@@ -5,7 +5,7 @@ using Abp.MultiTenancy;
 
 namespace Abp.Web.MultiTenancy
 {
-    public class HttpCookieTenantResolveContributer : ITenantResolveContributer, ITransientDependency
+    public class HttpCookieTenantResolveContributor : ITenantResolveContributor, ITransientDependency
     {
         public int? ResolveTenantId()
         {

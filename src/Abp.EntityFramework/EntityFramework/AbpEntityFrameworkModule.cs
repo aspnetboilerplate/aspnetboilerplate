@@ -1,8 +1,10 @@
-﻿using System.Reflection;
+﻿using System.Data.Entity.Infrastructure.Interception;
+using System.Reflection;
 using Abp.Collections.Extensions;
 using Abp.Configuration.Startup;
 using Abp.Dependency;
 using Abp.Domain.Uow;
+using Abp.EntityFramework.Interceptors;
 using Abp.EntityFramework.Repositories;
 using Abp.EntityFramework.Uow;
 using Abp.Modules;
@@ -17,6 +19,9 @@ namespace Abp.EntityFramework
     [DependsOn(typeof(AbpKernelModule))]
     public class AbpEntityFrameworkModule : AbpModule
     {
+        private static WithNoLockInterceptor _withNoLockInterceptor;
+        private static readonly object WithNoLockInterceptorSyncObj = new object();
+
         private readonly ITypeFinder _typeFinder;
 
         public AbpEntityFrameworkModule(ITypeFinder typeFinder)
@@ -48,6 +53,21 @@ namespace Abp.EntityFramework
                 );
 
             RegisterGenericRepositoriesAndMatchDbContexes();
+            RegisterWithNoLockInterceptor();
+        }
+
+        private void RegisterWithNoLockInterceptor()
+        {
+            lock (WithNoLockInterceptorSyncObj)
+            {
+                if (_withNoLockInterceptor != null)
+                {
+                    return;
+                }
+
+                _withNoLockInterceptor = IocManager.Resolve<WithNoLockInterceptor>();
+                DbInterception.Add(_withNoLockInterceptor);
+            }
         }
 
         private void RegisterGenericRepositoriesAndMatchDbContexes()

@@ -7,12 +7,12 @@ using Abp.Text;
 
 namespace Abp.Web.MultiTenancy
 {
-    public class DomainTenantResolveContributer : ITenantResolveContributer, ITransientDependency
+    public class DomainTenantResolveContributor : ITenantResolveContributor, ITransientDependency
     {
         private readonly IWebMultiTenancyConfiguration _multiTenancyConfiguration;
         private readonly ITenantStore _tenantStore;
 
-        public DomainTenantResolveContributer(
+        public DomainTenantResolveContributor(
             IWebMultiTenancyConfiguration multiTenancyConfiguration,
             ITenantStore tenantStore)
         {

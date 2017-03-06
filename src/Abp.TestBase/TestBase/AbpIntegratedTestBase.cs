@@ -37,11 +37,13 @@ namespace Abp.TestBase
 
         protected void InitializeAbp()
         {
-            LocalIocManager.Register<IAbpSession, TestAbpSession>();
+            LocalIocManager.RegisterIfNot<IAbpSession, TestAbpSession>();
 
             PreInitialize();
 
             AbpBootstrapper.Initialize();
+
+            PostInitialize();
 
             AbpSession = LocalIocManager.Resolve<TestAbpSession>();
         }
@@ -50,6 +52,14 @@ namespace Abp.TestBase
         /// This method can be overrided to replace some services with fakes.
         /// </summary>
         protected virtual void PreInitialize()
+        {
+
+        }
+
+        /// <summary>
+        /// This method can be overrided to replace some services with fakes.
+        /// </summary>
+        protected virtual void PostInitialize()
         {
 
         }

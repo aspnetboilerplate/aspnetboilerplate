@@ -7,13 +7,13 @@ using Microsoft.AspNetCore.Http;
 
 namespace Abp.AspNetCore.MultiTenancy
 {
-    public class HttpHeaderTenantResolveContributer : ITenantResolveContributer, ITransientDependency
+    public class HttpHeaderTenantResolveContributor : ITenantResolveContributor, ITransientDependency
     {
         public ILogger Logger { get; set; }
 
         private readonly IHttpContextAccessor _httpContextAccessor;
 
-        public HttpHeaderTenantResolveContributer(IHttpContextAccessor httpContextAccessor)
+        public HttpHeaderTenantResolveContributor(IHttpContextAccessor httpContextAccessor)
         {
             _httpContextAccessor = httpContextAccessor;
 

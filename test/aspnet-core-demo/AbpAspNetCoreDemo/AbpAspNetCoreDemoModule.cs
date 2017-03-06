@@ -26,7 +26,14 @@ namespace AbpAspNetCoreDemo
 
             Configuration.Modules.AbpEfCore().AddDbContext<MyDbContext>(options =>
             {
-                options.DbContextOptions.UseSqlServer(options.ConnectionString);
+                if (options.ExistingConnection != null)
+                {
+                    options.DbContextOptions.UseSqlServer(options.ExistingConnection);
+                }
+                else
+                {
+                    options.DbContextOptions.UseSqlServer(options.ConnectionString);
+                }
             });
 
             Configuration.Modules.AbpAspNetCore()

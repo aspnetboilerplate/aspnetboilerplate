@@ -2,11 +2,12 @@
   "version": "1.0.0-*",
 
   "dependencies": {
-    "Abp.AspNetCore": "1.4.3.0-*",
+    "Abp.AspNetCore": "1.5.0.0-*",
     "Microsoft.AspNetCore.Razor.Tools": {
       "version": "1.1.0-preview4-final",
       "type": "build"
-    }
+    },
+    "Scs": "1.1.1"
   },
 
   "tools": {

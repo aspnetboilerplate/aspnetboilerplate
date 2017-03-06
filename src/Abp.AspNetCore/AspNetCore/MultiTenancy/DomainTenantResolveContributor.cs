@@ -8,14 +8,14 @@ using Microsoft.AspNetCore.Http;
 
 namespace Abp.AspNetCore.MultiTenancy
 {
-    public class DomainTenantResolveContributer : ITenantResolveContributer, ITransientDependency
+    public class DomainTenantResolveContributor : ITenantResolveContributor, ITransientDependency
     {
         private readonly IHttpContextAccessor _httpContextAccessor;
         private readonly IWebMultiTenancyConfiguration _multiTenancyConfiguration;
         private readonly ITenantStore _tenantStore;
 
-        public DomainTenantResolveContributer(
-            IHttpContextAccessor httpContextAccessor, 
+        public DomainTenantResolveContributor(
+            IHttpContextAccessor httpContextAccessor,
             IWebMultiTenancyConfiguration multiTenancyConfiguration,
             ITenantStore tenantStore)
         {
@@ -38,7 +38,9 @@ namespace Abp.AspNetCore.MultiTenancy
             }
 
             var hostName = httpContext.Request.Host.Host.RemovePreFix("http://", "https://");
-            var result = new FormattedStringValueExtracter().Extract(hostName, _multiTenancyConfiguration.DomainFormat, true);
+            var domainFormat = _multiTenancyConfiguration.DomainFormat.RemovePreFix("http://", "https://").Split(':')[0];
+            var result = new FormattedStringValueExtracter().Extract(hostName, domainFormat, true);
+
             if (!result.IsMatch)
             {
                 return null;
@@ -54,7 +56,7 @@ namespace Abp.AspNetCore.MultiTenancy
             {
                 return null;
             }
-            
+
             var tenantInfo = _tenantStore.Find(tenancyName);
             if (tenantInfo == null)
             {

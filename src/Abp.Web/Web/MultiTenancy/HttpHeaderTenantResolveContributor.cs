@@ -6,11 +6,11 @@ using Castle.Core.Logging;
 
 namespace Abp.Web.MultiTenancy
 {
-    public class HttpHeaderTenantResolveContributer : ITenantResolveContributer, ITransientDependency
+    public class HttpHeaderTenantResolveContributor : ITenantResolveContributor, ITransientDependency
     {
         public ILogger Logger { get; set; }
 
-        public HttpHeaderTenantResolveContributer()
+        public HttpHeaderTenantResolveContributor()
         {
             Logger = NullLogger.Instance;
         }
