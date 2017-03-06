@@ -21,6 +21,46 @@ namespace Abp.EntityFrameworkCore.Uow
             ActiveTransactions = new Dictionary<string, ActiveTransactionInfo>();
         }
 
+        public void InitOptions(UnitOfWorkOptions options)
+        {
+            Options = options;
+        }
+
+        public DbContext CreateDbContext<TDbContext>(string connectionString, IDbContextResolver dbContextResolver) where TDbContext : DbContext
+        {
+            DbContext dbContext;
+
+            var activeTransaction = ActiveTransactions.GetOrDefault(connectionString);
+            if (activeTransaction == null)
+            {
+                dbContext = dbContextResolver.Resolve<TDbContext>(connectionString, null);
+
+                var dbtransaction = dbContext.Database.BeginTransaction((Options.IsolationLevel ?? IsolationLevel.ReadUncommitted).ToSystemDataIsolationLevel());
+                activeTransaction = new ActiveTransactionInfo(dbtransaction, dbContext);
+                ActiveTransactions[connectionString] = activeTransaction;
+            }
+            else
+            {
+                dbContext = dbContextResolver.Resolve<TDbContext>(
+                    connectionString,
+                    activeTransaction.DbContextTransaction.GetDbTransaction().Connection
+                );
+
+                if (dbContext.HasRelationalTransactionManager())
+                {
+                    dbContext.Database.UseTransaction(activeTransaction.DbContextTransaction.GetDbTransaction());
+                }
+                else
+                {
+                    dbContext.Database.BeginTransaction();
+                }
+
+                activeTransaction.AttendedDbContexts.Add(dbContext);
+            }
+
+            return dbContext;
+        }
+
         public void Commit()
         {
             foreach (var activeTransaction in ActiveTransactions.Values)
@@ -31,44 +71,12 @@ namespace Abp.EntityFrameworkCore.Uow
                 {
                     if (dbContext.HasRelationalTransactionManager())
                     {
-                        //Relational databases use the SharedTransaction
-                        continue;
+                        continue; //Relational databases use the shared transaction
                     }
 
                     dbContext.Database.CommitTransaction();
                 }
             }
-        }
-
-        public DbContext CreateDbContext<TDbContext>(string connectionString, IDbContextResolver dbContextResolver) where TDbContext : DbContext
-        {
-            var activeTransaction = ActiveTransactions.GetOrDefault(connectionString);
-
-            var dbContext = dbContextResolver.Resolve<TDbContext>(
-                connectionString,
-                activeTransaction?.DbContextTransaction.GetDbTransaction().Connection
-            );
-
-            if (dbContext.HasRelationalTransactionManager())
-            {
-                if (activeTransaction == null)
-                {
-                    var dbtransaction = dbContext.Database.BeginTransaction((Options.IsolationLevel ?? IsolationLevel.ReadUncommitted).ToSystemDataIsolationLevel());
-                    activeTransaction = new ActiveTransactionInfo(dbtransaction, dbContext);
-                    ActiveTransactions[connectionString] = activeTransaction;
-                }
-                else
-                {
-                    dbContext.Database.UseTransaction(activeTransaction.DbContextTransaction.GetDbTransaction());
-                    activeTransaction.AttendedDbContexts.Add(dbContext);
-                }
-            }
-            else
-            {
-                dbContext.Database.BeginTransaction();
-            }
-
-            return dbContext;
         }
 
         public void Dispose(IIocResolver iocResolver)
@@ -86,11 +94,6 @@ namespace Abp.EntityFrameworkCore.Uow
             }
 
             ActiveTransactions.Clear();
-        }
-
-        public void InitOptions(UnitOfWorkOptions options)
-        {
-            Options = options;
         }
     }
 }
