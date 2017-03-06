@@ -1,7 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Data.Common;
+using System.Data.Entity.Infrastructure.Interception;
 using System.Threading.Tasks;
+
+using Abp.EntityFramework.Interceptors;
 using Abp.TestBase.SampleApplication.ContacLists;
 using Abp.TestBase.SampleApplication.Crm;
 using Abp.TestBase.SampleApplication.EntityFramework;
@@ -29,6 +32,12 @@ namespace Abp.TestBase.SampleApplication.Tests
                     .UsingFactoryMethod(Effort.DbConnectionFactory.CreateTransient)
                     .LifestyleSingleton()
                 );
+        }
+
+        protected override void PostInitialize()
+        {
+            //Commented out, since Effort.DbConnection does not provide Sql Text while interception time.
+            //DbInterception.Add(Resolve<WithNoLockInterceptor>());
         }
 
         protected virtual void CreateInitialData()
