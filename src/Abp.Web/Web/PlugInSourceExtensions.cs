@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Linq;
 using System.Web.Compilation;
 using Abp.Logging;
 using Abp.PlugIns;
@@ -10,13 +9,7 @@ namespace Abp.Web
     {
         public static void AddToBuildManager(this PlugInSourceList plugInSourceList)
         {
-            var plugInAssemblies = plugInSourceList
-                .GetAllModules()
-                .Select(m => m.Assembly)
-                .Distinct()
-                .ToList();
-
-            foreach (var plugInAssembly in plugInAssemblies)
+            foreach (var plugInAssembly in plugInSourceList.GetAllAssemblies())
             {
                 try
                 {

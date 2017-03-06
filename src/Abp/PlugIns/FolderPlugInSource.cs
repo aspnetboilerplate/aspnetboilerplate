@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Reflection;
 using Abp.Collections.Extensions;
 using Abp.Modules;
 using Abp.Reflection;
@@ -13,18 +14,26 @@ namespace Abp.PlugIns
 
         public SearchOption SearchOption { get; set; }
 
+        private readonly Lazy<List<Assembly>> _assemblies;
+        
         public FolderPlugInSource(string folder, SearchOption searchOption = SearchOption.TopDirectoryOnly)
         {
             Folder = folder;
             SearchOption = searchOption;
+
+            _assemblies = new Lazy<List<Assembly>>(LoadAssemblies, true);
+        }
+
+        public List<Assembly> GetAssemblies()
+        {
+            return _assemblies.Value;
         }
 
         public List<Type> GetModules()
         {
             var modules = new List<Type>();
 
-            var assemblies = AssemblyHelper.GetAllAssembliesInFolder(Folder, SearchOption);
-            foreach (var assembly in assemblies)
+            foreach (var assembly in GetAssemblies())
             {
                 try
                 {
@@ -43,6 +52,11 @@ namespace Abp.PlugIns
             }
 
             return modules;
+        }
+
+        private List<Assembly> LoadAssemblies()
+        {
+            return AssemblyHelper.GetAllAssembliesInFolder(Folder, SearchOption);
         }
     }
 }
