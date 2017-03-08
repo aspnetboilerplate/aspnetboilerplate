@@ -14,9 +14,15 @@ namespace Abp.Localization
 
         /// <summary>
         /// Display name of the language in it's original language.
-        /// Ex: "English" for English, "Türkçe" for Turkish.
+        /// Ex: "English" for English, "TÃ¼rkÃ§e" for Turkish.
         /// </summary>
         public string DisplayName { get; set; }
+        
+        /// <summary>
+        /// Direction of the language in it's original language.
+        /// Ex: "ltr" for English, "rtl" for Persian or Arabic.
+        /// </summary>
+        public string Direction { get; set; }
 
         /// <summary>
         /// An icon can be set to display on the UI.
@@ -38,14 +44,19 @@ namespace Abp.Localization
         /// </param>
         /// <param name="displayName">
         /// Display name of the language in it's original language.
-        /// Ex: "English" for English, "Türkçe" for Turkish.
+        /// Ex: "English" for English, "TÃ¼rkÃ§e" for Turkish.
+        /// </param>
+        /// <param name="direction">
+        /// Direction of the language in it's original language.
+        /// Ex: "ltr" for English, "rtl" for Persian or Arabic.
         /// </param>
         /// <param name="icon">An icon can be set to display on the UI</param>
         /// <param name="isDefault">Is this the default language?</param>
-        public LanguageInfo(string name, string displayName, string icon = null, bool isDefault = false)
+        public LanguageInfo(string name, string displayName, string direction = "ltr", string icon = null, bool isDefault = false)
         {
             Name = name;
             DisplayName = displayName;
+            Direction = direction;
             Icon = icon;
             IsDefault = isDefault;
         }
