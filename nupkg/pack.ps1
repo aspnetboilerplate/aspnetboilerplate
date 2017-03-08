@@ -39,14 +39,23 @@ $projects = (
     "Abp.Web.Resources"
 )
 
-# Build solution
+# Rebuild solution
 Set-Location $slnPath
 & dotnet msbuild /t:Rebuild /p:Configuration=Release
 
 # Copy all nuget packages to the pack folder
 foreach($project in $projects) {
-    $projectPackPath = Join-Path $srcPath ($project + "/bin/Release/" + $project + ".*.nupkg")
+    
+    $projectFolder = Join-Path $srcPath $project
+
+    # Create nuget pack
+    Set-Location $projectFolder
+    & dotnet msbuild /t:pack /p:Configuration=Release /p:IncludeSymbols=true
+
+    # Copy nuget package
+    $projectPackPath = Join-Path $projectFolder ("/bin/Release/" + $project + ".*.nupkg")
     Copy-Item $projectPackPath $packFolder
+
 }
 
 # Go back to the pack folder
