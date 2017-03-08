@@ -1,14 +1,14 @@
+# Parameters
 param (
-    $versionSuffix,
-    $slnPath,
-    $targetPath
+    $versionSuffix
 )
 
-if($slnPath -eq $null) { $slnPath = "..\" }
-if($targetPath -eq $null) { $targetPath = "." }
+# Paths
+$packFolder = (Get-Item -Path "./" -Verbose).FullName
+$slnPath = Join-Path $packFolder "../"
+$srcPath = Join-Path $slnPath "src"
 
-$srcPath = $slnPath + "src\"
-
+# List of projects
 $projects = (
     "Abp",
     "Abp.AspNetCore",
@@ -39,11 +39,15 @@ $projects = (
     "Abp.Web.Resources"
 )
 
+# Build solution
+Set-Location $slnPath
+& dotnet msbuild /t:Rebuild /p:Configuration=Release
+
+# Copy all nuget packages to the pack folder
 foreach($project in $projects) {
-    $prjPath = $srcPath + $project
-    if($versionSuffix -eq $null) {
-        & dotnet "pack" "$prjPath" -c "Release" -o "$targetPath"
-    } else {
-        & dotnet "pack" "$prjPath" -c "Release" -o "$targetPath" --version-suffix "$versionSuffix"
-    }
+    $projectPackPath = Join-Path $srcPath ($project + "/bin/Release/" + $project + ".*.nupkg")
+    Copy-Item $projectPackPath $packFolder
 }
+
+# Go back to the pack folder
+Set-Location $packFolder
