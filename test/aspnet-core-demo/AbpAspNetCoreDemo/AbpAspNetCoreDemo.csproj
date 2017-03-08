@@ -6,6 +6,7 @@
     <AssemblyName>AbpAspNetCoreDemo</AssemblyName>
     <OutputType>Exe</OutputType>
     <PackageId>AbpAspNetCoreDemo</PackageId>
+    <RuntimeIdentifier>win7-x64</RuntimeIdentifier>
   </PropertyGroup>
 
   <ItemGroup>
