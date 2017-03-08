@@ -5,8 +5,6 @@ VisualStudioVersion = 15.0.26228.4
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "src", "src", "{DFF0464B-5402-4DD6-86F5-2AEC1163B232}"
 EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{E2098634-558B-4FC5-A002-38E02CCA1F68}"
-EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "test", "test", "{1E6B9E8D-D5C1-4AD7-89F9-7179FEFD7C01}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "aspnet-core-demo", "aspnet-core-demo", "{1C5D3B56-8C59-4ABC-8E66-CBE971633FA7}"
