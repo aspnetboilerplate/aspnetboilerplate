@@ -1,8 +1,3 @@
-# Parameters
-param (
-    $versionSuffix
-)
-
 # Paths
 $packFolder = (Get-Item -Path "./" -Verbose).FullName
 $slnPath = Join-Path $packFolder "../"
@@ -54,7 +49,7 @@ foreach($project in $projects) {
 
     # Copy nuget package
     $projectPackPath = Join-Path $projectFolder ("/bin/Release/" + $project + ".*.nupkg")
-    Copy-Item $projectPackPath $packFolder
+    Move-Item $projectPackPath $packFolder
 
 }
 

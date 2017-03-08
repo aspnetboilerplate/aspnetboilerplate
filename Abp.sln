@@ -105,6 +105,12 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Abp.Dapper", "src\Abp.Dappe
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Abp.Dapper.Tests", "test\Abp.Dapper.Tests\Abp.Dapper.Tests.csproj", "{91103AD5-286A-45C6-8901-400269B1F939}"
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "solution-items", "solution-items", "{0A8896A1-EC2E-44D8-BD7E-34D2E46A16CF}"
+	ProjectSection(SolutionItems) = preProject
+		appveyor.yml = appveyor.yml
+		common.props = common.props
+	EndProjectSection
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
