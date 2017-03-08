@@ -1,114 +1,115 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio 14
-VisualStudioVersion = 14.0.25420.1
+# Visual Studio 15
+VisualStudioVersion = 15.0.26228.4
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "src", "src", "{DFF0464B-5402-4DD6-86F5-2AEC1163B232}"
 EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{E2098634-558B-4FC5-A002-38E02CCA1F68}"
-	ProjectSection(SolutionItems) = preProject
-		global.json = global.json
-	EndProjectSection
-EndProject
-Project("{8BB2217D-0F2D-49D1-97BC-3654ED321F3B}") = "Abp", "src\Abp\Abp.xproj", "{486C8629-0E65-47E9-9BA4-8180E682C1F8}"
-EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "test", "test", "{1E6B9E8D-D5C1-4AD7-89F9-7179FEFD7C01}"
-EndProject
-Project("{8BB2217D-0F2D-49D1-97BC-3654ED321F3B}") = "Abp.Tests", "test\Abp.Tests\Abp.Tests.xproj", "{D15AE572-FE92-4307-8262-37A3CA276B8F}"
-EndProject
-Project("{8BB2217D-0F2D-49D1-97BC-3654ED321F3B}") = "Abp.AutoMapper", "src\Abp.AutoMapper\Abp.AutoMapper.xproj", "{D792EF2A-63EB-460B-8FB7-8D6DDDAB4604}"
-EndProject
-Project("{8BB2217D-0F2D-49D1-97BC-3654ED321F3B}") = "Abp.AutoMapper.Tests", "test\Abp.AutoMapper.Tests\Abp.AutoMapper.Tests.xproj", "{A634FA1F-CF60-4B61-93CF-464D0F42E795}"
-EndProject
-Project("{8BB2217D-0F2D-49D1-97BC-3654ED321F3B}") = "Abp.EntityFramework", "src\Abp.EntityFramework\Abp.EntityFramework.xproj", "{51C56751-CEDC-40BE-86AD-A2A1A6A1A806}"
-EndProject
-Project("{8BB2217D-0F2D-49D1-97BC-3654ED321F3B}") = "Abp.EntityFramework.Tests", "test\Abp.EntityFramework.Tests\Abp.EntityFramework.Tests.xproj", "{721DDE83-9334-4BC7-8E45-58A336359786}"
-EndProject
-Project("{8BB2217D-0F2D-49D1-97BC-3654ED321F3B}") = "Abp.FluentMigrator", "src\Abp.FluentMigrator\Abp.FluentMigrator.xproj", "{CE407E98-8E1F-49A0-8ADE-D25F4D47B875}"
-EndProject
-Project("{8BB2217D-0F2D-49D1-97BC-3654ED321F3B}") = "Abp.HangFire", "src\Abp.HangFire\Abp.HangFire.xproj", "{BDF77DF1-C10B-4358-9BAA-22860DC7A0A9}"
-EndProject
-Project("{8BB2217D-0F2D-49D1-97BC-3654ED321F3B}") = "Abp.MemoryDb", "src\Abp.MemoryDb\Abp.MemoryDb.xproj", "{DE0847EF-92D0-402F-8223-500AEE136ECD}"
-EndProject
-Project("{8BB2217D-0F2D-49D1-97BC-3654ED321F3B}") = "Abp.MemoryDb.Tests", "test\Abp.MemoryDb.Tests\Abp.MemoryDb.Tests.xproj", "{221C96FA-49F3-456E-AA6A-53BB22956578}"
-EndProject
-Project("{8BB2217D-0F2D-49D1-97BC-3654ED321F3B}") = "Abp.MongoDB", "src\Abp.MongoDB\Abp.MongoDB.xproj", "{B8978FDF-E9A9-42D0-9234-32C8BA0411A9}"
-EndProject
-Project("{8BB2217D-0F2D-49D1-97BC-3654ED321F3B}") = "Abp.NHibernate", "src\Abp.NHibernate\Abp.NHibernate.xproj", "{0570DCCD-B666-42F3-9AA4-9F1394E6C904}"
-EndProject
-Project("{8BB2217D-0F2D-49D1-97BC-3654ED321F3B}") = "Abp.NHibernate.Tests", "test\Abp.NHibernate.Tests\Abp.NHibernate.Tests.xproj", "{CED2AC21-F052-4654-BBA3-01556BE2C61B}"
-EndProject
-Project("{8BB2217D-0F2D-49D1-97BC-3654ED321F3B}") = "Abp.TestBase", "src\Abp.TestBase\Abp.TestBase.xproj", "{BCA80B2B-871B-4A6F-B719-5FF6017BC572}"
-EndProject
-Project("{8BB2217D-0F2D-49D1-97BC-3654ED321F3B}") = "Abp.TestBase.Tests", "test\Abp.TestBase.Tests\Abp.TestBase.Tests.xproj", "{32041945-7035-410D-A1D5-E5779122114A}"
-EndProject
-Project("{8BB2217D-0F2D-49D1-97BC-3654ED321F3B}") = "Abp.TestBase.SampleApplication", "test\Abp.TestBase.SampleApplication\Abp.TestBase.SampleApplication.xproj", "{D0BBBAD1-D373-45EB-8346-4AD629AFCAC0}"
-EndProject
-Project("{8BB2217D-0F2D-49D1-97BC-3654ED321F3B}") = "Abp.TestBase.SampleApplication.Tests", "test\Abp.TestBase.SampleApplication.Tests\Abp.TestBase.SampleApplication.Tests.xproj", "{C6C58C8F-CDF4-42E2-8088-332D776B2780}"
-EndProject
-Project("{8BB2217D-0F2D-49D1-97BC-3654ED321F3B}") = "Abp.Owin", "src\Abp.Owin\Abp.Owin.xproj", "{558FB5A4-09AD-469E-8865-30B903C17F47}"
-EndProject
-Project("{8BB2217D-0F2D-49D1-97BC-3654ED321F3B}") = "Abp.RedisCache", "src\Abp.RedisCache\Abp.RedisCache.xproj", "{0DBA5587-9ECE-4E86-B798-FCF28A130A0F}"
-EndProject
-Project("{8BB2217D-0F2D-49D1-97BC-3654ED321F3B}") = "Abp.RedisCache.Tests", "test\Abp.RedisCache.Tests\Abp.RedisCache.Tests.xproj", "{0B306A5A-FCEC-4E0B-A800-ECC9F94FFDC9}"
-EndProject
-Project("{8BB2217D-0F2D-49D1-97BC-3654ED321F3B}") = "Abp.Web", "src\Abp.Web\Abp.Web.xproj", "{BDB8FAF9-A297-46E8-9EFA-FC806A670B88}"
-EndProject
-Project("{8BB2217D-0F2D-49D1-97BC-3654ED321F3B}") = "Abp.Web.Tests", "test\Abp.Web.Tests\Abp.Web.Tests.xproj", "{FFFDF573-B8E2-4454-8356-4B1928961D7F}"
-EndProject
-Project("{8BB2217D-0F2D-49D1-97BC-3654ED321F3B}") = "Abp.Web.Api", "src\Abp.Web.Api\Abp.Web.Api.xproj", "{2F6778B1-E0EE-49D7-8FCE-92508D6D0D8E}"
-EndProject
-Project("{8BB2217D-0F2D-49D1-97BC-3654ED321F3B}") = "Abp.Web.Api.Tests", "test\Abp.Web.Api.Tests\Abp.Web.Api.Tests.xproj", "{BBC6FFDB-8654-4A45-9696-C4FEE20B5073}"
-EndProject
-Project("{8BB2217D-0F2D-49D1-97BC-3654ED321F3B}") = "Abp.Web.Api.OData", "src\Abp.Web.Api.OData\Abp.Web.Api.OData.xproj", "{5574CDE0-6734-457E-9B30-6371FAA37ECF}"
-EndProject
-Project("{8BB2217D-0F2D-49D1-97BC-3654ED321F3B}") = "Abp.Web.Mvc", "src\Abp.Web.Mvc\Abp.Web.Mvc.xproj", "{D2C8ED70-6ED1-4539-A7F0-D8FE89904530}"
-EndProject
-Project("{8BB2217D-0F2D-49D1-97BC-3654ED321F3B}") = "Abp.Web.Mvc.Tests", "test\Abp.Web.Mvc.Tests\Abp.Web.Mvc.Tests.xproj", "{8BCDAE4C-3F02-42CF-854D-A9A1EDC507C3}"
-EndProject
-Project("{8BB2217D-0F2D-49D1-97BC-3654ED321F3B}") = "Abp.Web.Resources", "src\Abp.Web.Resources\Abp.Web.Resources.xproj", "{1192F00E-070E-426B-9DF1-AD5E1C44AB7D}"
-EndProject
-Project("{8BB2217D-0F2D-49D1-97BC-3654ED321F3B}") = "Abp.Web.SignalR", "src\Abp.Web.SignalR\Abp.Web.SignalR.xproj", "{145B3DC6-599E-4FE2-BD76-A52DF3A86870}"
-EndProject
-Project("{8BB2217D-0F2D-49D1-97BC-3654ED321F3B}") = "Abp.EntityFramework.GraphDiff", "src\Abp.EntityFramework.GraphDiff\Abp.EntityFramework.GraphDiff.xproj", "{F9066A34-8822-427D-9E62-B2BBA2B3A618}"
-EndProject
-Project("{8BB2217D-0F2D-49D1-97BC-3654ED321F3B}") = "Abp.EntityFramework.GraphDiff.Tests", "test\Abp.EntityFramework.GraphDiff.Tests\Abp.EntityFramework.GraphDiff.Tests.xproj", "{69EAF8EE-F4DA-44D5-8D10-A3D0D085717C}"
-EndProject
-Project("{8BB2217D-0F2D-49D1-97BC-3654ED321F3B}") = "Abp.AspNetCore", "src\Abp.AspNetCore\Abp.AspNetCore.xproj", "{7391E502-1385-4DE4-BD0F-9BD2A9ECC6D9}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "aspnet-core-demo", "aspnet-core-demo", "{1C5D3B56-8C59-4ABC-8E66-CBE971633FA7}"
 EndProject
-Project("{8BB2217D-0F2D-49D1-97BC-3654ED321F3B}") = "AbpAspNetCoreDemo.Core", "test\aspnet-core-demo\AbpAspNetCoreDemo.Core\AbpAspNetCoreDemo.Core.xproj", "{8B47606D-901C-404F-9AD0-C156F39A61DF}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Abp", "src\Abp\Abp.csproj", "{486C8629-0E65-47E9-9BA4-8180E682C1F8}"
 EndProject
-Project("{8BB2217D-0F2D-49D1-97BC-3654ED321F3B}") = "Abp.Web.Common", "src\Abp.Web.Common\Abp.Web.Common.xproj", "{883F1591-5B8E-4D5D-85DE-ED96069F2A13}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Abp.Tests", "test\Abp.Tests\Abp.Tests.csproj", "{D15AE572-FE92-4307-8262-37A3CA276B8F}"
 EndProject
-Project("{8BB2217D-0F2D-49D1-97BC-3654ED321F3B}") = "Abp.EntityFrameworkCore", "src\Abp.EntityFrameworkCore\Abp.EntityFrameworkCore.xproj", "{E4D541BF-CD9B-4CE0-AAA7-ED87E99EC9BD}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Abp.AutoMapper", "src\Abp.AutoMapper\Abp.AutoMapper.csproj", "{D792EF2A-63EB-460B-8FB7-8D6DDDAB4604}"
 EndProject
-Project("{8BB2217D-0F2D-49D1-97BC-3654ED321F3B}") = "Abp.EntityFrameworkCore.Tests", "test\Abp.EntityFrameworkCore.Tests\Abp.EntityFrameworkCore.Tests.xproj", "{E16465B4-280D-4019-A81F-D36D11C07802}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Abp.AutoMapper.Tests", "test\Abp.AutoMapper.Tests\Abp.AutoMapper.Tests.csproj", "{A634FA1F-CF60-4B61-93CF-464D0F42E795}"
 EndProject
-Project("{8BB2217D-0F2D-49D1-97BC-3654ED321F3B}") = "Abp.EntityFramework.Common", "src\Abp.EntityFramework.Common\Abp.EntityFramework.Common.xproj", "{A776FDCE-FDD0-46AF-B2AE-55CF7D3315FF}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Abp.EntityFramework", "src\Abp.EntityFramework\Abp.EntityFramework.csproj", "{51C56751-CEDC-40BE-86AD-A2A1A6A1A806}"
 EndProject
-Project("{8BB2217D-0F2D-49D1-97BC-3654ED321F3B}") = "Abp.AspNetCore.Tests", "test\Abp.AspNetCore.Tests\Abp.AspNetCore.Tests.xproj", "{47279576-BA2A-4941-96BD-E4B913B50B4A}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Abp.EntityFramework.Tests", "test\Abp.EntityFramework.Tests\Abp.EntityFramework.Tests.csproj", "{721DDE83-9334-4BC7-8E45-58A336359786}"
 EndProject
-Project("{8BB2217D-0F2D-49D1-97BC-3654ED321F3B}") = "Abp.AspNetCore.TestBase", "src\Abp.AspNetCore.TestBase\Abp.AspNetCore.TestBase.xproj", "{B21CDFC5-81C3-4E29-B7FF-C11B5EC43456}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Abp.FluentMigrator", "src\Abp.FluentMigrator\Abp.FluentMigrator.csproj", "{CE407E98-8E1F-49A0-8ADE-D25F4D47B875}"
 EndProject
-Project("{8BB2217D-0F2D-49D1-97BC-3654ED321F3B}") = "AbpAspNetCoreDemo", "test\aspnet-core-demo\AbpAspNetCoreDemo\AbpAspNetCoreDemo.xproj", "{26172FE6-890F-4D45-83B2-3F28193843AF}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Abp.HangFire", "src\Abp.HangFire\Abp.HangFire.csproj", "{BDF77DF1-C10B-4358-9BAA-22860DC7A0A9}"
 EndProject
-Project("{8BB2217D-0F2D-49D1-97BC-3654ED321F3B}") = "Abp.Web.Common.Tests", "test\Abp.Web.Common.Tests\Abp.Web.Common.Tests.xproj", "{26898200-F326-46B8-A202-81167B6048F3}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Abp.MemoryDb", "src\Abp.MemoryDb\Abp.MemoryDb.csproj", "{DE0847EF-92D0-402F-8223-500AEE136ECD}"
 EndProject
-Project("{8BB2217D-0F2D-49D1-97BC-3654ED321F3B}") = "Abp.Castle.Log4Net", "src\Abp.Castle.Log4Net\Abp.Castle.Log4Net.xproj", "{FB797CC0-A394-4977-86B0-47F16672DDE8}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Abp.MemoryDb.Tests", "test\Abp.MemoryDb.Tests\Abp.MemoryDb.Tests.csproj", "{221C96FA-49F3-456E-AA6A-53BB22956578}"
 EndProject
-Project("{8BB2217D-0F2D-49D1-97BC-3654ED321F3B}") = "Abp.Quartz", "src\Abp.Quartz\Abp.Quartz.xproj", "{F90B1606-F375-4C84-9118-AB0C1DDEB0DF}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Abp.MongoDB", "src\Abp.MongoDB\Abp.MongoDB.csproj", "{B8978FDF-E9A9-42D0-9234-32C8BA0411A9}"
 EndProject
-Project("{8BB2217D-0F2D-49D1-97BC-3654ED321F3B}") = "Abp.RedisCache.ProtoBuf", "src\Abp.RedisCache.ProtoBuf\Abp.RedisCache.ProtoBuf.xproj", "{DA281194-390E-40E4-861B-A034CD6943B7}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Abp.NHibernate", "src\Abp.NHibernate\Abp.NHibernate.csproj", "{0570DCCD-B666-42F3-9AA4-9F1394E6C904}"
 EndProject
-Project("{8BB2217D-0F2D-49D1-97BC-3654ED321F3B}") = "Abp.Quartz.Tests", "test\Abp.Quartz.Tests\Abp.Quartz.Tests.xproj", "{5023EDC4-AC43-4E11-9D9A-021F0F51EE78}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Abp.NHibernate.Tests", "test\Abp.NHibernate.Tests\Abp.NHibernate.Tests.csproj", "{CED2AC21-F052-4654-BBA3-01556BE2C61B}"
 EndProject
-Project("{8BB2217D-0F2D-49D1-97BC-3654ED321F3B}") = "AbpAspNetCoreDemo.PlugIn", "test\aspnet-core-demo\AbpAspNetCoreDemo.PlugIn\AbpAspNetCoreDemo.PlugIn.xproj", "{B93E2627-CA5B-4242-8283-5B69240EF97B}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Abp.TestBase", "src\Abp.TestBase\Abp.TestBase.csproj", "{BCA80B2B-871B-4A6F-B719-5FF6017BC572}"
 EndProject
-Project("{8BB2217D-0F2D-49D1-97BC-3654ED321F3B}") = "Abp.Dapper", "src\Abp.Dapper\Abp.Dapper.xproj", "{43442BE2-6533-4B91-809C-78C79A0BE67B}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Abp.TestBase.Tests", "test\Abp.TestBase.Tests\Abp.TestBase.Tests.csproj", "{32041945-7035-410D-A1D5-E5779122114A}"
 EndProject
-Project("{8BB2217D-0F2D-49D1-97BC-3654ED321F3B}") = "Abp.Dapper.Tests", "test\Abp.Dapper.Tests\Abp.Dapper.Tests.xproj", "{91103AD5-286A-45C6-8901-400269B1F939}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Abp.TestBase.SampleApplication", "test\Abp.TestBase.SampleApplication\Abp.TestBase.SampleApplication.csproj", "{D0BBBAD1-D373-45EB-8346-4AD629AFCAC0}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Abp.TestBase.SampleApplication.Tests", "test\Abp.TestBase.SampleApplication.Tests\Abp.TestBase.SampleApplication.Tests.csproj", "{C6C58C8F-CDF4-42E2-8088-332D776B2780}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Abp.Owin", "src\Abp.Owin\Abp.Owin.csproj", "{558FB5A4-09AD-469E-8865-30B903C17F47}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Abp.RedisCache", "src\Abp.RedisCache\Abp.RedisCache.csproj", "{0DBA5587-9ECE-4E86-B798-FCF28A130A0F}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Abp.RedisCache.Tests", "test\Abp.RedisCache.Tests\Abp.RedisCache.Tests.csproj", "{0B306A5A-FCEC-4E0B-A800-ECC9F94FFDC9}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Abp.Web", "src\Abp.Web\Abp.Web.csproj", "{BDB8FAF9-A297-46E8-9EFA-FC806A670B88}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Abp.Web.Tests", "test\Abp.Web.Tests\Abp.Web.Tests.csproj", "{FFFDF573-B8E2-4454-8356-4B1928961D7F}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Abp.Web.Api", "src\Abp.Web.Api\Abp.Web.Api.csproj", "{2F6778B1-E0EE-49D7-8FCE-92508D6D0D8E}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Abp.Web.Api.Tests", "test\Abp.Web.Api.Tests\Abp.Web.Api.Tests.csproj", "{BBC6FFDB-8654-4A45-9696-C4FEE20B5073}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Abp.Web.Api.OData", "src\Abp.Web.Api.OData\Abp.Web.Api.OData.csproj", "{5574CDE0-6734-457E-9B30-6371FAA37ECF}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Abp.Web.Mvc", "src\Abp.Web.Mvc\Abp.Web.Mvc.csproj", "{D2C8ED70-6ED1-4539-A7F0-D8FE89904530}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Abp.Web.Mvc.Tests", "test\Abp.Web.Mvc.Tests\Abp.Web.Mvc.Tests.csproj", "{8BCDAE4C-3F02-42CF-854D-A9A1EDC507C3}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Abp.Web.Resources", "src\Abp.Web.Resources\Abp.Web.Resources.csproj", "{1192F00E-070E-426B-9DF1-AD5E1C44AB7D}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Abp.Web.SignalR", "src\Abp.Web.SignalR\Abp.Web.SignalR.csproj", "{145B3DC6-599E-4FE2-BD76-A52DF3A86870}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Abp.EntityFramework.GraphDiff", "src\Abp.EntityFramework.GraphDiff\Abp.EntityFramework.GraphDiff.csproj", "{F9066A34-8822-427D-9E62-B2BBA2B3A618}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Abp.EntityFramework.GraphDiff.Tests", "test\Abp.EntityFramework.GraphDiff.Tests\Abp.EntityFramework.GraphDiff.Tests.csproj", "{69EAF8EE-F4DA-44D5-8D10-A3D0D085717C}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Abp.AspNetCore", "src\Abp.AspNetCore\Abp.AspNetCore.csproj", "{7391E502-1385-4DE4-BD0F-9BD2A9ECC6D9}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "AbpAspNetCoreDemo.Core", "test\aspnet-core-demo\AbpAspNetCoreDemo.Core\AbpAspNetCoreDemo.Core.csproj", "{8B47606D-901C-404F-9AD0-C156F39A61DF}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Abp.Web.Common", "src\Abp.Web.Common\Abp.Web.Common.csproj", "{883F1591-5B8E-4D5D-85DE-ED96069F2A13}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Abp.EntityFrameworkCore", "src\Abp.EntityFrameworkCore\Abp.EntityFrameworkCore.csproj", "{E4D541BF-CD9B-4CE0-AAA7-ED87E99EC9BD}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Abp.EntityFrameworkCore.Tests", "test\Abp.EntityFrameworkCore.Tests\Abp.EntityFrameworkCore.Tests.csproj", "{E16465B4-280D-4019-A81F-D36D11C07802}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Abp.EntityFramework.Common", "src\Abp.EntityFramework.Common\Abp.EntityFramework.Common.csproj", "{A776FDCE-FDD0-46AF-B2AE-55CF7D3315FF}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Abp.AspNetCore.Tests", "test\Abp.AspNetCore.Tests\Abp.AspNetCore.Tests.csproj", "{47279576-BA2A-4941-96BD-E4B913B50B4A}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Abp.AspNetCore.TestBase", "src\Abp.AspNetCore.TestBase\Abp.AspNetCore.TestBase.csproj", "{B21CDFC5-81C3-4E29-B7FF-C11B5EC43456}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "AbpAspNetCoreDemo", "test\aspnet-core-demo\AbpAspNetCoreDemo\AbpAspNetCoreDemo.csproj", "{26172FE6-890F-4D45-83B2-3F28193843AF}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Abp.Web.Common.Tests", "test\Abp.Web.Common.Tests\Abp.Web.Common.Tests.csproj", "{26898200-F326-46B8-A202-81167B6048F3}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Abp.Castle.Log4Net", "src\Abp.Castle.Log4Net\Abp.Castle.Log4Net.csproj", "{FB797CC0-A394-4977-86B0-47F16672DDE8}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Abp.Quartz", "src\Abp.Quartz\Abp.Quartz.csproj", "{F90B1606-F375-4C84-9118-AB0C1DDEB0DF}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Abp.RedisCache.ProtoBuf", "src\Abp.RedisCache.ProtoBuf\Abp.RedisCache.ProtoBuf.csproj", "{DA281194-390E-40E4-861B-A034CD6943B7}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Abp.Quartz.Tests", "test\Abp.Quartz.Tests\Abp.Quartz.Tests.csproj", "{5023EDC4-AC43-4E11-9D9A-021F0F51EE78}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "AbpAspNetCoreDemo.PlugIn", "test\aspnet-core-demo\AbpAspNetCoreDemo.PlugIn\AbpAspNetCoreDemo.PlugIn.csproj", "{B93E2627-CA5B-4242-8283-5B69240EF97B}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Abp.Dapper", "src\Abp.Dapper\Abp.Dapper.csproj", "{43442BE2-6533-4B91-809C-78C79A0BE67B}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Abp.Dapper.Tests", "test\Abp.Dapper.Tests\Abp.Dapper.Tests.csproj", "{91103AD5-286A-45C6-8901-400269B1F939}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "solution-items", "solution-items", "{0A8896A1-EC2E-44D8-BD7E-34D2E46A16CF}"
+	ProjectSection(SolutionItems) = preProject
+		appveyor.yml = appveyor.yml
+		common.props = common.props
+	EndProjectSection
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -313,6 +314,7 @@ Global
 		HideSolutionNode = FALSE
 	EndGlobalSection
 	GlobalSection(NestedProjects) = preSolution
+		{1C5D3B56-8C59-4ABC-8E66-CBE971633FA7} = {1E6B9E8D-D5C1-4AD7-89F9-7179FEFD7C01}
 		{486C8629-0E65-47E9-9BA4-8180E682C1F8} = {DFF0464B-5402-4DD6-86F5-2AEC1163B232}
 		{D15AE572-FE92-4307-8262-37A3CA276B8F} = {1E6B9E8D-D5C1-4AD7-89F9-7179FEFD7C01}
 		{D792EF2A-63EB-460B-8FB7-8D6DDDAB4604} = {DFF0464B-5402-4DD6-86F5-2AEC1163B232}
@@ -345,7 +347,6 @@ Global
 		{F9066A34-8822-427D-9E62-B2BBA2B3A618} = {DFF0464B-5402-4DD6-86F5-2AEC1163B232}
 		{69EAF8EE-F4DA-44D5-8D10-A3D0D085717C} = {1E6B9E8D-D5C1-4AD7-89F9-7179FEFD7C01}
 		{7391E502-1385-4DE4-BD0F-9BD2A9ECC6D9} = {DFF0464B-5402-4DD6-86F5-2AEC1163B232}
-		{1C5D3B56-8C59-4ABC-8E66-CBE971633FA7} = {1E6B9E8D-D5C1-4AD7-89F9-7179FEFD7C01}
 		{8B47606D-901C-404F-9AD0-C156F39A61DF} = {1C5D3B56-8C59-4ABC-8E66-CBE971633FA7}
 		{883F1591-5B8E-4D5D-85DE-ED96069F2A13} = {DFF0464B-5402-4DD6-86F5-2AEC1163B232}
 		{E4D541BF-CD9B-4CE0-AAA7-ED87E99EC9BD} = {DFF0464B-5402-4DD6-86F5-2AEC1163B232}
