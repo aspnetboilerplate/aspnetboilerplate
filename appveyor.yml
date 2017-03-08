@@ -1,8 +1,16 @@
-version: 1.4.3-beta{build}
+configuration: Release
+version: 1.5.1-beta{build}
+image: Visual Studio 2017 RC
+
 nuget:
   disable_publish_on_pr: true
+
 before_build:
+- cmd: set PATH=C:\Program Files (x86)\Microsoft Visual Studio\2017\Enterprise\MSBuild\15.0\Bin;C:\Program Files (x86)\Microsoft Visual Studio\2017\Community\MSBuild\15.0\Bin;C:\Program Files (x86)\Microsoft Visual Studio\2017\Professional\MSBuild\15.0\Bin;%PATH%
+- cmd: nuget install nuget.commandline -source https://dotnet.myget.org/F/nuget-build -prerelease -excludeversion
+- cmd: set PATH=%appveyor_build_folder%\NuGet.CommandLine\tools;%PATH%
 - cmd: dotnet.exe restore
+
 after_build:
 - ps: >-
     $versionSuffix=(Get-Item Env:APPVEYOR_BUILD_NUMBER).Value
@@ -10,8 +18,13 @@ after_build:
     Set-Location "nupkg"
     
     .\pack.ps1 -versionSuffix "$versionSuffix"
+
 build:
   verbosity: minimal
+
+pull_requests:  
+  do_not_increment_build_number: true
+
 test:
   assemblies:
   - test\Abp.AutoMapper.Tests\bin\Debug\net452\win7-x64\Abp.AutoMapper.dll
@@ -30,6 +43,7 @@ test:
   - test\Abp.Dapper.Tests\bin\Debug\net461\win7-x64\Abp.Dapper.Tests.dll
   - test\Abp.Quartz.Tests\bin\Debug\net461\win7-x64\Abp.Quartz.Tests.dll
   - test\Abp.Web.Common.Tests\bin\Debug\net461\win7-x64\Abp.Web.Common.Tests.dll
+
 artifacts:
 - path: nupkg\*.nupkg
   name: nuget-packages
