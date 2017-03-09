@@ -27,13 +27,13 @@ pull_requests:
 
 test:
   assemblies:
+  - test\Abp.Tests\bin\Release\net452\Abp.Tests.dll
   - test\Abp.AutoMapper.Tests\bin\Release\net452\Abp.AutoMapper.dll
   - test\Abp.EntityFramework.Tests\bin\Release\net452\Abp.EntityFramework.Tests.dll
   - test\Abp.MemoryDb.Tests\bin\Release\net452\Abp.MemoryDb.Tests.dll
-  - test\Abp.NHibernate.Tests\bin\Release\net452\Abp.NHibernate.Tests.dll
+#  - test\Abp.NHibernate.Tests\bin\Release\net452\Abp.NHibernate.Tests.dll
   - test\Abp.TestBase.SampleApplication.Tests\bin\Release\net452\Abp.TestBase.SampleApplication.Tests.dll
   - test\Abp.TestBase.Tests\bin\Release\net452\Abp.TestBase.Tests.dll
-  - test\Abp.Tests\bin\Release\net452\Abp.Tests.dll
   - test\Abp.Web.Api.Tests\bin\Release\net452\Abp.Web.Api.Tests.dll
   - test\Abp.Web.Mvc.Tests\bin\Release\net452\Abp.Web.Mvc.Tests.dll
   - test\Abp.Web.Tests\bin\Release\net452\Abp.Web.Tests.dll
