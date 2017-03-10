@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Linq.Expressions;
 
-namespace Abp.Dapper.Dapper.Expressions
+namespace Abp.Dapper.Expressions
 {
     /// <summary>
     ///     Reference

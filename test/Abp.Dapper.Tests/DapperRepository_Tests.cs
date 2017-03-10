@@ -1,4 +1,4 @@
-﻿using Abp.Dapper.Dapper.Repositories;
+﻿using Abp.Dapper.Repositories;
 using Abp.Dapper.Tests.Entities;
 using Abp.Domain.Repositories;
 

@@ -5,19 +5,16 @@ using System.Data.Common;
 using System.Data.Entity;
 using System.Linq.Expressions;
 using System.Threading.Tasks;
-
-using Abp.Dapper.Dapper.Expressions;
-using Abp.Dapper.Dapper.Extensions;
+using Abp.Dapper.Expressions;
+using Abp.Dapper.Extensions;
 using Abp.Domain.Entities;
 using Abp.Domain.Uow;
 using Abp.EntityFramework;
 using Abp.EntityFramework.Uow;
-
 using Dapper;
-
 using DapperExtensions;
 
-namespace Abp.Dapper.Dapper.Repositories
+namespace Abp.Dapper.Repositories
 {
     public class DapperRepositoryBase<TDbContext, TEntity, TPrimaryKey> : AbpDapperRepositoryBase<TEntity, TPrimaryKey>
         where TEntity : class, IEntity<TPrimaryKey>

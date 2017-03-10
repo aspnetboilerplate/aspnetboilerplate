@@ -1,10 +1,8 @@
 ﻿using System;
-
 using Abp.Dependency;
-
 using JetBrains.Annotations;
 
-namespace Abp.Dapper.Dapper.Repositories
+namespace Abp.Dapper.Repositories
 {
     public interface IDapperGenericRepositoryRegistrar
     {
