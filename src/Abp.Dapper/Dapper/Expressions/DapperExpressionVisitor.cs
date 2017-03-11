@@ -3,12 +3,10 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
 using System.Reflection;
-
 using Abp.Domain.Entities;
-
 using DapperExtensions;
 
-namespace Abp.Dapper.Dapper.Expressions
+namespace Abp.Dapper.Expressions
 {
     /// <summary>
     ///     This class converts an Expression{Func{TEntity, bool}} into an IPredicate group that can be used with

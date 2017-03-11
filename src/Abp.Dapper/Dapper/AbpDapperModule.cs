@@ -1,9 +1,7 @@
 ﻿using System;
-using System.Data.Entity.Infrastructure;
 using System.Reflection;
-
 using Abp.Configuration.Startup;
-using Abp.Dapper.Dapper.Repositories;
+using Abp.Dapper.Repositories;
 using Abp.Dependency;
 using Abp.EntityFramework;
 using Abp.EntityFramework.Uow;

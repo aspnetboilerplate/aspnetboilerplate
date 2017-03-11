@@ -32,7 +32,7 @@ namespace Abp.Web
                 new DictionaryBasedLocalizationSource(
                     AbpWebConsts.LocalizaionSourceName,
                     new XmlEmbeddedFileLocalizationDictionaryProvider(
-                        Assembly.GetExecutingAssembly(), "Abp.Web.Common.Web.Localization.AbpWebXmlSource"
+                        Assembly.GetExecutingAssembly(), "Abp.Web.Localization.AbpWebXmlSource"
                         )));
         }
 

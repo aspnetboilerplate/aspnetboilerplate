@@ -1,13 +1,10 @@
 ﻿using System;
 using System.Linq.Expressions;
-
 using Abp.Domain.Entities;
-
 using DapperExtensions;
-
 using JetBrains.Annotations;
 
-namespace Abp.Dapper.Dapper.Expressions
+namespace Abp.Dapper.Expressions
 {
     internal static class DapperExpressionExtensions
     {

@@ -2,13 +2,11 @@
 using System.Collections.Generic;
 using System.Linq.Expressions;
 using System.Threading.Tasks;
-
 using Abp.Domain.Entities;
 using Abp.Domain.Repositories;
-
 using JetBrains.Annotations;
 
-namespace Abp.Dapper.Dapper.Repositories
+namespace Abp.Dapper.Repositories
 {
     /// <summary>
     ///     Dapper repository abstraction interface.
