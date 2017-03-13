@@ -1,10 +1,8 @@
 ﻿using System;
-
 using Abp.EntityFramework;
-
 using JetBrains.Annotations;
 
-namespace Abp.Dapper.Dapper
+namespace Abp.Dapper
 {
     public class DapperAutoRepositoryTypeAttribute : AutoRepositoryTypesAttribute
     {

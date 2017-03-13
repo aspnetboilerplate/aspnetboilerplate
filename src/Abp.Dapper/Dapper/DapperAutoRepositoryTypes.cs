@@ -1,8 +1,7 @@
-﻿using Abp.Dapper.Dapper.Repositories;
-
+﻿using Abp.Dapper.Repositories;
 using JetBrains.Annotations;
 
-namespace Abp.Dapper.Dapper
+namespace Abp.Dapper
 {
     public static class DapperAutoRepositoryTypes
     {

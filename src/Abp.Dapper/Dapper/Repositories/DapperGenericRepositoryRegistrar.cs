@@ -1,11 +1,10 @@
 ﻿using System;
-
 using Abp.Dependency;
 using Abp.Domain.Entities;
 using Abp.EntityFramework;
 using Abp.Reflection.Extensions;
 
-namespace Abp.Dapper.Dapper.Repositories
+namespace Abp.Dapper.Repositories
 {
     public class DapperGenericRepositoryRegistrar : IDapperGenericRepositoryRegistrar, ITransientDependency
     {

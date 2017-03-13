@@ -1,4 +1,5 @@
 using System;
+using System.Linq;
 using Abp.Dependency;
 using Abp.Extensions;
 using Abp.MultiTenancy;
@@ -41,7 +42,7 @@ namespace Abp.AspNetCore.MultiTenancy
             var domainFormat = _multiTenancyConfiguration.DomainFormat.RemovePreFix("http://", "https://").Split(':')[0];
             var result = new FormattedStringValueExtracter().Extract(hostName, domainFormat, true);
 
-            if (!result.IsMatch)
+            if (!result.IsMatch || !result.Matches.Any())
             {
                 return null;
             }

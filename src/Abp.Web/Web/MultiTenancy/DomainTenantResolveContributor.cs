@@ -1,4 +1,5 @@
 using System;
+using System.Linq;
 using System.Web;
 using Abp.Dependency;
 using Abp.Extensions;
@@ -35,7 +36,7 @@ namespace Abp.Web.MultiTenancy
 
             var hostName = httpContext.Request.Url.Host.RemovePreFix("http://", "https://");
             var result = new FormattedStringValueExtracter().Extract(hostName, _multiTenancyConfiguration.DomainFormat, true);
-            if (!result.IsMatch)
+            if (!result.IsMatch || !result.Matches.Any())
             {
                 return null;
             }

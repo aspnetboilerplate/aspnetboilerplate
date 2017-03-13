@@ -2,10 +2,9 @@
 using System.Collections.Generic;
 using System.Linq.Expressions;
 using System.Threading.Tasks;
-
 using Abp.Domain.Entities;
 
-namespace Abp.Dapper.Dapper.Repositories
+namespace Abp.Dapper.Repositories
 {
     /// <summary>
     ///     Base class to implement <see cref="IDapperRepository{TEntity,TPrimaryKey}" />.
@@ -13,7 +12,7 @@ namespace Abp.Dapper.Dapper.Repositories
     /// </summary>
     /// <typeparam name="TEntity">The type of the entity.</typeparam>
     /// <typeparam name="TPrimaryKey">The type of the primary key.</typeparam>
-    /// <seealso cref="Abp.Dapper.Dapper.Repositories.IDapperRepository{TEntity, TPrimaryKey}" />
+    /// <seealso cref="IDapperRepository{TEntity,TPrimaryKey}" />
     public abstract class AbpDapperRepositoryBase<TEntity, TPrimaryKey> : IDapperRepository<TEntity, TPrimaryKey> where TEntity : class, IEntity<TPrimaryKey>
     {
         public abstract TEntity Get(TPrimaryKey id);
