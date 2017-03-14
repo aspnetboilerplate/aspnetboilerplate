@@ -19,14 +19,11 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <None Update="Abp\**\*">
-      <PackagePath>content/Abp/</PackagePath>
-      <Pack>true</Pack>
-    </None>
+    <None Remove="Abp\**\*" />
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\Abp\Abp.csproj" />
+    <Content Include="Abp\**\*" />
   </ItemGroup>
 
   <ItemGroup Condition=" '$(TargetFramework)' == 'net452' ">
