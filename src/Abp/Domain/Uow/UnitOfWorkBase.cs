@@ -279,8 +279,15 @@ namespace Abp.Domain.Uow
 
             DisposeUow();
             OnDisposed();
+            DisposeDelegates();
         }
 
+        private void DisposeDelegates()
+        {
+            if (Failed != null) { Failed -= Failed; }
+            if (Completed != null) { Completed -= Completed; }
+            if (Disposed != null) { Disposed -= Disposed; }
+        }
         /// <summary>
         /// Can be implemented by derived classes to start UOW.
         /// </summary>

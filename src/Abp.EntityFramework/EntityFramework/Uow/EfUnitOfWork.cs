@@ -3,7 +3,6 @@ using System.Collections.Immutable;
 using System.Data.Entity;
 using System.Data.Entity.Core.Objects;
 using System.Data.Entity.Infrastructure;
-using System.Linq;
 using System.Threading.Tasks;
 using Abp.Dependency;
 using Abp.Domain.Uow;
@@ -11,15 +10,22 @@ using Abp.EntityFramework.Utils;
 using Abp.Extensions;
 using Abp.MultiTenancy;
 using Castle.Core.Internal;
+using System;
+using System.Linq;
 
 namespace Abp.EntityFramework.Uow
 {
+    public class EfUnitOfWorkDbContextContainer
+    {
+        public DbContext DbContext { get; set; }
+        public ObjectMaterializedEventHandler ObjectMaterializedDelegate { get; set; }
+    }
     /// <summary>
     /// Implements Unit of work for Entity Framework.
     /// </summary>
     public class EfUnitOfWork : UnitOfWorkBase, ITransientDependency
     {
-        protected IDictionary<string, DbContext> ActiveDbContexts { get; }
+        protected IDictionary<string, EfUnitOfWorkDbContextContainer> ActiveDbContexts { get; }
         protected IIocResolver IocResolver { get; }
 
         private readonly IDbContextResolver _dbContextResolver;
@@ -47,7 +53,7 @@ namespace Abp.EntityFramework.Uow
             _dbContextTypeMatcher = dbContextTypeMatcher;
             _transactionStrategy = transactionStrategy;
 
-            ActiveDbContexts = new Dictionary<string, DbContext>();
+            ActiveDbContexts = new Dictionary<string, EfUnitOfWorkDbContextContainer>();
         }
 
         protected override void BeginUow()
@@ -73,7 +79,7 @@ namespace Abp.EntityFramework.Uow
 
         public IReadOnlyList<DbContext> GetAllActiveDbContexts()
         {
-            return ActiveDbContexts.Values.ToImmutableList();
+            return ActiveDbContexts.Values.Select(x => x.DbContext).ToImmutableList();
         }
 
         protected override void CompleteUow()
@@ -108,45 +114,56 @@ namespace Abp.EntityFramework.Uow
 
             var dbContextKey = concreteDbContextType.FullName + "#" + connectionString;
 
-            DbContext dbContext;
-            if (!ActiveDbContexts.TryGetValue(dbContextKey, out dbContext))
+            EfUnitOfWorkDbContextContainer dbContextContainer;
+            if (!ActiveDbContexts.TryGetValue(dbContextKey, out dbContextContainer))
             {
+                dbContextContainer = new EfUnitOfWorkDbContextContainer();
                 if (Options.IsTransactional == true)
                 {
-                    dbContext = _transactionStrategy.CreateDbContext<TDbContext>(connectionString, _dbContextResolver);
+                    dbContextContainer.DbContext = _transactionStrategy.CreateDbContext<TDbContext>(connectionString, _dbContextResolver);
                 }
                 else
                 {
-                    dbContext = _dbContextResolver.Resolve<TDbContext>(connectionString);
+                    dbContextContainer.DbContext = _dbContextResolver.Resolve<TDbContext>(connectionString);
                 }
 
-                if (Options.Timeout.HasValue && !dbContext.Database.CommandTimeout.HasValue)
+                if (Options.Timeout.HasValue && !dbContextContainer.DbContext.Database.CommandTimeout.HasValue)
                 {
-                    dbContext.Database.CommandTimeout = Options.Timeout.Value.TotalSeconds.To<int>();
+                    dbContextContainer.DbContext.Database.CommandTimeout = Options.Timeout.Value.TotalSeconds.To<int>();
                 }
-
-                ((IObjectContextAdapter)dbContext).ObjectContext.ObjectMaterialized += (sender, args) =>
+                dbContextContainer.ObjectMaterializedDelegate = (sender, args) =>
                 {
-                    ObjectContext_ObjectMaterialized(dbContext, args);
+                    ObjectContext_ObjectMaterialized(dbContextContainer.DbContext, args);
                 };
+                ((IObjectContextAdapter)dbContextContainer.DbContext).ObjectContext.ObjectMaterialized += dbContextContainer.ObjectMaterializedDelegate;
 
-                FilterExecuter.As<IEfUnitOfWorkFilterExecuter>().ApplyCurrentFilters(this, dbContext);
+                FilterExecuter.As<IEfUnitOfWorkFilterExecuter>().ApplyCurrentFilters(this, dbContextContainer.DbContext);
                 
-                ActiveDbContexts[dbContextKey] = dbContext;
+                ActiveDbContexts[dbContextKey] = dbContextContainer;
             }
 
-            return (TDbContext)dbContext;
+            return (TDbContext)dbContextContainer.DbContext;
         }
 
         protected override void DisposeUow()
         {
+            //detach our event handlers to avoid leaks
+            foreach (var activeDbContext in ActiveDbContexts.Values)
+            {
+                if (activeDbContext.ObjectMaterializedDelegate != null)
+                {
+                    ((IObjectContextAdapter)activeDbContext.DbContext).ObjectContext.ObjectMaterialized -= activeDbContext.ObjectMaterializedDelegate;
+                    activeDbContext.ObjectMaterializedDelegate = null;
+                }
+            }
+
             if (Options.IsTransactional == true)
             {
                 _transactionStrategy.Dispose(IocResolver);
             }
             else
             {
-                foreach (var activeDbContext in GetAllActiveDbContexts())
+                foreach (var activeDbContext in ActiveDbContexts.Values)
                 {
                     Release(activeDbContext);
                 }
@@ -165,10 +182,10 @@ namespace Abp.EntityFramework.Uow
             await dbContext.SaveChangesAsync();
         }
 
-        protected virtual void Release(DbContext dbContext)
+        protected virtual void Release(EfUnitOfWorkDbContextContainer container)
         {
-            dbContext.Dispose();
-            IocResolver.Release(dbContext);
+            container.DbContext.Dispose();
+            IocResolver.Release(container.DbContext);
         }
 
         private static void ObjectContext_ObjectMaterialized(DbContext dbContext, ObjectMaterializedEventArgs e)
