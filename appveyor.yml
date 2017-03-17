@@ -1,32 +1,49 @@
-version: 1.4.3-beta{build}
+configuration: Release
+version: 1.5.1-beta{build}
+image: Visual Studio 2017 RC
+
 nuget:
   disable_publish_on_pr: true
+
 before_build:
+- cmd: set PATH=C:\Program Files (x86)\Microsoft Visual Studio\2017\Enterprise\MSBuild\15.0\Bin;C:\Program Files (x86)\Microsoft Visual Studio\2017\Community\MSBuild\15.0\Bin;C:\Program Files (x86)\Microsoft Visual Studio\2017\Professional\MSBuild\15.0\Bin;%PATH%
+- cmd: nuget install nuget.commandline -source https://dotnet.myget.org/F/nuget-build -prerelease -excludeversion
+- cmd: set PATH=%appveyor_build_folder%\NuGet.CommandLine\tools;%PATH%
 - cmd: dotnet.exe restore
-build:
-  verbosity: minimal
+
 after_build:
 - ps: >-
     $versionSuffix=(Get-Item Env:APPVEYOR_BUILD_NUMBER).Value
+    
+    Set-Location "nupkg"
+    
+    .\pack.ps1 -versionSuffix "$versionSuffix"
 
-    .\nupkg\pack.ps1 -slnPath ".\" -targetPath ".\nupkg" -versionSuffix "$versionSuffix"
+build:
+  verbosity: minimal
+
+pull_requests:  
+  do_not_increment_build_number: true
+
 test:
   assemblies:
-  - test\Abp.AutoMapper.Tests\bin\Debug\net452\win7-x64\Abp.AutoMapper.dll
-  - test\Abp.EntityFramework.Tests\bin\Debug\net452\win7-x64\Abp.EntityFramework.Tests.dll
-  - test\Abp.MemoryDb.Tests\bin\Debug\net452\win7-x64\Abp.MemoryDb.Tests.dll
-  - test\Abp.NHibernate.Tests\bin\Debug\net452\win7-x64\Abp.NHibernate.Tests.dll
-  - test\Abp.TestBase.SampleApplication.Tests\bin\Debug\net452\win7-x64\Abp.TestBase.SampleApplication.Tests.dll
-  - test\Abp.TestBase.Tests\bin\Debug\net452\win7-x64\Abp.TestBase.Tests.dll
-  - test\Abp.Tests\bin\Debug\net452\win7-x64\Abp.Tests.dll
-  - test\Abp.Web.Api.Tests\bin\Debug\net452\win7-x64\Abp.Web.Api.Tests.dll
-  - test\Abp.Web.Mvc.Tests\bin\Debug\net452\win7-x64\Abp.Web.Mvc.Tests.dll
-  - test\Abp.Web.Tests\bin\Debug\net452\win7-x64\Abp.Web.Tests.dll
-  - test\Abp.EntityFrameworkCore.Tests\bin\Debug\net461\win7-x64\Abp.EntityFrameworkCore.Tests.dll
-  - test\Abp.AspNetCore.Tests\bin\Debug\net461\win7-x64\Abp.AspNetCore.Tests.dll
-  - test\Abp.EntityFramework.GraphDiff.Tests\bin\Debug\net452\win7-x64\Abp.EntityFramework.GraphDiff.Tests.dll
-  - test\Abp.Quartz.Tests\bin\Debug\net461\win7-x64\Abp.Quartz.Tests.dll
-  - test\Abp.Web.Common.Tests\bin\Debug\net461\win7-x64\Abp.Web.Common.Tests.dll
+  - test\Abp.Tests\bin\Release\net452\Abp.Tests.dll
+  - test\Abp.AutoMapper.Tests\bin\Release\net452\Abp.AutoMapper.dll
+  - test\Abp.EntityFramework.Tests\bin\Release\net452\Abp.EntityFramework.Tests.dll
+  - test\Abp.MemoryDb.Tests\bin\Release\net452\Abp.MemoryDb.Tests.dll
+#  - test\Abp.NHibernate.Tests\bin\Release\net452\Abp.NHibernate.Tests.dll
+  - test\Abp.TestBase.SampleApplication.Tests\bin\Release\net452\Abp.TestBase.SampleApplication.Tests.dll
+  - test\Abp.TestBase.Tests\bin\Release\net452\Abp.TestBase.Tests.dll
+  - test\Abp.Web.Api.Tests\bin\Release\net452\Abp.Web.Api.Tests.dll
+  - test\Abp.Web.Mvc.Tests\bin\Release\net452\Abp.Web.Mvc.Tests.dll
+  - test\Abp.Web.Tests\bin\Release\net452\Abp.Web.Tests.dll
+  - test\Abp.EntityFrameworkCore.Tests\bin\Release\net461\Abp.EntityFrameworkCore.Tests.dll
+  - test\Abp.AspNetCore.Tests\bin\Release\net461\Abp.AspNetCore.Tests.dll
+  - test\Abp.EntityFramework.GraphDiff.Tests\bin\Release\net452\Abp.EntityFramework.GraphDiff.Tests.dll
+  - test\Abp.Dapper.Tests\bin\Release\net461\Abp.Dapper.Tests.dll
+  - test\Abp.Quartz.Tests\bin\Release\net461\Abp.Quartz.Tests.dll
+  - test\Abp.Web.Common.Tests\bin\Release\net461\Abp.Web.Common.Tests.dll
+
 artifacts:
 - path: nupkg\*.nupkg
   name: nuget-packages

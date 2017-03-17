@@ -52,8 +52,8 @@ namespace AbpAspNetCoreDemo
             {
                 options.PlugInSources.Add(
                     new AssemblyFileListPlugInSource(
-                        Path.Combine(_env.ContentRootPath,
-                            @"..\AbpAspNetCoreDemo.PlugIn\bin\Debug\net461\AbpAspNetCoreDemo.PlugIn.dll")
+                        Path.Combine(_env.ContentRootPath, @"..\AbpAspNetCoreDemo.PlugIn\bin\Debug\net461\AbpAspNetCoreDemo.PlugIn.dll"),
+                        Path.Combine(_env.ContentRootPath, @"..\AbpAspNetCoreDemo.PlugIn\bin\Debug\net461\Scs.dll")
                     )
                 );
 

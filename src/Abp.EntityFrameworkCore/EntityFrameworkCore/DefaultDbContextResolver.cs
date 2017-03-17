@@ -1,9 +1,11 @@
-using System;
-using System.Reflection;
 using Abp.Dependency;
 using Abp.EntityFramework;
 using Abp.EntityFrameworkCore.Configuration;
 using Microsoft.EntityFrameworkCore;
+using System;
+using System.Data.Common;
+using System.Reflection;
+using JetBrains.Annotations;
 
 namespace Abp.EntityFrameworkCore
 {
@@ -22,7 +24,7 @@ namespace Abp.EntityFrameworkCore
             _dbContextTypeMatcher = dbContextTypeMatcher;
         }
 
-        public TDbContext Resolve<TDbContext>(string connectionString)
+        public TDbContext Resolve<TDbContext>(string connectionString, DbConnection existingConnection)
             where TDbContext : DbContext
         {
             var dbContextType = typeof(TDbContext);
@@ -31,7 +33,7 @@ namespace Abp.EntityFrameworkCore
             {
                 return _iocResolver.Resolve<TDbContext>(new
                 {
-                    options = CreateOptions<TDbContext>(connectionString)
+                    options = CreateOptions<TDbContext>(connectionString, existingConnection)
                 });
             }
 
@@ -39,21 +41,20 @@ namespace Abp.EntityFrameworkCore
 
             return (TDbContext)_iocResolver.Resolve(concreteType, new
             {
-                options = CreateOptionsForType(concreteType, connectionString)
+                options = CreateOptionsForType(concreteType, connectionString, existingConnection)
             });
         }
 
-        private object CreateOptionsForType(Type dbContextType, string connectionString)
+        private object CreateOptionsForType(Type dbContextType, string connectionString, DbConnection existingConnection)
         {
-            return CreateOptionsMethod.MakeGenericMethod(dbContextType).Invoke(this, new object[] { connectionString });
+            return CreateOptionsMethod.MakeGenericMethod(dbContextType).Invoke(this, new object[] { connectionString, existingConnection });
         }
 
-        protected virtual DbContextOptions<TDbContext> CreateOptions<TDbContext>(string connectionString)
-            where TDbContext : DbContext
+        protected virtual DbContextOptions<TDbContext> CreateOptions<TDbContext>([NotNull] string connectionString, [CanBeNull] DbConnection existingConnection) where TDbContext : DbContext
         {
             if (_iocResolver.IsRegistered<IAbpDbContextConfigurer<TDbContext>>())
             {
-                var configuration = new AbpDbContextConfiguration<TDbContext>(connectionString);
+                var configuration = new AbpDbContextConfiguration<TDbContext>(connectionString, existingConnection);
 
                 using (var configurer = _iocResolver.ResolveAsDisposable<IAbpDbContextConfigurer<TDbContext>>())
                 {

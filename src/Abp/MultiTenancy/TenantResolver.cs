@@ -66,7 +66,7 @@ namespace Abp.MultiTenancy
         {
             foreach (var resolverType in _multiTenancy.Resolvers)
             {
-                using (var resolver = _iocResolver.ResolveAsDisposable<ITenantResolveContributer>(resolverType))
+                using (var resolver = _iocResolver.ResolveAsDisposable<ITenantResolveContributor>(resolverType))
                 {
                     int? tenantId;
 

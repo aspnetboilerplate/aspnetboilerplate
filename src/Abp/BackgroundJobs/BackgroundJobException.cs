@@ -1,12 +1,17 @@
 ﻿using System;
 using System.Runtime.Serialization;
+using JetBrains.Annotations;
 
 namespace Abp.BackgroundJobs
 {
     [Serializable]
     public class BackgroundJobException : AbpException
     {
+        [CanBeNull]
         public BackgroundJobInfo BackgroundJob { get; set; }
+
+        [CanBeNull]
+        public object JobObject { get; set; }
 
         /// <summary>
         /// Creates a new <see cref="BackgroundJobException"/> object.
