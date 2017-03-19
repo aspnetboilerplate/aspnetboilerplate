@@ -1,20 +1,26 @@
-﻿using Abp.Domain.Entities;
+﻿using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
+
+using Abp.Domain.Entities;
+using Abp.Domain.Entities.Auditing;
 
 namespace Abp.Dapper.Tests.Entities
 {
-    public class Product : Entity
+    [Table("Products")]
+    public class Product : FullAuditedEntity, IMayHaveTenant
     {
-        public Product(string name, string color, int size)
+        protected Product()
         {
-            Name = name;
-            Color = color;
-            Size = size;
         }
 
+        public Product(string name) : this()
+        {
+            Name = name;
+        }
+
+        [Required]
         public string Name { get; set; }
 
-        public string Color { get; set; }
-
-        public int Size { get; set; }
+        public int? TenantId { get; set; }
     }
 }

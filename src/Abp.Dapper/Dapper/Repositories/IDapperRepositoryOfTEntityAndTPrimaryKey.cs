@@ -2,8 +2,10 @@
 using System.Collections.Generic;
 using System.Linq.Expressions;
 using System.Threading.Tasks;
+
 using Abp.Domain.Entities;
 using Abp.Domain.Repositories;
+
 using JetBrains.Annotations;
 
 namespace Abp.Dapper.Repositories
@@ -51,15 +53,7 @@ namespace Abp.Dapper.Repositories
         /// </summary>
         /// <param name="predicate">The predicate.</param>
         /// <returns></returns>
-        [CanBeNull]
-        IEnumerable<TEntity> GetList([CanBeNull] object predicate);
-
-        /// <summary>
-        ///     Gets the list.
-        /// </summary>
-        /// <param name="predicate">The predicate.</param>
-        /// <returns></returns>
-        [CanBeNull]
+        [NotNull]
         IEnumerable<TEntity> GetList([CanBeNull] Expression<Func<TEntity, bool>> predicate);
 
         /// <summary>
@@ -68,27 +62,7 @@ namespace Abp.Dapper.Repositories
         /// <param name="predicate">The predicate.</param>
         /// <returns></returns>
         [CanBeNull]
-        Task<IEnumerable<TEntity>> GetListAsync([NotNull] object predicate);
-
-        /// <summary>
-        ///     Gets the list asynchronous.
-        /// </summary>
-        /// <param name="predicate">The predicate.</param>
-        /// <returns></returns>
-        [CanBeNull]
         Task<IEnumerable<TEntity>> GetListAsync([NotNull] Expression<Func<TEntity, bool>> predicate);
-
-        /// <summary>
-        ///     Gets the list paged asynchronous.
-        /// </summary>
-        /// <param name="predicate">The predicate.</param>
-        /// <param name="pageNumber">The page number.</param>
-        /// <param name="itemsPerPage">The items per page.</param>
-        /// <param name="sortingProperty">The sorting property.</param>
-        /// <param name="ascending">if set to <c>true</c> [ascending].</param>
-        /// <returns></returns>
-        [CanBeNull]
-        Task<IEnumerable<TEntity>> GetListPagedAsync([NotNull] object predicate, int pageNumber, int itemsPerPage, [NotNull] string sortingProperty, bool ascending = true);
 
         /// <summary>
         ///     Gets the list paged asynchronous.
@@ -124,18 +98,6 @@ namespace Abp.Dapper.Repositories
         /// <param name="ascending">if set to <c>true</c> [ascending].</param>
         /// <returns></returns>
         [CanBeNull]
-        IEnumerable<TEntity> GetListPaged([NotNull] object predicate, int pageNumber, int itemsPerPage, [NotNull] string sortingProperty, bool ascending = true);
-
-        /// <summary>
-        ///     Gets the list paged.
-        /// </summary>
-        /// <param name="predicate">The predicate.</param>
-        /// <param name="pageNumber">The page number.</param>
-        /// <param name="itemsPerPage">The items per page.</param>
-        /// <param name="sortingProperty">The sorting property.</param>
-        /// <param name="ascending">if set to <c>true</c> [ascending].</param>
-        /// <returns></returns>
-        [CanBeNull]
         IEnumerable<TEntity> GetListPaged([NotNull] Expression<Func<TEntity, bool>> predicate, int pageNumber, int itemsPerPage, [NotNull] string sortingProperty, bool ascending = true);
 
         /// <summary>
@@ -155,22 +117,7 @@ namespace Abp.Dapper.Repositories
         /// </summary>
         /// <param name="predicate">The predicate.</param>
         /// <returns></returns>
-        int Count([NotNull] object predicate);
-
-        /// <summary>
-        ///     Counts the specified predicate.
-        /// </summary>
-        /// <param name="predicate">The predicate.</param>
-        /// <returns></returns>
         int Count([NotNull] Expression<Func<TEntity, bool>> predicate);
-
-        /// <summary>
-        ///     Counts the asynchronous.
-        /// </summary>
-        /// <param name="predicate">The predicate.</param>
-        /// <returns></returns>
-        [NotNull]
-        Task<int> CountAsync([NotNull] object predicate);
 
         /// <summary>
         ///     Counts the asynchronous.
@@ -239,18 +186,6 @@ namespace Abp.Dapper.Repositories
         /// <param name="predicate">The predicate.</param>
         /// <param name="firstResult">The first result.</param>
         /// <param name="maxResults">The maximum results.</param>
-        /// <param name="sortingProperty"></param>
-        /// <param name="ascending"></param>
-        /// <returns></returns>
-        [CanBeNull]
-        IEnumerable<TEntity> GetSet([NotNull] object predicate, int firstResult, int maxResults, [NotNull] string sortingProperty, bool ascending = true);
-
-        /// <summary>
-        ///     Gets the set.
-        /// </summary>
-        /// <param name="predicate">The predicate.</param>
-        /// <param name="firstResult">The first result.</param>
-        /// <param name="maxResults">The maximum results.</param>
         /// <param name="sortingProperty">The sorting property.</param>
         /// <param name="ascending">if set to <c>true</c> [ascending].</param>
         /// <returns></returns>
@@ -268,18 +203,6 @@ namespace Abp.Dapper.Repositories
         /// <returns></returns>
         [CanBeNull]
         IEnumerable<TEntity> GetSet([NotNull] Expression<Func<TEntity, bool>> predicate, int firstResult, int maxResults, bool ascending = true, [NotNull] params Expression<Func<TEntity, object>>[] sortingExpression);
-
-        /// <summary>
-        ///     Gets the set asynchronous.
-        /// </summary>
-        /// <param name="predicate">The predicate.</param>
-        /// <param name="firstResult">The first result.</param>
-        /// <param name="maxResults">The maximum results.</param>
-        /// <param name="sortingProperty">The sorting property.</param>
-        /// <param name="ascending">if set to <c>true</c> [ascending].</param>
-        /// <returns></returns>
-        [CanBeNull]
-        Task<IEnumerable<TEntity>> GetSetAsync([NotNull] object predicate, int firstResult, int maxResults, [NotNull] string sortingProperty, bool ascending = true);
 
         /// <summary>
         ///     Gets the set asynchronous.

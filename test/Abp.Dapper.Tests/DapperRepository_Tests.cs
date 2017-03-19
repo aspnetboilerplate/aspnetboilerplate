@@ -1,6 +1,9 @@
-﻿using Abp.Dapper.Repositories;
+﻿using System.Linq;
+
+using Abp.Dapper.Repositories;
 using Abp.Dapper.Tests.Entities;
 using Abp.Domain.Repositories;
+using Abp.Domain.Uow;
 
 using Shouldly;
 
@@ -12,26 +15,28 @@ namespace Abp.Dapper.Tests
     {
         private readonly IDapperRepository<Product> _productDapperRepository;
         private readonly IRepository<Product> _productRepository;
+        private readonly IUnitOfWorkManager _unitOfWorkManager;
 
         public DapperRepository_Tests()
         {
             _productDapperRepository = Resolve<IDapperRepository<Product>>();
             _productRepository = Resolve<IRepository<Product>>();
+            _unitOfWorkManager = Resolve<IUnitOfWorkManager>();
         }
 
-        //[Fact(Skip = "Effort does not support Dapper queries.")]
-        public void DapperRepositories_Should_Work_Within_A_UnitOfWorkScope()
+        [Fact]
+        public void Insert_Should_Work()
         {
-            _productDapperRepository.Insert(new Product("TShirt", "Red", 5) { Id = 1 });
+            using (IUnitOfWorkCompleteHandle uow = _unitOfWorkManager.Begin())
+            {
+                _productDapperRepository.Insert(new Product("TShirt"));
 
-            Product productFromEf = _productRepository.Get(1);
+                Product product = _productDapperRepository.GetList(x => x.Name == "TShirt").FirstOrDefault();
 
-            _productDapperRepository.GetList(x => x.Name == "TShirt").ShouldNotBeNull();
+                product.ShouldNotBeNull();
 
-            productFromEf.Name = "Pants";
-            _productDapperRepository.Update(productFromEf);
-
-            _productDapperRepository.GetListPaged(x => x.Name == "Pants", 1, 10, true, product => product.Name, product => product.Color);
+                uow.Complete();
+            }
         }
     }
 }

@@ -1,6 +1,9 @@
 ﻿using System;
 using System.Reflection;
+
 using Abp.Configuration.Startup;
+using Abp.Dapper.Filters.Action;
+using Abp.Dapper.Filters.Query;
 using Abp.Dapper.Repositories;
 using Abp.Dependency;
 using Abp.EntityFramework;
@@ -32,6 +35,16 @@ namespace Abp.Dapper
         {
             IocManager.RegisterAssemblyByConvention(Assembly.GetExecutingAssembly());
 
+            //IocManager.Register<IDapperQueryFilter, MayHaveTenantDapperQueryFilter>(DependencyLifeStyle.Transient);
+            //IocManager.Register<IDapperQueryFilter, MustHaveTenantDapperQueryFilter>(DependencyLifeStyle.Transient);
+            //IocManager.Register<IDapperQueryFilter, SoftDeleteDapperQueryFilter>(DependencyLifeStyle.Transient);
+            //IocManager.Register<IDapperQueryFilterExecuter, DapperQueryFilterExecuter>(DependencyLifeStyle.Transient);
+
+            //IocManager.Register<IDapperActionFilter, CreationAuditDapperActionFilter>(DependencyLifeStyle.Transient);
+            //IocManager.Register<IDapperActionFilter, ModificationAuditDapperActionFilter>(DependencyLifeStyle.Transient);
+            //IocManager.Register<IDapperActionFilter, DeletionAuditDapperActionFilter>(DependencyLifeStyle.Transient);
+            //IocManager.Register<IDapperActionFilterExecuter, DapperActionFilterExecuter>(DependencyLifeStyle.Transient);
+
             RegisterDapperGenericRepositories();
         }
 
@@ -45,7 +58,7 @@ namespace Abp.Dapper
                     typeof(AbpDbContext).IsAssignableFrom(type)
                 );
 
-            using (var repositoryRegistrar = IocManager.ResolveAsDisposable<IDapperGenericRepositoryRegistrar>())
+            using (IDisposableDependencyObjectWrapper<IDapperGenericRepositoryRegistrar> repositoryRegistrar = IocManager.ResolveAsDisposable<IDapperGenericRepositoryRegistrar>())
             {
                 foreach (Type dbContextType in dbContextTypes)
                 {
