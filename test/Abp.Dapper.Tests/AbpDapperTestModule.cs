@@ -12,6 +12,8 @@ namespace Abp.Dapper.Tests
     [DependsOn(typeof(AbpDapperModule))]
     public class AbpDapperTestModule : AbpModule
     {
+        private readonly object _lockObject = new object();
+
         public override void Initialize()
         {
             IocManager.RegisterAssemblyByConvention(Assembly.GetExecutingAssembly());
@@ -24,9 +26,9 @@ namespace Abp.Dapper.Tests
             var connection = new SqlConnection(Configuration.DefaultNameOrConnectionString);
 
             var files = new List<string>
-                             {
-                                 ReadScriptFile("DestroyScript")
-                             };
+            {
+                ReadScriptFile("DestroyScript")
+            };
 
             foreach (string setupFile in files)
             {
@@ -50,6 +52,5 @@ namespace Abp.Dapper.Tests
 
             return string.Empty;
         }
-
     }
 }

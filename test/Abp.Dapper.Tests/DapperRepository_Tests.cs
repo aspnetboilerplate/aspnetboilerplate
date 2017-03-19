@@ -25,7 +25,7 @@ namespace Abp.Dapper.Tests
         }
 
         [Fact]
-        public void Insert_Should_Work()
+        public void Insert_by_dapper_should_change_creationaudit()
         {
             using (IUnitOfWorkCompleteHandle uow = _unitOfWorkManager.Begin())
             {
@@ -34,6 +34,31 @@ namespace Abp.Dapper.Tests
                 Product product = _productDapperRepository.GetList(x => x.Name == "TShirt").FirstOrDefault();
 
                 product.ShouldNotBeNull();
+                product.TenantId.ShouldBe(AbpSession.TenantId);
+                product.CreationTime.ShouldNotBeNull();
+                product.CreatorUserId.ShouldBeNull();
+
+                uow.Complete();
+            }
+        }
+
+        [Fact]
+        public void Update_by_dapper_repository_should_update_tenantId_and_lastmodified_audits()
+        {
+            using (IUnitOfWorkCompleteHandle uow = _unitOfWorkManager.Begin())
+            {
+                _productDapperRepository.Insert(new Product("TShirt"));
+
+                Product product = _productDapperRepository.GetList(x => x.Name == "TShirt").FirstOrDefault();
+
+                product.Name = "Pants";
+
+                _productDapperRepository.Update(product);
+
+                product.ShouldNotBeNull();
+                product.TenantId.ShouldBe(AbpSession.TenantId);
+                product.CreationTime.ShouldNotBeNull();
+                product.LastModifierUserId.ShouldBe(AbpSession.UserId);
 
                 uow.Complete();
             }

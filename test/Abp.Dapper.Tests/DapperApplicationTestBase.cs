@@ -17,6 +17,7 @@ namespace Abp.Dapper.Tests
     public abstract class DapperApplicationTestBase : AbpIntegratedTestBase<AbpDapperTestModule>
     {
         private readonly string _connectionString;
+        private readonly object _lockObject = new object();
 
         protected DapperApplicationTestBase()
         {
@@ -24,7 +25,7 @@ namespace Abp.Dapper.Tests
             string executable = AppDomain.CurrentDomain.BaseDirectory;
             string path = Path.GetDirectoryName(Path.GetDirectoryName(Path.GetDirectoryName(executable))) + @"\Db\AbpDapperTest.mdf";
             _connectionString = $@"Data Source=(localdb)\MsSqlLocalDb;Integrated Security=SSPI;AttachDBFilename={path}";
-           
+
             Resolve<IAbpStartupConfiguration>().DefaultNameOrConnectionString = _connectionString;
 
             AbpSession.UserId = 1;
@@ -34,10 +35,6 @@ namespace Abp.Dapper.Tests
         protected override void PreInitialize()
         {
             base.PreInitialize();
-
-            
-
-            AppDomain.CurrentDomain.SetData("DataDirectory", Path.Combine(AppDomain.CurrentDomain.BaseDirectory, ""));
 
             LocalIocManager.IocContainer.Register(
                 Component.For<DbConnection>()
