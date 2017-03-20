@@ -17,15 +17,19 @@
 		module zero</strong>".</p>
 			<p>After creating and downloading your project,</p>
 			<ul>
-				<li>Open your solution on Visual Studio 2015+ (Visual Studio 2015 with Update 3 is recommended).</li>
-				<li>Select the '<strong>Web</strong>' project as startup project.</li>
+				<li>Open your solution on Visual Studio 2017+.</li>
+				<li>Select the '<strong>Web.Mvc</strong>' project as startup project.</li>
 				<li><a href="https://github.com/mrahhal/Migrator.EF6" target="_blank">Migrator.EF</a> tool is used for adding/applying EntityFramework migrations. In order to create your database, open command prompt and move to root folder of EntityFramework project in your solution. Then run "<strong>dotnet ef database update</strong>" command."</li>
 				<li>Run the application. User name is '<strong>admin</strong>' and password is '<strong>123qwe</strong>' as default.</li>
 			</ul>
 
 			<p>In this template, <strong>multi-tenancy is enabled by default</strong>. You 
 	can disable it in Core project's module class if you don't need.</p>
-
+			<div class="bs-callout bs-callout-warning">
+				<p>If you have problems with running the application, please try 
+				close and open your Visual Studio again. It sometimes fail on 
+				first package restore.</p>
+			</div>
 			<h3>Social Logins</h3>
 			<p>Startup template supports <strong>Facebook</strong>, <strong>Twitter</strong>, <strong>Google+ </strong> and <strong>Microsoft</strong> logins. In the web.config, you can see the 
 	following settings in appsettings.json:</p>
@@ -66,13 +70,19 @@
 			<p>Here, <strong>Postman</strong> (chrome extension) will be used to demonstrate 
 	requests and responses.</p>
 			<h4>Authentication</h4>
-			<p>Just send a <strong>POST</strong> request to <strong>http://localhost:62114/jwt-token/authenticate</strong> with <strong>Context-Type="application/x-www-form-urlencoded"</strong> header as shown below:</p>
+			<p>Just send a <strong>POST</strong> request to <strong>http://localhost:62114/api/TokenAuth/Authenticate</strong> with <strong>Context-Type="application/json"</strong> header as shown below:</p>
 			<p>
-				<img class="img-thumbnail" alt="Request for token" src="../images/jwt-token-authenticate.png" />
+				<img class="img-thumbnail" alt="Request for token" src="../images/aspnet-core-token-auth.png" />
 			</p>
-			<p>We sent form values <strong>tenancyName</strong>, <strong>usernameOrEmailAddress
-			</strong>and <strong>password</strong>. tenancyName should not be sent in order to authenticate as a 
-			<strong>host </strong>user. As seen above, result property of returning JSON contains the token and expire time (which is 24 hours by default and can be configured). We can save it and use for next requests.</p>
+			<p>We sent values <strong>usernameOrEmailAddress
+            </strong>and <strong>password</strong>. As seen above, result property of returning JSON contains the token and expire time (which is 24 hours by default and can be configured). We can save it and use for next requests.</p>
+			<div class="bs-callout bs-callout-warning">
+				<p><strong>About Multi Tenancy<br>
+				</strong>API will work as host users by default. You can send
+				<strong>Abp.TenantId</strong> header value to work with a 
+				specified tenant. It's an integer value and 1 for default tenant 
+				by default.</p>
+			</div>
 			<h4>Use API</h4>
 			<p>After authenticate and get the <strong>token</strong>, we can use it to call any <strong>authorized</strong> 
 	action. All <strong>application services </strong>are available to be used remotely. For 
@@ -80,7 +90,7 @@
 			<p>
 				<img class="img-thumbnail" alt="Authorization via token" src="../images/jwt-token-request.png" />
 			</p>
-			<p>Just made a <strong>GET</strong> request to <strong>http://localhost:6234/api/services/app/user/GetUsers</strong> with <strong>
+			<p>Just made a <strong>GET</strong> request to <strong>http://localhost:62114/api/services/app/user/GetUsers</strong> with <strong>
 	Content-Type="application/json"</strong> and <strong>Authorization="Bearer <em>
 	your-</em>
 				</strong>
@@ -97,19 +107,23 @@
 You can run this application to create/migrate host and tenant databases.</p>
 <p>
 <img class="img-thumbnail" alt="Database Migrator" height="230" src="../images/database-migrator.png" width="659" /></p>
-<p>This application gets host connection string from it's <strong>own .config 
-file</strong>. It will be same in the web.config at the beggining. Be sure that 
-the connection string in config file is the database you want. After getting
-<strong class="auto-style2">host </strong><strong>connection sring</strong>, it 
-first creates the host database or apply migrations if it does already exists. 
-Then it gets connection strings of tenant databases and runs migrations for 
-those databases. It skips a tenant if it has not a dedicated database or it's 
-database is already migrated for another tenant (for shared databases between 
-multiple tenants).</p>
+<p>This application gets host connection string from it's <strong>own 
+		 appsettings.json 
+            file</strong>. It will be same in the appsettings.json in the 
+		 .Web.Host project at the beggining. Be sure that 
+            the connection string in config file is the database you want. After getting
+            <strong class="auto-style2">host </strong><strong>connection sring</strong>, it 
+            first creates the host database or apply migrations if it does already exists. 
+            Then it gets connection strings of tenant databases and runs migrations for 
+            those databases. It skips a tenant if it has not a dedicated database or it's 
+            database is already migrated for another tenant (for shared databases between 
+            multiple tenants).
+         </p>
 			<p>You can use this tool on development or on product environment to 
-			migrate databases on deployment, instead of EntityFramework's own 
-			Migrate.exe (which requires some configuration and can work for 
-			single database in one run).</p>
+            migrate databases on deployment, instead of EntityFramework's own 
+            tooling (which requires some configuration and can work for 
+            single database/tenant in one run).
+         </p>
 			<h3>Unit Testing</h3>
 			<p>Startup template includes test infrastructure setup and a few tests under 
 	the .Test project. You can check them and write similar tests easily. 
