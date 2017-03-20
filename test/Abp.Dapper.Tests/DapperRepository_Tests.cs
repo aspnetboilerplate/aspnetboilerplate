@@ -121,7 +121,7 @@ namespace Abp.Dapper.Tests
                     Product productWithTenantId3FromDapperInsideTenantScope = _productDapperRepository.FirstOrDefault(x => x.Name == "ProductWithTenant3");
                     productWithTenantId3FromDapperInsideTenantScope.ShouldNotBeNull();
                 }
-
+               
                 uow.Complete();
             }
         }

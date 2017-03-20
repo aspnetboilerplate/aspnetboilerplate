@@ -149,7 +149,7 @@ namespace Abp.Dapper.Repositories
         /// <param name="ascending">if set to <c>true</c> [ascending].</param>
         /// <returns></returns>
         [NotNull]
-        Task<IEnumerable<TEntity>> GetListPagedAsync([NotNull] Expression<Func<TEntity, bool>> predicate, int pageNumber, int itemsPerPage, bool ascending = true, [NotNull] params Expression<Func<TEntity, object>>[] sortingExpression);
+        Task<IEnumerable<TEntity>> GetAllPagedAsync([NotNull] Expression<Func<TEntity, bool>> predicate, int pageNumber, int itemsPerPage, bool ascending = true, [NotNull] params Expression<Func<TEntity, object>>[] sortingExpression);
 
         /// <summary>
         ///     Gets the list paged.
