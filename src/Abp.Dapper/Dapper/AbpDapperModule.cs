@@ -35,16 +35,6 @@ namespace Abp.Dapper
         {
             IocManager.RegisterAssemblyByConvention(Assembly.GetExecutingAssembly());
 
-            //IocManager.Register<IDapperQueryFilter, MayHaveTenantDapperQueryFilter>(DependencyLifeStyle.Transient);
-            //IocManager.Register<IDapperQueryFilter, MustHaveTenantDapperQueryFilter>(DependencyLifeStyle.Transient);
-            //IocManager.Register<IDapperQueryFilter, SoftDeleteDapperQueryFilter>(DependencyLifeStyle.Transient);
-            //IocManager.Register<IDapperQueryFilterExecuter, DapperQueryFilterExecuter>(DependencyLifeStyle.Transient);
-
-            //IocManager.Register<IDapperActionFilter, CreationAuditDapperActionFilter>(DependencyLifeStyle.Transient);
-            //IocManager.Register<IDapperActionFilter, ModificationAuditDapperActionFilter>(DependencyLifeStyle.Transient);
-            //IocManager.Register<IDapperActionFilter, DeletionAuditDapperActionFilter>(DependencyLifeStyle.Transient);
-            //IocManager.Register<IDapperActionFilterExecuter, DapperActionFilterExecuter>(DependencyLifeStyle.Transient);
-
             RegisterDapperGenericRepositories();
         }
 
