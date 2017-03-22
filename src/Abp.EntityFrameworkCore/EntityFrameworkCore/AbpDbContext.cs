@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations.Schema;
+using System.Data;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
@@ -135,18 +136,32 @@ namespace Abp.EntityFrameworkCore
 
         public override int SaveChanges()
         {
-            var changeReport = ApplyAbpConcepts();
-            var result = base.SaveChanges();
-            EntityChangeEventHelper.TriggerEvents(changeReport);
-            return result;
+            try
+            {
+                var changeReport = ApplyAbpConcepts();
+                var result = base.SaveChanges();
+                EntityChangeEventHelper.TriggerEvents(changeReport);
+                return result;
+            }
+            catch (DbUpdateConcurrencyException ex)
+            {
+                throw new AbpDbConcurrencyException(ex.Message, ex);
+            }
         }
 
         public override async Task<int> SaveChangesAsync(CancellationToken cancellationToken = default(CancellationToken))
         {
-            var changeReport = ApplyAbpConcepts();
-            var result = await base.SaveChangesAsync(cancellationToken);
-            await EntityChangeEventHelper.TriggerEventsAsync(changeReport);
-            return result;
+            try
+            {
+                var changeReport = ApplyAbpConcepts();
+                var result = await base.SaveChangesAsync(cancellationToken);
+                await EntityChangeEventHelper.TriggerEventsAsync(changeReport);
+                return result;
+            }
+            catch (DbUpdateConcurrencyException ex)
+            {
+                throw new AbpDbConcurrencyException(ex.Message, ex);
+            }
         }
 
         protected virtual EntityChangeReport ApplyAbpConcepts()
