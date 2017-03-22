@@ -45,8 +45,6 @@ namespace Abp
             IocManager.Register<IScopedIocResolver, ScopedIocResolver>(DependencyLifeStyle.Transient);
             IocManager.Register(typeof(IAmbientScopeProvider<>), typeof(DataContextAmbientScopeProvider<>), DependencyLifeStyle.Transient);
 
-            InitializeInterceptors();
-
             AddAuditingSelectors();
             AddLocalizationSources();
             AddSettingProviders();
@@ -96,14 +94,6 @@ namespace Abp
             {
                 IocManager.Resolve<IBackgroundWorkerManager>().StopAndWaitToStop();
             }
-        }
-
-        private void InitializeInterceptors()
-        {
-            ValidationInterceptorRegistrar.Initialize(IocManager);
-            AuditingInterceptorRegistrar.Initialize(IocManager);
-            UnitOfWorkRegistrar.Initialize(IocManager);
-            AuthorizationInterceptorRegistrar.Initialize(IocManager);
         }
 
         private void AddUnitOfWorkFilters()

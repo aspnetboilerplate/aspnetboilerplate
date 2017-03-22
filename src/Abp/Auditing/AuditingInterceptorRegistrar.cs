@@ -9,9 +9,15 @@ namespace Abp.Auditing
     {
         public static void Initialize(IIocManager iocManager)
         {
-            var auditingConfiguration = iocManager.Resolve<IAuditingConfiguration>();
             iocManager.IocContainer.Kernel.ComponentRegistered += (key, handler) =>
             {
+                if (!iocManager.IsRegistered<IAuditingConfiguration>())
+                {
+                    return;
+                }
+
+                var auditingConfiguration = iocManager.Resolve<IAuditingConfiguration>();
+
                 if (ShouldIntercept(auditingConfiguration, handler.ComponentModel.Implementation))
                 {
                     handler.ComponentModel.Interceptors.Add(new InterceptorReference(typeof(AuditingInterceptor)));
