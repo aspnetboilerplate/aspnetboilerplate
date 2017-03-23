@@ -2,6 +2,7 @@ using System.Collections.Generic;
 using System.Configuration;
 using System.Threading.Tasks;
 using Abp.Logging;
+using Abp.Threading;
 
 namespace Abp.Configuration
 {
@@ -15,9 +16,7 @@ namespace Abp.Configuration
         /// <summary>
         /// Gets singleton instance.
         /// </summary>
-        public static DefaultConfigSettingStore Instance { get { return SingletonInstance; } }
-        private static readonly DefaultConfigSettingStore SingletonInstance = new DefaultConfigSettingStore();
-
+        public static DefaultConfigSettingStore Instance { get; } = new DefaultConfigSettingStore();
         private DefaultConfigSettingStore()
         {
         }
@@ -33,32 +32,26 @@ namespace Abp.Configuration
 
             return Task.FromResult(new SettingInfo(tenantId, userId, name, value));
         }
-#pragma warning disable 1998
         /// <inheritdoc/>
-        public async Task DeleteAsync(SettingInfo setting)
+        public Task DeleteAsync(SettingInfo setting)
         {
-            //TODO: Call should be async and use await
             LogHelper.Logger.Warn("ISettingStore is not implemented, using DefaultConfigSettingStore which does not support DeleteAsync.");
+            return AbpTaskCache.CompletedTask;
         }
-        #pragma warning restore 1998
 
-        #pragma warning disable 1998
         /// <inheritdoc/>
-        public async Task CreateAsync(SettingInfo setting)
+        public Task CreateAsync(SettingInfo setting)
         {
-            //TODO: Call should be async and use await
             LogHelper.Logger.Warn("ISettingStore is not implemented, using DefaultConfigSettingStore which does not support CreateAsync.");
+            return AbpTaskCache.CompletedTask;
         }
-        #pragma warning restore 1998
 
-        #pragma warning disable 1998
         /// <inheritdoc/>
-        public async Task UpdateAsync(SettingInfo setting)
+        public Task UpdateAsync(SettingInfo setting)
         {
-            //TODO: Call should be async and use await
             LogHelper.Logger.Warn("ISettingStore is not implemented, using DefaultConfigSettingStore which does not support UpdateAsync.");
+            return AbpTaskCache.CompletedTask;
         }
-        #pragma warning restore 1998
 
         /// <inheritdoc/>
         public Task<List<SettingInfo>> GetAllListAsync(int? tenantId, long? userId)
