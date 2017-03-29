@@ -110,31 +110,31 @@ namespace Abp.Web.Api.ProxyScripting.Generators
 
         public static string GetConventionalVerbForMethodName(string methodName)
         {
-            if (methodName.StartsWith("Get", StringComparison.InvariantCultureIgnoreCase))
+            if (methodName.StartsWith("Get", StringComparison.OrdinalIgnoreCase))
             {
                 return "GET";
             }
 
-            if (methodName.StartsWith("Put", StringComparison.InvariantCultureIgnoreCase) ||
-                methodName.StartsWith("Update", StringComparison.InvariantCultureIgnoreCase))
+            if (methodName.StartsWith("Put", StringComparison.OrdinalIgnoreCase) ||
+                methodName.StartsWith("Update", StringComparison.OrdinalIgnoreCase))
             {
                 return "PUT";
             }
 
-            if (methodName.StartsWith("Delete", StringComparison.InvariantCultureIgnoreCase) ||
-                methodName.StartsWith("Remove", StringComparison.InvariantCultureIgnoreCase))
+            if (methodName.StartsWith("Delete", StringComparison.OrdinalIgnoreCase) ||
+                methodName.StartsWith("Remove", StringComparison.OrdinalIgnoreCase))
             {
                 return "DELETE";
             }
 
-            if (methodName.StartsWith("Patch", StringComparison.InvariantCultureIgnoreCase))
+            if (methodName.StartsWith("Patch", StringComparison.OrdinalIgnoreCase))
             {
                 return "PATCH";
             }
 
-            if (methodName.StartsWith("Post", StringComparison.InvariantCultureIgnoreCase) ||
-                methodName.StartsWith("Create", StringComparison.InvariantCultureIgnoreCase) ||
-                methodName.StartsWith("Insert", StringComparison.InvariantCultureIgnoreCase))
+            if (methodName.StartsWith("Post", StringComparison.OrdinalIgnoreCase) ||
+                methodName.StartsWith("Create", StringComparison.OrdinalIgnoreCase) ||
+                methodName.StartsWith("Insert", StringComparison.OrdinalIgnoreCase))
             {
                 return "POST";
             }

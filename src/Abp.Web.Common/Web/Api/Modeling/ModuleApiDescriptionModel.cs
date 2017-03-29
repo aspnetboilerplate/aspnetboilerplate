@@ -5,7 +5,9 @@ using Abp.Collections.Extensions;
 
 namespace Abp.Web.Api.Modeling
 {
+#if NET46
     [Serializable]
+#endif
     public class ModuleApiDescriptionModel
     {
         public string Name { get; set; }

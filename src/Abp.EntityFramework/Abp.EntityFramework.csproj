@@ -19,8 +19,8 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <None Update="bin\Release\net452\Abp.EntityFramework.pdb">
-      <PackagePath>lib/net452/</PackagePath>
+    <None Update="bin\Release\net46\Abp.EntityFramework.pdb">
+      <PackagePath>lib/net46/</PackagePath>
       <Pack>true</Pack>
     </None>
   </ItemGroup>

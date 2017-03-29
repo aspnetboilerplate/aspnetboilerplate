@@ -2,7 +2,9 @@
 
 namespace Abp.Web.Api.Modeling
 {
+#if NET46
     [Serializable]
+#endif
     public class ParameterApiDescriptionModel
     {
         public string NameOnMethod { get; }

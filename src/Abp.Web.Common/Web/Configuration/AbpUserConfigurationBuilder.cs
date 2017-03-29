@@ -16,6 +16,7 @@ using Abp.Web.Security.AntiForgery;
 using System.Linq;
 using Abp.Dependency;
 using Abp.Extensions;
+using System.Globalization;
 
 namespace Abp.Web.Configuration
 {
@@ -101,7 +102,7 @@ namespace Abp.Web.Configuration
 
         private AbpUserLocalizationConfigDto GetUserLocalizationConfig()
         {
-            var currentCulture = Thread.CurrentThread.CurrentUICulture;
+            var currentCulture = CultureInfo.CurrentUICulture;
             var languages = _languageManager.GetLanguages();
 
             var config = new AbpUserLocalizationConfigDto

@@ -29,7 +29,7 @@ namespace Abp.Web.Localization
         /// <inheritdoc/>
         public string GetScript()
         {
-            return GetScript(Thread.CurrentThread.CurrentUICulture);
+            return GetScript(CultureInfo.CurrentUICulture);
         }
 
         /// <inheritdoc/>
