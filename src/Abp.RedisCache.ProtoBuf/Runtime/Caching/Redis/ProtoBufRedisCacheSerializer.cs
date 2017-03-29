@@ -1,5 +1,6 @@
 ﻿using System;
 using System.IO;
+using System.Reflection;
 using ProtoBuf;
 using StackExchange.Redis;
 
@@ -25,7 +26,7 @@ namespace Abp.Runtime.Caching.Redis
             }
 
             serializedObj = serializedObj.Substring(ProtoBufPrefix.Length);
-            var typeSeperatorIndex = serializedObj.IndexOf(TypeSeperator, StringComparison.InvariantCultureIgnoreCase);
+            var typeSeperatorIndex = serializedObj.IndexOf(TypeSeperator, StringComparison.OrdinalIgnoreCase);
             var type = Type.GetType(serializedObj.Substring(0, typeSeperatorIndex));
             var serialized = serializedObj.Substring(typeSeperatorIndex + 1);
             var byteAfter64 = Convert.FromBase64String(serialized);
@@ -45,7 +46,7 @@ namespace Abp.Runtime.Caching.Redis
         /// <seealso cref="IRedisCacheSerializer.Deserialize" />
         public override string Serialize(object value, Type type)
         {
-            if (!type.IsDefined(typeof(ProtoContractAttribute), false))
+            if (!type.GetTypeInfo().IsDefined(typeof(ProtoContractAttribute), false))
             {
                 return base.Serialize(value, type);
             }
@@ -53,7 +54,8 @@ namespace Abp.Runtime.Caching.Redis
             using (var memoryStream = new MemoryStream())
             {
                 Serializer.Serialize(memoryStream, value);
-                var serialized = Convert.ToBase64String(memoryStream.GetBuffer(), 0, (int)memoryStream.Length);
+                var byteArray = memoryStream.ToArray();
+                var serialized = Convert.ToBase64String(byteArray, 0, byteArray.Length);
                 return $"{ProtoBufPrefix}{type.AssemblyQualifiedName}{TypeSeperator}{serialized}";
             }
         }
