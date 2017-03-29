@@ -66,9 +66,12 @@ namespace Abp.AutoMapper
         private void FindAndAutoMapTypes(IMapperConfigurationExpression configuration)
         {
             var types = _typeFinder.Find(type =>
-                    type.IsDefined(typeof(AutoMapAttribute)) ||
-                    type.IsDefined(typeof(AutoMapFromAttribute)) ||
-                    type.IsDefined(typeof(AutoMapToAttribute))
+                {
+                    var typeInfo = type.GetTypeInfo();
+                    return typeInfo.IsDefined(typeof(AutoMapAttribute)) ||
+                           typeInfo.IsDefined(typeof(AutoMapFromAttribute)) ||
+                           typeInfo.IsDefined(typeof(AutoMapToAttribute));
+                }
             );
 
             Logger.DebugFormat("Found {0} classes define auto mapping attributes", types.Length);
