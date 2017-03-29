@@ -8,7 +8,9 @@ namespace Abp.RealTime
     /// <summary>
     /// Implements <see cref="IOnlineClient"/>.
     /// </summary>
+#if NET46
     [Serializable]
+#endif
     public class OnlineClient : IOnlineClient
     {
         /// <summary>
@@ -55,7 +57,7 @@ namespace Abp.RealTime
             {
                 if (value == null)
                 {
-                    throw new ArgumentNullException("value");
+                    throw new ArgumentNullException(nameof(value));
                 }
 
                 _properties = value;

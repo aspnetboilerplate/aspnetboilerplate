@@ -6,7 +6,9 @@ namespace Abp.Events.Bus.Entities
     /// This type of event can be used to notify just after update of an Entity.
     /// </summary>
     /// <typeparam name="TEntity">Entity type</typeparam>
+#if NET46
     [Serializable]
+#endif
     public class EntityUpdatedEventData<TEntity> : EntityChangedEventData<TEntity>
     {
         /// <summary>

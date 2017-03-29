@@ -31,7 +31,7 @@ namespace Abp.Web.Tests.Navigation
         {
             return new TestAbpSession(
                 new MultiTenancyConfig { IsEnabled = true },
-                new DataContextAmbientScopeProvider<SessionOverride>(new CallContextAmbientDataContext()),
+                new DataContextAmbientScopeProvider<SessionOverride>(new AsyncLocalAmbientDataContext()),
                 Substitute.For<ITenantResolver>()
             );
         }

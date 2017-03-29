@@ -5,7 +5,9 @@ namespace Abp.Application.Services.Dto
     /// <summary>
     /// A shortcut of <see cref="EntityDto{TPrimaryKey}"/> for most used primary key type (<see cref="int"/>).
     /// </summary>
+#if NET46
     [Serializable]
+#endif
     public class EntityDto : EntityDto<int>, IEntityDto
     {
         /// <summary>
@@ -30,7 +32,9 @@ namespace Abp.Application.Services.Dto
     /// Implements common properties for entity based DTOs.
     /// </summary>
     /// <typeparam name="TPrimaryKey">Type of the primary key</typeparam>
+#if NET46
     [Serializable]
+#endif
     public class EntityDto<TPrimaryKey> : IEntityDto<TPrimaryKey>
     {
         /// <summary>

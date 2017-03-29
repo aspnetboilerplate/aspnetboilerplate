@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Reflection;
 using Abp.Extensions;
 
 namespace Abp.Domain.Entities
@@ -7,7 +8,9 @@ namespace Abp.Domain.Entities
     /// <summary>
     /// A shortcut of <see cref="Entity{TPrimaryKey}"/> for most used primary key type (<see cref="int"/>).
     /// </summary>
+#if NET46
     [Serializable]
+#endif
     public abstract class Entity : Entity<int>, IEntity
     {
 
@@ -18,7 +21,9 @@ namespace Abp.Domain.Entities
     /// An entity can inherit this class of directly implement to IEntity interface.
     /// </summary>
     /// <typeparam name="TPrimaryKey">Type of the primary key of the entity</typeparam>
+#if NET46
     [Serializable]
+#endif
     public abstract class Entity<TPrimaryKey> : IEntity<TPrimaryKey>
     {
         /// <summary>
@@ -75,7 +80,7 @@ namespace Abp.Domain.Entities
             //Must have a IS-A relation of types or must be same type
             var typeOfThis = GetType();
             var typeOfOther = other.GetType();
-            if (!typeOfThis.IsAssignableFrom(typeOfOther) && !typeOfOther.IsAssignableFrom(typeOfThis))
+            if (!typeOfThis.GetTypeInfo().IsAssignableFrom(typeOfOther) && !typeOfOther.GetTypeInfo().IsAssignableFrom(typeOfThis))
             {
                 return false;
             }

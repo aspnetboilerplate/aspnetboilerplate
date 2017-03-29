@@ -7,14 +7,16 @@ using Abp.Runtime.Validation;
 
 namespace Abp.UI.Inputs
 {
+#if NET46
     [Serializable]
+#endif
     public abstract class InputTypeBase : IInputType
     {
         public virtual string Name
         {
             get
             {
-                var type = GetType();
+                var type = GetType().GetTypeInfo();
                 if (type.IsDefined(typeof(InputTypeAttribute)))
                 {
                     return type.GetCustomAttributes(typeof(InputTypeAttribute)).Cast<InputTypeAttribute>().First().Name;

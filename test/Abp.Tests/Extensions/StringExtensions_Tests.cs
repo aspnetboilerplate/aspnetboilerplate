@@ -2,6 +2,7 @@
 using System.Globalization;
 using System.Linq;
 using Abp.Extensions;
+using Abp.Localization;
 using Shouldly;
 using Xunit;
 
@@ -67,7 +68,12 @@ namespace Abp.Tests.Extensions
         {
             (null as string).ToSentenceCase().ShouldBe(null);
             "HelloWorld".ToSentenceCase().ShouldBe("Hello world");
-            "HelloIsparta".ToSentenceCase().ShouldBe("Hello isparta");
+
+            using (CultureHelper.Use("en-US"))
+            {
+                "HelloIsparta".ToSentenceCase().ShouldBe("Hello isparta");
+            }
+
             "HelloIsparta".ToSentenceCase(new CultureInfo("tr-TR")).ShouldBe("Hello ısparta");
         }
 

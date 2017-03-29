@@ -6,7 +6,9 @@ namespace Abp
     /// <summary>
     /// Base exception type for those are thrown by Abp system for Abp specific exceptions.
     /// </summary>
+#if NET46
     [Serializable]
+#endif
     public class AbpException : Exception
     {
         /// <summary>
@@ -17,6 +19,7 @@ namespace Abp
 
         }
 
+#if NET46
         /// <summary>
         /// Creates a new <see cref="AbpException"/> object.
         /// </summary>
@@ -25,6 +28,7 @@ namespace Abp
         {
 
         }
+#endif
 
         /// <summary>
         /// Creates a new <see cref="AbpException"/> object.

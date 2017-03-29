@@ -7,7 +7,9 @@ namespace Abp.Application.Services.Dto
     /// to pass an nullable Id value to an application service method.
     /// </summary>
     /// <typeparam name="TId">Type of the Id</typeparam>
+#if NET46
     [Serializable]
+#endif
     public class NullableIdDto<TId>
         where TId : struct
     {
@@ -27,7 +29,9 @@ namespace Abp.Application.Services.Dto
     /// <summary>
     /// A shortcut of <see cref="NullableIdDto{TId}"/> for <see cref="int"/>.
     /// </summary>
+#if NET46
     [Serializable]
+#endif
     public class NullableIdDto : NullableIdDto<int>
     {
         public NullableIdDto()

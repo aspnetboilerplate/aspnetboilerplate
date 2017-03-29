@@ -6,14 +6,16 @@ using Abp.Collections.Extensions;
 
 namespace Abp.Runtime.Validation
 {
+#if NET46
     [Serializable]
+#endif
     public abstract class ValueValidatorBase : IValueValidator
     {
         public virtual string Name
         {
             get
             {
-                var type = GetType();
+                var type = GetType().GetTypeInfo();
                 if (type.IsDefined(typeof(ValidatorAttribute)))
                 {
                     return type.GetCustomAttributes(typeof(ValidatorAttribute)).Cast<ValidatorAttribute>().First().Name;

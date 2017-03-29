@@ -3,7 +3,9 @@ using System.Runtime.Serialization;
 
 namespace Abp.Domain.Uow
 {
+#if NET46
     [Serializable]
+#endif
     public class AbpDbConcurrencyException : AbpException
     {
         /// <summary>
@@ -14,6 +16,7 @@ namespace Abp.Domain.Uow
 
         }
 
+#if NET46
         /// <summary>
         /// Creates a new <see cref="AbpException"/> object.
         /// </summary>
@@ -22,6 +25,7 @@ namespace Abp.Domain.Uow
         {
 
         }
+#endif
 
         /// <summary>
         /// Creates a new <see cref="AbpDbConcurrencyException"/> object.

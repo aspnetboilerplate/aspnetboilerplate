@@ -8,7 +8,9 @@ namespace Abp.Notifications
     /// <summary>
     /// Represents a published notification for a tenant/user.
     /// </summary>
+#if NET46
     [Serializable]
+#endif
     public class TenantNotification : EntityDto<Guid>, IHasCreationTime
     {
         /// <summary>

@@ -6,7 +6,9 @@ namespace Abp.Events.Bus
     /// <summary>
     /// Implements <see cref="IEventData"/> and provides a base for event data classes.
     /// </summary>
+#if NET46
     [Serializable]
+#endif
     public abstract class EventData : IEventData
     {
         /// <summary>

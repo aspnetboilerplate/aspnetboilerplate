@@ -701,6 +701,8 @@ For terms of use, see http://www.unicode.org/copyright.html
       <mapZone other="Norfolk Standard Time" territory="001" type="Pacific/Norfolk"/>
       <mapZone other="Chatham Islands Standard Time" territory="001" type="Pacific/Chatham"/>
       <mapZone other="Omsk Standard Time" territory="001" type="Asia/Omsk"/>
+      <mapZone other="Saratov Standard Time" territory="001" type="Europe/Saratov"/>
+      <mapZone other="UTC+13" territory="001" type="Etc/GMT-13"/>
     </mapTimezones>
   </windowsZones>
 </supplementalData>

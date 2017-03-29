@@ -14,7 +14,7 @@ namespace Abp.Localization
 
             try
             {
-                CultureInfo.GetCultureInfo(cultureCode);
+                new CultureInfo(cultureCode); //TODO: Do not create a new object! How?
                 return true;
             }
             catch (CultureNotFoundException)

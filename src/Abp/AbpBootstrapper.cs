@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Reflection;
 using Abp.Auditing;
 using Abp.Authorization;
 using Abp.Configuration.Startup;
@@ -64,7 +65,7 @@ namespace Abp
             Check.NotNull(startupModule, nameof(startupModule));
             Check.NotNull(iocManager, nameof(iocManager));
 
-            if (!typeof(AbpModule).IsAssignableFrom(startupModule))
+            if (!typeof(AbpModule).GetTypeInfo().IsAssignableFrom(startupModule))
             {
                 throw new ArgumentException($"{nameof(startupModule)} should be derived from {nameof(AbpModule)}.");
             }

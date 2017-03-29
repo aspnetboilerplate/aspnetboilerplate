@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Linq;
+using System.Reflection;
 using Abp.Dependency;
 using Castle.Core;
 
@@ -32,7 +33,7 @@ namespace Abp.Auditing
                 return true;
             }
 
-            if (type.IsDefined(typeof(AuditedAttribute), true))
+            if (type.GetTypeInfo().IsDefined(typeof(AuditedAttribute), true))
             {
                 return true;
             }

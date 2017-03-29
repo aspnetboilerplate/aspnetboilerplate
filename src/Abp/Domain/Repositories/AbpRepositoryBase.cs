@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
+using System.Reflection;
 using System.Threading.Tasks;
 using Abp.Dependency;
 using Abp.Domain.Entities;
@@ -270,7 +271,7 @@ namespace Abp.Domain.Repositories
         {
             var tenantId = UnitOfWorkManager?.Current?.GetTenantId();
 
-            if (typeof(IMustHaveTenant).IsAssignableFrom(typeof(TEntity)))
+            if (typeof(IMustHaveTenant).GetTypeInfo().IsAssignableFrom(typeof(TEntity)))
             {
                 if (UnitOfWorkManager?.Current == null || UnitOfWorkManager.Current.IsFilterEnabled(AbpDataFilters.MustHaveTenant))
                 {
@@ -278,7 +279,7 @@ namespace Abp.Domain.Repositories
                 }
             }
 
-            if (typeof(IMayHaveTenant).IsAssignableFrom(typeof(TEntity)))
+            if (typeof(IMayHaveTenant).GetTypeInfo().IsAssignableFrom(typeof(TEntity)))
             {
                 if (UnitOfWorkManager?.Current == null || UnitOfWorkManager.Current.IsFilterEnabled(AbpDataFilters.MayHaveTenant))
                 {
@@ -291,7 +292,7 @@ namespace Abp.Domain.Repositories
 
         private IQueryable<TEntity> ApplySoftDeleteFilter(IQueryable<TEntity> query)
         {
-            if (typeof(ISoftDelete).IsAssignableFrom(typeof(TEntity)))
+            if (typeof(ISoftDelete).GetTypeInfo().IsAssignableFrom(typeof(TEntity)))
             {
                 if (UnitOfWorkManager?.Current == null || UnitOfWorkManager.Current.IsFilterEnabled(AbpDataFilters.SoftDelete))
                 {

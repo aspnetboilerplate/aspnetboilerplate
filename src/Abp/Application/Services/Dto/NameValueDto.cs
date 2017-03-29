@@ -5,7 +5,9 @@ namespace Abp.Application.Services.Dto
     /// <summary>
     /// Can be used to send/receive Name/Value (or Key/Value) pairs.
     /// </summary>
+#if NET46
     [Serializable]
+#endif
     public class NameValueDto : NameValueDto<string>
     {
         /// <summary>
@@ -39,7 +41,9 @@ namespace Abp.Application.Services.Dto
     /// <summary>
     /// Can be used to send/receive Name/Value (or Key/Value) pairs.
     /// </summary>
+#if NET46
     [Serializable]
+#endif
     public class NameValueDto<T> : NameValue<T>
     {
         /// <summary>

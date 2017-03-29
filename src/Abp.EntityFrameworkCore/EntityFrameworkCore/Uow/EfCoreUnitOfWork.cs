@@ -142,7 +142,10 @@ namespace Abp.EntityFrameworkCore.Uow
             }
             else
             {
-                GetAllActiveDbContexts().ForEach(Release);
+                foreach (var context in GetAllActiveDbContexts())
+                {
+                    Release(context);
+                }
             }
 
             ActiveDbContexts.Clear();

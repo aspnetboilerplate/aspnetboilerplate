@@ -5,14 +5,16 @@ using Abp.Extensions;
 
 namespace Abp.Runtime.Validation
 {
+#if NET46
     [Serializable]
+#endif
     [Validator("STRING")]
     public class StringValueValidator : ValueValidatorBase
     {
         public bool AllowNull
         {
             get { return (this["AllowNull"] ?? "false").To<bool>(); }
-            set { this["AllowNull"] = value.ToString().ToLower(CultureInfo.InvariantCulture); }
+            set { this["AllowNull"] = value.ToString().ToLowerInvariant(); }
         }
 
         public int MinLength

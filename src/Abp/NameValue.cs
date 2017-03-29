@@ -5,7 +5,9 @@ namespace Abp
     /// <summary>
     /// Can be used to store Name/Value (or Key/Value) pairs.
     /// </summary>
+#if NET46
     [Serializable]
+#endif
     public class NameValue : NameValue<string>
     {
         /// <summary>
@@ -29,7 +31,9 @@ namespace Abp
     /// <summary>
     /// Can be used to store Name/Value (or Key/Value) pairs.
     /// </summary>
+#if NET46
     [Serializable]
+#endif
     public class NameValue<T>
     {
         /// <summary>

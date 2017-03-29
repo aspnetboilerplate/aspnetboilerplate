@@ -6,7 +6,9 @@ namespace Abp.Localization
     /// <summary>
     /// A class that gets the same string on every localization.
     /// </summary>
+#if NET46
     [Serializable]
+#endif
     public class FixedLocalizableString : ILocalizableString
     {
         /// <summary>

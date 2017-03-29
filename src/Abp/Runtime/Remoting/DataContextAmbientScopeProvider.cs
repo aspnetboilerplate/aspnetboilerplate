@@ -1,16 +1,11 @@
 ﻿using System;
 using System.Collections.Concurrent;
 using Abp.Collections.Extensions;
-using Abp.Domain.Uow;
 using Castle.Core.Logging;
 using JetBrains.Annotations;
 
 namespace Abp.Runtime.Remoting
 {
-    /// <summary>
-    /// CallContext implementation of <see cref="ICurrentUnitOfWorkProvider"/>. 
-    /// This is the default implementation.
-    /// </summary>
     public class DataContextAmbientScopeProvider<T> : IAmbientScopeProvider<T>
     {
         public ILogger Logger { get; set; }
@@ -35,6 +30,7 @@ namespace Abp.Runtime.Remoting
             {
                 return default(T);
             }
+
             return item.Value;
         }
 
@@ -44,7 +40,7 @@ namespace Abp.Runtime.Remoting
 
             if (!ScopeDictionary.TryAdd(item.Id, item))
             {
-                throw new AbpException("Can not set unit of work! ScopeDictionary.TryAdd returns false!");
+                throw new AbpException("Can not add item! ScopeDictionary.TryAdd returns false!");
             }
 
             _dataContext.SetData(contextKey, item.Id);

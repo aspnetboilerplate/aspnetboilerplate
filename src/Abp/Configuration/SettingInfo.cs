@@ -5,7 +5,9 @@ namespace Abp.Configuration
     /// <summary>
     /// Represents a setting information.
     /// </summary>
+#if NET46
     [Serializable]
+#endif
     public class SettingInfo
     {
         /// <summary>

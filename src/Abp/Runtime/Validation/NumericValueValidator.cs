@@ -3,7 +3,9 @@ using Abp.Extensions;
 
 namespace Abp.Runtime.Validation
 {
+#if NET46
     [Serializable]
+#endif
     [Validator("NUMERIC")]
     public class NumericValueValidator : ValueValidatorBase
     {

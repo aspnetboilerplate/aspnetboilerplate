@@ -5,6 +5,10 @@ using System.Reflection;
 using Abp.Collections.Extensions;
 using Abp.Modules;
 
+#if !NET46
+using System.Runtime.Loader;
+#endif
+
 namespace Abp.PlugIns
 {
     //TODO: This class is similar to FolderPlugInSource. Create an abstract base class for them.
@@ -53,7 +57,13 @@ namespace Abp.PlugIns
 
         private List<Assembly> LoadAssemblies()
         {
-            return FilePaths.Select(Assembly.LoadFile).ToList();
+            return FilePaths.Select(
+#if NET46
+                Assembly.LoadFile
+#else
+                AssemblyLoadContext.Default.LoadFromAssemblyPath
+#endif
+                ).ToList();
         }
     }
 }

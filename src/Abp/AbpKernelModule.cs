@@ -21,6 +21,7 @@ using Abp.Modules;
 using Abp.MultiTenancy;
 using Abp.Net.Mail;
 using Abp.Notifications;
+using Abp.Reflection.Extensions;
 using Abp.Runtime;
 using Abp.Runtime.Caching;
 using Abp.Runtime.Remoting;
@@ -62,7 +63,7 @@ namespace Abp
 
             IocManager.IocContainer.Install(new EventBusInstaller(IocManager));
 
-            IocManager.RegisterAssemblyByConvention(Assembly.GetExecutingAssembly(),
+            IocManager.RegisterAssemblyByConvention(typeof(AbpKernelModule).GetAssembly(),
                 new ConventionalRegistrationConfig
                 {
                     InstallInstallers = false
@@ -127,7 +128,7 @@ namespace Abp
                 new DictionaryBasedLocalizationSource(
                     AbpConsts.LocalizationSourceName,
                     new XmlEmbeddedFileLocalizationDictionaryProvider(
-                        Assembly.GetExecutingAssembly(), "Abp.Localization.Sources.AbpXmlSource"
+                        typeof(AbpKernelModule).GetAssembly(), "Abp.Localization.Sources.AbpXmlSource"
                     )));
         }
 

@@ -5,7 +5,9 @@ namespace Abp.Notifications
     /// <summary>
     /// Arguments for <see cref="NotificationDistributionJob"/>.
     /// </summary>
+#if NET46
     [Serializable]
+#endif
     public class NotificationDistributionJobArgs
     {
         /// <summary>

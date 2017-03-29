@@ -6,7 +6,9 @@ namespace Abp.Notifications
     /// <summary>
     /// Represents a notification sent to a user.
     /// </summary>
+#if NET46
     [Serializable]
+#endif
     public class UserNotification : EntityDto<Guid>, IUserIdentifier
     {
         /// <summary>

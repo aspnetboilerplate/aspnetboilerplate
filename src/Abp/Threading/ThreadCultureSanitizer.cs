@@ -28,9 +28,15 @@ namespace Abp.Threading
                 return;
             }
 
+#if NET46
             var thread = Thread.CurrentThread;
-            thread.CurrentCulture = CultureInfo.GetCultureInfo(thread.CurrentCulture.Name);
-            thread.CurrentUICulture = CultureInfo.GetCultureInfo(thread.CurrentUICulture.Name);
+            CultureInfo.CurrentCulture = CultureInfo.GetCultureInfo(thread.CurrentCulture.Name);
+            CultureInfo.CurrentUICulture = CultureInfo.GetCultureInfo(thread.CurrentUICulture.Name);
+#else
+            //TODO: Creating new CultureInfo objects may not be an effective solution!
+            CultureInfo.CurrentCulture = new CultureInfo(CultureInfo.CurrentCulture.Name);
+            CultureInfo.CurrentUICulture = new CultureInfo(CultureInfo.CurrentUICulture.Name);
+#endif
         }
     }
 }

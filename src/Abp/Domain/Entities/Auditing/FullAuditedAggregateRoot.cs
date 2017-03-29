@@ -6,7 +6,9 @@ namespace Abp.Domain.Entities.Auditing
     /// <summary>
     /// A shortcut of <see cref="FullAuditedAggregateRoot{TPrimaryKey}"/> for most used primary key type (<see cref="int"/>).
     /// </summary>
+#if NET46
     [Serializable]
+#endif
     public abstract class FullAuditedAggregateRoot : FullAuditedAggregateRoot<int>
     {
 
@@ -16,7 +18,9 @@ namespace Abp.Domain.Entities.Auditing
     /// Implements <see cref="IFullAudited"/> to be a base class for full-audited aggregate roots.
     /// </summary>
     /// <typeparam name="TPrimaryKey">Type of the primary key of the entity</typeparam>
+#if NET46
     [Serializable]
+#endif
     public abstract class FullAuditedAggregateRoot<TPrimaryKey> : AuditedAggregateRoot<TPrimaryKey>, IFullAudited
     {
         /// <summary>
@@ -40,7 +44,9 @@ namespace Abp.Domain.Entities.Auditing
     /// </summary>
     /// <typeparam name="TPrimaryKey">Type of the primary key of the entity</typeparam>
     /// <typeparam name="TUser">Type of the user</typeparam>
+#if NET46
     [Serializable]
+#endif
     public abstract class FullAuditedAggregateRoot<TPrimaryKey, TUser> : AuditedAggregateRoot<TPrimaryKey, TUser>, IFullAudited<TUser>
         where TUser : IEntity<long>
     {

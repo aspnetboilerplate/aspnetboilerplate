@@ -6,7 +6,9 @@ namespace Abp.Domain.Entities
     /// Used to identify an entity.
     /// Can be used to store an entity <see cref="Type"/> and <see cref="Id"/>.
     /// </summary>
+#if NET46
     [Serializable]
+#endif
     public class EntityIdentifier
     {
         /// <summary>

@@ -3,7 +3,9 @@ using Abp.Runtime.Validation;
 
 namespace Abp.UI.Inputs
 {
+#if NET46
     [Serializable]
+#endif
     [InputType("CHECKBOX")]
     public class CheckboxInputType : InputTypeBase
     {

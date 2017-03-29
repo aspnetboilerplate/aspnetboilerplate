@@ -3,7 +3,9 @@ using Abp.Localization;
 
 namespace Abp.UI.Inputs
 {
+#if NET46
     [Serializable]
+#endif
     public class LocalizableComboboxItem : ILocalizableComboboxItem
     {
         public string Value { get; set; }

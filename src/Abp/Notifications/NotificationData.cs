@@ -9,7 +9,9 @@ namespace Abp.Notifications
     /// Used to store data for a notification.
     /// It can be directly used or can be derived.
     /// </summary>
+#if NET46
     [Serializable]
+#endif
     public class NotificationData
     {
         /// <summary>

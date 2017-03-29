@@ -5,14 +5,14 @@ using Xunit;
 
 namespace Abp.Tests.Runtime.Remoting
 {
-    public class CallContextAmbientScopeAccessor_Tests
+    public class DataContextAmbientScopeProvider_Tests
     {
         private const string ContextKey = "Abp.Tests.TestData";
 
         [Fact]
         public void Test_Sync()
         {
-            var scopeAccessor = new DataContextAmbientScopeProvider<TestData>(new CallContextAmbientDataContext());
+            var scopeAccessor = new DataContextAmbientScopeProvider<TestData>(new AsyncLocalAmbientDataContext());
 
             scopeAccessor.GetValue(ContextKey).ShouldBeNull();
 
@@ -34,7 +34,7 @@ namespace Abp.Tests.Runtime.Remoting
         [Fact]
         public async Task Test_Async()
         {
-            var scopeAccessor = new DataContextAmbientScopeProvider<TestData>(new CallContextAmbientDataContext());
+            var scopeAccessor = new DataContextAmbientScopeProvider<TestData>(new AsyncLocalAmbientDataContext());
 
             scopeAccessor.GetValue(ContextKey).ShouldBeNull();
 

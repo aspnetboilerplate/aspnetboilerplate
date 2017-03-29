@@ -4,7 +4,9 @@ using Abp.Reflection.Extensions;
 
 namespace Abp.Application.Services
 {
+#if NET46
     [Serializable]
+#endif
     [AttributeUsage(AttributeTargets.Interface | AttributeTargets.Class | AttributeTargets.Method)]
     public class RemoteServiceAttribute : Attribute
     {
@@ -46,25 +48,25 @@ namespace Abp.Application.Services
 
         public static bool IsExplicitlyEnabledFor(Type type)
         {
-            var remoteServiceAttr = type.GetSingleAttributeOrNull<RemoteServiceAttribute>();
+            var remoteServiceAttr = type.GetTypeInfo().GetSingleAttributeOrNull<RemoteServiceAttribute>();
             return remoteServiceAttr != null && remoteServiceAttr.IsEnabledFor(type);
         }
 
         public static bool IsExplicitlyDisabledFor(Type type)
         {
-            var remoteServiceAttr = type.GetSingleAttributeOrNull<RemoteServiceAttribute>();
+            var remoteServiceAttr = type.GetTypeInfo().GetSingleAttributeOrNull<RemoteServiceAttribute>();
             return remoteServiceAttr != null && !remoteServiceAttr.IsEnabledFor(type);
         }
 
         public static bool IsMetadataExplicitlyEnabledFor(Type type)
         {
-            var remoteServiceAttr = type.GetSingleAttributeOrNull<RemoteServiceAttribute>();
+            var remoteServiceAttr = type.GetTypeInfo().GetSingleAttributeOrNull<RemoteServiceAttribute>();
             return remoteServiceAttr != null && remoteServiceAttr.IsMetadataEnabledFor(type);
         }
 
         public static bool IsMetadataExplicitlyDisabledFor(Type type)
         {
-            var remoteServiceAttr = type.GetSingleAttributeOrNull<RemoteServiceAttribute>();
+            var remoteServiceAttr = type.GetTypeInfo().GetSingleAttributeOrNull<RemoteServiceAttribute>();
             return remoteServiceAttr != null && !remoteServiceAttr.IsMetadataEnabledFor(type);
         }
 

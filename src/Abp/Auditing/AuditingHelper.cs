@@ -75,12 +75,12 @@ namespace Abp.Auditing
             var classType = methodInfo.DeclaringType;
             if (classType != null)
             {
-                if (classType.IsDefined(typeof(AuditedAttribute), true))
+                if (classType.GetTypeInfo().IsDefined(typeof(AuditedAttribute), true))
                 {
                     return true;
                 }
 
-                if (classType.IsDefined(typeof(DisableAuditingAttribute), true))
+                if (classType.GetTypeInfo().IsDefined(typeof(DisableAuditingAttribute), true))
                 {
                     return false;
                 }

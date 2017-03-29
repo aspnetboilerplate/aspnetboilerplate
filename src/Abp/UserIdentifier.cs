@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Reflection;
 using Abp.Extensions;
 
 namespace Abp
@@ -6,7 +7,9 @@ namespace Abp
     /// <summary>
     /// Used to identify a user.
     /// </summary>
+#if NET46
     [Serializable]
+#endif
     public class UserIdentifier : IUserIdentifier
     {
         /// <summary>
@@ -108,7 +111,7 @@ namespace Abp
             //Must have a IS-A relation of types or must be same type
             var typeOfThis = GetType();
             var typeOfOther = other.GetType();
-            if (!typeOfThis.IsAssignableFrom(typeOfOther) && !typeOfOther.IsAssignableFrom(typeOfThis))
+            if (!typeOfThis.GetTypeInfo().IsAssignableFrom(typeOfOther) && !typeOfOther.GetTypeInfo().IsAssignableFrom(typeOfThis))
             {
                 return false;
             }
