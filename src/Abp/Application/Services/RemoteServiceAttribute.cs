@@ -4,9 +4,7 @@ using Abp.Reflection.Extensions;
 
 namespace Abp.Application.Services
 {
-#if NET46
     [Serializable]
-#endif
     [AttributeUsage(AttributeTargets.Interface | AttributeTargets.Class | AttributeTargets.Method)]
     public class RemoteServiceAttribute : Attribute
     {

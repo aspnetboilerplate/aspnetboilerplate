@@ -4,9 +4,7 @@ using JetBrains.Annotations;
 
 namespace Abp.BackgroundJobs
 {
-#if NET46
     [Serializable]
-#endif
     public class BackgroundJobException : AbpException
     {
         [CanBeNull]

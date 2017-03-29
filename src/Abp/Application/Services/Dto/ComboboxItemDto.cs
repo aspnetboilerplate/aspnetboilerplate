@@ -5,9 +5,7 @@ namespace Abp.Application.Services.Dto
     /// <summary>
     /// This DTO can be used as a simple item for a combobox/list.
     /// </summary>
-#if NET46
     [Serializable]
-#endif
     public class ComboboxItemDto
     {
         /// <summary>

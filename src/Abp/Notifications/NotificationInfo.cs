@@ -10,9 +10,7 @@ namespace Abp.Notifications
     /// Used to store a notification request.
     /// This notification is distributed to tenants and users by <see cref="INotificationDistributer"/>.
     /// </summary>
-#if NET46
     [Serializable]
-#endif
     [Table("AbpNotifications")]
     [MultiTenancySide(MultiTenancySides.Host)]
     public class NotificationInfo : CreationAuditedEntity<Guid>

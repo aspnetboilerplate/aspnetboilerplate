@@ -8,9 +8,7 @@ namespace Abp.RealTime
     /// <summary>
     /// Implements <see cref="IOnlineClient"/>.
     /// </summary>
-#if NET46
     [Serializable]
-#endif
     public class OnlineClient : IOnlineClient
     {
         /// <summary>

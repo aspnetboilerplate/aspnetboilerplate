@@ -6,9 +6,7 @@ namespace Abp
     /// <summary>
     /// This exception is thrown if a problem on ABP initialization progress.
     /// </summary>
-#if NET46
     [Serializable]
-#endif
     public class AbpInitializationException : AbpException
     {
         /// <summary>

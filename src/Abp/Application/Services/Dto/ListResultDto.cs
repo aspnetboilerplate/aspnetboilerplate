@@ -7,9 +7,7 @@ namespace Abp.Application.Services.Dto
     /// Implements <see cref="IListResult{T}"/>.
     /// </summary>
     /// <typeparam name="T">Type of the items in the <see cref="Items"/> list</typeparam>
-#if NET46
     [Serializable]
-#endif
     public class ListResultDto<T> : IListResult<T>
     {
         /// <summary>

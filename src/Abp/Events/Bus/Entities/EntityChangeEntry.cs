@@ -2,9 +2,7 @@ using System;
 
 namespace Abp.Events.Bus.Entities
 {
-#if NET46
     [Serializable]
-#endif
     public class EntityChangeEntry
     {
         public object Entity { get; set; }

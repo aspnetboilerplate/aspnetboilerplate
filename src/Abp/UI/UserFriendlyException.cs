@@ -7,9 +7,7 @@ namespace Abp.UI
     /// <summary>
     /// This exception type is directly shown to the user.
     /// </summary>
-#if NET46
     [Serializable]
-#endif
     public class UserFriendlyException : AbpException, IHasLogSeverity, IHasErrorCode
     {
         /// <summary>

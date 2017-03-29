@@ -7,9 +7,7 @@ namespace Abp.Application.Services.Dto
     /// Implements <see cref="IPagedResult{T}"/>.
     /// </summary>
     /// <typeparam name="T">Type of the items in the <see cref="ListResultDto{T}.Items"/> list</typeparam>
-#if NET46
     [Serializable]
-#endif
     public class PagedResultDto<T> : ListResultDto<T>, IPagedResult<T>
     {
         /// <summary>

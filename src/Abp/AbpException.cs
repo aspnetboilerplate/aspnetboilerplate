@@ -6,9 +6,7 @@ namespace Abp
     /// <summary>
     /// Base exception type for those are thrown by Abp system for Abp specific exceptions.
     /// </summary>
-#if NET46
     [Serializable]
-#endif
     public class AbpException : Exception
     {
         /// <summary>

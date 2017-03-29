@@ -6,9 +6,7 @@ namespace Abp.Domain.Entities.Auditing
     /// <summary>
     /// A shortcut of <see cref="AuditedEntity{TPrimaryKey}"/> for most used primary key type (<see cref="int"/>).
     /// </summary>
-#if NET46
     [Serializable]
-#endif
     public abstract class AuditedEntity : AuditedEntity<int>, IEntity
     {
 
@@ -18,9 +16,7 @@ namespace Abp.Domain.Entities.Auditing
     /// This class can be used to simplify implementing <see cref="IAudited"/>.
     /// </summary>
     /// <typeparam name="TPrimaryKey">Type of the primary key of the entity</typeparam>
-#if NET46
     [Serializable]
-#endif
     public abstract class AuditedEntity<TPrimaryKey> : CreationAuditedEntity<TPrimaryKey>, IAudited
     {
         /// <summary>
@@ -39,9 +35,7 @@ namespace Abp.Domain.Entities.Auditing
     /// </summary>
     /// <typeparam name="TPrimaryKey">Type of the primary key of the entity</typeparam>
     /// <typeparam name="TUser">Type of the user</typeparam>
-#if NET46
     [Serializable]
-#endif
     public abstract class AuditedEntity<TPrimaryKey, TUser> : AuditedEntity<TPrimaryKey>, IAudited<TUser>
         where TUser : IEntity<long>
     {

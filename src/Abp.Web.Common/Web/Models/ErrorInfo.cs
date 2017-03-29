@@ -5,9 +5,7 @@ namespace Abp.Web.Models
     /// <summary>
     /// Used to store information about an error.
     /// </summary>
-#if NET46
     [Serializable]
-#endif
     public class ErrorInfo
     {
         /// <summary>

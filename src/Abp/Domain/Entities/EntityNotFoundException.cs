@@ -6,9 +6,7 @@ namespace Abp.Domain.Entities
     /// <summary>
     /// This exception is thrown if an entity excepted to be found but not found.
     /// </summary>
-#if NET46
     [Serializable]
-#endif
     public class EntityNotFoundException : AbpException
     {
         /// <summary>

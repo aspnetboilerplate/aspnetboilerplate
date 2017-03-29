@@ -6,9 +6,7 @@ namespace Abp.Notifications
     /// <summary>
     /// Can be used to store a simple message as notification data.
     /// </summary>
-#if NET46
     [Serializable]
-#endif
     public class LocalizableMessageNotificationData : NotificationData
     {
         /// <summary>

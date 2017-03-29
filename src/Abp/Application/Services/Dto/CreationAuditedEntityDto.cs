@@ -7,9 +7,7 @@ namespace Abp.Application.Services.Dto
     /// <summary>
     ///  A shortcut of <see cref="CreationAuditedEntityDto"/> for most used primary key type (<see cref="int"/>).
     /// </summary>
-#if NET46
     [Serializable]
-#endif
     public abstract class CreationAuditedEntityDto : CreationAuditedEntityDto<int>
     {
         
@@ -19,9 +17,7 @@ namespace Abp.Application.Services.Dto
     /// This class can be inherited for simple Dto objects those are used for entities implement <see cref="ICreationAudited"/> interface.
     /// </summary>
     /// <typeparam name="TPrimaryKey">Type of primary key</typeparam>
-#if NET46
     [Serializable]
-#endif
     public abstract class CreationAuditedEntityDto<TPrimaryKey> : EntityDto<TPrimaryKey>, ICreationAudited
     {
         /// <summary>

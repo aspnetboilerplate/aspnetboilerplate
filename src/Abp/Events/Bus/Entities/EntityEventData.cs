@@ -7,9 +7,7 @@ namespace Abp.Events.Bus.Entities
     /// Used to pass data for an event that is related to with an <see cref="IEntity"/> object.
     /// </summary>
     /// <typeparam name="TEntity">Entity type</typeparam>
-#if NET46
     [Serializable]
-#endif
     public class EntityEventData<TEntity> : EventData , IEventDataWithInheritableGenericArgument
     {
         /// <summary>

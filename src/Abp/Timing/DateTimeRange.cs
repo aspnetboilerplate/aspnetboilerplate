@@ -5,9 +5,7 @@ namespace Abp.Timing
     /// <summary>
     /// A basic implementation of <see cref="IDateTimeRange"/> to store a date range.
     /// </summary>
-#if NET46
     [Serializable]
-#endif
     public class DateTimeRange : IDateTimeRange
     {
         /// <summary>

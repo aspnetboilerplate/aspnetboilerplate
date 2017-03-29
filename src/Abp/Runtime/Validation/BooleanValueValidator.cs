@@ -2,9 +2,7 @@ using System;
 
 namespace Abp.Runtime.Validation
 {
-#if NET46
     [Serializable]
-#endif
     [Validator("BOOLEAN")]
     public class BooleanValueValidator : ValueValidatorBase
     {

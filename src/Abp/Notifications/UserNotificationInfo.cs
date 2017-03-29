@@ -10,9 +10,7 @@ namespace Abp.Notifications
     /// <summary>
     /// Used to store a user notification.
     /// </summary>
-#if NET46
     [Serializable]
-#endif
     [Table("AbpUserNotifications")]
     public class UserNotificationInfo : Entity<Guid>, IHasCreationTime, IMayHaveTenant
     {

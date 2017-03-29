@@ -7,9 +7,7 @@ namespace Abp.Authorization
     /// <summary>
     /// This exception is thrown on an unauthorized request.
     /// </summary>
-#if NET46
     [Serializable]
-#endif
     public class AbpAuthorizationException : AbpException, IHasLogSeverity
     {
         /// <summary>

@@ -9,9 +9,7 @@ namespace Abp.Runtime.Validation
     /// <summary>
     /// This exception type is used to throws validation exceptions.
     /// </summary>
-#if NET46
     [Serializable]
-#endif
     public class AbpValidationException : AbpException, IHasLogSeverity
     {
         /// <summary>

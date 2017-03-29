@@ -7,9 +7,7 @@ using Abp.Runtime.Validation;
 
 namespace Abp.UI.Inputs
 {
-#if NET46
     [Serializable]
-#endif
     public abstract class InputTypeBase : IInputType
     {
         public virtual string Name

@@ -3,9 +3,7 @@ using System.Runtime.Serialization;
 
 namespace Abp.Domain.Uow
 {
-#if NET46
     [Serializable]
-#endif
     public class AbpDbConcurrencyException : AbpException
     {
         /// <summary>

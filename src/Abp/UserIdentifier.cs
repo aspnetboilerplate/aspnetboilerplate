@@ -7,9 +7,7 @@ namespace Abp
     /// <summary>
     /// Used to identify a user.
     /// </summary>
-#if NET46
     [Serializable]
-#endif
     public class UserIdentifier : IUserIdentifier
     {
         /// <summary>

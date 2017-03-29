@@ -5,9 +5,7 @@ namespace Abp.Web.Models
     /// <summary>
     /// This class is used to create standard responses for AJAX/remote requests.
     /// </summary>
-#if NET46
     [Serializable]
-#endif
     public class AjaxResponse : AjaxResponse<object>
     {
         /// <summary>

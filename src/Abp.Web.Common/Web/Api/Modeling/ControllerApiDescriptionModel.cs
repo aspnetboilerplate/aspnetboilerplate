@@ -4,9 +4,7 @@ using System.Collections.Generic;
 
 namespace Abp.Web.Api.Modeling
 {
-#if NET46
     [Serializable]
-#endif
     public class ControllerApiDescriptionModel
     {
         public string Name { get; }

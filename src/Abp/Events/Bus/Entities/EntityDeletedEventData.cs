@@ -6,9 +6,7 @@ namespace Abp.Events.Bus.Entities
     /// This type of event can be used to notify just after deletion of an Entity.
     /// </summary>
     /// <typeparam name="TEntity">Entity type</typeparam>
-#if NET46
     [Serializable]
-#endif
     public class EntityDeletedEventData<TEntity> : EntityChangedEventData<TEntity>
     {
         /// <summary>

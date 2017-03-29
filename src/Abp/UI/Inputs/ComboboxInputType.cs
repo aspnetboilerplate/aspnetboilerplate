@@ -6,9 +6,7 @@ namespace Abp.UI.Inputs
     /// <summary>
     /// Combobox value UI type.
     /// </summary>
-#if NET46
     [Serializable]
-#endif
     [InputType("COMBOBOX")]
     public class ComboboxInputType : InputTypeBase
     {

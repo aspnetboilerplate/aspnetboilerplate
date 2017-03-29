@@ -8,9 +8,7 @@ namespace Abp.Events.Bus.Entities
     /// See <see cref="EntityCreatedEventData{TEntity}"/>, <see cref="EntityDeletedEventData{TEntity}"/> and <see cref="EntityUpdatedEventData{TEntity}"/> classes.
     /// </summary>
     /// <typeparam name="TEntity">Entity type</typeparam>
-#if NET46
     [Serializable]
-#endif
     public class EntityChangedEventData<TEntity> : EntityEventData<TEntity>
     {
         /// <summary>
