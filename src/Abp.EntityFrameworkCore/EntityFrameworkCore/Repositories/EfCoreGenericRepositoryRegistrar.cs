@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Reflection;
 using Abp.Dependency;
 using Abp.Domain.Entities;
 using Abp.EntityFramework;
@@ -18,7 +19,7 @@ namespace Abp.EntityFrameworkCore.Repositories
 
         public void RegisterForDbContext(Type dbContextType, IIocManager iocManager)
         {
-            var autoRepositoryAttr = dbContextType.GetSingleAttributeOrNull<AutoRepositoryTypesAttribute>() ??
+            var autoRepositoryAttr = dbContextType.GetTypeInfo().GetSingleAttributeOrNull<AutoRepositoryTypesAttribute>() ??
                                      EfCoreAutoRepositoryTypes.Default;
 
             foreach (var entityTypeInfo in DbContextHelper.GetEntityTypeInfos(dbContextType))

@@ -29,7 +29,7 @@ namespace Abp.EntityFrameworkCore
         {
             var dbContextType = typeof(TDbContext);
 
-            if (!dbContextType.IsAbstract)
+            if (!dbContextType.GetTypeInfo().IsAbstract)
             {
                 return _iocResolver.Resolve<TDbContext>(new
                 {
