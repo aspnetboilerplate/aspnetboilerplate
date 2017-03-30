@@ -36,37 +36,40 @@ namespace Abp.Domain.Uow
 
         private static void SetCurrentUow(IUnitOfWork value)
         {
-            if (value == null)
+            lock (AsyncLocalUow)
             {
-                if (AsyncLocalUow.Value == null)
+                if (value == null)
                 {
-                    return;
-                }
-
-                if (AsyncLocalUow.Value.UnitOfWork.Outer == null)
-                {
-                    AsyncLocalUow.Value.UnitOfWork = null;
-                    AsyncLocalUow.Value = null;
-                    return;
-                }
-
-                AsyncLocalUow.Value.UnitOfWork = AsyncLocalUow.Value.UnitOfWork.Outer;
-            }
-            else
-            {
-                if (AsyncLocalUow.Value?.UnitOfWork == null)
-                {
-                    if (AsyncLocalUow.Value != null)
+                    if (AsyncLocalUow.Value == null)
                     {
-                        AsyncLocalUow.Value.UnitOfWork = value;
+                        return;
                     }
 
-                    AsyncLocalUow.Value = new LocalUowWrapper(value);
-                    return;
-                }
+                    if (AsyncLocalUow.Value.UnitOfWork.Outer == null)
+                    {
+                        AsyncLocalUow.Value.UnitOfWork = null;
+                        AsyncLocalUow.Value = null;
+                        return;
+                    }
 
-                value.Outer = AsyncLocalUow.Value.UnitOfWork;
-                AsyncLocalUow.Value.UnitOfWork = value;
+                    AsyncLocalUow.Value.UnitOfWork = AsyncLocalUow.Value.UnitOfWork.Outer;
+                }
+                else
+                {
+                    if (AsyncLocalUow.Value?.UnitOfWork == null)
+                    {
+                        if (AsyncLocalUow.Value != null)
+                        {
+                            AsyncLocalUow.Value.UnitOfWork = value;
+                        }
+
+                        AsyncLocalUow.Value = new LocalUowWrapper(value);
+                        return;
+                    }
+
+                    value.Outer = AsyncLocalUow.Value.UnitOfWork;
+                    AsyncLocalUow.Value.UnitOfWork = value;
+                }
             }
         }
 
