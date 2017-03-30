@@ -1,4 +1,5 @@
-﻿using Abp.Net.Mail.Smtp;
+﻿#if NET46
+using Abp.Net.Mail.Smtp;
 using NSubstitute;
 using Xunit;
 
@@ -39,3 +40,4 @@ namespace Abp.Tests.Net.Mail
         }
     }
 }
+#endif

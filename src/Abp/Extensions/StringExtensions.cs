@@ -293,7 +293,7 @@ namespace Abp.Extensions
         /// </summary>
         /// <param name="str">String to convert</param>
         /// <returns>camelCase of the string</returns>
-        public static string ToCamelCase(this string str)
+        public static string ToCamelCase(this string str) //TODO: Create an overload for invariant culture
         {
             if (string.IsNullOrWhiteSpace(str))
             {
@@ -336,7 +336,7 @@ namespace Abp.Extensions
         /// Example: "ThisIsSampleSentence" is converted to "This is a sample sentence".
         /// </summary>
         /// <param name="str">String to convert.</param>
-        public static string ToSentenceCase(this string str)
+        public static string ToSentenceCase(this string str) //TODO: Create an overload for invariant culture
         {
             if (string.IsNullOrWhiteSpace(str))
             {
@@ -421,7 +421,7 @@ namespace Abp.Extensions
         /// </summary>
         /// <param name="str">String to convert</param>
         /// <returns>PascalCase of the string</returns>
-        public static string ToPascalCase(this string str)
+        public static string ToPascalCase(this string str) //TODO: Create an overload for invariant culture
         {
             if (string.IsNullOrWhiteSpace(str))
             {

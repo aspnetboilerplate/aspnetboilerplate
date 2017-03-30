@@ -21,7 +21,7 @@ namespace Abp.Localization
             var currentUiCulture = CultureInfo.CurrentUICulture;
 
             CultureInfo.CurrentCulture = culture;
-            CultureInfo.CurrentCulture = uiCulture ?? culture;
+            CultureInfo.CurrentUICulture = uiCulture ?? culture;
 
             return new DisposeAction(() =>
             {

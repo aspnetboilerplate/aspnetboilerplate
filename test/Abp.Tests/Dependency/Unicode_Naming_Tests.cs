@@ -26,7 +26,7 @@ namespace Abp.Tests.Dependency
 
             container.Register(
                 Classes
-                    .FromThisAssembly()
+                    .FromAssemblyContaining(typeof(Unicode_Naming_Tests))
                     .Where(c => c == typeof(お知らせAppService))
                     .WithServiceDefaultInterfaces()
                     .WithServiceSelf()

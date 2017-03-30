@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Reflection;
 using System.Collections.Generic;
 using Abp.Reflection;
 using Shouldly;
@@ -21,7 +22,7 @@ namespace Abp.Tests.Reflection
         [Fact]
         public static void Should_Find_Attributes()
         {
-            var attributes = ReflectionHelper.GetAttributesOfMemberAndDeclaringType<MyAttribute>(typeof(MyDerivedList).GetMethod("DoIt"));
+            var attributes = ReflectionHelper.GetAttributesOfMemberAndDeclaringType<MyAttribute>(typeof(MyDerivedList).GetTypeInfo().GetMethod("DoIt"));
             attributes.Count.ShouldBe(2); //TODO: Why not find MyList's attribute?
             attributes[0].Number.ShouldBe(1);
             attributes[1].Number.ShouldBe(2);

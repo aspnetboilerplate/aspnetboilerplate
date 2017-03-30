@@ -62,7 +62,7 @@
     <PackageReference Include="Microsoft.Extensions.Options" Version="1.1.1" />
     <PackageReference Include="Nito.AsyncEx.Context" Version="1.1.0" />
     <PackageReference Include="Nito.AsyncEx.Coordination" Version="1.0.2" />
-    <PackageReference Include="Fortress.Facilities.Logging" Version="0.5.0" />
+    <PackageReference Include="Fortress.Facilities.Logging" Version="0.6.1" />
   </ItemGroup>
 
 </Project>
