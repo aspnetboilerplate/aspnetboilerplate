@@ -22,7 +22,7 @@ namespace Abp.Domain.Uow
 
         public ILogger Logger { get; set; }
 
-        private static readonly AsyncLocal<IUnitOfWork> AsyncLocalUow = new AsyncLocal<IUnitOfWork>();
+        private static readonly AsyncLocal<LocalUowWrapper> AsyncLocalUow = new AsyncLocal<LocalUowWrapper>();
 
         public AsyncLocalCurrentUnitOfWorkProvider()
         {
@@ -31,24 +31,53 @@ namespace Abp.Domain.Uow
 
         private static IUnitOfWork GetCurrentUow()
         {
-            return AsyncLocalUow.Value;
+            return AsyncLocalUow.Value?.UnitOfWork;
         }
 
         private static void SetCurrentUow(IUnitOfWork value)
         {
             if (value == null)
             {
-                //Set outer to current if possible
-                if (AsyncLocalUow.Value != null)
+                if (AsyncLocalUow.Value == null)
                 {
-                    AsyncLocalUow.Value = AsyncLocalUow.Value.Outer;
+                    return;
                 }
 
-                return;
-            }
+                if (AsyncLocalUow.Value.UnitOfWork.Outer == null)
+                {
+                    AsyncLocalUow.Value.UnitOfWork = null;
+                    AsyncLocalUow.Value = null;
+                    return;
+                }
 
-            value.Outer = AsyncLocalUow.Value;
-            AsyncLocalUow.Value = value;
+                AsyncLocalUow.Value.UnitOfWork = AsyncLocalUow.Value.UnitOfWork.Outer;
+            }
+            else
+            {
+                if (AsyncLocalUow.Value?.UnitOfWork == null)
+                {
+                    if (AsyncLocalUow.Value != null)
+                    {
+                        AsyncLocalUow.Value.UnitOfWork = value;
+                    }
+
+                    AsyncLocalUow.Value = new LocalUowWrapper(value);
+                    return;
+                }
+
+                value.Outer = AsyncLocalUow.Value.UnitOfWork;
+                AsyncLocalUow.Value.UnitOfWork = value;
+            }
+        }
+
+        private class LocalUowWrapper
+        {
+            public IUnitOfWork UnitOfWork { get; set; }
+
+            public LocalUowWrapper(IUnitOfWork unitOfWork)
+            {
+                UnitOfWork = unitOfWork;
+            }
         }
     }
 }

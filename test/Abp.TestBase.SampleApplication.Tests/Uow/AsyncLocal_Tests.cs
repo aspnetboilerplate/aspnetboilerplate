@@ -16,7 +16,10 @@
 //        [Fact]
 //        public async Task Test1()
 //        {
+//            _asyncLocal.Value = "XX";
+
 //            await AsyncTestCode("42");
+
 //            _asyncLocal.Value.ShouldBe("42");
 //        }
 
