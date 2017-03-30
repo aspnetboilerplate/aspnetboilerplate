@@ -1,5 +1,6 @@
 ﻿using System.Reflection;
 using Abp.Modules;
+using Abp.Reflection.Extensions;
 
 namespace Abp.TestBase
 {
@@ -14,7 +15,7 @@ namespace Abp.TestBase
 
         public override void Initialize()
         {
-            IocManager.RegisterAssemblyByConvention(Assembly.GetExecutingAssembly());
+            IocManager.RegisterAssemblyByConvention(typeof(AbpTestBaseModule).GetAssembly());
         }
     }
 }
