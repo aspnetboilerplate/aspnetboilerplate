@@ -8,6 +8,7 @@ using Abp.AspNetCore.Mocks;
 using Abp.Auditing;
 using Abp.Localization;
 using Abp.MultiTenancy;
+using Abp.Reflection.Extensions;
 
 namespace Abp.AspNetCore.App
 {
@@ -24,13 +25,13 @@ namespace Abp.AspNetCore.App
             Configuration
                 .Modules.AbpAspNetCore()
                 .CreateControllersForAppServices(
-                    Assembly.GetExecutingAssembly()
+                    typeof(AppModule).GetAssembly()
                 );
         }
 
         public override void Initialize()
         {
-            IocManager.RegisterAssemblyByConvention(Assembly.GetExecutingAssembly());
+            IocManager.RegisterAssemblyByConvention(typeof(AppModule).GetAssembly());
         }
 
         public override void PostInitialize()
