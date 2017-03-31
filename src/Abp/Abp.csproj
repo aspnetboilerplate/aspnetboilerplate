@@ -58,6 +58,7 @@
     <PackageReference Include="System.Xml.XPath.XmlDocument" Version="4.3.0" />
     <PackageReference Include="System.ComponentModel.Annotations" Version="4.3.0" />
     <PackageReference Include="System.Runtime.Serialization.Formatters" Version="4.3.0" />
+    <PackageReference Include="System.Security.Claims" Version="4.3.0" />
     <PackageReference Include="Microsoft.Extensions.Caching.Memory" Version="1.1.1" />
     <PackageReference Include="Microsoft.Extensions.Options" Version="1.1.1" />
     <PackageReference Include="Nito.AsyncEx.Context" Version="1.1.0" />
