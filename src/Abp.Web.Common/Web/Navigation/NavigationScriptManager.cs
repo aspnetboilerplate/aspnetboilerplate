@@ -89,7 +89,7 @@ namespace Abp.Web.Navigation
             sb.AppendLine("{");
 
             sb.AppendLine(new string(' ', indentLength + 4) + "name: '" + menuItem.Name + "',");
-            sb.AppendLine(new string(' ', indentLength + 4) + "order: '" + menuItem.Order + "',");
+            sb.AppendLine(new string(' ', indentLength + 4) + "order: " + menuItem.Order + ",");
 
             if (!string.IsNullOrEmpty(menuItem.Icon))
             {
