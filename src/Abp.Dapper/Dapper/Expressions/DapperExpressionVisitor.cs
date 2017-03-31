@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
@@ -48,51 +48,6 @@ namespace Abp.Dapper.Expressions
             return _pg.Predicates.Count == 1 ? _pg.Predicates[0] : _pg;
         }
 
-        private static PredicateGroup GetLastPredicateGroup(PredicateGroup grp)
-        {
-            IList<IPredicate> groups = grp.Predicates;
-
-            if (!groups.Any())
-            {
-                return grp;
-            }
-
-            IPredicate last = groups.Last();
-
-            if (last is PredicateGroup)
-            {
-                return GetLastPredicateGroup(last as PredicateGroup);
-            }
-
-            return grp;
-        }
-
-        private IFieldPredicate GetLastField()
-        {
-            PredicateGroup lastGrp = GetLastPredicateGroup(_pg);
-
-            IPredicate last = lastGrp.Predicates.Last();
-
-            return last as IFieldPredicate;
-        }
-
-        private IFieldPredicate GetCurrentField()
-        {
-            //IPredicate last =_currentGroup.Predicates.Last();
-
-            //return last as IFieldPredicate;
-
-            return GetCurrentField(_currentGroup);
-        }
-        private IFieldPredicate GetCurrentField(IPredicateGroup group)
-        {
-            IPredicate last = group.Predicates.Last();
-            if (last is IPredicateGroup)
-            {
-                return GetCurrentField(last as IPredicateGroup);
-            }
-            return last as IFieldPredicate;
-        }
         private static Operator DetermineOperator(Expression binaryExpression)
         {
             switch (binaryExpression.NodeType)
@@ -112,6 +67,21 @@ namespace Abp.Dapper.Expressions
             }
         }
 
+        private IFieldPredicate GetCurrentField()
+        {
+            return GetCurrentField(_currentGroup);
+        }
+
+        private IFieldPredicate GetCurrentField(IPredicateGroup group)
+        {
+            IPredicate last = group.Predicates.Last();
+            if (last is IPredicateGroup)
+            {
+                return GetCurrentField(last as IPredicateGroup);
+            }
+            return last as IFieldPredicate;
+        }
+
         private void AddField(MemberExpression exp, Operator op = Operator.Eq, object value = null, bool not = false)
         {
             PredicateGroup pg = _currentGroup;
@@ -123,6 +93,8 @@ namespace Abp.Dapper.Expressions
             pg.Predicates.Add(field);
         }
 
+
+        #region The visit methods override
         protected override Expression VisitBinary(BinaryExpression node)
         {
             Expressions.Add(node);
@@ -240,5 +212,6 @@ namespace Abp.Dapper.Expressions
 
             return base.VisitUnary(node); // returning base because we want to continue further processing - ie subsequent call to VisitMethodCall
         }
+        #endregion
     }
 }
