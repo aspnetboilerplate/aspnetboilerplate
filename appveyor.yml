@@ -1,6 +1,6 @@
 configuration: Release
 version: 1.5.1-beta{build}
-image: Visual Studio 2017 RC
+image: Visual Studio 2017
 
 nuget:
   disable_publish_on_pr: true
