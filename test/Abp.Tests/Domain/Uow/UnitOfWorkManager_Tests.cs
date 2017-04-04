@@ -16,7 +16,7 @@ namespace Abp.Tests.Domain.Uow
             LocalIocManager.IocContainer.Register(
                 Component.For<IUnitOfWorkDefaultOptions>().ImplementedBy<UnitOfWorkDefaultOptions>().LifestyleSingleton(),
                 Component.For<IUnitOfWorkManager>().ImplementedBy<UnitOfWorkManager>().LifestyleSingleton(),
-                Component.For<IUnitOfWork>().UsingFactoryMethod(() => fakeUow).LifestyleSingleton(),
+                Component.For<IUnitOfWork>().Instance(fakeUow).LifestyleSingleton(),
 #if NET46
                 Component.For<ICurrentUnitOfWorkProvider>().ImplementedBy<CallContextCurrentUnitOfWorkProvider>().LifestyleSingleton()
 #else

@@ -21,7 +21,7 @@ namespace Abp.Tests.Runtime.Caching.Memory
             LocalIocManager.Register<ICachingConfiguration, CachingConfiguration>();
             LocalIocManager.Register<ICacheManager, AbpMemoryCacheManager>();
             LocalIocManager.Register<MyClientPropertyInjects>(DependencyLifeStyle.Transient);
-            LocalIocManager.IocContainer.Register(Component.For<IAbpStartupConfiguration>().UsingFactoryMethod(() => Substitute.For<IAbpStartupConfiguration>()));
+            LocalIocManager.IocContainer.Register(Component.For<IAbpStartupConfiguration>().Instance(Substitute.For<IAbpStartupConfiguration>()));
 
             _cacheManager = LocalIocManager.Resolve<ICacheManager>();
 
