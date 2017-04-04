@@ -28,7 +28,7 @@ namespace Abp.Tests.Extensions
             "TAKSİ".EnsureEndsWith('i', true, new CultureInfo("tr-TR")).ShouldBe("TAKSİ");
             "TAKSİ".EnsureEndsWith('i', false, new CultureInfo("tr-TR")).ShouldBe("TAKSİi");
 #else
-            using (CultureHelper.Use("tr-TR"))
+            using (CultureInfoHelper.Use("tr-TR"))
             {
                 "TAKSİ".EnsureEndsWith('i', StringComparison.CurrentCultureIgnoreCase).ShouldBe("TAKSİ");
                 "TAKSİ".EnsureEndsWith('i', StringComparison.CurrentCulture).ShouldBe("TAKSİi");
@@ -52,7 +52,7 @@ namespace Abp.Tests.Extensions
             "İstanbul".EnsureStartsWith('i', true, new CultureInfo("tr-TR")).ShouldBe("İstanbul");
             "İstanbul".EnsureStartsWith('i', false, new CultureInfo("tr-TR")).ShouldBe("iİstanbul");
 #else
-            using (CultureHelper.Use("tr-TR"))
+            using (CultureInfoHelper.Use("tr-TR"))
             {
                 "İstanbul".EnsureStartsWith('i', StringComparison.CurrentCultureIgnoreCase).ShouldBe("İstanbul");
                 "İstanbul".EnsureStartsWith('i', StringComparison.CurrentCulture).ShouldBe("iİstanbul");
@@ -90,7 +90,7 @@ namespace Abp.Tests.Extensions
             (null as string).ToSentenceCase().ShouldBe(null);
             "HelloWorld".ToSentenceCase().ShouldBe("Hello world");
 
-            using (CultureHelper.Use("en-US"))
+            using (CultureInfoHelper.Use("en-US"))
             {
                 "HelloIsparta".ToSentenceCase().ShouldBe("Hello isparta");
             }

@@ -29,7 +29,7 @@ namespace Abp.Tests.Localization.Json
         {
             var mananger = LocalIocManager.Resolve<LocalizationManager>();
 
-            using (CultureHelper.Use("en"))
+            using (CultureInfoHelper.Use("en"))
             {
                 var source = mananger.GetSource("Lang");
 
@@ -39,7 +39,7 @@ namespace Abp.Tests.Localization.Json
                 source.GetString("HowAreYou").ShouldBe("How are you?");
             }
 
-            using (CultureHelper.Use("zh-CN"))
+            using (CultureInfoHelper.Use("zh-CN"))
             {
                 var source = mananger.GetSource("Lang");
 
