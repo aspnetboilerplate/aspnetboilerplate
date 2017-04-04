@@ -17,15 +17,18 @@ namespace Abp.Localization
             }
 
             LogHelper.Logger.Warn(exceptionMessage);
-
+            string notFoundText;
 #if NET46
-            var notFoundText = configuration.HumanizeTextIfNotFound
+            notFoundText = configuration.HumanizeTextIfNotFound
                 ? name.ToSentenceCase(culture)
                 : name;
 #else
-            var notFoundText = configuration.HumanizeTextIfNotFound
-                ? name.ToSentenceCase() //TODO: Removed culture since it's not supported by netstandard
-                : name;
+            using (CultureInfoHelper.Use(culture))
+            {
+                notFoundText = configuration.HumanizeTextIfNotFound
+                    ? name.ToSentenceCase()
+                    : name;
+            }
 #endif
 
             return configuration.WrapGivenTextIfNotFound
