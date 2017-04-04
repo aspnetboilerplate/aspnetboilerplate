@@ -108,7 +108,6 @@ EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "solution-items", "solution-items", "{0A8896A1-EC2E-44D8-BD7E-34D2E46A16CF}"
 	ProjectSection(SolutionItems) = preProject
 		appveyor.yml = appveyor.yml
-		common-tests.props = common-tests.props
 		common.props = common.props
 	EndProjectSection
 EndProject

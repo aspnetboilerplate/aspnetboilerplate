@@ -87,7 +87,7 @@ namespace Abp.Localization.Sources.Resource
         }
 
         /// <summary>
-        /// Gets all strings in specified culture.
+        /// Gets all strings in specified culture. 
         /// </summary>
         public virtual IReadOnlyList<LocalizedString> GetAllStrings(CultureInfo culture, bool includeDefaults = true)
         {
@@ -98,7 +98,7 @@ namespace Abp.Localization.Sources.Resource
                 .Select(entry => new LocalizedString(entry.Key.ToString(), entry.Value.ToString(), culture))
                 .ToImmutableList();
 #else
-            return new LocalizedString[0]; //TODO: Implement for netstandard!
+            return new LocalizedString[0];
 #endif
         }
 

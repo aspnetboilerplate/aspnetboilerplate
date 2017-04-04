@@ -1,8 +1,7 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
-  <Import Project="..\..\common-tests.props" />
-
   <PropertyGroup>
+    <TargetFramework>netcoreapp1.0</TargetFramework>
     <AssemblyName>Abp.Tests</AssemblyName>
     <PackageId>Abp.Tests</PackageId>
     <GenerateRuntimeConfigurationFiles>true</GenerateRuntimeConfigurationFiles>
