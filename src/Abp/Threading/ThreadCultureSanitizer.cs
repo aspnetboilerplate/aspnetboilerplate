@@ -1,4 +1,5 @@
-﻿using System.Globalization;
+﻿using Abp.Localization;
+using System.Globalization;
 using System.Threading;
 
 namespace Abp.Threading
@@ -33,9 +34,8 @@ namespace Abp.Threading
             CultureInfo.CurrentCulture = CultureInfo.GetCultureInfo(thread.CurrentCulture.Name);
             CultureInfo.CurrentUICulture = CultureInfo.GetCultureInfo(thread.CurrentUICulture.Name);
 #else
-            //TODO: Creating new CultureInfo objects may not be an effective solution!
-            CultureInfo.CurrentCulture = new CultureInfo(CultureInfo.CurrentCulture.Name);
-            CultureInfo.CurrentUICulture = new CultureInfo(CultureInfo.CurrentUICulture.Name);
+            CultureInfo.CurrentCulture = CultureInfoHelper.Get(CultureInfo.CurrentCulture.Name);
+            CultureInfo.CurrentUICulture = CultureInfoHelper.Get(CultureInfo.CurrentUICulture.Name);
 #endif
         }
     }

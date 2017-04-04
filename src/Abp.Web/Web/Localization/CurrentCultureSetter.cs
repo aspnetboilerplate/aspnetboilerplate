@@ -114,8 +114,8 @@ namespace Abp.Web.Localization
 
         protected virtual void SetCurrentCulture(string language)
         {
-            Thread.CurrentThread.CurrentCulture = new CultureInfo(language);
-            Thread.CurrentThread.CurrentUICulture = new CultureInfo(language);
+            Thread.CurrentThread.CurrentCulture = CultureInfoHelper.Get(language);
+            Thread.CurrentThread.CurrentUICulture = CultureInfoHelper.Get(language);
         }
     }
 }

@@ -37,6 +37,13 @@ using Abp;
 [assembly: InternalsVisibleTo("Abp.Web.Tests")]
 [assembly: InternalsVisibleTo("Abp.Web.Api.Tests")]
 
+[assembly: InternalsVisibleTo("Abp.Zero.Common")]
+[assembly: InternalsVisibleTo("Abp.Zero.Ldap")]
+[assembly: InternalsVisibleTo("Abp.Zero")]
+[assembly: InternalsVisibleTo("Abp.Zero.EntityFramework")]
+[assembly: InternalsVisibleTo("Abp.ZeroCore")]
+[assembly: InternalsVisibleTo("Abp.ZeroCore.EntityFrameworkCore")]
+
 // Setting ComVisible to false makes the types in this assembly not visible 
 // to COM components.  If you need to access a type in this assembly from 
 // COM, set the ComVisible attribute to true on that type.
