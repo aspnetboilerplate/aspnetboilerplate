@@ -20,7 +20,6 @@ namespace Abp.Dependency.Installers
     {
         public void Install(IWindsorContainer container, IConfigurationStore store)
         {
-            //TODO: Register to IIocManager to not depend on Castle Windsor
             container.Register(
                 Component.For<IUnitOfWorkDefaultOptions, UnitOfWorkDefaultOptions>().ImplementedBy<UnitOfWorkDefaultOptions>().LifestyleSingleton(),
                 Component.For<INavigationConfiguration, NavigationConfiguration>().ImplementedBy<NavigationConfiguration>().LifestyleSingleton(),

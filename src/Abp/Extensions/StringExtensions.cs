@@ -292,8 +292,9 @@ namespace Abp.Extensions
         /// Converts PascalCase string to camelCase string.
         /// </summary>
         /// <param name="str">String to convert</param>
+        /// <param name="invariantCulture">Invariant culture</param>
         /// <returns>camelCase of the string</returns>
-        public static string ToCamelCase(this string str) //TODO: Create an overload for invariant culture
+        public static string ToCamelCase(this string str, bool invariantCulture = true)
         {
             if (string.IsNullOrWhiteSpace(str))
             {
@@ -302,10 +303,10 @@ namespace Abp.Extensions
 
             if (str.Length == 1)
             {
-                return str.ToLowerInvariant();
+                return invariantCulture ? str.ToLowerInvariant() : str.ToLower();
             }
 
-            return char.ToLowerInvariant(str[0]) + str.Substring(1);
+            return (invariantCulture ? char.ToLowerInvariant(str[0]) : char.ToLower(str[0])) + str.Substring(1);
         }
 
 #if NET46
@@ -336,14 +337,19 @@ namespace Abp.Extensions
         /// Example: "ThisIsSampleSentence" is converted to "This is a sample sentence".
         /// </summary>
         /// <param name="str">String to convert.</param>
-        public static string ToSentenceCase(this string str) //TODO: Create an overload for invariant culture
+        /// <param name="invariantCulture">Invariant culture</param>
+        public static string ToSentenceCase(this string str, bool invariantCulture = false)
         {
             if (string.IsNullOrWhiteSpace(str))
             {
                 return str;
             }
 
-            return Regex.Replace(str, "[a-z][A-Z]", m => m.Value[0] + " " + char.ToLower(m.Value[1]));
+            return Regex.Replace(
+                str,
+                "[a-z][A-Z]",
+                m => m.Value[0] + " " + (invariantCulture ? char.ToLowerInvariant(m.Value[1]) : char.ToLower(m.Value[1]))
+            );
         }
 
 #if NET46
@@ -420,8 +426,9 @@ namespace Abp.Extensions
         /// Converts camelCase string to PascalCase string.
         /// </summary>
         /// <param name="str">String to convert</param>
+        /// <param name="invariantCulture">Invariant culture</param>
         /// <returns>PascalCase of the string</returns>
-        public static string ToPascalCase(this string str) //TODO: Create an overload for invariant culture
+        public static string ToPascalCase(this string str, bool invariantCulture = true)
         {
             if (string.IsNullOrWhiteSpace(str))
             {
@@ -430,10 +437,10 @@ namespace Abp.Extensions
 
             if (str.Length == 1)
             {
-                return str.ToUpperInvariant();
+                return invariantCulture ? str.ToUpperInvariant(): str.ToUpper();
             }
 
-            return char.ToUpperInvariant(str[0]) + str.Substring(1);
+            return (invariantCulture ? char.ToUpperInvariant(str[0]) : char.ToUpper(str[0])) + str.Substring(1);
         }
 
 #if NET46
