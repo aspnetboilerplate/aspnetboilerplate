@@ -70,8 +70,6 @@ namespace Abp.Web.Mvc.Controllers
                 Thread.CurrentThread.CurrentUICulture = CultureInfoHelper.Get(culture);
             }
 
-            //TODO: Optimize this using single StringBuilde
-
             var sb = new StringBuilder();
 
             sb.AppendLine(_multiTenancyScriptManager.GetScript());

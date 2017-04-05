@@ -29,7 +29,7 @@ namespace Abp.Text
                 ? StringComparison.OrdinalIgnoreCase
                 : StringComparison.Ordinal;
 
-            if (str == format) //TODO: think on that!
+            if (str == format)
             {
                 return new ExtractionResult(true);
             }
