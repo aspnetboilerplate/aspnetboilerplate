@@ -1,5 +1,4 @@
-﻿using System.Reflection;
-using Abp.Hangfire.Configuration;
+﻿using Abp.Hangfire.Configuration;
 using Abp.Modules;
 using Abp.Reflection.Extensions;
 using Hangfire;

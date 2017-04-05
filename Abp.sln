@@ -111,6 +111,8 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "solution-items", "solution-
 		common.props = common.props
 	EndProjectSection
 EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Abp.HangFire.AspNetCore", "src\Abp.HangFire.AspNetCore\Abp.HangFire.AspNetCore.csproj", "{1CC8525B-3F36-4ED0-BD5A-18DCEA19167E}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -309,6 +311,10 @@ Global
 		{91103AD5-286A-45C6-8901-400269B1F939}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{91103AD5-286A-45C6-8901-400269B1F939}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{91103AD5-286A-45C6-8901-400269B1F939}.Release|Any CPU.Build.0 = Release|Any CPU
+		{1CC8525B-3F36-4ED0-BD5A-18DCEA19167E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{1CC8525B-3F36-4ED0-BD5A-18DCEA19167E}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{1CC8525B-3F36-4ED0-BD5A-18DCEA19167E}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{1CC8525B-3F36-4ED0-BD5A-18DCEA19167E}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -363,5 +369,6 @@ Global
 		{B93E2627-CA5B-4242-8283-5B69240EF97B} = {1C5D3B56-8C59-4ABC-8E66-CBE971633FA7}
 		{43442BE2-6533-4B91-809C-78C79A0BE67B} = {DFF0464B-5402-4DD6-86F5-2AEC1163B232}
 		{91103AD5-286A-45C6-8901-400269B1F939} = {1E6B9E8D-D5C1-4AD7-89F9-7179FEFD7C01}
+		{1CC8525B-3F36-4ED0-BD5A-18DCEA19167E} = {DFF0464B-5402-4DD6-86F5-2AEC1163B232}
 	EndGlobalSection
 EndGlobal
