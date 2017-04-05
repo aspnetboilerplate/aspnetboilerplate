@@ -34,8 +34,8 @@
   </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Include="Castle.LoggingFacility.MsLogging" Version="2.0.0-preview1-1" />
-    <PackageReference Include="Castle.Windsor.MsDependencyInjection" Version="2.0.0-preview1" />
+    <PackageReference Include="Castle.LoggingFacility.MsLogging" Version="2.0.0-preview1" />
+    <PackageReference Include="Castle.Windsor.MsDependencyInjection" Version="2.0.0-preview1-1" />
     <PackageReference Include="Microsoft.AspNetCore.Mvc" Version="1.1.2" />
     <PackageReference Include="Microsoft.AspNetCore.StaticFiles" Version="1.1.1" />
   </ItemGroup>
