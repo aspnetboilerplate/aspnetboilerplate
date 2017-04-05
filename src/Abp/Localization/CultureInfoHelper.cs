@@ -33,7 +33,10 @@ namespace Abp.Localization
             });
         }
 
-        internal static CultureInfo Get(string name)
+        /// <summary>
+        /// This method is a temporary solution since CultureInfo.GetCultureInfo() does not exists in netstandard yet.
+        /// </summary>
+        public static CultureInfo Get(string name)
         {
             if (name == null)
             {
