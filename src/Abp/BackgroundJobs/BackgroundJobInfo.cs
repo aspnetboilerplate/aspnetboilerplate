@@ -2,6 +2,7 @@
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 using Abp.Domain.Entities.Auditing;
+using Abp.MultiTenancy;
 using Abp.Timing;
 
 namespace Abp.BackgroundJobs
@@ -10,6 +11,7 @@ namespace Abp.BackgroundJobs
     /// Represents a background job info that is used to persist jobs.
     /// </summary>
     [Table("AbpBackgroundJobs")]
+    [MultiTenancySide(MultiTenancySides.Host)]
     public class BackgroundJobInfo : CreationAuditedEntity<long>
     {
         /// <summary>
@@ -80,7 +82,7 @@ namespace Abp.BackgroundJobs
         /// </summary>
         //[Index("IX_IsAbandoned_NextTryTime", 1)]
         public virtual bool IsAbandoned { get; set; }
-        
+
         /// <summary>
         /// Priority of this job.
         /// </summary>
@@ -114,7 +116,7 @@ namespace Abp.BackgroundJobs
                 ? LastTryTime.Value.AddSeconds(nextWaitDuration)
                 : Clock.Now.AddSeconds(nextWaitDuration);
 
-            if (nextTryDate.Subtract(CreationTime).TotalDays > DefaultTimeout)
+            if (nextTryDate.Subtract(CreationTime).TotalSeconds > DefaultTimeout)
             {
                 return null;
             }

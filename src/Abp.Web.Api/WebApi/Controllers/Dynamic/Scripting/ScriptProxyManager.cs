@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Net;
 using System.Text;
 using System.Web;
 using Abp.Collections.Extensions;
@@ -14,9 +15,11 @@ namespace Abp.WebApi.Controllers.Dynamic.Scripting
     public class ScriptProxyManager : ISingletonDependency
     {
         private readonly IDictionary<string, ScriptInfo> CachedScripts;
+        private readonly DynamicApiControllerManager _dynamicApiControllerManager;
 
-        public ScriptProxyManager()
+        public ScriptProxyManager(DynamicApiControllerManager dynamicApiControllerManager)
         {
+            _dynamicApiControllerManager = dynamicApiControllerManager;
             CachedScripts = new Dictionary<string, ScriptInfo>();
         }
 
@@ -24,7 +27,7 @@ namespace Abp.WebApi.Controllers.Dynamic.Scripting
         {
             if (string.IsNullOrWhiteSpace(name))
             {
-                throw new ArgumentException("name is null or empty!", "name");
+                throw new ArgumentException("name is null or empty!", nameof(name));
             }
 
             var cacheKey = type + "_" + name;
@@ -34,10 +37,13 @@ namespace Abp.WebApi.Controllers.Dynamic.Scripting
                 var cachedScript = CachedScripts.GetOrDefault(cacheKey);
                 if (cachedScript == null)
                 {
-                    var dynamicController = DynamicApiControllerManager.GetAll().FirstOrDefault(ci => ci.ServiceName == name);
+                    var dynamicController = _dynamicApiControllerManager
+                        .GetAll()
+                        .FirstOrDefault(ci => ci.ServiceName == name && ci.IsProxyScriptingEnabled);
+
                     if (dynamicController == null)
                     {
-                        throw new HttpException(404, "There is no such a service: " + cacheKey);
+                        throw new HttpException((int)HttpStatusCode.NotFound, "There is no such a service: " + cacheKey);
                     }
 
                     var script = CreateProxyGenerator(type, dynamicController, true).Generate();
@@ -57,7 +63,7 @@ namespace Abp.WebApi.Controllers.Dynamic.Scripting
                 {
                     var script = new StringBuilder();
 
-                    var dynamicControllers = DynamicApiControllerManager.GetAll();
+                    var dynamicControllers = _dynamicApiControllerManager.GetAll().Where(ci => ci.IsProxyScriptingEnabled);
                     foreach (var dynamicController in dynamicControllers)
                     {
                         var proxyGenerator = CreateProxyGenerator(type, dynamicController, false);

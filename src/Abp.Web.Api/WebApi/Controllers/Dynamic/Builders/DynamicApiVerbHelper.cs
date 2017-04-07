@@ -15,17 +15,26 @@ namespace Abp.WebApi.Controllers.Dynamic.Builders
                 return HttpVerb.Get;
             }
 
-            if (methodName.StartsWith("Update", StringComparison.InvariantCultureIgnoreCase) || methodName.StartsWith("Put", StringComparison.InvariantCultureIgnoreCase))
+            if (methodName.StartsWith("Put", StringComparison.InvariantCultureIgnoreCase) || 
+                methodName.StartsWith("Update", StringComparison.InvariantCultureIgnoreCase))
             {
                 return HttpVerb.Put;
             }
 
-            if (methodName.StartsWith("Delete", StringComparison.InvariantCultureIgnoreCase) || methodName.StartsWith("Remove", StringComparison.InvariantCultureIgnoreCase))
+            if (methodName.StartsWith("Patch", StringComparison.InvariantCultureIgnoreCase))
+            {
+                return HttpVerb.Patch;
+            }
+
+            if (methodName.StartsWith("Delete", StringComparison.InvariantCultureIgnoreCase) ||
+                methodName.StartsWith("Remove", StringComparison.InvariantCultureIgnoreCase))
             {
                 return HttpVerb.Delete;
             }
 
-            if (methodName.StartsWith("Create", StringComparison.InvariantCultureIgnoreCase) || methodName.StartsWith("Post", StringComparison.InvariantCultureIgnoreCase))
+            if (methodName.StartsWith("Post", StringComparison.InvariantCultureIgnoreCase) || 
+                methodName.StartsWith("Create", StringComparison.InvariantCultureIgnoreCase) ||
+                methodName.StartsWith("Insert", StringComparison.InvariantCultureIgnoreCase))
             {
                 return HttpVerb.Post;
             }

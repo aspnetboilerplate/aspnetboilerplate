@@ -21,7 +21,7 @@ namespace Abp.Application.Navigation
         private readonly IIocResolver _iocResolver;
 
         public UserNavigationManager(
-            INavigationManager navigationManager, 
+            INavigationManager navigationManager,
             ILocalizationContext localizationContext,
             IIocResolver iocResolver)
         {
@@ -32,7 +32,7 @@ namespace Abp.Application.Navigation
             AbpSession = NullAbpSession.Instance;
         }
 
-        public async Task<UserMenu> GetMenuAsync(string menuName, long? userId, int? tenantId = null)
+        public async Task<UserMenu> GetMenuAsync(string menuName, UserIdentifier user)
         {
             var menuDefinition = _navigationManager.Menus.GetOrDefault(menuName);
             if (menuDefinition == null)
@@ -41,51 +41,53 @@ namespace Abp.Application.Navigation
             }
 
             var userMenu = new UserMenu(menuDefinition, _localizationContext);
-            await FillUserMenuItems(tenantId, userId, menuDefinition.Items, userMenu.Items);
+            await FillUserMenuItems(user, menuDefinition.Items, userMenu.Items);
             return userMenu;
         }
 
-        public async Task<IReadOnlyList<UserMenu>> GetMenusAsync(long? userId, int? tenantId = null)
+        public async Task<IReadOnlyList<UserMenu>> GetMenusAsync(UserIdentifier user)
         {
             var userMenus = new List<UserMenu>();
 
             foreach (var menu in _navigationManager.Menus.Values)
             {
-                userMenus.Add(await GetMenuAsync(menu.Name, userId, tenantId));
+                userMenus.Add(await GetMenuAsync(menu.Name, user));
             }
 
             return userMenus;
         }
 
-        private async Task<int> FillUserMenuItems(int? tenantId, long? userId, IList<MenuItemDefinition> menuItemDefinitions, IList<UserMenuItem> userMenuItems)
+        private async Task<int> FillUserMenuItems(UserIdentifier user, IList<MenuItemDefinition> menuItemDefinitions, IList<UserMenuItem> userMenuItems)
         {
+            //TODO: Can be optimized by re-using FeatureDependencyContext.
+
             var addedMenuItemCount = 0;
 
             using (var featureDependencyContext = _iocResolver.ResolveAsDisposable<FeatureDependencyContext>())
             {
-                featureDependencyContext.Object.TenantId = tenantId;
+                featureDependencyContext.Object.TenantId = user == null ? null : user.TenantId;
 
                 foreach (var menuItemDefinition in menuItemDefinitions)
                 {
-                    if (menuItemDefinition.RequiresAuthentication && !userId.HasValue)
+                    if (menuItemDefinition.RequiresAuthentication && user == null)
                     {
                         continue;
                     }
 
-                    if (!string.IsNullOrEmpty(menuItemDefinition.RequiredPermissionName) && (!userId.HasValue || !(await PermissionChecker.IsGrantedAsync(userId.Value, menuItemDefinition.RequiredPermissionName))))
+                    if (!string.IsNullOrEmpty(menuItemDefinition.RequiredPermissionName) && (user == null || !(await PermissionChecker.IsGrantedAsync(user, menuItemDefinition.RequiredPermissionName))))
                     {
                         continue;
                     }
 
                     if (menuItemDefinition.FeatureDependency != null &&
-                        (AbpSession.MultiTenancySide == MultiTenancySides.Tenant || tenantId.HasValue) &&
+                        (AbpSession.MultiTenancySide == MultiTenancySides.Tenant || (user != null && user.TenantId != null)) &&
                         !(await menuItemDefinition.FeatureDependency.IsSatisfiedAsync(featureDependencyContext.Object)))
                     {
                         continue;
                     }
 
                     var userMenuItem = new UserMenuItem(menuItemDefinition, _localizationContext);
-                    if (menuItemDefinition.IsLeaf || (await FillUserMenuItems(tenantId, userId, menuItemDefinition.Items, userMenuItem.Items)) > 0)
+                    if (menuItemDefinition.IsLeaf || (await FillUserMenuItems(user, menuItemDefinition.Items, userMenuItem.Items)) > 0)
                     {
                         userMenuItems.Add(userMenuItem);
                         ++addedMenuItemCount;

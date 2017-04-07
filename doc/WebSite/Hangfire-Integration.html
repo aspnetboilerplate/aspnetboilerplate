@@ -11,6 +11,8 @@
 
 		<div class="document-contents">
 
+			<h3>
+				Introduction</h3>
 			<p>
 				<a href="http://hangfire.io/" target="_blank">Hangfire</a> is a 
 	compherensive background job manager. You can <strong>integrate</strong> ASP.NET Boilerplate 
@@ -20,6 +22,8 @@
 				<strong>independent</strong> of Hangfire. But, if you like, you can directly use 
 				<strong>Hangfire's 
 	API</strong> also.</p>
+			<h3>
+				Integration</h3>
 			<p>First, install
 				<a href="https://www.nuget.org/packages/Abp.HangFire" target="_blank">
 					<strong>Abp.HangFire</strong>
@@ -48,12 +52,36 @@ public class MyProjectWebModule : AbpModule
 	Configuration.BackgroundJobs.<strong>UseHangfire</strong> method to enable 
 	and configure Hangfire ("Default" is the connection string in web.config).</p>
 			<p>
-				<strong>NOTE</strong>: Hangfire requires 
+				Hangfire requires 
 	schema creation permission in your database since it creates it's own schema 
-	and tables on first run.</p>
-			<p>See <a href="http://docs.hangfire.io/en/latest/" target="_blank">Hangfire 
+	and tables on first run. See <a href="http://docs.hangfire.io/en/latest/" target="_blank">Hangfire 
 	documentation</a> for more information.</p>
-			<p>&nbsp;</p>
+			<h3>
+				HangFire Dashboard Authorization</h3>
+			<p>
+				Hagfire can show a <strong>dashboard page </strong>to see status 
+				of all background jobs in real time. You can configure it as 
+				described in it's
+				<a href="http://docs.hangfire.io/en/latest/configuration/using-dashboard.html" target="_blank">
+				documentation</a>. By default, this dashboard page is available 
+				for all users, not authorized. You can integrate it to ABP's 
+				<a href="Authorization.html">authorization system</a> using <strong>
+				AbpHangfireAuthorizationFilter</strong> class defined in 
+				Abp.HangFire package. Example configuration:</p>
+			<pre lang="cs">app.UseHangfireDashboard(&quot;/hangfire&quot;, new DashboardOptions
+{
+    Authorization = new[] { <strong>new AbpHangfireAuthorizationFilter()</strong> }
+});</pre>
+			<p>This checks if current user has logged in to the application. If 
+			you want to require an additional permission, you can pass into it's 
+			constructor:</p>
+			<pre lang="cs">app.UseHangfireDashboard(&quot;/hangfire&quot;, new DashboardOptions
+{
+    Authorization = new[] { new AbpHangfireAuthorizationFilter(<strong>&quot;MyHangFireDashboardPermissionName&quot;</strong>) }
+});</pre>
+			<p><strong>Note</strong>: UseHangfireDashboard should be called 
+			after authentication middleware in your Startup class (probably as 
+			the last line). Otherwise, authorization always fails.</p>
 
 		</div>
 

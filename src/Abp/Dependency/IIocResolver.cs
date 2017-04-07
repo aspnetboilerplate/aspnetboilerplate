@@ -49,7 +49,41 @@ namespace Abp.Dependency
         /// <param name="argumentsAsAnonymousType">Constructor arguments</param>
         /// <returns>The object instance</returns>
         object Resolve(Type type, object argumentsAsAnonymousType);
-        
+
+        /// <summary>
+        /// Gets all implementations for given type.
+        /// Returning objects must be Released (see <see cref="Release"/>) after usage.
+        /// </summary> 
+        /// <typeparam name="T">Type of the objects to resolve</typeparam>
+        /// <returns>Object instances</returns>
+        T[] ResolveAll<T>();
+
+        /// <summary>
+        /// Gets all implementations for given type.
+        /// Returning objects must be Released (see <see cref="Release"/>) after usage.
+        /// </summary> 
+        /// <typeparam name="T">Type of the objects to resolve</typeparam>
+        /// <param name="argumentsAsAnonymousType">Constructor arguments</param>
+        /// <returns>Object instances</returns>
+        T[] ResolveAll<T>(object argumentsAsAnonymousType);
+
+        /// <summary>
+        /// Gets all implementations for given type.
+        /// Returning objects must be Released (see <see cref="Release"/>) after usage.
+        /// </summary> 
+        /// <param name="type">Type of the objects to resolve</param>
+        /// <returns>Object instances</returns>
+        object[] ResolveAll(Type type);
+
+        /// <summary>
+        /// Gets all implementations for given type.
+        /// Returning objects must be Released (see <see cref="Release"/>) after usage.
+        /// </summary> 
+        /// <param name="type">Type of the objects to resolve</param>
+        /// <param name="argumentsAsAnonymousType">Constructor arguments</param>
+        /// <returns>Object instances</returns>
+        object[] ResolveAll(Type type, object argumentsAsAnonymousType);
+
         /// <summary>
         /// Releases a pre-resolved object. See Resolve methods.
         /// </summary>

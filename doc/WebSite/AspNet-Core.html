@@ -1,0 +1,236 @@
+﻿<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+
+<head>
+<meta content="text/html; charset=utf-8" http-equiv="Content-Type" />
+<title>ASP.NET Core</title>
+<link type="text/css" rel="stylesheet" href="bootstrap.min.css" />
+</head>
+
+<body>
+
+<div class="document-contents">
+
+<h3>Introduction</h3>
+<p>This document describes ASP.NET Core integration for ASP.NET Boilerplate 
+framework. ASP.NET Core integration is implemented in
+	<a href="https://www.nuget.org/packages/Abp.AspNetCore" target="_blank">
+	Abp.AspNetCore</a> nuget package </p>
+      <div class="bs-callout bs-callout-warning">
+        <h4>Migrating to ASP.NET Core?</h4>
+        <p>If you have an existing project and considering to migrate to ASP.NET 
+		Core, you can read our
+		<a href="http://volosoft.com/migrating-from-asp-net-mvc-5x-to-asp-net-core/" target="_blank">
+		blog post</a> for our experince on the migration.</p>
+      </div>
+	<h3>Startup Template</h3>
+	<p>You can create your project from <a href="/Templates">startup template</a>, 
+	which is a simple, empty web project but properly integrated and configured 
+	to work with ABP framework.</p>
+	<h3>Configuration</h3>
+	<h4>Startup Class</h4>
+	<p>To integrate ABP to ASP.NET Core, we should make some changes in the 
+	Startup class as shown below:</p>
+	<pre lang="cs">public class Startup
+{
+    public <strong>IServiceProvider</strong> ConfigureServices(IServiceCollection services)
+    {
+        //...
+
+<strong>        //Configure Abp and Dependency Injection. Should be called last.
+        return services.AddAbp&lt;MyProjectWebModule&gt;(options =&gt;
+        {
+            //Configure Log4Net logging (optional)
+            options.IocManager.IocContainer.AddFacility&lt;LoggingFacility&gt;(
+                f =&gt; f.UseLog4Net().WithConfig(&quot;log4net.config&quot;)
+            );
+        });
+</strong>    }
+
+    public void Configure(IApplicationBuilder app, IHostingEnvironment env, ILoggerFactory loggerFactory)
+    {
+<strong>        //Initializes ABP framework and all modules. Should be called first.
+        app.UseAbp(); 
+</strong>        
+        //...
+    }
+}</pre>
+	<h4>Module Configuration</h4>
+	<p>You can use <a href="Startup-Configuration.html">startup configuration</a> 
+	to configure AspNet Core Module (using <em>Configuration.Modules.AbpAspNetCore()</em> 
+	in PreInitialize of your module).</p>
+	<h3>Controllers</h3>
+	<p>Controllers can be any type of classes in ASP.NET Core. It's not 
+	restricted to classes derived from Controller class. By default, a class 
+	ends with Controller (like ProductController) is considered as MVC 
+	Controller. You can also add MVC's [Controller] attribute to any class to 
+	make it a controller. This is the way ASP.NET Core MVC is working. See ASP.NET Core <a href="https://docs.asp.net">
+	documentation</a> for more.</p>
+	<p>If you will use web layer classes (like HttpContext) or return a view, 
+	it's better to inherit from <strong>AbpController</strong> (which is derived 
+	from MVC's Controller) class. But if you are creating an API controller just 
+	works with objects, you can consider to create a POCO controller class or 
+	you can use your application services as controllers as described below.</p>
+	<h4>Application Services as Controllers</h4>
+	<p>ASP.NET Boilerplate provides infrastructure to create
+	<a href="Application-Services.html">application services</a>. If you want to 
+	expose your application services to remote clients as controllers (as 
+	previously done using <a href="Dynamic-Web-API.html">dynamic web api</a>), 
+	you can easily do it by a simple configuration in
+	<a href="Module-System.html">PreInitialize</a> method of your module. 
+	Example:</p>
+	<pre lang="cs">Configuration.Modules.AbpAspNetCore().<strong>CreateControllersForAppServices</strong>(typeof(MyApplicationModule).Assembly, moduleName: 'app', useConventionalHttpVerbs: true);</pre>
+	<p><strong>CreateControllersForAppServices</strong> method gets an assembly 
+	and converts all application services to MVC controllers in that assembly. 
+	You can use <strong>RemoteService</strong> attribute to enable/disable it for method or 
+	class level.</p>
+	<p>When an application service is converted to MVC Controller, it's default 
+	route will be like <em>
+	/api/services/&lt;module-name&gt;/&lt;service-name&gt;/&lt;method-name&gt;</em>. Example: If 
+	ProductAppService defines a Create method, it's URL will be <strong>
+	/api/services/app/product/create</strong> (assumed that module name is 
+	'app').</p>
+	<p>If <strong>useConventionalHttpVerbs</strong> set to <strong>true</strong> 
+	(which is the <strong>default value</strong>), then HTTP verbs for service 
+	methods are determined by <strong>naming conventions</strong>:</p>
+			<ul>
+				<li>
+					<strong>Get</strong>: Used if method name starts with 'Get'.</li>
+				<li>
+					<strong>Put</strong>: Used if method name starts with 'Put' or 'Update'.</li>
+				<li>
+					<strong>Delete</strong>: Used if method name starts with 'Delete' or 
+	'Remove'.</li>
+				<li>
+					<strong>Post</strong>: Used if method name starts with 'Post', 
+	'Create' or 'Insert'.</li>
+				<li>
+					<strong>Patch</strong>: Used if method name starts with 
+					'Patch'.</li>
+				<li>Otherwise, <strong>Post</strong> is used <strong>as default</strong> 
+	HTTP verb.</li>
+			</ul>
+	<p>You can use any ASP.NET Core attributes to change HTTP methods or routes 
+	of the actions (but surely, this requires to add reference to related ASP.NET Core 
+	package).</p>
+	<p><strong>Note</strong>: Previously, dynamic web api system was requiring 
+	to create service <strong>interfaces</strong> for application services. But this is not required for 
+	ASP.NET Core integration. Also, MVC attributes should be added to the 
+	service classes, even you have interfaces.</p>
+	<h3>Filters</h3>
+	<p>ABP defines some <strong>pre-built filters</strong> for AspNet Core. All 
+	of them are added to <strong>all actions of all controllers</strong> by 
+	default.</p>
+	<h4>Authorization Filter</h4>
+	<p><strong>AbpAuthorizationFilter</strong> is used to integrate to
+	<a href="Authorization.html">authorization system</a> and
+	<a href="Feature-Management.html">feature system</a>.</p>
+	<ul>
+		<li>You can define <strong>AbpMvcAuthorize</strong> attribute for 
+		actions or controllers to check 
+	desired permissions before action execution.</li>
+		<li>You can define <strong>RequiresFeature</strong> attribute for 
+		actions or controllers to check desired features before action 
+		execution.</li>
+		<li>You can define <strong>AllowAnonymous</strong> (or AbpAllowAnonymous 
+		in application layer) attribute for actions or controllers to suppress 
+		authentication/authorization.</li>
+	</ul>
+	<h4>Audit Action Filter</h4>
+	<p><strong>AbpAuditActionFilter</strong> is used to integrate to
+	<a href="Audit-Logging.html">audit logging system</a>. It logs all requests 
+	to all actions by default (if auditing is not disabled). You can control audit logging using <strong>Audited</strong> and <strong>
+	DisableAuditing</strong> attributes for actions and controllers.</p>
+	<h4>Validation Action Filter</h4>
+	<p><strong>AbpValidationActionFilter</strong> is used to integrate to
+	<a href="Validating-Data-Transfer-Objects.html">validation system</a> and 
+	automatically validate all inputs of all actions. In addition to ABP's 
+	built-in validation &amp; normalization, it also checks MVC's <strong>
+	Model.IsValid</strong> property and throws validation exception if action 
+	inputs have any invalid value.</p>
+	<p>You can control validation using <strong>EnableValidation</strong> and
+	<strong>DisableValidation</strong> attributes for actions and controllers.</p>
+	<h4>Unit of Work Action Filter</h4>
+	<p><strong>AbpUowActionFilter</strong> is used to integrate to
+	<a href="Unit-Of-Work.html">Unit of Work</a> system. It automatically begins 
+	a new unit of work before an action execution and completes unit of work 
+	after action exucition (if no exception is thrown).</p>
+	<p>You can use <strong>UnitOfWork</strong> attribute to control behaviour of 
+	UOW for an action. You can also use startup configuration to change default 
+	unit of work attribute for all actions.</p>
+	<h4>Exception Filter</h4>
+	<p><strong>AbpExceptionFilter</strong> is used to handle exceptions thrown 
+	from controller actions. It <strong>handles</strong> and <strong>logs</strong> 
+	exceptions and returns <strong>wrapped response</strong> to the client.</p>
+	<ul>
+		<li>It <strong>only handles object results</strong>, not view results. 
+		So, actions returns any object, JsonResult or ObjectResult will be 
+		handled. Action returns a view or any other result type implements 
+		IActionsResult are not handled. It's suggested to use built-in 
+		UseExceptionHandler extension method defined in 
+		Microsoft.AspNetCore.Diagonistics package to handle view exceptions.</li>
+		<li>Exception handling and logging behaviour can be changed using
+		<strong>WrapResult</strong> and <strong>DontWrapResult</strong> 
+		attributes for methods and classes.</li>
+	</ul>
+	<h4>Result Filter</h4>
+	<p><strong>AbpResultFilter</strong> is mainly used to wrap result action if action 
+	is successfully executed.</p>
+	<ul>
+		<li>It only wraps results for JsonResult, ObjectResult and any object 
+		which does not implement IActionResult (and also their async versions). If your 
+		action is returning a view or any other type of result, it's not 
+		wrapped.</li>
+		<li><strong>WrapResult</strong> and <strong>DontWrapResult</strong> 
+		attributes can be used for methods and classes to enable/disable 
+		wrapping.</li>
+		<li>You can use startup configuration to change default behaviour for 
+		result wrapping.</li>
+	</ul>
+	<h5>Result Caching For Ajax Requests</h5>
+	<p>AbpResultFilter adds Cache-Control header (no-cache, no-store) to the 
+	response for AJAX Requests. Thus, it prevents browser caching of AJAX 
+	responses even for GET requests. This behaviour can be disabled by the 
+	configuration.</p>
+	<h3>Model Binders</h3>
+	<p><strong>AbpDateTimeModelBinder</strong> is used to normalize DateTime 
+	(and Nullable&lt;DateTime&gt;) inputs using <strong>Clock.Normalize</strong> 
+	method.</p>
+	<h3>Views</h3>
+	<p>MVC Views can be inherited from <strong>AbpRazorPage</strong> to 
+	automatically inject most used infrastructure (LocalizationManager, 
+	PermissionChecker, SettingManager... etc.). It also has shortcut methods 
+	(like L(...) for localize texts). Startup template inherits it by default.</p>
+	<h3>Client Proxies</h3>
+	<p>ABP can automatically create javascript proxies for all MVC Controllers 
+	(not only application services). 
+	It's created for <em>Application Services as Controllers</em> (see the 
+	section above) by default. You can add [RemoteService] attribute to any MVC 
+	controller to create client proxy for it. Javascript proxies are dynamically 
+	generated on runtime. You need to add given script definition to your page:</p>
+	<pre lang="xml">&lt;script src=&quot;~/AbpServiceProxies/GetAll?type=jquery&quot; type=&quot;text/javascript&quot;&gt;&lt;/script&gt;</pre>
+	<p>Currently, only JQuery proxies are generated. We can then call an MVC method 
+	with javascript as shown below:</p>
+	<pre lang="js">
+abp.services.app.product.create({
+    name: 'My test product',
+    price: 99
+}).done(function(result){
+    //...
+});</pre>
+	<h3>Integration Testing</h3>
+	<p>Integration testing is fairly easy for ASP.NET Core and it's
+	<a href="https://docs.asp.net/en/latest/testing/integration-testing.html" target="_blank">
+	documented it's own web site</a> in details. ABP follows this guide and 
+	provides <strong>AbpAspNetCoreIntegratedTestBase</strong> class in
+	<a href="https://www.nuget.org/packages/Abp.AspNetCore.TestBase" target="_blank">
+	Abp.AspNetCore.TestBase</a> package. It makes integration testing even 
+	easier.</p>
+	<p>It's better to start by investigating integration tests in startup 
+	template to see it in action.</p>
+
+</div>
+
+</body>
+
+</html>

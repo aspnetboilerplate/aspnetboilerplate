@@ -13,5 +13,8 @@
     <text name="DefaultLanguage">Varsayılan dil</text>
     <text name="ReceiveNotifications">Bildirimleri al</text>
     <text name="CurrentUserDidNotLoginToTheApplication">Kullanıcı girişi yapılmamış!</text>
+    <text name="TimeZone">Zaman dilimi</text>
+    <text name="AllOfThesePermissionsMustBeGranted">Gereken izinler sağlanamadı. Şu izinlerin tamamı sağlanmış olmalı: {0}</text>
+    <text name="AtLeastOneOfThesePermissionsMustBeGranted">Gereken izinler sağlanamadı. Şu izinlerin en az birisi sağlanmış olmalı: {0}</text>
   </texts>
 </localizationDictionary>

@@ -17,19 +17,37 @@ namespace Abp.WebApi.Controllers.Dynamic.Builders
         IBatchApiControllerBuilder<T> Where(Func<Type, bool> predicate);
 
         /// <summary>
-        /// The adds Action filters for the Dynamic Controller.
+        /// Adds filters for dynamic controllers.
         /// </summary>
         /// <param name="filters"> The filters. </param>
         /// <returns>The current Controller Builder </returns>
         IBatchApiControllerBuilder<T> WithFilters(params IFilter[] filters);
 
         /// <summary>
-        /// Selects service name for a controller.
+        /// Enables/Disables API Explorer for dynamic controllers.
+        /// </summary>
+        IBatchApiControllerBuilder<T> WithApiExplorer(bool isEnabled);
+
+        /// <summary>
+        /// Enables/Disables proxy scripting for dynamic controllers.
+        /// It's enabled by default.
+        /// </summary>
+        IBatchApiControllerBuilder<T> WithProxyScripts(bool isEnabled);
+
+        /// <summary>
+        /// Sets service name for controllers.
         /// </summary>
         /// <param name="serviceNameSelector">Service name selector</param>
         /// <returns></returns>
         IBatchApiControllerBuilder<T> WithServiceName(Func<Type, string> serviceNameSelector);
-        
+
+        /// <summary>
+        /// Used to perform actions for each method of all dynamic api controllers.
+        /// </summary>
+        /// <param name="action">The action.</param>
+        /// <returns>The current Controller Builder</returns>
+        IBatchApiControllerBuilder<T> ForMethods(Action<IApiControllerActionBuilder> action);
+
         /// <summary>
         /// Use conventional Http Verbs by method names.
         /// By default, it uses <see cref="HttpVerb.Post"/> for all actions.

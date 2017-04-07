@@ -4,9 +4,9 @@ namespace Abp.Authorization
 {
     internal class PermissionDependencyContext : IPermissionDependencyContext, ITransientDependency
     {
-        public long? UserId { get; set; }
+        public UserIdentifier User { get; set; }
 
-        public IIocResolver IocResolver { get; private set; }
+        public IIocResolver IocResolver { get; }
         
         public IPermissionChecker PermissionChecker { get; set; }
 

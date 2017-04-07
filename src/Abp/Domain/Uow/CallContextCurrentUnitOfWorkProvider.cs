@@ -12,11 +12,18 @@ namespace Abp.Domain.Uow
     /// </summary>
     public class CallContextCurrentUnitOfWorkProvider : ICurrentUnitOfWorkProvider, ITransientDependency
     {
+        /// <inheritdoc />
+        [DoNotWire]
+        public IUnitOfWork Current
+        {
+            get { return GetCurrentUow(Logger); }
+            set { SetCurrentUow(value, Logger); }
+        }
+
         public ILogger Logger { get; set; }
 
         private const string ContextKey = "Abp.UnitOfWork.Current";
 
-        //TODO: Clear periodically..?
         private static readonly ConcurrentDictionary<string, IUnitOfWork> UnitOfWorkDictionary = new ConcurrentDictionary<string, IUnitOfWork>();
 
         public CallContextCurrentUnitOfWorkProvider()
@@ -124,14 +131,6 @@ namespace Abp.Domain.Uow
             }
 
             CallContext.LogicalSetData(ContextKey, outerUnitOfWorkKey);
-        }
-
-        /// <inheritdoc />
-        [DoNotWire]
-        public IUnitOfWork Current
-        {
-            get { return GetCurrentUow(Logger); }
-            set { SetCurrentUow(value, Logger); }
         }
     }
 }

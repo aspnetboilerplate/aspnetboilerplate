@@ -90,6 +90,12 @@ parameters in it's constructor:</p>
 				<li>
 					<strong>IsVisibleToClients</strong>: Set true to make a setting usable 
 	on the client side.</li>
+				<li>
+					<strong>isInherited</strong>: Used to set if this setting is 
+					inherited by tenant and users (See setting scope section).</li>
+				<li>
+					<strong>customData</strong>: Can be used to set a custom 
+					data for this setting definition.</li>
 			</ul>
 			<p>After creating a setting provider, we should register it in PreIntialize 
 method of our module:</p>
@@ -117,7 +123,8 @@ defined in <strong>SettingScopes</strong> enum:</p>
 			</ul>
 			<p>SettingScopes enum has <strong>Flags </strong>attribute, so we can define a 
 setting with <strong>more than one scopes</strong>.</p>
-			<p>Setting scope is <strong>hierarchic</strong>. For example, if we define a 
+			<p>Setting scope is <strong>hierarchic</strong> by default (unless 
+			you set <strong>isInherited</strong> to false). For example, if we define a 
 setting's scope as "Application | Tenant | User" and try to get <strong>current value 
 				</strong>of the the 
 setting;</p>
@@ -129,6 +136,10 @@ setting;</p>
 			</ul>
 			<p>Default value can be <strong>null </strong>or <strong>empty </strong>string. 
 It's adviced to provide default values for settings where it's possible.</p>
+			<h4>Overriding Setting Definitions</h4>
+			<p>context.Manager can be used to get a setting definition to change 
+			it's values. In this way, you can manipulate setting definitions of
+			<a href="Module-System.html">depended modules</a>.</p>
 
 			<h3 id="DocGettingValues">Getting setting values</h3>
 			<p>After defining a setting, we can get it's current value both in server and 

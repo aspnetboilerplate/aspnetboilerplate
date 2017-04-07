@@ -3,6 +3,7 @@ using Abp.Configuration;
 using Abp.Domain.Uow;
 using Abp.Localization;
 using Abp.Localization.Sources;
+using Abp.ObjectMapping;
 using Castle.Core.Logging;
 
 namespace Abp
@@ -17,7 +18,7 @@ namespace Abp
         /// <summary>
         /// Reference to the setting manager.
         /// </summary>
-        public ISettingManager SettingManager { protected get; set; }
+        public ISettingManager SettingManager { get; set; }
 
         /// <summary>
         /// Reference to <see cref="IUnitOfWorkManager"/>.
@@ -45,7 +46,7 @@ namespace Abp
         /// <summary>
         /// Reference to the localization manager.
         /// </summary>
-        public ILocalizationManager LocalizationManager { protected get; set; }
+        public ILocalizationManager LocalizationManager { get; set; }
 
         /// <summary>
         /// Gets/sets name of the localization source that is used in this application service.
@@ -82,11 +83,17 @@ namespace Abp
         public ILogger Logger { protected get; set; }
 
         /// <summary>
+        /// Reference to the object to object mapper.
+        /// </summary>
+        public IObjectMapper ObjectMapper { get; set; }
+
+        /// <summary>
         /// Constructor.
         /// </summary>
         protected AbpServiceBase()
         {
             Logger = NullLogger.Instance;
+            ObjectMapper = NullObjectMapper.Instance;
             LocalizationManager = NullLocalizationManager.Instance;
         }
 

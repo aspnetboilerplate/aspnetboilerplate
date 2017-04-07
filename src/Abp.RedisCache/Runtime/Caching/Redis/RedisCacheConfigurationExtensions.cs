@@ -1,4 +1,5 @@
-﻿using Abp.Dependency;
+﻿using System;
+using Abp.Dependency;
 using Abp.Runtime.Caching.Configuration;
 
 namespace Abp.Runtime.Caching.Redis
@@ -14,7 +15,21 @@ namespace Abp.Runtime.Caching.Redis
         /// <param name="cachingConfiguration">The caching configuration.</param>
         public static void UseRedis(this ICachingConfiguration cachingConfiguration)
         {
-            cachingConfiguration.AbpConfiguration.IocManager.RegisterIfNot<ICacheManager, AbpRedisCacheManager>();
+            cachingConfiguration.UseRedis(options => { });
+        }
+
+        /// <summary>
+        /// Configures caching to use Redis as cache server.
+        /// </summary>
+        /// <param name="cachingConfiguration">The caching configuration.</param>
+        /// <param name="optionsAction">Ac action to get/set options</param>
+        public static void UseRedis(this ICachingConfiguration cachingConfiguration, Action<AbpRedisCacheOptions> optionsAction)
+        {
+            var iocManager = cachingConfiguration.AbpConfiguration.IocManager;
+
+            iocManager.RegisterIfNot<ICacheManager, AbpRedisCacheManager>();
+
+            optionsAction(iocManager.Resolve<AbpRedisCacheOptions>());
         }
     }
 }

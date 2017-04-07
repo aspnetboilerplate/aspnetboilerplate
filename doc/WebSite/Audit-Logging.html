@@ -5,6 +5,11 @@
 		<meta content="text/html; charset=utf-8" http-equiv="Content-Type" />
 		<title>Audit Logging</title>
 		<link type="text/css" rel="stylesheet" href="bootstrap.min.css" />
+		<style type="text/css">
+.auto-style1 {
+	font-weight: bold;
+}
+</style>
 	</head>
 
 	<body>
@@ -12,7 +17,7 @@
 		<div class="document-contents">
 
 			<h3 id="DocIntro">Introduction</h3>
-			<p>Wikipedia: "<em>An audit trail (also called audit log) is a security-relevant chronological record, set of records, and/or destination and source of records that provide documentary evidence of the sequence of activities that have affected at any time a specific operation, procedure, or even</em>".</p>
+			<p>Wikipedia: "<em>An audit trail (also called audit log) is a security-relevant chronological record, set of records, and/or destination and source of records that provide documentary evidence of the sequence of activities that have affected at any time a specific operation, procedure, or event</em>".</p>
 			<p>ASP.NET Boilerplate provides an infrastructure to automatically log all 
 interactions with the application. It can record intended method calls with 
 caller info and arguments. </p>
@@ -31,12 +36,15 @@ application.</p>
 					<strong>
 IAbpSession</strong>
 				</a> to get current UserId and TenantId.</p>
+			<p>Application service, MVC Controller, Web API and ASP.NET Core 
+			methods are automatically audited by default.</p>
 
 			<div class="bs-callout bs-callout-warning">
 				<h4>About IAuditingStore</h4>
 				<p>
-					<span class="auto-style1">Auditing system uses IAuditingStore</span> to 
-	save audit informatins. While you can 
+					Auditing system uses
+					<span class="auto-style1">IAuditingStore</span> to 
+	save audit informations. While you can 
 	implement it in your own way, it's fully implemented in <strong>module-zero</strong> 
 	project. If you don't implement it, SimpleLogAuditingStore is used and it 
 	writes audit informations to the <a href="/Pages/Documents/Logging">log</a>.</p>
@@ -66,20 +74,8 @@ disable it as shown below.</p>
 	audit logs are saved also for users those are not logged in to the system. 
 	Default: <strong>false</strong>.</li>
 				<li>
-					<strong>MvcControllers</strong>: Used to configure auditing for ASP.NET MVC Controllers.<ul>
-						<li>
-							<strong>IsEnabled</strong>: Used to enable/disable auditing for MVC controllers. 
-		Default: <strong>true</strong>.</li>
-						<li>
-							<strong>IsEnabledForChildActions</strong>: Used to enable/disable auditing for child MVC actions. 
-		Default: <strong>false</strong>.</li>
-					</ul>
-				</li>
-				<li>
 					<strong>Selectors</strong>: Used to select other classes to save audit logs.</li>
 			</ul>
-			<p>As you see, auditing for <strong>MVC</strong> controller are seperately 
-configured since a different technique is used for it.</p>
 			<p>
 				<strong>Selectors</strong> is a list of predicates to select other types to 
 save audit logs. A selector has a unique <strong>name </strong>and a <strong>
@@ -95,11 +91,14 @@ predicate</strong>. The only <strong>default</strong> selector in this list is u
 can remove the selector above by name if you don't like to save audit logs for 
 application services. That's why it has a unique name (Use simple LINQ to find 
 the selector in Selectors and remove it if you want).</p>
+			<p>Note: In addition to standard audit configuration, MVC and 
+			ASP.NET Core modules define configuration to enable/disable audit 
+			logging for actions.</p>
 
 			<h3 id="DocEnableDisableByAttrs">Enable/Disable by attributes</h3>
 			<p>While you can select auditing classes by configuration, you can use <strong>
 Audited</strong> and <strong>DisableAuditing</strong> attributes for a single 
-class or a single method. An example:</p>
+			<strong>class</strong>, a single <strong>method</strong>. An example:</p>
 			<pre lang="cs">[Audited]
 public class MyClass
 {
@@ -122,6 +121,10 @@ public class MyClass
 			<p>All methods of MyClass are audited except MyMethod2 since it's explicitly 
 disabled. Audited attribute can be used for a method to just save audits for the 
 desired method.</p>
+			<p><strong>DisableAuditing</strong> can also be used for or a single
+			<strong>property of a DTO</strong>. Thus, you can <strong>hide 
+			sensitive data</strong> in audit logs, such as passwords for 
+			example.</p>
 			<h3 id="DocNotes">Notes</h3>
 			<ul>
 				<li>A method must be <strong>public </strong>in order to saving audit logs. 

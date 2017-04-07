@@ -9,7 +9,7 @@ namespace Abp.Timing
     {
         /// <summary>
         /// This object is used to perform all <see cref="Clock"/> operations.
-        /// Default value: <see cref="LocalClockProvider"/>.
+        /// Default value: <see cref="UnspecifiedClockProvider"/>.
         /// </summary>
         public static IClockProvider Provider
         {
@@ -18,26 +18,31 @@ namespace Abp.Timing
             {
                 if (value == null)
                 {
-                    throw new AbpException("Can not set Clock to null!");
+                    throw new ArgumentNullException(nameof(value), "Can not set Clock.Provider to null!");
                 }
 
                 _provider = value;
             }
         }
+
         private static IClockProvider _provider;
 
         static Clock()
         {
-            Provider = new LocalClockProvider();
+            Provider = ClockProviders.Unspecified;
         }
 
         /// <summary>
         /// Gets Now using current <see cref="Provider"/>.
         /// </summary>
-        public static DateTime Now
-        {
-            get { return Provider.Now; }
-        }
+        public static DateTime Now => Provider.Now;
+
+        public static DateTimeKind Kind => Provider.Kind;
+
+        /// <summary>
+        /// Returns true if multiple timezone is supported, returns false if not.
+        /// </summary>
+        public static bool SupportsMultipleTimezone => Provider.SupportsMultipleTimezone;
 
         /// <summary>
         /// Normalizes given <see cref="DateTime"/> using current <see cref="Provider"/>.

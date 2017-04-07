@@ -11,5 +11,10 @@
     <text name="DefaultFromSenderEmailAddress">Pagal nutylėjimą iš (siuntėjo) el. pašto adresas</text>
     <text name="DefaultFromSenderDisplayName">Pagal nutylėjimą rodomas iš (siuntėjo) pavadinimas</text>
     <text name="DefaultLanguage">Kalba pagal nutylėjimą</text>
+    <text name="ReceiveNotifications">Gauti pranešimus</text>
+    <text name="CurrentUserDidNotLoginToTheApplication">Dabartinis vartotojas neprisijungė prie programos!</text>
+    <text name="TimeZone">Laiko juosta</text>
+    <text name="AllOfThesePermissionsMustBeGranted">Reikalingi leidimai nėra suteikti. Privalo būti suteikti visi šie leidimai: {0}</text>
+    <text name="AtLeastOneOfThesePermissionsMustBeGranted">Reikalingi leidimai nėra suteikti. Bent vienas iš šių leidimų privalo būti suteiktas: {0}</text>
   </texts>
 </localizationDictionary>

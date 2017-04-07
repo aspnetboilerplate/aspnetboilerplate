@@ -1,3 +1,6 @@
+using System.Collections.Generic;
+using Abp.Application.Services;
+
 namespace Abp.WebApi.Controllers.Dynamic
 {
     /// <summary>
@@ -8,8 +11,13 @@ namespace Abp.WebApi.Controllers.Dynamic
     /// A dynamic ApiController is used to transparently expose an object (Generally an Application Service class)
     /// to remote clients.
     /// </remarks>
-    public class DynamicApiController<T> : AbpApiController, IDynamicApiController
+    public class DynamicApiController<T> : AbpApiController, IDynamicApiController, IAvoidDuplicateCrossCuttingConcerns
     {
+        public List<string> AppliedCrossCuttingConcerns { get; }
 
+        public DynamicApiController()
+        {
+            AppliedCrossCuttingConcerns = new List<string>();
+        }
     }
 }

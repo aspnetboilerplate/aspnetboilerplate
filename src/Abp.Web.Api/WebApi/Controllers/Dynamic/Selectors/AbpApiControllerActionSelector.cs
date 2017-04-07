@@ -1,5 +1,8 @@
 using System.Linq;
+using System.Net;
+using System.Web;
 using System.Web.Http.Controllers;
+using Abp.WebApi.Configuration;
 using Abp.WebApi.Controllers.Dynamic.Builders;
 
 namespace Abp.WebApi.Controllers.Dynamic.Selectors
@@ -9,6 +12,13 @@ namespace Abp.WebApi.Controllers.Dynamic.Selectors
     /// </summary>
     public class AbpApiControllerActionSelector : ApiControllerActionSelector
     {
+        private readonly IAbpWebApiConfiguration _configuration;
+
+        public AbpApiControllerActionSelector(IAbpWebApiConfiguration configuration)
+        {
+            _configuration = configuration;
+        }
+
         /// <summary>
         /// This class is called by Web API system to select action method from given controller.
         /// </summary>
@@ -46,42 +56,44 @@ namespace Abp.WebApi.Controllers.Dynamic.Selectors
             var actionName = DynamicApiServiceNameHelper.GetActionNameInServiceNameWithAction(serviceNameWithAction);
 
             return GetActionDescriptorByActionName(
-                controllerContext, 
-                controllerInfo, 
+                controllerContext,
+                controllerInfo,
                 actionName
                 );
         }
 
-        private static HttpActionDescriptor GetActionDescriptorByCurrentHttpVerb(HttpControllerContext controllerContext, DynamicApiControllerInfo controllerInfo)
+        private HttpActionDescriptor GetActionDescriptorByCurrentHttpVerb(HttpControllerContext controllerContext, DynamicApiControllerInfo controllerInfo)
         {
             //Check if there is only one action with the current http verb
             var actionsByVerb = controllerInfo.Actions.Values
-                .Where(action => action.Verb.IsEqualTo(controllerContext.Request.Method))
+                .Where(action => action.Verb == controllerContext.Request.Method.ToHttpVerb())
                 .ToArray();
 
             if (actionsByVerb.Length == 0)
             {
-                throw new AbpException(
+                throw new HttpException(
+                    (int)HttpStatusCode.NotFound,
                     "There is no action" +
                     " defined for api controller " + controllerInfo.ServiceName +
                     " with an http verb: " + controllerContext.Request.Method
-                    );
+                );
             }
 
             if (actionsByVerb.Length > 1)
             {
-                throw new AbpException(
+                throw new HttpException(
+                    (int)HttpStatusCode.InternalServerError,
                     "There are more than one action" +
                     " defined for api controller " + controllerInfo.ServiceName +
                     " with an http verb: " + controllerContext.Request.Method
-                    );
+                );
             }
 
             //Return the single action by the current http verb
-            return new DynamicHttpActionDescriptor(controllerContext.ControllerDescriptor, actionsByVerb[0].Method, actionsByVerb[0].Filters);
+            return new DynamicHttpActionDescriptor(_configuration, controllerContext.ControllerDescriptor, actionsByVerb[0]);
         }
 
-        private static HttpActionDescriptor GetActionDescriptorByActionName(HttpControllerContext controllerContext, DynamicApiControllerInfo controllerInfo, string actionName)
+        private HttpActionDescriptor GetActionDescriptorByActionName(HttpControllerContext controllerContext, DynamicApiControllerInfo controllerInfo, string actionName)
         {
             //Get action information by action name
             DynamicApiActionInfo actionInfo;
@@ -90,16 +102,18 @@ namespace Abp.WebApi.Controllers.Dynamic.Selectors
                 throw new AbpException("There is no action " + actionName + " defined for api controller " + controllerInfo.ServiceName);
             }
 
-            if (!actionInfo.Verb.IsEqualTo(controllerContext.Request.Method))
+            if (actionInfo.Verb != controllerContext.Request.Method.ToHttpVerb())
             {
-                throw new AbpException(
+                throw new HttpException(
+                    (int) HttpStatusCode.BadRequest,
                     "There is an action " + actionName +
                     " defined for api controller " + controllerInfo.ServiceName +
                     " but with a different HTTP Verb. Request verb is " + controllerContext.Request.Method +
-                    ". It should be " + actionInfo.Verb);
+                    ". It should be " + actionInfo.Verb
+                );
             }
 
-            return new DynamicHttpActionDescriptor(controllerContext.ControllerDescriptor, actionInfo.Method, actionInfo.Filters);
+            return new DynamicHttpActionDescriptor(_configuration, controllerContext.ControllerDescriptor, actionInfo);
         }
 
         private HttpActionDescriptor GetDefaultActionDescriptor(HttpControllerContext controllerContext)

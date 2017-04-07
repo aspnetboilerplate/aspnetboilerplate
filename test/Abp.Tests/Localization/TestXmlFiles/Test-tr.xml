@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<localizationDictionary culture="tr">
+  <texts>
+    <text name="hello" value="Merhaba" />
+    <text name="world">Dünya</text>
+  </texts>
+</localizationDictionary>

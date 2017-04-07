@@ -7,9 +7,9 @@
 		<link type="text/css" rel="stylesheet" href="bootstrap.min.css" />
 		<style type="text/css">
 .auto-style1 {
-	text-decoration: underline;
+	font-weight: bold;
 }
-		</style>
+</style>
 	</head>
 
 	<body>
@@ -38,16 +38,16 @@ permissions. A module should
 create a class derived from <strong>AuthorizationProvider </strong>in order to define it's 
 permissions. 
 An example authorization provider is shown below:</p>
-			<pre lang="cs">public class MyAuthorizationProvider : AuthorizationProvider
+			<pre lang="cs">public class MyAuthorizationProvider : <strong>AuthorizationProvider</strong>
 {
     public override void SetPermissions(IPermissionDefinitionContext context)
     {
-        var administration = context.CreatePermission(&quot;Administration&quot;);
+        var administration = context.<strong>CreatePermission</strong>(&quot;Administration&quot;);
 
-        var userManagement = administration.CreateChildPermission(&quot;Administration.UserManagement&quot;);
-        userManagement.CreateChildPermission(&quot;Administration.UserManagement.CreateUser&quot;);
+        var userManagement = administration.<strong>CreateChildPermission</strong>(&quot;Administration.UserManagement&quot;);
+        userManagement.<strong>CreateChildPermission</strong>(&quot;Administration.UserManagement.CreateUser&quot;);
 
-        var roleManagement = administration.CreateChildPermission(&quot;Administration.RoleManagement&quot;);
+        var roleManagement = administration.<strong>CreateChildPermission</strong>(&quot;Administration.RoleManagement&quot;);
     }
 }
 			</pre>
@@ -69,23 +69,19 @@ permissions.</p>
 					<strong>Description</strong>: A localizable string that can be used to 
 	show definition of the permission, later in UI.</li>
 				<li>
-					<strong>IsGrantedByDefault</strong>: Is this permission granted for all 
-	(logged in) users unless it's explicitly prohibited. This is generally made 
-	false (as default).</li>
-				<li>
 					<strong>MultiTenancySides</strong>: For multi-tenant application, a 
 	permission can be used by tenants or the host. This is a <strong>Flags
 					</strong>enumeration and thus a permission can be used in both sides.</li>
 				<li>
-					<strong>dependedFeature</strong>: Can be used to declare a dependency to
-					<a href="/Pages/Documents/Feature-Management">features</a>. So, this 
-	permission can be granted only if feature dependency is satisfied.</li>
+					<strong>featureDependency</strong>: Can be used to declare a dependency to
+					<a href="/Pages/Documents/Feature-Management">features</a>. Thus, this 
+	permission can be granted only if feature dependency is satisfied. It waits for an object implements IFeatureDependency. Default implementation is the SimpleFeatureDependency class. Example usage: <code>new SimpleFeatureDependency("MyFeatureName")</code></li>
 			</ul>
 			<p>A permission can have a parent and child permissions. While this does not 
 effect permission checking, it may help to group permissions in UI.</p>
 			<p>After creating an authorization provider, we should register it in PreInitialize 
 method of our module:</p>
-			<pre lang="cs">Configuration.Authorization.Providers.Add&lt;MyAuthorizationProvider&gt;();</pre>
+			<pre lang="cs"><strong>Configuration.Authorization.Providers.Add</strong>&lt;MyAuthorizationProvider&gt;();</pre>
 			<p>Authorization providers are registered to <a href="/Pages/Documents/Dependency-Injection">dependency injection</a> 
 automatically. So, an authorization provider can inject any dependency (like a 
 repository) to build permission definitions using some other sources.</p>
@@ -93,10 +89,10 @@ repository) to build permission definitions using some other sources.</p>
 			<h3 id="DocCheckPermission">Checking Permissions</h3>
 			<h4 id="DocUsingAbpAuthorize">Using AbpAuthorize Attribute</h4>
 			<p>
-				<strong>AbpAuthorize</strong> (AbpMvcAuthorize for MVC Controllers and 
-AbpApiAuthorize for Web API Controllers) attribute is the easiest and most common way of checking permissions. Consider&nbsp;the 
+				<strong>AbpAuthorize</strong> (<strong>AbpMvcAuthorize</strong> for MVC Controllers and 
+				<strong>AbpApiAuthorize</strong> for Web API Controllers) attribute is the easiest and most common way of checking permissions. Consider&nbsp;the 
 				<a href="/Pages/Documents/Application-Services">application service</a> method shown below:</p>
-			<pre lang="cs">[AbpAuthorize(&quot;Administration.UserManagement.CreateUser&quot;)]
+			<pre lang="cs"><strong>[AbpAuthorize(&quot;Administration.UserManagement.CreateUser&quot;)]</strong>
 public void CreateUser(CreateUserInput input)
 {
     //A user can not execute this method if he is not granted for "Administration.UserManagement.CreateUser" permission.
@@ -104,8 +100,8 @@ public void CreateUser(CreateUserInput input)
 			<p>CreateUser method can not be called by a user who is not granted for permission "<em>Administration.UserManagement.CreateUser</em>".</p>
 			<p>AbpAuthorize attribute also checks if current user is logged in (using
 				<a href="/Pages/Documents/Abp-Session">IAbpSession.UserId</a>). So, if we declare an 
-AbpAuthorize for a method, it at least checks for login:</p>
-			<pre lang="cs">[AbpAuthorize]
+AbpAuthorize for a method, it only checks for login:</p>
+			<pre lang="cs"><strong>[AbpAuthorize]</strong>
 public void SomeMethod(SomeMethodInput input)
 {
     //A user can not execute this method if he did not login.
@@ -129,25 +125,37 @@ attribute.</p>
 				<li>A method should be <strong>virtual</strong> if it's <strong>protected</strong>.</li>
 			</ul>
 			<p>
-				<span class="auto-style1">
-					<strong>Notice</strong>
-				</span>; There are three 
-AbpAuthorize attributes: In an application 
+				<b>N</b><span class="auto-style1">otice</span>: There are four 
+				types of authorize attributes:</p>
+			<ul>
+				<li>In an application 
 service (application layer), we use <strong>Abp.Authorization.AbpAuthorize</strong> 
-class. In an MVC controller (web layer), we use <strong>
-Abp.Web.Mvc.Authorization.AbpMvcAuthorize</strong> class and in ASP.NET Web API, we 
-use <strong>Abp.WebApi.Authorization.AbpApiAuthorize</strong> attribute. This 
-difference comes from inheritance. In MVC side, it's derived from MVC's own 
-Authorize class. In Web API side it's derived from Web API's Authorize class. 
-Thus, it's better integrated to MVC and Web API. But, in application layer it's 
-completely ASP.NET Boilerplate's implementation and does not extend any class.</p>
+				attribute.</li>
+				<li>In an MVC controller (web layer), we use <strong>Abp.Web.Mvc.Authorization.AbpMvcAuthorize</strong> 
+				attribute.</li>
+				<li>In ASP.NET Web API, we 
+use <strong>Abp.WebApi.Authorization.AbpApiAuthorize</strong> attribute.</li>
+				<li>In ASP.NET Core, we use <strong>
+				Abp.AspNetCore.Mvc.Authorization.AbpMvcAuthorize</strong> 
+				attribute.</li>
+			</ul>
+			<p>This 
+difference comes from inheritance. In application layer it's 
+completely ASP.NET Boilerplate's implementation and does not extend any class. 
+			But, int MVC and Web API, it inherits from Authorize attributes of 
+			those frameworks.</p>
+			<h5>Suppress Authorization</h5>
+			<p>You can disable authorization for a method/class by adding
+			<strong>AbpAllowAnonymous</strong> attribute to aplication services. 
+			Use <strong>AllowAnonymous</strong> for MVC, Web API and ASP.NET 
+			Core Controllers, which are native attributes of these frameworks.</p>
 			<h4 id="DocUsingPermissionChecker">Using IPermissionChecker</h4>
 			<p>While AbpAuthorize attribute pretty enough for most cases, there must be 
 situations we should check for a permission in a method body. We can inject and 
 use <strong>IPermissionChecker</strong> for that as shown in the example below:</p>
 			<pre lang="cs">public void CreateUser(CreateOrUpdateUserInput input)
 {
-    if (!PermissionChecker.IsGranted("Administration.UserManagement.CreateUser"))
+    if (!<strong>PermissionChecker.IsGranted("Administration.UserManagement.CreateUser")</strong>)
     {
         throw new AbpAuthorizationException("You are not authorized to create user!");
     }
@@ -160,18 +168,18 @@ permission and throw an exception as shown above, you can use the <strong>
 Authorize</strong> method:</p>
 			<pre lang="cs">public void CreateUser(CreateOrUpdateUserInput input)
 {
-    PermissionChecker.Authorize("Administration.UserManagement.CreateUser");
+    <strong>PermissionChecker.Authorize("Administration.UserManagement.CreateUser");</strong>
 
     //A user can not reach this point if he is not granted for "Administration.UserManagement.CreateUser" permission.
 }</pre>
-			<p>Since authorization generally implemented in application layer, <strong>
-ApplicationService</strong> base class injects and defines PermissionChecker 
+			<p>Since authorization is widely used, <strong>
+ApplicationService</strong> and some common base classes inject and define PermissionChecker 
 property. Thus, permission checker can be used without injecting in application 
 service classes.</p>
 			<h4>In Razor Views</h4>
 			<p>Base view class defines IsGranted method to check if current user has a 
 	permission. Thus, we can conditionally render the view. Example:</p>
-			<pre lang="xml">@if (IsGranted("Administration.UserManagement.CreateUser"))
+			<pre lang="xml">@if (<strong>IsGranted("Administration.UserManagement.CreateUser")</strong>)
 {
     &lt;button id=&quot;CreateNewUserButton&quot; class=&quot;btn btn-primary&quot;&gt;&lt;i class=&quot;fa fa-plus&quot;&gt;&lt;/i&gt; @L(&quot;CreateNewUser&quot;)&lt;/button&gt;
 }</pre>

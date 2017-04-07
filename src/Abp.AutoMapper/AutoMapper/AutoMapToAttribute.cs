@@ -1,18 +1,36 @@
 ﻿using System;
+using Abp.Collections.Extensions;
+using AutoMapper;
 
 namespace Abp.AutoMapper
 {
-    public class AutoMapToAttribute : AutoMapAttribute
+    public class AutoMapToAttribute : AutoMapAttributeBase
     {
-        internal override AutoMapDirection Direction
-        {
-            get { return AutoMapDirection.To; }
-        }
+        public MemberList MemberList { get; set; } = MemberList.Source;
 
         public AutoMapToAttribute(params Type[] targetTypes)
             : base(targetTypes)
         {
 
+        }
+
+        public AutoMapToAttribute(MemberList memberList, params Type[] targetTypes)
+            : this(targetTypes)
+        {
+            MemberList = memberList;
+        }
+
+        public override void CreateMap(IMapperConfigurationExpression configuration, Type type)
+        {
+            if (TargetTypes.IsNullOrEmpty())
+            {
+                return;
+            }
+
+            foreach (var targetType in TargetTypes)
+            {
+                configuration.CreateMap(type, targetType, MemberList);
+            }
         }
     }
 }

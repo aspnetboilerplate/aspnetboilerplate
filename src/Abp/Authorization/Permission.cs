@@ -23,7 +23,7 @@ namespace Abp.Authorization
         /// Unique name of the permission.
         /// This is the key name to grant permissions.
         /// </summary>
-        public string Name { get; private set; }
+        public string Name { get; }
 
         /// <summary>
         /// Display name of the permission.
@@ -35,12 +35,6 @@ namespace Abp.Authorization
         /// A brief description for this permission.
         /// </summary>
         public ILocalizableString Description { get; set; }
-
-        /// <summary>
-        /// Is this permission granted by default.
-        /// Default value: false.
-        /// </summary>
-        public bool IsGrantedByDefault { get; set; }
 
         /// <summary>
         /// Which side can use this permission.
@@ -55,10 +49,7 @@ namespace Abp.Authorization
         /// <summary>
         /// List of child permissions. A child permission can be granted only if parent is granted.
         /// </summary>
-        public IReadOnlyList<Permission> Children
-        {
-            get { return _children.ToImmutableList(); }
-        }
+        public IReadOnlyList<Permission> Children => _children.ToImmutableList();
         private readonly List<Permission> _children;
 
         /// <summary>
@@ -66,14 +57,12 @@ namespace Abp.Authorization
         /// </summary>
         /// <param name="name">Unique name of the permission</param>
         /// <param name="displayName">Display name of the permission</param>
-        /// <param name="isGrantedByDefault">Is this permission granted by default. Default value: false.</param>
         /// <param name="description">A brief description for this permission</param>
         /// <param name="multiTenancySides">Which side can use this permission</param>
         /// <param name="featureDependency">Depended feature(s) of this permission</param>
         public Permission(
             string name,
             ILocalizableString displayName = null,
-            bool isGrantedByDefault = false,
             ILocalizableString description = null,
             MultiTenancySides multiTenancySides = MultiTenancySides.Host | MultiTenancySides.Tenant,
             IFeatureDependency featureDependency = null)
@@ -85,7 +74,6 @@ namespace Abp.Authorization
 
             Name = name;
             DisplayName = displayName;
-            IsGrantedByDefault = isGrantedByDefault;
             Description = description;
             MultiTenancySides = multiTenancySides;
             FeatureDependency = featureDependency;
@@ -101,12 +89,11 @@ namespace Abp.Authorization
         public Permission CreateChildPermission(
             string name, 
             ILocalizableString displayName = null, 
-            bool isGrantedByDefault = false, 
             ILocalizableString description = null, 
             MultiTenancySides multiTenancySides = MultiTenancySides.Host | MultiTenancySides.Tenant,
             IFeatureDependency featureDependency = null)
         {
-            var permission = new Permission(name, displayName, isGrantedByDefault, description, multiTenancySides, featureDependency) { Parent = this };
+            var permission = new Permission(name, displayName, description, multiTenancySides, featureDependency) { Parent = this };
             _children.Add(permission);
             return permission;
         }

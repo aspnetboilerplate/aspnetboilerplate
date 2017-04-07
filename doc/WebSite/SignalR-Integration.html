@@ -86,6 +86,10 @@ namespace MyProject.Web
 &lt;/script&gt;</pre>
 			<p>In this case, you can call <strong>abp.signalr.connect()</strong> 
 	function manually whenever you need to connect to the server.</p>
+	<p>
+	ASP.NET Boilerplate also <strong>automatically reconnects</strong> to the server (from the 
+	client) when client disconnects, if <strong>abp.signalr.autoConnect</strong> is true.
+	</p>
 			<p>
 				<strong>"abp.signalr.connected"</strong> global event is triggered when 
 	client connects to the server. You can register to this event to take 
@@ -119,7 +123,7 @@ namespace MyProject.Web
 	sending/receiving objects (because camelCase is preferred notation in 
 	javascript). If you want to ignore this for your classes in some assemblies, 
 	then you can add those assemblies to 
-	AbpSignalRContractResolver.IgnoredAssemblies list.</p>
+	AbpSignalRContractResolver.<strong>IgnoredAssemblies</strong> list.</p>
 			<h3>Your SignalR Code</h3>
 			<p>
 				<strong>Abp.Web.SignalR</strong> package also simplifies your SignalR 

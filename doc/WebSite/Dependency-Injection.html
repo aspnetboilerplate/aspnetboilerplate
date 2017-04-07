@@ -19,7 +19,7 @@ which allows program designs to be loosely coupled and to follow the dependency 
 service locator pattern, which allows clients to know about the system they use to find dependencies.</em>".</p>
 			<p>It's very hard to manage dependencies and develop a modular and well 
 structured application without using dependency injection techniques.</p>
-			<h4 id="DocProblems">Problems of traditional way</h4>
+			<h4 id="DocProblems">Problems of Traditional Way</h4>
 			<p>In an application, classes depend on each other. Assume that we have an
 				<a href="/Pages/Documents/Application-Services">application service</a> that 
 uses a <a href="/Pages/Documents/Entities">repository</a> to insert
@@ -99,7 +99,7 @@ from PersonRepository implementation. But,still there are some problems:</p>
 			</ul>
 			<h4 id="DocSolution">Solution</h4>
 			<p>There are some best practices (patterns) to depend on other classes.</p>
-			<h4 id="DocConstructorInjection">Constructor Injection pattern</h4>
+			<h5 id="DocConstructorInjection">Constructor Injection Pattern</h5>
 			<p>The example above can be re-written as shown below:</p>
 			<pre lang="cs">public class PersonAppService
 {
@@ -139,7 +139,7 @@ creation of dependent objects. But, there are some problems with the code above:
 			</ul>
 			<p>Fortunately, there are <a href="#DocDIFrameworks">Dependency Injection 
 frameworks</a> automates to manage dependencies.</p>
-			<h4 id="DocPropertyInjection">Property Injection pattern</h4>
+			<h5 id="DocPropertyInjection">Property Injection pattern</h5>
 			<p>Constructor injection pattern is a perfect way of providing dependencies of a 
 class. In this way, you can not create an instance of the class without 
 supplying dependencies. It's also a strong way of explicitly declaring what's 
@@ -184,7 +184,7 @@ optional dependency </strong>of PersonAppService.</p>
 
 			<p>Almost all of Dependency Injection frameworks support Property Injection 
 pattern.</p>
-			<h4 id="DocDIFrameworks">Dependency Injection frameworks</h4>
+			<h5 id="DocDIFrameworks">Dependency Injection frameworks</h5>
 			<p>There are many dependency injection framework that automates resolving 
 dependencies. They can create objects with all dependencies (and dependencies of 
 dependencies recursively). So, you just write your class with constructor &amp; 
@@ -221,15 +221,16 @@ and made only one time in an application startup.</p>
 				<strong>transient</strong>. That means whenever we resolves an object of these 
 types, a new instance will be created. There are many different life cycles 
 (like <strong>singletion</strong>).</p>
-			<h3 id="DocAbpInfrastructure">ASP.NET Boilerplate Dependency Injection infrastructure</h3>
+			<h3 id="DocAbpInfrastructure">ASP.NET Boilerplate Dependency Injection 
+			Infrastructure</h3>
 			<p>ASP.NET Boilerplate almost makes invisible of using the dependency injection 
 framework when you write your application by following best practices and some 
 conventions.</p>
-			<h4 id="DocRegisterDependencies">Registering</h4>
+			<h4 id="DocRegisterDependencies">Registering Dependencies</h4>
 			<p>There are different ways of registering your classes to Dependency Injection 
 system in ASP.NET Boilerplate. Most of time, conventional registration will be 
 sufficient.</p>
-			<h4 id="DocConventionalRegister">Conventional registrations</h4>
+			<h5 id="DocConventionalRegister">Conventional Registrations</h5>
 
 			<p>ASP.NET Boilerplate automatically registers all
 				<a href="/Pages/Documents/Repositories">Repositories</a>, 
@@ -261,8 +262,9 @@ postfix. But you can not name your service as PeopleService. If you do it, it's
 not registered for IPersonAppService automatically (It's registered to DI 
 framework but with self-registration, not with interface), so, you should manually 
 register it if you want.</p>
-			<p>ASP.NET Boilerplate registers assemblies by convention. So, you should tell 
-to ASP.NET Boilerplate to register your assembly by convention. It's pretty 
+			<p>ASP.NET Boilerplate can register assemblies by convention. You 
+			can tell 
+ASP.NET Boilerplate to register your assembly by convention. It's pretty 
 easy:</p>
 			<pre lang="cs">IocManager.RegisterAssemblyByConvention(Assembly.GetExecutingAssembly());</pre>
 			<p>Assembly.GetExecutingAssembly() gets a reference to the assembly which 
@@ -274,7 +276,7 @@ being initialized. See ASP.NET Boilerplate's
 				<strong>IConventionalRegisterer</strong> interface and calling <strong>IocManager.AddConventionalRegisterer</strong> 
 method with your class. You should add it in pre-initialize method of your 
 module.</p>
-			<h4 id="DocHelperInterfaces">Helper Interfaces</h4>
+			<h5 id="DocHelperInterfaces">Helper Interfaces</h5>
 			<p>You may want to register a specific class that does not fit to conventional 
 registration rules. ASP.NET Boilerplate provides <strong>ITransientDependency</strong> and 
 				<strong>ISingletonDependency</strong> interfaces as a shortcut. For example:</p>
@@ -294,26 +296,25 @@ MyPersonManager is created and same object is passed to all needed classes. It's
 just created in first usage, then same instance is used in whole life of the 
 application.</p>
 
-			<h4 id="DocCustomRegistration">Custom/Direct registration</h4>
-			<p>If the approaches described before is no sufficient for your situation, you 
-can direcly use <strong>Castle Windsor</strong> to register your classes and dependencies. Thus, 
-you will have all capabilities of registering in Castle Windsor.</p>
-			<p>Castle Windsor has <strong>IWindsorInstaller</strong> interface that can be 
-implemented for registration. You can create a class that implements IWindsorInstaller 
-interface in your application:</p>
-			<pre lang="cs">public class MyInstaller : IWindsorInstaller
-{
-    public void Install(IWindsorContainer container, IConfigurationStore store)
-    {
-        container.Register(Classes.FromThisAssembly().BasedOn&lt;IMySpecialInterface&gt;().LifestylePerThread().WithServiceSelf());
-    }
-}</pre>ASP.NET Boilerplate automatically finds and executes this class. Lastly, you 
-can reach to the WindsorContainer using <strong>IIocManager.IocContainer</strong> 
-property. For more information, read
-			<a href="http://docs.castleproject.org/Default.aspx?Page=MainPage">Windsor's 
+			<h5 id="DocCustomRegistration">Custom/Direct Registration</h5>
+			<p>If conventional registrations are not sufficient for your situation, you 
+can either use <strong>IocManager</strong> or <strong>Castle Windsor</strong> to 
+			register your classes and dependencies.</p>
+			<h6>Using IocManager</h6>
+			<p>You can use <strong>IocManager</strong> to register dependencies (generally in 
+			PreInitialize of your <a href="Module-System.html">module definition</a> 
+			class):</p>
+			<pre lang="cs">IocManager.Register&lt;IMyService, MyService&gt;(DependencyLifeStyle.Transient);</pre>
+			<p>Using Castle Windsor API</p>
+			<p>You can use <strong>IIocManager.IocContainer</strong> 
+			property to access to the Castle Windsor Container and register 
+			dependencies. Example:</p>
+			<pre lang="cs">IocManager.IocContainer.Register(Classes.FromThisAssembly().BasedOn&lt;IMySpecialInterface&gt;().LifestylePerThread().WithServiceSelf());</pre>
+			&nbsp;For more information, read
+			<a href="https://github.com/castleproject/Home/blob/master/README.md">Windsor's 
 documentation</a>&nbsp;<h4 id="DocResolvingDependencies">Resolving</h4>
 			<p>Registration informs IOC (Inversion of Control) Container (a.k.a. DI 
-frameowk) about your classes, their dependencies and lifecycles. Somewhere in 
+framework) about your classes, their dependencies and lifetimes. Somewhere in 
 your application you need to create objects using IOC Container. ASP.NET 
 Provides a few options for resolving dependencies.</p>
 			<h4 id="DocResolveConstAndProp">Constructor &amp; Property Injection</h4>
@@ -343,8 +344,9 @@ it's possible. An example:</p>
 			<p>IPersonRepository is injected from constructor and ILogger is injected with 
 public property. In that way, your code will be unaware of dependency injection 
 system at all. This is the most proper way of using DI system.</p>
-			<h4 id="DocIocHelper">IIocResolver and IIocManager</h4>
-			<p>Sometime you may have to directly resolve your dependency instead of 
+			<h4 id="DocIocHelper">IIocResolver, IIocManager and 
+			IScopedIocResolver</h4>
+			<p>You may have to directly resolve your dependency instead of 
 constructor &amp; property injection. This should be avoided when possible, but it 
 may be impossible. ASP.NET Boilerplate provides some services those can be injected 
 and used easily. Example:</p>
@@ -360,14 +362,14 @@ and used easily. Example:</p>
     public void DoIt()
     {
         //Resolving, using and releasing manually
-        var personService1 = _iocResolver.Resolve&lt;PersonAppService&gt;();
+        var personService1 = <strong>_iocResolver.Resolve&lt;PersonAppService&gt;()</strong>;
         personService1.CreatePerson(new CreatePersonInput { Name = &quot;Yunus&quot;, Surname = &quot;Emre&quot; });
-        _iocResolver.Release(personService1);
+        <strong>_iocResolver.Release(personService1);</strong>
 
         //Resolving and using in a safe way
-        using (var personService2 = _iocResolver.ResolveAsDisposable&lt;PersonAppService&gt;())
+        using (var personService2 = <strong>_iocResolver.ResolveAsDisposable&lt;PersonAppService&gt;()</strong>)
         {
-            personService2.Object.CreatePerson(new CreatePersonInput { Name = &quot;Yunus&quot;, Surname = &quot;Emre&quot; });
+            <strong>personService2.Object</strong>.CreatePerson(new CreatePersonInput { Name = &quot;Yunus&quot;, Surname = &quot;Emre&quot; });
         }
     }
 }</pre>
@@ -376,9 +378,27 @@ and used easily. Example:</p>
 are a few overloads of <strong>Resolve</strong> method can be used as needed.<strong> Release </strong>method is used to 
 release component (object). It's <strong>critical </strong>
 to call Release if you're manually resolving an object. Otherwise, your 
-application has some memory leak problem. To be sure of releasing the object, 
+application may have memory leak problem. To be sure of releasing the object, 
 use <strong>ResolveAsDisposable</strong> (as shown in the example above) 
 wherever it's possible. It automatically calls Release at the end of the using block.</p>
+			<p>IIocResolver (and IIocManager) have also <strong>CreateScope</strong> extension 
+			method (defined in Abp.Dependency namespace) to safely release all 
+			resolved 
+			dependencies. Example:</p>
+			<pre lang="xml">using (var scope = <strong>_iocResolver.CreateScope()</strong>)
+{
+    var simpleObj1 = scope.Resolve&lt;SimpleService1&gt;();
+    var simpleObj2 = scope.Resolve&lt;SimpleService2&gt;();
+    //...
+}</pre>
+			<p>In the end of using block, all resolved dependencies 
+			automatically removed. A scope is also injectable using <strong>
+			IScopedIocResolver</strong>. You can inject this interface and 
+			resolve dependencies. When your class is released, all resolved 
+			dependencies will be released. But use it carefully; For example, if 
+			your class has a long life (say it&#39;s a singleton) and you are 
+			resolving too many objects, then all of them will remain in the 
+			memory until your class is released.</p>
 			<p>If you want to directly reach to IOC Container (Castle Windsor) to resolve dependencies, you 
 can consturctor-inject <strong>IIocManager</strong> and use <strong>IIocManager.IocContainer</strong> 
 property. If you are in a static context or can not inject IIocManager, as a 
@@ -392,7 +412,7 @@ automatically called just after creating your object (before used). Surely, you
 should inject/resolve the object in order to work this feature.</p>
 
 			<h4 id="DocMvcAndWebApiIntegration">ASP.NET MVC &amp; ASP.NET Web API integration</h4>
-			<p>Surely, we must call dependency injection system to resolve the root object 
+			<p>We must call dependency injection system to resolve the root object 
 in dependency graph. In an <strong>ASP.NET MVC </strong>application, it's 
 generally a <strong>Controller </strong>class. We can use contructor injection and property injection
 patterns also in controllers. When a request come to our application, the 
@@ -401,6 +421,15 @@ recursively. So, who does that? It's done automatically by ASP.NET Boilerplate
 by extending ASP.NET MVC's default controller factory. As similar, it's true for 
 ASP.NET Web API also. You don't care about creating and disposing objects.</p>
 
+			<h4>ASP.NET Core Integration</h4>
+			<p>ASP.NET Core has already a built-in dependency injection system 
+			with
+			<a href="https://www.nuget.org/packages/Microsoft.Extensions.DependencyInjection" target="_blank">
+			Microsoft.Extensions.DependencyInjection</a> package. ABP uses
+			<a href="https://www.nuget.org/packages/Castle.Windsor.MsDependencyInjection" target="_blank">
+			Castle.Windsor.MsDependencyInjection</a> package to integrate it's 
+			dependency injection system with ASP.NET Core's. So, you don't have 
+			to think about it.</p>
 			<h4>Last notes</h4>
 			<p>ASP.NET Boilerplate simplifies and automates using dependency injection as 
 long as you follow the rules and use the structures above. Most of times you 

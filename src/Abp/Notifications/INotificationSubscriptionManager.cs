@@ -12,30 +12,29 @@ namespace Abp.Notifications
         /// <summary>
         /// Subscribes to a notification for given user and notification informations.
         /// </summary>
-        /// <param name="tenantId">Tenant id of the user. Null for host users.</param>
-        /// <param name="userId">The user id (which belongs to given tenantId).</param>
+        /// <param name="user">User</param>
         /// <param name="notificationName">Name of the notification.</param>
         /// <param name="entityIdentifier">entity identifier</param>
-        Task SubscribeAsync(int? tenantId, long userId, string notificationName, EntityIdentifier entityIdentifier = null);
+        Task SubscribeAsync(UserIdentifier user, string notificationName, EntityIdentifier entityIdentifier = null);
 
         /// <summary>
         /// Subscribes to all available notifications for given user.
         /// It does not subscribe entity related notifications.
         /// </summary>
-        /// <param name="tenantId">The tenant identifier.</param>
-        /// <param name="userId">The user identifier.</param>
-        Task SubscribeToAllAvailableNotificationsAsync(int? tenantId, long userId);
+        /// <param name="user">User.</param>
+        Task SubscribeToAllAvailableNotificationsAsync(UserIdentifier user);
 
         /// <summary>
         /// Unsubscribes from a notification.
         /// </summary>
-        /// <param name="userId">The user id.</param>
+        /// <param name="user">User.</param>
         /// <param name="notificationName">Name of the notification.</param>
         /// <param name="entityIdentifier">entity identifier</param>
-        Task UnsubscribeAsync(long userId, string notificationName, EntityIdentifier entityIdentifier = null);
+        Task UnsubscribeAsync(UserIdentifier user, string notificationName, EntityIdentifier entityIdentifier = null);
 
         /// <summary>
         /// Gets all subscribtions for given notification (including all tenants).
+        /// This only works for single database approach in a multitenant application!
         /// </summary>
         /// <param name="notificationName">Name of the notification.</param>
         /// <param name="entityIdentifier">entity identifier</param>
@@ -52,15 +51,15 @@ namespace Abp.Notifications
         /// <summary>
         /// Gets subscribed notifications for a user.
         /// </summary>
-        /// <param name="userId">The user id.</param>
-        Task<List<NotificationSubscription>> GetSubscribedNotificationsAsync(long userId);
+        /// <param name="user">User.</param>
+        Task<List<NotificationSubscription>> GetSubscribedNotificationsAsync(UserIdentifier user);
 
         /// <summary>
         /// Checks if a user subscribed for a notification.
         /// </summary>
-        /// <param name="userId">The user id.</param>
+        /// <param name="user">User.</param>
         /// <param name="notificationName">Name of the notification.</param>
         /// <param name="entityIdentifier">entity identifier</param>
-        Task<bool> IsSubscribedAsync(long userId, string notificationName, EntityIdentifier entityIdentifier = null);
+        Task<bool> IsSubscribedAsync(UserIdentifier user, string notificationName, EntityIdentifier entityIdentifier = null);
     }
 }

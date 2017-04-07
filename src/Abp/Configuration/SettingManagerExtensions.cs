@@ -109,7 +109,7 @@ namespace Abp.Configuration
         /// <param name="tenantId">Tenant id</param>
         /// <param name="userId">User id</param>
         /// <returns>Current value of the setting for the user</returns>
-        public static string GetSettingValueForUser(this ISettingManager settingManager, string name, int tenantId, long userId)
+        public static string GetSettingValueForUser(this ISettingManager settingManager, string name, int? tenantId, long userId)
         {
             return AsyncHelper.RunSync(() => settingManager.GetSettingValueForUserAsync(name, tenantId, userId));
         }
@@ -216,11 +216,11 @@ namespace Abp.Configuration
         /// If you want to get current values of all settings, use <see cref="GetAllSettingValues"/> method.
         /// </summary>
         /// <param name="settingManager">Setting manager</param>
-        /// <param name="userId">User to get settings</param>
+        /// <param name="user">User to get settings</param>
         /// <returns>All settings of the user</returns>
-        public static IReadOnlyList<ISettingValue> GetAllSettingValuesForUser(this ISettingManager settingManager, long userId)
+        public static IReadOnlyList<ISettingValue> GetAllSettingValuesForUser(this ISettingManager settingManager, UserIdentifier user)
         {
-            return AsyncHelper.RunSync(() => settingManager.GetAllSettingValuesForUserAsync(userId));
+            return AsyncHelper.RunSync(() => settingManager.GetAllSettingValuesForUserAsync(user));
         }
 
         /// <summary>
@@ -250,12 +250,12 @@ namespace Abp.Configuration
         /// Changes setting for a user.
         /// </summary>
         /// <param name="settingManager">Setting manager</param>
-        /// <param name="userId">UserId</param>
+        /// <param name="user">User</param>
         /// <param name="name">Unique name of the setting</param>
         /// <param name="value">Value of the setting</param>
-        public static void ChangeSettingForUser(this ISettingManager settingManager, long userId, string name, string value)
+        public static void ChangeSettingForUser(this ISettingManager settingManager, UserIdentifier user, string name, string value)
         {
-            AsyncHelper.RunSync(() => settingManager.ChangeSettingForUserAsync(userId, name, value));
+            AsyncHelper.RunSync(() => settingManager.ChangeSettingForUserAsync(user, name, value));
         }
     }
 }

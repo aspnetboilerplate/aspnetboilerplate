@@ -2,47 +2,36 @@
 using System.Linq;
 using Abp.Dependency;
 using Castle.Core;
-using Castle.MicroKernel;
 
 namespace Abp.Auditing
 {
     internal static class AuditingInterceptorRegistrar
     {
-        private static IAuditingConfiguration _auditingConfiguration;
-
         public static void Initialize(IIocManager iocManager)
         {
-            _auditingConfiguration = iocManager.Resolve<IAuditingConfiguration>();
-
-            if (!_auditingConfiguration.IsEnabled)
+            var auditingConfiguration = iocManager.Resolve<IAuditingConfiguration>();
+            iocManager.IocContainer.Kernel.ComponentRegistered += (key, handler) =>
             {
-                return;
-            }
-
-            iocManager.IocContainer.Kernel.ComponentRegistered += Kernel_ComponentRegistered;
+                if (ShouldIntercept(auditingConfiguration, handler.ComponentModel.Implementation))
+                {
+                    handler.ComponentModel.Interceptors.Add(new InterceptorReference(typeof(AuditingInterceptor)));
+                }
+            };
         }
-
-        private static void Kernel_ComponentRegistered(string key, IHandler handler)
+        
+        private static bool ShouldIntercept(IAuditingConfiguration auditingConfiguration, Type type)
         {
-            if (ShouldIntercept(handler.ComponentModel.Implementation))
-            {
-                handler.ComponentModel.Interceptors.Add(new InterceptorReference(typeof(AuditingInterceptor)));
-            }
-        }
-
-        private static bool ShouldIntercept(Type type)
-        {
-            if (_auditingConfiguration.Selectors.Any(selector => selector.Predicate(type)))
+            if (auditingConfiguration.Selectors.Any(selector => selector.Predicate(type)))
             {
                 return true;
             }
 
-            if (type.IsDefined(typeof(AuditedAttribute), true)) //TODO: true or false?
+            if (type.IsDefined(typeof(AuditedAttribute), true))
             {
                 return true;
             }
 
-            if (type.GetMethods().Any(m => m.IsDefined(typeof(AuditedAttribute), true))) //TODO: true or false?
+            if (type.GetMethods().Any(m => m.IsDefined(typeof(AuditedAttribute), true)))
             {
                 return true;
             }

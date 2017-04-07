@@ -5,6 +5,11 @@
 		<meta content="text/html; charset=utf-8" http-equiv="Content-Type" />
 		<title>NLayer Architecture</title>
 		<link type="text/css" rel="stylesheet" href="bootstrap.min.css" />
+		<style type="text/css">
+.auto-style1 {
+	color: #333333;
+}
+</style>
 	</head>
 
 	<body>
@@ -13,7 +18,7 @@
 
 			<h3 id="DocIntroLayers">Introduction</h3>
 			<p>Layering of an application's codebase is a widely accepted technique to help
-reduce complexity and improve code reusability. To achieve this layered
+reduce complexity and improve code reusability. To achieve layered
 architecture, ASP.NET Boilerplate follows the principles of <strong>Domain Driven
 Design</strong>. In Domain Driven Design there are four fundamental layers:</p>
 			<ul>
@@ -26,18 +31,18 @@ Design</strong>. In Domain Driven Design there are four fundamental layers:</p>
 	application tasks.</li>
 				<li>
 					<strong>Domain Layer</strong>: Includes business objects and their rules.
-	This is the heart of the application.</li>
+	This is heart of the application.</li>
 				<li>
 					<strong>Infrastructure Layer</strong>: Provides generic technical
 	capabilities that support higher layers. An example of the Infrastructure
-	Layer is a Repository being used to interact with a database through an
-	ORM framework.</li>
+	Layer can be a Repository implementation used to interact with a database through an
+	ORM framework, or an implementation for an email provider to send emails.</li>
 			</ul>
 
 			<p>There may be additional layers added as necessary. An example being:</p>
 			<ul>
 				<li>
-					<strong>Distributed Service Layer</strong>: Used to expose application
+					<strong>Distributed Services Layer</strong>: Used to expose application
 	features to remote clients. There are tools like ASP.NET Web API and WCF that
 	can provide this layer.</li>
 			</ul>
@@ -61,21 +66,22 @@ differences based on implementation.</p>
                 Presentation
 						</td>
 						<td class="layer-building-blocks col-sm-10">
-							<span>View Models (Javascript)</span>
-							<span>Views (HTML/CSS)</span>
+							<span>View Models (Javascript),</span>
+							<span>Views (HTML/CSS),</span>
 							<span>
-								<a href="/Pages/Documents/Localization">Localization</a>
-							</span>
-						</td>
+								<a href="/Pages/Documents/Localization">Localization</a>,
+							<a href="Navigation.html">Navigation</a>,
+							<a href="Notification-System.html">Notifications</a></span></td>
 					</tr>
 					<tr>
 						<td class="layer-name">
                 Web
 						</td>
 						<td class="layer-building-blocks">
-							<span>Web API Controllers</span>
-							<span>MVC Controllers</span>
-						</td>
+							<span><a href="Web-API-Controllers.html">Web API Controllers</a>,</span>
+							<span><a href="MVC-Controllers.html">MVC Controllers</a>,
+							<a href="OData-Integration.html">OData</a>,
+							<a href="AspNet-Core.html">ASP.NET Core</a></span></td>
 					</tr>
 					<tr>
 						<td class="layer-name">
@@ -83,15 +89,12 @@ differences based on implementation.</p>
 						</td>
 						<td class="layer-building-blocks">
 							<span>
-								<a href="/Pages/Documents/Application-Services">Application Services</a>
-							</span>
-							<span>
-								<a href="/Pages/Documents/Data-Transfer-Objects">DTOs</a>
-							</span>
-							<span>
-								<a href="/Pages/Documents/Data-Transfer-Objects#DocAutoMapping">DTO Mappers</a>
-							</span>
-						</td>
+								<a href="/Pages/Documents/Application-Services">Application Services</a>,
+								<a href="/Pages/Documents/Data-Transfer-Objects">DTOs</a>,
+								<a href="/Pages/Documents/Data-Transfer-Objects#DocAutoMapping">DTO Mappers</a><span class="auto-style1"><a href="/Pages/Documents/Data-Transfer-Objects#DocAutoMapping">,</a>
+							<a href="Authorization.html">Authorization</a>,
+							<a href="Abp-Session.html">Session</a>,
+							<a href="Audit-Logging.html">Audit Logging</a></span></span></td>
 					</tr>
 					<tr>
 						<td class="layer-name">
@@ -99,18 +102,12 @@ differences based on implementation.</p>
             	(Core)</td>
 						<td class="layer-building-blocks">
 							<span>
-								<a href="/Pages/Documents/Entities">Entities</a>
-							</span>
-							<span>Value Objects</span>
+								<a href="/Pages/Documents/Entities">Entities</a>, Value Objects,</span>
 							<span>
-								<a href="/Pages/Documents/Repositories">Repositories</a>
-							</span>
-							<span>Business Classes</span>
-							<span>Domain Services</span>
+								<a href="/Pages/Documents/Repositories">Repositories</a>,
+							<a href="Domain-Services.html">Domain Services</a>,</span>
 							<span>
-								<a href="/Pages/Documents/Unit-Of-Work">Unit of Work</a>
-							</span>
-							<span>
+								<a href="/Pages/Documents/Unit-Of-Work">Unit of Work</a>,
 								<a href="/Pages/Documents/EventBus-Domain-Events">Domain Events</a>
 							</span>
 						</td>
@@ -120,31 +117,28 @@ differences based on implementation.</p>
                 Infrastructure
 						</td>
 						<td class="layer-building-blocks">
-							<span>ORM</span>
-							<span>DB Migrations</span>
-						</td>
+							<span>ORM (<a href="EntityFramework-Integration.html">EntityFramework</a>,
+							<a href="NHibernate-Integration.html">NHibernate</a>),</span>
+							<span>DB Migrations,
+							<a href="Background-Jobs-And-Workers.html">
+							Background Jobs</a></span></td>
 					</tr>
 				</tbody>
 				<thead>
 					<tr>
 						<th colspan="2">
-							<h3>Others</h3>
+							<h3>Others (common)</h3>
 						</th>
 					</tr>
 				</thead>
 				<tbody>
 					<tr>
-						<td class="layer-name">
-                Server Side
-						</td>
-						<td class="layer-building-blocks">
+						<td class="layer-name" colspan="2">
 							<span>
-								<a href="/Pages/Documents/Dependency-Injection">Dependency Injection</a>
-							</span>
-							<span>
-								<a href="/Pages/Documents/Logging">Logging</a>
-							</span>
-						</td>
+								<a href="/Pages/Documents/Dependency-Injection">Dependency Injection</a>,
+								<a href="/Pages/Documents/Logging">Logging</a>,
+						<a href="Caching.html">Caching</a>,
+						<a href="Setting-Management.html">Settings</a>...</span></td>
 					</tr>
 				</tbody>
 			</table>
@@ -153,61 +147,72 @@ differences based on implementation.</p>
 			<p>
 				<img alt="A solution structure" height="114" src="images/StsSolutionStructure2.png" width="248" />
 			</p>
-			<p>A layer can be implemented as one or more assemblies. It may be especially
-good to create more than one assembly for third-party dependencies (like
-NHibernate).</p>
+			<p>A layer can be implemented as one or more assemblies. It may be good to create more than one assembly for third-party dependencies (like 
+			EntityFramework here) for larger projects. Also, there may be 
+			bounded contextes where every context has it's own layers.</p>
 
 			<h4 id="DocDomainLayer">Domain (Core) Layer</h4>
-			<p>The Domain Layer is where all business rules should be implemented.</p>
+			<p>Domain Layer is where all business rules should be implemented.</p>
 			<p>
 				<a href="/Pages/Documents/Entities">Entities</a> represent data and operations
 of the business domain. Generally they are mapped to database tables in practice.</p>
 			<p>
 				<a href="/Pages/Documents/Repositories">Repositories</a> are collection-like
 objects and are used to retrieve and persist entities on a data source (database).
-The Domain Layer defines repositories, but does not implement them. They are
+Domain Layer defines repositories, but does not implement them. They are
 implemented in the Infrastructure Layer.</p>
 			<p>
 				<a href="/Pages/Documents/EventBus-Domain-Events">Domain Events</a> are used
-to define domain-specific events as well as to trigger and handle them. Domain
-services work with entities and implement business rules which do not belong
+to define domain-specific events as well as to trigger and handle them. 
+				<a href="Domain-Services.html">Domain
+services</a> work with entities (and other domain objects) and implement business rules which do not belong
 within a single entity.</p>
 			<p>
-				<a href="/Pages/Documents/Unit-Of-Work">Unit of Work</a> is a design pattern
-used to manage entities who have been affected by business logic and persist
-their state to a data store.</p>
+				<a href="/Pages/Documents/Unit-Of-Work">Unit of Work</a> is a 
+				design pattern used to manage database connection and 
+				transaction, track entity changes and save changes to a data store. 
+				It's defined in domain layer, but implemented in infrastructure 
+				layer.</p>
 			<p>This layer should be independent of third-party libraries as much as possible.</p>
 
 			<h4 id="DocAppLayer">Application Layer</h4>
-			<p>The Application Layer contains <a href="/Pages/Documents/Application-Services">
-application services</a> that are used by the Presentation Layer. An application
-service method receives a <a href="/Pages/Documents/Data-Transfer-Objects">DTO</a>
-(Data Transfer Object) as input, uses this input to perform some specific domain
-layer operation, and may return another DTO, if needed. Generally, it does not
-receive or return entities which allows the Presentation Layer to be abstracted
-from the Domain Layer. An application service method is generally considered a
+			<p>Application Layer contains <a href="/Pages/Documents/Application-Services">
+application services</a> those are used by the Presentation Layer. An application
+service method can receive a <a href="/Pages/Documents/Data-Transfer-Objects">DTO</a>
+			(Data Transfer Object) as input, uses this input to perform some 
+			specific domain layer operation, and may return another DTO, if 
+			needed. It should not
+receive or return entities. An application service method is generally considered a
 				<a href="/Pages/Documents/Unit-Of-Work#DocAppServices">Unit of Work</a>.
 				<a href="/Pages/Documents/Validating-Data-Transfer-Objects">User input validation</a>
-is also implemented in this layer. ASP.NET Boilerplate provides infrastructure to
-implement validation easily. It's suggested to use a tool for mapping entities to
+is also implemented in this layer. It's suggested to use a tool for mapping entities to
 DTOs such as the <a href="http://automapper.org" target="_blank">AutoMapper</a>
-library.</p>
+library. We have also <a href="Abp-Session.html">session</a> here to obtain 
+			information on current user.</p>
 
 			<h4 id="DocInfraLayer">Infrastructure Layer</h4>
-			<p>While the Domain Layer defines interfaces for <a href="/Pages/Documents/Repositories">repositories</a>,
-the Infrastructure Layer implements those interfaces using ORM tools like
+			<p>While Domain Layer defines interfaces for <a href="/Pages/Documents/Repositories">repositories</a>,
+			<a href="Unit-Of-Work.html">unit of work</a> and other services, Infrastructure Layer implements those interfaces. 
+			It implements repositories using ORM tools like
 				<a href="/Pages/Documents/NHibernate-Integration" target="_blank">NHibernate</a> or
 				<a href="/Pages/Documents/EntityFramework-Integration" target="_blank">EntityFramework</a>.
 ASP.NET Boilerplate provides base classes to work with these two ORM frameworks.
-The Infrastructure Layer is used to abstract away dependencies on third-party
+Infrastructure Layer is used to abstract away dependencies on third-party
 libraries from the other layers.
 				<a href="http://www.codeproject.com/Articles/768664/Introduction-to-ASP-NET-Boilerplate#InfraMigrations" target="_blank">
 Database Migrations</a> can be used here as well.</p>
+			<p>Beside database access, we may have abstractions for service 
+			providers. For example, we may use a vendor to send SMS messages. We 
+			can define an interface in domain or application layer to abstract it from our 
+			code. Then we can implement that interface in the infrastructure 
+			layer.</p>
 
 			<h4 id="DocPresentationLayer">Web &amp; Presentation Layers</h4>
-			<p>The Web Layer is implemented using ASP.NET MVC and Web API. Two different
+			<p>Web Layer is implemented using <a href="MVC-Controllers.html">ASP.NET MVC</a>,
+			<a href="Web-API-Controllers.html">Web API</a> and
+			<a href="AspNet-Core.html">ASP.NET Core</a>. Two different
 approaches can be implemented here: Single-Page Applications or Multi-Page
-Applications.</p>
+Applications. <a href="/Templates">Startup templates</a> support both of them.</p>
 			<p>In a <strong>Single-Page Application (SPA)</strong> all resources are loaded once
 (or a core resource is loaded and others are lazy loaded when needed) to the
 client (browser) and then all subsequent interaction with the server is made
@@ -215,15 +220,17 @@ using AJAX calls. HTML code is generated on the client-side with data received
 from server. The entire page is never refreshed; views are just swapped in and
 out as necessary. There are many Javascript SPA frameworks, such as
 				<a href="https://angularjs.org/" target="_blank">AngularJs</a>,
-				<a href="http://durandaljs.com/" target="_blank">DurandalJs</a>,
 				<a href="http://backbonejs.org" target="_blank">BackboneJs</a>, and
-				<a href="http://emberjs.com/" target="_blank">EmberJs</a>. ASP.NET Boilerplate
-can work with any of them, but provides samples and some helper mechanisms to
-easily work with AngularJs and DurandalJs.</p>
-			<p>In a <strong>Multi-Page (Classic) Application (MPA)</strong>, the client makes
-a request to the server, the server side code (ASP.NET MVC Controllers) gets data
-from the database, and Razor views generate HTML. These compiled pages are sent
-back to the client for display. Each new page results in a full page refresh.</p>
+				<a href="http://emberjs.com/" target="_blank">EmberJs</a>. 
+			ASP.NET Boilerplate can work with any of them, but provides samples 
+			and some helper mechanisms to easily work with Angular.</p>
+			<p>In a <strong>Multi-Page (Classic) Application (MPA)</strong>, client makes
+a request to the server, the server side code (ASP.NET MVC Controllers in 
+			general) gets data
+from the database, and Razor views generate HTML. These generated pages are sent
+back to the client to display it. Each new page results in a full page refresh. 
+			Client then can make additional AJAX requests for better user 
+			experience.</p>
 			<p>SPA and MPA involve completely different architectures. An admin panel is a
 perfect candidate for a SPA. On the other hand, a blog better fits to the MPA
 model since it is desirable to have it crawled by search engines. Even though
@@ -231,31 +238,32 @@ there are tools to help make SPAs visible to search engines, the general approac
 is as such for the time being.</p>
 			<p>
 				<a href="http://www.asp.net/signalr" target="_blank">SignalR</a> is a perfect
-tool to send push-notifications from the server to the client. It can be used to
+tool to send push-<a href="Notification-System.html">notifications</a> from the server to the client. It can be used to
 provide a rich, real-time experience to the user.</p>
 			<p>There are many Javascript libraries &amp; frameworks on the client side.
 				<a href="http://jquery.com" target="_blank">jQuery</a> is the most popular in
 this area with thousands of free plug-ins. There are also tools/frameworks
 that make it easy to work with HTML &amp; CSS. For example, <a href="http://getbootstrap.com/" target="_blank">Twitter Bootstrap</a> is a very popular HTML/CSS framework option.</p>
-			<p>ASP.NET Boilerplate provides the infrastructure to automatically create a Web
+			<p>ABP provides infrastructure to automatically create a Web
 API Layer from your application services and easily use it with Javascript (see
 				<a href="/Pages/Documents/Dynamic-Web-API">documentation</a>). Additionally, it
-provides the infrastructure to manage application menus, <a href="/Pages/Documents/Localization">localization</a>,
-and language switching. Also included is a unified <a href="/Pages/Documents/Javascript-API">Javascript API</a>
+provides infrastructure to manage application <a href="Navigation.html">menus</a>, <a href="/Pages/Documents/Localization">localization</a>,
+and language switching. Also included is a simple and unified <a href="/Pages/Documents/Javascript-API">Javascript API</a>
 to simplify showing system messages and notifications.</p>
-			<p>ASP.NET Boilerplate automatically <a href="/Pages/Documents/Handling-Exceptions">handles exceptions</a> server-side
+			<p>ASP.NET Boilerplate automatically <a href="/Pages/Documents/Handling-Exceptions">handles exceptions</a> 
+			in server-side
 and returns an appropriate response to the client.</p>
 
 			<h3 id="DocOthers">Others</h3>
 			<p>ASP.NET Boilerplate uses and supports <a href="/Pages/Documents/Dependency-Injection">Dependency Injection</a> through
-the <a href="http://docs.castleproject.org/Windsor.MainPage.ashx" target="_blank">Castle Windsor</a> framework.
+the <a href="https://github.com/castleproject/Windsor/blob/master/docs/README.md" target="_blank">Castle Windsor</a> framework.
 It also uses <a href="http://logging.apache.org/log4net/" target="_blank">Log4Net</a> for <a href="/Pages/Documents/Logging">logging</a>
 server-side, however, easily supports swapping in other logging libraries
-without code change using Castle's logging facility.</p>
+without code change by the help of Castle's abstract logging facility.</p>
 
 			<h3 id="DocLayeringSummary">Summary</h3>
 			<p>ASP.NET Boilerplate leverages some of the best frameworks/libraries in addition
-to its own classes and systems to provide a great infrastructure on which to
+to its own classes and systems to provide a great infrastructure to
 build web applications with an NLayer architecture. It also has <a href="/Templates">templates</a>
 that can be used to easily create a layered solution as a starting point for
 your application.</p>

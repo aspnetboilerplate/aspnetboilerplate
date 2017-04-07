@@ -10,12 +10,6 @@ namespace Abp.Web.Models
     public class DontWrapResultAttribute : WrapResultAttribute
     {
         /// <summary>
-        /// Gets default <see cref="DontWrapResultAttribute"/>.
-        /// </summary>
-        public new static DontWrapResultAttribute Default { get { return _default; } }
-        private static readonly DontWrapResultAttribute _default = new DontWrapResultAttribute();
-
-        /// <summary>
         /// Initializes a new instance of the <see cref="DontWrapResultAttribute"/> class.
         /// </summary>
         public DontWrapResultAttribute()

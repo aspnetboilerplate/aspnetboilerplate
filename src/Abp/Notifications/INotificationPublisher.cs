@@ -18,7 +18,7 @@ namespace Abp.Notifications
         /// <param name="severity">Notification severity</param>
         /// <param name="userIds">
         /// Target user id(s). 
-        /// Used to send notification to specific user(s). 
+        /// Used to send notification to specific user(s) (without checking the subscription). 
         /// If this is null/empty, the notification is sent to subscribed users.
         /// </param>
         /// <param name="excludedUserIds">
@@ -31,15 +31,16 @@ namespace Abp.Notifications
         /// Used to send notification to subscribed users of specific tenant(s).
         /// This should not be set if <see cref="userIds"/> is set.
         /// <see cref="NotificationPublisher.AllTenants"/> can be passed to indicate all tenants.
-        /// If this is null, then it's automatically set to the current tenant on <see cref="IAbpSession.TenantId"/>.
+        /// But this can only work in a single database approach (all tenants are stored in host database).
+        /// If this is null, then it's automatically set to the current tenant on <see cref="IAbpSession.TenantId"/>. 
         /// </param>
         Task PublishAsync(
             string notificationName,
             NotificationData data = null,
             EntityIdentifier entityIdentifier = null,
             NotificationSeverity severity = NotificationSeverity.Info,
-            long[] userIds = null,
-            long[] excludedUserIds = null,
+            UserIdentifier[] userIds = null,
+            UserIdentifier[] excludedUserIds = null,
             int?[] tenantIds = null);
     }
 }

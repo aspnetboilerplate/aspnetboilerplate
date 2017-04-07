@@ -11,54 +11,64 @@
 
 		<div class="document-contents">
 
-			<h3 id="DocIntroModules">Introduction to modules</h3>
+			<h3 id="DocIntroModules">Introduction</h3>
 			<p>ASP.NET Boilerplate provides an infrastructure to build modules and compose 
 them to create an application. A module can depend on another module. Generally, an assembly is considered 
-as a module. A 
+as a module. If you created an application with more than one 
+assembly, it's suggested to create a module definition for each assembly.</p>
+			<p>Module system is currently focused on server side rather than 
+			client side.</p>
+			<h3>Module Definition</h3>
+			<p>A 
 module is defined with a class that is derived from <strong>AbpModule</strong>. 
 Say that we're developing a Blog module that can be used in different 
 applications. Simplest module definition can be as shown below:</p>
-			<pre lang="cs">public class MyBlogApplicationModule : AbpModule
+			<pre lang="cs">public class MyBlogApplicationModule : <strong>AbpModule</strong>
 {
     public override void Initialize()
     {
-        IocManager.RegisterAssemblyByConvention(Assembly.GetExecutingAssembly());
+        IocManager.<strong>RegisterAssemblyByConvention</strong>(Assembly.GetExecutingAssembly());
     }
 }</pre>
-			<p>ASP.NET Boilerplate scans all assemblies and finds all classes those are 
-devired from AbpModule class. If you created an application with more than one 
-assembly, it's suggested to create a module definition for each assembly.</p>
-			<h3 id="DocModuleLifecycleEvents">Lifecycle events</h3>
+
+<p>Module definition class is responsible to register it's classes to
+<a href="Dependency-Injection.html">dependency injection</a> (can be done 
+conventionally as shown above) if needed. It can configure application and other modules, 
+add new features to the application and so on...</p>
+			<h3 id="DocModuleLifecycleEvents">Lifecycle Methods</h3>
 			<p>ASP.NET Boilerplate calls some specific methods of modules on application 
 startup and shutdown. You can override these methods to perform some specific 
 tasks.</p>
 			<p>ASP.NET Boilerplate calls these methods <strong>ordered by dependecies</strong>. If module A depends on module B, module B is initialized before module A. Exact order of 
 startup methods: PreInitialize-B, PreInitialize-A, Initialize-B, Initialize-A, PostInitialize-B and PostInitialize-A. This is true for all dependency graph. 
-Shutdown method is also similar but in reverse order.</p>
+			<strong>Shutdown</strong> method is also similar but in <strong>reverse order</strong>.</p>
 			<h4 id="DocModulePreInit">PreInitialize</h4>
-			<p>This method is called first when application starts. You can write some 
+			<p>This method is called first when application starts. It's usual 
+			method to <a href="Startup-Configuration.html">configure</a> the 
+			framework and other modules before they initialize.</p>
+			<p>Also, you can write some 
 specific code here to run before dependency injection registrations. For 
-example, if you create a conventional registration class, you should register it 
-here (using IocManager.AddConventionalRegisterer method). You can 
-register to events of IOC container.. so on.</p>
+example, if you create a <a href="Dependency-Injection.html">conventional registration</a> 
+			class, you should register it here using 
+			IocManager.AddConventionalRegisterer method.</p>
 			<h4 id="DocModuleInit">Initialize</h4>
 			<p>It's the usual place where
 				<a href="/Pages/Documents/Dependency-Injection">dependency injection</a> 
 registration should be done. It's generally done using IocManager.RegisterAssemblyByConvention method. 
-If you want to define custom dependency registration, see dependency injection 
-documentation.</p>
+If you want to define custom dependency registration, see 
+			<a href="Dependency-Injection.html">dependency injection 
+documentation</a>.</p>
 			<h4 id="DocModulePostInit">PostInitialize</h4>
 
 			<p>This method is called lastly in startup progress. It's safe to resolve a 
 dependency here.</p>
 			<h4 id="DocModuleShutdown">Shutdown</h4>
 			<p>This method is called when the application shuts down.</p>
-			<h3 id="DocModuleDepend">Module dependencies</h3>
+			<h3 id="DocModuleDepend">Module Dependencies</h3>
 
-			<p>A module can be dependent to another. ASP.NET Boilerplate tries to resolve 
-these dependencies automatically. But it's suggested to explicitly declare dependencies 
-using DependsOn attribute like below:</p>
-			<pre lang="cs">[DependsOn(typeof(MyBlogCoreModule))]
+			<p>A module can be dependent to another. It's required to <strong>explicitly</strong> declare dependencies 
+using <strong>DependsOn</strong> attribute like below:</p>
+			<pre lang="cs"><strong>[DependsOn(typeof(MyBlogCoreModule))]</strong>
 public class MyBlogApplicationModule : AbpModule
 {
     public override void Initialize()
@@ -66,13 +76,84 @@ public class MyBlogApplicationModule : AbpModule
         IocManager.RegisterAssemblyByConvention(Assembly.GetExecutingAssembly());
     }
 }</pre>
-			<p>Thus, we declare to ASP.NET Boilerplate that MyBlogApplicationModule is 
-depended to MyBlogCoreModule and the core module should be initialized before 
-the application module.</p>
-			<h3 id="DocCustomModule">Custom module methods</h3>
+			<p>Thus, we declare to ASP.NET Boilerplate that MyBlogApplicationModule 
+			depends on MyBlogCoreModule and the MyBlogCoreModule should be initialized before 
+the MyBlogApplicationModule.</p>
+			<p>ABP can resolve dependencies recursively beginning from the
+			<strong>startup module</strong> and initialize them accordingly. 
+			Startup module initialized as the last module.</p>
+			<h3>PlugIn Modules</h3>
+			<p>While modules are investigated beginning from startup module and 
+			going to dependencies, ABP can also load modules <strong>dynamically</strong>. <strong>AbpBootstrapper</strong> class defines 
+			<strong>PlugInSources</strong> 
+			property which can be used to add sources to dynamically load plugin 
+			modules. A plugin source can be any class implements <strong>
+			IPlugInSource</strong> interface. <strong>PlugInFolderSource</strong> 
+			class implements it to get plugin modules from assemblies located in 
+			a folder.</p>
+			<h4>ASP.NET Core</h4>
+			<p>ABP ASP.NET Core module defines options in <strong>AddAbp</strong> extension 
+			method to add plugin sources in <strong>Startup</strong> class:</p>
+			<pre lang="cs">services.AddAbp&lt;MyStartupModule&gt;(options =&gt;
+{
+    options.<strong>PlugInSources</strong>.Add(new <strong>FolderPlugInSource</strong>(@&quot;C:\MyPlugIns&quot;));
+});</pre>
+			<p>We could use <strong>AddFolder</strong> extension method for a simpler syntax:</p>
+<pre lang="cs">services.AddAbp&lt;MyStartupModule&gt;(options =&gt;
+{
+    options.PlugInSources.<strong>AddFolder</strong>(@&quot;C:\MyPlugIns&quot;);
+});</pre>
+			<p>See <a href="AspNet-Core.html">ASP.NET Core document</a> for more 
+			on Startup class.</p>
+			<h4>ASP.NET MVC, Web API</h4>
+			<p>For classic ASP.NET MVC applications, we can add plugin folders 
+			by overriding <strong>Application_Start</strong> in <strong>global.asax</strong> as shown below:</p>
+			<pre lang="cs">public class MvcApplication : AbpWebApplication&lt;MyStartupModule&gt;
+{
+    protected <strong>override void Application_Start</strong>(object sender, EventArgs e)
+    {
+        <strong>AbpBootstrapper.PlugInSources.AddFolder(@"C:\MyPlugIns");</strong>
+        //...
+        base.Application_Start(sender, e);
+    }
+}</pre>
+			<h5 lang="cs"><span lang="tr">Controllers in PlugIns</span></h5>
+			<p lang="cs"><span lang="tr">If your modules include MVC or Web API 
+			Controllers, ASP.NET can not investigate your controllers. To 
+			overcome this issue, you can change global.asax file like below:</span></p>
+			<pre lang="cs">using System.Web;
+using Abp.PlugIns;
+using Abp.Web;
+using MyDemoApp.Web;
+
+<strong>[assembly: PreApplicationStartMethod(typeof(PreStarter), &quot;Start&quot;)]
+</strong>
+namespace MyDemoApp.Web
+{
+    public class MvcApplication : AbpWebApplication&lt;MyStartupModule&gt;
+    {
+    }
+
+    public static class PreStarter
+    {
+        public static void Start()
+        {
+            //...
+            MvcApplication.AbpBootstrapper.PlugInSources.AddFolder(@&quot;C:\MyPlugIns\&quot;);
+            <strong>MvcApplication.AbpBootstrapper.PlugInSources.AddToBuildManager();</strong>
+        }
+    }
+}</pre>
+<h3>Additional Assemblies</h3>
+			<p>Default implementations for IAssemblyFinder and ITypeFinder (which is used by ABP to investigate specific classes 
+			in the application) only finds module assemblies and types in those 
+			assemblies. We can 
+			override <strong>GetAdditionalAssemblies</strong> method in our 
+			module to include additional assemblies.</p>
+			<h3 id="DocCustomModule">Custom Module Methods</h3>
 			<p>Your modules also can have custom methods those can be used by other modules 
 depend on this module. Assume that MyModule2 depends on MyModule1 and wants to 
-call a method of MyModule1 in PreInitialize event.</p>
+call a method of MyModule1 in PreInitialize.</p>
 
 			<pre lang="cs">public class MyModule1 : AbpModule
 {
@@ -81,25 +162,25 @@ call a method of MyModule1 in PreInitialize event.</p>
         IocManager.RegisterAssemblyByConvention(Assembly.GetExecutingAssembly());
     }
 
-    public void MyModuleMethod1()
-    {
+    <strong>public void MyModuleMethod1()
+</strong>    {
         //this is a custom method of this module
     }
 }
 
-[DependsOn(typeof(MyModule1))]
+<strong>[DependsOn(typeof(MyModule1))]</strong>
 public class MyModule2 : AbpModule
 {
     private readonly MyModule1 _myModule1;
 
-    public MyModule2(MyModule1 myModule1)
+    public MyModule2(<strong>MyModule1 myModule1</strong>)
     {
         _myModule1 = myModule1;
     }
 
     public override void PreInitialize()
     {
-        _myModule1.MyModuleMethod1(); //Call MyModule1's method
+        <strong>_myModule1.MyModuleMethod1(); //Call MyModule1's method</strong>
     }
 
     public override void Initialize()
@@ -109,7 +190,14 @@ public class MyModule2 : AbpModule
 }</pre>
 
 			<p>Here, we constructor-injected MyModule1 to MyModule2, so MyModule2 can call 
-MyModule1's custom method.</p>
+MyModule1's custom method. This is only possible if Module2 depends on Module1.</p>
+			<h3>Module Configuration</h3>
+			<p>While custom module methods can be used to configure 
+			modules, we suggest to use <a href="Startup-Configuration.html">
+			startup configuration</a> system to define and set configuration for 
+			modules.</p>
+			<h3>Module Lifetime</h3>
+			<p>Module classes are automatically registered as <strong>singleton</strong>.</p>
 		</div>
 	</body>
 

@@ -12,7 +12,7 @@ namespace Abp.Configuration.Startup
         /// </summary>
         public static IAbpNHibernateModuleConfiguration AbpNHibernate(this IModuleConfigurations configurations)
         {
-            return configurations.AbpConfiguration.GetOrCreate("Modules.Abp.NHibernate", () => new AbpNHibernateModuleConfiguration());
+            return configurations.AbpConfiguration.Get<IAbpNHibernateModuleConfiguration>();
         }
     }
 }

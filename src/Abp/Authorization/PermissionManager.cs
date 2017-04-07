@@ -37,7 +37,7 @@ namespace Abp.Authorization
         {
             foreach (var providerType in _authorizationConfiguration.Providers)
             {
-                _iocManager.RegisterIfNot(providerType, DependencyLifeStyle.Transient);
+                _iocManager.RegisterIfNot(providerType, DependencyLifeStyle.Transient); //TODO: Needed?
                 using (var provider = _iocManager.ResolveAsDisposable<AuthorizationProvider>(providerType))
                 {
                     provider.Object.SetPermissions(this);

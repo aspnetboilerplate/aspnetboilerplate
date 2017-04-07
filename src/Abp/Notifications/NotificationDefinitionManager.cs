@@ -34,7 +34,7 @@ namespace Abp.Notifications
 
             foreach (var providerType in _configuration.Providers)
             {
-                _iocManager.RegisterIfNot(providerType, DependencyLifeStyle.Transient);
+                _iocManager.RegisterIfNot(providerType, DependencyLifeStyle.Transient); //TODO: Needed?
                 using (var provider = _iocManager.ResolveAsDisposable<NotificationProvider>(providerType))
                 {
                     provider.Object.SetNotifications(context);
@@ -73,7 +73,7 @@ namespace Abp.Notifications
             return _notificationDefinitions.Values.ToImmutableList();
         }
 
-        public async Task<bool> IsAvailableAsync(string name, int? tenantId, long userId)
+        public async Task<bool> IsAvailableAsync(string name, UserIdentifier user)
         {
             var notificationDefinition = GetOrNull(name);
             if (notificationDefinition == null)
@@ -85,7 +85,7 @@ namespace Abp.Notifications
             {
                 using (var featureDependencyContext = _iocManager.ResolveAsDisposable<FeatureDependencyContext>())
                 {
-                    featureDependencyContext.Object.TenantId = tenantId;
+                    featureDependencyContext.Object.TenantId = user.TenantId;
 
                     if (!await notificationDefinition.FeatureDependency.IsSatisfiedAsync(featureDependencyContext.Object))
                     {
@@ -98,7 +98,7 @@ namespace Abp.Notifications
             {
                 using (var permissionDependencyContext = _iocManager.ResolveAsDisposable<PermissionDependencyContext>())
                 {
-                    permissionDependencyContext.Object.UserId = userId;
+                    permissionDependencyContext.Object.User = user;
 
                     if (!await notificationDefinition.PermissionDependency.IsSatisfiedAsync(permissionDependencyContext.Object))
                     {
@@ -110,17 +110,17 @@ namespace Abp.Notifications
             return true;
         }
 
-        public async Task<IReadOnlyList<NotificationDefinition>> GetAllAvailableAsync(int? tenantId, long userId)
+        public async Task<IReadOnlyList<NotificationDefinition>> GetAllAvailableAsync(UserIdentifier user)
         {
             var availableDefinitions = new List<NotificationDefinition>();
 
             using (var permissionDependencyContext = _iocManager.ResolveAsDisposable<PermissionDependencyContext>())
             {
-                permissionDependencyContext.Object.UserId = userId;
+                permissionDependencyContext.Object.User = user;
 
                 using (var featureDependencyContext = _iocManager.ResolveAsDisposable<FeatureDependencyContext>())
                 {
-                    featureDependencyContext.Object.TenantId = tenantId;
+                    featureDependencyContext.Object.TenantId = user.TenantId;
 
                     foreach (var notificationDefinition in GetAll())
                     {
@@ -130,7 +130,7 @@ namespace Abp.Notifications
                             continue;
                         }
 
-                        if (tenantId.HasValue &&
+                        if (user.TenantId.HasValue &&
                             notificationDefinition.FeatureDependency != null &&
                             !await notificationDefinition.FeatureDependency.IsSatisfiedAsync(featureDependencyContext.Object))
                         {
