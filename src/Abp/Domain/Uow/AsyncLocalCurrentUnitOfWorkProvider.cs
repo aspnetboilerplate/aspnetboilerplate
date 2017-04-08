@@ -31,7 +31,19 @@ namespace Abp.Domain.Uow
 
         private static IUnitOfWork GetCurrentUow()
         {
-            return AsyncLocalUow.Value?.UnitOfWork;
+            var uow = AsyncLocalUow.Value?.UnitOfWork;
+            if (uow == null)
+            {
+                return null;
+            }
+
+            if (uow.IsDisposed)
+            {
+                AsyncLocalUow.Value = null;
+                return null;
+            }
+
+            return uow;
         }
 
         private static void SetCurrentUow(IUnitOfWork value)
@@ -45,7 +57,7 @@ namespace Abp.Domain.Uow
                         return;
                     }
 
-                    if (AsyncLocalUow.Value.UnitOfWork.Outer == null)
+                    if (AsyncLocalUow.Value.UnitOfWork?.Outer == null)
                     {
                         AsyncLocalUow.Value.UnitOfWork = null;
                         AsyncLocalUow.Value = null;
