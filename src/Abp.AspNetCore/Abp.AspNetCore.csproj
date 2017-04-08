@@ -31,7 +31,7 @@
 
   <ItemGroup>
     <PackageReference Include="Castle.LoggingFacility.MsLogging" Version="1.1.0" />
-    <PackageReference Include="Castle.Windsor.MsDependencyInjection" Version="1.3.1" />
+    <PackageReference Include="Castle.Windsor.MsDependencyInjection" Version="1.3.3" />
     <PackageReference Include="Microsoft.AspNetCore.Mvc" Version="1.1.2" />
     <PackageReference Include="Microsoft.AspNetCore.StaticFiles" Version="1.1.1" />
   </ItemGroup>
