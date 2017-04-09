@@ -29,7 +29,7 @@
     <PackageReference Include="Microsoft.NET.Test.Sdk" Version="15.0.0" />
     <PackageReference Include="xunit" Version="2.2.0" />
     <PackageReference Include="xunit.runner.visualstudio" Version="2.2.0" />
-    <PackageReference Include="System.Data.SQLite.Core" Version="1.0.104" />
+    <PackageReference Include="System.Data.SQLite.Core" Version="1.0.105" />
   </ItemGroup>
 
   <ItemGroup Condition=" '$(TargetFramework)' == 'net46' ">
