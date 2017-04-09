@@ -9,6 +9,7 @@ $projects = (
     "Abp.AspNetCore",
     "Abp.AutoMapper",
     "Abp.HangFire",
+    "Abp.HangFire.AspNetCore",
     "Abp.Quartz",
     "Abp.EntityFramework.Common",
     "Abp.EntityFramework",
