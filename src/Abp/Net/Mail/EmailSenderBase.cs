@@ -1,9 +1,11 @@
-#if NET46
-using System.Net.Mail;
-#endif
+
 using System.Text;
 using System.Threading.Tasks;
 using Abp.Extensions;
+
+#if NET46
+using System.Net.Mail;
+#endif
 
 namespace Abp.Net.Mail
 {
@@ -12,7 +14,7 @@ namespace Abp.Net.Mail
     /// </summary>
     public abstract class EmailSenderBase : IEmailSender
     {
-        private readonly IEmailSenderConfiguration _configuration;
+        public IEmailSenderConfiguration Configuration { get; }
 
         /// <summary>
         /// Constructor.
@@ -20,31 +22,31 @@ namespace Abp.Net.Mail
         /// <param name="configuration">Configuration</param>
         protected EmailSenderBase(IEmailSenderConfiguration configuration)
         {
-            _configuration = configuration;
+            Configuration = configuration;
         }
 
         public virtual async Task SendAsync(string to, string subject, string body, bool isBodyHtml = true)
         {
-            await SendAsync(_configuration.DefaultFromAddress, to, subject, body, isBodyHtml);
+            await SendAsync(Configuration.DefaultFromAddress, to, subject, body, isBodyHtml);
         }
 
         public virtual void Send(string to, string subject, string body, bool isBodyHtml = true)
         {
-            Send(_configuration.DefaultFromAddress, to, subject, body, isBodyHtml);
+            Send(Configuration.DefaultFromAddress, to, subject, body, isBodyHtml);
         }
 
 #if NET46
-        public async Task SendAsync(string from, string to, string subject, string body, bool isBodyHtml = true)
+        public virtual async Task SendAsync(string from, string to, string subject, string body, bool isBodyHtml = true)
         {
             await SendAsync(new MailMessage(from, to, subject, body) { IsBodyHtml = isBodyHtml });
         }
 
-        public void Send(string from, string to, string subject, string body, bool isBodyHtml = true)
+        public virtual void Send(string from, string to, string subject, string body, bool isBodyHtml = true)
         {
             Send(new MailMessage(from, to, subject, body) { IsBodyHtml = isBodyHtml });
         }
 
-        public async Task SendAsync(MailMessage mail, bool normalize = true)
+        public virtual async Task SendAsync(MailMessage mail, bool normalize = true)
         {
             if (normalize)
             {
@@ -54,7 +56,7 @@ namespace Abp.Net.Mail
             await SendEmailAsync(mail);
         }
 
-        public void Send(MailMessage mail, bool normalize = true)
+        public virtual void Send(MailMessage mail, bool normalize = true)
         {
             if (normalize)
             {
@@ -64,7 +66,7 @@ namespace Abp.Net.Mail
             SendEmail(mail);
         }
 
-                /// <summary>
+        /// <summary>
         /// Should implement this method to send email in derived classes.
         /// </summary>
         /// <param name="mail">Mail to be sent</param>
@@ -87,8 +89,8 @@ namespace Abp.Net.Mail
             if (mail.From == null || mail.From.Address.IsNullOrEmpty())
             {
                 mail.From = new MailAddress(
-                    _configuration.DefaultFromAddress,
-                    _configuration.DefaultFromDisplayName,
+                    Configuration.DefaultFromAddress,
+                    Configuration.DefaultFromDisplayName,
                     Encoding.UTF8
                     );
             }
