@@ -33,7 +33,7 @@ $projects = (
     "Abp.TestBase",
     "Abp.AspNetCore.TestBase",
     "Abp.Web.Resources",
-	"Abp.MailKit"
+    "Abp.MailKit"
 )
 
 # Rebuild solution
