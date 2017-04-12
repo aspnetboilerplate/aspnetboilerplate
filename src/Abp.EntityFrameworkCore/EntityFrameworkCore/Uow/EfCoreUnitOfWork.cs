@@ -4,12 +4,10 @@ using Abp.Domain.Uow;
 using Abp.EntityFramework;
 using Abp.Extensions;
 using Abp.MultiTenancy;
-using Castle.Core.Internal;
 using Microsoft.EntityFrameworkCore;
 using System.Collections.Generic;
 using System.Collections.Immutable;
 using System.Threading.Tasks;
-using Microsoft.EntityFrameworkCore.Infrastructure;
 
 namespace Abp.EntityFrameworkCore.Uow
 {
@@ -20,7 +18,7 @@ namespace Abp.EntityFrameworkCore.Uow
     {
         protected IDictionary<string, DbContext> ActiveDbContexts { get; }
         protected IIocResolver IocResolver { get; }
-        
+
         private readonly IDbContextResolver _dbContextResolver;
         private readonly IDbContextTypeMatcher _dbContextTypeMatcher;
         private readonly IEfCoreTransactionStrategy _transactionStrategy;
@@ -33,7 +31,7 @@ namespace Abp.EntityFrameworkCore.Uow
             IConnectionStringResolver connectionStringResolver,
             IUnitOfWorkFilterExecuter filterExecuter,
             IDbContextResolver dbContextResolver,
-            IUnitOfWorkDefaultOptions defaultOptions, 
+            IUnitOfWorkDefaultOptions defaultOptions,
             IDbContextTypeMatcher dbContextTypeMatcher,
             IEfCoreTransactionStrategy transactionStrategy)
             : base(
@@ -122,13 +120,13 @@ namespace Abp.EntityFrameworkCore.Uow
                     dbContext = _dbContextResolver.Resolve<TDbContext>(connectionString, null);
                 }
 
-                //TODO: Check if relational database? //dbContext.Database.GetInfrastructure<IServiceProvider>().GetService()
-
-                if (Options.Timeout.HasValue && !dbContext.Database.GetCommandTimeout().HasValue)
+                if (Options.Timeout.HasValue &&
+                    dbContext.Database.IsRelational() && 
+                    !dbContext.Database.GetCommandTimeout().HasValue)
                 {
                     dbContext.Database.SetCommandTimeout(Options.Timeout.Value.TotalSeconds.To<int>());
                 }
-                
+
                 //TODO: Object materialize event
                 //TODO: Apply current filters to this dbcontext
 

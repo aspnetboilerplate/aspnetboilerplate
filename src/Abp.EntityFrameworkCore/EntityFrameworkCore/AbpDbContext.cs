@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations.Schema;
-using System.Data;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
@@ -20,7 +19,6 @@ using Abp.Timing;
 using Castle.Core.Logging;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.ChangeTracking;
-using Microsoft.EntityFrameworkCore.Metadata.Internal;
 
 namespace Abp.EntityFrameworkCore
 {
@@ -28,7 +26,6 @@ namespace Abp.EntityFrameworkCore
     /// Base class for all DbContext classes in the application.
     /// </summary>
     public abstract class AbpDbContext : DbContext, ITransientDependency
-        //, IShouldInitialize
     {
         /// <summary>
         /// Used to get current session values.
@@ -77,38 +74,7 @@ namespace Abp.EntityFrameworkCore
         private void InitializeDbContext()
         {
             SetNullsForInjectedProperties();
-            //RegisterToChanges();
         }
-
-        //private void RegisterToChanges()
-        //{
-        //    ((IObjectContextAdapter)this)
-        //        .ObjectContext
-        //        .ObjectStateManager
-        //        .ObjectStateManagerChanged += ObjectStateManager_ObjectStateManagerChanged;
-        //}
-
-        //protected virtual void ObjectStateManager_ObjectStateManagerChanged(object sender, System.ComponentModel.CollectionChangeEventArgs e)
-        //{
-        //    var contextAdapter = (IObjectContextAdapter)this;
-        //    if (e.Action != CollectionChangeAction.Add)
-        //    {
-        //        return;
-        //    }
-
-        //    var entry = contextAdapter.ObjectContext.ObjectStateManager.GetObjectStateEntry(e.Element);
-        //    switch (entry.State)
-        //    {
-        //        case EntityState.Added:
-        //            CheckAndSetId(entry.Entity);
-        //            CheckAndSetMustHaveTenantIdProperty(entry.Entity);
-        //            SetCreationAuditProperties(entry.Entity, GetAuditUserId());
-        //            break;
-        //        //case EntityState.Deleted: //It's not going here at all
-        //        //    SetDeletionAuditProperties(entry.Entity, GetAuditUserId());
-        //        //    break;
-        //    }
-        //}
 
         private void SetNullsForInjectedProperties()
         {
@@ -117,21 +83,6 @@ namespace Abp.EntityFrameworkCore
             EntityChangeEventHelper = NullEntityChangeEventHelper.Instance;
             GuidGenerator = SequentialGuidGenerator.Instance;
             EventBus = NullEventBus.Instance;
-        }
-
-        //public virtual void Initialize()
-        //{
-        //    Database.Initialize(false);
-        //    this.SetFilterScopedParameterValue(AbpDataFilters.MustHaveTenant, AbpDataFilters.Parameters.TenantId, AbpSession.TenantId ?? 0);
-        //    this.SetFilterScopedParameterValue(AbpDataFilters.MayHaveTenant, AbpDataFilters.Parameters.TenantId, AbpSession.TenantId);
-        //}
-
-        protected override void OnModelCreating(ModelBuilder modelBuilder)
-        {
-            base.OnModelCreating(modelBuilder);
-            //modelBuilder.Filter(AbpDataFilters.SoftDelete, (ISoftDelete d) => d.IsDeleted, false);
-            //modelBuilder.Filter(AbpDataFilters.MustHaveTenant, (IMustHaveTenant t, int tenantId) => t.TenantId == tenantId || (int?)t.TenantId == null, 0);
-            //modelBuilder.Filter(AbpDataFilters.MayHaveTenant, (IMayHaveTenant t, int? tenantId) => t.TenantId == tenantId, 0);
         }
 
         public override int SaveChanges()
@@ -428,15 +379,6 @@ namespace Abp.EntityFrameworkCore
                 }
             }
         }
-
-        //protected virtual void LogDbEntityValidationException(DbEntityValidationException exception)
-        //{
-        //    Logger.Error("There are some validation errors while saving changes in EntityFramework:");
-        //    foreach (var ve in exception.EntityValidationErrors.SelectMany(eve => eve.ValidationErrors))
-        //    {
-        //        Logger.Error(" - " + ve.PropertyName + ": " + ve.ErrorMessage);
-        //    }
-        //}
 
         protected virtual long? GetAuditUserId()
         {
