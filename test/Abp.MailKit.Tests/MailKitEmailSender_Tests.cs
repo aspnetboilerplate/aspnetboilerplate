@@ -10,7 +10,7 @@ namespace Abp.MailKit.Tests
 {
     public class MailKitEmailSender_Tests
     {
-        //[Fact()]
+        //[Fact]
         public void ShouldSend()
         {
             var mailSender = CreateMailKitEmailSender();
@@ -18,7 +18,7 @@ namespace Abp.MailKit.Tests
             mailSender.Send("from_mail_address", "to_mail_address", "subject", "body", true);
         }
 
-        //[Fact()]
+        //[Fact]
         public async Task ShouldSendAsync()
         {
             var mailSender = CreateMailKitEmailSender();
@@ -27,7 +27,7 @@ namespace Abp.MailKit.Tests
         }
 
 #if NET46
-        //[Fact()]
+        //[Fact]
         public async Task ShouldSendMailMessage()
         {
             var mailSender = CreateMailKitEmailSender();
@@ -37,7 +37,7 @@ namespace Abp.MailKit.Tests
             await mailSender.SendAsync(mailMessage);
         }
 
-        //[Fact()]
+        //[Fact]
         public void ShouldSendMailMessageAsync()
         {
             var mailSender = CreateMailKitEmailSender();
