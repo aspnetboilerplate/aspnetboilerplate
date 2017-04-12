@@ -2,7 +2,7 @@
 using System.Linq;
 using System.Linq.Expressions;
 using System.Reflection;
-
+using Abp.Dapper.Utils;
 using Abp.Domain.Entities;
 using Abp.Domain.Uow;
 using Abp.Reflection.Extensions;
