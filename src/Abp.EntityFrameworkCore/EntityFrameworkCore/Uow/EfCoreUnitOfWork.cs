@@ -1,3 +1,4 @@
+using System;
 using Abp.Dependency;
 using Abp.Domain.Uow;
 using Abp.EntityFramework;
@@ -8,6 +9,7 @@ using Microsoft.EntityFrameworkCore;
 using System.Collections.Generic;
 using System.Collections.Immutable;
 using System.Threading.Tasks;
+using Microsoft.EntityFrameworkCore.Infrastructure;
 
 namespace Abp.EntityFrameworkCore.Uow
 {
@@ -119,7 +121,9 @@ namespace Abp.EntityFrameworkCore.Uow
                 {
                     dbContext = _dbContextResolver.Resolve<TDbContext>(connectionString, null);
                 }
-                
+
+                //TODO: Check if relational database? //dbContext.Database.GetInfrastructure<IServiceProvider>().GetService()
+
                 if (Options.Timeout.HasValue && !dbContext.Database.GetCommandTimeout().HasValue)
                 {
                     dbContext.Database.SetCommandTimeout(Options.Timeout.Value.TotalSeconds.To<int>());
