@@ -21,6 +21,7 @@ namespace Abp.Hangfire
         public override void Initialize()
         {
             IocManager.RegisterAssemblyByConvention(typeof(AbpHangfireModule).GetAssembly());
+            GlobalJobFilters.Filters.Add(IocManager.Resolve<AbpHangfireJobExceptionFilter>());
         }
     }
 }
