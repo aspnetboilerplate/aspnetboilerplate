@@ -8,6 +8,7 @@ $projects = (
     "Abp",
     "Abp.AspNetCore",
     "Abp.AutoMapper",
+    "Abp.MailKit",
     "Abp.HangFire",
     "Abp.HangFire.AspNetCore",
     "Abp.Quartz",
@@ -32,8 +33,7 @@ $projects = (
     "Abp.Castle.Log4Net",
     "Abp.TestBase",
     "Abp.AspNetCore.TestBase",
-    "Abp.Web.Resources",
-    "Abp.MailKit"
+    "Abp.Web.Resources"    
 )
 
 # Rebuild solution
