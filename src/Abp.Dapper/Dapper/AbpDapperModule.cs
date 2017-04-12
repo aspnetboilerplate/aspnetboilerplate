@@ -1,6 +1,9 @@
 ﻿using System;
 using System.Reflection;
+
 using Abp.Configuration.Startup;
+using Abp.Dapper.Filters.Action;
+using Abp.Dapper.Filters.Query;
 using Abp.Dapper.Repositories;
 using Abp.Dependency;
 using Abp.EntityFramework;
@@ -45,7 +48,7 @@ namespace Abp.Dapper
                     typeof(AbpDbContext).IsAssignableFrom(type)
                 );
 
-            using (var repositoryRegistrar = IocManager.ResolveAsDisposable<IDapperGenericRepositoryRegistrar>())
+            using (IDisposableDependencyObjectWrapper<IDapperGenericRepositoryRegistrar> repositoryRegistrar = IocManager.ResolveAsDisposable<IDapperGenericRepositoryRegistrar>())
             {
                 foreach (Type dbContextType in dbContextTypes)
                 {
