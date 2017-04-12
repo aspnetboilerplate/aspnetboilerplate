@@ -116,6 +116,9 @@ namespace Abp.Web.Navigation
                 sb.AppendLine(new string(' ', indentLength + 4) + "target: '" + menuItem.Target.Replace("'", @"\'") + "',");
             }
 
+            sb.AppendLine(new string(' ', indentLength + 4) + "isEnabled: " + menuItem.IsEnabled.ToString().ToLowerInvariant() + ",");
+            sb.AppendLine(new string(' ', indentLength + 4) + "isVisible: " + menuItem.IsVisible.ToString().ToLowerInvariant() + ",");
+
             sb.Append(new string(' ', indentLength + 4) + "items: [");
 
             for (int i = 0; i < menuItem.Items.Count; i++)
