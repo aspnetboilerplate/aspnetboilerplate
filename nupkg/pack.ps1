@@ -32,7 +32,8 @@ $projects = (
     "Abp.Castle.Log4Net",
     "Abp.TestBase",
     "Abp.AspNetCore.TestBase",
-    "Abp.Web.Resources"
+    "Abp.Web.Resources",
+    "Abp.MailKit"
 )
 
 # Rebuild solution
