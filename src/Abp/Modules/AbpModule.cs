@@ -121,12 +121,12 @@ namespace Abp.Modules
         public static List<Type> FindDependedModuleTypesRecursivelyIncludingGivenModule(Type moduleType)
         {
             var list = new List<Type>();
-            AddModuleAndDependenciesResursively(list, moduleType);
+            AddModuleAndDependenciesRecursively(list, moduleType);
             list.AddIfNotContains(typeof(AbpKernelModule));
             return list;
         }
 
-        private static void AddModuleAndDependenciesResursively(List<Type> modules, Type module)
+        private static void AddModuleAndDependenciesRecursively(List<Type> modules, Type module)
         {
             if (!IsAbpModule(module))
             {
@@ -143,7 +143,7 @@ namespace Abp.Modules
             var dependedModules = FindDependedModuleTypes(module);
             foreach (var dependedModule in dependedModules)
             {
-                AddModuleAndDependenciesResursively(modules, dependedModule);
+                AddModuleAndDependenciesRecursively(modules, dependedModule);
             }
         }
     }
