@@ -13,6 +13,9 @@ using Abp.Web.Mvc.Helpers;
 
 namespace Abp.Web.Mvc.Authorization
 {
+    /// <summary>
+    /// AbpMvc验证过滤
+    /// </summary>
     public class AbpMvcAuthorizeFilter : IAuthorizationFilter, ITransientDependency
     {
         private readonly IAuthorizationHelper _authorizationHelper;
