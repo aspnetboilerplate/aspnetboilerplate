@@ -24,6 +24,22 @@ namespace Abp.Tests.Timing
             TimezoneHelper.WindowsToIana(windowsTimezoneId).ShouldBe(ianaTimezoneId);
         }
 
+        [Theory]
+        [InlineData("America/Los_Angeles", "Pacific Standard Time")]
+        [InlineData("America/Argentina/San_Luis", "Argentina Standard Time")]
+        [InlineData("Etc/UTC", "UTC")]
+        [InlineData("America/Godthab", "Greenland Standard Time")]
+        [InlineData("Europe/London", "GMT Standard Time")]
+        [InlineData("Europe/Berlin", "W. Europe Standard Time")]
+        [InlineData("Europe/Paris", "Romance Standard Time")]
+        [InlineData("Asia/Amman", "Jordan Standard Time")]
+        [InlineData("Europe/Zaporozhye", "FLE Standard Time")]
+        [InlineData("Asia/Choibalsan", "Ulaanbaatar Standard Time")]
+        public void Iana_Timezone_Id_To_Windows_Tests(string ianaTimezoneId, string windowsTimezoneId)
+        {
+            TimezoneHelper.IanaToWindows(ianaTimezoneId).ShouldBe(windowsTimezoneId);
+        }
+
         [Fact]
         public void All_Windows_Timezones_Should_Be_Convertable_To_Iana()
         {
@@ -44,6 +60,23 @@ namespace Abp.Tests.Timing
             {
                 TimezoneHelper.WindowsToIana("abc");
             });
+        }
+
+        [Fact]
+        public void Should_Throw_Exception_For_Unknown_Iana_Timezone_Id()
+        {
+            Should.Throw<Exception>(() =>
+            {
+                TimezoneHelper.IanaToWindows("cba");
+            });
+        }
+
+        [Fact]
+        public void Convert_By_Iana_Timezone_Should_Be_Convert_By_Windows_Timezone()
+        {
+            var now = DateTime.UtcNow;
+            TimezoneHelper.ConvertTimeFromUtcByIanaTimeZoneId(now, "Asia/Shanghai")
+                .ShouldBe(TimezoneHelper.ConvertFromUtc(now, "China Standard Time"));
         }
     }
 }
