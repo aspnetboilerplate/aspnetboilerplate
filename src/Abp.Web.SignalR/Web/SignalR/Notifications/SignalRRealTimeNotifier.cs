@@ -10,12 +10,12 @@ using Microsoft.AspNet.SignalR;
 namespace Abp.Web.SignalR.Notifications
 {
     /// <summary>
-    /// Implements <see cref="IRealTimeNotifier"/> to send notifications via SignalR.
+    /// 实现<see cref ="IRealTimeNotifier"/>通过SignalR发送通知。
     /// </summary>
     public class SignalRRealTimeNotifier : IRealTimeNotifier, ITransientDependency
     {
         /// <summary>
-        /// Reference to the logger.
+        /// <seealso cref="ILogger"/>
         /// </summary>
         public ILogger Logger { get; set; }
 
@@ -30,7 +30,7 @@ namespace Abp.Web.SignalR.Notifications
         }
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="SignalRRealTimeNotifier"/> class.
+        /// 初始化<see cref ="SignalRRealTimeNotifier"/>类的新实例。
         /// </summary>
         public SignalRRealTimeNotifier(IOnlineClientManager onlineClientManager)
         {

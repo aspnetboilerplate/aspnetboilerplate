@@ -7,7 +7,7 @@ using Newtonsoft.Json;
 namespace Abp.Web.SignalR
 {
     /// <summary>
-    /// ABP SignalR integration module.
+    /// ABP SignalR集成模块。
     /// </summary>
     [DependsOn(typeof(AbpKernelModule))]
     public class AbpWebSignalRModule : AbpModule

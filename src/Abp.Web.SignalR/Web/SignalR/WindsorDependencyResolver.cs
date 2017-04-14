@@ -7,14 +7,14 @@ using Microsoft.AspNet.SignalR;
 namespace Abp.Web.SignalR
 {
     /// <summary>
-    /// Replaces <see cref="DefaultDependencyResolver"/> to resolve dependencies from Castle Windsor (<see cref="IWindsorContainer"/>).
+    /// 替换<see cref ="DefaultDependencyResolver"/>来解决Castle Windsor的依赖关系（<see cref ="IWindsorContainer"/>）。
     /// </summary>
     public class WindsorDependencyResolver : DefaultDependencyResolver
     {
         private readonly IWindsorContainer _windsorContainer;
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="WindsorDependencyResolver"/> class.
+        /// 初始化<see cref ="WindsorDependencyResolver"/>类的新实例。
         /// </summary>
         /// <param name="windsorContainer">The windsor container.</param>
         public WindsorDependencyResolver(IWindsorContainer windsorContainer)
