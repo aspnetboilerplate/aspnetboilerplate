@@ -225,7 +225,7 @@ namespace Abp.EntityFrameworkCore
         protected virtual void CheckAndSetMayHaveTenantIdProperty(object entityAsObj)
         {
             //Only works for single tenant applications
-            if (MultiTenancyConfig.IsEnabled)
+            if (MultiTenancyConfig?.IsEnabled ?? false)
             {
                 return;
             }
