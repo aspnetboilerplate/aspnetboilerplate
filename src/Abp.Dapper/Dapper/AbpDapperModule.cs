@@ -2,8 +2,6 @@
 using System.Reflection;
 
 using Abp.Configuration.Startup;
-using Abp.Dapper.Filters.Action;
-using Abp.Dapper.Filters.Query;
 using Abp.Dapper.Repositories;
 using Abp.Dependency;
 using Abp.EntityFramework;
@@ -28,7 +26,7 @@ namespace Abp.Dapper
 
         public override void PreInitialize()
         {
-            Configuration.ReplaceService<IEfTransactionStrategy, DbContextEfTransactionStrategy>();
+            Configuration.ReplaceService<IEfTransactionStrategy, DbContextEfTransactionStrategy>(DependencyLifeStyle.Transient);
         }
 
         public override void Initialize()
