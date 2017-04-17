@@ -11,12 +11,15 @@ namespace Abp.MailKit
 {
     public class MailKitEmailSender : EmailSenderBase
     {
-        private readonly IAbpMailKitConfiguration _mailKitConfiguration;
+        private readonly IMailKitSmtpBuilder _smtpBuilder;
 
-        public MailKitEmailSender(IEmailSenderConfiguration smtpEmailSenderConfiguration, IAbpMailKitConfiguration mailKitConfiguration)
-            : base(smtpEmailSenderConfiguration)
+        public MailKitEmailSender(
+            IEmailSenderConfiguration smtpEmailSenderConfiguration,
+            IMailKitSmtpBuilder smtpBuilder)
+            : base(
+                  smtpEmailSenderConfiguration)
         {
-            _mailKitConfiguration = mailKitConfiguration;
+            _smtpBuilder = smtpBuilder;
         }
 
         public override async Task SendAsync(string from, string to, string subject, string body, bool isBodyHtml = true)
@@ -63,17 +66,7 @@ namespace Abp.MailKit
 
         protected virtual SmtpClient BuildSmtpClient()
         {
-            var client = new SmtpClient();
-            try
-            {
-                _mailKitConfiguration.SmtpClientConfigurer?.Invoke(client);
-                return client;
-            }
-            catch
-            {
-                client.Dispose();
-                throw;
-            }
+            return _smtpBuilder.Build();
         }
 
         private static MimeMessage BuildMimeMessage(string from, string to, string subject, string body, bool isBodyHtml = true)

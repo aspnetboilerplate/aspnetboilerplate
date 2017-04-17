@@ -11,8 +11,6 @@ namespace Abp.MailKit
     {
         public override void PreInitialize()
         {
-            IocManager.Register<IAbpMailKitConfiguration, AbpMailKitConfiguration>(DependencyLifeStyle.Singleton);
-
             Configuration.ReplaceService<IEmailSender, MailKitEmailSender>(DependencyLifeStyle.Transient);
         }
 
