@@ -63,6 +63,12 @@ namespace Abp.EntityFrameworkCore
         public IMultiTenancyConfig MultiTenancyConfig { get; set; }
 
         /// <summary>
+        /// Can be used to suppress automatically setting TenantId on SaveChanges.
+        /// Default: false.
+        /// </summary>
+        public bool SuppressAutoSetTenantId { get; set; }
+
+        /// <summary>
         /// Constructor.
         /// </summary>
         protected AbpDbContext(DbContextOptions options)
@@ -196,6 +202,11 @@ namespace Abp.EntityFrameworkCore
 
         protected virtual void CheckAndSetMustHaveTenantIdProperty(object entityAsObj)
         {
+            if (SuppressAutoSetTenantId)
+            {
+                return;
+            }
+            
             //Only set IMustHaveTenant entities
             if (!(entityAsObj is IMustHaveTenant))
             {
@@ -224,6 +235,11 @@ namespace Abp.EntityFrameworkCore
 
         protected virtual void CheckAndSetMayHaveTenantIdProperty(object entityAsObj)
         {
+            if (SuppressAutoSetTenantId)
+            {
+                return;
+            }
+
             //Only works for single tenant applications
             if (MultiTenancyConfig?.IsEnabled ?? false)
             {
