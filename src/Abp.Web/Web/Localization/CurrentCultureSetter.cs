@@ -73,7 +73,7 @@ namespace Abp.Web.Localization
             context.Response.SetCookie(
                 new HttpCookie(_webLocalizationConfiguration.CookieName, culture)
                 {
-                    Expires = Clock.Now.AddYears(1),
+                    Expires = Clock.Now.AddYears(2),
                     Path = context.Request.ApplicationPath
                 }
             );
