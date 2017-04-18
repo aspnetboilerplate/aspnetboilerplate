@@ -4,7 +4,6 @@ using System.Web.Mvc;
 using Abp.Auditing;
 using Abp.Configuration;
 using Abp.Localization;
-using Abp.Net;
 using Abp.Runtime.Session;
 using Abp.Timing;
 using Abp.Web.Configuration;
@@ -32,7 +31,8 @@ namespace Abp.Web.Mvc.Controllers.Localization
             Response.Cookies.Add(
                 new HttpCookie(_webLocalizationConfiguration.CookieName, cultureName)
                 {
-                    Expires = Clock.Now.AddYears(2)
+                    Expires = Clock.Now.AddYears(2),
+                    Path = Request.ApplicationPath
                 }
             );
 
