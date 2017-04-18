@@ -28,18 +28,12 @@ namespace Abp.EntityFrameworkCore.Repositories
         /// <summary>
         /// Gets EF DbContext object.
         /// </summary>
-        public virtual TDbContext Context { get { return _dbContextProvider.GetDbContext(MultiTenancySide); } }
+        public virtual TDbContext Context => _dbContextProvider.GetDbContext(MultiTenancySide);
 
         /// <summary>
         /// Gets DbSet for given entity.
         /// </summary>
-        public virtual DbSet<TEntity> Table
-        {
-            get
-            {
-                return Context.Set<TEntity>();
-            }
-        }
+        public virtual DbSet<TEntity> Table => Context.Set<TEntity>();
 
         private readonly IDbContextProvider<TDbContext> _dbContextProvider;
 
@@ -106,7 +100,7 @@ namespace Abp.EntityFrameworkCore.Repositories
 
         public override Task<TEntity> InsertAsync(TEntity entity)
         {
-            return Task.FromResult(Table.Add(entity).Entity);
+            return Task.FromResult(Insert(entity));
         }
 
         public override TPrimaryKey InsertAndGetId(TEntity entity)
