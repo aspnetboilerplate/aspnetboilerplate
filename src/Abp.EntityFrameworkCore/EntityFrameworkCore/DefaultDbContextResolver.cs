@@ -6,6 +6,7 @@ using System;
 using System.Data.Common;
 using System.Reflection;
 using JetBrains.Annotations;
+using Microsoft.EntityFrameworkCore.Metadata.Internal;
 
 namespace Abp.EntityFrameworkCore
 {
@@ -55,6 +56,8 @@ namespace Abp.EntityFrameworkCore
             if (_iocResolver.IsRegistered<IAbpDbContextConfigurer<TDbContext>>())
             {
                 var configuration = new AbpDbContextConfiguration<TDbContext>(connectionString, existingConnection);
+
+                configuration.DbContextOptions.ReplaceService<IEntityMaterializerSource, AbpEntityMaterializerSource>();
 
                 using (var configurer = _iocResolver.ResolveAsDisposable<IAbpDbContextConfigurer<TDbContext>>())
                 {
