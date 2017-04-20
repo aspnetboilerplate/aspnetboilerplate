@@ -33,12 +33,12 @@ namespace Abp.TestBase.SampleApplication.People
 
             var people = query.ToList();
 
-            return new ListResultDto<PersonDto>(people.MapTo<List<PersonDto>>());
+            return new ListResultDto<PersonDto>(ObjectMapper.Map<List<PersonDto>>(people));
         }
 
         public async Task CreatePersonAsync(CreatePersonInput input)
         {
-            await _personRepository.InsertAsync(input.MapTo<Person>());
+            await _personRepository.InsertAsync(ObjectMapper.Map<Person>(input));
         }
 
         [AbpAuthorize("CanDeletePerson")]

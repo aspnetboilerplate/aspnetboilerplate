@@ -20,7 +20,7 @@ namespace Abp.Tests.Auditing
                         Name = "Crosswell Secondary",
                         Address = "Broadway Ave, West Bend"
                     },
-                    Exception = new ApplicationException("this should be ignored!")
+                    Exception = new Exception("this should be ignored!")
                 });
 
             json.ShouldBe("{\"fullName\":\"John Doe\",\"school\":{\"name\":\"Crosswell Secondary\"}}");

@@ -16,6 +16,7 @@ using Abp.Events.Bus.Exceptions;
 using Abp.Localization;
 using Abp.Localization.Sources;
 using Abp.Logging;
+using Abp.ObjectMapping;
 using Abp.Reflection;
 using Abp.Runtime.Session;
 using Abp.Runtime.Validation;
@@ -114,6 +115,11 @@ namespace Abp.Web.Mvc.Controllers
         public ILogger Logger { get; set; }
 
         /// <summary>
+        /// Reference to the object to object mapper.
+        /// </summary>
+        public IObjectMapper ObjectMapper { get; set; }
+
+        /// <summary>
         /// Reference to <see cref="IUnitOfWorkManager"/>.
         /// </summary>
         public IUnitOfWorkManager UnitOfWorkManager
@@ -158,6 +164,7 @@ namespace Abp.Web.Mvc.Controllers
             LocalizationManager = NullLocalizationManager.Instance;
             PermissionChecker = NullPermissionChecker.Instance;
             EventBus = NullEventBus.Instance;
+            ObjectMapper = NullObjectMapper.Instance;
         }
 
         /// <summary>

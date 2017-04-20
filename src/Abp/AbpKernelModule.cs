@@ -21,6 +21,7 @@ using Abp.Modules;
 using Abp.MultiTenancy;
 using Abp.Net.Mail;
 using Abp.Notifications;
+using Abp.Reflection.Extensions;
 using Abp.Runtime;
 using Abp.Runtime.Caching;
 using Abp.Runtime.Remoting;
@@ -45,8 +46,6 @@ namespace Abp
             IocManager.Register<IScopedIocResolver, ScopedIocResolver>(DependencyLifeStyle.Transient);
             IocManager.Register(typeof(IAmbientScopeProvider<>), typeof(DataContextAmbientScopeProvider<>), DependencyLifeStyle.Transient);
 
-            InitializeInterceptors();
-
             AddAuditingSelectors();
             AddLocalizationSources();
             AddSettingProviders();
@@ -64,7 +63,7 @@ namespace Abp
 
             IocManager.IocContainer.Install(new EventBusInstaller(IocManager));
 
-            IocManager.RegisterAssemblyByConvention(Assembly.GetExecutingAssembly(),
+            IocManager.RegisterAssemblyByConvention(typeof(AbpKernelModule).GetAssembly(),
                 new ConventionalRegistrationConfig
                 {
                     InstallInstallers = false
@@ -98,14 +97,6 @@ namespace Abp
             }
         }
 
-        private void InitializeInterceptors()
-        {
-            ValidationInterceptorRegistrar.Initialize(IocManager);
-            AuditingInterceptorRegistrar.Initialize(IocManager);
-            UnitOfWorkRegistrar.Initialize(IocManager);
-            AuthorizationInterceptorRegistrar.Initialize(IocManager);
-        }
-
         private void AddUnitOfWorkFilters()
         {
             Configuration.UnitOfWork.RegisterFilter(AbpDataFilters.SoftDelete, true);
@@ -137,7 +128,7 @@ namespace Abp
                 new DictionaryBasedLocalizationSource(
                     AbpConsts.LocalizationSourceName,
                     new XmlEmbeddedFileLocalizationDictionaryProvider(
-                        Assembly.GetExecutingAssembly(), "Abp.Localization.Sources.AbpXmlSource"
+                        typeof(AbpKernelModule).GetAssembly(), "Abp.Localization.Sources.AbpXmlSource"
                     )));
         }
 

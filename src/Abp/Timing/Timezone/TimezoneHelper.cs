@@ -7,6 +7,7 @@ using System.Text;
 using System.Xml;
 using Abp.Extensions;
 using Abp.IO.Extensions;
+using Abp.Reflection.Extensions;
 using Abp.Xml.Extensions;
 
 namespace Abp.Timing.Timezone
@@ -40,7 +41,7 @@ namespace Abp.Timing.Timezone
                 return WindowsTimeZoneMappings[windowsTimezoneId];
             }
 
-            throw new Exception(string.Format("Unable to map {0} to iana timezone.", windowsTimezoneId));
+            throw new Exception($"Unable to map {windowsTimezoneId} to iana timezone.");
         }
 
         /// <summary>
@@ -120,7 +121,7 @@ namespace Abp.Timing.Timezone
                     return;
                 }
 
-                var assembly = Assembly.GetExecutingAssembly();
+                var assembly = typeof(TimezoneHelper).GetAssembly();
                 var resourceNames = assembly.GetManifestResourceNames();
 
                 var resourceName = resourceNames.First(r => r.Contains("WindowsZones.xml"));

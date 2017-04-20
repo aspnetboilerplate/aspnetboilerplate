@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Linq;
 using System.Reflection;
 
 namespace Abp.Reflection.Extensions
@@ -20,10 +21,10 @@ namespace Abp.Reflection.Extensions
         {
             if (memberInfo == null)
             {
-                throw new ArgumentNullException("memberInfo");
+                throw new ArgumentNullException(nameof(memberInfo));
             }
 
-            var attrs = memberInfo.GetCustomAttributes(typeof(TAttribute), inherit);
+            var attrs = memberInfo.GetCustomAttributes(typeof(TAttribute), inherit).ToArray();
             if (attrs.Length > 0)
             {
                 return (TAttribute)attrs[0];
@@ -36,18 +37,18 @@ namespace Abp.Reflection.Extensions
         public static TAttribute GetSingleAttributeOfTypeOrBaseTypesOrNull<TAttribute>(this Type type, bool inherit = true)
             where TAttribute : Attribute
         {
-            var attr = type.GetSingleAttributeOrNull<TAttribute>();
+            var attr = type.GetTypeInfo().GetSingleAttributeOrNull<TAttribute>();
             if (attr != null)
             {
                 return attr;
             }
 
-            if (type.BaseType == null)
+            if (type.GetTypeInfo().BaseType == null)
             {
                 return null;
             }
 
-            return type.BaseType.GetSingleAttributeOfTypeOrBaseTypesOrNull<TAttribute>(inherit);
+            return type.GetTypeInfo().BaseType.GetSingleAttributeOfTypeOrBaseTypesOrNull<TAttribute>(inherit);
         }
     }
 }

@@ -1,12 +1,11 @@
-﻿using System.Globalization;
-using System.Reflection;
-using System.Threading;
+﻿using System.Reflection;
 using Abp.Localization;
 using Abp.Localization.Dictionaries;
 using Abp.Localization.Dictionaries.Json;
 using Abp.Localization.Dictionaries.Xml;
 using Abp.Localization.Sources;
 using Abp.Modules;
+using Abp.Reflection.Extensions;
 using Shouldly;
 using Xunit;
 
@@ -28,23 +27,27 @@ namespace Abp.Tests.Localization.Json
         [Fact]
         public void Test_Xml_Json()
         {
-            Thread.CurrentThread.CurrentUICulture = new CultureInfo("en");
-
             var mananger = LocalIocManager.Resolve<LocalizationManager>();
 
-            var source = mananger.GetSource("Lang");
+            using (CultureInfoHelper.Use("en"))
+            {
+                var source = mananger.GetSource("Lang");
 
-            source.GetString("Apple").ShouldBe("Apple");
-            source.GetString("Banana").ShouldBe("Banana");
-            source.GetString("ThisIsATest").ShouldBe("This is a test.");
-            source.GetString("HowAreYou").ShouldBe("How are you?");
+                source.GetString("Apple").ShouldBe("Apple");
+                source.GetString("Banana").ShouldBe("Banana");
+                source.GetString("ThisIsATest").ShouldBe("This is a test.");
+                source.GetString("HowAreYou").ShouldBe("How are you?");
+            }
 
-            Thread.CurrentThread.CurrentUICulture = new CultureInfo("zh-CN");
+            using (CultureInfoHelper.Use("zh-CN"))
+            {
+                var source = mananger.GetSource("Lang");
 
-            source.GetString("Apple").ShouldBe("苹果");
-            source.GetString("Banana").ShouldBe("香蕉");
-            source.GetString("ThisIsATest").ShouldBe("这是一个测试.");
-            source.GetString("HowAreYou").ShouldBe("你好吗?");
+                source.GetString("Apple").ShouldBe("苹果");
+                source.GetString("Banana").ShouldBe("香蕉");
+                source.GetString("ThisIsATest").ShouldBe("这是一个测试.");
+                source.GetString("HowAreYou").ShouldBe("你好吗?");
+            }
         }
     }
 
@@ -56,7 +59,7 @@ namespace Abp.Tests.Localization.Json
                 new DictionaryBasedLocalizationSource(
                     "Lang",
                     new XmlEmbeddedFileLocalizationDictionaryProvider(
-                        Assembly.GetExecutingAssembly(),
+                        typeof(MyLangModule).GetAssembly(),
                          "Abp.Tests.Localization.Json.XmlSources"
                         )
                     )
@@ -66,7 +69,7 @@ namespace Abp.Tests.Localization.Json
                 new LocalizationSourceExtensionInfo(
                     "Lang",
                     new JsonEmbeddedFileLocalizationDictionaryProvider(
-                        Assembly.GetExecutingAssembly(),
+                        typeof(MyLangModule).GetAssembly(),
                          "Abp.Tests.Localization.Json.JsonSources"
                         )));
 
@@ -75,7 +78,7 @@ namespace Abp.Tests.Localization.Json
 
         public override void Initialize()
         {
-            IocManager.RegisterAssemblyByConvention(Assembly.GetExecutingAssembly());
+            IocManager.RegisterAssemblyByConvention(typeof(MyLangModule).GetAssembly());
         }
     }
 }

@@ -1,6 +1,7 @@
 ﻿using System.Reflection;
 using Abp.MemoryDb.Configuration;
 using Abp.Modules;
+using Abp.Reflection.Extensions;
 
 namespace Abp.MemoryDb
 {
@@ -16,7 +17,7 @@ namespace Abp.MemoryDb
 
         public override void Initialize()
         {
-            IocManager.RegisterAssemblyByConvention(Assembly.GetExecutingAssembly());
+            IocManager.RegisterAssemblyByConvention(typeof(AbpMemoryDbModule).GetAssembly());
         }
     }
 }

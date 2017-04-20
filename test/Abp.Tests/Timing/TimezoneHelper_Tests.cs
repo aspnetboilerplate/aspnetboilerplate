@@ -1,4 +1,7 @@
 ﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using Abp.Collections.Extensions;
 using Abp.Timing.Timezone;
 using NSubstitute.ExceptionExtensions;
 using Shouldly;
@@ -44,13 +47,27 @@ namespace Abp.Tests.Timing
         public void All_Windows_Timezones_Should_Be_Convertable_To_Iana()
         {
             var allTimezones = TimeZoneInfo.GetSystemTimeZones();
-            foreach (var timezone in allTimezones)
+            Should.NotThrow(() =>
             {
-                Should.NotThrow(() =>
+                var exceptions = new List<string>();
+
+                foreach (var timezone in allTimezones)
                 {
-                    TimezoneHelper.WindowsToIana(timezone.Id);
-                });
-            }
+                    try
+                    {
+                        TimezoneHelper.WindowsToIana(timezone.Id);
+                    }
+                    catch (Exception ex)
+                    {
+                        exceptions.Add(ex.Message);
+                    }
+                }
+
+                if (exceptions.Any())
+                {
+                    throw new Exception(exceptions.JoinAsString(Environment.NewLine));
+                }
+            });
         }
 
         [Fact]

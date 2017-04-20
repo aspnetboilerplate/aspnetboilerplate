@@ -1,4 +1,5 @@
 using System;
+using System.Reflection;
 using Newtonsoft.Json;
 
 namespace Abp.Localization
@@ -28,7 +29,7 @@ namespace Abp.Localization
 
         public override bool CanConvert(Type objectType)
         {
-            return typeof (ILocalizableString).IsAssignableFrom(objectType);
+            return typeof (ILocalizableString).GetTypeInfo().IsAssignableFrom(objectType);
         }
     }
 }

@@ -14,7 +14,7 @@ namespace Abp.Application.Navigation
         /// Unique name of the menu item in the application. 
         /// Can be used to find this menu item later.
         /// </summary>
-        public string Name { get; private set; }
+        public string Name { get; }
 
         /// <summary>
         /// Display name of the menu item. Required.
@@ -69,6 +69,16 @@ namespace Abp.Application.Navigation
         public object CustomData { get; set; }
 
         /// <summary>
+        /// Can be used to enable/disable a menu item.
+        /// </summary>
+        public bool IsEnabled { get; set; }
+
+        /// <summary>
+        /// Can be used to show/hide a menu item.
+        /// </summary>
+        public bool IsVisible { get; set; }
+
+        /// <summary>
         /// Sub items of this menu item. Optional.
         /// </summary>
         public virtual IList<MenuItemDefinition> Items { get; private set; }
@@ -86,7 +96,9 @@ namespace Abp.Application.Navigation
             int order = 0, 
             object customData = null,
             IFeatureDependency featureDependency = null,
-            string target = null)
+            string target = null,
+            bool isEnabled = true,
+            bool isVisible = true)
         {
             Check.NotNull(name, nameof(name));
             Check.NotNull(displayName, nameof(displayName));
@@ -101,6 +113,8 @@ namespace Abp.Application.Navigation
             CustomData = customData;
             FeatureDependency = featureDependency;
             Target = target;
+            IsEnabled = isEnabled;
+            IsVisible = isVisible;
 
             Items = new List<MenuItemDefinition>();
         }

@@ -17,6 +17,8 @@ namespace Abp.Runtime.Validation.Interception
     /// </summary>
     public class MethodInvocationValidator : ITransientDependency
     {
+        private const int MaxRecursiveParameterValidationDepth = 8;
+
         protected MethodInfo Method { get; private set; }
         protected object[] ParameterValues { get; private set; }
         protected ParameterInfo[] Parameters { get; private set; }
@@ -140,11 +142,16 @@ namespace Abp.Runtime.Validation.Interception
                 return;
             }
 
-            ValidateObjectRecursively(parameterValue);
+            ValidateObjectRecursively(parameterValue, 1);
         }
 
-        protected virtual void ValidateObjectRecursively(object validatingObject)
+        protected virtual void ValidateObjectRecursively(object validatingObject, int currentDepth)
         {
+            if (currentDepth > MaxRecursiveParameterValidationDepth)
+            {
+                return;
+            }
+
             if (validatingObject == null)
             {
                 return;
@@ -157,7 +164,7 @@ namespace Abp.Runtime.Validation.Interception
             {
                 foreach (var item in (validatingObject as IEnumerable))
                 {
-                    ValidateObjectRecursively(item);
+                    ValidateObjectRecursively(item, currentDepth + 1);
                 }
             }
 
@@ -202,7 +209,7 @@ namespace Abp.Runtime.Validation.Interception
                     continue;
                 }
 
-                ValidateObjectRecursively(property.GetValue(validatingObject));
+                ValidateObjectRecursively(property.GetValue(validatingObject), currentDepth + 1);
             }
         }
 

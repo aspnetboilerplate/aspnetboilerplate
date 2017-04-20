@@ -57,7 +57,7 @@ namespace Abp.Notifications
         /// <summary>
         /// Updates a user notification state.
         /// </summary>
-        Task UpdateUserNotificationStateAsync(int? notificationId, Guid userNotificationId, UserNotificationState state);
+        Task UpdateUserNotificationStateAsync(int? tenantId, Guid userNotificationId, UserNotificationState state);
 
         /// <summary>
         /// Updates all notification states for a user.
@@ -67,7 +67,7 @@ namespace Abp.Notifications
         /// <summary>
         /// Deletes a user notification.
         /// </summary>
-        Task DeleteUserNotificationAsync(int? notificationId, Guid userNotificationId);
+        Task DeleteUserNotificationAsync(int? tenantId, Guid userNotificationId);
 
         /// <summary>
         /// Deletes all notifications of a user.

@@ -11,6 +11,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 using Abp.Configuration.Startup;
 using Abp.Dependency;
+using Abp.Reflection.Extensions;
 
 namespace Abp.EntityFrameworkCore.Tests
 {
@@ -52,7 +53,7 @@ namespace Abp.EntityFrameworkCore.Tests
 
         public override void Initialize()
         {
-            IocManager.RegisterAssemblyByConvention(Assembly.GetExecutingAssembly());
+            IocManager.RegisterAssemblyByConvention(typeof(EntityFrameworkCoreTestModule).GetAssembly());
         }
     }
 }

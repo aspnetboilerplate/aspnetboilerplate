@@ -6,6 +6,7 @@ using Abp.AspNetCore.Mvc.Extensions;
 using Abp.AspNetCore.Mvc.Proxying.Utils;
 using Abp.Dependency;
 using Abp.Extensions;
+using Abp.Reflection.Extensions;
 using Abp.Web.Api.Modeling;
 using Castle.Core.Logging;
 using Microsoft.AspNetCore.Mvc.ApiExplorer;
@@ -125,7 +126,7 @@ namespace Abp.AspNetCore.Mvc.Proxying
 
             foreach (var controllerSetting in _configuration.ControllerAssemblySettings)
             {
-                if (controllerType.Assembly == controllerSetting.Assembly)
+                if (controllerType.GetAssembly() == controllerSetting.Assembly)
                 {
                     return controllerSetting.ModuleName;
                 }

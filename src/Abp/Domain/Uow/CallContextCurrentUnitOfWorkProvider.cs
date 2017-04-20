@@ -1,4 +1,5 @@
-﻿using System.Collections.Concurrent;
+﻿#if NET46
+using System.Collections.Concurrent;
 using System.Runtime.Remoting.Messaging;
 using Abp.Dependency;
 using Castle.Core;
@@ -134,3 +135,4 @@ namespace Abp.Domain.Uow
         }
     }
 }
+#endif

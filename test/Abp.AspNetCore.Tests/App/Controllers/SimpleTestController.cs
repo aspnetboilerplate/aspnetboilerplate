@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Globalization;
 using System.Threading;
 using System.Threading.Tasks;
 using Abp.AspNetCore.App.Models;
@@ -86,7 +87,7 @@ namespace Abp.AspNetCore.App.Controllers
         [HttpGet]
         public ActionResult GetCurrentCultureNameTest()
         {
-            return Content(Thread.CurrentThread.CurrentCulture.Name);
+            return Content(CultureInfo.CurrentCulture.Name);
         }
     }
 }

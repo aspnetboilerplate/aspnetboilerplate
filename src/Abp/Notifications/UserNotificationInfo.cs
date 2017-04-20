@@ -37,11 +37,18 @@ namespace Abp.Notifications
 
         public virtual DateTime CreationTime { get; set; }
 
+        public UserNotificationInfo()
+        {
+            
+        }
+
         /// <summary>
         /// Initializes a new instance of the <see cref="UserNotificationInfo"/> class.
         /// </summary>
-        public UserNotificationInfo()
+        /// <param name="create"></param>
+        public UserNotificationInfo(Guid id)
         {
+            Id = id;
             State = UserNotificationState.Unread;
             CreationTime = Clock.Now;
         }

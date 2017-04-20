@@ -4,6 +4,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using Abp.Auditing;
 using Abp.Extensions;
+using Abp.Localization;
 using Abp.Web.Authorization;
 using Abp.Web.Features;
 using Abp.Web.Localization;
@@ -62,8 +63,8 @@ namespace Abp.AspNetCore.Mvc.Controllers
         {
             if (!culture.IsNullOrEmpty())
             {
-                Thread.CurrentThread.CurrentCulture = new CultureInfo(culture);
-                Thread.CurrentThread.CurrentUICulture = new CultureInfo(culture);
+                CultureInfo.CurrentCulture = CultureInfoHelper.Get(culture);
+                CultureInfo.CurrentUICulture = CultureInfoHelper.Get(culture);
             }
 
             var sb = new StringBuilder();

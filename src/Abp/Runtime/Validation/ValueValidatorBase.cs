@@ -13,7 +13,7 @@ namespace Abp.Runtime.Validation
         {
             get
             {
-                var type = GetType();
+                var type = GetType().GetTypeInfo();
                 if (type.IsDefined(typeof(ValidatorAttribute)))
                 {
                     return type.GetCustomAttributes(typeof(ValidatorAttribute)).Cast<ValidatorAttribute>().First().Name;

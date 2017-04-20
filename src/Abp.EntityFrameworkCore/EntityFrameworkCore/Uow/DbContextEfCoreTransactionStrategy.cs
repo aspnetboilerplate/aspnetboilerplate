@@ -89,8 +89,8 @@ namespace Abp.EntityFrameworkCore.Uow
                 {
                     iocResolver.Release(attendedDbContext);
                 }
-                                
-                activeTransaction.StarterDbContext.Dispose();
+
+                iocResolver.Release(activeTransaction.StarterDbContext);
             }
 
             ActiveTransactions.Clear();

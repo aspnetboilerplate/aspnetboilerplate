@@ -1,11 +1,10 @@
-﻿using System.Runtime.Caching;
-using Abp.Dependency;
+﻿using Abp.Dependency;
 using Abp.Runtime.Caching.Configuration;
 
 namespace Abp.Runtime.Caching.Memory
 {
     /// <summary>
-    /// Implements <see cref="ICacheManager"/> to work with <see cref="MemoryCache"/>.
+    /// Implements <see cref="ICacheManager"/> to work with MemoryCache.
     /// </summary>
     public class AbpMemoryCacheManager : CacheManagerBase
     {
