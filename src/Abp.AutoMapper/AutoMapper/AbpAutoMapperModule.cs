@@ -1,4 +1,5 @@
-﻿using Abp.Localization;
+﻿using System;
+using Abp.Localization;
 using Abp.Modules;
 using System.Reflection;
 using Abp.Configuration.Startup;
@@ -13,10 +14,9 @@ namespace Abp.AutoMapper
     {
         private readonly ITypeFinder _typeFinder;
 
-        private static bool _createdMappingsBefore;
-
+        private static volatile bool _createdMappingsBefore;
         private static readonly object SyncObj = new object();
-
+        
         public AbpAutoMapperModule(ITypeFinder typeFinder)
         {
             _typeFinder = typeFinder;
@@ -34,32 +34,41 @@ namespace Abp.AutoMapper
         public override void PostInitialize()
         {
             CreateMappings();
-
-            IocManager.IocContainer.Register(
-                Component.For<IMapper>().Instance(Mapper.Instance).LifestyleSingleton()
-            );
         }
 
-        public void CreateMappings()
+        private void CreateMappings()
         {
             lock (SyncObj)
             {
-                //We should prevent duplicate mapping in an application, since Mapper is static.
-                if (_createdMappingsBefore)
-                {
-                    return;
-                }
-
-                Mapper.Initialize(configuration =>
+                Action<IMapperConfigurationExpression> configurer = configuration =>
                 {
                     FindAndAutoMapTypes(configuration);
                     foreach (var configurator in Configuration.Modules.AbpAutoMapper().Configurators)
                     {
                         configurator(configuration);
                     }
-                });
+                };
 
-                _createdMappingsBefore = true;
+                if (Configuration.Modules.AbpAutoMapper().UseStaticMapper)
+                {
+                    //We should prevent duplicate mapping in an application, since Mapper is static.
+                    if (!_createdMappingsBefore)
+                    {
+                        Mapper.Initialize(configurer);
+                        _createdMappingsBefore = true;
+                    }
+
+                    IocManager.IocContainer.Register(
+                        Component.For<IMapper>().Instance(Mapper.Instance).LifestyleSingleton()
+                    );
+                }
+                else
+                {
+                    var config = new MapperConfiguration(configurer);
+                    IocManager.IocContainer.Register(
+                        Component.For<IMapper>().Instance(config.CreateMapper()).LifestyleSingleton()
+                    );
+                }
             }
         }
 

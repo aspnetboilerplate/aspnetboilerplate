@@ -41,7 +41,6 @@ namespace Abp.Runtime.Caching.Memory
             else if (slidingExpireTime != null)
             {
                 _memoryCache.Set(key, value, slidingExpireTime.Value);
-                //cachePolicy.SlidingExpiration = slidingExpireTime.Value; // TODO: How to set sliding time?
             }
             else if (DefaultAbsoluteExpireTime != null)
             {
@@ -50,7 +49,6 @@ namespace Abp.Runtime.Caching.Memory
             else
             {
                 _memoryCache.Set(key, value, DefaultSlidingExpireTime);
-                //cachePolicy.SlidingExpiration = DefaultSlidingExpireTime; // TODO: How to set sliding time?
             }
         }
 
