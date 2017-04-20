@@ -8,7 +8,9 @@ $projects = (
     "Abp",
     "Abp.AspNetCore",
     "Abp.AutoMapper",
+    "Abp.MailKit",
     "Abp.HangFire",
+    "Abp.HangFire.AspNetCore",
     "Abp.Quartz",
     "Abp.EntityFramework.Common",
     "Abp.EntityFramework",
@@ -31,11 +33,12 @@ $projects = (
     "Abp.Castle.Log4Net",
     "Abp.TestBase",
     "Abp.AspNetCore.TestBase",
-    "Abp.Web.Resources"
+    "Abp.Web.Resources"    
 )
 
 # Rebuild solution
 Set-Location $slnPath
+& dotnet restore
 & dotnet msbuild /t:Rebuild /p:Configuration=Release
 
 # Copy all nuget packages to the pack folder

@@ -1,5 +1,8 @@
+using System;
+
 namespace Abp.Events.Bus.Entities
 {
+    [Serializable]
     public class DomainEventEntry
     {
         public object SourceEntity { get; }

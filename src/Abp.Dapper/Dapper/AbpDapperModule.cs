@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Reflection;
+
 using Abp.Configuration.Startup;
 using Abp.Dapper.Repositories;
 using Abp.Dependency;
@@ -25,7 +26,7 @@ namespace Abp.Dapper
 
         public override void PreInitialize()
         {
-            Configuration.ReplaceService<IEfTransactionStrategy, DbContextEfTransactionStrategy>();
+            Configuration.ReplaceService<IEfTransactionStrategy, DbContextEfTransactionStrategy>(DependencyLifeStyle.Transient);
         }
 
         public override void Initialize()
@@ -45,7 +46,7 @@ namespace Abp.Dapper
                     typeof(AbpDbContext).IsAssignableFrom(type)
                 );
 
-            using (var repositoryRegistrar = IocManager.ResolveAsDisposable<IDapperGenericRepositoryRegistrar>())
+            using (IDisposableDependencyObjectWrapper<IDapperGenericRepositoryRegistrar> repositoryRegistrar = IocManager.ResolveAsDisposable<IDapperGenericRepositoryRegistrar>())
             {
                 foreach (Type dbContextType in dbContextTypes)
                 {

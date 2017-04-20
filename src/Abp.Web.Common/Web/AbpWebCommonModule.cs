@@ -8,6 +8,7 @@ using Abp.Web.Api.ProxyScripting.Generators.JQuery;
 using Abp.Web.Configuration;
 using Abp.Web.MultiTenancy;
 using Abp.Web.Security.AntiForgery;
+using Abp.Reflection.Extensions;
 
 namespace Abp.Web
 {
@@ -32,14 +33,14 @@ namespace Abp.Web
                 new DictionaryBasedLocalizationSource(
                     AbpWebConsts.LocalizaionSourceName,
                     new XmlEmbeddedFileLocalizationDictionaryProvider(
-                        Assembly.GetExecutingAssembly(), "Abp.Web.Localization.AbpWebXmlSource"
+                        typeof(AbpWebCommonModule).GetAssembly(), "Abp.Web.Localization.AbpWebXmlSource"
                         )));
         }
 
         /// <inheritdoc/>
         public override void Initialize()
         {
-            IocManager.RegisterAssemblyByConvention(Assembly.GetExecutingAssembly());            
+            IocManager.RegisterAssemblyByConvention(typeof(AbpWebCommonModule).GetAssembly());            
         }
     }
 }

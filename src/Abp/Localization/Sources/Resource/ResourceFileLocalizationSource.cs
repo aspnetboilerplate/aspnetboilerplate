@@ -49,7 +49,7 @@ namespace Abp.Localization.Sources.Resource
             var value = GetStringOrNull(name);
             if (value == null)
             {
-                return ReturnGivenNameOrThrowException(name, Thread.CurrentThread.CurrentUICulture);
+                return ReturnGivenNameOrThrowException(name, CultureInfo.CurrentUICulture);
             }
 
             return value;
@@ -83,19 +83,23 @@ namespace Abp.Localization.Sources.Resource
         /// </summary>
         public virtual IReadOnlyList<LocalizedString> GetAllStrings(bool includeDefaults = true)
         {
-            return GetAllStrings(Thread.CurrentThread.CurrentUICulture, includeDefaults);
+            return GetAllStrings(CultureInfo.CurrentUICulture, includeDefaults);
         }
 
         /// <summary>
-        /// Gets all strings in specified culture.
+        /// Gets all strings in specified culture. 
         /// </summary>
         public virtual IReadOnlyList<LocalizedString> GetAllStrings(CultureInfo culture, bool includeDefaults = true)
         {
+#if NET46
             return ResourceManager
                 .GetResourceSet(culture, true, includeDefaults)
                 .Cast<DictionaryEntry>()
                 .Select(entry => new LocalizedString(entry.Key.ToString(), entry.Value.ToString(), culture))
                 .ToImmutableList();
+#else
+            return new LocalizedString[0];
+#endif
         }
 
         protected virtual string ReturnGivenNameOrThrowException(string name, CultureInfo culture)

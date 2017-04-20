@@ -1,6 +1,7 @@
 ﻿using System.Linq;
 using System.Reflection;
 using Abp.Localization.Dictionaries.Json;
+using Abp.Reflection.Extensions;
 using Shouldly;
 using Xunit;
 
@@ -13,7 +14,7 @@ namespace Abp.Tests.Localization.Json
         public JsonEmbeddedFileLocalizationDictionaryProvider_Tests()
         {
             _dictionaryProvider = new JsonEmbeddedFileLocalizationDictionaryProvider(
-                Assembly.GetExecutingAssembly(),
+                typeof(JsonEmbeddedFileLocalizationDictionaryProvider_Tests).GetAssembly(),
                 "Abp.Tests.Localization.Json.JsonSources"
                 );
 

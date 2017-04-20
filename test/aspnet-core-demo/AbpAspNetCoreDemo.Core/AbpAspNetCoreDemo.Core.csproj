@@ -1,8 +1,8 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <VersionPrefix>1.5.0.0</VersionPrefix>
-    <TargetFramework>net452</TargetFramework>
+    <Version>1.5.0.0</Version>
+    <TargetFrameworks>net461;netstandard1.6</TargetFrameworks>
     <AssemblyName>AbpAspNetCoreDemo.Core</AssemblyName>
     <PackageId>AbpAspNetCoreDemo.Core</PackageId>
     <GenerateAssemblyConfigurationAttribute>false</GenerateAssemblyConfigurationAttribute>
@@ -18,7 +18,7 @@
     <ProjectReference Include="..\..\..\src\Abp.AutoMapper\Abp.AutoMapper.csproj" />
   </ItemGroup>
 
-  <ItemGroup Condition=" '$(TargetFramework)' == 'net452' ">
+  <ItemGroup Condition=" '$(TargetFramework)' == 'net461' ">
     <Reference Include="System" />
     <Reference Include="Microsoft.CSharp" />
   </ItemGroup>

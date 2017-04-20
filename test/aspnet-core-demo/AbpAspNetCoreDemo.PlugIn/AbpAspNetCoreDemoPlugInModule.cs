@@ -1,9 +1,8 @@
 ﻿using System.Reflection;
 using Abp.AspNetCore;
 using Abp.Modules;
+using Abp.Reflection.Extensions;
 using Abp.Resources.Embedded;
-using Hik.Communication.Scs.Communication.EndPoints.Tcp;
-using Hik.Communication.Scs.Server;
 
 namespace AbpAspNetCoreDemo.PlugIn
 {
@@ -12,13 +11,11 @@ namespace AbpAspNetCoreDemo.PlugIn
     {
         public override void PreInitialize()
         {
-            //SCS package is just added to test dependency of a plugin module!
-            var server = ScsServerFactory.CreateServer(new ScsTcpEndPoint(42000));
 
             Configuration.EmbeddedResources.Sources.Add(
                 new EmbeddedResourceSet(
                     "/Views/",
-                    Assembly.GetExecutingAssembly(),
+                    typeof(AbpAspNetCoreDemoPlugInModule).GetAssembly(),
                     "AbpAspNetCoreDemo.PlugIn.Views"
                 )
             );
@@ -26,7 +23,7 @@ namespace AbpAspNetCoreDemo.PlugIn
 
         public override void Initialize()
         {
-            IocManager.RegisterAssemblyByConvention(Assembly.GetExecutingAssembly());
+            IocManager.RegisterAssemblyByConvention(typeof(AbpAspNetCoreDemoPlugInModule).GetAssembly());
         }
     }
 }

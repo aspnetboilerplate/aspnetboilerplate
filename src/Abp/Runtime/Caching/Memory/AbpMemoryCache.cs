@@ -1,4 +1,5 @@
-﻿using System;
+﻿#if NET46
+using System;
 using System.Runtime.Caching;
 
 namespace Abp.Runtime.Caching.Memory
@@ -72,3 +73,4 @@ namespace Abp.Runtime.Caching.Memory
         }
     }
 }
+#endif

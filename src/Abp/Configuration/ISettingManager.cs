@@ -41,7 +41,16 @@ namespace Abp.Configuration
         /// <param name="tenantId">Tenant id</param>
         /// <param name="userId">User id</param>
         /// <returns>Current value of the setting for the user</returns>
-        Task<string> GetSettingValueForUserAsync(string name, int? tenantId, long userId); //TODO: Can be overloaded for UserIdentifier.
+        Task<string> GetSettingValueForUserAsync(string name, int? tenantId, long userId);
+
+        /// <summary>
+        /// Gets current value of a setting for a user level.
+        /// It gets the setting value, overwritten by given tenant and user.
+        /// </summary>
+        /// <param name="name">Unique name of the setting</param>
+        /// <param name="user">User</param>
+        /// <returns>Current value of the setting for the user</returns>
+        Task<string> GetSettingValueForUserAsync(string name, UserIdentifier user);
 
         /// <summary>
         /// Gets current values of all settings.

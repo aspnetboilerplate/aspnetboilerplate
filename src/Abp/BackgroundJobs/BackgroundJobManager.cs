@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Reflection;
 using System.Threading.Tasks;
 using Abp.Dependency;
 using Abp.Events.Bus;
@@ -90,7 +91,7 @@ namespace Abp.BackgroundJobs
                 {
                     try
                     {
-                        var jobExecuteMethod = job.Object.GetType().GetMethod("Execute");
+                        var jobExecuteMethod = job.Object.GetType().GetTypeInfo().GetMethod("Execute");
                         var argsType = jobExecuteMethod.GetParameters()[0].ParameterType;
                         var argsObj = JsonConvert.DeserializeObject(jobInfo.JobArgs, argsType);
 

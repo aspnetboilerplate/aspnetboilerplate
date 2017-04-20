@@ -19,7 +19,6 @@ using Abp.Timing;
 using Castle.Core.Logging;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.ChangeTracking;
-using Microsoft.EntityFrameworkCore.Metadata.Internal;
 
 namespace Abp.EntityFrameworkCore
 {
@@ -27,7 +26,6 @@ namespace Abp.EntityFrameworkCore
     /// Base class for all DbContext classes in the application.
     /// </summary>
     public abstract class AbpDbContext : DbContext, ITransientDependency
-        //, IShouldInitialize
     {
         /// <summary>
         /// Used to get current session values.
@@ -65,6 +63,12 @@ namespace Abp.EntityFrameworkCore
         public IMultiTenancyConfig MultiTenancyConfig { get; set; }
 
         /// <summary>
+        /// Can be used to suppress automatically setting TenantId on SaveChanges.
+        /// Default: false.
+        /// </summary>
+        public bool SuppressAutoSetTenantId { get; set; }
+
+        /// <summary>
         /// Constructor.
         /// </summary>
         protected AbpDbContext(DbContextOptions options)
@@ -76,38 +80,7 @@ namespace Abp.EntityFrameworkCore
         private void InitializeDbContext()
         {
             SetNullsForInjectedProperties();
-            //RegisterToChanges();
         }
-
-        //private void RegisterToChanges()
-        //{
-        //    ((IObjectContextAdapter)this)
-        //        .ObjectContext
-        //        .ObjectStateManager
-        //        .ObjectStateManagerChanged += ObjectStateManager_ObjectStateManagerChanged;
-        //}
-
-        //protected virtual void ObjectStateManager_ObjectStateManagerChanged(object sender, System.ComponentModel.CollectionChangeEventArgs e)
-        //{
-        //    var contextAdapter = (IObjectContextAdapter)this;
-        //    if (e.Action != CollectionChangeAction.Add)
-        //    {
-        //        return;
-        //    }
-
-        //    var entry = contextAdapter.ObjectContext.ObjectStateManager.GetObjectStateEntry(e.Element);
-        //    switch (entry.State)
-        //    {
-        //        case EntityState.Added:
-        //            CheckAndSetId(entry.Entity);
-        //            CheckAndSetMustHaveTenantIdProperty(entry.Entity);
-        //            SetCreationAuditProperties(entry.Entity, GetAuditUserId());
-        //            break;
-        //        //case EntityState.Deleted: //It's not going here at all
-        //        //    SetDeletionAuditProperties(entry.Entity, GetAuditUserId());
-        //        //    break;
-        //    }
-        //}
 
         private void SetNullsForInjectedProperties()
         {
@@ -118,35 +91,34 @@ namespace Abp.EntityFrameworkCore
             EventBus = NullEventBus.Instance;
         }
 
-        //public virtual void Initialize()
-        //{
-        //    Database.Initialize(false);
-        //    this.SetFilterScopedParameterValue(AbpDataFilters.MustHaveTenant, AbpDataFilters.Parameters.TenantId, AbpSession.TenantId ?? 0);
-        //    this.SetFilterScopedParameterValue(AbpDataFilters.MayHaveTenant, AbpDataFilters.Parameters.TenantId, AbpSession.TenantId);
-        //}
-
-        protected override void OnModelCreating(ModelBuilder modelBuilder)
-        {
-            base.OnModelCreating(modelBuilder);
-            //modelBuilder.Filter(AbpDataFilters.SoftDelete, (ISoftDelete d) => d.IsDeleted, false);
-            //modelBuilder.Filter(AbpDataFilters.MustHaveTenant, (IMustHaveTenant t, int tenantId) => t.TenantId == tenantId || (int?)t.TenantId == null, 0);
-            //modelBuilder.Filter(AbpDataFilters.MayHaveTenant, (IMayHaveTenant t, int? tenantId) => t.TenantId == tenantId, 0);
-        }
-
         public override int SaveChanges()
         {
-            var changeReport = ApplyAbpConcepts();
-            var result = base.SaveChanges();
-            EntityChangeEventHelper.TriggerEvents(changeReport);
-            return result;
+            try
+            {
+                var changeReport = ApplyAbpConcepts();
+                var result = base.SaveChanges();
+                EntityChangeEventHelper.TriggerEvents(changeReport);
+                return result;
+            }
+            catch (DbUpdateConcurrencyException ex)
+            {
+                throw new AbpDbConcurrencyException(ex.Message, ex);
+            }
         }
 
         public override async Task<int> SaveChangesAsync(CancellationToken cancellationToken = default(CancellationToken))
         {
-            var changeReport = ApplyAbpConcepts();
-            var result = await base.SaveChangesAsync(cancellationToken);
-            await EntityChangeEventHelper.TriggerEventsAsync(changeReport);
-            return result;
+            try
+            {
+                var changeReport = ApplyAbpConcepts();
+                var result = await base.SaveChangesAsync(cancellationToken);
+                await EntityChangeEventHelper.TriggerEventsAsync(changeReport);
+                return result;
+            }
+            catch (DbUpdateConcurrencyException ex)
+            {
+                throw new AbpDbConcurrencyException(ex.Message, ex);
+            }
         }
 
         protected virtual EntityChangeReport ApplyAbpConcepts()
@@ -230,6 +202,11 @@ namespace Abp.EntityFrameworkCore
 
         protected virtual void CheckAndSetMustHaveTenantIdProperty(object entityAsObj)
         {
+            if (SuppressAutoSetTenantId)
+            {
+                return;
+            }
+            
             //Only set IMustHaveTenant entities
             if (!(entityAsObj is IMustHaveTenant))
             {
@@ -258,8 +235,13 @@ namespace Abp.EntityFrameworkCore
 
         protected virtual void CheckAndSetMayHaveTenantIdProperty(object entityAsObj)
         {
+            if (SuppressAutoSetTenantId)
+            {
+                return;
+            }
+
             //Only works for single tenant applications
-            if (MultiTenancyConfig.IsEnabled)
+            if (MultiTenancyConfig?.IsEnabled ?? false)
             {
                 return;
             }
@@ -413,15 +395,6 @@ namespace Abp.EntityFrameworkCore
                 }
             }
         }
-
-        //protected virtual void LogDbEntityValidationException(DbEntityValidationException exception)
-        //{
-        //    Logger.Error("There are some validation errors while saving changes in EntityFramework:");
-        //    foreach (var ve in exception.EntityValidationErrors.SelectMany(eve => eve.ValidationErrors))
-        //    {
-        //        Logger.Error(" - " + ve.PropertyName + ": " + ve.ErrorMessage);
-        //    }
-        //}
 
         protected virtual long? GetAuditUserId()
         {

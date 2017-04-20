@@ -72,7 +72,7 @@ namespace Abp.AspNetCore
 
                 var supportedCultures = languageManager.Object
                     .GetLanguages()
-                    .Select(l => new CultureInfo(l.Name))
+                    .Select(l => CultureInfoHelper.Get(l.Name))
                     .ToArray();
 
                 var defaultCulture = new RequestCulture(defaultLanguage.Name);

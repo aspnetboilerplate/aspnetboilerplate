@@ -14,7 +14,7 @@ namespace Abp.Localization
 
             try
             {
-                CultureInfo.GetCultureInfo(cultureCode);
+                CultureInfoHelper.Get(cultureCode);
                 return true;
             }
             catch (CultureNotFoundException)

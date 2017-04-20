@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using System.Globalization;
 using System.Linq;
 using System.Threading;
 using Abp.Dependency;
@@ -29,7 +30,7 @@ namespace Abp.Localization
                 throw new AbpException("No language defined in this application.");
             }
 
-            var currentCultureName = Thread.CurrentThread.CurrentUICulture.Name;
+            var currentCultureName = CultureInfo.CurrentUICulture.Name;
 
             //Try to find exact match
             var currentLanguage = languages.FirstOrDefault(l => l.Name == currentCultureName);

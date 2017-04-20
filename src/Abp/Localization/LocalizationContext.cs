@@ -7,7 +7,7 @@ namespace Abp.Localization
     /// </summary>
     public class LocalizationContext : ILocalizationContext, ISingletonDependency
     {
-        public ILocalizationManager LocalizationManager { get; private set; }
+        public ILocalizationManager LocalizationManager { get; }
         
         /// <summary>
         /// Initializes a new instance of the <see cref="LocalizationContext"/> class.

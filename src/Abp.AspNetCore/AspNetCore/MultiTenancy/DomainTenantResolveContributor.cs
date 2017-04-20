@@ -39,7 +39,7 @@ namespace Abp.AspNetCore.MultiTenancy
             }
 
             var hostName = httpContext.Request.Host.Host.RemovePreFix("http://", "https://");
-            var domainFormat = _multiTenancyConfiguration.DomainFormat.RemovePreFix("http://", "https://").Split(':')[0];
+            var domainFormat = _multiTenancyConfiguration.DomainFormat.RemovePreFix("http://", "https://").Split(':')[0].RemovePostFix("/");
             var result = new FormattedStringValueExtracter().Extract(hostName, domainFormat, true);
 
             if (!result.IsMatch || !result.Matches.Any())

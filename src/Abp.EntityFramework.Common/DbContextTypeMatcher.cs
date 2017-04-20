@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Reflection;
 using Abp.Collections.Extensions;
 using Abp.Dependency;
 using Abp.Domain.Uow;
@@ -40,7 +41,7 @@ namespace Abp.EntityFramework
         {
             //TODO: This can also get MultiTenancySide to filter dbcontexes
 
-            if (!sourceDbContextType.IsAbstract)
+            if (!sourceDbContextType.GetTypeInfo().IsAbstract)
             {
                 return sourceDbContextType;
             }
@@ -97,7 +98,7 @@ namespace Abp.EntityFramework
         {
             return dbContextTypes.Where(type =>
             {
-                var attrs = type.GetCustomAttributes(typeof(MultiTenancySideAttribute), true);
+                var attrs = type.GetTypeInfo().GetCustomAttributes(typeof(MultiTenancySideAttribute), true).ToArray();
                 if (attrs.IsNullOrEmpty())
                 {
                     return false;
@@ -110,7 +111,7 @@ namespace Abp.EntityFramework
         private static Type GetDefaultDbContextType(List<Type> dbContextTypes, Type sourceDbContextType, MultiTenancySides tenancySide)
         {
             var filteredTypes = dbContextTypes
-                .Where(type => !type.IsDefined(typeof(AutoRepositoryTypesAttribute), true))
+                .Where(type => !type.GetTypeInfo().IsDefined(typeof(AutoRepositoryTypesAttribute), true))
                 .ToList();
 
             if (filteredTypes.Count == 1)
@@ -119,7 +120,7 @@ namespace Abp.EntityFramework
             }
 
             filteredTypes = filteredTypes
-                .Where(type => !type.IsDefined(typeof(DefaultDbContextAttribute), true))
+                .Where(type => !type.GetTypeInfo().IsDefined(typeof(DefaultDbContextAttribute), true))
                 .ToList();
 
             if (filteredTypes.Count == 1)
@@ -140,7 +141,7 @@ namespace Abp.EntityFramework
             types.Add(dbContextType);
             if (dbContextType != typeof(TBaseDbContext))
             {
-                AddWithBaseTypes(dbContextType.BaseType, types);
+                AddWithBaseTypes(dbContextType.GetTypeInfo().BaseType, types);
             }
         }
 

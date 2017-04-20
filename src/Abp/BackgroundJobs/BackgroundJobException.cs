@@ -21,6 +21,7 @@ namespace Abp.BackgroundJobs
 
         }
 
+#if NET46
         /// <summary>
         /// Creates a new <see cref="BackgroundJobException"/> object.
         /// </summary>
@@ -29,6 +30,7 @@ namespace Abp.BackgroundJobs
         {
 
         }
+#endif
 
         /// <summary>
         /// Creates a new <see cref="BackgroundJobException"/> object.

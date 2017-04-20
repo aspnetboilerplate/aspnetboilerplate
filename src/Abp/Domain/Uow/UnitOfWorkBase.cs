@@ -428,5 +428,10 @@ namespace Abp.Domain.Uow
 
             return filterIndex;
         }
+
+        public override string ToString()
+        {
+            return $"[UnitOfWork {Id}]";
+        }
     }
 }
