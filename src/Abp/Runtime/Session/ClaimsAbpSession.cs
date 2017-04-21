@@ -10,7 +10,7 @@ using Abp.Runtime.Security;
 namespace Abp.Runtime.Session
 {
     /// <summary>
-    /// Implements <see cref="IAbpSession"/> to get session properties from claims of <see cref="Thread.CurrentPrincipal"/>.
+    /// Implements <see cref="IAbpSession"/> to get session properties from current claims.
     /// </summary>
     public class ClaimsAbpSession : AbpSessionBase, ISingletonDependency
     {

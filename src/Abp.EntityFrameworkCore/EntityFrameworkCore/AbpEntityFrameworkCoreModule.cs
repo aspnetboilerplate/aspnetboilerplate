@@ -7,6 +7,7 @@ using Abp.EntityFrameworkCore.Repositories;
 using Abp.EntityFrameworkCore.Uow;
 using Abp.Modules;
 using Abp.Reflection;
+using Abp.Reflection.Extensions;
 using Castle.MicroKernel.Registration;
 
 namespace Abp.EntityFrameworkCore
@@ -31,7 +32,7 @@ namespace Abp.EntityFrameworkCore
 
         public override void Initialize()
         {
-            IocManager.RegisterAssemblyByConvention(Assembly.GetExecutingAssembly());
+            IocManager.RegisterAssemblyByConvention(typeof(AbpEntityFrameworkCoreModule).GetAssembly());
 
             IocManager.IocContainer.Register(
                 Component.For(typeof(IDbContextProvider<>))
@@ -46,11 +47,13 @@ namespace Abp.EntityFrameworkCore
         {
             var dbContextTypes =
                 _typeFinder.Find(type =>
-                    type.IsPublic &&
-                    !type.IsAbstract &&
-                    type.IsClass &&
-                    typeof(AbpDbContext).IsAssignableFrom(type)
-                    );
+                {
+                    var typeInfo = type.GetTypeInfo();
+                    return typeInfo.IsPublic &&
+                           !typeInfo.IsAbstract &&
+                           typeInfo.IsClass &&
+                           typeof(AbpDbContext).IsAssignableFrom(type);
+                });
 
             if (dbContextTypes.IsNullOrEmpty())
             {

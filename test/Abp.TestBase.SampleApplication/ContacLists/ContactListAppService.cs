@@ -23,7 +23,7 @@ namespace Abp.TestBase.SampleApplication.ContacLists
 
         public List<ContactListDto> GetContactLists()
         {
-            return _contactListRepository.GetAllList().MapTo<List<ContactListDto>>();
+            return ObjectMapper.Map<List<ContactListDto>>(_contactListRepository.GetAllList());
         }
     }
 }

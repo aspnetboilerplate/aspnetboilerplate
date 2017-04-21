@@ -2,10 +2,9 @@
 using System.Linq.Expressions;
 using System.Reflection;
 
+using Abp.Dapper.Utils;
 using Abp.Domain.Entities;
 using Abp.Domain.Uow;
-using Abp.Reflection.Extensions;
-using Abp.Utils;
 
 using DapperExtensions;
 
@@ -61,7 +60,7 @@ namespace Abp.Dapper.Filters.Query
 
         private bool IsFilterable<TEntity, TPrimaryKey>() where TEntity : class, IEntity<TPrimaryKey>
         {
-            return typeof(TEntity).IsInheritsOrImplements(typeof(ISoftDelete)) && IsEnabled;
+            return typeof(ISoftDelete).IsAssignableFrom(typeof(TEntity)) && IsEnabled;
         }
     }
 }

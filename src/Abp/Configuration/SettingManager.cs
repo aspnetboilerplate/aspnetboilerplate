@@ -413,6 +413,14 @@ namespace Abp.Configuration
                 });
         }
 
+        public Task<string> GetSettingValueForUserAsync(string name, UserIdentifier user)
+        {
+            Check.NotNull(name, nameof(name));
+            Check.NotNull(user, nameof(user));
+
+            return GetSettingValueForUserAsync(name, user.TenantId, user.UserId);
+        }
+
         #endregion
 
         #region Nested classes

@@ -19,12 +19,12 @@ namespace Abp.Authorization
         public ILocalizationManager LocalizationManager { get; set; }
 
         private readonly IFeatureChecker _featureChecker;
-        private readonly IAuthorizationConfiguration _configuration;
+        private readonly IAuthorizationConfiguration _authConfiguration;
 
-        public AuthorizationHelper(IFeatureChecker featureChecker, IAuthorizationConfiguration configuration)
+        public AuthorizationHelper(IFeatureChecker featureChecker, IAuthorizationConfiguration authConfiguration)
         {
             _featureChecker = featureChecker;
-            _configuration = configuration;
+            _authConfiguration = authConfiguration;
             AbpSession = NullAbpSession.Instance;
             PermissionChecker = NullPermissionChecker.Instance;
             LocalizationManager = NullLocalizationManager.Instance;
@@ -32,7 +32,7 @@ namespace Abp.Authorization
 
         public async Task AuthorizeAsync(IEnumerable<IAbpAuthorizeAttribute> authorizeAttributes)
         {
-            if (!_configuration.IsEnabled)
+            if (!_authConfiguration.IsEnabled)
             {
                 return;
             }
@@ -52,17 +52,6 @@ namespace Abp.Authorization
 
         public async Task AuthorizeAsync(MethodInfo methodInfo)
         {
-            if (!_configuration.IsEnabled)
-            {
-                return;
-            }
-
-            if (AllowAnonymous(methodInfo))
-            {
-                return;
-            }
-            
-            //Authorize
             await CheckFeatures(methodInfo);
             await CheckPermissions(methodInfo);
         }
@@ -87,6 +76,16 @@ namespace Abp.Authorization
 
         private async Task CheckPermissions(MethodInfo methodInfo)
         {
+            if (!_authConfiguration.IsEnabled)
+            {
+                return;
+            }
+
+            if (AllowAnonymous(methodInfo))
+            {
+                return;
+            }
+
             var authorizeAttributes =
                 ReflectionHelper.GetAttributesOfMemberAndDeclaringType(
                     methodInfo

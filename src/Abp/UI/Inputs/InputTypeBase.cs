@@ -14,7 +14,7 @@ namespace Abp.UI.Inputs
         {
             get
             {
-                var type = GetType();
+                var type = GetType().GetTypeInfo();
                 if (type.IsDefined(typeof(InputTypeAttribute)))
                 {
                     return type.GetCustomAttributes(typeof(InputTypeAttribute)).Cast<InputTypeAttribute>().First().Name;

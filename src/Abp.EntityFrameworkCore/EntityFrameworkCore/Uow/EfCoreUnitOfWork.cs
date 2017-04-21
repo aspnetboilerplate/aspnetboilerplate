@@ -1,9 +1,9 @@
+using System;
 using Abp.Dependency;
 using Abp.Domain.Uow;
 using Abp.EntityFramework;
 using Abp.Extensions;
 using Abp.MultiTenancy;
-using Castle.Core.Internal;
 using Microsoft.EntityFrameworkCore;
 using System.Collections.Generic;
 using System.Collections.Immutable;
@@ -18,7 +18,7 @@ namespace Abp.EntityFrameworkCore.Uow
     {
         protected IDictionary<string, DbContext> ActiveDbContexts { get; }
         protected IIocResolver IocResolver { get; }
-        
+
         private readonly IDbContextResolver _dbContextResolver;
         private readonly IDbContextTypeMatcher _dbContextTypeMatcher;
         private readonly IEfCoreTransactionStrategy _transactionStrategy;
@@ -31,7 +31,7 @@ namespace Abp.EntityFrameworkCore.Uow
             IConnectionStringResolver connectionStringResolver,
             IUnitOfWorkFilterExecuter filterExecuter,
             IDbContextResolver dbContextResolver,
-            IUnitOfWorkDefaultOptions defaultOptions, 
+            IUnitOfWorkDefaultOptions defaultOptions,
             IDbContextTypeMatcher dbContextTypeMatcher,
             IEfCoreTransactionStrategy transactionStrategy)
             : base(
@@ -119,12 +119,14 @@ namespace Abp.EntityFrameworkCore.Uow
                 {
                     dbContext = _dbContextResolver.Resolve<TDbContext>(connectionString, null);
                 }
-                
-                if (Options.Timeout.HasValue && !dbContext.Database.GetCommandTimeout().HasValue)
+
+                if (Options.Timeout.HasValue &&
+                    dbContext.Database.IsRelational() && 
+                    !dbContext.Database.GetCommandTimeout().HasValue)
                 {
                     dbContext.Database.SetCommandTimeout(Options.Timeout.Value.TotalSeconds.To<int>());
                 }
-                
+
                 //TODO: Object materialize event
                 //TODO: Apply current filters to this dbcontext
 
@@ -142,7 +144,10 @@ namespace Abp.EntityFrameworkCore.Uow
             }
             else
             {
-                GetAllActiveDbContexts().ForEach(Release);
+                foreach (var context in GetAllActiveDbContexts())
+                {
+                    Release(context);
+                }
             }
 
             ActiveDbContexts.Clear();

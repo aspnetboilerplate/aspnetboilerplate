@@ -3,10 +3,9 @@ using System.Linq;
 using System.Linq.Expressions;
 using System.Reflection;
 
+using Abp.Dapper.Utils;
 using Abp.Domain.Entities;
 using Abp.Domain.Uow;
-using Abp.Reflection.Extensions;
-using Abp.Utils;
 
 using DapperExtensions;
 
@@ -37,15 +36,12 @@ namespace Abp.Dapper.Filters.Query
 
         public string FilterName { get; } = AbpDataFilters.MayHaveTenant;
 
-        public bool IsEnabled
-        {
-            get { return _currentUnitOfWorkProvider.Current.IsFilterEnabled(FilterName); }
-        }
+        public bool IsEnabled => _currentUnitOfWorkProvider.Current.IsFilterEnabled(FilterName);
 
         public IFieldPredicate ExecuteFilter<TEntity, TPrimaryKey>() where TEntity : class, IEntity<TPrimaryKey>
         {
             IFieldPredicate predicate = null;
-            if (typeof(TEntity).IsInheritsOrImplements(typeof(IMayHaveTenant)) && IsEnabled)
+            if (typeof(IMayHaveTenant).IsAssignableFrom(typeof(TEntity)) && IsEnabled)
             {
                 predicate = Predicates.Field<TEntity>(f => (f as IMayHaveTenant).TenantId, Operator.Eq, TenantId);
             }
@@ -54,7 +50,7 @@ namespace Abp.Dapper.Filters.Query
 
         public Expression<Func<TEntity, bool>> ExecuteFilter<TEntity, TPrimaryKey>(Expression<Func<TEntity, bool>> predicate) where TEntity : class, IEntity<TPrimaryKey>
         {
-            if (typeof(TEntity).IsInheritsOrImplements(typeof(IMayHaveTenant)) && IsEnabled)
+            if (typeof(IMayHaveTenant).IsAssignableFrom(typeof(TEntity)) && IsEnabled)
             {
                 PropertyInfo propType = typeof(TEntity).GetProperty(nameof(IMayHaveTenant.TenantId));
                 if (predicate == null)

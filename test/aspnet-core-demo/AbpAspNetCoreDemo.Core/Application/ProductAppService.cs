@@ -20,7 +20,7 @@ namespace AbpAspNetCoreDemo.Core.Application
 
         public List<ProductDto> GetAll()
         {
-            return _productRepository.GetAll().ToList().MapTo<List<ProductDto>>();
+            return ObjectMapper.Map<List<ProductDto>>(_productRepository.GetAll().ToList());
         }
 
         public int CreateProduct(ProductCreateInput input)

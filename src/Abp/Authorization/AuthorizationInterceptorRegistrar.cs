@@ -43,7 +43,7 @@ namespace Abp.Authorization
 
         private static bool SelfOrMethodsDefinesAttribute<TAttr>(Type type)
         {
-            if (type.IsDefined(typeof(TAttr), true))
+            if (type.GetTypeInfo().IsDefined(typeof(TAttr), true))
             {
                 return true;
             }

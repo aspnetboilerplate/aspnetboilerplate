@@ -44,6 +44,16 @@ namespace Abp.Application.Navigation
         public string Target { get; set; }
 
         /// <summary>
+        /// Can be used to enable/disable a menu item.
+        /// </summary>
+        public bool IsEnabled { get; set; }
+
+        /// <summary>
+        /// Can be used to show/hide a menu item.
+        /// </summary>
+        public bool IsVisible { get; set; }
+
+        /// <summary>
         /// Sub items of this menu item.
         /// </summary>
         public IList<UserMenuItem> Items { get; private set; }
@@ -68,6 +78,8 @@ namespace Abp.Application.Navigation
             Url = menuItemDefinition.Url;
             CustomData = menuItemDefinition.CustomData;
             Target = menuItemDefinition.Target;
+            IsEnabled = menuItemDefinition.IsEnabled;
+            IsVisible = menuItemDefinition.IsVisible;
 
             Items = new List<UserMenuItem>();
         }

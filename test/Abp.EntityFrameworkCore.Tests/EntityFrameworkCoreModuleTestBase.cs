@@ -3,6 +3,7 @@ using System.Threading.Tasks;
 using Abp.EntityFrameworkCore.Tests.Domain;
 using Abp.EntityFrameworkCore.Tests.Ef;
 using Abp.TestBase;
+using Abp.Timing;
 
 namespace Abp.EntityFrameworkCore.Tests
 {
@@ -10,6 +11,8 @@ namespace Abp.EntityFrameworkCore.Tests
     {
         protected EntityFrameworkCoreModuleTestBase()
         {
+            Clock.Provider = ClockProviders.Utc;
+
             CreateInitialData();
         }
 

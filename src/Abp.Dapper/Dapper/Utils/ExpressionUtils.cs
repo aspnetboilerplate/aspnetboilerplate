@@ -1,9 +1,9 @@
 ﻿using System;
 using System.Linq.Expressions;
 
-namespace Abp.Utils
+namespace Abp.Dapper.Utils
 {
-    public class ExpressionUtils
+    internal class ExpressionUtils
     {
         /// <summary>
         ///     Makes the predicate.

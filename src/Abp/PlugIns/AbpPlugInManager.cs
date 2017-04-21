@@ -7,16 +7,22 @@ namespace Abp.PlugIns
     {
         public PlugInSourceList PlugInSources { get; }
 
+#if NET46
         private static readonly object SyncObj = new object();
         private static bool _isRegisteredToAssemblyResolve;
+#endif
 
         public AbpPlugInManager()
         {
             PlugInSources = new PlugInSourceList();
 
+            //TODO: Try to use AssemblyLoadContext.Default!
+#if NET46
             RegisterToAssemblyResolve(PlugInSources);
+#endif
         }
 
+#if NET46
         private static void RegisterToAssemblyResolve(PlugInSourceList plugInSources)
         {
             if (_isRegisteredToAssemblyResolve)
@@ -39,5 +45,7 @@ namespace Abp.PlugIns
                 };
             }
         }
+
+#endif
     }
 }

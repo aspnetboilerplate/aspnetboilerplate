@@ -1,4 +1,5 @@
-﻿using Abp.Configuration.Startup;
+﻿using System.Reflection;
+using Abp.Configuration.Startup;
 using Abp.Dependency;
 using Abp.Events.Bus.Factories;
 using Abp.Events.Bus.Handlers;
@@ -49,15 +50,15 @@ namespace Abp.Events.Bus
             /* This code checks if registering component implements any IEventHandler<TEventData> interface, if yes,
              * gets all event handler interfaces and registers type to Event Bus for each handling event.
              */
-            if (!typeof(IEventHandler).IsAssignableFrom(handler.ComponentModel.Implementation))
+            if (!typeof(IEventHandler).GetTypeInfo().IsAssignableFrom(handler.ComponentModel.Implementation))
             {
                 return;
             }
 
-            var interfaces = handler.ComponentModel.Implementation.GetInterfaces();
+            var interfaces = handler.ComponentModel.Implementation.GetTypeInfo().GetInterfaces();
             foreach (var @interface in interfaces)
             {
-                if (!typeof(IEventHandler).IsAssignableFrom(@interface))
+                if (!typeof(IEventHandler).GetTypeInfo().IsAssignableFrom(@interface))
                 {
                     continue;
                 }

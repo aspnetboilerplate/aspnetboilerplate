@@ -26,10 +26,10 @@ namespace Abp.Text
         public ExtractionResult Extract(string str, string format, bool ignoreCase = false)
         {
             var stringComparison = ignoreCase
-                ? StringComparison.InvariantCultureIgnoreCase
-                : StringComparison.InvariantCulture;
+                ? StringComparison.OrdinalIgnoreCase
+                : StringComparison.Ordinal;
 
-            if (str == format) //TODO: think on that!
+            if (str == format)
             {
                 return new ExtractionResult(true);
             }

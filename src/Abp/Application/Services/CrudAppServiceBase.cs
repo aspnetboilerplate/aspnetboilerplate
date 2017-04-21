@@ -1,5 +1,5 @@
 ﻿using System.Linq;
-using System.Linq.Dynamic;
+using System.Linq.Dynamic.Core;
 using Abp.Application.Services.Dto;
 using Abp.Authorization;
 using Abp.Domain.Entities;

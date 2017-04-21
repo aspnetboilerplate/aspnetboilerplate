@@ -2,9 +2,11 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
+using System.Reflection;
 using System.Threading.Tasks;
 using Abp.Dependency;
 using Abp.Domain.Entities;
+using Abp.Domain.Uow;
 using Abp.MultiTenancy;
 using Abp.Reflection.Extensions;
 
@@ -23,6 +25,8 @@ namespace Abp.Domain.Repositories
         /// The multi tenancy side
         /// </summary>
         public static MultiTenancySides? MultiTenancySide { get; private set; }
+
+        public IUnitOfWorkManager UnitOfWorkManager { get; set; }
 
         public IIocResolver IocResolver { get; set; }
 
@@ -254,6 +258,49 @@ namespace Abp.Domain.Repositories
         public virtual Task<long> LongCountAsync(Expression<Func<TEntity, bool>> predicate)
         {
             return Task.FromResult(LongCount(predicate));
+        }
+
+        protected virtual IQueryable<TEntity> ApplyFilters(IQueryable<TEntity> query)
+        {
+            query = ApplyMultiTenancyFilter(query);
+            query = ApplySoftDeleteFilter(query);
+            return query;
+        }
+
+        protected virtual IQueryable<TEntity> ApplyMultiTenancyFilter(IQueryable<TEntity> query)
+        {
+            var tenantId = UnitOfWorkManager?.Current?.GetTenantId();
+
+            if (typeof(IMustHaveTenant).GetTypeInfo().IsAssignableFrom(typeof(TEntity)))
+            {
+                if (UnitOfWorkManager?.Current == null || UnitOfWorkManager.Current.IsFilterEnabled(AbpDataFilters.MustHaveTenant))
+                {
+                    query = query.Where(e => ((IMustHaveTenant) e).TenantId == tenantId);
+                }
+            }
+
+            if (typeof(IMayHaveTenant).GetTypeInfo().IsAssignableFrom(typeof(TEntity)))
+            {
+                if (UnitOfWorkManager?.Current == null || UnitOfWorkManager.Current.IsFilterEnabled(AbpDataFilters.MayHaveTenant))
+                {
+                    query = query.Where(e => ((IMayHaveTenant)e).TenantId == tenantId);
+                }
+            }
+
+            return query;
+        }
+
+        private IQueryable<TEntity> ApplySoftDeleteFilter(IQueryable<TEntity> query)
+        {
+            if (typeof(ISoftDelete).GetTypeInfo().IsAssignableFrom(typeof(TEntity)))
+            {
+                if (UnitOfWorkManager?.Current == null || UnitOfWorkManager.Current.IsFilterEnabled(AbpDataFilters.SoftDelete))
+                {
+                    query = query.Where(e => !((ISoftDelete)e).IsDeleted);
+                }
+            }
+
+            return query;
         }
 
         protected static Expression<Func<TEntity, bool>> CreateEqualityExpressionForId(TPrimaryKey id)

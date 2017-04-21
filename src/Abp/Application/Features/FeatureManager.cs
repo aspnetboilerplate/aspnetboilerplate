@@ -50,7 +50,6 @@ namespace Abp.Application.Features
 
         private IDisposableDependencyObjectWrapper<FeatureProvider> CreateProvider(Type providerType)
         {
-            _iocManager.RegisterIfNot(providerType); //TODO: Needed?
             return _iocManager.ResolveAsDisposable<FeatureProvider>(providerType);
         }
     }
