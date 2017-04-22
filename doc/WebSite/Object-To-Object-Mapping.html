@@ -187,7 +187,7 @@ public class MyModule : AbpModule
 	our project with the following rules:</p>
 	<p>1. Always use IObjectMapper, not use MapTo extension methods.</p>
 	<p>2. Configure Abp.AutoMapper module to use local Mapper instance 
-	(registered as Singleton to dependency injection) rather 
+	(registered as singleton to dependency injection) rather 
 	than the static one (Abp.AutoMapper uses the static Mapper.Instance by 
 	default to allow to use MapTo extension methods defined above):</p>
 	<pre lang="cs">Configuration.Modules.AbpAutoMapper().UseStaticMapper = false;</pre>
@@ -201,8 +201,8 @@ public class MyModule : AbpModule
 	<h4>Injecting IMapper</h4>
 	<p>You may need to directly use AutoMapper's IMapper object instead of 
 	IObjectMapper abstraction. In that case, just inject IMapper in your classes 
-	and use it since Abp.AutoMapper package registers IMapper to
-	<a href="Dependency-Injection.html">dependency injection</a>.</p>
+	and use it. Abp.AutoMapper package registers IMapper to
+	<a href="Dependency-Injection.html">dependency injection</a> as singleton.</p>
 
 </div>
 
