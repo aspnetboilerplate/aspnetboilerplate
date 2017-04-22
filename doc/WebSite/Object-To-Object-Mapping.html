@@ -12,7 +12,7 @@
 <div class="document-contents">
 
 <h3>Introduction</h3>
-<p>It's a common work to map a similar object to another object. It's tedious 
+<p>It's a common to map a similar object to another object. It's also tedious 
 and repeating since generally both objects (classes) may have similar/same 
 properties mapped to each other. Think on a typical
 <a href="Application-Services.html">application service</a> method below:</p>
@@ -50,15 +50,15 @@ properties mapped to each other. Think on a typical
 	interface using AutoMapper in
 	<a href="https://www.nuget.org/packages/Abp.AutoMapper" target="_blank">
 	Abp.AutoMapper</a> package.</p>
-	<h3>IIObjectMapper Interface</h3>
+	<h3>IObjectMapper Interface</h3>
 	<p>IObjectMapper is a simple abstraction that has Map methods to map an 
-	object to another. We can write the code shared above as like below:</p>
+	object to another. We can write the sample code above as like below:</p>
 <pre lang="cs">public class UserAppService : ApplicationService
 {
     private readonly IRepository&lt;User&gt; _userRepository;
-    private readonly IObjectMapper _objectMapper;
+    <strong>private readonly IObjectMapper _objectMapper;</strong>
 
-    public UserAppService(IRepository&lt;User&gt; userRepository, IObjectMapper objectMapper)
+    public UserAppService(IRepository&lt;User&gt; userRepository, <strong>IObjectMapper objectMapper</strong>)
     {
         _userRepository = userRepository;
         _objectMapper = objectMapper;
@@ -70,10 +70,10 @@ properties mapped to each other. Think on a typical
         _userRepository.Insert(user);
     }
 }</pre>
-	<p>Map is a simple method gets the source object and create a new 
-	destination object with type declared as the generic parameter (User in this 
-	sample). Map method has a second overload to map an object to an <strong>
-	existing</strong> object. This that we already have a User entity and want 
+	<p>Map is a simple method gets the source object and creates a new 
+	destination object with the type declared as the generic parameter (User in this 
+	sample). Map method has an overload to map an object to an <strong>
+	existing</strong> object. Assume that we already have a User entity and want 
 	to update it's properties by an object:</p>
 	<pre lang="cs">public void UpdateUser(UpdateUserInput input)
 {
@@ -84,11 +84,11 @@ properties mapped to each other. Think on a typical
 	<p><strong>
 	<a href="https://www.nuget.org/packages/Abp.AutoMapper" target="_blank">
 	Abp.AutoMapper</a></strong> nuget package (<a href="Module-System.html">module</a>) 
-	implements IObjectMapper.</p>
+	implements IObjectMapper and provides additional features.</p>
 	<h4>Installation</h4>
-	<p>&nbsp;First, install Abp.AutoMapper nuget to your project:</p>
+	<p>First, install <strong>Abp.AutoMapper</strong> nuget to your project:</p>
 	<pre>Install-Package Abp.AutoMapper</pre>
-	<p>Then add a dependency for AbpAutoMapperModule to your module definition 
+	<p>Then add a dependency for <strong>AbpAutoMapperModule</strong> to your module definition 
 	class:</p>
 	<pre lang="cs"><strong>[DependsOn(typeof(AbpAutoMapperModule))]</strong>
 public class MyModule : AbpModule
@@ -122,11 +122,11 @@ public class CreateUserInput
     public string Password { get; set; }
 }</pre>
 	<p>AutoMap attribute maps two classes in both direction. But in this sample, 
-	we only need to map from CreateUserInput to User.</p>
+	we only need to map from CreateUserInput to User, so we used AutoMapTo.</p>
 	<h5>Custom Mapping</h5>
 	<p>Simple mapping may not be suitable in some cases. For instance, property 
 	names of two classes may be a little different or you may want to ignore 
-	some properties during the mappping. In that cases you should directly use 
+	some properties during the mappping. In such cases you should directly use 
 	AutoMapper's API to define the mapping. Abp.AutoMapper package defines API 
 	to make this custom mapping stuff more modular.</p>
 	<p>Assume that we want to ignore Password on mapping and User has Email 
@@ -176,15 +176,18 @@ public class MyModule : AbpModule
         <strong>input.MapTo(user);</strong>
     }
 }</pre>
-	<p>Since MapTo extension methods are statics they use AutoMapper's static 
-	instance (Mapper.Instance). This is simple fine for the application code, 
+	<p>MapTo extension methods are defined in Abp.AutoMapper namespace, so you 
+	first import this namespaces into your code file.</p>
+	<p>Since MapTo extension methods are statics, they use AutoMapper's static 
+	instance (Mapper.Instance). This is simple and fine for the application code, 
 	but can have problems in unit tests since static configuration and mapper is 
 	shared among different tests and they may effect each other.</p>
 	<h4>Unit Tests</h4>
 	<p>We want to isolate tests from each others. To do that, we should design 
 	our project with the following rules:</p>
-	<p>1. Always use IObjectMapper, not use MapTo extension method.</p>
-	<p>2. Configure Abp.AutoMapper module to use local Mapper instances rather 
+	<p>1. Always use IObjectMapper, not use MapTo extension methods.</p>
+	<p>2. Configure Abp.AutoMapper module to use local Mapper instance 
+	(registered as Singleton to dependency injection) rather 
 	than the static one (Abp.AutoMapper uses the static Mapper.Instance by 
 	default to allow to use MapTo extension methods defined above):</p>
 	<pre lang="cs">Configuration.Modules.AbpAutoMapper().UseStaticMapper = false;</pre>
@@ -193,7 +196,13 @@ public class MyModule : AbpModule
 	<p>Abp.AutoMapper module defines a mapping to convert LocalizableString (or 
 	ILocalizableString) objects to string objects. It makes the conversion using
 	<a href="Localization.html">ILocalizationManager</a>, so localizable 
-	properties are automatically localized during the mapping process.</p>
+	properties are automatically localized during the mapping process of any 
+	class.</p>
+	<h4>Injecting IMapper</h4>
+	<p>You may need to directly use AutoMapper's IMapper object instead of 
+	IObjectMapper abstraction. In that case, just inject IMapper in your classes 
+	and use it since Abp.AutoMapper package registers IMapper to
+	<a href="Dependency-Injection.html">dependency injection</a>.</p>
 
 </div>
 
