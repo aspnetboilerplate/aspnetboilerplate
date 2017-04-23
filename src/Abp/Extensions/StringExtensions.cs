@@ -186,14 +186,9 @@ namespace Abp.Extensions
         /// <returns>Modified string or the same string if it has not any of given postfixes</returns>
         public static string RemovePostFix(this string str, params string[] postFixes)
         {
-            if (str == null)
+            if (str.IsNullOrEmpty())
             {
                 return null;
-            }
-
-            if (str == string.Empty)
-            {
-                return string.Empty;
             }
 
             if (postFixes.IsNullOrEmpty())
@@ -220,14 +215,9 @@ namespace Abp.Extensions
         /// <returns>Modified string or the same string if it has not any of given prefixes</returns>
         public static string RemovePreFix(this string str, params string[] preFixes)
         {
-            if (str == null)
+            if (str.IsNullOrEmpty())
             {
                 return null;
-            }
-
-            if (str == string.Empty)
-            {
-                return string.Empty;
             }
 
             if (preFixes.IsNullOrEmpty())
