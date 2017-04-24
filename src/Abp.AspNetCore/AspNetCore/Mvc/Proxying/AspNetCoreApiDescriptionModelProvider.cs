@@ -49,7 +49,8 @@ namespace Abp.AspNetCore.Mvc.Proxying
         private void AddApiDescriptionToModel(ApiDescription apiDescription, ApplicationApiDescriptionModel model)
         {
             var moduleModel = model.GetOrAddModule(GetModuleName(apiDescription));
-            var controllerModel = moduleModel.GetOrAddController(apiDescription.GroupName.RemovePostFix(ApplicationService.CommonPostfixes));
+            var controllerModel = moduleModel.GetOrAddController(GetControllerName(apiDescription));
+
             var method = apiDescription.ActionDescriptor.GetMethodInfo();
 
             if (controllerModel.Actions.ContainsKey(method.Name))
@@ -68,6 +69,12 @@ namespace Abp.AspNetCore.Mvc.Proxying
             ));
 
             AddParameterDescriptionsToModel(actionModel, method, apiDescription);
+        }
+
+        private static string GetControllerName(ApiDescription apiDescription)
+        {
+            return apiDescription.GroupName?.RemovePostFix(ApplicationService.CommonPostfixes) 
+                   ?? apiDescription.ActionDescriptor.AsControllerActionDescriptor().ControllerName;
         }
 
         private void AddParameterDescriptionsToModel(ActionApiDescriptionModel actionModel, MethodInfo method, ApiDescription apiDescription)
@@ -126,7 +133,7 @@ namespace Abp.AspNetCore.Mvc.Proxying
 
             foreach (var controllerSetting in _configuration.ControllerAssemblySettings)
             {
-                if (controllerType.GetAssembly() == controllerSetting.Assembly)
+                if (Equals(controllerType.GetAssembly(), controllerSetting.Assembly))
                 {
                     return controllerSetting.ModuleName;
                 }
