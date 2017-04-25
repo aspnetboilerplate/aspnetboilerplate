@@ -30,8 +30,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Include="MimeKit " Version="1.14.1" />
-    <PackageReference Include="MailKit" Version="1.14.2" />
+    <PackageReference Include="MailKit" Version="1.16.0" />
   </ItemGroup>
 
   <ItemGroup Condition=" '$(TargetFramework)' == 'net46' ">
