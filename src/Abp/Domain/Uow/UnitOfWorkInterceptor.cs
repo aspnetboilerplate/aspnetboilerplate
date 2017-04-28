@@ -59,7 +59,15 @@ namespace Abp.Domain.Uow
         {
             var uow = _unitOfWorkManager.Begin(options);
 
-            invocation.Proceed();
+            try
+            {
+                invocation.Proceed();
+            }
+            catch
+            {
+                uow.Dispose();
+                throw;
+            }
 
             if (invocation.Method.ReturnType == typeof(Task))
             {
