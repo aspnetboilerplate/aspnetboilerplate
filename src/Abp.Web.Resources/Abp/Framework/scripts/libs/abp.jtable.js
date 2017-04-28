@@ -50,18 +50,33 @@
                         sorting: jtParams.jtSorting
                     });
 
-                    originalListAction.method(input)
-                        .done(function (result) {
+                        if (!$.isFunction(originalListAction.method)) {
+                        originalListAction.method.done(function (result) {
+
                             $dfd.resolve({
                                 "Result": "OK",
                                 "Records": result.items || result[originalListAction.recordsField],
                                 "TotalRecordCount": result.totalCount,
                                 originalResult: result
                             });
-                        })
-                        .fail(function (error) {
-                            self._handlerForFailOnAbpRequest($dfd, error);
+
                         });
+
+                    } else {
+                        originalListAction.method(input)
+                            .done(function (result) {
+                                $dfd.resolve({
+                                    "Result": "OK",
+                                    "Records": result.items || result[originalListAction.recordsField],
+                                    "TotalRecordCount": result.totalCount,
+                                    originalResult: result
+                                });
+                            })
+                            .fail(function (error) {
+                                self._handlerForFailOnAbpRequest($dfd, error);
+                            });
+                    }
+
                 });
             };
         },
