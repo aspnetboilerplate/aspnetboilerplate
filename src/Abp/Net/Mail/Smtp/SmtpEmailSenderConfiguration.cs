@@ -12,7 +12,7 @@ namespace Abp.Net.Mail.Smtp
         /// <summary>
         /// SMTP Host name/IP.
         /// </summary>
-        public string Host
+        public virtual string Host
         {
             get { return GetNotEmptySettingValue(EmailSettingNames.Smtp.Host); }
         }
@@ -20,7 +20,7 @@ namespace Abp.Net.Mail.Smtp
         /// <summary>
         /// SMTP Port.
         /// </summary>
-        public int Port
+        public virtual int Port
         {
             get { return SettingManager.GetSettingValue<int>(EmailSettingNames.Smtp.Port); }
         }
@@ -28,7 +28,7 @@ namespace Abp.Net.Mail.Smtp
         /// <summary>
         /// User name to login to SMTP server.
         /// </summary>
-        public string UserName
+        public virtual string UserName
         {
             get { return GetNotEmptySettingValue(EmailSettingNames.Smtp.UserName); }
         }
@@ -36,7 +36,7 @@ namespace Abp.Net.Mail.Smtp
         /// <summary>
         /// Password to login to SMTP server.
         /// </summary>
-        public string Password
+        public virtual string Password
         {
             get { return GetNotEmptySettingValue(EmailSettingNames.Smtp.Password); }
         }
@@ -44,7 +44,7 @@ namespace Abp.Net.Mail.Smtp
         /// <summary>
         /// Domain name to login to SMTP server.
         /// </summary>
-        public string Domain
+        public virtual string Domain
         {
             get { return SettingManager.GetSettingValue(EmailSettingNames.Smtp.Domain); }
         }
@@ -52,7 +52,7 @@ namespace Abp.Net.Mail.Smtp
         /// <summary>
         /// Is SSL enabled?
         /// </summary>
-        public bool EnableSsl
+        public virtual bool EnableSsl
         {
             get { return SettingManager.GetSettingValue<bool>(EmailSettingNames.Smtp.EnableSsl); }
         }
@@ -60,7 +60,7 @@ namespace Abp.Net.Mail.Smtp
         /// <summary>
         /// Use default credentials?
         /// </summary>
-        public bool UseDefaultCredentials
+        public virtual bool UseDefaultCredentials
         {
             get { return SettingManager.GetSettingValue<bool>(EmailSettingNames.Smtp.UseDefaultCredentials); }
         }

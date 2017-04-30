@@ -19,7 +19,9 @@ namespace Abp.Tests.Authorization
             authorizationConfiguration.Providers.Add<MyAuthorizationProvider2>();
 
             LocalIocManager.IocContainer.Register(
-                Component.For<IFeatureDependencyContext, FeatureDependencyContext>().UsingFactoryMethod(() => new FeatureDependencyContext(LocalIocManager, Substitute.For<IFeatureChecker>()))
+                Component.For<IFeatureDependencyContext, FeatureDependencyContext>().UsingFactoryMethod(() => new FeatureDependencyContext(LocalIocManager, Substitute.For<IFeatureChecker>())),
+                Component.For<MyAuthorizationProvider1>().LifestyleTransient(),
+                Component.For<MyAuthorizationProvider2>().LifestyleTransient()
                 );
 
             var permissionManager = new PermissionManager(LocalIocManager, authorizationConfiguration);

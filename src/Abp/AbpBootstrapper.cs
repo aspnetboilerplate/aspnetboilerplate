@@ -1,9 +1,14 @@
 ﻿using System;
+using System.Reflection;
+using Abp.Auditing;
+using Abp.Authorization;
 using Abp.Configuration.Startup;
 using Abp.Dependency;
 using Abp.Dependency.Installers;
+using Abp.Domain.Uow;
 using Abp.Modules;
 using Abp.PlugIns;
+using Abp.Runtime.Validation.Interception;
 using Castle.Core.Logging;
 using Castle.MicroKernel.Registration;
 using JetBrains.Annotations;
@@ -60,7 +65,7 @@ namespace Abp
             Check.NotNull(startupModule, nameof(startupModule));
             Check.NotNull(iocManager, nameof(iocManager));
 
-            if (!typeof(AbpModule).IsAssignableFrom(startupModule))
+            if (!typeof(AbpModule).GetTypeInfo().IsAssignableFrom(startupModule))
             {
                 throw new ArgumentException($"{nameof(startupModule)} should be derived from {nameof(AbpModule)}.");
             }
@@ -70,6 +75,8 @@ namespace Abp
 
             PlugInSources = new PlugInSourceList();
             _logger = NullLogger.Instance;
+
+            AddInterceptorRegistrars();
         }
 
         /// <summary>
@@ -110,6 +117,14 @@ namespace Abp
         public static AbpBootstrapper Create([NotNull] Type startupModule, [NotNull] IIocManager iocManager)
         {
             return new AbpBootstrapper(startupModule, iocManager);
+        }
+
+        private void AddInterceptorRegistrars()
+        {
+            ValidationInterceptorRegistrar.Initialize(IocManager);
+            AuditingInterceptorRegistrar.Initialize(IocManager);
+            UnitOfWorkRegistrar.Initialize(IocManager);
+            AuthorizationInterceptorRegistrar.Initialize(IocManager);
         }
 
         /// <summary>

@@ -1,4 +1,5 @@
-﻿using System.Web;
+﻿using System.Security.Policy;
+using System.Web;
 using System.Web.Mvc;
 using Abp.Auditing;
 using Abp.Configuration;
@@ -30,7 +31,8 @@ namespace Abp.Web.Mvc.Controllers.Localization
             Response.Cookies.Add(
                 new HttpCookie(_webLocalizationConfiguration.CookieName, cultureName)
                 {
-                    Expires = Clock.Now.AddYears(2)
+                    Expires = Clock.Now.AddYears(2),
+                    Path = Request.ApplicationPath
                 }
             );
 
@@ -48,7 +50,7 @@ namespace Abp.Web.Mvc.Controllers.Localization
                 return Json(new AjaxResponse(), JsonRequestBehavior.AllowGet);
             }
 
-            if (!string.IsNullOrWhiteSpace(returnUrl))
+            if (!string.IsNullOrWhiteSpace(returnUrl) && Request.Url != null && AbpUrlHelper.IsLocalUrl(Request.Url, returnUrl))
             {
                 return Redirect(returnUrl);
             }

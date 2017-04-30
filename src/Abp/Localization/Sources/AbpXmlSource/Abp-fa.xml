@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<localizationDictionary culture="fa">
+  <texts>
+    <text name="SmtpHost" value="آدرس میزبان SMTP" />
+    <text name="SmtpPort" value="شماره پورت SMTP" />
+    <text name="Username" value="نام کاربری" />
+    <text name="Password" value="کلمه عبور" />
+    <text name="DomainName" value="نام دامنه" />
+    <text name="UseSSL" value="استفاده از SSL" />
+    <text name="UseDefaultCredentials" value="استفاده از اعتبار پیش فرض!" />
+    <text name="DefaultFromSenderEmailAddress" value="از آدرس پست الکترونیک پیش فرض به عنوان فرستنده استفاده شود." />
+    <text name="DefaultFromSenderDisplayName" value="از نام پیش فرض به عنوان فرستنده استفاده شود." />
+    <text name="DefaultLanguage" value="زبان پیش فرض سامانه!" />
+    <text name="ReceiveNotifications" value="دریافت اطلاعیه از طرف سامانه!" />
+    <text name="CurrentUserDidNotLoginToTheApplication" value="کاربر جاری اجازه ورود مجدد به سامانه را نداشته باشد." />
+    <text name="TimeZone" value="موقعیت زمانی" />
+    <text name="AllOfThesePermissionsMustBeGranted" value="دسترسی مورد نیاز کاربر تعریف نشده است. تمام این حق دسترسی ها باید برای کاربر تعریف شود: {0}" />
+    <text name="AtLeastOneOfThesePermissionsMustBeGranted" value="دسترسی مورد نیاز کاربر تعریف نشده است. حداقل یکی از این دسترسی ها باید برای کاربر تعیین شود : {0}" />
+  </texts>
+</localizationDictionary>

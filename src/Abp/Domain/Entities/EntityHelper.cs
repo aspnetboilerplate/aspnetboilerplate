@@ -1,4 +1,5 @@
 using System;
+using System.Reflection;
 using Abp.Reflection;
 
 namespace Abp.Domain.Entities
@@ -23,9 +24,9 @@ namespace Abp.Domain.Entities
         /// </summary>
         public static Type GetPrimaryKeyType(Type entityType)
         {
-            foreach (var interfaceType in entityType.GetInterfaces())
+            foreach (var interfaceType in entityType.GetTypeInfo().GetInterfaces())
             {
-                if (interfaceType.IsGenericType && interfaceType.GetGenericTypeDefinition() == typeof (IEntity<>))
+                if (interfaceType.GetTypeInfo().IsGenericType && interfaceType.GetGenericTypeDefinition() == typeof (IEntity<>))
                 {
                     return interfaceType.GenericTypeArguments[0];
                 }

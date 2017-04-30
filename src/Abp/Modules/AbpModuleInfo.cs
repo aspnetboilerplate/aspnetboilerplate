@@ -46,7 +46,7 @@ namespace Abp.Modules
             Type = type;
             Instance = instance;
             IsLoadedAsPlugIn = isLoadedAsPlugIn;
-            Assembly = Type.Assembly;
+            Assembly = Type.GetTypeInfo().Assembly;
 
             Dependencies = new List<AbpModuleInfo>();
         }

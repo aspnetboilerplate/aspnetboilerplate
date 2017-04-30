@@ -220,6 +220,14 @@ and <strong>delay</strong>.</p>
     application and create a seperated standalone application (example: a 
     Windows Service) that executes background jobs.</li>
       </ul>
+        <h4>Exception Handling</h4>
+		<p>Since default background job manager should re-try failed jobs, it 
+		handles (and logs) all exceptions. In case you want to be informed when 
+		an exception occurred, you can create an event handler to handle
+		<a href="Handling-Exceptions.html">AbpHandledExceptionData</a>. 
+		Background manager triggers this event with a BackgroundJobException 
+		exception object which wraps the real exception (get InnerException for 
+		the actual exception).</p>
       <h4>Hangfire Integration</h4>
       <p>Background job manager is designed as <strong>replaceable</strong> by 
   another background job manager. See
@@ -317,6 +325,12 @@ when your applications is being shutdown.</p>
   IBackgroundWorkerManager. In this case, your worker probably will be 
   parametric (say that you have a single LogCleaner class but two LogCleaner 
   worker instances they watch and clear different log folders).</p>
+		<h4>Advanced Scheduling</h4>
+		<p>ASP.NET Boilerplate's background worker system are simple. It has not 
+		a schedule system, except periodic running workers as demonstrated 
+		above. If you need to more advanced scheduling features, we suggest you 
+		to check <a href="Quartz-Integration.html">Quartz</a> or another 
+		library.</p>
       <h3>Making Your Application Always Running</h3>
       <p>Background jobs and workers only works if your application is running. An 
   ASP.NET application <strong>shutdowns</strong> by default if no request is 

@@ -1,4 +1,5 @@
-﻿using Abp.Auditing;
+﻿using System;
+using Abp.Auditing;
 using Abp.Domain.Uow;
 using Abp.Extensions;
 using Abp.Runtime.Validation;
@@ -13,6 +14,11 @@ namespace Abp.AspNetCore.Mvc.Controllers
         [UnitOfWork(IsDisabled = true)]
         public ActionResult Load(string viewUrl)
         {
+            if (viewUrl.IsNullOrEmpty())
+            {
+                throw new ArgumentNullException(nameof(viewUrl));
+            }
+
             return View(viewUrl.EnsureStartsWith('~'));
         }
     }

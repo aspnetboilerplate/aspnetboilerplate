@@ -16,6 +16,14 @@ namespace AbpAspNetCoreDemo.Controllers
         {
             return model.Names.Length + " -> " + model.Names.JoinAsString(" # ");
         }
+        
+        [Route("api/person")]
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public string CreatePerson()
+        {
+            return "42!";
+        }
     }
 
     public class TestGetArrayModel

@@ -13,19 +13,26 @@
 
 			<h3>What Is Multi Tenancy?</h3>
 			<p>
-				<a href="https://en.wikipedia.org/wiki/Multitenancy">Wikipedia</a>: "Software 
-				<strong>Multitenancy</strong> refers to a software <strong>architecture</strong> in which a 
-				<strong>single instance</strong> of a software runs on a server and serves 
-				<strong>multiple tenants</strong>. 
+				"<em>Software </em> 
+				<strong><em>Multitenancy</em></strong><em> refers to a software 
+				</em> <strong><em>architecture</em></strong><em> in which a 
+				</em> 
+				<strong><em>single instance</em></strong><em> of a software runs on a server and serves 
+				</em> 
+				<strong><em>multiple tenants</em></strong><em>. 
 A tenant is a group of users who share a common access with specific privileges 
 to the software instance. With a multitenant architecture, a software application 
-is designed to provide every tenant a <strong>dedicated share of the instance including 
-its data</strong>, configuration, user management, tenant individual functionality and
+is designed to provide every tenant a </em> <strong><em>dedicated share of the instance including 
+its data</em></strong><em>, configuration, user management, tenant individual functionality and
  non-functional properties. Multitenancy contrasts with multi-instance architectures,
-  where separate software instances operate on behalf of different tenants"</p>
-			<p>Multi-tenancy is used to create <strong>SaaS</strong> (Software as-a Service) 
-applications (cloud computing). There are some architectures multi-tenancy:</p>
-			<h4>Multiple Deployment - Multiple Database</h4>
+  where separate software instances operate on behalf of different tenants</em>" 
+				(<a href="https://en.wikipedia.org/wiki/Multitenancy">Wikipedia</a>)</p>
+			<p>In brief, multi-tenancy is a technique that is used to create <strong>SaaS</strong> (Software as-a Service) 
+applications.</p>
+			<h4>Database &amp; Deployment Architectures</h4>
+			<p>There are some different multi-tenant database &amp; deployment 
+			approaches:</p>
+			<h5>Multiple Deployment - Multiple Database</h5>
 			<p>This is <strong>not multi tenancy</strong> actually. But, if we run <strong>one instance</strong> of 
 the application <strong>for each</strong> customer (tenant) with a <strong>
 seperated database</strong>, we can serve 
@@ -36,7 +43,7 @@ server environment.</p>
 			as multitenant. It's easier to create such an application since the application has 
 not aware of multitenancy. But there are setup, utilization and maintenance 
 problems in this approach.</p>
-			<h4>Single Deployment - Multiple Database</h4>
+			<h5>Single Deployment - Multiple Database</h5>
 			<p>ln this approach, we may run a <strong>single instance</strong> 
 			of the application in a server. We have a <strong>master</strong> 
 			(host) database to store tenant metadata (like tenant name and 
@@ -55,7 +62,7 @@ should create and maintain a <strong>seperated database</strong> for each tenant
 			database for a tenant, we can <strong>backup</strong> it's database 
 			seperately from other tenants. Also, we can <strong>move</strong> 
 			the tenant database to a stronger server if that tenant needs it.</p>
-			<h4>Single Deployment - Single Database</h4>
+			<h5>Single Deployment - Single Database</h5>
 			<p>This is the most <strong>real multi-tenancy</strong> architecture: We only deploy 
 				<strong>single 
 instance</strong> of the application with a <strong>single database</strong> into a 
@@ -71,15 +78,15 @@ automatic <a href="Data-Filters.html">data filtering</a></strong>.</p>
 			<p>This approach may have performance problems if we have many 
 			tenants with huge data. We may use table partitioning or other 
 			database features to overcome this problem.</p>
-			<h4>Single Deployment - Hybrid Databases</h4>
+			<h5>Single Deployment - Hybrid Databases</h5>
 			<p>We may want to store tenants in single databases normally, but 
 			want to create seperated databases for desired tenants. For example, 
 			we can store tenants with big data in their own databases, but store 
 			all other tenants in a single database.</p>
-			<h4>Multiple Deployment - Single/Multiple/Hybrid Database</h4>
+			<h5>Multiple Deployment - Single/Multiple/Hybrid Database</h5>
 			<p>Finally, we may want to deploy our application to more than one 
 			server (like web farms) for a better application performance, high 
-			availability, and/or scalability. This is independent from database 
+			availability, and/or scalability. This is independent from the database 
 			approach.</p>
 			<h3>Multi-Tenancy in ASP.NET Boilerplate</h3>
 			<p>ASP.NET Boilerplate can work with all scenarios described above.</p>
@@ -114,9 +121,70 @@ based on current tenant's id. We can say these rules: </p>
 	current user is a <strong>host user</strong>.</li>
 				<li>If UserId is not null and also TenantId is not null, we can know that 
 	current user is a <strong>tenant user</strong>.</li>
+				<li>If UserId is null but TenantId is not null, that means we 
+				can know the current tenant, but current request is not 
+				authorized (user did not login). See the next section to 
+				understand how current tenant is determined.</li>
 			</ul>
 			<p>See <a href="/Pages/Documents/Abp-Session">session documentation</a> for more 
 information on the session.</p>
+			<h4>Determining Current Tenant</h4>
+			<p>Since all tenant users use the same application, we should have a 
+			way of distinguishing the tenant of the current request. Default 
+			session implementation (ClaimsAbpSession) uses different approaches 
+			to find the tenant related to the current request with the given 
+			order:</p>
+			<ol>
+				<li>If user has logged in, then gets TenantId from current 
+				claims. Claim name is <em>
+				http://www.aspnetboilerplate.com/identity/claims/tenantId </em>
+				and should contain an integer value. If it's not found in claims 
+				then the user is assumed as a <em>host</em> user.</li>
+				<li>If user has not logged in, then it tries to resolve TenantId 
+				from <em>tenant resolve contributor</em>s. There are 3 
+				pre-defined tenant contributors and runs in given order (first 
+				success resolver wins):<ol>
+					<li><strong>DomainTenantResolveContributer</strong>: Tries 
+					to resolve tenancy name from url, generally from domain or 
+					subdomain. You can configure domain format in PreInitialize 
+					method of your module (like 
+					Configuration.Modules.AbpWebCommon().MultiTenancy.DomainFormat 
+					= "{0}.mydomain.com";). If domain format is 
+					"{0}.mydomain.com" and current host of the request is <em>
+					<strong>acme</strong>.mydomain.com</em>, then tenancy name 
+					is resolved as "acme". Then next step is to query 
+					ITenantStore to find the TenantId by given tenancy name. If 
+					a tenant is found, then it's resolved as the current 
+					TenantId.</li>
+					<li><strong>HttpHeaderTenantResolveContributer</strong>: 
+					Tries to resolve TenantId from "Abp.TenantId" header value, 
+					if present (This is a constant defined in 
+					Abp.MultiTenancy.MultiTenancyConsts.TenantIdResolveKey).</li>
+					<li><strong>HttpCookieTenantResolveContributer</strong>: 
+					Tries to resolve TenantId from "Abp.TenantId" cookie value, 
+					if present (uses the same constant explained above).</li>
+				</ol>
+				</li>
+			</ol>
+			<p>If none of these attemtps can resolve a TenantId, then current 
+			requester is considered as the host. Tenant resolvers are 
+			extensible. You can add resolvers to <strong>
+			Configuration.MultiTenancy.Resolvers</strong> collection, or remove 
+			an existing resolver.</p>
+			<p>One last thing on resolvers is that; resolved tenant id is cached 
+			during the same request for performance reasons. So, resolvers are 
+			executed once in a request (and only if current user has not already 
+			logged in).</p>
+			<h5>Tenant Store</h5>
+			<p><strong>DomainTenantResolveContributer </strong>uses ITenantStore 
+			to find tenant id by tenancy name. Default implementation of <strong>
+			ITenantStore</strong> is <strong>NullTenantStore</strong> which does 
+			not contain any tenant and returns null for queries. You can 
+			implement and replace it to query tenants from any data source.
+			<a href="Zero/Overall.html">Module zero</a> properly implements it 
+			to get from it's <a href="Zero/Tenant-Management.html">tenant 
+			manager</a>. So, if you are using module zero, don't care about the 
+			tenant store.</p>
 			<h4>Data Filters</h4>
 			<p>For <strong>multi tenant single database</strong> approach, we must add a
 			<strong>TenantId</strong> filter to get only current tenant's entities 

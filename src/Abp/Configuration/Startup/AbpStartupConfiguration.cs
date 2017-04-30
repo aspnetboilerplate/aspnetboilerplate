@@ -7,6 +7,7 @@ using Abp.Dependency;
 using Abp.Domain.Uow;
 using Abp.Events.Bus;
 using Abp.Notifications;
+using Abp.Resources.Embedded;
 using Abp.Runtime.Caching.Configuration;
 
 namespace Abp.Configuration.Startup
@@ -97,6 +98,8 @@ namespace Abp.Configuration.Startup
 
         public Dictionary<Type, Action> ServiceReplaceActions { get; private set; }
 
+        public IEmbeddedResourcesConfiguration EmbeddedResources { get; private set; }
+
         /// <summary>
         /// Private constructor for singleton pattern.
         /// </summary>
@@ -121,6 +124,8 @@ namespace Abp.Configuration.Startup
             Caching = IocManager.Resolve<ICachingConfiguration>();
             BackgroundJobs = IocManager.Resolve<IBackgroundJobConfiguration>();
             Notifications = IocManager.Resolve<INotificationConfiguration>();
+            EmbeddedResources = IocManager.Resolve<IEmbeddedResourcesConfiguration>();
+
             ServiceReplaceActions = new Dictionary<Type, Action>();
         }
 

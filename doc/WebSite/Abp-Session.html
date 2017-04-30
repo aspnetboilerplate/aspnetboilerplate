@@ -89,13 +89,45 @@ is null, this method throws exception. GetTenantId() is also similar.</p>
 			<p>Impersonator properties are not common as other properties and generally used 
 for <a href="/Pages/Documents/Audit-Logging">audit logging</a> purposes.</p>
 
-		</div>
+		<h3>Overriding Current Session Values</h3>
+		<p>In some specific cases, you may need to change/override session 
+		values for a limited scope. In such cases, you can use IAbpSession.Use 
+		method as shown below:</p>
+		<pre lang="cs">public class MyService
+{
+    private readonly IAbpSession _session;
 
+    public MyService(IAbpSession session)
+    {
+        _session = session;
+    }
+
+    public void Test()
+    {
+<strong>        using (_session.Use(42, null))
+        {
+            var tenantId = _session.TenantId; //42
+            var userId = _session.UserId; //null
+        }
+</strong>    }
+}</pre>
+		<p>Use method returns an IDisposable and it <strong>must be disposed</strong>. 
+		Once the return value is disposed, Session values are <strong>
+		automatically restored</strong> the to previous values.</p>
+			<div class="bs-callout bs-callout-warning">
+				<h4>Warning!</h4>
+		<p>Always use it in a using block as shown above. Otherwise, you may get 
+		unexpected session values. You can have nested Use blocks and they will 
+		work as you expect.</p>
+			</div>
 		<h3>User Identifier</h3>
 		<p>You can use <strong>.ToUserIdentifier()</strong> extension method to create a 
 		UserIdentifier object from IAbpSession. Since UserIdentifier is used in 
-		most API, this will simplify to create a UserIdentifier for current 
+		most API, this will simplify to create a UserIdentifier object for the current 
 		user.</p>
+		
+</div>
+
 
 	</body>
 

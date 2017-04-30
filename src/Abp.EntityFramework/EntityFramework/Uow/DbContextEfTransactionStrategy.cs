@@ -33,26 +33,26 @@ namespace Abp.EntityFramework.Uow
             }
         }
 
-        public void InitDbContext(DbContext dbContext, string connectionString)
+        public DbContext CreateDbContext<TDbContext>(string connectionString, IDbContextResolver dbContextResolver) where TDbContext : DbContext
         {
+            DbContext dbContext;
+
             var activeTransaction = ActiveTransactions.GetOrDefault(connectionString);
             if (activeTransaction == null)
             {
-                activeTransaction = new ActiveTransactionInfo(
-                    dbContext.Database.BeginTransaction(
-                        (Options.IsolationLevel ?? IsolationLevel.ReadUncommitted).ToSystemDataIsolationLevel()
-                    ),
-                    dbContext
-                );
-
+                dbContext = dbContextResolver.Resolve<TDbContext>(connectionString);
+                var dbtransaction = dbContext.Database.BeginTransaction((Options.IsolationLevel ?? IsolationLevel.ReadUncommitted).ToSystemDataIsolationLevel());
+                activeTransaction = new ActiveTransactionInfo(dbtransaction, dbContext);
                 ActiveTransactions[connectionString] = activeTransaction;
             }
             else
             {
+                dbContext = dbContextResolver.Resolve<TDbContext>(activeTransaction.DbContextTransaction.UnderlyingTransaction.Connection, false);
                 dbContext.Database.UseTransaction(activeTransaction.DbContextTransaction.UnderlyingTransaction);
                 activeTransaction.AttendedDbContexts.Add(dbContext);
             }
 
+            return dbContext;
         }
 
         public void Dispose(IIocResolver iocResolver)
@@ -65,7 +65,7 @@ namespace Abp.EntityFramework.Uow
                 }
 
                 activeTransaction.DbContextTransaction.Dispose();
-                activeTransaction.StarterDbContext.Dispose();
+                iocResolver.Release(activeTransaction.StarterDbContext);
             }
 
             ActiveTransactions.Clear();

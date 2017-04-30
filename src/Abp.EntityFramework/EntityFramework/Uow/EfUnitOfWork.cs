@@ -3,8 +3,8 @@ using System.Collections.Immutable;
 using System.Data.Entity;
 using System.Data.Entity.Core.Objects;
 using System.Data.Entity.Infrastructure;
+using System.Linq;
 using System.Threading.Tasks;
-using System.Transactions;
 using Abp.Dependency;
 using Abp.Domain.Uow;
 using Abp.EntityFramework.Utils;
@@ -60,12 +60,12 @@ namespace Abp.EntityFramework.Uow
 
         public override void SaveChanges()
         {
-            ActiveDbContexts.Values.ForEach(SaveChangesInDbContext);
+            GetAllActiveDbContexts().ForEach(SaveChangesInDbContext);
         }
 
         public override async Task SaveChangesAsync()
         {
-            foreach (var dbContext in ActiveDbContexts.Values)
+            foreach (var dbContext in GetAllActiveDbContexts())
             {
                 await SaveChangesInDbContextAsync(dbContext);
             }
@@ -84,8 +84,6 @@ namespace Abp.EntityFramework.Uow
             {
                 _transactionStrategy.Commit();
             }
-
-            DisposeUow();
         }
 
         protected override async Task CompleteUowAsync()
@@ -96,8 +94,6 @@ namespace Abp.EntityFramework.Uow
             {
                 _transactionStrategy.Commit();
             }
-
-            DisposeUow();
         }
         
         public virtual TDbContext GetOrCreateDbContext<TDbContext>(MultiTenancySides? multiTenancySide = null)
@@ -115,7 +111,19 @@ namespace Abp.EntityFramework.Uow
             DbContext dbContext;
             if (!ActiveDbContexts.TryGetValue(dbContextKey, out dbContext))
             {
-                dbContext = _dbContextResolver.Resolve<TDbContext>(connectionString);
+                if (Options.IsTransactional == true)
+                {
+                    dbContext = _transactionStrategy.CreateDbContext<TDbContext>(connectionString, _dbContextResolver);
+                }
+                else
+                {
+                    dbContext = _dbContextResolver.Resolve<TDbContext>(connectionString);
+                }
+
+                if (Options.Timeout.HasValue && !dbContext.Database.CommandTimeout.HasValue)
+                {
+                    dbContext.Database.CommandTimeout = Options.Timeout.Value.TotalSeconds.To<int>();
+                }
 
                 ((IObjectContextAdapter)dbContext).ObjectContext.ObjectMaterialized += (sender, args) =>
                 {
@@ -123,12 +131,7 @@ namespace Abp.EntityFramework.Uow
                 };
 
                 FilterExecuter.As<IEfUnitOfWorkFilterExecuter>().ApplyCurrentFilters(this, dbContext);
-
-                if (Options.IsTransactional == true)
-                {
-                    _transactionStrategy.InitDbContext(dbContext, connectionString);
-                }
-
+                
                 ActiveDbContexts[dbContextKey] = dbContext;
             }
 
@@ -143,7 +146,7 @@ namespace Abp.EntityFramework.Uow
             }
             else
             {
-                foreach (var activeDbContext in ActiveDbContexts.Values)
+                foreach (var activeDbContext in GetAllActiveDbContexts())
                 {
                     Release(activeDbContext);
                 }

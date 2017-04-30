@@ -14,7 +14,7 @@ namespace Abp.EntityFrameworkCore.Tests.Ef
 
         public override int Count()
         {
-            throw new ApplicationException("can not get count of posts");
+            throw new Exception("can not get count of posts");
         }
     }
 }

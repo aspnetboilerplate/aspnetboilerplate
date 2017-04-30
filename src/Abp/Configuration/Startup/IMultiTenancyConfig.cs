@@ -1,4 +1,8 @@
-﻿namespace Abp.Configuration.Startup
+﻿using System.Collections;
+using Abp.Collections;
+using Abp.MultiTenancy;
+
+namespace Abp.Configuration.Startup
 {
     /// <summary>
     /// Used to configure multi-tenancy.
@@ -10,5 +14,10 @@
         /// Default value: false.
         /// </summary>
         bool IsEnabled { get; set; }
+
+        /// <summary>
+        /// A list of contributors for tenant resolve process.
+        /// </summary>
+        ITypeList<ITenantResolveContributor> Resolvers { get; }
     }
 }

@@ -14,7 +14,7 @@ namespace Abp.Domain.Uow
     /// </summary>
     public abstract class UnitOfWorkBase : IUnitOfWork
     {
-        public string Id { get; private set; }
+        public string Id { get; }
 
         [DoNotWire]
         public IUnitOfWork Outer { get; set; }
@@ -103,10 +103,7 @@ namespace Abp.Domain.Uow
         /// <inheritdoc/>
         public void Begin(UnitOfWorkOptions options)
         {
-            if (options == null)
-            {
-                throw new ArgumentNullException("options");
-            }
+            Check.NotNull(options, nameof(options));
 
             PreventMultipleBegin();
             Options = options; //TODO: Do not set options like that, instead make a copy?
@@ -268,7 +265,7 @@ namespace Abp.Domain.Uow
         /// <inheritdoc/>
         public void Dispose()
         {
-            if (IsDisposed)
+            if (!_isBeginCalledBefore || IsDisposed)
             {
                 return;
             }
@@ -430,6 +427,11 @@ namespace Abp.Domain.Uow
             }
 
             return filterIndex;
+        }
+
+        public override string ToString()
+        {
+            return $"[UnitOfWork {Id}]";
         }
     }
 }

@@ -1,4 +1,5 @@
-﻿using Abp.Auditing;
+﻿using System;
+using Abp.Auditing;
 using Shouldly;
 using Xunit;
 
@@ -9,16 +10,18 @@ namespace Abp.Tests.Auditing
         [Fact]
         public void Ignored_Properties_Should_Not_Be_Serialized()
         {
-            var json = AuditingHelper.Serialize(new AuditingHelperTestPersonDto
-            {
-                FullName = "John Doe",
-                Age = 18,
-                School = new AuditingHelperTestSchoolDto
+            var json = new JsonNetAuditSerializer(new AuditingConfiguration {IgnoredTypes = { typeof(Exception) }})
+                .Serialize(new AuditingHelperTestPersonDto
                 {
-                    Name = "Crosswell Secondary",
-                    Address = "Broadway Ave, West Bend"
-                }
-            });
+                    FullName = "John Doe",
+                    Age = 18,
+                    School = new AuditingHelperTestSchoolDto
+                    {
+                        Name = "Crosswell Secondary",
+                        Address = "Broadway Ave, West Bend"
+                    },
+                    Exception = new Exception("this should be ignored!")
+                });
 
             json.ShouldBe("{\"fullName\":\"John Doe\",\"school\":{\"name\":\"Crosswell Secondary\"}}");
         }
@@ -29,6 +32,8 @@ namespace Abp.Tests.Auditing
 
             [DisableAuditing]
             public int Age { get; set; }
+
+            public Exception Exception { get; set; }
 
             public AuditingHelperTestSchoolDto School { get; set; }
         }

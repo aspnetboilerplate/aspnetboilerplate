@@ -37,7 +37,13 @@ namespace Abp.TestBase.SampleApplication.EntityFramework
         }
 
         public SampleApplicationDbContext(DbConnection connection)
-            : base(connection, true)
+            : base(connection, false)
+        {
+
+        }
+
+        public SampleApplicationDbContext(DbConnection connection, bool contextOwnsConnection)
+            : base(connection, contextOwnsConnection)
         {
 
         }

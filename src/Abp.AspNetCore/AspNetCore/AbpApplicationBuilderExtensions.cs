@@ -1,7 +1,8 @@
 ﻿using System.Globalization;
 using System.Linq;
+using Abp.AspNetCore.EmbeddedResources;
 using Abp.AspNetCore.Localization;
-using Abp.Configuration;
+using Abp.AspNetCore.Mvc.Views;
 using Abp.Dependency;
 using Abp.Localization;
 using Castle.LoggingFacility.MsLogging;
@@ -21,6 +22,19 @@ namespace Abp.AspNetCore
             InitializeAbp(app);
 
             ConfigureRequestLocalization(app);
+        }
+
+        public static void UseEmbeddedFiles(this IApplicationBuilder app)
+        {
+            //TODO: Can improve it or create a custom middleware?
+            app.UseStaticFiles(
+                new StaticFileOptions
+                {
+                    FileProvider = new EmbeddedResourceFileProvider(
+                        app.ApplicationServices.GetRequiredService<IIocResolver>()
+                    )
+                }
+            );
         }
 
         private static void InitializeAbp(IApplicationBuilder app)
@@ -58,7 +72,7 @@ namespace Abp.AspNetCore
 
                 var supportedCultures = languageManager.Object
                     .GetLanguages()
-                    .Select(l => new CultureInfo(l.Name))
+                    .Select(l => CultureInfoHelper.Get(l.Name))
                     .ToArray();
 
                 var defaultCulture = new RequestCulture(defaultLanguage.Name);
@@ -70,26 +84,9 @@ namespace Abp.AspNetCore
                     SupportedUICultures = supportedCultures
                 };
 
-                var settingManager = iocResolver.Resolve<ISettingManager>();
-                var settingRequestCultureProvider = new SettingRequestCultureProvider(settingManager);
-                AddSettingRequestCultureProvider(options, settingRequestCultureProvider);
+                options.RequestCultureProviders.Insert(0, new AbpLocalizationHeaderRequestCultureProvider());
 
                 app.UseRequestLocalization(options);
-            }
-        }
-
-        private static void AddSettingRequestCultureProvider(RequestLocalizationOptions options, SettingRequestCultureProvider settingRequestCultureProvider)
-        {
-            var acceptLanguageHeaderRequestCultureProvider = options.RequestCultureProviders.FirstOrDefault(rcp => rcp.GetType() == typeof(AcceptLanguageHeaderRequestCultureProvider));
-
-            if (acceptLanguageHeaderRequestCultureProvider != null)
-            {
-                var acceptLanguageHeaderRequestCultureProviderIndex = options.RequestCultureProviders.IndexOf(acceptLanguageHeaderRequestCultureProvider);
-                options.RequestCultureProviders.Insert(acceptLanguageHeaderRequestCultureProviderIndex, settingRequestCultureProvider);
-            }
-            else
-            {
-                options.RequestCultureProviders.Add(settingRequestCultureProvider);
             }
         }
     }

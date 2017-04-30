@@ -1,4 +1,5 @@
-﻿using System;
+﻿#if NET46
+using System;
 using System.IO;
 using System.Security.Cryptography;
 using System.Text;
@@ -12,8 +13,7 @@ namespace Abp.Runtime.Security
     /// </summary>
     public class SimpleStringCipher
     {
-        public static SimpleStringCipher Instance { get { return _instance; } }
-        private static SimpleStringCipher _instance = new SimpleStringCipher();
+        public static SimpleStringCipher Instance { get; }
 
         /// <summary>
         /// This constant string is used as a "salt" value for the PasswordDeriveBytes function calls.
@@ -24,42 +24,61 @@ namespace Abp.Runtime.Security
 
         /// <summary>
         /// Default password to encrypt/decrypt texts.
+        /// It's recommented to set to another value for security.
+        /// Default value: "gsKnGZ041HLL4IM8"
         /// </summary>
-        public const string DefaultPassPhrase = "gsKnGZ041HLL4IM8";
+        public static string DefaultPassPhrase { get; set; }
+
+        /// <summary>
+        /// Default value: Encoding.ASCII.GetBytes("jkE49230Tf093b42")
+        /// </summary>
+        public static byte[] DefaultInitVectorBytes { get; set; }
 
         /// <summary>
         /// This constant is used to determine the keysize of the encryption algorithm.
         /// </summary>
         public const int Keysize = 256;
 
-        public SimpleStringCipher()
+        static SimpleStringCipher()
         {
-            InitVectorBytes = Encoding.ASCII.GetBytes("jkE49230Tf093b42");
+            DefaultPassPhrase = "gsKnGZ041HLL4IM8";
+            DefaultInitVectorBytes = Encoding.ASCII.GetBytes("jkE49230Tf093b42");
+            Instance = new SimpleStringCipher();
         }
 
-        public string Encrypt(string plainText, string passPhrase = DefaultPassPhrase)
+        public SimpleStringCipher()
+        {
+            InitVectorBytes = DefaultInitVectorBytes;
+        }
+
+        public string Encrypt(string plainText, string passPhrase = null)
         {
             if (plainText == null)
             {
                 return null;
             }
 
-            byte[] plainTextBytes = Encoding.UTF8.GetBytes(plainText);
-            using (PasswordDeriveBytes password = new PasswordDeriveBytes(passPhrase, null))
+            if (passPhrase == null)
             {
-                byte[] keyBytes = password.GetBytes(Keysize / 8);
-                using (RijndaelManaged symmetricKey = new RijndaelManaged())
+                passPhrase = DefaultPassPhrase;
+            }
+
+            var plainTextBytes = Encoding.UTF8.GetBytes(plainText);
+            using (var password = new PasswordDeriveBytes(passPhrase, null))
+            {
+                var keyBytes = password.GetBytes(Keysize / 8);
+                using (var symmetricKey = new RijndaelManaged())
                 {
                     symmetricKey.Mode = CipherMode.CBC;
-                    using (ICryptoTransform encryptor = symmetricKey.CreateEncryptor(keyBytes, InitVectorBytes))
+                    using (var encryptor = symmetricKey.CreateEncryptor(keyBytes, InitVectorBytes))
                     {
-                        using (MemoryStream memoryStream = new MemoryStream())
+                        using (var memoryStream = new MemoryStream())
                         {
-                            using (CryptoStream cryptoStream = new CryptoStream(memoryStream, encryptor, CryptoStreamMode.Write))
+                            using (var cryptoStream = new CryptoStream(memoryStream, encryptor, CryptoStreamMode.Write))
                             {
                                 cryptoStream.Write(plainTextBytes, 0, plainTextBytes.Length);
                                 cryptoStream.FlushFinalBlock();
-                                byte[] cipherTextBytes = memoryStream.ToArray();
+                                var cipherTextBytes = memoryStream.ToArray();
                                 return Convert.ToBase64String(cipherTextBytes);
                             }
                         }
@@ -68,28 +87,33 @@ namespace Abp.Runtime.Security
             }
         }
 
-        public string Decrypt(string cipherText, string passPhrase = DefaultPassPhrase)
+        public string Decrypt(string cipherText, string passPhrase = null)
         {
-            if (cipherText == null)
+            if (string.IsNullOrEmpty(cipherText))
             {
                 return null;
             }
 
-            byte[] cipherTextBytes = Convert.FromBase64String(cipherText);
-            using (PasswordDeriveBytes password = new PasswordDeriveBytes(passPhrase, null))
+            if (passPhrase == null)
             {
-                byte[] keyBytes = password.GetBytes(Keysize / 8);
-                using (RijndaelManaged symmetricKey = new RijndaelManaged())
+                passPhrase = DefaultPassPhrase;
+            }
+
+            var cipherTextBytes = Convert.FromBase64String(cipherText);
+            using (var password = new PasswordDeriveBytes(passPhrase, null))
+            {
+                var keyBytes = password.GetBytes(Keysize / 8);
+                using (var symmetricKey = new RijndaelManaged())
                 {
                     symmetricKey.Mode = CipherMode.CBC;
-                    using (ICryptoTransform decryptor = symmetricKey.CreateDecryptor(keyBytes, InitVectorBytes))
+                    using (var decryptor = symmetricKey.CreateDecryptor(keyBytes, InitVectorBytes))
                     {
-                        using (MemoryStream memoryStream = new MemoryStream(cipherTextBytes))
+                        using (var memoryStream = new MemoryStream(cipherTextBytes))
                         {
-                            using (CryptoStream cryptoStream = new CryptoStream(memoryStream, decryptor, CryptoStreamMode.Read))
+                            using (var cryptoStream = new CryptoStream(memoryStream, decryptor, CryptoStreamMode.Read))
                             {
-                                byte[] plainTextBytes = new byte[cipherTextBytes.Length];
-                                int decryptedByteCount = cryptoStream.Read(plainTextBytes, 0, plainTextBytes.Length);
+                                var plainTextBytes = new byte[cipherTextBytes.Length];
+                                var decryptedByteCount = cryptoStream.Read(plainTextBytes, 0, plainTextBytes.Length);
                                 return Encoding.UTF8.GetString(plainTextBytes, 0, decryptedByteCount);
                             }
                         }
@@ -99,3 +123,4 @@ namespace Abp.Runtime.Security
         }
     }
 }
+#endif

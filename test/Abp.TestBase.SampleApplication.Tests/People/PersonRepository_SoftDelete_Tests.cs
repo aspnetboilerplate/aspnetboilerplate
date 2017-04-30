@@ -75,8 +75,9 @@ namespace Abp.TestBase.SampleApplication.Tests.People
         public async Task Should_Set_Deletion_Audit_Informations()
         {
             const long userId = 42;
-
             AbpSession.UserId = userId;
+
+            var uowManager = Resolve<IUnitOfWorkManager>();
 
             //Get an entity to delete
             var personToBeDeleted = (await _personRepository.GetAllListAsync()).FirstOrDefault();
@@ -94,7 +95,6 @@ namespace Abp.TestBase.SampleApplication.Tests.People
             (await _personRepository.FirstOrDefaultAsync(personToBeDeleted.Id)).ShouldBe(null);
 
             //Get deleted entity again and check audit informations
-            var uowManager = Resolve<IUnitOfWorkManager>();
             using (var ouw = uowManager.Begin())
             {
                 using (uowManager.Current.DisableFilter(AbpDataFilters.SoftDelete))

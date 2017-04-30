@@ -4,7 +4,7 @@
 
         let autoConnect: boolean;
 
-        function connect();
+        function connect(): any;
 
         namespace hubs {
 

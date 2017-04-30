@@ -138,11 +138,17 @@ namespace Abp.Notifications
         [MaxLength(MaxTenantIdsLength)]
         public virtual string TenantIds { get; set; }
 
+        public NotificationInfo()
+        {
+            
+        }
+
         /// <summary>
         /// Initializes a new instance of the <see cref="NotificationInfo"/> class.
         /// </summary>
-        public NotificationInfo()
+        public NotificationInfo(Guid id)
         {
+            Id = id;
             Severity = NotificationSeverity.Info;
         }
     }

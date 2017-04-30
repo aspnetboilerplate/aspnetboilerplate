@@ -17,7 +17,7 @@ namespace Abp.EntityFrameworkCore.Tests.Tests
 
             postRepository.GetAllList().Any().ShouldBeTrue();
 
-            Assert.Throws<ApplicationException>(
+            Assert.Throws<Exception>(
                 () => postRepository.Count()
             ).Message.ShouldBe("can not get count of posts");
 

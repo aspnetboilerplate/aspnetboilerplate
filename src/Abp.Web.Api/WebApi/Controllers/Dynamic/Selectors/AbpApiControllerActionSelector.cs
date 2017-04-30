@@ -1,4 +1,6 @@
 using System.Linq;
+using System.Net;
+using System.Web;
 using System.Web.Http.Controllers;
 using Abp.WebApi.Configuration;
 using Abp.WebApi.Controllers.Dynamic.Builders;
@@ -54,8 +56,8 @@ namespace Abp.WebApi.Controllers.Dynamic.Selectors
             var actionName = DynamicApiServiceNameHelper.GetActionNameInServiceNameWithAction(serviceNameWithAction);
 
             return GetActionDescriptorByActionName(
-                controllerContext, 
-                controllerInfo, 
+                controllerContext,
+                controllerInfo,
                 actionName
                 );
         }
@@ -69,20 +71,22 @@ namespace Abp.WebApi.Controllers.Dynamic.Selectors
 
             if (actionsByVerb.Length == 0)
             {
-                throw new AbpException(
+                throw new HttpException(
+                    (int)HttpStatusCode.NotFound,
                     "There is no action" +
                     " defined for api controller " + controllerInfo.ServiceName +
                     " with an http verb: " + controllerContext.Request.Method
-                    );
+                );
             }
 
             if (actionsByVerb.Length > 1)
             {
-                throw new AbpException(
+                throw new HttpException(
+                    (int)HttpStatusCode.InternalServerError,
                     "There are more than one action" +
                     " defined for api controller " + controllerInfo.ServiceName +
                     " with an http verb: " + controllerContext.Request.Method
-                    );
+                );
             }
 
             //Return the single action by the current http verb
@@ -100,11 +104,13 @@ namespace Abp.WebApi.Controllers.Dynamic.Selectors
 
             if (actionInfo.Verb != controllerContext.Request.Method.ToHttpVerb())
             {
-                throw new AbpException(
+                throw new HttpException(
+                    (int) HttpStatusCode.BadRequest,
                     "There is an action " + actionName +
                     " defined for api controller " + controllerInfo.ServiceName +
                     " but with a different HTTP Verb. Request verb is " + controllerContext.Request.Method +
-                    ". It should be " + actionInfo.Verb);
+                    ". It should be " + actionInfo.Verb
+                );
             }
 
             return new DynamicHttpActionDescriptor(_configuration, controllerContext.ControllerDescriptor, actionInfo);
