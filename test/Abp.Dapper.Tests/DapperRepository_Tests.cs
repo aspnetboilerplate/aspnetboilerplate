@@ -38,7 +38,7 @@ namespace Abp.Dapper.Tests
                 insertedProduct.ShouldNotBeNull();
                 insertedProduct.TenantId.ShouldBe(AbpSession.TenantId);
                 insertedProduct.CreationTime.ShouldNotBeNull();
-                insertedProduct.CreatorUserId.ShouldBeNull();
+                insertedProduct.CreatorUserId.ShouldBe(AbpSession.UserId);
 
                 //----Update operation should work and Modification Audits should be set---------------------------
                 _productDapperRepository.Insert(new Product("TShirt"));
@@ -121,7 +121,18 @@ namespace Abp.Dapper.Tests
                     Product productWithTenantId3FromDapperInsideTenantScope = _productDapperRepository.FirstOrDefault(x => x.Name == "ProductWithTenant3");
                     productWithTenantId3FromDapperInsideTenantScope.ShouldNotBeNull();
                 }
-               
+
+                //About issue-#2091
+                using (_unitOfWorkManager.Current.SetTenantId(AbpSession.TenantId))
+                {
+                    int productWithTenantId40 = _productDapperRepository.InsertAndGetId(new Product("ProductWithTenantId40"));
+
+                    Product productWithTenant40 = _productRepository.Get(productWithTenantId40);
+
+                    productWithTenant40.TenantId.ShouldBe(AbpSession.TenantId);
+                    productWithTenant40.CreatorUserId.ShouldBe(AbpSession.UserId);
+                }
+
                 uow.Complete();
             }
         }

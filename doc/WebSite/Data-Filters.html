@@ -215,8 +215,19 @@ after using statement.</p>
 			<a href="Multi-Tenancy.html">multi tenancy document</a> for more 
 			information.</p>
 
-			<h3 id="DocDefineCustomFilters">Defining Custom Filters</h3>
-			<p>To create a custom filter and integrate to ASP.NET Boilerplate, first we 
+			<h3 id="DocDefineCustomFilters">ORM Integrations</h3>
+			<p>Data filtering for pre-defined filters works for
+			<a href="NHibernate-Integration.html">NHibernate</a>,
+			<a href="EntityFramework-Integration.html">Entity Framework</a> 6.x 
+			and <a href="Entity-Framework-Core.html">Entity Framework Core</a>. 
+			Currently, you can only define custom filters for Entity Framework 
+			6.x.</p>
+			<h4>Entity Framework</h4>
+			<p>For <a href="EntityFramework-Integration.html">Entity Framework 
+			integration</a>, automatic data filtering is implemented using<strong>
+					<a href="https://github.com/jcachat/EntityFramework.DynamicFilters" target="_blank">EntityFramework.DynamicFilters</a></strong> 
+			library. </p>
+			<p>To create a custom filter for Entity Framework and integrate to ASP.NET Boilerplate, first we 
 should define an interface that will be implemented by entities which use this 
 filter. Assume that we want to automatically filter entities by PersonId. 
 Example interface:</p>
@@ -233,8 +244,7 @@ Example interface:</p>
 
     public virtual string Number { get; set; }
 }</pre>
-			<p>Since ASP.NET Boilerplate uses <strong>
-					<a href="https://github.com/jcachat/EntityFramework.DynamicFilters" target="_blank">EntityFramework.DynamicFilters</a></strong>, we use it's 
+			<p>We use it's 
 rules to define the filter. In our <strong>DbContext </strong>class, we override 
 				<strong>OnModelCreating </strong>and define filter as shown below:</p>
 
@@ -277,13 +287,13 @@ disable it).</p>
 
 			<p>We can create custom filters for security, active/passive entities and so on.</p>
 
-			<h3 id="DicOtherORMs">Other ORMs</h3>
-			<p>ASP.NET Boilerplate data filtering is implemented for EntityFramework and 
-NHibernate. 
-Not available for other ORMs yet (including EntityFramework Core). But, actually, you can mimic it for 
-most cases as long as you're using <strong>repositories</strong> to get data. In this case, you 
-can create a custom <a href="/Pages/Documents/Repositories">repository</a> and 
-override <strong>GetAll</strong> and other data retrieve methods if needed.</p>
+			<h4 id="DicOtherORMs">Other ORMs</h4>
+			<p>For <a href="Entity-Framework-Core.html">Entity Framework Core</a> 
+			and NHibernate, data filtering is implemented in the
+			<a href="Repositories.html">repository</a> level. That means it only 
+			filters when you query over repositories. If you directly use 
+			DbContext (for EF Core) or query via custom SQL, you should handle 
+			filtering yourself.</p>
 
 		</div>
 
