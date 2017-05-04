@@ -50,7 +50,7 @@ namespace AbpAspNetCoreDemo.Core.Application
 
             for (int i = 0; i < threadCount; i++)
             {
-                tasks.Add(Task.Run(GetAllParallelMethod));
+                tasks.Add(GetAllParallelMethod());
             }
 
             await Task.WhenAll(tasks.Cast<Task>().ToArray());
