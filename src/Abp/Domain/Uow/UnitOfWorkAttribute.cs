@@ -123,6 +123,19 @@ namespace Abp.Domain.Uow
 
         /// <summary>
         /// Creates a new <see cref="UnitOfWorkAttribute"/> object.
+        /// </summary>
+        /// <param name="scope">Transaction scope</param>
+        /// <param name="isTransactional">
+        /// Is this unit of work will be transactional?
+        /// </param>
+        public UnitOfWorkAttribute(TransactionScopeOption scope, bool isTransactional)
+        {
+            Scope = scope;
+            IsTransactional = isTransactional;
+        }
+
+        /// <summary>
+        /// Creates a new <see cref="UnitOfWorkAttribute"/> object.
         /// <see cref="IsTransactional"/> is automatically set to true.
         /// </summary>
         /// <param name="scope">Transaction scope</param>

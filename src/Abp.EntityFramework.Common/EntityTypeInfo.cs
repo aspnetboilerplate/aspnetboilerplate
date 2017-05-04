@@ -2,7 +2,7 @@ using System;
 
 namespace Abp.EntityFramework
 {
-    internal class EntityTypeInfo
+    public class EntityTypeInfo
     {
         /// <summary>
         /// Type of the entity.
