@@ -1,4 +1,5 @@
-﻿using System.Globalization;
+﻿using System;
+using System.Globalization;
 using System.Linq;
 using Abp.AspNetCore.EmbeddedResources;
 using Abp.AspNetCore.Localization;
@@ -18,15 +19,17 @@ namespace Abp.AspNetCore
     {
         public static void UseAbp(this IApplicationBuilder app)
         {
-            app.UseAbp(new AbpApplicationBuilderOptions());
+            app.UseAbp(null);
         }
 
-	    public static void UseAbp([NotNull] this IApplicationBuilder app, [NotNull] AbpApplicationBuilderOptions options)
+	    public static void UseAbp([NotNull] this IApplicationBuilder app, Action<AbpApplicationBuilderOptions> optionsAction)
 	    {
 		    Check.NotNull(app, nameof(app));
-		    Check.NotNull(options, nameof(options));
 
-		    if (options.UseCastleLoggerFactory)
+	        var options = new AbpApplicationBuilderOptions();
+            optionsAction?.Invoke(options);
+
+            if (options.UseCastleLoggerFactory)
 		    {
 			    app.UseCastleLoggerFactory();
 			}
