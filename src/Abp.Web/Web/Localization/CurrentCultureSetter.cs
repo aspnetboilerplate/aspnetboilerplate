@@ -48,7 +48,7 @@ namespace Abp.Web.Localization
         
         protected virtual bool IsCultureSpecifiedInGlobalizationConfig()
         {
-            var globalizationSection = WebConfigurationManager.GetSection("globalization") as GlobalizationSection;
+            var globalizationSection = WebConfigurationManager.GetSection("system.web/globalization") as GlobalizationSection;
             if (globalizationSection == null || globalizationSection.UICulture.IsNullOrEmpty())
             {
                 return false;
