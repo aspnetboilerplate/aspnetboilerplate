@@ -10,10 +10,12 @@ namespace Abp.Domain.Uow
     internal class UnitOfWorkInterceptor : IInterceptor
     {
         private readonly IUnitOfWorkManager _unitOfWorkManager;
+        private readonly IUnitOfWorkDefaultOptions _unitOfWorkOptions;
 
-        public UnitOfWorkInterceptor(IUnitOfWorkManager unitOfWorkManager)
+        public UnitOfWorkInterceptor(IUnitOfWorkManager unitOfWorkManager, IUnitOfWorkDefaultOptions unitOfWorkOptions)
         {
             _unitOfWorkManager = unitOfWorkManager;
+            _unitOfWorkOptions = unitOfWorkOptions;
         }
 
         /// <summary>
@@ -22,7 +24,7 @@ namespace Abp.Domain.Uow
         /// <param name="invocation">Method invocation arguments</param>
         public void Intercept(IInvocation invocation)
         {
-            var unitOfWorkAttr = UnitOfWorkAttribute.GetUnitOfWorkAttributeOrNull(invocation.MethodInvocationTarget);
+            var unitOfWorkAttr = _unitOfWorkOptions.GetUnitOfWorkAttributeOrNull(invocation.MethodInvocationTarget);
             if (unitOfWorkAttr == null || unitOfWorkAttr.IsDisabled)
             {
                 //No need to a uow

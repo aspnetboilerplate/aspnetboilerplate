@@ -2,7 +2,6 @@ using System.Linq;
 using System.Reflection;
 using Abp.Dependency;
 using Castle.Core;
-using Castle.MicroKernel;
 
 namespace Abp.Domain.Uow
 {
@@ -17,22 +16,26 @@ namespace Abp.Domain.Uow
         /// <param name="iocManager">IOC manager</param>
         public static void Initialize(IIocManager iocManager)
         {
-            iocManager.IocContainer.Kernel.ComponentRegistered += ComponentRegistered;
-        }
+            iocManager.IocContainer.Kernel.ComponentRegistered += (key, handler) =>
+            {
+                if (!iocManager.IsRegistered<IUnitOfWorkDefaultOptions>())
+                {
+                    return;
+                }
 
-        private static void ComponentRegistered(string key, IHandler handler)
-        {
-            if (UnitOfWorkHelper.IsConventionalUowClass(handler.ComponentModel.Implementation))
-            {
-                //Intercept all methods of all repositories.
-                handler.ComponentModel.Interceptors.Add(new InterceptorReference(typeof(UnitOfWorkInterceptor)));
-            }
-            else if (handler.ComponentModel.Implementation.GetMethods(BindingFlags.Instance | BindingFlags.Public | BindingFlags.NonPublic).Any(UnitOfWorkHelper.HasUnitOfWorkAttribute))
-            {
-                //Intercept all methods of classes those have at least one method that has UnitOfWork attribute.
-                //TODO: Intecept only UnitOfWork methods, not other methods!
-                handler.ComponentModel.Interceptors.Add(new InterceptorReference(typeof(UnitOfWorkInterceptor)));
-            }
+                var uowOptions = iocManager.Resolve<IUnitOfWorkDefaultOptions>();
+
+                if (uowOptions.IsConventionalUowClass(handler.ComponentModel.Implementation))
+                {
+                    handler.ComponentModel.Interceptors.Add(new InterceptorReference(typeof(UnitOfWorkInterceptor)));
+                }
+                else if (handler.ComponentModel.Implementation.GetMethods(BindingFlags.Instance | BindingFlags.Public | BindingFlags.NonPublic).Any(UnitOfWorkHelper.HasUnitOfWorkAttribute))
+                {
+                    //Intercept all methods of classes those have at least one method that has UnitOfWork attribute.
+                    //TODO: Intecept only UnitOfWork methods, not other methods!
+                    handler.ComponentModel.Interceptors.Add(new InterceptorReference(typeof(UnitOfWorkInterceptor)));
+                }
+            };
         }
     }
 }

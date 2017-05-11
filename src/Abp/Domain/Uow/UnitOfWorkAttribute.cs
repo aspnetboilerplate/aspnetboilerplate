@@ -1,6 +1,4 @@
 using System;
-using System.Linq;
-using System.Reflection;
 using System.Transactions;
 
 namespace Abp.Domain.Uow
@@ -145,27 +143,6 @@ namespace Abp.Domain.Uow
             IsTransactional = true;
             Scope = scope;
             Timeout = TimeSpan.FromMilliseconds(timeout);
-        }
-
-        /// <summary>
-        /// Gets UnitOfWorkAttribute for given method or null if no attribute defined.
-        /// </summary>
-        /// <param name="methodInfo">Method to get attribute</param>
-        /// <returns>The UnitOfWorkAttribute object</returns>
-        internal static UnitOfWorkAttribute GetUnitOfWorkAttributeOrNull(MemberInfo methodInfo)
-        {
-            var attrs = methodInfo.GetCustomAttributes(true).OfType<UnitOfWorkAttribute>().ToArray();
-            if (attrs.Length > 0)
-            {
-                return attrs[0];
-            }
-
-            if (UnitOfWorkHelper.IsConventionalUowClass(methodInfo.DeclaringType))
-            {
-                return new UnitOfWorkAttribute(); //Default
-            }
-
-            return null;
         }
 
         internal UnitOfWorkOptions CreateOptions()

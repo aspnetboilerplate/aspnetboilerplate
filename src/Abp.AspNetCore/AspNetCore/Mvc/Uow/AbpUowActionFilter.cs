@@ -10,21 +10,24 @@ namespace Abp.AspNetCore.Mvc.Uow
     public class AbpUowActionFilter : IAsyncActionFilter, ITransientDependency
     {
         private readonly IUnitOfWorkManager _unitOfWorkManager;
-        private readonly IAbpAspNetCoreConfiguration _configuration;
+        private readonly IAbpAspNetCoreConfiguration _aspnetCoreConfiguration;
+        private readonly IUnitOfWorkDefaultOptions _unitOfWorkDefaultOptions;
 
         public AbpUowActionFilter(
             IUnitOfWorkManager unitOfWorkManager,
-            IAbpAspNetCoreConfiguration configuration)
+            IAbpAspNetCoreConfiguration aspnetCoreConfiguration,
+            IUnitOfWorkDefaultOptions unitOfWorkDefaultOptions)
         {
             _unitOfWorkManager = unitOfWorkManager;
-            _configuration = configuration;
+            _aspnetCoreConfiguration = aspnetCoreConfiguration;
+            _unitOfWorkDefaultOptions = unitOfWorkDefaultOptions;
         }
 
         public async Task OnActionExecutionAsync(ActionExecutingContext context, ActionExecutionDelegate next)
         {
-            var unitOfWorkAttr = UnitOfWorkAttribute
+            var unitOfWorkAttr = _unitOfWorkDefaultOptions
                 .GetUnitOfWorkAttributeOrNull(context.ActionDescriptor.GetMethodInfo()) ??
-                _configuration.DefaultUnitOfWorkAttribute;
+                _aspnetCoreConfiguration.DefaultUnitOfWorkAttribute;
 
             if (unitOfWorkAttr.IsDisabled)
             {
