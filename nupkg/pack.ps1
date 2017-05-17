@@ -33,13 +33,12 @@ $projects = (
     "Abp.Castle.Log4Net",
     "Abp.TestBase",
     "Abp.AspNetCore.TestBase",
-    "Abp.Web.Resources"    
+    "Abp.Web.Resources"  
 )
 
 # Rebuild solution
 Set-Location $slnPath
 & dotnet restore
-& dotnet msbuild /t:Rebuild /p:Configuration=Release
 
 # Copy all nuget packages to the pack folder
 foreach($project in $projects) {
@@ -48,6 +47,7 @@ foreach($project in $projects) {
 
     # Create nuget pack
     Set-Location $projectFolder
+    Remove-Item -Recurse (Join-Path $projectFolder "bin/Release")
     & dotnet msbuild /t:pack /p:Configuration=Release /p:IncludeSymbols=true
 
     # Copy nuget package
