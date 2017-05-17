@@ -8,4 +8,9 @@
     <RepositoryType>git</RepositoryType>
     <RepositoryUrl>https://github.com/aspnetboilerplate/aspnetboilerplate</RepositoryUrl>
   </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="SourceLink.Create.CommandLine" Version="2.1.2" PrivateAssets="All" />
+  </ItemGroup>
+
 </Project>
