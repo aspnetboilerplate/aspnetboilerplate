@@ -36,6 +36,7 @@ namespace Abp.AspNetCore
 
 		    if (options.UseAbpRequestLocalization)
 		    {
+                //TODO: This should be added later than authorization middleware!
 			    app.UseAbpRequestLocalization();
 		    }
 	    }
@@ -100,6 +101,7 @@ namespace Abp.AspNetCore
                 };
 
                 options.RequestCultureProviders.Insert(0, new AbpLocalizationHeaderRequestCultureProvider());
+                options.RequestCultureProviders.Insert(2, new UserRequestCultureProvider());
 
                 app.UseRequestLocalization(options);
             }
