@@ -1,9 +1,7 @@
 ﻿using System;
-using System.Globalization;
 using System.Linq;
 using Abp.AspNetCore.EmbeddedResources;
 using Abp.AspNetCore.Localization;
-using Abp.AspNetCore.Mvc.Views;
 using Abp.Dependency;
 using Abp.Localization;
 using Castle.LoggingFacility.MsLogging;
@@ -44,7 +42,6 @@ namespace Abp.AspNetCore
 
 		public static void UseEmbeddedFiles(this IApplicationBuilder app)
         {
-            //TODO: Can improve it or create a custom middleware?
             app.UseStaticFiles(
                 new StaticFileOptions
                 {
