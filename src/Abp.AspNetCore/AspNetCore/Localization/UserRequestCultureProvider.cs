@@ -1,4 +1,5 @@
-﻿using System.Threading.Tasks;
+﻿using System.Linq;
+using System.Threading.Tasks;
 using Abp.Configuration;
 using Abp.Runtime.Session;
 using Microsoft.AspNetCore.Http;
@@ -11,6 +12,8 @@ namespace Abp.AspNetCore.Localization
 {
     public class UserRequestCultureProvider : RequestCultureProvider
     {
+        public IRequestCultureProvider CookieProvider { get; set; }
+        
         public override async Task<ProviderCultureResult> DetermineProviderCultureResult(HttpContext httpContext)
         {
             var abpSession = httpContext.RequestServices.GetRequiredService<IAbpSession>();
@@ -30,6 +33,22 @@ namespace Abp.AspNetCore.Localization
 
             if (culture.IsNullOrEmpty())
             {
+                //Try to set user's language setting from cookie if available.
+                if (CookieProvider != null)
+                {
+                    var cookieResult = await CookieProvider.DetermineProviderCultureResult(httpContext);
+                    if (cookieResult != null && cookieResult.Cultures.Any())
+                    {
+                        await settingManager.ChangeSettingForUserAsync(
+                            abpSession.ToUserIdentifier(),
+                            LocalizationSettingNames.DefaultLanguage,
+                            cookieResult.Cultures.First()
+                        );
+
+                        return cookieResult;
+                    }
+                }
+
                 return null;
             }
 
