@@ -77,31 +77,20 @@ namespace Abp.AspNetCore
             var iocResolver = app.ApplicationServices.GetRequiredService<IIocResolver>();
             using (var languageManager = iocResolver.ResolveAsDisposable<ILanguageManager>())
             {
-                var defaultLanguage = languageManager.Object
-                    .GetLanguages()
-                    .FirstOrDefault(l => l.IsDefault);
-
-                if (defaultLanguage == null)
-                {
-                    return;
-                }
-
                 var supportedCultures = languageManager.Object
                     .GetLanguages()
                     .Select(l => CultureInfoHelper.Get(l.Name))
                     .ToArray();
 
-                var defaultCulture = new RequestCulture(defaultLanguage.Name);
-
                 var options = new RequestLocalizationOptions
                 {
-                    DefaultRequestCulture = defaultCulture,
                     SupportedCultures = supportedCultures,
                     SupportedUICultures = supportedCultures
                 };
 
                 options.RequestCultureProviders.Insert(0, new AbpLocalizationHeaderRequestCultureProvider());
                 options.RequestCultureProviders.Insert(2, new UserRequestCultureProvider());
+                options.RequestCultureProviders.Insert(4, new DefaultRequestCultureProvider());
 
                 app.UseRequestLocalization(options);
             }

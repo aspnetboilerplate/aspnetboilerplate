@@ -46,4 +46,8 @@
     <Reference Include="System.Transactions" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="Localization\AspNetCore\" />
+  </ItemGroup>
+
 </Project>
