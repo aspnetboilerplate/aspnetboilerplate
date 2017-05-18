@@ -29,10 +29,13 @@ namespace Abp.Domain.Uow
                 {
                     handler.ComponentModel.Interceptors.Add(new InterceptorReference(typeof(UnitOfWorkInterceptor)));
                 }
-                else if (handler.ComponentModel.Implementation.GetMethods(BindingFlags.Instance | BindingFlags.Public | BindingFlags.NonPublic).Any(UnitOfWorkHelper.HasUnitOfWorkAttribute))
+                else if (UnitOfWorkHelper.HasUnitOfWorkAttribute(handler.ComponentModel.Implementation.GetTypeInfo()) &&
+                        handler.ComponentModel
+                               .Implementation
+                               .GetMethods(BindingFlags.Instance | BindingFlags.Public | BindingFlags.NonPublic)
+                               .Any(UnitOfWorkHelper.HasUnitOfWorkAttribute))
                 {
-                    //Intercept all methods of classes those have at least one method that has UnitOfWork attribute.
-                    //TODO: Intecept only UnitOfWork methods, not other methods!
+                    //Intercept all methods of classes those have at least one method that has UnitOfWork attribute or class marked as UnitOfWork.
                     handler.ComponentModel.Interceptors.Add(new InterceptorReference(typeof(UnitOfWorkInterceptor)));
                 }
             };
