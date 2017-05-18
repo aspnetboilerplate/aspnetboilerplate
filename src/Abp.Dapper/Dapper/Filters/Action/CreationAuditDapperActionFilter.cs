@@ -32,6 +32,9 @@ namespace Abp.Dapper.Filters.Action
                 entityWithCreationTime.CreationTime = Clock.Now;
             }
 
+            CheckAndSetMustHaveTenantIdProperty(entity);
+            CheckAndSetMayHaveTenantIdProperty(entity);
+
             if (userId.HasValue && entity is ICreationAudited)
             {
                 var record = entity as ICreationAudited;
@@ -63,9 +66,6 @@ namespace Abp.Dapper.Filters.Action
                 var record = entity.As<IModificationAudited>();
                 record.LastModifierUserId = null;
             }
-
-            CheckAndSetMustHaveTenantIdProperty(entity);
-            CheckAndSetMayHaveTenantIdProperty(entity);
         }
 
         protected virtual void CheckAndSetMustHaveTenantIdProperty(object entityAsObj)

@@ -37,6 +37,11 @@ namespace Abp.Domain.Uow
         IReadOnlyList<DataFilterConfiguration> Filters { get; }
 
         /// <summary>
+        /// A list of selectors to determine conventional Unit Of Work classes.
+        /// </summary>
+        List<Func<Type, bool>> ConventionalUowSelectors { get; }
+
+        /// <summary>
         /// Registers a data filter to unit of work system.
         /// </summary>
         /// <param name="filterName">Name of the filter.</param>

@@ -1,10 +1,14 @@
 ﻿using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
+using System.Threading.Tasks;
+using System.Transactions;
 using Abp.Application.Services;
 using AbpAspNetCoreDemo.Core.Application.Dtos;
 using AbpAspNetCoreDemo.Core.Domain;
 using Abp.AutoMapper;
 using Abp.Domain.Repositories;
+using Abp.Domain.Uow;
 using Abp.UI;
 
 namespace AbpAspNetCoreDemo.Core.Application
@@ -22,7 +26,7 @@ namespace AbpAspNetCoreDemo.Core.Application
         {
             return ObjectMapper.Map<List<ProductDto>>(_productRepository.GetAll().ToList());
         }
-
+        
         public int CreateProduct(ProductCreateInput input)
         {
             input.Name = "";
@@ -35,6 +39,32 @@ namespace AbpAspNetCoreDemo.Core.Application
             _productRepository.Insert(ObjectMapper.Map<Product>(input));
             CurrentUnitOfWork.SaveChanges();
             throw new UserFriendlyException("This exception is thrown to rollback the transaction!");
+        }
+
+        //TODO: This method crashes!
+        public async Task GetAllParallel()
+        {
+            const int threadCount = 32;
+
+            var tasks = new List<Task<int>>();
+
+            for (int i = 0; i < threadCount; i++)
+            {
+                tasks.Add(GetAllParallelMethod());
+            }
+
+            await Task.WhenAll(tasks.Cast<Task>().ToArray());
+
+            foreach (var task in tasks)
+            {
+                Debug.Assert(task.Result > 0);
+            }
+        }
+
+        [UnitOfWork(TransactionScopeOption.RequiresNew)]
+        protected virtual async Task<int> GetAllParallelMethod()
+        {
+            return await _productRepository.CountAsync();
         }
     }
 }
