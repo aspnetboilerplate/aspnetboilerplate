@@ -29,7 +29,7 @@ namespace Abp.Domain.Uow
                 {
                     handler.ComponentModel.Interceptors.Add(new InterceptorReference(typeof(UnitOfWorkInterceptor)));
                 }
-                else if (UnitOfWorkHelper.HasUnitOfWorkAttribute(handler.ComponentModel.Implementation.GetTypeInfo()) &&
+                else if (UnitOfWorkHelper.HasUnitOfWorkAttribute(handler.ComponentModel.Implementation.GetTypeInfo()) ||
                         handler.ComponentModel
                                .Implementation
                                .GetMethods(BindingFlags.Instance | BindingFlags.Public | BindingFlags.NonPublic)
