@@ -35,7 +35,7 @@ namespace Abp.EntityFrameworkCore.Tests.Tests
                 creatingEventTriggered.ShouldBeFalse();
                 createdEventTriggered.ShouldBeFalse();
                 updatingEventTriggered.ShouldBeFalse();
-                updatingEventTriggered.ShouldBeFalse();
+                updatedEventTriggered.ShouldBeFalse();
                 blogUrlChangedEventTriggered.ShouldBeFalse();
 
                 creatingEventTriggered = true;
@@ -54,7 +54,7 @@ namespace Abp.EntityFrameworkCore.Tests.Tests
                 creatingEventTriggered.ShouldBeTrue();
                 createdEventTriggered.ShouldBeFalse();
                 updatingEventTriggered.ShouldBeTrue();
-                updatingEventTriggered.ShouldBeTrue();
+                updatedEventTriggered.ShouldBeTrue();
                 blogUrlChangedEventTriggered.ShouldBeTrue();
 
                 createdEventTriggered = true;
