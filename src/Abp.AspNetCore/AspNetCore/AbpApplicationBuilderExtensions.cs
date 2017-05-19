@@ -88,16 +88,19 @@ namespace Abp.AspNetCore
                     SupportedUICultures = supportedCultures
                 };
 
-                var userProvider = new UserRequestCultureProvider();
-
-                options.RequestCultureProviders.Insert(0, new AbpLocalizationHeaderRequestCultureProvider());
-                options.RequestCultureProviders.Insert(2, userProvider);
-                options.RequestCultureProviders.Insert(4, new DefaultRequestCultureProvider());
+                var userProvider = new AbpUserRequestCultureProvider();
+                
+                //0: QueryStringRequestCultureProvider
+                options.RequestCultureProviders.Insert(1, userProvider);
+                options.RequestCultureProviders.Insert(2, new AbpLocalizationHeaderRequestCultureProvider());
+                //3: CookieRequestCultureProvider
+                options.RequestCultureProviders.Insert(4, new AbpDefaultRequestCultureProvider());
+                //5: AcceptLanguageHeaderRequestCultureProvider
 
                 optionsAction?.Invoke(options);
 
-                //TODO: Find cookie provider, set to UserRequestCultureProvider to set user's setting!!!
-                userProvider.CookieProvider = options.RequestCultureProviders.FirstOrDefault(p => p is CookieRequestCultureProvider);
+                userProvider.CookieProvider = options.RequestCultureProviders.OfType<CookieRequestCultureProvider>().FirstOrDefault();
+                userProvider.HeaderProvider = options.RequestCultureProviders.OfType<AbpLocalizationHeaderRequestCultureProvider>().FirstOrDefault();
 
                 app.UseRequestLocalization(options);
             }

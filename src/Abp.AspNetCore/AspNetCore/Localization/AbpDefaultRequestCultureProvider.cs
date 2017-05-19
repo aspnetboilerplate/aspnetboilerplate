@@ -8,7 +8,7 @@ using Microsoft.Extensions.DependencyInjection;
 
 namespace Abp.AspNetCore.Localization
 {
-    public class DefaultRequestCultureProvider : RequestCultureProvider
+    public class AbpDefaultRequestCultureProvider : RequestCultureProvider
     {
         public override async Task<ProviderCultureResult> DetermineProviderCultureResult(HttpContext httpContext)
         {
