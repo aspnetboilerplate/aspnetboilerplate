@@ -320,7 +320,7 @@ namespace Abp.Configuration
             }
 
             //No need to store on database if the value is the default value
-            if (value == defaultValue)
+            if (value == defaultValue || value == settingDefinition.DefaultValue)
             {
                 if (settingValue != null)
                 {
