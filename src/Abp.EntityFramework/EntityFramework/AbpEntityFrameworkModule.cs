@@ -47,7 +47,7 @@ namespace Abp.EntityFramework
 
             _transactionStrategyEnforcer += configuration =>
             {
-                configuration.ReplaceService<IEfTransactionStrategy, DbContextEfTransactionStrategy>();
+                configuration.ReplaceService<IEfTransactionStrategy, DbContextEfTransactionStrategy>(DependencyLifeStyle.Transient);
                 return configuration;
             };
 
