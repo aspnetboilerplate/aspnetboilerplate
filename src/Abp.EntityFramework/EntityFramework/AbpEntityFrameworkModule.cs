@@ -11,6 +11,7 @@ using Abp.EntityFramework.Uow;
 using Abp.Modules;
 using Abp.Orm;
 using Abp.Reflection;
+
 using Castle.MicroKernel.Registration;
 
 namespace Abp.EntityFramework
@@ -25,6 +26,7 @@ namespace Abp.EntityFramework
         private static readonly object WithNoLockInterceptorSyncObj = new object();
 
         private readonly ITypeFinder _typeFinder;
+        private TransactionStrategyEnforcer _transactionStrategyEnforcer;
 
         public AbpEntityFrameworkModule(ITypeFinder typeFinder)
         {
@@ -42,6 +44,14 @@ namespace Abp.EntityFramework
                     .LifestyleTransient()
                 );
             });
+
+            _transactionStrategyEnforcer += configuration =>
+            {
+                configuration.ReplaceService<IEfTransactionStrategy, DbContextEfTransactionStrategy>();
+                return configuration;
+            };
+
+            IocManager.IocContainer.Register(Component.For<TransactionStrategyEnforcer>().UsingFactoryMethod(() => _transactionStrategyEnforcer));
         }
 
         public override void Initialize()

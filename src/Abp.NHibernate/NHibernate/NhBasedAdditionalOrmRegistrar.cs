@@ -10,8 +10,6 @@ namespace Abp.NHibernate
     {
         public string OrmContextKey => AbpConsts.Orms.NHibernate;
 
-        public event EventHandler RegistrationCallback;
-
         public void RegisterRepositories(IIocManager iocManager, AutoRepositoryTypesAttribute defaultRepositoryTypes)
         {
             iocManager.Register(defaultRepositoryTypes.RepositoryInterface, defaultRepositoryTypes.RepositoryImplementation);

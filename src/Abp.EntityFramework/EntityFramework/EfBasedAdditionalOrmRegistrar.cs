@@ -19,8 +19,6 @@ namespace Abp.EntityFramework
 
         public string OrmContextKey => AbpConsts.Orms.EntityFramework;
 
-        public event EventHandler RegistrationCallback;
-
         public void RegisterRepositories(IIocManager iocManager, AutoRepositoryTypesAttribute defaultRepositoryTypes)
         {
             AutoRepositoryTypesAttribute autoRepositoryAttr = _dbContextType.GetSingleAttributeOrNull<AutoRepositoryTypesAttribute>()

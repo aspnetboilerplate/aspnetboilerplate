@@ -3,10 +3,7 @@ using System.Data.SqlClient;
 using System.IO;
 using System.Reflection;
 
-using Abp.Configuration.Startup;
-using Abp.Dependency;
 using Abp.EntityFramework;
-using Abp.EntityFramework.Uow;
 using Abp.Modules;
 using Abp.TestBase;
 
@@ -21,11 +18,6 @@ namespace Abp.Dapper.Tests
     )]
     public class AbpDapperTestModule : AbpModule
     {
-        public override void PreInitialize()
-        {
-            Configuration.ReplaceService<IEfTransactionStrategy, DbContextEfTransactionStrategy>(DependencyLifeStyle.Transient);
-        }
-
         public override void Initialize()
         {
             IocManager.RegisterAssemblyByConvention(Assembly.GetExecutingAssembly());

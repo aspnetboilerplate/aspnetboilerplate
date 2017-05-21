@@ -13,6 +13,11 @@ namespace Abp.Dapper
     )]
     public class AbpDapperModule : AbpModule
     {
+        public override void PreInitialize()
+        {
+            EnforceTransactionStrategyToDbContextEfTransactionStrategy();
+        }
+
         public override void Initialize()
         {
             IocManager.RegisterAssemblyByConvention(Assembly.GetExecutingAssembly());
@@ -33,6 +38,14 @@ namespace Abp.Dapper
                         registrar.RegisterRepositories(IocManager, NhBasedDapperAutoRepositoryTypes.Default);
                     }
                 });
+            }
+        }
+
+        private void EnforceTransactionStrategyToDbContextEfTransactionStrategy()
+        {
+            if (IocManager.IsRegistered<TransactionStrategyEnforcer>())
+            {
+                IocManager.Resolve<TransactionStrategyEnforcer>()(Configuration);
             }
         }
     }
