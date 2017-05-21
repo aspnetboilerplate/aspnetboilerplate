@@ -3,16 +3,28 @@ using System.Data.SqlClient;
 using System.IO;
 using System.Reflection;
 
+using Abp.Configuration.Startup;
+using Abp.Dependency;
+using Abp.EntityFramework;
+using Abp.EntityFramework.Uow;
 using Abp.Modules;
+using Abp.TestBase;
 
 using Dapper;
 
 namespace Abp.Dapper.Tests
 {
-    [DependsOn(typeof(AbpDapperModule))]
+    [DependsOn(
+        typeof(AbpEntityFrameworkModule),
+        typeof(AbpTestBaseModule),
+        typeof(AbpDapperModule)
+    )]
     public class AbpDapperTestModule : AbpModule
     {
-        private readonly object _lockObject = new object();
+        public override void PreInitialize()
+        {
+            Configuration.ReplaceService<IEfTransactionStrategy, DbContextEfTransactionStrategy>(DependencyLifeStyle.Transient);
+        }
 
         public override void Initialize()
         {

@@ -23,7 +23,6 @@
 
   <ItemGroup>
     <ProjectReference Include="..\Abp\Abp.csproj" />
-    <ProjectReference Include="..\Abp.EntityFramework\Abp.EntityFramework.csproj" />
   </ItemGroup>
 
   <ItemGroup>
@@ -34,6 +33,10 @@
   <ItemGroup Condition=" '$(TargetFramework)' == 'net46' ">
     <Reference Include="System" />
     <Reference Include="Microsoft.CSharp" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Reference Include="System.ComponentModel.DataAnnotations" />
   </ItemGroup>
 
 </Project>

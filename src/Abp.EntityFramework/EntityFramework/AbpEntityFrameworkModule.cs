@@ -1,4 +1,5 @@
-﻿using System.Data.Entity.Infrastructure.Interception;
+﻿using System;
+using System.Data.Entity.Infrastructure.Interception;
 using System.Reflection;
 using Abp.Collections.Extensions;
 using Abp.Configuration.Startup;
@@ -8,6 +9,7 @@ using Abp.EntityFramework.Interceptors;
 using Abp.EntityFramework.Repositories;
 using Abp.EntityFramework.Uow;
 using Abp.Modules;
+using Abp.Orm;
 using Abp.Reflection;
 using Castle.MicroKernel.Registration;
 
@@ -92,6 +94,10 @@ namespace Abp.EntityFramework
                 {
                     Logger.Debug("Registering DbContext: " + dbContextType.AssemblyQualifiedName);
                     repositoryRegistrar.Object.RegisterForDbContext(dbContextType, IocManager);
+
+                    IocManager.IocContainer.Register(
+                        Component.For<IAdditionalOrmRegistrar>().Named(Guid.NewGuid().ToString("N")).Instance(new EfBasedAdditionalOrmRegistrar(dbContextType)).LifestyleTransient()
+                        );
                 }
             }
 

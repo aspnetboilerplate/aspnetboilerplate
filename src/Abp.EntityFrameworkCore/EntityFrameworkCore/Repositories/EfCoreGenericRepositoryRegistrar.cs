@@ -2,7 +2,7 @@
 using System.Reflection;
 using Abp.Dependency;
 using Abp.Domain.Entities;
-using Abp.EntityFramework;
+using Abp.Domain.Repositories;
 using Abp.Reflection.Extensions;
 using Castle.Core.Logging;
 

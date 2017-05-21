@@ -1,6 +1,6 @@
 using System;
 
-namespace Abp.EntityFramework
+namespace Abp.Domain.Entities
 {
     public class EntityTypeInfo
     {

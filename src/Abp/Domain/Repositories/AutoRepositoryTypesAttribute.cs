@@ -1,6 +1,6 @@
 using System;
 
-namespace Abp.EntityFramework
+namespace Abp.Domain.Repositories
 {
     /// <summary>
     /// Used to define auto-repository types for entities.
