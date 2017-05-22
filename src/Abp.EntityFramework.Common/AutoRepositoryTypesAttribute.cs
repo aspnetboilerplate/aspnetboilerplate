@@ -9,13 +9,13 @@ namespace Abp.EntityFramework
     [AttributeUsage(AttributeTargets.Class)]
     public class AutoRepositoryTypesAttribute : Attribute
     {
-        public Type RepositoryInterface { get; private set; }
+        public Type RepositoryInterface { get; }
 
-        public Type RepositoryInterfaceWithPrimaryKey { get; private set; }
+        public Type RepositoryInterfaceWithPrimaryKey { get; }
 
-        public Type RepositoryImplementation { get; private set; }
+        public Type RepositoryImplementation { get; }
 
-        public Type RepositoryImplementationWithPrimaryKey { get; private set; }
+        public Type RepositoryImplementationWithPrimaryKey { get; }
 
         public AutoRepositoryTypesAttribute(
             Type repositoryInterface,
