@@ -54,7 +54,7 @@ namespace Abp.EntityFrameworkCore.Tests.Tests
                 creatingEventTriggered.ShouldBeTrue();
                 createdEventTriggered.ShouldBeFalse();
                 updatingEventTriggered.ShouldBeTrue();
-                updatedEventTriggered.ShouldBeTrue();
+                updatedEventTriggered.ShouldBeFalse();
                 blogUrlChangedEventTriggered.ShouldBeTrue();
 
                 createdEventTriggered = true;
@@ -81,7 +81,7 @@ namespace Abp.EntityFrameworkCore.Tests.Tests
             _eventBus.Register<EntityUpdatedEventData<Blog>>(data =>
             {
                 creatingEventTriggered.ShouldBeTrue();
-                //createdEventTriggered.ShouldBeTrue();
+                createdEventTriggered.ShouldBeTrue();
                 updatingEventTriggered.ShouldBeTrue();
                 updatedEventTriggered.ShouldBeFalse();
                 blogUrlChangedEventTriggered.ShouldBeTrue();
