@@ -12,7 +12,7 @@ namespace Abp.Domain.Uow
     /// <remarks>
     /// This attribute has no effect if there is already a unit of work before calling this method, if so, it uses the same transaction.
     /// </remarks>
-    [AttributeUsage(AttributeTargets.Method)]
+    [AttributeUsage(AttributeTargets.Method | AttributeTargets.Class | AttributeTargets.Interface)]
     public class UnitOfWorkAttribute : Attribute
     {
         /// <summary>

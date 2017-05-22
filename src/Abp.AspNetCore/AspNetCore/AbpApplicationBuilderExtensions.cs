@@ -1,9 +1,7 @@
 ﻿using System;
-using System.Globalization;
 using System.Linq;
 using Abp.AspNetCore.EmbeddedResources;
 using Abp.AspNetCore.Localization;
-using Abp.AspNetCore.Mvc.Views;
 using Abp.Dependency;
 using Abp.Localization;
 using Castle.LoggingFacility.MsLogging;
@@ -38,13 +36,13 @@ namespace Abp.AspNetCore
 
 		    if (options.UseAbpRequestLocalization)
 		    {
+                //TODO: This should be added later than authorization middleware!
 			    app.UseAbpRequestLocalization();
 		    }
 	    }
 
 		public static void UseEmbeddedFiles(this IApplicationBuilder app)
         {
-            //TODO: Can improve it or create a custom middleware?
             app.UseStaticFiles(
                 new StaticFileOptions
                 {
@@ -74,35 +72,35 @@ namespace Abp.AspNetCore
                 .AddCastleLogger(castleLoggerFactory);
         }
 
-        public static void UseAbpRequestLocalization(this IApplicationBuilder app)
+        public static void UseAbpRequestLocalization(this IApplicationBuilder app, Action<RequestLocalizationOptions> optionsAction = null)
         {
             var iocResolver = app.ApplicationServices.GetRequiredService<IIocResolver>();
             using (var languageManager = iocResolver.ResolveAsDisposable<ILanguageManager>())
             {
-                var defaultLanguage = languageManager.Object
-                    .GetLanguages()
-                    .FirstOrDefault(l => l.IsDefault);
-
-                if (defaultLanguage == null)
-                {
-                    return;
-                }
-
                 var supportedCultures = languageManager.Object
                     .GetLanguages()
                     .Select(l => CultureInfoHelper.Get(l.Name))
                     .ToArray();
 
-                var defaultCulture = new RequestCulture(defaultLanguage.Name);
-
                 var options = new RequestLocalizationOptions
                 {
-                    DefaultRequestCulture = defaultCulture,
                     SupportedCultures = supportedCultures,
                     SupportedUICultures = supportedCultures
                 };
 
-                options.RequestCultureProviders.Insert(0, new AbpLocalizationHeaderRequestCultureProvider());
+                var userProvider = new AbpUserRequestCultureProvider();
+                
+                //0: QueryStringRequestCultureProvider
+                options.RequestCultureProviders.Insert(1, userProvider);
+                options.RequestCultureProviders.Insert(2, new AbpLocalizationHeaderRequestCultureProvider());
+                //3: CookieRequestCultureProvider
+                options.RequestCultureProviders.Insert(4, new AbpDefaultRequestCultureProvider());
+                //5: AcceptLanguageHeaderRequestCultureProvider
+
+                optionsAction?.Invoke(options);
+
+                userProvider.CookieProvider = options.RequestCultureProviders.OfType<CookieRequestCultureProvider>().FirstOrDefault();
+                userProvider.HeaderProvider = options.RequestCultureProviders.OfType<AbpLocalizationHeaderRequestCultureProvider>().FirstOrDefault();
 
                 app.UseRequestLocalization(options);
             }

@@ -100,9 +100,8 @@ predefined repository methods. Example:</p>
 
 			<p>PersonAppService contructor-injects <strong>IRepository&lt;Person&gt;</strong> and 
 uses the <strong>Insert</strong> method. In this way, you can easily inject
-				<strong>IRepository&lt;TEntity&gt;</strong> (or IRepository&lt;TEntity, TPrimaryKey&gt;) and 
-use predefined methods. See <a href="/Pages/Documents/Repositories">repository 
-documentation</a> for all predefined methods.</p>
+				<strong>IRepository&lt;TEntity&gt;</strong> (or 
+			IRepository&lt;TEntity, TPrimaryKey&gt;) and use predefined methods.</p>
 
 			<h4 id="DocCustomRepositoryMethods">Custom Repositories</h4>
 			<p>If standard repository methods are not sufficient, you can create 
@@ -140,6 +139,21 @@ public class SimpleTaskSystemRepositoryBase&lt;TEntity&gt; : <strong>SimpleTaskS
 			<p>Notice that we're inheriting from EfCoreRepositoryBase&lt;<strong>SimpleTaskSystemDbContext</strong>, TEntity, TPrimaryKey&gt;. 
 This declares to ASP.NET Boilerplate to use SimpleTaskSystemDbContext in our 
 repositories.</p>
+			<p>By default, all repositories for your given DbContext 
+			(SimpleTaskSystemDbContext in this example) is implemented using 
+			EfCoreRepositoryBase. You can replace it to your own repository base 
+			repository class by adding <strong>AutoRepositoryTypes</strong> 
+			attribute to your DbContext as shown below:</p>
+<pre lang="cs"><strong>[AutoRepositoryTypes(
+    typeof(IRepository&lt;&gt;),
+    typeof(IRepository&lt;,&gt;),
+    typeof(SimpleTaskSystemEfRepositoryBase&lt;&gt;),
+    typeof(SimpleTaskSystemEfRepositoryBase&lt;,&gt;)
+)]</strong>
+public class SimpleTaskSystemDbContext : AbpDbContext
+{
+    ...
+}</pre>
 			<h5>Custom Repository Example</h5>
 
 			<p>To implement a custom repository, just derive from your application specific 
