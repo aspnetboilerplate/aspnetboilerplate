@@ -17,6 +17,12 @@
     <GeneratePackageOnBuild>False</GeneratePackageOnBuild>
     <RootNamespace>Abp</RootNamespace>
   </PropertyGroup>
+  
+  <ItemGroup>
+    <Compile Remove="Localization\**" />
+    <EmbeddedResource Remove="Localization\**" />
+    <None Remove="Localization\**" />
+  </ItemGroup>
 
   <ItemGroup>
     <None Update="bin\Release\net46\Abp.AspNetCore.pdb">
@@ -44,10 +50,6 @@
     <Reference Include="System" />
     <Reference Include="Microsoft.CSharp" />
     <Reference Include="System.Transactions" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <Folder Include="Localization\AspNetCore\" />
   </ItemGroup>
 
 </Project>

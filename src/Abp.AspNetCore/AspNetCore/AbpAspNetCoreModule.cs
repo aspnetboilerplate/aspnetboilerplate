@@ -24,6 +24,8 @@ namespace Abp.AspNetCore
     {
         public override void PreInitialize()
         {
+            IocManager.AddConventionalRegistrar(new AbpAspNetCoreConventionalRegistrar());
+
             IocManager.Register<IAbpAspNetCoreConfiguration, AbpAspNetCoreConfiguration>();
 
             Configuration.ReplaceService<IPrincipalAccessor, AspNetCorePrincipalAccessor>(DependencyLifeStyle.Transient);
