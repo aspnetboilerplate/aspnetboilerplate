@@ -3,16 +3,18 @@ using System.Reflection;
 using Abp.Domain.Entities;
 using Abp.Reflection.Extensions;
 using StackExchange.Redis;
+using System.Collections.Generic;
 
 namespace Abp.Runtime.Caching.Redis
 {
     /// <summary>
     /// Used to store cache in a Redis server.
     /// </summary>
-    public class AbpRedisCache : CacheBase
+    public class AbpRedisCache : CacheBase, ICacheSupportsGetAllKeys
     {
         private readonly IDatabase _database;
         private readonly IRedisCacheSerializer _serializer;
+        private List<String> CacheKeys {get;set;}
 
         /// <summary>
         /// Constructor.
@@ -25,6 +27,7 @@ namespace Abp.Runtime.Caching.Redis
         {
             _database = redisCacheDatabaseProvider.GetDatabase();
             _serializer = redisCacheSerializer;
+            CacheKeys = new List<string>();
         }
 
         public override object GetOrDefault(string key)
@@ -53,7 +56,13 @@ namespace Abp.Runtime.Caching.Redis
                 Serialize(value, type),
                 absoluteExpireTime ?? slidingExpireTime ?? DefaultAbsoluteExpireTime ?? DefaultSlidingExpireTime
                 );
-            AddCacheKey(key);
+            
+            if(CacheKeys==null)
+                CacheKeys = new List<string>();
+            if(!CacheKeys.Contains(key))
+            {
+                CacheKeys.Add(key);
+            }
         }
 
         public override void Remove(string key)
@@ -61,6 +70,11 @@ namespace Abp.Runtime.Caching.Redis
             _database.KeyDelete(GetLocalizedKey(key));
             if(CacheKeys!=null)
                 CacheKeys.Remove(key);
+        }        
+
+        public string[] GetAllKeys()
+        {
+            return CacheKeys.ToArray();
         }
 
         public override void Clear()

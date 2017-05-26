@@ -103,17 +103,5 @@ namespace Abp.Runtime.Caching
         /// Clears all items in this cache.
         /// </summary>
         Task ClearAsync();
-
-        /// <summary>
-        /// Returns all keys of cache.
-        /// </summary>
-        /// <returns>String array of keys</returns>
-        string[] GetAllKeys();
-        
-        /// <summary>
-        /// Add key into array.
-        /// </summary>
-        /// <param name="key">Key</param>
-        void AddCacheKey(string key);
     }
 }

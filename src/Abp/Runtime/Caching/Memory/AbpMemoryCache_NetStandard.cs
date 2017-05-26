@@ -2,15 +2,18 @@
 using System;
 using Microsoft.Extensions.Options;
 using Microsoft.Extensions.Caching.Memory;
+using System.Collections.Generic;
 
 namespace Abp.Runtime.Caching.Memory
 {
     /// <summary>
     /// Implements <see cref="ICache"/> to work with <see cref="MemoryCache"/>.
     /// </summary>
-    public class AbpMemoryCache : CacheBase
+    public class AbpMemoryCache : CacheBase, ICacheSupportsGetAllKeys
     {
         private MemoryCache _memoryCache;
+
+        private List<String> CacheKeys {get;set;}
 
         /// <summary>
         /// Constructor.
@@ -20,6 +23,7 @@ namespace Abp.Runtime.Caching.Memory
             : base(name)
         {
             _memoryCache = new MemoryCache(new OptionsWrapper<MemoryCacheOptions>(new MemoryCacheOptions()));
+            CacheKeys = new List<string>();
         }
 
         public override object GetOrDefault(string key)
@@ -50,7 +54,12 @@ namespace Abp.Runtime.Caching.Memory
             {
                 _memoryCache.Set(key, value, DefaultSlidingExpireTime);
             }
-            AddCacheKey(key);
+            if(CacheKeys==null)
+                CacheKeys = new List<string>();
+            if(!CacheKeys.Contains(key))
+            {
+                CacheKeys.Add(key);
+            }
         }
 
         public override void Remove(string key)
@@ -58,6 +67,11 @@ namespace Abp.Runtime.Caching.Memory
             _memoryCache.Remove(key);
             if(CacheKeys!=null)
                 CacheKeys.Remove(key);
+        }        
+
+        public string[] GetAllKeys()
+        {
+            return CacheKeys.ToArray();
         }
 
         public override void Clear()
