@@ -50,16 +50,21 @@ namespace Abp.Runtime.Caching.Memory
             {
                 _memoryCache.Set(key, value, DefaultSlidingExpireTime);
             }
+            AddCacheKey(key);
         }
 
         public override void Remove(string key)
         {
             _memoryCache.Remove(key);
+            if(CacheKeys!=null)
+                CacheKeys.Remove(key);
         }
 
         public override void Clear()
         {
             _memoryCache.Dispose();
+            if(CacheKeys!=null)
+                CacheKeys.Clear();
             _memoryCache = new MemoryCache(new OptionsWrapper<MemoryCacheOptions>(new MemoryCacheOptions()));
         }
 

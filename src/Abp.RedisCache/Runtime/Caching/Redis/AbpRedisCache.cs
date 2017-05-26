@@ -53,16 +53,21 @@ namespace Abp.Runtime.Caching.Redis
                 Serialize(value, type),
                 absoluteExpireTime ?? slidingExpireTime ?? DefaultAbsoluteExpireTime ?? DefaultSlidingExpireTime
                 );
+            AddCacheKey(key);
         }
 
         public override void Remove(string key)
         {
             _database.KeyDelete(GetLocalizedKey(key));
+            if(CacheKeys!=null)
+                CacheKeys.Remove(key);
         }
 
         public override void Clear()
         {
             _database.KeyDeleteWithPrefix(GetLocalizedKey("*"));
+            if(CacheKeys!=null)
+                CacheKeys.Clear();
         }
 
         protected virtual string Serialize(object value, Type type)

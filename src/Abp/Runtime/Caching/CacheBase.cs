@@ -1,6 +1,7 @@
 using System;
 using System.Threading.Tasks;
 using Nito.AsyncEx;
+using System.Collections.Generic;
 
 namespace Abp.Runtime.Caching
 {
@@ -10,6 +11,8 @@ namespace Abp.Runtime.Caching
     /// </summary>
     public abstract class CacheBase : ICache
     {
+        protected List<String> CacheKeys {get;set;}
+
         public string Name { get; }
 
         public TimeSpan DefaultSlidingExpireTime { get; set; }
@@ -28,6 +31,16 @@ namespace Abp.Runtime.Caching
         {
             Name = name;
             DefaultSlidingExpireTime = TimeSpan.FromHours(1);
+            CacheKeys = new List<string>();
+        }
+
+        public virtual void AddCacheKey(string key){
+            if(CacheKeys==null)
+                CacheKeys = new List<string>();
+            if(!CacheKeys.Contains(key))
+            {
+                CacheKeys.Add(key);
+            }
         }
 
         public virtual object Get(string key, Func<string, object> factory)
@@ -111,9 +124,14 @@ namespace Abp.Runtime.Caching
             return Task.FromResult(0);
         }
 
+        public virtual string[] GetAllKeys()
+        {
+            return CacheKeys.ToArray();
+        }
+
         public virtual void Dispose()
         {
-
+            CacheKeys = null;
         }
     }
 }
