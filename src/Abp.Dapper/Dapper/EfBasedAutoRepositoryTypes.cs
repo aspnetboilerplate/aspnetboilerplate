@@ -1,17 +1,19 @@
-﻿using Abp.Dapper;
-using Abp.Dapper.Repositories;
+﻿using Abp.Dapper.Repositories;
 
-public static class EfBasedDapperAutoRepositoryTypes
+namespace Abp.Dapper
 {
-    static EfBasedDapperAutoRepositoryTypes()
+    public static class EfBasedDapperAutoRepositoryTypes
     {
-        Default = new DapperAutoRepositoryTypeAttribute(
-            typeof(IDapperRepository<>),
-            typeof(IDapperRepository<,>),
-            typeof(DapperEfRepositoryBase<,>),
-            typeof(DapperEfRepositoryBase<,,>)
-        );
-    }
+        static EfBasedDapperAutoRepositoryTypes()
+        {
+            Default = new DapperAutoRepositoryTypeAttribute(
+                typeof(IDapperRepository<>),
+                typeof(IDapperRepository<,>),
+                typeof(DapperEfRepositoryBase<,>),
+                typeof(DapperEfRepositoryBase<,,>)
+            );
+        }
 
-    public static DapperAutoRepositoryTypeAttribute Default { get; }
+        public static DapperAutoRepositoryTypeAttribute Default { get; }
+    }
 }
