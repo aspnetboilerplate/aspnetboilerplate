@@ -58,11 +58,5 @@ namespace Abp.Reflection
                    type == typeof (TimeSpan) ||
                    type == typeof (Guid);
         }
-
-        internal static object GetInstanceField(Type type, object instance, string fieldName)
-        {
-            FieldInfo field = type.GetField(fieldName, BindingFlags.Instance | BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Static);
-            return field.GetValue(instance);
-        }
     }
 }
