@@ -44,15 +44,8 @@ namespace Abp.Runtime.Validation.Interception
         /// <param name="parameterValues">List of arguments those are used to call the <paramref name="method"/>.</param>
         public virtual void Initialize(MethodInfo method, object[] parameterValues)
         {
-            if (method == null)
-            {
-                throw new ArgumentNullException(nameof(method));
-            }
-
-            if (parameterValues == null)
-            {
-                throw new ArgumentNullException(nameof(parameterValues));
-            }
+            Check.NotNull(method, nameof(method));
+            Check.NotNull(parameterValues, nameof(parameterValues));
 
             Method = method;
             ParameterValues = parameterValues;
