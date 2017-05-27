@@ -102,8 +102,11 @@ namespace Abp.EntityFramework
                     repositoryRegistrar.Object.RegisterForDbContext(dbContextType, IocManager);
 
                     IocManager.IocContainer.Register(
-                        Component.For<IAdditionalOrmRegistrar>().Named(Guid.NewGuid().ToString("N")).Instance(new EfBasedAdditionalOrmRegistrar(dbContextType)).LifestyleTransient()
-                        );
+                        Component.For<IAdditionalOrmRegistrar>()
+                            .Named(Guid.NewGuid().ToString("N"))
+                            .Instance(new EfBasedAdditionalOrmRegistrar(dbContextType))
+                            .LifestyleTransient()
+                    );
                 }
             }
 

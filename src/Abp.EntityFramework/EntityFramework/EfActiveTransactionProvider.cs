@@ -1,10 +1,7 @@
 ﻿using System;
 using System.Data;
 using System.Data.Entity;
-using System.Reflection;
-
 using Abp.Dependency;
-using Abp.Extensions;
 using Abp.MultiTenancy;
 using Abp.Transactions;
 
@@ -31,13 +28,21 @@ namespace Abp.EntityFramework
 
         private DbContext GetDbContext(ActiveTransactionProviderArgs args)
         {
-            var dbContextType = (Type)args["ContextType"];
-            var multiTenancySide = (MultiTenancySides?)args["MultiTenancySide"];
-            Type dbContextProviderType = typeof(IDbContextProvider<>).MakeGenericType(dbContextType);
-            object dbContextProvider = _iocResolver.Resolve(dbContextProviderType);
-            MethodInfo method = dbContextProvider.GetType().GetMethod(nameof(IDbContextProvider<AbpDbContext>.GetDbContext), new[] { typeof(MultiTenancySides) });
-            var dbContext = method.Invoke(dbContextProvider, new object[] { multiTenancySide }).As<DbContext>();
-            return dbContext;
+            var dbContextProviderType = typeof(IDbContextProvider<>).MakeGenericType((Type)args["ContextType"]);
+
+            using (var dbContextProviderWrapper = _iocResolver.ResolveAsDisposable(dbContextProviderType))
+            {
+                var method = dbContextProviderWrapper.Object.GetType()
+                    .GetMethod(
+                        nameof(IDbContextProvider<AbpDbContext>.GetDbContext),
+                        new[] {typeof(MultiTenancySides)}
+                    );
+
+                return (DbContext) method.Invoke(
+                    dbContextProviderWrapper.Object,
+                    new object[] { (MultiTenancySides?)args["MultiTenancySide"] }
+                );
+            }
         }
     }
 }
