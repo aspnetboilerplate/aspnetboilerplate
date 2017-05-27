@@ -1,6 +1,6 @@
 ﻿using System.Collections.Generic;
 
-namespace Abp.Transactions
+namespace Abp.Data
 {
     public class ActiveTransactionProviderArgs : Dictionary<string, object>
     {

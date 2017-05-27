@@ -1,6 +1,6 @@
 ﻿using System.Data;
 
-namespace Abp.Transactions
+namespace Abp.Data
 {
     public interface IActiveTransactionProvider
     {
