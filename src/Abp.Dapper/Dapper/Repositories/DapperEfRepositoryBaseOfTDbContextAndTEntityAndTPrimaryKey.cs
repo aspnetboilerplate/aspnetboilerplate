@@ -1,7 +1,6 @@
 ﻿using System.Data;
-
+using Abp.Data;
 using Abp.Domain.Entities;
-using Abp.Transactions;
 
 namespace Abp.Dapper.Repositories
 {
@@ -20,10 +19,11 @@ namespace Abp.Dapper.Repositories
         {
             get
             {
-                var args = new ActiveTransactionProviderArgs();
-                args["ContextType"] = typeof(TDbContext);
-                args["MultiTenancySide"] = MultiTenancySide;
-                return args;
+                return new ActiveTransactionProviderArgs
+                {
+                    ["ContextType"] = typeof(TDbContext),
+                    ["MultiTenancySide"] = MultiTenancySide
+                };
             }
         }
 

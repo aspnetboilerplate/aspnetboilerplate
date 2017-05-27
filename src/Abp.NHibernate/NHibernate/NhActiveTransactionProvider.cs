@@ -1,10 +1,8 @@
 ﻿using System.Data;
-
+using Abp.Data;
 using Abp.Dependency;
 using Abp.Extensions;
 using Abp.Reflection;
-using Abp.Transactions;
-
 using NHibernate.Transaction;
 
 namespace Abp.NHibernate

@@ -10,7 +10,7 @@ namespace Abp
         /// </summary>
         public const string LocalizationSourceName = "Abp";
 
-        public static class Orms
+        internal static class Orms
         {
             public const string Dapper = "Dapper";
             public const string EntityFramework = "EntityFramework";

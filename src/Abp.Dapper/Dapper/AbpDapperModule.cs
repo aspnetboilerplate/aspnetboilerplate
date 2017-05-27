@@ -20,7 +20,7 @@ namespace Abp.Dapper
 
             using (var scope = IocManager.CreateScope())
             {
-                var additionalOrmRegistrars = scope.ResolveAll<IAdditionalOrmRegistrar>();
+                var additionalOrmRegistrars = scope.ResolveAll<ISecondaryOrmRegistrar>();
 
                 additionalOrmRegistrars.ForEach(registrar =>
                 {

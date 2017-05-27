@@ -8,11 +8,11 @@ using Abp.Reflection.Extensions;
 
 namespace Abp.EntityFramework
 {
-    public class EfBasedAdditionalOrmRegistrar : IAdditionalOrmRegistrar
+    public class EfBasedSecondaryOrmRegistrar : ISecondaryOrmRegistrar
     {
         private readonly Type _dbContextType;
 
-        public EfBasedAdditionalOrmRegistrar(Type dbContextType)
+        public EfBasedSecondaryOrmRegistrar(Type dbContextType)
         {
             _dbContextType = dbContextType;
         }

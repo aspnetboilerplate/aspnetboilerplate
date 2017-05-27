@@ -1,9 +1,9 @@
 ﻿using System;
 using System.Data;
 using System.Data.Entity;
+using Abp.Data;
 using Abp.Dependency;
 using Abp.MultiTenancy;
-using Abp.Transactions;
 
 namespace Abp.EntityFramework
 {

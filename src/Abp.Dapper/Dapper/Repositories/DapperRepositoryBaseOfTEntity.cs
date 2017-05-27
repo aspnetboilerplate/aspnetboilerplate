@@ -1,5 +1,5 @@
-﻿using Abp.Domain.Entities;
-using Abp.Transactions;
+﻿using Abp.Data;
+using Abp.Domain.Entities;
 
 namespace Abp.Dapper.Repositories
 {

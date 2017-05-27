@@ -3,7 +3,7 @@ using Abp.Domain.Repositories;
 
 namespace Abp.Orm
 {
-    public interface IAdditionalOrmRegistrar
+    public interface ISecondaryOrmRegistrar
     {
         string OrmContextKey { get; }
 

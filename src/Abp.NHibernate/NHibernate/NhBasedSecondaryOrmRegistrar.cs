@@ -6,7 +6,7 @@ using Abp.Orm;
 
 namespace Abp.NHibernate
 {
-    public class NhBasedAdditionalOrmRegistrar : IAdditionalOrmRegistrar, ITransientDependency
+    public class NhBasedSecondaryOrmRegistrar : ISecondaryOrmRegistrar, ITransientDependency
     {
         public string OrmContextKey => AbpConsts.Orms.NHibernate;
 
