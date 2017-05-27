@@ -1,6 +1,4 @@
-﻿using System;
-
-using Abp.Dependency;
+﻿using Abp.Dependency;
 using Abp.Domain.Repositories;
 using Abp.Orm;
 
