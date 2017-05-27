@@ -27,14 +27,8 @@ namespace Abp.Dapper.Repositories
             }
         }
 
-        public override IDbConnection Connection
-        {
-            get { return _activeTransactionProvider.GetActiveConnection(ActiveTransactionProviderArgs); }
-        }
+        public override IDbConnection Connection => _activeTransactionProvider.GetActiveConnection(ActiveTransactionProviderArgs);
 
-        public override IDbTransaction ActiveTransaction
-        {
-            get { return _activeTransactionProvider.GetActiveTransaction(ActiveTransactionProviderArgs); }
-        }
+        public override IDbTransaction ActiveTransaction => _activeTransactionProvider.GetActiveTransaction(ActiveTransactionProviderArgs);
     }
 }

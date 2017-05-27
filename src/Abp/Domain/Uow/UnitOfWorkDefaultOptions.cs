@@ -18,6 +18,11 @@ namespace Abp.Domain.Uow
         /// <inheritdoc/>
         public TimeSpan? Timeout { get; set; }
 
+#if NET46
+        /// <inheritdoc/>
+        public bool IsTransactionScopeAvailable { get; set; }
+#endif
+
         /// <inheritdoc/>
         public IsolationLevel? IsolationLevel { get; set; }
 
@@ -31,6 +36,10 @@ namespace Abp.Domain.Uow
             _filters = new List<DataFilterConfiguration>();
             IsTransactional = true;
             Scope = TransactionScopeOption.Required;
+
+#if NET46
+            IsTransactionScopeAvailable = true;
+#endif
 
             ConventionalUowSelectors = new List<Func<Type, bool>>
             {

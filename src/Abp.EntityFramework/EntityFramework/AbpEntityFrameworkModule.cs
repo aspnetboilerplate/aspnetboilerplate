@@ -26,7 +26,6 @@ namespace Abp.EntityFramework
         private static readonly object WithNoLockInterceptorSyncObj = new object();
 
         private readonly ITypeFinder _typeFinder;
-        private TransactionStrategyEnforcer _transactionStrategyEnforcer;
 
         public AbpEntityFrameworkModule(ITypeFinder typeFinder)
         {
@@ -44,18 +43,15 @@ namespace Abp.EntityFramework
                     .LifestyleTransient()
                 );
             });
-
-            _transactionStrategyEnforcer += configuration =>
-            {
-                configuration.ReplaceService<IEfTransactionStrategy, DbContextEfTransactionStrategy>(DependencyLifeStyle.Transient);
-                return configuration;
-            };
-
-            IocManager.IocContainer.Register(Component.For<TransactionStrategyEnforcer>().UsingFactoryMethod(() => _transactionStrategyEnforcer));
         }
 
         public override void Initialize()
         {
+            if (!Configuration.UnitOfWork.IsTransactionScopeAvailable)
+            {
+                IocManager.RegisterIfNot<IEfTransactionStrategy, DbContextEfTransactionStrategy>(DependencyLifeStyle.Transient);
+            }
+
             IocManager.RegisterAssemblyByConvention(Assembly.GetExecutingAssembly());
 
             IocManager.IocContainer.Register(

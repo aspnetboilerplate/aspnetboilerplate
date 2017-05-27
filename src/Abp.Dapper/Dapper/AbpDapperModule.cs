@@ -1,30 +1,26 @@
 ﻿using System.Reflection;
-
 using Abp.Dependency;
 using Abp.Modules;
 using Abp.Orm;
-
 using Castle.Core.Internal;
 
 namespace Abp.Dapper
 {
-    [DependsOn(
-        typeof(AbpKernelModule)
-    )]
+    [DependsOn(typeof(AbpKernelModule))]
     public class AbpDapperModule : AbpModule
     {
         public override void PreInitialize()
         {
-            EnforceTransactionStrategyToDbContextEfTransactionStrategy();
+            Configuration.UnitOfWork.IsTransactionScopeAvailable = false;
         }
 
         public override void Initialize()
         {
             IocManager.RegisterAssemblyByConvention(Assembly.GetExecutingAssembly());
 
-            using (IScopedIocResolver scope = IocManager.CreateScope())
+            using (var scope = IocManager.CreateScope())
             {
-                IAdditionalOrmRegistrar[] additionalOrmRegistrars = scope.ResolveAll<IAdditionalOrmRegistrar>();
+                var additionalOrmRegistrars = scope.ResolveAll<IAdditionalOrmRegistrar>();
 
                 additionalOrmRegistrars.ForEach(registrar =>
                 {
@@ -38,14 +34,6 @@ namespace Abp.Dapper
                         registrar.RegisterRepositories(IocManager, NhBasedDapperAutoRepositoryTypes.Default);
                     }
                 });
-            }
-        }
-
-        private void EnforceTransactionStrategyToDbContextEfTransactionStrategy()
-        {
-            if (IocManager.IsRegistered<TransactionStrategyEnforcer>())
-            {
-                IocManager.Resolve<TransactionStrategyEnforcer>()(Configuration);
             }
         }
     }
