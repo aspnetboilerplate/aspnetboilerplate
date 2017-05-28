@@ -11,16 +11,10 @@ namespace Abp.EntityFrameworkCore.Repositories
         public static DbContext GetDbContext<TEntity, TPrimaryKey>(this IRepository<TEntity, TPrimaryKey> repository)
             where TEntity : class, IEntity<TPrimaryKey>
         {
-            var repositoryWithDbContext = repository as IRepositoryWithDbContext;
+            var repositoryWithDbContext = ProxyHelper.UnProxy(repository) as IRepositoryWithDbContext;
             if (repositoryWithDbContext != null)
             {
                 return repositoryWithDbContext.GetDbContext();
-            }
-
-            var targetWithDbContext = CastleProxyHelper.GetProxyTargetOrNull(repository) as IRepositoryWithDbContext;
-            if (targetWithDbContext != null)
-            {
-                return targetWithDbContext.GetDbContext();
             }
 
             throw new ArgumentException("Given repository does not implement IRepositoryWithDbContext", nameof(repository));
