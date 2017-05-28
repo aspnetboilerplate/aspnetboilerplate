@@ -2,6 +2,7 @@
 using Abp.Collections.Extensions;
 using Abp.Dependency;
 using Abp.EntityFramework;
+using Abp.EntityFramework.Repositories;
 using Abp.EntityFrameworkCore.Configuration;
 using Abp.EntityFrameworkCore.Repositories;
 using Abp.EntityFrameworkCore.Uow;
@@ -15,7 +16,7 @@ namespace Abp.EntityFrameworkCore
     /// <summary>
     /// This module is used to implement "Data Access Layer" in EntityFramework.
     /// </summary>
-    [DependsOn(typeof(AbpKernelModule))]
+    [DependsOn(typeof(AbpEntityFrameworkCommonModule))]
     public class AbpEntityFrameworkCoreModule : AbpModule
     {
         private readonly ITypeFinder _typeFinder;
@@ -61,12 +62,12 @@ namespace Abp.EntityFrameworkCore
                 return;
             }
 
-            using (var repositoryRegistrar = IocManager.ResolveAsDisposable<IEfCoreGenericRepositoryRegistrar>())
+            using (var repositoryRegistrar = IocManager.ResolveAsDisposable<IEfGenericRepositoryRegistrar>())
             {
                 foreach (var dbContextType in dbContextTypes)
                 {
                     Logger.Debug("Registering DbContext: " + dbContextType.AssemblyQualifiedName);
-                    repositoryRegistrar.Object.RegisterForDbContext(dbContextType, IocManager);
+                    repositoryRegistrar.Object.RegisterForDbContext(dbContextType, IocManager, EfCoreAutoRepositoryTypes.Default);
                 }
             }
 

@@ -2,15 +2,17 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
+using Abp.Dependency;
 using Abp.Domain.Entities;
+using Abp.EntityFramework;
 using Abp.Reflection;
 using Microsoft.EntityFrameworkCore;
 
 namespace Abp.EntityFrameworkCore
 {
-    internal static class DbContextHelper
+    internal class EfCoreDbContextEntityFinder : IDbContextEntityFinder, ITransientDependency
     {
-        public static IEnumerable<EntityTypeInfo> GetEntityTypeInfos(Type dbContextType)
+        public IEnumerable<EntityTypeInfo> GetEntityTypeInfos(Type dbContextType)
         {
             return
                 from property in dbContextType.GetProperties(BindingFlags.Public | BindingFlags.Instance)

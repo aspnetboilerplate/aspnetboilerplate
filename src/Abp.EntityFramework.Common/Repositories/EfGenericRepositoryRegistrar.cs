@@ -7,21 +7,26 @@ using Abp.Reflection.Extensions;
 using Castle.Core.Logging;
 using Castle.MicroKernel.Registration;
 
-namespace Abp.EntityFrameworkCore.Repositories
+namespace Abp.EntityFramework.Repositories
 {
-    public class EfCoreGenericRepositoryRegistrar : IEfCoreGenericRepositoryRegistrar, ITransientDependency
+    public class EfGenericRepositoryRegistrar : IEfGenericRepositoryRegistrar, ITransientDependency
     {
         public ILogger Logger { get; set; }
 
-        public EfCoreGenericRepositoryRegistrar()
+        private readonly IDbContextEntityFinder _dbContextEntityFinder;
+
+        public EfGenericRepositoryRegistrar(IDbContextEntityFinder dbContextEntityFinder)
         {
+            _dbContextEntityFinder = dbContextEntityFinder;
             Logger = NullLogger.Instance;
         }
 
-        public void RegisterForDbContext(Type dbContextType, IIocManager iocManager)
+        public void RegisterForDbContext(
+            Type dbContextType, 
+            IIocManager iocManager, 
+            AutoRepositoryTypesAttribute defaultAutoRepositoryTypesAttribute)
         {
-            var autoRepositoryAttr = dbContextType.GetTypeInfo().GetSingleAttributeOrNull<AutoRepositoryTypesAttribute>() ??
-                                     EfCoreAutoRepositoryTypes.Default;
+            var autoRepositoryAttr = dbContextType.GetTypeInfo().GetSingleAttributeOrNull<AutoRepositoryTypesAttribute>() ?? defaultAutoRepositoryTypesAttribute;
 
             RegisterForDbContext(
                 dbContextType,
@@ -37,15 +42,15 @@ namespace Abp.EntityFrameworkCore.Repositories
                 RegisterForDbContext(
                     dbContextType,
                     iocManager,
-                    EfCoreAutoRepositoryTypes.Default.RepositoryInterface,
-                    EfCoreAutoRepositoryTypes.Default.RepositoryInterfaceWithPrimaryKey,
+                    defaultAutoRepositoryTypesAttribute.RepositoryInterface,
+                    defaultAutoRepositoryTypesAttribute.RepositoryInterfaceWithPrimaryKey,
                     autoRepositoryAttr.RepositoryImplementation,
                     autoRepositoryAttr.RepositoryImplementationWithPrimaryKey
                 );
             }
         }
 
-        private static void RegisterForDbContext(
+        private void RegisterForDbContext(
             Type dbContextType, 
             IIocManager iocManager,
             Type repositoryInterface,
@@ -53,7 +58,7 @@ namespace Abp.EntityFrameworkCore.Repositories
             Type repositoryImplementation,
             Type repositoryImplementationWithPrimaryKey)
         {
-            foreach (var entityTypeInfo in DbContextHelper.GetEntityTypeInfos(dbContextType))
+            foreach (var entityTypeInfo in _dbContextEntityFinder.GetEntityTypeInfos(dbContextType))
             {
                 var primaryKeyType = EntityHelper.GetPrimaryKeyType(entityTypeInfo.EntityType);
                 if (primaryKeyType == typeof(int))
