@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Reflection;
 using Abp.Domain.Repositories;
 using Abp.EntityFrameworkCore.Tests.Domain;
 using Abp.EntityFrameworkCore.Tests.Ef;
@@ -10,7 +9,6 @@ using Castle.Windsor.MsDependencyInjection;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 using Abp.Configuration.Startup;
-using Abp.Dependency;
 using Abp.Reflection.Extensions;
 
 namespace Abp.EntityFrameworkCore.Tests
@@ -30,6 +28,7 @@ namespace Abp.EntityFrameworkCore.Tests
                 services
             );
 
+            //BloggingDbContext
             var blogDbOptionsBuilder = new DbContextOptionsBuilder<BloggingDbContext>();
             blogDbOptionsBuilder.UseInMemoryDatabase()
                 .UseInternalServiceProvider(serviceProvider);
@@ -41,6 +40,7 @@ namespace Abp.EntityFrameworkCore.Tests
                     .LifestyleSingleton()
             );
 
+            //SupportDbContext
             var supportDbOptionsBuilder = new DbContextOptionsBuilder<SupportDbContext>();
             supportDbOptionsBuilder.UseInMemoryDatabase()
                 .UseInternalServiceProvider(serviceProvider);
@@ -52,6 +52,7 @@ namespace Abp.EntityFrameworkCore.Tests
                     .LifestyleSingleton()
             );
 
+            //Custom repository
             Configuration.ReplaceService<IRepository<Post, Guid>>(() =>
             {
                 IocManager.IocContainer.Register(

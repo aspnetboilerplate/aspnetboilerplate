@@ -22,7 +22,7 @@ namespace Abp.TestBase.SampleApplication.Tests.EntityFramework
         {
             _companyRepository.GetDbContext().ShouldBeOfType<SampleApplicationDbContext>();
         }
-
+        
         [Fact]
         public void Should_Get_IocResolver()
         {

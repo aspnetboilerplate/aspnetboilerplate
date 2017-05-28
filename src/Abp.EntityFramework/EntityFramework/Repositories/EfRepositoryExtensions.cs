@@ -2,6 +2,7 @@ using System;
 using System.Data.Entity;
 using Abp.Domain.Entities;
 using Abp.Domain.Repositories;
+using Abp.Reflection;
 
 namespace Abp.EntityFramework.Repositories
 {
@@ -14,6 +15,12 @@ namespace Abp.EntityFramework.Repositories
             if (repositoryWithDbContext == null)
             {
                 throw new ArgumentException("Given repository does not implement IRepositoryWithDbContext", nameof(repository));
+            }
+
+            var targetWithDbContext = CastleProxyHelper.GetProxyTargetOrNull(repository) as IRepositoryWithDbContext;
+            if (targetWithDbContext != null)
+            {
+                return targetWithDbContext.GetDbContext();
             }
 
             return repositoryWithDbContext.GetDbContext();

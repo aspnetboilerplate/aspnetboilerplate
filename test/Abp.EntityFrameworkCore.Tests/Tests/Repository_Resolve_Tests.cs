@@ -2,6 +2,8 @@
 using System.Linq;
 using System.Reflection;
 using Abp.Domain.Repositories;
+using Abp.Domain.Uow;
+using Abp.EntityFrameworkCore.Repositories;
 using Abp.EntityFrameworkCore.Tests.Domain;
 using Abp.EntityFrameworkCore.Tests.Ef;
 using Shouldly;
@@ -67,6 +69,45 @@ namespace Abp.EntityFrameworkCore.Tests.Tests
             activeTickets = repo2.GetActiveList();
             activeTickets.Count.ShouldBe(1);
             activeTickets[0].IsActive.ShouldBeTrue();
+        }
+
+        [Fact]
+        public void Should_Get_DbContext()
+        {
+            Resolve<IPostRepository>().GetDbContext().ShouldBeOfType<BloggingDbContext>();
+        }
+
+        [Fact]
+        public void Should_Get_DbContext_2()
+        {
+            using (var uow = Resolve<IUnitOfWorkManager>().Begin())
+            {
+                Resolve<IRepository<Blog>>().GetDbContext().ShouldBeOfType<BloggingDbContext>();
+
+                uow.Complete();
+            }
+        }
+
+        [Fact]
+        public void Should_Get_DbContext_From_Second_DbContext()
+        {
+            using (var uow = Resolve<IUnitOfWorkManager>().Begin())
+            {
+                Resolve<IRepository<Ticket>>().GetDbContext().ShouldBeOfType<SupportDbContext>();
+
+                uow.Complete();
+            }
+        }
+
+        [Fact]
+        public void Should_Get_DbContext_From_Second_DbContext_With_Custom_Repository()
+        {
+            using (var uow = Resolve<IUnitOfWorkManager>().Begin())
+            {
+                Resolve<ISupportRepository<Ticket>>().GetDbContext().ShouldBeOfType<SupportDbContext>();
+
+                uow.Complete();
+            }
         }
     }
 }
