@@ -30,14 +30,25 @@ namespace Abp.EntityFrameworkCore.Tests
                 services
             );
 
-            var builder = new DbContextOptionsBuilder<BloggingDbContext>();
-            builder.UseInMemoryDatabase()
+            var blogDbOptionsBuilder = new DbContextOptionsBuilder<BloggingDbContext>();
+            blogDbOptionsBuilder.UseInMemoryDatabase()
                 .UseInternalServiceProvider(serviceProvider);
 
             IocManager.IocContainer.Register(
                 Component
                     .For<DbContextOptions<BloggingDbContext>>()
-                    .Instance(builder.Options)
+                    .Instance(blogDbOptionsBuilder.Options)
+                    .LifestyleSingleton()
+            );
+
+            var supportDbOptionsBuilder = new DbContextOptionsBuilder<SupportDbContext>();
+            supportDbOptionsBuilder.UseInMemoryDatabase()
+                .UseInternalServiceProvider(serviceProvider);
+
+            IocManager.IocContainer.Register(
+                Component
+                    .For<DbContextOptions<SupportDbContext>>()
+                    .Instance(supportDbOptionsBuilder.Options)
                     .LifestyleSingleton()
             );
 
