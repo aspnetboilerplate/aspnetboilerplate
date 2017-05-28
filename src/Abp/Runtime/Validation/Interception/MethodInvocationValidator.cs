@@ -59,6 +59,11 @@ namespace Abp.Runtime.Validation.Interception
         {
             CheckInitialized();
 
+            if (Parameters.IsNullOrEmpty())
+            {
+                return;
+            }
+
             if (!Method.IsPublic)
             {
                 return;
@@ -69,14 +74,14 @@ namespace Abp.Runtime.Validation.Interception
                 return;                
             }
 
-            if (Parameters.IsNullOrEmpty())
-            {
-                return;
-            }
-
             if (Parameters.Length != ParameterValues.Length)
             {
                 throw new Exception("Method parameter count does not match with argument count!");
+            }
+
+            if (ValidationErrors.Any() && HasSingleNullArgument())
+            {
+                ThrowValidationError();
             }
 
             for (var i = 0; i < Parameters.Length; i++)
@@ -86,10 +91,7 @@ namespace Abp.Runtime.Validation.Interception
 
             if (ValidationErrors.Any())
             {
-                throw new AbpValidationException(
-                    "Method arguments are not valid! See ValidationErrors for details.",
-                    ValidationErrors
-                    );
+                ThrowValidationError();
             }
 
             foreach (var objectToBeNormalized in ObjectsToBeNormalized)
@@ -98,7 +100,7 @@ namespace Abp.Runtime.Validation.Interception
             }
         }
 
-        private void CheckInitialized()
+        protected virtual void CheckInitialized()
         {
             if (Method == null)
             {
@@ -114,6 +116,19 @@ namespace Abp.Runtime.Validation.Interception
             }
 
             return ReflectionHelper.GetSingleAttributeOfMemberOrDeclaringTypeOrDefault<DisableValidationAttribute>(Method) != null;
+        }
+
+        protected virtual bool HasSingleNullArgument()
+        {
+            return Parameters.Length == 1 && ParameterValues[0] == null;
+        }
+
+        protected virtual void ThrowValidationError()
+        {
+            throw new AbpValidationException(
+                "Method arguments are not valid! See ValidationErrors for details.",
+                ValidationErrors
+            );
         }
 
         /// <summary>
