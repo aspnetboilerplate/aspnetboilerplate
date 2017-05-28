@@ -1,4 +1,5 @@
 ﻿using System.Linq;
+using System.Reflection;
 
 namespace Abp.Reflection
 {
@@ -11,7 +12,7 @@ namespace Abp.Reflection
                 return null;
             }
 
-            var targetField = repository.GetType()
+            var targetField = repository.GetType().GetTypeInfo()
                 .GetFields()
                 .FirstOrDefault(f => f.Name == "__target");
 

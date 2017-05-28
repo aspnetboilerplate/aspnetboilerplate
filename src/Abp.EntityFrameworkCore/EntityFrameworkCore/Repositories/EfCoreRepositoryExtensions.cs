@@ -1,4 +1,5 @@
 using System;
+using Abp.Reflection;
 using Abp.Domain.Entities;
 using Abp.Domain.Repositories;
 using Microsoft.EntityFrameworkCore;
