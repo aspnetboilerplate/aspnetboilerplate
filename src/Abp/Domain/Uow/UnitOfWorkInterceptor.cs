@@ -31,7 +31,16 @@ namespace Abp.Domain.Uow
                 invocation.Proceed();
                 return;
             }
-
+            
+            if (typeof(Abp.Domain.Repositories.IRepository).IsAssignableFrom(invocation.MethodInvocationTarget.DeclaringType))
+            {
+                // Disable Transaction
+                // for example:I only read some data in the action of controller,at the moment ,I don't need a transaction.
+                // If need uow in the action of controller,I must set the UnitOfWOrkAttribute on the action of controller.
+                // The transaction is the important,need to indicate by UnitOfWOrkAttribute,not auto in the system.
+                unitOrWorkAttr.IsTransactional = false;
+            }
+            
             //No current uow, run a new one
             PerformUow(invocation, unitOfWorkAttr.CreateOptions());
         }
