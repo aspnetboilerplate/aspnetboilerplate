@@ -10,10 +10,12 @@ namespace Abp.EntityFramework
     public class EfBasedSecondaryOrmRegistrar : ISecondaryOrmRegistrar
     {
         private readonly Type _dbContextType;
+        private readonly IDbContextEntityFinder _dbContextEntityFinder;
 
-        public EfBasedSecondaryOrmRegistrar(Type dbContextType)
+        public EfBasedSecondaryOrmRegistrar(Type dbContextType, IDbContextEntityFinder dbContextEntityFinder)
         {
             _dbContextType = dbContextType;
+            _dbContextEntityFinder = dbContextEntityFinder;
         }
 
         public string OrmContextKey => AbpConsts.Orms.EntityFramework;
@@ -23,7 +25,7 @@ namespace Abp.EntityFramework
             AutoRepositoryTypesAttribute autoRepositoryAttr = _dbContextType.GetSingleAttributeOrNull<AutoRepositoryTypesAttribute>()
                                                               ?? defaultRepositoryTypes;
 
-            foreach (EntityTypeInfo entityTypeInfo in DbContextHelper.GetEntityTypeInfos(_dbContextType))
+            foreach (EntityTypeInfo entityTypeInfo in _dbContextEntityFinder.GetEntityTypeInfos(_dbContextType))
             {
                 Type primaryKeyType = EntityHelper.GetPrimaryKeyType(entityTypeInfo.EntityType);
                 if (primaryKeyType == typeof(int))

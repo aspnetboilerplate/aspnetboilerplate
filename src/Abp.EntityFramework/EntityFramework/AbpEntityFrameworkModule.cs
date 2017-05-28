@@ -19,7 +19,7 @@ namespace Abp.EntityFramework
     /// <summary>
     /// This module is used to implement "Data Access Layer" in EntityFramework.
     /// </summary>
-    [DependsOn(typeof(AbpKernelModule))]
+    [DependsOn(typeof(AbpEntityFrameworkCommonModule))]
     public class AbpEntityFrameworkModule : AbpModule
     {
         private static WithNoLockInterceptor _withNoLockInterceptor;
@@ -94,25 +94,24 @@ namespace Abp.EntityFramework
                 return;
             }
 
-            using (var repositoryRegistrar = IocManager.ResolveAsDisposable<IEntityFrameworkGenericRepositoryRegistrar>())
+            using (var scope = IocManager.CreateScope())
             {
+                var repositoryRegistrar = scope.Resolve<IEfGenericRepositoryRegistrar>();
+
                 foreach (var dbContextType in dbContextTypes)
                 {
                     Logger.Debug("Registering DbContext: " + dbContextType.AssemblyQualifiedName);
-                    repositoryRegistrar.Object.RegisterForDbContext(dbContextType, IocManager);
+                    repositoryRegistrar.RegisterForDbContext(dbContextType, IocManager, EfAutoRepositoryTypes.Default);
 
                     IocManager.IocContainer.Register(
                         Component.For<ISecondaryOrmRegistrar>()
                             .Named(Guid.NewGuid().ToString("N"))
-                            .Instance(new EfBasedSecondaryOrmRegistrar(dbContextType))
+                            .Instance(new EfBasedSecondaryOrmRegistrar(dbContextType, scope.Resolve<IDbContextEntityFinder>()))
                             .LifestyleTransient()
                     );
                 }
-            }
-
-            using (var dbContextMatcher = IocManager.ResolveAsDisposable<IDbContextTypeMatcher>())
-            {
-                dbContextMatcher.Object.Populate(dbContextTypes);
+                
+                scope.Resolve<IDbContextTypeMatcher>().Populate(dbContextTypes);
             }
         }
     }
