@@ -8,9 +8,20 @@ namespace Abp.Domain.Entities
 {
     public static class ExtendableObjectExtensions
     {
-        public static T GetData<T>([NotNull] this IExtendableObject extendableObject, string name)
+        public static T GetData<T>([NotNull] this IExtendableObject extendableObject, [NotNull] string name, bool handleType = false)
+        {
+            return extendableObject.GetData<T>(
+                name,
+                handleType
+                    ? new JsonSerializer { TypeNameHandling = TypeNameHandling.All }
+                    : JsonSerializer.CreateDefault()
+            );
+        }
+
+        public static T GetData<T>([NotNull] this IExtendableObject extendableObject, [NotNull] string name, [CanBeNull] JsonSerializer jsonSerializer)
         {
             Check.NotNull(extendableObject, nameof(extendableObject));
+            Check.NotNull(name, nameof(name));
 
             if (extendableObject.ExtensionData == null)
             {
@@ -31,13 +42,30 @@ namespace Abp.Domain.Entities
             }
             else
             {
-                return (T)prop.ToObject(typeof(T));
+                return (T)prop.ToObject(typeof(T), jsonSerializer ?? JsonSerializer.CreateDefault());
             }
         }
 
-        public static void SetData<T>([NotNull] this IExtendableObject extendableObject, string name, T value)
+        public static void SetData<T>([NotNull] this IExtendableObject extendableObject, [NotNull] string name, [CanBeNull] T value, bool handleType = false)
+        {
+            extendableObject.SetData(
+                name,
+                value,
+                handleType
+                    ? new JsonSerializer {TypeNameHandling = TypeNameHandling.All}
+                    : JsonSerializer.CreateDefault()
+            );
+        }
+
+        public static void SetData<T>([NotNull] this IExtendableObject extendableObject, [NotNull] string name, [CanBeNull] T value, [CanBeNull] JsonSerializer jsonSerializer)
         {
             Check.NotNull(extendableObject, nameof(extendableObject));
+            Check.NotNull(name, nameof(name));
+
+            if (jsonSerializer == null)
+            {
+                jsonSerializer = JsonSerializer.CreateDefault();
+            }
 
             if (extendableObject.ExtensionData == null)
             {
@@ -51,7 +79,7 @@ namespace Abp.Domain.Entities
 
             var json = JObject.Parse(extendableObject.ExtensionData);
 
-            if (EqualityComparer<T>.Default.Equals(value, default(T)))
+            if (value == null || EqualityComparer<T>.Default.Equals(value, default(T)))
             {
                 if (json[name] != null)
                 {
@@ -64,7 +92,7 @@ namespace Abp.Domain.Entities
             }
             else
             {
-                json[name] = JToken.FromObject(value);
+                json[name] = JToken.FromObject(value, jsonSerializer);
             }
 
             var data = json.ToString(Formatting.None);

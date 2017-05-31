@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using Abp.Domain.Entities;
+using Abp.Extensions;
 using Abp.Json;
 using Shouldly;
 using Xunit;
@@ -52,7 +53,7 @@ namespace Abp.Tests.Domain.Entities
 
             obj.ToJsonString().ShouldBe(obj2.ToJsonString());
 
-            entity.SetData("ComplexData", (MyComplexType) null);
+            entity.SetData("ComplexData", (MyComplexType)null);
             entity.GetData<MyComplexType>("ComplexData").ShouldBe(null);
         }
 
@@ -104,6 +105,37 @@ namespace Abp.Tests.Domain.Entities
             entity.GetData<MyComplexType>("ComplexData").ShouldBe(null);
         }
 
+        [Fact]
+        public void Should_Support_Inheritance_Of_Complex_Objects()
+        {
+            var entity = new MyEntity();
+            entity.SetData<IAnimal>("MyCat", new Tiger(), true);
+            var tiger = entity.GetData<IAnimal>("MyCat", true) as Tiger;
+            tiger.ShouldNotBeNull();
+        }
+
+        [Fact]
+        public void Should_Support_Inheritance_Of_Complex_Objects_Inside_Array()
+        {
+            var entity = new MyEntity();
+
+            var animals = new AnimalBase[]
+            {
+                new Cat {Friend = new Lion()},
+                new Lion(),
+                new Tiger()
+            };
+
+            entity.SetData("MyAnimals", animals, true);
+            var animals2 = entity.GetData<AnimalBase[]>("MyAnimals", true);
+
+            animals2.Length.ShouldBe(3);
+            animals2[0].ShouldBeOfType<Cat>();
+            animals2[0].As<Cat>().Friend.ShouldBeOfType<Lion>();
+            animals2[1].ShouldBeOfType<Lion>();
+            animals2[2].ShouldBeOfType<Tiger>();
+        }
+
         private class MyEntity : Entity, IExtendableObject
         {
             public string ExtensionData { get; set; }
@@ -120,6 +152,42 @@ namespace Abp.Tests.Domain.Entities
         {
             public string Value1 { get; set; }
             public int? Value2 { get; set; }
+        }
+
+        public interface IAnimal
+        {
+            string Name { get; }
+        }
+
+        public abstract class AnimalBase : IAnimal
+        {
+            public string Name => GetType().Name;
+        }
+
+        public class Cat : AnimalBase
+        {
+            public IAnimal Friend { get; set; }
+
+            public virtual void CatMethod()
+            {
+
+            }
+        }
+
+        public class Lion : AnimalBase
+        {
+            public void LionMethod()
+            {
+
+            }
+        }
+
+        public class Tiger : Cat
+        {
+            public void TigerMethod()
+            {
+
+            }
         }
     }
 }
