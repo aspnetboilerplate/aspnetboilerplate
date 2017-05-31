@@ -50,8 +50,42 @@ namespace Abp.Tests.Domain.Entities
 
             obj.ToJsonString().ShouldBe(obj2.ToJsonString());
 
-            entity.SetData("ComplexData", null);
+            entity.SetData("ComplexData", (MyComplexType) null);
             entity.GetData<MyComplexType>("ComplexData").ShouldBe(null);
+        }
+
+        [Fact]
+        public void Should_Set_ExtensionData_To_Null_If_No_Properties_Remain_With_Setting_Properties_To_Default()
+        {
+            var entity = new MyEntity();
+
+            entity.ExtensionData.ShouldBeNull(); //It's null at the beginning
+
+            entity.SetData("Name", "Douglas");
+            entity.SetData("Age", 42);
+            entity.ExtensionData.ShouldNotBeNull();
+
+            entity.SetData<string>("Name", null); //setting to default removes data
+            entity.ExtensionData.ShouldNotBeNull(); //but there is an "Age" property.
+            entity.SetData("Age", 0); //setting to default removes data, no data remains
+            entity.ExtensionData.ShouldBeNull(); //Now, it's null
+        }
+
+        [Fact]
+        public void Should_Set_ExtensionData_To_Null_If_No_Properties_Remain_With_Removing_Properties()
+        {
+            var entity = new MyEntity();
+
+            entity.ExtensionData.ShouldBeNull(); //It's null at the beginning
+
+            entity.SetData("Name", "Douglas");
+            entity.SetData("Age", 42);
+            entity.ExtensionData.ShouldNotBeNull();
+
+            entity.RemoveData("Name");
+            entity.ExtensionData.ShouldNotBeNull();
+            entity.RemoveData("Age");
+            entity.ExtensionData.ShouldBeNull(); //Now, it's null
         }
 
         [Fact]
@@ -65,6 +99,7 @@ namespace Abp.Tests.Domain.Entities
             entity.GetData<DateTime?>("BirthDate").ShouldBe(null);
             Assert.Equal(0, entity.GetData<byte>("Age"));
             Assert.Equal(null, entity.GetData<byte?>("Age"));
+            entity.GetData<MyComplexType>("ComplexData").ShouldBe(null);
         }
 
         private class MyEntity : Entity, IExtendableObject
