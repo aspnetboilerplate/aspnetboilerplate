@@ -18,7 +18,12 @@ namespace Abp.Domain.Entities
             }
 
             var json = JObject.Parse(extendableObject.ExtensionData);
+
             var prop = json[name];
+            if (prop == null)
+            {
+                return default(T);
+            }
 
             if (TypeHelper.IsPrimitiveExtendedIncludingNullable(typeof(T)))
             {

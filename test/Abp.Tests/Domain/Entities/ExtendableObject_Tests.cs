@@ -25,6 +25,8 @@ namespace Abp.Tests.Domain.Entities
 
             entity.SetData("BirthDate", new DateTime(2015, 05, 25, 13, 24, 00, DateTimeKind.Utc));
             Assert.Equal(new DateTime(2015, 05, 25, 13, 24, 00, DateTimeKind.Utc), entity.GetData<DateTime>("BirthDate"));
+
+            entity.GetData<string>("NonExistingValue").ShouldBe(null);
         }
 
         [Fact]
