@@ -36,11 +36,7 @@ namespace Abp.Domain.Repositories
             where TEntity : class, IEntity<TPrimaryKey>
             where TProperty : class
         {
-            var repo = ProxyHelper.UnProxy(repository) as ISupportsExplicitLoading<TEntity, TPrimaryKey>;
-            if (repo != null)
-            {
-                AsyncHelper.RunSync(() => repo.EnsureLoadedAsync(entity, propertyExpression, default(CancellationToken)));
-            }
+            AsyncHelper.RunSync(() => repository.EnsureLoadedAsync(entity, propertyExpression));
         }
 
         public static async Task EnsureLoadedAsync<TEntity, TPrimaryKey, TProperty>(
@@ -67,11 +63,7 @@ namespace Abp.Domain.Repositories
             where TEntity : class, IEntity<TPrimaryKey>
             where TProperty : class
         {
-            var repo = ProxyHelper.UnProxy(repository) as ISupportsExplicitLoading<TEntity, TPrimaryKey>;
-            if (repo != null)
-            {
-                AsyncHelper.RunSync(() => repo.EnsureLoadedAsync(entity, propertyExpression, default(CancellationToken)));
-            }
+            AsyncHelper.RunSync(() => repository.EnsureLoadedAsync(entity, propertyExpression));
         }
 
         public static IIocResolver GetIocResolver<TEntity, TPrimaryKey>(this IRepository<TEntity, TPrimaryKey> repository)
