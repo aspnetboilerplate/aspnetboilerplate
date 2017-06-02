@@ -235,6 +235,15 @@ namespace Abp.EntityFrameworkCore.Repositories
             return Context.Entry(entity).Collection(propertyExpression).LoadAsync(cancellationToken);
         }
 
+        public Task EnsureLoadedAsync<TProperty>(
+            TEntity entity,
+            Expression<Func<TEntity, TProperty>> propertyExpression,
+            CancellationToken cancellationToken)
+            where TProperty : class
+        {
+            return Context.Entry(entity).Reference(propertyExpression).LoadAsync(cancellationToken);
+        }
+
         private TEntity GetFromChangeTrackerOrNull(TPrimaryKey id)
         {
             var entry = Context.ChangeTracker.Entries()

@@ -15,5 +15,11 @@ namespace Abp.Domain.Repositories
             Expression<Func<TEntity, IEnumerable<TProperty>>> propertyExpression,
             CancellationToken cancellationToken)
             where TProperty : class;
+
+        Task EnsureLoadedAsync<TProperty>(
+            TEntity entity,
+            Expression<Func<TEntity, TProperty>> propertyExpression,
+            CancellationToken cancellationToken)
+            where TProperty : class;
     }
 }

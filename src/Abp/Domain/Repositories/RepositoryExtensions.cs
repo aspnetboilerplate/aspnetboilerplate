@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 using Abp.Dependency;
 using Abp.Domain.Entities;
 using Abp.Reflection;
+using Abp.Threading;
 
 namespace Abp.Domain.Repositories
 {
@@ -24,6 +25,52 @@ namespace Abp.Domain.Repositories
             if (repo != null)
             {
                 await repo.EnsureLoadedAsync(entity, propertyExpression, cancellationToken);
+            }
+        }
+
+        public static void EnsureLoaded<TEntity, TPrimaryKey, TProperty>(
+            this IRepository<TEntity, TPrimaryKey> repository,
+            TEntity entity,
+            Expression<Func<TEntity, IEnumerable<TProperty>>> propertyExpression
+        )
+            where TEntity : class, IEntity<TPrimaryKey>
+            where TProperty : class
+        {
+            var repo = ProxyHelper.UnProxy(repository) as ISupportsExplicitLoading<TEntity, TPrimaryKey>;
+            if (repo != null)
+            {
+                AsyncHelper.RunSync(() => repo.EnsureLoadedAsync(entity, propertyExpression, default(CancellationToken)));
+            }
+        }
+
+        public static async Task EnsureLoadedAsync<TEntity, TPrimaryKey, TProperty>(
+            this IRepository<TEntity, TPrimaryKey> repository,
+            TEntity entity,
+            Expression<Func<TEntity, TProperty>> propertyExpression,
+            CancellationToken cancellationToken = default(CancellationToken)
+        )
+            where TEntity : class, IEntity<TPrimaryKey>
+            where TProperty : class
+        {
+            var repo = ProxyHelper.UnProxy(repository) as ISupportsExplicitLoading<TEntity, TPrimaryKey>;
+            if (repo != null)
+            {
+                await repo.EnsureLoadedAsync(entity, propertyExpression, cancellationToken);
+            }
+        }
+
+        public static void EnsureLoaded<TEntity, TPrimaryKey, TProperty>(
+            this IRepository<TEntity, TPrimaryKey> repository,
+            TEntity entity,
+            Expression<Func<TEntity, TProperty>> propertyExpression
+        )
+            where TEntity : class, IEntity<TPrimaryKey>
+            where TProperty : class
+        {
+            var repo = ProxyHelper.UnProxy(repository) as ISupportsExplicitLoading<TEntity, TPrimaryKey>;
+            if (repo != null)
+            {
+                AsyncHelper.RunSync(() => repo.EnsureLoadedAsync(entity, propertyExpression, default(CancellationToken)));
             }
         }
 
