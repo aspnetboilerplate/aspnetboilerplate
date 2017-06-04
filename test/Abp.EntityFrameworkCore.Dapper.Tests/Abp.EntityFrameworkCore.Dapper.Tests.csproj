@@ -18,6 +18,7 @@
     <PackageReference Include="Microsoft.EntityFrameworkCore.Sqlite" Version="1.1.2" />
     <PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="1.1.2" PrivateAssets="All" />
     <DotNetCliToolReference Include="Microsoft.EntityFrameworkCore.Tools.DotNet" Version="1.0.0" />
+    <PackageReference Include="Shouldly" Version="2.8.2" />
     <PackageReference Include="System.Data.SQLite.Core" Version="1.0.105.1" />
   </ItemGroup>
 
@@ -26,12 +27,6 @@
     <ProjectReference Include="..\..\src\Abp.EntityFrameworkCore\Abp.EntityFrameworkCore.csproj" />
     <ProjectReference Include="..\..\src\Abp.TestBase\Abp.TestBase.csproj" />
     <ProjectReference Include="..\..\src\Abp\Abp.csproj" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <Reference Include="Shouldly">
-      <HintPath>C:\Users\OSOYKAN\.nuget\packages\shouldly\2.8.2\lib\net451\Shouldly.dll</HintPath>
-    </Reference>
   </ItemGroup>
 
   <ItemGroup>
