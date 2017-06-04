@@ -1,4 +1,5 @@
-﻿using System.Reflection;
+﻿using System;
+using System.Reflection;
 using Abp.Collections.Extensions;
 using Abp.Dependency;
 using Abp.EntityFramework;
@@ -7,6 +8,7 @@ using Abp.EntityFrameworkCore.Configuration;
 using Abp.EntityFrameworkCore.Repositories;
 using Abp.EntityFrameworkCore.Uow;
 using Abp.Modules;
+using Abp.Orm;
 using Abp.Reflection;
 using Abp.Reflection.Extensions;
 using Castle.MicroKernel.Registration;
@@ -62,18 +64,24 @@ namespace Abp.EntityFrameworkCore
                 return;
             }
 
-            using (var repositoryRegistrar = IocManager.ResolveAsDisposable<IEfGenericRepositoryRegistrar>())
+            using (IScopedIocResolver scope = IocManager.CreateScope())
             {
                 foreach (var dbContextType in dbContextTypes)
                 {
                     Logger.Debug("Registering DbContext: " + dbContextType.AssemblyQualifiedName);
-                    repositoryRegistrar.Object.RegisterForDbContext(dbContextType, IocManager, EfCoreAutoRepositoryTypes.Default);
-                }
-            }
+                    scope.Resolve<IEfGenericRepositoryRegistrar>().RegisterForDbContext(dbContextType, IocManager, EfCoreAutoRepositoryTypes.Default);
+#if NET46
+                      IocManager.IocContainer.Register(
+                        Component.For<ISecondaryOrmRegistrar>()
+                                 .Named(Guid.NewGuid().ToString("N"))
+                                 .Instance(new EfCoreBasedSecondaryOrmRegistrar(dbContextType, scope.Resolve<IDbContextEntityFinder>()))
+                                 .LifestyleTransient()
+                    );
+#endif
 
-            using (var dbContextMatcher = IocManager.ResolveAsDisposable<IDbContextTypeMatcher>())
-            {
-                dbContextMatcher.Object.Populate(dbContextTypes);
+                }
+
+                scope.Resolve<IDbContextTypeMatcher>().Populate(dbContextTypes);
             }
         }
     }

@@ -12,6 +12,7 @@ namespace Abp.Dapper
         public override void PreInitialize()
         {
             Configuration.UnitOfWork.IsTransactionScopeAvailable = false;
+            Configuration.UnitOfWork.IsTransactional = true;
         }
 
         public override void Initialize()
@@ -32,6 +33,11 @@ namespace Abp.Dapper
                     if (registrar.OrmContextKey == AbpConsts.Orms.NHibernate)
                     {
                         registrar.RegisterRepositories(IocManager, NhBasedDapperAutoRepositoryTypes.Default);
+                    }
+                    
+                    if (registrar.OrmContextKey == AbpConsts.Orms.EntityFrameworkCore)
+                    {
+                        registrar.RegisterRepositories(IocManager, EfBasedDapperAutoRepositoryTypes.Default);
                     }
                 });
             }
