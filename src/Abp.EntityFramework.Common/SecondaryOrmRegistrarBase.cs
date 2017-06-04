@@ -9,12 +9,12 @@ using Abp.Reflection.Extensions;
 
 namespace Abp.EntityFramework
 {
-    public abstract class SecondayOrmRegistrarBase : ISecondaryOrmRegistrar
+    public abstract class SecondaryOrmRegistrarBase : ISecondaryOrmRegistrar
     {
         private readonly IDbContextEntityFinder _dbContextEntityFinder;
         private readonly Type _dbContextType;
 
-        protected SecondayOrmRegistrarBase(Type dbContextType, IDbContextEntityFinder dbContextEntityFinder)
+        protected SecondaryOrmRegistrarBase(Type dbContextType, IDbContextEntityFinder dbContextEntityFinder)
         {
             _dbContextType = dbContextType;
             _dbContextEntityFinder = dbContextEntityFinder;

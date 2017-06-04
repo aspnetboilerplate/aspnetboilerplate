@@ -5,7 +5,7 @@ using Abp.EntityFramework;
 
 namespace Abp.EntityFrameworkCore
 {
-    public class EfCoreBasedSecondaryOrmRegistrar : SecondayOrmRegistrarBase
+    public class EfCoreBasedSecondaryOrmRegistrar : SecondaryOrmRegistrarBase
     {
         public EfCoreBasedSecondaryOrmRegistrar(Type dbContextType, IDbContextEntityFinder dbContextEntityFinder)
             : base(dbContextType, dbContextEntityFinder)

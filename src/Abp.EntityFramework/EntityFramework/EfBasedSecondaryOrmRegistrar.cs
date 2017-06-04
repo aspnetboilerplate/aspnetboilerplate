@@ -2,7 +2,7 @@
 
 namespace Abp.EntityFramework
 {
-    public class EfBasedSecondaryOrmRegistrar : SecondayOrmRegistrarBase
+    public class EfBasedSecondaryOrmRegistrar : SecondaryOrmRegistrarBase
     {
         public EfBasedSecondaryOrmRegistrar(Type dbContextType, IDbContextEntityFinder dbContextEntityFinder)
             : base(dbContextType, dbContextEntityFinder)
