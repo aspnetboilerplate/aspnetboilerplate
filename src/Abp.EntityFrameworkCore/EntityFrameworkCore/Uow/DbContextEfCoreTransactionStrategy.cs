@@ -41,14 +41,16 @@ namespace Abp.EntityFrameworkCore.Uow
             }
             else
             {
+                var getActiveDbTransaction = activeTransaction.DbContextTransaction.GetDbTransaction();
+
                 dbContext = dbContextResolver.Resolve<TDbContext>(
                     connectionString,
-                    activeTransaction.DbContextTransaction.GetDbTransaction().Connection
+                    getActiveDbTransaction.Connection
                 );
 
                 if (dbContext.HasRelationalTransactionManager())
                 {
-                    dbContext.Database.UseTransaction(activeTransaction.DbContextTransaction.GetDbTransaction());
+                    dbContext.Database.UseTransaction(getActiveDbTransaction);
                 }
                 else
                 {
