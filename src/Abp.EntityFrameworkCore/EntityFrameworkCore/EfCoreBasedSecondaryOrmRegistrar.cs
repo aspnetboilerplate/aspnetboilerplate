@@ -1,5 +1,4 @@
-﻿#if NET46
-using System;
+﻿using System;
 
 using Abp.EntityFramework;
 
@@ -15,4 +14,3 @@ namespace Abp.EntityFrameworkCore
         public override string OrmContextKey { get; } = AbpConsts.Orms.EntityFrameworkCore;
     }
 }
-#endif

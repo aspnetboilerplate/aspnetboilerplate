@@ -7,6 +7,7 @@ namespace Abp.Dapper.NHibernate.Tests.Nhibernate
         public PersonMap()
         {
             Table("Persons");
+            Map(x => x.Id).Key(KeyType.Identity);
             AutoMap();
         }
     }
