@@ -161,7 +161,7 @@ namespace Abp.Application.Services
 
         protected virtual Task<TEntity> GetEntityByIdAsync(TPrimaryKey id)
         {
-            return Repository.GetAsync(id);
+            return Repository.FirstOrDefaultAsync(id);
         }
     }
 }
