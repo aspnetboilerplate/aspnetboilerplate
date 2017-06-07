@@ -10,10 +10,8 @@ using Abp.EntityFrameworkCore.Dapper.Tests.Ef;
 using Abp.Modules;
 using Abp.Reflection.Extensions;
 using Abp.TestBase;
-
 using Castle.MicroKernel.Registration;
 using DapperExtensions.Sql;
-
 using Microsoft.Data.Sqlite;
 using Microsoft.EntityFrameworkCore;
 

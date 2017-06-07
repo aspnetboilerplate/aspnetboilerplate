@@ -13,7 +13,6 @@ namespace Abp.Dapper
 #if NET46
             Configuration.UnitOfWork.IsTransactionScopeAvailable = false;
 #endif
-            Configuration.UnitOfWork.IsTransactional = true;
         }
 
         public override void Initialize()

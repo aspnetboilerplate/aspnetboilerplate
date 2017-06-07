@@ -109,7 +109,7 @@ namespace Abp.EntityFrameworkCore.Dapper.Tests.Tests
 
             try
             {
-                using (IUnitOfWorkCompleteHandle uow = Resolve<IUnitOfWorkManager>().Begin())
+                using (IUnitOfWorkCompleteHandle uow = Resolve<IUnitOfWorkManager>().Begin(new UnitOfWorkOptions {IsTransactional = true}))
                 {
                     await _blogDapperRepository.ExecuteAsync("Update Blogs Set Name = @name where Id =@id", new { id = blogId, name = "Oguzhan_New_Blog" });
 
