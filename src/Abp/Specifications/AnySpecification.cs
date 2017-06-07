@@ -4,19 +4,29 @@ using System.Linq.Expressions;
 namespace Abp.Specifications
 {
     /// <summary>
-    /// Represents the specification that can be satisfied by the given object
-    /// in any circumstance.
+    /// Any specification ,raw is true specification
     /// </summary>
-    /// <typeparam name="T">The type of the object to which the specification is applied.</typeparam>
-    public sealed class AnySpecification<T> : Specification<T>
+    /// <typeparam name="TEntity">Type of entity in this specification</typeparam>
+    public sealed class AnySpecification<TEntity>
+        : Specification<TEntity>
+        where TEntity : class
     {
+        #region Specification overrides
+
         /// <summary>
-        /// Gets the LINQ expression which represents the current specification.
+        /// <see cref="Specification{TEntity}"/>
         /// </summary>
-        /// <returns>The LINQ expression.</returns>
-        public override Expression<Func<T, bool>> ToExpression()
+        /// <returns><see cref="Specification{TEntity}"/></returns>
+        public override System.Linq.Expressions.Expression<Func<TEntity, bool>> SatisfiedBy()
         {
-            return o => true;
+            //Create "result variable" transform adhoc execution plan in prepared plan
+            //for more info: http://geeks.ms/blogs/unai/2010/07/91/ef-4-0-performance-tips-1.aspx
+            bool result = true;
+
+            Expression<Func<TEntity, bool>> trueExpression = t => result;
+            return trueExpression;
         }
+
+        #endregion
     }
 }

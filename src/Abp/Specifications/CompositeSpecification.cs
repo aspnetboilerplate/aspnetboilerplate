@@ -1,30 +1,25 @@
-﻿namespace Abp.Specifications
+namespace Abp.Specifications
 {
     /// <summary>
-    /// Represents the base class for composite specifications.
+    /// Base class for composite specifications
     /// </summary>
-    /// <typeparam name="T">The type of the object to which the specification is applied.</typeparam>
-    public abstract class CompositeSpecification<T> : Specification<T>, ICompositeSpecification<T>
+    /// <typeparam name="TEntity">Type of entity that check this specification</typeparam>
+    public abstract class CompositeSpecification<TEntity>
+         : Specification<TEntity>
+         where TEntity : class
     {
-        /// <summary>
-        /// Gets the first specification.
-        /// </summary>
-        public ISpecification<T> Left { get; }
+        #region Properties
 
         /// <summary>
-        /// Gets the second specification.
+        /// Left side specification for this composite element
         /// </summary>
-        public ISpecification<T> Right { get; }
+        public abstract ISpecification<TEntity> LeftSideSpecification { get; }
 
         /// <summary>
-        /// Constructs a new instance of <see cref="CompositeSpecification{T}"/> class.
+        /// Right side specification for this composite element
         /// </summary>
-        /// <param name="left">The first specification.</param>
-        /// <param name="right">The second specification.</param>
-        protected CompositeSpecification(ISpecification<T> left, ISpecification<T> right)
-        {
-            Left = left;
-            Right = right;
-        }
+        public abstract ISpecification<TEntity> RightSideSpecification { get; }
+
+        #endregion
     }
 }
