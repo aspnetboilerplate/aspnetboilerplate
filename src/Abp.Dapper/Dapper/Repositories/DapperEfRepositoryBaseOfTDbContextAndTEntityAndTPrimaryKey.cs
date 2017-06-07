@@ -1,4 +1,6 @@
 ﻿using System.Data;
+using System.Data.Common;
+
 using Abp.Data;
 using Abp.Domain.Entities;
 
@@ -27,8 +29,8 @@ namespace Abp.Dapper.Repositories
             }
         }
 
-        public override IDbConnection Connection => _activeTransactionProvider.GetActiveConnection(ActiveTransactionProviderArgs);
+        public override DbConnection Connection => (DbConnection)_activeTransactionProvider.GetActiveConnection(ActiveTransactionProviderArgs);
 
-        public override IDbTransaction ActiveTransaction => _activeTransactionProvider.GetActiveTransaction(ActiveTransactionProviderArgs);
+        public override DbTransaction ActiveTransaction => (DbTransaction)_activeTransactionProvider.GetActiveTransaction(ActiveTransactionProviderArgs);
     }
 }

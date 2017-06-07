@@ -1,8 +1,7 @@
-﻿using System.Reflection;
-using Abp.Dependency;
+﻿using Abp.Dependency;
 using Abp.Modules;
 using Abp.Orm;
-using Castle.Core.Internal;
+using Abp.Reflection.Extensions;
 
 namespace Abp.Dapper
 {
@@ -12,17 +11,18 @@ namespace Abp.Dapper
         public override void PreInitialize()
         {
             Configuration.UnitOfWork.IsTransactionScopeAvailable = false;
+            Configuration.UnitOfWork.IsTransactional = true;
         }
 
         public override void Initialize()
         {
-            IocManager.RegisterAssemblyByConvention(Assembly.GetExecutingAssembly());
+            IocManager.RegisterAssemblyByConvention(typeof(AbpDapperModule).GetAssembly());
 
-            using (var scope = IocManager.CreateScope())
+            using (IScopedIocResolver scope = IocManager.CreateScope())
             {
-                var additionalOrmRegistrars = scope.ResolveAll<ISecondaryOrmRegistrar>();
+                ISecondaryOrmRegistrar[] additionalOrmRegistrars = scope.ResolveAll<ISecondaryOrmRegistrar>();
 
-                additionalOrmRegistrars.ForEach(registrar =>
+                foreach (ISecondaryOrmRegistrar registrar in additionalOrmRegistrars)
                 {
                     if (registrar.OrmContextKey == AbpConsts.Orms.EntityFramework)
                     {
@@ -33,7 +33,12 @@ namespace Abp.Dapper
                     {
                         registrar.RegisterRepositories(IocManager, NhBasedDapperAutoRepositoryTypes.Default);
                     }
-                });
+
+                    if (registrar.OrmContextKey == AbpConsts.Orms.EntityFrameworkCore)
+                    {
+                        registrar.RegisterRepositories(IocManager, EfBasedDapperAutoRepositoryTypes.Default);
+                    }
+                }
             }
         }
     }
