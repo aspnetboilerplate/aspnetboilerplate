@@ -60,7 +60,7 @@ namespace Abp.EntityFrameworkCore.Dapper.Tests.Tests
                 {
                     eventData.Entity.Name.ShouldBe("Oguzhan_Same_Uow");
 
-                    throw new ApplicationException("Uow Rollback");
+                    throw new Exception("Uow Rollback");
                 });
 
             try
@@ -113,7 +113,7 @@ namespace Abp.EntityFrameworkCore.Dapper.Tests.Tests
                 {
                     await _blogDapperRepository.ExecuteAsync("Update Blogs Set Name = @name where Id =@id", new { id = blogId, name = "Oguzhan_New_Blog" });
 
-                    throw new ApplicationException("uow rollback");
+                    throw new Exception("uow rollback");
 
                     uow.Complete();
                 }

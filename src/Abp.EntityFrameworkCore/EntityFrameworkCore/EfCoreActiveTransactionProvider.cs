@@ -1,12 +1,9 @@
-﻿#if NET46
-using System;
+﻿using System;
 using System.Data;
 using System.Reflection;
-
 using Abp.Data;
 using Abp.Dependency;
 using Abp.MultiTenancy;
-
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Storage;
 
@@ -23,7 +20,7 @@ namespace Abp.EntityFrameworkCore
 
         public IDbTransaction GetActiveTransaction(ActiveTransactionProviderArgs args)
         {
-            return GetDbContext(args).Database.CurrentTransaction.GetDbTransaction();
+            return GetDbContext(args).Database.CurrentTransaction?.GetDbTransaction();
         }
 
         public IDbConnection GetActiveConnection(ActiveTransactionProviderArgs args)
@@ -51,4 +48,3 @@ namespace Abp.EntityFrameworkCore
         }
     }
 }
-#endif
