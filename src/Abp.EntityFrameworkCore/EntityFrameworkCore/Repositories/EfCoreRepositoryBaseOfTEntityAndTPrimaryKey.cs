@@ -226,7 +226,7 @@ namespace Abp.EntityFrameworkCore.Repositories
             return Context;
         }
 
-        public Task EnsureLoadedAsync<TProperty>(
+        public Task EnsureCollectionLoadedAsync<TProperty>(
             TEntity entity, 
             Expression<Func<TEntity, IEnumerable<TProperty>>> propertyExpression, 
             CancellationToken cancellationToken)
@@ -235,7 +235,7 @@ namespace Abp.EntityFrameworkCore.Repositories
             return Context.Entry(entity).Collection(propertyExpression).LoadAsync(cancellationToken);
         }
 
-        public Task EnsureLoadedAsync<TProperty>(
+        public Task EnsurePropertyLoadedAsync<TProperty>(
             TEntity entity,
             Expression<Func<TEntity, TProperty>> propertyExpression,
             CancellationToken cancellationToken)

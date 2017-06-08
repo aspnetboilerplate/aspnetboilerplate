@@ -10,13 +10,13 @@ namespace Abp.Domain.Repositories
     public interface ISupportsExplicitLoading<TEntity, TPrimaryKey>
         where TEntity : class, IEntity<TPrimaryKey>
     {
-        Task EnsureLoadedAsync<TProperty>(
+        Task EnsureCollectionLoadedAsync<TProperty>(
             TEntity entity,
             Expression<Func<TEntity, IEnumerable<TProperty>>> propertyExpression,
             CancellationToken cancellationToken)
             where TProperty : class;
 
-        Task EnsureLoadedAsync<TProperty>(
+        Task EnsurePropertyLoadedAsync<TProperty>(
             TEntity entity,
             Expression<Func<TEntity, TProperty>> propertyExpression,
             CancellationToken cancellationToken)

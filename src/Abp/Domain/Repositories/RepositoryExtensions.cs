@@ -12,7 +12,7 @@ namespace Abp.Domain.Repositories
 {
     public static class RepositoryExtensions
     {
-        public static async Task EnsureLoadedAsync<TEntity, TPrimaryKey, TProperty>(
+        public static async Task EnsureCollectionLoadedAsync<TEntity, TPrimaryKey, TProperty>(
             this IRepository<TEntity, TPrimaryKey> repository,
             TEntity entity,
             Expression<Func<TEntity, IEnumerable<TProperty>>> propertyExpression,
@@ -24,11 +24,11 @@ namespace Abp.Domain.Repositories
             var repo = ProxyHelper.UnProxy(repository) as ISupportsExplicitLoading<TEntity, TPrimaryKey>;
             if (repo != null)
             {
-                await repo.EnsureLoadedAsync(entity, propertyExpression, cancellationToken);
+                await repo.EnsureCollectionLoadedAsync(entity, propertyExpression, cancellationToken);
             }
         }
 
-        public static void EnsureLoaded<TEntity, TPrimaryKey, TProperty>(
+        public static void EnsureCollectionLoaded<TEntity, TPrimaryKey, TProperty>(
             this IRepository<TEntity, TPrimaryKey> repository,
             TEntity entity,
             Expression<Func<TEntity, IEnumerable<TProperty>>> propertyExpression
@@ -36,10 +36,10 @@ namespace Abp.Domain.Repositories
             where TEntity : class, IEntity<TPrimaryKey>
             where TProperty : class
         {
-            AsyncHelper.RunSync(() => repository.EnsureLoadedAsync(entity, propertyExpression));
+            AsyncHelper.RunSync(() => repository.EnsureCollectionLoadedAsync(entity, propertyExpression));
         }
 
-        public static async Task EnsureLoadedAsync<TEntity, TPrimaryKey, TProperty>(
+        public static async Task EnsurePropertyLoadedAsync<TEntity, TPrimaryKey, TProperty>(
             this IRepository<TEntity, TPrimaryKey> repository,
             TEntity entity,
             Expression<Func<TEntity, TProperty>> propertyExpression,
@@ -51,11 +51,11 @@ namespace Abp.Domain.Repositories
             var repo = ProxyHelper.UnProxy(repository) as ISupportsExplicitLoading<TEntity, TPrimaryKey>;
             if (repo != null)
             {
-                await repo.EnsureLoadedAsync(entity, propertyExpression, cancellationToken);
+                await repo.EnsurePropertyLoadedAsync(entity, propertyExpression, cancellationToken);
             }
         }
 
-        public static void EnsureLoaded<TEntity, TPrimaryKey, TProperty>(
+        public static void EnsurePropertyLoaded<TEntity, TPrimaryKey, TProperty>(
             this IRepository<TEntity, TPrimaryKey> repository,
             TEntity entity,
             Expression<Func<TEntity, TProperty>> propertyExpression
@@ -63,7 +63,7 @@ namespace Abp.Domain.Repositories
             where TEntity : class, IEntity<TPrimaryKey>
             where TProperty : class
         {
-            AsyncHelper.RunSync(() => repository.EnsureLoadedAsync(entity, propertyExpression));
+            AsyncHelper.RunSync(() => repository.EnsurePropertyLoadedAsync(entity, propertyExpression));
         }
 
         public static IIocResolver GetIocResolver<TEntity, TPrimaryKey>(this IRepository<TEntity, TPrimaryKey> repository)
