@@ -1,15 +1,17 @@
 ﻿using System;
+using System.Transactions;
 using Abp.Domain.Repositories;
 using Abp.EntityFrameworkCore.Tests.Domain;
 using Abp.EntityFrameworkCore.Tests.Ef;
 using Abp.Modules;
 using Abp.TestBase;
 using Castle.MicroKernel.Registration;
-using Castle.Windsor.MsDependencyInjection;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.DependencyInjection;
 using Abp.Configuration.Startup;
+using Abp.Dependency;
 using Abp.Reflection.Extensions;
+using Microsoft.Data.Sqlite;
+using Microsoft.EntityFrameworkCore.Metadata.Internal;
 
 namespace Abp.EntityFrameworkCore.Tests
 {
@@ -18,39 +20,13 @@ namespace Abp.EntityFrameworkCore.Tests
     {
         public override void PreInitialize()
         {
-            Configuration.UnitOfWork.IsTransactional = false; //EF Core InMemory DB does not support transactions
-
-            var services = new ServiceCollection()
-                .AddEntityFrameworkInMemoryDatabase();
-
-            var serviceProvider = WindsorRegistrationHelper.CreateServiceProvider(
-                IocManager.IocContainer,
-                services
-            );
+            Configuration.UnitOfWork.IsolationLevel = IsolationLevel.Unspecified;
 
             //BloggingDbContext
-            var blogDbOptionsBuilder = new DbContextOptionsBuilder<BloggingDbContext>();
-            blogDbOptionsBuilder.UseInMemoryDatabase()
-                .UseInternalServiceProvider(serviceProvider);
-
-            IocManager.IocContainer.Register(
-                Component
-                    .For<DbContextOptions<BloggingDbContext>>()
-                    .Instance(blogDbOptionsBuilder.Options)
-                    .LifestyleSingleton()
-            );
+            RegisterBloggingDbContextToSqliteInMemoryDb(IocManager);
 
             //SupportDbContext
-            var supportDbOptionsBuilder = new DbContextOptionsBuilder<SupportDbContext>();
-            supportDbOptionsBuilder.UseInMemoryDatabase()
-                .UseInternalServiceProvider(serviceProvider);
-
-            IocManager.IocContainer.Register(
-                Component
-                    .For<DbContextOptions<SupportDbContext>>()
-                    .Instance(supportDbOptionsBuilder.Options)
-                    .LifestyleSingleton()
-            );
+            RegisterSupportDbContextToSqliteInMemoryDb(IocManager);
 
             //Custom repository
             Configuration.ReplaceService<IRepository<Post, Guid>>(() =>
@@ -66,6 +42,46 @@ namespace Abp.EntityFrameworkCore.Tests
         public override void Initialize()
         {
             IocManager.RegisterAssemblyByConvention(typeof(EntityFrameworkCoreTestModule).GetAssembly());
+        }
+
+        private static void RegisterBloggingDbContextToSqliteInMemoryDb(IIocManager iocManager)
+        {
+            var builder = new DbContextOptionsBuilder<BloggingDbContext>();
+
+            builder.ReplaceService<IEntityMaterializerSource, AbpEntityMaterializerSource>();
+
+            var inMemorySqlite = new SqliteConnection("Data Source=:memory:");
+            builder.UseSqlite(inMemorySqlite);
+
+            iocManager.IocContainer.Register(
+                Component
+                    .For<DbContextOptions<BloggingDbContext>>()
+                    .Instance(builder.Options)
+                    .LifestyleSingleton()
+            );
+
+            inMemorySqlite.Open();
+            new BloggingDbContext(builder.Options).Database.EnsureCreated();
+        }
+
+        private static void RegisterSupportDbContextToSqliteInMemoryDb(IIocManager iocManager)
+        {
+            var builder = new DbContextOptionsBuilder<SupportDbContext>();
+
+            builder.ReplaceService<IEntityMaterializerSource, AbpEntityMaterializerSource>();
+
+            var inMemorySqlite = new SqliteConnection("Data Source=:memory:");
+            builder.UseSqlite(inMemorySqlite);
+
+            iocManager.IocContainer.Register(
+                Component
+                    .For<DbContextOptions<SupportDbContext>>()
+                    .Instance(builder.Options)
+                    .LifestyleSingleton()
+            );
+
+            inMemorySqlite.Open();
+            new SupportDbContext(builder.Options).Database.EnsureCreated();
         }
     }
 }
