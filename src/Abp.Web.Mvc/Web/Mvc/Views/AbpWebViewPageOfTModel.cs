@@ -13,13 +13,13 @@ using Abp.Web.Security.AntiForgery;
 namespace Abp.Web.Mvc.Views
 {
     /// <summary>
-    /// Base class for all views in Abp system.
+    /// Abp系统中所有视图的基类。
     /// </summary>
-    /// <typeparam name="TModel">Type of the View Model</typeparam>
+    /// <typeparam name="TModel">视图模型的类型</typeparam>
     public abstract class AbpWebViewPage<TModel> : WebViewPage<TModel>
     {
         /// <summary>
-        /// Gets the root path of the application.
+        /// 获取应用程序的根路径。
         /// </summary>
         public string ApplicationPath
         {
@@ -41,10 +41,10 @@ namespace Abp.Web.Mvc.Views
         /// Reference to the setting manager.
         /// </summary>
         public ISettingManager SettingManager { get; set; }
-        
+
         /// <summary>
-        /// Gets/sets name of the localization source that is used in this controller.
-        /// It must be set in order to use <see cref="L(string)"/> and <see cref="L(string,CultureInfo)"/> methods.
+        /// 获取/设置此控制器中使用的本地化源的名称。
+        /// 必须设置为使用<see cref ="L(string)"/>和<see cref ="L(string,CultureInfo)"/>方法。
         /// </summary>
         protected string LocalizationSourceName
         {
@@ -54,7 +54,7 @@ namespace Abp.Web.Mvc.Views
         private ILocalizationSource _localizationSource;
 
         /// <summary>
-        /// Constructor.
+        /// 构造函数。
         /// </summary>
         protected AbpWebViewPage()
         {
@@ -63,21 +63,21 @@ namespace Abp.Web.Mvc.Views
         }
 
         /// <summary>
-        /// Gets localized string for given key name and current language.
+        /// 获取给定键名称和当前语言的本地化字符串。
         /// </summary>
-        /// <param name="name">Key name</param>
-        /// <returns>Localized string</returns>
+        /// <param name="name">主要名称</param>
+        /// <returns>本地化字符串</returns>
         protected virtual string L(string name)
         {
             return _localizationSource.GetString(name);
         }
 
         /// <summary>
-        /// Gets localized string for given key name and current language with formatting strings.
+        /// 为格式化字符串获取给定键名称和当前语言的本地化字符串。
         /// </summary>
-        /// <param name="name">Key name</param>
-        /// <param name="args">Format arguments</param>
-        /// <returns>Localized string</returns>
+        /// <param name="name">主要名称</param>
+        /// <param name="args">格式参数</param>
+        /// <returns>本地化字符串</returns>
         protected virtual string L(string name, params object[] args)
         {
             return _localizationSource.GetString(name, args);

@@ -9,24 +9,24 @@ using Microsoft.AspNet.SignalR;
 namespace Abp.Web.SignalR.Hubs
 {
     /// <summary>
-    /// Common Hub of ABP.
+    /// ABP公共枢纽。
     /// </summary>
     public class AbpCommonHub : Hub, ITransientDependency
     {
         /// <summary>
-        /// Reference to the logger.
+        /// <seealso cref="ILogger"/>
         /// </summary>
         public ILogger Logger { get; set; }
 
         /// <summary>
-        /// Reference to the session.
+        /// <seealso cref="IAbpSession"/>
         /// </summary>
         public IAbpSession AbpSession { get; set; }
 
         private readonly IOnlineClientManager _onlineClientManager;
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="AbpCommonHub"/> class.
+        /// 初始化<see cref ="AbpCommonHub"/>类的新实例。
         /// </summary>
         public AbpCommonHub(IOnlineClientManager onlineClientManager)
         {
@@ -35,12 +35,17 @@ namespace Abp.Web.SignalR.Hubs
             Logger = NullLogger.Instance;
             AbpSession = NullAbpSession.Instance;
         }
-
+        /// <summary>
+        /// 客户端注册
+        /// </summary>
         public void Register()
         {
             Logger.Debug("A client is registered: " + Context.ConnectionId);
         }
-
+        /// <summary>
+        /// 客户端连接
+        /// </summary>
+        /// <returns></returns>
         public override async Task OnConnected()
         {
             await base.OnConnected();
@@ -51,7 +56,10 @@ namespace Abp.Web.SignalR.Hubs
             
             _onlineClientManager.Add(client);
         }
-
+        /// <summary>
+        /// 客户端重新连接
+        /// </summary>
+        /// <returns></returns>
         public override async Task OnReconnected()
         {
             await base.OnReconnected();
@@ -68,7 +76,11 @@ namespace Abp.Web.SignalR.Hubs
                 Logger.Debug("A client is reconnected: " + client);
             }
         }
-
+        /// <summary>
+        /// 客户端断开连接
+        /// </summary>
+        /// <param name="stopCalled"></param>
+        /// <returns></returns>
         public override async Task OnDisconnected(bool stopCalled)
         {
             await base.OnDisconnected(stopCalled);
@@ -84,7 +96,10 @@ namespace Abp.Web.SignalR.Hubs
                 Logger.Warn(ex.ToString(), ex);
             }
         }
-
+        /// <summary>
+        /// 为当前连接创建客户端
+        /// </summary>
+        /// <returns></returns>
         private IOnlineClient CreateClientForCurrentConnection()
         {
             return new OnlineClient(
@@ -94,7 +109,10 @@ namespace Abp.Web.SignalR.Hubs
                 AbpSession.UserId
             );
         }
-
+        /// <summary>
+        /// 获取客户端的IP地址
+        /// </summary>
+        /// <returns></returns>
         private string GetIpAddressOfClient()
         {
             try

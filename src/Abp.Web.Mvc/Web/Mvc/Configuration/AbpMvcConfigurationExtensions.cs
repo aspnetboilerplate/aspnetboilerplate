@@ -3,12 +3,12 @@
 namespace Abp.Web.Mvc.Configuration
 {
     /// <summary>
-    /// Defines extension methods to <see cref="IModuleConfigurations"/> to allow to configure Abp.Web.Api module.
+    /// 定义扩展方法，以便<see cref =“IModuleConfigurations”/>允许配置Abp.Web.Api模块。
     /// </summary>
     public static class AbpMvcConfigurationExtensions
     {
         /// <summary>
-        /// Used to configure Abp.Web.Api module.
+        /// 用于配置Abp.Web.Api模块。
         /// </summary>
         public static IAbpMvcConfiguration AbpMvc(this IModuleConfigurations configurations)
         {

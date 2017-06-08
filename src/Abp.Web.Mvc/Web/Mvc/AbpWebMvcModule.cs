@@ -18,7 +18,7 @@ using Abp.Web.Security.AntiForgery;
 namespace Abp.Web.Mvc
 {
     /// <summary>
-    /// This module is used to build ASP.NET MVC web sites using Abp.
+    /// 该模块用于使用Abp构建ASP.NET MVC网站。
     /// </summary>
     [DependsOn(typeof(AbpWebModule))]
     public class AbpWebMvcModule : AbpModule

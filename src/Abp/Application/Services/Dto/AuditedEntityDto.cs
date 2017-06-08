@@ -4,7 +4,7 @@ using Abp.Domain.Entities.Auditing;
 namespace Abp.Application.Services.Dto
 {
     /// <summary>
-    /// A shortcut of <see cref="AuditedEntityDto{TPrimaryKey}"/> for most used primary key type (<see cref="int"/>).
+    /// 对于大多数使用的主键类型（<see cref ="int"/>）的<see cref ="AuditedEntityDto {TPrimaryKey}"/>的快捷方式。
     /// </summary>
     [Serializable]
     public abstract class AuditedEntityDto : AuditedEntityDto<int>

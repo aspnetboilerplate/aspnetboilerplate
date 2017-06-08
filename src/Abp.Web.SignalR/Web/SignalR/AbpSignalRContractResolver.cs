@@ -7,14 +7,14 @@ using Newtonsoft.Json.Serialization;
 namespace Abp.Web.SignalR
 {
     /// <summary>
-    /// Uses CamelCasePropertyNamesContractResolver instead of DefaultContractResolver for SignalR communication. 
+    /// 使用CamelCasePropertyNamesContractResolver代替DefaultContractResolver进行SignalR通信。
     /// </summary>
     public class AbpSignalRContractResolver : IContractResolver
     {
         /// <summary>
-        /// List of ignored assemblies.
-        /// It contains only the SignalR's own assembly.
-        /// If you don't want that your assembly's types are automatically camel cased while sending to the client, then add it to this list.
+        /// 忽略的程序集列表。
+        /// 它只包含SignalR自己的程序集。
+        /// 如果您不想让您的程序集的类型在发送给客户端时自动将其套用，则将其添加到此列表中。
         /// </summary>
         public static List<Assembly> IgnoredAssemblies { get; private set; }
 
@@ -30,7 +30,7 @@ namespace Abp.Web.SignalR
         }
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="AbpSignalRContractResolver"/> class.
+        /// 初始化<see cref ="AbpSignalRContractResolver"/>类的新实例。
         /// </summary>
         public AbpSignalRContractResolver()
         {
