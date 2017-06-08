@@ -1,5 +1,6 @@
 using System;
 using System.Collections;
+using System.Web;
 using System.Web.Caching;
 using System.Web.Hosting;
 using Abp.Dependency;
@@ -56,7 +57,7 @@ namespace Abp.Web.Mvc.Resources.Embedded
 
         private EmbeddedResourceItem GetResource(string virtualPath)
         {
-            return _embeddedResourceManager.GetResource(virtualPath.RemovePreFix("~"));
+            return _embeddedResourceManager.GetResource(VirtualPathUtility.ToAppRelative(virtualPath).RemovePreFix("~"));
         }
     }
 }
