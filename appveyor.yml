@@ -37,7 +37,7 @@ test:
   - test\Abp.EntityFramework.Tests\bin\Release\net46\Abp.EntityFramework.Tests.dll
   - test\Abp.EntityFramework.GraphDiff.Tests\bin\Release\net46\Abp.EntityFramework.GraphDiff.Tests.dll
   - test\Abp.EntityFrameworkCore.Tests\bin\Release\net46\Abp.EntityFrameworkCore.Tests.dll
-  - test\Abp.EntityFrameworkCore.Dapper.Tests\bin\Release\netcoreapp1.1\Abp.EntityFrameworkCore.Dapper.Tests.dll
+#  - test\Abp.EntityFrameworkCore.Dapper.Tests\bin\Release\netcoreapp1.1\Abp.EntityFrameworkCore.Dapper.Tests.dll
   - test\Abp.MemoryDb.Tests\bin\Release\net46\Abp.MemoryDb.Tests.dll
   - test\Abp.Quartz.Tests\bin\Release\net46\Abp.Quartz.Tests.dll
   - test\Abp.TestBase.Tests\bin\Release\net46\Abp.TestBase.Tests.dll
