@@ -54,44 +54,5 @@ namespace Abp.Application.Services.Dto
         {
             Id = id;
         }
-
-        /// <inheritdoc/>
-        public override bool Equals(object obj)
-        {
-            if (!(obj is EntityDto<TPrimaryKey>))
-            {
-                return false;
-            }
-
-            if (ReferenceEquals(this, obj))
-            {
-                return true;
-            }
-
-            return Id.Equals(((EntityDto<TPrimaryKey>) obj).Id);
-        }
-
-        /// <inheritdoc/>
-        public override int GetHashCode()
-        {
-            return Id.GetHashCode();
-        }
-
-        /// <inheritdoc/>
-        public static bool operator ==(EntityDto<TPrimaryKey> left, EntityDto<TPrimaryKey> right)
-        {
-            if (Equals(left, null))
-            {
-                return Equals(right, null);
-            }
-
-            return left.Equals(right);
-        }
-
-        /// <inheritdoc/>
-        public static bool operator !=(EntityDto<TPrimaryKey> left, EntityDto<TPrimaryKey> right)
-        {
-            return !(left == right);
-        }
     }
 }
