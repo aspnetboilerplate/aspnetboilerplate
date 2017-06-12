@@ -91,7 +91,9 @@ connection and transaction, both repositories use same unit of work. Note that
 no need to UnitOfWork attribute if this is an application service method. Also see '<a href="#DocUowRestrictions">unit 
 of work method restrictions</a>' section.</p>
 			<p>There are some options of the UnitOfWork attribute. See 'unit of work in 
-detail' section.</p>
+detail' section. UnitOfWork attribute can also be used for classes to configure 
+			all methods of a class. Method attribute overrides the class 
+			attribute if exists.</p>
 			<h5>IUnitOfWorkManager</h5>
 			<p>Second appropaches is using the <strong>IUnitOfWorkManager.Begin(...)</strong> 
 method as 
