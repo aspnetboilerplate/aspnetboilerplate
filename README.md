@@ -41,7 +41,7 @@ Create your solution based on free or premium startup templates. Either with an 
 
 ## Nuget Packages
 
-ASP.NET Boilerplate is distributed as nuget packages. A list of core framework packages:
+ASP.NET Boilerplate is distributed as nuget packages.
 
 |Package|Status|
 |:------|:-----:|
