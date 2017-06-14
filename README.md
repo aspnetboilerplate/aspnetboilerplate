@@ -37,7 +37,7 @@ Create your solution based on free or premium startup templates. Either with an 
 
 ![](doc/img/module-zero-core-template.png)
 
-<a href="http://aspnetboilerplate.com/Templates" target="_blank">Create your project now!</a>
+<a href="https://aspnetboilerplate.com/Templates" target="_blank">Create your project now!</a>
 
 ## Nuget Packages
 
