@@ -8,22 +8,16 @@ AppVeyor: [![Build status](https://ci.appveyor.com/api/projects/status/tvad583r9
 ASP.NET Boilerplate is a general purpose **application framework** especially designed for new modern web applications. It uses already **familiar tools** and implements **best practices** arround them to provide you a **SOLID development experience**.
 
 ###### Layered Architecture
-Provides a layered architectural model based on **Domain Driven Design**.
+Provides a layered architectural model based on **Domain Driven Design**. Provides a **SOLID** model for your application.
 
 ###### Modular Design
-Designed as modular and extensible. Provides infrastructure to build your own modules too.
+Designed as <a href="https://aspnetboilerplate.com/Pages/Documents/Module-System" target="_blank">**modular**</a> and **extensible**. Provides infrastructure to build your own modules too.
 
 ###### Multi Tenancy
-SaaS applications made easy! Integrated multi-tenancy from database to UI.
-
-###### Domain Driven Design
-Designed and developed DDD in mind. Provides a SOLID model for your application.
+**SaaS** applications made easy! Integrated <a href="https://aspnetboilerplate.com/Pages/Documents/Multi-Tenancy" target="_blank">multi-tenancy</a> from database to UI.
 
 ###### Well Documented
-Compherensive documentation and jump start tutorials.
-
-###### Free & Open Source
-Actively developed on Github (MIT license) and open for contributions.
+Compherensive <a href="https://aspnetboilerplate.com/Pages/Documents" target="_blank">**documentation**</a> and jump start tutorials.
 
 ## How It Works
 
