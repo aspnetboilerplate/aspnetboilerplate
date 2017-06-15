@@ -11,7 +11,7 @@
     <text name="DefaultFromSenderEmailAddress">عنوان البريد الإلكتروني الافتراضي للمرسل</text>
     <text name="DefaultFromSenderDisplayName">الاسم الافتراضي للمرسل</text>
     <text name="DefaultLanguage">اللغة الافتراضية</text>
-    <text name="ReceiveNotifications">تلقي الإخطارات</text>
+    <text name="ReceiveNotifications">استلام الإشعارات</text>
     <text name="CurrentUserDidNotLoginToTheApplication">المستخدم الحالي لم يسجيل الدخول إلى البرنامج!</text>
     <text name="TimeZone">المنطقة الزمنية</text>
     <text name="AllOfThesePermissionsMustBeGranted">لم يتم منح التصاريح المطلوبة. يجب أن يتم منح كل من هذه التصاريح: {0}</text>
