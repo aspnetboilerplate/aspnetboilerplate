@@ -29,17 +29,18 @@
     <ProjectReference Include="..\Abp\Abp.csproj" />
     <PackageReference Include="Dapper" Version="1.50.2" />
     <Reference Include="System.ComponentModel.DataAnnotations" />
-    <PackageReference Include="DapperExtensions.DotnetCore" Version="1.0.1" />
     <PackageReference Include="System.Data.Common" Version="4.3.0" />
   </ItemGroup>
 
   <ItemGroup Condition=" '$(TargetFramework)' == 'net46' ">
     <Reference Include="System" />
     <Reference Include="Microsoft.CSharp" />
+    <PackageReference Include="DapperExtensions" Version="1.5.0" />
   </ItemGroup>
 
   <ItemGroup Condition="'$(TargetFramework)' == 'netstandard1.6'">
     <PackageReference Include="NETStandard.Library" Version="1.6.1" />
+    <PackageReference Include="DapperExtensions.DotnetCore" Version="1.0.1" />
   </ItemGroup>
   
 </Project>
