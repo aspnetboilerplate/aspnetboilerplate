@@ -1,6 +1,7 @@
 using System.Linq;
 using Abp.Domain.Repositories;
 using Abp.Domain.Uow;
+using Abp.Reflection;
 using Abp.TestBase.SampleApplication.EntityFramework.Repositories;
 using Abp.TestBase.SampleApplication.People;
 using Shouldly;
@@ -20,7 +21,7 @@ namespace Abp.TestBase.SampleApplication.Tests.People
         [Fact]
         public void Should_Use_Custom_Base_Repository_Class()
         {
-            (_personRepository is SampleApplicationEfRepositoryBase<Person>).ShouldBeTrue();
+            (ProxyHelper.UnProxy(_personRepository) is SampleApplicationEfRepositoryBase<Person>).ShouldBeTrue();
         }
 
         [Fact]

@@ -14,7 +14,7 @@
 			<p>Entities are one of the core concepts of DDD (Domain Driven Design). Eric Evans describe it as "<em>An object that is not fundamentally defined by its attributes, but rather by a thread of continuity and identity</em>". 
 			So, entities have Id's and stored in a database. An entity is 
 			generally mapped to a table for relational databases.</p>
-			<h3 id="DocEntityClasses">Entity Classes</h3>
+			<h3 id="DocEntityClasses">Entity Class</h3>
 			<p>In ASP.NET Boilerplate, Entities are derived from <strong>Entity </strong>
 class. See the sample below:</p>
 
@@ -206,6 +206,40 @@ If you do not want to derive from Entity class, you can implement these
 interfaces directly. There are also corresponding interfaces for other entity 
 classes. But this is not the suggested way, unless you have a good 
 reason to do not derive from Entity classes.</p>
+			<h3>IExtendableObject Interface</h3>
+			<p>ASP.NET Boilerplate provides a simple interface, 
+			<strong>IExtendableObject</strong>, to easily associate <strong>arbitrary name-value data</strong> to 
+			an entity. Consider this simple entity:</p>
+			<pre lang="cs">public class Person : Entity, <strong>IExtendableObject</strong>
+{
+    public string Name { get; set; }
+
+    <strong>public string ExtensionData { get; set; }</strong>
+
+    public Person(string name)
+    {
+        Name = name;
+    }
+}</pre>
+			<p><strong>IExtendableObject</strong> just defines <strong>ExtensionData</strong> 
+			string property which is used to store <strong>JSON formatted</strong> name value 
+			objects. Example:</p>
+			<pre lang="cs">var person = new Person("John");
+
+<strong>person.SetData("RandomValue", RandomHelper.GetRandom(1, 1000));
+person.SetData("CustomData", new MyCustomObject { Value1 = 42, Value2 = "forty-two" });</strong></pre>
+			<p>We can use any type of object as value to <strong>SetData</strong> method. When we 
+			use such the code above, <strong>ExtensionData</strong> will be like 
+			that:</p>
+			<pre lang="js">{"CustomData":{"Value1":42,"Value2":"forty-two"},"RandomValue":178}</pre>
+			<p>Then we can use <strong>GetData</strong> to get any value:</p>
+			<pre lang="cs">var randomValue = person.<strong>GetData&lt;int&gt;("RandomValue")</strong>;
+var customData = person.<strong>GetData&lt;MyCustomObject&gt;("CustomData")</strong>;
+</pre>
+			<p>While this technique can be very useful in some cases (when you 
+			need to provide ability to dynamically add extra data to an entity), 
+			you normally should use regular properties. Such a dynamic usage is 
+			not type safe and explicit.</p>
 
 		</div>
 

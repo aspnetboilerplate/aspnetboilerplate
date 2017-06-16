@@ -72,7 +72,7 @@ namespace Abp.AspNetCore
                 .AddCastleLogger(castleLoggerFactory);
         }
 
-        public static void UseAbpRequestLocalization(this IApplicationBuilder app)
+        public static void UseAbpRequestLocalization(this IApplicationBuilder app, Action<RequestLocalizationOptions> optionsAction = null)
         {
             var iocResolver = app.ApplicationServices.GetRequiredService<IIocResolver>();
             using (var languageManager = iocResolver.ResolveAsDisposable<ILanguageManager>())
@@ -88,9 +88,19 @@ namespace Abp.AspNetCore
                     SupportedUICultures = supportedCultures
                 };
 
-                options.RequestCultureProviders.Insert(0, new AbpLocalizationHeaderRequestCultureProvider());
-                options.RequestCultureProviders.Insert(2, new UserRequestCultureProvider());
-                options.RequestCultureProviders.Insert(4, new DefaultRequestCultureProvider());
+                var userProvider = new AbpUserRequestCultureProvider();
+                
+                //0: QueryStringRequestCultureProvider
+                options.RequestCultureProviders.Insert(1, userProvider);
+                options.RequestCultureProviders.Insert(2, new AbpLocalizationHeaderRequestCultureProvider());
+                //3: CookieRequestCultureProvider
+                options.RequestCultureProviders.Insert(4, new AbpDefaultRequestCultureProvider());
+                //5: AcceptLanguageHeaderRequestCultureProvider
+
+                optionsAction?.Invoke(options);
+
+                userProvider.CookieProvider = options.RequestCultureProviders.OfType<CookieRequestCultureProvider>().FirstOrDefault();
+                userProvider.HeaderProvider = options.RequestCultureProviders.OfType<AbpLocalizationHeaderRequestCultureProvider>().FirstOrDefault();
 
                 app.UseRequestLocalization(options);
             }

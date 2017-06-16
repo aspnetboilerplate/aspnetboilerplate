@@ -28,6 +28,8 @@ namespace Abp.Runtime.Caching
 
         /// <summary>
         /// Gets an item from the cache.
+        /// This method hides cache provider failures (and logs them),
+        /// uses the factory method to get the object if cache provider fails.
         /// </summary>
         /// <param name="key">Key</param>
         /// <param name="factory">Factory method to create cache item if not exists</param>
@@ -36,6 +38,8 @@ namespace Abp.Runtime.Caching
 
         /// <summary>
         /// Gets an item from the cache.
+        /// This method hides cache provider failures (and logs them),
+        /// uses the factory method to get the object if cache provider fails.
         /// </summary>
         /// <param name="key">Key</param>
         /// <param name="factory">Factory method to create cache item if not exists</param>

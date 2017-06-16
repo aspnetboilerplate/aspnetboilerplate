@@ -12,24 +12,43 @@
 		<div class="document-contents">
 
 			<h3>Introduction</h3>
-			<p>The easiest way of starting a new project using ABP and module-zero for ASP.NET Core is to create a 
+			<p>The easiest way of starting a new project using ABP with <strong>ASP.NET Core 
+			MVC</strong> is to create a 
 	template on <a href="/Templates">templates page</a>. Remember to check "<strong>Include 
-		module zero</strong>".</p>
-			<p>After creating and downloading your project,</p>
+		module zero</strong>". After creating and downloading your project, 
+			follow below steps to run your application.</p>
 			<ul>
-				<li>Open your solution on Visual Studio 2017+.</li>
+				<li>Open your solution on <strong>Visual Studio 2017+</strong> 
+				and <strong>build</strong> the solution.</li>
 				<li>Select the '<strong>Web.Mvc</strong>' project as startup project.</li>
-				<li><a href="https://github.com/mrahhal/Migrator.EF6" target="_blank">Migrator.EF</a> tool is used for adding/applying EntityFramework migrations. In order to create your database, open command prompt and move to root folder of EntityFramework project in your solution. Then run "<strong>dotnet ef database update</strong>" command."</li>
-				<li>Run the application. User name is '<strong>admin</strong>' and password is '<strong>123qwe</strong>' as default.</li>
+				<li>Open <strong>Package Manager Console</strong> and run <strong>
+			Update-Database</strong> command to create your database (ensure 
+			that Default project is selected as <strong>.EntityFrameworkCore</strong> 
+			in the Package Manager Console window).</li>
+				<li>Run the application.</li>
 			</ul>
-
-			<p>In this template, <strong>multi-tenancy is enabled by default</strong>. You 
-	can disable it in Core project's module class if you don't need.</p>
-			<div class="bs-callout bs-callout-warning">
+			
+						<div class="bs-callout bs-callout-warning">
 				<p>If you have problems with running the application, please try 
 				close and open your Visual Studio again. It sometimes fail on 
 				first package restore.</p>
 			</div>
+
+
+			<h4>Login</h4>
+			<p>Once you run the application, you will see a login page as shown 
+			below:</p>
+					  <p>
+		  <img class="img-thumbnail" alt="Login Page" height="654" src="../images/module-zero-core-template-ui-login.png" width="897" /></p>
+
+			<p>User name is &#39;<strong>admin</strong>' and password is '<strong>123qwe</strong>' as default. 
+			There is also a &quot;Default&quot; tenant by default. After login, you can 
+			see the sample dashboard page:</p>
+			<p>
+		  <img class="img-thumbnail" alt="Dashboard" height="971" src="../images/module-zero-core-template-ui-home.png" width="1365" /></p>
+			<h4>About Multi Tenancy</h4>
+			<p>In this template, <strong>multi-tenancy is enabled by default</strong>. You 
+	can disable it in Core project's module class if you don't need.</p>
 			<h3>Social Logins</h3>
 			<p>Startup template supports <strong>Facebook</strong>, <strong>Twitter</strong>, <strong>Google+ </strong> and <strong>Microsoft</strong> logins. In the web.config, you can see the 
 	following settings in appsettings.json:</p>
@@ -130,6 +149,14 @@ You can run this application to create/migrate host and tenant databases.</p>
 	Actually, they are integration tests rather than unit tests since they tests 
 	your code with all ASP.NET Boilerplate infrastructure (including validation, 
 	authorization, unit of work...).</p>
+      <div class="document-contents">
+		  <h3>Source Code</h3>
+		  <p>This project template is developed as open source and free under 
+		  Github:
+		  <a href="https://github.com/aspnetboilerplate/module-zero-core-template">
+		  https://github.com/aspnetboilerplate/module-zero-core-template</a></p>
+
+      </div>
 
 		</div>
 

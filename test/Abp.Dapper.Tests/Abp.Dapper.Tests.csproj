@@ -19,13 +19,15 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\..\src\Abp.EntityFramework\Abp.EntityFramework.csproj" />
+    <ProjectReference Include="..\..\src\Abp.TestBase\Abp.TestBase.csproj" />
     <ProjectReference Include="..\Abp.Tests\Abp.Tests.csproj" />
     <ProjectReference Include="..\..\src\Abp.Dapper\Abp.Dapper.csproj" />
   </ItemGroup>
 
   <ItemGroup>
     <PackageReference Include="EntityFramework" Version="6.1.3" />
-    <PackageReference Include="EntityFrameworkProfiler.Appender" Version="4.0.4040" />
+    <PackageReference Include="EntityFrameworkProfiler.Appender" Version="4.0.4041" />
     <PackageReference Include="Microsoft.NET.Test.Sdk" Version="15.0.0" />
     <PackageReference Include="xunit" Version="2.2.0" />
     <PackageReference Include="xunit.runner.visualstudio" Version="2.2.0" />

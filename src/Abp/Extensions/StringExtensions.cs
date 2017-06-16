@@ -180,6 +180,7 @@ namespace Abp.Extensions
 
         /// <summary>
         /// Removes first occurrence of the given postfixes from end of the given string.
+        /// Ordering is important. If one of the postFixes is matched, others will not be tested.
         /// </summary>
         /// <param name="str">The string.</param>
         /// <param name="postFixes">one or more postfix.</param>
@@ -214,6 +215,7 @@ namespace Abp.Extensions
 
         /// <summary>
         /// Removes first occurrence of the given prefixes from beginning of the given string.
+        /// Ordering is important. If one of the preFixes is matched, others will not be tested.
         /// </summary>
         /// <param name="str">The string.</param>
         /// <param name="preFixes">one or more prefix.</param>

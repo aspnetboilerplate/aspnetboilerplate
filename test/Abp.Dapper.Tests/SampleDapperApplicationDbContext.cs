@@ -21,8 +21,6 @@ namespace Abp.Dapper.Tests
         }
 
         public virtual IDbSet<Product> Products { get; set; }
-
-        public virtual IDbSet<ProductDetail> ProductDetails { get; set; }
     }
 
     public class DapperDbContextConfiguration : DbConfiguration

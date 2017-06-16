@@ -17,6 +17,12 @@
     <GeneratePackageOnBuild>False</GeneratePackageOnBuild>
     <RootNamespace>Abp</RootNamespace>
   </PropertyGroup>
+  
+  <ItemGroup>
+    <Compile Remove="Localization\**" />
+    <EmbeddedResource Remove="Localization\**" />
+    <None Remove="Localization\**" />
+  </ItemGroup>
 
   <ItemGroup>
     <None Update="bin\Release\net46\Abp.AspNetCore.pdb">
@@ -37,17 +43,13 @@
     <PackageReference Include="Microsoft.AspNetCore.Mvc" Version="1.1.3" />
     <PackageReference Include="Microsoft.AspNetCore.StaticFiles" Version="1.1.2" />
     <PackageReference Include="Castle.LoggingFacility.MsLogging" Version="2.0.0" />
-    <PackageReference Include="Castle.Windsor.MsDependencyInjection" Version="2.0.0" />
+    <PackageReference Include="Castle.Windsor.MsDependencyInjection" Version="2.0.1" />
   </ItemGroup>
 
   <ItemGroup Condition=" '$(TargetFramework)' == 'net46' ">
     <Reference Include="System" />
     <Reference Include="Microsoft.CSharp" />
     <Reference Include="System.Transactions" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <Folder Include="Localization\AspNetCore\" />
   </ItemGroup>
 
 </Project>

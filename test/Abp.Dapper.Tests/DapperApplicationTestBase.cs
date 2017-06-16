@@ -17,7 +17,6 @@ namespace Abp.Dapper.Tests
     public abstract class DapperApplicationTestBase : AbpIntegratedTestBase<AbpDapperTestModule>
     {
         private readonly string _connectionString;
-        private readonly object _lockObject = new object();
 
         protected DapperApplicationTestBase()
         {

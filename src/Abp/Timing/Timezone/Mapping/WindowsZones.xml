@@ -704,6 +704,7 @@ For terms of use, see http://www.unicode.org/copyright.html
       <mapZone other="Saratov Standard Time" territory="001" type="Europe/Saratov"/>
       <mapZone other="UTC+13" territory="001" type="Etc/GMT-13"/>
       <mapZone other="Magallanes Standard Time" territory="001" type="America/Punta_Arenas"/>
+      <mapZone other="Malay Peninsula Standard Time" territory="001" type="Asia/Kuala_Lumpur"/>
     </mapTimezones>
   </windowsZones>
 </supplementalData>

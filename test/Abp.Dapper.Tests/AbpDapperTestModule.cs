@@ -3,17 +3,21 @@ using System.Data.SqlClient;
 using System.IO;
 using System.Reflection;
 
+using Abp.EntityFramework;
 using Abp.Modules;
+using Abp.TestBase;
 
 using Dapper;
 
 namespace Abp.Dapper.Tests
 {
-    [DependsOn(typeof(AbpDapperModule))]
+    [DependsOn(
+        typeof(AbpEntityFrameworkModule),
+        typeof(AbpTestBaseModule),
+        typeof(AbpDapperModule)
+    )]
     public class AbpDapperTestModule : AbpModule
     {
-        private readonly object _lockObject = new object();
-
         public override void Initialize()
         {
             IocManager.RegisterAssemblyByConvention(Assembly.GetExecutingAssembly());
