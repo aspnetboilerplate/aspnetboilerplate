@@ -26,7 +26,6 @@ namespace Abp.AspNetCore
         public override void PreInitialize()
         {
             IocManager.Register<IAbpAspNetCoreConfiguration, AbpAspNetCoreConfiguration>();
-            IocManager.Register<IAbpActionResultWrapperFactory, AbpActionResultWrapperFactory>();
 
             Configuration.ReplaceService<IPrincipalAccessor, AspNetCorePrincipalAccessor>(DependencyLifeStyle.Transient);
             Configuration.ReplaceService<IAbpAntiForgeryManager, AbpAspNetCoreAntiForgeryManager>(DependencyLifeStyle.Transient);
