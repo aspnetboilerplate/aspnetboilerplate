@@ -10,10 +10,13 @@ namespace Abp.AspNetCore.Mvc.Results
     public class AbpResultFilter : IResultFilter, ITransientDependency
     {
         private readonly IAbpAspNetCoreConfiguration _configuration;
+        private readonly IAbpActionResultWrapperFactory _actionResultWrapper;
 
-        public AbpResultFilter(IAbpAspNetCoreConfiguration configuration)
+        public AbpResultFilter(IAbpAspNetCoreConfiguration configuration, 
+            IAbpActionResultWrapperFactory actionResultWrapper)
         {
             _configuration = configuration;
+            _actionResultWrapper = actionResultWrapper;
         }
 
         public virtual void OnResultExecuting(ResultExecutingContext context)
@@ -35,9 +38,7 @@ namespace Abp.AspNetCore.Mvc.Results
                 return;
             }
 
-            AbpActionResultWrapperFactory
-                .CreateFor(context)
-                .Wrap(context);
+            _actionResultWrapper.CreateFor(context).Wrap(context);
         }
 
         public virtual void OnResultExecuted(ResultExecutedContext context)

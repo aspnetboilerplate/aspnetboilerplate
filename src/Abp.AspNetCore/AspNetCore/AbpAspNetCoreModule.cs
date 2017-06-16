@@ -2,6 +2,7 @@
 using Abp.AspNetCore.Configuration;
 using Abp.AspNetCore.MultiTenancy;
 using Abp.AspNetCore.Mvc.Auditing;
+using Abp.AspNetCore.Mvc.Results.Wrapping;
 using Abp.AspNetCore.Runtime.Session;
 using Abp.AspNetCore.Security.AntiForgery;
 using Abp.Auditing;
@@ -25,6 +26,7 @@ namespace Abp.AspNetCore
         public override void PreInitialize()
         {
             IocManager.Register<IAbpAspNetCoreConfiguration, AbpAspNetCoreConfiguration>();
+            IocManager.Register<IAbpActionResultWrapperFactory, AbpActionResultWrapperFactory>();
 
             Configuration.ReplaceService<IPrincipalAccessor, AspNetCorePrincipalAccessor>(DependencyLifeStyle.Transient);
             Configuration.ReplaceService<IAbpAntiForgeryManager, AbpAspNetCoreAntiForgeryManager>(DependencyLifeStyle.Transient);
