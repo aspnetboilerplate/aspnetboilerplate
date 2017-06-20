@@ -94,6 +94,15 @@ automatic <a href="Data-Filters.html">data filtering</a></strong>.</p>
 			<p>Multi-tenancy is disabled by default. We can enable it in PreInitialize 
 	of our module as shown below:</p>
 			<pre lang="cs">Configuration.MultiTenancy.IsEnabled = true;&nbsp;</pre>
+			<h4>Disabling in Multi Tenancy</h4>
+			<p>When creating a project from the ABP Template, multi-tenancy is enabled by default. To disable it, simply change MultiTenancyEnabled in ProjectNameConsts (Core project) to false.</p>
+			<p>Optionally, if you don't plan on re-enabling multi-tenancy in the future, you can disable the tenant data filters (described below in more detail). In that case, we should ensure that database have not host-specific entities (where tenantid is null) or other tenant entities (tenantid != 1). To disable the filters, add the following code to the PreInitialize method of the Core module:</p>
+
+            <pre lang="cs">Configuration.UnitOfWork.OverrideFilter(AbpDataFilters.MayHaveTenant, false);
+Configuration.UnitOfWork.OverrideFilter(AbpDataFilters.MustHaveTenant, false);</pre>
+
+			<p>Afterwards, you can remove tenant specific code from the web UI and modify the seeding methods appropriately. <strong>Do not</strong> remove any of the tenant specific data types and make sure that a default tenant still exists. The way ABP works is that there always has to be a default tenant. When running in single-tenant mode, AbpSession.TenantId (and others) will default to MultiTenancyConsts.DefaultTenantId (which is 1 by default, <strong>not null</strong> - as null is reserved for the host).</p> 
+
 			<h4>Host vs Tenant</h4>
 			<p>First, we should define two terms used in a multi-tenant system:</p>
 			<ul>
