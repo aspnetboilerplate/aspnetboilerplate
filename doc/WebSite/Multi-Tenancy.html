@@ -94,7 +94,8 @@ automatic <a href="Data-Filters.html">data filtering</a></strong>.</p>
 			<p>Multi-tenancy is disabled by default. We can enable it in PreInitialize 
 	of our module as shown below:</p>
 			<pre lang="cs">Configuration.MultiTenancy.IsEnabled = true;&nbsp;</pre>
-			<h4>Disabling in Multi Tenancy</h4>
+			
+			<h4>Disabling Multi Tenancy</h4>
 			<p>When creating a project from the ABP Template, multi-tenancy is enabled by default. To disable it, simply change MultiTenancyEnabled in ProjectNameConsts (Core project) to false.</p>
 			<p>Optionally, if you don't plan on re-enabling multi-tenancy in the future, you can disable the tenant data filters (described below in more detail). In that case, we should ensure that database have not host-specific entities (where tenantid is null) or other tenant entities (tenantid != 1). To disable the filters, add the following code to the PreInitialize method of the Core module:</p>
 
