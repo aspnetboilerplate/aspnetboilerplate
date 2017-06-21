@@ -70,8 +70,8 @@ ASP.NET Boilerplate is distributed as nuget packages.
 
 ## Links
 
-* Web site & Documentation: https://www.aspnetboilerplate.com
-* Forum: https://forum.aspnetboilerplate.com
+* Web site & Documentation: https://aspnetboilerplate.com
+* Questions & Answers: https://stackoverflow.com/questions/tagged/aspnetboilerplate?sort=newest
 
 ## License
 
