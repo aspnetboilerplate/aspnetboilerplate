@@ -27,6 +27,9 @@ namespace Abp.Tests.Domain.Entities
             entity.SetData("BirthDate", new DateTime(2015, 05, 25, 13, 24, 00, DateTimeKind.Utc));
             Assert.Equal(new DateTime(2015, 05, 25, 13, 24, 00, DateTimeKind.Utc), entity.GetData<DateTime>("BirthDate"));
 
+            entity.SetData("EnumVal", MyEnum.Value2);
+            entity.GetData<MyEnum>("EnumVal").ShouldBe(MyEnum.Value2);
+            
             entity.GetData<string>("NonExistingValue").ShouldBe(null);
         }
 
@@ -188,6 +191,12 @@ namespace Abp.Tests.Domain.Entities
             {
 
             }
+        }
+
+        public enum MyEnum
+        {
+            Value1,
+            Value2
         }
     }
 }
