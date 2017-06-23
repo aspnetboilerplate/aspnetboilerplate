@@ -142,7 +142,7 @@ namespace Abp.Runtime.Validation.Interception
             {
                 if (!parameterInfo.IsOptional && 
                     !parameterInfo.IsOut && 
-                    !TypeHelper.IsPrimitiveExtendedIncludingNullable(parameterInfo.ParameterType))
+                    !TypeHelper.IsPrimitiveExtendedIncludingNullable(parameterInfo.ParameterType, includeEnums: true))
                 {
                     ValidationErrors.Add(new ValidationResult(parameterInfo.Name + " is null!", new[] { parameterInfo.Name }));
                 }
