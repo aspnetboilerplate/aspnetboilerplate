@@ -1,0 +1,19 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>net46</TargetFramework>
+    <RootNamespace>Abp</RootNamespace>
+  </PropertyGroup>
+  
+  <ItemGroup>
+    <PackageReference Include="Rebus" Version="3.1.5" />
+    <PackageReference Include="Rebus.Castle.Windsor" Version="3.0.0" />
+    <PackageReference Include="Rebus.RabbitMq" Version="3.0.0" />
+    <PackageReference Include="Rebus.NewtonsoftJson" Version="3.1.5" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\Abp.MqMessages.Rebus\Abp.MqMessages.Rebus.csproj" />
+    <ProjectReference Include="..\Abp\Abp.csproj" />
+  </ItemGroup>
+</Project>
