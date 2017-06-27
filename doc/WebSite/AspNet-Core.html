@@ -201,6 +201,8 @@ framework. ASP.NET Core integration is implemented in
 	automatically inject most used infrastructure (LocalizationManager, 
 	PermissionChecker, SettingManager... etc.). It also has shortcut methods 
 	(like L(...) for localize texts). Startup template inherits it by default.</p>
+	<p>You can inherit your web components from <strong>AbpViewComponent</strong> 
+	instead of ViewComponent to take advantage of base properties and methods.</p>
 	<h3>Client Proxies</h3>
 	<p>ABP can automatically create javascript proxies for all MVC Controllers 
 	(not only application services). 

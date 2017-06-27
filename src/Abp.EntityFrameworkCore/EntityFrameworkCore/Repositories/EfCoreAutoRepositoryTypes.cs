@@ -4,7 +4,7 @@ namespace Abp.EntityFrameworkCore.Repositories
 {
     public static class EfCoreAutoRepositoryTypes
     {
-        public static AutoRepositoryTypesAttribute Default { get; private set; }
+        public static AutoRepositoryTypesAttribute Default { get; }
 
         static EfCoreAutoRepositoryTypes()
         {

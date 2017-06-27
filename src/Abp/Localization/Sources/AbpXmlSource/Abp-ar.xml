@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<localizationDictionary culture="ar">
+  <texts>
+    <text name="SmtpHost">خادم SMTP</text>
+    <text name="SmtpPort">منفذ SMTP</text>
+    <text name="Username">اسم المستخدم</text>
+    <text name="Password">كلمة المرور</text>
+    <text name="DomainName">اسم النطاق</text>
+    <text name="UseSSL">استخدام SSL</text>
+    <text name="UseDefaultCredentials">استخدام بيانات الدخول الافتراضية</text>
+    <text name="DefaultFromSenderEmailAddress">عنوان البريد الإلكتروني الافتراضي للمرسل</text>
+    <text name="DefaultFromSenderDisplayName">الاسم الافتراضي للمرسل</text>
+    <text name="DefaultLanguage">اللغة الافتراضية</text>
+    <text name="ReceiveNotifications">استلام الإشعارات</text>
+    <text name="CurrentUserDidNotLoginToTheApplication">المستخدم الحالي لم يسجيل الدخول إلى البرنامج!</text>
+    <text name="TimeZone">المنطقة الزمنية</text>
+    <text name="AllOfThesePermissionsMustBeGranted">لم يتم منح التصاريح المطلوبة. يجب أن يتم منح كل من هذه التصاريح: {0}</text>
+    <text name="AtLeastOneOfThesePermissionsMustBeGranted">لم يتم منح التصاريح المطلوبة. يجب منح واحد على الأقل من هذه التصاريح: {0}</text>
+    <text name="MainMenu">القائمة الرئيسية</text>
+  </texts>
+</localizationDictionary>

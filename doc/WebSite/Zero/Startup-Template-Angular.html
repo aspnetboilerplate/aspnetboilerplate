@@ -8,18 +8,25 @@
    <body>
       <div class="document-contents">
          <h3>Introduction</h3>
-         <p>The easiest way of starting a new project using ABP and module-zero for ASP.NET Core with Angular (also known as Angular2) is to create a 
+         <p>The easiest way of starting a new project using ABP with <strong>ASP.NET Core</strong> with 
+		 <strong>Angular</strong> is to create a 
             template on <a href="/Templates">templates page</a>. Remember to check "<strong>Include 
             module zero</strong>".
-         </p>
-         <p>After creating and downloading your project, follow below steps to run your application.</p>
+         After creating and downloading your project, follow below steps to run your application.</p>
          <h3>ASP.NET Core Application</h3>
          <ul>
-            <li>Open your solution on Visual Studio 2017+.</li>
-            <li>Select the '<strong>Web.Host</strong>' project as startup project.</li>
-            <li><a href="https://github.com/mrahhal/Migrator.EF6" target="_blank">Migrator.EF</a> tool is used for adding/applying EntityFramework migrations. In order to create your database, open command prompt and move to root folder of EntityFramework project in your solution. Then run "<strong>dotnet ef database update</strong>" command."</li>
-            <li>Run the application. It will show swagger-ui if it is successfull.</li>
+            <li>Open your solution on <strong>Visual Studio 2017+</strong> and
+			<strong>build</strong> the solution.</li>
+            <li>Select the '<strong>Web.Host</strong>' project as <strong>startup project</strong>.</li>
+            <li>Open <strong>Package Manager Console</strong> and run <strong>
+			Update-Database</strong> command to create your database (ensure 
+			that Default project is selected as <strong>.EntityFrameworkCore</strong> 
+			in the Package Manager Console window).</li>
+            <li>Run the application. It will show <strong>swagger-ui</strong> if 
+			it is successfull:</li>
          </ul>
+          <p>
+		  <img class="img-thumbnail" alt="Swagger UI" height="618" src="../images/swagger-ui-module-zero-core-template.png" width="997" /></p>
          <p>In this template, <strong>multi-tenancy is enabled by default</strong>. You 
             can disable it in Core project's module class if you don't need.
          </p>
@@ -28,6 +35,54 @@
 				close and open your Visual Studio again. It sometimes fail on 
 				first package restore.</p>
 			</div>
+
+         <h3>Angular Application</h3>
+         <h4>Prerequirements</h4>
+		 <p>
+			 Angular application needs to following tools be installed:
+		 </p>
+		 <ul>
+			<li><a href="https://nodejs.org/en/download/" target="_blank">nodejs</a> 6.9+ with npm 3.10+</li>
+			<li>Typescript 2.0+</li>
+		</ul>
+		  <p>We used <a href="https://cli.angular.io/" target="_blank">
+		  angular-cli</a> to develop the Angular application.</p>
+		<h4>Restore Packages</h4>
+		<p>Open a command prompt, navigate to <strong>angular</strong> folder which contains *.sln file and run the following command to 
+		<strong>restore npm packages</strong>:</p>
+		<pre class="js">npm install</pre>
+		<p>Notice that npm install may show some warn messages, which is not related to our solution and generally it's not a problem. 
+		The solution can also configured to work with
+		<a href="https://yarnpkg.com/" target="_blank"><strong>yarn</strong></a> 
+		and we suggest to use it if available on your computer.</p>
+		<h4>Run The Application</h4>
+		<p>In your opened command prompt, run the following command:</p>
+		<pre class="js">npm start</pre>
+		<p>Once the application compiled, you can browse <a href="http://localhost:4200">http://localhost:4200</a> in your browser. 
+		Be sure that Web.Host application is running at the same time. When you 
+		open the application, you will see the <strong>login page</strong>:</p>
+		  <p>
+		  <img class="img-thumbnail" alt="Login Page" height="654" src="../images/module-zero-core-template-ui-login.png" width="897" /></p>
+		  <p>Angular client app has also <strong>HMR</strong> (Hot Module Replacement) enabled. You can use the 
+		following command (instead of npm start) to enable HMR on development time:</p>
+		<pre class="js">npm run hmr</pre>
+		  <h4>Login</h4>
+		<p>Now you can login the application using default credentials. User name is '<strong>admin</strong>' and password is '<strong>123qwe</strong>' as default. 
+		If you want to login as a tenant, first switch to that tenant in login 
+		page. There is a tenant named &quot;Default&quot; by default. Once you 
+		login successfully, you will see a dashboard:</p>
+		  <p>
+		  <img class="img-thumbnail" alt="Dashboard" height="971" src="../images/module-zero-core-template-ui-home.png" width="1365" /></p>
+		  <p>This dashboard is just for demonstration and to be a base for your 
+		  actual dashboard.</p>
+
+      <h4>Deployment of Angular Application</h4>
+
+	  <p>We used <strong>angular-cli</strong> tooling to build Angular solution. 
+	  You can use <strong>ng build</strong> command to publish your project. It 
+	  publishes to <strong>dist</strong> folder by default. Then you can host this folder on 
+	  IIS or any web server you like.</p>
+		  <h3>Solution Details &amp; Other Features</h3>
 
          <h4>Social Logins</h4>
          <p>Startup template supports <strong>Facebook</strong> and <strong>Google+ </strong> logins. You can see the 
@@ -122,39 +177,11 @@
             your code with all ASP.NET Boilerplate infrastructure (including validation, 
             authorization, unit of work...).
          </p>
-         <h3>Angular Application</h3>
-         <h4>Prerequirements</h4>
-		 <p>
-			 Angular application needs to following tools be installed:
-		 </p>
-		 <ul>
-			<li><a href="https://nodejs.org/en/download/" target="_blank">nodejs</a> 6.9+ with npm 3.10+</li>
-			<li>Typescript 2.0+</li>
-		</ul>
-		  <p>We used <a href="https://cli.angular.io/" target="_blank">
-		  angular-cli</a> to develop the Angular application.</p>
-		<h4>Restore Packages</h4>
-		<p>Open a command prompt, navigate to <strong>angular</strong> folder which contains *.sln file and run the following command to restore packages:</p>
-		<pre class="js">npm install</pre>
-		<p>Notice that npm install may show some warn messages, which is not related to our solution and generally it's not a problem.</p>
-		<h4>Run The Application</h4>
-		<p>In your opened command prompt, run the following command:</p>
-		<pre class="js">npm start</pre>
-		<p>Once the application compiled, you can browse <a href="http://localhost:4200">http://localhost:4200</a> in your browser. 
-		Be sure that Web.Host application is running at the same time. Angular client app has also <strong>HMR</strong> (Hot Module Replacement) enabled. You can use the 
-		following command (instead of npm start) to enable HMR on development time:</p>
-		<pre class="js">npm run hmr</pre>
-		  <h4>Login</h4>
-		<p>Now you can login the application using default credentials. User name is '<strong>admin</strong>' and password is '<strong>123qwe</strong>' as default. 
-		If you want to login as a tenant, first switch to that tenant in login 
-		page.</p>
-
-      <h4>Deployment</h4>
-
-	  <p>We used <strong>angular-cli</strong> tooling to build Angular solution. 
-	  You can use <strong>ng build</strong> command to publish your project. It 
-	  publishes to <strong>dist</strong> folder by default. Then you can host this folder on 
-	  IIS or any web server you like.</p>
+		  <h3>Source Code</h3>
+		  <p>This project template is developed as open source and free under 
+		  Github:
+		  <a href="https://github.com/aspnetboilerplate/module-zero-core-template">
+		  https://github.com/aspnetboilerplate/module-zero-core-template</a></p>
 
       </div>
    </body>

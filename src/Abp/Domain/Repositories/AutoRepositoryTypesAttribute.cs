@@ -17,6 +17,8 @@ namespace Abp.Domain.Repositories
 
         public Type RepositoryImplementationWithPrimaryKey { get; }
 
+        public bool WithDefaultRepositoryInterfaces { get; set; }
+
         public AutoRepositoryTypesAttribute(
             Type repositoryInterface,
             Type repositoryInterfaceWithPrimaryKey,

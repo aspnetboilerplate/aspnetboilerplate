@@ -183,6 +183,37 @@ namespace Abp.TestBase.SampleApplication.Tests.People
         }
 
         [Fact]
+        public void Should_Rollback_UOW_In_Deleting_Event()
+        {
+            Resolve<IEventBus>().Register<EntityDeletingEventData<Person>>(
+                eventData =>
+                {
+                    throw new ApplicationException("A sample exception to rollback the UOW.");
+                });
+
+            //Act
+            try
+            {
+                using (var uow = Resolve<IUnitOfWorkManager>().Begin())
+                {
+                    var person = _personRepository.Single(p => p.Name == "halil");
+                    _personRepository.Delete(person);
+                    uow.Complete();
+                }
+
+                Assert.True(false, "Should not come here since ApplicationException is thrown!");
+            }
+            catch (ApplicationException)
+            {
+                //hiding exception
+            }
+            
+            _personRepository
+                .FirstOrDefault(p => p.Name == "halil")
+                .ShouldNotBeNull();
+        }
+
+        [Fact]
         public async Task Should_Insert_A_New_Entity_On_EntityCreating_Event()
         {
             var person = await _personRepository.InsertAsync(new Person { Name = "Tuana", ContactListId = 1 });
