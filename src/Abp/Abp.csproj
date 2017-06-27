@@ -74,4 +74,8 @@
     <Reference Include="mscorlib" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="MqMessages\" />
+  </ItemGroup>
+
 </Project>
