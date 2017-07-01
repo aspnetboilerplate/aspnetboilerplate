@@ -11,6 +11,7 @@ namespace Abp.EntityFrameworkCore.Dapper.Tests.Dapper
             Table("Posts");
             Map(x => x.Id).Key(KeyType.Guid);
             Map(x => x.Blog).Ignore();
+            Map(x => x.Comment).Ignore();
             AutoMap();
         }
     }
