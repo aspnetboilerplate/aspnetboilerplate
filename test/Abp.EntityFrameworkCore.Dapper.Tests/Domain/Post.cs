@@ -28,6 +28,10 @@ namespace Abp.EntityFrameworkCore.Dapper.Tests.Domain
         [Required]
         public Blog Blog { get; set; }
 
+        public Comment Comment { get; set; }
+
+        public int CommentId { get; set; }
+
         public int BlogId { get; set; }
 
         public string Title { get; set; }
