@@ -46,7 +46,7 @@ namespace Abp.Application.Navigation
         public string RequiredPermissionName { get; set; }
 
         /// <summary>
-        /// A permission dependency. Only users that can statify this permission dependency can see this menu item.
+        /// A permission dependency. Only users that can satisfy this permission dependency can see this menu item.
         /// Optional.
         /// </summary>
         public IPermissionDependency PermissionDependency { get; set; }
