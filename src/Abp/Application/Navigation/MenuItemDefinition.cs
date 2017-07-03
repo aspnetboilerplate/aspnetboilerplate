@@ -39,7 +39,7 @@ namespace Abp.Application.Navigation
         public string Url { get; set; }
 
         /// <summary>
-        /// A permission name. Only users that has this permission name can see this menu item.
+        /// A permission name. Only users that has this permission can see this menu item.
         /// Optional.
         /// </summary>
         [Obsolete]
