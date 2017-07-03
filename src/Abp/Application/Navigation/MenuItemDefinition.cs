@@ -100,7 +100,8 @@ namespace Abp.Application.Navigation
             ILocalizableString displayName, 
             string icon = null, 
             string url = null, 
-            bool requiresAuthentication = false, 
+            bool requiresAuthentication = false,
+            string requiredPermissionName = null,
             IPermissionDependency permissionDependency = null, 
             int order = 0, 
             object customData = null,
@@ -117,6 +118,7 @@ namespace Abp.Application.Navigation
             Icon = icon;
             Url = url;
             RequiresAuthentication = requiresAuthentication;
+            RequiredPermissionName = requiredPermissionName;
             PermissionDependency = permissionDependency;
             Order = order;
             CustomData = customData;
