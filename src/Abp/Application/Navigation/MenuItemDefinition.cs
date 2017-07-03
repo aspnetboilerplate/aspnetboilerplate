@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using Abp.Application.Features;
+using Abp.Authorization;
 using Abp.Collections.Extensions;
 using Abp.Localization;
 
@@ -37,10 +38,10 @@ namespace Abp.Application.Navigation
         public string Url { get; set; }
 
         /// <summary>
-        /// A permission name. Only users that has this permission can see this menu item.
+        /// A permission dependency. Only users that can statify this permission dependency can see this menu item.
         /// Optional.
         /// </summary>
-        public string RequiredPermissionName { get; set; }
+        public IPermissionDependency PermissionDependency { get; set; }
 
         /// <summary>
         /// A feature dependency.
@@ -92,7 +93,7 @@ namespace Abp.Application.Navigation
             string icon = null, 
             string url = null, 
             bool requiresAuthentication = false, 
-            string requiredPermissionName = null, 
+            IPermissionDependency permissionDependency = null, 
             int order = 0, 
             object customData = null,
             IFeatureDependency featureDependency = null,
@@ -108,7 +109,7 @@ namespace Abp.Application.Navigation
             Icon = icon;
             Url = url;
             RequiresAuthentication = requiresAuthentication;
-            RequiredPermissionName = requiredPermissionName;
+            PermissionDependency = permissionDependency;
             Order = order;
             CustomData = customData;
             FeatureDependency = featureDependency;
