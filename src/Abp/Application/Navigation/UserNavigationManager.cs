@@ -75,7 +75,16 @@ namespace Abp.Application.Navigation
                         continue;
                     }
 
-                    if (menuItemDefinition.PermissionDependency != null && 
+                    if (!string.IsNullOrEmpty(menuItemDefinition.RequiredPermissionName))
+                    {
+                        var permissionDependency = new SimplePermissionDependency(menuItemDefinition.RequiredPermissionName);
+                        if (user == null || !(await permissionDependency.IsSatisfiedAsync(permissionDependencyContext)))
+                        {
+                            continue;
+                        }
+                    }
+
+                    if (menuItemDefinition.PermissionDependency != null &&
                         (user == null || !(await menuItemDefinition.PermissionDependency.IsSatisfiedAsync(permissionDependencyContext))))
                     {
                         continue;

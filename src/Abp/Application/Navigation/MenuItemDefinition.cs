@@ -3,6 +3,7 @@ using Abp.Application.Features;
 using Abp.Authorization;
 using Abp.Collections.Extensions;
 using Abp.Localization;
+using System;
 
 namespace Abp.Application.Navigation
 {
@@ -36,6 +37,13 @@ namespace Abp.Application.Navigation
         /// The URL to navigate when this menu item is selected. Optional.
         /// </summary>
         public string Url { get; set; }
+
+        /// <summary>
+        /// A permission name. Only users that has this permission dependency can see this menu item.
+        /// Optional.
+        /// </summary>
+        [Obsolete]
+        public string RequiredPermissionName { get; set; }
 
         /// <summary>
         /// A permission dependency. Only users that can statify this permission dependency can see this menu item.
