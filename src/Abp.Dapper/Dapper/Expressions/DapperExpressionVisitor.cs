@@ -197,6 +197,17 @@ namespace Abp.Dapper.Expressions
 
                 return node;
             }
+            // in queries
+            if (node.Type == typeof(bool) && node.Method.DeclaringType == typeof(Abp.Dapper.Extensions.LinqExtensions))
+            {
+                var me = ((MemberExpression)(node.Arguments[0]));
+                object arg = ((ConstantExpression)node.Arguments[1]).Value;
+                var op = Operator.Eq;
+
+                _unarySpecified = false;
+                AddField(me, op, arg, _unarySpecified);
+                return node;
+            }
 
             throw new NotSupportedException($"The method '{node}' is not supported");
         }
