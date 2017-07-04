@@ -1,0 +1,12 @@
+ public static class LinqExtensions
+    {
+        public static bool In<T>(this int obj, T[] array)
+        {
+            return true;
+        }
+
+        public static bool In<T>(this string obj, T[] array)
+        {
+            return true;
+        }
+    }
