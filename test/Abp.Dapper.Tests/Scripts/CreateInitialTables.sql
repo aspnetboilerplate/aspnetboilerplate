@@ -1,50 +1,29 @@
-﻿
+﻿ CREATE TABLE IF NOT EXISTS Products (
+											Id INTEGER PRIMARY KEY
+										,	Name varchar(100) 
+										,	IsDeleted BOOLEAN
+										,	DeleterUserId BIGINT
+										,	DeletionTime DATETIME
+										,	LastModificationTime DATETIME
+										,	LastModifierUserId BIGINT
+										,	CreationTime DATETIME
+										,	CreatorUserId BIGINT
+										,	TenantId INTEGER NULLABLE
+									);
 
-IF ( NOT EXISTS ( SELECT    *
-                  FROM      INFORMATION_SCHEMA.TABLES
-                  WHERE     TABLE_SCHEMA = 'dbo'
-                            AND TABLE_NAME = 'Products' )
-   )
-    BEGIN
-        CREATE TABLE [dbo].[Products]
-            (
-              [Id] [INT] IDENTITY(1, 1)
-                         NOT NULL
-            , [Name] [NVARCHAR](50) NOT NULL
-            , [IsDeleted] [BIT] NOT NULL
-            , [DeleterUserId] BIGINT NULL
-            , [DeletionTime] [DATETIME] NULL
-            , [LastModificationTime] [DATETIME] NULL
-            , [LastModifierUserId] BIGINT NULL
-            , [CreationTime] [DATETIME] NOT NULL
-            , [CreatorUserId] BIGINT NULL
-            , TenantId INT NULL
-            )
-        ON  [PRIMARY]
-    END
+ CREATE TABLE IF NOT EXISTS ProductDetails (
+											Id INTEGER PRIMARY KEY
+										,	Gender varchar(100) 
+										,	IsDeleted BOOLEAN
+										,	DeleterUserId BIGINT
+										,	DeletionTime DATETIME
+										,	LastModificationTime DATETIME
+										,	LastModifierUserId BIGINT
+										,	CreationTime DATETIME
+										,	CreatorUserId BIGINT
+										,	TenantId INTEGER
+									);
 
+ 
 
-IF ( NOT EXISTS ( SELECT    *
-                  FROM      INFORMATION_SCHEMA.TABLES
-                  WHERE     TABLE_SCHEMA = 'dbo'
-                            AND TABLE_NAME = 'ProductDetails' )
-   )
-    BEGIN
-        CREATE TABLE [dbo].ProductDetails
-            (
-              [Id] [INT] IDENTITY(1, 1)
-                         NOT NULL
-            , Gender [NVARCHAR](50) NOT NULL
-            , [IsDeleted] [BIT] NOT NULL
-            , [DeleterUserId] BIGINT NULL
-            , [DeletionTime] [DATETIME] NULL
-            , [LastModificationTime] [DATETIME] NULL
-            , [LastModifierUserId] BIGINT NULL
-            , [CreationTime] [DATETIME] NOT NULL
-            , [CreatorUserId] BIGINT NULL
-            , TenantId INT NOT NULL
-            )
-        ON  [PRIMARY]
-    END
-
-
+ 
