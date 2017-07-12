@@ -25,10 +25,10 @@ namespace Abp.Web.Common.Tests.Web
 
             Assert.Equal(errorInfo.Message, message);
 
-            var exception = new EntityNotFoundException();
-            errorInfo = _defaultErrorInfoConverter.Convert(exception);
+            var exceptionWithoutMessage = new EntityNotFoundException();
+            errorInfo = _defaultErrorInfoConverter.Convert(exceptionWithoutMessage);
 
-            Assert.Equal(errorInfo.Message, exception.Message);
+            Assert.Equal(errorInfo.Message, exceptionWithoutMessage.Message);
         }
     }
 }
