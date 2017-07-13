@@ -1,9 +1,7 @@
 ﻿using System.Threading.Tasks;
 using Abp.Domain.Entities;
 using Abp.TestBase;
-using Abp.Web.Configuration;
 using Abp.Web.Models;
-using Shouldly;
 using Xunit;
 
 namespace Abp.Web.Common.Tests.Web
