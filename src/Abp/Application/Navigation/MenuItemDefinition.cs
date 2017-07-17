@@ -42,7 +42,7 @@ namespace Abp.Application.Navigation
         /// A permission name. Only users that has this permission can see this menu item.
         /// Optional.
         /// </summary>
-        [Obsolete]
+        [Obsolete("Use PermissionDependency instead.")]
         public string RequiredPermissionName { get; set; }
 
         /// <summary>
@@ -90,11 +90,21 @@ namespace Abp.Application.Navigation
         /// <summary>
         /// Sub items of this menu item. Optional.
         /// </summary>
-        public virtual IList<MenuItemDefinition> Items { get; private set; }
+        public virtual IList<MenuItemDefinition> Items { get; }
 
-        /// <summary>
-        /// Creates a new <see cref="MenuItemDefinition"/> object.
-        /// </summary>
+        /// <param name="name"></param>
+        /// <param name="displayName"></param>
+        /// <param name="icon"></param>
+        /// <param name="url"></param>
+        /// <param name="requiresAuthentication"></param>
+        /// <param name="requiredPermissionName">This parameter is obsolete. Use <paramref name="permissionDependency"/> instead!</param>
+        /// <param name="order"></param>
+        /// <param name="customData"></param>
+        /// <param name="featureDependency"></param>
+        /// <param name="target"></param>
+        /// <param name="isEnabled"></param>
+        /// <param name="isVisible"></param>
+        /// <param name="permissionDependency"></param>
         public MenuItemDefinition(
             string name, 
             ILocalizableString displayName, 
@@ -102,13 +112,13 @@ namespace Abp.Application.Navigation
             string url = null, 
             bool requiresAuthentication = false,
             string requiredPermissionName = null,
-            IPermissionDependency permissionDependency = null, 
             int order = 0, 
             object customData = null,
             IFeatureDependency featureDependency = null,
             string target = null,
             bool isEnabled = true,
-            bool isVisible = true)
+            bool isVisible = true,
+            IPermissionDependency permissionDependency = null)
         {
             Check.NotNull(name, nameof(name));
             Check.NotNull(displayName, nameof(displayName));
@@ -119,13 +129,13 @@ namespace Abp.Application.Navigation
             Url = url;
             RequiresAuthentication = requiresAuthentication;
             RequiredPermissionName = requiredPermissionName;
-            PermissionDependency = permissionDependency;
             Order = order;
             CustomData = customData;
             FeatureDependency = featureDependency;
             Target = target;
             IsEnabled = isEnabled;
             IsVisible = isVisible;
+            PermissionDependency = permissionDependency;
 
             Items = new List<MenuItemDefinition>();
         }
