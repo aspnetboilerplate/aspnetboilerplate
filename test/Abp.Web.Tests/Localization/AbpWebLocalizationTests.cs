@@ -2,7 +2,6 @@
 using System.Reflection;
 using Abp.Localization;
 using Abp.TestBase;
-using Abp.Web.Localization;
 using Shouldly;
 using Xunit;
 

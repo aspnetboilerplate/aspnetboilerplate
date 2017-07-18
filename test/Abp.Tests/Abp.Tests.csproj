@@ -18,6 +18,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\..\src\Abp.Web.Common\Abp.Web.Common.csproj" />
     <ProjectReference Include="..\..\src\Abp\Abp.csproj" />
     <ProjectReference Include="..\..\src\Abp.TestBase\Abp.TestBase.csproj" />
   </ItemGroup>

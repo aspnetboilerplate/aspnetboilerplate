@@ -1,8 +1,6 @@
 ﻿using System.Linq;
-
 using Abp.Modules;
 using Abp.PlugIns;
-
 using Shouldly;
 
 using Xunit;
