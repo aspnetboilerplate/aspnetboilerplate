@@ -66,7 +66,7 @@ namespace Abp.WebApi.Authorization
 
             try
             {
-                await _authorizationHelper.AuthorizeAsync(methodInfo);
+                await _authorizationHelper.AuthorizeAsync(methodInfo, methodInfo.DeclaringType);
                 return await continuation();
             }
             catch (AbpAuthorizationException ex)

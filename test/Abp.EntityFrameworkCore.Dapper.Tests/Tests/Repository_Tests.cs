@@ -22,6 +22,8 @@ namespace Abp.EntityFrameworkCore.Dapper.Tests.Tests
         private readonly IRepository<Blog> _blogRepository;
         private readonly IDapperRepository<Post, Guid> _postDapperRepository;
         private readonly IRepository<Post, Guid> _postRepository;
+        private readonly IRepository<Comment, long> _commentRepository;
+        private readonly IDapperRepository<Comment, long> _commentDapperRepository;
         private readonly IUnitOfWorkManager _uowManager;
 
         public Repository_Tests()
@@ -31,6 +33,8 @@ namespace Abp.EntityFrameworkCore.Dapper.Tests.Tests
             _postRepository = Resolve<IRepository<Post, Guid>>();
             _blogDapperRepository = Resolve<IDapperRepository<Blog>>();
             _postDapperRepository = Resolve<IDapperRepository<Post, Guid>>();
+            _commentRepository = Resolve<IRepository<Comment, long>>();
+            _commentDapperRepository = Resolve<IDapperRepository<Comment, long>>();
         }
 
         [Fact]
@@ -217,6 +221,18 @@ namespace Abp.EntityFrameworkCore.Dapper.Tests.Tests
 
             _blogDapperRepository.Get(blogId).Name.ShouldBe("Oguzhan_New_Blog");
             _blogRepository.Get(blogId).Name.ShouldBe("Oguzhan_New_Blog");
+        }
+
+        [Fact]
+        public void querying_with_TEntity_TPrimaryKey_should_work_on_dapper_repositories()
+        {
+            _commentRepository.Insert(new Comment("hey!"));
+
+            List<Comment> comments = _commentDapperRepository.Query("select * from Comments").ToList();
+            List<Comment> comments2 = _commentDapperRepository.Query<Comment>("select * from Comments").ToList();
+
+            comments2.Count.ShouldBe(1);
+            comments.Count.ShouldBe(1);
         }
     }
 }

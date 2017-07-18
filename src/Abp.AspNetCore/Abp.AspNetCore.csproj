@@ -25,11 +25,11 @@
   </ItemGroup>
 
   <ItemGroup>
-    <None Update="bin\Release\net46\Abp.AspNetCore.pdb">
+    <None Include="bin\Release\net46\Abp.AspNetCore.pdb">
       <PackagePath>lib/net46/</PackagePath>
       <Pack>true</Pack>
     </None>
-    <None Update="bin\Release\netstandard1.6\Abp.AspNetCore.pdb">
+    <None Include="bin\Release\netstandard1.6\Abp.AspNetCore.pdb">
       <PackagePath>lib/netstandard1.6/</PackagePath>
       <Pack>true</Pack>
     </None>
@@ -42,8 +42,8 @@
   <ItemGroup>
     <PackageReference Include="Microsoft.AspNetCore.Mvc" Version="1.1.3" />
     <PackageReference Include="Microsoft.AspNetCore.StaticFiles" Version="1.1.2" />
-    <PackageReference Include="Castle.LoggingFacility.MsLogging" Version="2.0.0" />
-    <PackageReference Include="Castle.Windsor.MsDependencyInjection" Version="2.0.1" />
+    <PackageReference Include="Castle.LoggingFacility.MsLogging" Version="2.1.1" />
+    <PackageReference Include="Castle.Windsor.MsDependencyInjection" Version="2.1.1" />
   </ItemGroup>
 
   <ItemGroup Condition=" '$(TargetFramework)' == 'net46' ">

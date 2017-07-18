@@ -1,5 +1,5 @@
 configuration: Release
-version: 2.1.0-beta{build}
+version: 2.2.0-beta{build}
 image: Visual Studio 2017
 
 nuget:

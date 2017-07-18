@@ -18,7 +18,7 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <None Update="bin\Release\net46\Abp.Owin.pdb">
+    <None Include="bin\Release\net46\Abp.Owin.pdb">
       <PackagePath>lib/net46/</PackagePath>
       <Pack>true</Pack>
     </None>

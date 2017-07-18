@@ -107,20 +107,15 @@
 	action. All <strong>application services </strong>are available to be used remotely. For 
 	example,  we can use the <strong>User service</strong> to get a <strong>list of users</strong>:</p>
 			<p>
-				<img class="img-thumbnail" alt="Authorization via token" src="../images/jwt-token-request.png" />
-			</p>
-			<p>Just made a <strong>GET</strong> request to <strong>http://localhost:62114/api/services/app/user/GetUsers</strong> with <strong>
+				&nbsp;<img class="img-thumbnail" alt="Call API" height="582" src="../images/token-request-v2.png" width="889" /></p>
+			<p>Just made a <strong>GET</strong> request to <strong>http://localhost:62114/api/services/app/user/GetAll</strong> with <strong>
 	Content-Type="application/json"</strong> and <strong>Authorization="Bearer <em>
 	your-</em>
 				</strong>
 				<em>
 					<strong>auth-token</strong>
 				</em>
-				<strong>"</strong>. 
-	Request body was just empty <strong>{}</strong>. Surely, request and response 
-	body will be different for different APIs.</p>
-	<p>Note that we also added X-Requested-With header to indicate that this is an AJAX request. Thus, ASP.NET Core can better handle the request and return appropriate return values on success and error cases.</p>
-			<p>Almost all operations available on UI are also available as API and can be consumed easily.</p>
+				<strong>"</strong>. Almost all operations available on UI are also available as API and can be consumed easily.</p>
 			<h3>Migrator Console Application</h3>
 <p>Startup template includes a tool, Migrator.exe, to easily migrate your databases. 
 You can run this application to create/migrate host and tenant databases.</p>

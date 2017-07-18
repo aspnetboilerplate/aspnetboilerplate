@@ -112,14 +112,14 @@ namespace Abp.Dapper.Repositories
             return Connection.QueryAsync<TAny>(query, parameters, ActiveTransaction);
         }
 
-        public override void Execute(string query, object parameters = null)
+        public override int Execute(string query, object parameters = null)
         {
-            Connection.Execute(query, parameters, ActiveTransaction);
+            return Connection.Execute(query, parameters, ActiveTransaction);
         }
 
-        public override Task ExecuteAsync(string query, object parameters = null)
+        public override Task<int> ExecuteAsync(string query, object parameters = null)
         {
-            return Task.FromResult(Connection.ExecuteAsync(query, parameters, ActiveTransaction));
+            return Connection.ExecuteAsync(query, parameters, ActiveTransaction);
         }
 
         public override IEnumerable<TEntity> GetAllPaged(Expression<Func<TEntity, bool>> predicate, int pageNumber, int itemsPerPage, string sortingProperty, bool ascending = true)
