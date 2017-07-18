@@ -33,12 +33,13 @@
     And we want to expose this service as a Web API Controller for clients. 
 	ASP.NET Boilerplate can automatically and dynamically create a Web API 
 	Controller for this application service with a single line of configuration:</p>
-			<pre lang="cs">DynamicApiControllerBuilder.For&lt;ITaskAppService&gt;("tasksystem/task").Build();</pre>
+			<pre lang="cs">Configuration.Modules.AbpWebApi().DynamicApiControllerBuilder.For&lt;ITaskAppService&gt;(<strong>"tasksystem/task"</strong>).Build();</pre>
 			<p>
     Thats 
 	all! An api controller is created in the address '<strong>/api/services/tasksystem/task</strong>' and all methods are now usable by clients.
     This configuration should be made in the
-				<a href="/Pages/Documents/Module-System">module initialization</a>. </p>
+				<strong>Initialize</strong> method of your
+			<a href="Module-System.html">module</a>.</p>
 			<p>
 				<strong>ITaskAppService</strong> is the application service that we want to 
 wrap with an api controller. It is not restricted to application services but 
@@ -56,7 +57,7 @@ world.</p>
 controllers one by one may be a tedious and forgettable work. 
 DynamicApiControllerBuilper provides a method to build web api controllers for 
 all application services in one call. Example:</p>
-			<pre lang="cs">DynamicApiControllerBuilder
+			<pre lang="cs">Configuration.Modules.AbpWebApi().DynamicApiControllerBuilder
     .ForAll&lt;IApplicationService&gt;(Assembly.GetAssembly(typeof(SimpleTaskSystemApplicationModule)), &quot;tasksystem&quot;)
     .Build();</pre>
 			<p>ForAll method is generic and accepts an interface. First parameter is an 
@@ -71,26 +72,21 @@ determine names. Also, There is a <strong>Where</strong> method to filter servic
 useful if you will build for all application services except a few one.</p>
 			<h4>Overriding ForAll</h4>
 			<p>We can override configuration after ForAll method. Example:</p>
-			<pre lang="cs">DynamicApiControllerBuilder
+			<pre lang="cs">Configuration.Modules.AbpWebApi().DynamicApiControllerBuilder
     .ForAll&lt;IApplicationService&gt;(Assembly.GetAssembly(typeof(SimpleTaskSystemApplicationModule)), &quot;tasksystem&quot;)
     .Build();
 
-DynamicApiControllerBuilder
+Configuration.Modules.AbpWebApi().DynamicApiControllerBuilder
     .For&lt;ITaskAppService&gt;("tasksystem/task")
     .ForMethod("CreateTask")<strong>.DontCreateAction()</strong>.Build();
 </pre>
 			<p>In this code, we created dynamic web api controllers for all application 
 services in an assembly. Then overrided configuration for a single application 
 service (ITaskAppService) to ignore CreateTask method. </p>
-			<h5>DisableDynamicWebApiAttribute</h5>
-			<p>You can also use DisableDynamicWebApiAttribute for any <strong>
-			interface</strong> or 
-			<strong>method</strong> definition to ignore this service or method while creating 
-			dynamic web api.</p>
 			<h5>ForMethods</h5>
 			<p>We can use <strong>ForMethods</strong> method to better adjust 
 			each method while using ForAll method. Example:</p>
-			<pre>DynamicApiControllerBuilder
+			<pre>Configuration.Modules.AbpWebApi().DynamicApiControllerBuilder
     .ForAll&lt;IApplicationService&gt;(Assembly.GetExecutingAssembly(), &quot;app&quot;)
     .<strong>ForMethods</strong>(builder =&gt;
     {
@@ -109,7 +105,7 @@ requests in order to use created web api actions. We can change this behaviour
 in different ways.</p>
 			<h5>WithVerb Method</h5>
 			<p>We can use WithVerb for a method like that:</p>
-			<pre lang="cs">DynamicApiControllerBuilder
+			<pre lang="cs">Configuration.Modules.AbpWebApi().DynamicApiControllerBuilder
     .For&lt;ITaskAppService&gt;("tasksystem/task")
     .ForMethod("GetTasks")<strong>.WithVerb(HttpVerb.Get)</strong>
     .Build();</pre>
@@ -135,7 +131,7 @@ nuget package from your project.</p>
 			<h5>Naming Convention</h5>
 			<p>Instead of declaring HTTP very for every method, you can use <strong>
 WithConventionalVerbs</strong> method as shown below:</p>
-			<pre lang="cs">DynamicApiControllerBuilder
+			<pre lang="cs">Configuration.Modules.AbpWebApi().DynamicApiControllerBuilder
     .ForAll&lt;IApplicationService&gt;(Assembly.GetAssembly(typeof(SimpleTaskSystemApplicationModule)), &quot;tasksystem&quot;)
     <strong>.WithConventionalVerbs()</strong>
     .Build();</pre>
@@ -151,10 +147,23 @@ WithConventionalVerbs</strong> method as shown below:</p>
 				<li>
 					<strong>Post</strong>: Used if method name starts with 'Post', 'Create' 
 					or 'Insert'.</li>
+				<li>
+					<strong>Patch</strong>: Used if method name starts with 
+					'Patch'.</li>
 				<li>Otherwise, <strong>Post</strong> is used <strong>as default</strong> 
 	HTTP verb.</li>
 			</ul>
 			<p>We can override it for a specific method as described before.</p>
+			<h4>API Explorer</h4>
+			<p>All dynamic web api controllers are visible to API explorer by 
+			default (They are available in <a href="Swagger-UI-Integration.html">
+			Swagger</a> for example). You can control this behaviour with fluent DynamicApiControllerBuilder 
+			API or using RemoteService attribute defined below.</p>
+			<h4>RemoteService Attribute</h4>
+			<p>You can also use <strong>RemoteService</strong> attribute for any <strong>
+			interface</strong> or 
+			<strong>method</strong> definition to enable/disable (<strong>IsEnabled</strong>) 
+			dynamic API or API explorer setting (<strong>IsMetadataEnabled</strong>).</p>
 			<h3 id="DocDynamicProxy">
     Dynamic Javascript Proxies</h3>
 			<p>
@@ -194,9 +203,12 @@ them as second argument as sown below:</p>
 			<p>All parameters of
 				<a href="http://api.jquery.com/jQuery.ajax/" target="_blank">jQuery.ajax</a> are 
 valid here.</p>
+			<p>In addition to standard jQuery.ajax parameters, you can add
+			<strong>abpHandleError: false</strong> to AJAX options in order to 
+			disable automatic message displaying on error cases.</p>
 			<h4 id="DocSingleService">Single Service Script</h4>
 			<p>'/api/AbpServiceProxies/GetAll' generates all service proxies in one file. 
-You can also generate a sinle service proxy using 
+You can also generate a single service proxy using 
 '/api/AbpServiceProxies/Get?name=<em>serviceName</em>' and include the script to the 
 page as shown below:</p>
 			<pre lang="xml">&lt;script src=&quot;/api/AbpServiceProxies/Get?name=tasksystem/task&quot; type=&quot;text/javascript&quot;&gt;&lt;/script&gt;</pre>

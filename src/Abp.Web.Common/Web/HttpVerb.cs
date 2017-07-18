@@ -42,5 +42,10 @@ namespace Abp.Web
         /// HEAD
         /// </summary>
         Head,
+
+        /// <summary>
+        /// PATCH
+        /// </summary>
+        Patch,
     }
 }

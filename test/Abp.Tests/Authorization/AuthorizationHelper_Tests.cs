@@ -1,6 +1,8 @@
-﻿using System.Threading.Tasks;
+﻿using System.Reflection;
+using System.Threading.Tasks;
 using Abp.Application.Features;
 using Abp.Authorization;
+using Abp.Configuration.Startup;
 using NSubstitute;
 using Xunit;
 
@@ -18,7 +20,10 @@ namespace Abp.Tests.Authorization
             var permissionChecker = Substitute.For<IPermissionChecker>();
             permissionChecker.IsGrantedAsync(Arg.Any<string>()).Returns(false);
 
-            _authorizeHelper = new AuthorizationHelper(featureChecker)
+            var configuration = Substitute.For<IAuthorizationConfiguration>();
+            configuration.IsEnabled.Returns(true);
+
+            _authorizeHelper = new AuthorizationHelper(featureChecker, configuration)
             {
                 PermissionChecker = permissionChecker
             };
@@ -28,11 +33,13 @@ namespace Abp.Tests.Authorization
         public async Task NotAuthorizedMethodsCanBeCalledAnonymously()
         {
             await _authorizeHelper.AuthorizeAsync(
-                typeof(MyNonAuthorizedClass).GetMethod(nameof(MyNonAuthorizedClass.Test_NotAuthorized))
+                typeof(MyNonAuthorizedClass).GetTypeInfo().GetMethod(nameof(MyNonAuthorizedClass.Test_NotAuthorized)),
+                typeof(MyNonAuthorizedClass)
                 );
 
             await _authorizeHelper.AuthorizeAsync(
-                typeof(MyAuthorizedClass).GetMethod(nameof(MyAuthorizedClass.Test_NotAuthorized))
+                typeof(MyAuthorizedClass).GetTypeInfo().GetMethod(nameof(MyAuthorizedClass.Test_NotAuthorized)),
+                typeof(MyAuthorizedClass)
             );
         }
 
@@ -42,14 +49,16 @@ namespace Abp.Tests.Authorization
             await Assert.ThrowsAsync<AbpAuthorizationException>(async () =>
             {
                 await _authorizeHelper.AuthorizeAsync(
-                    typeof(MyNonAuthorizedClass).GetMethod(nameof(MyNonAuthorizedClass.Test_Authorized))
+                    typeof(MyNonAuthorizedClass).GetTypeInfo().GetMethod(nameof(MyNonAuthorizedClass.Test_Authorized)),
+                    typeof(MyNonAuthorizedClass)
                 );
             });
 
             await Assert.ThrowsAsync<AbpAuthorizationException>(async () =>
             {
                 await _authorizeHelper.AuthorizeAsync(
-                    typeof(MyAuthorizedClass).GetMethod(nameof(MyAuthorizedClass.Test_Authorized))
+                    typeof(MyAuthorizedClass).GetTypeInfo().GetMethod(nameof(MyAuthorizedClass.Test_Authorized)),
+                    typeof(MyAuthorizedClass)
                 );
             });
         }

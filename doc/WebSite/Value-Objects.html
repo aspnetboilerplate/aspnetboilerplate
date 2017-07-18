@@ -1,0 +1,74 @@
+﻿<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+
+<head>
+<meta content="text/html; charset=utf-8" http-equiv="Content-Type" />
+<title>Value Objects</title>
+<link type="text/css" rel="stylesheet" href="bootstrap.min.css" />
+</head>
+
+<body>
+
+<div class="document-contents">
+
+<h3>Introduction</h3>
+<p>"<em>An object that represents a descriptive aspect of the domain with no 
+conceptual identity is called a VALUE OBJECT.</em>" (Eric Evans).</p>
+	<p>As opposite to <a href="Entities.html">Entities</a>, which have their 
+	identities (Id), a Value Object has not it's identity. If identities of two 
+	Entities are different, they are considered as different objects/entities 
+	even if all other properties of those entities are same. Think two different 
+	persons have same Name, Surname and Age but they are different people if 
+	their identity numbers are different. But, for an Address (which is a 
+	classic Value Object) class, if two addresses has same Country, City, Street 
+	number... etc. they are considered as the same address.</p>
+	<p>In Domain Driven Design (DDD), Value Object is another type of domain 
+	object which can include business logic and is an essential part of the 
+	domain.</p>
+	<h3>Value Object Base Class</h3>
+	<p>ABP has a <strong>ValueObject&lt;T&gt;</strong> base class which can be inherited 
+	in order to easily create Value Object types. Example <strong>Address</strong> 
+	Value Object type:</p>
+	<pre lang="cs">public class Address : <strong>ValueObject&lt;Address&gt;</strong>
+{
+    public Guid CityId { get; private set; } //A reference to a City entity.
+
+    public string Street { get; private set; }
+
+    public int Number { get; private set; }
+
+    public Address(Guid cityId, string street, int number)
+    {
+        CityId = cityId;
+        Street = street;
+        Number = number;
+    }
+}</pre>
+	<p>ValueObject base class overrides equality operator (and other related 
+	operator and methods) to compare two value object and assumes that they are 
+	identical if all properties are identical. So, all of these tests pass:</p>
+	<pre lang="cs">var address1 = new Address(new Guid(&quot;21C67A65-ED5A-4512-AA29-66308FAAB5AF&quot;), &quot;Baris Manco Street&quot;, 42);
+var address2 = new Address(new Guid(&quot;21C67A65-ED5A-4512-AA29-66308FAAB5AF&quot;), &quot;Baris Manco Street&quot;, 42);
+
+Assert.Equal(address1, address2);
+Assert.Equal(address1.GetHashCode(), address2.GetHashCode());
+Assert.True(address1 == address2);
+Assert.False(address1 != address2);</pre>
+	<p>Even they are different objects in memory, they are identical for our 
+	domain.</p>
+	<h3>Best Practices</h3>
+	<p>Here, some best practices for Value Objects:</p>
+	<ul>
+		<li>Design a value object as <strong>immutable</strong> (as like the 
+		Address above) if there is not a very good reason for designing it as 
+		mutable.</li>
+		<li>The properties that make up a Value Object should form a conceptual 
+		whole. For example, CityId, Street and Number shouldn't be serarate 
+		properties of a Person entity. Also, this makes Person entity simpler.</li>
+	</ul>
+
+</div>
+
+</body>
+
+</html>

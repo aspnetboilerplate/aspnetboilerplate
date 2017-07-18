@@ -2,9 +2,11 @@ using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Collections.Immutable;
+using System.Linq;
 using Abp.Collections.Extensions;
 using Abp.Dependency;
 using Abp.Extensions;
+using JetBrains.Annotations;
 
 namespace Abp.RealTime
 {
@@ -21,31 +23,31 @@ namespace Abp.RealTime
         /// <summary>
         /// Online clients.
         /// </summary>
-        private readonly ConcurrentDictionary<string, IOnlineClient> _clients;
+        protected ConcurrentDictionary<string, IOnlineClient> Clients { get; }
 
-        private readonly object _syncObj = new object();
+        protected readonly object SyncObj = new object();
 
         /// <summary>
         /// Initializes a new instance of the <see cref="OnlineClientManager"/> class.
         /// </summary>
         public OnlineClientManager()
         {
-            _clients = new ConcurrentDictionary<string, IOnlineClient>();
+            Clients = new ConcurrentDictionary<string, IOnlineClient>();
         }
 
-        public void Add(IOnlineClient client)
+        public virtual void Add(IOnlineClient client)
         {
-            lock (_syncObj)
+            lock (SyncObj)
             {
                 var userWasAlreadyOnline = false;
-                var user = client.ToUserIdentifier();
+                var user = client.ToUserIdentifierOrNull();
 
                 if (user != null)
                 {
                     userWasAlreadyOnline = this.IsOnline(user);
                 }
 
-                _clients[client.ConnectionId] = client;
+                Clients[client.ConnectionId] = client;
 
                 ClientConnected.InvokeSafely(this, new OnlineClientEventArgs(client));
 
@@ -56,18 +58,18 @@ namespace Abp.RealTime
             }
         }
 
-        public bool Remove(string connectionId)
+        public virtual bool Remove(string connectionId)
         {
-            lock (_syncObj)
+            lock (SyncObj)
             {
                 IOnlineClient client;
-                var isRemoved = _clients.TryRemove(connectionId, out client);
+                var isRemoved = Clients.TryRemove(connectionId, out client);
 
                 if (isRemoved)
                 {
-                    var user = client.ToUserIdentifier();
+                    var user = client.ToUserIdentifierOrNull();
 
-                    if (!this.IsOnline(user))
+                    if (user != null && !this.IsOnline(user))
                     {
                         UserDisconnected.InvokeSafely(this, new OnlineUserEventArgs(user, client));
                     }
@@ -79,20 +81,30 @@ namespace Abp.RealTime
             }
         }
 
-        public IOnlineClient GetByConnectionIdOrNull(string connectionId)
+        public virtual IOnlineClient GetByConnectionIdOrNull(string connectionId)
         {
-            lock (_syncObj)
+            lock (SyncObj)
             {
-                return _clients.GetOrDefault(connectionId);
+                return Clients.GetOrDefault(connectionId);
             }
         }
         
-        public IReadOnlyList<IOnlineClient> GetAllClients()
+        public virtual IReadOnlyList<IOnlineClient> GetAllClients()
         {
-            lock (_syncObj)
+            lock (SyncObj)
             {
-                return _clients.Values.ToImmutableList();
+                return Clients.Values.ToImmutableList();
             }
+        }
+
+        [NotNull]
+        public virtual IReadOnlyList<IOnlineClient> GetAllByUserId([NotNull] IUserIdentifier user)
+        {
+            Check.NotNull(user, nameof(user));
+
+            return GetAllClients()
+                 .Where(c => (c.UserId == user.UserId && c.TenantId == user.TenantId))
+                 .ToImmutableList();
         }
     }
 }

@@ -3,6 +3,7 @@ using System.Linq;
 using Abp.Configuration.Startup;
 using Abp.Domain.Repositories;
 using Abp.Domain.Uow;
+using Abp.TestBase.SampleApplication.Messages;
 using Abp.TestBase.SampleApplication.Tests.People;
 using Abp.Timing;
 using Shouldly;
@@ -16,8 +17,13 @@ namespace Abp.TestBase.SampleApplication.Tests.ContactLists
 
         public Messages_MultiTenancy_Tests()
         {
-            Resolve<IMultiTenancyConfig>().IsEnabled = true;
             _messageRepository = Resolve<IRepository<Message>>();
+        }
+
+        protected override void CreateInitialData()
+        {
+            Resolve<IMultiTenancyConfig>().IsEnabled = true;
+            base.CreateInitialData();
         }
 
         [Fact]
@@ -40,6 +46,8 @@ namespace Abp.TestBase.SampleApplication.Tests.ContactLists
 
                 using (unitOfWorkManager.Current.SetTenantId(1))
                 {
+                    unitOfWorkManager.Current.GetTenantId().ShouldBe(1);
+
                     tenant1Message1 = _messageRepository.FirstOrDefault(m => m.Text == "tenant-1-message-1");
                     tenant1Message1.ShouldNotBeNull(); //Can get tenant's data from host since we used SetTenantId()
                     tenant1Message1.LastModifierUserId.ShouldBeNull();

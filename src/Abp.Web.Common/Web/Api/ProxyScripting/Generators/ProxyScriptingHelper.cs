@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using Abp.Collections.Extensions;
 using Abp.Extensions;
 using Abp.Web.Api.Modeling;
 
@@ -100,53 +101,40 @@ namespace Abp.Web.Api.ProxyScripting.Generators
                 return url;
             }
 
-            if (!url.Contains("?"))
-            {
-                url += "?";
-            }
+            var qsBuilderParams = queryStringParameters
+                .Select(p => $"{{ name: '{p.Name.ToCamelCase()}', value: {ProxyScriptingJsFuncHelper.GetParamNameInJsFunc(p)} }}")
+                .JoinAsString(", ");
 
-            for (var i = 0; i < queryStringParameters.Length; i++)
-            {
-                var parameterInfo = queryStringParameters[i];
-
-                if (i > 0)
-                {
-                    url += "&";
-                }
-
-                url += (parameterInfo.Name.ToCamelCase() + "=' + escape(" + ProxyScriptingJsFuncHelper.GetParamNameInJsFunc(parameterInfo) + ") + '");
-            }
-
-            return url;
+            return url + $"' + abp.utils.buildQueryString([{qsBuilderParams}]) + '";
         }
-        
+
         public static string GetConventionalVerbForMethodName(string methodName)
         {
-            if (methodName.StartsWith("Get", StringComparison.InvariantCultureIgnoreCase))
+            if (methodName.StartsWith("Get", StringComparison.OrdinalIgnoreCase))
             {
                 return "GET";
             }
 
-            if (methodName.StartsWith("Put", StringComparison.InvariantCultureIgnoreCase) || 
-                methodName.StartsWith("Update", StringComparison.InvariantCultureIgnoreCase))
+            if (methodName.StartsWith("Put", StringComparison.OrdinalIgnoreCase) ||
+                methodName.StartsWith("Update", StringComparison.OrdinalIgnoreCase))
             {
                 return "PUT";
             }
 
-            if (methodName.StartsWith("Delete", StringComparison.InvariantCultureIgnoreCase) ||
-                methodName.StartsWith("Remove", StringComparison.InvariantCultureIgnoreCase))
+            if (methodName.StartsWith("Delete", StringComparison.OrdinalIgnoreCase) ||
+                methodName.StartsWith("Remove", StringComparison.OrdinalIgnoreCase))
             {
                 return "DELETE";
             }
 
-            if (methodName.StartsWith("Patch", StringComparison.InvariantCultureIgnoreCase))
+            if (methodName.StartsWith("Patch", StringComparison.OrdinalIgnoreCase))
             {
                 return "PATCH";
             }
 
-            if (methodName.StartsWith("Post", StringComparison.InvariantCultureIgnoreCase) || 
-                methodName.StartsWith("Create", StringComparison.InvariantCultureIgnoreCase) ||
-                methodName.StartsWith("Insert", StringComparison.InvariantCultureIgnoreCase))
+            if (methodName.StartsWith("Post", StringComparison.OrdinalIgnoreCase) ||
+                methodName.StartsWith("Create", StringComparison.OrdinalIgnoreCase) ||
+                methodName.StartsWith("Insert", StringComparison.OrdinalIgnoreCase))
             {
                 return "POST";
             }

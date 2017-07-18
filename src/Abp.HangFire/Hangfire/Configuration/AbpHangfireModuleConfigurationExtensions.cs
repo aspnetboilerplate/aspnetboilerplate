@@ -1,7 +1,6 @@
 ﻿using System;
 using Abp.BackgroundJobs;
 using Abp.Configuration.Startup;
-using Abp.Dependency;
 
 namespace Abp.Hangfire.Configuration
 {
@@ -20,7 +19,7 @@ namespace Abp.Hangfire.Configuration
         /// </summary>
         public static void UseHangfire(this IBackgroundJobConfiguration backgroundJobConfiguration, Action<IAbpHangfireConfiguration> configureAction)
         {
-            backgroundJobConfiguration.AbpConfiguration.IocManager.RegisterIfNot<IBackgroundJobManager, HangfireBackgroundJobManager>();
+            backgroundJobConfiguration.AbpConfiguration.ReplaceService<IBackgroundJobManager, HangfireBackgroundJobManager>();
             configureAction(backgroundJobConfiguration.AbpConfiguration.Modules.AbpHangfire());
         }
     }

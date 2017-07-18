@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Linq;
+using System.Reflection;
 using Abp.Dependency;
 using Castle.Core;
 
@@ -9,14 +10,15 @@ namespace Abp.Auditing
     {
         public static void Initialize(IIocManager iocManager)
         {
-            var auditingConfiguration = iocManager.Resolve<IAuditingConfiguration>();
-            if (!auditingConfiguration.IsEnabled)
-            {
-                return;
-            }
-
             iocManager.IocContainer.Kernel.ComponentRegistered += (key, handler) =>
             {
+                if (!iocManager.IsRegistered<IAuditingConfiguration>())
+                {
+                    return;
+                }
+
+                var auditingConfiguration = iocManager.Resolve<IAuditingConfiguration>();
+
                 if (ShouldIntercept(auditingConfiguration, handler.ComponentModel.Implementation))
                 {
                     handler.ComponentModel.Interceptors.Add(new InterceptorReference(typeof(AuditingInterceptor)));
@@ -31,12 +33,12 @@ namespace Abp.Auditing
                 return true;
             }
 
-            if (type.IsDefined(typeof(AuditedAttribute), true)) //TODO: true or false?
+            if (type.GetTypeInfo().IsDefined(typeof(AuditedAttribute), true))
             {
                 return true;
             }
 
-            if (type.GetMethods().Any(m => m.IsDefined(typeof(AuditedAttribute), true))) //TODO: true or false?
+            if (type.GetMethods().Any(m => m.IsDefined(typeof(AuditedAttribute), true)))
             {
                 return true;
             }

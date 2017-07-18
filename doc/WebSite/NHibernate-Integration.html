@@ -151,6 +151,11 @@ public class TaskRepository : <strong>NhRepositoryBase&lt;Task, long&gt;, ITaskR
 Tasks.</p>
 			<p>You can also use <strong>Session </strong>object in repository methods to use 
 full API of NHibernate.&nbsp;</p>
+			<p><strong>Note</strong>: Define the custom repository <strong>
+			interface </strong>in the <strong>domain/core</strong> layer,
+			<strong>implement </strong>it in the <strong>NHibernate </strong>
+			project for layered applications. Thus, you can inject the interface 
+			from any project without referencing to NH.</p>
 			<h5 id="DocAppBaseRepo">Application Specific Base Repository Class</h5>
 			<p>Although you can derive your repositories from NhRepositoryBase of ASP.NET 
 Boilerplate, it's a better practice to create your own base class that <strong>extends</strong> 

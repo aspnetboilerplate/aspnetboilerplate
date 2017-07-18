@@ -22,16 +22,27 @@ using Abp;
 [assembly: InternalsVisibleTo("Abp.NHibernate")]
 [assembly: InternalsVisibleTo("Abp.Web.Common")]
 [assembly: InternalsVisibleTo("Abp.AspNetCore")]
+[assembly: InternalsVisibleTo("Abp.Owin")]
 [assembly: InternalsVisibleTo("Abp.Web")]
 [assembly: InternalsVisibleTo("Abp.Web.Api")]
 [assembly: InternalsVisibleTo("Abp.Web.Mvc")]
 [assembly: InternalsVisibleTo("Abp.Web.Resources")]
+[assembly: InternalsVisibleTo("Abp.Specifications")]
+[assembly: InternalsVisibleTo("Abp.Dapper")]
 
 [assembly: InternalsVisibleTo("Abp.Tests")]
 [assembly: InternalsVisibleTo("Abp.EntityFramework.Tests")]
+[assembly: InternalsVisibleTo("Abp.EntityFrameworkCore.Tests")]
 [assembly: InternalsVisibleTo("Abp.RedisCache.Tests")]
 [assembly: InternalsVisibleTo("Abp.Web.Tests")]
 [assembly: InternalsVisibleTo("Abp.Web.Api.Tests")]
+
+[assembly: InternalsVisibleTo("Abp.Zero.Common")]
+[assembly: InternalsVisibleTo("Abp.Zero.Ldap")]
+[assembly: InternalsVisibleTo("Abp.Zero")]
+[assembly: InternalsVisibleTo("Abp.Zero.EntityFramework")]
+[assembly: InternalsVisibleTo("Abp.ZeroCore")]
+[assembly: InternalsVisibleTo("Abp.ZeroCore.EntityFrameworkCore")]
 
 // Setting ComVisible to false makes the types in this assembly not visible 
 // to COM components.  If you need to access a type in this assembly from 

@@ -1,11 +1,13 @@
 ﻿using System.Reflection;
 using Abp.Configuration.Startup;
 using Abp.Dependency;
+using Abp.Domain.Uow;
 using Abp.Modules;
 using Abp.NHibernate.Configuration;
 using Abp.NHibernate.Filters;
 using Abp.NHibernate.Interceptors;
 using Abp.NHibernate.Repositories;
+using Abp.NHibernate.Uow;
 using NHibernate;
 
 namespace Abp.NHibernate
@@ -24,6 +26,7 @@ namespace Abp.NHibernate
         public override void PreInitialize()
         {
             IocManager.Register<IAbpNHibernateModuleConfiguration, AbpNHibernateModuleConfiguration>();
+            Configuration.ReplaceService<IUnitOfWorkFilterExecuter, NhUnitOfWorkFilterExecuter>(DependencyLifeStyle.Transient);
         }
 
         /// <inheritdoc/>

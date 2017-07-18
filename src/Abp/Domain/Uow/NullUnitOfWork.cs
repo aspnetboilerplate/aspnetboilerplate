@@ -41,10 +41,12 @@ namespace Abp.Domain.Uow
 
         public NullUnitOfWork(
             IConnectionStringResolver connectionStringResolver,
-            IUnitOfWorkDefaultOptions defaultOptions)
-            : base(
+            IUnitOfWorkDefaultOptions defaultOptions,
+            IUnitOfWorkFilterExecuter filterExecuter
+            ) : base(
                 connectionStringResolver,
-                defaultOptions)
+                defaultOptions,
+                filterExecuter)
         {
         }
     }

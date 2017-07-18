@@ -69,17 +69,13 @@ permissions.</p>
 					<strong>Description</strong>: A localizable string that can be used to 
 	show definition of the permission, later in UI.</li>
 				<li>
-					<strong>IsGrantedByDefault</strong>: Is this permission granted for all 
-	(logged in) users unless it's explicitly prohibited. This is generally made 
-	false (as default).</li>
-				<li>
 					<strong>MultiTenancySides</strong>: For multi-tenant application, a 
 	permission can be used by tenants or the host. This is a <strong>Flags
 					</strong>enumeration and thus a permission can be used in both sides.</li>
 				<li>
-					<strong>dependedFeature</strong>: Can be used to declare a dependency to
-					<a href="/Pages/Documents/Feature-Management">features</a>. So, this 
-	permission can be granted only if feature dependency is satisfied.</li>
+					<strong>featureDependency</strong>: Can be used to declare a dependency to
+					<a href="/Pages/Documents/Feature-Management">features</a>. Thus, this 
+	permission can be granted only if feature dependency is satisfied. It waits for an object implements IFeatureDependency. Default implementation is the SimpleFeatureDependency class. Example usage: <code>new SimpleFeatureDependency("MyFeatureName")</code></li>
 			</ul>
 			<p>A permission can have a parent and child permissions. While this does not 
 effect permission checking, it may help to group permissions in UI.</p>

@@ -21,6 +21,11 @@ namespace Abp.WebApi.Controllers.Dynamic.Builders
                 return HttpVerb.Put;
             }
 
+            if (methodName.StartsWith("Patch", StringComparison.InvariantCultureIgnoreCase))
+            {
+                return HttpVerb.Patch;
+            }
+
             if (methodName.StartsWith("Delete", StringComparison.InvariantCultureIgnoreCase) ||
                 methodName.StartsWith("Remove", StringComparison.InvariantCultureIgnoreCase))
             {

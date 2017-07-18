@@ -1,0 +1,109 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+        "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+
+<head>
+    <meta content="text/html; charset=utf-8" http-equiv="Content-Type"/>
+    <title>Quartz Integration</title>
+    <link type="text/css" rel="stylesheet" href="bootstrap.min.css"/>
+</head>
+
+<body>
+
+<div class="document-contents">
+
+    <h3>Introduction</h3>
+    <p>
+        <a href="http://www.quartz-scheduler.net/" target="_blank">Quartz</a> is 
+		a is a full-featured, open source job scheduling system that can be used 
+		from smallest apps to large scale enterprise systems. 
+		<a href="https://www.nuget.org/packages/Abp.Quartz" target="_blank">Abp.Quartz</a> package 
+		simply integrates Quartz to ASP.NET Boilerplate.</p>
+
+		<div class="bs-callout bs-callout-info">
+			<p>ASP.NET Boilerplate has a built-in
+			<a href="Background-Jobs-And-Workers.html">persistent background job 
+			queue and background worker</a> system. Quartz can be a good 
+			alternative if you have advanced scheduling requirements for your 
+			background workers. Also, <a href="Hangfire-Integration.html">
+			Hangfire</a> can be a good alternative for persistent background job 
+			queue.</p>
+		</div>
+
+	<h3>Installation</h3>
+    <p>
+        Install
+        <a href="https://www.nuget.org/packages/Abp.Quartz" target="_blank">
+            <strong>Abp.Quartz</strong>
+        </a> nuget package to your project and add a <strong>DependsOn</strong> 
+		attribute to your <a href="Module-System.html">module</a> for <strong>AbpQuartzModule</strong>:
+    </p>
+    <pre lang="cs">
+<strong>[DependsOn(typeof (AbpQuartzModule))]</strong>
+public class YourModule : AbpModule
+{
+    //...
+}</pre>
+
+	<h3>Creating Jobs</h3>
+	<p>To create a new job, you can either implement Quartz's IJob interface, or 
+	derive from JobBase class (defined in Abp.Quartz package) that has some 
+	helper properties/methods (for logging and localization for example). A 
+	simple job class is shown below:</p>
+    <pre lang="cs">public class MyLogJob : <strong>JobBase, ITransientDependency
+</strong>{
+    public override void <strong>Execute</strong>(IJobExecutionContext context)
+    {
+        Logger.Info("Executed MyLogJob :)");
+    }
+}</pre>
+
+<p>We simply implemented the <strong>Execute</strong> method to write a log. You 
+can see Quartz's <a href="http://www.quartz-scheduler.net/" target="_blank">
+documentation</a> for more.</p>
+	<h3>Schedule Jobs</h3>
+	<p><strong>IQuartzScheduleJobManager</strong> is used to schedule jobs. You can inject it 
+	to your class (or you can Resolve and use it in your module's PostInitialize 
+	method) to schedule jobs. An example Controller that schedules a job:</p>
+
+    <pre lang="cs">public class HomeController : AbpController
+{
+    private readonly IQuartzScheduleJobManager _jobManager;
+
+    public HomeController(<strong>IQuartzScheduleJobManager jobManager</strong>)
+    {
+        _jobManager = jobManager;
+    }
+        
+    public async Task&lt;ActionResult&gt; ScheduleJob()
+    {
+<strong>        await _jobManager.ScheduleAsync&lt;MyLogJob&gt;(
+            job =&gt;
+            {
+                job.WithIdentity("MyLogJobIdentity", "MyGroup")
+                    .WithDescription("A job to simply write logs.");
+            },
+            trigger =&gt;
+            {
+                trigger.StartNow()
+                    .WithSimpleSchedule(schedule =&gt;
+                    {
+                        schedule.RepeatForever()
+                            .WithIntervalInSeconds(5)
+                            .Build();
+                    });
+            });
+</strong>
+        return Content("OK, scheduled!");
+    }
+}   </pre>
+
+<h3>More</h3>
+<p>Please see Quartz's <a href="http://www.quartz-scheduler.net/" target="_blank">
+documentation</a> for more information about Quartz.</p>
+
+</div>
+
+</body>
+
+</html>

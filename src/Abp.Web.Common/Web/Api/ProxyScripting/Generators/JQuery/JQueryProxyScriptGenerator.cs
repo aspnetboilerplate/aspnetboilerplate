@@ -30,7 +30,7 @@ namespace Abp.Web.Api.ProxyScripting.Generators.JQuery
             return script.ToString();
         }
 
-        private void AddModuleScript(StringBuilder script, ModuleApiDescriptionModel module)
+        private static void AddModuleScript(StringBuilder script, ModuleApiDescriptionModel module)
         {
             script.AppendLine($"// module '{module.Name.ToCamelCase()}'");
             script.AppendLine("(function(){");
@@ -47,7 +47,7 @@ namespace Abp.Web.Api.ProxyScripting.Generators.JQuery
             script.AppendLine("})();");
         }
 
-        private void AddControllerScript(StringBuilder script, ModuleApiDescriptionModel module, ControllerApiDescriptionModel controller)
+        private static void AddControllerScript(StringBuilder script, ModuleApiDescriptionModel module, ControllerApiDescriptionModel controller)
         {
             script.AppendLine($"  // controller '{controller.Name.ToCamelCase()}'");
             script.AppendLine("  (function(){");
@@ -65,12 +65,12 @@ namespace Abp.Web.Api.ProxyScripting.Generators.JQuery
             script.AppendLine("  })();");
         }
 
-        private void AddActionScript(StringBuilder script, ModuleApiDescriptionModel module, ControllerApiDescriptionModel controller, ActionApiDescriptionModel action)
+        private static void AddActionScript(StringBuilder script, ModuleApiDescriptionModel module, ControllerApiDescriptionModel controller, ActionApiDescriptionModel action)
         {
             var parameterList = ProxyScriptingJsFuncHelper.GenerateJsFuncParameterList(action, "ajaxParams");
 
             script.AppendLine($"    // action '{action.Name.ToCamelCase()}'");
-            script.AppendLine($"    abp.services.{module.Name.ToCamelCase()}.{controller.Name.ToCamelCase()}.{action.Name.ToCamelCase()} = function({parameterList}) {{");
+            script.AppendLine($"    abp.services.{module.Name.ToCamelCase()}.{controller.Name.ToCamelCase()}{ProxyScriptingJsFuncHelper.WrapWithBracketsOrWithDotPrefix(action.Name.ToCamelCase())} = function({parameterList}) {{");
             script.AppendLine("      return abp.ajax($.extend(true, {");
 
             AddAjaxCallParameters(script, controller, action);
@@ -79,7 +79,7 @@ namespace Abp.Web.Api.ProxyScripting.Generators.JQuery
             script.AppendLine("    };");
         }
 
-        private void AddAjaxCallParameters(StringBuilder script, ControllerApiDescriptionModel controller, ActionApiDescriptionModel action)
+        private static void AddAjaxCallParameters(StringBuilder script, ControllerApiDescriptionModel controller, ActionApiDescriptionModel action)
         {
             var httpMethod = action.HttpMethod?.ToUpperInvariant() ?? "POST";
 

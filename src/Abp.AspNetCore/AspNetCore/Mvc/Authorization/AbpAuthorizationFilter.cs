@@ -5,6 +5,8 @@ using Abp.AspNetCore.Mvc.Extensions;
 using Abp.AspNetCore.Mvc.Results;
 using Abp.Authorization;
 using Abp.Dependency;
+using Abp.Events.Bus;
+using Abp.Events.Bus.Exceptions;
 using Abp.Web.Models;
 using Castle.Core.Logging;
 using Microsoft.AspNetCore.Mvc;
@@ -19,14 +21,16 @@ namespace Abp.AspNetCore.Mvc.Authorization
 
         private readonly IAuthorizationHelper _authorizationHelper;
         private readonly IErrorInfoBuilder _errorInfoBuilder;
+        private readonly IEventBus _eventBus;
 
         public AbpAuthorizationFilter(
             IAuthorizationHelper authorizationHelper,
-            IErrorInfoBuilder errorInfoBuilder
-            )
+            IErrorInfoBuilder errorInfoBuilder,
+            IEventBus eventBus)
         {
             _authorizationHelper = authorizationHelper;
             _errorInfoBuilder = errorInfoBuilder;
+            _eventBus = eventBus;
             Logger = NullLogger.Instance;
         }
 
@@ -38,14 +42,19 @@ namespace Abp.AspNetCore.Mvc.Authorization
                 return;
             }
 
+            //TODO: Avoid using try/catch, use conditional checking
             try
             {
-                //TODO: Avoid using try/catch, use conditional checking
-                await _authorizationHelper.AuthorizeAsync(context.ActionDescriptor.GetMethodInfo());
+                await _authorizationHelper.AuthorizeAsync(
+                    context.ActionDescriptor.GetMethodInfo(),
+                    context.ActionDescriptor.GetMethodInfo().DeclaringType
+                );
             }
             catch (AbpAuthorizationException ex)
             {
                 Logger.Warn(ex.ToString(), ex);
+
+                _eventBus.Trigger(this, new AbpHandledExceptionData(ex));
 
                 if (ActionResultHelper.IsObjectResult(context.ActionDescriptor.GetMethodInfo().ReturnType))
                 {
@@ -64,6 +73,8 @@ namespace Abp.AspNetCore.Mvc.Authorization
             catch (Exception ex)
             {
                 Logger.Error(ex.ToString(), ex);
+
+                _eventBus.Trigger(this, new AbpHandledExceptionData(ex));
 
                 if (ActionResultHelper.IsObjectResult(context.ActionDescriptor.GetMethodInfo().ReturnType))
                 {

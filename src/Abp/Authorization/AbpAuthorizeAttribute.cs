@@ -7,6 +7,7 @@ namespace Abp.Authorization
     /// This attribute is used on a method of an Application Service (A class that implements <see cref="IApplicationService"/>)
     /// to make that method usable only by authorized users.
     /// </summary>
+    [AttributeUsage(AttributeTargets.Class | AttributeTargets.Method, AllowMultiple = true)]
     public class AbpAuthorizeAttribute : Attribute, IAbpAuthorizeAttribute
     {
         /// <summary>

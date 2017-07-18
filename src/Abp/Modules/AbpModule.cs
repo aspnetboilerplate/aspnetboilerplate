@@ -5,6 +5,7 @@ using System.Reflection;
 using Abp.Collections.Extensions;
 using Abp.Configuration.Startup;
 using Abp.Dependency;
+using Castle.Core.Logging;
 
 namespace Abp.Modules
 {
@@ -27,6 +28,16 @@ namespace Abp.Modules
         /// Gets a reference to the ABP configuration.
         /// </summary>
         protected internal IAbpStartupConfiguration Configuration { get; internal set; }
+
+        /// <summary>
+        /// Gets or sets the logger.
+        /// </summary>
+        public ILogger Logger { get; set; }
+
+        protected AbpModule()
+        {
+            Logger = NullLogger.Instance;
+        }
 
         /// <summary>
         /// This is the first event called on application startup. 
@@ -72,15 +83,16 @@ namespace Abp.Modules
         /// <param name="type">Type to check</param>
         public static bool IsAbpModule(Type type)
         {
+            var typeInfo = type.GetTypeInfo();
             return
-                type.IsClass &&
-                !type.IsAbstract &&
-                !type.IsGenericType &&
+                typeInfo.IsClass &&
+                !typeInfo.IsAbstract &&
+                !typeInfo.IsGenericType &&
                 typeof(AbpModule).IsAssignableFrom(type);
         }
 
         /// <summary>
-        /// Finds direct depended modules of a module.
+        /// Finds direct depended modules of a module (excluding given module).
         /// </summary>
         public static List<Type> FindDependedModuleTypes(Type moduleType)
         {
@@ -91,9 +103,9 @@ namespace Abp.Modules
 
             var list = new List<Type>();
 
-            if (moduleType.IsDefined(typeof(DependsOnAttribute), true))
+            if (moduleType.GetTypeInfo().IsDefined(typeof(DependsOnAttribute), true))
             {
-                var dependsOnAttributes = moduleType.GetCustomAttributes(typeof(DependsOnAttribute), true).Cast<DependsOnAttribute>();
+                var dependsOnAttributes = moduleType.GetTypeInfo().GetCustomAttributes(typeof(DependsOnAttribute), true).Cast<DependsOnAttribute>();
                 foreach (var dependsOnAttribute in dependsOnAttributes)
                 {
                     foreach (var dependedModuleType in dependsOnAttribute.DependedModuleTypes)
@@ -106,19 +118,15 @@ namespace Abp.Modules
             return list;
         }
 
-
-        /// <summary>
-        /// Finds all depended modules (and their dependencies recursively) for a module.
-        /// </summary>
-        public static List<Type> FindDependedModuleTypesRecursively(Type moduleType)
+        public static List<Type> FindDependedModuleTypesRecursivelyIncludingGivenModule(Type moduleType)
         {
             var list = new List<Type>();
-            AddModuleAndDependenciesResursively(list, moduleType);
+            AddModuleAndDependenciesRecursively(list, moduleType);
             list.AddIfNotContains(typeof(AbpKernelModule));
             return list;
         }
 
-        private static void AddModuleAndDependenciesResursively(List<Type> modules, Type module)
+        private static void AddModuleAndDependenciesRecursively(List<Type> modules, Type module)
         {
             if (!IsAbpModule(module))
             {
@@ -135,7 +143,7 @@ namespace Abp.Modules
             var dependedModules = FindDependedModuleTypes(module);
             foreach (var dependedModule in dependedModules)
             {
-                AddModuleAndDependenciesResursively(modules, dependedModule);
+                AddModuleAndDependenciesRecursively(modules, dependedModule);
             }
         }
     }

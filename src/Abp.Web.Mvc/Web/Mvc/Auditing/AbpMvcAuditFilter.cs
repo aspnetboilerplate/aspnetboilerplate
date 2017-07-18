@@ -1,50 +1,22 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Diagnostics;
-using System.Linq;
-using System.Web;
 using System.Web.Mvc;
 using Abp.Auditing;
-using Abp.Collections.Extensions;
 using Abp.Dependency;
-using Abp.Runtime.Session;
-using Abp.Timing;
+using Abp.Web.Mvc.Configuration;
 using Abp.Web.Mvc.Extensions;
-using Castle.Core.Logging;
 
 namespace Abp.Web.Mvc.Auditing
 {
     public class AbpMvcAuditFilter : IActionFilter, ITransientDependency
     {
-        /// <summary>
-        /// Ignored types for serialization on audit logging.
-        /// </summary>
-        public static List<Type> IgnoredTypesForSerializationOnAuditLogging { get; private set; }
+        private readonly IAbpMvcConfiguration _configuration;
+        private readonly IAuditingHelper _auditingHelper;
 
-        public IAbpSession AbpSession { get; set; }
-        public IAuditInfoProvider AuditInfoProvider { get; set; }
-        public IAuditingStore AuditingStore { get; set; }
-        public ILogger Logger { get; set; }
-
-        private readonly IAuditingConfiguration _auditingConfiguration;
-
-        static AbpMvcAuditFilter()
+        public AbpMvcAuditFilter(IAbpMvcConfiguration configuration, IAuditingHelper auditingHelper)
         {
-            IgnoredTypesForSerializationOnAuditLogging = new List<Type>
-            {
-                typeof (HttpPostedFileBase),
-                typeof (IEnumerable<HttpPostedFileBase>)
-            };
-        }
-
-        public AbpMvcAuditFilter(IAuditingConfiguration auditingConfiguration)
-        {
-            _auditingConfiguration = auditingConfiguration;
-
-            AbpSession = NullAbpSession.Instance;
-            AuditingStore = SimpleLogAuditingStore.Instance;
-            AuditInfoProvider = NullAuditInfoProvider.Instance;
-            Logger = NullLogger.Instance;
+            _configuration = configuration;
+            _auditingHelper = auditingHelper;
         }
 
         public void OnActionExecuting(ActionExecutingContext filterContext)
@@ -55,21 +27,12 @@ namespace Abp.Web.Mvc.Auditing
                 return;
             }
 
-            var currentMethodInfo = filterContext.ActionDescriptor.GetMethodInfoOrNull();
+            var auditInfo = _auditingHelper.CreateAuditInfo(
+                filterContext.ActionDescriptor.GetMethodInfoOrNull(),
+                filterContext.ActionParameters
+            );
+
             var actionStopwatch = Stopwatch.StartNew();
-            var auditInfo = new AuditInfo
-            {
-                TenantId = AbpSession.TenantId,
-                UserId = AbpSession.UserId,
-                ImpersonatorUserId = AbpSession.ImpersonatorUserId,
-                ImpersonatorTenantId = AbpSession.ImpersonatorTenantId,
-                ServiceName = currentMethodInfo.DeclaringType != null
-                                ? currentMethodInfo.DeclaringType.FullName
-                                : filterContext.ActionDescriptor.ControllerDescriptor.ControllerName,
-                MethodName = currentMethodInfo.Name,
-                Parameters = ConvertArgumentsToJson(filterContext),
-                ExecutionTime = Clock.Now
-            };
 
             AbpAuditFilterData.Set(
                 filterContext.HttpContext,
@@ -93,8 +56,7 @@ namespace Abp.Web.Mvc.Auditing
             auditData.AuditInfo.ExecutionDuration = Convert.ToInt32(auditData.Stopwatch.Elapsed.TotalMilliseconds);
             auditData.AuditInfo.Exception = filterContext.Exception;
 
-            AuditInfoProvider?.Fill(auditData.AuditInfo);
-            AuditingStore.Save(auditData.AuditInfo);
+            _auditingHelper.Save(auditData.AuditInfo);
         }
 
         private bool ShouldSaveAudit(ActionExecutingContext filterContext)
@@ -105,60 +67,22 @@ namespace Abp.Web.Mvc.Auditing
                 return false;
             }
 
-            if (_auditingConfiguration == null)
+            if (_configuration == null)
             {
                 return false;
             }
 
-            if (!_auditingConfiguration.MvcControllers.IsEnabled)
+            if (!_configuration.IsAuditingEnabled)
             {
                 return false;
             }
 
-            if (filterContext.IsChildAction && !_auditingConfiguration.MvcControllers.IsEnabledForChildActions)
+            if (filterContext.IsChildAction && !_configuration.IsAuditingEnabledForChildActions)
             {
                 return false;
             }
 
-            return AuditingHelper.ShouldSaveAudit(
-                currentMethodInfo,
-                _auditingConfiguration,
-                AbpSession,
-                true
-                );
-        }
-
-        private string ConvertArgumentsToJson(ActionExecutingContext filterContext)
-        {
-            try
-            {
-                if (filterContext.ActionParameters.IsNullOrEmpty())
-                {
-                    return "{}";
-                }
-
-                var dictionary = new Dictionary<string, object>();
-
-                foreach (var argument in filterContext.ActionParameters)
-                {
-                    if (argument.Value != null && IgnoredTypesForSerializationOnAuditLogging.Any(t => t.IsInstanceOfType(argument.Value)))
-                    {
-                        dictionary[argument.Key] = null;
-                    }
-                    else
-                    {
-                        dictionary[argument.Key] = argument.Value;
-                    }
-                }
-
-                return AuditingHelper.Serialize(dictionary);
-            }
-            catch (Exception ex)
-            {
-                Logger.Warn("Could not serialize arguments for method: " + filterContext.Controller.GetType().FullName + "." + filterContext.ActionDescriptor.ActionName);
-                Logger.Warn(ex.ToString(), ex);
-                return "{}";
-            }
+            return _auditingHelper.ShouldSaveAudit(currentMethodInfo, true);
         }
     }
 }

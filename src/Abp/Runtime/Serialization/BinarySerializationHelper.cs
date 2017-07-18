@@ -1,4 +1,5 @@
-﻿using System;
+﻿#if NET46
+using System;
 using System.IO;
 using System.Runtime.Serialization;
 using System.Runtime.Serialization.Formatters.Binary;
@@ -124,3 +125,4 @@ namespace Abp.Runtime.Serialization
         }
     }
 }
+#endif

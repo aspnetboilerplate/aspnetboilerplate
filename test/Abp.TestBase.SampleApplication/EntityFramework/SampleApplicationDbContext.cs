@@ -1,13 +1,22 @@
 ﻿using System.Data.Common;
 using System.Data.Entity;
+using Abp.Domain.Repositories;
 using Abp.EntityFramework;
 using Abp.TestBase.SampleApplication.ContacLists;
 using Abp.TestBase.SampleApplication.Crm;
+using Abp.TestBase.SampleApplication.EntityFramework.Repositories;
 using Abp.TestBase.SampleApplication.GuidEntities;
+using Abp.TestBase.SampleApplication.Messages;
 using Abp.TestBase.SampleApplication.People;
 
 namespace Abp.TestBase.SampleApplication.EntityFramework
 {
+    [AutoRepositoryTypes(
+        typeof(IRepository<>),
+        typeof(IRepository<,>),
+        typeof(SampleApplicationEfRepositoryBase<>),
+        typeof(SampleApplicationEfRepositoryBase<,>)
+    )]
     public class SampleApplicationDbContext : AbpDbContext
     {
         public virtual IDbSet<ContactList> ContactLists { get; set; }
@@ -36,7 +45,13 @@ namespace Abp.TestBase.SampleApplication.EntityFramework
         }
 
         public SampleApplicationDbContext(DbConnection connection)
-            : base(connection, true)
+            : base(connection, false)
+        {
+
+        }
+
+        public SampleApplicationDbContext(DbConnection connection, bool contextOwnsConnection)
+            : base(connection, contextOwnsConnection)
         {
 
         }

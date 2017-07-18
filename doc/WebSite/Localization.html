@@ -212,6 +212,97 @@ DictionaryBasedLocalizationSource</strong>
 class to make implementation easier (json and xml localization sources also use 
 it). <a href="Zero/Language-Management.html">Module zero</a> implements source 
 			in the database for example.</p>
+			<h3>How Current Language Is Determined</h3>
+			<h4>ASP.NET Core</h4>
+			<p>ASP.NET Core has it's own mechanism to determine the current 
+			language. Abp.AspNetCore package automatically adds ASP.NET Core's
+			<strong>UseRequestLocalization</strong> middleware to request 
+			pipeline. It also adds some special providers. Here, default ordered 
+			list of all provides, which determines the current language for an 
+			HTTP request:</p>
+			<ul>
+				<li><strong>QueryStringRequestCultureProvider</strong> (ASP.NET 
+				Core&#39;s default provider): Use <strong>culture</strong> &amp; <strong>
+				ui-culture</strong> URL query string values if present. Example 
+				value: &quot;culture=es-MX&amp;ui-culture=es-MX&quot;.</li>
+				<li><strong>AbpUserRequestCultureProvider</strong> (ABP&#39;s 
+				provider): If user is known via <strong>
+				<a href="Abp-Session.html">IAbpSession</a></strong> and 
+				explicitly selected a language before (and saved to
+				<a href="Setting-Management.html">ISettingManager</a>) then use 
+				user&#39;s preferred language. If user is known but not selected any 
+				language and <strong>.AspNetCore.Culture</strong> cookie or 
+				header has a value, set user&#39;s language setting with that 
+				information and use this value as the current language. If user 
+				is unknown, this provides does nothing.</li>
+				<li><strong>AbpLocalizationHeaderRequestCultureProvider</strong> 
+				(ABP&#39;s provider): Use <strong>.AspNetCore.Culture</strong> 
+				header value if present. Example value: &quot;c=en|uic=en-US&quot;.</li>
+				<li><strong>CookieRequestCultureProvider</strong> (ASP.NET 
+				Core&#39;s default provider): Use <strong>.AspNetCore.Culture</strong> 
+				cookie value if present. Example value: &quot;c=en|uic=en-US&quot;.</li>
+				<li><strong>AbpDefaultRequestCultureProvider</strong> (ABP&#39;s 
+				provider): If there is an default/application/tenant <strong>
+				setting value</strong> for the language (named 
+				&quot;Abp.Localization.DefaultLanguageName&quot;), then use the setting&#39;s 
+				value.</li>
+				<li><strong>AcceptLanguageHeaderRequestCultureProvider</strong> 
+				(ASP.NET Core&#39;s default provider): Use <strong>Accept-Language</strong> 
+				header value if present (automatically sent by browsers). 
+				Example value: &quot;tr-TR,tr;q=0.8,en-US;q=0.6,en;q=0.4&quot;.</li>
+			</ul>
+			<p>The
+			<strong>UseRequestLocalization</strong> middleware is automatically 
+			added when you call <strong>app.UseAbp()</strong> method. But it&#39;s 
+			suggested that manually add it (in Configure method of Startup 
+			class) after authentication middleware if your application uses 
+			authentication. Otherwise, localization middleware can now know 
+			current user to determine the best language. Example usage:</p>
+			<pre lang="cs">public void Configure(IApplicationBuilder app, IHostingEnvironment env, ILoggerFactory loggerFactory)
+{
+    app.UseAbp(options =&gt;
+    {
+        <strong>options.UseAbpRequestLocalization = false;</strong> //disable automatic adding of request localization
+    });
+
+    //...authentication middleware(s)
+
+    <strong>app.UseAbpRequestLocalization();</strong> //manually add request localization
+
+    //...other middlewares
+
+    app.UseMvc(routes =&gt;
+    {
+        //...
+    });
+}</pre>
+			<p>Most of time, you don't need to care about if you are using ABP's 
+			localization system properly. See ASP.NET Core
+			<a href="https://docs.microsoft.com/en-us/aspnet/core/fundamentals/localization" target="_blank">
+			localization document</a> to understand it better.</p>
+			<h4>ASP.NET MVC 5.x</h4>
+			<p>ABP automatically determines current language in every web 
+			request and sets
+				<strong>current thread's culture (and UI culture)</strong>. This 
+			is how ABP determines it by default:</p>
+			<ul>
+				<li>Tries to get from a special <strong>header</strong> value, named 
+				"Abp.Localization.CultureName" by default.</li>
+				<li>If not found, tries to get from a special <strong>cookie</strong> value, 
+				named "Abp.Localization.CultureName" by default.</li>
+				<li>If not found, tries to get from <strong>default culture</strong> setting 
+				(setting name is "Abp.Localization.DefaultLanguageName", which 
+				is a constant defined in 
+				Abp.Localization.LocalizationSettingNames.DefaultLanguage and 
+				can be changed using <a href="Setting-Management.html">setting 
+				management</a>).</li>
+				<li>If not found, tries to get from <strong>browser's default language</strong> 
+				(HttpContext.Request.UserLanguages).</li>
+			</ul>
+			<p>If you need, you can change special cookie name (it's also the header 
+			name) in your 
+			module's PreInitialize method. Example:</p>
+			<pre lang="cs">Configuration.Modules.AbpWeb().Localization.CookieName = "YourCustomName";</pre>
 			<h3 id="DocGetText">Getting A Localized Text</h3>
 			<p>After creating a source and register it to the ASP.NET Boilerplate's 
 localization system, texts can be localized easily.</p>
@@ -384,6 +475,11 @@ can also add new language files.</p>
 			<p>
 				<strong>Note</strong>: We can use JSON files to extend XML files, or vice 
 	verse.</p>
+			<h3>
+				Getting Languages</h3>
+			<p>
+				ILanguageManager can be used to get a list of all available 
+				languages and the current language.</p>
 
 			<h3 id="DocConclusion">Best Practices</h3>
 			<p>XML files, JSON files and Resource files have own strengths and weaknesses. 

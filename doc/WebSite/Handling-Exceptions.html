@@ -33,10 +33,14 @@ handles these response in the client and show error messages to the user.</p>
 			be enabled for ASP.NET MVC applications.</p>
 			<pre>&lt;customErrors mode=&quot;<strong>On</strong>&quot; /&gt;</pre>
 			<p>It also can be '<strong>RemoteOnly</strong>' if you do not want to handler errors in local 
-computer.</p>
-			<p>Note that this is only required for ASP.NET MVC Controllers, not 
-			needed for Web API and ASP.NET Core Controllers.</p>
+computer. Note that this is only required for ASP.NET MVC Controllers, not 
+			needed for Web API Controllers.</p>
 
+			<div class="bs-callout bs-callout-warning">
+				<p>If you have already handling exceptions in a global filter 
+				then it may hide exceptions and ABP's exception handling may not 
+				work as you expected. So, if you do that, do it carefully.</p>
+			</div>
 			<h3 id="DocNonAjax">Non-Ajax Requests</h3>
 			<p>If request is not AJAX, an error page is shown.</p>
 			<h4 id="DocShowExceptions">Showing Exceptions</h4>

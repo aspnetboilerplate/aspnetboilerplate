@@ -12,11 +12,6 @@ namespace Abp.EntityFrameworkCore.Uow
     public class UnitOfWorkDbContextProvider<TDbContext> : IDbContextProvider<TDbContext> 
         where TDbContext : DbContext
     {
-        /// <summary>
-        /// Gets the DbContext.
-        /// </summary>
-        public TDbContext DbContext { get { return GetDbContext(null); } }
-
         private readonly ICurrentUnitOfWorkProvider _currentUnitOfWorkProvider;
 
         /// <summary>

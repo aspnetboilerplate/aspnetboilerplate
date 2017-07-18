@@ -3,6 +3,7 @@ using System.Linq;
 using Abp.Configuration.Startup;
 using Abp.Domain.Repositories;
 using Abp.Domain.Uow;
+using Abp.TestBase.SampleApplication.Messages;
 using Shouldly;
 using Xunit;
 
@@ -14,10 +15,15 @@ namespace Abp.TestBase.SampleApplication.Tests.ContactLists
 
         public Querying_Tests()
         {
-            Resolve<IMultiTenancyConfig>().IsEnabled = true;
             _messageRepository = Resolve<IRepository<Message>>();
         }
-        
+
+        protected override void CreateInitialData()
+        {
+            Resolve<IMultiTenancyConfig>().IsEnabled = true;
+            base.CreateInitialData();
+        }
+
         [Fact]
         public void Simple_Querying_With_AsNoTracking()
         {

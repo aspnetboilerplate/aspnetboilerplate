@@ -1,12 +1,9 @@
 ﻿using System;
-using System.Globalization;
-using System.Linq;
-using System.Threading;
 using System.Web;
-using Abp.Collections.Extensions;
-using Abp.Localization;
+using Abp.Dependency;
 using Abp.Modules;
 using Abp.Threading;
+using Abp.Web.Localization;
 
 namespace Abp.Web
 {
@@ -21,12 +18,7 @@ namespace Abp.Web
         /// <summary>
         /// Gets a reference to the <see cref="AbpBootstrapper"/> instance.
         /// </summary>
-        protected AbpBootstrapper AbpBootstrapper { get; }
-
-        protected AbpWebApplication()
-        {
-            AbpBootstrapper = AbpBootstrapper.Create<TStartupModule>();
-        }
+        public static AbpBootstrapper AbpBootstrapper { get; } = AbpBootstrapper.Create<TStartupModule>();
 
         /// <summary>
         /// This method is called by ASP.NET system on web application's startup.
@@ -66,24 +58,12 @@ namespace Abp.Web
         /// </summary>
         protected virtual void Application_BeginRequest(object sender, EventArgs e)
         {
-            var langCookie = Request.Cookies["Abp.Localization.CultureName"];
-            if (langCookie != null && GlobalizationHelper.IsValidCultureCode(langCookie.Value))
-            {
-                Thread.CurrentThread.CurrentCulture = new CultureInfo(langCookie.Value);
-                Thread.CurrentThread.CurrentUICulture = new CultureInfo(langCookie.Value);
-            }
-            else if (!Request.UserLanguages.IsNullOrEmpty())
-            {
-                var firstValidLanguage = Request
-                    .UserLanguages
-                    .FirstOrDefault(GlobalizationHelper.IsValidCultureCode);
+            SetCurrentCulture();
+        }
 
-                if (firstValidLanguage != null)
-                {
-                    Thread.CurrentThread.CurrentCulture = new CultureInfo(firstValidLanguage);
-                    Thread.CurrentThread.CurrentUICulture = new CultureInfo(firstValidLanguage);
-                }
-            }
+        protected virtual void SetCurrentCulture()
+        {
+            AbpBootstrapper.IocManager.Using<ICurrentCultureSetter>(cultureSetter => cultureSetter.SetCurrentCulture(Context));
         }
 
         /// <summary>
@@ -96,7 +76,7 @@ namespace Abp.Web
 
         protected virtual void Application_AuthenticateRequest(object sender, EventArgs e)
         {
-            
+
         }
 
         protected virtual void Application_Error(object sender, EventArgs e)

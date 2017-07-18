@@ -22,7 +22,7 @@ namespace Abp.TestBase.SampleApplication.People
         }
 
         [DisableAuditing]
-        public ListResultOutput<PersonDto> GetPeople(GetPeopleInput input)
+        public ListResultDto<PersonDto> GetPeople(GetPeopleInput input)
         {
             var query = _personRepository.GetAll();
 
@@ -33,21 +33,21 @@ namespace Abp.TestBase.SampleApplication.People
 
             var people = query.ToList();
 
-            return new ListResultOutput<PersonDto>(people.MapTo<List<PersonDto>>());
+            return new ListResultDto<PersonDto>(ObjectMapper.Map<List<PersonDto>>(people));
         }
 
         public async Task CreatePersonAsync(CreatePersonInput input)
         {
-            await _personRepository.InsertAsync(input.MapTo<Person>());
+            await _personRepository.InsertAsync(ObjectMapper.Map<Person>(input));
         }
 
         [AbpAuthorize("CanDeletePerson")]
-        public async Task DeletePerson(EntityRequestInput input)
+        public async Task DeletePerson(EntityDto input)
         {
             await _personRepository.DeleteAsync(input.Id);
         }
 
-        public string TestPrimitiveMethod(int a, string b, EntityRequestInput c)
+        public string TestPrimitiveMethod(int a, string b, EntityDto c)
         {
             return a + "#" + b + "#" + c.Id;
         }

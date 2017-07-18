@@ -16,12 +16,17 @@
 framework. ASP.NET Core integration is implemented in
 	<a href="https://www.nuget.org/packages/Abp.AspNetCore" target="_blank">
 	Abp.AspNetCore</a> nuget package </p>
+      <div class="bs-callout bs-callout-warning">
+        <h4>Migrating to ASP.NET Core?</h4>
+        <p>If you have an existing project and considering to migrate to ASP.NET 
+		Core, you can read our
+		<a href="http://volosoft.com/migrating-from-asp-net-mvc-5x-to-asp-net-core/" target="_blank">
+		blog post</a> for our experince on the migration.</p>
+      </div>
 	<h3>Startup Template</h3>
-	<p>Still
-	<a href="https://github.com/aspnetboilerplate/aspnet-core-template" target="_blank">
-	working</a> to create a simple startup template. You can take it as a 
-	starting point for your projects or you can follow this document to 
-	integrate ABP into your ASP.NET Core MVC projects.</p>
+	<p>You can create your project from <a href="/Templates">startup template</a>, 
+	which is a simple, empty web project but properly integrated and configured 
+	to work with ABP framework.</p>
 	<h3>Configuration</h3>
 	<h4>Startup Class</h4>
 	<p>To integrate ABP to ASP.NET Core, we should make some changes in the 
@@ -31,13 +36,6 @@ framework. ASP.NET Core integration is implemented in
     public <strong>IServiceProvider</strong> ConfigureServices(IServiceCollection services)
     {
         //...
-    
-        services.AddMvc(mvcOptions =&gt;
-        {
-<strong>            //Add ABP infrastructure to MVC
-            mvcOptions.AddAbp(services);
-</strong>            //...
-        });
 
 <strong>        //Configure Abp and Dependency Injection. Should be called last.
         return services.AddAbp&lt;MyProjectWebModule&gt;(options =&gt;
@@ -106,6 +104,9 @@ framework. ASP.NET Core integration is implemented in
 				<li>
 					<strong>Post</strong>: Used if method name starts with 'Post', 
 	'Create' or 'Insert'.</li>
+				<li>
+					<strong>Patch</strong>: Used if method name starts with 
+					'Patch'.</li>
 				<li>Otherwise, <strong>Post</strong> is used <strong>as default</strong> 
 	HTTP verb.</li>
 			</ul>
@@ -173,11 +174,11 @@ framework. ASP.NET Core integration is implemented in
 		attributes for methods and classes.</li>
 	</ul>
 	<h4>Result Filter</h4>
-	<p><strong>AbpResultFilter</strong> is used to wrap result action if action 
+	<p><strong>AbpResultFilter</strong> is mainly used to wrap result action if action 
 	is successfully executed.</p>
 	<ul>
 		<li>It only wraps results for JsonResult, ObjectResult and any object 
-		which does not implement IActionResult. If your 
+		which does not implement IActionResult (and also their async versions). If your 
 		action is returning a view or any other type of result, it's not 
 		wrapped.</li>
 		<li><strong>WrapResult</strong> and <strong>DontWrapResult</strong> 
@@ -186,6 +187,11 @@ framework. ASP.NET Core integration is implemented in
 		<li>You can use startup configuration to change default behaviour for 
 		result wrapping.</li>
 	</ul>
+	<h5>Result Caching For Ajax Requests</h5>
+	<p>AbpResultFilter adds Cache-Control header (no-cache, no-store) to the 
+	response for AJAX Requests. Thus, it prevents browser caching of AJAX 
+	responses even for GET requests. This behaviour can be disabled by the 
+	configuration.</p>
 	<h3>Model Binders</h3>
 	<p><strong>AbpDateTimeModelBinder</strong> is used to normalize DateTime 
 	(and Nullable&lt;DateTime&gt;) inputs using <strong>Clock.Normalize</strong> 
@@ -195,6 +201,8 @@ framework. ASP.NET Core integration is implemented in
 	automatically inject most used infrastructure (LocalizationManager, 
 	PermissionChecker, SettingManager... etc.). It also has shortcut methods 
 	(like L(...) for localize texts). Startup template inherits it by default.</p>
+	<p>You can inherit your web components from <strong>AbpViewComponent</strong> 
+	instead of ViewComponent to take advantage of base properties and methods.</p>
 	<h3>Client Proxies</h3>
 	<p>ABP can automatically create javascript proxies for all MVC Controllers 
 	(not only application services). 

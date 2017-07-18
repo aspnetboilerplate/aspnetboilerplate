@@ -49,7 +49,8 @@ provider. <a href="https://www.nuget.org/packages/Abp.RedisCache" target="_blank
     }
 }</pre>
 			<p>In this sample, we're injecting <strong>ICacheManager</strong> and getting a 
-cache named <strong>MyCache</strong>.</p>
+cache named <strong>MyCache</strong>. Cache names are case sensitive, than means 
+			"MyCache" and "MYCACHE" are different caches.</p>
 
 			<div class="bs-callout bs-callout-warning">
 				<h4>
@@ -251,6 +252,9 @@ namespace MyProject.AbpZeroTemplate.Web
 			<pre lang="xml">&lt;add key=&quot;<strong>Abp.Redis.Cache.DatabaseId</strong>&quot; value=&quot;2&quot;/&gt;</pre>
 			<p>Different database ids are useful to create different key spaces 
 			(isolated caches) in same server.</p>
+			<p><strong>UseRedis</strong> method has also an overload that takes 
+			an action to directly set option values (overrides values in the 
+			config file).</p>
 			<p>See <a href="http://redis.io/documentation" target="_blank">Redis 
 			documentation</a> for more information on Redis and it's 
 			configuration.</p>

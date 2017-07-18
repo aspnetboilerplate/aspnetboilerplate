@@ -3,6 +3,7 @@ using System.Reflection;
 using System.Web.Mvc;
 using System.Web.Routing;
 using Abp.Dependency;
+using Abp.Extensions;
 using Abp.Resources.Embedded;
 using Abp.Web.Mvc.Resources.Embedded.Handlers;
 
@@ -11,16 +12,9 @@ namespace Abp.Web.Mvc.Resources
     /// <summary>
     /// A helper class to simplify expose web resources.
     /// </summary>
+    [Obsolete("No need to use WebResourceHelper anymore. Use Configuration.EmbeddedResources.Sources.Add(...) in PreInitialize of your module.")]
     public static class WebResourceHelper
     {
-        private static IEmbeddedResourceManager EmbeddedResourceManager { get { return LazyEmbeddedResourceManager.Value; } }
-        private static readonly Lazy<IEmbeddedResourceManager> LazyEmbeddedResourceManager;
-
-        static WebResourceHelper()
-        {
-            LazyEmbeddedResourceManager = new Lazy<IEmbeddedResourceManager>(IocManager.Instance.Resolve<IEmbeddedResourceManager>, true);
-        }
-
         /// <summary>
         /// Exposes one or more embedded resources to web clients.
         /// It can be used to embed javascript/css files into assemblies and use them in html pages easily.
@@ -32,7 +26,9 @@ namespace Abp.Web.Mvc.Resources
         /// <param name="resourceNamespace">Root namespace of the resources</param>
         public static void ExposeEmbeddedResources(string rootPath, Assembly assembly, string resourceNamespace)
         {
-            EmbeddedResourceManager.ExposeResources(rootPath, assembly, resourceNamespace);
+            SingletonDependency<IEmbeddedResourcesConfiguration>.Instance.Sources.Add(
+                new EmbeddedResourceSet(rootPath, assembly, resourceNamespace)
+            );
 
             /* @hikalkan: Default values are a workaround. If it's not set, @Url.Action in views can not run
              * properly and use this route accidently.
@@ -40,7 +36,7 @@ namespace Abp.Web.Mvc.Resources
              */
             RouteTable.Routes.MapRoute(
                 name: "EmbeddedResource:" + rootPath,
-                url: rootPath + "/{*pathInfo}", //TODO: Define extension?
+                url: rootPath.EnsureEndsWith('/') + "{*pathInfo}",
                 defaults: new
                 {
                     controller = "AbpNoController",
@@ -54,9 +50,9 @@ namespace Abp.Web.Mvc.Resources
         /// </summary>
         /// <param name="fullResourcePath">Full path of the resource</param>
         /// <returns>Embedded resource file</returns>
-        public static EmbeddedResourceInfo GetEmbeddedResource(string fullResourcePath)
+        public static EmbeddedResourceItem GetEmbeddedResource(string fullResourcePath)
         {
-            return EmbeddedResourceManager.GetResource(fullResourcePath);
+            return SingletonDependency<IEmbeddedResourceManager>.Instance.GetResource(fullResourcePath);
         }
     }
 }

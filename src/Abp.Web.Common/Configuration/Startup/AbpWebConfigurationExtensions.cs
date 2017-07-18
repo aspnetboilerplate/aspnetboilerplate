@@ -8,11 +8,11 @@ namespace Abp.Configuration.Startup
     public static class AbpWebConfigurationExtensions
     {
         /// <summary>
-        /// Used to configure ABP Web module.
+        /// Used to configure ABP Web Common module.
         /// </summary>
-        public static IAbpWebModuleConfiguration AbpWeb(this IModuleConfigurations configurations)
+        public static IAbpWebCommonModuleConfiguration AbpWebCommon(this IModuleConfigurations configurations)
         {
-            return configurations.AbpConfiguration.Get<IAbpWebModuleConfiguration>();
+            return configurations.AbpConfiguration.Get<IAbpWebCommonModuleConfiguration>();
         }
     }
 }

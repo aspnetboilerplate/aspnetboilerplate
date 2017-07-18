@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Web.Mvc;
-using Abp.Web.Localization;
+using Abp.Dependency;
+using Abp.Localization;
 using Abp.Web.Models;
 
 namespace Abp.Web.Mvc.Models
@@ -24,10 +25,10 @@ namespace Abp.Web.Mvc.Models
                 }
             }
 
-            var errorInfo = new ErrorInfo(AbpWebLocalizedMessages.ValidationError)
-                            {
-                                ValidationErrors = validationErrors.ToArray()
-                            };
+            var errorInfo = new ErrorInfo(SingletonDependency<ILocalizationManager>.Instance.GetString(AbpWebConsts.LocalizaionSourceName, "ValidationError"))
+            {
+                ValidationErrors = validationErrors.ToArray()
+            };
 
             return new AjaxResponse(errorInfo);
         }

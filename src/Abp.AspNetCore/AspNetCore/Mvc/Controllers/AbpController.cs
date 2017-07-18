@@ -1,4 +1,3 @@
-using System;
 using System.Globalization;
 using System.Threading.Tasks;
 using Abp.Application.Features;
@@ -9,6 +8,7 @@ using Abp.Domain.Uow;
 using Abp.Events.Bus;
 using Abp.Localization;
 using Abp.Localization.Sources;
+using Abp.ObjectMapping;
 using Abp.Runtime.Session;
 using Castle.Core.Logging;
 using Microsoft.AspNetCore.Mvc;
@@ -56,6 +56,11 @@ namespace Abp.AspNetCore.Mvc.Controllers
         public IFeatureChecker FeatureChecker { protected get; set; }
 
         /// <summary>
+        /// Reference to the object to object mapper.
+        /// </summary>
+        public IObjectMapper ObjectMapper { get; set; }
+
+        /// <summary>
         /// Reference to the localization manager.
         /// </summary>
         public ILocalizationManager LocalizationManager { protected get; set; }
@@ -95,12 +100,6 @@ namespace Abp.AspNetCore.Mvc.Controllers
         public ILogger Logger { get; set; }
 
         /// <summary>
-        /// Gets current session information.
-        /// </summary>
-        [Obsolete("Use AbpSession property instead. CurrentSession will be removed in future releases.")]
-        protected IAbpSession CurrentSession { get { return AbpSession; } }
-
-        /// <summary>
         /// Reference to <see cref="IUnitOfWorkManager"/>.
         /// </summary>
         public IUnitOfWorkManager UnitOfWorkManager
@@ -133,6 +132,7 @@ namespace Abp.AspNetCore.Mvc.Controllers
             LocalizationManager = NullLocalizationManager.Instance;
             PermissionChecker = NullPermissionChecker.Instance;
             EventBus = NullEventBus.Instance;
+            ObjectMapper = NullObjectMapper.Instance;
         }
 
         /// <summary>

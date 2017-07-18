@@ -6,6 +6,7 @@ using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Reflection;
 using Abp.Collections.Extensions;
+using Abp.Configuration.Startup;
 using Abp.Dependency;
 using Abp.Reflection;
 
@@ -16,39 +17,35 @@ namespace Abp.Runtime.Validation.Interception
     /// </summary>
     public class MethodInvocationValidator : ITransientDependency
     {
-        public static List<Type> IgnoredTypesForRecursiveValidation { get; }
+        private const int MaxRecursiveParameterValidationDepth = 8;
 
         protected MethodInfo Method { get; private set; }
         protected object[] ParameterValues { get; private set; }
         protected ParameterInfo[] Parameters { get; private set; }
         protected List<ValidationResult> ValidationErrors { get; }
+        protected List<IShouldNormalize> ObjectsToBeNormalized { get; }
 
-        static MethodInvocationValidator()
-        {
-            IgnoredTypesForRecursiveValidation = new List<Type>();
-        }
+        private readonly IValidationConfiguration _configuration;
+        private readonly IIocResolver _iocResolver;
 
         /// <summary>
         /// Creates a new <see cref="MethodInvocationValidator"/> instance.
         /// </summary>
-        public MethodInvocationValidator()
+        public MethodInvocationValidator(IValidationConfiguration configuration, IIocResolver iocResolver)
         {
+            _configuration = configuration;
+            _iocResolver = iocResolver;
+
             ValidationErrors = new List<ValidationResult>();
+            ObjectsToBeNormalized = new List<IShouldNormalize>();
         }
 
         /// <param name="method">Method to be validated</param>
         /// <param name="parameterValues">List of arguments those are used to call the <paramref name="method"/>.</param>
         public virtual void Initialize(MethodInfo method, object[] parameterValues)
         {
-            if (method == null)
-            {
-                throw new ArgumentNullException(nameof(method));
-            }
-
-            if (parameterValues == null)
-            {
-                throw new ArgumentNullException(nameof(parameterValues));
-            }
+            Check.NotNull(method, nameof(method));
+            Check.NotNull(parameterValues, nameof(parameterValues));
 
             Method = method;
             ParameterValues = parameterValues;
@@ -62,6 +59,11 @@ namespace Abp.Runtime.Validation.Interception
         {
             CheckInitialized();
 
+            if (Parameters.IsNullOrEmpty())
+            {
+                return;
+            }
+
             if (!Method.IsPublic)
             {
                 return;
@@ -72,14 +74,14 @@ namespace Abp.Runtime.Validation.Interception
                 return;                
             }
 
-            if (Parameters.IsNullOrEmpty())
-            {
-                return;
-            }
-
             if (Parameters.Length != ParameterValues.Length)
             {
                 throw new Exception("Method parameter count does not match with argument count!");
+            }
+
+            if (ValidationErrors.Any() && HasSingleNullArgument())
+            {
+                ThrowValidationError();
             }
 
             for (var i = 0; i < Parameters.Length; i++)
@@ -89,19 +91,16 @@ namespace Abp.Runtime.Validation.Interception
 
             if (ValidationErrors.Any())
             {
-                throw new AbpValidationException(
-                    "Method arguments are not valid! See ValidationErrors for details.",
-                    ValidationErrors
-                    );
+                ThrowValidationError();
             }
 
-            foreach (var parameterValue in ParameterValues)
+            foreach (var objectToBeNormalized in ObjectsToBeNormalized)
             {
-                NormalizeParameter(parameterValue);
+                objectToBeNormalized.Normalize();
             }
         }
 
-        private void CheckInitialized()
+        protected virtual void CheckInitialized()
         {
             if (Method == null)
             {
@@ -119,6 +118,19 @@ namespace Abp.Runtime.Validation.Interception
             return ReflectionHelper.GetSingleAttributeOfMemberOrDeclaringTypeOrDefault<DisableValidationAttribute>(Method) != null;
         }
 
+        protected virtual bool HasSingleNullArgument()
+        {
+            return Parameters.Length == 1 && ParameterValues[0] == null;
+        }
+
+        protected virtual void ThrowValidationError()
+        {
+            throw new AbpValidationException(
+                "Method arguments are not valid! See ValidationErrors for details.",
+                ValidationErrors
+            );
+        }
+
         /// <summary>
         /// Validates given parameter for given value.
         /// </summary>
@@ -128,7 +140,9 @@ namespace Abp.Runtime.Validation.Interception
         {
             if (parameterValue == null)
             {
-                if (!parameterInfo.IsOptional && !parameterInfo.IsOut && !TypeHelper.IsPrimitiveExtendedIncludingNullable(parameterInfo.ParameterType))
+                if (!parameterInfo.IsOptional && 
+                    !parameterInfo.IsOut && 
+                    !TypeHelper.IsPrimitiveExtendedIncludingNullable(parameterInfo.ParameterType, includeEnums: true))
                 {
                     ValidationErrors.Add(new ValidationResult(parameterInfo.Name + " is null!", new[] { parameterInfo.Name }));
                 }
@@ -136,11 +150,16 @@ namespace Abp.Runtime.Validation.Interception
                 return;
             }
 
-            ValidateObjectRecursively(parameterValue);
+            ValidateObjectRecursively(parameterValue, 1);
         }
 
-        protected virtual void ValidateObjectRecursively(object validatingObject)
+        protected virtual void ValidateObjectRecursively(object validatingObject, int currentDepth)
         {
+            if (currentDepth > MaxRecursiveParameterValidationDepth)
+            {
+                return;
+            }
+
             if (validatingObject == null)
             {
                 return;
@@ -153,13 +172,22 @@ namespace Abp.Runtime.Validation.Interception
             {
                 foreach (var item in (validatingObject as IEnumerable))
                 {
-                    ValidateObjectRecursively(item);
+                    ValidateObjectRecursively(item, currentDepth + 1);
                 }
             }
 
-            if (validatingObject is ICustomValidate)
+            //Custom validations
+            (validatingObject as ICustomValidate)?.AddValidationErrors(
+                new CustomValidationContext(
+                    ValidationErrors,
+                    _iocResolver
+                )
+            );
+
+            //Add list to be normalized later
+            if (validatingObject is IShouldNormalize)
             {
-                (validatingObject as ICustomValidate).AddValidationErrors(ValidationErrors);
+                ObjectsToBeNormalized.Add(validatingObject as IShouldNormalize);
             }
 
             //Do not recursively validate for enumerable objects
@@ -176,7 +204,7 @@ namespace Abp.Runtime.Validation.Interception
                 return;
             }
 
-            if (IgnoredTypesForRecursiveValidation.Contains(validatingObjectType))
+            if (_configuration.IgnoredTypes.Any(t => t.IsInstanceOfType(validatingObject)))
             {
                 return;
             }
@@ -189,7 +217,7 @@ namespace Abp.Runtime.Validation.Interception
                     continue;
                 }
 
-                ValidateObjectRecursively(property.GetValue(validatingObject));
+                ValidateObjectRecursively(property.GetValue(validatingObject), currentDepth + 1);
             }
         }
 
@@ -222,13 +250,11 @@ namespace Abp.Runtime.Validation.Interception
                     }
                 }
             }
-        }
 
-        protected virtual void NormalizeParameter(object parameterValue)
-        {
-            if (parameterValue is IShouldNormalize)
+            if (validatingObject is IValidatableObject)
             {
-                (parameterValue as IShouldNormalize).Normalize();
+                var results = (validatingObject as IValidatableObject).Validate(new ValidationContext(validatingObject));
+                ValidationErrors.AddRange(results);
             }
         }
     }

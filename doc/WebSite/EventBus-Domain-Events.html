@@ -110,8 +110,12 @@ or Student is inserted.</p>
 			<p>There are some overloads of the trigger method:</p>
 			<pre lang="cs">EventBus.Trigger&lt;TaskCompletedEventData&gt;(new TaskCompletedEventData { TaskId = 42 }); //Explicitly declare generic argument
 EventBus.Trigger(this, new TaskCompletedEventData { TaskId = 42 }); //Set 'event source' as 'this'
-EventBus.Trigger(typeof(TaskCompletedEventData), this, new TaskCompletedEventData { TaskId = 42 }); //Call non-generic version (first argument is the type of the event class)
-			</pre>
+EventBus.Trigger(typeof(TaskCompletedEventData), this, new TaskCompletedEventData { TaskId = 42 }); //Call non-generic version (first argument is the type of the event class)</pre>
+
+<p>Another way of triggering events can be using DomainEvents collection of 
+AggregateRoot class (see related section in the <a href="Entities.html">Entity 
+documentation</a>).</p>
+
 			<h3 id="DocHandleEvents">Handling Events</h3>
 
 			<p>To handle an event, you should implement <strong>IEventHandler&lt;T&gt;</strong> 
@@ -167,6 +171,12 @@ handle both of the events:</p>
 }</pre>
 			<p>That also means you can implement IEventHandler&lt;EventData&gt; to handle all events 
 			in the application. You probably don't want that, but it's possible.</p>
+			<h4>Handler Exceptions</h4>
+			<p>EventBus <strong>triggers all handlers</strong> even one/some of 
+			them throws exception. If only one of them throws exception, then 
+			it's directly thrown by the Trigger method. If more than one handler 
+			throws exception, EventBus throws a single <strong>
+			AggregateException</strong> for all of them.</p>
 			<h4 id="DocHandleMultipleEvents">Handling Multiple Events</h4>
 			<p>You can handle <strong>multiple events</strong> in a single handler. In this time, you should 
 implement IEventHandler&lt;T&gt; for each event. Example:</p>

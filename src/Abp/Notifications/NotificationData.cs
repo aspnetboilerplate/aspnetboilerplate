@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using Abp.Collections.Extensions;
 using Abp.Json;
 
 namespace Abp.Notifications
@@ -15,17 +16,14 @@ namespace Abp.Notifications
         /// Gets notification data type name.
         /// It returns the full class name by default.
         /// </summary>
-        public virtual string Type
-        {
-            get { return GetType().FullName; }
-        }
+        public virtual string Type => GetType().FullName;
 
         /// <summary>
         /// Shortcut to set/get <see cref="Properties"/>.
         /// </summary>
         public object this[string key]
         {
-            get { return Properties[key]; }
+            get { return Properties.GetOrDefault(key); }
             set { Properties[key] = value; }
         }
 
@@ -39,20 +37,27 @@ namespace Abp.Notifications
             {
                 if (value == null)
                 {
-                    throw new ArgumentNullException("value");
+                    throw new ArgumentNullException(nameof(value));
                 }
 
-                _properties = value;
+                /* Not assign value, but add dictionary items. This is required for backward compability. */
+                foreach (var keyValue in value)
+                {
+                    if (!_properties.ContainsKey(keyValue.Key))
+                    {
+                        _properties[keyValue.Key] = keyValue.Value;
+                    }
+                }
             }
         }
-        private Dictionary<string, object> _properties;
+        private readonly Dictionary<string, object> _properties;
 
         /// <summary>
         /// Createa a new NotificationData object.
         /// </summary>
         public NotificationData()
         {
-            Properties = new Dictionary<string, object>();
+            _properties = new Dictionary<string, object>();
         }
 
         public override string ToString()

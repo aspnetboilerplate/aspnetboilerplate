@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
-using Abp.Web.Localization;
+using Abp.Localization;
+using Abp.Web;
 using Abp.Web.Models;
 using Microsoft.AspNetCore.Mvc.ModelBinding;
 
@@ -7,7 +8,7 @@ namespace Abp.AspNetCore.Mvc.Models
 {
     public static class ModelStateExtensions
     {
-        public static AjaxResponse ToMvcAjaxResponse(this ModelStateDictionary modelState)
+        public static AjaxResponse ToMvcAjaxResponse(this ModelStateDictionary modelState, ILocalizationManager localizationManager)
         {
             if (modelState.IsValid)
             {
@@ -24,10 +25,10 @@ namespace Abp.AspNetCore.Mvc.Models
                 }
             }
 
-            var errorInfo = new ErrorInfo(AbpWebLocalizedMessages.ValidationError)
-                            {
-                                ValidationErrors = validationErrors.ToArray()
-                            };
+            var errorInfo = new ErrorInfo(localizationManager.GetString(AbpWebConsts.LocalizaionSourceName, "ValidationError"))
+            {
+                ValidationErrors = validationErrors.ToArray()
+            };
 
             return new AjaxResponse(errorInfo);
         }

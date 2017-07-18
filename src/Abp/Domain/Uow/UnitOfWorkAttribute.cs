@@ -1,5 +1,4 @@
 using System;
-using System.Reflection;
 using System.Transactions;
 
 namespace Abp.Domain.Uow
@@ -13,7 +12,7 @@ namespace Abp.Domain.Uow
     /// <remarks>
     /// This attribute has no effect if there is already a unit of work before calling this method, if so, it uses the same transaction.
     /// </remarks>
-    [AttributeUsage(AttributeTargets.Method)]
+    [AttributeUsage(AttributeTargets.Method | AttributeTargets.Class | AttributeTargets.Interface)]
     public class UnitOfWorkAttribute : Attribute
     {
         /// <summary>
@@ -122,6 +121,19 @@ namespace Abp.Domain.Uow
 
         /// <summary>
         /// Creates a new <see cref="UnitOfWorkAttribute"/> object.
+        /// </summary>
+        /// <param name="scope">Transaction scope</param>
+        /// <param name="isTransactional">
+        /// Is this unit of work will be transactional?
+        /// </param>
+        public UnitOfWorkAttribute(TransactionScopeOption scope, bool isTransactional)
+        {
+            Scope = scope;
+            IsTransactional = isTransactional;
+        }
+
+        /// <summary>
+        /// Creates a new <see cref="UnitOfWorkAttribute"/> object.
         /// <see cref="IsTransactional"/> is automatically set to true.
         /// </summary>
         /// <param name="scope">Transaction scope</param>
@@ -131,27 +143,6 @@ namespace Abp.Domain.Uow
             IsTransactional = true;
             Scope = scope;
             Timeout = TimeSpan.FromMilliseconds(timeout);
-        }
-
-        /// <summary>
-        /// Gets UnitOfWorkAttribute for given method or null if no attribute defined.
-        /// </summary>
-        /// <param name="methodInfo">Method to get attribute</param>
-        /// <returns>The UnitOfWorkAttribute object</returns>
-        internal static UnitOfWorkAttribute GetUnitOfWorkAttributeOrNull(MemberInfo methodInfo)
-        {
-            var attrs = methodInfo.GetCustomAttributes(typeof(UnitOfWorkAttribute), false);
-            if (attrs.Length > 0)
-            {
-                return (UnitOfWorkAttribute)attrs[0];
-            }
-
-            if (UnitOfWorkHelper.IsConventionalUowClass(methodInfo.DeclaringType))
-            {
-                return new UnitOfWorkAttribute(); //Default
-            }
-
-            return null;
         }
 
         internal UnitOfWorkOptions CreateOptions()

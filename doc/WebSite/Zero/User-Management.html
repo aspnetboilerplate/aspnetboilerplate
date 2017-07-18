@@ -68,7 +68,7 @@ users and much more. You can add your own methods here. Also, you can
 			<h4>Multi Tenancy</h4>
 			<p>
 				<em>If you're not creating a multi-tenant application, you can skip this 
-section. See <a href="/Pages/Documents/Multi-Tenancy">multi-tenancy 
+section. See <a href="../Multi-Tenancy.html">multi-tenancy 
 documentation</a> for more information about multi-tenancy.</em>
 			</p>
 			<p>UserManager is designed to work for a <strong>single tenant</strong> in a 
@@ -112,11 +112,9 @@ some usages of the UserManager:</p>
     }
 }</pre>
 			<h4>User Login</h4>
-			<p>UserManager has a <strong>LoginAsync</strong> method used to login to the 
-application. It checks all logic for login and returns a login result. See
-				<a href="/Pages/Documents/Zero/Installation#DocAccountController">sample account 
-controller</a> for example usage of the Login method.</p>
-			<p>LoginAsync method also <strong>automatically saves all login 
+			<p>Module-zero defines LoginManager which has a <strong>LoginAsync</strong> 
+			method used to login to the application. It checks all logic for 
+			login and returns a login result. LoginAsync method also <strong>automatically saves all login 
 			attempts </strong>to the database (even it's a failed attempt). You 
 			can use <strong>UserLoginAttempt</strong> entity to query it.</p>
 			<h4>About IdentityResults</h4>

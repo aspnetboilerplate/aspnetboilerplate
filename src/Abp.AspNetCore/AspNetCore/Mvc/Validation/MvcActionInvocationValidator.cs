@@ -1,6 +1,8 @@
 ﻿using System.ComponentModel.DataAnnotations;
 using Abp.AspNetCore.Mvc.Extensions;
 using Abp.Collections.Extensions;
+using Abp.Configuration.Startup;
+using Abp.Dependency;
 using Abp.Runtime.Validation.Interception;
 using Microsoft.AspNetCore.Mvc.Filters;
 
@@ -11,18 +13,31 @@ namespace Abp.AspNetCore.Mvc.Validation
         protected ActionExecutingContext ActionContext { get; private set; }
 
         private bool _isValidatedBefore;
-        
+
+        public MvcActionInvocationValidator(IValidationConfiguration configuration, IIocResolver iocResolver)
+            : base(configuration, iocResolver)
+        {
+
+        }
+
         public void Initialize(ActionExecutingContext actionContext)
         {
+            ActionContext = actionContext;
+
+            SetDataAnnotationAttributeErrors();
+
             base.Initialize(
                 actionContext.ActionDescriptor.GetMethodInfo(),
                 GetParameterValues(actionContext)
             );
-
-            ActionContext = actionContext;
+        }
+        
+        protected override void SetDataAnnotationAttributeErrors(object validatingObject)
+        {
+            SetDataAnnotationAttributeErrors();
         }
 
-        protected override void SetDataAnnotationAttributeErrors(object validatingObject)
+        protected virtual void SetDataAnnotationAttributeErrors()
         {
             if (_isValidatedBefore || ActionContext.ModelState.IsValid)
             {

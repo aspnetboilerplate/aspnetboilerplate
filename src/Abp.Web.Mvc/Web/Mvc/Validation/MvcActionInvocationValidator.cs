@@ -2,6 +2,8 @@
 using System.Reflection;
 using System.Web.Mvc;
 using Abp.Collections.Extensions;
+using Abp.Configuration.Startup;
+using Abp.Dependency;
 using Abp.Extensions;
 using Abp.Runtime.Validation.Interception;
 
@@ -13,17 +15,30 @@ namespace Abp.Web.Mvc.Validation
 
         private bool _isValidatedBefore;
 
+        public MvcActionInvocationValidator(IValidationConfiguration configuration, IIocResolver iocResolver) 
+            : base(configuration, iocResolver)
+        {
+
+        }
+
         public void Initialize(ActionExecutingContext actionContext, MethodInfo methodInfo)
         {
+            ActionContext = actionContext;
+
+            SetDataAnnotationAttributeErrors();
+
             base.Initialize(
                 methodInfo,
                 GetParameterValues(actionContext, methodInfo)
             );
-
-            ActionContext = actionContext;
         }
 
         protected override void SetDataAnnotationAttributeErrors(object validatingObject)
+        {
+            SetDataAnnotationAttributeErrors();
+        }
+
+        protected virtual void SetDataAnnotationAttributeErrors()
         {
             if (_isValidatedBefore)
             {
@@ -42,7 +57,7 @@ namespace Abp.Web.Mvc.Validation
             {
                 foreach (var error in state.Value.Errors)
                 {
-                    ValidationErrors.Add(new ValidationResult(error.ErrorMessage, new[] { state.Key }));
+                    ValidationErrors.Add(new ValidationResult(error.ErrorMessage, new[] {state.Key}));
                 }
             }
         }

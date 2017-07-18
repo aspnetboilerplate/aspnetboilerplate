@@ -1,3 +1,4 @@
+#if NET46
 using System.Net.Mail;
 
 namespace Abp.Net.Mail.Smtp
@@ -16,3 +17,4 @@ namespace Abp.Net.Mail.Smtp
         SmtpClient BuildClient();
     }
 }
+#endif

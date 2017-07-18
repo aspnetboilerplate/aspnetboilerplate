@@ -29,9 +29,9 @@ namespace Abp.Web.Timing
             script.AppendLine("(function(){");
 
             script.AppendLine("    abp.clock.provider = abp.timing." + Clock.Provider.GetType().Name.ToCamelCase() + " || abp.timing.localClockProvider;");
-            script.AppendLine("    abp.clock.provider.supportsMultipleTimezone = " + Clock.SupportsMultipleTimezone().ToString().ToLower(CultureInfo.InvariantCulture) + ";");
+            script.AppendLine("    abp.clock.provider.supportsMultipleTimezone = " + Clock.SupportsMultipleTimezone.ToString().ToLowerInvariant() + ";");
 
-            if (Clock.SupportsMultipleTimezone())
+            if (Clock.SupportsMultipleTimezone)
             {
                 script.AppendLine("    abp.timing.timeZoneInfo = " + await GetUsersTimezoneScriptsAsync());
             }

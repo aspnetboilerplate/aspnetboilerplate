@@ -4,11 +4,7 @@ using Abp.Web;
 
 namespace Abp.WebApi.Controllers.Dynamic.Builders
 {
-    /// <summary>
-    /// This interface is used to define a dynamic api controller.
-    /// </summary>
-    /// <typeparam name="T">Type of the proxied object</typeparam>
-    public interface IApiControllerBuilder<T>
+    public interface IApiControllerBuilder
     {
         /// <summary>
         /// Name of the controller.
@@ -24,13 +20,25 @@ namespace Abp.WebApi.Controllers.Dynamic.Builders
         /// <summary>
         /// Action Filters to apply to this dynamic controller.
         /// </summary>
-        IFilter[] Filters { get; }
+        IFilter[] Filters { get; set; }
+
+        /// <summary>
+        /// Is API Explorer enabled.
+        /// </summary>
+        bool? IsApiExplorerEnabled { get; set; }
 
         /// <summary>
         /// True, if using conventional verbs for this dynamic controller.
         /// </summary>
-        bool ConventionalVerbs { get; }
+        bool ConventionalVerbs { get; set; }
+    }
 
+    /// <summary>
+    /// This interface is used to define a dynamic api controller.
+    /// </summary>
+    /// <typeparam name="T">Type of the proxied object</typeparam>
+    public interface IApiControllerBuilder<T> : IApiControllerBuilder
+    {
         /// <summary>
         /// To add Action filters for the Dynamic Controller.
         /// </summary>
@@ -58,6 +66,17 @@ namespace Abp.WebApi.Controllers.Dynamic.Builders
         /// </summary>
         /// <returns>The current Controller Builder</returns>
         IApiControllerBuilder<T> WithConventionalVerbs();
+
+        /// <summary>
+        /// Enables/Disables API Explorer for the Dynamic Controller.
+        /// </summary>
+        IApiControllerBuilder<T> WithApiExplorer(bool isEnabled);
+
+        /// <summary>
+        /// Enables/Disables proxy scripting for the Dynamic Controller.
+        /// It's enabled by default.
+        /// </summary>
+        IApiControllerBuilder<T> WithProxyScripts(bool isEnabled);
 
         /// <summary>
         /// Builds the controller.

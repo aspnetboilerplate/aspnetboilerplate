@@ -14,12 +14,6 @@ namespace Abp.Localization
     {
         public ILogger Logger { get; set; }
 
-        /// <summary>
-        /// Gets current language for the application.
-        /// </summary>
-        [Obsolete("Inject ILanguageManager and use ILanguageManager.CurrentLanguage.")]
-        public LanguageInfo CurrentLanguage { get { return _languageManager.CurrentLanguage; } }
-
         private readonly ILanguageManager _languageManager;
         private readonly ILocalizationConfiguration _configuration;
         private readonly IIocResolver _iocResolver;
@@ -43,12 +37,6 @@ namespace Abp.Localization
         public void Initialize()
         {
             InitializeSources();
-        }
-
-        [Obsolete("Inject ILanguageManager and use ILanguageManager.GetLanguages().")]
-        public IReadOnlyList<LanguageInfo> GetAllLanguages()
-        {
-            return _languageManager.GetLanguages();
         }
 
         private void InitializeSources()

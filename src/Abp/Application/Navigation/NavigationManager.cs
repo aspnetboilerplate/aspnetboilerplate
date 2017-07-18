@@ -24,7 +24,7 @@ namespace Abp.Application.Navigation
 
             Menus = new Dictionary<string, MenuDefinition>
                     {
-                        {"MainMenu", new MenuDefinition("MainMenu", new FixedLocalizableString("Main menu"))} //TODO: Localization for "Main menu"
+                        {"MainMenu", new MenuDefinition("MainMenu", new LocalizableString("MainMenu", AbpConsts.LocalizationSourceName))}
                     };
         }
 

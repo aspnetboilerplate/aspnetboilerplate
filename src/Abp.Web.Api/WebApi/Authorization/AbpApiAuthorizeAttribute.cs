@@ -1,4 +1,5 @@
-﻿using System.Web;
+﻿using System;
+using System.Web;
 using System.Web.Http;
 using System.Web.Http.Controllers;
 using Abp.Authorization;
@@ -9,6 +10,7 @@ namespace Abp.WebApi.Authorization
     /// This attribute is used on a method of an <see cref="ApiController"/>
     /// to make that method usable only by authorized users.
     /// </summary>
+    [AttributeUsage(AttributeTargets.Class | AttributeTargets.Method, AllowMultiple = true)]
     public class AbpApiAuthorizeAttribute : AuthorizeAttribute, IAbpAuthorizeAttribute
     {
         /// <inheritdoc/>

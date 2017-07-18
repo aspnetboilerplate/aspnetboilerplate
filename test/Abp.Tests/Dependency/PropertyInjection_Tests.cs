@@ -23,7 +23,7 @@ namespace Abp.Tests.Dependency
 
             LocalIocManager.Register<MyApplicationService>();
             LocalIocManager.IocContainer.Register(
-                Component.For<IAbpSession>().UsingFactoryMethod(() => session)
+                Component.For<IAbpSession>().Instance(session)
                 );
 
             var myAppService = LocalIocManager.Resolve<MyApplicationService>();

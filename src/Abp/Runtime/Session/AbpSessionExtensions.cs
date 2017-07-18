@@ -1,6 +1,4 @@
-﻿using System;
-
-namespace Abp.Runtime.Session
+﻿namespace Abp.Runtime.Session
 {
     /// <summary>
     /// Extension methods for <see cref="IAbpSession"/>.

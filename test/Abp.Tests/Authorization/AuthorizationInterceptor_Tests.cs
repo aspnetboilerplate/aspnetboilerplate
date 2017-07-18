@@ -1,6 +1,7 @@
 ﻿using System.Threading.Tasks;
 using Abp.Application.Features;
 using Abp.Authorization;
+using Abp.Configuration.Startup;
 using Abp.Dependency;
 using Abp.Runtime.Session;
 using Castle.MicroKernel.Registration;
@@ -21,6 +22,8 @@ namespace Abp.Tests.Authorization
             LocalIocManager.IocContainer.Register(
                 Component.For<IFeatureChecker>().Instance(Substitute.For<IFeatureChecker>())
                 );
+
+            LocalIocManager.Register<IAuthorizationConfiguration, AuthorizationConfiguration>();
             LocalIocManager.Register<AuthorizationInterceptor>(DependencyLifeStyle.Transient);
             LocalIocManager.Register<IAuthorizationHelper, AuthorizationHelper>(DependencyLifeStyle.Transient);
             LocalIocManager.IocContainer.Register(
@@ -32,14 +35,14 @@ namespace Abp.Tests.Authorization
             var session = Substitute.For<IAbpSession>();
             session.TenantId.Returns(1);
             session.UserId.Returns(1);
-            LocalIocManager.IocContainer.Register(Component.For<IAbpSession>().UsingFactoryMethod(() => session));
+            LocalIocManager.IocContainer.Register(Component.For<IAbpSession>().Instance(session));
 
             //Mock permission checker
             var permissionChecker = Substitute.For<IPermissionChecker>();
             permissionChecker.IsGrantedAsync("Permission1").Returns(true);
             permissionChecker.IsGrantedAsync("Permission2").Returns(true);
             permissionChecker.IsGrantedAsync("Permission3").Returns(false); //Permission3 is not granted
-            LocalIocManager.IocContainer.Register(Component.For<IPermissionChecker>().UsingFactoryMethod(() => permissionChecker));
+            LocalIocManager.IocContainer.Register(Component.For<IPermissionChecker>().Instance(permissionChecker));
 
             _syncObj = LocalIocManager.Resolve<MyTestClassToBeAuthorized_Sync>();
             _asyncObj = LocalIocManager.Resolve<MyTestClassToBeAuthorized_Async>();

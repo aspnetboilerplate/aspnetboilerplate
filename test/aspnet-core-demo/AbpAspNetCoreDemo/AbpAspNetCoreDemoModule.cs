@@ -1,9 +1,11 @@
 ﻿using System.Reflection;
 using Abp.AspNetCore;
 using Abp.AspNetCore.Configuration;
+using Abp.Castle.Logging.Log4Net;
 using Abp.EntityFrameworkCore;
 using Abp.EntityFrameworkCore.Configuration;
 using Abp.Modules;
+using Abp.Reflection.Extensions;
 using AbpAspNetCoreDemo.Core;
 using AbpAspNetCoreDemo.Db;
 using Microsoft.EntityFrameworkCore;
@@ -14,7 +16,8 @@ namespace AbpAspNetCoreDemo
     [DependsOn(
         typeof(AbpAspNetCoreModule), 
         typeof(AbpAspNetCoreDemoCoreModule),
-        typeof(AbpEntityFrameworkCoreModule)
+        typeof(AbpEntityFrameworkCoreModule),
+        typeof(AbpCastleLog4NetModule)
         )]
     public class AbpAspNetCoreDemoModule : AbpModule
     {
@@ -24,18 +27,25 @@ namespace AbpAspNetCoreDemo
 
             Configuration.Modules.AbpEfCore().AddDbContext<MyDbContext>(options =>
             {
-                options.DbContextOptions.UseSqlServer(options.ConnectionString);
+                if (options.ExistingConnection != null)
+                {
+                    options.DbContextOptions.UseSqlServer(options.ExistingConnection);
+                }
+                else
+                {
+                    options.DbContextOptions.UseSqlServer(options.ConnectionString);
+                }
             });
 
             Configuration.Modules.AbpAspNetCore()
                 .CreateControllersForAppServices(
-                    typeof(AbpAspNetCoreDemoCoreModule).Assembly
+                    typeof(AbpAspNetCoreDemoCoreModule).GetAssembly()
                 );
         }
 
         public override void Initialize()
         {
-            IocManager.RegisterAssemblyByConvention(Assembly.GetExecutingAssembly());
+            IocManager.RegisterAssemblyByConvention(typeof(AbpAspNetCoreDemoModule).GetAssembly());
         }
     }
 }

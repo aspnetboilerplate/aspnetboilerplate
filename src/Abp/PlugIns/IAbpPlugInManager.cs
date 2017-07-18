@@ -1,6 +1,4 @@
-﻿using System.Collections.Generic;
-
-namespace Abp.PlugIns
+﻿namespace Abp.PlugIns
 {
     public interface IAbpPlugInManager
     {
