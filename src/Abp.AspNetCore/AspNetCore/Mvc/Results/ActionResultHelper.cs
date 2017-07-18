@@ -1,4 +1,5 @@
 using System;
+using System.Reflection;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 
@@ -13,14 +14,14 @@ namespace Abp.AspNetCore.Mvc.Results
             {
                 returnType = typeof(void);
             }
-            else if (returnType.IsGenericType && returnType.GetGenericTypeDefinition() == typeof(Task<>))
+            else if (returnType.GetTypeInfo().IsGenericType && returnType.GetGenericTypeDefinition() == typeof(Task<>))
             {
                 returnType = returnType.GenericTypeArguments[0];
             }
 
-            if (typeof(IActionResult).IsAssignableFrom(returnType))
+            if (typeof(IActionResult).GetTypeInfo().IsAssignableFrom(returnType))
             {
-                if (typeof(JsonResult).IsAssignableFrom(returnType) || typeof(ObjectResult).IsAssignableFrom(returnType))
+                if (typeof(JsonResult).GetTypeInfo().IsAssignableFrom(returnType) || typeof(ObjectResult).GetTypeInfo().IsAssignableFrom(returnType))
                 {
                     return true;
                 }

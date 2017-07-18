@@ -50,7 +50,7 @@ namespace Abp.Application.Features
         /// <returns>True, if current feature's value is "true".</returns>
         public static async Task<bool> IsEnabledAsync(this IFeatureChecker featureChecker, string featureName)
         {
-            return string.Equals(await featureChecker.GetValueAsync(featureName), "true", StringComparison.InvariantCultureIgnoreCase);
+            return string.Equals(await featureChecker.GetValueAsync(featureName), "true", StringComparison.OrdinalIgnoreCase);
         }
 
         /// <summary>
@@ -63,7 +63,7 @@ namespace Abp.Application.Features
         /// <returns>True, if current feature's value is "true".</returns>
         public static async Task<bool> IsEnabledAsync(this IFeatureChecker featureChecker, int tenantId, string featureName)
         {
-            return string.Equals(await featureChecker.GetValueAsync(tenantId, featureName), "true", StringComparison.InvariantCultureIgnoreCase);
+            return string.Equals(await featureChecker.GetValueAsync(tenantId, featureName), "true", StringComparison.OrdinalIgnoreCase);
         }
 
         /// <summary>

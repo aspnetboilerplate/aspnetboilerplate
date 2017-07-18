@@ -20,6 +20,7 @@ namespace Abp.Notifications
         private readonly INotificationDefinitionManager _notificationDefinitionManager;
         private readonly INotificationStore _notificationStore;
         private readonly IUnitOfWorkManager _unitOfWorkManager;
+        private readonly IGuidGenerator _guidGenerator;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="NotificationDistributionJob"/> class.
@@ -27,11 +28,13 @@ namespace Abp.Notifications
         public NotificationDistributer(
             INotificationDefinitionManager notificationDefinitionManager,
             INotificationStore notificationStore,
-            IUnitOfWorkManager unitOfWorkManager)
+            IUnitOfWorkManager unitOfWorkManager, 
+            IGuidGenerator guidGenerator)
         {
             _notificationDefinitionManager = notificationDefinitionManager;
             _notificationStore = notificationStore;
             _unitOfWorkManager = unitOfWorkManager;
+            _guidGenerator = guidGenerator;
 
             RealTimeNotifier = NullRealTimeNotifier.Instance;
         }
@@ -168,7 +171,7 @@ namespace Abp.Notifications
             {
                 using (_unitOfWorkManager.Current.SetTenantId(tenantGroup.Key))
                 {
-                    var tenantNotificationInfo = new TenantNotificationInfo(tenantGroup.Key, notificationInfo);
+                    var tenantNotificationInfo = new TenantNotificationInfo(_guidGenerator.Create(), tenantGroup.Key, notificationInfo);
                     await _notificationStore.InsertTenantNotificationAsync(tenantNotificationInfo);
                     await _unitOfWorkManager.Current.SaveChangesAsync(); //To get tenantNotification.Id.
 
@@ -176,7 +179,7 @@ namespace Abp.Notifications
 
                     foreach (var user in tenantGroup)
                     {
-                        var userNotification = new UserNotificationInfo
+                        var userNotification = new UserNotificationInfo(_guidGenerator.Create())
                         {
                             TenantId = tenantGroup.Key,
                             UserId = user.UserId,

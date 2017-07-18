@@ -17,16 +17,11 @@ namespace Abp.TestBase.SampleApplication.Tests.People
 {
     public class PersonAppService_Tests : SampleApplicationTestBase
     {
-        private readonly IPersonAppService _personAppService;
-
-        public PersonAppService_Tests()
-        {
-            _personAppService = Resolve<IPersonAppService>();
-        }
-
         [Fact]
         public async Task Should_Insert_New_Person()
         {
+            var personAppService = Resolve<IPersonAppService>();
+
             ContactList contactList = null;
             int peopleCount = 0;
 
@@ -37,7 +32,7 @@ namespace Abp.TestBase.SampleApplication.Tests.People
                     peopleCount = await context.People.CountAsync();
                 });
 
-            await _personAppService.CreatePersonAsync(
+            await personAppService.CreatePersonAsync(
                 new CreatePersonInput
                 {
                     ContactListId = contactList.Id,
@@ -54,6 +49,8 @@ namespace Abp.TestBase.SampleApplication.Tests.People
         [Fact]
         public async Task Should_Rollback_If_Uow_Is_Not_Completed()
         {
+            var personAppService = Resolve<IPersonAppService>();
+
             ContactList contactList = null;
             int peopleCount = 0;
 
@@ -67,7 +64,7 @@ namespace Abp.TestBase.SampleApplication.Tests.People
             //CreatePersonAsync will use same UOW.
             using (var uow = LocalIocManager.Resolve<IUnitOfWorkManager>().Begin())
             {
-                await _personAppService.CreatePersonAsync(new CreatePersonInput { ContactListId = contactList.Id, Name = "john" });
+                await personAppService.CreatePersonAsync(new CreatePersonInput { ContactListId = contactList.Id, Name = "john" });
                 //await uow.CompleteAsync(); //It's intentionally removed from code to see roll-back
             }
 
@@ -82,13 +79,17 @@ namespace Abp.TestBase.SampleApplication.Tests.People
         [Fact]
         public async Task Should_Not_Insert_For_Invalid_Input()
         {
-            await Assert.ThrowsAsync<AbpValidationException>(async () => await _personAppService.CreatePersonAsync(new CreatePersonInput { Name = null }));
+            var personAppService = Resolve<IPersonAppService>();
+
+            await Assert.ThrowsAsync<AbpValidationException>(async () => await personAppService.CreatePersonAsync(new CreatePersonInput { Name = null }));
         }
 
         [Fact]
         public void Should_Get_All_People_Without_Filter()
         {
-            var output = _personAppService.GetPeople(new GetPeopleInput());
+            var personAppService = Resolve<IPersonAppService>();
+
+            var output = personAppService.GetPeople(new GetPeopleInput());
             output.Items.Count.ShouldBe(UsingDbContext(context => context.People.Count(p => !p.IsDeleted)));
             output.Items.FirstOrDefault(p => p.Name == "halil").ShouldNotBe(null);
         }
@@ -96,7 +97,9 @@ namespace Abp.TestBase.SampleApplication.Tests.People
         [Fact]
         public void Should_Get_Related_People_With_Filter()
         {
-            var output = _personAppService.GetPeople(new GetPeopleInput { NameFilter = "h" });
+            var personAppService = Resolve<IPersonAppService>();
+
+            var output = personAppService.GetPeople(new GetPeopleInput { NameFilter = "h" });
             output.Items.FirstOrDefault(p => p.Name == "halil").ShouldNotBe(null);
             output.Items.All(p => p.Name.Contains("h")).ShouldBe(true);
         }
@@ -104,28 +107,73 @@ namespace Abp.TestBase.SampleApplication.Tests.People
         [Fact]
         public async Task Should_Delete_Person()
         {
-            AbpSession.UserId = 1;
+            //Arrange
 
             var permissionChecker = Substitute.For<IPermissionChecker>();
-            permissionChecker.IsGrantedAsync("CanDeletePerson").Returns(async info =>
-                                                                        {
-                                                                            await Task.Delay(10);
-                                                                            return true;
-                                                                        });
+            permissionChecker.IsGrantedAsync("CanDeletePerson")
+                .Returns(
+                    async info =>
+                    {
+                        await Task.Delay(10);
+                        return true;
+                    });
 
             LocalIocManager.IocContainer.Register(
-                Component.For<IPermissionChecker>().UsingFactoryMethod(() => permissionChecker).LifestyleSingleton()
-                );
+                Component.For<IPermissionChecker>().Instance(permissionChecker).IsDefault()
+            );
+
+            var personAppService = Resolve<IPersonAppService>();
+
+            AbpSession.UserId = 1;
 
             var halil = await UsingDbContextAsync(async context => await context.People.SingleAsync(p => p.Name == "halil"));
-            await _personAppService.DeletePerson(new EntityDto(halil.Id));
+
+            //Act
+
+            await personAppService.DeletePerson(new EntityDto(halil.Id));
+
+            //Assert
+
             (await UsingDbContextAsync(async context => await context.People.FirstOrDefaultAsync(p => p.Name == "halil"))).IsDeleted.ShouldBe(true);
+        }
+
+        [Fact]
+        public async Task Should_Not_Delete_Person_If_UnAuthorized()
+        {
+            //Arrange
+
+            var permissionChecker = Substitute.For<IPermissionChecker>();
+            permissionChecker.IsGrantedAsync("CanDeletePerson")
+                .Returns(async info =>
+                {
+                    await Task.Delay(10);
+                    return false;
+                });
+
+            LocalIocManager.IocContainer.Register(
+                Component.For<IPermissionChecker>().Instance(permissionChecker).IsDefault()
+            );
+
+            var personAppService = Resolve<IPersonAppService>();
+
+            AbpSession.UserId = 1;
+            
+            var halil = await UsingDbContextAsync(async context => await context.People.SingleAsync(p => p.Name == "halil"));
+
+            //Act & Assert
+
+            await Assert.ThrowsAsync<AbpAuthorizationException>(async () =>
+            {
+                await personAppService.DeletePerson(new EntityDto(halil.Id));
+            });
         }
 
         [Fact]
         public void Test_TestPrimitiveMethod()
         {
-            _personAppService.TestPrimitiveMethod(42, "adana", new EntityDto(7)).ShouldBe("42#adana#7");
+            var personAppService = Resolve<IPersonAppService>();
+
+            personAppService.TestPrimitiveMethod(42, "adana", new EntityDto(7)).ShouldBe("42#adana#7");
         }
     }
 }

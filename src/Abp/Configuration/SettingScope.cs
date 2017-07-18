@@ -22,6 +22,11 @@ namespace Abp.Configuration
         /// <summary>
         /// Represents a setting that can be configured/changed for each User.
         /// </summary>
-        User = 4
+        User = 4,
+
+        /// <summary>
+        /// Represents a setting that can be configured/changed for all levels
+        /// </summary>
+        All = Application | Tenant | User
     }
 }

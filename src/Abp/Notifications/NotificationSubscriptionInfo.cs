@@ -53,14 +53,14 @@ namespace Abp.Notifications
         /// </summary>
         public NotificationSubscriptionInfo()
         {
-            
         }
 
         /// <summary>
         /// Initializes a new instance of the <see cref="NotificationSubscriptionInfo"/> class.
         /// </summary>
-        public NotificationSubscriptionInfo(int? tenantId, long userId, string notificationName, EntityIdentifier entityIdentifier = null)
+        public NotificationSubscriptionInfo(Guid id, int? tenantId, long userId, string notificationName, EntityIdentifier entityIdentifier = null)
         {
+            Id = id;
             TenantId = tenantId;
             NotificationName = notificationName;
             UserId = userId;

@@ -4,6 +4,7 @@ using Abp.Localization;
 using Abp.Localization.Dictionaries;
 using Abp.Localization.Dictionaries.Json;
 using Abp.Modules;
+using Abp.Reflection.Extensions;
 
 namespace AbpAspNetCoreDemo.Core
 {
@@ -20,7 +21,7 @@ namespace AbpAspNetCoreDemo.Core
             Configuration.Localization.Sources.Add(
                 new DictionaryBasedLocalizationSource("AbpAspNetCoreDemoModule",
                     new JsonEmbeddedFileLocalizationDictionaryProvider(
-                        Assembly.GetExecutingAssembly(),
+                        typeof(AbpAspNetCoreDemoCoreModule).GetAssembly(),
                         "AbpAspNetCoreDemo.Core.Localization.SourceFiles"
                     )
                 )
@@ -29,7 +30,7 @@ namespace AbpAspNetCoreDemo.Core
 
         public override void Initialize()
         {
-            IocManager.RegisterAssemblyByConvention(Assembly.GetExecutingAssembly());
+            IocManager.RegisterAssemblyByConvention(typeof(AbpAspNetCoreDemoCoreModule).GetAssembly());
         }
     }
 }

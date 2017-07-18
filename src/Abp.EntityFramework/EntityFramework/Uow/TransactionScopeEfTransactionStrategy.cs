@@ -22,24 +22,32 @@ namespace Abp.EntityFramework.Uow
         public virtual void InitOptions(UnitOfWorkOptions options)
         {
             Options = options;
+
+            StartTransaction();
         }
 
         public virtual void Commit()
         {
-            CurrentTransaction?.Complete();
+            if (CurrentTransaction == null)
+            {
+                return;
+            }
+
+            CurrentTransaction.Complete();
+
+            CurrentTransaction.Dispose();
+            CurrentTransaction = null;
         }
 
         public DbContext CreateDbContext<TDbContext>(string connectionString, IDbContextResolver dbContextResolver)
             where TDbContext : DbContext
         {
-            EnsureCurrentTransactionInitialized();
-
             var dbContext = dbContextResolver.Resolve<TDbContext>(connectionString);
             DbContexts.Add(dbContext);
             return dbContext;
         }
 
-        private void EnsureCurrentTransactionInitialized()
+        private void StartTransaction()
         {
             if (CurrentTransaction != null)
             {
@@ -69,6 +77,8 @@ namespace Abp.EntityFramework.Uow
             {
                 iocResolver.Release(dbContext);
             }
+
+            DbContexts.Clear();
 
             if (CurrentTransaction != null)
             {

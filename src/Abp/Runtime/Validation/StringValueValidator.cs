@@ -12,7 +12,7 @@ namespace Abp.Runtime.Validation
         public bool AllowNull
         {
             get { return (this["AllowNull"] ?? "false").To<bool>(); }
-            set { this["AllowNull"] = value.ToString().ToLower(CultureInfo.InvariantCulture); }
+            set { this["AllowNull"] = value.ToString().ToLowerInvariant(); }
         }
 
         public int MinLength

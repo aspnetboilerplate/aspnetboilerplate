@@ -17,7 +17,7 @@
 		module zero</strong>".</p>
 			<p>After creating and downloading your project,</p>
 			<ul>
-				<li>Open your solution on Visual Studio 2013+.</li>
+				<li>Open your solution on Visual Studio 2015+.</li>
 				<li>Select the '<strong>Web</strong>' project as startup project.</li>
 				<li>Open Package Manager Console, select '<strong>EntityFramework</strong>' project as 
 					<strong>Default project</strong> and run the EntityFramework's '<strong>Update-Database</strong>' command. This will create the database. 
@@ -25,6 +25,9 @@
 				<li>Run the application. User name is '<strong>admin</strong>' and password is '<strong>123qwe</strong>' as default.</li>
 			</ul>
 
+			<div class="bs-callout bs-callout-warning">
+				<p>Be sure you have installed Typescript 2.0+ for your Visual Studio because Abp.Web.Resources nuget package comes with d.ts and it requires Typescript 2.0+.</p>
+			</div>
 			<p>In this template, <strong>multi-tenancy is enabled by default</strong>. You 
 	can disable it in Core project's module class if you don't need.</p>
 

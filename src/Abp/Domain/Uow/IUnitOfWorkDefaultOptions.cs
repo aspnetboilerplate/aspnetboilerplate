@@ -20,6 +20,14 @@ namespace Abp.Domain.Uow
         /// </summary>
         bool IsTransactional { get; set; }
 
+#if NET46
+        /// <summary>
+        /// A boolean value indicates that System.Transactions.TransactionScope is available for current application.
+        /// Default: true.
+        /// </summary>
+        bool IsTransactionScopeAvailable { get; set; }
+#endif
+
         /// <summary>
         /// Gets/sets a timeout value for unit of works.
         /// </summary>
@@ -35,6 +43,11 @@ namespace Abp.Domain.Uow
         /// Gets list of all data filter configurations.
         /// </summary>
         IReadOnlyList<DataFilterConfiguration> Filters { get; }
+
+        /// <summary>
+        /// A list of selectors to determine conventional Unit Of Work classes.
+        /// </summary>
+        List<Func<Type, bool>> ConventionalUowSelectors { get; }
 
         /// <summary>
         /// Registers a data filter to unit of work system.

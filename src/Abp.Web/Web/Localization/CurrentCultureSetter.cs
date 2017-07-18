@@ -1,5 +1,4 @@
 using System;
-using System.Globalization;
 using System.Linq;
 using System.Threading;
 using System.Web;
@@ -49,7 +48,7 @@ namespace Abp.Web.Localization
         
         protected virtual bool IsCultureSpecifiedInGlobalizationConfig()
         {
-            var globalizationSection = WebConfigurationManager.GetSection("globalization") as GlobalizationSection;
+            var globalizationSection = WebConfigurationManager.GetSection("system.web/globalization") as GlobalizationSection;
             if (globalizationSection == null || globalizationSection.UICulture.IsNullOrEmpty())
             {
                 return false;
@@ -74,7 +73,7 @@ namespace Abp.Web.Localization
             context.Response.SetCookie(
                 new HttpCookie(_webLocalizationConfiguration.CookieName, culture)
                 {
-                    Expires = Clock.Now.AddYears(1),
+                    Expires = Clock.Now.AddYears(2),
                     Path = context.Request.ApplicationPath
                 }
             );
@@ -114,8 +113,8 @@ namespace Abp.Web.Localization
 
         protected virtual void SetCurrentCulture(string language)
         {
-            Thread.CurrentThread.CurrentCulture = new CultureInfo(language);
-            Thread.CurrentThread.CurrentUICulture = new CultureInfo(language);
+            Thread.CurrentThread.CurrentCulture = CultureInfoHelper.Get(language);
+            Thread.CurrentThread.CurrentUICulture = CultureInfoHelper.Get(language);
         }
     }
 }

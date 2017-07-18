@@ -17,25 +17,27 @@ namespace Abp.Reflection
         /// <param name="genericType">Generic type</param>
         public static bool IsAssignableToGenericType(Type givenType, Type genericType)
         {
-            if (givenType.IsGenericType && givenType.GetGenericTypeDefinition() == genericType)
+            var givenTypeInfo = givenType.GetTypeInfo();
+
+            if (givenTypeInfo.IsGenericType && givenType.GetGenericTypeDefinition() == genericType)
             {
                 return true;
             }
 
             foreach (var interfaceType in givenType.GetInterfaces())
             {
-                if (interfaceType.IsGenericType && interfaceType.GetGenericTypeDefinition() == genericType)
+                if (interfaceType.GetTypeInfo().IsGenericType && interfaceType.GetGenericTypeDefinition() == genericType)
                 {
                     return true;
                 }
             }
 
-            if (givenType.BaseType == null)
+            if (givenTypeInfo.BaseType == null)
             {
                 return false;
             }
 
-            return IsAssignableToGenericType(givenType.BaseType, genericType);
+            return IsAssignableToGenericType(givenTypeInfo.BaseType, genericType);
         }
 
         /// <summary>
@@ -49,12 +51,25 @@ namespace Abp.Reflection
 
             attributeList.AddRange(memberInfo.GetCustomAttributes(inherit));
 
-            //Add attributes on the class
             if (memberInfo.DeclaringType != null)
             {
-                attributeList.AddRange(memberInfo.DeclaringType.GetCustomAttributes(inherit));
+                attributeList.AddRange(memberInfo.DeclaringType.GetTypeInfo().GetCustomAttributes(inherit));
             }
 
+            return attributeList;
+        }
+
+        /// <summary>
+        /// Gets a list of attributes defined for a class member and type including inherited attributes.
+        /// </summary>
+        /// <param name="memberInfo">MemberInfo</param>
+        /// <param name="type">Type</param>
+        /// <param name="inherit">Inherit attribute from base classes</param>
+        public static List<object> GetAttributesOfMemberAndType(MemberInfo memberInfo, Type type, bool inherit = true)
+        {
+            var attributeList = new List<object>();
+            attributeList.AddRange(memberInfo.GetCustomAttributes(inherit));
+            attributeList.AddRange(type.GetTypeInfo().GetCustomAttributes(inherit));
             return attributeList;
         }
 
@@ -69,16 +84,39 @@ namespace Abp.Reflection
         {
             var attributeList = new List<TAttribute>();
 
-            //Add attributes on the member
             if (memberInfo.IsDefined(typeof(TAttribute), inherit))
             {
                 attributeList.AddRange(memberInfo.GetCustomAttributes(typeof(TAttribute), inherit).Cast<TAttribute>());
             }
 
-            //Add attributes on the class
-            if (memberInfo.DeclaringType != null && memberInfo.DeclaringType.IsDefined(typeof(TAttribute), inherit))
+            if (memberInfo.DeclaringType != null && memberInfo.DeclaringType.GetTypeInfo().IsDefined(typeof(TAttribute), inherit))
             {
-                attributeList.AddRange(memberInfo.DeclaringType.GetCustomAttributes(typeof(TAttribute), inherit).Cast<TAttribute>());
+                attributeList.AddRange(memberInfo.DeclaringType.GetTypeInfo().GetCustomAttributes(typeof(TAttribute), inherit).Cast<TAttribute>());
+            }
+
+            return attributeList;
+        }
+
+        /// <summary>
+        /// Gets a list of attributes defined for a class member and type including inherited attributes.
+        /// </summary>
+        /// <typeparam name="TAttribute">Type of the attribute</typeparam>
+        /// <param name="memberInfo">MemberInfo</param>
+        /// <param name="type">Type</param>
+        /// <param name="inherit">Inherit attribute from base classes</param>
+        public static List<TAttribute> GetAttributesOfMemberAndType<TAttribute>(MemberInfo memberInfo, Type type, bool inherit = true)
+            where TAttribute : Attribute
+        {
+            var attributeList = new List<TAttribute>();
+
+            if (memberInfo.IsDefined(typeof(TAttribute), inherit))
+            {
+                attributeList.AddRange(memberInfo.GetCustomAttributes(typeof(TAttribute), inherit).Cast<TAttribute>());
+            }
+
+            if (type.GetTypeInfo().IsDefined(typeof(TAttribute), inherit))
+            {
+                attributeList.AddRange(type.GetTypeInfo().GetCustomAttributes(typeof(TAttribute), inherit).Cast<TAttribute>());
             }
 
             return attributeList;
@@ -102,9 +140,9 @@ namespace Abp.Reflection
             }
 
             //Get attribute from class
-            if (memberInfo.DeclaringType != null && memberInfo.DeclaringType.IsDefined(typeof(TAttribute), inherit))
+            if (memberInfo.DeclaringType != null && memberInfo.DeclaringType.GetTypeInfo().IsDefined(typeof(TAttribute), inherit))
             {
-                return memberInfo.DeclaringType.GetCustomAttributes(typeof(TAttribute), inherit).Cast<TAttribute>().First();
+                return memberInfo.DeclaringType.GetTypeInfo().GetCustomAttributes(typeof(TAttribute), inherit).Cast<TAttribute>().First();
             }
 
             return defaultValue;

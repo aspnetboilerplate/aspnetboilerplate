@@ -48,5 +48,11 @@ namespace Abp.Configuration.Startup
         /// Default: true.
         /// </summary>
         bool HumanizeTextIfNotFound { get; set; }
+
+        /// <summary>
+        /// Write (or not write) a warning log if given text can not found in the localization source.
+        /// Default: true.
+        /// </summary>
+        bool LogWarnMessageIfNotFound { get; set; }
     }
 }

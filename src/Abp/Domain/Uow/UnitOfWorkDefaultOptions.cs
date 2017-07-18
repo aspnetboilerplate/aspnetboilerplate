@@ -1,7 +1,10 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Reflection;
 using System.Transactions;
+using Abp.Application.Services;
+using Abp.Domain.Repositories;
 
 namespace Abp.Domain.Uow
 {
@@ -15,14 +18,35 @@ namespace Abp.Domain.Uow
         /// <inheritdoc/>
         public TimeSpan? Timeout { get; set; }
 
+#if NET46
+        /// <inheritdoc/>
+        public bool IsTransactionScopeAvailable { get; set; }
+#endif
+
         /// <inheritdoc/>
         public IsolationLevel? IsolationLevel { get; set; }
 
-        public IReadOnlyList<DataFilterConfiguration> Filters
-        {
-            get { return _filters; }
-        }
+        public IReadOnlyList<DataFilterConfiguration> Filters => _filters;
         private readonly List<DataFilterConfiguration> _filters;
+
+        public List<Func<Type, bool>> ConventionalUowSelectors { get; }
+
+        public UnitOfWorkDefaultOptions()
+        {
+            _filters = new List<DataFilterConfiguration>();
+            IsTransactional = true;
+            Scope = TransactionScopeOption.Required;
+
+#if NET46
+            IsTransactionScopeAvailable = true;
+#endif
+
+            ConventionalUowSelectors = new List<Func<Type, bool>>
+            {
+                type => typeof(IRepository).IsAssignableFrom(type) ||
+                        typeof(IApplicationService).IsAssignableFrom(type)
+            };
+        }
 
         public void RegisterFilter(string filterName, bool isEnabledByDefault)
         {
@@ -38,13 +62,6 @@ namespace Abp.Domain.Uow
         {
             _filters.RemoveAll(f => f.FilterName == filterName);
             _filters.Add(new DataFilterConfiguration(filterName, isEnabledByDefault));
-        }
-
-        public UnitOfWorkDefaultOptions()
-        {
-            _filters = new List<DataFilterConfiguration>();
-            IsTransactional = true;
-            Scope = TransactionScopeOption.Required;
         }
     }
 }

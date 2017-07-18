@@ -1,11 +1,14 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Abp.AspNetCore;
+using Microsoft.AspNetCore.Http.Extensions;
+using Microsoft.AspNetCore.Mvc;
 
 namespace AbpAspNetCoreDemo.Controllers
 {
     public class HomeController : DemoControllerBase
     {
-        public IActionResult Index()
+        public IActionResult Index(string returnUrl = "")
         {
+            var islocal = AbpUrlHelper.IsLocalUrl(Request, returnUrl);
             return View();
         }
 

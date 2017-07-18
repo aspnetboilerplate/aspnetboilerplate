@@ -17,7 +17,8 @@ interactive documentation</strong>, client SDK generation and discoverability."<
 <h3>ASP.NET Core</h3>
 	<h4>Install Nuget Package</h4>	
 <p>Install <strong>
-	<a href="https://www.nuget.org/packages/Swashbuckle/6.0.0-beta902">Swashbuckle</a></strong> 
+	<a href="https://www.nuget.org/packages/Swashbuckle/" target="_blank">Swashbuckle</a></strong> 
+	<strong>6.x</strong> 
 	nuget package to your <strong>Web</strong> project.</p>
 	<h4>Configure</h4>
 <p>Add configuration code for Swagger into <strong>ConfigureServices</strong> method of your <strong>Startup.cs</strong></p>
@@ -42,7 +43,7 @@ public void Configure(IApplicationBuilder app, IHostingEnvironment env, ILoggerF
     app.UseSwaggerUi(); //URL: /swagger/ui
 </strong>}
 </pre>
-<p>And finally, in order to send CSRF token when testing dynamic web api services from swagger ui, you need to add swagger ui's <a href="https://github.com/swagger-api/swagger-ui/blob/master/dist/index.htmlhttps://github.com/swagger-api/swagger-ui/blob/master/dist/index.html">index.html</a> file to your web project. It should be placed exactly under "<strong>wwwroot\swagger\ui</strong>" folder.
+<p>And finally, in order to send CSRF token when testing dynamic web api services from swagger ui, you need to add swagger ui's <a href="https://github.com/swagger-api/swagger-ui/blob/master/dist/index.html">index.html</a> file to your web project. It should be placed exactly under "<strong>wwwroot\swagger\ui</strong>" folder.
 Then you need to change <strong>onComplete </strong>method of swagger ui definition like this in 
 <strong>index.html</strong>.</p>
 <pre lang="js">
@@ -107,11 +108,13 @@ onComplete: function(swaggerApi, swaggerUi){
 }
 </pre>
 <p>Notice that, we inject a javascript file named "<strong>Swagger-Custom.js</strong>" while configuring swagger ui. This script file is used to add CSRF token to requests while testing api services on swagger ui. You also need to add this file to your WebApi project 
-(as embedded resource) and use it's Logical Name in InjectJavaScript method while injecting it. It's content is:</p>
-<pre lang="js">
-var getCookieValue = function(key) {
+as <strong>embedded resource</strong> and use it's Logical Name in InjectJavaScript method while injecting it. </p>
+	<p><strong>IMPORTANT</strong>: The code above will be slightly different for 
+	your project (Namespace will not be AbpCompanyName.AbpProjectName... and AbpProjectNameWebApiModule will be	<em>YourProjectName</em>WebApiModule).</p>
+	<p>Content of the <strong>Swagger-Custom.js</strong> here:</p>
+<pre lang="js">var getCookieValue = function(key) {
     var equalities = document.cookie.split('; ');
-    for (var i = 0; i < equalities.length; i++) {
+    for (var i = 0; i &lt; equalities.length; i++) {
         if (!equalities[i]) {
             continue;
         }
@@ -131,8 +134,7 @@ var getCookieValue = function(key) {
 
 var csrfCookie = getCookieValue("XSRF-TOKEN");
 var csrfCookieAuth = new SwaggerClient.ApiKeyAuthorization("X-XSRF-TOKEN", csrfCookie, "header");
-swaggerUi.api.clientAuthorizations.add("X-XSRF-TOKEN", csrfCookieAuth);
-</pre>
+swaggerUi.api.clientAuthorizations.add("X-XSRF-TOKEN", csrfCookieAuth);</pre>
 	<p>See Swashbuckle 
 	<a href="https://github.com/domaindrivendev/Swashbuckle" target="_blank">
 	documentation</a> for more configuration options.</p>

@@ -1,6 +1,8 @@
 ﻿using System;
+using System.IO;
 using Abp.AspNetCore;
 using Abp.Castle.Logging.Log4Net;
+using Abp.PlugIns;
 using AbpAspNetCoreDemo.Controllers;
 using Castle.Facilities.Logging;
 using Microsoft.AspNetCore.Builder;
@@ -14,8 +16,11 @@ namespace AbpAspNetCoreDemo
 {
     public class Startup
     {
+        private readonly IHostingEnvironment _env;
+
         public Startup(IHostingEnvironment env)
         {
+            _env = env;
             var builder = new ConfigurationBuilder()
                 .SetBasePath(env.ContentRootPath)
                 .AddJsonFile("appsettings.json", optional: true, reloadOnChange: true)
@@ -45,6 +50,12 @@ namespace AbpAspNetCoreDemo
             //Configure Abp and Dependency Injection. Should be called last.
             return services.AddAbp<AbpAspNetCoreDemoModule>(options =>
             {
+                options.PlugInSources.Add(
+                    new AssemblyFileListPlugInSource(
+                        Path.Combine(_env.ContentRootPath, @"..\AbpAspNetCoreDemo.PlugIn\bin\Debug\net461\AbpAspNetCoreDemo.PlugIn.dll")
+                    )
+                );
+
                 //Configure Log4Net logging
                 options.IocManager.IocContainer.AddFacility<LoggingFacility>(
                     f => f.UseAbpLog4Net().WithConfig("log4net.config")
@@ -71,6 +82,7 @@ namespace AbpAspNetCoreDemo
             }
 
             app.UseStaticFiles();
+            app.UseEmbeddedFiles(); //Allows to expose embedded files to the web!
 
             app.UseMvc(routes =>
             {

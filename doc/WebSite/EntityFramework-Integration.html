@@ -29,13 +29,31 @@ and depend on that package from this assembly.</p>
 			<h3 id="DocDbContext">DbContext</h3>
 			<p>As you know, to work with EntityFramework, you should define a <strong>DbContext</strong> 
 class for your application. An example DbContext is shown below:</p>
-			<pre lang="cs">public class SimpleTaskSystemDbContext : <strong>AbpDbContext</strong>
+			<pre lang="cs">public class SimpleTaskSystemDbContext : AbpDbContext
 {
     public virtual IDbSet&lt;Person&gt; People { get; set; }
     public virtual IDbSet&lt;Task&gt; Tasks { get; set; }
 
     public SimpleTaskSystemDbContext()
-        : base(&quot;<strong>MyConnectionStringName</strong>&quot;)
+        : base("Default")
+    {
+
+    }
+    
+    public SimpleTaskSystemDbContext(string nameOrConnectionString)
+        : base(nameOrConnectionString)
+    {
+
+    }
+
+    public SimpleTaskSystemDbContext(DbConnection existingConnection)
+        : base(existingConnection, false)
+    {
+
+    }
+
+    public SimpleTaskSystemDbContext(DbConnection existingConnection, bool contextOwnsConnection)
+        : base(existingConnection, contextOwnsConnection)
     {
 
     }
@@ -44,13 +62,35 @@ class for your application. An example DbContext is shown below:</p>
     {
         base.OnModelCreating(modelBuilder);
 
-        modelBuilder.Entity&lt;Person&gt;().ToTable(&quot;StsPeople&quot;);
-        modelBuilder.Entity&lt;Task&gt;().ToTable(&quot;StsTasks&quot;).HasOptional(t =&gt; t.AssignedPerson);
+        modelBuilder.Entity&lt;Person&gt;().ToTable("StsPeople");
+        modelBuilder.Entity&lt;Task&gt;().ToTable("StsTasks").HasOptional(t =&gt; t.AssignedPerson);
     }
 }</pre>
-			<p>It's a regular DbContext class except it's derived from <strong>AbpDbContext</strong> 
-instead of DbContext. There are many overloaded constructors of AbpDbContext. 
-You can use which you need.</p>
+			<p>It's a regular DbContext class except following rules:</p>
+			<ul>
+				<li>It's derived from <strong>AbpDbContext</strong> instead of 
+				DbContext.</li>
+				<li>It should have constructors as the sample above (constructor 
+				parameter names should also be same). Explanation:<ul>
+					<li><strong>Default</strong> consturctor passes "Default" to 
+					base bass as the connection string. So, it expects a 
+					"Default" named connection string in the 
+					web.config/app.config file. This constructor is not used by 
+					ABP, but used by EF command line migration tool commands 
+					(like update-database).</li>
+					<li>The constructor gets <strong>nameOrConnectionString</strong> 
+					is used by ABP to pass the connection name or string on 
+					runtime.</li>
+					<li>The constructor get <strong>existingConnection</strong> 
+					can be used for unit test and not directly used by ABP.</li>
+					<li>The constructor gets <strong>existingConnection </strong>
+					and <strong>contextOwnsConnection </strong>is used by ABP on 
+					single database multiple dbcontext scenarios to share same 
+					connection &amp; transaction () when <strong>DbContextEfTransactionStrategy</strong> 
+					is used (see Transaction Management section below).</li>
+				</ul>
+				</li>
+			</ul>
 			<p>EntityFramework can map classes to database tables in a 
 conventional way. You even don't need to make any configuration unless you make 
 some custom stuff. In this example, we mapped entities to different tables. As 
@@ -88,9 +128,8 @@ predefined repository methods. Example:</p>
 
 			<p>PersonAppService contructor-injects <strong>IRepository&lt;Person&gt;</strong> and 
 uses the <strong>Insert</strong> method. In this way, you can easily inject
-				<strong>IRepository&lt;TEntity&gt;</strong> (or IRepository&lt;TEntity, TPrimaryKey&gt;) and 
-use predefined methods. See <a href="/Pages/Documents/Repositories">repository 
-documentation</a> for all predefined methods.</p>
+				<strong>IRepository&lt;TEntity&gt;</strong> (or 
+			IRepository&lt;TEntity, TPrimaryKey&gt;) and use predefined methods.</p>
 
 			<h4 id="DocCustomRepositoryMethods">Custom Repositories</h4>
 			<p>If standard repository methods are not sufficient, you can create 
@@ -101,7 +140,7 @@ documentation</a> for all predefined methods.</p>
 to implement repositories easily. To implement <strong>IRepository</strong> interface, you can 
 just derive your repository from this class. But it's better to create your own 
 base class that extens EfRepositoryBase. Thus, you can add shared/common methods 
-to your repositories easily. An example base class all for repositories of a <em>SimpleTaskSystem</em> application:</p>
+to your repositories or override existing methods easily. An example base class all for repositories of a <em>SimpleTaskSystem</em> application:</p>
 			<pre lang="cs">//Base class for all repositories in my application
 public class SimpleTaskSystemRepositoryBase&lt;TEntity, TPrimaryKey&gt; : <strong>EfRepositoryBase&lt;SimpleTaskSystemDbContext, TEntity, TPrimaryKey&gt;</strong>
     where TEntity : class, IEntity&lt;TPrimaryKey&gt;
@@ -128,6 +167,21 @@ public class SimpleTaskSystemRepositoryBase&lt;TEntity&gt; : <strong>SimpleTaskS
 			<p>Notice that we're inheriting from EfRepositoryBase&lt;<strong>SimpleTaskSystemDbContext</strong>, TEntity, TPrimaryKey&gt;. 
 This declares to ASP.NET Boilerplate to use SimpleTaskSystemDbContext in our 
 repositories.</p>
+			<p>By default, all repositories for your given DbContext 
+			(SimpleTaskSystemDbContext in this example) is implemented using 
+			EfRepositoryBase. You can replace it to your own repository base 
+			repository class by adding <strong>AutoRepositoryTypes</strong> 
+			attribute to your DbContext as shown below:</p>
+<pre lang="cs"><strong>[AutoRepositoryTypes(
+    typeof(IRepository&lt;&gt;),
+    typeof(IRepository&lt;,&gt;),
+    typeof(SimpleTaskSystemEfRepositoryBase&lt;&gt;),
+    typeof(SimpleTaskSystemEfRepositoryBase&lt;,&gt;)
+)]</strong>
+public class SimpleTaskSystemDbContext : AbpDbContext
+{
+    ...
+}</pre>
 			<h5>Custom Repository Example</h5>
 
 			<p>To implement a custom repository, just derive from your application specific 
@@ -211,6 +265,12 @@ reach to your DbContext and directly use Entity Framework APIs.&nbsp;</p>
 			<p>Remember to add "<em>using Abp.Configuration.Startup;</em>" to 
 			your code file to be able to use ReplaceService generic extension 
 			method.</p>
+			<p>In addition, your DbContext <strong>should have constructors</strong> 
+			as described in DbContext section of this document.</p>
+			
+			<h3>Data Stores</h3>
+			<p>Since ASP.NET Boilerplate has built-in integration with EntityFramework, it can work with data stores EntityFramework supports. Our free startup templates are designed to work with Sql Server but you can modify them to work with a different data store.</p>
+			<p>For example, if you want to work with MySql, please refer to <a href="EF-MySql-Integration.html">this document </a></p>
 		</div>
 	</body>
 
