@@ -1,13 +1,18 @@
-﻿using Abp.Modules;
+﻿using System.Reflection;
+using Abp.Modules;
+using Abp.Web;
 
 namespace Abp.Owin
 {
     /// <summary>
     /// OWIN integration module for ABP.
     /// </summary>
-    [DependsOn(typeof (AbpKernelModule))]
+    [DependsOn(typeof (AbpWebCommonModule))]
     public class AbpOwinModule : AbpModule
     {
-        //nothing to do...
+        public override void Initialize()
+        {
+            IocManager.RegisterAssemblyByConvention(Assembly.GetExecutingAssembly());
+        }
     }
 }

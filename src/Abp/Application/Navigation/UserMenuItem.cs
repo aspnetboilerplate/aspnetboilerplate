@@ -39,6 +39,21 @@ namespace Abp.Application.Navigation
         public object CustomData { get; set; }
 
         /// <summary>
+        /// Target of the menu item. Can be "_blank", "_self", "_parent", "_top" or a frame name.
+        /// </summary>
+        public string Target { get; set; }
+
+        /// <summary>
+        /// Can be used to enable/disable a menu item.
+        /// </summary>
+        public bool IsEnabled { get; set; }
+
+        /// <summary>
+        /// Can be used to show/hide a menu item.
+        /// </summary>
+        public bool IsVisible { get; set; }
+
+        /// <summary>
         /// Sub items of this menu item.
         /// </summary>
         public IList<UserMenuItem> Items { get; private set; }
@@ -62,6 +77,10 @@ namespace Abp.Application.Navigation
             Order = menuItemDefinition.Order;
             Url = menuItemDefinition.Url;
             CustomData = menuItemDefinition.CustomData;
+            Target = menuItemDefinition.Target;
+            IsEnabled = menuItemDefinition.IsEnabled;
+            IsVisible = menuItemDefinition.IsVisible;
+
             Items = new List<UserMenuItem>();
         }
     }

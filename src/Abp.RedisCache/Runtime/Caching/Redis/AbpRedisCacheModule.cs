@@ -1,5 +1,6 @@
 ﻿using System.Reflection;
 using Abp.Modules;
+using Abp.Reflection.Extensions;
 
 namespace Abp.Runtime.Caching.Redis
 {
@@ -16,7 +17,7 @@ namespace Abp.Runtime.Caching.Redis
 
         public override void Initialize()
         {
-            IocManager.RegisterAssemblyByConvention(Assembly.GetExecutingAssembly());
+            IocManager.RegisterAssemblyByConvention(typeof(AbpRedisCacheModule).GetAssembly());
         }
     }
 }

@@ -1,10 +1,9 @@
-﻿using Abp.Dependency;
-using AutoMapper;
+﻿using AutoMapper;
 using IObjectMapper = Abp.ObjectMapping.IObjectMapper;
 
 namespace Abp.AutoMapper
 {
-    public class AutoMapperObjectMapper : IObjectMapper, ISingletonDependency
+    public class AutoMapperObjectMapper : IObjectMapper
     {
         private readonly IMapper _mapper;
 

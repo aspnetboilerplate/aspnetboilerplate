@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using AutoMapper;
 using Shouldly;
 using Xunit;
@@ -7,14 +8,14 @@ namespace Abp.AutoMapper.Tests
 {
     public class AutoMapping_Tests
     {
-        private static IMapper _mapper;
+        private readonly IMapper _mapper;
 
-        static AutoMapping_Tests()
+        public AutoMapping_Tests()
         {
             var config = new MapperConfiguration(configuration =>
             {
-                configuration.CreateAbpAttributeMaps(typeof(MyClass1));
-                configuration.CreateAbpAttributeMaps(typeof(MyClass2));
+                configuration.CreateAutoAttributeMaps(typeof(MyClass1));
+                configuration.CreateAutoAttributeMaps(typeof(MyClass2));
             });
 
             _mapper = config.CreateMapper();
@@ -62,6 +63,11 @@ namespace Abp.AutoMapper.Tests
             var obj3 = new MyClass3();
             _mapper.Map(obj2, obj3);
             obj3.TestProp.ShouldBe("Test value");
+
+            Assert.ThrowsAny<Exception>(() => //Did not define reverse mapping!
+            {
+                _mapper.Map(obj3, obj2);
+            });
         }
 
         [Fact]
@@ -71,6 +77,15 @@ namespace Abp.AutoMapper.Tests
 
             var obj1 = _mapper.Map<MyClass1>(obj2);
             obj1.TestProp.ShouldBe("Test value");
+        }
+
+        [Fact]
+        public void IgnoreMap_Tests()
+        {
+            var obj2 = new MyClass2 {TestProp = "Test value", AnotherValue = 42};
+            var obj3 = _mapper.Map<MyClass3>(obj2);
+            obj3.TestProp.ShouldBe("Test value");
+            obj3.AnotherValue.ShouldBe(0); //Ignored because of IgnoreMap attribute!
         }
 
         [Fact]
@@ -127,11 +142,16 @@ namespace Abp.AutoMapper.Tests
             public string TestProp { get; set; }
 
             public long? NullableValue { get; set; }
+
+            public int AnotherValue { get; set; }
         }
 
         private class MyClass3
         {
             public string TestProp { get; set; }
+
+            [IgnoreMap]
+            public int AnotherValue { get; set; }
         }
     }
 }

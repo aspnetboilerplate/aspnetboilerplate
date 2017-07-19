@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using JetBrains.Annotations;
 
 namespace Abp.RealTime
 {
@@ -40,5 +41,7 @@ namespace Abp.RealTime
         /// Gets all online clients.
         /// </summary>
         IReadOnlyList<IOnlineClient> GetAllClients();
+
+        IReadOnlyList<IOnlineClient> GetAllByUserId([NotNull] IUserIdentifier user);
     }
 }

@@ -1,6 +1,4 @@
 ﻿using System.Reflection;
-using System.Text;
-using Abp.IO.Extensions;
 
 namespace Abp.Localization.Dictionaries.Xml
 {
@@ -32,8 +30,7 @@ namespace Abp.Localization.Dictionaries.Xml
                 {
                     using (var stream = _assembly.GetManifestResourceStream(resourceName))
                     {
-                        var bytes = stream.GetAllBytes();
-                        var xmlString = Encoding.UTF8.GetString(bytes, 3, bytes.Length - 3); //Skipping byte order mark
+                        var xmlString = Utf8Helper.ReadStringFromStream(stream);
 
                         var dictionary = CreateXmlLocalizationDictionary(xmlString);
                         if (Dictionaries.ContainsKey(dictionary.CultureInfo.Name))

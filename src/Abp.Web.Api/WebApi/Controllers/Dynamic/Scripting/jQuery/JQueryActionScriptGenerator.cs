@@ -1,6 +1,7 @@
 using System.Text;
 using Abp.Extensions;
 using Abp.Web;
+using Abp.Web.Api.ProxyScripting.Generators;
 
 namespace Abp.WebApi.Controllers.Dynamic.Scripting.jQuery
 {
@@ -10,7 +11,7 @@ namespace Abp.WebApi.Controllers.Dynamic.Scripting.jQuery
         private readonly DynamicApiActionInfo _actionInfo;
 
         private const string JsMethodTemplate =
-@"    serviceNamespace.{jsMethodName} = function({jsMethodParameterList}) {
+@"    serviceNamespace{jsMethodName} = function({jsMethodParameterList}) {
         return abp.ajax($.extend({
 {ajaxCallParameters}
         }, ajaxParams));
@@ -28,7 +29,7 @@ namespace Abp.WebApi.Controllers.Dynamic.Scripting.jQuery
             var jsMethodParameterList = ActionScriptingHelper.GenerateJsMethodParameterList(_actionInfo.Method, "ajaxParams");
 
             var jsMethod = JsMethodTemplate
-                .Replace("{jsMethodName}", jsMethodName)
+                .Replace("{jsMethodName}", ProxyScriptingJsFuncHelper.WrapWithBracketsOrWithDotPrefix(jsMethodName))
                 .Replace("{jsMethodParameterList}", jsMethodParameterList)
                 .Replace("{ajaxCallParameters}", GenerateAjaxCallParameters());
 

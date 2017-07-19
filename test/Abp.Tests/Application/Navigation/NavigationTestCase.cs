@@ -45,16 +45,22 @@ namespace Abp.Tests.Application.Navigation
             NavigationManager.Initialize();
 
             _iocManager.IocContainer.Register(
+                Component.For<IPermissionDependencyContext, PermissionDependencyContext>()
+                    .UsingFactoryMethod(
+                        () => new PermissionDependencyContext(_iocManager)
+                        {
+                            PermissionChecker = CreateMockPermissionChecker()
+                        })
+                );
+
+            _iocManager.IocContainer.Register(
                 Component.For<IFeatureDependencyContext, FeatureDependencyContext>()
                     .UsingFactoryMethod(
                         () => new FeatureDependencyContext(_iocManager, Substitute.For<IFeatureChecker>()))
                 );
 
             //Create user navigation manager to test
-            UserNavigationManager = new UserNavigationManager(NavigationManager, Substitute.For<ILocalizationContext>(), _iocManager)
-            {
-                PermissionChecker = CreateMockPermissionChecker()
-            };
+            UserNavigationManager = new UserNavigationManager(NavigationManager, Substitute.For<ILocalizationContext>(), _iocManager);
         }
 
         private static IPermissionChecker CreateMockPermissionChecker()
@@ -81,7 +87,7 @@ namespace Abp.Tests.Application.Navigation
                                 new FixedLocalizableString("User management"),
                                 "fa fa-users",
                                 "#/admin/users",
-                                requiredPermissionName: "Abp.Zero.UserManagement",
+                                permissionDependency: new SimplePermissionDependency("Abp.Zero.UserManagement"),
                                 customData: "A simple test data"
                                 )
                         ).AddItem(
@@ -90,7 +96,7 @@ namespace Abp.Tests.Application.Navigation
                                 new FixedLocalizableString("Role management"),
                                 "fa fa-star-o",
                                 "#/admin/roles",
-                                requiredPermissionName: "Abp.Zero.RoleManagement"
+                                permissionDependency: new SimplePermissionDependency("Abp.Zero.RoleManagement")
                                 )
                         )
                     );

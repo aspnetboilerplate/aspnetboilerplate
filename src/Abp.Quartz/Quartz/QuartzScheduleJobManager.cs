@@ -1,19 +1,20 @@
 ﻿using System;
 using System.Threading.Tasks;
 using Abp.BackgroundJobs;
+using Abp.Dependency;
 using Abp.Quartz.Quartz.Configuration;
 using Abp.Threading.BackgroundWorkers;
 using Quartz;
 
 namespace Abp.Quartz.Quartz
 {
-    public class QuartzScheduleJobManager : BackgroundWorkerBase, IQuartzScheduleJobManager
+    public class QuartzScheduleJobManager : BackgroundWorkerBase, IQuartzScheduleJobManager, ISingletonDependency
     {
         private readonly IBackgroundJobConfiguration _backgroundJobConfiguration;
         private readonly IAbpQuartzConfiguration _quartzConfiguration;
 
         public QuartzScheduleJobManager(
-            IAbpQuartzConfiguration quartzConfiguration, 
+            IAbpQuartzConfiguration quartzConfiguration,
             IBackgroundJobConfiguration backgroundJobConfiguration)
         {
             _quartzConfiguration = quartzConfiguration;
@@ -44,6 +45,8 @@ namespace Abp.Quartz.Quartz
             {
                 _quartzConfiguration.Scheduler.Start();
             }
+
+            Logger.Info("Started QuartzScheduleJobManager");
         }
 
         public override void WaitToStop()
@@ -61,6 +64,8 @@ namespace Abp.Quartz.Quartz
             }
 
             base.WaitToStop();
+
+            Logger.Info("Stopped QuartzScheduleJobManager");
         }
     }
 }

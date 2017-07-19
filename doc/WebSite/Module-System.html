@@ -80,7 +80,8 @@ public class MyBlogApplicationModule : AbpModule
 			depends on MyBlogCoreModule and the MyBlogCoreModule should be initialized before 
 the MyBlogApplicationModule.</p>
 			<p>ABP can resolve dependencies recursively beginning from the
-			<strong>startup module</strong> and initialize them accordingly.</p>
+			<strong>startup module</strong> and initialize them accordingly. 
+			Startup module initialized as the last module.</p>
 			<h3>PlugIn Modules</h3>
 			<p>While modules are investigated beginning from startup module and 
 			going to dependencies, ABP can also load modules <strong>dynamically</strong>. <strong>AbpBootstrapper</strong> class defines 

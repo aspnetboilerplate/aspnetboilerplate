@@ -1,11 +1,12 @@
 ﻿using Castle.Core.Logging;
-
 using Quartz;
 
 namespace Abp.Quartz.Quartz
 {
     public class AbpQuartzJobListener : IJobListener
     {
+        public string Name { get; } = "AbpJobListener";
+
         public ILogger Logger { get; set; }
 
         public AbpQuartzJobListener()
@@ -20,21 +21,19 @@ namespace Abp.Quartz.Quartz
 
         public virtual void JobToBeExecuted(IJobExecutionContext context)
         {
-            Logger.Info($"Job {context.JobDetail.JobType.Name} executing...");
+            Logger.Debug($"Job {context.JobDetail.JobType.Name} executing...");
         }
 
         public virtual void JobWasExecuted(IJobExecutionContext context, JobExecutionException jobException)
         {
             if (jobException == null)
             {
-                Logger.Info($"Job {context.JobDetail.JobType.Name} sucessfully executed.");
+                Logger.Debug($"Job {context.JobDetail.JobType.Name} sucessfully executed.");
             }
             else
             {
-                Logger.Error($"Job {context.JobDetail.JobType.Name} failed with exception:{jobException}");
+                Logger.Error($"Job {context.JobDetail.JobType.Name} failed with exception: {jobException}");
             }
         }
-
-        public string Name { get; } = "AbpJobListener";
     }
 }

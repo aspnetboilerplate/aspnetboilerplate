@@ -28,6 +28,8 @@ namespace Abp.Runtime.Caching
 
         /// <summary>
         /// Gets an item from the cache.
+        /// This method hides cache provider failures (and logs them),
+        /// uses the factory method to get the object if cache provider fails.
         /// </summary>
         /// <param name="key">Key</param>
         /// <param name="factory">Factory method to create cache item if not exists</param>
@@ -36,6 +38,8 @@ namespace Abp.Runtime.Caching
 
         /// <summary>
         /// Gets an item from the cache.
+        /// This method hides cache provider failures (and logs them),
+        /// uses the factory method to get the object if cache provider fails.
         /// </summary>
         /// <param name="key">Key</param>
         /// <param name="factory">Factory method to create cache item if not exists</param>
@@ -58,7 +62,7 @@ namespace Abp.Runtime.Caching
 
         /// <summary>
         /// Saves/Overrides an item in the cache by a key.
-        /// Use one of the expire times at most (<see cref="slidingExpireTime"/> or <see cref="absoluteExpireTime"/>).
+        /// Use one of the expire times at most (<paramref name="slidingExpireTime"/> or <paramref name="absoluteExpireTime"/>).
         /// If none of them is specified, then
         /// <see cref="DefaultAbsoluteExpireTime"/> will be used if it's not null. Othewise, <see cref="DefaultSlidingExpireTime"/>
         /// will be used.
@@ -71,7 +75,7 @@ namespace Abp.Runtime.Caching
 
         /// <summary>
         /// Saves/Overrides an item in the cache by a key.
-        /// Use one of the expire times at most (<see cref="slidingExpireTime"/> or <see cref="absoluteExpireTime"/>).
+        /// Use one of the expire times at most (<paramref name="slidingExpireTime"/> or <paramref name="absoluteExpireTime"/>).
         /// If none of them is specified, then
         /// <see cref="DefaultAbsoluteExpireTime"/> will be used if it's not null. Othewise, <see cref="DefaultSlidingExpireTime"/>
         /// will be used.

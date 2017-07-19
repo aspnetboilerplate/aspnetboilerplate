@@ -35,7 +35,11 @@ namespace Abp.WebApi.Validation
                 return await continuation();
             }
 
-            if (actionContext.ActionDescriptor.IsDynamicAbpAction())
+            /* ModelState.IsValid is being checked to handle parameter binding errors (ex: send string for an int value).
+             * These type of errors can not be catched from application layer. */
+
+            if (actionContext.ModelState.IsValid
+                && actionContext.ActionDescriptor.IsDynamicAbpAction())
             {
                 return await continuation();
             }

@@ -22,17 +22,81 @@
 				<strong>independent</strong> of Hangfire. But, if you like, you can directly use 
 				<strong>Hangfire's 
 	API</strong> also.</p>
+			<p>
+				Hangfire Integration depends on the frameworks you are using.</p>
 			<h3>
-				Integration</h3>
-			<p>First, install
-				<a href="https://www.nuget.org/packages/Abp.HangFire" target="_blank">
-					<strong>Abp.HangFire</strong>
-				</a> nuget package to your project. Then you can install any 
+				ASP.NET Core Integration</h3>
+			<p>
+				<a href="https://www.nuget.org/packages/Abp.HangFire.AspNetCore" target="_blank">
+				<strong>Abp.HangFire.AspNetCore</strong></a> package is used to integrate to 
+				ASP.NET Core based applications. It depends on
+				<a href="https://www.nuget.org/packages/Hangfire.AspNetCore/" target="_blank">
+				Hangfire.AspNetCore</a>. 
+				<a href="https://www.hangfire.io/blog/2016/07/16/hangfire-1.6.0.html" target="_blank">
+				This document</a> describes to install hangfire to an ASP.NET 
+				Core project. It's similar for ABP based projects too. First install
+				<a href="https://www.nuget.org/packages/Abp.HangFire.AspNetCore" target="_blank">
+				Abp.HangFire.AspNetCore</a> package to your web project:</p>
+<pre>Install-Package Abp.HangFire.AspNetCore</pre>
+<p>Then you can install any 
 	storage for Hangfire. Most common one is SQL Server storage (see <a href="https://www.nuget.org/packages/Hangfire.SqlServer" target="_blank">
 					<strong>Hangfire.SqlServer</strong>
 				</a> 
 	nuget package). After you installed these nuget packages, you can 
-				<strong>configure</strong> ASP.NET Boilerplate to use Hangfire as shown below:</p>
+				<strong>configure</strong> your project to use Hangfire.</p>
+			<p>First, we are changing Startup class to add Hangfire to 
+			dependency injection and configure storage and connection string in 
+			the <strong>ConfigureServices</strong> method:</p>
+			<pre lang="cs">services.AddHangfire(config =&gt;
+{
+    config.UseSqlServerStorage(_appConfiguration.GetConnectionString("Default"));
+});</pre>
+			<p>Then we can add UseHangfireServer call in the <strong>Configure</strong> method:</p>
+<pre lang="cs">app.UseHangfireServer();</pre>
+			<p>If you want to use hangfire's dashboard, you can add it too:</p>
+<pre lang="cs">app.UseHangfireDashboard();</pre>
+			<p>If you want to <a href="Authorization.html">authorize</a> the dashboard, you can use 
+			AbpHangfireAuthorizationFilter as shown below:</p>
+			<pre lang="cs">app.UseHangfireDashboard("/hangfire", new DashboardOptions
+{
+    Authorization = new[] { new AbpHangfireAuthorizationFilter("MyHangFireDashboardPermissionName") }
+});</pre>
+			<p>The configuration above is almost standard to integrate hangfire 
+			to an ASP.NET Core application. For ABP based projects, we should 
+			also configure our web module to replace Hangfire for ABP's default 
+			background job manager:</p>
+<pre lang="cs">
+<strong>[DependsOn(typeof (AbpHangfireAspNetCoreModule))]</strong>
+public class MyProjectWebModule : AbpModule
+{
+    public override void PreInitialize()
+    {
+        <strong>Configuration.BackgroundJobs.UseHangfire();				</strong>
+    }
+
+    //...
+}</pre>
+
+			<p>We added <strong>AbpHangfireAspNetCoreModule</strong> as a dependency and used 
+	Configuration.BackgroundJobs.<strong>UseHangfire</strong> method to replace 
+			Hangfire for ABP's default background job manager.</p>
+			<p>Hangfire requires 
+	schema creation permission in your database since it creates it's own schema 
+	and tables on first run. See <a href="http://docs.hangfire.io/en/latest/" target="_blank">Hangfire 
+	documentation</a> for more information.</p>
+			<h3>
+				ASP.NET MVC 5.x Integration</h3>
+			<p>
+			<a href="https://www.nuget.org/packages/Abp.HangFire" target="_blank">
+					<strong>Abp.HangFire</strong>
+				</a> nuget package is used for ASP.NET MVC 5.x projects:</p>
+<pre>Install-Package Abp.HangFire</pre>
+			<p>Then you can install any 
+	storage for Hangfire. Most common one is SQL Server storage (see <a href="https://www.nuget.org/packages/Hangfire.SqlServer" target="_blank">
+					<strong>Hangfire.SqlServer</strong>
+				</a> 
+	nuget package). After you installed these nuget packages, you can 
+				<strong>configure</strong> your project to use Hangfire as shown below:</p>
 			<pre lang="cs">
 <strong>[DependsOn(typeof (AbpHangfireModule))]</strong>
 public class MyProjectWebModule : AbpModule
@@ -56,8 +120,8 @@ public class MyProjectWebModule : AbpModule
 	schema creation permission in your database since it creates it's own schema 
 	and tables on first run. See <a href="http://docs.hangfire.io/en/latest/" target="_blank">Hangfire 
 	documentation</a> for more information.</p>
-			<h3>
-				HangFire Dashboard Authorization</h3>
+			<h4>
+				Dashboard Authorization</h4>
 			<p>
 				Hagfire can show a <strong>dashboard page </strong>to see status 
 				of all background jobs in real time. You can configure it as 

@@ -106,7 +106,13 @@ namespace Abp.TestBase.Tests.Application.Services
         }
 
         [Fact]
-        public void Should_Work_If_Array_Is_Null_But_DisabledValidation()
+        public void Should_Work_If_Array_Is_Null_But_DisabledValidation_For_Method()
+        {
+            _myAppService.MyMethod4_2(new MyMethod4Input());
+        }
+
+        [Fact]
+        public void Should_Work_If_Array_Is_Null_But_DisabledValidation_For_Property()
         {
             _myAppService.MyMethod5(new MyMethod5Input());
         }
@@ -139,6 +145,18 @@ namespace Abp.TestBase.Tests.Application.Services
             input.Inner.Value.ShouldBe(12);
         }
 
+        [Fact]
+        public void Should_Stop_Recursive_Validation_In_A_Constant_Depth()
+        {
+            _myAppService.MyMethod8(new MyClassWithRecursiveReference { Value = "42" }).Result.ShouldBe(42);
+        }
+
+        [Fact]
+        public void Should_Allow_Null_For_Nullable_Enums()
+        {
+            _myAppService.MyMethodWithNullableEnum(null);
+        }
+
         #region Nested Classes
 
         public interface IMyAppService
@@ -147,9 +165,12 @@ namespace Abp.TestBase.Tests.Application.Services
             MyMethodOutput MyMethod2(MyMethod2Input input);
             MyMethodOutput MyMethod3(MyMethod3Input input);
             MyMethodOutput MyMethod4(MyMethod4Input input);
+            MyMethodOutput MyMethod4_2(MyMethod4Input input);
             MyMethodOutput MyMethod5(MyMethod5Input input);
             MyMethodOutput MyMethod6(MyMethod6Input input);
             MyMethodOutput MyMethod7(MyMethod7Input input);
+            MyMethodOutput MyMethod8(MyClassWithRecursiveReference input);
+            void MyMethodWithNullableEnum(MyEnum? value);
         }
 
         public class MyAppService : IMyAppService, IApplicationService
@@ -174,6 +195,12 @@ namespace Abp.TestBase.Tests.Application.Services
                 return new MyMethodOutput { Result = 42 };
             }
 
+            [DisableValidation]
+            public MyMethodOutput MyMethod4_2(MyMethod4Input input)
+            {
+                return new MyMethodOutput { Result = 42 };
+            }
+
             public MyMethodOutput MyMethod5(MyMethod5Input input)
             {
                 return new MyMethodOutput { Result = 42 };
@@ -187,6 +214,16 @@ namespace Abp.TestBase.Tests.Application.Services
             public MyMethodOutput MyMethod7(MyMethod7Input input)
             {
                 return new MyMethodOutput { Result = 42 };
+            }
+
+            public MyMethodOutput MyMethod8(MyClassWithRecursiveReference input)
+            {
+                return new MyMethodOutput { Result = 42 };
+            }
+
+            public void MyMethodWithNullableEnum(MyEnum? value)
+            {
+                
             }
         }
 
@@ -264,7 +301,7 @@ namespace Abp.TestBase.Tests.Application.Services
                 Inner.Value++;
             }
 
-            public class MyMethod7InputInner: IShouldNormalize
+            public class MyMethod7InputInner : IShouldNormalize
             {
                 public int Value { get; set; }
 
@@ -285,6 +322,25 @@ namespace Abp.TestBase.Tests.Application.Services
         public class MyMethodOutput
         {
             public int Result { get; set; }
+        }
+
+        public class MyClassWithRecursiveReference
+        {
+            public MyClassWithRecursiveReference Reference { get; }
+
+            [Required]
+            public string Value { get; set; }
+
+            public MyClassWithRecursiveReference()
+            {
+                Reference = this;
+            }
+        }
+
+        public enum MyEnum
+        {
+            Value1,
+            Value2
         }
 
         #endregion

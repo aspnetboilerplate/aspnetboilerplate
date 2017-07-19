@@ -178,7 +178,7 @@ framework. ASP.NET Core integration is implemented in
 	is successfully executed.</p>
 	<ul>
 		<li>It only wraps results for JsonResult, ObjectResult and any object 
-		which does not implement IActionResult. If your 
+		which does not implement IActionResult (and also their async versions). If your 
 		action is returning a view or any other type of result, it's not 
 		wrapped.</li>
 		<li><strong>WrapResult</strong> and <strong>DontWrapResult</strong> 
@@ -201,6 +201,8 @@ framework. ASP.NET Core integration is implemented in
 	automatically inject most used infrastructure (LocalizationManager, 
 	PermissionChecker, SettingManager... etc.). It also has shortcut methods 
 	(like L(...) for localize texts). Startup template inherits it by default.</p>
+	<p>You can inherit your web components from <strong>AbpViewComponent</strong> 
+	instead of ViewComponent to take advantage of base properties and methods.</p>
 	<h3>Client Proxies</h3>
 	<p>ABP can automatically create javascript proxies for all MVC Controllers 
 	(not only application services). 

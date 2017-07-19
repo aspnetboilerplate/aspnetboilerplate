@@ -17,27 +17,26 @@ namespace Abp.Modules
     {
         public AbpModuleInfo StartupModule { get; private set; }
 
-        private Type _startupModuleType;
-
         public IReadOnlyList<AbpModuleInfo> Modules => _modules.ToImmutableList();
 
         public ILogger Logger { get; set; }
 
+        private AbpModuleCollection _modules;
+
         private readonly IIocManager _iocManager;
         private readonly IAbpPlugInManager _abpPlugInManager;
-        private readonly AbpModuleCollection _modules;
 
         public AbpModuleManager(IIocManager iocManager, IAbpPlugInManager abpPlugInManager)
         {
-            _modules = new AbpModuleCollection();
             _iocManager = iocManager;
             _abpPlugInManager = abpPlugInManager;
+
             Logger = NullLogger.Instance;
         }
 
         public virtual void Initialize(Type startupModule)
         {
-            _startupModuleType = startupModule;
+            _modules = new AbpModuleCollection(startupModule);
             LoadAllModules();
         }
 
@@ -64,33 +63,40 @@ namespace Abp.Modules
         {
             Logger.Debug("Loading Abp modules...");
 
-            var moduleTypes = FindAllModules().Distinct().ToList();
+            List<Type> plugInModuleTypes;
+            var moduleTypes = FindAllModuleTypes(out plugInModuleTypes).Distinct().ToList();
 
             Logger.Debug("Found " + moduleTypes.Count + " ABP modules in total.");
 
             RegisterModules(moduleTypes);
-            CreateModules(moduleTypes);
+            CreateModules(moduleTypes, plugInModuleTypes);
 
-            AbpModuleCollection.EnsureKernelModuleToBeFirst(_modules);
+            _modules.EnsureKernelModuleToBeFirst();
+            _modules.EnsureStartupModuleToBeLast();
 
             SetDependencies();
 
             Logger.DebugFormat("{0} modules loaded.", _modules.Count);
         }
 
-        private List<Type> FindAllModules()
+        private List<Type> FindAllModuleTypes(out List<Type> plugInModuleTypes)
         {
-            var modules = AbpModule.FindDependedModuleTypesRecursivelyIncludingGivenModule(_startupModuleType);
+            plugInModuleTypes = new List<Type>();
 
-            _abpPlugInManager
-                .PlugInSources
-                .GetAllModules()
-                .ForEach(m => modules.AddIfNotContains(m));
+            var modules = AbpModule.FindDependedModuleTypesRecursivelyIncludingGivenModule(_modules.StartupModuleType);
+            
+            foreach (var plugInModuleType in _abpPlugInManager.PlugInSources.GetAllModules())
+            {
+                if (modules.AddIfNotContains(plugInModuleType))
+                {
+                    plugInModuleTypes.Add(plugInModuleType);
+                }
+            }
 
             return modules;
         }
 
-        private void CreateModules(ICollection<Type> moduleTypes)
+        private void CreateModules(ICollection<Type> moduleTypes, List<Type> plugInModuleTypes)
         {
             foreach (var moduleType in moduleTypes)
             {
@@ -103,11 +109,11 @@ namespace Abp.Modules
                 moduleObject.IocManager = _iocManager;
                 moduleObject.Configuration = _iocManager.Resolve<IAbpStartupConfiguration>();
 
-                var moduleInfo = new AbpModuleInfo(moduleType, moduleObject);
+                var moduleInfo = new AbpModuleInfo(moduleType, moduleObject, plugInModuleTypes.Contains(moduleType));
 
                 _modules.Add(moduleInfo);
 
-                if (moduleType == _startupModuleType)
+                if (moduleType == _modules.StartupModuleType)
                 {
                     StartupModule = moduleInfo;
                 }

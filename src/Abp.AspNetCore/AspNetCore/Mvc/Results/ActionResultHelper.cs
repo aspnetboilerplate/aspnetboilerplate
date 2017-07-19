@@ -1,16 +1,27 @@
 using System;
+using System.Reflection;
+using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Abp.AspNetCore.Mvc.Results
 {
-    internal static class ActionResultHelper
+    public static class ActionResultHelper
     {
         public static bool IsObjectResult(Type returnType)
         {
-            if (typeof(IActionResult).IsAssignableFrom(returnType))
+            //Get the actual return type (unwrap Task)
+            if (returnType == typeof(Task))
             {
-                if (typeof(JsonResult).IsAssignableFrom(returnType) ||
-                    typeof(ObjectResult).IsAssignableFrom(returnType))
+                returnType = typeof(void);
+            }
+            else if (returnType.GetTypeInfo().IsGenericType && returnType.GetGenericTypeDefinition() == typeof(Task<>))
+            {
+                returnType = returnType.GenericTypeArguments[0];
+            }
+
+            if (typeof(IActionResult).GetTypeInfo().IsAssignableFrom(returnType))
+            {
+                if (typeof(JsonResult).GetTypeInfo().IsAssignableFrom(returnType) || typeof(ObjectResult).GetTypeInfo().IsAssignableFrom(returnType))
                 {
                     return true;
                 }

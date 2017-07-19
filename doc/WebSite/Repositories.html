@@ -107,7 +107,7 @@ TEntity Load(TPrimaryKey id);</pre>
 than an Id. So, you can write a lambda expression to get an Entity. Example 
 usages:</p>
 			<pre>var person = _personRepository.Get(42);
-var person = _personRepository.Single(p =&gt; p.Name == "Halil İbrahim Kalkan");</pre>
+var person = _personRepository.Single(p =&gt; p.Name == "John");</pre>
 			<p>Notice that <strong>Single </strong>method throws 
 exception if there is no entity with given conditions or there are more 
 than one entity.</p>

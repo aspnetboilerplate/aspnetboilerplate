@@ -16,8 +16,18 @@
 				<a href="https://www.nuget.org/packages/Abp.Owin">
 					<strong>Abp.Owin</strong>
 				</a> 
+nuget package to your project.</p>
+			<h3>Installation</h3>
+
+			<p>Add
+				<a href="https://www.nuget.org/packages/Abp.Owin">
+					<strong>Abp.Owin</strong>
+				</a> 
 nuget package to your host project (generally, to the <strong>Web</strong> 
-project) and call <strong>UseAbp()</strong> extension method in your OWIN
+project).</p>
+			<pre>Install-Package Abp.Owin</pre>
+			<h3>Usage</h3>
+			<p>Then call <strong>UseAbp()</strong> extension method in your OWIN
 				<strong>Startup</strong> file as shown below:</p>
 			<pre lang="cs">[assembly: OwinStartup(typeof(Startup))]
 public class Startup

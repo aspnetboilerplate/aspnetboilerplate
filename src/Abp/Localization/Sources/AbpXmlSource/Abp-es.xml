@@ -7,11 +7,15 @@
     <text name="Password">Contraseña</text>
     <text name="DomainName">Nombre del dominio</text>
     <text name="UseSSL">Usar SSL</text>
-    <text name="UseDefaultCredentials">Utilizar las credenciales predeterminadas</text>
-    <text name="DefaultFromSenderEmailAddress">Por defecto el correo electrónico del remitente</text>
-    <text name="DefaultFromSenderDisplayName">Por defecto el nombre a mostrar del remitente</text>
+    <text name="UseDefaultCredentials">Usar las credenciales predeterminadas</text>
+    <text name="DefaultFromSenderEmailAddress">Correo electrónico predeterminado del remitente</text>
+    <text name="DefaultFromSenderDisplayName">Nombre predeterminado del remitente</text>
     <text name="DefaultLanguage">Idioma predeterminado</text>
     <text name="ReceiveNotifications">Recibir notificaciones</text>
     <text name="CurrentUserDidNotLoginToTheApplication">El usuario actual no ha iniciado sesión en la aplicación!</text>
+    <text name="TimeZone">Huso horario</text>
+    <text name="AllOfThesePermissionsMustBeGranted">Los permisos requeridos no han sido otorgados. Todos estos permisos deben ser otorgados: {0}</text>
+    <text name="AtLeastOneOfThesePermissionsMustBeGranted">Los permisos requeridos no han sido otorgados. Al menos uno de estos permisos deben ser otorgados: {0}</text>
+    <text name="MainMenu">Menú principal</text>
   </texts>
 </localizationDictionary>

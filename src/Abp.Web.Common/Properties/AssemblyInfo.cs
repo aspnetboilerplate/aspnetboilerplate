@@ -19,6 +19,7 @@ using System.Runtime.InteropServices;
 [assembly: InternalsVisibleTo("Abp.Web.Common.Tests")]
 [assembly: InternalsVisibleTo("Abp.Web.Tests")]
 [assembly: InternalsVisibleTo("Abp.Web.Mvc")]
+[assembly: InternalsVisibleTo("Abp.Web.Api")]
 
 // Setting ComVisible to false makes the types in this assembly not visible 
 // to COM components.  If you need to access a type in this assembly from 

@@ -1,7 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Data.Common;
+using System.Data.Entity.Infrastructure.Interception;
 using System.Threading.Tasks;
+
+using Abp.EntityFramework.Interceptors;
 using Abp.TestBase.SampleApplication.ContacLists;
 using Abp.TestBase.SampleApplication.Crm;
 using Abp.TestBase.SampleApplication.EntityFramework;
@@ -31,6 +34,12 @@ namespace Abp.TestBase.SampleApplication.Tests
                 );
         }
 
+        protected override void PostInitialize()
+        {
+            //Commented out, since Effort.DbConnection does not provide Sql Text while interception time.
+            //DbInterception.Add(Resolve<WithNoLockInterceptor>());
+        }
+
         protected virtual void CreateInitialData()
         {
             UsingDbContext(
@@ -43,7 +52,7 @@ namespace Abp.TestBase.SampleApplication.Tests
                             Name = "List of Tenant-1",
                             People = new List<Person>
                                      {
-                                         new Person {Name = "halil"},
+                                         new Person {Name = "halil", CreatorUserId = 42 },
                                          new Person {Name = "emre", IsDeleted = true}
                                      }
                         });

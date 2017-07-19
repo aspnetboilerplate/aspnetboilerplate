@@ -184,55 +184,8 @@ properties. </p>
 			<p>Fortunately there are tools that makes this very easy. <strong>
 					<a href="http://automapper.org/" target="_blank">AutoMapper</a>
 				</strong> is one 
-of them. It's distributed on nuget, you can easily add to your project. Let's 
-write SearchPeople method again but using AutoMapper:</p>
-			<pre lang="cs">public SearchPeopleOutput SearchPeople(SearchPeopleInput input)
-{
-    var peopleEntityList = _personRepository.GetAllList(person =&gt; person.Name.Contains(input.SearchedName));
-    return new SearchPeopleOutput { People = Mapper.Map&lt;List&lt;PersonDto&gt;&gt;(peopleEntityList) };
-}</pre>
-			<p>That's all. You can add more properties to entity and DTO but converting code 
-does not change. The only thing to do is define a mapping before using it:</p>
-			<pre lang="cs">Mapper.CreateMap<span lang="tr">&lt;</span>Person, PersonDto<span lang="tr">&gt;</span>();</pre>
-			<p>AutoMapper creates mapping code. Thus, dynamic mapping does not become 
-a performance problem. It's fast &amp; easy. AutoMapper creates a PersonDto for a Person entity and assign DTO's properties 
-using naming conventions. Naming conventions can be complex and configurable. Also, 
-you can define custom maps and much more. See <a href="http://automapper.org/" target="_blank">AutoMapper</a>'s documentation 
-for more information.</p>
-			<p>You can define mappings in <a href="Module-System.html">
-			PostInitialize</a> of your module for example.</p>
-
-			<h4 id="DocAutoMappingHelpers">Mapping using attributes and extension methods</h4>
-
-			<p>ASP.NET Boilerplate provides several attributes and extension methods to define mappings. 
-To use it, add
-				<a href="http://www.nuget.org/packages/Abp.AutoMapper">Abp.AutoMapper</a> nuget 
-package to your project. Then, use attribute
-				<strong>AutoMap</strong> for two way mapping, <strong>AutoMapFrom</strong> and <strong>AutoMapTo</strong> for one way mapping.
-Use <strong>MapTo </strong> extension methods to map one object to another. 
-Example mapping definition:</p>
-
-			<pre lang="cs">[AutoMap(typeof(MyClass2))] //define two-way mapping
-public class MyClass1
-{
-    public string TestProp { get; set; }
-}
-
-public class MyClass2
-{
-    public string TestProp { get; set; }
-}</pre>
-
-			<p>Then you can map them using MapTo extension method:</p>
-
-			<pre lang="cs">var obj1 = new MyClass1 { TestProp = "Test value" };
-var obj2 = obj1.MapTo&lt;MyClass2&gt;(); //Creates a new MyClass2 object with TestProp copied from obj1.</pre>
-
-			<p>The code above creates a new MyClass2 object from a MyClass1 object. Also, 
-you can map to an existing object as shown below:</p>
-			<pre>var obj1 = new MyClass1 { TestProp = &quot;Test value&quot; };
-var obj2 = new MyClass2();
-obj1.MapTo(obj2); //Sets properties of obj2 from obj1</pre>
+of them. See <a href="Object-To-Object-Mapping.html">AutoMapper Integration</a> 
+			document to know how to use it.</p>
 
 			<h3 id="DocHelperDtoInterfaces">Helper interfaces and classes</h3>
 

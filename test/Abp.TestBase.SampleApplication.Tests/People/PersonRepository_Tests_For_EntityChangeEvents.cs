@@ -40,7 +40,7 @@ namespace Abp.TestBase.SampleApplication.Tests.People
                 eventData =>
                 {
                     eventData.Entity.Name.ShouldBe("halil");
-                    eventData.Entity.IsTransient().ShouldBe(true);
+                    eventData.Entity.IsTransient().ShouldBe(false);
                     changingTriggerCount++;
                     changedTriggerCount.ShouldBe(0);
                 });
@@ -49,7 +49,7 @@ namespace Abp.TestBase.SampleApplication.Tests.People
                 eventData =>
                 {
                     eventData.Entity.Name.ShouldBe("halil");
-                    eventData.Entity.IsTransient().ShouldBe(true);
+                    eventData.Entity.IsTransient().ShouldBe(false);
                     creatingTriggerCount++;
                     createdTriggerCount.ShouldBe(0);
                 });
@@ -120,6 +120,8 @@ namespace Abp.TestBase.SampleApplication.Tests.People
                 eventData =>
                 {
                     eventData.Entity.Name.ShouldBe("halil");
+                    eventData.Entity.CreatorUserId.ShouldNotBeNull();
+                    eventData.Entity.CreatorUserId.ShouldBe(42);
                     triggerCount++;
                 });
 
@@ -181,6 +183,51 @@ namespace Abp.TestBase.SampleApplication.Tests.People
         }
 
         [Fact]
+        public void Should_Rollback_UOW_In_Deleting_Event()
+        {
+            Resolve<IEventBus>().Register<EntityDeletingEventData<Person>>(
+                eventData =>
+                {
+                    throw new ApplicationException("A sample exception to rollback the UOW.");
+                });
+
+            //Act
+            try
+            {
+                using (var uow = Resolve<IUnitOfWorkManager>().Begin())
+                {
+                    var person = _personRepository.Single(p => p.Name == "halil");
+                    _personRepository.Delete(person);
+                    uow.Complete();
+                }
+
+                Assert.True(false, "Should not come here since ApplicationException is thrown!");
+            }
+            catch (ApplicationException)
+            {
+                //hiding exception
+            }
+            
+            _personRepository
+                .FirstOrDefault(p => p.Name == "halil")
+                .ShouldNotBeNull();
+        }
+
+        [Fact]
+        public async Task Should_Insert_A_New_Entity_On_EntityCreating_Event()
+        {
+            var person = await _personRepository.InsertAsync(new Person { Name = "Tuana", ContactListId = 1 });
+            person.IsTransient().ShouldBeFalse();
+
+            var text = string.Format("{0} is being created with Id = {1}!", person.Name, person.Id);
+            UsingDbContext(context =>
+            {
+                var message = context.Messages.FirstOrDefault(m => m.Text == text && m.TenantId == PersonHandler.FakeTenantId);
+                message.ShouldNotBeNull();
+            });
+        }
+
+        [Fact]
         public async Task Should_Insert_A_New_Entity_On_EntityCreated_Event()
         {
             var person = await _personRepository.InsertAsync(new Person { Name = "Tuana", ContactListId = 1 });
@@ -194,7 +241,7 @@ namespace Abp.TestBase.SampleApplication.Tests.People
             });
         }
 
-        public class PersonHandler : IEventHandler<EntityCreatedEventData<Person>>, ITransientDependency
+        public class PersonHandler : IEventHandler<EntityCreatingEventData<Person>>, IEventHandler<EntityCreatedEventData<Person>>, ITransientDependency
         {
             public const int FakeTenantId = 65910381;
 
@@ -203,6 +250,11 @@ namespace Abp.TestBase.SampleApplication.Tests.People
             public PersonHandler(IRepository<Message> messageRepository)
             {
                 _messageRepository = messageRepository;
+            }
+
+            public void HandleEvent(EntityCreatingEventData<Person> eventData)
+            {
+                _messageRepository.Insert(new Message(FakeTenantId, string.Format("{0} is being created with Id = {1}!", eventData.Entity.Name, eventData.Entity.Id)));
             }
 
             public void HandleEvent(EntityCreatedEventData<Person> eventData)
