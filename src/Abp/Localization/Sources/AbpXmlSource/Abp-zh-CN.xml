@@ -16,5 +16,6 @@
     <text name="TimeZone">时区</text>
     <text name="AllOfThesePermissionsMustBeGranted">您没有权限进行此操作,您需要以下权限: {0}</text>
     <text name="AtLeastOneOfThesePermissionsMustBeGranted">您没有权限进行此操作,您至少需要下列权限的其中一项: {0}</text>
+    <text name="MainMenu">主菜单</text>
   </texts>
 </localizationDictionary>

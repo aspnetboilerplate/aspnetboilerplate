@@ -71,7 +71,7 @@ used to identify a text. You can use <strong>value </strong>attribute or
 last one) to set value of the localization text. We create a seperated XML file for 
 				<strong>each language</strong> as shown below:</p>
 			<p>
-				<img alt="Localization files" height="89" src="images/localization_files2.png" width="217" />
+				<img class="img-thumbnail" alt="Localization files" src="images/localization_files2.png" />
 			</p>
 			<p>
 				<strong>SimpleTaskSystem</strong> is the <strong>source name</strong> here 
@@ -132,7 +132,7 @@ since dot notation causes namespacing problems when finding resources.</p>
 	"en"</strong> declares that this JSON file contains English texts. We create 
 	a seperated JSON file for <strong>each language</strong> as shown below:</p>
 			<p>
-				<img alt="JSON localization files" height="64" src="images/json-localization-source-files.png" width="212" />
+				<img class="img-thumbnail" alt="JSON localization files" src="images/json-localization-source-files.png" />
 			</p>
 			<p>
 				<strong>MySourceName </strong>is the <strong>source name</strong> here, 
@@ -182,14 +182,14 @@ since dot notation causes namespace problems when finding resources.&nbsp;</p>
 a resource file for each language as shown below (Right click to the project, 
 choose add new item then find resources file).</p>
 			<p>
-				<img alt="Localization resource files" height="97" src="images/resource_files.png" width="149" />
+				<img class="img-thumbnail" alt="Localization resource files" src="images/resource_files.png" />
 			</p>
 			<p>
 				<strong>MyTexts.resx</strong> contains the default language texts and MyTexts<strong>.tr</strong>.resx 
 contains texts for Turkish language. When we open MyTexts.resx, we can see all 
 texts:</p>
 			<p>
-				<img alt="Content of a resource file" height="174" src="images/resource_files_content.png" width="466" />
+				<img class="img-thumbnail" alt="Content of a resource file" src="images/resource_files_content.png" />
 			</p>
 			<p>In this case, ASP.NET Boilerplate uses .NET's built-in resource manager for 
 localization. You should configure a localization source for the resource:</p>
@@ -286,26 +286,41 @@ it). <a href="Zero/Language-Management.html">Module zero</a> implements source
 				<strong>current thread's culture (and UI culture)</strong>. This 
 			is how ABP determines it by default:</p>
 			<ul>
-				<li>Tries to get from a special <strong>header</strong> value, named 
-				"Abp.Localization.CultureName" by default.</li>
-				<li>If not found, tries to get from a special <strong>cookie</strong> value, 
-				named "Abp.Localization.CultureName" by default.</li>
-				<li>If not found, tries to get from <strong>default culture</strong> setting 
+				<li>Try to get from a special <strong>query string </strong>
+				value, named &quot;<strong>Abp.Localization.CultureName</strong>&quot; by 
+				default.</li>
+				<li>If user is known via&nbsp;<a href="Abp-Session.html">IAbpSession</a>&nbsp;and 
+				explicitly selected a language before (and saved to
+				<a href="Setting-Management.html">ISettingManager</a>) then use 
+				user&#39;s preferred language. If user is known but not selected any 
+				language and cookie/header (see below) has a value, set user&#39;s 
+				setting with that information. </li>
+				<li>Try to get from a special <strong>header</strong> value, named 
+				"<strong>Abp.Localization.CultureName</strong>" by default.</li>
+				<li>Try to get from a special <strong>header</strong> value, 
+				named "<strong>Abp.Localization.CultureName</strong>" by default.</li>
+				<li>Try to get from a special <strong>cookie</strong> value, 
+				named "<strong>Abp.Localization.CultureName</strong>" by default.</li>
+				<li>Try to get from <strong>default culture</strong> setting 
 				(setting name is "Abp.Localization.DefaultLanguageName", which 
 				is a constant defined in 
 				Abp.Localization.LocalizationSettingNames.DefaultLanguage and 
 				can be changed using <a href="Setting-Management.html">setting 
 				management</a>).</li>
-				<li>If not found, tries to get from <strong>browser's default language</strong> 
+				<li>Try to get from <strong>browser's default language</strong> 
 				(HttpContext.Request.UserLanguages).</li>
 			</ul>
-			<p>If you need, you can change special cookie name (it's also the header 
-			name) in your 
+			<p>If you need, you can change the special cookie/header/querystring name in your 
 			module's PreInitialize method. Example:</p>
 			<pre lang="cs">Configuration.Modules.AbpWeb().Localization.CookieName = "YourCustomName";</pre>
+			<p>ABP overrides <strong>Application_PostAuthenticateRequest</strong> 
+			(in global.asax) to implement that logic. You can override <strong>
+			SetCurrentCulture</strong> in global.asax or replace <strong>
+			ICurrentCultureSetter</strong> in order to override the logic 
+			described above.</p>
 			<h3 id="DocGetText">Getting A Localized Text</h3>
 			<p>After creating a source and register it to the ASP.NET Boilerplate's 
-localization system, texts can be localized easily.</p>
+localization system, texts can be localized easily.&nbsp;</p>
 			<h4 id="DocInServer">In Server Side</h4>
 			<p>In server side, we can <a href="/Pages/Documents/Dependency-Injection">inject</a>
 				<strong>ILocalizationManager</strong> and use 
@@ -438,7 +453,7 @@ IDictionaryBasedLocalizationSource interface).</p>
 				<strong>Abp.Web</strong> nuget package defines a localization source named "<strong>AbpWeb</strong>" 
 as embedded XML files:</p>
 			<p>
-				<img alt="AbpWeb localization source files" height="147" src="images/AbpWeb-localization-source.png" width="216" />
+				<img class="img-thumbnail" alt="AbpWeb localization source files" src="images/AbpWeb-localization-source.png" />
 			</p>
 			<p>&nbsp;Default (English) XML file 
 is like below (only first two texts are shown):</p>

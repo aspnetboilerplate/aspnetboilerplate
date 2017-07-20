@@ -26,7 +26,7 @@
 			it is successfull:</li>
          </ul>
           <p>
-		  <img class="img-thumbnail" alt="Swagger UI" height="618" src="../images/swagger-ui-module-zero-core-template.png" width="997" /></p>
+		  <img class="img-thumbnail" alt="Swagger UI" src="../images/swagger-ui-module-zero-core-template.png" /></p>
          <p>In this template, <strong>multi-tenancy is enabled by default</strong>. You 
             can disable it in Core project's module class if you don't need.
          </p>
@@ -62,7 +62,7 @@
 		Be sure that Web.Host application is running at the same time. When you 
 		open the application, you will see the <strong>login page</strong>:</p>
 		  <p>
-		  <img class="img-thumbnail" alt="Login Page" height="654" src="../images/module-zero-core-template-ui-login.png" width="897" /></p>
+		  <img class="img-thumbnail" alt="Login Page" src="../images/module-zero-core-template-ui-login.png" /></p>
 		  <p>Angular client app has also <strong>HMR</strong> (Hot Module Replacement) enabled. You can use the 
 		following command (instead of npm start) to enable HMR on development time:</p>
 		<pre class="js">npm run hmr</pre>
@@ -72,7 +72,7 @@
 		page. There is a tenant named &quot;Default&quot; by default. Once you 
 		login successfully, you will see a dashboard:</p>
 		  <p>
-		  <img class="img-thumbnail" alt="Dashboard" height="971" src="../images/module-zero-core-template-ui-home.png" width="1365" /></p>
+		  <img class="img-thumbnail" alt="Dashboard" src="../images/module-zero-core-template-ui-home.png" /></p>
 		  <p>This dashboard is just for demonstration and to be a base for your 
 		  actual dashboard.</p>
 
@@ -118,7 +118,7 @@
          <p>Just send a <strong>POST</strong> request to <strong>
 		 http://localhost:21021/api/TokenAuth/Authenticate</strong> with <strong>Context-Type="application/json"</strong> header as shown below:</p>
          <p>
-		 <img class="img-thumbnail" alt="Swagger UI auth" height="831" src="../images/swagger-ui-angular-auth.png" width="888" /></p>
+		 <img class="img-thumbnail" alt="Swagger UI auth" src="../images/swagger-ui-angular-auth.png" /></p>
          <p>We sent values <strong>usernameOrEmailAddress
             </strong>and <strong>password</strong>. As seen above, result property of returning JSON contains the token and expire time (which is 24 hours by default and can be configured). We can save it and use for next requests.</p>
 
@@ -136,7 +136,7 @@
             example,  we can use the <strong>User service</strong> to get a <strong>list of users</strong>:
          </p>
          <p>
-            <img class="img-thumbnail" alt="Using API" height="580" src="../images/swagger-ui-angular-api-v2.png" width="889" /></p>
+            <img class="img-thumbnail" alt="Using API" src="../images/swagger-ui-angular-api-v2.png"/></p>
          <p>Just made a <strong>GET</strong> request to <strong>
 		 http://localhost:21021/api/services/app/user/getAll</strong> with <strong>
             Content-Type="application/json"</strong> and <strong>Authorization="Bearer <em>
@@ -149,7 +149,7 @@
             You can run this application to create/migrate host and tenant databases.
          </p>
          <p>
-            <img class="img-thumbnail" alt="Database Migrator" height="230" src="../images/database-migrator.png" width="659" />
+            <img class="img-thumbnail" alt="Database Migrator" src="../images/database-migrator.png" />
          </p>
          <p>This application gets host connection string from it's <strong>own 
 		 appsettings.json 
