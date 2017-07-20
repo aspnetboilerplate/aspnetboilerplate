@@ -1,0 +1,144 @@
+﻿<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+
+	<head>
+		<meta content="text/html; charset=utf-8" http-equiv="Content-Type" />
+		<title>Dapper Usage</title>
+		<link type="text/css" rel="stylesheet" href="bootstrap.min.css" />
+	</head>
+
+	<body>
+
+		<div class="document-contents">
+
+
+		<h3 id="DocConfigureModules">Introduction</h3>
+			<p><a href="https://github.com/StackExchange/Dapper" target="_blank">Dapper</a> is an object-relational mapping (ORM) product for .NET. 
+			It provides a framework for mapping an object-oriented domain model to a traditional relational database. 
+			Dapper is free as open source software that is distributed under dual license, either the Apache License 2.0 or the MIT License.
+			<a href="https://www.nuget.org/packages/Abp.Dapper" target="_blank">Abp.Dapper</a> package simply integrates Dapper to ASP.NET Boilerplate.</p>
+
+			<h3 id="DocConfigureAbp">Module Registration</h3>
+			<p>First, you need to add <strong>DependsOn</strong> attribute for AbpDapperModule on your module where you register it. Example configuration:</p>
+			<pre lang="cs">[DependsOn(
+     typeof(AbpEntityFrameworkModule),
+     typeof(AbpKernelModule),
+     typeof(AbpDapperModule)
+)]
+public class SampleApplicationModule : AbpModule
+{
+    public override void Initialize()
+    {
+        IocManager.RegisterAssemblyByConvention(Assembly.GetExecutingAssembly());
+    }
+}
+			</pre>
+			
+			<h3 id="DocConfigureModules">Usage</h3>
+
+			
+			<p>After registering <strong>AbpDapperModule</strong>, you can use it like traditinal ABP repositories like following.</p>
+			<pre lang="cs">public class SomeDomainService : ITransientDependency
+{
+    private readonly IDapperRepository&lt;Animal&gt; _animalDapperRepository;
+    private readonly IRepository&lt;Animal&gt; _animalRepository;
+    private readonly IDapperRepository&lt;Person&gt; _personDapperRepository;
+    private readonly IRepository&lt;Person&gt; _personRepository;
+    private readonly IUnitOfWorkManager _unitOfWorkManager;
+
+    public SomeDomainService(
+        IUnitOfWorkManager unitOfWorkManager,
+        IRepository&lt;Person&gt; personRepository,
+        IRepository&lt;Animal&gt; animalRepository,
+        IDapperRepository&lt;Person&gt; personDapperRepository,
+        IDapperRepository&lt;Animal&gt; animalDapperRepository)
+    {
+        _unitOfWorkManager = unitOfWorkManager;
+        _personRepository = personRepository;
+        _animalRepository = animalRepository;
+        _personDapperRepository = personDapperRepository;
+        _animalDapperRepository = animalDapperRepository;
+    }
+
+    public void DoSomeStuff()
+    {
+        using (IUnitOfWorkCompleteHandle uow = _unitOfWorkManager.Begin())
+        {
+            _personRepository.Insert(new Person("Oğuzhan"));
+            _personRepository.Insert(new Person("Bread"));
+
+            _animalRepository.Insert(new Animal("Bird"));
+            _animalRepository.Insert(new Animal("Cat"));
+
+            _unitOfWorkManager.Current.SaveChanges();
+
+            Animal animal = _animalRepository.FirstOrDefault(x => x.Name == "Bird");
+
+            Person person = _personDapperRepository.Get(1);
+            int personCount = _personDapperRepository.Count(x => x.Name == "Oğuzhan");
+            List&lt;Animal&gt; persons = _animalDapperRepository.GetList(x => x.Name.StartsWith("O")).ToList();
+
+            uow.Complete();
+        }
+    }
+}
+</pre>
+			<p>You can use both EF repositories and Dapper repositories at the same time.</p>
+			
+			<h3 id="DocCreateModuleConfig">Abp.Dapper can use with sql statements</h3>
+			<p>You can write pure SQL statements, if you want.</p>
+
+			<h4>When your repository and your query is related</h4>
+
+			<p>For example, if <strong>IDapperRepository&lt;Product&gt; _productDapperRepository</strong> and Product table that you want to select from database are related to each other.</p>
+			
+			<pre lang="cs">_productDapperRepository.Query&lt;Product&gt;("select * from Product where Name = 'oguzhan'");
+_productDapperRepository.Query&lt;Product&gt;("select * from Product where Name = @name", new { name = "oguzhan" });
+_productDapperRepository.Query&lt;Product&gt;("select * from Product where Name in @name", new { name = new List&lt;string&gt;() { "oguzhan" } });</pre>
+
+			<h4>When we have not wanted columns for Dapper</h4>
+
+			<p>Like EF mappings dapper has entity mapping configurations and Abp.Dapper supports it.</p>
+			
+			<pre lang="cs">public class SomeViewDapperMap : ClassMapper&lt;SomeView&gt;
+{
+    public SomeViewDapperMap ()
+    {
+        Map(x => x.Id).Ignore(); 
+        AutoMap();
+    }
+}</pre>
+			
+			<h4>When do you need mapping configuration in strongly typed repositories?</h4>
+
+			<p>If you don't want to map the column from dapper results, you can ignore mapping for specific column.</p>
+			<p>Views generally have not Id columns, but you need a create <strong>IDapperRepository&lt;SomeView&gt;</strong>. 
+			As you know Abp Repository structure forces classes to be inherited from <strong>IEntity</strong>, in this case you should do some trick for sake of the repository creation and you do not map the Id to Dapper.</p>
+			
+
+			<h4>Assembly registration</h4>
+
+			<p></p>
+			
+			<pre lang="cs">[DependsOn(typeof(AbpDapperModule))]
+public class AbpDapperTestModule : AbpModule
+{
+    public override void Initialize()
+    {
+        IocManager.RegisterAssemblyByConvention(Assembly.GetExecutingAssembly());
+
+        DapperExtensions.DapperExtensions.SetMappingAssemblies(new List&lt;Assembly&gt;() {Assembly.GetExecutingAssembly()});
+    }
+}</pre>
+
+
+			<p><p>
+			<h4>When you select anonymous type</h4>
+			<p>Sometimes you might want to do big join queries or want to select big view with a lot of columns, in this case you create a new data representation to handle Dapper result like as dto and does not matter to your repository is what.</p>
+			<pre lang="cs"> _productDapperRepository.Query&lt;AnyDto&gt;("select * from SomeView");</pre>
+
+
+		</div>
+	</body>
+
+</html>
