@@ -136,16 +136,14 @@
             example,  we can use the <strong>User service</strong> to get a <strong>list of users</strong>:
          </p>
          <p>
-            <img class="img-thumbnail" alt="Swagger API usage" height="655" src="../images/swagger-ui-angular-api.png" width="888" /></p>
+            <img class="img-thumbnail" alt="Using API" height="580" src="../images/swagger-ui-angular-api-v2.png" width="889" /></p>
          <p>Just made a <strong>GET</strong> request to <strong>
-		 http://localhost:21021/api/services/app/user/getUsers</strong> with <strong>
+		 http://localhost:21021/api/services/app/user/getAll</strong> with <strong>
             Content-Type="application/json"</strong> and <strong>Authorization="Bearer <em>
             your-</em></strong><em><strong>auth-token</strong>
             </em>
             <strong>"</strong>.
-         </p>
-         <p>Note that we also added <strong>X-Requested-With</strong> header to indicate that this is an AJAX request. Thus, ASP.NET Core can better handle the request and return appropriate return values on success and error cases.</p>
-         <p>All functionality available on UI is also available as API.</p>
+         All functionality available on UI is also available as API.</p>
          <h4>Migrator Console Application</h4>
          <p>Startup template includes a tool, Migrator.exe, to easily migrate your databases. 
             You can run this application to create/migrate host and tenant databases.
