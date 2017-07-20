@@ -21,6 +21,7 @@ namespace Abp.RedisCache.Tests
             LocalIocManager.Register<ICachingConfiguration, CachingConfiguration>();
             LocalIocManager.Register<IAbpRedisCacheDatabaseProvider, AbpRedisCacheDatabaseProvider>();
             LocalIocManager.Register<ICacheManager, AbpRedisCacheManager>();
+            LocalIocManager.Register<IRedisCacheSerializer,DefaultRedisCacheSerializer>();
             LocalIocManager.IocContainer.Register(Component.For<IAbpStartupConfiguration>().UsingFactoryMethod(() => Substitute.For<IAbpStartupConfiguration>()));
 
             var defaultSlidingExpireTime = TimeSpan.FromHours(24);
@@ -33,9 +34,9 @@ namespace Abp.RedisCache.Tests
             _cache.DefaultSlidingExpireTime.ShouldBe(defaultSlidingExpireTime);
         }
 
-        //[Theory]
-        //[InlineData("A", 42)]
-        //[InlineData("B", 43)]
+        [Theory]
+        [InlineData("A", 42)]
+        [InlineData("B", 43)]
         public void Simple_Get_Set_Test(string cacheKey, int cacheValue)
         {
             var item = _cache.Get(cacheKey, () => new MyCacheItem { Value = cacheValue });
