@@ -12,18 +12,25 @@
 		<div class="document-contents">
 
 
-		<h3 id="DocConfigureModules">Introduction</h3>
+		<h3 id="DocIntroduction">Introduction</h3>
 			<p><a href="https://github.com/StackExchange/Dapper" target="_blank">Dapper</a> is an object-relational mapping (ORM) product for .NET. 
 			It provides a framework for mapping an object-oriented domain model to a traditional relational database. 
 			Dapper is free as open source software that is distributed under dual license, either the Apache License 2.0 or the MIT License.
 			<a href="https://www.nuget.org/packages/Abp.Dapper" target="_blank">Abp.Dapper</a> package simply integrates Dapper to ASP.NET Boilerplate.</p>
 
-			<h3 id="DocConfigureAbp">Module Registration</h3>
-			<p>Before you start, you need to download <a href="https://www.nuget.org/packages/Abp.Dapper" target="_blank">Abp.Dapper</a> nuget package. 
-			Then you need to add <strong>DependsOn</strong> attribute for <strong>AbpDapperModule</strong> on your module where you register it. Example configuration:</p>
+			<h3 id="DocQuickStart">Quick Start</h3>
+			<p>Before you start, you need to download <a href="https://www.nuget.org/packages/Abp.Dapper" target="_blank">Abp.Dapper</a> and <a href="https://www.nuget.org/packages/Abp.EntityFrameworkCore" target="_blank">Abp.EntityFrameworkCore</a> nuget packages 
+			to project that you want to use it.
+			</p>
+			
+			<h4>Module Registration</h3>
+			
+			<p>First you need to add <strong>DependsOn</strong> attribute for <strong>AbpDapperModule</strong> on your module where you register it.</p>
+			
+			<p><strong>NOTE:</strong> Modules need to be added by order. And also you should define mappings, if your entities and tables don't have the same name.</p>
+			
 			<pre lang="cs">[DependsOn(
      typeof(AbpEntityFrameworkModule),
-     typeof(AbpKernelModule),
      typeof(AbpDapperModule)
 )]
 public class SampleApplicationModule : AbpModule
@@ -35,7 +42,49 @@ public class SampleApplicationModule : AbpModule
 }
 			</pre>
 			
-			<h3 id="DocConfigureModules">Usage</h3>
+			<h4>When entity classes and tables have different names</h4>
+
+			<p>For example, <strong>User</strong> class reference <strong>AbpUsers</strong> table. So you should define a mapping between them.</p>
+			
+			<pre lang="cs">public class UserMapper : ClassMapper&lt;User&gt;
+{
+    public UserMapper()
+    {
+        //use different table name
+        Table("AbpUsers");
+        
+        Map(x => x.Logins).Ignore();
+        Map(x => x.Roles).Ignore();
+        Map(x => x.Claims).Ignore();
+        Map(x => x.Permissions).Ignore();
+        Map(x => x.Settings).Ignore();
+
+        Map(x => x.DeleterUser).Ignore();
+        Map(x => x.CreatorUser).Ignore();
+        Map(x => x.LastModifierUser).Ignore();
+        Map(x => x.FullName).Ignore();
+        Map(x => x.Tokens).Ignore();
+
+        AutoMap();
+    }
+}</pre>
+			
+			<p>After define mappings, you need to register them in module initialize method.</p>
+						<pre lang="cs">[DependsOn(
+     typeof(AbpEntityFrameworkModule),
+     typeof(AbpDapperModule)
+)]
+public class SampleApplicationModule : AbpModule
+{
+    public override void Initialize()
+    {
+        IocManager.RegisterAssemblyByConvention(typeof(SampleApplicationModule).GetAssembly());
+        <strong>DapperExtensions.DapperExtensions.SetMappingAssemblies(new List<Assembly> { typeof(SampleApplicationModule).GetAssembly() });</strong>
+    }
+}
+			</pre>
+			
+			<h3 id="DocUsage">Usage</h3>
 
 			
 			<p>After registering <strong>AbpDapperModule</strong>, you can use it like traditinal ABP repositories like following.</p>
@@ -86,16 +135,16 @@ public class SampleApplicationModule : AbpModule
 </pre>
 			<p>You can use both EF repositories and Dapper repositories at the same time.</p>
 			
-			<h3 id="DocCreateModuleConfig">Abp.Dapper can use with sql statements</h3>
+			<h3 id="DocUseSql">SQL Statements</h3>
 			<p>You can write pure SQL statements, if you want.</p>
 
 			<h4>When your repository and your query is related</h4>
 
 			<p>For example, if <strong>IDapperRepository&lt;Product&gt; _productDapperRepository</strong> and Product table that you want to select from database are related to each other.</p>
 			
-			<pre lang="cs">_productDapperRepository.Query&lt;Product&gt;("select * from Product where Name = 'john'");
-_productDapperRepository.Query&lt;Product&gt;("select * from Product where Name = @name", new { name = "john" });
-_productDapperRepository.Query&lt;Product&gt;("select * from Product where Name in @name", new { name = new List&lt;string&gt;() { "john" } });</pre>
+			<pre lang="cs">_productDapperRepository.Query("select * from Product where Name = 'john'");
+_productDapperRepository.Query("select * from Product where Name = @name", new { name = "john" });
+_productDapperRepository.Query("select * from Product where Name in @name", new { name = new List&lt;string&gt;() { "john" } });</pre>
 
 			<h4>When we have not wanted columns for Dapper</h4>
 
@@ -119,7 +168,7 @@ _productDapperRepository.Query&lt;Product&gt;("select * from Product where Name 
 
 			<h4>Assembly registration</h4>
 
-			<p></p>
+			<p>You can define your mapping with using assembly registration.</p>
 			
 			<pre lang="cs">[DependsOn(typeof(AbpDapperModule))]
 public class AbpDapperTestModule : AbpModule
@@ -127,15 +176,9 @@ public class AbpDapperTestModule : AbpModule
     public override void Initialize()
     {
         IocManager.RegisterAssemblyByConvention(typeof(AbpDapperTestModule).GetAssembly());
-        DapperExtensions.DapperExtensions.SetMappingAssemblies(new List&lt;Assembly&gt;() { typeof(AbpDapperTestModule).GetAssembly() });
+        <strong>DapperExtensions.DapperExtensions.SetMappingAssemblies(new List&lt;Assembly&gt;() { typeof(AbpDapperTestModule).GetAssembly() });</strong>
     }
 }</pre>
-
-
-			<p><p>
-			<h4>When you select anonymous type</h4>
-			<p>Sometimes you might want to do big join queries or want to select big view with a lot of columns, in this case you create a new data representation to handle Dapper result like as dto and does not matter to your repository is what.</p>
-			<pre lang="cs"> _productDapperRepository.Query&lt;AnyDto&gt;("select * from SomeView");</pre>
 
 
 		</div>
