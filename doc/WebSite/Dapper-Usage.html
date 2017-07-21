@@ -14,23 +14,21 @@
 
 		<h3 id="DocIntroduction">Introduction</h3>
 			<p><a href="https://github.com/StackExchange/Dapper" target="_blank">Dapper</a> is an object-relational mapping (ORM) product for .NET. 
-			It provides a framework for mapping an object-oriented domain model to a traditional relational database. 
-			Dapper is free as open source software that is distributed under dual license, either the Apache License 2.0 or the MIT License.
 			<a href="https://www.nuget.org/packages/Abp.Dapper" target="_blank">Abp.Dapper</a> package simply integrates Dapper to ASP.NET Boilerplate.</p>
 
 			<h3 id="DocQuickStart">Quick Start</h3>
-			<p>Before you start, you need to download <a href="https://www.nuget.org/packages/Abp.Dapper" target="_blank">Abp.Dapper</a> and <a href="https://www.nuget.org/packages/Abp.EntityFrameworkCore" target="_blank">Abp.EntityFrameworkCore</a> nuget packages 
-			to project that you want to use it.
+			<p>Before you start, you need to install <a href="https://www.nuget.org/packages/Abp.Dapper" target="_blank">Abp.Dapper</a> and one of EF Core, EF 6.x and NHibernate ORM nuget packages 
+			to project that you want to use it. For example you can install <a href="https://www.nuget.org/packages/Abp.EntityFrameworkCore" target="_blank">Abp.EntityFrameworkCore</a> like following example.
 			</p>
 			
 			<h4>Module Registration</h3>
 			
 			<p>First you need to add <strong>DependsOn</strong> attribute for <strong>AbpDapperModule</strong> on your module where you register it.</p>
 			
-			<p><strong>NOTE:</strong> Modules need to be added by order. And also you should define mappings, if your entities and tables don't have the same name.</p>
+			<p><strong>NOTE:</strong> Modules need to be added by order.</p>
 			
 			<pre lang="cs">[DependsOn(
-     typeof(AbpEntityFrameworkModule),
+     typeof(AbpEntityFrameworkCoreModule),
      typeof(AbpDapperModule)
 )]
 public class SampleApplicationModule : AbpModule
@@ -42,28 +40,18 @@ public class SampleApplicationModule : AbpModule
 }
 			</pre>
 			
-			<h4>When entity classes and tables have different names</h4>
+			<h4>Entity to Table Mapping</h4>
 
-			<p>For example, <strong>User</strong> class reference <strong>AbpUsers</strong> table. So you should define a mapping between them.</p>
+			<p>You should define mappings, if your entities and tables don't have the same name. For example, <strong>Person</strong> class reference <strong>AbpPerson</strong> table. So you should define a mapping between them.</p>
 			
-			<pre lang="cs">public class UserMapper : ClassMapper&lt;User&gt;
+			<pre lang="cs">public class PersonMapper : ClassMapper&lt;Person&gt;
 {
-    public UserMapper()
+    public PersonMapper()
     {
         //use different table name
-        Table("AbpUsers");
-        
-        Map(x => x.Logins).Ignore();
-        Map(x => x.Roles).Ignore();
-        Map(x => x.Claims).Ignore();
-        Map(x => x.Permissions).Ignore();
-        Map(x => x.Settings).Ignore();
+        Table("AbpPerson");
 
-        Map(x => x.DeleterUser).Ignore();
-        Map(x => x.CreatorUser).Ignore();
-        Map(x => x.LastModifierUser).Ignore();
-        Map(x => x.FullName).Ignore();
-        Map(x => x.Tokens).Ignore();
+        Map(x => x.Roles).Ignore();
 
         AutoMap();
     }
@@ -87,99 +75,34 @@ public class SampleApplicationModule : AbpModule
 			<h3 id="DocUsage">Usage</h3>
 
 			
-			<p>After registering <strong>AbpDapperModule</strong>, you can use it like traditinal ABP repositories like following.</p>
-			<pre lang="cs">public class SomeDomainService : ITransientDependency
+			<p>After registering <strong>AbpDapperModule</strong>, you can use Generic IDapperRepository interface (instead of standard IRepository) to inject dapper repositories.</p>
+			<pre lang="cs">public class SomeApplicationService : ITransientDependency
 {
-    private readonly IDapperRepository&lt;Animal&gt; _animalDapperRepository;
-    private readonly IRepository&lt;Animal&gt; _animalRepository;
     private readonly IDapperRepository&lt;Person&gt; _personDapperRepository;
     private readonly IRepository&lt;Person&gt; _personRepository;
-    private readonly IUnitOfWorkManager _unitOfWorkManager;
 
-    public SomeDomainService(
-        IUnitOfWorkManager unitOfWorkManager,
+    public SomeApplicationService(
         IRepository&lt;Person&gt; personRepository,
-        IRepository&lt;Animal&gt; animalRepository,
-        IDapperRepository&lt;Person&gt; personDapperRepository,
-        IDapperRepository&lt;Animal&gt; animalDapperRepository)
+        IDapperRepository&lt;Person&gt; personDapperRepository)
     {
-        _unitOfWorkManager = unitOfWorkManager;
         _personRepository = personRepository;
-        _animalRepository = animalRepository;
         _personDapperRepository = personDapperRepository;
-        _animalDapperRepository = animalDapperRepository;
     }
 
     public void DoSomeStuff()
     {
-        using (IUnitOfWorkCompleteHandle uow = _unitOfWorkManager.Begin())
-        {
-            _personRepository.Insert(new Person("John"));
-            _personRepository.Insert(new Person("Bread"));
+        _personRepository.Insert(new Person("John"));
+        _personRepository.Insert(new Person("Bread"));
 
-            _animalRepository.Insert(new Animal("Bird"));
-            _animalRepository.Insert(new Animal("Cat"));
-
-            _unitOfWorkManager.Current.SaveChanges();
-
-            Animal animal = _animalRepository.FirstOrDefault(x => x.Name == "Bird");
-
-            Person person = _personDapperRepository.Get(1);
-            int personCount = _personDapperRepository.Count(x => x.Name == "John");
-            List&lt;Animal&gt; persons = _animalDapperRepository.GetList(x => x.Name.StartsWith("O")).ToList();
-
-            uow.Complete();
-        }
+        Person person = _personDapperRepository.Get(1);
+        int personCount = _personDapperRepository.Count(x => x.Name == "John");
+        List&lt;Person&gt; persons = _personDapperRepository.GetList(x => x.Name.StartsWith("J")).ToList();
+        List&lt;Person&gt; sqlQueryPersons = _personDapperRepository.Query("select * from Persons where Name = 'john'");
     }
 }
 </pre>
 			<p>You can use both EF repositories and Dapper repositories at the same time.</p>
 			
-			<h3 id="DocUseSql">SQL Statements</h3>
-			<p>You can write pure SQL statements, if you want.</p>
-
-			<h4>When your repository and your query is related</h4>
-
-			<p>For example, if <strong>IDapperRepository&lt;Product&gt; _productDapperRepository</strong> and Product table that you want to select from database are related to each other.</p>
-			
-			<pre lang="cs">_productDapperRepository.Query("select * from Product where Name = 'john'");
-_productDapperRepository.Query("select * from Product where Name = @name", new { name = "john" });
-_productDapperRepository.Query("select * from Product where Name in @name", new { name = new List&lt;string&gt;() { "john" } });</pre>
-
-			<h4>When we have not wanted columns for Dapper</h4>
-
-			<p>Like EF mappings dapper has entity mapping configurations and Abp.Dapper supports it.</p>
-			
-			<pre lang="cs">public class SomeViewDapperMap : ClassMapper&lt;SomeView&gt;
-{
-    public SomeViewDapperMap ()
-    {
-        Map(x => x.Id).Ignore(); 
-        AutoMap();
-    }
-}</pre>
-			
-			<h4>When do you need mapping configuration in strongly typed repositories?</h4>
-
-			<p>If you don't want to map the column from dapper results, you can ignore mapping for specific column.</p>
-			<p>Views generally have not Id columns, but you need a create <strong>IDapperRepository&lt;SomeView&gt;</strong>. 
-			As you know Abp Repository structure forces classes to be inherited from <strong>IEntity</strong>, in this case you should do some trick for sake of the repository creation and you do not map the Id to Dapper.</p>
-			
-
-			<h4>Assembly registration</h4>
-
-			<p>You can define your mapping with using assembly registration.</p>
-			
-			<pre lang="cs">[DependsOn(typeof(AbpDapperModule))]
-public class AbpDapperTestModule : AbpModule
-{
-    public override void Initialize()
-    {
-        IocManager.RegisterAssemblyByConvention(typeof(AbpDapperTestModule).GetAssembly());
-        <strong>DapperExtensions.DapperExtensions.SetMappingAssemblies(new List&lt;Assembly&gt;() { typeof(AbpDapperTestModule).GetAssembly() });</strong>
-    }
-}</pre>
-
 
 		</div>
 	</body>
