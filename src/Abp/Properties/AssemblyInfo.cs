@@ -36,6 +36,8 @@ using Abp;
 [assembly: InternalsVisibleTo("Abp.RedisCache.Tests")]
 [assembly: InternalsVisibleTo("Abp.Web.Tests")]
 [assembly: InternalsVisibleTo("Abp.Web.Api.Tests")]
+[assembly: InternalsVisibleTo("Abp.TestBase")]
+[assembly: InternalsVisibleTo("Abp.AspNetCore.TestBase")]
 
 [assembly: InternalsVisibleTo("Abp.Zero.Common")]
 [assembly: InternalsVisibleTo("Abp.Zero.Ldap")]
