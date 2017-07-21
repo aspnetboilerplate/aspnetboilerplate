@@ -19,7 +19,8 @@
 			<a href="https://www.nuget.org/packages/Abp.Dapper" target="_blank">Abp.Dapper</a> package simply integrates Dapper to ASP.NET Boilerplate.</p>
 
 			<h3 id="DocConfigureAbp">Module Registration</h3>
-			<p>First, you need to add <strong>DependsOn</strong> attribute for AbpDapperModule on your module where you register it. Example configuration:</p>
+			<p>Before you start, you need to download <a href="https://www.nuget.org/packages/Abp.Dapper" target="_blank">Abp.Dapper</a> nuget package. 
+			Then you need to add <strong>DependsOn</strong> attribute for <strong>AbpDapperModule</strong> on your module where you register it. Example configuration:</p>
 			<pre lang="cs">[DependsOn(
      typeof(AbpEntityFrameworkModule),
      typeof(AbpKernelModule),
@@ -29,7 +30,7 @@ public class SampleApplicationModule : AbpModule
 {
     public override void Initialize()
     {
-        IocManager.RegisterAssemblyByConvention(Assembly.GetExecutingAssembly());
+        IocManager.RegisterAssemblyByConvention(typeof(SampleApplicationModule).GetAssembly());
     }
 }
 			</pre>
@@ -64,7 +65,7 @@ public class SampleApplicationModule : AbpModule
     {
         using (IUnitOfWorkCompleteHandle uow = _unitOfWorkManager.Begin())
         {
-            _personRepository.Insert(new Person("Oğuzhan"));
+            _personRepository.Insert(new Person("John"));
             _personRepository.Insert(new Person("Bread"));
 
             _animalRepository.Insert(new Animal("Bird"));
@@ -75,7 +76,7 @@ public class SampleApplicationModule : AbpModule
             Animal animal = _animalRepository.FirstOrDefault(x => x.Name == "Bird");
 
             Person person = _personDapperRepository.Get(1);
-            int personCount = _personDapperRepository.Count(x => x.Name == "Oğuzhan");
+            int personCount = _personDapperRepository.Count(x => x.Name == "John");
             List&lt;Animal&gt; persons = _animalDapperRepository.GetList(x => x.Name.StartsWith("O")).ToList();
 
             uow.Complete();
@@ -92,9 +93,9 @@ public class SampleApplicationModule : AbpModule
 
 			<p>For example, if <strong>IDapperRepository&lt;Product&gt; _productDapperRepository</strong> and Product table that you want to select from database are related to each other.</p>
 			
-			<pre lang="cs">_productDapperRepository.Query&lt;Product&gt;("select * from Product where Name = 'oguzhan'");
-_productDapperRepository.Query&lt;Product&gt;("select * from Product where Name = @name", new { name = "oguzhan" });
-_productDapperRepository.Query&lt;Product&gt;("select * from Product where Name in @name", new { name = new List&lt;string&gt;() { "oguzhan" } });</pre>
+			<pre lang="cs">_productDapperRepository.Query&lt;Product&gt;("select * from Product where Name = 'john'");
+_productDapperRepository.Query&lt;Product&gt;("select * from Product where Name = @name", new { name = "john" });
+_productDapperRepository.Query&lt;Product&gt;("select * from Product where Name in @name", new { name = new List&lt;string&gt;() { "john" } });</pre>
 
 			<h4>When we have not wanted columns for Dapper</h4>
 
@@ -125,9 +126,8 @@ public class AbpDapperTestModule : AbpModule
 {
     public override void Initialize()
     {
-        IocManager.RegisterAssemblyByConvention(Assembly.GetExecutingAssembly());
-
-        DapperExtensions.DapperExtensions.SetMappingAssemblies(new List&lt;Assembly&gt;() {Assembly.GetExecutingAssembly()});
+        IocManager.RegisterAssemblyByConvention(typeof(AbpDapperTestModule).GetAssembly());
+        DapperExtensions.DapperExtensions.SetMappingAssemblies(new List&lt;Assembly&gt;() { typeof(AbpDapperTestModule).GetAssembly() });
     }
 }</pre>
 
