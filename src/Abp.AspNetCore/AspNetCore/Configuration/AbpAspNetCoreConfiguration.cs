@@ -28,7 +28,7 @@ namespace Abp.AspNetCore.Configuration
         public AbpAspNetCoreConfiguration()
         {
             DefaultWrapResultAttribute = new WrapResultAttribute();
-            DefaultClientCacheAttribute = new NoClientCacheAttribute();
+            DefaultClientCacheAttribute = new NoClientCacheAttribute(false);
             DefaultUnitOfWorkAttribute = new UnitOfWorkAttribute();
             ControllerAssemblySettings = new ControllerAssemblySettingList();
             FormBodyBindingIgnoredTypes = new List<Type>();

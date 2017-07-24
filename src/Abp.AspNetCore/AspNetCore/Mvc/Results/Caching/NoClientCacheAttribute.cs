@@ -10,6 +10,12 @@ namespace Abp.AspNetCore.Mvc.Results.Caching
         /// </summary>
         public bool IncludeNonAjaxRequests { get; set; }
 
+        public NoClientCacheAttribute()
+            : this(false)
+        {
+            
+        }
+
         public NoClientCacheAttribute(bool includeNonAjaxRequests)
         {
             IncludeNonAjaxRequests = includeNonAjaxRequests;
