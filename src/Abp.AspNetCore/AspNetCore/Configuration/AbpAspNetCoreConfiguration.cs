@@ -10,6 +10,8 @@ namespace Abp.AspNetCore.Configuration
     {
         public WrapResultAttribute DefaultWrapResultAttribute { get; }
 
+        public CacheResultAttribute DefaultCacheResultAttribute { get; }
+
         public UnitOfWorkAttribute DefaultUnitOfWorkAttribute { get; }
 
         public List<Type> FormBodyBindingIgnoredTypes { get; }
@@ -25,6 +27,7 @@ namespace Abp.AspNetCore.Configuration
         public AbpAspNetCoreConfiguration()
         {
             DefaultWrapResultAttribute = new WrapResultAttribute();
+            DefaultCacheResultAttribute = new CacheResultAttribute();
             DefaultUnitOfWorkAttribute = new UnitOfWorkAttribute();
             ControllerAssemblySettings = new ControllerAssemblySettingList();
             FormBodyBindingIgnoredTypes = new List<Type>();
