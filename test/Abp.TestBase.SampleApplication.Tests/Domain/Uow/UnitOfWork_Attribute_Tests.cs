@@ -11,19 +11,32 @@ namespace Abp.TestBase.SampleApplication.Tests.Domain.Uow
         public void UnitOfWork_Attribute_Should_Work_Without_Virtual_When_Resolved_By_Interface()
         {
             var service = Resolve<IMyTestDomainService>();
-            service.DoIt();
+            service.DoIt<string>();
+        }
+
+        [Fact]
+        public void UnitOfWork_Attribute_Should_Work_With_Virtual_When_Resolved_By_Class()
+        {
+            var service = Resolve<MyTestDomainService>();
+            service.DoIt2<string>();
         }
     }
 
     public interface IMyTestDomainService : IDomainService
     {
-        void DoIt();
+        void DoIt<T>();
     }
 
     public class MyTestDomainService : DomainService, IMyTestDomainService
     {
         [UnitOfWork]
-        public void DoIt()
+        public void DoIt<T>()
+        {
+            CurrentUnitOfWork.ShouldNotBeNull();
+        }
+
+        [UnitOfWork]
+        public virtual void DoIt2<T>()
         {
             CurrentUnitOfWork.ShouldNotBeNull();
         }
