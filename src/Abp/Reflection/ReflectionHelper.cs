@@ -131,21 +131,11 @@ namespace Abp.Reflection
         /// <param name="defaultValue">Default value (null as default)</param>
         /// <param name="inherit">Inherit attribute from base classes</param>
         public static TAttribute GetSingleAttributeOfMemberOrDeclaringTypeOrDefault<TAttribute>(MemberInfo memberInfo, TAttribute defaultValue = default(TAttribute), bool inherit = true)
-            where TAttribute : Attribute
+            where TAttribute : class
         {
-            //Get attribute on the member
-            if (memberInfo.IsDefined(typeof(TAttribute), inherit))
-            {
-                return memberInfo.GetCustomAttributes(typeof(TAttribute), inherit).Cast<TAttribute>().First();
-            }
-
-            //Get attribute from class
-            if (memberInfo.DeclaringType != null && memberInfo.DeclaringType.GetTypeInfo().IsDefined(typeof(TAttribute), inherit))
-            {
-                return memberInfo.DeclaringType.GetTypeInfo().GetCustomAttributes(typeof(TAttribute), inherit).Cast<TAttribute>().First();
-            }
-
-            return defaultValue;
+            return memberInfo.GetCustomAttributes(true).OfType<TAttribute>().FirstOrDefault()
+                   ?? memberInfo.DeclaringType?.GetTypeInfo().GetCustomAttributes(true).OfType<TAttribute>().FirstOrDefault()
+                   ?? defaultValue;
         }
 
         /// <summary>

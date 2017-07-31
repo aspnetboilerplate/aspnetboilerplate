@@ -69,13 +69,14 @@ namespace Abp.EntityFrameworkCore
                 foreach (var dbContextType in dbContextTypes)
                 {
                     Logger.Debug("Registering DbContext: " + dbContextType.AssemblyQualifiedName);
+
                     scope.Resolve<IEfGenericRepositoryRegistrar>().RegisterForDbContext(dbContextType, IocManager, EfCoreAutoRepositoryTypes.Default);
- 
-                      IocManager.IocContainer.Register(
+
+                    IocManager.IocContainer.Register(
                         Component.For<ISecondaryOrmRegistrar>()
-                                 .Named(Guid.NewGuid().ToString("N"))
-                                 .Instance(new EfCoreBasedSecondaryOrmRegistrar(dbContextType, scope.Resolve<IDbContextEntityFinder>()))
-                                 .LifestyleTransient()
+                            .Named(Guid.NewGuid().ToString("N"))
+                            .Instance(new EfCoreBasedSecondaryOrmRegistrar(dbContextType, scope.Resolve<IDbContextEntityFinder>()))
+                            .LifestyleTransient()
                     );
                 }
 

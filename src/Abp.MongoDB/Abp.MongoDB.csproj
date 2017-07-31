@@ -19,8 +19,8 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <None Include="bin\Release\net452\Abp.MongoDB.pdb">
-      <PackagePath>lib/net452/</PackagePath>
+    <None Include="bin\Release\net46\Abp.MongoDB.pdb">
+      <PackagePath>lib/net46/</PackagePath>
       <Pack>true</Pack>
     </None>
   </ItemGroup>

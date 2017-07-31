@@ -188,10 +188,13 @@ framework. ASP.NET Core integration is implemented in
 		result wrapping.</li>
 	</ul>
 	<h5>Result Caching For Ajax Requests</h5>
-	<p>AbpResultFilter adds Cache-Control header (no-cache, no-store) to the 
+	<p>AbpResultFilter adds <strong>Cache-Control</strong> header (no-cache, no-store...) to the 
 	response for AJAX Requests. Thus, it prevents browser caching of AJAX 
 	responses even for GET requests. This behaviour can be disabled by the 
-	configuration.</p>
+	configuration or attributes. You can use <strong>NoClientCache</strong> 
+	attrbiute to prevent caching (default) or <strong>AllowClientCache</strong> 
+	attrbiute to allow browser to cache results. Alternatively you can implement 
+	IClientCacheAttribute to create your special attribute for finer control.</p>
 	<h3>Model Binders</h3>
 	<p><strong>AbpDateTimeModelBinder</strong> is used to normalize DateTime 
 	(and Nullable&lt;DateTime&gt;) inputs using <strong>Clock.Normalize</strong> 
