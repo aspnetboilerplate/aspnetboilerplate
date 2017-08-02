@@ -58,7 +58,7 @@ namespace Abp.Web.Localization
                 script.AppendLine("        name: '" + language.Name + "',");
                 script.AppendLine("        displayName: '" + language.DisplayName + "',");
                 script.AppendLine("        icon: '" + language.Icon + "',");
-                script.AppendLine("        isDisabled: '" + language.IsDisabled.ToString().ToLowerInvariant() + "',");
+                script.AppendLine("        isDisabled: " + language.IsDisabled.ToString().ToLowerInvariant() + ",");
                 script.AppendLine("        isDefault: " + language.IsDefault.ToString().ToLowerInvariant());
                 script.Append("    }");
 
@@ -78,7 +78,7 @@ namespace Abp.Web.Localization
                 script.AppendLine("        name: '" + currentLanguage.Name + "',");
                 script.AppendLine("        displayName: '" + currentLanguage.DisplayName + "',");
                 script.AppendLine("        icon: '" + currentLanguage.Icon + "',");
-                script.AppendLine("        isDisabled: '" + currentLanguage.IsDisabled.ToString().ToLowerInvariant() + "',");
+                script.AppendLine("        isDisabled: " + currentLanguage.IsDisabled.ToString().ToLowerInvariant() + ",");
                 script.AppendLine("        isDefault: " + currentLanguage.IsDefault.ToString().ToLowerInvariant());
                 script.AppendLine("    };");
             }
