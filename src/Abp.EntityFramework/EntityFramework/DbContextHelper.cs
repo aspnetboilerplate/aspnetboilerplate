@@ -7,28 +7,13 @@ using System.Data.Entity.Core.Mapping;
 using System.Data.Entity.Core.Metadata.Edm;
 using System.Data.Entity.Infrastructure;
 using System.Linq;
-using System.Reflection;
-using Abp.Domain.Entities;
-using Abp.Reflection;
 
 namespace Abp.EntityFramework
 {
+    //TODO: Remove not used class!
     internal static class DbContextHelper
     {
         private static readonly ConcurrentDictionary<string, IReadOnlyList<string>> CachedTableNames = new ConcurrentDictionary<string, IReadOnlyList<string>>();
-
-        //TODO: Get entities in different way.. we may not define DbSet for each entity.
-
-        public static IEnumerable<EntityTypeInfo> GetEntityTypeInfos(Type dbContextType)
-        {
-            return
-                from property in dbContextType.GetProperties(BindingFlags.Public | BindingFlags.Instance)
-                where
-                    (ReflectionHelper.IsAssignableToGenericType(property.PropertyType, typeof(IDbSet<>)) ||
-                     ReflectionHelper.IsAssignableToGenericType(property.PropertyType, typeof(DbSet<>))) &&
-                    ReflectionHelper.IsAssignableToGenericType(property.PropertyType.GenericTypeArguments[0], typeof(IEntity<>))
-                select new EntityTypeInfo(property.PropertyType.GenericTypeArguments[0], property.DeclaringType);
-        }
 
         public static IReadOnlyList<string> GetTableName(this DbContext context, Type type)
         {

@@ -14,11 +14,11 @@ namespace Abp.Configuration.Startup
         /// </summary>
         public bool IsEnabled { get; set; }
 
-        public ITypeList<ITenantResolveContributer> Resolvers { get; }
+        public ITypeList<ITenantResolveContributor> Resolvers { get; }
 
         public MultiTenancyConfig()
         {
-            Resolvers = new TypeList<ITenantResolveContributer>();
+            Resolvers = new TypeList<ITenantResolveContributor>();
         }
     }
 }

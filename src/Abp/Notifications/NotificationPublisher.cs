@@ -38,6 +38,7 @@ namespace Abp.Notifications
         private readonly INotificationStore _store;
         private readonly IBackgroundJobManager _backgroundJobManager;
         private readonly INotificationDistributer _notificationDistributer;
+        private readonly IGuidGenerator _guidGenerator;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="NotificationPublisher"/> class.
@@ -45,11 +46,13 @@ namespace Abp.Notifications
         public NotificationPublisher(
             INotificationStore store,
             IBackgroundJobManager backgroundJobManager,
-            INotificationDistributer notificationDistributer)
+            INotificationDistributer notificationDistributer,
+            IGuidGenerator guidGenerator)
         {
             _store = store;
             _backgroundJobManager = backgroundJobManager;
             _notificationDistributer = notificationDistributer;
+            _guidGenerator = guidGenerator;
             AbpSession = NullAbpSession.Instance;
         }
 
@@ -79,7 +82,7 @@ namespace Abp.Notifications
                 tenantIds = new[] {AbpSession.TenantId};
             }
 
-            var notificationInfo = new NotificationInfo
+            var notificationInfo = new NotificationInfo(_guidGenerator.Create())
             {
                 NotificationName = notificationName,
                 EntityTypeName = entityIdentifier == null ? null : entityIdentifier.Type.FullName,

@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<localizationDictionary culture="ar">
+  <texts>
+    <text name="InternalServerError" value="حدث خطأ داخلي أثناء تنفيذ طلبك!" />
+    <text name="ValidationError" value="طلبك غير صحيح!" />
+    <text name="AreYouSure" value="هل أنت متأكد؟" />
+    <text name="Cancel" value="إلغاء" />
+    <text name="Yes" value="نعم" />
+    <text name="ValidationNarrativeTitle" value="تم اكتشاف الأخطاء التالية أثناء التحقق من صحة الطلب." />
+    <text name="DefaultError" value="حدث خطأ!" />
+    <text name="DefaultErrorDetail" value="تفاصيل الخطأ لم ترسل من قبل خادم." />
+    <text name="DefaultError401" value="أنت غير مسجل!" />
+    <text name="DefaultErrorDetail401" value="يجب عليك تسجيل الدخول من أجل تنفيذ هذه العملية." />
+    <text name="DefaultError403" value="لا تملك الصلاحية!" />
+    <text name="DefaultErrorDetail403" value="لا يسمح لك بتنفيذ هذه العملية." />
+    <text name="DefaultError404" value="لم يتم العثور على المورد!" />
+    <text name="DefaultErrorDetail404" value="تعذر العثور على المورد المطلوب على الخادم." />
+    <text name="EntityNotFound" value="لا يوجد كيان {0} بهوية = {1}!" />
+  </texts>
+</localizationDictionary>

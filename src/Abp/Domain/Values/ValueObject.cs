@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Linq;
+using System.Reflection;
 
 namespace Abp.Domain.Values
 {
@@ -18,7 +19,7 @@ namespace Abp.Domain.Values
                 return false;
             }
 
-            var publicProperties = GetType().GetProperties();
+            var publicProperties = GetType().GetTypeInfo().GetProperties();
             if (!publicProperties.Any())
             {
                 return true;
@@ -44,7 +45,7 @@ namespace Abp.Domain.Values
             const int index = 1;
             const int initialHasCode = 31;
 
-            var publicProperties = GetType().GetProperties();
+            var publicProperties = GetType().GetTypeInfo().GetProperties();
 
             if (!publicProperties.Any())
             {

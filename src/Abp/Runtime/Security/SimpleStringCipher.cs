@@ -1,4 +1,5 @@
-﻿using System;
+﻿#if NET46
+using System;
 using System.IO;
 using System.Security.Cryptography;
 using System.Text;
@@ -122,3 +123,4 @@ namespace Abp.Runtime.Security
         }
     }
 }
+#endif

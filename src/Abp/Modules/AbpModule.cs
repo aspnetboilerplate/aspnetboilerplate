@@ -83,10 +83,11 @@ namespace Abp.Modules
         /// <param name="type">Type to check</param>
         public static bool IsAbpModule(Type type)
         {
+            var typeInfo = type.GetTypeInfo();
             return
-                type.IsClass &&
-                !type.IsAbstract &&
-                !type.IsGenericType &&
+                typeInfo.IsClass &&
+                !typeInfo.IsAbstract &&
+                !typeInfo.IsGenericType &&
                 typeof(AbpModule).IsAssignableFrom(type);
         }
 
@@ -102,9 +103,9 @@ namespace Abp.Modules
 
             var list = new List<Type>();
 
-            if (moduleType.IsDefined(typeof(DependsOnAttribute), true))
+            if (moduleType.GetTypeInfo().IsDefined(typeof(DependsOnAttribute), true))
             {
-                var dependsOnAttributes = moduleType.GetCustomAttributes(typeof(DependsOnAttribute), true).Cast<DependsOnAttribute>();
+                var dependsOnAttributes = moduleType.GetTypeInfo().GetCustomAttributes(typeof(DependsOnAttribute), true).Cast<DependsOnAttribute>();
                 foreach (var dependsOnAttribute in dependsOnAttributes)
                 {
                     foreach (var dependedModuleType in dependsOnAttribute.DependedModuleTypes)
@@ -120,12 +121,12 @@ namespace Abp.Modules
         public static List<Type> FindDependedModuleTypesRecursivelyIncludingGivenModule(Type moduleType)
         {
             var list = new List<Type>();
-            AddModuleAndDependenciesResursively(list, moduleType);
+            AddModuleAndDependenciesRecursively(list, moduleType);
             list.AddIfNotContains(typeof(AbpKernelModule));
             return list;
         }
 
-        private static void AddModuleAndDependenciesResursively(List<Type> modules, Type module)
+        private static void AddModuleAndDependenciesRecursively(List<Type> modules, Type module)
         {
             if (!IsAbpModule(module))
             {
@@ -142,7 +143,7 @@ namespace Abp.Modules
             var dependedModules = FindDependedModuleTypes(module);
             foreach (var dependedModule in dependedModules)
             {
-                AddModuleAndDependenciesResursively(modules, dependedModule);
+                AddModuleAndDependenciesRecursively(modules, dependedModule);
             }
         }
     }

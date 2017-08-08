@@ -6,7 +6,12 @@ namespace Abp.Runtime.Session
 {
     public class DefaultPrincipalAccessor : IPrincipalAccessor, ISingletonDependency
     {
-        public virtual ClaimsPrincipal Principal => Thread.CurrentPrincipal as ClaimsPrincipal;
+        public virtual ClaimsPrincipal Principal =>
+#if NET46
+            Thread.CurrentPrincipal as ClaimsPrincipal;
+#else
+            null;
+#endif
 
         public static DefaultPrincipalAccessor Instance => new DefaultPrincipalAccessor();
     }

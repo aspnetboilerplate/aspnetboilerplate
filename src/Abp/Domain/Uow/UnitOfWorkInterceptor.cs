@@ -1,3 +1,5 @@
+using System;
+using System.Reflection;
 using System.Threading.Tasks;
 using Abp.Threading;
 using Castle.DynamicProxy;
@@ -10,10 +12,12 @@ namespace Abp.Domain.Uow
     internal class UnitOfWorkInterceptor : IInterceptor
     {
         private readonly IUnitOfWorkManager _unitOfWorkManager;
+        private readonly IUnitOfWorkDefaultOptions _unitOfWorkOptions;
 
-        public UnitOfWorkInterceptor(IUnitOfWorkManager unitOfWorkManager)
+        public UnitOfWorkInterceptor(IUnitOfWorkManager unitOfWorkManager, IUnitOfWorkDefaultOptions unitOfWorkOptions)
         {
             _unitOfWorkManager = unitOfWorkManager;
+            _unitOfWorkOptions = unitOfWorkOptions;
         }
 
         /// <summary>
@@ -22,7 +26,17 @@ namespace Abp.Domain.Uow
         /// <param name="invocation">Method invocation arguments</param>
         public void Intercept(IInvocation invocation)
         {
-            var unitOfWorkAttr = UnitOfWorkAttribute.GetUnitOfWorkAttributeOrNull(invocation.MethodInvocationTarget);
+            MethodInfo method;
+            try
+            {
+                method = invocation.MethodInvocationTarget;
+            }
+            catch
+            {
+                method = invocation.GetConcreteMethod();
+            }
+
+            var unitOfWorkAttr = _unitOfWorkOptions.GetUnitOfWorkAttributeOrNull(method);
             if (unitOfWorkAttr == null || unitOfWorkAttr.IsDisabled)
             {
                 //No need to a uow
@@ -59,15 +73,23 @@ namespace Abp.Domain.Uow
         {
             var uow = _unitOfWorkManager.Begin(options);
 
-            invocation.Proceed();
+            try
+            {
+                invocation.Proceed();
+            }
+            catch
+            {
+                uow.Dispose();
+                throw;
+            }
 
             if (invocation.Method.ReturnType == typeof(Task))
             {
                 invocation.ReturnValue = InternalAsyncHelper.AwaitTaskWithPostActionAndFinally(
-                    (Task)invocation.ReturnValue,
+                    (Task) invocation.ReturnValue,
                     async () => await uow.CompleteAsync(),
                     exception => uow.Dispose()
-                    );
+                );
             }
             else //Task<TResult>
             {
@@ -75,8 +97,8 @@ namespace Abp.Domain.Uow
                     invocation.Method.ReturnType.GenericTypeArguments[0],
                     invocation.ReturnValue,
                     async () => await uow.CompleteAsync(),
-                    (exception) => uow.Dispose()
-                    );
+                    exception => uow.Dispose()
+                );
             }
         }
     }

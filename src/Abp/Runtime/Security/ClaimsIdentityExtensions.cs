@@ -28,7 +28,7 @@ namespace Abp.Runtime.Security
 
             var claimsIdentity = identity as ClaimsIdentity;
 
-            var userIdOrNull = claimsIdentity?.Claims?.FirstOrDefault(c => c.Type == ClaimTypes.NameIdentifier);
+            var userIdOrNull = claimsIdentity?.Claims?.FirstOrDefault(c => c.Type == AbpClaimTypes.UserId);
             if (userIdOrNull == null || userIdOrNull.Value.IsNullOrWhiteSpace())
             {
                 return null;

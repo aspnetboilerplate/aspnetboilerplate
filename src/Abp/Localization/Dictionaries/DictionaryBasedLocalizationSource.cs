@@ -2,10 +2,10 @@ using System;
 using System.Collections.Generic;
 using System.Collections.Immutable;
 using System.Globalization;
-using System.Threading;
 using Abp.Configuration.Startup;
 using Abp.Dependency;
 using Abp.Extensions;
+using Castle.Core.Logging;
 
 namespace Abp.Localization.Dictionaries
 {
@@ -18,13 +18,13 @@ namespace Abp.Localization.Dictionaries
         /// <summary>
         /// Unique Name of the source.
         /// </summary>
-        public string Name { get; private set; }
+        public string Name { get; }
 
-        public ILocalizationDictionaryProvider DictionaryProvider { get { return _dictionaryProvider; } }
+        public ILocalizationDictionaryProvider DictionaryProvider { get; }
 
         protected ILocalizationConfiguration LocalizationConfiguration { get; private set; }
 
-        private readonly ILocalizationDictionaryProvider _dictionaryProvider;
+        private ILogger _logger;
 
         /// <summary>
         /// 
@@ -33,32 +33,29 @@ namespace Abp.Localization.Dictionaries
         /// <param name="dictionaryProvider"></param>
         public DictionaryBasedLocalizationSource(string name, ILocalizationDictionaryProvider dictionaryProvider)
         {
-            if (name.IsNullOrEmpty())
-            {
-                throw new ArgumentNullException("name");
-            }
+            Check.NotNullOrEmpty(name, nameof(name));
+            Check.NotNull(dictionaryProvider, nameof(dictionaryProvider));
 
             Name = name;
-
-            if (dictionaryProvider == null)
-            {
-                throw new ArgumentNullException("dictionaryProvider");
-            }
-
-            _dictionaryProvider = dictionaryProvider;
+            DictionaryProvider = dictionaryProvider;
         }
 
         /// <inheritdoc/>
         public virtual void Initialize(ILocalizationConfiguration configuration, IIocResolver iocResolver)
         {
             LocalizationConfiguration = configuration;
+
+            _logger = iocResolver.IsRegistered(typeof(ILoggerFactory))
+                ? iocResolver.Resolve<ILoggerFactory>().Create(typeof(DictionaryBasedLocalizationSource))
+                : NullLogger.Instance;
+
             DictionaryProvider.Initialize(Name);
         }
 
         /// <inheritdoc/>
         public string GetString(string name)
         {
-            return GetString(name, Thread.CurrentThread.CurrentUICulture);
+            return GetString(name, CultureInfo.CurrentUICulture);
         }
 
         /// <inheritdoc/>
@@ -76,7 +73,7 @@ namespace Abp.Localization.Dictionaries
 
         public string GetStringOrNull(string name, bool tryDefaults = true)
         {
-            return GetStringOrNull(name, Thread.CurrentThread.CurrentUICulture, tryDefaults);
+            return GetStringOrNull(name, CultureInfo.CurrentUICulture, tryDefaults);
         }
 
         public string GetStringOrNull(string name, CultureInfo culture, bool tryDefaults = true)
@@ -133,7 +130,7 @@ namespace Abp.Localization.Dictionaries
         /// <inheritdoc/>
         public IReadOnlyList<LocalizedString> GetAllStrings(bool includeDefaults = true)
         {
-            return GetAllStrings(Thread.CurrentThread.CurrentUICulture, includeDefaults);
+            return GetAllStrings(CultureInfo.CurrentUICulture, includeDefaults);
         }
 
         /// <inheritdoc/>
@@ -196,13 +193,19 @@ namespace Abp.Localization.Dictionaries
 
         protected virtual string ReturnGivenNameOrThrowException(string name, CultureInfo culture)
         {
-            return LocalizationSourceHelper.ReturnGivenNameOrThrowException(LocalizationConfiguration, Name, name, culture);
+            return LocalizationSourceHelper.ReturnGivenNameOrThrowException(
+                LocalizationConfiguration,
+                Name,
+                name,
+                culture,
+                _logger
+            );
         }
 
         private static string GetBaseCultureName(string cultureName)
         {
             return cultureName.Contains("-")
-                ? cultureName.Left(cultureName.IndexOf("-", StringComparison.InvariantCulture))
+                ? cultureName.Left(cultureName.IndexOf("-", StringComparison.Ordinal))
                 : cultureName;
         }
     }

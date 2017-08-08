@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Reflection;
 using Abp.Dependency;
 using Abp.Modules;
 using Abp.Runtime.Session;
@@ -37,11 +38,13 @@ namespace Abp.TestBase
 
         protected void InitializeAbp()
         {
-            LocalIocManager.Register<IAbpSession, TestAbpSession>();
+            LocalIocManager.RegisterIfNot<IAbpSession, TestAbpSession>();
 
             PreInitialize();
 
             AbpBootstrapper.Initialize();
+
+            PostInitialize();
 
             AbpSession = LocalIocManager.Resolve<TestAbpSession>();
         }
@@ -50,6 +53,14 @@ namespace Abp.TestBase
         /// This method can be overrided to replace some services with fakes.
         /// </summary>
         protected virtual void PreInitialize()
+        {
+
+        }
+
+        /// <summary>
+        /// This method can be overrided to replace some services with fakes.
+        /// </summary>
+        protected virtual void PostInitialize()
         {
 
         }
@@ -119,7 +130,7 @@ namespace Abp.TestBase
         {
             if (!LocalIocManager.IsRegistered(type))
             {
-                if (!type.IsClass || type.IsAbstract)
+                if (!type.GetTypeInfo().IsClass || type.GetTypeInfo().IsAbstract)
                 {
                     throw new AbpException("Can not register " + type.Name + ". It should be a non-abstract class. If not, it should be registered before.");
                 }

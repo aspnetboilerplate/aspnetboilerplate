@@ -34,30 +34,22 @@ AbpEntityFrameworkCoreModule</strong>.</p>
 	above.</p>
 	<h3>Configuration</h3>
 	<h4>In Startup Class</h4>
-	<p>For an ASP.NET Core project, you will have a <strong>Startup</strong> 
-	file and you can use <strong>AddDbContext</strong> extension method of EF 
-	Core as you always do:</p>
-	<pre lang="cs">public IServiceProvider ConfigureServices(IServiceCollection services)
-{
-    ...
-    
-<strong>    services.AddDbContext&lt;MyDbContext&gt;(options =&gt;
-    {
-        options.UseSqlServer(Configuration.GetConnectionString(&quot;Default&quot;));
-    });</strong>
-
-    ...
-}</pre>
-	<p>This approach is standard, simple and enough for ABP. In this approach, 
-	connection string is static (because we are always using the "Default" 
-	connection string). If you have single database for a dbcontext, that's fine. But 
-	if you want to dynamically determine connection string and better integrate 
-	to ABP's connection string system, use <strong>AddAbpDbContext</strong> method:</p>
+	<p>Use <strong>AddAbpDbContext</strong> method on service collection in
+	<strong>ConfigureServices</strong> method as shown below:</p>
 	<pre lang="cs">services.<strong>AddAbpDbContext</strong>&lt;MyDbContext&gt;(options =&gt;
 {
     options.DbContextOptions.UseSqlServer(options.ConnectionString);
 });</pre>
-	<p>We used given connection string and used Sql Server as database provider. <strong>options.ConnectionString</strong> 
+	<p>For non web projects, we will not have a Startup class. In that case, we 
+	can use
+<strong>        Configuration.Modules.AbpEfCore().AddDbContext</strong> method 
+	in our <a href="Module-System.html">module </a>class to configure DbContext, as shown below:</p>
+	<pre lang="cs">Configuration.Modules.AbpEfCore().<strong>AddDbContext</strong>&lt;MyDbContext&gt;(options =&gt;
+{
+    options.DbContextOptions.UseSqlServer(options.ConnectionString);
+});</pre>
+
+			<p>We used given connection string and used Sql Server as database provider. <strong>options.ConnectionString</strong> 
 	is the <strong>default connection string</strong> (see next section) 
 	normally. But ABP uses IConnectionStringResolver to determine it. So, 
 	this behaviour can be changed and connection string can be determined 
@@ -75,14 +67,9 @@ AbpEntityFrameworkCoreModule</strong>.</p>
         ...
     }
 }</pre>
-	<p>For non web projects, we will not have a Startup class. In that case, we 
-	can use
-<strong>        Configuration.Modules.AbpEfCore().AddDbContext</strong> method 
-	here to configure DbContext, as shown below:</p>
-	<pre lang="cs">Configuration.Modules.AbpEfCore().AddDbContext&lt;MyDbContext&gt;(options =&gt;
-{
-    options.DbContextOptions.UseSqlServer(options.ConnectionString);
-});</pre>
+	<p>So, you can define GetConnectionString method simply returns the 
+	connection string from a configuration file (generally from 
+	appsettings.json). </p>
 
 			<h3 id="DocRepositories">Repositories</h3>
 			<p>Repositories are used to abstract data access from higher layers. 
@@ -113,9 +100,8 @@ predefined repository methods. Example:</p>
 
 			<p>PersonAppService contructor-injects <strong>IRepository&lt;Person&gt;</strong> and 
 uses the <strong>Insert</strong> method. In this way, you can easily inject
-				<strong>IRepository&lt;TEntity&gt;</strong> (or IRepository&lt;TEntity, TPrimaryKey&gt;) and 
-use predefined methods. See <a href="/Pages/Documents/Repositories">repository 
-documentation</a> for all predefined methods.</p>
+				<strong>IRepository&lt;TEntity&gt;</strong> (or 
+			IRepository&lt;TEntity, TPrimaryKey&gt;) and use predefined methods.</p>
 
 			<h4 id="DocCustomRepositoryMethods">Custom Repositories</h4>
 			<p>If standard repository methods are not sufficient, you can create 
@@ -153,6 +139,21 @@ public class SimpleTaskSystemRepositoryBase&lt;TEntity&gt; : <strong>SimpleTaskS
 			<p>Notice that we're inheriting from EfCoreRepositoryBase&lt;<strong>SimpleTaskSystemDbContext</strong>, TEntity, TPrimaryKey&gt;. 
 This declares to ASP.NET Boilerplate to use SimpleTaskSystemDbContext in our 
 repositories.</p>
+			<p>By default, all repositories for your given DbContext 
+			(SimpleTaskSystemDbContext in this example) is implemented using 
+			EfCoreRepositoryBase. You can replace it to your own repository base 
+			repository class by adding <strong>AutoRepositoryTypes</strong> 
+			attribute to your DbContext as shown below:</p>
+<pre lang="cs"><strong>[AutoRepositoryTypes(
+    typeof(IRepository&lt;&gt;),
+    typeof(IRepository&lt;,&gt;),
+    typeof(SimpleTaskSystemEfRepositoryBase&lt;&gt;),
+    typeof(SimpleTaskSystemEfRepositoryBase&lt;,&gt;)
+)]</strong>
+public class SimpleTaskSystemDbContext : AbpDbContext
+{
+    ...
+}</pre>
 			<h5>Custom Repository Example</h5>
 
 			<p>To implement a custom repository, just derive from your application specific 
@@ -242,22 +243,6 @@ reach to your DbContext and directly use Entity Framework APIs.&nbsp;</p>
 				<strong>.EntityFrameworkCore</strong> project if you want to 
 				abstract EF Core from your domain/application.</li>
 			</ul>
-
-	<h3>Missing Points</h3>
-	<p>Abp.EntityFrameworkCore module currently does not support following ABP 
-	features:</p>
-	<ul>
-		<li><strong>Data Filters</strong>: Abp.EntityFramework module uses 
-		EntityFramework.DynamicFilters to accomplish automatic
-		<a href="Data-Filters.html">data filtering</a>. Currently, it
-		<a href="https://github.com/jcachat/EntityFramework.DynamicFilters/issues/48" target="_blank">
-		does not support</a> EF Core. While some other libraries (like EF Plus) 
-		do it, as our investigation it's implemented in a limited way (for 
-		example, EF+ does not support filtering of navigation properties).</li>
-		<li><strong>DateTime normalization</strong>: Abp.EntityFramework module 
-		normalizes DateTime properties of entities while getting them from 
-		database. This is not possible for Abp.EntityFrameworkCore yet.</li>
-	</ul>
 
 </div>
 

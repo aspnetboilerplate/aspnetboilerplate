@@ -10,7 +10,7 @@ using Abp.Runtime.Security;
 namespace Abp.Runtime.Session
 {
     /// <summary>
-    /// Implements <see cref="IAbpSession"/> to get session properties from claims of <see cref="Thread.CurrentPrincipal"/>.
+    /// Implements <see cref="IAbpSession"/> to get session properties from current claims.
     /// </summary>
     public class ClaimsAbpSession : AbpSessionBase, ISingletonDependency
     {
@@ -23,7 +23,7 @@ namespace Abp.Runtime.Session
                     return OverridedValue.UserId;
                 }
 
-                var userIdClaim = PrincipalAccessor.Principal?.Claims.FirstOrDefault(c => c.Type == ClaimTypes.NameIdentifier);
+                var userIdClaim = PrincipalAccessor.Principal?.Claims.FirstOrDefault(c => c.Type == AbpClaimTypes.UserId);
                 if (string.IsNullOrEmpty(userIdClaim?.Value))
                 {
                     return null;

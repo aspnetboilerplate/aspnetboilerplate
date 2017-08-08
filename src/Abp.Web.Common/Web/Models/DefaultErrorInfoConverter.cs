@@ -29,7 +29,7 @@ namespace Abp.Web.Models
         }
 
         public DefaultErrorInfoConverter(
-            IAbpWebCommonModuleConfiguration configuration, 
+            IAbpWebCommonModuleConfiguration configuration,
             ILocalizationManager localizationManager)
         {
             _configuration = configuration;
@@ -84,12 +84,19 @@ namespace Abp.Web.Models
             {
                 var entityNotFoundException = exception as EntityNotFoundException;
 
+                if (entityNotFoundException.EntityType != null)
+                {
+                    return new ErrorInfo(
+                        string.Format(
+                            L("EntityNotFound"),
+                            entityNotFoundException.EntityType.Name,
+                            entityNotFoundException.Id
+                        )
+                    );
+                }
+
                 return new ErrorInfo(
-                    string.Format(
-                        L("EntityNotFound"),
-                        entityNotFoundException.EntityType.Name,
-                        entityNotFoundException.Id
-                    )
+                    entityNotFoundException.Message
                 );
             }
 
@@ -194,7 +201,7 @@ namespace Abp.Web.Models
         {
             var detailBuilder = new StringBuilder();
             detailBuilder.AppendLine(L("ValidationNarrativeTitle"));
-            
+
             foreach (var validationResult in validationException.ValidationErrors)
             {
                 detailBuilder.AppendFormat(" - {0}", validationResult.ErrorMessage);

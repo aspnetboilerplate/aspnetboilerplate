@@ -9,7 +9,7 @@ namespace Abp.TestBase.Runtime.Session
 {
     public class TestAbpSession : IAbpSession, ISingletonDependency
     {
-        public long? UserId
+        public virtual long? UserId
         {
             get
             {
@@ -23,7 +23,7 @@ namespace Abp.TestBase.Runtime.Session
             set { _userId = value; }
         }
 
-        public int? TenantId
+        public virtual int? TenantId
         {
             get
             {
@@ -56,11 +56,11 @@ namespace Abp.TestBase.Runtime.Session
             }
         }
 
-        public MultiTenancySides MultiTenancySide { get { return GetCurrentMultiTenancySide(); } }
+        public virtual MultiTenancySides MultiTenancySide { get { return GetCurrentMultiTenancySide(); } }
         
-        public long? ImpersonatorUserId { get; set; }
+        public virtual long? ImpersonatorUserId { get; set; }
         
-        public int? ImpersonatorTenantId { get; set; }
+        public virtual int? ImpersonatorTenantId { get; set; }
 
         private readonly IMultiTenancyConfig _multiTenancy;
         private readonly IAmbientScopeProvider<SessionOverride> _sessionOverrideScopeProvider;
@@ -78,14 +78,14 @@ namespace Abp.TestBase.Runtime.Session
             _tenantResolver = tenantResolver;
         }
 
-        private MultiTenancySides GetCurrentMultiTenancySide()
+        protected virtual MultiTenancySides GetCurrentMultiTenancySide()
         {
             return _multiTenancy.IsEnabled && !TenantId.HasValue
                 ? MultiTenancySides.Host
                 : MultiTenancySides.Tenant;
         }
 
-        public IDisposable Use(int? tenantId, long? userId)
+        public virtual IDisposable Use(int? tenantId, long? userId)
         {
             return _sessionOverrideScopeProvider.BeginScope(AbpSessionBase.SessionOverrideContextKey, new SessionOverride(tenantId, userId));
         }

@@ -60,7 +60,10 @@ namespace Abp.EntityFramework.Uow
 
         public override void SaveChanges()
         {
-            GetAllActiveDbContexts().ForEach(SaveChangesInDbContext);
+            foreach (var dbContext in GetAllActiveDbContexts())
+            {
+                SaveChangesInDbContext(dbContext);
+            }
         }
 
         public override async Task SaveChangesAsync()
@@ -118,6 +121,11 @@ namespace Abp.EntityFramework.Uow
                 else
                 {
                     dbContext = _dbContextResolver.Resolve<TDbContext>(connectionString);
+                }
+
+                if (Options.Timeout.HasValue && !dbContext.Database.CommandTimeout.HasValue)
+                {
+                    dbContext.Database.CommandTimeout = Options.Timeout.Value.TotalSeconds.To<int>();
                 }
 
                 ((IObjectContextAdapter)dbContext).ObjectContext.ObjectMaterialized += (sender, args) =>

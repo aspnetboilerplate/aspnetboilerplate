@@ -143,7 +143,13 @@ namespace Abp.Tests.Configuration
         {
             return new TestAbpSession(
                 new MultiTenancyConfig {IsEnabled = true},
-                new DataContextAmbientScopeProvider<SessionOverride>(new CallContextAmbientDataContext()),
+                new DataContextAmbientScopeProvider<SessionOverride>(
+#if NET46
+                new CallContextAmbientDataContext()
+#else
+                new AsyncLocalAmbientDataContext()
+#endif
+                    ),
                 Substitute.For<ITenantResolver>()
             );
         }

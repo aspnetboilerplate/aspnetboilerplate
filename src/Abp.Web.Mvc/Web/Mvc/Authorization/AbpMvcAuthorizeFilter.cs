@@ -20,7 +20,7 @@ namespace Abp.Web.Mvc.Authorization
         private readonly IEventBus _eventBus;
 
         public AbpMvcAuthorizeFilter(
-            IAuthorizationHelper authorizationHelper, 
+            IAuthorizationHelper authorizationHelper,
             IErrorInfoBuilder errorInfoBuilder,
             IEventBus eventBus)
         {
@@ -45,7 +45,7 @@ namespace Abp.Web.Mvc.Authorization
 
             try
             {
-                _authorizationHelper.Authorize(methodInfo);
+                _authorizationHelper.Authorize(methodInfo, methodInfo.DeclaringType);
             }
             catch (AbpAuthorizationException ex)
             {
@@ -55,14 +55,14 @@ namespace Abp.Web.Mvc.Authorization
         }
 
         protected virtual void HandleUnauthorizedRequest(
-            AuthorizationContext filterContext, 
-            MethodInfo methodInfo, 
+            AuthorizationContext filterContext,
+            MethodInfo methodInfo,
             AbpAuthorizationException ex)
         {
             filterContext.HttpContext.Response.StatusCode =
                 filterContext.RequestContext.HttpContext.User?.Identity?.IsAuthenticated ?? false
-                    ? (int) HttpStatusCode.Forbidden
-                    : (int) HttpStatusCode.Unauthorized;
+                    ? (int)HttpStatusCode.Forbidden
+                    : (int)HttpStatusCode.Unauthorized;
 
             var isJsonResult = MethodInfoHelper.IsJsonResult(methodInfo);
 
@@ -87,9 +87,9 @@ namespace Abp.Web.Mvc.Authorization
         {
             return new AbpJsonResult(
                 new AjaxResponse(_errorInfoBuilder.BuildForException(ex), true))
-                {
-                    JsonRequestBehavior = JsonRequestBehavior.AllowGet
-                };
+            {
+                JsonRequestBehavior = JsonRequestBehavior.AllowGet
+            };
         }
 
         protected virtual HttpStatusCodeResult CreateUnAuthorizedNonJsonResult(AuthorizationContext filterContext, AbpAuthorizationException ex)

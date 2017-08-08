@@ -10,7 +10,6 @@ using Abp.Domain.Uow;
 using Abp.Runtime.Session;
 using Abp.Timing;
 using Castle.Core.Logging;
-using Newtonsoft.Json;
 
 namespace Abp.Auditing
 {
@@ -76,12 +75,12 @@ namespace Abp.Auditing
             var classType = methodInfo.DeclaringType;
             if (classType != null)
             {
-                if (classType.IsDefined(typeof(AuditedAttribute), true))
+                if (classType.GetTypeInfo().IsDefined(typeof(AuditedAttribute), true))
                 {
                     return true;
                 }
 
-                if (classType.IsDefined(typeof(DisableAuditingAttribute), true))
+                if (classType.GetTypeInfo().IsDefined(typeof(DisableAuditingAttribute), true))
                 {
                     return false;
                 }
@@ -116,7 +115,14 @@ namespace Abp.Auditing
                 ExecutionTime = Clock.Now
             };
 
-            _auditInfoProvider.Fill(auditInfo);
+            try
+            {
+                _auditInfoProvider.Fill(auditInfo);
+            }
+            catch (Exception ex)
+            {
+                Logger.Warn(ex.ToString(), ex);
+            }
 
             return auditInfo;
         }

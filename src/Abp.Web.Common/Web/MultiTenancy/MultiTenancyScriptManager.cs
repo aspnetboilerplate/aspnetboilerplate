@@ -25,7 +25,7 @@ namespace Abp.Web.MultiTenancy
             script.AppendLine();
 
             script.AppendLine("    abp.multiTenancy = abp.multiTenancy || {};");
-            script.AppendLine("    abp.multiTenancy.isEnabled = " + _multiTenancyConfig.IsEnabled.ToString().ToLower(CultureInfo.InvariantCulture) + ";");
+            script.AppendLine("    abp.multiTenancy.isEnabled = " + _multiTenancyConfig.IsEnabled.ToString().ToLowerInvariant() + ";");
 
             script.AppendLine();
             script.Append("})(abp);");

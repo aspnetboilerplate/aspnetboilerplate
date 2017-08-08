@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
+using System.Threading;
 using System.Threading.Tasks;
 using Abp.Collections.Extensions;
 using Abp.Domain.Entities;
@@ -16,19 +17,23 @@ namespace Abp.EntityFrameworkCore.Repositories
     /// <typeparam name="TDbContext">DbContext which contains <typeparamref name="TEntity"/>.</typeparam>
     /// <typeparam name="TEntity">Type of the Entity for this repository</typeparam>
     /// <typeparam name="TPrimaryKey">Primary key of the entity</typeparam>
-    public class EfCoreRepositoryBase<TDbContext, TEntity, TPrimaryKey> : AbpRepositoryBase<TEntity, TPrimaryKey>, IRepositoryWithDbContext
+    public class EfCoreRepositoryBase<TDbContext, TEntity, TPrimaryKey> : 
+        AbpRepositoryBase<TEntity, TPrimaryKey>,
+        ISupportsExplicitLoading<TEntity, TPrimaryKey>,
+        IRepositoryWithDbContext
+        
         where TEntity : class, IEntity<TPrimaryKey>
         where TDbContext : DbContext
     {
         /// <summary>
         /// Gets EF DbContext object.
         /// </summary>
-        public virtual TDbContext Context { get { return _dbContextProvider.GetDbContext(MultiTenancySide); } }
+        public virtual TDbContext Context => _dbContextProvider.GetDbContext(MultiTenancySide);
 
         /// <summary>
         /// Gets DbSet for given entity.
         /// </summary>
-        public virtual DbSet<TEntity> Table { get { return Context.Set<TEntity>(); } }
+        public virtual DbSet<TEntity> Table => Context.Set<TEntity>();
 
         private readonly IDbContextProvider<TDbContext> _dbContextProvider;
 
@@ -43,22 +48,22 @@ namespace Abp.EntityFrameworkCore.Repositories
 
         public override IQueryable<TEntity> GetAll()
         {
-            return Table;
+            return GetAllIncluding();
         }
 
         public override IQueryable<TEntity> GetAllIncluding(params Expression<Func<TEntity, object>>[] propertySelectors)
         {
-            if (propertySelectors.IsNullOrEmpty())
+            var query = Table.AsQueryable();
+
+            if (!propertySelectors.IsNullOrEmpty())
             {
-                return GetAll();
+                foreach (var propertySelector in propertySelectors)
+                {
+                    query = query.Include(propertySelector);
+                }
             }
 
-            var query = GetAll();
-
-            foreach (var propertySelector in propertySelectors)
-            {
-                query = query.Include(propertySelector);
-            }
+            query = ApplyFilters(query);
 
             return query;
         }
@@ -95,7 +100,7 @@ namespace Abp.EntityFrameworkCore.Repositories
 
         public override Task<TEntity> InsertAsync(TEntity entity)
         {
-            return Task.FromResult(Table.Add(entity).Entity);
+            return Task.FromResult(Insert(entity));
         }
 
         public override TPrimaryKey InsertAndGetId(TEntity entity)
@@ -212,13 +217,31 @@ namespace Abp.EntityFrameworkCore.Repositories
             {
                 return;
             }
-            
+
             Table.Attach(entity);
         }
 
         public DbContext GetDbContext()
         {
             return Context;
+        }
+
+        public Task EnsureCollectionLoadedAsync<TProperty>(
+            TEntity entity, 
+            Expression<Func<TEntity, IEnumerable<TProperty>>> propertyExpression, 
+            CancellationToken cancellationToken)
+            where TProperty : class
+        {
+            return Context.Entry(entity).Collection(propertyExpression).LoadAsync(cancellationToken);
+        }
+
+        public Task EnsurePropertyLoadedAsync<TProperty>(
+            TEntity entity,
+            Expression<Func<TEntity, TProperty>> propertyExpression,
+            CancellationToken cancellationToken)
+            where TProperty : class
+        {
+            return Context.Entry(entity).Reference(propertyExpression).LoadAsync(cancellationToken);
         }
 
         private TEntity GetFromChangeTrackerOrNull(TPrimaryKey id)

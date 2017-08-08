@@ -25,9 +25,7 @@ namespace Abp.EntityFramework.GraphDiff.Extensions
         public static TEntity AttachGraph<TEntity, TPrimaryKey>(this IRepository<TEntity, TPrimaryKey> repository, TEntity entity)
             where TEntity : class, IEntity<TPrimaryKey>, new()
         {
-            var iocResolver = ((AbpRepositoryBase<TEntity, TPrimaryKey>)repository).IocResolver;
-
-            using (var mappingManager = iocResolver.ResolveAsDisposable<IEntityMappingManager>())
+            using (var mappingManager = repository.GetIocResolver().ResolveAsDisposable<IEntityMappingManager>())
             {
                 var mapping = mappingManager.Object.GetEntityMappingOrNull<TEntity>();
                 return repository

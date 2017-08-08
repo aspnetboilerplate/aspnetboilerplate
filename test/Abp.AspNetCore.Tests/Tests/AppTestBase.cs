@@ -32,5 +32,22 @@ namespace Abp.AspNetCore.Tests
             response.StatusCode.ShouldBe(expectedStatusCode);
             return response;
         }
+
+        protected virtual async Task<TResult> PostAsync<TResult>(string url, HttpContent requestContent, HttpStatusCode expectedStatusCode = HttpStatusCode.OK)
+        {
+            var response = await PostAsync(url, requestContent, expectedStatusCode);
+            var responseContent = await response.Content.ReadAsStringAsync();
+            return JsonConvert.DeserializeObject<TResult>(responseContent, new JsonSerializerSettings
+            {
+                ContractResolver = new CamelCasePropertyNamesContractResolver()
+            });
+        }
+
+        protected virtual async Task<HttpResponseMessage> PostAsync(string url, HttpContent requestContent, HttpStatusCode expectedStatusCode = HttpStatusCode.OK)
+        {
+            var response = await Client.PostAsync(url, requestContent);
+            response.StatusCode.ShouldBe(expectedStatusCode);
+            return response;
+        }
     }
 }

@@ -9,6 +9,7 @@ using Abp.Domain.Uow;
 using Abp.Events.Bus;
 using Abp.Localization;
 using Abp.Localization.Sources;
+using Abp.ObjectMapping;
 using Abp.Runtime.Session;
 using Castle.Core.Logging;
 
@@ -53,6 +54,11 @@ namespace Abp.WebApi.Controllers
         /// Reference to the permission checker.
         /// </summary>
         public IFeatureChecker FeatureChecker { protected get; set; }
+
+        /// <summary>
+        /// Reference to the object to object mapper.
+        /// </summary>
+        public IObjectMapper ObjectMapper { get; set; }
 
         /// <summary>
         /// Reference to the localization manager.
@@ -126,8 +132,9 @@ namespace Abp.WebApi.Controllers
             LocalizationManager = NullLocalizationManager.Instance;
             PermissionChecker = NullPermissionChecker.Instance;
             EventBus = NullEventBus.Instance;
+            ObjectMapper = NullObjectMapper.Instance;
         }
-        
+
         /// <summary>
         /// Gets localized string for given key name and current language.
         /// </summary>

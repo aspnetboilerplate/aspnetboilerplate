@@ -14,14 +14,19 @@ namespace Abp.Notifications
     {
         private readonly INotificationStore _store;
         private readonly INotificationDefinitionManager _notificationDefinitionManager;
+        private readonly IGuidGenerator _guidGenerator;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="NotificationSubscriptionManager"/> class.
         /// </summary>
-        public NotificationSubscriptionManager(INotificationStore store, INotificationDefinitionManager notificationDefinitionManager)
+        public NotificationSubscriptionManager(
+            INotificationStore store, 
+            INotificationDefinitionManager notificationDefinitionManager,
+            IGuidGenerator guidGenerator)
         {
             _store = store;
             _notificationDefinitionManager = notificationDefinitionManager;
+            _guidGenerator = guidGenerator;
         }
 
         public async Task SubscribeAsync(UserIdentifier user, string notificationName, EntityIdentifier entityIdentifier = null)
@@ -33,6 +38,7 @@ namespace Abp.Notifications
 
             await _store.InsertSubscriptionAsync(
                 new NotificationSubscriptionInfo(
+                    _guidGenerator.Create(),
                     user.TenantId,
                     user.UserId,
                     notificationName,

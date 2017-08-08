@@ -1,12 +1,17 @@
-﻿using System.Reflection;
+﻿using System;
+using System.Data.Entity.Infrastructure.Interception;
+using System.Reflection;
 using Abp.Collections.Extensions;
 using Abp.Configuration.Startup;
 using Abp.Dependency;
 using Abp.Domain.Uow;
+using Abp.EntityFramework.Interceptors;
 using Abp.EntityFramework.Repositories;
 using Abp.EntityFramework.Uow;
 using Abp.Modules;
+using Abp.Orm;
 using Abp.Reflection;
+
 using Castle.MicroKernel.Registration;
 
 namespace Abp.EntityFramework
@@ -14,9 +19,12 @@ namespace Abp.EntityFramework
     /// <summary>
     /// This module is used to implement "Data Access Layer" in EntityFramework.
     /// </summary>
-    [DependsOn(typeof(AbpKernelModule))]
+    [DependsOn(typeof(AbpEntityFrameworkCommonModule))]
     public class AbpEntityFrameworkModule : AbpModule
     {
+        private static WithNoLockInterceptor _withNoLockInterceptor;
+        private static readonly object WithNoLockInterceptorSyncObj = new object();
+
         private readonly ITypeFinder _typeFinder;
 
         public AbpEntityFrameworkModule(ITypeFinder typeFinder)
@@ -39,6 +47,11 @@ namespace Abp.EntityFramework
 
         public override void Initialize()
         {
+            if (!Configuration.UnitOfWork.IsTransactionScopeAvailable)
+            {
+                IocManager.RegisterIfNot<IEfTransactionStrategy, DbContextEfTransactionStrategy>(DependencyLifeStyle.Transient);
+            }
+
             IocManager.RegisterAssemblyByConvention(Assembly.GetExecutingAssembly());
 
             IocManager.IocContainer.Register(
@@ -48,6 +61,21 @@ namespace Abp.EntityFramework
                 );
 
             RegisterGenericRepositoriesAndMatchDbContexes();
+            RegisterWithNoLockInterceptor();
+        }
+
+        private void RegisterWithNoLockInterceptor()
+        {
+            lock (WithNoLockInterceptorSyncObj)
+            {
+                if (_withNoLockInterceptor != null)
+                {
+                    return;
+                }
+
+                _withNoLockInterceptor = IocManager.Resolve<WithNoLockInterceptor>();
+                DbInterception.Add(_withNoLockInterceptor);
+            }
         }
 
         private void RegisterGenericRepositoriesAndMatchDbContexes()
@@ -66,18 +94,24 @@ namespace Abp.EntityFramework
                 return;
             }
 
-            using (var repositoryRegistrar = IocManager.ResolveAsDisposable<IEntityFrameworkGenericRepositoryRegistrar>())
+            using (var scope = IocManager.CreateScope())
             {
+                var repositoryRegistrar = scope.Resolve<IEfGenericRepositoryRegistrar>();
+
                 foreach (var dbContextType in dbContextTypes)
                 {
                     Logger.Debug("Registering DbContext: " + dbContextType.AssemblyQualifiedName);
-                    repositoryRegistrar.Object.RegisterForDbContext(dbContextType, IocManager);
-                }
-            }
+                    repositoryRegistrar.RegisterForDbContext(dbContextType, IocManager, EfAutoRepositoryTypes.Default);
 
-            using (var dbContextMatcher = IocManager.ResolveAsDisposable<IDbContextTypeMatcher>())
-            {
-                dbContextMatcher.Object.Populate(dbContextTypes);
+                    IocManager.IocContainer.Register(
+                        Component.For<ISecondaryOrmRegistrar>()
+                            .Named(Guid.NewGuid().ToString("N"))
+                            .Instance(new EfBasedSecondaryOrmRegistrar(dbContextType, scope.Resolve<IDbContextEntityFinder>()))
+                            .LifestyleTransient()
+                    );
+                }
+                
+                scope.Resolve<IDbContextTypeMatcher>().Populate(dbContextTypes);
             }
         }
     }

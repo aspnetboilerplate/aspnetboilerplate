@@ -89,7 +89,7 @@ namespace Abp.Web.Navigation
             sb.AppendLine("{");
 
             sb.AppendLine(new string(' ', indentLength + 4) + "name: '" + menuItem.Name + "',");
-            sb.AppendLine(new string(' ', indentLength + 4) + "order: '" + menuItem.Order + "',");
+            sb.AppendLine(new string(' ', indentLength + 4) + "order: " + menuItem.Order + ",");
 
             if (!string.IsNullOrEmpty(menuItem.Icon))
             {
@@ -115,6 +115,9 @@ namespace Abp.Web.Navigation
             {
                 sb.AppendLine(new string(' ', indentLength + 4) + "target: '" + menuItem.Target.Replace("'", @"\'") + "',");
             }
+
+            sb.AppendLine(new string(' ', indentLength + 4) + "isEnabled: " + menuItem.IsEnabled.ToString().ToLowerInvariant() + ",");
+            sb.AppendLine(new string(' ', indentLength + 4) + "isVisible: " + menuItem.IsVisible.ToString().ToLowerInvariant() + ",");
 
             sb.Append(new string(' ', indentLength + 4) + "items: [");
 

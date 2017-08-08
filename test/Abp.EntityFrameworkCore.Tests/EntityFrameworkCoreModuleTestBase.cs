@@ -3,6 +3,7 @@ using System.Threading.Tasks;
 using Abp.EntityFrameworkCore.Tests.Domain;
 using Abp.EntityFrameworkCore.Tests.Ef;
 using Abp.TestBase;
+using Abp.Timing;
 
 namespace Abp.EntityFrameworkCore.Tests
 {
@@ -10,6 +11,8 @@ namespace Abp.EntityFrameworkCore.Tests
     {
         protected EntityFrameworkCoreModuleTestBase()
         {
+            Clock.Provider = ClockProviders.Utc;
+
             CreateInitialData();
         }
 
@@ -22,11 +25,21 @@ namespace Abp.EntityFrameworkCore.Tests
 
                     context.Blogs.Add(blog1);
 
-                    var post1 = new Post {Blog = blog1, Title = "test-post-1-title", Body = "test-post-1-body"};
-                    var post2 = new Post {Blog = blog1, Title = "test-post-2-title", Body = "test-post-2-body"};
+                    var post1 = new Post { Blog = blog1, Title = "test-post-1-title", Body = "test-post-1-body" };
+                    var post2 = new Post { Blog = blog1, Title = "test-post-2-title", Body = "test-post-2-body" };
 
                     context.Posts.AddRange(post1, post2);
                 });
+
+            using (var context = LocalIocManager.Resolve<SupportDbContext>())
+            {
+                context.Tickets.AddRange(
+                    new Ticket { EmailAddress = "john@aspnetboilerplate.com", Message = "an active message" },
+                    new Ticket { EmailAddress = "david@aspnetboilerplate.com", Message = "an inactive message", IsActive = false }
+                    );
+
+                context.SaveChanges();
+            }
         }
 
         public void UsingDbContext(Action<BloggingDbContext> action)

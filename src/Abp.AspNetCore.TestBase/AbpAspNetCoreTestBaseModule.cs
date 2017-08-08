@@ -1,5 +1,5 @@
-﻿using System.Reflection;
-using Abp.Modules;
+﻿using Abp.Modules;
+using Abp.Reflection.Extensions;
 using Abp.TestBase;
 
 namespace Abp.AspNetCore.TestBase
@@ -9,7 +9,7 @@ namespace Abp.AspNetCore.TestBase
     {
         public override void Initialize()
         {
-            IocManager.RegisterAssemblyByConvention(Assembly.GetExecutingAssembly());
+            IocManager.RegisterAssemblyByConvention(typeof(AbpAspNetCoreTestBaseModule).GetAssembly());
         }
     }
 }

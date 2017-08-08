@@ -63,7 +63,7 @@ namespace Abp.EntityFrameworkCore.Utils
                                      ).ToList();
 
             var complexTypeProperties = entityType.GetProperties()
-                                                   .Where(p => p.PropertyType.IsDefined(typeof(ComplexTypeAttribute), true))
+                                                   .Where(p => p.PropertyType.GetTypeInfo().IsDefined(typeof(ComplexTypeAttribute), true))
                                                    .ToList();
 
             var complexTypeDateTimePropertyPaths = new List<string>();
@@ -81,7 +81,7 @@ namespace Abp.EntityFrameworkCore.Utils
 
         private static void AddComplexTypeDateTimePropertyPaths(string pathPrefix, PropertyInfo complexProperty, List<string> complexTypeDateTimePropertyPaths)
         {
-            if (!complexProperty.PropertyType.IsDefined(typeof(ComplexTypeAttribute), true))
+            if (!complexProperty.PropertyType.GetTypeInfo().IsDefined(typeof(ComplexTypeAttribute), true))
             {
                 return;
             }
@@ -96,7 +96,7 @@ namespace Abp.EntityFrameworkCore.Utils
             complexTypeDateTimePropertyPaths.AddRange(complexTypeDateProperties);
 
             var complexTypeProperties = complexProperty.PropertyType.GetProperties()
-                                                  .Where(p => p.PropertyType.IsDefined(typeof(ComplexTypeAttribute), true))
+                                                  .Where(p => p.PropertyType.GetTypeInfo().IsDefined(typeof(ComplexTypeAttribute), true))
                                                   .ToList();
 
             if (!complexTypeProperties.Any())

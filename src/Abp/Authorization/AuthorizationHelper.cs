@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Reflection;
 using System.Threading.Tasks;
 using System.Linq;
@@ -19,12 +20,12 @@ namespace Abp.Authorization
         public ILocalizationManager LocalizationManager { get; set; }
 
         private readonly IFeatureChecker _featureChecker;
-        private readonly IAuthorizationConfiguration _configuration;
+        private readonly IAuthorizationConfiguration _authConfiguration;
 
-        public AuthorizationHelper(IFeatureChecker featureChecker, IAuthorizationConfiguration configuration)
+        public AuthorizationHelper(IFeatureChecker featureChecker, IAuthorizationConfiguration authConfiguration)
         {
             _featureChecker = featureChecker;
-            _configuration = configuration;
+            _authConfiguration = authConfiguration;
             AbpSession = NullAbpSession.Instance;
             PermissionChecker = NullPermissionChecker.Instance;
             LocalizationManager = NullLocalizationManager.Instance;
@@ -32,7 +33,7 @@ namespace Abp.Authorization
 
         public async Task AuthorizeAsync(IEnumerable<IAbpAuthorizeAttribute> authorizeAttributes)
         {
-            if (!_configuration.IsEnabled)
+            if (!_authConfiguration.IsEnabled)
             {
                 return;
             }
@@ -50,29 +51,15 @@ namespace Abp.Authorization
             }
         }
 
-        public async Task AuthorizeAsync(MethodInfo methodInfo)
+        public async Task AuthorizeAsync(MethodInfo methodInfo, Type type)
         {
-            if (!_configuration.IsEnabled)
-            {
-                return;
-            }
-
-            if (AllowAnonymous(methodInfo))
-            {
-                return;
-            }
-            
-            //Authorize
-            await CheckFeatures(methodInfo);
-            await CheckPermissions(methodInfo);
+            await CheckFeatures(methodInfo, type);
+            await CheckPermissions(methodInfo, type);
         }
 
-        private async Task CheckFeatures(MethodInfo methodInfo)
+        private async Task CheckFeatures(MethodInfo methodInfo, Type type)
         {
-            var featureAttributes =
-                ReflectionHelper.GetAttributesOfMemberAndDeclaringType<RequiresFeatureAttribute>(
-                    methodInfo
-                    );
+            var featureAttributes = ReflectionHelper.GetAttributesOfMemberAndType<RequiresFeatureAttribute>(methodInfo, type);
 
             if (featureAttributes.Count <= 0)
             {
@@ -85,12 +72,23 @@ namespace Abp.Authorization
             }
         }
 
-        private async Task CheckPermissions(MethodInfo methodInfo)
+        private async Task CheckPermissions(MethodInfo methodInfo, Type type)
         {
+            if (!_authConfiguration.IsEnabled)
+            {
+                return;
+            }
+
+            if (AllowAnonymous(methodInfo, type))
+            {
+                return;
+            }
+
             var authorizeAttributes =
-                ReflectionHelper.GetAttributesOfMemberAndDeclaringType(
-                    methodInfo
-                ).OfType<IAbpAuthorizeAttribute>().ToArray();
+                ReflectionHelper
+                    .GetAttributesOfMemberAndType(methodInfo, type)
+                    .OfType<IAbpAuthorizeAttribute>()
+                    .ToArray();
 
             if (!authorizeAttributes.Any())
             {
@@ -100,10 +98,12 @@ namespace Abp.Authorization
             await AuthorizeAsync(authorizeAttributes);
         }
 
-        private static bool AllowAnonymous(MethodInfo methodInfo)
+        private static bool AllowAnonymous(MemberInfo methodInfo, Type type)
         {
-            return ReflectionHelper.GetAttributesOfMemberAndDeclaringType(methodInfo)
-                .OfType<IAbpAllowAnonymousAttribute>().Any();
+            return ReflectionHelper
+                .GetAttributesOfMemberAndType(methodInfo, type)
+                .OfType<IAbpAllowAnonymousAttribute>()
+                .Any();
         }
     }
 }
