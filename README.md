@@ -1,4 +1,3 @@
-
 # ASP.NET Boilerplate
 
 AppVeyor: [![Build status](https://ci.appveyor.com/api/projects/status/tvad583r9lbimxh4?svg=true)](https://ci.appveyor.com/project/hikalkan/aspnetboilerplate)
@@ -7,16 +6,16 @@ AppVeyor: [![Build status](https://ci.appveyor.com/api/projects/status/tvad583r9
 
 ASP.NET Boilerplate is a general purpose **application framework** especially designed for new modern web applications. It uses already **familiar tools** and implements **best practices** arround them to provide you a **SOLID development experience**.
 
-###### Layered Architecture
-Provides a layered architectural model based on **Domain Driven Design**. Provides a **SOLID** model for your application.
-
 ###### Modular Design
+
 Designed as <a href="https://aspnetboilerplate.com/Pages/Documents/Module-System" target="_blank">**modular**</a> and **extensible**. Provides infrastructure to build your own modules too.
 
 ###### Multi Tenancy
+
 **SaaS** applications made easy! Integrated <a href="https://aspnetboilerplate.com/Pages/Documents/Multi-Tenancy" target="_blank">multi-tenancy</a> from database to UI.
 
 ###### Well Documented
+
 Compherensive <a href="https://aspnetboilerplate.com/Pages/Documents" target="_blank">**documentation**</a> and jump start tutorials.
 
 ## How It Works
@@ -24,6 +23,16 @@ Compherensive <a href="https://aspnetboilerplate.com/Pages/Documents" target="_b
 Don't Repeat Yourself! ASP.NET Boilerplate automates common software development tasks by convention. You focus your business code.
 
 ![ASP.NET Boilerplate](doc/img/abp-concerns.png)
+
+See <a href="https://aspnetboilerplate.com/Pages/Documents/Introduction" target="_blank">introduction</a> document for details.
+
+## Layered Architecture
+
+ABP provides a layered architectural model based on **Domain Driven Design**. Provides a **SOLID** model for your application.
+
+![NLayer Architecture](doc/img/abp-nlayer-architecture.png)
+
+See <a href="https://aspnetboilerplate.com/Pages/Documents/NLayer-Architecture" target="_blank">NLayer Architecture</a> document for details.
 
 ## Startup Templates
 
