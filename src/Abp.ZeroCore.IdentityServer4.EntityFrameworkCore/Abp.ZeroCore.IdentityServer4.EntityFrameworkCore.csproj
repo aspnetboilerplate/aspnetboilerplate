@@ -1,0 +1,36 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <Import Project="..\..\common.props" />
+
+  <PropertyGroup>
+    <TargetFrameworks>net46;netstandard1.6</TargetFrameworks>
+    <GenerateDocumentationFile>true</GenerateDocumentationFile>
+    <AssemblyName>Abp.ZeroCore.IdentityServer4.EntityFrameworkCore</AssemblyName>
+    <PackageId>Abp.ZeroCore.IdentityServer4.EntityFrameworkCore</PackageId>
+    <PackageTags>asp.net;asp.net mvc;boilerplate;application framework;web framework;framework;domain driven design;multitenancy;user management;role management;identity server;entity framework</PackageTags>
+    <GenerateAssemblyTitleAttribute>false</GenerateAssemblyTitleAttribute>
+    <GenerateAssemblyDescriptionAttribute>false</GenerateAssemblyDescriptionAttribute>
+    <GenerateAssemblyConfigurationAttribute>false</GenerateAssemblyConfigurationAttribute>
+    <GenerateAssemblyCompanyAttribute>false</GenerateAssemblyCompanyAttribute>
+    <GenerateAssemblyProductAttribute>false</GenerateAssemblyProductAttribute>
+    <GenerateAssemblyCopyrightAttribute>false</GenerateAssemblyCopyrightAttribute>
+    <RootNamespace>Abp</RootNamespace>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\Abp.ZeroCore.EntityFrameworkCore\Abp.ZeroCore.EntityFrameworkCore.csproj" />
+    <ProjectReference Include="..\Abp.ZeroCore.IdentityServer4\Abp.ZeroCore.IdentityServer4.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Include="bin\Release\net46\Abp.ZeroCore.IdentityServer4.EntityFrameworkCore.pdb">
+      <PackagePath>lib/net46/</PackagePath>
+      <Pack>true</Pack>
+    </None>
+    <None Include="bin\Release\netstandard1.6\Abp.ZeroCore.IdentityServer4.EntityFrameworkCore.pdb">
+      <PackagePath>lib/netstandard1.6/</PackagePath>
+      <Pack>true</Pack>
+    </None>
+  </ItemGroup>
+  
+</Project>

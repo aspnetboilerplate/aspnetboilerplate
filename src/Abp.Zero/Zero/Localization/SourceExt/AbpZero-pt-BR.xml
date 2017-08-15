@@ -1,0 +1,26 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<localizationDictionary culture="pt-BR">
+  <texts>
+    <text name="Identity.UserAlreadyInRole" value="Usuário já possui essa função." />
+    <text name="Identity.UserNotInRole" value="Usuário não possui essa função." />
+    <text name="Identity.RoleNotFound" value="Função {0} não existe." />
+    <text name="Identity.PasswordMismatch" value="Senha incorreta." />
+    <text name="Identity.InvalidUserName" value="Nome de usuário {0} é inválido, pode conter apenas caracteres alfanuméricos." />
+    <text name="Identity.PasswordTooShort" value="As senhas devem ter pelo menos {0} caracteres." />
+    <text name="Identity.PropertyTooShort" value="{0} não pode ser nulo ou vazio." />
+    <text name="Identity.DuplicateUserName" value="Nome {0} já foi usado." />
+    <text name="Identity.UserAlreadyHasPassword" value="Usuário já tem um conjunto de senha." />
+    <text name="Identity.PasswordRequireNonLetterOrDigit" value="As senhas devem ter pelo menos uma não letra ou caractere." />
+    <text name="Identity.UserIdNotFound" value="ID do usuário não encontrado." />
+    <text name="Identity.InvalidToken" value="Token inválido." />
+    <text name="Identity.InvalidEmail" value="Email '{0}' é inválido." />
+    <text name="Identity.UserNameNotFound" value="O usuário {0} não existe." />
+    <text name="Identity.LockoutNotEnabled" value="Bloqueio não está habilitado para esse usuário." />
+    <text name="Identity.PasswordRequireUpper" value="As senhas devem ter pelo menos uma letra maiúscula ('A'-'Z')." />
+    <text name="Identity.PasswordRequireDigit" value="As senhas devem ter pelo menos um dígito ('0'-'9')." />
+    <text name="Identity.PasswordRequireLower" value="As senhas devem ter pelo menos uma letra minúscula ('a'-'z')." />
+    <text name="Identity.DuplicateEmail" value="Email '{0}' já foi usado." />
+    <text name="Identity.ExternalLoginExists" value="Um usuário com o login externo já existe." />
+    <text name="Identity.DefaultError" value="Uma falha desconhecida ocorreu." />
+  </texts>
+</localizationDictionary>

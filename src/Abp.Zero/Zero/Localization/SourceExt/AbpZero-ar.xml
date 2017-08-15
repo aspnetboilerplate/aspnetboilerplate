@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="utf-8"?>
+<localizationDictionary culture="ar">
+  <texts>
+    <text name="Identity.UserAlreadyInRole" value="المستخدم بالفعل منضم للدور." />
+    <text name="Identity.UserNotInRole" value="المستخدم ليس منضم للدور." />
+    <text name="Identity.RoleNotFound" value="الدور {0} غير موجود." />
+    <text name="Identity.PasswordMismatch" value="كلمة مرور غير صحيحة." />
+    <text name="Identity.InvalidUserName" value="اسم المستخدم {0} غير صالح، يمكن أن يحتوي فقط على أحرف أو أرقام." />
+    <text name="Identity.PasswordTooShort" value="يجب أن تكون كلمات المرور {0} حرفا على الأقل." />
+    <text name="Identity.PropertyTooShort" value="{0} لا يمكن أن يكون فارغا." />
+    <text name="Identity.DuplicateUserName" value="الاسم {0} مستخدم بالفعل." />
+    <text name="Identity.UserAlreadyHasPassword" value="لدى المستخدم بالفعل كلمة مرور محددة." />
+    <text name="Identity.PasswordRequireNonLetterOrDigit" value="يجب أن تحتوي كلمة المرور على حرف خاص أو رقم على الأقل." />
+    <text name="Identity.UserIdNotFound" value="لم يتم العثور على هوية المستخدم." />
+    <text name="Identity.InvalidToken" value="الرمز المميز غير صالح." />
+    <text name="Identity.InvalidEmail" value="البريد الإلكتروني '{0}' غير صالح." />
+    <text name="Identity.UserNameNotFound" value="المستخدم {0} غير موجود." />
+    <text name="Identity.LockoutNotEnabled" value="لم يتم تمكين الغلق لهذا المستخدم." />
+    <text name="Identity.PasswordRequireUpper" value="يجب أن تحتوي كلمات المرور على حرف واحد كبير على الأقل ('A' - 'Z')." />
+    <text name="Identity.PasswordRequireDigit" value="يجب أن تحتوي كلمات المرور على رقم واحد على الأقل ('0' - '9')." />
+    <text name="Identity.PasswordRequireLower" value="يجب أن تحتوي كلمات المرور على حرف صغير واحد على الأقل ('a' - 'z')." />
+    <text name="Identity.DuplicateEmail" value="البريد الإلكتروني {0} مستخدم بالفعل." />
+    <text name="Identity.ExternalLoginExists" value="هناك مستخدم لديه نفس معلومات تسجيل دخول خارجية." />
+    <text name="Identity.DefaultError" value="حدث فشل غير معروف." />
+    <text name="Email">البريد الإلكتروني</text>
+    <text name="EmailSecurityCodeSubject">رمز الحماية</text>
+    <text name="EmailSecurityCodeBody">رمز الحماية الخاص بك هو: {0}</text>
+    <text name="Sms">رسالة قصيرة</text>
+    <text name="SmsSecurityCodeMessage">رمز الحماية الخاص بك هو: {0}</text>
+  </texts>
+</localizationDictionary>

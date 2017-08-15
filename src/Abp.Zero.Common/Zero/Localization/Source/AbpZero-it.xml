@@ -1,0 +1,13 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<localizationDictionary culture="it">
+  <texts>
+    <text name="InvalidTenancyName" value="Nome Tenancy non valido!" />
+    <text name="TenancyNameIsAlreadyTaken" value="Nome Tenancy {0} già in uso." />
+    <text name="RoleNameIsAlreadyTaken" value="Il ruolo {0} è già utilizzato." />
+    <text name="RoleDisplayNameIsAlreadyTaken" value="Il nome da visualizzare per il ruolo {0} è già stato utilizzato." />
+    <text name="CanNotDeleteStaticRole" value="Impossibile eliminare un ruolo statico: {0}" />
+    <text name="CanNotRenameAdminUser" value="Impossibile rinominare l'utente {0} perché è un amministratore predefinito!" />
+    <text name="CanNotDeleteAdminUser" value="Impossibile eliminare l'utente {0} perché è un amministratore predefinito!" />
+    <text name="OrganizationUnitDuplicateDisplayNameWarning" value="Esiste già un'organizzazione con il nome {0}. Due Organizzazioni con lo stesso nome a pari livello non possono essere create." />
+  </texts>
+</localizationDictionary>

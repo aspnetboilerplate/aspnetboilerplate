@@ -1,0 +1,31 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<localizationDictionary culture="es">
+  <texts>
+    <text name="Identity.UserAlreadyInRole" value="El usuario ya está en ese rol." />
+    <text name="Identity.UserNotInRole" value="El usuario no está en ese rol." />
+    <text name="Identity.RoleNotFound" value="El rol {0} no existe." />
+    <text name="Identity.PasswordMismatch" value="Contraseña incorrecta." />
+    <text name="Identity.InvalidUserName" value="Nombre de usuario {0} no es válido, solo puede contener letras y dígitos." />
+    <text name="Identity.PasswordTooShort" value="Las contraseñas deben ser al menos {0} caracteres." />
+    <text name="Identity.PropertyTooShort" value="{0} no puede ser nulo o vacío." />
+    <text name="Identity.DuplicateUserName" value="El nombre {0} ya está tomado." />
+    <text name="Identity.UserAlreadyHasPassword" value="El usuario ya tiene una contraseña definida." />
+    <text name="Identity.PasswordRequireNonLetterOrDigit" value="Las contraseñas deben tener al menos un carácter que no sea letra o dígito." />
+    <text name="Identity.UserIdNotFound" value="Id de usuario no encontrado." />
+    <text name="Identity.InvalidToken" value="Token no válido." />
+    <text name="Identity.InvalidEmail" value="Email '{0}' no es válido." />
+    <text name="Identity.UserNameNotFound" value="El usuario {0} no existe." />
+    <text name="Identity.LockoutNotEnabled" value="Bloqueado no está habilitado para este usuario." />
+    <text name="Identity.PasswordRequireUpper" value="Las contraseñas deben tener al menos una mayúscula ('A'-'Z')." />
+    <text name="Identity.PasswordRequireDigit" value="Las contraseñas deben tener al menos un dígito ('0'-'9')." />
+    <text name="Identity.PasswordRequireLower" value="Las contraseñas deben tener al menos una minúscula ('a'-'z')." />
+    <text name="Identity.DuplicateEmail" value="Email '{0}' ya ha sido tomado." />
+    <text name="Identity.ExternalLoginExists" value="Ya existe un usuario con esa sesión externa." />
+    <text name="Identity.DefaultError" value="Un error desconocido ha sucedido." />
+    <text name="Email">Email</text>
+    <text name="EmailSecurityCodeSubject">Código de seguridad</text>
+    <text name="EmailSecurityCodeBody">Su código de seguridad es: {0}</text>
+    <text name="Sms">Sms</text>
+    <text name="SmsSecurityCodeMessage">Su código de seguridad es: {0}</text>
+  </texts>
+</localizationDictionary>

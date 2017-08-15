@@ -1,0 +1,26 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<localizationDictionary culture="de">
+  <texts>
+    <text name="Identity.UserAlreadyInRole" value="Nutzer bereits in Rolle." />
+    <text name="Identity.UserNotInRole" value="Nutzer nicht in Rolle." />
+    <text name="Identity.RoleNotFound" value="Die Rolle {0} existiert nicht." />
+    <text name="Identity.PasswordMismatch" value="Passwort falsch." />
+    <text name="Identity.InvalidUserName" value="Nutzername {0} ist ungültig, es sind nur Buchstaben und Zahlen erlaubt." />
+    <text name="Identity.PasswordTooShort" value="Passwort muss mindestens {0} Zeichen lang sein." />
+    <text name="Identity.PropertyTooShort" value="{0} darf nicht null oder leer sein." />
+    <text name="Identity.DuplicateUserName" value="Name {0} ist bereits vergeben." />
+    <text name="Identity.UserAlreadyHasPassword" value="Der Nutzer hat bereits ein Passwort" />
+    <text name="Identity.PasswordRequireNonLetterOrDigit" value="Passwort muss mindestens eine Zahl und ein Sonderzeichen enthalten." />
+    <text name="Identity.UserIdNotFound" value="UserId nicht gefunden." />
+    <text name="Identity.InvalidToken" value="Ungültiger Token." />
+    <text name="Identity.InvalidEmail" value="Email '{0}' ist ungültig." />
+    <text name="Identity.UserNameNotFound" value="Nutzer {0} existiert nicht." />
+    <text name="Identity.LockoutNotEnabled" value="Sperre ist für diesen Nutzer nicht erlaubt." />
+    <text name="Identity.PasswordRequireUpper" value="Passwort muss mindestens einen Großbuchstaben enthalten ('A'-'Z')." />
+    <text name="Identity.PasswordRequireDigit" value="Passwort muss muss mindestens eine Zahl enthalten ('0'-'9')." />
+    <text name="Identity.PasswordRequireLower" value="Passwort muss mindestens einen kleinen Buchstaben enthalten ('a'-'z')." />
+    <text name="Identity.DuplicateEmail" value="Email '{0}' ist bereits vergeben." />
+    <text name="Identity.ExternalLoginExists" value="Es gibt bereits einen Benutzer von diesem Login-Provider." />
+    <text name="Identity.DefaultError" value="Ein unbekannter Fehler ist aufgetreten." />
+  </texts>
+</localizationDictionary>
