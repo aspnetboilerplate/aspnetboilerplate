@@ -3,7 +3,7 @@
   <Import Project="..\..\common.props" />
   
   <PropertyGroup>
-    <TargetFramework>net46</TargetFramework>
+    <TargetFramework>net461</TargetFramework>
     <GenerateDocumentationFile>true</GenerateDocumentationFile>
     <AssemblyName>Abp.Web</AssemblyName>
     <PackageId>Abp.Web</PackageId>
@@ -20,8 +20,8 @@
 
   <ItemGroup>
     <EmbeddedResource Include="Web\Localization\AbpWebXmlSource\*.xml" Exclude="bin\**;obj\**;**\*.xproj;packages\**;@(EmbeddedResource)" />
-    <None Include="bin\Release\net46\Abp.Web.pdb">
-      <PackagePath>lib/net46/</PackagePath>
+    <None Include="bin\Release\net461\Abp.Web.pdb">
+      <PackagePath>lib/net461/</PackagePath>
       <Pack>true</Pack>
     </None>
   </ItemGroup>
@@ -30,7 +30,7 @@
     <ProjectReference Include="..\Abp.Web.Common\Abp.Web.Common.csproj" />
   </ItemGroup>
 
-  <ItemGroup Condition=" '$(TargetFramework)' == 'net46' ">
+  <ItemGroup Condition=" '$(TargetFramework)' == 'net461' ">
     <Reference Include="System.Web" />
     <Reference Include="System" />
     <Reference Include="Microsoft.CSharp" />
