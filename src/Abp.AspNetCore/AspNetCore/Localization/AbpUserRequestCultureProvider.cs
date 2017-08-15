@@ -50,7 +50,7 @@ namespace Abp.AspNetCore.Localization
             await settingManager.ChangeSettingForUserAsync(
                 abpSession.ToUserIdentifier(),
                 LocalizationSettingNames.DefaultLanguage,
-                result.Cultures.First()
+                result.Cultures.First().Value
             );
 
             return result;
