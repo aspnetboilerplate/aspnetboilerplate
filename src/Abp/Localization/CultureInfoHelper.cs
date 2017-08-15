@@ -5,6 +5,7 @@ using JetBrains.Annotations;
 
 namespace Abp.Localization
 {
+    //TODO: Remove!
     public static class CultureInfoHelper
     {
         private static readonly ConcurrentDictionary<string, CultureInfoCacheEntry> Cache = new ConcurrentDictionary<string, CultureInfoCacheEntry>();

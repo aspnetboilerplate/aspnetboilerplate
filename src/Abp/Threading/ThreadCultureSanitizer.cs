@@ -1,5 +1,4 @@
-﻿using Abp.Localization;
-using System.Globalization;
+﻿using System.Globalization;
 using System.Threading;
 
 namespace Abp.Threading
@@ -29,14 +28,9 @@ namespace Abp.Threading
                 return;
             }
 
-#if NET46
             var thread = Thread.CurrentThread;
             CultureInfo.CurrentCulture = CultureInfo.GetCultureInfo(thread.CurrentCulture.Name);
             CultureInfo.CurrentUICulture = CultureInfo.GetCultureInfo(thread.CurrentUICulture.Name);
-#else
-            CultureInfo.CurrentCulture = CultureInfoHelper.Get(CultureInfo.CurrentCulture.Name);
-            CultureInfo.CurrentUICulture = CultureInfoHelper.Get(CultureInfo.CurrentUICulture.Name);
-#endif
         }
     }
 }

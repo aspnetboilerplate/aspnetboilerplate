@@ -1,6 +1,4 @@
-﻿#if NET46
-using System.Net.Mail;
-#endif
+﻿using System.Net.Mail;
 using System.Threading.Tasks;
 
 namespace Abp.Net.Mail
@@ -30,7 +28,6 @@ namespace Abp.Net.Mail
         /// </summary>
         void Send(string from, string to, string subject, string body, bool isBodyHtml = true);
 
-#if NET46
         /// <summary>
         /// Sends an email.
         /// </summary>
@@ -50,6 +47,5 @@ namespace Abp.Net.Mail
         /// If true, it sets sender address/name if it's not set before and makes mail encoding UTF-8. 
         /// </param>
         Task SendAsync(MailMessage mail, bool normalize = true);
-#endif
     }
 }

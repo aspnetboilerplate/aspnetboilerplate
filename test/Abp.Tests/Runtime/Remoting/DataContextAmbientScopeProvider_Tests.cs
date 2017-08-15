@@ -13,12 +13,8 @@ namespace Abp.Tests.Runtime.Remoting
         public void Test_Sync()
         {
             var scopeAccessor = new DataContextAmbientScopeProvider<TestData>(
-#if NET46
-                new CallContextAmbientDataContext()
-#else
                 new AsyncLocalAmbientDataContext()
-#endif
-                );
+            );
 
             scopeAccessor.GetValue(ContextKey).ShouldBeNull();
 
@@ -41,12 +37,8 @@ namespace Abp.Tests.Runtime.Remoting
         public async Task Test_Async()
         {
             var scopeAccessor = new DataContextAmbientScopeProvider<TestData>(
-#if NET46
-                new CallContextAmbientDataContext()
-#else
                 new AsyncLocalAmbientDataContext()
-#endif
-                );
+            );
 
             scopeAccessor.GetValue(ContextKey).ShouldBeNull();
 
