@@ -13,9 +13,8 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="Abp.TestBase" Version="2.3.0" />
     <PackageReference Include="Castle.Windsor.MsDependencyInjection" Version="2.1.1" />
-    <PackageReference Include="Microsoft.NET.Test.Sdk" Version="15.0.0" />
+    <PackageReference Include="Microsoft.NET.Test.Sdk" Version="15.3.0" />
     <PackageReference Include="xunit" Version="2.2.0" />
     <PackageReference Include="xunit.extensibility.execution" Version="2.2.0" />
     <PackageReference Include="xunit.runner.visualstudio" Version="2.2.0" />
@@ -24,12 +23,13 @@
     <PackageReference Include="NSubstitute" Version="2.0.3" />
   </ItemGroup>
 
-  <ItemGroup Condition=" '$(TargetFramework)' == 'net461' ">
+  <ItemGroup>
     <Reference Include="System" />
     <Reference Include="Microsoft.CSharp" />
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\..\src\Abp.TestBase\Abp.TestBase.csproj" />
     <ProjectReference Include="..\Abp.Zero.SampleApp.EntityFrameworkCore\Abp.Zero.SampleApp.EntityFrameworkCore.csproj" />
   </ItemGroup>
 

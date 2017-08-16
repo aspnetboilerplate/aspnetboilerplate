@@ -1,18 +1,18 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <TargetFramework>netcoreapp1.0</TargetFramework>
+    <TargetFramework>netcoreapp2.0</TargetFramework>
     <RootNamespace>Abp</RootNamespace>
   </PropertyGroup>
 
   <ItemGroup>
     <ProjectReference Include="..\..\src\Abp.ZeroCore.IdentityServer4.EntityFrameworkCore\Abp.ZeroCore.IdentityServer4.EntityFrameworkCore.csproj" />
     <ProjectReference Include="..\Abp.ZeroCore.Tests\Abp.ZeroCore.Tests.csproj" />
+    <ProjectReference Include="..\..\src\Abp.TestBase\Abp.TestBase.csproj" />
   </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Include="Abp.TestBase" Version="2.3.0" />
-    <PackageReference Include="Microsoft.NET.Test.Sdk" Version="15.0.0" />
+    <PackageReference Include="Microsoft.NET.Test.Sdk" Version="15.3.0" />
     <PackageReference Include="Castle.Windsor.MsDependencyInjection" Version="2.1.1" />
     <PackageReference Include="xunit" Version="2.2.0" />
     <PackageReference Include="xunit.extensibility.execution" Version="2.2.0" />

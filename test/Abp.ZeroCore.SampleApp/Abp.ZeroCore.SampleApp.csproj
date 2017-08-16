@@ -1,23 +1,23 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <TargetFramework>netcoreapp1.0</TargetFramework>
+    <TargetFramework>netcoreapp2.0</TargetFramework>
     <RootNamespace>Abp.ZeroCore.SampleApp</RootNamespace>
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="Abp.AutoMapper" Version="2.3.0" />
     <PackageReference Include="Castle.Windsor.MsDependencyInjection" Version="2.1.1" />
-    <PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer" Version="1.1.2" />
-    <PackageReference Include="Microsoft.EntityFrameworkCore.Tools" Version="1.1.1" />
-    <PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="1.1.2" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer" Version="2.0.0" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore.Tools" Version="2.0.0" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="2.0.0" />
   </ItemGroup>
 
   <ItemGroup>
-    <DotNetCliToolReference Include="Microsoft.EntityFrameworkCore.Tools.DotNet" Version="1.0.0" />
+    <DotNetCliToolReference Include="Microsoft.EntityFrameworkCore.Tools.DotNet" Version="2.0.0" />
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\..\src\Abp.AutoMapper\Abp.AutoMapper.csproj" />
     <ProjectReference Include="..\..\src\Abp.ZeroCore.IdentityServer4.EntityFrameworkCore\Abp.ZeroCore.IdentityServer4.EntityFrameworkCore.csproj" />
   </ItemGroup>
   

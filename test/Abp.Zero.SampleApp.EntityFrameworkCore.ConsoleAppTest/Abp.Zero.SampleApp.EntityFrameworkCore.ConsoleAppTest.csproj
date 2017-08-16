@@ -12,7 +12,6 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="Abp.Castle.Log4Net" Version="2.3.0" />
     <PackageReference Include="Castle.LoggingFacility.MsLogging" Version="2.1.1" />
     <PackageReference Include="Castle.Windsor.MsDependencyInjection" Version="2.1.1" />
   </ItemGroup>
@@ -24,10 +23,11 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\..\src\Abp.Castle.Log4Net\Abp.Castle.Log4Net.csproj" />
     <ProjectReference Include="..\Abp.Zero.SampleApp.EntityFrameworkCore\Abp.Zero.SampleApp.EntityFrameworkCore.csproj" />
   </ItemGroup>
 
-  <ItemGroup Condition=" '$(TargetFramework)' == 'net461' ">
+  <ItemGroup>
     <Reference Include="System" />
     <Reference Include="Microsoft.CSharp" />
   </ItemGroup>

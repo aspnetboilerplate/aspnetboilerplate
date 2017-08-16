@@ -1,12 +1,13 @@
 ﻿using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Design;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 
 namespace Abp.Zero.SampleApp.EntityFrameworkCore
 {
     /* This class is needed to run "dotnet ef ..." commands from command line on development. Not used anywhere else */
-    public class AbpProjectNameDbContextFactory : IDbContextFactory<AppDbContext>
+    public class AbpProjectNameDbContextFactory : IDesignTimeDbContextFactory<AppDbContext>
     {
-        public AppDbContext Create(DbContextFactoryOptions options)
+        public AppDbContext CreateDbContext(string[] args)
         {
             var builder = new DbContextOptionsBuilder<AppDbContext>();
 
