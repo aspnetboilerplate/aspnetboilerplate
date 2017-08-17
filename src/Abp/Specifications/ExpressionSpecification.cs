@@ -8,7 +8,7 @@ namespace Abp.Specifications
     /// LINQ expression.
     /// </summary>
     /// <typeparam name="T">The type of the object to which the specification is applied.</typeparam>
-    public class ExpressionSpecification<T> : Specification<T>
+    internal sealed class ExpressionSpecification<T> : Specification<T>
     {
         private readonly Expression<Func<T, bool>> _expression;
 

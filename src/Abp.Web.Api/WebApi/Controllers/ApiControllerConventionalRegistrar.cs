@@ -1,7 +1,6 @@
 ﻿using System.Web.Http;
 using Abp.Dependency;
 using Castle.MicroKernel.Registration;
-using System.Reflection;
 
 namespace Abp.WebApi.Controllers
 {
@@ -15,7 +14,6 @@ namespace Abp.WebApi.Controllers
             context.IocManager.IocContainer.Register(
                 Classes.FromAssembly(context.Assembly)
                     .BasedOn<ApiController>()
-                    .If(type => !type.GetTypeInfo().IsGenericTypeDefinition)
                     .LifestyleTransient()
                 );
         }

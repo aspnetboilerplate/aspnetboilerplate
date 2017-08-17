@@ -1,7 +1,6 @@
 using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
-using Abp.Domain.Entities;
 
 namespace Abp.Domain.Uow
 {
@@ -96,21 +95,7 @@ namespace Abp.Domain.Uow
         /// Sets/Changes Tenant's Id for this UOW.
         /// </summary>
         /// <param name="tenantId">The tenant id.</param>
-        /// <returns>A disposable object to restore old TenantId value when you dispose it</returns>
         IDisposable SetTenantId(int? tenantId);
-
-        /// <summary>
-        /// Sets/Changes Tenant's Id for this UOW.
-        /// </summary>
-        /// <param name="tenantId">The tenant id</param>
-        /// <param name="switchMustHaveTenantEnableDisable">
-        /// True to enable/disable <see cref="IMustHaveTenant"/> based on given tenantId.
-        /// Enables <see cref="IMustHaveTenant"/> filter if tenantId is not null.
-        /// Disables <see cref="IMustHaveTenant"/> filter if tenantId is null.
-        /// This value is true for <see cref="SetTenantId(int?)"/> method.
-        /// </param>
-        /// <returns>A disposable object to restore old TenantId value when you dispose it</returns>
-        IDisposable SetTenantId(int? tenantId, bool switchMustHaveTenantEnableDisable);
 
         /// <summary>
         /// Gets Tenant Id for this UOW.

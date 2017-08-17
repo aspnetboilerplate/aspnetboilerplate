@@ -34,9 +34,8 @@ namespace Abp.Web.MultiTenancy
                 return null;
             }
 
-            var hostName = httpContext.Request.Url.Host.RemovePreFix("http://", "https://").RemovePostFix("/");
-            var domainFormat = _multiTenancyConfiguration.DomainFormat.RemovePreFix("http://", "https://").Split(':')[0].RemovePostFix("/");
-            var result = new FormattedStringValueExtracter().Extract(hostName, domainFormat, true);
+            var hostName = httpContext.Request.Url.Host.RemovePreFix("http://", "https://");
+            var result = new FormattedStringValueExtracter().Extract(hostName, _multiTenancyConfiguration.DomainFormat, true);
             if (!result.IsMatch || !result.Matches.Any())
             {
                 return null;

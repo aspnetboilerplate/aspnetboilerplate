@@ -1,7 +1,6 @@
 ﻿using System.Reflection;
 using Abp.AutoMapper;
 using Abp.Modules;
-using Abp.TestBase.SampleApplication.Tests.Uow;
 
 namespace Abp.TestBase.SampleApplication.Tests
 {
@@ -11,8 +10,6 @@ namespace Abp.TestBase.SampleApplication.Tests
         public override void PreInitialize()
         {
             Configuration.Modules.AbpAutoMapper().UseStaticMapper = false;
-
-            Configuration.UnitOfWork.ConventionalUowSelectors.Add(type => type == typeof(MyCustomUowClass));
         }
 
         public override void Initialize()

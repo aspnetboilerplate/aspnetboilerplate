@@ -19,11 +19,11 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <None Include="bin\Release\net46\Abp.HangFire.pdb">
+    <None Update="bin\Release\net46\Abp.HangFire.pdb">
       <PackagePath>lib/net46/</PackagePath>
       <Pack>true</Pack>
     </None>
-    <None Include="bin\Release\netstandard1.6\Abp.HangFire.pdb">
+    <None Update="bin\Release\netstandard1.6\Abp.HangFire.pdb">
       <PackagePath>lib/netstandard1.6/</PackagePath>
       <Pack>true</Pack>
     </None>
@@ -34,7 +34,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Include="Hangfire.Core" Version="1.6.14" />
+    <PackageReference Include="Hangfire.Core" Version="1.6.12" />
   </ItemGroup>
 
   <ItemGroup Condition=" '$(TargetFramework)' == 'net46' ">

@@ -14,19 +14,17 @@ namespace Abp.WebApi.Uow
     public class AbpApiUowFilter : IActionFilter, ITransientDependency
     {
         private readonly IUnitOfWorkManager _unitOfWorkManager;
-        private readonly IAbpWebApiConfiguration _webApiConfiguration;
-        private readonly IUnitOfWorkDefaultOptions _unitOfWorkDefaultOptions;
+        private readonly IAbpWebApiConfiguration _configuration;
 
         public bool AllowMultiple => false;
 
         public AbpApiUowFilter(
             IUnitOfWorkManager unitOfWorkManager,
-            IAbpWebApiConfiguration webApiConfiguration, 
-            IUnitOfWorkDefaultOptions unitOfWorkDefaultOptions)
+            IAbpWebApiConfiguration configuration
+            )
         {
             _unitOfWorkManager = unitOfWorkManager;
-            _webApiConfiguration = webApiConfiguration;
-            _unitOfWorkDefaultOptions = unitOfWorkDefaultOptions;
+            _configuration = configuration;
         }
 
         public async Task<HttpResponseMessage> ExecuteActionFilterAsync(HttpActionContext actionContext, CancellationToken cancellationToken, Func<Task<HttpResponseMessage>> continuation)
@@ -42,8 +40,8 @@ namespace Abp.WebApi.Uow
                 return await continuation();
             }
 
-            var unitOfWorkAttr = _unitOfWorkDefaultOptions.GetUnitOfWorkAttributeOrNull(methodInfo) ??
-                                 _webApiConfiguration.DefaultUnitOfWorkAttribute;
+            var unitOfWorkAttr = UnitOfWorkAttribute.GetUnitOfWorkAttributeOrNull(methodInfo) ??
+                                 _configuration.DefaultUnitOfWorkAttribute;
 
             if (unitOfWorkAttr.IsDisabled)
             {

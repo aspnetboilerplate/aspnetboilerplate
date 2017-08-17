@@ -18,16 +18,12 @@ namespace Abp.Dapper.Tests
         private readonly IDapperRepository<Product> _productDapperRepository;
         private readonly IRepository<Product> _productRepository;
         private readonly IUnitOfWorkManager _unitOfWorkManager;
-        private readonly IRepository<ProductDetail> _productDetailRepository;
-        private readonly IDapperRepository<ProductDetail> _productDetailDapperRepository;
 
         public DapperRepository_Tests()
         {
             _productDapperRepository = Resolve<IDapperRepository<Product>>();
             _productRepository = Resolve<IRepository<Product>>();
             _unitOfWorkManager = Resolve<IUnitOfWorkManager>();
-            _productDetailRepository = Resolve<IRepository<ProductDetail>>();
-            _productDetailDapperRepository = Resolve<IDapperRepository<ProductDetail>>();
         }
 
         [Fact]
@@ -136,12 +132,6 @@ namespace Abp.Dapper.Tests
                     productWithTenant40.TenantId.ShouldBe(AbpSession.TenantId);
                     productWithTenant40.CreatorUserId.ShouldBe(AbpSession.UserId);
                 }
-
-
-                //Second DbContext tests
-                int productDetailId =_productDetailRepository.InsertAndGetId(new ProductDetail("Woman"));
-                _productDetailDapperRepository.Get(productDetailId).ShouldNotBeNull();
-
 
                 uow.Complete();
             }

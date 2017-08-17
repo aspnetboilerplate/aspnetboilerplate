@@ -12,7 +12,7 @@
     abp.ajax = function (userOptions) {
         userOptions = userOptions || {};
 
-        var options = $.extend(true, {}, abp.ajax.defaultOpts, userOptions);
+        var options = $.extend({}, abp.ajax.defaultOpts, userOptions);
         options.success = undefined;
         options.error = undefined;
 
@@ -39,10 +39,7 @@
         defaultOpts: {
             dataType: 'json',
             type: 'POST',
-            contentType: 'application/json',
-            headers: {
-                'X-Requested-With': 'XMLHttpRequest'
-            }
+            contentType: 'application/json'
         },
 
         defaultError: {

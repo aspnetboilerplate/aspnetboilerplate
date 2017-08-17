@@ -1,44 +1,57 @@
-﻿using Abp.Dependency;
+﻿using System;
+using System.Reflection;
+
+using Abp.Configuration.Startup;
+using Abp.Dapper.Repositories;
+using Abp.Dependency;
+using Abp.EntityFramework;
+using Abp.EntityFramework.Uow;
 using Abp.Modules;
-using Abp.Orm;
-using Abp.Reflection.Extensions;
+using Abp.Reflection;
 
 namespace Abp.Dapper
 {
-    [DependsOn(typeof(AbpKernelModule))]
+    [DependsOn(
+        typeof(AbpEntityFrameworkModule),
+        typeof(AbpKernelModule)
+    )]
     public class AbpDapperModule : AbpModule
     {
+        private readonly ITypeFinder _typeFinder;
+
+        public AbpDapperModule(ITypeFinder typeFinder)
+        {
+            _typeFinder = typeFinder;
+        }
+
         public override void PreInitialize()
         {
-#if NET46
-            Configuration.UnitOfWork.IsTransactionScopeAvailable = false;
-#endif
+            Configuration.ReplaceService<IEfTransactionStrategy, DbContextEfTransactionStrategy>(DependencyLifeStyle.Transient);
         }
 
         public override void Initialize()
         {
-            IocManager.RegisterAssemblyByConvention(typeof(AbpDapperModule).GetAssembly());
+            IocManager.RegisterAssemblyByConvention(Assembly.GetExecutingAssembly());
 
-            using (IScopedIocResolver scope = IocManager.CreateScope())
+            RegisterDapperGenericRepositories();
+        }
+
+        private void RegisterDapperGenericRepositories()
+        {
+            Type[] dbContextTypes =
+                _typeFinder.Find(type =>
+                    type.IsPublic &&
+                    !type.IsAbstract &&
+                    type.IsClass &&
+                    typeof(AbpDbContext).IsAssignableFrom(type)
+                );
+
+            using (IDisposableDependencyObjectWrapper<IDapperGenericRepositoryRegistrar> repositoryRegistrar = IocManager.ResolveAsDisposable<IDapperGenericRepositoryRegistrar>())
             {
-                ISecondaryOrmRegistrar[] additionalOrmRegistrars = scope.ResolveAll<ISecondaryOrmRegistrar>();
-
-                foreach (ISecondaryOrmRegistrar registrar in additionalOrmRegistrars)
+                foreach (Type dbContextType in dbContextTypes)
                 {
-                    if (registrar.OrmContextKey == AbpConsts.Orms.EntityFramework)
-                    {
-                        registrar.RegisterRepositories(IocManager, EfBasedDapperAutoRepositoryTypes.Default);
-                    }
-
-                    if (registrar.OrmContextKey == AbpConsts.Orms.NHibernate)
-                    {
-                        registrar.RegisterRepositories(IocManager, NhBasedDapperAutoRepositoryTypes.Default);
-                    }
-
-                    if (registrar.OrmContextKey == AbpConsts.Orms.EntityFrameworkCore)
-                    {
-                        registrar.RegisterRepositories(IocManager, EfBasedDapperAutoRepositoryTypes.Default);
-                    }
+                    Logger.Debug("Registering DbContext: " + dbContextType.AssemblyQualifiedName);
+                    repositoryRegistrar.Object.RegisterForDbContext(dbContextType, IocManager);
                 }
             }
         }

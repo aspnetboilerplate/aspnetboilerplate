@@ -12,17 +12,14 @@ namespace Abp.Web.Mvc.Uow
         public const string UowHttpContextKey = "__AbpUnitOfWork";
 
         private readonly IUnitOfWorkManager _unitOfWorkManager;
-        private readonly IAbpMvcConfiguration _mvcConfiguration;
-        private readonly IUnitOfWorkDefaultOptions _unitOfWorkDefaultOptions;
+        private readonly IAbpMvcConfiguration _configuration;
 
         public AbpMvcUowFilter(
             IUnitOfWorkManager unitOfWorkManager,
-            IAbpMvcConfiguration mvcConfiguration, 
-            IUnitOfWorkDefaultOptions unitOfWorkDefaultOptions)
+            IAbpMvcConfiguration configuration)
         {
             _unitOfWorkManager = unitOfWorkManager;
-            _mvcConfiguration = mvcConfiguration;
-            _unitOfWorkDefaultOptions = unitOfWorkDefaultOptions;
+            _configuration = configuration;
         }
 
         public void OnActionExecuting(ActionExecutingContext filterContext)
@@ -39,8 +36,8 @@ namespace Abp.Web.Mvc.Uow
             }
 
             var unitOfWorkAttr =
-                _unitOfWorkDefaultOptions.GetUnitOfWorkAttributeOrNull(methodInfo) ??
-                _mvcConfiguration.DefaultUnitOfWorkAttribute;
+                UnitOfWorkAttribute.GetUnitOfWorkAttributeOrNull(methodInfo) ??
+                _configuration.DefaultUnitOfWorkAttribute;
 
             if (unitOfWorkAttr.IsDisabled)
             {

@@ -31,7 +31,7 @@ namespace Abp.Configuration
         private readonly ITypedCache<string, Dictionary<string, SettingInfo>> _applicationSettingCache;
         private readonly ITypedCache<int, Dictionary<string, SettingInfo>> _tenantSettingCache;
         private readonly ITypedCache<string, Dictionary<string, SettingInfo>> _userSettingCache;
-
+        
         /// <inheritdoc/>
         public SettingManager(ISettingDefinitionManager settingDefinitionManager, ICacheManager cacheManager)
         {
@@ -58,29 +58,14 @@ namespace Abp.Configuration
             return GetSettingValueInternalAsync(name);
         }
 
-        public Task<string> GetSettingValueForApplicationAsync(string name, bool fallbackToDefault)
-        {
-            return GetSettingValueInternalAsync(name, fallbackToDefault: fallbackToDefault);
-        }
-
         public Task<string> GetSettingValueForTenantAsync(string name, int tenantId)
         {
             return GetSettingValueInternalAsync(name, tenantId);
         }
 
-        public Task<string> GetSettingValueForTenantAsync(string name, int tenantId, bool fallbackToDefault)
-        {
-            return GetSettingValueInternalAsync(name, tenantId, fallbackToDefault: fallbackToDefault);
-        }
-
         public Task<string> GetSettingValueForUserAsync(string name, int? tenantId, long userId)
         {
             return GetSettingValueInternalAsync(name, tenantId, userId);
-        }
-
-        public Task<string> GetSettingValueForUserAsync(string name, int? tenantId, long userId, bool fallbackToDefault)
-        {
-            return GetSettingValueInternalAsync(name, tenantId, userId, fallbackToDefault);
         }
 
         public async Task<IReadOnlyList<ISettingValue>> GetAllSettingValuesAsync()
@@ -225,7 +210,7 @@ namespace Abp.Configuration
 
         #region Private methods
 
-        private async Task<string> GetSettingValueInternalAsync(string name, int? tenantId = null, long? userId = null, bool fallbackToDefault = true)
+        private async Task<string> GetSettingValueInternalAsync(string name, int? tenantId = null, long? userId = null)
         {
             var settingDefinition = _settingDefinitionManager.GetSettingDefinition(name);
 
@@ -236,11 +221,6 @@ namespace Abp.Configuration
                 if (settingValue != null)
                 {
                     return settingValue.Value;
-                }
-
-                if (!fallbackToDefault)
-                {
-                    return null;
                 }
 
                 if (!settingDefinition.IsInherited)
@@ -258,11 +238,6 @@ namespace Abp.Configuration
                     return settingValue.Value;
                 }
 
-                if (!fallbackToDefault)
-                {
-                    return null;
-                }
-
                 if (!settingDefinition.IsInherited)
                 {
                     return settingDefinition.DefaultValue;
@@ -276,11 +251,6 @@ namespace Abp.Configuration
                 if (settingValue != null)
                 {
                     return settingValue.Value;
-                }
-
-                if (!fallbackToDefault)
-                {
-                    return null;
                 }
             }
 

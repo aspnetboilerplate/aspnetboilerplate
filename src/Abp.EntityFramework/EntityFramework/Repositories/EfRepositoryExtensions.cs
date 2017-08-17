@@ -2,7 +2,6 @@ using System;
 using System.Data.Entity;
 using Abp.Domain.Entities;
 using Abp.Domain.Repositories;
-using Abp.Reflection;
 
 namespace Abp.EntityFramework.Repositories
 {
@@ -11,13 +10,13 @@ namespace Abp.EntityFramework.Repositories
         public static DbContext GetDbContext<TEntity, TPrimaryKey>(this IRepository<TEntity, TPrimaryKey> repository)
             where TEntity : class, IEntity<TPrimaryKey>
         {
-            var repositoryWithDbContext = ProxyHelper.UnProxy(repository) as IRepositoryWithDbContext;
-            if (repositoryWithDbContext != null)
+            var repositoryWithDbContext = repository as IRepositoryWithDbContext;
+            if (repositoryWithDbContext == null)
             {
-                return repositoryWithDbContext.GetDbContext();
+                throw new ArgumentException("Given repository does not implement IRepositoryWithDbContext", nameof(repository));
             }
 
-            throw new ArgumentException("Given repository does not implement IRepositoryWithDbContext", nameof(repository));
+            return repositoryWithDbContext.GetDbContext();
         }
 
         public static void DetachFromDbContext<TEntity, TPrimaryKey>(this IRepository<TEntity, TPrimaryKey> repository, TEntity entity)

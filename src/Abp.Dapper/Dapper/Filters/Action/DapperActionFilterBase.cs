@@ -1,5 +1,6 @@
 ﻿using System;
 using System.ComponentModel.DataAnnotations.Schema;
+using System.Data.Entity.Core.Objects;
 using System.Reflection;
 
 using Abp.Domain.Entities;
@@ -38,7 +39,7 @@ namespace Abp.Dapper.Filters.Action
             var entity = entityAsObj as IEntity<Guid>;
             if (entity != null && entity.Id == Guid.Empty)
             {
-                Type entityType = entityAsObj.GetType();
+                Type entityType = ObjectContext.GetObjectType(entityAsObj.GetType());
                 PropertyInfo idProperty = entityType.GetProperty("Id");
                 var dbGeneratedAttr = ReflectionHelper.GetSingleAttributeOrDefault<DatabaseGeneratedAttribute>(idProperty);
                 if (dbGeneratedAttr == null || dbGeneratedAttr.DatabaseGeneratedOption == DatabaseGeneratedOption.None)

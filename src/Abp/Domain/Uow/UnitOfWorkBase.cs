@@ -5,7 +5,6 @@ using System.Linq;
 using System.Threading.Tasks;
 using Abp.Extensions;
 using Abp.Runtime.Session;
-using Abp.Utils.Etc;
 using Castle.Core;
 
 namespace Abp.Domain.Uow
@@ -111,7 +110,7 @@ namespace Abp.Domain.Uow
 
             SetFilters(options.FilterOverrides);
 
-            SetTenantId(AbpSession.TenantId, false);
+            SetTenantId(AbpSession.TenantId);
 
             BeginUow();
         }
@@ -203,28 +202,14 @@ namespace Abp.Domain.Uow
             });
         }
 
-        public virtual IDisposable SetTenantId(int? tenantId)
-        {
-            return SetTenantId(tenantId, true);
-        }
-
-        public virtual IDisposable SetTenantId(int? tenantId, bool switchMustHaveTenantEnableDisable)
+        public IDisposable SetTenantId(int? tenantId)
         {
             var oldTenantId = _tenantId;
             _tenantId = tenantId;
 
-
-            IDisposable mustHaveTenantEnableChange;
-            if (switchMustHaveTenantEnableDisable)
-            {
-                mustHaveTenantEnableChange = tenantId == null
-                    ? DisableFilter(AbpDataFilters.MustHaveTenant)
-                    : EnableFilter(AbpDataFilters.MustHaveTenant);
-            }
-            else
-            {
-                mustHaveTenantEnableChange = NullDisposable.Instance;
-            }
+            var mustHaveTenantEnableChange = tenantId == null
+                ? DisableFilter(AbpDataFilters.MustHaveTenant)
+                : EnableFilter(AbpDataFilters.MustHaveTenant);
 
             var mayHaveTenantChange = SetFilterParameter(AbpDataFilters.MayHaveTenant, AbpDataFilters.Parameters.TenantId, tenantId);
             var mustHaveTenantChange = SetFilterParameter(AbpDataFilters.MustHaveTenant, AbpDataFilters.Parameters.TenantId, tenantId ?? 0);

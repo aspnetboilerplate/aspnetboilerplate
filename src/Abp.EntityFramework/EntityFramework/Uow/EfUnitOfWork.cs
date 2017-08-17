@@ -60,10 +60,7 @@ namespace Abp.EntityFramework.Uow
 
         public override void SaveChanges()
         {
-            foreach (var dbContext in GetAllActiveDbContexts())
-            {
-                SaveChangesInDbContext(dbContext);
-            }
+            GetAllActiveDbContexts().ForEach(SaveChangesInDbContext);
         }
 
         public override async Task SaveChangesAsync()

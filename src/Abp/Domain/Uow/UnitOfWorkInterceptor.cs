@@ -1,5 +1,3 @@
-using System;
-using System.Reflection;
 using System.Threading.Tasks;
 using Abp.Threading;
 using Castle.DynamicProxy;
@@ -12,12 +10,10 @@ namespace Abp.Domain.Uow
     internal class UnitOfWorkInterceptor : IInterceptor
     {
         private readonly IUnitOfWorkManager _unitOfWorkManager;
-        private readonly IUnitOfWorkDefaultOptions _unitOfWorkOptions;
 
-        public UnitOfWorkInterceptor(IUnitOfWorkManager unitOfWorkManager, IUnitOfWorkDefaultOptions unitOfWorkOptions)
+        public UnitOfWorkInterceptor(IUnitOfWorkManager unitOfWorkManager)
         {
             _unitOfWorkManager = unitOfWorkManager;
-            _unitOfWorkOptions = unitOfWorkOptions;
         }
 
         /// <summary>
@@ -26,17 +22,7 @@ namespace Abp.Domain.Uow
         /// <param name="invocation">Method invocation arguments</param>
         public void Intercept(IInvocation invocation)
         {
-            MethodInfo method;
-            try
-            {
-                method = invocation.MethodInvocationTarget;
-            }
-            catch
-            {
-                method = invocation.GetConcreteMethod();
-            }
-
-            var unitOfWorkAttr = _unitOfWorkOptions.GetUnitOfWorkAttributeOrNull(method);
+            var unitOfWorkAttr = UnitOfWorkAttribute.GetUnitOfWorkAttributeOrNull(invocation.MethodInvocationTarget);
             if (unitOfWorkAttr == null || unitOfWorkAttr.IsDisabled)
             {
                 //No need to a uow

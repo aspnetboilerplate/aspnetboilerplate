@@ -2,10 +2,10 @@ using System;
 using System.Collections.Generic;
 using System.Collections.Immutable;
 using System.Globalization;
+using System.Threading;
 using Abp.Configuration.Startup;
 using Abp.Dependency;
 using Abp.Extensions;
-using Castle.Core.Logging;
 
 namespace Abp.Localization.Dictionaries
 {
@@ -18,13 +18,13 @@ namespace Abp.Localization.Dictionaries
         /// <summary>
         /// Unique Name of the source.
         /// </summary>
-        public string Name { get; }
+        public string Name { get; private set; }
 
-        public ILocalizationDictionaryProvider DictionaryProvider { get; }
+        public ILocalizationDictionaryProvider DictionaryProvider { get { return _dictionaryProvider; } }
 
         protected ILocalizationConfiguration LocalizationConfiguration { get; private set; }
 
-        private ILogger _logger;
+        private readonly ILocalizationDictionaryProvider _dictionaryProvider;
 
         /// <summary>
         /// 
@@ -33,22 +33,25 @@ namespace Abp.Localization.Dictionaries
         /// <param name="dictionaryProvider"></param>
         public DictionaryBasedLocalizationSource(string name, ILocalizationDictionaryProvider dictionaryProvider)
         {
-            Check.NotNullOrEmpty(name, nameof(name));
-            Check.NotNull(dictionaryProvider, nameof(dictionaryProvider));
+            if (name.IsNullOrEmpty())
+            {
+                throw new ArgumentNullException("name");
+            }
 
             Name = name;
-            DictionaryProvider = dictionaryProvider;
+
+            if (dictionaryProvider == null)
+            {
+                throw new ArgumentNullException("dictionaryProvider");
+            }
+
+            _dictionaryProvider = dictionaryProvider;
         }
 
         /// <inheritdoc/>
         public virtual void Initialize(ILocalizationConfiguration configuration, IIocResolver iocResolver)
         {
             LocalizationConfiguration = configuration;
-
-            _logger = iocResolver.IsRegistered(typeof(ILoggerFactory))
-                ? iocResolver.Resolve<ILoggerFactory>().Create(typeof(DictionaryBasedLocalizationSource))
-                : NullLogger.Instance;
-
             DictionaryProvider.Initialize(Name);
         }
 
@@ -193,13 +196,7 @@ namespace Abp.Localization.Dictionaries
 
         protected virtual string ReturnGivenNameOrThrowException(string name, CultureInfo culture)
         {
-            return LocalizationSourceHelper.ReturnGivenNameOrThrowException(
-                LocalizationConfiguration,
-                Name,
-                name,
-                culture,
-                _logger
-            );
+            return LocalizationSourceHelper.ReturnGivenNameOrThrowException(LocalizationConfiguration, Name, name, culture);
         }
 
         private static string GetBaseCultureName(string cultureName)

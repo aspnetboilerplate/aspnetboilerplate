@@ -9,7 +9,6 @@ namespace Abp.Dapper.Tests.Mappings
         public ProductMap()
         {
             Table("Products");
-            Map(x => x.Id).Key(KeyType.Identity);
             AutoMap();
         }
     }

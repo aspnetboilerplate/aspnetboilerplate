@@ -1,7 +1,5 @@
 ﻿using System;
-
-using Abp.Domain.Repositories;
-
+using Abp.EntityFramework;
 using JetBrains.Annotations;
 
 namespace Abp.Dapper

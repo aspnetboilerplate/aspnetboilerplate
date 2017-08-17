@@ -51,25 +51,12 @@ namespace Abp.Reflection
 
             attributeList.AddRange(memberInfo.GetCustomAttributes(inherit));
 
+            //Add attributes on the class
             if (memberInfo.DeclaringType != null)
             {
                 attributeList.AddRange(memberInfo.DeclaringType.GetTypeInfo().GetCustomAttributes(inherit));
             }
 
-            return attributeList;
-        }
-
-        /// <summary>
-        /// Gets a list of attributes defined for a class member and type including inherited attributes.
-        /// </summary>
-        /// <param name="memberInfo">MemberInfo</param>
-        /// <param name="type">Type</param>
-        /// <param name="inherit">Inherit attribute from base classes</param>
-        public static List<object> GetAttributesOfMemberAndType(MemberInfo memberInfo, Type type, bool inherit = true)
-        {
-            var attributeList = new List<object>();
-            attributeList.AddRange(memberInfo.GetCustomAttributes(inherit));
-            attributeList.AddRange(type.GetTypeInfo().GetCustomAttributes(inherit));
             return attributeList;
         }
 
@@ -84,39 +71,16 @@ namespace Abp.Reflection
         {
             var attributeList = new List<TAttribute>();
 
+            //Add attributes on the member
             if (memberInfo.IsDefined(typeof(TAttribute), inherit))
             {
                 attributeList.AddRange(memberInfo.GetCustomAttributes(typeof(TAttribute), inherit).Cast<TAttribute>());
             }
 
+            //Add attributes on the class
             if (memberInfo.DeclaringType != null && memberInfo.DeclaringType.GetTypeInfo().IsDefined(typeof(TAttribute), inherit))
             {
                 attributeList.AddRange(memberInfo.DeclaringType.GetTypeInfo().GetCustomAttributes(typeof(TAttribute), inherit).Cast<TAttribute>());
-            }
-
-            return attributeList;
-        }
-
-        /// <summary>
-        /// Gets a list of attributes defined for a class member and type including inherited attributes.
-        /// </summary>
-        /// <typeparam name="TAttribute">Type of the attribute</typeparam>
-        /// <param name="memberInfo">MemberInfo</param>
-        /// <param name="type">Type</param>
-        /// <param name="inherit">Inherit attribute from base classes</param>
-        public static List<TAttribute> GetAttributesOfMemberAndType<TAttribute>(MemberInfo memberInfo, Type type, bool inherit = true)
-            where TAttribute : Attribute
-        {
-            var attributeList = new List<TAttribute>();
-
-            if (memberInfo.IsDefined(typeof(TAttribute), inherit))
-            {
-                attributeList.AddRange(memberInfo.GetCustomAttributes(typeof(TAttribute), inherit).Cast<TAttribute>());
-            }
-
-            if (type.GetTypeInfo().IsDefined(typeof(TAttribute), inherit))
-            {
-                attributeList.AddRange(type.GetTypeInfo().GetCustomAttributes(typeof(TAttribute), inherit).Cast<TAttribute>());
             }
 
             return attributeList;
@@ -131,11 +95,21 @@ namespace Abp.Reflection
         /// <param name="defaultValue">Default value (null as default)</param>
         /// <param name="inherit">Inherit attribute from base classes</param>
         public static TAttribute GetSingleAttributeOfMemberOrDeclaringTypeOrDefault<TAttribute>(MemberInfo memberInfo, TAttribute defaultValue = default(TAttribute), bool inherit = true)
-            where TAttribute : class
+            where TAttribute : Attribute
         {
-            return memberInfo.GetCustomAttributes(true).OfType<TAttribute>().FirstOrDefault()
-                   ?? memberInfo.DeclaringType?.GetTypeInfo().GetCustomAttributes(true).OfType<TAttribute>().FirstOrDefault()
-                   ?? defaultValue;
+            //Get attribute on the member
+            if (memberInfo.IsDefined(typeof(TAttribute), inherit))
+            {
+                return memberInfo.GetCustomAttributes(typeof(TAttribute), inherit).Cast<TAttribute>().First();
+            }
+
+            //Get attribute from class
+            if (memberInfo.DeclaringType != null && memberInfo.DeclaringType.GetTypeInfo().IsDefined(typeof(TAttribute), inherit))
+            {
+                return memberInfo.DeclaringType.GetTypeInfo().GetCustomAttributes(typeof(TAttribute), inherit).Cast<TAttribute>().First();
+            }
+
+            return defaultValue;
         }
 
         /// <summary>

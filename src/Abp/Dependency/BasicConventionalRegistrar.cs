@@ -1,5 +1,4 @@
-﻿using System.Reflection;
-using Castle.DynamicProxy;
+﻿using Castle.DynamicProxy;
 using Castle.MicroKernel.Registration;
 
 namespace Abp.Dependency
@@ -16,7 +15,6 @@ namespace Abp.Dependency
                 Classes.FromAssembly(context.Assembly)
                     .IncludeNonPublicTypes()
                     .BasedOn<ITransientDependency>()
-                    .If(type => !type.GetTypeInfo().IsGenericTypeDefinition)
                     .WithService.Self()
                     .WithService.DefaultInterfaces()
                     .LifestyleTransient()
@@ -27,7 +25,6 @@ namespace Abp.Dependency
                 Classes.FromAssembly(context.Assembly)
                     .IncludeNonPublicTypes()
                     .BasedOn<ISingletonDependency>()
-                    .If(type => !type.GetTypeInfo().IsGenericTypeDefinition)
                     .WithService.Self()
                     .WithService.DefaultInterfaces()
                     .LifestyleSingleton()
@@ -38,7 +35,6 @@ namespace Abp.Dependency
                 Classes.FromAssembly(context.Assembly)
                     .IncludeNonPublicTypes()
                     .BasedOn<IInterceptor>()
-                    .If(type => !type.GetTypeInfo().IsGenericTypeDefinition)
                     .WithService.Self()
                     .LifestyleTransient()
                 );

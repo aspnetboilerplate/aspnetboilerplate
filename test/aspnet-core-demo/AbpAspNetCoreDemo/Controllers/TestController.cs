@@ -1,5 +1,4 @@
-﻿using System.ComponentModel.DataAnnotations;
-using Abp.Collections.Extensions;
+﻿using Abp.Collections.Extensions;
 using Microsoft.AspNetCore.Mvc;
 
 namespace AbpAspNetCoreDemo.Controllers
@@ -25,31 +24,10 @@ namespace AbpAspNetCoreDemo.Controllers
         {
             return "42!";
         }
-
-        [HttpPost]
-        public JsonResult GetJsonValueWithEnum([FromBody] ValidationTestArgument2 arg2)
-        {
-            return Json(new ValidationTestArgument2
-            {
-                Value = arg2.Value
-            });
-        }
     }
 
     public class TestGetArrayModel
     {
         public string[] Names { get; set; }
-    }
-
-    public class ValidationTestArgument2
-    {
-        [EnumDataType(typeof(ValidationTestEnum))]
-        public ValidationTestEnum Value { get; set; }
-    }
-
-    public enum ValidationTestEnum
-    {
-        Value1 = 1,
-        Value2 = 2
     }
 }

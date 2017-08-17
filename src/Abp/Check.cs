@@ -22,17 +22,6 @@ namespace Abp
         }
 
         [ContractAnnotation("value:null => halt")]
-        public static string NotNullOrEmpty(string value, [InvokerParameterName] [NotNull] string parameterName)
-        {
-            if (value.IsNullOrEmpty())
-            {
-                throw new ArgumentException($"{parameterName} can not be null or empty!", parameterName);
-            }
-
-            return value;
-        }
-
-        [ContractAnnotation("value:null => halt")]
         public static string NotNullOrWhiteSpace(string value, [InvokerParameterName] [NotNull] string parameterName)
         {
             if (value.IsNullOrWhiteSpace())

@@ -1,11 +1,11 @@
-﻿using System;
+﻿using System.Globalization;
 using System.Linq;
 using Abp.AspNetCore.EmbeddedResources;
 using Abp.AspNetCore.Localization;
+using Abp.AspNetCore.Mvc.Views;
 using Abp.Dependency;
 using Abp.Localization;
 using Castle.LoggingFacility.MsLogging;
-using JetBrains.Annotations;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Localization;
 using Microsoft.Extensions.DependencyInjection;
@@ -13,36 +13,20 @@ using Microsoft.Extensions.Logging;
 
 namespace Abp.AspNetCore
 {
-	public static class AbpApplicationBuilderExtensions
+    public static class AbpApplicationBuilderExtensions
     {
         public static void UseAbp(this IApplicationBuilder app)
         {
-            app.UseAbp(null);
+            AddCastleLoggerFactory(app);
+
+            InitializeAbp(app);
+
+            ConfigureRequestLocalization(app);
         }
 
-	    public static void UseAbp([NotNull] this IApplicationBuilder app, Action<AbpApplicationBuilderOptions> optionsAction)
-	    {
-		    Check.NotNull(app, nameof(app));
-
-	        var options = new AbpApplicationBuilderOptions();
-            optionsAction?.Invoke(options);
-
-            if (options.UseCastleLoggerFactory)
-		    {
-			    app.UseCastleLoggerFactory();
-			}
-
-			InitializeAbp(app);
-
-		    if (options.UseAbpRequestLocalization)
-		    {
-                //TODO: This should be added later than authorization middleware!
-			    app.UseAbpRequestLocalization();
-		    }
-	    }
-
-		public static void UseEmbeddedFiles(this IApplicationBuilder app)
+        public static void UseEmbeddedFiles(this IApplicationBuilder app)
         {
+            //TODO: Can improve it or create a custom middleware?
             app.UseStaticFiles(
                 new StaticFileOptions
                 {
@@ -59,7 +43,7 @@ namespace Abp.AspNetCore
             abpBootstrapper.Initialize();
         }
 
-        public static void UseCastleLoggerFactory(this IApplicationBuilder app)
+        private static void AddCastleLoggerFactory(IApplicationBuilder app)
         {
             var castleLoggerFactory = app.ApplicationServices.GetService<Castle.Core.Logging.ILoggerFactory>();
             if (castleLoggerFactory == null)
@@ -72,35 +56,35 @@ namespace Abp.AspNetCore
                 .AddCastleLogger(castleLoggerFactory);
         }
 
-        public static void UseAbpRequestLocalization(this IApplicationBuilder app, Action<RequestLocalizationOptions> optionsAction = null)
+        private static void ConfigureRequestLocalization(IApplicationBuilder app)
         {
             var iocResolver = app.ApplicationServices.GetRequiredService<IIocResolver>();
             using (var languageManager = iocResolver.ResolveAsDisposable<ILanguageManager>())
             {
+                var defaultLanguage = languageManager.Object
+                    .GetLanguages()
+                    .FirstOrDefault(l => l.IsDefault);
+
+                if (defaultLanguage == null)
+                {
+                    return;
+                }
+
                 var supportedCultures = languageManager.Object
                     .GetLanguages()
                     .Select(l => CultureInfoHelper.Get(l.Name))
                     .ToArray();
 
+                var defaultCulture = new RequestCulture(defaultLanguage.Name);
+
                 var options = new RequestLocalizationOptions
                 {
+                    DefaultRequestCulture = defaultCulture,
                     SupportedCultures = supportedCultures,
                     SupportedUICultures = supportedCultures
                 };
 
-                var userProvider = new AbpUserRequestCultureProvider();
-                
-                //0: QueryStringRequestCultureProvider
-                options.RequestCultureProviders.Insert(1, userProvider);
-                options.RequestCultureProviders.Insert(2, new AbpLocalizationHeaderRequestCultureProvider());
-                //3: CookieRequestCultureProvider
-                options.RequestCultureProviders.Insert(4, new AbpDefaultRequestCultureProvider());
-                //5: AcceptLanguageHeaderRequestCultureProvider
-
-                optionsAction?.Invoke(options);
-
-                userProvider.CookieProvider = options.RequestCultureProviders.OfType<CookieRequestCultureProvider>().FirstOrDefault();
-                userProvider.HeaderProvider = options.RequestCultureProviders.OfType<AbpLocalizationHeaderRequestCultureProvider>().FirstOrDefault();
+                options.RequestCultureProviders.Insert(0, new AbpLocalizationHeaderRequestCultureProvider());
 
                 app.UseRequestLocalization(options);
             }

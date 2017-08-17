@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Reflection;
 using System.Threading.Tasks;
 using System.Linq;
@@ -51,15 +50,18 @@ namespace Abp.Authorization
             }
         }
 
-        public async Task AuthorizeAsync(MethodInfo methodInfo, Type type)
+        public async Task AuthorizeAsync(MethodInfo methodInfo)
         {
-            await CheckFeatures(methodInfo, type);
-            await CheckPermissions(methodInfo, type);
+            await CheckFeatures(methodInfo);
+            await CheckPermissions(methodInfo);
         }
 
-        private async Task CheckFeatures(MethodInfo methodInfo, Type type)
+        private async Task CheckFeatures(MethodInfo methodInfo)
         {
-            var featureAttributes = ReflectionHelper.GetAttributesOfMemberAndType<RequiresFeatureAttribute>(methodInfo, type);
+            var featureAttributes =
+                ReflectionHelper.GetAttributesOfMemberAndDeclaringType<RequiresFeatureAttribute>(
+                    methodInfo
+                    );
 
             if (featureAttributes.Count <= 0)
             {
@@ -72,23 +74,22 @@ namespace Abp.Authorization
             }
         }
 
-        private async Task CheckPermissions(MethodInfo methodInfo, Type type)
+        private async Task CheckPermissions(MethodInfo methodInfo)
         {
             if (!_authConfiguration.IsEnabled)
             {
                 return;
             }
 
-            if (AllowAnonymous(methodInfo, type))
+            if (AllowAnonymous(methodInfo))
             {
                 return;
             }
 
             var authorizeAttributes =
-                ReflectionHelper
-                    .GetAttributesOfMemberAndType(methodInfo, type)
-                    .OfType<IAbpAuthorizeAttribute>()
-                    .ToArray();
+                ReflectionHelper.GetAttributesOfMemberAndDeclaringType(
+                    methodInfo
+                ).OfType<IAbpAuthorizeAttribute>().ToArray();
 
             if (!authorizeAttributes.Any())
             {
@@ -98,12 +99,10 @@ namespace Abp.Authorization
             await AuthorizeAsync(authorizeAttributes);
         }
 
-        private static bool AllowAnonymous(MemberInfo methodInfo, Type type)
+        private static bool AllowAnonymous(MethodInfo methodInfo)
         {
-            return ReflectionHelper
-                .GetAttributesOfMemberAndType(methodInfo, type)
-                .OfType<IAbpAllowAnonymousAttribute>()
-                .Any();
+            return ReflectionHelper.GetAttributesOfMemberAndDeclaringType(methodInfo)
+                .OfType<IAbpAllowAnonymousAttribute>().Any();
         }
     }
 }

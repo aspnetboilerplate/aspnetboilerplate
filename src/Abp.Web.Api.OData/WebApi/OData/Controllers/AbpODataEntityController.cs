@@ -65,7 +65,7 @@ namespace Abp.WebApi.OData.Controllers
             }
             
             var dbLookup = await Repository.GetAsync(key);
-            if (dbLookup == null)
+            if (entity == null)
             {
                 return NotFound();
             }

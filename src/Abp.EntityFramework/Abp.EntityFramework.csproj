@@ -19,7 +19,7 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <None Include="bin\Release\net46\Abp.EntityFramework.pdb">
+    <None Update="bin\Release\net46\Abp.EntityFramework.pdb">
       <PackagePath>lib/net46/</PackagePath>
       <Pack>true</Pack>
     </None>
@@ -32,7 +32,7 @@
 
   <ItemGroup>
     <PackageReference Include="EntityFramework" Version="6.1.3" />
-    <PackageReference Include="EntityFramework.DynamicFilters" Version="2.10.0" />
+    <PackageReference Include="EntityFramework.DynamicFilters" Version="2.6.0" />
   </ItemGroup>
 
   <ItemGroup Condition=" '$(TargetFramework)' == 'net46' ">

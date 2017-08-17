@@ -23,7 +23,7 @@ namespace Abp.Runtime.Session
                     return OverridedValue.UserId;
                 }
 
-                var userIdClaim = PrincipalAccessor.Principal?.Claims.FirstOrDefault(c => c.Type == AbpClaimTypes.UserId);
+                var userIdClaim = PrincipalAccessor.Principal?.Claims.FirstOrDefault(c => c.Type == ClaimTypes.NameIdentifier);
                 if (string.IsNullOrEmpty(userIdClaim?.Value))
                 {
                     return null;

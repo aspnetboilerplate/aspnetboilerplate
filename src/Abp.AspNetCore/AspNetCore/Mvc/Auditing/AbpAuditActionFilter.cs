@@ -32,7 +32,6 @@ namespace Abp.AspNetCore.Mvc.Auditing
             using (AbpCrossCuttingConcerns.Applying(context.Controller, AbpCrossCuttingConcerns.Auditing))
             {
                 var auditInfo = _auditingHelper.CreateAuditInfo(
-                    context.ActionDescriptor.AsControllerActionDescriptor().ControllerTypeInfo.AsType(),
                     context.ActionDescriptor.AsControllerActionDescriptor().MethodInfo,
                     context.ActionArguments
                 );

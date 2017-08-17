@@ -1,22 +1,28 @@
-﻿using System.Globalization;
+﻿using System;
+using System.Globalization;
 using System.Linq;
 using System.Text;
+using System.Threading;
 using Abp.Dependency;
 using Abp.Json;
 using Abp.Localization;
+using Abp.Runtime.Caching;
 
 namespace Abp.Web.Localization
 {
     internal class LocalizationScriptManager : ILocalizationScriptManager, ISingletonDependency
     {
         private readonly ILocalizationManager _localizationManager;
+        private readonly ICacheManager _cacheManager;
         private readonly ILanguageManager _languageManager;
 
         public LocalizationScriptManager(
-            ILocalizationManager localizationManager,
+            ILocalizationManager localizationManager, 
+            ICacheManager cacheManager,
             ILanguageManager languageManager)
         {
             _localizationManager = localizationManager;
+            _cacheManager = cacheManager;
             _languageManager = languageManager;
         }
 
@@ -58,8 +64,7 @@ namespace Abp.Web.Localization
                 script.AppendLine("        name: '" + language.Name + "',");
                 script.AppendLine("        displayName: '" + language.DisplayName + "',");
                 script.AppendLine("        icon: '" + language.Icon + "',");
-                script.AppendLine("        isDisabled: " + language.IsDisabled.ToString().ToLowerInvariant() + ",");
-                script.AppendLine("        isDefault: " + language.IsDefault.ToString().ToLowerInvariant());
+                script.AppendLine("        isDefault: " + language.IsDefault.ToString().ToLower());
                 script.Append("    }");
 
                 if (i < languages.Count - 1)
@@ -78,8 +83,7 @@ namespace Abp.Web.Localization
                 script.AppendLine("        name: '" + currentLanguage.Name + "',");
                 script.AppendLine("        displayName: '" + currentLanguage.DisplayName + "',");
                 script.AppendLine("        icon: '" + currentLanguage.Icon + "',");
-                script.AppendLine("        isDisabled: " + currentLanguage.IsDisabled.ToString().ToLowerInvariant() + ",");
-                script.AppendLine("        isDefault: " + currentLanguage.IsDefault.ToString().ToLowerInvariant());
+                script.AppendLine("        isDefault: " + currentLanguage.IsDefault.ToString().ToLower());
                 script.AppendLine("    };");
             }
 

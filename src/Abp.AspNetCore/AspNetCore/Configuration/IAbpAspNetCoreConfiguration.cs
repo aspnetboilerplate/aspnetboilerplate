@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Reflection;
-using Abp.AspNetCore.Mvc.Results.Caching;
 using Abp.Domain.Uow;
 using Abp.Web.Models;
 
@@ -10,8 +9,6 @@ namespace Abp.AspNetCore.Configuration
     public interface IAbpAspNetCoreConfiguration
     {
         WrapResultAttribute DefaultWrapResultAttribute { get; }
-
-        IClientCacheAttribute DefaultClientCacheAttribute { get; set; }
 
         UnitOfWorkAttribute DefaultUnitOfWorkAttribute { get; }
 
