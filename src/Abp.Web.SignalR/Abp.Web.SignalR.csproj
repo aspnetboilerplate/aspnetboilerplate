@@ -36,7 +36,6 @@
   <ItemGroup>
     <Reference Include="System" />
     <Reference Include="Microsoft.CSharp" />
-    <Reference Include="Microsoft.CSharp" />
   </ItemGroup>
 
 </Project>
