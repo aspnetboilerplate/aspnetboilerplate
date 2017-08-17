@@ -24,9 +24,11 @@ namespace Abp.IdentityServer4
         public AbpResourceOwnerPasswordValidator(
             UserManager<TUser> userManager,
             SignInManager<TUser> signInManager,
-            ILogger<ResourceOwnerPasswordValidator<TUser>> logger
-        )
-            : base(userManager, signInManager, logger)
+            ILogger<ResourceOwnerPasswordValidator<TUser>> logger)
+            : base(
+                  userManager, 
+                  signInManager, 
+                  logger)
         {
             UserManager = userManager;
             SignInManager = signInManager;
