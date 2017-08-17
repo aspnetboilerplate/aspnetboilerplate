@@ -85,7 +85,8 @@ namespace Abp.AspNetCore.TestBase
         }
 
         #endregion
-        
+
+
         #region Resolve
 
         /// <summary>

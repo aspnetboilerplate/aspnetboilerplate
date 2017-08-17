@@ -1,7 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Data.Common;
+using System.Data.Entity.Infrastructure.Interception;
 using System.Threading.Tasks;
+
+using Abp.EntityFramework.Interceptors;
 using Abp.TestBase.SampleApplication.ContacLists;
 using Abp.TestBase.SampleApplication.Crm;
 using Abp.TestBase.SampleApplication.EntityFramework;

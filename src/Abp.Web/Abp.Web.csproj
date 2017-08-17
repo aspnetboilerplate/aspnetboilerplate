@@ -20,7 +20,7 @@
 
   <ItemGroup>
     <EmbeddedResource Include="Web\Localization\AbpWebXmlSource\*.xml" Exclude="bin\**;obj\**;**\*.xproj;packages\**;@(EmbeddedResource)" />
-    <None Include="bin\Release\net46\Abp.Web.pdb">
+    <None Update="bin\Release\net46\Abp.Web.pdb">
       <PackagePath>lib/net46/</PackagePath>
       <Pack>true</Pack>
     </None>

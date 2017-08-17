@@ -29,29 +29,24 @@ namespace Abp.Reflection
             return obj != null && obj.GetType() == typeof(Func<TReturn>);
         }
 
-        public static bool IsPrimitiveExtendedIncludingNullable(Type type, bool includeEnums = false)
+        public static bool IsPrimitiveExtendedIncludingNullable(Type type)
         {
-            if (IsPrimitiveExtended(type, includeEnums))
+            if (IsPrimitiveExtended(type))
             {
                 return true;
             }
 
             if (type.GetTypeInfo().IsGenericType && type.GetGenericTypeDefinition() == typeof(Nullable<>))
             {
-                return IsPrimitiveExtended(type.GenericTypeArguments[0], includeEnums);
+                return IsPrimitiveExtended(type.GenericTypeArguments[0]);
             }
 
             return false;
         }
 
-        private static bool IsPrimitiveExtended(Type type, bool includeEnums)
+        private static bool IsPrimitiveExtended(Type type)
         {
             if (type.GetTypeInfo().IsPrimitive)
-            {
-                return true;
-            }
-
-            if (includeEnums && type.GetTypeInfo().IsEnum)
             {
                 return true;
             }

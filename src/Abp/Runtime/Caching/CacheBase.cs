@@ -1,6 +1,5 @@
 using System;
 using System.Threading.Tasks;
-using Castle.Core.Logging;
 using Nito.AsyncEx;
 
 namespace Abp.Runtime.Caching
@@ -11,8 +10,6 @@ namespace Abp.Runtime.Caching
     /// </summary>
     public abstract class CacheBase : ICache
     {
-        public ILogger Logger { get; set; }
-
         public string Name { get; }
 
         public TimeSpan DefaultSlidingExpireTime { get; set; }
@@ -31,53 +28,26 @@ namespace Abp.Runtime.Caching
         {
             Name = name;
             DefaultSlidingExpireTime = TimeSpan.FromHours(1);
-
-            Logger = NullLogger.Instance;
         }
 
         public virtual object Get(string key, Func<string, object> factory)
         {
-            object item = null;
-
-            try
-            {
-                item = GetOrDefault(key);
-            }
-            catch (Exception ex)
-            {
-                Logger.Error(ex.ToString(), ex);
-            }
-
+            var cacheKey = key;
+            var item = GetOrDefault(key);
             if (item == null)
             {
                 lock (SyncObj)
                 {
-                    try
-                    {
-                        item = GetOrDefault(key);
-                    }
-                    catch (Exception ex)
-                    {
-                        Logger.Error(ex.ToString(), ex);
-                    }
-
+                    item = GetOrDefault(key);
                     if (item == null)
                     {
                         item = factory(key);
-
                         if (item == null)
                         {
                             return null;
                         }
 
-                        try
-                        {
-                            Set(key, item);
-                        }
-                        catch (Exception ex)
-                        {
-                            Logger.Error(ex.ToString(), ex);
-                        }
+                        Set(cacheKey, item);
                     }
                 }
             }
@@ -87,47 +57,22 @@ namespace Abp.Runtime.Caching
 
         public virtual async Task<object> GetAsync(string key, Func<string, Task<object>> factory)
         {
-            object item = null;
-
-            try
-            {
-                item = await GetOrDefaultAsync(key);
-            }
-            catch (Exception ex)
-            {
-                Logger.Error(ex.ToString(), ex);
-            }
-
+            var cacheKey = key;
+            var item = await GetOrDefaultAsync(key);
             if (item == null)
             {
                 using (await _asyncLock.LockAsync())
                 {
-                    try
-                    {
-                        item = await GetOrDefaultAsync(key);
-                    }
-                    catch (Exception ex)
-                    {
-                        Logger.Error(ex.ToString(), ex);
-                    }
-
+                    item = await GetOrDefaultAsync(key);
                     if (item == null)
                     {
                         item = await factory(key);
-
                         if (item == null)
                         {
                             return null;
                         }
 
-                        try
-                        {
-                            await SetAsync(key, item);
-                        }
-                        catch (Exception ex)
-                        {
-                            Logger.Error(ex.ToString(), ex);
-                        }
+                        await SetAsync(cacheKey, item);
                     }
                 }
             }

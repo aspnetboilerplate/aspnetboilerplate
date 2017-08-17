@@ -77,7 +77,7 @@ namespace Abp.Domain.Uow
             //Inherit tenant from outer UOW
             if (outerUow != null)
             {
-                uow.SetTenantId(outerUow.GetTenantId(), false);
+                uow.SetTenantId(outerUow.GetTenantId());
             }
 
             _currentUnitOfWorkProvider.Current = uow;

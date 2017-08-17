@@ -1,4 +1,3 @@
-using System;
 using System.Collections.Generic;
 using System.Reflection;
 using System.Threading.Tasks;
@@ -9,12 +8,10 @@ namespace Abp.Auditing
     {
         bool ShouldSaveAudit(MethodInfo methodInfo, bool defaultValue = false);
 
-        AuditInfo CreateAuditInfo(Type type, MethodInfo method, object[] arguments);
-
-        AuditInfo CreateAuditInfo(Type type, MethodInfo method, IDictionary<string, object> arguments);
+        AuditInfo CreateAuditInfo(MethodInfo method, object[] arguments);
+        AuditInfo CreateAuditInfo(MethodInfo method, IDictionary<string, object> arguments);
 
         void Save(AuditInfo auditInfo);
-
         Task SaveAsync(AuditInfo auditInfo);
     }
 }

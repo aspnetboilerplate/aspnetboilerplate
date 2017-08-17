@@ -1,11 +1,12 @@
+using JetBrains.Annotations;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Filters;
 
 namespace Abp.AspNetCore.Mvc.Results.Wrapping
 {
-    public class AbpActionResultWrapperFactory : IAbpActionResultWrapperFactory
+    public static class AbpActionResultWrapperFactory
     {
-        public IAbpActionResultWrapper CreateFor(ResultExecutingContext actionResult)
+        public static IAbpActionResultWrapper CreateFor([NotNull] ResultExecutingContext actionResult)
         {
             Check.NotNull(actionResult, nameof(actionResult));
 

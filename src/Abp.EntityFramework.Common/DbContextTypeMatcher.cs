@@ -4,7 +4,6 @@ using System.Linq;
 using System.Reflection;
 using Abp.Collections.Extensions;
 using Abp.Dependency;
-using Abp.Domain.Repositories;
 using Abp.Domain.Uow;
 using Abp.MultiTenancy;
 

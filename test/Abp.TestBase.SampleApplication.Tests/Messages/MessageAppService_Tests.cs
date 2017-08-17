@@ -98,8 +98,6 @@ namespace Abp.TestBase.SampleApplication.Tests.Messages
         [Fact]
         public async Task Should_Get_All_Messages_With_Filtering_Async()
         {
-            AbpSession.UserId = 42;
-
             //Act
 
             var messages = await _asyncMessageAppService.GetAll(new PagedAndSortedResultRequestDto());

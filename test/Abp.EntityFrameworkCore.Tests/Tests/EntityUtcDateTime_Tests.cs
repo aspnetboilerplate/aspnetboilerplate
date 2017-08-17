@@ -1,7 +1,6 @@
 ﻿using System;
 using Abp.Domain.Repositories;
 using Abp.EntityFrameworkCore.Tests.Domain;
-using Abp.Timing;
 using Shouldly;
 using Xunit;
 
@@ -19,8 +18,6 @@ namespace Abp.EntityFrameworkCore.Tests.Tests
         [Fact]
         public void DateTimes_Should_Be_UTC()
         {
-            Clock.Kind.ShouldBe(DateTimeKind.Utc);
-
             //Act
 
             var blogs = _blogRepository.GetAllList();

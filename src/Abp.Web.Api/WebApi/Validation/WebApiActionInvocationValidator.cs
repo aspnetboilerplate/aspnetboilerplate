@@ -22,22 +22,15 @@ namespace Abp.WebApi.Validation
 
         public void Initialize(HttpActionContext actionContext, MethodInfo methodInfo)
         {
-            ActionContext = actionContext;
-
-            SetDataAnnotationAttributeErrors();
-
             base.Initialize(
                 methodInfo,
                 GetParameterValues(actionContext, methodInfo)
             );
+
+            ActionContext = actionContext;
         }
 
         protected override void SetDataAnnotationAttributeErrors(object validatingObject)
-        {
-            SetDataAnnotationAttributeErrors();
-        }
-
-        protected virtual void SetDataAnnotationAttributeErrors()
         {
             if (_isValidatedBefore || ActionContext.ModelState.IsValid)
             {
@@ -48,7 +41,7 @@ namespace Abp.WebApi.Validation
             {
                 foreach (var error in state.Value.Errors)
                 {
-                    ValidationErrors.Add(new ValidationResult(error.ErrorMessage, new[] {state.Key}));
+                    ValidationErrors.Add(new ValidationResult(error.ErrorMessage, new[] { state.Key }));
                 }
             }
 

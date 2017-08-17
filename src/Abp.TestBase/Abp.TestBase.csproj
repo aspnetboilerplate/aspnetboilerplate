@@ -19,11 +19,11 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <None Include="bin\Release\net46\Abp.TestBase.pdb">
+    <None Update="bin\Release\net46\Abp.TestBase.pdb">
       <PackagePath>lib/net46/</PackagePath>
       <Pack>true</Pack>
     </None>
-    <None Include="bin\Release\netstandard1.6\Abp.TestBase.pdb">
+    <None Update="bin\Release\netstandard1.6\Abp.TestBase.pdb">
       <PackagePath>lib/netstandard1.6/</PackagePath>
       <Pack>true</Pack>
     </None>

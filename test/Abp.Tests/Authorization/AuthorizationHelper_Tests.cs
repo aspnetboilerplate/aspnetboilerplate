@@ -33,13 +33,11 @@ namespace Abp.Tests.Authorization
         public async Task NotAuthorizedMethodsCanBeCalledAnonymously()
         {
             await _authorizeHelper.AuthorizeAsync(
-                typeof(MyNonAuthorizedClass).GetTypeInfo().GetMethod(nameof(MyNonAuthorizedClass.Test_NotAuthorized)),
-                typeof(MyNonAuthorizedClass)
+                typeof(MyNonAuthorizedClass).GetTypeInfo().GetMethod(nameof(MyNonAuthorizedClass.Test_NotAuthorized))
                 );
 
             await _authorizeHelper.AuthorizeAsync(
-                typeof(MyAuthorizedClass).GetTypeInfo().GetMethod(nameof(MyAuthorizedClass.Test_NotAuthorized)),
-                typeof(MyAuthorizedClass)
+                typeof(MyAuthorizedClass).GetTypeInfo().GetMethod(nameof(MyAuthorizedClass.Test_NotAuthorized))
             );
         }
 
@@ -49,16 +47,14 @@ namespace Abp.Tests.Authorization
             await Assert.ThrowsAsync<AbpAuthorizationException>(async () =>
             {
                 await _authorizeHelper.AuthorizeAsync(
-                    typeof(MyNonAuthorizedClass).GetTypeInfo().GetMethod(nameof(MyNonAuthorizedClass.Test_Authorized)),
-                    typeof(MyNonAuthorizedClass)
+                    typeof(MyNonAuthorizedClass).GetTypeInfo().GetMethod(nameof(MyNonAuthorizedClass.Test_Authorized))
                 );
             });
 
             await Assert.ThrowsAsync<AbpAuthorizationException>(async () =>
             {
                 await _authorizeHelper.AuthorizeAsync(
-                    typeof(MyAuthorizedClass).GetTypeInfo().GetMethod(nameof(MyAuthorizedClass.Test_Authorized)),
-                    typeof(MyAuthorizedClass)
+                    typeof(MyAuthorizedClass).GetTypeInfo().GetMethod(nameof(MyAuthorizedClass.Test_Authorized))
                 );
             });
         }

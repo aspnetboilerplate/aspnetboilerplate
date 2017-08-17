@@ -12,6 +12,8 @@ namespace Abp.Application.Navigation
 {
     internal class UserNavigationManager : IUserNavigationManager, ITransientDependency
     {
+        public IPermissionChecker PermissionChecker { get; set; }
+
         public IAbpSession AbpSession { get; set; }
 
         private readonly INavigationManager _navigationManager;
@@ -26,6 +28,7 @@ namespace Abp.Application.Navigation
             _navigationManager = navigationManager;
             _localizationContext = localizationContext;
             _iocResolver = iocResolver;
+            PermissionChecker = NullPermissionChecker.Instance;
             AbpSession = NullAbpSession.Instance;
         }
 
@@ -60,14 +63,10 @@ namespace Abp.Application.Navigation
 
             var addedMenuItemCount = 0;
 
-            using (var scope = _iocResolver.CreateScope())
+            using (var featureDependencyContext = _iocResolver.ResolveAsDisposable<FeatureDependencyContext>())
             {
-                var permissionDependencyContext = scope.Resolve<PermissionDependencyContext>();
-                permissionDependencyContext.User = user;
+                featureDependencyContext.Object.TenantId = user == null ? null : user.TenantId;
 
-                var featureDependencyContext = scope.Resolve<FeatureDependencyContext>();
-                featureDependencyContext.TenantId = user == null ? null : user.TenantId;
-                
                 foreach (var menuItemDefinition in menuItemDefinitions)
                 {
                     if (menuItemDefinition.RequiresAuthentication && user == null)
@@ -75,24 +74,14 @@ namespace Abp.Application.Navigation
                         continue;
                     }
 
-                    if (!string.IsNullOrEmpty(menuItemDefinition.RequiredPermissionName))
-                    {
-                        var permissionDependency = new SimplePermissionDependency(menuItemDefinition.RequiredPermissionName);
-                        if (user == null || !(await permissionDependency.IsSatisfiedAsync(permissionDependencyContext)))
-                        {
-                            continue;
-                        }
-                    }
-
-                    if (menuItemDefinition.PermissionDependency != null &&
-                        (user == null || !(await menuItemDefinition.PermissionDependency.IsSatisfiedAsync(permissionDependencyContext))))
+                    if (!string.IsNullOrEmpty(menuItemDefinition.RequiredPermissionName) && (user == null || !(await PermissionChecker.IsGrantedAsync(user, menuItemDefinition.RequiredPermissionName))))
                     {
                         continue;
                     }
 
                     if (menuItemDefinition.FeatureDependency != null &&
                         (AbpSession.MultiTenancySide == MultiTenancySides.Tenant || (user != null && user.TenantId != null)) &&
-                        !(await menuItemDefinition.FeatureDependency.IsSatisfiedAsync(featureDependencyContext)))
+                        !(await menuItemDefinition.FeatureDependency.IsSatisfiedAsync(featureDependencyContext.Object)))
                     {
                         continue;
                     }

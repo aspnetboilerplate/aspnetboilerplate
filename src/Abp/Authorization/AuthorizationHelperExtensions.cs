@@ -1,4 +1,3 @@
-using System;
 using System.Collections.Generic;
 using System.Reflection;
 using System.Threading.Tasks;
@@ -23,9 +22,9 @@ namespace Abp.Authorization
             authorizationHelper.Authorize(new[] { authorizeAttribute });
         }
 
-        public static void Authorize(this IAuthorizationHelper authorizationHelper, MethodInfo methodInfo, Type type)
+        public static void Authorize(this IAuthorizationHelper authorizationHelper, MethodInfo methodInfo)
         {
-            AsyncHelper.RunSync(() => authorizationHelper.AuthorizeAsync(methodInfo, type));
+            AsyncHelper.RunSync(() => authorizationHelper.AuthorizeAsync(methodInfo));
         }
     }
 }

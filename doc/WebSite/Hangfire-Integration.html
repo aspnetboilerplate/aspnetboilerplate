@@ -66,7 +66,7 @@
 			also configure our web module to replace Hangfire for ABP's default 
 			background job manager:</p>
 <pre lang="cs">
-<strong>[DependsOn(typeof (AbpHangfireAspNetCoreModule))]</strong>
+<strong>[DependsOn(typeof (AbpHangfireModule))]</strong>
 public class MyProjectWebModule : AbpModule
 {
     public override void PreInitialize()
@@ -77,7 +77,7 @@ public class MyProjectWebModule : AbpModule
     //...
 }</pre>
 
-			<p>We added <strong>AbpHangfireAspNetCoreModule</strong> as a dependency and used 
+			<p>We added <strong>AbpHangfireModule</strong> as a dependency and used 
 	Configuration.BackgroundJobs.<strong>UseHangfire</strong> method to replace 
 			Hangfire for ABP's default background job manager.</p>
 			<p>Hangfire requires 

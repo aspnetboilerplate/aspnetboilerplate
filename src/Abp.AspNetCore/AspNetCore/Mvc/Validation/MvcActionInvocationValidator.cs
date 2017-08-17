@@ -22,22 +22,15 @@ namespace Abp.AspNetCore.Mvc.Validation
 
         public void Initialize(ActionExecutingContext actionContext)
         {
-            ActionContext = actionContext;
-
-            SetDataAnnotationAttributeErrors();
-
             base.Initialize(
                 actionContext.ActionDescriptor.GetMethodInfo(),
                 GetParameterValues(actionContext)
             );
-        }
-        
-        protected override void SetDataAnnotationAttributeErrors(object validatingObject)
-        {
-            SetDataAnnotationAttributeErrors();
+
+            ActionContext = actionContext;
         }
 
-        protected virtual void SetDataAnnotationAttributeErrors()
+        protected override void SetDataAnnotationAttributeErrors(object validatingObject)
         {
             if (_isValidatedBefore || ActionContext.ModelState.IsValid)
             {

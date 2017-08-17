@@ -19,7 +19,7 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <None Include="bin\Release\net46\Abp.Web.Api.OData.pdb">
+    <None Update="bin\Release\net46\Abp.Web.Api.OData.pdb">
       <PackagePath>lib/net46/</PackagePath>
       <Pack>true</Pack>
     </None>

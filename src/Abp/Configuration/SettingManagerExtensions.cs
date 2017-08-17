@@ -129,21 +129,6 @@ namespace Abp.Configuration
         }
 
         /// <summary>
-        /// Gets current value of a setting for a user level.
-        /// It gets the setting value, overwritten by given tenant and user.
-        /// </summary>
-        /// <param name="settingManager">Setting manager</param>
-        /// <param name="name">Unique name of the setting</param>
-        /// <param name="tenantId">Tenant id</param>
-        /// <param name="userId">User id</param>
-        /// <param name="fallbackToDefault"></param>
-        /// <returns>Current value of the setting for the user</returns>
-        public static string GetSettingValueForUser(this ISettingManager settingManager, string name, int? tenantId, long userId, bool fallbackToDefault)
-        {
-            return AsyncHelper.RunSync(() => settingManager.GetSettingValueForUserAsync(name, tenantId, userId, fallbackToDefault));
-        }
-
-        /// <summary>
         /// Gets value of a setting.
         /// </summary>
         /// <typeparam name="T">Type of the setting to get</typeparam>
