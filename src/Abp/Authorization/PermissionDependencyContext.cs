@@ -2,7 +2,7 @@ using Abp.Dependency;
 
 namespace Abp.Authorization
 {
-    internal class PermissionDependencyContext : IPermissionDependencyContext, ITransientDependency
+    public class PermissionDependencyContext : IPermissionDependencyContext, ITransientDependency
     {
         public UserIdentifier User { get; set; }
 

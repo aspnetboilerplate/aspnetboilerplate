@@ -1,23 +1,26 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations.Schema;
-using Abp.Domain.Entities;
 using Abp.Domain.Entities.Auditing;
+using Abp.MultiTenancy;
 
 namespace Abp.TestBase.SampleApplication.Crm
 {
     [Table("Companies")]
-    public class Company : Entity, IHasCreationTime
+    [MultiTenancySide(MultiTenancySides.Host)]
+    public class Company : AuditedEntity
     {
         public string Name { get; set; }
 
-        public DateTime CreationTime { get; set; }
+        public virtual Address ShippingAddress { get; set; }
 
-        public Address ShippingAddress { get; set; }
-
-        public Address BillingAddress { get; set; }
+        public virtual Address BillingAddress { get; set; }
 
         [ForeignKey("CompanyId")]
         public virtual ICollection<Branch> Branches { get; set; }
+
+        public Company()
+        {
+            
+        }
     }
 }

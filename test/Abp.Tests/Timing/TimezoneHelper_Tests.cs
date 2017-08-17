@@ -22,6 +22,7 @@ namespace Abp.Tests.Timing
         [InlineData("Jordan Standard Time", "Asia/Amman")]
         [InlineData("South Africa Standard Time", "Africa/Johannesburg")]
         [InlineData("Mauritius Standard Time", "Indian/Mauritius")]
+        [InlineData("Malay Peninsula Standard Time", "Asia/Kuala_Lumpur")]
         public void Windows_Timezone_Id_To_Iana_Tests(string windowsTimezoneId, string ianaTimezoneId)
         {
             TimezoneHelper.WindowsToIana(windowsTimezoneId).ShouldBe(ianaTimezoneId);

@@ -30,7 +30,7 @@ namespace Abp.Auditing
                 return;
             }
 
-            var auditInfo = _auditingHelper.CreateAuditInfo(invocation.MethodInvocationTarget, invocation.Arguments);
+            var auditInfo = _auditingHelper.CreateAuditInfo(invocation.TargetType, invocation.MethodInvocationTarget, invocation.Arguments);
 
             if (AsyncHelper.IsAsyncMethod(invocation.Method))
             {

@@ -11,29 +11,6 @@ namespace Abp.TestBase.SampleApplication.EntityFramework
     public class SecondDbContext : AbpDbContext
     {
         public virtual IDbSet<SecondDbContextEntity> SecondDbContextEntities { get; set; }
-
-        public SecondDbContext()
-        {
-
-        }
-
-        public SecondDbContext(string nameOrConnectionString)
-            : base(nameOrConnectionString)
-        {
-
-        }
-
-        public SecondDbContext(DbConnection connection)
-            : base(connection, false)
-        {
-
-        }
-
-        public SecondDbContext(DbConnection connection, bool contextOwnsConnection)
-            : base(connection, contextOwnsConnection)
-        {
-
-        }
     }
 
     public class SecondDbContextEntity : Entity

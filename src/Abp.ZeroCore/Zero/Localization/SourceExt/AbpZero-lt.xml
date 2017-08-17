@@ -1,0 +1,10 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<localizationDictionary culture="lt">
+  <texts>
+    <text name="Email">El. paštas</text>
+    <text name="EmailSecurityCodeSubject">AbpZeroTemplate Saugumo Kodas</text>
+    <text name="EmailSecurityCodeBody">Jūsų saugumo kodas: {0}</text>
+    <text name="Sms">Sms</text>
+    <text name="SmsSecurityCodeMessage">Jusu saugumo kodas: {0}</text>
+  </texts>
+</localizationDictionary>

@@ -12,18 +12,18 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <None Update="bin\Release\net46\Abp.HangFire.AspNetCore.pdb">
+    <None Include="bin\Release\net46\Abp.HangFire.AspNetCore.pdb">
       <PackagePath>lib/net46/</PackagePath>
       <Pack>true</Pack>
     </None>
-    <None Update="bin\Release\netstandard1.6\Abp.HangFire.AspNetCore.pdb">
+    <None Include="bin\Release\netstandard1.6\Abp.HangFire.AspNetCore.pdb">
       <PackagePath>lib/netstandard1.6/</PackagePath>
       <Pack>true</Pack>
     </None>
   </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Include="Hangfire.AspNetCore" Version="1.6.12" />
+    <PackageReference Include="Hangfire.AspNetCore" Version="1.6.14" />
   </ItemGroup>
 
   <ItemGroup Condition=" '$(TargetFramework)' == 'net46' ">

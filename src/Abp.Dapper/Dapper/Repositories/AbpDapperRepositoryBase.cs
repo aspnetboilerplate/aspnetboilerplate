@@ -3,7 +3,11 @@ using System.Collections.Generic;
 using System.Linq.Expressions;
 using System.Threading.Tasks;
 
+using Abp.Dependency;
 using Abp.Domain.Entities;
+using Abp.Domain.Uow;
+using Abp.MultiTenancy;
+using Abp.Reflection.Extensions;
 
 namespace Abp.Dapper.Repositories
 {
@@ -16,6 +20,17 @@ namespace Abp.Dapper.Repositories
     /// <seealso cref="IDapperRepository{TEntity,TPrimaryKey}" />
     public abstract class AbpDapperRepositoryBase<TEntity, TPrimaryKey> : IDapperRepository<TEntity, TPrimaryKey> where TEntity : class, IEntity<TPrimaryKey>
     {
+        public static MultiTenancySides? MultiTenancySide { get; private set; }
+
+        static AbpDapperRepositoryBase()
+        {
+            var attr = typeof(TEntity).GetSingleAttributeOfTypeOrBaseTypesOrNull<MultiTenancySideAttribute>();
+            if (attr != null)
+            {
+                MultiTenancySide = attr.Side;
+            }
+        }
+
         public abstract TEntity Single(TPrimaryKey id);
 
         public abstract IEnumerable<TEntity> GetAll();
@@ -42,6 +57,13 @@ namespace Abp.Dapper.Repositories
         public virtual Task<IEnumerable<TAny>> QueryAsync<TAny>(string query, object parameters = null) where TAny : class
         {
             return Task.FromResult(Query<TAny>(query, parameters));
+        }
+
+        public abstract int Execute(string query, object parameters = null);
+        
+        public virtual Task<int> ExecuteAsync(string query, object parameters = null)
+        {
+            return Task.FromResult(Execute(query, parameters));
         }
 
         public abstract IEnumerable<TEntity> GetAll(Expression<Func<TEntity, bool>> predicate);

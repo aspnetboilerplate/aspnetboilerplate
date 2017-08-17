@@ -19,22 +19,22 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <None Update="bin\Release\net46\Abp.RedisCache.pdb">
+    <None Include="bin\Release\net46\Abp.RedisCache.pdb">
       <PackagePath>lib/net46/</PackagePath>
       <Pack>true</Pack>
     </None>
-    <None Update="bin\Release\netstandard1.6\Abp.RedisCache.pdb">
+    <None Include="bin\Release\netstandard1.6\Abp.RedisCache.pdb">
       <PackagePath>lib/netstandard1.6/</PackagePath>
       <Pack>true</Pack>
     </None>
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\Abp\Abp.csproj" />
+    <PackageReference Include="StackExchange.Redis.StrongName" Version="1.2.6" />
   </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Include="StackExchange.Redis" Version="1.2.1" />
+    <ProjectReference Include="..\Abp\Abp.csproj" />
   </ItemGroup>
 
   <ItemGroup Condition=" '$(TargetFramework)' == 'net46' ">

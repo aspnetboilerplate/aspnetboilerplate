@@ -14,23 +14,9 @@
 		<div class="document-contents">
 
 			<h3 id="DocIntroduction">Introduction</h3>
-			<p>If an application requires login, it also needs to know the 
-			<strong>current user</strong> 
-performing operations. While ASP.NET itself provides Session objects in the 
-presentation layer, ASP.NET Boilerplate provides <strong>IAbpSession</strong> 
+			<p>ASP.NET Boilerplate provides <strong>IAbpSession</strong> 
 			interface to obtain current user and tenant <strong>without</strong> 
-			using ASP.NET's Session.</p>
-
-			<div class="bs-callout bs-callout-warning">
-				<h4>About IAbpSession</h4>
-				<p>IAbpSession
-interface must be implemented in order to get actual session informations. While you can 
-implement it in your own way, it's fully implemented in <strong>
-				<a href="Zero/Overall.html">module-zero</a></strong> 
-project.</p>
-			</div>
-
-			<p>IAbpSession is also fully integrated and used by other structures in ASP.NET 
+			using ASP.NET's Session. IAbpSession is also fully integrated and used by other structures in ASP.NET 
 Boilerplate (<a href="Setting-Management.html">setting</a> system and 
 			<a href="Authorization.html">authorization</a> system for instance).</p>
 
@@ -88,6 +74,15 @@ you're sure there is a current user, you can call GetUserId(). If current user
 is null, this method throws exception. GetTenantId() is also similar.</p>
 			<p>Impersonator properties are not common as other properties and generally used 
 for <a href="/Pages/Documents/Audit-Logging">audit logging</a> purposes.</p>
+
+			<div class="bs-callout bs-callout-warning">
+				<p><strong>ClaimsAbpSession</strong></p>
+				<p>ClaimsAbpSession is the <strong>default implementation</strong> 
+				of IAbpSession interface. It gets session properties (except MultiTenancySide, 
+				it's calculated) from claims of current user's princical. For a 
+				cookie based form authentication, it gets from cookies. Thus, 
+				it' well integrated to ASP.NET's authentication mechanism.</p>
+			</div>
 
 		<h3>Overriding Current Session Values</h3>
 		<p>In some specific cases, you may need to change/override session 

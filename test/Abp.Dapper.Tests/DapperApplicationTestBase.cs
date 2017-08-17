@@ -1,7 +1,7 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Data.Common;
 using System.Data.SqlClient;
+using System.Data.SQLite;
 using System.IO;
 using System.Reflection;
 
@@ -16,17 +16,11 @@ namespace Abp.Dapper.Tests
 {
     public abstract class DapperApplicationTestBase : AbpIntegratedTestBase<AbpDapperTestModule>
     {
-        private readonly string _connectionString;
-        private readonly object _lockObject = new object();
-
         protected DapperApplicationTestBase()
         {
             Resolve<IMultiTenancyConfig>().IsEnabled = true;
-            string executable = AppDomain.CurrentDomain.BaseDirectory;
-            string path = Path.GetDirectoryName(Path.GetDirectoryName(Path.GetDirectoryName(executable))) + @"\Db\AbpDapperTest.mdf";
-            _connectionString = $@"Data Source=(localdb)\MsSqlLocalDb;Integrated Security=SSPI;AttachDBFilename={path}";
 
-            Resolve<IAbpStartupConfiguration>().DefaultNameOrConnectionString = _connectionString;
+            Resolve<IAbpStartupConfiguration>().DefaultNameOrConnectionString = "Data Source=:memory:";
 
             AbpSession.UserId = 1;
             AbpSession.TenantId = 1;
@@ -40,8 +34,8 @@ namespace Abp.Dapper.Tests
                 Component.For<DbConnection>()
                          .UsingFactoryMethod(() =>
                          {
-                             var connection = new SqlConnection(_connectionString);
-
+                             var connection = new SQLiteConnection(Resolve<IAbpStartupConfiguration>().DefaultNameOrConnectionString);
+                             connection.Open();
                              var files = new List<string>
                              {
                                  ReadScriptFile("CreateInitialTables")

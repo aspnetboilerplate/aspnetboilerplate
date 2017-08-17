@@ -54,6 +54,8 @@
 
             isDefault: boolean;
 
+            isDisabled: boolean;
+
         }
 
         interface ILocalizationSource {

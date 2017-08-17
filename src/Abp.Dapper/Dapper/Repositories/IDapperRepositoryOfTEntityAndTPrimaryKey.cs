@@ -227,6 +227,21 @@ namespace Abp.Dapper.Repositories
         Task<IEnumerable<TAny>> QueryAsync<TAny>([NotNull] string query, [CanBeNull] object parameters = null) where TAny : class;
 
         /// <summary>
+        ///     Executes the given query text
+        /// </summary>
+        /// <param name="query">The query.</param>
+        /// <param name="parameters">The parameters.</param>
+        /// <returns></returns>
+        int Execute([NotNull] string query, [CanBeNull] object parameters = null);
+
+        /// <summary>
+        ///     Executes as async the given query text
+        /// </summary>
+        /// <param name="query"></param>
+        /// <param name="parameters"></param>
+        Task<int> ExecuteAsync([NotNull] string query, [CanBeNull] object parameters = null);
+
+        /// <summary>
         ///     Gets the set.
         /// </summary>
         /// <param name="predicate">The predicate.</param>

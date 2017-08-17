@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<localizationDictionary culture="ar">
+  <texts>
+    <text name="Ldap_IsEnabled" value="مفعل" />
+    <text name="Ldap_ContextType" value="نوع السياق" />
+    <text name="Ldap_Container" value="الوعاء" />
+    <text name="Ldap_Domain" value="النطاق" />
+    <text name="Ldap_UserName" value="اسم المستخدم" />
+    <text name="Ldap_Password" value="كلمة المرور" />
+  </texts>
+</localizationDictionary>

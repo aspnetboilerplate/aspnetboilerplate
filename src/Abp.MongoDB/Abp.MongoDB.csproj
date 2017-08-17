@@ -19,8 +19,8 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <None Update="bin\Release\net452\Abp.MongoDB.pdb">
-      <PackagePath>lib/net452/</PackagePath>
+    <None Include="bin\Release\net46\Abp.MongoDB.pdb">
+      <PackagePath>lib/net46/</PackagePath>
       <Pack>true</Pack>
     </None>
   </ItemGroup>
@@ -30,7 +30,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Include="mongocsharpdriver" Version="2.4.3" />
+    <PackageReference Include="mongocsharpdriver" Version="2.4.4" />
   </ItemGroup>
 
   <ItemGroup Condition=" '$(TargetFramework)' == 'net46' ">
