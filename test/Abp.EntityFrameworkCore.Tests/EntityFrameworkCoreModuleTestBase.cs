@@ -27,8 +27,9 @@ namespace Abp.EntityFrameworkCore.Tests
 
                     var post1 = new Post { Blog = blog1, Title = "test-post-1-title", Body = "test-post-1-body" };
                     var post2 = new Post { Blog = blog1, Title = "test-post-2-title", Body = "test-post-2-body" };
+                    var post3 = new Post { Blog = blog1, Title = "test-post-3-title", Body = "test-post-3-body-deleted", IsDeleted = true };
 
-                    context.Posts.AddRange(post1, post2);
+                    context.Posts.AddRange(post1, post2, post3);
                 });
 
             using (var context = LocalIocManager.Resolve<SupportDbContext>())
@@ -36,7 +37,7 @@ namespace Abp.EntityFrameworkCore.Tests
                 context.Tickets.AddRange(
                     new Ticket { EmailAddress = "john@aspnetboilerplate.com", Message = "an active message" },
                     new Ticket { EmailAddress = "david@aspnetboilerplate.com", Message = "an inactive message", IsActive = false }
-                    );
+                );
 
                 context.SaveChanges();
             }
