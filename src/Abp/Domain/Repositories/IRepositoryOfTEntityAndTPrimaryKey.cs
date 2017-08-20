@@ -82,6 +82,14 @@ namespace Abp.Domain.Repositories
         Task<TEntity> GetAsync(TPrimaryKey id);
 
         /// <summary>
+        /// Gets an entity with given primary key including 1 or more entities
+        /// </summary>
+        /// <param name="predicate">A condition to filter entities</param>
+        /// <param name="propertySelectors">A list of include expressions.</param>
+        /// <returns>Entity</returns>
+        Task<TEntity> GetIncludingAsync(Expression<Func<TEntity, bool>> predicate, params Expression<Func<TEntity, object>>[] propertySelectors);
+
+        /// <summary>
         /// Gets exactly one entity with given predicate.
         /// Throws exception if no entity or more than one entity.
         /// </summary>

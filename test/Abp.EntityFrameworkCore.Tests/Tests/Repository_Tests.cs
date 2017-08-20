@@ -90,6 +90,40 @@ namespace Abp.EntityFrameworkCore.Tests.Tests
         }
 
         [Fact]
+        public async Task Should_Return_Single_Entity_With_Included_Navigation_Properties_If_Requested()
+        {
+            using (var uow = _uowManager.Begin())
+            {
+                var firstPost = await _postRepository.GetAll().FirstOrDefaultAsync();
+
+                var post = await _postRepository.GetIncludingAsync(
+                    (p => p.Id == firstPost.Id),
+                    (p => p.Blog));
+
+                post.ShouldNotBeNull();
+                post.Blog.ShouldNotBeNull();
+                post.Blog.Name.ShouldBe("test-blog-1");
+
+                await uow.CompleteAsync();
+            }
+        }
+
+        [Fact]
+        public async Task Should_Not_Return_Results_With_Empty_Guid_Even_With_Included_Navigation_Properties()
+        {
+            using (var uow = _uowManager.Begin())
+            {
+                var post = await _postRepository.GetIncludingAsync(
+                    (p => p.Id == Guid.NewGuid()),
+                    (p => p.Blog));
+
+                post.ShouldBeNull();
+
+                await uow.CompleteAsync();
+            }
+        }
+
+        [Fact]
         public async Task Should_Insert_New_Entity()
         {
             using (var uow = _uowManager.Begin())

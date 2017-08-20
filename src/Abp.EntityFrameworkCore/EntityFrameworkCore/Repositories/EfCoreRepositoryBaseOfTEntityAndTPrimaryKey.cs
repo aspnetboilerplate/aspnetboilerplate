@@ -110,6 +110,12 @@ namespace Abp.EntityFrameworkCore.Repositories
             return await GetAll().Where(predicate).ToListAsync();
         }
 
+        public override async Task<TEntity> GetIncludingAsync(Expression<Func<TEntity, bool>> predicate,
+            params Expression<Func<TEntity, object>>[] propertySelectors)
+        {
+            return await GetAllIncluding(propertySelectors).FirstOrDefaultAsync(predicate);
+        }
+
         public override async Task<TEntity> SingleAsync(Expression<Func<TEntity, bool>> predicate)
         {
             return await GetAll().SingleAsync(predicate);

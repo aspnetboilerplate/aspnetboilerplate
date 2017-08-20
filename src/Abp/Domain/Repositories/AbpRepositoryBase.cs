@@ -92,7 +92,12 @@ namespace Abp.Domain.Repositories
 
             return entity;
         }
-        
+
+        public virtual Task<TEntity> GetIncludingAsync(Expression<Func<TEntity, bool>> predicate, params Expression<Func<TEntity, object>>[] propertySelectors)
+        {
+            return Task.FromResult(GetAllIncluding(propertySelectors).FirstOrDefault(predicate));
+        }
+
         public virtual TEntity Single(Expression<Func<TEntity, bool>> predicate)
         {
             return GetAll().Single(predicate);
