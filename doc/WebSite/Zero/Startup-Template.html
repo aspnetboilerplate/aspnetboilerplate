@@ -30,27 +30,6 @@
 			</div>
 			<p>In this template, <strong>multi-tenancy is enabled by default</strong>. You 
 	can disable it in Core project's module class if you don't need.</p>
-
-			<h3>Social Logins</h3>
-			<p>Startup template supports <strong>Facebook</strong>, <strong>Twitter</strong> 
-	and <strong>Google+ </strong>logins. In the web.config, you can see the 
-	following settings:</p>
-			<pre lang="xml">&lt;add key=&quot;ExternalAuth.Facebook.IsEnabled&quot; value=&quot;false&quot; /&gt;
-&lt;add key=&quot;ExternalAuth.Facebook.AppId&quot; value=&quot;&quot; /&gt;
-&lt;add key=&quot;ExternalAuth.Facebook.AppSecret&quot; value=&quot;&quot; /&gt;
-
-&lt;add key=&quot;ExternalAuth.Twitter.IsEnabled&quot; value=&quot;false&quot; /&gt;
-&lt;add key=&quot;ExternalAuth.Twitter.ConsumerKey&quot; value=&quot;&quot; /&gt;
-&lt;add key=&quot;ExternalAuth.Twitter.ConsumerSecret&quot; value=&quot;&quot; /&gt;
-
-&lt;add key=&quot;ExternalAuth.Google.IsEnabled&quot; value=&quot;false&quot; /&gt;
-&lt;add key=&quot;ExternalAuth.Google.ClientId&quot; value=&quot;&quot; /&gt;
-&lt;add key=&quot;ExternalAuth.Google.ClientSecret&quot; value=&quot;&quot; /&gt;</pre>
-			<p>Here, you can enable which you need. Surely, you must have application 
-	keys and passwords which you need to get from related social web site. You 
-	can find guides from web to learn how to obtain this keys. Once you enable a 
-	social login and enter true keys, you will see a button in the login page. 
-	You can implement other logins as similar.</p>
 			<h3>Token Based Authentication</h3>
 			<p>Startup template uses cookie based authentication for browsers. However, if you 
 	want to consume Web APIs or application services (those are exposed via 

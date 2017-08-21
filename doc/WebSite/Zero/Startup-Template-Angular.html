@@ -50,9 +50,11 @@
 		<h4>Restore Packages</h4>
 		<p>Open a command prompt, navigate to <strong>angular</strong> folder which contains *.sln file and run the following command to 
 		<strong>restore npm packages</strong>:</p>
-		<pre class="js">yarn</pre>
-		<p>You have to install <a href="https://yarnpkg.com">yarn</a> to run this command. "npm install" command can be used to install npm dependencies as well but it will install latest minor version for each dependency and it might cause some problems. So, we suggest yarn to install npm dependencies.
-		</p>
+		<pre class="js">npm install</pre>
+		<p>Notice that npm install may show some warn messages, which is not related to our solution and generally it's not a problem. 
+		The solution can also configured to work with
+		<a href="https://yarnpkg.com/" target="_blank"><strong>yarn</strong></a> 
+		and we suggest to use it if available on your computer.</p>
 		<h4>Run The Application</h4>
 		<p>In your opened command prompt, run the following command:</p>
 		<pre class="js">npm start</pre>
@@ -82,28 +84,6 @@
 	  IIS or any web server you like.</p>
 		  <h3>Solution Details &amp; Other Features</h3>
 
-         <h4>Social Logins</h4>
-         <p>Startup template supports <strong>Facebook</strong> and <strong>Google+ </strong> logins. You can see the 
-            following settings in appsettings.json of Web.Host project:
-         </p>
-         <pre lang="json">
- "Facebook": {
-  "IsEnabled": "false",
-  "AppId": "",
-  "AppSecret": ""
-},
-"Google": {
-  "IsEnabled": "false",
-  "ClientId": "",
-  "ClientSecret": ""
-}
-			</pre>
-         <p>Here, you can enable which you need. Surely, you must have application 
-            keys and passwords which you need to get from related social web site. You 
-            can find guides from web to learn how to obtain this keys. Once you enable a 
-            social login and enter true keys, you will see a button in the login page. 
-            You can implement other logins as similar.
-         </p>
          <h4>Token Based Authentication</h4>
          <p>If you want to consume APIs/application services from a mobile application, you can use token based 
             authentication mechanism just like we do it for Angular client. Startup template includes JwtBearer token authentication 
