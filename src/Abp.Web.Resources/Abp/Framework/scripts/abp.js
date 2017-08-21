@@ -10,7 +10,7 @@
 
     //Converts given path to absolute path using abp.appPath variable.
     abp.toAbsAppPath = function (path) {
-        if (path.indexOf('/') === 0) {
+        if (path.indexOf('/') == 0) {
             path = path.substring(1);
         }
 
@@ -105,7 +105,7 @@
     abp.localization.isCurrentCulture = function (name) {
         return abp.localization.currentCulture
             && abp.localization.currentCulture.name
-            && abp.localization.currentCulture.name.indexOf(name) === 0;
+            && abp.localization.currentCulture.name.indexOf(name) == 0;
     };
 
     abp.localization.defaultSourceName = undefined;
@@ -651,7 +651,7 @@
      * includeQuestionMark is true by default.
      */
     abp.utils.buildQueryString = function (parameterInfos, includeQuestionMark) {
-        if (includeQuestionMark == undefined) {
+        if (includeQuestionMark === undefined) {
             includeQuestionMark = true;
         }
 
@@ -670,17 +670,17 @@
 
         for (var i = 0; i < parameterInfos.length; ++i) {
             var parameterInfo = parameterInfos[i];
-            if (parameterInfo.value == undefined) {
+            if (parameterInfo.value === undefined) {
                 continue;
             }
 
-            if (parameterInfo.value == null) {
+            if (parameterInfo.value === null) {
                 parameterInfo.value = '';
             }
 
             addSeperator();
 
-            if (parameterInfo.value.toJSON && typeof parameterInfo.value.toJSON == "function") {
+            if (parameterInfo.value.toJSON && typeof parameterInfo.value.toJSON === "function") {
                 qs = qs + parameterInfo.name + '=' + encodeURIComponent(parameterInfo.value.toJSON());
             } else if (Array.isArray(parameterInfo.value) && parameterInfo.value.length) {
                 for (var j = 0; j < parameterInfo.value.length; j++) {
@@ -740,7 +740,7 @@
             }
 
             var splitted = equalities[i].split('=');
-            if (splitted.length !== 2) {
+            if (splitted.length != 2) {
                 continue;
             }
 
