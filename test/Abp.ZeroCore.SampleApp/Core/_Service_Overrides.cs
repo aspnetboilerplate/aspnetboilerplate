@@ -17,6 +17,7 @@ using Abp.MultiTenancy;
 using Abp.Organizations;
 using Abp.Runtime.Caching;
 using Abp.Zero.Configuration;
+using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
@@ -104,7 +105,6 @@ namespace Abp.ZeroCore.SampleApp.Core
             ILookupNormalizer keyNormalizer,
             IdentityErrorDescriber errors,
             ILogger<RoleManager> logger,
-            IHttpContextAccessor contextAccessor,
             IPermissionManager permissionManager,
             ICacheManager cacheManager,
             IUnitOfWorkManager unitOfWorkManager,
@@ -115,7 +115,6 @@ namespace Abp.ZeroCore.SampleApp.Core
             keyNormalizer,
             errors,
             logger,
-            contextAccessor,
             permissionManager,
             cacheManager,
             unitOfWorkManager,
@@ -199,9 +198,10 @@ namespace Abp.ZeroCore.SampleApp.Core
     public class SecurityStampValidator : AbpSecurityStampValidator<Tenant, Role, User>
     {
         public SecurityStampValidator(
-            IOptions<IdentityOptions> options,
-            SignInManager signInManager)
-            : base(options, signInManager)
+            IOptions<SecurityStampValidatorOptions> options,
+            SignInManager signInManager,
+            ISystemClock systemClock)
+            : base(options, signInManager, systemClock)
         {
         }
     }
@@ -215,7 +215,8 @@ namespace Abp.ZeroCore.SampleApp.Core
             IOptions<IdentityOptions> optionsAccessor,
             ILogger<SignInManager<User>> logger,
             IUnitOfWorkManager unitOfWorkManager,
-            ISettingManager settingManager
+            ISettingManager settingManager,
+            IAuthenticationSchemeProvider schemes
         ) : base(
             userManager,
             contextAccessor,
@@ -223,7 +224,8 @@ namespace Abp.ZeroCore.SampleApp.Core
             optionsAccessor,
             logger,
             unitOfWorkManager,
-            settingManager)
+            settingManager,
+            schemes)
         {
         }
     }
