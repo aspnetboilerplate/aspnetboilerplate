@@ -2,6 +2,8 @@
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations.Schema;
 using System.Linq;
+using System.Linq.Expressions;
+using System.Reflection;
 using System.Threading;
 using System.Threading.Tasks;
 using Abp.Collections.Extensions;
@@ -13,13 +15,14 @@ using Abp.Domain.Uow;
 using Abp.Events.Bus;
 using Abp.Events.Bus.Entities;
 using Abp.Extensions;
-using Abp.MultiTenancy;
 using Abp.Reflection;
 using Abp.Runtime.Session;
 using Abp.Timing;
 using Castle.Core.Logging;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.ChangeTracking;
+using Abp.Linq.Expressions;
+using Microsoft.EntityFrameworkCore.Metadata;
 
 namespace Abp.EntityFrameworkCore
 {
@@ -67,7 +70,17 @@ namespace Abp.EntityFrameworkCore
         /// Can be used to suppress automatically setting TenantId on SaveChanges.
         /// Default: false.
         /// </summary>
-        public bool SuppressAutoSetTenantId { get; set; }
+        public virtual bool SuppressAutoSetTenantId { get; set; }
+
+        protected virtual int? CurrentTenantId => GetCurrentTenantIdOrNull();
+
+        protected virtual bool IsSoftDeleteFilterEnabled => CurrentUnitOfWorkProvider?.Current?.IsFilterEnabled(AbpDataFilters.SoftDelete) == true;
+
+        protected virtual bool IsMayHaveTenantFilterEnabled => CurrentUnitOfWorkProvider?.Current?.IsFilterEnabled(AbpDataFilters.MayHaveTenant) == true;
+
+        protected virtual bool IsMustHaveTenantFilterEnabled => CurrentTenantId != null && CurrentUnitOfWorkProvider?.Current?.IsFilterEnabled(AbpDataFilters.MustHaveTenant) == true;
+
+        private static MethodInfo ConfigureGlobalFiltersMethodInfo = typeof(AbpDbContext).GetMethod(nameof(ConfigureGlobalFilters), BindingFlags.Instance | BindingFlags.NonPublic);
 
         /// <summary>
         /// Constructor.
@@ -92,6 +105,93 @@ namespace Abp.EntityFrameworkCore
             EventBus = NullEventBus.Instance;
         }
 
+        protected override void OnModelCreating(ModelBuilder modelBuilder)
+        {
+            base.OnModelCreating(modelBuilder);
+
+            foreach (var entityType in modelBuilder.Model.GetEntityTypes())
+            {
+                ConfigureGlobalFiltersMethodInfo
+                    .MakeGenericMethod(entityType.ClrType)
+                    .Invoke(this, new object[] { modelBuilder, entityType });
+            }
+        }
+
+        protected void ConfigureGlobalFilters<TEntity>(ModelBuilder modelBuilder, IMutableEntityType entityType)
+            where TEntity : class
+        {
+            if (entityType.BaseType == null && ShouldFilterEntity<TEntity>(entityType))
+            {
+                var filterExpression = CreateFilterExpression<TEntity>();
+                if (filterExpression != null)
+                {
+                    modelBuilder.Entity<TEntity>().HasQueryFilter(filterExpression);
+                }
+            }
+        }
+
+        protected virtual bool ShouldFilterEntity<TEntity>(IMutableEntityType entityType) where TEntity : class
+        {
+            if (typeof(ISoftDelete).IsAssignableFrom(typeof(TEntity)))
+            {
+                return true;
+            }
+
+            if (typeof(IMayHaveTenant).IsAssignableFrom(typeof(TEntity)))
+            {
+                return true;
+            }
+
+            if (typeof(IMustHaveTenant).IsAssignableFrom(typeof(TEntity)))
+            {
+                return true;
+            }
+
+            return false;
+        }
+
+        protected virtual Expression<Func<TEntity, bool>> CreateFilterExpression<TEntity>()
+            where TEntity : class
+        {
+            Expression<Func<TEntity, bool>> expression = null;
+
+            if (typeof(ISoftDelete).IsAssignableFrom(typeof(TEntity)))
+            {
+                /* This condition should normally be defined as below:
+                 * !IsSoftDeleteFilterEnabled || !((ISoftDelete) e).IsDeleted
+                 * But this causes a problem with EF Core (see https://github.com/aspnet/EntityFrameworkCore/issues/9502)
+                 * So, we made a workaround to make it working. It works same as above.
+                 */
+
+                Expression<Func<TEntity, bool>> softDeleteFilter = e => !((ISoftDelete) e).IsDeleted || ((ISoftDelete) e).IsDeleted != IsSoftDeleteFilterEnabled;
+                expression = expression == null ? softDeleteFilter : expression.And(softDeleteFilter);
+            }
+
+            if (typeof(IMayHaveTenant).IsAssignableFrom(typeof(TEntity)))
+            {
+                /* This condition should normally be defined as below:
+                 * !IsMayHaveTenantFilterEnabled || ((IMayHaveTenant)e).TenantId == CurrentTenantId
+                 * But this causes a problem with EF Core (see https://github.com/aspnet/EntityFrameworkCore/issues/9502)
+                 * So, we made a workaround to make it working. It works same as above.
+                 */
+                Expression<Func<TEntity, bool>> mayHaveTenantFilter = e => ((IMayHaveTenant) e).TenantId == CurrentTenantId || (((IMayHaveTenant) e).TenantId == CurrentTenantId) == IsMayHaveTenantFilterEnabled;
+                expression = expression == null ? mayHaveTenantFilter : expression.And(mayHaveTenantFilter);
+            }
+
+            if (typeof(IMustHaveTenant).IsAssignableFrom(typeof(TEntity)))
+            {
+                /* This condition should normally be defined as below:
+                 * !IsMustHaveTenantFilterEnabled || ((IMustHaveTenant)e).TenantId == CurrentTenantId
+                 * But this causes a problem with EF Core (see https://github.com/aspnet/EntityFrameworkCore/issues/9502)
+                 * So, we made a workaround to make it working. It works same as above.
+                 */
+                Expression<Func<TEntity, bool>> mustHaveTenantFilter = e => ((IMustHaveTenant)e).TenantId == CurrentTenantId || (((IMustHaveTenant)e).TenantId == CurrentTenantId) == IsMustHaveTenantFilterEnabled;
+                expression = expression == null ? mustHaveTenantFilter : expression.And(mustHaveTenantFilter);
+            }
+
+            return expression;
+        }
+        
         public override int SaveChanges()
         {
             try

@@ -12,6 +12,8 @@ namespace Abp.MultiTenancy
     public abstract class AbpTenant<TUser> : AbpTenantBase, IFullAudited<TUser>
         where TUser : AbpUserBase
     {
+        //TODO: Move consts to AbpTenantBase
+
         /// <summary>
         /// "Default".
         /// </summary>
