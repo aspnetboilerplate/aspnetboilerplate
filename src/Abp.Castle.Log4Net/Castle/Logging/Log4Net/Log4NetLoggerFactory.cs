@@ -2,6 +2,7 @@
 using System.IO;
 using System.Reflection;
 using System.Xml;
+using Abp.Reflection.Extensions;
 using Castle.Core.Logging;
 using log4net;
 using log4net.Config;
@@ -21,16 +22,16 @@ namespace Abp.Castle.Logging.Log4Net
 
         public Log4NetLoggerFactory(string configFileName)
         {
-            var file = GetConfigFile(configFileName);
+            //TODO: Test this code since it's changed on netstandard2.0 change
 
             _loggerRepository = LogManager.CreateRepository(
-                Assembly.GetEntryAssembly(),
+                typeof(Log4NetLoggerFactory).GetAssembly(),
                 typeof(log4net.Repository.Hierarchy.Hierarchy)
             );
 
-            XmlConfigurator.ConfigureAndWatch(_loggerRepository, file);
-
-            //TODO: Test this code since it's changed on netstandard2.0 change
+            var log4NetConfig = new XmlDocument();
+            log4NetConfig.Load(File.OpenRead(configFileName));
+            XmlConfigurator.Configure(_loggerRepository, log4NetConfig["log4net"]);
         }
 
         public override ILogger Create(string name)
