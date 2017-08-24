@@ -1,6 +1,5 @@
 ﻿using System;
 using System.IO;
-using System.Reflection;
 using System.Xml;
 using Abp.Reflection.Extensions;
 using Castle.Core.Logging;
@@ -22,8 +21,6 @@ namespace Abp.Castle.Logging.Log4Net
 
         public Log4NetLoggerFactory(string configFileName)
         {
-            //TODO: Test this code since it's changed on netstandard2.0 change
-
             _loggerRepository = LogManager.CreateRepository(
                 typeof(Log4NetLoggerFactory).GetAssembly(),
                 typeof(log4net.Repository.Hierarchy.Hierarchy)
