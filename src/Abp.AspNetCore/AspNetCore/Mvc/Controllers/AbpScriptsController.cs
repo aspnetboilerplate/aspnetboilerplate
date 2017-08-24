@@ -63,8 +63,8 @@ namespace Abp.AspNetCore.Mvc.Controllers
         {
             if (!culture.IsNullOrEmpty())
             {
-                CultureInfo.CurrentCulture = CultureInfoHelper.Get(culture);
-                CultureInfo.CurrentUICulture = CultureInfoHelper.Get(culture);
+                CultureInfo.CurrentCulture = CultureInfo.GetCultureInfo(culture);
+                CultureInfo.CurrentUICulture = CultureInfo.GetCultureInfo(culture);
             }
 
             var sb = new StringBuilder();

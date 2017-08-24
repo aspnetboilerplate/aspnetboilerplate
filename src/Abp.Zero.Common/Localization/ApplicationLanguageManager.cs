@@ -9,6 +9,7 @@ using Abp.Domain.Uow;
 using Abp.Events.Bus.Entities;
 using Abp.Events.Bus.Handlers;
 using Abp.Runtime.Caching;
+using System.Globalization;
 
 namespace Abp.Localization
 {
@@ -148,7 +149,7 @@ namespace Abp.Localization
         /// <param name="languageName">Name of the language.</param>
         public virtual async Task SetDefaultLanguageAsync(int? tenantId, string languageName)
         {
-            var cultureInfo = CultureInfoHelper.Get(languageName);
+            var cultureInfo = CultureInfo.GetCultureInfo(languageName);
             if (tenantId.HasValue)
             {
                 await _settingManager.ChangeSettingForTenantAsync(tenantId.Value, LocalizationSettingNames.DefaultLanguage, cultureInfo.Name);
