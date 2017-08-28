@@ -258,7 +258,7 @@ namespace Abp.Authorization
                         var permission = permissionManager.Object.GetPermissionOrNull(permissionName);
                         return permission?.DisplayName == null
                             ? permissionName
-                            : permission.DisplayName.Localize(localizationContext.Object);
+                            : permission.DisplayName != null ? permission.DisplayName.Localize(localizationContext.Object) : permission.Name;
                     }).ToArray();
                 }
             }
