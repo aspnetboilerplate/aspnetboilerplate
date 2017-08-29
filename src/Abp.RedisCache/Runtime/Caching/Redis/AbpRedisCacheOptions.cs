@@ -1,4 +1,6 @@
-﻿using System.Configuration;
+﻿#if NET46
+using System.Configuration;
+#endif
 using Abp.Configuration.Startup;
 using Abp.Extensions;
 
@@ -26,6 +28,7 @@ namespace Abp.Runtime.Caching.Redis
 
         private static int GetDefaultDatabaseId()
         {
+#if NET46
             var appSetting = ConfigurationManager.AppSettings[DatabaseIdSettingKey];
             if (appSetting.IsNullOrEmpty())
             {
@@ -39,10 +42,14 @@ namespace Abp.Runtime.Caching.Redis
             }
 
             return databaseId;
+#else
+            return -1;
+#endif
         }
 
         private static string GetDefaultConnectionString()
         {
+#if NET46
             var connStr = ConfigurationManager.ConnectionStrings[ConnectionStringKey];
             if (connStr == null || connStr.ConnectionString.IsNullOrWhiteSpace())
             {
@@ -50,6 +57,9 @@ namespace Abp.Runtime.Caching.Redis
             }
 
             return connStr.ConnectionString;
+#else
+            return "localhost";
+#endif
         }
     }
 }

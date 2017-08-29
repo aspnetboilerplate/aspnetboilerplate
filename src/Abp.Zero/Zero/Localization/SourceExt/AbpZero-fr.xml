@@ -1,0 +1,26 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<localizationDictionary culture="fr">
+  <texts>
+    <text name="Identity.UserAlreadyInRole" value="L'utilisateur possède déjà ce profil." />
+    <text name="Identity.UserNotInRole" value="L'utilisateur ne possède pas ce profil." />
+    <text name="Identity.RoleNotFound" value="Le profil {0} n'existe pas." />
+    <text name="Identity.PasswordMismatch" value="Mot de passe incorrect." />
+    <text name="Identity.InvalidUserName" value="Le nom de l'utilisateur {0} n'est pas valide, seuls les lettres et chiffres sont acceptés." />
+    <text name="Identity.PasswordTooShort" value="Les mots de passe doivent comporter au moins {0} caractères." />
+    <text name="Identity.PropertyTooShort" value="{0} ne peut pas être nul ou vide." />
+    <text name="Identity.DuplicateUserName" value="Le nom {0} est déjà connu et réservé." />
+    <text name="Identity.UserAlreadyHasPassword" value="L'utilisateur a déjà un mot de passe défini." />
+    <text name="Identity.PasswordRequireNonLetterOrDigit" value="Les mots de passe doivent comporter un caractère non alphabétique, au minimum." />
+    <text name="Identity.UserIdNotFound" value="L'identifiant utilisateur n'est pas connu." />
+    <text name="Identity.InvalidToken" value="Ticket invalide." />
+    <text name="Identity.InvalidEmail" value="L'email '{0}' n'est pas valide." />
+    <text name="Identity.UserNameNotFound" value="L'utilisateur {0} n'existe pas." />
+    <text name="Identity.LockoutNotEnabled" value="Le déverrouillage n'est pas possible pour cet utilisateur." />
+    <text name="Identity.PasswordRequireUpper" value="Les mots de passe doivent comporter au moins une lettre majuscule('A'-'Z')." />
+    <text name="Identity.PasswordRequireDigit" value="Les mots de passe doivent comporter au moins un chiffre ('0'-'9')." />
+    <text name="Identity.PasswordRequireLower" value="Les mots de passe doivent comporter au moins une minuscule ('a'-'z')." />
+    <text name="Identity.DuplicateEmail" value="L'email '{0}' est déjà connu et réservé." />
+    <text name="Identity.ExternalLoginExists" value="Un utilisateur externe avec le même nom d'utilisateur existe déjà." />
+    <text name="Identity.DefaultError" value="Une erreur inconnue est survenue." />
+  </texts>
+</localizationDictionary>

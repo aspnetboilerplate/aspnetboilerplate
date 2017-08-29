@@ -188,10 +188,13 @@ framework. ASP.NET Core integration is implemented in
 		result wrapping.</li>
 	</ul>
 	<h5>Result Caching For Ajax Requests</h5>
-	<p>AbpResultFilter adds Cache-Control header (no-cache, no-store) to the 
+	<p>AbpResultFilter adds <strong>Cache-Control</strong> header (no-cache, no-store...) to the 
 	response for AJAX Requests. Thus, it prevents browser caching of AJAX 
 	responses even for GET requests. This behaviour can be disabled by the 
-	configuration.</p>
+	configuration or attributes. You can use <strong>NoClientCache</strong> 
+	attrbiute to prevent caching (default) or <strong>AllowClientCache</strong> 
+	attrbiute to allow browser to cache results. Alternatively you can implement 
+	IClientCacheAttribute to create your special attribute for finer control.</p>
 	<h3>Model Binders</h3>
 	<p><strong>AbpDateTimeModelBinder</strong> is used to normalize DateTime 
 	(and Nullable&lt;DateTime&gt;) inputs using <strong>Clock.Normalize</strong> 
@@ -201,6 +204,8 @@ framework. ASP.NET Core integration is implemented in
 	automatically inject most used infrastructure (LocalizationManager, 
 	PermissionChecker, SettingManager... etc.). It also has shortcut methods 
 	(like L(...) for localize texts). Startup template inherits it by default.</p>
+	<p>You can inherit your web components from <strong>AbpViewComponent</strong> 
+	instead of ViewComponent to take advantage of base properties and methods.</p>
 	<h3>Client Proxies</h3>
 	<p>ABP can automatically create javascript proxies for all MVC Controllers 
 	(not only application services). 

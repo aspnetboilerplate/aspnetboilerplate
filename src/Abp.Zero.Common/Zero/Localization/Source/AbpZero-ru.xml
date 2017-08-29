@@ -1,0 +1,13 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<localizationDictionary culture="ru">
+  <texts>
+    <text name="InvalidTenancyName" value="Недопустимое название организации!" />
+    <text name="TenancyNameIsAlreadyTaken" value="Имя организации {0} уже используется." />
+    <text name="RoleNameIsAlreadyTaken" value="Роль {0} уже используется." />
+    <text name="RoleDisplayNameIsAlreadyTaken" value="Роль с названием {0} уже используется." />
+    <text name="CanNotDeleteStaticRole" value="Невозможно удалить статичную роль: {0}" />
+    <text name="CanNotRenameAdminUser" value="Невозможно переименовать пользователя {0}, так как это пользователь администратор по умолчанию!" />
+    <text name="CanNotDeleteAdminUser" value="Невозможно удалить пользователя {0}, так как это пользователь администратор по умолчанию!" />
+    <text name="OrganizationUnitDuplicateDisplayNameWarning" value="В организации уже существует {0}. Две записи с одинаковым именем не могут быть созданы на одном уровне." />
+  </texts>
+</localizationDictionary>

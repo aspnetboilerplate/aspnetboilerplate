@@ -1,0 +1,13 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<localizationDictionary culture="lt">
+  <texts>
+    <text name="InvalidTenancyName" value="Valdytojo pavadinimas yra blogas!" />
+    <text name="TenancyNameIsAlreadyTaken" value="Valdytojo pavadinimas {0} jau yra paimtas." />
+    <text name="RoleNameIsAlreadyTaken" value="Rolės pavadinimas {0} jau paimtas." />
+    <text name="RoleDisplayNameIsAlreadyTaken" value="Rolės rodomas pavadinimas {0} jau paimtas." />
+    <text name="CanNotDeleteStaticRole" value="Negalima ištrinti statinės rolės: {0}" />
+    <text name="CanNotRenameAdminUser" value="Negalima pervardinti vartotojo vardo {0} kadangi tai yra administratoriaus vartotojas!" />
+    <text name="CanNotDeleteAdminUser" value="Negalima ištrinti vartotojo {0} kadangi tai yra administratorius pagal nutylėjimą!" />
+    <text name="OrganizationUnitDuplicateDisplayNameWarning" value="Jau egzistuoja organizacijos vienetas su pavadinimu {0}. Du vienetai su tuo pačiu pavadinimu negali būti sukurti tame pačiame lygyje." />
+  </texts>
+</localizationDictionary>

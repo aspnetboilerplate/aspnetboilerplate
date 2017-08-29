@@ -1,13 +1,19 @@
 ﻿using System;
+using System.Collections.Generic;
 using Abp.Domain.Entities;
+using Abp.Domain.Entities.Auditing;
 
 namespace Abp.EntityFrameworkCore.Tests.Domain
 {
-    public class Blog : AggregateRoot
+    public class Blog : AggregateRoot, IHasCreationTime
     {
         public string Name { get; set; }
 
         public string Url { get; protected set; }
+
+        public DateTime CreationTime { get; set; }
+
+        public ICollection<Post> Posts { get; set; }
 
         public Blog()
         {

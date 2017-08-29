@@ -1,6 +1,7 @@
 ﻿using System.Reflection;
 using Abp.AspNetCore;
 using Abp.Modules;
+using Abp.Reflection.Extensions;
 using Abp.Resources.Embedded;
 
 namespace AbpAspNetCoreDemo.PlugIn
@@ -10,10 +11,11 @@ namespace AbpAspNetCoreDemo.PlugIn
     {
         public override void PreInitialize()
         {
+
             Configuration.EmbeddedResources.Sources.Add(
                 new EmbeddedResourceSet(
                     "/Views/",
-                    Assembly.GetExecutingAssembly(),
+                    typeof(AbpAspNetCoreDemoPlugInModule).GetAssembly(),
                     "AbpAspNetCoreDemo.PlugIn.Views"
                 )
             );
@@ -21,7 +23,7 @@ namespace AbpAspNetCoreDemo.PlugIn
 
         public override void Initialize()
         {
-            IocManager.RegisterAssemblyByConvention(Assembly.GetExecutingAssembly());
+            IocManager.RegisterAssemblyByConvention(typeof(AbpAspNetCoreDemoPlugInModule).GetAssembly());
         }
     }
 }

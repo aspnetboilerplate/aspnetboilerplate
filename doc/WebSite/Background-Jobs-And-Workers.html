@@ -76,7 +76,8 @@
         _userRepository = userRepository;
         _emailSender = emailSender;
     }
-
+    
+    [UnitOfWork]
     public override void <strong>Execute</strong>(SimpleSendEmailJobArgs args)
     {
         var senderUser = _userRepository.Get(args.SenderUserId);

@@ -1,4 +1,5 @@
 ﻿using Abp.Domain.Repositories;
+using Abp.Domain.Uow;
 using Abp.EntityFramework.Repositories;
 using Abp.Extensions;
 using Abp.TestBase.SampleApplication.Crm;
@@ -20,13 +21,18 @@ namespace Abp.TestBase.SampleApplication.Tests.EntityFramework
         [Fact]
         public void Should_Get_DbContext()
         {
-            _companyRepository.GetDbContext().ShouldBeOfType<SampleApplicationDbContext>();
-        }
+            using (var uow = Resolve<IUnitOfWorkManager>().Begin())
+            {
+                _companyRepository.GetDbContext().ShouldBeOfType<SampleApplicationDbContext>();
 
+                uow.Complete();
+            }
+        }
+        
         [Fact]
         public void Should_Get_IocResolver()
         {
-            _companyRepository.As<AbpRepositoryBase<Company, int>>().IocResolver.ShouldNotBeNull();
+            _companyRepository.GetIocResolver().ShouldNotBeNull();
         }
     }
 }

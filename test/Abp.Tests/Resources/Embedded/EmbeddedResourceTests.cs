@@ -1,4 +1,5 @@
-﻿using Abp.Resources.Embedded;
+﻿using Abp.Reflection.Extensions;
+using Abp.Resources.Embedded;
 using Shouldly;
 using Xunit;
 
@@ -14,7 +15,7 @@ namespace Abp.Tests.Resources.Embedded
 
             configuration.Sources.Add(
                 new EmbeddedResourceSet(
-                    "/MyApp/MyResources/", GetType().Assembly, "Abp.Tests.Resources.Embedded.MyResources"
+                    "/MyApp/MyResources/", GetType().GetAssembly(), "Abp.Tests.Resources.Embedded.MyResources"
                 )
             );
 
@@ -27,7 +28,7 @@ namespace Abp.Tests.Resources.Embedded
             var resource = _embeddedResourceManager.GetResource("/MyApp/MyResources/js/MyScriptFile1.js");
 
             resource.ShouldNotBeNull();
-            Assert.True(resource.Assembly == GetType().Assembly);
+            Assert.True(resource.Assembly == GetType().GetAssembly());
             Assert.True(resource.Content.Length > 0);
         }
     }

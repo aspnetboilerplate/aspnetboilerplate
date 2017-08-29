@@ -1,0 +1,13 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<localizationDictionary culture="lv">
+  <texts>
+    <text name="InvalidTenancyName" value="Klienta vārds nav derīgs!" />
+    <text name="TenancyNameIsAlreadyTaken" value="Klienta vārds {0} ir jau izmantots." />
+    <text name="RoleNameIsAlreadyTaken" value="Lomas nosaukums {0} ir jau izmantots." />
+    <text name="RoleDisplayNameIsAlreadyTaken" value="Lomas attēlotais nosaukums {0} eksistē." />
+    <text name="CanNotDeleteStaticRole" value="Nevar dzēst statisko lomu: {0}" />
+    <text name="CanNotRenameAdminUser" value="Lietotājvārdu {0} nevar pārdēvēt, jo tas ir noklusētais administrators!" />
+    <text name="CanNotDeleteAdminUser" value="Lietotāju {0} nevar dzēst, jo tas ir noklusētais administrators!" />
+    <text name="OrganizationUnitDuplicateDisplayNameWarning" value="Organizācija {0} jau eksistē. Vienā līmenī nevar tikt izveidotas divas vienības ar tādu pašu nosaukumu." />
+  </texts>
+</localizationDictionary>

@@ -65,7 +65,7 @@ namespace Abp.EntityFramework.Uow
                 }
 
                 activeTransaction.DbContextTransaction.Dispose();
-                activeTransaction.StarterDbContext.Dispose();
+                iocResolver.Release(activeTransaction.StarterDbContext);
             }
 
             ActiveTransactions.Clear();

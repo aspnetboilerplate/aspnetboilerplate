@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Threading.Tasks;
 using Abp.Configuration.Startup;
 using Abp.Dependency;
 using Abp.Runtime.Caching;
@@ -21,7 +22,7 @@ namespace Abp.Tests.Runtime.Caching.Memory
             LocalIocManager.Register<ICachingConfiguration, CachingConfiguration>();
             LocalIocManager.Register<ICacheManager, AbpMemoryCacheManager>();
             LocalIocManager.Register<MyClientPropertyInjects>(DependencyLifeStyle.Transient);
-            LocalIocManager.IocContainer.Register(Component.For<IAbpStartupConfiguration>().UsingFactoryMethod(() => Substitute.For<IAbpStartupConfiguration>()));
+            LocalIocManager.IocContainer.Register(Component.For<IAbpStartupConfiguration>().Instance(Substitute.For<IAbpStartupConfiguration>()));
 
             _cacheManager = LocalIocManager.Resolve<ICacheManager>();
 
@@ -50,6 +51,35 @@ namespace Abp.Tests.Runtime.Caching.Memory
         }
 
         [Fact]
+        public void MultiThreading_Test()
+        {
+            Parallel.For(
+                0,
+                2048,
+                new ParallelOptions {MaxDegreeOfParallelism = 16},
+                i =>
+                {
+                    var randomKey = RandomHelper.GetRandomOf("A", "B", "C", "D");
+                    var randomValue = RandomHelper.GetRandom(0, 16);
+                    switch (RandomHelper.GetRandom(0, 3))
+                    {
+                        case 0:
+                            _cache.Get(randomKey, () => new MyCacheItem(randomValue));
+                            _cache.GetOrDefault(randomKey);
+                            break;
+                        case 1:
+                            _cache.GetOrDefault(randomKey);
+                            _cache.Set(randomKey, new MyCacheItem(RandomHelper.GetRandom(0, 16)));
+                            _cache.GetOrDefault(randomKey);
+                            break;
+                        case 2:
+                            _cache.GetOrDefault(randomKey);
+                            break;
+                    }
+                });
+        }
+
+        [Fact]
         public void Property_Injected_CacheManager_Should_Work()
         {
             LocalIocManager.Using<MyClientPropertyInjects>(client =>
@@ -67,6 +97,16 @@ namespace Abp.Tests.Runtime.Caching.Memory
         public class MyCacheItem
         {
             public int Value { get; set; }
+
+            public MyCacheItem()
+            {
+                
+            }
+
+            public MyCacheItem(int value)
+            {
+                Value = value;
+            }
         }
 
         public class MyClientPropertyInjects

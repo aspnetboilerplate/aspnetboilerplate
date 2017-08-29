@@ -10,7 +10,6 @@ using Abp.Domain.Uow;
 using Abp.Runtime.Session;
 using Abp.Timing;
 using Castle.Core.Logging;
-using Newtonsoft.Json;
 
 namespace Abp.Auditing
 {
@@ -26,8 +25,8 @@ namespace Abp.Auditing
         private readonly IAuditSerializer _auditSerializer;
 
         public AuditingHelper(
-            IAuditInfoProvider auditInfoProvider, 
-            IAuditingConfiguration configuration, 
+            IAuditInfoProvider auditInfoProvider,
+            IAuditingConfiguration configuration,
             IUnitOfWorkManager unitOfWorkManager,
             IAuditSerializer auditSerializer)
         {
@@ -76,12 +75,12 @@ namespace Abp.Auditing
             var classType = methodInfo.DeclaringType;
             if (classType != null)
             {
-                if (classType.IsDefined(typeof(AuditedAttribute), true))
+                if (classType.GetTypeInfo().IsDefined(typeof(AuditedAttribute), true))
                 {
                     return true;
                 }
 
-                if (classType.IsDefined(typeof(DisableAuditingAttribute), true))
+                if (classType.GetTypeInfo().IsDefined(typeof(DisableAuditingAttribute), true))
                 {
                     return false;
                 }
@@ -95,12 +94,12 @@ namespace Abp.Auditing
             return defaultValue;
         }
 
-        public AuditInfo CreateAuditInfo(MethodInfo method, object[] arguments)
+        public AuditInfo CreateAuditInfo(Type type, MethodInfo method, object[] arguments)
         {
-            return CreateAuditInfo(method, CreateArgumentsDictionary(method, arguments));
+            return CreateAuditInfo(type, method, CreateArgumentsDictionary(method, arguments));
         }
 
-        public AuditInfo CreateAuditInfo(MethodInfo method, IDictionary<string, object> arguments)
+        public AuditInfo CreateAuditInfo(Type type, MethodInfo method, IDictionary<string, object> arguments)
         {
             var auditInfo = new AuditInfo
             {
@@ -108,15 +107,22 @@ namespace Abp.Auditing
                 UserId = AbpSession.UserId,
                 ImpersonatorUserId = AbpSession.ImpersonatorUserId,
                 ImpersonatorTenantId = AbpSession.ImpersonatorTenantId,
-                ServiceName = method.DeclaringType != null
-                    ? method.DeclaringType.FullName
+                ServiceName = type != null
+                    ? type.FullName
                     : "",
                 MethodName = method.Name,
                 Parameters = ConvertArgumentsToJson(arguments),
                 ExecutionTime = Clock.Now
             };
 
-            _auditInfoProvider.Fill(auditInfo);
+            try
+            {
+                _auditInfoProvider.Fill(auditInfo);
+            }
+            catch (Exception ex)
+            {
+                Logger.Warn(ex.ToString(), ex);
+            }
 
             return auditInfo;
         }

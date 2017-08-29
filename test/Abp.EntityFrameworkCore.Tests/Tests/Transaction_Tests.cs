@@ -35,10 +35,10 @@ namespace Abp.EntityFrameworkCore.Tests.Tests
                         new Blog(blogName, $"http://{blogName}.com/")
                         );
 
-                    throw new ApplicationException(exceptionMessage);
+                    throw new Exception(exceptionMessage);
                 }
             }
-            catch (ApplicationException ex) when (ex.Message == exceptionMessage)
+            catch (Exception ex) when (ex.Message == exceptionMessage)
             {
 
             }

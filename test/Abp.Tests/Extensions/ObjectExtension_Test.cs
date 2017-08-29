@@ -32,7 +32,9 @@ namespace Abp.Tests.Extensions
 
             "false".To<bool>().ShouldBeOfType<bool>().ShouldBe(false);
             "True".To<bool>().ShouldBeOfType<bool>().ShouldBe(true);
-            
+
+            "2260afec-bbfd-42d4-a91a-dcb11e09b17f".To<Guid>().ShouldBeOfType<Guid>().ShouldBe(new Guid("2260afec-bbfd-42d4-a91a-dcb11e09b17f"));
+
             Assert.Throws<FormatException>(() => "test".To<bool>());
             Assert.Throws<FormatException>(() => "test".To<int>());
         }

@@ -1,0 +1,16 @@
+<Project>
+  <PropertyGroup>
+    <Version>2.3.0</Version>
+    <NoWarn>$(NoWarn);CS1591</NoWarn>
+    <PackageIconUrl>http://www.aspnetboilerplate.com/images/abp_nupkg.png</PackageIconUrl>
+    <PackageProjectUrl>http://www.aspnetboilerplate.com/</PackageProjectUrl>
+    <PackageLicenseUrl>https://github.com/aspnetboilerplate/aspnetboilerplate/blob/master/LICENSE</PackageLicenseUrl>
+    <RepositoryType>git</RepositoryType>
+    <RepositoryUrl>https://github.com/aspnetboilerplate/aspnetboilerplate</RepositoryUrl>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="SourceLink.Create.CommandLine" Version="2.1.2" PrivateAssets="All" />
+  </ItemGroup>
+
+</Project>

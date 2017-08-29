@@ -3,6 +3,7 @@ using System.Collections.Immutable;
 using System.Data.Entity;
 using System.Data.Entity.Core.Objects;
 using System.Data.Entity.Infrastructure;
+using System.Linq;
 using System.Threading.Tasks;
 using Abp.Dependency;
 using Abp.Domain.Uow;
@@ -59,12 +60,15 @@ namespace Abp.EntityFramework.Uow
 
         public override void SaveChanges()
         {
-            ActiveDbContexts.Values.ForEach(SaveChangesInDbContext);
+            foreach (var dbContext in GetAllActiveDbContexts())
+            {
+                SaveChangesInDbContext(dbContext);
+            }
         }
 
         public override async Task SaveChangesAsync()
         {
-            foreach (var dbContext in ActiveDbContexts.Values)
+            foreach (var dbContext in GetAllActiveDbContexts())
             {
                 await SaveChangesInDbContextAsync(dbContext);
             }
@@ -119,6 +123,11 @@ namespace Abp.EntityFramework.Uow
                     dbContext = _dbContextResolver.Resolve<TDbContext>(connectionString);
                 }
 
+                if (Options.Timeout.HasValue && !dbContext.Database.CommandTimeout.HasValue)
+                {
+                    dbContext.Database.CommandTimeout = Options.Timeout.Value.TotalSeconds.To<int>();
+                }
+
                 ((IObjectContextAdapter)dbContext).ObjectContext.ObjectMaterialized += (sender, args) =>
                 {
                     ObjectContext_ObjectMaterialized(dbContext, args);
@@ -140,7 +149,7 @@ namespace Abp.EntityFramework.Uow
             }
             else
             {
-                foreach (var activeDbContext in ActiveDbContexts.Values)
+                foreach (var activeDbContext in GetAllActiveDbContexts())
                 {
                     Release(activeDbContext);
                 }

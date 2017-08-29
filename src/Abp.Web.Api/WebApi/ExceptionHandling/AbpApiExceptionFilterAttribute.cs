@@ -11,6 +11,7 @@ using Abp.Events.Bus.Exceptions;
 using Abp.Extensions;
 using Abp.Logging;
 using Abp.Runtime.Session;
+using Abp.Runtime.Validation;
 using Abp.Web.Models;
 using Abp.WebApi.Configuration;
 using Abp.WebApi.Controllers;
@@ -106,6 +107,11 @@ namespace Abp.WebApi.ExceptionHandling
                 return AbpSession.UserId.HasValue
                     ? HttpStatusCode.Forbidden
                     : HttpStatusCode.Unauthorized;
+            }
+
+            if (context.Exception is AbpValidationException)
+            {
+                return HttpStatusCode.BadRequest;
             }
 
             if (context.Exception is EntityNotFoundException)

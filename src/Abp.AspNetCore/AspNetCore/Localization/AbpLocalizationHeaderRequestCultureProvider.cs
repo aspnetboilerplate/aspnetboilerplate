@@ -8,7 +8,7 @@ namespace Abp.AspNetCore.Localization
 {
     public class AbpLocalizationHeaderRequestCultureProvider : RequestCultureProvider
     {
-        private static readonly char[] _separator = new[] { '|' };
+        private static readonly char[] Separator = { '|' };
 
         private static readonly string _culturePrefix = "c=";
         private static readonly string _uiCulturePrefix = "uic=";
@@ -28,8 +28,7 @@ namespace Abp.AspNetCore.Localization
                 return TaskCache<ProviderCultureResult>.DefaultCompletedTask;
             }
 
-            var providerResultCulture = ParseHeaderValue(localizationHeader);
-            return Task.FromResult(providerResultCulture);
+            return Task.FromResult(ParseHeaderValue(localizationHeader));
         }
 
         /// <summary>
@@ -45,7 +44,12 @@ namespace Abp.AspNetCore.Localization
                 return null;
             }
 
-            var parts = value.Split(_separator, StringSplitOptions.RemoveEmptyEntries);
+            if (!value.Contains("|") && !value.Contains("="))
+            {
+                return new ProviderCultureResult(value, value);
+            }
+
+            var parts = value.Split(Separator, StringSplitOptions.RemoveEmptyEntries);
 
             if (parts.Length != 2)
             {

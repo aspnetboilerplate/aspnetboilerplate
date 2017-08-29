@@ -23,13 +23,14 @@ namespace Abp.EntityFramework.Tests.Repositories
                 Component.For<IDbContextProvider<MyBaseDbContext>>().UsingFactoryMethod(() => fakeBaseDbContextProvider),
                 Component.For<IDbContextProvider<MyMainDbContext>>().UsingFactoryMethod(() => fakeMainDbContextProvider),
                 Component.For<IDbContextProvider<MyModuleDbContext>>().UsingFactoryMethod(() => fakeModuleDbContextProvider),
-                Component.For<EntityFrameworkGenericRepositoryRegistrar>().LifestyleTransient()
+                Component.For<IDbContextEntityFinder>().ImplementedBy<EfDbContextEntityFinder>().LifestyleTransient(),
+                Component.For<EfGenericRepositoryRegistrar>().LifestyleTransient()
                 );
 
-            using (var repositoryRegistrar = LocalIocManager.ResolveAsDisposable<EntityFrameworkGenericRepositoryRegistrar>())
+            using (var repositoryRegistrar = LocalIocManager.ResolveAsDisposable<EfGenericRepositoryRegistrar>())
             {
-                repositoryRegistrar.Object.RegisterForDbContext(typeof(MyModuleDbContext), LocalIocManager);
-                repositoryRegistrar.Object.RegisterForDbContext(typeof(MyMainDbContext), LocalIocManager);
+                repositoryRegistrar.Object.RegisterForDbContext(typeof(MyModuleDbContext), LocalIocManager, EfAutoRepositoryTypes.Default);
+                repositoryRegistrar.Object.RegisterForDbContext(typeof(MyMainDbContext), LocalIocManager, EfAutoRepositoryTypes.Default);
             }
         }
 

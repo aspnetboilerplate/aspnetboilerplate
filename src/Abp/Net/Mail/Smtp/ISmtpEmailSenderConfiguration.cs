@@ -1,9 +1,7 @@
-﻿using System.Net.Mail;
-
-namespace Abp.Net.Mail.Smtp
+﻿namespace Abp.Net.Mail.Smtp
 {
     /// <summary>
-    /// Defines configurations to used by <see cref="SmtpClient"/> object.
+    /// Defines configurations to used by SmtpClient object.
     /// </summary>
     public interface ISmtpEmailSenderConfiguration : IEmailSenderConfiguration
     {

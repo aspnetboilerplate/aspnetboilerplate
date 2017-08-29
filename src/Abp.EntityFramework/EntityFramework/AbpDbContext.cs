@@ -19,6 +19,7 @@ using Abp.Domain.Uow;
 using Abp.Events.Bus;
 using Abp.Events.Bus.Entities;
 using Abp.Extensions;
+using Abp.MultiTenancy;
 using Abp.Reflection;
 using Abp.Runtime.Session;
 using Abp.Timing;
@@ -66,6 +67,12 @@ namespace Abp.EntityFramework
         /// Reference to multi tenancy configuration.
         /// </summary>
         public IMultiTenancyConfig MultiTenancyConfig { get; set; }
+
+        /// <summary>
+        /// Can be used to suppress automatically setting TenantId on SaveChanges.
+        /// Default: false.
+        /// </summary>
+        public bool SuppressAutoSetTenantId { get; set; }
 
         /// <summary>
         /// Constructor.
@@ -138,15 +145,16 @@ namespace Abp.EntityFramework
 
         private void RegisterToChanges()
         {
-            ((IObjectContextAdapter)this)
+            ((IObjectContextAdapter) this)
                 .ObjectContext
                 .ObjectStateManager
                 .ObjectStateManagerChanged += ObjectStateManager_ObjectStateManagerChanged;
         }
 
-        protected virtual void ObjectStateManager_ObjectStateManagerChanged(object sender, System.ComponentModel.CollectionChangeEventArgs e)
+        protected virtual void ObjectStateManager_ObjectStateManagerChanged(object sender,
+            System.ComponentModel.CollectionChangeEventArgs e)
         {
-            var contextAdapter = (IObjectContextAdapter)this;
+            var contextAdapter = (IObjectContextAdapter) this;
             if (e.Action != CollectionChangeAction.Add)
             {
                 return;
@@ -160,9 +168,9 @@ namespace Abp.EntityFramework
                     CheckAndSetMustHaveTenantIdProperty(entry.Entity);
                     SetCreationAuditProperties(entry.Entity, GetAuditUserId());
                     break;
-                    //case EntityState.Deleted: //It's not going here at all
-                    //    SetDeletionAuditProperties(entry.Entity, GetAuditUserId());
-                    //    break;
+                //case EntityState.Deleted: //It's not going here at all
+                //    SetDeletionAuditProperties(entry.Entity, GetAuditUserId());
+                //    break;
             }
         }
 
@@ -178,16 +186,21 @@ namespace Abp.EntityFramework
         public virtual void Initialize()
         {
             Database.Initialize(false);
-            this.SetFilterScopedParameterValue(AbpDataFilters.MustHaveTenant, AbpDataFilters.Parameters.TenantId, AbpSession.TenantId ?? 0);
-            this.SetFilterScopedParameterValue(AbpDataFilters.MayHaveTenant, AbpDataFilters.Parameters.TenantId, AbpSession.TenantId);
+            this.SetFilterScopedParameterValue(AbpDataFilters.MustHaveTenant, AbpDataFilters.Parameters.TenantId,
+                AbpSession.TenantId ?? 0);
+            this.SetFilterScopedParameterValue(AbpDataFilters.MayHaveTenant, AbpDataFilters.Parameters.TenantId,
+                AbpSession.TenantId);
         }
 
         protected override void OnModelCreating(DbModelBuilder modelBuilder)
         {
             base.OnModelCreating(modelBuilder);
             modelBuilder.Filter(AbpDataFilters.SoftDelete, (ISoftDelete d) => d.IsDeleted, false);
-            modelBuilder.Filter(AbpDataFilters.MustHaveTenant, (IMustHaveTenant t, int tenantId) => t.TenantId == tenantId || (int?)t.TenantId == null, 0); //While "(int?)t.TenantId == null" seems wrong, it's needed. See https://github.com/jcachat/EntityFramework.DynamicFilters/issues/62#issuecomment-208198058
-            modelBuilder.Filter(AbpDataFilters.MayHaveTenant, (IMayHaveTenant t, int? tenantId) => t.TenantId == tenantId, 0);
+            modelBuilder.Filter(AbpDataFilters.MustHaveTenant,
+                (IMustHaveTenant t, int tenantId) => t.TenantId == tenantId || (int?) t.TenantId == null,
+                0); //While "(int?)t.TenantId == null" seems wrong, it's needed. See https://github.com/jcachat/EntityFramework.DynamicFilters/issues/62#issuecomment-208198058
+            modelBuilder.Filter(AbpDataFilters.MayHaveTenant,
+                (IMayHaveTenant t, int? tenantId) => t.TenantId == tenantId, 0);
         }
 
         public override int SaveChanges()
@@ -228,42 +241,61 @@ namespace Abp.EntityFramework
 
             var userId = GetAuditUserId();
 
-            var entries = ChangeTracker.Entries().ToList();
-            foreach (var entry in entries)
+            foreach (var entry in ChangeTracker.Entries().ToList())
             {
-                switch (entry.State)
-                {
-                    case EntityState.Added:
-                        CheckAndSetId(entry.Entity);
-                        CheckAndSetMustHaveTenantIdProperty(entry.Entity);
-                        CheckAndSetMayHaveTenantIdProperty(entry.Entity);
-                        SetCreationAuditProperties(entry.Entity, userId);
-                        changeReport.ChangedEntities.Add(new EntityChangeEntry(entry.Entity, EntityChangeType.Created));
-                        break;
-                    case EntityState.Modified:
-                        SetModificationAuditProperties(entry, userId);
-                        if (entry.Entity is ISoftDelete && entry.Entity.As<ISoftDelete>().IsDeleted)
-                        {
-                            SetDeletionAuditProperties(entry.Entity, userId);
-                            changeReport.ChangedEntities.Add(new EntityChangeEntry(entry.Entity, EntityChangeType.Deleted));
-                        }
-                        else
-                        {
-                            changeReport.ChangedEntities.Add(new EntityChangeEntry(entry.Entity, EntityChangeType.Updated));
-                        }
-
-                        break;
-                    case EntityState.Deleted:
-                        CancelDeletionForSoftDelete(entry);
-                        SetDeletionAuditProperties(entry.Entity, userId);
-                        changeReport.ChangedEntities.Add(new EntityChangeEntry(entry.Entity, EntityChangeType.Deleted));
-                        break;
-                }
-
-                AddDomainEvents(changeReport.DomainEvents, entry.Entity);
+                ApplyAbpConcepts(entry, userId, changeReport);
             }
 
             return changeReport;
+        }
+
+        protected virtual void ApplyAbpConcepts(DbEntityEntry entry, long? userId, EntityChangeReport changeReport)
+        {
+            switch (entry.State)
+            {
+                case EntityState.Added:
+                    ApplyAbpConceptsForAddedEntity(entry, userId, changeReport);
+                    break;
+                case EntityState.Modified:
+                    ApplyAbpConceptsForModifiedEntity(entry, userId, changeReport);
+                    break;
+                case EntityState.Deleted:
+                    ApplyAbpConceptsForDeletedEntity(entry, userId, changeReport);
+                    break;
+            }
+
+            AddDomainEvents(changeReport.DomainEvents, entry.Entity);
+        }
+
+        protected virtual void ApplyAbpConceptsForAddedEntity(DbEntityEntry entry, long? userId, EntityChangeReport changeReport)
+        {
+            CheckAndSetId(entry.Entity);
+            CheckAndSetMustHaveTenantIdProperty(entry.Entity);
+            CheckAndSetMayHaveTenantIdProperty(entry.Entity);
+            SetCreationAuditProperties(entry.Entity, userId);
+            changeReport.ChangedEntities.Add(new EntityChangeEntry(entry.Entity, EntityChangeType.Created));
+        }
+
+        protected virtual void ApplyAbpConceptsForModifiedEntity(DbEntityEntry entry, long? userId, EntityChangeReport changeReport)
+        {
+            SetModificationAuditProperties(entry.Entity, userId);
+
+            if (entry.Entity is ISoftDelete && entry.Entity.As<ISoftDelete>().IsDeleted)
+            {
+                SetDeletionAuditProperties(entry.Entity, userId);
+                changeReport.ChangedEntities.Add(new EntityChangeEntry(entry.Entity, EntityChangeType.Deleted));
+            }
+            else
+            {
+                changeReport.ChangedEntities.Add(new EntityChangeEntry(entry.Entity, EntityChangeType.Updated));
+            }
+        }
+
+        protected virtual void ApplyAbpConceptsForDeletedEntity(DbEntityEntry entry, long? userId, EntityChangeReport changeReport)
+        {
+            CancelDeletionForSoftDelete(entry);
+            SetDeletionAuditProperties(entry.Entity, userId);
+            changeReport.ChangedEntities.Add(new EntityChangeEntry(entry.Entity, EntityChangeType.Deleted));
         }
 
         protected virtual void AddDomainEvents(List<DomainEventEntry> domainEvents, object entityAsObj)
@@ -279,7 +311,9 @@ namespace Abp.EntityFramework
                 return;
             }
 
-            domainEvents.AddRange(generatesDomainEventsEntity.DomainEvents.Select(eventData => new DomainEventEntry(entityAsObj, eventData)));
+            domainEvents.AddRange(
+                generatesDomainEventsEntity.DomainEvents.Select(
+                    eventData => new DomainEventEntry(entityAsObj, eventData)));
             generatesDomainEventsEntity.DomainEvents.Clear();
         }
 
@@ -291,7 +325,8 @@ namespace Abp.EntityFramework
             {
                 var entityType = ObjectContext.GetObjectType(entityAsObj.GetType());
                 var idProperty = entityType.GetProperty("Id");
-                var dbGeneratedAttr = ReflectionHelper.GetSingleAttributeOrDefault<DatabaseGeneratedAttribute>(idProperty);
+                var dbGeneratedAttr =
+                    ReflectionHelper.GetSingleAttributeOrDefault<DatabaseGeneratedAttribute>(idProperty);
                 if (dbGeneratedAttr == null || dbGeneratedAttr.DatabaseGeneratedOption == DatabaseGeneratedOption.None)
                 {
                     entity.Id = GuidGenerator.Create();
@@ -301,6 +336,11 @@ namespace Abp.EntityFramework
 
         protected virtual void CheckAndSetMustHaveTenantIdProperty(object entityAsObj)
         {
+            if (SuppressAutoSetTenantId)
+            {
+                return;
+            }
+
             //Only set IMustHaveTenant entities
             if (!(entityAsObj is IMustHaveTenant))
             {
@@ -329,6 +369,11 @@ namespace Abp.EntityFramework
 
         protected virtual void CheckAndSetMayHaveTenantIdProperty(object entityAsObj)
         {
+            if (SuppressAutoSetTenantId)
+            {
+                return;
+            }
+
             //Only set IMayHaveTenant entities
             if (!(entityAsObj is IMayHaveTenant))
             {
@@ -360,75 +405,14 @@ namespace Abp.EntityFramework
 
         protected virtual void SetCreationAuditProperties(object entityAsObj, long? userId)
         {
-            var entityWithCreationTime = entityAsObj as IHasCreationTime;
-            if (entityWithCreationTime == null)
-            {
-                return;
-            }
-
-            if (entityWithCreationTime.CreationTime == default(DateTime))
-            {
-                entityWithCreationTime.CreationTime = Clock.Now;
-            }
-
-            if (userId.HasValue && entityAsObj is ICreationAudited)
-            {
-                var entity = entityAsObj as ICreationAudited;
-                if (entity.CreatorUserId == null)
-                {
-                    if (entity is IMayHaveTenant || entity is IMustHaveTenant)
-                    {
-                        //Sets CreatorUserId only if current user is in same tenant/host with the given entity
-                        if ((entity is IMayHaveTenant && entity.As<IMayHaveTenant>().TenantId == AbpSession.TenantId) ||
-                            (entity is IMustHaveTenant && entity.As<IMustHaveTenant>().TenantId == AbpSession.TenantId))
-                        {
-                            entity.CreatorUserId = userId;
-                        }
-                    }
-                    else
-                    {
-                        entity.CreatorUserId = userId;
-                    }
-                }
-            }
+            EntityAuditingHelper.SetCreationAuditProperties(MultiTenancyConfig, entityAsObj, AbpSession.TenantId,
+                userId);
         }
 
-        protected virtual void SetModificationAuditProperties(DbEntityEntry entry, long? userId)
+        protected virtual void SetModificationAuditProperties(object entityAsObj, long? userId)
         {
-            if (entry.Entity is IHasModificationTime)
-            {
-                entry.Cast<IHasModificationTime>().Entity.LastModificationTime = Clock.Now;
-            }
-
-            if (entry.Entity is IModificationAudited)
-            {
-                var entity = entry.Cast<IModificationAudited>().Entity;
-
-                if (userId == null)
-                {
-                    entity.LastModifierUserId = null;
-                    return;
-                }
-
-                //Special check for multi-tenant entities
-                if (entity is IMayHaveTenant || entity is IMustHaveTenant)
-                {
-                    //Sets LastModifierUserId only if current user is in same tenant/host with the given entity
-                    if ((entity is IMayHaveTenant && entity.As<IMayHaveTenant>().TenantId == AbpSession.TenantId) ||
-                        (entity is IMustHaveTenant && entity.As<IMustHaveTenant>().TenantId == AbpSession.TenantId))
-                    {
-                        entity.LastModifierUserId = userId;
-                    }
-                    else
-                    {
-                        entity.LastModifierUserId = null;
-                    }
-                }
-                else
-                {
-                    entity.LastModifierUserId = userId;
-                }
-            }
+            EntityAuditingHelper.SetModificationAuditProperties(MultiTenancyConfig, entityAsObj, AbpSession.TenantId,
+                userId);
         }
 
         protected virtual void CancelDeletionForSoftDelete(DbEntityEntry entry)

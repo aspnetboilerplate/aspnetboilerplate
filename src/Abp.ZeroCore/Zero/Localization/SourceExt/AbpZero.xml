@@ -1,0 +1,35 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<localizationDictionary culture="en">
+  <texts>
+    <text name="Identity.ConcurrencyFailure">Optimistic concurrency failure, object has been modified.</text>
+    <text name="Identity.DefaultError">An unknown failure has occurred.</text>
+    <text name="Identity.DuplicateEmail">Email '{0}' is already taken.</text>
+    <text name="Identity.DuplicateRoleName">Role name '{0}' is already taken.</text>
+    <text name="Identity.DuplicateUserName">User name '{0}' is already taken.</text>
+    <text name="Identity.InvalidEmail">Email '{0}' is invalid.</text>
+    <text name="Identity.InvalidPasswordHasherCompatibilityMode">The provided PasswordHasherCompatibilityMode is invalid.</text>
+    <text name="Identity.InvalidPasswordHasherIterationCount">The iteration count must be a positive integer.</text>
+    <text name="Identity.InvalidRoleName">Role name '{0}' is invalid.</text>
+    <text name="Identity.InvalidToken">Invalid token.</text>
+    <text name="Identity.InvalidUserName">User name '{0}' is invalid, can only contain letters or digits.</text>
+    <text name="Identity.LoginAlreadyAssociated">A user with this login already exists.</text>
+    <text name="Identity.PasswordMismatch">Incorrect password.</text>
+    <text name="Identity.PasswordRequiresDigit">Passwords must have at least one digit ('0'-'9').</text>
+    <text name="Identity.PasswordRequiresLower">Passwords must have at least one lowercase ('a'-'z').</text>
+    <text name="Identity.PasswordRequiresNonAlphanumeric">Passwords must have at least one non alphanumeric character.</text>
+    <text name="Identity.PasswordRequiresUpper">Passwords must have at least one uppercase ('A'-'Z').</text>
+    <text name="Identity.PasswordTooShort">Passwords must be at least {0} characters.</text>
+    <text name="Identity.RoleNotFound">Role {0} does not exist.</text>
+    <text name="Identity.UserAlreadyHasPassword">User already has a password set.</text>
+    <text name="Identity.UserAlreadyInRole">User already in role '{0}'.</text>
+    <text name="Identity.UserLockedOut">User is locked out.</text>
+    <text name="Identity.UserLockoutNotEnabled">Lockout is not enabled for this user.</text>
+    <text name="Identity.UserNameNotFound">User {0} does not exist.</text>
+    <text name="Identity.UserNotInRole">User is not in role '{0}'.</text>
+    <text name="Email">Email</text>
+    <text name="EmailSecurityCodeSubject">Security Code</text>
+    <text name="EmailSecurityCodeBody">Your security code is: {0}</text>
+    <text name="Sms">Sms</text>
+    <text name="SmsSecurityCodeMessage">Your security code is: {0}</text>
+  </texts>
+</localizationDictionary>

@@ -31,6 +31,12 @@ namespace Abp.TestBase.SampleApplication.Tests
                 );
         }
 
+        protected override void PostInitialize()
+        {
+            //Commented out, since Effort.DbConnection does not provide Sql Text while interception time.
+            //DbInterception.Add(Resolve<WithNoLockInterceptor>());
+        }
+
         protected virtual void CreateInitialData()
         {
             UsingDbContext(

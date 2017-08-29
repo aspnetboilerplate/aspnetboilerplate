@@ -77,10 +77,10 @@ namespace Abp.Owin
         {
             app.UseAbp(optionsAction);
 
-            var abpBootstrapper = app.Properties["_AbpBootstrapper.Instance"] as AbpBootstrapper;
-            if (abpBootstrapper == null)
+            if (!app.Properties.ContainsKey("_AbpBootstrapper.Instance"))
             {
-                abpBootstrapper = AbpBootstrapper.Create<TStartupModule>();
+                var abpBootstrapper = AbpBootstrapper.Create<TStartupModule>();
+                app.Properties["_AbpBootstrapper.Instance"] = abpBootstrapper;
                 configureAction?.Invoke(abpBootstrapper);
                 abpBootstrapper.Initialize();
             }

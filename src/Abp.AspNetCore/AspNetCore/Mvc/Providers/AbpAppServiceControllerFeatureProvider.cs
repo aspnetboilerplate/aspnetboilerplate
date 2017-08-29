@@ -25,12 +25,12 @@ namespace Abp.AspNetCore.Mvc.Providers
             var type = typeInfo.AsType();
 
             if (!typeof(IApplicationService).IsAssignableFrom(type) ||
-                !type.IsPublic || type.IsAbstract || type.IsGenericType)
+                !typeInfo.IsPublic || typeInfo.IsAbstract || typeInfo.IsGenericType)
             {
                 return false;
             }
 
-            var remoteServiceAttr = ReflectionHelper.GetSingleAttributeOrDefault<RemoteServiceAttribute>(type);
+            var remoteServiceAttr = ReflectionHelper.GetSingleAttributeOrDefault<RemoteServiceAttribute>(typeInfo);
 
             if (remoteServiceAttr != null && !remoteServiceAttr.IsEnabledFor(type))
             {

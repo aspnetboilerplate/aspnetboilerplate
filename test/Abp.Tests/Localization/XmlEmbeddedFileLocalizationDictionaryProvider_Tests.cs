@@ -1,6 +1,7 @@
 ﻿using System.Linq;
 using System.Reflection;
 using Abp.Localization.Dictionaries.Xml;
+using Abp.Reflection.Extensions;
 using Shouldly;
 using Xunit;
 
@@ -13,7 +14,7 @@ namespace Abp.Tests.Localization
         public XmlEmbeddedFileLocalizationDictionaryProvider_Tests()
         {
             _dictionaryProvider = new XmlEmbeddedFileLocalizationDictionaryProvider(
-                Assembly.GetExecutingAssembly(),
+                typeof(XmlEmbeddedFileLocalizationDictionaryProvider_Tests).GetAssembly(),
                 "Abp.Tests.Localization.TestXmlFiles"
                 );
 

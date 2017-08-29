@@ -16,5 +16,6 @@
     <text name="TimeZone">Timezone</text>
     <text name="AllOfThesePermissionsMustBeGranted">Required permissions are not granted. All of these permissions must be granted: {0}</text>
     <text name="AtLeastOneOfThesePermissionsMustBeGranted">Required permissions are not granted. At least one of these permissions must be granted: {0}</text>
+    <text name="MainMenu">Main menu</text>
   </texts>
 </localizationDictionary>

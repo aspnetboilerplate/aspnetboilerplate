@@ -43,10 +43,7 @@ namespace Abp.Configuration
         /// <param name="displayName">Display name of the setting</param>
         public SettingDefinitionGroup(string name, ILocalizableString displayName)
         {
-            if (string.IsNullOrWhiteSpace(name))
-            {
-                throw new ArgumentException("name parameter is invalid! It can not be null or empty or whitespace", "name"); //TODO: Simpify throwing such exceptions
-            }
+           Check.NotNullOrWhiteSpace(name, nameof(name));
 
             Name = name;
             DisplayName = displayName;

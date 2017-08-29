@@ -1,0 +1,31 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<localizationDictionary culture="en">
+  <texts>
+    <text name="Identity.UserAlreadyInRole" value="User already in role." />
+    <text name="Identity.UserNotInRole" value="User is not in role." />
+    <text name="Identity.RoleNotFound" value="Role {0} does not exist." />
+    <text name="Identity.PasswordMismatch" value="Incorrect password." />
+    <text name="Identity.InvalidUserName" value="User name {0} is invalid, can only contain letters or digits." />
+    <text name="Identity.PasswordTooShort" value="Passwords must be at least {0} characters." />
+    <text name="Identity.PropertyTooShort" value="{0} cannot be null or empty." />
+    <text name="Identity.DuplicateUserName" value="Name {0} is already taken." />
+    <text name="Identity.UserAlreadyHasPassword" value="User already has a password set." />
+    <text name="Identity.PasswordRequireNonLetterOrDigit" value="Passwords must have at least one non letter or digit character." />
+    <text name="Identity.UserIdNotFound" value="UserId not found." />
+    <text name="Identity.InvalidToken" value="Invalid token." />
+    <text name="Identity.InvalidEmail" value="Email '{0}' is invalid." />
+    <text name="Identity.UserNameNotFound" value="User {0} does not exist." />
+    <text name="Identity.LockoutNotEnabled" value="Lockout is not enabled for this user." />
+    <text name="Identity.PasswordRequireUpper" value="Passwords must have at least one uppercase ('A'-'Z')." />
+    <text name="Identity.PasswordRequireDigit" value="Passwords must have at least one digit ('0'-'9')." />
+    <text name="Identity.PasswordRequireLower" value="Passwords must have at least one lowercase ('a'-'z')." />
+    <text name="Identity.DuplicateEmail" value="Email '{0}' is already taken." />
+    <text name="Identity.ExternalLoginExists" value="A user with that external login already exists." />
+    <text name="Identity.DefaultError" value="An unknown failure has occured." />
+    <text name="Email">Email</text>
+    <text name="EmailSecurityCodeSubject">Security Code</text>
+    <text name="EmailSecurityCodeBody">Your security code is: {0}</text>
+    <text name="Sms">Sms</text>
+    <text name="SmsSecurityCodeMessage">Your security code is: {0}</text>
+  </texts>
+</localizationDictionary>
