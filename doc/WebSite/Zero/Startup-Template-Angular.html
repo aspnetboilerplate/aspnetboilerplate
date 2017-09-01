@@ -84,28 +84,6 @@
 	  IIS or any web server you like.</p>
 		  <h3>Solution Details &amp; Other Features</h3>
 
-         <h4>Social Logins</h4>
-         <p>Startup template supports <strong>Facebook</strong> and <strong>Google+ </strong> logins. You can see the 
-            following settings in appsettings.json of Web.Host project:
-         </p>
-         <pre lang="json">
- "Facebook": {
-  "IsEnabled": "false",
-  "AppId": "",
-  "AppSecret": ""
-},
-"Google": {
-  "IsEnabled": "false",
-  "ClientId": "",
-  "ClientSecret": ""
-}
-			</pre>
-         <p>Here, you can enable which you need. Surely, you must have application 
-            keys and passwords which you need to get from related social web site. You 
-            can find guides from web to learn how to obtain this keys. Once you enable a 
-            social login and enter true keys, you will see a button in the login page. 
-            You can implement other logins as similar.
-         </p>
          <h4>Token Based Authentication</h4>
          <p>If you want to consume APIs/application services from a mobile application, you can use token based 
             authentication mechanism just like we do it for Angular client. Startup template includes JwtBearer token authentication 

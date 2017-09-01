@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<localizationDictionary culture="ar">
+  <texts>
+    <text name="InvalidTenancyName" value="اسم الإيجار غير صالح!" />
+    <text name="TenancyNameIsAlreadyTaken" value="اسم الإيجار {0} مأخوذ بالفعل." />
+    <text name="RoleNameIsAlreadyTaken" value="اسم الدور {0} مأخوذ بالفعل." />
+    <text name="RoleDisplayNameIsAlreadyTaken" value="اسم العرض للدور {0} مأخوذ بالفعل." />
+    <text name="CanNotDeleteStaticRole" value="لا يمكن حذف دور ثابت: {0}" />
+    <text name="CanNotRenameAdminUser" value="لا يمكن إعادة تسمية اسم المستخدم من {0} لأن هذا هو المستخدم المسؤول الافتراضي!" />
+    <text name="CanNotDeleteAdminUser" value="لا يمكن حذف المستخدم {0} لأن هذا هو المستخدم المشرف الافتراضي!" />
+    <text name="OrganizationUnitDuplicateDisplayNameWarning" value="هناك بالفعل وحدة تنظيمية باسم {0}. لا يمكن إنشاء وحدتين بنفس الاسم في نفس المستوى." />
+  </texts>
+</localizationDictionary>

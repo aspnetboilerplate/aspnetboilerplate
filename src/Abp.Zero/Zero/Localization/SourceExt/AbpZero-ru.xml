@@ -1,0 +1,31 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<localizationDictionary culture="ru">
+  <texts>
+    <text name="Identity.UserAlreadyInRole" value="Пользователь уже добавлен в роль." />
+    <text name="Identity.UserNotInRole" value="Пользователь не содержится в роли." />
+    <text name="Identity.RoleNotFound" value="Роль {0} не существует." />
+    <text name="Identity.PasswordMismatch" value="Неправильный пароль." />
+    <text name="Identity.InvalidUserName" value="Недопустимое имя пользователя: {0}. Имена пользователей могут содержать только буквы и цифры." />
+    <text name="Identity.PasswordTooShort" value="Пароли должны содержать не меньше {0} символов." />
+    <text name="Identity.PropertyTooShort" value="{0} не может иметь значение NULL или быть пустым." />
+    <text name="Identity.DuplicateUserName" value="Имя {0} уже используется." />
+    <text name="Identity.UserAlreadyHasPassword" value="Пароль пользователя уже задан." />
+    <text name="Identity.PasswordRequireNonLetterOrDigit" value="В пароле должен быть по крайней мере один небуквенный или нецифровой символ." />
+    <text name="Identity.UserIdNotFound" value="Не удается найти UserId." />
+    <text name="Identity.InvalidToken" value="Недопустимый маркер." />
+    <text name="Identity.InvalidEmail" value="Адрес электронной почты '{0}' является недопустимым." />
+    <text name="Identity.UserNameNotFound" value="Пользователь {0} не существует." />
+    <text name="Identity.LockoutNotEnabled" value="Блокировка не включена для этого пользователя." />
+    <text name="Identity.PasswordRequireUpper" value="В пароле должен быть по крайней мере один символ в верхнем регистре ('A'-'Z')." />
+    <text name="Identity.PasswordRequireDigit" value="В пароле должна быть по крайней мере одна цифра ('0'-'9')." />
+    <text name="Identity.PasswordRequireLower" value="В пароле должен быть по крайней мере один символ в нижнем регистре ('a'-'z')." />
+    <text name="Identity.DuplicateEmail" value="Адрес электронной почты '{0}' уже используется." />
+    <text name="Identity.ExternalLoginExists" value="Пользователь с таким внешним именем уже существует." />
+    <text name="Identity.DefaultError" value="Произошел неизвестный сбой." />
+    <text name="Email">Email</text>
+    <text name="EmailSecurityCodeSubject">Секретный код</text>
+    <text name="EmailSecurityCodeBody">Ваш секретный код: {0}</text>
+    <text name="Sms">Смс</text>
+    <text name="SmsSecurityCodeMessage">Ваш секретный код: {0}</text>
+  </texts>
+</localizationDictionary>

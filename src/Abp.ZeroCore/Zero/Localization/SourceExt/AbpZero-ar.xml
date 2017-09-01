@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<localizationDictionary culture="ar">
+  <texts>
+    <text name="Identity.ConcurrencyFailure">فشل التزامن الأمثل، تم تعديل الكائن.</text>
+    <text name="Identity.DefaultError">حدث فشل غير معروف.</text>
+    <text name="Identity.DuplicateEmail">البريد الإلكتروني '{0}' مستخدم بالفعل.</text>
+    <text name="Identity.DuplicateRoleName">اسم الدور '{0}' مأخوذ بالفعل.</text>
+    <text name="Identity.DuplicateUserName">اسم المستخدم '{0}' مأخوذ بالفعل.</text>
+    <text name="Identity.InvalidEmail">البريد الإلكتروني '{0}' غير صالح.</text>
+    <text name="Identity.InvalidPasswordHasherCompatibilityMode">وضع التوافق المتوفر لمشفر كلمة المرور غير صالح.</text>
+    <text name="Identity.InvalidPasswordHasherIterationCount">يجب أن يكون عدد التكرار عددا صحيحا موجبا.</text>
+    <text name="Identity.InvalidRoleName">اسم الدور '{0}' غير صالح.</text>
+    <text name="Identity.InvalidToken" value="الرمز المميز غير صالح." />
+    <text name="Identity.InvalidUserName" value="اسم المستخدم {0} غير صالح، يمكن أن يحتوي فقط على أحرف أو أرقام." />
+    <text name="Identity.ExternalLoginExists" value="هناك مستخدم لديه نفس معلومات تسجيل دخول خارجية." />
+    <text name="Identity.PasswordMismatch">كلمة المرور غير متوافقة</text>
+    <text name="Identity.PasswordRequiresDigit" value="يجب أن تحتوي كلمات المرور على رقم واحد على الأقل ('0' - '9')." />
+    <text name="Identity.PasswordRequiresLower" value="يجب أن تحتوي كلمات المرور على حرف صغير واحد على الأقل ('a' - 'z')." />
+    <text name="Identity.PasswordRequiresNonAlphanumeric" value="يجب أن تحتوي كلمة المرور على حرف خاص أو رقم على الأقل." />
+    <text name="Identity.PasswordRequiresUpper" value="يجب أن تحتوي كلمات المرور على حرف واحد كبير على الأقل ('A' - 'Z')." />
+    <text name="Identity.PasswordTooShort" value="يجب أن تكون كلمات المرور {0} حرفا على الأقل." />
+    <text name="Identity.RoleNotFound" value="الدور {0} غير موجود." />
+    <text name="Identity.UserAlreadyHasPassword" value="لدى المستخدم بالفعل كلمة مرور محددة." />
+    <text name="Identity.UserAlreadyInRole">المستخدم بالفعل منضم للدور '{0}'.</text>
+    <text name="Identity.UserLockedOut">تم غلق المستخدم.</text>
+    <text name="Identity.UserLockoutNotEnabled" value="لم يتم تمكين الغلق لهذا المستخدم." />
+    <text name="Identity.UserNameNotFound" value="المستخدم {0} غير موجود." />
+    <text name="Identity.UserNotInRole" value="المستخدم ليس منضم للدور." />
+    <text name="Email">البريد الإلكتروني</text>
+    <text name="EmailSecurityCodeSubject">رمز الحماية</text>
+    <text name="EmailSecurityCodeBody">رمز الحماية الخاص بك هو: {0}</text>
+    <text name="Sms">رسالة قصيرة</text>
+    <text name="SmsSecurityCodeMessage">رمز الحماية الخاص بك هو: {0}</text>
+  </texts>
+</localizationDictionary>

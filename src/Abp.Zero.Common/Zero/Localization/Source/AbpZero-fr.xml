@@ -1,0 +1,13 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<localizationDictionary culture="fr">
+  <texts>
+    <text name="InvalidTenancyName" value="Ce nom de client (Tenant) n'est pas valide !" />
+    <text name="TenancyNameIsAlreadyTaken" value="Le nom de client (Tenant) {0} est déjà connu et réservé." />
+    <text name="RoleNameIsAlreadyTaken" value="Le nom du profil {0} est déjà connu et réservé." />
+    <text name="RoleDisplayNameIsAlreadyTaken" value="Le nom affiché du profil est déjà connu et réservé." />
+    <text name="CanNotDeleteStaticRole" value="Impossible d'effacer le profil statique : {0}" />
+    <text name="CanNotRenameAdminUser" value="Impossible de renommer le nom d'utilisateur : {0} car il s'agit de l'utilisateur administrateur par défaut !" />
+    <text name="CanNotDeleteAdminUser" value="Impossible d'effacer le nom d'utilisateur : {0} car il s'agit de l'utilisateur administrateur par défaut !" />
+    <text name="OrganizationUnitDuplicateDisplayNameWarning" value="Il existe déjà une unité organisationnelle portant le nom {0}. Deux unités avec la même appelation ne peuvent être créées au même niveau." />
+  </texts>
+</localizationDictionary>

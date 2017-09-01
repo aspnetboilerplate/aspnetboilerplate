@@ -1,0 +1,13 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<localizationDictionary culture="en">
+  <texts>
+    <text name="InvalidTenancyName" value="Tenancy name is not valid!" />
+    <text name="TenancyNameIsAlreadyTaken" value="Tenancy name {0} is already taken." />
+    <text name="RoleNameIsAlreadyTaken" value="Role name {0} is already taken." />
+    <text name="RoleDisplayNameIsAlreadyTaken" value="Role display name {0} is already taken." />
+    <text name="CanNotDeleteStaticRole" value="Can not delete a static role: {0}" />
+    <text name="CanNotRenameAdminUser" value="Can not rename user name of the {0} since this is the default admin user!" />
+    <text name="CanNotDeleteAdminUser" value="Can not delete user {0} since this is the default admin user!" />
+    <text name="OrganizationUnitDuplicateDisplayNameWarning" value="There is already an organization unit with name {0}. Two units with same name can not be created in same level." />
+  </texts>
+</localizationDictionary>

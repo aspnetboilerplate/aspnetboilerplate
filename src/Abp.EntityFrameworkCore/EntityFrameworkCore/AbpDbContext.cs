@@ -128,42 +128,60 @@ namespace Abp.EntityFrameworkCore
 
             var userId = GetAuditUserId();
 
-            var entries = ChangeTracker.Entries().ToList();
-            foreach (var entry in entries)
+            foreach (var entry in ChangeTracker.Entries().ToList())
             {
-                switch (entry.State)
-                {
-                    case EntityState.Added:
-                        CheckAndSetId(entry);
-                        CheckAndSetMustHaveTenantIdProperty(entry.Entity);
-                        CheckAndSetMayHaveTenantIdProperty(entry.Entity);
-                        SetCreationAuditProperties(entry.Entity, userId);
-                        changeReport.ChangedEntities.Add(new EntityChangeEntry(entry.Entity, EntityChangeType.Created));
-                        break;
-                    case EntityState.Modified:
-                        SetModificationAuditProperties(entry.Entity, userId);
-                        if (entry.Entity is ISoftDelete && entry.Entity.As<ISoftDelete>().IsDeleted)
-                        {
-                            SetDeletionAuditProperties(entry.Entity, userId);
-                            changeReport.ChangedEntities.Add(new EntityChangeEntry(entry.Entity, EntityChangeType.Deleted));
-                        }
-                        else
-                        {
-                            changeReport.ChangedEntities.Add(new EntityChangeEntry(entry.Entity, EntityChangeType.Updated));
-                        }
-
-                        break;
-                    case EntityState.Deleted:
-                        CancelDeletionForSoftDelete(entry);
-                        SetDeletionAuditProperties(entry.Entity, userId);
-                        changeReport.ChangedEntities.Add(new EntityChangeEntry(entry.Entity, EntityChangeType.Deleted));
-                        break;
-                }
-
-                AddDomainEvents(changeReport.DomainEvents, entry.Entity);
+                ApplyAbpConcepts(entry, userId, changeReport);
             }
 
             return changeReport;
+        }
+
+        protected virtual void ApplyAbpConcepts(EntityEntry entry, long? userId, EntityChangeReport changeReport)
+        {
+            switch (entry.State)
+            {
+                case EntityState.Added:
+                    ApplyAbpConceptsForAddedEntity(entry, userId, changeReport);
+                    break;
+                case EntityState.Modified:
+                    ApplyAbpConceptsForModifiedEntity(entry, userId, changeReport);
+                    break;
+                case EntityState.Deleted:
+                    ApplyAbpConceptsForDeletedEntity(entry, userId, changeReport);
+                    break;
+            }
+
+            AddDomainEvents(changeReport.DomainEvents, entry.Entity);
+        }
+
+        protected virtual void ApplyAbpConceptsForAddedEntity(EntityEntry entry, long? userId, EntityChangeReport changeReport)
+        {
+            CheckAndSetId(entry);
+            CheckAndSetMustHaveTenantIdProperty(entry.Entity);
+            CheckAndSetMayHaveTenantIdProperty(entry.Entity);
+            SetCreationAuditProperties(entry.Entity, userId);
+            changeReport.ChangedEntities.Add(new EntityChangeEntry(entry.Entity, EntityChangeType.Created));
+        }
+
+        protected virtual void ApplyAbpConceptsForModifiedEntity(EntityEntry entry, long? userId, EntityChangeReport changeReport)
+        {
+            SetModificationAuditProperties(entry.Entity, userId);
+            if (entry.Entity is ISoftDelete && entry.Entity.As<ISoftDelete>().IsDeleted)
+            {
+                SetDeletionAuditProperties(entry.Entity, userId);
+                changeReport.ChangedEntities.Add(new EntityChangeEntry(entry.Entity, EntityChangeType.Deleted));
+            }
+            else
+            {
+                changeReport.ChangedEntities.Add(new EntityChangeEntry(entry.Entity, EntityChangeType.Updated));
+            }
+        }
+
+        protected virtual void ApplyAbpConceptsForDeletedEntity(EntityEntry entry, long? userId, EntityChangeReport changeReport)
+        {
+            CancelDeletionForSoftDelete(entry);
+            SetDeletionAuditProperties(entry.Entity, userId);
+            changeReport.ChangedEntities.Add(new EntityChangeEntry(entry.Entity, EntityChangeType.Deleted));
         }
 
         protected virtual void AddDomainEvents(List<DomainEventEntry> domainEvents, object entityAsObj)

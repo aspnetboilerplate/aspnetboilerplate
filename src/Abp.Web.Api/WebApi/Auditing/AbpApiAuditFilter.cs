@@ -31,6 +31,7 @@ namespace Abp.WebApi.Auditing
             }
 
             var auditInfo = _auditingHelper.CreateAuditInfo(
+                actionContext.ActionDescriptor.ControllerDescriptor.ControllerType,
                 method,
                 actionContext.ActionArguments
             );

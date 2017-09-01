@@ -98,10 +98,10 @@ namespace Abp.Authorization
             await AuthorizeAsync(authorizeAttributes);
         }
 
-        private static bool AllowAnonymous(MemberInfo methodInfo, Type type)
+        private static bool AllowAnonymous(MemberInfo memberInfo, Type type)
         {
             return ReflectionHelper
-                .GetAttributesOfMemberAndType(methodInfo, type)
+                .GetAttributesOfMemberAndType(memberInfo, type)
                 .OfType<IAbpAllowAnonymousAttribute>()
                 .Any();
         }
