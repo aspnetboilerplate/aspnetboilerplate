@@ -31,7 +31,7 @@
   
   <ItemGroup>
     <PackageReference Include="System.Runtime" Version="4.3.0" />
-    <PackageReference Include="MailKit" Version="1.18.0" />
+    <PackageReference Include="MailKit" Version="1.18.1.1" />
   </ItemGroup>
 
 </Project>

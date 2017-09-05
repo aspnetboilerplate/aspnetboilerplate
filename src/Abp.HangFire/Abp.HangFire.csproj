@@ -30,7 +30,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Include="Hangfire.Core" Version="1.6.15" />
+    <PackageReference Include="Hangfire.Core" Version="1.6.16" />
   </ItemGroup>
 
 </Project>
