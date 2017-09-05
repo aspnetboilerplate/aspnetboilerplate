@@ -2,6 +2,7 @@
 using Abp.Application.Services;
 using Abp.Aspects;
 using Abp.AspNetCore.Configuration;
+using Abp.AspNetCore.Mvc.Extensions;
 using Abp.Dependency;
 using Microsoft.AspNetCore.Mvc.Filters;
 
@@ -20,7 +21,7 @@ namespace Abp.AspNetCore.Mvc.Validation
 
         public async Task OnActionExecutionAsync(ActionExecutingContext context, ActionExecutionDelegate next)
         {
-            if (!_configuration.IsValidationEnabledForControllers)
+            if (!_configuration.IsValidationEnabledForControllers || !context.ActionDescriptor.IsControllerAction())
             {
                 await next();
                 return;
