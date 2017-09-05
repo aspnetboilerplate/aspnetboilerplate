@@ -17,11 +17,7 @@ namespace Abp.Tests.Domain.Uow
                 Component.For<IUnitOfWorkDefaultOptions>().ImplementedBy<UnitOfWorkDefaultOptions>().LifestyleSingleton(),
                 Component.For<IUnitOfWorkManager>().ImplementedBy<UnitOfWorkManager>().LifestyleSingleton(),
                 Component.For<IUnitOfWork>().Instance(fakeUow).LifestyleSingleton(),
-#if NET46
-                Component.For<ICurrentUnitOfWorkProvider>().ImplementedBy<CallContextCurrentUnitOfWorkProvider>().LifestyleSingleton()
-#else
                 Component.For<ICurrentUnitOfWorkProvider>().ImplementedBy<AsyncLocalCurrentUnitOfWorkProvider>().LifestyleSingleton()
-#endif
                 );
 
             var uowManager = LocalIocManager.Resolve<IUnitOfWorkManager>();

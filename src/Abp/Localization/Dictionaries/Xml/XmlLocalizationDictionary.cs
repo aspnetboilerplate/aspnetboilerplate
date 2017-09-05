@@ -64,7 +64,7 @@ namespace Abp.Localization.Dictionaries.Xml
                 throw new AbpException("culture is not defined in language XML file!");
             }
 
-            var dictionary = new XmlLocalizationDictionary(CultureInfoHelper.Get(cultureName));
+            var dictionary = new XmlLocalizationDictionary(CultureInfo.GetCultureInfo(cultureName));
 
             var dublicateNames = new List<string>();
 

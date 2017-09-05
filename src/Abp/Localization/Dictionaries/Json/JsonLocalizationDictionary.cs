@@ -69,7 +69,7 @@ namespace Abp.Localization.Dictionaries.Json
                 throw new AbpException("Culture is empty in language json file.");
             }
 
-            var dictionary = new JsonLocalizationDictionary(CultureInfoHelper.Get(cultureCode));
+            var dictionary = new JsonLocalizationDictionary(CultureInfo.GetCultureInfo(cultureCode));
             var dublicateNames = new List<string>();
             foreach (var item in jsonFile.Texts)
             {

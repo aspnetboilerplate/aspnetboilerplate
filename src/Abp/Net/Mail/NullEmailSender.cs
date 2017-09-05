@@ -1,10 +1,6 @@
-using System;
-#if NET46
 using System.Net.Mail;
-#endif
 using System.Threading.Tasks;
 using Castle.Core.Logging;
-using Abp.Threading;
 
 namespace Abp.Net.Mail
 {
@@ -26,7 +22,6 @@ namespace Abp.Net.Mail
             Logger = NullLogger.Instance;
         }
 
-#if NET46
         protected override Task SendEmailAsync(MailMessage mail)
         {
             Logger.Warn("USING NullEmailSender!");
@@ -49,21 +44,5 @@ namespace Abp.Net.Mail
             Logger.Debug(mail.Subject);
             Logger.Debug(mail.Body);
         }
-#else
-        public override Task SendAsync(string from, string to, string subject, string body, bool isBodyHtml = true)
-        {
-            Send(from, to, subject, body, isBodyHtml);
-            return AbpTaskCache.CompletedTask;
-        }
-
-        public override void Send(string from, string to, string subject, string body, bool isBodyHtml = true)
-        {
-            Logger.Debug("from       : " + from);
-            Logger.Debug("to         : " + to);
-            Logger.Debug("subject    : " + subject);
-            Logger.Debug("body       : " + body);
-            Logger.Debug("isBodyHtml : " + isBodyHtml.ToString());
-        }
-#endif
     }
 }

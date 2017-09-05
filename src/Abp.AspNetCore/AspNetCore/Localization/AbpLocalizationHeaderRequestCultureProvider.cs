@@ -2,7 +2,6 @@
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Localization;
-using Microsoft.AspNetCore.Mvc.Internal;
 
 namespace Abp.AspNetCore.Localization
 {
@@ -25,7 +24,7 @@ namespace Abp.AspNetCore.Localization
 
             if (localizationHeader.Count == 0)
             {
-                return TaskCache<ProviderCultureResult>.DefaultCompletedTask;
+                return Task.FromResult((ProviderCultureResult) null);
             }
 
             return Task.FromResult(ParseHeaderValue(localizationHeader));

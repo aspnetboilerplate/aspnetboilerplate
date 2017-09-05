@@ -16,8 +16,8 @@ namespace Microsoft.Extensions.DependencyInjection
         {
             var type = typeof(TTenantManager);
             var abpManagerType = typeof(AbpTenantManager<,>).MakeGenericType(builder.TenantType, builder.UserType);
-            builder.Services.AddTransient(type, provider => provider.GetService(abpManagerType));
-            builder.Services.AddTransient(abpManagerType, type);
+            builder.Services.AddScoped(type, provider => provider.GetRequiredService(abpManagerType));
+            builder.Services.AddScoped(abpManagerType, type);
             return builder;
         }
 
@@ -26,8 +26,8 @@ namespace Microsoft.Extensions.DependencyInjection
         {
             var type = typeof(TEditionManager);
             var abpManagerType = typeof(AbpEditionManager);
-            builder.Services.AddTransient(type, provider => provider.GetService(abpManagerType));
-            builder.Services.AddTransient(abpManagerType, type);
+            builder.Services.AddScoped(type, provider => provider.GetRequiredService(abpManagerType));
+            builder.Services.AddScoped(abpManagerType, type);
             return builder;
         }
 

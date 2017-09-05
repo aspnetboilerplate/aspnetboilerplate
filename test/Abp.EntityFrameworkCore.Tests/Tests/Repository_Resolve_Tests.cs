@@ -63,12 +63,12 @@ namespace Abp.EntityFrameworkCore.Tests.Tests
             ).Message.ShouldBe("can not get count!");
 
             var activeTickets = repo1.GetActiveList();
-            activeTickets.Count.ShouldBe(1);
-            activeTickets[0].IsActive.ShouldBeTrue();
+            activeTickets.Count.ShouldBeGreaterThan(0);
+            activeTickets.All(t => t.IsActive).ShouldBeTrue();
 
             activeTickets = repo2.GetActiveList();
-            activeTickets.Count.ShouldBe(1);
-            activeTickets[0].IsActive.ShouldBeTrue();
+            activeTickets.Count.ShouldBeGreaterThan(0);
+            activeTickets.All(t => t.IsActive).ShouldBeTrue();
         }
 
         [Fact]

@@ -21,6 +21,11 @@ namespace Abp.AspNetCore.Mvc.Results
 
         public virtual void OnResultExecuting(ResultExecutingContext context)
         {
+            if (!context.ActionDescriptor.IsControllerAction())
+            {
+                return;
+            }
+
             var methodInfo = context.ActionDescriptor.GetMethodInfo();
 
             //var clientCacheAttribute = ReflectionHelper.GetSingleAttributeOfMemberOrDeclaringTypeOrDefault(

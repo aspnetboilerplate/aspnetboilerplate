@@ -39,6 +39,11 @@ namespace Abp.AspNetCore.Mvc.Proxying
             {
                 foreach (var apiDescription in descriptionGroupItem.Items)
                 {
+                    if (!apiDescription.ActionDescriptor.IsControllerAction())
+                    {
+                        continue;
+                    }
+
                     AddApiDescriptionToModel(apiDescription, model);
                 }
             }

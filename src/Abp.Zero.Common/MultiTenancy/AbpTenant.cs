@@ -13,32 +13,10 @@ namespace Abp.MultiTenancy
         where TUser : AbpUserBase
     {
         /// <summary>
-        /// "Default".
-        /// </summary>
-        public const string DefaultTenantName = "Default";
-
-        /// <summary>
-        /// "^[a-zA-Z][a-zA-Z0-9_-]{1,}$".
-        /// </summary>
-        public const string TenancyNameRegex = "^[a-zA-Z][a-zA-Z0-9_-]{1,}$";
-        
-        /// <summary>
-        /// Max length of the <see cref="Name"/> property.
-        /// </summary>
-        public const int MaxNameLength = 128;
-
-        /// <summary>
         /// Current <see cref="Edition"/> of the Tenant.
         /// </summary>
         public virtual Edition Edition { get; set; }
         public virtual int? EditionId { get; set; }
-
-        /// <summary>
-        /// Display name of the Tenant.
-        /// </summary>
-        [Required]
-        [StringLength(MaxNameLength)]
-        public virtual string Name { get; set; }
 
         /// <summary>
         /// Reference to the creator user of this entity.

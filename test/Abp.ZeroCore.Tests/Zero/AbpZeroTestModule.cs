@@ -26,8 +26,8 @@ namespace Abp.Zero
 
         public override void Initialize()
         {
-            IocManager.RegisterAssemblyByConvention(typeof(AbpZeroTestModule).GetAssembly());
             TestServiceCollectionRegistrar.Register(IocManager);
+            IocManager.RegisterAssemblyByConvention(typeof(AbpZeroTestModule).GetAssembly());
         }
     }
 }

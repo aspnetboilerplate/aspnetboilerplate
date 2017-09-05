@@ -10,6 +10,7 @@ using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Localization;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
+using System.Globalization;
 
 namespace Abp.AspNetCore
 {
@@ -79,7 +80,7 @@ namespace Abp.AspNetCore
             {
                 var supportedCultures = languageManager.Object
                     .GetLanguages()
-                    .Select(l => CultureInfoHelper.Get(l.Name))
+                    .Select(l => CultureInfo.GetCultureInfo(l.Name))
                     .ToArray();
 
                 var options = new RequestLocalizationOptions

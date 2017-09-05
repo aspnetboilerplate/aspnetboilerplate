@@ -1,4 +1,3 @@
-#if NET46
 using System.Net.Mail;
 
 namespace Abp.Net.Mail.Smtp
@@ -9,7 +8,7 @@ namespace Abp.Net.Mail.Smtp
     public interface ISmtpEmailSender : IEmailSender
     {
         /// <summary>
-        /// Creates and configures new <see cref="SmtpClient"/> object to send emails. 
+        /// Creates and configures new <see cref="SmtpClient"/> object to send emails.
         /// </summary>
         /// <returns>
         /// An <see cref="SmtpClient"/> object that is ready to send emails.
@@ -17,4 +16,3 @@ namespace Abp.Net.Mail.Smtp
         SmtpClient BuildClient();
     }
 }
-#endif

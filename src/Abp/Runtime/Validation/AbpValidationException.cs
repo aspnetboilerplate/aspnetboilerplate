@@ -32,7 +32,6 @@ namespace Abp.Runtime.Validation
             Severity = LogSeverity.Warn;
         }
 
-#if NET46
         /// <summary>
         /// Constructor for serializing.
         /// </summary>
@@ -42,7 +41,6 @@ namespace Abp.Runtime.Validation
             ValidationErrors = new List<ValidationResult>();
             Severity = LogSeverity.Warn;
         }
-#endif
 
         /// <summary>
         /// Constructor.
@@ -54,7 +52,6 @@ namespace Abp.Runtime.Validation
             ValidationErrors = new List<ValidationResult>();
             Severity = LogSeverity.Warn;
         }
-
 
         /// <summary>
         /// Constructor.

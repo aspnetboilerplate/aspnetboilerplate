@@ -1,7 +1,5 @@
 using System.Collections.Generic;
-#if NET46
 using System.Configuration;
-#endif
 using System.Threading.Tasks;
 using Abp.Logging;
 using Abp.Threading;
@@ -25,7 +23,6 @@ namespace Abp.Configuration
 
         public Task<SettingInfo> GetSettingOrNullAsync(int? tenantId, long? userId, string name)
         {
-#if NET46
             var value = ConfigurationManager.AppSettings[name];
 
             if (value == null)
@@ -34,9 +31,7 @@ namespace Abp.Configuration
             }
 
             return Task.FromResult(new SettingInfo(tenantId, userId, name, value));
-#else
-            return Task.FromResult<SettingInfo>(null);
-#endif
+
         }
         /// <inheritdoc/>
         public Task DeleteAsync(SettingInfo setting)

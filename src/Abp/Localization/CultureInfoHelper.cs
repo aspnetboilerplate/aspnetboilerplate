@@ -13,7 +13,7 @@ namespace Abp.Localization
         {
             Check.NotNull(culture, nameof(culture));
 
-            return Use(Get(culture), uiCulture == null ? null : Get(uiCulture));
+            return Use(CultureInfo.GetCultureInfo(culture), uiCulture == null ? null : CultureInfo.GetCultureInfo(uiCulture));
         }
 
         public static IDisposable Use([NotNull] CultureInfo culture, CultureInfo uiCulture = null)
@@ -36,6 +36,7 @@ namespace Abp.Localization
         /// <summary>
         /// This method is a temporary solution since CultureInfo.GetCultureInfo() does not exists in netstandard yet.
         /// </summary>
+        [Obsolete("Use CultureInfo.GetCultureInfo instead!")]
         public static CultureInfo Get(string name)
         {
             if (name == null)
@@ -55,7 +56,7 @@ namespace Abp.Localization
 
             public CultureInfoCacheEntry(CultureInfo cultureInfo)
             {
-                this.CultureInfo = cultureInfo;
+                CultureInfo = cultureInfo;
             }
         }
     }
