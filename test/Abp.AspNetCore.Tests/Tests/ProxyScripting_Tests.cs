@@ -1,6 +1,4 @@
-﻿using System.Net.Http;
-using System.Net.Http.Headers;
-using System.Threading.Tasks;
+﻿using System.Threading.Tasks;
 using Abp.AspNetCore.Mvc.Proxying;
 using Abp.Web.Api.ProxyScripting.Generators.JQuery;
 using Shouldly;
@@ -10,7 +8,7 @@ namespace Abp.AspNetCore.Tests
 {
     public class ProxyScripting_Tests : AppTestBase
     {
-        [Fact]// TODO: Getting NotAcceptable return code
+        [Fact]
         public async Task jQuery_Scripting_Simple_Test()
         {
             // Act
