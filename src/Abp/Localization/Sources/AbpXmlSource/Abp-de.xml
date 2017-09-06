@@ -3,13 +3,19 @@
   <texts>
     <text name="SmtpHost">SMTP Host</text>
     <text name="SmtpPort">SMTP Port</text>
-    <text name="Username">User Name</text>
+    <text name="Username">Benutzername</text>
     <text name="Password">Passwort</text>
     <text name="DomainName">Domäne</text>
     <text name="UseSSL">SSL nutzen</text>
     <text name="UseDefaultCredentials">Standard Anmeldedaten verwenden</text>
-    <text name="DefaultFromSenderEmailAddress">Standard (Absender) Email Adresse</text>
+    <text name="DefaultFromSenderEmailAddress">Standard (Absender) E-Mail Adresse</text>
     <text name="DefaultFromSenderDisplayName">Standard (Absender) Benutzername</text>
     <text name="DefaultLanguage">Standard Sprache</text>
+    <text name="ReceiveNotifications">Benachrichtigungen erhalten</text>
+    <text name="CurrentUserDidNotLoginToTheApplication">Der aktuelle Benutzer hat sich nicht angemeldet!</text>
+    <text name="TimeZone">Zeitzone</text>
+    <text name="AllOfThesePermissionsMustBeGranted">Die benötigten Berechtigungen wurden nicht vergeben. Alle der folgenden Berechtigungen werden benötigt: {0}</text>
+    <text name="AtLeastOneOfThesePermissionsMustBeGranted">Die benötigten Berechtigungen wurden nicht vergeben. Mindestens eine der folgenden Berechtigungen wird benötigt: {0}</text>
+    <text name="MainMenu">Hauptmenü</text>
   </texts>
 </localizationDictionary>
