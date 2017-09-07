@@ -66,7 +66,7 @@
 		<p>ABP defines a <a href="Setting-Management.html">setting</a> named <strong>Abp.Timing.TimeZone</strong> 
 		(<em>TimingSettingNames.TimeZone</em> constant) for 
 		storing selected timezone of host, tenant and user.  ABP assumes that value of timezone setting is a valid 
-		<strong>Windows timezone id</strong>. It also defines a timezone mapping file to convert a Windows Timezone to 
+		<strong>Windows timezone name</strong>. It also defines a timezone mapping file to convert a Windows Timezone to 
 		<strong>IANA</strong> timezone since some of the common libraries are using IANA timezone id. 
 		<strong>UtcClockProvider</strong> must be used in order to support
 		<strong>multiple timezones</strong>. Because if UtcClockProvider is used, all datetime values will be stored 
