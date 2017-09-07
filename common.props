@@ -10,7 +10,7 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="SourceLink.Create.CommandLine" Version="2.1.2" PrivateAssets="All" />
+    <PackageReference Include="SourceLink.Create.CommandLine" Version="2.2.1" PrivateAssets="All" />
   </ItemGroup>
 
 </Project>
