@@ -46,6 +46,18 @@
       <DocumentationSource sourceFile="..\src\Abp.Web.Mvc\Abp.Web.Mvc.csproj" />
       <DocumentationSource sourceFile="..\src\Abp.Web.Resources\Abp.Web.Resources.csproj" />
       <DocumentationSource sourceFile="..\src\Abp.Web.SignalR\Abp.Web.SignalR.csproj" />
+      <DocumentationSource sourceFile="..\..\src\Abp.Zero.EntityFramework\Abp.Zero.EntityFramework.csproj" />
+      <DocumentationSource sourceFile="..\..\src\Abp.Zero.EntityFrameworkCore\Abp.Zero.EntityFrameworkCore.csproj" />
+      <DocumentationSource sourceFile="..\..\src\Abp.Zero.Ldap\Abp.Zero.Ldap.csproj" />
+      <DocumentationSource sourceFile="..\..\src\Abp.Zero.Owin\Abp.Zero.Owin.csproj" />
+      <DocumentationSource sourceFile="..\..\src\Abp.Zero\Abp.Zero.csproj" />
+      <DocumentationSource sourceFile="..\..\src\Abp.Zero.AspNetCore\Abp.Zero.AspNetCore.csproj" />
+      <DocumentationSource sourceFile="..\..\src\Abp.Zero.NHibernate\Abp.Zero.NHibernate.csproj" />
+      <DocumentationSource sourceFile="..\..\src\Abp.Zero.Common\Abp.Zero.Common.csproj" />
+      <DocumentationSource sourceFile="..\..\src\Abp.ZeroCore\Abp.ZeroCore.csproj" />
+      <DocumentationSource sourceFile="..\..\src\Abp.ZeroCore.EntityFrameworkCore\Abp.ZeroCore.EntityFrameworkCore.csproj" />
+      <DocumentationSource sourceFile="..\..\src\Abp.ZeroCore.IdentityServer4\Abp.ZeroCore.IdentityServer4.csproj" />
+      <DocumentationSource sourceFile="..\..\src\Abp.ZeroCore.IdentityServer4.EntityFrameworkCore\Abp.ZeroCore.IdentityServer4.EntityFrameworkCore.csproj" />
     </DocumentationSources>
     <SaveComponentCacheCapacity>100</SaveComponentCacheCapacity>
     <BuildAssemblerVerbosity>OnlyWarningsAndErrors</BuildAssemblerVerbosity>
@@ -67,13 +79,21 @@
     <HelpTitle>ABP Api Document</HelpTitle>
     <ContentPlacement>AboveNamespaces</ContentPlacement>
     <PlugInConfigurations>
-      <PlugInConfig id="Assembly Binding Redirection" enabled="True" xmlns="">
+      <PlugInConfig id="Assembly Binding Redirection" enabled="True">
         <configuration useGAC="false">
           <assemblyBinding />
           <ignoreIfUnresolved>
+            <assemblyIdentity name="AutoMapper" />
             <assemblyIdentity name="BusinessObjects.Licensing.KeycodeDecoder" />
+            <assemblyIdentity name="Castle.Core" />
+            <assemblyIdentity name="Castle.Windsor" />
+            <assemblyIdentity name="IdentityServer4" />
+            <assemblyIdentity name="IdentityServer4.AspNetIdentity" />
             <assemblyIdentity name="Microsoft.VisualStudio.TestTools.UITest.Playback" />
+            <assemblyIdentity name="netstandard" />
             <assemblyIdentity name="Newtonsoft.Json" />
+            <assemblyIdentity name="NHibernate" />
+            <assemblyIdentity name="System" />
           </ignoreIfUnresolved>
         </configuration>
       </PlugInConfig>
@@ -81,19 +101,20 @@
     <MissingTags>AutoDocumentCtors, AutoDocumentDispose</MissingTags>
     <ApiFilter>
       <Filter entryType="Namespace" fullName="Abp.AutoMapper" isExposed="True">
-  <Filter entryType="Class" fullName="Abp.AutoMapper.AutoMapExtensions" filterName="AutoMapExtensions" isExposed="False" />
-</Filter>
-<Filter entryType="Namespace" fullName="Abp.Extensions" isExposed="True">
-  <Filter entryType="Class" fullName="Abp.Extensions.ObjectExtensions" filterName="ObjectExtensions" isExposed="False" />
-</Filter>
-<Filter entryType="Namespace" fullName="Abp.Json" isExposed="True">
-  <Filter entryType="Class" fullName="Abp.Json.JsonExtensions" filterName="JsonExtensions" isExposed="True">
-    <Filter entryType="Method" fullName="Abp.Json.JsonExtensions.ToJsonString" filterName="ToJsonString" isExposed="False" />
-  </Filter>
-</Filter>
-<Filter entryType="Namespace" fullName="Abp.Threading.Extensions" isExposed="True">
-  <Filter entryType="Class" fullName="Abp.Threading.Extensions.LockExtensions" filterName="LockExtensions" isExposed="False" />
-</Filter></ApiFilter>
+        <Filter entryType="Class" fullName="Abp.AutoMapper.AutoMapExtensions" filterName="AutoMapExtensions" isExposed="False" />
+      </Filter>
+      <Filter entryType="Namespace" fullName="Abp.Extensions" isExposed="True">
+        <Filter entryType="Class" fullName="Abp.Extensions.ObjectExtensions" filterName="ObjectExtensions" isExposed="False" />
+      </Filter>
+      <Filter entryType="Namespace" fullName="Abp.Json" isExposed="True">
+        <Filter entryType="Class" fullName="Abp.Json.JsonExtensions" filterName="JsonExtensions" isExposed="True">
+          <Filter entryType="Method" fullName="Abp.Json.JsonExtensions.ToJsonString" filterName="ToJsonString" isExposed="False" />
+        </Filter>
+      </Filter>
+      <Filter entryType="Namespace" fullName="Abp.Threading.Extensions" isExposed="True">
+        <Filter entryType="Class" fullName="Abp.Threading.Extensions.LockExtensions" filterName="LockExtensions" isExposed="False" />
+      </Filter>
+    </ApiFilter>
     <VisibleItems>InheritedMembers, InheritedFrameworkMembers, Protected, ProtectedInternalAsProtected</VisibleItems>
   </PropertyGroup>
   <!-- There are no properties for these groups.  AnyCPU needs to appear in order for Visual Studio to perform
