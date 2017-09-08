@@ -95,8 +95,6 @@ namespace Abp.EntityFrameworkCore.Repositories
                 }
             }
 
-            query = ApplyFilters(query);
-
             return query;
         }
 

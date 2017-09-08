@@ -295,9 +295,7 @@ namespace Abp.Events.Bus
         /// <inheritdoc/>
         public Task TriggerAsync<TEventData>(object eventSource, TEventData eventData) where TEventData : IEventData
         {
-#if  NET46
             ExecutionContext.SuppressFlow();
-#endif
 
             var task = Task.Factory.StartNew(
                 () =>
@@ -312,9 +310,7 @@ namespace Abp.Events.Bus
                     }
                 });
 
-#if NET46
             ExecutionContext.RestoreFlow();
-#endif
 
             return task;
         }
@@ -328,9 +324,7 @@ namespace Abp.Events.Bus
         /// <inheritdoc/>
         public Task TriggerAsync(Type eventType, object eventSource, IEventData eventData)
         {
-#if  NET46
             ExecutionContext.SuppressFlow();
-#endif
 
             var task = Task.Factory.StartNew(
                 () =>
@@ -345,9 +339,7 @@ namespace Abp.Events.Bus
                     }
                 });
 
-#if NET46
             ExecutionContext.RestoreFlow();
-#endif
 
             return task;
         }

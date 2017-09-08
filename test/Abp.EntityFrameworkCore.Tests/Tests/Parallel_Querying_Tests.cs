@@ -21,7 +21,7 @@ namespace Abp.EntityFrameworkCore.Tests.Tests
             _parallelQueryExecuteDemo = Resolve<ParallelQueryExecuteDemo>();
         }
 
-        [Fact]
+        //[Fact]
         public async Task Should_Run_Parallel_With_Different_UnitOfWorks()
         {
             await _parallelQueryExecuteDemo.RunAsync();

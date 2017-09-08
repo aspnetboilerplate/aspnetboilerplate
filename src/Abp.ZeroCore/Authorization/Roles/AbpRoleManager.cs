@@ -11,7 +11,6 @@ using Abp.Runtime.Session;
 using Abp.UI;
 using Abp.Zero;
 using Abp.Zero.Configuration;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.Logging;
 
@@ -25,7 +24,7 @@ namespace Abp.Authorization.Roles
 
         public IAbpSession AbpSession { get; set; }
 
-        public IRoleManagementConfig RoleManagementConfig { get; private set; }
+        public IRoleManagementConfig RoleManagementConfig { get; }
 
         private IRolePermissionStore<TRole> RolePermissionStore
         {
@@ -40,7 +39,7 @@ namespace Abp.Authorization.Roles
             }
         }
 
-        protected AbpRoleStore<TRole, TUser> AbpStore { get; private set; }
+        protected AbpRoleStore<TRole, TUser> AbpStore { get; }
 
         private readonly IPermissionManager _permissionManager;
         private readonly ICacheManager _cacheManager;
@@ -52,7 +51,6 @@ namespace Abp.Authorization.Roles
             ILookupNormalizer keyNormalizer,
             IdentityErrorDescriber errors,
             ILogger<AbpRoleManager<TRole, TUser>> logger,
-            IHttpContextAccessor contextAccessor, 
             IPermissionManager permissionManager,
             ICacheManager cacheManager, 
             IUnitOfWorkManager unitOfWorkManager,
@@ -62,8 +60,7 @@ namespace Abp.Authorization.Roles
                   roleValidators,
                   keyNormalizer,
                   errors,
-                  logger,
-                  contextAccessor)
+                  logger)
         {
             _permissionManager = permissionManager;
             _cacheManager = cacheManager;

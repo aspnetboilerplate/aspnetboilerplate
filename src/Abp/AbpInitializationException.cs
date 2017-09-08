@@ -17,7 +17,6 @@ namespace Abp
 
         }
 
-#if NET46
         /// <summary>
         /// Constructor for serializing.
         /// </summary>
@@ -26,7 +25,6 @@ namespace Abp
         {
 
         }
-#endif
 
         /// <summary>
         /// Constructor.

@@ -3,7 +3,7 @@
   <Import Project="..\..\common.props" />
 
   <PropertyGroup>
-    <TargetFramework>net46</TargetFramework>
+    <TargetFramework>net461</TargetFramework>
     <GenerateDocumentationFile>true</GenerateDocumentationFile>
     <AssemblyName>Abp.Zero.NHibernate</AssemblyName>
     <PackageId>Abp.Zero.NHibernate</PackageId>
@@ -18,22 +18,19 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <None Include="bin\Release\net46\Abp.Zero.NHibernate.pdb">
-      <PackagePath>lib/net46/</PackagePath>
+    <None Include="bin\Release\net461\Abp.Zero.NHibernate.pdb">
+      <PackagePath>lib/net461/</PackagePath>
       <Pack>true</Pack>
     </None>
   </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Include="Abp.NHibernate" Version="2.3.0" />
-    <PackageReference Include="Abp.FluentMigrator" Version="2.3.0" />
-  </ItemGroup>
-
-  <ItemGroup>
+    <ProjectReference Include="..\Abp.FluentMigrator\Abp.FluentMigrator.csproj" />
+    <ProjectReference Include="..\Abp.NHibernate\Abp.NHibernate.csproj" />
     <ProjectReference Include="..\Abp.Zero\Abp.Zero.csproj" />
   </ItemGroup>
 
-  <ItemGroup Condition=" '$(TargetFramework)' == 'net46' ">
+  <ItemGroup>
     <Reference Include="System" />
     <Reference Include="Microsoft.CSharp" />
   </ItemGroup>

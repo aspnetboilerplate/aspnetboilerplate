@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Linq;
 using System.Threading.Tasks;
 using Abp.Domain.Repositories;
 using Abp.Domain.Uow;
@@ -109,11 +110,14 @@ namespace Abp.EntityFrameworkCore.Tests.Tests
             {
                 var blog1 = await _blogRepository.GetAsync(1);
                 var post = new Post(blog1, "a test title", "a test body");
-                post.IsTransient().ShouldBeTrue();
                 await _postRepository.InsertAsync(post);
                 await uow.CompleteAsync();
-                post.IsTransient().ShouldBeFalse();
             }
+
+            UsingDbContext(context =>
+            {
+                context.Posts.FirstOrDefault(p => p.Title == "a test title").ShouldNotBeNull();
+            });
         }
     }
 }

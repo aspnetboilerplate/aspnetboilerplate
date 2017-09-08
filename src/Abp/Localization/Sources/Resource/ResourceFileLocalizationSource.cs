@@ -96,15 +96,11 @@ namespace Abp.Localization.Sources.Resource
         /// </summary>
         public virtual IReadOnlyList<LocalizedString> GetAllStrings(CultureInfo culture, bool includeDefaults = true)
         {
-#if NET46
             return ResourceManager
                 .GetResourceSet(culture, true, includeDefaults)
                 .Cast<DictionaryEntry>()
                 .Select(entry => new LocalizedString(entry.Key.ToString(), entry.Value.ToString(), culture))
                 .ToImmutableList();
-#else
-            return new LocalizedString[0];
-#endif
         }
 
         protected virtual string ReturnGivenNameOrThrowException(string name, CultureInfo culture)

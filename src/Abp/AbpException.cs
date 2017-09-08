@@ -17,7 +17,6 @@ namespace Abp
 
         }
 
-#if NET46
         /// <summary>
         /// Creates a new <see cref="AbpException"/> object.
         /// </summary>
@@ -26,7 +25,6 @@ namespace Abp
         {
 
         }
-#endif
 
         /// <summary>
         /// Creates a new <see cref="AbpException"/> object.

@@ -1,5 +1,4 @@
-﻿#if NET46
-using MimeKit;
+﻿using MimeKit;
 using System.Net.Mail;
 
 
@@ -29,4 +28,3 @@ namespace Abp.MailKit
         }
     }
 }
-#endif

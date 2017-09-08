@@ -3,7 +3,7 @@
   <Import Project="..\..\common.props" />
   
   <PropertyGroup>
-    <TargetFramework>net46</TargetFramework>
+    <TargetFramework>net461</TargetFramework>
     <GenerateDocumentationFile>true</GenerateDocumentationFile>
     <AssemblyName>Abp.Web.Mvc</AssemblyName>
     <PackageId>Abp.Web.Mvc</PackageId>
@@ -19,8 +19,8 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <None Include="bin\Release\net46\Abp.Web.Mvc.pdb">
-      <PackagePath>lib/net46/</PackagePath>
+    <None Include="bin\Release\net461\Abp.Web.Mvc.pdb">
+      <PackagePath>lib/net461/</PackagePath>
       <Pack>true</Pack>
     </None>
   </ItemGroup>
@@ -33,12 +33,9 @@
     <PackageReference Include="Microsoft.AspNet.Mvc" Version="5.2.3" />
   </ItemGroup>
 
-  <ItemGroup Condition=" '$(TargetFramework)' == 'net46' ">
+  <ItemGroup>
     <Reference Include="System" />
     <Reference Include="Microsoft.CSharp" />
-  </ItemGroup>
-
-  <ItemGroup>
     <Reference Include="System.ComponentModel.DataAnnotations" />
     <Reference Include="System.Transactions" />
     <Reference Include="System.Web" />

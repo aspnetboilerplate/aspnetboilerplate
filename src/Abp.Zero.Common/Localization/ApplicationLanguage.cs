@@ -56,7 +56,7 @@ namespace Abp.Localization
         /// <summary>
         /// Is this language active. Inactive languages are not get by <see cref="IApplicationLanguageManager"/>.
         /// </summary>
-        public bool IsDisabled { get; set; }
+        public virtual bool IsDisabled { get; set; }
 
         /// <summary>
         /// Creates a new <see cref="ApplicationLanguage"/> object.

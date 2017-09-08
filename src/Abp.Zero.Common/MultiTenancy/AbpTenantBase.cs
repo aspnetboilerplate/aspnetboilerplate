@@ -24,12 +24,34 @@ namespace Abp.MultiTenancy
         public const int MaxConnectionStringLength = 1024;
 
         /// <summary>
+        /// "Default".
+        /// </summary>
+        public const string DefaultTenantName = "Default";
+
+        /// <summary>
+        /// "^[a-zA-Z][a-zA-Z0-9_-]{1,}$".
+        /// </summary>
+        public const string TenancyNameRegex = "^[a-zA-Z][a-zA-Z0-9_-]{1,}$";
+
+        /// <summary>
+        /// Max length of the <see cref="Name"/> property.
+        /// </summary>
+        public const int MaxNameLength = 128;
+
+        /// <summary>
         /// Tenancy name. This property is the UNIQUE name of this Tenant.
         /// It can be used as subdomain name in a web application.
         /// </summary>
         [Required]
         [StringLength(MaxTenancyNameLength)]
         public virtual string TenancyName { get; set; }
+
+        /// <summary>
+        /// Display name of the Tenant.
+        /// </summary>
+        [Required]
+        [StringLength(MaxNameLength)]
+        public virtual string Name { get; set; }
 
         /// <summary>
         /// ENCRYPTED connection string of the tenant database.

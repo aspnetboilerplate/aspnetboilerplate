@@ -3,7 +3,7 @@
   <Import Project="..\..\common.props" />
   
   <PropertyGroup>
-    <TargetFrameworks>net46;netstandard1.6</TargetFrameworks>
+    <TargetFramework>netstandard2.0</TargetFramework>
     <GenerateDocumentationFile>true</GenerateDocumentationFile>
     <AssemblyName>Abp.Castle.Log4Net</AssemblyName>
     <PackageId>Abp.Castle.Log4Net</PackageId>
@@ -16,12 +16,8 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <None Include="bin\Release\net46\Abp.Castle.Log4Net.pdb">
-      <PackagePath>lib/net46/</PackagePath>
-      <Pack>true</Pack>
-    </None>
-    <None Include="bin\Release\netstandard1.6\Abp.Castle.Log4Net.pdb">
-      <PackagePath>lib/netstandard1.6/</PackagePath>
+    <None Include="bin\Release\netstandard2.0\Abp.Castle.Log4Net.pdb">
+      <PackagePath>lib/netstandard2.0/</PackagePath>
       <Pack>true</Pack>
     </None>
   </ItemGroup>
@@ -32,14 +28,6 @@
 
   <ItemGroup>
     <PackageReference Include="log4net" Version="2.0.8" />
-  </ItemGroup>
-
-  <ItemGroup Condition=" '$(TargetFramework)' == 'net46' ">
-    <Reference Include="System.Configuration" />
-    <Reference Include="System.Runtime" />
-    <Reference Include="System.Threading.Tasks" />
-    <Reference Include="System" />
-    <Reference Include="Microsoft.CSharp" />
   </ItemGroup>
 
 </Project>

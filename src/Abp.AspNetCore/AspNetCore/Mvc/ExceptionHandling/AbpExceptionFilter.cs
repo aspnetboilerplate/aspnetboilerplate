@@ -37,6 +37,11 @@ namespace Abp.AspNetCore.Mvc.ExceptionHandling
 
         public void OnException(ExceptionContext context)
         {
+            if (!context.ActionDescriptor.IsControllerAction())
+            {
+                return;
+            }
+
             var wrapResultAttribute =
                 ReflectionHelper.GetSingleAttributeOfMemberOrDeclaringTypeOrDefault(
                     context.ActionDescriptor.GetMethodInfo(),

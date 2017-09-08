@@ -1,4 +1,3 @@
-#if NET46
 using System.Net;
 using System.Net.Mail;
 using System.Threading.Tasks;
@@ -82,4 +81,3 @@ namespace Abp.Net.Mail.Smtp
         }
     }
 }
-#endif

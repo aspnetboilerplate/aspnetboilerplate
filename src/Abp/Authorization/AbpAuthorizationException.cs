@@ -24,7 +24,6 @@ namespace Abp.Authorization
             Severity = LogSeverity.Warn;
         }
 
-#if NET46
         /// <summary>
         /// Creates a new <see cref="AbpAuthorizationException"/> object.
         /// </summary>
@@ -33,7 +32,6 @@ namespace Abp.Authorization
         {
 
         }
-#endif
 
         /// <summary>
         /// Creates a new <see cref="AbpAuthorizationException"/> object.
