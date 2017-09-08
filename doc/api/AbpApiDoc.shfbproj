@@ -18,34 +18,6 @@
     <HtmlHelpName>Documentation</HtmlHelpName>
     <Language>en-US</Language>
     <DocumentationSources>
-      <DocumentationSource sourceFile="..\src\Abp\Abp.csproj" />
-      <DocumentationSource sourceFile="..\src\Abp.AspNetCore\Abp.AspNetCore.csproj" />
-      <DocumentationSource sourceFile="..\src\Abp.AspNetCore.TestBase\Abp.AspNetCore.TestBase.csproj" />
-      <DocumentationSource sourceFile="..\src\Abp.AutoMapper\Abp.AutoMapper.csproj" />
-      <DocumentationSource sourceFile="..\src\Abp.Castle.Log4Net\Abp.Castle.Log4Net.csproj" />
-      <DocumentationSource sourceFile="..\src\Abp.Dapper\Abp.Dapper.csproj" />
-      <DocumentationSource sourceFile="..\src\Abp.EntityFramework\Abp.EntityFramework.csproj" />
-      <DocumentationSource sourceFile="..\src\Abp.EntityFramework.Common\Abp.EntityFramework.Common.csproj" />
-      <DocumentationSource sourceFile="..\src\Abp.EntityFramework.GraphDiff\Abp.EntityFramework.GraphDiff.csproj" />
-      <DocumentationSource sourceFile="..\src\Abp.EntityFrameworkCore\Abp.EntityFrameworkCore.csproj" />
-      <DocumentationSource sourceFile="..\src\Abp.FluentMigrator\Abp.FluentMigrator.csproj" />
-      <DocumentationSource sourceFile="..\src\Abp.HangFire\Abp.HangFire.csproj" />
-      <DocumentationSource sourceFile="..\src\Abp.HangFire.AspNetCore\Abp.HangFire.AspNetCore.csproj" />
-      <DocumentationSource sourceFile="..\src\Abp.MailKit\Abp.MailKit.csproj" />
-      <DocumentationSource sourceFile="..\src\Abp.MemoryDb\Abp.MemoryDb.csproj" />
-      <DocumentationSource sourceFile="..\src\Abp.MongoDB\Abp.MongoDB.csproj" />
-      <DocumentationSource sourceFile="..\src\Abp.Owin\Abp.Owin.csproj" />
-      <DocumentationSource sourceFile="..\src\Abp.Quartz\Abp.Quartz.csproj" />
-      <DocumentationSource sourceFile="..\src\Abp.RedisCache\Abp.RedisCache.csproj" />
-      <DocumentationSource sourceFile="..\src\Abp.RedisCache.ProtoBuf\Abp.RedisCache.ProtoBuf.csproj" />
-      <DocumentationSource sourceFile="..\src\Abp.TestBase\Abp.TestBase.csproj" />
-      <DocumentationSource sourceFile="..\src\Abp.Web\Abp.Web.csproj" />
-      <DocumentationSource sourceFile="..\src\Abp.Web.Api\Abp.Web.Api.csproj" />
-      <DocumentationSource sourceFile="..\src\Abp.Web.Api.OData\Abp.Web.Api.OData.csproj" />
-      <DocumentationSource sourceFile="..\src\Abp.Web.Common\Abp.Web.Common.csproj" />
-      <DocumentationSource sourceFile="..\src\Abp.Web.Mvc\Abp.Web.Mvc.csproj" />
-      <DocumentationSource sourceFile="..\src\Abp.Web.Resources\Abp.Web.Resources.csproj" />
-      <DocumentationSource sourceFile="..\src\Abp.Web.SignalR\Abp.Web.SignalR.csproj" />
       <DocumentationSource sourceFile="..\..\src\Abp.Zero.EntityFramework\Abp.Zero.EntityFramework.csproj" />
       <DocumentationSource sourceFile="..\..\src\Abp.Zero.EntityFrameworkCore\Abp.Zero.EntityFrameworkCore.csproj" />
       <DocumentationSource sourceFile="..\..\src\Abp.Zero.Ldap\Abp.Zero.Ldap.csproj" />
@@ -58,6 +30,35 @@
       <DocumentationSource sourceFile="..\..\src\Abp.ZeroCore.EntityFrameworkCore\Abp.ZeroCore.EntityFrameworkCore.csproj" />
       <DocumentationSource sourceFile="..\..\src\Abp.ZeroCore.IdentityServer4\Abp.ZeroCore.IdentityServer4.csproj" />
       <DocumentationSource sourceFile="..\..\src\Abp.ZeroCore.IdentityServer4.EntityFrameworkCore\Abp.ZeroCore.IdentityServer4.EntityFrameworkCore.csproj" />
+      <DocumentationSource sourceFile="..\..\src\Abp.EntityFramework\Abp.EntityFramework.csproj" />
+      <DocumentationSource sourceFile="..\..\src\Abp\Abp.csproj" />
+      <DocumentationSource sourceFile="..\..\src\Abp.AspNetCore\Abp.AspNetCore.csproj" />
+      <DocumentationSource sourceFile="..\..\src\Abp.AspNetCore.TestBase\Abp.AspNetCore.TestBase.csproj" />
+      <DocumentationSource sourceFile="..\..\src\Abp.AutoMapper\Abp.AutoMapper.csproj" />
+      <DocumentationSource sourceFile="..\..\src\Abp.Castle.Log4Net\Abp.Castle.Log4Net.csproj" />
+      <DocumentationSource sourceFile="..\..\src\Abp.Dapper\Abp.Dapper.csproj" />
+      <DocumentationSource sourceFile="..\..\src\Abp.EntityFramework.Common\Abp.EntityFramework.Common.csproj" />
+      <DocumentationSource sourceFile="..\..\src\Abp.EntityFramework.GraphDiff\Abp.EntityFramework.GraphDiff.csproj" />
+      <DocumentationSource sourceFile="..\..\src\Abp.EntityFrameworkCore\Abp.EntityFrameworkCore.csproj" />
+      <DocumentationSource sourceFile="..\..\src\Abp.FluentMigrator\Abp.FluentMigrator.csproj" />
+      <DocumentationSource sourceFile="..\..\src\Abp.HangFire\Abp.HangFire.csproj" />
+      <DocumentationSource sourceFile="..\..\src\Abp.HangFire.AspNetCore\Abp.HangFire.AspNetCore.csproj" />
+      <DocumentationSource sourceFile="..\..\src\Abp.MailKit\Abp.MailKit.csproj" />
+      <DocumentationSource sourceFile="..\..\src\Abp.MemoryDb\Abp.MemoryDb.csproj" />
+      <DocumentationSource sourceFile="..\..\src\Abp.MongoDB\Abp.MongoDB.csproj" />
+      <DocumentationSource sourceFile="..\..\src\Abp.NHibernate\Abp.NHibernate.csproj" />
+      <DocumentationSource sourceFile="..\..\src\Abp.Owin\Abp.Owin.csproj" />
+      <DocumentationSource sourceFile="..\..\src\Abp.Quartz\Abp.Quartz.csproj" />
+      <DocumentationSource sourceFile="..\..\src\Abp.RedisCache\Abp.RedisCache.csproj" />
+      <DocumentationSource sourceFile="..\..\src\Abp.RedisCache.ProtoBuf\Abp.RedisCache.ProtoBuf.csproj" />
+      <DocumentationSource sourceFile="..\..\src\Abp.TestBase\Abp.TestBase.csproj" />
+      <DocumentationSource sourceFile="..\..\src\Abp.Web\Abp.Web.csproj" />
+      <DocumentationSource sourceFile="..\..\src\Abp.Web.Api\Abp.Web.Api.csproj" />
+      <DocumentationSource sourceFile="..\..\src\Abp.Web.Api.OData\Abp.Web.Api.OData.csproj" />
+      <DocumentationSource sourceFile="..\..\src\Abp.Web.Common\Abp.Web.Common.csproj" />
+      <DocumentationSource sourceFile="..\..\src\Abp.Web.Mvc\Abp.Web.Mvc.csproj" />
+      <DocumentationSource sourceFile="..\..\src\Abp.Web.Resources\Abp.Web.Resources.csproj" />
+      <DocumentationSource sourceFile="..\..\src\Abp.Web.SignalR\Abp.Web.SignalR.csproj" />
     </DocumentationSources>
     <SaveComponentCacheCapacity>100</SaveComponentCacheCapacity>
     <BuildAssemblerVerbosity>OnlyWarningsAndErrors</BuildAssemblerVerbosity>
@@ -86,13 +87,22 @@
             <assemblyIdentity name="AutoMapper" />
             <assemblyIdentity name="BusinessObjects.Licensing.KeycodeDecoder" />
             <assemblyIdentity name="Castle.Core" />
+            <assemblyIdentity name="Castle.Facilities.Logging" />
             <assemblyIdentity name="Castle.Windsor" />
+            <assemblyIdentity name="DapperExtensions.DotnetCore" />
+            <assemblyIdentity name="Hangfire.Core" />
             <assemblyIdentity name="IdentityServer4" />
             <assemblyIdentity name="IdentityServer4.AspNetIdentity" />
+            <assemblyIdentity name="log4net" />
+            <assemblyIdentity name="MailKit" />
             <assemblyIdentity name="Microsoft.VisualStudio.TestTools.UITest.Playback" />
+            <assemblyIdentity name="MimeKit" />
+            <assemblyIdentity name="MongoDB.Driver.Legacy" />
             <assemblyIdentity name="netstandard" />
             <assemblyIdentity name="Newtonsoft.Json" />
             <assemblyIdentity name="NHibernate" />
+            <assemblyIdentity name="Nito.AsyncEx.Coordination" />
+            <assemblyIdentity name="StackExchange.Redis.StrongName" />
             <assemblyIdentity name="System" />
           </ignoreIfUnresolved>
         </configuration>
