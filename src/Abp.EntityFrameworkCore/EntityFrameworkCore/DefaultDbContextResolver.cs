@@ -29,21 +29,42 @@ namespace Abp.EntityFrameworkCore
             where TDbContext : DbContext
         {
             var dbContextType = typeof(TDbContext);
+            Type concreteType = null;
+            var isAbstract = dbContextType.GetTypeInfo().IsAbstract;
+            if (isAbstract)
+                concreteType = _dbContextTypeMatcher.GetConcreteType(dbContextType);
 
-            if (!dbContextType.GetTypeInfo().IsAbstract)
+            try
             {
-                return _iocResolver.Resolve<TDbContext>(new
+                if (!isAbstract)
                 {
-                    options = CreateOptions<TDbContext>(connectionString, existingConnection)
+                    return _iocResolver.Resolve<TDbContext>(new
+                    {
+                        options = CreateOptions<TDbContext>(connectionString, existingConnection)
+                    });
+                }
+
+                return (TDbContext)_iocResolver.Resolve(concreteType, new
+                {
+                    options = CreateOptionsForType(concreteType, connectionString, existingConnection)
                 });
             }
-
-            var concreteType = _dbContextTypeMatcher.GetConcreteType(dbContextType);
-
-            return (TDbContext)_iocResolver.Resolve(concreteType, new
+            catch (Castle.MicroKernel.Resolvers.DependencyResolverException ex)
             {
-                options = CreateOptionsForType(concreteType, connectionString, existingConnection)
-            });
+                bool hasOptions = isAbstract ? HasOptions(concreteType) : HasOptions(dbContextType);
+                if (!hasOptions)
+                    throw new AggregateException($"The parameter name of {dbContextType.Name}'s constructor must be 'options'", ex);
+                throw ex;
+            }
+
+            bool HasOptions(Type contextType)
+            {
+                return contextType.GetConstructors().Any(ctor =>
+                {
+                    var pmts = ctor.GetParameters();
+                    return pmts.Count() == 1 && (pmts.FirstOrDefault()?.Name == "options");
+                });
+            }
         }
 
         private object CreateOptionsForType(Type dbContextType, string connectionString, DbConnection existingConnection)
