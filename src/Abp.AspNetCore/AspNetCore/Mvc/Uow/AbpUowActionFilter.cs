@@ -25,6 +25,12 @@ namespace Abp.AspNetCore.Mvc.Uow
 
         public async Task OnActionExecutionAsync(ActionExecutingContext context, ActionExecutionDelegate next)
         {
+            if (!context.ActionDescriptor.IsControllerAction())
+            {
+                await next();
+                return;
+            }
+
             var unitOfWorkAttr = _unitOfWorkDefaultOptions
                 .GetUnitOfWorkAttributeOrNull(context.ActionDescriptor.GetMethodInfo()) ??
                 _aspnetCoreConfiguration.DefaultUnitOfWorkAttribute;

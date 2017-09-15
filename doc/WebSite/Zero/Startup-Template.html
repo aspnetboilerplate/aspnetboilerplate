@@ -30,27 +30,6 @@
 			</div>
 			<p>In this template, <strong>multi-tenancy is enabled by default</strong>. You 
 	can disable it in Core project's module class if you don't need.</p>
-
-			<h3>Social Logins</h3>
-			<p>Startup template supports <strong>Facebook</strong>, <strong>Twitter</strong> 
-	and <strong>Google+ </strong>logins. In the web.config, you can see the 
-	following settings:</p>
-			<pre lang="xml">&lt;add key=&quot;ExternalAuth.Facebook.IsEnabled&quot; value=&quot;false&quot; /&gt;
-&lt;add key=&quot;ExternalAuth.Facebook.AppId&quot; value=&quot;&quot; /&gt;
-&lt;add key=&quot;ExternalAuth.Facebook.AppSecret&quot; value=&quot;&quot; /&gt;
-
-&lt;add key=&quot;ExternalAuth.Twitter.IsEnabled&quot; value=&quot;false&quot; /&gt;
-&lt;add key=&quot;ExternalAuth.Twitter.ConsumerKey&quot; value=&quot;&quot; /&gt;
-&lt;add key=&quot;ExternalAuth.Twitter.ConsumerSecret&quot; value=&quot;&quot; /&gt;
-
-&lt;add key=&quot;ExternalAuth.Google.IsEnabled&quot; value=&quot;false&quot; /&gt;
-&lt;add key=&quot;ExternalAuth.Google.ClientId&quot; value=&quot;&quot; /&gt;
-&lt;add key=&quot;ExternalAuth.Google.ClientSecret&quot; value=&quot;&quot; /&gt;</pre>
-			<p>Here, you can enable which you need. Surely, you must have application 
-	keys and passwords which you need to get from related social web site. You 
-	can find guides from web to learn how to obtain this keys. Once you enable a 
-	social login and enter true keys, you will see a button in the login page. 
-	You can implement other logins as similar.</p>
 			<h3>Token Based Authentication</h3>
 			<p>Startup template uses cookie based authentication for browsers. However, if you 
 	want to consume Web APIs or application services (those are exposed via 
@@ -67,7 +46,7 @@
 	http://localhost:6334/api/Account/Authenticate</strong> with <strong>
 	Context-Type="application/json"</strong> header as shown below:</p>
 			<p>
-				<img class="img-thumbnail" alt="Request for token" height="670" src="../images/token-authenticate.png" width="673" />
+				<img class="img-thumbnail" alt="Request for token" src="../images/token-authenticate.png" />
 			</p>
 			<p>We sent a <strong>JSON request body</strong> includes <strong>userNameOrEmailAddress </strong>and <strong>password</strong>. 
 	Also, <strong>tenancyName </strong>should be sent for <strong>tenant</strong> users. As seen 
@@ -79,7 +58,7 @@
 	example, we can use the <strong>Tenant service</strong> to get a <strong>list of
 	tenants</strong>:</p>
 			<p>
-				<img class="img-thumbnail" alt="Authorization via token" height="713" src="../images/token-request.png" width="702" />
+				<img class="img-thumbnail" alt="Authorization via token" src="../images/token-request.png" />
 			</p>
 			<p>Just made a <strong>POST</strong> request to <strong>
 	http://localhost:6334/api/services/app/tenant/GetTenants</strong> with <strong>
@@ -98,7 +77,7 @@
 <p>Startup template includes a tool, Migrator.exe, to easily migrate your databases. 
 You can run this application to create/migrate host and tenant databases.</p>
 <p>
-<img class="img-thumbnail" alt="Database Migrator" height="230" src="../images/database-migrator.png" width="659" /></p>
+<img class="img-thumbnail" alt="Database Migrator" src="../images/database-migrator.png" /></p>
 <p>This application gets host connection string from it's <strong>own .config 
 file</strong>. It will be same in the web.config at the beggining. Be sure that 
 the connection string in config file is the database you want. After getting

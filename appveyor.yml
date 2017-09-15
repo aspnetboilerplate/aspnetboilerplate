@@ -1,5 +1,5 @@
 configuration: Release
-version: 2.1.0-beta{build}
+version: 3.0.0-beta{build}
 image: Visual Studio 2017
 
 nuget:
@@ -44,6 +44,9 @@ test:
   - test\Abp.TestBase.SampleApplication.Tests\bin\Release\net46\Abp.TestBase.SampleApplication.Tests.dll
 #  - test\Abp.Dapper.Tests\bin\Release\net46\Abp.Dapper.Tests.dll
 #  - test\Abp.NHibernate.Tests\bin\Release\net46\Abp.NHibernate.Tests.dll
+  - test\Abp.Zero.SampleApp.Tests\bin\Release\net452\Abp.Zero.SampleApp.Tests.dll
+ # - test\Abp.Zero.SampleApp.EntityFrameworkCore.Tests\bin\Release\net461\Abp.Zero.SampleApp.EntityFrameworkCore.Tests.dll
+ # - test\Abp.Zero.SampleApp.NHibernateTests\bin\Release\net452\Abp.Zero.SampleApp.NHibernateTests.dll
 
 artifacts:
 - path: nupkg\*.nupkg

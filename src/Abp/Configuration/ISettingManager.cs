@@ -26,7 +26,7 @@ namespace Abp.Configuration
 
         /// <summary>
         /// Gets current value of a setting for the application level.
-        /// If fallbackToDefault is false, it just gets value from tenant and returns null if application has not defined a value for the setting.
+        /// If fallbackToDefault is false, it just gets value from application and returns null if application has not defined a value for the setting.
         /// </summary>
         /// <param name="name">Unique name of the setting</param>
         /// <param name="fallbackToDefault"></param>

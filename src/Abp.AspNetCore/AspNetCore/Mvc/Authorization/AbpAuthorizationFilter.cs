@@ -42,10 +42,18 @@ namespace Abp.AspNetCore.Mvc.Authorization
                 return;
             }
 
+            if (!context.ActionDescriptor.IsControllerAction())
+            {
+                return;
+            }
+
+            //TODO: Avoid using try/catch, use conditional checking
             try
             {
-                //TODO: Avoid using try/catch, use conditional checking
-                await _authorizationHelper.AuthorizeAsync(context.ActionDescriptor.GetMethodInfo());
+                await _authorizationHelper.AuthorizeAsync(
+                    context.ActionDescriptor.GetMethodInfo(),
+                    context.ActionDescriptor.GetMethodInfo().DeclaringType
+                );
             }
             catch (AbpAuthorizationException ex)
             {

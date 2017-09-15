@@ -1,15 +1,16 @@
-﻿using Microsoft.EntityFrameworkCore;
-using Microsoft.EntityFrameworkCore.Infrastructure;
+﻿using System.IO;
+using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Design;
 using Microsoft.Extensions.Configuration;
 
 namespace AbpAspNetCoreDemo.Db
 {
-    public class MyDbContextFactory : IDbContextFactory<MyDbContext>
+    public class MyDbContextFactory : IDesignTimeDbContextFactory<MyDbContext>
     {
-        public MyDbContext Create(DbContextFactoryOptions options)
+        public MyDbContext CreateDbContext(string[] args)
         {
             var builder = new ConfigurationBuilder()
-                .SetBasePath(options.ContentRootPath)
+                .SetBasePath(Directory.GetCurrentDirectory()) //TODO: .SetBasePath(options.ContentRootPath) ???
                 .AddJsonFile("appsettings.json", optional: true, reloadOnChange: true)
                 .AddEnvironmentVariables();
             var configuration = builder.Build();

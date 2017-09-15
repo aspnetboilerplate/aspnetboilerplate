@@ -1,0 +1,31 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<localizationDictionary culture="tr">
+  <texts>
+    <text name="Identity.UserAlreadyInRole" value="Kullanıcı zaten bu role atanmış." />
+    <text name="Identity.UserNotInRole" value="Kullanıcı bu rolde değil." />
+    <text name="Identity.RoleNotFound" value="Rol {0} bulunamadı." />
+    <text name="Identity.PasswordMismatch" value="Hatalı şifre." />
+    <text name="Identity.InvalidUserName" value="{0} kullanıcı adı geçersiz, sadece harf ve rakamlardan oluşmalıdır." />
+    <text name="Identity.PasswordTooShort" value="Şifre en az {0} karakter olmalıdır." />
+    <text name="Identity.PropertyTooShort" value="{0} boş olmamalıdır." />
+    <text name="Identity.DuplicateUserName" value="{0} adı zaten var." />
+    <text name="Identity.UserAlreadyHasPassword" value="Kullanıcının zaten bir şifresi var." />
+    <text name="Identity.PasswordRequireNonLetterOrDigit" value="Şifre harf ve sayı dışında en az bir karakter içermelidir." />
+    <text name="Identity.UserIdNotFound" value="Kullanıcı id bulunamadı." />
+    <text name="Identity.InvalidToken" value="Geçersiz işlem." />
+    <text name="Identity.InvalidEmail" value="'{0}' e-posta adresi geçersiz." />
+    <text name="Identity.UserNameNotFound" value="Kullanıcı {0} mevcut değildir." />
+    <text name="Identity.LockoutNotEnabled" value="Bu kullanıcı için kilitleme işlemi geçersizdir." />
+    <text name="Identity.PasswordRequireUpper" value="Şifre en az bir büyük harf içermelidir ('A'-'Z')." />
+    <text name="Identity.PasswordRequireDigit" value="Şifre en az bir sayı içermelidir ('0'-'9')." />
+    <text name="Identity.PasswordRequireLower" value="Şifre en az bir küçük harf içermelidir ('a'-'z')." />
+    <text name="Identity.DuplicateEmail" value="'{0}' e-posta adresi başka bir kullanıcı tarafından alınmış." />
+    <text name="Identity.ExternalLoginExists" value="Bu dış giriş bilgisine sahip bir kullanıcı zaten vardır." />
+    <text name="Identity.DefaultError" value="Bilinmeyen bir hata oluştu." />
+    <text name="Email">E-posta</text>
+    <text name="EmailSecurityCodeSubject">Güvenlik Kodu</text>
+    <text name="EmailSecurityCodeBody">Güvenlik kodunuz: {0}</text>
+    <text name="Sms">Sms</text>
+    <text name="SmsSecurityCodeMessage">Güvenlik kodunuz: {0}</text>
+  </texts>
+</localizationDictionary>

@@ -1,0 +1,18 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<localizationDictionary culture="it">
+  <texts>
+    <text name="Identity.DefaultError">Si è verificato un errore non gestito.</text>
+    <text name="Identity.DuplicateEmail">Email '{0}' già utilizzata.</text>
+    <text name="Identity.InvalidEmail">Email '{0}' non valida.</text>
+    <text name="Identity.InvalidToken">Token non valido.</text>
+    <text name="Identity.InvalidUserName">Nome utente {0} non valido, sono ammesse solo lettere e numeri.</text>
+    <text name="Identity.PasswordMismatch">Password errata.</text>
+    <text name="Identity.PasswordTooShort">La password deve avere almeno {0} caratteri.</text>
+    <text name="Identity.RoleNotFound">Il ruolo {0} non esiste.</text>
+    <text name="Identity.UserAlreadyHasPassword">Password già impostata per l'utente.</text>
+    <text name="Identity.UserAlreadyInRole">Ruolo già assegnato all'utente.</text>
+    <text name="Identity.UserLockoutNotEnabled">Blocco non abilitato per questo utente.</text>
+    <text name="Identity.UserNameNotFound">L'utente {0} non esiste.</text>
+    <text name="Identity.UserNotInRole">Ruolo mancate per l'utente.</text>
+  </texts>
+</localizationDictionary>

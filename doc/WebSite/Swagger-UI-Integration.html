@@ -16,9 +16,9 @@
 interactive documentation</strong>, client SDK generation and discoverability."</p>
 <h3>ASP.NET Core</h3>
 	<h4>Install Nuget Package</h4>	
-<p>Install <strong>
-	<a href="https://www.nuget.org/packages/Swashbuckle/" target="_blank">Swashbuckle</a></strong> 
-	<strong>6.x</strong> 
+<p>Install<strong>
+	<a href="https://www.nuget.org/packages/Swashbuckle.AspNetCore/" target="_blank">Swashbuckle.AspNetCore</a></strong> 
+	
 	nuget package to your <strong>Web</strong> project.</p>
 	<h4>Configure</h4>
 <p>Add configuration code for Swagger into <strong>ConfigureServices</strong> method of your <strong>Startup.cs</strong></p>
@@ -27,7 +27,11 @@ public IServiceProvider ConfigureServices(IServiceCollection services)
 {
     //your other code...
     
-    <strong>services.AddSwaggerGen();</strong>
+    <strong>  services.AddSwaggerGen(options =>
+            {
+                options.SwaggerDoc("v1", new Info { Title = "AbpZeroTemplate API", Version = "v1" });
+                options.DocInclusionPredicate((docName, description) => true);
+            });</strong>
     
     //your other code...
 }
@@ -39,38 +43,18 @@ public void Configure(IApplicationBuilder app, IHostingEnvironment env, ILoggerF
 {
     //your other code...
 
-    <strong>app.UseSwagger();
-    app.UseSwaggerUi(); //URL: /swagger/ui
-</strong>}
+    <strong> app.UseSwagger();
+            //Enable middleware to serve swagger - ui assets(HTML, JS, CSS etc.)
+            app.UseSwaggerUI(options =>
+            {
+                options.SwaggerEndpoint("/swagger/v1/swagger.json", "AbpZeroTemplate API V1");
+            }); //URL: /swagger </strong>
+            
+    //your other code...
+}
 </pre>
-<p>And finally, in order to send CSRF token when testing dynamic web api services from swagger ui, you need to add swagger ui's <a href="https://github.com/swagger-api/swagger-ui/blob/master/dist/index.html">index.html</a> file to your web project. It should be placed exactly under "<strong>wwwroot\swagger\ui</strong>" folder.
-Then you need to change <strong>onComplete </strong>method of swagger ui definition like this in 
-<strong>index.html</strong>.</p>
-<pre lang="js">
-onComplete: function(swaggerApi, swaggerUi){
-  if(typeof initOAuth == "function") {
-    initOAuth({
-      clientId: "your-client-id",
-      clientSecret: "your-client-secret-if-required",
-      realm: "your-realms",
-      appName: "your-app-name",
-      scopeSeparator: " ",
-      additionalQueryStringParams: {}
-    });
-  }
-
-  if(window.SwaggerTranslator) {
-    window.SwaggerTranslator.translate();
-  }
-
-<strong>  var csrfToken = abp.security.antiForgery.getToken();
-  var csrfCookieAuth = new SwaggerClient.ApiKeyAuthorization(abp.security.antiForgery.tokenHeaderName, csrfToken, "header");
-  swaggerUi.api.clientAuthorizations.add(abp.security.antiForgery.tokenHeaderName, csrfCookieAuth);
-</strong>
-}</pre>
-<p>See Swashbuckle <a href="https://github.com/domaindrivendev/Ahoy">documentation</a> for more configuration options.</p>
 <h4>Test</h4>
-	<p>That's all. You can browse swagger ui under "<strong>/swagger/ui/index</strong>".</p>
+	<p>That's all. You can browse swagger ui under "<strong>/swagger</strong>".</p>
 
 
 
@@ -140,7 +124,7 @@ swaggerUi.api.clientAuthorizations.add("X-XSRF-TOKEN", csrfCookieAuth);</pre>
 	documentation</a> for more configuration options.</p>
 	<h4>Test</h4>
 	<p>That's all. Let's browse <strong>/swagger/ui/index</strong>:</p>
-	<p><img alt="Swagger UI" height="657" src="images/swagger-ui.png" width="1027" /></p>
+	<p><img class="img-thumbnail" alt="Swagger UI" src="images/swagger-ui.png" /></p>
 	<p>You can see all Web API Controllers (and also
 	<a href="/Pages/Documents/Dynamic-Web-API">dynamic web api</a> controllers) 
 	and test them.</p>

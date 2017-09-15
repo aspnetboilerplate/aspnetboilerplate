@@ -1,5 +1,7 @@
 ﻿using System.Threading.Tasks;
+using Abp.Application.Services.Dto;
 using Abp.Auditing;
+using Abp.TestBase.SampleApplication.Crm;
 using Abp.TestBase.SampleApplication.People;
 using Abp.TestBase.SampleApplication.People.Dto;
 using Castle.MicroKernel.Registration;
@@ -11,12 +13,14 @@ namespace Abp.TestBase.SampleApplication.Tests.Auditing
     public class SimpleAuditing_Test : SampleApplicationTestBase
     {
         private readonly IPersonAppService _personAppService;
+        private readonly AsyncCompanyAppService _asyncCompanyAppService;
 
         private IAuditingStore _auditingStore;
 
         public SimpleAuditing_Test()
         {
             _personAppService = Resolve<IPersonAppService>();
+            _asyncCompanyAppService = Resolve<AsyncCompanyAppService>();
             Resolve<IAuditingConfiguration>().IsEnabledForAnonymousUsers = true;
         }
 
@@ -56,6 +60,13 @@ namespace Abp.TestBase.SampleApplication.Tests.Auditing
         {
             Resolve<MyServiceWithMethodAudited>().Test1();
             _auditingStore.Received().SaveAsync(Arg.Any<AuditInfo>());
+        }
+
+        [Fact]
+        public void Should_Write_Audits_For_AsyncCrudAppService_With_Correct_Service_Name()
+        {
+            _asyncCompanyAppService.Delete(new EntityDto(1));
+            _auditingStore.Received().SaveAsync(Arg.Is<AuditInfo>(a => a.ServiceName.Contains("AsyncCompanyAppService")));
         }
 
         #endregion

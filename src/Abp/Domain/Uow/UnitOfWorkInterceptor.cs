@@ -1,3 +1,5 @@
+using System;
+using System.Reflection;
 using System.Threading.Tasks;
 using Abp.Threading;
 using Castle.DynamicProxy;
@@ -24,7 +26,17 @@ namespace Abp.Domain.Uow
         /// <param name="invocation">Method invocation arguments</param>
         public void Intercept(IInvocation invocation)
         {
-            var unitOfWorkAttr = _unitOfWorkOptions.GetUnitOfWorkAttributeOrNull(invocation.MethodInvocationTarget);
+            MethodInfo method;
+            try
+            {
+                method = invocation.MethodInvocationTarget;
+            }
+            catch
+            {
+                method = invocation.GetConcreteMethod();
+            }
+
+            var unitOfWorkAttr = _unitOfWorkOptions.GetUnitOfWorkAttributeOrNull(method);
             if (unitOfWorkAttr == null || unitOfWorkAttr.IsDisabled)
             {
                 //No need to a uow

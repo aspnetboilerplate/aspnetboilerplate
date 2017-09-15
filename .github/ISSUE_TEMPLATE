@@ -1,1 +1,18 @@
-Please include your Abp version, exception message and stack trace in bug/problem reports.
+### Github Issues
+
+Github issues is for bug reports, feature requests and other discussions around the framework.
+
+If you're creating a bug/problem report, please include followings:
+
+* Your Abp package version.
+* Your base framework: .Net Framework or .Net Core.
+* Exception message and stack trace if available.
+* Steps needed to reproduce the problem.
+
+### Stack Overflow
+
+Please use Stack Overflow for your questions about using the framework, templates and samples:
+
+https://stackoverflow.com/questions/tagged/aspnetboilerplate
+
+Use aspnetboilerplate tag in your questions.
