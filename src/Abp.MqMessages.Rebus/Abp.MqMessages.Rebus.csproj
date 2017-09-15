@@ -18,10 +18,6 @@
     <PackageReference Include="Microsoft.Extensions.Options" Version="2.0.0" />
     <PackageReference Include="Nito.AsyncEx.Context" Version="1.1.0" />
     <PackageReference Include="Nito.AsyncEx.Coordination" Version="1.0.2" />
-    <PackageReference Include="Fortress.Facilities.Logging" Version="0.5.274" />
     <PackageReference Include="Rebus" Version="4.1.0-b4" />
-  </ItemGroup>
-  <ItemGroup>
-    <Reference Include="mscorlib" />
   </ItemGroup>
 </Project>

@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 15
-VisualStudioVersion = 15.0.26730.10
+VisualStudioVersion = 15.0.26730.12
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "src", "src", "{DFF0464B-5402-4DD6-86F5-2AEC1163B232}"
 EndProject
@@ -173,15 +173,13 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Abp.MqMessages.Rebus", "src
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Abp.MqMessages.RebusRabbitMqPublisher", "src\Abp.MqMessages.RebusRabbitMqPublisher\Abp.MqMessages.RebusRabbitMqPublisher.csproj", "{D0A2DA46-E5DE-4508-A181-3A2325A64872}"
 EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "mq-messages-sample", "mq-messages-sample", "{27D7303F-C5BF-49A2-B674-A04170420D25}"
-EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Abp.MqMessages.RebusRabbitMqConsumer", "src\Abp.MqMessages.RebusRabbitMqConsumer\Abp.MqMessages.RebusRabbitMqConsumer.csproj", "{6FF899A2-3C25-4263-A8F6-74EB9534A6DC}"
-EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Sample.MqMessages", "test\mq-messages-sample\Sample.MqMessages\Sample.MqMessages.csproj", "{A8333DD8-8A68-4C72-B587-FBC44901B4C7}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Sample.RebusRabbitMqPublisher", "test\mq-messages-sample\Sample.RebusRabbitMqPublisher\Sample.RebusRabbitMqPublisher.csproj", "{F2FBB1A0-3D70-4CC4-BE7F-EDCB1B5E604C}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Sample.RebusRabbitMqConsumer", "test\mq-messages-sample\Sample.RebusRabbitMqConsumer\Sample.RebusRabbitMqConsumer.csproj", "{0F410BAA-F444-4F53-A754-F3D1FA862398}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Sample.MqMessages", "test\mq-messages-sample\Sample.MqMessages\Sample.MqMessages.csproj", "{A8333DD8-8A68-4C72-B587-FBC44901B4C7}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -509,10 +507,6 @@ Global
 		{6FF899A2-3C25-4263-A8F6-74EB9534A6DC}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{6FF899A2-3C25-4263-A8F6-74EB9534A6DC}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{6FF899A2-3C25-4263-A8F6-74EB9534A6DC}.Release|Any CPU.Build.0 = Release|Any CPU
-		{A8333DD8-8A68-4C72-B587-FBC44901B4C7}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{A8333DD8-8A68-4C72-B587-FBC44901B4C7}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{A8333DD8-8A68-4C72-B587-FBC44901B4C7}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{A8333DD8-8A68-4C72-B587-FBC44901B4C7}.Release|Any CPU.Build.0 = Release|Any CPU
 		{F2FBB1A0-3D70-4CC4-BE7F-EDCB1B5E604C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{F2FBB1A0-3D70-4CC4-BE7F-EDCB1B5E604C}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{F2FBB1A0-3D70-4CC4-BE7F-EDCB1B5E604C}.Release|Any CPU.ActiveCfg = Release|Any CPU
@@ -521,6 +515,10 @@ Global
 		{0F410BAA-F444-4F53-A754-F3D1FA862398}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{0F410BAA-F444-4F53-A754-F3D1FA862398}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{0F410BAA-F444-4F53-A754-F3D1FA862398}.Release|Any CPU.Build.0 = Release|Any CPU
+		{A8333DD8-8A68-4C72-B587-FBC44901B4C7}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{A8333DD8-8A68-4C72-B587-FBC44901B4C7}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{A8333DD8-8A68-4C72-B587-FBC44901B4C7}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{A8333DD8-8A68-4C72-B587-FBC44901B4C7}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -603,6 +601,10 @@ Global
 		{0AD3082B-68F2-4FE2-B53E-8BE6BEA2EB74} = {1E6B9E8D-D5C1-4AD7-89F9-7179FEFD7C01}
 		{0CA8B27D-292C-4D57-AD88-EB0073C68F31} = {1E6B9E8D-D5C1-4AD7-89F9-7179FEFD7C01}
 		{F6F5F70B-2217-403F-AB87-6DFA9AD6692F} = {1E6B9E8D-D5C1-4AD7-89F9-7179FEFD7C01}
+		{65D9A698-3448-4DFA-B35D-9FBB84DAB4B7} = {DFF0464B-5402-4DD6-86F5-2AEC1163B232}
+		{51D0B81A-F65A-4449-9B73-CF946E695CC5} = {DFF0464B-5402-4DD6-86F5-2AEC1163B232}
+		{D0A2DA46-E5DE-4508-A181-3A2325A64872} = {DFF0464B-5402-4DD6-86F5-2AEC1163B232}
+		{6FF899A2-3C25-4263-A8F6-74EB9534A6DC} = {DFF0464B-5402-4DD6-86F5-2AEC1163B232}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {5A1CB38E-F77D-4A40-B3A9-9A70C3F3BC6D}
