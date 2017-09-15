@@ -2,8 +2,8 @@
 using System.Reflection;
 using Newtonsoft.Json;
 using Rebus.Config;
-using Rebus.NewtonsoftJson;
 using Rebus.Serialization;
+using Rebus.Serialization.Json;
 
 namespace Abp.MqMessages.Consumers
 {
