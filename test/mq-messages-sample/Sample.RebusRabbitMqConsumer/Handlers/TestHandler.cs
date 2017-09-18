@@ -8,7 +8,8 @@ namespace Sample.Handlers
 {
     public class TestHandler : IHandleMessages<TestMqMessage>
     {
-        public ILogger Logger { get; set; }
+        //As Castle.Windsor-Nlog for Castle.Core 4.1.1 not ready, Now comment it.
+        //public ILogger Logger { get; set; }
         public IMqMessagePublisher Publisher { get; set; }
         public TestHandler()
         {
@@ -17,9 +18,9 @@ namespace Sample.Handlers
 
         public async Task Handle(TestMqMessage message)
         {
-            var msg = $"{Logger.GetType()}:{message.Name},{message.Value},{message.Time}";
-            Logger.Debug(msg);
-            await Publisher.PublishAsync(msg);//send it again!
+            var msg = $"{message.Name},{message.Value},{message.Time}";
+            //Logger.Debug(msg);
+            await Publisher.PublishAsync(msg);//send it again ( as a string)!
         }
     }
 }

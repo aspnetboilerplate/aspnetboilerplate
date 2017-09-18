@@ -21,7 +21,8 @@ namespace Sample.BackgroundWorks
 
         protected override void DoWork()
         {
-            Logger.Info($"TestWork Done! Time:{DateTime.Now}");
+            //As Castle.Windsor-Nlog for Castle.Core 4.1.1 not ready, Now comment it.
+            //Logger.Info($"TestWork Done! Time:{DateTime.Now}");
             _publisher.Publish(new TestMqMessage
             {
                 Name = "TestWork",

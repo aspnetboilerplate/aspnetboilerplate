@@ -13,8 +13,8 @@ namespace Sample
         public override void PreInitialize()
         {
             Configuration.Modules.UseRebusRabbitMqConsumer()
-                .UseLogging(c => c.NLog())
-                .ConnectTo("amqp://dev:dev@rabbitmq.local.cn/dev_host")
+                //.UseLogging(c => c.NLog())
+                .ConnectTo("amqp://dev:dev@rabbitmq.local.jk724.cn/dev_host")
                 .UseQueue(Assembly.GetExecutingAssembly().GetName().Name)
                 .RegisterHandlerInAssemblys(Assembly.GetExecutingAssembly());
         }
@@ -26,7 +26,8 @@ namespace Sample
 
         public override void PostInitialize()
         {
-            Abp.Dependency.IocManager.Instance.IocContainer.AddFacility<LoggingFacility>(f => f.UseNLog().WithConfig("nlog.config"));
+            //As Castle.Windsor-Nlog for Castle.Core 4.1.1 not ready, Now comment it.
+            // Abp.Dependency.IocManager.Instance.IocContainer.AddFacility<LoggingFacility>(f => f.UseNLog().WithConfig("nlog.config"));
         }
     }
 }
