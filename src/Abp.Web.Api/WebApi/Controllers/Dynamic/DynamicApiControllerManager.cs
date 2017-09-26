@@ -2,28 +2,29 @@ using System;
 using System.Collections.Generic;
 using System.Collections.Immutable;
 using Abp.Collections.Extensions;
+using Abp.Dependency;
 
 namespace Abp.WebApi.Controllers.Dynamic
 {
     /// <summary>
     /// This class is used to store dynamic controller information.
     /// </summary>
-    internal static class DynamicApiControllerManager
+    public class DynamicApiControllerManager : ISingletonDependency
     {
-        private static readonly IDictionary<string, DynamicApiControllerInfo> DynamicApiControllers;
+        private readonly IDictionary<string, DynamicApiControllerInfo> _dynamicApiControllers;
 
-        static DynamicApiControllerManager()
+        public DynamicApiControllerManager()
         {
-            DynamicApiControllers = new Dictionary<string, DynamicApiControllerInfo>(StringComparer.InvariantCultureIgnoreCase);
+            _dynamicApiControllers = new Dictionary<string, DynamicApiControllerInfo>(StringComparer.InvariantCultureIgnoreCase);
         }
 
         /// <summary>
         /// Registers given controller info to be found later.
         /// </summary>
         /// <param name="controllerInfo">Controller info</param>
-        public static void Register(DynamicApiControllerInfo controllerInfo)
+        public void Register(DynamicApiControllerInfo controllerInfo)
         {
-            DynamicApiControllers[controllerInfo.ServiceName] = controllerInfo;
+            _dynamicApiControllers[controllerInfo.ServiceName] = controllerInfo;
         }
 
         /// <summary>
@@ -31,14 +32,14 @@ namespace Abp.WebApi.Controllers.Dynamic
         /// </summary>
         /// <param name="controllerName">Name of the controller</param>
         /// <returns>Controller info</returns>
-        public static DynamicApiControllerInfo FindOrNull(string controllerName)
+        public DynamicApiControllerInfo FindOrNull(string controllerName)
         {
-            return DynamicApiControllers.GetOrDefault(controllerName);
+            return _dynamicApiControllers.GetOrDefault(controllerName);
         }
 
-        public static IReadOnlyList<DynamicApiControllerInfo> GetAll()
+        public IReadOnlyList<DynamicApiControllerInfo> GetAll()
         {
-            return DynamicApiControllers.Values.ToImmutableList();
+            return _dynamicApiControllers.Values.ToImmutableList();
         }
     }
 }

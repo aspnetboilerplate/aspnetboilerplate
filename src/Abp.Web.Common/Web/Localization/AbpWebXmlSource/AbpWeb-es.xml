@@ -1,0 +1,20 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<localizationDictionary culture="es">
+  <texts>
+    <text name="InternalServerError" value="Un error interno ha ocurrido durante su solicitud!" />
+    <text name="ValidationError" value="Su solicitud no es válida!" />
+    <text name="AreYouSure" value="¿Está seguro?" />
+    <text name="Cancel" value="Cancelar" />
+    <text name="Yes" value="Sí" />
+    <text name="ValidationNarrativeTitle" value="Se detectaron los siguientes errores durante la validación." />
+    <text name="DefaultError" value="Un error ha ocurrido!" />
+    <text name="DefaultErrorDetail" value="Detalle del error no enviado por el servidor." />
+    <text name="DefaultError401" value="Ud. no está autenticado!" />
+    <text name="DefaultErrorDetail401" value="Ud. debe autenticarse (inicia sesión) para realizar esta operación." />
+    <text name="DefaultError403" value="Ud. no está autorizado!" />
+    <text name="DefaultErrorDetail403" value="Ud. no cuenta con permisos para realizar esta operación." />
+    <text name="DefaultError404" value="Recurso no encontrado!" />
+    <text name="DefaultErrorDetail404" value="El recurso solicitado no pudo ser encontrado en el servidor." />
+    <text name="EntityNotFound" value="No existe una instancia {0} con id = {1}!" />
+  </texts>
+</localizationDictionary>

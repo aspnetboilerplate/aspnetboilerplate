@@ -1,0 +1,32 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <Import Project="..\..\common.props" />
+  
+  <PropertyGroup>
+    <TargetFramework>netstandard2.0</TargetFramework>
+    <AssemblyName>Abp.Dapper</AssemblyName>
+    <PackageId>Abp.Dapper</PackageId>
+    <PackageTags>asp.net;asp.net mvc;boilerplate;application framework;web framework;framework;domain driven design;Dapper;ORM</PackageTags>
+    <GenerateAssemblyConfigurationAttribute>false</GenerateAssemblyConfigurationAttribute>
+    <GenerateAssemblyCompanyAttribute>false</GenerateAssemblyCompanyAttribute>
+    <GenerateAssemblyProductAttribute>false</GenerateAssemblyProductAttribute>
+    <GeneratePackageOnBuild>False</GeneratePackageOnBuild>
+    <RootNamespace>Abp</RootNamespace>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <None Include="bin\Release\netstandard2.0\Abp.Dapper.pdb">
+      <PackagePath>lib/netstandard2.0/</PackagePath>
+      <Pack>true</Pack>
+    </None>
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\Abp\Abp.csproj" />
+    <PackageReference Include="Dapper" Version="1.50.2" />
+    <Reference Include="System.ComponentModel.DataAnnotations" />
+    <PackageReference Include="System.Data.Common" Version="4.3.0" />
+    <PackageReference Include="DapperExtensions.DotnetCore" Version="1.0.1" />
+  </ItemGroup>
+
+</Project>

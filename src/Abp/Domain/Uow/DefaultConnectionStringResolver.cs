@@ -1,4 +1,3 @@
-using System;
 using System.Configuration;
 using Abp.Configuration.Startup;
 using Abp.Dependency;
@@ -25,10 +24,7 @@ namespace Abp.Domain.Uow
 
         public virtual string GetNameOrConnectionString(ConnectionStringResolveArgs args)
         {
-            if (args == null)
-            {
-                throw new ArgumentNullException("args");
-            }
+            Check.NotNull(args, nameof(args));
 
             var defaultConnectionString = _configuration.DefaultNameOrConnectionString;
             if (!string.IsNullOrWhiteSpace(defaultConnectionString))

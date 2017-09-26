@@ -2,6 +2,7 @@ using System.Collections.Generic;
 using System.Configuration;
 using System.Threading.Tasks;
 using Abp.Logging;
+using Abp.Threading;
 
 namespace Abp.Configuration
 {
@@ -15,9 +16,7 @@ namespace Abp.Configuration
         /// <summary>
         /// Gets singleton instance.
         /// </summary>
-        public static DefaultConfigSettingStore Instance { get { return SingletonInstance; } }
-        private static readonly DefaultConfigSettingStore SingletonInstance = new DefaultConfigSettingStore();
-
+        public static DefaultConfigSettingStore Instance { get; } = new DefaultConfigSettingStore();
         private DefaultConfigSettingStore()
         {
         }
@@ -25,31 +24,34 @@ namespace Abp.Configuration
         public Task<SettingInfo> GetSettingOrNullAsync(int? tenantId, long? userId, string name)
         {
             var value = ConfigurationManager.AppSettings[name];
-            
+
             if (value == null)
             {
                 return Task.FromResult<SettingInfo>(null);
             }
 
             return Task.FromResult(new SettingInfo(tenantId, userId, name, value));
-        }
 
+        }
         /// <inheritdoc/>
-        public async Task DeleteAsync(SettingInfo setting)
+        public Task DeleteAsync(SettingInfo setting)
         {
             LogHelper.Logger.Warn("ISettingStore is not implemented, using DefaultConfigSettingStore which does not support DeleteAsync.");
+            return AbpTaskCache.CompletedTask;
         }
 
         /// <inheritdoc/>
-        public async Task CreateAsync(SettingInfo setting)
+        public Task CreateAsync(SettingInfo setting)
         {
             LogHelper.Logger.Warn("ISettingStore is not implemented, using DefaultConfigSettingStore which does not support CreateAsync.");
+            return AbpTaskCache.CompletedTask;
         }
 
         /// <inheritdoc/>
-        public async Task UpdateAsync(SettingInfo setting)
+        public Task UpdateAsync(SettingInfo setting)
         {
             LogHelper.Logger.Warn("ISettingStore is not implemented, using DefaultConfigSettingStore which does not support UpdateAsync.");
+            return AbpTaskCache.CompletedTask;
         }
 
         /// <inheritdoc/>

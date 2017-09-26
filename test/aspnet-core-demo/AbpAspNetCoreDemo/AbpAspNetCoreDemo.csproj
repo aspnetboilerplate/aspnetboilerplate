@@ -1,0 +1,43 @@
+﻿<Project Sdk="Microsoft.NET.Sdk.Web">
+
+  <PropertyGroup>
+    <TargetFramework>netcoreapp2.0</TargetFramework>
+    <PreserveCompilationContext>true</PreserveCompilationContext>
+    <AssemblyName>AbpAspNetCoreDemo</AssemblyName>
+    <OutputType>Exe</OutputType>
+    <PackageId>AbpAspNetCoreDemo</PackageId>
+    <RuntimeIdentifier>win7-x64</RuntimeIdentifier>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <None Include="App.config" />
+    <None Update="log4net.config">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
+    </None>
+    <None Update="wwwroot\**\*;Views\**\*;Areas\**\Views">
+      <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
+    </None>
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="System.Runtime" Version="4.3.0" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\..\..\src\Abp.AspNetCore\Abp.AspNetCore.csproj" />
+    <ProjectReference Include="..\..\..\src\Abp.EntityFrameworkCore\Abp.EntityFrameworkCore.csproj" />
+    <ProjectReference Include="..\..\..\src\Abp.Castle.Log4Net\Abp.Castle.Log4Net.csproj" />
+    <ProjectReference Include="..\AbpAspNetCoreDemo.Core\AbpAspNetCoreDemo.Core.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Microsoft.AspNetCore.All" Version="2.0.0" />
+  </ItemGroup>
+  
+  <Target Name="PrepublishScript" BeforeTargets="PrepareForPublish">
+    <Exec Command="bower install" />
+    <Exec Command="dotnet bundle" />
+  </Target>
+
+</Project>

@@ -1,5 +1,5 @@
 ﻿using System.IO;
-using Abp.Localization.Sources.Xml;
+using Abp.Localization.Sources;
 
 namespace Abp.Localization.Dictionaries.Xml
 {
@@ -16,11 +16,6 @@ namespace Abp.Localization.Dictionaries.Xml
         /// <param name="directoryPath">Path of the dictionary that contains all related XML files</param>
         public XmlFileLocalizationDictionaryProvider(string directoryPath)
         {
-            if (!Path.IsPathRooted(directoryPath))
-            {
-                directoryPath = Path.Combine(XmlLocalizationSource.RootDirectoryOfApplication, directoryPath);
-            }
-
             _directoryPath = directoryPath;
         }
 

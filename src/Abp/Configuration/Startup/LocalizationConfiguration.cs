@@ -9,10 +9,10 @@ namespace Abp.Configuration.Startup
     internal class LocalizationConfiguration : ILocalizationConfiguration
     {
         /// <inheritdoc/>
-        public IList<LanguageInfo> Languages { get; private set; }
+        public IList<LanguageInfo> Languages { get; }
 
         /// <inheritdoc/>
-        public ILocalizationSourceList Sources { get; private set; }
+        public ILocalizationSourceList Sources { get; }
 
         /// <inheritdoc/>
         public bool IsEnabled { get; set; }
@@ -23,6 +23,11 @@ namespace Abp.Configuration.Startup
         /// <inheritdoc/>
         public bool WrapGivenTextIfNotFound { get; set; }
 
+        /// <inheritdoc/>
+        public bool HumanizeTextIfNotFound { get; set; }
+
+        public bool LogWarnMessageIfNotFound { get; set; }
+
         public LocalizationConfiguration()
         {
             Languages = new List<LanguageInfo>();
@@ -31,6 +36,8 @@ namespace Abp.Configuration.Startup
             IsEnabled = true;
             ReturnGivenTextIfNotFound = true;
             WrapGivenTextIfNotFound = true;
+            HumanizeTextIfNotFound = true;
+            LogWarnMessageIfNotFound = true;
         }
     }
 }

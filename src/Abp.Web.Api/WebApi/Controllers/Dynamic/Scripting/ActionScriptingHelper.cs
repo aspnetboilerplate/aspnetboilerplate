@@ -37,7 +37,7 @@ namespace Abp.WebApi.Controllers.Dynamic.Scripting
                     urlBuilder.Append("&");
                 }
 
-                urlBuilder.Append(parameterInfo.Name.ToCamelCase() + "=' + escape(" + parameterInfo.Name.ToCamelCase() + ") + '");
+                urlBuilder.Append(parameterInfo.Name.ToCamelCase() + "=' + encodeURIComponent(" + parameterInfo.Name.ToCamelCase() + ") + '");
             }
 
             return urlBuilder.ToString();

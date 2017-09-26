@@ -1,0 +1,20 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<localizationDictionary culture="fr">
+  <texts>
+    <text name="InternalServerError" value="Une erreur interne s'est produite !" />
+    <text name="ValidationError" value="Votre demande n'est pas valide !" />
+    <text name="AreYouSure" value="Confirmez vous cette action ?" />
+    <text name="Cancel" value="Annuler" />
+    <text name="Yes" value="Oui" />
+    <text name="ValidationNarrativeTitle" value="Les erreurs suivantes ont été détectées après vérification de votre saisie." />
+    <text name="DefaultError" value="Une erreur est survenue!" />
+    <text name="DefaultErrorDetail" value="Le serveur a envoyé aucune autre information d'erreur." />
+    <text name="DefaultError401" value="Vous n'êtes pas identifié!" />
+    <text name="DefaultErrorDetail401" value="Vous devez être connecté (inscrivez-vous) pour effectuer cette action." />
+    <text name="DefaultError403" value="Vous n'êtes pas autorisé!" />
+    <text name="DefaultErrorDetail403" value="Vous ne pourrez pas effectuer cette action." />
+    <text name="DefaultError404" value="Ressource introuvable!" />
+    <text name="DefaultErrorDetail404" value="La ressource demandée n'a pas été trouvée sur le serveur." />
+    <text name="EntityNotFound" value="Il n'y a pas d'entité {0} avec id = {1}!" />
+  </texts>
+</localizationDictionary>

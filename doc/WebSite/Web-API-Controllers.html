@@ -15,12 +15,11 @@
 			<p>ASP.NET Boilerplate is integrated to <strong>ASP.NET Web API Controllers</strong> via <strong>
 Abp.Web.Api</strong> nuget package. You can create regular ASP.NET Web API Controllers as 
 you always do. <a href="/Pages/Documents/Dependency-Injection">Dependency Injection</a> properly works for regular 
-ApiControllers.</p>
-			<p>But you should derive your controllers from <strong>
+ApiControllers. But you should derive your controllers from <strong>
 	AbpApiController</strong>, which provides several benefits 
 	and better integrates to ASP.NET Boilerplate.</p>
 			<h3>AbpApiController Base Class</h3>
-			<p>This is a simple api controller derived from AbpApiController:</p>
+			<p>This is a simple api controller derived from <strong>AbpApiController</strong>:</p>
 			<pre lang="cs">public class UsersController : <strong>AbpApiController</strong>
 {
 
@@ -28,11 +27,11 @@ ApiControllers.</p>
 			<h4>Localization</h4>
 			<p>AbpApiController defines <strong>L</strong> method to make
 				<a href="/Pages/Documents/Localization">localization</a> easier. Example:</p>
-			<pre lang="cs">public class UsersController : AbpApiController
+			<pre lang="cs">public class UsersController : <strong>AbpApiController</strong>
 {
     public UsersController()
     {
-				<strong>LocalizationSourceName = &quot;MySourceName&quot;;</strong>
+        <strong>LocalizationSourceName = &quot;MySourceName&quot;;</strong>
     }
 
     public UserDto Get(long id)
@@ -45,61 +44,9 @@ ApiControllers.</p>
 			<p>You should set <strong>LocalizationSourceName</strong> to make <strong>L</strong> method 
 	working. You can set it in your own base api controller class, to not repeat for 
 	each api controller.</p>
-			<h4>Audit Logging</h4>
-			<p>Audit logs are <strong>not</strong> automatically written for api controllers. 
-	You should declare <strong>Audited</strong> attribute for api controller or 
-	action to enable it. See <a href="/Pages/Documents/Audit-Logging">audit logs</a> documentation 
-	for more.</p>
-			<h4>Authorization</h4>
-			<p>You can use <strong>AbpApiAuthorize</strong> attribute for your 
-	api controllers or actions to prevent unauthorized users to use your controllers 
-	and actions. Example:</p>
-			<pre lang="cs">public class UsersController : AbpApiController
-{
-				<strong>[AbpApiAuthorize(&quot;MyPermissionName&quot;)]</strong>
-    public UserDto Get(long id)
-    {
-        //...
-    }
-}</pre>
-			<p>AbpApiController also defines <strong>IsGranted</strong> method as a 
-	shortcut to check permissions.</p>
-			<p>See <a href="/Pages/Documents/Authorization">authorization</a> 
-	documentation for more.</p>
-			<h4>Unit Of Work</h4>
-			<p>Web API actions are <strong>not</strong>
-				<a href="/Pages/Documents/Unit-Of-Work">unit of work</a> by default. For 
-	example, if you 
-	need database connection to be open in your action, you need to explicitly 
-	declare <strong>UnitOfWork</strong> attribute as shown below:</p>
-			<pre lang="cs">public class UsersController : AbpApiController
-{
-    private readonly IRepository&lt;User, long&gt; _userRepository;
 
-    public UsersController(IRepository&lt;User, long&gt; userRepository)
-    {
-        _userRepository = userRepository;
-    }
+		<div class="document-contents">
 
-				<strong>[UnitOfWork]</strong>
-    public <strong>virtual</strong> List&lt;UserDto&gt; Users(string filter)
-    {
-        var users = _userRepository
-            .GetAll()
-            .Where(u =&gt; u.UserName.StartsWith(filter))
-            .ToList();
-
-        //...
-    }
-}</pre>
-			<p>We declared <strong>UnitOfWork</strong> attribute. This is needed since 
-	repository's <strong>GetAll()</strong> method returns <strong>IQueryable</strong>, 
-	which requires an open database connection while using <strong>ToList()</strong> 
-	method (because of deferred execution of IQueryable). Notice that it should 
-	also be <strong>virtual</strong> (because interception can not work 
-	otherwise).</p>
-			<p>See <a href="/Pages/Documents/Unit-Of-Work">unit of work</a> 
-	documentation for more.</p>
 			<h4>Others</h4>
 			<p>You can also use pre-injected <a href="/Pages/Documents/Abp-Session">AbpSession</a>, 
 				<a href="/Pages/Documents/EventBus-Domain-Events">EventBus</a>, 
@@ -110,6 +57,71 @@ ApiControllers.</p>
 				<a href="/Pages/Documents/Logging">Logger</a>, 
 				<a href="/Pages/Documents/Unit-Of-Work">CurrentUnitOfWork</a> base 
 	properties and more.</p>
+
+		</div>
+			<h3>Filters</h3>
+			<p>ABP defines some <strong>pre-built filters</strong> for AspNet 
+			Web API. All 
+	of them are added to <strong>all actions of all controllers</strong> by 
+	default.</p>
+			<h4>Audit Logging</h4>
+			<strong>AbpApiAuditFilter</strong> is used to integrate to
+	<a href="Audit-Logging.html">audit logging system</a>. It logs all requests 
+	to all actions by default (if auditing is not disabled). You can control audit logging using <strong>Audited</strong> and <strong>
+	DisableAuditing</strong> attributes for actions and controllers.<h4>Authorization</h4>
+			<p>You can use <strong>AbpApiAuthorize</strong> attribute for your 
+	api controllers or actions to prevent unauthorized users to use your controllers 
+	and actions. Example:</p>
+			<pre lang="cs">public class UsersController : AbpApiController
+{
+    <strong>[AbpApiAuthorize(&quot;MyPermissionName&quot;)]</strong>
+    public UserDto Get(long id)
+    {
+        //...
+    }
+}</pre>
+			<p>You can define <strong>AllowAnonymous</strong> attribute for actions or controllers to suppress 
+		authentication/authorization. AbpApiController also defines <strong>IsGranted</strong> method as a 
+	shortcut to check permissions in the code.</p>
+			<p>See <a href="/Pages/Documents/Authorization">authorization</a> 
+	documentation for more.&nbsp;</p>
+			<h4>Anti Forgery Filter</h4>
+			<p><strong>AbpAntiForgeryApiFilter</strong> is used to auto protect 
+			ASP.NET Web API actions (including <a href="Dynamic-Web-API.html">
+			dynamic web api</a>) for POST, PUT and DELETE requests from 
+			CSRF/XSRF attacks. See <a href="XSRF-CSRF-Protection.html">CSRF 
+			documentation</a> for more.&nbsp;</p>
+			<h4>Unit Of Work</h4>
+	<p><strong>AbpApiUowFilter</strong> is used to integrate to
+	<a href="Unit-Of-Work.html">Unit of Work</a> system. It automatically begins 
+	a new unit of work before an action execution and completes unit of work 
+	after action exucition (if no exception is thrown).</p>
+	<p>You can use <strong>UnitOfWork</strong> attribute to control behaviour of 
+	UOW for an action. You can also use startup configuration to change default 
+	unit of work attribute for all actions.</p>
+			<h4>Result Wrapping &amp; Exception Handling</h4>
+<p>ASP.NET Boilerplate <strong>does not wrap</strong> Web API actions <strong>by 
+default</strong> if action has successfully executed. But 
+it <strong>handles and wraps for exceptions</strong>. You can add 
+WrapResult/DontWrapResult to actions and controllers if you need.&nbsp;You can change this default behaviour from
+<a href="Startup-Configuration.html">startup configuration</a> (using 
+Configuration.Modules.AbpWebApi()...). See <a href="Javascript-API/AJAX.html">
+AJAX document</a> for more about result wrapping.&nbsp;</p>
+			<h4>Result Caching</h4>
+			<p>ASP.NET Boilerplate adds Cache-Control header (no-cache, 
+			no-store) to the response for Web API requests. Thus, it prevents 
+			browser caching of responses even for GET requests. This behaviour 
+			can be disabled by the configuration.</p>
+			<h4>Validation</h4>
+			<p><strong>AbpApiValidationFilter</strong> automatically checks <strong>
+			ModelState.IsValid</strong> and prevents execution of the action if 
+			it's not valid. Also, implements input DTO validation described in 
+			the <a href="Validating-Data-Transfer-Objects.html">validation 
+			documentation</a>.</p>
+		<h3>Model Binders</h3>
+		<p><strong>AbpApiDateTimeBinder</strong> is used to normalize DateTime 
+	(and Nullable&lt;DateTime&gt;) inputs using <strong>Clock.Normalize</strong> 
+	method.</p>
 
 		</div>
 

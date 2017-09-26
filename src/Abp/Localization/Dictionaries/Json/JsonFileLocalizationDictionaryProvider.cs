@@ -1,6 +1,6 @@
 ﻿using System.IO;
 using Abp.Localization.Dictionaries.Xml;
-using Abp.Localization.Sources.Xml;
+using Abp.Localization.Sources;
 
 namespace Abp.Localization.Dictionaries.Json
 {
@@ -17,11 +17,6 @@ namespace Abp.Localization.Dictionaries.Json
         /// <param name="directoryPath">Path of the dictionary that contains all related XML files</param>
         public JsonFileLocalizationDictionaryProvider(string directoryPath)
         {
-            if (!Path.IsPathRooted(directoryPath))
-            {
-                directoryPath = Path.Combine(XmlLocalizationSource.RootDirectoryOfApplication, directoryPath);
-            }
-
             _directoryPath = directoryPath;
         }
         

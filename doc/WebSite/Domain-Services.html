@@ -30,7 +30,7 @@ Transfer Objects</a>, a Domain Service gets/returns <strong>domain objects</stro
 Services, but not directly used by presentation layer (application service is 
 for that).</p>
 
-			<h3 id="DocBases">IDomainService interface and DomainService class</h3>
+			<h3 id="DocBases">IDomainService Interface and DomainService Class</h3>
 			<p>ASP.NET Boilerplate defines <strong>IDomainService interface</strong> that is 
 implemented by all domain services conventionally. When it's implemented, the 
 domain service is <strong>automatically registered</strong> to
@@ -46,10 +46,10 @@ they if needs.</p>
 			<p>Assume that we have a task management system and we have business rules while 
 assigning a task to a person.</p>
 
-			<h4 id="DocInterface">Creating an interface</h4>
+			<h4 id="DocInterface">Creating an Interface</h4>
 			<p>First, we define an interface for the service (not required, but as a good 
 practice):</p>
-			<pre lang="cs">public interface ITaskManager : IDomainService
+			<pre lang="cs">public interface ITaskManager : <strong>IDomainService</strong>
 {
     void AssignTaskToPerson(Task task, Person person);
 }</pre>
@@ -58,9 +58,9 @@ practice):</p>
 of naming domain services. It can be TaskManager, TaskService or 
 TaskDomainService...</p>
 
-			<h4 id="DocImpl">Service implementation</h4>
+			<h4 id="DocImpl">Service Implementation</h4>
 			<p>Let's see the implementation:</p>
-			<pre lang="cs">public class TaskManager : DomainService, ITaskManager
+			<pre lang="cs">public class TaskManager : <strong>DomainService</strong>, <strong>ITaskManager</strong>
 {
     public const int MaxActiveTaskCountForAPerson = 3;
 
@@ -112,16 +112,16 @@ and should not allow us to assign it to a person. I think this is an application
 error and we may hide it from user. Second one is harder to check by UI and we 
 can show a readable error message to the user. Just for an example.</p>
 
-			<h4 id="DocUsingFromAppService">Using from application service</h4>
+			<h4 id="DocUsingFromAppService">Using from Application Service</h4>
 			<p>Now, let's see how to use TaskManager from an application service:</p>
 
 			<pre lang="cs">public class TaskAppService : ApplicationService, ITaskAppService
 {
     private readonly IRepository&lt;Task, long&gt; _taskRepository;
     private readonly IRepository&lt;Person&gt; _personRepository;
-    private readonly ITaskManager _taskManager;
-
-    public TaskAppService(IRepository&lt;Task, long&gt; taskRepository, IRepository&lt;Person&gt; personRepository , ITaskManager taskManager)
+    <strong>private readonly ITaskManager _taskManager;
+</strong>
+    public TaskAppService(IRepository&lt;Task, long&gt; taskRepository, IRepository&lt;Person&gt; personRepository, <strong>ITaskManager taskManager</strong>)
     {
         _taskRepository = taskRepository;
         _personRepository = personRepository;
@@ -133,7 +133,7 @@ can show a readable error message to the user. Just for an example.</p>
         var task = _taskRepository.Get(input.TaskId);
         var person = _personRepository.Get(input.PersonId);
 
-        _taskManager.AssignTaskToPerson(task, person);
+        <strong>_taskManager.AssignTaskToPerson(task, person);</strong>
     }
 }</pre>
 			<p>Task <strong>Application Service</strong> uses given <strong>DTO</strong> (input) and 
@@ -142,34 +142,35 @@ related <strong>task</strong> and <strong>person</strong> and passes them to the
 				<strong>Task Manager</strong> (the domain 
 service).</p>
 
-			<h3 id="DocDiscussions">Some discussions</h3>
+			<h3 id="DocDiscussions">Some Discussions</h3>
 			<p>Based on the example above, you may have some questions.</p>
 
-			<h4 id="DocWhyNotOnlyAppServices">Why not only application services?</h4>
+			<h4 id="DocWhyNotOnlyAppServices">Why Not Only Application Services?</h4>
 			<p>You can say that why application service does not implement the logic in the 
 domain service?</p>
 			<p>We can simply say that it's not application service task. Because it's not a
 				<strong>use-case</strong>, instead, it's a <strong>business operation</strong>. 
-We may use same 'assign a task to a user' logic in a different use-case. Say 
+We may use same 'assign a task to a user' domain logic in a different use-case. Say 
 that we may have <strong>another screen</strong> to somehow update the task and 
 this updating can include assigning the task to another person. So, we can use 
 same domain logic there. Also, we may have<strong> 2 different UI</strong> (one 
-mobile application and one web application) that shares same domain.</p>
+mobile application and one web application) that shares same domain or we may 
+			have a web API for remote clients that includes a task assign 
+			operation.</p>
 			<p>If your domain is simple, will have only one UI and assigning a task to a 
 person will be done in just a single point, then you may consider to skip domain 
 services and implement the logic in your application service. This will not be a 
 best practice for DDD, but ASP.NET 
 Boilerplate does not force you for such a design.</p>
 
-			<h4 id="DocHowToForceDomainService">How to force to use the domain service?</h4>
+			<h4 id="DocHowToForceDomainService">How to Force to Use the Domain Service?</h4>
 			<p>You can see that, application service simply could do that:</p>
 			<pre lang="cs">public void AssignTaskToPerson(AssignTaskToPersonInput input)
 {
     var task = _taskRepository.Get(input.TaskId);
-
-    task.AssignedPersonId = input.PersonId;
+    <strong>task.AssignedPersonId = input.PersonId;</strong>
 }</pre>
-			<p>The developer who write the application service may not know there is a 
+			<p>The developer write the application service may not know there is a 
 				<strong>TaskManager</strong> and can directly set given <strong>PersonId</strong> to task's 
 				<strong>AssignedPersonId</strong>. So, 
 how to <strong>prevent</strong> it? There are many discussions in DDD area based on these and there are some used 
@@ -178,30 +179,30 @@ will provide a simple way of doing it.</p>
 			<p>We can change <strong>Task</strong> entity as shown below:</p>
 			<pre lang="cs">public class Task : Entity&lt;long&gt;
 {
-    public virtual int? AssignedPersonId { get; protected set; }
+    public virtual int? AssignedPersonId { get; <strong>protected set;</strong> }
 
     //...other members and codes of Task entity
 
-    public void AssignToPerson(Person person, ITaskPolicy taskPolicy)
+<strong>    public void AssignToPerson(Person person, ITaskPolicy taskPolicy)
     {
         taskPolicy.CheckIfCanAssignTaskToPerson(this, person);
-
         AssignedPersonId = person.Id;
-    }
+    }</strong>
 }</pre>
 			<p>We changed setter of <strong>AssignedPersonId</strong> as <strong>protected</strong>. 
 So, it can not be changed out of this Task entity class. Added an <strong>
 AssignToPerson</strong> method that takes a person and a task policy. <strong>
 CheckIfCanAssignTaskToPerson</strong> method checks if it's a valid assignment 
-and throws a proper exception if not. Then application service method will be like that:</p>
+and throws a proper exception if not (it's implementation is not important here). Then application service method will be like that:</p>
 			<pre lang="cs">public void AssignTaskToPerson(AssignTaskToPersonInput input)
 {
     var task = _taskRepository.Get(input.TaskId);
     var person = _personRepository.Get(input.PersonId);
 
-    task.AssignToPerson(person, _taskPolicy);
+    <strong>task.AssignToPerson(person, _taskPolicy);</strong>
 }</pre>
-			<p>Now, there is no second way of assigning a task to a person. We should always 
+			<p>We injected ITaskPolicy as _taskPolicy and passed to 
+			AssignToPerson method. Now, there is no second way of assigning a task to a person. We should always 
 use AssignToPerson and can not skip business rules.</p>
 		</div>
 	</body>

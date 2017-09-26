@@ -1,6 +1,4 @@
 ﻿using System.Reflection;
-using System.Text;
-using Abp.IO.Extensions;
 using Abp.Localization.Dictionaries.Xml;
 
 namespace Abp.Localization.Dictionaries.Json
@@ -43,10 +41,9 @@ namespace Abp.Localization.Dictionaries.Json
                 {
                     using (var stream = _assembly.GetManifestResourceStream(resourceName))
                     {
-                        var bytes = stream.GetAllBytes();
-                        var xmlString = Encoding.UTF8.GetString(bytes, 3, bytes.Length - 3); //Skipping byte order mark
+                        var jsonString = Utf8Helper.ReadStringFromStream(stream);
 
-                        var dictionary = CreateJsonLocalizationDictionary(xmlString);
+                        var dictionary = CreateJsonLocalizationDictionary(jsonString);
                         if (Dictionaries.ContainsKey(dictionary.CultureInfo.Name))
                         {
                             throw new AbpInitializationException(sourceName + " source contains more than one dictionary for the culture: " + dictionary.CultureInfo.Name);

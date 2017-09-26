@@ -1,6 +1,6 @@
-﻿using System.Reflection;
-using Abp.Hangfire.Configuration;
+﻿using Abp.Hangfire.Configuration;
 using Abp.Modules;
+using Abp.Reflection.Extensions;
 using Hangfire;
 
 namespace Abp.Hangfire
@@ -20,7 +20,8 @@ namespace Abp.Hangfire
 
         public override void Initialize()
         {
-            IocManager.RegisterAssemblyByConvention(Assembly.GetExecutingAssembly());
+            IocManager.RegisterAssemblyByConvention(typeof(AbpHangfireModule).GetAssembly());
+            GlobalJobFilters.Filters.Add(IocManager.Resolve<AbpHangfireJobExceptionFilter>());
         }
     }
 }

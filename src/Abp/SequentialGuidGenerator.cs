@@ -1,53 +1,60 @@
 ﻿using System;
-using Abp.Timing;
 using System.Security.Cryptography;
+using Abp.Threading.Extensions;
 
 namespace Abp
 {
     /// <summary>
     /// Implements <see cref="IGuidGenerator"/> by creating sequential Guids.
-    /// This code is taken from jhtodd/SequentialGuid
-    /// https://github.com/jhtodd/SequentialGuid/blob/master/SequentialGuid/Classes/SequentialGuid.cs
+    /// This code is taken from https://github.com/jhtodd/SequentialGuid/blob/master/SequentialGuid/Classes/SequentialGuid.cs
     /// </summary>
     public class SequentialGuidGenerator : IGuidGenerator
     {
         /// <summary>
         /// Gets the singleton <see cref="SequentialGuidGenerator"/> instance.
         /// </summary>
-        public static SequentialGuidGenerator Instance { get { return _instance; } }
-        private static readonly SequentialGuidGenerator _instance = new SequentialGuidGenerator();
+        public static SequentialGuidGenerator Instance { get; } = new SequentialGuidGenerator();
 
-        private static readonly RNGCryptoServiceProvider _rng = new RNGCryptoServiceProvider();
+        private static readonly RandomNumberGenerator Rng = RandomNumberGenerator.Create();
 
         public SequentialGuidDatabaseType DatabaseType { get; set; }
 
-        public SequentialGuidGenerator()
+        /// <summary>
+        /// Prevents a default instance of the <see cref="SequentialGuidGenerator"/> class from being created.
+        /// Use <see cref="Instance"/>.
+        /// </summary>
+        private SequentialGuidGenerator()
         {
             DatabaseType = SequentialGuidDatabaseType.SqlServer;
         }
 
         public Guid Create()
         {
-           return Create(DatabaseType);
+            return Create(DatabaseType);
         }
 
         public Guid Create(SequentialGuidDatabaseType databaseType)
         {
             switch (databaseType)
             {
-                case SequentialGuidDatabaseType.SqlServer: return Create(SequentialGuidType.SequentialAtEnd);
-                case SequentialGuidDatabaseType.Oracle: return Create(SequentialGuidType.SequentialAsBinary);
-                case SequentialGuidDatabaseType.MySql: return Create(SequentialGuidType.SequentialAsString);
-                case SequentialGuidDatabaseType.PostgreSql: return Create(SequentialGuidType.SequentialAsString);
-                default: throw new InvalidOperationException();
+                case SequentialGuidDatabaseType.SqlServer:
+                    return Create(SequentialGuidType.SequentialAtEnd);
+                case SequentialGuidDatabaseType.Oracle:
+                    return Create(SequentialGuidType.SequentialAsBinary);
+                case SequentialGuidDatabaseType.MySql:
+                    return Create(SequentialGuidType.SequentialAsString);
+                case SequentialGuidDatabaseType.PostgreSql:
+                    return Create(SequentialGuidType.SequentialAsString);
+                default:
+                    throw new InvalidOperationException();
             }
         }
 
         public Guid Create(SequentialGuidType guidType)
         {
             // We start with 16 bytes of cryptographically strong random data.
-            byte[] randomBytes = new byte[10];
-            _rng.GetBytes(randomBytes);
+            var randomBytes = new byte[10];
+            Rng.Locking(r => r.GetBytes(randomBytes));
 
             // An alternate method: use a normally-created GUID to get our initial
             // random data:
@@ -115,7 +122,7 @@ namespace Abp
 
             return new Guid(guidBytes);
         }
-        
+
         /// <summary>
         /// Database type to generate GUIDs.
         /// </summary>

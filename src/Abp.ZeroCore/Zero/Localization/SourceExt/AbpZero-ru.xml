@@ -1,0 +1,10 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<localizationDictionary culture="ru">
+  <texts>
+    <text name="Email">Email</text>
+    <text name="EmailSecurityCodeSubject">Секретный код</text>
+    <text name="EmailSecurityCodeBody">Ваш секретный код: {0}</text>
+    <text name="Sms">Смс</text>
+    <text name="SmsSecurityCodeMessage">Ваш секретный код: {0}</text>
+  </texts>
+</localizationDictionary>

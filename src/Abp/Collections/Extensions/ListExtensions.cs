@@ -49,7 +49,7 @@ namespace Abp.Collections.Extensions
             {
                 if (inProcess)
                 {
-                    throw new ArgumentException("Cyclic dependency found!");
+                    throw new ArgumentException("Cyclic dependency found! Item: " + item);
                 }
             }
             else

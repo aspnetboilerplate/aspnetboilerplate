@@ -17,7 +17,6 @@ namespace Abp.Authorization
         public Permission CreatePermission(
             string name, 
             ILocalizableString displayName = null, 
-            bool isGrantedByDefault = false, 
             ILocalizableString description = null, 
             MultiTenancySides multiTenancySides = MultiTenancySides.Host | MultiTenancySides.Tenant,
             IFeatureDependency featureDependency = null)
@@ -27,7 +26,7 @@ namespace Abp.Authorization
                 throw new AbpException("There is already a permission with name: " + name);
             }
 
-            var permission = new Permission(name, displayName, isGrantedByDefault, description, multiTenancySides, featureDependency);
+            var permission = new Permission(name, displayName, description, multiTenancySides, featureDependency);
             Permissions[permission.Name] = permission;
             return permission;
         }

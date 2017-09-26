@@ -92,7 +92,7 @@ namespace Abp.Runtime.Serialization
             {
                 return new BinaryFormatter
                 {
-                    AssemblyFormat = System.Runtime.Serialization.Formatters.FormatterAssemblyStyle.Simple,
+                    //TODO: AssemblyFormat = System.Runtime.Serialization.Formatters.FormatterAssemblyStyle.Simple,
                     Binder = new ExtendedSerializationBinder()
                 };
             }

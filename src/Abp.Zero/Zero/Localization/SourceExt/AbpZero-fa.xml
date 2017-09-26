@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<localizationDictionary culture="fa">
+  <texts>
+    <text name="Identity.UserAlreadyInRole" value="کاربر در این گروه وجود دارد." />
+    <text name="Identity.UserNotInRole" value="کاربر در این گروه وجود ندارد." />
+    <text name="Identity.RoleNotFound" value="گروه {0} وجود ندارد." />
+    <text name="Identity.PasswordMismatch" value="رمز ورود اشتباه است." />
+    <text name="Identity.InvalidUserName" value="نام کاربری {0} نامعتبر است، نام کاربری فقط می تواند شامل حرف یا عددی باشد." />
+    <text name="Identity.PasswordTooShort" value="کلمه عبور باید حداقل {0} حرف باشد." />
+    <text name="Identity.PropertyTooShort" value="{0} نباید تهی یا خالی باشد.." />
+    <text name="Identity.DuplicateUserName" value="نام {0} قبلا گرفته شده است." />
+    <text name="Identity.UserAlreadyHasPassword" value="کاربر در حال حاضر کلمه عبور خود را تعیین کرده است.." />
+    <text name="Identity.PasswordRequireNonLetterOrDigit" value="کلمه عبور باید حداقل شامل یک کاراکتر غیر حرفی و غیر عددی باشد.." />
+    <text name="Identity.UserIdNotFound" value="شناسه کاربری یافت نشد." />
+    <text name="Identity.InvalidToken" value="کد نامعتبر می باشد." />
+    <text name="Identity.InvalidEmail" value="پست الکترونیک '{0}' نامعتبر است." />
+    <text name="Identity.UserNameNotFound" value="کاربر {0} وجود ندارد." />
+    <text name="Identity.LockoutNotEnabled" value="تحریم برای این کاربر فعال نیست." />
+    <text name="Identity.PasswordRequireUpper" value="کلمه عبور باید حداقل یک حرف بزرگ شامل ('A'-'Z') باشد." />
+    <text name="Identity.PasswordRequireDigit" value="کلمه عبور باید حداقل یک رقم شامل ('0'-'9') باشد." />
+    <text name="Identity.PasswordRequireLower" value="کلمه عبور باید حداقل یک حرف کوچک شامل ('a'-'z') باشد." />
+    <text name="Identity.DuplicateEmail" value="پست الکترونیک {0} در حال حاضر گرفته شده است." />
+    <text name="Identity.ExternalLoginExists" value="کاربری با آن ورود خارجی از قبل وجود دارد." />
+    <text name="Identity.DefaultError" value="یک خطای ناشناخته رخ داده است." />
+    <text name="Email" value="پست الکترونیک" />
+    <text name="EmailSecurityCodeSubject" value="کد امنیتی" />
+    <text name="EmailSecurityCodeBody" value="کد امنیتی شما '{0}' است" />
+    <text name="Sms" value="پیام کوتاه" />
+    <text name="SmsSecurityCodeMessage" value="کد امنیتی شما '{0}' است" />
+  </texts>
+</localizationDictionary>

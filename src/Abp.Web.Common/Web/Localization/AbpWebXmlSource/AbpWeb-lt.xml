@@ -1,0 +1,20 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<localizationDictionary culture="lt">
+  <texts>
+    <text name="InternalServerError" value="Įvyko vidinė serverio klaida apdorojant užklausą!" />
+    <text name="ValidationError" value="Jūsų užklausa turi klaidų!" />
+    <text name="AreYouSure" value="Ar tikrai to norite?" />
+    <text name="Cancel" value="Atšaukti" />
+    <text name="Yes" value="Taip" />
+    <text name="ValidationNarrativeTitle" value="Tikrinimo metu buvo nustatyta klaidų įvedime." />
+    <text name="DefaultError" value="Įvyko klaida!" />
+    <text name="DefaultErrorDetail" value="Išsamesnė informacija apie klaidą negauta." />
+    <text name="DefaultError401" value="Jūs nesate prisijungęs!" />
+    <text name="DefaultErrorDetail401" value="Šiai operacijai atlikti Jūs turėtumėte būti prisijungęs." />
+    <text name="DefaultError403" value="Jūs neturite teisių!" />
+    <text name="DefaultErrorDetail403" value="Jūs neturite teisių atlikti šią operaciją." />
+    <text name="DefaultError404" value="Resursas nerastas!" />
+    <text name="DefaultErrorDetail404" value="Užklaustas resursas nėra rastas serveryje." />
+    <text name="EntityNotFound" value="Vienetas {0} su id = {1} neegzistuoja!" />
+  </texts>
+</localizationDictionary>

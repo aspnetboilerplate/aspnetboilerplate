@@ -10,7 +10,7 @@ namespace Abp.Events.Bus
     public abstract class EventData : IEventData
     {
         /// <summary>
-        /// The time when the event occured.
+        /// The time when the event occurred.
         /// </summary>
         public DateTime EventTime { get; set; }
 

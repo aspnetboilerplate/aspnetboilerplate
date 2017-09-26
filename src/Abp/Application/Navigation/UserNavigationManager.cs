@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Threading.Tasks;
 using Abp.Application.Features;
 using Abp.Authorization;
@@ -13,8 +12,6 @@ namespace Abp.Application.Navigation
 {
     internal class UserNavigationManager : IUserNavigationManager, ITransientDependency
     {
-        public IPermissionChecker PermissionChecker { get; set; }
-
         public IAbpSession AbpSession { get; set; }
 
         private readonly INavigationManager _navigationManager;
@@ -29,14 +26,7 @@ namespace Abp.Application.Navigation
             _navigationManager = navigationManager;
             _localizationContext = localizationContext;
             _iocResolver = iocResolver;
-            PermissionChecker = NullPermissionChecker.Instance;
             AbpSession = NullAbpSession.Instance;
-        }
-
-        [Obsolete("Use GetMenuAsync(UserIdentifier) instead.")]
-        public Task<UserMenu> GetMenuAsync(string menuName, long? userId, int? tenantId = null)
-        {
-            return GetMenuAsync(menuName, GetNormalizedUserIdentifier(tenantId, userId));
         }
 
         public async Task<UserMenu> GetMenuAsync(string menuName, UserIdentifier user)
@@ -50,12 +40,6 @@ namespace Abp.Application.Navigation
             var userMenu = new UserMenu(menuDefinition, _localizationContext);
             await FillUserMenuItems(user, menuDefinition.Items, userMenu.Items);
             return userMenu;
-        }
-
-        [Obsolete("Use GetMenusAsync(UserIdentifier) instead.")]
-        public Task<IReadOnlyList<UserMenu>> GetMenusAsync(long? userId, int? tenantId = null)
-        {
-            return GetMenusAsync(GetNormalizedUserIdentifier(tenantId, userId));
         }
 
         public async Task<IReadOnlyList<UserMenu>> GetMenusAsync(UserIdentifier user)
@@ -76,10 +60,14 @@ namespace Abp.Application.Navigation
 
             var addedMenuItemCount = 0;
 
-            using (var featureDependencyContext = _iocResolver.ResolveAsDisposable<FeatureDependencyContext>())
+            using (var scope = _iocResolver.CreateScope())
             {
-                featureDependencyContext.Object.TenantId = user == null ? null : user.TenantId;
+                var permissionDependencyContext = scope.Resolve<PermissionDependencyContext>();
+                permissionDependencyContext.User = user;
 
+                var featureDependencyContext = scope.Resolve<FeatureDependencyContext>();
+                featureDependencyContext.TenantId = user == null ? null : user.TenantId;
+                
                 foreach (var menuItemDefinition in menuItemDefinitions)
                 {
                     if (menuItemDefinition.RequiresAuthentication && user == null)
@@ -87,14 +75,24 @@ namespace Abp.Application.Navigation
                         continue;
                     }
 
-                    if (!string.IsNullOrEmpty(menuItemDefinition.RequiredPermissionName) && (user == null || !(await PermissionChecker.IsGrantedAsync(user, menuItemDefinition.RequiredPermissionName))))
+                    if (!string.IsNullOrEmpty(menuItemDefinition.RequiredPermissionName))
+                    {
+                        var permissionDependency = new SimplePermissionDependency(menuItemDefinition.RequiredPermissionName);
+                        if (user == null || !(await permissionDependency.IsSatisfiedAsync(permissionDependencyContext)))
+                        {
+                            continue;
+                        }
+                    }
+
+                    if (menuItemDefinition.PermissionDependency != null &&
+                        (user == null || !(await menuItemDefinition.PermissionDependency.IsSatisfiedAsync(permissionDependencyContext))))
                     {
                         continue;
                     }
 
                     if (menuItemDefinition.FeatureDependency != null &&
                         (AbpSession.MultiTenancySide == MultiTenancySides.Tenant || (user != null && user.TenantId != null)) &&
-                        !(await menuItemDefinition.FeatureDependency.IsSatisfiedAsync(featureDependencyContext.Object)))
+                        !(await menuItemDefinition.FeatureDependency.IsSatisfiedAsync(featureDependencyContext)))
                     {
                         continue;
                     }
@@ -109,30 +107,6 @@ namespace Abp.Application.Navigation
             }
 
             return addedMenuItemCount;
-        }
-
-        private UserIdentifier GetNormalizedUserIdentifier(int? tenantId, long? userId)
-        {
-            if (userId == null)
-            {
-                //No identifier
-                return null;
-            }
-
-            if (tenantId != null)
-            {
-                //known tenant id
-                return new UserIdentifier(tenantId, userId.Value);
-            }
-
-            if (userId == AbpSession.UserId)
-            {
-                //normalized tenant id
-                return new UserIdentifier(AbpSession.TenantId, userId.Value);
-            }
-
-            //assumed as host user
-            return new UserIdentifier(null, userId.Value);
         }
     }
 }

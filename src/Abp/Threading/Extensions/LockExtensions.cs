@@ -8,7 +8,7 @@ namespace Abp.Threading.Extensions
     public static class LockExtensions
     {
         /// <summary>
-        /// Executes given <see cref="action"/> by locking given <see cref="source"/> object.
+        /// Executes given <paramref name="action"/> by locking given <paramref name="source"/> object.
         /// </summary>
         /// <param name="source">Source object (to be locked)</param>
         /// <param name="action">Action (to be executed)</param>
@@ -21,7 +21,7 @@ namespace Abp.Threading.Extensions
         }
 
         /// <summary>
-        /// Executes given <see cref="action"/> by locking given <see cref="source"/> object.
+        /// Executes given <paramref name="action"/> by locking given <paramref name="source"/> object.
         /// </summary>
         /// <typeparam name="T">Type of the object (to be locked)</typeparam>
         /// <param name="source">Source object (to be locked)</param>
@@ -35,13 +35,12 @@ namespace Abp.Threading.Extensions
         }
 
         /// <summary>
-        /// Executes given <see cref="func"/> and returns it's value by locking given <see cref="source"/> object.
+        /// Executes given <paramref name="func"/> and returns it's value by locking given <paramref name="source"/> object.
         /// </summary>
-        /// <typeparam name="T">Type of the object (to be locked)</typeparam>
         /// <typeparam name="TResult">Return type</typeparam>
         /// <param name="source">Source object (to be locked)</param>
         /// <param name="func">Function (to be executed)</param>
-        /// <returns>Return value of the <see cref="func"/></returns>
+        /// <returns>Return value of the <paramref name="func"/></returns>
         public static TResult Locking<TResult>(this object source, Func<TResult> func)
         {
             lock (source)
@@ -51,13 +50,13 @@ namespace Abp.Threading.Extensions
         }
 
         /// <summary>
-        /// Executes given <see cref="func"/> and returns it's value by locking given <see cref="source"/> object.
+        /// Executes given <paramref name="func"/> and returns it's value by locking given <paramref name="source"/> object.
         /// </summary>
         /// <typeparam name="T">Type of the object (to be locked)</typeparam>
         /// <typeparam name="TResult">Return type</typeparam>
         /// <param name="source">Source object (to be locked)</param>
         /// <param name="func">Function (to be executed)</param>
-        /// <returns>Return value of the <see cref="func"/></returns>
+        /// <returns>Return value of the <paramnref name="func"/></returns>
         public static TResult Locking<T, TResult>(this T source, Func<T, TResult> func) where T : class
         {
             lock (source)

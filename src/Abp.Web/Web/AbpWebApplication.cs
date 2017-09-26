@@ -1,16 +1,9 @@
 ﻿using System;
-using System.Globalization;
-using System.Linq;
-using System.Security.Claims;
-using System.Threading;
 using System.Web;
-using Abp.Collections.Extensions;
 using Abp.Dependency;
-using Abp.Localization;
-using Abp.MultiTenancy;
-using Abp.Reflection;
-using Abp.Runtime.Security;
+using Abp.Modules;
 using Abp.Threading;
+using Abp.Web.Localization;
 
 namespace Abp.Web
 {
@@ -18,89 +11,54 @@ namespace Abp.Web
     /// This class is used to simplify starting of ABP system using <see cref="AbpBootstrapper"/> class..
     /// Inherit from this class in global.asax instead of <see cref="HttpApplication"/> to be able to start ABP system.
     /// </summary>
-    public abstract class AbpWebApplication : HttpApplication
+    /// <typeparam name="TStartupModule">Startup module of the application which depends on other used modules. Should be derived from <see cref="AbpModule"/>.</typeparam>
+    public abstract class AbpWebApplication<TStartupModule> : HttpApplication
+        where TStartupModule : AbpModule
     {
         /// <summary>
         /// Gets a reference to the <see cref="AbpBootstrapper"/> instance.
         /// </summary>
-        protected AbpBootstrapper AbpBootstrapper { get; private set; }
+        public static AbpBootstrapper AbpBootstrapper { get; } = AbpBootstrapper.Create<TStartupModule>();
 
-        protected AbpWebApplication()
-        {
-            AbpBootstrapper = new AbpBootstrapper();
-        }
-
-        /// <summary>
-        /// This method is called by ASP.NET system on web application's startup.
-        /// </summary>
         protected virtual void Application_Start(object sender, EventArgs e)
         {
             ThreadCultureSanitizer.Sanitize();
-
-            AbpBootstrapper.IocManager.RegisterIfNot<IAssemblyFinder, WebAssemblyFinder>();
             AbpBootstrapper.Initialize();
         }
 
-        /// <summary>
-        /// This method is called by ASP.NET system on web application shutdown.
-        /// </summary>
         protected virtual void Application_End(object sender, EventArgs e)
         {
             AbpBootstrapper.Dispose();
         }
 
-        /// <summary>
-        /// This method is called by ASP.NET system when a session starts.
-        /// </summary>
         protected virtual void Session_Start(object sender, EventArgs e)
         {
 
         }
 
-        /// <summary>
-        /// This method is called by ASP.NET system when a session ends.
-        /// </summary>
         protected virtual void Session_End(object sender, EventArgs e)
         {
 
         }
 
-        /// <summary>
-        /// This method is called by ASP.NET system when a request starts.
-        /// </summary>
         protected virtual void Application_BeginRequest(object sender, EventArgs e)
         {
-            var langCookie = Request.Cookies["Abp.Localization.CultureName"];
-            if (langCookie != null && GlobalizationHelper.IsValidCultureCode(langCookie.Value))
-            {
-                Thread.CurrentThread.CurrentCulture = new CultureInfo(langCookie.Value);
-                Thread.CurrentThread.CurrentUICulture = new CultureInfo(langCookie.Value);
-            }
-            else if (!Request.UserLanguages.IsNullOrEmpty())
-            {
-                var firstValidLanguage = Request
-                    .UserLanguages
-                    .FirstOrDefault(GlobalizationHelper.IsValidCultureCode);
-
-                if (firstValidLanguage != null)
-                {
-                    Thread.CurrentThread.CurrentCulture = new CultureInfo(firstValidLanguage);
-                    Thread.CurrentThread.CurrentUICulture = new CultureInfo(firstValidLanguage);
-                }
-            }
-        }
-
-        /// <summary>
-        /// This method is called by ASP.NET system when a request ends.
-        /// </summary>
-        protected virtual void Application_EndRequest(object sender, EventArgs e)
-        {
-
+            
         }
 
         protected virtual void Application_AuthenticateRequest(object sender, EventArgs e)
         {
-            TrySetTenantId();
+
+        }
+
+        protected virtual void Application_PostAuthenticateRequest(object sender, EventArgs e)
+        {
+            SetCurrentCulture();
+        }
+
+        protected virtual void Application_EndRequest(object sender, EventArgs e)
+        {
+
         }
 
         protected virtual void Application_Error(object sender, EventArgs e)
@@ -108,47 +66,9 @@ namespace Abp.Web
 
         }
 
-        /// <summary>
-        /// Tries to set current tenant Id.
-        /// </summary>
-        protected virtual void TrySetTenantId()
+        protected virtual void SetCurrentCulture()
         {
-            var claimsPrincipal = User as ClaimsPrincipal;
-            if (claimsPrincipal == null)
-            {
-                return;
-            }
-
-            var claimsIdentity = claimsPrincipal.Identity as ClaimsIdentity;
-            if (claimsIdentity == null)
-            {
-                return;
-            }
-
-            var tenantIdClaim = claimsIdentity.Claims.FirstOrDefault(c => c.Type == AbpClaimTypes.TenantId);
-            if (tenantIdClaim != null)
-            {
-                return;
-            }
-
-            var tenantId = ResolveTenantIdOrNull();
-            if (!tenantId.HasValue)
-            {
-                return;
-            }
-
-            claimsIdentity.AddClaim(new Claim(AbpClaimTypes.TenantId, tenantId.Value.ToString(CultureInfo.InvariantCulture)));
-        }
-
-        /// <summary>
-        /// Resolves current tenant id or returns null if can not.
-        /// </summary>
-        protected virtual int? ResolveTenantIdOrNull()
-        {
-            using (var tenantIdResolver = AbpBootstrapper.IocManager.ResolveAsDisposable<ITenantIdResolver>())
-            {
-                return tenantIdResolver.Object.TenantId;
-            }
+            AbpBootstrapper.IocManager.Using<ICurrentCultureSetter>(cultureSetter => cultureSetter.SetCurrentCulture(Context));
         }
     }
 }

@@ -13,5 +13,9 @@
     <text name="DefaultLanguage">Language par défaut</text>
     <text name="ReceiveNotifications">Recevoir les notifications</text>
     <text name="CurrentUserDidNotLoginToTheApplication">L'utilisateur courant ne peut pas s'authentifier à l'application!</text>
+    <text name="TimeZone">Fuseau horaire</text>
+    <text name="AllOfThesePermissionsMustBeGranted">Les autorisations resuises ne sont pas accordées. Les autorisations suivantes doivent toutes êtres accordées : {0}</text>
+    <text name="AtLeastOneOfThesePermissionsMustBeGranted">Les autorisations resuises ne sont pas accordées. Au moins une des autorisations suivantes doit être accordée : {0}</text>
+    <text name="MainMenu">Menu principal</text>    
   </texts>
 </localizationDictionary>

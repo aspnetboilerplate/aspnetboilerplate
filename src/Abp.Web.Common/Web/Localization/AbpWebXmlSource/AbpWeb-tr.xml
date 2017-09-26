@@ -1,0 +1,20 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<localizationDictionary culture="tr">
+  <texts>
+    <text name="InternalServerError" value="Sayfa işlenirken sunucu tarafında beklenmedik bir hata oluştu!" />
+    <text name="ValidationError" value="İşleminiz geçerli değil!" />
+    <text name="AreYouSure" value="Emin misiniz?" />
+    <text name="Cancel" value="İptal" />
+    <text name="Yes" value="Evet" />
+    <text name="ValidationNarrativeTitle" value="Aşağıdaki hatalar doğrulama sırasında tespit edilmiştir." />
+    <text name="DefaultError" value="Bir hata oluştu!" />
+    <text name="DefaultErrorDetail" value="Hatanın ne olduğu sunucu tarafından gönderilmedi." />
+    <text name="DefaultError401" value="Giriş yapılmamış!" />
+    <text name="DefaultErrorDetail401" value="Bu işlemi gerçekleştirmek için uygulamaya giriş yapmalısınız." />
+    <text name="DefaultError403" value="İzinsiz işlem!" />
+    <text name="DefaultErrorDetail403" value="Bu işlemi gerçekleştirmek için gereken izne sahip değilsiniz." />
+    <text name="DefaultError404" value="Kaynak bulunamadı!" />
+    <text name="DefaultErrorDetail404" value="İstenilen kaynak sunucuda bulunamadı." />
+    <text name="EntityNotFound" value="Id değeri {1} olan {0} türünden bir nesne bulunamadı!" />
+  </texts>
+</localizationDictionary>

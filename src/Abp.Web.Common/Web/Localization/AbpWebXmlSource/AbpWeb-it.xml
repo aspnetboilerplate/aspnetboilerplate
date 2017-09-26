@@ -1,0 +1,20 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<localizationDictionary culture="it">
+  <texts>
+    <text name="InternalServerError" value="Si è verificato un errore interno durante la richiesta!" />
+    <text name="ValidationError" value="La tua richiesta non è valida!" />
+    <text name="AreYouSure" value="Sei sicuro?" />
+    <text name="Cancel" value="Annulla" />
+    <text name="Yes" value="Sì" />
+    <text name="ValidationNarrativeTitle" value="I seguenti errori sono stati individuati durante la validazione." />
+    <text name="DefaultError" value="Errore!" />
+    <text name="DefaultErrorDetail" value="Il server non ha inviato dettagli sull'errore." />
+    <text name="DefaultError401" value="Non sei antenticato!" />
+    <text name="DefaultErrorDetail401" value="Devi essere autenticato al sistema (login) per eseguire questa operazione." />
+    <text name="DefaultError403" value="Autorizzazioni non sufficienti!" />
+    <text name="DefaultErrorDetail403" value="Non hai le autorizzazioni sufficienti per per eseguire questa operazione." />
+    <text name="DefaultError404" value="Risorsa non trovata!" />
+    <text name="DefaultErrorDetail404" value="La risorsa richiesta non è presente sul server." />
+    <text name="EntityNotFound" value="Nessun dato '{0}' con identificativo = {1}!" />
+  </texts>
+</localizationDictionary>

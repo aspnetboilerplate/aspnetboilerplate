@@ -1,12 +1,12 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using System.Collections.Immutable;
+﻿using System.Collections.Generic;
 using System.Globalization;
-using System.Linq;
 using System.Resources;
-using System.Threading;
 using Abp.Configuration.Startup;
 using Abp.Dependency;
+using Castle.Core.Logging;
+using System.Collections;
+using System.Collections.Immutable;
+using System.Linq;
 
 namespace Abp.Localization.Sources.Resource
 {
@@ -19,13 +19,14 @@ namespace Abp.Localization.Sources.Resource
         /// <summary>
         /// Unique Name of the source.
         /// </summary>
-        public string Name { get; private set; }
+        public string Name { get; }
 
         /// <summary>
         /// Reference to the <see cref="ResourceManager"/> object related to this localization source.
         /// </summary>
-        public ResourceManager ResourceManager { get; private set; }
+        public ResourceManager ResourceManager { get; }
 
+        private ILogger _logger;
         private ILocalizationConfiguration _configuration;
 
         /// <param name="name">Unique Name of the source</param>
@@ -42,6 +43,10 @@ namespace Abp.Localization.Sources.Resource
         public virtual void Initialize(ILocalizationConfiguration configuration, IIocResolver iocResolver)
         {
             _configuration = configuration;
+
+            _logger = iocResolver.IsRegistered(typeof(ILoggerFactory))
+                ? iocResolver.Resolve<ILoggerFactory>().Create(typeof(ResourceFileLocalizationSource))
+                : NullLogger.Instance;
         }
 
         public virtual string GetString(string name)
@@ -49,7 +54,7 @@ namespace Abp.Localization.Sources.Resource
             var value = GetStringOrNull(name);
             if (value == null)
             {
-                return ReturnGivenNameOrThrowException(name);
+                return ReturnGivenNameOrThrowException(name, CultureInfo.CurrentUICulture);
             }
 
             return value;
@@ -60,7 +65,7 @@ namespace Abp.Localization.Sources.Resource
             var value = GetStringOrNull(name, culture);
             if (value == null)
             {
-                return ReturnGivenNameOrThrowException(name);
+                return ReturnGivenNameOrThrowException(name, culture);
             }
 
             return value;
@@ -83,11 +88,11 @@ namespace Abp.Localization.Sources.Resource
         /// </summary>
         public virtual IReadOnlyList<LocalizedString> GetAllStrings(bool includeDefaults = true)
         {
-            return GetAllStrings(Thread.CurrentThread.CurrentUICulture, includeDefaults);
+            return GetAllStrings(CultureInfo.CurrentUICulture, includeDefaults);
         }
 
         /// <summary>
-        /// Gets all strings in specified culture.
+        /// Gets all strings in specified culture. 
         /// </summary>
         public virtual IReadOnlyList<LocalizedString> GetAllStrings(CultureInfo culture, bool includeDefaults = true)
         {
@@ -98,9 +103,15 @@ namespace Abp.Localization.Sources.Resource
                 .ToImmutableList();
         }
 
-        protected virtual string ReturnGivenNameOrThrowException(string name)
+        protected virtual string ReturnGivenNameOrThrowException(string name, CultureInfo culture)
         {
-            return LocalizationSourceHelper.ReturnGivenNameOrThrowException(_configuration, Name, name);
+            return LocalizationSourceHelper.ReturnGivenNameOrThrowException(
+                _configuration,
+                Name,
+                name,
+                culture,
+                _logger
+            );
         }
     }
 }

@@ -17,7 +17,9 @@
 implementation uses
 				<a href="https://msdn.microsoft.com/en-us/library/system.runtime.caching.memorycache(v=vs.110).aspx?f=255&amp;MSPPError=-2147217396">
 MemoryCache</a>, it can be implemented and changable for any other caching 
-provider.</p>
+provider. <a href="https://www.nuget.org/packages/Abp.RedisCache" target="_blank">
+			Abp.RedisCache</a> package implements cache in Redis for instance 
+			(see "Redis Cache Integration" section below).</p>
 
 			<h3>ICacheManager</h3>
 
@@ -47,13 +49,14 @@ provider.</p>
     }
 }</pre>
 			<p>In this sample, we're injecting <strong>ICacheManager</strong> and getting a 
-cache named <strong>MyCache</strong>.</p>
+cache named <strong>MyCache</strong>. Cache names are case sensitive, than means 
+			"MyCache" and "MYCACHE" are different caches.</p>
 
 			<div class="bs-callout bs-callout-warning">
 				<h4>
 					<strong>WARNING: </strong>GetCache Method</h4>
-				<p>Do not use GetCache method in your constructor. This may dispose the 
-	Cache if your class is transient.</p>
+				<p>Do not use <strong>GetCache</strong> method in your constructor. This may dispose the 
+	Cache if your class is not singleton.</p>
 			</div>
 
 			<h3>ICache</h3>
@@ -114,6 +117,96 @@ while all other caches will have 2 hours.</p>
 first request). Configuration is not restricted to DefaultSlidingExpireTime 
 only, since cache object is an ICache, you can use it's properties and methods 
 freely configure and initialize it.</p>
+			<h3>Entity Caching</h3>
+			<p>While ASP.NET Boilerplate's cache system is general purpose, 
+			there is an <strong>EntityCache </strong> base class that can help you if you want to 
+			cache entities. We can use this base class if we get entities by 
+			their Ids and we want to <strong>cache them by Id</strong> to not 
+			query from database frequently. Assume that we have a Person entity 
+			like that:</p>
+			<pre lang="cs">public class Person : Entity
+{
+    public string Name { get; set; }
+
+    public int Age { get; set; }
+}</pre>
+			<p>And assume that we frequently want to get <strong>Name</strong> of people while we know their 
+			<strong>Id</strong>. 
+			First, we should create a class to store <strong>cache items</strong>:</p>
+			<pre lang="cs"><strong>[AutoMapFrom(typeof(Person))]</strong>
+public class PersonCacheItem
+{
+    public string Name { get; set; }
+}
+</pre>
+			<p>We <strong>should not directly store entities in the cache</strong> since 
+			caching may need to <strong>serialize</strong> cached objects and 
+			entities may not be serialized (especially if they have navigation 
+			properties). That's why we defined a simple (<a href="Data-Transfer-Objects.html">DTO</a> 
+			like) class to store data in 
+			the cache. We added <strong>
+			AutoMapFrom</strong> attribute since we want to use AutoMapper to 
+			convert Person entities to PersonCacheItem objects automatically. If we don't use 
+			AutoMapper, we should <strong>override MapToCacheItem</strong> 
+			method of EntityCache class to manually convert/map it.</p>
+			<p>While it's <strong>not required</strong>, we may want to define an interface for 
+			our cache class:</p>
+			<pre lang="cs">public interface IPersonCache : <strong>IEntityCache&lt;PersonCacheItem&gt;</strong>
+{
+
+}</pre>
+			<p>Finally, we can create the cache class to cache Person entities:</p>
+			<pre lang="cs">public class PersonCache : <strong>EntityCache&lt;Person, PersonCacheItem&gt;</strong>, IPersonCache, <strong>ITransientDependency</strong>
+{
+    public PersonCache(ICacheManager cacheManager, IRepository&lt;Person&gt; repository)
+        : base(cacheManager, repository)
+    {
+
+    }
+}</pre>
+			<p>That's all. Our person cache is ready to use. Cache class can be 
+			transient (as in this example) or singleton. This does not mean the 
+			cached data is transient. It's always cached globally and accessed 
+			thread-safe in your application.</p>
+			<p>Now, whenever we 
+			need <strong>Name</strong> of a person, we can get it from cache by 
+			the person's 
+			<strong>Id</strong>. An example class that uses the Person cache:</p>
+			<pre lang="cs">public class MyPersonService : ITransientDependency
+{
+    private readonly IPersonCache _personCache;
+
+    public MyPersonService(<strong>IPersonCache personCache</strong>)
+    {
+        _personCache = personCache;
+    }
+
+    public string GetPersonNameById(int id)
+    {
+        <strong>return _personCache[id].Name;</strong> //alternative: _personCache.Get(id).Name;
+    }
+}</pre>
+			<p>We simply <a href="Dependency-Injection.html">injected</a> 
+			IPersonCache, got the cache item and got the Name property.</p>
+			<h4>How EntityCache Works</h4>
+			<ul>
+				<li>It gets entity from repository (from database) in first 
+				call. Then gets from cache in subsequent calls.</li>
+				<li>It automatically invalidates cached entity if this entity is 
+				updated or deleted. Thus, it will be retrieved from database in 
+				the next call.</li>
+				<li>It uses IObjectMapper to map entity to cache item. 
+				IObjectMapper is implemented by AutoMapper module. So, you need 
+				to
+				<a href="/Pages/Documents/Data-Transfer-Objects#DocAutoMappingHelpers">
+				AutoMapper module</a> if you are using it. You can override 
+				MapToCacheItem method to manually map entity to cache item.</li>
+				<li>It uses cache class's FullName as cache name. You can change 
+				it by passing a cache name to the base constructor.</li>
+				<li>It's thread-safe.</li>
+			</ul>
+			<p>If you need more complex caching requirements, you can extend 
+			EntityCache or create your own solution.</p>
 			<h3>Redis Cache Integration</h3>
 			<p>Default cache manager uses <strong>in-memory</strong> caches. So, it can be a 
 			problem if you have more than one concurrent web server running the 
@@ -159,6 +252,9 @@ namespace MyProject.AbpZeroTemplate.Web
 			<pre lang="xml">&lt;add key=&quot;<strong>Abp.Redis.Cache.DatabaseId</strong>&quot; value=&quot;2&quot;/&gt;</pre>
 			<p>Different database ids are useful to create different key spaces 
 			(isolated caches) in same server.</p>
+			<p><strong>UseRedis</strong> method has also an overload that takes 
+			an action to directly set option values (overrides values in the 
+			config file).</p>
 			<p>See <a href="http://redis.io/documentation" target="_blank">Redis 
 			documentation</a> for more information on Redis and it's 
 			configuration.</p>

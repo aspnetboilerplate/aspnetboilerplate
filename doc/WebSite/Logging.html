@@ -9,7 +9,7 @@
 
 	<body>
 		<div class="document-contents">
-			<h3 id="DocServerSide">Server side</h3>
+			<h3 id="DocServerSide">Server Side</h3>
 			<p>ASP.NET Boilerplate uses
 Castle Windsor's
 				<a href="http://docs.castleproject.org/Windsor.Logging-Facility.ashx" target="_blank">
@@ -27,14 +27,15 @@ Log4Net properly
 configured and working. But, there is just a single-line of dependency to 
 log4net (as seen in <a href="#DocConfig">configuration</a>  section), so you can 
 change it to your favourite library.</p>
-			<h4 id="DocGetLogger">Getting the logger</h4>
+			<h4 id="DocGetLogger">Getting The Logger</h4>
 			<p>No matter which logging library you choice, the code to write log is same 
 (thanks to Castle's common ILogger interface).</p>
-			<p>First, we should <strong>handle</strong> a Logger object to write logs. Since ASP.NET 
+			<p>First, we should get a Logger object to write logs. Since ASP.NET 
 Boilerplate strongly uses <a href="/Pages/Documents/Dependency-Injection">
 dependency injection</a>, we can 
 easily inject a <strong>Logger</strong> object using 
-				<a href="/Pages/Documents/Dependency-Injection#DocPropertyInjection">property injection</a> pattern. 
+				<a href="/Pages/Documents/Dependency-Injection#DocPropertyInjection">property injection</a> 
+			(or constructor injection) pattern. 
 See a sample class that writes a log line:</p>
 			<pre lang="cs">
 <strong>using Castle.Core.Logging</strong>; //1: Import Logging namespace
@@ -85,10 +86,11 @@ below:</p>
 
 			<pre>INFO  2014-07-13 13:40:23,360 [8    ] SimpleTaskSystem.Tasks.TaskAppService    - Creating a new task with description: Remember to drink milk before sleeping!</pre>
 
-			<h4 id="DocControllers">Base classes with Logger</h4>
-			<p>ASP.NET Boilerplate provides <strong>base classes</strong> for MVC 
-controllers, Web API controllers and
-				<a href="/Pages/Documents/Application-Services">Application service</a> classes. 
+			<h4 id="DocControllers">Base Classes With Logger</h4>
+			<p>ASP.NET Boilerplate provides <strong>base classes</strong> for 
+			MVC controllers, Web API controllers,
+				<a href="/Pages/Documents/Application-Services">Application service</a> classes 
+			and more. 
 They declare a <strong>Logger</strong> property. So, you can directly use 
 this Logger to write logs, no injection needed. Example:</p>
 			<pre lang="cs">public class HomeController : SimpleTaskSystemControllerBase
@@ -100,13 +102,8 @@ this Logger to write logs, no injection needed. Example:</p>
     }
 }</pre>
 			<p>Note that SimpleTaskSystemControllerBase is our application specific base 
-controller that inherits <strong>AbpController.</strong> Thus, it can directly use Logger. Logger also exists in <strong>AbpApiController</strong> 
-base class 
-for Web API Controllers and
-				<a href="/Pages/Documents/Application-Services#DocAppServiceClass">
-					<strong>
-ApplicationService</strong>
-				</a> class for application services.. You can also write your own common base class for other 
+controller that inherits <strong>AbpController.</strong> Thus, it can directly 
+			use Logger. You can also write your own common base class for other 
 classes. Then, you will not have to inject logger every time.</p>
 
 			<h4 id="DocConfig">Configuration</h4>
@@ -175,9 +172,35 @@ log4net.config file:</p>
 Also, only the web project depends on log4net library's
 				<a href="https://www.nuget.org/packages/log4net/" target="_blank">nuget package</a>. 
 So, you can easily change to another library without changing your logging code.</p>
+			<h4>Abp.Castle.Log4Net Package</h4>
+			<p>ABP uses Castle Logging Facility for logging and it does not 
+			directly depend on log4net, as declared above. But there is a 
+			problem with Castle's Log4Net integration. It does not support the 
+			latest log4net. We created a nuget package,
+			<a href="http://nuget.org/packages/Abp.Castle.Log4Net" target="_blank">
+			<strong>Abp.Castle.Log4Net</strong></a>, to solve this issue. After adding this 
+			package to our solution, all we should do is to change the code in 
+			application start like that:</p>
 
-			<h3 id="DocClient">Client side</h3>
-			<p>ASP.NET Boilerplate defines a javascript logging API for client side. It logs 
+			<pre lang="cs">public class MvcApplication : AbpWebApplication
+{
+    protected override void Application_Start(object sender, EventArgs e)
+    {
+        IocManager.Instance.IocContainer.AddFacility&lt;LoggingFacility&gt;(f =&gt; f.<strong>UseAbpLog4Net()</strong>.WithConfig(&quot;log4net.config&quot;));
+        base.Application_Start(sender, e);
+    }
+}</pre>
+			<p>The only difference is that we used "<strong>UseAbpLog4Net()</strong>" 
+			method (defined in Abp.Castle.Logging.Log4Net namespace) instead of 
+			"UseLog4Net()". When we use Abp.Castle.Log4Net package, it's <strong>
+			not needed</strong> to use
+			<a href="https://www.nuget.org/packages/Castle.Windsor-log4net" target="_blank">
+			Castle.Windsor-log4net</a> and
+			<a href="https://www.nuget.org/packages/Castle.Core-log4net/" target="_blank">
+			Castle.Core-log4net</a> packages.</p>
+
+			<h3 id="DocClient">Client Side</h3>
+			<p>ASP.NET Boilerplate defines a simple javascript logging API for client side. It logs 
 to browser's console as default. Sample javascript code to write logs:</p>
 			<pre lang="js">abp.log.warn('a sample log message...');</pre>
 			<p>For more information, see <a href="/Pages/Documents/Javascript-API/Logging">

@@ -1,12 +1,14 @@
 ﻿using System;
+using System.IO;
+using System.Linq.Expressions;
 using System.Reflection;
 using Abp.Application.Features;
 using Abp.Application.Navigation;
 using Abp.Application.Services;
 using Abp.Auditing;
 using Abp.Authorization;
-using Abp.Authorization.Interceptors;
 using Abp.BackgroundJobs;
+using Abp.Collections.Extensions;
 using Abp.Configuration;
 using Abp.Configuration.Startup;
 using Abp.Dependency;
@@ -19,12 +21,15 @@ using Abp.Modules;
 using Abp.MultiTenancy;
 using Abp.Net.Mail;
 using Abp.Notifications;
+using Abp.Reflection.Extensions;
+using Abp.Runtime;
 using Abp.Runtime.Caching;
-using Abp.Runtime.Session;
+using Abp.Runtime.Remoting;
 using Abp.Runtime.Validation.Interception;
 using Abp.Threading;
 using Abp.Threading.BackgroundWorkers;
 using Abp.Timing;
+using Castle.MicroKernel.Registration;
 
 namespace Abp
 {
@@ -38,39 +43,15 @@ namespace Abp
         {
             IocManager.AddConventionalRegistrar(new BasicConventionalRegistrar());
 
-            ValidationInterceptorRegistrar.Initialize(IocManager);
+            IocManager.Register<IScopedIocResolver, ScopedIocResolver>(DependencyLifeStyle.Transient);
+            IocManager.Register(typeof(IAmbientScopeProvider<>), typeof(DataContextAmbientScopeProvider<>), DependencyLifeStyle.Transient);
 
-            FeatureInterceptorRegistrar.Initialize(IocManager);
-            AuditingInterceptorRegistrar.Initialize(IocManager);
-
-            UnitOfWorkRegistrar.Initialize(IocManager);
-
-            AuthorizationInterceptorRegistrar.Initialize(IocManager);
-
-            Configuration.Auditing.Selectors.Add(
-                new NamedTypeSelector(
-                    "Abp.ApplicationServices",
-                    type => typeof(IApplicationService).IsAssignableFrom(type)
-                    )
-                );
-
-            Configuration.Localization.Sources.Add(
-                new DictionaryBasedLocalizationSource(
-                    AbpConsts.LocalizationSourceName,
-                    new XmlEmbeddedFileLocalizationDictionaryProvider(
-                        Assembly.GetExecutingAssembly(), "Abp.Localization.Sources.AbpXmlSource"
-                        )));
-
-            Configuration.Settings.Providers.Add<LocalizationSettingProvider>();
-            Configuration.Settings.Providers.Add<EmailSettingProvider>();
-            Configuration.Settings.Providers.Add<NotificationSettingProvider>();
-            Configuration.Settings.Providers.Add<TimingSettingProvider>();
-
-            Configuration.UnitOfWork.RegisterFilter(AbpDataFilters.SoftDelete, true);
-            Configuration.UnitOfWork.RegisterFilter(AbpDataFilters.MustHaveTenant, true);
-            Configuration.UnitOfWork.RegisterFilter(AbpDataFilters.MayHaveTenant, true);
-
+            AddAuditingSelectors();
+            AddLocalizationSources();
+            AddSettingProviders();
+            AddUnitOfWorkFilters();
             ConfigureCaches();
+            AddIgnoredTypes();
         }
 
         public override void Initialize()
@@ -82,7 +63,7 @@ namespace Abp
 
             IocManager.IocContainer.Install(new EventBusInstaller(IocManager));
 
-            IocManager.RegisterAssemblyByConvention(Assembly.GetExecutingAssembly(),
+            IocManager.RegisterAssemblyByConvention(typeof(AbpKernelModule).GetAssembly(),
                 new ConventionalRegistrationConfig
                 {
                     InstallInstallers = false
@@ -116,6 +97,41 @@ namespace Abp
             }
         }
 
+        private void AddUnitOfWorkFilters()
+        {
+            Configuration.UnitOfWork.RegisterFilter(AbpDataFilters.SoftDelete, true);
+            Configuration.UnitOfWork.RegisterFilter(AbpDataFilters.MustHaveTenant, true);
+            Configuration.UnitOfWork.RegisterFilter(AbpDataFilters.MayHaveTenant, true);
+        }
+
+        private void AddSettingProviders()
+        {
+            Configuration.Settings.Providers.Add<LocalizationSettingProvider>();
+            Configuration.Settings.Providers.Add<EmailSettingProvider>();
+            Configuration.Settings.Providers.Add<NotificationSettingProvider>();
+            Configuration.Settings.Providers.Add<TimingSettingProvider>();
+        }
+
+        private void AddAuditingSelectors()
+        {
+            Configuration.Auditing.Selectors.Add(
+                new NamedTypeSelector(
+                    "Abp.ApplicationServices",
+                    type => typeof(IApplicationService).IsAssignableFrom(type)
+                )
+            );
+        }
+
+        private void AddLocalizationSources()
+        {
+            Configuration.Localization.Sources.Add(
+                new DictionaryBasedLocalizationSource(
+                    AbpConsts.LocalizationSourceName,
+                    new XmlEmbeddedFileLocalizationDictionaryProvider(
+                        typeof(AbpKernelModule).GetAssembly(), "Abp.Localization.Sources.AbpXmlSource"
+                    )));
+        }
+
         private void ConfigureCaches()
         {
             Configuration.Caching.Configure(AbpCacheNames.ApplicationSettings, cache =>
@@ -134,18 +150,47 @@ namespace Abp
             });
         }
 
+        private void AddIgnoredTypes()
+        {
+            var commonIgnoredTypes = new[]
+            {
+                typeof(Stream),
+                typeof(Expression)
+            };
+
+            foreach (var ignoredType in commonIgnoredTypes)
+            {
+                Configuration.Auditing.IgnoredTypes.AddIfNotContains(ignoredType);
+                Configuration.Validation.IgnoredTypes.AddIfNotContains(ignoredType);
+            }
+
+            var validationIgnoredTypes = new[] { typeof(Type) };
+            foreach (var ignoredType in validationIgnoredTypes)
+            {
+                Configuration.Validation.IgnoredTypes.AddIfNotContains(ignoredType);
+            }
+        }
+
         private void RegisterMissingComponents()
         {
-            IocManager.RegisterIfNot<IGuidGenerator, SequentialGuidGenerator>(DependencyLifeStyle.Transient);
+            if (!IocManager.IsRegistered<IGuidGenerator>())
+            {
+                IocManager.IocContainer.Register(
+                    Component
+                        .For<IGuidGenerator, SequentialGuidGenerator>()
+                        .Instance(SequentialGuidGenerator.Instance)
+                );
+            }
+
             IocManager.RegisterIfNot<IUnitOfWork, NullUnitOfWork>(DependencyLifeStyle.Transient);
-            IocManager.RegisterIfNot<IAuditInfoProvider, NullAuditInfoProvider>(DependencyLifeStyle.Singleton);
-            IocManager.RegisterIfNot<IAuditingStore, SimpleLogAuditingStore>(DependencyLifeStyle.Transient);
-            IocManager.RegisterIfNot<ITenantIdResolver, NullTenantIdResolver>(DependencyLifeStyle.Singleton);
-            IocManager.RegisterIfNot<IAbpSession, ClaimsAbpSession>(DependencyLifeStyle.Singleton);
+            IocManager.RegisterIfNot<IAuditingStore, SimpleLogAuditingStore>(DependencyLifeStyle.Singleton);
+            IocManager.RegisterIfNot<IPermissionChecker, NullPermissionChecker>(DependencyLifeStyle.Singleton);
             IocManager.RegisterIfNot<IRealTimeNotifier, NullRealTimeNotifier>(DependencyLifeStyle.Singleton);
             IocManager.RegisterIfNot<INotificationStore, NullNotificationStore>(DependencyLifeStyle.Singleton);
-
-            IocManager.RegisterIfNot<IBackgroundJobManager, BackgroundJobManager>(DependencyLifeStyle.Singleton);
+            IocManager.RegisterIfNot<IUnitOfWorkFilterExecuter, NullUnitOfWorkFilterExecuter>(DependencyLifeStyle.Singleton);
+            IocManager.RegisterIfNot<IClientInfoProvider, NullClientInfoProvider>(DependencyLifeStyle.Singleton);
+            IocManager.RegisterIfNot<ITenantStore, NullTenantStore>(DependencyLifeStyle.Singleton);
+            IocManager.RegisterIfNot<ITenantResolverCache, NullTenantResolverCache>(DependencyLifeStyle.Singleton);
 
             if (Configuration.BackgroundJobs.IsJobExecutionEnabled)
             {

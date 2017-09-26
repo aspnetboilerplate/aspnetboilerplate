@@ -11,7 +11,16 @@ namespace Abp.Notifications
         /// <summary>
         /// The message.
         /// </summary>
-        public string Message { get; set; }
+        public string Message
+        {
+            get { return _message ?? (this[nameof(Message)] as string); }
+            set
+            {
+                this[nameof(Message)] = value;
+                _message = value;
+            }
+        }
+        private string _message;
 
         /// <summary>
         /// Needed for serialization.

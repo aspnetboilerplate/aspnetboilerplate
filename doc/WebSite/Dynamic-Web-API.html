@@ -13,8 +13,13 @@
 
 			<h3 id="DocDynamicApi">
     Building Dynamic Web API Controllers</h3>
+			<div class="bs-callout bs-callout-warning">
+				<p>This document is for ASP.NET Web API. If you're interested in 
+				ASP.NET Core, see <a href="AspNet-Core.html">ASP.NET Core</a> 
+				documentation.</p>
+			</div>
 			<p>
-    ASP.NET Boilerplate can automatically generate <strong>web api layer</strong> 
+    ASP.NET Boilerplate can automatically generate <strong>ASP.NET Web API layer</strong> 
 	for your <strong>application layer</strong>. Say that we have an 
 				<a href="/Pages/Documents/Application-Services">application 
 	service</a> as shown below:</p>
@@ -28,12 +33,13 @@
     And we want to expose this service as a Web API Controller for clients. 
 	ASP.NET Boilerplate can automatically and dynamically create a Web API 
 	Controller for this application service with a single line of configuration:</p>
-			<pre lang="cs">DynamicApiControllerBuilder.For&lt;ITaskAppService&gt;("tasksystem/task").Build();</pre>
+			<pre lang="cs">Configuration.Modules.AbpWebApi().DynamicApiControllerBuilder.For&lt;ITaskAppService&gt;(<strong>"tasksystem/task"</strong>).Build();</pre>
 			<p>
     Thats 
 	all! An api controller is created in the address '<strong>/api/services/tasksystem/task</strong>' and all methods are now usable by clients.
     This configuration should be made in the
-				<a href="/Pages/Documents/Module-System">module initialization</a>. </p>
+				<strong>Initialize</strong> method of your
+			<a href="Module-System.html">module</a>.</p>
 			<p>
 				<strong>ITaskAppService</strong> is the application service that we want to 
 wrap with an api controller. It is not restricted to application services but 
@@ -51,12 +57,12 @@ world.</p>
 controllers one by one may be a tedious and forgettable work. 
 DynamicApiControllerBuilper provides a method to build web api controllers for 
 all application services in one call. Example:</p>
-			<pre lang="cs">DynamicApiControllerBuilder
+			<pre lang="cs">Configuration.Modules.AbpWebApi().DynamicApiControllerBuilder
     .ForAll&lt;IApplicationService&gt;(Assembly.GetAssembly(typeof(SimpleTaskSystemApplicationModule)), &quot;tasksystem&quot;)
     .Build();</pre>
 			<p>ForAll method is generic and accepts an interface. First parameter is an 
-assembly that has classes derived from given interface. The last one is 
-namespace prefix of services. Say that we have ITaskAppService and 
+assembly that has classes derived from given interface. Second one is 
+			the namespace prefix of services. Say that we have ITaskAppService and 
 IPersonAppService in given assembly. For this configuration, services will be 
 '/api/services/<strong>tasksystem/task</strong>' and '/api/services/<strong>tasksystem/person</strong>'. 
 To calculate service name: Service and AppService postfixes and I prefix is 
@@ -66,26 +72,21 @@ determine names. Also, There is a <strong>Where</strong> method to filter servic
 useful if you will build for all application services except a few one.</p>
 			<h4>Overriding ForAll</h4>
 			<p>We can override configuration after ForAll method. Example:</p>
-			<pre lang="cs">DynamicApiControllerBuilder
+			<pre lang="cs">Configuration.Modules.AbpWebApi().DynamicApiControllerBuilder
     .ForAll&lt;IApplicationService&gt;(Assembly.GetAssembly(typeof(SimpleTaskSystemApplicationModule)), &quot;tasksystem&quot;)
     .Build();
 
-DynamicApiControllerBuilder
+Configuration.Modules.AbpWebApi().DynamicApiControllerBuilder
     .For&lt;ITaskAppService&gt;("tasksystem/task")
     .ForMethod("CreateTask")<strong>.DontCreateAction()</strong>.Build();
 </pre>
 			<p>In this code, we created dynamic web api controllers for all application 
 services in an assembly. Then overrided configuration for a single application 
 service (ITaskAppService) to ignore CreateTask method. </p>
-			<h5>DisableDynamicWebApiAttribute</h5>
-			<p>You can also use DisableDynamicWebApiAttribute for any <strong>
-			interface</strong> or 
-			<strong>method</strong> definition to ignore this service or method while creating 
-			dynamic web api.</p>
 			<h5>ForMethods</h5>
 			<p>We can use <strong>ForMethods</strong> method to better adjust 
 			each method while using ForAll method. Example:</p>
-			<pre>DynamicApiControllerBuilder
+			<pre>Configuration.Modules.AbpWebApi().DynamicApiControllerBuilder
     .ForAll&lt;IApplicationService&gt;(Assembly.GetExecutingAssembly(), &quot;app&quot;)
     .<strong>ForMethods</strong>(builder =&gt;
     {
@@ -104,7 +105,7 @@ requests in order to use created web api actions. We can change this behaviour
 in different ways.</p>
 			<h5>WithVerb Method</h5>
 			<p>We can use WithVerb for a method like that:</p>
-			<pre lang="cs">DynamicApiControllerBuilder
+			<pre lang="cs">Configuration.Modules.AbpWebApi().DynamicApiControllerBuilder
     .For&lt;ITaskAppService&gt;("tasksystem/task")
     .ForMethod("GetTasks")<strong>.WithVerb(HttpVerb.Get)</strong>
     .Build();</pre>
@@ -130,7 +131,7 @@ nuget package from your project.</p>
 			<h5>Naming Convention</h5>
 			<p>Instead of declaring HTTP very for every method, you can use <strong>
 WithConventionalVerbs</strong> method as shown below:</p>
-			<pre lang="cs">DynamicApiControllerBuilder
+			<pre lang="cs">Configuration.Modules.AbpWebApi().DynamicApiControllerBuilder
     .ForAll&lt;IApplicationService&gt;(Assembly.GetAssembly(typeof(SimpleTaskSystemApplicationModule)), &quot;tasksystem&quot;)
     <strong>.WithConventionalVerbs()</strong>
     .Build();</pre>
@@ -144,13 +145,25 @@ WithConventionalVerbs</strong> method as shown below:</p>
 					<strong>Delete</strong>: Used if method name starts with 'Delete' or 
 	'Remove'.</li>
 				<li>
-					<strong>Post</strong>: Used if method name starts with 'Post' or 
-	'Create'.</li>
+					<strong>Post</strong>: Used if method name starts with 'Post', 'Create' 
+					or 'Insert'.</li>
+				<li>
+					<strong>Patch</strong>: Used if method name starts with 
+					'Patch'.</li>
 				<li>Otherwise, <strong>Post</strong> is used <strong>as default</strong> 
 	HTTP verb.</li>
 			</ul>
-			<p>We can override it for a specific method using WithVerb method or HTTP 
-attributes.</p>
+			<p>We can override it for a specific method as described before.</p>
+			<h4>API Explorer</h4>
+			<p>All dynamic web api controllers are visible to API explorer by 
+			default (They are available in <a href="Swagger-UI-Integration.html">
+			Swagger</a> for example). You can control this behaviour with fluent DynamicApiControllerBuilder 
+			API or using RemoteService attribute defined below.</p>
+			<h4>RemoteService Attribute</h4>
+			<p>You can also use <strong>RemoteService</strong> attribute for any <strong>
+			interface</strong> or 
+			<strong>method</strong> definition to enable/disable (<strong>IsEnabled</strong>) 
+			dynamic API or API explorer setting (<strong>IsMetadataEnabled</strong>).</p>
 			<h3 id="DocDynamicProxy">
     Dynamic Javascript Proxies</h3>
 			<p>
@@ -190,9 +203,12 @@ them as second argument as sown below:</p>
 			<p>All parameters of
 				<a href="http://api.jquery.com/jQuery.ajax/" target="_blank">jQuery.ajax</a> are 
 valid here.</p>
+			<p>In addition to standard jQuery.ajax parameters, you can add
+			<strong>abpHandleError: false</strong> to AJAX options in order to 
+			disable automatic message displaying on error cases.</p>
 			<h4 id="DocSingleService">Single Service Script</h4>
 			<p>'/api/AbpServiceProxies/GetAll' generates all service proxies in one file. 
-You can also generate a sinle service proxy using 
+You can also generate a single service proxy using 
 '/api/AbpServiceProxies/Get?name=<em>serviceName</em>' and include the script to the 
 page as shown below:</p>
 			<pre lang="xml">&lt;script src=&quot;/api/AbpServiceProxies/Get?name=tasksystem/task&quot; type=&quot;text/javascript&quot;&gt;&lt;/script&gt;</pre>
@@ -226,6 +242,11 @@ to your page:</p>
 			<pre lang="xml">&lt;script src=&quot;~/Abp/Framework/scripts/libs/angularjs/abp.ng.js&quot;&gt;&lt;/script&gt;
 &lt;script src=&quot;~/api/AbpServiceProxies/GetAll?type=angular&quot;&gt;&lt;/script&gt;</pre>
 
+			<h3>Enable/Disable</h3>
+			<p>If you used <strong>ForAll</strong> method as defined above, the 
+			you can use <strong>RemoteService</strong> attribute to disable it 
+			for a service or for method. Use this attribute in the <strong>
+			service interface</strong>, not in the service class.</p>
 			<h3>Wrapping Results</h3>
 			<p>ASP.NET Boilerplate <strong>wraps</strong> return values of dynamic Web 
 	API actions by <strong>AjaxResponse</strong> object. See
@@ -243,8 +264,11 @@ to your page:</p>
 			<p>Unwrapping can be useful if you want to more control on exact return 
 	values to the client. Especially, disabling it may be needed while working 
 				<strong>3rd party client side libraries</strong> which can not work with ASP.NET 
-	Boilerplate's standard AjaxResponse. In this case, you should handle 
-	exceptions yourself.</p>
+	Boilerplate's standard AjaxResponse. In this case, you should also handle 
+	exceptions yourself since <a href="Handling-Exceptions.html">exception 
+			handling</a> will be disabled (DontWrapResult attribute has 
+			WrapOnError properties that can be used to enable handling and 
+			wrapping for exceptions).</p>
 			<p>Note: Dynamic javascript proxies can understand if result is unwrapped and 
 	run properly in either case.</p>
 			<h3>About Parameter Binding</h3>
@@ -265,7 +289,8 @@ in service interface to advanced control on binding. </p>
 DTO</a>s as method parameters for application services and web api controllers. 
 But you can also use primitive types (like string, int, bool... or nullable 
 types like int?, bool?...) as service arguments. More than one parameters can 
-be used but only one complex-type parameter is allowed in these parameters.</p>
+be used but only one complex-type parameter is allowed in these parameters 
+			(because of restriction of ASP.NET Web API).</p>
 
 		</div>
 

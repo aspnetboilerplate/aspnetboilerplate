@@ -27,7 +27,7 @@ namespace Abp.Configuration
 
         public void Initialize()
         {
-            var context = new SettingDefinitionProviderContext();
+            var context = new SettingDefinitionProviderContext(this);
 
             foreach (var providerType in _settingsConfiguration.Providers)
             {
@@ -59,7 +59,6 @@ namespace Abp.Configuration
 
         private IDisposableDependencyObjectWrapper<SettingProvider> CreateProvider(Type providerType)
         {
-            _iocManager.RegisterIfNot(providerType, DependencyLifeStyle.Transient); //TODO: Needed?
             return _iocManager.ResolveAsDisposable<SettingProvider>(providerType);
         }
     }

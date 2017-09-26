@@ -1,31 +1,36 @@
-﻿using Abp.MultiTenancy;
+﻿using Abp.Configuration.Startup;
+using Abp.MultiTenancy;
+using Abp.Runtime.Remoting;
 
 namespace Abp.Runtime.Session
 {
     /// <summary>
     /// Implements null object pattern for <see cref="IAbpSession"/>.
     /// </summary>
-    public class NullAbpSession : IAbpSession
+    public class NullAbpSession : AbpSessionBase
     {
         /// <summary>
         /// Singleton instance.
         /// </summary>
-        public static NullAbpSession Instance { get { return SingletonInstance; } }
-        private static readonly NullAbpSession SingletonInstance = new NullAbpSession();
+        public static NullAbpSession Instance { get; } = new NullAbpSession();
 
         /// <inheritdoc/>
-        public long? UserId { get { return null; } }
+        public override long? UserId => null;
 
         /// <inheritdoc/>
-        public int? TenantId { get { return null; } }
+        public override int? TenantId => null;
 
-        public MultiTenancySides MultiTenancySide { get { return MultiTenancySides.Tenant; } }
-        
-        public long? ImpersonatorUserId { get { return null; } }
-        
-        public int? ImpersonatorTenantId { get { return null; } }
+        public override MultiTenancySides MultiTenancySide => MultiTenancySides.Tenant;
 
-        private NullAbpSession()
+        public override long? ImpersonatorUserId => null;
+
+        public override int? ImpersonatorTenantId => null;
+
+        private NullAbpSession() 
+            : base(
+                  new MultiTenancyConfig(), 
+                  new DataContextAmbientScopeProvider<SessionOverride>(new AsyncLocalAmbientDataContext())
+            )
         {
 
         }

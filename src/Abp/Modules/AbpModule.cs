@@ -1,8 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Reflection;
+using Abp.Collections.Extensions;
 using Abp.Configuration.Startup;
 using Abp.Dependency;
+using Castle.Core.Logging;
 
 namespace Abp.Modules
 {
@@ -11,7 +14,7 @@ namespace Abp.Modules
     /// </summary>
     /// <remarks>
     /// A module definition class is generally located in it's own assembly
-    /// and implements some action in module events on application startup and shotdown.
+    /// and implements some action in module events on application startup and shutdown.
     /// It also defines depended modules.
     /// </remarks>
     public abstract class AbpModule
@@ -25,6 +28,16 @@ namespace Abp.Modules
         /// Gets a reference to the ABP configuration.
         /// </summary>
         protected internal IAbpStartupConfiguration Configuration { get; internal set; }
+
+        /// <summary>
+        /// Gets or sets the logger.
+        /// </summary>
+        public ILogger Logger { get; set; }
+
+        protected AbpModule()
+        {
+            Logger = NullLogger.Instance;
+        }
 
         /// <summary>
         /// This is the first event called on application startup. 
@@ -59,23 +72,28 @@ namespace Abp.Modules
             
         }
 
+        public virtual Assembly[] GetAdditionalAssemblies()
+        {
+            return new Assembly[0];
+        }
+
         /// <summary>
         /// Checks if given type is an Abp module class.
         /// </summary>
         /// <param name="type">Type to check</param>
         public static bool IsAbpModule(Type type)
         {
+            var typeInfo = type.GetTypeInfo();
             return
-                type.IsClass &&
-                !type.IsAbstract &&
+                typeInfo.IsClass &&
+                !typeInfo.IsAbstract &&
+                !typeInfo.IsGenericType &&
                 typeof(AbpModule).IsAssignableFrom(type);
         }
 
         /// <summary>
-        /// Finds depended modules of a module.
+        /// Finds direct depended modules of a module (excluding given module).
         /// </summary>
-        /// <param name="moduleType"></param>
-        /// <returns></returns>
         public static List<Type> FindDependedModuleTypes(Type moduleType)
         {
             if (!IsAbpModule(moduleType))
@@ -85,9 +103,9 @@ namespace Abp.Modules
 
             var list = new List<Type>();
 
-            if (moduleType.IsDefined(typeof(DependsOnAttribute), true))
+            if (moduleType.GetTypeInfo().IsDefined(typeof(DependsOnAttribute), true))
             {
-                var dependsOnAttributes = moduleType.GetCustomAttributes(typeof(DependsOnAttribute), true).Cast<DependsOnAttribute>();
+                var dependsOnAttributes = moduleType.GetTypeInfo().GetCustomAttributes(typeof(DependsOnAttribute), true).Cast<DependsOnAttribute>();
                 foreach (var dependsOnAttribute in dependsOnAttributes)
                 {
                     foreach (var dependedModuleType in dependsOnAttribute.DependedModuleTypes)
@@ -98,6 +116,35 @@ namespace Abp.Modules
             }
 
             return list;
+        }
+
+        public static List<Type> FindDependedModuleTypesRecursivelyIncludingGivenModule(Type moduleType)
+        {
+            var list = new List<Type>();
+            AddModuleAndDependenciesRecursively(list, moduleType);
+            list.AddIfNotContains(typeof(AbpKernelModule));
+            return list;
+        }
+
+        private static void AddModuleAndDependenciesRecursively(List<Type> modules, Type module)
+        {
+            if (!IsAbpModule(module))
+            {
+                throw new AbpInitializationException("This type is not an ABP module: " + module.AssemblyQualifiedName);
+            }
+
+            if (modules.Contains(module))
+            {
+                return;
+            }
+
+            modules.Add(module);
+
+            var dependedModules = FindDependedModuleTypes(module);
+            foreach (var dependedModule in dependedModules)
+            {
+                AddModuleAndDependenciesRecursively(modules, dependedModule);
+            }
         }
     }
 }

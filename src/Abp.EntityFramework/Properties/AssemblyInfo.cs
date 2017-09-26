@@ -5,18 +5,18 @@ using System.Runtime.InteropServices;
 // General Information about an assembly is controlled through the following 
 // set of attributes. Change these attribute values to modify the information
 // associated with an assembly.
-using Abp;
 
 [assembly: AssemblyTitle("ASP.NET Boilerplate - EntityFramework adapter")]
 [assembly: AssemblyDescription("ASP.NET Boilerplate - EntityFramework adapter")]
 [assembly: AssemblyConfiguration("")]
-[assembly: AssemblyCompany("ASP.NET Boilerplate")]
+[assembly: AssemblyCompany("Volosoft")]
 [assembly: AssemblyProduct("Abp.EntityFramework")]
-[assembly: AssemblyCopyright("Copyright ©  2014")]
+[assembly: AssemblyCopyright("Copyright © 2016")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]
 
 [assembly: InternalsVisibleTo("Abp.EntityFramework.Tests")]
+[assembly: InternalsVisibleTo("Abp.Dapper")]
 
 // Setting ComVisible to false makes the types in this assembly not visible 
 // to COM components.  If you need to access a type in this assembly from 
@@ -36,5 +36,5 @@ using Abp;
 // You can specify all the values or you can default the Build and Revision Numbers 
 // by using the '*' as shown below:
 // [assembly: AssemblyVersion("1.0.*")]
-[assembly: AssemblyVersion(AbpConsts.CurrentVersion)]
-[assembly: AssemblyFileVersion(AbpConsts.CurrentVersion)]
+
+

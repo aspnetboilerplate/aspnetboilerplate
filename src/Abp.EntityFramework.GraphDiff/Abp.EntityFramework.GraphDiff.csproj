@@ -1,0 +1,40 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <Import Project="..\..\common.props" />
+  
+  <PropertyGroup>
+    <TargetFramework>net461</TargetFramework>
+    <GenerateDocumentationFile>true</GenerateDocumentationFile>
+    <AssemblyName>Abp.EntityFramework.GraphDiff</AssemblyName>
+    <PackageId>Abp.EntityFramework.GraphDiff</PackageId>
+    <PackageTags>asp.net;asp.net mvc;boilerplate;application framework;web framework;framework;domain driven design;GraphDiff;detached graphs</PackageTags>
+    <GenerateAssemblyConfigurationAttribute>false</GenerateAssemblyConfigurationAttribute>
+    <GenerateAssemblyCompanyAttribute>false</GenerateAssemblyCompanyAttribute>
+    <GenerateAssemblyProductAttribute>false</GenerateAssemblyProductAttribute>
+    <GeneratePackageOnBuild>False</GeneratePackageOnBuild>
+    <RootNamespace>Abp.EntityFramework</RootNamespace>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <None Include="bin\Release\net461\Abp.EntityFramework.GraphDiff.pdb">
+      <PackagePath>lib/net461/</PackagePath>
+      <Pack>true</Pack>
+    </None>
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\Abp\Abp.csproj" />
+    <ProjectReference Include="..\Abp.EntityFramework\Abp.EntityFramework.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="EntityFramework" Version="6.1.3" />
+    <PackageReference Include="RefactorThis.GraphDiff" Version="2.0.1" />
+  </ItemGroup>
+
+  <ItemGroup Condition=" '$(TargetFramework)' == 'net461' ">
+    <Reference Include="System" />
+    <Reference Include="Microsoft.CSharp" />
+  </ItemGroup>
+
+</Project>

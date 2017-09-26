@@ -6,6 +6,7 @@ using Abp.Dependency;
 using Abp.Domain.Uow;
 using Abp.Events.Bus;
 using Abp.Notifications;
+using Abp.Resources.Embedded;
 using Abp.Runtime.Caching.Configuration;
 
 namespace Abp.Configuration.Startup
@@ -56,6 +57,11 @@ namespace Abp.Configuration.Startup
         IAuthorizationConfiguration Authorization { get; }
 
         /// <summary>
+        /// Used to configure validation.
+        /// </summary>
+        IValidationConfiguration Validation { get; }
+
+        /// <summary>
         /// Used to configure settings.
         /// </summary>
         ISettingsConfiguration Settings { get; }
@@ -93,11 +99,21 @@ namespace Abp.Configuration.Startup
         INotificationConfiguration Notifications { get; }
 
         /// <summary>
+        /// Used to configure embedded resources.
+        /// </summary>
+        IEmbeddedResourcesConfiguration EmbeddedResources { get; }
+
+        /// <summary>
         /// Used to replace a service type.
         /// Given <see cref="replaceAction"/> should register an implementation for the <see cref="type"/>.
         /// </summary>
         /// <param name="type">The type to be replaced.</param>
         /// <param name="replaceAction">Replace action.</param>
         void ReplaceService(Type type, Action replaceAction);
+
+        /// <summary>
+        /// Gets a configuration object.
+        /// </summary>
+        T Get<T>();
     }
 }

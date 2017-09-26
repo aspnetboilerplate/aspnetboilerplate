@@ -7,7 +7,7 @@ namespace Abp.Configuration
 {
     /// <summary>
     /// A setting group is used to group some settings togehter.
-    /// A group can be child of another group and can has child groups.
+    /// A group can be child of another group and can have child groups.
     /// </summary>
     public class SettingDefinitionGroup
     {
@@ -43,10 +43,7 @@ namespace Abp.Configuration
         /// <param name="displayName">Display name of the setting</param>
         public SettingDefinitionGroup(string name, ILocalizableString displayName)
         {
-            if (string.IsNullOrWhiteSpace(name))
-            {
-                throw new ArgumentException("name parameter is invalid! It can not be null or empty or whitespace", "name"); //TODO: Simpify throwing such exceptions
-            }
+           Check.NotNullOrWhiteSpace(name, nameof(name));
 
             Name = name;
             DisplayName = displayName;

@@ -1,5 +1,6 @@
 ﻿using System;
-using System.Runtime.Caching;
+using Microsoft.Extensions.Options;
+using Microsoft.Extensions.Caching.Memory;
 
 namespace Abp.Runtime.Caching.Memory
 {
@@ -17,29 +18,37 @@ namespace Abp.Runtime.Caching.Memory
         public AbpMemoryCache(string name)
             : base(name)
         {
-            _memoryCache = new MemoryCache(Name);
+            _memoryCache = new MemoryCache(new OptionsWrapper<MemoryCacheOptions>(new MemoryCacheOptions()));
         }
 
         public override object GetOrDefault(string key)
         {
             return _memoryCache.Get(key);
         }
-        
-        public override void Set(string key, object value, TimeSpan? slidingExpireTime = null)
+
+        public override void Set(string key, object value, TimeSpan? slidingExpireTime = null, TimeSpan? absoluteExpireTime = null)
         {
             if (value == null)
             {
                 throw new AbpException("Can not insert null values to the cache!");
             }
 
-            //TODO: Optimize by using a default CacheItemPolicy?
-            _memoryCache.Set(
-                key,
-                value,
-                new CacheItemPolicy
-                {
-                    SlidingExpiration = slidingExpireTime ?? DefaultSlidingExpireTime
-                });
+            if (absoluteExpireTime != null)
+            {
+                _memoryCache.Set(key, value, DateTimeOffset.Now.Add(absoluteExpireTime.Value));
+            }
+            else if (slidingExpireTime != null)
+            {
+                _memoryCache.Set(key, value, slidingExpireTime.Value);
+            }
+            else if (DefaultAbsoluteExpireTime != null)
+            {
+                _memoryCache.Set(key, value, DateTimeOffset.Now.Add(DefaultAbsoluteExpireTime.Value));
+            }
+            else
+            {
+                _memoryCache.Set(key, value, DefaultSlidingExpireTime);
+            }
         }
 
         public override void Remove(string key)
@@ -50,7 +59,7 @@ namespace Abp.Runtime.Caching.Memory
         public override void Clear()
         {
             _memoryCache.Dispose();
-            _memoryCache = new MemoryCache(Name);
+            _memoryCache = new MemoryCache(new OptionsWrapper<MemoryCacheOptions>(new MemoryCacheOptions()));
         }
 
         public override void Dispose()

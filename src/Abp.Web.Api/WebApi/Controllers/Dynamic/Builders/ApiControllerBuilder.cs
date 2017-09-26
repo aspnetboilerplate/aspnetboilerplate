@@ -2,6 +2,8 @@ using System;
 using System.Collections.Generic;
 using System.Web.Http.Filters;
 using Abp.Application.Services;
+using Abp.Dependency;
+using Abp.Reflection.Extensions;
 using Abp.WebApi.Controllers.Dynamic.Interceptors;
 
 namespace Abp.WebApi.Controllers.Dynamic.Builders
@@ -15,34 +17,50 @@ namespace Abp.WebApi.Controllers.Dynamic.Builders
         /// <summary>
         /// Name of the controller.
         /// </summary>
-        public string ServiceName { get; private set; }
+        public string ServiceName { get; }
 
         /// <summary>
         /// Gets type of the service interface for this dynamic controller.
         /// </summary>
-        public Type ServiceInterfaceType { get; private set; }
+        public Type ServiceInterfaceType { get; }
 
         /// <summary>
         /// Action Filters to apply to this dynamic controller.
         /// </summary>
-        public IFilter[] Filters { get; private set; }
+        public IFilter[] Filters { get; set; }
+
+        /// <summary>
+        /// Is API Explorer enabled.
+        /// </summary>
+        public bool? IsApiExplorerEnabled { get; set; }
+
+        /// <summary>
+        /// Is proxy scripting enabled.
+        /// Default: true.
+        /// </summary>
+        public bool IsProxyScriptingEnabled { get; set; } = true;
 
         /// <summary>
         /// True, if using conventional verbs for this dynamic controller.
         /// </summary>
-        public bool ConventionalVerbs { get; private set; }
+        public bool ConventionalVerbs { get; set; }
 
         /// <summary>
         /// List of all action builders for this controller.
         /// </summary>
         private readonly IDictionary<string, ApiControllerActionBuilder<T>> _actionBuilders;
-        
+
+        private readonly IIocResolver _iocResolver;
+
         /// <summary>
         /// Creates a new instance of ApiControllerInfoBuilder.
         /// </summary>
         /// <param name="serviceName">Name of the controller</param>
-        public ApiControllerBuilder(string serviceName)
+        /// <param name="iocResolver">Ioc resolver</param>
+        public ApiControllerBuilder(string serviceName, IIocResolver iocResolver)
         {
+            Check.NotNull(iocResolver, nameof(iocResolver));
+
             if (string.IsNullOrWhiteSpace(serviceName))
             {
                 throw new ArgumentException("serviceName null or empty!", "serviceName");
@@ -53,6 +71,8 @@ namespace Abp.WebApi.Controllers.Dynamic.Builders
                 throw new ArgumentException("serviceName is not properly formatted! It must contain a single-depth namespace at least! For example: 'myapplication/myservice'.", "serviceName");
             }
 
+            _iocResolver = iocResolver;
+
             ServiceName = serviceName;
             ServiceInterfaceType = typeof (T);
 
@@ -62,7 +82,8 @@ namespace Abp.WebApi.Controllers.Dynamic.Builders
             {
                 var actionBuilder = new ApiControllerActionBuilder<T>(this, methodInfo);
 
-                if (methodInfo.IsDefined(typeof (DisableDynamicWebApiAttribute), true))
+                var remoteServiceAttr = methodInfo.GetSingleAttributeOrNull<RemoteServiceAttribute>();
+                if (remoteServiceAttr != null && !remoteServiceAttr.IsEnabledFor(methodInfo))
                 {
                     actionBuilder.DontCreateAction();
                 }
@@ -113,6 +134,18 @@ namespace Abp.WebApi.Controllers.Dynamic.Builders
             return this;
         }
 
+        public IApiControllerBuilder<T> WithApiExplorer(bool isEnabled)
+        {
+            IsApiExplorerEnabled = isEnabled;
+            return this;
+        }
+
+        public IApiControllerBuilder<T> WithProxyScripts(bool isEnabled)
+        {
+            IsProxyScriptingEnabled = isEnabled;
+            return this;
+        }
+
         /// <summary>
         /// Builds the controller.
         /// This method must be called at last of the build operation.
@@ -124,7 +157,9 @@ namespace Abp.WebApi.Controllers.Dynamic.Builders
                 ServiceInterfaceType,
                 typeof(DynamicApiController<T>),
                 typeof(AbpDynamicApiControllerInterceptor<T>),
-                Filters
+                Filters,
+                IsApiExplorerEnabled,
+                IsProxyScriptingEnabled
                 );
             
             foreach (var actionBuilder in _actionBuilders.Values)
@@ -136,8 +171,8 @@ namespace Abp.WebApi.Controllers.Dynamic.Builders
 
                 controllerInfo.Actions[actionBuilder.ActionName] = actionBuilder.BuildActionInfo(ConventionalVerbs);
             }
-            
-            DynamicApiControllerManager.Register(controllerInfo);
+
+            _iocResolver.Resolve<DynamicApiControllerManager>().Register(controllerInfo);
         }
     }
 }

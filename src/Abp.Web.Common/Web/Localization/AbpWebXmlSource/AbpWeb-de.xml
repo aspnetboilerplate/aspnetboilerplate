@@ -1,0 +1,20 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<localizationDictionary culture="de">
+  <texts>
+    <text name="InternalServerError" value="Ein interner Fehler ist aufgetreten!" />
+    <text name="ValidationError" value="Die Anfrage war ungültig!" />
+    <text name="AreYouSure" value="Sind Sie sicher?" />
+    <text name="Cancel" value="Abbrechen" />
+    <text name="Yes" value="Ja" />
+    <text name="ValidationNarrativeTitle" value="Die folgenden Fehler wurden während der Validierung entdeckt." />
+    <text name="DefaultError" value="Ein Fehler ist aufgetreten!" />
+    <text name="DefaultErrorDetail" value="Der Server hat keine weiteren Fehlerinformationen gesendet." />
+    <text name="DefaultError401" value="Sie sind nicht angemeldet!" />
+    <text name="DefaultErrorDetail401" value="Sie müssen authentifiziert sein (melden Sie sich an) um diese Aktion durchzuführen." />
+    <text name="DefaultError403" value="Sie sind nicht autorisiert!" />
+    <text name="DefaultErrorDetail403" value="Sie dürfen diese Aktion nicht durchführen." />
+    <text name="DefaultError404" value="Ressource nicht gefunden!" />
+    <text name="DefaultErrorDetail404" value="Die angeforderte Ressource konnte auf dem Server nicht gefunden werden." />
+    <text name="EntityNotFound" value="Es gibt keine Entität {0} mit id = {1}!" />
+  </texts>
+</localizationDictionary>

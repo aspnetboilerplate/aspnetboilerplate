@@ -9,17 +9,6 @@ namespace Abp.Localization
     public interface ILocalizationManager
     {
         /// <summary>
-        /// Gets current language for the application.
-        /// </summary>
-        LanguageInfo CurrentLanguage { get; }
-
-        /// <summary>
-        /// Gets all available languages for the application.
-        /// </summary>
-        /// <returns>List of languages</returns>
-        IReadOnlyList<LanguageInfo> GetAllLanguages();
-
-        /// <summary>
         /// Gets a localization source with name.
         /// </summary>
         /// <param name="name">Unique name of the localization source</param>

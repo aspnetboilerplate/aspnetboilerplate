@@ -1,0 +1,31 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<localizationDictionary culture="lv">
+  <texts>
+    <text name="Identity.UserAlreadyInRole" value="Lietotājam ir jau piešķirta loma." />
+    <text name="Identity.UserNotInRole" value="Lietotājam nav piešķirta loma." />
+    <text name="Identity.RoleNotFound" value="{0} loma neeksistē." />
+    <text name="Identity.PasswordMismatch" value="Nepareiza parole." />
+    <text name="Identity.InvalidUserName" value="Lietotājvārds {0} nav korekts, var saturēt tikai burtus vai ciparus." />
+    <text name="Identity.PasswordTooShort" value="Parolei jāsastāv vismaz no {0} simboliem." />
+    <text name="Identity.PropertyTooShort" value="{0} nevar būt nulle vai tukšs." />
+    <text name="Identity.DuplicateUserName" value="Vārds {0} jau ir izmantots." />
+    <text name="Identity.UserAlreadyHasPassword" value="Lietotājs ir jau iestatījis paroli." />
+    <text name="Identity.PasswordRequireNonLetterOrDigit" value="Parolei ir jāsatur vismaz viena zīme vai cipars." />
+    <text name="Identity.UserIdNotFound" value="Lietotāja ID nav atrasts." />
+    <text name="Identity.InvalidToken" value="Nekorekts tokens." />
+    <text name="Identity.InvalidEmail" value="E-pasta adrese '{0}' nav korekta." />
+    <text name="Identity.UserNameNotFound" value="Lietotājs {0} neeksistē." />
+    <text name="Identity.LockoutNotEnabled" value="Šim lietotājam bloķēšana nav aktivizēta." />
+    <text name="Identity.PasswordRequireUpper" value="Parolei ir jāsatur vismaz viens lielais burts ('A'-'Z')." />
+    <text name="Identity.PasswordRequireDigit" value="Parolei ir jāsatur vismaz viens cipars ('0'-'9')." />
+    <text name="Identity.PasswordRequireLower" value="Parolei ir jāsatur vismaz viens mazais burts ('a'-'z')." />
+    <text name="Identity.DuplicateEmail" value="E-pasta adrese '{0}' ir jau reģistrēta." />
+    <text name="Identity.ExternalLoginExists" value="Lietotājs ar šādu ārējo lietotājvārdu eksistē." />
+    <text name="Identity.DefaultError" value="Ir notikusi nezināma kļūda." />
+    <text name="Email" value="E-pasta" />
+    <text name="EmailSecurityCodeSubject" value="Drošības kods" />
+    <text name="EmailSecurityCodeBody" value="Jūsu drošības kodu: {0}" />
+    <text name="Sms" value="Sms" />
+    <text name="SmsSecurityCodeMessage" value="Jūsu drošības kodu: {0}" />
+  </texts>
+</localizationDictionary>

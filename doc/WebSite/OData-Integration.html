@@ -73,6 +73,12 @@ public class MyProjectWebApiModule : AbpModule
 	virtual</strong>. That means you can override <strong>Get</strong>, <strong>
 	Post</strong>, <strong>Put</strong>, <strong>Patch</strong>, <strong>Delete</strong> 
 	and other actions and add your own logic.</p>
+			<h3>Configuration</h3>
+			<p>Abp.Web.Api.OData automatically calls 
+			HttpConfiguration.MapODataServiceRoute method with conventional 
+			configuration. If you need, you can set 
+			Configuration.Modules.AbpWebApiOData().<strong>MapAction</strong> to 
+			map OData routes yourself.</p>
 			<h3>Examples</h3>
 			<p>Here, some example requests to the controller defined above. Assume that 
 	the application works on <em>http://localhost:61842</em>. We will show some 
@@ -136,7 +142,7 @@ public class MyProjectWebApiModule : AbpModule
 			<p>In this example, we're creating a new person.</p>
 			<h5>Request</h5>
 			<pre>
-				<strong>POST</strong> http://localhost:61842/odata/Persons
+<strong>POST</strong> http://localhost:61842/odata/Persons
 
 {
     Name: "Galileo Galilei"
