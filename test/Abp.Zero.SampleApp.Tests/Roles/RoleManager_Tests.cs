@@ -1,6 +1,7 @@
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using Abp.Authorization;
+using Abp.Zero.SampleApp.MultiTenancy;
 using Abp.Zero.SampleApp.Roles;
 using Shouldly;
 using Xunit;
@@ -65,6 +66,41 @@ namespace Abp.Zero.SampleApp.Tests.Roles
             grantedPermissions.ShouldContain(p => p.Name == "Permission1");
             grantedPermissions.ShouldContain(p => p.Name == "Permission2");
             grantedPermissions.ShouldContain(p => p.Name == "Permission3");
+        }
+
+        [Fact]
+        public async Task PermissionWithFeatureDependencyTests()
+        {
+            //Create tenant
+            var firstTenantId = UsingDbContext(context =>
+            {
+                var firstTenant = new Tenant("Tenant1", "Tenant1");
+                context.Tenants.Add(firstTenant);
+
+                context.SaveChanges();
+                return firstTenant.Id;
+            });
+
+            AbpSession.TenantId = firstTenantId;
+
+            var role1 = new Role(firstTenantId, "TestRole", "Test Role");
+            await RoleManager.CreateAsync(role1);
+
+            await RoleManager.GrantAllPermissionsAsync(role1);
+
+            (await RoleManager.IsGrantedAsync(role1.Id, PermissionManager.GetPermission("PermissionWithFeatureDependency"))).ShouldBe(false);
+            (await RoleManager.IsGrantedAsync(role1.Id, PermissionManager.GetPermission("Permission1"))).ShouldBe(true);
+            (await RoleManager.IsGrantedAsync(role1.Id, PermissionManager.GetPermission("Permission2"))).ShouldBe(true);
+            (await RoleManager.IsGrantedAsync(role1.Id, PermissionManager.GetPermission("Permission3"))).ShouldBe(true);
+            (await RoleManager.IsGrantedAsync(role1.Id, PermissionManager.GetPermission("Permission4"))).ShouldBe(true);
+
+            var grantedPermissions = await RoleManager.GetGrantedPermissionsAsync(role1);
+
+            grantedPermissions.Count.ShouldBe(4);
+            grantedPermissions.ShouldContain(p => p.Name == "Permission1");
+            grantedPermissions.ShouldContain(p => p.Name == "Permission2");
+            grantedPermissions.ShouldContain(p => p.Name == "Permission3");
+            grantedPermissions.ShouldContain(p => p.Name == "Permission4");
         }
     }
 }
