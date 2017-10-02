@@ -88,7 +88,7 @@
                 return {
 
                     'request': function (config) {
-                        if (endsWith(config.url, '.cshtml')) {
+                        if (config.url.indexOf('.cshtml') !== -1) {
                             config.url = abp.appPath + 'AbpAppView/Load?viewUrl=' + config.url + '&_t=' + abp.pageLoadTime.getTime();
                         }
 
@@ -120,14 +120,6 @@
             }]);
         }
     ]);
-
-    function endsWith(str, suffix) {
-        if (suffix.length > str.length) {
-            return false;
-        }
-
-        return str.indexOf(suffix, str.length - suffix.length) !== -1;
-    }
 
     abp.event.on('abp.dynamicScriptsInitialized', function () {
         abp.ng.http.defaultError.message = abp.localization.abpWeb('DefaultError');

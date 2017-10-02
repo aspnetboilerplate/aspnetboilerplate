@@ -36,6 +36,7 @@ namespace Abp.Authorization.Users
         IUserAuthenticationTokenStore<TUser>,
         IUserPermissionStore<TUser>,
         IQueryableUserStore<TUser>,
+        IUserAuthenticatorKeyStore<TUser>,
         ITransientDependency
 
         where TRole : AbpRole<TUser>
@@ -1284,6 +1285,19 @@ namespace Abp.Authorization.Users
         public virtual async Task RemoveAllPermissionSettingsAsync(TUser user)
         {
             await _userPermissionSettingRepository.DeleteAsync(s => s.UserId == user.Id);
+        }
+
+        private const string InternalLoginProvider = "[AspNetUserStore]";
+        private const string AuthenticatorKeyTokenName = "AuthenticatorKey";
+
+        public virtual async Task SetAuthenticatorKeyAsync(TUser user, string key, CancellationToken cancellationToken)
+        {
+            await SetTokenAsync(user, InternalLoginProvider, AuthenticatorKeyTokenName, key, cancellationToken);
+        }
+
+        public async Task<string> GetAuthenticatorKeyAsync(TUser user, CancellationToken cancellationToken)
+        {
+            return await GetTokenAsync(user, InternalLoginProvider, AuthenticatorKeyTokenName, cancellationToken);
         }
     }
 }

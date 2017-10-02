@@ -16,6 +16,7 @@
     <GenerateAssemblyCopyrightAttribute>false</GenerateAssemblyCopyrightAttribute>
     <GeneratePackageOnBuild>False</GeneratePackageOnBuild>
     <RootNamespace>Abp</RootNamespace>
+	<Description>Abp.AutoMapper</Description>
   </PropertyGroup>
 
   <ItemGroup>
