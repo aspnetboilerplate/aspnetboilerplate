@@ -7,7 +7,7 @@ namespace Abp.IdentityServer4
     {
         public static IdentityBuilder AddAbpIdentityServer(this IdentityBuilder builder)
         {
-            builder.AddIdentityServer();
+            builder.Services.AddIdentityServer();
 
             //AbpIdentityServerUserClaimsPrincipalFactory
             var serviceType = typeof(IUserClaimsPrincipalFactory<>).MakeGenericType(builder.UserType);

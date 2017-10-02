@@ -12,7 +12,7 @@ using Microsoft.Extensions.Options;
 
 namespace Abp.IdentityServer4
 {
-    public class AbpIdentityServerUserClaimsPrincipalFactory<TUser, TRole> : UserClaimsFactory<TUser, TRole>, ITransientDependency
+    public class AbpIdentityServerUserClaimsPrincipalFactory<TUser, TRole> : UserClaimsFactory<TUser>, ITransientDependency
         where TRole : AbpRole<TUser>, new()
         where TUser : AbpUser<TUser>
     {
