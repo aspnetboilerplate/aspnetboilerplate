@@ -15,7 +15,7 @@ var configuration = Argument("configuration", "Release");
 var toolpath = Argument("toolpath", @"tools");
 var branch = Argument("branch", EnvironmentVariable("APPVEYOR_REPO_BRANCH"));
 var nugetApiKey = EnvironmentVariable("nugetApiKey");
-var isRelease = EnvironmentVariable("APPVEYOR_REPO_TAG");
+var isRelease = EnvironmentVariable("APPVEYOR_REPO_TAG") == "true";
 
 var testProjects = new List<Tuple<string, string[]>>
                 {
