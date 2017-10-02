@@ -15,6 +15,7 @@ var configuration = Argument("configuration", "Release");
 var toolpath = Argument("toolpath", @"tools");
 var branch = Argument("branch", EnvironmentVariable("APPVEYOR_REPO_BRANCH"));
 var nugetApiKey = EnvironmentVariable("nugetApiKey");
+var isRelease = EnvironmentVariable("APPVEYOR_REPO_TAG");
 
 var testProjects = new List<Tuple<string, string[]>>
                 {
@@ -65,6 +66,7 @@ Task("Clean")
     .Does(() =>
     {
         Information("Current Branch is:" + EnvironmentVariable("APPVEYOR_REPO_BRANCH"));
+        Information($"IsRelease: {isRelease}");
         CleanDirectories("./src/**/bin");
         CleanDirectories("./src/**/obj");
         CleanDirectories("./test/**/bin");
@@ -112,7 +114,7 @@ Task("Pack")
 
 Task("NugetPublish")
     .IsDependentOn("Pack")
-    .WithCriteria(() => branch == "master")
+    .WithCriteria(() => branch == "master" && isRelease)
     .Does(()=>
     {
         foreach(var nupkgFile in GetFiles(nupkgRegex))
