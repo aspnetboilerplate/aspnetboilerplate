@@ -9,6 +9,7 @@
     <AssemblyName>Abp.ZeroCore.EntityFrameworkCore</AssemblyName>
     <PackageId>Abp.ZeroCore.EntityFrameworkCore</PackageId>
     <PackageTags>asp.net;asp.net mvc;boilerplate;application framework;web framework;framework;domain driven design;multitenancy;user management;role management;identity;entity framework core</PackageTags>
+    <Description>Abp.ZeroCore.EntityFrameworkCore</Description>
   </PropertyGroup>
 
   <ItemGroup>

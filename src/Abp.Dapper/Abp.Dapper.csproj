@@ -12,6 +12,7 @@
     <GenerateAssemblyProductAttribute>false</GenerateAssemblyProductAttribute>
     <GeneratePackageOnBuild>False</GeneratePackageOnBuild>
     <RootNamespace>Abp</RootNamespace>
+	<Description>Abp.Dapper</Description>
   </PropertyGroup>
 
   <ItemGroup>

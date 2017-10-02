@@ -13,6 +13,7 @@
     <GenerateAssemblyProductAttribute>false</GenerateAssemblyProductAttribute>
     <GeneratePackageOnBuild>False</GeneratePackageOnBuild>
     <RootNamespace>Abp</RootNamespace>
+    <Description>Abp.RedisCache.ProtoBuf</Description>
   </PropertyGroup>
 
   <ItemGroup>

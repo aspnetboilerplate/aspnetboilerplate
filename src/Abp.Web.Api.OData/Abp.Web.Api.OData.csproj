@@ -18,6 +18,7 @@
     <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>
     <GenerateBindingRedirectsOutputType>true</GenerateBindingRedirectsOutputType>
     <RootNamespace>Abp</RootNamespace>
+    <Description>Abp.Web.Api.OData</Description>
   </PropertyGroup>
 
   <ItemGroup>

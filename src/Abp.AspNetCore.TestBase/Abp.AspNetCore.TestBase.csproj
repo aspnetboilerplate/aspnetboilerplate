@@ -15,6 +15,7 @@
     <GenerateAssemblyProductAttribute>false</GenerateAssemblyProductAttribute>
     <GenerateAssemblyCopyrightAttribute>false</GenerateAssemblyCopyrightAttribute>
     <GeneratePackageOnBuild>False</GeneratePackageOnBuild>
+	<Description>Abp.AspNetCore.TestBase</Description>
   </PropertyGroup>
 
   <ItemGroup>
