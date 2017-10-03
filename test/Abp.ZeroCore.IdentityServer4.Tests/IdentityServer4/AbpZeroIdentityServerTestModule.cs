@@ -16,7 +16,7 @@ namespace Abp.IdentityServer4
             Configuration.BackgroundJobs.IsJobExecutionEnabled = false;
 
             var services = new ServiceCollection();
-
+ 
             services.AddIdentityServer()
                 .AddDeveloperSigningCredential()
                 .AddAbpPersistedGrants<SampleAppDbContext>()

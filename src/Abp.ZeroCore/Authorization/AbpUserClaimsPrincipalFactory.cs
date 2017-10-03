@@ -6,7 +6,6 @@ using Abp.Authorization.Users;
 using Abp.Dependency;
 using Abp.Domain.Uow;
 using Abp.Runtime.Security;
-using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.Options;
 
