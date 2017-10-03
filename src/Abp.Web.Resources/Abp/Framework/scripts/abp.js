@@ -5,7 +5,6 @@
 
     //Current application root path (including virtual directory if exists).
     abp.appPath = abp.appPath || '/';
-    abp.domain = abp.domain || 'localhost';
     abp.pageLoadTime = new Date();
 
     //Converts given path to absolute path using abp.appPath variable.
