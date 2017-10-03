@@ -9,6 +9,7 @@
     <PackageId>Abp.HangFire.AspNetCore</PackageId>
     <PackageTags>asp.net;asp.net mvc;boilerplate;application framework;web framework;framework;domain driven design;HangFire;background jobs; aspnet core</PackageTags>
     <RootNamespace>Abp</RootNamespace>
+	<Description>Abp.HangFire.AspNetCore</Description>
   </PropertyGroup>
 
   <ItemGroup>

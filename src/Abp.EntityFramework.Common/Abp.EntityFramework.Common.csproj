@@ -13,6 +13,7 @@
     <GenerateAssemblyProductAttribute>false</GenerateAssemblyProductAttribute>
     <GeneratePackageOnBuild>False</GeneratePackageOnBuild>
     <RootNamespace>Abp.EntityFramework</RootNamespace>
+	<Description>Abp.EntityFramework.Common</Description>
   </PropertyGroup>
 
   <ItemGroup>

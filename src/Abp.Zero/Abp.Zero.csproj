@@ -15,6 +15,7 @@
     <GenerateAssemblyProductAttribute>false</GenerateAssemblyProductAttribute>
     <GenerateAssemblyCopyrightAttribute>false</GenerateAssemblyCopyrightAttribute>
     <RootNamespace>Abp</RootNamespace>
+    <Description>Abp.Zero</Description>
   </PropertyGroup>
 
   <ItemGroup>
