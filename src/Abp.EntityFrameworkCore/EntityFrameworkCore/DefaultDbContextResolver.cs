@@ -31,39 +31,44 @@ namespace Abp.EntityFrameworkCore
         {
             var dbContextType = typeof(TDbContext);
             Type concreteType = null;
-            var isAbstract = dbContextType.GetTypeInfo().IsAbstract;
-            if (isAbstract)
+            var isAbstractDbContext = dbContextType.GetTypeInfo().IsAbstract;
+            if (isAbstractDbContext)
+            {
                 concreteType = _dbContextTypeMatcher.GetConcreteType(dbContextType);
+            }
 
             try
             {
-                if (!isAbstract)
+                if (isAbstractDbContext)
                 {
-                    return _iocResolver.Resolve<TDbContext>(new
+                    return (TDbContext) _iocResolver.Resolve(concreteType, new
                     {
-                        options = CreateOptions<TDbContext>(connectionString, existingConnection)
+                        options = CreateOptionsForType(concreteType, connectionString, existingConnection)
                     });
                 }
 
-                return (TDbContext)_iocResolver.Resolve(concreteType, new
+                return _iocResolver.Resolve<TDbContext>(new
                 {
-                    options = CreateOptionsForType(concreteType, connectionString, existingConnection)
+                    options = CreateOptions<TDbContext>(connectionString, existingConnection)
                 });
             }
             catch (Castle.MicroKernel.Resolvers.DependencyResolverException ex)
             {
-                bool hasOptions = isAbstract ? HasOptions(concreteType) : HasOptions(dbContextType);
+                var hasOptions = isAbstractDbContext ? HasOptions(concreteType) : HasOptions(dbContextType);
                 if (!hasOptions)
+                {
                     throw new AggregateException($"The parameter name of {dbContextType.Name}'s constructor must be 'options'", ex);
-                throw ex;
+                }
+
+                throw;
             }
 
             bool HasOptions(Type contextType)
             {
                 return contextType.GetConstructors().Any(ctor =>
                 {
-                    var pmts = ctor.GetParameters();
-                    return pmts.Count() == 1 && (pmts.FirstOrDefault()?.Name == "options");
+                    var parameters = ctor.GetParameters();
+                    return parameters.Length == 1 && parameters.FirstOrDefault()?.Name == "options";
                 });
             }
         }
