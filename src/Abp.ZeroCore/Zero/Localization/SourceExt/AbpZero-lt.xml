@@ -1,8 +1,33 @@
 ﻿<?xml version="1.0" encoding="utf-8" ?>
 <localizationDictionary culture="lt">
   <texts>
+    <text name="Identity.ConcurrencyFailure">Optimistinio lygiagretumo klaida, objektas buvo pakeistas.</text>
+    <text name="Identity.DefaultError">Įvyko nenumatyta klaida.</text>
+    <text name="Identity.DuplicateEmail">El. pašto adresas '{0}' jau yra užimtas.</text>
+    <text name="Identity.DuplicateRoleName">Rolė '{0}' jau yra užimta.</text>
+    <text name="Identity.DuplicateUserName">Vartotojo vardas '{0}' jau yra užimtas.</text>
+    <text name="Identity.InvalidEmail">El. pašto adresas '{0}' yra netaisyklingas.</text>
+    <text name="Identity.InvalidPasswordHasherCompatibilityMode">Nurodyta PasswordHasherCompatibilityMode reikšmė yra negalima.</text>
+    <text name="Identity.InvalidPasswordHasherIterationCount">Iteracija turi būti teigiamas sveikasis skaičius.</text>
+    <text name="Identity.InvalidRoleName">Rolės pavadinimas '{0}' yra netaisyklingas.</text>
+    <text name="Identity.InvalidToken">Netinkama žymė.</text>
+    <text name="Identity.InvalidUserName">Vartotojo vardas '{0}' yra netaisyklingas - gali būti tik iš raidžių ar skaičių.</text>
+    <text name="Identity.LoginAlreadyAssociated">Vartotojas su tokiu prisijungimu jau egzistuoja.</text>
+    <text name="Identity.PasswordMismatch">Neteisingas slaptažodis.</text>
+    <text name="Identity.PasswordRequiresDigit">Slaptažodį sudaryti turi bent vienas skaičius ('0'-'9').</text>
+    <text name="Identity.PasswordRequiresLower">Slaptažodį sudaryti turi bent viena mažoji raidė ('a'-'z').</text>
+    <text name="Identity.PasswordRequiresNonAlphanumeric">Slaptažodis turi turėti bent vieną specialų simbolį.</text>
+    <text name="Identity.PasswordRequiresUpper">Slaptažodį sudaryti turi bent viena didžioji raidė ('A'-'Z').</text>
+    <text name="Identity.PasswordTooShort">Slaptažodis turi būti bent {0} simbolių ilgio.</text>
+    <text name="Identity.RoleNotFound">Rolė {0} neegzistuoja.</text>
+    <text name="Identity.UserAlreadyHasPassword">Vartotojas jau turi nustatytą slaptažodį.</text>
+    <text name="Identity.UserAlreadyInRole">Vartotojas jau yra rolėje '{0}'.</text>
+    <text name="Identity.UserLockedOut">Vartotojas yra užblokuotas.</text>
+    <text name="Identity.UserLockoutNotEnabled">Blokavimas nėra įjungtas šiam vartotojui.</text>
+    <text name="Identity.UserNameNotFound">Vartotojas {0} neegzistuoja.</text>
+    <text name="Identity.UserNotInRole">Vartotojas nėra rolėje '{0}'.</text>
     <text name="Email">El. paštas</text>
-    <text name="EmailSecurityCodeSubject">AbpZeroTemplate Saugumo Kodas</text>
+    <text name="EmailSecurityCodeSubject">Saugumo Kodas</text>
     <text name="EmailSecurityCodeBody">Jūsų saugumo kodas: {0}</text>
     <text name="Sms">Sms</text>
     <text name="SmsSecurityCodeMessage">Jusu saugumo kodas: {0}</text>
