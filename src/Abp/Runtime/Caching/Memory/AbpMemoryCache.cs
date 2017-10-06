@@ -1,5 +1,6 @@
 ﻿using System;
-using System.Runtime.Caching;
+using Microsoft.Extensions.Options;
+using Microsoft.Extensions.Caching.Memory;
 
 namespace Abp.Runtime.Caching.Memory
 {
@@ -17,7 +18,7 @@ namespace Abp.Runtime.Caching.Memory
         public AbpMemoryCache(string name)
             : base(name)
         {
-            _memoryCache = new MemoryCache(Name);
+            _memoryCache = new MemoryCache(new OptionsWrapper<MemoryCacheOptions>(new MemoryCacheOptions()));
         }
 
         public override object GetOrDefault(string key)
@@ -32,26 +33,22 @@ namespace Abp.Runtime.Caching.Memory
                 throw new AbpException("Can not insert null values to the cache!");
             }
 
-            var cachePolicy = new CacheItemPolicy();
-
             if (absoluteExpireTime != null)
             {
-                cachePolicy.AbsoluteExpiration = DateTimeOffset.Now.Add(absoluteExpireTime.Value);
+                _memoryCache.Set(key, value, DateTimeOffset.Now.Add(absoluteExpireTime.Value));
             }
             else if (slidingExpireTime != null)
             {
-                cachePolicy.SlidingExpiration = slidingExpireTime.Value;
+                _memoryCache.Set(key, value, slidingExpireTime.Value);
             }
-            else if(DefaultAbsoluteExpireTime != null)
+            else if (DefaultAbsoluteExpireTime != null)
             {
-                cachePolicy.AbsoluteExpiration = DateTimeOffset.Now.Add(DefaultAbsoluteExpireTime.Value);
+                _memoryCache.Set(key, value, DateTimeOffset.Now.Add(DefaultAbsoluteExpireTime.Value));
             }
             else
             {
-                cachePolicy.SlidingExpiration = DefaultSlidingExpireTime;
+                _memoryCache.Set(key, value, DefaultSlidingExpireTime);
             }
-
-            _memoryCache.Set(key, value, cachePolicy);
         }
 
         public override void Remove(string key)
@@ -62,7 +59,7 @@ namespace Abp.Runtime.Caching.Memory
         public override void Clear()
         {
             _memoryCache.Dispose();
-            _memoryCache = new MemoryCache(Name);
+            _memoryCache = new MemoryCache(new OptionsWrapper<MemoryCacheOptions>(new MemoryCacheOptions()));
         }
 
         public override void Dispose()

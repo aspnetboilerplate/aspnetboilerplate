@@ -1,3 +1,5 @@
+using System.Globalization;
+
 namespace Abp.Localization
 {
     /// <summary>
@@ -29,6 +31,29 @@ namespace Abp.Localization
         public bool IsDefault { get; set; }
 
         /// <summary>
+        /// Is this the language disabled?
+        /// </summary>
+        public bool IsDisabled { get; set; }
+
+        /// <summary>
+        /// Is this language Right To Left?
+        /// </summary>
+        public bool IsRightToLeft
+        {
+            get
+            {
+                try
+                {
+                    return CultureInfo.GetCultureInfo(Name).TextInfo?.IsRightToLeft ?? false;
+                }
+                catch
+                {
+                    return false;
+                }
+            }
+        }
+
+        /// <summary>
         /// Creates a new <see cref="LanguageInfo"/> object.
         /// </summary>
         /// <param name="name">
@@ -42,12 +67,14 @@ namespace Abp.Localization
         /// </param>
         /// <param name="icon">An icon can be set to display on the UI</param>
         /// <param name="isDefault">Is this the default language?</param>
-        public LanguageInfo(string name, string displayName, string icon = null, bool isDefault = false)
+        /// <param name="isDisabled">Is this the language disabled?</param>
+        public LanguageInfo(string name, string displayName, string icon = null, bool isDefault = false, bool isDisabled = false)
         {
             Name = name;
             DisplayName = displayName;
             Icon = icon;
             IsDefault = isDefault;
+            IsDisabled = isDisabled;
         }
     }
 }

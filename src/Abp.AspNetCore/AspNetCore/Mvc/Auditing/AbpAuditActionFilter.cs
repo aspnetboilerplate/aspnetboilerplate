@@ -32,6 +32,7 @@ namespace Abp.AspNetCore.Mvc.Auditing
             using (AbpCrossCuttingConcerns.Applying(context.Controller, AbpCrossCuttingConcerns.Auditing))
             {
                 var auditInfo = _auditingHelper.CreateAuditInfo(
+                    context.ActionDescriptor.AsControllerActionDescriptor().ControllerTypeInfo.AsType(),
                     context.ActionDescriptor.AsControllerActionDescriptor().MethodInfo,
                     context.ActionArguments
                 );
@@ -63,6 +64,7 @@ namespace Abp.AspNetCore.Mvc.Auditing
         private bool ShouldSaveAudit(ActionExecutingContext actionContext)
         {
             return _configuration.IsAuditingEnabled &&
+                   actionContext.ActionDescriptor.IsControllerAction() &&
                    _auditingHelper.ShouldSaveAudit(actionContext.ActionDescriptor.GetMethodInfo(), true);
         }
     }

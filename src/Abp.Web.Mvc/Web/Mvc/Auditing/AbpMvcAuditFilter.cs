@@ -28,6 +28,7 @@ namespace Abp.Web.Mvc.Auditing
             }
 
             var auditInfo = _auditingHelper.CreateAuditInfo(
+                filterContext.ActionDescriptor.ControllerDescriptor.ControllerType,
                 filterContext.ActionDescriptor.GetMethodInfoOrNull(),
                 filterContext.ActionParameters
             );

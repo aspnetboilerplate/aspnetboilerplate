@@ -1,12 +1,19 @@
+using System.Collections.Generic;
+using System.Collections.Immutable;
 using System.Net;
 using System.Threading.Tasks;
 using Microsoft.Extensions.DependencyInjection;
 using Abp.AspNetCore.App.Controllers;
 using Abp.AspNetCore.App.Models;
+using Abp.Configuration;
+using Abp.Configuration.Startup;
 using Abp.Events.Bus;
 using Abp.Events.Bus.Exceptions;
+using Abp.Localization;
 using Abp.UI;
 using Abp.Web.Models;
+using Microsoft.AspNetCore.Localization;
+using NSubstitute;
 using Shouldly;
 using Xunit;
 
@@ -143,5 +150,73 @@ namespace Abp.AspNetCore.Tests
 
             response.ShouldBeNullOrEmpty();
         }
+
+        [Fact]
+        public async Task Should_Not_Wrap_ActionResult()
+        {
+            // Act
+            var response = await GetResponseAsStringAsync(
+                GetUrl<SimpleTestController>(
+                    nameof(SimpleTestController.GetActionResultTest)
+                ));
+
+            //Assert
+            response.ShouldBe("GetActionResultTest-Result");
+        }
+
+        [Fact]
+        public async Task Should_Not_Wrap_Async_ActionResult()
+        {
+            // Act
+            var response = await GetResponseAsStringAsync(
+                GetUrl<SimpleTestController>(
+                    nameof(SimpleTestController.GetActionResultTestAsync)
+                ));
+
+            //Assert
+            response.ShouldBe("GetActionResultTestAsync-Result");
+        }
+
+        [Fact]
+        public async Task Should_Wrap_Async_Void_On_Exception()
+        {
+            // Act
+            var response = await GetResponseAsObjectAsync<AjaxResponse>(
+                GetUrl<SimpleTestController>(
+                    nameof(SimpleTestController.GetVoidExceptionTestAsync)
+                ), HttpStatusCode.InternalServerError);
+
+            response.Error.ShouldNotBeNull();
+            response.Error.Message.ShouldBe("GetVoidExceptionTestAsync-Exception");
+            response.Result.ShouldBeNull();
+        }
+
+        [Fact]
+        public async Task Should_Not_Wrap_Async_ActionResult_On_Exception()
+        {
+            // Act
+            (await Assert.ThrowsAsync<UserFriendlyException>(async () =>
+            {
+                await GetResponseAsStringAsync(
+                    GetUrl<SimpleTestController>(
+                        nameof(SimpleTestController.GetActionResultExceptionTestAsync)
+                    ), HttpStatusCode.InternalServerError);
+            })).Message.ShouldBe("GetActionResultExceptionTestAsync-Exception");
+        }
+
+        [Fact]
+        public async Task AbpLocalizationHeaderRequestCultureProvider_Test()
+        {
+            //Arrange
+            Client.DefaultRequestHeaders.Add(CookieRequestCultureProvider.DefaultCookieName, "c=it|uic=it");
+
+            var culture = await GetResponseAsStringAsync(
+                    GetUrl<SimpleTestController>(
+                        nameof(SimpleTestController.GetCurrentCultureNameTest)
+                    ));
+
+            culture.ShouldBe("it");
+        }
+
     }
 }

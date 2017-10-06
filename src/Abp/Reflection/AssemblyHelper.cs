@@ -13,7 +13,9 @@ namespace Abp.Reflection
                 .EnumerateFiles(folderPath, "*.*", searchOption)
                 .Where(s => s.EndsWith(".dll") || s.EndsWith(".exe"));
 
-            return assemblyFiles.Select(Assembly.LoadFile).ToList();
+            return assemblyFiles.Select(
+                Assembly.LoadFile //TODO: Use AssemblyLoadContext.Default.LoadFromAssemblyPath instead?
+            ).ToList();
         }
     }
 }

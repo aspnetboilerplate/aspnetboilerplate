@@ -41,24 +41,24 @@
 				<a href="http://www.nuget.org/packages/Abp.Web.Mvc">Abp.Web.Mvc</a>
 			</h4>
 			<p>
-    ASP.NET MVC integration and infrastructure.</p>
+    ASP.NET MVC integration package.</p>
 			<h4>
 				<a href="http://www.nuget.org/packages/Abp.Web.Api" target="_blank">
 	Abp.Web.Api</a>
 			</h4>
 			<p>
-    ASP.NET Web API integration and infrastructure.</p>
+    ASP.NET Web API integration package.</p>
 			<h4>
 				<a href="https://www.nuget.org/packages/Abp.Web.Api.OData" target="_blank">
 	Abp.Web.Api.OData</a>
 			</h4>
 			<p>
-    OData integration and infrastructure.</p>
+    OData integration package.</p>
 			<h4>
 				<a href="http://www.nuget.org/packages/Abp.Web.Resources" target="_blank">Abp.Web.Resources</a>
 			</h4>
 			<p>
-    Resources (js,css... files) for web projects.</p>
+    		Client side scripts package.</p>
 			<h4>
 				<a href="http://www.nuget.org/packages/Abp.Web.SignalR">Abp.Web.SignalR</a>
 			</h4>
@@ -68,7 +68,7 @@
 				<a href="http://www.nuget.org/packages/Abp.Owin" target="_blank">
 Abp.Owin</a>
 			</h4>
-			<p>OWIN integration.</p>
+			<p>OWIN integration package.</p>
 
 			<h4>
 				<a href="http://www.nuget.org/packages/Abp.EntityFramework.Common" target="_blank">
@@ -80,7 +80,7 @@ Abp.EntityFramework.Common</a>
 				<a href="http://www.nuget.org/packages/Abp.EntityFramework" target="_blank">
 Abp.EntityFramework</a>
 			</h4>
-			<p>EntityFramework integration and infrastructure.</p>
+			<p>EntityFramework integration package.</p>
 
 			<h4>
 				<a href="http://www.nuget.org/packages/Abp.EntityFramework.GraphDiff" target="_blank">Abp.EntityFramework.GraphDiff</a>
@@ -90,13 +90,19 @@ Abp.EntityFramework</a>
 			<h4>
 				<a href="http://www.nuget.org/packages/Abp.EntityFrameworkCore" target="_blank">Abp.EntityFrameworkCore</a>
 			</h4>
-			<p>EntityFrameworkCore integration and infrastructure.</p>
+			<p>EntityFrameworkCore integration package.</p>
 
 			<h4>
 				<a href="http://www.nuget.org/packages/Abp.NHibernate" target="_blank">
 	Abp.NHibernate</a>
 			</h4>
-			<p>NHibernate integration and infrastructure.</p>
+			<p>NHibernate integration package.</p>
+
+			<h4>
+				<a href="http://www.nuget.org/packages/Abp.Dapper" target="_blank">Abp.Dapper</a>
+			</h4>
+			<p>Dapper integration package.</p>
+
 			<h4>
 				<a href="http://www.nuget.org/packages/Abp.FluentMigrator" target="_blank">
 	Abp.FluentMigrator</a>
@@ -109,13 +115,19 @@ Abp.EntityFramework</a>
 	Abp.AutoMapper</a>
 			</h4>
 			<p>
-    Some simple attributes and extension methods to make AutoMapper easier to use.</p>
+    		AutoMapper integration package for object mapper.</p>
 			<h4>
 				<a href="http://www.nuget.org/packages/Abp.HangFire" target="_blank">
 	Abp.HangFire</a>
 			</h4>
 			<p>
     Hanfire integration for background job management.</p>
+			<h4>
+				<a href="http://www.nuget.org/packages/Abp.HangFire.AspNetCore" target="_blank">
+	Abp.HangFire.AspNetCore</a>
+			</h4>
+			<p>
+    Hangfire.AspNetCore integration for background job management.</p>
 			<h4>
 				<a href="http://www.nuget.org/packages/Abp.Castle.Log4Net" target="_blank">
 	Abp.Castle.Log4Net</a>
@@ -127,6 +139,16 @@ Abp.EntityFramework</a>
 			Abp.RedisCache</a></h4>
 			<p>
     		Redis replacement for ABP's default cache manager.</p>
+			<h4>
+    		<a href="https://www.nuget.org/packages/Abp.MailKit" target="_blank">
+			Abp.MailKit</a></h4>
+			<p>
+    		MailKit implementation for ABP's IEmailSender.</p>
+			<h4>
+    		<a href="https://www.nuget.org/packages/Abp.Quartz" target="_blank">
+			Abp.Quartz</a></h4>
+			<p>
+    		Quartz integration package.&nbsp;</p>
 
 			<h4>
 				<a href="http://www.nuget.org/packages/Abp.TestBase" target="_blank">Abp.TestBase</a>
@@ -137,12 +159,6 @@ Abp.EntityFramework</a>
 				<a href="http://www.nuget.org/packages/Abp.AspNetCore.TestBase" target="_blank">Abp.AspNetCore.TestBase</a>
 			</h4>
 			<p>Base classes to create integration tests for AspNet Core and ABP based projects.</p>
-
-			<h3>Tips</h3>
-			<p>You can use the command below in <strong>Package Manager Console</strong> to upgrade all Abp 
-packages in your solution in one command:</p>
-			<pre lang="cs">get-project -all | get-package | ?{ $_.Id -like 'Abp*' } | update-package</pre>
-			<p>It's tested in Visual Studio 2015.</p>
 
 		</div>
 

@@ -24,6 +24,7 @@ namespace Abp.WebApi.Controllers.Dynamic.Builders
         private bool? _isApiExplorerEnabled;
         private readonly IIocResolver _iocResolver;
         private readonly IDynamicApiControllerBuilder _dynamicApiControllerBuilder;
+        private bool? _isProxyScriptingEnabled;
 
         public BatchApiControllerBuilder(
             IIocResolver iocResolver,
@@ -52,6 +53,12 @@ namespace Abp.WebApi.Controllers.Dynamic.Builders
         public IBatchApiControllerBuilder<T> WithApiExplorer(bool isEnabled)
         {
             _isApiExplorerEnabled = isEnabled;
+            return this;
+        }
+
+        public IBatchApiControllerBuilder<T> WithProxyScripts(bool isEnabled)
+        {
+            _isProxyScriptingEnabled = isEnabled;
             return this;
         }
 
@@ -120,6 +127,13 @@ namespace Abp.WebApi.Controllers.Dynamic.Builders
                     builder.GetType()
                         .GetMethod("WithApiExplorer", BindingFlags.Public | BindingFlags.Instance)
                         .Invoke(builder, new object[] { _isApiExplorerEnabled });
+                }
+
+                if (_isProxyScriptingEnabled != null)
+                {
+                    builder.GetType()
+                        .GetMethod("WithProxyScripts", BindingFlags.Public | BindingFlags.Instance)
+                        .Invoke(builder, new object[] { _isProxyScriptingEnabled.Value });
                 }
 
                 if (_conventionalVerbs)

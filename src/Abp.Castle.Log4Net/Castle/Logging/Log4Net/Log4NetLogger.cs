@@ -8,7 +8,9 @@ using ILogger = Castle.Core.Logging.ILogger;
 namespace Abp.Castle.Logging.Log4Net
 {
     [Serializable]
-    public class Log4NetLogger : MarshalByRefObject, ILogger
+    public class Log4NetLogger :
+        MarshalByRefObject,
+        ILogger
     {
         private static readonly Type DeclaringType = typeof(Log4NetLogger);
 

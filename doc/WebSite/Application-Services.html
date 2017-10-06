@@ -201,13 +201,13 @@ public class TaskDto : EntityDto, IHasCreationTime
 			<h4>Customize CRUD Application Services</h4>
 			<h5>Getting List</h5>
 			<p>Crud application service gets <strong>
-			PagedAndSortedResultRequestInput</strong> as argument 
+			PagedAndSortedResultRequestDto</strong> as argument 
 			for <strong>GetAll</strong> method as 
 			default, which provides optional sorting and paging parameters. But you may 
 			want to add another parameters for GetAll method. For example, you 
 			may want to add some <strong>custom filters</strong>. In that case, you can create a 
 			DTO for GetAll method. Example:</p>
-			<pre lang="cs">public class GetAllTasksInput : <strong>PagedAndSortedResultRequestInput</strong>
+			<pre lang="cs">public class GetAllTasksInput : <strong>PagedAndSortedResultRequestDto</strong>
 {
     public TaskState? State { get; set; }
 }</pre>
@@ -288,12 +288,31 @@ public class UpdateTaskInput : <strong>CreateTaskInput</strong>, <strong>IEntity
     }
 }</pre>
 			<p>No need to an additional code change.</p>
-			<h5>Others</h5>
+			<h5>Other Method Arguments</h5>
 			<p>AsyncCrudAppService can get 
 			more generic arguments if you want to customize input DTOs for 
 			<strong>Get</strong> 
 			and <strong>Delete</strong> methods. Also, all methods of the base class is virtual, so you 
 			can override them to customize the behaviour.</p>
+			<h4>CRUD Permissions</h4>
+			<p>You probably need to <a href="Authorization.html">authorize</a> 
+			your CRUD methods. There are pre-defined permission properties you 
+			can set: GetPermissionName, GetAllPermissionName, 
+			CreatePermissionName, UpdatePermissionName and DeletePermissionName. 
+			Base CRUD class automatically checks permissions if you set them. You can set it in the constructor as shown below:</p>
+			<pre lang="xml">public class TaskAppService : AsyncCrudAppService&lt;Task, TaskDto&gt;
+{
+    public TaskAppService(IRepository&lt;Task&gt; repository) 
+        : base(repository)
+    {
+        <strong>CreatePermissionName = "MyTaskCreationPermission";
+</strong>    }
+}</pre>
+<p>Alternatively, you can override appropriate permission checker methods to 
+manually check permissions: CheckGetPermission(), CheckGetAllPermission(), 
+CheckCreatePermission(), CheckUpdatePermission(), CheckDeletePermission(). As 
+default, they all calls CheckPermission(...) method with related permission name 
+which simply calls IPermissionChecker.Authorize(...) method.</p>
 			<h3 id="DocUsingUow">Unit of Work</h3>
 			<p>An application service method is a <strong>
 					<a href="/Pages/Documents/Unit-Of-Work">unit of work</a>

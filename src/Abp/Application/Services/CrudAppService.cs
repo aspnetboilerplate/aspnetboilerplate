@@ -1,7 +1,9 @@
 ﻿using System.Linq;
 using Abp.Application.Services.Dto;
+using Abp.Authorization;
 using Abp.Domain.Entities;
 using Abp.Domain.Repositories;
+using Abp.UI;
 
 namespace Abp.Application.Services
 {
@@ -71,7 +73,7 @@ namespace Abp.Application.Services
     : CrudAppService<TEntity, TEntityDto, TPrimaryKey, TGetAllInput, TCreateInput, TUpdateInput, TGetInput, EntityDto<TPrimaryKey>>
         where TEntity : class, IEntity<TPrimaryKey>
         where TEntityDto : IEntityDto<TPrimaryKey>
-        where TUpdateInput : IEntityDto<TPrimaryKey> 
+        where TUpdateInput : IEntityDto<TPrimaryKey>
         where TGetInput : IEntityDto<TPrimaryKey>
     {
         protected CrudAppService(IRepository<TEntity, TPrimaryKey> repository)
@@ -90,7 +92,7 @@ namespace Abp.Application.Services
            where TGetInput : IEntityDto<TPrimaryKey>
            where TDeleteInput : IEntityDto<TPrimaryKey>
     {
-        protected CrudAppService(IRepository<TEntity, TPrimaryKey> repository) 
+        protected CrudAppService(IRepository<TEntity, TPrimaryKey> repository)
             : base(repository)
         {
 
@@ -98,12 +100,16 @@ namespace Abp.Application.Services
 
         public virtual TEntityDto Get(TGetInput input)
         {
+            CheckGetPermission();
+
             var entity = GetEntityById(input.Id);
             return MapToEntityDto(entity);
         }
 
         public virtual PagedResultDto<TEntityDto> GetAll(TGetAllInput input)
         {
+            CheckGetAllPermission();
+
             var query = CreateFilteredQuery(input);
 
             var totalCount = query.Count();
@@ -121,6 +127,8 @@ namespace Abp.Application.Services
 
         public virtual TEntityDto Create(TCreateInput input)
         {
+            CheckCreatePermission();
+
             var entity = MapToEntity(input);
 
             Repository.Insert(entity);
@@ -131,6 +139,8 @@ namespace Abp.Application.Services
 
         public virtual TEntityDto Update(TUpdateInput input)
         {
+            CheckUpdatePermission();
+
             var entity = GetEntityById(input.Id);
 
             MapToEntity(input, entity);
@@ -141,6 +151,8 @@ namespace Abp.Application.Services
 
         public virtual void Delete(TDeleteInput input)
         {
+            CheckDeletePermission();
+
             Repository.Delete(input.Id);
         }
 

@@ -22,16 +22,20 @@ namespace Abp.RedisCache.Tests
         public void Simple_Serialize_Deserialize_Test()
         {
             //Arrange
-            ProtoBufRedisCacheSerializer protoBufSerializer = new ProtoBufRedisCacheSerializer();
-            ClassToSerialize objectToSerialize = new ClassToSerialize {Age = 10, Name = "John"};
+            var protoBufSerializer = new ProtoBufRedisCacheSerializer();
+            var objectToSerialize = new ClassToSerialize {Age = 10, Name = "John"};
 
             //Act
-            string classSerializedString = protoBufSerializer.Serialize(objectToSerialize, typeof(ClassToSerialize));
+            string classSerializedString = protoBufSerializer.Serialize(
+                objectToSerialize,
+                typeof(ClassToSerialize)
+            );
+
             object classUnSerialized = protoBufSerializer.Deserialize(classSerializedString);
 
             //Assert
             classUnSerialized.ShouldBeOfType<ClassToSerialize>();
-            ClassToSerialize classUnSerializedTyped = classUnSerialized as ClassToSerialize;
+            ClassToSerialize classUnSerializedTyped = (ClassToSerialize) classUnSerialized;
             classUnSerializedTyped.Age.ShouldBe(10);
             classUnSerializedTyped.Name.ShouldBe("John");
         }

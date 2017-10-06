@@ -2,6 +2,7 @@
 using System.Globalization;
 using System.Linq;
 using Abp.Extensions;
+using Abp.Localization;
 using Shouldly;
 using Xunit;
 
@@ -20,7 +21,7 @@ namespace Abp.Tests.Extensions
 
             //Case differences
             "TurkeY".EnsureEndsWith('y').ShouldBe("TurkeYy");
-            "TurkeY".EnsureEndsWith('y', StringComparison.InvariantCultureIgnoreCase).ShouldBe("TurkeY");
+            "TurkeY".EnsureEndsWith('y', StringComparison.OrdinalIgnoreCase).ShouldBe("TurkeY");
 
             //Edge cases for Turkish 'i'.
             "TAKSİ".EnsureEndsWith('i', true, new CultureInfo("tr-TR")).ShouldBe("TAKSİ");
@@ -36,7 +37,7 @@ namespace Abp.Tests.Extensions
 
             //Case differences
             "Turkey".EnsureStartsWith('t').ShouldBe("tTurkey");
-            "Turkey".EnsureStartsWith('t', StringComparison.InvariantCultureIgnoreCase).ShouldBe("Turkey");
+            "Turkey".EnsureStartsWith('t', StringComparison.OrdinalIgnoreCase).ShouldBe("Turkey");
 
             //Edge cases for Turkish 'i'.
             "İstanbul".EnsureStartsWith('i', true, new CultureInfo("tr-TR")).ShouldBe("İstanbul");
@@ -67,7 +68,12 @@ namespace Abp.Tests.Extensions
         {
             (null as string).ToSentenceCase().ShouldBe(null);
             "HelloWorld".ToSentenceCase().ShouldBe("Hello world");
-            "HelloIsparta".ToSentenceCase().ShouldBe("Hello isparta");
+
+            using (CultureInfoHelper.Use("en-US"))
+            {
+                "HelloIsparta".ToSentenceCase().ShouldBe("Hello isparta");
+            }
+
             "HelloIsparta".ToSentenceCase(new CultureInfo("tr-TR")).ShouldBe("Hello ısparta");
         }
 

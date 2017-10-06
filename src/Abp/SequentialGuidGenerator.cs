@@ -1,12 +1,12 @@
 ﻿using System;
 using System.Security.Cryptography;
+using Abp.Threading.Extensions;
 
 namespace Abp
 {
     /// <summary>
     /// Implements <see cref="IGuidGenerator"/> by creating sequential Guids.
-    /// This code is taken from jhtodd/SequentialGuid
-    /// https://github.com/jhtodd/SequentialGuid/blob/master/SequentialGuid/Classes/SequentialGuid.cs
+    /// This code is taken from https://github.com/jhtodd/SequentialGuid/blob/master/SequentialGuid/Classes/SequentialGuid.cs
     /// </summary>
     public class SequentialGuidGenerator : IGuidGenerator
     {
@@ -15,7 +15,7 @@ namespace Abp
         /// </summary>
         public static SequentialGuidGenerator Instance { get; } = new SequentialGuidGenerator();
 
-        private static readonly RNGCryptoServiceProvider Rng = new RNGCryptoServiceProvider();
+        private static readonly RandomNumberGenerator Rng = RandomNumberGenerator.Create();
 
         public SequentialGuidDatabaseType DatabaseType { get; set; }
 
@@ -54,7 +54,7 @@ namespace Abp
         {
             // We start with 16 bytes of cryptographically strong random data.
             var randomBytes = new byte[10];
-            Rng.GetBytes(randomBytes);
+            Rng.Locking(r => r.GetBytes(randomBytes));
 
             // An alternate method: use a normally-created GUID to get our initial
             // random data:

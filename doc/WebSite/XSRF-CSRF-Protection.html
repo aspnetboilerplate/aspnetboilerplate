@@ -33,6 +33,13 @@
 		Forgery protection for only <strong>POST</strong>, <strong>PUT, PATCH </strong>
 		and <strong>DELETE</strong> verbs), you can change this 
 		behaviour using attrbiutes defined in this document.</p>
+		<h4>Non Browser Clients</h4>
+		<p>CSRF is a type of attack that is a problem for browsers. Because a 
+		browser sends all cookies (including auth cookies) in all requests, 
+		including cross domain requests. But, it's not a problem for non browser 
+		clients, like mobile applications. ABP framework can understand the 
+		difference and automatically <strong>skips anti forgery validation for 
+		non browser clients</strong>.</p>
 	</div>
 
 	
@@ -199,19 +206,19 @@ namespace AngularForgeryDemo.Controllers
 	automatically adds anti forgery token field if you use one of asp-* tags in 
 	your form. So, no need to use
 	@Html.AntiForgeryToken() normally.</p>
-	<h3>Client Side Libraries</h3>
+	<h3>Client Libraries</h3>
 	<p>Anti forgery token should be provided in the request header for all AJAX 
 	requests, as we declared before. We will see how it's done here.</p>
 	<h4>jQuery</h4>
 	<p>abp.jquery.js defines an AJAX interceptor which adds the anti forgery 
 	token to the request header for every request. It gets the token from <strong>abp.security.antiForgery.getToken()</strong> 
 	javascript function.</p>
-	<h4>Angularjs</h4>
-	<p>Angularjs automatically adds the anti forgery token to all AJAX requests. 
+	<h4>Angular</h4>
+	<p>Angular automatically adds the anti forgery token to all AJAX requests. 
 	See <em>Cross Site Request Forgery (XSRF) Protection</em> section in Angularjs
 	<a href="https://docs.angularjs.org/api/ng/service/$http" target="_blank">
 	$http document</a>. ABP uses the same cookie and header names as default. 
-	So, Angularjs integration works out of the box.</p>
+	So, Angular integration works out of the box.</p>
 	<h4>Other Libraries</h4>
 	<p>If you are using any other library for AJAX requests, you have three 
 	options:</p>

@@ -1,6 +1,7 @@
 ﻿using System;
+using System.Reflection;
 using Abp.Domain.Entities;
-using Abp.Json;
+using Abp.Reflection.Extensions;
 using StackExchange.Redis;
 
 namespace Abp.Runtime.Caching.Redis
@@ -11,12 +12,15 @@ namespace Abp.Runtime.Caching.Redis
     public class AbpRedisCache : CacheBase
     {
         private readonly IDatabase _database;
-        private IRedisCacheSerializer _serializer;
+        private readonly IRedisCacheSerializer _serializer;
 
         /// <summary>
         /// Constructor.
         /// </summary>
-        public AbpRedisCache(string name, IAbpRedisCacheDatabaseProvider redisCacheDatabaseProvider, IRedisCacheSerializer redisCacheSerializer)
+        public AbpRedisCache(
+            string name, 
+            IAbpRedisCacheDatabaseProvider redisCacheDatabaseProvider, 
+            IRedisCacheSerializer redisCacheSerializer)
             : base(name)
         {
             _database = redisCacheDatabaseProvider.GetDatabase();
@@ -39,9 +43,9 @@ namespace Abp.Runtime.Caching.Redis
             //TODO: This is a workaround for serialization problems of entities.
             //TODO: Normally, entities should not be stored in the cache, but currently Abp.Zero packages does it. It will be fixed in the future.
             var type = value.GetType();
-            if (EntityHelper.IsEntity(type) && type.Assembly.FullName.Contains("EntityFrameworkDynamicProxies"))
+            if (EntityHelper.IsEntity(type) && type.GetAssembly().FullName.Contains("EntityFrameworkDynamicProxies"))
             {
-                type = type.BaseType;
+                type = type.GetTypeInfo().BaseType;
             }
 
             _database.StringSet(

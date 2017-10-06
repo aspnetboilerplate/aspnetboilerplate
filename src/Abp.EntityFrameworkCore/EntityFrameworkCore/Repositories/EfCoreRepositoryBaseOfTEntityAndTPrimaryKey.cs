@@ -1,9 +1,13 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Data;
+using System.Data.Common;
 using System.Linq;
 using System.Linq.Expressions;
+using System.Threading;
 using System.Threading.Tasks;
 using Abp.Collections.Extensions;
+using Abp.Data;
 using Abp.Domain.Entities;
 using Abp.Domain.Repositories;
 using Microsoft.EntityFrameworkCore;
@@ -13,23 +17,56 @@ namespace Abp.EntityFrameworkCore.Repositories
     /// <summary>
     /// Implements IRepository for Entity Framework.
     /// </summary>
-    /// <typeparam name="TDbContext">DbContext which contains <see cref="TEntity"/>.</typeparam>
+    /// <typeparam name="TDbContext">DbContext which contains <typeparamref name="TEntity"/>.</typeparam>
     /// <typeparam name="TEntity">Type of the Entity for this repository</typeparam>
     /// <typeparam name="TPrimaryKey">Primary key of the entity</typeparam>
-    public class EfCoreRepositoryBase<TDbContext, TEntity, TPrimaryKey> : AbpRepositoryBase<TEntity, TPrimaryKey>, IRepositoryWithDbContext
+    public class EfCoreRepositoryBase<TDbContext, TEntity, TPrimaryKey> : 
+        AbpRepositoryBase<TEntity, TPrimaryKey>,
+        ISupportsExplicitLoading<TEntity, TPrimaryKey>,
+        IRepositoryWithDbContext
+        
         where TEntity : class, IEntity<TPrimaryKey>
         where TDbContext : DbContext
     {
         /// <summary>
         /// Gets EF DbContext object.
         /// </summary>
-        public virtual TDbContext Context { get { return _dbContextProvider.GetDbContext(MultiTenancySide); } }
+        public virtual TDbContext Context => _dbContextProvider.GetDbContext(MultiTenancySide);
 
         /// <summary>
         /// Gets DbSet for given entity.
         /// </summary>
-        public virtual DbSet<TEntity> Table { get { return Context.Set<TEntity>(); } }
+        public virtual DbSet<TEntity> Table => Context.Set<TEntity>();
 
+        public virtual DbTransaction Transaction
+        {
+            get
+            {
+                return (DbTransaction) TransactionProvider?.GetActiveTransaction(new ActiveTransactionProviderArgs
+                {
+                    {"ContextType", typeof(TDbContext) },
+                    {"MultiTenancySide", MultiTenancySide }
+                });
+            }
+        }
+
+        public virtual DbConnection Connection
+        {
+            get
+            {
+                var connection = Context.Database.GetDbConnection();
+
+                if (connection.State != ConnectionState.Open)
+                {
+                    connection.Open();
+                }
+
+                return connection;
+            }
+        }
+
+        public IActiveTransactionProvider TransactionProvider { private get; set; }
+        
         private readonly IDbContextProvider<TDbContext> _dbContextProvider;
 
         /// <summary>
@@ -43,21 +80,19 @@ namespace Abp.EntityFrameworkCore.Repositories
 
         public override IQueryable<TEntity> GetAll()
         {
-            return Table;
+            return GetAllIncluding();
         }
 
         public override IQueryable<TEntity> GetAllIncluding(params Expression<Func<TEntity, object>>[] propertySelectors)
         {
-            if (propertySelectors.IsNullOrEmpty())
-            {
-                return GetAll();
-            }
+            var query = Table.AsQueryable();
 
-            var query = GetAll();
-
-            foreach (var propertySelector in propertySelectors)
+            if (!propertySelectors.IsNullOrEmpty())
             {
-                query = query.Include(propertySelector);
+                foreach (var propertySelector in propertySelectors)
+                {
+                    query = query.Include(propertySelector);
+                }
             }
 
             return query;
@@ -95,7 +130,7 @@ namespace Abp.EntityFrameworkCore.Repositories
 
         public override Task<TEntity> InsertAsync(TEntity entity)
         {
-            return Task.FromResult(Table.Add(entity).Entity);
+            return Task.FromResult(Insert(entity));
         }
 
         public override TPrimaryKey InsertAndGetId(TEntity entity)
@@ -212,13 +247,31 @@ namespace Abp.EntityFrameworkCore.Repositories
             {
                 return;
             }
-            
+
             Table.Attach(entity);
         }
 
         public DbContext GetDbContext()
         {
             return Context;
+        }
+
+        public Task EnsureCollectionLoadedAsync<TProperty>(
+            TEntity entity, 
+            Expression<Func<TEntity, IEnumerable<TProperty>>> propertyExpression, 
+            CancellationToken cancellationToken)
+            where TProperty : class
+        {
+            return Context.Entry(entity).Collection(propertyExpression).LoadAsync(cancellationToken);
+        }
+
+        public Task EnsurePropertyLoadedAsync<TProperty>(
+            TEntity entity,
+            Expression<Func<TEntity, TProperty>> propertyExpression,
+            CancellationToken cancellationToken)
+            where TProperty : class
+        {
+            return Context.Entry(entity).Reference(propertyExpression).LoadAsync(cancellationToken);
         }
 
         private TEntity GetFromChangeTrackerOrNull(TPrimaryKey id)

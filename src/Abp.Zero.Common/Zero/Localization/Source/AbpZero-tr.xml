@@ -1,0 +1,13 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<localizationDictionary culture="tr">
+  <texts>
+    <text name="InvalidTenancyName" value="Müşteri adı geçerli değil." />
+    <text name="TenancyNameIsAlreadyTaken" value="{0} müşteri adı daha önce alınmış." />
+    <text name="RoleNameIsAlreadyTaken" value="{0} rol adı daha önce alınmış." />
+    <text name="RoleDisplayNameIsAlreadyTaken" value="{0} rol görünen adı daha önce alınmış." />
+    <text name="CanNotDeleteStaticRole" value="Sabit roller silinemez: {0}" />
+    <text name="CanNotRenameAdminUser" value="{0} kullanıcı adı varsayılan yönetici kullanıcısı olduğu için değiştirilemez." />
+    <text name="CanNotDeleteAdminUser" value="{0} kullanıcısı varsayılan yönetici kullanıcısı olduğu için silinemez." />
+    <text name="OrganizationUnitDuplicateDisplayNameWarning" value="{0} isminde bir birim zaten var. Aynı seviyede aynı isimli iki birim olamaz." />
+  </texts>
+</localizationDictionary>

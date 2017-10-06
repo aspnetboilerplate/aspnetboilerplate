@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<localizationDictionary culture="fa">
+  <texts>
+    <text name="Email" value="پست الکترونیک" />
+    <text name="EmailSecurityCodeSubject" value="کد امنیتی" />
+    <text name="EmailSecurityCodeBody" value="کد امنیتی شما '{0}' است" />
+    <text name="Sms" value="پیام کوتاه" />
+    <text name="SmsSecurityCodeMessage" value="کد امنیتی شما '{0}' است" />
+  </texts>
+</localizationDictionary>

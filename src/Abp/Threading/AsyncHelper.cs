@@ -18,7 +18,7 @@ namespace Abp.Threading
         {
             return (
                 method.ReturnType == typeof(Task) ||
-                (method.ReturnType.IsGenericType && method.ReturnType.GetGenericTypeDefinition() == typeof(Task<>))
+                (method.ReturnType.GetTypeInfo().IsGenericType && method.ReturnType.GetGenericTypeDefinition() == typeof(Task<>))
                 );
         }
 

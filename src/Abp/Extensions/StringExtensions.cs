@@ -17,7 +17,7 @@ namespace Abp.Extensions
         /// </summary>
         public static string EnsureEndsWith(this string str, char c)
         {
-            return EnsureEndsWith(str, c, StringComparison.InvariantCulture);
+            return EnsureEndsWith(str, c, StringComparison.Ordinal);
         }
 
         /// <summary>
@@ -27,10 +27,10 @@ namespace Abp.Extensions
         {
             if (str == null)
             {
-                throw new ArgumentNullException("str");
+                throw new ArgumentNullException(nameof(str));
             }
 
-            if (str.EndsWith(c.ToString(CultureInfo.InvariantCulture), comparisonType))
+            if (str.EndsWith(c.ToString(), comparisonType))
             {
                 return str;
             }
@@ -45,7 +45,7 @@ namespace Abp.Extensions
         {
             if (str == null)
             {
-                throw new ArgumentNullException("str");
+                throw new ArgumentNullException(nameof(str));
             }
 
             if (str.EndsWith(c.ToString(culture), ignoreCase, culture))
@@ -61,7 +61,7 @@ namespace Abp.Extensions
         /// </summary>
         public static string EnsureStartsWith(this string str, char c)
         {
-            return EnsureStartsWith(str, c, StringComparison.InvariantCulture);
+            return EnsureStartsWith(str, c, StringComparison.Ordinal);
         }
 
         /// <summary>
@@ -71,10 +71,10 @@ namespace Abp.Extensions
         {
             if (str == null)
             {
-                throw new ArgumentNullException("str");
+                throw new ArgumentNullException(nameof(str));
             }
 
-            if (str.StartsWith(c.ToString(CultureInfo.InvariantCulture), comparisonType))
+            if (str.StartsWith(c.ToString(), comparisonType))
             {
                 return str;
             }
@@ -176,15 +176,21 @@ namespace Abp.Extensions
 
         /// <summary>
         /// Removes first occurrence of the given postfixes from end of the given string.
+        /// Ordering is important. If one of the postFixes is matched, others will not be tested.
         /// </summary>
         /// <param name="str">The string.</param>
         /// <param name="postFixes">one or more postfix.</param>
         /// <returns>Modified string or the same string if it has not any of given postfixes</returns>
         public static string RemovePostFix(this string str, params string[] postFixes)
         {
-            if (str.IsNullOrEmpty())
+            if (str == null)
             {
                 return null;
+            }
+
+            if (str == string.Empty)
+            {
+                return string.Empty;
             }
 
             if (postFixes.IsNullOrEmpty())
@@ -205,15 +211,21 @@ namespace Abp.Extensions
 
         /// <summary>
         /// Removes first occurrence of the given prefixes from beginning of the given string.
+        /// Ordering is important. If one of the preFixes is matched, others will not be tested.
         /// </summary>
         /// <param name="str">The string.</param>
         /// <param name="preFixes">one or more prefix.</param>
         /// <returns>Modified string or the same string if it has not any of given prefixes</returns>
         public static string RemovePreFix(this string str, params string[] preFixes)
         {
-            if (str.IsNullOrEmpty())
+            if (str == null)
             {
                 return null;
+            }
+
+            if (str == string.Empty)
+            {
+                return string.Empty;
             }
 
             if (preFixes.IsNullOrEmpty())
@@ -288,10 +300,21 @@ namespace Abp.Extensions
         /// Converts PascalCase string to camelCase string.
         /// </summary>
         /// <param name="str">String to convert</param>
+        /// <param name="invariantCulture">Invariant culture</param>
         /// <returns>camelCase of the string</returns>
-        public static string ToCamelCase(this string str)
+        public static string ToCamelCase(this string str, bool invariantCulture = true)
         {
-            return str.ToCamelCase(CultureInfo.InvariantCulture);
+            if (string.IsNullOrWhiteSpace(str))
+            {
+                return str;
+            }
+
+            if (str.Length == 1)
+            {
+                return invariantCulture ? str.ToLowerInvariant() : str.ToLower();
+            }
+
+            return (invariantCulture ? char.ToLowerInvariant(str[0]) : char.ToLower(str[0])) + str.Substring(1);
         }
 
         /// <summary>
@@ -320,9 +343,19 @@ namespace Abp.Extensions
         /// Example: "ThisIsSampleSentence" is converted to "This is a sample sentence".
         /// </summary>
         /// <param name="str">String to convert.</param>
-        public static string ToSentenceCase(this string str)
+        /// <param name="invariantCulture">Invariant culture</param>
+        public static string ToSentenceCase(this string str, bool invariantCulture = false)
         {
-            return str.ToSentenceCase(CultureInfo.InvariantCulture);
+            if (string.IsNullOrWhiteSpace(str))
+            {
+                return str;
+            }
+
+            return Regex.Replace(
+                str,
+                "[a-z][A-Z]",
+                m => m.Value[0] + " " + (invariantCulture ? char.ToLowerInvariant(m.Value[1]) : char.ToLower(m.Value[1]))
+            );
         }
 
         /// <summary>
@@ -352,7 +385,7 @@ namespace Abp.Extensions
         {
             if (value == null)
             {
-                throw new ArgumentNullException("value");
+                throw new ArgumentNullException(nameof(value));
             }
 
             return (T)Enum.Parse(typeof(T), value);
@@ -370,7 +403,7 @@ namespace Abp.Extensions
         {
             if (value == null)
             {
-                throw new ArgumentNullException("value");
+                throw new ArgumentNullException(nameof(value));
             }
 
             return (T)Enum.Parse(typeof(T), value, ignoreCase);
@@ -397,10 +430,21 @@ namespace Abp.Extensions
         /// Converts camelCase string to PascalCase string.
         /// </summary>
         /// <param name="str">String to convert</param>
+        /// <param name="invariantCulture">Invariant culture</param>
         /// <returns>PascalCase of the string</returns>
-        public static string ToPascalCase(this string str)
+        public static string ToPascalCase(this string str, bool invariantCulture = true)
         {
-            return str.ToPascalCase(CultureInfo.InvariantCulture);
+            if (string.IsNullOrWhiteSpace(str))
+            {
+                return str;
+            }
+
+            if (str.Length == 1)
+            {
+                return invariantCulture ? str.ToUpperInvariant(): str.ToUpper();
+            }
+
+            return (invariantCulture ? char.ToUpperInvariant(str[0]) : char.ToUpper(str[0])) + str.Substring(1);
         }
 
         /// <summary>

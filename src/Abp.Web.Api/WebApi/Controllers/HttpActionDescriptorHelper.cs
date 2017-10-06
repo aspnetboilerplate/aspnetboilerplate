@@ -22,14 +22,14 @@ namespace Abp.WebApi.Controllers
             }
 
             //Get for the action
-            wrapAttr = actionDescriptor.GetCustomAttributes<WrapResultAttribute>().FirstOrDefault();
+            wrapAttr = actionDescriptor.GetCustomAttributes<WrapResultAttribute>(true).FirstOrDefault();
             if (wrapAttr != null)
             {
                 return wrapAttr;
             }
 
             //Get for the controller
-            wrapAttr = actionDescriptor.ControllerDescriptor.GetCustomAttributes<WrapResultAttribute>().FirstOrDefault();
+            wrapAttr = actionDescriptor.ControllerDescriptor.GetCustomAttributes<WrapResultAttribute>(true).FirstOrDefault();
             if (wrapAttr != null)
             {
                 return wrapAttr;

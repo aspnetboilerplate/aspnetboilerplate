@@ -73,6 +73,12 @@ namespace Abp.WebApi.Controllers.Dynamic.Builders
         IApiControllerBuilder<T> WithApiExplorer(bool isEnabled);
 
         /// <summary>
+        /// Enables/Disables proxy scripting for the Dynamic Controller.
+        /// It's enabled by default.
+        /// </summary>
+        IApiControllerBuilder<T> WithProxyScripts(bool isEnabled);
+
+        /// <summary>
         /// Builds the controller.
         /// This method must be called at last of the build operation.
         /// </summary>

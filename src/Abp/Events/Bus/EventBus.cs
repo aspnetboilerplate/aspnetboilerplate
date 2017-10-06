@@ -219,10 +219,7 @@ namespace Abp.Events.Bus
 
                         var method = handlerType.GetMethod(
                             "HandleEvent",
-                            BindingFlags.Public | BindingFlags.Instance,
-                            null,
-                            new[] { handlerFactories.EventType },
-                            null
+                            new[] { handlerFactories.EventType }
                         );
 
                         method.Invoke(eventHandler, new object[] { eventData });
@@ -243,12 +240,12 @@ namespace Abp.Events.Bus
             }
 
             //Implements generic argument inheritance. See IEventDataWithInheritableGenericArgument
-            if (eventType.IsGenericType &&
+            if (eventType.GetTypeInfo().IsGenericType &&
                 eventType.GetGenericArguments().Length == 1 &&
                 typeof(IEventDataWithInheritableGenericArgument).IsAssignableFrom(eventType))
             {
                 var genericArg = eventType.GetGenericArguments()[0];
-                var baseArg = genericArg.BaseType;
+                var baseArg = genericArg.GetTypeInfo().BaseType;
                 if (baseArg != null)
                 {
                     var baseEventType = eventType.GetGenericTypeDefinition().MakeGenericType(baseArg);

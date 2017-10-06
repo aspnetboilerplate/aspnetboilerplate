@@ -1,24 +1,13 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using Abp.Modules;
+using System.Reflection;
 
 namespace Abp.PlugIns
 {
     public interface IPlugInSource
     {
-        List<Type> GetModules();
-    }
+        List<Assembly> GetAssemblies();
 
-    public static class PlugInSourceExtensions
-    {
-        public static List<Type> GetModulesWithAllDependencies(this IPlugInSource plugInSource)
-        {
-            return plugInSource
-                .GetModules()
-                .SelectMany(AbpModule.FindDependedModuleTypesRecursivelyIncludingGivenModule)
-                .Distinct()
-                .ToList();
-        }
+        List<Type> GetModules();
     }
 }

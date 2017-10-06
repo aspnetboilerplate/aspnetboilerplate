@@ -29,8 +29,8 @@ namespace Abp.Threading
             }
 
             var thread = Thread.CurrentThread;
-            thread.CurrentCulture = CultureInfo.GetCultureInfo(thread.CurrentCulture.Name);
-            thread.CurrentUICulture = CultureInfo.GetCultureInfo(thread.CurrentUICulture.Name);
+            CultureInfo.CurrentCulture = CultureInfo.GetCultureInfo(thread.CurrentCulture.Name);
+            CultureInfo.CurrentUICulture = CultureInfo.GetCultureInfo(thread.CurrentUICulture.Name);
         }
     }
 }

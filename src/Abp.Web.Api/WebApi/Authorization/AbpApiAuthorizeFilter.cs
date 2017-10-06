@@ -1,8 +1,10 @@
 using System;
+using System.Linq;
 using System.Net;
 using System.Net.Http;
 using System.Threading;
 using System.Threading.Tasks;
+using System.Web.Http;
 using System.Web.Http.Controllers;
 using System.Web.Http.Filters;
 using Abp.Authorization;
@@ -14,6 +16,7 @@ using Abp.Logging;
 using Abp.Web;
 using Abp.Web.Models;
 using Abp.WebApi.Configuration;
+using Abp.WebApi.Controllers;
 using Abp.WebApi.Validation;
 
 namespace Abp.WebApi.Authorization
@@ -44,6 +47,12 @@ namespace Abp.WebApi.Authorization
             CancellationToken cancellationToken,
             Func<Task<HttpResponseMessage>> continuation)
         {
+            if (actionContext.ActionDescriptor.GetCustomAttributes<AllowAnonymousAttribute>().Any() ||
+                actionContext.ActionDescriptor.ControllerDescriptor.GetCustomAttributes<AllowAnonymousAttribute>().Any())
+            {
+                return await continuation();
+            }
+            
             var methodInfo = actionContext.ActionDescriptor.GetMethodInfoOrNull();
             if (methodInfo == null)
             {
@@ -57,7 +66,7 @@ namespace Abp.WebApi.Authorization
 
             try
             {
-                await _authorizationHelper.AuthorizeAsync(methodInfo);
+                await _authorizationHelper.AuthorizeAsync(methodInfo, methodInfo.DeclaringType);
                 return await continuation();
             }
             catch (AbpAuthorizationException ex)
@@ -70,35 +79,50 @@ namespace Abp.WebApi.Authorization
 
         protected virtual HttpResponseMessage CreateUnAuthorizedResponse(HttpActionContext actionContext)
         {
-            HttpStatusCode statusCode;
-            ErrorInfo error;
+            var statusCode = GetUnAuthorizedStatusCode(actionContext);
 
-            if (actionContext.RequestContext.Principal?.Identity?.IsAuthenticated ?? false)
+            var wrapResultAttribute =
+                HttpActionDescriptorHelper.GetWrapResultAttributeOrNull(actionContext.ActionDescriptor) ??
+                _configuration.DefaultWrapResultAttribute;
+
+            if (!wrapResultAttribute.WrapOnError)
             {
-                statusCode = HttpStatusCode.Forbidden;
-                error = new ErrorInfo(
+                return new HttpResponseMessage(statusCode);
+            }
+
+            return new HttpResponseMessage(statusCode)
+            {
+                Content = new ObjectContent<AjaxResponse>(
+                    new AjaxResponse(
+                        GetUnAuthorizedErrorMessage(statusCode),
+                        true
+                    ),
+                    _configuration.HttpConfiguration.Formatters.JsonFormatter
+                )
+            };
+        }
+
+        private ErrorInfo GetUnAuthorizedErrorMessage(HttpStatusCode statusCode)
+        {
+            if (statusCode == HttpStatusCode.Forbidden)
+            {
+                return new ErrorInfo(
                     _localizationManager.GetString(AbpWebConsts.LocalizaionSourceName, "DefaultError403"),
                     _localizationManager.GetString(AbpWebConsts.LocalizaionSourceName, "DefaultErrorDetail403")
                 );
             }
-            else
-            {
-                statusCode = HttpStatusCode.Unauthorized;
-                error = new ErrorInfo(
-                    _localizationManager.GetString(AbpWebConsts.LocalizaionSourceName, "DefaultError401"),
-                    _localizationManager.GetString(AbpWebConsts.LocalizaionSourceName, "DefaultErrorDetail401")
-                );
-            }
 
-            var response = new HttpResponseMessage(statusCode)
-            {
-                Content = new ObjectContent<AjaxResponse>(
-                    new AjaxResponse(error, true),
-                    _configuration.HttpConfiguration.Formatters.JsonFormatter
-                )
-            };
+            return new ErrorInfo(
+                _localizationManager.GetString(AbpWebConsts.LocalizaionSourceName, "DefaultError401"),
+                _localizationManager.GetString(AbpWebConsts.LocalizaionSourceName, "DefaultErrorDetail401")
+            );
+        }
 
-            return response;
+        private static HttpStatusCode GetUnAuthorizedStatusCode(HttpActionContext actionContext)
+        {
+            return (actionContext.RequestContext.Principal?.Identity?.IsAuthenticated ?? false)
+                ? HttpStatusCode.Forbidden
+                : HttpStatusCode.Unauthorized;
         }
     }
 }

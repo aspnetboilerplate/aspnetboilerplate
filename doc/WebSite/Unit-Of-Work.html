@@ -70,6 +70,12 @@ database connection and starts a transaction when entering CreatePerson method
 and commit the transaction at end of the method if no exception is thrown, 
 rolls back if any exception occurs. In that way, all database operations in 
 CreatePerson method becomes <strong>atomic</strong> (<strong>unit of work</strong>).&nbsp;</p>
+			<p>In addition to default conventional unit of work classes, you can 
+			add your own convention in PreInitialize method of your
+			<a href="Module-System.html">module</a> like below:</p>
+			<pre lang="cs">Configuration.UnitOfWork.ConventionalUowSelectors.Add(type =&gt; ...);</pre>
+			<p>You should check type and return true if this type should be a 
+			conventional unit of work class.</p>
 			<h4 id="DocUow">Controlling Unit Of Work</h4>
 			<p>Unit of work <strong>implicitly</strong> works for the methods 
 			defined above. 
@@ -91,7 +97,9 @@ connection and transaction, both repositories use same unit of work. Note that
 no need to UnitOfWork attribute if this is an application service method. Also see '<a href="#DocUowRestrictions">unit 
 of work method restrictions</a>' section.</p>
 			<p>There are some options of the UnitOfWork attribute. See 'unit of work in 
-detail' section.</p>
+detail' section. UnitOfWork attribute can also be used for classes to configure 
+			all methods of a class. Method attribute overrides the class 
+			attribute if exists.</p>
 			<h5>IUnitOfWorkManager</h5>
 			<p>Second appropaches is using the <strong>IUnitOfWorkManager.Begin(...)</strong> 
 method as 

@@ -1,5 +1,4 @@
 ﻿using System;
-using Abp.Dependency;
 using StackExchange.Redis;
 
 namespace Abp.Runtime.Caching.Redis

@@ -27,7 +27,7 @@ namespace Abp.Runtime.Validation.Interception
 
             using (var validator = _iocResolver.ResolveAsDisposable<MethodInvocationValidator>())
             {
-                validator.Object.Initialize(invocation.Method, invocation.Arguments);
+                validator.Object.Initialize(invocation.MethodInvocationTarget, invocation.Arguments);
                 validator.Object.Validate();
             }
             

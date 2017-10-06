@@ -5,6 +5,7 @@ using System.Linq.Expressions;
 using System.Threading.Tasks;
 using Abp.Dependency;
 using Abp.Domain.Entities;
+using Abp.Domain.Uow;
 using Abp.MultiTenancy;
 using Abp.Reflection.Extensions;
 
@@ -23,6 +24,8 @@ namespace Abp.Domain.Repositories
         /// The multi tenancy side
         /// </summary>
         public static MultiTenancySides? MultiTenancySide { get; private set; }
+
+        public IUnitOfWorkManager UnitOfWorkManager { get; set; }
 
         public IIocResolver IocResolver { get; set; }
 
@@ -210,9 +213,10 @@ namespace Abp.Domain.Repositories
             }
         }
 
-        public virtual async Task DeleteAsync(Expression<Func<TEntity, bool>> predicate)
+        public virtual Task DeleteAsync(Expression<Func<TEntity, bool>> predicate)
         {
             Delete(predicate);
+            return Task.FromResult(0);
         }
 
         public virtual int Count()

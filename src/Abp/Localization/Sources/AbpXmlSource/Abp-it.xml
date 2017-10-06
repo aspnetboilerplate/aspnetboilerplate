@@ -12,5 +12,10 @@
     <text name="DefaultFromSenderDisplayName">Nome visualizzato come mittente</text>
     <text name="DefaultLanguage">Lingua Predefinita</text>
     <text name="ReceiveNotifications" value="Ricevi Notifiche" />
+    <text name="CurrentUserDidNotLoginToTheApplication">L'utente corrente non si è registrato all'applicazione!</text>
+    <text name="TimeZone">Fuso orario</text>
+    <text name="AllOfThesePermissionsMustBeGranted">Le autorizzazioni necessarie non vengono concesse. Tutte queste autorizzazioni devono essere concesse: {0}</text>
+    <text name="AtLeastOneOfThesePermissionsMustBeGranted">Le autorizzazioni necessarie non vengono concesse. Almeno una di queste autorizzazioni deve essere concessa: {0}</text>
+    <text name="MainMenu">Menu principale</text>
   </texts>
 </localizationDictionary>

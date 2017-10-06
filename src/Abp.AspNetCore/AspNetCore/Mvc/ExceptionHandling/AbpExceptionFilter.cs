@@ -9,9 +9,9 @@ using Abp.Events.Bus;
 using Abp.Events.Bus.Exceptions;
 using Abp.Logging;
 using Abp.Reflection;
+using Abp.Runtime.Validation;
 using Abp.Web.Models;
 using Castle.Core.Logging;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Filters;
 
@@ -37,6 +37,11 @@ namespace Abp.AspNetCore.Mvc.ExceptionHandling
 
         public void OnException(ExceptionContext context)
         {
+            if (!context.ActionDescriptor.IsControllerAction())
+            {
+                return;
+            }
+
             var wrapResultAttribute =
                 ReflectionHelper.GetSingleAttributeOfMemberOrDeclaringTypeOrDefault(
                     context.ActionDescriptor.GetMethodInfo(),
@@ -61,7 +66,6 @@ namespace Abp.AspNetCore.Mvc.ExceptionHandling
                 return;
             }
 
-            context.HttpContext.Response.Clear();
             context.HttpContext.Response.StatusCode = GetStatusCode(context);
 
             context.Result = new ObjectResult(
@@ -83,6 +87,11 @@ namespace Abp.AspNetCore.Mvc.ExceptionHandling
                 return context.HttpContext.User.Identity.IsAuthenticated
                     ? (int)HttpStatusCode.Forbidden
                     : (int)HttpStatusCode.Unauthorized;
+            }
+
+            if (context.Exception is AbpValidationException)
+            {
+                return (int)HttpStatusCode.BadRequest;
             }
 
             if (context.Exception is EntityNotFoundException)

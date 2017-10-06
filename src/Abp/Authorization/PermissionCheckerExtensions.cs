@@ -1,4 +1,5 @@
 using System;
+using System.Linq;
 using System.Threading.Tasks;
 using Abp.Collections.Extensions;
 using Abp.Dependency;
@@ -32,7 +33,7 @@ namespace Abp.Authorization
         {
             return AsyncHelper.RunSync(() => permissionChecker.IsGrantedAsync(user, permissionName));
         }
-        
+
         /// <summary>
         /// Checks if given user is granted for given permission.
         /// </summary>
@@ -196,12 +197,18 @@ namespace Abp.Authorization
                 return;
             }
 
+            var localizedPermissionNames = LocalizePermissionNames(permissionChecker, permissionNames);
+
             if (requireAll)
             {
                 throw new AbpAuthorizationException(
                     string.Format(
-                        L(permissionChecker, "AllOfThesePermissionsMustBeGranted", "Required permissions are not granted. All of these permissions must be granted: {0}"),
-                        string.Join(", ", permissionNames)
+                        L(
+                            permissionChecker,
+                            "AllOfThesePermissionsMustBeGranted",
+                            "Required permissions are not granted. All of these permissions must be granted: {0}"
+                        ),
+                        string.Join(", ", localizedPermissionNames)
                     )
                 );
             }
@@ -209,8 +216,12 @@ namespace Abp.Authorization
             {
                 throw new AbpAuthorizationException(
                     string.Format(
-                        L(permissionChecker, "AtLeastOneOfThesePermissionsMustBeGranted", "Required permissions are not granted. At least one of these permissions must be granted: {0}"),
-                        string.Join(", ", permissionNames)
+                        L(
+                            permissionChecker,
+                            "AtLeastOneOfThesePermissionsMustBeGranted",
+                            "Required permissions are not granted. At least one of these permissions must be granted: {0}"
+                        ),
+                        string.Join(", ", localizedPermissionNames)
                     )
                 );
             }
@@ -223,9 +234,33 @@ namespace Abp.Authorization
                 return defaultValue;
             }
 
-            using (var localizationManager = (permissionChecker as IIocManagerAccessor).IocManager.ResolveAsDisposable<ILocalizationManager>())
+            var iocManager = (permissionChecker as IIocManagerAccessor).IocManager;
+            using (var localizationManager = iocManager.ResolveAsDisposable<ILocalizationManager>())
             {
                 return localizationManager.Object.GetString(AbpConsts.LocalizationSourceName, name);
+            }
+        }
+
+        public static string[] LocalizePermissionNames(IPermissionChecker permissionChecker, string[] permissionNames)
+        {
+            if (!(permissionChecker is IIocManagerAccessor))
+            {
+                return permissionNames;
+            }
+
+            var iocManager = (permissionChecker as IIocManagerAccessor).IocManager;
+            using (var localizationContext = iocManager.ResolveAsDisposable<ILocalizationContext>())
+            {
+                using (var permissionManager = iocManager.ResolveAsDisposable<IPermissionManager>())
+                {
+                    return permissionNames.Select(permissionName =>
+                    {
+                        var permission = permissionManager.Object.GetPermissionOrNull(permissionName);
+                        return permission?.DisplayName == null
+                            ? permissionName
+                            : permission.DisplayName.Localize(localizationContext.Object);
+                    }).ToArray();
+                }
             }
         }
     }

@@ -1,5 +1,4 @@
-﻿using System;
-using System.Linq;
+﻿using System.Linq;
 using System.Xml;
 
 namespace Abp.Xml.Extensions
@@ -19,7 +18,7 @@ namespace Abp.Xml.Extensions
         {
             if (node.Attributes == null || node.Attributes.Count <= 0)
             {
-                throw new ApplicationException(node.Name + " node has not " + attributeName + " attribute");
+                throw new AbpException(node.Name + " node has not " + attributeName + " attribute");
             }
 
             return node.Attributes

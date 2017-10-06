@@ -1,0 +1,13 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<localizationDictionary culture="pt-BR">
+  <texts>
+    <text name="InvalidTenancyName" value="O nome da Tenancy não é válido!" />
+    <text name="TenancyNameIsAlreadyTaken" value="O nome da Tenancy {0} já foi usado." />
+    <text name="RoleNameIsAlreadyTaken" value="Nome da função {0} já foi usado." />
+    <text name="RoleDisplayNameIsAlreadyTaken" value="O nome de exibição da função {0} já foi usado." />
+    <text name="CanNotDeleteStaticRole" value="Não é possível excluir uma função estática: {0}" />
+    <text name="CanNotRenameAdminUser" value="Não é possível renomear o nome de usuário da {0} já que este é o usuário padrão do administrador!" />
+    <text name="CanNotDeleteAdminUser" value="Não é possível excluir o usuário {0} já que este é o usuário padrão admin!" />
+    <text name="OrganizationUnitDuplicateDisplayNameWarning" value="Já existe uma unidade organizacional com o nome {0}. Duas unidades com o mesmo nome não pode ser criada no mesmo nível." />
+  </texts>
+</localizationDictionary>

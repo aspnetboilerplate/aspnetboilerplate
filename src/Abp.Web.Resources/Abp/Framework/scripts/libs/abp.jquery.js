@@ -12,7 +12,7 @@
     abp.ajax = function (userOptions) {
         userOptions = userOptions || {};
 
-        var options = $.extend({}, abp.ajax.defaultOpts, userOptions);
+        var options = $.extend(true, {}, abp.ajax.defaultOpts, userOptions);
         options.success = undefined;
         options.error = undefined;
 
@@ -39,7 +39,10 @@
         defaultOpts: {
             dataType: 'json',
             type: 'POST',
-            contentType: 'application/json'
+            contentType: 'application/json',
+            headers: {
+                'X-Requested-With': 'XMLHttpRequest'
+            }
         },
 
         defaultError: {
@@ -176,8 +179,13 @@
         },
 
         ajaxSendHandler: function (event, request, settings) {
+            var token = abp.security.antiForgery.getToken();
+            if (!token) {
+                return;
+            }
+
             if (!settings.headers || settings.headers[abp.security.antiForgery.tokenHeaderName] === undefined) {
-                request.setRequestHeader(abp.security.antiForgery.tokenHeaderName, abp.security.antiForgery.getToken());
+                request.setRequestHeader(abp.security.antiForgery.tokenHeaderName, token);
             }
         }
     });

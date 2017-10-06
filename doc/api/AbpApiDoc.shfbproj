@@ -1,0 +1,159 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="14.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup>
+    <!-- The configuration and platform will be used to determine which assemblies to include from solution and
+				 project documentation sources -->
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <SchemaVersion>2.0</SchemaVersion>
+    <ProjectGuid>{834e9c19-4fe8-418d-822b-69be2b939f89}</ProjectGuid>
+    <SHFBSchemaVersion>2015.6.5.0</SHFBSchemaVersion>
+    <!-- AssemblyName, Name, and RootNamespace are not used by SHFB but Visual Studio adds them anyway -->
+    <AssemblyName>Documentation</AssemblyName>
+    <RootNamespace>Documentation</RootNamespace>
+    <Name>Documentation</Name>
+    <!-- SHFB properties -->
+    <FrameworkVersion>.NET Framework 4.6.1</FrameworkVersion>
+    <OutputPath>.\Help\</OutputPath>
+    <HtmlHelpName>Documentation</HtmlHelpName>
+    <Language>en-US</Language>
+    <DocumentationSources>
+      <DocumentationSource sourceFile="..\..\src\Abp.Zero.EntityFramework\Abp.Zero.EntityFramework.csproj" />
+      <DocumentationSource sourceFile="..\..\src\Abp.Zero.EntityFrameworkCore\Abp.Zero.EntityFrameworkCore.csproj" />
+      <DocumentationSource sourceFile="..\..\src\Abp.Zero.Ldap\Abp.Zero.Ldap.csproj" />
+      <DocumentationSource sourceFile="..\..\src\Abp.Zero.Owin\Abp.Zero.Owin.csproj" />
+      <DocumentationSource sourceFile="..\..\src\Abp.Zero\Abp.Zero.csproj" />
+      <DocumentationSource sourceFile="..\..\src\Abp.Zero.AspNetCore\Abp.Zero.AspNetCore.csproj" />
+      <DocumentationSource sourceFile="..\..\src\Abp.Zero.NHibernate\Abp.Zero.NHibernate.csproj" />
+      <DocumentationSource sourceFile="..\..\src\Abp.Zero.Common\Abp.Zero.Common.csproj" />
+      <DocumentationSource sourceFile="..\..\src\Abp.ZeroCore\Abp.ZeroCore.csproj" />
+      <DocumentationSource sourceFile="..\..\src\Abp.ZeroCore.EntityFrameworkCore\Abp.ZeroCore.EntityFrameworkCore.csproj" />
+      <DocumentationSource sourceFile="..\..\src\Abp.ZeroCore.IdentityServer4\Abp.ZeroCore.IdentityServer4.csproj" />
+      <DocumentationSource sourceFile="..\..\src\Abp.ZeroCore.IdentityServer4.EntityFrameworkCore\Abp.ZeroCore.IdentityServer4.EntityFrameworkCore.csproj" />
+      <DocumentationSource sourceFile="..\..\src\Abp.EntityFramework\Abp.EntityFramework.csproj" />
+      <DocumentationSource sourceFile="..\..\src\Abp\Abp.csproj" />
+      <DocumentationSource sourceFile="..\..\src\Abp.AspNetCore\Abp.AspNetCore.csproj" />
+      <DocumentationSource sourceFile="..\..\src\Abp.AspNetCore.TestBase\Abp.AspNetCore.TestBase.csproj" />
+      <DocumentationSource sourceFile="..\..\src\Abp.AutoMapper\Abp.AutoMapper.csproj" />
+      <DocumentationSource sourceFile="..\..\src\Abp.Castle.Log4Net\Abp.Castle.Log4Net.csproj" />
+      <DocumentationSource sourceFile="..\..\src\Abp.Dapper\Abp.Dapper.csproj" />
+      <DocumentationSource sourceFile="..\..\src\Abp.EntityFramework.Common\Abp.EntityFramework.Common.csproj" />
+      <DocumentationSource sourceFile="..\..\src\Abp.EntityFramework.GraphDiff\Abp.EntityFramework.GraphDiff.csproj" />
+      <DocumentationSource sourceFile="..\..\src\Abp.EntityFrameworkCore\Abp.EntityFrameworkCore.csproj" />
+      <DocumentationSource sourceFile="..\..\src\Abp.FluentMigrator\Abp.FluentMigrator.csproj" />
+      <DocumentationSource sourceFile="..\..\src\Abp.HangFire\Abp.HangFire.csproj" />
+      <DocumentationSource sourceFile="..\..\src\Abp.HangFire.AspNetCore\Abp.HangFire.AspNetCore.csproj" />
+      <DocumentationSource sourceFile="..\..\src\Abp.MailKit\Abp.MailKit.csproj" />
+      <DocumentationSource sourceFile="..\..\src\Abp.MemoryDb\Abp.MemoryDb.csproj" />
+      <DocumentationSource sourceFile="..\..\src\Abp.MongoDB\Abp.MongoDB.csproj" />
+      <DocumentationSource sourceFile="..\..\src\Abp.NHibernate\Abp.NHibernate.csproj" />
+      <DocumentationSource sourceFile="..\..\src\Abp.Owin\Abp.Owin.csproj" />
+      <DocumentationSource sourceFile="..\..\src\Abp.Quartz\Abp.Quartz.csproj" />
+      <DocumentationSource sourceFile="..\..\src\Abp.RedisCache\Abp.RedisCache.csproj" />
+      <DocumentationSource sourceFile="..\..\src\Abp.RedisCache.ProtoBuf\Abp.RedisCache.ProtoBuf.csproj" />
+      <DocumentationSource sourceFile="..\..\src\Abp.TestBase\Abp.TestBase.csproj" />
+      <DocumentationSource sourceFile="..\..\src\Abp.Web\Abp.Web.csproj" />
+      <DocumentationSource sourceFile="..\..\src\Abp.Web.Api\Abp.Web.Api.csproj" />
+      <DocumentationSource sourceFile="..\..\src\Abp.Web.Api.OData\Abp.Web.Api.OData.csproj" />
+      <DocumentationSource sourceFile="..\..\src\Abp.Web.Common\Abp.Web.Common.csproj" />
+      <DocumentationSource sourceFile="..\..\src\Abp.Web.Mvc\Abp.Web.Mvc.csproj" />
+      <DocumentationSource sourceFile="..\..\src\Abp.Web.Resources\Abp.Web.Resources.csproj" />
+      <DocumentationSource sourceFile="..\..\src\Abp.Web.SignalR\Abp.Web.SignalR.csproj" />
+    </DocumentationSources>
+    <SaveComponentCacheCapacity>100</SaveComponentCacheCapacity>
+    <BuildAssemblerVerbosity>OnlyWarningsAndErrors</BuildAssemblerVerbosity>
+    <HelpFileFormat>Website</HelpFileFormat>
+    <IndentHtml>False</IndentHtml>
+    <KeepLogFile>True</KeepLogFile>
+    <DisableCodeBlockComponent>False</DisableCodeBlockComponent>
+    <CleanIntermediates>True</CleanIntermediates>
+    <HelpFileVersion>1.0.0.0</HelpFileVersion>
+    <MaximumGroupParts>4</MaximumGroupParts>
+    <NamespaceGrouping>True</NamespaceGrouping>
+    <SyntaxFilters>C#, ASP.NET</SyntaxFilters>
+    <SdkLinkTarget>Blank</SdkLinkTarget>
+    <RootNamespaceTitle>ASP.NET Boilerplate</RootNamespaceTitle>
+    <RootNamespaceContainer>True</RootNamespaceContainer>
+    <PresentationStyle>VS2013</PresentationStyle>
+    <Preliminary>False</Preliminary>
+    <NamingMethod>MemberName</NamingMethod>
+    <HelpTitle>ABP Api Document</HelpTitle>
+    <ContentPlacement>AboveNamespaces</ContentPlacement>
+    <PlugInConfigurations>
+      <PlugInConfig id="Assembly Binding Redirection" enabled="True">
+        <configuration useGAC="false">
+          <assemblyBinding />
+          <ignoreIfUnresolved>
+            <assemblyIdentity name="AutoMapper" />
+            <assemblyIdentity name="BusinessObjects.Licensing.KeycodeDecoder" />
+            <assemblyIdentity name="Castle.Core" />
+            <assemblyIdentity name="Castle.Facilities.Logging" />
+            <assemblyIdentity name="Castle.Windsor" />
+            <assemblyIdentity name="DapperExtensions.DotnetCore" />
+            <assemblyIdentity name="Hangfire.Core" />
+            <assemblyIdentity name="IdentityServer4" />
+            <assemblyIdentity name="IdentityServer4.AspNetIdentity" />
+            <assemblyIdentity name="log4net" />
+            <assemblyIdentity name="MailKit" />
+            <assemblyIdentity name="Microsoft.VisualStudio.TestTools.UITest.Playback" />
+            <assemblyIdentity name="MimeKit" />
+            <assemblyIdentity name="MongoDB.Driver.Legacy" />
+            <assemblyIdentity name="netstandard" />
+            <assemblyIdentity name="Newtonsoft.Json" />
+            <assemblyIdentity name="NHibernate" />
+            <assemblyIdentity name="Nito.AsyncEx.Coordination" />
+            <assemblyIdentity name="StackExchange.Redis.StrongName" />
+            <assemblyIdentity name="System" />
+          </ignoreIfUnresolved>
+        </configuration>
+      </PlugInConfig>
+    </PlugInConfigurations>
+    <MissingTags>AutoDocumentCtors, AutoDocumentDispose</MissingTags>
+    <ApiFilter>
+      <Filter entryType="Namespace" fullName="Abp.AutoMapper" isExposed="True">
+        <Filter entryType="Class" fullName="Abp.AutoMapper.AutoMapExtensions" filterName="AutoMapExtensions" isExposed="False" />
+      </Filter>
+      <Filter entryType="Namespace" fullName="Abp.Extensions" isExposed="True">
+        <Filter entryType="Class" fullName="Abp.Extensions.ObjectExtensions" filterName="ObjectExtensions" isExposed="False" />
+      </Filter>
+      <Filter entryType="Namespace" fullName="Abp.Json" isExposed="True">
+        <Filter entryType="Class" fullName="Abp.Json.JsonExtensions" filterName="JsonExtensions" isExposed="True">
+          <Filter entryType="Method" fullName="Abp.Json.JsonExtensions.ToJsonString" filterName="ToJsonString" isExposed="False" />
+        </Filter>
+      </Filter>
+      <Filter entryType="Namespace" fullName="Abp.Threading.Extensions" isExposed="True">
+        <Filter entryType="Class" fullName="Abp.Threading.Extensions.LockExtensions" filterName="LockExtensions" isExposed="False" />
+      </Filter>
+    </ApiFilter>
+    <VisibleItems>InheritedMembers, InheritedFrameworkMembers, Protected, ProtectedInternalAsProtected</VisibleItems>
+  </PropertyGroup>
+  <!-- There are no properties for these groups.  AnyCPU needs to appear in order for Visual Studio to perform
+			 the build.  The others are optional common platform types that may appear. -->
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|x86' ">
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|x86' ">
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|x64' ">
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|x64' ">
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|Win32' ">
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|Win32' ">
+  </PropertyGroup>
+  <!-- Import the SHFB build targets -->
+  <Import Project="$(SHFBROOT)\SandcastleHelpFileBuilder.targets" />
+  <!-- The pre-build and post-build event properties must appear *after* the targets file import in order to be
+			 evaluated correctly. -->
+  <PropertyGroup>
+    <PreBuildEvent>
+    </PreBuildEvent>
+    <PostBuildEvent>
+    </PostBuildEvent>
+    <RunPostBuildEvent>OnBuildSuccess</RunPostBuildEvent>
+  </PropertyGroup>
+</Project>

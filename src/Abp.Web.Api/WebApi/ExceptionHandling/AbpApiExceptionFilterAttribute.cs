@@ -2,6 +2,7 @@ using System;
 using System.Linq;
 using System.Net;
 using System.Net.Http;
+using System.Web;
 using System.Web.Http.Filters;
 using Abp.Dependency;
 using Abp.Domain.Entities;
@@ -10,6 +11,7 @@ using Abp.Events.Bus.Exceptions;
 using Abp.Extensions;
 using Abp.Logging;
 using Abp.Runtime.Session;
+using Abp.Runtime.Validation;
 using Abp.Web.Models;
 using Abp.WebApi.Configuration;
 using Abp.WebApi.Controllers;
@@ -34,14 +36,14 @@ namespace Abp.WebApi.ExceptionHandling
 
         public IAbpSession AbpSession { get; set; }
 
-        private readonly IAbpWebApiConfiguration _configuration;
+        protected IAbpWebApiConfiguration Configuration { get; }
 
         /// <summary>
         /// Initializes a new instance of the <see cref="AbpApiExceptionFilterAttribute"/> class.
         /// </summary>
         public AbpApiExceptionFilterAttribute(IAbpWebApiConfiguration configuration)
         {
-            _configuration = configuration;
+            Configuration = configuration;
             Logger = NullLogger.Instance;
             EventBus = NullEventBus.Instance;
             AbpSession = NullAbpSession.Instance;
@@ -55,7 +57,7 @@ namespace Abp.WebApi.ExceptionHandling
         {
             var wrapResultAttribute = HttpActionDescriptorHelper
                 .GetWrapResultAttributeOrNull(context.ActionContext.ActionDescriptor) ??
-                _configuration.DefaultWrapResultAttribute;
+                Configuration.DefaultWrapResultAttribute;
 
             if (wrapResultAttribute.LogError)
             {
@@ -72,23 +74,44 @@ namespace Abp.WebApi.ExceptionHandling
                 return;
             }
 
-            context.Response = context.Request.CreateResponse(
-                GetStatusCode(context),
-                new AjaxResponse(
-                    SingletonDependency<ErrorInfoBuilder>.Instance.BuildForException(context.Exception),
-                    context.Exception is Abp.Authorization.AbpAuthorizationException)
-            );
+            if (context.Exception is HttpException)
+            {
+                var httpException = context.Exception as HttpException;
+                var httpStatusCode = (HttpStatusCode) httpException.GetHttpCode();
+
+                context.Response = context.Request.CreateResponse(
+                    httpStatusCode,
+                    new AjaxResponse(
+                        new ErrorInfo(httpException.Message),
+                        httpStatusCode == HttpStatusCode.Unauthorized || httpStatusCode == HttpStatusCode.Forbidden
+                    )
+                );
+            }
+            else
+            {
+                context.Response = context.Request.CreateResponse(
+                    GetStatusCode(context),
+                    new AjaxResponse(
+                        SingletonDependency<ErrorInfoBuilder>.Instance.BuildForException(context.Exception),
+                        context.Exception is Abp.Authorization.AbpAuthorizationException)
+                );
+            }
 
             EventBus.Trigger(this, new AbpHandledExceptionData(context.Exception));
         }
 
-        private HttpStatusCode GetStatusCode(HttpActionExecutedContext context)
+        protected virtual HttpStatusCode GetStatusCode(HttpActionExecutedContext context)
         {
             if (context.Exception is Abp.Authorization.AbpAuthorizationException)
             {
                 return AbpSession.UserId.HasValue
                     ? HttpStatusCode.Forbidden
                     : HttpStatusCode.Unauthorized;
+            }
+
+            if (context.Exception is AbpValidationException)
+            {
+                return HttpStatusCode.BadRequest;
             }
 
             if (context.Exception is EntityNotFoundException)
@@ -99,14 +122,14 @@ namespace Abp.WebApi.ExceptionHandling
             return HttpStatusCode.InternalServerError;
         }
 
-        private bool IsIgnoredUrl(Uri uri)
+        protected virtual bool IsIgnoredUrl(Uri uri)
         {
             if (uri == null || uri.AbsolutePath.IsNullOrEmpty())
             {
                 return false;
             }
 
-            return _configuration.ResultWrappingIgnoreUrls.Any(url => uri.AbsolutePath.StartsWith(url));
+            return Configuration.ResultWrappingIgnoreUrls.Any(url => uri.AbsolutePath.StartsWith(url));
         }
     }
 }

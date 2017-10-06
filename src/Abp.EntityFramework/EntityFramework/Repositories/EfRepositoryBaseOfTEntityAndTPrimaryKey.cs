@@ -1,10 +1,13 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Data;
+using System.Data.Common;
 using System.Data.Entity;
 using System.Linq;
 using System.Linq.Expressions;
 using System.Threading.Tasks;
 using Abp.Collections.Extensions;
+using Abp.Data;
 using Abp.Domain.Entities;
 using Abp.Domain.Repositories;
 
@@ -13,7 +16,7 @@ namespace Abp.EntityFramework.Repositories
     /// <summary>
     /// Implements IRepository for Entity Framework.
     /// </summary>
-    /// <typeparam name="TDbContext">DbContext which contains <see cref="TEntity"/>.</typeparam>
+    /// <typeparam name="TDbContext">DbContext which contains <typeparamref name="TEntity"/>.</typeparam>
     /// <typeparam name="TEntity">Type of the Entity for this repository</typeparam>
     /// <typeparam name="TPrimaryKey">Primary key of the entity</typeparam>
     public class EfRepositoryBase<TDbContext, TEntity, TPrimaryKey> : AbpRepositoryBase<TEntity, TPrimaryKey>, IRepositoryWithDbContext
@@ -23,14 +26,43 @@ namespace Abp.EntityFramework.Repositories
         /// <summary>
         /// Gets EF DbContext object.
         /// </summary>
-        public virtual TDbContext Context { get { return _dbContextProvider.GetDbContext(MultiTenancySide); } }
+        public virtual TDbContext Context => _dbContextProvider.GetDbContext(MultiTenancySide);
 
         /// <summary>
         /// Gets DbSet for given entity.
         /// </summary>
-        public virtual DbSet<TEntity> Table { get { return Context.Set<TEntity>(); } }
-        
+        public virtual DbSet<TEntity> Table => Context.Set<TEntity>();
+
+        public virtual DbTransaction Transaction
+        {
+            get
+            {
+                return (DbTransaction)TransactionProvider?.GetActiveTransaction(new ActiveTransactionProviderArgs
+                {
+                    {"ContextType", typeof(TDbContext) },
+                    {"MultiTenancySide", MultiTenancySide }
+                });
+            }
+        }
+
+        public virtual DbConnection Connection
+        {
+            get
+            {
+                var connection = Context.Database.Connection;
+
+                if (connection.State != ConnectionState.Open)
+                {
+                    connection.Open();
+                }
+
+                return connection;
+            }
+        }
+
         private readonly IDbContextProvider<TDbContext> _dbContextProvider;
+
+        public IActiveTransactionProvider TransactionProvider { private get; set; }
 
         /// <summary>
         /// Constructor
