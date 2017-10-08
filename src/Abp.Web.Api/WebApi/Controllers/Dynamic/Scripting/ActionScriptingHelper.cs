@@ -1,6 +1,6 @@
 ﻿using System.Linq;
 using System.Reflection;
-using System.Text;
+using Abp.Collections.Extensions;
 using Abp.Extensions;
 using Abp.Reflection;
 
@@ -22,25 +22,11 @@ namespace Abp.WebApi.Controllers.Dynamic.Scripting
                 return baseUrl;
             }
 
-            var urlBuilder = new StringBuilder(baseUrl);
-            if (!baseUrl.Contains("?"))
-            {
-                urlBuilder.Append("?");
-            }
+            var qsBuilderParams = primitiveParameters
+                .Select(p => $"{{ name: '{p.Name.ToCamelCase()}', value: " + p.Name.ToCamelCase() + " }")
+                .JoinAsString(", ");
 
-            for (var i = 0; i < primitiveParameters.Length; i++)
-            {
-                var parameterInfo = primitiveParameters[i];
-
-                if (i > 0)
-                {
-                    urlBuilder.Append("&");
-                }
-
-                urlBuilder.Append(parameterInfo.Name.ToCamelCase() + "=' + encodeURIComponent(" + parameterInfo.Name.ToCamelCase() + ") + '");
-            }
-
-            return urlBuilder.ToString();
+            return baseUrl + $"' + abp.utils.buildQueryString([{qsBuilderParams}]) + '";
         }
 
         public static string GenerateJsMethodParameterList(MethodInfo methodInfo, string ajaxParametersName)
