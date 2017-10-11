@@ -173,6 +173,8 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Abp.ZeroCore.Tests", "test\
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Abp.Castle.Log4Net.Tests", "test\Abp.Castle.Log4Net.Tests\Abp.Castle.Log4Net.Tests.csproj", "{F6F5F70B-2217-403F-AB87-6DFA9AD6692F}"
 EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Abp.QuartzCore", "src\Abp.QuartzCore\Abp.QuartzCore.csproj", "{C83BF865-0EC4-4F9D-962D-922B6DD67A2D}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -483,6 +485,10 @@ Global
 		{F6F5F70B-2217-403F-AB87-6DFA9AD6692F}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{F6F5F70B-2217-403F-AB87-6DFA9AD6692F}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{F6F5F70B-2217-403F-AB87-6DFA9AD6692F}.Release|Any CPU.Build.0 = Release|Any CPU
+		{C83BF865-0EC4-4F9D-962D-922B6DD67A2D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{C83BF865-0EC4-4F9D-962D-922B6DD67A2D}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{C83BF865-0EC4-4F9D-962D-922B6DD67A2D}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{C83BF865-0EC4-4F9D-962D-922B6DD67A2D}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -565,6 +571,7 @@ Global
 		{0AD3082B-68F2-4FE2-B53E-8BE6BEA2EB74} = {1E6B9E8D-D5C1-4AD7-89F9-7179FEFD7C01}
 		{0CA8B27D-292C-4D57-AD88-EB0073C68F31} = {1E6B9E8D-D5C1-4AD7-89F9-7179FEFD7C01}
 		{F6F5F70B-2217-403F-AB87-6DFA9AD6692F} = {1E6B9E8D-D5C1-4AD7-89F9-7179FEFD7C01}
+		{C83BF865-0EC4-4F9D-962D-922B6DD67A2D} = {DFF0464B-5402-4DD6-86F5-2AEC1163B232}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {5A1CB38E-F77D-4A40-B3A9-9A70C3F3BC6D}

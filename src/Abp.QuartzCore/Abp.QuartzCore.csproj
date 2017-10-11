@@ -1,0 +1,15 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>netstandard2.0</TargetFramework>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Quartz" Version="3.0.0-beta1" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\Abp\Abp.csproj" />
+  </ItemGroup>
+
+</Project>
