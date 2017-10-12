@@ -7,7 +7,7 @@ using System.Text;
 
 namespace Abp.MailKit
 {
-    public static class EmailExtensitons
+    public static class EmailExtensions
     {
         /// <summary>
         /// A modified version of CreateFromMailMessage() method in https://github.com/jstedfast/MimeKit/blob/master/MimeKit/MimeMessage.cs
