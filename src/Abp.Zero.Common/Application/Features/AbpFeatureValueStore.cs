@@ -83,40 +83,36 @@ namespace Abp.Application.Features
             return null;
         }
 
+        [UnitOfWork]
         public virtual async Task SetEditionFeatureValueAsync(int editionId, string featureName, string value)
         {
-            using (var uow = _unitOfWorkManager.Begin())
+            using (_unitOfWorkManager.Current.SetTenantId(null))
             {
-                using (_unitOfWorkManager.Current.SetTenantId(null))
+                if (await GetEditionValueOrNullAsync(editionId, featureName) == value)
                 {
-                    if (await GetEditionValueOrNullAsync(editionId, featureName) == value)
+                    return;
+                }
+
+                var currentFeature = await _editionFeatureRepository.FirstOrDefaultAsync(f => f.EditionId == editionId && f.Name == featureName);
+
+                var feature = _featureManager.GetOrNull(featureName);
+                if (feature == null || feature.DefaultValue == value)
+                {
+                    if (currentFeature != null)
                     {
-                        return;
+                        await _editionFeatureRepository.DeleteAsync(currentFeature);
                     }
 
-                    var currentFeature = await _editionFeatureRepository.FirstOrDefaultAsync(f => f.EditionId == editionId && f.Name == featureName);
+                    return;
+                }
 
-                    var feature = _featureManager.GetOrNull(featureName);
-                    if (feature == null || feature.DefaultValue == value)
-                    {
-                        if (currentFeature != null)
-                        {
-                            await _editionFeatureRepository.DeleteAsync(currentFeature);
-                        }
-
-                        return;
-                    }
-
-                    if (currentFeature == null)
-                    {
-                        await _editionFeatureRepository.InsertAsync(new EditionFeatureSetting(editionId, featureName, value));
-                    }
-                    else
-                    {
-                        currentFeature.Value = value;
-                    }
-
-                    await uow.CompleteAsync();
+                if (currentFeature == null)
+                {
+                    await _editionFeatureRepository.InsertAsync(new EditionFeatureSetting(editionId, featureName, value));
+                }
+                else
+                {
+                    currentFeature.Value = value;
                 }
             }
         }
