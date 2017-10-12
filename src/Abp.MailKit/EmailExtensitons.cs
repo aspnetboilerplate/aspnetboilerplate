@@ -181,7 +181,7 @@ namespace Abp.MailKit
             return message;
         }
 
-        static MimePart GetMimePart(AttachmentBase item)
+        private static MimePart GetMimePart(AttachmentBase item)
         {
             var mimeType = item.ContentType.ToString();
             var contentType = ContentType.Parse(mimeType);
@@ -191,7 +191,8 @@ namespace Abp.MailKit
             if (contentType.MediaType.Equals("text", StringComparison.OrdinalIgnoreCase))
             {
                 // Original: part = new TextPart(contentType);
-                // Due to consturctor of TextPart(ContentType contentType) being internal, mimic the instantiation by using MimePart(ContentType contentType)
+                // Due to constructor of TextPart(ContentType contentType) being internal, 
+                // mimic the instantiation by using MimePart(ContentType contentType)
                 part = new MimePart(contentType);
             }
             else
@@ -236,23 +237,23 @@ namespace Abp.MailKit
         }
 
         /// <summary>
-		/// Convert a <see cref="System.Net.Mail.MailAddress"/>
-		/// to a <see cref="MailboxAddress"/>.
-		/// </summary>
-		/// <returns>The equivalent <see cref="MailboxAddress"/>.</returns>
-		/// <param name="address">The mail address.</param>
-		static MailboxAddress ToMailboxAddress(this MailAddress address)
+        /// Convert a <see cref="System.Net.Mail.MailAddress"/>
+        /// to a <see cref="MailboxAddress"/>.
+        /// </summary>
+        /// <returns>The equivalent <see cref="MailboxAddress"/>.</returns>
+        /// <param name="address">The mail address.</param>
+		private static MailboxAddress ToMailboxAddress(this MailAddress address)
         {
             return address != null ? new MailboxAddress(address.DisplayName, address.Address) : null;
         }
 
         /// <summary>
-		/// Convert a <see cref="System.Net.Mail.MailAddressCollection"/>
-		/// to a <see cref="InternetAddressList"/>.
-		/// </summary>
-		/// <returns>The equivalent <see cref="InternetAddressList"/>.</returns>
-		/// <param name="addresses">The mail address.</param>
-		static InternetAddressList ToInternetAddressList(this MailAddressCollection addresses)
+        /// Convert a <see cref="System.Net.Mail.MailAddressCollection"/>
+        /// to a <see cref="InternetAddressList"/>.
+        /// </summary>
+        /// <returns>The equivalent <see cref="InternetAddressList"/>.</returns>
+        /// <param name="addresses">The mail address.</param>
+		private static InternetAddressList ToInternetAddressList(this MailAddressCollection addresses)
         {
             if (addresses == null)
                 return null;
