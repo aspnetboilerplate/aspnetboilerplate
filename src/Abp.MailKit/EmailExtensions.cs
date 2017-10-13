@@ -25,7 +25,9 @@ namespace Abp.MailKit
             foreach (var field in mail.Headers.AllKeys)
             {
                 foreach (var value in mail.Headers.GetValues(field))
+                {
                     headers.Add(new Header(field, value));
+                }
             }
 
             var message = new MimeMessage(ParserOptions.Default, headers, RfcComplianceMode.Strict);
@@ -119,7 +121,9 @@ namespace Abp.MailKit
                     var part = GetMimePart(view);
 
                     if (view.BaseUri != null)
+                    {
                         part.ContentLocation = view.BaseUri;
+                    }
 
                     if (view.LinkedResources.Count > 0)
                     {
@@ -129,7 +133,9 @@ namespace Abp.MailKit
                         related.ContentType.Parameters.Add("type", type);
 
                         if (view.BaseUri != null)
+                        {
                             related.ContentLocation = view.BaseUri;
+                        }
 
                         related.Add(part);
 
@@ -256,7 +262,9 @@ namespace Abp.MailKit
         private static InternetAddressList ToInternetAddressList(this MailAddressCollection addresses)
         {
             if (addresses == null)
+            {
                 return null;
+            }
 
             var list = new InternetAddressList();
             foreach (var address in addresses)
