@@ -68,13 +68,21 @@ public class MyModule : AbpModule
     public void ConfigureServices(IServiceCollection services)
     {
         //...
+        
+        services.AddAbpIdentity&lt;Tenant, User, Role&gt;()
+            ...
+            <strong>.AddAbpIdentityServer()</strong>;
+        
+        //...
+        
         services.AddIdentityServer()
-            .AddTemporarySigningCredential()
+            .AddDeveloperSigningCredential()
             .AddInMemoryIdentityResources(IdentityServerConfig.GetIdentityResources())
             .AddInMemoryApiResources(IdentityServerConfig.GetApiResources())
             .AddInMemoryClients(IdentityServerConfig.GetClients())
             <strong>.AddAbpPersistedGrants&lt;YourDbContext&gt;()</strong>
             <strong>.AddAbpIdentityServer&lt;User&gt;()</strong>;
+
         //...
     }
 
@@ -86,15 +94,15 @@ public class MyModule : AbpModule
     }
 }</pre>
 	<p>
-            I added <strong>services.AddIdentityServer()</strong> just after
-			<strong>IdentityRegistrar.Register(services)</strong> and added 
-			app.UseIdentityServer() just afterAuthConfigurer.Configure in the 
-			startup project.</p>
+            1) Added <strong>.AddAbpIdentityServer()</strong> after 
+			AddAbpIdentity... chain. In ABP the startup template, AddAbpIdentity 
+			is inside IdentityRegistrar.Register(services) method. So, you can 
+			chain like <em>IdentityRegistrar.Register(services)</em><em><strong>.AddAbpIdentityServer()</strong>.</em></p>
 	<p>
-            <strong>AddAbpIdentityServer&lt;User&gt;()</strong> is the main method 
-	that integrates IdentityServer4 with Abp.ZeroCore and Microsoft ASP.NET Core 
-	Identity. It gets your User class a generic parameter.&nbsp;Add this just 
-			after adding Microsoft ASP.NET Core Identity.</p>
+            2) Added <strong>services.AddIdentityServer()</strong> just after
+			<strong>IdentityRegistrar.Register(services)</strong> and added 
+			app.UseIdentityServer() just <strong>app.UseAuthentication()</strong> in the 
+			startup project.</p>
 	<h4>IdentityServerConfig Class</h4>
 	<p>We have used IdentityServerConfig class to get identity resources, api 
 	resources and clients. You can find more information about this class in 
@@ -188,6 +196,12 @@ public class MyModule : AbpModule
         AutomaticChallenge = true
     });</pre>
 	<p>I added this just after app.UseIdentityServer() in the startup project.</p>
+		<div class="bs-callout bs-callout-warning">
+			<h4>IdentityServer4.AccessTokenValidation Status</h4>
+			<p><em>IdentityServer4.AccessTokenValidation</em> package is not 
+			ready for ASP.NET Core 2.0 yet (at the time we write this document). 
+			See https://github.com/IdentityServer/IdentityServer4/issues/1055</p>
+		</div>
 	<h3>Test</h3>
 	<p>Now, our identity server is ready to get requests from clients. We can 
 	create a console application to make requests and get responses.</p>
