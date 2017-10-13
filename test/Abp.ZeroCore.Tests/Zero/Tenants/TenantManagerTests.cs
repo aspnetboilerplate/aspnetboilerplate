@@ -1,8 +1,6 @@
 ﻿using System.Linq;
 using System.Threading.Tasks;
-using Abp.Domain.Repositories;
 using Abp.Domain.Uow;
-using Abp.MultiTenancy;
 using Abp.ZeroCore.SampleApp.Application;
 using Abp.ZeroCore.SampleApp.Core;
 using Shouldly;
@@ -13,13 +11,11 @@ namespace Abp.Zero.Tenants
     public class TenantManagerTests : AbpZeroTestBase
     {
         private readonly TenantManager _tenantManager;
-        private readonly IRepository<TenantFeatureSetting, long> _tenantFeatureSettingRepository;
         private readonly IUnitOfWorkManager _unitOfWorkManager;
 
         public TenantManagerTests()
         {
             _tenantManager = Resolve<TenantManager>();
-            _tenantFeatureSettingRepository = Resolve<IRepository<TenantFeatureSetting, long>>();
             _unitOfWorkManager = Resolve<IUnitOfWorkManager>();
         }
 
