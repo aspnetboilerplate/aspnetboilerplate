@@ -29,7 +29,7 @@ namespace Abp.TestBase.SampleApplication.Tests.Auditing
             base.PreInitialize();
             _auditingStore = Substitute.For<IAuditingStore>();
             LocalIocManager.IocContainer.Register(
-                Component.For<IAuditingStore>().UsingFactoryMethod(() => _auditingStore).LifestyleSingleton()
+                Component.For<IAuditingStore>().Instance(_auditingStore).LifestyleSingleton()
                 );
         }
 
