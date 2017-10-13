@@ -16,6 +16,7 @@
     <GenerateAssemblyCopyrightAttribute>false</GenerateAssemblyCopyrightAttribute>
     <GeneratePackageOnBuild>False</GeneratePackageOnBuild>
     <RootNamespace>Abp</RootNamespace>
+	<Description>Abp.HangFire</Description>
   </PropertyGroup>
 
   <ItemGroup>
@@ -30,7 +31,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Include="Hangfire.Core" Version="1.6.16" />
+    <PackageReference Include="Hangfire.Core" Version="1.6.17" />
   </ItemGroup>
 
 </Project>

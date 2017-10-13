@@ -1,3 +1,5 @@
+using System.Globalization;
+
 namespace Abp.Localization
 {
     /// <summary>
@@ -32,6 +34,24 @@ namespace Abp.Localization
         /// Is this the language disabled?
         /// </summary>
         public bool IsDisabled { get; set; }
+
+        /// <summary>
+        /// Is this language Right To Left?
+        /// </summary>
+        public bool IsRightToLeft
+        {
+            get
+            {
+                try
+                {
+                    return CultureInfo.GetCultureInfo(Name).TextInfo?.IsRightToLeft ?? false;
+                }
+                catch
+                {
+                    return false;
+                }
+            }
+        }
 
         /// <summary>
         /// Creates a new <see cref="LanguageInfo"/> object.

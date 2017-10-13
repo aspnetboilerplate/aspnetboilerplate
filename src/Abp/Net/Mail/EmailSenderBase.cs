@@ -23,12 +23,24 @@ namespace Abp.Net.Mail
 
         public virtual async Task SendAsync(string to, string subject, string body, bool isBodyHtml = true)
         {
-            await SendAsync(Configuration.DefaultFromAddress, to, subject, body, isBodyHtml);
+            await SendAsync(new MailMessage
+            {
+                To = { to },
+                Subject = subject,
+                Body = body,
+                IsBodyHtml = isBodyHtml
+            });
         }
 
         public virtual void Send(string to, string subject, string body, bool isBodyHtml = true)
         {
-            Send(Configuration.DefaultFromAddress, to, subject, body, isBodyHtml);
+            Send(new MailMessage
+            {
+                To = { to },
+                Subject = subject,
+                Body = body,
+                IsBodyHtml = isBodyHtml
+            });
         }
 
         public virtual async Task SendAsync(string from, string to, string subject, string body, bool isBodyHtml = true)

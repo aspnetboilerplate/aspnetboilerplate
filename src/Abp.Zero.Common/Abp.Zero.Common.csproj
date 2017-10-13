@@ -12,6 +12,7 @@
     <GenerateAssemblyCompanyAttribute>false</GenerateAssemblyCompanyAttribute>
     <GenerateAssemblyProductAttribute>false</GenerateAssemblyProductAttribute>
     <RootNamespace>Abp</RootNamespace>
+    <Description>Abp.Zero.Common</Description>
   </PropertyGroup>
 
   <ItemGroup>

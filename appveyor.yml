@@ -1,53 +1,10 @@
+version: 1.0.{build}
 configuration: Release
-version: 3.0.0-beta{build}
 image: Visual Studio 2017
-
-nuget:
-  disable_publish_on_pr: true
-
-before_build:
-- cmd: set PATH=C:\Program Files (x86)\Microsoft Visual Studio\2017\Enterprise\MSBuild\15.0\Bin;C:\Program Files (x86)\Microsoft Visual Studio\2017\Community\MSBuild\15.0\Bin;C:\Program Files (x86)\Microsoft Visual Studio\2017\Professional\MSBuild\15.0\Bin;%PATH%
-- cmd: nuget install nuget.commandline -source https://dotnet.myget.org/F/nuget-build -prerelease -excludeversion
-- cmd: set PATH=%appveyor_build_folder%\NuGet.CommandLine\tools;%PATH%
-- cmd: dotnet.exe restore
-
-after_build:
-- ps: >-
-    $versionSuffix=(Get-Item Env:APPVEYOR_BUILD_NUMBER).Value
-    
-    Set-Location "nupkg"
-    
-    .\pack.ps1 -versionSuffix "$versionSuffix"
-
-build:
-  verbosity: minimal
-
-pull_requests:  
+pull_requests:
   do_not_increment_build_number: true
+  
+build_script:
+- ps: .\build.ps1
 
-test:
-  assemblies:
-  - test\Abp.Tests\bin\Release\net46\Abp.Tests.dll
-  - test\Abp.AspNetCore.Tests\bin\Release\net46\Abp.AspNetCore.Tests.dll
-  - test\Abp.Web.Tests\bin\Release\net46\Abp.Web.Tests.dll
-  - test\Abp.Web.Common.Tests\bin\Release\net46\Abp.Web.Common.Tests.dll
-  - test\Abp.Web.Api.Tests\bin\Release\net46\Abp.Web.Api.Tests.dll
-  - test\Abp.Web.Mvc.Tests\bin\Release\net46\Abp.Web.Mvc.Tests.dll
-  - test\Abp.AutoMapper.Tests\bin\Release\net46\Abp.AutoMapper.dll
-  - test\Abp.EntityFramework.Tests\bin\Release\net46\Abp.EntityFramework.Tests.dll
-  - test\Abp.EntityFramework.GraphDiff.Tests\bin\Release\net46\Abp.EntityFramework.GraphDiff.Tests.dll
-  - test\Abp.EntityFrameworkCore.Tests\bin\Release\net46\Abp.EntityFrameworkCore.Tests.dll
-#  - test\Abp.EntityFrameworkCore.Dapper.Tests\bin\Release\netcoreapp1.1\Abp.EntityFrameworkCore.Dapper.Tests.dll
-  - test\Abp.MemoryDb.Tests\bin\Release\net46\Abp.MemoryDb.Tests.dll
-  - test\Abp.Quartz.Tests\bin\Release\net46\Abp.Quartz.Tests.dll
-  - test\Abp.TestBase.Tests\bin\Release\net46\Abp.TestBase.Tests.dll
-  - test\Abp.TestBase.SampleApplication.Tests\bin\Release\net46\Abp.TestBase.SampleApplication.Tests.dll
-#  - test\Abp.Dapper.Tests\bin\Release\net46\Abp.Dapper.Tests.dll
-#  - test\Abp.NHibernate.Tests\bin\Release\net46\Abp.NHibernate.Tests.dll
-  - test\Abp.Zero.SampleApp.Tests\bin\Release\net452\Abp.Zero.SampleApp.Tests.dll
- # - test\Abp.Zero.SampleApp.EntityFrameworkCore.Tests\bin\Release\net461\Abp.Zero.SampleApp.EntityFrameworkCore.Tests.dll
- # - test\Abp.Zero.SampleApp.NHibernateTests\bin\Release\net452\Abp.Zero.SampleApp.NHibernateTests.dll
-
-artifacts:
-- path: nupkg\*.nupkg
-  name: nuget-packages
+test: off

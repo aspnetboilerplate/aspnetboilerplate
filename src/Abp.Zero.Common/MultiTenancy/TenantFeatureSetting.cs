@@ -6,13 +6,8 @@ namespace Abp.MultiTenancy
     /// <summary>
     /// Feature setting for a Tenant (<see cref="AbpTenant{TUser}"/>).
     /// </summary>
-    public class TenantFeatureSetting : FeatureSetting, IMustHaveTenant
+    public class TenantFeatureSetting : FeatureSetting
     {
-        /// <summary>
-        /// Tenant's Id.
-        /// </summary>
-        public virtual int TenantId { get; set; }
-
         /// <summary>
         /// Initializes a new instance of the <see cref="TenantFeatureSetting"/> class.
         /// </summary>

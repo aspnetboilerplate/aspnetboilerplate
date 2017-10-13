@@ -22,7 +22,8 @@ namespace Abp.EntityFrameworkCore.Tests.Tests
         [Fact]
         public async Task Should_Explicitly_Load_Collections()
         {
-            using (var uow = Resolve<IUnitOfWorkManager>().Begin())
+            var uowManager = Resolve<IUnitOfWorkManager>();
+            using (var uow = uowManager.Begin())
             {
                 var blog = await _blogRepository.FirstOrDefaultAsync(b => b.Name == "test-blog-1");
                 blog.ShouldNotBeNull();

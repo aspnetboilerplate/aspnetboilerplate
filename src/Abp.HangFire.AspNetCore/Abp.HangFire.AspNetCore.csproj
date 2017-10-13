@@ -9,6 +9,7 @@
     <PackageId>Abp.HangFire.AspNetCore</PackageId>
     <PackageTags>asp.net;asp.net mvc;boilerplate;application framework;web framework;framework;domain driven design;HangFire;background jobs; aspnet core</PackageTags>
     <RootNamespace>Abp</RootNamespace>
+	<Description>Abp.HangFire.AspNetCore</Description>
   </PropertyGroup>
 
   <ItemGroup>
@@ -23,7 +24,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Include="Hangfire.AspNetCore" Version="1.6.16" />
+    <PackageReference Include="Hangfire.AspNetCore" Version="1.6.17" />
     <PackageReference Include="System.Runtime" Version="4.3.0" />
   </ItemGroup>
 
