@@ -15,7 +15,7 @@ namespace Abp.Reflection
                 .Where(s => s.EndsWith(".dll") || s.EndsWith(".exe"));
 
             return assemblyFiles.Select(
-                Assembly.LoadFile
+                file => Assembly.Load(AssemblyName.GetAssemblyName(file))
             ).ToList();
         }
     }
