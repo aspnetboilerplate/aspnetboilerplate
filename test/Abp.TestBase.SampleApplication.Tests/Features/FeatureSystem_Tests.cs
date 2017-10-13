@@ -42,7 +42,7 @@ namespace Abp.TestBase.SampleApplication.Tests.Features
             featureValueStore.GetValueOrNullAsync(1, _featureManager.Get(SampleFeatureProvider.Names.MaxContactCount)).Returns(Task.FromResult("20"));
 
             LocalIocManager.IocContainer.Register(
-                Component.For<IFeatureValueStore>().UsingFactoryMethod(() => featureValueStore).LifestyleSingleton()
+                Component.For<IFeatureValueStore>().Instance(featureValueStore).LifestyleSingleton()
                 );
 
             var featureChecker = Resolve<IFeatureChecker>();
@@ -58,7 +58,7 @@ namespace Abp.TestBase.SampleApplication.Tests.Features
             featureValueStore.GetValueOrNullAsync(1, _featureManager.Get(SampleFeatureProvider.Names.Contacts)).Returns(Task.FromResult("true"));
 
             LocalIocManager.IocContainer.Register(
-                Component.For<IFeatureValueStore>().UsingFactoryMethod(() => featureValueStore).LifestyleSingleton()
+                Component.For<IFeatureValueStore>().Instance(featureValueStore).LifestyleSingleton()
                 );
 
             var contactListAppService = Resolve<IContactListAppService>();
@@ -73,7 +73,7 @@ namespace Abp.TestBase.SampleApplication.Tests.Features
             featureValueStore.GetValueOrNullAsync(1, _featureManager.Get(SampleFeatureProvider.Names.MaxContactCount)).Returns(Task.FromResult("20"));
 
             LocalIocManager.IocContainer.Register(
-                Component.For<IFeatureValueStore>().UsingFactoryMethod(() => featureValueStore).LifestyleSingleton()
+                Component.For<IFeatureValueStore>().Instance(featureValueStore).LifestyleSingleton()
                 );
 
             var contactListAppService = Resolve<IContactListAppService>();

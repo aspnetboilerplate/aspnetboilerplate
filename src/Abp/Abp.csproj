@@ -31,9 +31,8 @@
     <PackageReference Include="Newtonsoft.Json" Version="10.0.3" />
     <PackageReference Include="System.Collections.Immutable" Version="1.4.0" />
     <PackageReference Include="System.Configuration.ConfigurationManager" Version="4.4.0" />
-    <PackageReference Include="System.Linq.Dynamic.Core" Version="1.0.7.7" />
-    <PackageReference Include="Castle.LoggingFacility" Version="4.0.0" />
-    <PackageReference Include="Castle.Core" Version="4.1.1" />
+    <PackageReference Include="System.Linq.Dynamic.Core" Version="1.0.7.9" />
+    <PackageReference Include="Castle.LoggingFacility" Version="4.1.0" />
     <PackageReference Include="System.Linq.Queryable" Version="4.3.0" />
     <PackageReference Include="System.Data.Common" Version="4.3.0" />
     <PackageReference Include="System.Threading" Version="4.3.0" />
@@ -45,6 +44,7 @@
     <PackageReference Include="Microsoft.Extensions.Options" Version="2.0.0" />
     <PackageReference Include="Nito.AsyncEx.Context" Version="1.1.0" />
     <PackageReference Include="Nito.AsyncEx.Coordination" Version="1.0.2" />
+    <PackageReference Include="Castle.Core" Version="4.2.1" />
   </ItemGroup>
 
 </Project>
