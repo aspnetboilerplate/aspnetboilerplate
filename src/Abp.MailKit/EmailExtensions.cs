@@ -242,7 +242,7 @@ namespace Abp.MailKit
         /// </summary>
         /// <returns>The equivalent <see cref="MailboxAddress"/>.</returns>
         /// <param name="address">The mail address.</param>
-		private static MailboxAddress ToMailboxAddress(this MailAddress address)
+        private static MailboxAddress ToMailboxAddress(this MailAddress address)
         {
             return address != null ? new MailboxAddress(address.DisplayName, address.Address) : null;
         }
@@ -253,7 +253,7 @@ namespace Abp.MailKit
         /// </summary>
         /// <returns>The equivalent <see cref="InternetAddressList"/>.</returns>
         /// <param name="addresses">The mail address.</param>
-		private static InternetAddressList ToInternetAddressList(this MailAddressCollection addresses)
+        private static InternetAddressList ToInternetAddressList(this MailAddressCollection addresses)
         {
             if (addresses == null)
                 return null;
