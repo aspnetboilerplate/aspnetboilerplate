@@ -250,7 +250,7 @@ namespace Abp.MailKit
         /// <param name="address">The mail address.</param>
         private static MailboxAddress ToMailboxAddress(this MailAddress address)
         {
-            return address != null ? new MailboxAddress(address.DisplayName, address.Address) : null;
+            return address == null ? null : new MailboxAddress(address.DisplayName, address.Address);
         }
 
         /// <summary>
