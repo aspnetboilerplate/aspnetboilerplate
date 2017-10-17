@@ -164,7 +164,7 @@ namespace Abp.EntityFrameworkCore
                  */
 
                 Expression<Func<TEntity, bool>> softDeleteFilter = e => !((ISoftDelete)e).IsDeleted || ((ISoftDelete)e).IsDeleted != IsSoftDeleteFilterEnabled;
-                expression = expression == null ? softDeleteFilter : CombinExpressions(expression, softDeleteFilter);
+                expression = expression == null ? softDeleteFilter : CombineExpressions(expression, softDeleteFilter);
             }
 
             if (typeof(IMayHaveTenant).IsAssignableFrom(typeof(TEntity)))
@@ -175,7 +175,7 @@ namespace Abp.EntityFrameworkCore
                  * So, we made a workaround to make it working. It works same as above.
                  */
                 Expression<Func<TEntity, bool>> mayHaveTenantFilter = e => ((IMayHaveTenant)e).TenantId == CurrentTenantId || (((IMayHaveTenant)e).TenantId == CurrentTenantId) == IsMayHaveTenantFilterEnabled;
-                expression = expression == null ? mayHaveTenantFilter : CombinExpressions(expression, mayHaveTenantFilter);
+                expression = expression == null ? mayHaveTenantFilter : CombineExpressions(expression, mayHaveTenantFilter);
             }
 
             if (typeof(IMustHaveTenant).IsAssignableFrom(typeof(TEntity)))
@@ -186,7 +186,7 @@ namespace Abp.EntityFrameworkCore
                  * So, we made a workaround to make it working. It works same as above.
                  */
                 Expression<Func<TEntity, bool>> mustHaveTenantFilter = e => ((IMustHaveTenant)e).TenantId == CurrentTenantId || (((IMustHaveTenant)e).TenantId == CurrentTenantId) == IsMustHaveTenantFilterEnabled;
-                expression = expression == null ? mustHaveTenantFilter : CombinExpressions(expression, mustHaveTenantFilter);
+                expression = expression == null ? mustHaveTenantFilter : CombineExpressions(expression, mustHaveTenantFilter);
             }
 
             return expression;
@@ -476,7 +476,7 @@ namespace Abp.EntityFrameworkCore
             return AbpSession.TenantId;
         }
 
-        protected virtual Expression<Func<T, bool>> CombinExpressions<T>(Expression<Func<T, bool>> expression1, Expression<Func<T, bool>> expression2)
+        protected virtual Expression<Func<T, bool>> CombineExpressions<T>(Expression<Func<T, bool>> expression1, Expression<Func<T, bool>> expression2)
         {
             var parameter = Expression.Parameter(typeof(T));
 
