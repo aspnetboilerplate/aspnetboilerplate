@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 15
-VisualStudioVersion = 15.0.26730.10
+VisualStudioVersion = 15.0.26730.16
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "src", "src", "{DFF0464B-5402-4DD6-86F5-2AEC1163B232}"
 EndProject
@@ -107,8 +107,14 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Abp.Dapper.Tests", "test\Ab
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "solution-items", "solution-items", "{0A8896A1-EC2E-44D8-BD7E-34D2E46A16CF}"
 	ProjectSection(SolutionItems) = preProject
+		.gitattributes = .gitattributes
+		.gitignore = .gitignore
 		appveyor.yml = appveyor.yml
+		build.cake = build.cake
+		build.ps1 = build.ps1
 		common.props = common.props
+		LICENSE = LICENSE
+		README.md = README.md
 	EndProjectSection
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Abp.HangFire.AspNetCore", "src\Abp.HangFire.AspNetCore\Abp.HangFire.AspNetCore.csproj", "{1CC8525B-3F36-4ED0-BD5A-18DCEA19167E}"
@@ -165,7 +171,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Abp.ZeroCore.SampleApp", "t
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Abp.ZeroCore.Tests", "test\Abp.ZeroCore.Tests\Abp.ZeroCore.Tests.csproj", "{0CA8B27D-292C-4D57-AD88-EB0073C68F31}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Abp.Castle.Log4Net.Tests", "test\Abp.Castle.Log4Net.Tests\Abp.Castle.Log4Net.Tests.csproj", "{F6F5F70B-2217-403F-AB87-6DFA9AD6692F}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Abp.Castle.Log4Net.Tests", "test\Abp.Castle.Log4Net.Tests\Abp.Castle.Log4Net.Tests.csproj", "{F6F5F70B-2217-403F-AB87-6DFA9AD6692F}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

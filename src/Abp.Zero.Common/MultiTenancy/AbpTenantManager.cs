@@ -38,6 +38,8 @@ namespace Abp.MultiTenancy
 
         public IFeatureManager FeatureManager { get; set; }
 
+        public IUnitOfWorkManager UnitOfWorkManager { get; set; }
+
         protected IRepository<TTenant> TenantRepository { get; set; }
 
         protected IRepository<TenantFeatureSetting, long> TenantFeatureRepository { get; set; }
@@ -153,7 +155,11 @@ namespace Abp.MultiTenancy
             }
 
             //Get the current feature setting
-            var currentSetting = await TenantFeatureRepository.FirstOrDefaultAsync(f => f.TenantId == tenant.Id && f.Name == featureName);
+            TenantFeatureSetting currentSetting;
+            using (UnitOfWorkManager.Current.SetTenantId(tenant.Id))
+            {
+                currentSetting = await TenantFeatureRepository.FirstOrDefaultAsync(f => f.Name == featureName);
+            }
 
             //Get the feature
             var feature = FeatureManager.GetOrNull(featureName);

@@ -5,7 +5,6 @@
 
     //Current application root path (including virtual directory if exists).
     abp.appPath = abp.appPath || '/';
-
     abp.pageLoadTime = new Date();
 
     //Converts given path to absolute path using abp.appPath variable.
@@ -36,7 +35,8 @@
                 abp.multiTenancy.tenantIdCookieName,
                 tenantId.toString(),
                 new Date(new Date().getTime() + 5 * 365 * 86400000), //5 years
-                abp.appPath
+                abp.appPath,
+                abp.domain
             );
         } else {
             abp.utils.deleteCookie(abp.multiTenancy.tenantIdCookieName, abp.appPath);
@@ -170,7 +170,7 @@
     abp.auth.tokenCookieName = 'Abp.AuthToken';
 
     abp.auth.setToken = function (authToken, expireDate) {
-        abp.utils.setCookieValue(abp.auth.tokenCookieName, authToken, expireDate, abp.appPath);
+        abp.utils.setCookieValue(abp.auth.tokenCookieName, authToken, expireDate, abp.appPath, abp.domain);
     };
 
     abp.auth.getToken = function () {
@@ -707,7 +707,7 @@
      * @param {Date} expireDate (optional). If not specified the cookie will expire at the end of session.
      * @param {string} path (optional)
      */
-    abp.utils.setCookieValue = function (key, value, expireDate, path) {
+    abp.utils.setCookieValue = function (key, value, expireDate, path, domain) {
         var cookieValue = encodeURIComponent(key) + '=';
 
         if (value) {
@@ -720,6 +720,10 @@
 
         if (path) {
             cookieValue = cookieValue + "; path=" + path;
+        }
+
+        if (domain) {
+            cookieValue = cookieValue + "; domain=" + domain;
         }
 
         document.cookie = cookieValue;

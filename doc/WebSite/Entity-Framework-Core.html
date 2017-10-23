@@ -31,7 +31,7 @@ AbpEntityFrameworkCoreModule</strong>.</p>
     }
 }</pre>
 	<p>Constructor should get a <strong>DbContextOptions&lt;T&gt;</strong> as shown 
-	above.</p>
+	above. Parameter name must be <strong>options</strong>. It's not possible to change it because ABP provides it as anonymous object parameter.</p>
 	<h3>Configuration</h3>
 	<h4>In Startup Class</h4>
 	<p>Use <strong>AddAbpDbContext</strong> method on service collection in

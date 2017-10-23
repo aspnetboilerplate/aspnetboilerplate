@@ -20,9 +20,9 @@ namespace Abp.EntityFramework.Tests.Repositories
             var fakeModuleDbContextProvider = NSubstitute.Substitute.For<IDbContextProvider<MyModuleDbContext>>();
 
             LocalIocManager.IocContainer.Register(
-                Component.For<IDbContextProvider<MyBaseDbContext>>().UsingFactoryMethod(() => fakeBaseDbContextProvider),
-                Component.For<IDbContextProvider<MyMainDbContext>>().UsingFactoryMethod(() => fakeMainDbContextProvider),
-                Component.For<IDbContextProvider<MyModuleDbContext>>().UsingFactoryMethod(() => fakeModuleDbContextProvider),
+                Component.For<IDbContextProvider<MyBaseDbContext>>().Instance(fakeBaseDbContextProvider),
+                Component.For<IDbContextProvider<MyMainDbContext>>().Instance(fakeMainDbContextProvider),
+                Component.For<IDbContextProvider<MyModuleDbContext>>().Instance(fakeModuleDbContextProvider),
                 Component.For<IDbContextEntityFinder>().ImplementedBy<EfDbContextEntityFinder>().LifestyleTransient(),
                 Component.For<EfGenericRepositoryRegistrar>().LifestyleTransient()
                 );
