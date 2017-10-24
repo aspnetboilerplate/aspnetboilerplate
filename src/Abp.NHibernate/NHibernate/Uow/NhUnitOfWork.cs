@@ -1,4 +1,4 @@
-using System.Data;
+using System.Data.Common;
 using System.Threading.Tasks;
 using Abp.Dependency;
 using Abp.Domain.Uow;
@@ -22,7 +22,7 @@ namespace Abp.NHibernate.Uow
         /// <see cref="NhUnitOfWork"/> uses this DbConnection if it's set.
         /// This is usually set in tests.
         /// </summary>
-        public IDbConnection DbConnection { get; set; }
+        public DbConnection DbConnection { get; set; }
 
         private readonly ISessionFactory _sessionFactory;
         private ITransaction _transaction;
