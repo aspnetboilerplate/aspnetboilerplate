@@ -32,7 +32,7 @@
 
   <ItemGroup>
     <PackageReference Include="FluentNHibernate" Version="2.0.3" />
-    <PackageReference Include="NHibernate" Version="4.1.1.4000" />
+    <PackageReference Include="NHibernate" Version="5.0.0" />
   </ItemGroup>
 
   <ItemGroup Condition=" '$(TargetFramework)' == 'net461' ">

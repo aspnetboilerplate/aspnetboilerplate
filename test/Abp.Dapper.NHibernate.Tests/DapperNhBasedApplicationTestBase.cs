@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Data;
+using System.Data.Common;
 using System.Data.SQLite;
 
 using Abp.TestBase;
@@ -26,7 +27,7 @@ namespace Abp.Dapper.NHibernate.Tests
             _connection.Open();
 
             LocalIocManager.IocContainer.Register(
-                Component.For<IDbConnection>().UsingFactoryMethod(() => _connection).LifestyleSingleton()
+                Component.For<DbConnection>().UsingFactoryMethod(() => _connection).LifestyleSingleton()
             );
         }
 
