@@ -1,6 +1,10 @@
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 using Abp.Authorization;
+using Abp.Domain.Uow;
+using Abp.MultiTenancy;
+using Abp.Zero.Configuration;
 using Abp.Zero.SampleApp.MultiTenancy;
 using Abp.Zero.SampleApp.Roles;
 using Shouldly;
@@ -10,6 +14,17 @@ namespace Abp.Zero.SampleApp.Tests.Roles
 {
     public class RoleManager_Tests : SampleAppTestBase
     {
+        private readonly TenantManager _tenantManager;
+        private readonly IUnitOfWorkManager _unitOfWorkManager;
+        private readonly IRoleManagementConfig _roleManagementConfig;
+
+        public RoleManager_Tests()
+        {
+            _tenantManager = Resolve<TenantManager>();
+            _unitOfWorkManager = Resolve<IUnitOfWorkManager>();
+            _roleManagementConfig = Resolve<IRoleManagementConfig>();
+        }
+
         [Fact]
         public async Task Should_Create_And_Retrieve_Role()
         {
@@ -71,36 +86,58 @@ namespace Abp.Zero.SampleApp.Tests.Roles
         [Fact]
         public async Task PermissionWithFeatureDependencyTests()
         {
-            //Create tenant
-            var firstTenantId = UsingDbContext(context =>
+            _roleManagementConfig.StaticRoles.Add(
+                new StaticRoleDefinition(
+                    "admin",
+                    MultiTenancySides.Tenant)
+            );
+
+            Tenant tenant;
+            Role adminRole;
+
+            using (var uow = _unitOfWorkManager.Begin())
             {
-                var firstTenant = new Tenant("Tenant1", "Tenant1");
-                context.Tenants.Add(firstTenant);
+                tenant = new Tenant("Tenant1", "Tenant1");
+                await _tenantManager.CreateAsync(tenant);
+                await _unitOfWorkManager.Current.SaveChangesAsync();
 
-                context.SaveChanges();
-                return firstTenant.Id;
-            });
+                using (_unitOfWorkManager.Current.SetTenantId(tenant.Id))
+                {
+                    AbpSession.TenantId = tenant.Id;
 
-            AbpSession.TenantId = firstTenantId;
+                    await RoleManager.CreateStaticRoles(tenant.Id);
+                    await _unitOfWorkManager.Current.SaveChangesAsync();
 
-            var role1 = new Role(firstTenantId, "TestRole", "Test Role");
-            await RoleManager.CreateAsync(role1);
+                    adminRole = RoleManager.Roles.Single(r => r.Name == "admin");
+                    await RoleManager.GrantAllPermissionsAsync(adminRole);
+                }
 
-            await RoleManager.GrantAllPermissionsAsync(role1);
+                await uow.CompleteAsync();
+            }
 
-            (await RoleManager.IsGrantedAsync(role1.Id, PermissionManager.GetPermission("PermissionWithFeatureDependency"))).ShouldBe(false);
-            (await RoleManager.IsGrantedAsync(role1.Id, PermissionManager.GetPermission("Permission1"))).ShouldBe(true);
-            (await RoleManager.IsGrantedAsync(role1.Id, PermissionManager.GetPermission("Permission2"))).ShouldBe(true);
-            (await RoleManager.IsGrantedAsync(role1.Id, PermissionManager.GetPermission("Permission3"))).ShouldBe(true);
-            (await RoleManager.IsGrantedAsync(role1.Id, PermissionManager.GetPermission("Permission4"))).ShouldBe(true);
+            using (var uow = _unitOfWorkManager.Begin())
+            {
+                using (_unitOfWorkManager.Current.SetTenantId(tenant.Id))
+                {
+                    AbpSession.TenantId = tenant.Id;
 
-            var grantedPermissions = await RoleManager.GetGrantedPermissionsAsync(role1);
+                    (await RoleManager.IsGrantedAsync(adminRole.Id, "PermissionWithFeatureDependency")).ShouldBe(false);
+                    (await RoleManager.IsGrantedAsync(adminRole.Id, "Permission1")).ShouldBe(true);
+                    (await RoleManager.IsGrantedAsync(adminRole.Id, "Permission2")).ShouldBe(true);
+                    (await RoleManager.IsGrantedAsync(adminRole.Id, "Permission3")).ShouldBe(true);
+                    (await RoleManager.IsGrantedAsync(adminRole.Id, "Permission4")).ShouldBe(true);
 
-            grantedPermissions.Count.ShouldBe(4);
-            grantedPermissions.ShouldContain(p => p.Name == "Permission1");
-            grantedPermissions.ShouldContain(p => p.Name == "Permission2");
-            grantedPermissions.ShouldContain(p => p.Name == "Permission3");
-            grantedPermissions.ShouldContain(p => p.Name == "Permission4");
+                    var grantedPermissions = await RoleManager.GetGrantedPermissionsAsync(adminRole);
+
+                    grantedPermissions.Count.ShouldBe(4);
+                    grantedPermissions.ShouldContain(p => p.Name == "Permission1");
+                    grantedPermissions.ShouldContain(p => p.Name == "Permission2");
+                    grantedPermissions.ShouldContain(p => p.Name == "Permission3");
+                    grantedPermissions.ShouldContain(p => p.Name == "Permission4");
+                }
+
+                await uow.CompleteAsync();
+            }
         }
     }
 }
