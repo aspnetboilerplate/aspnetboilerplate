@@ -336,7 +336,6 @@ namespace Abp.Authorization.Roles
             var permissions = _permissionManager.GetAllPermissions(role.GetMultiTenancySide())
                 .Where(permission =>
                     permission.FeatureDependency == null ||
-                    permission.FeatureDependency != null &&
                     permission.FeatureDependency.IsSatisfied(FeatureDependencyContext)
                 );
 
