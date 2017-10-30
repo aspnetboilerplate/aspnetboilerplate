@@ -59,6 +59,37 @@ public class MyModule : AbpModule
 	<a href="https://identityserver4.readthedocs.io" target="_blank">own 
 	documentation</a> to understand and use it. In this document, we only show 
 	additional configuration needed to integrate to Abp.ZeroCore.</p>
+	<h4>JwtTokenMiddleware</h4>
+	<p>In ASP.NET Core 2.0, you could not add same authentication scheme names <strong>twice</strong>.
+	Abp template has been already registed default <strong>"Bearer"</strong> for JWT token authentication,
+	so IdentityServer could not use it. In this case we will use <strong>"IdentityBearer"</strong> for IdentityServer authentication scheme.
+	In <strong>JwtTokenMiddleware.cs</strong> in <strong>ProjectName.Web.Core/Authentication/JwtBearer</strong> alter class as shown below:</p>
+<pre>
+public static class JwtTokenMiddleware
+{
+    public static IApplicationBuilder UseJwtTokenMiddleware(this IApplicationBuilder app)
+    {
+        return UseJwtTokenMiddleware(app, JwtBearerDefaults.AuthenticationScheme);
+    }
+
+    public static IApplicationBuilder UseJwtTokenMiddleware(this IApplicationBuilder app, string authenticationScheme)
+    {
+        return app.Use(async (ctx, next) =>
+        {
+            if (ctx.User.Identity?.IsAuthenticated != true)
+            {
+                var result = await ctx.AuthenticateAsync(authenticationScheme);
+                if (result.Succeeded && result.Principal != null)
+                {
+                    ctx.User = result.Principal;
+                }
+            }
+
+            await next();
+        });
+    }
+}
+</pre>
 	<h4>Startup Class</h4>
 	<p>In the ASP.NET Core <strong>Startup class</strong>, we should add IdentityServer to 
 	<strong>service collection</strong> and to ASP.NET Core <strong>middleware pipeline</strong>. 
@@ -187,12 +218,6 @@ public class MyModule : AbpModule
             });
 </pre>
 	<p>I added this just after <strong>services.AddIdentityServer()</strong> in the startup project.</p>
-		<div class="bs-callout bs-callout-warning">
-			<h4>IdentityServer4.AccessTokenValidation Status</h4>
-			<p><em>IdentityServer4.AccessTokenValidation</em> package is not 
-			ready for ASP.NET Core 2.0 yet (at the time we write this document). 
-			See https://github.com/IdentityServer/IdentityServer4/issues/1055</p>
-		</div>
 	<h3>Test</h3>
 	<p>Now, our identity server is ready to get requests from clients. We can 
 	create a console application to make requests and get responses.</p>
@@ -275,7 +300,7 @@ namespace IdentityServerIntegrationDemo.ConsoleApiClient
             }
 
             var content = await response.Content.ReadAsStringAsync();
-<strong>            var ajaxResponse = JsonConvert.DeserializeObject&lt;AjaxResponse&lt;PagedResultDto&lt;UserListDto&gt;&gt;&gt;(content);
+<strong>            var ajaxResponse = JsonConvert.DeserializeObject&lt;AjaxResponse&lt;PagedResultDto&lt;UserDto&gt;&gt;&gt;(content);
 </strong>            if (!ajaxResponse.Success)
             {
                 throw new Exception(ajaxResponse.Error?.Message ?? "Remote service throws exception!");
@@ -290,12 +315,6 @@ namespace IdentityServerIntegrationDemo.ConsoleApiClient
                 Console.WriteLine(user.ToJsonString(indented: true));
             }
         }
-    }
-    
-    internal class UserListDto
-    {
-        public int Id { get; set; }
-        public string UserName { get; set; }
     }
 }</pre>
 	<p>Before running this application, ensure that your web project is up and 
