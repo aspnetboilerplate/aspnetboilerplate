@@ -51,7 +51,7 @@ namespace Abp.BackgroundJobs
             Timer.Period = JobPollPeriod;
         }
 
-        public async Task EnqueueAsync<TJob, TArgs>(TArgs args, BackgroundJobPriority priority = BackgroundJobPriority.Normal, TimeSpan? delay = null)
+        public async Task<string> EnqueueAsync<TJob, TArgs>(TArgs args, BackgroundJobPriority priority = BackgroundJobPriority.Normal, TimeSpan? delay = null)
             where TJob : IBackgroundJob<TArgs>
         {
             var jobInfo = new BackgroundJobInfo
@@ -67,6 +67,25 @@ namespace Abp.BackgroundJobs
             }
 
             await _store.InsertAsync(jobInfo);
+
+            return jobInfo.Id.ToString();
+        }
+
+        public async Task<bool> DeleteAsync(string jobId)
+        {
+            if (long.TryParse(jobId, out long finalJobId) == false)
+            {
+                throw new ArgumentException($"The jobId '{jobId}' should be a number.", nameof(jobId));
+            }
+
+            BackgroundJobInfo jobInfo = await _store.GetAsync(finalJobId);
+            if (jobInfo == null)
+            {
+                return false;
+            }
+
+            await _store.DeleteAsync(jobInfo);
+            return true;
         }
 
         protected override void DoWork()

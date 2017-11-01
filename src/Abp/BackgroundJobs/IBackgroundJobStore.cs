@@ -9,6 +9,13 @@ namespace Abp.BackgroundJobs
     public interface IBackgroundJobStore
     {
         /// <summary>
+        /// Gets a BackgroundJobInfo based on the given jobId.
+        /// </summary>
+        /// <param name="jobId">The Job Unique Identifier.</param>
+        /// <returns>The BackgroundJobInfo object.</returns>
+        Task<BackgroundJobInfo> GetAsync(long jobId);
+
+        /// <summary>
         /// Inserts a background job.
         /// </summary>
         /// <param name="jobInfo">Job information.</param>
