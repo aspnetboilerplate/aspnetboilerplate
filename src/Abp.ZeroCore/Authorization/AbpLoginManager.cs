@@ -309,6 +309,7 @@ namespace Abp.Authorization
                                 user.TenantId = tenantId;
                                 user.AuthenticationSource = source.Object.Name;
                                 user.Password = _passwordHasher.HashPassword(user, Guid.NewGuid().ToString("N").Left(16)); //Setting a random password since it will not be used
+                                user.SetNormalizedNames();
 
                                 if (user.Roles == null)
                                 {
