@@ -24,6 +24,11 @@ namespace Abp.BackgroundJobs
             _jobs = new Dictionary<long, BackgroundJobInfo>();
         }
 
+        public Task<BackgroundJobInfo> GetAsync(long jobId)
+        {
+            return Task.FromResult(_jobs[jobId]);
+        }
+
         public Task InsertAsync(BackgroundJobInfo jobInfo)
         {
             jobInfo.Id = Interlocked.Increment(ref _lastId);

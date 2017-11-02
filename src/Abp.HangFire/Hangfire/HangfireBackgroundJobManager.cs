@@ -48,14 +48,32 @@ namespace Abp.Hangfire
             base.WaitToStop();
         }
 
-        public Task EnqueueAsync<TJob, TArgs>(TArgs args, BackgroundJobPriority priority = BackgroundJobPriority.Normal,
+        public Task<string> EnqueueAsync<TJob, TArgs>(TArgs args, BackgroundJobPriority priority = BackgroundJobPriority.Normal,
             TimeSpan? delay = null) where TJob : IBackgroundJob<TArgs>
         {
+            string jobUniqueIdentifier = string.Empty;
+
             if (!delay.HasValue)
-                HangfireBackgroundJob.Enqueue<TJob>(job => job.Execute(args));
+            { 
+                jobUniqueIdentifier = HangfireBackgroundJob.Enqueue<TJob>(job => job.Execute(args));
+            }
             else
-                HangfireBackgroundJob.Schedule<TJob>(job => job.Execute(args), delay.Value);
-            return Task.FromResult(0);
+            {
+                jobUniqueIdentifier = HangfireBackgroundJob.Schedule<TJob>(job => job.Execute(args), delay.Value);
+            }
+
+            return Task.FromResult(jobUniqueIdentifier);
+        }
+
+        public Task<bool> DeleteAsync(string jobId)
+        {
+            if (string.IsNullOrWhiteSpace(jobId))
+            {
+                throw new ArgumentNullException(nameof(jobId));
+            }
+
+            bool successfulDeletion = HangfireBackgroundJob.Delete(jobId);
+            return Task.FromResult(successfulDeletion);
         }
     }
 }

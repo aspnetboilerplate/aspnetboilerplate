@@ -10,6 +10,11 @@ namespace Abp.BackgroundJobs
     /// </summary>
     public class NullBackgroundJobStore : IBackgroundJobStore
     {
+        public Task<BackgroundJobInfo> GetAsync(long jobId)
+        {
+            return Task.FromResult(new BackgroundJobInfo());
+        }
+
         public Task InsertAsync(BackgroundJobInfo jobInfo)
         {
             return Task.FromResult(0);

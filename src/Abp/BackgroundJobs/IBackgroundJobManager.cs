@@ -18,7 +18,15 @@ namespace Abp.BackgroundJobs
         /// <param name="args">Job arguments.</param>
         /// <param name="priority">Job priority.</param>
         /// <param name="delay">Job delay (wait duration before first try).</param>
-        Task EnqueueAsync<TJob, TArgs>(TArgs args, BackgroundJobPriority priority = BackgroundJobPriority.Normal, TimeSpan? delay = null)
+        /// <returns>Unique identifier of a background job.</returns>
+        Task<string> EnqueueAsync<TJob, TArgs>(TArgs args, BackgroundJobPriority priority = BackgroundJobPriority.Normal, TimeSpan? delay = null)
             where TJob : IBackgroundJob<TArgs>;
+
+        /// <summary>
+        /// Deletes a job with the specified jobId.
+        /// </summary>
+        /// <param name="jobId">The Job Unique Identifier.</param>
+        /// <returns><c>True</c> on a successfull state transition, <c>false</c> otherwise.</returns>
+        Task<bool> DeleteAsync(string jobId);
     }
 }
