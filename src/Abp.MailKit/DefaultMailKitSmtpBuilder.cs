@@ -1,4 +1,5 @@
-﻿using Abp.Dependency;
+﻿using System.Net;
+using Abp.Dependency;
 using Abp.Extensions;
 using Abp.Net.Mail.Smtp;
 using MailKit.Net.Smtp;
@@ -38,14 +39,15 @@ namespace Abp.MailKit
                 _smtpEmailSenderConfiguration.EnableSsl
             );
 
-            var userName = _smtpEmailSenderConfiguration.UserName;
-            if (!userName.IsNullOrEmpty())
+            if (_smtpEmailSenderConfiguration.UseDefaultCredentials)
             {
-                client.Authenticate(
-                    _smtpEmailSenderConfiguration.UserName, 
-                    _smtpEmailSenderConfiguration.Password
-                );
+                return;
             }
+
+            client.Authenticate(
+                _smtpEmailSenderConfiguration.UserName,
+                _smtpEmailSenderConfiguration.Password
+            );
         }
     }
 }
