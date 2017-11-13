@@ -1,5 +1,4 @@
-﻿using System;
-using Abp.AspNetCore.Mvc.Controllers;
+﻿using Abp.AspNetCore.Mvc.Controllers;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Abp.AspNetCore.App.Controllers
