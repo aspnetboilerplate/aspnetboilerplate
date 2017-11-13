@@ -12,6 +12,7 @@ namespace Abp.Authorization
         protected PermissionDefinitionContextBase()
         {
             Permissions = new PermissionDictionary();
+
         }
 
         public Permission CreatePermission(
