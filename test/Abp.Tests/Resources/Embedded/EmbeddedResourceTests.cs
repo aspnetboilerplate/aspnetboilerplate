@@ -31,5 +31,15 @@ namespace Abp.Tests.Resources.Embedded
             Assert.True(resource.Assembly == GetType().GetAssembly());
             Assert.True(resource.Content.Length > 0);
         }
+
+        [Fact]
+        public void Should_Get_Embedded_Resource_With_Dash_In_Name()
+        {
+            var resource = _embeddedResourceManager.GetResource("/MyApp/MyResources/js/MyScriptFile1.js");
+
+            resource.ShouldNotBeNull();
+            Assert.True(resource.Assembly == GetType().GetAssembly());
+            Assert.True(resource.Content.Length > 0);
+        }
     }
 }
