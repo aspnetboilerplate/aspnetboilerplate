@@ -46,7 +46,7 @@ namespace Abp.NHibernate.Uow
         protected override void BeginUow()
         {
             Session = DbConnection != null
-                ? _sessionFactory.OpenSession(DbConnection)
+                ? _sessionFactory.WithOptions().Connection(DbConnection).OpenSession()
                 : _sessionFactory.OpenSession();
 
             if (Options.IsTransactional == true)

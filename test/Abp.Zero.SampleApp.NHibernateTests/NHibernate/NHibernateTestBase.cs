@@ -3,6 +3,7 @@ using System.Data;
 using System.Data.Common;
 using System.Data.SQLite;
 using System.Linq;
+using Abp.MultiTenancy;
 using Abp.TestBase;
 using Abp.Zero.SampleApp.MultiTenancy;
 using Abp.Zero.SampleApp.NHibernate.TestDatas;
@@ -33,7 +34,7 @@ namespace Abp.Zero.SampleApp.NHibernate
 
         public void UsingSession(Action<ISession> action)
         {
-            using (var session = LocalIocManager.Resolve<ISessionFactory>().OpenSession(_connection))
+            using (var session = LocalIocManager.Resolve<ISessionFactory>().WithOptions().Connection(_connection).OpenSession())
             {
                 using (var transaction = session.BeginTransaction())
                 {
@@ -48,7 +49,7 @@ namespace Abp.Zero.SampleApp.NHibernate
         {
             T result;
 
-            using (var session = LocalIocManager.Resolve<ISessionFactory>().OpenSession(_connection))
+            using (var session = LocalIocManager.Resolve<ISessionFactory>().WithOptions().Connection(_connection).OpenSession())
             {
                 using (var transaction = session.BeginTransaction())
                 {
@@ -66,7 +67,7 @@ namespace Abp.Zero.SampleApp.NHibernate
             return UsingSession(
                 session =>
                 {
-                    return session.Query<Tenant>().Single(t => t.TenancyName == Tenant.DefaultTenantName);
+                    return session.Query<Tenant>().Single(t => t.TenancyName == AbpTenantBase.DefaultTenantName);
                 });
         }
 

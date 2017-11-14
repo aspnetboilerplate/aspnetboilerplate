@@ -1,5 +1,4 @@
-﻿using System.Reflection;
-using Abp.Localization;
+﻿using Abp.Localization;
 using Abp.Localization.Dictionaries;
 using Abp.Localization.Dictionaries.Json;
 using Abp.Localization.Dictionaries.Xml;
@@ -20,7 +19,11 @@ namespace Abp.Tests.Localization.Json
             LocalIocManager.Register<ILanguageManager, LanguageManager>();
             LocalIocManager.Register<ILanguageProvider, DefaultLanguageProvider>();
 
-            _bootstrapper = AbpBootstrapper.Create<MyLangModule>(LocalIocManager);
+            _bootstrapper = AbpBootstrapper.Create<MyLangModule>(options =>
+            {
+                options.IocManager = LocalIocManager;
+            });
+
             _bootstrapper.Initialize();
         }
 

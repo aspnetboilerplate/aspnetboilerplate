@@ -30,7 +30,11 @@ namespace Abp.TestBase
         protected AbpIntegratedTestBase(bool initializeAbp = true)
         {
             LocalIocManager = new IocManager();
-            AbpBootstrapper = AbpBootstrapper.Create<TStartupModule>(LocalIocManager);
+
+            AbpBootstrapper = AbpBootstrapper.Create<TStartupModule>(options =>
+            {
+                options.IocManager = LocalIocManager;
+            });
 
             if (initializeAbp)
             {
