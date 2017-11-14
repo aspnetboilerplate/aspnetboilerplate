@@ -2,8 +2,7 @@
 using System.Threading;
 
 using Abp.Dependency;
-using Abp.Quartz.Quartz;
-using Abp.Quartz.Quartz.Configuration;
+using Abp.Quartz.Configuration;
 using Abp.TestBase;
 
 using Quartz;

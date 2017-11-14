@@ -3,7 +3,7 @@ using Abp.Extensions;
 using Quartz;
 using Quartz.Spi;
 
-namespace Abp.Quartz.Quartz
+namespace Abp.Quartz
 {
     public class AbpQuartzJobFactory : IJobFactory
     {

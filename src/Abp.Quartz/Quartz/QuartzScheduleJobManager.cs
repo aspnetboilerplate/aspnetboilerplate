@@ -2,11 +2,11 @@
 using System.Threading.Tasks;
 using Abp.BackgroundJobs;
 using Abp.Dependency;
-using Abp.Quartz.Quartz.Configuration;
+using Abp.Quartz.Configuration;
 using Abp.Threading.BackgroundWorkers;
 using Quartz;
 
-namespace Abp.Quartz.Quartz
+namespace Abp.Quartz
 {
     public class QuartzScheduleJobManager : BackgroundWorkerBase, IQuartzScheduleJobManager, ISingletonDependency
     {
