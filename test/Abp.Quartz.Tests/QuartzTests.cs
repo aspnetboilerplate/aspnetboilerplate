@@ -1,15 +1,10 @@
 ﻿using System;
 using System.Threading;
-
 using Abp.Dependency;
-using Abp.Quartz.Quartz;
-using Abp.Quartz.Quartz.Configuration;
+using Abp.Quartz.Configuration;
 using Abp.TestBase;
-
 using Quartz;
-
 using Shouldly;
-
 using Xunit;
 
 namespace Abp.Quartz.Tests
