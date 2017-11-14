@@ -223,32 +223,39 @@ namespace Abp.NHibernate.Interceptors
 
         private static void NormalizeDateTimePropertiesForComponentType(object componentObject, IType type)
         {
-            var componentType = type as ComponentType;
-            if (componentType != null)
+            if (componentObject == null)
             {
-                for (int i = 0; i < componentType.PropertyNames.Length; i++)
+                return;
+            }
+
+            var componentType = type as ComponentType;
+            if (componentType == null)
+            {
+                return;
+            }
+
+            for (int i = 0; i < componentType.PropertyNames.Length; i++)
+            {
+                var propertyName = componentType.PropertyNames[i];
+                if (componentType.Subtypes[i].IsComponentType)
                 {
-                    var propertyName = componentType.PropertyNames[i];
-                    if (componentType.Subtypes[i].IsComponentType)
-                    {
-                        var value = componentObject.GetType().GetProperty(propertyName).GetValue(componentObject, null);
-                        NormalizeDateTimePropertiesForComponentType(value, componentType.Subtypes[i]);
-                    }
-
-                    if (componentType.Subtypes[i].ReturnedClass != typeof(DateTime) && componentType.Subtypes[i].ReturnedClass != typeof(DateTime?))
-                    {
-                        continue;
-                    }
-
-                    var dateTime = componentObject.GetType().GetProperty(propertyName).GetValue(componentObject) as DateTime?;
-
-                    if (!dateTime.HasValue)
-                    {
-                        continue;
-                    }
-
-                    componentObject.GetType().GetProperty(propertyName).SetValue(componentObject, Clock.Normalize(dateTime.Value));
+                    var value = componentObject.GetType().GetProperty(propertyName).GetValue(componentObject, null);
+                    NormalizeDateTimePropertiesForComponentType(value, componentType.Subtypes[i]);
                 }
+
+                if (componentType.Subtypes[i].ReturnedClass != typeof(DateTime) && componentType.Subtypes[i].ReturnedClass != typeof(DateTime?))
+                {
+                    continue;
+                }
+
+                var dateTime = componentObject.GetType().GetProperty(propertyName).GetValue(componentObject) as DateTime?;
+
+                if (!dateTime.HasValue)
+                {
+                    continue;
+                }
+
+                componentObject.GetType().GetProperty(propertyName).SetValue(componentObject, Clock.Normalize(dateTime.Value));
             }
         }
 
