@@ -5,8 +5,8 @@
   <PropertyGroup>
     <TargetFramework>net461</TargetFramework>
     <GenerateDocumentationFile>true</GenerateDocumentationFile>
-    <AssemblyName>Abp.Zero.EntityFramework</AssemblyName>
-    <PackageId>Abp.Zero.EntityFramework</PackageId>
+    <AssemblyName>Abp.ZeroCore.EntityFramework</AssemblyName>
+    <PackageId>Abp.ZeroCore.EntityFramework</PackageId>
     <PackageTags>asp.net;asp.net mvc;boilerplate;application framework;web framework;framework;domain driven design;multitenancy;user management;role management;identity;entity framework</PackageTags>
     <GenerateAssemblyTitleAttribute>false</GenerateAssemblyTitleAttribute>
     <GenerateAssemblyDescriptionAttribute>false</GenerateAssemblyDescriptionAttribute>
@@ -15,11 +15,11 @@
     <GenerateAssemblyProductAttribute>false</GenerateAssemblyProductAttribute>
     <GenerateAssemblyCopyrightAttribute>false</GenerateAssemblyCopyrightAttribute>
     <RootNamespace>Abp</RootNamespace>
-    <Description>Abp.Zero.EntityFramework</Description>
+    <Description>Abp.ZeroCore.EntityFramework</Description>
   </PropertyGroup>
 
   <ItemGroup>
-    <None Include="bin\Release\net461\Abp.Zero.EntityFramework.pdb">
+    <None Include="bin\Release\net461\Abp.ZeroCore.EntityFramework.pdb">
       <PackagePath>lib/net461/</PackagePath>
       <Pack>true</Pack>
     </None>

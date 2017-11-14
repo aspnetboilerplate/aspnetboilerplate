@@ -44,6 +44,7 @@ $projects = (
     "Abp.Zero.NHibernate",
     "Abp.ZeroCore",
     "Abp.ZeroCore.EntityFrameworkCore",
+    "Abp.ZeroCore.EntityFramework",
     "Abp.ZeroCore.IdentityServer4",
     "Abp.ZeroCore.IdentityServer4.EntityFrameworkCore"    
 )
