@@ -12,7 +12,7 @@ namespace Abp.Domain.Repositories
     {
         Task EnsureCollectionLoadedAsync<TProperty>(
             TEntity entity,
-            Expression<Func<TEntity, IEnumerable<TProperty>>> propertyExpression,
+            Expression<Func<TEntity, IEnumerable<TProperty>>> collectionExpression,
             CancellationToken cancellationToken)
             where TProperty : class;
 

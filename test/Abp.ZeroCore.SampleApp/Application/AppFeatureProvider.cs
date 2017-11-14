@@ -15,6 +15,12 @@ namespace Abp.ZeroCore.SampleApp.Application
                 displayName: L("SimpleBooleanFeature"),
                 inputType: new CheckboxInputType()
             );
+
+            context.Create(
+                AppFeatures.SimpleIntFeature,
+                defaultValue: "0",
+                displayName: L("SimpleIntFeature")
+            );
         }
     }
 }

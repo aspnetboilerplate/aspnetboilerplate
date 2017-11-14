@@ -20,6 +20,11 @@ namespace Abp.BackgroundJobs
             _backgroundJobRepository = backgroundJobRepository;
         }
 
+        public Task<BackgroundJobInfo> GetAsync(long jobId)
+        {
+            return _backgroundJobRepository.GetAsync(jobId);
+        }
+
         public Task InsertAsync(BackgroundJobInfo jobInfo)
         {
             return _backgroundJobRepository.InsertAsync(jobInfo);

@@ -23,12 +23,7 @@ namespace Abp.Resources.Embedded
                 }
             }
 
-            return NormalizeChars(fileName) + extension;
-        }
-        
-        private static string NormalizeChars(string fileName)
-        {
-            return fileName.Replace(".", "/").Replace("-", "_");
+            return fileName + extension;
         }
     }
 }

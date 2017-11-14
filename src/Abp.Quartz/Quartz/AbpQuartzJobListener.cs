@@ -1,7 +1,7 @@
 ﻿using Castle.Core.Logging;
 using Quartz;
 
-namespace Abp.Quartz.Quartz
+namespace Abp.Quartz
 {
     public class AbpQuartzJobListener : IJobListener
     {

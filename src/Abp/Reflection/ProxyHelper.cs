@@ -15,8 +15,8 @@ namespace Abp.Reflection
                 return obj;
             }
 
-            var targetField = obj.GetType().GetTypeInfo()
-                .GetFields()
+            var targetField = obj.GetType()
+                .GetFields(BindingFlags.Instance | BindingFlags.NonPublic)
                 .FirstOrDefault(f => f.Name == "__target");
 
             if (targetField == null)

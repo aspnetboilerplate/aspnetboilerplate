@@ -2,6 +2,7 @@
 using System.IO;
 using System.Linq;
 using System.Reflection;
+using System.Runtime.Loader;
 
 namespace Abp.Reflection
 {
@@ -14,7 +15,7 @@ namespace Abp.Reflection
                 .Where(s => s.EndsWith(".dll") || s.EndsWith(".exe"));
 
             return assemblyFiles.Select(
-                Assembly.LoadFile //TODO: Use AssemblyLoadContext.Default.LoadFromAssemblyPath instead?
+                Assembly.LoadFile
             ).ToList();
         }
     }

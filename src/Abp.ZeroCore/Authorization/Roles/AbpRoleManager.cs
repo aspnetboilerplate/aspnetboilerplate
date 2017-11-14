@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Abp.Application.Features;
 using Abp.Authorization.Users;
 using Abp.Domain.Services;
 using Abp.Domain.Uow;
@@ -25,6 +26,8 @@ namespace Abp.Authorization.Roles
         public IAbpSession AbpSession { get; set; }
 
         public IRoleManagementConfig RoleManagementConfig { get; }
+
+        public FeatureDependencyContext FeatureDependencyContext { get; set; }
 
         private IRolePermissionStore<TRole> RolePermissionStore
         {
@@ -330,7 +333,12 @@ namespace Abp.Authorization.Roles
 
         public async Task GrantAllPermissionsAsync(TRole role)
         {
-            var permissions = _permissionManager.GetAllPermissions(role.GetMultiTenancySide());
+            var permissions = _permissionManager.GetAllPermissions(role.GetMultiTenancySide())
+                .Where(permission =>
+                    permission.FeatureDependency == null ||
+                    permission.FeatureDependency.IsSatisfied(FeatureDependencyContext)
+                );
+
             await SetGrantedPermissionsAsync(role, permissions);
         }
 

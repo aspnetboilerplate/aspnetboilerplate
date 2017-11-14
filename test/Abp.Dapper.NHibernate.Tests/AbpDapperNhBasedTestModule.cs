@@ -1,5 +1,5 @@
 ﻿using System;
-using System.Data;
+using System.Data.Common;
 using System.Reflection;
 
 using Abp.Configuration.Startup;
@@ -34,7 +34,7 @@ namespace Abp.Dapper.NHibernate.Tests
             Configuration.Modules.AbpNHibernate().FluentConfiguration
                          .Database(SQLiteConfiguration.Standard.InMemory())
                          .Mappings(m => m.FluentMappings.AddFromAssembly(Assembly.GetExecutingAssembly()))
-                         .ExposeConfiguration(cfg => new SchemaExport(cfg).Execute(true, true, false, IocManager.Resolve<IDbConnection>(), Console.Out));
+                         .ExposeConfiguration(cfg => new SchemaExport(cfg).Execute(true, true, false, IocManager.Resolve<DbConnection>(), Console.Out));
         }
     }
 }

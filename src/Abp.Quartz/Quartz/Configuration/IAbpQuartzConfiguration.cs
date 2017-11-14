@@ -1,6 +1,6 @@
 ﻿using Quartz;
 
-namespace Abp.Quartz.Quartz.Configuration
+namespace Abp.Quartz.Configuration
 {
     public interface IAbpQuartzConfiguration
     {

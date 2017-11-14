@@ -15,8 +15,8 @@ namespace Abp.Application.Features
     /// <summary>
     /// Implements <see cref="IFeatureValueStore"/>.
     /// </summary>
-    public class AbpFeatureValueStore<TTenant, TUser> : 
-        IAbpZeroFeatureValueStore, 
+    public class AbpFeatureValueStore<TTenant, TUser> :
+        IAbpZeroFeatureValueStore,
         ITransientDependency,
         IEventHandler<EntityChangedEventData<Edition>>,
         IEventHandler<EntityChangedEventData<EditionFeatureSetting>>
@@ -86,31 +86,34 @@ namespace Abp.Application.Features
         [UnitOfWork]
         public virtual async Task SetEditionFeatureValueAsync(int editionId, string featureName, string value)
         {
-            if (await GetEditionValueOrNullAsync(editionId, featureName) == value)
+            using (_unitOfWorkManager.Current.SetTenantId(null))
             {
-                return;
-            }
-
-            var currentFeature = await _editionFeatureRepository.FirstOrDefaultAsync(f => f.EditionId == editionId && f.Name == featureName);
-
-            var feature = _featureManager.GetOrNull(featureName);
-            if (feature == null || feature.DefaultValue == value)
-            {
-                if (currentFeature != null)
+                if (await GetEditionValueOrNullAsync(editionId, featureName) == value)
                 {
-                    await _editionFeatureRepository.DeleteAsync(currentFeature);
+                    return;
                 }
 
-                return;
-            }
+                var currentFeature = await _editionFeatureRepository.FirstOrDefaultAsync(f => f.EditionId == editionId && f.Name == featureName);
 
-            if (currentFeature == null)
-            {
-                await _editionFeatureRepository.InsertAsync(new EditionFeatureSetting(editionId, featureName, value));
-            }
-            else
-            {
-                currentFeature.Value = value;
+                var feature = _featureManager.GetOrNull(featureName);
+                if (feature == null || feature.DefaultValue == value)
+                {
+                    if (currentFeature != null)
+                    {
+                        await _editionFeatureRepository.DeleteAsync(currentFeature);
+                    }
+
+                    return;
+                }
+
+                if (currentFeature == null)
+                {
+                    await _editionFeatureRepository.InsertAsync(new EditionFeatureSetting(editionId, featureName, value));
+                }
+                else
+                {
+                    currentFeature.Value = value;
+                }
             }
         }
 
@@ -163,12 +166,20 @@ namespace Abp.Application.Features
         {
             var newCacheItem = new EditionfeatureCacheItem();
 
-            var featureSettings = await _editionFeatureRepository.GetAllListAsync(f => f.EditionId == editionId);
-            foreach (var featureSetting in featureSettings)
+            using (var uow = _unitOfWorkManager.Begin())
             {
-                newCacheItem.FeatureValues[featureSetting.Name] = featureSetting.Value;
-            }
+                using (_unitOfWorkManager.Current.SetTenantId(null))
+                {
+                    var featureSettings = await _editionFeatureRepository.GetAllListAsync(f => f.EditionId == editionId);
+                    foreach (var featureSetting in featureSettings)
+                    {
+                        newCacheItem.FeatureValues[featureSetting.Name] = featureSetting.Value;
+                    }
 
+                    await uow.CompleteAsync();
+                }
+            }
+            
             return newCacheItem;
         }
 
