@@ -1,6 +1,6 @@
 ﻿using Abp.Configuration.Startup;
 
-namespace Abp.Quartz.Quartz.Configuration
+namespace Abp.Quartz.Configuration
 {
     public static class AbpQuartzConfigurationExtensions
     {
