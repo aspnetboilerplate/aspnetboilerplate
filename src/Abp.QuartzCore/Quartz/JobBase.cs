@@ -8,7 +8,7 @@ using Abp.ObjectMapping;
 using Castle.Core.Logging;
 using Quartz;
 
-namespace Abp.Quartz.Quartz
+namespace Abp.Quartz
 {
     public abstract class JobBase : IJob
     {

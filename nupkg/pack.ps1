@@ -12,6 +12,7 @@ $projects = (
     "Abp.HangFire",
     "Abp.HangFire.AspNetCore",
     "Abp.Quartz",
+    "Abp.QuartzCore",
     "Abp.EntityFramework.Common",
     "Abp.EntityFramework",
     "Abp.EntityFramework.GraphDiff",

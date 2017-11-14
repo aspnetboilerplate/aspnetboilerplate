@@ -3,7 +3,7 @@ using System.Threading.Tasks;
 using Abp.Threading.BackgroundWorkers;
 using Quartz;
 
-namespace Abp.Quartz.Quartz
+namespace Abp.Quartz
 {
     /// <summary>
     /// Defines interface of Quartz schedule job manager.

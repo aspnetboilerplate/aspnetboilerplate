@@ -1,7 +1,7 @@
 ﻿using Quartz;
 using Quartz.Impl;
 
-namespace Abp.Quartz.Quartz.Configuration
+namespace Abp.Quartz.Configuration
 {
     public class AbpQuartzConfiguration : IAbpQuartzConfiguration
     {
