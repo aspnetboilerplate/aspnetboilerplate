@@ -1,0 +1,34 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+  
+  <Import Project="..\..\common.props" />
+
+  <PropertyGroup>
+    <TargetFramework>net461</TargetFramework>
+    <GenerateDocumentationFile>true</GenerateDocumentationFile>
+    <RootNamespace>Abp</RootNamespace>
+    <AssemblyName>Abp.ZeroCore.EntityFramework</AssemblyName>
+    <PackageId>Abp.ZeroCore.EntityFramework</PackageId>
+    <PackageTags>asp.net;asp.net mvc;boilerplate;application framework;web framework;framework;domain driven design;multitenancy;user management;role management;identity;entity framework</PackageTags>
+    <Description>Abp.ZeroCore.EntityFramework</Description>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <None Include="bin\Release\net461\Abp.ZeroCore.EntityFramework.pdb">
+      <PackagePath>lib/net461/</PackagePath>
+      <Pack>true</Pack>
+    </None>
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\Abp.EntityFramework\Abp.EntityFramework.csproj" />
+    <ProjectReference Include="..\Abp.ZeroCore\Abp.ZeroCore.csproj" />
+  </ItemGroup>
+  
+  <ItemGroup>
+    <Reference Include="System" />
+    <Reference Include="Microsoft.CSharp" />
+    <Reference Include="System.Configuration" />
+    <Reference Include="System.Transactions" />
+  </ItemGroup>
+
+</Project>
