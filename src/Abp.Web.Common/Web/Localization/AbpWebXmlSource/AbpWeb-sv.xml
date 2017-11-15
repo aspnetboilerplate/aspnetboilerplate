@@ -1,5 +1,5 @@
 ﻿<?xml version="1.0" encoding="utf-8" ?>
-<localizationDictionary culture="en">
+<localizationDictionary culture="sv">
   <texts>
     <text name="InternalServerError" value="Ett internt fel uppstod!" />
     <text name="ValidationError" value="Ogiltig förfrågan!" />
