@@ -13,24 +13,21 @@
 
             },
             info: {
-                type: 'info'
+                icon: 'info'
             },
             success: {
-                type: 'success'
+                icon: 'success'
             },
             warn: {
-                type: 'warning'
+                icon: 'warning'
             },
             error: {
-                type: 'error'
+                icon: 'error'
             },
             confirm: {
-                type: 'warning',
+                icon: 'warning',
                 title: 'Are you sure?',
-                showCancelButton: true,
-                cancelButtonText: 'Cancel',
-                confirmButtonColor: "#DD6B55",
-                confirmButtonText: 'Yes'
+                buttons: ['Cancel', 'Yes']
             }
         }
     };
@@ -45,7 +42,7 @@
 
         var opts = $.extend(
             {},
-            abp.libs.sweetAlert.config.default,
+            abp.libs.sweetAlert.config['default'],
             abp.libs.sweetAlert.config[type],
             {
                 title: title,
@@ -54,7 +51,7 @@
         );
 
         return $.Deferred(function ($dfd) {
-            sweetAlert(opts, function () {
+            sweetAlert(opts).then(function () {
                 $dfd.resolve();
             });
         });
@@ -89,13 +86,13 @@
 
         var opts = $.extend(
             {},
-            abp.libs.sweetAlert.config.default,
+            abp.libs.sweetAlert.config['default'],
             abp.libs.sweetAlert.config.confirm,
             userOpts
         );
 
         return $.Deferred(function ($dfd) {
-            sweetAlert(opts, function (isConfirmed) {
+            sweetAlert(opts).then(function (isConfirmed) {
                 callback && callback(isConfirmed);
                 $dfd.resolve(isConfirmed);
             });
@@ -104,8 +101,7 @@
 
     abp.event.on('abp.dynamicScriptsInitialized', function () {
         abp.libs.sweetAlert.config.confirm.title = abp.localization.abpWeb('AreYouSure');
-        abp.libs.sweetAlert.config.confirm.cancelButtonText = abp.localization.abpWeb('Cancel');
-        abp.libs.sweetAlert.config.confirm.confirmButtonText = abp.localization.abpWeb('Yes');
+        abp.libs.sweetAlert.config.confirm.buttons = [abp.localization.abpWeb('Cancel'), abp.localization.abpWeb('Yes')];
     });
 
 })(jQuery);
