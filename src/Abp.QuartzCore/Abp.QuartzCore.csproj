@@ -1,5 +1,7 @@
 <Project Sdk="Microsoft.NET.Sdk">
 
+  <Import Project="..\..\common.props" />
+  
   <PropertyGroup>
     <TargetFramework>netstandard2.0</TargetFramework>
     <GenerateDocumentationFile>true</GenerateDocumentationFile>
@@ -16,6 +18,13 @@
     <RootNamespace>Abp</RootNamespace>
     <Description>Abp.QuartzCore</Description>
   </PropertyGroup>
+  
+  <ItemGroup>
+    <None Include="bin\Release\netstandard2.0\Abp.QuartzCore.pdb">
+      <PackagePath>lib/netstandard2.0/</PackagePath>
+      <Pack>true</Pack>
+    </None>
+  </ItemGroup>
 
   <ItemGroup>
     <PackageReference Include="Quartz" Version="3.0.0-beta1" />
