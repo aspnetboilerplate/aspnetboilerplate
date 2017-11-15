@@ -58,7 +58,7 @@ namespace Abp.AspNetCore
 
             //Add feature providers
             var partManager = services.GetSingletonServiceOrNull<ApplicationPartManager>();
-            partManager.FeatureProviders.Add(new AbpAppServiceControllerFeatureProvider(iocResolver));
+            partManager?.FeatureProviders.Add(new AbpAppServiceControllerFeatureProvider(iocResolver));
 
             //Configure JSON serializer
             services.Configure<MvcJsonOptions>(jsonOptions =>
