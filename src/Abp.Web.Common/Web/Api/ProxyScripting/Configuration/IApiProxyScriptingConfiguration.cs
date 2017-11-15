@@ -9,5 +9,10 @@ namespace Abp.Web.Api.ProxyScripting.Configuration
         /// Used to add/replace proxy script generators. 
         /// </summary>
         IDictionary<string, Type> Generators { get; }
+
+        /// <summary>
+        /// Default: true.
+        /// </summary>
+        bool RemoveAsyncPostfixOnProxyGeneration { get; set; }
     }
 }

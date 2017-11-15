@@ -14,12 +14,22 @@ namespace Abp.Threading
         /// Checks if given method is an async method.
         /// </summary>
         /// <param name="method">A method to check</param>
-        public static bool IsAsyncMethod(MethodInfo method)
+        public static bool IsAsync(this MethodInfo method)
         {
             return (
                 method.ReturnType == typeof(Task) ||
                 (method.ReturnType.GetTypeInfo().IsGenericType && method.ReturnType.GetGenericTypeDefinition() == typeof(Task<>))
-                );
+            );
+        }
+
+        /// <summary>
+        /// Checks if given method is an async method.
+        /// </summary>
+        /// <param name="method">A method to check</param>
+        [Obsolete("Use MethodInfo.IsAsync() extension method!")]
+        public static bool IsAsyncMethod(MethodInfo method)
+        {
+            return method.IsAsync();
         }
 
         /// <summary>

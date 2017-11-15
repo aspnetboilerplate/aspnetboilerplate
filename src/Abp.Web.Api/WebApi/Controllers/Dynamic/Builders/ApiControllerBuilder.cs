@@ -80,7 +80,7 @@ namespace Abp.WebApi.Controllers.Dynamic.Builders
 
             foreach (var methodInfo in DynamicApiControllerActionHelper.GetMethodsOfType(typeof(T)))
             {
-                var actionBuilder = new ApiControllerActionBuilder<T>(this, methodInfo);
+                var actionBuilder = new ApiControllerActionBuilder<T>(this, methodInfo, iocResolver);
 
                 var remoteServiceAttr = methodInfo.GetSingleAttributeOrNull<RemoteServiceAttribute>();
                 if (remoteServiceAttr != null && !remoteServiceAttr.IsEnabledFor(methodInfo))
