@@ -51,7 +51,7 @@
         );
 
         return $.Deferred(function ($dfd) {
-            sweetAlert(opts).then(function () {
+            sweetAlert(opts).then(() => {
                 $dfd.resolve();
             });
         });
@@ -92,8 +92,10 @@
         );
 
         return $.Deferred(function ($dfd) {
-            sweetAlert(opts).then(function (isConfirmed) {
-                callback && callback(isConfirmed);
+            sweetAlert(opts).then((isConfirmed) => {
+                if (isConfirmed) {
+                    callback();
+                }
                 $dfd.resolve(isConfirmed);
             });
         });
