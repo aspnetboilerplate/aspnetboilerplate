@@ -50,7 +50,7 @@ namespace Abp.Authorization
             ISettingManager settingManager,
             IRepository<UserLoginAttempt, long> userLoginAttemptRepository,
             IUserManagementConfig userManagementConfig,
-            IIocResolver iocResolver, 
+            IIocResolver iocResolver,
             IPasswordHasher<TUser> passwordHasher,
             AbpRoleManager<TRole, TUser> roleManager,
             AbpUserClaimsPrincipalFactory<TUser, TRole> claimsPrincipalFactory)
@@ -174,22 +174,14 @@ namespace Abp.Authorization
                 {
                     return new AbpLoginResult<TTenant, TUser>(AbpLoginResultType.InvalidUserNameOrEmailAddress, tenant);
                 }
-                var fromLdap = user.AuthenticationSource == "LDAP";
-                if (fromLdap)
+
+                if (await UserManager.IsLockedOutAsync(user))
                 {
-                    if (await UserManager.IsLockedOutAsync(user))
-                    {
-                        return new AbpLoginResult<TTenant, TUser>(AbpLoginResultType.LockedOut, tenant, user);
-                    }
+                    return new AbpLoginResult<TTenant, TUser>(AbpLoginResultType.LockedOut, tenant, user);
                 }
 
                 if (!loggedInFromExternalSource)
                 {
-                    if (await UserManager.IsLockedOutAsync(user))
-                    {
-                        return new AbpLoginResult<TTenant, TUser>(AbpLoginResultType.LockedOut, tenant, user);
-                    }
-
                     if (!await UserManager.CheckPasswordAsync(user, plainPassword))
                     {
                         if (shouldLockout)
@@ -202,7 +194,7 @@ namespace Abp.Authorization
 
                         return new AbpLoginResult<TTenant, TUser>(AbpLoginResultType.InvalidPassword, tenant, user);
                     }
-                    
+
                     await UserManager.ResetAccessFailedCountAsync(user);
                 }
 
@@ -254,7 +246,7 @@ namespace Abp.Authorization
                         TenantId = tenantId,
                         TenancyName = tenancyName,
 
-                        UserId = loginResult.User != null ? loginResult.User.Id : (long?) null,
+                        UserId = loginResult.User != null ? loginResult.User.Id : (long?)null,
                         UserNameOrEmailAddress = userNameOrEmailAddress,
 
                         Result = loginResult.Result,
@@ -282,7 +274,7 @@ namespace Abp.Authorization
 
                     (await UserManager.AccessFailedAsync(user)).CheckErrors();
 
-                    var isLockOut =  await UserManager.IsLockedOutAsync(user);
+                    var isLockOut = await UserManager.IsLockedOutAsync(user);
 
                     await UnitOfWorkManager.Current.SaveChangesAsync();
 
@@ -327,7 +319,7 @@ namespace Abp.Authorization
                                         user.Roles.Add(new UserRole(tenantId, user.Id, defaultRole.Id));
                                     }
                                 }
-                                
+
                                 await UserManager.AbpStore.CreateAsync(user);
                             }
                             else
