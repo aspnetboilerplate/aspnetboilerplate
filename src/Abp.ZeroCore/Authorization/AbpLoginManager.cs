@@ -174,6 +174,14 @@ namespace Abp.Authorization
                 {
                     return new AbpLoginResult<TTenant, TUser>(AbpLoginResultType.InvalidUserNameOrEmailAddress, tenant);
                 }
+                var fromLdap = user.AuthenticationSource == "LDAP";
+                if (fromLdap)
+                {
+                    if (await UserManager.IsLockedOutAsync(user))
+                    {
+                        return new AbpLoginResult<TTenant, TUser>(AbpLoginResultType.LockedOut, tenant, user);
+                    }
+                }
 
                 if (!loggedInFromExternalSource)
                 {
