@@ -94,7 +94,7 @@
         return $.Deferred(function ($dfd) {
             sweetAlert(opts).then((isConfirmed) => {
                 if (isConfirmed) {
-                    callback();
+                    callback && callback(isConfirmed);
                 }
                 $dfd.resolve(isConfirmed);
             });
