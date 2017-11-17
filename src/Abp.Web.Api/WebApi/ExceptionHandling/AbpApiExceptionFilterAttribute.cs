@@ -92,7 +92,7 @@ namespace Abp.WebApi.ExceptionHandling
                 context.Response = context.Request.CreateResponse(
                     GetStatusCode(context),
                     new AjaxResponse(
-                        SingletonDependency<ErrorInfoBuilder>.Instance.BuildForException(context.Exception),
+                        SingletonDependency<IErrorInfoBuilder>.Instance.BuildForException(context.Exception),
                         context.Exception is Abp.Authorization.AbpAuthorizationException)
                 );
             }
