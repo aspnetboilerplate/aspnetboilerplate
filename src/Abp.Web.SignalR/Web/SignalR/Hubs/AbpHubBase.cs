@@ -55,6 +55,13 @@ namespace Abp.Web.SignalR.Hubs
 
         protected bool Disposed { get; private set; }
 
+        protected AbpHubBase()
+        {
+            Logger = NullLogger.Instance;
+            ObjectMapper = NullObjectMapper.Instance;
+            LocalizationManager = NullLocalizationManager.Instance;
+        }
+
         /// <summary>
         /// Gets localized string for given key name and current language.
         /// </summary>
