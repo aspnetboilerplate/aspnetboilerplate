@@ -4,6 +4,7 @@ using System.Linq;
 using System.Reflection;
 using Abp.Collections.Extensions;
 using Abp.Modules;
+using Abp.Logging;
 
 namespace Abp.PlugIns
 {
@@ -53,9 +54,20 @@ namespace Abp.PlugIns
 
         private List<Assembly> LoadAssemblies()
         {
-            return FilePaths.Select(
-                Assembly.LoadFile //TODO: Use AssemblyLoadContext.Default.LoadFromAssemblyPath instead?
-            ).ToList();
+            List<Assembly> assemblies;
+            try
+            {
+                assemblies = FilePaths.Select(
+                    Assembly.LoadFile //TODO: Use AssemblyLoadContext.Default.LoadFromAssemblyPath instead?
+                ).ToList();
+            }
+            catch (Exception ex)
+            {
+                assemblies = new List<Assembly>();
+                LogHelper.LogException(ex);
+            }
+
+            return assemblies;
         }
     }
 }

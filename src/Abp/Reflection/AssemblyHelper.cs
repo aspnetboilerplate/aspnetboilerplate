@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using Abp.Logging;
+using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Reflection;
@@ -10,13 +11,24 @@ namespace Abp.Reflection
     {
         public static List<Assembly> GetAllAssembliesInFolder(string folderPath, SearchOption searchOption)
         {
-            var assemblyFiles = Directory
-                .EnumerateFiles(folderPath, "*.*", searchOption)
-                .Where(s => s.EndsWith(".dll") || s.EndsWith(".exe"));
+            List<Assembly> assemblies;
+            try
+            {
+                IEnumerable<string> assemblyFiles = Directory
+                    .EnumerateFiles(folderPath, "*.*", searchOption)
+                    .Where(s => s.EndsWith(".dll") || s.EndsWith(".exe"));
 
-            return assemblyFiles.Select(
-                Assembly.LoadFile
-            ).ToList();
+                assemblies = assemblyFiles.Select(
+                    Assembly.LoadFile
+                ).ToList();
+            }
+            catch (Exception ex)
+            {
+                assemblies = new List<Assembly>();
+                LogHelper.LogException(ex);
+            }
+
+            return assemblies;
         }
     }
 }
