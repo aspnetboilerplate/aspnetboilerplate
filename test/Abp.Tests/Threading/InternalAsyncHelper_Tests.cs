@@ -15,10 +15,10 @@ namespace Abp.Tests.Threading
         [Fact]
         public void IsAsync_Should_Work()
         {
-            AsyncHelper.IsAsyncMethod(GetType().GetMethod("MyMethod1Sync", BindingFlags.NonPublic | BindingFlags.Instance)).ShouldBe(false);
-            AsyncHelper.IsAsyncMethod(GetType().GetMethod("MyMethod1Async", BindingFlags.NonPublic | BindingFlags.Instance)).ShouldBe(true);
-            AsyncHelper.IsAsyncMethod(GetType().GetMethod("MyMethod2Sync", BindingFlags.NonPublic | BindingFlags.Instance)).ShouldBe(false);
-            AsyncHelper.IsAsyncMethod(GetType().GetMethod("MyMethod2Async", BindingFlags.NonPublic | BindingFlags.Instance)).ShouldBe(true);
+            GetType().GetMethod("MyMethod1Sync", BindingFlags.NonPublic | BindingFlags.Instance).IsAsync().ShouldBe(false);
+            GetType().GetMethod("MyMethod1Async", BindingFlags.NonPublic | BindingFlags.Instance).IsAsync().ShouldBe(true);
+            GetType().GetMethod("MyMethod2Sync", BindingFlags.NonPublic | BindingFlags.Instance).IsAsync().ShouldBe(false);
+            GetType().GetMethod("MyMethod2Async", BindingFlags.NonPublic | BindingFlags.Instance).IsAsync().ShouldBe(true);
         }
 
         [Fact]

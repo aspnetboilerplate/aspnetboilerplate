@@ -14,7 +14,11 @@ namespace Abp.Tests.Modules
         public void Should_Get_Module_And_Additional_Assemblies()
         {
             //Arrange
-            var bootstrapper = AbpBootstrapper.Create<MyStartupModule>(LocalIocManager);
+            var bootstrapper = AbpBootstrapper.Create<MyStartupModule>(options =>
+            {
+                options.IocManager = LocalIocManager;
+            });
+
             bootstrapper.Initialize();
 
             //Act

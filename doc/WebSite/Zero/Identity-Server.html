@@ -15,8 +15,8 @@
 <p><a href="http://identityserver.io/" target="_blank">Identity Server</a> is an 
 open source <strong>OpenID Connect</strong> and <strong>OAuth 2.0</strong> framework. It can be used to make your 
 application an <strong>authentication / single sign on server</strong>. It can also issue 
-<strong>access tokens</strong> for 3rd party clients.
-This document describes how you can integrate IdentityServer to your project.</p>
+<strong>access tokens</strong> for 3rd party clients. This document describes 
+how you can integrate IdentityServer4 (version <strong>2.0+</strong>) to your project. </p>
 
 	<div class="bs-callout bs-callout-warning">
 	<h4>Startup Project</h4>
@@ -69,19 +69,13 @@ public class MyModule : AbpModule
     {
         //...
         
-        services.AddAbpIdentity&lt;Tenant, User, Role&gt;()
-            ...
-            <strong>.AddAbpIdentityServer()</strong>;
-        
-        //...
-        
-        services.AddIdentityServer()
-            .AddDeveloperSigningCredential()
-            .AddInMemoryIdentityResources(IdentityServerConfig.GetIdentityResources())
-            .AddInMemoryApiResources(IdentityServerConfig.GetApiResources())
-            .AddInMemoryClients(IdentityServerConfig.GetClients())
-            <strong>.AddAbpPersistedGrants&lt;YourDbContext&gt;()</strong>
-            <strong>.AddAbpIdentityServer&lt;User&gt;()</strong>;
+            services.AddIdentityServer()
+                .AddDeveloperSigningCredential()
+                .AddInMemoryIdentityResources(IdentityServerConfig.GetIdentityResources())
+                .AddInMemoryApiResources(IdentityServerConfig.GetApiResources())
+                .AddInMemoryClients(IdentityServerConfig.GetClients())
+                .AddAbpPersistedGrants&lt;IAbpPersistedGrantDbContext&gt;()
+                .AddAbpIdentityServer&lt;User&gt;(); ;
 
         //...
     }
@@ -89,19 +83,18 @@ public class MyModule : AbpModule
     public void Configure(IApplicationBuilder app)
     {
         //...
-        app.UseIdentityServer();
+
+            app.UseJwtTokenMiddleware("IdentityBearer");
+            app.UseIdentityServer();
+            
         //...
     }
 }</pre>
 	<p>
-            1) Added <strong>.AddAbpIdentityServer()</strong> after 
-			AddAbpIdentity... chain. In ABP the startup template, AddAbpIdentity 
-			is inside IdentityRegistrar.Register(services) method. So, you can 
-			chain like <em>IdentityRegistrar.Register(services)</em><em><strong>.AddAbpIdentityServer()</strong>.</em></p>
-	<p>
-            2) Added <strong>services.AddIdentityServer()</strong> just after
+            Added <strong>services.AddIdentityServer()</strong> just after
 			<strong>IdentityRegistrar.Register(services)</strong> and added 
-			app.UseIdentityServer() just <strong>app.UseAuthentication()</strong> in the 
+			<strong>app.UseJwtTokenMiddleware("IdentityBearer&quot;)</strong> just 
+			after <strong>app.UseAuthentication()</strong> in the 
 			startup project.</p>
 	<h4>IdentityServerConfig Class</h4>
 	<p>We have used IdentityServerConfig class to get identity resources, api 
@@ -138,7 +131,7 @@ public class MyModule : AbpModule
             new Client
             {
                 ClientId = "client",
-                AllowedGrantTypes = GrantTypes.ClientCredentials.Union(GrantTypes.ResourceOwnerPassword),
+                AllowedGrantTypes = GrantTypes.ClientCredentials.Union(GrantTypes.ResourceOwnerPassword).ToList(),
                 AllowedScopes = {"default-api"},
                 ClientSecrets =
                 {
@@ -187,15 +180,13 @@ public class MyModule : AbpModule
 	to your project:</p>
 	<pre>Install-Package IdentityServer4.AccessTokenValidation</pre>
 	<p>Then we can add the middleware to Startup class as shown below:</p>
-	<pre lang="cs">app.UseIdentityServerAuthentication(
-    new IdentityServerAuthenticationOptions
-    {
-        Authority = "http://localhost:62114/",
-        RequireHttpsMetadata = false,
-        AutomaticAuthenticate = true,
-        AutomaticChallenge = true
-    });</pre>
-	<p>I added this just after app.UseIdentityServer() in the startup project.</p>
+	<pre lang="cs">            services.AddAuthentication().AddIdentityServerAuthentication("IdentityBearer", options =&gt;
+            {
+                options.Authority = "http://localhost:62114/";
+                options.RequireHttpsMetadata = false;
+            });
+</pre>
+	<p>I added this just after <strong>services.AddIdentityServer()</strong> in the startup project.</p>
 		<div class="bs-callout bs-callout-warning">
 			<h4>IdentityServer4.AccessTokenValidation Status</h4>
 			<p><em>IdentityServer4.AccessTokenValidation</em> package is not 
@@ -276,7 +267,7 @@ namespace IdentityServerIntegrationDemo.ConsoleApiClient
             var client = new HttpClient();
             client.SetBearerToken(accessToken);
 
-<strong>            var response = await client.GetAsync("http://localhost:62114/api/services/app/user/getUsers");
+<strong>            var response = await client.GetAsync("http://localhost:62114/api/services/app/user/GetAll");
 </strong>            if (!response.IsSuccessStatusCode)
             {
                 Console.WriteLine(response.StatusCode);
@@ -300,18 +291,18 @@ namespace IdentityServerIntegrationDemo.ConsoleApiClient
             }
         }
     }
+    
+    internal class UserListDto
+    {
+        public int Id { get; set; }
+        public string UserName { get; set; }
+    }
 }</pre>
 	<p>Before running this application, ensure that your web project is up and 
 	running, because this console application will make request to the web 
 	application. Also, ensure that the requesting port (62114) is the same of 
 	your web application.</p>
-	<h3>Source Code</h3>
-	<p>You can see source code of this tutorial here:
-	<a href="https://github.com/aspnetboilerplate/aspnetboilerplate-samples/tree/master/IdentityServerDemo">
-	https://github.com/aspnetboilerplate/aspnetboilerplate-samples/tree/master/IdentityServerDemo</a>.
-	<a href="https://github.com/aspnetboilerplate/aspnetboilerplate-samples/commit/dcc1033a65bc1cd95ec6284a89a22859ee3545ef" target="_blank">
-	This commit</a> shows all changes done to the startup project.</p>
-
+	
 </div>
 
 </body>

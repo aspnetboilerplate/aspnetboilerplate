@@ -32,8 +32,8 @@
   </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Include="EntityFramework" Version="6.1.3" />
-    <PackageReference Include="EntityFramework.DynamicFilters" Version="2.10.0" />
+    <PackageReference Include="EntityFramework" Version="6.2.0" />
+    <PackageReference Include="EntityFramework.DynamicFilters" Version="3.0.1" />
   </ItemGroup>
 
   <ItemGroup>

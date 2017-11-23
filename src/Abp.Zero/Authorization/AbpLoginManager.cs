@@ -164,15 +164,14 @@ namespace Abp.Authorization
                     return new AbpLoginResult<TTenant, TUser>(AbpLoginResultType.InvalidUserNameOrEmailAddress, tenant);
                 }
 
+                if (await UserManager.IsLockedOutAsync(user.Id))
+                {
+                    return new AbpLoginResult<TTenant, TUser>(AbpLoginResultType.LockedOut, tenant, user);
+                }
+
                 if (!loggedInFromExternalSource)
                 {
                     UserManager.InitializeLockoutSettings(tenantId);
-
-                    if (await UserManager.IsLockedOutAsync(user.Id))
-                    {
-                        return new AbpLoginResult<TTenant, TUser>(AbpLoginResultType.LockedOut, tenant, user);
-                    }
-
                     var verificationResult = UserManager.PasswordHasher.VerifyHashedPassword(user.Password, plainPassword);
                     if (verificationResult == PasswordVerificationResult.Failed)
                     {

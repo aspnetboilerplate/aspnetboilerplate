@@ -1,0 +1,20 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<localizationDictionary culture="sv">
+  <texts>
+    <text name="InternalServerError" value="Ett internt fel uppstod!" />
+    <text name="ValidationError" value="Ogiltig förfrågan!" />
+    <text name="AreYouSure" value="Är du säker?" />
+    <text name="Cancel" value="Avbryt" />
+    <text name="Yes" value="Ja" />
+    <text name="ValidationNarrativeTitle" value="Följande fel upptäcktes i valideringen." />
+    <text name="DefaultError" value="Ett fel uppstod!" />
+    <text name="DefaultErrorDetail" value="Inga detaljer om felet." />
+    <text name="DefaultError401" value="Du är inte autentiserad!" />
+    <text name="DefaultErrorDetail401" value="Du måste vara autentiserad (inloggad) för att göra detta." />
+    <text name="DefaultError403" value="Du är inte auktoriserad!" />
+    <text name="DefaultErrorDetail403" value="Du har inte rättigheter att göra detta." />
+    <text name="DefaultError404" value="Resursen hittades inte!" />
+    <text name="DefaultErrorDetail404" value="Resursen som efterfrågades hittades inte på servern." />
+    <text name="EntityNotFound" value="Det finns inget objekt ({0}) med id = {1}!" />
+  </texts>
+</localizationDictionary>

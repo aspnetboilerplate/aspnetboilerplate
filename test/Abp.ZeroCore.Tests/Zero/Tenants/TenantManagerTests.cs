@@ -51,6 +51,39 @@ namespace Abp.Zero.Tenants
             });
         }
 
+        [Fact]
+        public async Task Should_Reset_Tenant_Features()
+        {
+            const int tenantId = 1;
+
+            UsingDbContext(tenantId, (context) =>
+            {
+                context.FeatureSettings.Count(f => f.TenantId == tenantId).ShouldBe(0);
+            });
+
+            await ChangeTenantFeatureValueAsync(tenantId, AppFeatures.SimpleIntFeature, "1");
+
+            UsingDbContext(tenantId, (context) =>
+            {
+                context.FeatureSettings.Count(f => f.TenantId == tenantId).ShouldBe(1);
+            });
+
+            using (var uow = _unitOfWorkManager.Begin())
+            {
+                using (_unitOfWorkManager.Current.SetTenantId(null))
+                {
+                    await _tenantManager.ResetAllFeaturesAsync(tenantId);
+                }
+
+                await uow.CompleteAsync();
+            }
+
+            UsingDbContext(tenantId, (context) =>
+            {
+                context.FeatureSettings.Count(f => f.TenantId == tenantId).ShouldBe(0);
+            });
+        }
+
         private async Task ChangeTenantFeatureValueAsync(int tenantId, string name, string value)
         {
             using (var uow = _unitOfWorkManager.Begin())

@@ -4,25 +4,14 @@ using Abp.Dependency;
 using Abp.RealTime;
 using Abp.Runtime.Session;
 using Castle.Core.Logging;
-using Microsoft.AspNet.SignalR;
 
 namespace Abp.Web.SignalR.Hubs
 {
     /// <summary>
     /// Common Hub of ABP.
     /// </summary>
-    public class AbpCommonHub : Hub, ITransientDependency
+    public class AbpCommonHub : AbpHubBase, ITransientDependency
     {
-        /// <summary>
-        /// Reference to the logger.
-        /// </summary>
-        public ILogger Logger { get; set; }
-
-        /// <summary>
-        /// Reference to the session.
-        /// </summary>
-        public IAbpSession AbpSession { get; set; }
-
         private readonly IOnlineClientManager _onlineClientManager;
 
         /// <summary>

@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Data;
+using System.Data.Common;
 using System.Data.SQLite;
 using Abp.TestBase;
 using Castle.MicroKernel.Registration;
@@ -17,13 +18,13 @@ namespace Abp.NHibernate.Tests
             _connection.Open();
 
             LocalIocManager.IocContainer.Register(
-                Component.For<IDbConnection>().UsingFactoryMethod(() => _connection).LifestyleSingleton()
+                Component.For<DbConnection>().UsingFactoryMethod(() => _connection).LifestyleSingleton()
                 );
         }
 
         public void UsingSession(Action<ISession> action)
         {
-            using (var session = LocalIocManager.Resolve<ISessionFactory>().OpenSession(_connection))
+            using (var session = LocalIocManager.Resolve<ISessionFactory>().WithOptions().Connection(_connection).OpenSession())
             {
                 using (var transaction = session.BeginTransaction())
                 {
@@ -38,7 +39,7 @@ namespace Abp.NHibernate.Tests
         {
             T result;
 
-            using (var session = LocalIocManager.Resolve<ISessionFactory>().OpenSession(_connection))
+            using (var session = LocalIocManager.Resolve<ISessionFactory>().WithOptions().Connection(_connection).OpenSession())
             {
                 using (var transaction = session.BeginTransaction())
                 {
