@@ -30,7 +30,7 @@ namespace Abp.MailKit
                 }
             }
 
-            var message = new MimeMessage(ParserOptions.Default, headers, RfcComplianceMode.Strict);
+            var message = new MimeMessage(headers.ToArray());
             MimeEntity body = null;
 
             // Note: If the user has already sent their MailMessage via System.Net.Mail.SmtpClient,
