@@ -333,6 +333,8 @@ namespace Abp.Authorization.Roles
 
         public async Task GrantAllPermissionsAsync(TRole role)
         {
+            FeatureDependencyContext.TenantId = role.TenantId;
+
             var permissions = _permissionManager.GetAllPermissions(role.GetMultiTenancySide())
                 .Where(permission =>
                     permission.FeatureDependency == null ||
