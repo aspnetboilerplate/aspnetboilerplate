@@ -336,10 +336,10 @@ namespace Abp.Authorization.Roles
             FeatureDependencyContext.TenantId = role.TenantId;
 
             var permissions = _permissionManager.GetAllPermissions(role.GetMultiTenancySide())
-                .Where(permission =>
-                    permission.FeatureDependency == null ||
-                    permission.FeatureDependency.IsSatisfied(FeatureDependencyContext)
-                );
+                                                .Where(permission =>
+                                                    permission.FeatureDependency == null ||
+                                                    permission.FeatureDependency.IsSatisfied(FeatureDependencyContext)
+                                                );
 
             await SetGrantedPermissionsAsync(role, permissions);
         }
