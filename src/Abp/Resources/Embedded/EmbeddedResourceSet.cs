@@ -35,10 +35,10 @@ namespace Abp.Resources.Embedded
                 using (var stream = Assembly.GetManifestResourceStream(resourceName))
                 {
                     var relativePath = ConvertToRelativePath(resourceName);
-                    var filePath = EmbeddedResourcePathHelper.NormalizePath(RootPath + relativePath);
+                    var filePath = EmbeddedResourcePathHelper.NormalizePath(RootPath) + relativePath;
 
                     resources[filePath] = new EmbeddedResourceItem(
-                        relativePath,
+                        filePath,
                         stream.GetAllBytes(),
                         Assembly
                     );
@@ -49,15 +49,6 @@ namespace Abp.Resources.Embedded
         private string ConvertToRelativePath(string resourceName)
         {
             return resourceName.Substring(ResourceNamespace.Length + 1);
-        }
-
-        private static string CalculateFileName(string filePath)
-        {
-            if (!filePath.Contains("/"))
-            {
-                return filePath;
-            }
-            return filePath.Substring(filePath.LastIndexOf("/", StringComparison.Ordinal) + 1);
         }
     }
 }

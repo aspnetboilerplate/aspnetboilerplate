@@ -2,6 +2,8 @@
 using System.Collections.Generic;
 using Abp.Collections.Extensions;
 using Abp.Dependency;
+using System.IO;
+using System.Linq;
 
 namespace Abp.Resources.Embedded
 {
@@ -25,12 +27,23 @@ namespace Abp.Resources.Embedded
         /// <inheritdoc/>
         public EmbeddedResourceItem GetResource(string fullPath)
         {
-            var resource = _resources.Value.GetOrDefault(EmbeddedResourcePathHelper.NormalizePath(fullPath));
-            if (resource != null)
+            var encodedPath = EmbeddedResourcePathHelper.EncodeAsResourcesPath(fullPath);
+            return _resources.Value.GetOrDefault(encodedPath);
+        }
+
+        public IEnumerable<EmbeddedResourceItem> GetResources(string fullPath)
+        {
+            var encodedPath = EmbeddedResourcePathHelper.EncodeAsResourcesPath(fullPath);
+            if (encodedPath.Length > 0 && !encodedPath.EndsWith("."))
             {
-                return new EmbeddedResourceItem(System.IO.Path.GetFileName(fullPath), resource.Content, resource.Assembly);
+                encodedPath = encodedPath + ".";
             }
-            return null;
+
+            // We will assume that any file starting with this path, is in that directory.
+            // NOTE: This may include false positives, but helps in the majority of cases until 
+            // https://github.com/aspnet/FileSystem/issues/184 is solved.
+
+            return _resources.Value.Where(k => k.Key.StartsWith(encodedPath)).Select(d => d.Value);
         }
 
         private Dictionary<string, EmbeddedResourceItem> CreateResourcesDictionary()

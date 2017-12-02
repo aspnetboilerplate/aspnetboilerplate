@@ -21,6 +21,15 @@
   </ItemGroup>
 
   <ItemGroup>
+    <None Remove="Resources\Embedded\MyResources\js_underscore\MyScriptFile.js" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <EmbeddedResource Include="Resources\Embedded\MyResources\js-dash\MyScriptFile.js" />
+    <EmbeddedResource Include="Resources\Embedded\MyResources\js_underscore\MyScriptFile.js" />
+  </ItemGroup>
+
+  <ItemGroup>
     <ProjectReference Include="..\..\src\Abp\Abp.csproj" />
     <ProjectReference Include="..\..\src\Abp.TestBase\Abp.TestBase.csproj" />
   </ItemGroup>
