@@ -48,7 +48,7 @@ If you want to use hangfire's dashboard, you can add it too:
 
     app.UseHangfireDashboard();
 
-If you want to [authorize](Authorization.html) the dashboard, you can
+If you want to [authorize](Authorization.md) the dashboard, you can
 use AbpHangfireAuthorizationFilter as shown below:
 
     app.UseHangfireDashboard("/hangfire", new DashboardOptions
@@ -123,7 +123,7 @@ jobs in real time. You can configure it as described in it's
 [documentation](http://docs.hangfire.io/en/latest/configuration/using-dashboard.html).
 By default, this dashboard page is available for all users, not
 authorized. You can integrate it to ABP's [authorization
-system](Authorization.html) using **AbpHangfireAuthorizationFilter**
+system](Authorization.md) using **AbpHangfireAuthorizationFilter**
 class defined in Abp.HangFire package. Example configuration:
 
     app.UseHangfireDashboard("/hangfire", new DashboardOptions

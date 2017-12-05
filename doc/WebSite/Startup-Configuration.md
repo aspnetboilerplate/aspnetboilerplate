@@ -32,7 +32,7 @@ your module. Example configuration:
         }
     }
 
-ASP.NET Boilerplate is designed **[modularity](Module-System.html)** in
+ASP.NET Boilerplate is designed **[modularity](Module-System.md)** in
 mind. Different modules can configure ASP.NET Boilerplate. For example,
 different modules can add navigation provider to add their own menu
 items to the main menu. (See
@@ -54,7 +54,7 @@ advanced registration API).
 
 Same service can be replaced multiple times (especially, in different
 modules). Last replaced will be valid (As you know, module PreInitialize
-methods are executed by [dependency order](Module-System.html)).
+methods are executed by [dependency order](Module-System.md)).
 
 ### Configuring Modules
 
@@ -92,7 +92,7 @@ properties:
     }
 
 Then we register this class to [Dependency
-Injection](Dependency-Injection.html) on **PreInitialize** event of
+Injection](Dependency-Injection.md) on **PreInitialize** event of
 MyModule (Thus, it will be injectable):
 
     IocManager.Register<MyModuleConfig>();

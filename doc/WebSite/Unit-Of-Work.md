@@ -26,10 +26,10 @@ connection & transaction, others use it.
 
 Some methods are unit of work methods by default:
 
--   All [MVC](MVC-Controllers.html), [Web API](Web-API-Controllers.html)
-    and [ASP.NET Core MVC](AspNet-Core.html) Controller actions.
--   All [Application Service](Application-Services.html) methods.
--   All [Repository](Repositories.html) methods.
+-   All [MVC](MVC-Controllers.md), [Web API](Web-API-Controllers.md)
+    and [ASP.NET Core MVC](AspNet-Core.md) Controller actions.
+-   All [Application Service](Application-Services.md) methods.
+-   All [Repository](Repositories.md) methods.
 
  Assume that we have an [application
 service](/Pages/Documents/Application-Services) method like below:
@@ -65,7 +65,7 @@ CreatePerson method becomes **atomic** (**unit of work**). 
 
 In addition to default conventional unit of work classes, you can add
 your own convention in PreInitialize method of your
-[module](Module-System.html) like below:
+[module](Module-System.md) like below:
 
     Configuration.UnitOfWork.ConventionalUowSelectors.Add(type => ...);
 
@@ -136,8 +136,8 @@ as shown below:
 
 You can inject and use IUnitOfWorkManager as shown here (Some base
 classes have already **UnitOfWorkManager** injected by default: MVC
-Controllers, [application services](Application-Services.html), [domain
-services](Domain-Services.html)...). Thus, you can create more **limited
+Controllers, [application services](Application-Services.md), [domain
+services](Domain-Services.md)...). Thus, you can create more **limited
 scope** unit of works. In this approach, you should call **Complete**
 method manually. If you don't call, transaction is rolled back and
 changes are not saved.

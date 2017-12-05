@@ -100,7 +100,7 @@ attribute since we may switch to another job manager in the future,
 which may use .NET's built-in binary serialization.
 
 **Keep your arguments simple** (like
-[DTO](Data-Transfer-Objects.html)s), do not include
+[DTO](Data-Transfer-Objects.md)s), do not include
 [entities](/Pages/Documents/Entities) or other non serializable objects.
 As shown in the SimpleSendEmailJob sample, we can only store **Id** of
 an entity and get the entity from repository inside the job.
@@ -161,7 +161,7 @@ Enqueu (or EnqueueAsync) method has other parameters such as
 
 IBackgroundJobManager is implemented by **BackgroundJobManager**
 default. It can be replaced by another background job provider (see
-[hangfire integration](Hangfire-Integration.html)). Some information on
+[hangfire integration](Hangfire-Integration.md)). Some information on
 default BackgroundJobManager:
 
 -   It's a simple job queue works as **FIFO** in a **single thread**. It
@@ -188,7 +188,7 @@ can use **[module-zero](/Pages/Documents/Zero/Overall)** which already
 implements it.
 
 If you are using a 3rd party job manager (like
-[Hanfgire](Hangfire-Integration.html)), no need to implement
+[Hanfgire](Hangfire-Integration.md)), no need to implement
 IBackgroundJobStore.
 
 #### Configuration
@@ -228,7 +228,7 @@ other problems. To prevent it, you have two options:
 Since default background job manager should re-try failed jobs, it
 handles (and logs) all exceptions. In case you want to be informed when
 an exception occurred, you can create an event handler to handle
-[AbpHandledExceptionData](Handling-Exceptions.html). Background manager
+[AbpHandledExceptionData](Handling-Exceptions.md). Background manager
 triggers this event with a BackgroundJobException exception object which
 wraps the real exception (get InnerException for the actual exception).
 
@@ -340,7 +340,7 @@ LogCleaner worker instances they watch and clear different log folders).
 ASP.NET Boilerplate's background worker system are simple. It has not a
 schedule system, except periodic running workers as demonstrated above.
 If you need to more advanced scheduling features, we suggest you to
-check [Quartz](Quartz-Integration.html) or another library.
+check [Quartz](Quartz-Integration.md) or another library.
 
 ### Making Your Application Always Running
 

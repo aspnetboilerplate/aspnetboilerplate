@@ -143,7 +143,7 @@ application model. Here, some other features of ABP:
 -   **[Data Filters](/Pages/Documents/Data-Filters)** : Provides
     automatic data filtering to implement some patterns like soft-delete
     and multi-tenancy.
--   **[Multi Tenancy](Multi-Tenancy.html)**: It fully supports
+-   **[Multi Tenancy](Multi-Tenancy.md)**: It fully supports
     multi-tenancy, including single database or database per tenant
     architectures.
 -   **[Setting Management](/Pages/Documents/Setting-Management)** :

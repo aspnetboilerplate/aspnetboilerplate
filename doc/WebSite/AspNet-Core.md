@@ -52,7 +52,7 @@ Startup class as shown below:
 
 #### Module Configuration
 
-You can use [startup configuration](Startup-Configuration.html) to
+You can use [startup configuration](Startup-Configuration.md) to
 configure AspNet Core Module (using
 *Configuration.Modules.AbpAspNetCore()* in PreInitialize of your
 module).
@@ -76,10 +76,10 @@ below.
 #### Application Services as Controllers
 
 ASP.NET Boilerplate provides infrastructure to create [application
-services](Application-Services.html). If you want to expose your
+services](Application-Services.md). If you want to expose your
 application services to remote clients as controllers (as previously
-done using [dynamic web api](Dynamic-Web-API.html)), you can easily do
-it by a simple configuration in [PreInitialize](Module-System.html)
+done using [dynamic web api](Dynamic-Web-API.md)), you can easily do
+it by a simple configuration in [PreInitialize](Module-System.md)
 method of your module. Example:
 
     Configuration.Modules.AbpAspNetCore().CreateControllersForAppServices(typeof(MyApplicationModule).Assembly, moduleName: 'app', useConventionalHttpVerbs: true);
@@ -125,8 +125,8 @@ added to **all actions of all controllers** by default.
 #### Authorization Filter
 
 **AbpAuthorizationFilter** is used to integrate to [authorization
-system](Authorization.html) and [feature
-system](Feature-Management.html).
+system](Authorization.md) and [feature
+system](Feature-Management.md).
 
 -   You can define **AbpMvcAuthorize** attribute for actions or
     controllers to check desired permissions before action execution.
@@ -139,7 +139,7 @@ system](Feature-Management.html).
 #### Audit Action Filter
 
 **AbpAuditActionFilter** is used to integrate to [audit logging
-system](Audit-Logging.html). It logs all requests to all actions by
+system](Audit-Logging.md). It logs all requests to all actions by
 default (if auditing is not disabled). You can control audit logging
 using **Audited** and **DisableAuditing** attributes for actions and
 controllers.
@@ -147,7 +147,7 @@ controllers.
 #### Validation Action Filter
 
 **AbpValidationActionFilter** is used to integrate to [validation
-system](Validating-Data-Transfer-Objects.html) and automatically
+system](Validating-Data-Transfer-Objects.md) and automatically
 validate all inputs of all actions. In addition to ABP's built-in
 validation & normalization, it also checks MVC's **Model.IsValid**
 property and throws validation exception if action inputs have any
@@ -159,7 +159,7 @@ You can control validation using **EnableValidation** and
 #### Unit of Work Action Filter
 
 **AbpUowActionFilter** is used to integrate to [Unit of
-Work](Unit-Of-Work.html) system. It automatically begins a new unit of
+Work](Unit-Of-Work.md) system. It automatically begins a new unit of
 work before an action execution and completes unit of work after action
 exucition (if no exception is thrown).
 

@@ -171,7 +171,7 @@ that, this works only for single database approach. If you have
 seperated databases for each tenants, disabling filter does not help to
 query all data of all tenants, since they are in different databases,
 can be even in different servers. See [multi tenancy
-document](Multi-Tenancy.html) for more information.
+document](Multi-Tenancy.md) for more information.
 
 #### Disable Filters Globally
 
@@ -214,19 +214,19 @@ change tenant filter: **SetTenantId()**. SetTenantId changes parameter
 value for both filters, and also works for single database and database
 per tenant approaches. So, it's **always suggested to use SetTenantId**
 to change tenancy filter parameter values. See [multi tenancy
-document](Multi-Tenancy.html) for more information.
+document](Multi-Tenancy.md) for more information.
 
 ### ORM Integrations
 
 Data filtering for pre-defined filters works for
-[NHibernate](NHibernate-Integration.html), [Entity
-Framework](EntityFramework-Integration.html) 6.x and [Entity Framework
-Core](Entity-Framework-Core.html). Currently, you can only define custom
+[NHibernate](NHibernate-Integration.md), [Entity
+Framework](EntityFramework-Integration.md) 6.x and [Entity Framework
+Core](Entity-Framework-Core.md). Currently, you can only define custom
 filters for Entity Framework 6.x.
 
 #### Entity Framework
 
-For [Entity Framework integration](EntityFramework-Integration.html),
+For [Entity Framework integration](EntityFramework-Integration.md),
 automatic data filtering is implemented using
 **[EntityFramework.DynamicFilters](https://github.com/jcachat/EntityFramework.DynamicFilters)**
 library.
@@ -304,8 +304,8 @@ so on.
 
 #### Other ORMs
 
-For [Entity Framework Core](Entity-Framework-Core.html) and NHibernate,
-data filtering is implemented in the [repository](Repositories.html)
+For [Entity Framework Core](Entity-Framework-Core.md) and NHibernate,
+data filtering is implemented in the [repository](Repositories.md)
 level. That means it only filters when you query over repositories. If
 you directly use DbContext (for EF Core) or query via custom SQL, you
 should handle filtering yourself.

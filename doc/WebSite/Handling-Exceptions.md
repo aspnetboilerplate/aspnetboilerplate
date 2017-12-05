@@ -1,7 +1,7 @@
 ### Introduction
 
 This document is for ASP.NET MVC and Web API. If you're interested in
-ASP.NET Core, see [ASP.NET Core](AspNet-Core.html) documentation.
+ASP.NET Core, see [ASP.NET Core](AspNet-Core.md) documentation.
 
 In a web application, exceptions are usually handled in MVC Controller
 actions and Web API Controller actions. When an exception occurs,

@@ -103,7 +103,7 @@ ValidateAbpAntiForgeryToken attribute for the corresponding action).
 #### Configuration
 
 XSRF protection is **enabled by default**. You can disable or configure
-it in your [module](Module-System.html)'s PreInitialize method. Example:
+it in your [module](Module-System.md)'s PreInitialize method. Example:
 
     Configuration.Modules.AbpWeb().AntiForgery.IsEnabled = false;
 
@@ -168,7 +168,7 @@ Then you can call this action from client to set the cookie.
 #### Features
 
 **ASP.NET Core** MVC has a better [Anti
-Forgery](https://docs.asp.net/en/latest/security/anti-request-forgery.html)
+Forgery](https://docs.asp.net/en/latest/security/anti-request-forgery.md)
 mechanism compared to previous version (ASP.NET MVC 5.x):
 
 -   It has **AutoValidateAntiforgeryTokenAttribute** class that

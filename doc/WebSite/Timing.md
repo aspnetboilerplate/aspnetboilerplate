@@ -50,7 +50,7 @@ automatically sets value of **abp.clock.provider** on the client side.
 
 ### Time Zones
 
-ABP defines a [setting](Setting-Management.html) named
+ABP defines a [setting](Setting-Management.md) named
 **Abp.Timing.TimeZone** (*TimingSettingNames.TimeZone* constant) for
 storing selected timezone of host, tenant and user. ABP assumes that
 value of timezone setting is a valid **Windows timezone name**. It also
@@ -77,8 +77,8 @@ datetime convertions and showing a datetime to user in his/her timezone.
     clock provider.
 -   ABP automatically normalized DateTimes received from **database**
     based on the current clock provider, when
-    [EntityFramework](EntityFramework-Integration.html) or
-    [NHibernate](NHibernate-Integration.html) modules used.
+    [EntityFramework](EntityFramework-Integration.md) or
+    [NHibernate](NHibernate-Integration.md) modules used.
 
 If UTC clock provider is used, then all DateTimes stored in database
 assumed as UTC values, and all DateTimes received from clients assumed

@@ -71,14 +71,14 @@ type is **JsonResult** (or Task&lt;JsonResult&gt; for async actions).
 
 You can change exception handling and wrapping by using **WrapResult**
 and **DontWrapResult** attributes for controllers or actions or from
-[startup configuration](Startup-Configuration.html) (using
+[startup configuration](Startup-Configuration.md) (using
 Configuration.Modules.AbpMvc()...) globally. See [ajax
 documentation](/Pages/Documents/Javascript-API/AJAX) for more.
 
 #### Audit Logging
 
 **AbpMvcAuditFilter** is used to integrate to [audit logging
-system](Audit-Logging.html). It logs all requests to all actions by
+system](Audit-Logging.md). It logs all requests to all actions by
 default (if auditing is not disabled). You can control audit logging
 using **Audited** and **DisableAuditing** attributes for actions and
 controllers.
@@ -88,7 +88,7 @@ controllers.
 **AbpMvcValidationFilter** automatically checks **ModelState.IsValid**
 and prevents execution of the action if it's not valid. Also, implements
 input DTO validation described in the [validation
-documentation](Validating-Data-Transfer-Objects.html).
+documentation](Validating-Data-Transfer-Objects.md).
 
 #### Authorization
 
@@ -115,7 +115,7 @@ more.
 #### Unit Of Work
 
 **AbpMvcUowFilter** is used to integrate to [Unit of
-Work](Unit-Of-Work.html) system. It automatically begins a new unit of
+Work](Unit-Of-Work.md) system. It automatically begins a new unit of
 work before an action execution and completes unit of work after action
 exucition (if no exception is thrown).
 
@@ -127,7 +127,7 @@ work attribute for all actions.
 
 **AbpAntiForgeryMvcFilter** is used to auto protect MVC actions for
 POST, PUT and DELETE requests from CSRF/XSRF attacks. See [CSRF
-documentation](XSRF-CSRF-Protection.html) for more.
+documentation](XSRF-CSRF-Protection.md) for more.
 
 ### Model Binders
 

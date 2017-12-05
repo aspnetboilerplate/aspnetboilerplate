@@ -54,7 +54,7 @@ cluster of domain objects that can be treated as a single unit. An
 example may be an order and its line-items, these will be separate
 objects, but it's useful to treat the order (together with its line
 items) as a single aggregate.*" (Martin Fowler - see [full
-description](http://martinfowler.com/bliki/DDD_Aggregate.html))
+description](http://martinfowler.com/bliki/DDD_Aggregate.md))
 
 While ABP does not enforce you to use aggregates, you may want to create
 aggregates and aggregate roots in your application. ABP defines
@@ -63,10 +63,10 @@ entities for an aggregate.
 
 #### Domain Events
 
-AggregateRoot defines [**DomainEvents**](EventBus-Domain-Events.html)
+AggregateRoot defines [**DomainEvents**](EventBus-Domain-Events.md)
 collection to generate domain events by the aggregate root class. These
 events are automatically triggered just before the current [unit of
-work](Unit-Of-Work.html) is completed. Actually, any entity can generate
+work](Unit-Of-Work.md) is completed. Actually, any entity can generate
 domain events by implementing **IGeneratesDomainEvents** interface, but
 it's common (best practice) to generate domain events in aggregate
 roots. That's why it's default for AggregateRoot but not for Entity

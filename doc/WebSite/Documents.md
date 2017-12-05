@@ -24,101 +24,101 @@
 
 Overall
 
--   [Introduction](Introduction.html)
--   [NLayer Architecture](NLayer-Architecture.html)
--   [Module System](Module-System.html)
--   [Startup Configuration](Startup-Configuration.html)
--   [Multi Tenancy](Multi-Tenancy.html)
--   [OWIN Integration](OWIN.html)
--   [Debugging](Debugging.html)
--   [API Reference](/api-docs/index.html)
+-   [Introduction](Introduction.md)
+-   [NLayer Architecture](NLayer-Architecture.md)
+-   [Module System](Module-System.md)
+-   [Startup Configuration](Startup-Configuration.md)
+-   [Multi Tenancy](Multi-Tenancy.md)
+-   [OWIN Integration](OWIN.md)
+-   [Debugging](Debugging.md)
+-   [API Reference](/api-docs/index.md)
 
 Common Structures
 
--   [Dependency Injection](Dependency-Injection.html)
--   [Session](Abp-Session.html)
--   [Caching](Caching.html)
--   [Logging](Logging.html)
--   [Setting Management](Setting-Management.html)
--   [Timing](Timing.html)
+-   [Dependency Injection](Dependency-Injection.md)
+-   [Session](Abp-Session.md)
+-   [Caching](Caching.md)
+-   [Logging](Logging.md)
+-   [Setting Management](Setting-Management.md)
+-   [Timing](Timing.md)
 -   [Object To Object Mapping (and AutoMapper
-    Integration)](Object-To-Object-Mapping.html)
--   [Email Sending (and MailKit Integration)](Email-Sending.html)
+    Integration)](Object-To-Object-Mapping.md)
+-   [Email Sending (and MailKit Integration)](Email-Sending.md)
 
 Domain Layer
 
--   [Entities](Entities.html)
--   [Value Objects](Value-Objects.html)
--   [Repositories](Repositories.html)
--   [Domain Services](Domain-Services.html)
--   [Specifications](Specifications.html)
--   [Unit Of Work](Unit-Of-Work.html)
--   [Domain Events (EventBus)](EventBus-Domain-Events.html)
--   [Data Filters](Data-Filters.html)
+-   [Entities](Entities.md)
+-   [Value Objects](Value-Objects.md)
+-   [Repositories](Repositories.md)
+-   [Domain Services](Domain-Services.md)
+-   [Specifications](Specifications.md)
+-   [Unit Of Work](Unit-Of-Work.md)
+-   [Domain Events (EventBus)](EventBus-Domain-Events.md)
+-   [Data Filters](Data-Filters.md)
 
 Application Layer
 
--   [Application Services](Application-Services.html)
--   [Data Transfer Objects](Data-Transfer-Objects.html)
+-   [Application Services](Application-Services.md)
+-   [Data Transfer Objects](Data-Transfer-Objects.md)
 -   [Validating Data Transfer
-    Objects](Validating-Data-Transfer-Objects.html)
--   [Authorization](Authorization.html)
--   [Feature Management](Feature-Management.html)
--   [Audit Logging](Audit-Logging.html)
+    Objects](Validating-Data-Transfer-Objects.md)
+-   [Authorization](Authorization.md)
+-   [Feature Management](Feature-Management.md)
+-   [Audit Logging](Audit-Logging.md)
 
 Distributed Service Layer
 
 -   ASP.NET Web API
-    -   [Web API Controllers](Web-API-Controllers.html)
-    -   [Dynamic Web API Layer](Dynamic-Web-API.html)
-    -   [OData Integration](OData-Integration.html)
-    -   [Swagger UI Integration](Swagger-UI-Integration.html)
+    -   [Web API Controllers](Web-API-Controllers.md)
+    -   [Dynamic Web API Layer](Dynamic-Web-API.md)
+    -   [OData Integration](OData-Integration.md)
+    -   [Swagger UI Integration](Swagger-UI-Integration.md)
 
 Presentation Layer
 
 -   ASP.NET MVC
-    -   [MVC Controllers](MVC-Controllers.html)
-    -   [MVC Views](MVC-Views.html)
-    -   [Handling Exceptions](Handling-Exceptions.html)
+    -   [MVC Controllers](MVC-Controllers.md)
+    -   [MVC Views](MVC-Views.md)
+    -   [Handling Exceptions](Handling-Exceptions.md)
 -   ASP.NET Core
-    -   [ASP.NET Core Integration](AspNet-Core.html)
--   [Localization](Localization.html)
--   [Navigation](Navigation.html)
--   [Embedded Resources](Embedded-Resource-Files.html)
+    -   [ASP.NET Core Integration](AspNet-Core.md)
+-   [Localization](Localization.md)
+-   [Navigation](Navigation.md)
+-   [Embedded Resources](Embedded-Resource-Files.md)
 -   [Javascript API](/Pages/Documents/Javascript-API)
--   [CSRF/XSRF Protection](XSRF-CSRF-Protection.html)
+-   [CSRF/XSRF Protection](XSRF-CSRF-Protection.md)
 
 Background Services
 
--   [Background Jobs and Workers](Background-Jobs-And-Workers.html)
--   [Hangfire Integration](Hangfire-Integration.html)
--   [Quartz Integration](Quartz-Integration.html)
+-   [Background Jobs and Workers](Background-Jobs-And-Workers.md)
+-   [Hangfire Integration](Hangfire-Integration.md)
+-   [Quartz Integration](Quartz-Integration.md)
 
 Real Time Services
 
--   [Notification System](Notification-System.html)
--   [SignalR Integration](SignalR-Integration.html)
+-   [Notification System](Notification-System.md)
+-   [SignalR Integration](SignalR-Integration.md)
 
 Object-Relational Mapping
 
--   [EntityFramework Integration](EntityFramework-Integration.html)
--   [EntityFramework Core Integration](Entity-Framework-Core.html)
--   [NHibernate Integration](NHibernate-Integration.html)
--   [Dapper Integration](Dapper-Integration.html) NEW
+-   [EntityFramework Integration](EntityFramework-Integration.md)
+-   [EntityFramework Core Integration](Entity-Framework-Core.md)
+-   [NHibernate Integration](NHibernate-Integration.md)
+-   [Dapper Integration](Dapper-Integration.md) NEW
 
 Releases
 
--   [Nuget Packages](Nuget-Packages.html)
+-   [Nuget Packages](Nuget-Packages.md)
 -   [Change Logs &
     Releases](https://github.com/aspnetboilerplate/aspnetboilerplate/releases)
 
 ### Module Zero
 
--   [Introduction](Zero/Overall.html)
+-   [Introduction](Zero/Overall.md)
 -   Startup Templates
-    -   [ASP.NET Core & Angular](Zero/Startup-Template-Angular.html)
-    -   [ASP.NET Core MVC & jQuery](Zero/Startup-Template-Core.html)
-    -   [ASP.NET MVC 5.x / Angularjs 1.x](Zero/Startup-Template.html)
+    -   [ASP.NET Core & Angular](Zero/Startup-Template-Angular.md)
+    -   [ASP.NET Core MVC & jQuery](Zero/Startup-Template-Core.md)
+    -   [ASP.NET MVC 5.x / Angularjs 1.x](Zero/Startup-Template.md)
 -   Features
     -   [Tenant Management](/Pages/Documents/Zero/Tenant-Management)
     -   [Edition Management](/Pages/Documents/Zero/Edition-Management)
@@ -129,7 +129,7 @@ Releases
     -   [Permission
         Management](/Pages/Documents/Zero/Permission-Management)
     -   [Language Management](/Pages/Documents/Zero/Language-Management)
-    -   [Identity Server Integration](Zero/Identity-Server.html) NEW
+    -   [Identity Server Integration](Zero/Identity-Server.md) NEW
 -   Releases
     -   [Nuget Packages](/Pages/Documents/Zero/Nuget-Packages)
     -   [Change Logs &

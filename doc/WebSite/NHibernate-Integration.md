@@ -70,7 +70,7 @@ NHibernate (like mapping XML files).
 ### Repositories
 
 Repositories are used to abstract data access from higher layers. See
-[repository documentation](Repositories.html) for more.  
+[repository documentation](Repositories.md) for more.  
 
 #### Default Implementation
 

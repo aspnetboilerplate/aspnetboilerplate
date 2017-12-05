@@ -7,8 +7,8 @@ those have different **features**. Thus, they can provide different
 ASP.NET Boilerplate provides a **feature system** to make it easier. We
 can **define** features, **check** if a feature is **enabled** for a
 tenant and **integrate** feature system to other ASP.NET Boilerplate
-concepts (like [authorization](Authorization.html) and
-[navigation](Navigation.html)).
+concepts (like [authorization](Authorization.md) and
+[navigation](Navigation.md)).
 
 #### About IFeatureValueStore
 

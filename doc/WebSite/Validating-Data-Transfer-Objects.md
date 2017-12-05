@@ -14,10 +14,10 @@ service method should first check (validate) input and then use it.
 ASP.NET Boilerplate provides a good infrastructure to automatically
 validate all inputs of an application for;
 
--   All [application service](Application-Services.html) methods
--   All [ASP.NET Core](AspNet-Core.html) MVC controller actions
--   All ASP.NET [MVC](MVC-Controllers.html) and [Web
-    API](Web-API-Controllers.html) controller actions.
+-   All [application service](Application-Services.md) methods
+-   All [ASP.NET Core](AspNet-Core.md) MVC controller actions
+-   All ASP.NET [MVC](MVC-Controllers.md) and [Web
+    API](Web-API-Controllers.md) controller actions.
 
 See Disabling Validation section to disable validation if needed.
 
@@ -103,7 +103,7 @@ ICustomValidate interface declares **AddValidationErrors** method to be
 implemented. We must add **ValidationResult** objects to
 **context.Results** list if there are validation errors. You can also
 use context.IocResolver to [resolve
-dependencies](Dependency-Injection.html) if needed in validation
+dependencies](Dependency-Injection.md) if needed in validation
 progress. 
 
 In addition to ICustomValidate, ABP also supports .NET's standard

@@ -24,7 +24,7 @@ applications. Simplest module definition can be as shown below:
     }
 
 Module definition class is responsible to register it's classes to
-[dependency injection](Dependency-Injection.html) (can be done
+[dependency injection](Dependency-Injection.md) (can be done
 conventionally as shown above) if needed. It can configure application
 and other modules, add new features to the application and so on...
 
@@ -44,12 +44,12 @@ but in **reverse order**.
 #### PreInitialize
 
 This method is called first when application starts. It's usual method
-to [configure](Startup-Configuration.html) the framework and other
+to [configure](Startup-Configuration.md) the framework and other
 modules before they initialize.
 
 Also, you can write some specific code here to run before dependency
 injection registrations. For example, if you create a [conventional
-registration](Dependency-Injection.html) class, you should register it
+registration](Dependency-Injection.md) class, you should register it
 here using IocManager.AddConventionalRegisterer method.
 
 #### Initialize
@@ -58,7 +58,7 @@ It's the usual place where [dependency
 injection](/Pages/Documents/Dependency-Injection) registration should be
 done. It's generally done using IocManager.RegisterAssemblyByConvention
 method. If you want to define custom dependency registration, see
-[dependency injection documentation](Dependency-Injection.html).
+[dependency injection documentation](Dependency-Injection.md).
 
 #### PostInitialize
 
@@ -118,7 +118,7 @@ We could use **AddFolder** extension method for a simpler syntax:
         options.PlugInSources.AddFolder(@"C:\MyPlugIns");
     });
 
-See [ASP.NET Core document](AspNet-Core.html) for more on Startup class.
+See [ASP.NET Core document](AspNet-Core.md) for more on Startup class.
 
 #### ASP.NET MVC, Web API
 
@@ -220,7 +220,7 @@ on Module1.
 ### Module Configuration
 
 While custom module methods can be used to configure modules, we suggest
-to use [startup configuration](Startup-Configuration.html) system to
+to use [startup configuration](Startup-Configuration.md) system to
 define and set configuration for modules.
 
 ### Module Lifetime

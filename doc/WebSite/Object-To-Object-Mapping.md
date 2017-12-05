@@ -3,7 +3,7 @@
 It's a common to map a similar object to another object. It's also
 tedious and repeating since generally both objects (classes) may have
 similar/same properties mapped to each other. Think on a typical
-[application service](Application-Services.html) method below:
+[application service](Application-Services.md) method below:
 
     public class UserAppService : ApplicationService
     {
@@ -28,8 +28,8 @@ similar/same properties mapped to each other. Think on a typical
         }
     }
 
-CreateUserInput is a simple [DTO](Data-Transfer-Objects.html) and User
-is a simple [entity](Entities.html) here. We manually created a User
+CreateUserInput is a simple [DTO](Data-Transfer-Objects.md) and User
+is a simple [entity](Entities.md) here. We manually created a User
 entity from given input. User entity will have much more properties in a
 real world application and manually creating it will become tedious and
 error-prone. Also, we should change the mapping code when we want to add
@@ -80,7 +80,7 @@ to update it's properties by an object:
 ### AutoMapper Integration
 
 **[Abp.AutoMapper](https://www.nuget.org/packages/Abp.AutoMapper)**
-nuget package ([module](Module-System.html)) implements IObjectMapper
+nuget package ([module](Module-System.md)) implements IObjectMapper
 and provides additional features.
 
 #### Installation
@@ -98,7 +98,7 @@ definition class:
         ...
     }
 
-Then you can safely [inject](Dependency-Injection.html) and use
+Then you can safely [inject](Dependency-Injection.md) and use
 IObjectMapper in your code. You can also use
 [AutoMapper](http://automapper.org/)'s own API when you need.
 
@@ -222,7 +222,7 @@ to use MapTo extension methods defined above):
 
 Abp.AutoMapper module defines a mapping to convert LocalizableString (or
 ILocalizableString) objects to string objects. It makes the conversion
-using [ILocalizationManager](Localization.html), so localizable
+using [ILocalizationManager](Localization.md), so localizable
 properties are automatically localized during the mapping process of any
 class.
 
@@ -231,4 +231,4 @@ class.
 You may need to directly use AutoMapper's IMapper object instead of
 IObjectMapper abstraction. In that case, just inject IMapper in your
 classes and use it. Abp.AutoMapper package registers IMapper to
-[dependency injection](Dependency-Injection.html) as singleton.
+[dependency injection](Dependency-Injection.md) as singleton.

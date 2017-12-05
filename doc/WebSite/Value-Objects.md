@@ -3,7 +3,7 @@
 "*An object that represents a descriptive aspect of the domain with no
 conceptual identity is called a VALUE OBJECT.*" (Eric Evans).
 
-As opposite to [Entities](Entities.html), which have their identities
+As opposite to [Entities](Entities.md), which have their identities
 (Id), a Value Object has not it's identity. If identities of two
 Entities are different, they are considered as different
 objects/entities even if all other properties of those entities are

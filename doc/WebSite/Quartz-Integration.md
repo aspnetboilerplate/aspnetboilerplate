@@ -7,16 +7,16 @@ large scale enterprise systems.
 integrates Quartz to ASP.NET Boilerplate.
 
 ASP.NET Boilerplate has a built-in [persistent background job queue and
-background worker](Background-Jobs-And-Workers.html) system. Quartz can
+background worker](Background-Jobs-And-Workers.md) system. Quartz can
 be a good alternative if you have advanced scheduling requirements for
-your background workers. Also, [Hangfire](Hangfire-Integration.html) can
+your background workers. Also, [Hangfire](Hangfire-Integration.md) can
 be a good alternative for persistent background job queue.
 
 ### Installation
 
 Install [**Abp.Quartz**](https://www.nuget.org/packages/Abp.Quartz)
 nuget package to your project and add a **DependsOn** attribute to your
-[module](Module-System.html) for **AbpQuartzModule**:
+[module](Module-System.md) for **AbpQuartzModule**:
 
     [DependsOn(typeof (AbpQuartzModule))]
     public class YourModule : AbpModule

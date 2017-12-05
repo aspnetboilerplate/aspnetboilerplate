@@ -3,7 +3,7 @@
 ASP.NET Boilerplate provides an easy way of using embedded **Razor
 views** (.cshtml files) and **other resources** (css, js, img... files)
 in your web application. You can use this feature to create
-[plugins/modules](Module-System.html) that contains UI functionality.
+[plugins/modules](Module-System.md) that contains UI functionality.
 
 ### Create Embedded Files
 
@@ -45,9 +45,9 @@ files you want to use in a web application.
 ### Add To Embedded Resource Manager
 
 Once we embed our files into the assembly, we can use [startup
-configuration](Startup-Configuration.html) to add them to embedded
+configuration](Startup-Configuration.md) to add them to embedded
 resource manager. You can add such a line to PreInitialize method of
-your [module](Module-System.html):
+your [module](Module-System.md):
 
     Configuration.EmbeddedResources.Sources.Add(
         new EmbeddedResourceSet(

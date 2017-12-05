@@ -124,7 +124,7 @@ provide default values for settings where it's possible.
 
 context.Manager can be used to get a setting definition to change it's
 values. In this way, you can manipulate setting definitions of [depended
-modules](Module-System.html).
+modules](Module-System.md).
 
 ### Getting setting values
 

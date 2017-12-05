@@ -133,7 +133,7 @@ items**:
 We **should not directly store entities in the cache** since caching may
 need to **serialize** cached objects and entities may not be serialized
 (especially if they have navigation properties). That's why we defined a
-simple ([DTO](Data-Transfer-Objects.html) like) class to store data in
+simple ([DTO](Data-Transfer-Objects.md) like) class to store data in
 the cache. We added **AutoMapFrom** attribute since we want to use
 AutoMapper to convert Person entities to PersonCacheItem objects
 automatically. If we don't use AutoMapper, we should **override
@@ -181,7 +181,7 @@ the person's **Id**. An example class that uses the Person cache:
         }
     }
 
-We simply [injected](Dependency-Injection.html) IPersonCache, got the
+We simply [injected](Dependency-Injection.md) IPersonCache, got the
 cache item and got the Name property.
 
 #### How EntityCache Works
@@ -215,7 +215,7 @@ First, you need to install
 nuget package to your application (you can install it to your Web
 project, for example). Then you need to add a **DependsOn** attribute
 for **AbpRedisCacheModule** and call **UseRedis** extension method in
-**PreInitialize** method of your [module](Module-System.html), as shown
+**PreInitialize** method of your [module](Module-System.md), as shown
 below:
 
     //...other namespaces

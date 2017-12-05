@@ -157,7 +157,7 @@ database**:
     }
 
 It's that simple. We can pass any specification to repositories since
-[repositories](Repositories.html) can work with expressions as filters.
+[repositories](Repositories.md) can work with expressions as filters.
 In this example, CustomerManager is unnecessary since we could directly
 use repository with the specification to query database. But think that
 we want to execute a business operation on some customers. In that case,
@@ -197,7 +197,7 @@ to a domain service as shown below:
 
     var count = _customerRepository.Count(c => c.Balance > 100000 && c.CreationYear == 2017);
 
-Since ABP's [Repository](Repositories.html) supports expessions, this is
+Since ABP's [Repository](Repositories.md) supports expessions, this is
 completely a valid usage. You don't have to define or use any
 specification in your application and you can go with expressions. So,
 what's the point of specification? Why and when should we consider to

@@ -128,7 +128,7 @@ There are some overloads of the trigger method:
 
 Another way of triggering events can be using DomainEvents collection of
 AggregateRoot class (see related section in the [Entity
-documentation](Entities.html)).
+documentation](Entities.md)).
 
 ### Handling Events
 

@@ -1,7 +1,7 @@
 ### Building Dynamic Web API Controllers
 
 This document is for ASP.NET Web API. If you're interested in ASP.NET
-Core, see [ASP.NET Core](AspNet-Core.html) documentation.
+Core, see [ASP.NET Core](AspNet-Core.md) documentation.
 
 ASP.NET Boilerplate can automatically generate **ASP.NET Web API layer**
 for your **application layer**. Say that we have an [application
@@ -24,7 +24,7 @@ configuration:
 Thats all! An api controller is created in the address
 '**/api/services/tasksystem/task**' and all methods are now usable by
 clients. This configuration should be made in the **Initialize** method
-of your [module](Module-System.html).
+of your [module](Module-System.md).
 
 **ITaskAppService** is the application service that we want to wrap with
 an api controller. It is not restricted to application services but this
@@ -159,7 +159,7 @@ We can override it for a specific method as described before.
 #### API Explorer
 
 All dynamic web api controllers are visible to API explorer by default
-(They are available in [Swagger](Swagger-UI-Integration.html) for
+(They are available in [Swagger](Swagger-UI-Integration.md) for
 example). You can control this behaviour with fluent
 DynamicApiControllerBuilder API or using RemoteService attribute defined
 below.
@@ -290,7 +290,7 @@ values to the client. Especially, disabling it may be needed while
 working **3rd party client side libraries** which can not work with
 ASP.NET Boilerplate's standard AjaxResponse. In this case, you should
 also handle exceptions yourself since [exception
-handling](Handling-Exceptions.html) will be disabled (DontWrapResult
+handling](Handling-Exceptions.md) will be disabled (DontWrapResult
 attribute has WrapOnError properties that can be used to enable handling
 and wrapping for exceptions).
 

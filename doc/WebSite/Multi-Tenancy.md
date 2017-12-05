@@ -67,7 +67,7 @@ tenant data. We may add **TenantId filter** for each database read
 (select) operation. Also, we may check it every write, if this entity is
 related to the **current tenant**. This is tedious and error-prone. But
 ASP.NET Boilerplate helps us here by using **automatic [data
-filtering](Data-Filters.html)**.
+filtering](Data-Filters.md)**.
 
 This approach may have performance problems if we have many tenants with
 huge data. We may use table partitioning or other database features to
@@ -182,8 +182,8 @@ once in a request (and only if current user has not already logged in).
 by tenancy name. Default implementation of **ITenantStore** is
 **NullTenantStore** which does not contain any tenant and returns null
 for queries. You can implement and replace it to query tenants from any
-data source. [Module zero](Zero/Overall.html) properly implements it to
-get from it's [tenant manager](Zero/Tenant-Management.html). So, if you
+data source. [Module zero](Zero/Overall.md) properly implements it to
+get from it's [tenant manager](Zero/Tenant-Management.md). So, if you
 are using module zero, don't care about the tenant store.
 
 #### Data Filters
@@ -254,7 +254,7 @@ while writing LINQ, since it will be automatically filtered.
 
 While working on a multitenant application database, we should know the
 **current tenant**. By default, it's obtained from
-[IAbpSession](Abp-Session.html) (as described before). We can change
+[IAbpSession](Abp-Session.md) (as described before). We can change
 this behaviour and switch to other tenant's database. Example:
 
     public class ProductService : ITransientDependency
@@ -288,7 +288,7 @@ independent from database architecture:
     get only that tenant's products.
 
 If we don't use SetTenantId, it gets tenantId from
-[session](Abp-Session.html), as said before. There are some notes and
+[session](Abp-Session.md), as said before. There are some notes and
 best practices here:
 
 -   Use **SetTenantId(null)** to switch to the host.
@@ -298,4 +298,4 @@ best practices here:
     works as before.
 -   You can use SetTenantId in **nested blocks** if it's needed.
 -   Since **\_unitOfWorkManager.Current** only available in a [unit of
-    work](Unit-Of-Work.html), be sure that your code runs in a UOW.
+    work](Unit-Of-Work.md), be sure that your code runs in a UOW.

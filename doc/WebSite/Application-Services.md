@@ -122,7 +122,7 @@ functionality when you need to customize it.
 
 #### Simple CRUD Application Service Example
 
-Assume that we have a Task [entity](Entities.html) defined below:
+Assume that we have a Task [entity](Entities.md) defined below:
 
     public class Task : Entity, IHasCreationTime
     {
@@ -144,7 +144,7 @@ Assume that we have a Task [entity](Entities.html) defined below:
         }
     }
 
-And we created a [DTO](Data-Transfer-Objects.html) for this entity:
+And we created a [DTO](Data-Transfer-Objects.md) for this entity:
 
     [AutoMap(typeof(Task))]
     public class TaskDto : EntityDto, IHasCreationTime
@@ -174,8 +174,8 @@ dto. Now, we can create an application service as shown below:
         }
     }
 
-We [injected](Dependency-Injection.html) the
-[repository](Repositories.html) and passed it to the base class (We
+We [injected](Dependency-Injection.md) the
+[repository](Repositories.md) and passed it to the base class (We
 could inherit from CrudAppService if we want to create sync methods
 instead of async methods). **That's all!** TaskAppService now have
 simple CRUD methods. If you want to define an interface for the
@@ -313,7 +313,7 @@ customize the behaviour.
 
 #### CRUD Permissions
 
-You probably need to [authorize](Authorization.html) your CRUD methods.
+You probably need to [authorize](Authorization.md) your CRUD methods.
 There are pre-defined permission properties you can set:
 GetPermissionName, GetAllPermissionName, CreatePermissionName,
 UpdatePermissionName and DeletePermissionName. Base CRUD class

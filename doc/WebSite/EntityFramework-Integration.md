@@ -86,7 +86,7 @@ way you like.
 ### Repositories
 
 Repositories are used to abstract data access from higher layers. See
-[repository documentation](Repositories.html) for more. 
+[repository documentation](Repositories.md) for more. 
 
 #### Default Repositories
 
@@ -249,14 +249,14 @@ from any project without referencing to EF.
 
 ### Transaction Management
 
-ASP.NET Boilerplate has a built-in [unit of work](Unit-Of-Work.html)
+ASP.NET Boilerplate has a built-in [unit of work](Unit-Of-Work.md)
 system to manage database connection and transactions. Entity framework
 has different [transaction management
 approaches](https://msdn.microsoft.com/en-us/library/dn456843(v=vs.113).aspx).
 ASP.NET Boilerplate uses ambient TransactionScope approach by default,
 but also has a built-in implementation for DbContext transaction API. If
 you want to switch to DbContext transaction API, you can configure it in
-PreInitialize method of your [module](Module-System.html) like that:
+PreInitialize method of your [module](Module-System.md) like that:
 
     Configuration.ReplaceService<IEfTransactionStrategy, DbContextEfTransactionStrategy>(DependencyLifeStyle.Transient);
 
@@ -274,4 +274,4 @@ templates are designed to work with Sql Server but you can modify them
 to work with a different data store.
 
 For example, if you want to work with MySql, please refer to [this
-document](EF-MySql-Integration.html)
+document](EF-MySql-Integration.md)

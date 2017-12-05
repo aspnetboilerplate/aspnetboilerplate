@@ -224,7 +224,7 @@ different sources such as in a database. You can directly implement the
 **ILocalizationSource** interface or you can use
 **DictionaryBasedLocalizationSource** class to make implementation
 easier (json and xml localization sources also use it). [Module
-zero](Zero/Language-Management.html) implements source in the database
+zero](Zero/Language-Management.md) implements source in the database
 for example.
 
 ### How Current Language Is Determined
@@ -241,9 +241,9 @@ which determines the current language for an HTTP request:
     provider): Use **culture** & **ui-culture** URL query string values
     if present. Example value: "culture=es-MX&ui-culture=es-MX".
 -   **AbpUserRequestCultureProvider** (ABP's provider): If user is known
-    via **[IAbpSession](Abp-Session.html)** and explicitly selected a
+    via **[IAbpSession](Abp-Session.md)** and explicitly selected a
     language before (and saved to
-    [ISettingManager](Setting-Management.html)) then use user's
+    [ISettingManager](Setting-Management.md)) then use user's
     preferred language. If user is known but not selected any language
     and **.AspNetCore.Culture** cookie or header has a value, set user's
     language setting with that information and use this value as the
@@ -302,9 +302,9 @@ determines it by default:
 
 -   Try to get from a special **query string** value, named
     "**Abp.Localization.CultureName**" by default.
--   If user is known via [IAbpSession](Abp-Session.html) and explicitly
+-   If user is known via [IAbpSession](Abp-Session.md) and explicitly
     selected a language before (and saved to
-    [ISettingManager](Setting-Management.html)) then use user's
+    [ISettingManager](Setting-Management.md)) then use user's
     preferred language. If user is known but not selected any language
     and cookie/header (see below) has a value, set user's setting with
     that information.
@@ -317,7 +317,7 @@ determines it by default:
 -   Try to get from **default culture** setting (setting name is
     "Abp.Localization.DefaultLanguageName", which is a constant defined
     in Abp.Localization.LocalizationSettingNames.DefaultLanguage and can
-    be changed using [setting management](Setting-Management.html)).
+    be changed using [setting management](Setting-Management.md)).
 -   Try to get from **browser's default language**
     (HttpContext.Request.UserLanguages).
 

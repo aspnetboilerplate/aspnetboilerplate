@@ -196,7 +196,7 @@ much more properties.
 
 Fortunately there are tools that makes this very easy.
 **[AutoMapper](http://automapper.org/)** is one of them. See [AutoMapper
-Integration](Object-To-Object-Mapping.html) document to know how to use
+Integration](Object-To-Object-Mapping.md) document to know how to use
 it.
 
 ### Helper interfaces and classes

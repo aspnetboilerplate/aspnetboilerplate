@@ -62,7 +62,7 @@ are added to **all actions of all controllers** by default.
 #### Audit Logging
 
 **AbpApiAuditFilter** is used to integrate to [audit logging
-system](Audit-Logging.html). It logs all requests to all actions by
+system](Audit-Logging.md). It logs all requests to all actions by
 default (if auditing is not disabled). You can control audit logging
 using **Audited** and **DisableAuditing** attributes for actions and
 controllers.
@@ -92,14 +92,14 @@ more. 
 #### Anti Forgery Filter
 
 **AbpAntiForgeryApiFilter** is used to auto protect ASP.NET Web API
-actions (including [dynamic web api](Dynamic-Web-API.html)) for POST,
+actions (including [dynamic web api](Dynamic-Web-API.md)) for POST,
 PUT and DELETE requests from CSRF/XSRF attacks. See [CSRF
-documentation](XSRF-CSRF-Protection.html) for more. 
+documentation](XSRF-CSRF-Protection.md) for more. 
 
 #### Unit Of Work
 
 **AbpApiUowFilter** is used to integrate to [Unit of
-Work](Unit-Of-Work.html) system. It automatically begins a new unit of
+Work](Unit-Of-Work.md) system. It automatically begins a new unit of
 work before an action execution and completes unit of work after action
 exucition (if no exception is thrown).
 
@@ -113,9 +113,9 @@ ASP.NET Boilerplate **does not wrap** Web API actions **by default** if
 action has successfully executed. But it **handles and wraps for
 exceptions**. You can add WrapResult/DontWrapResult to actions and
 controllers if you need. You can change this default behaviour from
-[startup configuration](Startup-Configuration.html) (using
+[startup configuration](Startup-Configuration.md) (using
 Configuration.Modules.AbpWebApi()...). See [AJAX
-document](Javascript-API/AJAX.html) for more about result wrapping. 
+document](Javascript-API/AJAX.md) for more about result wrapping. 
 
 #### Result Caching
 
@@ -129,7 +129,7 @@ configuration.
 **AbpApiValidationFilter** automatically checks **ModelState.IsValid**
 and prevents execution of the action if it's not valid. Also, implements
 input DTO validation described in the [validation
-documentation](Validating-Data-Transfer-Objects.html).
+documentation](Validating-Data-Transfer-Objects.md).
 
 ### Model Binders
 

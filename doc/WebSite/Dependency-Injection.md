@@ -345,7 +345,7 @@ classes and dependencies.
 ###### Using IocManager
 
 You can use **IocManager** to register dependencies (generally in
-PreInitialize of your [module definition](Module-System.html) class):
+PreInitialize of your [module definition](Module-System.md) class):
 
     IocManager.Register<IMyService, MyService>(DependencyLifeStyle.Transient);
 

@@ -3,7 +3,7 @@
 [Abp.EntityFrameworkCore](https://www.nuget.org/packages/Abp.EntityFrameworkCore)
 nuget package is used to integrate to Entity Framework (EF) Core ORM
 framework. After installing this package, we should also add a
-[DependsOn](Module-System.html) attribute for
+[DependsOn](Module-System.md) attribute for
 **AbpEntityFrameworkCoreModule**.
 
 ### DbContext
@@ -39,7 +39,7 @@ Use **AddAbpDbContext** method on service collection in
 
 For non web projects, we will not have a Startup class. In that case, we
 can use **Configuration.Modules.AbpEfCore().AddDbContext** method in our
-[module](Module-System.html)class to configure DbContext, as shown
+[module](Module-System.md)class to configure DbContext, as shown
 below:
 
     Configuration.Modules.AbpEfCore().AddDbContext<MyDbContext>(options =>
@@ -78,7 +78,7 @@ appsettings.json).
 ### Repositories
 
 Repositories are used to abstract data access from higher layers. See
-[repository documentation](Repositories.html) for more. 
+[repository documentation](Repositories.md) for more. 
 
 #### Default Repositories
 
@@ -229,7 +229,7 @@ from any project without referencing to EF Core.
 ##### Replacing Default Repositories
 
 Even you have created a TaskRepository as shown above, any class can
-still [inject](Dependency-Injection.html) IRepository&lt;Task, long&gt;
+still [inject](Dependency-Injection.md) IRepository&lt;Task, long&gt;
 and use it. That's not a problem in most cases. But, what if you
 **overrided** a base method in your custom repository? Say that you have
 overrided Delete method in your custom repository to add a custom
