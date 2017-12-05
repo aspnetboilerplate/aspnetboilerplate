@@ -489,23 +489,6 @@ namespace Abp.Zero.EntityFramework
 
             #endregion
 
-
-            #region UserNotificationInfo.IX_UserId_State_CreationTime
-
-            modelBuilder.Entity<UserNotificationInfo>()
-                .Property(e => e.TenantId)
-                .CreateIndex("IX_UserId_State_CreationTime", 1);
-
-            modelBuilder.Entity<UserNotificationInfo>()
-                .Property(e => e.State)
-                .CreateIndex("IX_UserId_State_CreationTime", 2);
-
-            modelBuilder.Entity<UserNotificationInfo>()
-                .Property(e => e.CreationTime)
-                .CreateIndex("IX_UserId_State_CreationTime", 2);
-
-            #endregion
-
             #region UserOrganizationUnit.IX_TenantId_UserId
 
             modelBuilder.Entity<UserOrganizationUnit>()
