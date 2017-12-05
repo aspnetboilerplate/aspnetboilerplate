@@ -53,7 +53,7 @@ AbpTenant class defines some base properties, most importants are:
 
 AbpTenant class is inherited from **FullAuditedEntity**. That means it
 has creation, modification and deletion **audit properties**. It's also
-**[Soft-Delete](/Pages/Documents/Data-Filters#DocSoftDelete)** . So,
+**[Soft-Delete](/Pages/Documents/Data-Filters#isoftdelete)** . So,
 when we delete a tenant, it's not deleted from database, just marked as
 deleted.
 

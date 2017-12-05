@@ -30,12 +30,12 @@ class for more information.
 
 AbpUser class is inherited from **FullAuditedEntity**. That means it has
 creation, modification and deletion audit properties. It's also
-**[Soft-Delete](/Pages/Documents/Data-Filters#DocSoftDelete)** . So,
+**[Soft-Delete](/Pages/Documents/Data-Filters#isoftdelete)** . So,
 when we delete a user, it's not deleted from database, just marked as
 deleted.
 
 AbpUser class implements
-[IMayHaveTenant](/Pages/Documents/Data-Filters#DocMayHaveTenant) filter
+[IMayHaveTenant](/Pages/Documents/Data-Filters#imayhavetenant) filter
 to properly work in a multi-tenant application.
 
 Finally, **Id** of the User is defined as **long**.
@@ -120,7 +120,7 @@ returning result object to know if operation succeeded.
 
 Module-zero defines **CheckErrors** extension method that automatically
 checks errors and throws exception (a localized
-[UserFriendlyException](/Pages/Documents/Handling-Exceptions#DocShowUserFriendlyExceptions))
+[UserFriendlyException](/Pages/Documents/Handling-Exceptions#userfriendlyexception))
 if needed. Example usage:
 
     (await UserManager.CreateAsync(user)).CheckErrors();

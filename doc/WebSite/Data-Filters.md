@@ -1,7 +1,7 @@
 ### Introduction
 
 It's common to use the
-[**soft-delete**](/Pages/Documents/Entities#DocSoftDelete) pattern which
+[**soft-delete**](/Pages/Documents/Entities#soft-delete) pattern which
 is used to not delete an entity from database but only mark it as
 'deleted'. So, if an entity is soft-deleted, it should not be accidently
 retrieved into the application. To provide that, we would add a SQL
@@ -33,7 +33,7 @@ property. Example:
 A **Person** entity is not actually deleted from database, instead
 **IsDeleted** property is set to true when need to delete it. This is
 done automatically by ASP.NET Boilerplate when you use
-**[IRepository.Delete](/Pages/Documents/Repositories#DocDeleteEntity)**
+**[IRepository.Delete](/Pages/Documents/Repositories#delete)**
 method (you can manually set IsDeleted to true, but Delete method is
 more natural and preffered way).
 
@@ -67,7 +67,7 @@ generated SQL query.
 ISoftDelete filter is always enabled unless you explicitly disable it.
 
 <span class="auto-style1">A side note</span>: If you implement
-[IDeletionAudited](/Pages/Documents/Entities#DocSoftDelete) (which
+[IDeletionAudited](/Pages/Documents/Entities#soft-delete) (which
 extends ISoftDelete) then deletion time and deleter user id are also
 automatically set by ASP.NET Boilerplate.
 

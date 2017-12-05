@@ -74,7 +74,7 @@ queue:
     }
 
 We
-[injected](/Pages/Documents/Dependency-Injection#DocConstructorInjection)
+[injected](/Pages/Documents/Dependency-Injection#constructor-injection-pattern)
 user [repository](/Pages/Documents/Repositories) (to get user emails)
 and email sender (a service to send emails) and simply sent the email.
 **SimpleSendEmailJobArgs** is the job argument here and defined as shown

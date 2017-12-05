@@ -95,7 +95,7 @@ Thus, CreatePerson methods becomes unit of work and manages database
 connection and transaction, both repositories use same unit of work.
 Note that no need to UnitOfWork attribute if this is an application
 service method. Also see '[unit of work method
-restrictions](#DocUowRestrictions)' section.
+restrictions](#uow-restrictions)' section.
 
 There are some options of the UnitOfWork attribute. See 'unit of work in
 detail' section. UnitOfWork attribute can also be used for classes to

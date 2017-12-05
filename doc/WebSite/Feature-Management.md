@@ -56,7 +56,7 @@ provider that defines 3 features:
     }
 
 After creating a feature provider, we should register it in our module's
-[PreInitialize](/Pages/Documents/Module-System#DocModulePreInit) method
+[PreInitialize](/Pages/Documents/Module-System#preinitialize) method
 as shown below:
 
     Configuration.Features.Providers.Add<AppFeatureProvider>();

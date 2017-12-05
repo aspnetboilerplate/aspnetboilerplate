@@ -124,7 +124,7 @@ called by javascript via AJAX. Let's see ABP's some benefits here:
     automatically does that on runtime. Thus, we can use application
     service methods directly from clients.
 -   **[Dynamic Javascript AJAX
-    Proxy](/Pages/Documents/Dynamic-Web-API#DocDynamicProxy)** : ABP
+    Proxy](/Pages/Documents/Dynamic-Web-API#dynamic-javascript-proxies)** : ABP
     creates javascript proxy methods those make calling application
     service methods just as simple as calling javascript methods on the
     client.

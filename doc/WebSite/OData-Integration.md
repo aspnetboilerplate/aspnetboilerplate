@@ -34,7 +34,7 @@ dependencies.
 
 OData requires to declare entities which can be used as OData resources.
 We should do this in
-[PreInitialize](/Pages/Documents/Module-System#DocModulePreInit) method
+[PreInitialize](/Pages/Documents/Module-System#preinitialize) method
 of our module, as shown below:
 
     [DependsOn(typeof(AbpWebApiODataModule))]

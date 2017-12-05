@@ -33,7 +33,7 @@ existing dictionary based localization sources with the
 MultiTenantLocalizationSource wraps existing
 **DictionaryBasedLocalizationSource** based sources. So, we generally
 wrap [XML based
-localization](/Pages/Documents/Localization#DocLocalizeXml) sources. It
+localization](/Pages/Documents/Localization#xml-files) sources. It
 can not wrap **Resource File** sources since resource files are designed
 to work hard-coded and static files which is not proper for dynamic
 localization.
@@ -50,7 +50,7 @@ First, we are enabling it:
     Configuration.Modules.Zero().LanguageManagement.EnableDbLocalization();
 
 This should be done in the **top level** module's
-**[PreInitialize](/Pages/Documents/Module-System#DocModulePreInit)**
+**[PreInitialize](/Pages/Documents/Module-System#preinitialize)**
 method (it's the web module for a web application. Import
 Abp.Zero.Configuration namespace (using Abp.Zero.Configuration) to see
 the Zero() extension method).

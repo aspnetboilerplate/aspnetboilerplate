@@ -368,7 +368,7 @@ There are also some other parameters, you can investigate in the code.
 Only notification name is **required** for a notification definition.
 
 After defining such a notification provider, we should register it in
-[PreInitialize](/Pages/Documents/Module-System#DocModulePreInit) event
+[PreInitialize](/Pages/Documents/Module-System#preinitialize) event
 of our module, as shown below:
 
     public class AbpZeroTemplateCoreModule : AbpModule

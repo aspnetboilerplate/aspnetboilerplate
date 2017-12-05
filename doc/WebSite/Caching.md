@@ -96,7 +96,7 @@ the cache. You can configure it for all caches or for a specific cache.
     });
 
 This code should be placed
-[**PreInitialize**](/Pages/Documents/Module-System#DocModulePreInit)
+[**PreInitialize**](/Pages/Documents/Module-System#preinitialize)
 method of your module. With such a code, MyCache will have 8 hours
 expire time while all other caches will have 2 hours.
 
@@ -193,7 +193,7 @@ cache item and got the Name property.
     call.
 -   It uses IObjectMapper to map entity to cache item. IObjectMapper is
     implemented by AutoMapper module. So, you need to [AutoMapper
-    module](/Pages/Documents/Data-Transfer-Objects#DocAutoMappingHelpers)
+    module](/Pages/Documents/Data-Transfer-Objects)
     if you are using it. You can override MapToCacheItem method to
     manually map entity to cache item.
 -   It uses cache class's FullName as cache name. You can change it by

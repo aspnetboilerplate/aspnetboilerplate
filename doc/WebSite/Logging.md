@@ -11,7 +11,7 @@ and can easily change it later if you need.
 popular logging libraries for .NET. ASP.NET Boilerplate
 [templates](/Templates) come with Log4Net properly configured and
 working. But, there is just a single-line of dependency to log4net (as
-seen in [configuration](#DocConfig) section), so you can change it to
+seen in [configuration](#config) section), so you can change it to
 your favourite library.
 
 #### Getting The Logger
@@ -23,7 +23,7 @@ First, we should get a Logger object to write logs. Since ASP.NET
 Boilerplate strongly uses [dependency
 injection](/Pages/Documents/Dependency-Injection), we can easily inject
 a **Logger** object using [property
-injection](/Pages/Documents/Dependency-Injection#DocPropertyInjection)
+injection](/Pages/Documents/Dependency-Injection#property-injection-pattern)
 (or constructor injection) pattern. See a sample class that writes a log
 line:
 
@@ -66,7 +66,7 @@ does nothing, does not write any logs. Thus, our class can work with and
 without an actual logger.
 
 **Fourth** and the last, we're writing a log text with **info** level.
-There are different levels (see [configuration](#DocConfig) section).
+There are different levels (see [configuration](#config) section).
 
 If we call the CreateTask method and check the log file, we see a log
 line as like as shown below:

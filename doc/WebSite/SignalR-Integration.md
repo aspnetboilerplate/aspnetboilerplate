@@ -156,7 +156,7 @@ that we want to add a Hub to our application:
 We implemented **ITransientDependency** to simply register our hub to
 [dependency injection](/Pages/Documents/Dependency-Injection) system
 (you can make it singleton based on your needs). We
-[property-injected](/Pages/Documents/Dependency-Injection#DocPropertyInjection)
+[property-injected](/Pages/Documents/Dependency-Injection#property-injection-pattern)
 the [session](/Pages/Documents/Abp-Session) and
 [logger](/Pages/Documents/Logging).
 
