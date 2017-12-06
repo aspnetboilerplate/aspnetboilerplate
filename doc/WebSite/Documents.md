@@ -31,7 +31,7 @@ Overall
 -   [Multi Tenancy](Multi-Tenancy.md)
 -   [OWIN Integration](OWIN.md)
 -   [Debugging](Debugging.md)
--   [API Reference](/api-docs/index.md)
+-   [API Reference](/api-docs/index.html)
 
 Common Structures
 
