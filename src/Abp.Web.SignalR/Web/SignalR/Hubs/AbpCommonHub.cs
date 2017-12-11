@@ -89,7 +89,7 @@ namespace Abp.Web.SignalR.Hubs
             );
         }
 
-        private string GetIpAddressOfClient()
+        protected virtual string GetIpAddressOfClient()
         {
             try
             {
