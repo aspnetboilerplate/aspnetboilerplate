@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Threading.Tasks;
+using Abp.Auditing;
 using Abp.Dependency;
 using Abp.RealTime;
 using Abp.Runtime.Session;
@@ -13,13 +14,17 @@ namespace Abp.Web.SignalR.Hubs
     public class AbpCommonHub : AbpHubBase, ITransientDependency
     {
         private readonly IOnlineClientManager _onlineClientManager;
+        private readonly IClientInfoProvider _clientInfoProvider;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="AbpCommonHub"/> class.
         /// </summary>
-        public AbpCommonHub(IOnlineClientManager onlineClientManager)
+        public AbpCommonHub(
+            IOnlineClientManager onlineClientManager, 
+            IClientInfoProvider clientInfoProvider)
         {
             _onlineClientManager = onlineClientManager;
+            _clientInfoProvider = clientInfoProvider;
 
             Logger = NullLogger.Instance;
             AbpSession = NullAbpSession.Instance;
@@ -84,11 +89,11 @@ namespace Abp.Web.SignalR.Hubs
             );
         }
 
-        private string GetIpAddressOfClient()
+        protected virtual string GetIpAddressOfClient()
         {
             try
             {
-                return Context.Request.Environment["server.RemoteIpAddress"].ToString();
+                return _clientInfoProvider.ClientIpAddress;
             }
             catch (Exception ex)
             {
