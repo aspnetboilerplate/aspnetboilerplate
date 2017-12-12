@@ -136,7 +136,7 @@ For the simplest case, it can be a static class like below:
 
 #### DbContext Changes
 
-**AddAbpPersistentGrants()** method is used to save consent responses to
+**AddAbpPersistedGrants()** method is used to save consent responses to
 the persistent data store. In order to use it, **YourDbContext** must
 implement **IAbpPersistedGrantDbContext** interface as shown below:
 
