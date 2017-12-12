@@ -1,7 +1,7 @@
--   [Considerations](#DocConsiderations)
--   [Source codes](#DocSourceCodes)
--   [Contributors](#DocContributors)
--   [Contact](#DocContact)
+-   [Considerations](#considerations)
+-   [Source codes](#sourcecodes)
+-   [Contributors](#contributors)
+-   [Contact](#contact)
 
 ASP.NET Boilerplate is designed to help us develop applications using
 the best software design practices without repeating ourselves. DRY -

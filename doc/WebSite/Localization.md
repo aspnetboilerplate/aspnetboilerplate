@@ -371,7 +371,7 @@ ILocalizationManager where it's possible since LocalizationHelper is
 static and statics are not well testable (for who writes unit tests).
 
 If you need to localization in an [**application
-service**](/Pages/Documents/Application-Services#DocAppServiceClass), in
+service**](/Pages/Documents/Application-Services#applicationservice-class), in
 an **MVC Controller**, in a **Razor View** or in another class derived
 from **AbpServiceBase**, there are shortcut **L** methods.
 

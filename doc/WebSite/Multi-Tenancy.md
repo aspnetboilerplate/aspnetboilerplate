@@ -203,9 +203,9 @@ IMustHaveTenant:
     public class Product : Entity, IMustHaveTenant
     {
         public int TenantId { get; set; }
-
+    
         public string Name { get; set; }
-
+    
         //...other properties
     }
 
@@ -222,9 +222,9 @@ in this case. An example entitiy that implements IMayHaveTenant:
     public class Role : Entity, IMayHaveTenant
     {
         public int? TenantId { get; set; }
-
+    
         public string RoleName { get; set; }
-
+    
         //...other properties
     }
 
@@ -261,13 +261,13 @@ this behaviour and switch to other tenant's database. Example:
     {
         private readonly IRepository<Product> _productRepository;
         private readonly IUnitOfWorkManager _unitOfWorkManager;
-
+    
         public ProductService(IRepository<Product> productRepository, IUnitOfWorkManager unitOfWorkManager)
         {
             _productRepository = productRepository;
             _unitOfWorkManager = unitOfWorkManager;
         }
-
+    
         [UnitOfWork]
         public virtual List<Product> GetProducts(int tenantId)
         {

@@ -31,7 +31,7 @@ Overall
 -   [Multi Tenancy](Multi-Tenancy.md)
 -   [OWIN Integration](OWIN.md)
 -   [Debugging](Debugging.md)
--   [API Reference](/api-docs/index.md)
+-   [API Reference](/api-docs/index.html)
 
 Common Structures
 
@@ -104,7 +104,7 @@ Object-Relational Mapping
 -   [EntityFramework Integration](EntityFramework-Integration.md)
 -   [EntityFramework Core Integration](Entity-Framework-Core.md)
 -   [NHibernate Integration](NHibernate-Integration.md)
--   [Dapper Integration](Dapper-Integration.md) NEW
+-   [Dapper Integration](Dapper-Integration.md) <label class="label label-success">NEW</label>
 
 Releases
 
@@ -129,7 +129,7 @@ Releases
     -   [Permission
         Management](/Pages/Documents/Zero/Permission-Management)
     -   [Language Management](/Pages/Documents/Zero/Language-Management)
-    -   [Identity Server Integration](Zero/Identity-Server.md) NEW
+    -   [Identity Server Integration](Zero/Identity-Server.md) <label class="label label-success">NEW</label>
 -   Releases
     -   [Nuget Packages](/Pages/Documents/Zero/Nuget-Packages)
     -   [Change Logs &

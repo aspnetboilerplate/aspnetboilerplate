@@ -14,9 +14,9 @@ properties of this entity are;
 -   **DisplayName**: Shown name of the OU.
 
 OrganizationUnit entitiy's primary key (Id) is **long** and it derives
-from [**FullAuditedEntity**](/Pages/Documents/Entities#DocAuditing)
+from [**FullAuditedEntity**](/Pages/Documents/Entities#auditing)
 which provides audit information and implements
-[**ISoftDelete**](/Pages/Documents/Data-Filters#DocSoftDelete) interface
+[**ISoftDelete**](/Pages/Documents/Data-Filters#isoftdelete) interface
 (so, OUs are not deleted from database, they are just marked as
 deleted).
 

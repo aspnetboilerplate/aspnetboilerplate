@@ -57,7 +57,7 @@ Then we can implement the IPersonAppService:
 There are some important points here:
 
 -   PersonAppService uses
-    [IRepository&lt;Person&gt;](/Pages/Documents/Repositories#DocRepositoryImpl)
+    [IRepository&lt;Person&gt;](/Pages/Documents/Repositories)
     to perform database operations. It uses **constructor injection**
     pattern. We're using [dependency
     injection](/Pages/Documents/Dependency-Injection) here.

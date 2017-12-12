@@ -2,7 +2,7 @@
 
 If you already know Dependency Injection concept, Constructor and
 Property Injection patterns, you can skip to the [next
-section](#DocAbpInfrastructure).
+section](#abpInfrastructure).
 
 Wikipedia says: "*Dependency injection is a software design pattern in
 which one or more dependencies (or services) are injected, or passed by
@@ -148,7 +148,7 @@ code above:
     since dependency graph is too complex.
 
 Fortunately, there are [Dependency Injection
-frameworks](#DocDIFrameworks) automates to manage dependencies.
+frameworks](#dIFrameworks) automates to manage dependencies.
 
 ##### Property Injection pattern
 

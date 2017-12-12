@@ -9,7 +9,7 @@ fully integrated and used by other structures in ASP.NET Boilerplate
 ### Injecting Session
 
 IAbpSession is generally **[property
-injected](/Pages/Documents/Dependency-Injection#DocPropertyInjection)**
+injected](/Pages/Documents/Dependency-Injection#property-injection-pattern)**
 to needed classes unless it's not possible to work without session
 informations. If we use property injection, we can use
 **NullAbpSession.Instance** as default value as shown below:
