@@ -37,7 +37,7 @@ namespace Abp.AspNetCore.Mvc
 
         private static void AddModelBinders(MvcOptions options)
         {
-            options.ModelBinderProviders.Add(new AbpDateTimeModelBinderProvider());
+            options.ModelBinderProviders.Insert(0, new AbpDateTimeModelBinderProvider());
         }
     }
 }
