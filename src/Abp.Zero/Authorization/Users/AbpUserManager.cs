@@ -7,6 +7,7 @@ using System.Threading.Tasks;
 using Abp.Application.Features;
 using Abp.Authorization.Roles;
 using Abp.Configuration;
+using Abp.Configuration.Startup;
 using Abp.Domain.Repositories;
 using Abp.Domain.Services;
 using Abp.Domain.Uow;
@@ -54,6 +55,8 @@ namespace Abp.Authorization.Users
         protected AbpRoleManager<TRole, TUser> RoleManager { get; }
 
         public AbpUserStore<TRole, TUser> AbpStore { get; }
+
+        public IMultiTenancyConfig MultiTenancy { get; set; }
 
         private readonly IPermissionManager _permissionManager;
         private readonly IUnitOfWorkManager _unitOfWorkManager;
@@ -149,13 +152,13 @@ namespace Abp.Authorization.Users
         public virtual async Task<bool> IsGrantedAsync(long userId, Permission permission)
         {
             //Check for multi-tenancy side
-            if (!permission.MultiTenancySides.HasFlag(AbpSession.MultiTenancySide))
+            if (!permission.MultiTenancySides.HasFlag(GetCurrentMultiTenancySide()))
             {
                 return false;
             }
 
             //Check for depended features
-            if (permission.FeatureDependency != null && AbpSession.MultiTenancySide == MultiTenancySides.Tenant)
+            if (permission.FeatureDependency != null && GetCurrentMultiTenancySide() == MultiTenancySides.Tenant)
             {
                 if (!await permission.FeatureDependency.IsSatisfiedAsync(FeatureDependencyContext))
                 {
@@ -702,6 +705,18 @@ namespace Abp.Authorization.Users
             }
 
             return AbpSession.TenantId;
+        }
+
+        private MultiTenancySides GetCurrentMultiTenancySide()
+        {
+            if (_unitOfWorkManager.Current != null)
+            {
+                return MultiTenancy.IsEnabled && !_unitOfWorkManager.Current.GetTenantId().HasValue
+                    ? MultiTenancySides.Host
+                    : MultiTenancySides.Tenant;
+            }
+
+            return AbpSession.MultiTenancySide;
         }
     }
 }
