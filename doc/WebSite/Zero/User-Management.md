@@ -292,5 +292,5 @@ Then you can get LDAP settings from any other source.
 
 #### Social Logins
 
-See [startup template](Startup-Template.md) document for social
-logins.
+See [social authentication](https://docs.microsoft.com/en-us/aspnet/core/security/authentication/social/)
+document for social logins.
