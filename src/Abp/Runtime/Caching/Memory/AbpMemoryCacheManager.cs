@@ -1,5 +1,6 @@
 ﻿using Abp.Dependency;
 using Abp.Runtime.Caching.Configuration;
+using System;
 
 namespace Abp.Runtime.Caching.Memory
 {
@@ -19,7 +20,8 @@ namespace Abp.Runtime.Caching.Memory
 
         protected override ICache CreateCacheImplementation(string name)
         {
-            return IocManager.Resolve<AbpMemoryCache>(new { name });
+            Action<string> disposeAction = (cacheName) => Caches.TryRemove(cacheName, out ICache cache);
+            return IocManager.Resolve<AbpMemoryCache>(new { name, disposeAction });
         }
     }
 }

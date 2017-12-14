@@ -9,6 +9,7 @@ using Castle.MicroKernel.Registration;
 using NSubstitute;
 using Shouldly;
 using Xunit;
+using System.Linq;
 
 namespace Abp.Tests.Runtime.Caching.Memory
 {
@@ -49,6 +50,29 @@ namespace Abp.Tests.Runtime.Caching.Memory
             _cache.Get("B", () => new MyCacheItem { Value = 43 }).Value.ShouldBe(43);
             _cache.Get("B", () => new MyCacheItem { Value = 44 }).Value.ShouldBe(43); //Does not call factory, so value is not changed
         }
+
+        [Fact]
+        public void Cache_Dispose_Test()
+        {
+            using (var cache = _cacheManager.GetCache("DisposeCache"))
+            {
+                cache.Set("A", "A");
+            }
+            _cacheManager.GetAllCaches().FirstOrDefault(s => s.Name == "DisposeCache").ShouldBe(null);
+        }
+
+        [Fact]
+        public void Cache_Disposed_Set_Get_Test()
+        {
+            string cacheName = "DisposedSetGet";
+            using (var disposeCache = _cacheManager.GetCache(cacheName))
+            {
+            }
+            var cache = _cacheManager.GetCache(cacheName);
+            cache.Set("A", "A");
+            cache.GetOrDefault("A").ShouldBe<object>("A");
+        }
+
 
         [Fact]
         public void MultiThreading_Test()
