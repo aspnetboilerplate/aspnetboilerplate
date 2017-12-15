@@ -30,6 +30,7 @@ $projects = (
     "Abp.Web.Api",
     "Abp.Web.Mvc",
     "Abp.Web.SignalR",
+    "Abp.Web.SignalR.AspNetCore",
     "Abp.Web.Api.OData",
     "Abp.Castle.Log4Net",
     "Abp.TestBase",
