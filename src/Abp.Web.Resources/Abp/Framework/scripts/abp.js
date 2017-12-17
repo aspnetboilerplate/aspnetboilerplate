@@ -71,6 +71,21 @@
     abp.localization.sources = [];
 
     abp.localization.values = {};
+	
+	abp.localization.missingValues = {};
+	
+	abp.localization.printMissingValues = function() {
+		var result = '';
+		Object.keys(abp.localization.missingValues)
+			.forEach(function(sourceName) {
+				result += 'SOURCE NAME: "'+sourceName+'"\n';
+				Object.keys(abp.localization.missingValues[sourceName])
+					.forEach(function(key) {
+						result += '<text name="'+key+'" value="'+key+'" />\n';
+					});
+			});
+		console.log(result);
+	}
 
     abp.localization.localize = function (key, sourceName) {
         sourceName = sourceName || abp.localization.defaultSourceName;
@@ -84,6 +99,10 @@
 
         var value = source[key];
         if (value == undefined) {
+			abp.localization.missingValues[sourceName] = abp.localization.missingValues[sourceName] || {};
+			if (abp.localization.missingValues[sourceName][key] == undefined) {
+				abp.localization.missingValues[sourceName][key] = key;
+			}
             return key;
         }
 
