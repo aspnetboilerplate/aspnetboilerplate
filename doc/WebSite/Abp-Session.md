@@ -46,7 +46,7 @@ AbpSession defines a few key properties:
 -   **TenantId**: Id of the current tenant or null if there is no
     current tenant (in case of user has not logged in or he is a host
     user).
--   **ImpersonatorUserId**: Id of the impersonator  user, if the current
+-   **ImpersonatorUserId**: Id of the impersonator user, if the current
     session is impersonated by another user. It's null if this is not an
     impersonated login.
 -   **ImpersonatorTenantId**: Id of the impersonator user's tenant, if
