@@ -43,8 +43,15 @@ var abp = abp || {};
 
     // Connect to the server
     abp.signalr.connect = function() {
+        var url = abp.signalr.url || '/signalr';
+
+        // Add query string: https://github.com/aspnet/SignalR/issues/680
+        if (abp.signalr.qs) {
+            url += '?' + abp.signalr.qs;
+        }
+
         // Start the connection.
-        startConnection('/abpCommonHub', configureConnection).then(function (connection) {
+        startConnection(url, configureConnection).then(function (connection) {
             abp.log.debug('Connected to SignalR server!'); //TODO: Remove log
             abp.event.trigger('abp.signalr.connected');
             // Call the Register method on the hub.

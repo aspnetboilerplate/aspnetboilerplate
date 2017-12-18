@@ -4,6 +4,10 @@
 
         let autoConnect: boolean;
 
+        let qs: string;
+
+        let url: string;
+
         function connect(): any;
 
         namespace hubs {
