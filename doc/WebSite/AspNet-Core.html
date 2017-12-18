@@ -111,7 +111,7 @@ framework. ASP.NET Core integration is implemented in
 	HTTP verb.</li>
 			</ul>
 	<p>You can use any ASP.NET Core attributes to change HTTP methods or routes 
-	of the actions (but surely, this requires to add reference to related ASP.NET Core 
+	of the actions (but surely, this requires you to add a reference to Microsoft.AspNetCore.Mvc.Core
 	package).</p>
 	<p><strong>Note</strong>: Previously, dynamic web api system was requiring 
 	to create service <strong>interfaces</strong> for application services. But this is not required for 
@@ -168,7 +168,7 @@ framework. ASP.NET Core integration is implemented in
 		handled. Action returns a view or any other result type implements 
 		IActionsResult are not handled. It's suggested to use built-in 
 		UseExceptionHandler extension method defined in 
-		Microsoft.AspNetCore.Diagonistics package to handle view exceptions.</li>
+		Microsoft.AspNetCore.Diagnostics package to handle view exceptions.</li>
 		<li>Exception handling and logging behaviour can be changed using
 		<strong>WrapResult</strong> and <strong>DontWrapResult</strong> 
 		attributes for methods and classes.</li>

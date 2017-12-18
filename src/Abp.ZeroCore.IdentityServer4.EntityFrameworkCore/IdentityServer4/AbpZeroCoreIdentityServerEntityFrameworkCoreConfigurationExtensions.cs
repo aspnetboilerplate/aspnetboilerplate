@@ -4,10 +4,21 @@ namespace Abp.IdentityServer4
 {
     public static class AbpZeroCoreIdentityServerEntityFrameworkCoreConfigurationExtensions
     {
-        public static void ConfigurePersistedGrantEntity(this ModelBuilder modelBuilder)
+        public static void ConfigurePersistedGrantEntity(this ModelBuilder modelBuilder, string prefix = null, string schemaName = null)
         {
+            prefix = prefix ?? "Abp";
+            var tableName = prefix + "PersistedGrants";
+
             modelBuilder.Entity<PersistedGrantEntity>(grant =>
             {
+                if (schemaName == null)
+                {
+                    grant.ToTable(tableName);
+                }
+                else
+                {
+                    grant.ToTable(tableName, schemaName);
+                }
                 grant.Property(x => x.Id).HasMaxLength(200).ValueGeneratedNever();
                 grant.Property(x => x.Type).HasMaxLength(50).IsRequired();
                 grant.Property(x => x.SubjectId).HasMaxLength(200);

@@ -1,4 +1,5 @@
-﻿using System.Threading.Tasks;
+﻿using System.Linq.Dynamic.Core;
+using System.Threading.Tasks;
 using Abp.Application.Services.Dto;
 using Abp.ZeroCore.SampleApp.Application.Users;
 using Shouldly;
@@ -6,7 +7,7 @@ using Xunit;
 
 namespace Abp.Zero.Users
 {
-    public class UserAppService_Tests: AbpZeroTestBase
+    public class UserAppService_Tests : AbpZeroTestBase
     {
         private readonly IUserAppService _userAppService;
 
