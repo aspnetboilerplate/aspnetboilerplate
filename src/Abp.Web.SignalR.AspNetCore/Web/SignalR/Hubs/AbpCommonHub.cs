@@ -20,7 +20,7 @@ namespace Abp.Web.SignalR.Hubs
         /// Initializes a new instance of the <see cref="AbpCommonHub"/> class.
         /// </summary>
         public AbpCommonHub(
-            IOnlineClientManager onlineClientManager, 
+            IOnlineClientManager onlineClientManager,
             IClientInfoProvider clientInfoProvider)
         {
             _onlineClientManager = onlineClientManager;
@@ -42,7 +42,7 @@ namespace Abp.Web.SignalR.Hubs
             var client = CreateClientForCurrentConnection();
 
             Logger.Debug("A client is connected: " + client);
-            
+
             _onlineClientManager.Add(client);
         }
 

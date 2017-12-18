@@ -51,7 +51,7 @@ namespace Abp.Web.SignalR.Notifications
                             Logger.Debug("Can not get user " + userNotification.ToUserIdentifier() + " with connectionId " + onlineClient.ConnectionId + " from SignalR hub!");
                             continue;
                         }
-                        
+
                         signalRClient.InvokeAsync("getNotification", userNotification);
                     }
                 }
