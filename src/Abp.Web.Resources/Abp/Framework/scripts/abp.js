@@ -917,4 +917,12 @@
         return abp.utils.getCookieValue(abp.security.antiForgery.tokenCookieName);
     };
 
+    abp.security.antiForgery.shouldSendToken = function (settings) {
+        if (settings.crossDomain === undefined || settings.crossDomain === null) {
+            return abp.utils.getDomain(location.href) === abp.utils.getDomain(settings.url);
+        }
+
+        return !settings.crossDomain;
+    };
+
 })(jQuery);

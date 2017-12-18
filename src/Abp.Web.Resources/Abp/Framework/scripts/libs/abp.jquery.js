@@ -195,11 +195,11 @@
                 return;
             }
 
-            if (settings.crossDomain === undefined || settings.crossDomain === null) {
-                settings.crossDomain = abp.utils.getDomain(location.href) !== abp.utils.getDomain(url);
+            if (!abp.security.antiForgery.shouldSendToken(settings)) {
+                return;
             }
 
-            if (!settings.headers || settings.headers[abp.security.antiForgery.tokenHeaderName] === undefined && !settings.crossDomain) {
+            if (!settings.headers || settings.headers[abp.security.antiForgery.tokenHeaderName] === undefined) {
                 request.setRequestHeader(abp.security.antiForgery.tokenHeaderName, token);
             }
         }
