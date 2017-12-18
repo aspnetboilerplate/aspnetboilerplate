@@ -37,13 +37,13 @@ Then use **AddSignalR** and **UseSignalR** methods in your Startup class:
             {
                 app.UseSignalR(routes =>
                 {
-                    routes.MapHub<AbpCommonHub>("/abpCommonHub");
+                    routes.MapHub<AbpCommonHub>("/signalr");
                 });
             }
         }
     }
 
-#### Client Side
+#### Client Side (jQuery)
 
 **abp.signalr-client.js** script should be included in the page. It's located
 in
