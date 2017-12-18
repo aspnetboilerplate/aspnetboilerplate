@@ -195,7 +195,11 @@
                 return;
             }
 
-            if (!settings.headers || settings.headers[abp.security.antiForgery.tokenHeaderName] === undefined) {
+            if (settings.crossDomain === undefined || settings.crossDomain === null) {
+                settings.crossDomain = abp.utils.getDomain(location.href) !== abp.utils.getDomain(url);
+            }
+
+            if (!settings.headers || settings.headers[abp.security.antiForgery.tokenHeaderName] === undefined && !settings.crossDomain) {
                 request.setRequestHeader(abp.security.antiForgery.tokenHeaderName, token);
             }
         }
