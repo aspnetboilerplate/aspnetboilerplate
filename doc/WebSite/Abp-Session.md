@@ -46,7 +46,7 @@ AbpSession defines a few key properties:
 -   **TenantId**: Id of the current tenant or null if there is no
     current tenant (in case of user has not logged in or he is a host
     user).
--   **ImpersonatorUserId**: Id of the impersonated user if the current
+-   **ImpersonatorUserId**: Id of the impersonator  user, if the current
     session is impersonated by another user. It's null if this is not an
     impersonated login.
 -   **ImpersonatorTenantId**: Id of the impersonated user's tenant, if
@@ -101,7 +101,7 @@ the to previous values.
 
 #### Warning!
 
-Always use the AbpSession in a using block as shown above. Otherwise, you may 
+Always use the Use method in a using block as shown above. Otherwise, you may 
 get unexpected session values. You can have nested Use blocks and they will
 work as you expect.
 
