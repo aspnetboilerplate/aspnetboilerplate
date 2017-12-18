@@ -3,13 +3,13 @@
 -   [Contributors](#contributors)
 -   [Contact](#contact)
 
-ASP.NET Boilerplate is designed to help us develop applications using
-the best software design practices without repeating ourselves. DRY -
+ASP.NET Boilerplate was created to help developers build applications using
+the best software design practices without repeating themselves. DRY -
 **Don't Repeat Yourself!** is the key idea behind ASP.NET Boilerplate.
 
-All applications have some common problems and need to some common
+All applications have some common problems and need some common
 structures. ASP.NET Boilerplate works for small projects to large
-enterprise web applications, providing a qick start, with maintanable
+enterprise web applications, providing a qick start with maintanable
 code bases.
 
 ### Considerations
@@ -68,7 +68,7 @@ application may use
 [EntityFramework](/Pages/Documents/EntityFramework-Integration) or
 [NHibernate](/Pages/Documents/NHibernate-Integration) for
 Object-Relational Mapping, and it may also use
-[AngularJs](https://angularjs.org/) or
+[Angular](https://angular.io/) or
 [DurandalJs](http://durandaljs.com/) as a Single-Page Application
 framework.
 
