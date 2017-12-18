@@ -49,7 +49,7 @@ AbpSession defines a few key properties:
 -   **ImpersonatorUserId**: Id of the impersonator  user, if the current
     session is impersonated by another user. It's null if this is not an
     impersonated login.
--   **ImpersonatorTenantId**: Id of the impersonated user's tenant, if
+-   **ImpersonatorTenantId**: Id of the impersonator user's tenant, if
     the current session is impersonated by another user. It's null if this
     is not an impersonated login.
 -   **MultiTenancySide**: It may be Host or Tenant.
