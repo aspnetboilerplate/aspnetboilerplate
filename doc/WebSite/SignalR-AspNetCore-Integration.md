@@ -1,16 +1,15 @@
 ### Introduction
 
-[Abp.Web.SignalR](http://www.nuget.org/packages/Abp.Web.SignalR) NuGet
+[Abp.Web.SignalR.AspNetCore](http://www.nuget.org/packages/Abp.Web.SignalR.AspNetCore) NuGet
 package makes it easily to use **SignalR** in ASP.NET Boilerplate-based
-applications. See [SignalR documentation](http://www.asp.net/signalr)
-for detailed information on SignalR.
+applications.
 
 ### Installation
 
 #### Server Side
 
 Install
-[**Abp.Web.SignalR**](http://www.nuget.org/packages/Abp.Web.SignalR)
+[**Abp.Web.SignalR.AspNetCore**](http://www.nuget.org/packages/Abp.Web.SignalR.AspNetCore)
 NuGet package to your project (generally to your Web layer) and add a
 **dependency** to your module:
 
@@ -21,40 +20,39 @@ NuGet package to your project (generally to your Web layer) and add a
     }
 
 
-Then use **MapSignalR** method in your OWIN startup class as you always
-do:
+Then use **AddSignalR** and **UseSignalR** methods in your Startup class:
 
-    [assembly: OwinStartup(typeof(Startup))]
-    namespace MyProject.Web
+    using Abp.Web.SignalR.Hubs;
+
+    namespace MyProject.Web.Startup
     {
         public class Startup
         {
-            public void Configuration(IAppBuilder app)
+            public void ConfigureServices(IServiceCollection services)
             {
-                app.MapSignalR();
+                services.AddSignalR();
+            }
 
-                //...
+            public void Configure(IApplicationBuilder app)
+            {
+                app.UseSignalR(routes =>
+                {
+                    routes.MapHub<AbpCommonHub>("/signalr");
+                });
             }
         }
     }
 
-**Note:** Abp.Web.SignalR only depends on Microsoft.AspNet.SignalR.Core
-package. So, you will also need to **install**
-**[Microsoft.AspNet.SignalR](https://www.nuget.org/packages/Microsoft.AspNet.SignalR)**
-package to your Web project if not installed before (See [SignalR
-documents](http://www.asp.net/signalr) for more).
+#### Client Side (jQuery)
 
-#### Client Side
-
-**abp.signalr.js** script should be included to the page. It's located
+**abp.signalr-client.js** script should be included in the page. It's located
 in
 **[Abp.Web.Resources](https://www.nuget.org/packages/Abp.Web.Resources)**
 package (It's already installed in [startup templates](/Templates)). We
-should include it after signalr hubs:
+should include it after signalr-client.min.js:
 
-    <script src="~/signalr/hubs"></script>
-    <script src="~/Abp/Framework/scripts/libs/abp.signalr.js"></script>
-
+    <script src="~/lib/signalr-client/signalr-client.min.js"></script>
+    <script src="~/lib/abp-web-resources/Abp/Framework/scripts/libs/abp.signalr-client.js"></script>
 
 That's all. SignalR is properly configured and integrated to your
 project.
@@ -62,9 +60,9 @@ project.
 ### Connection Establishment
 
 ASP.NET Boilerplate **automatically connects** to the server (from the
-client) when **abp.signalr.js** is included to your page. This is
+client) when **abp.signalr-client.js** is included to your page. This is
 generally fine. But there may be cases you don't want it to. You can add
-these lines just before including **abp.signalr.js** to disable auto
+these lines just before including **abp.signalr-client.js** to disable auto
 connecting:
 
     <script>
@@ -88,11 +86,11 @@ about client side events.
 ### Built-In Features
 
 You can use all the power of SignalR in your applications. In addition,
-**Abp.Web.SignalR** package implements some built-in features.
+**Abp.Web.SignalR.AspNetCore** package implements some built-in features.
 
 #### Notification
 
-**Abp.Web.SignalR** package implements **IRealTimeNotifier** to send
+**Abp.Web.SignalR.AspNetCore** package implements **IRealTimeNotifier** to send
 real time notifications to clients (see [notification
 system](/Pages/Documents/Notification-System)). Thus, your users can get
 real time push notifications.
@@ -103,24 +101,13 @@ ASP.NET Boilerplate provides **IOnlineClientManager** to get information
 about online users (inject IOnlineClientManager and use
 GetByUserIdOrNull, GetAllClients, IsOnline methods for example).
 IOnlineClientManager needs a communication infrastructure to properly
-work. **Abp.Web.SignalR** package provides the infrastructure. So, you
+work. **Abp.Web.SignalR.AspNetCore** package provides the infrastructure. So, you
 can inject and use IOnlineClientManager in any layer of your application
 if SignalR is installed.
 
-#### PascalCase vs. camelCase
-
-Abp.Web.SignalR package overrides SignalR's default **ContractResolver**
-to use **CamelCasePropertyNamesContractResolver** on serialization.
-Thus, we can have classes have **PascalCase** properties on the server
-and use them as **camelCase** on the client for sending/receiving
-objects (because camelCase is preferred notation in JavaScript). If you
-want to ignore this for your classes in some assemblies, then you can
-add those assemblies to AbpSignalRContractResolver.**IgnoredAssemblies**
-list.
-
 ### Your SignalR Code
 
-**Abp.Web.SignalR** package also simplifies your SignalR code. Consider
+**Abp.Web.SignalR.AspNetCore** package also simplifies your SignalR code. Consider
 that we want to add a Hub to our application:
 
     public class MyChatHub : Hub, ITransientDependency
@@ -135,23 +122,27 @@ that we want to add a Hub to our application:
             Logger = NullLogger.Instance;
         }
 
-        public void SendMessage(string message)
+        public async Task SendMessage(string message)
         {
-            Clients.All.getMessage(string.Format("User {0}: {1}", AbpSession.UserId, message));
+            await Clients.All.getMessage(string.Format("User {0}: {1}", AbpSession.UserId, message));
         }
 
-        public async override Task OnConnected()
+        public override async Task OnConnectedAsync()
         {
-            await base.OnConnected();
+            await base.OnConnectedAsync();
             Logger.Debug("A client connected to MyChatHub: " + Context.ConnectionId);
         }
 
-        public async override Task OnDisconnected(bool stopCalled)
+        public override async Task OnDisconnectedAsync(Exception exception)
         {
-            await base.OnDisconnected(stopCalled);
+            await base.OnDisconnectedAsync(exception);
             Logger.Debug("A client disconnected from MyChatHub: " + Context.ConnectionId);
         }
     }
+
+<!-- -->
+
+    routes.MapHub<MyChatHub>("/myChatHub");
 
 We implemented **ITransientDependency** to simply register our hub to
 [dependency injection](/Pages/Documents/Dependency-Injection) system
@@ -163,23 +154,26 @@ the [session](/Pages/Documents/Abp-Session) and
 **SendMessage** is a method of our hub that can be used by clients. We
 call **getMessage** function of **all** clients in this method. We can
 use [AbpSession](/Pages/Documents/Abp-Session) to get current user id
-(if user logged in) as done above. We also overrided **OnConnected** and
-**OnDisconnected**, which is just for demonstration and not needed here
+(if user logged in) as done above. We also overrided **OnConnectedAsync** and
+**OnDisconnectedAsync**, which is just for demonstration and not needed here
 actually.
 
-Here, the **client side** JavaScript code to send/receive messages using
+Here is the **client side** JavaScript code to send/receive messages using
 our hub.
 
-    var chatHub = $.connection.myChatHub; // Get a reference to the hub
+    var chatHub = null;
 
-    chatHub.client.getMessage = function (message) { // Register for incoming messages
-        console.log('received message: ' + message);
-    };
+    abp.signalr.startConnection('/myChatHub', function (connection) {
+        chatHub = connection; // Save a reference to the hub
+
+        connection.on('getMessage', function (message) { // Register for incoming messages
+            console.log('received message: ' + message);
+        });
+    });
 
     abp.event.on('abp.signalr.connected', function() { // Register for connect event
-        chatHub.server.sendMessage("Hi everybody, I'm connected to the chat!"); // Send a message to the server
+        chatHub.invoke('sendMessage', "Hi everybody, I'm connected to the chat!"); // Send a message to the server
     });
 
 Then we can use **chatHub** anytime we need to send message to the
-server. See [SignalR documentation](http://www.asp.net/signalr) for
-detailed information on SignalR.
+server.
