@@ -168,7 +168,7 @@ our hub.
 
         connection.on('getMessage', function (message) { // Register for incoming messages
             console.log('received message: ' + message);
-        };
+        });
     });
 
     abp.event.on('abp.signalr.connected', function() { // Register for connect event
