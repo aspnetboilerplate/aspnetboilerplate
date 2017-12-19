@@ -244,7 +244,7 @@ method with javascript as shown below:
 Integration testing is fairly easy for ASP.NET Core and it's [documented on
 it's own web
 site](https://docs.asp.net/en/latest/testing/integration-testing.html)
-in detail. ABP follows these guide guidelines and provides a 
+in detail. ABP follows these guidelines and provides a 
 **AbpAspNetCoreIntegratedTestBase** class in the
 [Abp.AspNetCore.TestBase](https://www.nuget.org/packages/Abp.AspNetCore.TestBase)
 package. It makes integration testing even easier.
