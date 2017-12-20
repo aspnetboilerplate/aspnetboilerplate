@@ -1,5 +1,8 @@
 ### Introduction
 
+This document is for .NET Framework 4.6.1. If you're interested in ASP.NET
+Core, see [SignalR AspNetCore Integration](SignalR-AspNetCore-Integration.md) documentation.
+
 [Abp.Web.SignalR](http://www.nuget.org/packages/Abp.Web.SignalR) NuGet
 package makes it easily to use **SignalR** in ASP.NET Boilerplate-based
 applications. See [SignalR documentation](http://www.asp.net/signalr)

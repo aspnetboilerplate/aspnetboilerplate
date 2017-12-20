@@ -98,6 +98,7 @@ Real Time Services
 
 -   [Notification System](Notification-System.md)
 -   [SignalR Integration](SignalR-Integration.md)
+-   [SignalR AspNetCore Integration](SignalR-AspNetCore-Integration.md) <label class="label label-success">NEW</label>
 
 Object-Relational Mapping
 
