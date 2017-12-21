@@ -70,6 +70,12 @@ namespace Abp.EntityHistory
                 return false;
             }
 
+            // Prevent infinite loop!
+            if (entity is EntityChangeInfo)
+            {
+                return false;
+            }
+
             var entityType = entity.GetType();
             if (!EntityHelper.IsEntity(entityType))
             {
@@ -112,6 +118,8 @@ namespace Abp.EntityHistory
                 await EntityHistoryStore.SaveAsync(entityChangeInfo);
                 await uow.CompleteAsync();
             }
+
+            // TODO: Save EntityPropertyChange!
         }
 
         private EntityChangeInfo CreateEntityChangeInfo(EntityEntry entityEntry)
