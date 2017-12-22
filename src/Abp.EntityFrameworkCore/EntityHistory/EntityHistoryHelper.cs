@@ -187,14 +187,10 @@ namespace Abp.EntityHistory
 
         private string GetEntityId(object entityAsObj)
         {
-            try
-            {
-                return ((entityAsObj as dynamic).Id as object).ToJsonString();
-            }
-            catch
-            {
-                return null;
-            }
+            return entityAsObj
+                .GetType().GetProperty("Id")?
+                .GetValue(entityAsObj)?
+                .ToJsonString();
         }
     }
 }
