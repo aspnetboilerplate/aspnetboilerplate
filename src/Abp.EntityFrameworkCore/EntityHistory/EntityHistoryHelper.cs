@@ -70,8 +70,7 @@ namespace Abp.EntityHistory
                 return false;
             }
 
-            // Prevent infinite loop!
-            if (entity is EntityChangeInfo)
+            if (_configuration.IgnoredTypes.Any(t => t.IsInstanceOfType(entity)))
             {
                 return false;
             }
