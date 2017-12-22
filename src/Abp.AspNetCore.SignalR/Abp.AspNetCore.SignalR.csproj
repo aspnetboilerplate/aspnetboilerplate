@@ -21,7 +21,7 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <None Include="bin\Release\netstandard2.0\Abp.Web.SignalR.AspNetCore.pdb">
+    <None Include="bin\Release\netstandard2.0\Abp.AspNetCore.SignalR.pdb">
       <PackagePath>lib/netstandard2.0/</PackagePath>
       <Pack>true</Pack>
     </None>
