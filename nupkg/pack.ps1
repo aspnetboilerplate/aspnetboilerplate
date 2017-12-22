@@ -7,6 +7,7 @@ $srcPath = Join-Path $slnPath "src"
 $projects = (
     "Abp",
     "Abp.AspNetCore",
+    "Abp.AspNetCore.SignalR",
     "Abp.AutoMapper",
     "Abp.MailKit",
     "Abp.HangFire",
@@ -30,7 +31,6 @@ $projects = (
     "Abp.Web.Api",
     "Abp.Web.Mvc",
     "Abp.Web.SignalR",
-    "Abp.Web.SignalR.AspNetCore",
     "Abp.Web.Api.OData",
     "Abp.Castle.Log4Net",
     "Abp.TestBase",
