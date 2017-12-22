@@ -2,21 +2,21 @@
 
 [Dapper](https://github.com/StackExchange/Dapper) is an
 object-relational mapper (ORM) for .NET.
-[Abp.Dapper](https://www.nuget.org/packages/Abp.Dapper) package simply
-integrates Dapper to ASP.NET Boilerplate. It works as secondary ORM
-provider with EF 6.x, EF Core or NHibernate.
+The [Abp.Dapper](https://www.nuget.org/packages/Abp.Dapper) package simply
+integrates Dapper to ASP.NET Boilerplate. It works as a secondary ORM
+provider along with EF 6.x, EF Core or NHibernate.
 
 ### Installation
 
 Before you start, you need to install
-[Abp.Dapper](https://www.nuget.org/packages/Abp.Dapper) and one of EF
-Core, EF 6.x and NHibernate ORM nuget packages to project that you want
-to use it.
+[Abp.Dapper](https://www.nuget.org/packages/Abp.Dapper) and either EF
+Core, EF 6.x or the NHibernate ORM nuget packages in to the project you want
+to use.
 
 #### Module Registration
 
-First you need to add **DependsOn** attribute for **AbpDapperModule** on
-your module where you register it.
+First you need to add the **DependsOn** attribute for the **AbpDapperModule** on
+your module where you register it:
 
     [DependsOn(
          typeof(AbpEntityFrameworkCoreModule),
@@ -30,12 +30,12 @@ your module where you register it.
         }
     }
 
-**Note** that AbpDapperModule dependency should be added later than EF
+**Note** that the AbpDapperModule dependency should be added later than the EF
 Core dependency.
 
 #### Entity to Table Mapping
 
-You can configure mappings. For example, **Person** class maps to
+You can configure mappings. For example, the **Person** class maps to the
 **Persons** table in the following example:
 
     public class PersonMapper : ClassMapper<Person>
@@ -48,7 +48,7 @@ You can configure mappings. For example, **Person** class maps to
         }
     }
 
-You should set the assemblies contains mapper classes. Excample:
+You should set the assemblies that contain mapper classes. Example:
 
     [DependsOn(
          typeof(AbpEntityFrameworkModule),
@@ -66,7 +66,7 @@ You should set the assemblies contains mapper classes. Excample:
 
 ### Usage
 
-After registering **AbpDapperModule**, you can use Generic
+After registering **AbpDapperModule**, you can use the Generic
 IDapperRepository interface (instead of standard IRepository) to inject
 dapper repositories.
 
@@ -89,5 +89,5 @@ dapper repositories.
         }
     }
 
-You can use both EF repositories and Dapper repositories at the same
-time, in the same transaction.
+You can use both EF and Dapper repositories at the same
+time and in the same transaction!
