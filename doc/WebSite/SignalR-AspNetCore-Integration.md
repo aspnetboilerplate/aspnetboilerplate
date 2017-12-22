@@ -1,8 +1,10 @@
 ### Introduction
 
 [Abp.AspNetCore.SignalR](http://www.nuget.org/packages/Abp.AspNetCore.SignalR) NuGet
-package makes it easily to use **SignalR** in ASP.NET Boilerplate-based
+package makes it easier to use **ASP.NET Core SignalR** in ASP.NET Boilerplate-based
 applications.
+
+> NOTICE: This package is currently in preview. If you have a problem, please write to the Github issues: https://github.com/aspnetboilerplate/aspnetboilerplate/issues/new
 
 ### Installation
 

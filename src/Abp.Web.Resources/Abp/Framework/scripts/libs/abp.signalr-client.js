@@ -70,7 +70,7 @@ var abp = abp || {};
     // any of the available transports the function will return a rejected Promise.
     function startConnection(url, configureConnection) {
         return function start(transport) {
-            abp.log.debug(`Starting connection using ${signalR.TransportType[transport]} transport`)
+            abp.log.debug(`Starting connection using ${signalR.TransportType[transport]} transport`);
             var connection = new signalR.HubConnection(url, {transport: transport});
             if (configureConnection && typeof configureConnection === 'function') {
                 configureConnection(connection);
@@ -81,7 +81,7 @@ var abp = abp || {};
                     return connection;
                 })
                 .catch(function(error) {
-                    abp.log.debug(`Cannot start the connection use ${signalR.TransportType[transport]} transport. ${error.message}`);
+                    abp.log.debug(`Cannot start the connection using ${signalR.TransportType[transport]} transport. ${error.message}`);
                     if (transport !== signalR.TransportType.LongPolling) {
                         return start(transport + 1);
                     }
