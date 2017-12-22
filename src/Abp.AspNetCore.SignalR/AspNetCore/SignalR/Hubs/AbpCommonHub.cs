@@ -6,7 +6,7 @@ using Abp.RealTime;
 using Abp.Runtime.Session;
 using Castle.Core.Logging;
 
-namespace Abp.Web.SignalR.Hubs
+namespace Abp.AspNetCore.SignalR.Hubs
 {
     /// <summary>
     /// Common Hub of ABP.

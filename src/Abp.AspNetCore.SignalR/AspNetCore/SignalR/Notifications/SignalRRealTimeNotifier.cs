@@ -1,13 +1,13 @@
 ﻿using System;
 using System.Threading.Tasks;
+using Abp.AspNetCore.SignalR.Hubs;
 using Abp.Dependency;
 using Abp.Notifications;
 using Abp.RealTime;
-using Abp.Web.SignalR.Hubs;
 using Castle.Core.Logging;
 using Microsoft.AspNetCore.SignalR;
 
-namespace Abp.Web.SignalR.Notifications
+namespace Abp.AspNetCore.SignalR.Notifications
 {
     /// <summary>
     /// Implements <see cref="IRealTimeNotifier"/> to send notifications via SignalR.

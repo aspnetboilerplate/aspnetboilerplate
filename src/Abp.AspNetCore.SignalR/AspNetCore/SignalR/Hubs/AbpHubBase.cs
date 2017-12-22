@@ -8,7 +8,7 @@ using Abp.Runtime.Session;
 using Castle.Core.Logging;
 using Microsoft.AspNetCore.SignalR;
 
-namespace Abp.Web.SignalR.Hubs
+namespace Abp.AspNetCore.SignalR.Hubs
 {
     public abstract class AbpHubBase : Hub
     {

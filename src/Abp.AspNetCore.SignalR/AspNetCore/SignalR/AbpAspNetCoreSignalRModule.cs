@@ -1,13 +1,13 @@
 ﻿using System.Reflection;
 using Abp.Modules;
 
-namespace Abp.Web.SignalR
+namespace Abp.AspNetCore.SignalR
 {
     /// <summary>
-    /// ABP SignalR integration module.
+    /// ABP ASP.NET Core SignalR integration module.
     /// </summary>
     [DependsOn(typeof(AbpKernelModule))]
-    public class AbpWebSignalRModule : AbpModule
+    public class AbpAspNetCoreSignalRModule : AbpModule
     {
         /// <inheritdoc/>
         public override void Initialize()
