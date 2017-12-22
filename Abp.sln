@@ -177,7 +177,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Abp.QuartzCore", "src\Abp.Q
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Abp.ZeroCore.EntityFramework", "src\Abp.ZeroCore.EntityFramework\Abp.ZeroCore.EntityFramework.csproj", "{AABAB6E5-B9E5-425B-8B2D-CD7050426487}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Abp.Web.SignalR.AspNetCore", "src\Abp.Web.SignalR.AspNetCore\Abp.Web.SignalR.AspNetCore.csproj", "{4530442B-8E27-4285-A491-7FAAFAC3D4F2}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Abp.AspNetCore.SignalR", "src\Abp.AspNetCore.SignalR\Abp.AspNetCore.SignalR.csproj", "{4530442B-8E27-4285-A491-7FAAFAC3D4F2}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

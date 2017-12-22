@@ -1,6 +1,6 @@
 ### Introduction
 
-[Abp.Web.SignalR.AspNetCore](http://www.nuget.org/packages/Abp.Web.SignalR.AspNetCore) NuGet
+[Abp.AspNetCore.SignalR](http://www.nuget.org/packages/Abp.AspNetCore.SignalR) NuGet
 package makes it easily to use **SignalR** in ASP.NET Boilerplate-based
 applications.
 
@@ -9,7 +9,7 @@ applications.
 #### Server Side
 
 Install
-[**Abp.Web.SignalR.AspNetCore**](http://www.nuget.org/packages/Abp.Web.SignalR.AspNetCore)
+[**Abp.AspNetCore.SignalR**](http://www.nuget.org/packages/Abp.AspNetCore.SignalR)
 NuGet package to your project (generally to your Web layer) and add a
 **dependency** to your module:
 
@@ -86,11 +86,11 @@ about client side events.
 ### Built-In Features
 
 You can use all the power of SignalR in your applications. In addition,
-**Abp.Web.SignalR.AspNetCore** package implements some built-in features.
+**Abp.AspNetCore.SignalR** package implements some built-in features.
 
 #### Notification
 
-**Abp.Web.SignalR.AspNetCore** package implements **IRealTimeNotifier** to send
+**Abp.AspNetCore.SignalR** package implements **IRealTimeNotifier** to send
 real time notifications to clients (see [notification
 system](/Pages/Documents/Notification-System)). Thus, your users can get
 real time push notifications.
@@ -101,13 +101,13 @@ ASP.NET Boilerplate provides **IOnlineClientManager** to get information
 about online users (inject IOnlineClientManager and use
 GetByUserIdOrNull, GetAllClients, IsOnline methods for example).
 IOnlineClientManager needs a communication infrastructure to properly
-work. **Abp.Web.SignalR.AspNetCore** package provides the infrastructure. So, you
+work. **Abp.AspNetCore.SignalR** package provides the infrastructure. So, you
 can inject and use IOnlineClientManager in any layer of your application
 if SignalR is installed.
 
 ### Your SignalR Code
 
-**Abp.Web.SignalR.AspNetCore** package also simplifies your SignalR code. Consider
+**Abp.AspNetCore.SignalR** package also simplifies your SignalR code. Consider
 that we want to add a Hub to our application:
 
     public class MyChatHub : Hub, ITransientDependency
