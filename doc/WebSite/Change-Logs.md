@@ -1,3 +1,3 @@
-See github repository for all releases & change logs:
+See the github repository for all release & change logs:
 
 <https://github.com/aspnetboilerplate/aspnetboilerplate/releases>
