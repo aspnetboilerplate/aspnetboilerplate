@@ -1,34 +1,32 @@
 ### Introduction
 
-ASP.NET Boilerplate provides background jobs and workers those are used
-to execute some tasks in **background threads** in an application.
+ASP.NET Boilerplate provides background jobs and workers that are used
+to execute some tasks in the **background threads** of an application.
 
 ### Background Jobs
 
-Background jobs are used to queue some tasks to be executed in
-background in a **queued and persistent** manner. You may need
-background jobs for several reasons. Some examples:
+In a **queued and persistent** manner, background jobs are used to queue some tasks to be executed in the
+background. You may need background jobs for several reasons. Here are some examples:
 
--   To perform **long-running tasks** to not wait users. For example; A
-    user presses a 'report' button to start a long running reporting
-    job. You add this job to the **queue** and send report result to
+-   To perform **long-running tasks** without having the users wait. For example; A
+    user presses a 'report' button to start a long-running reporting
+    job. You add this job to the **queue** and send the report's result to
     your user via email when it's completed.
--   To create **re-trying** and **persistent tasks** to **g**<span
-    class="auto-style1">uarantee</span> a code will be **successfully
+-   To create **re-trying** and **persistent tasks** to **guarantee** code will be **successfully
     executed**. For example; You can send emails in a background job to
-    overcome **temporary failures** and **guarantie** that it's
-    eventually will be sent. Also, thus, users do not wait while sending
+    overcome **temporary failures** and **guarantee** that it
+    eventually will be sent. That way users do not wait while sending
     emails.
 
 #### About Job Persistence
 
-See *Background Job Store* section for more information on job
+See the *Background Job Store* section for more information on job
 persistence.
 
 #### Create a Background Job
 
-We can create a background job class by either inheriting from
-**BackgroundJob&lt;TArgs&gt;** class or directly implementing
+We can create a background job class by either inheriting from the
+**BackgroundJob&lt;TArgs&gt;** class or by directly implementing the
 **IBackgroundJob&lt;TArgs&gt; interface**.
 
 Here is the most simple background job:
@@ -41,11 +39,11 @@ Here is the most simple background job:
         }
     }
 
-A background job defines an **Execute** method gets an input
-**argument**. Argument **type** is defined as **generic** class
+A background job defines an **Execute** method that gets an input
+**argument**. The argument **type** is defined as a **generic** class
 parameter as shown in the example.
 
-A background job must be registered to [dependency
+A background job must be registered via [dependency
 injection](/Pages/Documents/Dependency-Injection). Implementing
 **ITransientDependency** is the simplest way.
 
@@ -74,9 +72,9 @@ queue:
     }
 
 We
-[injected](/Pages/Documents/Dependency-Injection#constructor-injection-pattern)
-user [repository](/Pages/Documents/Repositories) (to get user emails)
-and email sender (a service to send emails) and simply sent the email.
+[injected](/Pages/Documents/Dependency-Injection#constructor-injection-pattern) the
+user [repository](/Pages/Documents/Repositories) to get user emails,  
+and injected the email sender (a service to send emails) and simply sent the email.
 **SimpleSendEmailJobArgs** is the job argument here and defined as shown
 below:
 
@@ -93,23 +91,23 @@ below:
     }
 
 A job argument should be **serializable**, because it's **serialized and
-stored** in the database. While ASP.NET Boilerplate default background
-job manager uses **JSON** serialization (which does not need
-\[Serializable\] attribute), it's better to define **\[Serializable\]**
-attribute since we may switch to another job manager in the future,
-which may use .NET's built-in binary serialization.
+stored** in the database. While ASP.NET Boilerplate's default background
+job manager uses **JSON** serialization (which does not need the
+\[Serializable\] attribute), it's better to define the **\[Serializable\]**
+attribute since we may switch to another job manager in the future, for which we may use 
+something like .NET's built-in binary serialization.
 
 **Keep your arguments simple** (like
 [DTO](Data-Transfer-Objects.md)s), do not include
-[entities](/Pages/Documents/Entities) or other non serializable objects.
-As shown in the SimpleSendEmailJob sample, we can only store **Id** of
-an entity and get the entity from repository inside the job.
+[entities](/Pages/Documents/Entities) or other non-serializable objects.
+As shown in the SimpleSendEmailJob sample, we can only store the **Id** of
+an entity and get the entity from the repository inside the job.
 
 #### Add a New Job To the Queue
 
 After defining a background job, we can inject and use
-**IBackgroundJobManager** to add a job to the queue. See a sample for
-TestJob defined above:
+**IBackgroundJobManager** to add a job to the queue. See this example for
+TestJob as defined above:
 
     public class MyService
     {
@@ -126,10 +124,10 @@ TestJob defined above:
         }
     }
 
-We sent 42 as argument while enqueuing. IBackgroundJobManager will
-instantiate and execute the TestJob with 42 as argument.
+We sent 42 as an argument while enqueuing. IBackgroundJobManager will
+instantiate and execute the TestJob with 42 as the argument.
 
-Let's see to add a new job for SimpleSendEmailJob defined above:
+Let's add a new job for SimpleSendEmailJob, as we defined before:
 
     [AbpAuthorize]
     public class MyEmailAppService : ApplicationService, IMyEmailAppService
@@ -159,28 +157,28 @@ Enqueu (or EnqueueAsync) method has other parameters such as
 
 #### Default Background Job Manager
 
-IBackgroundJobManager is implemented by **BackgroundJobManager**
-default. It can be replaced by another background job provider (see
-[hangfire integration](Hangfire-Integration.md)). Some information on
+IBackgroundJobManager is implemented by **BackgroundJobManager**,
+by default. It can be replaced by another background job provider (see
+[hangfire integration](Hangfire-Integration.md)). Some information on the
 default BackgroundJobManager:
 
--   It's a simple job queue works as **FIFO** in a **single thread**. It
-    uses **IBackgroundJobStore** to persist jobs (see next section).
--   It **retries** job execution until job **successfully runs** (does
-    not throw any exception but logs them) or **timeouts**. Default
-    timeout is 2 days for a job.
--   It **deletes** a job from store (database) when it's successfully
-    executed. If it's timed out, sets as **abandoned** and leaves on the
+-   It's a simple job queue that works as **FIFO** in a **single thread**. It
+    uses **IBackgroundJobStore** to persist jobs (see the next section).
+-   It **retries** job execution until the job **successfully runs** (if it does
+    not throw any exceptions, but logs them) or **timeouts**. Default
+    timeout are 2 days for a job.
+-   It **deletes** a job from the store (database) when it's successfully
+    executed. If it's timed out, it sets it as **abandoned**, and leaves it in the
     database.
--   It **increasingly waits between retries** for a job. Waits 1 minute
-    for first retry, 2 minutes for second retry, 4 minutes for third
+-   It **increasingly waits between retries** for a job. It waits 1 minute
+    for first retry, 2 minutes for the second retry, 4 minutes for the third
     retry and so on..
--   It **polls** the store for jobs in fixed intervals. Queries jobs
-    ordering by priority (asc) then by try count (asc).
+-   It **polls** the store for jobs in fixed intervals. It queries jobs,
+    ordering by priority (asc) and then by try count (asc).
 
 ##### Background Job Store
 
-Default BackgroundJobManager needs a data store to save and get jobs. If
+The default BackgroundJobManager needs a data store to save and get jobs. If
 you do not implement **IBackgroundJobStore** then it uses
 **InMemoryBackgroundJobStore** which does not save jobs in a persistent
 database. You can simply implement it to store jobs in a database or you
@@ -188,14 +186,14 @@ can use **[module-zero](/Pages/Documents/Zero/Overall)** which already
 implements it.
 
 If you are using a 3rd party job manager (like
-[Hanfgire](Hangfire-Integration.md)), no need to implement
+[Hanfgire](Hangfire-Integration.md)), there is no need to implement
 IBackgroundJobStore.
 
 #### Configuration
 
-You can use **Configuration.BackgroundJobs** in
+You can use **Configuration.BackgroundJobs** in the
 [PreInitialize](/Pages/Documents/Module-System) method of your module to
-configure background job system.
+configure the background job system.
 
 ##### Disabling Job Execution
 
@@ -211,32 +209,32 @@ You may want to disable background job execution for your application:
         //...
     }
 
-This is rarely needed. But, think that you are running multiple
+This is rarely needed. An example of this is if you're running multiple
 instances of your application working on the same database (in a web
-farm). In this case, each application will query same database for jobs
-and executes them. This leads multiple execution of same jobs and some
+farm). In this case, each application will query the same database for jobs
+and execute them. This leads to multiple executions of the same jobs and 
 other problems. To prevent it, you have two options:
 
 -   You can enable job execution for only one instance of the
     application.
 -   You can disable job execution for all instances of the web
-    application and create a seperated standalone application (example:
+    application and create a seperated, standalone application (example:
     a Windows Service) that executes background jobs.
 
 #### Exception Handling
 
-Since default background job manager should re-try failed jobs, it
+Since the default background job manager should re-try failed jobs, it
 handles (and logs) all exceptions. In case you want to be informed when
 an exception occurred, you can create an event handler to handle
-[AbpHandledExceptionData](Handling-Exceptions.md). Background manager
+[AbpHandledExceptionData](Handling-Exceptions.md). The background manager
 triggers this event with a BackgroundJobException exception object which
 wraps the real exception (get InnerException for the actual exception).
 
 #### Hangfire Integration
 
-Background job manager is designed as **replaceable** by another
+The background job manager is designed to be **replaceable** by another
 background job manager. See [hangfire integration
-document](/Pages/Documents/Hangfire-Integration) to replace it by
+document](/Pages/Documents/Hangfire-Integration) to replace it with
 [**Hangfire**](http://hangfire.io/).
 
 ### Background Workers
@@ -246,13 +244,12 @@ Background workers are different than background jobs. They are simple
 Generally, they run **periodically** to perform some tasks. Examples;
 
 -   A background worker can run **periodically** to **delete old logs**.
--   A background worker can **periodically** to **determine inactive
-    users** and send emails to return back to your application.
+-   A background worker can run **periodically** to **determine inactive users** and send emails to get users to return to your application.
 
 #### Create a Background Worker
 
-To create a background worker, we should implement **IBackgroundWorker**
-interface. Alternatively, we can inherit from **BackgroundWorkerBase**
+To create a background worker, we implement the **IBackgroundWorker**
+interface. Alternatively, we can inherit from the **BackgroundWorkerBase**
 or **PeriodicBackgroundWorkerBase** based on our needs.
 
 Assume that we want to make a user passive, if he did not login to the
@@ -292,22 +289,22 @@ application in last 30 days. See the code:
         }
     }
 
-This is a real code and directly works in ASP.NET Boilerplate with
+This real code directly works in ASP.NET Boilerplate with
 [module-zero](/Pages/Documents/Zero/Overall).
 
 -   If you derive from **PeriodicBackgroundWorkerBase** (as in this
-    sample), you should implement **DoWork** method to perform your
+    sample), you should implement the **DoWork** method to perform your
     periodic working code.
--   If you derive from **BackgroundWorkerBase** or directly implement
-    **IBackgroundWorke**r, you will override/implement **Start**,
+-   If you derive from the **BackgroundWorkerBase** or directly implement
+    **IBackgroundWorker**, you will override/implement the **Start**,
     **Stop** and **WaitToStop** methods. Start and Stop methods should
-    be **non-blocking**, WaitToStop method should **wait** worker to
+    be **non-blocking**, the WaitToStop method should **wait** for the worker to
     finish it's current critical job.
 
 #### Register Background Workers
 
-After creating a background worker, we should add it to
-**IBackgroundWorkerManager**. Most common place is the PostInitialize
+After creating a background worker, add it to the 
+**IBackgroundWorkerManager**. The most common place is the PostInitialize
 method of your module:
 
     public class MyProjectWebModule : AbpModule
@@ -321,40 +318,40 @@ method of your module:
         }
     }
 
-While we generally add workers in PostInitialize, there is no
-restriction on that. You can inject IBackgroundWorkerManager anywhere
+While we generally add workers in PostInitialize, there are no
+restrictions on that. You can inject IBackgroundWorkerManager anywhere
 and add workers on runtime. IBackgroundWorkerManager will stop and
 release all registered workers when your applications is being shutdown.
 
 #### Background Worker Lifestyles
 
-Background workers are generally implemented as **singleton**. But there
-is no restriction. If you need multiple instance of same worker class,
-you can make it transient and add more than one instance to
-IBackgroundWorkerManager. In this case, your worker probably will be
+Background workers are generally implemented as a **singleton**, but there
+are no restrictions to this. If you need multiple instances of the same worker class,
+you can make it transient and add more than one instance to the
+IBackgroundWorkerManager. In this case, your worker will probably be
 parametric (say that you have a single LogCleaner class but two
-LogCleaner worker instances they watch and clear different log folders).
+LogCleaner worker instances and they watch and clear different log folders).
 
 #### Advanced Scheduling
 
-ASP.NET Boilerplate's background worker system are simple. It has not a
-schedule system, except periodic running workers as demonstrated above.
-If you need to more advanced scheduling features, we suggest you to
-check [Quartz](Quartz-Integration.md) or another library.
+ASP.NET Boilerplate's background worker systems are simple. It does not have a
+schedule system, except for periodic running workers as demonstrated above.
+If you need more advanced scheduling features, we suggest you 
+check out [Quartz](Quartz-Integration.md) or another library.
 
-### Making Your Application Always Running
+### Making Your Application Always Run
 
-Background jobs and workers only works if your application is running.
-An ASP.NET application **shutdowns** by default if no request is
-performed to the web application for a long time. So, if you host
+Background jobs and workers only work if your application is running.
+An ASP.NET application **shuts down** by default if no request is
+performed to the web application for a long period of time. So, if you host the
 background job execution in your web application (this is the default
-behaviour), you should ensure that your web application is configured to
-always running. Otherwise, background jobs only works while your
+behavior), you should ensure that your web application is configured to always
+be running. Otherwise, background jobs only work while your
 applications is in use.
 
-There are some techniques to accomplish that. Most simple way is to make
+There are some techniques to accomplish that. The most simple way is to make
 periodic requests to your web application from an external application.
-Thus, you can also check if your web application is up and running.
+Thus, you can also check if your web application is up and running. The
 [Hangfire
 documentation](http://docs.hangfire.io/en/latest/deployment-to-production/making-aspnet-app-always-running.html)
-explains some other ways.
+explains some other ways to accomplish this.
