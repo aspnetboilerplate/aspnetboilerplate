@@ -43,4 +43,8 @@
     <PackageReference Include="Castle.Windsor.MsDependencyInjection" Version="3.2.0" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="Web\Security\Headers\" />
+  </ItemGroup>
+
 </Project>
