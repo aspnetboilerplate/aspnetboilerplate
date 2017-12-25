@@ -1,13 +1,13 @@
-﻿using Abp.Events.Bus.Entities;
-using Microsoft.EntityFrameworkCore;
+﻿using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.ChangeTracking;
+using System.Collections.Generic;
 using System.Threading.Tasks;
 
 namespace Abp.EntityHistory
 {
     public interface IEntityHistoryHelper
     {
-        EntityChangeSet CreateEntityChangeSet(EntityChangeReport changeReport);
+        EntityChangeSet CreateEntityChangeSet(ICollection<EntityEntry> entityEntries);
 
         bool ShouldSaveEntityHistory(EntityEntry entityEntry, bool defaultValue = false);
 

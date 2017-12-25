@@ -199,7 +199,7 @@ namespace Abp.EntityFrameworkCore
             try
             {
                 var changeReport = ApplyAbpConcepts();
-                var changeSet = EntityHistoryHelper.CreateEntityChangeSet(changeReport);
+                var changeSet = EntityHistoryHelper.CreateEntityChangeSet(ChangeTracker.Entries().ToList());
                 var result = base.SaveChanges();
                 EntityChangeEventHelper.TriggerEvents(changeReport);
                 EntityHistoryHelper.SaveAsync(changeSet, this);

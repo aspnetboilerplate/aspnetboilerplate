@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using System.Transactions;
@@ -7,6 +8,7 @@ using Abp.Domain.Entities;
 using Abp.Domain.Entities.Auditing;
 using Abp.Domain.Uow;
 using Abp.Events.Bus.Entities;
+using Abp.Extensions;
 using Abp.Json;
 using Abp.Runtime.Session;
 using Abp.Timing;
@@ -37,11 +39,11 @@ namespace Abp.EntityHistory
             EntityHistoryStore = NullEntityHistoryStore.Instance;
         }
         
-        public EntityChangeSet CreateEntityChangeSet(EntityChangeReport changeReport)
+        public EntityChangeSet CreateEntityChangeSet(ICollection<EntityEntry> entityEntries)
         {
             var changeSet = new EntityChangeSet();
 
-            foreach (var entry in changeReport.ChangedEntities)
+            foreach (var entry in entityEntries)
             {
                 changeSet.EntityChanges.Add(CreateEntityChangeInfo(entry));
             }
@@ -145,49 +147,6 @@ namespace Abp.EntityHistory
             // TODO: Save EntityPropertyChange!
         }
 
-        private EntityChangeInfo CreateEntityChangeInfo(EntityChangeEntry changeEntry)
-        {
-            var changeType = changeEntry.ChangeType;
-            var entity = changeEntry.Entity;
-
-            DateTime changeTime;
-            switch (changeType)
-            {
-                case EntityChangeType.Created:
-                    changeTime = GetCreationTime(entity);
-                    break;
-                case EntityChangeType.Deleted:
-                    changeTime = GetDeletionTime(entity);
-                    break;
-                case EntityChangeType.Updated:
-                    changeTime = GetLastModificationTime(entity);
-                    break;
-                default:
-                    return null;
-            }
-
-            var entityId = GetEntityId(entity);
-            if (entityId == null)
-            {
-                return null;
-            }
-
-            var entityType = entity.GetType();
-            var entityChangeInfo = new EntityChangeInfo
-            {
-                TenantId = AbpSession.TenantId,
-                UserId = AbpSession.UserId,
-                ImpersonatorUserId = AbpSession.ImpersonatorUserId,
-                ImpersonatorTenantId = AbpSession.ImpersonatorTenantId,
-                ChangeTime = changeTime,
-                ChangeType = changeType,
-                EntityId = entityId,
-                EntityTypeAssemblyQualifiedName = entityType.AssemblyQualifiedName
-            };
-
-            return entityChangeInfo;
-        }
-
         private EntityChangeInfo CreateEntityChangeInfo(EntityEntry entityEntry)
         {
             var entity = entityEntry.Entity;
@@ -205,8 +164,16 @@ namespace Abp.EntityHistory
                     changeTime = GetDeletionTime(entity);
                     break;
                 case EntityState.Modified:
-                    changeType = EntityChangeType.Updated;
-                    changeTime = GetLastModificationTime(entity);
+                    if (entity is ISoftDelete && entity.As<ISoftDelete>().IsDeleted)
+                    {
+                        changeType = EntityChangeType.Deleted;
+                        changeTime = GetDeletionTime(entity);
+                    }
+                    else
+                    {
+                        changeType = EntityChangeType.Updated;
+                        changeTime = GetLastModificationTime(entity);
+                    }
                     break;
                 case EntityState.Detached:
                 case EntityState.Unchanged:
