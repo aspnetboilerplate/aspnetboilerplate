@@ -32,6 +32,8 @@ namespace Abp.EntityHistory
         /// </summary>
         public virtual EntityChangeType ChangeType { get; set; }
 
+        public virtual long EntityChangeSetId { get; set; }
+
         /// <summary>
         /// Gets/sets primary key of the entity, if this is an entity level notification.
         /// </summary>

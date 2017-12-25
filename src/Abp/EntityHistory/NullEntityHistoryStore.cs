@@ -10,5 +10,10 @@ namespace Abp.EntityHistory
         {
             return Task.CompletedTask;
         }
+
+        public Task SaveAsync(EntityChangeSet entityChangeSet)
+        {
+            return Task.CompletedTask;
+        }
     }
 }

@@ -39,7 +39,14 @@ namespace Abp.EntityHistory
         
         public EntityChangeSet CreateEntityChangeSet(EntityChangeReport changeReport)
         {
-            throw new NotImplementedException();
+            var changeSet = new EntityChangeSet();
+
+            foreach (var entry in changeReport.ChangedEntities)
+            {
+                changeSet.EntityChanges.Add(CreateEntityChangeInfo(entry));
+            }
+
+            return changeSet;
         }
 
         public bool ShouldSaveEntityHistory(EntityEntry entityEntry, bool defaultValue = false)
@@ -110,9 +117,15 @@ namespace Abp.EntityHistory
             return defaultValue;
         }
 
-        public Task SaveAsync(EntityChangeSet changeSet, DbContext context)
+        public async Task SaveAsync(EntityChangeSet changeSet, DbContext context)
         {
-            throw new NotImplementedException();
+            UpdateChangeSet(changeSet, context);
+
+            using (var uow = _unitOfWorkManager.Begin(TransactionScopeOption.RequiresNew))
+            {
+                await EntityHistoryStore.SaveAsync(changeSet);
+                await uow.CompleteAsync();
+            }
         }
 
         public async Task SaveAsync(EntityEntry entityEntry)
@@ -130,6 +143,49 @@ namespace Abp.EntityHistory
             }
 
             // TODO: Save EntityPropertyChange!
+        }
+
+        private EntityChangeInfo CreateEntityChangeInfo(EntityChangeEntry changeEntry)
+        {
+            var changeType = changeEntry.ChangeType;
+            var entity = changeEntry.Entity;
+
+            DateTime changeTime;
+            switch (changeType)
+            {
+                case EntityChangeType.Created:
+                    changeTime = GetCreationTime(entity);
+                    break;
+                case EntityChangeType.Deleted:
+                    changeTime = GetDeletionTime(entity);
+                    break;
+                case EntityChangeType.Updated:
+                    changeTime = GetLastModificationTime(entity);
+                    break;
+                default:
+                    return null;
+            }
+
+            var entityId = GetEntityId(entity);
+            if (entityId == null)
+            {
+                return null;
+            }
+
+            var entityType = entity.GetType();
+            var entityChangeInfo = new EntityChangeInfo
+            {
+                TenantId = AbpSession.TenantId,
+                UserId = AbpSession.UserId,
+                ImpersonatorUserId = AbpSession.ImpersonatorUserId,
+                ImpersonatorTenantId = AbpSession.ImpersonatorTenantId,
+                ChangeTime = changeTime,
+                ChangeType = changeType,
+                EntityId = entityId,
+                EntityTypeAssemblyQualifiedName = entityType.AssemblyQualifiedName
+            };
+
+            return entityChangeInfo;
         }
 
         private EntityChangeInfo CreateEntityChangeInfo(EntityEntry entityEntry)
@@ -201,6 +257,11 @@ namespace Abp.EntityHistory
                 .GetType().GetProperty("Id")?
                 .GetValue(entityAsObj)?
                 .ToJsonString();
+        }
+
+        private void UpdateChangeSet(EntityChangeSet changeSet, DbContext context)
+        {
+            throw new NotImplementedException();
         }
     }
 }
