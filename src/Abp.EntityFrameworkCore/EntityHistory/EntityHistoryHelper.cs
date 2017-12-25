@@ -6,6 +6,7 @@ using Abp.Dependency;
 using Abp.Domain.Entities;
 using Abp.Domain.Entities.Auditing;
 using Abp.Domain.Uow;
+using Abp.Events.Bus.Entities;
 using Abp.Json;
 using Abp.Runtime.Session;
 using Abp.Timing;
@@ -138,7 +139,7 @@ namespace Abp.EntityHistory
                     changeTime = GetDeletionTime(entity);
                     break;
                 case EntityState.Modified:
-                    changeType = EntityChangeType.Modified;
+                    changeType = EntityChangeType.Updated;
                     changeTime = GetLastModificationTime(entity);
                     break;
                 case EntityState.Detached:

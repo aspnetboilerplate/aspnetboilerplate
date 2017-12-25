@@ -1,4 +1,5 @@
 ﻿using Abp.Domain.Entities;
+using Abp.Events.Bus.Entities;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
