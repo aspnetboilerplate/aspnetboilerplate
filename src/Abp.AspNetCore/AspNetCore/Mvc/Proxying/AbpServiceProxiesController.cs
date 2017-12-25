@@ -17,6 +17,7 @@ namespace Abp.AspNetCore.Mvc.Proxying
             _proxyScriptManager = proxyScriptManager;
         }
 
+        [Produces("application/x-javascript")]
         public ContentResult GetAll(ApiProxyGenerationModel model)
         {
             var script = _proxyScriptManager.GetScript(model.CreateOptions());
