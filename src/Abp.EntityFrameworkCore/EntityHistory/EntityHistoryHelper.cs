@@ -36,6 +36,11 @@ namespace Abp.EntityHistory
             Logger = NullLogger.Instance;
             EntityHistoryStore = NullEntityHistoryStore.Instance;
         }
+        
+        public EntityChangeSet CreateEntityChangeSet(EntityChangeReport changeReport)
+        {
+            throw new NotImplementedException();
+        }
 
         public bool ShouldSaveEntityHistory(EntityEntry entityEntry, bool defaultValue = false)
         {
@@ -103,6 +108,11 @@ namespace Abp.EntityHistory
             }
 
             return defaultValue;
+        }
+
+        public Task SaveAsync(EntityChangeSet changeSet, DbContext context)
+        {
+            throw new NotImplementedException();
         }
 
         public async Task SaveAsync(EntityEntry entityEntry)

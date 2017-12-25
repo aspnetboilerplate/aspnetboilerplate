@@ -4,14 +4,10 @@ using Abp.Authorization.Roles;
 using Abp.Authorization.Users;
 using Abp.Configuration;
 using Abp.EntityFrameworkCore;
-using Abp.EntityHistory;
-using Abp.Events.Bus.Entities;
 using Abp.Localization;
 using Abp.Notifications;
 using Abp.Organizations;
-using Abp.Threading;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.EntityFrameworkCore.ChangeTracking;
 
 namespace Abp.Zero.EntityFrameworkCore
 {
@@ -120,8 +116,6 @@ namespace Abp.Zero.EntityFrameworkCore
         /// </summary>
         public virtual DbSet<NotificationSubscriptionInfo> NotificationSubscriptions { get; set; }
 
-        public IEntityHistoryHelper EntityHistoryHelper { get; set; }
-
         /// <summary>
         /// 
         /// </summary>
@@ -130,17 +124,6 @@ namespace Abp.Zero.EntityFrameworkCore
             :base(options)
         {
 
-        }
-
-        protected override void ApplyAbpConcepts(EntityEntry entry, long? userId, EntityChangeReport changeReport)
-        {
-            base.ApplyAbpConcepts(entry, userId, changeReport);
-
-            if (EntityHistoryHelper.ShouldSaveEntityHistory(entry))
-            {
-                // TODO: Group entity histories!
-                AsyncHelper.RunSync(() => EntityHistoryHelper.SaveAsync(entry));
-            }
         }
 
         /// <summary>

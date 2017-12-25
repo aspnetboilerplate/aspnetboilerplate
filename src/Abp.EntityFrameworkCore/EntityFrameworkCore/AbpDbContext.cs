@@ -12,6 +12,7 @@ using Abp.Dependency;
 using Abp.Domain.Entities;
 using Abp.Domain.Entities.Auditing;
 using Abp.Domain.Uow;
+using Abp.EntityHistory;
 using Abp.Events.Bus;
 using Abp.Events.Bus.Entities;
 using Abp.Extensions;
@@ -21,7 +22,6 @@ using Abp.Timing;
 using Castle.Core.Logging;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.ChangeTracking;
-using Abp.Linq.Expressions;
 using Microsoft.EntityFrameworkCore.Metadata;
 
 namespace Abp.EntityFrameworkCore
@@ -40,6 +40,8 @@ namespace Abp.EntityFrameworkCore
         /// Used to trigger entity change events.
         /// </summary>
         public IEntityChangeEventHelper EntityChangeEventHelper { get; set; }
+
+        public IEntityHistoryHelper EntityHistoryHelper { get; set; }
 
         /// <summary>
         /// Reference to the logger.
@@ -197,8 +199,10 @@ namespace Abp.EntityFrameworkCore
             try
             {
                 var changeReport = ApplyAbpConcepts();
+                var changeSet = EntityHistoryHelper.CreateEntityChangeSet(changeReport);
                 var result = base.SaveChanges();
                 EntityChangeEventHelper.TriggerEvents(changeReport);
+                EntityHistoryHelper.SaveAsync(changeSet, this);
                 return result;
             }
             catch (DbUpdateConcurrencyException ex)
