@@ -197,7 +197,8 @@ namespace Abp.EntityHistory
                 ChangeTime = changeTime,
                 ChangeType = changeType,
                 EntityId = entityId,
-                EntityTypeAssemblyQualifiedName = entityType.AssemblyQualifiedName
+                EntityTypeAssemblyQualifiedName = entityType.AssemblyQualifiedName,
+                PropertyChanges = GetPropertyChanges(entityEntry)
             };
 
             return entityChangeInfo;
@@ -224,6 +225,32 @@ namespace Abp.EntityHistory
                 .GetType().GetProperty("Id")?
                 .GetValue(entityAsObj)?
                 .ToJsonString();
+        }
+
+        /// <summary>
+        /// Gets the property changes for this entry.
+        /// </summary>
+        private ICollection<EntityPropertyChangeInfo> GetPropertyChanges(EntityEntry entityEntry)
+        {
+            var propertyChanges = new List<EntityPropertyChangeInfo>();
+            var properties = entityEntry.Metadata.GetProperties();
+
+            foreach (var property in properties)
+            {
+                var propertyEntry = entityEntry.Property(property.Name);
+                if (propertyEntry.IsModified)
+                {
+                    propertyChanges.Add(new EntityPropertyChangeInfo
+                    {
+                        NewValue = propertyEntry.CurrentValue.ToJsonString(),
+                        OriginalValue = propertyEntry.OriginalValue.ToJsonString(),
+                        PropertyName = property.Name,
+                        PropertyTypeName = property.ClrType.AssemblyQualifiedName
+                    });
+                }
+            }
+
+            return propertyChanges;
         }
 
         private void UpdateChangeSet(EntityChangeSet changeSet, DbContext context)
