@@ -61,12 +61,12 @@ namespace Abp.EntityHistory
         
         public EntityChangeSet CreateEntityChangeSet(ICollection<EntityEntry> entityEntries)
         {
+            var changeSet = new EntityChangeSet();
+
             if (!IsEntityHistoryEnabled)
             {
-                return null;
+                return changeSet;
             }
-
-            var changeSet = new EntityChangeSet();
 
             foreach (var entry in entityEntries)
             {
@@ -86,11 +86,6 @@ namespace Abp.EntityHistory
 
         private bool ShouldSaveEntityHistory(EntityEntry entityEntry, bool defaultValue = false)
         {
-            if (entityEntry == null)
-            {
-                return false;
-            }
-
             var entityState = entityEntry.State;
             if (entityState == EntityState.Detached)
             {
@@ -103,11 +98,6 @@ namespace Abp.EntityHistory
             }
 
             var entity = entityEntry.Entity;
-            if (entity == null)
-            {
-                return false;
-            }
-
             if (_configuration.IgnoredTypes.Any(t => t.IsInstanceOfType(entity)))
             {
                 return false;
@@ -176,7 +166,7 @@ namespace Abp.EntityHistory
 
         public async Task SaveAsync(EntityChangeSet changeSet)
         {
-            if (changeSet == null || !IsEntityHistoryEnabled)
+            if (!IsEntityHistoryEnabled)
             {
                 return;
             }
@@ -226,12 +216,14 @@ namespace Abp.EntityHistory
                 case EntityState.Detached:
                 case EntityState.Unchanged:
                 default:
+                    Logger.Error("Unexpected EntityState!");
                     return null;
             }
 
             var entityId = GetEntityId(entity);
             if (entityId == null && changeType != EntityChangeType.Created)
             {
+                Logger.Error("Unexpected null value for entityId!");
                 return null;
             }
 
