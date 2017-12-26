@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Reflection;
 using System.Threading.Tasks;
 using System.Transactions;
 using Abp.Dependency;
@@ -123,12 +124,12 @@ namespace Abp.EntityHistory
                 return false;
             }
 
-            if (entityType.IsDefined(typeof(HistoryTrackedAttribute), true))
+            if (entityType.GetTypeInfo().IsDefined(typeof(HistoryTrackedAttribute), true))
             {
                 return true;
             }
 
-            if (entityType.IsDefined(typeof(DisableHistoryTrackingAttribute), true))
+            if (entityType.GetTypeInfo().IsDefined(typeof(DisableHistoryTrackingAttribute), true))
             {
                 return false;
             }
@@ -147,6 +148,16 @@ namespace Abp.EntityHistory
             if (propertyInfo.IsDefined(typeof(DisableHistoryTrackingAttribute), true))
             {
                 return false;
+            }
+
+            var classType = propertyInfo.DeclaringType;
+            if (classType != null)
+            {
+                if (classType.GetTypeInfo().IsDefined(typeof(DisableHistoryTrackingAttribute), true) &&
+                    !propertyInfo.IsDefined(typeof(HistoryTrackedAttribute), true))
+                {
+                    return false;
+                }
             }
 
             if (propertyEntry.IsModified)
