@@ -28,6 +28,24 @@ namespace Abp.EntityHistory
         private readonly IEntityHistoryConfiguration _configuration;
         private readonly IUnitOfWorkManager _unitOfWorkManager;
 
+        private bool IsEntityHistoryEnabled
+        {
+            get
+            {
+                if (!_configuration.IsEnabled)
+                {
+                    return false;
+                }
+
+                if (!_configuration.IsEnabledForAnonymousUsers && (AbpSession?.UserId == null))
+                {
+                    return false;
+                }
+
+                return true;
+            }
+        }
+
         public EntityHistoryHelper(
             IEntityHistoryConfiguration configuration,
             IUnitOfWorkManager unitOfWorkManager)
@@ -42,6 +60,11 @@ namespace Abp.EntityHistory
         
         public EntityChangeSet CreateEntityChangeSet(ICollection<EntityEntry> entityEntries)
         {
+            if (!IsEntityHistoryEnabled)
+            {
+                return null;
+            }
+
             var changeSet = new EntityChangeSet();
 
             foreach (var entry in entityEntries)
@@ -62,16 +85,6 @@ namespace Abp.EntityHistory
 
         private bool ShouldSaveEntityHistory(EntityEntry entityEntry, bool defaultValue = false)
         {
-            if (!_configuration.IsEnabled)
-            {
-                return false;
-            }
-
-            if (!_configuration.IsEnabledForAnonymousUsers && (AbpSession?.UserId == null))
-            {
-                return false;
-            }
-
             if (entityEntry == null)
             {
                 return false;
@@ -151,6 +164,11 @@ namespace Abp.EntityHistory
 
         public async Task SaveAsync(EntityChangeSet changeSet, DbContext context)
         {
+            if (changeSet == null || !IsEntityHistoryEnabled)
+            {
+                return;
+            }
+
             UpdateChangeSet(changeSet, context);
 
             using (var uow = _unitOfWorkManager.Begin(TransactionScopeOption.RequiresNew))
