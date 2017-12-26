@@ -15,7 +15,7 @@ Install
 NuGet package to your project (generally to your Web layer) and add a
 **dependency** to your module:
 
-    [DependsOn(typeof(AbpWebSignalRModule))]
+    [DependsOn(typeof(AbpAspNetCoreSignalRModule))]
     public class YourProjectWebModule : AbpModule
     {
         //...
