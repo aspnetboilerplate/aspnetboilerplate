@@ -19,6 +19,7 @@ namespace Abp.EntityHistory
             Selectors = new EntityHistorySelectorList();
             IgnoredTypes = new List<Type>()
             {
+                typeof(EntityChangeSet),
                 typeof(EntityChangeInfo),
                 typeof(EntityPropertyChangeInfo)
             };
