@@ -28,22 +28,36 @@ namespace Abp.EntityFrameworkCore.Tests.Tests
                 );
         }
 
-        [Fact]
-        public void Should_Write_History()
-        {
-            //Arrange
+        #region CASES WRITE HISTORY
 
-            //Act
+        [Fact]
+        public void Should_Write_History_For_Tracked_Entities()
+        {
+            /* Blog has HistoryTracked attribute. */
 
             var blog1 = _blogRepository.Single(b => b.Name == "test-blog-1");
             blog1.ChangeUrl("http://testblog1-changed.myblogs.com");
             _blogRepository.Update(blog1);
 
-            //Assert
-
-#pragma warning disable 4014
             _entityHistoryStore.Received().SaveAsync(Arg.Any<EntityChangeSet>());
-#pragma warning restore 4014
         }
+
+        #endregion
+
+        #region CASES DON'T WRITE HISTORY
+
+        [Fact]
+        public void Should_Not_Write_History_If_Disabled()
+        {
+            Resolve<IEntityHistoryConfiguration>().IsEnabled = false;
+
+            var blog1 = _blogRepository.Single(b => b.Name == "test-blog-1");
+            blog1.ChangeUrl("http://testblog1-changed.myblogs.com");
+            _blogRepository.Update(blog1);
+
+            _entityHistoryStore.DidNotReceive().SaveAsync(Arg.Any<EntityChangeSet>());
+        }
+
+        #endregion
     }
 }
