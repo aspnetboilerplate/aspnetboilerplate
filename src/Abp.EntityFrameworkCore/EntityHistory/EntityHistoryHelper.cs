@@ -168,12 +168,12 @@ namespace Abp.EntityHistory
             return defaultValue;
         }
 
-        public void Save(EntityChangeSet changeSet, DbContext context)
+        public void Save(EntityChangeSet changeSet)
         {
-            AsyncHelper.RunSync(() => SaveAsync(changeSet, context));
+            AsyncHelper.RunSync(() => SaveAsync(changeSet));
         }
 
-        public async Task SaveAsync(EntityChangeSet changeSet, DbContext context)
+        public async Task SaveAsync(EntityChangeSet changeSet)
         {
             if (changeSet == null || !IsEntityHistoryEnabled)
             {
@@ -185,7 +185,7 @@ namespace Abp.EntityHistory
                 return;
             }
 
-            UpdateChangeSet(changeSet, context);
+            UpdateChangeSet(changeSet);
 
             using (var uow = _unitOfWorkManager.Begin(TransactionScopeOption.RequiresNew))
             {
@@ -337,7 +337,7 @@ namespace Abp.EntityHistory
         /// <summary>
         /// Updates entity id and foreign keys after SaveChanges is called.
         /// </summary>
-        private void UpdateChangeSet(EntityChangeSet changeSet, DbContext context)
+        private void UpdateChangeSet(EntityChangeSet changeSet)
         {
             foreach (var entityChangeInfo in changeSet.EntityChanges)
             {

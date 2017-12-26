@@ -202,7 +202,7 @@ namespace Abp.EntityFrameworkCore
                 var changeSet = EntityHistoryHelper.CreateEntityChangeSet(ChangeTracker.Entries().ToList());
                 var result = base.SaveChanges();
                 EntityChangeEventHelper.TriggerEvents(changeReport);
-                EntityHistoryHelper.Save(changeSet, this);
+                EntityHistoryHelper.Save(changeSet);
                 return result;
             }
             catch (DbUpdateConcurrencyException ex)
