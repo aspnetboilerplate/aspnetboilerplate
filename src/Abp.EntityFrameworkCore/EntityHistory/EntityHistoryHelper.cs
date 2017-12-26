@@ -60,7 +60,7 @@ namespace Abp.EntityHistory
             return changeSet;
         }
 
-        public bool ShouldSaveEntityHistory(EntityEntry entityEntry, bool defaultValue = false)
+        private bool ShouldSaveEntityHistory(EntityEntry entityEntry, bool defaultValue = false)
         {
             if (!_configuration.IsEnabled)
             {
@@ -158,23 +158,6 @@ namespace Abp.EntityHistory
                 await EntityHistoryStore.SaveAsync(changeSet);
                 await uow.CompleteAsync();
             }
-        }
-
-        public async Task SaveAsync(EntityEntry entityEntry)
-        {
-            var entityChangeInfo = CreateEntityChangeInfo(entityEntry);
-            if (entityChangeInfo == null)
-            {
-                return;
-            }
-
-            using (var uow = _unitOfWorkManager.Begin(TransactionScopeOption.Suppress))
-            {
-                await EntityHistoryStore.SaveAsync(entityChangeInfo);
-                await uow.CompleteAsync();
-            }
-
-            // TODO: Save EntityPropertyChange!
         }
 
         private EntityChangeInfo CreateEntityChangeInfo(EntityEntry entityEntry)
