@@ -1,12 +1,13 @@
 ### Introduction
 
-Email sending is a pretty common task for almost every application.
-ASP.NET Boilerplate provides a basic infrastructure to simply send
-emails and seperate email server configuration from sending emails.
+Sending emails is a very common task for most applications.
+ASP.NET Boilerplate provides the basic infrastructure to send
+emails in a simple way. It also seperates the email server configuration from the sending 
+of emails.
 
 ### IEmailSender
 
-**IEmailSender** is a service to simply send emails without knowing
+**IEmailSender** is a service to send emails without it knowing
 details. Example usage:
 
     public class TaskManager : IDomainService
@@ -34,14 +35,14 @@ details. Example usage:
     }
 
 We simply [injected](Dependency-Injection.md) **IEmailSender** and
-used **Send** method. Send method has a few more overloads. It can also
-get a MailMessage object (not available for .net core since .net core
+used the **Send** method. The Send method has additional overloads. For example, it
+can also get a MailMessage object (not available for .net core since .net core
 does not include SmtpClient and MailMessage).
 
 #### ISmtpEmailSender
 
-There is also **ISmtpEmailSender** which extends IEmailSender and adds
-**BuildClient** method to create an **SmtpClient** to directly use it
+There is also an **ISmtpEmailSender** which extends IEmailSender and adds a
+**BuildClient** method to create an **SmtpClient** and then directly uses it
 (not available for .net core since .net core does not include SmtpClient
 and MailMessage). Using IEmailSender will be enough for most cases.
 
@@ -49,61 +50,61 @@ and MailMessage). Using IEmailSender will be enough for most cases.
 
 There is also a [null object
 pattern](https://en.wikipedia.org/wiki/Null_Object_pattern)
-implementation of IEmailSender as **NullEmailSender**. You can use it in
-unit tests or injecting IEmalSender with [property
+implementation of IEmailSender, aptly named **NullEmailSender**. You can use it in
+unit tests or inject IEmalSender with the [property
 injection](Dependency-Injection.md) pattern.
 
 ### Configuration
 
-Email Sender uses [setting management](Setting-Management.md) system
-to read emal sending configuration. All setting names are defined in
-Abp.Net.Mail.EmailSettingNames class as constant strings. Their values
-and descriptions:
+Email Sender uses a [settings management](Setting-Management.md) system
+to read emal-sending configurations. All the setting names are defined in the
+Abp.Net.Mail.EmailSettingNames class as constant strings. 
 
--   Abp.Net.Mail.**DefaultFromAddress**: Used as sender email address
-    when you don't specify a sender while sending emails (as like in the
-    sample above).
--   Abp.Net.Mail.**DefaultFromDisplayName**: Used as sender display name
-    when you don't specify a sender while sending emails (as like in the
-    sample above).
--   Abp.Net.Mail.**Smtp.Host**: IP/Domain of the SMTP server (default:
+Their values and descriptions:
+
+-   Abp.Net.Mail.**DefaultFromAddress**: Used as the sender's email address
+    when you don't specify a sender when sending emails (just like in the
+    example above).
+-   Abp.Net.Mail.**DefaultFromDisplayName**: Used as the sender's display name
+    when you don't specify a sender when sending emails (just like in the
+    example above).
+-   Abp.Net.Mail.**Smtp.Host**: The IP/Domain of the SMTP server (default:
     127.0.0.1).
--   Abp.Net.Mail.**Smtp.Port**: Port of the SMTP server (default: 25).
--   Abp.Net.Mail.**Smtp.UserName**: Username, if SMTP server requires
+-   Abp.Net.Mail.**Smtp.Port**: The Port of the SMTP server (default: 25).
+-   Abp.Net.Mail.**Smtp.UserName**: Username, if the SMTP server requires
     authentication.
--   Abp.Net.Mail.**Smtp.Password**: Password, if SMTP server requires
+-   Abp.Net.Mail.**Smtp.Password**: Password, if the SMTP server requires
     authentication.
--   Abp.Net.Mail.**Smtp.Domain**: Domain for the username, if SMTP
+-   Abp.Net.Mail.**Smtp.Domain**: Domain for the username, if the SMTP
     server requires authentication.
--   Abp.Net.Mail.**Smtp.EnableSsl**: A value indicates that SMTP server
+-   Abp.Net.Mail.**Smtp.EnableSsl**: A value that indicates if the SMTP server
     uses SSL or not ("true" or "false". Default: "false").
--   Abp.Net.Mail.**Smtp.UseDefaultCredentials**: True, to use default
-    credentials instead of provided username and password ("true" or
+-   Abp.Net.Mail.**Smtp.UseDefaultCredentials**: If true, uses default
+    credentials instead of the provided username and password ("true" or
     "false". Default: "true").
 
 ### MailKit Integration
 
-Since .net core does not support standard System.Net.Mail.SmtpClient, so
+Since .net core does not support the standard System.Net.Mail.SmtpClient, 
 we need a 3rd-party vendor to send emails. Fortunately,
 [MailKit](https://github.com/jstedfast/MailKit) provides a good
-replacement for default SmtpClient. It's also
+replacement for the default SmtpClient. It's also
 [suggested](https://www.infoq.com/news/2017/04/MailKit-MimeKit-Official)
 by Microsoft.
 
-Abp.MailKit package gracefully integrates to ABP's email sending system.
-So, you can still use IEmailSender as described above to send emails via
-MailKit.
+The Abp.MailKit package gracefully integrates in to ABP's email sending system, so you 
+can still use IEmailSender as described above to send emails via MailKit.
 
 #### Installation
 
-First, install [Abp.MailKit](https://www.nuget.org/packages/Abp.MailKit)
+First, install the [Abp.MailKit](https://www.nuget.org/packages/Abp.MailKit)
 nuget package to your project:
 
     Install-Package Abp.MailKit
 
 #### Integration
 
-Add AbpMailKitModule to dependencies of your
+Add the AbpMailKitModule to the dependencies of your
 [module](Module-System.md):
 
     [DependsOn(typeof(AbpMailKitModule))]
@@ -114,18 +115,18 @@ Add AbpMailKitModule to dependencies of your
 
 #### Usage
 
-You can use **IEmailSender** as described before since Abp.MailKit
-package [registers](Dependency-Injection.md) MailKit implementation
-for it. It also uses the same configuration defined above.
+You can use **IEmailSender** as described above since the Abp.MailKit
+package [registers](Dependency-Injection.md) the MailKit implementation
+for it. It also uses the same configuration.
 
 #### Customization
 
-You may need to make additional configuration or customization while
+You may need to make additional configuration or customizations while
 creating MailKit's SmtpClient. In that case, you can
-[replace](Startup-Configuration.md) IMailKitSmtpBuilder interface with
-your own implementation. You can derive from DefaultMailKitSmtpBuilder
+[replace](Startup-Configuration.md) the IMailKitSmtpBuilder interface with
+your own implementation. You can derive from the DefaultMailKitSmtpBuilder
 to make it easier. For instance, you may want to accept all SSL
-certificates. In that case, you can override ConfigureClient method as
+certificates. In that case, you can override the ConfigureClient method as
 shown below:
 
     public class MyMailKitSmtpBuilder : DefaultMailKitSmtpBuilder
@@ -143,8 +144,8 @@ shown below:
         }
     }
 
-Then you can replace IMailKitSmtpBuilder interface with your
-implementation in [PreInitialize](Module-System.md) method of your
+You can then replace the IMailKitSmtpBuilder interface with your
+implementation in the [PreInitialize](Module-System.md) method of your
 module:
 
     [DependsOn(typeof(AbpMailKitModule))]
@@ -158,5 +159,5 @@ module:
         //...
     }
 
-(remember to add "using Abp.Configuration.Startup;" statement since
+(Don't forget to add the "using Abp.Configuration.Startup;" statement since the
 ReplaceService extension method is defined in that namespace)
