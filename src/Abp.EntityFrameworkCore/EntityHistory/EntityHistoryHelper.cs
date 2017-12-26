@@ -46,7 +46,12 @@ namespace Abp.EntityHistory
 
             foreach (var entry in entityEntries)
             {
-                changeSet.EntityChanges.Add(CreateEntityChangeInfo(entry));
+                var entityChangeInfo = CreateEntityChangeInfo(entry);
+                if (entityChangeInfo == null)
+                {
+                    continue;
+                }
+                changeSet.EntityChanges.Add(entityChangeInfo);
             }
 
             return changeSet;
@@ -188,7 +193,7 @@ namespace Abp.EntityHistory
             }
 
             var entityId = GetEntityId(entity);
-            if (entityId == null)
+            if (entityId == null && changeType != EntityChangeType.Created)
             {
                 return null;
             }
