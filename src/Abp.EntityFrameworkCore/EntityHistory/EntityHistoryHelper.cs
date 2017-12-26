@@ -180,6 +180,11 @@ namespace Abp.EntityHistory
                 return;
             }
 
+            if (changeSet.EntityChanges.Count == 0)
+            {
+                return;
+            }
+
             UpdateChangeSet(changeSet, context);
 
             using (var uow = _unitOfWorkManager.Begin(TransactionScopeOption.RequiresNew))
@@ -336,12 +341,11 @@ namespace Abp.EntityHistory
         {
             foreach (var entityChangeInfo in changeSet.EntityChanges)
             {
-                var entry = entityChangeInfo.EntityEntry.As<EntityEntry>();
-                entityChangeInfo.EntityId = GetEntityId(entry.Entity);
+                var entityEntry = entityChangeInfo.EntityEntry.As<EntityEntry>();
+                entityChangeInfo.EntityId = GetEntityId(entityEntry.Entity);
 
                 #region Update foreign keys
 
-                var entityEntry = entityChangeInfo.EntityEntry.As<EntityEntry>();
                 var foreignKeys = entityEntry.Metadata.GetForeignKeys();
 
                 foreach (var foreignKey in foreignKeys)

@@ -2,9 +2,11 @@
 using System.Collections.Generic;
 using Abp.Domain.Entities;
 using Abp.Domain.Entities.Auditing;
+using Abp.EntityHistory;
 
 namespace Abp.EntityFrameworkCore.Tests.Domain
 {
+    [HistoryTracked]
     public class Blog : AggregateRoot, IHasCreationTime
     {
         public string Name { get; set; }
