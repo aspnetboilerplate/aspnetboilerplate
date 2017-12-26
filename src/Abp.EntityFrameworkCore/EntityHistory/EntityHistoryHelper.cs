@@ -11,6 +11,7 @@ using Abp.Events.Bus.Entities;
 using Abp.Extensions;
 using Abp.Json;
 using Abp.Runtime.Session;
+using Abp.Threading;
 using Abp.Timing;
 using Castle.Core.Logging;
 using Microsoft.EntityFrameworkCore;
@@ -117,6 +118,11 @@ namespace Abp.EntityHistory
             }
 
             return defaultValue;
+        }
+
+        public void Save(EntityChangeSet changeSet, DbContext context)
+        {
+            AsyncHelper.RunSync(() => SaveAsync(changeSet, context));
         }
 
         public async Task SaveAsync(EntityChangeSet changeSet, DbContext context)
