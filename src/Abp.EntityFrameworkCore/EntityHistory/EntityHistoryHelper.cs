@@ -160,7 +160,8 @@ namespace Abp.EntityHistory
                 }
             }
 
-            if (propertyEntry.IsModified)
+            var isModified = propertyEntry.OriginalValue.ToJsonString() != propertyEntry.CurrentValue.ToJsonString();
+            if (isModified)
             {
                 return true;
             }
@@ -282,12 +283,13 @@ namespace Abp.EntityHistory
         {
             var propertyChanges = new List<EntityPropertyChangeInfo>();
             var properties = entityEntry.Metadata.GetProperties();
-            var isDeletedEntity = IsDeleted(entityEntry);
+            var isCreated = entityEntry.State == EntityState.Added;
+            var isCreatedOrDeleted = isCreated || IsDeleted(entityEntry);
 
             foreach (var property in properties)
             {
                 var propertyEntry = entityEntry.Property(property.Name);
-                if (ShouldSavePropertyHistory(propertyEntry, isDeletedEntity))
+                if (ShouldSavePropertyHistory(propertyEntry, isCreatedOrDeleted))
                 {
                     propertyChanges.Add(new EntityPropertyChangeInfo
                     {
