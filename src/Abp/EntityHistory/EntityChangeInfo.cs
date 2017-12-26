@@ -70,5 +70,12 @@ namespace Abp.EntityHistory
         /// PropertyChanges.
         /// </summary>
         public virtual ICollection<EntityPropertyChangeInfo> PropertyChanges { get; set; }
+
+        #region Not mapped
+
+        [NotMapped]
+        public virtual object EntityEntry { get; set; }
+
+        #endregion
     }
 }

@@ -207,6 +207,7 @@ namespace Abp.EntityHistory
                 ImpersonatorTenantId = AbpSession.ImpersonatorTenantId,
                 ChangeTime = changeTime,
                 ChangeType = changeType,
+                EntityEntry = entityEntry, // [NotMapped]
                 EntityId = entityId,
                 EntityTypeAssemblyQualifiedName = entityType.AssemblyQualifiedName,
                 PropertyChanges = GetPropertyChanges(entityEntry)
@@ -261,12 +262,72 @@ namespace Abp.EntityHistory
                 }
             }
 
+            #region Get foreign keys
+
+            var foreignKeys = entityEntry.Metadata.GetForeignKeys();
+
+            foreach (var foreignKey in foreignKeys)
+            {
+                foreach (var property in foreignKey.Properties)
+                {
+                    var propertyEntry = entityEntry.Property(property.Name);
+                    propertyChanges.Add(new EntityPropertyChangeInfo
+                    {
+                        NewValue = propertyEntry.CurrentValue.ToJsonString(),
+                        OriginalValue = propertyEntry.OriginalValue.ToJsonString(),
+                        PropertyName = property.Name,
+                        PropertyTypeName = property.ClrType.AssemblyQualifiedName
+                    });
+                }
+            }
+
+            #endregion
+
             return propertyChanges;
         }
 
+        /// <summary>
+        /// Updates entity id and foreign keys after SaveChanges is called.
+        /// </summary>
         private void UpdateChangeSet(EntityChangeSet changeSet, DbContext context)
         {
-            throw new NotImplementedException();
+            foreach (var entityChangeInfo in changeSet.EntityChanges)
+            {
+                var entry = entityChangeInfo.EntityEntry.As<EntityEntry>();
+                entityChangeInfo.EntityId = GetEntityId(entry.Entity);
+
+                #region Update foreign keys
+
+                var entityEntry = entityChangeInfo.EntityEntry.As<EntityEntry>();
+                var foreignKeys = entityEntry.Metadata.GetForeignKeys();
+
+                foreach (var foreignKey in foreignKeys)
+                {
+                    foreach (var property in foreignKey.Properties)
+                    {
+                        var propertyEntry = entityEntry.Property(property.Name);
+                        var propertyChange = entityChangeInfo.PropertyChanges
+                            .Where(pc => pc.PropertyName == property.Name)
+                            .First();
+
+                        if (propertyChange.OriginalValue == propertyChange.NewValue)
+                        {
+                            var newValue = propertyEntry.CurrentValue.ToJsonString();
+                            if (newValue == propertyChange.NewValue)
+                            {
+                                // No change
+                                entityChangeInfo.PropertyChanges.Remove(propertyChange);
+                            }
+                            else
+                            {
+                                propertyChange.NewValue = newValue;
+                            }
+                        }
+                    }
+                }
+
+                #endregion
+            }
         }
     }
 }
