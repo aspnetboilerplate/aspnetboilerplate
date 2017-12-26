@@ -46,12 +46,15 @@ namespace Abp.EntityHistory
 
             foreach (var entry in entityEntries)
             {
-                var entityChangeInfo = CreateEntityChangeInfo(entry);
-                if (entityChangeInfo == null)
+                if (ShouldSaveEntityHistory(entry))
                 {
-                    continue;
+                    var entityChangeInfo = CreateEntityChangeInfo(entry);
+                    if (entityChangeInfo == null)
+                    {
+                        continue;
+                    }
+                    changeSet.EntityChanges.Add(entityChangeInfo);
                 }
-                changeSet.EntityChanges.Add(entityChangeInfo);
             }
 
             return changeSet;
@@ -107,17 +110,33 @@ namespace Abp.EntityHistory
                 return false;
             }
 
-            if (entityType.IsDefined(typeof(EntityChangeTrackedAttribute), true))
+            if (entityType.IsDefined(typeof(HistoryTrackedAttribute), true))
             {
                 return true;
             }
 
-            if (entityType.IsDefined(typeof(DisableEntityChangeTrackingAttribute), true))
+            if (entityType.IsDefined(typeof(DisableHistoryTrackingAttribute), true))
             {
                 return false;
             }
 
             if (_configuration.Selectors.Any(selector => selector.Predicate(entityType)))
+            {
+                return true;
+            }
+
+            return defaultValue;
+        }
+
+        private bool ShouldSavePropertyHistory(PropertyEntry propertyEntry, bool defaultValue)
+        {
+            var propertyInfo = propertyEntry.Metadata.PropertyInfo;
+            if (propertyInfo.IsDefined(typeof(DisableHistoryTrackingAttribute), true))
+            {
+                return false;
+            }
+
+            if (propertyEntry.IsModified)
             {
                 return true;
             }
@@ -175,7 +194,7 @@ namespace Abp.EntityHistory
                     changeTime = GetDeletionTime(entity);
                     break;
                 case EntityState.Modified:
-                    if (entity is ISoftDelete && entity.As<ISoftDelete>().IsDeleted)
+                    if (IsDeleted(entityEntry))
                     {
                         changeType = EntityChangeType.Deleted;
                         changeTime = GetDeletionTime(entity);
@@ -246,11 +265,12 @@ namespace Abp.EntityHistory
         {
             var propertyChanges = new List<EntityPropertyChangeInfo>();
             var properties = entityEntry.Metadata.GetProperties();
+            var isDeletedEntity = IsDeleted(entityEntry);
 
             foreach (var property in properties)
             {
                 var propertyEntry = entityEntry.Property(property.Name);
-                if (propertyEntry.IsModified)
+                if (ShouldSavePropertyHistory(propertyEntry, isDeletedEntity))
                 {
                     propertyChanges.Add(new EntityPropertyChangeInfo
                     {
@@ -286,6 +306,17 @@ namespace Abp.EntityHistory
             return propertyChanges;
         }
 
+        private bool IsDeleted(EntityEntry entityEntry)
+        {
+            if (entityEntry.State == EntityState.Deleted)
+            {
+                return true;
+            }
+
+            var entity = entityEntry.Entity;
+            return entity is ISoftDelete && entity.As<ISoftDelete>().IsDeleted;
+        }
+
         /// <summary>
         /// Updates entity id and foreign keys after SaveChanges is called.
         /// </summary>
@@ -308,7 +339,12 @@ namespace Abp.EntityHistory
                         var propertyEntry = entityEntry.Property(property.Name);
                         var propertyChange = entityChangeInfo.PropertyChanges
                             .Where(pc => pc.PropertyName == property.Name)
-                            .First();
+                            .FirstOrDefault();
+
+                        if (propertyChange == null)
+                        {
+                            continue;
+                        }
 
                         if (propertyChange.OriginalValue == propertyChange.NewValue)
                         {
