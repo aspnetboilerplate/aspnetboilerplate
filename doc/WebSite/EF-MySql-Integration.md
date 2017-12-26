@@ -2,7 +2,7 @@
 
 While our default templates are designed to work with SQL Server, you can
 easily modify them to work with MySql. In order to do that, you need to
-follow the these steps.
+follow these steps.
 
 #### Download Project
 
