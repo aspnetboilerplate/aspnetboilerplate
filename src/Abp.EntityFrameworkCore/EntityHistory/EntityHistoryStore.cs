@@ -31,7 +31,7 @@ namespace Abp.EntityHistory
             _unitOfWorkManager = unitOfWorkManager;
         }
 
-        public virtual async Task SaveAsync(EntityChangeInfo entityChangeInfo)
+        protected async Task SaveAsync(EntityChangeInfo entityChangeInfo)
         {
             var entityChangeId = await _entityChangeRepository.InsertAndGetIdAsync(entityChangeInfo);
             await SaveAsync(entityChangeInfo.PropertyChanges, entityChangeId);
