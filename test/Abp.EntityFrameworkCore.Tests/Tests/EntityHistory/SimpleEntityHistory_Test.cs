@@ -1,8 +1,14 @@
-﻿using Abp.Domain.Repositories;
+﻿using Abp.Domain.Entities;
+using Abp.Domain.Repositories;
+using Abp.Domain.Uow;
 using Abp.EntityFrameworkCore.Tests.Domain;
 using Abp.EntityHistory;
+using Abp.Extensions;
+using Abp.Json;
 using Castle.MicroKernel.Registration;
+using Microsoft.EntityFrameworkCore.ChangeTracking;
 using NSubstitute;
+using System.Collections.Generic;
 using Xunit;
 
 namespace Abp.EntityFrameworkCore.Tests.Tests
@@ -35,11 +41,33 @@ namespace Abp.EntityFrameworkCore.Tests.Tests
         {
             /* Blog has HistoryTracked attribute. */
 
-            var blog1 = _blogRepository.Single(b => b.Name == "test-blog-1");
-            blog1.ChangeUrl("http://testblog1-changed.myblogs.com");
-            _blogRepository.Update(blog1);
+            var newValue = "http://testblog1-changed.myblogs.com";
+            string originalValue;
 
-            _entityHistoryStore.Received().SaveAsync(Arg.Any<EntityChangeSet>());
+            using (var uow = Resolve<IUnitOfWorkManager>().Begin())
+            {
+                var blog1 = _blogRepository.Single(b => b.Name == "test-blog-1");
+                originalValue = blog1.Url;
+
+                blog1.ChangeUrl(newValue);
+                _blogRepository.Update(blog1);
+
+                uow.Complete();
+            }
+
+            _entityHistoryStore.Received().SaveAsync(Arg.Is<EntityChangeSet>(
+                s => s.EntityChanges.Count == 1 &&
+                     s.EntityChanges[0].ChangeType == Events.Bus.Entities.EntityChangeType.Updated &&
+                     s.EntityChanges[0].EntityId == s.EntityChanges[0].EntityEntry.As<EntityEntry>().Entity.As<IEntity>().Id.ToJsonString(false, false) &&
+                     s.EntityChanges[0].EntityTypeAssemblyQualifiedName == typeof(Blog).AssemblyQualifiedName &&
+                     s.EntityChanges[0].PropertyChanges.Count == 1 &&
+                     s.EntityChanges[0].PropertyChanges.FirstOrDefault().NewValue == newValue.ToJsonString(false, false) &&
+                     s.EntityChanges[0].PropertyChanges.FirstOrDefault().OriginalValue == originalValue.ToJsonString(false, false) &&
+                     s.EntityChanges[0].PropertyChanges.FirstOrDefault().PropertyName == nameof(Blog.Url) &&
+                     s.EntityChanges[0].PropertyChanges.FirstOrDefault().PropertyTypeName == typeof(Blog).GetProperty(nameof(Blog.Url)).PropertyType.AssemblyQualifiedName &&
+                     s.EntityChanges[0].TenantId == AbpSession.TenantId &&
+                     s.EntityChanges[0].UserId == AbpSession.UserId
+            ));
         }
 
         #endregion
@@ -60,4 +88,18 @@ namespace Abp.EntityFrameworkCore.Tests.Tests
 
         #endregion
     }
+
+    #region Helpers
+
+    internal static class IEnumerableExtensions
+    {
+        internal static EntityPropertyChangeInfo FirstOrDefault(this IEnumerable<EntityPropertyChangeInfo> enumerable)
+        {
+            var enumerator = enumerable.GetEnumerator();
+            enumerator.MoveNext();
+            return enumerator.Current;
+        }
+    }
+
+    #endregion
 }
