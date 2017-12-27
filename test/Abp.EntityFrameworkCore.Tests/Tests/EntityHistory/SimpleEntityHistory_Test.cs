@@ -42,18 +42,7 @@ namespace Abp.EntityFrameworkCore.Tests.Tests
             /* Blog has HistoryTracked attribute. */
 
             var newValue = "http://testblog1-changed.myblogs.com";
-            string originalValue;
-
-            using (var uow = Resolve<IUnitOfWorkManager>().Begin())
-            {
-                var blog1 = _blogRepository.Single(b => b.Name == "test-blog-1");
-                originalValue = blog1.Url;
-
-                blog1.ChangeUrl(newValue);
-                _blogRepository.Update(blog1);
-
-                uow.Complete();
-            }
+            var originalValue = UpdateBlogUrlAndGetOriginalValue(newValue);
 
             _entityHistoryStore.Received().SaveAsync(Arg.Is<EntityChangeSet>(
                 s => s.EntityChanges.Count == 1 &&
@@ -79,14 +68,33 @@ namespace Abp.EntityFrameworkCore.Tests.Tests
         {
             Resolve<IEntityHistoryConfiguration>().IsEnabled = false;
 
-            var blog1 = _blogRepository.Single(b => b.Name == "test-blog-1");
-            blog1.ChangeUrl("http://testblog1-changed.myblogs.com");
-            _blogRepository.Update(blog1);
+            /* Blog has HistoryTracked attribute. */
+
+            var newValue = "http://testblog1-changed.myblogs.com";
+            var originalValue = UpdateBlogUrlAndGetOriginalValue(newValue);
 
             _entityHistoryStore.DidNotReceive().SaveAsync(Arg.Any<EntityChangeSet>());
         }
 
         #endregion
+
+        private string UpdateBlogUrlAndGetOriginalValue(string newValue)
+        {
+            string originalValue;
+
+            using (var uow = Resolve<IUnitOfWorkManager>().Begin())
+            {
+                var blog1 = _blogRepository.Single(b => b.Name == "test-blog-1");
+                originalValue = blog1.Url;
+
+                blog1.ChangeUrl(newValue);
+                _blogRepository.Update(blog1);
+
+                uow.Complete();
+            }
+
+            return originalValue;
+        }
     }
 
     #region Helpers
