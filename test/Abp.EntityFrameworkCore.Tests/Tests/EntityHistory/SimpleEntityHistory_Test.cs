@@ -3,6 +3,7 @@ using Abp.Domain.Repositories;
 using Abp.Domain.Uow;
 using Abp.EntityFrameworkCore.Tests.Domain;
 using Abp.EntityHistory;
+using Abp.Events.Bus.Entities;
 using Abp.Extensions;
 using Abp.Json;
 using Castle.MicroKernel.Registration;
@@ -46,7 +47,7 @@ namespace Abp.EntityFrameworkCore.Tests.Tests
 
             _entityHistoryStore.Received().SaveAsync(Arg.Is<EntityChangeSet>(
                 s => s.EntityChanges.Count == 1 &&
-                     s.EntityChanges[0].ChangeType == Events.Bus.Entities.EntityChangeType.Updated &&
+                     s.EntityChanges[0].ChangeType == EntityChangeType.Updated &&
                      s.EntityChanges[0].EntityId == s.EntityChanges[0].EntityEntry.As<EntityEntry>().Entity.As<IEntity>().Id.ToJsonString(false, false) &&
                      s.EntityChanges[0].EntityTypeAssemblyQualifiedName == typeof(Blog).AssemblyQualifiedName &&
                      s.EntityChanges[0].PropertyChanges.Count == 1 &&
