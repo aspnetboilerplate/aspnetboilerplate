@@ -75,6 +75,7 @@ namespace Abp.EntityHistory
                     var entityChangeInfo = CreateEntityChangeInfo(entry);
                     if (entityChangeInfo == null)
                     {
+                        // Already logged in CreateEntityChangeInfo
                         continue;
                     }
                     changeSet.EntityChanges.Add(entityChangeInfo);
@@ -200,7 +201,7 @@ namespace Abp.EntityHistory
         {
             var propertyChanges = new List<EntityPropertyChangeInfo>();
             var properties = entityEntry.Metadata.GetProperties();
-            var isCreatedOrDeleted = (entityEntry.State == EntityState.Added) || IsDeleted(entityEntry);
+            var isCreatedOrDeleted = IsCreated(entityEntry) || IsDeleted(entityEntry);
 
             foreach (var property in properties)
             {
@@ -220,6 +221,11 @@ namespace Abp.EntityHistory
             return propertyChanges;
         }
 
+        private bool IsCreated(EntityEntry entityEntry)
+        {
+            return entityEntry.State == EntityState.Added;
+        }
+
         private bool IsDeleted(EntityEntry entityEntry)
         {
             if (entityEntry.State == EntityState.Deleted)
@@ -233,24 +239,18 @@ namespace Abp.EntityHistory
 
         private bool ShouldSaveEntityHistory(EntityEntry entityEntry, bool defaultValue = false)
         {
-            var entityState = entityEntry.State;
-            if (entityState == EntityState.Detached)
+            if (entityEntry.State == EntityState.Detached ||
+                entityEntry.State == EntityState.Unchanged)
             {
                 return false;
             }
 
-            if (entityState == EntityState.Unchanged)
+            if (_configuration.IgnoredTypes.Any(t => t.IsInstanceOfType(entityEntry.Entity)))
             {
                 return false;
             }
 
-            var entity = entityEntry.Entity;
-            if (_configuration.IgnoredTypes.Any(t => t.IsInstanceOfType(entity)))
-            {
-                return false;
-            }
-
-            var entityType = entity.GetType();
+            var entityType = entityEntry.Entity.GetType();
             if (!EntityHelper.IsEntity(entityType))
             {
                 return false;
@@ -313,10 +313,12 @@ namespace Abp.EntityHistory
         {
             foreach (var entityChangeInfo in changeSet.EntityChanges)
             {
+                /* Update entity id */
+
                 var entityEntry = entityChangeInfo.EntityEntry.As<EntityEntry>();
                 entityChangeInfo.EntityId = GetEntityId(entityEntry.Entity);
 
-                #region Update foreign keys
+                /* Update foreign keys */
 
                 var foreignKeys = entityEntry.Metadata.GetForeignKeys();
 
@@ -362,8 +364,6 @@ namespace Abp.EntityHistory
                         }
                     }
                 }
-
-                #endregion
             }
         }
     }
