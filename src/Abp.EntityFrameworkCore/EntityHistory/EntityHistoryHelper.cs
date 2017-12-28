@@ -275,8 +275,7 @@ namespace Abp.EntityHistory
         {
             var propertyChanges = new List<EntityPropertyChangeInfo>();
             var properties = entityEntry.Metadata.GetProperties();
-            var isCreated = entityEntry.State == EntityState.Added;
-            var isCreatedOrDeleted = isCreated || IsDeleted(entityEntry);
+            var isCreatedOrDeleted = (entityEntry.State == EntityState.Added) || IsDeleted(entityEntry);
 
             foreach (var property in properties)
             {
