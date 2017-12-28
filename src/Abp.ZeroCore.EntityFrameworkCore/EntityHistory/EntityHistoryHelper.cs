@@ -118,29 +118,17 @@ namespace Abp.EntityHistory
         {
             var entity = entityEntry.Entity;
             
-            DateTime changeTime;
             EntityChangeType changeType;
             switch (entityEntry.State)
             {
                 case EntityState.Added:
                     changeType = EntityChangeType.Created;
-                    changeTime = GetCreationTime(entity);
                     break;
                 case EntityState.Deleted:
                     changeType = EntityChangeType.Deleted;
-                    changeTime = GetDeletionTime(entity);
                     break;
                 case EntityState.Modified:
-                    if (IsDeleted(entityEntry))
-                    {
-                        changeType = EntityChangeType.Deleted;
-                        changeTime = GetDeletionTime(entity);
-                    }
-                    else
-                    {
-                        changeType = EntityChangeType.Updated;
-                        changeTime = GetLastModificationTime(entity);
-                    }
+                    changeType = IsDeleted(entityEntry) ? EntityChangeType.Deleted : EntityChangeType.Updated;
                     break;
                 case EntityState.Detached:
                 case EntityState.Unchanged:
@@ -168,7 +156,6 @@ namespace Abp.EntityHistory
                 ImpersonatorUserId = AbpSession.ImpersonatorUserId,
                 ImpersonatorTenantId = AbpSession.ImpersonatorTenantId,
 
-                ChangeTime = changeTime,
                 ChangeType = changeType,
                 EntityEntry = entityEntry, // [NotMapped]
                 EntityId = entityId,
@@ -179,19 +166,21 @@ namespace Abp.EntityHistory
             return entityChangeInfo;
         }
 
-        private DateTime GetCreationTime(object entityAsObj)
+        private DateTime GetChangeTime(EntityChangeInfo entityChangeInfo)
         {
-            return (entityAsObj as IHasCreationTime)?.CreationTime ?? Clock.Now;
-        }
-
-        private DateTime GetDeletionTime(object entityAsObj)
-        {
-            return (entityAsObj as IHasDeletionTime)?.DeletionTime ?? Clock.Now;
-        }
-
-        private DateTime GetLastModificationTime(object entityAsObj)
-        {
-            return (entityAsObj as IHasModificationTime)?.LastModificationTime ?? Clock.Now;
+            var entity = entityChangeInfo.EntityEntry.As<EntityEntry>().Entity;
+            switch (entityChangeInfo.ChangeType)
+            {
+                case EntityChangeType.Created:
+                    return (entity as IHasCreationTime)?.CreationTime ?? Clock.Now;
+                case EntityChangeType.Deleted:
+                    return (entity as IHasDeletionTime)?.DeletionTime ?? Clock.Now;
+                case EntityChangeType.Updated:
+                    return (entity as IHasModificationTime)?.LastModificationTime ?? Clock.Now;
+                default:
+                    Logger.Error("Unexpected EntityState!");
+                    return Clock.Now;
+            }
         }
 
         private string GetEntityId(object entityAsObj)
@@ -321,12 +310,16 @@ namespace Abp.EntityHistory
         }
 
         /// <summary>
-        /// Updates entity id and foreign keys after SaveChanges is called.
+        /// Updates change time, entity id and foreign keys after SaveChanges is called.
         /// </summary>
         private void UpdateChangeSet(EntityChangeSet changeSet)
         {
             foreach (var entityChangeInfo in changeSet.EntityChanges)
             {
+                /* Update change time */
+
+                entityChangeInfo.ChangeTime = GetChangeTime(entityChangeInfo);
+
                 /* Update entity id */
 
                 var entityEntry = entityChangeInfo.EntityEntry.As<EntityEntry>();

@@ -1,4 +1,5 @@
 ﻿using Abp.Domain.Entities;
+using Abp.Domain.Entities.Auditing;
 using Abp.Domain.Repositories;
 using Abp.Domain.Uow;
 using Abp.EntityHistory;
@@ -50,6 +51,7 @@ namespace Abp.Zero.EntityHistory
 
             _entityHistoryStore.Received().SaveAsync(Arg.Is<EntityChangeSet>(
                 s => s.EntityChanges.Count == 1 &&
+                     s.EntityChanges[0].ChangeTime == s.EntityChanges[0].EntityEntry.As<EntityEntry>().Entity.As<IHasCreationTime>().CreationTime &&
                      s.EntityChanges[0].ChangeType == EntityChangeType.Created &&
                      s.EntityChanges[0].EntityId == blog2Id.ToJsonString(false, false) &&
                      s.EntityChanges[0].EntityTypeAssemblyQualifiedName == typeof(Blog).AssemblyQualifiedName &&
