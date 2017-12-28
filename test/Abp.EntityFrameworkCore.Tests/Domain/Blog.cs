@@ -9,6 +9,7 @@ namespace Abp.EntityFrameworkCore.Tests.Domain
     [HistoryTracked]
     public class Blog : AggregateRoot, IHasCreationTime
     {
+        [DisableHistoryTracking]
         public string Name { get; set; }
 
         public string Url { get; protected set; }
