@@ -54,6 +54,10 @@ namespace Abp.EntityFrameworkCore.Tests.Tests
                      s.EntityChanges[0].EntityId == blog2Id.ToJsonString(false, false) &&
                      s.EntityChanges[0].EntityTypeAssemblyQualifiedName == typeof(Blog).AssemblyQualifiedName &&
                      s.EntityChanges[0].PropertyChanges.Count == 3 && // Blog.Id, Blog.Name, Blog.Url
+
+                     // Check "who did this change"
+                     s.EntityChanges[0].ImpersonatorTenantId == AbpSession.ImpersonatorTenantId &&
+                     s.EntityChanges[0].ImpersonatorUserId == AbpSession.ImpersonatorUserId &&
                      s.EntityChanges[0].TenantId == AbpSession.TenantId &&
                      s.EntityChanges[0].UserId == AbpSession.UserId
             ));
@@ -76,9 +80,7 @@ namespace Abp.EntityFrameworkCore.Tests.Tests
                      s.EntityChanges[0].PropertyChanges.FirstOrDefault().NewValue == newValue.ToJsonString(false, false) &&
                      s.EntityChanges[0].PropertyChanges.FirstOrDefault().OriginalValue == originalValue.ToJsonString(false, false) &&
                      s.EntityChanges[0].PropertyChanges.FirstOrDefault().PropertyName == nameof(Blog.Url) &&
-                     s.EntityChanges[0].PropertyChanges.FirstOrDefault().PropertyTypeName == typeof(Blog).GetProperty(nameof(Blog.Url)).PropertyType.AssemblyQualifiedName &&
-                     s.EntityChanges[0].TenantId == AbpSession.TenantId &&
-                     s.EntityChanges[0].UserId == AbpSession.UserId
+                     s.EntityChanges[0].PropertyChanges.FirstOrDefault().PropertyTypeName == typeof(Blog).GetProperty(nameof(Blog.Url)).PropertyType.AssemblyQualifiedName
             ));
         }
 
@@ -111,9 +113,7 @@ namespace Abp.EntityFrameworkCore.Tests.Tests
                      s.EntityChanges[0].ChangeType == EntityChangeType.Updated &&
                      s.EntityChanges[0].EntityId == post1Id.ToJsonString(false, false) &&
                      s.EntityChanges[0].EntityTypeAssemblyQualifiedName == typeof(Post).AssemblyQualifiedName &&
-                     s.EntityChanges[0].PropertyChanges.Count == 2 && // Post.BlogId, Post.ModificationTime
-                     s.EntityChanges[0].TenantId == AbpSession.TenantId &&
-                     s.EntityChanges[0].UserId == AbpSession.UserId
+                     s.EntityChanges[0].PropertyChanges.Count == 2 // Post.BlogId, Post.ModificationTime
             ));
         }
 
@@ -137,9 +137,7 @@ namespace Abp.EntityFrameworkCore.Tests.Tests
                      s.EntityChanges[0].ChangeType == EntityChangeType.Updated &&
                      s.EntityChanges[0].EntityId == s.EntityChanges[0].EntityEntry.As<EntityEntry>().Entity.As<IEntity>().Id.ToJsonString(false, false) &&
                      s.EntityChanges[0].EntityTypeAssemblyQualifiedName == typeof(Blog).AssemblyQualifiedName &&
-                     s.EntityChanges[0].PropertyChanges.Count == 0 &&
-                     s.EntityChanges[0].TenantId == AbpSession.TenantId &&
-                     s.EntityChanges[0].UserId == AbpSession.UserId
+                     s.EntityChanges[0].PropertyChanges.Count == 0
             ));
         }
 
