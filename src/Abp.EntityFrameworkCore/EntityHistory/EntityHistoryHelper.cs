@@ -297,7 +297,7 @@ namespace Abp.EntityHistory
                 }
             }
 
-            var isModified = propertyEntry.OriginalValue.ToJsonString() != propertyEntry.CurrentValue.ToJsonString();
+            var isModified = !propertyEntry.OriginalValue.Equals(propertyEntry.CurrentValue);
             if (isModified)
             {
                 return true;
@@ -331,7 +331,7 @@ namespace Abp.EntityHistory
 
                         if (propertyChange == null)
                         {
-                            if (propertyEntry.OriginalValue != propertyEntry.CurrentValue)
+                            if (!propertyEntry.OriginalValue.Equals(propertyEntry.CurrentValue))
                             {
                                 // Add foreign key
                                 entityChangeInfo.PropertyChanges.Add(new EntityPropertyChangeInfo
