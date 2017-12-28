@@ -4,10 +4,14 @@ using Abp.Authorization.Roles;
 using Abp.Authorization.Users;
 using Abp.Configuration;
 using Abp.EntityFrameworkCore;
+using Abp.EntityHistory;
 using Abp.Localization;
 using Abp.Notifications;
 using Abp.Organizations;
 using Microsoft.EntityFrameworkCore;
+using System.Linq;
+using System.Threading;
+using System.Threading.Tasks;
 
 namespace Abp.Zero.EntityFrameworkCore
 {
@@ -116,6 +120,8 @@ namespace Abp.Zero.EntityFrameworkCore
         /// </summary>
         public virtual DbSet<NotificationSubscriptionInfo> NotificationSubscriptions { get; set; }
 
+        public IEntityHistoryHelper EntityHistoryHelper { get; set; }
+
         /// <summary>
         /// 
         /// </summary>
@@ -124,6 +130,22 @@ namespace Abp.Zero.EntityFrameworkCore
             :base(options)
         {
 
+        }
+
+        public override int SaveChanges()
+        {
+            var changeSet = EntityHistoryHelper?.CreateEntityChangeSet(ChangeTracker.Entries().ToList());
+            var result = base.SaveChanges();
+            EntityHistoryHelper?.Save(changeSet);
+            return result;
+        }
+
+        public override async Task<int> SaveChangesAsync(CancellationToken cancellationToken = default(CancellationToken))
+        {
+            var changeSet = EntityHistoryHelper?.CreateEntityChangeSet(ChangeTracker.Entries().ToList());
+            var result = await base.SaveChangesAsync(cancellationToken);
+            await EntityHistoryHelper?.SaveAsync(changeSet);
+            return result;
         }
 
         /// <summary>
