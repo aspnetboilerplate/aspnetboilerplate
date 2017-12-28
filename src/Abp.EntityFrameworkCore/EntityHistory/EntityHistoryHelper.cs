@@ -305,7 +305,7 @@ namespace Abp.EntityHistory
                 }
             }
 
-            var isModified = !propertyEntry.OriginalValue.Equals(propertyEntry.CurrentValue);
+            var isModified = !(propertyEntry.OriginalValue?.Equals(propertyEntry.CurrentValue) ?? propertyEntry.CurrentValue == null);
             if (isModified)
             {
                 return true;
@@ -341,7 +341,7 @@ namespace Abp.EntityHistory
 
                         if (propertyChange == null)
                         {
-                            if (!propertyEntry.OriginalValue.Equals(propertyEntry.CurrentValue))
+                            if (!(propertyEntry.OriginalValue?.Equals(propertyEntry.CurrentValue) ?? propertyEntry.CurrentValue == null))
                             {
                                 // Add foreign key
                                 entityChangeInfo.PropertyChanges.Add(new EntityPropertyChangeInfo
