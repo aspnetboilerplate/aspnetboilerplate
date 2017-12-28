@@ -1,6 +1,4 @@
 ﻿using System.Reflection;
-using Abp.Auditing;
-using Abp.Collections.Extensions;
 using Abp.Domain.Uow;
 using Abp.EntityFrameworkCore;
 using Abp.Modules;
@@ -25,26 +23,11 @@ namespace Abp.Zero.EntityFrameworkCore
                         .LifestyleTransient()
                     );
             });
-
-            AddIgnoredTypes();
         }
 
         public override void Initialize()
         {
             IocManager.RegisterAssemblyByConvention(Assembly.GetExecutingAssembly());
-        }
-
-        private void AddIgnoredTypes()
-        {
-            var ignoredTypes = new[]
-            {
-                typeof(AuditLog)
-            };
-
-            foreach (var ignoredType in ignoredTypes)
-            {
-                Configuration.EntityHistory.IgnoredTypes.AddIfNotContains(ignoredType);
-            }
         }
     }
 }
