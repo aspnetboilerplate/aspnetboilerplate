@@ -47,10 +47,13 @@ namespace Abp.EntityHistory
         /// </summary>
         public virtual EntityChangeType ChangeType { get; set; }
 
+        /// <summary>
+        /// Gets/sets change set id, used to group entity changes.
+        /// </summary>
         public virtual long EntityChangeSetId { get; set; }
 
         /// <summary>
-        /// Gets/sets primary key of the entity, if this is an entity level notification.
+        /// Gets/sets primary key of the entity.
         /// </summary>
         [MaxLength(MaxEntityIdLength)]
         public virtual string EntityId { get; set; }
@@ -62,7 +65,7 @@ namespace Abp.EntityHistory
         public virtual string EntityTypeAssemblyQualifiedName { get; set; }
 
         /// <summary>
-        /// Browser information if this method is called in a web request.
+        /// Browser information if this entity is changed in a web request.
         /// </summary>
         [MaxLength(MaxBrowserInfoLength)]
         public virtual string BrowserInfo { get; set; }
