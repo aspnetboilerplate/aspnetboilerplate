@@ -274,7 +274,7 @@ namespace Abp.EntityHistory
             }
 
             var properties = entityEntry.Metadata.GetProperties();
-            if (properties.Any(p => p.PropertyInfo.IsDefined(typeof(HistoryTrackedAttribute))))
+            if (properties.Any(p => p.PropertyInfo?.IsDefined(typeof(HistoryTrackedAttribute)) ?? false))
             {
                 return true;
             }
