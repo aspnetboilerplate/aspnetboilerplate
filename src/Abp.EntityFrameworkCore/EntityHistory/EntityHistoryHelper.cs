@@ -293,27 +293,6 @@ namespace Abp.EntityHistory
                 }
             }
 
-            #region Get foreign keys
-
-            var foreignKeys = entityEntry.Metadata.GetForeignKeys();
-
-            foreach (var foreignKey in foreignKeys)
-            {
-                foreach (var property in foreignKey.Properties)
-                {
-                    var propertyEntry = entityEntry.Property(property.Name);
-                    propertyChanges.Add(new EntityPropertyChangeInfo
-                    {
-                        NewValue = propertyEntry.CurrentValue.ToJsonString(),
-                        OriginalValue = propertyEntry.OriginalValue.ToJsonString(),
-                        PropertyName = property.Name,
-                        PropertyTypeName = property.ClrType.AssemblyQualifiedName
-                    });
-                }
-            }
-
-            #endregion
-
             return propertyChanges;
         }
 
@@ -353,6 +332,18 @@ namespace Abp.EntityHistory
 
                         if (propertyChange == null)
                         {
+                            if (propertyEntry.OriginalValue != propertyEntry.CurrentValue)
+                            {
+                                // Add foreign key
+                                entityChangeInfo.PropertyChanges.Add(new EntityPropertyChangeInfo
+                                {
+                                    NewValue = propertyEntry.CurrentValue.ToJsonString(),
+                                    OriginalValue = propertyEntry.OriginalValue.ToJsonString(),
+                                    PropertyName = property.Name,
+                                    PropertyTypeName = property.ClrType.AssemblyQualifiedName
+                                });
+                            }
+
                             continue;
                         }
 
@@ -366,6 +357,7 @@ namespace Abp.EntityHistory
                             }
                             else
                             {
+                                // Update foreign key
                                 propertyChange.NewValue = newValue;
                             }
                         }
