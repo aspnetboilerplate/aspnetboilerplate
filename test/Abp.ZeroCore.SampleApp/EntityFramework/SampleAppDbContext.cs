@@ -1,8 +1,8 @@
-﻿using Abp.Zero.EntityFrameworkCore;
+﻿using Abp.IdentityServer4;
+using Abp.Zero.EntityFrameworkCore;
 using Abp.ZeroCore.SampleApp.Core;
 using Abp.ZeroCore.SampleApp.Core.EntityHistory;
 using Microsoft.EntityFrameworkCore;
-using Abp.IdentityServer4;
 
 namespace Abp.ZeroCore.SampleApp.EntityFramework
 {
