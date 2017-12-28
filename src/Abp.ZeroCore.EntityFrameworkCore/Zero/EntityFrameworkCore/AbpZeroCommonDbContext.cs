@@ -120,6 +120,21 @@ namespace Abp.Zero.EntityFrameworkCore
         /// </summary>
         public virtual DbSet<NotificationSubscriptionInfo> NotificationSubscriptions { get; set; }
 
+        /// <summary>
+        /// Entity changes.
+        /// </summary>
+        public virtual DbSet<EntityChangeInfo> EntityChanges { get; set; }
+
+        /// <summary>
+        /// Entity change sets.
+        /// </summary>
+        public virtual DbSet<EntityChangeSet> EntityChangeSets { get; set; }
+
+        /// <summary>
+        /// Entity property changes.
+        /// </summary>
+        public virtual DbSet<EntityPropertyChangeInfo> EntityPropertyChanges { get; set; }
+
         public IEntityHistoryHelper EntityHistoryHelper { get; set; }
 
         /// <summary>
