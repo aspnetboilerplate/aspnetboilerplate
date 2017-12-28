@@ -284,6 +284,12 @@ namespace Abp.EntityHistory
                 return true;
             }
 
+            var properties = entityEntry.Metadata.GetProperties();
+            if (properties.Any(p => p.PropertyInfo.IsDefined(typeof(HistoryTrackedAttribute))))
+            {
+                return true;
+            }
+
             return defaultValue;
         }
 

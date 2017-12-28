@@ -85,9 +85,9 @@ namespace Abp.EntityFrameworkCore.Tests.Tests
         }
 
         [Fact]
-        public void Should_Write_History_For_Tracked_Entities_Foreign_Key()
+        public void Should_Write_History_For_Tracked_Property_Foreign_Key()
         {
-            /* Post has HistoryTracked attribute. */
+            /* Post.BlogId has HistoryTracked attribute. */
 
             var blogId = CreateBlogAndGetId();
             _entityHistoryStore.ClearReceivedCalls();
