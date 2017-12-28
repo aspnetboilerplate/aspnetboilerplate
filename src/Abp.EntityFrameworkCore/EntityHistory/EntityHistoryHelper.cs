@@ -84,81 +84,6 @@ namespace Abp.EntityHistory
             return changeSet;
         }
 
-        private bool ShouldSaveEntityHistory(EntityEntry entityEntry, bool defaultValue = false)
-        {
-            var entityState = entityEntry.State;
-            if (entityState == EntityState.Detached)
-            {
-                return false;
-            }
-
-            if (entityState == EntityState.Unchanged)
-            {
-                return false;
-            }
-
-            var entity = entityEntry.Entity;
-            if (_configuration.IgnoredTypes.Any(t => t.IsInstanceOfType(entity)))
-            {
-                return false;
-            }
-
-            var entityType = entity.GetType();
-            if (!EntityHelper.IsEntity(entityType))
-            {
-                return false;
-            }
-
-            if (!entityType.IsPublic)
-            {
-                return false;
-            }
-
-            if (entityType.GetTypeInfo().IsDefined(typeof(HistoryTrackedAttribute), true))
-            {
-                return true;
-            }
-
-            if (entityType.GetTypeInfo().IsDefined(typeof(DisableHistoryTrackingAttribute), true))
-            {
-                return false;
-            }
-
-            if (_configuration.Selectors.Any(selector => selector.Predicate(entityType)))
-            {
-                return true;
-            }
-
-            return defaultValue;
-        }
-
-        private bool ShouldSavePropertyHistory(PropertyEntry propertyEntry, bool defaultValue)
-        {
-            var propertyInfo = propertyEntry.Metadata.PropertyInfo;
-            if (propertyInfo.IsDefined(typeof(DisableHistoryTrackingAttribute), true))
-            {
-                return false;
-            }
-
-            var classType = propertyInfo.DeclaringType;
-            if (classType != null)
-            {
-                if (classType.GetTypeInfo().IsDefined(typeof(DisableHistoryTrackingAttribute), true) &&
-                    !propertyInfo.IsDefined(typeof(HistoryTrackedAttribute), true))
-                {
-                    return false;
-                }
-            }
-
-            var isModified = propertyEntry.OriginalValue.ToJsonString() != propertyEntry.CurrentValue.ToJsonString();
-            if (isModified)
-            {
-                return true;
-            }
-
-            return defaultValue;
-        }
-
         public void Save(EntityChangeSet changeSet)
         {
             AsyncHelper.RunSync(() => SaveAsync(changeSet));
@@ -304,6 +229,81 @@ namespace Abp.EntityHistory
 
             var entity = entityEntry.Entity;
             return entity is ISoftDelete && entity.As<ISoftDelete>().IsDeleted;
+        }
+
+        private bool ShouldSaveEntityHistory(EntityEntry entityEntry, bool defaultValue = false)
+        {
+            var entityState = entityEntry.State;
+            if (entityState == EntityState.Detached)
+            {
+                return false;
+            }
+
+            if (entityState == EntityState.Unchanged)
+            {
+                return false;
+            }
+
+            var entity = entityEntry.Entity;
+            if (_configuration.IgnoredTypes.Any(t => t.IsInstanceOfType(entity)))
+            {
+                return false;
+            }
+
+            var entityType = entity.GetType();
+            if (!EntityHelper.IsEntity(entityType))
+            {
+                return false;
+            }
+
+            if (!entityType.IsPublic)
+            {
+                return false;
+            }
+
+            if (entityType.GetTypeInfo().IsDefined(typeof(HistoryTrackedAttribute), true))
+            {
+                return true;
+            }
+
+            if (entityType.GetTypeInfo().IsDefined(typeof(DisableHistoryTrackingAttribute), true))
+            {
+                return false;
+            }
+
+            if (_configuration.Selectors.Any(selector => selector.Predicate(entityType)))
+            {
+                return true;
+            }
+
+            return defaultValue;
+        }
+
+        private bool ShouldSavePropertyHistory(PropertyEntry propertyEntry, bool defaultValue)
+        {
+            var propertyInfo = propertyEntry.Metadata.PropertyInfo;
+            if (propertyInfo.IsDefined(typeof(DisableHistoryTrackingAttribute), true))
+            {
+                return false;
+            }
+
+            var classType = propertyInfo.DeclaringType;
+            if (classType != null)
+            {
+                if (classType.GetTypeInfo().IsDefined(typeof(DisableHistoryTrackingAttribute), true) &&
+                    !propertyInfo.IsDefined(typeof(HistoryTrackedAttribute), true))
+                {
+                    return false;
+                }
+            }
+
+            var isModified = propertyEntry.OriginalValue.ToJsonString() != propertyEntry.CurrentValue.ToJsonString();
+            if (isModified)
+            {
+                return true;
+            }
+
+            return defaultValue;
         }
 
         /// <summary>
