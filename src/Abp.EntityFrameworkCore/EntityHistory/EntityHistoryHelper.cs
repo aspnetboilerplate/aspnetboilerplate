@@ -4,6 +4,7 @@ using System.Linq;
 using System.Reflection;
 using System.Threading.Tasks;
 using System.Transactions;
+using Abp.Auditing;
 using Abp.Dependency;
 using Abp.Domain.Entities;
 using Abp.Domain.Entities.Auditing;
@@ -24,6 +25,7 @@ namespace Abp.EntityHistory
     {
         public ILogger Logger { get; set; }
         public IAbpSession AbpSession { get; set; }
+        public IClientInfoProvider ClientInfoProvider { get; set; }
         public IEntityHistoryStore EntityHistoryStore { get; set; }
 
         private readonly IEntityHistoryConfiguration _configuration;
@@ -56,6 +58,7 @@ namespace Abp.EntityHistory
 
             AbpSession = NullAbpSession.Instance;
             Logger = NullLogger.Instance;
+            ClientInfoProvider = NullClientInfoProvider.Instance;
             EntityHistoryStore = NullEntityHistoryStore.Instance;
         }
         
@@ -156,10 +159,15 @@ namespace Abp.EntityHistory
             var entityType = entity.GetType();
             var entityChangeInfo = new EntityChangeInfo
             {
+                // Fill "who did this change"
+                BrowserInfo = ClientInfoProvider.BrowserInfo.TruncateWithPostfix(EntityChangeInfo.MaxBrowserInfoLength),
+                ClientIpAddress = ClientInfoProvider.ClientIpAddress.TruncateWithPostfix(EntityChangeInfo.MaxClientIpAddressLength),
+                ClientName = ClientInfoProvider.ComputerName.TruncateWithPostfix(EntityChangeInfo.MaxClientNameLength),
                 TenantId = AbpSession.TenantId,
                 UserId = AbpSession.UserId,
                 ImpersonatorUserId = AbpSession.ImpersonatorUserId,
                 ImpersonatorTenantId = AbpSession.ImpersonatorTenantId,
+
                 ChangeTime = changeTime,
                 ChangeType = changeType,
                 EntityEntry = entityEntry, // [NotMapped]

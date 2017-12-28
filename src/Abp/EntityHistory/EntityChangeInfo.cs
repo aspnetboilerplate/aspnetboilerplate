@@ -23,6 +23,21 @@ namespace Abp.EntityHistory
         public const int MaxEntityTypeAssemblyQualifiedNameLength = 512;
 
         /// <summary>
+        /// Maximum length of <see cref="BrowserInfo"/> property.
+        /// </summary>
+        public const int MaxBrowserInfoLength = 256;
+
+        /// <summary>
+        /// Maximum length of <see cref="ClientIpAddress"/> property.
+        /// </summary>
+        public const int MaxClientIpAddressLength = 64;
+
+        /// <summary>
+        /// Maximum length of <see cref="ClientName"/> property.
+        /// </summary>
+        public const int MaxClientNameLength = 128;
+
+        /// <summary>
         /// ChangeTime.
         /// </summary>
         public virtual DateTime ChangeTime { get; set; }
@@ -45,6 +60,24 @@ namespace Abp.EntityHistory
         /// </summary>
         [MaxLength(MaxEntityTypeAssemblyQualifiedNameLength)]
         public virtual string EntityTypeAssemblyQualifiedName { get; set; }
+
+        /// <summary>
+        /// Browser information if this method is called in a web request.
+        /// </summary>
+        [MaxLength(MaxBrowserInfoLength)]
+        public virtual string BrowserInfo { get; set; }
+
+        /// <summary>
+        /// IP address of the client.
+        /// </summary>
+        [MaxLength(MaxClientIpAddressLength)]
+        public virtual string ClientIpAddress { get; set; }
+
+        /// <summary>
+        /// Name (generally computer name) of the client.
+        /// </summary>
+        [MaxLength(MaxClientNameLength)]
+        public virtual string ClientName { get; set; }
 
         /// <summary>
         /// ImpersonatorTenantId.
