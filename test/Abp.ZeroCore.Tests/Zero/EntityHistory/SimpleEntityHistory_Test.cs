@@ -1,11 +1,11 @@
 ﻿using Abp.Domain.Entities;
 using Abp.Domain.Repositories;
 using Abp.Domain.Uow;
-using Abp.EntityFrameworkCore.Tests.Domain;
 using Abp.EntityHistory;
 using Abp.Events.Bus.Entities;
 using Abp.Extensions;
 using Abp.Json;
+using Abp.ZeroCore.SampleApp.Core.EntityHistory;
 using Castle.MicroKernel.Registration;
 using Microsoft.EntityFrameworkCore.ChangeTracking;
 using NSubstitute;
@@ -13,9 +13,9 @@ using System;
 using System.Collections.Generic;
 using Xunit;
 
-namespace Abp.EntityFrameworkCore.Tests.Tests
+namespace Abp.Zero.EntityHistory
 {
-    public class SimpleEntityHistory_Test : EntityFrameworkCoreModuleTestBase
+    public class SimpleEntityHistory_Test : AbpZeroTestBase
     {
         private readonly IRepository<Blog> _blogRepository;
         private readonly IRepository<Post, Guid> _postRepository;
@@ -113,7 +113,7 @@ namespace Abp.EntityFrameworkCore.Tests.Tests
                      s.EntityChanges[0].ChangeType == EntityChangeType.Updated &&
                      s.EntityChanges[0].EntityId == post1Id.ToJsonString(false, false) &&
                      s.EntityChanges[0].EntityTypeAssemblyQualifiedName == typeof(Post).AssemblyQualifiedName &&
-                     s.EntityChanges[0].PropertyChanges.Count == 2 // Post.BlogId, Post.ModificationTime
+                     s.EntityChanges[0].PropertyChanges.Count == 1 // Post.BlogId
             ));
         }
 

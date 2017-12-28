@@ -2,11 +2,14 @@
 using System.Collections.Generic;
 using Abp.Domain.Entities;
 using Abp.Domain.Entities.Auditing;
+using Abp.EntityHistory;
 
-namespace Abp.EntityFrameworkCore.Tests.Domain
+namespace Abp.ZeroCore.SampleApp.Core.EntityHistory
 {
+    [HistoryTracked]
     public class Blog : AggregateRoot, IHasCreationTime
     {
+        [DisableHistoryTracking]
         public string Name { get; set; }
 
         public string Url { get; protected set; }
@@ -45,8 +48,6 @@ namespace Abp.EntityFrameworkCore.Tests.Domain
 
             var oldUrl = Url;
             Url = url;
-
-            DomainEvents.Add(new BlogUrlChangedEventData(this, oldUrl));
         }
     }
 }

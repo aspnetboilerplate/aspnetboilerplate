@@ -2,13 +2,17 @@
 using System.ComponentModel.DataAnnotations;
 using Abp.Domain.Entities.Auditing;
 using Abp.Domain.Entities;
+using Abp.EntityHistory;
 
-namespace Abp.EntityFrameworkCore.Tests.Domain
+namespace Abp.ZeroCore.SampleApp.Core.EntityHistory
 {
     public class Post : AuditedEntity<Guid>, ISoftDelete, IMayHaveTenant
     {
         [Required]
         public Blog Blog { get; set; }
+
+        [HistoryTracked]
+        public int BlogId { get; set; }
 
         public string Title { get; set; }
 
