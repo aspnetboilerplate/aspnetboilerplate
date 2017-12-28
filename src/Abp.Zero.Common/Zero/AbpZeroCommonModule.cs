@@ -5,6 +5,7 @@ using Abp.Auditing;
 using Abp.Authorization.Roles;
 using Abp.Authorization.Users;
 using Abp.Collections.Extensions;
+using Abp.Configuration.Startup;
 using Abp.Dependency;
 using Abp.Localization;
 using Abp.Localization.Dictionaries;
@@ -12,9 +13,8 @@ using Abp.Localization.Dictionaries.Xml;
 using Abp.Modules;
 using Abp.MultiTenancy;
 using Abp.Reflection;
-using Abp.Zero.Configuration;
-using Abp.Configuration.Startup;
 using Abp.Reflection.Extensions;
+using Abp.Zero.Configuration;
 using Castle.MicroKernel.Registration;
 
 namespace Abp.Zero
