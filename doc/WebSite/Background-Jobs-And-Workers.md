@@ -60,7 +60,7 @@ queue:
             _userRepository = userRepository;
             _emailSender = emailSender;
         }
-        
+
         [UnitOfWork]
         public override void Execute(SimpleSendEmailJobArgs args)
         {
@@ -94,7 +94,7 @@ A job argument should be **serializable**, because it's **serialized and
 stored** in the database. While ASP.NET Boilerplate's default background
 job manager uses **JSON** serialization (which does not need the
 \[Serializable\] attribute), it's better to define the **\[Serializable\]**
-attribute since we may switch to another job manager in the future, for which we may use 
+attribute since we may switch to another job manager in the future, for which we may use
 something like .NET's built-in binary serialization.
 
 **Keep your arguments simple** (like
@@ -172,7 +172,7 @@ default BackgroundJobManager:
     database.
 -   It **increasingly waits between retries** for a job. It waits 1 minute
     for the first retry, 2 minutes for the second retry, 4 minutes for the third
-    retry and so on..
+    retry and so on.
 -   It **polls** the store for jobs in fixed intervals. It queries jobs,
     ordering by priority (asc) and then by try count (asc).
 
@@ -212,7 +212,7 @@ You may want to disable background job execution for your application:
 This is rarely needed. An example of this is if you're running multiple
 instances of your application working on the same database (in a web
 farm). In this case, each application will query the same database for jobs
-and execute them. This leads to multiple executions of the same jobs and 
+and execute them. This leads to multiple executions of the same jobs and
 other problems. To prevent it, you have two options:
 
 -   You can enable job execution for only one instance of the
@@ -303,7 +303,7 @@ This real code directly works in ASP.NET Boilerplate with
 
 #### Register Background Workers
 
-After creating a background worker, add it to the 
+After creating a background worker, add it to the
 **IBackgroundWorkerManager**. The most common place is the PostInitialize
 method of your module:
 
@@ -336,7 +336,7 @@ LogCleaner worker instances and they watch and clear different log folders).
 
 ASP.NET Boilerplate's background worker systems are simple. It does not have a
 schedule system, except for periodic running workers as demonstrated above.
-If you need more advanced scheduling features, we suggest you 
+If you need more advanced scheduling features, we suggest you
 check out [Quartz](Quartz-Integration.md) or another library.
 
 ### Making Your Application Always Run
