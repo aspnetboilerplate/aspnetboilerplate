@@ -19,7 +19,7 @@ the method throws an exception).
 
 With this information, we not just know who did the operation, but we can also
 measure the **performance** of the application and observe the
-**exceptions** thrown. Even more, you can get **statistics** about the usage
+**exceptions** thrown. Furthermore, you can get **statistics** about the usage
 of your application.
 
 The auditing system uses [**IAbpSession**](/Pages/Documents/Abp-Session) to
@@ -113,7 +113,7 @@ All methods of MyClass are audited except MyMethod2 since it's
 explicitly disabled.  The Audited attribute can be used to 
 save audits for the desired method.
 
-**DisableAuditing** can also be used for or a single **property of a
+**DisableAuditing** can also be used for a single **property of a
 DTO**. Thus, you can **hide sensitive data** in audit logs, such as
 passwords for example.
 
@@ -122,7 +122,7 @@ passwords for example.
 -   A method must be **public** in order to be saved in audit logs. Private
     and protected methods are ignored.
 -   A method must be **virtual** if it's called over class reference.
-    This is not needed if it's injected using it's interface (like
+    This is not needed if it's injected using its interface (like
     injecting the IPersonService interface to use the PersonService class). This
     is needed since ASP.NET Boilerplate uses dynamic proxying and
     interception. This is not true for **MVC** Controller actions. They
