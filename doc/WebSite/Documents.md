@@ -65,6 +65,7 @@ Application Layer
 -   [Authorization](Authorization.md)
 -   [Feature Management](Feature-Management.md)
 -   [Audit Logging](Audit-Logging.md)
+-   [Entity History](Entity-History.md) <label class="label label-success">NEW</label>
 
 Distributed Service Layer
 
