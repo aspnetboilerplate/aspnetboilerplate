@@ -107,7 +107,7 @@ namespace Abp.EntityHistory
 
             UpdateChangeSet(changeSet);
 
-            using (var uow = _unitOfWorkManager.Begin(TransactionScopeOption.RequiresNew))
+            using (var uow = _unitOfWorkManager.Begin(TransactionScopeOption.Suppress))
             {
                 await EntityHistoryStore.SaveAsync(changeSet);
                 await uow.CompleteAsync();

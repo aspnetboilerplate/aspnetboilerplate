@@ -210,6 +210,20 @@ namespace Abp.Zero.EntityFrameworkCore
                 b.HasIndex(e => new { e.TenantId, e.Source, e.LanguageName, e.Key });
             });
 
+            modelBuilder.Entity<EntityChangeInfo>(b =>
+            {
+                b.HasMany(p => p.PropertyChanges)
+                    .WithOne()
+                    .HasForeignKey(p => p.EntityChangeId);
+            });
+
+            modelBuilder.Entity<EntityChangeSet>(b =>
+            {
+                b.HasMany(p => p.EntityChanges)
+                    .WithOne()
+                    .HasForeignKey(p => p.EntityChangeSetId);
+            });
+
             modelBuilder.Entity<NotificationSubscriptionInfo>(b =>
             {
                 b.HasIndex(e => new { e.NotificationName, e.EntityTypeName, e.EntityId, e.UserId });
