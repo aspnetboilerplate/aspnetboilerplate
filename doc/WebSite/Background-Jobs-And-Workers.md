@@ -8,12 +8,12 @@ to execute some tasks in the **background threads** of an application.
 In a **queued and persistent** manner, background jobs are used to queue some tasks to be executed in the
 background. You may need background jobs for several reasons. Here are some examples:
 
--   To perform **long-running tasks** without having the users wait. For example; A
+-   To perform **long-running tasks** without having the users wait. For example, a
     user presses a 'report' button to start a long-running reporting
     job. You add this job to the **queue** and send the report's result to
     your user via email when it's completed.
 -   To create **re-trying** and **persistent tasks** to **guarantee** code will be **successfully
-    executed**. For example; You can send emails in a background job to
+    executed**. For example, you can send emails in a background job to
     overcome **temporary failures** and **guarantee** that it
     eventually will be sent. That way users do not wait while sending
     emails.
@@ -47,7 +47,7 @@ A background job must be registered via [dependency
 injection](/Pages/Documents/Dependency-Injection). Implementing
 **ITransientDependency** is the simplest way.
 
-Lest's define a more realistic job which sends emails in a background
+Let's define a more realistic job which sends emails in a background
 queue:
 
     public class SimpleSendEmailJob : BackgroundJob<SimpleSendEmailJobArgs>, ITransientDependency
@@ -152,7 +152,7 @@ Let's add a new job for SimpleSendEmailJob, as we defined before:
         }
     }
 
-Enqueu (or EnqueueAsync) method has other parameters such as
+Enqueue (or EnqueueAsync) method has other parameters such as
 **priority** and **delay**.
 
 #### Default Background Job Manager
@@ -166,12 +166,12 @@ default BackgroundJobManager:
     uses **IBackgroundJobStore** to persist jobs (see the next section).
 -   It **retries** job execution until the job **successfully runs** (if it does
     not throw any exceptions, but logs them) or **timeouts**. Default
-    timeout are 2 days for a job.
+    timeout is 2 days for a job.
 -   It **deletes** a job from the store (database) when it's successfully
     executed. If it's timed out, it sets it as **abandoned**, and leaves it in the
     database.
 -   It **increasingly waits between retries** for a job. It waits 1 minute
-    for first retry, 2 minutes for the second retry, 4 minutes for the third
+    for the first retry, 2 minutes for the second retry, 4 minutes for the third
     retry and so on..
 -   It **polls** the store for jobs in fixed intervals. It queries jobs,
     ordering by priority (asc) and then by try count (asc).
@@ -186,7 +186,7 @@ can use **[module-zero](/Pages/Documents/Zero/Overall)** which already
 implements it.
 
 If you are using a 3rd party job manager (like
-[Hanfgire](Hangfire-Integration.md)), there is no need to implement
+[Hangfire](Hangfire-Integration.md)), there is no need to implement
 IBackgroundJobStore.
 
 #### Configuration
@@ -218,7 +218,7 @@ other problems. To prevent it, you have two options:
 -   You can enable job execution for only one instance of the
     application.
 -   You can disable job execution for all instances of the web
-    application and create a seperated, standalone application (example:
+    application and create a separated, standalone application (example:
     a Windows Service) that executes background jobs.
 
 #### Exception Handling
@@ -299,7 +299,7 @@ This real code directly works in ASP.NET Boilerplate with
     **IBackgroundWorker**, you will override/implement the **Start**,
     **Stop** and **WaitToStop** methods. Start and Stop methods should
     be **non-blocking**, the WaitToStop method should **wait** for the worker to
-    finish it's current critical job.
+    finish its current critical job.
 
 #### Register Background Workers
 
@@ -320,8 +320,8 @@ method of your module:
 
 While we generally add workers in PostInitialize, there are no
 restrictions on that. You can inject IBackgroundWorkerManager anywhere
-and add workers on runtime. IBackgroundWorkerManager will stop and
-release all registered workers when your applications is being shutdown.
+and add workers at runtime. IBackgroundWorkerManager will stop and
+release all registered workers when your application is being shut down.
 
 #### Background Worker Lifestyles
 
@@ -347,7 +347,7 @@ performed to the web application for a long period of time. So, if you host the
 background job execution in your web application (this is the default
 behavior), you should ensure that your web application is configured to always
 be running. Otherwise, background jobs only work while your
-applications is in use.
+application is in use.
 
 There are some techniques to accomplish that. The most simple way is to make
 periodic requests to your web application from an external application.
