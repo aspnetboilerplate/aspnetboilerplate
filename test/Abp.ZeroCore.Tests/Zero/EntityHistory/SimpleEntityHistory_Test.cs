@@ -6,12 +6,15 @@ using Abp.EntityHistory;
 using Abp.Events.Bus.Entities;
 using Abp.Extensions;
 using Abp.Json;
+using Abp.Threading;
 using Abp.ZeroCore.SampleApp.Core.EntityHistory;
 using Castle.MicroKernel.Registration;
 using Microsoft.EntityFrameworkCore.ChangeTracking;
 using NSubstitute;
+using Shouldly;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using Xunit;
 
 namespace Abp.Zero.EntityHistory
@@ -63,6 +66,51 @@ namespace Abp.Zero.EntityHistory
                      s.EntityChanges[0].TenantId == AbpSession.TenantId &&
                      s.EntityChanges[0].UserId == AbpSession.UserId
             ));
+        }
+
+        [Fact]
+        public void Should_Write_History_For_Tracked_Entities_Create_To_Database()
+        {
+            // Forward calls from substitute to implementation
+            var entityHistoryStore = Resolve<EntityHistoryStore>();
+            _entityHistoryStore.When(x => x.SaveAsync(Arg.Any<EntityChangeSet>()))
+                .Do(callback => AsyncHelper.RunSync(() =>
+                    entityHistoryStore.SaveAsync(callback.Arg<EntityChangeSet>()))
+                );
+
+            const int tenantId = 1;
+
+            UsingDbContext(tenantId, (context) =>
+            {
+                context.EntityChanges.Count(f => f.TenantId == tenantId).ShouldBe(0);
+            });
+
+            UsingDbContext(tenantId, (context) =>
+            {
+                context.EntityChangeSets.Count(f => f.TenantId == tenantId).ShouldBe(0);
+            });
+
+            UsingDbContext(tenantId, (context) =>
+            {
+                context.EntityPropertyChanges.Count(f => f.TenantId == tenantId).ShouldBe(0);
+            });
+
+            var blog2Id = CreateBlogAndGetId();
+
+            UsingDbContext(tenantId, (context) =>
+            {
+                context.EntityChanges.Count(f => f.TenantId == tenantId).ShouldBe(1);
+            });
+
+            UsingDbContext(tenantId, (context) =>
+            {
+                context.EntityChangeSets.Count(f => f.TenantId == tenantId).ShouldBe(1);
+            });
+
+            UsingDbContext(tenantId, (context) =>
+            {
+                context.EntityPropertyChanges.Count(f => f.TenantId == tenantId).ShouldBe(3);
+            });
         }
 
         [Fact]
