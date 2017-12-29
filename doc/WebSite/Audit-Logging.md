@@ -25,12 +25,12 @@ of your application.
 The auditing system uses [**IAbpSession**](/Pages/Documents/Abp-Session) to
 get the current UserId and TenantId.
 
-The Application service, MVC Controller, Web API and ASP.NET Core methods
+The Application Service, MVC Controller, Web API and ASP.NET Core methods
 are automatically audited by default.
 
 #### About IAuditingStore
 
-The Auditing system uses **IAuditingStore** to
+The auditing system uses **IAuditingStore** to
 save audit information. While you can implement it in your own way,
 it's fully implemented in the **module-zero** project. If you don't
 implement it, SimpleLogAuditingStore is used and it writes audit
@@ -73,7 +73,7 @@ service classes**. It's defined as shown below:
         )
     );
 
-You can add your selectors in your module's PreInitialize method. 
+You can add your selectors in your module's PreInitialize method.
 You can also remove the selector above by name if you don't want to save
 audit logs for application services. This is why it has a unique name
 (Use simple LINQ to find the selector in Selectors and remove it if you
@@ -110,7 +110,7 @@ individual **method**. Example:
     }
 
 All methods of MyClass are audited except MyMethod2 since it's
-explicitly disabled.  The Audited attribute can be used to 
+explicitly disabled. The Audited attribute can be used to
 save audits for the desired method.
 
 **DisableAuditing** can also be used for a single **property of a
