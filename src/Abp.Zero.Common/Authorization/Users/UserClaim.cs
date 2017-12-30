@@ -10,7 +10,7 @@ namespace Abp.Authorization.Users
     public class UserClaim : CreationAuditedEntity<long>, IMayHaveTenant
     {
         /// <summary>
-        /// Maximum length of <see cref="ClaimType"/> property.
+        /// Maximum length of the <see cref="ClaimType"/> property.
         /// </summary>
         public const int MaxClaimTypeLength = 256;
 
