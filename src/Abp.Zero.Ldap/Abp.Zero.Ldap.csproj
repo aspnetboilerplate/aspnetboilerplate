@@ -21,8 +21,8 @@
   <ItemGroup>
     <EmbeddedResource Include="Ldap\Localization\Source\*.xml" Exclude="bin\**;obj\**;**\*.xproj;packages\**;@(EmbeddedResource)" />
     
-    <PackageReference Include="System.DirectoryServices.AccountManagement" Version="4.5.0-preview1-25914-04" />
-    <PackageReference Include="System.DirectoryServices.Protocols" Version="4.5.0-preview1-25914-04" />
+    <PackageReference Include="System.DirectoryServices.AccountManagement" Version="4.5.0-*" />
+    <PackageReference Include="System.DirectoryServices.Protocols" Version="4.5.0-*" />
    
     <ProjectReference Include="..\Abp.Zero.Common\Abp.Zero.Common.csproj" />
 
