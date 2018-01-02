@@ -19,7 +19,7 @@ The Entity History tracking system uses
 [**IAbpSession**](/Pages/Documents/Abp-Session) to
 get the current UserId and TenantId.
 
-No entities are automatically tracked by default.
+No entities are automatically tracked by default. You should configure entities either by startup configuration or using attributes.
 
 #### About IEntityHistoryStore
 
@@ -59,7 +59,7 @@ change logs. A selector has a unique **name** and a **predicate**.
 For example, a selector can be used to select **full audited entities**.
 It's defined as shown below:
 
-    Configuration.Auditing.Selectors.Add(
+    Configuration.EntityHistory.Selectors.Add(
         new NamedTypeSelector(
             "Abp.FullAuditedEntities",
             type => typeof (IFullAudited).IsAssignableFrom(type)
@@ -79,7 +79,7 @@ While you can select tracked entities by configuration, you can use the
     {
         public string MyProperty1 { get; set; }
 
-        [DisableAuditing]
+        [DisableHistoryTracking]
         public int MyProperty2 { get; set; }
 
         public long MyProperty3 { get; set; }
@@ -89,7 +89,7 @@ All properties of MyEntity are tracked except MyProperty2 since it's
 explicitly disabled. The HistoryTracked attribute can be used to
 save change logs for a desired property.
 
-**DisableHistoryTracking** can also be used for a single **property of an
+**DisableHistoryTracking** can be used for an entity or a single **property of an
 entity**. Thus, you can **hide sensitive data** in change logs, such as
 passwords for example.
 
@@ -98,6 +98,5 @@ passwords for example.
 -   A property must be **public** in order to be saved in change logs.
     Private and protected properties are ignored.
 -   DisableHistoryTracking takes priority over HistoryTracking attribute.
--   Only works for entities that inherit IEntity&lt;TPrimaryKey&gt;,
-    e.g. Entity&lt;long&gt;, FullAuditedEntity.
--   Only works for scalar properties, e.g. string, int.
+-   Only works for entities.
+-   Only works for scalar properties, e.g. string, int, bool...
