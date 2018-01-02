@@ -8,7 +8,7 @@ using System.ComponentModel.DataAnnotations.Schema;
 namespace Abp.EntityHistory
 {
     [Table("AbpEntityChangeSets")]
-    public class EntityChangeSet : Entity<long>, IHasCreationTime, IMayHaveTenant
+    public class EntityChangeSet : Entity<long>, IHasCreationTime, IMayHaveTenant, IExtendableObject
     {
         /// <summary>
         /// Maximum length of <see cref="BrowserInfo"/> property.
@@ -47,6 +47,11 @@ namespace Abp.EntityHistory
         /// Creation time of this entity.
         /// </summary>
         public virtual DateTime CreationTime { get; set; }
+
+        /// <summary>
+        /// A JSON formatted string to extend the containing object.
+        /// </summary>
+        public virtual string ExtensionData { get; set; }
 
         /// <summary>
         /// ImpersonatorTenantId.
