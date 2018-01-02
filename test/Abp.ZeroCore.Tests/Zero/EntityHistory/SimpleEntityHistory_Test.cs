@@ -249,7 +249,7 @@ namespace Abp.Zero.EntityHistory
 
     internal static class IEnumerableExtensions
     {
-        internal static EntityPropertyChangeInfo FirstOrDefault(this IEnumerable<EntityPropertyChangeInfo> enumerable)
+        internal static EntityPropertyChange FirstOrDefault(this IEnumerable<EntityPropertyChange> enumerable)
         {
             var enumerator = enumerable.GetEnumerator();
             enumerator.MoveNext();

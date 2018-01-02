@@ -20,8 +20,8 @@ namespace Abp.EntityHistory
             IgnoredTypes = new List<Type>()
             {
                 typeof(EntityChangeSet),
-                typeof(EntityChangeInfo),
-                typeof(EntityPropertyChangeInfo)
+                typeof(EntityChange),
+                typeof(EntityPropertyChange)
             };
         }
     }

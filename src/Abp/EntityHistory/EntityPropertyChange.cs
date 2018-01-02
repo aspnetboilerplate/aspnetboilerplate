@@ -5,7 +5,7 @@ using System.ComponentModel.DataAnnotations.Schema;
 namespace Abp.EntityHistory
 {
     [Table("AbpEntityPropertyChanges")]
-    public class EntityPropertyChangeInfo : Entity<long>, IMayHaveTenant
+    public class EntityPropertyChange : Entity<long>, IMayHaveTenant
     {
         /// <summary>
         /// Maximum length of <see cref="PropertyName"/> property.

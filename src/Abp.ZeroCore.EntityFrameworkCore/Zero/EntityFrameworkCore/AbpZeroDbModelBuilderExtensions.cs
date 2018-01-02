@@ -39,9 +39,9 @@ namespace Abp.Zero.EntityFrameworkCore
             SetTableName<AuditLog>(modelBuilder, prefix + "AuditLogs", schemaName);
             SetTableName<BackgroundJobInfo>(modelBuilder, prefix + "BackgroundJobs", schemaName);
             SetTableName<Edition>(modelBuilder, prefix + "Editions", schemaName);
-            SetTableName<EntityChangeInfo>(modelBuilder, prefix + "EntityChanges", schemaName);
+            SetTableName<EntityChange>(modelBuilder, prefix + "EntityChanges", schemaName);
             SetTableName<EntityChangeSet>(modelBuilder, prefix + "EntityChangeSets", schemaName);
-            SetTableName<EntityPropertyChangeInfo>(modelBuilder, prefix + "EntityPropertyChanges", schemaName);
+            SetTableName<EntityPropertyChange>(modelBuilder, prefix + "EntityPropertyChanges", schemaName);
             SetTableName<FeatureSetting>(modelBuilder, prefix + "Features", schemaName);
             SetTableName<TenantFeatureSetting>(modelBuilder, prefix + "Features", schemaName);
             SetTableName<EditionFeatureSetting>(modelBuilder, prefix + "Features", schemaName);

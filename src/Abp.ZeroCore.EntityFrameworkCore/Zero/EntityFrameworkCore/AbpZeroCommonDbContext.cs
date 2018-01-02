@@ -123,7 +123,7 @@ namespace Abp.Zero.EntityFrameworkCore
         /// <summary>
         /// Entity changes.
         /// </summary>
-        public virtual DbSet<EntityChangeInfo> EntityChanges { get; set; }
+        public virtual DbSet<EntityChange> EntityChanges { get; set; }
 
         /// <summary>
         /// Entity change sets.
@@ -133,7 +133,7 @@ namespace Abp.Zero.EntityFrameworkCore
         /// <summary>
         /// Entity property changes.
         /// </summary>
-        public virtual DbSet<EntityPropertyChangeInfo> EntityPropertyChanges { get; set; }
+        public virtual DbSet<EntityPropertyChange> EntityPropertyChanges { get; set; }
 
         public IEntityHistoryHelper EntityHistoryHelper { get; set; }
 
@@ -210,7 +210,7 @@ namespace Abp.Zero.EntityFrameworkCore
                 b.HasIndex(e => new { e.TenantId, e.Source, e.LanguageName, e.Key });
             });
 
-            modelBuilder.Entity<EntityChangeInfo>(b =>
+            modelBuilder.Entity<EntityChange>(b =>
             {
                 b.HasMany(p => p.PropertyChanges)
                     .WithOne()

@@ -114,7 +114,7 @@ namespace Abp.EntityHistory
             }
         }
 
-        private EntityChangeInfo CreateEntityChangeInfo(EntityEntry entityEntry)
+        private EntityChange CreateEntityChangeInfo(EntityEntry entityEntry)
         {
             var entity = entityEntry.Entity;
             
@@ -145,12 +145,12 @@ namespace Abp.EntityHistory
             }
 
             var entityType = entity.GetType();
-            var entityChangeInfo = new EntityChangeInfo
+            var entityChangeInfo = new EntityChange
             {
                 // Fill "who did this change"
-                BrowserInfo = ClientInfoProvider.BrowserInfo.TruncateWithPostfix(EntityChangeInfo.MaxBrowserInfoLength),
-                ClientIpAddress = ClientInfoProvider.ClientIpAddress.TruncateWithPostfix(EntityChangeInfo.MaxClientIpAddressLength),
-                ClientName = ClientInfoProvider.ComputerName.TruncateWithPostfix(EntityChangeInfo.MaxClientNameLength),
+                BrowserInfo = ClientInfoProvider.BrowserInfo.TruncateWithPostfix(EntityChange.MaxBrowserInfoLength),
+                ClientIpAddress = ClientInfoProvider.ClientIpAddress.TruncateWithPostfix(EntityChange.MaxClientIpAddressLength),
+                ClientName = ClientInfoProvider.ComputerName.TruncateWithPostfix(EntityChange.MaxClientNameLength),
                 TenantId = AbpSession.TenantId,
                 UserId = AbpSession.UserId,
                 ImpersonatorUserId = AbpSession.ImpersonatorUserId,
@@ -166,10 +166,10 @@ namespace Abp.EntityHistory
             return entityChangeInfo;
         }
 
-        private DateTime GetChangeTime(EntityChangeInfo entityChangeInfo)
+        private DateTime GetChangeTime(EntityChange entityChange)
         {
-            var entity = entityChangeInfo.EntityEntry.As<EntityEntry>().Entity;
-            switch (entityChangeInfo.ChangeType)
+            var entity = entityChange.EntityEntry.As<EntityEntry>().Entity;
+            switch (entityChange.ChangeType)
             {
                 case EntityChangeType.Created:
                     return (entity as IHasCreationTime)?.CreationTime ?? Clock.Now;
@@ -194,9 +194,9 @@ namespace Abp.EntityHistory
         /// <summary>
         /// Gets the property changes for this entry.
         /// </summary>
-        private ICollection<EntityPropertyChangeInfo> GetPropertyChanges(EntityEntry entityEntry)
+        private ICollection<EntityPropertyChange> GetPropertyChanges(EntityEntry entityEntry)
         {
-            var propertyChanges = new List<EntityPropertyChangeInfo>();
+            var propertyChanges = new List<EntityPropertyChange>();
             var properties = entityEntry.Metadata.GetProperties();
             var isCreatedOrDeleted = IsCreated(entityEntry) || IsDeleted(entityEntry);
 
@@ -205,7 +205,7 @@ namespace Abp.EntityHistory
                 var propertyEntry = entityEntry.Property(property.Name);
                 if (ShouldSavePropertyHistory(propertyEntry, isCreatedOrDeleted))
                 {
-                    propertyChanges.Add(new EntityPropertyChangeInfo
+                    propertyChanges.Add(new EntityPropertyChange
                     {
                         NewValue = propertyEntry.CurrentValue.ToJsonString(),
                         OriginalValue = propertyEntry.OriginalValue.ToJsonString(),
@@ -343,7 +343,7 @@ namespace Abp.EntityHistory
                             if (!(propertyEntry.OriginalValue?.Equals(propertyEntry.CurrentValue) ?? propertyEntry.CurrentValue == null))
                             {
                                 // Add foreign key
-                                entityChangeInfo.PropertyChanges.Add(new EntityPropertyChangeInfo
+                                entityChangeInfo.PropertyChanges.Add(new EntityPropertyChange
                                 {
                                     NewValue = propertyEntry.CurrentValue.ToJsonString(),
                                     OriginalValue = propertyEntry.OriginalValue.ToJsonString(),

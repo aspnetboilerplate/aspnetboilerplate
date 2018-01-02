@@ -15,11 +15,11 @@ namespace Abp.EntityHistory
         /// <summary>
         /// Entity changes grouped in this change set.
         /// </summary>
-        public IList<EntityChangeInfo> EntityChanges { get; set; }
+        public virtual IList<EntityChange> EntityChanges { get; set; }
 
         public EntityChangeSet()
         {
-            EntityChanges = new List<EntityChangeInfo>();
+            EntityChanges = new List<EntityChange>();
         }
     }
 }
