@@ -43,7 +43,6 @@ namespace Abp.Authorization.Users
         
         protected AbpUser()
         {
-            Tokens = new Collection<UserToken>();
         }
 
         public void SetNormalizedNames()
