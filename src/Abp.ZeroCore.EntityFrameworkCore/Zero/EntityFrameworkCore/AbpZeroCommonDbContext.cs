@@ -150,16 +150,25 @@ namespace Abp.Zero.EntityFrameworkCore
         public override int SaveChanges()
         {
             var changeSet = EntityHistoryHelper?.CreateEntityChangeSet(ChangeTracker.Entries().ToList());
+
             var result = base.SaveChanges();
+
             EntityHistoryHelper?.Save(changeSet);
+
             return result;
         }
 
         public override async Task<int> SaveChangesAsync(CancellationToken cancellationToken = default(CancellationToken))
         {
             var changeSet = EntityHistoryHelper?.CreateEntityChangeSet(ChangeTracker.Entries().ToList());
+
             var result = await base.SaveChangesAsync(cancellationToken);
-            await EntityHistoryHelper?.SaveAsync(changeSet);
+
+            if (EntityHistoryHelper != null)
+            {
+                await EntityHistoryHelper.SaveAsync(changeSet);
+            }
+
             return result;
         }
 

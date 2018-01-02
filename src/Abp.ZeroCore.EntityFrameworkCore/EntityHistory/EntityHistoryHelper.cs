@@ -16,6 +16,7 @@ using Abp.Runtime.Session;
 using Abp.Threading;
 using Abp.Timing;
 using Castle.Core.Logging;
+using JetBrains.Annotations;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.ChangeTracking;
 
@@ -62,7 +63,7 @@ namespace Abp.EntityHistory
             EntityHistoryStore = NullEntityHistoryStore.Instance;
         }
         
-        public EntityChangeSet CreateEntityChangeSet(ICollection<EntityEntry> entityEntries)
+        public virtual EntityChangeSet CreateEntityChangeSet(ICollection<EntityEntry> entityEntries)
         {
             var changeSet = new EntityChangeSet();
 
@@ -73,27 +74,24 @@ namespace Abp.EntityHistory
 
             foreach (var entry in entityEntries)
             {
-                if (ShouldSaveEntityHistory(entry))
+                if (!ShouldSaveEntityHistory(entry))
                 {
-                    var entityChangeInfo = CreateEntityChangeInfo(entry);
-                    if (entityChangeInfo == null)
-                    {
-                        // Already logged in CreateEntityChangeInfo
-                        continue;
-                    }
-                    changeSet.EntityChanges.Add(entityChangeInfo);
+                    continue;
                 }
+
+                var entityChangeInfo = CreateEntityChangeInfo(entry);
+                if (entityChangeInfo == null)
+                {
+                    continue;
+                }
+
+                changeSet.EntityChanges.Add(entityChangeInfo);
             }
 
             return changeSet;
         }
 
-        public void Save(EntityChangeSet changeSet)
-        {
-            AsyncHelper.RunSync(() => SaveAsync(changeSet));
-        }
-
-        public async Task SaveAsync(EntityChangeSet changeSet)
+        public virtual async Task SaveAsync(EntityChangeSet changeSet)
         {
             if (!IsEntityHistoryEnabled)
             {
@@ -114,6 +112,7 @@ namespace Abp.EntityHistory
             }
         }
 
+        [CanBeNull]
         private EntityChange CreateEntityChangeInfo(EntityEntry entityEntry)
         {
             var entity = entityEntry.Entity;
@@ -334,9 +333,7 @@ namespace Abp.EntityHistory
                     foreach (var property in foreignKey.Properties)
                     {
                         var propertyEntry = entityEntry.Property(property.Name);
-                        var propertyChange = entityChangeInfo.PropertyChanges
-                            .Where(pc => pc.PropertyName == property.Name)
-                            .FirstOrDefault();
+                        var propertyChange = entityChangeInfo.PropertyChanges.FirstOrDefault(pc => pc.PropertyName == property.Name);
 
                         if (propertyChange == null)
                         {
