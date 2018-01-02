@@ -4,6 +4,7 @@ using Abp.Auditing;
 using Abp.BackgroundJobs;
 using Abp.Dependency;
 using Abp.Domain.Uow;
+using Abp.EntityHistory;
 using Abp.Events.Bus;
 using Abp.Notifications;
 using Abp.Resources.Embedded;
@@ -102,6 +103,11 @@ namespace Abp.Configuration.Startup
         /// Used to configure embedded resources.
         /// </summary>
         IEmbeddedResourcesConfiguration EmbeddedResources { get; }
+
+        /// <summary>
+        /// Used to configure entity history.
+        /// </summary>
+        IEntityHistoryConfiguration EntityHistory { get; }
 
         /// <summary>
         /// Used to replace a service type.

@@ -2,13 +2,16 @@ using Abp.Auditing;
 using Abp.Authorization;
 using Abp.Authorization.Roles;
 using Abp.Authorization.Users;
-using Abp.BackgroundJobs;
 using Abp.Configuration;
 using Abp.EntityFrameworkCore;
+using Abp.EntityHistory;
 using Abp.Localization;
 using Abp.Notifications;
 using Abp.Organizations;
 using Microsoft.EntityFrameworkCore;
+using System.Linq;
+using System.Threading;
+using System.Threading.Tasks;
 
 namespace Abp.Zero.EntityFrameworkCore
 {
@@ -118,6 +121,23 @@ namespace Abp.Zero.EntityFrameworkCore
         public virtual DbSet<NotificationSubscriptionInfo> NotificationSubscriptions { get; set; }
 
         /// <summary>
+        /// Entity changes.
+        /// </summary>
+        public virtual DbSet<EntityChange> EntityChanges { get; set; }
+
+        /// <summary>
+        /// Entity change sets.
+        /// </summary>
+        public virtual DbSet<EntityChangeSet> EntityChangeSets { get; set; }
+
+        /// <summary>
+        /// Entity property changes.
+        /// </summary>
+        public virtual DbSet<EntityPropertyChange> EntityPropertyChanges { get; set; }
+
+        public IEntityHistoryHelper EntityHistoryHelper { get; set; }
+
+        /// <summary>
         /// 
         /// </summary>
         /// <param name="options"></param>
@@ -125,6 +145,31 @@ namespace Abp.Zero.EntityFrameworkCore
             :base(options)
         {
 
+        }
+
+        public override int SaveChanges()
+        {
+            var changeSet = EntityHistoryHelper?.CreateEntityChangeSet(ChangeTracker.Entries().ToList());
+
+            var result = base.SaveChanges();
+
+            EntityHistoryHelper?.Save(changeSet);
+
+            return result;
+        }
+
+        public override async Task<int> SaveChangesAsync(CancellationToken cancellationToken = default(CancellationToken))
+        {
+            var changeSet = EntityHistoryHelper?.CreateEntityChangeSet(ChangeTracker.Entries().ToList());
+
+            var result = await base.SaveChangesAsync(cancellationToken);
+
+            if (EntityHistoryHelper != null)
+            {
+                await EntityHistoryHelper.SaveAsync(changeSet);
+            }
+
+            return result;
         }
 
         /// <summary>
@@ -172,6 +217,20 @@ namespace Abp.Zero.EntityFrameworkCore
             modelBuilder.Entity<ApplicationLanguageText>(b =>
             {
                 b.HasIndex(e => new { e.TenantId, e.Source, e.LanguageName, e.Key });
+            });
+
+            modelBuilder.Entity<EntityChange>(b =>
+            {
+                b.HasMany(p => p.PropertyChanges)
+                    .WithOne()
+                    .HasForeignKey(p => p.EntityChangeId);
+            });
+
+            modelBuilder.Entity<EntityChangeSet>(b =>
+            {
+                b.HasMany(p => p.EntityChanges)
+                    .WithOne()
+                    .HasForeignKey(p => p.EntityChangeSetId);
             });
 
             modelBuilder.Entity<NotificationSubscriptionInfo>(b =>
