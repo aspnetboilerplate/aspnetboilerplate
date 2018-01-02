@@ -13,7 +13,6 @@ using Abp.Events.Bus.Entities;
 using Abp.Extensions;
 using Abp.Json;
 using Abp.Runtime.Session;
-using Abp.Threading;
 using Abp.Timing;
 using Castle.Core.Logging;
 using JetBrains.Annotations;
@@ -65,7 +64,17 @@ namespace Abp.EntityHistory
         
         public virtual EntityChangeSet CreateEntityChangeSet(ICollection<EntityEntry> entityEntries)
         {
-            var changeSet = new EntityChangeSet();
+            var changeSet = new EntityChangeSet
+            {
+                // Fill "who did this change"
+                BrowserInfo = ClientInfoProvider.BrowserInfo.TruncateWithPostfix(EntityChangeSet.MaxBrowserInfoLength),
+                ClientIpAddress = ClientInfoProvider.ClientIpAddress.TruncateWithPostfix(EntityChangeSet.MaxClientIpAddressLength),
+                ClientName = ClientInfoProvider.ComputerName.TruncateWithPostfix(EntityChangeSet.MaxClientNameLength),
+                ImpersonatorTenantId = AbpSession.ImpersonatorTenantId,
+                ImpersonatorUserId = AbpSession.ImpersonatorUserId,
+                TenantId = AbpSession.TenantId,
+                UserId = AbpSession.UserId
+            };
 
             if (!IsEntityHistoryEnabled)
             {
@@ -146,15 +155,6 @@ namespace Abp.EntityHistory
             var entityType = entity.GetType();
             var entityChangeInfo = new EntityChange
             {
-                // Fill "who did this change"
-                BrowserInfo = ClientInfoProvider.BrowserInfo.TruncateWithPostfix(EntityChange.MaxBrowserInfoLength),
-                ClientIpAddress = ClientInfoProvider.ClientIpAddress.TruncateWithPostfix(EntityChange.MaxClientIpAddressLength),
-                ClientName = ClientInfoProvider.ComputerName.TruncateWithPostfix(EntityChange.MaxClientNameLength),
-                TenantId = AbpSession.TenantId,
-                UserId = AbpSession.UserId,
-                ImpersonatorUserId = AbpSession.ImpersonatorUserId,
-                ImpersonatorTenantId = AbpSession.ImpersonatorTenantId,
-
                 ChangeType = changeType,
                 EntityEntry = entityEntry, // [NotMapped]
                 EntityId = entityId,
@@ -257,12 +257,12 @@ namespace Abp.EntityHistory
                 return false;
             }
 
-            if (entityType.GetTypeInfo().IsDefined(typeof(HistoryTrackedAttribute), true))
+            if (entityType.GetTypeInfo().IsDefined(typeof(AuditedAttribute), true))
             {
                 return true;
             }
 
-            if (entityType.GetTypeInfo().IsDefined(typeof(DisableHistoryTrackingAttribute), true))
+            if (entityType.GetTypeInfo().IsDefined(typeof(DisableAuditingAttribute), true))
             {
                 return false;
             }
@@ -273,7 +273,7 @@ namespace Abp.EntityHistory
             }
 
             var properties = entityEntry.Metadata.GetProperties();
-            if (properties.Any(p => p.PropertyInfo?.IsDefined(typeof(HistoryTrackedAttribute)) ?? false))
+            if (properties.Any(p => p.PropertyInfo?.IsDefined(typeof(AuditedAttribute)) ?? false))
             {
                 return true;
             }
@@ -284,7 +284,7 @@ namespace Abp.EntityHistory
         private bool ShouldSavePropertyHistory(PropertyEntry propertyEntry, bool defaultValue)
         {
             var propertyInfo = propertyEntry.Metadata.PropertyInfo;
-            if (propertyInfo.IsDefined(typeof(DisableHistoryTrackingAttribute), true))
+            if (propertyInfo.IsDefined(typeof(DisableAuditingAttribute), true))
             {
                 return false;
             }
@@ -292,8 +292,8 @@ namespace Abp.EntityHistory
             var classType = propertyInfo.DeclaringType;
             if (classType != null)
             {
-                if (classType.GetTypeInfo().IsDefined(typeof(DisableHistoryTrackingAttribute), true) &&
-                    !propertyInfo.IsDefined(typeof(HistoryTrackedAttribute), true))
+                if (classType.GetTypeInfo().IsDefined(typeof(DisableAuditingAttribute), true) &&
+                    !propertyInfo.IsDefined(typeof(AuditedAttribute), true))
                 {
                     return false;
                 }

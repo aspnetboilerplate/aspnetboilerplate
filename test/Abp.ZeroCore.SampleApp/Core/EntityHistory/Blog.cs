@@ -1,15 +1,15 @@
 ﻿using System;
 using System.Collections.Generic;
+using Abp.Auditing;
 using Abp.Domain.Entities;
 using Abp.Domain.Entities.Auditing;
-using Abp.EntityHistory;
 
 namespace Abp.ZeroCore.SampleApp.Core.EntityHistory
 {
-    [HistoryTracked]
+    [Audited]
     public class Blog : AggregateRoot, IHasCreationTime
     {
-        [DisableHistoryTracking]
+        [DisableAuditing]
         public string Name { get; set; }
 
         public string Url { get; protected set; }

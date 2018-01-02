@@ -7,6 +7,7 @@ using Abp.Events.Bus.Entities;
 using Abp.Extensions;
 using Abp.Json;
 using Abp.Threading;
+using Abp.Timing;
 using Abp.ZeroCore.SampleApp.Core.EntityHistory;
 using Castle.MicroKernel.Registration;
 using Microsoft.EntityFrameworkCore.ChangeTracking;
@@ -61,10 +62,10 @@ namespace Abp.Zero.EntityHistory
                      s.EntityChanges[0].PropertyChanges.Count == 3 && // Blog.Id, Blog.Name, Blog.Url
 
                      // Check "who did this change"
-                     s.EntityChanges[0].ImpersonatorTenantId == AbpSession.ImpersonatorTenantId &&
-                     s.EntityChanges[0].ImpersonatorUserId == AbpSession.ImpersonatorUserId &&
-                     s.EntityChanges[0].TenantId == AbpSession.TenantId &&
-                     s.EntityChanges[0].UserId == AbpSession.UserId
+                     s.ImpersonatorTenantId == AbpSession.ImpersonatorTenantId &&
+                     s.ImpersonatorUserId == AbpSession.ImpersonatorUserId &&
+                     s.TenantId == AbpSession.TenantId &&
+                     s.UserId == AbpSession.UserId
             ));
         }
 
@@ -95,6 +96,7 @@ namespace Abp.Zero.EntityHistory
                 context.EntityPropertyChanges.Count(f => f.TenantId == tenantId).ShouldBe(0);
             });
 
+            var justNow = Clock.Now;
             var blog2Id = CreateBlogAndGetId();
 
             UsingDbContext(tenantId, (context) =>
@@ -105,6 +107,7 @@ namespace Abp.Zero.EntityHistory
             UsingDbContext(tenantId, (context) =>
             {
                 context.EntityChangeSets.Count(f => f.TenantId == tenantId).ShouldBe(1);
+                context.EntityChangeSets.Single().CreationTime.ShouldBeGreaterThan(justNow);
             });
 
             UsingDbContext(tenantId, (context) =>
