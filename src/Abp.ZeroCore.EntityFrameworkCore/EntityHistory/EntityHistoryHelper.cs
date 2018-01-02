@@ -64,7 +64,17 @@ namespace Abp.EntityHistory
         
         public virtual EntityChangeSet CreateEntityChangeSet(ICollection<EntityEntry> entityEntries)
         {
-            var changeSet = new EntityChangeSet();
+            var changeSet = new EntityChangeSet
+            {
+                // Fill "who did this change"
+                BrowserInfo = ClientInfoProvider.BrowserInfo.TruncateWithPostfix(EntityChangeSet.MaxBrowserInfoLength),
+                ClientIpAddress = ClientInfoProvider.ClientIpAddress.TruncateWithPostfix(EntityChangeSet.MaxClientIpAddressLength),
+                ClientName = ClientInfoProvider.ComputerName.TruncateWithPostfix(EntityChangeSet.MaxClientNameLength),
+                ImpersonatorTenantId = AbpSession.ImpersonatorTenantId,
+                ImpersonatorUserId = AbpSession.ImpersonatorUserId,
+                TenantId = AbpSession.TenantId,
+                UserId = AbpSession.UserId
+            };
 
             if (!IsEntityHistoryEnabled)
             {
@@ -145,15 +155,6 @@ namespace Abp.EntityHistory
             var entityType = entity.GetType();
             var entityChangeInfo = new EntityChange
             {
-                // Fill "who did this change"
-                BrowserInfo = ClientInfoProvider.BrowserInfo.TruncateWithPostfix(EntityChange.MaxBrowserInfoLength),
-                ClientIpAddress = ClientInfoProvider.ClientIpAddress.TruncateWithPostfix(EntityChange.MaxClientIpAddressLength),
-                ClientName = ClientInfoProvider.ComputerName.TruncateWithPostfix(EntityChange.MaxClientNameLength),
-                TenantId = AbpSession.TenantId,
-                UserId = AbpSession.UserId,
-                ImpersonatorUserId = AbpSession.ImpersonatorUserId,
-                ImpersonatorTenantId = AbpSession.ImpersonatorTenantId,
-
                 ChangeType = changeType,
                 EntityEntry = entityEntry, // [NotMapped]
                 EntityId = entityId,
