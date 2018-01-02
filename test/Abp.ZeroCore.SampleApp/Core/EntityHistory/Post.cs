@@ -1,8 +1,8 @@
 ﻿using System;
 using System.ComponentModel.DataAnnotations;
+using Abp.Auditing;
 using Abp.Domain.Entities.Auditing;
 using Abp.Domain.Entities;
-using Abp.EntityHistory;
 
 namespace Abp.ZeroCore.SampleApp.Core.EntityHistory
 {
@@ -11,7 +11,7 @@ namespace Abp.ZeroCore.SampleApp.Core.EntityHistory
         [Required]
         public Blog Blog { get; set; }
 
-        [HistoryTracked]
+        [Audited]
         public int BlogId { get; set; }
 
         public string Title { get; set; }

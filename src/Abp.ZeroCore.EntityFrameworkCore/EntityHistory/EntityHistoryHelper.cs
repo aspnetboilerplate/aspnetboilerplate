@@ -13,7 +13,6 @@ using Abp.Events.Bus.Entities;
 using Abp.Extensions;
 using Abp.Json;
 using Abp.Runtime.Session;
-using Abp.Threading;
 using Abp.Timing;
 using Castle.Core.Logging;
 using JetBrains.Annotations;
@@ -257,12 +256,12 @@ namespace Abp.EntityHistory
                 return false;
             }
 
-            if (entityType.GetTypeInfo().IsDefined(typeof(HistoryTrackedAttribute), true))
+            if (entityType.GetTypeInfo().IsDefined(typeof(AuditedAttribute), true))
             {
                 return true;
             }
 
-            if (entityType.GetTypeInfo().IsDefined(typeof(DisableHistoryTrackingAttribute), true))
+            if (entityType.GetTypeInfo().IsDefined(typeof(DisableAuditingAttribute), true))
             {
                 return false;
             }
@@ -273,7 +272,7 @@ namespace Abp.EntityHistory
             }
 
             var properties = entityEntry.Metadata.GetProperties();
-            if (properties.Any(p => p.PropertyInfo?.IsDefined(typeof(HistoryTrackedAttribute)) ?? false))
+            if (properties.Any(p => p.PropertyInfo?.IsDefined(typeof(AuditedAttribute)) ?? false))
             {
                 return true;
             }
@@ -284,7 +283,7 @@ namespace Abp.EntityHistory
         private bool ShouldSavePropertyHistory(PropertyEntry propertyEntry, bool defaultValue)
         {
             var propertyInfo = propertyEntry.Metadata.PropertyInfo;
-            if (propertyInfo.IsDefined(typeof(DisableHistoryTrackingAttribute), true))
+            if (propertyInfo.IsDefined(typeof(DisableAuditingAttribute), true))
             {
                 return false;
             }
@@ -292,8 +291,8 @@ namespace Abp.EntityHistory
             var classType = propertyInfo.DeclaringType;
             if (classType != null)
             {
-                if (classType.GetTypeInfo().IsDefined(typeof(DisableHistoryTrackingAttribute), true) &&
-                    !propertyInfo.IsDefined(typeof(HistoryTrackedAttribute), true))
+                if (classType.GetTypeInfo().IsDefined(typeof(DisableAuditingAttribute), true) &&
+                    !propertyInfo.IsDefined(typeof(AuditedAttribute), true))
                 {
                     return false;
                 }
