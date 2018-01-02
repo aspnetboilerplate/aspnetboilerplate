@@ -95,6 +95,7 @@ namespace Abp.Zero.EntityHistory
                 context.EntityPropertyChanges.Count(f => f.TenantId == tenantId).ShouldBe(0);
             });
 
+            var justNow = Clock.Now;
             var blog2Id = CreateBlogAndGetId();
 
             UsingDbContext(tenantId, (context) =>
@@ -105,6 +106,7 @@ namespace Abp.Zero.EntityHistory
             UsingDbContext(tenantId, (context) =>
             {
                 context.EntityChangeSets.Count(f => f.TenantId == tenantId).ShouldBe(1);
+                context.EntityChangeSets.Single().CreationTime.ShouldBeGreaterThan(justNow);
             });
 
             UsingDbContext(tenantId, (context) =>
