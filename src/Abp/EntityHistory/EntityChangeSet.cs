@@ -5,7 +5,7 @@ using System.ComponentModel.DataAnnotations.Schema;
 namespace Abp.EntityHistory
 {
     [Table("AbpEntityChangeSets")]
-    public class EntityChangeSet : Entity<long>, IEntityChangeSet, IMayHaveTenant
+    public class EntityChangeSet : Entity<long>, IMayHaveTenant
     {
         /// <summary>
         /// TenantId.
