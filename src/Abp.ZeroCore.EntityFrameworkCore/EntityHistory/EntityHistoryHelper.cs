@@ -68,7 +68,7 @@ namespace Abp.EntityHistory
         {
             var changeSet = new EntityChangeSet
             {
-                Reason = EntityChangeSetReasonProvider.Reason,
+                Reason = EntityChangeSetReasonProvider.Reason.TruncateWithPostfix(EntityChangeSet.MaxReasonLength),
 
                 // Fill "who did this change"
                 BrowserInfo = ClientInfoProvider.BrowserInfo.TruncateWithPostfix(EntityChangeSet.MaxBrowserInfoLength),
