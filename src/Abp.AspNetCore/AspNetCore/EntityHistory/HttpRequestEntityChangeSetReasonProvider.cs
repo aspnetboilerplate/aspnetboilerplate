@@ -13,7 +13,18 @@ namespace Abp.AspNetCore.EntityHistory
     public class HttpRequestEntityChangeSetReasonProvider : EntityChangeSetReasonProviderBase, ISingletonDependency
     {
         [CanBeNull]
-        public override string Reason => HttpContextAccessor.HttpContext?.Request.GetDisplayUrl();
+        public override string Reason
+        {
+            get
+            {
+                if (OverridedValue != null)
+                {
+                    return OverridedValue.Reason;
+                }
+
+                return HttpContextAccessor.HttpContext?.Request.GetDisplayUrl();
+            }
+        }
 
         protected IHttpContextAccessor HttpContextAccessor { get; }
 
