@@ -1,5 +1,6 @@
 ﻿using Castle.DynamicProxy;
 using System.Linq;
+using System.Reflection;
 
 namespace Abp.EntityHistory
 {
@@ -14,10 +15,11 @@ namespace Abp.EntityHistory
 
         public void Intercept(IInvocation invocation)
         {
-            var useCaseAttribute = invocation.MethodInvocationTarget.GetCustomAttributes(typeof(UseCaseAttribute), true).Cast<UseCaseAttribute>().FirstOrDefault();
-            var reason = useCaseAttribute?.Description;
+            var methodInfo = invocation.MethodInvocationTarget;
+            var useCaseAttribute = methodInfo.GetCustomAttributes<UseCaseAttribute>(true).FirstOrDefault()
+                  ?? methodInfo.DeclaringType.GetCustomAttributes<UseCaseAttribute>(true).First();
 
-            using (ReasonProvider.Use(reason))
+            using (ReasonProvider.Use(useCaseAttribute.Description))
             {
                 invocation.Proceed();
             }
