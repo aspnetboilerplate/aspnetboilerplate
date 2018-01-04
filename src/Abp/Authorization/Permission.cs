@@ -11,7 +11,7 @@ namespace Abp.Authorization
     /// Represents a permission.
     /// A permission is used to restrict functionalities of the application from unauthorized users.
     /// </summary>
-    public sealed class Permission
+    public class Permission
     {
         /// <summary>
         /// Parent of this permission if one exists.
