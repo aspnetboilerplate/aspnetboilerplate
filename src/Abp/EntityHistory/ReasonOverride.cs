@@ -6,7 +6,7 @@
 
         public ReasonOverride(string reason)
         {
-            Reason = null;
+            Reason = reason;
         }
     }
 }
