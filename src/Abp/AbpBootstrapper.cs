@@ -6,6 +6,7 @@ using Abp.Configuration.Startup;
 using Abp.Dependency;
 using Abp.Dependency.Installers;
 using Abp.Domain.Uow;
+using Abp.EntityHistory;
 using Abp.Modules;
 using Abp.PlugIns;
 using Abp.Runtime.Validation.Interception;
@@ -131,6 +132,7 @@ namespace Abp
             AuditingInterceptorRegistrar.Initialize(IocManager);
             UnitOfWorkRegistrar.Initialize(IocManager);
             AuthorizationInterceptorRegistrar.Initialize(IocManager);
+            EntityHistoryInterceptorRegistrar.Initialize(IocManager);
         }
 
         /// <summary>
