@@ -4,16 +4,19 @@ ASP.NET Boilerplate provides an infrastructure to automatically log all
 entity and property change history.
 
 The saved fields for an entity change are: Related **tenant id**,
-changer **user id**, **entity change set id**, **entity id**,
-**entity type name**, **change time**, **change type**, the client's
-**IP address**, the client's **computer name** and the **browser info** (if
-entity is changed in a web request).
+**entity change set id**, **entity id**,
+**entity type name**, **change time** and the **change type**.
 
 The saved fields for an entity property change are: Related **tenant id**,
 **entity change id**, **property name**, **property type name**,
 **new value** and the **original value**.
 
 The entity changes are grouped in a change set for each SaveChanges call.
+
+The saved fields for an entity change set are: Related **tenant id**,
+changer **user id**, **creation time**, the client's
+**IP address**, the client's **computer name** and the **browser info** (if
+entities are changed in a web request).
 
 The Entity History tracking system uses
 [**IAbpSession**](/Pages/Documents/Abp-Session) to
@@ -71,25 +74,25 @@ You can add your selectors in your module's PreInitialize method.
 ### Enable/Disable by attributes
 
 While you can select tracked entities by configuration, you can use the
-**HistoryTracked** and **DisableHistoryTracking** attributes for a single
+**Audited** and **DisableAuditing** attributes for a single
 **entity** or an individual **property**. Example:
 
-    [HistoryTracked]
+    [Audited]
     public class MyEntity : Entity
     {
         public string MyProperty1 { get; set; }
 
-        [DisableHistoryTracking]
+        [DisableAuditing]
         public int MyProperty2 { get; set; }
 
         public long MyProperty3 { get; set; }
     }
 
 All properties of MyEntity are tracked except MyProperty2 since it's
-explicitly disabled. The HistoryTracked attribute can be used to
+explicitly disabled. The Audited attribute can be used to
 save change logs for a desired property.
 
-**DisableHistoryTracking** can be used for an entity or a single **property of an
+**DisableAuditing** can be used for an entity or a single **property of an
 entity**. Thus, you can **hide sensitive data** in change logs, such as
 passwords for example.
 
@@ -97,6 +100,6 @@ passwords for example.
 
 -   A property must be **public** in order to be saved in change logs.
     Private and protected properties are ignored.
--   DisableHistoryTracking takes priority over HistoryTracking attribute.
+-   DisableAuditing takes priority over Audited attribute.
 -   Only works for entities.
 -   Only works for scalar properties, e.g. string, int, bool...
