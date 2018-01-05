@@ -130,9 +130,9 @@ namespace Abp
         {
             ValidationInterceptorRegistrar.Initialize(IocManager);
             AuditingInterceptorRegistrar.Initialize(IocManager);
+            EntityHistoryInterceptorRegistrar.Initialize(IocManager);
             UnitOfWorkRegistrar.Initialize(IocManager);
             AuthorizationInterceptorRegistrar.Initialize(IocManager);
-            EntityHistoryInterceptorRegistrar.Initialize(IocManager);
         }
 
         /// <summary>
