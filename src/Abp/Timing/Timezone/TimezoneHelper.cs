@@ -9,6 +9,7 @@ using Abp.Extensions;
 using Abp.IO.Extensions;
 using Abp.Reflection.Extensions;
 using Abp.Xml.Extensions;
+using TimeZoneConverter;
 
 namespace Abp.Timing.Timezone
 {
@@ -74,8 +75,9 @@ namespace Abp.Timing.Timezone
                 return null;
             }
 
-            var sourceTimeZone = TimeZoneInfo.FindSystemTimeZoneById(fromTimeZoneId);
-            var destinationTimeZone = TimeZoneInfo.FindSystemTimeZoneById(toTimeZoneId);
+            var sourceTimeZone = FindTimeZoneInfo(fromTimeZoneId);
+            var destinationTimeZone = FindTimeZoneInfo(toTimeZoneId);
+            
             return TimeZoneInfo.ConvertTime(date.Value, sourceTimeZone, destinationTimeZone);
         }
 
@@ -91,9 +93,9 @@ namespace Abp.Timing.Timezone
                 return null;
             }
 
-            var sourceTimeZone = TimeZoneInfo.FindSystemTimeZoneById(IanaToWindows(fromIanaTimeZoneId));
-            var destinationTimeZone = TimeZoneInfo.FindSystemTimeZoneById(IanaToWindows(toIanaTimeZoneId));
-
+            var sourceTimeZone = FindTimeZoneInfo(IanaToWindows(fromIanaTimeZoneId));
+            var destinationTimeZone = FindTimeZoneInfo(IanaToWindows(toIanaTimeZoneId));
+            
             return TimeZoneInfo.ConvertTime(date.Value, sourceTimeZone, destinationTimeZone);
         }
 
@@ -105,6 +107,16 @@ namespace Abp.Timing.Timezone
         public static DateTime? ConvertTimeToUtcByIanaTimeZoneId(DateTime? date, string fromIanaTimeZoneId)
         {
             return ConvertTimeByIanaTimeZoneId(date, fromIanaTimeZoneId, "Etc/UTC");
+        }
+
+        public static TimeZoneInfo FindTimeZoneInfo(string windowsOrIanaTimeZoneId)
+        {
+            return TZConvert.GetTimeZoneInfo(windowsOrIanaTimeZoneId);
+        }
+
+        public static List<TimeZoneInfo> GetWindowsTimeZoneInfos()
+        {
+            return TZConvert.KnownWindowsTimeZoneIds.Select(TZConvert.GetTimeZoneInfo).ToList();
         }
 
         private static void GetTimezoneMappings()
