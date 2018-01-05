@@ -104,7 +104,7 @@ the UserManager:
     }
 
 #### User Login
-
+,
 Module-zero defines LoginManager which has a **LoginAsync** method used
 to login to the application. It checks all logic for login and returns a
 login result. LoginAsync method also **automatically saves all login
@@ -143,7 +143,7 @@ authentication source'. We can create a class derived from
 There is **DefaultExternalAuthenticationSource** class to simplify
 implementation of IExternalAuthenticationSource. Let's see an example:
 
-    public class MyExternalAuthSource : DefaultExternalAuthenticationSource<Tenant, User>
+    public class MyExternalAuthSource : DefaultExternalAuthenticationSource<Tenant, User>,  ITransientDependency
     {
         public override string Name
         {
