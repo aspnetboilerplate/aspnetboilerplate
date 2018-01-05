@@ -14,7 +14,7 @@ The saved fields for an entity property change are: Related **tenant id**,
 The entity changes are grouped in a change set for each SaveChanges call.
 
 The saved fields for an entity change set are: Related **tenant id**,
-changer **user id**, **creation time**, the client's
+changer **user id**, **creation time**, **reason**, the client's
 **IP address**, the client's **computer name** and the **browser info** (if
 entities are changed in a web request).
 
@@ -95,6 +95,64 @@ save change logs for a desired property.
 **DisableAuditing** can be used for an entity or a single **property of an
 entity**. Thus, you can **hide sensitive data** in change logs, such as
 passwords for example.
+
+### Reason
+
+Entity change set has a **Reason** property that can be used to further group
+change sets. Since each SaveChanges call creates an entity change set, a single
+request can result in more than one change set.
+
+**Abp.AspNetCore** package implements **HttpRequestEntityChangeSetReasonProvider**,
+which returns HttpContext.Request's URL as the Reason.
+
+#### UseCase Attribute
+
+The preferred approach is using the **UseCase** attribute. Example:
+
+    [UseCase(Description = "Assign an issue to a user")]
+    public virtual async Task AssignIssueAsync(AssignIssueInput input)
+    {
+        // ...
+    }
+
+##### UseCase Attribute Restrictions
+
+You can use UseCase attribute for:
+
+-   All **public** or **public virtual** methods for classes that are
+    used via its interface, e.g. an application service used via its interface.
+-   All **public virtual** methods for self-injected classes, e.g. **MVC
+    Controllers**.
+-   All **protected virtual** methods.
+
+#### IEntityChangeSetReasonProvider
+
+In some cases, you may need to change/override Reason value for a limited scope.
+You can use the **IEntityChangeSetReasonProvider.Use(...)** method as shown below:
+
+    public class MyService
+    {
+        private readonly IEntityChangeSetReasonProvider _reasonProvider;
+
+        public MyService(IEntityChangeSetReasonProvider reasonProvider)
+        {
+            _reasonProvider = reasonProvider;
+        }
+
+        public virtual async Task AssignIssueAsync(AssignIssueInput input)
+        {
+            var reason = "Assign an issue to user: " + input.UserId.ToString();
+            using (_reasonProvider.Use(reason))
+            {
+                ...
+                
+                _unitOfWorkManager.Current.SaveChanges();
+            }
+        }
+    }
+
+The Use method returns an IDisposable and it **must be disposed**. Once the return
+value is disposed, Reason is automatically restored to the previous value.
 
 ### Notes
 
