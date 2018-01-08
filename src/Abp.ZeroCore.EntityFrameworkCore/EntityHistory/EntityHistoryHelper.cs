@@ -162,7 +162,7 @@ namespace Abp.EntityHistory
                 ChangeType = changeType,
                 EntityEntry = entityEntry, // [NotMapped]
                 EntityId = entityId,
-                EntityTypeAssemblyQualifiedName = entityType.AssemblyQualifiedName,
+                EntityTypeFullName = entityType.FullName,
                 PropertyChanges = GetPropertyChanges(entityEntry)
             };
 
@@ -210,10 +210,10 @@ namespace Abp.EntityHistory
                 {
                     propertyChanges.Add(new EntityPropertyChange
                     {
-                        NewValue = propertyEntry.CurrentValue.ToJsonString(),
-                        OriginalValue = propertyEntry.OriginalValue.ToJsonString(),
+                        NewValue = propertyEntry.CurrentValue.ToJsonString().TruncateWithPostfix(EntityPropertyChange.MaxValueLength),
+                        OriginalValue = propertyEntry.OriginalValue.ToJsonString().TruncateWithPostfix(EntityPropertyChange.MaxValueLength),
                         PropertyName = property.Name,
-                        PropertyTypeName = property.ClrType.AssemblyQualifiedName
+                        PropertyTypeFullName = property.ClrType.FullName
                     });
                 }
             }
@@ -349,7 +349,7 @@ namespace Abp.EntityHistory
                                     NewValue = propertyEntry.CurrentValue.ToJsonString(),
                                     OriginalValue = propertyEntry.OriginalValue.ToJsonString(),
                                     PropertyName = property.Name,
-                                    PropertyTypeName = property.ClrType.AssemblyQualifiedName
+                                    PropertyTypeFullName = property.ClrType.FullName
                                 });
                             }
 
@@ -367,7 +367,7 @@ namespace Abp.EntityHistory
                             else
                             {
                                 // Update foreign key
-                                propertyChange.NewValue = newValue;
+                                propertyChange.NewValue = newValue.TruncateWithPostfix(EntityPropertyChange.MaxValueLength);
                             }
                         }
                     }

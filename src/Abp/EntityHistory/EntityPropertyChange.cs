@@ -20,10 +20,10 @@ namespace Abp.EntityHistory
         public const int MaxValueLength = 512;
 
         /// <summary>
-        /// Maximum length of <see cref="PropertyTypeName"/> property.
+        /// Maximum length of <see cref="PropertyTypeFullName"/> property.
         /// Value: 512.
         /// </summary>
-        public const int MaxPropertyTypeNameLength = 512;
+        public const int MaxPropertyTypeFullNameLength = 192;
 
         /// <summary>
         /// EntityChangeId.
@@ -52,8 +52,8 @@ namespace Abp.EntityHistory
         /// Type of the JSON serialized <see cref="NewValue"/> and <see cref="OriginalValue"/>.
         /// It's AssemblyQualifiedName of the type.
         /// </summary>
-        [MaxLength(MaxPropertyTypeNameLength)]
-        public virtual string PropertyTypeName { get; set; }
+        [MaxLength(MaxPropertyTypeFullNameLength)]
+        public virtual string PropertyTypeFullName { get; set; }
 
         /// <summary>
         /// TenantId.

@@ -18,7 +18,7 @@ namespace Abp.Zero.EntityFrameworkCore
     public abstract class AbpZeroCommonDbContext<TRole, TUser, TSelf> : AbpDbContext
         where TRole : AbpRole<TUser>
         where TUser : AbpUser<TUser>
-        where TSelf: AbpZeroCommonDbContext<TRole, TUser, TSelf>
+        where TSelf : AbpZeroCommonDbContext<TRole, TUser, TSelf>
     {
         /// <summary>
         /// Roles.
@@ -142,7 +142,7 @@ namespace Abp.Zero.EntityFrameworkCore
         /// </summary>
         /// <param name="options"></param>
         protected AbpZeroCommonDbContext(DbContextOptions<TSelf> options)
-            :base(options)
+            : base(options)
         {
 
         }
@@ -224,6 +224,9 @@ namespace Abp.Zero.EntityFrameworkCore
                 b.HasMany(p => p.PropertyChanges)
                     .WithOne()
                     .HasForeignKey(p => p.EntityChangeId);
+
+                b.HasIndex(e => new { e.EntityChangeSetId });
+                b.HasIndex(e => new { e.EntityTypeFullName, e.EntityId });
             });
 
             modelBuilder.Entity<EntityChangeSet>(b =>
@@ -231,6 +234,15 @@ namespace Abp.Zero.EntityFrameworkCore
                 b.HasMany(p => p.EntityChanges)
                     .WithOne()
                     .HasForeignKey(p => p.EntityChangeSetId);
+
+                b.HasIndex(e => new { e.TenantId, e.UserId });
+                b.HasIndex(e => new { e.TenantId, e.CreationTime });
+                b.HasIndex(e => new { e.TenantId, e.Reason });
+            });
+
+            modelBuilder.Entity<EntityPropertyChange>(b =>
+            {
+                b.HasIndex(e => e.EntityChangeId);
             });
 
             modelBuilder.Entity<NotificationSubscriptionInfo>(b =>
@@ -278,7 +290,7 @@ namespace Abp.Zero.EntityFrameworkCore
             modelBuilder.Entity<UserLoginAttempt>(b =>
             {
                 b.HasIndex(e => new { e.TenancyName, e.UserNameOrEmailAddress, e.Result });
-                b.HasIndex(ula => new {ula.UserId, ula.TenantId});
+                b.HasIndex(ula => new { ula.UserId, ula.TenantId });
             });
 
             modelBuilder.Entity<UserLogin>(b =>

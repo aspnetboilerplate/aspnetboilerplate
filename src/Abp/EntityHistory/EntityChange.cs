@@ -12,15 +12,15 @@ namespace Abp.EntityHistory
     {
         /// <summary>
         /// Maximum length of <see cref="EntityId"/> property.
-        /// Value: 96.
+        /// Value: 48.
         /// </summary>
-        public const int MaxEntityIdLength = 96;
+        public const int MaxEntityIdLength = 48;
 
         /// <summary>
-        /// Maximum length of <see cref="EntityTypeAssemblyQualifiedName"/> property.
-        /// Value: 512.
+        /// Maximum length of <see cref="EntityTypeFullName"/> property.
+        /// Value: 192.
         /// </summary>
-        public const int MaxEntityTypeAssemblyQualifiedNameLength = 512;
+        public const int MaxEntityTypeFullNameLength = 192;
 
         /// <summary>
         /// ChangeTime.
@@ -46,8 +46,8 @@ namespace Abp.EntityHistory
         /// <summary>
         /// AssemblyQualifiedName of the entity type.
         /// </summary>
-        [MaxLength(MaxEntityTypeAssemblyQualifiedNameLength)]
-        public virtual string EntityTypeAssemblyQualifiedName { get; set; }
+        [MaxLength(MaxEntityTypeFullNameLength)]
+        public virtual string EntityTypeFullName { get; set; }
 
         /// <summary>
         /// TenantId.
