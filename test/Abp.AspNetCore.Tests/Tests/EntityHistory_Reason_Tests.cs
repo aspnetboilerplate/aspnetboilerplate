@@ -40,6 +40,12 @@ namespace Abp.AspNetCore.Tests
         {
             _nonUseCaseMarkedClass.UseCaseMarkedMethod();
         }
+
+        [Fact]
+        public void Should_Not_Intercept_No_UseCase_Marked_Method()
+        {
+            _nonUseCaseMarkedClass.AnotherMethod();
+        }
     }
 
     public static class Consts
@@ -60,6 +66,11 @@ namespace Abp.AspNetCore.Tests
         public virtual void UseCaseMarkedMethod()
         {
             ReasonProvider.Reason.ShouldBe(Consts.UseCaseDescription);
+        }
+
+        public virtual void AnotherMethod()
+        {
+            ReasonProvider.Reason.ShouldBeNull();
         }
     }
 
