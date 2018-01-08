@@ -4,16 +4,19 @@ ASP.NET Boilerplate provides an infrastructure to automatically log all
 entity and property change history.
 
 The saved fields for an entity change are: Related **tenant id**,
-changer **user id**, **entity change set id**, **entity id**,
-**entity type name**, **change time**, **change type**, the client's
-**IP address**, the client's **computer name** and the **browser info** (if
-entity is changed in a web request).
+**entity change set id**, **entity id**,
+**entity type name**, **change time** and the **change type**.
 
 The saved fields for an entity property change are: Related **tenant id**,
 **entity change id**, **property name**, **property type name**,
 **new value** and the **original value**.
 
 The entity changes are grouped in a change set for each SaveChanges call.
+
+The saved fields for an entity change set are: Related **tenant id**,
+changer **user id**, **creation time**, **reason**, the client's
+**IP address**, the client's **computer name** and the **browser info** (if
+entities are changed in a web request).
 
 The Entity History tracking system uses
 [**IAbpSession**](/Pages/Documents/Abp-Session) to
@@ -71,32 +74,94 @@ You can add your selectors in your module's PreInitialize method.
 ### Enable/Disable by attributes
 
 While you can select tracked entities by configuration, you can use the
-**HistoryTracked** and **DisableHistoryTracking** attributes for a single
+**Audited** and **DisableAuditing** attributes for a single
 **entity** or an individual **property**. Example:
 
-    [HistoryTracked]
+    [Audited]
     public class MyEntity : Entity
     {
         public string MyProperty1 { get; set; }
 
-        [DisableHistoryTracking]
+        [DisableAuditing]
         public int MyProperty2 { get; set; }
 
         public long MyProperty3 { get; set; }
     }
 
 All properties of MyEntity are tracked except MyProperty2 since it's
-explicitly disabled. The HistoryTracked attribute can be used to
+explicitly disabled. The Audited attribute can be used to
 save change logs for a desired property.
 
-**DisableHistoryTracking** can be used for an entity or a single **property of an
+**DisableAuditing** can be used for an entity or a single **property of an
 entity**. Thus, you can **hide sensitive data** in change logs, such as
 passwords for example.
+
+### Reason
+
+Entity change set has a **Reason** property that can be used to understand why a
+set of changes had occurred, i.e. the use case that resulted in these changes.
+
+For example, Person A transfers money from Account A to Account B. Both account
+balances change and "Money transfer" is recorded as the Reason for this change set.
+Since a balance change can be due to other reasons, the Reason property explains
+why these changes were made.
+
+**Abp.AspNetCore** package implements **HttpRequestEntityChangeSetReasonProvider**,
+which returns HttpContext.Request's URL as the Reason.
+
+#### UseCase Attribute
+
+The preferred approach is using the **UseCase** attribute. Example:
+
+    [UseCase(Description = "Assign an issue to a user")]
+    public virtual async Task AssignIssueAsync(AssignIssueInput input)
+    {
+        // ...
+    }
+
+##### UseCase Attribute Restrictions
+
+You can use UseCase attribute for:
+
+-   All **public** or **public virtual** methods for classes that are
+    used via its interface, e.g. an application service used via its interface.
+-   All **public virtual** methods for self-injected classes, e.g. **MVC
+    Controllers**.
+-   All **protected virtual** methods.
+
+#### IEntityChangeSetReasonProvider
+
+In some cases, you may need to change/override Reason value for a limited scope.
+You can use the **IEntityChangeSetReasonProvider.Use(...)** method as shown below:
+
+    public class MyService
+    {
+        private readonly IEntityChangeSetReasonProvider _reasonProvider;
+
+        public MyService(IEntityChangeSetReasonProvider reasonProvider)
+        {
+            _reasonProvider = reasonProvider;
+        }
+
+        public virtual async Task AssignIssueAsync(AssignIssueInput input)
+        {
+            var reason = "Assign an issue to user: " + input.UserId.ToString();
+            using (_reasonProvider.Use(reason))
+            {
+                ...
+
+                _unitOfWorkManager.Current.SaveChanges();
+            }
+        }
+    }
+
+The Use method returns an IDisposable and it **must be disposed**. Once the return
+value is disposed, Reason is automatically restored to the previous value.
 
 ### Notes
 
 -   A property must be **public** in order to be saved in change logs.
     Private and protected properties are ignored.
--   DisableHistoryTracking takes priority over HistoryTracking attribute.
+-   DisableAuditing takes priority over Audited attribute.
 -   Only works for entities.
 -   Only works for scalar properties, e.g. string, int, bool...

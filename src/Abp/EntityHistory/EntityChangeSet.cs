@@ -26,6 +26,11 @@ namespace Abp.EntityHistory
         public const int MaxClientNameLength = 128;
 
         /// <summary>
+        /// Maximum length of <see cref="Reason"/> property.
+        /// </summary>
+        public const int MaxReasonLength = 256;
+
+        /// <summary>
         /// Browser information if this entity is changed in a web request.
         /// </summary>
         [MaxLength(MaxBrowserInfoLength)]
@@ -62,6 +67,12 @@ namespace Abp.EntityHistory
         /// ImpersonatorUserId.
         /// </summary>
         public virtual long? ImpersonatorUserId { get; set; }
+
+        /// <summary>
+        /// Reason for this change set.
+        /// </summary>
+        [MaxLength(MaxReasonLength)]
+        public virtual string Reason { get; set; }
 
         /// <summary>
         /// TenantId.

@@ -26,6 +26,7 @@ namespace Abp.EntityHistory
         public ILogger Logger { get; set; }
         public IAbpSession AbpSession { get; set; }
         public IClientInfoProvider ClientInfoProvider { get; set; }
+        public IEntityChangeSetReasonProvider EntityChangeSetReasonProvider { get; set; }
         public IEntityHistoryStore EntityHistoryStore { get; set; }
 
         private readonly IEntityHistoryConfiguration _configuration;
@@ -59,6 +60,7 @@ namespace Abp.EntityHistory
             AbpSession = NullAbpSession.Instance;
             Logger = NullLogger.Instance;
             ClientInfoProvider = NullClientInfoProvider.Instance;
+            EntityChangeSetReasonProvider = NullEntityChangeSetReasonProvider.Instance;
             EntityHistoryStore = NullEntityHistoryStore.Instance;
         }
         
@@ -66,6 +68,8 @@ namespace Abp.EntityHistory
         {
             var changeSet = new EntityChangeSet
             {
+                Reason = EntityChangeSetReasonProvider.Reason.TruncateWithPostfix(EntityChangeSet.MaxReasonLength),
+
                 // Fill "who did this change"
                 BrowserInfo = ClientInfoProvider.BrowserInfo.TruncateWithPostfix(EntityChangeSet.MaxBrowserInfoLength),
                 ClientIpAddress = ClientInfoProvider.ClientIpAddress.TruncateWithPostfix(EntityChangeSet.MaxClientIpAddressLength),
