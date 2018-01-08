@@ -98,9 +98,13 @@ passwords for example.
 
 ### Reason
 
-Entity change set has a **Reason** property that can be used to further group
-change sets. Since each SaveChanges call creates an entity change set, a single
-request can result in more than one change set.
+Entity change set has a **Reason** property that can be used to understand why a
+set of changes had occurred, i.e. the use case that resulted in these changes.
+
+For example, Person A transfers money from Account A to Account B. Both account
+balances change and "Money transfer" is recorded as the Reason for this change set.
+Since a balance change can be due to other reasons, the Reason property explains
+why these changes were made.
 
 **Abp.AspNetCore** package implements **HttpRequestEntityChangeSetReasonProvider**,
 which returns HttpContext.Request's URL as the Reason.
@@ -145,7 +149,7 @@ You can use the **IEntityChangeSetReasonProvider.Use(...)** method as shown belo
             using (_reasonProvider.Use(reason))
             {
                 ...
-                
+
                 _unitOfWorkManager.Current.SaveChanges();
             }
         }
