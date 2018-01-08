@@ -28,11 +28,6 @@ namespace Abp.EntityHistory
         
         private static bool ShouldIntercept(IEntityHistoryConfiguration entityHistoryConfiguration, Type type)
         {
-            if (entityHistoryConfiguration.Selectors.Any(selector => selector.Predicate(type)))
-            {
-                return true;
-            }
-
             if (type.GetTypeInfo().IsDefined(typeof(UseCaseAttribute), true))
             {
                 return true;
