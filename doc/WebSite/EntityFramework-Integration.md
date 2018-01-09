@@ -1,11 +1,11 @@
 ASP.NET Boilerplate can work with any O/RM framework. It has built-in
 integration with **EntityFramework**. This document will explain how to
 use EntityFramework with ASP.NET Boilerplate. It's assumed that you're
-already familar with EntityFramework in a basic level.
+already familar with EntityFramework at a basic level.
 
 ### Nuget Package
 
-Nuget package to use EntityFramework as O/RM in ASP.NET Boilerplate is
+The Nuget package to use EntityFramework as an O/RM in ASP.NET Boilerplate is
 [Abp.EntityFramework](http://www.nuget.org/packages/Abp.EntityFramework).
 You should add it to your application. It's better to implement
 EntityFramework in a seperated assembly (dll) in your application and
@@ -55,43 +55,43 @@ below:
         }
     }
 
-It's a regular DbContext class except following rules:
+It's a regular DbContext class except with the following rules:
 
 -   It's derived from **AbpDbContext** instead of DbContext.
--   It should have constructors as the sample above (constructor
-    parameter names should also be same). Explanation:
-    -   **Default** consturctor passes "Default" to base bass as the
-        connection string. So, it expects a "Default" named connection
+-   It should have the constructors like the sample above (constructor
+    parameter names should also be the same). Explanation:
+    -   The **Default** consturctor passes "Default" to the base bass as the
+        connection string. It expects a "Default" named connection
         string in the web.config/app.config file. This constructor is
-        not used by ABP, but used by EF command line migration tool
-        commands (like update-database).
-    -   The constructor gets **nameOrConnectionString** is used by ABP
+        not used by ABP, but used by the EF command-line migration tool
+        commands (like "update-database").
+    -   The constructor gets the **nameOrConnectionString** which is used by ABP
         to pass the connection name or string on runtime.
-    -   The constructor get **existingConnection** can be used for unit
-        test and not directly used by ABP.
-    -   The constructor gets **existingConnection** and
-        **contextOwnsConnection** is used by ABP on single database
-        multiple dbcontext scenarios to share same connection &
+    -   The constructor get the **existingConnection** which can be used for unit
+        tests, and is not directly used by ABP.
+    -   The constructor gets the **existingConnection** and the
+        **contextOwnsConnection** is used by ABP on single database/
+        multiple dbcontext scenarios to share the same connection &
         transaction () when **DbContextEfTransactionStrategy** is used
         (see Transaction Management section below).
 
 EntityFramework can map classes to database tables in a conventional
-way. You even don't need to make any configuration unless you make some
+way. You don't even need to make a configuration unless you make some
 custom stuff. In this example, we mapped entities to different tables.
-As default, Task entity maps to **Tasks** table. But we changed it to be
+By default, the Task entity maps to the **Tasks** table. We changed it to be
 **StsTasks** table. Instead of configuring it with data annotation
-attributes, I prefered to use fluent configuration. You can choice the
-way you like.
+attributes, it is recommended that you use fluent configuration. You can choose 
+what you like.
 
 ### Repositories
 
-Repositories are used to abstract data access from higher layers. See
-[repository documentation](Repositories.md) for more. 
+Repositories are used to abstract data access from higher layers. See the
+[repository documentation](Repositories.md) for more info. 
 
 #### Default Repositories
 
-[Abp.EntityFramework](http://www.nuget.org/packages/Abp.EntityFramework)
-implements default repositories for all entities defined in your
+The [Abp.EntityFramework](http://www.nuget.org/packages/Abp.EntityFramework)
+implements default repositories for all the entities defined in your
 DbContext. You don't have to create repository classes to use predefined
 repository methods. Example:
 
@@ -112,10 +112,10 @@ repository methods. Example:
         }
     }
 
-PersonAppService contructor-injects **IRepository&lt;Person&gt;** and
-uses the **Insert** method. In this way, you can easily inject
+The PersonAppService contructor-injects **IRepository&lt;Person&gt;** and
+uses the **Insert** method. This way, you can easily inject
 **IRepository&lt;TEntity&gt;** (or IRepository&lt;TEntity,
-TPrimaryKey&gt;) and use predefined methods.
+TPrimaryKey&gt;) and use the predefined methods.
 
 #### Custom Repositories
 
@@ -124,12 +124,12 @@ repository classes for your entities.
 
 ##### Application Specific Base Repository Class
 
-ASP.NET Boilerplate provides a base class **EfRepositoryBase** to
-implement repositories easily. To implement **IRepository** interface,
-you can just derive your repository from this class. But it's better to
-create your own base class that extens EfRepositoryBase. Thus, you can
-add shared/common methods to your repositories or override existing
-methods easily. An example base class all for repositories of a
+ASP.NET Boilerplate provides a base class, **EfRepositoryBase**, to
+implement repositories easily. To implement the **IRepository** interface,
+you can simply derive your repository from this class. However, it's better to
+create your own base class that extends the EfRepositoryBase. Thus, you can
+easily add shared/common methods to your repositories or override existing
+methods. An example base class for all the repositories of a
 *SimpleTaskSystem* application:
 
     //Base class for all repositories in my application
@@ -153,18 +153,18 @@ methods easily. An example base class all for repositories of a
         {
         }
 
-        //do not add any method here, add to the class above (because this class inherits it)
+        //do not add methods here, add them to the class above (because this class inherits it)
     }
 
 Notice that we're inheriting from
-EfRepositoryBase&lt;**SimpleTaskSystemDbContext**, TEntity,
-TPrimaryKey&gt;. This declares to ASP.NET Boilerplate to use
+EfRepositoryBase&lt;**SimpleTaskSystemDbContext**, TEntity, and
+TPrimaryKey&gt;? This sets ASP.NET Boilerplate to use the
 SimpleTaskSystemDbContext in our repositories.
 
-By default, all repositories for your given DbContext
+By default, all the repositories for your given DbContext
 (SimpleTaskSystemDbContext in this example) is implemented using
-EfRepositoryBase. You can replace it to your own repository base
-repository class by adding **AutoRepositoryTypes** attribute to your
+EfRepositoryBase. You can replace it to your own base
+repository class by adding the **AutoRepositoryTypes** attribute to your
 DbContext as shown below:
 
     [AutoRepositoryTypes(
@@ -180,13 +180,13 @@ DbContext as shown below:
 
 ##### Custom Repository Example
 
-To implement a custom repository, just derive from your application
-specific base repository class we created above.
+To implement a custom repository, simply derive it from your application
+specific base repository class like the one we created above.
 
 Assume that we have a Task entity that can be assigned to a Person
-(entity) and a Task has a State (new, assigned, completed... and so on).
-We may need to write a custom method to get list of Tasks with some
-conditions and with AssisgnedPerson property pre-fetched (included) in a
+(entity) and a Task State (new, assigned, completed... and so on).
+We may need to write a custom method to get the list of Tasks, with some
+conditions, and with a pre-fetched (included) AssisgnedPerson property; All in a
 single database query. See the example code:
 
     public interface ITaskRepository : IRepository<Task, long>
@@ -223,28 +223,28 @@ single database query. See the example code:
     }
 
 **We first defined** ITaskRepository and then implemented it.
-**GetAll()** returns **IQueryable&lt;Task&gt;**, then we can add some
-**Where** filters using given parameters. Finally we can call
-**ToList()** to get list of Tasks.
+The **GetAll()** method returns an **IQueryable&lt;Task&gt;**, then we can added
+some **Where** filters using the given parameters. Finally, we called
+**ToList()** to get the list of Tasks.
 
-You can also use **Context** object in repository methods to reach to
-your DbContext and directly use Entity Framework APIs. 
+You can also use the **Context** object in repository methods to reach 
+your DbContext, so that you can directly use the Entity Framework APIs. 
 
 **Note**: Define the custom repository **interface** in the
 **domain/core** layer, **implement** it in the **EntityFramework**
-project for layered applications. Thus, you can inject the interface
-from any project without referencing to EF.
+project for layered applications. This way, you can inject the interface
+from any project without actually referencing EF.
 
 #### Repository Best Practices
 
 -   **Use default repositories** wherever it's possible. You can use
-    default repository even you have a custom repository for an entity
-    (if you will use standard repository methods).
--   Always create **repository base class** for your application for
+    the default repository even if you have a custom repository for an entity
+    (if you use standard repository methods).
+-   Always create a **repository base class** for your application for
     custom repositories, as defined above.
--   Define **interfaces** for your custom repositories in **domain
-    layer** (.Core project in startup template), custom repository
-    **classes** in **.EntityFramework** project if you want to abstract
+-   Define **interfaces** for your custom repositories in the **domain
+    layer** (.Core project in startup template), and custom repository
+    **classes** in the **.EntityFramework** project, if you want to abstract
     EF from your domain/application.
 
 ### Transaction Management
@@ -253,23 +253,23 @@ ASP.NET Boilerplate has a built-in [unit of work](Unit-Of-Work.md)
 system to manage database connection and transactions. Entity framework
 has different [transaction management
 approaches](https://msdn.microsoft.com/en-us/library/dn456843(v=vs.113).aspx).
-ASP.NET Boilerplate uses ambient TransactionScope approach by default,
-but also has a built-in implementation for DbContext transaction API. If
-you want to switch to DbContext transaction API, you can configure it in
-PreInitialize method of your [module](Module-System.md) like that:
+ASP.NET Boilerplate uses the ambient TransactionScope approach by default,
+but it also has a built-in implementation for the DbContext transaction API. If
+you want to switch to the DbContext transaction API, you can configure it in the
+PreInitialize method of your [module](Module-System.md) like this:
 
     Configuration.ReplaceService<IEfTransactionStrategy, DbContextEfTransactionStrategy>(DependencyLifeStyle.Transient);
 
 Remember to add "*using Abp.Configuration.Startup;*" to your code file
-to be able to use ReplaceService generic extension method.
+to be able to use the ReplaceService generic extension method.
 
-In addition, your DbContext **should have constructors** as described in
+In addition, your DbContext **should have constructors** as described in the
 DbContext section of this document.
 
 ### Data Stores
 
 Since ASP.NET Boilerplate has built-in integration with EntityFramework,
-it can work with data stores EntityFramework supports. Our free startup
+it can work with the data stores EntityFramework supports. Our free startup
 templates are designed to work with Sql Server but you can modify them
 to work with a different data store.
 
