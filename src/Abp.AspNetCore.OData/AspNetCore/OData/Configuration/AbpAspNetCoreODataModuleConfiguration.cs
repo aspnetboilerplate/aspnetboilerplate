@@ -12,10 +12,8 @@ namespace Abp.AspNetCore.OData.Configuration
 
         public Action<IAbpStartupConfiguration> MapAction { get; set; }
 
-        public AbpAspNetCoreODataModuleConfiguration(IServiceProvider serviceProvider)
+        public AbpAspNetCoreODataModuleConfiguration()
         {
-            ODataModelBuilder = new ODataConventionModelBuilder(serviceProvider);
-
             MapAction = configuration =>
             {
                 configuration.Modules.AbpAspNetCore().RouteBuilder.MapODataServiceRoute(

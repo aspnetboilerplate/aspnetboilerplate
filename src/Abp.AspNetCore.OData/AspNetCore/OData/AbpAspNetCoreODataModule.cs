@@ -21,8 +21,6 @@ namespace Abp.AspNetCore.OData
         {
             IocManager.Register<MetadataController>(DependencyLifeStyle.Transient);
             IocManager.RegisterAssemblyByConvention(Assembly.GetExecutingAssembly());
-
-            Configuration.Modules.AbpAspNetCoreOData().MapAction?.Invoke(Configuration);
         }
     }
 }
