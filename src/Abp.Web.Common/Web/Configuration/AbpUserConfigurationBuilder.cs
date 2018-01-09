@@ -22,18 +22,18 @@ namespace Abp.Web.Configuration
 {
     public class AbpUserConfigurationBuilder : ITransientDependency
     {
-        private readonly IMultiTenancyConfig _multiTenancyConfig;
-        private readonly ILanguageManager _languageManager;
-        private readonly ILocalizationManager _localizationManager;
-        private readonly IFeatureManager _featureManager;
-        private readonly IFeatureChecker _featureChecker;
-        private readonly IPermissionManager _permissionManager;
-        private readonly IUserNavigationManager _userNavigationManager;
-        private readonly ISettingDefinitionManager _settingDefinitionManager;
-        private readonly ISettingManager _settingManager;
-        private readonly IAbpAntiForgeryConfiguration _abpAntiForgeryConfiguration;
-        private readonly IAbpSession _abpSession;
-        private readonly IPermissionChecker _permissionChecker;
+        protect readonly IMultiTenancyConfig _multiTenancyConfig;
+        protect readonly ILanguageManager _languageManager;
+        protect readonly ILocalizationManager _localizationManager;
+        protect readonly IFeatureManager _featureManager;
+        protect readonly IFeatureChecker _featureChecker;
+        protect readonly IPermissionManager _permissionManager;
+        protect readonly IUserNavigationManager _userNavigationManager;
+        protect readonly ISettingDefinitionManager _settingDefinitionManager;
+        protect readonly ISettingManager _settingManager;
+        protect readonly IAbpAntiForgeryConfiguration _abpAntiForgeryConfiguration;
+        protect readonly IAbpSession _abpSession;
+        protect readonly IPermissionChecker _permissionChecker;
 
         public AbpUserConfigurationBuilder(
             IMultiTenancyConfig multiTenancyConfig,
@@ -63,7 +63,7 @@ namespace Abp.Web.Configuration
             _permissionChecker = permissionChecker;
         }
 
-        public async Task<AbpUserConfigurationDto> GetAll()
+        public virtual async Task<AbpUserConfigurationDto> GetAll()
         {
             return new AbpUserConfigurationDto
             {
