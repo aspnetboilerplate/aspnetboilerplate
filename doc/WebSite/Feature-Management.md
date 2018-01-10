@@ -34,7 +34,7 @@ numbers also can be stored as strings.
 
 For example, our application may be a task management application and we
 may have a limit for creating tasks in a month. Imagine that we have two
-different edition/packages; one allows for creating 1,000 tasks per month,
+different editions/packages; one allows for creating 1,000 tasks per month,
 while the other allows for creating 5,000 tasks per month. This feature
 should be stored as a value, not simply as true or false.
 
@@ -82,7 +82,7 @@ prevent typing errors.
 While the unique name and default value properties are required, there are
 some optional properties for more fine-tuned control.
 
--   **Scope**: A value in the FeatureScopes enum. It can be an **Edition** (if
+-   **Scope**: A value in the FeatureScopes enum. It can be **Edition** (if
     this feature can be set only for edition level), **Tenant** (if this
     feature can be set only for tenant level) or **All** (if this
     feature can be set for editions and tenants, where a tenant setting
