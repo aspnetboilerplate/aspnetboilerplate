@@ -19,18 +19,18 @@ the method throws an exception).
 
 With this information, we not just know who did the operation, but we can also
 measure the **performance** of the application and observe the
-**exceptions** thrown. Even more, you can get **statistics** about the usage
+**exceptions** thrown. Furthermore, you can get **statistics** about the usage
 of your application.
 
 The auditing system uses [**IAbpSession**](/Pages/Documents/Abp-Session) to
 get the current UserId and TenantId.
 
-The Application service, MVC Controller, Web API and ASP.NET Core methods
+The Application Service, MVC Controller, Web API and ASP.NET Core methods
 are automatically audited by default.
 
 #### About IAuditingStore
 
-The Auditing system uses **IAuditingStore** to
+The auditing system uses **IAuditingStore** to
 save audit information. While you can implement it in your own way,
 it's fully implemented in the **module-zero** project. If you don't
 implement it, SimpleLogAuditingStore is used and it writes audit
@@ -73,7 +73,7 @@ service classes**. It's defined as shown below:
         )
     );
 
-You can add your selectors in your module's PreInitialize method. 
+You can add your selectors in your module's PreInitialize method.
 You can also remove the selector above by name if you don't want to save
 audit logs for application services. This is why it has a unique name
 (Use simple LINQ to find the selector in Selectors and remove it if you
@@ -110,10 +110,10 @@ individual **method**. Example:
     }
 
 All methods of MyClass are audited except MyMethod2 since it's
-explicitly disabled.  The Audited attribute can be used to 
+explicitly disabled. The Audited attribute can be used to
 save audits for the desired method.
 
-**DisableAuditing** can also be used for or a single **property of a
+**DisableAuditing** can also be used for a single **property of a
 DTO**. Thus, you can **hide sensitive data** in audit logs, such as
 passwords for example.
 
@@ -122,7 +122,7 @@ passwords for example.
 -   A method must be **public** in order to be saved in audit logs. Private
     and protected methods are ignored.
 -   A method must be **virtual** if it's called over class reference.
-    This is not needed if it's injected using it's interface (like
+    This is not needed if it's injected using its interface (like
     injecting the IPersonService interface to use the PersonService class). This
     is needed since ASP.NET Boilerplate uses dynamic proxying and
     interception. This is not true for **MVC** Controller actions. They

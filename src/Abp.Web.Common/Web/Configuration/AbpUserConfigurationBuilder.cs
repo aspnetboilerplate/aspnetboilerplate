@@ -238,7 +238,7 @@ namespace Abp.Web.Configuration
         private async Task<AbpUserTimingConfigDto> GetUserTimingConfig()
         {
             var timezoneId = await _settingManager.GetSettingValueAsync(TimingSettingNames.TimeZone);
-            var timezone = TimeZoneInfo.FindSystemTimeZoneById(timezoneId);
+            var timezone = TimezoneHelper.FindTimeZoneInfo(timezoneId);
 
             return new AbpUserTimingConfigDto
             {

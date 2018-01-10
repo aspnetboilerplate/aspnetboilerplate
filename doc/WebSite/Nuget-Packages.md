@@ -11,6 +11,10 @@ Core package. All other packages depends on it.
 
 ASP.NET Core integration package.
 
+#### [Abp.AspNetCore.SignalR](http://www.nuget.org/packages/Abp.AspNetCore.SignalR)
+
+ASP.NET Core SignalR integration package.
+
 #### [Abp.Web.Common](http://www.nuget.org/packages/Abp.Web.Common)
 
 Common web related classes (Used both by ASP.NET MVC and ASP.NET Core).

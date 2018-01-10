@@ -1,7 +1,10 @@
 ### Introduction
 
-[Abp.Web.SignalR](http://www.nuget.org/packages/Abp.Web.SignalR) nuget
-package makes it easily to use **SignalR** in ASP.NET Boilerplate based
+This document is for .NET Framework 4.6.1. If you're interested in ASP.NET
+Core, see [SignalR AspNetCore Integration](SignalR-AspNetCore-Integration.md) documentation.
+
+[Abp.Web.SignalR](http://www.nuget.org/packages/Abp.Web.SignalR) NuGet
+package makes it easily to use **SignalR** in ASP.NET Boilerplate-based
 applications. See [SignalR documentation](http://www.asp.net/signalr)
 for detailed information on SignalR.
 
@@ -11,7 +14,7 @@ for detailed information on SignalR.
 
 Install
 [**Abp.Web.SignalR**](http://www.nuget.org/packages/Abp.Web.SignalR)
-nuget package to your project (generally to your Web layer) and add a
+NuGet package to your project (generally to your Web layer) and add a
 **dependency** to your module:
 
     [DependsOn(typeof(AbpWebSignalRModule))]
@@ -19,7 +22,7 @@ nuget package to your project (generally to your Web layer) and add a
     {
         //...
     }
-                
+
 
 Then use **MapSignalR** method in your OWIN startup class as you always
 do:
@@ -54,7 +57,7 @@ should include it after signalr hubs:
 
     <script src="~/signalr/hubs"></script>
     <script src="~/Abp/Framework/scripts/libs/abp.signalr.js"></script>
-                
+
 
 That's all. SignalR is properly configured and integrated to your
 project.
@@ -63,7 +66,7 @@ project.
 
 ASP.NET Boilerplate **automatically connects** to the server (from the
 client) when **abp.signalr.js** is included to your page. This is
-generally fine. But there may be cases you don't want to it. You can add
+generally fine. But there may be cases you don't want it to. You can add
 these lines just before including **abp.signalr.js** to disable auto
 connecting:
 
@@ -81,20 +84,20 @@ ASP.NET Boilerplate also **automatically reconnects** to the server
 
 **"abp.signalr.connected"** global event is triggered when client
 connects to the server. You can register to this event to take actions
-when the connection is successfully established. See javascript [event
+when the connection is successfully established. See JavaScript [event
 bus documentation](/Pages/Documents/Javascript-API/Event-Bus) for more
 about client side events.
 
 ### Built-In Features
 
-You can use all power of SignalR in your applications. In addition,
+You can use all the power of SignalR in your applications. In addition,
 **Abp.Web.SignalR** package implements some built-in features.
 
 #### Notification
 
 **Abp.Web.SignalR** package implements **IRealTimeNotifier** to send
 real time notifications to clients (see [notification
-system](/Pages/Documents/Notification-System)). Thus, you users can get
+system](/Pages/Documents/Notification-System)). Thus, your users can get
 real time push notifications.
 
 #### Online Clients
@@ -113,14 +116,14 @@ Abp.Web.SignalR package overrides SignalR's default **ContractResolver**
 to use **CamelCasePropertyNamesContractResolver** on serialization.
 Thus, we can have classes have **PascalCase** properties on the server
 and use them as **camelCase** on the client for sending/receiving
-objects (because camelCase is preferred notation in javascript). If you
+objects (because camelCase is preferred notation in JavaScript). If you
 want to ignore this for your classes in some assemblies, then you can
 add those assemblies to AbpSignalRContractResolver.**IgnoredAssemblies**
 list.
 
 ### Your SignalR Code
 
-**Abp.Web.SignalR** package also simplifies your SignalR code. Assume
+**Abp.Web.SignalR** package also simplifies your SignalR code. Consider
 that we want to add a Hub to our application:
 
     public class MyChatHub : Hub, ITransientDependency
@@ -163,21 +166,21 @@ the [session](/Pages/Documents/Abp-Session) and
 **SendMessage** is a method of our hub that can be used by clients. We
 call **getMessage** function of **all** clients in this method. We can
 use [AbpSession](/Pages/Documents/Abp-Session) to get current user id
-(if user logged in) as you see. We also overrided **OnConnected** and
+(if user logged in) as done above. We also overrided **OnConnected** and
 **OnDisconnected**, which is just for demonstration and not needed here
 actually.
 
-Here, the **client side** javascript code to send/receive messages using
+Here, the **client side** JavaScript code to send/receive messages using
 our hub.
 
-    var chatHub = $.connection.myChatHub; //get a reference to the hub
+    var chatHub = $.connection.myChatHub; // Get a reference to the hub
 
-    chatHub.client.getMessage = function (message) { //register for incoming messages
+    chatHub.client.getMessage = function (message) { // Register for incoming messages
         console.log('received message: ' + message);
     };
 
-    abp.event.on('abp.signalr.connected', function() { //register for connect event
-        chatHub.server.sendMessage("Hi everybody, I'm connected to the chat!"); //send a message to the server
+    abp.event.on('abp.signalr.connected', function() { // Register for connect event
+        chatHub.server.sendMessage("Hi everybody, I'm connected to the chat!"); // Send a message to the server
     });
 
 Then we can use **chatHub** anytime we need to send message to the

@@ -65,6 +65,7 @@ Application Layer
 -   [Authorization](Authorization.md)
 -   [Feature Management](Feature-Management.md)
 -   [Audit Logging](Audit-Logging.md)
+-   [Entity History](Entity-History.md) <label class="label label-success">NEW</label>
 
 Distributed Service Layer
 
@@ -98,6 +99,7 @@ Real Time Services
 
 -   [Notification System](Notification-System.md)
 -   [SignalR Integration](SignalR-Integration.md)
+-   [SignalR AspNetCore Integration](SignalR-AspNetCore-Integration.md) <label class="label label-success">NEW</label>
 
 Object-Relational Mapping
 

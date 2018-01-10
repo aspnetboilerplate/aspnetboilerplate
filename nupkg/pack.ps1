@@ -7,6 +7,7 @@ $srcPath = Join-Path $slnPath "src"
 $projects = (
     "Abp",
     "Abp.AspNetCore",
+    "Abp.AspNetCore.SignalR",
     "Abp.AutoMapper",
     "Abp.MailKit",
     "Abp.HangFire",
