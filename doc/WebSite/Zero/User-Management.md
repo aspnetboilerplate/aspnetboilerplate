@@ -143,7 +143,7 @@ authentication source'. We can create a class derived from
 There is **DefaultExternalAuthenticationSource** class to simplify
 implementation of IExternalAuthenticationSource. Let's see an example:
 
-    public class MyExternalAuthSource : DefaultExternalAuthenticationSource<Tenant, User>
+    public class MyExternalAuthSource : DefaultExternalAuthenticationSource<Tenant, User>,  ITransientDependency
     {
         public override string Name
         {
