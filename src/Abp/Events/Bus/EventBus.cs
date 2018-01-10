@@ -496,14 +496,14 @@ namespace Abp.Events.Bus
                             {
                                 if (asyncEventHandler == null)
                                 {
-                                    throw new Exception($"Registered event handler for event type {eventType.Name} does not implement IAsyncEventHandler<{eventType.Name}> interface!");
+                                    throw new Exception($"Registered event handler for event type {asyncHandlerFactories.EventType.Name} does not implement IAsyncEventHandler<{asyncHandlerFactories.EventType.Name}> interface!");
                                 }
 
-                                var asyncHandlerType = typeof(IAsyncEventHandler<>).MakeGenericType(eventType);
+                                var asyncHandlerType = typeof(IAsyncEventHandler<>).MakeGenericType(asyncHandlerFactories.EventType);
 
                                 var method = asyncHandlerType.GetMethod(
                                     "HandleEventAsync",
-                                    new[] { eventType }
+                                    new[] { asyncHandlerFactories.EventType }
                                 );
 
                                 await (Task)method.Invoke(asyncEventHandler, new object[] { eventData });
