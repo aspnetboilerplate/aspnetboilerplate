@@ -33,22 +33,59 @@ dependencies.
 #### Configure Your Entities
 
 OData requires us to declare entities which can be used as OData resources.
-We should do this in
-[PreInitialize](/Pages/Documents/Module-System#preinitialize) method
-of our module, as shown below:
+We should do this in the Startup class:
 
-    [DependsOn(typeof(AbpAspNetCoreODataModule))]
-    public class MyProjectWebCoreModule : AbpModule
+    public class Startup
     {
-        public override void PreInitialize()
+        public IServiceProvider ConfigureServices(IServiceCollection services)
         {
-            var builder = Configuration.Modules.AbpAspNetCoreOData().ODataModelBuilder;
+            ...
 
-            // Configure your entities here...
-            builder.EntitySet<Person>("Persons");
+            services.AddOData();
+
+            // Workaround: https://github.com/OData/WebApi/issues/1177
+            services.AddMvcCore(options =>
+            {
+                foreach (var outputFormatter in options.OutputFormatters.OfType<ODataOutputFormatter>().Where(_ => _.SupportedMediaTypes.Count == 0))
+                {
+                    outputFormatter.SupportedMediaTypes.Add(new MediaTypeHeaderValue("application/prs.odatatestxx-odata"));
+                }
+                foreach (var inputFormatter in options.InputFormatters.OfType<ODataInputFormatter>().Where(_ => _.SupportedMediaTypes.Count == 0))
+                {
+                    inputFormatter.SupportedMediaTypes.Add(new MediaTypeHeaderValue("application/prs.odatatestxx-odata"));
+                }
+            });
+
+            return services.AddAbp<MyProjectWebHostModule>(...);
         }
 
-        ...
+        public void Configure(IApplicationBuilder app, IHostingEnvironment env, ILoggerFactory loggerFactory)
+        {
+            app.UseAbp();
+
+            ...
+
+            app.UseOData(builder =>
+            {
+                builder.EntitySet<Person>("Persons").EntityType.Expand().Filter().OrderBy().Page();
+            });
+
+            // Return IQueryable from controllers
+            app.UseUnitOfWork(options =>
+            {
+                options.Filter = httpContext =>
+                {
+                    return httpContext.Request.Path.Value.StartsWith("/odata");
+                };
+            });
+
+            app.UseMvc(routes =>
+            {
+                routes.MapODataServiceRoute(app);
+
+                ...
+            });
+        }
     }
 
 Here, we got the ODataModelBuilder reference and set the Person entity.
@@ -71,14 +108,14 @@ entity:
         }
     }
 
-It's that easy. All methods of AbpODataEntityController is **virtual**.
+It's that easy. All methods of AbpODataEntityController are **virtual**.
 That means you can override **Get**, **Post**, **Put**, **Patch**,
 **Delete** and other actions and add your own logic.
 
 ### Configuration
 
-Abp.AspNetCore.OData automatically calls the
-HttpConfiguration.MapODataServiceRoute method with the conventional
+Abp.AspNetCore.OData calls the
+IRouteBuilder.MapODataServiceRoute method with the conventional
 configuration. If you need, you can set
 Configuration.Modules.AbpAspNetCoreOData().**MapAction** to map OData routes
 yourself.
@@ -258,7 +295,7 @@ We can get metadata of entities, as shown in this example.
                 <EntityContainer Name="Container">
                     <EntitySet Name="Persons" EntityType="AbpODataDemo.People.Person" />
                 </EntityContainer>
-                
+
             </Schema>
         </edmx:DataServices>
     </edmx:Edmx>
@@ -267,5 +304,5 @@ Metadata is used to investigate the service.
 
 ### Sample Project
 
-You get the source code of the sample project here:
+You can get the source code of the sample project here:
 <https://github.com/aspnetboilerplate/sample-odata>

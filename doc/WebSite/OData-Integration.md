@@ -71,7 +71,7 @@ entity:
         }
     }
 
-It's that easy. All methods of AbpODataEntityController is **virtual**.
+It's that easy. All methods of AbpODataEntityController are **virtual**.
 That means you can override **Get**, **Post**, **Put**, **Patch**,
 **Delete** and other actions and add your own logic.
 
@@ -309,5 +309,5 @@ Metadata is used to investigate the service.
 
 ### Sample Project
 
-You get the source code of the sample project here:
+You can get the source code of the sample project here:
 <https://github.com/aspnetboilerplate/sample-odata>
