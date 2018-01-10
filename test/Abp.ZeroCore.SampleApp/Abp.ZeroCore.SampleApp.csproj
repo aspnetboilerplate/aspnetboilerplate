@@ -6,7 +6,7 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="Castle.Windsor.MsDependencyInjection" Version="3.2.0" />
+    <PackageReference Include="Castle.Windsor.MsDependencyInjection" Version="3.3.0" />
     <PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer" Version="2.0.1" />
     <PackageReference Include="Microsoft.EntityFrameworkCore.Tools" Version="2.0.1" />
     <PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="2.0.1" />
