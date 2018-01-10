@@ -67,7 +67,7 @@ We can override the configuration after the ForAll method. Example:
     Configuration.Modules.AbpWebApi().DynamicApiControllerBuilder
         .ForAll<IApplicationService>(Assembly.GetAssembly(typeof(SimpleTaskSystemApplicationModule)), "tasksystem")
         .Build();
-
+    
     Configuration.Modules.AbpWebApi().DynamicApiControllerBuilder
         .For<ITaskAppService>("tasksystem/task")
         .ForMethod("CreateTask").DontCreateAction().Build();
@@ -119,10 +119,10 @@ interface:
     {
         [HttpGet]
         GetTasksOutput GetTasks(GetTasksInput input);
-
+    
         [HttpPut]
         void UpdateTask(UpdateTaskInput input);
-
+    
         [HttpPost]
         void CreateTask(CreateTaskInput input);
     }
@@ -236,8 +236,8 @@ services**. Consider the sample below:
                 vm.tasks = [];
                 taskService.getTasks({
                     state: 0
-                }).success(function(result) {
-                    vm.tasks = result.tasks;
+                }).then(function(result) {
+                    vm.tasks = result.data.tasks;
                 });
             }
         ]);
@@ -245,7 +245,7 @@ services**. Consider the sample below:
 
 We can inject a **service** using it's name (with a namespace). We
 can call it's **functions** as regular javascript functions. Notice that
-we registered to the **success** handler (instead of done) since it's similar to
+we registered to the **then** handler (instead of done) since it's similar to
 what is in angular's **$http** service. ASP.NET Boilerplate uses the $http
 service of AngularJs. If you want to pass the $http **configuration**, you
 can pass a configuration object as the last parameter of the service
