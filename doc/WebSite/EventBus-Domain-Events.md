@@ -85,10 +85,10 @@ EntityDeletingEventData&lt;TEntity&gt;** and
 **EntityChangedEventData&lt;TEntity&gt;**. A change can be insert,
 update or delete.
 
-'ing' events (ex: EntityUpdating) are triggered before saving changes.
+'ing' events (e.g. EntityUpdating) are triggered before committing a transaction.
 This way, you can rollback the [unit of work](/Pages/Documents/Unit-Of-Work)
-and prevent an operation by throwing exceptions. 'ed'
-events (ex: EntityUpdated) are triggered after saving changes, for which 
+and prevent an operation by throwing an exception. 'ed'
+events (e.g. EntityUpdated) are triggered after committing a transaction, for which
 you cannot rollback the unit of work.
 
 Entity change events are defined in the **Abp.Events.Bus.Entities**
