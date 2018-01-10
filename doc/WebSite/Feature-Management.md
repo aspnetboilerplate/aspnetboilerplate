@@ -1,21 +1,21 @@
 ### Introduction
 
 Most **SaaS** (multi-tenant) applications have **editions** (packages)
-those have different **features**. Thus, they can provide different
-**price and feature options** to thier tenants (customers).
+that have different **features**. This way they can provide different
+**price and feature options** to their tenants (customers).
 
-ASP.NET Boilerplate provides a **feature system** to make it easier. We
+ASP.NET Boilerplate provides a **feature system** to make it easier. You
 can **define** features, **check** if a feature is **enabled** for a
-tenant and **integrate** feature system to other ASP.NET Boilerplate
+tenant, and **integrate** the feature system to other ASP.NET Boilerplate
 concepts (like [authorization](Authorization.md) and
 [navigation](Navigation.md)).
 
 #### About IFeatureValueStore
 
-Feature system uses **IFeatureValueStore** to get values of features.
-While you can implement it in your own way, it's fully implemented in
+The feature system uses the **IFeatureValueStore** to get the values of features.
+While you can implement it in your own way, it's fully implemented in the
 **module-zero** project. If it's not implemented, NullFeatureValueStore
-is used which returns null for all features (Default feature values are
+is used which returns null for all features (The default feature values are
 used in this case).
 
 ### Feature Types
@@ -29,20 +29,20 @@ Can be "true" or "false". This type of a feature can be **enabled** or
 
 #### Value Feature
 
-Can be an **arbitrary value**. While it's stored and retrieved a string,
+Can be an **arbitrary value**. While it's stored and retrieved as a string,
 numbers also can be stored as strings.
 
 For example, our application may be a task management application and we
 may have a limit for creating tasks in a month. Say that we have two
-different edition/package; one allows creating 1,000 tasks per month,
-while other allows creating 5,000 tasks per month. So, this feature
-should be stored as value, not simply true/false.
+different edition/package; one allows for creating 1,000 tasks per month,
+while the other allows for creating 5,000 tasks per month. This feature
+should be stored as a value, not simply as true or false.
 
 ### Defining Features
 
-A feature should be defined before checking. A
+A feature should be defined before it is checked. A
 [module](/Pages/Documents/Module-System) can define it's own features by
-deriving from **FeatureProvider** class. Here, a very simple feature
+deriving from the **FeatureProvider** class. Here's a very simple feature
 provider that defines 3 features:
 
     public class AppFeatureProvider : FeatureProvider
@@ -55,7 +55,7 @@ provider that defines 3 features:
         }
     }
 
-After creating a feature provider, we should register it in our module's
+After creating a feature provider, we must register it in our module's
 [PreInitialize](/Pages/Documents/Module-System#preinitialize) method
 as shown below:
 
@@ -63,40 +63,40 @@ as shown below:
 
 #### Basic Feature Properties
 
-A feature definition requires two properties at least:
+A feature definition requires at least two properties:
 
--   **Name**: A unique name (as string) to identify the feature.
+-   **Name**: A unique name (string) to identify the feature.
 -   **Default value**: A default value. This is used when we need the
-    value of the feature and it's not available for current tenant.
+    value of the feature when it's not available for current tenant.
 
-Here, we defined a boolean feature named "SampleBooleanFeature" which's
-default value is "false" (not enabled). We also defined two value
-features (SampleNumericFeature is defined as child of
-SampleBooleanFeature).
+Here, we defined a boolean feature named "SampleBooleanFeature", with the
+default value of "false" (not enabled). We also defined two value
+features. Note that SampleNumericFeature is defined as a child of
+SampleBooleanFeature.
 
 Tip: Create a const string for a feature name and use it everywhere to
 prevent typing errors.
 
 #### Other Feature Properties
 
-While unique name and default value properties are required, there are
-some optional properties for a detailed control.
+While the unique name and default value properties are required, there are
+some optional properties for more fine-tuned control.
 
--   **Scope**: A value in FeatureScopes enum. It can be **Edition** (if
-    this feature can be set only for edition level), **Tenant** (if this
+-   **Scope**: A value in the FeatureScopes enum. It can be and **Edition** (if
+    this feature can be set only for edition level), a **Tenant** (if this
     feature can be set only for tenant level) or **All** (if this
-    feature can be set for editions and tenants, where tenant setting
+    feature can be set for editions and tenants, where a tenant setting
     overrides it's edition's setting). Default value is **All**.
 -   **DisplayName**: A localizable string to show the feature's name to
     users.
 -   **Description**: A localizable string to show the feature's detailed
     description to users.
 -   **InputType**: A UI input type for the feature. This can be defined,
-    then can be used while creating an automatic feature screen.
+    and then used while creating an automatic feature screen.
 -   **Attributes**: An arbitrary custom dictionary of key-value pairs
-    those can be related to the feature.
+    that are related to the feature.
 
-Let's see more detailed definitions for the features above:
+Let's see some more detailed definitions for the features above:
 
     public class AppFeatureProvider : FeatureProvider
     {
@@ -136,27 +136,27 @@ Let's see more detailed definitions for the features above:
         }
     }
 
-Note that: Input type definitions are not used by ASP.NET Boilerplate.
-They can be used by applications while creating inputs for features.
-ASP.NET Boilerplate just provides infrastructure to make it easier.
+Note that the Input type definitions are not used by ASP.NET Boilerplate.
+They can be used by applications to create inputs for features.
+ASP.NET Boilerplate just provides the infrastructure to make it easier.
 
 #### Feature Hierarchy
 
-As shown in the sample feature providers, a feature can have **child
-features**. A Parent feature is generally defined as **boolean**
-feature. Child features will be available only if the parent enabled.
-ASP.NET Boilerplate **does not** enforces but suggests this.
-Applications should take care of it.
+As shown in the sample feature providers, a feature can have **child features**. 
+A Parent feature is generally defined as a **boolean**
+feature. Child features will be available only if the parent is enabled.
+ASP.NET Boilerplate **does not** enforce this, but we recommend it.
+The application should take care of it.
 
 ### Checking Features
 
-We define a feature to check it's value in the application to allow or
+We define a feature to check its value in the application to allow or
 block some application features per tenant. There are different ways of
 checking it.
 
 #### Using RequiresFeature Attribute
 
-We can use **RequiredFeature** attribute for a method or a class as
+We can use the **RequiredFeature** attribute for a method or a class as
 shown below:
 
     [RequiresFeature("ExportToExcel")]
@@ -165,42 +165,42 @@ shown below:
         ...
     }
 
-This method is executed only if "ExportToExcel" feature is enabled for
+This method is executed only if the "ExportToExcel" feature is enabled for
 the **current tenant** (current tenant is obtained from
 [IAbpSession](/Pages/Documents/Abp-Session)). If it's not enabled, an
 **AbpAuthorizationException** is thrown automatically.
 
-Surely, RequiresFeature attribute should be used for **boolean type
+As such, the RequiresFeature attribute should only be used for **boolean type
 features**. Otherwise, you may get exceptions.
 
 ##### RequiresFeature attribute notes
 
-ASP.NET Boilerplate uses power of dynamic method interception for
-feature checking. So, there is some restrictions for the methods use
+ASP.NET Boilerplate uses the power of dynamic method interception for
+feature checking. There are some restrictions for the methods which can use the
 RequiresFeature attribute.
 
--   Can not use it for private methods.
--   Can not use it for static methods.
--   Can not use it for methods of a non-injected class (We must use
+-   You can not use it for private methods.
+-   You can not use it for static methods.
+-   You can not use it for methods of a non-injected class (We must use
     [dependency injection](/Pages/Documents/Dependency-Injection)).
 
 Also,
 
--   Can use it for any **public** method if the method is called over an
+-   You can use it for any **public** method if the method is called over an
     **interface** (like Application Services used over interface).
--   A method should be **virtual** if it's called directly from class
+-   A method should be **virtual** if it's called directly from a class
     reference (like ASP.NET MVC or Web API Controllers).
 -   A method should be **virtual** if it's **protected**.
 
 #### Using IFeatureChecker
 
 We can inject and use IFeatureChecker to check a feature manually (it's
-automatically injected and directly usable for application services, MVC
+automatically injected and directly usable for application services, MVC,
 and Web API controllers).
 
 ##### IsEnabled
 
-Used to simply check if given feature is enabled or not. Example:
+This is used to simply check if a given feature is enabled or not. Example:
 
     public async Task<FileDto> GetReportToExcel(...)
     {
@@ -212,17 +212,17 @@ Used to simply check if given feature is enabled or not. Example:
         ...
     }
 
-IsEnabledAsync and other methods have also sync versions.
+The IsEnabledAsync and other methods also have sync versions.
 
-Surely, IsEnabled method should be used for **boolean type features**.
-Otherwise, you may get exceptions.
+The IsEnabled method should be used for **boolean type features**,
+otherwise you may get exceptions.
 
-If you just want to check a feature and throw exception as shown in the
-example, you can just use **CheckEnabled** method.
+If you just want to check a feature and throw an exception as shown in the
+example, you can just use the **CheckEnabled** method.
 
 ##### GetValue
 
-Used to get current value of a feature for value type features. Example:
+Used to get the current value of a feature for value-type features. Example:
 
     var createdTaskCountInThisMonth = GetCreatedTaskCountInThisMonth();
     if (createdTaskCountInThisMonth >= FeatureChecker.GetValue("MaxTaskCreationLimitPerMonth").To<int>())
@@ -230,13 +230,13 @@ Used to get current value of a feature for value type features. Example:
         throw new AbpAuthorizationException("You exceed task creation limit for this month, sorry :(");
     }
 
-FeatureChecker methods have also overrides to work features for a
-specified tenantId, not only for the current tenantId.
+The FeatureChecker methods also have overrides so that features can not only work for the
+current tenantId, but for a **specified** tenantId as well.
 
 #### Client Side
 
-In the client side (javascript), we can use **abp.features** namespace
-to get current values of the features.
+On the client side (javascript), we can use the **abp.features** namespace
+to get the current values of features.
 
 ##### isEnabled
 
@@ -248,14 +248,14 @@ to get current values of the features.
 
 ### Feature Manager
 
-If you need to definitions of features, you can inject and use
+If you need the definitions of features, you can inject and use
 **IFeatureManager**.
 
 ### A Note For Editions
 
-ASP.NET Boilerplate framework has not a built-in edition system because
+The ASP.NET Boilerplate framework does not have a built-in edition system because
 such a system requires a database (to store editions, edition features,
-tenant-edition mappings and so on...). Therefore, edition system is
+tenant-edition mappings and so on...). Therefore, the edition system is
 implemented in [module zero](/Pages/Documents/Zero/Edition-Management).
-You can use it to easily have an edition system, or you can implement
-all yourself.
+You can use it to easily have an edition system or you can implement
+one yourself.
