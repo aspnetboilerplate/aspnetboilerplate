@@ -40,8 +40,8 @@ should be stored as a value, not simply as true or false.
 
 ### Defining Features
 
-A feature should be defined before it's checked. A
-[module](/Pages/Documents/Module-System) can define it's own features by
+A feature should be defined before it is checked. A
+[module](/Pages/Documents/Module-System) can define its own features by
 deriving from the **FeatureProvider** class. Here's a very simple feature
 provider that defines 3 features:
 
