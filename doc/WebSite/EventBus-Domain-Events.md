@@ -2,7 +2,7 @@ In C\#, a class can define events and other classes can register with them
 to be notified when something happens. This is useful for a desktop
 application or standalone windows service, but for a web application
 it's a bit problematic since objects are created in a web request and
-are short-lived. It's hard to register some class events. 
+are short-lived. It's hard to register some class events.
 Directly registering to another class's event makes classes tightly
 coupled.
 
@@ -35,7 +35,7 @@ Property injection is more proper than a constructor injection when injecting
 the event bus. This way, your class can work without the event bus. NullEventBus
 implements the [null object
 pattern](http://en.wikipedia.org/wiki/Null_Object_pattern). When you
-call it's methods, it does nothing at all.
+call its methods, it does nothing at all.
 
 #### Getting The Default Instance
 
@@ -44,7 +44,7 @@ It's the global event bus and it can be used as shown:
 
     EventBus.Default.Trigger(...); //trigger an event
 
-We **do not recommend** that you directly use EventBus.Default, 
+We **do not recommend** that you directly use EventBus.Default,
 since it makes unit testing harder.
 
 ### Defining Events
@@ -95,7 +95,7 @@ Entity change events are defined in the **Abp.Events.Bus.Entities**
 namespace and are **automatically triggered** by ASP.NET Boilerplate
 when an entity is inserted, updated or deleted. If you have a Person
 entity, you can register to EntityCreatedEventData&lt;Person&gt; to be
-informed when a new Person is created and inserted in to database. These
+informed when a new Person is created and inserted into the database. These
 events also support inheritance. If the Student class is derived from the Person
 class and you registered to EntityCreatedEventData&lt;Person&gt;, you
 will be informed when a Person **or** Student is inserted.
@@ -115,7 +115,7 @@ Triggering an event is simple:
 
         public void CompleteTask(CompleteTaskInput input)
         {
-            //TODO: complete the task on database...
+            //TODO: complete the task in the database...
             EventBus.Trigger(new TaskCompletedEventData {TaskId = 42});
         }
     }
@@ -146,9 +146,9 @@ interface as shown below:
 The IEventHandler defines a HandleEvent method and implements it as shown
 above.
 
-EventBus is integrated in to the dependency injection system. We implemented
+EventBus is integrated into the dependency injection system. We implemented
 ITransientDependency (above), so when a TaskCompleted event occurs, it
-creates a new instance of the ActivityWriter class, calls it's
+creates a new instance of the ActivityWriter class, calls its
 HandleEvent method, and then disposes it. See [dependency
 injection](/Pages/Documents/Dependency-Injection) for more info.
 
@@ -207,9 +207,9 @@ EventBus throws a single **AggregateException** for all of them.
 You can handle **multiple events** in a single handler. If so,
 you should implement IEventHandler&lt;T&gt; for each event. Example:
 
-    public class ActivityWriter : 
-        IEventHandler<TaskCompletedEventData>, 
-        IEventHandler<TaskCreatedEventData>, 
+    public class ActivityWriter :
+        IEventHandler<TaskCompletedEventData>,
+        IEventHandler<TaskCreatedEventData>,
         ITransientDependency
     {
         public void HandleEvent(TaskCompletedEventData eventData)
@@ -232,8 +232,8 @@ We have to register handlers to the event bus in order to handle events.
 ASP.NET Boilerplate finds all the classes that implement **IEventHandler**
 that are registered with **dependency injection** (for example, by implementing
 ITransientDependency as the samples above). It then registers them to
-the eventbus **automatically**. When an event occurs, it uses
-dependency injection to get a reference to the handler, and after handling the event, 
+the event bus **automatically**. When an event occurs, it uses
+dependency injection to get a reference to the handler and, after handling the event,
 releases it. This is the **suggested** way of using the
 event bus in ASP.NET Boilerplate.
 
@@ -243,7 +243,7 @@ It is also possible to manually register to events, but use it with
 caution! In a web application, event registration should be done at
 the start of the application. It's not a good approach to register to an event in a
 web request, since registered classes remain registered after the request's
-completion and would thus be re-registered for each request. This may cause problems
+completion and would be re-registered for each request. This may cause problems
 for your application since a registered class can be called multiple
 times. Keep in mind that manual registrations do not use the
 dependency injection system.
@@ -255,7 +255,7 @@ simplest one uses a delegate (or a lambda):
         {
             WriteActivity("A task is completed by id = " + eventData.TaskId);
         });
-                
+
 
 When a 'task completed' event occurs, this lambda method is
 called. The second one waits for an object that implements
@@ -307,7 +307,7 @@ event is disposing the return value of the **Register** method. Example:
 
     //Unregister from event
     registration.Dispose();
-                
+
 
 Most likely, the unregistration will be somewhere else and at a later time. Keep the
 registration object and dispose it when you want to unregister. All
@@ -324,7 +324,7 @@ The EventBus also provides the **Unregister** method. Example usage:
 
     //Unregister from event
     EventBus.Unregister<TaskCompletedEventData>(handler);
-                
+
 
 This also provides overloads to unregister delegates and factories.
 Unregistering a handler object must be done on the same object which was registered
