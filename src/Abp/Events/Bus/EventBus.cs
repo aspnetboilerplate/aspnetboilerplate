@@ -5,6 +5,7 @@ using System.Linq;
 using System.Reflection;
 using System.Threading;
 using System.Threading.Tasks;
+using Abp.Collections.Extensions;
 using Abp.Events.Bus.Factories;
 using Abp.Events.Bus.Factories.Internals;
 using Abp.Events.Bus.Handlers;
@@ -268,7 +269,33 @@ namespace Abp.Events.Bus
         /// <inheritdoc/>
         public void Trigger(Type eventType, object eventSource, IEventData eventData)
         {
-            List<Exception> exceptions = TriggerHandling(eventType, eventSource, eventData);
+            var asyncExceptions = new List<Exception>();
+            AsyncHelper.RunSync(() => TriggerAsyncHandlingException(eventType, eventSource, eventData, asyncExceptions));
+
+            var exceptions = new List<Exception>();
+            TriggerHandlingException(eventType, eventSource, eventData, exceptions);
+
+            //Implements generic argument inheritance. See IEventDataWithInheritableGenericArgument
+            if (eventType.GetTypeInfo().IsGenericType &&
+                eventType.GetGenericArguments().Length == 1 &&
+                typeof(IEventDataWithInheritableGenericArgument).IsAssignableFrom(eventType))
+            {
+                var genericArg = eventType.GetGenericArguments()[0];
+                var baseArg = genericArg.GetTypeInfo().BaseType;
+                if (baseArg != null)
+                {
+                    var baseEventType = eventType.GetGenericTypeDefinition().MakeGenericType(baseArg);
+                    var constructorArgs = ((IEventDataWithInheritableGenericArgument)eventData).GetConstructorArgs();
+                    var baseEventData = (IEventData)Activator.CreateInstance(baseEventType, constructorArgs);
+                    baseEventData.EventTime = eventData.EventTime;
+                    Trigger(baseEventType, eventData.EventSource, baseEventData);
+                }
+            }
+
+            if (!asyncExceptions.IsNullOrEmpty())
+            {
+                exceptions.AddRange(asyncExceptions);
+            }
 
             if (exceptions.Any())
             {
@@ -300,23 +327,57 @@ namespace Abp.Events.Bus
         }
 
         /// <inheritdoc/>
-        public async Task TriggerAsync(Type eventType, object eventSource, IEventData eventData)
+        public Task TriggerAsync(Type eventType, object eventSource, IEventData eventData)
         {
             ExecutionContext.SuppressFlow();
 
-            List<Exception> exceptions = await TriggerAsyncHandling(eventType, eventSource, eventData);
+            var task = Task.Factory.StartNew(
+                async () =>
+                {
+                    var asyncExceptions = new List<Exception>();
+                    var asyncHandlerTask = TriggerAsyncHandlingException(eventType, eventSource, eventData, asyncExceptions);
+
+                    var exceptions = new List<Exception>();
+                    TriggerHandlingException(eventType, eventSource, eventData, exceptions);
+
+                    await asyncHandlerTask;
+
+                    //Implements generic argument inheritance. See IEventDataWithInheritableGenericArgument
+                    if (eventType.GetTypeInfo().IsGenericType &&
+                        eventType.GetGenericArguments().Length == 1 &&
+                        typeof(IEventDataWithInheritableGenericArgument).IsAssignableFrom(eventType))
+                    {
+                        var genericArg = eventType.GetGenericArguments()[0];
+                        var baseArg = genericArg.GetTypeInfo().BaseType;
+                        if (baseArg != null)
+                        {
+                            var baseEventType = eventType.GetGenericTypeDefinition().MakeGenericType(baseArg);
+                            var constructorArgs = ((IEventDataWithInheritableGenericArgument)eventData).GetConstructorArgs();
+                            var baseEventData = (IEventData)Activator.CreateInstance(baseEventType, constructorArgs);
+                            baseEventData.EventTime = eventData.EventTime;
+                            await TriggerAsync(baseEventType, eventData.EventSource, baseEventData);
+                        }
+                    }
+
+                    if (!asyncExceptions.IsNullOrEmpty())
+                    {
+                        exceptions.AddRange(asyncExceptions);
+                    }
+
+                    if (exceptions.Any())
+                    {
+                        if (exceptions.Count == 1)
+                        {
+                            exceptions[0].ReThrow();
+                        }
+
+                        throw new AggregateException("More than one error has occurred while triggering the event: " + eventType, exceptions);
+                    }
+                });
 
             ExecutionContext.RestoreFlow();
 
-            if (exceptions.Any())
-            {
-                if (exceptions.Count == 1)
-                {
-                    exceptions[0].ReThrow();
-                }
-
-                throw new AggregateException("More than one error has occurred while triggering the event: " + eventType, exceptions);
-            }
+            return task;
         }
 
         private bool CheckEventHandlerType(IEventHandler handler, Type handlerInterfaceType)
@@ -373,7 +434,6 @@ namespace Abp.Events.Bus
             return false;
         }
 
-        [Obsolete]
         private void TriggerHandlingException(Type eventType, object eventSource, IEventData eventData, List<Exception> exceptions)
         {
             //TODO: This method can be optimized by adding all possibilities to a dictionary.
@@ -416,211 +476,71 @@ namespace Abp.Events.Bus
                     }
                 }
             }
-
-            //Implements generic argument inheritance. See IEventDataWithInheritableGenericArgument
-            if (eventType.GetTypeInfo().IsGenericType &&
-                eventType.GetGenericArguments().Length == 1 &&
-                typeof(IEventDataWithInheritableGenericArgument).IsAssignableFrom(eventType))
-            {
-                var genericArg = eventType.GetGenericArguments()[0];
-                var baseArg = genericArg.GetTypeInfo().BaseType;
-                if (baseArg != null)
-                {
-                    var baseEventType = eventType.GetGenericTypeDefinition().MakeGenericType(baseArg);
-                    var constructorArgs = ((IEventDataWithInheritableGenericArgument)eventData).GetConstructorArgs();
-                    var baseEventData = (IEventData)Activator.CreateInstance(baseEventType, constructorArgs);
-                    baseEventData.EventTime = eventData.EventTime;
-                    Trigger(baseEventType, eventData.EventSource, baseEventData);
-                }
-            }
         }
 
-        private List<Exception> TriggerHandling(Type eventType, object eventSource, IEventData eventData)
+        private Task TriggerAsyncHandlingException(Type eventType, object eventSource, IEventData eventData, List<Exception> exceptions)
         {
-            eventData.EventSource = eventSource;
-
-            var exceptions = new List<Exception>();
-            var asyncTasks = new List<Task<Exception>>();
+            var tasks = new List<Task>();
 
             foreach (var asyncHandlerFactories in GetAsyncHandlerFactories(eventType))
             {
                 foreach (var asyncHandlerFactory in asyncHandlerFactories.EventHandlerFactories)
                 {
-                    asyncTasks.Add(TriggerAsyncHandlingException(eventType, eventSource, eventData, asyncHandlerFactory));
+                    var task = Task.Factory.StartNew(
+                        async () =>
+                        {
+                            var asyncEventHandler = asyncHandlerFactory.GetHandler();
+                            Exception exception = null;
+
+                            try
+                            {
+                                if (asyncEventHandler == null)
+                                {
+                                    throw new Exception($"Registered event handler for event type {eventType.Name} does not implement IAsyncEventHandler<{eventType.Name}> interface!");
+                                }
+
+                                var asyncHandlerType = typeof(IAsyncEventHandler<>).MakeGenericType(eventType);
+
+                                var method = asyncHandlerType.GetMethod(
+                                    "HandleEventAsync",
+                                    new[] { eventType }
+                                );
+
+                                await (Task)method.Invoke(asyncEventHandler, new object[] { eventData });
+                            }
+                            catch (TargetInvocationException ex)
+                            {
+                                exception =  ex.InnerException;
+                            }
+                            catch (Exception ex)
+                            {
+                                exception = ex;
+                            }
+                            finally
+                            {
+                                asyncHandlerFactory.ReleaseHandler(asyncEventHandler);
+                            }
+
+                            return exception;
+                        });
+
+                    tasks.Add(task);
                 }
             }
 
-            foreach (var handlerFactories in GetHandlerFactories(eventType))
-            {
-                foreach (var handlerFactory in handlerFactories.EventHandlerFactories)
+            return Task.Factory.StartNew(
+                async () =>
                 {
-                    Exception exception = TriggerHandlingException(eventType, eventSource, eventData, handlerFactory);
-                    if (exception != null)
+                    await Task.WhenAll(tasks.ToArray());
+                    foreach (Task<Exception> task in tasks)
                     {
-                        exceptions.Add(exception);
+                        Exception exception = await task;
+                        if (exception != null)
+                        {
+                            exceptions.Add(exception);
+                        }
                     }
-                }
-            }
-
-            AsyncHelper.RunSync(() => Task.WhenAll(asyncTasks.ToArray()));
-            foreach (Task<Exception> asyncTask in asyncTasks)
-            {
-                Exception exception = AsyncHelper.RunSync(() => asyncTask);
-                if (exception != null)
-                {
-                    exceptions.Add(exception);
-                }
-            }
-
-            //Implements generic argument inheritance. See IEventDataWithInheritableGenericArgument
-            if (eventType.GetTypeInfo().IsGenericType &&
-                eventType.GetGenericArguments().Length == 1 &&
-                typeof(IEventDataWithInheritableGenericArgument).IsAssignableFrom(eventType))
-            {
-                var genericArg = eventType.GetGenericArguments()[0];
-                var baseArg = genericArg.GetTypeInfo().BaseType;
-                if (baseArg != null)
-                {
-                    var baseEventType = eventType.GetGenericTypeDefinition().MakeGenericType(baseArg);
-                    var constructorArgs = ((IEventDataWithInheritableGenericArgument)eventData).GetConstructorArgs();
-                    var baseEventData = (IEventData)Activator.CreateInstance(baseEventType, constructorArgs);
-                    baseEventData.EventTime = eventData.EventTime;
-                    Trigger(baseEventType, eventData.EventSource, baseEventData);
-                }
-            }
-
-            return exceptions;
-        }
-
-        private async Task<List<Exception>> TriggerAsyncHandling(Type eventType, object eventSource, IEventData eventData)
-        {
-            eventData.EventSource = eventSource;
-
-            var exceptions = new List<Exception>();
-            var asyncTasks = new List<Task<Exception>>();
-
-            foreach (var asyncHandlerFactories in GetAsyncHandlerFactories(eventType))
-            {
-                foreach (var asyncHandlerFactory in asyncHandlerFactories.EventHandlerFactories)
-                {
-                    asyncTasks.Add(TriggerAsyncHandlingException(eventType, eventSource, eventData, asyncHandlerFactory));
-                }
-            }
-
-            foreach (var handlerFactories in GetHandlerFactories(eventType))
-            {
-                foreach (var handlerFactory in handlerFactories.EventHandlerFactories)
-                {
-                    Exception exception = TriggerHandlingException(eventType, eventSource, eventData, handlerFactory);
-                    if (exception != null)
-                    {
-                        exceptions.Add(exception);
-                    }
-                }
-            }
-
-            await Task.WhenAll(asyncTasks.ToArray());
-            foreach (Task<Exception> asyncTask in asyncTasks)
-            {
-                Exception exception = await asyncTask;
-                if (exception != null)
-                {
-                    exceptions.Add(exception);
-                }
-            }
-
-            //Implements generic argument inheritance. See IEventDataWithInheritableGenericArgument
-            if (eventType.GetTypeInfo().IsGenericType &&
-                eventType.GetGenericArguments().Length == 1 &&
-                typeof(IEventDataWithInheritableGenericArgument).IsAssignableFrom(eventType))
-            {
-                var genericArg = eventType.GetGenericArguments()[0];
-                var baseArg = genericArg.GetTypeInfo().BaseType;
-                if (baseArg != null)
-                {
-                    var baseEventType = eventType.GetGenericTypeDefinition().MakeGenericType(baseArg);
-                    var constructorArgs = ((IEventDataWithInheritableGenericArgument)eventData).GetConstructorArgs();
-                    var baseEventData = (IEventData)Activator.CreateInstance(baseEventType, constructorArgs);
-                    baseEventData.EventTime = eventData.EventTime;
-                    await TriggerAsync(baseEventType, eventData.EventSource, baseEventData);
-                }
-            }
-
-            return exceptions;
-        }
-
-        private Exception TriggerHandlingException(Type eventType, object eventSource, IEventData eventData, IEventHandlerFactory handlerFactory)
-        {
-            var eventHandler = handlerFactory.GetHandler();
-            Exception exception = null;
-
-            try
-            {
-                if (eventHandler == null)
-                {
-                    throw new Exception($"Registered event handler for event type {eventType.Name} does not implement IEventHandler<{eventType.Name}> interface!");
-                }
-
-                var handlerType = typeof(IEventHandler<>).MakeGenericType(eventType);
-
-                var method = handlerType.GetMethod(
-                    "HandleEvent",
-                    new[] { eventType }
-                );
-
-                method.Invoke(eventHandler, new object[] { eventData });
-            }
-            catch (TargetInvocationException ex)
-            {
-                exception = ex.InnerException;
-            }
-            catch (Exception ex)
-            {
-                exception = ex;
-            }
-            finally
-            {
-                handlerFactory.ReleaseHandler(eventHandler);
-            }
-
-            return exception;
-        }
-
-        private async Task<Exception> TriggerAsyncHandlingException(Type eventType, object eventSource, IEventData eventData, IEventHandlerFactory asyncHandlerFactory)
-        {
-            var asyncEventHandler = asyncHandlerFactory.GetHandler();
-            Exception exception = null;
-
-            try
-            {
-                if (asyncEventHandler == null)
-                {
-                    throw new Exception($"Registered event handler for event type {eventType.Name} does not implement IAsyncEventHandler<{eventType.Name}> interface!");
-                }
-
-                var asyncHandlerType = typeof(IAsyncEventHandler<>).MakeGenericType(eventType);
-
-                var method = asyncHandlerType.GetMethod(
-                    "HandleEventAsync",
-                    new[] { eventType }
-                );
-
-                await (Task)method.Invoke(asyncEventHandler, new object[] { eventData });
-            }
-            catch (TargetInvocationException ex)
-            {
-                exception = ex.InnerException;
-            }
-            catch (Exception ex)
-            {
-                exception = ex;
-            }
-            finally
-            {
-                asyncHandlerFactory.ReleaseHandler(asyncEventHandler);
-            }
-
-            return exception;
+                });
         }
 
         private List<IEventHandlerFactory> GetOrCreateHandlerFactories(Type eventType)
