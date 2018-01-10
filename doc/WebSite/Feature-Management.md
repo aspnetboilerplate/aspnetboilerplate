@@ -15,7 +15,7 @@ concepts (like [authorization](Authorization.md) and
 The feature system uses the **IFeatureValueStore** to get the values of features.
 While you can implement it in your own way, it's fully implemented in the
 **module-zero** project. If it's not implemented, NullFeatureValueStore
-is used which returns null for all features (The default feature values are
+is used to return null for all features (so the default feature values are
 used in this case).
 
 ### Feature Types
@@ -33,14 +33,14 @@ Can be an **arbitrary value**. While it's stored and retrieved as a string,
 numbers also can be stored as strings.
 
 For example, our application may be a task management application and we
-may have a limit for creating tasks in a month. Say that we have two
-different edition/package; one allows for creating 1,000 tasks per month,
+may have a limit for creating tasks in a month. Imagine that we have two
+different edition/packages; one allows for creating 1,000 tasks per month,
 while the other allows for creating 5,000 tasks per month. This feature
 should be stored as a value, not simply as true or false.
 
 ### Defining Features
 
-A feature should be defined before it is checked. A
+A feature should be defined before it's checked. A
 [module](/Pages/Documents/Module-System) can define it's own features by
 deriving from the **FeatureProvider** class. Here's a very simple feature
 provider that defines 3 features:
@@ -67,7 +67,7 @@ A feature definition requires at least two properties:
 
 -   **Name**: A unique name (string) to identify the feature.
 -   **Default value**: A default value. This is used when we need the
-    value of the feature when it's not available for current tenant.
+    value of the feature and it's not available for current tenant.
 
 Here, we defined a boolean feature named "SampleBooleanFeature", with the
 default value of "false" (not enabled). We also defined two value
@@ -82,11 +82,11 @@ prevent typing errors.
 While the unique name and default value properties are required, there are
 some optional properties for more fine-tuned control.
 
--   **Scope**: A value in the FeatureScopes enum. It can be and **Edition** (if
-    this feature can be set only for edition level), a **Tenant** (if this
+-   **Scope**: A value in the FeatureScopes enum. It can be an **Edition** (if
+    this feature can be set only for edition level), **Tenant** (if this
     feature can be set only for tenant level) or **All** (if this
     feature can be set for editions and tenants, where a tenant setting
-    overrides it's edition's setting). Default value is **All**.
+    overrides its edition's setting). Default value is **All**.
 -   **DisplayName**: A localizable string to show the feature's name to
     users.
 -   **Description**: A localizable string to show the feature's detailed
@@ -176,7 +176,7 @@ features**. Otherwise, you may get exceptions.
 ##### RequiresFeature attribute notes
 
 ASP.NET Boilerplate uses the power of dynamic method interception for
-feature checking. There are some restrictions for the methods which can use the
+feature checking. There are some restrictions for the methods that can use the
 RequiresFeature attribute.
 
 -   You can not use it for private methods.
@@ -218,7 +218,7 @@ The IsEnabled method should be used for **boolean type features**,
 otherwise you may get exceptions.
 
 If you just want to check a feature and throw an exception as shown in the
-example, you can just use the **CheckEnabled** method.
+example, you can use the **CheckEnabled** method.
 
 ##### GetValue
 
@@ -230,7 +230,7 @@ Used to get the current value of a feature for value-type features. Example:
         throw new AbpAuthorizationException("You exceed task creation limit for this month, sorry :(");
     }
 
-The FeatureChecker methods also have overrides so that features can not only work for the
+The FeatureChecker methods also have overrides to check features not only for the
 current tenantId, but for a **specified** tenantId as well.
 
 #### Client Side
@@ -257,5 +257,5 @@ The ASP.NET Boilerplate framework does not have a built-in edition system becaus
 such a system requires a database (to store editions, edition features,
 tenant-edition mappings and so on...). Therefore, the edition system is
 implemented in [module zero](/Pages/Documents/Zero/Edition-Management).
-You can use it to easily have an edition system or you can implement
+You can use it as a ready-made edition system or implement
 one yourself.
