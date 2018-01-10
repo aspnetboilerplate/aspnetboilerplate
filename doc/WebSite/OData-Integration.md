@@ -5,20 +5,20 @@ consumption of **queryable** and **interoperable RESTful APIs** in a
 **simple** and **standard** way" in [odata.org](http://www.odata.org/).
 You can use OData with ASP.NET Boilerplate.
 [Abp.Web.Api.OData](https://www.nuget.org/packages/Abp.Web.Api.OData)
-nuget package simplifies it's usage.
+NuGet package simplifies its usage.
 
 ### Setup
 
-#### Install Nuget Package
+#### Install NuGet Package
 
-We should first install Abp.Web.Api.OData nuget package to our WebApi
+We should first install Abp.Web.Api.OData NuGet package to our WebApi
 project:
 
     Install-Package Abp.Web.Api.OData
 
 #### Set Module Dependency
 
-We should set dependency to AbpWebApiODataModule from our module.
+We should set a dependency on AbpWebApiODataModule for our module.
 Example:
 
     [DependsOn(typeof(AbpWebApiODataModule))]
@@ -32,7 +32,7 @@ dependencies.
 
 #### Configure Your Entities
 
-OData requires to declare entities which can be used as OData resources.
+OData requires us to declare entities which can be used as OData resources.
 We should do this in
 [PreInitialize](/Pages/Documents/Module-System#preinitialize) method
 of our module, as shown below:
@@ -44,7 +44,7 @@ of our module, as shown below:
         {
             var builder = Configuration.Modules.AbpWebApiOData().ODataModelBuilder;
 
-            //Configure your entities here...
+            // Configure your entities here...
             builder.EntitySet<Person>("Persons");
         }
 
@@ -52,13 +52,13 @@ of our module, as shown below:
     }
 
 Here, we got the ODataModelBuilder reference and set the Person entity.
-You can use EntitySet to add other entities as similar. See [OData
+You can use EntitySet to add other entities in a similar way. See [OData
 documentation](http://www.asp.net/web-api/overview/odata-support-in-aspnet-web-api/odata-v4/create-an-odata-v4-endpoint)
-for more information on builder.
+for more information on the builder.
 
 ### Create Controllers
 
-Abp.Web.Api.OData nuget package includes **AbpODataEntityController**
+Abp.Web.Api.OData NuGet package includes **AbpODataEntityController**
 base class (which extends standard ODataController) to create your
 controllers easier. An example to create an OData endpoint for Person
 entity:
@@ -77,17 +77,17 @@ That means you can override **Get**, **Post**, **Put**, **Patch**,
 
 ### Configuration
 
-Abp.Web.Api.OData automatically calls
-HttpConfiguration.MapODataServiceRoute method with conventional
+Abp.Web.Api.OData automatically calls the
+HttpConfiguration.MapODataServiceRoute method with the conventional
 configuration. If you need, you can set
 Configuration.Modules.AbpWebApiOData().**MapAction** to map OData routes
 yourself.
 
 ### Examples
 
-Here, some example requests to the controller defined above. Assume that
+Here are some requests made to the controller defined above. Assume that
 the application works on *http://localhost:61842*. We will show some
-basics. Since OData is a standard protocol, you can easily find more
+basic examples. Since OData is a standard protocol, you can easily find more
 advanced examples on the web.
 
 #### Getting List of Entities
@@ -166,7 +166,7 @@ Here, a more advanced query includes filtering, sorting and getting top
     }
 
 OData supports paging, sorting, filtering, projections and much more.
-See [it's own documentation](http://www.odata.org/) for more
+See [its own documentation](http://www.odata.org/) for more
 information.
 
 #### Creating a New Entity
@@ -309,5 +309,5 @@ Metadata is used to investigate the service.
 
 ### Sample Project
 
-You get source code of the sample project here:
+You get the source code of the sample project here:
 <https://github.com/aspnetboilerplate/sample-odata>
