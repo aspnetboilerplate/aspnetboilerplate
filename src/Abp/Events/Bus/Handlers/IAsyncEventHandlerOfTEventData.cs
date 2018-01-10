@@ -3,7 +3,7 @@
 namespace Abp.Events.Bus.Handlers
 {
     /// <summary>
-    /// Defines an interface of a class that handles events of type <see cref="TEventData"/>.
+    /// Defines an interface of a class that handles events asynchrounously of type <see cref="IAsyncEventHandler{TEventData}"/>.
     /// </summary>
     /// <typeparam name="TEventData">Event type to handle</typeparam>
     public interface IAsyncEventHandler<in TEventData> : IEventHandler
