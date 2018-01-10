@@ -1,14 +1,13 @@
 ASP.NET Boilerplate provides a set of objects and functions that are
 used to make javascript development easy and standards-based.
 
-Here is a list of APIs in ASP.NET Boilerplate. Click headers to see
-details and usages.
+Here is a list of APIs in ASP.NET Boilerplate.
 
 #### [AJAX](/Pages/Documents/Javascript-API/AJAX)
 
 Used to call server-side services using AJAX and evaluate the return
-value. Since ASP.NET Boilerplate server-side code returns a standard
-response for AJAX calls, it's suggested to use this method to handle the
+value. Since ASP.NET Boilerplate's server-side code returns a standard
+response for AJAX calls, it's suggested you use this method to handle the
 standard return value.
 
 #### [Notification](/Pages/Documents/Javascript-API/Notification)
@@ -30,7 +29,7 @@ Used to register to and trigger client side global events.
 
 #### [Logging](/Pages/Documents/Javascript-API/Logging)
 
-Used to write logs in client-side.
+Used to write logs on the client-side.
 
 #### [Other Utility Functions](/Pages/Documents/Javascript-API/Other-Utilities)
 
