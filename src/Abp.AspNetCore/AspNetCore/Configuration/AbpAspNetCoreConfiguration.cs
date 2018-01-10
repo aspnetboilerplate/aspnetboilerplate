@@ -4,7 +4,6 @@ using System.Reflection;
 using Abp.AspNetCore.Mvc.Results.Caching;
 using Abp.Domain.Uow;
 using Abp.Web.Models;
-using Microsoft.AspNetCore.Routing;
 
 namespace Abp.AspNetCore.Configuration
 {
@@ -17,8 +16,6 @@ namespace Abp.AspNetCore.Configuration
         public UnitOfWorkAttribute DefaultUnitOfWorkAttribute { get; }
 
         public List<Type> FormBodyBindingIgnoredTypes { get; }
-
-        public IRouteBuilder RouteBuilder { get; set; }
 
         public ControllerAssemblySettingList ControllerAssemblySettings { get; }
 

@@ -18,8 +18,6 @@ namespace Abp.AspNetCore.Configuration
 
         List<Type> FormBodyBindingIgnoredTypes { get; }
 
-        IRouteBuilder RouteBuilder { get; set; }
-
         /// <summary>
         /// Default: true.
         /// </summary>

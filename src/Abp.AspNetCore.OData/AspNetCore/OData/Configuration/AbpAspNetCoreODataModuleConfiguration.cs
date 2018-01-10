@@ -1,9 +1,7 @@
 ﻿using System;
-using Abp.AspNetCore.Configuration;
-using Abp.Configuration.Startup;
-using Microsoft.AspNet.OData;
 using Microsoft.AspNet.OData.Builder;
 using Microsoft.AspNet.OData.Extensions;
+using Microsoft.AspNetCore.Routing;
 
 namespace Abp.AspNetCore.OData.Configuration
 {
@@ -11,20 +9,20 @@ namespace Abp.AspNetCore.OData.Configuration
     {
         public ODataConventionModelBuilder ODataModelBuilder { get; set; }
 
-        public Action<IAbpStartupConfiguration> MapAction { get; set; }
+        public Action<IRouteBuilder> MapAction { get; set; }
 
         public AbpAspNetCoreODataModuleConfiguration()
         {
-            MapAction = configuration =>
+            MapAction = routes =>
             {
-                configuration.Modules.AbpAspNetCore().RouteBuilder.MapODataServiceRoute(
+                routes.MapODataServiceRoute(
                     routeName: "ODataRoute",
                     routePrefix: "odata",
-                    model: configuration.Modules.AbpAspNetCoreOData().ODataModelBuilder.GetEdmModel()
+                    model: ODataModelBuilder.GetEdmModel()
                 );
 
                 // Workaround: https://github.com/OData/WebApi/issues/1175
-                configuration.Modules.AbpAspNetCore().RouteBuilder.EnableDependencyInjection();
+                routes.EnableDependencyInjection();
             };
         }
     }

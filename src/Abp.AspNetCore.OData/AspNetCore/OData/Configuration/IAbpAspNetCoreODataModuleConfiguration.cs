@@ -1,6 +1,6 @@
 ﻿using System;
-using Abp.Configuration.Startup;
 using Microsoft.AspNet.OData.Builder;
+using Microsoft.AspNetCore.Routing;
 
 namespace Abp.AspNetCore.OData.Configuration
 {
@@ -17,6 +17,6 @@ namespace Abp.AspNetCore.OData.Configuration
         /// <summary>
         /// Allows overriding OData mapping.
         /// </summary>
-        Action<IAbpStartupConfiguration> MapAction { get; set; }
+        Action<IRouteBuilder> MapAction { get; set; }
     }
 }
