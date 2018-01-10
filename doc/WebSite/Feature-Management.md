@@ -1,7 +1,7 @@
 ### Introduction
 
 Most **SaaS** (multi-tenant) applications have **editions** (packages)
-that have different **features**. This way they can provide different
+that have different **features**. This way, they can provide different
 **price and feature options** to their tenants (customers).
 
 ASP.NET Boilerplate provides a **feature system** to make it easier. You
