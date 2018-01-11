@@ -104,14 +104,14 @@ namespace Abp.Events.Bus
         /// <inheritdoc/>
         public IDisposable Register(Type eventType, IEventHandlerFactory handlerFactory)
         {
-            IEventHandler handler = handlerFactory.GetHandler();
+            Type handlerType = GetEventHandlerType(handlerFactory);
             List<IEventHandlerFactory> handlerFactories;
 
-            if (CheckEventHandlerType(handler, typeof(IEventHandler<>)))
+            if (CheckEventHandlerType(handlerType, typeof(IEventHandler<>)))
             {
                 handlerFactories = GetOrCreateHandlerFactories(eventType);
             }
-            else if (CheckEventHandlerType(handler, typeof(IAsyncEventHandler<>)))
+            else if (CheckEventHandlerType(handlerType, typeof(IAsyncEventHandler<>)))
             {
                 handlerFactories = GetOrCreateAsyncHandlerFactories(eventType);
             }
@@ -196,13 +196,14 @@ namespace Abp.Events.Bus
         /// <inheritdoc/>
         public void Unregister(Type eventType, IEventHandler handler)
         {
+            Type handlerType = handler.GetType();
             List<IEventHandlerFactory> handlerFactories;
 
-            if (CheckEventHandlerType(handler, typeof(IEventHandler<>)))
+            if (CheckEventHandlerType(handlerType, typeof(IEventHandler<>)))
             {
                 handlerFactories = GetOrCreateHandlerFactories(eventType);
             }
-            else if (CheckEventHandlerType(handler, typeof(IAsyncEventHandler<>)))
+            else if (CheckEventHandlerType(handlerType, typeof(IAsyncEventHandler<>)))
             {
                 handlerFactories = GetOrCreateAsyncHandlerFactories(eventType);
             }
@@ -230,9 +231,25 @@ namespace Abp.Events.Bus
         }
 
         /// <inheritdoc/>
-        public void Unregister(Type eventType, IEventHandlerFactory factory)
+        public void Unregister(Type eventType, IEventHandlerFactory handlerFactory)
         {
-            GetOrCreateHandlerFactories(eventType).Locking(factories => factories.Remove(factory));
+            Type handlerType = GetEventHandlerType(handlerFactory);
+            List<IEventHandlerFactory> handlerFactories;
+
+            if (CheckEventHandlerType(handlerType, typeof(IEventHandler<>)))
+            {
+                handlerFactories = GetOrCreateHandlerFactories(eventType);
+            }
+            else if (CheckEventHandlerType(handlerType, typeof(IAsyncEventHandler<>)))
+            {
+                handlerFactories = GetOrCreateAsyncHandlerFactories(eventType);
+            }
+            else
+            {
+                throw new Exception($"Event handler to unregister for event type {eventType.Name} does not implement IEventHandler<{eventType.Name}> or IAsyncEventHandler<{eventType.Name}> interface!");
+            }
+
+            handlerFactories.Locking(factories => factories.Remove(handlerFactory));
         }
 
         /// <inheritdoc/>
@@ -380,14 +397,32 @@ namespace Abp.Events.Bus
             return task;
         }
 
-        private bool CheckEventHandlerType(IEventHandler handler, Type handlerInterfaceType)
+        private Type GetEventHandlerType(IEventHandlerFactory eventHandlerFactory)
         {
-            if (handler == null)
+            var eventHandlerFactoryType = eventHandlerFactory.GetType();
+            var isTransientHandlerFactory =
+                eventHandlerFactoryType.IsGenericType &&
+                eventHandlerFactoryType.GenericTypeArguments?.Length == 1 &&
+                eventHandlerFactoryType.GetGenericTypeDefinition() == typeof(TransientEventHandlerFactory<>);
+
+            if (isTransientHandlerFactory)
             {
-                return false;
+                return eventHandlerFactoryType.GenericTypeArguments[0];
+            }
+            else if (eventHandlerFactory is SingleInstanceHandlerFactory)
+            {
+                return (eventHandlerFactory as SingleInstanceHandlerFactory).HandlerInstance?.GetType();
+            }
+            else if (eventHandlerFactory is IocHandlerFactory)
+            {
+                return (eventHandlerFactory as IocHandlerFactory).HandlerType;
             }
 
-            Type handlerType = handler.GetType();
+            return eventHandlerFactory.GetHandler()?.GetType();
+        }
+
+        private bool CheckEventHandlerType(Type handlerType, Type handlerInterfaceType)
+        {
             return handlerType.GetInterfaces()
                 .Where(i => i.IsGenericType)
                 .Any(i => i.GetGenericTypeDefinition() == handlerInterfaceType);
@@ -510,7 +545,7 @@ namespace Abp.Events.Bus
                             }
                             catch (TargetInvocationException ex)
                             {
-                                exception =  ex.InnerException;
+                                exception = ex.InnerException;
                             }
                             catch (Exception ex)
                             {
