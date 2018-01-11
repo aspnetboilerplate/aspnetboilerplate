@@ -19,8 +19,8 @@ namespace Abp.Tests.Events.Bus
 
             var asyncHandler = new MyAsyncEventHandler();
 
-            EventBus.Register<EntityChangedEventData<MyEntity>>(asyncHandler);
-            EventBus.Register<EntityCreatedEventData<MyEntity>>(asyncHandler);
+            EventBus.AsyncRegister<EntityChangedEventData<MyEntity>>(asyncHandler);
+            EventBus.AsyncRegister<EntityCreatedEventData<MyEntity>>(asyncHandler);
 
             EventBus.Trigger(new EntityCreatedEventData<MyEntity>(new MyEntity()));
 

@@ -64,7 +64,7 @@ namespace Abp.Events.Bus
         }
 
         /// <inheritdoc/>
-        public IDisposable Register<TEventData>(Func<TEventData, Task> action) where TEventData : IEventData
+        public IDisposable AsyncRegister<TEventData>(Func<TEventData, Task> action) where TEventData : IEventData
         {
             return Register(typeof(TEventData), new ActionAsyncEventHandler<TEventData>(action));
         }
@@ -76,7 +76,7 @@ namespace Abp.Events.Bus
         }
 
         /// <inheritdoc/>
-        public IDisposable Register<TEventData>(IAsyncEventHandler<TEventData> handler) where TEventData : IEventData
+        public IDisposable AsyncRegister<TEventData>(IAsyncEventHandler<TEventData> handler) where TEventData : IEventData
         {
             return Register(typeof(TEventData), handler);
         }
@@ -154,7 +154,7 @@ namespace Abp.Events.Bus
         }
 
         /// <inheritdoc/>
-        public void Unregister<TEventData>(Func<TEventData, Task> action) where TEventData : IEventData
+        public void AsyncUnregister<TEventData>(Func<TEventData, Task> action) where TEventData : IEventData
         {
             Check.NotNull(action, nameof(action));
 
@@ -188,7 +188,7 @@ namespace Abp.Events.Bus
         }
 
         /// <inheritdoc/>
-        public void Unregister<TEventData>(IAsyncEventHandler<TEventData> handler) where TEventData : IEventData
+        public void AsyncUnregister<TEventData>(IAsyncEventHandler<TEventData> handler) where TEventData : IEventData
         {
             Unregister(typeof(TEventData), handler);
         }
