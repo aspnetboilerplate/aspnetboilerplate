@@ -21,7 +21,7 @@ namespace Abp.Events.Bus
         IDisposable Register<TEventData>(Action<TEventData> action) where TEventData : IEventData;
 
         /// <summary>
-        /// Registers to an async event.
+        /// Registers to an event.
         /// Given action is called for all event occurrences.
         /// </summary>
         /// <param name="action">Action to handle events</param>
@@ -37,7 +37,7 @@ namespace Abp.Events.Bus
         IDisposable Register<TEventData>(IEventHandler<TEventData> handler) where TEventData : IEventData;
 
         /// <summary>
-        /// Registers to an async event. 
+        /// Registers to an event. 
         /// Same (given) instance of the async handler is used for all event occurrences.
         /// </summary>
         /// <typeparam name="TEventData">Event type</typeparam>
@@ -87,7 +87,7 @@ namespace Abp.Events.Bus
         void Unregister<TEventData>(Action<TEventData> action) where TEventData : IEventData;
 
         /// <summary>
-        /// Unregisters from an async event.
+        /// Unregisters from an event.
         /// </summary>
         /// <typeparam name="TEventData">Event type</typeparam>
         /// <param name="action"></param>
@@ -101,7 +101,7 @@ namespace Abp.Events.Bus
         void Unregister<TEventData>(IEventHandler<TEventData> handler) where TEventData : IEventData;
 
         /// <summary>
-        /// Unregisters from an async event.
+        /// Unregisters from an event.
         /// </summary>
         /// <typeparam name="TEventData">Event type</typeparam>
         /// <param name="handler">Handler object that is registered before</param>
