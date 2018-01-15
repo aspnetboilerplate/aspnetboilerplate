@@ -1,8 +1,7 @@
 ### Introduction
 
-All applications have at least one language for their user interface, and many
-have more than one. ASP.NET Boilerplate provides a flexible
-localization system for applications.
+Developing a world-ready application, including an application that can be localized into one or more languages, requires localization features. 
+ASP.NET Boilerplate provides extensive support for the development of world-ready and localized applications.
 
 ### Application Languages
 
@@ -15,7 +14,7 @@ done in the **PreInitialize** method of your
 
 On the server side, you can [inject](/Pages/Documents/Dependency-Injection)
 and use the **ILocalizationManager**. On the client side, you can use the
-**abp.localization** javascript API to get a list of all available
+**abp.localization** JavaScript API to get a list of all available
 languages, as well as the current language. famfamfam-flag-england (and tr) is
 just a CSS class, which you can change based on your needs. You can then use it
 in the UI to show the related flag.
@@ -400,8 +399,7 @@ source name. It's done in the SimpleTaskSystemControllerBase as shown below:
         }
     }
 
-Notice that it is derived from **AbpController**? That way, you can easily
-localize text with the **L** method.
+Note that it is derived from **AbpController** and therefore, you can easily localize text with the **L** method.
 
 ##### In MVC Views
 
@@ -444,17 +442,17 @@ Then set this view base class in web.config:
 All controllers and views are ready with these methods when you create your
 solution from one of the ASP.NET Boilerplate [templates](/Templates).
 
-#### In Javascript
+#### In JavaScript
 
 ASP.NET Boilerplate also makes it possible to use the same localization text in
-javascript. First, you need to add the dynamic ABP scripts to
+JavaScript. First, you need to add the dynamic ABP scripts to
 the page:
 
     <script src="/AbpScripts/GetScripts" type="text/javascript"></script>
 
-ASP.NET Boilerplate automatically generates the needed javascript code to
+ASP.NET Boilerplate automatically generates the needed JavaScript code to
 get localized text on the client side. You can then easily get a
-localized text in javascript as shown below:
+localized text in JavaScript as shown below:
 
     var s1 = abp.localization.localize('NewTask', 'SimpleTaskSystem');
 
