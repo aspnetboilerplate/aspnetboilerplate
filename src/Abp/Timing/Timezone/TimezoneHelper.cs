@@ -130,7 +130,7 @@ namespace Abp.Timing.Timezone
 
             if (transitionTime.IsFixedDateRule)
             {
-                daylightTime = new DateTime(daylightTime.Year, daylightTime.Month, transitionTime.Day);
+                daylightTime = new DateTime(daylightTime.Year, daylightTime.Month, transitionTime.Day, transitionTime.TimeOfDay.Hour, transitionTime.TimeOfDay.Minute, transitionTime.TimeOfDay.Second);
             }
             else
             {
