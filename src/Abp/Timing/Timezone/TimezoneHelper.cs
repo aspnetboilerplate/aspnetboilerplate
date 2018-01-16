@@ -67,6 +67,13 @@ namespace Abp.Timing.Timezone
             throw new Exception(string.Format("Unable to map {0} to windows timezone.", ianaTimezoneId));
         }
 
+        /// <summary>
+        /// Converts a date from one timezone to another
+        /// </summary>
+        /// <param name="date"></param>
+        /// <param name="fromTimeZoneId"></param>
+        /// <param name="toTimeZoneId"></param>
+        /// <returns></returns>
         public static DateTime? Convert(DateTime? date, string fromTimeZoneId, string toTimeZoneId)
         {
             if (!date.HasValue)
@@ -80,11 +87,23 @@ namespace Abp.Timing.Timezone
             return TimeZoneInfo.ConvertTime(date.Value, sourceTimeZone, destinationTimeZone);
         }
 
+        /// <summary>
+        /// Converts a utc datetime to a local time based on a timezone
+        /// </summary>
+        /// <param name="date"></param>
+        /// <param name="toTimeZoneId"></param>
+        /// <returns></returns>
         public static DateTime? ConvertFromUtc(DateTime? date, string toTimeZoneId)
         {
             return Convert(date, "UTC", toTimeZoneId);
         }
 
+        /// <summary>
+        /// Converts a utc datetime in to a datetimeoffset
+        /// </summary>
+        /// <param name="date"></param>
+        /// <param name="timeZoneId"></param>
+        /// <returns></returns>
         public static DateTimeOffset? ConvertFromUtcToDateTimeOffset(DateTime? date, string timeZoneId)
         {
             var zonedDate = ConvertFromUtc(date, timeZoneId);
@@ -92,6 +111,12 @@ namespace Abp.Timing.Timezone
             return ConvertToDateTimeOffset(zonedDate, timeZoneId);
         }
 
+        /// <summary>
+        /// Converts a nullable date with a timezone to a nullable datetimeoffset
+        /// </summary>
+        /// <param name="date"></param>
+        /// <param name="timeZoneId"></param>
+        /// <returns></returns>
         public static DateTimeOffset? ConvertToDateTimeOffset(DateTime? date, string timeZoneId)
         {
             if (!date.HasValue)
@@ -102,6 +127,12 @@ namespace Abp.Timing.Timezone
             return ConvertToDateTimeOffset(date.Value, timeZoneId);
         }
 
+        /// <summary>
+        /// Converts a date with a timezone to a datetimeoffset
+        /// </summary>
+        /// <param name="date"></param>
+        /// <param name="timeZoneId"></param>
+        /// <returns></returns>
         public static DateTimeOffset ConvertToDateTimeOffset(DateTime date, string timeZoneId)
         {
             var timeZone = FindTimeZoneInfo(timeZoneId);
