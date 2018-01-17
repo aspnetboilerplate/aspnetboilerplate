@@ -18,7 +18,17 @@ namespace Abp.Timing
         /// </summary>
         public DateTime EndTime { get; set; }
 
-        private static DateTime Now { get { return Clock.Now; } }
+        /// <summary>
+        /// Gets the time span of the datetime range.  
+        /// When set, EndTime is recalculated
+        /// </summary>
+        public TimeSpan TimeSpan
+        {
+            get => EndTime - StartTime;
+            set => EndTime = StartTime.Add(value);
+        }
+
+        private static DateTime Now => Clock.Now;
 
         /// <summary>
         /// Creates a new <see cref="DateTimeRange"/> object.
@@ -29,7 +39,7 @@ namespace Abp.Timing
         }
 
         /// <summary>
-        /// Creates a new <see cref="DateTimeRange"/> object from given <paramref name="startTime"/> and <paramref name="endTime"/>.
+        /// Creates a new <see cref="DateTimeRange"/> object from the given <paramref name="startTime"/> and <paramref name="endTime"/>.
         /// </summary>
         /// <param name="startTime">Start time of the datetime range</param>
         /// <param name="endTime">End time of the datetime range</param>
@@ -40,7 +50,18 @@ namespace Abp.Timing
         }
 
         /// <summary>
-        /// Creates a new <see cref="DateTimeRange"/> object from given <paramref name="dateTimeRange"/> object.
+        /// Creates a new <see cref="DateTimeRange"/> object from the given <paramref name="startTime"/> and <paramref name="timeSpan"/>.
+        /// </summary>
+        /// <param name="startTime">Start time of the datetime range</param>
+        /// <param name="timeSpan">The span of time to calculate the EndTime</param>
+        public DateTimeRange(DateTime startTime, TimeSpan timeSpan)
+        {
+            StartTime = startTime;
+            TimeSpan = timeSpan;
+        }
+
+        /// <summary>
+        /// Creates a new <see cref="DateTimeRange"/> object from given the <paramref name="dateTimeRange"/> object.
         /// </summary>
         /// <param name="dateTimeRange">IDateTimeRange object</param>
         public DateTimeRange(IDateTimeRange dateTimeRange)
@@ -50,7 +71,7 @@ namespace Abp.Timing
         }
 
         /// <summary>
-        /// Gets a date range represents yesterday.
+        /// Gets a date range representing yesterday.
         /// </summary>
         public static DateTimeRange Yesterday
         {
@@ -62,7 +83,7 @@ namespace Abp.Timing
         }
 
         /// <summary>
-        /// Gets a date range represents today.
+        /// Gets a date range representing today.
         /// </summary>
         public static DateTimeRange Today
         {
@@ -74,7 +95,7 @@ namespace Abp.Timing
         }
 
         /// <summary>
-        /// Gets a date range represents tomorrow.
+        /// Gets a date range representing tomorrow.
         /// </summary>
         public static DateTimeRange Tomorrow
         {
@@ -86,7 +107,7 @@ namespace Abp.Timing
         }
 
         /// <summary>
-        /// Gets a date range represents the last month.
+        /// Gets a date range representing the last month.
         /// </summary>
         public static DateTimeRange LastMonth
         {
@@ -100,7 +121,7 @@ namespace Abp.Timing
         }
 
         /// <summary>
-        /// Gets a date range represents this month.
+        /// Gets a date range representing this month.
         /// </summary>
         public static DateTimeRange ThisMonth
         {
@@ -114,7 +135,7 @@ namespace Abp.Timing
         }
 
         /// <summary>
-        /// Gets a date range represents the next month.
+        /// Gets a date range representing the next month.
         /// </summary>
         public static DateTimeRange NextMonth
         {
@@ -129,7 +150,7 @@ namespace Abp.Timing
 
 
         /// <summary>
-        /// Gets a date range represents the last year.
+        /// Gets a date range representing the last year.
         /// </summary>
         public static DateTimeRange LastYear
         {
@@ -141,7 +162,7 @@ namespace Abp.Timing
         }
 
         /// <summary>
-        /// Gets a date range represents this year.
+        /// Gets a date range representing this year.
         /// </summary>
         public static DateTimeRange ThisYear
         {
@@ -153,7 +174,7 @@ namespace Abp.Timing
         }
 
         /// <summary>
-        /// Gets a date range represents the next year.
+        /// Gets a date range representing the next year.
         /// </summary>
         public static DateTimeRange NextYear
         {
@@ -166,7 +187,7 @@ namespace Abp.Timing
 
 
         /// <summary>
-        /// Gets a date range represents the last 30 days (30x24 hours) including today.
+        /// Gets a date range representing the last 30 days (30x24 hours) including today.
         /// </summary>
         public static DateTimeRange Last30Days
         {
@@ -178,7 +199,7 @@ namespace Abp.Timing
         }
 
         /// <summary>
-        /// Gets a date range represents the last 30 days excluding today.
+        /// Gets a date range representing the last 30 days excluding today.
         /// </summary>
         public static DateTimeRange Last30DaysExceptToday
         {
@@ -190,7 +211,7 @@ namespace Abp.Timing
         }
 
         /// <summary>
-        /// Gets a date range represents the last 7 days (7x24 hours) including today.
+        /// Gets a date range representing the last 7 days (7x24 hours) including today.
         /// </summary>
         public static DateTimeRange Last7Days
         {
@@ -202,7 +223,7 @@ namespace Abp.Timing
         }
 
         /// <summary>
-        /// Gets a date range represents the last 7 days excluding today.
+        /// Gets a date range representing the last 7 days excluding today.
         /// </summary>
         public static DateTimeRange Last7DaysExceptToday
         {
