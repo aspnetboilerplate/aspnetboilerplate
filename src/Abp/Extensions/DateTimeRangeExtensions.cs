@@ -45,7 +45,7 @@ namespace Abp.Extensions
         }
 
         /// <summary>
-        /// Returns all the days of a month.
+        /// Returns all the days in a range.
         /// </summary>
         /// <param name="start">The start.</param>
         /// <param name="end">The end.</param>
