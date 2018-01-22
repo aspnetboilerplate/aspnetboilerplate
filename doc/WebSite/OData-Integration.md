@@ -5,7 +5,7 @@ consumption of **queryable** and **interoperable RESTful APIs** in a
 **simple** and **standard** way". See [odata.org](http://www.odata.org/).
 You can use OData with ASP.NET Boilerplate.
 The [Abp.Web.Api.OData](https://www.nuget.org/packages/Abp.Web.Api.OData)
-NuGet package simplifies it's usage.
+NuGet package simplifies its usage.
 
 ### Setup
 
