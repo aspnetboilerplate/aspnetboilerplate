@@ -44,7 +44,7 @@ namespace Abp.EntityHistory
         public virtual string EntityId { get; set; }
 
         /// <summary>
-        /// AssemblyQualifiedName of the entity type.
+        /// FullName of the entity type.
         /// </summary>
         [MaxLength(MaxEntityTypeFullNameLength)]
         public virtual string EntityTypeFullName { get; set; }
