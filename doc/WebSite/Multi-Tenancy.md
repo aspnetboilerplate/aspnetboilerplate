@@ -27,7 +27,7 @@ database**, we can serve **multiple tenants** on a single server. We
 just have to make sure that multiple instances of the application don't
 **conflict** with each other on the same server environment.
 
-This can also be possibl for an **existing application** which is not
+This can also be possible for an **existing application** which is not
 designed as multi-tenant. It's easier to create such an application since
 the application is not aware of multitenancy. There are, however, setup,
 utilization and maintenance problems in this approach.
