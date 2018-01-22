@@ -1,4 +1,4 @@
-### What Is Multi Tenancy?
+### What Is Multi-Tenancy?
 
 "*Software* ***Multitenancy*** *refers to a software* ***architecture***
 *in which a* ***single instance*** *of a software runs on a server and
@@ -21,7 +21,7 @@ There are some different multi-tenant database & deployment approaches:
 
 ##### Multiple Deployment - Multiple Database
 
-This is **not multi tenancy** actually, but if we run **one instance**
+This is **not multi-tenancy** actually, but if we run **one instance**
 of the application **for each** customer (tenant) with a **seperated
 database**, we can serve **multiple tenants** on a single server. We
 just have to make sure that multiple instances of the application don't
@@ -90,7 +90,7 @@ approach.
 
 ASP.NET Boilerplate can work with all the scenarios described above.
 
-#### Enabling Multi Tenancy
+#### Enabling Multi-Tenancy
 
 Multi-tenancy is disabled by default. We can enable it in PreInitialize method
 of our module as shown below:
