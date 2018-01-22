@@ -1,14 +1,14 @@
 ### Introduction
 
 Notifications are used to **inform** users on specific events in the
-system. ASP.NET Boilerplate provides a **pub/sub** based **real time**
-notification infrastructure.
+system. ASP.NET Boilerplate provides a **pub/sub** (publish/subscribe) based **real-time**
+notification system.
 
 #### Sending Models
 
 There are two ways of sending notifications to users:
 
--   User **subscribes** to a specific notification type. Then we
+-   The user **subscribes** to a specific notification type. Then we
     **publish** a notification of this type which is delivered to all
     **subscribed** users. This is the **pub/sub** model.
 -   We can **directly send** a notification to **target user(s)**.
@@ -21,25 +21,25 @@ There are also two types of notifications:
     "Notify me if a user sends me a friendship request" is an example of
     this type notifications.
 -   **Entity notifications** are associated to a specific entity.
-    "Notify me if a user comment on **this** photo" is an entity based
+    "Notify me if a user comment on **this** photo" is an entity-based
     notification since it's associated to a specific photo entity. Users
-    may want to get notifications for some photos, not for all.
+    may want to get notifications for some photos, but not for all.
 
 #### Notification Data
 
-A notification generally include a **notification data**. For example:
-"Notify me if a user sends me a friendship request" notification may
+A notification generally includes **notification data**. For example:
+The "Notify me if a user sends me a friendship request" notification may
 have two data properties: *sender user name* (which user sent this
-friendship request) and *request note* (a note that user did write in
-the request). It's obvious that the notification data type is tightly
-coupled to notification types. Different notification types have
+friendship request) and a *request note* (a note that the user wrote in
+the request). Note that the notification data type is tightly
+coupled to the notification types. Different notification types have
 different data types.
 
-Notification data is **optional**. Some notifications may not require a
-data. There are some pre-defined notification data types those can be
-enough for most cases. **MessageNotificationData** can be used for
-simple messages and **LocalizableMessageNotificationData** can be used
-for localizable and parametric notification messages. We will see
+Notification data is **optional**. Some notifications may not require
+data. There are some pre-defined notification data types that are
+enough for most cases. The **MessageNotificationData** can be used for
+simple messages and the **LocalizableMessageNotificationData** can be used
+for localizable and parametric notification messages. We will see the
 example usage in later sections.
 
 #### Notification Severity
@@ -50,12 +50,12 @@ There are 5 levels of notification severity, defined in
 
 #### About Notification Persistence
 
-See *Notification Store* section for more information on notification
+See the *Notification Store* section for more information on notification
 persistence.
 
 ### Subscribe to Notifications
 
-**INotificationSubscriptionManager** provides API to **subscribe** to
+The **INotificationSubscriptionManager** provides an API to **subscribe** to
 notifications. Examples:
 
     public class MyService : ITransientDependency
@@ -80,17 +80,17 @@ notifications. Examples:
         }
     }
 
-First, we [injected](/Pages/Documents/Dependency-Injection)
-**INotificationSubscriptionManager**. First method subscribes to a
-**general notification**. User wants to get notified when someone sends
-a friendship request. Second one subscribes to a notification related to
-a **specific entity** (Photo). User wants to get notified if anyone
-write comment to a specified photo.
+First, we [injected](/Pages/Documents/Dependency-Injection) the
+**INotificationSubscriptionManager**. The first method subscribes to a
+**general notification**, if a user wants to get notified when someone sends
+a friendship request. The second method subscribes to a notification related to
+a **specific entity** (Photo), if the user wants to get notified if anyone
+writes a comment to a specified photo.
 
-Every notification type should have **unique names** (like
-*SentFrendshipRequest* and *CommentPhoto* in the samples)
+Every notification type should have a **unique name** (like
+*SentFrendshipRequest* and *CommentPhoto* in the examples)
 
-**INotificationSubscriptionManager** has also **UnsubscribeAsync,
+The **INotificationSubscriptionManager** also has the **UnsubscribeAsync,
 IsSubscribedAsync, GetSubscriptionsAsync**... methods to manage
 subscriptions.
 
@@ -132,7 +132,7 @@ subscriptions.
 
 In the first example, we published a notification to a single user.
 *SentFrendshipRequestNotificationData* should be derived from
-**NotificationData** like that:
+**NotificationData** like this:
 
     [Serializable]
     public class SentFrendshipRequestNotificationData : NotificationData
@@ -151,7 +151,7 @@ In the first example, we published a notification to a single user.
 In the second example, we sent a notification to a **specific user** for
 a **specific entity**. Notification data classes don't need to be
 **serialzable** normally (since JSON serialization is used by default).
-But it's suggested to mark it as serializable since you may need to move
+But we suggest you mark it as serializable since you may need to move
 notifications between applications and may want to use binary
 serialization in the future. Also, as declared before, notification data
 is optional and may not be required for all notifications.
@@ -160,57 +160,57 @@ is optional and may not be required for all notifications.
 **don't need** to be subscribed to those notifications.
 
 In the third example, we did not define a dedicated notification data
-class. instead, directly used built-in
+class. Instead, we directly used the built-in
 **LocalizableMessageNotificationData** with **dictionary** based data
-and published notification as '**Warn**'.
+and then published the notification as '**Warn**'.
 **LocalizableMessageNotificationData** can store dictionary-based
 arbitrary data (this is also true for custom notification data classes
 since they also inherit from **NotificationData** class). We used
-"**remainingDiskInMb**" as argument on
-[localization](/Pages/Documents/Localization). Localization message can
+"**remainingDiskInMb**" as an argument on
+[localization](/Pages/Documents/Localization). The localization message can
 include these arguments (like "*Attention! Only {remainingDiskInMb} MBs
-left on the disk!*" in the example). We will see how to localize it in
-the Client Side section.
+left on the disk!*" as an example). We will see how to localize it on
+the client-side section.
 
 ### User Notification Manager
 
-**IUserNotificationManager** is used to manage notifications of users.
+The **IUserNotificationManager** is used to manage the notifications of users.
 It has methods to **get**, **update** or **delete** notifications for a
 user. You can use it to prepare a notification list page for your
 application.
 
-### Real Time Notifications
+### Real-Time Notifications
 
 While you can use IUserNotificationManager to query notifications, we
 generally want to push real time notifications to the client.
 
-Notification system uses **IRealTimeNotifier** to send real time
+The notification system uses **IRealTimeNotifier** to send real time
 notifications to users. This can be implemented with any type of real
 time communication system. It's implemented using **SignalR** in a
-seperated package. [Startup templates](/Templates) have already SignalR
-installed. See [SignalR Integration
+seperated package. The [startup templates](/Templates) already have SignalR
+installed. See the [SignalR Integration
 document](/Pages/Documents/SignalR-Integration) for more information.
 
-**Note**: Notification system calls **IRealTimeNotifier** asynchronously
+**Note**: The notification system calls **IRealTimeNotifier** asynchronously
 in a [**background job**](/Pages/Documents/Background-Jobs-And-Workers).
-So, notifications may be sent with a small delay.
+Because of this, notifications may be sent with a small delay.
 
-#### Client Side
+#### Client-Side
 
-When a real time notification is received, ASP.NET Boilerplate triggers
-a **global event** in the client side. You can register like that to get
+When a real-time notification is received, ASP.NET Boilerplate triggers
+a **global event** on the client-side. You can register it like this to get
 notifications:
 
     abp.event.on('abp.notifications.received', function (userNotification) {
         console.log(userNotification);
     });
 
-**abp.notifications.received** event is triggered for each received real
+The **abp.notifications.received** event is triggered for each received real-
 time notification. You can register to this event as shown above to get
-notifications. See [javascript event
+notifications. See the [JavaScript event
 bus](/Pages/Documents/Javascript-API/Event-Bus) documentation for more
-information on events. An example incoming notification JSON for
-"System.LowDisk" example:
+information on events. Here's an example of the incoming notification JSON for
+"System.LowDisk":
 
     {
         "userId": 2,
@@ -239,7 +239,7 @@ information on events. An example incoming notification JSON for
 
 In this object;
 
--   **userId**: Current user id. Generally you don't need this since you
+-   **userId**: The current user id. You don't generally need this since you
     know the current user.
 -   **state**: Value of **UserNotificationState** enum. 0: **Unread**,
     1: **Read**.
@@ -248,10 +248,10 @@ In this object;
         value used while publishing the notification).
     -   **data**: notification data. In this example, we used
         **LocalizableMessageNotificationData** (as published in the
-        example before).
+        example above).
         -   **message**: Localizable message information. We can use
-            **sourceName** and **name** to localize message on the UI.
-        -   **type**: Notification data type. Full type name, including
+            **sourceName** and **name** to localize the message on the UI.
+        -   **type**: The notification data type. Full type name, including
             namespaces. We can check this type while processing the
             notification data.
         -   **properties**: Dictionary based custom properties.
@@ -260,11 +260,11 @@ In this object;
     -   **severity**: Value of **NotificationSeverity** enum. 0:
         **Info**, 1: **Success**, 2: **Warn**, 3: **Error**, 4:
         **Fatal**.
-    -   **creationTime**: Time of when this notification is created.
+    -   **creationTime**: Time of when this notification was created.
     -   **id**: Notification id.
 -   **id**: User notification id.
 
-Surely, you will not just log the notification. You can use notification
+You can not only log the notification, but you can use the notification
 data to show notification information to the user. Example:
 
     abp.event.on('abp.notifications.received', function (userNotification) {
@@ -285,16 +285,16 @@ data to show notification information to the user. Example:
     });
 
 To be able to process notification data, we should check the data type.
-This example simply gets message from notification data. For the
+This example simply gets a message from the notification data. For the
 localized message (LocalizableMessageNotificationData), we are
-localizing the message and replacing parameters. For simple message
-(MessageNotificationData), we directly get the message. Surely, in a
-real project, we will not use alert function. We can use
-[abp.notify](/Pages/Documents/Javascript-API/Notification) api to show
+localizing the message and replacing parameters. For a simple message
+(MessageNotificationData), we directly get the message. Of course, in a
+real project, we will not use the alert function. We can use the
+[abp.notify](/Pages/Documents/Javascript-API/Notification) api instead to show
 nice UI notifications.
 
-If you need to implement such a logic above, there is an easier and
-scaleable way. You can just use single line of code to show a [UI
+If you need to implement logic like what is shown above, there is an easier and
+scaleable way. You can just use a single line of code to show a [UI
 notification](/Pages/Documents/Javascript-API/Notification) when a push
 notification is received:
 
@@ -303,7 +303,7 @@ notification is received:
     });
 
 This shows a [UI
-notification](/Pages/Documents/Javascript-API/Notification) like that
+notification](/Pages/Documents/Javascript-API/Notification) like this
 (for System.LowDisk notification published above):
 
 <img src="images/notification-warn.png" class="img-thumbnail" />
@@ -311,33 +311,33 @@ notification](/Pages/Documents/Javascript-API/Notification) like that
 It works for built-in notification data types
 (LocalizableMessageNotificationData and MessageNotificationData). If you
 have custom notification data types, then you should register data
-formatters like that:
+formatters like this:
 
     abp.notifications.messageFormatters['MyProject.MyNotificationDataType'] = function(userNotification) {
         return ...; //format and return message here
     };
 
-Thus, **showUiNotifyForUserNotification** can create shown messages for
-your data types. If you just need to the formatted message, you can
+This way, **showUiNotifyForUserNotification** can create the shown messages for
+your data types. If you just need the formatted message, you can
 directly use
 **abp.notifications.getFormattedMessageFromUserNotification(userNotification)**
 which is internally used by showUiNotifyForUserNotification.
 
-[Startup templates](/Templates) include the code to show UI
+The [startup templates](/Templates) include the code to show UI
 notifications when a push notification is received.
 
 ### Notification Store
 
-Notification system uses **INotificationStore** to persist
-notifications. This should be implemented in order to make notification
-system properly working. You can implement it yourself or use
+The notification system uses **INotificationStore** to persist
+notifications. This must be implemented in order to make the notification
+system properly work. You can implement it yourself or use
 **[module-zero](/Pages/Documents/Zero/Overall)** which already
 implements it.
 
 ### Notification Definitions
 
-You don't have to **define** a notification before usage. You can just
-use any **notification name** without defining it. But, defining it may
+You don't have to **define** a notification to use it. You can just
+use any **notification name** without defining it. However, defining it may
 bring you some additional benefits. For example, you can then
 **investigate** all notifications in your application. In this case, we
 can define a **notification provider** for our
@@ -357,18 +357,18 @@ can define a **notification provider** for our
         }
     }
 
-"**App.NewUserRegistered**" is unique name of the notification. We
-defined a localizable **displayName** (then we can show it while
-subscribing to the notification on UI). And finally, we declared that
-this notification is available to a user only if he has
+"**App.NewUserRegistered**" is the unique name of the notification. We
+defined a localizable **displayName** so we can then show it when
+subscribing to the notification on the UI. And finally, we declared that
+this notification is available to a user only if he has the
 "**App.Pages.UserManagement**"
 [permission](/Pages/Documents/Authorization).
 
-There are also some other parameters, you can investigate in the code.
-Only notification name is **required** for a notification definition.
+There are also some other parameters that you can investigate in the code.
+Note: The notification name is **required** for a notification definition.
 
-After defining such a notification provider, we should register it in
-[PreInitialize](/Pages/Documents/Module-System#preinitialize) event
+After defining such a notification provider, we must register it in the
+[PreInitialize](/Pages/Documents/Module-System#preinitialize) method
 of our module, as shown below:
 
     public class AbpZeroTemplateCoreModule : AbpModule
@@ -381,6 +381,6 @@ of our module, as shown below:
         //...
     }
 
-Finally, you can inject and use **INotificationDefinitionManager** in
-your application to get notification definitions. Then you may want to
-prepare a automatic page to allow user to subscribe those notifications.
+Finally, you can inject and use the **INotificationDefinitionManager** in
+your application to get notification definitions. You may then want to
+prepare an automatic page to allow users to subscribe to those notifications.
