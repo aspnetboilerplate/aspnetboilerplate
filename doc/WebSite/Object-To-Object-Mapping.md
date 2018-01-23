@@ -1,8 +1,8 @@
 ### Introduction
 
-It's a common to map a similar object to another object. It's also
-tedious and repeating since generally both objects (classes) may have
-similar/same properties mapped to each other. Think on a typical
+It's common to map a similar object to another object. It's also
+tedious and repetitive since generally both objects (classes) may have the
+same/similar properties mapped to each other. Imagine a typical
 [application service](Application-Services.md) method below:
 
     public class UserAppService : ApplicationService
@@ -28,24 +28,24 @@ similar/same properties mapped to each other. Think on a typical
         }
     }
 
-CreateUserInput is a simple [DTO](Data-Transfer-Objects.md) and User
-is a simple [entity](Entities.md) here. We manually created a User
-entity from given input. User entity will have much more properties in a
-real world application and manually creating it will become tedious and
-error-prone. Also, we should change the mapping code when we want to add
+CreateUserInput is a simple [DTO](Data-Transfer-Objects.md) class and User
+is a simple [entity](Entities.md). We manually created a User
+entity from the given input. The User entity will have more properties in a
+real-world application and manually creating it will become tedious and
+error-prone. We also have to change the mapping code when we want to add
 new properties to User and CreateUserInput.
 
-We can use a library to make this mapping automatically.
+We can use a library to automatically handle our mappings.
 [AutoMapper](http://automapper.org/) is one of the best libraries for
-object to object mapping. ASP.NET Boilerplate defines **IObjectMapper**
-interface to abstract it and implements this interface using AutoMapper
-in [Abp.AutoMapper](https://www.nuget.org/packages/Abp.AutoMapper)
+object to object mapping. ASP.NET Boilerplate defines an **IObjectMapper**
+interface to abstract it and then implements this interface using AutoMapper
+in the [Abp.AutoMapper](https://www.nuget.org/packages/Abp.AutoMapper)
 package.
 
 ### IObjectMapper Interface
 
 IObjectMapper is a simple abstraction that has Map methods to map an
-object to another. We can write the sample code above as like below:
+object to another. We can replace the above code with this, instead:
 
     public class UserAppService : ApplicationService
     {
@@ -65,11 +65,11 @@ object to another. We can write the sample code above as like below:
         }
     }
 
-Map is a simple method gets the source object and creates a new
+Map is a simple method that gets the source object and creates a new
 destination object with the type declared as the generic parameter (User
-in this sample). Map method has an overload to map an object to an
+in this sample). The Map method has an overload to map an object to an
 **existing** object. Assume that we already have a User entity and want
-to update it's properties by an object:
+to update it's properties using an object:
 
     public void UpdateUser(UpdateUserInput input)
     {
@@ -79,13 +79,13 @@ to update it's properties by an object:
 
 ### AutoMapper Integration
 
-**[Abp.AutoMapper](https://www.nuget.org/packages/Abp.AutoMapper)**
-nuget package ([module](Module-System.md)) implements IObjectMapper
+The **[Abp.AutoMapper](https://www.nuget.org/packages/Abp.AutoMapper)**
+NuGet package ([module](Module-System.md)) implements the IObjectMapper
 and provides additional features.
 
 #### Installation
 
-First, install **Abp.AutoMapper** nuget to your project:
+First, install the **Abp.AutoMapper** NuGet package to your project:
 
     Install-Package Abp.AutoMapper
 
@@ -98,23 +98,23 @@ definition class:
         ...
     }
 
-Then you can safely [inject](Dependency-Injection.md) and use
+You can then safely [inject](Dependency-Injection.md) and use
 IObjectMapper in your code. You can also use
-[AutoMapper](http://automapper.org/)'s own API when you need.
+[AutoMapper](http://automapper.org/)'s own API when you need it.
 
 #### Creating Mappings
 
-AutoMapper requires to define mappings between classes (by default)
-before using the mapping. You can see it's own
+Before using the mapping, AutoMapper requires you to define mappings between classes (by default). 
+You can see AutoMapper's own
 [documentation](http://automapper.org/) for details on mapping. ASP.NET
 Boilerplate makes it a bit easier and modular.
 
 ##### Auto Mapping Attributes
 
-Most of time you only want to directly (and conventionally) map classes.
-In that case, you can use **AutoMap**, **AutoMapFrom** and **AutoMapTo**
-attributes. For instance, as we want to map **CreateUserInput** class to
-**User** class in the sample above, we can use **AutoMapTo** attribute
+Most of the time you may only want to directly (and conventionally) map classes.
+In this case, you can use the **AutoMap**, **AutoMapFrom** and **AutoMapTo**
+attributes. For instance, if we want to map the **CreateUserInput** class to
+the **User** class in the sample above, we can use the **AutoMapTo** attribute
 as shown below:
 
     [AutoMapTo(typeof(User))]
@@ -129,7 +129,7 @@ as shown below:
         public string Password { get; set; }
     }
 
-AutoMap attribute maps two classes in both direction. But in this
+The AutoMap attribute maps two classes in both directions. But in this
 sample, we only need to map from CreateUserInput to User, so we used
 AutoMapTo.
 
@@ -138,11 +138,11 @@ AutoMapTo.
 Simple mapping may not be suitable in some cases. For instance, property
 names of two classes may be a little different or you may want to ignore
 some properties during the mappping. In such cases you should directly
-use AutoMapper's API to define the mapping. Abp.AutoMapper package
-defines API to make this custom mapping stuff more modular.
+use AutoMapper's API to define the mapping. The Abp.AutoMapper package
+defines an API to make custom mapping more modular.
 
-Assume that we want to ignore Password on mapping and User has Email
-property for email address. We can define mapping as shown below:
+Assume that we want to ignore Password on mapping and the User has a slightly
+different named Email property. We can define the mapping as shown below:
 
     [DependsOn(typeof(AbpAutoMapperModule))]
     public class MyModule : AbpModule
@@ -158,17 +158,17 @@ property for email address. We can define mapping as shown below:
         }
     }
 
-AutoMapper has much more options and abilities for object to object
-mapping. See it's [documentation](http://automapper.org/) for more.
+AutoMapper has many more options and abilities for object to object
+mapping. See it's [documentation](http://automapper.org/) for more info.
 
 #### MapTo Extension Methods
 
-It's suggested to inject and use IObjectMapper interface as defined
-before. This makes our project independent from AutoMapper as much as
+It's recommended that you inject and use the IObjectMapper interface as defined
+above. This makes our project independent from AutoMapper as much as
 possible. It also makes unit testing easier since we can replace (mock)
 the mapping in unit tests.
 
-Abp.AutoMapper module also defines MapTo extension methods which can be
+The Abp.AutoMapper module also defines MapTo extension methods which can be
 used on any object to map it to another object without injecting
 IObjectMapper. Example usage:
 
@@ -194,25 +194,25 @@ IObjectMapper. Example usage:
         }
     }
 
-MapTo extension methods are defined in Abp.AutoMapper namespace, so you
+The MapTo extension methods are defined in the Abp.AutoMapper namespace, so you must
 first import this namespaces into your code file.
 
-Since MapTo extension methods are statics, they use AutoMapper's static
+Since the MapTo extension methods are static, they use AutoMapper's static
 instance (Mapper.Instance). This is simple and fine for the application
-code, but can have problems in unit tests since static configuration and
-mapper is shared among different tests and they may effect each other.
+code, but you can have problems in unit tests since the static configuration and
+mapper is shared among different tests, all effecting each other.
 
 #### Unit Tests
 
-We want to isolate tests from each others. To do that, we should design
+We want to isolate tests from each other. To do that, we should design
 our project with the following rules:
 
-1. Always use IObjectMapper, not use MapTo extension methods.
+1. Always use IObjectMapper, do not use MapTo extension methods.
 
-2. Configure Abp.AutoMapper module to use local Mapper instance
-(registered as singleton to dependency injection) rather than the static
-one (Abp.AutoMapper uses the static Mapper.Instance by default to allow
-to use MapTo extension methods defined above):
+2. Configure the Abp.AutoMapper module to use a local Mapper instance
+(registered as a singleton via dependency injection) rather than the static
+one (Abp.AutoMapper uses the static Mapper.Instance by default to allow you
+to use the MapTo extension methods as defined above):
 
     Configuration.Modules.AbpAutoMapper().UseStaticMapper = false;
 
@@ -220,7 +220,7 @@ to use MapTo extension methods defined above):
 
 ##### LocalizableString -&gt; string
 
-Abp.AutoMapper module defines a mapping to convert LocalizableString (or
+The Abp.AutoMapper module defines a mapping to convert LocalizableString (or
 ILocalizableString) objects to string objects. It makes the conversion
 using [ILocalizationManager](Localization.md), so localizable
 properties are automatically localized during the mapping process of any
@@ -230,5 +230,5 @@ class.
 
 You may need to directly use AutoMapper's IMapper object instead of
 IObjectMapper abstraction. In that case, just inject IMapper in your
-classes and use it. Abp.AutoMapper package registers IMapper to
-[dependency injection](Dependency-Injection.md) as singleton.
+classes and use it. The Abp.AutoMapper package registers the IMapper with
+[dependency injection](Dependency-Injection.md) as a singleton.
