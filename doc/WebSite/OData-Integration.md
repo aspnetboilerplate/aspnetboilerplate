@@ -1,24 +1,25 @@
 ### Introduction
 
-**OData** is defined as "An **open protocol** to allow the creation and
+**OData** is defined as "An **open protocol** to allow for the creation and
 consumption of **queryable** and **interoperable RESTful APIs** in a
-**simple** and **standard** way" in [odata.org](http://www.odata.org/).
+**simple** and **standard** way". See [odata.org](http://www.odata.org/).
 You can use OData with ASP.NET Boilerplate.
-[Abp.Web.Api.OData](https://www.nuget.org/packages/Abp.Web.Api.OData)
+
+The [Abp.Web.Api.OData](https://www.nuget.org/packages/Abp.Web.Api.OData)
 NuGet package simplifies its usage.
 
 ### Setup
 
 #### Install NuGet Package
 
-We should first install Abp.Web.Api.OData NuGet package to our WebApi
+We should first install the Abp.Web.Api.OData NuGet package to our WebApi
 project:
 
     Install-Package Abp.Web.Api.OData
 
 #### Set Module Dependency
 
-We should set a dependency on AbpWebApiODataModule for our module.
+We should set the dependency to AbpWebApiODataModule from our module.
 Example:
 
     [DependsOn(typeof(AbpWebApiODataModule))]
@@ -27,13 +28,13 @@ Example:
         ...
     }
 
-See [module system](/Pages/Documents/Module-System) to understand module
+See the [module system documentation](/Pages/Documents/Module-System) to understand module
 dependencies.
 
 #### Configure Your Entities
 
-OData requires us to declare entities which can be used as OData resources.
-We should do this in
+OData requires you to declare entities which can be used as OData resources.
+We should do this in the
 [PreInitialize](/Pages/Documents/Module-System#preinitialize) method
 of our module, as shown below:
 
@@ -51,16 +52,18 @@ of our module, as shown below:
         ...
     }
 
-Here, we got the ODataModelBuilder reference and set the Person entity.
-You can use EntitySet to add other entities in a similar way. See [OData
+Here, we get the ODataModelBuilder reference and set the Person entity.
+Similarly, you can use EntitySet to add other entities. See the [OData
 documentation](http://www.asp.net/web-api/overview/odata-support-in-aspnet-web-api/odata-v4/create-an-odata-v4-endpoint)
 for more information on the builder.
 
 ### Create Controllers
 
-Abp.Web.Api.OData NuGet package includes **AbpODataEntityController**
+Abp.Web.Api.OData NuGet package includes the **AbpODataEntityController**
 base class (which extends standard ODataController) to create your
-controllers easier. An example to create an OData endpoint for Person
+controllers easily. 
+
+Here's an example on how to create an OData endpoint for the Person
 entity:
 
     public class PersonsController : AbpODataEntityController<Person>
@@ -71,26 +74,26 @@ entity:
         }
     }
 
-It's that easy. All methods of AbpODataEntityController are **virtual**.
+It's that easy. All the methods of AbpODataEntityController are **virtual**.
 That means you can override **Get**, **Post**, **Put**, **Patch**,
 **Delete** and other actions and add your own logic.
 
 ### Configuration
 
-Abp.Web.Api.OData automatically calls the
+Abp.Web.Api.OData automatically calls
 HttpConfiguration.MapODataServiceRoute method with the conventional
-configuration. If you need, you can set
+configuration. If you need to, you can set the
 Configuration.Modules.AbpWebApiOData().**MapAction** to map OData routes
 yourself.
 
 ### Examples
 
-Here are some requests made to the controller defined above. Assume that
-the application works on *http://localhost:61842*. We will show some
-basic examples. Since OData is a standard protocol, you can easily find more
+Here are some example requests to the controller defined above. Assume that
+the application works on *http://localhost:61842*. We will show you some
+basics. Since OData is a standard protocol, you can easily find more
 advanced examples on the web.
 
-#### Getting List of Entities
+#### Getting a List of Entities
 
 Getting all people.
 
@@ -146,7 +149,7 @@ Getting the person with Id = 1 including his phone numbers.
 
 #### Querying
 
-Here, a more advanced query includes filtering, sorting and getting top
+Here's a more advanced query that includes filtering, sorting and getting the top
 2 results.
 
 ##### Request
@@ -166,7 +169,7 @@ Here, a more advanced query includes filtering, sorting and getting top
     }
 
 OData supports paging, sorting, filtering, projections and much more.
-See [its own documentation](http://www.odata.org/) for more
+See the [OData documentation](http://www.odata.org/) for more
 information.
 
 #### Creating a New Entity
@@ -181,7 +184,7 @@ In this example, we're creating a new person.
         Name: "Galileo Galilei"
     }
 
-Here, "Content-Type" header is "application/json".
+Here, the "Content-Type" header is "application/json".
 
 ##### Response
 
@@ -203,7 +206,7 @@ or delete an existing entity as OData supports it.
 
 #### Getting MetaData
 
-We can get metadata of entities, as shown in this example.
+We can get the metadata of entities, as shown in this example.
 
 ##### Request
 
@@ -309,5 +312,5 @@ Metadata is used to investigate the service.
 
 ### Sample Project
 
-You can get the source code of the sample project here:
+You can see the source code of the sample project here:
 <https://github.com/aspnetboilerplate/sample-odata>
