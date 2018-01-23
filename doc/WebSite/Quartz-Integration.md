@@ -1,21 +1,21 @@
 ### Introduction
 
-[Quartz](http://www.quartz-scheduler.net/) is a is a full-featured, open
-source job scheduling system that can be used from smallest apps to
-large scale enterprise systems.
-[Abp.Quartz](https://www.nuget.org/packages/Abp.Quartz) package simply
+[Quartz](http://www.quartz-scheduler.net/) is a full-featured, open-source 
+job scheduling system that can be used from the smallest apps to
+large-scale enterprise systems.
+The [Abp.Quartz](https://www.nuget.org/packages/Abp.Quartz) package simply
 integrates Quartz to ASP.NET Boilerplate.
 
 ASP.NET Boilerplate has a built-in [persistent background job queue and
 background worker](Background-Jobs-And-Workers.md) system. Quartz can
 be a good alternative if you have advanced scheduling requirements for
-your background workers. Also, [Hangfire](Hangfire-Integration.md) can
-be a good alternative for persistent background job queue.
+your background workers. [Hangfire](Hangfire-Integration.md) can also
+be a good alternative for persistent background job queues.
 
 ### Installation
 
-Install [**Abp.Quartz**](https://www.nuget.org/packages/Abp.Quartz)
-nuget package to your project and add a **DependsOn** attribute to your
+Install the [**Abp.Quartz**](https://www.nuget.org/packages/Abp.Quartz)
+NuGet package to your project and add a **DependsOn** attribute to your
 [module](Module-System.md) for **AbpQuartzModule**:
 
     [DependsOn(typeof (AbpQuartzModule))]
@@ -27,9 +27,9 @@ nuget package to your project and add a **DependsOn** attribute to your
 ### Creating Jobs
 
 To create a new job, you can either implement Quartz's IJob interface,
-or derive from JobBase class (defined in Abp.Quartz package) that has
-some helper properties/methods (for logging and localization for
-example). A simple job class is shown below:
+or derive from the JobBase class (defined in the Abp.Quartz package) that has
+some helper properties/methods for logging and localization, for
+example. A simple job class is shown below:
 
     public class MyLogJob : JobBase, ITransientDependency
     {
@@ -40,11 +40,11 @@ example). A simple job class is shown below:
     }
 
 We simply implemented the **Execute** method to write a log. You can see
-Quartz's [documentation](http://www.quartz-scheduler.net/) for more.
+Quartz's [documentation](http://www.quartz-scheduler.net/) for more info.
 
 ### Schedule Jobs
 
-**IQuartzScheduleJobManager** is used to schedule jobs. You can inject
+The **IQuartzScheduleJobManager** is used to schedule jobs. You can inject
 it to your class (or you can Resolve and use it in your module's
 PostInitialize method) to schedule jobs. An example Controller that
 schedules a job:
@@ -84,4 +84,4 @@ schedules a job:
 ### More
 
 Please see Quartz's [documentation](http://www.quartz-scheduler.net/)
-for more information about Quartz.
+for more information.
