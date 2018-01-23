@@ -32,10 +32,6 @@ namespace Abp.Tests.Extensions
             var firstMondayOfJan2018 = DayOfWeek.Monday.FindNthWeekDayOfMonth(2018, 1, 1);
             firstMondayOfJan2018.ShouldBe(new DateTime(2018, 1, 1));
 
-            // should normalize the nth
-            firstMondayOfJan2018 = DayOfWeek.Monday.FindNthWeekDayOfMonth(2018, 1, -9999);
-            firstMondayOfJan2018.ShouldBe(new DateTime(2018, 1, 1));
-
             var secondFridayOfJan2018 = DayOfWeek.Friday.FindNthWeekDayOfMonth(2018, 1, 2);
 
             secondFridayOfJan2018.ShouldBe(new DateTime(2018, 1, 12));
@@ -45,11 +41,6 @@ namespace Abp.Tests.Extensions
             lastSundayOfJan2018.ShouldBe(new DateTime(2018, 1, 28));
 
             var lastWednesdayOfJan2018 = DayOfWeek.Wednesday.FindNthWeekDayOfMonth(2018, 1, 5);
-
-            lastWednesdayOfJan2018.ShouldBe(new DateTime(2018, 1, 31));
-
-            // should normalize the nth
-            lastWednesdayOfJan2018 = DayOfWeek.Wednesday.FindNthWeekDayOfMonth(2018, 1, 9999);
 
             lastWednesdayOfJan2018.ShouldBe(new DateTime(2018, 1, 31));
         }

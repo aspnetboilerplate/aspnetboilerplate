@@ -88,25 +88,13 @@ namespace Abp.Tests.Extensions
         }
 
         [Fact]
-        public void Trim_Test()
+        public void TrimMilliseconds_Test()
         {
             var now = Clock.Now;
 
-            var trimmed = now.Trim();
+            var trimmed = now.TrimMilliseconds();
 
             trimmed.Millisecond.ShouldBe(0);
-        }
-
-        //TODO: Birthday Tests?
-
-        [Fact]
-        public void Age_Test()
-        {
-            var birthday = new DateTime(1980, 11, 20);
-            var compareDate = new DateTime(2018, 1, 22);
-            var age = birthday.Age(compareDate);
-
-            age.ShouldBe(37);
         }
     }
 }
