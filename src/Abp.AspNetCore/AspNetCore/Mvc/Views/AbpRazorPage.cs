@@ -2,8 +2,11 @@
 using Abp.Application.Features;
 using Abp.Authorization;
 using Abp.Configuration;
+using Abp.Extensions;
 using Abp.Localization;
 using Abp.Localization.Sources;
+using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc.Razor;
 using Microsoft.AspNetCore.Mvc.Razor.Internal;
 
@@ -22,17 +25,15 @@ namespace Abp.AspNetCore.Mvc.Views
         {
             get
             {
-                //TODO: Implement this
-                return "/";
-                //var appPath = HttpContext.Current.Request.ApplicationPath;
-                //if (appPath == null)
-                //{
-                //    return "/";
-                //}
+                var appPath = Context.Request.PathBase.Value;
+                if (appPath == null)
+                {
+                    return "/";
+                }
 
-                //appPath = appPath.EnsureEndsWith('/');
+                appPath = appPath.EnsureEndsWith('/');
 
-                //return appPath;
+                return appPath;
             }
         }
 
