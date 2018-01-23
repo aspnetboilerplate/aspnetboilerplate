@@ -34,17 +34,12 @@ namespace Abp.Extensions
         /// <remarks>Compensates for 4th and 5th DayOfWeek of Month</remarks>
         public static DateTime FindNthWeekDayOfMonth(this DayOfWeek dayOfWeek, int year, int month, int n)
         {
+            if (n < 1 || n > 5)
+            {
+                throw new ArgumentOutOfRangeException(nameof(n));
+            }
+
             var y = 0;
-
-            if (n > 5)
-            {
-                n = 5;
-            }
-
-            if (n < 1)
-            {
-                n = 1;
-            }
 
             var daysOfMonth = DateTimeExtensions.DaysOfMonth(year, month);
 

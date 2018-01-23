@@ -116,59 +116,9 @@ namespace Abp.Extensions
         /// </summary>
         /// <param name="date"></param>
         /// <returns></returns>
-        public static DateTime Trim(this DateTime date)
+        public static DateTime TrimMilliseconds(this DateTime date)
         {
             return new DateTime(date.Year, date.Month, date.Day, date.Hour, date.Minute, date.Second, date.Kind);
-        }
-
-        /// <summary>
-        /// Gets the next birthday given a birth date
-        /// </summary>
-        /// <param name="birthday">The date of birth</param>
-        /// <returns>The next birthday</returns>
-        public static DateTime NextBirthday(this DateTime birthday)
-        {
-            var currentYear = Clock.Now.Year;
-            var birthYear = birthday.Year;
-
-            // yep, we're going to allow negative ages
-            var age = currentYear - birthYear;
-            var nextBirthday = new DateTime(birthday.Year, birthday.Month, birthday.Day).AddYears(age);
-
-            if (nextBirthday.Date < Clock.Now.Date)
-                nextBirthday = nextBirthday.AddYears(1);
-
-            return nextBirthday;
-        }
-
-        /// <summary>
-        /// Gets the next birthday given a birth date
-        /// </summary>
-        /// <param name="birthday">The date of birth</param>
-        /// <returns>The next birthday</returns>
-        public static DateTime? NextBirthday(this DateTime? birthday)
-        {
-            return birthday?.NextBirthday();
-        }
-
-        /// <summary>
-        /// Determines the Age of a Person
-        /// </summary>
-        /// <param name="date">The birth date</param>
-        /// <param name="compareDate">The date to compare, if null, uses clock.now</param>
-        /// <returns></returns>
-        public static int Age(this DateTime date, DateTime? compareDate = null)
-        {
-            var now = Clock.Now.Date;
-            if (compareDate.HasValue)
-            {
-                now = compareDate.Value;
-            }
-
-            var age = now.Year - date.Year;
-            if (date > now.AddYears(-age)) age--;
-
-            return age;
         }
     }
 }
