@@ -1,7 +1,7 @@
 ### Introduction
 
 This document is for .NET Framework 4.6.1. If you're interested in ASP.NET
-Core, see the [SignalR AspNetCore Integration](SignalR-AspNetCore-Integration.md) documentation, instead.
+Core, see the [SignalR AspNetCore Integration](SignalR-AspNetCore-Integration.md) documentation instead.
 
 The [Abp.Web.SignalR](http://www.nuget.org/packages/Abp.Web.SignalR) NuGet
 package makes it easy to use **SignalR** in ASP.NET Boilerplate-based
@@ -24,7 +24,7 @@ NuGet package to your project (generally to your Web layer) and add a
     }
 
 
-Then use then **MapSignalR** method in your OWIN startup class as you always
+Then use the **MapSignalR** method in your OWIN startup class as you always
 do:
 
     [assembly: OwinStartup(typeof(Startup))]
@@ -59,7 +59,7 @@ should include it after signalr hubs:
     <script src="~/Abp/Framework/scripts/libs/abp.signalr.js"></script>
 
 
-That's all you have to do! SignalR is properly configured and integrated in to your
+That's all you have to do! SignalR is properly configured and integrated into your
 project.
 
 ### Connection Establishment
