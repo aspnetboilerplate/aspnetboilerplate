@@ -11,9 +11,9 @@ The saved fields for an entity property change are: Related **tenant id**,
 **entity change id**, **property name**, **property type name**,
 **new value** and the **original value**.
 
-The entity changes are grouped in a change set for each SaveChanges call.
+The entity changes are grouped in a Change Set for each SaveChanges call.
 
-The saved fields for an entity change set are: Related **tenant id**,
+The saved fields for an entity Change Set are: Related **tenant id**,
 changer **user id**, **creation time**, **reason**, the client's
 **IP address**, the client's **computer name** and the **browser info** (if
 entities are changed in a web request).
