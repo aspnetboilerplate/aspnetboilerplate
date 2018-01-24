@@ -1,6 +1,8 @@
 ﻿using System;
 using System.IO;
 using Abp.AspNetCore;
+using Abp.AspNetCore.Configuration;
+using Abp.AspNetCore.Mvc.Extensions;
 using Abp.Castle.Logging.Log4Net;
 using Abp.PlugIns;
 using AbpAspNetCoreDemo.Controllers;
@@ -86,9 +88,7 @@ namespace AbpAspNetCoreDemo
 
             app.UseMvc(routes =>
             {
-                routes.MapRoute(
-                    name: "default",
-                    template: "{controller=Home}/{action=Index}/{id?}");
+                app.ApplicationServices.GetRequiredService<IAbpAspNetCoreConfiguration>().RouteConfiguration.ConfigureAll(routes);
             });
         }
     }
