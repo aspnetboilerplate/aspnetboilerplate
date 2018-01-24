@@ -100,7 +100,10 @@ namespace Abp.Domain.Entities
         public override int GetHashCode()
         {
             if (Id == null)
+            {
                 return 0;
+            }
+
             return Id.GetHashCode();
         }
 
