@@ -1,18 +1,18 @@
 ### Introduction
 
 This document is for .NET Framework 4.6.1. If you're interested in ASP.NET
-Core, see [SignalR AspNetCore Integration](SignalR-AspNetCore-Integration.md) documentation.
+Core, see the [SignalR AspNetCore Integration](SignalR-AspNetCore-Integration.md) documentation, instead.
 
-[Abp.Web.SignalR](http://www.nuget.org/packages/Abp.Web.SignalR) NuGet
-package makes it easily to use **SignalR** in ASP.NET Boilerplate-based
-applications. See [SignalR documentation](http://www.asp.net/signalr)
-for detailed information on SignalR.
+The [Abp.Web.SignalR](http://www.nuget.org/packages/Abp.Web.SignalR) NuGet
+package makes it easy to use **SignalR** in ASP.NET Boilerplate-based
+applications. See the [SignalR documentation](http://www.asp.net/signalr)
+for more detailed information on SignalR.
 
 ### Installation
 
-#### Server Side
+#### Server-Side
 
-Install
+Install the
 [**Abp.Web.SignalR**](http://www.nuget.org/packages/Abp.Web.SignalR)
 NuGet package to your project (generally to your Web layer) and add a
 **dependency** to your module:
@@ -24,7 +24,7 @@ NuGet package to your project (generally to your Web layer) and add a
     }
 
 
-Then use **MapSignalR** method in your OWIN startup class as you always
+Then use then **MapSignalR** method in your OWIN startup class as you always
 do:
 
     [assembly: OwinStartup(typeof(Startup))]
@@ -41,32 +41,32 @@ do:
         }
     }
 
-**Note:** Abp.Web.SignalR only depends on Microsoft.AspNet.SignalR.Core
-package. So, you will also need to **install**
+**Note:** Abp.Web.SignalR only depends on the Microsoft.AspNet.SignalR.Core
+package, so you will also need to **install** the
 **[Microsoft.AspNet.SignalR](https://www.nuget.org/packages/Microsoft.AspNet.SignalR)**
-package to your Web project if not installed before (See [SignalR
-documents](http://www.asp.net/signalr) for more).
+package to your Web project, if you haven't installed it before (See the [SignalR
+documents](http://www.asp.net/signalr) for more info).
 
-#### Client Side
+#### Client-Side
 
-**abp.signalr.js** script should be included to the page. It's located
-in
+The **abp.signalr.js** script should be included on the page. It's located
+in the
 **[Abp.Web.Resources](https://www.nuget.org/packages/Abp.Web.Resources)**
-package (It's already installed in [startup templates](/Templates)). We
+package (It's already installed in the [startup templates](/Templates)). We
 should include it after signalr hubs:
 
     <script src="~/signalr/hubs"></script>
     <script src="~/Abp/Framework/scripts/libs/abp.signalr.js"></script>
 
 
-That's all. SignalR is properly configured and integrated to your
+That's all you have to do! SignalR is properly configured and integrated in to your
 project.
 
 ### Connection Establishment
 
 ASP.NET Boilerplate **automatically connects** to the server (from the
-client) when **abp.signalr.js** is included to your page. This is
-generally fine. But there may be cases you don't want it to. You can add
+client) when **abp.signalr.js** is included on your page. This is
+generally fine, but there may be cases where you might not want to. You can add
 these lines just before including **abp.signalr.js** to disable auto
 connecting:
 
@@ -75,55 +75,55 @@ connecting:
         abp.signalr.autoConnect = false;
     </script>
 
-In this case, you can call **abp.signalr.connect()** function manually
+In this case, you can call the **abp.signalr.connect()** function manually
 whenever you need to connect to the server.
 
 ASP.NET Boilerplate also **automatically reconnects** to the server
-(from the client) when client disconnects, if
+(from the client) when the client disconnects, if
 **abp.signalr.autoConnect** is true.
 
-**"abp.signalr.connected"** global event is triggered when client
+The **"abp.signalr.connected"** global event is triggered when the client
 connects to the server. You can register to this event to take actions
-when the connection is successfully established. See JavaScript [event
+when the connection is successfully established. See the JavaScript [event
 bus documentation](/Pages/Documents/Javascript-API/Event-Bus) for more
-about client side events.
+information about client-side events.
 
 ### Built-In Features
 
-You can use all the power of SignalR in your applications. In addition,
-**Abp.Web.SignalR** package implements some built-in features.
+You can use the full power of SignalR in your applications. Additionally,
+the **Abp.Web.SignalR** package implements some built-in features.
 
 #### Notification
 
-**Abp.Web.SignalR** package implements **IRealTimeNotifier** to send
-real time notifications to clients (see [notification
-system](/Pages/Documents/Notification-System)). Thus, your users can get
-real time push notifications.
+The **Abp.Web.SignalR** package implements the **IRealTimeNotifier** to send
+real-time notifications to clients (see the [notification
+system](/Pages/Documents/Notification-System)). This way, your users can get
+real-time push notifications.
 
 #### Online Clients
 
-ASP.NET Boilerplate provides **IOnlineClientManager** to get information
-about online users (inject IOnlineClientManager and use
-GetByUserIdOrNull, GetAllClients, IsOnline methods for example).
-IOnlineClientManager needs a communication infrastructure to properly
-work. **Abp.Web.SignalR** package provides the infrastructure. So, you
-can inject and use IOnlineClientManager in any layer of your application
+ASP.NET Boilerplate provides the **IOnlineClientManager** to get information
+about online users (inject IOnlineClientManager and use the
+GetByUserIdOrNull, GetAllClients, and IsOnline methods, for example).
+The IOnlineClientManager needs a communication infrastructure to properly
+work. The **Abp.Web.SignalR** package provides that infrastructure, so you
+can inject and use IOnlineClientManager in any layer of your application,
 if SignalR is installed.
 
 #### PascalCase vs. camelCase
 
-Abp.Web.SignalR package overrides SignalR's default **ContractResolver**
-to use **CamelCasePropertyNamesContractResolver** on serialization.
-Thus, we can have classes have **PascalCase** properties on the server
+The Abp.Web.SignalR package overrides SignalR's default **ContractResolver**
+to use the **CamelCasePropertyNamesContractResolver** on serialization.
+This way, we can have classes with **PascalCase** properties on the server
 and use them as **camelCase** on the client for sending/receiving
 objects (because camelCase is preferred notation in JavaScript). If you
 want to ignore this for your classes in some assemblies, then you can
-add those assemblies to AbpSignalRContractResolver.**IgnoredAssemblies**
+add those assemblies to the AbpSignalRContractResolver.**IgnoredAssemblies**
 list.
 
 ### Your SignalR Code
 
-**Abp.Web.SignalR** package also simplifies your SignalR code. Consider
+The **Abp.Web.SignalR** package also simplifies your SignalR code. Imagine
 that we want to add a Hub to our application:
 
     public class MyChatHub : Hub, ITransientDependency
@@ -156,7 +156,7 @@ that we want to add a Hub to our application:
         }
     }
 
-We implemented **ITransientDependency** to simply register our hub to
+We implemented the **ITransientDependency** to simply register our hub via the
 [dependency injection](/Pages/Documents/Dependency-Injection) system
 (you can make it singleton based on your needs). We
 [property-injected](/Pages/Documents/Dependency-Injection#property-injection-pattern)
@@ -164,13 +164,12 @@ the [session](/Pages/Documents/Abp-Session) and
 [logger](/Pages/Documents/Logging).
 
 **SendMessage** is a method of our hub that can be used by clients. We
-call **getMessage** function of **all** clients in this method. We can
-use [AbpSession](/Pages/Documents/Abp-Session) to get current user id
-(if user logged in) as done above. We also overrided **OnConnected** and
-**OnDisconnected**, which is just for demonstration and not needed here
-actually.
+call the **getMessage** function of **all** clients in this method. We can
+use [AbpSession](/Pages/Documents/Abp-Session) to get the current user id
+(if user logged in) as done above. We also made an override of **OnConnected** and
+**OnDisconnected**, but for demonstration purposes only.
 
-Here, the **client side** JavaScript code to send/receive messages using
+Here's the **client-side** JavaScript code to send/receive messages using
 our hub.
 
     var chatHub = $.connection.myChatHub; // Get a reference to the hub
@@ -179,10 +178,10 @@ our hub.
         console.log('received message: ' + message);
     };
 
-    abp.event.on('abp.signalr.connected', function() { // Register for connect event
+    abp.event.on('abp.signalr.connected', function() { // Register to connect event
         chatHub.server.sendMessage("Hi everybody, I'm connected to the chat!"); // Send a message to the server
     });
 
-Then we can use **chatHub** anytime we need to send message to the
-server. See [SignalR documentation](http://www.asp.net/signalr) for
-detailed information on SignalR.
+We can then use the **chatHub** anytime we need to send a message to the
+server. See the [SignalR documentation](http://www.asp.net/signalr) for
+more information.
