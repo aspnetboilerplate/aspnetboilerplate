@@ -163,5 +163,5 @@ value is disposed, the Reason is automatically restored to the previous value.
 -   A property must be **public** in order to be saved in the change logs.
     Private and protected properties are ignored.
 -   DisableAuditing takes priority over the Audited attribute.
--   This only works for entities.
--   This only works for scalar properties, e.g. string, int, bool...
+-   Entity History only works for entities.
+-   Entity History only works for scalar properties, e.g. string, int, bool...
