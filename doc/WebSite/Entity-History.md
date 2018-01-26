@@ -26,7 +26,7 @@ No entities are automatically tracked by default. You should configure entities 
 
 #### About IEntityHistoryStore
 
-The Entity History tracking system uses the **IEntityHistoryStore** to
+The Entity History tracking system uses **IEntityHistoryStore** to
 save change information. While you can implement it in your own way,
 it's fully implemented in the **module-zero** project.
 
@@ -106,7 +106,7 @@ balances change and "Money transfer" is recorded as the Reason for this change s
 Since a balance change can be due to other reasons, the Reason property explains
 why these changes were made.
 
-The **Abp.AspNetCore** package implements the **HttpRequestEntityChangeSetReasonProvider**,
+The **Abp.AspNetCore** package implements **HttpRequestEntityChangeSetReasonProvider**,
 which returns the HttpContext.Request's URL as the Reason.
 
 #### UseCase Attribute
