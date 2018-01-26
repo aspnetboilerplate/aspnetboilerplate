@@ -18,7 +18,7 @@ changer **user id**, **creation time**, **reason**, the client's
 **IP address**, the client's **computer name** and the **browser info** (if
 entities are changed in a web request).
 
-The Entity History tracking system uses the
+The Entity History tracking system uses
 [**IAbpSession**](/Pages/Documents/Abp-Session) to
 get the current UserId and TenantId.
 
