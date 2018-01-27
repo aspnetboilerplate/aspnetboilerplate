@@ -20,7 +20,7 @@ Boilerplate does all of this automatically.
 
 If a unit of work method calls another unit of work method, both use the
 same connection & transaction. The first entered method manages the
-connection & transaction and then the others use reuse it.
+connection & transaction and then the others reuse it.
 
 #### Conventional Unit Of Work Methods
 
@@ -168,7 +168,7 @@ to disable the unit of work:
     the UnitOfWorkScope class as described above.
 
 Note that if a unit of work method calls this RemoveFriendship method,
-disabling this method is ignored, and it wil use the same unit of work with
+disabling this method is ignored, and it will use the same unit of work with
 the caller method. So, disable carefully! The code above
 works well since the repository methods are a unit of work by default.
 
