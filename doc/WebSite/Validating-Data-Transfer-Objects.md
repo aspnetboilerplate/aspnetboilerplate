@@ -1,31 +1,31 @@
 ### Introduction to validation
 
-Inputs of an application should be validated first. This input can be
-sent by user or another application. In a web application, validation is
-usually implemented twice: in client and in the server. Client-side
+The inputs of an application should be validated first. The input can be
+sent by a user or another application. In a web application, validation is
+usually implemented twice: on the client and server sides. Client-side
 validation is implemented mostly for user experience. It's better to
 check a form first in the client and show invalid fields to the user.
-But, server-side validation is more critical and unavoidable.
+However, server-side validation is unavoidable and more critical.
 
-Server side validation is generally implemented in [application
+Server-side validation is generally implemented in [application
 services](/Pages/Documents/Application-Services) or controllers (in
-general, all services get data from presentation layer). An application
-service method should first check (validate) input and then use it.
-ASP.NET Boilerplate provides a good infrastructure to automatically
-validate all inputs of an application for;
+general, all services get data from the presentation layer). An application
+service method should first check (validate) the input and then use it.
+ASP.NET Boilerplate provides the infrastructure to automatically
+validate all inputs of an application for:
 
 -   All [application service](Application-Services.md) methods
 -   All [ASP.NET Core](AspNet-Core.md) MVC controller actions
 -   All ASP.NET [MVC](MVC-Controllers.md) and [Web
     API](Web-API-Controllers.md) controller actions.
 
-See Disabling Validation section to disable validation if needed.
+See the Disabling Validation section to disable validation if needed.
 
 ### Using data annotations
 
 ASP.NET Boilerplate supports data annotation attributes. Assume that
 we're developing a Task application service that is used to create a
-task and gets an input as shown below:
+task by getting an input as shown below:
 
     public class CreateTaskInput
     {
@@ -35,10 +35,10 @@ task and gets an input as shown below:
         public string Description { get; set; }
     }
 
-Here, **Description** property is marked as **Required**.
+Here, the **Description** property is marked as **Required**.
 AssignedPersonId is optional. There are also many attributes (like
-MaxLength, MinLength, RegularExpression...) in
-**System.ComponentModel.DataAnnotations** namespace. See Task
+MaxLength, MinLength, RegularExpression...) in the
+**System.ComponentModel.DataAnnotations** namespace. See the Task
 [application service](/Pages/Documents/Application-Services)
 implementation:
 
@@ -66,20 +66,20 @@ implementation:
         }
     }
 
-As you see, no validation code is written since ASP.NET Boilerplate does
+As you can see there is no validation code written since ASP.NET Boilerplate does
 it automatically. ASP.NET Boilerplate also checks if input is **null**
-and throws **AbpValidationException** if so. So, you don't have to write
-**null-check** code (guard clause). It also throws
+and throws an **AbpValidationException** if it is. You therefore don't have to write
+**null-check** code (guard clauses). It also throws an
 AbpValidationException if any of the input properties are invalid.
 
-This machanism is similar to ASP.NET MVC's validation but notice that an
-application service class is not derived from Controller, it's a plain
-class and can work even out of a web application.
+This machanism is similar to ASP.NET MVC's validation but note that an
+application service class is not derived from the Controller, it's a plain
+class and can work even outside of a web application.
 
 ### Custom Validation
 
 If data annotations are not sufficient for your case, you can implement
-**ICustomValidate** interface as shown below:
+the **ICustomValidate** interface as shown below:
 
     public class CreateTaskInput : ICustomValidate
     {
@@ -99,12 +99,12 @@ If data annotations are not sufficient for your case, you can implement
         }
     }
 
-ICustomValidate interface declares **AddValidationErrors** method to be
-implemented. We must add **ValidationResult** objects to
+The ICustomValidate interface declares the **AddValidationErrors** method to be
+implemented. We must add the **ValidationResult** objects to the
 **context.Results** list if there are validation errors. You can also
-use context.IocResolver to [resolve
-dependencies](Dependency-Injection.md) if needed in validation
-progress. 
+use the context.IocResolver to [resolve
+dependencies](Dependency-Injection.md) if needed in the validation
+process. 
 
 In addition to ICustomValidate, ABP also supports .NET's standard
 IValidatableObject interface. You can also implement it to perform
@@ -124,10 +124,10 @@ use these attributes to control validation:
 ### Normalization
 
 We may need to perform an extra operation to arrange DTO parameters
-after validation. ASP.NET Boilerplate defines **IShouldNormalize**
-interface that has **Normalize** method for that. If you implement this
-interface, Normalize method is called just after validation (and just
-before method call). Assume that our DTO gets a Sorting direction. If
+after validation. ASP.NET Boilerplate defines an **IShouldNormalize**
+interface that has a **Normalize** method. If you implement this
+interface, the Normalize method is called just after validation (and just
+before the method call). Assume that our DTO gets a Sorting direction. If
 it's not supplied, we want to set a default sorting:
 
     public class GetTasksInput : IShouldNormalize
