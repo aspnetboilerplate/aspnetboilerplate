@@ -1,6 +1,6 @@
 ### Introduction to validation
 
-The inputs of an application should be validated first. The input can be
+In an application, the inputs should be validated first. The input can be
 sent by a user or another application. In a web application, validation is
 usually implemented twice: on the client and server sides. Client-side
 validation is implemented mostly for user experience. It's better to
@@ -12,7 +12,7 @@ services](/Pages/Documents/Application-Services) or controllers (in
 general, all services get data from the presentation layer). An application
 service method should first check (validate) the input and then use it.
 ASP.NET Boilerplate provides the infrastructure to automatically
-validate all inputs of an application for:
+validate inputs of an application for:
 
 -   All [application service](Application-Services.md) methods
 -   All [ASP.NET Core](AspNet-Core.md) MVC controller actions
@@ -25,7 +25,7 @@ See the Disabling Validation section to disable validation if needed.
 
 ASP.NET Boilerplate supports data annotation attributes. Assume that
 we're developing a Task application service that is used to create a
-task by getting an input as shown below:
+task by when it gets an input as shown below:
 
     public class CreateTaskInput
     {
@@ -66,13 +66,13 @@ implementation:
         }
     }
 
-As you can see there is no validation code written since ASP.NET Boilerplate does
+As you can see, there is no validation code written since ASP.NET Boilerplate does
 it automatically. ASP.NET Boilerplate also checks if input is **null**
-and throws an **AbpValidationException** if it is. You therefore don't have to write
+and throws an **AbpValidationException** if it is, so you don't have to write
 **null-check** code (guard clauses). It also throws an
 AbpValidationException if any of the input properties are invalid.
 
-This machanism is similar to ASP.NET MVC's validation but note that an
+A Controller is similar to ASP.NET MVC's validation but note that an
 application service class is not derived from the Controller, it's a plain
 class and can work even outside of a web application.
 
@@ -123,7 +123,7 @@ use these attributes to control validation:
 
 ### Normalization
 
-We may need to perform an extra operation to arrange DTO parameters
+We may need to perform an extra operations to prepare DTO parameters
 after validation. ASP.NET Boilerplate defines an **IShouldNormalize**
 interface that has a **Normalize** method. If you implement this
 interface, the Normalize method is called just after validation (and just
