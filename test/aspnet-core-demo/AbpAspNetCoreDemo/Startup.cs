@@ -85,7 +85,7 @@ namespace AbpAspNetCoreDemo
 
             app.UseStaticFiles();
             app.UseEmbeddedFiles(); //Allows to expose embedded files to the web!
-
+         
             app.UseMvc(routes =>
             {
                 app.ApplicationServices.GetRequiredService<IAbpAspNetCoreConfiguration>().RouteConfiguration.ConfigureAll(routes);

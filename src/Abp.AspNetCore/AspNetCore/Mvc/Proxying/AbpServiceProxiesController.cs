@@ -17,10 +17,11 @@ namespace Abp.AspNetCore.Mvc.Proxying
             _proxyScriptManager = proxyScriptManager;
         }
 
-        [Produces("text/javascript", "text/plain")]
-        public string GetAll(ApiProxyGenerationModel model)
+        [Produces("application/x-javascript")]
+        public ContentResult GetAll(ApiProxyGenerationModel model)
         {
-            return _proxyScriptManager.GetScript(model.CreateOptions());
+            var script = _proxyScriptManager.GetScript(model.CreateOptions());
+            return Content(script, "application/x-javascript");
         }
     }
 }
