@@ -72,8 +72,8 @@ and throws an **AbpValidationException** if it is, so you don't have to write
 **null-check** code (guard clauses). It also throws an
 AbpValidationException if any of the input properties are invalid.
 
-A Controller is similar to ASP.NET MVC's validation but note that an
-application service class is not derived from the Controller, it's a plain
+This mechanism is similar to ASP.NET MVC's validation but note that an
+application service class is not derived from a Controller, it's a plain
 class and can work even outside of a web application.
 
 ### Custom Validation
