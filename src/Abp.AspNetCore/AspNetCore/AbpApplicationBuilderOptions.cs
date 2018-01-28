@@ -15,13 +15,13 @@
         /// <summary>
         /// Default: true.
         /// </summary>
-        public bool AddSecurityHeaders { get; set; }
+        public bool UseSecurityHeaders { get; set; }
 
         public AbpApplicationBuilderOptions()
         {
             UseCastleLoggerFactory = true;
             UseAbpRequestLocalization = true;
-            AddSecurityHeaders = true;
+            UseSecurityHeaders = true;
         }
     }
 }
