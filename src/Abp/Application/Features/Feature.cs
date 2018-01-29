@@ -51,7 +51,7 @@ namespace Abp.Application.Features
 
         /// <summary>
         /// A brief description for this feature.
-        /// This can be used to show the feature's description on the UI. 
+        /// This can be used to show this feature's description on the UI. 
         /// </summary>
         public ILocalizableString Description { get; set; }
         
@@ -64,7 +64,7 @@ namespace Abp.Application.Features
 
         /// <summary>
         /// Default value of the feature.
-        /// This value is used if the feature's value is not defined for a current edition or tenant.
+        /// This value is used if this feature's value is not defined for a current edition or tenant.
         /// </summary>
         public string DefaultValue { get; set; }
 
@@ -86,17 +86,12 @@ namespace Abp.Application.Features
         /// <param name="name">Unique name of the feature</param>
         /// <param name="defaultValue">Default value</param>
         /// <param name="displayName">Display name of the feature</param>
-        /// <param name="description">A brief description for this feature</param>
+        /// <param name="description">A brief description for the feature</param>
         /// <param name="scope">Feature scope</param>
         /// <param name="inputType">Input type</param>
         public Feature(string name, string defaultValue, ILocalizableString displayName = null, ILocalizableString description = null, FeatureScopes scope = FeatureScopes.All, IInputType inputType = null)
         {
-            if (name.IsNullOrEmpty())
-            {
-                throw new ArgumentNullException("name");
-            }
-
-            Name = name;
+            Name = name ?? throw new ArgumentNullException("name");
             DisplayName = displayName;
             Description = description;
             Scope = scope;
