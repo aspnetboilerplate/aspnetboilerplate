@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Threading;
+using System.Threading.Tasks;
 using Abp.Dependency;
 using Abp.Quartz.Configuration;
 using Abp.TestBase;
@@ -54,12 +55,12 @@ namespace Abp.Quartz.Tests
         }
 
         [Fact]
-        public void QuartzScheduler_Jobs_ShouldBeRegistered()
+        public async Task QuartzScheduler_Jobs_ShouldBeRegistered()
         {
             _abpQuartzConfiguration.Scheduler.ShouldNotBeNull();
             _abpQuartzConfiguration.Scheduler.IsStarted.ShouldBe(true);
-            _abpQuartzConfiguration.Scheduler.CheckExists(JobKey.Create("HelloJobKey")).ShouldBe(true);
-            _abpQuartzConfiguration.Scheduler.CheckExists(JobKey.Create("GoodByeJobKey")).ShouldBe(true);
+            (await _abpQuartzConfiguration.Scheduler.CheckExists(JobKey.Create("HelloJobKey"))).ShouldBe(true);
+            (await _abpQuartzConfiguration.Scheduler.CheckExists(JobKey.Create("GoodByeJobKey"))).ShouldBe(true);
         }
 
         [Fact]
@@ -86,9 +87,11 @@ namespace Abp.Quartz.Tests
             _helloDependency = helloDependency;
         }
 
-        public override void Execute(IJobExecutionContext context)
+        public override Task Execute(IJobExecutionContext context)
         {
             _helloDependency.ExecutionCount++;
+
+            return Task.CompletedTask;
         }
     }
 
@@ -102,9 +105,12 @@ namespace Abp.Quartz.Tests
             _goodByeDependency = goodByeDependency;
         }
 
-        public override void Execute(IJobExecutionContext context)
+
+        public override Task Execute(IJobExecutionContext context)
         {
             _goodByeDependency.ExecutionCount++;
+
+            return Task.CompletedTask;
         }
     }
 

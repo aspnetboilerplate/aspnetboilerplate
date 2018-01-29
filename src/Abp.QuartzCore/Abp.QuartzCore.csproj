@@ -16,7 +16,7 @@
     <GenerateAssemblyCopyrightAttribute>false</GenerateAssemblyCopyrightAttribute>
     <GeneratePackageOnBuild>False</GeneratePackageOnBuild>
     <RootNamespace>Abp</RootNamespace>
-    <Description>Abp.QuartzCore</Description>
+    <Description>IMPORTANT: This package has been deprecated! Use Abp.Quartz instead.</Description>
   </PropertyGroup>
   
   <ItemGroup>
@@ -27,7 +27,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Include="Quartz" Version="3.0.0-beta1" />
+    <PackageReference Include="Quartz" Version="3.0.2" />
   </ItemGroup>
 
   <ItemGroup>

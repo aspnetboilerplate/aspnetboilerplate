@@ -21,7 +21,7 @@ namespace Abp.Quartz
             _backgroundJobConfiguration = backgroundJobConfiguration;
         }
 
-        public Task ScheduleAsync<TJob>(Action<JobBuilder> configureJob, Action<TriggerBuilder> configureTrigger)
+        public async Task ScheduleAsync<TJob>(Action<JobBuilder> configureJob, Action<TriggerBuilder> configureTrigger)
             where TJob : IJob
         {
             var jobToBuild = JobBuilder.Create<TJob>();
@@ -32,9 +32,7 @@ namespace Abp.Quartz
             configureTrigger(triggerToBuild);
             var trigger = triggerToBuild.Build();
 
-            _quartzConfiguration.Scheduler.ScheduleJob(job, trigger);
-
-            return Task.FromResult(0);
+            await _quartzConfiguration.Scheduler.ScheduleJob(job, trigger);
         }
 
         public override void Start()
