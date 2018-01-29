@@ -43,7 +43,7 @@ namespace Abp.Application.Features
         public string Name { get; private set; }
 
         /// <summary>
-        /// Display name of the feature.
+        /// Display name of this feature.
         /// This can be used to show features on the UI.
         /// </summary>
         public ILocalizableString DisplayName { get; set; }
@@ -62,7 +62,7 @@ namespace Abp.Application.Features
         public IInputType InputType { get; set; }
 
         /// <summary>
-        /// Default value of the feature.
+        /// Default value of this feature.
         /// This value is used if this feature's value is not defined for the current edition or tenant.
         /// </summary>
         public string DefaultValue { get; set; }
