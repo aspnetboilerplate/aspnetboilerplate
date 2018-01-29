@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Collections.Immutable;
 using Abp.Collections.Extensions;
+using Abp.Extensions;
 using Abp.Localization;
 using Abp.UI.Inputs;
 
@@ -9,20 +10,20 @@ namespace Abp.Application.Features
 {
     /// <summary>
     /// Defines a feature of the application. A <see cref="Feature"/> can be used in a multi-tenant application
-    /// to enable disable some application features depending on editions and tenants.
+    /// to enable or disable some application features depending on editions and tenants.
     /// </summary>
     public class Feature
     {
         /// <summary>
-        /// Gets/sets arbitrary objects related to this object.
-        /// Gets null if given key does not exists.
-        /// This is a shortcut for <see cref="Attributes"/> dictionary.
+        /// Gets/sets the arbitrary objects related to this object.
+        /// Gets null if a given key does not exist.
+        /// This is a shortcut for the <see cref="Attributes"/> dictionary.
         /// </summary>
         /// <param name="key">Key</param>
         public object this[string key]
         {
-            get { return Attributes.GetOrDefault(key); }
-            set { Attributes[key] = value; }
+            get => Attributes.GetOrDefault(key);
+            set => Attributes[key] = value;
         }
 
         /// <summary>
@@ -33,7 +34,7 @@ namespace Abp.Application.Features
 
         /// <summary>
         /// Parent of this feature, if one exists.
-        /// If set, this feature can be enabled only if parent is enabled.
+        /// If set, this feature can be enabled only if the parent is enabled.
         /// </summary>
         public Feature Parent { get; private set; }
 
@@ -44,13 +45,13 @@ namespace Abp.Application.Features
 
         /// <summary>
         /// Display name of the feature.
-        /// This can be used to show features on UI.
+        /// This can be used to show features on the UI.
         /// </summary>
         public ILocalizableString DisplayName { get; set; }
 
         /// <summary>
         /// A brief description for this feature.
-        /// This can be used to show feature description on UI. 
+        /// This can be used to show the feature's description on the UI. 
         /// </summary>
         public ILocalizableString Description { get; set; }
         
@@ -63,23 +64,20 @@ namespace Abp.Application.Features
 
         /// <summary>
         /// Default value of the feature.
-        /// This value is used if feature's value is not defined for current edition or tenant.
+        /// This value is used if the feature's value is not defined for a current edition or tenant.
         /// </summary>
         public string DefaultValue { get; set; }
 
         /// <summary>
         /// Feature's scope.
-        /// 
         /// </summary>
         public FeatureScopes Scope { get; set; }
 
         /// <summary>
         /// List of child features.
         /// </summary>
-        public IReadOnlyList<Feature> Children
-        {
-            get { return _children.ToImmutableList(); }
-        }
+        public IReadOnlyList<Feature> Children => _children.ToImmutableList();
+
         private readonly List<Feature> _children;
 
         /// <summary>
@@ -93,7 +91,7 @@ namespace Abp.Application.Features
         /// <param name="inputType">Input type</param>
         public Feature(string name, string defaultValue, ILocalizableString displayName = null, ILocalizableString description = null, FeatureScopes scope = FeatureScopes.All, IInputType inputType = null)
         {
-            if (name == null)
+            if (name.IsNullOrEmpty())
             {
                 throw new ArgumentNullException("name");
             }
@@ -112,7 +110,7 @@ namespace Abp.Application.Features
         /// <summary>
         /// Adds a child feature.
         /// </summary>
-        /// <returns>Returns newly created child feature</returns>
+        /// <returns>Returns a newly created child feature</returns>
         public Feature CreateChildFeature(string name, string defaultValue, ILocalizableString displayName = null, ILocalizableString description = null, FeatureScopes scope = FeatureScopes.All, IInputType inputType = null)
         {
             var feature = new Feature(name, defaultValue, displayName, description, scope, inputType) { Parent = this };
