@@ -63,7 +63,7 @@ namespace Abp.Application.Features
 
         /// <summary>
         /// Default value of the feature.
-        /// This value is used if this feature's value is not defined for a current edition or tenant.
+        /// This value is used if this feature's value is not defined for the current edition or tenant.
         /// </summary>
         public string DefaultValue { get; set; }
 
