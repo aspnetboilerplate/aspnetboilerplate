@@ -3,7 +3,7 @@
   <Import Project="..\..\common.props" />
 
   <PropertyGroup>
-    <Version>3.4.0-preview1</Version>
+    <Version>3.4.0-preview2</Version>
     <TargetFramework>netstandard2.0</TargetFramework>
     <GenerateDocumentationFile>true</GenerateDocumentationFile>
     <AssemblyName>Abp.AspNetCore.SignalR</AssemblyName>
