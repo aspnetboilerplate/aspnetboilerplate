@@ -104,8 +104,7 @@ namespace Abp.Quartz.Tests
         {
             _goodByeDependency = goodByeDependency;
         }
-
-
+        
         public override Task Execute(IJobExecutionContext context)
         {
             _goodByeDependency.ExecutionCount++;
