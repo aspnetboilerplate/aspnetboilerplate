@@ -1,8 +1,7 @@
 ### Introduction
 
 The easiest way of starting a new project using ABP and module-zero is
-to create a template on [templates page](/Templates). Remember to check
-"**Include module zero**".
+to create a template on the [templates page](/Templates).
 
 After creating and downloading your project,
 
@@ -11,7 +10,7 @@ After creating and downloading your project,
 -   Open Package Manager Console, select '**EntityFramework**' project
     as **Default project** and run the EntityFramework's
     '**Update-Database**' command. This will create the database. You
-    can change **connection string** from web.config.
+    can change **connection string** from the web.config file.
 -   Run the application. User name is '**admin**' and password is
     '**123qwe**' as default.
 
