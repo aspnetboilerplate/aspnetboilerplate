@@ -18,7 +18,7 @@ namespace Abp.Application.Features
         /// This is a shortcut for <see cref="GetValue(IFeatureChecker, int, string)"/> that uses <see cref="IAbpSession.TenantId"/>.
         /// Note: This method should only be used if the TenantId can be obtained from the session.
         /// </summary>
-        /// <param name="featureChecker"><see cref="IFeatureChecker"/>instance</param>
+        /// <param name="featureChecker"><see cref="IFeatureChecker"/> instance</param>
         /// <param name="featureName">Unique feature name</param>
         /// <returns>Feature's current value</returns>
         public static string GetValue(this IFeatureChecker featureChecker, string featureName)
@@ -29,7 +29,7 @@ namespace Abp.Application.Features
         /// <summary>
         /// Gets the value of a feature by its name. This is the sync version of <see cref="IFeatureChecker.GetValueAsync(int, string)"/>
         /// </summary>
-        /// <param name="featureChecker"><see cref="IFeatureChecker"/>instance</param>
+        /// <param name="featureChecker"><see cref="IFeatureChecker"/> instance</param>
         /// <param name="tenantId">Tenant's Id</param>
         /// <param name="featureName">Unique feature name</param>
         /// <returns>Feature's current value</returns>
@@ -45,7 +45,7 @@ namespace Abp.Application.Features
         /// This is a shortcut for <see cref="IsEnabledAsync(IFeatureChecker, int, string)"/> that uses <see cref="IAbpSession.TenantId"/>.
         /// Note: This method should only be used if the TenantId can be obtained from the session.
         /// </summary>
-        /// <param name="featureChecker"><see cref="IFeatureChecker"/>instance</param>
+        /// <param name="featureChecker"><see cref="IFeatureChecker"/> instance</param>
         /// <param name="featureName">Unique feature name</param>
         /// <returns>True, if the current feature's value is "true".</returns>
         public static async Task<bool> IsEnabledAsync(this IFeatureChecker featureChecker, string featureName)
@@ -57,7 +57,7 @@ namespace Abp.Application.Features
         /// Checks if a given feature is enabled.
         /// This should be used for boolean-value features.
         /// </summary>
-        /// <param name="featureChecker"><see cref="IFeatureChecker"/>instance</param>
+        /// <param name="featureChecker"><see cref="IFeatureChecker"/> instance</param>
         /// <param name="tenantId">Tenant's Id</param>
         /// <param name="featureName">Unique feature name</param>
         /// <returns>True, if the current feature's value is "true".</returns>
