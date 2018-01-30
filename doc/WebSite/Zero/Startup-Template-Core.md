@@ -1,13 +1,11 @@
 ### Introduction
 
-The easiest way of starting a new project using ABP with **ASP.NET Core
-MVC** is to create a template on [templates page](/Templates). Remember
-to check "**Include module zero**". After creating and downloading your
-project, follow below steps to run your application.
+The easiest way of starting a new project using ABP with **ASP.NET Core MVC** is to create a template on the [templates page](/Templates). After creating and downloading your project, follow below steps to run your application.
 
 -   Open your solution on **Visual Studio 2017 v15.3.5+** and **build**
     the solution.
 -   Select the '**Web.Mvc**' project as startup project.
+-   Check **connection string** in the **appsettings.json** file of the Web.Mvc project, change if you want.
 -   Open **Package Manager Console** and run **Update-Database** command
     to create your database (ensure that Default project is selected as
     **.EntityFrameworkCore** in the Package Manager Console window).
