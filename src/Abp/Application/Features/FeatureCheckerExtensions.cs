@@ -98,7 +98,7 @@ namespace Abp.Application.Features
         /// Used to check if one or all of the given features are enabled.
         /// </summary>
         /// <param name="featureChecker"><see cref="IFeatureChecker"/> instance</param>
-        /// <param name="requiresAll">True to require all the given features to be enabled. False to require one or more.</param>
+        /// <param name="requiresAll">True, to require that all the given features are enabled. False, to require one or more.</param>
         /// <param name="featureNames">Names of the features</param>
         public static async Task<bool> IsEnabledAsync(this IFeatureChecker featureChecker, bool requiresAll, params string[] featureNames)
         {
