@@ -390,7 +390,7 @@ namespace Abp.Events.Bus
 
                         throw new AggregateException("More than one error has occurred while triggering the event: " + eventType, exceptions);
                     }
-                });
+                }).Unwrap();
 
             ExecutionContext.RestoreFlow();
 
@@ -557,7 +557,7 @@ namespace Abp.Events.Bus
                             }
 
                             return exception;
-                        });
+                        }).Unwrap();
 
                     tasks.Add(task);
                 }
@@ -575,7 +575,7 @@ namespace Abp.Events.Bus
                             exceptions.Add(exception);
                         }
                     }
-                });
+                }).Unwrap();
         }
 
         private List<IEventHandlerFactory> GetOrCreateHandlerFactories(Type eventType)
