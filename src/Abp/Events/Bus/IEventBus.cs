@@ -65,15 +65,15 @@ namespace Abp.Events.Bus
         /// Given factory is used to create/release handlers
         /// </summary>
         /// <typeparam name="TEventData">Event type</typeparam>
-        /// <param name="handlerFactory">A factory to create/release handlers</param>
-        IDisposable Register<TEventData>(IEventHandlerFactory handlerFactory) where TEventData : IEventData;
+        /// <param name="factory">A factory to create/release handlers</param>
+        IDisposable Register<TEventData>(IEventHandlerFactory factory) where TEventData : IEventData;
 
         /// <summary>
         /// Registers to an event.
         /// </summary>
         /// <param name="eventType">Event type</param>
-        /// <param name="handlerFactory">A factory to create/release handlers</param>
-        IDisposable Register(Type eventType, IEventHandlerFactory handlerFactory);
+        /// <param name="factory">A factory to create/release handlers</param>
+        IDisposable Register(Type eventType, IEventHandlerFactory factory);
 
         #endregion
 
