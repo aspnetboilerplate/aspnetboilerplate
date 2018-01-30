@@ -83,6 +83,7 @@ Presentation Layer
     -   [Handling Exceptions](Handling-Exceptions.md)
 -   ASP.NET Core
     -   [ASP.NET Core Integration](AspNet-Core.md)
+    -   [ASP.NET Core OData Integration](OData-AspNetCore-Integration.md) <label class="label label-success">NEW</label>
 -   [Localization](Localization.md)
 -   [Navigation](Navigation.md)
 -   [Embedded Resources](Embedded-Resource-Files.md)
@@ -99,7 +100,7 @@ Real Time Services
 
 -   [Notification System](Notification-System.md)
 -   [SignalR Integration](SignalR-Integration.md)
--   [SignalR AspNetCore Integration](SignalR-AspNetCore-Integration.md) <label class="label label-success">NEW</label>
+-   [SignalR ASP.NET Core Integration](SignalR-AspNetCore-Integration.md) <label class="label label-success">NEW</label>
 
 Object-Relational Mapping
 
