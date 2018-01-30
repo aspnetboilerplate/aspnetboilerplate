@@ -171,7 +171,7 @@ namespace Abp.Application.Features
         }
 
         /// <summary>
-        /// Used to check if one or all given features are enabled.
+        /// Used to check if one or all of the given features are enabled.
         /// </summary>
         /// <param name="featureChecker"><see cref="IFeatureChecker"/> instance</param>
         /// <param name="requiresAll">True, to require that all the given features are enabled. False, to require one or more.</param>
@@ -182,7 +182,7 @@ namespace Abp.Application.Features
         }
 
         /// <summary>
-        /// Used to check if one or all given features are enabled.
+        /// Used to check if one or all of the given features are enabled.
         /// </summary>
         /// <param name="featureChecker"><see cref="IFeatureChecker"/> instance</param>
         /// <param name="tenantId">Tenant id</param>
@@ -220,7 +220,7 @@ namespace Abp.Application.Features
         }
 
         /// <summary>
-        /// Checks if one or all given features are enabled. Throws <see cref="AbpAuthorizationException"/> if not.
+        /// Checks if one or all of the given features are enabled. Throws <see cref="AbpAuthorizationException"/> if not.
         /// </summary>
         /// <param name="featureChecker"><see cref="IFeatureChecker"/> instance</param>
         /// <param name="requiresAll">True, to require that all the given features are enabled. False, to require one or more.</param>
@@ -263,7 +263,7 @@ namespace Abp.Application.Features
         }
 
         /// <summary>
-        /// Checks if one or all given features are enabled. Throws <see cref="AbpAuthorizationException"/> if not.
+        /// Checks if one or all of the given features are enabled. Throws <see cref="AbpAuthorizationException"/> if not.
         /// </summary>
         /// <param name="featureChecker"><see cref="IFeatureChecker"/> instance</param>
         /// <param name="tenantId">Tenant id</param>
@@ -307,7 +307,7 @@ namespace Abp.Application.Features
         }
 
         /// <summary>
-        /// Checks if one or all given features are enabled. Throws <see cref="AbpAuthorizationException"/> if not.
+        /// Checks if one or all of the given features are enabled. Throws <see cref="AbpAuthorizationException"/> if not.
         /// </summary>
         /// <param name="featureChecker"><see cref="IFeatureChecker"/> instance</param>
         /// <param name="requiresAll">True, to require that all the given features are enabled. False, to require one or more.</param>
@@ -318,7 +318,7 @@ namespace Abp.Application.Features
         }
 
         /// <summary>
-        /// Checks if one or all given features are enabled. Throws <see cref="AbpAuthorizationException"/> if not.
+        /// Checks if one or all of the given features are enabled. Throws <see cref="AbpAuthorizationException"/> if not.
         /// </summary>
         /// <param name="featureChecker"><see cref="IFeatureChecker"/> instance</param>
         /// <param name="tenantId">Tenant id</param>
