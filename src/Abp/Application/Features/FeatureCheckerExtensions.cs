@@ -43,7 +43,7 @@ namespace Abp.Application.Features
         /// This should be used for boolean-value features.
         /// 
         /// This is a shortcut for <see cref="IsEnabledAsync(IFeatureChecker, int, string)"/> that uses <see cref="IAbpSession.TenantId"/>.
-        /// Note: This method should only be used if the TenantId can be obtained from the session.
+        /// Note: This method should be used only if the TenantId can be obtained from the session.
         /// </summary>
         /// <param name="featureChecker"><see cref="IFeatureChecker"/> instance</param>
         /// <param name="featureName">Unique feature name</param>
@@ -71,7 +71,7 @@ namespace Abp.Application.Features
         /// This should be used for boolean-value features.
         /// 
         /// This is a shortcut for <see cref="IsEnabled(IFeatureChecker, int, string)"/> that uses <see cref="IAbpSession.TenantId"/>.
-        /// Note: This method should only be used if the TenantId can be obtained from the session.
+        /// Note: This method should be used only if the TenantId can be obtained from the session.
         /// </summary>
         /// <param name="featureChecker"><see cref="IFeatureChecker"/> instance</param>
         /// <param name="name">Unique feature name</param>
