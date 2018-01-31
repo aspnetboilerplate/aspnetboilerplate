@@ -32,23 +32,7 @@ namespace Abp.Localization.Dictionaries.Xml
                     {
                         var xmlString = Utf8Helper.ReadStringFromStream(stream);
 
-                        var dictionary = CreateXmlLocalizationDictionary(xmlString);
-                        if (Dictionaries.ContainsKey(dictionary.CultureInfo.Name))
-                        {
-                            throw new AbpInitializationException(sourceName + " source contains more than one dictionary for the culture: " + dictionary.CultureInfo.Name);
-                        }
-
-                        Dictionaries[dictionary.CultureInfo.Name] = dictionary;
-
-                        if (resourceName.EndsWith(sourceName + ".xml"))
-                        {
-                            if (DefaultDictionary != null)
-                            {
-                                throw new AbpInitializationException("Only one default localization dictionary can be for source: " + sourceName);
-                            }
-
-                            DefaultDictionary = dictionary;
-                        }
+                        CommonInitialize(xmlStr => { return CreateXmlLocalizationDictionary(xmlStr); }, xmlString, resourceName, sourceName, ".xml");
                     }
                 }
             }

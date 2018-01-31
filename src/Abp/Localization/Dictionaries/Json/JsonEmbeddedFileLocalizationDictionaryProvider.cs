@@ -43,23 +43,7 @@ namespace Abp.Localization.Dictionaries.Json
                     {
                         var jsonString = Utf8Helper.ReadStringFromStream(stream);
 
-                        var dictionary = CreateJsonLocalizationDictionary(jsonString);
-                        if (Dictionaries.ContainsKey(dictionary.CultureInfo.Name))
-                        {
-                            throw new AbpInitializationException(sourceName + " source contains more than one dictionary for the culture: " + dictionary.CultureInfo.Name);
-                        }
-
-                        Dictionaries[dictionary.CultureInfo.Name] = dictionary;
-
-                        if (resourceName.EndsWith(sourceName + ".json"))
-                        {
-                            if (DefaultDictionary != null)
-                            {
-                                throw new AbpInitializationException("Only one default localization dictionary can be for source: " + sourceName);
-                            }
-
-                            DefaultDictionary = dictionary;
-                        }
+                        CommonInitialize(jsonStr => { return CreateJsonLocalizationDictionary(jsonStr); }, jsonString, resourceName, sourceName, ".json");
                     }
                 }
             }
