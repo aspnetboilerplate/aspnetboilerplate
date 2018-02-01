@@ -312,8 +312,6 @@ namespace Abp.Events.Bus
         /// <inheritdoc/>
         public async Task TriggerAsync(Type eventType, object eventSource, IEventData eventData)
         {
-            ExecutionContext.SuppressFlow();
-
             var asyncTasks = new List<Task>();
             var exceptions = new List<Exception>();
 
@@ -365,8 +363,6 @@ namespace Abp.Events.Bus
                     await TriggerAsync(baseEventType, eventData.EventSource, baseEventData);
                 }
             }
-
-            ExecutionContext.RestoreFlow();
 
             if (exceptions.Any())
             {
