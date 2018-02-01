@@ -3,6 +3,7 @@ using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
+using System.Runtime.CompilerServices;
 using System.Threading;
 using System.Threading.Tasks;
 using Abp.Events.Bus.Factories;
@@ -315,6 +316,8 @@ namespace Abp.Events.Bus
             var asyncTasks = new List<Task>();
             var exceptions = new List<Exception>();
 
+            await new SynchronizationContextRemover();
+
             foreach (var handlerFactories in GetHandlerFactories(eventType))
             {
                 foreach (var handlerFactory in handlerFactories.EventHandlerFactories)
@@ -530,6 +533,39 @@ namespace Abp.Events.Bus
             {
                 EventType = eventType;
                 EventHandlerFactories = eventHandlerFactories;
+            }
+        }
+
+        // Reference from
+        // https://blogs.msdn.microsoft.com/benwilli/2017/02/09/an-alternative-to-configureawaitfalse-everywhere/
+        private struct SynchronizationContextRemover : INotifyCompletion
+        {
+            public bool IsCompleted
+            {
+                get { return SynchronizationContext.Current == null; }
+            }
+
+            public void OnCompleted(Action continuation)
+            {
+                var prevContext = SynchronizationContext.Current;
+                try
+                {
+                    SynchronizationContext.SetSynchronizationContext(null);
+                    continuation();
+                }
+                finally
+                {
+                    SynchronizationContext.SetSynchronizationContext(prevContext);
+                }
+            }
+
+            public SynchronizationContextRemover GetAwaiter()
+            {
+                return this;
+            }
+
+            public void GetResult()
+            {
             }
         }
     }
