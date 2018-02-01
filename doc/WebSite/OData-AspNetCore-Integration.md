@@ -2,8 +2,8 @@
 
 **OData** is defined as "An **open protocol** to allow the creation and
 consumption of **queryable** and **interoperable RESTful APIs** in a
-**simple** and **standard** way" in [odata.org](http://www.odata.org/).
-You can use OData with ASP.NET Boilerplate.
+**simple** and **standard** way" ([odata.org](http://www.odata.org/)).
+You can use OData with ASP.NET Boilerplate. The
 [Abp.AspNetCore.OData](https://www.nuget.org/packages/Abp.AspNetCore.OData)
 NuGet package simplifies its usage.
 
@@ -11,14 +11,14 @@ NuGet package simplifies its usage.
 
 #### Install NuGet Package
 
-We should first install Abp.AspNetCore.OData NuGet package to our Web.Core
+We must first install the Abp.AspNetCore.OData NuGet package to our Web.Core
 project:
 
     Install-Package Abp.AspNetCore.OData
 
 #### Set Module Dependency
 
-We should set a dependency on AbpAspNetCoreODataModule for our module.
+We need to set a dependency on AbpAspNetCoreODataModule for our module.
 Example:
 
     [DependsOn(typeof(AbpAspNetCoreODataModule))]
@@ -27,13 +27,13 @@ Example:
         ...
     }
 
-See [module system](/Pages/Documents/Module-System) to understand module
+See the [module system](/Pages/Documents/Module-System) to understand module
 dependencies.
 
 #### Configure Your Entities
 
 OData requires us to declare entities which can be used as OData resources.
-We should do this in the Startup class:
+We must do this in the Startup class:
 
     public class Startup
     {
@@ -89,15 +89,15 @@ We should do this in the Startup class:
     }
 
 Here, we got the ODataModelBuilder reference and set the Person entity.
-You can use EntitySet to add other entities in a similar way. See [OData
+You can use EntitySet to add other entities in a similar way. See the [OData
 documentation](http://www.asp.net/web-api/overview/odata-support-in-aspnet-web-api/odata-v4/create-an-odata-v4-endpoint)
 for more information on the builder.
 
 ### Create Controllers
 
-Abp.AspNetCore.OData NuGet package includes **AbpODataEntityController**
+The Abp.AspNetCore.OData NuGet package includes the **AbpODataEntityController**
 base class (which extends standard ODataController) to create your
-controllers easier. An example to create an OData endpoint for Person
+controllers easier. An example to create an OData endpoint for the Person
 entity:
 
     public class PersonsController : AbpODataEntityController<Person>
@@ -108,15 +108,15 @@ entity:
         }
     }
 
-It's that easy. All methods of AbpODataEntityController are **virtual**.
-That means you can override **Get**, **Post**, **Put**, **Patch**,
+It's that easy! All the methods of AbpODataEntityController are **virtual**.
+This means that you can override the **Get**, **Post**, **Put**, **Patch**,
 **Delete** and other actions and add your own logic.
 
 ### Configuration
 
 Abp.AspNetCore.OData calls the
 IRouteBuilder.MapODataServiceRoute method with the conventional
-configuration. If you need, you can set
+configuration. If you need to, you can set
 Configuration.Modules.AbpAspNetCoreOData().**MapAction** to map OData routes
 yourself.
 
@@ -163,7 +163,7 @@ Getting the person with Id = 2.
 
 #### Getting a Single Entity With Navigation Properties
 
-Getting the person with Id = 1 including his phone numbers.
+Getting the person with Id = 1 including his/her phone numbers.
 
 ##### Request
 
@@ -183,7 +183,7 @@ Getting the person with Id = 1 including his phone numbers.
 
 #### Querying
 
-Here, a more advanced query includes filtering, sorting and getting top
+Here's a more advanced query that includes filtering, sorting and getting the top
 2 results.
 
 ##### Request
@@ -216,7 +216,7 @@ In this example, we're creating a new person.
         Name: "Galileo Galilei"
     }
 
-Here, "Content-Type" header is "application/json".
+Here, the "Content-Type" header is "application/json".
 
 ##### Response
 
@@ -234,11 +234,11 @@ Here, "Content-Type" header is "application/json".
     }
 
 If we get the list again, we can see the new person. We can also update
-or delete an existing entity as OData supports it.
+or delete an existing entity since OData supports it.
 
 #### Getting MetaData
 
-We can get metadata of entities, as shown in this example.
+We can get the metadata of entities, as shown in this example.
 
 ##### Request
 
