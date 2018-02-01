@@ -8,7 +8,7 @@ namespace Abp.Application.Features
     public static class FeatureDependencyExtensions
     {
         /// <summary>
-        /// Checks depended features and returns true if dependencies are satisfied.
+        /// Checks dependent features and returns true if dependencies are satisfied.
         /// </summary>
         /// <param name="featureDependency">The feature dependency.</param>
         /// <param name="context">The context.</param>
