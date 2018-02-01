@@ -237,25 +237,28 @@ namespace Abp.Events.Bus
                     Type handlerType = GetEventHandlerType(handlerFactory);
                     eventData.EventSource = eventSource;
 
-                    if (CheckEventHandlerType(handlerType, typeof(IAsyncEventHandler<>)))
+                    if (IsAsyncEventHandler(handlerType))
                     {
-                        Exception exception = AsyncHelper.RunSync(() => TriggerAsyncHandlingException(handlerFactory, handlerFactories.EventType, eventData));
-                        if (exception != null)
+                        AsyncHelper.RunSync(async () =>
                         {
-                            exceptions.Add(exception);
-                        }
+                            try
+                            {
+                                await TriggerAsyncHandlingException(handlerFactory, handlerFactories.EventType, eventData);
+                            }
+                            catch (Exception ex)
+                            {
+                                exceptions.Add(ex);
+                            }
+                        });
                     }
-                    else if (CheckEventHandlerType(handlerType, typeof(IEventHandler<>)))
+                    else if (IsEventHandler(handlerType))
                     {
-                        Exception exception = TriggerHandlingException(handlerFactory, handlerFactories.EventType, eventData);
-                        if (exception != null)
-                        {
-                            exceptions.Add(exception);
-                        }
+                        TriggerHandlingException(handlerFactory, handlerFactories.EventType, eventData, exceptions);
                     }
                     else
                     {
-                        throw new Exception($"Event handler to register for event type {eventType.Name} does not implement IEventHandler<{eventType.Name}> or IAsyncEventHandler<{eventType.Name}> interface!");
+                        var message = $"Event handler to register for event type {eventType.Name} does not implement IEventHandler<{eventType.Name}> or IAsyncEventHandler<{eventType.Name}> interface!";
+                        exceptions.Add(new AbpException(message));
                     }
                 }
             }
@@ -321,35 +324,29 @@ namespace Abp.Events.Bus
                     Type handlerType = GetEventHandlerType(handlerFactory);
                     eventData.EventSource = eventSource;
 
-                    if (CheckEventHandlerType(handlerType, typeof(IAsyncEventHandler<>)))
+                    if (IsAsyncEventHandler(handlerType))
                     {
-                        Task asyncTask = TriggerAsyncHandlingException(handlerFactory, handlerFactories.EventType, eventData);
-                        asyncTasks.Add(asyncTask);
+                        asyncTasks.Add(TriggerAsyncHandlingException(handlerFactory, handlerFactories.EventType, eventData));
                     }
-                    else if (CheckEventHandlerType(handlerType, typeof(IEventHandler<>)))
+                    else if (IsEventHandler(handlerType))
                     {
-                        Exception exception = TriggerHandlingException(handlerFactory, handlerFactories.EventType, eventData);
-                        if (exception != null)
-                        {
-                            exceptions.Add(exception);
-                        }
+                        TriggerHandlingException(handlerFactory, handlerFactories.EventType, eventData, exceptions);
                     }
                     else
                     {
-                        throw new Exception($"Event handler to register for event type {eventType.Name} does not implement IEventHandler<{eventType.Name}> or IAsyncEventHandler<{eventType.Name}> interface!");
+                        var message = $"Event handler to register for event type {eventType.Name} does not implement IEventHandler<{eventType.Name}> or IAsyncEventHandler<{eventType.Name}> interface!";
+                        exceptions.Add(new AbpException(message));
                     }
                 }
             }
 
-            await Task.WhenAll(asyncTasks.ToArray());
-
-            foreach (Task<Exception> asyncTask in asyncTasks)
+            try
             {
-                Exception exception = await asyncTask;
-                if (exception != null)
-                {
-                    exceptions.Add(exception);
-                }
+                await Task.WhenAll(asyncTasks.ToArray());
+            }
+            catch (AggregateException ae)
+            {
+                exceptions.AddRange(ae.InnerExceptions);
             }
 
             //Implements generic argument inheritance. See IEventDataWithInheritableGenericArgument
@@ -382,16 +379,14 @@ namespace Abp.Events.Bus
             }
         }
 
-        private Exception TriggerHandlingException(IEventHandlerFactory handlerFactory, Type eventType, IEventData eventData)
+        private void TriggerHandlingException(IEventHandlerFactory handlerFactory, Type eventType, IEventData eventData, List<Exception> exceptions)
         {
             var eventHandler = handlerFactory.GetHandler();
-            Exception exception = null;
-
             try
             {
                 if (eventHandler == null)
                 {
-                    throw new Exception($"Registered event handler for event type {eventType.Name} does not implement IEventHandler<{eventType.Name}> interface!");
+                    throw new ArgumentNullException($"Registered event handler for event type {eventType.Name} is null!");
                 }
 
                 Type handlerType = typeof(IEventHandler<>).MakeGenericType(eventType);
@@ -405,21 +400,19 @@ namespace Abp.Events.Bus
             }
             catch (TargetInvocationException ex)
             {
-                exception = ex.InnerException;
+                exceptions.Add(ex.InnerException);
             }
             catch (Exception ex)
             {
-                exception = ex;
+                exceptions.Add(ex);
             }
             finally
             {
                 handlerFactory.ReleaseHandler(eventHandler);
             }
-
-            return exception;
         }
 
-        private async Task<Exception> TriggerAsyncHandlingException(IEventHandlerFactory asyncHandlerFactory, Type eventType, IEventData eventData)
+        private async Task TriggerAsyncHandlingException(IEventHandlerFactory asyncHandlerFactory, Type eventType, IEventData eventData)
         {
             var asyncEventHandler = asyncHandlerFactory.GetHandler();
             Exception exception = null;
@@ -428,7 +421,7 @@ namespace Abp.Events.Bus
             {
                 if (asyncEventHandler == null)
                 {
-                    throw new Exception($"Registered event handler for event type {eventType.Name} does not implement IAsyncEventHandler<{eventType.Name}> interface!");
+                    throw new ArgumentNullException($"Registered async event handler for event type {eventType.Name} is null!");
                 }
 
                 Type asyncHandlerType = typeof(IAsyncEventHandler<>).MakeGenericType(eventType);
@@ -453,7 +446,10 @@ namespace Abp.Events.Bus
                 asyncHandlerFactory.ReleaseHandler(asyncEventHandler);
             }
 
-            return exception;
+            if(exception != null)
+            {
+                exception.ReThrow();
+            }
         }
 
         private Type GetEventHandlerType(IEventHandlerFactory eventHandlerFactory)
@@ -480,11 +476,18 @@ namespace Abp.Events.Bus
             return eventHandlerFactory.GetHandler()?.GetType();
         }
 
-        private bool CheckEventHandlerType(Type handlerType, Type handlerInterfaceType)
+        private bool IsEventHandler(Type handlerType)
         {
             return handlerType.GetInterfaces()
                 .Where(i => i.IsGenericType)
-                .Any(i => i.GetGenericTypeDefinition() == handlerInterfaceType);
+                .Any(i => i.GetGenericTypeDefinition() == typeof(IEventHandler<>));
+        }
+
+        private bool IsAsyncEventHandler(Type handlerType)
+        {
+            return handlerType.GetInterfaces()
+                .Where(i => i.IsGenericType)
+                .Any(i => i.GetGenericTypeDefinition() == typeof(IAsyncEventHandler<>));
         }
 
         private IEnumerable<EventTypeWithEventHandlerFactories> GetHandlerFactories(Type eventType)
