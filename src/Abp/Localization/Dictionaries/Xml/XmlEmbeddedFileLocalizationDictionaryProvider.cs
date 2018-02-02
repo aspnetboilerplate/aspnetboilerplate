@@ -32,7 +32,7 @@ namespace Abp.Localization.Dictionaries.Xml
                     {
                         var xmlString = Utf8Helper.ReadStringFromStream(stream);
 
-                        CommonInitialize(xmlStr => { return CreateXmlLocalizationDictionary(xmlStr); }, xmlString, resourceName, sourceName, ".xml");
+                        CommonInitialize(() => CreateXmlLocalizationDictionary(xmlString), resourceName, sourceName, ".xml");
                     }
                 }
             }

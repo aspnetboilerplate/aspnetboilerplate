@@ -1,5 +1,4 @@
 ﻿using System.Reflection;
-using Abp.Localization.Dictionaries.Xml;
 
 namespace Abp.Localization.Dictionaries.Json
 {
@@ -43,7 +42,7 @@ namespace Abp.Localization.Dictionaries.Json
                     {
                         var jsonString = Utf8Helper.ReadStringFromStream(stream);
 
-                        CommonInitialize(jsonStr => { return CreateJsonLocalizationDictionary(jsonStr); }, jsonString, resourceName, sourceName, ".json");
+                        CommonInitialize(() => CreateJsonLocalizationDictionary(jsonString), resourceName, sourceName, ".json");
                     }
                 }
             }

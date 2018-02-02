@@ -24,7 +24,7 @@ namespace Abp.Localization.Dictionaries.Xml
 
             foreach (var fileName in fileNames)
             {
-                CommonInitialize(file => { return CreateXmlLocalizationDictionary(file); }, fileName, fileName, sourceName, ".xml");
+                CommonInitialize(() => CreateXmlLocalizationDictionary(fileName) , fileName, sourceName, ".xml");
             }
         }
 

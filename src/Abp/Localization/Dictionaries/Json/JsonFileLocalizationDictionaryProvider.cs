@@ -1,5 +1,4 @@
 ﻿using System.IO;
-using Abp.Localization.Dictionaries.Xml;
 
 namespace Abp.Localization.Dictionaries.Json
 {
@@ -25,7 +24,7 @@ namespace Abp.Localization.Dictionaries.Json
 
             foreach (var fileName in fileNames)
             {
-                CommonInitialize(file => { return CreateJsonLocalizationDictionary(file); }, fileName, fileName, sourceName, ".json");
+                CommonInitialize(() => CreateJsonLocalizationDictionary(fileName), fileName, sourceName, ".json");
             }
         }
 

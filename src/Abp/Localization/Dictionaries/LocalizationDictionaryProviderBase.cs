@@ -1,7 +1,7 @@
 using System;
 using System.Collections.Generic;
 
-namespace Abp.Localization.Dictionaries.Xml
+namespace Abp.Localization.Dictionaries
 {
     public abstract class LocalizationDictionaryProviderBase : ILocalizationDictionaryProvider
     {
@@ -39,10 +39,10 @@ namespace Abp.Localization.Dictionaries.Xml
             }
         }
 
-        protected void CommonInitialize(Func<string, LocalizationDictionary> getLocalizationDictionaryFunc, string resourceOrFile,
+        protected void CommonInitialize(Func<LocalizationDictionary> localizationDictionaryFactory,
             string resourceName, string sourceName, string fileExtension)
         {
-            var dictionary = getLocalizationDictionaryFunc(resourceOrFile);
+            var dictionary = localizationDictionaryFactory();
             if (Dictionaries.ContainsKey(dictionary.CultureInfo.Name))
             {
                 throw new AbpInitializationException(sourceName + " source contains more than one dictionary for the culture: " + dictionary.CultureInfo.Name);
