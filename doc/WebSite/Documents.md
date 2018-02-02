@@ -2,7 +2,7 @@
 
 -   Introduction & Step by Step
     -   [With ASP.NET Core & Entity Framework
-        Core](http://www.codeproject.com/Articles/1115763/Using-ASP-NET-Core-Entity-Framework-Core-and-ASP-N & [link2](https://raw.githubusercontent.com/aspnetboilerplate/aspnetboilerplate-samples/master/SimpleTaskSystem-Core/_article/part-1/article.html)).
+        Core](http://www.codeproject.com/Articles/1115763/Using-ASP-NET-Core-Entity-Framework-Core-and-ASP-N).
     -   [With ASP.NET MVC, Web API, EntityFramework &
         AngularJs](http://www.codeproject.com/Articles/791740/Using-AngularJs-ASP-NET-MVC-Web-API-and-EntityFram).
 -   Advanced
