@@ -43,7 +43,7 @@ namespace Abp.Application.Features
         }
 
         /// <summary>
-        /// Gets a feature with given name or null if can not find.
+        /// Gets a feature with a given name, or null if can not be found.
         /// </summary>
         /// <param name="name">Unique name of the feature</param>
         /// <returns>
