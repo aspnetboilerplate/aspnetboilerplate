@@ -100,7 +100,7 @@ base class (which extends standard ODataController) to create your
 controllers easier. An example to create an OData endpoint for Person
 entity:
 
-    public class PersonsController : AbpODataEntityController<Person>, ITransientDependency 
+    public class PersonsController : AbpODataEntityController<Person>
     {
         public PersonsController(IRepository<Person> repository)
             : base(repository)
