@@ -50,14 +50,13 @@ Then use the **AddSignalR** and **UseSignalR** methods in your Startup class:
 The **abp.signalr-client.js** script should be included on the page. It's located
 in the
 **[Abp.Web.Resources](https://www.nuget.org/packages/Abp.Web.Resources)**
-package (It's already installed in the [startup templates](/Templates)). We
-should include it after the signalr-client.min.js:
+package (and already installed in the [startup templates](/Templates)). We
+should include it after the signalr.min.js:
 
-    <script src="~/lib/signalr-client/signalr-client.min.js"></script>
+    <script src="~/lib/signalr-client/signalr.min.js"></script>
     <script src="~/lib/abp-web-resources/Abp/Framework/scripts/libs/abp.signalr-client.js"></script>
 
-That's all you have to do. SignalR is properly configured and integrated in to your
-project.
+That's all you have to do. SignalR is properly configured and integrated into your project.
 
 ### Connection Establishment
 
