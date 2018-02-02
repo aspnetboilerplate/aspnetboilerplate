@@ -45,6 +45,18 @@ Then use the **AddSignalR** and **UseSignalR** methods in your Startup class:
         }
     }
 
+#### Client-Side (Angular)
+
+The **@aspnet/signalr** package should be added in package.json, and the signalr.min.js included under **scripts** in .angular-cli.json.
+
+The **abp.signalr-client.js** script should be included under **assets** in .angular-cli.json.
+
+SignalR cannot send authorization headers, so encryptedAuthToken is sent in the query string. The startup template includes SignalRAspNetCoreHelper. We should call it in ngOnInit in app.component.ts:
+
+    SignalRAspNetCoreHelper.initSignalR();
+
+That's all you have to do. SignalR is properly configured and integrated into your project.
+
 #### Client-Side (jQuery)
 
 The **abp.signalr-client.js** script should be included on the page. It's located
