@@ -4,7 +4,7 @@
     -   [With ASP.NET Core & Entity Framework Core Part-1](Articles/aspnet-core-ef-core-abp-nlayered-web-application/Part1/index.html) & [Part-2](Articles/aspnet-core-ef-core-abp-nlayered-web-application/Part2/index.html)
     -   [With ASP.NET MVC, Web API, EntityFramework & AngularJs](Articles/using-angularjs-aspnet-mvc-webapi-entityframework-spa-app/index.html)
 -   Advanced
-    -   [Developing a Multi-Tenant (SaaS) Application with ASP.NET MVC, EntityFramework & Angularjs](http://www.codeproject.com/Articles/1043326/A-Multi-Tenant-SaaS-Application-With-ASP-NET-MVC-A)
+    -   [Developing a Multi-Tenant (SaaS) Application with ASP.NET MVC, EntityFramework & Angularjs](Articles/multi-tenant-saas-application-aspnet-mvc-angularjs-entityframework-aspnetboilerplate/index.html)
 -   Miscellaneous
     -   [Unit testing with Entity Framework, xUnit & Effort](http://www.codeproject.com/Articles/871786/Unit-testing-in-Csharp-using-xUnit-Entity-Framewor)
     -   [Aspect Oriented Programming using Interceptors](http://www.codeproject.com/Articles/1080517/Aspect-Oriented-Programming-using-Interceptors-wit)
