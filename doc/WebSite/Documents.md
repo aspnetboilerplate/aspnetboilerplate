@@ -1,7 +1,7 @@
 ### Articles & Tutorials
 
 -   Introduction & Step by Step
-    -   [With ASP.NET Core & Entity Framework Core](http://www.codeproject.com/Articles/1115763/Using-ASP-NET-Core-Entity-Framework-Core-and-ASP-N).
+    -   [With ASP.NET Core & Entity Framework Core](Articles/aspnet-core-ef-core-abp-nlayered-web-application/index.html).
 	-   [With ASP.NET Core & Entity Framework Core - Inhouse link](Articles/aspnet-core-ef-core-abp-nlayered-web-application/article.html)
     -   [With ASP.NET MVC, Web API, EntityFramework & AngularJs](http://www.codeproject.com/Articles/791740/Using-AngularJs-ASP-NET-MVC-Web-API-and-EntityFram).
 -   Advanced
