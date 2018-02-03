@@ -2,7 +2,7 @@
 
 -   Introduction & Step by Step
     -   [With ASP.NET Core & Entity Framework Core Part-1](Articles/aspnet-core-ef-core-abp-nlayered-web-application/Part1/index.html) & [Part-2](Articles/aspnet-core-ef-core-abp-nlayered-web-application/Part2/index.html)
-    -   [With ASP.NET MVC, Web API, EntityFramework & AngularJs](http://www.codeproject.com/Articles/791740/Using-AngularJs-ASP-NET-MVC-Web-API-and-EntityFram)
+    -   [With ASP.NET MVC, Web API, EntityFramework & AngularJs](Articles/using-angularjs-aspnet-mvc-webapi-entityframework-spa-app/index.html)
 -   Advanced
     -   [Developing a Multi-Tenant (SaaS) Application with ASP.NET MVC, EntityFramework & Angularjs](http://www.codeproject.com/Articles/1043326/A-Multi-Tenant-SaaS-Application-With-ASP-NET-MVC-A)
 -   Miscellaneous
