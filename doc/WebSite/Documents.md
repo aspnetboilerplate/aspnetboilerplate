@@ -7,7 +7,7 @@
     -   [Developing a Multi-Tenant (SaaS) Application with ASP.NET MVC, EntityFramework & Angularjs](Articles/multi-tenant-saas-application-aspnet-mvc-angularjs-entityframework-aspnetboilerplate/index.html)
 -   Miscellaneous
     -   [Unit testing with Entity Framework, xUnit & Effort](Articles/unit-testing-in-csharp-xunit-entityframework-effort-aspnet-boilerplate/index.html)
-    -   [Aspect Oriented Programming using Interceptors](Articles/aspect-oriented-programming-using-interceptors-castle-windsor-aspnetboilerplate/index.html)
+    -   [Aspect Oriented Programming using Interceptors](Articles/Aspect-Oriented-Programming-using-Interceptors/index.html)
     -   [Running in Docker Containers and building a Web Farm / Load Balancer Scenario](https://www.codeproject.com/Articles/1189662/Running-ASP-NET-Boilerplate-Module-Zero-Core-Templ)
     -   [Using Stored Procedure, User Defined Function and Views](Articles/using-stored-procedure-in-custom-repository-aspnetboilerplate/index.html)
 
