@@ -8,7 +8,7 @@
 -   Miscellaneous
     -   [Unit Testing with Entity Framework, xUnit & Effort](Articles/Unit-Testing-with-Entity-Framework-xUnit-Effort/index.html)
     -   [Aspect Oriented Programming using Interceptors](Articles/Aspect-Oriented-Programming-using-Interceptors/index.html)
-    -   [Running in Docker Containers and building a Web Farm / Load Balancer Scenario](Articles/Running-in-Docker-Containers-and-Building-a-Web-Farm -Load-Balancer-Scenario/index.html)
+    -   [Running in Docker Containers and building a Web Farm / Load Balancer Scenario](Articles/Running-in-Docker-Containers-and-Building-a-Web-Farm-Load-Balancer-Scenario/index.html)
     -   [Using Stored Procedures, User Defined Functions and Views](Articles/Using-Stored-Procedures-User-Defined-Functions-and-Views/index.html)
 
 ### ABP Framework
