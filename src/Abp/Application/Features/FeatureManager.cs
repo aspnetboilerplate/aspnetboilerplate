@@ -63,11 +63,6 @@ namespace Abp.Application.Features
             return Features.Values.ToImmutableList();
         }
 
-        /// <summary>
-        /// ??? Not sure if this is the best description
-        /// Creates a disposable <see cref="FeatureProvider"/> from the given provider type
-        /// </summary>
-        /// <param name="providerType">Provider type</param>
         private IDisposableDependencyObjectWrapper<FeatureProvider> CreateProvider(Type providerType)
         {
             return _iocManager.ResolveAsDisposable<FeatureProvider>(providerType);
