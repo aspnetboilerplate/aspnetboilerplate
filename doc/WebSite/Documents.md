@@ -1,24 +1,15 @@
 ### Articles & Tutorials
 
 -   Introduction & Step by Step
-    -   [With ASP.NET Core & Entity Framework
-        Core](http://www.codeproject.com/Articles/1115763/Using-ASP-NET-Core-Entity-Framework-Core-and-ASP-N).
-    -   [With ASP.NET MVC, Web API, EntityFramework &
-        AngularJs](http://www.codeproject.com/Articles/791740/Using-AngularJs-ASP-NET-MVC-Web-API-and-EntityFram).
+    -   [With ASP.NET Core & Entity Framework Core Part-1](Articles/With-AspNet-Core-And-Entity-Framework-Core-Part-1/index.html) & [Part-2](Articles/With-AspNet-Core-And-Entity-Framework-Core-Part-2/index.html)
+    -   [With ASP.NET MVC, Web API, EntityFramework & AngularJs](Articles/With-AspNet-MVC-Web-API-EntityFramework-and-AngularJs/index.html)
 -   Advanced
-    -   [Developing a Multi-Tenant (SaaS) Application with ASP.NET MVC,
-        EntityFramework &
-        Angularjs](http://www.codeproject.com/Articles/1043326/A-Multi-Tenant-SaaS-Application-With-ASP-NET-MVC-A).
+    -   [Developing a Multi-Tenant (SaaS) Application with ASP.NET MVC, EntityFramework & Angularjs](Articles/Developing-a-Multi-Tenant-SaaS-Application-with-ASP.NET-MVC-EntityFramework-AngularJs/index.html)
 -   Miscellaneous
-    -   [Unit testing with Entity Framework, xUnit &
-        Effort](http://www.codeproject.com/Articles/871786/Unit-testing-in-Csharp-using-xUnit-Entity-Framewor)
-    -   [Aspect Oriented Programming using
-        Interceptors](http://www.codeproject.com/Articles/1080517/Aspect-Oriented-Programming-using-Interceptors-wit)
-    -   [Running in Docker Containers and building a Web Farm / Load
-        Balancer
-        Scenario](https://www.codeproject.com/Articles/1189662/Running-ASP-NET-Boilerplate-Module-Zero-Core-Templ)
-    -   [Using Stored Procedure, User Defined Function and
-        Views](https://www.codeproject.com/Articles/1199648/Using-Stored-Procedure-User-Defined-Function-and-V)
+    -   [Unit Testing with Entity Framework, xUnit & Effort](Articles/Unit-Testing-with-Entity-Framework,-xUnit-Effort/index.html)
+    -   [Aspect Oriented Programming using Interceptors](Articles/Aspect-Oriented-Programming-using-Interceptors/index.html)
+    -   [Running in Docker Containers and building a Web Farm / Load Balancer Scenario](Articles/Running-in-Docker-Containers-and-Building-a-Web-Farm-Load-Balancer-Scenario/index.html)
+    -   [Using Stored Procedures, User Defined Functions and Views](Articles/Using-Stored-Procedures,-User-Defined-Functions-and-Views/index.html)
 
 ### ABP Framework
 
