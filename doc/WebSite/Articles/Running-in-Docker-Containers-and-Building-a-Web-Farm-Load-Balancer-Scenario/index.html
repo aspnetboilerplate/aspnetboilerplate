@@ -1,12 +1,36 @@
+<!DOCTYPE html>
+<!-- saved from url=(0081)https://www.codeproject.com/script/Articles/ViewHtml.aspx?aid=1189662&waid=256055 -->
+<html><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<title>Article Source</title>
+<link rel="stylesheet" type="text/css" href="./Article Source_files/Main.css">
+<!--<base href="https://www.codeproject.com/KB/aspnet/">--><base href=".">
+</head>
+<body><div id="touchvpn_icon_container" class="disconnected" draggable="true" style="right: 0.78369906% !important; bottom: 1.54320988% !important;"><div id="touchvpn_status_icon" class="touchvpn_ca"><div class="touchvpn_icon_sign">Best choice for browsing</div></div><div id="touchvpn_icon_selector"><div class="touchvpn_country touchvpn_in"><div class="touchvpn_icon_sign">Browse from India</div></div><div class="touchvpn_country touchvpn_cl"><div class="touchvpn_icon_sign">Browse from Chile</div></div><div class="touchvpn_country touchvpn_nl"><div class="touchvpn_icon_sign">Browse from Netherlands</div></div><div class="touchvpn_country touchvpn_ca"><div class="touchvpn_icon_sign">Browse from Canada</div></div></div></div>
+<!--
+HTML for article "Dockerize ASP.NET Boilerplate Projects" by alirıza adıyahşi
+URL: https://www.codeproject.com/KB/aspnet/1189662.aspx
+Copyright 2018 by alirıza adıyahşi
+All formatting, additions and alterations Copyright © CodeProject, 1999-2018
+-->
+
+<p><b>Please choose 'View Source' in your browser to view the HTML, or File | Save to save this 
+file to your hard drive for editing.</b></p>
+
+<hr class="Divider subdue">
+<div>
+
+<!-- Start Article -->
+<span id="ArticleContent">
+
 <h2>Introduction</h2>
 
 <p>In this article, I will show you how to run&nbsp;<a href="https://github.com/aspnetboilerplate/module-zero-core-template"><strong>ABP module zero core template</strong></a>&nbsp;on&nbsp;<strong>Docker</strong>, step by step. And then, we will discuss alternative scenarios like web farm using&nbsp;<strong>Redis&nbsp;</strong>and&nbsp;<strong>Haproxy</strong>.&nbsp;</p>
 
-<p>As you now,&nbsp;<strong>Docker</strong>&nbsp;is the most popular software container platform. I will not go into details of how to install/configure&nbsp;<strong>Docker on windows</strong>&nbsp;or what are the advantages of using Docker. You can find related documents&nbsp;<strong><a href="https://docs.docker.com/docker-for-windows/install/#start-docker-for-windows" rel="noopener noreferrer" target="_blank">here</a></strong>. And there is a&nbsp;<strong><a href="https://docs.docker.com/docker-for-windows/" rel="noopener noreferrer" target="_blank">Getting Started</a></strong>&nbsp;document as well.</p>
+<p>As you now,&nbsp;<strong>Docker</strong>&nbsp;is the most popular software container platform. I won’t go into details of how to install/configure&nbsp;<strong>Docker on windows</strong>&nbsp;or what are the advantages of using Docker. You can find related documents&nbsp;<strong><a href="https://docs.docker.com/docker-for-windows/install/#start-docker-for-windows" rel="noopener noreferrer" target="_blank">here</a></strong>. And there is a&nbsp;<strong><a href="https://docs.docker.com/docker-for-windows/" rel="noopener noreferrer" target="_blank">Getting Started</a></strong>&nbsp;document as well.</p>
 
 <h2>What is ABP Module Zero Core Template?</h2>
 
-<p><strong><a href="https://github.com/aspnetboilerplate/module-zero-core-template">Module zero core template</a></strong>&nbsp;is a starter project template that is developed with using&nbsp;<strong>ASP.NET Boilerplate Framework</strong>. This a .net core project as a&nbsp;<strong>Single Page Application</strong>&nbsp;with using&nbsp;<strong>Angular4</strong>. And also there is a&nbsp;<strong>multi-page MVC application</strong>&nbsp;as well. But in this article, I will explain&nbsp;<strong>angular4&nbsp;</strong>version.</p>
+<p><strong><a href="https://github.com/aspnetboilerplate/module-zero-core-template">Module zero core template</a></strong>&nbsp;is a starter project template that is developed with using&nbsp;<strong><a href="https://www.codeproject.com/Articles/768664/Introduction-to-ASP-NET-Boilerplate">ASP.NET Boilerplate Framework</a></strong>. This a .net core project as a&nbsp;<strong>Single Page Application</strong>&nbsp;with using&nbsp;<strong>Angular4</strong>. And also there is a&nbsp;<strong>multi-page MVC application</strong>&nbsp;as well. But in this article, I will explain&nbsp;<strong>angular4&nbsp;</strong>version.</p>
 
 <p>In&nbsp;<strong>module zero core template</strong>&nbsp;project there are two seperate projects, one is&nbsp;<strong>Angular4&nbsp;</strong>project as web UI and the host project that is used by angular UI. Let's examine it to better understand the project before running it on&nbsp;<strong>Docker</strong>.</p>
 
@@ -16,14 +40,14 @@
 
 <p>First, I will download module zero core template from&nbsp;<strong><a href="https://www.aspnetboilerplate.com/Templates">https://www.aspnetboilerplate.com/Templates</a></strong>&nbsp;site.</p>
 
-<p><img alt="" src="Clipboard01.png"></p>
+<p><img alt="" src="./Article Source_files/Clipboard01.png"></p>
 
 <p>Framework: .<b>NET Core2.0&nbsp;+ Single Page Web Application Angular&nbsp;+ Include module zero</b><br>
 Project name:&nbsp;<b>Acme.ProjectName</b></p>
 
 <p>Before preparing project to run on&nbsp;<strong>Docker</strong>,&nbsp;let's run the project, first. I am opening the <strong>.sln</strong> file in folder <strong>ProjectName\aspnet-core</strong>.&nbsp;</p>
 
-<p><img alt="" src="project-folder.PNG"></p>
+<p><img alt="" src="./Article Source_files/project-folder.PNG"></p>
 
 <h4>Creating Database with Using EF Migrations</h4>
 
@@ -33,35 +57,35 @@ Project name:&nbsp;<b>Acme.ProjectName</b></p>
 
 <p>&nbsp;After running this command, database will be created with name&nbsp;<b>ProjectNameDb</b>.</p>
 
-<p><img alt="" src="update-database.PNG"></p>
+<p><img alt="" src="./Article Source_files/update-database.PNG"></p>
 
 <h4>Running Host Project</h4>
 
 <p>And now, Host project is ready to run. On visual studio Ctrl+F5 . It opens swagger method index page.</p>
 
-<p><img alt="" src="host-page.PNG"></p>
+<p><img alt="" src="./Article Source_files/host-page.PNG"></p>
 
 <p>All these services are served in application layer of project and used by Angular UI.&nbsp;</p>
 
 <h4>Running Angular Project</h4>
 
-<p>While host is already running and we can run&nbsp;<strong>Angular&nbsp;project</strong>&nbsp;that uses APIs. To run&nbsp;<strong>Angular project</strong>, make sure you have&nbsp;<strong><a href="https://angular.io/docs/ts/latest/guide/setup.html#install-prerequisites" title="What if you don't have node and npm?">node and npm installed</a></strong>&nbsp;on your machine.</p>
+<p>While host is already running and we can run&nbsp;<strong>Angular&nbsp;project</strong>&nbsp;that uses APIs. To run&nbsp;<strong>Angular project</strong>, make sure you have&nbsp;<strong><a href="https://angular.io/docs/ts/latest/guide/setup.html#install-prerequisites" title="What if you don&#39;t have node and npm?">node and npm installed</a></strong>&nbsp;on your machine.</p>
 
 <p>First, run&nbsp;<strong>cmd&nbsp;</strong>on location&nbsp;<strong>ProjectName\angular&nbsp;</strong>and run&nbsp;the command&nbsp;<strong>"npm install"</strong>&nbsp;or just&nbsp;<strong>"yarn"</strong>&nbsp;to fetch client side packages.</p>
 
-<p><img alt="" src="running-yarn.PNG"></p>
+<p><img alt="" src="./Article Source_files/running-yarn.PNG"></p>
 
 <p>Run&nbsp;<strong>npm start</strong>&nbsp;command in the same directory to start angular project.</p>
 
-<p><img alt="" src="npm-start.PNG"></p>
+<p><img alt="" src="./Article Source_files/npm-start.PNG"></p>
 
 <p>Finally you have to see the line "<strong>webpack: Compiled successfully</strong>" in the output screen.</p>
 
-<p><img alt="" src="npm-final-screen.PNG"></p>
+<p><img alt="" src="./Article Source_files/npm-final-screen.PNG"></p>
 
 <p>We started&nbsp;<strong>Angular&nbsp;</strong>project successfully. Open your browser and navigate to&nbsp;<a href="http://localhost:4200/">http://localhost:4200/</a></p>
 
-<p><img alt="" src="module-zero-core-template-ui-login2.png"></p>
+<p><img alt="" src="./Article Source_files/module-zero-core-template-ui-login2.png"></p>
 
 <p>Use the credentials below to login</p>
 
@@ -70,7 +94,7 @@ Project name:&nbsp;<b>Acme.ProjectName</b></p>
 
 <p>After you login, you will see the screen below.</p>
 
-<p><img alt="" src="admin.png"></p>
+<p><img alt="" src="./Article Source_files/admin.png"></p>
 
 <p>Check&nbsp;<a href="https://aspnetboilerplate.com/Pages/Documents/Zero/Startup-Template-Angular"><strong>HERE</strong></a>&nbsp;for more details.</p>
 
@@ -89,19 +113,19 @@ Project name:&nbsp;<b>Acme.ProjectName</b></p>
 
 <p>After you ensure Angular CLI installed, let's see files and folders to configure&nbsp;<strong>Docker&nbsp;</strong>environment. There is a folder that named docker under&nbsp;<strong>ProjectName/aspnet-core</strong>.&nbsp;</p>
 
-<p><img alt="" src="docker-config-folder.PNG"></p>
+<p><img alt="" src="./Article Source_files/docker-config-folder.PNG"></p>
 
 <p>In&nbsp;<b>docker/ng</b>&nbsp;folder there is a&nbsp;<strong>docker-compose.yml</strong>&nbsp;file and two powershell script to run docker compose(<strong>up.ps1</strong>) and stop(<strong>down.ps1</strong>) it. And there is one more folder and a powershell script file.</p>
 
-<p><img alt="" src="build-folder.PNG"></p>
+<p><img alt="" src="./Article Source_files/build-folder.PNG"></p>
 
 <p>This script file to build and publish host and agular project. And also, this script copies the files that is into docker folder to build folder. First, I will run the <strong>build-with-ng.ps1</strong> script&nbsp;on location <strong>ProjectName/aspnet-core/build</strong>.</p>
 
-<p><img alt="" src="build-with-ng.PNG"></p>
+<p><img alt="" src="./Article Source_files/build-with-ng.PNG"></p>
 
 <p>After running script, when you look at the build folder, you will see the outputs folder.&nbsp;</p>
 
-<p><img alt="" src="outputs-folder.PNG"></p>
+<p><img alt="" src="./Article Source_files/outputs-folder.PNG"></p>
 
 <p>Before running&nbsp;<b>up.ps1</b>&nbsp;command,</p>
 
@@ -110,15 +134,15 @@ Project name:&nbsp;<b>Acme.ProjectName</b></p>
 
 <p>Run&nbsp;<strong>up.ps1</strong>&nbsp;script to run these two project on docker under location&nbsp;<strong>ProjectName/aspnet-core/build/outputs</strong>.</p>
 
-<p><img alt="" src="up.PNG"></p>
+<p><img alt="" src="./Article Source_files/up.PNG"></p>
 
 <p>Angular and host projects are now running. Browse&nbsp;<a href="http://localhost:9901/">http://localhost:9901/</a><strong>&nbsp;for Host Project</strong>&nbsp;and&nbsp;<a href="http://localhost:9902/">http://localhost:9902/</a><strong>&nbsp;for Angular UI</strong>.</p>
 
-<p><img alt="" src="app-on-docker.PNG"></p>
+<p><img alt="" src="./Article Source_files/app-on-docker.PNG"></p>
 
 <h2>Module Zero Core Tepmlate Web Farm on Docker with Using Redis and Haproxy</h2>
 
-<p><img alt="" src="sessionwebfarm.png"></p>
+<p><img alt="" src="./Article Source_files/sessionwebfarm.png"></p>
 
 <p name="090d">In a web farm there are more than one web servers, there is a load balancer at the front of these servers and a server to store sharing sessions/caches.&nbsp;</p>
 
@@ -130,8 +154,8 @@ Project name:&nbsp;<b>Acme.ProjectName</b></p>
 
 <p name="5178"><strong>(Copy paste code lines makes encoding problem just download the file =&gt;&nbsp;&nbsp;<a href="https://raw.githubusercontent.com/alirizaadiyahsi/ModuleZeroCoreTemplateWebFarm/master/aspnet-core/docker/ng/haproxy.cfg">Download haproxy.cfg</a>)</strong></p>
 
-<div class="pre-action-link" id="premain219676" style="width:100%;display:block;"><span id="prehide219676" onclick="processCodeBlocks.togglePre(219676);">Hide</span>  &nbsp; <span id="copycode219676" onclick="return processCodeBlocks.copyCode(219676);">Copy Code</span></div><pre name="6341" id="pre219676" class="notranslate" style="margin-top: 0px;"><span class="code-keyword">global</span>
-&nbsp; &nbsp; maxconn <span class="code-digit">4096</span>
+<pre name="6341">global
+&nbsp; &nbsp; maxconn 4096
 &nbsp;&nbsp; &nbsp;
 defaults
 &nbsp; &nbsp; mode http
@@ -140,10 +164,10 @@ defaults
 &nbsp; &nbsp; timeout server 50s
 &nbsp;&nbsp; &nbsp;
 listen http-in
-&nbsp; &nbsp; bind *:<span class="code-digit">8080</span>
+&nbsp; &nbsp; bind *:8080
 &nbsp;&nbsp; &nbsp;
-&nbsp; &nbsp; server web-1 outputs_abp_host_1:<span class="code-digit">80</span>
-&nbsp; &nbsp; server web-2 outputs_abp_host_2:<span class="code-digit">80</span>
+&nbsp; &nbsp; server web-1 outputs_abp_host_1:80
+&nbsp; &nbsp; server web-2 outputs_abp_host_2:80
 &nbsp;&nbsp; &nbsp;
 &nbsp; &nbsp; stats enable
 &nbsp; &nbsp; stats uri /haproxy
@@ -155,68 +179,68 @@ listen http-in
 
 <p name="4c0d"><strong>(Copy paste code lines makes encoding problem just download the file =&gt;&nbsp;&nbsp;<a href="https://raw.githubusercontent.com/alirizaadiyahsi/ModuleZeroCoreTemplateWebFarm/master/aspnet-core/docker/ng/docker-compose.yml">Download docker-compose.yml</a>)</strong></p>
 
-<div class="pre-action-link" id="premain156549" style="width:100%;display:block;"><span id="prehide156549" onclick="processCodeBlocks.togglePre(156549);">Hide</span>  &nbsp; <span id="copycode156549" onclick="return processCodeBlocks.copyCode(156549);">Copy Code</span></div><pre name="0a6e" id="pre156549" class="notranslate" style="margin-top: 0px;">version: <span class="code-string">'</span><span class="code-string">2'</span>
+<pre name="0a6e">version: '2'
 
 services:
 
 &nbsp; &nbsp; abp_redis:
 &nbsp; &nbsp; &nbsp; &nbsp; image: redis
 &nbsp; &nbsp; &nbsp; &nbsp; ports:
-&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; - <span class="code-string">"</span><span class="code-string">6379:6379"</span>
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; - "6379:6379"
 
 &nbsp; &nbsp; abp_host:
 &nbsp; &nbsp; &nbsp; &nbsp; image: abp/host
 &nbsp; &nbsp; &nbsp; &nbsp; environment:
 &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; - ASPNETCORE_ENVIRONMENT=Staging
 &nbsp; &nbsp; &nbsp; &nbsp; volumes:
-&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; - <span class="code-string">"</span><span class="code-string">./Host-Logs:/app/App_Data/Logs"</span>
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; - "./Host-Logs:/app/App_Data/Logs"
 
 &nbsp; &nbsp; abp_ng:
 &nbsp; &nbsp; &nbsp; &nbsp; image: abp/ng
 &nbsp; &nbsp; &nbsp; &nbsp; ports:
-&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; - <span class="code-string">"</span><span class="code-string">9902:80"</span>
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; - "9902:80"
 &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;&nbsp;
 &nbsp; &nbsp; load_balancer:
-&nbsp; &nbsp; &nbsp; &nbsp; image: haproxy:<span class="code-digit">1</span>.<span class="code-digit">7</span>.<span class="code-digit">1</span>
+&nbsp; &nbsp; &nbsp; &nbsp; image: haproxy:1.7.1
 &nbsp; &nbsp; &nbsp; &nbsp; volumes:
-&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; - <span class="code-string">"</span><span class="code-string">./haproxy.cfg:/usr/local/etc/haproxy/haproxy.cfg"</span>
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; - "./haproxy.cfg:/usr/local/etc/haproxy/haproxy.cfg"
 &nbsp; &nbsp; &nbsp; &nbsp; ports:
-&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; - <span class="code-string">"</span><span class="code-string">9904:8080"</span></pre>
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; - "9904:8080"</pre>
 
 <p name="7c8b"><strong>build-with-ng.ps1</strong></p>
 
 <p name="7c8b">Replace the below line</p>
 
-<pre id="pre874903" lang="aspnet" class="notranslate" style="margin-top: 0px;">(Get-Content $ngConfigPath) -replace "21021", "9901" | Set-Content $ngConfigPath</pre>
+<pre id="pre874903" lang="aspnet">(Get-Content $ngConfigPath) -replace "21021", "9901" | Set-Content $ngConfigPath</pre>
 
 <p name="7c8b">with this line</p>
 
-<div class="pre-action-link" id="premain874903" style="width:100%;display:block;"><span id="prehide874903" onclick="processCodeBlocks.togglePre(874903);">Hide</span>  &nbsp; <span id="copycode874903" onclick="return processCodeBlocks.copyCode(874903);">Copy Code</span></div><pre id="pre874903" lang="aspnet" class="notranslate" style="margin-top: 0px;">(Get-Content $ngConfigPath) -replace "21021", "9904" | Set-Content $ngConfigPath</pre>
+<pre id="pre874903" lang="aspnet">(Get-Content $ngConfigPath) -replace "21021", "9904" | Set-Content $ngConfigPath</pre>
 
 <p name="7c8b">Now Angular UI will connect to haproxy. Haproxy distribute the requests to web servers.</p>
 
 <p name="7c8b">Overwrite&nbsp;<strong>up.ps1&nbsp;</strong>with the content below</p>
 
-<div class="pre-action-link" id="premain88278" style="width:100%;display:block;"><span id="prehide88278" onclick="processCodeBlocks.togglePre(88278);">Hide</span>  &nbsp; <span id="copycode88278" onclick="return processCodeBlocks.copyCode(88278);">Copy Code</span></div><pre name="3c26" id="pre88278" class="notranslate" style="margin-top: 0px;">docker rm $(docker ps -aq)
+<pre name="3c26">docker rm $(docker ps -aq)
 docker-compose up -d abp_redis
-sleep <span class="code-digit">3</span>
+sleep 3
 docker-compose up -d abp_host
 docker-compose up -d abp_ng
-sleep <span class="code-digit">2</span>
-docker-compose scale abp_host=<span class="code-digit">2</span>
-sleep <span class="code-digit">2</span>
+sleep 2
+docker-compose scale abp_host=2
+sleep 2
 docker-compose up -d load_balancer</pre>
 
 <p id="b33c" name="b33c">To use redis cache install&nbsp;<a href="https://www.nuget.org/packages/Abp.RedisCache">Abp.RedisCache</a>&nbsp;library to&nbsp;<strong>ProjectName.Web.Core</strong>&nbsp;project. And update&nbsp;<strong>ProjectNameWebCoreModule.cs</strong>&nbsp;like following:</p>
 
-<div class="pre-action-link" id="premain771930" style="width:100%;display:block;"><span id="prehide771930" onclick="processCodeBlocks.togglePre(771930);">Hide</span>  &nbsp; <span id="copycode771930" onclick="return processCodeBlocks.copyCode(771930);">Copy Code</span></div><pre lang="text" id="pre771930" class="notranslate" style="margin-top: 0px;">[DependsOn(...,
+<pre lang="text">[DependsOn(...,
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;typeof(AbpRedisCacheModule))]
 public&nbsp;class&nbsp;ProjectNameWebCoreModule&nbsp;:&nbsp;AbpModule
 {</pre>
 
 <p name="d275">And adding redis cache configuration to <strong>PreInitialize</strong> method&nbsp;(<strong>ProjectNameWebCoreModule.cs</strong>)</p>
 
-<div class="pre-action-link" id="premain137177" style="width:100%;display:block;"><span id="prehide137177" onclick="processCodeBlocks.togglePre(137177);">Hide</span>  &nbsp; <span id="copycode137177" onclick="return processCodeBlocks.copyCode(137177);">Copy Code</span></div><pre lang="text" id="pre137177" class="notranslate" style="margin-top: 0px;">public&nbsp;override&nbsp;void&nbsp;PreInitialize()
+<pre lang="text">public&nbsp;override&nbsp;void&nbsp;PreInitialize()
 {
     ...
 
@@ -235,18 +259,18 @@ public&nbsp;class&nbsp;ProjectNameWebCoreModule&nbsp;:&nbsp;AbpModule
 
 <p><strong>appsettings.staging.json</strong></p>
 
-<div class="pre-action-link" id="premain418996" style="width:100%;display:block;"><span id="prehide418996" onclick="processCodeBlocks.togglePre(418996);">Hide</span>  &nbsp; <span id="copycode418996" onclick="return processCodeBlocks.copyCode(418996);">Copy Code</span></div><pre id="pre418996" class="notranslate" style="margin-top: 0px;">{
+<pre>{
 &nbsp;&nbsp;...,
-&nbsp;&nbsp;<span class="code-string">"</span><span class="code-string">Abp"</span>:&nbsp;{
-&nbsp;&nbsp;&nbsp;&nbsp;<span class="code-string">"</span><span class="code-string">RedisCache"</span>:&nbsp;{
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="code-string">"</span><span class="code-string">ConnectionString"</span>:&nbsp;<span class="code-string">"</span><span class="code-string">outputs_abp_redis_1"</span>
+&nbsp;&nbsp;"Abp":&nbsp;{
+&nbsp;&nbsp;&nbsp;&nbsp;"RedisCache":&nbsp;{
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;"ConnectionString":&nbsp;"outputs_abp_redis_1"
 &nbsp;&nbsp;&nbsp;&nbsp;}
 &nbsp;&nbsp;}
 }</pre>
 
 <p><strong>outputs_abp_redis_1</strong> is the name of redis container and this name is defining by docker automatically. After this changing, host project will resolve the dns of machine that is deployed on. And now, when I run <strong>build-with-ng.ps1<font color="#990000" face="Consolas, Courier New, Courier, mono"><span style="font-size: 14.6667px">&nbsp;</span></font></strong>and <strong>up.ps1</strong>&nbsp;, web farm project will run. &nbsp;And the result:</p>
 
-<p name="41bf"><img alt="" src="webfarm.PNG"></p>
+<p name="41bf"><img alt="" src="./Article Source_files/webfarm.PNG"></p>
 
 <p name="41bf">As you can see, all containers are working. When you browse&nbsp;<a href="http://localhost:9902/">http://localhost:9902</a>&nbsp;you can see Angular UI is working.</p>
 
@@ -258,7 +282,7 @@ public&nbsp;class&nbsp;ProjectNameWebCoreModule&nbsp;:&nbsp;AbpModule
 
 <p name="704e">When you browse&nbsp;<a href="http://localhost:9904/haproxy">http://localhost:9904/haproxy</a>&nbsp;you will see something like following.</p>
 
-<p name="cf2e"><img alt="" src="haproxy.PNG"></p>
+<p name="cf2e"><img alt="" src="./Article Source_files/haproxy.PNG"></p>
 
 <p name="fd87">When you navigate between&nbsp;on&nbsp;angular application<strong>&nbsp;</strong>pages or run any api on host project (<a href="http://localhost:9904/">http://localhost:9904</a>),&nbsp;you can see that the haproxy is routing the requests to different machines. You can track which machine is running under&nbsp;<strong>Session rate&gt;Cur&nbsp;</strong>tab that are changing for web-1 and web-2.&nbsp;</p>
 
@@ -266,7 +290,7 @@ public&nbsp;class&nbsp;ProjectNameWebCoreModule&nbsp;:&nbsp;AbpModule
 
 <p>To understand if redis is working, you can use redis-cli. run&nbsp;<strong>docker exec -it outputs_abp_redis_1 redis-cli&nbsp;</strong>command<strong>&nbsp;</strong>to run&nbsp;<strong>redis-cli</strong>&nbsp;interactive mode to connect redis server that is running on docker container. Then to test if redis is running, write&nbsp;<b>ping</b>&nbsp;command and it will return&nbsp;<strong>PONG&nbsp;</strong>if it works. Now when I write&nbsp;<strong>keys *</strong>&nbsp;command, I should get the application cache keys.</p>
 
-<p><img alt="" src="redis-it-mode.png"></p>
+<p><img alt="" src="./Article Source_files/redis-it-mode.png"></p>
 
 <p>As you can see, redis is working well. Cache keys stored on redis, correctly.</p>
 
@@ -274,3 +298,10 @@ public&nbsp;class&nbsp;ProjectNameWebCoreModule&nbsp;:&nbsp;AbpModule
 
 <p>You can get the modified source code here:&nbsp;<a href="https://github.com/alirizaadiyahsi/ModuleZeroCoreTemplateWebFarm">https://github.com/alirizaadiyahsi/ModuleZeroCoreTemplateWebFarm</a></p>
 
+<p>&nbsp;</p>
+
+</span>
+<!-- End Article -->
+</div> 
+</body>
+</html>
