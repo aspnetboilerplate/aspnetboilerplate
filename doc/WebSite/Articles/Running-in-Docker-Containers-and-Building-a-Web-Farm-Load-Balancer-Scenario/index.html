@@ -15,7 +15,7 @@
 
 <h2>Getting Started</h2>
 
-<h4>Creating Template From Site</h4>
+<h3>Creating Template From Site</h3>
 
 <p>First, I will download module zero core template from&nbsp;<strong><a href="https://www.aspnetboilerplate.com/Templates">https://www.aspnetboilerplate.com/Templates</a></strong>&nbsp;site.</p>
 
@@ -28,7 +28,7 @@ Project name:&nbsp;<b>Acme.ProjectName</b></p>
 
 <p><img alt="" src="project-folder.PNG"></p>
 
-<h4>Creating Database with Using EF Migrations</h4>
+<h3>Creating Database with Using EF Migrations</h3>
 
 <p>Before running project, we should create database with using EF migrations on&nbsp;<strong>Package Manager Console.</strong>&nbsp;First, I am setting&nbsp;<strong>Acme.ProjectName.Web.Host&nbsp;</strong>as start up project. (right-click Host project and select&nbsp;<strong>Set as Startup Project</strong>). And then, open Package Manager Console, select default project to&nbsp;<strong>EntityFrameworkCore,&nbsp;</strong>run the command below</p>
 
@@ -38,7 +38,7 @@ Project name:&nbsp;<b>Acme.ProjectName</b></p>
 
 <p><img alt="" src="update-database.PNG"></p>
 
-<h4>Running Host Project</h4>
+<h3>Running Host Project</h3>
 
 <p>And now, Host project is ready to run. On visual studio Ctrl+F5 . It opens swagger method index page.</p>
 
@@ -46,7 +46,7 @@ Project name:&nbsp;<b>Acme.ProjectName</b></p>
 
 <p>All these services are served in application layer of project and used by Angular UI.&nbsp;</p>
 
-<h4>Running Angular Project</h4>
+<h3>Running Angular Project</h3>
 
 <p>While host is already running and we can run&nbsp;<strong>Angular&nbsp;project</strong>&nbsp;that uses APIs. To run&nbsp;<strong>Angular project</strong>, make sure you have&nbsp;<strong><a href="https://angular.io/docs/ts/latest/guide/setup.html#install-prerequisites" title="What if you don&#39;t have node and npm?">node and npm installed</a></strong>&nbsp;on your machine.</p>
 
@@ -257,7 +257,7 @@ public&nbsp;class&nbsp;ProjectNameWebCoreModule&nbsp;:&nbsp;AbpModule
 
 <p name="c9bd">There are tools to track haproxy activity(haproxy web interface) and get redis stored data(redis cli).</p>
 
-<h4 name="7777"><strong>Haproxy web interface</strong></h4>
+<h4 name="7777"><strong>Haproxy web interface</strong></h3>
 
 <p name="704e">When you browse&nbsp;<a href="http://localhost:9904/haproxy">http://localhost:9904/haproxy</a>&nbsp;you will see something like following.</p>
 
@@ -265,7 +265,7 @@ public&nbsp;class&nbsp;ProjectNameWebCoreModule&nbsp;:&nbsp;AbpModule
 
 <p name="fd87">When you navigate between&nbsp;on&nbsp;angular application<strong>&nbsp;</strong>pages or run any api on host project (<a href="http://localhost:9904/">http://localhost:9904</a>),&nbsp;you can see that the haproxy is routing the requests to different machines. You can track which machine is running under&nbsp;<strong>Session rate&gt;Cur&nbsp;</strong>tab that are changing for web-1 and web-2.&nbsp;</p>
 
-<h4 name="c43b"><strong>Redis cli</strong></h4>
+<h4 name="c43b"><strong>Redis cli</strong></h3>
 
 <p>To understand if redis is working, you can use redis-cli. run&nbsp;<strong>docker exec -it outputs_abp_redis_1 redis-cli&nbsp;</strong>command<strong>&nbsp;</strong>to run&nbsp;<strong>redis-cli</strong>&nbsp;interactive mode to connect redis server that is running on docker container. Then to test if redis is running, write&nbsp;<b>ping</b>&nbsp;command and it will return&nbsp;<strong>PONG&nbsp;</strong>if it works. Now when I write&nbsp;<strong>keys *</strong>&nbsp;command, I should get the application cache keys.</p>
 
