@@ -1,6 +1,6 @@
 #### About Authorization
 
-We strongly recommend you read the [authorization
+We strongly recommend that you read the [authorization
 documentation](/Pages/Documents/Authorization) before this one.
 
 ### Introduction
