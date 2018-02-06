@@ -51,10 +51,14 @@ but your database will be created succesfully.
 
 ### Create Database
 
-We are ready to create database and run project. 
+Then remove all migration classes under **\*.EntityFrameworkCore/Migrations** folder. 
+Because `Pomelo.EntityFrameworkCore.MySql` will add some of its own configurations to work with Entity Framework Core.
 
-- Select __\*.Web.Mvc__ as startup project.
-- Open **Package Manager Console** and select __\*.EntityFrameworkCore__ project.
+Now we are ready to create database and run project. 
+
+- Select **\*.Web.Mvc** as startup project.
+- Open **Package Manager Console** and select **\*.EntityFrameworkCore** project.
+- Run `add-migration Initial_Migration` command
 - Run `update-database` command
 
 MySql integration is completed. Now you can run your project with MySql. 
