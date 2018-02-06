@@ -11,6 +11,25 @@ Install [`Npgsql.EntityFrameworkCore.PostgreSQL`](https://www.nuget.org/packages
 
 We need some configurations and workarounds to use PostgreSql with ASP.NET Core and Entity Framework Core. 
 
+#### Configure DbContext 
+
+Replace `YourProjectNameDbContextConfigurer.cs` with the following lines
+
+```c#
+public static class SqliteDemoDbContextConfigurer
+{
+    public static void Configure(DbContextOptionsBuilder<PostgreSqlDemoDbContext> builder, string connectionString)
+    {
+        builder.UseNpgsql(connectionString);
+    }
+
+    public static void Configure(DbContextOptionsBuilder<PostgreSqlDemoDbContext> builder, DbConnection connection)
+    {
+        builder.UseNpgsql(connection);
+    }
+ }
+ ```
+
 #### Configure connection string 
 
 Change connection string to your PostgreSql connection in ***.Web.Mvc/appsettings.json**. For example:
