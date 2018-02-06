@@ -12,7 +12,7 @@ this document, we will show you how to grant permissions for roles and users.
 
 ### Role Permissions
 
-If we **grant** a role for a permission, all the users that have this role are
+If we **grant** a permission for a role, all the users that have this role are
 authorized for the permission (unless explicitly prohibited for a
 specific user).
 
@@ -57,9 +57,9 @@ ProhibitPermissionAsync to control the permissions one-by-one.
 While the role-based permission management can be enough for most
 applications, we may need to control the permissions per user. When we
 define a permission setting for a user, it overrides the permission setting
-coming from the roles of the user.
+defined for the roles of the user.
 
-As an example; Imagine that we have an application service that prohibits a
+As an example, imagine that we have an application service method for prohibiting a
 permission for a user:
 
     public class UserAppService : IUserAppService
@@ -91,6 +91,6 @@ When we **prohibit** a permission for a user, he/she **can not** be
 authorized for this permission even his/her roles are **granted** for
 the permission. We can use the same principle for granting permissions. When we
 **grant** a permission specifically for a user, this user **is granted**
-the permission even if the roles of the user are not granted for the
-permission. We can use the **ResetAllPermissionsAsync** method for a user to delete
-all user-specific permission settings for them.
+the permission even if the roles of the user are not granted the
+permission. We can use the **ResetAllPermissionsAsync** method to delete
+all user-specific permission settings for a user.
