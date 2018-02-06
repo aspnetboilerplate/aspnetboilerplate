@@ -80,11 +80,5 @@ Now we are ready to create database and run project.
 - Run `add-migration Initial_Migration` command
 - Run `update-database` command
 
-MySql integration is completed. Now you can run your project with MySql. 
-
-### Summary
-
-Below image shows all the steps about integrating MySql.
-
-<img src="images/mysql-integration-summary.png" alt="Swagger UI" class="img-thumbnail" />
+MySql integration is complete. Now you can run your project with MySql. 
 
