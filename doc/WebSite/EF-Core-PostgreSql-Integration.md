@@ -1,15 +1,15 @@
 ### Download Starter Template
 
-I will use a starter template with **ASP.NET Core** and **Entity Framework Core** to integrate PostgreSql. 
-So I downloaded a multi-page template with **ASP.NET Core 2.x** + **.Net Core Framework** + **Authentication** from [https://aspnetboilerplate.com/Templates](https://aspnetboilerplate.com/Templates)
+I will use a starter template with **ASP.NET Core** and **Entity Framework Core** to integrate PostgreSQL.
+I downloaded a multi-page template with **ASP.NET Core 2.x** + **.NET Core** + **Authentication** from [https://aspnetboilerplate.com/Templates](https://aspnetboilerplate.com/Templates).
 
-### Install 
+### Install
 
-Install [`Npgsql.EntityFrameworkCore.PostgreSQL`](https://www.nuget.org/packages/Npgsql.EntityFrameworkCore.PostgreSQL/) nuget package to ***.EntityFrameworkCore** project. 
+Install [`Npgsql.EntityFrameworkCore.PostgreSQL`](https://www.nuget.org/packages/Npgsql.EntityFrameworkCore.PostgreSQL/) NuGet package to ***.EntityFrameworkCore** project.
 
 ### Configuration
 
-We need some configurations and workarounds to use PostgreSql with ASP.NET Core and Entity Framework Core. 
+We need some configuration and a workaround to use PostgreSQL with ASP.NET Core and Entity Framework Core.
 
 #### Configure DbContext 
 
@@ -32,7 +32,7 @@ public static class SqliteDemoDbContextConfigurer
 
 #### Configure connection string 
 
-Change connection string to your PostgreSql connection in ***.Web.Mvc/appsettings.json**. For example:
+Change the connection string to your PostgreSQL connection in ***.Web.Mvc/appsettings.json**. For example:
 
 ```js
 {
@@ -41,24 +41,23 @@ Change connection string to your PostgreSql connection in ***.Web.Mvc/appsetting
   },
   ...
 }
-
 ```
 
 #### A workaround
 
-To prevent EF Core from calling `Program.BuildWebHost()` rename `BuildWebHost`. For example, I will change it to `InitWebHost`. 
-I won't be detailed this workaround. I will give some points to understand better. Check the following issues,
+To prevent EF Core from calling `Program.BuildWebHost()`, rename `BuildWebHost`. For example, I will change it to `InitWebHost`.
+I won't explain this workaround. To understand it better, check the following issues:
 
-> **Reason** : [EF Core 2.0: design-time DbContext discovery changes](https://github.com/aspnet/EntityFrameworkCore/issues/9033)
-> 
-> **Workaround** : [Design: Allow IDesignTimeDbContextFactory to short-circuit service provider creation](https://github.com/aspnet/EntityFrameworkCore/issues/9076#issuecomment-313278753)
+> **Reason**: [EF Core 2.0: design-time DbContext discovery changes](https://github.com/aspnet/EntityFrameworkCore/issues/9033)
 >
-> **NOTE :** If you don't rename `BuildWebHost`, you get an error that is about running `BuildWebHost` method.
+> **Workaround**: [Design: Allow IDesignTimeDbContextFactory to short-circuit service provider creation](https://github.com/aspnet/EntityFrameworkCore/issues/9076#issuecomment-313278753)
+>
+> **NOTE**: If you don't rename `BuildWebHost`, you will get an error about running `BuildWebHost` method.
 
 ### Create Database
 
-Before you create the database, you should change max length of "Value" property of AbpLanguagesTexts with adding following lines to DbContext.
-Because max length of char in MS Sql and PostgreSql are different.
+Before you create the database, you should change the max length of the "Value" property of ApplicationLanguageText by adding the following lines to DbContext.
+This is because the max length of char in MS SQL and PostgreSQL are different.
 
 ```c#
 public class PostgreSqlDemoDbContext : AbpZeroDbContext<Tenant, Role, User, PostgreSqlDemoDbContext>
@@ -69,30 +68,30 @@ public class PostgreSqlDemoDbContext : AbpZeroDbContext<Tenant, Role, User, Post
     }
 
     // add these lines to override max length of property
-    // we should set max length smaller than that postgresql allowed size (10485760)
+    // we should set max length smaller than the PostgreSQL allowed size (10485760)
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
         modelBuilder.Entity<ApplicationLanguageText>()
-            .Property(p=>p.Value)
+            .Property(p => p.Value)
             .HasMaxLength(100); // any integer that is smaller than 10485760
     }
 }
 ```
 
-Then remove all migration classes under ***.EntityFrameworkCore/Migrations** folder. 
-Because `Npgsql.EntityFrameworkCore.PostgreSQL` will add some of its own configurations to work with Entity Framework Core.
+Then remove all migration classes in ***.EntityFrameworkCore/Migrations** folder,
+because `Npgsql.EntityFrameworkCore.PostgreSQL` will add some of its own configuration to work with Entity Framework Core.
 
-Now we are ready to create database and run project. 
+We are ready to create the database and run the project.
 
 - Select **\*.Web.Mvc** as startup project.
 - Open **Package Manager Console** and select **\*.EntityFrameworkCore** project.
-- Run `add-migration Initial_Migration` command
-- Run `update-database` command
+- Run `add-migration Initial_Migration` command.
+- Run `update-database` command.
 
-PostgreSql integration is completed. Now you can run your project with PostgreSql. 
+PostgreSQL integration is complete. Now you can run your project with PostgreSQL.
 
 ### Summary
 
-Below image shows all the steps about integrating PostgreSql.
+The image below shows all the steps for integrating PostgreSQL.
 
-<img src="images/postgresql-integration-summary.png" alt="Swagger UI" class="img-thumbnail" />
+<img src="images/postgresql-integration-summary.png" alt="PostgreSQL integration summary" class="img-thumbnail" />
