@@ -53,8 +53,8 @@ but your database will be created succesfully.
 
 We are ready to create database and run project. 
 
-- Select ***.Web.Mvc** as startup project.
-- Open **Package Manager Console** and select ""*.EntityFrameworkCore** project.
+- Select __\*.Web.Mvc__ as startup project.
+- Open **Package Manager Console** and select __\*.EntityFrameworkCore__ project.
 - Run `update-database` command
 
 MySql integration is completed. Now you can run your project with MySql. 
