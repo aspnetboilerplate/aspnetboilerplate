@@ -89,9 +89,3 @@ We are ready to create the database and run the project.
 - Run `update-database` command.
 
 PostgreSQL integration is complete. Now you can run your project with PostgreSQL.
-
-### Summary
-
-The image below shows all the steps for integrating PostgreSQL.
-
-<img src="images/postgresql-integration-summary.png" alt="PostgreSQL integration summary" class="img-thumbnail" />
