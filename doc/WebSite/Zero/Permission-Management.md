@@ -87,7 +87,7 @@ example, we're getting a UserId and PermissionName and using the
 UserManager's **ProhibitPermissionAsync** method to prohibit a
 permission for a user.
 
-When we **prohibit** a permission for a user, he/she **can not** be
+When we **prohibit** a permission for a user, he/she **cannot** be
 authorized for this permission even his/her roles are **granted** for
 the permission. We can use the same principle for granting permissions. When we
 **grant** a permission specifically for a user, this user **is granted**
