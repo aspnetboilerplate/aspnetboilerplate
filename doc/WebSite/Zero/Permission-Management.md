@@ -12,7 +12,7 @@ this document, we will show you how to grant permissions for roles and users.
 
 ### Role Permissions
 
-If we **grant** a permission for a role, all the users that have this role are
+If we **grant** a permission to a role, all the users that have this role are
 authorized for the permission (unless explicitly prohibited for a
 specific user).
 
