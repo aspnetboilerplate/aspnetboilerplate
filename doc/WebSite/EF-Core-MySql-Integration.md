@@ -20,6 +20,25 @@ Install [`Pomelo.EntityFrameworkCore.MySql`](https://www.nuget.org/packages/Pome
 
 ### Configuration
 
+#### Configure DbContext 
+
+Replace `YourProjectNameDbContextConfigurer.cs` with the following lines
+
+```c#
+public static class SqliteDemoDbContextConfigurer
+{
+    public static void Configure(DbContextOptionsBuilder<MySqlDemoDbContext> builder, string connectionString)
+    {
+        builder.UseMySql(connectionString);
+    }
+
+    public static void Configure(DbContextOptionsBuilder<MySqlDemoDbContext> builder, DbConnection connection)
+    {
+        builder.UseMySql(connection);
+    }
+ }
+ ```
+
 We need some configurations and workarounds to use MySql with ASP.NET Core and Entity Framework Core. 
 There is no need to add any configuration for ABP.
 
