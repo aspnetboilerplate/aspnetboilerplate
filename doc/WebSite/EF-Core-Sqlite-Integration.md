@@ -48,24 +48,24 @@ Change connection string to your Sqlite connection in ***.Web.Mvc/appsettings.js
 #### A workaround
 
 To prevent EF Core from calling `Program.BuildWebHost()` rename `BuildWebHost`. For example, change it to `InitWebHost`. 
-This workaround won't be detailed in this document, but you will find some points to understand better. Check the following issues,
+To understand why it needs to be renamed check the following issues,
 
 > **Reason** : [EF Core 2.0: design-time DbContext discovery changes](https://github.com/aspnet/EntityFrameworkCore/issues/9033)
 > 
 > **Workaround** : [Design: Allow IDesignTimeDbContextFactory to short-circuit service provider creation](https://github.com/aspnet/EntityFrameworkCore/issues/9076#issuecomment-313278753)
 >
-> **NOTE :** If you don't rename `BuildWebHost`, you get an error that is about running `BuildWebHost` method.
+> **NOTE :** If you don't rename BuildWebHost, you'll get an error running BuildWebHost method.
 
 ### Create Database
 
-Remove all migration classes under ***.EntityFrameworkCore/Migrations** folder, before create database. 
-Because `Microsoft.EntityFrameworkCore.Sqlite` will add some of its own configurations to work with Entity Framework Core.
+Remove all migration classes under **\*.EntityFrameworkCore/Migrations** folder, before creating database.
+Because `Microsoft.EntityFrameworkCore.Sqlite` will add some of its own configuration to work with Entity Framework Core.
 
-Now we are ready to create database and run project. 
+Now it's ready to build database.
 
 - Select **\*.Web.Mvc** as startup project.
 - Open **Package Manager Console** and select **\*.EntityFrameworkCore** project.
 - Run `add-migration Initial_Migration` command
 - Run `update-database` command
 
-Sqlite integration is completed. Now run your project with Sqlite. 
+Sqlite integration is complete. Now run your project with Sqlite. 
