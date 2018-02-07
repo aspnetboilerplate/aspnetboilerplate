@@ -1,6 +1,6 @@
 ### Download Starter Template
 
-Download a starter template with **ASP.NET Core** and **Entity Framework Core** to integrate SqlLite. 
+Download a starter template with **ASP.NET Core** and **Entity Framework Core** to integrate PostgreSQL. 
 [Multi-page template with **ASP.NET Core 2.x** + **.Net Core Framework** + **Authentication**](https://aspnetboilerplate.com/Templates) 
 will be explained in this document.
 
