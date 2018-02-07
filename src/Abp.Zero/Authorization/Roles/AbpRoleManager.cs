@@ -49,9 +49,9 @@ namespace Abp.Authorization.Roles
 
         protected AbpRoleStore<TRole, TUser> AbpStore { get; private set; }
 
-        private readonly IPermissionManager _permissionManager;
-        private readonly ICacheManager _cacheManager;
-        private readonly IUnitOfWorkManager _unitOfWorkManager;
+        protected readonly IPermissionManager _permissionManager;
+        protected readonly ICacheManager _cacheManager;
+        protected readonly IUnitOfWorkManager _unitOfWorkManager;
 
         /// <summary>
         /// Constructor.
