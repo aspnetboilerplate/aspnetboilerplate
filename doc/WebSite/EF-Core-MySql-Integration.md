@@ -41,7 +41,6 @@ public static class SqliteDemoDbContextConfigurer
  ```
 
 Some configuration and workaround are needed to use MySQL with ASP.NET Core and Entity Framework Core. 
-There is no need to add any configuration for ABP.
 
 #### Configure connection string 
 
