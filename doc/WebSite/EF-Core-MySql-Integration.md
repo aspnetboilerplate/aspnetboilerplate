@@ -1,16 +1,17 @@
 
 ### Download Starter Template
 
-I will use a starter template with **ASP.NET Core** and **Entity Framework Core** to integrate MySql. 
-So I downloaded a multi-page template with **ASP.NET Core 2.x** + **.Net Core Framework** + **Authentication** from [https://aspnetboilerplate.com/Templates](https://aspnetboilerplate.com/Templates)
+Download a starter template with **ASP.NET Core** and **Entity Framework Core** to integrate SqlLite. 
+[Multi-page template with **ASP.NET Core 2.x** + **.Net Core Framework** + **Authentication**](https://aspnetboilerplate.com/Templates) 
+will be explained in this document.
 
 ### Getting Started
 
-There are two Entity Framework Core providers for MySql that are mentioned in Micrososft Docs. One of them is 
+There are two Entity Framework Core providers for MySQL that are mentioned in Micrososft Docs. One of them is 
 [Official MySQL EF Core Database Provider](https://docs.microsoft.com/en-us/ef/core/providers/mysql/) and 
 other is [Pomelo EF Core Database Provider for MySQL](https://docs.microsoft.com/en-us/ef/core/providers/pomelo/).
 
-> **NOTE:** Official provider doesn't support EF Core 2.0 yet. So we will use Pomelo.
+> **NOTE:** Official provider doesn't support EF Core 2.0 yet. Pomelo EF Core Database Provider will be used in this example.
 > 
 > Related issue: https://github.com/aspnet/EntityFrameworkCore/issues/10065#issuecomment-336495475
 
@@ -39,7 +40,7 @@ public static class SqliteDemoDbContextConfigurer
  }
  ```
 
-We need some configurations and workarounds to use MySql with ASP.NET Core and Entity Framework Core. 
+Some configuration and workaround are needed to use MySQL with ASP.NET Core and Entity Framework Core. 
 There is no need to add any configuration for ABP.
 
 #### Configure connection string 
@@ -58,15 +59,14 @@ Change connection string to your MySql connection in ***.Web.Mvc/appsettings.jso
 
 #### A workaround
 
-To prevent EF Core from calling `Program.BuildWebHost()` rename `BuildWebHost`. For example, I will change it to `InitWebHost`. 
-I won't be detailed this workaround. I will give some points to understand better. Check the following issues,
+To prevent EF Core from calling `Program.BuildWebHost()` rename `BuildWebHost`. For example, change it to `InitWebHost`. 
+To understand why it needs to be renamed, check the following issues:
 
 > **Reason** : [EF Core 2.0: design-time DbContext discovery changes](https://github.com/aspnet/EntityFrameworkCore/issues/9033)
 > 
 > **Workaround** : [Design: Allow IDesignTimeDbContextFactory to short-circuit service provider creation](https://github.com/aspnet/EntityFrameworkCore/issues/9076#issuecomment-313278753)
 >
-> **NOTE :** If you don't rename `BuildWebHost`, you get an error like `Unknown database 'your_database'` in MySQL, 
-but your database will be created succesfully.
+> **NOTE :** If you don't rename BuildWebHost, you'll get an error running BuildWebHost method.
 
 ### Create Database
 
@@ -80,5 +80,5 @@ Now we are ready to create database and run project.
 - Run `add-migration Initial_Migration` command
 - Run `update-database` command
 
-MySql integration is complete. Now you can run your project with MySql. 
+MySQL integration is complete. Now you can run your project with MySQL. 
 
