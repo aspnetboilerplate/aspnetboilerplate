@@ -265,7 +265,7 @@ to use the TaskRepository.
 
 ### Other Database Integrations
 
-This document is prepared via the MS SQL Server example. 
+This document and the examples are based on using MS SQL Server.
 The following documents can be followed for different database integrations.
 
 - [MySQL Integration](EF-Core-MySql-Integration.md)
