@@ -262,3 +262,13 @@ to use the TaskRepository.
     layer** (.Core project in the startup template). Then define the custom repository
     **classes** in the **.EntityFrameworkCore** project if you want to
     abstract EF Core from your domain/application.
+
+### Other Database Integrations
+
+This document is prepared via the MS SQL Server example. 
+The following documents can be followed for different database integrations.
+
+- [MySQL Integration](EF-Core-MySql-Integration.md)
+- [PostgreSQL Integration](EF-Core-PostgreSql-Integration.md)
+- [SQLite Integration](EF-Core-Sqlite-Integration.md)
+- [Oracle Integration](EF-Core-Oracle-Integration.md)
