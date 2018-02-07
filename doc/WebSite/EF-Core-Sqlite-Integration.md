@@ -1,6 +1,6 @@
 ### Download Starter Template
 
-Download a starter template with **ASP.NET Core** and **Entity Framework Core** to integrate SqlLite. 
+Download a starter template with **ASP.NET Core** and **Entity Framework Core** to integrate SQLite. 
 [Multi-page template with **ASP.NET Core 2.x** + **.Net Core Framework** + **Authentication**](https://aspnetboilerplate.com/Templates) 
 will be explained in this document.
 
@@ -10,7 +10,7 @@ Install [`Microsoft.EntityFrameworkCore.Sqlite`](https://www.nuget.org/packages/
 
 ### Configuration
 
-Some configurations and workarounds are needed to use Sqlite with ASP.NET Core and Entity Framework Core. 
+Some configurations and workarounds are needed to use SQLite with ASP.NET Core and Entity Framework Core. 
 
 #### Configure DbContext 
 
@@ -33,7 +33,7 @@ public static class SqliteDemoDbContextConfigurer
 
 #### Configure connection string 
 
-Change connection string to your Sqlite connection in ***.Web.Mvc/appsettings.json**. For example:
+Change connection string to your SQLite connection in ***.Web.Mvc/appsettings.json**. For example:
 
 ```js
 {
@@ -68,4 +68,4 @@ Now it's ready to build database.
 - Run `add-migration Initial_Migration` command
 - Run `update-database` command
 
-Sqlite integration is complete. Now run your project with Sqlite. 
+SQLite integration is complete. Now run your project with SQLite. 
