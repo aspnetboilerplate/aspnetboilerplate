@@ -14,7 +14,7 @@ namespace Abp.ZeroCore.SampleApp.EntityFramework.Seed.Host
         {
             return new List<ApplicationLanguage>
             {
-                new ApplicationLanguage(null, "en", "English", "famfamfam-flags gb"),
+                new ApplicationLanguage(null, "en-gb", "English", "famfamfam-flags gb"),
                 new ApplicationLanguage(null, "tr", "Türkçe", "famfamfam-flags tr")
             };
         }
