@@ -1,7 +1,8 @@
 ### Download Starter Template
 
-I will use a starter template with **ASP.NET Core** and **Entity Framework Core** to integrate PostgreSQL.
-I downloaded a multi-page template with **ASP.NET Core 2.x** + **.NET Core** + **Authentication** from [https://aspnetboilerplate.com/Templates](https://aspnetboilerplate.com/Templates).
+Download a starter template with **ASP.NET Core** and **Entity Framework Core** to integrate SqlLite. 
+[Multi-page template with **ASP.NET Core 2.x** + **.Net Core Framework** + **Authentication**](https://aspnetboilerplate.com/Templates) 
+will be explained in this document.
 
 ### Install
 
@@ -9,7 +10,7 @@ Install [`Npgsql.EntityFrameworkCore.PostgreSQL`](https://www.nuget.org/packages
 
 ### Configuration
 
-We need some configuration and a workaround to use PostgreSQL with ASP.NET Core and Entity Framework Core.
+Some configuration and workaround are needed to use MySQL with ASP.NET Core and Entity Framework Core. 
 
 #### Configure DbContext 
 
@@ -45,14 +46,14 @@ Change the connection string to your PostgreSQL connection in ***.Web.Mvc/appset
 
 #### A workaround
 
-To prevent EF Core from calling `Program.BuildWebHost()`, rename `BuildWebHost`. For example, I will change it to `InitWebHost`.
-I won't explain this workaround. To understand it better, check the following issues:
+To prevent EF Core from calling `Program.BuildWebHost()` rename `BuildWebHost`. For example, change it to `InitWebHost`. 
+To understand why it needs to be renamed, check the following issues:
 
-> **Reason**: [EF Core 2.0: design-time DbContext discovery changes](https://github.com/aspnet/EntityFrameworkCore/issues/9033)
+> **Reason** : [EF Core 2.0: design-time DbContext discovery changes](https://github.com/aspnet/EntityFrameworkCore/issues/9033)
+> 
+> **Workaround** : [Design: Allow IDesignTimeDbContextFactory to short-circuit service provider creation](https://github.com/aspnet/EntityFrameworkCore/issues/9076#issuecomment-313278753)
 >
-> **Workaround**: [Design: Allow IDesignTimeDbContextFactory to short-circuit service provider creation](https://github.com/aspnet/EntityFrameworkCore/issues/9076#issuecomment-313278753)
->
-> **NOTE**: If you don't rename `BuildWebHost`, you will get an error about running `BuildWebHost` method.
+> **NOTE :** If you don't rename BuildWebHost, you'll get an error running BuildWebHost method.
 
 ### Create Database
 
@@ -81,7 +82,7 @@ public class PostgreSqlDemoDbContext : AbpZeroDbContext<Tenant, Role, User, Post
 Then remove all migration classes in ***.EntityFrameworkCore/Migrations** folder,
 because `Npgsql.EntityFrameworkCore.PostgreSQL` will add some of its own configuration to work with Entity Framework Core.
 
-We are ready to create the database and run the project.
+Now it's ready to build database.
 
 - Select **\*.Web.Mvc** as startup project.
 - Open **Package Manager Console** and select **\*.EntityFrameworkCore** project.
