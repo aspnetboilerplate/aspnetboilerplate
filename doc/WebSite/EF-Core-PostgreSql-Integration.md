@@ -79,7 +79,7 @@ public class PostgreSqlDemoDbContext : AbpZeroDbContext<Tenant, Role, User, Post
 }
 ```
 
-Then remove all migration classes in ***.EntityFrameworkCore/Migrations** folder,
+Remove all migration classes in ***.EntityFrameworkCore/Migrations** folder,
 because `Npgsql.EntityFrameworkCore.PostgreSQL` will add some of its own configuration to work with Entity Framework Core.
 
 Now it's ready to build database.
