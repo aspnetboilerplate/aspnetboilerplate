@@ -72,7 +72,7 @@ To understand why it needs to be renamed, check the following issues:
 Then remove all migration classes under **\*.EntityFrameworkCore/Migrations** folder. 
 Because `Pomelo.EntityFrameworkCore.MySql` will add some of its own configurations to work with Entity Framework Core.
 
-Now we are ready to create database and run project. 
+Now it's ready to build database.
 
 - Select **\*.Web.Mvc** as startup project.
 - Open **Package Manager Console** and select **\*.EntityFrameworkCore** project.
