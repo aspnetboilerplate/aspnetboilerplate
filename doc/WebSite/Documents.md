@@ -97,6 +97,9 @@ Object-Relational Mapping
 
 -   [EntityFramework Integration](EntityFramework-Integration.md)
 -   [EntityFramework Core Integration](Entity-Framework-Core.md)
+    - [MySQL Integration](EF-Core-MySql-Integration.md)
+    - [PostgreSQL Integration](EF-Core-PostgreSql-Integration.md)
+    - [SQLite Integration](EF-Core-Sqlite-Integration.md)
 -   [NHibernate Integration](NHibernate-Integration.md)
 -   [Dapper Integration](Dapper-Integration.md) <label class="label label-success">NEW</label>
 
