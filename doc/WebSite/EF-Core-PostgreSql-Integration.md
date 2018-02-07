@@ -10,14 +10,14 @@ Install [`Npgsql.EntityFrameworkCore.PostgreSQL`](https://www.nuget.org/packages
 
 ### Configuration
 
-Some configuration and workaround are needed to use MySQL with ASP.NET Core and Entity Framework Core. 
+Some configuration and workaround are needed to use PostgreSQL with ASP.NET Core and Entity Framework Core. 
 
 #### Configure DbContext 
 
 Replace `YourProjectNameDbContextConfigurer.cs` with the following lines
 
 ```c#
-public static class SqliteDemoDbContextConfigurer
+public static class PostgreSqlDemoDbContextConfigurer
 {
     public static void Configure(DbContextOptionsBuilder<PostgreSqlDemoDbContext> builder, string connectionString)
     {
