@@ -1,7 +1,7 @@
 
 ### Download Starter Template
 
-Download a starter template with **ASP.NET Core** and **Entity Framework Core** to integrate SqlLite. 
+Download a starter template with **ASP.NET Core** and **Entity Framework Core** to integrate MySQL. 
 [Multi-page template with **ASP.NET Core 2.x** + **.Net Core Framework** + **Authentication**](https://aspnetboilerplate.com/Templates) 
 will be explained in this document.
 
@@ -26,7 +26,7 @@ Install [`Pomelo.EntityFrameworkCore.MySql`](https://www.nuget.org/packages/Pome
 Replace `YourProjectNameDbContextConfigurer.cs` with the following lines
 
 ```c#
-public static class SqliteDemoDbContextConfigurer
+public static class MySqlDemoDbContextConfigurer
 {
     public static void Configure(DbContextOptionsBuilder<MySqlDemoDbContext> builder, string connectionString)
     {
