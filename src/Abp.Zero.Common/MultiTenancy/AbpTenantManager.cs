@@ -73,7 +73,7 @@ namespace Abp.MultiTenancy
             await TenantRepository.InsertAsync(tenant);
         }
 
-        public async Task UpdateAsync(TTenant tenant)
+        public virtual async Task UpdateAsync(TTenant tenant)
         {
             if (await TenantRepository.FirstOrDefaultAsync(t => t.TenancyName == tenant.TenancyName && t.Id != tenant.Id) != null)
             {
