@@ -45,7 +45,7 @@ There is no need to add any configuration for ABP.
 
 #### Configure connection string 
 
-Change connection string to your MySql connection in ***.Web.Mvc/appsettings.json**. For example:
+Change connection string to your MySQL connection in ***.Web.Mvc/appsettings.json**. For example:
 
 ```js
 {
