@@ -14,6 +14,26 @@ Some configurations and workarounds are needed to use SQLite with ASP.NET Core a
 
 #### Configure DbContext 
 
+Since SQLite doesn't support multithreading, tansactions should be disabled in `SQLiteDemoEntityFrameworkModule.PreInitialize()` method.
+
+> NOTE:Check [here](https://github.com/XdX-Software/EasyDDD/issues/1) for more detail and workarounds.
+
+```c#
+[DependsOn(
+    typeof(SQLiteDemoCoreModule), 
+    typeof(AbpZeroCoreEntityFrameworkCoreModule))]
+public class SQLiteDemoEntityFrameworkModule : AbpModule
+{
+    public override void PreInitialize()
+    {
+        ...
+        // add this line to disable transactions
+        Configuration.UnitOfWork.IsTransactional = false;
+        ...
+    }
+}
+```
+
 Replace `YourProjectNameDbContextConfigurer.cs` with the following lines
 
 ```c#
