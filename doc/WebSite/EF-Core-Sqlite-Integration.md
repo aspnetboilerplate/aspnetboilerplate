@@ -58,7 +58,7 @@ Change connection string to your SQLite connection in ***.Web.Mvc/appsettings.js
 ```js
 {
   "ConnectionStrings": {
-    "Default": "Data Source=SqliteDemoDb"
+    "Default": "Data Source=SqliteDemoDb.db"
   },
   ...
 }
