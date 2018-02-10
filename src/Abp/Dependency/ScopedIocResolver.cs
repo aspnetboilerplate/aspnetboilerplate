@@ -19,6 +19,10 @@ namespace Abp.Dependency
         {
             return Resolve<T>(typeof(T));
         }
+        public T Resolve<T>(string name)
+        {
+            return (T)Resolve(name, typeof(T), null);
+        }
 
         public T Resolve<T>(Type type)
         {
@@ -40,6 +44,15 @@ namespace Abp.Dependency
             var resolvedObject = argumentsAsAnonymousType != null
                 ? _iocResolver.Resolve(type, argumentsAsAnonymousType)
                 : _iocResolver.Resolve(type);
+
+            _resolvedObjects.Add(resolvedObject);
+            return resolvedObject;
+        }
+        public object Resolve(string name, Type type, object argumentsAsAnonymousType)
+        {
+            var resolvedObject = argumentsAsAnonymousType != null
+                ? _iocResolver.Resolve(name, type, argumentsAsAnonymousType)
+                : _iocResolver.Resolve(name, type);
 
             _resolvedObjects.Add(resolvedObject);
             return resolvedObject;
@@ -89,6 +102,11 @@ namespace Abp.Dependency
         public void Dispose()
         {
             _resolvedObjects.ForEach(_iocResolver.Release);
+        }
+
+        public object Resolve(string name, Type type)
+        {
+            return Resolve(name, type, null);
         }
     }
 }

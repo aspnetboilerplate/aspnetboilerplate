@@ -159,6 +159,15 @@ namespace Abp.Dependency
         {
             return IocContainer.Resolve<T>();
         }
+        /// <summary>
+        /// Gets an object from IOC container.
+        /// Returning object must be Released (see <see cref="IIocResolver.Release"/>) after usage.
+        /// </summary> 
+        /// <param name="name">component name</param>
+        public T Resolve<T>(string name)
+        {
+            return IocContainer.Resolve<T>(name);
+        }
 
         /// <summary>
         /// Gets an object from IOC container.
@@ -170,6 +179,11 @@ namespace Abp.Dependency
         public T Resolve<T>(Type type)
         {
             return (T)IocContainer.Resolve(type);
+        }
+
+        public object Resolve(string name, Type type)
+        {
+            return IocContainer.Resolve(name, type);
         }
 
         /// <summary>
@@ -205,6 +219,11 @@ namespace Abp.Dependency
         public object Resolve(Type type, object argumentsAsAnonymousType)
         {
             return IocContainer.Resolve(type, argumentsAsAnonymousType);
+        }
+
+        public object Resolve(string name, Type type, object argumentsAsAnonymousType)
+        {
+            return IocContainer.Resolve(name, type, argumentsAsAnonymousType);
         }
 
         ///<inheritdoc/>

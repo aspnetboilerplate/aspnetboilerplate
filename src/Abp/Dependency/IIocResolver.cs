@@ -14,7 +14,13 @@ namespace Abp.Dependency
         /// <typeparam name="T">Type of the object to get</typeparam>
         /// <returns>The object instance</returns>
         T Resolve<T>();
-
+        /// <summary>
+        /// Gets an object from IOC container.
+        /// Returning object must be Released (see <see cref="Release"/>) after usage.
+        /// </summary> 
+        /// <typeparam name="T">Type of the object to get</typeparam>
+        /// <returns>The object instance</returns>
+        T Resolve<T>(string name);
         /// <summary>
         /// Gets an object from IOC container.
         /// Returning object must be Released (see <see cref="Release"/>) after usage.
@@ -23,6 +29,7 @@ namespace Abp.Dependency
         /// <param name="type">Type of the object to resolve</param>
         /// <returns>The object instance</returns>
         T Resolve<T>(Type type);
+        object Resolve(string name, Type type);
 
         /// <summary>
         /// Gets an object from IOC container.
@@ -49,6 +56,7 @@ namespace Abp.Dependency
         /// <param name="argumentsAsAnonymousType">Constructor arguments</param>
         /// <returns>The object instance</returns>
         object Resolve(Type type, object argumentsAsAnonymousType);
+        object Resolve(string name, Type type, object argumentsAsAnonymousType);
 
         /// <summary>
         /// Gets all implementations for given type.
