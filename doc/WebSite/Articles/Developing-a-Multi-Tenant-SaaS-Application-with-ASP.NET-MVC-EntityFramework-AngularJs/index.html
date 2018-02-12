@@ -59,9 +59,9 @@
 
 <p>ASP.NET Boilerplate provides templates to make a project startup easier. We create the <strong>startup template</strong> from <a href="https://aspnetboilerplate.com/Templates"> https://aspnetboilerplate.com/Templates</a>:</p>
 
-<p><img alt="Create template" height="781" src="create-template-3.png" width="955" /></p>
+<p><img alt="Create template" height="969" src="create-template-4.png" width="1147" /></p>
 
-<p>I selected ASP.NET MVC 5.x, Angularjs and Entity Frameowork including &quot;<strong>module zero</strong>&quot;. It creates a ready and working solution for us including a <strong>login page</strong>, <strong> navigation</strong> and a bootstrap based <strong>layout</strong>. After download and open the solution with <strong>Visual Studio 2015+</strong>, we see a <strong>layered</strong> solution structure including a unit test project:</p>
+<p>I selected ASP.NET MVC 5.x, Angularjs and Entity Frameowork including &quot;<strong>Authentication</strong>&quot;. It creates a ready and working solution for us including a <strong>login page</strong>, <strong> navigation</strong> and a bootstrap based <strong>layout</strong>. After download and open the solution with <strong>Visual Studio 2017+</strong>, we see a <strong>layered</strong> solution structure including a unit test project:</p>
 
 <p><img alt="Solution structure" height="167" src="solution-structure.png" width="215" /></p>
 
@@ -69,9 +69,10 @@
 
 <p><img alt="Update database command" height="203" src="pmc-update-database.png" width="743" /></p>
 
-<p>PMC <strong>Default project</strong> should be <strong> EventCloud.EntityFramework</strong> (since it contains the migrations). This command creates <strong>EventCloud </strong>database<strong> </strong>in local SQL Server (you can change <strong>connection string</strong> from <strong>web.config</strong> file).</p>
+<p>Package Manager Console's <strong>Default project</strong> should be <strong> EventCloud.EntityFramework</strong> (since it contains the migrations). This command creates <strong>EventCloud </strong>database<strong> </strong>in local SQL Server (you can change <strong>connection string</strong> from <strong>web.config</strong> file).</p>
 
-<p>Now, we can run the application. We see the pre-built <strong>login</strong> page. Can can enter <strong>default </strong>as tenancy name, <strong>admin </strong>as user and <strong>123qwe </strong>as password to login:</p>
+<p>Now, we can run the application. We see the pre-built <strong>login</strong> page. 
+We can enter <strong>default </strong>as tenancy name, <strong>admin </strong>as user and <strong>123qwe </strong>as password to login:</p>
 
 <p><img alt="Initial Login PAge" height="394" src="initial-login-page.png" width="388" /></p>
 
@@ -83,7 +84,7 @@
 
 <h2 id="ArticleEventCloudProject">Event Cloud Project</h2>
 
-<p>In this article, I will show key parts of the project and explain it. So, please download the sample project, open in Visual Studio 2013+ and run migrations just like above before reading rest of the article (Be sure that there is no database named EventCloud before running the migrations). I will follow some <strong>DDD</strong> (Domain Driven Design) techniques to create <strong>domain (business) layer </strong>and <strong>application layer</strong>.</p>
+<p>In this article, I will show key parts of the project and explain it. So, please download the sample project, open in Visual Studio 2017+ and run migrations just like above before reading rest of the article (Be sure that there is no database named EventCloud before running the migrations). I will follow some <strong>DDD</strong> (Domain Driven Design) techniques to create <strong>domain (business) layer </strong>and <strong>application layer</strong>.</p>
 
 <p>Event Cloud is a free SaaS (multi-tenant) application. We can create a tenant which has it&#39;s own events, users, roles... There are some simple business rules applied while creating, canceling and registering to an event.</p>
 
@@ -673,8 +674,8 @@ public class EventAppService : EventCloudAppServiceBase, IEventAppService
             function loadEvent() {
 <strong>                eventService.getDetail({
                     id: $stateParams.id
-                }).success(function (result) {
-                    vm.event = result;
+                }).<span lang="tr">then</span>(function (result) {
+                    vm.event = result<span lang="tr">.data</span>;
                 });
 </strong>            }
 
@@ -699,8 +700,8 @@ public class EventAppService : EventCloudAppServiceBase, IEventAppService
             vm.register = function() {
 <strong>                eventService.register({
                     id: vm.event.id
-                }).success(function (result) {
-                    abp.notify.success(&#39;Successfully registered to event. Your registration id: &#39; + result.registrationId + &quot;.&quot;);
+                }).<span lang="tr">then</span>(function (result) {
+                    abp.notify.success(&#39;Successfully registered to event. Your registration id: &#39; + result<span lang="tr">.data</span>.registrationId + &quot;.&quot;);
                     loadEvent();
                 });
 </strong>            };
@@ -708,7 +709,7 @@ public class EventAppService : EventCloudAppServiceBase, IEventAppService
             vm.cancelRegistertration = function() {
 <strong>                eventService.cancelRegistration({
                     id: vm.event.id
-                }).success(function () {
+                }).<span lang="tr">then</span>(function () {
                     abp.notify.info(&#39;Canceled your registration.&#39;);
                     loadEvent();
                 });
@@ -717,7 +718,7 @@ public class EventAppService : EventCloudAppServiceBase, IEventAppService
             vm.cancelEvent = function() {
 <strong>                eventService.cancel({
                     id: vm.event.id
-                }).success(function () {
+                }).<span lang="tr">then</span>(function () {
                     abp.notify.info(&#39;Canceled the event.&#39;);
                     vm.backToEventsPage();
                 });
@@ -860,25 +861,6 @@ public class EventAppService_Tests : EventCloudTestBase
 <p>We use <strong>xUnit</strong> as test framework. In the first test, we simply create an event and check database if it&#39;s in there. In the second test, we intentionally trying to create an event in the past. Since our business rule don&#39;t allow it, we should get an exception here.</p>
 
 <p>With such tests, we tested everyting starting from application service including all aspects of ASP.NET Boilerplate (like validation, unit of work and so on). See my <em> <a href="http://www.codeproject.com/Articles/871786/Unit-testing-in-Csharp-using-xUnit-Entity-Framewor" data-abp-href="/Pages/Articles/Unit-Testing-with-Entity-Framework,-xUnit-Effort/index.html">Unit testing in C# using xUnit, Entity Framework, Effort and ASP.NET Boilerplate</a></em> article for details on unit testing.</p>
-
-<h2 id="ArticleSocialLogins">Social Logins</h2>
-
-<p>Startup template is configured to work with social login providers: Facebook, Twitter and Google+. All we need to enable it in web.config and enter API credentials:</p>
-
-<pre lang="xml">
-&lt;add key=&quot;ExternalAuth.Facebook.IsEnabled&quot; value=&quot;false&quot; /&gt;
-&lt;add key=&quot;ExternalAuth.Facebook.AppId&quot; value=&quot;&quot; /&gt;
-&lt;add key=&quot;ExternalAuth.Facebook.AppSecret&quot; value=&quot;&quot; /&gt;
-    
-&lt;add key=&quot;ExternalAuth.Twitter.IsEnabled&quot; value=&quot;false&quot; /&gt;
-&lt;add key=&quot;ExternalAuth.Twitter.ConsumerKey&quot; value=&quot;&quot; /&gt;
-&lt;add key=&quot;ExternalAuth.Twitter.ConsumerSecret&quot; value=&quot;&quot; /&gt;
-    
-&lt;add key=&quot;ExternalAuth.Google.IsEnabled&quot; value=&quot;false&quot; /&gt;
-&lt;add key=&quot;ExternalAuth.Google.ClientId&quot; value=&quot;&quot; /&gt;
-&lt;add key=&quot;ExternalAuth.Google.ClientSecret&quot; value=&quot;&quot; /&gt;</pre>
-
-<p>You can easily find information on the web to learn how to get these credentials from vendors.</p>
 
 <h2 id="ArticleTokenAuth">Token Based Authentication</h2>
 
