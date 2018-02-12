@@ -5,7 +5,7 @@ documentation](/Pages/Documents/Authorization) before this one.
 
 ### Introduction
 
-Module-zero implements the **IPermissionChecker** interface of ASP.NET
+Module Zero implements the **IPermissionChecker** interface of ASP.NET
 Boilerplate's authorization system. To define and check permissions,
 see the [authorization document](/Pages/Documents/Authorization). In
 this document, we will show you how to grant permissions for roles and users.
