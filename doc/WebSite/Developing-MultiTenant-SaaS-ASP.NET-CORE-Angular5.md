@@ -12,17 +12,17 @@ In this article, we will see a SaaS (multi-tenant) application developed using t
 
 ASP.NET Boilerplate provides templates to make a project startup easier. We create the startup template from https://aspnetboilerplate.com/Templates
 
-I selected ASP.NET Core 2.x, Angular and checked "Authentication". It creates a ready and working solution for us including a login page, navigation and a bootstrap based layout. After download and open the solution with Visual Studio 2017+, we see a layered solution structure including a unit test project.
+I selected **ASP.NET Core 2.x**, **Angular** and checked **"Include login, register, user, role and tenant management pages"**. It creates a ready and working solution for us including a login page, navigation and a bootstrap based layout. After download and open the solution with Visual Studio 2017+, we see a layered solution structure including a unit test project.
 
 ### Solution structure
 
-First, we select **EventCloud.Web** as startup project. Solution comes with Entity Framework Core Code-First Migrations. So, (after restoring nuget packages) we open the Package Manager Console (PMC) and run Update-Database command to create the database.
+First, we select **EventCloud.Web** as startup project. Solution comes with **Entity Framework Core Code-First Migrations**. So, (after restoring nuget packages) we open the Package Manager Console (PMC) and run **Update-Database** command to create the database.
 
-Package Manager Console's Default project should be EventCloud.EntityFrameworkCore (since it contains the migrations). This command creates EventCloud database in local SQL Server (you can change connection string from web.config file).
+Package Manager Console's Default project should be **EventCloud.EntityFrameworkCore** (since it contains the migrations). This command creates **EventCloud** database in local SQL Server (you can change connection string in **appsettings.json** file).
 
-Now, we can run the application. We see the pre-built login page. We can enter default as tenancy name, admin as user and 123qwe as password to login.
+Now, we can run the application. We see the pre-built login page. We can enter **Default** as tenancy name, **admin** as user name and **123qwe** as password to login.
 
-After login, we see the basic bootstrap based layout consists of two pages: Home and About
+After login, we see the basic bootstrap based layout.
 
 This is a localized UI with a dynamic menu. Angular layout, routing and basic infrastructure are properly working. I got this project as a base for the event cloud project.
 
@@ -36,9 +36,9 @@ So, let's start to investigate the source code.
 
 ### Entities
 
-Entities are parts of our domain layer and located under EventCloud.Core project. ASP.NET Boilerplate startup template comes with Tenant, User, Role... entities which are common for most applications. We can customize them based on our needs. Surely, we can add our application specific entities.
+Entities are parts of our domain layer and located under **EventCloud.Core** project. **ASP.NET Boilerplate** startup template comes with **Tenant**, **User**, **Role** ... entities which are common for most applications. We can customize them based on our needs. Surely, we can add our application specific entities.
 
-The fundamental entity of event cloud project is the Event entity:
+The fundamental entity of event cloud project is the Event entity.
 
 [Table("AppEvents")]
 public class Event : FullAuditedEntity<Guid>, IMustHaveTenant
