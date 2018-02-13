@@ -6,15 +6,15 @@ discoverability."
 
 ### ASP.NET Core
 
-#### Install Nuget Package
+#### Install NuGet Package
 
-Install
+Install the
 **[Swashbuckle.AspNetCore](https://www.nuget.org/packages/Swashbuckle.AspNetCore/)**
-nuget package to your **Web** project.
+NuGet package to your **Web** project.
 
 #### Configure
 
-Add configuration code for Swagger into **ConfigureServices** method of
+Add the following configuration code for Swagger into the **ConfigureServices** method of
 your **Startup.cs**
 
     public IServiceProvider ConfigureServices(IServiceCollection services)
@@ -30,8 +30,7 @@ your **Startup.cs**
         //your other code...
     }
 
-Then, add below code into **Configure** method of **Startup.cs** to use
-Swagger
+Then, to use swagger, add this code into the **Configure** method of **Startup.cs** 
 
     public void Configure(IApplicationBuilder app, IHostingEnvironment env, ILoggerFactory loggerFactory)
     {
@@ -49,19 +48,19 @@ Swagger
 
 #### Test
 
-That's all. You can browse swagger ui under "**/swagger**".
+That's it! You can now browse the swagger ui under "**/swagger**".
 
 ### ASP.NET 5.x
 
-#### Install Nuget Package
+#### Install NuGet Package
 
-Install
+Install the
 **[Swashbuckle.Core](https://www.nuget.org/packages/Swashbuckle.Core/)**
-nuget package to your **WebApi** project (or Web project).
+NuGet package to your **WebApi** project (or Web project).
 
 #### Configure
 
-Add configuration code for Swagger into
+Add the configuration code for Swagger into the
 [Initialize](/Pages/Documents/Module-System) method of your module.
 Example:
 
@@ -89,17 +88,17 @@ Example:
         }
     }
 
-Notice that, we inject a javascript file named "**Swagger-Custom.js**"
-while configuring swagger ui. This script file is used to add CSRF token
-to requests while testing api services on swagger ui. You also need to
-add this file to your WebApi project as **embedded resource** and use
-it's Logical Name in InjectJavaScript method while injecting it.
+Note that we inject a JavaScript file named "**Swagger-Custom.js**"
+while configuring the swagger ui. This script file is used to add a CSRF token
+to requests while testing api services in the ui. You may also need to
+add this file to your WebApi project as an **embedded resource** and use
+it's Logical Name in the InjectJavaScript method while injecting it.
 
 **IMPORTANT**: The code above will be slightly different for your
 project (Namespace will not be AbpCompanyName.AbpProjectName... and
 AbpProjectNameWebApiModule will be *YourProjectName*WebApiModule).
 
-Content of the **Swagger-Custom.js** here:
+Here's the content of the **Swagger-Custom.js**:
 
     var getCookieValue = function(key) {
         var equalities = document.cookie.split('; ');
@@ -125,15 +124,15 @@ Content of the **Swagger-Custom.js** here:
     var csrfCookieAuth = new SwaggerClient.ApiKeyAuthorization("X-XSRF-TOKEN", csrfCookie, "header");
     swaggerUi.api.clientAuthorizations.add("X-XSRF-TOKEN", csrfCookieAuth);
 
-See Swashbuckle
+See the Swashbuckle
 [documentation](https://github.com/domaindrivendev/Swashbuckle) for more
 configuration options.
 
 #### Test
 
-That's all. Let's browse **/swagger/ui/index**:
+That's it! Let's browse to **/swagger/ui/index**:
 
 <img src="images/swagger-ui.png" alt="Swagger UI" class="img-thumbnail" />
 
-You can see all Web API Controllers (and also [dynamic web
+You can see all the Web API Controllers (and also the [dynamic web
 api](/Pages/Documents/Dynamic-Web-API) controllers) and test them.

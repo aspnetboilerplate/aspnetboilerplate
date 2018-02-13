@@ -1,19 +1,19 @@
 ### Introduction
 
 ASP.NET Boilerplate provides an infrastructure to automatically log all
-entity and property change history.
+entity and property changes.
 
-The saved fields for an entity change are: Related **tenant id**,
+The saved fields for an entity change are: The related **tenant id**,
 **entity change set id**, **entity id**,
 **entity type name**, **change time** and the **change type**.
 
-The saved fields for an entity property change are: Related **tenant id**,
+The saved fields for an entity property change are: The related **tenant id**,
 **entity change id**, **property name**, **property type name**,
 **new value** and the **original value**.
 
 The entity changes are grouped in a change set for each SaveChanges call.
 
-The saved fields for an entity change set are: Related **tenant id**,
+The saved fields for an entity change set are: The related **tenant id**,
 changer **user id**, **creation time**, **reason**, the client's
 **IP address**, the client's **computer name** and the **browser info** (if
 entities are changed in a web request).
@@ -22,7 +22,7 @@ The Entity History tracking system uses
 [**IAbpSession**](/Pages/Documents/Abp-Session) to
 get the current UserId and TenantId.
 
-No entities are automatically tracked by default. You should configure entities either by startup configuration or using attributes.
+No entities are automatically tracked by default. You should configure entities either by using the startup configuration or via attributes.
 
 #### About IEntityHistoryStore
 
@@ -52,7 +52,7 @@ Here are the Entity History configuration properties:
 
 -   **IsEnabled**: Used to enable/disable the tracking system completely.
     Default: **true**.
--   **IsEnabledForAnonymousUsers**: If this is set to true, change logs
+-   **IsEnabledForAnonymousUsers**: If this is set to true, the change logs
     are saved for users that are not logged in to the application.
     Default: **false**.
 -   **Selectors**: Used to select entities to save change logs.
@@ -96,18 +96,18 @@ save change logs for a desired property.
 entity**. Thus, you can **hide sensitive data** in change logs, such as
 passwords for example.
 
-### Reason
+### Reason Property
 
-Entity change set has a **Reason** property that can be used to understand why a
-set of changes had occurred, i.e. the use case that resulted in these changes.
+The entity change set has a **Reason** property that can be used to understand why a
+set of changes has occurred, i.e. the use case that resulted in these changes.
 
 For example, Person A transfers money from Account A to Account B. Both account
 balances change and "Money transfer" is recorded as the Reason for this change set.
 Since a balance change can be due to other reasons, the Reason property explains
 why these changes were made.
 
-**Abp.AspNetCore** package implements **HttpRequestEntityChangeSetReasonProvider**,
-which returns HttpContext.Request's URL as the Reason.
+The **Abp.AspNetCore** package implements **HttpRequestEntityChangeSetReasonProvider**,
+which returns the HttpContext.Request's URL as the Reason.
 
 #### UseCase Attribute
 
@@ -121,7 +121,7 @@ The preferred approach is using the **UseCase** attribute. Example:
 
 ##### UseCase Attribute Restrictions
 
-You can use UseCase attribute for:
+You can use the UseCase attribute for:
 
 -   All **public** or **public virtual** methods for classes that are
     used via its interface, e.g. an application service used via its interface.
@@ -131,7 +131,7 @@ You can use UseCase attribute for:
 
 #### IEntityChangeSetReasonProvider
 
-In some cases, you may need to change/override Reason value for a limited scope.
+In some cases, you may need to change/override the Reason value for a limited scope.
 You can use the **IEntityChangeSetReasonProvider.Use(...)** method as shown below:
 
     public class MyService
@@ -156,12 +156,12 @@ You can use the **IEntityChangeSetReasonProvider.Use(...)** method as shown belo
     }
 
 The Use method returns an IDisposable and it **must be disposed**. Once the return
-value is disposed, Reason is automatically restored to the previous value.
+value is disposed, the Reason is automatically restored to the previous value.
 
 ### Notes
 
--   A property must be **public** in order to be saved in change logs.
+-   A property must be **public** in order to be saved in the change logs.
     Private and protected properties are ignored.
--   DisableAuditing takes priority over Audited attribute.
--   Only works for entities.
--   Only works for scalar properties, e.g. string, int, bool...
+-   DisableAuditing takes priority over the Audited attribute.
+-   Entity History only works for entities.
+-   Entity History only works for scalar properties, e.g. string, int, bool...

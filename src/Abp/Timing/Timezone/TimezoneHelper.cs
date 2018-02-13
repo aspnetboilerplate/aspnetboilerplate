@@ -6,6 +6,7 @@ using System.Text;
 using System.Xml;
 using Abp.Extensions;
 using Abp.IO.Extensions;
+using Abp.Logging;
 using Abp.Reflection.Extensions;
 using Abp.Xml.Extensions;
 using TimeZoneConverter;
@@ -83,7 +84,7 @@ namespace Abp.Timing.Timezone
 
             var sourceTimeZone = FindTimeZoneInfo(fromTimeZoneId);
             var destinationTimeZone = FindTimeZoneInfo(toTimeZoneId);
-            
+
             return TimeZoneInfo.ConvertTime(date.Value, sourceTimeZone, destinationTimeZone);
         }
 
@@ -184,7 +185,7 @@ namespace Abp.Timing.Timezone
             var firstDay = new DateTime(currentDate.Year, currentDate.Month, 1);
 
             var firstOccurrence = firstDay.DayOfWeek == day ? firstDay : firstDay.AddDays(day - firstDay.DayOfWeek);
-            
+
             if (firstOccurrence.Month < currentDate.Month) occurrence = occurrence + 1;
 
             return firstOccurrence.AddDays(7 * (occurrence - 1));
@@ -199,7 +200,7 @@ namespace Abp.Timing.Timezone
 
             var sourceTimeZone = FindTimeZoneInfo(IanaToWindows(fromIanaTimeZoneId));
             var destinationTimeZone = FindTimeZoneInfo(IanaToWindows(toIanaTimeZoneId));
-            
+
             return TimeZoneInfo.ConvertTime(date.Value, sourceTimeZone, destinationTimeZone);
         }
 
@@ -218,9 +219,31 @@ namespace Abp.Timing.Timezone
             return TZConvert.GetTimeZoneInfo(windowsOrIanaTimeZoneId);
         }
 
-        public static List<TimeZoneInfo> GetWindowsTimeZoneInfos()
+        public static List<TimeZoneInfo> GetWindowsTimeZoneInfos(bool ignoreTimeZoneNotFoundException = true)
         {
-            return TZConvert.KnownWindowsTimeZoneIds.Select(TZConvert.GetTimeZoneInfo).ToList();
+            var timezoneInfos = new List<TimeZoneInfo>();
+
+            foreach (var windowsTimeZoneId in TZConvert.KnownWindowsTimeZoneIds)
+            {
+                try
+                {
+                    var timezoneInfo = TZConvert.GetTimeZoneInfo(windowsTimeZoneId);
+                    timezoneInfos.Add(timezoneInfo);
+                }
+                catch (TimeZoneNotFoundException exception)
+                {
+                    if (ignoreTimeZoneNotFoundException)
+                    {
+                        LogHelper.LogException(exception);
+                    }
+                    else
+                    {
+                        throw;
+                    }
+                }
+            }
+
+            return timezoneInfos;
         }
 
         private static void GetTimezoneMappings()

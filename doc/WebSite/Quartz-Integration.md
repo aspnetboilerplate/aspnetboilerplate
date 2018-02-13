@@ -1,10 +1,8 @@
 ### Introduction
 
-[Quartz](http://www.quartz-scheduler.net/) is a full-featured, open-source 
-job scheduling system that can be used from the smallest apps to
-large-scale enterprise systems.
-The [Abp.Quartz](https://www.nuget.org/packages/Abp.Quartz) package simply
-integrates Quartz to ASP.NET Boilerplate.
+[Quartz](http://www.quartz-scheduler.net/) is a full-featured, open-source job scheduling system that can be used from the smallest apps to large-scale enterprise systems.
+
+The [Abp.Quartz](https://www.nuget.org/packages/Abp.Quartz) package simply integrates Quartz to ASP.NET Boilerplate.
 
 ASP.NET Boilerplate has a built-in [persistent background job queue and
 background worker](Background-Jobs-And-Workers.md) system. Quartz can
@@ -33,9 +31,10 @@ example. A simple job class is shown below:
 
     public class MyLogJob : JobBase, ITransientDependency
     {
-        public override void Execute(IJobExecutionContext context)
+        public override Task Execute(IJobExecutionContext context)
         {
-            Logger.Info("Executed MyLogJob :)");
+            Logger.Info("Executed MyLogJob..!");
+            return Task.CompletedTask;
         }
     }
 
@@ -52,7 +51,7 @@ schedules a job:
     public class HomeController : AbpController
     {
         private readonly IQuartzScheduleJobManager _jobManager;
-
+    
         public HomeController(IQuartzScheduleJobManager jobManager)
         {
             _jobManager = jobManager;
@@ -76,12 +75,11 @@ schedules a job:
                                 .Build();
                         });
                 });
-
+    
             return Content("OK, scheduled!");
         }
     }   
 
 ### More
 
-Please see Quartz's [documentation](http://www.quartz-scheduler.net/)
-for more information.
+Please see Quartz's [documentation](http://www.quartz-scheduler.net/) for more information.

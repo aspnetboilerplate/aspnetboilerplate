@@ -201,17 +201,18 @@ namespace Abp.EntityHistory
         {
             var propertyChanges = new List<EntityPropertyChange>();
             var properties = entityEntry.Metadata.GetProperties();
-            var isCreatedOrDeleted = IsCreated(entityEntry) || IsDeleted(entityEntry);
+            var isCreated = IsCreated(entityEntry);
+            var isDeleted = IsDeleted(entityEntry);
 
             foreach (var property in properties)
             {
                 var propertyEntry = entityEntry.Property(property.Name);
-                if (ShouldSavePropertyHistory(propertyEntry, isCreatedOrDeleted))
+                if (ShouldSavePropertyHistory(propertyEntry, isCreated || isDeleted))
                 {
                     propertyChanges.Add(new EntityPropertyChange
                     {
-                        NewValue = propertyEntry.CurrentValue.ToJsonString().TruncateWithPostfix(EntityPropertyChange.MaxValueLength),
-                        OriginalValue = propertyEntry.OriginalValue.ToJsonString().TruncateWithPostfix(EntityPropertyChange.MaxValueLength),
+                        NewValue = isDeleted ? null : propertyEntry.CurrentValue.ToJsonString().TruncateWithPostfix(EntityPropertyChange.MaxValueLength),
+                        OriginalValue = isCreated ? null : propertyEntry.OriginalValue.ToJsonString().TruncateWithPostfix(EntityPropertyChange.MaxValueLength),
                         PropertyName = property.Name,
                         PropertyTypeFullName = property.ClrType.FullName
                     });

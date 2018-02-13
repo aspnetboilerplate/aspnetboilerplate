@@ -1,5 +1,5 @@
-ASP.NET Boilerplate module-zero is distributed on **nuget**. Here, a
-list of all packages.
+ASP.NET Boilerplate's module-zero is distributed on **NuGet**. Here's a
+list of all the packages.
 
 ### Abp.ZeroCore Packages
 
@@ -8,19 +8,19 @@ Abp.ZeroCore is built on
 
 #### [Abp.ZeroCore](http://www.nuget.org/packages/Abp.ZeroCore)
 
-Main package of module zero core.
+The core/main package of module zero.
 
 #### [Abp.ZeroCore.EntityFrameworkCore](http://www.nuget.org/packages/Abp.ZeroCore.EntityFrameworkCore)
 
-Entity Framework Core integration package for Abp.ZeroCore package.
+Entity Framework Core integration package for the Abp.ZeroCore package.
 
 #### [Abp.ZeroCore.IdentityServer4](http://www.nuget.org/packages/Abp.ZeroCore.IdentityServer4)
 
-IdentityServer4 integration package for Abp.ZeroCore package.
+IdentityServer4 integration package for the Abp.ZeroCore package.
 
 #### [Abp.ZeroCore.IdentityServer4.EntityFrameworkCore](http://www.nuget.org/packages/Abp.ZeroCore.IdentityServer4.EntityFrameworkCore)
 
-Entity Framework Core integration package for
+Entity Framework Core integration package for the
 Abp.ZeroCore.IdentityServer4 package.
 
 ### Abp.Zero
@@ -50,7 +50,7 @@ Shared packages between Abp.Zero.\* and Abp.ZeroCore.\* packages.
 
 #### [Abp.Zero.Common](http://www.nuget.org/packages/Abp.Zero.Common)
 
-Common package for both of Abp.Zero and Abp.ZeroCore libraries.
+Common package for both the Abp.Zero and Abp.ZeroCore libraries.
 
 #### [Abp.Zero.Ldap](http://www.nuget.org/packages/Abp.Zero.Ldap)
 

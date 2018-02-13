@@ -33,6 +33,11 @@ namespace Abp.AspNetCore.Configuration
         /// Default: true.
         /// </summary>
         bool SetNoCacheForAjaxResponses { get; set; }
+        
+        /// <summary>
+        /// Used to add route config for modules.
+        /// </summary>
+        List<Action<IRouteBuilder>> RouteConfiguration { get; }
 
         AbpControllerAssemblySettingBuilder CreateControllersForAppServices(
             Assembly assembly,
