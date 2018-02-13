@@ -38,8 +38,9 @@ So, let's start to investigate the source code.
 
 Entities are parts of our domain layer and located under **EventCloud.Core** project. **ASP.NET Boilerplate** startup template comes with **Tenant**, **User**, **Role** ... entities which are common for most applications. We can customize them based on our needs. Surely, we can add our application specific entities.
 
-The fundamental entity of event cloud project is the Event entity.
+The fundamental entity of event cloud project is the `Event` entity.
 
+```c#
 [Table("AppEvents")]
 public class Event : FullAuditedEntity<Guid>, IMustHaveTenant
 {
@@ -160,18 +161,21 @@ public class Event : FullAuditedEntity<Guid>, IMustHaveTenant
         }
     }
 }
+```
+
 Event entity has not just get/set properties. Actually, it has not public setters, setters are protected. It has some domain logic. All properties must be changed by the Event entity itself to ensure domain logic is executed.
 
-Event entity's constructor is also protected. So, the only way to create an Event is the Event.Create method (They can be private normally, but private setters don't work well with Entity Framework since Entity Framework can not set privates when retrieving an entity from database).
+Event entity's constructor is also protected. So, the only way to create an Event is the `Event.Create` method (They can be private normally, but private setters don't work well with Entity Framework Core since Entity Framework Core can not set privates when retrieving an entity from database).
 
-Event implements IMustHaveTenant interface. This is an interface of ASP.NET Boilerplate (ABP) framework and ensures that this entity is per tenant. This is needed for multi-tenancy. Thus, different tenants will have different events and can not see each other's events. ABP automatically filters entities of current tenant.
+Event implements ,`IMustHaveTenant` interface. This is an interface of **ASP.NET Boilerplate (ABP)** framework and ensures that this entity is per tenant. This is needed for multi-tenancy. Thus, different tenants will have different events and can not see each other's events. **ABP automatically** filters entities of current tenant.
 
-Event class inherits from FullAuditedEntity which contains creation, modification and deletion audit columns. FullAuditedEntity also implements ISoftDelete, so events can not be deleted from database. They are marked as deleted when you delete it. ABP automatically filters (hides) deleted entities when you query database.
+Event class inherits from `FullAuditedEntity` which contains creation, modification and deletion audit columns. `FullAuditedEntity` also implements `ISoftDelete`, so events can not be deleted from database. They are marked as deleted when you delete it. **ABP** automatically filters (hides) deleted entities when you query database.
 
-In DDD, entities have domain (business) logic. We have some simple business rules those can be understood easily when you check the entity.
+In **DDD**, entities have domain (business) logic. We have some simple business rules those can be understood easily when you check the entity.
 
-Second entity of our application is EventRegistration:
+Second entity of our application is `EventRegistration`
 
+```c#
 [Table("AppEventRegistrations")]
 public class EventRegistration : CreationAuditedEntity, IMustHaveTenant
 {
@@ -226,13 +230,17 @@ public class EventRegistration : CreationAuditedEntity, IMustHaveTenant
         await repository.DeleteAsync(this);
     }
 }
-As similar to Event, we have a static create method. The only way of creating a new EventRegistration is this CreateAsync method. It gets an event, user and a registration policy. It checks if given user can register to the event using registrationPolicy.CheckRegistrationAttemptAsync method. This method throws exception if given user can not register to given event. With such a design, we ensure that all business rules are applied while creating a registration. There is no way of creating a registration without using registration policy.
+```
+
+As similar to `Event`, we have a static create method. The only way of creating a new EventRegistration is this `CreateAsync` method. It gets an event, user and a registration policy. It checks if given user can register to the event using `registrationPolicy.CheckRegistrationAttemptAsync` method. This method throws exception if given user can not register to given event. With such a design, we ensure that all business rules are applied while creating a registration. There is no way of creating a registration without using registration policy.
 
 See Entity documentation for more information on entities.
 
-Event Registration Policy
-EventRegistrationPolicy class is defined as shown below:
+### Event Registration Policy
 
+`EventRegistrationPolicy` class is defined as shown below:
+
+```c#
 public class EventRegistrationPolicy : EventCloudServiceBase, IEventRegistrationPolicy
 {
     private readonly IRepository<EventRegistration> _eventRegistrationRepository;
@@ -273,13 +281,18 @@ public class EventRegistrationPolicy : EventCloudServiceBase, IEventRegistration
         }
     }
 }
+```
+
 This is an important part of our domain. We have two rules while creating an event registration:
 
-A used can not register to an event in the past.
-A user can register to a maximum count of events in 30 days. So, we have registration frequency limit.
-Event Manager
-EventManager implements business (domain) logic for events. All Event operations should be executed using this class. It's defined as shown below:
+- A used can not register to an event in the past.
+- A user can register to a maximum count of events in 30 days. So, we have registration frequency limit.
 
+### Event Manager
+
+`EventManager` implements business (domain) logic for events. All Event operations should be executed using this class. It's defined as shown below:
+
+```c#
 public class EventManager : IEventManager
 {
     public IEventBus EventBus { get; set; }
@@ -351,19 +364,24 @@ public class EventManager : IEventManager
             .ToListAsync();
     }
 }
+```
+
 It performs domain logic and triggers needed events.
 
 See domain services documentation for more information on domain services.
 
-Domain Events
+### Domain Events
+
 We may want to define and trigger some domain specific events on some state changes in our application. I defined 2 domain specific events:
 
-EventCancelledEvent: Triggered when an event is canceled. It's triggered in EventManager.Cancel method.
-EventDateChangedEvent: Triggered when date of an event changed. It's triggered in Event.ChangeDate method.
-We handle these events and notify related users about these changes. Also, I handle EntityCreatedEventDate<Event> (which is a pre-defined ABP event and triggered automatically).
+- **EventCancelledEvent:** Triggered when an event is canceled. It's triggered in `EventManager.Cancel` method.
+- **EventDateChangedEvent:** Triggered when date of an event changed. It's triggered in `Event.ChangeDate` method.
 
-To handle an event, we should define an event handler class. I defined EventUserEmailer to send emails to users when needed:
+We handle these events and notify related users about these changes. Also, I handle `EntityCreatedEventDate<Event>` (which is a pre-defined **ABP** event and triggered automatically).
 
+To handle an event, we should define an event handler class. I defined `EventUserEmailer` to send emails to users when needed:
+
+```c#
 public class EventUserEmailer : 
     IEventHandler<EntityCreatedEventData<Event>>,
     IEventHandler<EventDateChangedEvent>, 
@@ -426,13 +444,17 @@ public class EventUserEmailer :
         }
     }
 }
-We can handle same events in different classes or different events in same class (as in this sample). Here, we handle these events and send email to related users as a notification (not implemented emailing actually to make the sample application simpler). An event handler should implement IEventHandler<event-type> interface. ABP automatically calls the handler when related events occur.
+```
 
-See EventBus documentation for more information on domain events.
+We can handle same events in different classes or different events in same class (as in this sample). Here, we handle these events and send email to related users as a notification (not implemented emailing actually to make the sample application simpler). An event handler should implement `IEventHandler<event-type>` interface. **ABP** automatically calls the handler when related events occur.
 
-Application Services
-Application services use domain layer to implement use cases of the application (generally used by presentation layer). EventAppService performs application logic for events.
+See **EventBus** documentation for more information on domain events.
 
+### Application Services
+
+Application services use domain layer to implement use cases of the application (generally used by presentation layer). `EventAppService` performs application logic for events.
+
+```c#
 [AbpAuthorize]
 public class EventAppService : EventCloudAppServiceBase, IEventAppService
 {
@@ -515,19 +537,21 @@ public class EventAppService : EventCloudAppServiceBase, IEventAppService
         return registration;
     }
 }
-As you see, application service does not implement domain logic itself. It just uses entities and domain services (EventManager) to perform the use cases.
+```
+
+As you see, application service does not implement domain logic itself. It just uses entities and domain services (**EventManager**) to perform the use cases.
 
 See application service documentation for more information on application services.
 
-Presentation Layer
-Presentation layer for this application is built using Angularjs as a SPA.
+### Presentation Layer
 
-Event List
+Presentation layer for this application is built using **Angular** as a SPA.
+
+#### Event List
+
 When we login to the application, we first see a list of events:
 
-Event list page
-
-We directly use EventAppService to get list of events. Here, the Angular controller to create this page:
+We directly use `EventAppService` to get list of events. Here, the Angular controller to create this page:
 
 (function() {
     var controllerId = 'app.views.events.index';
