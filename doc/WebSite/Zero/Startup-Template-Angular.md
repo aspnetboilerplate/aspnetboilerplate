@@ -1,8 +1,8 @@
 ### Introduction
 
-
-After creating and downloading your project, follow the steps below 
-to run your application.
+The easiest way of starting a new project using ABP with **ASP.NET Core** and with **Angular** is to create a 
+template on the [templates page](/Templates). After creating and downloading your project, follow the 
+below steps to run your application.
 
 ### ASP.NET Core Application
 
