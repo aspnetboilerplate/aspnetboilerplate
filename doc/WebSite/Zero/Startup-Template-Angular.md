@@ -6,9 +6,14 @@ to run your application.
 
 ### ASP.NET Core Application
 
--   Open your solution on **Visual Studio 2017 v15.3.5+** and **build**
+-   Open your solution in **Visual Studio 2017 v15.3.5+** and **build**
     the solution.
+-   Select the '**Web.Host**' project as the **startup project**.
+-   Check the **connection string** in the **appsettings.json** file of the Web.Host project, change it if you need to.
+-   Open the **Package Manager Console** and run an **Update-Database** command
+    to create your database (ensure that the Default project is selected as
     **.EntityFrameworkCore** in the Package Manager Console window).
+-   Run the application. It will show **swagger-ui** if it is successful:
 
 <img src="../images/swagger-ui-module-zero-core-template.png" alt="Swagger UI" class="img-thumbnail" />
 
