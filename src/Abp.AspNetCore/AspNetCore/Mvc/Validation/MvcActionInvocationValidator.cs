@@ -1,4 +1,5 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using System;
+using System.ComponentModel.DataAnnotations;
 using Abp.AspNetCore.Mvc.Extensions;
 using Abp.Collections.Extensions;
 using Abp.Configuration.Startup;
@@ -24,16 +25,27 @@ namespace Abp.AspNetCore.Mvc.Validation
         {
             ActionContext = actionContext;
 
-            SetDataAnnotationAttributeErrors();
-
             base.Initialize(
                 actionContext.ActionDescriptor.GetMethodInfo(),
                 GetParameterValues(actionContext)
             );
         }
-        
-        protected override void SetDataAnnotationAttributeErrors(object validatingObject)
+
+        protected override bool ShouldValidateUsingValidator(object validatingObject, Type validatorType)
         {
+            // Skip data annotations validation because MVC does this automatically
+            if (validatorType == typeof(DataAnnotationsValidator))
+            {
+                return false;
+            }
+
+            return base.ShouldValidateUsingValidator(validatingObject, validatorType);
+        }
+
+        protected override void SetValidationErrors(object validatingObject)
+        {
+            base.SetValidationErrors(validatingObject);
+
             SetDataAnnotationAttributeErrors();
         }
 
