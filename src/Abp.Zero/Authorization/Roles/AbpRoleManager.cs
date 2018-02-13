@@ -49,9 +49,11 @@ namespace Abp.Authorization.Roles
 
         protected AbpRoleStore<TRole, TUser> AbpStore { get; private set; }
 
-        private readonly IPermissionManager _permissionManager;
-        private readonly ICacheManager _cacheManager;
-        private readonly IUnitOfWorkManager _unitOfWorkManager;
+        protected IPermissionManager PermissionManager { get; }
+        
+        protected ICacheManager CacheManager { get; }
+        
+        protected IUnitOfWorkManager UnitOfWorkManager { get; }
 
         /// <summary>
         /// Constructor.
@@ -64,9 +66,9 @@ namespace Abp.Authorization.Roles
             IUnitOfWorkManager unitOfWorkManager)
             : base(store)
         {
-            _permissionManager = permissionManager;
-            _cacheManager = cacheManager;
-            _unitOfWorkManager = unitOfWorkManager;
+            PermissionManager = permissionManager;
+            CacheManager = cacheManager;
+            UnitOfWorkManager = unitOfWorkManager;
 
             RoleManagementConfig = roleManagementConfig;
             AbpStore = store;
@@ -82,7 +84,7 @@ namespace Abp.Authorization.Roles
         /// <returns>True, if the role has the permission</returns>
         public virtual async Task<bool> IsGrantedAsync(string roleName, string permissionName)
         {
-            return await IsGrantedAsync((await GetRoleByNameAsync(roleName)).Id, _permissionManager.GetPermission(permissionName));
+            return await IsGrantedAsync((await GetRoleByNameAsync(roleName)).Id, PermissionManager.GetPermission(permissionName));
         }
 
         /// <summary>
@@ -93,7 +95,7 @@ namespace Abp.Authorization.Roles
         /// <returns>True, if the role has the permission</returns>
         public virtual async Task<bool> IsGrantedAsync(int roleId, string permissionName)
         {
-            return await IsGrantedAsync(roleId, _permissionManager.GetPermission(permissionName));
+            return await IsGrantedAsync(roleId, PermissionManager.GetPermission(permissionName));
         }
 
         /// <summary>
@@ -151,7 +153,7 @@ namespace Abp.Authorization.Roles
         {
             var permissionList = new List<Permission>();
 
-            foreach (var permission in _permissionManager.GetAllPermissions())
+            foreach (var permission in PermissionManager.GetAllPermissions())
             {
                 if (await IsGrantedAsync(role.Id, permission))
                 {
@@ -231,7 +233,7 @@ namespace Abp.Authorization.Roles
         /// <param name="role">Role</param>
         public async Task ProhibitAllPermissionsAsync(TRole role)
         {
-            foreach (var permission in _permissionManager.GetAllPermissions())
+            foreach (var permission in PermissionManager.GetAllPermissions())
             {
                 await ProhibitPermissionAsync(role, permission);
             }
@@ -334,7 +336,7 @@ namespace Abp.Authorization.Roles
         {
             FeatureDependencyContext.TenantId = role.TenantId;
 
-            var permissions = _permissionManager.GetAllPermissions(role.GetMultiTenancySide())
+            var permissions = PermissionManager.GetAllPermissions(role.GetMultiTenancySide())
                                                 .Where(permission => 
                                                     permission.FeatureDependency == null || 
                                                     permission.FeatureDependency.IsSatisfied(FeatureDependencyContext)
@@ -348,7 +350,7 @@ namespace Abp.Authorization.Roles
         {
             var staticRoleDefinitions = RoleManagementConfig.StaticRoles.Where(sr => sr.Side == MultiTenancySides.Tenant);
 
-            using (_unitOfWorkManager.Current.SetTenantId(tenantId))
+            using (UnitOfWorkManager.Current.SetTenantId(tenantId))
             {
                 foreach (var staticRoleDefinition in staticRoleDefinitions)
                 {
@@ -396,7 +398,7 @@ namespace Abp.Authorization.Roles
         private async Task<RolePermissionCacheItem> GetRolePermissionCacheItemAsync(int roleId)
         {
             var cacheKey = roleId + "@" + (GetCurrentTenantId() ?? 0);
-            return await _cacheManager.GetRolePermissionCache().GetAsync(cacheKey, async () =>
+            return await CacheManager.GetRolePermissionCache().GetAsync(cacheKey, async () =>
             {
                 var newCacheItem = new RolePermissionCacheItem(roleId);
 
@@ -419,9 +421,9 @@ namespace Abp.Authorization.Roles
 
         private int? GetCurrentTenantId()
         {
-            if (_unitOfWorkManager.Current != null)
+            if (UnitOfWorkManager.Current != null)
             {
-                return _unitOfWorkManager.Current.GetTenantId();
+                return UnitOfWorkManager.Current.GetTenantId();
             }
 
             return AbpSession.TenantId;

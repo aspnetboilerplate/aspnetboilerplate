@@ -10,7 +10,7 @@ namespace Abp.Application.Features
     public class FeatureChecker : IFeatureChecker, ITransientDependency
     {
         /// <summary>
-        /// Reference to current session.
+        /// Reference to the current session.
         /// </summary>
         public IAbpSession AbpSession { get; set; }
 

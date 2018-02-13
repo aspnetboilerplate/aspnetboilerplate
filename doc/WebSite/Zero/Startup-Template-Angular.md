@@ -1,21 +1,17 @@
 ### Introduction
 
-The easiest way of starting a new project using ABP with **ASP.NET
-Core** with **Angular** is to create a template on [templates
-page](/Templates). Remember to check "**Include module zero**". After
-creating and downloading your project, follow below steps to run your
-application.
+The easiest way of starting a new project using ABP with **ASP.NET Core** with **Angular** is to create a template on the [templates page](/Templates). After creating and downloading your project, follow the below steps to run your application.
 
 ### ASP.NET Core Application
 
 -   Open your solution on **Visual Studio 2017 v15.3.5+** and **build**
     the solution.
 -   Select the '**Web.Host**' project as **startup project**.
+-   Check **connection string** in the **appsettings.json** file of the Web.Host project, change if you want.
 -   Open **Package Manager Console** and run **Update-Database** command
     to create your database (ensure that Default project is selected as
     **.EntityFrameworkCore** in the Package Manager Console window).
--   Run the application. It will show **swagger-ui** if it is
-    successfull:
+-   Run the application. It will show **swagger-ui** if it is successfull:
 
 <img src="../images/swagger-ui-module-zero-core-template.png" alt="Swagger UI" class="img-thumbnail" />
 
