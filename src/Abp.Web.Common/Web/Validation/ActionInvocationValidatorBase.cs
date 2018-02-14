@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Reflection;
 using Abp.Configuration.Startup;
 using Abp.Dependency;
@@ -8,6 +9,12 @@ namespace Abp.Web.Validation
 {
     public abstract class ActionInvocationValidatorBase : MethodInvocationValidator
     {
+        protected IList<Type> ValidatorsToSkip => new List<Type>
+        {
+            typeof(DataAnnotationsValidator),
+            typeof(ValidatableObjectValidator)
+        };
+
         protected ActionInvocationValidatorBase(IValidationConfiguration configuration, IIocResolver iocResolver)
             : base(configuration, iocResolver)
         {
@@ -23,8 +30,8 @@ namespace Abp.Web.Validation
 
         protected override bool ShouldValidateUsingValidator(object validatingObject, Type validatorType)
         {
-            // Skip data annotations validation because MVC does this automatically
-            if (validatorType == typeof(DataAnnotationsValidator))
+            // Skip DataAnnotations and IValidatableObject validation because MVC does this automatically
+            if (ValidatorsToSkip.Contains(validatorType))
             {
                 return false;
             }
@@ -32,24 +39,15 @@ namespace Abp.Web.Validation
             return base.ShouldValidateUsingValidator(validatingObject, validatorType);
         }
 
-        protected override void SetValidationErrors(object validatingObject)
-        {
-            base.SetValidationErrors(validatingObject);
-
-            SetDataAnnotationAttributeErrors();
-        }
-
         protected override void ValidateMethodParameter(ParameterInfo parameterInfo, object parameterValue)
         {
             // If action parameter value is null then set only ModelState errors
-            if (parameterValue == null)
-            {
-                SetDataAnnotationAttributeErrors();
-            }
-            else
+            if (parameterValue != null)
             {
                 base.ValidateMethodParameter(parameterInfo, parameterValue);
             }
+
+            SetDataAnnotationAttributeErrors();
         }
 
         protected virtual object[] GetParameterValues(MethodInfo method)
