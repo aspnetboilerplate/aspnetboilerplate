@@ -16,19 +16,37 @@ I selected **ASP.NET Core 2.x**, **Angular** and checked **"Include login, regis
 
 ### Solution structure
 
-First, we select **EventCloud.Web** as startup project. Solution comes with **Entity Framework Core Code-First Migrations**. So, (after restoring nuget packages) we open the Package Manager Console (PMC) and run **Update-Database** command to create the database.
+First, we select **EventCloud.Host** as startup project. Solution comes with **Entity Framework Core Code-First Migrations**. So, (after restoring nuget packages) we open the Package Manager Console (PMC) and run **Update-Database** command to create the database.
 
 Package Manager Console's Default project should be **EventCloud.EntityFrameworkCore** (since it contains the migrations). This command creates **EventCloud** database in local SQL Server (you can change connection string in **appsettings.json** file).
 
-Now, we can run the application. We see the pre-built login page. We can enter **Default** as tenancy name, **admin** as user name and **123qwe** as password to login.
+<img src="images/event-cloud-create-db.png" alt="Swagger UI" class="img-thumbnail" />
 
-After login, we see the basic bootstrap based layout.
+First I'm running **EventCloud.Host** project. We will see the following screen:
+
+<img src="images/event-cloud-swagger-ui.png" alt="Swagger UI" class="img-thumbnail" />
+
+We will use **Angular-CLI** to start **Angular UI**. Here is the steps to start Angular UI:
+
+- Open cmd on **EventCloud/angular** location
+- Run `yarn` command to install packages
+- Run `npm start` to run application
+
+Then we will see following login page when you browse http://localhost:4200 :
+
+<img src="images/event-cloud-login-page.png" alt="Swagger UI" class="img-thumbnail" />
+
+We can enter **Default** as tenancy name, **admin** as user name and **123qwe** as password to login.
+
+After login, we see the basic bootstrap based [Admin BSB Material Design](https://github.com/gurayyarar/AdminBSBMaterialDesign) layout.
+
+<img src="images/event-cloud-dashboard.png" alt="Swagger UI" class="img-thumbnail" />
 
 This is a localized UI with a dynamic menu. Angular layout, routing and basic infrastructure are properly working. I got this project as a base for the event cloud project.
 
 ## Event Cloud Project
 
-In this article, I will show key parts of the project and explain it. So, please download the sample project, open in Visual Studio 2017+ and run migrations just like above before reading rest of the article (Be sure that there is no database named EventCloud before running the migrations). I will follow some DDD (Domain Driven Design) techniques to create domain (business) layer and application layer.
+In this article, I will show key parts of the project and explain it. So, please download the sample project, open in **Visual Studio 2017+** and run migrations just like above before reading rest of the article (Be sure that there is no database named EventCloud before running the migrations). I will follow some DDD (Domain Driven Design) techniques to create domain (business) layer and application layer.
 
 Event Cloud is a free SaaS (multi-tenant) application. We can create a tenant which has it's own events, users, roles... There are some simple business rules applied while creating, canceling and registering to an event.
 
@@ -163,11 +181,11 @@ public class Event : FullAuditedEntity<Guid>, IMustHaveTenant
 }
 ```
 
-Event entity has not just get/set properties. Actually, it has not public setters, setters are protected. It has some domain logic. All properties must be changed by the Event entity itself to ensure domain logic is executed.
+**Event** entity has not just get/set properties. Actually, it has not public setters, setters are protected. It has some domain logic. All properties must be changed by the **Event** entity itself to ensure domain logic is executed.
 
-Event entity's constructor is also protected. So, the only way to create an Event is the `Event.Create` method (They can be private normally, but private setters don't work well with Entity Framework Core since Entity Framework Core can not set privates when retrieving an entity from database).
+**Event** entity's constructor is also protected. So, the only way to create an Event is the `Event.Create` method (They can be private normally, but private setters don't work well with Entity Framework Core since Entity Framework Core can not set privates when retrieving an entity from database).
 
-Event implements ,`IMustHaveTenant` interface. This is an interface of **ASP.NET Boilerplate (ABP)** framework and ensures that this entity is per tenant. This is needed for multi-tenancy. Thus, different tenants will have different events and can not see each other's events. **ABP automatically** filters entities of current tenant.
+Event implements, `IMustHaveTenant` interface. This is an interface of **ASP.NET Boilerplate (ABP)** framework and ensures that this entity is per tenant. This is needed for multi-tenancy. Thus, different tenants will have different events and can not see each other's events. **ABP** automatically filters entities of current tenant.
 
 Event class inherits from `FullAuditedEntity` which contains creation, modification and deletion audit columns. `FullAuditedEntity` also implements `ISoftDelete`, so events can not be deleted from database. They are marked as deleted when you delete it. **ABP** automatically filters (hides) deleted entities when you query database.
 
