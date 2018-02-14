@@ -39,6 +39,19 @@ namespace Abp.Web.Validation
             SetDataAnnotationAttributeErrors();
         }
 
+        protected override void ValidateMethodParameter(ParameterInfo parameterInfo, object parameterValue)
+        {
+            // If action parameter value is null then set only ModelState errors
+            if (parameterValue == null)
+            {
+                SetDataAnnotationAttributeErrors();
+            }
+            else
+            {
+                base.ValidateMethodParameter(parameterInfo, parameterValue);
+            }
+        }
+
         protected virtual object[] GetParameterValues(MethodInfo method)
         {
             var parameters = method.GetParameters();
