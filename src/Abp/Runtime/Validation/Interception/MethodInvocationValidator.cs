@@ -163,9 +163,9 @@ namespace Abp.Runtime.Validation.Interception
             SetValidationErrors(validatingObject);
 
             // Validate items of enumerable
-            if (validatingObject is IEnumerable enumerable && !(enumerable is IQueryable))
+            if (IsEnumerable(validatingObject))
             {
-                foreach (var item in enumerable)
+                foreach (var item in (IEnumerable) validatingObject)
                 {
                     ValidateObjectRecursively(item, currentDepth + 1);
                 }
@@ -229,6 +229,14 @@ namespace Abp.Runtime.Validation.Interception
             }
 
             return true;
+        }
+
+        private bool IsEnumerable(object validatingObject)
+        {
+            return
+                validatingObject is IEnumerable &&
+                !(validatingObject is IQueryable) &&
+                !TypeHelper.IsPrimitiveExtendedIncludingNullable(validatingObject.GetType());
         }
     }
 }
