@@ -79,11 +79,6 @@ namespace Abp.Runtime.Validation.Interception
                 throw new Exception("Method parameter count does not match with argument count!");
             }
 
-            if (ValidationErrors.Any() && HasSingleNullArgument())
-            {
-                ThrowValidationError();
-            }
-
             for (var i = 0; i < Parameters.Length; i++)
             {
                 ValidateMethodParameter(Parameters[i], ParameterValues[i]);
@@ -116,11 +111,6 @@ namespace Abp.Runtime.Validation.Interception
             }
 
             return ReflectionHelper.GetSingleAttributeOfMemberOrDeclaringTypeOrDefault<DisableValidationAttribute>(Method) != null;
-        }
-
-        protected virtual bool HasSingleNullArgument()
-        {
-            return Parameters.Length == 1 && ParameterValues[0] == null;
         }
 
         protected virtual void ThrowValidationError()
