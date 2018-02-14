@@ -128,11 +128,6 @@ namespace Abp.Runtime.Validation.Interception
         /// <param name="parameterValue">Value to validate</param>
         protected virtual void ValidateMethodParameter(ParameterInfo parameterInfo, object parameterValue)
         {
-            if (_configuration.IgnoredTypes.Any(t => t.IsInstanceOfType(parameterValue)))
-            {
-                return;
-            }
-
             if (parameterValue == null)
             {
                 if (!parameterInfo.IsOptional && 
@@ -156,6 +151,11 @@ namespace Abp.Runtime.Validation.Interception
             }
 
             if (validatingObject == null)
+            {
+                return;
+            }
+
+            if (_configuration.IgnoredTypes.Any(t => t.IsInstanceOfType(validatingObject)))
             {
                 return;
             }
