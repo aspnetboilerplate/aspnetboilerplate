@@ -12,7 +12,7 @@ using Abp.Runtime.Session;
 
 namespace Abp.Authorization
 {
-    internal class AuthorizationHelper : IAuthorizationHelper, ITransientDependency
+    public class AuthorizationHelper : IAuthorizationHelper, ITransientDependency
     {
         public IAbpSession AbpSession { get; set; }
         public IPermissionChecker PermissionChecker { get; set; }
@@ -31,7 +31,7 @@ namespace Abp.Authorization
             LocalizationManager = NullLocalizationManager.Instance;
         }
 
-        public async Task AuthorizeAsync(IEnumerable<IAbpAuthorizeAttribute> authorizeAttributes)
+        public virtual async Task AuthorizeAsync(IEnumerable<IAbpAuthorizeAttribute> authorizeAttributes)
         {
             if (!_authConfiguration.IsEnabled)
             {
@@ -51,13 +51,13 @@ namespace Abp.Authorization
             }
         }
 
-        public async Task AuthorizeAsync(MethodInfo methodInfo, Type type)
+        public virtual async Task AuthorizeAsync(MethodInfo methodInfo, Type type)
         {
             await CheckFeatures(methodInfo, type);
             await CheckPermissions(methodInfo, type);
         }
 
-        private async Task CheckFeatures(MethodInfo methodInfo, Type type)
+        protected virtual async Task CheckFeatures(MethodInfo methodInfo, Type type)
         {
             var featureAttributes = ReflectionHelper.GetAttributesOfMemberAndType<RequiresFeatureAttribute>(methodInfo, type);
 
@@ -72,7 +72,7 @@ namespace Abp.Authorization
             }
         }
 
-        private async Task CheckPermissions(MethodInfo methodInfo, Type type)
+        protected virtual async Task CheckPermissions(MethodInfo methodInfo, Type type)
         {
             if (!_authConfiguration.IsEnabled)
             {
