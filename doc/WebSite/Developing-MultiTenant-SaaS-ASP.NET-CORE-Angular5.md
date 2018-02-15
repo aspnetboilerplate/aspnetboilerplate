@@ -571,6 +571,7 @@ When we login to the application, we first see a list of events:
 
 We directly use `EventAppService` to get list of events. Here, the Angular controller to create this page:
 
+```js
 (function() {
     var controllerId = 'app.views.events.index';
     angular.module('app').controller(controllerId, [
@@ -611,6 +612,8 @@ We directly use `EventAppService` to get list of events. Here, the Angular contr
         }
     ]);
 })();
+```
+
 We inject EventAppService as 'abp.services.app.event' into Angular controller. We used dynamic web api layer feature of ABP. It creates needed Web API controller and Angularjs service automatically and dynamically. So, we can use application service methods like calling regular javascript functions. So, to call EventAppService.GetList C# method, we simple call eventService.getList javascript function which returns a promise ($q for angular).
 
 We also open a "new event" modal (dialog) when user clicks to "+ New event" button (which triggers vm.openNewEventDialog function). I will not go details of Angular views, since they are simpler and you can check it in source code.
