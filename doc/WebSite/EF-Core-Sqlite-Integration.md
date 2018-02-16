@@ -6,17 +6,17 @@ will be explained in this document.
 
 ### Install 
 
-Install [`Microsoft.EntityFrameworkCore.Sqlite`](https://www.nuget.org/packages/Microsoft.EntityFrameworkCore.Sqlite/) nuget package to **\*.EntityFrameworkCore** project. 
+Install the [`Microsoft.EntityFrameworkCore.Sqlite`](https://www.nuget.org/packages/Microsoft.EntityFrameworkCore.Sqlite/) NuGet package to the **\*.EntityFrameworkCore** project. 
 
 ### Configuration
 
-Some configurations and workarounds are needed to use SQLite with ASP.NET Core and Entity Framework Core. 
+Some configuration and workarounds are needed to use SQLite with ASP.NET Core and Entity Framework Core. 
 
 #### Configure DbContext 
 
-Since SQLite doesn't support multithreading, transactions should be disabled in `SQLiteDemoEntityFrameworkModule.PreInitialize()` method.
+Since SQLite doesn't support multithreading, transactions should be disabled in the `SQLiteDemoEntityFrameworkModule.PreInitialize()` method.
 
-> NOTE:Check [here](https://github.com/XdX-Software/EasyDDD/issues/1) for more detail and workarounds.
+> NOTE:Check [here](https://github.com/XdX-Software/EasyDDD/issues/1) for more info and workarounds.
 
 ```c#
 [DependsOn(
@@ -53,7 +53,7 @@ public static class SqliteDemoDbContextConfigurer
 
 #### Configure connection string 
 
-Change connection string to your SQLite connection in ***.Web.Mvc/appsettings.json**. For example:
+Change the connection string to your SQLite connection in ***.Web.Mvc/appsettings.json**. Example:
 
 ```js
 {
@@ -74,18 +74,18 @@ To understand why it needs to be renamed check the following issues,
 > 
 > **Workaround** : [Design: Allow IDesignTimeDbContextFactory to short-circuit service provider creation](https://github.com/aspnet/EntityFrameworkCore/issues/9076#issuecomment-313278753)
 >
-> **NOTE :** If you don't rename BuildWebHost, you'll get an error running BuildWebHost method.
+> **NOTE :** If you don't rename BuildWebHost, you'll get an error running the BuildWebHost method.
 
 ### Create Database
 
-Remove all migration classes under **\*.EntityFrameworkCore/Migrations** folder, before creating database.
-Because `Microsoft.EntityFrameworkCore.Sqlite` will add some of its own configuration to work with Entity Framework Core.
+Remove all migration classes under **\*.EntityFrameworkCore/Migrations** folder before creating database.
+`Microsoft.EntityFrameworkCore.Sqlite` will add some of its own configuration to work with Entity Framework Core.
 
-Now it's ready to build database.
+Now it's ready to build the database.
 
-- Select **\*.Web.Mvc** as startup project.
-- Open **Package Manager Console** and select **\*.EntityFrameworkCore** project.
-- Run `add-migration Initial_Migration` command
-- Run `update-database` command
+- Select **\*.Web.Mvc** as the startup project.
+- Open **Package Manager Console** and select the **\*.EntityFrameworkCore** project.
+- Run the `add-migration Initial_Migration` command
+- Run the `update-database` command
 
-SQLite integration is complete. Now run your project with SQLite. 
+The SQLite integration is now complete. You can now run your project with SQLite. 
