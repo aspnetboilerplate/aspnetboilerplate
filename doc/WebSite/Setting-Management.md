@@ -117,7 +117,7 @@ the setting;
 -   If not, we get the application value if it's defined.
 -   If not, we get the **default value**.
 
-The default value can be **null** or an **empty** string. It's recommened that you
+The default value can be **null** or an **empty** string. It's recommended that you
 provide default values for settings where it's possible.
 
 #### Overriding Setting Definitions

@@ -1,5 +1,5 @@
 We all love to show some fancy auto-disappearing notifications when
-something happens, like when an item is saved or a problem has occured.
+something happens, like when an item is saved or a problem has occurred.
 ASP.NET Boilerplate defines some standard APIs for that.
 
     abp.notify.success('a message text', 'optional title');

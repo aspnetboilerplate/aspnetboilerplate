@@ -36,6 +36,6 @@ This module has 2 versions:
 
 ### Source code
 
-The Module Zero source code is seperate from ASP.NET Boilerplate and hosted
+The Module Zero source code is separate from ASP.NET Boilerplate and hosted
 on <https://github.com/aspnetboilerplate/module-zero>. It's distributed
 via [NuGet](/Pages/Documents/Zero/Nuget-Packages).

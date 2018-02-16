@@ -97,7 +97,7 @@ as follows:
 
 -   There is a list of languages defined for **the host**. This list
     is considered as the **default** for all tenants.
--   There is a seperated list of languages for **each tenant**. This
+-   There is a separated list of languages for **each tenant**. This
     list **inherits** the host list and **adds** tenant-specific languages.
     Tenants can not delete or update host-defined (default) languages
     (but can override localization texts as we will see later).

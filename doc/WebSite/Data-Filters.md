@@ -3,7 +3,7 @@
 It's common to use the
 [**soft-delete**](/Pages/Documents/Entities#soft-delete) pattern which
 is used to not actually delete an entity from database but to only mark it as
-'deleted'. If an entity is soft-deleted, it should not be accidently
+'deleted'. If an entity is soft-deleted, it should not be accidentally
 retrieved into the application. To provide for that, we would have to add an SQL
 **where** condition like 'IsDeleted = false' in every query where we select
 entities. This is not only tedious, but is more importantly a forgettable task. To keep 
@@ -168,7 +168,7 @@ remains disabled even after the using statement.
 
 You can disable tenancy filters to query all tenant data. Note
 that this only works for a single-database approach. If you have
-seperated databases for each tenant, disabling the filter does not help to
+separated databases for each tenant, disabling the filter does not help to
 query all the data of all tenants since they are in different databases,
 or even on different servers. See the [Multi-Tenancy
 document](Multi-Tenancy.md) for more information.

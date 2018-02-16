@@ -8,7 +8,7 @@ already familar with EntityFramework at a basic level.
 The NuGet package to use EntityFramework as an O/RM in ASP.NET Boilerplate is
 [Abp.EntityFramework](http://www.nuget.org/packages/Abp.EntityFramework).
 You should add it to your application. It's better to implement
-EntityFramework in a seperated assembly (dll) in your application and
+EntityFramework in a separated assembly (dll) in your application and
 depend on that package from this assembly.
 
 ### DbContext

@@ -64,7 +64,7 @@ entities from the database when they're needed. Say a User class has a reference
 to a Role class. When you get a User from the database, the Role property is not 
 filled. When you first read the Role property, it's loaded from the database. 
 So, if you return such an Entity to the presentation layer, it
-will cause it to retrieve additonal entities from the database. If a
+will cause it to retrieve additional entities from the database. If a
 serialization tool reads the entity, it reads all properties recursively
 and again your whole database can be retrieved (if there are suitable,
 related properties between entities).
@@ -77,7 +77,7 @@ presentation layer.
 
 ASP.NET Boilerplate strongly supports DTOs. It provides
 conventional classes, interfaces, and standardizes DTO naming and usage
-conventions. When you write your code as described here in the documenation,
+conventions. When you write your code as described here in the documentation,
 ASP.NET Boilerplate will easily automate some common tasks. 
 
 #### Example
@@ -103,7 +103,7 @@ service](/Pages/Documents/Application-Services):
     }
 
 ASP.NET Boilerplate suggests naming input/output parameters as
-MethodName**Input** and MethodName**Output** and defining a seperated
+MethodName**Input** and MethodName**Output** and defining a separated
 input and output DTO for every application service method. Even if your
 method only takes and returns **one** parameter, it's better to create a DTO
 class. In turn, your code will be more extensible. You can add more

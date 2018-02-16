@@ -138,7 +138,7 @@ of those frameworks.
 ##### Suppress Authorization
 
 You can disable authorization for a method/class by adding
-**AbpAllowAnonymous** attribute to aplication services. Use the
+**AbpAllowAnonymous** attribute to application services. Use the
 **AllowAnonymous** attribute for MVC, Web API and ASP.NET Core Controllers, which
 is a native attribute of these frameworks.
 

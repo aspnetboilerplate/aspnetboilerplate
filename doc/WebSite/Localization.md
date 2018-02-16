@@ -28,7 +28,7 @@ see the source code for more info.
 Localization texts can be stored in different sources. You can even use
 more than one source in the same application (If you have more than one
 [module](/Pages/Documents/Module-System), each module can define a
-seperated localization source, or one module can define multiple
+separated localization source, or one module can define multiple
 sources). The **ILocalizationSource** interface should be implemented by a
 localization source. It is then **register**ed to ASP.NET Boilerplate's
 localization configuration.
@@ -59,7 +59,7 @@ XML files must be unicode (**utf-8**). **culture="en"** declares that
 this XML file contains English texts. For text nodes; the **name** attribute
 is used to identify a text. You can use the **value** attribute or **inner
 text** (like the last one) to set the value of the localization text. We
-create a seperated XML file for **each language** as shown below:
+create a separated XML file for **each language** as shown below:
 
 <img src="images/localization_files2.png" alt="Localization files" class="img-thumbnail" />
 
@@ -131,7 +131,7 @@ sample JSON localization file is shown below:
     }
 
 JSON files should be unicode (**utf-8**). **culture: "en"** declares
-that this JSON file contains English texts. We create a seperate JSON
+that this JSON file contains English texts. We create a separate JSON
 file for **each language** as shown below:
 
 <img src="images/json-localization-source-files.png" alt="JSON localization files" class="img-thumbnail" />

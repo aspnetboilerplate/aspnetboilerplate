@@ -89,7 +89,7 @@ Authorization,
 handling](/Pages/Documents/Handling-Exceptions),
 [logging](/Pages/Documents/Logging), caching are common things all
 applications implement at some level. The code should be generic and
-shared by different applications. It should also be seperated from the
+shared by different applications. It should also be separated from the
 business logic code and should be automated as much as possible. This
 allows us to focus more on our application specific business logic and
 prevents us from re-coding the same stuff over and over again (DRY!).

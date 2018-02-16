@@ -2,7 +2,7 @@
 
 Sending emails is a very common task for most applications.
 ASP.NET Boilerplate provides the basic infrastructure to send
-emails in a simple way. It also seperates the email server configuration from the sending 
+emails in a simple way. It also separates the email server configuration from the sending 
 of emails.
 
 ### IEmailSender

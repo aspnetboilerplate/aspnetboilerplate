@@ -238,7 +238,7 @@ used the container to create an IPersonAppService. It created the concrete class
 PersonAppService with it's dependencies and then returned it. In this simple
 example, it may not be clear what the advantages are of using a DI framework.
 You will, however, have many classes and dependencies in a real enterprise
-application. The registration of dependencies are seperated from the creation and use of 
+application. The registration of dependencies are separated from the creation and use of 
 objects, and is made only once during the application's startup.
 
 Note that we also set the **life cycle** of the objects as **transient**.

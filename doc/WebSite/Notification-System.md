@@ -187,7 +187,7 @@ generally want to push real time notifications to the client.
 The notification system uses **IRealTimeNotifier** to send real time
 notifications to users. This can be implemented with any type of real
 time communication system. It's implemented using **SignalR** in a
-seperated package. The [startup templates](/Templates) already have SignalR
+separated package. The [startup templates](/Templates) already have SignalR
 installed. See the [SignalR Integration
 document](/Pages/Documents/SignalR-Integration) for more information.
 
@@ -294,7 +294,7 @@ real project, we will not use the alert function. We can use the
 nice UI notifications.
 
 If you need to implement logic like what is shown above, there is an easier and
-scaleable way. You can just use a single line of code to show a [UI
+scalable way. You can just use a single line of code to show a [UI
 notification](/Pages/Documents/Javascript-API/Notification) when a push
 notification is received:
 

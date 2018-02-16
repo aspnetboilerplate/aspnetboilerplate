@@ -44,7 +44,7 @@ of an OU (recursively). There are some rules for this code:
 -   All the children of the same OU have codes that **start with the parent OU's code**.
 -   It's **fixed length** and based on the level of the OU in the tree, as shown in
     the sample.
--   While the OU code is unique, it can be **changable** if you move an OU.
+-   While the OU code is unique, it can be **changeable** if you move an OU.
 -   We must reference an OU by Id, not Code.
 
 ### OrganizationUnit Manager

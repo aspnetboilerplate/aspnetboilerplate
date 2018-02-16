@@ -3,7 +3,7 @@
 ASP.NET Boilerplate provides the infrastructure to build modules and
 compose them to create an application. A module can depend on another
 module. Generally, an assembly is considered a module. If you create
-an application with more than one assembly, it's recommened that you create a
+an application with more than one assembly, it's recommended that you create a
 module definition for each one.
 
 The module system is currently focused on the server-side rather than client-side.
