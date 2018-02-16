@@ -53,7 +53,7 @@ Startup class:
 #### Module Configuration
 
 You can use the [startup configuration](Startup-Configuration.md) to
-configure the AspNet Core Module by using
+configure the AspNetCore Module by using
 *Configuration.Modules.AbpAspNetCore()* in the PreInitialize method of your
 module.
 
@@ -117,7 +117,7 @@ added to the service classes, even if you have interfaces.
 
 ### Filters
 
-ABP defines some **pre-built filters** for AspNet Core. All of them are
+ABP defines some **pre-built filters** for ASP.NET Core. All of them are
 added to **all actions of all controllers** by default.
 
 #### Authorization Filter
