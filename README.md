@@ -4,7 +4,8 @@
 
 ## What is ABP?
 
-ASP.NET Boilerplate is a general purpose **application framework** especially designed for new modern web applications. It uses already **familiar tools** and implements **best practices** arround them to provide you a **SOLID development experience**.
+ASP.NET Boilerplate is a general purpose **application framework** specially designed for new modern web applications. It uses already **familiar tools** and 
+implements **best practices** around them to provide you a **SOLID development experience**.
 
 ###### Modular Design
 
@@ -14,17 +15,17 @@ Designed to be <a href="https://aspnetboilerplate.com/Pages/Documents/Module-Sys
 
 **SaaS** applications made easy! Integrated <a href="https://aspnetboilerplate.com/Pages/Documents/Multi-Tenancy" target="_blank">multi-tenancy</a> from database to UI.
 
-###### Well Documented
+###### Well-Documented
 
-Compherensive <a href="https://aspnetboilerplate.com/Pages/Documents" target="_blank">**documentation**</a> and jump-start tutorials.
+Compherensive <a href="https://aspnetboilerplate.com/Pages/Documents" target="_blank">**documentation**</a> and quick start tutorials.
 
 ## How It Works
 
-Don't Repeat Yourself! ASP.NET Boilerplate automates common software development tasks by convention. You focus your business code!
+Don't Repeat Yourself! ASP.NET Boilerplate automates common software development tasks by convention. You focus on your business code!
 
 ![ASP.NET Boilerplate](doc/img/abp-concerns.png)
 
-See the <a href="https://aspnetboilerplate.com/Pages/Documents/Introduction" target="_blank">introduction</a> document for more details.
+See the <a href="https://aspnetboilerplate.com/Pages/Documents/Introduction" target="_blank">Introduction</a> document for more details.
 
 ## Layered Architecture
 
@@ -87,19 +88,19 @@ Implements abstract concepts of ASP.NET Boilerplate framework:
 
 Also adds common enterprise application features:
 
-* **<a href="https://aspnetboilerplate.com/Pages/Documents/Zero/User-Management" target="_blank">User</a>, <a href="https://aspnetboilerplate.com/Pages/Documents/Zero/Role-Management" target="_blank">Role</a> and <a href="https://aspnetboilerplate.com/Pages/Documents/Zero/Permission-Management" target="_blank">Permission</a>** management for applications require authentication and authorization.
+* **<a href="https://aspnetboilerplate.com/Pages/Documents/Zero/User-Management" target="_blank">User</a>, <a href="https://aspnetboilerplate.com/Pages/Documents/Zero/Role-Management" target="_blank">Role</a> and <a href="https://aspnetboilerplate.com/Pages/Documents/Zero/Permission-Management" target="_blank">Permission</a>** management for applications that require authentication and authorization.
 * **<a href="https://aspnetboilerplate.com/Pages/Documents/Zero/Tenant-Management" target="_blank">Tenant</a> and <a href="https://aspnetboilerplate.com/Pages/Documents/Zero/Edition-Management" target="_blank">Edition</a>** management for SaaS applications.
 * **<a href="https://aspnetboilerplate.com/Pages/Documents/Zero/Organization-Units" target="_blank">Organization Units</a>** management.
 * **<a href="https://aspnetboilerplate.com/Pages/Documents/Zero/Language-Management" target="_blank">Language and localization</a> text** management.
 * **<a href="https://aspnetboilerplate.com/Pages/Documents/Zero/Identity-Server" target="_blank">Identity Server 4</a>** integration.
 
-Module zero packages define entities and implements base domain logic for these concepts.
+Module Zero packages define entities and implement base domain logic for these concepts.
 
-## Nuget Packages
+## NuGet Packages
 
 ### ASP.NET Core Identity Packages
 
-Packages integrated into <a href="https://docs.microsoft.com/en-us/aspnet/identity/overview/getting-started/introduction-to-aspnet-identity" target="_blank">ASP.NET Core Identity</a> and <a href="http://identityserver.io/" target="_blank">Identity Server 4</a> (supports .net standard).
+Packages integrated into <a href="https://docs.microsoft.com/en-us/aspnet/identity/overview/getting-started/introduction-to-aspnet-identity" target="_blank">ASP.NET Core Identity</a> and <a href="http://identityserver.io/" target="_blank">Identity Server 4</a> (supports .NET Standard).
 
 |Package|Status|
 |:------|:-----:|
@@ -136,7 +137,7 @@ You can create your project from startup templates to easily start with Module Z
 * <a href="https://aspnetboilerplate.com/Pages/Documents/Zero/Startup-Template-Core" target="_blank">ASP.NET Core MVC & jQuery</a> based startup project.
 * <a href="https://aspnetboilerplate.com/Pages/Documents/Zero/Startup-Template" target="_blank">ASP.NET Core MVC 5.x / Angularjs</a> based startup project.
  
-A screenshot from the ASP.NET Core based startup template:
+A screenshot of the ASP.NET Core based startup template:
 
 ![](doc/img/module-zero-core-template.png)
 
