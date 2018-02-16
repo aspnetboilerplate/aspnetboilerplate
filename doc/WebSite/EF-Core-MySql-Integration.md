@@ -1,23 +1,23 @@
 
 ### Download Starter Template
 
-Download a starter template with **ASP.NET Core** and **Entity Framework Core** to integrate MySQL. 
+Download the starter template with **ASP.NET Core** and **Entity Framework Core** to integrate MySQL. 
 [Multi-page template with **ASP.NET Core 2.x** + **.Net Core Framework** + **Authentication**](https://aspnetboilerplate.com/Templates) 
 will be explained in this document.
 
 ### Getting Started
 
-There are two Entity Framework Core providers for MySQL that are mentioned in Micrososft Docs. One of them is 
-[Official MySQL EF Core Database Provider](https://docs.microsoft.com/en-us/ef/core/providers/mysql/) and 
+There are two Entity Framework Core providers for MySQL that are mentioned in the Micrososft Docs. One of them is the
+[Official MySQL EF Core Database Provider](https://docs.microsoft.com/en-us/ef/core/providers/mysql/) and the
 other is [Pomelo EF Core Database Provider for MySQL](https://docs.microsoft.com/en-us/ef/core/providers/pomelo/).
 
-> **NOTE:** Official provider doesn't support EF Core 2.0 yet. Pomelo EF Core Database Provider will be used in this example.
+> **NOTE:** The official provider doesn't support EF Core 2.0 just yet, so the Pomelo EF Core Database Provider will be used in this example, instead.
 > 
 > Related issue: https://github.com/aspnet/EntityFrameworkCore/issues/10065#issuecomment-336495475
 
 ### Install 
 
-Install [`Pomelo.EntityFrameworkCore.MySql`](https://www.nuget.org/packages/Pomelo.EntityFrameworkCore.MySql/) nuget package to ***.EntityFrameworkCore** project. 
+Install the [`Pomelo.EntityFrameworkCore.MySql`](https://www.nuget.org/packages/Pomelo.EntityFrameworkCore.MySql/) NuGet package to the ***.EntityFrameworkCore** project. 
 
 ### Configuration
 
@@ -40,11 +40,11 @@ public static class MySqlDemoDbContextConfigurer
  }
  ```
 
-Some configuration and workaround are needed to use MySQL with ASP.NET Core and Entity Framework Core. 
+Some configuration and workarounds are needed to use MySQL with ASP.NET Core and Entity Framework Core. 
 
 #### Configure connection string 
 
-Change connection string to your MySQL connection in ***.Web.Mvc/appsettings.json**. For example:
+Change the connection string to your MySQL connection in ***.Web.Mvc/appsettings.json**. Example:
 
 ```js
 {
@@ -72,12 +72,12 @@ To understand why it needs to be renamed, check the following issues:
 Remove all migration classes under **\*.EntityFrameworkCore/Migrations** folder. 
 Because `Pomelo.EntityFrameworkCore.MySql` will add some of its own configurations to work with Entity Framework Core.
 
-Now it's ready to build database.
+Now it's ready to build the database.
 
-- Select **\*.Web.Mvc** as startup project.
-- Open **Package Manager Console** and select **\*.EntityFrameworkCore** project.
-- Run `add-migration Initial_Migration` command
-- Run `update-database` command
+- Select **\*.Web.Mvc** as the startup project.
+- Open **Package Manager Console** and select the **\*.EntityFrameworkCore** project.
+- Run the `add-migration Initial_Migration` command
+- Run the `update-database` command
 
-MySQL integration is complete. Now you can run your project with MySQL. 
+The MySQL integration is now complete. You can now run your project with MySQL. 
 
