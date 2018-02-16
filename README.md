@@ -17,7 +17,7 @@ Designed to be <a href="https://aspnetboilerplate.com/Pages/Documents/Module-Sys
 
 ###### Well-Documented
 
-Compherensive <a href="https://aspnetboilerplate.com/Pages/Documents" target="_blank">**documentation**</a> and quick start tutorials.
+Comprehensive <a href="https://aspnetboilerplate.com/Pages/Documents" target="_blank">**documentation**</a> and quick start tutorials.
 
 ## How It Works
 
