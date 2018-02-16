@@ -23,7 +23,7 @@ It should be easy to share [entities](/Pages/Documents/Entities),
 [services](/Pages/Documents/Application-Services) and views between web
 applications. They should be packaged into
 [modules](/Pages/Documents/Module-System) and can be easily distributed
-(preferred as public/private nuget packages). Modules may depend on and
+(preferred as public/private NuGet packages). Modules may depend on and
 use other modules. We should be able to extend models in a module for
 our application needs.
 

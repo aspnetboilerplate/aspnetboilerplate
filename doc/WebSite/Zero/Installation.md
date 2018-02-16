@@ -384,7 +384,7 @@ and used the initial data builder class.
 
 #### Presentation Layer
 
-##### Nuget Packages
+##### NuGet Packages
 
 Add the following NuGet packages to the .Web project:
 

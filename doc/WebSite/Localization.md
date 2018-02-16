@@ -495,7 +495,7 @@ localization source that implements the IDictionaryBasedLocalizationSource
 interface).
 
 ASP.NET Boilerplate also defines some localization sources. For
-instance, the **Abp.Web** nuget package defines a localization source named
+instance, the **Abp.Web** NuGet package defines a localization source named
 "**AbpWeb**" as embedded XML files:
 
 <img src="images/AbpWeb-localization-source.png" alt="AbpWeb localization source files" class="img-thumbnail" />

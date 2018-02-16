@@ -158,7 +158,7 @@ For all the features, see the [documentation](/Pages/Documents).
 
 ### Startup Templates
 
-Starting a new solution, creating layers, installing nuget packages,
+Starting a new solution, creating layers, installing NuGet packages,
 creating a simple layout and a menu... all these are very time consuming.
 
 ABP provides pre-built [startup

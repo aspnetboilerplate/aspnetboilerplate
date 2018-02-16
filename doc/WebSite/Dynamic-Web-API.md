@@ -129,7 +129,7 @@ interface:
 
 In order to use these attributes, you need to add a reference to the
 [Microsoft.AspNet.WebApi.Core](https://www.nuget.org/packages/Microsoft.AspNet.WebApi.Core)
-nuget package to your project.
+NuGet package to your project.
 
 ##### Naming Convention
 

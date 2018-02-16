@@ -98,7 +98,7 @@ can still use IEmailSender as described above to send emails via MailKit.
 #### Installation
 
 First, install the [Abp.MailKit](https://www.nuget.org/packages/Abp.MailKit)
-nuget package to your project:
+NuGet package to your project:
 
     Install-Package Abp.MailKit
 
