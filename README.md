@@ -20,11 +20,11 @@ Compherensive <a href="https://aspnetboilerplate.com/Pages/Documents" target="_b
 
 ## How It Works
 
-Don't Repeat Yourself! ASP.NET Boilerplate automates common software development tasks by convention. You focus your business code.
+Don't Repeat Yourself! ASP.NET Boilerplate automates common software development tasks by convention. You focus your business code!
 
 ![ASP.NET Boilerplate](doc/img/abp-concerns.png)
 
-See the <a href="https://aspnetboilerplate.com/Pages/Documents/Introduction" target="_blank">introduction</a> document for details.
+See the <a href="https://aspnetboilerplate.com/Pages/Documents/Introduction" target="_blank">introduction</a> document for more details.
 
 ## Layered Architecture
 
@@ -32,7 +32,7 @@ ABP provides a layered architectural model based on **Domain Driven Design** and
 
 ![NLayer Architecture](doc/img/abp-nlayer-architecture.png)
 
-See the <a href="https://aspnetboilerplate.com/Pages/Documents/NLayer-Architecture" target="_blank">NLayer Architecture</a> document for details.
+See the <a href="https://aspnetboilerplate.com/Pages/Documents/NLayer-Architecture" target="_blank">NLayer Architecture</a> document for more details.
 
 ## Nuget Packages
 
