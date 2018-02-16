@@ -229,7 +229,7 @@ need to add a given script definition to your page:
 
     <script src="~/AbpServiceProxies/GetAll?type=jquery" type="text/javascript"></script>
 
-Currently, only JQuery proxies are generated. We can then call an MVC
+Currently, only jQuery proxies are generated. We can then call an MVC
 method with JavaScript as shown below:
 
     abp.services.app.product.create({
