@@ -3,7 +3,7 @@
 This document describes the ASP.NET Core integration for ASP.NET Boilerplate. 
 The ASP.NET Core integration is implemented in the 
 [Abp.AspNetCore](https://www.nuget.org/packages/Abp.AspNetCore) NuGet
-package
+package.
 
 #### Migrating to ASP.NET Core?
 
