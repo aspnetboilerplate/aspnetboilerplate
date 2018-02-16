@@ -331,7 +331,7 @@ notifications when a push notification is received.
 The notification system uses **INotificationStore** to persist
 notifications. This must be implemented in order to make the notification
 system properly work. You can implement it yourself or use
-**[module-zero](/Pages/Documents/Zero/Overall)** which already
+**[Module Zero](/Pages/Documents/Zero/Overall)** which already
 implements it.
 
 ### Notification Definitions

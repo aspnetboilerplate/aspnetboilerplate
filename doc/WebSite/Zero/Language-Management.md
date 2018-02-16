@@ -7,7 +7,7 @@ define localization texts (strings) in different sources (Resource files
 and XML files are two pre-defined sources).
 
 While it's good for most cases, we may want to define languages and
-texts **dynamically** and on a **database**. Module-Zero allows us to
+texts **dynamically** and on a **database**. Module Zero allows us to
 dynamically manage application **languages** and **texts** **per
 tenant**.
 

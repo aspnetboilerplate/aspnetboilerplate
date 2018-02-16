@@ -18,11 +18,11 @@ management](/Pages/Documents/Setting-Management), [language
 management](/Pages/Documents/Zero/Language-Management), [audit
 logging](/Pages/Documents/Audit-Logging) and more.
 
-Module-Zero defines entities and implements the **domain logic** (domain
+Module Zero defines entities and implements the **domain logic** (domain
 layer). It leaves the application and presentation layers to the
 application. You can use the [startup
 template](/Pages/Documents/Zero/Startup-Template) to create your own
-application based on module zero.
+application based on Module Zero.
 
 ### Microsoft ASP.NET Identity
 
@@ -36,6 +36,6 @@ This module has 2 versions:
 
 ### Source code
 
-The Module-Zero source code is seperate from ASP.NET Boilerplate and hosted
+The Module Zero source code is seperate from ASP.NET Boilerplate and hosted
 on <https://github.com/aspnetboilerplate/module-zero>. It's distributed
 via [NuGet](/Pages/Documents/Zero/Nuget-Packages).

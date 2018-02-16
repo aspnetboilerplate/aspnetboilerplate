@@ -181,9 +181,9 @@ The **DomainTenantResolveContributer** uses ITenantStore to find the tenant id
 by tenancy name. The default implementation of **ITenantStore** is
 **NullTenantStore** which does not contain any tenant and returns null
 for queries. You can implement and replace it to query tenants from any
-data source. [Module zero](Zero/Overall.md) properly implements it by
+data source. [Module Zero](Zero/Overall.md) properly implements it by
 getting it from its [tenant manager](Zero/Tenant-Management.md). So if you
-are using module zero, you don't need to worry about the tenant store.
+are using Module Zero, you don't need to worry about the tenant store.
 
 #### Data Filters
 

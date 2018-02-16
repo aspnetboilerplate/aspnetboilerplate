@@ -556,7 +556,7 @@ files, because;
     instead of compile-time properties like Resource files. This can be
     considered as a weakness. However, it's easier to change the source later.
     We can even move the localization to a database without changing the code
-    which uses localization (**Module-zero** implements it to create a
+    which uses localization (**Module Zero** implements it to create a
     **database based** and **per-tenant** localization source. See
     [documentation](/Pages/Documents/Zero/Language-Management).)
 

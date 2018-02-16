@@ -32,7 +32,7 @@ are automatically audited by default.
 
 The auditing system uses **IAuditingStore** to
 save audit information. While you can implement it in your own way,
-it's fully implemented in the **module-zero** project. If you don't
+it's fully implemented in the **Module Zero** project. If you don't
 implement it, SimpleLogAuditingStore is used and it writes audit
 information to the [log](/Pages/Documents/Logging).
 

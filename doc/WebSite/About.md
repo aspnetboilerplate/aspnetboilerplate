@@ -125,7 +125,7 @@ ASP.NET Boilerplate is an open source project developed under Github.
     <https://github.com/aspnetboilerplate/aspnetboilerplate-templates>
 -   Sample projects:
     <https://github.com/aspnetboilerplate/aspnetboilerplate-samples>
--   Module-Zero: <https://github.com/aspnetboilerplate/module-zero>
+-   Module Zero: <https://github.com/aspnetboilerplate/module-zero>
 
 ### Contributors
 

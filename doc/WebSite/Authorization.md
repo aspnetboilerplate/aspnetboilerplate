@@ -9,7 +9,7 @@ specific operation in the application. ASP.NET Boilerplate defines a
 
 The Authorization system uses **IPermissionChecker** to check permissions.
 While you can implement it in your own way, it's fully implemented in the
-**module-zero** project. If it's not implemented, NullPermissionChecker
+**Module Zero** project. If it's not implemented, NullPermissionChecker
 is used which grants all permissions to everyone.
 
 ### Defining Permissions
