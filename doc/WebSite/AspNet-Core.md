@@ -220,17 +220,17 @@ ViewComponent to take advantage of it's base properties and methods.
 
 ### Client Proxies
 
-ABP can automatically create javascript proxies for all MVC Controllers
+ABP can automatically create JavaScript proxies for all MVC Controllers
 (not only application services). It's created for *Application Services
 as Controllers* (see the section above) by default. You can add the
 \[RemoteService\] attribute to any MVC controller to create a client proxy
-for it. Javascript proxies are dynamically generated on runtime. You
+for it. JavaScript proxies are dynamically generated on runtime. You
 need to add a given script definition to your page:
 
     <script src="~/AbpServiceProxies/GetAll?type=jquery" type="text/javascript"></script>
 
 Currently, only JQuery proxies are generated. We can then call an MVC
-method with javascript as shown below:
+method with JavaScript as shown below:
 
     abp.services.app.product.create({
         name: 'My test product',

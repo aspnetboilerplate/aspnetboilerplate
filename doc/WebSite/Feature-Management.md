@@ -235,7 +235,7 @@ current tenantId, but for a **specified** tenantId as well.
 
 #### Client Side
 
-On the client side (javascript), we can use the **abp.features** namespace
+On the client side (JavaScript), we can use the **abp.features** namespace
 to get the current values of features.
 
 ##### isEnabled

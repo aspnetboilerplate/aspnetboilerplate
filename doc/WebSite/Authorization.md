@@ -186,7 +186,7 @@ permission. Thus, we can conditionally render the view. Example:
         <button id="CreateNewUserButton" class="btn btn-primary"><i class="fa fa-plus"></i> @L("CreateNewUser")</button>
     }
 
-#### Client Side (Javascript)
+#### Client Side (JavaScript)
 
 In the client side, we can use the API defined in the **abp.auth** namespace. In
 most cases, we need to check if the current user has a specific permission

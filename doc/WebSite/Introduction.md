@@ -56,7 +56,7 @@ Here we see a sample [Application
 Service](/Pages/Documents/Application-Services) method. An application
 service, in DDD, is directly used by the presentation layer to perform the **use
 cases** of the application. Think of **UpdateTask** as a method that is
-called by javascript via AJAX. 
+called by JavaScript via AJAX. 
 
 Let's see some of ABP's benefits here:
 
@@ -120,13 +120,13 @@ Let's see some of ABP's benefits here:
     to another based on naming conventions.
 -   **[Dynamic Web API Layer](/Pages/Documents/Dynamic-Web-API)** :
     TaskAppService is a simple class, actually. We generally have to write a wrapper Web API
-    Controller to expose methods to javascript clients, but ABP
+    Controller to expose methods to JavaScript clients, but ABP
     automatically does that on runtime. This way, we can use application
     service methods directly from clients.
 -   **[Dynamic Javascript AJAX
     Proxy](/Pages/Documents/Dynamic-Web-API#dynamic-javascript-proxies)** : ABP
     creates proxy methods that make calling application
-    service methods as simple as calling javascript methods on the
+    service methods as simple as calling JavaScript methods on the
     client.
 
 We can see the benefits of ABP in this simple class. All these tasks

@@ -148,7 +148,7 @@ Id property.
 
 As you can see, **PersonDto** does not include a Password property since it's
 not needed for the presentation layer. It can be dangerous to send 
-peoples' passwords to the presentation layer! If a Javascript client
+peoples' passwords to the presentation layer! If a JavaScript client
 requested it, anyone can easily grab the passwords from the result.
 
 Let's implement **IPersonAppService** before go further:
