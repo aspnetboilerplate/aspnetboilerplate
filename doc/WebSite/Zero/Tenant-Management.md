@@ -1,13 +1,13 @@
-#### About Multi Tenancy
+### About Multi-Tenancy
 
-We strongly recommend you read the [multi-tenancy
+We strongly recommend that you read the [multi-tenancy
 documentation](/Pages/Documents/Multi-Tenancy) before this one.
 
-### Enabling Multi Tenancy
+### Enabling Multi-Tenancy
 
-ASP.NET Boilerplate and module-zero can run in **multi-tenant** or
+ASP.NET Boilerplate and Module Zero can run in **multi-tenant** or
 **single-tenant** modes. Multi-tenancy is disabled by default. We can
-enable it in PreInitialize method of our
+enable it in the PreInitialize method of our
 [module](/Pages/Documents/Module-System) as shown below:
 
     [DependsOn(typeof(AbpZeroCoreModule))]
@@ -25,7 +25,7 @@ Note: Even if our application is not multi-tenant, we must define a
 default tenant (see Default Tenant section of this document). 
 
 When we create a project [template](/Templates) based on ASP.NET
-Boilerplate and module-zero, we have the **Tenant** entity and the
+Boilerplate and Module Zero, we have the **Tenant** entity and the
 **TenantManager** domain service.
 
 ### Tenant Entity
@@ -46,13 +46,14 @@ The AbpTenant class defines some base properties, the most important are:
 -   **TenancyName**: This is the **unique** name of a tenant in the
     application. It should not normally be changed. It can be used to
     allocate subdomains to tenants like '**mytenant**.mydomain.com'.
+    As such, it cannot contain spaces.
     Tenant.**TenancyNameRegex** constant defines the naming rule.
 -   **Name**: An arbitrary, human-readable, long name of the tenant.
--   **IsActive**: True if this tenant can use the application. If it's
-    false, no user of this tenant can login to to system.
+-   **IsActive**: True, if this tenant can use the application. If it's
+    false, no user of this tenant can login to the application.
 
-The AbpTenant class is inherited from the **FullAuditedEntity**. This means it
-has creation, modification and deletion **audit properties**. There's also
+The AbpTenant class inherits **FullAuditedEntity**. This means it
+has creation, modification and deletion **audit properties**. It is also
 **[Soft-Delete](/Pages/Documents/Data-Filters#isoftdelete)**, so
 when we delete a tenant, it's not deleted from the database, just marked as
 deleted.
@@ -79,7 +80,7 @@ class for your own needs.
 
 ### Default Tenant
 
-ASP.NET Boilerplate and module-zero assumes that there is a pre-defined
+ASP.NET Boilerplate and Module Zero assume that there is a pre-defined
 tenant where the TenancyName is '**Default**' and the Id is **1**. In a
-single-tenant application, this is used as as the main, single tenant. In a
+single-tenant application, this is used as the only tenant. In a
 multi-tenant application, you can delete it or make it passive.
