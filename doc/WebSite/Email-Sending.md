@@ -36,14 +36,14 @@ details. Example usage:
 
 We simply [injected](Dependency-Injection.md) **IEmailSender** and
 used the **Send** method. The Send method has additional overloads. For example, it
-can also get a MailMessage object (not available for .net core since .net core
+can also get a MailMessage object (not available for .NET Core since .NET Core
 does not include SmtpClient and MailMessage).
 
 #### ISmtpEmailSender
 
 There is also an **ISmtpEmailSender** which extends IEmailSender and adds a
 **BuildClient** method to create an **SmtpClient** and then directly uses it
-(not available for .net core since .net core does not include SmtpClient
+(not available for .NET Core since .NET Core does not include SmtpClient
 and MailMessage). Using IEmailSender will be enough for most cases.
 
 #### NullEmailSender
@@ -85,7 +85,7 @@ Their values and descriptions:
 
 ### MailKit Integration
 
-Since .net core does not support the standard System.Net.Mail.SmtpClient, 
+Since .NET Core does not support the standard System.Net.Mail.SmtpClient, 
 we need a 3rd-party vendor to send emails. Fortunately,
 [MailKit](https://github.com/jstedfast/MailKit) provides a good
 replacement for the default SmtpClient. It's also
