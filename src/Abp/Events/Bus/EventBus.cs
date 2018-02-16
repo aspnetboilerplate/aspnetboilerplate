@@ -6,6 +6,7 @@ using System.Reflection;
 using System.Runtime.CompilerServices;
 using System.Threading;
 using System.Threading.Tasks;
+using Abp.Collections.Extensions;
 using Abp.Events.Bus.Factories;
 using Abp.Events.Bus.Factories.Internals;
 using Abp.Events.Bus.Handlers;
@@ -314,12 +315,15 @@ namespace Abp.Events.Bus
         public async Task TriggerAsync(Type eventType, object eventSource, IEventData eventData)
         {
             var asyncTasks = new List<Task>();
+            var syncTasks = new List<EventTypeWithEventHandlerFactories>();
             var exceptions = new List<Exception>();
 
             await new SynchronizationContextRemover();
 
             foreach (var handlerFactories in GetHandlerFactories(eventType))
             {
+                var syncHandlerFactories = new List<IEventHandlerFactory>();
+
                 foreach (var handlerFactory in handlerFactories.EventHandlerFactories)
                 {
                     Type handlerType = GetEventHandlerType(handlerFactory);
@@ -331,13 +335,26 @@ namespace Abp.Events.Bus
                     }
                     else if (IsEventHandler(handlerType))
                     {
-                        TriggerHandlingException(handlerFactory, handlerFactories.EventType, eventData, exceptions);
+                        syncHandlerFactories.Add(handlerFactory);
                     }
                     else
                     {
                         var message = $"Event handler to register for event type {eventType.Name} does not implement IEventHandler<{eventType.Name}> or IAsyncEventHandler<{eventType.Name}> interface!";
                         exceptions.Add(new AbpException(message));
                     }
+                }
+
+                if (syncHandlerFactories.IsNullOrEmpty())
+                {
+                    syncTasks.Add(new EventTypeWithEventHandlerFactories(handlerFactories.EventType, syncHandlerFactories));
+                }
+            }
+
+            foreach(var syncTask in syncTasks)
+            {
+                foreach(var syncHandlerFactory in syncTask.EventHandlerFactories)
+                {
+                    TriggerHandlingException(syncHandlerFactory, syncTask.EventType, eventData, exceptions);
                 }
             }
 
