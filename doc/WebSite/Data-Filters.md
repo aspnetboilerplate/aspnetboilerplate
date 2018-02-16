@@ -164,13 +164,13 @@ after the using statement. If the filter was already disabled before the
 using statement, DisableFilter does nothing and the filter
 remains disabled even after the using statement.
 
-#### About Multi Tenancy
+#### About Multi-Tenancy
 
 You can disable tenancy filters to query all tenant data. Note
 that this only works for a single-database approach. If you have
 seperated databases for each tenant, disabling the filter does not help to
 query all the data of all tenants since they are in different databases,
-or even on different servers. See the [multi tenancy
+or even on different servers. See the [Multi-Tenancy
 document](Multi-Tenancy.md) for more information.
 
 #### Disable Filters Globally
@@ -213,7 +213,7 @@ MayHaveTenant and MustHaveTenant filters, there is a better way to
 change the tenant filter: **SetTenantId()**. SetTenantId changes the parameter
 value for both filters, and also works for single database and database
 per tenant approaches. **It is highly recommended that you use use SetTenantId**
-to change tenancy filter parameter values. See the [multi tenancy
+to change tenancy filter parameter values. See the [Multi-Tenancy
 document](Multi-Tenancy.md) for more information.
 
 ### ORM Integrations

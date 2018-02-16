@@ -76,7 +76,7 @@ as a result instead of throwing exceptions. See the [user
 management](/Pages/Documents/Zero/User-Management) document for more
 information.
 
-### Multi Tenancy
+### Multi-Tenancy
 
 Similar to user management, role management also works for a tenant
 in a multi-tenant application. See the [user

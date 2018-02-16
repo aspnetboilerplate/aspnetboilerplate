@@ -57,7 +57,7 @@ OUs. Common use cases are:
 -   Move an OU in the OU tree.
 -   Getting information about the OU tree and its items.
 
-#### Multi Tenancy
+#### Multi-Tenancy
 
 The OrganizationUnitManager is designed to work for a **single tenant** at a
 time. It works for the **current tenant** by default.
@@ -95,7 +95,7 @@ OU.
 
 **Please note**; The product entity must have a **TenantId** (which is a property
 of IMustHaveTenant) to distinguish it from products of different tenants in a
-multi-tenant application (see the [multi tenancy
+multi-tenant application (see the [Multi-Tenancy
 document](/Pages/Documents/Multi-Tenancy#data-filters) for more info). If your
 application is not multi-tenant, you don't need this interface and
 property.
