@@ -59,25 +59,29 @@ Application Layer
 -   [Authorization](Authorization.md)
 -   [Feature Management](Feature-Management.md)
 -   [Audit Logging](Audit-Logging.md)
--   [Entity History](Entity-History.md) <label class="label label-success">NEW</label>
+-   [Entity History <label class="label label-success">New</label>](Entity-History.md)
 
 Distributed Service Layer
 
--   ASP.NET Web API
-    -   [Web API Controllers](Web-API-Controllers.md)
-    -   [Dynamic Web API Layer](Dynamic-Web-API.md)
-    -   [OData Integration](OData-Integration.md)
-    -   [Swagger UI Integration](Swagger-UI-Integration.md)
+ASP.NET Web API
+-   [Web API Controllers](Web-API-Controllers.md)
+-   [Dynamic Web API Layer](Dynamic-Web-API.md)
+-   [OData Integration](OData-Integration.md)
+-   [Swagger UI Integration](Swagger-UI-Integration.md)
 
 Presentation Layer
 
--   ASP.NET MVC
-    -   [MVC Controllers](MVC-Controllers.md)
-    -   [MVC Views](MVC-Views.md)
-    -   [Handling Exceptions](Handling-Exceptions.md)
--   ASP.NET Core
-    -   [ASP.NET Core Integration](AspNet-Core.md)
-    -   [ASP.NET Core OData Integration  <label class="label label-success">NEW</label>](OData-AspNetCore-Integration.md)
+ASP.NET MVC
+-   [MVC Controllers](MVC-Controllers.md)
+-   [MVC Views](MVC-Views.md)
+-   [Handling Exceptions](Handling-Exceptions.md)
+
+ASP.NET Core
+
+-   [ASP.NET Core Integration](AspNet-Core.md)
+-   [ASP.NET Core OData Integration  <label class="label label-success">New</label>](OData-AspNetCore-Integration.md)
+
+
 -   [Localization](Localization.md)
 -   [Navigation](Navigation.md)
 -   [Embedded Resources](Embedded-Resource-Files.md)
@@ -94,27 +98,31 @@ Real Time Services
 
 -   [Notification System](Notification-System.md)
 -   [SignalR Integration](SignalR-Integration.md)
--   [SignalR ASP.NET Core Integration](SignalR-AspNetCore-Integration.md) <label class="label label-success">NEW</label>
+-   [SignalR ASP.NET Core Integration <label class="label label-success">New</label>](SignalR-AspNetCore-Integration.md)
 
 Object-Relational Mapping
 
 -   [EntityFramework Integration](EntityFramework-Integration.md)
 -   [EntityFramework Core Integration](Entity-Framework-Core.md)
 -   [NHibernate Integration](NHibernate-Integration.md)
--   [Dapper Integration](Dapper-Integration.md) <label class="label label-success">NEW</label>
+-   [Dapper Integration <label class="label label-success">New</label>](Dapper-Integration.md) 
 
 Releases
 
--   [Nuget Packages](Nuget-Packages.md)
--   [Change Logs & Releases](https://github.com/aspnetboilerplate/aspnetboilerplate/releases)
+- [Nuget Packages](Nuget-Packages.md)
+- [Change Logs & Releases](https://github.com/aspnetboilerplate/aspnetboilerplate/releases)
 
  #### Module Zero
--   [Introduction](Zero/Overall.md)
-  Startup Templates
+[Introduction](Zero/Overall.md)
+
+Startup Templates
+
   -   [ASP.NET Core & Angular](Zero/Startup-Template-Angular.md)
   -   [ASP.NET Core MVC & jQuery](Zero/Startup-Template-Core.md)
   -   [ASP.NET MVC 5.x / Angularjs 1.x](Zero/Startup-Template.md)
-    Features
+
+Features
+
   -   [Tenant Management](/Pages/Documents/Zero/Tenant-Management)
   -   [Edition Management](/Pages/Documents/Zero/Edition-Management)
   -   [User Management](/Pages/Documents/Zero/User-Management)
@@ -122,14 +130,17 @@ Releases
   -   [Organization Unit Management](/Pages/Documents/Zero/Organization-Units)
   -   [Permission Management](/Pages/Documents/Zero/Permission-Management)
   -   [Language Management](/Pages/Documents/Zero/Language-Management)
-  -   [Identity Server Integration](Zero/Identity-Server.md) <label class="label label-success">NEW</label>
-    Releases
+  -   [Identity Server Integration <label class="label label-success">New</label>](Zero/Identity-Server.md)
+
+Releases
+
   -   [Nuget Packages](/Pages/Documents/Zero/Nuget-Packages)
   -   [Change Logs & Releases](https://github.com/aspnetboilerplate/module-zero/releases)
 
 ### Other
 
 Chinese translations of ABP's documentation (from contributors)
+
   -   [Cnblogs.com/farb](http://www.cnblogs.com/farb/p/ABPTheory.html)
   -   [Cnblogs.com/mienreal](http://www.cnblogs.com/mienreal/p/4528470.html)
   -   [GitHub.com/ABPFrameWorkGroup/AbpDocument2Chinese](https://github.com/ABPFrameWorkGroup/AbpDocument2Chinese)
