@@ -4,7 +4,7 @@ using Abp.Runtime.Session;
 namespace Abp.Application.Features
 {
     /// <summary>
-    /// This interface should be implemented to get the value of features
+    /// This interface should be used to get the value of features
     /// </summary>
     public interface IFeatureChecker
     {
