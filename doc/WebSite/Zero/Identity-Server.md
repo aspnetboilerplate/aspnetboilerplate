@@ -10,7 +10,7 @@ project.
 #### Startup Project
 
 This document assumes that you have already created an ASP.NET Core based
-project (including module-zero) from the [startup templates](/Templates) and
+project (including Module Zero) from the [startup templates](/Templates) and
 have set it up to work. We created an [ASP.NET Core MVC startup
 project](Startup-Template-Core.md) for this demonstration.
 

@@ -28,7 +28,7 @@ No entities are automatically tracked by default. You should configure entities 
 
 The Entity History tracking system uses **IEntityHistoryStore** to
 save change information. While you can implement it in your own way,
-it's fully implemented in the **module-zero** project.
+it's fully implemented in the **Module Zero** project.
 
 ### Configuration
 

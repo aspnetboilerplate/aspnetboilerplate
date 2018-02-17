@@ -59,7 +59,7 @@ time. When you open the application, you will see the **login page**:
 
 <img src="../images/module-zero-core-template-ui-login.png" alt="Login Page" class="img-thumbnail" />
 
-The angular client app also has **HMR** (Hot Module Replacement) enabled.
+The Angular client app also has **HMR** (Hot Module Replacement) enabled.
 You can use the following command (instead of npm start) to enable HMR
 at development time:
 

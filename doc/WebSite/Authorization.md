@@ -9,7 +9,7 @@ specific operation in the application. ASP.NET Boilerplate defines a
 
 The Authorization system uses **IPermissionChecker** to check permissions.
 While you can implement it in your own way, it's fully implemented in the
-**module-zero** project. If it's not implemented, NullPermissionChecker
+**Module Zero** project. If it's not implemented, NullPermissionChecker
 is used which grants all permissions to everyone.
 
 ### Defining Permissions
@@ -138,7 +138,7 @@ of those frameworks.
 ##### Suppress Authorization
 
 You can disable authorization for a method/class by adding
-**AbpAllowAnonymous** attribute to aplication services. Use the
+**AbpAllowAnonymous** attribute to application services. Use the
 **AllowAnonymous** attribute for MVC, Web API and ASP.NET Core Controllers, which
 is a native attribute of these frameworks.
 
@@ -186,7 +186,7 @@ permission. Thus, we can conditionally render the view. Example:
         <button id="CreateNewUserButton" class="btn btn-primary"><i class="fa fa-plus"></i> @L("CreateNewUser")</button>
     }
 
-#### Client Side (Javascript)
+#### Client Side (JavaScript)
 
 In the client side, we can use the API defined in the **abp.auth** namespace. In
 most cases, we need to check if the current user has a specific permission
