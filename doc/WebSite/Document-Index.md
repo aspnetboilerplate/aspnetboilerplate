@@ -138,7 +138,7 @@ Releases
   -   [Nuget Packages](/Pages/Documents/Zero/Nuget-Packages)
   -   [Change Logs & Releases](https://github.com/aspnetboilerplate/module-zero/releases)
 
-Miscellaneous
+### Miscellaneous
 
   -   Chinese translations of ABP's documentation (from contributors)
 
