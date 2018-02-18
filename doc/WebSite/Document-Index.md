@@ -112,8 +112,9 @@ Releases
 - [Nuget Packages](Nuget-Packages.md)
 - [Change Logs & Releases](https://github.com/aspnetboilerplate/aspnetboilerplate/releases)
 
- #### Module Zero
-[Introduction](Zero/Overall.md)
+Module Zero
+
+- [Introduction](Zero/Overall.md)
 
 Startup Templates
 
@@ -137,10 +138,10 @@ Releases
   -   [Nuget Packages](/Pages/Documents/Zero/Nuget-Packages)
   -   [Change Logs & Releases](https://github.com/aspnetboilerplate/module-zero/releases)
 
-### Other
+Miscellaneous
 
-Chinese translations of ABP's documentation (from contributors)
+  -   Chinese translations of ABP's documentation (from contributors)
 
-  -   [Cnblogs.com/farb](http://www.cnblogs.com/farb/p/ABPTheory.html)
-  -   [Cnblogs.com/mienreal](http://www.cnblogs.com/mienreal/p/4528470.html)
-  -   [GitHub.com/ABPFrameWorkGroup/AbpDocument2Chinese](https://github.com/ABPFrameWorkGroup/AbpDocument2Chinese)
+    -   [Cnblogs.com/farb](http://www.cnblogs.com/farb/p/ABPTheory.html)
+    -   [Cnblogs.com/mienreal](http://www.cnblogs.com/mienreal/p/4528470.html)
+    -   [GitHub.com/ABPFrameWorkGroup/AbpDocument2Chinese](https://github.com/ABPFrameWorkGroup/AbpDocument2Chinese)
