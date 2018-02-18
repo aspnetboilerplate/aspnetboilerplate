@@ -160,6 +160,11 @@ namespace Abp.Runtime.Validation.Interception
                 return;
             }
 
+            if (TypeHelper.IsPrimitiveExtendedIncludingNullable(validatingObject.GetType()))
+            {
+                return;
+            }
+
             SetValidationErrors(validatingObject);
 
             // Validate items of enumerable
