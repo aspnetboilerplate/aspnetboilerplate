@@ -140,8 +140,8 @@ Releases
 
 ### Miscellaneous
 
-  -   Chinese translations of ABP's documentation (from contributors)
+Chinese translations of ABP's documentation (from contributors)
 
-    -   [Cnblogs.com/farb](http://www.cnblogs.com/farb/p/ABPTheory.html)
-    -   [Cnblogs.com/mienreal](http://www.cnblogs.com/mienreal/p/4528470.html)
-    -   [GitHub.com/ABPFrameWorkGroup/AbpDocument2Chinese](https://github.com/ABPFrameWorkGroup/AbpDocument2Chinese)
+-   [Cnblogs.com/farb](http://www.cnblogs.com/farb/p/ABPTheory.html)
+-   [Cnblogs.com/mienreal](http://www.cnblogs.com/mienreal/p/4528470.html)
+-   [GitHub.com/ABPFrameWorkGroup/AbpDocument2Chinese](https://github.com/ABPFrameWorkGroup/AbpDocument2Chinese)
