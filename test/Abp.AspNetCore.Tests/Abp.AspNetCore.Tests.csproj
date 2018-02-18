@@ -16,6 +16,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\..\src\Abp.AspNetCore.TestBase\Abp.AspNetCore.TestBase.csproj" />
+    <ProjectReference Include="..\..\src\Abp.FluentValidation\Abp.FluentValidation.csproj" />
     <ProjectReference Include="..\Abp.Tests\Abp.Tests.csproj" />
   </ItemGroup>
 

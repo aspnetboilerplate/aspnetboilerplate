@@ -6,6 +6,7 @@ using Abp.Modules;
 using Abp.AspNetCore.Configuration;
 using Abp.AspNetCore.Mocks;
 using Abp.Auditing;
+using Abp.FluentValidation;
 using Abp.Localization;
 using Abp.MultiTenancy;
 using Abp.Reflection.Extensions;
@@ -13,7 +14,7 @@ using Microsoft.AspNetCore.Builder;
 
 namespace Abp.AspNetCore.App
 {
-    [DependsOn(typeof(AbpAspNetCoreTestBaseModule))]
+    [DependsOn(typeof(AbpAspNetCoreTestBaseModule), typeof(AbpFluentValidationModule))]
     public class AppModule : AbpModule
     {
         public override void PreInitialize()
