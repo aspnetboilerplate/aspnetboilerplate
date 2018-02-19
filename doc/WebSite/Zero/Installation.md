@@ -1,12 +1,12 @@
 ### Creating from the template (the automatic way!)
 
-The easiest way of starting a new project using ABP and module-zero is to
+The easiest way of starting a new project using ABP and Module Zero is to
 create a template on our [templates page](/Templates). See the [startup
 template](/Pages/Documents/Zero/Startup-Template) documentation for more info.
 
 ### Installing manually
 
-If you have a legacy application and want to install module-zero, follow
+If you have a legacy application and want to install Module Zero, follow
 the instructions in this section.
 
 In this document, we will assume that your solution has these projects:
@@ -34,7 +34,7 @@ module class (AbpZeroSampleCoreModule class for this sample) and add a
 
 ##### Domain classes (entities)
 
-Module-zero provides the abstract **User**, **Role** and **Tenant** classes. 
+Module Zero provides the abstract **User**, **Role** and **Tenant** classes. 
 We can implement them as shown below:
 
     public class User : AbpUser<Tenant, User>
@@ -219,7 +219,7 @@ need to implement the **permission checker**:
 ##### EntityFramework
 
 If you selected EntityFramework, you must configure it to use
-module-zero. Install the **Abp.Zero.EntityFramework** NuGet package to the
+Module Zero. Install the **Abp.Zero.EntityFramework** NuGet package to the
 .EntityFramework project. Then go to the module file
 (AbpZeroSampleDataModule in this example) and change
 the AbpEntityFrameworkModule dependency to **AbpZeroEntityFrameworkModule**
@@ -241,7 +241,7 @@ Go to your DbContext class and change the base class from AbpDbContext to
         //...
     }
 
-This way, the base entities from module-zero are added to your db context.
+This way, the base entities from Module Zero are added to your db context.
 
 ###### Database Migration
 
@@ -384,7 +384,7 @@ and used the initial data builder class.
 
 #### Presentation Layer
 
-##### Nuget Packages
+##### NuGet Packages
 
 Add the following NuGet packages to the .Web project:
 
@@ -538,6 +538,6 @@ only authenticated users can access pages:
     {
         public ActionResult Index()
         { 
-            return View("~/App/Main/views/layout/layout.cshtml"); //Layout of the angular application.
+            return View("~/App/Main/views/layout/layout.cshtml"); //Layout of the Angular application.
         }
     }

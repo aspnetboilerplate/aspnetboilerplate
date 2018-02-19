@@ -199,6 +199,12 @@ namespace Abp.AspNetCore.Mvc.Conventions
         {
             RemoveEmptySelectors(action.Selectors);
 
+            var remoteServiceAtt = ReflectionHelper.GetSingleAttributeOrDefault<RemoteServiceAttribute>(action.ActionMethod);
+            if (remoteServiceAtt != null && !remoteServiceAtt.IsEnabledFor(action.ActionMethod))
+            {
+                return;
+            }
+
             if (!action.Selectors.Any())
             {
                 AddAbpServiceSelector(moduleName, controllerName, action, configuration);

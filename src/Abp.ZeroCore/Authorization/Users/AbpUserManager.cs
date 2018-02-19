@@ -49,7 +49,7 @@ namespace Abp.Authorization.Users
 
         protected AbpRoleManager<TRole, TUser> RoleManager { get; }
 
-        public AbpUserStore<TRole, TUser> AbpStore { get; }
+        protected AbpUserStore<TRole, TUser> AbpStore { get; }
 
         public IMultiTenancyConfig MultiTenancy { get; set; }
 
@@ -295,14 +295,24 @@ namespace Abp.Authorization.Users
             await UserPermissionStore.AddPermissionAsync(user, new PermissionGrantInfo(permission.Name, false));
         }
 
-        public virtual async Task<TUser> FindByNameOrEmailAsync(string userNameOrEmailAddress)
+        public virtual Task<TUser> FindByNameOrEmailAsync(string userNameOrEmailAddress)
         {
-            return await AbpStore.FindByNameOrEmailAsync(userNameOrEmailAddress);
+            return AbpStore.FindByNameOrEmailAsync(userNameOrEmailAddress);
         }
 
         public virtual Task<List<TUser>> FindAllAsync(UserLoginInfo login)
         {
             return AbpStore.FindAllAsync(login);
+        }
+
+        public virtual Task<TUser> FindAsync(int? tenantId, UserLoginInfo login)
+        {
+            return AbpStore.FindAsync(tenantId, login);
+        }
+
+        public virtual Task<TUser> FindByNameOrEmailAsync(int? tenantId, string userNameOrEmailAddress)
+        {
+            return AbpStore.FindByNameOrEmailAsync(tenantId, userNameOrEmailAddress);
         }
 
         /// <summary>

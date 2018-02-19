@@ -111,5 +111,5 @@ Base classes to create integration tests for ABP based projects.
 
 #### [Abp.AspNetCore.TestBase](http://www.nuget.org/packages/Abp.AspNetCore.TestBase)
 
-Base classes to create integration tests for Asp.Net Core and ABP-based
+Base classes to create integration tests for ASP.NET Core and ABP-based
 projects.

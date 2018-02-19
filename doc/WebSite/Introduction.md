@@ -10,7 +10,7 @@ using **best practices** such as **Layered** and **Modular**
 Architecture, **Domain Driven Design**, **Dependency Injection** and others. 
 These applications are developed based on **conventions**.
 
-Since all of these are very time-consuming and hard to build seperately
+Since all of these are very time-consuming and hard to build separately
 and for every project, many companies create private **frameworks**. Using
 these framworks, they can develop new applications faster and with fewer bugs. 
 Not all companies are this lucky. Most of them have no
@@ -56,7 +56,7 @@ Here we see a sample [Application
 Service](/Pages/Documents/Application-Services) method. An application
 service, in DDD, is directly used by the presentation layer to perform the **use
 cases** of the application. Think of **UpdateTask** as a method that is
-called by javascript via AJAX. 
+called by JavaScript via AJAX. 
 
 Let's see some of ABP's benefits here:
 
@@ -88,11 +88,11 @@ Let's see some of ABP's benefits here:
 -   [**Unit Of Work**](/Pages/Documents/Unit-Of-Work): In ABP, each
     application service method is assumed to be a unit of work by default.
     It automatically creates a connection and begins a transaction at
-    the beggining of the method. If the method successfully completes
+    the beginning of the method. If the method successfully completes
     without an exception, then the transaction is committed and the connection
     is disposed. Even if this method uses different repositories or
     methods, all of them will be atomic (transactional). All changes
-    on entities are automatically saved when a transaction is commited.
+    on entities are automatically saved when a transaction is committed.
     We don't even need to call the \_repository.Update(task) method as
     shown above.
 -   [**Exception Handling**](/Pages/Documents/Handling-Exceptions): We
@@ -100,14 +100,14 @@ Let's see some of ABP's benefits here:
     All exceptions are automatically handled by default! If an exception
     occurs, ABP automatically logs it and returns a proper result to the
     client. For example, if this is an AJAX request, it returns a
-    JSON object to the client indicating that an error occured. It hides the actual
+    JSON object to the client indicating that an error occurred. It hides the actual
     exception from the client unless the exception is a
     UserFriendlyException, as used in this sample. It also understands
     and handles errors on the client side and show appropriate messages to the
     users.
 -   **[Logging](/Pages/Documents/Logging)** : As you see, we can write
     logs using the Logger object defined in the base class. Log4Net is used
-    by default, but it's changable and configurable.
+    by default, but it's changeable and configurable.
 -   **[Localization](/Pages/Documents/Localization)** : Note that we
     used the 'L' method while throwing the exception? This way, it's automatically
     localized based on the current user's culture. We define
@@ -120,13 +120,13 @@ Let's see some of ABP's benefits here:
     to another based on naming conventions.
 -   **[Dynamic Web API Layer](/Pages/Documents/Dynamic-Web-API)** :
     TaskAppService is a simple class, actually. We generally have to write a wrapper Web API
-    Controller to expose methods to javascript clients, but ABP
+    Controller to expose methods to JavaScript clients, but ABP
     automatically does that on runtime. This way, we can use application
     service methods directly from clients.
 -   **[Dynamic Javascript AJAX
     Proxy](/Pages/Documents/Dynamic-Web-API#dynamic-javascript-proxies)** : ABP
     creates proxy methods that make calling application
-    service methods as simple as calling javascript methods on the
+    service methods as simple as calling JavaScript methods on the
     client.
 
 We can see the benefits of ABP in this simple class. All these tasks
@@ -143,7 +143,7 @@ application model. Here are some other features of ABP:
 -   **[Data Filters](/Pages/Documents/Data-Filters)** : Provides
     automatic data filtering to implement some patterns like soft-delete
     and multi-tenancy.
--   **[Multi Tenancy](Multi-Tenancy.md)**: It fully supports
+-   **[Multi-Tenancy](Multi-Tenancy.md)**: It fully supports
     multi-tenancy, including single database or database per tenant
     architectures.
 -   **[Setting Management](/Pages/Documents/Setting-Management)** :
@@ -158,7 +158,7 @@ For all the features, see the [documentation](/Pages/Documents).
 
 ### Startup Templates
 
-Starting a new solution, creating layers, installing nuget packages,
+Starting a new solution, creating layers, installing NuGet packages,
 creating a simple layout and a menu... all these are very time consuming.
 
 ABP provides pre-built [startup

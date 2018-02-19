@@ -19,7 +19,7 @@ Overall
 -   [NLayer Architecture](NLayer-Architecture.md)
 -   [Module System](Module-System.md)
 -   [Startup Configuration](Startup-Configuration.md)
--   [Multi Tenancy](Multi-Tenancy.md)
+-   [Multi-Tenancy](Multi-Tenancy.md)
 -   [OWIN Integration](OWIN.md)
 -   [Debugging](Debugging.md)
 -   [API Reference](/api-docs/index.html)
