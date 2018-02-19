@@ -236,6 +236,11 @@ public interface ITaskRepository : IRepository&lt;Task, long&gt;
 <pre lang="cs">
 public class TaskRepository : SimpleTaskSystemRepositoryBase&lt;Task, long&gt;, ITaskRepository
 {
+    public TaskRepository(IDbContextProvider&lt;SimpleTaskSystemDbContext&gt; dbContextProvider)
+            : base(dbContextProvider)
+    {
+    }
+
     public List&lt;Task&gt; GetAllWithPeople(int? assignedPersonId, TaskState? state)
     {
         //In repository methods, we do not deal with create/dispose DB connections, DbContexes and transactions. ABP handles it.
