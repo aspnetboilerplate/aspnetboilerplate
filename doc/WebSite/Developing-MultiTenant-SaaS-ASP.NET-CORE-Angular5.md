@@ -576,6 +576,8 @@ Presentation layer for this application is built using **Angular** as a SPA.
 
 When we login to the application, we first see a list of events:
 
+<img src="images/event-cloud-events.png" alt="Swagger UI" class="img-thumbnail" />
+
 We directly use `EventAppService` to get list of events. Here is the **events.component.ts** to create this page:
 
 ```ts
@@ -646,10 +648,11 @@ We inject EventAppService as 'abp.services.app.event' into **events.component.ts
 
 We also open a "new event" modal (dialog) when user clicks to "+ New event" button (which triggers `createEvent` function). I will not go details of Angular views, since they are simpler and you can check it in source code.
 
-Event Detail
+#### Event Detail
+
 When we click "Details" button for an event, we go to event details with a URL like "http://eventcloud.aspnetboilerplate.com/#/events/e9499e3e-35c0-492c-98ce-7e410461103f". GUID is id of the event.
 
-#### Event details
+<img src="images/event-cloud-event-detail.png" alt="Swagger UI" class="img-thumbnail" />
 
 Here, we see event details with registered users. We can register to the event or cancel registration. This view's component is defined in **event-detail.component.ts** as shown below:
 
