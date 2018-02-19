@@ -35,7 +35,7 @@ least a one-level namespace, but you can define more deep namespaces like
 The address of the api controller will look like
 '/api/services/tasksystem/task' and the GetTasks method's address will be
 '/api/services/tasksystem/task/getTasks'. Method names are converted to
-**camelCase** since it's conventional in the world of javascript.
+**camelCase** since it's conventional in the world of JavaScript.
 
 #### ForAll Method
 
@@ -129,7 +129,7 @@ interface:
 
 In order to use these attributes, you need to add a reference to the
 [Microsoft.AspNet.WebApi.Core](https://www.nuget.org/packages/Microsoft.AspNet.WebApi.Core)
-nuget package to your project.
+NuGet package to your project.
 
 ##### Naming Convention
 
@@ -167,12 +167,12 @@ You can also use the **RemoteService** attribute for any **interface** or
 **method** definition to enable or disable (**IsEnabled**) the dynamic API or
 API explorer settings (**IsMetadataEnabled**).
 
-### Dynamic Javascript Proxies
+### Dynamic JavaScript Proxies
 
 You can use the dynamically created web api controller via ajax in
-javascript. ASP.NET Boilerplate also simplifies this by creating dynamic
-javascript proxies for dynamic web api controllers. You can call a
-dynamic web api controller's action from javascript like a function
+JavaScript. ASP.NET Boilerplate also simplifies this by creating dynamic
+JavaScript proxies for dynamic web api controllers. You can call a
+dynamic web api controller's action from JavaScript like a function
 call:
 
     abp.services.tasksystem.task.getTasks({
@@ -181,7 +181,7 @@ call:
         //use result.tasks here...
     });
 
-Javascript proxies are created dynamically. You should include the
+JavaScript proxies are created dynamically. You should include the
 dynamic script on your page before you use it:
 
     <script src="/api/AbpServiceProxies/GetAll" type="text/javascript"></script>

@@ -1,4 +1,4 @@
-ASP.NET Boilerplate's module-zero is distributed on **NuGet**. Here's a
+ASP.NET Boilerplate's Module Zero is distributed on **NuGet**. Here's a
 list of all the packages.
 
 ### Abp.ZeroCore Packages
@@ -8,7 +8,7 @@ Abp.ZeroCore is built on
 
 #### [Abp.ZeroCore](http://www.nuget.org/packages/Abp.ZeroCore)
 
-The core/main package of module zero.
+The core/main package of Module Zero.
 
 #### [Abp.ZeroCore.EntityFrameworkCore](http://www.nuget.org/packages/Abp.ZeroCore.EntityFrameworkCore)
 
@@ -30,19 +30,19 @@ Abp.Zero is built on
 
 #### [Abp.Zero](http://www.nuget.org/packages/Abp.Zero)
 
-Main package of module zero.
+Main package of Module Zero.
 
 #### [Abp.Zero.Owin](http://www.nuget.org/packages/Abp.Zero.Owin)
 
-Owin integration package for module zero.
+Owin integration package for Module Zero.
 
 #### [Abp.Zero.AspNetCore](http://www.nuget.org/packages/Abp.Zero.AspNetCore)
 
-ASP.NET Core integration package for module zero.
+ASP.NET Core integration package for Module Zero.
 
 #### [Abp.Zero.EntityFramework](http://www.nuget.org/packages/Abp.Zero.EntityFramework)
 
-EntityFramework integration package for module zero.
+EntityFramework integration package for Module Zero.
 
 ### Shared
 

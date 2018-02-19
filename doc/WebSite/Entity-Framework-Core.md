@@ -1,7 +1,7 @@
 ### Introduction
 
 The [Abp.EntityFrameworkCore](https://www.nuget.org/packages/Abp.EntityFrameworkCore)
-nuget package is used to integrate the Entity Framework (EF) Core ORM
+NuGet package is used to integrate the Entity Framework (EF) Core ORM
 framework. After installing this package, you need to also add a
 [DependsOn](Module-System.md) attribute for
 **AbpEntityFrameworkCoreModule**.

@@ -1,5 +1,5 @@
 We all love to show some fancy auto-disappearing notifications when
-something happens, like when an item is saved or a problem has occured.
+something happens, like when an item is saved or a problem has occurred.
 ASP.NET Boilerplate defines some standard APIs for that.
 
     abp.notify.success('a message text', 'optional title');
@@ -20,6 +20,6 @@ A toastr success notification is shown below:
 <img src="../images/success_notification.png" alt="Success notification using toastr.js" class="img-thumbnail" />
 
 You can also implement a notification in your favourite notification
-library. Just override all functions in a custom javascript file and
+library. Just override all functions in a custom JavaScript file and
 include it in to your page instead of abp.toastr.js (You can check this
 file to see the implementation, it's pretty simple).
