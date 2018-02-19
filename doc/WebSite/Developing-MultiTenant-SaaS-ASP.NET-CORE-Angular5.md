@@ -576,7 +576,7 @@ Presentation layer for this application is built using **Angular** as a SPA.
 
 When we login to the application, we first see a list of events:
 
-We directly use `EventAppService` to get list of events. Here, the Angular controller to create this page:
+We directly use `EventAppService` to get list of events. Here is the **events.component.ts** to create this page:
 
 ```ts
 import { Component, Injector, ViewChild } from '@angular/core';
@@ -642,143 +642,178 @@ export class EventsComponent extends PagedListingComponentBase<EventListDto> {
 }
 ```
 
-We inject EventAppService as 'abp.services.app.event' into Angular controller. We used dynamic web api layer feature of ABP. It creates needed Web API controller and Angularjs service automatically and dynamically. So, we can use application service methods like calling regular javascript functions. So, to call EventAppService.GetList C# method, we simple call eventService.getList javascript function which returns a promise ($q for angular).
+We inject EventAppService as 'abp.services.app.event' into **events.component.ts** component. We used dynamic web api layer feature of **ABP**. It creates needed Web API controller and Angular service automatically and dynamically. So, we can use application service methods like calling regular typescript functions. So, to call `EventAppService.GetListAsync` C# method, we simple call `_eventService.getListAsync` typescript function.
 
-We also open a "new event" modal (dialog) when user clicks to "+ New event" button (which triggers vm.openNewEventDialog function). I will not go details of Angular views, since they are simpler and you can check it in source code.
+We also open a "new event" modal (dialog) when user clicks to "+ New event" button (which triggers `createEvent` function). I will not go details of Angular views, since they are simpler and you can check it in source code.
 
 Event Detail
 When we click "Details" button for an event, we go to event details with a URL like "http://eventcloud.aspnetboilerplate.com/#/events/e9499e3e-35c0-492c-98ce-7e410461103f". GUID is id of the event.
 
-Event details
+#### Event details
 
-Here, we see event details with registered users. We can register to the event or cancel registration. This view's controller is defined in detail.js as shown below:
+Here, we see event details with registered users. We can register to the event or cancel registration. This view's component is defined in **event-detail.component.ts** as shown below:
 
-(function () {
-    var controllerId = 'app.views.events.detail';
-    angular.module('app').controller(controllerId, [
-        '$scope', '$state','$stateParams', 'abp.services.app.event',
-        function ($scope, $state, $stateParams, eventService) {
-            var vm = this;
+```ts
+import { Component, OnInit, Injector } from '@angular/core';
+import { appModuleAnimation } from '@shared/animations/routerTransition';
+import { ActivatedRoute, Params, Router } from '@angular/router';
+import { AppComponentBase } from '@shared/app-component-base';
+import { EventDetailOutput, EventServiceProxy, EntityDtoOfGuid, EventRegisterOutput } from '@shared/service-proxies/service-proxies';
 
-            function loadEvent() {
-                eventService.getDetail({
-                    id: $stateParams.id
-                }).then(function (result) {
-                    vm.event = result.data;
-                });
-            }
+import * as _ from 'lodash';
 
-            vm.isRegistered = function () {
-                if (!vm.event) {
-                    return false;
-                }
+@Component({
+    templateUrl: './event-detail.component.html',
+    animations: [appModuleAnimation()]
+})
 
-                return _.find(vm.event.registrations, function(registration) {
-                    return registration.userId == abp.session.userId;
-                });
-            };
+export class EventDetailComponent extends AppComponentBase implements OnInit {
 
-            vm.isEventCreator = function() {
-                return vm.event && vm.event.creatorUserId == abp.session.userId;
-            };
+    event: EventDetailOutput = new EventDetailOutput();
+    eventId:string;
 
-            vm.getUserThumbnail = function(registration) {
-                return registration.userName.substr(0, 1).toLocaleUpperCase();
-            };
-
-            vm.register = function() {
-                eventService.register({
-                    id: vm.event.id
-                }).then(function (result) {
-                    abp.notify.success('Successfully registered to event. Your registration id: ' + result.data.registrationId + ".");
-                    loadEvent();
-                });
-            };
-
-            vm.cancelRegistertration = function() {
-                eventService.cancelRegistration({
-                    id: vm.event.id
-                }).then(function () {
-                    abp.notify.info('Canceled your registration.');
-                    loadEvent();
-                });
-            };
-
-            vm.cancelEvent = function() {
-                eventService.cancel({
-                    id: vm.event.id
-                }).then(function () {
-                    abp.notify.info('Canceled the event.');
-                    vm.backToEventsPage();
-                });
-            };
-
-            vm.backToEventsPage = function() {
-                $state.go('events');
-            };
-
-            loadEvent();
-        }
-    ]);
-})();
-We simply use event application service to perform actions.
-
-Main Menu
-Top menu is automatically created by ABP template. We define menu items in EventCloudNavigationProvider class:
-
-public class EventCloudNavigationProvider : NavigationProvider
-{
-    public override void SetNavigation(INavigationProviderContext context)
-    {
-        context.Manager.MainMenu
-            .AddItem(
-                new MenuItemDefinition(
-                    AppPageNames.Events,
-                    new LocalizableString("Events", EventCloudConsts.LocalizationSourceName),
-                    url: "#/",
-                    icon: "fa fa-calendar-check-o"
-                    )
-            ).AddItem(
-                new MenuItemDefinition(
-                    AppPageNames.About,
-                    new LocalizableString("About", EventCloudConsts.LocalizationSourceName),
-                    url: "#/about",
-                    icon: "fa fa-info"
-                    )
-            );
+    constructor(
+        injector: Injector,
+        private _eventService: EventServiceProxy,
+        private _router: Router,
+        private _activatedRoute: ActivatedRoute
+    ) {
+        super(injector);
     }
-}
-We can add new menu items here. See navigation documentation for more information.
 
-Angular Route
-Defining the menu only shows it on the page. Angular has it's own route system. This application uses Angular ui-router. Routes are defined in app.js as shown below:
+    ngOnInit(): void {
+        this._activatedRoute.params.subscribe((params: Params) => {
+            this.eventId = params['eventId'];
+            this.loadEvent();
+        });
+    }
 
-//Configuration for Angular UI routing.
-app.config([
-    '$stateProvider', '$urlRouterProvider',
-    function($stateProvider, $urlRouterProvider) {
-        $urlRouterProvider.otherwise('/events');
-        $stateProvider
-            .state('events', {
-                url: '/events',
-                templateUrl: '/App/Main/views/events/index.cshtml',
-                menu: 'Events' //Matches to name of 'Events' menu in EventCloudNavigationProvider
-            })
-            .state('eventDetail', {
-                url: '/events/:id',
-                templateUrl: '/App/Main/views/events/detail.cshtml',
-                menu: 'Events' //Matches to name of 'Events' menu in EventCloudNavigationProvider
-            })
-            .state('about', {
-                url: '/about',
-                templateUrl: '/App/Main/views/about/about.cshtml',
-                menu: 'About' //Matches to name of 'About' menu in EventCloudNavigationProvider
+    registerToEvent(): void {
+        var input = new EntityDtoOfGuid();
+        input.id = this.event.id;
+
+        this._eventService.registerAsync(input)
+            .subscribe((result: EventRegisterOutput) => {
+                abp.notify.success('Successfully registered to event. Your registration id: ' + result.registrationId + ".");
+                this.loadEvent();
+            });
+    };
+
+    cancelRegistrationFromEvent(): void {
+        var input = new EntityDtoOfGuid();
+        input.id = this.event.id;
+
+        this._eventService.cancelRegistrationAsync(input)
+            .subscribe(() => {
+                abp.notify.info('Canceled your registration.');
+                this.loadEvent();
+            });
+    };
+
+    cancelEvent(): void {
+        var input = new EntityDtoOfGuid();
+        input.id = this.event.id;
+
+        this._eventService.cancelAsync(input)
+            .subscribe(() => {
+                abp.notify.info('Canceled the event.');
+                this.backToEventsPage();
+            });
+    };
+
+    isRegistered(): boolean {
+        return _.some(this.event.registrations, { userId: abp.session.userId });
+    };
+
+    isEventCreator(): boolean {
+        return this.event.creatorUserId === abp.session.userId;
+    };
+
+    loadEvent() {
+        this._eventService.getDetailAsync(this.eventId)
+            .subscribe((result: EventDetailOutput) => {
+                this.event = result;
             });
     }
-]);
-Unit and Integration Tests
-ASP.NET Boilerplate provides tools to make unit and integration tests easier. You can find all test code from source code of the project. Here, I will briefly explain basic tests. Solution includes EventAppService_Tests class which tests the EventAppService. See 2 tests from this class:
 
+    backToEventsPage() {
+        this._router.navigate(['app/events']);
+    };
+}
+```
+
+We simply use event application service to perform actions.
+
+#### Main Menu
+
+Top menu is automatically created by **ABP template**. We define menu items in `sidebar-nav.component.ts` class:
+
+```ts
+@Component({
+    templateUrl: './sidebar-nav.component.html',
+    selector: 'sidebar-nav',
+    encapsulation: ViewEncapsulation.None
+})
+export class SideBarNavComponent extends AppComponentBase {
+
+    menuItems: MenuItem[] = [
+        new MenuItem(this.l("HomePage"), "", "home", "/app/home"),
+
+        new MenuItem(this.l("Tenants"), "Pages.Tenants", "business", "/app/tenants"),
+        new MenuItem(this.l("Users"), "Pages.Users", "people", "/app/users"),
+        new MenuItem(this.l("Roles"), "Pages.Roles", "local_offer", "/app/roles"),
+        new MenuItem(this.l("Events"), "Pages.Events", "event", "/app/events"),
+        new MenuItem(this.l("About"), "", "info", "/app/about"),
+        
+...        
+```
+
+#### Angular Route
+
+Defining the menu only shows it on the page. Angular has it's own route system. Routes are defined in app-routing-module.ts as shown below:
+
+```ts
+import { NgModule } from '@angular/core';
+import { RouterModule } from '@angular/router';
+import { AppComponent } from './app.component';
+import { AppRouteGuard } from '@shared/auth/auth-route-guard';
+import { HomeComponent } from './home/home.component';
+import { AboutComponent } from './about/about.component';
+import { UsersComponent } from './users/users.component';
+import { TenantsComponent } from './tenants/tenants.component';
+import { RolesComponent } from "app/roles/roles.component";
+import { EventsComponent } from "app/events/events.component";
+import { EventDetailComponent } from "app/events/event-detail/event-detail.component";
+
+@NgModule({
+    imports: [
+        RouterModule.forChild([
+            {
+                path: '',
+                component: AppComponent,
+                children: [
+                    { path: 'home', component: HomeComponent, canActivate: [AppRouteGuard] },
+                    { path: 'users', component: UsersComponent, data: { permission: 'Pages.Users' }, canActivate: [AppRouteGuard] },
+                    { path: 'roles', component: RolesComponent, data: { permission: 'Pages.Roles' }, canActivate: [AppRouteGuard] },
+                    { path: 'tenants', component: TenantsComponent, data: { permission: 'Pages.Tenants' }, canActivate: [AppRouteGuard] },
+                    { path: 'events', component: EventsComponent, data: { permission: 'Pages.Events' }, canActivate: [AppRouteGuard] },
+                    { path: 'events/:eventId', component: EventDetailComponent },
+                    { path: 'about', component: AboutComponent }
+                ]
+            }
+        ])
+    ],
+    exports: [RouterModule]
+})
+export class AppRoutingModule { }
+
+```
+
+### Unit and Integration Tests
+
+**ASP.NET Boilerplate** provides tools to make unit and integration tests easier. You can find all test code from source code of the project. Here, I will briefly explain basic tests. Solution includes `EventAppService_Tests` class which tests the `EventAppService`. See 2 tests from this class:
+
+```c#
 public class EventAppService_Tests : EventCloudTestBase
 {
     private readonly IEventAppService _eventAppService;
@@ -789,13 +824,20 @@ public class EventAppService_Tests : EventCloudTestBase
     }
 
     [Fact]
+    public async Task Should_Get_Test_Events()
+    {
+        var output = await _eventAppService.GetListAsync(new GetEventListInput());
+        output.Items.Count.ShouldBe(1);
+    }
+
+    [Fact]
     public async Task Should_Create_Event()
     {
         //Arrange
         var eventTitle = Guid.NewGuid().ToString();
 
         //Act
-        await _eventAppService.Create(new CreateEventInput
+        await _eventAppService.CreateAsync(new CreateEventInput
         {
             Title = eventTitle,
             Description = "A description",
@@ -818,12 +860,72 @@ public class EventAppService_Tests : EventCloudTestBase
         //Act
         await Assert.ThrowsAsync<UserFriendlyException>(async () =>
         {
-            await _eventAppService.Create(new CreateEventInput
+            await _eventAppService.CreateAsync(new CreateEventInput
             {
                 Title = eventTitle,
                 Description = "A description",
                 Date = Clock.Now.AddDays(-1)
             });
+        });
+    }
+
+    [Fact]
+    public async Task Should_Cancel_Event()
+    {
+        //Act
+        await _eventAppService.CancelAsync(new EntityDto<Guid>(GetTestEvent().Id));
+
+        //Assert
+        GetTestEvent().IsCancelled.ShouldBeTrue();
+    }
+
+    [Fact]
+    public async Task Should_Register_To_Events()
+    {
+        //Arrange
+        var testEvent = GetTestEvent();
+
+        //Act
+        var output = await _eventAppService.RegisterAsync(new EntityDto<Guid>(testEvent.Id));
+
+        //Assert
+        output.RegistrationId.ShouldBeGreaterThan(0);
+
+        UsingDbContext(context =>
+        {
+            var currentUserId = AbpSession.GetUserId();
+            var registration = context.EventRegistrations.FirstOrDefault(r => r.EventId == testEvent.Id && r.UserId == currentUserId);
+            registration.ShouldNotBeNull();
+        });
+    }
+
+    [Fact]
+    public async Task Should_Cancel_Registration()
+    {
+        //Arrange
+        var currentUserId = AbpSession.GetUserId();
+        await UsingDbContext(async context =>
+        {
+            var testEvent = GetTestEvent(context);
+            var currentUser = await context.Users.SingleAsync(u => u.Id == currentUserId);
+            var testRegistration = await EventRegistration.CreateAsync(
+                testEvent,
+                currentUser,
+                Substitute.For<IEventRegistrationPolicy>()
+                );
+
+            context.EventRegistrations.Add(testRegistration);
+        });
+
+        //Act
+        await _eventAppService.CancelRegistrationAsync(new EntityDto<Guid>(GetTestEvent().Id));
+
+        //Assert
+        UsingDbContext(context =>
+        {
+            var testEvent = GetTestEvent(context);
+            var testRegistration = context.EventRegistrations.FirstOrDefault(r => r.EventId == testEvent.Id && r.UserId == currentUserId);
+            testRegistration.ShouldBeNull();
         });
     }
 
@@ -837,30 +939,37 @@ public class EventAppService_Tests : EventCloudTestBase
         return context.Events.Single(e => e.Title == TestDataBuilder.TestEventTitle);
     }
 }
+```
+
 We use xUnit as test framework. In the first test, we simply create an event and check database if it's in there. In the second test, we intentionally trying to create an event in the past. Since our business rule don't allow it, we should get an exception here.
 
-With such tests, we tested everyting starting from application service including all aspects of ASP.NET Boilerplate (like validation, unit of work and so on). See my Unit testing in C# using xUnit, Entity Framework, Effort and ASP.NET Boilerplate article for details on unit testing.
+With such tests, we tested everyting starting from application service including all aspects of **ASP.NET Boilerplate** (like validation, unit of work and so on). 
 
-Token Based Authentication
-Startup template uses cookie based authentication for browsers. However, if you want to consume Web APIs or application services (those are exposed via dynamic web api) from a mobile application, you probably want a token based authentication mechanism. Startup template includes bearer token authentication infrastructure. AccountController in .WebApi project contains Authenticate action to get the token. Then we can use the token for next requests.
+### Token Based Authentication
 
-Here, Postman (chrome extension) will be used to demonstrate requests and responses.
+If you want to consume APIs/application services from a mobile application, you can use the token based authentication mechanism just like we do for the Angular client. The startup template includes the JwtBearer token authentication infrastructure.
 
-Authentication
-Just send a POST request to http://localhost:6334/api/Account/Authenticate with Context-Type="application/json" header as shown below:
+We will use Postman (a chrome extension) to demonstrate requests and responses.
 
-Token based auth
+#### Authentication
+
+Just send a POST request to http://localhost:21021/api/TokenAuth/Authenticate with the **Context-Type="application/json"** header as shown below:
+
+<img src="images/swagger-ui-angular-auth.png" alt="Swagger UI" class="img-thumbnail" />
 
 We sent a JSON request body includes tenancyName, userNameOrEmailAddress and password. tenancyName is not required for host users. As seen above, result property of returning JSON contains the token. We can save it and use for next requests.
 
-Use API
-After authenticate and get the token, we can use it to call any authorized action. All application services are available to be used remotely. For example, we can use the EventAppService to get a list of events:
 
-Use application service via token
+#### Use API
 
-Just made a POST request to http://localhost:6334/api/services/app/event/GetList with Content-Type="application/json" and Authorization="Bearer your-auth-token". Request body was just empty {}. Surely, request and response body will be different for different APIs.
+After authenticate and get the **token**, we can use it to call any **authorized** action. All **application services** are available to be used remotely. For example, we can use the **User service** to get a **list of users**:
+
+<img src="images/swagger-ui-angular-api-v2.png" alt="Using API" class="img-thumbnail" />
+
+Just made a **GET** request to **http://localhost:21021/api/services/app/user/getAll** with **Content-Type="application/json"** and **Authorization="Bearer *your-******auth-token*** **"**. All functionality available on UI is also available as API.
 
 Almost all operations available on UI also available as Web API (since UI uses the same Web API) and can be consumed easily.
 
-Source Code
-You can get the latest source code here https://github.com/aspnetboilerplate/eventcloud
+### Source Code
+
+You can get the latest source code here https://github.com/aspnetboilerplate/eventcloudcore
