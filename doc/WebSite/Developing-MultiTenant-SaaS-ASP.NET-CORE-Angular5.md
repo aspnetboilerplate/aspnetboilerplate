@@ -644,7 +644,7 @@ export class EventsComponent extends PagedListingComponentBase<EventListDto> {
 }
 ```
 
-We inject EventAppService as 'abp.services.app.event' into **events.component.ts** component. We used dynamic web api layer feature of **ABP**. It creates needed Web API controller and Angular service automatically and dynamically. So, we can use application service methods like calling regular typescript functions. So, to call `EventAppService.GetListAsync` C# method, we simple call `_eventService.getListAsync` typescript function.
+We inject `EventServiceProxy` into **events.component.ts** component. We used dynamic web api layer feature of **ABP**. It creates needed Web API controller and Angular service automatically and dynamically. So, we can use application service methods like calling regular typescript functions. So, to call `EventAppService.GetListAsync` C# method, we simple call `_eventService.getListAsync` typescript function.
 
 We also open a "new event" modal (dialog) when user clicks to "+ New event" button (which triggers `createEvent` function). I will not go details of Angular views, since they are simpler and you can check it in source code.
 
