@@ -236,6 +236,11 @@ public interface ITaskRepository : IRepository&lt;Task, long&gt;
 <pre lang="cs">
 public class TaskRepository : SimpleTaskSystemRepositoryBase&lt;Task, long&gt;, ITaskRepository
 {
+    public TaskRepository(IDbContextProvider&lt;SimpleTaskSystemDbContext&gt; dbContextProvider)
+            : base(dbContextProvider)
+    {
+    }
+
     public List&lt;Task&gt; GetAllWithPeople(int? assignedPersonId, TaskState? state)
     {
         //In repository methods, we do not deal with create/dispose DB connections, DbContexes and transactions. ABP handles it.
@@ -379,6 +384,11 @@ public class CreateTaskInput
 
     [Required]
     public string Description { get; set; }
+    
+    public override string ToString()
+    {
+        return string.Format("[CreateTaskInput &gt; AssignedPersonId = {0}, Description = {1}]", AssignedPersonId, Description);
+    }
 }</pre>
 
 <p>Here, Description is marked as <strong>Required</strong>. You can use any <a href="http://msdn.microsoft.com/en-us/library/system.componentmodel.dataannotations.aspx" target="_blank"> Data Annotation attributes</a> here. If you want to make some custom validation, you can implement <strong>ICustomValidate</strong> as I implemented in <strong>UpdateTaskInput</strong>:</p>
