@@ -139,25 +139,25 @@ namespace Abp.Events.Bus
         /// <inheritdoc/>
         public Task TriggerAsync<TEventData>(TEventData eventData) where TEventData : IEventData
         {
-            return new Task(() => { });
+            return Task.CompletedTask;
         }
 
         /// <inheritdoc/>
         public Task TriggerAsync<TEventData>(object eventSource, TEventData eventData) where TEventData : IEventData
         {
-            return new Task(() => { });
+            return Task.CompletedTask;
         }
 
         /// <inheritdoc/>
         public Task TriggerAsync(Type eventType, IEventData eventData)
         {
-            return new Task(() => { });
+            return Task.CompletedTask;
         }
 
         /// <inheritdoc/>
         public Task TriggerAsync(Type eventType, object eventSource, IEventData eventData)
         {
-            return new Task(() => { });
+            return Task.CompletedTask;
         }
     }
 }
