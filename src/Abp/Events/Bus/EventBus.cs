@@ -237,7 +237,7 @@ namespace Abp.Events.Bus
             {
                 foreach (var handlerFactory in handlerFactories.EventHandlerFactories)
                 {
-                    var handlerType = GetEventHandlerType(handlerFactory);
+                    var handlerType = handlerFactory.GetHandlerType();
 
                     if (IsAsyncEventHandler(handlerType))
                     {
@@ -314,7 +314,7 @@ namespace Abp.Events.Bus
             {
                 foreach (var handlerFactory in handlerFactories.EventHandlerFactories)
                 {
-                    var handlerType = GetEventHandlerType(handlerFactory);
+                    var handlerType = handlerFactory.GetHandlerType();
 
                     if (IsAsyncEventHandler(handlerType))
                     {
@@ -425,33 +425,6 @@ namespace Abp.Events.Bus
             {
                 asyncHandlerFactory.ReleaseHandler(asyncEventHandler);
             }
-        }
-
-        private Type GetEventHandlerType(IEventHandlerFactory eventHandlerFactory)
-        {
-            var eventHandlerFactoryType = eventHandlerFactory.GetType();
-
-            var isTransientHandlerFactory =
-                eventHandlerFactoryType.IsGenericType &&
-                eventHandlerFactoryType.GenericTypeArguments?.Length == 1 &&
-                eventHandlerFactoryType.GetGenericTypeDefinition() == typeof(TransientEventHandlerFactory<>);
-
-            if (isTransientHandlerFactory)
-            {
-                return eventHandlerFactoryType.GenericTypeArguments[0];
-            }
-
-            if (eventHandlerFactory is SingleInstanceHandlerFactory)
-            {
-                return (eventHandlerFactory as SingleInstanceHandlerFactory).HandlerInstance?.GetType();
-            }
-
-            if (eventHandlerFactory is IocHandlerFactory)
-            {
-                return (eventHandlerFactory as IocHandlerFactory).HandlerType;
-            }
-
-            return eventHandlerFactory.GetHandler()?.GetType();
         }
 
         private bool IsEventHandler(Type handlerType)

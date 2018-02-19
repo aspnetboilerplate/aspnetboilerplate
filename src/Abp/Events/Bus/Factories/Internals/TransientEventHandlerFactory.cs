@@ -22,6 +22,11 @@ namespace Abp.Events.Bus.Factories.Internals
             return new THandler();
         }
 
+        public Type GetHandlerType()
+        {
+            return typeof(THandler);
+        }
+
         /// <summary>
         /// Disposes the handler object if it's <see cref="IDisposable"/>. Does nothing if it's not.
         /// </summary>
