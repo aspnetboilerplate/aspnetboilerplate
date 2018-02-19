@@ -1,16 +1,16 @@
 ### Introduction
 
-[Abp.AspNetCore.SignalR](http://www.nuget.org/packages/Abp.AspNetCore.SignalR) NuGet
+The [Abp.AspNetCore.SignalR](http://www.nuget.org/packages/Abp.AspNetCore.SignalR) NuGet
 package makes it easier to use **ASP.NET Core SignalR** in ASP.NET Boilerplate-based
 applications.
 
-> NOTICE: This package is currently in preview. If you have a problem, please write to the Github issues: https://github.com/aspnetboilerplate/aspnetboilerplate/issues/new
+> NOTE: This package is currently in preview. If you have a problem, please write to the Github issues: https://github.com/aspnetboilerplate/aspnetboilerplate/issues/new
 
 ### Installation
 
-#### Server Side
+#### Server-Side
 
-Install
+Install the
 [**Abp.AspNetCore.SignalR**](http://www.nuget.org/packages/Abp.AspNetCore.SignalR)
 NuGet package to your project (generally to your Web layer) and add a
 **dependency** to your module:
@@ -22,7 +22,7 @@ NuGet package to your project (generally to your Web layer) and add a
     }
 
 
-Then use **AddSignalR** and **UseSignalR** methods in your Startup class:
+Then use the **AddSignalR** and **UseSignalR** methods in your Startup class:
 
     using Abp.Web.SignalR.Hubs;
 
@@ -45,25 +45,36 @@ Then use **AddSignalR** and **UseSignalR** methods in your Startup class:
         }
     }
 
-#### Client Side (jQuery)
+#### Client-Side (Angular)
 
-**abp.signalr-client.js** script should be included in the page. It's located
-in
+The **@aspnet/signalr** package should be added in package.json, and the signalr.min.js included under **scripts** in .angular-cli.json.
+
+The **abp.signalr-client.js** script should be included under **assets** in .angular-cli.json.
+
+SignalR cannot send authorization headers, so encryptedAuthToken is sent in the query string. The startup template includes SignalRAspNetCoreHelper. We should call it in ngOnInit in app.component.ts:
+
+    SignalRAspNetCoreHelper.initSignalR();
+
+That's all you have to do. SignalR is properly configured and integrated into your project.
+
+#### Client-Side (jQuery)
+
+The **abp.signalr-client.js** script should be included on the page. It's located
+in the
 **[Abp.Web.Resources](https://www.nuget.org/packages/Abp.Web.Resources)**
-package (It's already installed in [startup templates](/Templates)). We
-should include it after signalr-client.min.js:
+package (and already installed in the [startup templates](/Templates)). We
+should include it after the signalr.min.js:
 
-    <script src="~/lib/signalr-client/signalr-client.min.js"></script>
+    <script src="~/lib/signalr-client/signalr.min.js"></script>
     <script src="~/lib/abp-web-resources/Abp/Framework/scripts/libs/abp.signalr-client.js"></script>
 
-That's all. SignalR is properly configured and integrated to your
-project.
+That's all you have to do. SignalR is properly configured and integrated into your project.
 
 ### Connection Establishment
 
 ASP.NET Boilerplate **automatically connects** to the server (from the
-client) when **abp.signalr-client.js** is included to your page. This is
-generally fine. But there may be cases you don't want it to. You can add
+client) when **abp.signalr-client.js** is included on your page. This is
+generally fine. But there may be some cases where you may not want it. You can add
 these lines just before including **abp.signalr-client.js** to disable auto
 connecting:
 
@@ -72,44 +83,44 @@ connecting:
         abp.signalr.autoConnect = false;
     </script>
 
-In this case, you can call **abp.signalr.connect()** function manually
+In this case, you can call the **abp.signalr.connect()** function manually
 whenever you need to connect to the server.
 
 ASP.NET Boilerplate also **automatically reconnects** to the server
-(from the client) when client disconnects, if
+(from the client) when the client disconnects, if
 **abp.signalr.autoConnect** is true.
 
-**"abp.signalr.connected"** global event is triggered when client
+The **"abp.signalr.connected"** global event is triggered when the client
 connects to the server. You can register to this event to take actions
-when the connection is successfully established. See JavaScript [event
-bus documentation](/Pages/Documents/Javascript-API/Event-Bus) for more
-about client side events.
+when the connection is successfully established. See the JavaScript [event
+bus documentation](/Pages/Documents/Javascript-API/Event-Bus) for more information
+about client-side events.
 
 ### Built-In Features
 
-You can use all the power of SignalR in your applications. In addition,
+You can use all the power of SignalR in your applications. Additionally, the
 **Abp.AspNetCore.SignalR** package implements some built-in features.
 
 #### Notification
 
-**Abp.AspNetCore.SignalR** package implements **IRealTimeNotifier** to send
-real time notifications to clients (see [notification
-system](/Pages/Documents/Notification-System)). Thus, your users can get
-real time push notifications.
+The **Abp.AspNetCore.SignalR** package implements the **IRealTimeNotifier** to send
+real-time notifications to clients (see the [notification
+system](/Pages/Documents/Notification-System)). This way, your users can get
+real-time push notifications!
 
 #### Online Clients
 
-ASP.NET Boilerplate provides **IOnlineClientManager** to get information
+ASP.NET Boilerplate provides the **IOnlineClientManager** to get information
 about online users (inject IOnlineClientManager and use
 GetByUserIdOrNull, GetAllClients, IsOnline methods for example).
-IOnlineClientManager needs a communication infrastructure to properly
-work. **Abp.AspNetCore.SignalR** package provides the infrastructure. So, you
+The IOnlineClientManager needs a communication infrastructure to properly
+work. The **Abp.AspNetCore.SignalR** package provides this infrastructure, so you
 can inject and use IOnlineClientManager in any layer of your application
 if SignalR is installed.
 
 ### Your SignalR Code
 
-**Abp.AspNetCore.SignalR** package also simplifies your SignalR code. Consider
+The **Abp.AspNetCore.SignalR** package also simplifies your SignalR code. Consider
 that we want to add a Hub to our application:
 
     public class MyChatHub : Hub, ITransientDependency
@@ -146,21 +157,20 @@ that we want to add a Hub to our application:
 
     routes.MapHub<MyChatHub>("/myChatHub");
 
-We implemented **ITransientDependency** to simply register our hub to
+We implemented the **ITransientDependency** interface to simply register our hub to the
 [dependency injection](/Pages/Documents/Dependency-Injection) system
-(you can make it singleton based on your needs). We
+(you can make it a singleton based on your needs). We
 [property-injected](/Pages/Documents/Dependency-Injection#property-injection-pattern)
 the [session](/Pages/Documents/Abp-Session) and
 [logger](/Pages/Documents/Logging).
 
 **SendMessage** is a method of our hub that can be used by clients. We
-call **getMessage** function of **all** clients in this method. We can
-use [AbpSession](/Pages/Documents/Abp-Session) to get current user id
-(if user logged in) as done above. We also overrided **OnConnectedAsync** and
-**OnDisconnectedAsync**, which is just for demonstration and not needed here
-actually.
+call the **getMessage** function of **all** clients in this method. We can
+use the [AbpSession](/Pages/Documents/Abp-Session) to get the current user id
+(if user logged in) as done above. We also overrode **OnConnectedAsync** and
+**OnDisconnectedAsync**, which is just for demonstration purposes and not needed here.
 
-Here is the **client side** JavaScript code to send/receive messages using
+Here is the **client-side** JavaScript code to send/receive messages using
 our hub.
 
     var chatHub = null;
@@ -177,5 +187,5 @@ our hub.
         chatHub.invoke('sendMessage', "Hi everybody, I'm connected to the chat!"); // Send a message to the server
     });
 
-Then we can use **chatHub** anytime we need to send message to the
+We can then use the **chatHub** anytime we need to send messages to the
 server.

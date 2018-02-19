@@ -1,15 +1,15 @@
-### Creating from template (automatic way)
+### Creating from the template (the automatic way!)
 
-The easiest way of starting a new project using ABP and module-zero, to
-create a template on [templates page](/Templates). See [startup
-template](/Pages/Documents/Zero/Startup-Template) documentation.
+The easiest way of starting a new project using ABP and Module Zero is to
+create a template on our [templates page](/Templates). See the [startup
+template](/Pages/Documents/Zero/Startup-Template) documentation for more info.
 
 ### Installing manually
 
-If you have a pre-created application and install module-zero later, you
-can follow the instructions in this section.
+If you have a legacy application and want to install Module Zero, follow
+the instructions in this section.
 
-In this document, I will assume that your solution has these projects:
+In this document, we will assume that your solution has these projects:
 
 -   AbpZeroSample.Core
 -   AbpZeroSample.Application
@@ -19,9 +19,9 @@ In this document, I will assume that your solution has these projects:
 
 #### Core (domain) layer
 
-Install **Abp.Zero** nuget package to .Core project. Then go to the core
-module class (AbpZeroSampleCoreModule class for this sample) and add
-**DependsOn** attribute for **AbpZeroCoreModule** as shown below:
+Install the **Abp.Zero** NuGet package to a .Core project. Then go to the core
+module class (AbpZeroSampleCoreModule class for this sample) and add a
+**DependsOn** attribute for the **AbpZeroCoreModule** as shown below:
 
     [DependsOn(typeof(AbpZeroCoreModule))]
     public class AbpZeroSampleCoreModule : AbpModule
@@ -34,8 +34,8 @@ module class (AbpZeroSampleCoreModule class for this sample) and add
 
 ##### Domain classes (entities)
 
-Module-zero provides **User**, **Role** and **Tenant** classes as
-abstract. So, we should implement they as shown below:
+Module Zero provides the abstract **User**, **Role** and **Tenant** classes. 
+We can implement them as shown below:
 
     public class User : AbpUser<Tenant, User>
     {
@@ -52,15 +52,15 @@ abstract. So, we should implement they as shown below:
 
     }
 
-You can add your custom properties here. In this way, we can extend base
-user, role and tenant classes upon our needs.
+You can add your custom properties here. In this way, we can extend the base
+user, role and tenant classes to our needs.
 
 ##### Managers (domain services)
 
-We should implement base **manager** and **store** classes since they
+We must implement the base **manager** and **store** classes since they
 are also abstract.
 
-Start from **user store** and **user manager**:
+Let's start with a **user store** and a **user manager**:
 
     public class UserStore : AbpUserStore<Tenant, Role, User>
     {
@@ -119,10 +119,10 @@ Start from **user store** and **user manager**:
         }
     }
 
-Don't worry dependency list. They may change in next versions. Just
-arrange constructors if needed (or you can copy from [this
+Don't worry about the dependency list. They may change in next versions. Just
+arrange the constructors if needed (or you can copy it from [this
 project](https://github.com/aspnetboilerplate/module-zero/tree/dev/test/Abp.Zero.SampleApp)).
-It's similar for **role store** and **role manager**:
+It's similar for the **role store** and **role manager**:
 
     public class RoleStore : AbpRoleStore<Tenant, Role, User>
     {
@@ -156,7 +156,7 @@ It's similar for **role store** and **role manager**:
         }
     }
 
-Here, the **tenant manager** (no tenant store here):
+Here's the **tenant manager** (no tenant store here):
 
     public class TenantManager : AbpTenantManager<Tenant, Role, User>
     {
@@ -173,7 +173,7 @@ Here, the **tenant manager** (no tenant store here):
         }
     }
 
-And finally, **feature value store** and **edition manager**:
+And finally, the **feature value store** and **edition manager**:
 
     public class FeatureValueStore : AbpFeatureValueStore<Tenant, Role, User>
     {
@@ -202,8 +202,8 @@ And finally, **feature value store** and **edition manager**:
 
 ##### Permission checker
 
-To make [authorization](/Pages/Documents/Authorization) system work, we
-should implement **permission checker**:
+To make the [authorization](/Pages/Documents/Authorization) system work, we
+need to implement the **permission checker**:
 
     public class PermissionChecker : PermissionChecker<Tenant, Role, User>
     {
@@ -218,11 +218,11 @@ should implement **permission checker**:
 
 ##### EntityFramework
 
-If you selected EntityFramework, we should configure it to use
-module-zero. Install **Abp.Zero.EntityFramework** nuget package to
-.EntityFramework project. Then go to module file
-(AbpZeroSampleDataModule for this sample) and change
-AbpEntityFrameworkModule dependency to **AbpZeroEntityFrameworkModule**
+If you selected EntityFramework, you must configure it to use
+Module Zero. Install the **Abp.Zero.EntityFramework** NuGet package to the
+.EntityFramework project. Then go to the module file
+(AbpZeroSampleDataModule in this example) and change
+the AbpEntityFrameworkModule dependency to **AbpZeroEntityFrameworkModule**
 as shown below:
 
     [DependsOn(typeof(AbpZeroEntityFrameworkModule), typeof(AbpZeroSampleCoreModule))]
@@ -233,7 +233,7 @@ as shown below:
 
 ###### DbContext
 
-Go to your DbContext class and change base class from AbpDbContext to
+Go to your DbContext class and change the base class from AbpDbContext to
 **AbpZeroDbContext** as shown below:
 
     public class AbpZeroSampleDbContext : AbpZeroDbContext<Tenant, Role, User>
@@ -241,34 +241,34 @@ Go to your DbContext class and change base class from AbpDbContext to
         //...
     }
 
-Thus, base entities from module-zero is added to your db context.
+This way, the base entities from Module Zero are added to your db context.
 
 ###### Database Migration
 
-Now, we should create database migrations since our db context is
+We must now create database migrations since our db context has
 changed. **Open Package Manager Console** and type the following
 command:
 
     Add-Migration "AbpZero_Installed"
 
-Surely, you can select a different migration name. Don't forget to
-select Default Project to AbpZeroSample.EntityFramework in package
-manager console (AbpZeroSample will be different for your case). After
+Select a different migration name here to suit your needs. Don't forget to
+select Default Project to AbpZeroSample.EntityFramework in the package
+manager console (AbpZeroSample will be different in your case). After
 executing this command, a new migration file is added to the project.
-Check it and change if you need. Then type the following command to
+Check it and change what you need. Then type the following command to
 update database schema:
 
     Update-Database
 
-You can check EntityFramework's code-first migration
+Check out EntityFramework's code-first migration
 [documentation](https://msdn.microsoft.com/en-us/data/jj591621.aspx) for
 more information.
 
 ###### Initial Data
 
-If you check your database, you will see that tables are created but
-they are empty. You can use EntityFramework's **seed** to fill initial
-data. You can use such a class as initial data builder:
+If you check your database, you will see that the tables are created, but
+they are empty. You can use EntityFramework's **seed** to fill the initial
+data. You can use a class like this as the initial data builder:
 
     public class DefaultTenantRoleAndUserBuilder
     {
@@ -361,7 +361,7 @@ data. You can use such a class as initial data builder:
         }
     }
 
-This class creates default tenant, roles and users. We can use it in
+This class creates the default tenant, roles and users. We can use it in
 EF's **Configuration** class to seed our database:
 
     internal sealed class Configuration : DbMigrationsConfiguration<AbpZeroSample.EntityFramework.AbpZeroSampleDbContext>
@@ -377,25 +377,25 @@ EF's **Configuration** class to seed our database:
             context.DisableAllFilters();
             new DefaultTenantRoleAndUserBuilder(context).Build();
         }
-                    }
+    }
 
-Here, we disabled data filters (so we can freely manipulate database)
+Here, we disabled the data filters (so we can freely manipulate the database)
 and used the initial data builder class.
 
 #### Presentation Layer
 
-##### Nuget Packages
+##### NuGet Packages
 
-Add the following nuget packages to the .Web project:
+Add the following NuGet packages to the .Web project:
 
--   Abp.Zero.EntityFramework (this will also add Abp.Zero and all
+-   Abp.Zero.EntityFramework (this will also add Abp.Zero and all its
     dependencies)
 -   Microsoft.AspNet.Identity.Owin
 -   Microsoft.Owin.Host.SystemWeb
 
 ##### Owin Startup Class
 
-Add an Owin Startup class like that:
+Add an Owin Startup class like this:
 
     using AbpZeroSample.Web;
     using Microsoft.AspNet.Identity;
@@ -410,7 +410,7 @@ Add an Owin Startup class like that:
         {
             public void Configuration(IAppBuilder app)
             {
-                // Enable the application to use a cookie to store information for the signed in user
+                // Enable the application to use a cookie to store information for the signed-in user
                 app.UseCookieAuthentication(new CookieAuthenticationOptions
                 {
                     AuthenticationType = DefaultAuthenticationTypes.ApplicationCookie,
@@ -425,7 +425,7 @@ Add an Owin Startup class like that:
 
 ##### Account Controller
 
-We can create a Controller for login/logout as shown below:
+We can create a Controller for the login/logout actions as shown below:
 
     public class AccountController : AbpZeroSampleControllerBase
     {
@@ -507,7 +507,7 @@ We can create a Controller for login/logout as shown below:
         }
     }
 
-With a simple LoginViewModel:
+Here's a simple LoginViewModel:
 
     public class LoginViewModel
     {
@@ -524,20 +524,20 @@ With a simple LoginViewModel:
 
 ##### Login View
 
-To be able to use AccountController, we should create a login page. It's
-up to you creating a login form. Just call AccountController.Login via
-AJAX with appropriate parameters.
+To be able to use the AccountController, we must first create a login page. It's
+up to you to create a login form. Just call AccountController.Login via
+AJAX with the appropriate parameters.
 
 ##### Secure The Application
 
-Now, we can add an AbpAuthorize attribute to HomeController to ensure
-only authenticated users can enter to the page:
+We can now add the AbpAuthorize attribute to HomeController to ensure
+only authenticated users can access pages:
 
     [AbpMvcAuthorize]
     public class HomeController : AbpZeroSampleControllerBase
     {
         public ActionResult Index()
         { 
-            return View("~/App/Main/views/layout/layout.cshtml"); //Layout of the angular application.
+            return View("~/App/Main/views/layout/layout.cshtml"); //Layout of the Angular application.
         }
     }

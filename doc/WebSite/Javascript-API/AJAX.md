@@ -1,31 +1,31 @@
 ### Problems of AJAX Operations
 
-Performing an AJAX call is frequently used by modern applcations.
-Especially in SPAs (Single-Page Applications), it's almost the only way
+Performing AJAX calls is frequently used by modern applcations.
+Especially in SPAs (Single Page Applications), it's almost the only way
 of communicating with the server. An AJAX call consists of some
 repeating steps:
 
-In client side, basically, javascript code should supply a URL,
-optionally a data and select a method (POST, GET...) to perfom an AJAX
+On the client-side, the JavaScript code should supply an URL,
+optionally some data, and it should select a method (POST, GET...) to perfom an AJAX
 call. It must wait and handle the return value. There may be an error
-(network error generally) while performing call to the server. Or there
-may be some error in server side and server may send an failed response
-with an error message. Client code should handle these and optionally
-notify user (may show an error dialog). If there is no error and server
-sent a return data, client must also handle it. Also, generally you want
-to block some (or whole) area of the screen and show a busy indicator
-until AJAX operation complete.
+(network error generally) while performing a call to the server. Or there
+may be some error on the server-side and server may send a failed response
+with an error message. The client-side code must handle these and optionally
+notify a user (like show an error dialog). If there is no error and the server
+returns data, the client must also handle it. In addition to this, you generally want
+to block some part or a whole area of the screen and show a busy indicator
+until an AJAX operation completes.
 
-Server code should get the request, perform some server-side code, catch
-any exceptions and return a valid response to the client. In an error
-situation, it may optionally send an error message to the client. If
-it's a validation error, server may want to add validation problems. In
-success case, it may send a return value to the client.
+Server-code should get the request, perform some server-side code, catch
+exceptions and return a valid response to the client. If an error
+occurs, it may optionally send an error message to the client. If
+it's a validation error, the server may want to the add descriptions to validation problems. 
+In the case of a successful request, it may send return values to the client.
 
-### ASP.NET Boilerplate Way
+### The ASP.NET Boilerplate Way
 
 ASP.NET Boilerplate automates some of these steps by wrapping AJAX calls
-with **abp.ajax** function. An example ajax call:
+with the **abp.ajax** function. An example ajax call:
 
     var newPerson = {
         name: 'Dougles Adams',
@@ -36,22 +36,22 @@ with **abp.ajax** function. An example ajax call:
         url: '/People/SavePerson',
         data: JSON.stringify(newPerson)
     }).done(function(data) {
-        abp.notify.success('created new person with id = ' + data.personId);
+        abp.notify.success('Created new person with id = ' + data.personId);
     });
 
-abp.ajax gets **options** as an object. You can pass any parameter that
-is valid in jQuery's [$.ajax](http://api.jquery.com/jQuery.ajax/)
-method. There are some **defaults** here: dataType is '**json**', type
-is '**POST**' and contentType is '**application/json**' (So, we're
-calling JSON.stringify to convert javascript object to JSON string
-before sending to the server). You can override defaults by passing
+abp.ajax gets **options** as an object. You can pass any valid parameter 
+into jQuery's [$.ajax](http://api.jquery.com/jQuery.ajax/) method. 
+There are some **defaults** here: the dataType is '**json**', the type
+is '**POST**', and the contentType is '**application/json**' (We're
+calling JSON.stringify to convert a JavaScript object into a JSON string
+before sending it to the server). You can override these defaults by passing
 options to abp.ajax.
 
-abp.ajax returns **[promise](http://api.jquery.com/deferred.promise/)**.
-So, you can write done, fail, then... handlers. In this example, we made
-a simple AJAX request to **PeopleController**'s **SavePerson** action.
-In the **done** handler, we got the database **id** for the new created
-person and showing a success notification (See [notification
+abp.ajax returns a **[promise](http://api.jquery.com/deferred.promise/)**,
+so you can write done, fail, then (etc) handlers. In this example, we made
+a simple AJAX request to the **PeopleController**'s **SavePerson** action.
+In the **done** handler, we fetched the database **id** for the newly created
+person and showed a success notification (See [notification
 API](/Pages/Documents/Javascript-API/Notification)). Let's see the **MVC
 controller** for this AJAX call:
 
@@ -65,20 +65,20 @@ controller** for this AJAX call:
         }
     }
 
-**SavePersonModel** contains Name and Age properties as you can guess.
-SavePerson is marked with **HttpPost** since abp.ajax's default method
-is POST. I simplified method implemtation by returning an anonymous
+The **SavePersonModel** contains the Name and Age properties.
+The SavePerson action is marked with **HttpPost**, since abp.ajax's default method
+is POST. We simplified the method implementation by returning an anonymous
 object.
 
-This seams straightforward, but there are some important things behind
-the scenes that is handled by ASP.NET Boilerplate. Let's dive into
+This seams pretty straightforward, but there are some important things behind
+the scenes that are handled by ASP.NET Boilerplate. Let's dive into those
 details...
 
 #### AJAX Return Messages
 
-Even we directly return an object with PersonId = 2, ASP.NET Boilerplate
-wraps it by an **MvcAjaxResponse** object. Actual AJAX response is
-something like that:
+When we directly return an object with PersonId = 2, ASP.NET Boilerplate
+wraps it with an **MvcAjaxResponse** object. The actual AJAX response is
+something like this:
 
     {
       "success": true,
@@ -91,82 +91,82 @@ something like that:
       "__abp": true
     }
 
-Here, all properties are camelCase (since it's conventional in
-javascript world) even they are PascalCase in the server code. Let's
-explain all fields:
+Here all the properties are camelCase (since it's conventional in
+JavaScript) even if they are PascalCase on the server-side's code. Here's
+an explanation of all the fields:
 
--   **success**: A boolean value (true or false) that indicates success
+-   **success**: A boolean value (true or false) that indicates the success
     status of the operation. If this is true, abp.ajax resolves the
     promise and calls the **done** handler. If it's false (if there is
-    an exception thrown in method call), it calls **fail** handler and
-    shows the **error** message using
+    an exception thrown in the method call), it calls the **fail** handler and
+    shows the **error** message using the
     [abp.message.error](/Pages/Documents/Javascript-API/Message)
     function.
--   **result**: Actual return value of the controller action. It's valid
-    if success is true and server sent a return value.
+-   **result**: The actual return value of the controller action. It's valid
+    if the request was a success and if the server sent a return value.
 -   **error**: If success is false, this field is an object that
-    contains **message** and **details** fields.
--   **targetUrl**: This provides a possibility to the server to
-    **redirect** client to another url if needed.
--   **unAuthorizedRequest**: This provides a possibility to the server
-    to inform client that this operation is not authorized or user is
-    not authenticated. abp.ajax **reloads** current page if this is
+    contains the **message** and **details** fields.
+-   **targetUrl**: This provides a way for the server to
+    **redirect** the client to another url if needed.
+-   **unAuthorizedRequest**: This provides a method for the server
+    to inform the client that this operation is not authorized or the user is
+    not authenticated. abp.ajax **reloads** the current page if this is
     true.
--   **\_\_abp**: A special signature that is returned by ABP wrapped
+-   **\_\_abp**: A special signature that is returned by an ABP wrapped
     responses. You don't use this yourself, but abp.ajax handles it.
 
-This return format is recognized and handled by **abp.ajax** function.
-Your done handler in abp.ajax gets the actual return value of the
-controller (An object with personId property) if there is no error.
+This return format is recognized and handled by the **abp.ajax** function.
+The done handler in abp.ajax gets the actual return value of the
+controller (An object with a personId property) if there is no error.
 
 #### Handling Errors
 
-As described above, ASP.NET Boilerplate handles exceptions in server and
-returns an object with an error message like that:
+As described above, ASP.NET Boilerplate handles exceptions on the server and
+returns an object with an error message like this:
 
     {
       "targetUrl": null,
       "result": null,
       "success": false,
       "error": {
-        "message": "An internal error occured during your request!",
+        "message": "An internal error occurred during your request!",
         "details": "..."
       },
       "unAuthorizedRequest": false,
       "__abp": true
     }
 
-As you see, **success is false** and **result is null**. abp.ajax
-handles this object and shows an error message to the user using
+As you can see, **success is false** and **result is null**. abp.ajax
+handles this object and shows an error message to the user using the
 [abp.message.error](/Pages/Documents/Javascript-API/Message) function.
-If your server side code throws an exception type of
-**UserFriendlyException**, it directly shows exception's message to the
+If your server-side code throws an exception type of
+**UserFriendlyException**, it directly shows the exception's message to the
 user. Otherwise, it hides the actual error (writes error to logs) and
-shows a standard ''An internal error occured..." message to the user.
+shows a standard ''An internal error occurred..." message to the user.
 All these are automatically done by ASP.NET Boilerplate.
 
-You may want to disable displaying message for particular AJAX call.
-Then add **abpHandleError: false** into abp.ajax options.
+You may want to disable displaying the message for a particular AJAX call.
+If so, add **abpHandleError: false** into the abp.ajax options.
 
 ##### HTTP Status Codes
 
-ABP returns given HTTP status codes on exceptions:
+ABP returns the following HTTP status codes when exceptions occur:
 
--   **401** for unauthenticated requests (Used has not logged in but
+-   **401** for unauthenticated requests (Used has not logged in and the
     server action needs authentication).
 -   **403** for unauthorized requests.
 -   **500** for all other exception types.
 
 #### WrapResult and DontWrapResult Attributes
 
-You can control wrapping using **WrapResult** and **DontWrapResult**
-attributes for an action or all actions of a controller.
+You can control the wrapping using **WrapResult** and the **DontWrapResult**
+attributes for an action or all actions in a controller.
 
 ##### ASP.NET MVC Controllers
 
 ASP.NET Boilerplate **wraps** (as described above) ASP.NET **MVC**
-action results **by default** if return type is **JsonResult** (or
-Task&lt;JsonResult&gt; for async actions). You can change this by using
+action results **by default** if the return type is a **JsonResult** (or
+Task&lt;JsonResult&gt; for async actions). You can change this by using the
 **WrapResult** attribute as shown below:
 
     public class PeopleController : AbpController
@@ -180,48 +180,48 @@ Task&lt;JsonResult&gt; for async actions). You can change this by using
         }
     }
 
-As a shortcut, we can only use **\[DontWrapResult\]** which is identical
+As a shortcut, we can simply use the **\[DontWrapResult\]** attribute which is identical
 for this example.
 
-You can change this default behaviour from [startup
+You can change this default behaviour from the [startup
 configuration](../Startup-Configuration.md) (using
 Configuration.Modules.AbpMvc()...).
 
 ##### ASP.NET Web API Controllers
 
 ASP.NET Boilerplate **does not wrap** Web API actions **by default** if
-action has successfully executed. You can add WrapResult to actions or
-controllers if you need. But it **wraps exceptions**.
+an action has successfully executed. You can add WrapResult to actions or
+controllers if you need to, but by default it **wraps exceptions**.
 
-You can change this default behaviour from [startup
+You can change this default behavior from the [startup
 configuration](../Startup-Configuration.md) (using
 Configuration.Modules.AbpWebApi()...).
 
 ##### Dynamic Web API Layer
 
 ASP.NET Boilerplate **wraps** dynamic web api layer methods **by
-default**. You can change this behaviour using **WrapResult** and
+default**. You can change this behavior using the **WrapResult** and
 **DontWrapResult** attributes in the **interface** of your application
 service.
 
-You can change this default behaviour from [startup
+You can change this default behaviour from the [startup
 configuration](../Startup-Configuration.md) (using
 Configuration.Modules.AbpWebApi()...).
 
 ##### ASP.NET Core Controllers
 
-ABP automatically wraps results for JsonResult, ObjectResult and any
-object which does not implement IActionResult.  See [ASP.NET Core
-documentation](../AspNet-Core.md) for more.
+ABP automatically wraps results for a JsonResult, ObjectResult and any
+object which does not implement IActionResult.  See the [ASP.NET Core
+documentation](../AspNet-Core.md) for more info.
 
-You can change this default behaviour from [startup
+You can change this default behavior from the [startup
 configuration](../Startup-Configuration.md) (using
 Configuration.Modules.AbpAspNetCore()...).
 
 #### Dynamic Web API Layer
 
-While ASP.NET Boilerplate provides a mechanism to make easy AJAX calls,
-in a real world application it's typical to write a javascript function
+While ASP.NET Boilerplate provides a mechanism to make AJAX calls easy,
+in a real-world application it's typical to write a JavaScript function
 for every AJAX call. For example:
 
     //Create a function to abstract AJAX call
@@ -243,11 +243,11 @@ for every AJAX call. For example:
         abp.notify.success('created new person with id = ' + data.personId);
     });
 
-This is a good practice but time-consuming and tedious to write a
+This is good practice, but time-consuming and tedious, because you have to write a
 function for every ajax call. ASP.NET can automatically generate these
 type of functions for [application
-service](/Pages/Documents/Application-Services) and controllers.
+services](/Pages/Documents/Application-Services) and controllers.
 
 Read the [dynamic web api](/Pages/Documents/Dynamic-Web-API) layer
-documentation for Web API and ASP.NET Core documentation for [ASP.NET
+documentation for the Web API and ASP.NET Core documentation for the [ASP.NET
 Core](../AspNet-Core.md) integration.

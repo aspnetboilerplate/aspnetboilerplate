@@ -50,7 +50,7 @@ namespace Abp.EntityHistory
 
         /// <summary>
         /// Type of the JSON serialized <see cref="NewValue"/> and <see cref="OriginalValue"/>.
-        /// It's AssemblyQualifiedName of the type.
+        /// It's the FullName of the type.
         /// </summary>
         [MaxLength(MaxPropertyTypeFullNameLength)]
         public virtual string PropertyTypeFullName { get; set; }

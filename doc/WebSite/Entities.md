@@ -13,9 +13,9 @@ the example below:
     public class Person : Entity
     {
         public virtual string Name { get; set; }
-
+    
         public virtual DateTime CreationTime { get; set; }
-
+    
         public Person()
         {
             CreationTime = DateTime.Now;
@@ -33,9 +33,9 @@ declare it as shown below:
     public class Person : Entity<long>
     {
         public virtual string Name { get; set; }
-
+    
         public virtual DateTime CreationTime { get; set; }
-
+    
         public Person()
         {
             CreationTime = DateTime.Now;
@@ -55,7 +55,7 @@ cluster of domain objects that can be treated as a single unit. An
 example may be an order and its line-items, these will be separate
 objects, but it's useful to treat the order (together with its line
 items) as a single aggregate.*" (Martin Fowler - see the [full
-description](http://martinfowler.com/bliki/DDD_Aggregate.md))
+description](http://martinfowler.com/bliki/DDD_Aggregate.html))
 
 While ABP does not enforce you to use aggregates, you may want to create
 aggregates and aggregate roots in your application. ABP defines
@@ -99,9 +99,9 @@ IHasCreationTime interface:
     public class Person : Entity<long>, IHasCreationTime
     {
         public virtual string Name { get; set; }
-
+    
         public virtual DateTime CreationTime { get; set; }
-
+    
         public Person()
         {
             CreationTime = DateTime.Now;
@@ -128,7 +128,7 @@ There are also similar interfaces for modifications:
     {
         DateTime? LastModificationTime { get; set; }
     }
-
+    
     public interface IModificationAudited : IHasModificationTime
     {
         long? LastModifierUserId { get; set; }
@@ -142,7 +142,7 @@ implement the **IAudited** interface:
 
     public interface IAudited : ICreationAudited, IModificationAudited
     {
-
+    
     }
 
 As a shortcut, you can derive from the **AuditedEntity** class instead of
@@ -177,10 +177,10 @@ entity was deleted and who deleted it. You can implement the
     public interface IDeletionAudited : ISoftDelete
     {
         long? DeleterUserId { get; set; }
-
+    
         DateTime? DeletionTime { get; set; }
     }
-                
+
 
 As you've probably noticed, IDeletionAudited extends ISoftDelete. ASP.NET Boilerplate
 automatically sets these properties when an entity is deleted.
@@ -191,7 +191,7 @@ since it inherits from the others:
 
     public interface IFullAudited : IAudited, IDeletionAudited
     {
-
+    
     }
 
 As a shortcut, you can derive your entity from the **FullAuditedEntity**
@@ -246,9 +246,9 @@ this simple entity:
     public class Person : Entity, IExtendableObject
     {
         public string Name { get; set; }
-
+    
         public string ExtensionData { get; set; }
-
+    
         public Person(string name)
         {
             Name = name;

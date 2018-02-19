@@ -14,8 +14,8 @@ Framework.
 
 You then need to install the
 [MySql.Data.Entity](https://www.nuget.org/packages/MySql.Data.Entity/)
-nuget package into your **.EntityFramework** and **.Web** projects.
-Installing this nuget package into your **.Web** project should make the
+NuGet package into your **.EntityFramework** and **.Web** projects.
+Installing this NuGet package into your **.Web** project should make the
 necessary changes in your web.config file.
 
 Open your DbContext's configuration class (Configuration.cs) and place
@@ -33,14 +33,14 @@ would be:
 
 #### Re-generate the migrations
 
-If you choose "Include module zero" while downloading your startup
+If you choose "Include Module Zero" while downloading your startup
 template, there will be some migration files included in your project.
 These files are generated for Sql Server. Delete all the migration files
 in your **.EntityFramework** project under the Migrations folder. Migration
 files start with a timestamp. A migration file name should look like this
 "201506210746108\_AbpZero\_Initial"
 
-After deleting all migration files, select your **.Web** project as the
+After deleting all the migration files, select your **.Web** project as the
 startup project, open Visual Studio's Package Manager Console and select
 the **.EntityFramework** project as the default project in the Package Manager
 Console. Then run the following command to add a migration for MySql.

@@ -10,7 +10,7 @@ provider along with EF 6.x, EF Core or NHibernate.
 
 Before you start, you need to install
 [Abp.Dapper](https://www.nuget.org/packages/Abp.Dapper) and either EF
-Core, EF 6.x or the NHibernate ORM nuget packages in to the project you want
+Core, EF 6.x or the NHibernate ORM NuGet packages in to the project you want
 to use.
 
 #### Module Registration

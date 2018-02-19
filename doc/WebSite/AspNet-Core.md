@@ -2,8 +2,8 @@
 
 This document describes the ASP.NET Core integration for ASP.NET Boilerplate. 
 The ASP.NET Core integration is implemented in the 
-[Abp.AspNetCore](https://www.nuget.org/packages/Abp.AspNetCore) nuget
-package
+[Abp.AspNetCore](https://www.nuget.org/packages/Abp.AspNetCore) NuGet
+package.
 
 #### Migrating to ASP.NET Core?
 
@@ -53,7 +53,7 @@ Startup class:
 #### Module Configuration
 
 You can use the [startup configuration](Startup-Configuration.md) to
-configure the AspNet Core Module by using
+configure the AspNetCore Module by using
 *Configuration.Modules.AbpAspNetCore()* in the PreInitialize method of your
 module.
 
@@ -117,7 +117,7 @@ added to the service classes, even if you have interfaces.
 
 ### Filters
 
-ABP defines some **pre-built filters** for AspNet Core. All of them are
+ABP defines some **pre-built filters** for ASP.NET Core. All of them are
 added to **all actions of all controllers** by default.
 
 #### Authorization Filter
@@ -220,17 +220,17 @@ ViewComponent to take advantage of it's base properties and methods.
 
 ### Client Proxies
 
-ABP can automatically create javascript proxies for all MVC Controllers
+ABP can automatically create JavaScript proxies for all MVC Controllers
 (not only application services). It's created for *Application Services
 as Controllers* (see the section above) by default. You can add the
 \[RemoteService\] attribute to any MVC controller to create a client proxy
-for it. Javascript proxies are dynamically generated on runtime. You
+for it. JavaScript proxies are dynamically generated on runtime. You
 need to add a given script definition to your page:
 
     <script src="~/AbpServiceProxies/GetAll?type=jquery" type="text/javascript"></script>
 
-Currently, only JQuery proxies are generated. We can then call an MVC
-method with javascript as shown below:
+Currently, only jQuery proxies are generated. We can then call an MVC
+method with JavaScript as shown below:
 
     abp.services.app.product.create({
         name: 'My test product',

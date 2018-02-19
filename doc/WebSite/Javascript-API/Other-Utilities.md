@@ -3,26 +3,26 @@ ASP.NET Boilerplate provides some common utility functions.
 #### abp.utils.createNamespace
 
 Used to create deep namespaces at once. Assume that we have a base 'abp'
-namespace and want to create or get 'abp.utils.strings.formatting'
+namespace and want to create or get a 'abp.utils.strings.formatting'
 namespace. Instead of this:
 
-    //Create or get namespace
+    //create or get namespace
     abp.utils = abp.utils || {};
     abp.utils.strings = abp.utils.strings || {};
     abp.utils.strings.formatting = abp.utils.strings.formatting || {};
 
-    //Add a function to the namespace
+    //add a function to the namespace
     abp.utils.strings.formatting.format = function() { ... };
 
-We can write like that:
+We can write something like this:
 
     var formatting = abp.utils.createNamespace(abp, 'utils.strings.formatting';
 
     //Add a function to the namespace
     formatting.format = function() { ... };
 
-This simplifies safely creating deep namespaces. Notice that first
-argument is the root namespace that must be exists.
+This simplifies things by safely creating deep namespaces. Note that the first
+argument is the root namespace that must exist.
 
 #### abp.utils.formatString
 

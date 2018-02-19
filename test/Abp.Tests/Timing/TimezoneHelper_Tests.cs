@@ -97,5 +97,52 @@ namespace Abp.Tests.Timing
             TimezoneHelper.ConvertTimeFromUtcByIanaTimeZoneId(now, "Asia/Shanghai")
                 .ShouldBe(TimezoneHelper.ConvertFromUtc(now, "China Standard Time"));
         }
+
+        [Fact]
+        public void ConvertToDateTimeOffset_Date_With_America_NewYork_TimeZone_Should_Return_Correct_DateTimeOffset()
+        {
+            var testDate = new DateTime(1980,11,20);
+            var timeSpan = new TimeSpan(-5,0,0);
+
+            var dateTimeOffset = TimezoneHelper.ConvertToDateTimeOffset(testDate, "America/New_York");
+
+            dateTimeOffset.ShouldNotBeNull();
+            dateTimeOffset.Offset.ShouldBe(timeSpan);
+            dateTimeOffset.DateTime.ShouldBe(testDate);
+        }
+
+        [Fact]
+        public void ConvertToDateTimeOffset_Date_With_America_NewYork_TimeZone_Should_Return_Correct_DateTimeOffset_With_DaylightSavings()
+        {
+            var testDate = new DateTime(1980, 5, 20);
+            var timeSpan = new TimeSpan(-4, 0, 0);
+
+            var dateTimeOffset = TimezoneHelper.ConvertToDateTimeOffset(testDate, "America/New_York");
+
+            dateTimeOffset.ShouldNotBeNull();
+            dateTimeOffset.Offset.ShouldBe(timeSpan);
+            dateTimeOffset.DateTime.ShouldBe(testDate);
+        }
+
+        [Fact]
+        public void ConvertToDateTimeOffset_Dates_With_America_Phoenix_TimeZone_Should_Return_Correct_DateTimeOffsests_With_No_DaylightSavings()
+        {
+            var testDate = new DateTime(1980, 5, 20);
+            var timeSpan = new TimeSpan(-7, 0, 0);
+
+            var dateTimeOffset = TimezoneHelper.ConvertToDateTimeOffset(testDate, "America/Phoenix");
+
+            dateTimeOffset.ShouldNotBeNull();
+            dateTimeOffset.Offset.ShouldBe(timeSpan);
+            dateTimeOffset.DateTime.ShouldBe(testDate);
+
+            var testDate2 = new DateTime(1980, 11, 20);
+
+            var dateTimeOffset2 = TimezoneHelper.ConvertToDateTimeOffset(testDate2, "America/Phoenix");
+
+            dateTimeOffset2.ShouldNotBeNull();
+            dateTimeOffset2.Offset.ShouldBe(timeSpan); // should be the same timespan as previous date
+            dateTimeOffset2.DateTime.ShouldBe(testDate2);
+        }
     }
 }

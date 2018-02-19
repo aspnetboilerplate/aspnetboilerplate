@@ -1,12 +1,12 @@
 ### Introduction
 
-ASP.NET Boilerplate is integrated to **ASP.NET MVC Controllers** via
-**Abp.Web.Mvc** nuget package. You can create regular MVC Controllers as
+ASP.NET Boilerplate is integrated in to the **ASP.NET MVC Controllers** via
+the **Abp.Web.Mvc** NuGet package. You can create regular MVC Controllers as
 you always do. [Dependency
 Injection](/Pages/Documents/Dependency-Injection) properly works for
-regular MVC Controllers. But you should derive your controllers from
-**AbpController**, which provides several benefits and better integrates
-to ASP.NET Boilerplate.
+regular MVC Controllers, but you should derive your controllers from
+**AbpController**, which provides several benefits and provides for better integration
+in to ASP.NET Boilerplate.
 
 ### AbpController Base Class
 
@@ -41,20 +41,20 @@ AbpController defines **L** method to make
         }
     }
 
-You should set **LocalizationSourceName** to make **L** method working.
-You can set it in your own base controller class, to not repeat for each
+You should set **LocalizationSourceName** to make the **L** method work.
+You can set it in your own base controller class, so you don't have to repeat it for each
 controller.
 
 #### Others
 
-You can also use pre-injected
+You can also use the pre-injected
 [AbpSession](/Pages/Documents/Abp-Session),
 [EventBus](/Pages/Documents/EventBus-Domain-Events), [PermissionManager,
 PermissionChecker](/Pages/Documents/Authorization),
 [SettingManager](/Pages/Documents/Setting-Management), [FeatureManager,
 FeatureChecker](/Pages/Documents/Feature-Management),
 [LocalizationManager](/Pages/Documents/Localization),
-[Logger](/Pages/Documents/Logging),
+[Logger](/Pages/Documents/Logging), and
 [CurrentUnitOfWork](/Pages/Documents/Unit-Of-Work) base properties and
 more.
 
@@ -62,38 +62,38 @@ more.
 
 #### Exception Handling & Result Wrapping
 
-All exceptions are automatically handled, logged and a proper response
-is returned to the client. See [exception
+All exceptions are automatically handled, logged, and a proper response
+is returned to the client. See the [exception
 handling](/Pages/Documents/Handling-Exceptions) documentation for more.
 
-ASP.NET Boilerplate also **wraps** action results by default if return
+ASP.NET Boilerplate also **wraps** action results by default if the return
 type is **JsonResult** (or Task&lt;JsonResult&gt; for async actions).
 
-You can change exception handling and wrapping by using **WrapResult**
-and **DontWrapResult** attributes for controllers or actions or from
+You can change exception handling and wrapping by using the **WrapResult**
+and **DontWrapResult** attributes for controllers or actions or from the
 [startup configuration](Startup-Configuration.md) (using
-Configuration.Modules.AbpMvc()...) globally. See [ajax
-documentation](/Pages/Documents/Javascript-API/AJAX) for more.
+Configuration.Modules.AbpMvc()...) globally. See the [ajax
+documentation](/Pages/Documents/Javascript-API/AJAX) for more info.
 
 #### Audit Logging
 
-**AbpMvcAuditFilter** is used to integrate to [audit logging
+The **AbpMvcAuditFilter** is used to integrate to the [audit logging
 system](Audit-Logging.md). It logs all requests to all actions by
 default (if auditing is not disabled). You can control audit logging
-using **Audited** and **DisableAuditing** attributes for actions and
+using the **Audited** and **DisableAuditing** attributes for actions and
 controllers.
 
 #### Validation
 
-**AbpMvcValidationFilter** automatically checks **ModelState.IsValid**
-and prevents execution of the action if it's not valid. Also, implements
+The **AbpMvcValidationFilter** automatically checks **ModelState.IsValid**
+and prevents execution of the action if it's not valid. It also implements
 input DTO validation described in the [validation
 documentation](Validating-Data-Transfer-Objects.md).
 
 #### Authorization
 
 You can use **AbpMvcAuthorize** attribute for your controllers or
-actions to prevent unauthorized users to use your controllers and
+actions to prevent unauthorized users from using your controllers and
 actions. Example:
 
     public class HomeController : AbpController
@@ -105,31 +105,31 @@ actions. Example:
         }
     }
 
-You can define **AllowAnonymous** attribute for actions or controllers
-to suppress authentication/authorization. AbpController also defines
+You can define the **AllowAnonymous** attribute for actions or controllers
+to suppress authentication/authorization. The AbpController also defines an
 **IsGranted** method as a shortcut to check permissions.
 
-See [authorization](/Pages/Documents/Authorization) documentation for
-more.
+See the [authorization](/Pages/Documents/Authorization) documentation for
+more info.
 
 #### Unit Of Work
 
-**AbpMvcUowFilter** is used to integrate to [Unit of
+The **AbpMvcUowFilter** is used to integrate to the [Unit of
 Work](Unit-Of-Work.md) system. It automatically begins a new unit of
-work before an action execution and completes unit of work after action
-exucition (if no exception is thrown).
+work before an action execution, and if no exception is thrown, completes the unit of work 
+after the action's execution.
 
-You can use **UnitOfWork** attribute to control behaviour of UOW for an
-action. You can also use startup configuration to change default unit of
+You can use the **UnitOfWork** attribute to control the behaviour of the UOW for an
+action. You can also use the startup configuration to change the default unit of
 work attribute for all actions.
 
 #### Anti Forgery
 
-**AbpAntiForgeryMvcFilter** is used to auto protect MVC actions for
-POST, PUT and DELETE requests from CSRF/XSRF attacks. See [CSRF
+The **AbpAntiForgeryMvcFilter** is used to auto-protect MVC actions for
+POST, PUT and DELETE requests from CSRF/XSRF attacks. See the [CSRF
 documentation](XSRF-CSRF-Protection.md) for more.
 
 ### Model Binders
 
-**AbpMvcDateTimeBinder** is used to normalize DateTime (and
-Nullable&lt;DateTime&gt;) inputs using **Clock.Normalize** method.
+The **AbpMvcDateTimeBinder** is used to normalize DateTime (and
+Nullable&lt;DateTime&gt;) inputs using the **Clock.Normalize** method.

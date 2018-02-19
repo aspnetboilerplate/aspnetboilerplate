@@ -3,7 +3,7 @@
   <Import Project="..\..\common.props" />
 
   <PropertyGroup>
-    <TargetFramework>net461</TargetFramework>
+    <TargetFramework>netstandard2.0</TargetFramework>
     <GenerateDocumentationFile>true</GenerateDocumentationFile>
     <AssemblyName>Abp.Zero.Ldap</AssemblyName>
     <PackageId>Abp.Zero.Ldap</PackageId>
@@ -21,17 +21,15 @@
   <ItemGroup>
     <EmbeddedResource Include="Ldap\Localization\Source\*.xml" Exclude="bin\**;obj\**;**\*.xproj;packages\**;@(EmbeddedResource)" />
     
-    <Reference Include="System.DirectoryServices.AccountManagement" />
-    <Reference Include="System.DirectoryServices.Protocols" />
-    <Reference Include="System" />
-    <Reference Include="Microsoft.CSharp" />
-
+    <PackageReference Include="System.DirectoryServices.AccountManagement" Version="4.5.0-*" />
+    <PackageReference Include="System.DirectoryServices.Protocols" Version="4.5.0-*" />
+   
     <ProjectReference Include="..\Abp.Zero.Common\Abp.Zero.Common.csproj" />
-    
-    <None Include="bin\Release\net461\Abp.Zero.Ldap.pdb">
-      <PackagePath>lib/net461/</PackagePath>
+
+    <None Include="bin\Release\netstandard2.0\Abp.Zero.Ldap.pdb">
+      <PackagePath>lib/netstandard2.0/</PackagePath>
       <Pack>true</Pack>
-    </None>
+    </None> 
   </ItemGroup>
 
 </Project>
