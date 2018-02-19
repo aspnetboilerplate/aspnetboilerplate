@@ -58,7 +58,7 @@ namespace Abp.Events.Bus
         /// <inheritdoc/>
         public IDisposable AsyncRegister<TEventData>(Func<TEventData, Task> action) where TEventData : IEventData
         {
-            return Register(typeof(TEventData), new ActionAsyncEventHandler<TEventData>(action));
+            return Register(typeof(TEventData), new AsyncActionEventHandler<TEventData>(action));
         }
 
         /// <inheritdoc/>
@@ -147,7 +147,7 @@ namespace Abp.Events.Bus
                                 return false;
                             }
 
-                            var actionHandler = singleInstanceFactory.HandlerInstance as ActionAsyncEventHandler<TEventData>;
+                            var actionHandler = singleInstanceFactory.HandlerInstance as AsyncActionEventHandler<TEventData>;
                             if (actionHandler == null)
                             {
                                 return false;
@@ -231,26 +231,17 @@ namespace Abp.Events.Bus
         {
             var exceptions = new List<Exception>();
 
+            eventData.EventSource = eventSource;
+
             foreach (var handlerFactories in GetHandlerFactories(eventType))
             {
                 foreach (var handlerFactory in handlerFactories.EventHandlerFactories)
                 {
-                    Type handlerType = GetEventHandlerType(handlerFactory);
-                    eventData.EventSource = eventSource;
+                    var handlerType = GetEventHandlerType(handlerFactory);
 
                     if (IsAsyncEventHandler(handlerType))
                     {
-                        AsyncHelper.RunSync(async () =>
-                        {
-                            try
-                            {
-                                await TriggerAsyncHandlingException(handlerFactory, handlerFactories.EventType, eventData);
-                            }
-                            catch (Exception ex)
-                            {
-                                exceptions.Add(ex);
-                            }
-                        });
+                        AsyncHelper.RunSync(() => TriggerAsyncHandlingException(handlerFactory, handlerFactories.EventType, eventData, exceptions));
                     }
                     else if (IsEventHandler(handlerType))
                     {
@@ -315,25 +306,19 @@ namespace Abp.Events.Bus
         {
             var exceptions = new List<Exception>();
 
+            eventData.EventSource = eventSource;
+
             await new SynchronizationContextRemover();
 
             foreach (var handlerFactories in GetHandlerFactories(eventType))
             {
                 foreach (var handlerFactory in handlerFactories.EventHandlerFactories)
                 {
-                    Type handlerType = GetEventHandlerType(handlerFactory);
-                    eventData.EventSource = eventSource;
+                    var handlerType = GetEventHandlerType(handlerFactory);
 
                     if (IsAsyncEventHandler(handlerType))
                     {
-                        try
-                        {
-                            await TriggerAsyncHandlingException(handlerFactory, handlerFactories.EventType, eventData);
-                        }
-                        catch (Exception ex)
-                        {
-                            exceptions.Add(ex);
-                        }
+                        await TriggerAsyncHandlingException(handlerFactory, handlerFactories.EventType, eventData, exceptions);
                     }
                     else if (IsEventHandler(handlerType))
                     {
@@ -385,7 +370,7 @@ namespace Abp.Events.Bus
                     throw new ArgumentNullException($"Registered event handler for event type {eventType.Name} is null!");
                 }
 
-                Type handlerType = typeof(IEventHandler<>).MakeGenericType(eventType);
+                var handlerType = typeof(IEventHandler<>).MakeGenericType(eventType);
 
                 var method = handlerType.GetMethod(
                     "HandleEvent",
@@ -408,10 +393,9 @@ namespace Abp.Events.Bus
             }
         }
 
-        private async Task TriggerAsyncHandlingException(IEventHandlerFactory asyncHandlerFactory, Type eventType, IEventData eventData)
+        private async Task TriggerAsyncHandlingException(IEventHandlerFactory asyncHandlerFactory, Type eventType, IEventData eventData, List<Exception> exceptions)
         {
             var asyncEventHandler = asyncHandlerFactory.GetHandler();
-            Exception exception = null;
 
             try
             {
@@ -420,7 +404,7 @@ namespace Abp.Events.Bus
                     throw new ArgumentNullException($"Registered async event handler for event type {eventType.Name} is null!");
                 }
 
-                Type asyncHandlerType = typeof(IAsyncEventHandler<>).MakeGenericType(eventType);
+                var asyncHandlerType = typeof(IAsyncEventHandler<>).MakeGenericType(eventType);
 
                 var method = asyncHandlerType.GetMethod(
                     "HandleEventAsync",
@@ -431,26 +415,22 @@ namespace Abp.Events.Bus
             }
             catch (TargetInvocationException ex)
             {
-                exception = ex.InnerException;
+                exceptions.Add(ex.InnerException);
             }
             catch (Exception ex)
             {
-                exception = ex;
+                exceptions.Add(ex);
             }
             finally
             {
                 asyncHandlerFactory.ReleaseHandler(asyncEventHandler);
-            }
-
-            if (exception != null)
-            {
-                exception.ReThrow();
             }
         }
 
         private Type GetEventHandlerType(IEventHandlerFactory eventHandlerFactory)
         {
             var eventHandlerFactoryType = eventHandlerFactory.GetType();
+
             var isTransientHandlerFactory =
                 eventHandlerFactoryType.IsGenericType &&
                 eventHandlerFactoryType.GenericTypeArguments?.Length == 1 &&
@@ -460,11 +440,13 @@ namespace Abp.Events.Bus
             {
                 return eventHandlerFactoryType.GenericTypeArguments[0];
             }
-            else if (eventHandlerFactory is SingleInstanceHandlerFactory)
+
+            if (eventHandlerFactory is SingleInstanceHandlerFactory)
             {
                 return (eventHandlerFactory as SingleInstanceHandlerFactory).HandlerInstance?.GetType();
             }
-            else if (eventHandlerFactory is IocHandlerFactory)
+
+            if (eventHandlerFactory is IocHandlerFactory)
             {
                 return (eventHandlerFactory as IocHandlerFactory).HandlerType;
             }

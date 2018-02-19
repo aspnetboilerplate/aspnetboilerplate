@@ -5,10 +5,10 @@ using Abp.Dependency;
 namespace Abp.Events.Bus.Handlers.Internals
 {
     /// <summary>
-    /// This event handler is an adapter to be able to use an action as <see cref="IEventHandler{TEventData}"/> implementation.
+    /// This event handler is an adapter to be able to use an action as <see cref="IAsyncEventHandler{TEventData}"/> implementation.
     /// </summary>
     /// <typeparam name="TEventData">Event type</typeparam>
-    internal class ActionAsyncEventHandler<TEventData> :
+    internal class AsyncActionEventHandler<TEventData> :
         IAsyncEventHandler<TEventData>,
         ITransientDependency
     {
@@ -18,10 +18,10 @@ namespace Abp.Events.Bus.Handlers.Internals
         public Func<TEventData, Task> Action { get; private set; }
 
         /// <summary>
-        /// Creates a new instance of <see cref="ActionAsyncEventHandler{TEventData}"/>.
+        /// Creates a new instance of <see cref="AsyncActionEventHandler{TEventData}"/>.
         /// </summary>
         /// <param name="handler">Action to handle the event</param>
-        public ActionAsyncEventHandler(Func<TEventData, Task> handler)
+        public AsyncActionEventHandler(Func<TEventData, Task> handler)
         {
             Action = handler;
         }
