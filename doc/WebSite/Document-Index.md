@@ -1,9 +1,9 @@
 ### Articles & Tutorials
 
 Introduction & Step by Step
-  -   [With ASP.NET Core & Entity Framework Core Part-1](Articles/With-AspNet-Core-And-Entity-Framework-Core-Part-1/index.html)
-  -   [With ASP.NET Core & Entity Framework Core Part-2](Articles/With-AspNet-Core-And-Entity-Framework-Core-Part-2/index.html)
-  -   [With ASP.NET MVC, Web API, EntityFramework & AngularJs](Articles/With-AspNet-MVC-Web-API-EntityFramework-and-AngularJs/index.html)
+  -   [With ASP.NET Core & Entity Framework Core Part-1](Articles/Introduction-With-AspNet-Core-And-Entity-Framework-Core-Part-1/index.html)
+  -   [With ASP.NET Core & Entity Framework Core Part-2](Articles/Introduction-With-AspNet-Core-And-Entity-Framework-Core-Part-2/index.html)
+  -   [With ASP.NET MVC, Web API, EntityFramework & AngularJs](Articles/Introduction-With-AspNet-MVC-Web-API-EntityFramework-and-AngularJs/index.html)
 
 Advanced
 
