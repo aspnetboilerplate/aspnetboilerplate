@@ -650,7 +650,7 @@ We also open a "new event" modal (dialog) when user clicks to "+ New event" butt
 
 #### Event Detail
 
-When we click "Details" button for an event, we go to event details with a URL like "http://eventcloud.aspnetboilerplate.com/#/events/e9499e3e-35c0-492c-98ce-7e410461103f". GUID is id of the event.
+When we click "Details" button for an event, we go to event details with a URL like [http://eventcloud.aspnetboilerplate.com/#/events/e9499e3e-35c0-492c-98ce-7e410461103f](http://eventcloud.aspnetboilerplate.com/#/events/e9499e3e-35c0-492c-98ce-7e410461103f) . GUID is id of the event.
 
 <img src="images/event-cloud-event-detail.png" alt="Swagger UI" class="img-thumbnail" />
 
@@ -975,4 +975,4 @@ Almost all operations available on UI also available as Web API (since UI uses t
 
 ### Source Code
 
-You can get the latest source code here https://github.com/aspnetboilerplate/eventcloudcore
+You can get the latest source code here [Event Cloud Source](https://github.com/aspnetboilerplate/eventcloudcore)
