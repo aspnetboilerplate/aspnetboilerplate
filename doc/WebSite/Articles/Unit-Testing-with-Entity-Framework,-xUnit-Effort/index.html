@@ -101,14 +101,15 @@ public abstract class SimpleTaskSystemTestBase : AbpIntegratedTestBase&lt;Simple
 <pre lang="cs">
 [DependsOn(
         typeof(SimpleTaskSystemDataModule),
-        typeof(SimpleTaskSystemApplicationModule)
+        typeof(SimpleTaskSystemApplicationModule),
+        typeof(AbpTestBaseModule)
     )]
 public class SimpleTaskSystemTestModule : AbpModule
 {
         
 }</pre>
 
-<p>This module only defines depended modules, which will be tested.</p>
+<p>This module only defines depended modules, which will be tested and the AbpTestBaseModule.</p>
 
 <p>In the SimpleTaskSystemTestBase&#39;s PreInitialize method, we&#39;re registering <strong>DbConnection</strong> to dependency injection system using <strong>Effort</strong> (PreInitialize method is used to run some code just befor ABP initialized). We registered it as Singleton (for LocalIocConainer). Thus, same database (and connection) will be used in a test even we create more than one DbContext in same test. <strong>SimpleTaskSystemDbContext</strong> must have a constructor getting DbConnection in order to use this in-memory database. So, I added the constructor below that accepts a DbConnection:</p>
 
@@ -273,7 +274,7 @@ public class TaskAppService_Tests : SimpleTaskSystemTestBase
     }
 }</pre>
 
-<p>We inherited from <strong>SimpleTaskSystemTestBas</strong>e as described before. In a unit test, we should create the object this will be tested. In the constructor, I used <strong>LocalIocManager</strong> (dependency injection manager) to create an <strong>ITaskAppService</strong> (it creates TaskAppService since it implements ITaskAppService). In this way, I got rid of creating mock implementations of dependencies.</p>
+<p>We inherited from <strong>SimpleTaskSystemTestBase</strong> as described before. In a unit test, we should create the object this will be tested. In the constructor, I used <strong>LocalIocManager</strong> (dependency injection manager) to create an <strong>ITaskAppService</strong> (it creates TaskAppService since it implements ITaskAppService). In this way, I got rid of creating mock implementations of dependencies.</p>
 
 <p><strong>Should_Create_New_Tasks</strong> is the test method. It&#39;s decorated with the <strong>Fact</strong> attribute of xUnit. Thus, <strong>xUnit</strong> understand that this is a test method, and it runs the method.</p>
 
