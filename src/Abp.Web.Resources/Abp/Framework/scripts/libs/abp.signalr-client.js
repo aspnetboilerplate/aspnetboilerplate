@@ -59,7 +59,7 @@ var abp = abp || {};
                 abp.log.debug('Registered to the SignalR server!'); //TODO: Remove log
             });
         })
-        .catch(error => {
+        .catch(function (error) {
             abp.log.debug(error.message);
         });
     };

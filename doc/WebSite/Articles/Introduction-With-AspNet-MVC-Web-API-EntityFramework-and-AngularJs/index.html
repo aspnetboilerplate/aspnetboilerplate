@@ -1,5 +1,5 @@
-﻿<ul class="download abp-invisible">
-	<li><a href="https://aspnetboilerplate.com/download/SimpleTaskSystem.zip">Download the sample application</a></li>
+﻿<ul class="download">
+	<li>Get the source code from the <a href="https://github.com/aspnetboilerplate/aspnetboilerplate-samples/tree/master/SimpleTaskSystem">Github repository.</a></li>
 </ul>
 
 <p>
@@ -50,11 +50,13 @@ A screenshot of the sample application.
 
 <p>Let&#39;s go to <a href="http://www.aspnetboilerplate.com/Templates">aspnetboilerplate.com/Templates</a> to build our application from template...</p>
 
-<p><img alt="Create template by ASP.NET Boilerplate" src="create-abp-template.png" style="width: 100%" /></p>
+<p><img alt="Create template by ASP.NET Boilerplate" src="create-abp-template-2.png" style="width: 100%" /></p>
 
-<p>Here, I selected <strong>SPA</strong> (Single Page Application) with <strong>AngularJs</strong> and <strong>EntityFramework</strong>. Also entered <strong>SimpleTaskSystem</strong> for my project name. It created and downloaded my solution.</p>
+<p>Here, I selected <strong>ASP.NET MVC 5.x</strong>, <strong>SPA</strong> (Single Page Application) with <strong>AngularJs</strong> and <strong>EntityFramework</strong>. Also entered <strong>SimpleTaskSystem</strong> for my project name. 
+I didn&#39;t want to include authentication options to get the most simple project 
+template. It created and downloaded my solution.</p>
 
-<p>There are 5 projects included in the solution. <strong>Core</strong> project for domain (business) layer, <strong>Application</strong> project for application layer, <strong>WebApi</strong> project to implement Web Api controllers, <strong> Web</strong> project for presentation layer and finally <strong> EntityFramework</strong> project for EntityFramework implementation.</p>
+<p>There are five projects included in the solution. <strong>Core</strong> project for domain (business) layer, <strong>Application</strong> project for application layer, <strong>WebApi</strong> project to implement Web Api controllers, <strong> Web</strong> project for presentation layer and finally <strong> EntityFramework</strong> project for EntityFramework implementation.</p>
 
 <p><strong>Note</strong>: If you download sample solution for this acticle, you will see 7 projects in the solution. I improved template to support NHibernate and Durandal also for same application. If you don&#39;t interest in NHibernate or Durandal, just ignore these 2 projects.</p>
 
@@ -234,6 +236,11 @@ public interface ITaskRepository : IRepository&lt;Task, long&gt;
 <pre lang="cs">
 public class TaskRepository : SimpleTaskSystemRepositoryBase&lt;Task, long&gt;, ITaskRepository
 {
+    public TaskRepository(IDbContextProvider&lt;SimpleTaskSystemDbContext&gt; dbContextProvider)
+            : base(dbContextProvider)
+    {
+    }
+
     public List&lt;Task&gt; GetAllWithPeople(int? assignedPersonId, TaskState? state)
     {
         //In repository methods, we do not deal with create/dispose DB connections, DbContexes and transactions. ABP handles it.
@@ -377,6 +384,11 @@ public class CreateTaskInput
 
     [Required]
     public string Description { get; set; }
+    
+    public override string ToString()
+    {
+        return string.Format("[CreateTaskInput &gt; AssignedPersonId = {0}, Description = {1}]", AssignedPersonId, Description);
+    }
 }</pre>
 
 <p>Here, Description is marked as <strong>Required</strong>. You can use any <a href="http://msdn.microsoft.com/en-us/library/system.componentmodel.dataannotations.aspx" target="_blank"> Data Annotation attributes</a> here. If you want to make some custom validation, you can implement <strong>ICustomValidate</strong> as I implemented in <strong>UpdateTaskInput</strong>:</p>
@@ -597,6 +609,10 @@ app.config([
 
 <p>ASP.NET Boilerplate is designed to be testable. I authored an article to show unit and integration testing for ABP based projects. See the article:&nbsp;<a href="http://www.codeproject.com/Articles/871786/Unit-testing-in-Csharp-using-xUnit-Entity-Framewor" data-abp-href="/Pages/Articles/Unit-Testing-with-Entity-Framework,-xUnit-Effort/index.html">Unit testing in C# using xUnit, Entity Framework, Effort and ASP.NET Boilerplate</a>.</p>
 
+<h2 id="ArticleSourceCode">Source Code</h2>
+
+<p>You can get the latest source code here <a href="https://github.com/aspnetboilerplate/aspnetboilerplate-samples/tree/master/SimpleTaskSystem"> https://github.com/aspnetboilerplate/aspnetboilerplate-samples/tree/master/SimpleTaskSystem</a></p>
+
 <h2 id="ArticleSummary" class="abp-invisible">Summary</h2>
 
 <p class="abp-invisible">In this article, I demonstrated how to develop an NLayered ASP.NET MVC web application with a SPA and responsive user interface. I used ASP.NET Boilerplate since it makes easy to develop such applications using best practices and saves our time. Use these links for moe:</p>
@@ -612,6 +628,8 @@ app.config([
 <h2 id="ArticleHistory" class="abp-invisible">Article history</h2>
 
 <ul class="abp-invisible">
+	<li><strong>2018-02-18</strong>: Upgraded sample project and article for ABP 
+	v3.4.</li>
 	<li><strong>2016-10-26</strong>: Upgraded sample project to ABP v1.0.</li>
 	<li><strong>2016-07-19</strong>: Updated article and sample project for ABP v0.10.</li>
 	<li><strong>2015-06-08</strong>: Updated article and sample project for ABP v0.6.3.1.</li>

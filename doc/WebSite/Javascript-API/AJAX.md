@@ -20,7 +20,7 @@ Server-code should get the request, perform some server-side code, catch
 exceptions and return a valid response to the client. If an error
 occurs, it may optionally send an error message to the client. If
 it's a validation error, the server may want to the add descriptions to validation problems. 
-In the case of a succesful request, it may send return values to the client.
+In the case of a successful request, it may send return values to the client.
 
 ### The ASP.NET Boilerplate Way
 
@@ -48,7 +48,7 @@ before sending it to the server). You can override these defaults by passing
 options to abp.ajax.
 
 abp.ajax returns a **[promise](http://api.jquery.com/deferred.promise/)**,
-so uou can write done, fail, then (etc) handlers. In this example, we made
+so you can write done, fail, then (etc) handlers. In this example, we made
 a simple AJAX request to the **PeopleController**'s **SavePerson** action.
 In the **done** handler, we fetched the database **id** for the newly created
 person and showed a success notification (See [notification
@@ -93,7 +93,7 @@ something like this:
 
 Here all the properties are camelCase (since it's conventional in
 JavaScript) even if they are PascalCase on the server-side's code. Here's
-an explaination of all the fields:
+an explanation of all the fields:
 
 -   **success**: A boolean value (true or false) that indicates the success
     status of the operation. If this is true, abp.ajax resolves the
@@ -129,7 +129,7 @@ returns an object with an error message like this:
       "result": null,
       "success": false,
       "error": {
-        "message": "An internal error occured during your request!",
+        "message": "An internal error occurred during your request!",
         "details": "..."
       },
       "unAuthorizedRequest": false,
@@ -142,7 +142,7 @@ handles this object and shows an error message to the user using the
 If your server-side code throws an exception type of
 **UserFriendlyException**, it directly shows the exception's message to the
 user. Otherwise, it hides the actual error (writes error to logs) and
-shows a standard ''An internal error occured..." message to the user.
+shows a standard ''An internal error occurred..." message to the user.
 All these are automatically done by ASP.NET Boilerplate.
 
 You may want to disable displaying the message for a particular AJAX call.

@@ -3,12 +3,12 @@ integration with **EntityFramework**. This document will explain how to
 use EntityFramework with ASP.NET Boilerplate. It's assumed that you're
 already familar with EntityFramework at a basic level.
 
-### Nuget Package
+### NuGet Package
 
-The Nuget package to use EntityFramework as an O/RM in ASP.NET Boilerplate is
+The NuGet package to use EntityFramework as an O/RM in ASP.NET Boilerplate is
 [Abp.EntityFramework](http://www.nuget.org/packages/Abp.EntityFramework).
 You should add it to your application. It's better to implement
-EntityFramework in a seperated assembly (dll) in your application and
+EntityFramework in a separated assembly (dll) in your application and
 depend on that package from this assembly.
 
 ### DbContext

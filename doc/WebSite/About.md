@@ -23,7 +23,7 @@ It should be easy to share [entities](/Pages/Documents/Entities),
 [services](/Pages/Documents/Application-Services) and views between web
 applications. They should be packaged into
 [modules](/Pages/Documents/Module-System) and can be easily distributed
-(preferred as public/private nuget packages). Modules may depend on and
+(preferred as public/private NuGet packages). Modules may depend on and
 use other modules. We should be able to extend models in a module for
 our application needs.
 
@@ -89,7 +89,7 @@ Authorization,
 handling](/Pages/Documents/Handling-Exceptions),
 [logging](/Pages/Documents/Logging), caching are common things all
 applications implement at some level. The code should be generic and
-shared by different applications. It should also be seperated from the
+shared by different applications. It should also be separated from the
 business logic code and should be automated as much as possible. This
 allows us to focus more on our application specific business logic and
 prevents us from re-coding the same stuff over and over again (DRY!).
@@ -125,7 +125,7 @@ ASP.NET Boilerplate is an open source project developed under Github.
     <https://github.com/aspnetboilerplate/aspnetboilerplate-templates>
 -   Sample projects:
     <https://github.com/aspnetboilerplate/aspnetboilerplate-samples>
--   Module-Zero: <https://github.com/aspnetboilerplate/module-zero>
+-   Module Zero: <https://github.com/aspnetboilerplate/module-zero>
 
 ### Contributors
 

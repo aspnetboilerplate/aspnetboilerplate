@@ -212,7 +212,7 @@ cache** server. You can easily use Redis as your cache server.
 
 First, you need to install the
 [**Abp.RedisCache**](https://www.nuget.org/packages/Abp.RedisCache)
-nuget package to your application (you can install it to your Web
+NuGet package to your application (you can install it to your Web
 project, for example). Then you need to add a **DependsOn** attribute
 for the **AbpRedisCacheModule** and call the **UseRedis** extension method in the
 **PreInitialize** method of your [module](Module-System.md), as shown

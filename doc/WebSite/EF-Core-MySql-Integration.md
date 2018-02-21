@@ -2,7 +2,7 @@
 ### Download Starter Template
 
 Download the starter template with **ASP.NET Core** and **Entity Framework Core** to integrate MySQL. 
-[Multi-page template with **ASP.NET Core 2.x** + **.Net Core Framework** + **Authentication**](https://aspnetboilerplate.com/Templates) 
+[Multi-page template with **ASP.NET Core 2.x** + **.NET Core Framework** + **Authentication**](https://aspnetboilerplate.com/Templates) 
 will be explained in this document.
 
 ### Getting Started

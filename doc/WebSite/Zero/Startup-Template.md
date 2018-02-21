@@ -1,8 +1,8 @@
 ### Introduction
 
-The easiest way of starting a new project using ABP and module-zero is
+The easiest way of starting a new project using ABP and Module Zero is
 to create a template on the [templates page](/Templates). Remember to check
-"**Include module zero**".
+"**Include Module Zero**".
 
 After creating and downloading your project:
 

@@ -28,7 +28,7 @@ sample dashboard page:
 
 <img src="../images/module-zero-core-template-ui-home.png" alt="Dashboard" class="img-thumbnail" />
 
-#### About Multi Tenancy
+#### About Multi-Tenancy
 
 In this template, **multi-tenancy is enabled by default**. You can
 disable it in Core project's module class if you don't need it.

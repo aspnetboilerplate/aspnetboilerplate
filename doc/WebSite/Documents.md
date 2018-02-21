@@ -1,8 +1,8 @@
 ### Articles & Tutorials
 
 -   Introduction & Step by Step
-    -   [With ASP.NET Core & Entity Framework Core Part-1](Articles/With-AspNet-Core-And-Entity-Framework-Core-Part-1/index.html) & [Part-2](Articles/With-AspNet-Core-And-Entity-Framework-Core-Part-2/index.html)
-    -   [With ASP.NET MVC, Web API, EntityFramework & AngularJs](Articles/With-AspNet-MVC-Web-API-EntityFramework-and-AngularJs/index.html)
+    -   [With ASP.NET Core & Entity Framework Core Part-1](Articles/Introduction-With-AspNet-Core-And-Entity-Framework-Core-Part-1/index.html) & [Part-2](Articles/Introduction-With-AspNet-Core-And-Entity-Framework-Core-Part-2/index.html)
+    -   [With ASP.NET MVC, Web API, EntityFramework & AngularJs](Articles/Introduction-With-AspNet-MVC-Web-API-EntityFramework-and-AngularJs/index.html)
 -   Advanced
     -   [Developing a Multi-Tenant (SaaS) Application with ASP.NET MVC, EntityFramework & Angularjs](Articles/Developing-a-Multi-Tenant-SaaS-Application-with-ASP.NET-MVC-EntityFramework-AngularJs/index.html)
 -   Miscellaneous
@@ -19,7 +19,7 @@ Overall
 -   [NLayer Architecture](NLayer-Architecture.md)
 -   [Module System](Module-System.md)
 -   [Startup Configuration](Startup-Configuration.md)
--   [Multi Tenancy](Multi-Tenancy.md)
+-   [Multi-Tenancy](Multi-Tenancy.md)
 -   [OWIN Integration](OWIN.md)
 -   [Debugging](Debugging.md)
 -   [API Reference](/api-docs/index.html)
