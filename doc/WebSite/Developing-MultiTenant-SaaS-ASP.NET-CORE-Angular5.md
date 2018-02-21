@@ -3,7 +3,7 @@
 In this article, we will see a SaaS (multi-tenant) application developed using the following frameworks:
 
 - ASP.NET Boilerplate as application framework.
-- ASP.NET Core and ASP.NET Web API as Web Frameworks.
+- ASP.NET Core as Web Frameworks.
 - Entity Framework Core as ORM.
 - Angular5 as SPA framework.
 - Bootstrap as HTML/CSS framework.
@@ -14,7 +14,7 @@ ASP.NET Boilerplate provides templates to make a project startup easier. We crea
 
 I selected **ASP.NET Core 2.x**, **Angular** and checked **"Include login, register, user, role and tenant management pages"**. It creates a ready and working solution for us including a login page, navigation and a bootstrap based layout. After download and open the solution with Visual Studio 2017+, we see a layered solution structure including a unit test project.
 
-### Solution structure
+### Running The Project?
 
 First, we select **EventCloud.Host** as startup project. Solution comes with **Entity Framework Core Code-First Migrations**. So, (after restoring nuget packages) we open the Package Manager Console (PMC) and run **Update-Database** command to create the database.
 
@@ -36,7 +36,7 @@ Then we will see the following login page when you browse http://localhost:4200 
 
 <img src="images/event-cloud-login-page.png" alt="Swagger UI" class="img-thumbnail" />
 
-We can enter **Default** as tenancy name, **admin** as user name and **123qwe** as password to login.
+We can change tenancy name as **Default**, enter **admin** as user name and **123qwe** as password to login.
 
 After login, we see the basic bootstrap based [Admin BSB Material Design](https://github.com/gurayyarar/AdminBSBMaterialDesign) layout.
 
@@ -46,7 +46,7 @@ This is a localized UI with a dynamic menu. Angular layout, routing and basic in
 
 ## Event Cloud Project
 
-In this article, I will show key parts of the project and explain it. So, please download the sample project, open in **Visual Studio 2017+** and run migrations just like above before reading rest of the article (Be sure that there is no database named EventCloud before running the migrations). I will follow some **DDD (Domain Driven Design)** techniques to create domain (business) layer and application layer.
+In this article, I will show key parts of the project and explain it. So, please download the sample project, open in **Visual Studio 2017+** and run migrations just like above before reading rest of the article (Be sure that there is no database named **EventCloudDb** before running the migrations). I will follow some **DDD (Domain Driven Design)** techniques to create domain (business) layer and application layer.
 
 Event Cloud is a free SaaS (multi-tenant) application. We can create a tenant which has it's own events, users, roles... There are some simple business rules applied while creating, canceling and registering to an event.
 
@@ -185,7 +185,7 @@ public class Event : FullAuditedEntity<Guid>, IMustHaveTenant
 
 **Event** entity's constructor is also protected. So, the only way to create an Event is the `Event.Create` method (They can be private normally, but private setters don't work well with Entity Framework Core since Entity Framework Core can not set privates when retrieving an entity from database).
 
-Event implements, `IMustHaveTenant` interface. This is an interface of **ASP.NET Boilerplate (ABP)** framework and ensures that this entity is per tenant. This is needed for multi-tenancy. Thus, different tenants will have different events and can not see each other's events. **ABP** automatically filters entities of current tenant.
+Event implements `IMustHaveTenant` interface. This is an interface of **ASP.NET Boilerplate (ABP)** framework and ensures that this entity is per tenant. This is needed for multi-tenancy. Thus, different tenants will have different events and can not see each other's events. **ABP** automatically filters entities of current tenant.
 
 Event class inherits from `FullAuditedEntity` which contains creation, modification and deletion audit columns. `FullAuditedEntity` also implements `ISoftDelete`, so events can not be deleted from database. They are marked as deleted when you delete it. **ABP** automatically filters (hides) deleted entities when you query database.
 
@@ -969,10 +969,10 @@ After authenticate and get the **token**, we can use it to call any **authorized
 
 <img src="images/swagger-ui-angular-api-v2.png" alt="Using API" class="img-thumbnail" />
 
-Just made a **GET** request to **http://localhost:21021/api/services/app/user/getAll** with **Content-Type="application/json"** and **Authorization="Bearer *your-******auth-token*** **"**. All functionality available on UI is also available as API.
+Just made a **GET** request to **http://localhost:21021/api/services/app/user/getAll** with **Content-Type="application/json"** and **Authorization="Bearer your-auth-token"**. All functionality available on UI is also available as API.
 
 Almost all operations available on UI also available as Web API (since UI uses the same Web API) and can be consumed easily.
 
 ### Source Code
 
-You can get the latest source code here [Event Cloud Source](https://github.com/aspnetboilerplate/eventcloudcore)
+You can get the latest source code here [Event Cloud Source](https://github.com/aspnetboilerplate/eventcloud/tree/master/aspnet-core-angular)
