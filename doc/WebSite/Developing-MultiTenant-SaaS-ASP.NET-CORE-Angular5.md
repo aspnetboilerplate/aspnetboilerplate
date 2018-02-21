@@ -12,7 +12,11 @@ In this article, we will see a SaaS (multi-tenant) application developed using t
 
 ASP.NET Boilerplate provides templates to make a project startup easier. We create the startup template from https://aspnetboilerplate.com/Templates
 
+<img src="images/event-cloud-create-template.png" class="img-thumbnail" />
+
 I selected **ASP.NET Core 2.x**, **Angular** and checked **"Include login, register, user, role and tenant management pages"**. It creates a ready and working solution for us including a login page, navigation and a bootstrap based layout. After download and open the solution with Visual Studio 2017+, we see a layered solution structure including a unit test project.
+
+<img src="images/event-cloud-solution-structure.png" class="img-thumbnail" />
 
 ### Running The Project?
 
@@ -20,11 +24,11 @@ First, we select **EventCloud.Host** as startup project. Solution comes with **E
 
 Package Manager Console's Default project should be **EventCloud.EntityFrameworkCore** (since it contains the migrations). This command creates **EventCloud** database in local SQL Server (you can change connection string in **appsettings.json** file).
 
-<img src="images/event-cloud-create-db.png" alt="Swagger UI" class="img-thumbnail" />
+<img src="images/event-cloud-create-db.png" class="img-thumbnail" />
 
 First I'm running **EventCloud.Host** project. We will see the following screen:
 
-<img src="images/event-cloud-swagger-ui.png" alt="Swagger UI" class="img-thumbnail" />
+<img src="images/event-cloud-swagger-ui.png" class="img-thumbnail" />
 
 We will use **Angular-CLI** to start **Angular UI**. Here is the steps to start Angular UI:
 
@@ -32,15 +36,17 @@ We will use **Angular-CLI** to start **Angular UI**. Here is the steps to start 
 - Run `yarn` command to install packages
 - Run `npm start` to run application
 
+<img src="images/event-cloud-run-angular.png" class="img-thumbnail" />
+
 Then we will see the following login page when you browse http://localhost:4200 :
 
-<img src="images/event-cloud-login-page.png" alt="Swagger UI" class="img-thumbnail" />
+<img src="images/event-cloud-login-page.png" class="img-thumbnail" />
 
 We can change tenancy name as **Default**, enter **admin** as user name and **123qwe** as password to login.
 
 After login, we see the basic bootstrap based [Admin BSB Material Design](https://github.com/gurayyarar/AdminBSBMaterialDesign) layout.
 
-<img src="images/event-cloud-dashboard.png" alt="Swagger UI" class="img-thumbnail" />
+<img src="images/event-cloud-dashboard.png" class="img-thumbnail" />
 
 This is a localized UI with a dynamic menu. Angular layout, routing and basic infrastructure are properly working. I got this project as a base for the event cloud project.
 
@@ -576,7 +582,7 @@ Presentation layer for this application is built using **Angular** as a SPA.
 
 When we login to the application, we first see a list of events:
 
-<img src="images/event-cloud-events.png" alt="Swagger UI" class="img-thumbnail" />
+<img src="images/event-cloud-events.png" class="img-thumbnail" />
 
 We directly use `EventAppService` to get list of events. Here is the **events.component.ts** to create this page:
 
@@ -652,7 +658,7 @@ We also open a "new event" modal (dialog) when user clicks to "+ New event" butt
 
 When we click "Details" button for an event, we go to event details with a URL like [http://eventcloud.aspnetboilerplate.com/#/events/e9499e3e-35c0-492c-98ce-7e410461103f](http://eventcloud.aspnetboilerplate.com/#/events/e9499e3e-35c0-492c-98ce-7e410461103f) . GUID is id of the event.
 
-<img src="images/event-cloud-event-detail.png" alt="Swagger UI" class="img-thumbnail" />
+<img src="images/event-cloud-event-detail.png" class="img-thumbnail" />
 
 Here, we see event details with registered users. We can register to the event or cancel registration. This view's component is defined in **event-detail.component.ts** as shown below:
 
@@ -958,7 +964,7 @@ We will use Postman (a chrome extension) to demonstrate requests and responses.
 
 Just send a POST request to http://localhost:21021/api/TokenAuth/Authenticate with the **Context-Type="application/json"** header as shown below:
 
-<img src="images/swagger-ui-angular-auth.png" alt="Swagger UI" class="img-thumbnail" />
+<img src="images/swagger-ui-angular-auth.png" class="img-thumbnail" />
 
 We sent a JSON request body includes tenancyName, userNameOrEmailAddress and password. tenancyName is not required for host users. As seen above, result property of returning JSON contains the token. We can save it and use for next requests.
 
