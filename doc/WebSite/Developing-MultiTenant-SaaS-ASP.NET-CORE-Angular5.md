@@ -820,6 +820,16 @@ export class AppRoutingModule { }
 
 ```
 
+### Localization
+
+Localization texts can be stored in different sources. You can even use more than one source in the same application (If you have more than one module, each module can define a separated localization source, or one module can define multiple sources). The `ILocalizationSource` interface should be implemented by a localization source. It is then registered to ASP.NET Boilerplate's localization configuration.
+
+Each localization source must have a unique source name. There are pre-defined localization source types in **.Core/Localization/SourceFiles/**, as defined below.
+
+<img src="images/event-cloud-localization-resources.png" class="img-thumbnail" />
+
+Check [ABP Localization Doc](https://aspnetboilerplate.com/Pages/Documents/Localization) for more information.
+
 ### Unit and Integration Tests
 
 **ASP.NET Boilerplate** provides tools to make unit and integration tests easier. You can find all test code from source code of the project. Here, I will briefly explain basic tests. Solution includes `EventAppService_Tests` class which tests the `EventAppService`. See 2 tests from this class:
