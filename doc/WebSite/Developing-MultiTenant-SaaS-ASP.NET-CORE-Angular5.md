@@ -50,6 +50,10 @@ After login, we see the basic bootstrap based [Admin BSB Material Design](https:
 
 <img src="images/event-cloud-dashboard.png" class="img-thumbnail" />
 
+If you leave tenancyName empty, you will login as host and see following dashboard (one more menu item for manage tenants):
+
+<img src="images/event-cloud-host-dashboard.png" class="img-thumbnail" />
+
 This is a localized UI with a dynamic menu. Angular layout, routing and basic infrastructure are properly working. I got this project as a base for the event cloud project.
 
 ## Event Cloud Project
