@@ -195,7 +195,7 @@ public class Event : FullAuditedEntity<Guid>, IMustHaveTenant
 
 **Event** entity has not just get/set properties. Actually, it has not public setters, setters are protected. It has some domain logic. All properties must be changed by the **Event** entity itself to ensure domain logic is executed.
 
-**Event** entity's constructor is also protected. So, the only way to create an Event is the `Event.Create` method (They can be private normally, but private setters don't work well with Entity Framework Core since Entity Framework Core can not set privates when retrieving an entity from database).
+**Event** entity's constructor is also protected. So, the only way to create an Event is the `Event.Create` method.
 
 Event implements `IMustHaveTenant` interface. This is an interface of **ASP.NET Boilerplate (ABP)** framework and ensures that this entity is per tenant. This is needed for multi-tenancy. Thus, different tenants will have different events and can not see each other's events. **ABP** automatically filters entities of current tenant.
 
