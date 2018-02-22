@@ -43,11 +43,6 @@ var abp = abp || {};
     abp.signalr.connect = function() {
         var url = abp.signalr.url || '/signalr';
 
-        // Add query string: https://github.com/aspnet/SignalR/issues/680
-        if (abp.signalr.qs) {
-            url += '?' + abp.signalr.qs;
-        }
-
         // Start the connection.
         startConnection(url, configureConnection).then(function (connection) {
             abp.log.debug('Connected to SignalR server!'); //TODO: Remove log
@@ -67,6 +62,15 @@ var abp = abp || {};
     // if this does not work it will try longPolling. If the connection cannot be started using
     // any of the available transports the function will return a rejected Promise.
     function startConnection(url, configureConnection) {
+        if (abp.signalr.remoteServiceBaseUrl) {
+            url = abp.signalr.remoteServiceBaseUrl + url;
+        }
+
+        // Add query string: https://github.com/aspnet/SignalR/issues/680
+        if (abp.signalr.qs) {
+            url += '?' + abp.signalr.qs;
+        }
+
         return function start(transport) {
             abp.log.debug(`Starting connection using ${signalR.TransportType[transport]} transport`);
             var connection = new signalR.HubConnection(url, {transport: transport});
