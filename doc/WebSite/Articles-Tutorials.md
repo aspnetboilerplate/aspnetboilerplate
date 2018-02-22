@@ -2,7 +2,7 @@
   - [With ASP.NET Core & Entity Framework Core Part-1](Articles/Introduction-With-AspNet-Core-And-Entity-Framework-Core-Part-1/index.html) & [Part-2](Articles/Introduction-With-AspNet-Core-And-Entity-Framework-Core-Part-2/index.html)
   - [With ASP.NET MVC, Web API, EntityFramework & AngularJs](Articles/Introduction-With-AspNet-MVC-Web-API-EntityFramework-and-AngularJs/index.html)
 - Advanced
-  - [Developing a Multi-Tenant (SaaS) Application with ASP.NET Core, EntityFramework Core & Angular](Articles/Developing-MultiTenant-SaaS-ASP.NET-CORE-Angular/Developing-MultiTenant-SaaS-ASP.NET-CORE-Angular5.md)
+  - [Developing a Multi-Tenant (SaaS) Application with ASP.NET Core, EntityFramework Core & Angular](Articles/Developing-MultiTenant-SaaS-ASP.NET-CORE-Angular/index.html)
   - [Developing a Multi-Tenant (SaaS) Application with ASP.NET MVC, EntityFramework & Angularjs](Articles/Developing-a-Multi-Tenant-SaaS-Application-with-ASP.NET-MVC-EntityFramework-AngularJs/index.html)
 - Miscellaneous
   - [Unit Testing with Entity Framework, xUnit & Effort](Articles/Unit-Testing-with-Entity-Framework,-xUnit-Effort/index.html)
