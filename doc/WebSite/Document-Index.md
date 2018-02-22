@@ -1,26 +1,9 @@
-### Articles & Tutorials
-
-Introduction & Step by Step
--   [With ASP.NET Core & Entity Framework Core Part-1](/Pages/Articles/Introduction-With-AspNet-Core-And-Entity-Framework-Core-Part-1/index.html)
--   [With ASP.NET Core & Entity Framework Core Part-2](/Pages/Articles/Introduction-With-AspNet-Core-And-Entity-Framework-Core-Part-2/index.html)
--   [With ASP.NET MVC, Web API, EntityFramework & AngularJs](/Pages/Articles/Introduction-With-AspNet-MVC-Web-API-EntityFramework-and-AngularJs/index.html)
-
-Advanced
-
--   [Developing a Multi-Tenant (SaaS) Application with ASP.NET MVC, EntityFramework & Angularjs](/Pages/Articles/Developing-a-Multi-Tenant-SaaS-Application-with-ASP.NET-MVC-EntityFramework-AngularJs/index.html)
-
-Miscellaneous
-
--   [Unit Testing with Entity Framework, xUnit & Effort](/Pages/Articles/Unit-Testing-with-Entity-Framework,-xUnit-Effort/index.html)
--   [Aspect Oriented Programming using Interceptors](/Pages/Articles/Aspect-Oriented-Programming-using-Interceptors/index.html)
--   [Running in Docker Containers and building a Web Farm / Load Balancer Scenario](/Pages/Articles/Running-in-Docker-Containers-and-Building-a-Web-Farm-Load-Balancer-Scenario/index.html)
--   [Using Stored Procedures, User Defined Functions and Views](/Pages/Articles/Using-Stored-Procedures,-User-Defined-Functions-and-Views/index.html)
-
 ### ABP Framework
 
 Overall
 
 -   [Introduction](Introduction.md)
+-   [Tutorials & Articles](Articles-Tutorials.md)
 -   [NLayer Architecture](NLayer-Architecture.md)
 -   [Module System](Module-System.md)
 -   [Startup Configuration](Startup-Configuration.md)
@@ -105,7 +88,7 @@ Object-Relational Mapping
 -   [EntityFramework Integration](EntityFramework-Integration.md)
 -   [EntityFramework Core Integration](Entity-Framework-Core.md)
 -   [NHibernate Integration](NHibernate-Integration.md)
--   [Dapper Integration <label class="label label-success">New</label>](Dapper-Integration.md) 
+-   [Dapper Integration](Dapper-Integration.md) 
 
 Releases
 
