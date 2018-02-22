@@ -40,21 +40,22 @@ var abp = abp || {};
     }
 
     // Connect to the server
-    abp.signalr.connect = function() {
+    abp.signalr.connect = function () {
         var url = abp.signalr.url || '/signalr';
 
         // Start the connection.
-        startConnection(url, configureConnection).then(function (connection) {
-            abp.log.debug('Connected to SignalR server!'); //TODO: Remove log
-            abp.event.trigger('abp.signalr.connected');
-            // Call the Register method on the hub.
-            connection.invoke('register').then(function () {
-                abp.log.debug('Registered to the SignalR server!'); //TODO: Remove log
+        startConnection(url, configureConnection)
+            .then(function (connection) {
+                abp.log.debug('Connected to SignalR server!'); //TODO: Remove log
+                abp.event.trigger('abp.signalr.connected');
+                // Call the Register method on the hub.
+                connection.invoke('register').then(function () {
+                    abp.log.debug('Registered to the SignalR server!'); //TODO: Remove log
+                });
+            })
+            .catch(function (error) {
+                abp.log.debug(error.message);
             });
-        })
-        .catch(function (error) {
-            abp.log.debug(error.message);
-        });
     };
 
     // Starts a connection with transport fallback - if the connection cannot be started using
@@ -73,16 +74,16 @@ var abp = abp || {};
 
         return function start(transport) {
             abp.log.debug(`Starting connection using ${signalR.TransportType[transport]} transport`);
-            var connection = new signalR.HubConnection(url, {transport: transport});
+            var connection = new signalR.HubConnection(url, { transport: transport });
             if (configureConnection && typeof configureConnection === 'function') {
                 configureConnection(connection);
             }
 
             return connection.start()
-                .then(function() {
+                .then(function () {
                     return connection;
                 })
-                .catch(function(error) {
+                .catch(function (error) {
                     abp.log.debug(`Cannot start the connection using ${signalR.TransportType[transport]} transport. ${error.message}`);
                     if (transport !== signalR.TransportType.LongPolling) {
                         return start(transport + 1);
