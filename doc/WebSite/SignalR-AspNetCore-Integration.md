@@ -155,7 +155,7 @@ that we want to add a Hub to our application:
 
 <!-- -->
 
-    routes.MapHub<MyChatHub>("/myChatHub");
+    routes.MapHub<MyChatHub>("/signalr-myChatHub"); // Prefix with '/signalr'
 
 We implemented the **ITransientDependency** interface to simply register our hub to the
 [dependency injection](/Pages/Documents/Dependency-Injection) system
@@ -163,6 +163,7 @@ We implemented the **ITransientDependency** interface to simply register our hub
 [property-injected](/Pages/Documents/Dependency-Injection#property-injection-pattern)
 the [session](/Pages/Documents/Abp-Session) and
 [logger](/Pages/Documents/Logging).
+Alternatively, we can inherit AbpHubBase.
 
 **SendMessage** is a method of our hub that can be used by clients. We
 call the **getMessage** function of **all** clients in this method. We can
@@ -175,15 +176,18 @@ our hub.
 
     var chatHub = null;
 
-    abp.signalr.startConnection('/myChatHub', function (connection) {
+    abp.signalr.startConnection('/signalr-myChatHub', function (connection) {
         chatHub = connection; // Save a reference to the hub
 
         connection.on('getMessage', function (message) { // Register for incoming messages
             console.log('received message: ' + message);
         });
+    }).then(function (connection) {
+        abp.log.debug('Connected to myChatHub server!');
+        abp.event.trigger('myChatHub.connected');
     });
 
-    abp.event.on('abp.signalr.connected', function() { // Register for connect event
+    abp.event.on('myChatHub.connected', function() { // Register for connect event
         chatHub.invoke('sendMessage', "Hi everybody, I'm connected to the chat!"); // Send a message to the server
     });
 
