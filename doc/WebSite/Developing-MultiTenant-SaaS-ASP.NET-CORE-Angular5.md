@@ -1,62 +1,63 @@
 ## Introduction
 
-In this article, we will see a SaaS (multi-tenant) application developed using the following frameworks:
+In this article, we will demonstrate a simple SaaS (multi-tenant) application developed using the following frameworks:
 
-- ASP.NET Boilerplate as application framework.
-- ASP.NET Core and ASP.NET Web API as Web Frameworks.
-- Entity Framework Core as ORM.
-- Angular5 as SPA framework.
-- Bootstrap as HTML/CSS framework.
+- ASP.NET Boilerplate as the application framework.
+- ASP.NET Core and ASP.NET Web API as the Web Frameworks.
+- Entity Framework Core as the ORM.
+- Angular5 as the SPA framework.
+- Bootstrap as the HTML/CSS framework.
 
 ## Creating Application From Template
 
-ASP.NET Boilerplate provides templates to make a project startup easier. We create the startup template from https://aspnetboilerplate.com/Templates
+ASP.NET Boilerplate provides templates to make a project's startup easier. The startup template can be created here: https://aspnetboilerplate.com/Templates
 
-I selected **ASP.NET Core 2.x**, **Angular** and checked **"Include login, register, user, role and tenant management pages"**. It creates a ready and working solution for us including a login page, navigation and a bootstrap based layout. After download and open the solution with Visual Studio 2017+, we see a layered solution structure including a unit test project.
+Select **ASP.NET Core 2.x**, **Angular** and check **"Include login, register, user, role and tenant management pages"**. A ready and working solution is then created, including a login page, navigation, and a bootstrap-based layout. After downloading and opening the solution with Visual Studio 2017+, you will see a layered solution structure including a unit test project.
 
 ### Solution structure
 
-First, we select **EventCloud.Host** as startup project. Solution comes with **Entity Framework Core Code-First Migrations**. So, (after restoring nuget packages) we open the Package Manager Console (PMC) and run **Update-Database** command to create the database.
+First, select **EventCloud.Host** as the startup project. The solution comes with **Entity Framework Core Code-First Migrations**, so after restoring the NuGet packages, open the Package Manager Console (PMC) and run the **Update-Database** command to create the database.
 
-Package Manager Console's Default project should be **EventCloud.EntityFrameworkCore** (since it contains the migrations). This command creates **EventCloud** database in local SQL Server (you can change connection string in **appsettings.json** file).
+Package Manager Console's Default project should be **EventCloud.EntityFrameworkCore** (since it contains the migrations). This command creates the **EventCloud** database on the local SQL Server (you can change the connection string in the **appsettings.json** file).
 
 <img src="images/event-cloud-create-db.png" alt="Swagger UI" class="img-thumbnail" />
 
-First I'm running **EventCloud.Host** project. We will see the following screen:
+First, run the **EventCloud.Host** project. You will see the following screen:
 
 <img src="images/event-cloud-swagger-ui.png" alt="Swagger UI" class="img-thumbnail" />
 
-We will use **Angular-CLI** to start **Angular UI**. Here is the steps to start Angular UI:
+Use **Angular-CLI** to start **Angular UI**. Here are the steps to start Angular UI:
 
-- Open cmd on **EventCloud/angular** location
-- Run `yarn` command to install packages
-- Run `npm start` to run application
+- Open cmd in the **EventCloud/angular** location
+- Run the `yarn` command to install packages
+- Run `npm start` to run the application
 
-Then we will see the following login page when you browse http://localhost:4200 :
+You will then see the following login page when browsing to http://localhost:4200 :
 
 <img src="images/event-cloud-login-page.png" alt="Swagger UI" class="img-thumbnail" />
 
-We can enter **Default** as tenancy name, **admin** as user name and **123qwe** as password to login.
+Enter **Default** as the tenancy name, **admin** as the user name and **123qwe** as the password to login.
 
-After login, we see the basic bootstrap based [Admin BSB Material Design](https://github.com/gurayyarar/AdminBSBMaterialDesign) layout.
+After you login, you will see the basic bootstrap-based [Admin BSB Material Design](https://github.com/gurayyarar/AdminBSBMaterialDesign) layout.
 
 <img src="images/event-cloud-dashboard.png" alt="Swagger UI" class="img-thumbnail" />
 
-This is a localized UI with a dynamic menu. Angular layout, routing and basic infrastructure are properly working. I got this project as a base for the event cloud project.
+This is a localized UI with a dynamic menu. The Angular layout, routing, and basic infrastructure are already set up. 
+We got this project as a base for the event cloud project.
 
 ## Event Cloud Project
 
-In this article, I will show key parts of the project and explain it. So, please download the sample project, open in **Visual Studio 2017+** and run migrations just like above before reading rest of the article (Be sure that there is no database named EventCloud before running the migrations). I will follow some **DDD (Domain Driven Design)** techniques to create domain (business) layer and application layer.
+In this article, we will show the key parts of the project and explain it. So, please download the sample project, open it in **Visual Studio 2017+** and run the migrations just like above before reading the rest of the article (Be sure that there is no database named EventCloud before running the migrations!). We will follow some **DDD (Domain Driven Design)** techniques to create the domain (business) and application layers.
 
-Event Cloud is a free SaaS (multi-tenant) application. We can create a tenant which has it's own events, users, roles... There are some simple business rules applied while creating, canceling and registering to an event.
+Event Cloud is a free SaaS (multi-tenant) application. We can create a tenant that has its own events, users, roles, etc. There are some simple business rules applied while creating, canceling and registering an event.
 
-So, let's start to investigate the source code.
+Let's check out the source code!
 
 ### Entities
 
-Entities are parts of our domain layer and located under **EventCloud.Core** project. **ASP.NET Boilerplate** startup template comes with **Tenant**, **User**, **Role** ... entities which are common for most applications. We can customize them based on our needs. Surely, we can add our application specific entities.
+Entities are part of our domain layer and are located in the **EventCloud.Core** project. The **ASP.NET Boilerplate** startup template comes with the **Tenant**, **User**, **Role**, and other entities which are common for most applications. We can customize them based on our needs. We can, of course, add our own application-specific entities.
 
-The fundamental entity of event cloud project is the `Event` entity.
+The fundamental entity of the Event Cloud project is the `Event` entity.
 
 ```c#
 [Table("AppEvents")]
@@ -89,9 +90,9 @@ public class Event : FullAuditedEntity<Guid>, IMustHaveTenant
     public virtual ICollection<EventRegistration> Registrations { get; protected set; }
 
     /// <summary>
-    /// We don't make constructor public and forcing to create events using <see cref="Create"/> method.
-    /// But constructor can not be private since it's used by EntityFramework.
-    /// Thats why we did it protected.
+    /// The constructor is not public in order to force you to create events using the <see cref="Create"/> method.
+    /// However, the constructor can not be private since it's used by EntityFramework.
+    /// That's why we made it protected.
     /// </summary>
     protected Event()
     {
@@ -123,7 +124,7 @@ public class Event : FullAuditedEntity<Guid>, IMustHaveTenant
 
     public bool IsAllowedCancellationTimeEnded()
     {
-        return Date.Subtract(Clock.Now).TotalHours <= 2.0; //2 hours can be defined as Event property and determined per event
+        return Date.Subtract(Clock.Now).TotalHours <= 2.0; //2 hours can be defined as an Event property and can be determined per event
     }
 
     public void ChangeDate(DateTime date)
@@ -155,7 +156,7 @@ public class Event : FullAuditedEntity<Guid>, IMustHaveTenant
 
         if (date <= Clock.Now.AddHours(3)) //3 can be configurable per tenant
         {
-            throw new UserFriendlyException("Should set an event's date 3 hours before at least!");
+            throw new UserFriendlyException("An event's date should be set at least 3 hours before it!");
         }
 
         Date = date;
@@ -175,23 +176,23 @@ public class Event : FullAuditedEntity<Guid>, IMustHaveTenant
     {
         if (IsCancelled)
         {
-            throw new UserFriendlyException("This event is canceled!");
+            throw new UserFriendlyException("This event is cancelled!");
         }
     }
 }
 ```
 
-**Event** entity has not just get/set properties. Actually, it has not public setters, setters are protected. It has some domain logic. All properties must be changed by the **Event** entity itself to ensure domain logic is executed.
+The **Event** entity does more than just get and set properties. The properties do not have public setters, and are instead protected. An entity has some domain logic, and as such, all properties must be changed by the **Event** entity itself to ensure the domain logic is executed.
 
-**Event** entity's constructor is also protected. So, the only way to create an Event is the `Event.Create` method (They can be private normally, but private setters don't work well with Entity Framework Core since Entity Framework Core can not set privates when retrieving an entity from database).
+The **Event** entity's constructor is also protected, so the only way to create an Event is to use the `Event.Create` method. Constructors can normally be private, but private setters don't work well with Entity Framework Core, since Entity Framework Core can not set private properties when retrieving an entity from the database.
 
-Event implements, `IMustHaveTenant` interface. This is an interface of **ASP.NET Boilerplate (ABP)** framework and ensures that this entity is per tenant. This is needed for multi-tenancy. Thus, different tenants will have different events and can not see each other's events. **ABP** automatically filters entities of current tenant.
+The Event implements the `IMustHaveTenant` interface. This is an interface included in the **ASP.NET Boilerplate (ABP)** framework and ensures that this entity is per-tenant. This is needed for multi-tenancy. Different tenants will have different events and can not see the other tenants' events. **ABP** automatically filters the entities of the current tenant.
 
-Event class inherits from `FullAuditedEntity` which contains creation, modification and deletion audit columns. `FullAuditedEntity` also implements `ISoftDelete`, so events can not be deleted from database. They are marked as deleted when you delete it. **ABP** automatically filters (hides) deleted entities when you query database.
+The Event class inherits from the `FullAuditedEntity` class, which contains creation, modification and deletion audit columns. `FullAuditedEntity` also implements `ISoftDelete`, so events can not be deleted from the database. They are simply marked as deleted, instead of being actually deleted. **ABP** automatically filters (hides) deleted entities when you query the database.
 
-In **DDD**, entities have domain (business) logic. We have some simple business rules those can be understood easily when you check the entity.
+In **DDD**, entities have domain (business) logic. We have some simple business rules that can be easily understood when you check the entity.
 
-Second entity of our application is `EventRegistration`
+The second entity of our application is `EventRegistration`
 
 ```c#
 [Table("AppEventRegistrations")]
@@ -208,9 +209,9 @@ public class EventRegistration : CreationAuditedEntity, IMustHaveTenant
     public virtual long UserId { get; protected set; }
 
     /// <summary>
-    /// We don't make constructor public and forcing to create registrations using <see cref="CreateAsync"/> method.
-    /// But constructor can not be private since it's used by EntityFramework.
-    /// Thats why we did it protected.
+    /// The constructor is not public in order to force you to create registrations using the <see cref="Create"/> method.
+    /// However, the constructor can not be private since it's used by EntityFramework.
+    /// That's why we made it protected.
     /// </summary>
     protected EventRegistration()
     {
@@ -250,13 +251,13 @@ public class EventRegistration : CreationAuditedEntity, IMustHaveTenant
 }
 ```
 
-As similar to `Event`, we have a static create method. The only way of creating a new EventRegistration is this `CreateAsync` method. It gets an event, user and a registration policy. It checks if given user can register to the event using `registrationPolicy.CheckRegistrationAttemptAsync` method. This method throws exception if given user can not register to given event. With such a design, we ensure that all business rules are applied while creating a registration. There is no way of creating a registration without using registration policy.
+Similar to `Event`, we have a static create method. The only way of creating a new EventRegistration is to use the `CreateAsync` method. It gets an event, user, and a registration policy and then checks if a given user can register to the event using the `registrationPolicy.CheckRegistrationAttemptAsync` method. This method throws an exception if a given user can not register to the given event. With such a design, we ensure that all the business rules are applied while creating a registration. There is no way of creating a registration without using a registration policy.
 
-See Entity documentation for more information on entities.
+See the Entity documentation for more information on entities.
 
 ### Event Registration Policy
 
-`EventRegistrationPolicy` class is defined as shown below:
+The `EventRegistrationPolicy` class is defined as shown below:
 
 ```c#
 public class EventRegistrationPolicy : IEventRegistrationPolicy
@@ -309,7 +310,7 @@ public class EventRegistrationPolicy : IEventRegistrationPolicy
 This is an important part of our domain. We have two rules while creating an event registration:
 
 - A user can not register to an event in the past.
-- A user can register to a maximum count of events in 30 days. So, we have registration frequency limit.
+- A user can not register to a maximum count of events in 30 days. This way we can have a registration frequency limit.
 
 ### Event Manager
 
@@ -389,20 +390,20 @@ public class EventManager : IEventManager
 }
 ```
 
-It performs domain logic and triggers needed events.
+This performs domain logic and triggers needed events.
 
-See domain services documentation for more information on domain services.
+See the domain services documentation for more information.
 
 ### Domain Events
 
-We may want to define and trigger some domain specific events on some state changes in our application. I defined 2 domain specific events:
+We may want to define and trigger some domain-specific events on some state changes in our application. We defined 2 domain-specific events:
 
-- **EventCancelledEvent:** Triggered when an event is canceled. It's triggered in `EventManager.Cancel` method.
-- **EventDateChangedEvent:** Triggered when date of an event changed. It's triggered in `Event.ChangeDate` method.
+- **EventCancelledEvent:** Triggered when an event is canceled. It's triggered in the `EventManager.Cancel` method.
+- **EventDateChangedEvent:** Triggered when the date of an event has changed. It's triggered in the `Event.ChangeDate` method.
 
-We handle these events and notify related users about these changes. Also, I handle `EntityCreatedEventDate<Event>` (which is a pre-defined **ABP** event and triggered automatically).
+We handle these events and then notify related users about these changes. We also handle `EntityCreatedEventDate<Event>`, which is a pre-defined **ABP** event, and triggered automatically.
 
-To handle an event, we should define an event handler class. I defined `EventUserEmailer` to send emails to users when needed:
+To handle an event, we must define an event handler class. Here we define `EventUserEmailer` to send emails to users, when needed:
 
 ```c#
 public class EventUserEmailer :
@@ -450,7 +451,7 @@ public class EventUserEmailer :
         var registeredUsers = AsyncHelper.RunSync(() => _eventManager.GetRegisteredUsersAsync(eventData.Entity));
         foreach (var user in registeredUsers)
         {
-            var message = eventData.Entity.Title + " event's date is changed! New date is: " + eventData.Entity.Date;
+            var message = eventData.Entity.Title + " event's date has changed! New date is: " + eventData.Entity.Date;
             Logger.Debug(string.Format("TODO: Send email to {0} -> {1}", user.EmailAddress, message));
         }
     }
@@ -469,13 +470,13 @@ public class EventUserEmailer :
 }
 ```
 
-We can handle same events in different classes or different events in same class (as in this sample). Here, we handle these events and send email to related users as a notification (not implemented emailing actually to make the sample application simpler). An event handler should implement `IEventHandler<event-type>` interface. **ABP** automatically calls the handler when related events occur.
+We can handle the same events in different classes, or different events in the same class (as in this example). Here, we handle these events and send emails to the related users as a notification (Emailing is not actually implemented to make the sample application simpler). An event handler must implement the `IEventHandler<event-type>` interface. **ABP** automatically calls the handler when the related events occur.
 
-See **EventBus** documentation for more information on domain events.
+See the **EventBus** documentation for more information on domain events.
 
 ### Application Services
 
-Application services use domain layer to implement use cases of the application (generally used by presentation layer). `EventAppService` performs application logic for events.
+Application services use the domain layer to implement the use-cases of the application (which are generally used by presentation layer). `EventAppService` performs application logic for events.
 
 ```c#
 [AbpAuthorize]
@@ -516,7 +517,7 @@ public class EventAppService : EventCloudAppServiceBase, IEventAppService
 
         if (@event == null)
         {
-            throw new UserFriendlyException("Could not found the event, maybe it's deleted.");
+            throw new UserFriendlyException("Could not find the event, it may be deleted.");
         }
 
         return @event.MapTo<EventDetailOutput>();
@@ -564,13 +565,13 @@ public class EventAppService : EventCloudAppServiceBase, IEventAppService
 }
 ```
 
-As you see, application service does not implement domain logic itself. It just uses entities and domain services (**EventManager**) to perform the use cases.
+As you can see, the application service does not implement the domain logic itself. It just uses entities and domain services (**EventManager**) to perform the use-cases.
 
-See application service documentation for more information on application services.
+See the application service documentation for more information.
 
 ### Presentation Layer
 
-Presentation layer for this application is built using **Angular** as a SPA.
+The presentation layer for this application is built using **Angular** as a SPA.
 
 #### Event List
 
@@ -578,7 +579,7 @@ When we login to the application, we first see a list of events:
 
 <img src="images/event-cloud-events.png" alt="Swagger UI" class="img-thumbnail" />
 
-We directly use `EventAppService` to get list of events. Here is the **events.component.ts** to create this page:
+We directly use `EventAppService` to get a list of events. Here is the **events.component.ts** file to create this page:
 
 ```ts
 import { Component, Injector, ViewChild } from '@angular/core';
@@ -644,17 +645,17 @@ export class EventsComponent extends PagedListingComponentBase<EventListDto> {
 }
 ```
 
-We inject `EventServiceProxy` into **events.component.ts** component. We used dynamic web api layer feature of **ABP**. It creates needed Web API controller and Angular service automatically and dynamically. So, we can use application service methods like calling regular typescript functions. So, to call `EventAppService.GetListAsync` C# method, we simple call `_eventService.getListAsync` typescript function.
+We injected `EventServiceProxy` into the **events.component.ts** component. We used the dynamic web api layer feature of **ABP**. It creates the needed Web API controller and Angular services automatically and dynamically. We can then use the application service methods like calling regular typescript functions. To call the `EventAppService.GetListAsync` C# method, we simply call the `_eventService.getListAsync` typescript function.
 
-We also open a "new event" modal (dialog) when user clicks to "+ New event" button (which triggers `createEvent` function). I will not go details of Angular views, since they are simpler and you can check it in source code.
+We also open a "new event" modal (dialog) when a user clicks the "+ New event" button, which triggers the `createEvent` function. We will not go into the details of Angular views, since they are simple and can be looked up in the source code.
 
 #### Event Detail
 
-When we click "Details" button for an event, we go to event details with a URL like [http://eventcloud.aspnetboilerplate.com/#/events/e9499e3e-35c0-492c-98ce-7e410461103f](http://eventcloud.aspnetboilerplate.com/#/events/e9499e3e-35c0-492c-98ce-7e410461103f) . GUID is id of the event.
+When we click the "Details" button for an event, we go to the event details with an URL like [http://eventcloud.aspnetboilerplate.com/#/events/e9499e3e-35c0-492c-98ce-7e410461103f](http://eventcloud.aspnetboilerplate.com/#/events/e9499e3e-35c0-492c-98ce-7e410461103f) . A GUID is the id of the event.
 
 <img src="images/event-cloud-event-detail.png" alt="Swagger UI" class="img-thumbnail" />
 
-Here, we see event details with registered users. We can register to the event or cancel registration. This view's component is defined in **event-detail.component.ts** as shown below:
+Here, we see event details with registered users. We can register to the event or cancel the registration. This view's component is defined in **event-detail.component.ts**, as shown below:
 
 ```ts
 import { Component, OnInit, Injector } from '@angular/core';
@@ -745,11 +746,11 @@ export class EventDetailComponent extends AppComponentBase implements OnInit {
 }
 ```
 
-We simply use event application service to perform actions.
+We can simply use the event application service to perform actions.
 
 #### Main Menu
 
-Top menu is automatically created by **ABP template**. We define menu items in `sidebar-nav.component.ts` class:
+The top menu is automatically created by the **ABP template**. We can define the menu items in the `sidebar-nav.component.ts` class:
 
 ```ts
 @Component({
@@ -773,7 +774,7 @@ export class SideBarNavComponent extends AppComponentBase {
 
 #### Angular Route
 
-Defining the menu only shows it on the page. Angular has it's own route system. Routes are defined in app-routing-module.ts as shown below:
+Defining the menu only shows it on the page. Angular has it's own route system. Routes are defined in the app-routing-module.ts file as shown below:
 
 ```ts
 import { NgModule } from '@angular/core';
@@ -814,7 +815,7 @@ export class AppRoutingModule { }
 
 ### Unit and Integration Tests
 
-**ASP.NET Boilerplate** provides tools to make unit and integration tests easier. You can find all test code from source code of the project. Here, I will briefly explain basic tests. Solution includes `EventAppService_Tests` class which tests the `EventAppService`. See 2 tests from this class:
+**ASP.NET Boilerplate** provides some tools to make unit and integration tests easier. You can find all the test code in the source code of the project. Here, we will briefly explain some basic tests. The solution includes the `EventAppService_Tests` class, which tests the `EventAppService`. Here are 2 tests from this class:
 
 ```c#
 public class EventAppService_Tests : EventCloudTestBase
@@ -944,13 +945,13 @@ public class EventAppService_Tests : EventCloudTestBase
 }
 ```
 
-We use xUnit as test framework. In the first test, we simply create an event and check database if it's in there. In the second test, we intentionally trying to create an event in the past. Since our business rule don't allow it, we should get an exception here.
+We use xUnit as the test framework. In the first test, we simply create an event and check the database if it's in there. In the second test, we intentionally try to create an event in the past. Since our business rule doesn't allow it, we should get an exception here.
 
-With such tests, we tested everyting starting from application service including all aspects of **ASP.NET Boilerplate** (like validation, unit of work and so on). 
+With these tests, we tested everyting starting from the application service, including all aspects of **ASP.NET Boilerplate** (like validation, unit of work and so on). 
 
-### Token Based Authentication
+### Token-Based Authentication
 
-If you want to consume APIs/application services from a mobile application, you can use the token based authentication mechanism just like we do for the Angular client. The startup template includes the JwtBearer token authentication infrastructure.
+If you want to consume the APIs/application services from a mobile application, you can use the token-based authentication mechanism just like we do for the Angular client. The startup template includes the JwtBearer token authentication infrastructure.
 
 We will use Postman (a chrome extension) to demonstrate requests and responses.
 
@@ -960,19 +961,19 @@ Just send a POST request to http://localhost:21021/api/TokenAuth/Authenticate wi
 
 <img src="images/swagger-ui-angular-auth.png" alt="Swagger UI" class="img-thumbnail" />
 
-We sent a JSON request body includes tenancyName, userNameOrEmailAddress and password. tenancyName is not required for host users. As seen above, result property of returning JSON contains the token. We can save it and use for next requests.
+We sent a JSON request body which includes the tenancyName, userNameOrEmailAddress and password. tenancyName is not required for host users. As seen above, the result property of the returning JSON contains the token. We can save it and use it for the next requests.
 
 
-#### Use API
+#### Using the API
 
-After authenticate and get the **token**, we can use it to call any **authorized** action. All **application services** are available to be used remotely. For example, we can use the **User service** to get a **list of users**:
+After we authenticate and get the **token**, we can use it to call any **authorized** action. All **application services** can be used remotely. For example, we can use the **User service** to get a **list of users**:
 
 <img src="images/swagger-ui-angular-api-v2.png" alt="Using API" class="img-thumbnail" />
 
-Just made a **GET** request to **http://localhost:21021/api/services/app/user/getAll** with **Content-Type="application/json"** and **Authorization="Bearer *your-******auth-token*** **"**. All functionality available on UI is also available as API.
+We simply made a **GET** request to **http://localhost:21021/api/services/app/user/getAll** with **Content-Type="application/json"** and **Authorization="Bearer *your-******auth-token*** **"**. All the functionality available on the UI are also available as an API.
 
-Almost all operations available on UI also available as Web API (since UI uses the same Web API) and can be consumed easily.
+Almost all operations available on the UI are also available as a Web API (since UI uses the same Web API), and can be consumed easily.
 
 ### Source Code
 
-You can get the latest source code here [Event Cloud Source](https://github.com/aspnetboilerplate/eventcloudcore)
+You can get the latest source code here: [Event Cloud Source](https://github.com/aspnetboilerplate/eventcloudcore)
