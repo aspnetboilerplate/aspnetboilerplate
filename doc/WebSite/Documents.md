@@ -38,8 +38,7 @@ Application Layer
 
 -   [Application Services](Application-Services.md)
 -   [Data Transfer Objects](Data-Transfer-Objects.md)
--   [Validating Data Transfer
-    Objects](Validating-Data-Transfer-Objects.md)
+-   [Validating Data Transfer Objects](Validating-Data-Transfer-Objects.md)
 -   [Authorization](Authorization.md)
 -   [Feature Management](Feature-Management.md)
 -   [Audit Logging](Audit-Logging.md)
