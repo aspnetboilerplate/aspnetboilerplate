@@ -107,7 +107,7 @@ You can start with the startup templates or the introduction tutorials.
 
 Directly create a modern looking startup project from the [startup templates](/Templates).
 
-![module-zero-core-template-ui-home](D:\Github\aspnetboilerplate\doc\WebSite\images\module-zero-core-template-ui-home.png)
+![module-zero-core-template-ui-home](images/module-zero-core-template-ui-home.png)
 
 Startup templates provides a basic layout and some common features for an application. There are several startup templates with different options.
 
