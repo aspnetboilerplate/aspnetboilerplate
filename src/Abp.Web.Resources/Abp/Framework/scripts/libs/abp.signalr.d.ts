@@ -6,6 +6,8 @@
 
         let qs: string;
 
+        let remoteServiceBaseUrl: string;
+
         let url: string;
 
         function connect(): any;
