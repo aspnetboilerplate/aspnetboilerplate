@@ -29,9 +29,7 @@ var abp = abp || {};
             }
 
             setTimeout(function () {
-                if ($.connection.hub.state === $.signalR.connectionState.disconnected) {
-                    $.connection.hub.start();
-                }
+                connection.start();
             }, 5000);
         });
 
