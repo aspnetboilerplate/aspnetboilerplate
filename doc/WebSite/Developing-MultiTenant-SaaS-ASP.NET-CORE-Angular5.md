@@ -1,9 +1,11 @@
+Get the source code from the [Github Repository](https://github.com/aspnetboilerplate/eventcloud/tree/master/aspnet-core-angular)
+
 ## Introduction
 
 In this article, we will demonstrate a simple SaaS (multi-tenant) application developed using the following frameworks:
 
 - ASP.NET Boilerplate as the application framework.
-- ASP.NET Core and ASP.NET Web API as the Web Frameworks.
+- ASP.NET Core as the web frameworks.
 - Entity Framework Core as the ORM.
 - Angular5 as the SPA framework.
 - Bootstrap as the HTML/CSS framework.
@@ -12,19 +14,23 @@ In this article, we will demonstrate a simple SaaS (multi-tenant) application de
 
 ASP.NET Boilerplate provides templates to make a project's startup easier. The startup template can be created here: https://aspnetboilerplate.com/Templates
 
+<img src="images/event-cloud-create-template.png" class="img-thumbnail" />
+
 Select **ASP.NET Core 2.x**, **Angular** and check **"Include login, register, user, role and tenant management pages"**. A ready and working solution is then created, including a login page, navigation, and a bootstrap-based layout. After downloading and opening the solution with Visual Studio 2017+, you will see a layered solution structure including a unit test project.
 
-### Solution structure
+<img src="images/event-cloud-solution-structure.png" class="img-thumbnail" />
+
+### Running The Project?
 
 First, select **EventCloud.Host** as the startup project. The solution comes with **Entity Framework Core Code-First Migrations**, so after restoring the NuGet packages, open the Package Manager Console (PMC) and run the **Update-Database** command to create the database.
 
 Package Manager Console's Default project should be **EventCloud.EntityFrameworkCore** (since it contains the migrations). This command creates the **EventCloud** database on the local SQL Server (you can change the connection string in the **appsettings.json** file).
 
-<img src="images/event-cloud-create-db.png" alt="Swagger UI" class="img-thumbnail" />
+<img src="images/event-cloud-create-db.png" class="img-thumbnail" />
 
 First, run the **EventCloud.Host** project. You will see the following screen:
 
-<img src="images/event-cloud-swagger-ui.png" alt="Swagger UI" class="img-thumbnail" />
+<img src="images/event-cloud-swagger-ui.png" class="img-thumbnail" />
 
 Use **Angular-CLI** to start **Angular UI**. Here are the steps to start Angular UI:
 
@@ -32,22 +38,28 @@ Use **Angular-CLI** to start **Angular UI**. Here are the steps to start Angular
 - Run the `yarn` command to install packages
 - Run `npm start` to run the application
 
+<img src="images/event-cloud-run-angular.png" class="img-thumbnail" />
+
 You will then see the following login page when browsing to http://localhost:4200 :
 
-<img src="images/event-cloud-login-page.png" alt="Swagger UI" class="img-thumbnail" />
+<img src="images/event-cloud-login-page.png" class="img-thumbnail" />
 
-Enter **Default** as the tenancy name, **admin** as the user name and **123qwe** as the password to login.
+Change current tenant as **Default**, enter **admin** as the user name and **123qwe** as the password to login.
 
 After you login, you will see the basic bootstrap-based [Admin BSB Material Design](https://github.com/gurayyarar/AdminBSBMaterialDesign) layout.
 
-<img src="images/event-cloud-dashboard.png" alt="Swagger UI" class="img-thumbnail" />
+<img src="images/event-cloud-dashboard.png" class="img-thumbnail" />
+
+If you leave tenancyName empty, you will login as host and see following dashboard (one more menu item for manage tenants):
+
+<img src="images/event-cloud-host-dashboard.png" class="img-thumbnail" />
 
 This is a localized UI with a dynamic menu. The Angular layout, routing, and basic infrastructure are already set up. 
 We got this project as a base for the event cloud project.
 
 ## Event Cloud Project
 
-In this article, we will show the key parts of the project and explain it. So, please download the sample project, open it in **Visual Studio 2017+** and run the migrations just like above before reading the rest of the article (Be sure that there is no database named EventCloud before running the migrations!). We will follow some **DDD (Domain Driven Design)** techniques to create the domain (business) and application layers.
+In this article, we will show the key parts of the project and explain it. So, please download the sample project, open it in **Visual Studio 2017+** and run the migrations just like above before reading the rest of the article (Be sure that there is no database named **EventCloudDb** before running the migrations!). We will follow some **DDD (Domain Driven Design)** techniques to create the domain (business) and application layers.
 
 Event Cloud is a free SaaS (multi-tenant) application. We can create a tenant that has its own events, users, roles, etc. There are some simple business rules applied while creating, canceling and registering an event.
 
@@ -184,7 +196,7 @@ public class Event : FullAuditedEntity<Guid>, IMustHaveTenant
 
 The **Event** entity does more than just get and set properties. The properties do not have public setters, and are instead protected. An entity has some domain logic, and as such, all properties must be changed by the **Event** entity itself to ensure the domain logic is executed.
 
-The **Event** entity's constructor is also protected, so the only way to create an Event is to use the `Event.Create` method. Constructors can normally be private, but private setters don't work well with Entity Framework Core, since Entity Framework Core can not set private properties when retrieving an entity from the database.
+The **Event** entity's constructor is also protected, so the only way to create an Event is to use the `Event.Create` method.
 
 The Event implements the `IMustHaveTenant` interface. This is an interface included in the **ASP.NET Boilerplate (ABP)** framework and ensures that this entity is per-tenant. This is needed for multi-tenancy. Different tenants will have different events and can not see the other tenants' events. **ABP** automatically filters the entities of the current tenant.
 
@@ -577,7 +589,7 @@ The presentation layer for this application is built using **Angular** as a SPA.
 
 When we login to the application, we first see a list of events:
 
-<img src="images/event-cloud-events.png" alt="Swagger UI" class="img-thumbnail" />
+<img src="images/event-cloud-events.png" class="img-thumbnail" />
 
 We directly use `EventAppService` to get a list of events. Here is the **events.component.ts** file to create this page:
 
@@ -653,7 +665,7 @@ We also open a "new event" modal (dialog) when a user clicks the "+ New event" b
 
 When we click the "Details" button for an event, we go to the event details with an URL like [http://eventcloud.aspnetboilerplate.com/#/events/e9499e3e-35c0-492c-98ce-7e410461103f](http://eventcloud.aspnetboilerplate.com/#/events/e9499e3e-35c0-492c-98ce-7e410461103f) . A GUID is the id of the event.
 
-<img src="images/event-cloud-event-detail.png" alt="Swagger UI" class="img-thumbnail" />
+<img src="images/event-cloud-event-detail.png" class="img-thumbnail" />
 
 Here, we see event details with registered users. We can register to the event or cancel the registration. This view's component is defined in **event-detail.component.ts**, as shown below:
 
@@ -813,6 +825,16 @@ export class AppRoutingModule { }
 
 ```
 
+### Localization
+
+Localization texts can be stored in different sources. You can even use more than one source in the same application (If you have more than one module, each module can define a separated localization source, or one module can define multiple sources). The `ILocalizationSource` interface should be implemented by a localization source. It is then registered to ASP.NET Boilerplate's localization configuration.
+
+Each localization source must have a unique source name. There are pre-defined localization source types in **.Core/Localization/SourceFiles/**, as defined below.
+
+<img src="images/event-cloud-localization-resources.png" class="img-thumbnail" />
+
+Check [ABP Localization Doc](https://aspnetboilerplate.com/Pages/Documents/Localization) for more information.
+
 ### Unit and Integration Tests
 
 **ASP.NET Boilerplate** provides some tools to make unit and integration tests easier. You can find all the test code in the source code of the project. Here, we will briefly explain some basic tests. The solution includes the `EventAppService_Tests` class, which tests the `EventAppService`. Here are 2 tests from this class:
@@ -959,7 +981,7 @@ We will use Postman (a chrome extension) to demonstrate requests and responses.
 
 Just send a POST request to http://localhost:21021/api/TokenAuth/Authenticate with the **Context-Type="application/json"** header as shown below:
 
-<img src="images/swagger-ui-angular-auth.png" alt="Swagger UI" class="img-thumbnail" />
+<img src="images/swagger-ui-angular-auth.png" class="img-thumbnail" />
 
 We sent a JSON request body which includes the tenancyName, userNameOrEmailAddress and password. tenancyName is not required for host users. As seen above, the result property of the returning JSON contains the token. We can save it and use it for the next requests.
 
@@ -970,10 +992,10 @@ After we authenticate and get the **token**, we can use it to call any **authori
 
 <img src="images/swagger-ui-angular-api-v2.png" alt="Using API" class="img-thumbnail" />
 
-We simply made a **GET** request to **http://localhost:21021/api/services/app/user/getAll** with **Content-Type="application/json"** and **Authorization="Bearer *your-******auth-token*** **"**. All the functionality available on the UI are also available as an API.
+We simply made a **GET** request to **http://localhost:21021/api/services/app/user/getAll** with **Content-Type="application/json"** and **Authorization="Bearer your-auth-token"**. All the functionality available on the UI are also available as an API.
 
 Almost all operations available on the UI are also available as a Web API (since UI uses the same Web API), and can be consumed easily.
 
 ### Source Code
 
-You can get the latest source code here: [Event Cloud Source](https://github.com/aspnetboilerplate/eventcloudcore)
+You can get the latest source code here: [Event Cloud Source](https://github.com/aspnetboilerplate/eventcloud/tree/master/aspnet-core-angular)
