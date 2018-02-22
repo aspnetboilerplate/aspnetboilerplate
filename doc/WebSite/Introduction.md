@@ -81,8 +81,7 @@ Let's see some of ABP's benefits here:
 -   **[Logging](/Pages/Documents/Logging)**: As you see, we can write logs using the Logger object defined in the base class.
     Log4Net is used by default, but it's changeable and configurable.
 -   **[Localization](/Pages/Documents/Localization)**: Note that we used the 'L' method while throwing the exception?
-    This way, it's automatically localized based on the current user's culture. We define
-    **CouldNotFindTheTaskMessage** elsewhere (see the [localization](/Pages/Documents/Localization) document for more info).
+    This way, it's automatically localized based on the current user's culture. See the [localization](/Pages/Documents/Localization) document for more.
 -   **[Auto Mapping](/Pages/Documents/Data-Transfer-Objects)**: In the last line, we're using ABP's MapTo extension method to map input
     properties to entity properties. It uses the AutoMapper library to
     perform the mapping. We can easily map properties from one object
@@ -93,11 +92,11 @@ Let's see some of ABP's benefits here:
 -   **[Dynamic Javascript AJAX Proxy](/Pages/Documents/Dynamic-Web-API#dynamic-javascript-proxies)** : ABP creates proxy methods those make calling application
     service methods as simple as calling JavaScript methods on the client.
 
-We can see the benefits of ABP in this simple class. All these tasks normally take significiant time,
-but are automatically handled by the framework
+We can see the benefits of ABP in this simple class. All these tasks normally take significant time,
+but are automatically handled by the framework.
 
 Besides this simple example, ABP provides a strong infrastructure and development model for
-[modularity](/Pages/Documents/Module-System), [multi-tenancy](Multi-Tenancy.md), [caching](Caching.md), [background jobs](Background-Jobs-And-Workers.md), [data filters](/Pages/Documents/Data-Filters), [setting management](/Pages/Documents/Setting-Management), [domain events](EventBus-Domain-Events.md), unit & integration testing and so on...
+[modularity](/Pages/Documents/Module-System), [multi-tenancy](Multi-Tenancy.md), [caching](Caching.md), [background jobs](Background-Jobs-And-Workers.md), [data filters](/Pages/Documents/Data-Filters), [setting management](/Pages/Documents/Setting-Management), [domain events](EventBus-Domain-Events.md), unit & integration testing and so on... You focus on your business code and don't repeat yourself!
 
 ### Getting Started
 
@@ -136,7 +135,7 @@ Step by step tutorials introduces the framework and explains how to create your 
 -   [Introduction with ASP.NET MVC 5.x, Web API 2.x, EntityFramework 6.x & AngularJs 1.x](Articles/Introduction-With-AspNet-MVC-Web-API-EntityFramework-and-AngularJs/index.html)
 -   [Developing a multi-tenant (SaaS) application with ASP.NET MVC 5.x, EntityFramework 6.x & Angularjs 1.x](Articles/Developing-a-Multi-Tenant-SaaS-Application-with-ASP.NET-MVC-EntityFramework-AngularJs/index.html)
 
-#### Samples
+### Samples
 
 There are many sample projects developed with the framework. See [the samples page](/Samples).
 
