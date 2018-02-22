@@ -129,7 +129,7 @@ Step by step tutorials introduces the framework and explains how to create your 
 ##### ASP.NET Core
 
 -   [Introduction with ASP.NET Core & Entity Framework Core](Articles/Introduction-With-AspNet-Core-And-Entity-Framework-Core-Part-1/index.html)
--   [Developing a multi-tenant (SaaS) application with ASP.NET Core, EntityFramework Core & Angular](Developing-MultiTenant-SaaS-ASP.NET-CORE-Angular5.md)
+-   [Developing a multi-tenant (SaaS) application with ASP.NET Core, EntityFramework Core & Angular](Articles/Developing-MultiTenant-SaaS-ASP.NET-CORE-Angular/Developing-MultiTenant-SaaS-ASP.NET-CORE-Angular5.md)
 
 ##### ASP.NET MVC 5.x
 
