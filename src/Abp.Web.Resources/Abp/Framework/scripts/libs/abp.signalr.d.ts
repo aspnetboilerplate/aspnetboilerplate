@@ -10,6 +10,8 @@
 
         function connect(): any;
 
+        function startConnection(url: string, configureConnection: Function): Promise<any>;
+
         namespace hubs {
 
             let common: any;
