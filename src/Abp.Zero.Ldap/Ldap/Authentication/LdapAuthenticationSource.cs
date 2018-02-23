@@ -24,10 +24,7 @@ namespace Abp.Zero.Ldap.Authentication
         /// </summary>
         public const string SourceName = "LDAP";
 
-        public override string Name
-        {
-            get { return SourceName; }
-        }
+        public override string Name => SourceName;
 
         private readonly ILdapSettings _settings;
         private readonly IAbpZeroLdapModuleConfig _ldapModuleConfig;
@@ -41,7 +38,7 @@ namespace Abp.Zero.Ldap.Authentication
         /// <inheritdoc/>
         public override async Task<bool> TryAuthenticateAsync(string userNameOrEmailAddress, string plainPassword, TTenant tenant)
         {
-            if (!_ldapModuleConfig.IsEnabled || !(await _settings.GetIsEnabled(GetIdOrNull(tenant))))
+            if (!_ldapModuleConfig.IsEnabled || !(await _settings.GetIsEnabled(tenant?.Id)))
             {
                 return false;
             }
@@ -53,7 +50,7 @@ namespace Abp.Zero.Ldap.Authentication
         }
 
         /// <inheritdoc/>
-        public async override Task<TUser> CreateUserAsync(string userNameOrEmailAddress, TTenant tenant)
+        public override async Task<TUser> CreateUserAsync(string userNameOrEmailAddress, TTenant tenant)
         {
             await CheckIsEnabled(tenant);
 
@@ -77,7 +74,7 @@ namespace Abp.Zero.Ldap.Authentication
             }
         }
 
-        public async override Task UpdateUserAsync(TUser user, TTenant tenant)
+        public override async Task UpdateUserAsync(TUser user, TTenant tenant)
         {
             await CheckIsEnabled(tenant);
 
@@ -116,7 +113,7 @@ namespace Abp.Zero.Ldap.Authentication
 
         protected virtual async Task<PrincipalContext> CreatePrincipalContext(TTenant tenant)
         {
-            var tenantId = GetIdOrNull(tenant);
+            var tenantId = tenant?.Id;
             
             return new PrincipalContext(
                 await _settings.GetContextType(tenantId),
@@ -127,25 +124,18 @@ namespace Abp.Zero.Ldap.Authentication
                 );
         }
 
-        private async Task CheckIsEnabled(TTenant tenant)
+        protected virtual async Task CheckIsEnabled(TTenant tenant)
         {
             if (!_ldapModuleConfig.IsEnabled)
             {
                 throw new AbpException("Ldap Authentication module is disabled globally!");                
             }
 
-            var tenantId = GetIdOrNull(tenant);
+            var tenantId = tenant?.Id;
             if (!await _settings.GetIsEnabled(tenantId))
             {
                 throw new AbpException("Ldap Authentication is disabled for given tenant (id:" + tenantId + ")! You can enable it by setting '" + LdapSettingNames.IsEnabled + "' to true");
             }
-        }
-
-        private static int? GetIdOrNull(TTenant tenant)
-        {
-            return tenant == null
-                ? (int?)null
-                : tenant.Id;
         }
 
         private static string ConvertToNullIfEmpty(string str)
