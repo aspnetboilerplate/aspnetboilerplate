@@ -43,7 +43,7 @@ namespace Abp.Zero.Ldap.Authentication
                 return false;
             }
 
-            using (var principalContext = await CreatePrincipalContext(tenant))
+            using (var principalContext = await CreatePrincipalContext(tenant, userNameOrEmailAddress))
             {
                 return ValidateCredentials(principalContext, userNameOrEmailAddress, plainPassword);
             }
@@ -56,7 +56,7 @@ namespace Abp.Zero.Ldap.Authentication
 
             var user = await base.CreateUserAsync(userNameOrEmailAddress, tenant);
 
-            using (var principalContext = await CreatePrincipalContext(tenant))
+            using (var principalContext = await CreatePrincipalContext(tenant, user))
             {
                 var userPrincipal = UserPrincipal.FindByIdentity(principalContext, userNameOrEmailAddress);
 
@@ -80,7 +80,7 @@ namespace Abp.Zero.Ldap.Authentication
 
             await base.UpdateUserAsync(user, tenant);
 
-            using (var principalContext = await CreatePrincipalContext(tenant))
+            using (var principalContext = await CreatePrincipalContext(tenant, user))
             {
                 var userPrincipal = UserPrincipal.FindByIdentity(principalContext, user.UserName);
 
@@ -111,17 +111,25 @@ namespace Abp.Zero.Ldap.Authentication
             }
         }
 
+        protected virtual Task<PrincipalContext> CreatePrincipalContext(TTenant tenant, string userNameOrEmailAddress)
+        {
+            return CreatePrincipalContext(tenant);
+        }
+
+        protected virtual Task<PrincipalContext> CreatePrincipalContext(TTenant tenant, TUser user)
+        {
+            return CreatePrincipalContext(tenant);
+        }
+
         protected virtual async Task<PrincipalContext> CreatePrincipalContext(TTenant tenant)
         {
-            var tenantId = tenant?.Id;
-            
             return new PrincipalContext(
-                await _settings.GetContextType(tenantId),
-                ConvertToNullIfEmpty(await _settings.GetDomain(tenantId)),
-                ConvertToNullIfEmpty(await _settings.GetContainer(tenantId)),
-                ConvertToNullIfEmpty(await _settings.GetUserName(tenantId)),
-                ConvertToNullIfEmpty(await _settings.GetPassword(tenantId))
-                );
+                await _settings.GetContextType(tenant?.Id),
+                ConvertToNullIfEmpty(await _settings.GetDomain(tenant?.Id)),
+                ConvertToNullIfEmpty(await _settings.GetContainer(tenant?.Id)),
+                ConvertToNullIfEmpty(await _settings.GetUserName(tenant?.Id)),
+                ConvertToNullIfEmpty(await _settings.GetPassword(tenant?.Id))
+            );
         }
 
         protected virtual async Task CheckIsEnabled(TTenant tenant)
@@ -138,7 +146,7 @@ namespace Abp.Zero.Ldap.Authentication
             }
         }
 
-        private static string ConvertToNullIfEmpty(string str)
+        protected static string ConvertToNullIfEmpty(string str)
         {
             return str.IsNullOrWhiteSpace()
                 ? null
