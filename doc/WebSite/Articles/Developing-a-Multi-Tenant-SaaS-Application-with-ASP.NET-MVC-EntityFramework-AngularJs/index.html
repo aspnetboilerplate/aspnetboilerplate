@@ -37,7 +37,7 @@
 	<li><a href="#ArticleHistory">Article History</a></li>
 </ul>
 
-<p><img alt="Login page" src="login-page-v2.jpg" style="width: 100%" /></p>
+<p><img alt="Login page" src="login-page-v2.jpg"/></p>
 
 <p>See <a href="http://eventcloud.aspnetboilerplate.com/">LIVE DEMO</a>.</p>
 
@@ -874,7 +874,7 @@ public class EventAppService_Tests : EventCloudTestBase
 
 <p>Just send a <strong>POST</strong> request to <strong> http://localhost:6334/api/Account/Authenticate</strong> with <strong> Context-Type=&quot;application/json&quot;</strong> header as shown below:</p>
 
-<p><img alt="Token based auth" height="718" src="token-auth.png" width="713" /></p>
+<p><img alt="Token based auth" src="token-auth.png"/></p>
 
 <p>We sent a <strong>JSON request body</strong> includes <strong>tenancyName</strong>, <strong>userNameOrEmailAddress </strong>and <strong>password</strong>. <strong>tenancyName </strong>is not required for <strong>host</strong> users. As seen above, <strong>result</strong> property of returning JSON contains the token. We can save it and use for next requests.</p>
 
@@ -882,7 +882,7 @@ public class EventAppService_Tests : EventCloudTestBase
 
 <p>After authenticate and get the <strong>token</strong>, we can use it to call any <strong>authorized</strong> action. All <strong>application services </strong>are available to be used remotely. For example, we can use the <strong>EventAppService</strong> to get a <strong> list of events</strong>:</p>
 
-<p><img alt="Use application service via token" height="914" src="token-api-call.png" width="700" /></p>
+<p><img alt="Use application service via token" src="token-api-call.png"/></p>
 
 <p>Just made a <strong>POST</strong> request to <strong> http://localhost:6334/api/services/app/event/GetList</strong> with <strong> Content-Type=&quot;application/json&quot;</strong> and <strong>Authorization=&quot;Bearer <em> your-</em></strong><em><strong>auth-token</strong></em><strong>&quot;</strong>. Request body was just empty <strong>{}</strong>. Surely, request and response body will be different for different APIs.</p>
 
