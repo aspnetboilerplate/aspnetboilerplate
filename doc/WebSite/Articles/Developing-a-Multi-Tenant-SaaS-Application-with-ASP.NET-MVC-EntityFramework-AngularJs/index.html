@@ -1,5 +1,7 @@
-﻿<ul class="download">
-	<li>Get the source code from the <a href="https://github.com/aspnetboilerplate/eventcloud">Github repository.</a></li>
+﻿<i id="abp-title" data-title="Developing a Multi-Tenant SaaS Application with ASP.NET MVC, EntityFramework and AngularJs"></i>
+ 
+<ul class="download">
+	<li>Get the source code from the <a href="https://github.com/aspnetboilerplate/eventcloud/tree/master/mvc-angularjs/src">Github repository.</a></li>
 </ul>
 
 <h2 class="abp-invisible">Contents</h2>
@@ -37,9 +39,7 @@
 	<li><a href="#ArticleHistory">Article History</a></li>
 </ul>
 
-<p><img alt="Login page" src="login-page-v2.jpg" style="width: 100%" /></p>
-
-<p>See <a href="http://eventcloud.aspnetboilerplate.com/">LIVE DEMO</a>.</p>
+<p><img alt="Login page" src="login-page-v2.jpg"/></p>
 
 <h2 id="ArticleIntroduction">Introduction</h2>
 
@@ -53,42 +53,42 @@
 	<li><strong>Bootstrap</strong> as HTML/CSS framework.</li>
 </ul>
 
-<p>You can see <a href="http://eventcloud.aspnetboilerplate.com/">live demo</a> before reading the article.&nbsp;</p>
+<p>You can see <a href="http://eventcloud-mvc5x.aspnetboilerplate.com">live demo</a> before reading the article.&nbsp;</p>
 
 <h2 id="ArticleCreateTemplate">Creating Application From Template</h2>
 
 <p>ASP.NET Boilerplate provides templates to make a project startup easier. We create the <strong>startup template</strong> from <a href="https://aspnetboilerplate.com/Templates"> https://aspnetboilerplate.com/Templates</a>:</p>
 
-<p><img alt="Create template" height="969" src="create-template-4.png" width="1147" /></p>
+<p><img alt="Create template" src="create-template-4.png"/></p>
 
-<p>I selected ASP.NET MVC 5.x, Angularjs and Entity Frameowork including &quot;<strong>Authentication</strong>&quot;. It creates a ready and working solution for us including a <strong>login page</strong>, <strong> navigation</strong> and a bootstrap based <strong>layout</strong>. After download and open the solution with <strong>Visual Studio 2017+</strong>, we see a <strong>layered</strong> solution structure including a unit test project:</p>
+<p>I selected ASP.NET MVC 5.x, Angularjs and Entity Frameowork including &quot;<strong>Options</strong>&quot;. It creates a ready and working solution for us including a <strong>login page</strong>, <strong> navigation</strong> and a bootstrap based <strong>layout</strong>. After downloading and opening the solution with <strong>Visual Studio 2017+</strong>, we see a <strong>layered</strong> solution structure including a unit test project:</p>
 
-<p><img alt="Solution structure" height="167" src="solution-structure.png" width="215" /></p>
+<p><img alt="Solution structure"  src="solution-structure.png"/></p>
 
-<p>First, we <strong>select EventCloud.Web as startup project</strong>. Solution comes with <strong>Entity Framework Code-First Migrations</strong>. So, (after restoring nuget packages) we open the <strong>Package Manager Console</strong> (PMC) and run <strong>Update-Database</strong> command to create the database:</p>
+<p>First, we select <strong>EventCloud.Web</strong> as startup project. Solution comes with <strong>Entity Framework Code-First Migrations</strong>. So, (after restoring nuget packages) we open the <strong>Package Manager Console</strong> (PMC) and run <strong>Update-Database</strong> command to create the database:</p>
 
-<p><img alt="Update database command" height="203" src="pmc-update-database.png" width="743" /></p>
+<p><img alt="Update database command" src="pmc-update-database.png"/></p>
 
 <p>Package Manager Console's <strong>Default project</strong> should be <strong> EventCloud.EntityFramework</strong> (since it contains the migrations). This command creates <strong>EventCloud </strong>database<strong> </strong>in local SQL Server (you can change <strong>connection string</strong> from <strong>web.config</strong> file).</p>
 
 <p>Now, we can run the application. We see the pre-built <strong>login</strong> page. 
 We can enter <strong>default </strong>as tenancy name, <strong>admin </strong>as user and <strong>123qwe </strong>as password to login:</p>
 
-<p><img alt="Initial Login PAge" height="394" src="initial-login-page.png" width="388" /></p>
+<p><img alt="Initial Login Page" src="initial-login-page.png" /></p>
 
-<p>After login, we see the basic bootstrap based layout consists of two pages: <strong>Home</strong> and <strong>About</strong>:</p>
+<p>After login, we see the following pages: <strong>Events</strong> and <strong>About</strong> pages</p>
 
-<p><img alt="Initial layout" height="449" src="initial-layout.png" width="956" /></p>
+<p><img alt="Initial layout" src="initial-layout.png"/></p>
 
-<p>This is a localized UI with a dynamic menu. Angular layout, routing and basic infrastructure are properly working. I got this project as a base for the event cloud project.</p>
+<p>This is a localized UI with a dynamic menu. Angular layout, routing and basic infrastructure are working properly. I take this project as a base for the event cloud project.</p>
 
 <h2 id="ArticleEventCloudProject">Event Cloud Project</h2>
 
-<p>In this article, I will show key parts of the project and explain it. So, please download the sample project, open in Visual Studio 2017+ and run migrations just like above before reading rest of the article (Be sure that there is no database named EventCloud before running the migrations). I will follow some <strong>DDD</strong> (Domain Driven Design) techniques to create <strong>domain (business) layer </strong>and <strong>application layer</strong>.</p>
+<p>In this article, I will show the key parts of the project and explain it. So, please download the sample project, open in Visual Studio 2017+ and run migrations just like above before reading rest of the article (Be sure that there is no database named <strong>EventCloud</strong> before running the migrations). I will follow some <strong>DDD</strong> (Domain Driven Design) techniques to create <strong>domain (business) layer </strong>and <strong>application layer</strong>.</p>
 
 <p>Event Cloud is a free SaaS (multi-tenant) application. We can create a tenant which has it&#39;s own events, users, roles... There are some simple business rules applied while creating, canceling and registering to an event.</p>
 
-<p>So, let&#39;s start to investigate the source code.</p>
+<p>So, let&#39;s start to review the source code.</p>
 
 <h3 id="ArticleEntities">Entities</h3>
 
@@ -218,13 +218,14 @@ public class Event : FullAuditedEntity&lt;Guid&gt;, IMustHaveTenant
     }
 }</pre>
 
-<p>Event entity has not just get/set properties. Actually, it has not <strong>public setters</strong>, setters are protected. It has some <strong>domain logic</strong>. All properties must be changed by the Event entity itself to ensure domain logic is executed.</p>
+<p>Event entity has not just get/set properties. Actually, it has not <strong>public setters</strong>, setters are protected. It has some <strong>domain logic</strong>. All properties must be changed by the Event entity itself to ensure domain logic is being executed.</p>
 
 <p>Event entity&#39;s <strong>constructor</strong> is also <strong>protected</strong>. So, the only way to create an Event is the <strong>Event.Create</strong> method (They can be private normally, but private setters don&#39;t work well with Entity Framework since Entity Framework can not set privates when retrieving an entity from database).</p>
 
 <p>Event implements <strong>IMustHaveTenant</strong> interface. This is an interface of ASP.NET Boilerplate (ABP) framework and ensures that this entity is per tenant. This is needed for <strong>multi-tenancy</strong>. Thus, different tenants will have different events and can not see each other&#39;s events. ABP automatically filters entities of current tenant.</p>
 
-<p>Event class inherits from <strong>FullAuditedEntity</strong> which contains creation, modification and deletion audit columns. FullAuditedEntity also implements <strong>ISoftDelete</strong>, so events can not be deleted from database. They are marked as deleted when you delete it. ABP automatically filters (hides) deleted entities when you query database.</p>
+<p>Event class inherits from <strong>FullAuditedEntity</strong> which contains creation, modification and deletion audit columns. FullAuditedEntity also implements <strong>ISoftDelete</strong>, so events can not be deleted from database. They are marked as deleted when you delete it 
+(soft delete). ABP automatically filters (hides) deleted entities when you query database.</p>
 
 <p>In DDD, entities have domain (business) logic. We have some simple business rules those can be understood easily when you check the entity.</p>
 
@@ -605,7 +606,7 @@ public class EventAppService : EventCloudAppServiceBase, IEventAppService
 
 <p>When we login to the application, we first see a list of events:</p>
 
-<p><img alt="Event list page" height="396" src="event-list-page.png" width="959" /></p>
+<p><img alt="Event list page" src="event-list-page.png"/></p>
 
 <p>We directly use <strong>EventAppService</strong> to get list of events. Here, the Angular controller to create this page:</p>
 
@@ -651,15 +652,15 @@ public class EventAppService : EventCloudAppServiceBase, IEventAppService
     ]);
 })();</pre>
 
-<p>We inject <strong>EventAppService</strong> as &#39;<strong>abp.services.app.event</strong>&#39; into Angular controller. We used <a href="http://www.aspnetboilerplate.com/Pages/Documents/Dynamic-Web-API"> dynamic web api layer</a> feature of ABP. It creates needed Web API controller and Angularjs service <strong>automatically</strong> and <strong>dynamically</strong>. So, we can use application service methods like calling regular javascript functions. So, to call <strong>EventAppService.GetList</strong> C# method, we simple call <strong>eventService.getList</strong> javascript function which returns a <strong>promise</strong> ($q for angular).</p>
+<p>We inject <strong>EventAppService</strong> as &#39;<strong>abp.services.app.event</strong>&#39; into Angular controller. We used <a href="http://www.aspnetboilerplate.com/Pages/Documents/Dynamic-Web-API"> dynamic web api layer</a> feature of ABP. It creates needed Web API controller and Angularjs service <strong>automatically</strong> and <strong>dynamically</strong>. So, we can use application service methods like calling regular javascript functions. So, to call <strong>EventAppService.GetList</strong> C# method, we simply call <strong>eventService.getList</strong> javascript function which returns a <strong>promise</strong> ($q for angular).</p>
 
-<p>We also open a &quot;new event&quot; modal (dialog) when user clicks to &quot;+ New event&quot; button (which triggers vm.openNewEventDialog function). I will not go details of Angular views, since they are simpler and you can check it in source code.</p>
+<p>We also open a &quot;new event&quot; modal (dialog) when user clicks to &quot;+ New event&quot; button (which triggers vm.openNewEventDialog function). I will not go in details of Angular views, since they are simple, you can check it out in the source code.</p>
 
 <h4 id="ArticleEventDetail">Event Detail</h4>
 
-<p>When we click &quot;Details&quot; button for an event, we go to event details with a URL like &quot;http://eventcloud.aspnetboilerplate.com/<strong>#/events/e9499e3e-35c0-492c-98ce-7e410461103f</strong>&quot;. GUID is id of the event.</p>
+<p>When we click &quot;Details&quot; button for an event, we go to event details with a URL like &quot;http://eventcloud-mvc5x.aspnetboilerplate.com/<strong>#/events/b680ad0a-d751-4d85-a7ad-34df5c8a86c2</strong>&quot;. GUID is id of the event.</p>
 
-<p><img alt="Event details" height="473" src="event-detail-page.png" width="742" /></p>
+<p><img alt="Event details" src="event-detail-page.png"/></p>
 
 <p>Here, we see event details with registered users. We can register to the event or cancel registration. This view&#39;s controller is defined in detail.js as shown below:</p>
 
@@ -796,7 +797,7 @@ app.config([
 
 <h2 id="ArticleUnitTests">Unit and Integration Tests</h2>
 
-<p>ASP.NET Boilerplate provides tools to make unit and integration tests easier. You can find all test code from <a href="https://github.com/aspnetboilerplate/eventcloud">source code</a> of the project. Here, I will briefly explain basic tests. Solution includes <strong>EventAppService_Tests</strong> class which tests the EventAppService. See 2 tests from this class:</p>
+<p>ASP.NET Boilerplate provides tools to make unit and integration tests easier. You can find all test code from <a href="https://github.com/aspnetboilerplate/eventcloud/tree/master/mvc-angularjs/src/Tests/EventCloud.Tests">source code</a> of the project. Here, I will briefly explain basic tests. Solution includes <strong>EventAppService_Tests</strong> class which tests the EventAppService. See 2 tests from this class:</p>
 
 <pre lang="js">
 public class EventAppService_Tests : EventCloudTestBase
@@ -864,15 +865,16 @@ public class EventAppService_Tests : EventCloudTestBase
 
 <h2 id="ArticleTokenAuth">Token Based Authentication</h2>
 
-<p>Startup template uses cookie based authentication for browsers. However, if you want to consume Web APIs or application services (those are exposed via <a href="http://www.aspnetboilerplate.com/Pages/Documents/Dynamic-Web-API">dynamic web api</a>) from a mobile application, you probably want a token based authentication mechanism. Startup template includes bearer token authentication infrastructure. <strong>AccountController</strong> in <strong>.WebApi</strong> project contains <strong>Authenticate</strong> action to get the token. Then we can use the token for next requests.</p>
+<p>Startup template uses cookie based authentication for browsers. However, if you want to consume Web APIs or application services (those are exposed via <a href="http://www.aspnetboilerplate.com/Pages/Documents/Dynamic-Web-API">dynamic web api</a>) from a mobile application, you probably want a token based authentication mechanism. Startup template includes bearer token authentication infrastructure. <strong>AccountController</strong> in <strong>*.WebApi</strong> project contains <strong>Authenticate</strong> action to get the token. Then we can use the token for next requests.</p>
 
-<p>Here, <strong>Postman</strong> (chrome extension) will be used to demonstrate requests and responses.</p>
+<p>We will use<strong>
+<a href="https://chrome.google.com/webstore/detail/postman/fhbjgbiflinjbdggehcddcbncdddomop">Postman</a></strong> (chrome extension) to demonstrate requests and responses.</p>
 
 <h3 id="ArticleTokenAuthenticate">Authentication</h3>
 
 <p>Just send a <strong>POST</strong> request to <strong> http://localhost:6334/api/Account/Authenticate</strong> with <strong> Context-Type=&quot;application/json&quot;</strong> header as shown below:</p>
 
-<p><img alt="Token based auth" height="718" src="token-auth.png" width="713" /></p>
+<p><img alt="Token based auth" src="token-auth.png"/></p>
 
 <p>We sent a <strong>JSON request body</strong> includes <strong>tenancyName</strong>, <strong>userNameOrEmailAddress </strong>and <strong>password</strong>. <strong>tenancyName </strong>is not required for <strong>host</strong> users. As seen above, <strong>result</strong> property of returning JSON contains the token. We can save it and use for next requests.</p>
 
@@ -880,7 +882,7 @@ public class EventAppService_Tests : EventCloudTestBase
 
 <p>After authenticate and get the <strong>token</strong>, we can use it to call any <strong>authorized</strong> action. All <strong>application services </strong>are available to be used remotely. For example, we can use the <strong>EventAppService</strong> to get a <strong> list of events</strong>:</p>
 
-<p><img alt="Use application service via token" height="914" src="token-api-call.png" width="700" /></p>
+<p><img alt="Use application service via token" src="token-api-call.png"/></p>
 
 <p>Just made a <strong>POST</strong> request to <strong> http://localhost:6334/api/services/app/event/GetList</strong> with <strong> Content-Type=&quot;application/json&quot;</strong> and <strong>Authorization=&quot;Bearer <em> your-</em></strong><em><strong>auth-token</strong></em><strong>&quot;</strong>. Request body was just empty <strong>{}</strong>. Surely, request and response body will be different for different APIs.</p>
 
@@ -888,7 +890,7 @@ public class EventAppService_Tests : EventCloudTestBase
 
 <h2 id="ArticleSourceCode">Source Code</h2>
 
-<p>You can get the latest source code here <a href="https://github.com/aspnetboilerplate/eventcloud"> https://github.com/aspnetboilerplate/eventcloud</a></p>
+<p>You can get the latest source code from <a href="https://github.com/aspnetboilerplate/eventcloud/tree/master/mvc-angularjs/src"> https://github.com/aspnetboilerplate/eventcloud/tree/master/mvc-angularjs/src</a></p>
 
 <h2 id="ArticleSummary" class="abp-invisible">Summary</h2>
 
