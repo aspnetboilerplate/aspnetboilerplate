@@ -1,8 +1,6 @@
 ### Introduction
 
-The easiest way of starting a new project using ABP and Module Zero is
-to create a template on the [templates page](/Templates). Remember to check
-"**Include Module Zero**".
+The easiest way of starting a new project using ABP with **ASP.NET MVC 5.x (and optionally Angularjs frontend)** is to create a template on the [download page](/Templates).
 
 After creating and downloading your project:
 

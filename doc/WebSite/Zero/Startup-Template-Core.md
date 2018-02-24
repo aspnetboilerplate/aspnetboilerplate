@@ -1,7 +1,6 @@
 ### Introduction
 
-The easiest way of starting a new project using ABP with **ASP.NET Core MVC** is to create a template on the [templates page](/Templates). 
-After creating and downloading your project, follow steps below to run your application.
+The easiest way of starting a new project using ABP with **ASP.NET Core MVC** is to create a template on the [download page](/Templates). After creating and downloading your project, follow the steps below to run your application.
 
 -   Open your solution in **Visual Studio 2017 v15.3.5+** and **build**
     the solution.
