@@ -112,12 +112,12 @@ Startup templates provides a basic layout and some common features for an applic
 
 ##### ASP.NET Core
 
-* [Single Page Application with ASP.NET Core & Angular](Startup-Template-Angular.md)
-* [Multi-Page Application with ASP.NET Core & jQuery](Startup-Template-Core.md)
+* [Single Page Application with ASP.NET Core & Angular](Zero/Startup-Template-Angular.md)
+* [Multi-Page Application with ASP.NET Core & jQuery](Zero/Startup-Template-Core.md)
 
 ##### ASP.NET MVC 5.x
 
-* [ASP.NET MVC 5.x & Angularjs 1.x / ASP.NET MVC 5.x & jQuery](Startup-Template.md)
+* [ASP.NET MVC 5.x & Angularjs 1.x / ASP.NET MVC 5.x & jQuery](Zero/Startup-Template.md)
 
 See the [download page](/Templates) for other combinations.
 
