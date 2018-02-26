@@ -18,17 +18,20 @@ namespace Abp.EntityFrameworkCore.Tests.Domain
 
         public int? TenantId { get; set; }
 
+        public Author Author { get; set; }
+
+
         public Post()
         {
             Id = Guid.NewGuid();
         }
 
-        public Post(Blog blog, string title, string body)
-            : this()
+        public Post(Blog blog, string title, string body, string author) : this()
         {
             Blog = blog;
             Title = title;
             Body = body;
+            Author = new Author { Name = author };
         }
     }
 }

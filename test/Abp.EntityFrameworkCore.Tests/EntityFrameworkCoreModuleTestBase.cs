@@ -25,10 +25,10 @@ namespace Abp.EntityFrameworkCore.Tests
                     context.Blogs.Add(blog1);
                     context.SaveChanges();
 
-                    var post1 = new Post { Blog = blog1, Title = "test-post-1-title", Body = "test-post-1-body" };
-                    var post2 = new Post { Blog = blog1, Title = "test-post-2-title", Body = "test-post-2-body" };
-                    var post3 = new Post { Blog = blog1, Title = "test-post-3-title", Body = "test-post-3-body-deleted", IsDeleted = true };
-                    var post4 = new Post { Blog = blog1, Title = "test-post-4-title", Body = "test-post-4-body", TenantId = 42 };
+                    var post1 = new Post { Blog = blog1, Title = "test-post-1-title", Body = "test-post-1-body", Author = new Author { Name = "author-1" } };
+                    var post2 = new Post { Blog = blog1, Title = "test-post-2-title", Body = "test-post-2-body", Author = new Author { Name = "author-2" } };
+                    var post3 = new Post { Blog = blog1, Title = "test-post-3-title", Body = "test-post-3-body-deleted", IsDeleted = true, Author = new Author { Name = "author-3" } };
+                    var post4 = new Post { Blog = blog1, Title = "test-post-4-title", Body = "test-post-4-body", TenantId = 42, Author = new Author { Name = "author-4" } };
 
                     context.Posts.AddRange(post1, post2, post3, post4);
                 });
@@ -37,8 +37,8 @@ namespace Abp.EntityFrameworkCore.Tests
             {
                 context.Tickets.AddRange(
                     new Ticket { EmailAddress = "john@aspnetboilerplate.com", Message = "an active message", TenantId = 1 },
-                    new Ticket { EmailAddress = "david@aspnetboilerplate.com", Message = "an inactive message", IsActive = false, TenantId = 1},
-                    new Ticket { EmailAddress = "smith@aspnetboilerplate.com", Message = "an active message of tenant 42", TenantId = 42}
+                    new Ticket { EmailAddress = "david@aspnetboilerplate.com", Message = "an inactive message", IsActive = false, TenantId = 1 },
+                    new Ticket { EmailAddress = "smith@aspnetboilerplate.com", Message = "an active message of tenant 42", TenantId = 42 }
                 );
 
                 context.SaveChanges();

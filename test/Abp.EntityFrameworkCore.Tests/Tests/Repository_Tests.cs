@@ -104,19 +104,35 @@ namespace Abp.EntityFrameworkCore.Tests.Tests
         }
 
         [Fact]
-        public async Task Should_Insert_New_Entity_With_Guid_Id()
+        public async Task Should_Insert_New_Entity_With_Guid_Id_And_Update_Author()
         {
+            Guid id;
             using (var uow = _uowManager.Begin())
             {
                 var blog1 = await _blogRepository.GetAsync(1);
-                var post = new Post(blog1, "a test title", "a test body");
+                var post = new Post(blog1, "a test title", "a test body", "author");
                 await _postRepository.InsertAsync(post);
+                await uow.CompleteAsync();
+                post.IsTransient().ShouldBeFalse();
+                id = post.Id;
+
+            }
+
+            using (var uow = _uowManager.Begin())
+            {
+                var blog1 = await _blogRepository.GetAsync(1);
+                var post = new Post(blog1, "a test title", "a test body", "author");
+                post.Id = id;
+                post.Author.Name = "author-new";
+                await _postRepository.UpdateAsync(post);
                 await uow.CompleteAsync();
             }
 
             UsingDbContext(context =>
             {
-                context.Posts.FirstOrDefault(p => p.Title == "a test title").ShouldNotBeNull();
+                var post = context.Posts.FirstOrDefault(p => p.Id == id);
+                post.Title.ShouldBe("a test title");
+                post.Author.Name.ShouldBe("author-new");
             });
         }
     }

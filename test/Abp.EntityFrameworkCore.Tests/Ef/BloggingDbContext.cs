@@ -14,5 +14,11 @@ namespace Abp.EntityFrameworkCore.Tests.Ef
         {
             
         }
+
+        protected override void OnModelCreating(ModelBuilder modelBuilder)
+        {
+            modelBuilder.Entity<Post>().OwnsOne(a => a.Author);
+            base.OnModelCreating(modelBuilder);
+        }
     }
 }
