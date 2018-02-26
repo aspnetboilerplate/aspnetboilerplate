@@ -8,8 +8,11 @@ derived from the **AbpUser** class as shown below:
         //add your own user properties here
     }
 
-This class is created when you
-[install](/Pages/Documents/Zero/Installation) Module Zero. Users are
+This class will be created when you download an ABP template with the option in the below image is selected.
+
+<img src="../images/include_module_zero_checkbox.png" alt="Login Page" class="img-thumbnail" />
+
+Users are
 stored in the **AbpUsers** table in the database. You can add custom
 properties to the User class (and create database migrations for the
 changes).
@@ -68,27 +71,27 @@ the UserManager:
     public class MyTestAppService : ApplicationService
     {
         private readonly UserManager _userManager;
-
+    
         public MyTestAppService(UserManager userManager)
         {
             _userManager = userManager;
         }
-
+    
         public void TestMethod_1()
         {
             //Find a user by email for current tenant
             var user = _userManager.FindByEmail("sampleuser@aspnetboilerplate.com");
         }
-
+    
         public void TestMethod_2()
         {
             //Switch to tenant 42
             CurrentUnitOfWork.SetFilterParameter(AbpDataFilters.MayHaveTenant, AbpDataFilters.Parameters.TenantId, 42);
-
+    
             //Find a user by email for tenant 42
             var user = _userManager.FindByEmail("sampleuser@aspnetboilerplate.com");
         }
-
+    
         public void TestMethod_3()
         {
             //Disabling MayHaveTenant filter, so we can reach all users
@@ -96,7 +99,7 @@ the UserManager:
             {
                 //Now, we can search for a user name in all tenants
                 var users = _userManager.Users.Where(u => u.UserName == "sampleuser").ToList();
-
+    
                 //Or we can add TenantId filter if we want to search for a specific tenant
                 var user = _userManager.Users.FirstOrDefault(u => u.TenantId == 42 && u.UserName == "sampleuser");
             }
@@ -149,7 +152,7 @@ the implementation of IExternalAuthenticationSource. Let's see an example:
         {
             get { return "MyCustomSource"; }
         }
-
+    
         public override Task<bool> TryAuthenticateAsync(string userNameOrEmailAddress, string plainPassword, Tenant tenant)
         {
             //TODO: authenticate user and return true or false
@@ -205,7 +208,7 @@ Lastly, we must set a module dependency to **AbpZeroLdapModule** and
         {
             Configuration.Modules.ZeroLdap().Enable(typeof (MyLdapAuthenticationSource));    
         }
-
+    
         ...
     }
 
@@ -247,27 +250,27 @@ ILdapSettings class as shown below:
         {
             return true;
         }
-
+    
         public async Task<ContextType> GetContextType(int? tenantId)
         {
             return ContextType.Domain;
         }
-
+    
         public async Task<string> GetContainer(int? tenantId)
         {
             return null;
         }
-
+    
         public async Task<string> GetDomain(int? tenantId)
         {
             return null;
         }
-
+    
         public async Task<string> GetUserName(int? tenantId)
         {
             return null;
         }
-
+    
         public async Task<string> GetPassword(int? tenantId)
         {
             return null;
@@ -284,7 +287,7 @@ Then register it to IOC in PreInitialize method of your module:
             IocManager.Register<ILdapSettings, MyLdapSettings>(); //change default setting source
             Configuration.Modules.ZeroLdap().Enable(typeof (MyLdapAuthenticationSource));
         }
-
+    
         ...
     }
 
