@@ -40,7 +40,7 @@ Just send a **POST** request to
 **http://localhost:6634/api/Account/Authenticate** with the
 **Context-Type="application/json"** header as shown below:
 
-<img src="../images/token-authenticate.png" alt="Request for token" class="img-thumbnail" />
+<img src="../images/startup-mvc5-postman-authanticate.png" alt="Request for token" class="img-thumbnail" />
 
 We sent a **JSON request body** which includes a **userNameOrEmailAddress** and
 **password**. **tenancyName** should also be sent for **tenant** users.
@@ -54,7 +54,7 @@ After we authenticate and get the **token**, we can use it to call
 used remotely. For example, we can use the **user service** to get a
 **list of roles**:
 
-<img src="../images/token-request.png" alt="Authorization via token" class="img-thumbnail" />
+<img src="../images/startup-mvc5-postman-getroles.png" alt="Authorization via token" class="img-thumbnail" />
 
 We just made a **POST** request to
 **http://localhost:6634/api/services/app/user/GetRoles** with
