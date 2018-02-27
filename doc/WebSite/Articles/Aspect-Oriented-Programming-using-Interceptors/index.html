@@ -29,17 +29,19 @@
 
 <h2 id="ArticleIntroduction">Introduction</h2>
 
-<p>In this article, I&#39;ll show you how to create interceptors to implement AOP techniques. I&#39;ll use <a href="https://aspnetboilerplate.com/" target="_blank"> <strong>ASP.NET Boilerplate</strong></a> (ABP) as base <strong>application framework</strong> and <strong> <a href="http://www.castleproject.org/" target="_blank">Castle Windsor</a></strong> for the interception library. Most of the techniques described here are also valid for using Castle Windsor independent from ABP framework.</p>
+<p>In this article, I&#39;ll show you how to create interceptors to implement AOP techniques. I&#39;ll use <a href="https://aspnetboilerplate.com/" target="_blank"> <strong>ASP.NET Boilerplate</strong></a> (ABP) as the base <strong>application framework</strong> and <strong> <a href="http://www.castleproject.org/" target="_blank">Castle Windsor</a></strong> for the interception library. 
+Apart from ABP framework, most of the techniques explained here are also 
+eligable for using Castle Windsor.</p>
 
 <h3 id="ArticleWhatIsAop">What is Aspect Oriented Programming (AOP) and Method Interception?</h3>
 
-<p>Wikipedia: &quot;<em>In computing, aspect-oriented programming (AOP) is a programming paradigm that aims to <strong>increase modularity</strong> by allowing the separation of <strong>cross-cutting concerns</strong>. It does so by adding additional behavior to existing code (an advice) <strong>without modifying</strong> the code itself, instead separately specifying which code is modified via a &quot;pointcut&quot; specification</em>&quot;.</p>
+<p>From Wikipedia: &quot;<em>In computing, aspect-oriented programming (AOP) is a programming paradigm that aims to <strong>increase modularity</strong> by allowing the separation of <strong>cross-cutting concerns</strong>. It does so by adding additional behavior to existing code (an advice) <strong>without modifying</strong> the code itself, instead separately specifying which code is modified via a &quot;pointcut&quot; specification</em>&quot;.</p>
 
 <p>In an application, we may have some repeating/similar code for logging, authorization, validation, exception handling and so on...</p>
 
 <h4 id="ArticleManualWay">Manual Way (Without AOP)</h4>
 
-<p>An example code does all manually:</p>
+<p>An example code that implements it all manually:</p>
 
 <pre lang="cs">
 public class TaskAppService : ApplicationService
@@ -84,7 +86,7 @@ public class TaskAppService : ApplicationService
     }
 }</pre>
 
-<p>In <code>CreateTask</code> method, the <strong>essential code</strong> is <code>_taskRepository.Insert(...)</code> method call. All other code is repeating code and will be the same/similar for our other methods of <code>TaskAppService</code>. In a real application, we will have many application service need the same functionality. Also, we may have other similar code for database connection open and close, audit logging and so on...</p>
+<p>In <code>CreateTask</code> method, the <strong>essential code</strong> is <code>_taskRepository.Insert(...)</code> method call. All other code is repeating code and will be the same/similar for our other methods of <code>TaskAppService</code>. In a real application, we will have many application services need the same functionality. Also, we may have other similar code for database connection open and close, audit logging and so on...</p>
 
 <h4 id="ArticleAopWay">AOP Way</h4>
 
@@ -109,11 +111,16 @@ public class TaskAppService : ApplicationService
 
 <p>Now, it exactly does what is unique to <code>CreateTask</code> method. <strong>Exception handling</strong>, <strong>validation</strong> and <strong>logging</strong> code are completely removed since they are similar for other methods and can be centralized conventionally. <strong>Authorization</strong> code is replaced with <code> AbpAuthorize</code> attribute which is simpler to write and read.</p>
 
-<p>Fortunately, all these and much more are <strong>automatically done</strong> by ABP framework. But, you may want to create some <strong>custom interception logic</strong> that is specific to your own application requirements. That&#39;s why I created this article.</p>
+<p>Fortunately, all these and much more are <strong>automatically done</strong> by ABP framework. But, you may want to create some <strong>custom interception logic</strong> 
+that is specific to your own application requirements.</p>
 
 <h3 id="ArticleAboutSample">About the Sample Project</h3>
 
-<p>I created a sample project from ABP <a href="https://aspnetboilerplate.com/Templates" target="_blank">startup templates</a> (including module zero) and added to a <a href="https://github.com/aspnetboilerplate/aspnetboilerplate-samples/tree/master/InterceptionDemo" target="_blank"> Github repository</a>.</p>
+<p>I created a sample project from
+<a href="https://aspnetboilerplate.com/Templates" target="_blank">ABP Download 
+page</a> (including login, register, user, role and tenant management pages) and 
+added to the <a href="https://github.com/aspnetboilerplate/aspnetboilerplate-samples/tree/master/InterceptionDemo" target="_blank"> GitHub 
+repository</a>.</p>
 
 <h2 id="ArticleCreateInterceptor">Creating Interceptors</h2>
 
