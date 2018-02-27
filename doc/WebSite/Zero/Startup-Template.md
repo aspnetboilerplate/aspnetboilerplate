@@ -101,4 +101,4 @@ since they test your code with all the ASP.NET Boilerplate infrastructure
 ### Source Code
 
 This template is developed as an open source project and is available for free at Github:
-<https://github.com/aspnetboilerplate/module-zero-core-template>
+<https://github.com/aspnetboilerplate/module-zero-template>
