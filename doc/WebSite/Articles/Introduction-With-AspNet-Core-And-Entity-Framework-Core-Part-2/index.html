@@ -571,9 +571,34 @@ namespace Acme.SimpleTaskApp.Web.Models.People
 
 <ul>
 	<li>Prepares <strong>validatation</strong> for the form (using <a href="https://jqueryvalidation.org/" target="_blank">jquery validation</a> plugin) and validates it on Save button&#39;s click.</li>
-	<li>Uses <strong>serializeFormToObject</strong> jquery plugin (defined in jquery-extensions.js in the solution) to convert forum data to a JSON object (I included jquery-extensions.js to the _Layout.cshtml as the last script file).</li>
+	<li>Uses <strong>serializeFormToObject</strong> jquery plugin (defined in jquery-extensions.js in the solution) to convert form data to a JSON object (I included jquery-extensions.js to the _Layout.cshtml as the last script file).</li>
 	<li>Uses <strong>abp.services.task.create</strong> method to call TaskAppService.Create method. This is one of the important features of ABP. We can use application services from javascript code just like calling a javascript method in our code. See <a href="http://www.aspnetboilerplate.com/Pages/Documents/AspNet-Core#application-services-as-controllers"> details</a>.</li>
 </ul>
+
+<p>
+Here is the content of jquery-extensions.js:
+</p>
+<pre lang="js">
+(function ($) {
+    //serializeFormToObject plugin for jQuery
+    $.fn.serializeFormToObject = function () {
+        //serialize to array
+        var data = $(this).serializeArray();
+
+        //add also disabled items
+        $(&#x27;:disabled[name]&#x27;, this)
+            .each(function () {
+                data.push({ name: this.name, value: $(this).val() });
+            });
+
+        //map to object
+        var obj = {};
+        data.map(function (x) { obj[x.name] = x.value; });
+
+        return obj;
+    };
+})(jQuery);
+</pre>
 
 <p>Finally, I added an &quot;Add Task&quot; button to the <em>task list</em> page in order to navigate to the <em>task creation page</em>:</p>
 
