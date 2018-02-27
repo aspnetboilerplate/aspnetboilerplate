@@ -37,7 +37,7 @@ requests and responses.
 #### Authentication
 
 Just send a **POST** request to
-**http://localhost:6334/api/Account/Authenticate** with the
+**http://localhost:6634/api/Account/Authenticate** with the
 **Context-Type="application/json"** header as shown below:
 
 <img src="../images/token-authenticate.png" alt="Request for token" class="img-thumbnail" />
@@ -51,13 +51,13 @@ We can save it and use it for the next requests.
 
 After we authenticate and get the **token**, we can use it to call
 **authorized** actions. All **application services** can be
-used remotely. For example, we can use the **tenant service** to get a
-**list of tenants**:
+used remotely. For example, we can use the **user service** to get a
+**list of roles**:
 
 <img src="../images/token-request.png" alt="Authorization via token" class="img-thumbnail" />
 
 We just made a **POST** request to
-**http://localhost:6334/api/services/app/tenant/GetTenants** with
+**http://localhost:6634/api/services/app/user/GetRoles** with
 **Content-Type="application/json"** and **Authorization="Bearer
 *your-*** ***auth-token*** **"** headers. The request body was empty **{}**.
 For the most part, request and response bodies will be different for each API.
