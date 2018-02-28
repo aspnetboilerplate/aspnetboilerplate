@@ -81,7 +81,7 @@ actual dashboard.
 #### Deployment of Angular Application
 
 We used the **angular-cli** tooling to build an Angular solution. You can use the
-**ng build** command to publish your project. It publishes to the **dist**
+`ng build -prod` command to publish your project. It publishes to the **dist**
 folder by default. You can then host this folder on IIS or any web
 server you like.
 
