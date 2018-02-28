@@ -173,8 +173,6 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Abp.ZeroCore.Tests", "test\
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Abp.Castle.Log4Net.Tests", "test\Abp.Castle.Log4Net.Tests\Abp.Castle.Log4Net.Tests.csproj", "{F6F5F70B-2217-403F-AB87-6DFA9AD6692F}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Abp.QuartzCore", "src\Abp.QuartzCore\Abp.QuartzCore.csproj", "{C83BF865-0EC4-4F9D-962D-922B6DD67A2D}"
-EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Abp.ZeroCore.EntityFramework", "src\Abp.ZeroCore.EntityFramework\Abp.ZeroCore.EntityFramework.csproj", "{AABAB6E5-B9E5-425B-8B2D-CD7050426487}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Abp.AspNetCore.SignalR", "src\Abp.AspNetCore.SignalR\Abp.AspNetCore.SignalR.csproj", "{4530442B-8E27-4285-A491-7FAAFAC3D4F2}"
