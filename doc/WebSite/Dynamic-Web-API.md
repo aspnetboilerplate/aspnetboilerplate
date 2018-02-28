@@ -41,7 +41,7 @@ The address of the api controller will look like
 
 We may have many application services in an application and building api
 controllers one by one may be a tedious and forgettable work.
-DynamicApiControllerBuilper provides a method to build web api
+DynamicApiControllerBuilder provides a method to build web api
 controllers for all application services in one call. Example:
 
     Configuration.Modules.AbpWebApi().DynamicApiControllerBuilder
