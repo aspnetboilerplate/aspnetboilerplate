@@ -110,7 +110,8 @@ above, the result property of the returning JSON will contain the token and expi
 time (this is 24 hours by default and can be configured). We can save
 it and use it for the next requests.
 
-**About Multi-Tenancy  
+##### About Multi-Tenancy  
+
 The **API will work as host users by default**. You can send the **Abp.TenantId**
 header value to work with a specified tenant. It's an integer value and by default is
 1 for the default tenant.
@@ -146,7 +147,8 @@ in the config file is the database you want. After getting the **host**
 migrations if they don't already exist. It then gets the connection strings of
 the tenant databases and runs the migrations for those databases. It skips a
 tenant if it does not have a dedicated database or if the database has already
-been migrated by another tenant (for databases shared between multiple
+been migrated by another tenant (for databases shared between 
+ple
 tenants).
 
 You can use this tool on the development or production environment to
