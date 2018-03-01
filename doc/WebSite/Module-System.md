@@ -10,7 +10,7 @@ The module system is currently focused on the server-side rather than client-sid
 
 ### Module Definition
 
-A module is defined with a class that is derived from **AbpModule**. Say
+A module is defined with a class that is derived from **AbpModule** that is in the [ABP package](https://www.nuget.org/packages/Abp). Say
 that we're developing a Blog module that can be used in different
 applications. The simplest module definition can be as shown below:
 
