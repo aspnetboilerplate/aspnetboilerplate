@@ -531,7 +531,8 @@ We can then register it on the PreInitialize method of our module:
                 typeof(AbpZeroTemplateLocalizationConfigurer).GetAssembly(),
                 "MyCompanyName.MyProjectName.Localization.AbpWebExtensions"
             )
-        ));
+        )
+    );
 
 We could use XmlEmbeddedFileLocalizationDictionaryProvider if we want to
 create embedded resource XML files (see the Localization sources section).
