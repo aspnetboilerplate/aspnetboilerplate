@@ -147,9 +147,7 @@ in the config file is the database you want. After getting the **host**
 migrations if they don't already exist. It then gets the connection strings of
 the tenant databases and runs the migrations for those databases. It skips a
 tenant if it does not have a dedicated database or if the database has already
-been migrated by another tenant (for databases shared between 
-ple
-tenants).
+been migrated by another tenant (for databases shared between multiple tenants).
 
 You can use this tool on the development or production environment to
 migrate the databases on deployment instead of using EntityFramework's own
