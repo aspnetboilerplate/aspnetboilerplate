@@ -74,7 +74,7 @@ namespace Abp.Authorization.Users
         /// <summary>
         /// Maximum length of the <see cref="SecurityStamp"/> property.
         /// </summary>
-        public const int MaxSecurityStampLength = 32;
+        public const int MaxSecurityStampLength = 128;
 
         /// <summary>
         /// Authorization source name.
