@@ -275,13 +275,13 @@ language. Example usage:
         {
             options.UseAbpRequestLocalization = false; //disable automatic adding of request localization
         });
-
+    
         //...authentication middleware(s)
-
+    
         app.UseAbpRequestLocalization(); //manually add request localization
-
+    
         //...other middlewares
-
+    
         app.UseMvc(routes =>
         {
             //...
@@ -424,9 +424,9 @@ sets the source name:
 
     public abstract class SimpleTaskSystemWebViewPageBase : SimpleTaskSystemWebViewPageBase<dynamic>
     {
-
+    
     }
-
+    
     public abstract class SimpleTaskSystemWebViewPageBase<TModel> : AbpWebViewPage<TModel>
     {
         protected SimpleTaskSystemWebViewPageBase()
@@ -525,16 +525,16 @@ as shown below:
 
 We can then register it on the PreInitialize method of our module:
 
-    Configuration.Localization.Sources.Extensions.Add(
-        new LocalizationSourceExtensionInfo("AbpWeb",
-            new XmlFileLocalizationDictionaryProvider(
-                HttpContext.Current.Server.MapPath("~/Localization/AbpWebExtensions")
-                )
-            )
-        );
+    Configuration.Localization.Sources.Add(
+    	new DictionaryBasedLocalizationSource(
+    		"AbpWeb",
+    		new XmlEmbeddedFileLocalizationDictionaryProvider(
+    			Assembly.GetExecutingAssembly(),
+                "MyCompany.MyProject.Localization.Sources"
+    		)
+    	)
+    );
 
-We could use XmlEmbeddedFileLocalizationDictionaryProvider if we want to
-create embedded resource XML files (see the Localization sources section).
 ASP.NET Boilerplate overrides (merges) the base localization source with our
 XML files. We can also add new language files.
 
