@@ -525,9 +525,8 @@ as shown below:
 
 We can then register it on the PreInitialize method of our module:
 
-    Configuration.Localization.Sources.Add(
-    	new DictionaryBasedLocalizationSource(
-    		"AbpWeb",
+    Configuration.Localization.Extensions.Add(
+    	new LocalizationSourceExtensionInfo("AbpWeb",
     		new XmlEmbeddedFileLocalizationDictionaryProvider(
     			Assembly.GetExecutingAssembly(),
                 "MyCompany.MyProject.Localization.Sources"
