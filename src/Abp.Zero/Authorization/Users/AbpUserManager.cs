@@ -160,6 +160,8 @@ namespace Abp.Authorization.Users
             //Check for depended features
             if (permission.FeatureDependency != null && GetCurrentMultiTenancySide() == MultiTenancySides.Tenant)
             {
+                FeatureDependencyContext.TenantId = GetCurrentTenantId();
+
                 if (!await permission.FeatureDependency.IsSatisfiedAsync(FeatureDependencyContext))
                 {
                     return false;
