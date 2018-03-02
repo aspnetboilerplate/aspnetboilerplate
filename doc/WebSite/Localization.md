@@ -525,11 +525,11 @@ as shown below:
 
 We can then register it on the PreInitialize method of our module:
 
-    Configuration.Localization.Extensions.Add(
+    Configuration.Localization.Sources.Extensions.Add(
     	new LocalizationSourceExtensionInfo("AbpWeb",
     		new XmlEmbeddedFileLocalizationDictionaryProvider(
     			Assembly.GetExecutingAssembly(),
-                "MyCompany.MyProject.Localization.Sources"
+    			"MyCompany.MyProject.Localization.Sources"
     		)
     	)
     );
