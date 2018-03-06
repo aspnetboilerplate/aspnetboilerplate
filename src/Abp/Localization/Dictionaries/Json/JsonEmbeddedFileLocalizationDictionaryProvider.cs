@@ -36,10 +36,11 @@ namespace Abp.Localization.Dictionaries.Json
 
         public override void Initialize(string sourceName)
         {
-            var allCultureInfos = CultureInfo.GetCultures(CultureTypes.NeutralCultures);
+            var allCultureInfos = CultureInfo.GetCultures(CultureTypes.AllCultures);
             var resourceNames = _assembly.GetManifestResourceNames().Where(resouceName =>
-                allCultureInfos.Any(culture =>
-                    sourceName.EndsWith($"{resouceName}-{culture.Name}.json", true, null))).ToList();
+                allCultureInfos.Any(culture => resouceName.EndsWith($"{sourceName}.json", true, null) ||
+                                               resouceName.EndsWith($"{sourceName}-{culture.Name}.json", true,
+                                                   null))).ToList();
             foreach (var resourceName in resourceNames)
             {
                 if (resourceName.StartsWith(_rootNamespace))
