@@ -32,6 +32,6 @@ trigger code for the event registered above:
         name: 'Acme Light MousePad'
     });
 
-The firt argument is the **unique name of the event**. The second one is the
+The first argument is the **unique name of the event**. The second one is the
 (optional) **event argument**. You can add any number of arguments and
 get them in the callback method.
