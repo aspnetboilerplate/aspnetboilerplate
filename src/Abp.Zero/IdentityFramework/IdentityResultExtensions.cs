@@ -50,7 +50,7 @@ namespace Abp.IdentityFramework
                 return;
             }
 
-            throw new UserFriendlyException(identityResult.Errors.JoinAsString(", "));
+            throw new UserFriendlyException(identityResult.Errors.Select(err => err.Description).JoinAsString(", "));
         }
 
         /// <summary>
