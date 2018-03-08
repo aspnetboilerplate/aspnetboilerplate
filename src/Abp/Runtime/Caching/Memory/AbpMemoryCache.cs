@@ -11,14 +11,17 @@ namespace Abp.Runtime.Caching.Memory
     {
         private MemoryCache _memoryCache;
 
+        private Action<string> _disposeAction;
         /// <summary>
         /// Constructor.
         /// </summary>
         /// <param name="name">Unique name of the cache</param>
-        public AbpMemoryCache(string name)
+        /// <param name="disposeAction">The Action called when AbpMemoryCache dispose</param>
+        public AbpMemoryCache(string name, Action<string> disposeAction = null)
             : base(name)
         {
             _memoryCache = new MemoryCache(new OptionsWrapper<MemoryCacheOptions>(new MemoryCacheOptions()));
+            _disposeAction = disposeAction;
         }
 
         public override object GetOrDefault(string key)
@@ -66,6 +69,7 @@ namespace Abp.Runtime.Caching.Memory
         {
             _memoryCache.Dispose();
             base.Dispose();
+            _disposeAction?.Invoke(Name);
         }
     }
 }
