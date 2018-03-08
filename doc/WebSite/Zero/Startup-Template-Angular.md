@@ -101,7 +101,7 @@ requests and responses.
 
 Just send a **POST** request to
 **http://localhost:21021/api/TokenAuth/Authenticate** with the
-**Context-Type="application/json"** header as shown below:
+**Content-Type="application/json"** header as shown below:
 
 <img src="../images/swagger-ui-angular-auth.png" alt="Swagger UI auth" class="img-thumbnail" />
 
