@@ -79,11 +79,6 @@ namespace Abp.Runtime.Validation.Interception
                 throw new Exception("Method parameter count does not match with argument count!");
             }
 
-            if (ValidationErrors.Any() && HasSingleNullArgument())
-            {
-                ThrowValidationError();
-            }
-
             for (var i = 0; i < Parameters.Length; i++)
             {
                 ValidateMethodParameter(Parameters[i], ParameterValues[i]);
@@ -116,11 +111,6 @@ namespace Abp.Runtime.Validation.Interception
             }
 
             return ReflectionHelper.GetSingleAttributeOfMemberOrDeclaringTypeOrDefault<DisableValidationAttribute>(Method) != null;
-        }
-
-        protected virtual bool HasSingleNullArgument()
-        {
-            return Parameters.Length == 1 && ParameterValues[0] == null;
         }
 
         protected virtual void ThrowValidationError()
@@ -165,97 +155,93 @@ namespace Abp.Runtime.Validation.Interception
                 return;
             }
 
-            SetDataAnnotationAttributeErrors(validatingObject);
-
-            //Validate items of enumerable
-            if (validatingObject is IEnumerable && !(validatingObject is IQueryable))
-            {
-                foreach (var item in (validatingObject as IEnumerable))
-                {
-                    ValidateObjectRecursively(item, currentDepth + 1);
-                }
-            }
-
-            //Custom validations
-            (validatingObject as ICustomValidate)?.AddValidationErrors(
-                new CustomValidationContext(
-                    ValidationErrors,
-                    _iocResolver
-                )
-            );
-
-            //Add list to be normalized later
-            if (validatingObject is IShouldNormalize)
-            {
-                ObjectsToBeNormalized.Add(validatingObject as IShouldNormalize);
-            }
-
-            //Do not recursively validate for enumerable objects
-            if (validatingObject is IEnumerable)
-            {
-                return;
-            }
-
-            var validatingObjectType = validatingObject.GetType();
-
-            //Do not recursively validate for primitive objects
-            if (TypeHelper.IsPrimitiveExtendedIncludingNullable(validatingObjectType))
-            {
-                return;
-            }
-
             if (_configuration.IgnoredTypes.Any(t => t.IsInstanceOfType(validatingObject)))
             {
                 return;
             }
 
-            var properties = TypeDescriptor.GetProperties(validatingObject).Cast<PropertyDescriptor>();
-            foreach (var property in properties)
+            if (TypeHelper.IsPrimitiveExtendedIncludingNullable(validatingObject.GetType()))
             {
-                if (property.Attributes.OfType<DisableValidationAttribute>().Any())
-                {
-                    continue;
-                }
+                return;
+            }
 
-                ValidateObjectRecursively(property.GetValue(validatingObject), currentDepth + 1);
+            SetValidationErrors(validatingObject);
+
+            // Validate items of enumerable
+            if (IsEnumerable(validatingObject))
+            {
+                foreach (var item in (IEnumerable) validatingObject)
+                {
+                    ValidateObjectRecursively(item, currentDepth + 1);
+                }
+            }
+
+            // Add list to be normalized later
+            if (validatingObject is IShouldNormalize)
+            {
+                ObjectsToBeNormalized.Add(validatingObject as IShouldNormalize);
+            }
+
+            if (ShouldMakeDeepValidation(validatingObject))
+            {
+                var properties = TypeDescriptor.GetProperties(validatingObject).Cast<PropertyDescriptor>();
+                foreach (var property in properties)
+                {
+                    if (property.Attributes.OfType<DisableValidationAttribute>().Any())
+                    {
+                        continue;
+                    }
+
+                    ValidateObjectRecursively(property.GetValue(validatingObject), currentDepth + 1);
+                }
             }
         }
 
-        /// <summary>
-        /// Checks all properties for DataAnnotations attributes.
-        /// </summary>
-        protected virtual void SetDataAnnotationAttributeErrors(object validatingObject)
+        protected virtual void SetValidationErrors(object validatingObject)
         {
-            var properties = TypeDescriptor.GetProperties(validatingObject).Cast<PropertyDescriptor>();
-            foreach (var property in properties)
+            foreach (var validatorType in _configuration.Validators)
             {
-                var validationAttributes = property.Attributes.OfType<ValidationAttribute>().ToArray();
-                if (validationAttributes.IsNullOrEmpty())
+                if (ShouldValidateUsingValidator(validatingObject, validatorType))
                 {
-                    continue;
-                }
-
-                var validationContext = new ValidationContext(validatingObject)
-                {
-                    DisplayName = property.DisplayName,
-                    MemberName = property.Name
-                };
-
-                foreach (var attribute in validationAttributes)
-                {
-                    var result = attribute.GetValidationResult(property.GetValue(validatingObject), validationContext);
-                    if (result != null)
+                    using (var validator = _iocResolver.ResolveAsDisposable<IMethodParameterValidator>(validatorType))
                     {
-                        ValidationErrors.Add(result);
+                        var validationResults = validator.Object.Validate(validatingObject);
+                        ValidationErrors.AddRange(validationResults);
                     }
                 }
             }
+        }
 
-            if (validatingObject is IValidatableObject)
+        protected virtual bool ShouldValidateUsingValidator(object validatingObject, Type validatorType)
+        {
+            return true;
+        }
+
+        protected virtual bool ShouldMakeDeepValidation(object validatingObject)
+        {
+            // Do not recursively validate for enumerable objects
+            if (validatingObject is IEnumerable)
             {
-                var results = (validatingObject as IValidatableObject).Validate(new ValidationContext(validatingObject));
-                ValidationErrors.AddRange(results);
+                return false;
             }
+
+            var validatingObjectType = validatingObject.GetType();
+
+            // Do not recursively validate for primitive objects
+            if (TypeHelper.IsPrimitiveExtendedIncludingNullable(validatingObjectType))
+            {
+                return false;
+            }
+
+            return true;
+        }
+
+        private bool IsEnumerable(object validatingObject)
+        {
+            return
+                validatingObject is IEnumerable &&
+                !(validatingObject is IQueryable) &&
+                !TypeHelper.IsPrimitiveExtendedIncludingNullable(validatingObject.GetType());
         }
     }
 }
