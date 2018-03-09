@@ -32,7 +32,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Include="FluentValidation" Version="7.4.0" />
+    <PackageReference Include="FluentValidation" Version="7.5.0" />
   </ItemGroup>
 
 </Project>
