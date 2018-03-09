@@ -427,7 +427,7 @@ injected and used easily. Example:
     }
 
 MySampleClass in an example class in an application. It is
-constructor-injected with **IIcResolver** and uses it to resolve and release
+constructor-injected with **IIocResolver** and uses it to resolve and release
 objects. There are a few overloads of the **Resolve** method which can be used as
 needed. The **Release** method is used to release a component (object). It's
 **critical** to call Release if you're manually resolving an object.
