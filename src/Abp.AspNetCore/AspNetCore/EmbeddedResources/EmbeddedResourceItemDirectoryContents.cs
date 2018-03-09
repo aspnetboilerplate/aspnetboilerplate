@@ -1,13 +1,11 @@
 ﻿using System;
 using System.Collections;
 using System.Collections.Generic;
-using System.IO;
-using Abp.Resources.Embedded;
 using Microsoft.Extensions.FileProviders;
 
 namespace Abp.AspNetCore.EmbeddedResources
 {
-    public class EmbeddedResourceItemDirectoryContents : IDirectoryContents
+    public class EmbeddedResourceItemDirectoryContents : IDirectoryContents, IEnumerable
     {
         private readonly IEnumerable<IFileInfo> _entries;
 
@@ -17,13 +15,11 @@ namespace Abp.AspNetCore.EmbeddedResources
             {
                 throw new ArgumentNullException(nameof(entries));
             }
+
             _entries = entries;
         }
 
-        public bool Exists
-        {
-            get { return true; }
-        }
+        public bool Exists => true;
 
         public IEnumerator<IFileInfo> GetEnumerator()
         {

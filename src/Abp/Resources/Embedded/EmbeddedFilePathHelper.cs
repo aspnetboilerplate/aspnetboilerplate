@@ -12,7 +12,6 @@ namespace Abp.Resources.Embedded
 
         public static string EncodeAsResourcesPath(string subPath)
         {
-
             var builder = new StringBuilder(subPath.Length);
 
             // does the subpath contain directory portion - if so we need to encode it.
@@ -56,7 +55,6 @@ namespace Abp.Resources.Embedded
             }
 
             return builder.ToString();
-
         }
     }
 }

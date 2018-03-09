@@ -81,6 +81,7 @@ namespace Abp.Tests.Resources.Embedded
             Assert.EndsWith(filename, resource.FileName);
             Assert.True(resource.FileExtension == extension.Substring(1)); // without dot
         }
+
         [Fact]
         public void Should_Get_Embedded_Resources_With_Dash_In_folder()
         {
@@ -95,6 +96,7 @@ namespace Abp.Tests.Resources.Embedded
             Assert.EndsWith(filename, resource.FileName);
             Assert.True(resource.FileExtension == extension.Substring(1)); // without dot
         }
+
         [Fact]
         public void Should_Get_Embedded_Resource_With_Underscore_In_Folder()
         {
@@ -109,6 +111,7 @@ namespace Abp.Tests.Resources.Embedded
             Assert.EndsWith(filename, resource.FileName);
             Assert.True(resource.FileExtension == extension.Substring(1)); // without dot
         }
+
         [Fact]
         public void Should_Get_Embedded_Resources()
         {

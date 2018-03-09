@@ -12,9 +12,6 @@ namespace Abp.Resources.Embedded
         private readonly IEmbeddedResourcesConfiguration _configuration;
         private readonly Lazy<Dictionary<string, EmbeddedResourceItem>> _resources;
 
-        /// <summary>
-        /// Constructor.
-        /// </summary>
         public EmbeddedResourceManager(IEmbeddedResourcesConfiguration configuration)
         {
             _configuration = configuration;
@@ -54,25 +51,8 @@ namespace Abp.Resources.Embedded
             {
                 source.AddResources(resources);
             }
+
             return resources;
-        }
-
-        class EmbeddedResourceItemComparer : IEqualityComparer<string>
-        {
-            public bool Equals(string fullPath1, string fullPath2)
-            {
-                return InvariantResourceName(fullPath1).Equals(InvariantResourceName(fullPath2));
-            }
-
-            public int GetHashCode(string fullPath)
-            {
-                return InvariantResourceName(fullPath).GetHashCode();
-            }
-            private string InvariantResourceName(string fullPath)
-            {
-                return fullPath.Replace("/", ".");
-            }
-
         }
     }
 }

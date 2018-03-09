@@ -20,12 +20,12 @@ namespace Abp.AspNetCore.EmbeddedResources
         {
             _iocResolver = iocResolver;
             _embeddedResourceManager = new Lazy<IEmbeddedResourceManager>(
-                () => iocResolver.Resolve<IEmbeddedResourceManager>(),
+                iocResolver.Resolve<IEmbeddedResourceManager>,
                 true
             );
 
             _configuration = new Lazy<IWebEmbeddedResourcesConfiguration>(
-                () => iocResolver.Resolve<IWebEmbeddedResourcesConfiguration>(),
+                iocResolver.Resolve<IWebEmbeddedResourcesConfiguration>,
                 true
             );
         }
@@ -60,6 +60,7 @@ namespace Abp.AspNetCore.EmbeddedResources
             {
                 return new NotFoundDirectoryContents();
             }
+
             var resources = _embeddedResourceManager.Value.GetResources(subpath);
             return new EmbeddedResourceItemDirectoryContents(resources
                 .Where(r=> !IsIgnoredFile(r))
