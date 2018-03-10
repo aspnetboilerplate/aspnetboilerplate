@@ -37,9 +37,43 @@ namespace Abp.EntityFrameworkCore.Tests
             {
                 context.Tickets.AddRange(
                     new Ticket { EmailAddress = "john@aspnetboilerplate.com", Message = "an active message", TenantId = 1 },
-                    new Ticket { EmailAddress = "david@aspnetboilerplate.com", Message = "an inactive message", IsActive = false, TenantId = 1},
-                    new Ticket { EmailAddress = "smith@aspnetboilerplate.com", Message = "an active message of tenant 42", TenantId = 42}
+                    new Ticket { EmailAddress = "david@aspnetboilerplate.com", Message = "an inactive message", IsActive = false, TenantId = 1 },
+                    new Ticket { EmailAddress = "smith@aspnetboilerplate.com", Message = "an active message of tenant 42", TenantId = 42 }
                 );
+
+                context.SaveChanges();
+            }
+
+            using (var context = LocalIocManager.Resolve<ShopDbContext>())
+            {
+                var product1 = new Product
+                {
+                    Price = 10,
+                    Stock = 1000
+                };
+
+                var product2 = new Product
+                {
+                    Price = 99,
+                    Stock = 1000
+                };
+
+                context.Products.Add(product1);
+                context.Products.Add(product2);
+                context.SaveChanges();
+
+                //Product1 translations
+                var product1_en = new ProductTranslation { CoreId = product1.Id, Language = "en", Name = "Watch" };
+                var product1_tr = new ProductTranslation { CoreId = product1.Id, Language = "tr", Name = "Saat" };
+
+                product1.Translations.Add(product1_en);
+                product1.Translations.Add(product1_tr);
+
+                var product2_en = new ProductTranslation { CoreId = product1.Id, Language = "en", Name = "Bike" };
+                var product2_tr = new ProductTranslation { CoreId = product1.Id, Language = "tr", Name = "Bisiklet" };
+
+                product2.Translations.Add(product2_en);
+                product2.Translations.Add(product2_tr);
 
                 context.SaveChanges();
             }
