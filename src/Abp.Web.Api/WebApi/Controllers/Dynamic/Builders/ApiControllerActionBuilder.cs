@@ -4,6 +4,10 @@ using System.Web.Http.Filters;
 using System.Linq;
 using Abp.Reflection;
 using System.Web.Http;
+using Abp.Dependency;
+using Abp.Extensions;
+using Abp.Threading;
+using Abp.Web.Api.ProxyScripting.Configuration;
 
 namespace Abp.WebApi.Controllers.Dynamic.Builders
 {
@@ -50,18 +54,40 @@ namespace Abp.WebApi.Controllers.Dynamic.Builders
         {
             get { return _controller; }
         }
+
         private readonly ApiControllerBuilder<T> _controller;
+        private readonly IIocResolver _iocResolver;
 
         /// <summary>
         /// Creates a new <see cref="ApiControllerActionBuilder{T}"/> object.
         /// </summary>
         /// <param name="apiControllerBuilder">Reference to the <see cref="ApiControllerBuilder{T}"/> which created this object</param>
         /// <param name="methodInfo">Method</param>
-        public ApiControllerActionBuilder(ApiControllerBuilder<T> apiControllerBuilder, MethodInfo methodInfo)
+        /// <param name="iocResolver"></param>
+        public ApiControllerActionBuilder(ApiControllerBuilder<T> apiControllerBuilder, MethodInfo methodInfo, IIocResolver iocResolver)
         {
             _controller = apiControllerBuilder;
+            _iocResolver = iocResolver;
             Method = methodInfo;
-            ActionName = Method.Name;
+            ActionName = GetNormalizedActionName();
+        }
+
+        private string GetNormalizedActionName()
+        {
+            using (var config = _iocResolver.ResolveAsDisposable<IApiProxyScriptingConfiguration>())
+            {
+                if (!config.Object.RemoveAsyncPostfixOnProxyGeneration)
+                {
+                    return Method.Name;
+                }
+            }
+
+            if (!Method.IsAsync())
+            {
+                return Method.Name;
+            }
+
+            return Method.Name.RemovePostFix("Async");
         }
 
         /// <summary>

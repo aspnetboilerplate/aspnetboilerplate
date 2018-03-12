@@ -12,7 +12,10 @@ namespace Abp.Tests.Modules
         public void Should_Load_All_Modules()
         {
             //Arrange
-            var bootstrapper = AbpBootstrapper.Create<MyStartupModule>(LocalIocManager);
+            var bootstrapper = AbpBootstrapper.Create<MyStartupModule>(options =>
+            {
+                options.IocManager = LocalIocManager;
+            });
 
             bootstrapper.PlugInSources.AddTypeList(typeof(MyPlugInModule));
 

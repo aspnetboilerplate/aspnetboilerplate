@@ -89,5 +89,11 @@ namespace Abp.AspNetCore.App.Controllers
         {
             return Content(CultureInfo.CurrentCulture.Name);
         }
+
+        [HttpGet]
+        public string GetDateTimeKind(SimpleDateModel input)
+        {
+            return input.Date.Kind.ToString().ToLower();
+        }
     }
 }

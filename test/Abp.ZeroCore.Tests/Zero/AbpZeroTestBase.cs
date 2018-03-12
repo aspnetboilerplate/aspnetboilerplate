@@ -9,6 +9,7 @@ using Abp.Runtime.Session;
 using Abp.TestBase;
 using Abp.Zero.TestData;
 using Abp.ZeroCore.SampleApp.Core;
+using Abp.ZeroCore.SampleApp.Core.EntityHistory;
 using Abp.ZeroCore.SampleApp.EntityFramework;
 using Microsoft.EntityFrameworkCore;
 
@@ -19,6 +20,7 @@ namespace Abp.Zero
         protected AbpZeroTestBase()
         {
             SeedTestData();
+            SeedTestDataForEntityHistory();
             LoginAsDefaultTenantAdmin();
         }
 
@@ -38,6 +40,25 @@ namespace Abp.Zero
                 NormalizeDbContext(context);
                 new TestDataBuilder(context, 1).Create();
             });
+        }
+
+        private void SeedTestDataForEntityHistory()
+        {
+            UsingDbContext(
+                context =>
+                {
+                    var blog1 = new Blog("test-blog-1", "http://testblog1.myblogs.com");
+
+                    context.Blogs.Add(blog1);
+                    context.SaveChanges();
+
+                    var post1 = new Post { Blog = blog1, Title = "test-post-1-title", Body = "test-post-1-body" };
+                    var post2 = new Post { Blog = blog1, Title = "test-post-2-title", Body = "test-post-2-body" };
+                    var post3 = new Post { Blog = blog1, Title = "test-post-3-title", Body = "test-post-3-body-deleted", IsDeleted = true };
+                    var post4 = new Post { Blog = blog1, Title = "test-post-4-title", Body = "test-post-4-body", TenantId = 42 };
+
+                    context.Posts.AddRange(post1, post2, post3, post4);
+                });
         }
 
         protected IDisposable UsingTenantId(int? tenantId)

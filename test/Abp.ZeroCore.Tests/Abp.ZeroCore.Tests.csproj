@@ -1,24 +1,42 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <TargetFramework>netcoreapp1.0</TargetFramework>
+    <TargetFramework>netcoreapp2.0</TargetFramework>
     <RootNamespace>Abp</RootNamespace>
   </PropertyGroup>
 
   <ItemGroup>
+    <None Remove="Zero\Localization\Abp.json" />
+    <None Remove="Zero\Localization\Sources\Base\AbpZero\AbpZero.json" />
+    <None Remove="Zero\Localization\Sources\Extensions\Json\AbpZero\AbpZero.json" />
+    <None Remove="Zero\Localization\Sources\Extensions\Xml\Abp.json" />
+    <None Remove="Zero\Localization\Sources\Extensions\Xml\Abp.xml" />
+    <None Remove="Zero\Localization\Sources\Extensions\Xml\AbpZero\AbpZero.xml" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <EmbeddedResource Include="Zero\Localization\Sources\Base\AbpZero\AbpZero.json" />
+    <EmbeddedResource Include="Zero\Localization\Sources\Base\Abp\Abp.json" />
+    <EmbeddedResource Include="Zero\Localization\Sources\Extensions\Json\AbpZero\AbpZero.json" />
+    <EmbeddedResource Include="Zero\Localization\Sources\Extensions\Xml\AbpZero\AbpZero.xml" />
+    <EmbeddedResource Include="Zero\Localization\Sources\Extensions\Xml\Abp\Abp.xml" />
+    <EmbeddedResource Include="Zero\Localization\Sources\Extensions\Json\Abp\Abp.json" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\..\src\Abp.TestBase\Abp.TestBase.csproj" />
     <ProjectReference Include="..\Abp.ZeroCore.SampleApp\Abp.ZeroCore.SampleApp.csproj" />
   </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Include="Microsoft.Data.Sqlite" Version="1.1.1" />
-    <PackageReference Include="Microsoft.EntityFrameworkCore.Sqlite" Version="1.1.2" />
-    <PackageReference Include="Abp.TestBase" Version="2.3.0" />
-    <PackageReference Include="Microsoft.NET.Test.Sdk" Version="15.0.0" />
-    <PackageReference Include="xunit" Version="2.2.0" />
-    <PackageReference Include="xunit.extensibility.execution" Version="2.2.0" />
-    <PackageReference Include="xunit.runner.visualstudio" Version="2.2.0" />
-    <PackageReference Include="Shouldly" Version="2.8.3" />
-    <PackageReference Include="NSubstitute" Version="2.0.3" />
+    <PackageReference Include="Microsoft.Data.Sqlite" Version="2.0.0" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore.Sqlite" Version="2.0.1" />
+    <PackageReference Include="Microsoft.NET.Test.Sdk" Version="15.6.0" />
+    <PackageReference Include="xunit" Version="2.3.1" />
+    <PackageReference Include="xunit.extensibility.execution" Version="2.3.1" />
+    <PackageReference Include="xunit.runner.visualstudio" Version="2.3.1" />
+    <PackageReference Include="Shouldly" Version="3.0.0" />
+    <PackageReference Include="NSubstitute" Version="3.1.0" />
   </ItemGroup>
 
   <ItemGroup>

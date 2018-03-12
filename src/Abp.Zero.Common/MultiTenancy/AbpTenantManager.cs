@@ -38,6 +38,8 @@ namespace Abp.MultiTenancy
 
         public IFeatureManager FeatureManager { get; set; }
 
+        public IUnitOfWorkManager UnitOfWorkManager { get; set; }
+
         protected IRepository<TTenant> TenantRepository { get; set; }
 
         protected IRepository<TenantFeatureSetting, long> TenantFeatureRepository { get; set; }
@@ -71,7 +73,7 @@ namespace Abp.MultiTenancy
             await TenantRepository.InsertAsync(tenant);
         }
 
-        public async Task UpdateAsync(TTenant tenant)
+        public virtual async Task UpdateAsync(TTenant tenant)
         {
             if (await TenantRepository.FirstOrDefaultAsync(t => t.TenancyName == tenant.TenancyName && t.Id != tenant.Id) != null)
             {
@@ -153,7 +155,11 @@ namespace Abp.MultiTenancy
             }
 
             //Get the current feature setting
-            var currentSetting = await TenantFeatureRepository.FirstOrDefaultAsync(f => f.TenantId == tenant.Id && f.Name == featureName);
+            TenantFeatureSetting currentSetting;
+            using (UnitOfWorkManager.Current.SetTenantId(tenant.Id))
+            {
+                currentSetting = await TenantFeatureRepository.FirstOrDefaultAsync(f => f.Name == featureName);
+            }
 
             //Get the feature
             var feature = FeatureManager.GetOrNull(featureName);
@@ -199,9 +205,13 @@ namespace Abp.MultiTenancy
         /// Tenant will have features according to it's edition.
         /// </summary>
         /// <param name="tenantId">Tenant Id</param>
-        public async Task ResetAllFeaturesAsync(int tenantId)
+        [UnitOfWork]
+        public virtual async Task ResetAllFeaturesAsync(int tenantId)
         {
-            await TenantFeatureRepository.DeleteAsync(f => f.TenantId == tenantId);
+            using (UnitOfWorkManager.Current.SetTenantId(tenantId))
+            {
+                await TenantFeatureRepository.DeleteAsync(f => f.TenantId == tenantId);
+            }
         }
 
         protected virtual async Task ValidateTenantAsync(TTenant tenant)

@@ -7,9 +7,12 @@ namespace Abp.Web.Api.ProxyScripting.Configuration
     {
         public IDictionary<string, Type> Generators { get; }
 
+        public bool RemoveAsyncPostfixOnProxyGeneration { get; set; }
+
         public ApiProxyScriptingConfiguration()
         {
             Generators = new Dictionary<string, Type>();
+            RemoveAsyncPostfixOnProxyGeneration = true;
         }
     }
 }

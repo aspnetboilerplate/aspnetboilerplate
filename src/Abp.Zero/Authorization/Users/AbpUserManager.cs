@@ -7,6 +7,7 @@ using System.Threading.Tasks;
 using Abp.Application.Features;
 using Abp.Authorization.Roles;
 using Abp.Configuration;
+using Abp.Configuration.Startup;
 using Abp.Domain.Repositories;
 using Abp.Domain.Services;
 using Abp.Domain.Uow;
@@ -54,6 +55,8 @@ namespace Abp.Authorization.Users
         protected AbpRoleManager<TRole, TUser> RoleManager { get; }
 
         public AbpUserStore<TRole, TUser> AbpStore { get; }
+
+        public IMultiTenancyConfig MultiTenancy { get; set; }
 
         private readonly IPermissionManager _permissionManager;
         private readonly IUnitOfWorkManager _unitOfWorkManager;
@@ -134,29 +137,31 @@ namespace Abp.Authorization.Users
         /// <summary>
         /// Check whether a user is granted for a permission.
         /// </summary>
-        /// <param name="user">User</param>
+        /// <param name="userId">User id</param>
         /// <param name="permission">Permission</param>
-        public virtual Task<bool> IsGrantedAsync(TUser user, Permission permission)
+        public virtual async Task<bool> IsGrantedAsync(long userId, Permission permission)
         {
-            return IsGrantedAsync(user.Id, permission);
+            return await IsGrantedAsync(await GetUserByIdAsync(userId), permission);
         }
 
         /// <summary>
         /// Check whether a user is granted for a permission.
         /// </summary>
-        /// <param name="userId">User id</param>
+        /// <param name="user">User</param>
         /// <param name="permission">Permission</param>
-        public virtual async Task<bool> IsGrantedAsync(long userId, Permission permission)
+        public virtual async Task<bool> IsGrantedAsync(TUser user, Permission permission)
         {
             //Check for multi-tenancy side
-            if (!permission.MultiTenancySides.HasFlag(AbpSession.MultiTenancySide))
+            if (!permission.MultiTenancySides.HasFlag(GetCurrentMultiTenancySide()))
             {
                 return false;
             }
 
             //Check for depended features
-            if (permission.FeatureDependency != null && AbpSession.MultiTenancySide == MultiTenancySides.Tenant)
+            if (permission.FeatureDependency != null && GetCurrentMultiTenancySide() == MultiTenancySides.Tenant)
             {
+                FeatureDependencyContext.TenantId = user.TenantId;
+
                 if (!await permission.FeatureDependency.IsSatisfiedAsync(FeatureDependencyContext))
                 {
                     return false;
@@ -164,7 +169,7 @@ namespace Abp.Authorization.Users
             }
             
             //Get cached user permissions
-            var cacheItem = await GetUserPermissionCacheItemAsync(userId);
+            var cacheItem = await GetUserPermissionCacheItemAsync(user.Id);
             if (cacheItem == null)
             {
                 return false;
@@ -702,6 +707,18 @@ namespace Abp.Authorization.Users
             }
 
             return AbpSession.TenantId;
+        }
+
+        private MultiTenancySides GetCurrentMultiTenancySide()
+        {
+            if (_unitOfWorkManager.Current != null)
+            {
+                return MultiTenancy.IsEnabled && !_unitOfWorkManager.Current.GetTenantId().HasValue
+                    ? MultiTenancySides.Host
+                    : MultiTenancySides.Tenant;
+            }
+
+            return AbpSession.MultiTenancySide;
         }
     }
 }

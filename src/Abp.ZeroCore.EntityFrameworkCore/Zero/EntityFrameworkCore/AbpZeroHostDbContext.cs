@@ -70,21 +70,6 @@ namespace Abp.Zero.EntityFrameworkCore
         {
             base.OnModelCreating(modelBuilder);
 
-            modelBuilder.Entity<TTenant>(u =>
-            {
-                u.HasOne(p => p.DeleterUser)
-                    .WithMany()
-                    .HasForeignKey(p => p.DeleterUserId);
-
-                u.HasOne(p => p.CreatorUser)
-                    .WithMany()
-                    .HasForeignKey(p => p.CreatorUserId);
-
-                u.HasOne(p => p.LastModifierUser)
-                    .WithMany()
-                    .HasForeignKey(p => p.LastModifierUserId);
-            });
-
             modelBuilder.Entity<TTenant>(b =>
             {
                 b.HasOne(p => p.DeleterUser)

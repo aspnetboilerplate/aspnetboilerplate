@@ -3,7 +3,7 @@
   <Import Project="..\..\common.props" />
   
   <PropertyGroup>
-    <TargetFrameworks>net46;netstandard1.6</TargetFrameworks>
+    <TargetFramework>netstandard2.0</TargetFramework>
     <GenerateDocumentationFile>true</GenerateDocumentationFile>
     <AssemblyName>Abp.RedisCache.ProtoBuf</AssemblyName>
     <PackageId>Abp.RedisCache.ProtoBuf</PackageId>
@@ -13,15 +13,12 @@
     <GenerateAssemblyProductAttribute>false</GenerateAssemblyProductAttribute>
     <GeneratePackageOnBuild>False</GeneratePackageOnBuild>
     <RootNamespace>Abp</RootNamespace>
+    <Description>Abp.RedisCache.ProtoBuf</Description>
   </PropertyGroup>
 
   <ItemGroup>
-    <None Include="bin\Release\net46\Abp.RedisCache.ProtoBuf.pdb">
-      <PackagePath>lib/net46/</PackagePath>
-      <Pack>true</Pack>
-    </None>
-    <None Include="bin\Release\netstandard1.6\Abp.RedisCache.ProtoBuf.pdb">
-      <PackagePath>lib/netstandard1.6/</PackagePath>
+    <None Include="bin\Release\netstandard2.0\Abp.RedisCache.ProtoBuf.pdb">
+      <PackagePath>lib/netstandard2.0/</PackagePath>
       <Pack>true</Pack>
     </None>
   </ItemGroup>
@@ -31,12 +28,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Include="protobuf-net" Version="2.3.1" />
-  </ItemGroup>
-
-  <ItemGroup Condition=" '$(TargetFramework)' == 'net46' ">
-    <Reference Include="System" />
-    <Reference Include="Microsoft.CSharp" />
+    <PackageReference Include="protobuf-net" Version="2.3.7" />
   </ItemGroup>
 
 </Project>

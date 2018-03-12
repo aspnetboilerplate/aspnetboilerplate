@@ -1,7 +1,5 @@
 ﻿using System.Reflection;
-
 using Abp.Modules;
-using Abp.Quartz.Quartz;
 
 namespace Abp.Quartz.Tests
 {

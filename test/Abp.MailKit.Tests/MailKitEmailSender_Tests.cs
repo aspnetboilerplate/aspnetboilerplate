@@ -1,10 +1,7 @@
 ﻿using System.Threading.Tasks;
 using Abp.Net.Mail.Smtp;
 using NSubstitute;
-
-#if NET46
 using System.Net.Mail;
-#endif
 
 namespace Abp.MailKit.Tests
 {
@@ -26,9 +23,8 @@ namespace Abp.MailKit.Tests
             await mailSender.SendAsync("from_mail_address", "to_mail_address", "subject", "body", true);
         }
 
-#if NET46
         //[Fact]
-        public async Task ShouldSendMailMessage()
+        public async Task ShouldSendMailMessageAsync()
         {
             var mailSender = CreateMailKitEmailSender();
             var mailMessage = new MailMessage("from_mail_address", "to_mail_address", "subject", "body")
@@ -38,7 +34,7 @@ namespace Abp.MailKit.Tests
         }
 
         //[Fact]
-        public void ShouldSendMailMessageAsync()
+        public void ShouldSendMailMessage()
         {
             var mailSender = CreateMailKitEmailSender();
             var mailMessage = new MailMessage("from_mail_address", "to_mail_address", "subject", "body")
@@ -46,7 +42,7 @@ namespace Abp.MailKit.Tests
 
             mailSender.Send(mailMessage);
         }
-#endif
+
         private static MailKitEmailSender CreateMailKitEmailSender()
         {
             var mailConfig = Substitute.For<ISmtpEmailSenderConfiguration>();

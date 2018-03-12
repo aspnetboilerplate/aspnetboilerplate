@@ -1,5 +1,7 @@
 ﻿using System;
 using Abp.AutoMapper;
+using Abp.Localization.Dictionaries.Xml;
+using Abp.Localization.Sources;
 using Abp.Modules;
 using Abp.Reflection.Extensions;
 using Abp.TestBase;
@@ -26,8 +28,8 @@ namespace Abp.Zero
 
         public override void Initialize()
         {
-            IocManager.RegisterAssemblyByConvention(typeof(AbpZeroTestModule).GetAssembly());
             TestServiceCollectionRegistrar.Register(IocManager);
+            IocManager.RegisterAssemblyByConvention(typeof(AbpZeroTestModule).GetAssembly());
         }
     }
 }

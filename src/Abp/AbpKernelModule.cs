@@ -1,7 +1,6 @@
 ﻿using System;
 using System.IO;
 using System.Linq.Expressions;
-using System.Reflection;
 using Abp.Application.Features;
 using Abp.Application.Navigation;
 using Abp.Application.Services;
@@ -13,6 +12,7 @@ using Abp.Configuration;
 using Abp.Configuration.Startup;
 using Abp.Dependency;
 using Abp.Domain.Uow;
+using Abp.EntityHistory;
 using Abp.Events.Bus;
 using Abp.Localization;
 using Abp.Localization.Dictionaries;
@@ -52,6 +52,7 @@ namespace Abp
             AddUnitOfWorkFilters();
             ConfigureCaches();
             AddIgnoredTypes();
+            AddMethodParameterValidators();
         }
 
         public override void Initialize()
@@ -171,6 +172,13 @@ namespace Abp
             }
         }
 
+        private void AddMethodParameterValidators()
+        {
+            Configuration.Validation.Validators.Add<DataAnnotationsValidator>();
+            Configuration.Validation.Validators.Add<ValidatableObjectValidator>();
+            Configuration.Validation.Validators.Add<CustomValidator>();
+        }
+
         private void RegisterMissingComponents()
         {
             if (!IocManager.IsRegistered<IGuidGenerator>())
@@ -191,6 +199,7 @@ namespace Abp
             IocManager.RegisterIfNot<IClientInfoProvider, NullClientInfoProvider>(DependencyLifeStyle.Singleton);
             IocManager.RegisterIfNot<ITenantStore, NullTenantStore>(DependencyLifeStyle.Singleton);
             IocManager.RegisterIfNot<ITenantResolverCache, NullTenantResolverCache>(DependencyLifeStyle.Singleton);
+            IocManager.RegisterIfNot<IEntityHistoryStore, NullEntityHistoryStore>(DependencyLifeStyle.Singleton);
 
             if (Configuration.BackgroundJobs.IsJobExecutionEnabled)
             {

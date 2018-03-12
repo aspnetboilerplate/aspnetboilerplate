@@ -10,9 +10,7 @@ namespace Abp.Dapper
     {
         public override void PreInitialize()
         {
-#if NET46
             Configuration.UnitOfWork.IsTransactionScopeAvailable = false;
-#endif
         }
 
         public override void Initialize()

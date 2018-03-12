@@ -3,7 +3,7 @@
   <Import Project="..\..\common.props" />
 
   <PropertyGroup>
-    <TargetFrameworks>net46;netstandard1.6</TargetFrameworks>
+    <TargetFramework>netstandard2.0</TargetFramework>
     <GenerateDocumentationFile>true</GenerateDocumentationFile>
     <AssemblyName>Abp.Zero.Common</AssemblyName>
     <PackageId>Abp.Zero.Common</PackageId>
@@ -12,29 +12,22 @@
     <GenerateAssemblyCompanyAttribute>false</GenerateAssemblyCompanyAttribute>
     <GenerateAssemblyProductAttribute>false</GenerateAssemblyProductAttribute>
     <RootNamespace>Abp</RootNamespace>
+    <Description>Abp.Zero.Common</Description>
   </PropertyGroup>
 
   <ItemGroup>
     <EmbeddedResource Include="Zero\Localization\Source\*.xml" />
   </ItemGroup>
 
-  <ItemGroup Condition=" '$(TargetFramework)' == 'net46' ">
-    <Reference Include="System.ComponentModel.DataAnnotations" />
-  </ItemGroup>
-
   <ItemGroup>
-    <None Include="bin\Release\net46\Abp.Zero.Common.pdb">
-      <PackagePath>lib/net46/</PackagePath>
-      <Pack>true</Pack>
-    </None>
-    <None Include="bin\Release\netstandard1.6\Abp.Zero.Common.pdb">
-      <PackagePath>lib/netstandard1.6/</PackagePath>
+    <None Include="bin\Release\netstandard2.0\Abp.Zero.Common.pdb">
+      <PackagePath>lib/netstandard2.0/</PackagePath>
       <Pack>true</Pack>
     </None>
   </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Include="Abp" Version="2.3.0" />
+    <ProjectReference Include="..\Abp\Abp.csproj" />
   </ItemGroup>
 
 </Project>

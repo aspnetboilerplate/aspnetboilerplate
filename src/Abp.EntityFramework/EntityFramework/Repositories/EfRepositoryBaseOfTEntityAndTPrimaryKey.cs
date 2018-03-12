@@ -5,6 +5,7 @@ using System.Data.Common;
 using System.Data.Entity;
 using System.Linq;
 using System.Linq.Expressions;
+using System.Threading;
 using System.Threading.Tasks;
 using Abp.Collections.Extensions;
 using Abp.Data;
@@ -19,7 +20,7 @@ namespace Abp.EntityFramework.Repositories
     /// <typeparam name="TDbContext">DbContext which contains <typeparamref name="TEntity"/>.</typeparam>
     /// <typeparam name="TEntity">Type of the Entity for this repository</typeparam>
     /// <typeparam name="TPrimaryKey">Primary key of the entity</typeparam>
-    public class EfRepositoryBase<TDbContext, TEntity, TPrimaryKey> : AbpRepositoryBase<TEntity, TPrimaryKey>, IRepositoryWithDbContext
+    public class EfRepositoryBase<TDbContext, TEntity, TPrimaryKey> : AbpRepositoryBase<TEntity, TPrimaryKey>, IRepositoryWithDbContext, ISupportsExplicitLoading<TEntity, TPrimaryKey>
         where TEntity : class, IEntity<TPrimaryKey>
         where TDbContext : DbContext
     {
@@ -244,6 +245,26 @@ namespace Abp.EntityFramework.Repositories
         public DbContext GetDbContext()
         {
             return Context;
+        }
+
+        public Task EnsureCollectionLoadedAsync<TProperty>(TEntity entity, Expression<Func<TEntity, IEnumerable<TProperty>>> collectionExpression,
+            CancellationToken cancellationToken) where TProperty : class
+        {
+            var expression = collectionExpression.Body as MemberExpression;
+            if (expression == null)
+            {
+                throw new AbpException($"Given {nameof(collectionExpression)} is not a {typeof(MemberExpression).FullName}");
+            }
+
+            return Context.Entry(entity)
+                .Collection(expression.Member.Name)
+                .LoadAsync(cancellationToken);
+        }
+
+        public Task EnsurePropertyLoadedAsync<TProperty>(TEntity entity, Expression<Func<TEntity, TProperty>> propertyExpression,
+            CancellationToken cancellationToken) where TProperty : class
+        {
+            return Context.Entry(entity).Reference(propertyExpression).LoadAsync(cancellationToken);
         }
     }
 }

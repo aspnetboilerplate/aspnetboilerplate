@@ -166,7 +166,7 @@ namespace Abp.Dapper.NHibernate.Tests
                     uow.Complete();
                 }
             }
-            catch (Exception exception)
+            catch
             {
                 //no handling.
             }

@@ -1,3 +1,4 @@
+using System;
 using Abp.Dependency;
 using Abp.Events.Bus.Entities;
 using Abp.Events.Bus.Handlers;
@@ -25,7 +26,12 @@ namespace Abp.MultiTenancy
 
         public void HandleEvent(EntityChangedEventData<TenantFeatureSetting> eventData)
         {
-            _cacheManager.GetTenantFeatureCache().Remove(eventData.Entity.TenantId);
+            if (!eventData.Entity.TenantId.HasValue)
+            {
+                throw new Exception("TenantId field of TenantFeatureSetting cannot be null !");
+            }
+
+            _cacheManager.GetTenantFeatureCache().Remove(eventData.Entity.TenantId.Value);
         }
     }
 }

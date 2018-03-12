@@ -42,6 +42,11 @@ namespace Abp.AspNetCore.Mvc.Authorization
                 return;
             }
 
+            if (!context.ActionDescriptor.IsControllerAction())
+            {
+                return;
+            }
+
             //TODO: Avoid using try/catch, use conditional checking
             try
             {

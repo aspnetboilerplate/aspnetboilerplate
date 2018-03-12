@@ -27,19 +27,9 @@ namespace Abp.Localization
                 (logger ?? LogHelper.Logger).Warn(exceptionMessage);
             }
 
-            string notFoundText;
-#if NET46
-            notFoundText = configuration.HumanizeTextIfNotFound
+            var notFoundText = configuration.HumanizeTextIfNotFound
                 ? name.ToSentenceCase(culture)
                 : name;
-#else
-            using (CultureInfoHelper.Use(culture))
-            {
-                notFoundText = configuration.HumanizeTextIfNotFound
-                    ? name.ToSentenceCase()
-                    : name;
-            }
-#endif
 
             return configuration.WrapGivenTextIfNotFound
                 ? $"[{notFoundText}]"

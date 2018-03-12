@@ -7,12 +7,9 @@ using ILogger = Castle.Core.Logging.ILogger;
 
 namespace Abp.Castle.Logging.Log4Net
 {
-    //TODO: Test log4net with .net core!
     [Serializable]
     public class Log4NetLogger :
-#if NET46
         MarshalByRefObject,
-#endif
         ILogger
     {
         private static readonly Type DeclaringType = typeof(Log4NetLogger);

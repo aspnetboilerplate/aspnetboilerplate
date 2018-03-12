@@ -1,36 +1,30 @@
 ﻿using System;
 using System.Threading.Tasks;
+using Abp.Auditing;
 using Abp.Dependency;
 using Abp.RealTime;
 using Abp.Runtime.Session;
 using Castle.Core.Logging;
-using Microsoft.AspNet.SignalR;
 
 namespace Abp.Web.SignalR.Hubs
 {
     /// <summary>
     /// Common Hub of ABP.
     /// </summary>
-    public class AbpCommonHub : Hub, ITransientDependency
+    public class AbpCommonHub : AbpHubBase, ITransientDependency
     {
-        /// <summary>
-        /// Reference to the logger.
-        /// </summary>
-        public ILogger Logger { get; set; }
-
-        /// <summary>
-        /// Reference to the session.
-        /// </summary>
-        public IAbpSession AbpSession { get; set; }
-
         private readonly IOnlineClientManager _onlineClientManager;
+        private readonly IClientInfoProvider _clientInfoProvider;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="AbpCommonHub"/> class.
         /// </summary>
-        public AbpCommonHub(IOnlineClientManager onlineClientManager)
+        public AbpCommonHub(
+            IOnlineClientManager onlineClientManager, 
+            IClientInfoProvider clientInfoProvider)
         {
             _onlineClientManager = onlineClientManager;
+            _clientInfoProvider = clientInfoProvider;
 
             Logger = NullLogger.Instance;
             AbpSession = NullAbpSession.Instance;
@@ -95,11 +89,11 @@ namespace Abp.Web.SignalR.Hubs
             );
         }
 
-        private string GetIpAddressOfClient()
+        protected virtual string GetIpAddressOfClient()
         {
             try
             {
-                return Context.Request.Environment["server.RemoteIpAddress"].ToString();
+                return _clientInfoProvider.ClientIpAddress;
             }
             catch (Exception ex)
             {

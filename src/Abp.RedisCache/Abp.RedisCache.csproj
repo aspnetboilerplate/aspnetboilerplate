@@ -3,7 +3,7 @@
   <Import Project="..\..\common.props" />
   
   <PropertyGroup>
-    <TargetFrameworks>net46;netstandard1.6</TargetFrameworks>
+    <TargetFramework>netstandard2.0</TargetFramework>
     <GenerateDocumentationFile>true</GenerateDocumentationFile>
     <AssemblyName>Abp.RedisCache</AssemblyName>
     <PackageId>Abp.RedisCache</PackageId>
@@ -16,15 +16,12 @@
     <GenerateAssemblyCopyrightAttribute>false</GenerateAssemblyCopyrightAttribute>
     <GeneratePackageOnBuild>False</GeneratePackageOnBuild>
     <RootNamespace>Abp</RootNamespace>
+    <Description>Abp.RedisCache</Description>
   </PropertyGroup>
 
   <ItemGroup>
-    <None Include="bin\Release\net46\Abp.RedisCache.pdb">
-      <PackagePath>lib/net46/</PackagePath>
-      <Pack>true</Pack>
-    </None>
-    <None Include="bin\Release\netstandard1.6\Abp.RedisCache.pdb">
-      <PackagePath>lib/netstandard1.6/</PackagePath>
+    <None Include="bin\Release\netstandard2.0\Abp.RedisCache.pdb">
+      <PackagePath>lib/netstandard2.0/</PackagePath>
       <Pack>true</Pack>
     </None>
   </ItemGroup>
@@ -35,12 +32,6 @@
 
   <ItemGroup>
     <ProjectReference Include="..\Abp\Abp.csproj" />
-  </ItemGroup>
-
-  <ItemGroup Condition=" '$(TargetFramework)' == 'net46' ">
-    <Reference Include="System" />
-    <Reference Include="Microsoft.CSharp" />
-    <Reference Include="System.Configuration" />
   </ItemGroup>
 
 </Project>

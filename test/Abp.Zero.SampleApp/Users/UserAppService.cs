@@ -77,5 +77,11 @@ namespace Abp.Zero.SampleApp.Users
 
             await _userManager.UpdateAsync(user);
         }
+
+        public void CustomValidateMethod(CustomValidateMethodInput input)
+        {
+            //Becasue of the validation error in AddValidationErrors method of CustomValidateMethodInput, 
+            //this method will not be called.
+        }
     }
 }

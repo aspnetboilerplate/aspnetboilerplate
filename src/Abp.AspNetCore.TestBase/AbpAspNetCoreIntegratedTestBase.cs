@@ -17,7 +17,7 @@ namespace Abp.AspNetCore.TestBase
     {
         protected TestServer Server { get; }
 
-        protected HttpClient Client { get; }
+        public HttpClient Client { get; }
 
         protected IServiceProvider ServiceProvider { get; }
 

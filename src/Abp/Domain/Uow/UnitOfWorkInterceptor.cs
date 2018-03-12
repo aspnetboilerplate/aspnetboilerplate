@@ -50,7 +50,7 @@ namespace Abp.Domain.Uow
 
         private void PerformUow(IInvocation invocation, UnitOfWorkOptions options)
         {
-            if (AsyncHelper.IsAsyncMethod(invocation.Method))
+            if (invocation.Method.IsAsync())
             {
                 PerformAsyncUow(invocation, options);
             }

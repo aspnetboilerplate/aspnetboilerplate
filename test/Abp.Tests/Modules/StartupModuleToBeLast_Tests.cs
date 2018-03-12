@@ -15,7 +15,10 @@ namespace Abp.Tests.Modules
         public void StartupModule_ShouldBe_LastModule()
         {
             //Arrange
-            var bootstrapper = AbpBootstrapper.Create<MyStartupModule>(LocalIocManager);
+            var bootstrapper = AbpBootstrapper.Create<MyStartupModule>(options =>
+            {
+                options.IocManager = LocalIocManager;
+            });
             bootstrapper.Initialize();
 
             //Act
@@ -37,7 +40,10 @@ namespace Abp.Tests.Modules
         [Fact]
         public void PluginModule_ShouldNotBeLast()
         {
-            var bootstrapper = AbpBootstrapper.Create<MyStartupModule>(LocalIocManager);
+            var bootstrapper = AbpBootstrapper.Create<MyStartupModule>(options =>
+            {
+                options.IocManager = LocalIocManager;
+            });
 
             bootstrapper.PlugInSources.AddTypeList(typeof(MyPlugInModule));
 

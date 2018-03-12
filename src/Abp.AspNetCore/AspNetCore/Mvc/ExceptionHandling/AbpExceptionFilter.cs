@@ -37,6 +37,11 @@ namespace Abp.AspNetCore.Mvc.ExceptionHandling
 
         public void OnException(ExceptionContext context)
         {
+            if (!context.ActionDescriptor.IsControllerAction())
+            {
+                return;
+            }
+
             var wrapResultAttribute =
                 ReflectionHelper.GetSingleAttributeOfMemberOrDeclaringTypeOrDefault(
                     context.ActionDescriptor.GetMethodInfo(),
@@ -75,7 +80,7 @@ namespace Abp.AspNetCore.Mvc.ExceptionHandling
             context.Exception = null; //Handled!
         }
 
-        private int GetStatusCode(ExceptionContext context)
+        protected virtual int GetStatusCode(ExceptionContext context)
         {
             if (context.Exception is AbpAuthorizationException)
             {

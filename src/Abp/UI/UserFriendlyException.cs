@@ -34,7 +34,6 @@ namespace Abp.UI
             Severity = LogSeverity.Warn;
         }
 
-#if NET46
         /// <summary>
         /// Constructor for serializing.
         /// </summary>
@@ -43,7 +42,6 @@ namespace Abp.UI
         {
 
         }
-#endif
 
         /// <summary>
         /// Constructor.

@@ -2,7 +2,7 @@
 
   <PropertyGroup>
     <VersionPrefix>1.5.0.0</VersionPrefix>
-    <TargetFramework>net46</TargetFramework>
+    <TargetFramework>net461</TargetFramework>
     <AssemblyName>Abp.Zero.SampleApp.EntityFramework</AssemblyName>
     <PackageId>Abp.Zero.SampleApp.EntityFramework</PackageId>
     <GenerateAssemblyTitleAttribute>false</GenerateAssemblyTitleAttribute>
@@ -19,7 +19,7 @@
     <ProjectReference Include="..\..\src\Abp.Zero.EntityFramework\Abp.Zero.EntityFramework.csproj" />
   </ItemGroup>
 
-  <ItemGroup Condition=" '$(TargetFramework)' == 'net46' ">
+  <ItemGroup>
     <Reference Include="System" />
     <Reference Include="Microsoft.CSharp" />
   </ItemGroup>

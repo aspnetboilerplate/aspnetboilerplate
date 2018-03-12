@@ -7,6 +7,8 @@ $srcPath = Join-Path $slnPath "src"
 $projects = (
     "Abp",
     "Abp.AspNetCore",
+    "Abp.AspNetCore.OData",
+    "Abp.AspNetCore.SignalR",
     "Abp.AutoMapper",
     "Abp.MailKit",
     "Abp.HangFire",
@@ -44,6 +46,7 @@ $projects = (
     "Abp.Zero.NHibernate",
     "Abp.ZeroCore",
     "Abp.ZeroCore.EntityFrameworkCore",
+    "Abp.ZeroCore.EntityFramework",
     "Abp.ZeroCore.IdentityServer4",
     "Abp.ZeroCore.IdentityServer4.EntityFrameworkCore"    
 )
@@ -60,7 +63,8 @@ foreach($project in $projects) {
     # Create nuget pack
     Set-Location $projectFolder
     Remove-Item -Recurse (Join-Path $projectFolder "bin/Release")
-    & dotnet msbuild /t:pack /p:Configuration=Release /p:IncludeSymbols=true /p:SourceLinkCreate=true
+    & dotnet msbuild /p:Configuration=Release /p:SourceLinkCreate=true
+    & dotnet msbuild /t:pack /p:Configuration=Release /p:SourceLinkCreate=true
 
     # Copy nuget package
     $projectPackPath = Join-Path $projectFolder ("/bin/Release/" + $project + ".*.nupkg")

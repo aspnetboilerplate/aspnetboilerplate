@@ -6,7 +6,7 @@ namespace Abp.AspNetCore.TestBase
 {
     public static class AbpServiceOptionsTestExtensions
     {
-        public static void SetupTest(this AbpServiceOptions options)
+        public static void SetupTest(this AbpBootstrapperOptions options)
         {
             options.IocManager = new IocManager();
             options.IocManager.RegisterIfNot<IAbpSession, TestAbpSession>();

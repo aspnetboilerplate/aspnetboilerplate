@@ -1,11 +1,7 @@
-
 using System.Text;
 using System.Threading.Tasks;
 using Abp.Extensions;
-
-#if NET46
 using System.Net.Mail;
-#endif
 
 namespace Abp.Net.Mail
 {
@@ -27,15 +23,26 @@ namespace Abp.Net.Mail
 
         public virtual async Task SendAsync(string to, string subject, string body, bool isBodyHtml = true)
         {
-            await SendAsync(Configuration.DefaultFromAddress, to, subject, body, isBodyHtml);
+            await SendAsync(new MailMessage
+            {
+                To = { to },
+                Subject = subject,
+                Body = body,
+                IsBodyHtml = isBodyHtml
+            });
         }
 
         public virtual void Send(string to, string subject, string body, bool isBodyHtml = true)
         {
-            Send(Configuration.DefaultFromAddress, to, subject, body, isBodyHtml);
+            Send(new MailMessage
+            {
+                To = { to },
+                Subject = subject,
+                Body = body,
+                IsBodyHtml = isBodyHtml
+            });
         }
 
-#if NET46
         public virtual async Task SendAsync(string from, string to, string subject, string body, bool isBodyHtml = true)
         {
             await SendAsync(new MailMessage(from, to, subject, body) { IsBodyHtml = isBodyHtml });
@@ -110,11 +117,5 @@ namespace Abp.Net.Mail
                 mail.BodyEncoding = Encoding.UTF8;
             }
         }
-#else
-        public abstract Task SendAsync(string from, string to, string subject, string body, bool isBodyHtml = true);
-
-        public abstract void Send(string from, string to, string subject, string body, bool isBodyHtml = true);
-#endif
-
     }
 }

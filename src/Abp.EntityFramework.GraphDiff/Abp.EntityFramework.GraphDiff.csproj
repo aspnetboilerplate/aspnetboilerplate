@@ -3,7 +3,7 @@
   <Import Project="..\..\common.props" />
   
   <PropertyGroup>
-    <TargetFramework>net46</TargetFramework>
+    <TargetFramework>net461</TargetFramework>
     <GenerateDocumentationFile>true</GenerateDocumentationFile>
     <AssemblyName>Abp.EntityFramework.GraphDiff</AssemblyName>
     <PackageId>Abp.EntityFramework.GraphDiff</PackageId>
@@ -13,11 +13,12 @@
     <GenerateAssemblyProductAttribute>false</GenerateAssemblyProductAttribute>
     <GeneratePackageOnBuild>False</GeneratePackageOnBuild>
     <RootNamespace>Abp.EntityFramework</RootNamespace>
+	<Description>Abp.EntityFramework.GraphDiff</Description>
   </PropertyGroup>
 
   <ItemGroup>
-    <None Include="bin\Release\net46\Abp.EntityFramework.GraphDiff.pdb">
-      <PackagePath>lib/net46/</PackagePath>
+    <None Include="bin\Release\net461\Abp.EntityFramework.GraphDiff.pdb">
+      <PackagePath>lib/net461/</PackagePath>
       <Pack>true</Pack>
     </None>
   </ItemGroup>
@@ -28,11 +29,11 @@
   </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Include="EntityFramework" Version="6.1.3" />
-    <PackageReference Include="RefactorThis.GraphDiff" Version="2.0.1" />
+    <PackageReference Include="EntityFramework" Version="6.2.0" />
+    <PackageReference Include="RefactorThis.GraphDiff" Version="3.0.1" />
   </ItemGroup>
 
-  <ItemGroup Condition=" '$(TargetFramework)' == 'net46' ">
+  <ItemGroup Condition=" '$(TargetFramework)' == 'net461' ">
     <Reference Include="System" />
     <Reference Include="Microsoft.CSharp" />
   </ItemGroup>

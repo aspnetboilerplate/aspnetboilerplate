@@ -17,8 +17,10 @@ namespace Abp.IdentityServer4
 
             var services = new ServiceCollection();
 
+            services.AddAbpIdentity<Tenant, User, Role>();
+
             services.AddIdentityServer()
-                .AddTemporarySigningCredential()
+                .AddDeveloperSigningCredential()
                 .AddAbpPersistedGrants<SampleAppDbContext>()
                 .AddInMemoryIdentityResources(IdentityServerConfig.GetIdentityResources())
                 .AddInMemoryApiResources(IdentityServerConfig.GetApiResources())

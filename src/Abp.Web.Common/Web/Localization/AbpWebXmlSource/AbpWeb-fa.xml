@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<localizationDictionary culture="fa-IR">
+  <texts>
+    <text name="InternalServerError" value="خطایی در درخواست شما رخ داده است!" />
+    <text name="ValidationError" value="درخواست شما معتبر نمی باشد!" />
+    <text name="AreYouSure" value="آیا مطمئن اید?" />
+    <text name="Cancel" value="انصراف" />
+    <text name="Yes" value="بله" />
+    <text name="ValidationNarrativeTitle" value="خطا های زیر در درخواست شما وجود دارد." />
+    <text name="DefaultError" value="خطایی رخ داده است!" />
+    <text name="DefaultErrorDetail" value="خطایی رخ داده است." />
+    <text name="DefaultError401" value="شما login نکرده اید" />
+    <text name="DefaultErrorDetail401" value="درخواست مورد نظر شما نیاز به login شدن دارد" />
+    <text name="DefaultError403" value="شما مجوز لازم را ندارید!" />
+    <text name="DefaultErrorDetail403" value="شما مجاز به این درخواست نیستید." />
+    <text name="DefaultError404" value="آدرس مورد نظر شما یافت نشد!" />
+    <text name="DefaultErrorDetail404" value="آدرس مورد نظر شما یافت نشد" />
+    <text name="EntityNotFound" value="رکورد مورد نظر شما {0} با شناسه = {1} یافت نشد!" />
+  </texts>
+</localizationDictionary>

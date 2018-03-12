@@ -1,9 +1,9 @@
 namespace Abp.Events.Bus.Entities
 {
-    public enum EntityChangeType
+    public enum EntityChangeType : byte
     {
-        Created,
-        Updated,
-        Deleted
+        Created = 0,
+        Updated = 1,
+        Deleted = 2
     }
 }

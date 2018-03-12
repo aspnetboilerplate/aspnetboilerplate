@@ -1,11 +1,11 @@
 ﻿using System.Reflection;
 using Abp.Dependency;
 using Abp.Modules;
-using Abp.Quartz.Quartz.Configuration;
+using Abp.Quartz.Configuration;
 using Abp.Threading.BackgroundWorkers;
 using Quartz;
 
-namespace Abp.Quartz.Quartz
+namespace Abp.Quartz
 {
     [DependsOn(typeof (AbpKernelModule))]
     public class AbpQuartzModule : AbpModule

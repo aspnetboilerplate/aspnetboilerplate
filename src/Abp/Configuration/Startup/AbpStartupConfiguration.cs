@@ -5,6 +5,7 @@ using Abp.Auditing;
 using Abp.BackgroundJobs;
 using Abp.Dependency;
 using Abp.Domain.Uow;
+using Abp.EntityHistory;
 using Abp.Events.Bus;
 using Abp.Notifications;
 using Abp.Resources.Embedded;
@@ -100,6 +101,8 @@ namespace Abp.Configuration.Startup
 
         public IEmbeddedResourcesConfiguration EmbeddedResources { get; private set; }
 
+        public IEntityHistoryConfiguration EntityHistory { get; private set; }
+
         /// <summary>
         /// Private constructor for singleton pattern.
         /// </summary>
@@ -125,6 +128,7 @@ namespace Abp.Configuration.Startup
             BackgroundJobs = IocManager.Resolve<IBackgroundJobConfiguration>();
             Notifications = IocManager.Resolve<INotificationConfiguration>();
             EmbeddedResources = IocManager.Resolve<IEmbeddedResourcesConfiguration>();
+            EntityHistory = IocManager.Resolve<IEntityHistoryConfiguration>();
 
             ServiceReplaceActions = new Dictionary<Type, Action>();
         }
