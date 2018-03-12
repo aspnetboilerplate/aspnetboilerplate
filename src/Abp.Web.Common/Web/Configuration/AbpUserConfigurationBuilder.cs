@@ -100,17 +100,32 @@ namespace Abp.Web.Configuration
 
         protected virtual AbpUserLocalizationConfigDto GetUserLocalizationConfig()
         {
+            var languages = LanguageManager.GetLanguages().ToList();
             var currentCulture = CultureInfo.CurrentUICulture;
-            var languages = LanguageManager.GetLanguages();
+            string userLanguageName = currentCulture.Name;
+            string userLanguageDisplayName = currentCulture.DisplayName;
+            if (AbpSession!=null && AbpSession.UserId.HasValue && languages.Count>0)
+            {
+                var userLanguage = SettingManager.GetSettingValueForUser(LocalizationSettingNames.DefaultLanguage, AbpSession.TenantId, AbpSession.UserId.Value);
+                if (userLanguage!=null)
+                {
+                    var defaultLanguage = languages.FirstOrDefault(x => x.Name.ToLower() == userLanguage);
+                    if (defaultLanguage!=null)
+                    {
+                        userLanguageName = defaultLanguage.Name;
+                        userLanguageDisplayName = defaultLanguage.DisplayName;
+                    }
+                }
+            }
 
             var config = new AbpUserLocalizationConfigDto
             {
                 CurrentCulture = new AbpUserCurrentCultureConfigDto
                 {
-                    Name = currentCulture.Name,
-                    DisplayName = currentCulture.DisplayName
+                    Name = userLanguageName,
+                    DisplayName = userLanguageDisplayName
                 },
-                Languages = languages.ToList()
+                Languages = languages
             };
 
             if (languages.Count > 0)
