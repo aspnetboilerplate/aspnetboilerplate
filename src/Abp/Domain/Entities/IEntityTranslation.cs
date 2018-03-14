@@ -1,6 +1,6 @@
 namespace Abp.Domain.Entities
 {
-    public interface IEntityTranslation<TEntity>
+    public interface IEntityTranslation<TEntity, TPrimaryKey> : IEntity<TPrimaryKey>
     {
         TEntity Core { get; set; }
 

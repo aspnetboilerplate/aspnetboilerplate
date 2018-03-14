@@ -71,7 +71,7 @@ namespace Abp.EntityFramework.Extensions
 
             TResult result;
 
-            using (var nolockInterceptor = repository.As<AbpRepositoryBase<TEntity, int>>().IocResolver.ResolveAsDisposable<WithNoLockInterceptor>())
+            using (var nolockInterceptor = repository.As<AbpRepositoryBase<TEntity, int>>().IocManager.ResolveAsDisposable<WithNoLockInterceptor>())
             {
                 using (nolockInterceptor.Object.UseNolocking())
                 {
@@ -97,7 +97,7 @@ namespace Abp.EntityFramework.Extensions
 
             TResult result;
 
-            using (var nolockInterceptor = repository.As<AbpRepositoryBase<TEntity, TPrimaryKey>>().IocResolver.ResolveAsDisposable<WithNoLockInterceptor>())
+            using (var nolockInterceptor = repository.As<AbpRepositoryBase<TEntity, TPrimaryKey>>().IocManager.ResolveAsDisposable<WithNoLockInterceptor>())
             {
                 using (nolockInterceptor.Object.UseNolocking())
                 {

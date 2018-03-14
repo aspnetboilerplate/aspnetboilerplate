@@ -66,14 +66,12 @@ namespace Abp.EntityFrameworkCore.Tests
                 var product1_en = new ProductTranslation { CoreId = product1.Id, Language = "en", Name = "Watch" };
                 var product1_tr = new ProductTranslation { CoreId = product1.Id, Language = "tr", Name = "Saat" };
 
-                product1.Translations.Add(product1_en);
-                product1.Translations.Add(product1_tr);
+                context.ProductTranslations.Add(product1_en);
+                context.ProductTranslations.Add(product1_tr);
 
-                var product2_en = new ProductTranslation { CoreId = product1.Id, Language = "en", Name = "Bike" };
-                var product2_tr = new ProductTranslation { CoreId = product1.Id, Language = "tr", Name = "Bisiklet" };
+                var product2_en = new ProductTranslation { CoreId = product2.Id, Language = "en", Name = "Bike" };
 
-                product2.Translations.Add(product2_en);
-                product2.Translations.Add(product2_tr);
+                context.ProductTranslations.Add(product2_en);
 
                 context.SaveChanges();
             }

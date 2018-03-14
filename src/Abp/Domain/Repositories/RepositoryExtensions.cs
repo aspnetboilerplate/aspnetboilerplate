@@ -3,8 +3,10 @@ using System.Collections.Generic;
 using System.Linq.Expressions;
 using System.Threading;
 using System.Threading.Tasks;
+using Abp.Configuration;
 using Abp.Dependency;
 using Abp.Domain.Entities;
+using Abp.Localization;
 using Abp.Reflection;
 using Abp.Threading;
 
@@ -72,10 +74,37 @@ namespace Abp.Domain.Repositories
             var repo = ProxyHelper.UnProxy(repository) as AbpRepositoryBase<TEntity, TPrimaryKey>;
             if (repo != null)
             {
-                return repo.IocResolver;
+                return repo.IocManager;
             }
 
             throw new ArgumentException($"Given {nameof(repository)} is not inherited from {typeof(AbpRepositoryBase<TEntity, TPrimaryKey>).AssemblyQualifiedName}");
+        }
+
+        public static async Task<TTranslation> GetWithFallback<TTranslation, TCore>(
+            this IRepository<TTranslation> repository, int id
+            )
+            where TTranslation : class, IEntityTranslation<TCore, int>, IEntity
+            where TCore : class, IMultiLingualEntity<TTranslation>
+        {
+            if (!(ProxyHelper.UnProxy(repository) is AbpRepositoryBase<TTranslation, int> repo))
+            {
+                throw new Exception("The repository is not derived from AbpRepositoryBase.");
+            }
+
+            var currentCulture = Thread.CurrentThread.CurrentCulture.Name;
+            var translationInCurrentLanguage = repo.FirstOrDefault(e => e.CoreId == id && e.Language == currentCulture);
+            if (translationInCurrentLanguage != null)
+            {
+                return translationInCurrentLanguage;
+            }
+            
+            var defaultCulture = await repo.IocManager.Resolve<ISettingManager>().GetSettingValueAsync(LocalizationSettingNames.DefaultLanguage);
+            if (string.IsNullOrEmpty(defaultCulture))
+            {
+                return null;
+            }
+
+            return repo.FirstOrDefault(e => e.CoreId == id && e.Language == defaultCulture);
         }
     }
 }

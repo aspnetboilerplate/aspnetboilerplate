@@ -17,7 +17,7 @@ namespace Abp.Domain.Repositories
     /// </summary>
     /// <typeparam name="TEntity">Type of the Entity for this repository</typeparam>
     /// <typeparam name="TPrimaryKey">Primary key of the entity</typeparam>
-    public abstract class AbpRepositoryBase<TEntity, TPrimaryKey> : IRepository<TEntity, TPrimaryKey>
+    public abstract class AbpRepositoryBase<TEntity, TPrimaryKey> : IRepository<TEntity, TPrimaryKey>, IIocManagerAccessor
         where TEntity : class, IEntity<TPrimaryKey>
     {
         /// <summary>
@@ -27,7 +27,7 @@ namespace Abp.Domain.Repositories
 
         public IUnitOfWorkManager UnitOfWorkManager { get; set; }
 
-        public IIocResolver IocResolver { get; set; }
+        public IIocManager IocManager { get; set; }
 
         static AbpRepositoryBase()
         {
