@@ -8,6 +8,7 @@ using Abp.Dependency.Installers;
 using Abp.Domain.Uow;
 using Abp.EntityHistory;
 using Abp.Modules;
+using Abp.MultiTenancy;
 using Abp.PlugIns;
 using Abp.Runtime.Validation.Interception;
 using Castle.Core.Logging;
@@ -132,6 +133,7 @@ namespace Abp
             AuditingInterceptorRegistrar.Initialize(IocManager);
             EntityHistoryInterceptorRegistrar.Initialize(IocManager);
             UnitOfWorkRegistrar.Initialize(IocManager);
+            MultiTenancySideInterceptorRegistrar.Initialize(IocManager);
             AuthorizationInterceptorRegistrar.Initialize(IocManager);
         }
 
