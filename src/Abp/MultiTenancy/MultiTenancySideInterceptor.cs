@@ -36,13 +36,15 @@ namespace Abp.MultiTenancy
                 return;
             }
 
-            if (multiTenancySideAttribute.Side.HasFlag(MultiTenancySides.Host) && AbpSession.TenantId.HasValue)
+            var isHost = multiTenancySideAttribute.Side.HasFlag(MultiTenancySides.Host);
+            var isTenant = multiTenancySideAttribute.Side.HasFlag(MultiTenancySides.Tenant);
+            if ((!isTenant && AbpSession.TenantId.HasValue) && isHost)
             {
                 throw new AbpAuthorizationException(
                     LocalizationManager.GetString(AbpConsts.LocalizationSourceName, "AnonymousTenantUserMustNotCallHostMethod")
                     );
             }
-            else if (multiTenancySideAttribute.Side.HasFlag(MultiTenancySides.Tenant) && !AbpSession.TenantId.HasValue)
+            else if ((!isHost && !AbpSession.TenantId.HasValue) && isTenant)
             {
                 throw new AbpAuthorizationException(
                     LocalizationManager.GetString(AbpConsts.LocalizationSourceName, "AnonymousHostUserMustNotCallTenantMethod")
