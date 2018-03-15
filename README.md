@@ -4,8 +4,9 @@
 
 ## What is ABP?
 
-ASP.NET Boilerplate is a general purpose **application framework** specially designed for new modern web applications. It uses already **familiar tools** and 
-implements **best practices** around them to provide you a **SOLID development experience**.
+ASP.NET Boilerplate is a general purpose **application framework** specially designed for new modern web applications. It uses already **familiar tools** and implements **best practices** around them to provide you a **SOLID development experience**.
+
+ASP.NET Boilerplate works with the latest **ASP.NET Core** & **EF Core** but also supports ASP.NET MVC 5.x & EF 6.x as well.
 
 ###### Modular Design
 
