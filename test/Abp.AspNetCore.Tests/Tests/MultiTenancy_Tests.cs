@@ -141,6 +141,7 @@ namespace Abp.AspNetCore.Tests
             using (AbpSession.Use(null, null))
             {
                 Should.Throw<AbpAuthorizationException>(() => _multiTenancyClass.TenantMethod()).Message.ShouldBe("Anonymous host user must not call tenant method.");
+                _multiTenancyClass.BothMethod();
             }
         }
 
@@ -159,6 +160,7 @@ namespace Abp.AspNetCore.Tests
             using (AbpSession.Use(1, null))
             {
                 Should.Throw<AbpAuthorizationException>(() => _multiTenancyClass.HostMethod()).Message.ShouldBe("Anonymous tenant user must not call host method.");
+                _multiTenancyClass.BothMethod();
             }
         }
     }
@@ -179,7 +181,8 @@ namespace Abp.AspNetCore.Tests
         {
         }
 
-        public virtual void AnotherMethod()
+        [MultiTenancySide(MultiTenancySides.Host | MultiTenancySides.Tenant)]
+        public virtual void BothMethod()
         {
         }
     }
