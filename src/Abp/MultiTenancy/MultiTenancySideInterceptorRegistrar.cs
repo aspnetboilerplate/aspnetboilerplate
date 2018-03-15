@@ -22,7 +22,7 @@ namespace Abp.MultiTenancy
 
                 if (ShouldIntercept(multiTenancyConfiguration, handler.ComponentModel.Implementation))
                 {
-                    handler.ComponentModel.Interceptors.Add(new InterceptorReference(typeof(MultiTenancySideAttribute)));
+                    handler.ComponentModel.Interceptors.Add(new InterceptorReference(typeof(MultiTenancySideInterceptor)));
                 }
             };
         }
