@@ -28,6 +28,11 @@ namespace Abp.EntityHistory
         
         private static bool ShouldIntercept(IEntityHistoryConfiguration entityHistoryConfiguration, Type type)
         {
+            if (!entityHistoryConfiguration.IsEnabled)
+            {
+                return false;
+            }
+
             if (type.GetTypeInfo().IsDefined(typeof(UseCaseAttribute), true))
             {
                 return true;
