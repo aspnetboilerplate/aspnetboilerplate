@@ -2,7 +2,6 @@
 using System.Threading.Tasks;
 using Abp.AspNetCore.App.Controllers;
 using Abp.Authorization;
-using Abp.Configuration.Startup;
 using Abp.Dependency;
 using Abp.MultiTenancy;
 using Abp.Web.Models;
@@ -21,7 +20,6 @@ namespace Abp.AspNetCore.Tests
 
         public MultiTenancy_Tests()
         {
-            IocManager.Resolve<IMultiTenancyConfig>().IsEnabled = true;
             _multiTenancyConfiguration = Resolve<IWebMultiTenancyConfiguration>();
             _multiTenancyClass = Resolve<MyMultiTenancyClass>();
             _tenantClass = Resolve<MyTenantClass>();
