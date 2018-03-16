@@ -73,6 +73,11 @@ namespace Abp.EntityFrameworkCore
 
         protected virtual int? CurrentTenantId => GetCurrentTenantIdOrNull();
 
+        protected virtual string DefaultLanguage => GetDefaultLanguage();
+
+        protected virtual string CurrentLanguage => GetCurrentLanguage();
+
+
         protected virtual bool IsSoftDeleteFilterEnabled => CurrentUnitOfWorkProvider?.Current?.IsFilterEnabled(AbpDataFilters.SoftDelete) == true;
 
         protected virtual bool IsMayHaveTenantFilterEnabled => CurrentUnitOfWorkProvider?.Current?.IsFilterEnabled(AbpDataFilters.MayHaveTenant) == true;
@@ -146,6 +151,12 @@ namespace Abp.EntityFrameworkCore
                 return true;
             }
 
+            //todo@ismail: ask to halil ?
+            if (typeof(TEntity).GetInterfaces().Any(i => i.Name == typeof(IEntityTranslation<>).Name))
+            {
+                return true;
+            }
+
             return false;
         }
 
@@ -186,6 +197,13 @@ namespace Abp.EntityFrameworkCore
                  */
                 Expression<Func<TEntity, bool>> mustHaveTenantFilter = e => ((IMustHaveTenant)e).TenantId == CurrentTenantId || (((IMustHaveTenant)e).TenantId == CurrentTenantId) == IsMustHaveTenantFilterEnabled;
                 expression = expression == null ? mustHaveTenantFilter : CombineExpressions(expression, mustHaveTenantFilter);
+            }
+
+            //todo@ismail: ask to halil ?
+            if (typeof(TEntity).GetInterfaces().Any(i => i.Name == typeof(IEntityTranslation<>).Name))
+            {
+                Expression<Func<TEntity, bool>> multiLingualFilter = e => (((IEntityTranslation)e).Language == CurrentLanguage || ((IEntityTranslation)e).Language == DefaultLanguage);
+                expression = expression == null ? multiLingualFilter : CombineExpressions(expression, multiLingualFilter);
             }
 
             return expression;
@@ -473,6 +491,17 @@ namespace Abp.EntityFrameworkCore
             }
 
             return AbpSession.TenantId;
+        }
+
+        protected virtual string GetDefaultLanguage()
+        {
+            //todo@ismail -> ask to halil ?
+            return "en";
+        }
+
+        protected virtual string GetCurrentLanguage()
+        {
+            return Thread.CurrentThread.CurrentCulture.Name.Substring(0, 2);
         }
 
         protected virtual Expression<Func<T, bool>> CombineExpressions<T>(Expression<Func<T, bool>> expression1, Expression<Func<T, bool>> expression2)

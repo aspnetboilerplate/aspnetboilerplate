@@ -2,7 +2,7 @@
 
 namespace Abp.EntityFrameworkCore.Tests.Domain
 {
-    public class ProductTranslation : Entity, IEntityTranslation<Product, int>
+    public class ProductTranslation : Entity, IEntityTranslation<Product>
     {
         public virtual string Name { get; set; }
 
