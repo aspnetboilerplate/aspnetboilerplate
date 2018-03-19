@@ -77,7 +77,6 @@ namespace Abp.EntityFrameworkCore
 
         protected virtual string CurrentLanguage => GetCurrentLanguage();
 
-
         protected virtual bool IsSoftDeleteFilterEnabled => CurrentUnitOfWorkProvider?.Current?.IsFilterEnabled(AbpDataFilters.SoftDelete) == true;
 
         protected virtual bool IsMayHaveTenantFilterEnabled => CurrentUnitOfWorkProvider?.Current?.IsFilterEnabled(AbpDataFilters.MayHaveTenant) == true;
@@ -197,13 +196,6 @@ namespace Abp.EntityFrameworkCore
                  */
                 Expression<Func<TEntity, bool>> mustHaveTenantFilter = e => ((IMustHaveTenant)e).TenantId == CurrentTenantId || (((IMustHaveTenant)e).TenantId == CurrentTenantId) == IsMustHaveTenantFilterEnabled;
                 expression = expression == null ? mustHaveTenantFilter : CombineExpressions(expression, mustHaveTenantFilter);
-            }
-
-            //todo@ismail: ask to halil ?
-            if (typeof(TEntity).GetInterfaces().Any(i => i.Name == typeof(IEntityTranslation<>).Name))
-            {
-                Expression<Func<TEntity, bool>> multiLingualFilter = e => (((IEntityTranslation)e).Language == CurrentLanguage || ((IEntityTranslation)e).Language == DefaultLanguage);
-                expression = expression == null ? multiLingualFilter : CombineExpressions(expression, multiLingualFilter);
             }
 
             return expression;

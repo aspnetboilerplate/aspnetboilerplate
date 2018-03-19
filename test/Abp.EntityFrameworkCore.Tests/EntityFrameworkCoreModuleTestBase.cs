@@ -70,8 +70,10 @@ namespace Abp.EntityFrameworkCore.Tests
                 context.ProductTranslations.Add(product1_tr);
 
                 var product2_en = new ProductTranslation { CoreId = product2.Id, Language = "en", Name = "Bike" };
+                var product2_fr = new ProductTranslation { CoreId = product2.Id, Language = "fr", Name = "Bicyclette" };
 
                 context.ProductTranslations.Add(product2_en);
+                context.ProductTranslations.Add(product2_fr);
 
                 context.SaveChanges();
             }
