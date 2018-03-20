@@ -6,6 +6,24 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <None Remove="Zero\Localization\Abp.json" />
+    <None Remove="Zero\Localization\Sources\Base\AbpZero\AbpZero.json" />
+    <None Remove="Zero\Localization\Sources\Extensions\Json\AbpZero\AbpZero.json" />
+    <None Remove="Zero\Localization\Sources\Extensions\Xml\Abp.json" />
+    <None Remove="Zero\Localization\Sources\Extensions\Xml\Abp.xml" />
+    <None Remove="Zero\Localization\Sources\Extensions\Xml\AbpZero\AbpZero.xml" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <EmbeddedResource Include="Zero\Localization\Sources\Base\AbpZero\AbpZero.json" />
+    <EmbeddedResource Include="Zero\Localization\Sources\Base\Abp\Abp.json" />
+    <EmbeddedResource Include="Zero\Localization\Sources\Extensions\Json\AbpZero\AbpZero.json" />
+    <EmbeddedResource Include="Zero\Localization\Sources\Extensions\Xml\AbpZero\AbpZero.xml" />
+    <EmbeddedResource Include="Zero\Localization\Sources\Extensions\Xml\Abp\Abp.xml" />
+    <EmbeddedResource Include="Zero\Localization\Sources\Extensions\Json\Abp\Abp.json" />
+  </ItemGroup>
+
+  <ItemGroup>
     <ProjectReference Include="..\..\src\Abp.TestBase\Abp.TestBase.csproj" />
     <ProjectReference Include="..\Abp.ZeroCore.SampleApp\Abp.ZeroCore.SampleApp.csproj" />
   </ItemGroup>
@@ -13,7 +31,7 @@
   <ItemGroup>
     <PackageReference Include="Microsoft.Data.Sqlite" Version="2.0.0" />
     <PackageReference Include="Microsoft.EntityFrameworkCore.Sqlite" Version="2.0.1" />
-    <PackageReference Include="Microsoft.NET.Test.Sdk" Version="15.5.0" />
+    <PackageReference Include="Microsoft.NET.Test.Sdk" Version="15.6.0" />
     <PackageReference Include="xunit" Version="2.3.1" />
     <PackageReference Include="xunit.extensibility.execution" Version="2.3.1" />
     <PackageReference Include="xunit.runner.visualstudio" Version="2.3.1" />

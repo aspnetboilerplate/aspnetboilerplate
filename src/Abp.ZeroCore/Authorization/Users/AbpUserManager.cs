@@ -135,19 +135,19 @@ namespace Abp.Authorization.Users
         /// <summary>
         /// Check whether a user is granted for a permission.
         /// </summary>
-        /// <param name="user">User</param>
+        /// <param name="userId">User id</param>
         /// <param name="permission">Permission</param>
-        public virtual Task<bool> IsGrantedAsync(TUser user, Permission permission)
+        public virtual async Task<bool> IsGrantedAsync(long userId, Permission permission)
         {
-            return IsGrantedAsync(user.Id, permission);
+            return await IsGrantedAsync(await GetUserByIdAsync(userId), permission);
         }
 
         /// <summary>
         /// Check whether a user is granted for a permission.
         /// </summary>
-        /// <param name="userId">User id</param>
+        /// <param name="user">User</param>
         /// <param name="permission">Permission</param>
-        public virtual async Task<bool> IsGrantedAsync(long userId, Permission permission)
+        public virtual async Task<bool> IsGrantedAsync(TUser user, Permission permission)
         {
             //Check for multi-tenancy side
             if (!permission.MultiTenancySides.HasFlag(GetCurrentMultiTenancySide()))
@@ -158,6 +158,8 @@ namespace Abp.Authorization.Users
             //Check for depended features
             if (permission.FeatureDependency != null && GetCurrentMultiTenancySide() == MultiTenancySides.Tenant)
             {
+                FeatureDependencyContext.TenantId = user.TenantId;
+
                 if (!await permission.FeatureDependency.IsSatisfiedAsync(FeatureDependencyContext))
                 {
                     return false;
@@ -165,7 +167,7 @@ namespace Abp.Authorization.Users
             }
 
             //Get cached user permissions
-            var cacheItem = await GetUserPermissionCacheItemAsync(userId);
+            var cacheItem = await GetUserPermissionCacheItemAsync(user.Id);
             if (cacheItem == null)
             {
                 return false;
