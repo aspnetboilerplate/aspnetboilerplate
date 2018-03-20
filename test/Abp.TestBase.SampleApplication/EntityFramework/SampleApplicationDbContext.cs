@@ -8,6 +8,7 @@ using Abp.TestBase.SampleApplication.EntityFramework.Repositories;
 using Abp.TestBase.SampleApplication.GuidEntities;
 using Abp.TestBase.SampleApplication.Messages;
 using Abp.TestBase.SampleApplication.People;
+using Abp.TestBase.SampleApplication.Shop;
 
 namespace Abp.TestBase.SampleApplication.EntityFramework
 {
@@ -32,6 +33,10 @@ namespace Abp.TestBase.SampleApplication.EntityFramework
         public virtual IDbSet<TestEntityWithGuidPk> TestEntityWithGuidPks { get; set; }
 
         public virtual IDbSet<TestEntityWithGuidPkAndDbGeneratedValue> TestEntityWithGuidPkAndDbGeneratedValues { get; set; }
+
+        public virtual IDbSet<Product> Products { get; set; }
+
+        public virtual IDbSet<ProductTranslation> ProductTranslations { get; set; }
 
         public SampleApplicationDbContext()
         {

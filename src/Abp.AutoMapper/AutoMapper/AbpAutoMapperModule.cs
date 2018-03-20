@@ -1,8 +1,10 @@
 ﻿using System;
+using System.Linq;
 using Abp.Localization;
 using Abp.Modules;
 using System.Reflection;
 using Abp.Configuration.Startup;
+using Abp.Domain.Entities;
 using Abp.Reflection;
 using AutoMapper;
 using Castle.MicroKernel.Registration;
@@ -16,7 +18,7 @@ namespace Abp.AutoMapper
 
         private static volatile bool _createdMappingsBefore;
         private static readonly object SyncObj = new object();
-        
+
         public AbpAutoMapperModule(ITypeFinder typeFinder)
         {
             _typeFinder = typeFinder;
@@ -98,6 +100,17 @@ namespace Abp.AutoMapper
 
             configuration.CreateMap<ILocalizableString, string>().ConvertUsing(ls => ls?.Localize(localizationContext));
             configuration.CreateMap<LocalizableString, string>().ConvertUsing(ls => ls == null ? null : localizationContext.LocalizationManager.GetString(ls));
+            //configuration.CreateMap(typeof(IMultiLingualEntity<>), typeof(object)).ConvertUsing(typeof(MultiLingualEntityTypeConverter<>));
+        }
+    }
+
+    public class MultiLingualEntityTypeConverter<TTranslation> : ITypeConverter<IMultiLingualEntity<TTranslation>, object>
+        where TTranslation : class, IEntity, IEntityTranslation
+    {
+        public object Convert(IMultiLingualEntity<TTranslation> source, object destination, ResolutionContext context)
+        {
+            var multiLingualDto = Mapper.Map(source, destination);
+            return Mapper.Map(source.Translations.FirstOrDefault(), multiLingualDto);
         }
     }
 }

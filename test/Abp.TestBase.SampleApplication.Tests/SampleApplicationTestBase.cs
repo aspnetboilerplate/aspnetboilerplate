@@ -7,6 +7,7 @@ using Abp.TestBase.SampleApplication.Crm;
 using Abp.TestBase.SampleApplication.EntityFramework;
 using Abp.TestBase.SampleApplication.Messages;
 using Abp.TestBase.SampleApplication.People;
+using Abp.TestBase.SampleApplication.Shop;
 using Castle.MicroKernel.Registration;
 using EntityFramework.DynamicFilters;
 
@@ -113,15 +114,15 @@ namespace Abp.TestBase.SampleApplication.Tests
             UsingDbContext(
               context =>
               {
-                  AddCompany(context, 
+                  AddCompany(context,
                       "Volosoft",
                       "Turkey",
-                      "Istanbul", 
-                      "Denizkoskler Mah. Avcilar", 
+                      "Istanbul",
+                      "Denizkoskler Mah. Avcilar",
                       "Halil",
                       "Gumuspala Mah. Avcilar",
-                      "Ismail", 
-                      "Headquarter", 
+                      "Ismail",
+                      "Headquarter",
                       "Europe Headquarter");
 
                   AddCompany(context,
@@ -135,9 +136,44 @@ namespace Abp.TestBase.SampleApplication.Tests
                       "Main Office",
                       "IT Office");
               });
+
+            UsingDbContext(
+                context =>
+                {
+                    var product1 = new Product
+                    {
+                        Price = 10,
+                        Stock = 1000
+                    };
+
+                    var product2 = new Product
+                    {
+                        Price = 99,
+                        Stock = 1000
+                    };
+
+                    context.Products.Add(product1);
+                    context.Products.Add(product2);
+                    context.SaveChanges();
+
+                    //Product1 translations
+                    var product1_en = new ProductTranslation { CoreId = product1.Id, Language = "en", Name = "Watch" };
+                    var product1_tr = new ProductTranslation { CoreId = product1.Id, Language = "tr", Name = "Saat" };
+
+                    context.ProductTranslations.Add(product1_en);
+                    context.ProductTranslations.Add(product1_tr);
+
+                    var product2_en = new ProductTranslation { CoreId = product2.Id, Language = "en", Name = "Bike" };
+                    var product2_fr = new ProductTranslation { CoreId = product2.Id, Language = "fr", Name = "Bicyclette" };
+
+                    context.ProductTranslations.Add(product2_en);
+                    context.ProductTranslations.Add(product2_fr);
+
+                    context.SaveChanges();
+                });
         }
 
-        private void AddCompany(SampleApplicationDbContext context,string name,string country, string city, string address1, string modifier1, string address2, string modifier2, string branchName1, string branchName2)
+        private void AddCompany(SampleApplicationDbContext context, string name, string country, string city, string address1, string modifier1, string address2, string modifier2, string branchName1, string branchName2)
         {
             context.Companies.Add(new Company
             {
@@ -182,7 +218,7 @@ namespace Abp.TestBase.SampleApplication.Tests
                       }
             });
         }
-        
+
         public void UsingDbContext(Action<SampleApplicationDbContext> action)
         {
             using (var context = LocalIocManager.Resolve<SampleApplicationDbContext>())
