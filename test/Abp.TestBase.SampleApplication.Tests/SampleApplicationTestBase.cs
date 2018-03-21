@@ -152,8 +152,15 @@ namespace Abp.TestBase.SampleApplication.Tests
                         Stock = 1000
                     };
 
+                    var product3 = new Product
+                    {
+                        Price = 15,
+                        Stock = 500
+                    };
+
                     context.Products.Add(product1);
                     context.Products.Add(product2);
+                    context.Products.Add(product3);
                     context.SaveChanges();
 
                     //Product1 translations
@@ -163,11 +170,17 @@ namespace Abp.TestBase.SampleApplication.Tests
                     context.ProductTranslations.Add(product1_en);
                     context.ProductTranslations.Add(product1_tr);
 
+                    //Product2 translations
                     var product2_en = new ProductTranslation { CoreId = product2.Id, Language = "en", Name = "Bike" };
                     var product2_fr = new ProductTranslation { CoreId = product2.Id, Language = "fr", Name = "Bicyclette" };
-
+                    
                     context.ProductTranslations.Add(product2_en);
                     context.ProductTranslations.Add(product2_fr);
+
+                    //Product3 translations
+                    var product3_it = new ProductTranslation { CoreId = product3.Id, Language = "it", Name = "Giornale" };
+
+                    context.ProductTranslations.Add(product3_it);
 
                     context.SaveChanges();
                 });

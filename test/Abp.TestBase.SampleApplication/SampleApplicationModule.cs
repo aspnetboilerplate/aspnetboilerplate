@@ -4,6 +4,7 @@ using System.Reflection;
 using Abp.AutoMapper;
 using Abp.Configuration;
 using Abp.Dependency;
+using Abp.Domain.Entities;
 using Abp.EntityFramework;
 using Abp.EntityFramework.GraphDiff;
 using Abp.EntityFramework.GraphDiff.Configuration;
@@ -15,6 +16,7 @@ using Abp.TestBase.SampleApplication.People;
 using Abp.TestBase.SampleApplication.Shop;
 using Abp.UI.Inputs;
 using AutoMapper;
+using Newtonsoft.Json;
 using RefactorThis.GraphDiff;
 
 namespace Abp.TestBase.SampleApplication
@@ -25,7 +27,6 @@ namespace Abp.TestBase.SampleApplication
         public override void PreInitialize()
         {
             Configuration.Features.Providers.Add<SampleFeatureProvider>();
-            Configuration.Modules.AbpAutoMapper().Configurators.Add(CustomDtoMapper.CreateMappings);
         }
 
         public override void Initialize()
@@ -37,19 +38,29 @@ namespace Abp.TestBase.SampleApplication
                 MappingExpressionBuilder.For<ContactList>(config => config.AssociatedCollection(entity => entity.People)),
                 MappingExpressionBuilder.For<Person>(config => config.AssociatedEntity(entity => entity.ContactList))
             };
+
+            Configuration.Modules.AbpAutoMapper().Configurators.Add((configuration) => CustomDtoMapper.CreateMappings(configuration, IocManager.Resolve<ISettingManager>()));
         }
     }
 
     internal static class CustomDtoMapper
     {
-        public static void CreateMappings(IMapperConfigurationExpression configuration)
+        public static void CreateMappings(IMapperConfigurationExpression configuration, ISettingManager settingManager)
         {
-            configuration.CreateMap<Product, ProductListDto>().AfterMap((source, destination, context) =>
+            configuration.CreateMultiLingualMap<Product, ProductTranslation, ProductListDto>(settingManager);
+        }
+    }
+
+    public static class AutoMapperConfigurationExtensions
+    {
+        public static void CreateMultiLingualMap<TMultiLingualEntity, TTranslation, TDestination>(this IMapperConfigurationExpression configuration, ISettingManager settingManager)
+            where TTranslation : class, IEntity, IEntityTranslation
+            where TMultiLingualEntity : IMultiLingualEntity<TTranslation>
+        {
+            configuration.CreateMap<TMultiLingualEntity, TDestination>().AfterMap((source, destination, context) =>
             {
-                //todo@ismail => how to resolve ISettingManager here...
-                //var settingManager = IocManager.Instance.Resolve<ISettingManager>();
                 var currentLanguage = System.Threading.Thread.CurrentThread.CurrentCulture.Name;
-                var defaultLanguage = "en"; //settingManager.GetSettingValue(LocalizationSettingNames.DefaultLanguage);
+                var defaultLanguage = settingManager.GetSettingValue(LocalizationSettingNames.DefaultLanguage);
 
                 if (source.Translations.Any(t => t.Language == currentLanguage))
                 {
@@ -67,18 +78,6 @@ namespace Abp.TestBase.SampleApplication
                     context.Mapper.Map(tranlation, destination);
                 }
             });
-        }
-    }
-
-    public class MultiLingualTranslationMapAction : IMappingAction<Product, ProductListDto>
-    {
-        public void Process(Product source, ProductListDto destination)
-        {
-            if (source.Translations != null && source.Translations.Any(pt => pt.Language == "en"))
-            {
-                var productTranlation = source.Translations.Single(pt => pt.Language == "en");
-                Mapper.Map(productTranlation, destination);
-            }
         }
     }
 }

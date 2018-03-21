@@ -100,17 +100,6 @@ namespace Abp.AutoMapper
 
             configuration.CreateMap<ILocalizableString, string>().ConvertUsing(ls => ls?.Localize(localizationContext));
             configuration.CreateMap<LocalizableString, string>().ConvertUsing(ls => ls == null ? null : localizationContext.LocalizationManager.GetString(ls));
-            //configuration.CreateMap(typeof(IMultiLingualEntity<>), typeof(object)).ConvertUsing(typeof(MultiLingualEntityTypeConverter<>));
-        }
-    }
-
-    public class MultiLingualEntityTypeConverter<TTranslation> : ITypeConverter<IMultiLingualEntity<TTranslation>, object>
-        where TTranslation : class, IEntity, IEntityTranslation
-    {
-        public object Convert(IMultiLingualEntity<TTranslation> source, object destination, ResolutionContext context)
-        {
-            var multiLingualDto = Mapper.Map(source, destination);
-            return Mapper.Map(source.Translations.FirstOrDefault(), multiLingualDto);
         }
     }
 }

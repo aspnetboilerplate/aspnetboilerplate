@@ -17,22 +17,45 @@ namespace Abp.TestBase.SampleApplication.Tests.MultiLingual
         }
 
         [Fact]
-        public async Task Get_MultiLingual_Dto_Test()
+        public async Task CreateMultiLingualMap_Tests()
         {
             System.Threading.Thread.CurrentThread.CurrentCulture = new CultureInfo("tr");
 
             var products = await _productAppService.GetProducts();
             products.ShouldNotBeNull();
 
-            products.Items.Count.ShouldBe(2);
+            products.Items.Count.ShouldBe(3);
             var product1 = products.Items[0];
             var product2 = products.Items[1];
+            var product3 = products.Items[2];
 
             product1.Language.ShouldBe("tr");
             product1.Name.ShouldBe("Saat");
 
             product2.Language.ShouldBe("en");
             product2.Name.ShouldBe("Bike");
+
+            product3.Language.ShouldBe("it");
+            product3.Name.ShouldBe("Giornale");
+
+            System.Threading.Thread.CurrentThread.CurrentCulture = new CultureInfo("fr");
+
+            products = await _productAppService.GetProducts();
+            products.ShouldNotBeNull();
+
+            products.Items.Count.ShouldBe(3);
+            product1 = products.Items[0];
+            product2 = products.Items[1];
+            product3 = products.Items[2];
+
+            product1.Language.ShouldBe("en");
+            product1.Name.ShouldBe("Watch");
+
+            product2.Language.ShouldBe("fr");
+            product2.Name.ShouldBe("Bicyclette");
+
+            product3.Language.ShouldBe("it");
+            product3.Name.ShouldBe("Giornale");
         }
     }
 }
