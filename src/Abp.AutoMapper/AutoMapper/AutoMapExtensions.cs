@@ -1,4 +1,4 @@
-﻿
+﻿using System.Globalization;
 using Abp.Configuration;
 using Abp.Dependency;
 using Abp.Domain.Entities;
@@ -41,24 +41,29 @@ namespace Abp.AutoMapper
         {
             configuration.CreateMap<TMultiLingualEntity, TDestination>().AfterMap((source, destination, context) =>
             {
-                var settingManager = iocResolver.Resolve<ISettingManager>();
-                var currentLanguage = System.Threading.Thread.CurrentThread.CurrentCulture.Name;
-                var defaultLanguage = settingManager.GetSettingValue(LocalizationSettingNames.DefaultLanguage);
+                var translation = source.Translations.FirstOrDefault(pt => pt.Language == CultureInfo.CurrentUICulture.Name);
+                if (translation != null)
+                {
+                    context.Mapper.Map(translation, destination);
+                    return;
+                }
 
-                if (source.Translations.Any(t => t.Language == currentLanguage))
+                //TODO: Use Context to resolve this once!
+                var defaultLanguage = iocResolver
+                    .Resolve<ISettingManager>()
+                    .GetSettingValue(LocalizationSettingNames.DefaultLanguage);
+
+                translation = source.Translations.FirstOrDefault(pt => pt.Language == defaultLanguage);
+                if (translation != null)
                 {
-                    var currentTranlation = source.Translations.Single(pt => pt.Language == currentLanguage);
-                    context.Mapper.Map(currentTranlation, destination);
+                    context.Mapper.Map(translation, destination);
+                    return;
                 }
-                else if (source.Translations.Any(t => t.Language == defaultLanguage))
+
+                translation = source.Translations.FirstOrDefault();
+                if (translation != null)
                 {
-                    var defaultTranlation = source.Translations.Single(pt => pt.Language == defaultLanguage);
-                    context.Mapper.Map(defaultTranlation, destination);
-                }
-                else if (source.Translations.Any())
-                {
-                    var tranlation = source.Translations.First();
-                    context.Mapper.Map(tranlation, destination);
+                    context.Mapper.Map(translation, destination);
                 }
             });
         }

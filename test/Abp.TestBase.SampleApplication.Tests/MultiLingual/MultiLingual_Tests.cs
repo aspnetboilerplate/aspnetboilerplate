@@ -19,7 +19,7 @@ namespace Abp.TestBase.SampleApplication.Tests.MultiLingual
         [Fact]
         public async Task CreateMultiLingualMap_Tests()
         {
-            System.Threading.Thread.CurrentThread.CurrentCulture = new CultureInfo("tr");
+            CultureInfo.CurrentUICulture = new CultureInfo("tr");
 
             var products = await _productAppService.GetProducts();
             products.ShouldNotBeNull();
@@ -38,7 +38,7 @@ namespace Abp.TestBase.SampleApplication.Tests.MultiLingual
             product3.Language.ShouldBe("it");
             product3.Name.ShouldBe("Giornale");
 
-            System.Threading.Thread.CurrentThread.CurrentCulture = new CultureInfo("fr");
+            CultureInfo.CurrentUICulture = new CultureInfo("fr");
 
             products = await _productAppService.GetProducts();
             products.ShouldNotBeNull();
