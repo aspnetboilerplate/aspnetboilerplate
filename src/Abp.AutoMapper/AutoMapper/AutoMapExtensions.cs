@@ -1,4 +1,10 @@
-﻿using AutoMapper;
+﻿
+using Abp.Configuration;
+using Abp.Dependency;
+using Abp.Domain.Entities;
+using Abp.Localization;
+using AutoMapper;
+using System.Linq;
 
 namespace Abp.AutoMapper
 {
@@ -27,6 +33,34 @@ namespace Abp.AutoMapper
         public static TDestination MapTo<TSource, TDestination>(this TSource source, TDestination destination)
         {
             return Mapper.Map(source, destination);
+        }
+
+        public static void CreateMultiLingualMap<TMultiLingualEntity, TTranslation, TDestination>(this IMapperConfigurationExpression configuration, IIocResolver iocResolver)
+            where TTranslation : class, IEntity, IEntityTranslation
+            where TMultiLingualEntity : IMultiLingualEntity<TTranslation>
+        {
+            configuration.CreateMap<TMultiLingualEntity, TDestination>().AfterMap((source, destination, context) =>
+            {
+                var settingManager = iocResolver.Resolve<ISettingManager>();
+                var currentLanguage = System.Threading.Thread.CurrentThread.CurrentCulture.Name;
+                var defaultLanguage = settingManager.GetSettingValue(LocalizationSettingNames.DefaultLanguage);
+
+                if (source.Translations.Any(t => t.Language == currentLanguage))
+                {
+                    var currentTranlation = source.Translations.Single(pt => pt.Language == currentLanguage);
+                    context.Mapper.Map(currentTranlation, destination);
+                }
+                else if (source.Translations.Any(t => t.Language == defaultLanguage))
+                {
+                    var defaultTranlation = source.Translations.Single(pt => pt.Language == defaultLanguage);
+                    context.Mapper.Map(defaultTranlation, destination);
+                }
+                else if (source.Translations.Any())
+                {
+                    var tranlation = source.Translations.First();
+                    context.Mapper.Map(tranlation, destination);
+                }
+            });
         }
     }
 }
