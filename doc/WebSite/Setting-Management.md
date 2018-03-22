@@ -13,7 +13,7 @@ converting it to a string.
 
 The **ISettingStore** interface must be implemented in order to use the setting
 system. While you can implement it in your own way, it's fully
-implemented in the **module-zero** project. If it's not implemented,
+implemented in the **Module Zero** project. If it's not implemented,
 settings are read from the application's **configuration file** (web.config
 or app.config) but those settings cannot be changed. Scoping will also not
 work.
@@ -117,7 +117,7 @@ the setting;
 -   If not, we get the application value if it's defined.
 -   If not, we get the **default value**.
 
-The default value can be **null** or an **empty** string. It's recommened that you
+The default value can be **null** or an **empty** string. It's recommended that you
 provide default values for settings where it's possible.
 
 #### Overriding Setting Definitions

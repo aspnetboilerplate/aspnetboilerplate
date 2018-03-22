@@ -29,9 +29,7 @@ var abp = abp || {};
             }
 
             setTimeout(function () {
-                if ($.connection.hub.state === $.signalR.connectionState.disconnected) {
-                    $.connection.hub.start();
-                }
+                connection.start();
             }, 5000);
         });
 
@@ -42,26 +40,22 @@ var abp = abp || {};
     }
 
     // Connect to the server
-    abp.signalr.connect = function() {
+    abp.signalr.connect = function () {
         var url = abp.signalr.url || '/signalr';
 
-        // Add query string: https://github.com/aspnet/SignalR/issues/680
-        if (abp.signalr.qs) {
-            url += '?' + abp.signalr.qs;
-        }
-
         // Start the connection.
-        startConnection(url, configureConnection).then(function (connection) {
-            abp.log.debug('Connected to SignalR server!'); //TODO: Remove log
-            abp.event.trigger('abp.signalr.connected');
-            // Call the Register method on the hub.
-            connection.invoke('register').then(function () {
-                abp.log.debug('Registered to the SignalR server!'); //TODO: Remove log
+        startConnection(url, configureConnection)
+            .then(function (connection) {
+                abp.log.debug('Connected to SignalR server!'); //TODO: Remove log
+                abp.event.trigger('abp.signalr.connected');
+                // Call the Register method on the hub.
+                connection.invoke('register').then(function () {
+                    abp.log.debug('Registered to the SignalR server!'); //TODO: Remove log
+                });
+            })
+            .catch(function (error) {
+                abp.log.debug(error.message);
             });
-        })
-        .catch(error => {
-            abp.log.debug(error.message);
-        });
     };
 
     // Starts a connection with transport fallback - if the connection cannot be started using
@@ -69,19 +63,28 @@ var abp = abp || {};
     // if this does not work it will try longPolling. If the connection cannot be started using
     // any of the available transports the function will return a rejected Promise.
     function startConnection(url, configureConnection) {
+        if (abp.signalr.remoteServiceBaseUrl) {
+            url = abp.signalr.remoteServiceBaseUrl + url;
+        }
+
+        // Add query string: https://github.com/aspnet/SignalR/issues/680
+        if (abp.signalr.qs) {
+            url += '?' + abp.signalr.qs;
+        }
+
         return function start(transport) {
-            abp.log.debug(`Starting connection using ${signalR.TransportType[transport]} transport`);
-            var connection = new signalR.HubConnection(url, {transport: transport});
+            abp.log.debug('Starting connection using ' + signalR.TransportType[transport] + ' transport');
+            var connection = new signalR.HubConnection(url, { transport: transport });
             if (configureConnection && typeof configureConnection === 'function') {
                 configureConnection(connection);
             }
 
             return connection.start()
-                .then(function() {
+                .then(function () {
                     return connection;
                 })
-                .catch(function(error) {
-                    abp.log.debug(`Cannot start the connection using ${signalR.TransportType[transport]} transport. ${error.message}`);
+                .catch(function (error) {
+                    abp.log.debug('Cannot start the connection using ' + signalR.TransportType[transport] + ' transport. ' + error.message);
                     if (transport !== signalR.TransportType.LongPolling) {
                         return start(transport + 1);
                     }

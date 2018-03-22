@@ -1,7 +1,7 @@
 ### Introduction
 
 The [Abp.EntityFrameworkCore](https://www.nuget.org/packages/Abp.EntityFrameworkCore)
-nuget package is used to integrate the Entity Framework (EF) Core ORM
+NuGet package is used to integrate the Entity Framework (EF) Core ORM
 framework. After installing this package, you need to also add a
 [DependsOn](Module-System.md) attribute for
 **AbpEntityFrameworkCoreModule**.
@@ -262,3 +262,13 @@ to use the TaskRepository.
     layer** (.Core project in the startup template). Then define the custom repository
     **classes** in the **.EntityFrameworkCore** project if you want to
     abstract EF Core from your domain/application.
+
+### Other Database Integrations
+
+This document and the examples are based on using MS SQL Server.
+The following documents can be followed for different database integrations.
+
+- [MySQL Integration](EF-Core-MySql-Integration.md)
+- [PostgreSQL Integration](EF-Core-PostgreSql-Integration.md)
+- [SQLite Integration](EF-Core-Sqlite-Integration.md)
+- [Oracle Integration](EF-Core-Oracle-Integration.md)

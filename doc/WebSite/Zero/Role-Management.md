@@ -1,59 +1,62 @@
 ### Role Entity
 
-Role entity represents a **role for the application**. It should be
-derived from **AbpRole** class as shown below:
+The Role entity represents a **role for the application**. It should be
+derived from the **AbpRole** class as shown below:
 
     public class Role : AbpRole<Tenant, User>
     {
         //add your own role properties here
     }
 
-This class is created when you
-[install](/Pages/Documents/Zero/Installation) module-zero. Roles are
-stored in **AbpRoles** table in the database. You can add your custom
-properties to Role class (and create database migrations for the
+This class will be created when you download an ABP template with the option in the below image is selected.
+
+<img src="../images/include_module_zero_checkbox.png" alt="Login Page" class="img-thumbnail" />
+
+Roles are
+stored in the **AbpRoles** table in the database. You can add your own custom
+properties to the Role class (and create database migrations for the
 changes).
 
-AbpRole defines some properties. Most importants are:
+AbpRole defines some properties. The most important are:
 
 -   **Name**: Unique name of the role in the tenant.
 -   **DisplayName**: Shown name of the role.
 -   **IsDefault**: Is this role assigned to new users by default?
--   **IsStatic**: Is this role static (pre-build and can not be
+-   **IsStatic**: Is this role static? (setup during pre-build, and can not be
     deleted).
 
 Roles are used to **group permissions**. When a user has a role, then
-he/she will have all permissions of that role. A user can have
-**multiple** roles. Permissions of this user will be a merge of all
+he/she will have all the permissions of that role. A user can have
+**multiple** roles. The Permissions of this user will be a merge of all the
 permissions of all assigned roles.
 
 #### Dynamic vs Static Roles
 
-In module-zero, roles can be dynamic or static:
+In Module Zero, roles can be dynamic or static:
 
 -   **Static role**: A static role has a known **name** (like 'admin')
-    and can not change this name (we can change **display name**). It
-    exists on the system startup and can not be deleted. Thus, we can
-    write codes based on a static role name.
+    which can not be changed (we can change the **display name**). It
+    exists on the system startup and can not be deleted. This way, we can
+    write code based on a static role's name.
 -   **Dynamic (non static) role**: We can create a dynamic role after
-    deployment. Then we can grant permissions for that role, we can
-    assign the role to some users and we can delete it. We can not know
-    names of dynamic roles in development time.
+    deployment. We can then grant permissions for that role, we can
+    assign the role to some users, and we can delete it. We do not know the
+    names of dynamic roles during development.
 
-Use **IsStatic** property to set it for a role. Also, we should
-**register** static roles on
-[PreInitialize](/Pages/Documents/Module-System) of our module. Assume
+Use the **IsStatic** property to set it for a role. We must also
+**register** static roles in
+the [PreInitialize](/Pages/Documents/Module-System) method of our module. Assume
 that we have an "Admin" static role for tenants:
 
     Configuration.Modules.Zero().RoleManagement.StaticRoles.Add(new StaticRoleDefinition("Admin", MultiTenancySides.Tenant));
 
-Thus, module-zero will be aware of static roles.
+This way, Module Zero will be aware of static roles.
 
 #### Default Roles
 
 One or more roles can be set as **default**. Default roles are assigned
-to new added/registered users as default. This is not a development time
-property and can be set or changed after deployment. Use **IsDefault**
+to newly added/registered users by default. This is not a development time
+property and can be set or changed after deployment. Use the **IsDefault**
 property to set it.
 
 ### Role Manager
@@ -66,19 +69,19 @@ property to set it.
     }
 
 You can [inject](/Pages/Documents/Dependency-Injection) and use
-RoleManager to create, delete, update roles, grant permissions for roles
-and much more. You can add your own methods here. Also, you can
-**override** any method of **AbpRoleManager** base class for your own
+the RoleManager to create, delete, update roles, grant permissions for roles
+and much more. You can add your own methods here, too. You can also
+**override** any method of the **AbpRoleManager** base class for your own
 needs.
 
-Like UserManager, Some methods of RoleManager also return IdentityResult
-as a result instead of throwing exceptions for some cases. See [user
+Like the UserManager, some methods of the RoleManager also return IdentityResult
+as a result instead of throwing exceptions. See the [user
 management](/Pages/Documents/Zero/User-Management) document for more
 information.
 
-### Multi Tenancy
+### Multi-Tenancy
 
-Similar to user management, role management also works for single tenant
-in one time in a multi-tenant application. See [user
+Similar to user management, role management also works for a tenant
+in a multi-tenant application. See the [user
 management](/Pages/Documents/Zero/User-Management#multi-tenancy)
 document for more information.

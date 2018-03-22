@@ -238,7 +238,7 @@ used the container to create an IPersonAppService. It created the concrete class
 PersonAppService with it's dependencies and then returned it. In this simple
 example, it may not be clear what the advantages are of using a DI framework.
 You will, however, have many classes and dependencies in a real enterprise
-application. The registration of dependencies are seperated from the creation and use of 
+application. The registration of dependencies are separated from the creation and use of 
 objects, and is made only once during the application's startup.
 
 Note that we also set the **life cycle** of the objects as **transient**.
@@ -427,7 +427,7 @@ injected and used easily. Example:
     }
 
 MySampleClass in an example class in an application. It is
-constructor-injected with **IIcResolver** and uses it to resolve and release
+constructor-injected with **IIocResolver** and uses it to resolve and release
 objects. There are a few overloads of the **Resolve** method which can be used as
 needed. The **Release** method is used to release a component (object). It's
 **critical** to call Release if you're manually resolving an object.

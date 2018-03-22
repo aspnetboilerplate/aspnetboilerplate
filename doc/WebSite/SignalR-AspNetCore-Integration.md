@@ -45,19 +45,30 @@ Then use the **AddSignalR** and **UseSignalR** methods in your Startup class:
         }
     }
 
+#### Client-Side (Angular)
+
+The **@aspnet/signalr** package should be added in package.json, and the signalr.min.js included under **scripts** in .angular-cli.json.
+
+The **abp.signalr-client.js** script should be included under **assets** in .angular-cli.json.
+
+SignalR cannot send authorization headers, so encryptedAuthToken is sent in the query string. The startup template includes SignalRAspNetCoreHelper. We should call it in ngOnInit in app.component.ts:
+
+    SignalRAspNetCoreHelper.initSignalR();
+
+That's all you have to do. SignalR is properly configured and integrated into your project.
+
 #### Client-Side (jQuery)
 
 The **abp.signalr-client.js** script should be included on the page. It's located
 in the
 **[Abp.Web.Resources](https://www.nuget.org/packages/Abp.Web.Resources)**
-package (It's already installed in the [startup templates](/Templates)). We
-should include it after the signalr-client.min.js:
+package (and already installed in the [startup templates](/Templates)). We
+should include it after the signalr.min.js:
 
-    <script src="~/lib/signalr-client/signalr-client.min.js"></script>
+    <script src="~/lib/signalr-client/signalr.min.js"></script>
     <script src="~/lib/abp-web-resources/Abp/Framework/scripts/libs/abp.signalr-client.js"></script>
 
-That's all you have to do. SignalR is properly configured and integrated in to your
-project.
+That's all you have to do. SignalR is properly configured and integrated into your project.
 
 ### Connection Establishment
 
@@ -126,7 +137,7 @@ that we want to add a Hub to our application:
 
         public async Task SendMessage(string message)
         {
-            await Clients.All.InvokeAsync("getMessage", string.Format("User {0}: {1}", AbpSession.UserId, message));
+            await Clients.All.SendAsync("getMessage", string.Format("User {0}: {1}", AbpSession.UserId, message));
         }
 
         public override async Task OnConnectedAsync()
@@ -144,7 +155,7 @@ that we want to add a Hub to our application:
 
 <!-- -->
 
-    routes.MapHub<MyChatHub>("/myChatHub");
+    routes.MapHub<MyChatHub>("/signalr-myChatHub"); // Prefix with '/signalr'
 
 We implemented the **ITransientDependency** interface to simply register our hub to the
 [dependency injection](/Pages/Documents/Dependency-Injection) system
@@ -152,6 +163,7 @@ We implemented the **ITransientDependency** interface to simply register our hub
 [property-injected](/Pages/Documents/Dependency-Injection#property-injection-pattern)
 the [session](/Pages/Documents/Abp-Session) and
 [logger](/Pages/Documents/Logging).
+Alternatively, we can inherit AbpHubBase.
 
 **SendMessage** is a method of our hub that can be used by clients. We
 call the **getMessage** function of **all** clients in this method. We can
@@ -164,15 +176,18 @@ our hub.
 
     var chatHub = null;
 
-    abp.signalr.startConnection('/myChatHub', function (connection) {
+    abp.signalr.startConnection('/signalr-myChatHub', function (connection) {
         chatHub = connection; // Save a reference to the hub
 
         connection.on('getMessage', function (message) { // Register for incoming messages
             console.log('received message: ' + message);
         });
+    }).then(function (connection) {
+        abp.log.debug('Connected to myChatHub server!');
+        abp.event.trigger('myChatHub.connected');
     });
 
-    abp.event.on('abp.signalr.connected', function() { // Register for connect event
+    abp.event.on('myChatHub.connected', function() { // Register for connect event
         chatHub.invoke('sendMessage', "Hi everybody, I'm connected to the chat!"); // Send a message to the server
     });
 

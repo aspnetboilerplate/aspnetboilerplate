@@ -13,6 +13,11 @@ namespace Abp.Authorization.Users
         where TUser : AbpUser<TUser>
     {
         /// <summary>
+        /// Maximum length of the <see cref="ConcurrencyStamp"/> property.
+        /// </summary>
+        public const int MaxConcurrencyStampLength = 128;
+
+        /// <summary>
         /// User name.
         /// User name must be unique for it's tenant.
         /// </summary>
@@ -31,6 +36,7 @@ namespace Abp.Authorization.Users
         /// <summary>
         /// A random value that must change whenever a user is persisted to the store
         /// </summary>
+        [StringLength(MaxConcurrencyStampLength)]
         public virtual string ConcurrencyStamp { get; set; } = Guid.NewGuid().ToString();
 
         public virtual ICollection<UserToken> Tokens { get; set; }

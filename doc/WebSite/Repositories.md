@@ -4,7 +4,7 @@ Fowler).
 
 Repositories, in practice, are used to perform database operations for
 domain objects ([Entity](/Pages/Documents/Entities) and Value types).
-Generally, a seperate repository is used for each Entity (or Aggregate
+Generally, a separate repository is used for each Entity (or Aggregate
 Root).
 
 ### Default Repositories
@@ -167,7 +167,7 @@ can be usable out of a unit of work.
 
     T Query<T>(Func<IQueryable<TEntity>, T> queryMethod);
 
-The Query method accepts a lambda (or method) that recieves
+The Query method accepts a lambda (or method) that receives
 IQueryable&lt;T&gt; and returns any type of object. Example:
 
     var people = _personRepository.Query(q => q.Where(p => p.Name.Contains("H")).OrderBy(p => p.Name).ToList());
@@ -225,7 +225,7 @@ database
 The first method accepts an existing entity, the second one accepts an Id of the
 entity to delete. The last one accepts a condition to delete all
 entities that fit a given condition. Note that all entities matching a given
-predicate may be retrived from the database and then deleted (based on
+predicate may be retrieved from the database and then deleted (based on
 repository implementation). So use it carefully! It may cause
 performance problems if there are too many entities with a given
 condition.
@@ -286,7 +286,7 @@ Connection management is made automatically by ASP.NET Boilerplate.
 
 A database connection is **opened** and a **transaction** automatically begins while
 entering a repository method. When the method ends and
-returns, all changes are **saved**, the transaction is **commited** and
+returns, all changes are **saved**, the transaction is **committed** and
 the database connection is **closed** by ASP.NET Boilerplate.
 If your repository method throws any type of Exception, the transaction
 is automatically **rolled back** and the database connection is closed. This

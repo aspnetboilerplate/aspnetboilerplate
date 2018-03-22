@@ -1,4 +1,6 @@
+using System;
 using Abp.Events.Bus.Handlers;
+using Abp.Reflection;
 
 namespace Abp.Events.Bus.Factories.Internals
 {
@@ -28,6 +30,11 @@ namespace Abp.Events.Bus.Factories.Internals
         public IEventHandler GetHandler()
         {
             return HandlerInstance;
+        }
+
+        public Type GetHandlerType()
+        {
+            return ProxyHelper.UnProxy(HandlerInstance).GetType();
         }
 
         public void ReleaseHandler(IEventHandler handler)

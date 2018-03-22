@@ -272,7 +272,7 @@ requests and manipulate headers.
 
 As a final option, you can use the abp.security.antiForgery.getToken() method to get
 the token and add it to the request header manually for every request.
-You probably do not need this and can solve this problem by using the methods descibed above.
+You probably do not need this and can solve this problem by using the methods described above.
 
 ### Internals
 

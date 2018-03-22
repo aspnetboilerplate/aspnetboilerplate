@@ -8,7 +8,7 @@ using Abp.Web.Api.Modeling;
 
 namespace Abp.Web.Api.ProxyScripting.Generators
 {
-    internal static class ProxyScriptingJsFuncHelper
+    public static class ProxyScriptingJsFuncHelper
     {
         private const string ValidJsVariableNameChars = "abcdefghijklmnopqrstuxwvyzABCDEFGHIJKLMNOPQRSTUXWVYZ0123456789_";
 

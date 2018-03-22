@@ -17,12 +17,12 @@ cache. Example:
     public class TestAppService : ApplicationService
     {
         private readonly ICacheManager _cacheManager;
-
+    
         public TestAppService(ICacheManager cacheManager)
         {
             _cacheManager = cacheManager;
         }
-
+    
         public Item GetItem(int id)
         {
             //Try to get from cache
@@ -30,7 +30,7 @@ cache. Example:
                     .GetCache("MyCache")
                     .Get(id.ToString(), () => GetFromDatabase(id)) as Item;
         }
-
+    
         public Item GetFromDatabase(int id)
         {
             //... retrieve item from database
@@ -40,11 +40,6 @@ cache. Example:
 In this example, we're injecting **ICacheManager** and getting a cache
 named **MyCache**. Cache names are case sensitive, that means "MyCache"
 and "MYCACHE" are two different caches.
-
-#### **WARNING:** GetCache Method
-
-Do not use the **GetCache** method in your constructor. This may dispose the
-Cache if your class is not a singleton!
 
 ### ICache
 
@@ -88,7 +83,7 @@ the cache. You can configure it for all caches or for a specific cache.
     {
         cache.DefaultSlidingExpireTime = TimeSpan.FromHours(2);
     });
-
+    
     //Configuration for a specific cache
     Configuration.Caching.Configure("MyCache", cache =>
     {
@@ -116,7 +111,7 @@ Assume that we have a Person entity like that:
     public class Person : Entity
     {
         public string Name { get; set; }
-
+    
         public int Age { get; set; }
     }
 
@@ -144,7 +139,7 @@ cache class:
 
     public interface IPersonCache : IEntityCache<PersonCacheItem>
     {
-
+    
     }
 
 Finally, we can create the cache class to cache Person entities:
@@ -154,7 +149,7 @@ Finally, we can create the cache class to cache Person entities:
         public PersonCache(ICacheManager cacheManager, IRepository<Person> repository)
             : base(cacheManager, repository)
         {
-
+    
         }
     }
 
@@ -169,12 +164,12 @@ the person's **Id**. Here's an example class that uses the Person cache:
     public class MyPersonService : ITransientDependency
     {
         private readonly IPersonCache _personCache;
-
+    
         public MyPersonService(IPersonCache personCache)
         {
             _personCache = personCache;
         }
-
+    
         public string GetPersonNameById(int id)
         {
             return _personCache[id].Name; //alternative: _personCache.Get(id).Name;
@@ -212,7 +207,7 @@ cache** server. You can easily use Redis as your cache server.
 
 First, you need to install the
 [**Abp.RedisCache**](https://www.nuget.org/packages/Abp.RedisCache)
-nuget package to your application (you can install it to your Web
+NuGet package to your application (you can install it to your Web
 project, for example). Then you need to add a **DependsOn** attribute
 for the **AbpRedisCacheModule** and call the **UseRedis** extension method in the
 **PreInitialize** method of your [module](Module-System.md), as shown
@@ -220,7 +215,7 @@ below:
 
     //...other namespaces
     using Abp.Runtime.Caching.Redis;
-
+    
     namespace MyProject.AbpZeroTemplate.Web
     {
         [DependsOn(
