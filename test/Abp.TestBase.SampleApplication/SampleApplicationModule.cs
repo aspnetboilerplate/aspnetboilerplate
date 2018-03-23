@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Reflection;
 using Abp.AutoMapper;
+using Abp.Configuration;
 using Abp.Dependency;
 using Abp.EntityFramework;
 using Abp.EntityFramework.GraphDiff;
@@ -35,18 +36,21 @@ namespace Abp.TestBase.SampleApplication
                 MappingExpressionBuilder.For<Person>(config => config.AssociatedEntity(entity => entity.ContactList))
             };
 
-            Configuration.Modules.AbpAutoMapper().Configurators.Add((configuration) =>
+            Configuration.Modules.AbpAutoMapper().Configurators.Add(configuration =>
             {
-                CustomDtoMapper.CreateMappings(configuration, IocManager);
+                CustomDtoMapper.CreateMappings(configuration, new MultiLingualMapContext
+                {
+                    SettingManager = IocManager.Resolve<ISettingManager>()
+                });
             });
 
         }
 
         internal static class CustomDtoMapper
         {
-            public static void CreateMappings(IMapperConfigurationExpression configuration, IIocResolver iocResolver)
+            public static void CreateMappings(IMapperConfigurationExpression configuration, MultiLingualMapContext context)
             {
-                configuration.CreateMultiLingualMap<Product, ProductTranslation, ProductListDto>(iocResolver);
+                configuration.CreateMultiLingualMap<Product, ProductTranslation, ProductListDto>(context);
             }
         }
     }

@@ -35,7 +35,7 @@ namespace Abp.AutoMapper
             return Mapper.Map(source, destination);
         }
 
-        public static void CreateMultiLingualMap<TMultiLingualEntity, TTranslation, TDestination>(this IMapperConfigurationExpression configuration, IIocResolver iocResolver)
+        public static void CreateMultiLingualMap<TMultiLingualEntity, TTranslation, TDestination>(this IMapperConfigurationExpression configuration, MultiLingualMapContext multiLingualMapContext)
             where TTranslation : class, IEntity, IEntityTranslation
             where TMultiLingualEntity : IMultiLingualEntity<TTranslation>
         {
@@ -48,10 +48,8 @@ namespace Abp.AutoMapper
                     return;
                 }
 
-                //TODO: Use Context to resolve this once!
-                var defaultLanguage = iocResolver
-                    .Resolve<ISettingManager>()
-                    .GetSettingValue(LocalizationSettingNames.DefaultLanguage);
+                var defaultLanguage = multiLingualMapContext.SettingManager
+                                                            .GetSettingValue(LocalizationSettingNames.DefaultLanguage);
 
                 translation = source.Translations.FirstOrDefault(pt => pt.Language == defaultLanguage);
                 if (translation != null)

@@ -7,11 +7,11 @@ using Xunit;
 
 namespace Abp.TestBase.SampleApplication.Tests.MultiLingual
 {
-    public class MultiLingual_Tests: SampleApplicationTestBase
+    public class MultiLingual_Mapping_Tests: SampleApplicationTestBase
     {
         private readonly IProductAppService _productAppService;
 
-        public MultiLingual_Tests()
+        public MultiLingual_Mapping_Tests()
         {
             _productAppService = Resolve<IProductAppService>();
         }
