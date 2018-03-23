@@ -39,6 +39,7 @@ namespace Abp.AutoMapper
             where TTranslation : class, IEntity, IEntityTranslation
             where TMultiLingualEntity : IMultiLingualEntity<TTranslation>
         {
+            configuration.CreateMap<TTranslation, TDestination>();
             configuration.CreateMap<TMultiLingualEntity, TDestination>().AfterMap((source, destination, context) =>
             {
                 var translation = source.Translations.FirstOrDefault(pt => pt.Language == CultureInfo.CurrentUICulture.Name);

@@ -43,40 +43,6 @@ namespace Abp.EntityFrameworkCore.Tests
 
                 context.SaveChanges();
             }
-
-            using (var context = LocalIocManager.Resolve<ShopDbContext>())
-            {
-                var product1 = new Product
-                {
-                    Price = 10,
-                    Stock = 1000
-                };
-
-                var product2 = new Product
-                {
-                    Price = 99,
-                    Stock = 1000
-                };
-
-                context.Products.Add(product1);
-                context.Products.Add(product2);
-                context.SaveChanges();
-
-                //Product1 translations
-                var product1_en = new ProductTranslation { CoreId = product1.Id, Language = "en", Name = "Watch" };
-                var product1_tr = new ProductTranslation { CoreId = product1.Id, Language = "tr", Name = "Saat" };
-
-                context.ProductTranslations.Add(product1_en);
-                context.ProductTranslations.Add(product1_tr);
-
-                var product2_en = new ProductTranslation { CoreId = product2.Id, Language = "en", Name = "Bike" };
-                var product2_fr = new ProductTranslation { CoreId = product2.Id, Language = "fr", Name = "Bicyclette" };
-
-                context.ProductTranslations.Add(product2_en);
-                context.ProductTranslations.Add(product2_fr);
-
-                context.SaveChanges();
-            }
         }
 
         public void UsingDbContext(Action<BloggingDbContext> action)

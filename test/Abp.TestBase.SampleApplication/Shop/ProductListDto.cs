@@ -1,8 +1,5 @@
-﻿using Abp.AutoMapper;
-
-namespace Abp.TestBase.SampleApplication.Shop
+﻿namespace Abp.TestBase.SampleApplication.Shop
 {
-    [AutoMapFrom(typeof(Product), typeof(ProductTranslation))]
     public class ProductListDto
     {
         public decimal Price { get; set; }

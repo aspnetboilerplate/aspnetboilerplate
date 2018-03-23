@@ -27,10 +27,7 @@ namespace Abp.EntityFrameworkCore.Tests
 
             //SupportDbContext
             RegisterSupportDbContextToSqliteInMemoryDb(IocManager);
-
-            //ShopDbContext
-            RegisterShopDbContextToSqliteInMemoryDb(IocManager);
-
+            
             //Custom repository
             Configuration.ReplaceService<IRepository<Post, Guid>>(() =>
             {
@@ -85,26 +82,6 @@ namespace Abp.EntityFrameworkCore.Tests
 
             inMemorySqlite.Open();
             new SupportDbContext(builder.Options).Database.EnsureCreated();
-        }
-
-        private static void RegisterShopDbContextToSqliteInMemoryDb(IIocManager iocManager)
-        {
-            var builder = new DbContextOptionsBuilder<ShopDbContext>();
-
-            builder.ReplaceService<IEntityMaterializerSource, AbpEntityMaterializerSource>();
-
-            var inMemorySqlite = new SqliteConnection("Data Source=:memory:");
-            builder.UseSqlite(inMemorySqlite);
-
-            iocManager.IocContainer.Register(
-                Component
-                    .For<DbContextOptions<ShopDbContext>>()
-                    .Instance(builder.Options)
-                    .LifestyleSingleton()
-            );
-
-            inMemorySqlite.Open();
-            new ShopDbContext(builder.Options).Database.EnsureCreated();
         }
     }
 }
