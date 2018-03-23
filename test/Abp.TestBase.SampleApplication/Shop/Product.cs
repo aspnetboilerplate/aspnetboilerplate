@@ -10,10 +10,5 @@ namespace Abp.TestBase.SampleApplication.Shop
         public virtual int Stock { get; set; }
 
         public virtual ICollection<ProductTranslation> Translations { get; set; }
-
-        public Product()
-        {
-            
-        }
     }
 }
