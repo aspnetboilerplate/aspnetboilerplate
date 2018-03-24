@@ -213,7 +213,7 @@ framework. There will only be a few lines of code or classes that explicitly
 interact with the DI framework in your whole application.
 
 ASP.NET Boilerplate uses the [Castle
-Windsor](http://docs.castleproject.org/Default.aspx?Page=MainPage)
+Windsor](https://github.com/castleproject/Windsor/blob/master/docs/README.md)
 framework for Dependency Injection. It's one of the most mature DI
 frameworks out there. There are many other frameworks, such as Unity, Ninject,
 StructureMap, and Autofac.
