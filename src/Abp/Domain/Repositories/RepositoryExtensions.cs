@@ -75,7 +75,7 @@ namespace Abp.Domain.Repositories
             var repo = ProxyHelper.UnProxy(repository) as AbpRepositoryBase<TEntity, TPrimaryKey>;
             if (repo != null)
             {
-                return repo.IocManager;
+                return repo.IocResolver;
             }
 
             throw new ArgumentException($"Given {nameof(repository)} is not inherited from {typeof(AbpRepositoryBase<TEntity, TPrimaryKey>).AssemblyQualifiedName}");
