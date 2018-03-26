@@ -1,10 +1,8 @@
 ﻿using System;
-using System.Linq;
 using Abp.Localization;
 using Abp.Modules;
 using System.Reflection;
 using Abp.Configuration.Startup;
-using Abp.Domain.Entities;
 using Abp.Reflection;
 using AutoMapper;
 using Castle.MicroKernel.Registration;
