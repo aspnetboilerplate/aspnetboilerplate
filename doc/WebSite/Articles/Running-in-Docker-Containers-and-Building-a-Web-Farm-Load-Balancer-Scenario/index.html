@@ -1,7 +1,7 @@
 <i id="abp-title" data-title="Running in Docker Containers and building a Web Farm / Load Balancer Scenario"></i>
  
 <ul class="download">
-	<li>Get the source code from the <a href="https://github.com/aspnetboilerplate/aspnetboilerplate-samples/tree/master/ModuleZeroCoreWebFarm">Github repository.</a></li>
+	<li>Get the source code from the <a href="https://github.com/aspnetboilerplate/aspnetboilerplate-samples/tree/master/ModuleZeroCoreWebFarm">GitHub repository.</a></li>
 </ul>
 
 <!-- Start Article -->
@@ -17,7 +17,7 @@
 
 <p><strong><a href="https://github.com/aspnetboilerplate/module-zero-core-template">Module zero core template</a></strong>&nbsp;is a starter project template that is developed with using&nbsp;<strong><a href="https://www.codeproject.com/Articles/768664/Introduction-to-ASP-NET-Boilerplate">ASP.NET Boilerplate Framework</a></strong>. This a .net core project as a&nbsp;<strong>Single Page Application</strong>&nbsp;with using&nbsp;<strong>Angular4</strong>. And also there is a&nbsp;<strong>multi-page MVC application</strong>&nbsp;as well. But in this article, I will explain&nbsp;<strong>angular4&nbsp;</strong>version.</p>
 
-<p>In&nbsp;<strong>module zero core template</strong>&nbsp;project there are two seperate projects, one is&nbsp;<strong>Angular4&nbsp;</strong>project as web UI and the host project that is used by angular UI. Let's examine it to better understand the project before running it on&nbsp;<strong>Docker</strong>.</p>
+<p>In&nbsp;<strong>module zero core template</strong>&nbsp;project there are two separate projects, one is&nbsp;<strong>Angular4&nbsp;</strong>project as web UI and the host project that is used by angular UI. Let's examine it to better understand the project before running it on&nbsp;<strong>Docker</strong>.</p>
 
 <h2>Getting Started</h2>
 
@@ -115,7 +115,7 @@ Project name:&nbsp;<b>Acme.ProjectName</b></p>
 <p>Before running&nbsp;<b>up.ps1</b>&nbsp;command,</p>
 
 <ul>
-	<li>You have to share the drives. To share it, right click Docker system tray, go to settings, navigate to shared folders and click all the drives.</li>	<li>Database is hosted on the local machine not on the docker. Website hosted on docker will be connecting to your local database. And with a trusted connection string the connection will be unsuccessfull. So set your sql database username &amp; password.&nbsp; To achive this modify the file "...\aspnet-core\src\Acme.ProjectName.Web.Host\<b>appsettings.Staging.json".&nbsp;</b>Update Default ConnectionStrings &gt; "<strong>Server=10.0.75.1; Database=ProjectNameDb; User=sa; Password=&lt;write your password&gt;;</strong>"</li></ul>
+	<li>You have to share the drives. To share it, right click Docker system tray, go to settings, navigate to shared folders and click all the drives.</li>	<li>Database is hosted on the local machine not on the docker. Website hosted on docker will be connecting to your local database. And with a trusted connection string the connection will be unsuccessful. So set your sql database username &amp; password.&nbsp; To achieve this modify the file "...\aspnet-core\src\Acme.ProjectName.Web.Host\<b>appsettings.Staging.json".&nbsp;</b>Update Default ConnectionStrings &gt; "<strong>Server=10.0.75.1; Database=ProjectNameDb; User=sa; Password=&lt;write your password&gt;;</strong>"</li></ul>
 
 <p>Run&nbsp;<strong>up.ps1</strong>&nbsp;script to run these two project on docker under location&nbsp;<strong>ProjectName/aspnet-core/build/outputs</strong>.</p>
 

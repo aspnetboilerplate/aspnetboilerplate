@@ -1,6 +1,6 @@
 ### Introduction
 
-The easiest way of starting a new project using ABP with **ASP.NET MVC 5.x (and optionally Angularjs frontend)** is to create a template on the [download page](/Templates).
+The easiest way of starting a new project using ABP with **ASP.NET MVC 5.x (and optionally AngularJS frontend)** is to create a template on the [download page](/Templates).
 
 After creating and downloading your project:
 
@@ -10,7 +10,7 @@ After creating and downloading your project:
     as the **Default project** and run EntityFramework's
     '**Update-Database**' command. This will create the database. You
     can then change the **connection string** in the web.config.
--   Run the application. The default user name is '**admin**' and the password is
+-   Run the application. The default username is '**admin**' and the password is
     '**123qwe**'.
 
 Be sure you have installed Typescript 2.0+ in Visual Studio
@@ -74,11 +74,11 @@ tenant databases.
 <img src="../images/database-migrator.png" alt="Database Migrator" class="img-thumbnail" />
 
 This application gets the host connection string from it's **own
-appsettings.json file**. In the beginning, it will be the 
-same in the appsettings.json in the .Web.Host project. 
+appsettings.json file**. In the beginning, it will be the
+same in the appsettings.json in the .Web.Host project.
 Be sure that the connection string
 in the config file is the database you want. After getting the **host**
-**connection sring**, it first creates the host database and applies
+**connection string**, it first creates the host database and applies
 migrations if they don't already exist. It then gets the connection strings of the
 tenant databases and runs migrations against those databases. It skips a
 tenant if it does not have a dedicated database or its database has already
@@ -100,5 +100,5 @@ since they test your code with all the ASP.NET Boilerplate infrastructure
 
 ### Source Code
 
-This template is developed as an open source project and is available for free at Github:
+This template is developed as an open source project and is available for free on GitHub:
 <https://github.com/aspnetboilerplate/module-zero-template>

@@ -1,7 +1,7 @@
-﻿<i id="abp-title" data-title="Introduction With AspNet MVC Web API EntityFramework and AngularJs"></i>
+﻿<i id="abp-title" data-title="Introduction With AspNet MVC Web API EntityFramework and AngularJS"></i>
 
 <ul class="download">
-	<li>Get the source code from the <a href="https://github.com/aspnetboilerplate/aspnetboilerplate-samples/tree/master/SimpleTaskSystem">Github repository.</a></li>
+	<li>Get the source code from the <a href="https://github.com/aspnetboilerplate/aspnetboilerplate-samples/tree/master/SimpleTaskSystem">GitHub repository.</a></li>
 </ul>
 
 <p>
@@ -36,7 +36,7 @@ A screenshot of the sample application.
 
 <ul>
 	<li><strong>ASP.NET MVC</strong> and <strong>ASP.NET Web API</strong> as web framework.</li>
-	<li><strong>Angularjs</strong> as SPA framework.</li>
+	<li><strong>AngularJS</strong> as SPA framework.</li>
 	<li><strong>EntityFramework</strong> as ORM (Object-Relational Mapping) framework</li>
 	<li><strong>Castle Windsor</strong> as Dependency Injection framework.</li>
 	<li><strong>Twitter Bootstrap</strong> as HTML/CSS framework.</li>
@@ -54,7 +54,7 @@ A screenshot of the sample application.
 
 <p><img alt="Create template by ASP.NET Boilerplate" src="create-abp-template-2.png" style="width: 100%" /></p>
 
-<p>Here, I selected <strong>ASP.NET MVC 5.x</strong>, <strong>SPA</strong> (Single Page Application) with <strong>AngularJs</strong> and <strong>EntityFramework</strong>. Also entered <strong>SimpleTaskSystem</strong> for my project name. 
+<p>Here, I selected <strong>ASP.NET MVC 5.x</strong>, <strong>SPA</strong> (Single Page Application) with <strong>AngularJS</strong> and <strong>EntityFramework</strong>. Also entered <strong>SimpleTaskSystem</strong> for my project name.
 I didn&#39;t want to include authentication options to get the most simple project 
 template. It created and downloaded my solution.</p>
 
@@ -215,7 +215,7 @@ PM&gt; Update-Database</pre>
 
 <p><img alt="IRepository interface" height="741" src="irepository-interface-v3.png" width="494" /></p>
 
-<p>We can extend these repository upon our needs. I will extend it to create a Task repository. As I want to seperate interface from implementation, I declare interfaces for repositories first. Here, is the Task repository interface:</p>
+<p>We can extend these repository upon our needs. I will extend it to create a Task repository. As I want to separate interface from implementation, I declare interfaces for repositories first. Here, is the Task repository interface:</p>
 
 <pre lang="cs">
 public interface ITaskRepository : IRepository&lt;Task, long&gt;
@@ -276,7 +276,7 @@ public class TaskRepository : SimpleTaskSystemRepositoryBase&lt;Task, long&gt;, 
 
 <h2 id="ArticleBuildAppServices">Build application services</h2>
 
-<p>Application services is used to seperate presentation layer from domain layer by providing fa&ccedil;ade style methods. I defined application services in the <strong> Application</strong> assembly in the project. First, I define interface for task application service:</p>
+<p>Application services is used to separate presentation layer from domain layer by providing fa&ccedil;ade style methods. I defined application services in the <strong> Application</strong> assembly in the project. First, I define interface for task application service:</p>
 
 <pre lang="cs">
 public interface ITaskAppService : IApplicationService
@@ -369,7 +369,7 @@ public class TaskAppService : ApplicationService, ITaskAppService
 
 <p>In the <strong>GetTasks</strong> method, I used the <strong>GetAllWithPeople</strong> method that I implemented before. It returns a <strong>List&lt;Task&gt;</strong> but I need to return a <strong>List&lt;TaskDto&gt;</strong> to presentation layer. <a href="http://automapper.org/" target="_blank">AutoMapper</a> helps us here to automatically convert <strong>Task</strong> objects to <strong>TaskDto</strong> objects. GetTasksInput and GetTasksOutput are special DTOs defined for GetTasks method.</p>
 
-<p>In the <strong>UpdateTask</strong> method, I retrived the Task from database (using IRepository&#39;s <strong>Get</strong> method) and changed peoperties of the Task. Notice that I did not even called <strong>Update</strong> method of the repository. ASP.NET Boilerplate implements <a href="http://www.aspnetboilerplate.com/Pages/Documents/Unit-Of-Work"> UnitOfWork</a> pattern. So, all changes in an application service method are a unit of work (atomic) and applied to database at the end of the method automatically.</p>
+<p>In the <strong>UpdateTask</strong> method, I retrieved the Task from database (using IRepository&#39;s <strong>Get</strong> method) and changed peoperties of the Task. Notice that I did not even called <strong>Update</strong> method of the repository. ASP.NET Boilerplate implements <a href="http://www.aspnetboilerplate.com/Pages/Documents/Unit-Of-Work"> UnitOfWork</a> pattern. So, all changes in an application service method are a unit of work (atomic) and applied to database at the end of the method automatically.</p>
 
 <p>In the <strong>CreateTask</strong> method, I simply created a new Task and inserted to database using the IRepository&#39;s Insert method.</p>
 
@@ -427,7 +427,7 @@ public class UpdateTaskInput : ICustomValidate
 
 <h2 id="ArticleBuildWebApiServices">Build Web API services</h2>
 
-<p>I want to expose my application services to remote clients. Thus, my AngularJs application can easily call these service methods using <strong>AJAX</strong>.</p>
+<p>I want to expose my application services to remote clients. Thus, my AngularJS application can easily call these service methods using <strong>AJAX</strong>.</p>
 
 <p>ASP.NET Boilerplate provides an <strong>automatic</strong> way of exposing application service methods as ASP.NET Web API. I just use <strong>DynamicApiControllerBuilder</strong> as shown below:</p>
 
@@ -440,11 +440,11 @@ DynamicApiControllerBuilder
 
 <h2 id="ArticleDevelopSpa">Develop the SPA</h2>
 
-<p>I&#39;ll implement a Single-Page Web Application as user interface of my project. <strong>AngularJs</strong> (by Google) is one (propably the top one) of the most used SPA frameworks.</p>
+<p>I&#39;ll implement a Single-Page Web Application as user interface of my project. <strong>AngularJS</strong> (by Google) is one (propably the top one) of the most used SPA frameworks.</p>
 
-<p>ASP.NET Boilerplate provides a <strong>template</strong> that makes easy to start with AngularJs. The template has two pages (Home and About) with smooth transition between pages. Uses Twitter <strong>Bootstrap</strong> as HTML/CSS framework (thus, it&#39;s responsive). It&#39;s also localized into English and Turkish with ASP.NET Boilerplate&#39;s localization system (You can easly add other languages or remove one of them).</p>
+<p>ASP.NET Boilerplate provides a <strong>template</strong> that makes easy to start with AngularJS. The template has two pages (Home and About) with smooth transition between pages. Uses Twitter <strong>Bootstrap</strong> as HTML/CSS framework (thus, it&#39;s responsive). It&#39;s also localized into English and Turkish with ASP.NET Boilerplate&#39;s localization system (You can easly add other languages or remove one of them).</p>
 
-<p>We first change route of the template. ASP.NET Boilerplate template uses AngularUI-Router, the de-facto standard router of AngularJs. It provides state based routing modal. We will have two views: <strong>task list</strong> and <strong>new task</strong>. So, we will change route definition in <strong>app.js</strong> as shown below:</p>
+<p>We first change route of the template. ASP.NET Boilerplate template uses AngularUI-Router, the de-facto standard router of AngularJS. It provides state based routing modal. We will have two views: <strong>task list</strong> and <strong>new task</strong>. So, we will change route definition in <strong>app.js</strong> as shown below:</p>
 
 <pre lang="js">
 app.config([
@@ -465,9 +465,9 @@ app.config([
     }
 ]);</pre>
 
-<p><strong>app.js</strong> is the main javascript file to configure and start our SPA. Notice that we&#39;re using <strong>cshtml files as views</strong>! Normally, html files are used as views in AngularJs. ASP.NET Boilerplate makes it possible to use cshtml files. Thus we will have the power of <strong>razor</strong> engine to generate HTML.</p>
+<p><strong>app.js</strong> is the main JavaScript file to configure and start our SPA. Notice that we&#39;re using <strong>cshtml files as views</strong>! Normally, html files are used as views in AngularJS. ASP.NET Boilerplate makes it possible to use cshtml files. Thus we will have the power of <strong>razor</strong> engine to generate HTML.</p>
 
-<p>ASP.NET Boilerplate provides an infrastructure to create and show <strong> menu</strong>s in an application. It allows to define menu in C# and use same menu both in C# and javascript. See <strong>SimpleTaskSystemNavigationProvider</strong> class for creating menu and see <strong>header.js/header.cshtml</strong> for showing menu in the angular way.</p>
+<p>ASP.NET Boilerplate provides an infrastructure to create and show <strong> menu</strong>s in an application. It allows to define menu in C# and use same menu both in C# and JavaScript. See <strong>SimpleTaskSystemNavigationProvider</strong> class for creating menu and see <strong>header.js/header.cshtml</strong> for showing menu in the angular way.</p>
 
 <p>First, I&#39;m creating an Angular <strong>controller</strong> for the <strong>task list</strong> view:</p>
 
@@ -494,7 +494,7 @@ app.config([
             vm.refreshTasks = function() {
                 abp.ui.setBusy( //Set whole page busy until getTasks complete
                     null,
-                    taskService.getTasks({ //Call application service method directly from javascript
+                    taskService.getTasks({ //Call application service method directly from JavaScript
                         state: $scope.selectedTaskState &gt; 0 ? $scope.selectedTaskState : null
                     }).success(function(data) {
                         vm.tasks = data.tasks;
@@ -526,13 +526,13 @@ app.config([
     ]);
 })();</pre>
 
-<p>I defined name of the controller as &#39;<strong>sts.views.task.list</strong>&#39;. This my convention (for scalable code-base) but you can simply name it as &#39;ListController&#39;. AngularJs also uses <strong>dependency injection</strong>. We&#39;re injecting &#39;<strong>$scope</strong>&#39; and &#39;<strong>abp.services.tasksystem.task</strong>&#39; here. First one is Angular&#39;s scope variable, second one is the automatically created javascript service proxy for ITaskAppService (we built it before in &#39;Build Web API services&#39; section).</p>
+<p>I defined name of the controller as &#39;<strong>sts.views.task.list</strong>&#39;. This my convention (for scalable code-base) but you can simply name it as &#39;ListController&#39;. AngularJS also uses <strong>dependency injection</strong>. We&#39;re injecting &#39;<strong>$scope</strong>&#39; and &#39;<strong>abp.services.tasksystem.task</strong>&#39; here. First one is Angular&#39;s scope variable, second one is the automatically created JavaScript service proxy for ITaskAppService (we built it before in &#39;Build Web API services&#39; section).</p>
 
 <p>ASP.NET Boilerplate provides infrastructure to use same <a href="http://www.aspnetboilerplate.com/Pages/Documents/Localization"> localization</a> texts both in server and client (see it&#39;s documentation for details).&nbsp;</p>
 
 <p><strong>vm.taks</strong> is the list of tasks that will be shown in the view. <strong>vm.refreshTasks</strong> method fills this array by getting tasks using <strong>taskService</strong>. It&#39;s called when <strong> selectedTaskState</strong> changes (observed using $scope.$watch).</p>
 
-<p>As you see, calling an application service method is very easy and straightforward! This is a feature of ASP.NET Boilerplate. It generates Web API layer and Javascript proxy layer that talks with this Web API layer. Thus, we are calling the application service method as calling a simple javascript method. It is completely integrated with AngularJs (uses Angular&#39;s $http service).</p>
+<p>As you see, calling an application service method is very easy and straightforward! This is a feature of ASP.NET Boilerplate. It generates Web API layer and JavaScript proxy layer that talks with this Web API layer. Thus, we are calling the application service method as calling a simple JavaScript method. It is completely integrated with AngularJS (uses Angular&#39;s $http service).</p>
 
 <p>Let&#39;s see the view side of task list:</p>
 
@@ -575,11 +575,11 @@ app.config([
 
 <p><strong>ng-controller</strong> attribute (in the first line) binds the controller to the view. <strong>@L(&quot;TaskList&quot;)</strong> gets localized text for &quot;task list&quot; (works on server while rendering HTML). It&#39;s possible since this is a <strong>cshtml</strong> file.</p>
 
-<p><strong>ng-model</strong> binds combobox and the javascript variable. When the variable changes, the combobox updated. When the combobox changes, the valiable is updated. This is two-way binding of AngularJs.</p>
+<p><strong>ng-model</strong> binds combobox and the JavaScript variable. When the variable changes, the combobox updated. When the combobox changes, the valiable is updated. This is two-way binding of AngularJS.</p>
 
-<p><strong>ng-repeat</strong> is another &#39;directive&#39; of Angular that is used to render same HTML for each value in an array. When the array changes (an item is added for example), it&#39;s automatically reflected to the view. This is another powerful feature of AngularJs.</p>
+<p><strong>ng-repeat</strong> is another &#39;directive&#39; of Angular that is used to render same HTML for each value in an array. When the array changes (an item is added for example), it&#39;s automatically reflected to the view. This is another powerful feature of AngularJS.</p>
 
-<p>Note: When you add a javascript file (for example, for the &#39;task list&#39; controller), you should add it to your page. This can be done by adding it to Home\Index.cshtml in the template.</p>
+<p>Note: When you add a JavaScript file (for example, for the &#39;task list&#39; controller), you should add it to your page. This can be done by adding it to Home\Index.cshtml in the template.</p>
 
 <h2 id="ArticleLocalization">Localization</h2>
 
@@ -622,7 +622,7 @@ app.config([
 <ul class="abp-invisible">
 	<li>Official site and documentation: <a href="http://www.aspnetboilerplate.com/">aspnetboilerplate.com</a></li>
 	<li>Official forum: <a href="http://forum.aspnetboilerplate.com/">forum.aspnetboilerplate.com</a></li>
-	<li>Github repositories: <a href="https://github.com/aspnetboilerplate">github.com/aspnetboilerplate</a></li>
+	<li>GitHub repositories: <a href="https://github.com/aspnetboilerplate">github.com/aspnetboilerplate</a></li>
 	<li>Follow on twitter: <a href="https://twitter.com/aspboilerplate">@aspboilerplate</a></li>
 	<li>Enterprise startup template:&nbsp;<a href="http://aspnetzero.com/">aspnetzero.com</a></li>
 </ul>

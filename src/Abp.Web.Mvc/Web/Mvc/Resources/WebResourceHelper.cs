@@ -17,7 +17,7 @@ namespace Abp.Web.Mvc.Resources
     {
         /// <summary>
         /// Exposes one or more embedded resources to web clients.
-        /// It can be used to embed javascript/css files into assemblies and use them in html pages easily.
+        /// It can be used to embed JavaScript/CSS files into assemblies and use them in html pages easily.
         /// </summary>
         /// <param name="rootPath">
         /// Root path of the resource. Can include '/' for deeper paths.

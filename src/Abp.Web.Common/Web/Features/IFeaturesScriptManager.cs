@@ -8,7 +8,7 @@ namespace Abp.Web.Features
     public interface IFeaturesScriptManager
     {
         /// <summary>
-        /// Gets Javascript that contains all feature information.
+        /// Gets JavaScript that contains all feature information.
         /// </summary>
         Task<string> GetScriptAsync();
     }
