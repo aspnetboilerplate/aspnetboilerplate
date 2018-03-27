@@ -74,8 +74,8 @@ tenant databases.
 <img src="../images/database-migrator.png" alt="Database Migrator" class="img-thumbnail" />
 
 This application gets the host connection string from it's **own
-appsettings.json file**. In the beginning, it will be the 
-same in the appsettings.json in the .Web.Host project. 
+appsettings.json file**. In the beginning, it will be the
+same in the appsettings.json in the .Web.Host project.
 Be sure that the connection string
 in the config file is the database you want. After getting the **host**
 **connection string**, it first creates the host database and applies

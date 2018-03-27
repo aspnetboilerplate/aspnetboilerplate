@@ -13,29 +13,29 @@ Let's investigate a simple class to see ABP's benefits:
     public class TaskAppService : ApplicationService, ITaskAppService
     {
         private readonly IRepository<Task> _taskRepository;
-    
+
         public TaskAppService(IRepository<Task> taskRepository)
         {
             _taskRepository = taskRepository;
         }
-    
+
         [AbpAuthorize(MyPermissions.UpdateTasks)]
         public async Task UpdateTask(UpdateTaskInput input)
         {
             Logger.Info("Updating a task for input: " + input);
-    
+
             var task = await _taskRepository.FirstOrDefaultAsync(input.TaskId);
             if (task == null)
             {
                 throw new UserFriendlyException(L("CouldNotFindTheTaskMessage"));
             }
-    
+
             input.MapTo(task);
         }
     }
 
 Here we see a sample [Application Service](Application-Services.md) method. An application service, in DDD,
-is directly used by the presentation layer to perform the **use cases** of the application. 
+is directly used by the presentation layer to perform the **use cases** of the application.
 Think **UpdateTask** as a method that is called by JavaScript via AJAX.
 
 Let's see some of ABP's benefits here:
@@ -52,7 +52,7 @@ Let's see some of ABP's benefits here:
     simplify the data access logic.
 -   **[Authorization](/Pages/Documents/Authorization)**: ABP can check permissions declaratively.
     It prevents access to the UpdateTask method if the current user
-    has no "update tasks" permission or is not logged in. ABP not only uses declarative 
+    has no "update tasks" permission or is not logged in. ABP not only uses declarative
     attributes, but it also has additional ways in which you can authorize.
 -   **[Validation](/Pages/Documents/Validating-Data-Transfer-Objects)**: ABP automatically checks if the input is null. It also validates all
     the properties of an input based on standard data annotation attributes

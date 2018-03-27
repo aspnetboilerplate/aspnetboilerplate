@@ -41,7 +41,7 @@ ASP.NET MVC has it's own built-in AntiForgery system as you probably
 know, but it has a few weaknesses:
 
 -   It requires you to add the **ValidateAntiForgeryToken** attribute to all
-    actions that need to be protected. You could potentially **forget** to add 
+    actions that need to be protected. You could potentially **forget** to add
     it for all the needed actions!
 -   The ValidateAntiForgeryToken attribute only checks the
     **\_\_RequestVerificationToken** in the HTML **form fields**. This
@@ -65,7 +65,7 @@ ABP does followings things to overcome these shortcomings:
     **DisableAbpAntiForgeryTokenValidation** attribute and you can
     enable it for any action/controller using the
     **ValidateAbpAntiForgeryToken** attribute.
--   In addition to the HTML **form field**, **AbpAntiForgeryMvcFilter** also checks the token in the **header**. 
+-   In addition to the HTML **form field**, **AbpAntiForgeryMvcFilter** also checks the token in the **header**.
     This way, we can easily use anti-forgery token protections for AJAX requests.
 -   ABP provides the **abp.security.antiForgery.getToken()** function to get the
     token in JavaScript, even if you don't need it often.

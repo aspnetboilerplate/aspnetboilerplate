@@ -20,7 +20,7 @@ namespace Abp.Web.Api.ProxyScripting.Generators.JQuery
             script.AppendLine();
             script.AppendLine("var abp = abp || {};");
             script.AppendLine("abp.services = abp.services || {};");
-            
+
             foreach (var module in model.Modules.Values)
             {
                 script.AppendLine();
@@ -114,7 +114,7 @@ namespace Abp.Web.Api.ProxyScripting.Generators.JQuery
                     script.Append("        data: " + formData);
                 }
             }
-            
+
             script.AppendLine();
         }
     }

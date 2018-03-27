@@ -47,7 +47,7 @@ requests and responses.
 #### Authentication
 
 Just send a **POST** request to
-**http://localhost:62114/api/TokenAuth/Authenticate** with a 
+**http://localhost:62114/api/TokenAuth/Authenticate** with a
 **Context-Type="application/json"** header as shown below:
 
 <img src="../images/aspnet-core-token-auth.png" alt="Request for token" class="img-thumbnail" />
@@ -74,7 +74,7 @@ used remotely. For example, we can use the **User service** to get a
 Just made a **GET** request to
 **http://localhost:62114/api/services/app/user/GetAll** with
 **Content-Type="application/json"** and **Authorization="Bearer
-*your-*** ***auth-token*** **"**. 
+*your-*** ***auth-token*** **"**.
 
 Almost all operations available on the UI are also available as a Web API,
 since the UI uses the same Web API, and can be easily consumed.
@@ -88,8 +88,8 @@ tenant databases.
 <img src="../images/database-migrator.png" alt="Database Migrator" class="img-thumbnail" />
 
 This application gets the host connection string from it's **own
-appsettings.json file**. In the beginning, it will be the 
-same in the appsettings.json in the .Web.Host project. 
+appsettings.json file**. In the beginning, it will be the
+same in the appsettings.json in the .Web.Host project.
 Be sure that the connection string
 in the config file is the database you want. After getting the **host**
 **connection string**, it first creates the host database and applies

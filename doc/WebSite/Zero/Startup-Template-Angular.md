@@ -1,7 +1,7 @@
 ### Introduction
 
-The easiest way of starting a new project using ABP with **ASP.NET Core** and **Angular** is to create a 
-template on the [download page](/Templates). After creating and downloading your project, follow the 
+The easiest way of starting a new project using ABP with **ASP.NET Core** and **Angular** is to create a
+template on the [download page](/Templates). After creating and downloading your project, follow the
 below steps to run your application.
 
 ### ASP.NET Core Application
@@ -17,7 +17,7 @@ below steps to run your application.
 
 <img src="../images/swagger-ui-module-zero-core-template.png" alt="Swagger UI" class="img-thumbnail" />
 
-In this template, **multi-tenancy is enabled by default**. If you don't 
+In this template, **multi-tenancy is enabled by default**. If you don't
 need it, you can disable it in the Core project's module class.
 
 If you have problems with running the application, close and then re-open
@@ -69,7 +69,7 @@ at development time:
 
 You can now login to the application using the default credentials. The default username
 is '**admin**' and the password is '**123qwe**'. If you want to
-login as a tenant, you need to first switch to that tenant on the login page. By default, there 
+login as a tenant, you need to first switch to that tenant on the login page. By default, there
 is a tenant named "Default". Once you login successfully, you will
 see a dashboard:
 

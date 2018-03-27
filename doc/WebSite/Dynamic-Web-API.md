@@ -67,7 +67,7 @@ We can override the configuration after the ForAll method. Example:
     Configuration.Modules.AbpWebApi().DynamicApiControllerBuilder
         .ForAll<IApplicationService>(Assembly.GetAssembly(typeof(SimpleTaskSystemApplicationModule)), "tasksystem")
         .Build();
-    
+
     Configuration.Modules.AbpWebApi().DynamicApiControllerBuilder
         .For<ITaskAppService>("tasksystem/task")
         .ForMethod("CreateTask").DontCreateAction().Build();
@@ -92,7 +92,7 @@ using the ForAll method. Example:
         })
         .Build();
 
-In this example, we used a custom attribute, MyIgnoreApiAttribute, to ignore a 
+In this example, we used a custom attribute, MyIgnoreApiAttribute, to ignore a
 dynamic web api controller's actions/methods when they are marked with it.
 
 #### Http Verbs
@@ -119,10 +119,10 @@ interface:
     {
         [HttpGet]
         GetTasksOutput GetTasks(GetTasksInput input);
-    
+
         [HttpPut]
         void UpdateTask(UpdateTaskInput input);
-    
+
         [HttpPost]
         void CreateTask(CreateTaskInput input);
     }
@@ -211,7 +211,7 @@ All the parameters of [jQuery.ajax](http://api.jquery.com/jQuery.ajax/) are
 valid here.
 
 In addition to standard jQuery.ajax parameters, you can add
-**abpHandleError: false** to AJAX options in order to disable 
+**abpHandleError: false** to AJAX options in order to disable
 messages displaying when errors occur.
 
 #### Single Service Script
@@ -299,7 +299,7 @@ and will run properly in either case.
 ASP.NET Boilerplate creates Api Controllers on runtime. ASP.NET Web
 API's [model and parameter
 binding](http://www.asp.net/web-api/overview/formats-and-model-binding/parameter-binding-in-aspnet-web-api)
-is used to bind models and parameters. You can read the following 
+is used to bind models and parameters. You can read the following
 [documentation](http://www.asp.net/web-api/overview/formats-and-model-binding/parameter-binding-in-aspnet-web-api)
 for more information.
 
@@ -310,7 +310,7 @@ for advanced control binding.
 
 #### DTOs vs Primitive Types
 
-We strongly advise you to use 
+We strongly advise you to use
 [DTO](http://www.aspnetboilerplate.com/Pages/Documents/Data-Transfer-Objects)s
 as method parameters for application services and web api controllers.
 You can also use primitive types like string, int, bool... or

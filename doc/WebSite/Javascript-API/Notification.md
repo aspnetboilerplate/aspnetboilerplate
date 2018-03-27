@@ -13,7 +13,7 @@ notification library.
 The Notification API is implemented using the
 [toastr](http://codeseven.github.io/toastr/demo.html) library by
 default. To make toastr work, you must include toastr's CSS &
-JavaScript files, then include **abp.toastr.js** to your page. 
+JavaScript files, then include **abp.toastr.js** to your page.
 
 A toastr success notification is shown below:
 

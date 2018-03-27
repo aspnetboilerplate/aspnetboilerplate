@@ -767,7 +767,7 @@ export class SideBarNavComponent extends AppComponentBase {
         new MenuItem(this.l("Roles"), "Pages.Roles", "local_offer", "/app/roles"),
         new MenuItem(this.l("Events"), "Pages.Events", "event", "/app/events"),
         new MenuItem(this.l("About"), "", "info", "/app/about"),
-        
+
 ...        
 ```
 
@@ -946,7 +946,7 @@ public class EventAppService_Tests : EventCloudTestBase
 
 We use xUnit as test framework. In the first test, we simply create an event and check database if it's in there. In the second test, we intentionally trying to create an event in the past. Since our business rule don't allow it, we should get an exception here.
 
-With such tests, we tested everything starting from application service including all aspects of **ASP.NET Boilerplate** (like validation, unit of work and so on). 
+With such tests, we tested everything starting from application service including all aspects of **ASP.NET Boilerplate** (like validation, unit of work and so on).
 
 ### Token Based Authentication
 
