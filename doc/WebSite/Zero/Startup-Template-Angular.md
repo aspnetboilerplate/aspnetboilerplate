@@ -164,5 +164,5 @@ since they test your code with all of ASP.NET Boilerplate's infrastructure
 
 ### Source Code
 
-This template is developed as an open source project and is available for free at Github:
+This template is developed as an open source project and is available for free on GitHub:
 <https://github.com/aspnetboilerplate/module-zero-core-template>

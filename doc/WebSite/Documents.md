@@ -116,4 +116,4 @@ Releases
 -   Chinese translations of ABP's documentation (thanks to all contributors)
     -   Source 1: [cnblogs.com/farb/p/ABPTheory.html](http://www.cnblogs.com/farb/p/ABPTheory.html)
     -   Source 2: [cnblogs.com/mienreal](http://www.cnblogs.com/mienreal/p/4528470.html)
-    -   Github: [github.com/ABPFrameWorkGroup/AbpDocument2Chinese](https://github.com/ABPFrameWorkGroup/AbpDocument2Chinese)
+    -   GitHub: [github.com/ABPFrameWorkGroup/AbpDocument2Chinese](https://github.com/ABPFrameWorkGroup/AbpDocument2Chinese)
