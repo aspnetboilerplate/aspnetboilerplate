@@ -1,4 +1,4 @@
-﻿<i id="abp-title" data-title="Developing a Multi-Tenant SaaS Application with ASP.NET MVC, EntityFramework and AngularJs"></i>
+﻿<i id="abp-title" data-title="Developing a Multi-Tenant SaaS Application with ASP.NET MVC, EntityFramework and AngularJS"></i>
  
 <ul class="download">
 	<li>Get the source code from the <a href="https://github.com/aspnetboilerplate/eventcloud/tree/master/mvc-angularjs/src">GitHub repository.</a></li>
@@ -49,7 +49,7 @@
 	<li><strong><a href="https://aspnetboilerplate.com/">ASP.NET Boilerplate</a></strong> as application framework.</li>
 	<li><strong>ASP.NET MVC</strong> and <strong>ASP.NET Web API</strong> as Web Frameworks.</li>
 	<li><strong>Entity Framework</strong> as ORM.</li>
-	<li><strong>Angularjs</strong> as SPA framework.</li>
+	<li><strong>AngularJS</strong> as SPA framework.</li>
 	<li><strong>Bootstrap</strong> as HTML/CSS framework.</li>
 </ul>
 
@@ -61,7 +61,7 @@
 
 <p><img alt="Create template" src="create-template-4.png"/></p>
 
-<p>I selected ASP.NET MVC 5.x, Angularjs and Entity Frameowork including &quot;<strong>Options</strong>&quot;. It creates a ready and working solution for us including a <strong>login page</strong>, <strong> navigation</strong> and a bootstrap based <strong>layout</strong>. After downloading and opening the solution with <strong>Visual Studio 2017+</strong>, we see a <strong>layered</strong> solution structure including a unit test project:</p>
+<p>I selected ASP.NET MVC 5.x, AngularJS and Entity Frameowork including &quot;<strong>Options</strong>&quot;. It creates a ready and working solution for us including a <strong>login page</strong>, <strong> navigation</strong> and a bootstrap based <strong>layout</strong>. After downloading and opening the solution with <strong>Visual Studio 2017+</strong>, we see a <strong>layered</strong> solution structure including a unit test project:</p>
 
 <p><img alt="Solution structure"  src="solution-structure.png"/></p>
 
@@ -600,7 +600,7 @@ public class EventAppService : EventCloudAppServiceBase, IEventAppService
 
 <h3 id="ArticlePresentation">Presentation Layer</h3>
 
-<p>Presentation layer for this application is built using Angularjs as a SPA.</p>
+<p>Presentation layer for this application is built using AngularJS as a SPA.</p>
 
 <h4 id="ArticleEventList">Event List</h4>
 
@@ -652,7 +652,7 @@ public class EventAppService : EventCloudAppServiceBase, IEventAppService
     ]);
 })();</pre>
 
-<p>We inject <strong>EventAppService</strong> as &#39;<strong>abp.services.app.event</strong>&#39; into Angular controller. We used <a href="http://www.aspnetboilerplate.com/Pages/Documents/Dynamic-Web-API"> dynamic web api layer</a> feature of ABP. It creates needed Web API controller and Angularjs service <strong>automatically</strong> and <strong>dynamically</strong>. So, we can use application service methods like calling regular javascript functions. So, to call <strong>EventAppService.GetList</strong> C# method, we simply call <strong>eventService.getList</strong> javascript function which returns a <strong>promise</strong> ($q for angular).</p>
+<p>We inject <strong>EventAppService</strong> as &#39;<strong>abp.services.app.event</strong>&#39; into Angular controller. We used <a href="http://www.aspnetboilerplate.com/Pages/Documents/Dynamic-Web-API"> dynamic web api layer</a> feature of ABP. It creates needed Web API controller and AngularJS service <strong>automatically</strong> and <strong>dynamically</strong>. So, we can use application service methods like calling regular javascript functions. So, to call <strong>EventAppService.GetList</strong> C# method, we simply call <strong>eventService.getList</strong> javascript function which returns a <strong>promise</strong> ($q for angular).</p>
 
 <p>We also open a &quot;new event&quot; modal (dialog) when user clicks to &quot;+ New event&quot; button (which triggers vm.openNewEventDialog function). I will not go in details of Angular views, since they are simple, you can check it out in the source code.</p>
 

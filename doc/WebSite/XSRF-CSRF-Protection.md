@@ -236,10 +236,10 @@ The abp.jquery.js script defines an AJAX interceptor which adds the anti-forgery
 token to the request header for every request. It gets the token from the
 **abp.security.antiForgery.getToken()** JavaScript function.
 
-#### AngularJs
+#### AngularJS
 
-AngularJs automatically adds the anti-forgery token to all AJAX requests.
-See the *Cross Site Request Forgery (XSRF) Protection* section in the AngularJs
+AngularJS automatically adds the anti-forgery token to all AJAX requests.
+See the *Cross Site Request Forgery (XSRF) Protection* section in the AngularJS
 [$http document](https://docs.angularjs.org/api/ng/service/$http). ABP
 uses the same cookie and header names by default. So, Angular
 integration works out of the box.
@@ -264,7 +264,7 @@ the header:
 
 ##### Using the Library Interceptor
 
-A good library provides interception points (like jQuery and AngularJs),
+A good library provides interception points (like jQuery and AngularJS),
 so follow your vendor's documentation to learn how to intercept
 requests and manipulate headers.
 
@@ -277,7 +277,7 @@ You probably do not need this and can solve this problem by using the methods de
 ### Internals
 
 You may wonder "How does ABP handle this?". Actually, we use the same
-mechanism described in the AngularJs documentation mentioned before. ABP
+mechanism described in the AngularJS documentation mentioned before. ABP
 stores the token into a cookie (as described above) and sets the request
 headers using that cookie. For validating it, it also integrates well into the
 ASP.NET MVC, Web API and Core frameworks.

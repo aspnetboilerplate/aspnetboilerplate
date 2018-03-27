@@ -247,7 +247,7 @@ We can inject a **service** using it's name (with a namespace). We
 can call it's **functions** as regular javascript functions. Notice that
 we registered to the **then** handler (instead of done) since it's similar to
 what is in angular's **$http** service. ASP.NET Boilerplate uses the $http
-service of AngularJs. If you want to pass the $http **configuration**, you
+service of AngularJS. If you want to pass the $http **configuration**, you
 can pass a configuration object as the last parameter of the service
 method.
 

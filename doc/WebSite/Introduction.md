@@ -117,7 +117,7 @@ Startup templates provides a basic layout and some common features for an applic
 
 ##### ASP.NET MVC 5.x
 
-* [ASP.NET MVC 5.x & Angularjs 1.x / ASP.NET MVC 5.x & jQuery](Zero/Startup-Template.md)
+* [ASP.NET MVC 5.x & AngularJS 1.x / ASP.NET MVC 5.x & jQuery](Zero/Startup-Template.md)
 
 See the [download page](/Templates) for other combinations.
 
@@ -132,8 +132,8 @@ Step by step tutorials introduces the framework and explains how to create your 
 
 ##### ASP.NET MVC 5.x
 
--   [Introduction with ASP.NET MVC 5.x, Web API 2.x, EntityFramework 6.x & AngularJs 1.x](Articles/Introduction-With-AspNet-MVC-Web-API-EntityFramework-and-AngularJs/index.html)
--   [Developing a multi-tenant (SaaS) application with ASP.NET MVC 5.x, EntityFramework 6.x & Angularjs 1.x](Articles/Developing-a-Multi-Tenant-SaaS-Application-with-ASP.NET-MVC-EntityFramework-AngularJs/index.html)
+-   [Introduction with ASP.NET MVC 5.x, Web API 2.x, EntityFramework 6.x & AngularJS 1.x](Articles/Introduction-With-AspNet-MVC-Web-API-EntityFramework-and-AngularJs/index.html)
+-   [Developing a multi-tenant (SaaS) application with ASP.NET MVC 5.x, EntityFramework 6.x & AngularJS 1.x](Articles/Developing-a-Multi-Tenant-SaaS-Application-with-ASP.NET-MVC-EntityFramework-AngularJs/index.html)
 
 ### Samples
 

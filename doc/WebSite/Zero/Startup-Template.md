@@ -1,6 +1,6 @@
 ### Introduction
 
-The easiest way of starting a new project using ABP with **ASP.NET MVC 5.x (and optionally Angularjs frontend)** is to create a template on the [download page](/Templates).
+The easiest way of starting a new project using ABP with **ASP.NET MVC 5.x (and optionally AngularJS frontend)** is to create a template on the [download page](/Templates).
 
 After creating and downloading your project:
 
