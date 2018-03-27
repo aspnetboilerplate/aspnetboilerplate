@@ -444,7 +444,7 @@ namespace Acme.SimpleTaskApp.Web.Controllers
     }
 }</pre>
 
-<p>I injected ILookupAppService that is used to get people combobox items. While I could directly inject and use IRepository&lt;Person, Guid&gt; here, I prefered this to make a better layering and re-usability. ILookupAppService.GetPeopleComboboxItems is defined in application layer as shown below:</p>
+<p>I injected ILookupAppService that is used to get people combobox items. While I could directly inject and use IRepository&lt;Person, Guid&gt; here, I preferred this to make a better layering and re-usability. ILookupAppService.GetPeopleComboboxItems is defined in application layer as shown below:</p>
 
 <pre lang="cs">
 public interface ILookupAppService : IApplicationService

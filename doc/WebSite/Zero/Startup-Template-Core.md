@@ -92,7 +92,7 @@ appsettings.json file**. In the beginning, it will be the
 same in the appsettings.json in the .Web.Host project. 
 Be sure that the connection string
 in the config file is the database you want. After getting the **host**
-**connection sring**, it first creates the host database and applies
+**connection string**, it first creates the host database and applies
 migrations if they don't already exist. It then gets the connection strings of the
 tenant databases and runs migrations against those databases. It skips a
 tenant if it does not have a dedicated database or its database has already

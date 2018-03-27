@@ -215,7 +215,7 @@ PM&gt; Update-Database</pre>
 
 <p><img alt="IRepository interface" height="741" src="irepository-interface-v3.png" width="494" /></p>
 
-<p>We can extend these repository upon our needs. I will extend it to create a Task repository. As I want to seperate interface from implementation, I declare interfaces for repositories first. Here, is the Task repository interface:</p>
+<p>We can extend these repository upon our needs. I will extend it to create a Task repository. As I want to separate interface from implementation, I declare interfaces for repositories first. Here, is the Task repository interface:</p>
 
 <pre lang="cs">
 public interface ITaskRepository : IRepository&lt;Task, long&gt;
@@ -276,7 +276,7 @@ public class TaskRepository : SimpleTaskSystemRepositoryBase&lt;Task, long&gt;, 
 
 <h2 id="ArticleBuildAppServices">Build application services</h2>
 
-<p>Application services is used to seperate presentation layer from domain layer by providing fa&ccedil;ade style methods. I defined application services in the <strong> Application</strong> assembly in the project. First, I define interface for task application service:</p>
+<p>Application services is used to separate presentation layer from domain layer by providing fa&ccedil;ade style methods. I defined application services in the <strong> Application</strong> assembly in the project. First, I define interface for task application service:</p>
 
 <pre lang="cs">
 public interface ITaskAppService : IApplicationService
@@ -369,7 +369,7 @@ public class TaskAppService : ApplicationService, ITaskAppService
 
 <p>In the <strong>GetTasks</strong> method, I used the <strong>GetAllWithPeople</strong> method that I implemented before. It returns a <strong>List&lt;Task&gt;</strong> but I need to return a <strong>List&lt;TaskDto&gt;</strong> to presentation layer. <a href="http://automapper.org/" target="_blank">AutoMapper</a> helps us here to automatically convert <strong>Task</strong> objects to <strong>TaskDto</strong> objects. GetTasksInput and GetTasksOutput are special DTOs defined for GetTasks method.</p>
 
-<p>In the <strong>UpdateTask</strong> method, I retrived the Task from database (using IRepository&#39;s <strong>Get</strong> method) and changed peoperties of the Task. Notice that I did not even called <strong>Update</strong> method of the repository. ASP.NET Boilerplate implements <a href="http://www.aspnetboilerplate.com/Pages/Documents/Unit-Of-Work"> UnitOfWork</a> pattern. So, all changes in an application service method are a unit of work (atomic) and applied to database at the end of the method automatically.</p>
+<p>In the <strong>UpdateTask</strong> method, I retrieved the Task from database (using IRepository&#39;s <strong>Get</strong> method) and changed peoperties of the Task. Notice that I did not even called <strong>Update</strong> method of the repository. ASP.NET Boilerplate implements <a href="http://www.aspnetboilerplate.com/Pages/Documents/Unit-Of-Work"> UnitOfWork</a> pattern. So, all changes in an application service method are a unit of work (atomic) and applied to database at the end of the method automatically.</p>
 
 <p>In the <strong>CreateTask</strong> method, I simply created a new Task and inserted to database using the IRepository&#39;s Insert method.</p>
 

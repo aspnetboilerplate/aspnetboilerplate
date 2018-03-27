@@ -67,7 +67,7 @@ at development time:
 
 #### Login
 
-You can now login to the application using the default credentials. The default user's name
+You can now login to the application using the default credentials. The default username
 is '**admin**' and the password is '**123qwe**'. If you want to
 login as a tenant, you need to first switch to that tenant on the login page. By default, there 
 is a tenant named "Default". Once you login successfully, you will
@@ -143,7 +143,7 @@ This application gets the host connection string from its **own
 appsettings.json file**. In the beginning, it will be the same as the appsettings.json
 in the .Web.Host project. Be sure that the connection string
 in the config file is the database you want. After getting the **host**
-**connection sring**, it first creates the host database and then applies the
+**connection string**, it first creates the host database and then applies the
 migrations if they don't already exist. It then gets the connection strings of
 the tenant databases and runs the migrations for those databases. It skips a
 tenant if it does not have a dedicated database or if the database has already

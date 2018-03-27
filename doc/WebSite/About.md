@@ -9,7 +9,7 @@ the best software design practices without repeating themselves. DRY -
 
 All applications have some common problems and need some common
 structures. ASP.NET Boilerplate works for small projects to large
-enterprise web applications, providing a qick start with maintanable
+enterprise web applications, providing a quick start with maintainable
 code bases.
 
 ### Considerations
