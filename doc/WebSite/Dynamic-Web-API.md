@@ -244,7 +244,7 @@ services**. Consider the sample below:
     })();
 
 We can inject a **service** using it's name (with a namespace). We
-can call it's **functions** as regular javascript functions. Notice that
+can call it's **functions** as regular JavaScript functions. Notice that
 we registered to the **then** handler (instead of done) since it's similar to
 what is in angular's **$http** service. ASP.NET Boilerplate uses the $http
 service of AngularJS. If you want to pass the $http **configuration**, you
@@ -291,7 +291,7 @@ handling](Handling-Exceptions.md) will be disabled (DontWrapResult
 attribute has WrapOnError properties that can be used to enable the handling
 and wrapping for exceptions).
 
-Note: Dynamic javascript proxies can understand if the result is unwrapped
+Note: Dynamic JavaScript proxies can understand if the result is unwrapped
 and will run properly in either case.
 
 ### About Parameter Binding

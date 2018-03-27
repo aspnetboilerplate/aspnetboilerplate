@@ -652,7 +652,7 @@ public class EventAppService : EventCloudAppServiceBase, IEventAppService
     ]);
 })();</pre>
 
-<p>We inject <strong>EventAppService</strong> as &#39;<strong>abp.services.app.event</strong>&#39; into Angular controller. We used <a href="http://www.aspnetboilerplate.com/Pages/Documents/Dynamic-Web-API"> dynamic web api layer</a> feature of ABP. It creates needed Web API controller and AngularJS service <strong>automatically</strong> and <strong>dynamically</strong>. So, we can use application service methods like calling regular javascript functions. So, to call <strong>EventAppService.GetList</strong> C# method, we simply call <strong>eventService.getList</strong> javascript function which returns a <strong>promise</strong> ($q for angular).</p>
+<p>We inject <strong>EventAppService</strong> as &#39;<strong>abp.services.app.event</strong>&#39; into Angular controller. We used <a href="http://www.aspnetboilerplate.com/Pages/Documents/Dynamic-Web-API"> dynamic web api layer</a> feature of ABP. It creates needed Web API controller and AngularJS service <strong>automatically</strong> and <strong>dynamically</strong>. So, we can use application service methods like calling regular JavaScript functions. So, to call <strong>EventAppService.GetList</strong> C# method, we simply call <strong>eventService.getList</strong> JavaScript function which returns a <strong>promise</strong> ($q for angular).</p>
 
 <p>We also open a &quot;new event&quot; modal (dialog) when user clicks to &quot;+ New event&quot; button (which triggers vm.openNewEventDialog function). I will not go in details of Angular views, since they are simple, you can check it out in the source code.</p>
 
