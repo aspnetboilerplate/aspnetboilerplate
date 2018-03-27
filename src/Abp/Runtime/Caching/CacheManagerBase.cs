@@ -4,7 +4,6 @@ using System.Collections.Immutable;
 using System.Linq;
 using Abp.Dependency;
 using Abp.Runtime.Caching.Configuration;
-using JetBrains.Annotations;
 
 namespace Abp.Runtime.Caching
 {
@@ -57,12 +56,16 @@ namespace Abp.Runtime.Caching
 
         public virtual void Dispose()
         {
+            DisposeCaches();
+            Caches.Clear();
+        }
+
+        protected virtual void DisposeCaches()
+        {
             foreach (var cache in Caches)
             {
                 IocManager.Release(cache.Value);
             }
-
-            Caches.Clear();
         }
 
         /// <summary>

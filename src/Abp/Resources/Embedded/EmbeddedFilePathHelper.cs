@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Text;
 
 namespace Abp.Resources.Embedded
 {
@@ -6,24 +7,54 @@ namespace Abp.Resources.Embedded
     {
         public static string NormalizePath(string fullPath)
         {
-            var fileName = fullPath;
-            var extension = "";
+            return fullPath?.Replace("/", ".").TrimStart('.');
+        }
 
-            if (fileName.Contains("."))
+        public static string EncodeAsResourcesPath(string subPath)
+        {
+            var builder = new StringBuilder(subPath.Length);
+
+            // does the subpath contain directory portion - if so we need to encode it.
+            var indexOfLastSeperator = subPath.LastIndexOf('/');
+            if (indexOfLastSeperator != -1)
             {
-                extension = fullPath.Substring(fileName.LastIndexOf(".", StringComparison.Ordinal));
-                if (extension.Contains("/"))
+                // has directory portion to encode.
+                for (int i = 0; i <= indexOfLastSeperator; i++)
                 {
-                    //That means the file does not have extension, but a directory has "." char. So, clear extension.
-                    extension = "";
-                }
-                else
-                {
-                    fileName = fullPath.Substring(0, fullPath.Length - extension.Length);
+                    var currentChar = subPath[i];
+
+                    if (currentChar == '/')
+                    {
+                        if (i != 0) // omit a starting slash (/), encode any others as a dot
+                        {
+                            builder.Append('.');
+                        }
+                        continue;
+                    }
+
+                    if (currentChar == '-')
+                    {
+                        builder.Append('_');
+                        continue;
+                    }
+
+                    builder.Append(currentChar);
                 }
             }
 
-            return fileName + extension;
+            // now append (and encode as necessary) filename portion
+            if (subPath.Length > indexOfLastSeperator + 1)
+            {
+                // has filename to encode
+                for (int c = indexOfLastSeperator + 1; c < subPath.Length; c++)
+                {
+                    var currentChar = subPath[c];
+                    // no encoding to do on filename - so just append
+                    builder.Append(currentChar);
+                }
+            }
+
+            return builder.ToString();
         }
     }
 }

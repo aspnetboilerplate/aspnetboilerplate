@@ -1,8 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
+﻿using System.Collections.Generic;
 using System.Reflection;
-using Abp.Collections.Extensions;
 using Abp.Extensions;
 using Abp.IO.Extensions;
 
@@ -34,10 +31,11 @@ namespace Abp.Resources.Embedded
 
                 using (var stream = Assembly.GetManifestResourceStream(resourceName))
                 {
-                    var filePath = RootPath + ConvertToRelativePath(resourceName);
+                    var relativePath = ConvertToRelativePath(resourceName);
+                    var filePath = EmbeddedResourcePathHelper.NormalizePath(RootPath) + relativePath;
 
                     resources[filePath] = new EmbeddedResourceItem(
-                        CalculateFileName(filePath),
+                        filePath,
                         stream.GetAllBytes(),
                         Assembly
                     );
@@ -47,28 +45,7 @@ namespace Abp.Resources.Embedded
 
         private string ConvertToRelativePath(string resourceName)
         {
-            resourceName = resourceName.Substring(ResourceNamespace.Length + 1);
-
-            var pathParts = resourceName.Split('.');
-            if (pathParts.Length <= 2)
-            {
-                return resourceName;
-            }
-
-            var folder = pathParts.Take(pathParts.Length - 2).JoinAsString("/");
-            var fileName = pathParts[pathParts.Length - 2] + "." + pathParts[pathParts.Length - 1];
-
-            return folder + "/" + fileName;
-        }
-
-        private static string CalculateFileName(string filePath)
-        {
-            if (!filePath.Contains("/"))
-            {
-                return filePath;
-            }
-
-            return filePath.Substring(filePath.LastIndexOf("/", StringComparison.Ordinal) + 1);
+            return resourceName.Substring(ResourceNamespace.Length + 1);
         }
     }
 }

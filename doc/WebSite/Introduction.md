@@ -13,29 +13,29 @@ Let's investigate a simple class to see ABP's benefits:
     public class TaskAppService : ApplicationService, ITaskAppService
     {
         private readonly IRepository<Task> _taskRepository;
-    
+
         public TaskAppService(IRepository<Task> taskRepository)
         {
             _taskRepository = taskRepository;
         }
-    
+
         [AbpAuthorize(MyPermissions.UpdateTasks)]
         public async Task UpdateTask(UpdateTaskInput input)
         {
             Logger.Info("Updating a task for input: " + input);
-    
+
             var task = await _taskRepository.FirstOrDefaultAsync(input.TaskId);
             if (task == null)
             {
                 throw new UserFriendlyException(L("CouldNotFindTheTaskMessage"));
             }
-    
+
             input.MapTo(task);
         }
     }
 
 Here we see a sample [Application Service](Application-Services.md) method. An application service, in DDD,
-is directly used by the presentation layer to perform the **use cases** of the application. 
+is directly used by the presentation layer to perform the **use cases** of the application.
 Think **UpdateTask** as a method that is called by JavaScript via AJAX.
 
 Let's see some of ABP's benefits here:
@@ -52,7 +52,7 @@ Let's see some of ABP's benefits here:
     simplify the data access logic.
 -   **[Authorization](/Pages/Documents/Authorization)**: ABP can check permissions declaratively.
     It prevents access to the UpdateTask method if the current user
-    has no "update tasks" permission or is not logged in. ABP not only uses declarative 
+    has no "update tasks" permission or is not logged in. ABP not only uses declarative
     attributes, but it also has additional ways in which you can authorize.
 -   **[Validation](/Pages/Documents/Validating-Data-Transfer-Objects)**: ABP automatically checks if the input is null. It also validates all
     the properties of an input based on standard data annotation attributes
@@ -89,7 +89,7 @@ Let's see some of ABP's benefits here:
 -   **[Dynamic API Layer](/Pages/Documents/Dynamic-Web-API)**: TaskAppService is a simple class, actually. We generally have to write a wrapper API Controller to expose methods to JavaScript clients, but ABP
     automatically does that on runtime. This way, we can use application
     service methods directly from clients.
--   **[Dynamic Javascript AJAX Proxy](/Pages/Documents/Dynamic-Web-API#dynamic-javascript-proxies)** : ABP creates proxy methods those make calling application
+-   **[Dynamic JavaScript AJAX Proxy](/Pages/Documents/Dynamic-Web-API#dynamic-javascript-proxies)** : ABP creates proxy methods those make calling application
     service methods as simple as calling JavaScript methods on the client.
 
 We can see the benefits of ABP in this simple class. All these tasks normally take significant time,
@@ -117,7 +117,7 @@ Startup templates provides a basic layout and some common features for an applic
 
 ##### ASP.NET MVC 5.x
 
-* [ASP.NET MVC 5.x & Angularjs 1.x / ASP.NET MVC 5.x & jQuery](Zero/Startup-Template.md)
+* [ASP.NET MVC 5.x & AngularJS 1.x / ASP.NET MVC 5.x & jQuery](Zero/Startup-Template.md)
 
 See the [download page](/Templates) for other combinations.
 
@@ -128,12 +128,12 @@ Step by step tutorials introduces the framework and explains how to create your 
 ##### ASP.NET Core
 
 -   [Introduction with ASP.NET Core & Entity Framework Core](Articles/Introduction-With-AspNet-Core-And-Entity-Framework-Core-Part-1/index.html)
--   [Developing a multi-tenant (SaaS) application with ASP.NET Core, EntityFramework Core & Angular](Articles/Developing-MultiTenant-SaaS-ASP.NET-CORE-Angular/Developing-MultiTenant-SaaS-ASP.NET-CORE-Angular5.md)
+-   [Developing a multi-tenant (SaaS) application with ASP.NET Core, EntityFramework Core & Angular](Articles/Developing-MultiTenant-SaaS-ASP.NET-CORE-Angular/index.html)
 
 ##### ASP.NET MVC 5.x
 
--   [Introduction with ASP.NET MVC 5.x, Web API 2.x, EntityFramework 6.x & AngularJs 1.x](Articles/Introduction-With-AspNet-MVC-Web-API-EntityFramework-and-AngularJs/index.html)
--   [Developing a multi-tenant (SaaS) application with ASP.NET MVC 5.x, EntityFramework 6.x & Angularjs 1.x](Articles/Developing-a-Multi-Tenant-SaaS-Application-with-ASP.NET-MVC-EntityFramework-AngularJs/index.html)
+-   [Introduction with ASP.NET MVC 5.x, Web API 2.x, EntityFramework 6.x & AngularJS 1.x](Articles/Introduction-With-AspNet-MVC-Web-API-EntityFramework-and-AngularJs/index.html)
+-   [Developing a multi-tenant (SaaS) application with ASP.NET MVC 5.x, EntityFramework 6.x & AngularJS 1.x](Articles/Developing-a-Multi-Tenant-SaaS-Application-with-ASP.NET-MVC-EntityFramework-AngularJs/index.html)
 
 ### Samples
 
@@ -143,6 +143,6 @@ There are many sample projects developed with the framework. See [the samples pa
 
 This is an open source project and open to contributions from the community.
 
-* Use [the Github repository](https://github.com/aspnetboilerplate/aspnetboilerplate) to access the latest **source code**, create [issues](https://github.com/aspnetboilerplate/aspnetboilerplate/issues) and send [pull requests](https://github.com/aspnetboilerplate/aspnetboilerplate/pulls).
+* Use [the GitHub repository](https://github.com/aspnetboilerplate/aspnetboilerplate) to access the latest **source code**, create [issues](https://github.com/aspnetboilerplate/aspnetboilerplate/issues) and send [pull requests](https://github.com/aspnetboilerplate/aspnetboilerplate/pulls).
 * Use [aspnetboilerplate tag on stackoverflow](https://stackoverflow.com/questions/tagged/aspnetboilerplate) to ask questions about the usage.
 * Follow [aspboilerplate on twitter](https://twitter.com/aspboilerplate) to be informed about the happenings.

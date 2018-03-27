@@ -97,7 +97,7 @@ Releases
 -   Startup Templates
     -   [ASP.NET Core & Angular](Zero/Startup-Template-Angular.md)
     -   [ASP.NET Core MVC & jQuery](Zero/Startup-Template-Core.md)
-    -   [ASP.NET MVC 5.x / Angularjs 1.x](Zero/Startup-Template.md)
+    -   [ASP.NET MVC 5.x / AngularJS 1.x](Zero/Startup-Template.md)
 -   Features
     -   [Tenant Management](/Pages/Documents/Zero/Tenant-Management)
     -   [Edition Management](/Pages/Documents/Zero/Edition-Management)
@@ -116,4 +116,4 @@ Releases
 -   Chinese translations of ABP's documentation (thanks to all contributors)
     -   Source 1: [cnblogs.com/farb/p/ABPTheory.html](http://www.cnblogs.com/farb/p/ABPTheory.html)
     -   Source 2: [cnblogs.com/mienreal](http://www.cnblogs.com/mienreal/p/4528470.html)
-    -   Github: [github.com/ABPFrameWorkGroup/AbpDocument2Chinese](https://github.com/ABPFrameWorkGroup/AbpDocument2Chinese)
+    -   GitHub: [github.com/ABPFrameWorkGroup/AbpDocument2Chinese](https://github.com/ABPFrameWorkGroup/AbpDocument2Chinese)

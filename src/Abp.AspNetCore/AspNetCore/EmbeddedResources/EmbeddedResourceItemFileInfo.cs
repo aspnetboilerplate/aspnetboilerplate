@@ -13,17 +13,18 @@ namespace Abp.AspNetCore.EmbeddedResources
 
         public string PhysicalPath => null;
 
-        public string Name => _resourceItem.FileName;
+        public string Name { get; }
 
         public DateTimeOffset LastModified => _resourceItem.LastModifiedUtc;
 
         public bool IsDirectory => false;
         
         private readonly EmbeddedResourceItem _resourceItem;
-
-        public EmbeddedResourceItemFileInfo(EmbeddedResourceItem resourceItem)
+        
+        public EmbeddedResourceItemFileInfo(EmbeddedResourceItem resourceItem, string name)
         {
             _resourceItem = resourceItem;
+            Name = name;
         }
 
         public Stream CreateReadStream()

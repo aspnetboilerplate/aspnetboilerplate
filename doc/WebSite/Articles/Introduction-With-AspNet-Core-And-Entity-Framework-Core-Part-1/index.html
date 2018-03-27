@@ -1,7 +1,7 @@
 ﻿<i id="abp-title" data-title="Introduction With AspNet Core And Entity Framework Core Part 1"></i>
 
 <ul class="download">
-	<li>Get the source code from the <a href="https://github.com/aspnetboilerplate/aspnetboilerplate-samples/tree/master/SimpleTaskSystem-Core">Github repository.</a></li>
+	<li>Get the source code from the <a href="https://github.com/aspnetboilerplate/aspnetboilerplate-samples/tree/master/SimpleTaskSystem-Core">GitHub repository.</a></li>
 </ul>
 
 <ul class="abp-invisible">
@@ -444,7 +444,7 @@ public class SimpleTaskAppNavigationProvider : NavigationProvider
     }
 }</pre>
 
-<p>Startup template comes with two pages: Home and About, as shown above. We can change them or create new pages. I prefered to leave them for now and create a new menu item.</p>
+<p>Startup template comes with two pages: Home and About, as shown above. We can change them or create new pages. I preferred to leave them for now and create a new menu item.</p>
 
 <h4 id="ArticleCreateTaskController">Creating the TaskController and ViewModel</h4>
 
@@ -627,7 +627,7 @@ public async Task&lt;ActionResult&gt; Index(GetAllTasksInput input)
 
 <p><img alt="Task list" height="405" src="task-list-view-2.png" width="763" /></p>
 
-<p>I added the combobox but it can not work yet. I&#39;ll write a simple javascript code to re-request/refresh task list page when combobox value changes. So, I&#39;m creating wwwroot\js\views\tasks\<strong>index.js</strong> file in the <strong>.Web</strong> project:</p>
+<p>I added the combobox but it can not work yet. I&#39;ll write a simple JavaScript code to re-request/refresh task list page when combobox value changes. So, I&#39;m creating wwwroot\js\views\tasks\<strong>index.js</strong> file in the <strong>.Web</strong> project:</p>
 
 <pre lang="cs">
 (function ($) {
@@ -642,7 +642,7 @@ public async Task&lt;ActionResult&gt; Index(GetAllTasksInput input)
     });
 })(jQuery);</pre>
 
-<p>Before including this javascript file into my view, I used <strong> <a href="https://github.com/madskristensen/BundlerMinifier" target="_blank"> Bundler &amp; Minifier</a></strong> VS extension (which is default way of minifying files in ASP.NET Core projects) to minify the script:</p>
+<p>Before including this JavaScript file into my view, I used <strong> <a href="https://github.com/madskristensen/BundlerMinifier" target="_blank"> Bundler &amp; Minifier</a></strong> VS extension (which is default way of minifying files in ASP.NET Core projects) to minify the script:</p>
 
 <p><img alt="Minify js" height="150" src="minify-js.png" width="586" /></p>
 
@@ -660,7 +660,7 @@ public async Task&lt;ActionResult&gt; Index(GetAllTasksInput input)
 
 <p><img alt="Minified js file" height="167" src="minified-js.png" width="215" /></p>
 
-<p>Whenever I change the index.js, index.min.js is automatically re-generated. Now, I can include the javascript file into my page:</p>
+<p>Whenever I change the index.js, index.min.js is automatically re-generated. Now, I can include the JavaScript file into my page:</p>
 
 <pre lang="xml">
 @section scripts

@@ -8,7 +8,7 @@ namespace Abp.Web.Timing
     public interface ITimingScriptManager
     {
         /// <summary>
-        /// Gets Javascript that contains all feature information.
+        /// Gets JavaScript that contains all feature information.
         /// </summary>
         Task<string> GetScriptAsync();
     }

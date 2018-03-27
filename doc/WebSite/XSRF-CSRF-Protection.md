@@ -41,7 +41,7 @@ ASP.NET MVC has it's own built-in AntiForgery system as you probably
 know, but it has a few weaknesses:
 
 -   It requires you to add the **ValidateAntiForgeryToken** attribute to all
-    actions that need to be protected. You could potentially **forget** to add 
+    actions that need to be protected. You could potentially **forget** to add
     it for all the needed actions!
 -   The ValidateAntiForgeryToken attribute only checks the
     **\_\_RequestVerificationToken** in the HTML **form fields**. This
@@ -65,7 +65,7 @@ ABP does followings things to overcome these shortcomings:
     **DisableAbpAntiForgeryTokenValidation** attribute and you can
     enable it for any action/controller using the
     **ValidateAbpAntiForgeryToken** attribute.
--   In addition to the HTML **form field**, **AbpAntiForgeryMvcFilter** also checks the token in the **header**. 
+-   In addition to the HTML **form field**, **AbpAntiForgeryMvcFilter** also checks the token in the **header**.
     This way, we can easily use anti-forgery token protections for AJAX requests.
 -   ABP provides the **abp.security.antiForgery.getToken()** function to get the
     token in JavaScript, even if you don't need it often.
@@ -236,10 +236,10 @@ The abp.jquery.js script defines an AJAX interceptor which adds the anti-forgery
 token to the request header for every request. It gets the token from the
 **abp.security.antiForgery.getToken()** JavaScript function.
 
-#### AngularJs
+#### AngularJS
 
-AngularJs automatically adds the anti-forgery token to all AJAX requests.
-See the *Cross Site Request Forgery (XSRF) Protection* section in the AngularJs
+AngularJS automatically adds the anti-forgery token to all AJAX requests.
+See the *Cross Site Request Forgery (XSRF) Protection* section in the AngularJS
 [$http document](https://docs.angularjs.org/api/ng/service/$http). ABP
 uses the same cookie and header names by default. So, Angular
 integration works out of the box.
@@ -264,7 +264,7 @@ the header:
 
 ##### Using the Library Interceptor
 
-A good library provides interception points (like jQuery and AngularJs),
+A good library provides interception points (like jQuery and AngularJS),
 so follow your vendor's documentation to learn how to intercept
 requests and manipulate headers.
 
@@ -277,7 +277,7 @@ You probably do not need this and can solve this problem by using the methods de
 ### Internals
 
 You may wonder "How does ABP handle this?". Actually, we use the same
-mechanism described in the AngularJs documentation mentioned before. ABP
+mechanism described in the AngularJS documentation mentioned before. ABP
 stores the token into a cookie (as described above) and sets the request
 headers using that cookie. For validating it, it also integrates well into the
 ASP.NET MVC, Web API and Core frameworks.
