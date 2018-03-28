@@ -13,7 +13,7 @@ namespace Abp.EntityHistory
         /// <summary>
         /// Maximum length of <see cref="BrowserInfo"/> property.
         /// </summary>
-        public const int MaxBrowserInfoLength = 256;
+        public const int MaxBrowserInfoLength = 512;
 
         /// <summary>
         /// Maximum length of <see cref="ClientIpAddress"/> property.

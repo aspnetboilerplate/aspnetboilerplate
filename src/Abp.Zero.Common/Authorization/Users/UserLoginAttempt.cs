@@ -37,7 +37,7 @@ namespace Abp.Authorization.Users
         /// <summary>
         /// Maximum length of <see cref="BrowserInfo"/> property.
         /// </summary>
-        public const int MaxBrowserInfoLength = 256;
+        public const int MaxBrowserInfoLength = 512;
 
         /// <summary>
         /// Tenant's Id, if <see cref="TenancyName"/> was a valid tenant name.

@@ -39,7 +39,7 @@ namespace Abp.Auditing
         /// <summary>
         /// Maximum length of <see cref="BrowserInfo"/> property.
         /// </summary>
-        public static int MaxBrowserInfoLength = 256;
+        public static int MaxBrowserInfoLength = 512;
 
         /// <summary>
         /// Maximum length of <see cref="Exception"/> property.
