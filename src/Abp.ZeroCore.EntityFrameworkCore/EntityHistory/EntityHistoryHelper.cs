@@ -163,7 +163,8 @@ namespace Abp.EntityHistory
                 EntityEntry = entityEntry, // [NotMapped]
                 EntityId = entityId,
                 EntityTypeFullName = entityType.FullName,
-                PropertyChanges = GetPropertyChanges(entityEntry)
+                PropertyChanges = GetPropertyChanges(entityEntry),
+                TenantId = AbpSession.TenantId
             };
 
             return entityChangeInfo;
@@ -214,7 +215,8 @@ namespace Abp.EntityHistory
                         NewValue = isDeleted ? null : propertyEntry.CurrentValue.ToJsonString().TruncateWithPostfix(EntityPropertyChange.MaxValueLength),
                         OriginalValue = isCreated ? null : propertyEntry.OriginalValue.ToJsonString().TruncateWithPostfix(EntityPropertyChange.MaxValueLength),
                         PropertyName = property.Name,
-                        PropertyTypeFullName = property.ClrType.FullName
+                        PropertyTypeFullName = property.ClrType.FullName,
+                        TenantId = AbpSession.TenantId
                     });
                 }
             }
