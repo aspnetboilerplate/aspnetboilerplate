@@ -95,5 +95,11 @@ namespace Abp.AspNetCore.App.Controllers
         {
             return input.Date.Kind.ToString().ToLower();
         }
+
+        [HttpGet]
+        public string GetNotNormalizedDateTimeKind(SimpleDateModel2 input)
+        {
+            return input.Date.Kind.ToString().ToLower();
+        }
     }
 }

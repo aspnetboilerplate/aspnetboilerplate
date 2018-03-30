@@ -31,6 +31,27 @@ namespace Abp.AspNetCore.Tests
             response.Result.ShouldBe(expectedKind.ToLower());
         }
 
+        [Theory]
+        [InlineData("2016-04-13T08:58:10.526Z", "local")]
+        [InlineData("2016-04-13T08:58:10.526", "unspecified")]
+        [InlineData("2016-04-13 08:58:10.526Z", "local")]
+        [InlineData("2016-04-13 08:58:10.526", "unspecified")]
+        [InlineData("2018-01-18T10:41:52.3257108+03:00", "local")]
+        public async Task Controller_Should_Receive_Correct_DateTimeKind_For_Current_ClockProvider_When_Not_Normalized(string date, string expectedKind)
+        {
+            var response = await GetResponseAsObjectAsync<AjaxResponse<string>>(
+                GetUrl<SimpleTestController>(
+                    nameof(SimpleTestController.GetNotNormalizedDateTimeKind),
+                    new
+                    {
+                        date = date
+                    }
+                )
+            );
+
+            response.Result.ShouldBe(expectedKind.ToLower());
+        }
+
         private IClockProvider StringToClockProvider(string dateTimeKind)
         {
             if (dateTimeKind == "local")
