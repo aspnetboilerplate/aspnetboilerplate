@@ -19,6 +19,7 @@ namespace Abp.AspNetCore.App
         public override void PreInitialize()
         {
             Configuration.Auditing.IsEnabledForAnonymousUsers = true;
+            Configuration.MultiTenancy.IsEnabled = true;
 
             Configuration.ReplaceService<IAuditingStore, MockAuditingStore>();
             Configuration.ReplaceService<ITenantStore, TestTenantStore>();
