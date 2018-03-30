@@ -195,6 +195,11 @@ namespace Abp.EntityFramework
         protected override void OnModelCreating(DbModelBuilder modelBuilder)
         {
             base.OnModelCreating(modelBuilder);
+            ConfigureFilters(modelBuilder);
+        }
+
+        protected virtual void ConfigureFilters(DbModelBuilder modelBuilder)
+        {
             modelBuilder.Filter(AbpDataFilters.SoftDelete, (ISoftDelete d) => d.IsDeleted, false);
             modelBuilder.Filter(AbpDataFilters.MustHaveTenant,
                 (IMustHaveTenant t, int tenantId) => t.TenantId == tenantId || (int?) t.TenantId == null,
