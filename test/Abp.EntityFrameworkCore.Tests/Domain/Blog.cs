@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using Abp.Domain.Entities;
 using Abp.Domain.Entities.Auditing;
+using Abp.Timing;
 
 namespace Abp.EntityFrameworkCore.Tests.Domain
 {
@@ -48,5 +49,23 @@ namespace Abp.EntityFrameworkCore.Tests.Domain
 
             DomainEvents.Add(new BlogUrlChangedEventData(this, oldUrl));
         }
+    }
+
+    public class BlogCategory: AggregateRoot, IHasCreationTime
+    {
+        public string Name { get; set; }
+
+        [DisableDateTimeNormalization]
+        public DateTime CreationTime { get; set; }
+
+        public List<SubBlogCategory> SubCategories { get; set; }
+    }
+
+    [DisableDateTimeNormalization]
+    public class SubBlogCategory : Entity, IHasCreationTime
+    {
+        public string Name { get; set; }
+
+        public DateTime CreationTime { get; set; }
     }
 }

@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Threading.Tasks;
 using Abp.EntityFrameworkCore.Tests.Domain;
 using Abp.EntityFrameworkCore.Tests.Ef;
@@ -31,6 +32,22 @@ namespace Abp.EntityFrameworkCore.Tests
                     var post4 = new Post { Blog = blog1, Title = "test-post-4-title", Body = "test-post-4-body", TenantId = 42 };
 
                     context.Posts.AddRange(post1, post2, post3, post4);
+
+                    context.BlogCategories.Add(new BlogCategory
+                    {
+                        Name = "Software Development",
+                        SubCategories = new List<SubBlogCategory>
+                        {
+                            new SubBlogCategory
+                            {
+                                Name ="ASP.NET Core"
+                            },
+                            new SubBlogCategory
+                            {
+                                Name = "ASP.NET MVC"
+                            }
+                        }
+                    });
                 });
 
             using (var context = LocalIocManager.Resolve<SupportDbContext>())
