@@ -139,7 +139,7 @@ namespace Abp.TestBase.SampleApplication.Tests
 
         private void AddCompany(SampleApplicationDbContext context,string name,string country, string city, string address1, string modifier1, string address2, string modifier2, string branchName1, string branchName2)
         {
-            context.Companies.Add(new Company
+            var company = new Company
             {
                 Name = name,
                 CreationTime = new DateTime(2017, 03, 16, 0, 0, 0, DateTimeKind.Utc),
@@ -168,19 +168,21 @@ namespace Abp.TestBase.SampleApplication.Tests
                     }
                 },
                 Branches = new List<Branch>
-                      {
-                          new Branch
-                          {
-                              Name = branchName1,
-                              CreationTime = new DateTime(2017, 03, 16, 0, 0, 0, DateTimeKind.Local),
-                          },
-                          new Branch()
-                          {
-                              Name = branchName2,
-                              CreationTime = new DateTime(2017, 03, 16, 0, 0, 0, DateTimeKind.Utc)
-                          }
-                      }
-            });
+                {
+                    new Branch
+                    {
+                        Name = branchName1,
+                        CreationTime = new DateTime(2017, 03, 16, 0, 0, 0, DateTimeKind.Local),
+                    },
+                    new Branch
+                    {
+                        Name = branchName2,
+                        CreationTime = new DateTime(2017, 03, 16, 0, 0, 0, DateTimeKind.Utc)
+                    }
+                }
+            };
+
+            context.Companies.Add(company);
         }
         
         public void UsingDbContext(Action<SampleApplicationDbContext> action)

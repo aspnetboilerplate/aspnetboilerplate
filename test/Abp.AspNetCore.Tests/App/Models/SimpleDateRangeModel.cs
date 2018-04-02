@@ -13,4 +13,10 @@ namespace Abp.AspNetCore.App.Models
         [DisableDateTimeNormalization]
         public DateTime Date { get; set; }
     }
+
+    [DisableDateTimeNormalization]
+    public class SimpleDateModel3
+    {
+        public DateTime Date { get; set; }
+    }
 }

@@ -97,7 +97,13 @@ namespace Abp.AspNetCore.App.Controllers
         }
 
         [HttpGet]
-        public string GetNotNormalizedDateTimeKind(SimpleDateModel2 input)
+        public string GetNotNormalizedDateTimeKindProperty(SimpleDateModel2 input)
+        {
+            return input.Date.Kind.ToString().ToLower();
+        }
+
+        [HttpGet]
+        public string GetNotNormalizedDateTimeKindClass(SimpleDateModel3 input)
         {
             return input.Date.Kind.ToString().ToLower();
         }

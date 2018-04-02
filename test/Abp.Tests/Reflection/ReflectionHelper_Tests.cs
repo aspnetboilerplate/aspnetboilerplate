@@ -47,6 +47,46 @@ namespace Abp.Tests.Reflection
             attr2.Number.ShouldBe(2);
         }
 
+        [Fact]
+        public static void Should_Find_Property_Using_Path()
+        {
+            var model = new MyParentObject
+            {
+              Child  = new MyChildObject
+              {
+                  InnerChild = new MyInnerChildObject
+                  {
+                      Age = 42
+                  }
+              }
+            };
+
+            var property = ReflectionHelper.GetPropertyByPath(model, typeof(MyParentObject), "Child.InnerChild.Age");
+            var propertyInfo = property as PropertyInfo;
+
+            propertyInfo.ShouldNotBeNull();
+            propertyInfo.Name.ShouldBe("Age");
+            propertyInfo.PropertyType.ShouldBe(typeof(Int32));
+        }
+
+        [Fact]
+        public static void Should_Find_Property_Value_Using_Path()
+        {
+            var model = new MyParentObject
+            {
+                Child = new MyChildObject
+                {
+                    InnerChild = new MyInnerChildObject
+                    {
+                        Age = 42
+                    }
+                }
+            };
+
+            var value = ReflectionHelper.GetValueByPath(model, typeof(MyParentObject), "Child.InnerChild.Age");
+            value.ShouldBe(42);
+        }
+
         [MyAttribute(3)]
         public class MyList : List<int>
         {
@@ -85,6 +125,21 @@ namespace Abp.Tests.Reflection
         public interface IMyAttribute
         {
             int Number { get; set; }
+        }
+
+        internal class MyParentObject
+        {
+            public MyChildObject Child { get; set; }
+        }
+
+        internal class MyChildObject
+        {
+            public MyInnerChildObject InnerChild { get; set; }
+        }
+
+        internal class MyInnerChildObject
+        {
+            public int Age { get; set; }
         }
     }
 }
