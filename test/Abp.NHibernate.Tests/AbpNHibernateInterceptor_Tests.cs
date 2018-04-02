@@ -79,7 +79,7 @@ namespace Abp.NHibernate.Tests
         }
 
         [Fact]
-        public void Interceptor_Should_Normalize_DateTime_Kind_Properties()
+        public void Normalize_DateTime_Kind_Properties_Test()
         {
             var hotel = _hotelRepository.GetAllList().First();
             hotel.CreationDate.Kind.ShouldBe(Clock.Kind);
@@ -89,7 +89,7 @@ namespace Abp.NHibernate.Tests
         }
 
         [Fact]
-        public void Interceptor_Should_Not_Normalize_DateTime_Kind_Properties()
+        public void Dont_Normalize_DateTime_Kind_Properties_Test()
         {
             using (var uow = _unitOfWorkManager.Begin())
             {
