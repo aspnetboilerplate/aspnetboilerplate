@@ -7,7 +7,7 @@ using Newtonsoft.Json.Serialization;
 
 namespace Abp.Json
 {
-    public class AbpContractResolver : DefaultContractResolver
+    public class AbpCamelCasePropertyNamesContractResolver : CamelCasePropertyNamesContractResolver
     {
         protected override JsonProperty CreateProperty(MemberInfo member, MemberSerialization memberSerialization)
         {
