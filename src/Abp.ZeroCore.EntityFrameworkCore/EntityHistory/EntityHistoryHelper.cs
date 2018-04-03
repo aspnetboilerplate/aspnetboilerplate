@@ -290,6 +290,11 @@ namespace Abp.EntityHistory
 
         private bool ShouldSavePropertyHistory(PropertyEntry propertyEntry, bool defaultValue)
         {
+            if (propertyEntry.Metadata.Name == "Id")
+            {
+                return false;
+            }
+
             var propertyInfo = propertyEntry.Metadata.PropertyInfo;
             if (propertyInfo.IsDefined(typeof(DisableAuditingAttribute), true))
             {

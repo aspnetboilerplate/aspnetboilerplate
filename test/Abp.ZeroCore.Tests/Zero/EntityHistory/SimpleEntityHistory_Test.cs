@@ -59,7 +59,7 @@ namespace Abp.Zero.EntityHistory
                      s.EntityChanges[0].ChangeType == EntityChangeType.Created &&
                      s.EntityChanges[0].EntityId == blog2Id.ToJsonString(false, false) &&
                      s.EntityChanges[0].EntityTypeFullName == typeof(Blog).FullName &&
-                     s.EntityChanges[0].PropertyChanges.Count == 3 && // Blog.Id, Blog.Name, Blog.Url
+                     s.EntityChanges[0].PropertyChanges.Count == 2 && // Blog.Name, Blog.Url
 
                      // Check "who did this change"
                      s.ImpersonatorTenantId == AbpSession.ImpersonatorTenantId &&
@@ -112,7 +112,7 @@ namespace Abp.Zero.EntityHistory
 
             UsingDbContext(tenantId, (context) =>
             {
-                context.EntityPropertyChanges.Count(f => f.TenantId == tenantId).ShouldBe(3);
+                context.EntityPropertyChanges.Count(f => f.TenantId == tenantId).ShouldBe(2);
             });
         }
 
