@@ -63,7 +63,7 @@ namespace Abp.AspNetCore
             //Configure JSON serializer
             services.Configure<MvcJsonOptions>(jsonOptions =>
             {
-                jsonOptions.SerializerSettings.Converters.Insert(0, new AbpDateTimeConverter());
+                jsonOptions.SerializerSettings.ContractResolver = new AbpContractResolver();
             });
 
             //Configure MVC
