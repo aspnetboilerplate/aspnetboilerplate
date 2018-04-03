@@ -121,7 +121,7 @@ namespace Abp.EntityFramework
             }
 
             filteredTypes = filteredTypes
-                .Where(type => !type.GetTypeInfo().IsDefined(typeof(DefaultDbContextAttribute), true))
+                .Where(type => type.GetTypeInfo().IsDefined(typeof(DefaultDbContextAttribute), true))
                 .ToList();
 
             if (filteredTypes.Count == 1)
