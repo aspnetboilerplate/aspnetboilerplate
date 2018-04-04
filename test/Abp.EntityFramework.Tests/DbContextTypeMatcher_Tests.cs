@@ -28,7 +28,8 @@ namespace Abp.EntityFramework.Tests
             {
                 typeof(MyDerivedDbContext1),
                 typeof(MyDerivedDbContext2),
-                typeof(MyDerivedDbContext3)
+                typeof(MyDerivedDbContext3),
+                typeof(MyDerivedDbContext4)
             });
         }
 
@@ -38,6 +39,7 @@ namespace Abp.EntityFramework.Tests
             matcher.GetConcreteType(typeof(MyDerivedDbContext1)).ShouldBe(typeof(MyDerivedDbContext1));
             matcher.GetConcreteType(typeof(MyDerivedDbContext2)).ShouldBe(typeof(MyDerivedDbContext2));
             matcher.GetConcreteType(typeof(MyDerivedDbContext3)).ShouldBe(typeof(MyDerivedDbContext3));
+            matcher.GetConcreteType(typeof(MyDerivedDbContext4)).ShouldBe(typeof(MyDerivedDbContext4));
         }
 
         [Fact]
@@ -50,6 +52,7 @@ namespace Abp.EntityFramework.Tests
         public void Should_Get_Single_DbContext_For_Current_Tenancy_Side_When_BaseDbContext_Requested()
         {
             //Should return MyDerivedDbContext3 since it defines MultiTenancySides.Tenant
+            //and DefaultDbContext
             matcher.GetConcreteType(typeof(MyCommonDbContext)).ShouldBe(typeof(MyDerivedDbContext3));
         }
 
@@ -83,8 +86,15 @@ namespace Abp.EntityFramework.Tests
 
         }
 
+        [DefaultDbContext]
         [MultiTenancySide(MultiTenancySides.Tenant)]
         private class MyDerivedDbContext3 : MyCommonDbContext
+        {
+
+        }
+
+        [MultiTenancySide(MultiTenancySides.Tenant)]
+        private class MyDerivedDbContext4 : MyCommonDbContext
         {
 
         }
