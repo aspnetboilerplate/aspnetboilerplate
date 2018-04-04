@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Globalization;
+using System.Linq;
 using System.Web.Http.Controllers;
 using System.Web.Http.ModelBinding;
 using Abp.Timing;
@@ -20,15 +21,25 @@ namespace Abp.WebApi.Controllers.Dynamic.Binders
                 return true;
             }
 
-            if (bindingContext.ModelMetadata.ContainerType.IsDefined(typeof(DisableDateTimeNormalizationAttribute), true))
+            if (bindingContext.ModelMetadata.ContainerType != null)
             {
-                bindingContext.Model = date.Value;
-                return true;
+                if (bindingContext.ModelMetadata.ContainerType.IsDefined(typeof(DisableDateTimeNormalizationAttribute), true))
+                {
+                    bindingContext.Model = date.Value;
+                    return true;
+                }
+
+                var property = bindingContext.ModelMetadata.ContainerType.GetProperty(bindingContext.ModelName);
+
+                if (property != null && property.IsDefined(typeof(DisableDateTimeNormalizationAttribute), true))
+                {
+                    bindingContext.Model = date.Value;
+                    return true;
+                }
             }
 
-            var property = bindingContext.ModelMetadata.ContainerType.GetProperty(bindingContext.ModelName);
-
-            if (property != null && property.IsDefined(typeof(DisableDateTimeNormalizationAttribute), true))
+            var parameter = actionContext.ActionDescriptor.GetParameters().FirstOrDefault(p => p.ParameterName == bindingContext.ModelName);
+            if (parameter != null && parameter.GetCustomAttributes<DisableDateTimeNormalizationAttribute>().Count > 0)
             {
                 bindingContext.Model = date.Value;
                 return true;
