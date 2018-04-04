@@ -63,7 +63,7 @@ namespace Abp.EntityHistory
             EntityChangeSetReasonProvider = NullEntityChangeSetReasonProvider.Instance;
             EntityHistoryStore = NullEntityHistoryStore.Instance;
         }
-        
+
         public virtual EntityChangeSet CreateEntityChangeSet(ICollection<EntityEntry> entityEntries)
         {
             var changeSet = new EntityChangeSet
@@ -92,13 +92,13 @@ namespace Abp.EntityHistory
                     continue;
                 }
 
-                var entityChangeInfo = CreateEntityChangeInfo(entry);
-                if (entityChangeInfo == null)
+                var entityChange = CreateEntityChange(entry);
+                if (entityChange == null)
                 {
                     continue;
                 }
 
-                changeSet.EntityChanges.Add(entityChangeInfo);
+                changeSet.EntityChanges.Add(entityChange);
             }
 
             return changeSet;
@@ -126,10 +126,10 @@ namespace Abp.EntityHistory
         }
 
         [CanBeNull]
-        private EntityChange CreateEntityChangeInfo(EntityEntry entityEntry)
+        private EntityChange CreateEntityChange(EntityEntry entityEntry)
         {
             var entity = entityEntry.Entity;
-            
+
             EntityChangeType changeType;
             switch (entityEntry.State)
             {
@@ -157,7 +157,7 @@ namespace Abp.EntityHistory
             }
 
             var entityType = entity.GetType();
-            var entityChangeInfo = new EntityChange
+            var entityChange = new EntityChange
             {
                 ChangeType = changeType,
                 EntityEntry = entityEntry, // [NotMapped]
@@ -167,7 +167,7 @@ namespace Abp.EntityHistory
                 TenantId = AbpSession.TenantId
             };
 
-            return entityChangeInfo;
+            return entityChange;
         }
 
         private DateTime GetChangeTime(EntityChange entityChange)
@@ -290,6 +290,11 @@ namespace Abp.EntityHistory
 
         private bool ShouldSavePropertyHistory(PropertyEntry propertyEntry, bool defaultValue)
         {
+            if (propertyEntry.Metadata.Name == "Id")
+            {
+                return false;
+            }
+
             var propertyInfo = propertyEntry.Metadata.PropertyInfo;
             if (propertyInfo.IsDefined(typeof(DisableAuditingAttribute), true))
             {
@@ -320,16 +325,16 @@ namespace Abp.EntityHistory
         /// </summary>
         private void UpdateChangeSet(EntityChangeSet changeSet)
         {
-            foreach (var entityChangeInfo in changeSet.EntityChanges)
+            foreach (var entityChange in changeSet.EntityChanges)
             {
                 /* Update change time */
 
-                entityChangeInfo.ChangeTime = GetChangeTime(entityChangeInfo);
+                entityChange.ChangeTime = GetChangeTime(entityChange);
 
                 /* Update entity id */
 
-                var entityEntry = entityChangeInfo.EntityEntry.As<EntityEntry>();
-                entityChangeInfo.EntityId = GetEntityId(entityEntry.Entity);
+                var entityEntry = entityChange.EntityEntry.As<EntityEntry>();
+                entityChange.EntityId = GetEntityId(entityEntry.Entity);
 
                 /* Update foreign keys */
 
@@ -340,14 +345,14 @@ namespace Abp.EntityHistory
                     foreach (var property in foreignKey.Properties)
                     {
                         var propertyEntry = entityEntry.Property(property.Name);
-                        var propertyChange = entityChangeInfo.PropertyChanges.FirstOrDefault(pc => pc.PropertyName == property.Name);
+                        var propertyChange = entityChange.PropertyChanges.FirstOrDefault(pc => pc.PropertyName == property.Name);
 
                         if (propertyChange == null)
                         {
                             if (!(propertyEntry.OriginalValue?.Equals(propertyEntry.CurrentValue) ?? propertyEntry.CurrentValue == null))
                             {
                                 // Add foreign key
-                                entityChangeInfo.PropertyChanges.Add(new EntityPropertyChange
+                                entityChange.PropertyChanges.Add(new EntityPropertyChange
                                 {
                                     NewValue = propertyEntry.CurrentValue.ToJsonString(),
                                     OriginalValue = propertyEntry.OriginalValue.ToJsonString(),
@@ -365,7 +370,7 @@ namespace Abp.EntityHistory
                             if (newValue == propertyChange.NewValue)
                             {
                                 // No change
-                                entityChangeInfo.PropertyChanges.Remove(propertyChange);
+                                entityChange.PropertyChanges.Remove(propertyChange);
                             }
                             else
                             {
