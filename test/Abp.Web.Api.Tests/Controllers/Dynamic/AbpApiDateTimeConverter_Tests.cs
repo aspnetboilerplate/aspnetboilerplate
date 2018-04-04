@@ -54,29 +54,6 @@ namespace Abp.Web.Api.Tests.Controllers.Dynamic
             }
         }
 
-        [Theory]
-        [InlineData("2016-04-13T08:58:10.526Z", "utc")]
-        //[InlineData("2016-04-13T08:58:10.526", "local")]
-        //[InlineData("2016-04-13 08:58:10.526Z", "local")]
-        //[InlineData("2016-04-13 08:58:10.526", "local")]
-        //[InlineData("2016-04-13T08:58:10.526+00:00", "local")]
-        //[InlineData("2016-04-13T16:58:10.526+08:00", "local")]
-        //[InlineData("2016-04-13T01:58:10.526-07:00", "local")]
-        //[InlineData("2016-04-13 01:58:10.526AM-07:00", "local")]
-        //[InlineData("2016-04-13 01:58:10.526PM+05:00", "local")]
-        public void DateTimeConverter_Not_Normalize_Tests(string sourceDate, string expectedKindText)
-        {
-            Clock.Provider = ClockProviders.Utc;
-            Enum.TryParse(expectedKindText, true, out DateTimeKind expectedKind);
-
-            // Date normalization disabled by an attribute on class
-            var dto1 = JsonConvert.DeserializeObject<DateTimeConverterTestDto1>("{date: \"" + sourceDate + "\"}", new AbpDateTimeConverter());
-            dto1.Date.Kind.ShouldBe(expectedKind);
-
-            var dto2 = JsonConvert.DeserializeObject<DateTimeConverterTestDto2>("{date: \"" + sourceDate + "\"}", new AbpDateTimeConverter());
-            dto2.Date.Kind.ShouldBe(expectedKind);
-        }
-
         private void DateTimeConverter_Local_Test_Internal(string sourceDate)
         {
             Clock.Provider = ClockProviders.Local;
@@ -90,19 +67,6 @@ namespace Abp.Web.Api.Tests.Controllers.Dynamic
 
         class DateTimeConverterTestDto
         {
-            public DateTime Date { get; set; }
-        }
-
-        [DisableDateTimeNormalization]
-        class DateTimeConverterTestDto1
-        {
-            public DateTime Date { get; set; }
-        }
-
-        [DisableDateTimeNormalization]
-        class DateTimeConverterTestDto2
-        {
-            [DisableDateTimeNormalization]
             public DateTime Date { get; set; }
         }
     }
