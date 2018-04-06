@@ -24,7 +24,7 @@ namespace Abp.Text
         /// <param name="format">Format of the string</param>
         /// <param name="ignoreCase">True, to search case-insensitive.</param>
         /// <param name="splitformatCharacter">format is splitted using this character when provided.</param>
-        public ExtractionResult Extract(string str, string format, bool ignoreCase = false, char splitformatCharacter = default(char))
+        public ExtractionResult Extract(string str, string format, bool ignoreCase = false, char? splitformatCharacter = null)
         {
             var stringComparison = ignoreCase
                 ? StringComparison.OrdinalIgnoreCase
@@ -82,15 +82,15 @@ namespace Abp.Text
             return result;
         }
 
-        private List<FormatStringToken> TokenizeFormat(string originalFormat, char splitformatCharacter)
+        private List<FormatStringToken> TokenizeFormat(string originalFormat, char? splitformatCharacter = null)
         {
-            if (splitformatCharacter == default(char))
+            if (splitformatCharacter == null)
             {
                 return new FormatStringTokenizer().Tokenize(originalFormat);
             }
 
             var result = new List<FormatStringToken>();
-            var formats = originalFormat.Split('/');
+            var formats = originalFormat.Split(splitformatCharacter.Value);
 
             foreach (var format in formats)
             {
