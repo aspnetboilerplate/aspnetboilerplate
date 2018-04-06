@@ -1,5 +1,4 @@
 ﻿using Newtonsoft.Json;
-using Newtonsoft.Json.Serialization;
 
 namespace Abp.Json
 {
@@ -15,16 +14,18 @@ namespace Abp.Json
 
             if (camelCase)
             {
-                options.ContractResolver = new CamelCasePropertyNamesContractResolver();
+                options.ContractResolver = new AbpCamelCasePropertyNamesContractResolver();
+            }
+            else
+            {
+                options.ContractResolver = new AbpContractResolver();
             }
 
             if (indented)
             {
                 options.Formatting = Formatting.Indented;
             }
-
-            options.Converters.Insert(0, new AbpDateTimeConverter());
-
+            
             return JsonConvert.SerializeObject(obj, options);
         }
     }

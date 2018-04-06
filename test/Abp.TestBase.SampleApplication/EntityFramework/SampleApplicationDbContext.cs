@@ -29,6 +29,10 @@ namespace Abp.TestBase.SampleApplication.EntityFramework
 
         public virtual IDbSet<Branch> Branches { get; set; }
 
+        public virtual IDbSet<Hotel> Hotels { get; set; }
+
+        public virtual IDbSet<Room> Rooms { get; set; }
+
         public virtual IDbSet<TestEntityWithGuidPk> TestEntityWithGuidPks { get; set; }
 
         public virtual IDbSet<TestEntityWithGuidPkAndDbGeneratedValue> TestEntityWithGuidPkAndDbGeneratedValues { get; set; }

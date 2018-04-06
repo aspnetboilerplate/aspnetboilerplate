@@ -41,6 +41,22 @@ namespace Abp.Tests.Json
             result.Date.Kind.ShouldBe(Clock.Kind);
         }
 
+        [Fact]
+        public void Should_Deserialize_Without_DateTime_Normalization()
+        {
+            Clock.Provider = ClockProviders.Utc;
+
+            var str1 = "Abp.Tests.Json.JsonSerializationHelper_Tests+MyClass3, Abp.Tests, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null|{\"Date\":\"2016-04-13T16:58:10.526+08:00\"}";
+            var result1 = (MyClass3)JsonSerializationHelper.DeserializeWithType(str1);
+            result1.ShouldNotBeNull();
+            result1.Date.Kind.ShouldBe(DateTimeKind.Local);
+
+            var str2 = "Abp.Tests.Json.JsonSerializationHelper_Tests+MyClass4, Abp.Tests, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null|{\"Date\":\"2016-04-13T16:58:10.526+08:00\"}";
+            var result2 = (MyClass4)JsonSerializationHelper.DeserializeWithType(str2);
+            result2.ShouldNotBeNull();
+            result2.Date.Kind.ShouldBe(DateTimeKind.Local);
+        }
+
         public class MyClass1
         {
             public string Name { get; set; }
@@ -61,6 +77,28 @@ namespace Abp.Tests.Json
             public DateTime Date { get; set; }
 
             public MyClass2(DateTime date)
+            {
+                Date = date;
+            }
+        }
+
+        [DisableDateTimeNormalization]
+        public class MyClass3
+        {
+            public DateTime Date { get; set; }
+
+            public MyClass3(DateTime date)
+            {
+                Date = date;
+            }
+        }
+
+        public class MyClass4
+        {
+            [DisableDateTimeNormalization]
+            public DateTime Date { get; set; }
+
+            public MyClass4(DateTime date)
             {
                 Date = date;
             }

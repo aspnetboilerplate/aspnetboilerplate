@@ -20,7 +20,7 @@ namespace Abp.TestBase.SampleApplication.Crm
 
         public Company()
         {
-            
+               
         }
     }
 }
