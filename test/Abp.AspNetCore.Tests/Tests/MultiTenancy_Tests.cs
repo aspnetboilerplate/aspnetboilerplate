@@ -74,6 +74,7 @@ namespace Abp.AspNetCore.Tests
         [InlineData("http://{TENANCY_NAME}.mysite.com", "http://default.mysite.com")]
         [InlineData("http://{TENANCY_NAME}.mysite.com:8080", "http://default.mysite.com:8080")]
         [InlineData("http://{TENANCY_NAME}.mysite.com/", "http://default.mysite.com/")]
+        [InlineData("http://{TENANCY_NAME}.mysite.com/host", "http://default.mysite.com/host")]
         public async Task DomainTenantResolveContributor_Test(string domainFormat, string domain)
         {
             _multiTenancyConfiguration.DomainFormat = domainFormat;
