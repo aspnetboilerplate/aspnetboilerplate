@@ -33,7 +33,7 @@ namespace Abp.Quartz.Tests
                 {
                     trigger.WithIdentity("HelloJobTrigger")
                            .WithDescription("HelloJobTriggerDescription")
-                           .WithSimpleSchedule(schedule => schedule.WithRepeatCount(5).WithInterval(TimeSpan.FromSeconds(1)).Build())
+                           .WithSimpleSchedule(schedule => schedule.WithRepeatCount(5).WithInterval(TimeSpan.FromSeconds(1)))
                            .StartNow();
                 });
 
@@ -47,7 +47,7 @@ namespace Abp.Quartz.Tests
                 {
                     trigger.WithIdentity("GoodByeJobTrigger")
                            .WithDescription("GoodByeJobTriggerDescription")
-                           .WithSimpleSchedule(schedule => schedule.WithRepeatCount(5).WithInterval(TimeSpan.FromSeconds(1)).Build())
+                           .WithSimpleSchedule(schedule => schedule.WithRepeatCount(5).WithInterval(TimeSpan.FromSeconds(1)))
                            .StartNow();
                 });
         }
