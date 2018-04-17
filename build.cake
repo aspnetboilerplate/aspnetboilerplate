@@ -75,18 +75,16 @@ Task("Build")
 
 Task("Run-Unit-Tests")
     .IsDependentOn("Build")
-    .Does(() =>
+    .DoesForEach(testProjects, testProject =>
     {
-        foreach (Tuple<string, string[]> testProject in testProjects)
-        {
-            foreach (string targetFramework in testProject.Item2)
-            {
-                Information($"Test execution started for target frameowork: {targetFramework}...");
-                var testProj = GetFiles($"./test/**/*{testProject.Item1}.csproj").First();
-                DotNetCoreTest(testProj.FullPath, new DotNetCoreTestSettings { Configuration = "Release", Framework = targetFramework });                              
-            }
-        }
-    });
+      foreach (string targetFramework in testProject.Item2)
+      {
+        Information($"Test execution started for target frameowork: {targetFramework}...");
+        var testProj = GetFiles($"./test/**/*{testProject.Item1}.csproj").First();
+        DotNetCoreTest(testProj.FullPath, new DotNetCoreTestSettings { Configuration = "Release", Framework = targetFramework });                              
+      }
+    })
+    .DeferOnError();
     
 
 //////////////////////////////////////////////////////////////////////
