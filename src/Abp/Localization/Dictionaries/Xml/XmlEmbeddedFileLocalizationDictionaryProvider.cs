@@ -11,7 +11,7 @@ namespace Abp.Localization.Dictionaries.Xml
     {
         private readonly Assembly _assembly;
         private readonly string _rootNamespace;
-        
+
         /// <summary>
         /// Creates a new <see cref="XmlEmbeddedFileLocalizationDictionaryProvider"/> object.
         /// </summary>
@@ -25,10 +25,14 @@ namespace Abp.Localization.Dictionaries.Xml
 
         public override void Initialize(string sourceName)
         {
-            var allCultureInfos = CultureInfo.GetCultures(CultureTypes.AllCultures);
+            var allCultureNames = CultureInfo.GetCultures(CultureTypes.AllCultures).Select(culture => culture.Name).ToList();
+            if (!allCultureNames.Any(name => name == "zh-CN") && allCultureNames.Any(name => name == "zh-Hans"))
+            {
+                allCultureNames.Add("zh-CN");
+            }
             var resourceNames = _assembly.GetManifestResourceNames().Where(resouceName =>
-                allCultureInfos.Any(culture => resouceName.EndsWith($"{sourceName}.xml", true, null) ||
-                                               resouceName.EndsWith($"{sourceName}-{culture.Name}.xml", true,
+                allCultureNames.Any(cultureName => resouceName.EndsWith($"{sourceName}.xml", true, null) ||
+                                               resouceName.EndsWith($"{sourceName}-{cultureName}.xml", true,
                                                    null))).ToList();
             foreach (var resourceName in resourceNames)
             {
