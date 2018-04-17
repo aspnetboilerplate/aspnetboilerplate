@@ -72,7 +72,7 @@ namespace Abp.Quartz.Tests
             var goodByeDependency = LocalIocManager.Resolve<IGoodByeDependency>();
 
             //Wait for execution!
-            Thread.Sleep(TimeSpan.FromSeconds(5));
+            await Task.Delay(TimeSpan.FromSeconds(5));
 
             helloDependency.ExecutionCount.ShouldBeGreaterThan(0);
             goodByeDependency.ExecutionCount.ShouldBeGreaterThan(0);
