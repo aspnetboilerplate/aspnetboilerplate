@@ -9,9 +9,11 @@ using Abp.Configuration.Startup;
 using Abp.Domain.Repositories;
 using Abp.Domain.Services;
 using Abp.Domain.Uow;
+using Abp.Json;
 using Abp.Localization;
 using Abp.MultiTenancy;
 using Abp.Organizations;
+using Abp.Reflection;
 using Abp.Runtime.Caching;
 using Abp.Runtime.Session;
 using Abp.UI;
@@ -21,6 +23,7 @@ using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
+using Newtonsoft.Json;
 
 namespace Abp.Authorization.Users
 {
@@ -60,6 +63,7 @@ namespace Abp.Authorization.Users
         private readonly IRepository<UserOrganizationUnit, long> _userOrganizationUnitRepository;
         private readonly IOrganizationUnitSettings _organizationUnitSettings;
         private readonly ISettingManager _settingManager;
+        private readonly IOptions<IdentityOptions> _optionsAccessor;
 
         public AbpUserManager(
             AbpRoleManager<TRole, TUser> roleManager,
@@ -97,6 +101,7 @@ namespace Abp.Authorization.Users
             _userOrganizationUnitRepository = userOrganizationUnitRepository;
             _organizationUnitSettings = organizationUnitSettings;
             _settingManager = settingManager;
+            _optionsAccessor = optionsAccessor;
 
             AbpStore = store;
             RoleManager = roleManager;
@@ -576,8 +581,8 @@ namespace Abp.Authorization.Users
 
         public virtual async Task InitializeOptionsAsync(int? tenantId)
         {
-            Options = new IdentityOptions();
-
+            Options = JsonConvert.DeserializeObject<IdentityOptions>(_optionsAccessor.Value.ToJsonString());
+            
             //Lockout
             Options.Lockout.AllowedForNewUsers = await IsTrueAsync(AbpZeroSettingNames.UserManagement.UserLockOut.IsEnabled, tenantId);
             Options.Lockout.DefaultLockoutTimeSpan = TimeSpan.FromSeconds(await GetSettingValueAsync<int>(AbpZeroSettingNames.UserManagement.UserLockOut.DefaultAccountLockoutSeconds, tenantId));
