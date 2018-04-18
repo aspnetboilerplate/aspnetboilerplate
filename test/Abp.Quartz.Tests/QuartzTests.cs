@@ -53,23 +53,18 @@ namespace Abp.Quartz.Tests
         }
 
         [Fact]
-        public async Task QuartzScheduler_Jobs_ShouldBeRegistered()
+        public async Task QuartzScheduler_Jobs_ShouldBe_Registered_And_Executed_With_SingletonDependency()
         {
+            // There should be only one test case in this project, or the unit test may fail in AppVeyor
             await ScheduleJobs();
+
+            var helloDependency = LocalIocManager.Resolve<IHelloDependency>();
+            var goodByeDependency = LocalIocManager.Resolve<IGoodByeDependency>();
 
             _abpQuartzConfiguration.Scheduler.ShouldNotBeNull();
             _abpQuartzConfiguration.Scheduler.IsStarted.ShouldBe(true);
             (await _abpQuartzConfiguration.Scheduler.CheckExists(JobKey.Create("HelloJobKey"))).ShouldBe(true);
             (await _abpQuartzConfiguration.Scheduler.CheckExists(JobKey.Create("GoodByeJobKey"))).ShouldBe(true);
-        }
-
-        [Fact]
-        public async Task QuartzScheduler_Jobs_ShouldBeExecuted_With_SingletonDependency()
-        {
-            await ScheduleJobs();
-
-            var helloDependency = LocalIocManager.Resolve<IHelloDependency>();
-            var goodByeDependency = LocalIocManager.Resolve<IGoodByeDependency>();
 
             //Wait for execution!
             await Task.Delay(TimeSpan.FromSeconds(5));
