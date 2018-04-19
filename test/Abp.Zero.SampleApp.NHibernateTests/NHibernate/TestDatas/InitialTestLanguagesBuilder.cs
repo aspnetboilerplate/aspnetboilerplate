@@ -30,7 +30,7 @@ namespace Abp.Zero.SampleApp.NHibernate.TestDatas
             _session.Save(new ApplicationLanguage { Name = "de", DisplayName = "German" });
 
             //Default tenant languages
-            _session.Save(new ApplicationLanguage { Name = "zh-CN", DisplayName = "简体中文", TenantId = defaultTenant.Id });
+            _session.Save(new ApplicationLanguage { Name = "zh-Hans", DisplayName = "简体中文", TenantId = defaultTenant.Id });
         }
     }
 }

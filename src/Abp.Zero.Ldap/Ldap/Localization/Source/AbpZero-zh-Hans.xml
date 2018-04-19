@@ -1,5 +1,5 @@
 ﻿<?xml version="1.0" encoding="utf-8" ?>
-<localizationDictionary culture="zh-CN">
+<localizationDictionary culture="zh-Hans">
   <texts>
     <text name="Ldap_IsEnabled" value="启用" />
     <text name="Ldap_ContextType" value="上下文类型" />
