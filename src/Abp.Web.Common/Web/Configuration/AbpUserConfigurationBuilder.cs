@@ -33,6 +33,8 @@ namespace Abp.Web.Configuration
         protected IAbpSession AbpSession { get; }
         protected IPermissionChecker PermissionChecker { get; }
 
+        private readonly IIocResolver _iocResolver;
+
         public AbpUserConfigurationBuilder(
             IMultiTenancyConfig multiTenancyConfig,
             ILanguageManager languageManager,
@@ -45,7 +47,8 @@ namespace Abp.Web.Configuration
             ISettingManager settingManager,
             IAbpAntiForgeryConfiguration abpAntiForgeryConfiguration,
             IAbpSession abpSession,
-            IPermissionChecker permissionChecker)
+            IPermissionChecker permissionChecker, 
+            IIocResolver iocResolver)
         {
             MultiTenancyConfig = multiTenancyConfig;
             LanguageManager = languageManager;
@@ -59,6 +62,7 @@ namespace Abp.Web.Configuration
             AbpAntiForgeryConfiguration = abpAntiForgeryConfiguration;
             AbpSession = abpSession;
             PermissionChecker = permissionChecker;
+            _iocResolver = iocResolver;
         }
 
         public virtual async Task<AbpUserConfigurationDto> GetAll()
@@ -218,8 +222,25 @@ namespace Abp.Web.Configuration
 
             foreach (var settingDefinition in settingDefinitions)
             {
-                var settingValue = await SettingManager.GetSettingValueAsync(settingDefinition.Name);
-                config.Values.Add(settingDefinition.Name, settingValue);
+                if (settingDefinition.RequiresAuthentication && !AbpSession.UserId.HasValue)
+                {
+                    continue;
+                }
+
+                using (var scope = _iocResolver.CreateScope())
+                {
+                    var permissionDependencyContext = scope.Resolve<PermissionDependencyContext>();
+                    permissionDependencyContext.User = AbpSession.ToUserIdentifier();
+
+                    if (settingDefinition.ClientVisibility != null &&
+                        (!AbpSession.UserId.HasValue || !(await settingDefinition.ClientVisibility.IsSatisfiedAsync(permissionDependencyContext))))
+                    {
+                        continue;
+                    }
+
+                    var settingValue = await SettingManager.GetSettingValueAsync(settingDefinition.Name);
+                    config.Values.Add(settingDefinition.Name, settingValue);
+                }
             }
 
             return config;

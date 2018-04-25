@@ -1,4 +1,5 @@
 ﻿using System;
+using Abp.Authorization;
 using Abp.Localization;
 
 namespace Abp.Configuration
@@ -55,6 +56,17 @@ namespace Abp.Configuration
         public bool IsVisibleToClients { get; set; }
 
         /// <summary>
+        /// A permission dependency. Only users that can satisfy this permission dependency can see this setting on the client.
+        /// Optional.
+        /// </summary>
+        public IPermissionDependency ClientVisibility { get; set; }
+
+        /// <summary>
+        /// This can be set to true if only authenticated users should see this setting on the client.
+        /// </summary>
+        public bool RequiresAuthentication { get; set; }
+
+        /// <summary>
         /// Can be used to store a custom object related to this setting.
         /// </summary>
         public object CustomData { get; set; }
@@ -71,6 +83,8 @@ namespace Abp.Configuration
         /// <param name="isVisibleToClients">Can clients see this setting and it's value. Default: false</param>
         /// <param name="isInherited">Is this setting inherited from parent scopes. Default: True.</param>
         /// <param name="customData">Can be used to store a custom object related to this setting</param>
+        /// <param name="requiresAuthentication">Requires authentication for setting's client visibility</param>
+        /// <param name="clientVisibility">Requires permissions for setting's client visibility</param>
         public SettingDefinition(
             string name, 
             string defaultValue, 
@@ -80,7 +94,9 @@ namespace Abp.Configuration
             SettingScopes scopes = SettingScopes.Application, 
             bool isVisibleToClients = false, 
             bool isInherited = true,
-            object customData = null)
+            object customData = null,
+            bool requiresAuthentication = false,
+            IPermissionDependency clientVisibility = null)
         {
             if (string.IsNullOrEmpty(name))
             {
@@ -96,6 +112,8 @@ namespace Abp.Configuration
             IsVisibleToClients = isVisibleToClients;
             IsInherited = isInherited;
             CustomData = customData;
+            RequiresAuthentication = requiresAuthentication;
+            ClientVisibility = clientVisibility;
         }
     }
 }
