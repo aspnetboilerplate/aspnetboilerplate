@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using Abp.Reflection;
+using ChangeTracking;
 using JetBrains.Annotations;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
@@ -132,6 +133,43 @@ namespace Abp.Domain.Entities
             extendableObject.ExtensionData = data;
 
             return true;
+        }
+
+        /// <summary>
+        /// Return a trackable POJO object, which will call SetData automatically when its properties changed.
+        /// </summary>
+        public static T GetTrackableData<T>([NotNull] this IExtendableObject extendableObject, [NotNull] string name,
+            [CanBeNull] JsonSerializer jsonSerializer) where T : class
+        {
+            var data = extendableObject.GetData<T>(name, jsonSerializer);
+            if (data == null)
+                return null;
+
+            var obj = data.AsTrackable();
+
+            obj.CastToIChangeTrackable()
+                .PropertyChanged += (sender, args) =>
+            {
+                var trackable = (IChangeTrackable<T>)sender;
+                trackable.AcceptChanges();
+
+                extendableObject.SetData(name, trackable.GetOriginal());
+            };
+            return obj;
+        }
+
+        /// <summary>
+        /// Return a trackable POJO class, which will call SetData automatically when its properties changed.
+        /// </summary>
+        public static T GetTrackableData<T>([NotNull] this IExtendableObject extendableObject, [NotNull] string name,
+            bool handleType = false) where T : class
+        {
+            return extendableObject.GetTrackableData<T>(
+                name,
+                handleType
+                    ? new JsonSerializer { TypeNameHandling = TypeNameHandling.All }
+                    : JsonSerializer.CreateDefault()
+            );
         }
 
         //TODO: string[] GetExtendedPropertyNames(...)
