@@ -14,15 +14,13 @@ namespace Abp.Web.Common.Tests
                     "AbpWebCommonTestModule.Test.Setting1",
                     "TestValue1",
                     scopes: SettingScopes.Application | SettingScopes.Tenant | SettingScopes.User,
-                    isVisibleToClients:true,
-                    requiresAuthentication:true),
+                    clientVisibility:new SettingDefinitionClientVisibility(isVisible: true, requiresAuthentication:true)),
 
                 new SettingDefinition(
                     "AbpWebCommonTestModule.Test.Setting2",
                     "TestValue2",
                     scopes: SettingScopes.Application | SettingScopes.Tenant | SettingScopes.User,
-                    isVisibleToClients:true,
-                    clientVisibility: new SimplePermissionDependency("Permission1"))
+                    clientVisibility:new SettingDefinitionClientVisibility(isVisible: true, permissionDependency:new SimplePermissionDependency("Permission1")))
             };
         }
     }

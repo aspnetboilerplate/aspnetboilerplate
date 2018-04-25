@@ -40,12 +40,12 @@ namespace Abp.Web.Settings
 
             var settingDefinitions = _settingDefinitionManager
                 .GetAllSettingDefinitions()
-                .Where(sd => sd.IsVisibleToClients);
+                .Where(sd => sd.ClientVisibility.IsVisible);
 
             var added = 0;
             foreach (var settingDefinition in settingDefinitions)
             {
-                if (settingDefinition.RequiresAuthentication && !_abpSession.UserId.HasValue)
+                if (settingDefinition.ClientVisibility.RequiresAuthentication && !_abpSession.UserId.HasValue)
                 {
                     continue;
                 }
@@ -55,8 +55,8 @@ namespace Abp.Web.Settings
                     var permissionDependencyContext = scope.Resolve<PermissionDependencyContext>();
                     permissionDependencyContext.User = _abpSession.ToUserIdentifier();
 
-                    if (settingDefinition.ClientVisibility != null &&
-                        (!_abpSession.UserId.HasValue || !(await settingDefinition.ClientVisibility.IsSatisfiedAsync(permissionDependencyContext))))
+                    if (settingDefinition.ClientVisibility.PermissionDependency != null &&
+                        (!_abpSession.UserId.HasValue || !(await settingDefinition.ClientVisibility.PermissionDependency.IsSatisfiedAsync(permissionDependencyContext))))
                     {
                         continue;
                     }

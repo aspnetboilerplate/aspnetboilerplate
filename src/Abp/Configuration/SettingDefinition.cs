@@ -1,5 +1,4 @@
 ﻿using System;
-using Abp.Authorization;
 using Abp.Localization;
 
 namespace Abp.Configuration
@@ -49,22 +48,9 @@ namespace Abp.Configuration
         public string DefaultValue { get; set; }
 
         /// <summary>
-        /// Can clients see this setting and it's value.
-        /// It maybe dangerous for some settings to be visible to clients (such as email server password).
-        /// Default: false.
+        /// Client visibility definition for the setting.
         /// </summary>
-        public bool IsVisibleToClients { get; set; }
-
-        /// <summary>
-        /// A permission dependency. Only users that can satisfy this permission dependency can see this setting on the client.
-        /// Optional.
-        /// </summary>
-        public IPermissionDependency ClientVisibility { get; set; }
-
-        /// <summary>
-        /// This can be set to true if only authenticated users should see this setting on the client.
-        /// </summary>
-        public bool RequiresAuthentication { get; set; }
+        public SettingDefinitionClientVisibility ClientVisibility { get; set; }
 
         /// <summary>
         /// Can be used to store a custom object related to this setting.
@@ -80,23 +66,19 @@ namespace Abp.Configuration
         /// <param name="group">Group of this setting</param>
         /// <param name="description">A brief description for this setting</param>
         /// <param name="scopes">Scopes of this setting. Default value: <see cref="SettingScopes.Application"/>.</param>
-        /// <param name="isVisibleToClients">Can clients see this setting and it's value. Default: false</param>
+        /// <param name="clientVisibility">Client visibility definition for the setting. Default: invisible</param>
         /// <param name="isInherited">Is this setting inherited from parent scopes. Default: True.</param>
         /// <param name="customData">Can be used to store a custom object related to this setting</param>
-        /// <param name="requiresAuthentication">Requires authentication for setting's client visibility</param>
-        /// <param name="clientVisibility">Requires permissions for setting's client visibility</param>
         public SettingDefinition(
-            string name, 
-            string defaultValue, 
-            ILocalizableString displayName = null, 
-            SettingDefinitionGroup group = null, 
-            ILocalizableString description = null, 
-            SettingScopes scopes = SettingScopes.Application, 
-            bool isVisibleToClients = false, 
+            string name,
+            string defaultValue,
+            ILocalizableString displayName = null,
+            SettingDefinitionGroup group = null,
+            ILocalizableString description = null,
+            SettingScopes scopes = SettingScopes.Application,
+            SettingDefinitionClientVisibility clientVisibility = null,
             bool isInherited = true,
-            object customData = null,
-            bool requiresAuthentication = false,
-            IPermissionDependency clientVisibility = null)
+            object customData = null)
         {
             if (string.IsNullOrEmpty(name))
             {
@@ -109,11 +91,9 @@ namespace Abp.Configuration
             Group = @group;
             Description = description;
             Scopes = scopes;
-            IsVisibleToClients = isVisibleToClients;
+            ClientVisibility = clientVisibility ?? new SettingDefinitionClientVisibility();
             IsInherited = isInherited;
             CustomData = customData;
-            RequiresAuthentication = requiresAuthentication;
-            ClientVisibility = clientVisibility;
         }
     }
 }
