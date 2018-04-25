@@ -36,20 +36,20 @@ provider is shown below:
                             "SmtpServerAddress",
                             "127.0.0.1"
                             ),
-
+    
                         new SettingDefinition(
                             "PassiveUsersCanNotLogin",
                             "true",
                             scopes: SettingScopes.Application | SettingScopes.Tenant
                             ),
-
+    
                         new SettingDefinition(
                             "SiteColorPreference",
                             "red",
                             scopes: SettingScopes.User,
-                            isVisibleToClients: true
+                            ClientVisibility: new SettingDefinitionClientVisibility(true)
                             )
-
+    
                     };
         }
     }
@@ -70,8 +70,7 @@ constructor:
     setting's description later in the UI.
 -   **Group**: Can be used to group settings. This is just for the UI, and not
     used in setting management.
--   **IsVisibleToClients**: Set true to make a setting usable on the
-    client-side.
+-   **ClientVisibility**: Can be used to define if a setting can be used on the client-side or not.
 -   **isInherited**: Used to set if this setting is inherited by tenant
     and users (See setting scope section).
 -   **customData**: Can be used to set custom data for this setting
@@ -144,10 +143,9 @@ Setting scope section before). Examples:
 
     //Getting a boolean value (async call)
     var value1 = await SettingManager.GetSettingValueAsync<bool>("PassiveUsersCanNotLogin");
-
+    
     //Getting a string value (sync call)
     var value2 = SettingManager.GetSettingValue("SmtpServerAddress");
-                
 
 GetSettingValue has generic and async versions as shown above. There are
 also methods to get a specific tenant or user's setting value or list of
@@ -160,7 +158,13 @@ need to explicitly inject it.
 
 #### Client-side
 
-If you set **IsVisibleToClients** as true while defining a setting, then
+**ClientVisibility** property of a setting definition contains three fields in order to determine a setting's client side visibility.
+
+* **IsVisible**: Shows if a setting can be used on the client-side or not. Set to true if you want setting to be visible on the client side.
+* **RequiresAuthentication**: Shows if a setting can be used on the client side only for authenticated users.
+* **PermissionDependency**: Shows if a setting can be used on the client side only for users with specific permissions.
+
+If a setting is visible to client-side according to above properties, then
 you can get it's current value on the client-side using JavaScript.
 The **abp.setting** namespace defines the needed functions and objects. Example:
 
