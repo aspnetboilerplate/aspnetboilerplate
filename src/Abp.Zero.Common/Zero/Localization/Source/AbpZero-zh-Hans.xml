@@ -1,5 +1,5 @@
 ﻿<?xml version="1.0" encoding="utf-8" ?>
-<localizationDictionary culture="zh-CN">
+<localizationDictionary culture="zh-Hans">
   <texts>
     <text name="InvalidTenancyName" value="租户名无效!" />
     <text name="TenancyNameIsAlreadyTaken" value="租户名{0} 已被占用." />
