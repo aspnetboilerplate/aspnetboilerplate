@@ -19,9 +19,9 @@ namespace Abp.Web.Settings
         private readonly IIocResolver _iocResolver;
 
         public SettingScriptManager(
-            ISettingDefinitionManager settingDefinitionManager, 
-            ISettingManager settingManager, 
-            IAbpSession abpSession, 
+            ISettingDefinitionManager settingDefinitionManager,
+            ISettingManager settingManager,
+            IAbpSession abpSession,
             IIocResolver iocResolver)
         {
             _settingDefinitionManager = settingDefinitionManager;
@@ -39,45 +39,36 @@ namespace Abp.Web.Settings
             script.AppendLine("    abp.setting.values = {");
 
             var settingDefinitions = _settingDefinitionManager
-                .GetAllSettingDefinitions()
-                .Where(sd => sd.ClientVisibility.IsVisible);
+                .GetAllSettingDefinitions();
 
             var added = 0;
-            foreach (var settingDefinition in settingDefinitions)
+
+            using (var scope = _iocResolver.CreateScope())
             {
-                if (settingDefinition.ClientVisibility.RequiresAuthentication && !_abpSession.UserId.HasValue)
+                foreach (var settingDefinition in settingDefinitions)
                 {
-                    continue;
-                }
-
-                using (var scope = _iocResolver.CreateScope())
-                {
-                    var permissionDependencyContext = scope.Resolve<PermissionDependencyContext>();
-                    permissionDependencyContext.User = _abpSession.ToUserIdentifier();
-
-                    if (settingDefinition.ClientVisibility.PermissionDependency != null &&
-                        (!_abpSession.UserId.HasValue || !(await settingDefinition.ClientVisibility.PermissionDependency.IsSatisfiedAsync(permissionDependencyContext))))
+                    if (!await settingDefinition.ClientVisibilityProvider.CheckVisible(scope))
                     {
                         continue;
                     }
+
+                    if (added > 0)
+                    {
+                        script.AppendLine(",");
+                    }
+                    else
+                    {
+                        script.AppendLine();
+                    }
+
+                    var settingValue = await _settingManager.GetSettingValueAsync(settingDefinition.Name);
+
+                    script.Append("        '" +
+                                  settingDefinition.Name.Replace("'", @"\'") + "': " +
+                                  (settingValue == null ? "null" : "'" + settingValue.Replace(@"\", @"\\").Replace("'", @"\'") + "'"));
+
+                    ++added;
                 }
-
-                if (added > 0)
-                {
-                    script.AppendLine(",");
-                }
-                else
-                {
-                    script.AppendLine();
-                }
-
-                var settingValue = await _settingManager.GetSettingValueAsync(settingDefinition.Name);
-
-                script.Append("        '" +
-                              settingDefinition.Name .Replace("'", @"\'") + "': " +
-                              (settingValue == null ? "null" : "'" + settingValue.Replace(@"\", @"\\").Replace("'", @"\'") + "'"));
-
-                ++added;
             }
 
             script.AppendLine();

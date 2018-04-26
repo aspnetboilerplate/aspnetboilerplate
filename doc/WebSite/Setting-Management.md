@@ -47,7 +47,7 @@ provider is shown below:
                             "SiteColorPreference",
                             "red",
                             scopes: SettingScopes.User,
-                            ClientVisibility: new SettingDefinitionClientVisibility(true)
+                            clientVisibilityProvider: new VisibleSettingClientVisibilityProvider()
                             )
     
                     };
@@ -70,7 +70,7 @@ constructor:
     setting's description later in the UI.
 -   **Group**: Can be used to group settings. This is just for the UI, and not
     used in setting management.
--   **ClientVisibility**: Can be used to define if a setting can be used on the client-side or not.
+-   **ClientVisibilityProvider**: Can be used to determine if a setting can be used on the client-side or not.
 -   **isInherited**: Used to set if this setting is inherited by tenant
     and users (See setting scope section).
 -   **customData**: Can be used to set custom data for this setting
@@ -158,13 +158,14 @@ need to explicitly inject it.
 
 #### Client-side
 
-**ClientVisibility** property of a setting definition contains three fields in order to determine a setting's client side visibility.
+**ClientVisibilityProvider** property of a setting definition determines the visibility of a setting for the client-side. There are four implementations of ISettingClientVisibilityProvider.
 
-* **IsVisible**: Shows if a setting can be used on the client-side or not. Set to true if you want setting to be visible on the client side.
-* **RequiresAuthentication**: Shows if a setting can be used on the client side only for authenticated users.
-* **PermissionDependency**: Shows if a setting can be used on the client side only for users with specific permissions.
+* **VisibleSettingClientVisibilityProvider**: Makes a setting definition visible to the client-side.
+* **HiddenSettingClientVisibilityProvider**: Makes a setting definition visible to the client-side.
+* **RequiresAuthenticationSettingClientVisibilityProvider**: Makes a setting definition visible to the client-side if a user is logged in.
+* **RequiresPermissionSettingClientVisibilityProvider**: Makes a setting definition visible to the client side if logged in user has a specific permission.
 
-If a setting is visible to client-side according to above properties, then
+If a setting is visible to client-side according to ClientVisibilityProvider of a setting definition , then
 you can get it's current value on the client-side using JavaScript.
 The **abp.setting** namespace defines the needed functions and objects. Example:
 

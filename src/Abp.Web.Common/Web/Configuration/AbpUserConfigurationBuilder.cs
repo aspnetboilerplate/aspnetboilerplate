@@ -47,7 +47,7 @@ namespace Abp.Web.Configuration
             ISettingManager settingManager,
             IAbpAntiForgeryConfiguration abpAntiForgeryConfiguration,
             IAbpSession abpSession,
-            IPermissionChecker permissionChecker, 
+            IPermissionChecker permissionChecker,
             IIocResolver iocResolver)
         {
             MultiTenancyConfig = multiTenancyConfig;
@@ -217,23 +217,13 @@ namespace Abp.Web.Configuration
             };
 
             var settingDefinitions = SettingDefinitionManager
-                .GetAllSettingDefinitions()
-                .Where(sd => sd.ClientVisibility.IsVisible);
+                .GetAllSettingDefinitions();
 
-            foreach (var settingDefinition in settingDefinitions)
+            using (var scope = _iocResolver.CreateScope())
             {
-                if (settingDefinition.ClientVisibility.RequiresAuthentication && !AbpSession.UserId.HasValue)
+                foreach (var settingDefinition in settingDefinitions)
                 {
-                    continue;
-                }
-
-                using (var scope = _iocResolver.CreateScope())
-                {
-                    var permissionDependencyContext = scope.Resolve<PermissionDependencyContext>();
-                    permissionDependencyContext.User = AbpSession.ToUserIdentifier();
-
-                    if (settingDefinition.ClientVisibility.PermissionDependency != null &&
-                        (!AbpSession.UserId.HasValue || !(await settingDefinition.ClientVisibility.PermissionDependency.IsSatisfiedAsync(permissionDependencyContext))))
+                    if (!await settingDefinition.ClientVisibilityProvider.CheckVisible(scope))
                     {
                         continue;
                     }

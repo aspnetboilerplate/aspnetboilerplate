@@ -9,7 +9,7 @@ namespace Abp.Localization
         {
             return new[]
             {
-                new SettingDefinition(LocalizationSettingNames.DefaultLanguage, null, L("DefaultLanguage"), scopes: SettingScopes.Application | SettingScopes.Tenant | SettingScopes.User, clientVisibility: new SettingDefinitionClientVisibility(true))
+                new SettingDefinition(LocalizationSettingNames.DefaultLanguage, null, L("DefaultLanguage"), scopes: SettingScopes.Application | SettingScopes.Tenant | SettingScopes.User, settingClientVisibilityProvider: new VisibleSettingClientVisibilityProvider())
             };
         }
 

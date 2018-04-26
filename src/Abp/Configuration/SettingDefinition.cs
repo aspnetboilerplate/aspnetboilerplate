@@ -48,9 +48,17 @@ namespace Abp.Configuration
         public string DefaultValue { get; set; }
 
         /// <summary>
+        /// Can clients see this setting and it's value.
+        /// It maybe dangerous for some settings to be visible to clients (such as email server password).
+        /// Default: false.
+        /// </summary>
+        [Obsolete("Use ClientVisibilityProvider instead.")]
+        public bool IsVisibleToClients { get; set; }
+
+        /// <summary>
         /// Client visibility definition for the setting.
         /// </summary>
-        public SettingDefinitionClientVisibility ClientVisibility { get; set; }
+        public ISettingClientVisibilityProvider ClientVisibilityProvider { get; set; }
 
         /// <summary>
         /// Can be used to store a custom object related to this setting.
@@ -66,9 +74,10 @@ namespace Abp.Configuration
         /// <param name="group">Group of this setting</param>
         /// <param name="description">A brief description for this setting</param>
         /// <param name="scopes">Scopes of this setting. Default value: <see cref="SettingScopes.Application"/>.</param>
-        /// <param name="clientVisibility">Client visibility definition for the setting. Default: invisible</param>
+        /// <param name="isVisibleToClients">Can clients see this setting and it's value. Default: false</param>
         /// <param name="isInherited">Is this setting inherited from parent scopes. Default: True.</param>
         /// <param name="customData">Can be used to store a custom object related to this setting</param>
+        /// <param name="clientVisibilityProvider">Client visibility definition for the setting. Default: invisible</param>
         public SettingDefinition(
             string name,
             string defaultValue,
@@ -76,9 +85,10 @@ namespace Abp.Configuration
             SettingDefinitionGroup group = null,
             ILocalizableString description = null,
             SettingScopes scopes = SettingScopes.Application,
-            SettingDefinitionClientVisibility clientVisibility = null,
+            bool isVisibleToClients = false,
             bool isInherited = true,
-            object customData = null)
+            object customData = null,
+            ISettingClientVisibilityProvider clientVisibilityProvider = null)
         {
             if (string.IsNullOrEmpty(name))
             {
@@ -91,9 +101,20 @@ namespace Abp.Configuration
             Group = @group;
             Description = description;
             Scopes = scopes;
-            ClientVisibility = clientVisibility ?? new SettingDefinitionClientVisibility();
+            IsVisibleToClients = isVisibleToClients;
             IsInherited = isInherited;
             CustomData = customData;
+
+            ClientVisibilityProvider = new HiddenSettingClientVisibilityProvider();
+
+            if (isVisibleToClients)
+            {
+                ClientVisibilityProvider = new VisibleSettingClientVisibilityProvider();
+            }
+            else if (clientVisibilityProvider != null)
+            {
+                ClientVisibilityProvider = clientVisibilityProvider;
+            }
         }
     }
 }
