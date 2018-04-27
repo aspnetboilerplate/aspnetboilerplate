@@ -1,10 +1,10 @@
 ### Introduction
 
-ASP.NET Boilerplate provides two basic interfaces for Multi-Lingual entity definitions. 
+ASP.NET Boilerplate defines two basic interfaces for Multi-Lingual entity definitions to provide a standard model for translating entities. 
 
 #### IMultiLingualEntity
 
-IMultiLingualEntity interface represents is used to mark multi lingual entities. The entities marked with IMultiLingualEntity interface must define language-neutral information. The entities marked with IMultiLingualEntity contains a collection of Translations which contains language-dependent information.
+`IMultiLingualEntity<TTranslation>` interface is used to mark multi lingual entities. The entities marked with `IMultiLingualEntity<TTranslation>` interface must define language-neutral information. The entities marked with `IMultiLingualEntity<TTranslation>` contains a collection of Translations which contains language-dependent information.
 
 A sample multi lingual entity would be;
 
@@ -38,9 +38,11 @@ public class ProductTranslation : Entity, IEntityTranslation<Product>
 
  #### CreateMultiLingualMap 
 
-CreateMultiLingualMap is an extension method to map a Multi-Lingual entity and one of it's Translations to a appropriate Dto class. 
+When listing Multi-Lingual entities on a user interface, most of the time, only one translation of a Multi-Lingual entity which is in user's current language will be displayed to user.
 
-When listing Multi-Lingual entities on a user interface, most of the time, only one record will be displayed to user in user's current language. By using CreateMultiLingualMap extension method, only one record from Translations collection of a Multi-Lingual entity will be mapped to target Dto class. This extension method finds the translation with selected UI language first. If there is no translation with selected UI language, then extension method searches for the default language setting (see  [Setting-Management](Setting-Management#setting-scope.md)) and uses the translation in default language. If extension method couldn't find any translation in current UI language or default language, it uses one of the existing translations. 
+For this purpose, ABP defines CreateMultiLingualMap extension method to map a Multi-Lingual entity and one of it's Translation to an appropriate Dto class using **AutoMapper**. 
+
+By using CreateMultiLingualMap extension method, only one record from Translations collection of a Multi-Lingual entity will be mapped to target Dto class. This extension method finds the translation with selected UI language first. If there is no translation with selected UI language, then extension method searches for the default language setting (see  [Setting-Management](Setting-Management#setting-scope.md)) and uses the translation in default language. If extension method couldn't find any translation in current UI language or default language, it uses one of the existing translations. 
 
 A sample Dto class for sample Product entity above would be;
 
@@ -60,11 +62,18 @@ And it's mapping configuration is;
 ```c#
 Configuration.Modules.AbpAutoMapper().Configurators.Add(configuration =>
 {
-	CustomDtoMapper.CreateMappings(configuration, new MultiLingualMapContext
-	{
-        SettingManager = IocManager.Resolve<ISettingManager>()
-    });
+	CustomDtoMapper.CreateMappings(configuration, new MultiLingualMapContext(
+		IocManager.Resolve<ISettingManager>()
+	));
 });
+
+internal static class CustomDtoMapper
+{
+	public static void CreateMappings(IMapperConfigurationExpression configuration, MultiLingualMapContext context)
+	{
+		configuration.CreateMultiLingualMap<Product, ProductTranslation, ProductListDto>(context);
+	}
+}
 ```
 
 SettingManager is required to find default language setting when mapping a multi lingual entity to a Dto class. 

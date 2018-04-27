@@ -38,12 +38,10 @@ namespace Abp.TestBase.SampleApplication
 
             Configuration.Modules.AbpAutoMapper().Configurators.Add(configuration =>
             {
-                CustomDtoMapper.CreateMappings(configuration, new MultiLingualMapContext
-                {
-                    SettingManager = IocManager.Resolve<ISettingManager>()
-                });
+                CustomDtoMapper.CreateMappings(configuration, new MultiLingualMapContext(
+                    IocManager.Resolve<ISettingManager>()
+                ));
             });
-
         }
 
         internal static class CustomDtoMapper
