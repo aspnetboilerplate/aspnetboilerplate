@@ -199,7 +199,7 @@ namespace Abp.Zero.EntityHistory
         [Fact]
         public void Should_Write_History_But_Not_For_Property_If_Disabled_History_Tracking()
         {
-            /* Blog.Name has DisableHistoryTracking attribute. */
+            /* Blog.Name has DisableAuditing attribute. */
 
             using (var uow = Resolve<IUnitOfWorkManager>().Begin())
             {
