@@ -67,6 +67,11 @@ namespace Abp.EntityFrameworkCore
                 return false;
             }
 
+            if (property.PropertyInfo == null)
+            {
+                return false;
+            }
+
             if (property.PropertyInfo.IsDefined(typeof(DisableDateTimeNormalizationAttribute), true))
             {
                 return true;
