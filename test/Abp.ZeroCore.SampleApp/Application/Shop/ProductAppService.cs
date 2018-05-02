@@ -1,5 +1,4 @@
 ﻿using System.Collections.Generic;
-using System.Linq;
 using System.Threading.Tasks;
 using Abp.Application.Services;
 using Abp.Application.Services.Dto;
@@ -41,8 +40,6 @@ namespace Abp.ZeroCore.SampleApp.Application.Shop
             _productRepository.EnsureCollectionLoaded(product, p => p.Translations);
 
             product.Translations.Clear();
-
-            await CurrentUnitOfWork.SaveChangesAsync();
 
             ObjectMapper.Map(input, product);
         }

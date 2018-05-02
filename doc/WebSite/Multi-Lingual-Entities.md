@@ -9,11 +9,11 @@ ASP.NET Boilerplate defines two basic interfaces for Multi-Lingual entity defini
 A sample multi lingual entity would be;
 
 ```c#
-public class Product : IMultiLingualEntity<ProductTranslation>
+public class Product : Entity, IMultiLingualEntity<ProductTranslation>
 {
-    public decimal Price {get; set;} 
-    
-    public virtual ICollection<ProductTranslation> Translations { get; set; }
+	public decimal Price { get; set; }
+
+	public ICollection<ProductTranslation> Translations { get; set; }
 }
 ```
 
@@ -81,7 +81,7 @@ SettingManager is required to find default language setting when mapping a multi
 In some cases like editing a multi lingual entity on the UI, all translations may be needed in the Dto class. In such cases, the Dto classes can be defined like below and [Object-To-Object-Mapping](Object-To-Object-Mapping.md) can be used.
 
 ```c#
-[AutoMapFrom(typeof(Product))]
+[AutoMap(typeof(Product))]
 public class ProductDto
 {
 	public decimal Price { get; set; }
@@ -91,8 +91,70 @@ public class ProductDto
 ```
 
 ```c#
+[AutoMap(typeof(ProductTranslation))]
 public class ProductTranslationDto
 {
     public string Name { get; set; }
+}
+```
+### Crud Operations
+
+#### Creating a MultiLingual Entity with Translation(s) 
+
+A Dto class like the below one can be used for creating a Multi-Lingual entity with it's translations.
+
+```c#
+[AutoMap(typeof(Product))]
+public class ProductDto
+{
+	public decimal Price { get; set; }
+
+	public ICollection<ProductTranslationDto> Translations { get; set; }
+}
+```
+After defining such a Dto class, we can use it in our application service to create a Multi-Lingual entity.
+
+```c#
+public class ProductAppService : ApplicationService, IProductAppService
+{
+	private readonly IRepository<Product> _productRepository;
+
+	public ProductAppService(IRepository<Product> productRepository)
+	{
+		_productRepository = productRepository;
+	}
+	
+	public async Task CreateProduct(ProductDto input)
+	{
+		var product = ObjectMapper.Map<Product>(input);
+		await _productRepository.InsertAsync(product);
+	}
+}
+```
+#### Updating a Multi-Lingual Entity with Translation(s)
+
+We can use similar Dto class for updating our Multi-Lingual entity. A sample application service method for update operation can be defined like below;
+
+```c#
+public async Task UpdateProduct(ProductDto input)
+{
+	var product = await _productRepository.GetAsync(input.Id);
+	_productRepository.EnsureCollectionLoaded(product, p => p.Translations);
+
+	product.Translations.Clear();
+
+	ObjectMapper.Map(input, product);
+}
+```
+##### Note for EntityFramework 6.x
+
+For EntityFramework 6.x, all the translations must be deleted from database manually because Entity Framework 6.x doesn't delete related data. Instead, EntityFramework 6.x tries to set CoreId of each Translation entity to null which fails. So, a sample code like the below one might be used to delete translations of a Multi-Lingual entity for EntityFramework 6.x.
+
+```c#
+while (product.Translations.Any())
+{
+    var translation = product.Translations.FirstOrDefault();
+    await _productTranslationRepository.DeleteAsync(translation);
+    product.Translations.Remove(translation);
 }
 ```
