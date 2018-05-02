@@ -22,5 +22,9 @@
     <ProjectReference Include="..\..\src\Abp.ZeroCore.IdentityServer4.EntityFrameworkCore\Abp.ZeroCore.IdentityServer4.EntityFrameworkCore.csproj" />
     <ProjectReference Include="..\..\src\Abp.ZeroCore\Abp.ZeroCore.csproj" />
   </ItemGroup>
+
+  <ItemGroup>
+    <Folder Include="Core\Shop\" />
+  </ItemGroup>
   
 </Project>

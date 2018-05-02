@@ -2,7 +2,6 @@
 using System.Reflection;
 using Abp.AutoMapper;
 using Abp.Configuration;
-using Abp.Dependency;
 using Abp.EntityFramework;
 using Abp.EntityFramework.GraphDiff;
 using Abp.EntityFramework.GraphDiff.Configuration;
@@ -49,6 +48,11 @@ namespace Abp.TestBase.SampleApplication
             public static void CreateMappings(IMapperConfigurationExpression configuration, MultiLingualMapContext context)
             {
                 configuration.CreateMultiLingualMap<Product, ProductTranslation, ProductListDto>(context);
+
+                configuration.CreateMap<ProductCreateDto, Product>();
+                configuration.CreateMap<ProductUpdateDto, Product>();
+
+                configuration.CreateMap<ProductTranslationDto, ProductTranslation>();
             }
         }
     }

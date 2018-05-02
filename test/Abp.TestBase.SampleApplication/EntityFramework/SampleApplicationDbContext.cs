@@ -60,5 +60,16 @@ namespace Abp.TestBase.SampleApplication.EntityFramework
         {
 
         }
+
+        protected override void OnModelCreating(DbModelBuilder modelBuilder)
+        {
+            base.OnModelCreating(modelBuilder);
+
+            modelBuilder.Entity<ProductTranslation>()
+                .HasRequired(pt => pt.Core)
+                .WithMany(p => p.Translations)
+                .HasForeignKey(d => d.CoreId)
+                .WillCascadeOnDelete(true);
+        }
     }
 }
