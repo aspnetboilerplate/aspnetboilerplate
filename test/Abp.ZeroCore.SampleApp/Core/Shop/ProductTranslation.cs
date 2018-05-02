@@ -1,6 +1,6 @@
 ﻿using Abp.Domain.Entities;
 
-namespace Abp.TestBase.SampleApplication.Shop
+namespace Abp.ZeroCore.SampleApp.Core.Shop
 {
     public class ProductTranslation : Entity, IEntityTranslation<Product>
     {

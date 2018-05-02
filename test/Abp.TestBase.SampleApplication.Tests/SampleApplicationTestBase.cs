@@ -7,7 +7,6 @@ using Abp.TestBase.SampleApplication.Crm;
 using Abp.TestBase.SampleApplication.EntityFramework;
 using Abp.TestBase.SampleApplication.Messages;
 using Abp.TestBase.SampleApplication.People;
-using Abp.TestBase.SampleApplication.Shop;
 using Castle.MicroKernel.Registration;
 using EntityFramework.DynamicFilters;
 
@@ -136,54 +135,6 @@ namespace Abp.TestBase.SampleApplication.Tests
                       "Main Office",
                       "IT Office");
               });
-
-            UsingDbContext(
-                context =>
-                {
-                    var product1 = new Product
-                    {
-                        Price = 10,
-                        Stock = 1000
-                    };
-
-                    var product2 = new Product
-                    {
-                        Price = 99,
-                        Stock = 1000
-                    };
-
-                    var product3 = new Product
-                    {
-                        Price = 15,
-                        Stock = 500
-                    };
-
-                    context.Products.Add(product1);
-                    context.Products.Add(product2);
-                    context.Products.Add(product3);
-                    context.SaveChanges();
-
-                    //Product1 translations
-                    var product1_en = new ProductTranslation { CoreId = product1.Id, Language = "en", Name = "Watch" };
-                    var product1_tr = new ProductTranslation { CoreId = product1.Id, Language = "tr", Name = "Saat" };
-
-                    context.ProductTranslations.Add(product1_en);
-                    context.ProductTranslations.Add(product1_tr);
-
-                    //Product2 translations
-                    var product2_en = new ProductTranslation { CoreId = product2.Id, Language = "en", Name = "Bike" };
-                    var product2_fr = new ProductTranslation { CoreId = product2.Id, Language = "fr", Name = "Bicyclette" };
-                    
-                    context.ProductTranslations.Add(product2_en);
-                    context.ProductTranslations.Add(product2_fr);
-
-                    //Product3 translations
-                    var product3_it = new ProductTranslation { CoreId = product3.Id, Language = "it", Name = "Giornale" };
-
-                    context.ProductTranslations.Add(product3_it);
-
-                    context.SaveChanges();
-                });
         }
 
         private void AddCompany(SampleApplicationDbContext context, string name, string country, string city, string address1, string modifier1, string address2, string modifier2, string branchName1, string branchName2)

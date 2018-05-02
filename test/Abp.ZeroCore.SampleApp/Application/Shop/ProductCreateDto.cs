@@ -1,6 +1,6 @@
 ﻿using System.Collections.Generic;
 
-namespace Abp.TestBase.SampleApplication.Shop
+namespace Abp.ZeroCore.SampleApp.Application.Shop
 {
     public class ProductCreateDto
     {

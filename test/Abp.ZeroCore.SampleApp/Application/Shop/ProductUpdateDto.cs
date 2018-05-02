@@ -1,7 +1,7 @@
 ﻿using System.Collections.Generic;
 using Abp.Application.Services.Dto;
 
-namespace Abp.TestBase.SampleApplication.Shop
+namespace Abp.ZeroCore.SampleApp.Application.Shop
 {
     public class ProductUpdateDto: EntityDto
     {

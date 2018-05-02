@@ -2,7 +2,7 @@
 using Abp.Application.Services;
 using Abp.Application.Services.Dto;
 
-namespace Abp.TestBase.SampleApplication.Shop
+namespace Abp.ZeroCore.SampleApp.Application.Shop
 {
     public interface IProductAppService : IApplicationService
     {

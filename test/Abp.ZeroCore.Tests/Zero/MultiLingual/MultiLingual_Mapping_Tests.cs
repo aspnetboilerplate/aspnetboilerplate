@@ -1,12 +1,12 @@
 ﻿using System.Globalization;
 using System.Threading.Tasks;
-using Abp.TestBase.SampleApplication.Shop;
+using Abp.ZeroCore.SampleApp.Application.Shop;
 using Shouldly;
 using Xunit;
 
-namespace Abp.TestBase.SampleApplication.Tests.MultiLingual
+namespace Abp.Zero.MultiLingual
 {
-    public class MultiLingual_Mapping_Tests: SampleApplicationTestBase
+    public class MultiLingual_Mapping_Tests: AbpZeroTestBase
     {
         private readonly IProductAppService _productAppService;
 

@@ -1,12 +1,13 @@
 ﻿using System.Collections.Generic;
-using System.Data.Entity;
 using System.Linq;
 using System.Threading.Tasks;
 using Abp.Application.Services;
 using Abp.Application.Services.Dto;
 using Abp.Domain.Repositories;
+using Abp.ZeroCore.SampleApp.Core.Shop;
+using Microsoft.EntityFrameworkCore;
 
-namespace Abp.TestBase.SampleApplication.Shop
+namespace Abp.ZeroCore.SampleApp.Application.Shop
 {
     public class ProductAppService : ApplicationService, IProductAppService
     {
@@ -39,13 +40,7 @@ namespace Abp.TestBase.SampleApplication.Shop
             var product = await _productRepository.GetAsync(input.Id);
             _productRepository.EnsureCollectionLoaded(product, p => p.Translations);
 
-            // Delete old translations
-            while (product.Translations.Any())
-            {
-                var translation = product.Translations.FirstOrDefault();
-                await _productTranslationRepository.DeleteAsync(translation);
-                product.Translations.Remove(translation);
-            }
+            product.Translations.Clear();
 
             await CurrentUnitOfWork.SaveChangesAsync();
 
@@ -57,7 +52,17 @@ namespace Abp.TestBase.SampleApplication.Shop
             var translation = await _productTranslationRepository.GetAll()
                                                            .FirstOrDefaultAsync(pt => pt.CoreId == productId && pt.Language == input.Language);
 
-            ObjectMapper.Map(input, translation);
+            if (translation == null)
+            {
+                var newTranslation = ObjectMapper.Map<ProductTranslation>(input);
+                newTranslation.CoreId = productId;
+
+                await _productTranslationRepository.InsertAsync(newTranslation);
+            }
+            else
+            {
+                ObjectMapper.Map(input, translation);
+            }
         }
     }
 }

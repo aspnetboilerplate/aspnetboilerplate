@@ -8,7 +8,6 @@ using Abp.TestBase.SampleApplication.EntityFramework.Repositories;
 using Abp.TestBase.SampleApplication.GuidEntities;
 using Abp.TestBase.SampleApplication.Messages;
 using Abp.TestBase.SampleApplication.People;
-using Abp.TestBase.SampleApplication.Shop;
 
 namespace Abp.TestBase.SampleApplication.EntityFramework
 {
@@ -34,10 +33,6 @@ namespace Abp.TestBase.SampleApplication.EntityFramework
 
         public virtual IDbSet<TestEntityWithGuidPkAndDbGeneratedValue> TestEntityWithGuidPkAndDbGeneratedValues { get; set; }
 
-        public virtual IDbSet<Product> Products { get; set; }
-
-        public virtual IDbSet<ProductTranslation> ProductTranslations { get; set; }
-
         public SampleApplicationDbContext()
         {
 
@@ -59,17 +54,6 @@ namespace Abp.TestBase.SampleApplication.EntityFramework
             : base(connection, contextOwnsConnection)
         {
 
-        }
-
-        protected override void OnModelCreating(DbModelBuilder modelBuilder)
-        {
-            base.OnModelCreating(modelBuilder);
-
-            modelBuilder.Entity<ProductTranslation>()
-                .HasRequired(pt => pt.Core)
-                .WithMany(p => p.Translations)
-                .HasForeignKey(d => d.CoreId)
-                .WillCascadeOnDelete(true);
         }
     }
 }

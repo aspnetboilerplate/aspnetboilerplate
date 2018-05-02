@@ -9,7 +9,6 @@ using Abp.EntityFramework.GraphDiff.Mapping;
 using Abp.Modules;
 using Abp.TestBase.SampleApplication.ContacLists;
 using Abp.TestBase.SampleApplication.People;
-using Abp.TestBase.SampleApplication.Shop;
 using AutoMapper;
 using RefactorThis.GraphDiff;
 
@@ -34,26 +33,6 @@ namespace Abp.TestBase.SampleApplication
                     config => config.AssociatedCollection(entity => entity.People)),
                 MappingExpressionBuilder.For<Person>(config => config.AssociatedEntity(entity => entity.ContactList))
             };
-
-            Configuration.Modules.AbpAutoMapper().Configurators.Add(configuration =>
-            {
-                CustomDtoMapper.CreateMappings(configuration, new MultiLingualMapContext(
-                    IocManager.Resolve<ISettingManager>()
-                ));
-            });
-        }
-
-        internal static class CustomDtoMapper
-        {
-            public static void CreateMappings(IMapperConfigurationExpression configuration, MultiLingualMapContext context)
-            {
-                configuration.CreateMultiLingualMap<Product, ProductTranslation, ProductListDto>(context);
-
-                configuration.CreateMap<ProductCreateDto, Product>();
-                configuration.CreateMap<ProductUpdateDto, Product>();
-
-                configuration.CreateMap<ProductTranslationDto, ProductTranslation>();
-            }
         }
     }
 }
