@@ -58,6 +58,10 @@ namespace Abp.Zero
                     var post4 = new Post { Blog = blog1, Title = "test-post-4-title", Body = "test-post-4-body", TenantId = 42 };
 
                     context.Posts.AddRange(post1, post2, post3, post4);
+
+                    var comment1 = new Comment { Post = post1, Content = "test-comment-1-content" };
+
+                    context.Comments.Add(comment1);
                 });
         }
 

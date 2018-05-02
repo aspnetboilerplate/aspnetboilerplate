@@ -296,16 +296,15 @@ namespace Abp.EntityHistory
             }
 
             var propertyInfo = propertyEntry.Metadata.PropertyInfo;
-            if (propertyInfo.IsDefined(typeof(DisableAuditingAttribute), true))
+            if (propertyInfo != null && propertyInfo.IsDefined(typeof(DisableAuditingAttribute), true))
             {
                 return false;
             }
 
-            var classType = propertyInfo.DeclaringType;
-            if (classType != null)
+            var entityType = propertyEntry.EntityEntry.Entity.GetType();
+            if (entityType.GetTypeInfo().IsDefined(typeof(DisableAuditingAttribute), true))
             {
-                if (classType.GetTypeInfo().IsDefined(typeof(DisableAuditingAttribute), true) &&
-                    !propertyInfo.IsDefined(typeof(AuditedAttribute), true))
+                if (propertyInfo == null || !propertyInfo.IsDefined(typeof(AuditedAttribute), true))
                 {
                     return false;
                 }
