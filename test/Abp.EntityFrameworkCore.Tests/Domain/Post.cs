@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using Abp.Domain.Entities.Auditing;
 using Abp.Domain.Entities;
@@ -18,9 +19,12 @@ namespace Abp.EntityFrameworkCore.Tests.Domain
 
         public int? TenantId { get; set; }
 
+        public ICollection<Comment> Comments { get; set; }
+
         public Post()
         {
             Id = Guid.NewGuid();
+            Comments = new List<Comment>();
         }
 
         public Post(Blog blog, string title, string body)
@@ -29,6 +33,7 @@ namespace Abp.EntityFrameworkCore.Tests.Domain
             Blog = blog;
             Title = title;
             Body = body;
+            Comments = new List<Comment>();
         }
     }
 }
