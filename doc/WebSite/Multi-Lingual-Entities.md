@@ -138,8 +138,8 @@ We can use similar Dto class for updating our Multi-Lingual entity. A sample app
 ```c#
 public async Task UpdateProduct(ProductDto input)
 {
-	var product = await _productRepository.GetAsync(input.Id);
-	_productRepository.EnsureCollectionLoaded(product, p => p.Translations);
+	var product = await _productRepository.GetAllIncluding(p => p.Translations)
+                .FirstOrDefaultAsync(p => p.Id == input.Id);
 
 	product.Translations.Clear();
 
@@ -151,10 +151,9 @@ public async Task UpdateProduct(ProductDto input)
 For EntityFramework 6.x, all the translations must be deleted from database manually because Entity Framework 6.x doesn't delete related data. Instead, EntityFramework 6.x tries to set CoreId of each Translation entity to null which fails. So, a sample code like the below one might be used to delete translations of a Multi-Lingual entity for EntityFramework 6.x.
 
 ```c#
-while (product.Translations.Any())
+foreach (var translation in product.Translations.ToList())
 {
-    var translation = product.Translations.FirstOrDefault();
-    await _productTranslationRepository.DeleteAsync(translation);
-    product.Translations.Remove(translation);
+	await _productTranslationRepository.DeleteAsync(translation);
+	product.Translations.Remove(translation);
 }
 ```

@@ -5,6 +5,7 @@ using Abp.Application.Services.Dto;
 using Abp.Domain.Repositories;
 using Abp.ZeroCore.SampleApp.Core.Shop;
 using Microsoft.EntityFrameworkCore;
+using System.Linq;
 
 namespace Abp.ZeroCore.SampleApp.Application.Shop
 {
@@ -36,8 +37,8 @@ namespace Abp.ZeroCore.SampleApp.Application.Shop
 
         public async Task UpdateProduct(ProductUpdateDto input)
         {
-            var product = await _productRepository.GetAsync(input.Id);
-            _productRepository.EnsureCollectionLoaded(product, p => p.Translations);
+            var product = await _productRepository.GetAllIncluding(p => p.Translations)
+                .FirstOrDefaultAsync(p => p.Id == input.Id);
 
             product.Translations.Clear();
 
