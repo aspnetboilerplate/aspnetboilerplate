@@ -90,7 +90,7 @@ the **ICustomValidate** interface as shown below:
         [Required]
         public string Description { get; set; }
 
-        public void AddValidationErrors(CustomValidatationContext context)
+        public void AddValidationErrors(CustomValidationContext context)
         {
             if (SendEmailToAssignedPerson && (!AssignedPersonId.HasValue || AssignedPersonId.Value <= 0))
             {

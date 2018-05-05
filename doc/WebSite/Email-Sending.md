@@ -7,8 +7,7 @@ of emails.
 
 ### IEmailSender
 
-**IEmailSender** is a service to send emails without it knowing
-details. Example usage:
+**IEmailSender** is a service to send emails without knowing the details. Example usage:
 
     public class TaskManager : IDomainService
     {
