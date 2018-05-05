@@ -8,7 +8,7 @@ namespace Abp.Web.Settings
     public interface ISettingScriptManager
     {
         /// <summary>
-        /// Gets Javascript that contains setting values.
+        /// Gets JavaScript that contains setting values.
         /// </summary>
         Task<string> GetScriptAsync();
     }

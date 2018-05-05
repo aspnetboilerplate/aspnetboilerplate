@@ -103,7 +103,7 @@ Startup Templates
 
   -   [ASP.NET Core & Angular](Zero/Startup-Template-Angular.md)
   -   [ASP.NET Core MVC & jQuery](Zero/Startup-Template-Core.md)
-  -   [ASP.NET MVC 5.x / Angularjs 1.x](Zero/Startup-Template.md)
+  -   [ASP.NET MVC 5.x / AngularJS 1.x](Zero/Startup-Template.md)
 
 Features
 

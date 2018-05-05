@@ -24,4 +24,4 @@ See [all packages](Nuget-Packages.md).
 
 ### Source code
 
-The source code of this module is also maintained in [the main Github repository](https://github.com/aspnetboilerplate/aspnetboilerplate/tree/dev/src) (Abp.Zero.* and Abp.ZeroCore.* projects).
+The source code of this module is also maintained in [the main GitHub repository](https://github.com/aspnetboilerplate/aspnetboilerplate/tree/dev/src) (Abp.Zero.* and Abp.ZeroCore.* projects).

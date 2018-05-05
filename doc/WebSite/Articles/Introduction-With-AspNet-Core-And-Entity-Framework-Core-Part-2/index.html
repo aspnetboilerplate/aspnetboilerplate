@@ -1,7 +1,7 @@
 ﻿<i id="abp-title" data-title="Introduction With AspNet Core And Entity Framework Core Part 2"></i>
 
 <ul class="download">
-	<li>Get the source code from the <a href="https://github.com/aspnetboilerplate/aspnetboilerplate-samples/tree/master/SimpleTaskSystem-Core">Github repository.</a></li>
+	<li>Get the source code from the <a href="https://github.com/aspnetboilerplate/aspnetboilerplate-samples/tree/master/SimpleTaskSystem-Core">GitHub repository.</a></li>
 </ul>
 
 <h2 class="abp-invisible">Contents</h2>
@@ -444,7 +444,7 @@ namespace Acme.SimpleTaskApp.Web.Controllers
     }
 }</pre>
 
-<p>I injected ILookupAppService that is used to get people combobox items. While I could directly inject and use IRepository&lt;Person, Guid&gt; here, I prefered this to make a better layering and re-usability. ILookupAppService.GetPeopleComboboxItems is defined in application layer as shown below:</p>
+<p>I injected ILookupAppService that is used to get people combobox items. While I could directly inject and use IRepository&lt;Person, Guid&gt; here, I preferred this to make a better layering and re-usability. ILookupAppService.GetPeopleComboboxItems is defined in application layer as shown below:</p>
 
 <pre lang="cs">
 public interface ILookupAppService : IApplicationService
@@ -567,12 +567,12 @@ namespace Acme.SimpleTaskApp.Web.Models.People
     });
 })(jQuery);</pre>
 
-<p>Let&#39;s see what&#39;s done in this javascript code:</p>
+<p>Let&#39;s see what&#39;s done in this JavaScript code:</p>
 
 <ul>
 	<li>Prepares <strong>validatation</strong> for the form (using <a href="https://jqueryvalidation.org/" target="_blank">jquery validation</a> plugin) and validates it on Save button&#39;s click.</li>
 	<li>Uses <strong>serializeFormToObject</strong> jquery plugin (defined in jquery-extensions.js in the solution) to convert form data to a JSON object (I included jquery-extensions.js to the _Layout.cshtml as the last script file).</li>
-	<li>Uses <strong>abp.services.task.create</strong> method to call TaskAppService.Create method. This is one of the important features of ABP. We can use application services from javascript code just like calling a javascript method in our code. See <a href="http://www.aspnetboilerplate.com/Pages/Documents/AspNet-Core#application-services-as-controllers"> details</a>.</li>
+	<li>Uses <strong>abp.services.task.create</strong> method to call TaskAppService.Create method. This is one of the important features of ABP. We can use application services from JavaScript code just like calling a JavaScript method in our code. See <a href="http://www.aspnetboilerplate.com/Pages/Documents/AspNet-Core#application-services-as-controllers"> details</a>.</li>
 </ul>
 
 <p>

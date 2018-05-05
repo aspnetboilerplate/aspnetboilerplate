@@ -9,7 +9,7 @@ the best software design practices without repeating themselves. DRY -
 
 All applications have some common problems and need some common
 structures. ASP.NET Boilerplate works for small projects to large
-enterprise web applications, providing a qick start with maintanable
+enterprise web applications, providing a quick start with maintainable
 code bases.
 
 ### Considerations
@@ -117,7 +117,7 @@ Project/Solution [templates](/Templates) is a proper way of doing it.
 
 ### Source code
 
-ASP.NET Boilerplate is an open source project developed under Github.
+ASP.NET Boilerplate is an open source project developed on GitHub.
 
 -   Source code:
     <https://github.com/aspnetboilerplate/aspnetboilerplate>
@@ -132,7 +132,7 @@ ASP.NET Boilerplate is an open source project developed under Github.
 ASP.NET Boilerplate is designed and developed by [Halil İbrahim
 Kalkan](http://www.halilibrahimkalkan.com/). There are also many
 [contributors](https://github.com/aspnetboilerplate/aspnetboilerplate/graphs/contributors)
-on github. Please feel free to fork our repositories and send pull
+on GitHub. Please feel free to fork our repositories and send pull
 requests!
 
 ### Contact
@@ -140,7 +140,7 @@ requests!
 For your questions and other discussions, use [official
 forum](http://forum.aspnetboilerplate.com/).
 
-For feature requests or bug reports, use [Github
+For feature requests or bug reports, use [GitHub
 issues](https://github.com/aspnetboilerplate/aspnetboilerplate/issues).
 
 For personal contact with me, visit my [web

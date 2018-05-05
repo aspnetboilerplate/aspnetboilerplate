@@ -20,6 +20,11 @@ namespace Abp.Runtime.Caching
             get { return InternalCache.DefaultSlidingExpireTime; }
             set { InternalCache.DefaultSlidingExpireTime = value; }
         }
+        public TimeSpan? DefaultAbsoluteExpireTime
+        {
+            get { return InternalCache.DefaultAbsoluteExpireTime; }
+            set { InternalCache.DefaultAbsoluteExpireTime = value; }
+        }
 
         public ICache InternalCache { get; private set; }
 
@@ -67,14 +72,14 @@ namespace Abp.Runtime.Caching
             return InternalCache.GetOrDefaultAsync<TKey, TValue>(key);
         }
 
-        public void Set(TKey key, TValue value, TimeSpan? slidingExpireTime = null)
+        public void Set(TKey key, TValue value, TimeSpan? slidingExpireTime = null, TimeSpan? absoluteExpireTime = null)
         {
-            InternalCache.Set(key.ToString(), value, slidingExpireTime);
+            InternalCache.Set(key.ToString(), value, slidingExpireTime, absoluteExpireTime);
         }
 
-        public Task SetAsync(TKey key, TValue value, TimeSpan? slidingExpireTime = null)
+        public Task SetAsync(TKey key, TValue value, TimeSpan? slidingExpireTime = null, TimeSpan? absoluteExpireTime = null)
         {
-            return InternalCache.SetAsync(key.ToString(), value, slidingExpireTime);
+            return InternalCache.SetAsync(key.ToString(), value, slidingExpireTime, absoluteExpireTime);
         }
 
         public void Remove(TKey key)

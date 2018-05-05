@@ -213,7 +213,7 @@ framework. There will only be a few lines of code or classes that explicitly
 interact with the DI framework in your whole application.
 
 ASP.NET Boilerplate uses the [Castle
-Windsor](http://docs.castleproject.org/Default.aspx?Page=MainPage)
+Windsor](https://github.com/castleproject/Windsor/blob/master/docs/README.md)
 framework for Dependency Injection. It's one of the most mature DI
 frameworks out there. There are many other frameworks, such as Unity, Ninject,
 StructureMap, and Autofac.
@@ -427,7 +427,7 @@ injected and used easily. Example:
     }
 
 MySampleClass in an example class in an application. It is
-constructor-injected with **IIcResolver** and uses it to resolve and release
+constructor-injected with **IIocResolver** and uses it to resolve and release
 objects. There are a few overloads of the **Resolve** method which can be used as
 needed. The **Release** method is used to release a component (object). It's
 **critical** to call Release if you're manually resolving an object.

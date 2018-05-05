@@ -159,6 +159,33 @@ namespace Abp.Reflection
         }
 
         /// <summary>
+        /// Gets a property by it's full path from given object
+        /// </summary>
+        /// <param name="obj">Object to get value from</param>
+        /// <param name="objectType">Type of given object</param>
+        /// <param name="propertyPath">Full path of property</param>
+        /// <returns></returns>
+        internal static object GetPropertyByPath(object obj, Type objectType, string propertyPath)
+        {
+            var property = obj;
+            var currentType = objectType;
+            var objectPath = currentType.FullName;
+            var absolutePropertyPath = propertyPath;
+            if (absolutePropertyPath.StartsWith(objectPath))
+            {
+                absolutePropertyPath = absolutePropertyPath.Replace(objectPath + ".", "");
+            }
+
+            foreach (var propertyName in absolutePropertyPath.Split('.'))
+            {
+                property = currentType.GetProperty(propertyName);
+                currentType = ((PropertyInfo) property).PropertyType;
+            }
+
+            return property;
+        }
+
+        /// <summary>
         /// Gets value of a property by it's full path from given object
         /// </summary>
         /// <param name="obj">Object to get value from</param>
@@ -185,7 +212,7 @@ namespace Abp.Reflection
 
             return value;
         }
-
+        
         /// <summary>
         /// Sets value of a property by it's full path on given object
         /// </summary>

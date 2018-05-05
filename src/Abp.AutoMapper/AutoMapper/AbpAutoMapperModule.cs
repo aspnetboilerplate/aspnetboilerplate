@@ -1,8 +1,8 @@
 ﻿using System;
-using Abp.Localization;
-using Abp.Modules;
 using System.Reflection;
 using Abp.Configuration.Startup;
+using Abp.Localization;
+using Abp.Modules;
 using Abp.Reflection;
 using AutoMapper;
 using Castle.MicroKernel.Registration;
@@ -59,12 +59,18 @@ namespace Abp.AutoMapper
                     }
 
                     IocManager.IocContainer.Register(
+                        Component.For<IConfigurationProvider>().Instance(Mapper.Configuration).LifestyleSingleton()
+                    );
+                    IocManager.IocContainer.Register(
                         Component.For<IMapper>().Instance(Mapper.Instance).LifestyleSingleton()
                     );
                 }
                 else
                 {
                     var config = new MapperConfiguration(configurer);
+                    IocManager.IocContainer.Register(
+                        Component.For<IConfigurationProvider>().Instance(config).LifestyleSingleton()
+                    );
                     IocManager.IocContainer.Register(
                         Component.For<IMapper>().Instance(config.CreateMapper()).LifestyleSingleton()
                     );

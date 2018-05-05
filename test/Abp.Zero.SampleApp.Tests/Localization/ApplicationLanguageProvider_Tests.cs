@@ -47,7 +47,7 @@ namespace Abp.Zero.SampleApp.Tests.Localization
             languages.FirstOrDefault(l => l.Name == "en").ShouldNotBeNull();
             languages.FirstOrDefault(l => l.Name == "tr").ShouldNotBeNull();
             languages.FirstOrDefault(l => l.Name == "de").ShouldNotBeNull();
-            languages.FirstOrDefault(l => l.Name == "zh-CN").ShouldNotBeNull();
+            languages.FirstOrDefault(l => l.Name == "zh-Hans").ShouldNotBeNull();
         }
     }
 }
