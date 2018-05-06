@@ -10,21 +10,7 @@ namespace Abp.Reflection
         /// </summary>
         public static object UnProxy(object obj)
         {
-            if (obj.GetType().Namespace != "Castle.Proxies")
-            {
-                return obj;
-            }
-
-            var targetField = obj.GetType()
-                .GetFields(BindingFlags.Instance | BindingFlags.NonPublic)
-                .FirstOrDefault(f => f.Name == "__target");
-
-            if (targetField == null)
-            {
-                return obj;
-            }
-
-            return targetField.GetValue(obj);
+            return Castle.DynamicProxy.ProxyUtil.GetUnproxiedInstance(obj);
         }
     }
 }
