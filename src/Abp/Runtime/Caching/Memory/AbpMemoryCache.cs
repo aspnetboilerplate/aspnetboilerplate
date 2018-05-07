@@ -67,5 +67,7 @@ namespace Abp.Runtime.Caching.Memory
             _memoryCache.Dispose();
             base.Dispose();
         }
+
+        public override long Count => _memoryCache.Count;
     }
 }
