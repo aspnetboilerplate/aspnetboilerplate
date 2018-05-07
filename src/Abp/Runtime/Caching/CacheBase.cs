@@ -170,5 +170,7 @@ namespace Abp.Runtime.Caching
         {
 
         }
+
+        public virtual long Count => throw new NotImplementedException();
     }
 }

@@ -107,5 +107,7 @@ namespace Abp.Runtime.Caching
         /// Clears all items in this cache.
         /// </summary>
         Task ClearAsync();
+
+        long Count { get; }
     }
 }
