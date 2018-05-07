@@ -3,6 +3,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using Abp.Application.Features;
 using Abp.Authorization.Users;
+using Abp.Collections.Extensions;
 using Abp.Domain.Services;
 using Abp.Domain.Uow;
 using Abp.IdentityFramework;
@@ -209,6 +210,7 @@ namespace Abp.Authorization.Roles
                 return;
             }
 
+            await RolePermissionStore.RemovePermissionAsync(role, new PermissionGrantInfo(permission.Name, false));
             await RolePermissionStore.AddPermissionAsync(role, new PermissionGrantInfo(permission.Name, true));
         }
 
@@ -225,6 +227,7 @@ namespace Abp.Authorization.Roles
             }
 
             await RolePermissionStore.RemovePermissionAsync(role, new PermissionGrantInfo(permission.Name, true));
+            await RolePermissionStore.AddPermissionAsync(role, new PermissionGrantInfo(permission.Name, false));
         }
 
         /// <summary>
@@ -242,7 +245,6 @@ namespace Abp.Authorization.Roles
         /// <summary>
         /// Resets all permission settings for a role.
         /// It removes all permission settings for the role.
-        /// Role will have permissions those have <see cref="Permission.IsGrantedByDefault"/> set to true.
         /// </summary>
         /// <param name="role">Role</param>
         public async Task ResetAllPermissionsAsync(TRole role)
@@ -402,11 +404,33 @@ namespace Abp.Authorization.Roles
             {
                 var newCacheItem = new RolePermissionCacheItem(roleId);
 
+                var role = await Store.FindByIdAsync(roleId);
+                if (role == null)
+                {
+                    throw new AbpException("There is no role with given id: " + roleId);
+                }
+
+                var staticRoleDefinition = RoleManagementConfig.StaticRoles.FirstOrDefault(r => r.RoleName == role.Name);
+                if (staticRoleDefinition != null)
+                {
+                    foreach (var permission in PermissionManager.GetAllPermissions())
+                    {
+                        if (staticRoleDefinition.IsGrantedByDefault(permission))
+                        {
+                            newCacheItem.GrantedPermissions.Add(permission.Name);
+                        }
+                    }
+                }
+
                 foreach (var permissionInfo in await RolePermissionStore.GetPermissionsAsync(roleId))
                 {
                     if (permissionInfo.IsGranted)
                     {
-                        newCacheItem.GrantedPermissions.Add(permissionInfo.Name);
+                        newCacheItem.GrantedPermissions.AddIfNotContains(permissionInfo.Name);
+                    }
+                    else
+                    {
+                        newCacheItem.GrantedPermissions.Remove(permissionInfo.Name);
                     }
                 }
 
