@@ -6,7 +6,7 @@ using Xunit;
 
 namespace Abp.Zero.MultiLingual
 {
-    public class MultiLingual_Mapping_Tests: AbpZeroTestBase
+    public class MultiLingual_Mapping_Tests : AbpZeroTestBase
     {
         private readonly IProductAppService _productAppService;
 
@@ -55,6 +55,21 @@ namespace Abp.Zero.MultiLingual
 
             product3.Language.ShouldBe("it");
             product3.Name.ShouldBe("Giornale");
+        }
+
+        [Fact]
+        public async Task CreateMultiLingualMap_Tests_Dont_Override_MultiLingual_Entity_Id()
+        {
+            CultureInfo.CurrentUICulture = new CultureInfo("tr");
+
+            var products = await _productAppService.GetProducts();
+            products.ShouldNotBeNull();
+
+            var product1 = products.Items[0];
+
+            product1.Language.ShouldBe("tr");
+            product1.Name.ShouldBe("Saat");
+            product1.Id.ShouldBe(1);
         }
     }
 }
