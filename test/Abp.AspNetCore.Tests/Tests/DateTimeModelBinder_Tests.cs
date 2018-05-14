@@ -91,6 +91,23 @@ namespace Abp.AspNetCore.Tests
         }
 
         [Theory]
+        [InlineData("2016-04-13T08:58:10.526Z")]
+        public async Task Controller_Should_Not_Throw_Exception_When_Correct_DateTime_Is_Provided(string date)
+        {
+            Clock.Provider = ClockProviders.Utc;
+
+            await GetResponseAsObjectAsync<AjaxResponse<SimpleDateModel4>>(
+                GetUrl<SimpleTestController>(
+                    nameof(SimpleTestController.GetNotNormalizedDateTimeKindProperty4),
+                    new
+                    {
+                        date = WebUtility.UrlEncode(date)
+                    }
+                )
+            );
+        }
+
+        [Theory]
         [InlineData("2016-04-13T08:58:10.526Z", "local")]
         [InlineData("2016-04-13T08:58:10.526", "unspecified")]
         [InlineData("2016-04-13 08:58:10.526Z", "local")]
