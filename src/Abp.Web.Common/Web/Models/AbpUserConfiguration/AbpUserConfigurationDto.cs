@@ -1,5 +1,4 @@
 using System.Collections.Generic;
-using Abp.Web.Configuration;
 
 namespace Abp.Web.Models.AbpUserConfiguration
 {
