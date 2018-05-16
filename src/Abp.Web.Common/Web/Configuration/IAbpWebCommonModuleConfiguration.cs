@@ -1,4 +1,5 @@
-﻿using Abp.Web.Api.ProxyScripting.Configuration;
+﻿using System.Collections.Generic;
+using Abp.Web.Api.ProxyScripting.Configuration;
 using Abp.Web.MultiTenancy;
 using Abp.Web.Security.AntiForgery;
 
@@ -31,5 +32,7 @@ namespace Abp.Web.Configuration
         IWebEmbeddedResourcesConfiguration EmbeddedResources { get; }
 
         IWebMultiTenancyConfiguration MultiTenancy { get; }
+
+        IList<CustomDataConfigProvider> CustomDataConfigProviders { get; set; }
     }
 }
