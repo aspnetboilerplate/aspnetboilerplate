@@ -20,6 +20,8 @@ namespace Abp.Web.Configuration
 {
     public class AbpUserConfigurationBuilder : ITransientDependency
     {
+        private readonly IAbpStartupConfiguration _startupConfiguration;
+
         protected IMultiTenancyConfig MultiTenancyConfig { get; }
         protected ILanguageManager LanguageManager { get; }
         protected ILocalizationManager LocalizationManager { get; }
@@ -32,6 +34,7 @@ namespace Abp.Web.Configuration
         protected IAbpAntiForgeryConfiguration AbpAntiForgeryConfiguration { get; }
         protected IAbpSession AbpSession { get; }
         protected IPermissionChecker PermissionChecker { get; }
+        protected Dictionary<string, object> CustomDataConfig { get; }
 
         private readonly IIocResolver _iocResolver;
 
@@ -48,7 +51,8 @@ namespace Abp.Web.Configuration
             IAbpAntiForgeryConfiguration abpAntiForgeryConfiguration,
             IAbpSession abpSession,
             IPermissionChecker permissionChecker,
-            IIocResolver iocResolver)
+            IIocResolver iocResolver,
+            IAbpStartupConfiguration startupConfiguration)
         {
             MultiTenancyConfig = multiTenancyConfig;
             LanguageManager = languageManager;
@@ -63,6 +67,9 @@ namespace Abp.Web.Configuration
             AbpSession = abpSession;
             PermissionChecker = permissionChecker;
             _iocResolver = iocResolver;
+            _startupConfiguration = startupConfiguration;
+
+            CustomDataConfig = new Dictionary<string, object>();
         }
 
         public virtual async Task<AbpUserConfigurationDto> GetAll()
@@ -78,7 +85,8 @@ namespace Abp.Web.Configuration
                 Setting = await GetUserSettingConfig(),
                 Clock = GetUserClockConfig(),
                 Timing = await GetUserTimingConfig(),
-                Security = GetUserSecurityConfig()
+                Security = GetUserSecurityConfig(),
+                Custom = _startupConfiguration.GetCustomConfig()
             };
         }
 

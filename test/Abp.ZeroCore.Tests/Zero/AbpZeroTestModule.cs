@@ -1,7 +1,4 @@
-﻿using System;
-using Abp.AutoMapper;
-using Abp.Localization.Dictionaries.Xml;
-using Abp.Localization.Sources;
+﻿using Abp.AutoMapper;
 using Abp.Modules;
 using Abp.Reflection.Extensions;
 using Abp.TestBase;
