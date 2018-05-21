@@ -32,7 +32,5 @@ namespace Abp.Web.Configuration
         IWebEmbeddedResourcesConfiguration EmbeddedResources { get; }
 
         IWebMultiTenancyConfiguration MultiTenancy { get; }
-
-        IList<CustomDataConfigProvider> CustomDataConfigProviders { get; set; }
     }
 }

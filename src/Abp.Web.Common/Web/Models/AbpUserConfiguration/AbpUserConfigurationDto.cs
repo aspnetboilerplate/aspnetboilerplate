@@ -24,6 +24,6 @@ namespace Abp.Web.Models.AbpUserConfiguration
 
         public AbpUserSecurityConfigDto Security { get; set; }
 
-        public Dictionary<string, object> CustomDataConfig { get; set; }
+        public Dictionary<string, object> Custom { get; set; }
     }
 }

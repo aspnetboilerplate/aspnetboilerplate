@@ -17,20 +17,16 @@ namespace Abp.Web.Configuration
 
         public IWebMultiTenancyConfiguration MultiTenancy { get; }
 
-        public IList<CustomDataConfigProvider> CustomDataConfigProviders { get; set; }
-
         public AbpWebCommonModuleConfiguration(
             IApiProxyScriptingConfiguration apiProxyScripting, 
             IAbpAntiForgeryConfiguration abpAntiForgery,
             IWebEmbeddedResourcesConfiguration embeddedResources, 
-            IWebMultiTenancyConfiguration multiTenancy, 
-            IList<CustomDataConfigProvider> customDataConfigProviders)
+            IWebMultiTenancyConfiguration multiTenancy)
         {
             ApiProxyScripting = apiProxyScripting;
             AntiForgery = abpAntiForgery;
             EmbeddedResources = embeddedResources;
             MultiTenancy = multiTenancy;
-            CustomDataConfigProviders = customDataConfigProviders;
         }
     }
 }

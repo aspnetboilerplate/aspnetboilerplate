@@ -20,7 +20,7 @@ namespace Abp.Web.Configuration
 {
     public class AbpUserConfigurationBuilder : ITransientDependency
     {
-        private readonly IAbpWebCommonModuleConfiguration _configuration;
+        private readonly IAbpStartupConfiguration _startupConfiguration;
 
         protected IMultiTenancyConfig MultiTenancyConfig { get; }
         protected ILanguageManager LanguageManager { get; }
@@ -52,8 +52,8 @@ namespace Abp.Web.Configuration
             IAbpSession abpSession,
             IPermissionChecker permissionChecker,
             IIocResolver iocResolver,
-            Dictionary<string, object> customDataConfig, 
-            IAbpWebCommonModuleConfiguration configuration)
+            Dictionary<string, object> customDataConfig,
+            IAbpStartupConfiguration startupConfiguration)
         {
             MultiTenancyConfig = multiTenancyConfig;
             LanguageManager = languageManager;
@@ -69,12 +69,12 @@ namespace Abp.Web.Configuration
             PermissionChecker = permissionChecker;
             _iocResolver = iocResolver;
             CustomDataConfig = customDataConfig;
-            _configuration = configuration;
+            _startupConfiguration = startupConfiguration;
         }
 
         public virtual async Task<AbpUserConfigurationDto> GetAll()
         {
-            var config = new AbpUserConfigurationDto
+            return new AbpUserConfigurationDto
             {
                 MultiTenancy = GetUserMultiTenancyConfig(),
                 Session = GetUserSessionConfig(),
@@ -85,17 +85,9 @@ namespace Abp.Web.Configuration
                 Setting = await GetUserSettingConfig(),
                 Clock = GetUserClockConfig(),
                 Timing = await GetUserTimingConfig(),
-                Security = GetUserSecurityConfig()
+                Security = GetUserSecurityConfig(),
+                Custom = _startupConfiguration.GetCustomConfig()
             };
-
-            foreach (var provider in _configuration.CustomDataConfigProviders)
-            {
-                config.CustomDataConfig = config.CustomDataConfig
-                    .Concat(provider.GetConfig())
-                    .ToDictionary(key => key.Key, value => value.Value);
-            }
-
-            return config;
         }
 
         protected virtual AbpMultiTenancyConfigDto GetUserMultiTenancyConfig()
