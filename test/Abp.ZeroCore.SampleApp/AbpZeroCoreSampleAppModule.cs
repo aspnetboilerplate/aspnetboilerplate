@@ -32,6 +32,8 @@ namespace Abp.ZeroCore.SampleApp
             Configuration.Authorization.Providers.Add<AppAuthorizationProvider>();
 
             Configuration.Features.Providers.Add<AppFeatureProvider>();
+
+            Configuration.CustomConfigProviders.Add(new TestCustomConfigProvider());
         }
 
         public override void Initialize()

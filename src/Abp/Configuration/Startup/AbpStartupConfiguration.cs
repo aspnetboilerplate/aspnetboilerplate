@@ -104,7 +104,7 @@ namespace Abp.Configuration.Startup
 
         public IEntityHistoryConfiguration EntityHistory { get; private set; }
 
-        public IList<ICustomConfigProvider> CustomConfigProviders { get; set; }
+        public IList<ICustomConfigProvider> CustomConfigProviders { get; private set; }
 
         public Dictionary<string, object> GetCustomConfig()
         {
@@ -149,8 +149,8 @@ namespace Abp.Configuration.Startup
             Notifications = IocManager.Resolve<INotificationConfiguration>();
             EmbeddedResources = IocManager.Resolve<IEmbeddedResourcesConfiguration>();
             EntityHistory = IocManager.Resolve<IEntityHistoryConfiguration>();
-            CustomConfigProviders = IocManager.Resolve<List<ICustomConfigProvider>>();
 
+            CustomConfigProviders = new List<ICustomConfigProvider>();
             ServiceReplaceActions = new Dictionary<Type, Action>();
         }
 

@@ -123,7 +123,7 @@ namespace Abp.Configuration.Startup
         /// </summary>
         T Get<T>();
 
-        IList<ICustomConfigProvider> CustomConfigProviders { get; set; }
+        IList<ICustomConfigProvider> CustomConfigProviders { get; }
 
         Dictionary<string, object> GetCustomConfig();
     }

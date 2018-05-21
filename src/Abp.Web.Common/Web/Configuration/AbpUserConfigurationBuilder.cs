@@ -52,7 +52,6 @@ namespace Abp.Web.Configuration
             IAbpSession abpSession,
             IPermissionChecker permissionChecker,
             IIocResolver iocResolver,
-            Dictionary<string, object> customDataConfig,
             IAbpStartupConfiguration startupConfiguration)
         {
             MultiTenancyConfig = multiTenancyConfig;
@@ -68,8 +67,9 @@ namespace Abp.Web.Configuration
             AbpSession = abpSession;
             PermissionChecker = permissionChecker;
             _iocResolver = iocResolver;
-            CustomDataConfig = customDataConfig;
             _startupConfiguration = startupConfiguration;
+
+            CustomDataConfig = new Dictionary<string, object>();
         }
 
         public virtual async Task<AbpUserConfigurationDto> GetAll()
