@@ -401,7 +401,7 @@ namespace Abp.Authorization.Roles
         {
             var cacheKey = roleId + "@" + (GetCurrentTenantId() ?? 0);
 
-            var cacheItem = await CacheManager.GetRolePermissionCache().GetAsync(cacheKey, async () =>
+            return await CacheManager.GetRolePermissionCache().GetAsync(cacheKey, async () =>
             {
                 var newCacheItem = new RolePermissionCacheItem(roleId);
 
@@ -438,8 +438,6 @@ namespace Abp.Authorization.Roles
 
                 return newCacheItem;
             });
-
-            return cacheItem;
         }
 
         private string L(string name)
