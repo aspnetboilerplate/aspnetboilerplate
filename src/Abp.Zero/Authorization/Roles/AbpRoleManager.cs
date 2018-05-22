@@ -51,9 +51,9 @@ namespace Abp.Authorization.Roles
         protected AbpRoleStore<TRole, TUser> AbpStore { get; private set; }
 
         protected IPermissionManager PermissionManager { get; }
-        
+
         protected ICacheManager CacheManager { get; }
-        
+
         protected IUnitOfWorkManager UnitOfWorkManager { get; }
 
         /// <summary>
@@ -339,8 +339,8 @@ namespace Abp.Authorization.Roles
             FeatureDependencyContext.TenantId = role.TenantId;
 
             var permissions = PermissionManager.GetAllPermissions(role.GetMultiTenancySide())
-                                                .Where(permission => 
-                                                    permission.FeatureDependency == null || 
+                                                .Where(permission =>
+                                                    permission.FeatureDependency == null ||
                                                     permission.FeatureDependency.IsSatisfied(FeatureDependencyContext)
                                                 );
 
@@ -400,7 +400,8 @@ namespace Abp.Authorization.Roles
         private async Task<RolePermissionCacheItem> GetRolePermissionCacheItemAsync(int roleId)
         {
             var cacheKey = roleId + "@" + (GetCurrentTenantId() ?? 0);
-            return await CacheManager.GetRolePermissionCache().GetAsync(cacheKey, async () =>
+
+            var cacheItem = await CacheManager.GetRolePermissionCache().GetAsync(cacheKey, async () =>
             {
                 var newCacheItem = new RolePermissionCacheItem(roleId);
 
@@ -410,7 +411,8 @@ namespace Abp.Authorization.Roles
                     throw new AbpException("There is no role with given id: " + roleId);
                 }
 
-                var staticRoleDefinition = RoleManagementConfig.StaticRoles.FirstOrDefault(r => r.RoleName == role.Name);
+                var staticRoleDefinition = RoleManagementConfig.StaticRoles.FirstOrDefault(r =>
+                    r.RoleName == role.Name && r.Side == role.GetMultiTenancySide());
                 if (staticRoleDefinition != null)
                 {
                     foreach (var permission in PermissionManager.GetAllPermissions())
@@ -436,6 +438,8 @@ namespace Abp.Authorization.Roles
 
                 return newCacheItem;
             });
+
+            return cacheItem;
         }
 
         private string L(string name)
