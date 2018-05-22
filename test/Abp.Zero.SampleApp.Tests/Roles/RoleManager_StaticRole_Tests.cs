@@ -29,6 +29,15 @@ namespace Abp.Zero.SampleApp.Tests.Roles
             _roleManagementConfig.StaticRoles.Add(
                 new StaticRoleDefinition(
                     "admin",
+                    MultiTenancySides.Host)
+                {
+                    GrantedPermissions = { "Permission5" }
+                }
+            );
+
+            _roleManagementConfig.StaticRoles.Add(
+                new StaticRoleDefinition(
+                    "admin",
                     MultiTenancySides.Tenant,
                     grantAllPermissionsByDefault: true)
             );
@@ -77,6 +86,7 @@ namespace Abp.Zero.SampleApp.Tests.Roles
             (await RoleManager.IsGrantedAsync(adminRole.Id, "Permission2")).ShouldBe(true);
             (await RoleManager.IsGrantedAsync(adminRole.Id, "Permission3")).ShouldBe(true);
             (await RoleManager.IsGrantedAsync(adminRole.Id, "Permission4")).ShouldBe(true);
+            (await RoleManager.IsGrantedAsync(adminRole.Id, "Permission5")).ShouldBe(false);
 
             (await RoleManager.IsGrantedAsync(supporterRole.Id, "Permission1")).ShouldBe(true);
             (await RoleManager.IsGrantedAsync(supporterRole.Id, "Permission2")).ShouldBe(true);
