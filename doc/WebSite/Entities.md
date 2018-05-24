@@ -237,6 +237,10 @@ also corresponding interfaces for other entity classes. We don't recommend
 you do this unless you have a good reason not to derive from the
 Entity classes.
 
+### Multi-Lingual Entities
+
+ASP.NET Boilerplate provides a simple way for defining and using Multi-Lingual entities. For more information see [Multi-Lingual Entities](Multi-Lingual-Entities.md).
+
 ### IExtendableObject Interface
 
 ASP.NET Boilerplate provides a simple interface, **IExtendableObject**,
@@ -259,7 +263,7 @@ this simple entity:
 which is used to store **JSON formatted** name value objects. Example:
 
     var person = new Person("John");
-
+    
     person.SetData("RandomValue", RandomHelper.GetRandom(1, 1000));
     person.SetData("CustomData", new MyCustomObject { Value1 = 42, Value2 = "forty-two" });
 

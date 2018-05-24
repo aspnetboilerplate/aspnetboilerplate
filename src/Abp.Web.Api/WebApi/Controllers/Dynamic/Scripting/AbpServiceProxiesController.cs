@@ -8,7 +8,7 @@ using Abp.WebApi.Controllers.Dynamic.Formatters;
 namespace Abp.WebApi.Controllers.Dynamic.Scripting
 {
     /// <summary>
-    /// This class is used to create proxies to call dynamic api methods from Javascript clients.
+    /// This class is used to create proxies to call dynamic api methods from JavaScript clients.
     /// </summary>
     [DontWrapResult]
     [DisableAuditing]
@@ -23,7 +23,7 @@ namespace Abp.WebApi.Controllers.Dynamic.Scripting
         }
 
         /// <summary>
-        /// Gets javascript proxy for given service name.
+        /// Gets JavaScript proxy for given service name.
         /// </summary>
         /// <param name="name">Name of the service</param>
         /// <param name="type">Script type</param>
@@ -36,7 +36,7 @@ namespace Abp.WebApi.Controllers.Dynamic.Scripting
         }
 
         /// <summary>
-        /// Gets javascript proxy for all services.
+        /// Gets JavaScript proxy for all services.
         /// </summary>
         /// <param name="type">Script type</param>
         public HttpResponseMessage GetAll(ProxyScriptType type = ProxyScriptType.JQuery)

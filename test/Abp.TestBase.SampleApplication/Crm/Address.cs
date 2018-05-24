@@ -1,6 +1,7 @@
 using System;
 using System.ComponentModel.DataAnnotations.Schema;
 using Abp.Domain.Entities.Auditing;
+using Abp.Timing;
 
 namespace Abp.TestBase.SampleApplication.Crm
 {
@@ -24,5 +25,16 @@ namespace Abp.TestBase.SampleApplication.Crm
         public string Name { get; set; }
 
         public DateTime? ModificationTime { get; set; }
+    }
+
+    [ComplexType]
+    public class Location : IHasCreationTime
+    {
+        public string Lat { get; set; }
+
+        public string Lng { get; set; }
+
+        [DisableDateTimeNormalization]
+        public DateTime CreationTime { get; set; }
     }
 }

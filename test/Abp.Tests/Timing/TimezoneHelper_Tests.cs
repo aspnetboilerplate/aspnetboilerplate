@@ -47,7 +47,7 @@ namespace Abp.Tests.Timing
         [Fact]
         public void All_Windows_Timezones_Should_Be_Convertable_To_Iana()
         {
-            var allTimezones = TimezoneHelper.GetWindowsTimeZoneInfos();
+            var allTimezones = TimezoneHelper.GetWindowsTimeZoneIds();
 
             Should.NotThrow(() =>
             {
@@ -57,7 +57,7 @@ namespace Abp.Tests.Timing
                 {
                     try
                     {
-                        TimezoneHelper.WindowsToIana(timezone.Id);
+                        TimezoneHelper.WindowsToIana(timezone);
                     }
                     catch (Exception ex)
                     {

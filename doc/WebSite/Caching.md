@@ -158,7 +158,7 @@ transient (as in this example) or a singleton. This does not mean the
 cached data is transient. It's always cached globally and accessed in a
 thread-safe manner in your application.
 
-Whenever we now need the **Name** of a person, we can get it from the cache by using
+Whenever we need the **Name** of a person, we can get it from the cache by using
 the person's **Id**. Here's an example class that uses the Person cache:
 
     public class MyPersonService : ITransientDependency

@@ -24,6 +24,7 @@ namespace Abp.Zero.EntityHistory
     {
         private readonly IRepository<Blog> _blogRepository;
         private readonly IRepository<Post, Guid> _postRepository;
+        private readonly IRepository<Comment> _commentRepository;
 
         private IEntityHistoryStore _entityHistoryStore;
 
@@ -31,6 +32,7 @@ namespace Abp.Zero.EntityHistory
         {
             _blogRepository = Resolve<IRepository<Blog>>();
             _postRepository = Resolve<IRepository<Post, Guid>>();
+            _commentRepository = Resolve<IRepository<Comment>>();
 
             Resolve<IEntityHistoryConfiguration>().IsEnabledForAnonymousUsers = true;
         }
@@ -59,7 +61,7 @@ namespace Abp.Zero.EntityHistory
                      s.EntityChanges[0].ChangeType == EntityChangeType.Created &&
                      s.EntityChanges[0].EntityId == blog2Id.ToJsonString(false, false) &&
                      s.EntityChanges[0].EntityTypeFullName == typeof(Blog).FullName &&
-                     s.EntityChanges[0].PropertyChanges.Count == 3 && // Blog.Id, Blog.Name, Blog.Url
+                     s.EntityChanges[0].PropertyChanges.Count == 2 && // Blog.Name, Blog.Url
 
                      // Check "who did this change"
                      s.ImpersonatorTenantId == AbpSession.ImpersonatorTenantId &&
@@ -112,7 +114,7 @@ namespace Abp.Zero.EntityHistory
 
             UsingDbContext(tenantId, (context) =>
             {
-                context.EntityPropertyChanges.Count(f => f.TenantId == tenantId).ShouldBe(3);
+                context.EntityPropertyChanges.Count(f => f.TenantId == tenantId).ShouldBe(2);
             });
         }
 
@@ -171,9 +173,33 @@ namespace Abp.Zero.EntityHistory
         }
 
         [Fact]
+        public void Should_Write_History_For_Tracked_Property_Foreign_Key_Shadow()
+        {
+            /* Comment has Audited attribute. */
+
+            using (var uow = Resolve<IUnitOfWorkManager>().Begin())
+            {
+                var comment1 = _commentRepository.Single(b => b.Content == "test-comment-1-content");
+                var post2 = _postRepository.Single(b => b.Body == "test-post-2-body");
+
+                // Change foreign key by assigning navigation property
+                comment1.Post = post2;
+                _commentRepository.Update(comment1);
+
+                uow.Complete();
+            }
+
+            _entityHistoryStore.Received().SaveAsync(Arg.Is<EntityChangeSet>(
+                s => s.EntityChanges.Count == 1 &&
+                     s.EntityChanges[0].PropertyChanges.Count == 1 &&
+                     s.EntityChanges[0].PropertyChanges.First().PropertyName == "PostId"
+            ));
+        }
+
+        [Fact]
         public void Should_Write_History_But_Not_For_Property_If_Disabled_History_Tracking()
         {
-            /* Blog.Name has DisableHistoryTracking attribute. */
+            /* Blog.Name has DisableAuditing attribute. */
 
             using (var uow = Resolve<IUnitOfWorkManager>().Begin())
             {

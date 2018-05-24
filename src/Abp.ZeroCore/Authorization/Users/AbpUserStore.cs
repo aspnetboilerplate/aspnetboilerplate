@@ -1220,20 +1220,11 @@ namespace Abp.Authorization.Users
 
         public async Task<string> GetUserNameFromDatabaseAsync(long userId)
         {
-            //note: This workaround will not be needed after fixing https://github.com/aspnetboilerplate/aspnetboilerplate/issues/1828
-            var outerUow = _unitOfWorkManager.Current;
             using (var uow = _unitOfWorkManager.Begin(new UnitOfWorkOptions
             {
-                Scope = TransactionScopeOption.RequiresNew,
-                IsTransactional = false,
-                IsolationLevel = IsolationLevel.ReadUncommitted
+                Scope = TransactionScopeOption.Suppress
             }))
             {
-                if (outerUow != null)
-                {
-                    _unitOfWorkManager.Current.SetTenantId(outerUow.GetTenantId());
-                }
-
                 var user = await UserRepository.GetAsync(userId);
                 await uow.CompleteAsync();
                 return user.UserName;

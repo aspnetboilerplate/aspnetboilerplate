@@ -1,3 +1,4 @@
+#tool nuget:?package=vswhere
 #tool "nuget:?package=xunit.runner.console&version=2.3.0-beta5-build3769"
 
 //////////////////////////////////////////////////////////////////////
@@ -11,6 +12,11 @@ var target = Argument("target", "Default");
 var configuration = Argument("configuration", "Release");
 var toolpath = Argument("toolpath", @"tools");
 var branch = Argument("branch", EnvironmentVariable("APPVEYOR_REPO_BRANCH"));
+
+var vsLatest  = VSWhereLatest();
+var msBuildPathX64 = (vsLatest==null)
+                            ? null
+                            : vsLatest.CombineWithFilePath("./MSBuild/15.0/Bin/amd64/MSBuild.exe");
 
 var testProjects = new List<Tuple<string, string[]>>
                 {
@@ -69,24 +75,22 @@ Task("Build")
     .IsDependentOn("Restore-NuGet-Packages")
     .Does(() =>
     {
-        MSBuild(solution, new MSBuildSettings(){Configuration = configuration}
+        MSBuild(solution, new MSBuildSettings(){Configuration = configuration, ToolPath = msBuildPathX64}
                                                .WithProperty("SourceLinkCreate","true"));
     });
 
 Task("Run-Unit-Tests")
     .IsDependentOn("Build")
-    .Does(() =>
+    .DoesForEach(testProjects, testProject =>
     {
-        foreach (Tuple<string, string[]> testProject in testProjects)
-        {
-            foreach (string targetFramework in testProject.Item2)
-            {
-                Information($"Test execution started for target frameowork: {targetFramework}...");
-                var testProj = GetFiles($"./test/**/*{testProject.Item1}.csproj").First();
-                DotNetCoreTest(testProj.FullPath, new DotNetCoreTestSettings { Configuration = "Release", Framework = targetFramework });                              
-            }
-        }
-    });
+      foreach (string targetFramework in testProject.Item2)
+      {
+        Information($"Test execution started for target frameowork: {targetFramework}...");
+        var testProj = GetFiles($"./test/**/*{testProject.Item1}.csproj").First();
+        DotNetCoreTest(testProj.FullPath, new DotNetCoreTestSettings { Configuration = "Release", Framework = targetFramework });                              
+      }
+    })
+    .DeferOnError();
     
 
 //////////////////////////////////////////////////////////////////////

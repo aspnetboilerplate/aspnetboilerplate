@@ -8,7 +8,7 @@ namespace Abp.Web.Authorization
     public interface IAuthorizationScriptManager
     {
         /// <summary>
-        /// Gets Javascript that contains all authorization information.
+        /// Gets JavaScript that contains all authorization information.
         /// </summary>
         Task<string> GetScriptAsync();
     }

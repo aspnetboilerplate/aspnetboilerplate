@@ -9,9 +9,11 @@ using Abp.Configuration.Startup;
 using Abp.Domain.Repositories;
 using Abp.Domain.Services;
 using Abp.Domain.Uow;
+using Abp.Json;
 using Abp.Localization;
 using Abp.MultiTenancy;
 using Abp.Organizations;
+using Abp.Reflection;
 using Abp.Runtime.Caching;
 using Abp.Runtime.Session;
 using Abp.UI;
@@ -21,6 +23,7 @@ using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
+using Newtonsoft.Json;
 
 namespace Abp.Authorization.Users
 {
@@ -60,6 +63,7 @@ namespace Abp.Authorization.Users
         private readonly IRepository<UserOrganizationUnit, long> _userOrganizationUnitRepository;
         private readonly IOrganizationUnitSettings _organizationUnitSettings;
         private readonly ISettingManager _settingManager;
+        private readonly IOptions<IdentityOptions> _optionsAccessor;
 
         public AbpUserManager(
             AbpRoleManager<TRole, TUser> roleManager,
@@ -97,6 +101,7 @@ namespace Abp.Authorization.Users
             _userOrganizationUnitRepository = userOrganizationUnitRepository;
             _organizationUnitSettings = organizationUnitSettings;
             _settingManager = settingManager;
+            _optionsAccessor = optionsAccessor;
 
             AbpStore = store;
             RoleManager = roleManager;
@@ -135,19 +140,19 @@ namespace Abp.Authorization.Users
         /// <summary>
         /// Check whether a user is granted for a permission.
         /// </summary>
-        /// <param name="userId">User id</param>
+        /// <param name="user">User</param>
         /// <param name="permission">Permission</param>
-        public virtual async Task<bool> IsGrantedAsync(long userId, Permission permission)
+        public virtual Task<bool> IsGrantedAsync(TUser user, Permission permission)
         {
-            return await IsGrantedAsync(await GetUserByIdAsync(userId), permission);
+            return IsGrantedAsync(user.Id, permission);
         }
 
         /// <summary>
         /// Check whether a user is granted for a permission.
         /// </summary>
-        /// <param name="user">User</param>
+        /// <param name="userId">User id</param>
         /// <param name="permission">Permission</param>
-        public virtual async Task<bool> IsGrantedAsync(TUser user, Permission permission)
+        public virtual async Task<bool> IsGrantedAsync(long userId, Permission permission)
         {
             //Check for multi-tenancy side
             if (!permission.MultiTenancySides.HasFlag(GetCurrentMultiTenancySide()))
@@ -158,7 +163,7 @@ namespace Abp.Authorization.Users
             //Check for depended features
             if (permission.FeatureDependency != null && GetCurrentMultiTenancySide() == MultiTenancySides.Tenant)
             {
-                FeatureDependencyContext.TenantId = user.TenantId;
+                FeatureDependencyContext.TenantId = GetCurrentTenantId();
 
                 if (!await permission.FeatureDependency.IsSatisfiedAsync(FeatureDependencyContext))
                 {
@@ -167,7 +172,7 @@ namespace Abp.Authorization.Users
             }
 
             //Get cached user permissions
-            var cacheItem = await GetUserPermissionCacheItemAsync(user.Id);
+            var cacheItem = await GetUserPermissionCacheItemAsync(userId);
             if (cacheItem == null)
             {
                 return false;
@@ -576,8 +581,8 @@ namespace Abp.Authorization.Users
 
         public virtual async Task InitializeOptionsAsync(int? tenantId)
         {
-            Options = new IdentityOptions();
-
+            Options = JsonConvert.DeserializeObject<IdentityOptions>(_optionsAccessor.Value.ToJsonString());
+            
             //Lockout
             Options.Lockout.AllowedForNewUsers = await IsTrueAsync(AbpZeroSettingNames.UserManagement.UserLockOut.IsEnabled, tenantId);
             Options.Lockout.DefaultLockoutTimeSpan = TimeSpan.FromSeconds(await GetSettingValueAsync<int>(AbpZeroSettingNames.UserManagement.UserLockOut.DefaultAccountLockoutSeconds, tenantId));

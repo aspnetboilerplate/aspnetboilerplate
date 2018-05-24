@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using Abp.Application.Features;
 using Abp.Auditing;
 using Abp.BackgroundJobs;
@@ -121,5 +122,9 @@ namespace Abp.Configuration.Startup
         /// Gets a configuration object.
         /// </summary>
         T Get<T>();
+
+        IList<ICustomConfigProvider> CustomConfigProviders { get; }
+
+        Dictionary<string, object> GetCustomConfig();
     }
 }

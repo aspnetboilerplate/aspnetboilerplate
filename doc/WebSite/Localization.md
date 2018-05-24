@@ -468,7 +468,7 @@ text:
 The localization method can also get additional format arguments. Example:
 
     abp.localization.localize('RoleDeleteWarningMessage', 'MySource', 'Admin');
-
+    
     //shortcut if the source is retrieved using getSource as shown above
     source('RoleDeleteWarningMessage', 'Admin');
 
@@ -537,7 +537,7 @@ We can then register it on the PreInitialize method of our module:
 ASP.NET Boilerplate overrides (merges) the base localization source with our
 XML files. We can also add new language files.
 
-**Note**: We can use JSON files to extend XML files, or vice verse.
+**Note**: We can use JSON files to extend XML files, or vice verse. The files created for extending localization sources must be marked as **embedded resource**.
 
 ### Getting Languages
 
