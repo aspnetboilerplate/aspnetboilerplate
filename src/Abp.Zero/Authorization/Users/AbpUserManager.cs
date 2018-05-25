@@ -123,7 +123,7 @@ namespace Abp.Authorization.Users
             var identityResult = await base.CreateAsync(user);
             if (identityResult.Succeeded)
             {
-                user.IsLockoutEnabled = isLockoutEnabled;
+                await SetLockoutEnabledAsync(user.Id, isLockoutEnabled);
             }
 
             return identityResult;
