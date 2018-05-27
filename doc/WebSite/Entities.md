@@ -137,7 +137,7 @@ There are also similar interfaces for modifications:
 ASP.NET Boilerplate automatically sets these properties when
 updating an entity. You just have to define them for your entity.
 
-If you want to implement all of the audit properties, you can direcly
+If you want to implement all of the audit properties, you can directly
 implement the **IAudited** interface:
 
     public interface IAudited : ICreationAudited, IModificationAudited
@@ -146,7 +146,7 @@ implement the **IAudited** interface:
     }
 
 As a shortcut, you can derive from the **AuditedEntity** class instead of
-direcly implementing **IAudited**. The AuditedEntity class also has a
+directly implementing **IAudited**. The AuditedEntity class also has a
 generic version for different types of Id properties.
 
 Note: ASP.NET Boilerplate gets the current user's Id from [ABP
@@ -155,7 +155,7 @@ Session](/Pages/Documents/Abp-Session).
 #### Soft Delete
 
 Soft delete is a commonly used pattern to mark an Entity as deleted
-instead of actually deleting it from database. For instace, you may not
+instead of actually deleting it from database. For instance, you may not
 want to hard delete a User from the database since it has many relations to
 other tables. The **ISoftDelete** interface is used for this purpose:
 
@@ -167,7 +167,7 @@ other tables. The **ISoftDelete** interface is used for this purpose:
 ASP.NET Boilerplate implements the soft delete pattern out-of-the-box. When
 a soft-delete entity is being deleted, ASP.NET Boilerplate detects this,
 prevents deleting, sets IsDeleted as true, and then updates the entity in the
-database. It also does not retrive (select) soft deleted entities from
+database. It also does not retrieve (select) soft deleted entities from
 the database by automatically filtering them.
 
 If you use soft delete, you may also want to store information of when an
