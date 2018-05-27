@@ -76,7 +76,7 @@ namespace Abp.Authorization.Users
             IRepository<UserOrganizationUnit, long> userOrganizationUnitRepository,
             IOrganizationUnitSettings organizationUnitSettings,
             ILocalizationManager localizationManager,
-            IdentityEmailMessageService emailService, 
+            IdentityEmailMessageService emailService,
             ISettingManager settingManager,
             IUserTokenProviderAccessor userTokenProviderAccessor)
             : base(userStore)
@@ -98,7 +98,7 @@ namespace Abp.Authorization.Users
             UserLockoutEnabledByDefault = true;
             DefaultAccountLockoutTimeSpan = TimeSpan.FromMinutes(5);
             MaxFailedAccessAttemptsBeforeLockout = 5;
-            
+
             EmailService = emailService;
 
             UserTokenProvider = userTokenProviderAccessor.GetUserTokenProviderOrNull<TUser>();
@@ -118,7 +118,15 @@ namespace Abp.Authorization.Users
                 user.TenantId = tenantId.Value;
             }
 
-            return await base.CreateAsync(user);
+            var isLockoutEnabled = user.IsLockoutEnabled;
+
+            var identityResult = await base.CreateAsync(user);
+            if (identityResult.Succeeded)
+            {
+                await SetLockoutEnabledAsync(user.Id, isLockoutEnabled);
+            }
+
+            return identityResult;
         }
 
         /// <summary>
@@ -167,7 +175,7 @@ namespace Abp.Authorization.Users
                     return false;
                 }
             }
-            
+
             //Get cached user permissions
             var cacheItem = await GetUserPermissionCacheItemAsync(userId);
             if (cacheItem == null)
