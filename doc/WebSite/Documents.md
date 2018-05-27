@@ -26,6 +26,7 @@ Common Structures
 Domain Layer
 
 -   [Entities](Entities.md)
+    -   [Multi-Lingual Entities](Multi-Lingual-Entities.md) <label class="label label-success">NEW</label>
 -   [Value Objects](Value-Objects.md)
 -   [Repositories](Repositories.md)
 -   [Domain Services](Domain-Services.md)
