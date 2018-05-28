@@ -1,6 +1,7 @@
 using System.Globalization;
 using System.Threading.Tasks;
 using Abp.Application.Features;
+using Abp.AspNetCore.Mvc.Alerts;
 using Abp.Authorization;
 using Abp.Configuration;
 using Abp.Dependency;
@@ -115,6 +116,11 @@ namespace Abp.AspNetCore.Mvc.Controllers
             }
             set { _unitOfWorkManager = value; }
         }
+
+        public IAlertManager AlertManager { get; set; }
+
+        public AlertList Alerts => AlertManager.Alerts;
+
         private IUnitOfWorkManager _unitOfWorkManager;
 
         /// <summary>
