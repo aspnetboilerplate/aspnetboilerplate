@@ -240,7 +240,7 @@ update the name of a person:
     }
 
 That's all you have to do! The name was updated. We didn't even have to call
-the \_personRepository.Update method. The O/RM framework keeps track of all
+the \_personRepository.Update method. The ORM framework keeps track of all
 the changes of entities in a unit of work and reflects these changes to the
 database.
 
