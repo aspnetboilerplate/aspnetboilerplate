@@ -5,8 +5,6 @@ using Abp.Configuration;
 using Abp.Extensions;
 using Abp.Localization;
 using Abp.Localization.Sources;
-using Microsoft.AspNetCore.Hosting;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc.Razor;
 using Microsoft.AspNetCore.Mvc.Razor.Internal;
 
