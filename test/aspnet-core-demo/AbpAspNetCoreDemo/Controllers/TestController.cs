@@ -7,17 +7,10 @@ namespace AbpAspNetCoreDemo.Controllers
 {
     public class TestController : DemoControllerBase
     {
-        private readonly IAlertManager _alertManager;
-
-        public TestController(IAlertManager alertManager)
-        {
-            _alertManager = alertManager;
-        }
-
         public IActionResult Index()
         {
             Alerts.Info("Test alert message!", "Test Alert");
-            return View(_alertManager.Alerts);
+            return View(AlertManager.Alerts);
         }
 
         [Route("api/test/getArray")]

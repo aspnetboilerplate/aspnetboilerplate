@@ -2,8 +2,7 @@
 
 namespace Abp.Web.Mvc.Alerts
 {
-    //todo: use ScopedDependency (inherit from IScopedDependency)
-    public class AlertManager : IAlertManager, ISingletonDependency
+    public class AlertManager : IAlertManager, IScopedDependency
     {
         public AlertList Alerts { get; }
 
