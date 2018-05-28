@@ -60,7 +60,7 @@ It's a regular DbContext class except with the following rules:
 -   It's derived from **AbpDbContext** instead of DbContext.
 -   It should have the constructors like the sample above (constructor
     parameter names should also be the same). Explanation:
-    -   The **Default** consturctor passes "Default" to the base bass as the
+    -   The **Default** constructor passes "Default" to the base class as the
         connection string. It expects a "Default" named connection
         string in the web.config/app.config file. This constructor is
         not used by ABP, but used by the EF command-line migration tool
