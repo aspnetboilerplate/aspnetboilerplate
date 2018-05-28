@@ -85,7 +85,7 @@ In some cases like editing a multi lingual entity on the UI, all translations ma
 	{
 		public decimal Price { get; set; }
 
-	    public List<ProductTranslationDto> Translations {get; set;}
+	    	public List<ProductTranslationDto> Translations {get; set;}
 	}
 
 
