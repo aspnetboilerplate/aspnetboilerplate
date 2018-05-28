@@ -2,8 +2,8 @@
 
 namespace Abp.Web.Mvc.Alerts
 {
-    //todo: use ScopedDependency instead of transient
-    public class AlertManager : IAlertManager, ITransientDependency
+    //todo: use ScopedDependency (inherit from IScopedDependency)
+    public class AlertManager : IAlertManager, ISingletonDependency
     {
         public AlertList Alerts { get; }
 
