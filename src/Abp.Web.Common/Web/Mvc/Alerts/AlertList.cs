@@ -1,6 +1,6 @@
 ﻿using System.Collections.Generic;
 
-namespace Abp.AspNetCore.Mvc.Alerts
+namespace Abp.Web.Mvc.Alerts
 {
     public class AlertList : List<AlertMessage>
     {

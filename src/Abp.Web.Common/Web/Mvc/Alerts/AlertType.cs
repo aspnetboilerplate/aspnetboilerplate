@@ -1,4 +1,4 @@
-﻿namespace Abp.AspNetCore.Mvc.Alerts
+﻿namespace Abp.Web.Mvc.Alerts
 {
     public enum AlertType
     {

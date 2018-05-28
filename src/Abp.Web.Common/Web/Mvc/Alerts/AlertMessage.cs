@@ -1,6 +1,6 @@
 ﻿using JetBrains.Annotations;
 
-namespace Abp.AspNetCore.Mvc.Alerts
+namespace Abp.Web.Mvc.Alerts
 {
     public class AlertMessage
     {

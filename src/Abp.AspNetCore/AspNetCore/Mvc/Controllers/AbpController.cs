@@ -1,7 +1,6 @@
 using System.Globalization;
 using System.Threading.Tasks;
 using Abp.Application.Features;
-using Abp.AspNetCore.Mvc.Alerts;
 using Abp.Authorization;
 using Abp.Configuration;
 using Abp.Dependency;
@@ -11,6 +10,7 @@ using Abp.Localization;
 using Abp.Localization.Sources;
 using Abp.ObjectMapping;
 using Abp.Runtime.Session;
+using Abp.Web.Mvc.Alerts;
 using Castle.Core.Logging;
 using Microsoft.AspNetCore.Mvc;
 
@@ -93,6 +93,7 @@ namespace Abp.AspNetCore.Mvc.Controllers
                 return _localizationSource;
             }
         }
+
         private ILocalizationSource _localizationSource;
 
         /// <summary>
