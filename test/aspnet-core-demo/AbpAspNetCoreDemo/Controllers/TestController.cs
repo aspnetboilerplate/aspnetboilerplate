@@ -1,14 +1,23 @@
 ﻿using System.ComponentModel.DataAnnotations;
 using Abp.Collections.Extensions;
+using Abp.Web.Mvc.Alerts;
 using Microsoft.AspNetCore.Mvc;
 
 namespace AbpAspNetCoreDemo.Controllers
 {
     public class TestController : DemoControllerBase
     {
+        private readonly IAlertManager _alertManager;
+
+        public TestController(IAlertManager alertManager)
+        {
+            _alertManager = alertManager;
+        }
+
         public IActionResult Index()
         {
-            return View();
+            Alerts.Info("Test alert message!", "Test Alert");
+            return View(_alertManager.Alerts);
         }
 
         [Route("api/test/getArray")]
