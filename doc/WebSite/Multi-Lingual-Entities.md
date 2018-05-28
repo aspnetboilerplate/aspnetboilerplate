@@ -8,14 +8,14 @@ ASP.NET Boilerplate defines two basic interfaces for Multi-Lingual entity defini
 
 A sample multi lingual entity would be;
 
-```c#
-public class Product : Entity, IMultiLingualEntity<ProductTranslation>
-{
-	public decimal Price { get; set; }
 
-	public ICollection<ProductTranslation> Translations { get; set; }
-}
-```
+	public class Product : Entity, IMultiLingualEntity<ProductTranslation>
+	{
+		public decimal Price { get; set; }
+
+		public ICollection<ProductTranslation> Translations { get; set; }
+	}
+
 
 #### IEntityTranslation
 
@@ -23,18 +23,17 @@ IEntityTranslation interface is used to mark translation of a Multi-Lingual enti
 
 A sample multi lingual entity would be;
 
-```c#
-public class ProductTranslation : Entity, IEntityTranslation<Product>
-{
-	public string Name { get; set; }
 
-	public Product Core { get; set; }
+	public class ProductTranslation : Entity, IEntityTranslation<Product>
+	{
+		public string Name { get; set; }
 
-	public int CoreId { get; set; }
+		public Product Core { get; set; }
 
-	public string Language { get; set; }
-}
-```
+		public int CoreId { get; set; }
+
+		public string Language { get; set; }
+	}
 
  #### CreateMultiLingualMap 
 
@@ -46,114 +45,114 @@ By using CreateMultiLingualMap extension method, only one record from Translatio
 
 A sample Dto class for sample Product entity above would be;
 
-```c#
-public class ProductListDto
-{
-    // Mapped from Product.Price
-    public decimal Price { get; set; }
 
-    // Mapped from ProductTranslation.Name
-    public string Name { get; set; }
-}
-```
+	public class ProductListDto
+	{
+	    // Mapped from Product.Price
+	    public decimal Price { get; set; }
+
+	    // Mapped from ProductTranslation.Name
+	    public string Name { get; set; }
+	}
+
 
 And it's mapping configuration is;
 
-```c#
-Configuration.Modules.AbpAutoMapper().Configurators.Add(configuration =>
-{
-	CustomDtoMapper.CreateMappings(configuration, new MultiLingualMapContext(
-		IocManager.Resolve<ISettingManager>()
-	));
-});
 
-internal static class CustomDtoMapper
-{
-	public static void CreateMappings(IMapperConfigurationExpression configuration, MultiLingualMapContext context)
+	Configuration.Modules.AbpAutoMapper().Configurators.Add(configuration =>
 	{
-		configuration.CreateMultiLingualMap<Product, ProductTranslation, ProductListDto>(context);
+		CustomDtoMapper.CreateMappings(configuration, new MultiLingualMapContext(
+			IocManager.Resolve<ISettingManager>()
+		));
+	});
+
+	internal static class CustomDtoMapper
+	{
+		public static void CreateMappings(IMapperConfigurationExpression configuration, MultiLingualMapContext context)
+		{
+			configuration.CreateMultiLingualMap<Product, ProductTranslation, ProductListDto>(context);
+		}
 	}
-}
-```
+
 
 SettingManager is required to find default language setting when mapping a multi lingual entity to a Dto class. 
 
 In some cases like editing a multi lingual entity on the UI, all translations may be needed in the Dto class. In such cases, the Dto classes can be defined like below and [Object-To-Object-Mapping](Object-To-Object-Mapping.md) can be used.
 
-```c#
-[AutoMap(typeof(Product))]
-public class ProductDto
-{
-	public decimal Price { get; set; }
-    
-    public List<ProductTranslationDto> Translations {get; set;}
-}
-```
 
-```c#
-[AutoMap(typeof(ProductTranslation))]
-public class ProductTranslationDto
-{
-    public string Name { get; set; }
-}
-```
+	[AutoMap(typeof(Product))]
+	public class ProductDto
+	{
+		public decimal Price { get; set; }
+
+	    public List<ProductTranslationDto> Translations {get; set;}
+	}
+
+
+
+	[AutoMap(typeof(ProductTranslation))]
+	public class ProductTranslationDto
+	{
+	    public string Name { get; set; }
+	}
+
 ### Crud Operations
 
 #### Creating a MultiLingual Entity with Translation(s) 
 
 A Dto class like the below one can be used for creating a Multi-Lingual entity with it's translations.
 
-```c#
-[AutoMap(typeof(Product))]
-public class ProductDto
-{
-	public decimal Price { get; set; }
 
-	public ICollection<ProductTranslationDto> Translations { get; set; }
-}
-```
+	[AutoMap(typeof(Product))]
+	public class ProductDto
+	{
+		public decimal Price { get; set; }
+
+		public ICollection<ProductTranslationDto> Translations { get; set; }
+	}
+
 After defining such a Dto class, we can use it in our application service to create a Multi-Lingual entity.
 
-```c#
-public class ProductAppService : ApplicationService, IProductAppService
-{
-	private readonly IRepository<Product> _productRepository;
 
-	public ProductAppService(IRepository<Product> productRepository)
+	public class ProductAppService : ApplicationService, IProductAppService
 	{
-		_productRepository = productRepository;
+		private readonly IRepository<Product> _productRepository;
+
+		public ProductAppService(IRepository<Product> productRepository)
+		{
+			_productRepository = productRepository;
+		}
+
+		public async Task CreateProduct(ProductDto input)
+		{
+			var product = ObjectMapper.Map<Product>(input);
+			await _productRepository.InsertAsync(product);
+		}
 	}
-	
-	public async Task CreateProduct(ProductDto input)
-	{
-		var product = ObjectMapper.Map<Product>(input);
-		await _productRepository.InsertAsync(product);
-	}
-}
-```
+
 #### Updating a Multi-Lingual Entity with Translation(s)
 
 We can use similar Dto class for updating our Multi-Lingual entity. A sample application service method for update operation can be defined like below;
 
-```c#
-public async Task UpdateProduct(ProductDto input)
-{
-	var product = await _productRepository.GetAllIncluding(p => p.Translations)
-                .FirstOrDefaultAsync(p => p.Id == input.Id);
 
-	product.Translations.Clear();
+	public async Task UpdateProduct(ProductDto input)
+	{
+		var product = await _productRepository.GetAllIncluding(p => p.Translations)
+			.FirstOrDefaultAsync(p => p.Id == input.Id);
 
-	ObjectMapper.Map(input, product);
-}
-```
+		product.Translations.Clear();
+
+		ObjectMapper.Map(input, product);
+	}
+
 ##### Note for EntityFramework 6.x
 
 For EntityFramework 6.x, all the translations must be deleted from database manually because Entity Framework 6.x doesn't delete related data. Instead, EntityFramework 6.x tries to set CoreId of each Translation entity to null which fails. So, a sample code like the below one might be used to delete translations of a Multi-Lingual entity for EntityFramework 6.x.
 
-```c#
-foreach (var translation in product.Translations.ToList())
-{
-	await _productTranslationRepository.DeleteAsync(translation);
-	product.Translations.Remove(translation);
-}
-```
+
+	foreach (var translation in product.Translations.ToList())
+	{
+		await _productTranslationRepository.DeleteAsync(translation);
+		product.Translations.Remove(translation);
+	}
+
