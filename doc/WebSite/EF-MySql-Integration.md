@@ -33,7 +33,7 @@ would be:
 
 #### Re-generate the migrations
 
-If you choose "Include Module Zero" while downloading your startup
+If you choose "Include login, register, user, role and tenant management pages" while downloading your startup
 template, there will be some migration files included in your project.
 These files are generated for Sql Server. Delete all the migration files
 in your **.EntityFramework** project under the Migrations folder. Migration
