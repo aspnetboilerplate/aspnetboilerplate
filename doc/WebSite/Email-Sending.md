@@ -56,7 +56,7 @@ injection](Dependency-Injection.md) pattern.
 ### Configuration
 
 Email Sender uses a [settings management](Setting-Management.md) system
-to read emal-sending configurations. All the setting names are defined in the
+to read email-sending configurations. All the setting names are defined in the
 Abp.Net.Mail.EmailSettingNames class as constant strings. 
 
 Their values and descriptions:
