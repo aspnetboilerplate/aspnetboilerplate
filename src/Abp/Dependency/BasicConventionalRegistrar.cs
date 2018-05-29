@@ -33,17 +33,6 @@ namespace Abp.Dependency
                     .LifestyleSingleton()
                 );
 
-            //Scoped
-            context.IocManager.IocContainer.Register(
-                Classes.FromAssembly(context.Assembly)
-                    .IncludeNonPublicTypes()
-                    .BasedOn<IScopedDependency>()
-                    .If(type => !type.GetTypeInfo().IsGenericTypeDefinition)
-                    .WithService.Self()
-                    .WithService.DefaultInterfaces()
-                    .LifestyleScoped()
-            );
-
             //Windsor Interceptors
             context.IocManager.IocContainer.Register(
                 Classes.FromAssembly(context.Assembly)

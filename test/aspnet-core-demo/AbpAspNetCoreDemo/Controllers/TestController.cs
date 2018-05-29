@@ -1,6 +1,5 @@
 ﻿using System.ComponentModel.DataAnnotations;
 using Abp.Collections.Extensions;
-using Abp.Web.Mvc.Alerts;
 using Microsoft.AspNetCore.Mvc;
 
 namespace AbpAspNetCoreDemo.Controllers
