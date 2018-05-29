@@ -2,6 +2,7 @@
 using Castle.MicroKernel.Registration;
 using Microsoft.AspNetCore.Mvc;
 using System.Reflection;
+using Castle.Windsor.MsDependencyInjection;
 
 namespace Abp.AspNetCore
 {
@@ -15,6 +16,17 @@ namespace Abp.AspNetCore
                     .BasedOn<ViewComponent>()
                     .If(type => !type.GetTypeInfo().IsGenericTypeDefinition)
                     .LifestyleTransient()
+            );
+
+            //Scoped
+            context.IocManager.IocContainer.Register(
+                Classes.FromAssembly(context.Assembly)
+                    .IncludeNonPublicTypes()
+                    .BasedOn<IScopedDependency>()
+                    .If(type => !type.GetTypeInfo().IsGenericTypeDefinition)
+                    .WithService.Self()
+                    .WithService.DefaultInterfaces()
+                    .LifestyleCustom<MsScopedLifestyleManager>()
             );
         }
     }
