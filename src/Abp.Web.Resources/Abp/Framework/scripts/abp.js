@@ -581,9 +581,16 @@
 
         var str = arguments[0];
 
-        for (var i = 1; i < arguments.length; i++) {
-            var placeHolder = '{' + (i - 1) + '}';
-            str = abp.utils.replaceAll(str, placeHolder, arguments[i]);
+        if (arguments.length == 2 && Array.isArray(arguments[1])) {
+            for (var i = 0; i < arguments[1].length; i++) {
+                var placeHolder = '{' + (i) + '}';
+                str = abp.utils.replaceAll(str, placeHolder, arguments[1][i]);
+            }
+        } else {
+            for (var i = 1; i < arguments.length; i++) {
+                var placeHolder = '{' + (i - 1) + '}';
+                str = abp.utils.replaceAll(str, placeHolder, arguments[i]);
+            }
         }
 
         return str;
