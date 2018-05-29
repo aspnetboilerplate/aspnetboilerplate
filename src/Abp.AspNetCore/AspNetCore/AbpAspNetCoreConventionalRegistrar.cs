@@ -22,7 +22,7 @@ namespace Abp.AspNetCore
             context.IocManager.IocContainer.Register(
                 Classes.FromAssembly(context.Assembly)
                     .IncludeNonPublicTypes()
-                    .BasedOn<IScopedDependency>()
+                    .BasedOn<IPerWebRequestDependency>()
                     .If(type => !type.GetTypeInfo().IsGenericTypeDefinition)
                     .WithService.Self()
                     .WithService.DefaultInterfaces()

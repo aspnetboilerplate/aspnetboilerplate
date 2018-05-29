@@ -1,6 +1,6 @@
 ﻿namespace Abp.Dependency
 {
-    public interface IScopedDependency
+    public interface PerWebRequest
     {
 
     }

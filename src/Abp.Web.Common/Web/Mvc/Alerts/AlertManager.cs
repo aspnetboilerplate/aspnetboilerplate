@@ -2,7 +2,7 @@
 
 namespace Abp.Web.Mvc.Alerts
 {
-    public class AlertManager : IAlertManager, IScopedDependency
+    public class AlertManager : IAlertManager, IPerWebRequestDependency
     {
         public AlertList Alerts { get; }
 
