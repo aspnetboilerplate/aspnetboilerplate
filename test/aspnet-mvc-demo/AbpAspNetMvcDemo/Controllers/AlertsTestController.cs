@@ -1,10 +1,10 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using System.Web.Mvc;
 
-namespace AbpAspNetCoreDemo.Controllers
+namespace AbpAspNetMvcDemo.Controllers
 {
     public class AlertsTestController : DemoControllerBase
     {
-        public IActionResult Index()
+        public ActionResult Index()
         {
             Alerts.Danger("Danger alert message!", "Test Alert");
             Alerts.Warning("Warning alert message!", "Test Alert");

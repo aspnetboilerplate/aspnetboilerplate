@@ -8,7 +8,7 @@ namespace AbpAspNetMvcDemo.Controllers
     {
         protected DemoControllerBase()
         {
-            LocalizationSourceName = "AbpAspNetMvcDemo";
+            LocalizationSourceName = "AbpAspNetMvcDemoModule";
         }
 
         protected void CheckErrors(IdentityResult identityResult)

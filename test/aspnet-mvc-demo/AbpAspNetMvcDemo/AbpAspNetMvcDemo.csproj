@@ -51,6 +51,9 @@
     <Reference Include="Abp, Version=3.6.2.0, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\..\..\packages\Abp.3.6.2\lib\netstandard2.0\Abp.dll</HintPath>
     </Reference>
+    <Reference Include="Abp.Web, Version=3.6.2.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\..\..\packages\Abp.Web.3.6.2\lib\net461\Abp.Web.dll</HintPath>
+    </Reference>
     <Reference Include="Abp.Zero, Version=3.6.2.0, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\..\..\packages\Abp.Zero.3.6.2\lib\net461\Abp.Zero.dll</HintPath>
     </Reference>
@@ -273,8 +276,10 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="App_Start\BundleConfig.cs" />
+    <Compile Include="App_Start\AbpAspNetMvcDemoModule.cs" />
     <Compile Include="App_Start\FilterConfig.cs" />
     <Compile Include="App_Start\RouteConfig.cs" />
+    <Compile Include="Controllers\AlertsTestController.cs" />
     <Compile Include="Controllers\DemoControllerBase.cs" />
     <Compile Include="Controllers\HomeController.cs" />
     <Compile Include="Global.asax.cs">
@@ -359,6 +364,7 @@
     <Content Include="Scripts\popper.js.map" />
     <Content Include="Scripts\popper-utils.min.js.map" />
     <Content Include="Scripts\popper-utils.js.map" />
+    <Content Include="Views\AlertsTest\Index.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
@@ -370,6 +376,10 @@
     <Content Include="Scripts\jquery-3.3.1.min.map" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\..\..\src\Abp.Web.Common\Abp.Web.Common.csproj">
+      <Project>{883F1591-5B8E-4D5D-85DE-ED96069F2A13}</Project>
+      <Name>Abp.Web.Common</Name>
+    </ProjectReference>
     <ProjectReference Include="..\..\..\src\Abp.Web.Mvc\Abp.Web.Mvc.csproj">
       <Project>{D2C8ED70-6ED1-4539-A7F0-D8FE89904530}</Project>
       <Name>Abp.Web.Mvc</Name>

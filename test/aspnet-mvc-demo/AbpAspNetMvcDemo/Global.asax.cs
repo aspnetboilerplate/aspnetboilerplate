@@ -1,21 +1,18 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Web;
-using System.Web.Mvc;
-using System.Web.Optimization;
-using System.Web.Routing;
+using Abp.Web;
 
 namespace AbpAspNetMvcDemo
 {
-    public class MvcApplication : System.Web.HttpApplication
+    public class MvcApplication : AbpWebApplication<AbpAspNetMvcDemoModule>
     {
-        protected void Application_Start()
+        protected override void Application_Start(object sender, EventArgs e)
         {
-            AreaRegistration.RegisterAllAreas();
-            FilterConfig.RegisterGlobalFilters(GlobalFilters.Filters);
-            RouteConfig.RegisterRoutes(RouteTable.Routes);
-            BundleConfig.RegisterBundles(BundleTable.Bundles);
+            base.Application_Start(sender, e);
+        }
+
+        protected override void Application_BeginRequest(object sender, EventArgs e)
+        {
+            base.Application_BeginRequest(sender, e);
         }
     }
 }
