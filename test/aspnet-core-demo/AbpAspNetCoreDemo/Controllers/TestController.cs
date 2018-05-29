@@ -8,8 +8,7 @@ namespace AbpAspNetCoreDemo.Controllers
     {
         public IActionResult Index()
         {
-            Alerts.Info("Test alert message!", "Test Alert");
-            return View(AlertManager.Alerts);
+            return View();
         }
 
         [Route("api/test/getArray")]
