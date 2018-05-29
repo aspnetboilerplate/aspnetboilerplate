@@ -18,7 +18,7 @@ namespace Abp.AspNetCore
                     .LifestyleTransient()
             );
 
-            //Scoped
+            //PerWebRequest
             context.IocManager.IocContainer.Register(
                 Classes.FromAssembly(context.Assembly)
                     .IncludeNonPublicTypes()
