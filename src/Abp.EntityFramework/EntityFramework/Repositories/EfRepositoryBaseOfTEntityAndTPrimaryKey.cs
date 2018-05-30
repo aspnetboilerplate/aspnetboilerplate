@@ -7,6 +7,7 @@ using System.Linq;
 using System.Linq.Expressions;
 using System.Threading;
 using System.Threading.Tasks;
+using Abp.Application.Services.Dto;
 using Abp.Collections.Extensions;
 using Abp.Data;
 using Abp.Domain.Entities;
@@ -232,6 +233,151 @@ namespace Abp.EntityFramework.Repositories
         public override async Task<long> LongCountAsync(Expression<Func<TEntity, bool>> predicate)
         {
             return await GetAll().Where(predicate).LongCountAsync();
+        }
+
+        public bool Exist(TPrimaryKey pId)
+        {
+            List<TPrimaryKey> list = new List<TPrimaryKey>()
+            {
+                pId
+            };
+
+            return GetAll().Any(a => list.Contains(a.Id));
+        }
+
+        public async Task<bool> ExistAsync(TPrimaryKey pId)
+        {
+            List<TPrimaryKey> list = new List<TPrimaryKey>()
+            {
+                pId
+            };
+
+            return await GetAll().AnyAsync(a => list.Contains(a.Id));
+        }
+
+        public bool Exists(List<TPrimaryKey> pIds)
+        {
+            int count = GetAll().Count(a => pIds.Contains(a.Id));
+
+            return count == pIds.Count;
+        }
+
+        public async Task<bool> ExistsAsync(List<TPrimaryKey> pIds)
+        {
+            int count = await GetAll().CountAsync(a => pIds.Contains(a.Id));
+
+            return count == pIds.Count;
+        }
+
+        public List<TPrimaryKey> ExistsReturnUnexistingIds(List<TPrimaryKey> ids)
+        {
+            List<TPrimaryKey> existingIds = GetAll().Where(x => ids.Contains(x.Id)).Select(x => x.Id).ToList();
+
+            List<TPrimaryKey> unexistingIds = ids.Except(existingIds).ToList();
+
+            return unexistingIds;
+        }
+
+        public async Task<List<TPrimaryKey>> ExistsReturnUnexistingIdsAsync(List<TPrimaryKey> ids)
+        {
+            List<TPrimaryKey> existingIds = await GetAll().Where(x => ids.Contains(x.Id)).Select(x => x.Id).ToListAsync();
+
+            List<TPrimaryKey> unexistingIds = ids.Except(existingIds).ToList();
+
+            return unexistingIds;
+        }
+
+        public async Task<PagedResultDto<TEntity>> GetPagedListAsync(int? skip, int? take, Func<TEntity, bool> predicate = null)
+        {
+            IQueryable<TEntity> query = GetAll();
+
+            if (predicate != null)
+            {
+                query = query.Where(predicate).AsQueryable();
+            }
+
+            int count = query.Count();
+
+            query = query.Skip(skip ?? 0)
+                         .Take(take ?? (count == 0 ? 1 : count));
+
+            List<TEntity> results = await Task.FromResult(query.ToList());
+
+            return new PagedResultDto<TEntity>(count, results);
+        }
+
+        public PagedResultDto<TEntity> GetPagedList(int? pSkip, int? pTake, Func<TEntity, bool> predicate = null)
+        {
+            IQueryable<TEntity> query = GetAll();
+
+            if (predicate != null)
+            {
+                query = query.Where(predicate).AsQueryable();
+            }
+
+            int count = query.Count();
+
+            query = query.Skip(pSkip ?? 0)
+                         .Take(pTake ?? (count == 0 ? 1 : count));
+
+            List<TEntity> results = query.ToList();
+
+            return new PagedResultDto<TEntity>(count, results);
+        }
+
+        public async Task<PagedResultDto<TEntity>> GetPagedListWithTranslationsAsync<TTranslated, TTranslation>(int? skip, int? take, Func<TTranslated, bool> predicate = null)
+            where TTranslated : class, TEntity, IMultiLingualEntity<TTranslation>
+            where TTranslation : class, IEntityTranslation
+        {
+            return await Task.FromResult(GetPagedListWithTranslations<TTranslated, TTranslation>(skip, take, predicate));
+        }
+
+        public PagedResultDto<TEntity> GetPagedListWithTranslations<TTranslated, TTranslation>(int? skip, int? take, Func<TTranslated, bool> predicate = null)
+            where TTranslated : class, TEntity, IMultiLingualEntity<TTranslation>
+            where TTranslation : class, IEntityTranslation
+        {
+            IQueryable<TTranslated> query = this.Context.Set<TTranslated>().AsQueryable();
+
+            if (predicate != null)
+            {
+                query = query.Where(predicate).AsQueryable();
+            }
+
+            int count = query.Count();
+
+            query = query.Skip(skip ?? 0)
+                         .Take(take ?? (count == 0 ? 1 : count));
+
+            var projectedQuery = query.Select(s => new
+            {
+                Entity = s,
+                //Because the translations are included in the ef context they will be map automatically inside the entity
+                Translations = s.Translations
+            }).ToList();
+
+            List<TTranslated> results = projectedQuery.Select(s => s.Entity).ToList();
+
+            return new PagedResultDto<TEntity>(count, results);
+        }
+
+        public List<TEntity> GetRange(List<TPrimaryKey> pIds)
+        {
+            return GetRange(predicate => pIds.Contains(predicate.Id));
+        }
+
+        public List<TEntity> GetRange(Expression<Func<TEntity, bool>> predicate)
+        {
+            return GetAll().Where(predicate).ToList();
+        }
+
+        public async Task<List<TEntity>> GetRangeAsync(List<TPrimaryKey> pIds)
+        {
+            return await GetRangeAsync(predicate => pIds.Contains(predicate.Id));
+        }
+
+        public async Task<List<TEntity>> GetRangeAsync(Expression<Func<TEntity, bool>> predicate)
+        {
+            return await GetAll().Where(predicate).ToListAsync();
         }
 
         protected virtual void AttachIfNot(TEntity entity)

@@ -91,7 +91,7 @@ namespace Abp.Domain.Repositories
 
             return entity;
         }
-        
+
         public virtual TEntity Single(Expression<Func<TEntity, bool>> predicate)
         {
             return GetAll().Single(predicate);
