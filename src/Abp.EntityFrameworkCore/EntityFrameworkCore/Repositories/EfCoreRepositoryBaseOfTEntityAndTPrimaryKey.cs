@@ -319,7 +319,7 @@ namespace Abp.EntityFrameworkCore.Repositories
             return unexistingIds;
         }
 
-        public async Task<List<TPrimaryKey>> ExistsReturnIdsAsync(List<TPrimaryKey> ids)
+        public async Task<List<TPrimaryKey>> ExistsReturnUnexistingIdsAsync(List<TPrimaryKey> ids)
         {
             List<TPrimaryKey> existingIds = await GetAll().Where(x => ids.Contains(x.Id)).Select(x => x.Id).ToListAsync();
 
