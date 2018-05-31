@@ -5,7 +5,7 @@ namespace Abp.ZeroCore.SampleApp.Core
 {
     public static class ServicesCollectionDependencyRegistrar
     {
-        public static void Register(IServiceCollection services)
+        public static void Register(ServiceCollection services)
         {
             services.AddLogging();
 
