@@ -43,6 +43,7 @@ namespace AbpAspNetCoreDemo
             services.AddTransient<MyTransientClass1>();
             services.AddTransient<MyTransientClass2>();
             services.AddScoped<MyScopedClass>();
+            services.AddScoped<IAlertManager, AlertManager>();
 
             //Add framework services
             services.AddMvc(options =>
