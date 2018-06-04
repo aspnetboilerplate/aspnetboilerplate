@@ -259,7 +259,7 @@ namespace Abp.Domain.Repositories
             return Task.FromResult(LongCount(predicate));
         }
 
-        protected static Expression<Func<TEntity, bool>> CreateEqualityExpressionForId(TPrimaryKey id)
+        protected virtual Expression<Func<TEntity, bool>> CreateEqualityExpressionForId(TPrimaryKey id)
         {
             var lambdaParam = Expression.Parameter(typeof(TEntity));
 
