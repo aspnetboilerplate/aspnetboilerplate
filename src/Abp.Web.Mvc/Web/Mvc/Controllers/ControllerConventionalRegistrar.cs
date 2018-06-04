@@ -23,8 +23,11 @@ namespace Abp.Web.Mvc.Controllers
             //PerWebRequest
             context.IocManager.IocContainer.Register(
                 Classes.FromAssembly(context.Assembly)
+                    .IncludeNonPublicTypes()
                     .BasedOn<IPerWebRequestDependency>()
                     .If(type => !type.GetTypeInfo().IsGenericTypeDefinition)
+                    .WithService.Self()
+                    .WithService.DefaultInterfaces()
                     .LifestylePerWebRequest()
             );
         }

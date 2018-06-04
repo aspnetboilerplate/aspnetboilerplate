@@ -1,5 +1,5 @@
 ﻿@using Abp.Web.Mvc.Alerts
-@model AlertList
+@inject IAlertManager AlertManager
 
 @{
     ViewData["Title"] = "Index";
@@ -7,10 +7,10 @@
 
 <h2>Alerts test page</h2>
 
-@if (Model.Any())
+@if (AlertManager.Alerts.Any())
 {
     <div id="AbpPageAlerts">
-        @foreach (var alertMessage in Model)
+        @foreach (var alertMessage in AlertManager.Alerts)
         {
             <div class="alert alert-@alertMessage.Type.ToString().ToLower() @(alertMessage.Dismissible ? "alert-dismisable" : "")" role="alert">
                 @if (alertMessage.Dismissible)

@@ -11,7 +11,7 @@ namespace AbpAspNetMvcDemo.Controllers
             Alerts.Info("Info alert message!", "Test Alert");
             Alerts.Success("Success alert message!", "Test Alert");
 
-            return View(AlertManager.Alerts);
+            return View();
         }
     }
 }
