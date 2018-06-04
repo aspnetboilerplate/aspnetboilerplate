@@ -71,11 +71,14 @@ namespace Abp.AspNetCore.Tests
         }
 
         [Theory]
-        [InlineData("http://{TENANCY_NAME}.mysite.com", "http://default.mysite.com")]
-        [InlineData("http://{TENANCY_NAME}.mysite.com:8080", "http://default.mysite.com:8080")]
-        [InlineData("http://{TENANCY_NAME}.mysite.com/", "http://default.mysite.com/")]
-        [InlineData("http://{TENANCY_NAME}.mysite.com/host", "http://default.mysite.com/host")]
-        public async Task DomainTenantResolveContributor_Test(string domainFormat, string domain)
+        [InlineData("http://{TENANCY_NAME}.mysite.com", "http://default.mysite.com", 1)]
+        [InlineData("http://{TENANCY_NAME}.mysite.com:8080", "http://default.mysite.com:8080", 1)]
+        [InlineData("http://{TENANCY_NAME}.mysite.com/", "http://default.mysite.com/", 1)]
+        [InlineData("http://{TENANCY_NAME}.mysite.com/host", "http://default.mysite.com/host", 1)]
+        [InlineData("http://{TENANCY_NAME}:80", "http://default:80", 1)]
+        [InlineData("http://{TENANCY_NAME}:80", "http://test:80", null)]
+        [InlineData("http://{TENANCY_NAME}.mysite.com/host", "http://mysite.default.com/host", null)]
+        public async Task DomainTenantResolveContributor_Test(string domainFormat, string domain, int? tenantId)
         {
             _multiTenancyConfiguration.DomainFormat = domainFormat;
             Client.BaseAddress = new Uri(domain);
@@ -88,7 +91,7 @@ namespace Abp.AspNetCore.Tests
             );
 
             //Assert
-            response.Result.ShouldBe(1);
+            response.Result.ShouldBe(tenantId);
         }
     }
 }

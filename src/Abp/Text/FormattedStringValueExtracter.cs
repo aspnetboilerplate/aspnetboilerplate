@@ -77,6 +77,7 @@ namespace Abp.Text
             if (lastToken.Type == FormatStringTokenType.DynamicValue)
             {
                 result.Matches.Add(new NameValue(lastToken.Text, str));
+                result.IsMatch = true;
             }
 
             return result;
