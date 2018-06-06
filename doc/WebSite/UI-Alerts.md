@@ -23,4 +23,4 @@ public class AlertsTestController : AbpControllerBase
 }
 ```
 
-And inject AlertManager into the view you want to use.
+And inject `IAlertManager` into the view you want to use.
