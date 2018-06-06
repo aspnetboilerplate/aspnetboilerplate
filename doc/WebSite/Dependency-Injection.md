@@ -333,7 +333,7 @@ MyPersonManager is created and the same object is passed to all needed
 classes. It's instantiated in it's first use, and then used in the
 whole life of the application.
 
-**NOTE:** The **IPerWebRequestDependency** can only be resolved at the web application layer.
+**NOTE:** The **IPerWebRequestDependency** can only be used in the web layer.
 
 ##### Custom/Direct Registration
 
