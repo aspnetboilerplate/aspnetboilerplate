@@ -136,24 +136,24 @@ controller like the following:
     using System.Net.Http;
     using Abp.Web.Security.AntiForgery;
     using Abp.WebApi.Controllers;
-
+    
     namespace AngularForgeryDemo.Controllers
     {
         public class AntiForgeryController : AbpApiController
         {
             private readonly IAbpAntiForgeryManager _antiForgeryManager;
-
+    
             public AntiForgeryController(IAbpAntiForgeryManager antiForgeryManager)
             {
                 _antiForgeryManager = antiForgeryManager;
             }
-
+    
             public HttpResponseMessage GetTokenCookie()
             {
                 var response = new HttpResponseMessage();
-
+    
                 _antiForgeryManager.SetCookie(response.Headers);
-
+    
                 return response;
             }
         }
@@ -166,7 +166,7 @@ You can then call this action from the client to set the cookie.
 #### Features
 
 **ASP.NET Core** MVC has a better [Anti
-Forgery](https://docs.asp.net/en/latest/security/anti-request-forgery.md)
+Forgery](<https://docs.microsoft.com/en-us/aspnet/core/security/anti-request-forgery?view=aspnetcore-2.0>)
 mechanism compared to previous versions (ASP.NET MVC 5.x):
 
 -   It has the **AutoValidateAntiforgeryTokenAttribute** class that
