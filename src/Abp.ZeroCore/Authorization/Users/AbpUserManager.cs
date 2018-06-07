@@ -121,7 +121,15 @@ namespace Abp.Authorization.Users
                 user.TenantId = tenantId.Value;
             }
 
-            return await base.CreateAsync(user);
+            var isLockoutEnabled = user.IsLockoutEnabled;
+
+            var identityResult = await base.CreateAsync(user);
+            if (identityResult.Succeeded)
+            {
+                await SetLockoutEnabledAsync(user, isLockoutEnabled);
+            }
+
+            return identityResult;
         }
 
         /// <summary>
@@ -582,7 +590,7 @@ namespace Abp.Authorization.Users
         public virtual async Task InitializeOptionsAsync(int? tenantId)
         {
             Options = JsonConvert.DeserializeObject<IdentityOptions>(_optionsAccessor.Value.ToJsonString());
-            
+
             //Lockout
             Options.Lockout.AllowedForNewUsers = await IsTrueAsync(AbpZeroSettingNames.UserManagement.UserLockOut.IsEnabled, tenantId);
             Options.Lockout.DefaultLockoutTimeSpan = TimeSpan.FromSeconds(await GetSettingValueAsync<int>(AbpZeroSettingNames.UserManagement.UserLockOut.DefaultAccountLockoutSeconds, tenantId));
