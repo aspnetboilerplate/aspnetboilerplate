@@ -212,7 +212,7 @@ While you can use the SetFilterParameter method to change the filter value for t
 MayHaveTenant and MustHaveTenant filters, there is a better way to
 change the tenant filter: **SetTenantId()**. SetTenantId changes the parameter
 value for both filters, and also works for single database and database
-per tenant approaches. **It is highly recommended that you use use SetTenantId**
+per tenant approaches. **It is highly recommended that you use SetTenantId**
 to change tenancy filter parameter values. See the [Multi-Tenancy
 document](Multi-Tenancy.md) for more information.
 

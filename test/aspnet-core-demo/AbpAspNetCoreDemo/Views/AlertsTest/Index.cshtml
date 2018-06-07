@@ -13,11 +13,15 @@
         @foreach (var alertMessage in AlertManager.Alerts)
         {
             <div class="alert alert-@alertMessage.Type.ToString().ToLower() @(alertMessage.Dismissible ? "alert-dismisable" : "")" role="alert">
-                @if (alertMessage.Dismissible)
-                {
-                    <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-                }
-                <strong>@alertMessage.Title</strong> @alertMessage.Text
+                <h4 class="alert-heading">
+                    @alertMessage.Title
+                    @if (alertMessage.Dismissible)
+                    {
+                        <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                    }
+                </h4>
+
+                <p>@alertMessage.Text</p>
             </div>
         }
     </div>
