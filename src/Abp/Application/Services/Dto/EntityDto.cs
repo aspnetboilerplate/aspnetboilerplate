@@ -1,4 +1,5 @@
 using System;
+using System.ComponentModel.DataAnnotations;
 
 namespace Abp.Application.Services.Dto
 {
@@ -36,6 +37,7 @@ namespace Abp.Application.Services.Dto
         /// <summary>
         /// Id of the entity.
         /// </summary>
+        [Required]
         public TPrimaryKey Id { get; set; }
 
         /// <summary>
