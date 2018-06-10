@@ -62,5 +62,5 @@ Here are some best practices when using Value Objects:
     if there is not a good reason for designing it as mutable.
 -   The properties that make up a Value Object should form a conceptual
     whole. For example, CityId, Street and Number shouldn't be separate
-    properties of a Person entity. This also makes the Person entity
+    properties of an Address entity. This also makes the Address entity
     simpler.
