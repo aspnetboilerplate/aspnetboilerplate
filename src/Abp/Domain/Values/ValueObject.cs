@@ -96,7 +96,7 @@ namespace Abp.Domain.Values
 
         private PropertyInfo[] GetPropertiesForCompare()
         {
-            return GetType().GetTypeInfo().GetProperties().Where(t => ReflectionHelper.GetSingleAttributeOrDefault<DiffIgnoreAttribute>(t) == null).ToArray();
+            return GetType().GetTypeInfo().GetProperties().Where(t => ReflectionHelper.GetSingleAttributeOrDefault<IgnoreOnCompareAttribute>(t) == null).ToArray();
         }
     }
 }

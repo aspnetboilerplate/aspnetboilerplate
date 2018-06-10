@@ -43,7 +43,7 @@ namespace Abp.Tests.Domain.Values
 
     public class Address3 : ValueObject<Address3>
     {
-        [DiffIgnore]
+        [IgnoreOnCompare]
         public Guid? CityId { get; }
 
         public string Street { get; }
