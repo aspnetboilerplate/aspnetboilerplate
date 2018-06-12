@@ -121,8 +121,10 @@ namespace Abp.Authorization.Users
             var isLockoutEnabled = user.IsLockoutEnabled;
 
             var identityResult = await base.CreateAsync(user);
+
             if (identityResult.Succeeded)
             {
+                await _unitOfWorkManager.Current.SaveChangesAsync();
                 await SetLockoutEnabledAsync(user.Id, isLockoutEnabled);
             }
 
