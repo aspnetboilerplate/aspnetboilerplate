@@ -64,7 +64,7 @@ namespace Abp.AspNetCore
             //Configure JSON serializer
             services.Configure<MvcJsonOptions>(jsonOptions =>
             {
-                jsonOptions.SerializerSettings.ContractResolver = new AbpContractResolver
+                jsonOptions.SerializerSettings.ContractResolver = new AbpMvcContractResolver(iocResolver)
                 {
                     NamingStrategy = new CamelCaseNamingStrategy()
                 };
