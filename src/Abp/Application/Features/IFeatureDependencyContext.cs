@@ -3,12 +3,12 @@ using Abp.Dependency;
 namespace Abp.Application.Features
 {
     /// <summary>
-    /// Used in <see cref="IFeatureDependency.IsSatisfiedAsync"/> method.
+    /// Used in the <see cref="IFeatureDependency.IsSatisfiedAsync"/> method.
     /// </summary>
     public interface IFeatureDependencyContext
     {
         /// <summary>
-        /// Tenant id which required the feature.
+        /// Tenant id which requires the feature.
         /// Null for current tenant.
         /// </summary>
         int? TenantId { get; }

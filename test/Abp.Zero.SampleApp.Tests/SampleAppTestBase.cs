@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 using Abp.Authorization;
 using Abp.IdentityFramework;
 using Abp.Modules;
+using Abp.MultiTenancy;
 using Abp.TestBase;
 using Abp.Zero.SampleApp.EntityFramework;
 using Abp.Zero.SampleApp.MultiTenancy;
@@ -84,10 +85,15 @@ namespace Abp.Zero.SampleApp.Tests
 
         protected Tenant GetDefaultTenant()
         {
+            return GetTenant(AbpTenantBase.DefaultTenantName);
+        }
+
+        protected Tenant GetTenant(string tenancyName)
+        {
             return UsingDbContext(
                 context =>
                 {
-                    return context.Tenants.Single(t => t.TenancyName == Tenant.DefaultTenantName);
+                    return context.Tenants.Single(t => t.TenancyName == tenancyName);
                 });
         }
 

@@ -181,7 +181,7 @@ The developer writing the application service may not know there is a
 **TaskManager** and can directly set a given **PersonId** to a task's
 **AssignedPersonId**. So, how do we **prevent** this? There are many
 discussions in DDD based on this and there are some commonly used patterns.
-We will not dwelve in to this too deeply, but we will provide a simple way of doing it.
+We will not delve into this too deeply, but we will provide a simple way of doing it.
 
 We can change **Task** entity as shown below:
 

@@ -1,28 +1,10 @@
-### Introduction
+### What is the ASP.NET Boilerplate?
 
-We are creating different applications based on different needs. But
-implementing common and similar structures over and over again, at least
-in some level. **Authorization**, **Validation**, **Exception
-Handling**, **Logging**, **Localization**, **Database Connection
-Management**, **Setting Management**, **Audit Logging** are some of
-these common structures. Also, we are building **architectural
-structures** and **best practices** like **Layered** and **Modular**
-Architecture, **Domain Driven Design**, **Dependency Injection** and so
-on. And trying to develop applications based on some **conventions**.
+ASP.NET Boilerplate (**ABP**) is an **[open source](https://github.com/aspnetboilerplate/aspnetboilerplate)** and well-documented **application framework**.
+It's not just a framework, it also provides a strong **[architectural model](https://aspnetboilerplate.com/Pages/Documents/NLayer-Architecture)**
+based on **Domain Driven Design**, with all the **best practices** in mind.
 
-Since all of these are very time-consuming and hard to build seperately
-for every project, many companies create private **frameworks**. They're
-developing new applications faster with less bugs using these
-frameworks. Surely, not all companies that lucky. Most of them have no
-**time**, **budget** and **team** to develop such frameworks. Even they
-have possibility to create a framework, it's hard to **document**,
-**train developers** and **maintain** it.
-
-ASP.NET Boilerplate (ABP) is an **open source and well documented
-application framework** started idea of "developing a **common**
-framework for all companies and all developers!" It's not just a
-framework but also provides a strong **architectural model** based on
-**Domain Driven Design** and **best practices** in mind.
+ABP works with the latest **ASP.NET Core** & **EF Core** but also supports ASP.NET MVC 5.x & EF 6.x as well.
 
 ### A Quick Sample
 
@@ -37,7 +19,7 @@ Let's investigate a simple class to see ABP's benefits:
             _taskRepository = taskRepository;
         }
 
-        [AbpAuthorize(MyPermissions.UpdatingTasks)]
+        [AbpAuthorize(MyPermissions.UpdateTasks)]
         public async Task UpdateTask(UpdateTaskInput input)
         {
             Logger.Info("Updating a task for input: " + input);
@@ -45,134 +27,122 @@ Let's investigate a simple class to see ABP's benefits:
             var task = await _taskRepository.FirstOrDefaultAsync(input.TaskId);
             if (task == null)
             {
-                throw new UserFriendlyException(L("CouldNotFoundTheTaskMessage"));
+                throw new UserFriendlyException(L("CouldNotFindTheTaskMessage"));
             }
 
             input.MapTo(task);
         }
     }
 
-Here, we see a sample [Application
-Service](/Pages/Documents/Application-Services) method. An application
-service, in DDD, is directly used by presentation layer to perform **use
-cases** of the application. We can think that **UpdateTask** method is
-called by javascript via AJAX. Let's see ABP's some benefits here:
+Here we see a sample [Application Service](Application-Services.md) method. An application service, in DDD,
+is directly used by the presentation layer to perform the **use cases** of the application.
+Think **UpdateTask** as a method that is called by JavaScript via AJAX.
 
--   **[Dependency Injection](/Pages/Documents/Dependency-Injection)** :
-    ABP uses and provides a strong and conventional DI infrastructure.
+Let's see some of ABP's benefits here:
+
+-   **[Dependency Injection](/Pages/Documents/Dependency-Injection)**: ABP uses and provides a conventional DI infrastructure.
     Since this class is an application service, it's conventionally
-    registered to DI container as transient (created per request). It
-    can simply inject all dependencies (as IRepository&lt;Task&gt; in
+    registered to the DI container as transient (created per request). It
+    can simply inject any dependencies (such as the IRepository&lt;Task&gt; in
     this sample).
--   **[Repository](/Pages/Documents/Repositories)** : ABP can create a
-    default repository for each entity (as IRepository&lt;Task&gt; in
-    this example). Default repository has many useful methods as
-    FirstOrDefault used in this example. We can easily extend default
-    repository upon our needs. Repositories abstracts DBMS and ORMs and
-    simplifies data access logic.
--   **[Authorization](/Pages/Documents/Authorization)** : ABP can check
-    permissions. It prevents access to UpdateTask method if current user
-    has no "updating task" permission or not logged in. It simplifies
-    authorization using declarative attributes but also has additional
-    ways of authorization.
--   **[Validation](/Pages/Documents/Validating-Data-Transfer-Objects)**
-    : ABP automatically checks if input is null. It also validates all
-    properties of an input based on standard data annotation attributes
-    and custom validation rules. If request is not valid, it throws a
-    proper validation exception.
--   **[Audit Logging](/Pages/Documents/Audit-Logging)** : User, browser,
-    IP address, calling service, method, parameters, calling time,
-    execution duration and some other informations are automatically
+-   **[Repository](/Pages/Documents/Repositories)**: ABP can create a default repository for each entity (such as IRepository&lt;Task&gt; in
+    this example). The default repository has many useful methods such as the
+    FirstOrDefault method used in this example. We can extend the default
+    repository to suit our needs. Repositories abstract the DBMS and ORMs and
+    simplify the data access logic.
+-   **[Authorization](/Pages/Documents/Authorization)**: ABP can check permissions declaratively.
+    It prevents access to the UpdateTask method if the current user
+    has no "update tasks" permission or is not logged in. ABP not only uses declarative
+    attributes, but it also has additional ways in which you can authorize.
+-   **[Validation](/Pages/Documents/Validating-Data-Transfer-Objects)**: ABP automatically checks if the input is null. It also validates all
+    the properties of an input based on standard data annotation attributes
+    and custom validation rules. If a request is not valid, it throws a
+    proper validation exception and handles it in the client side.
+-   **[Audit Logging](/Pages/Documents/Audit-Logging)** : User, browser, IP address, calling service, method, parameters, calling time,
+    execution duration and some other information is automatically
     saved for each request based on conventions and configurations.
--   [**Unit Of Work**](/Pages/Documents/Unit-Of-Work): In ABP, each
-    application service method is assumed as a unit of work as default.
+-   [**Unit Of Work**](/Pages/Documents/Unit-Of-Work): In ABP, each application service method is assumed to be a unit of work by default.
     It automatically creates a connection and begins a transaction at
-    the beggining of the method. If the method successfully completed
-    without exception, then the transaction is commited and connection
-    is disposed. Even this method uses different repositories or
-    methods, all of them will be atomic (transactional). And all changes
-    on entities are automatically saved when transaction is commited.
-    Thus, we don't even need to call \_repository.Update(task) method as
-    shown here.
--   [**Exception Handling**](/Pages/Documents/Handling-Exceptions): We
-    almost never handle exceptions in ABP in a web application. All
-    exceptions are automatically handled by default. If an exception
+    the beginning of the method. If the method successfully completes
+    without an exception, then the transaction is committed and the connection
+    is disposed. Even if this method uses different repositories or
+    methods, all of them will be atomic (transactional). All changes
+    on entities are automatically saved when a transaction is committed.
+    We don't even need to call the \_repository.Update(task) method as
+    shown above.
+-   [**Exception Handling**](/Pages/Documents/Handling-Exceptions): We almost never have to manually handle exceptions in ABP on a web application. All exceptions are automatically handled by default! If an exception
     occurs, ABP automatically logs it and returns a proper result to the
-    client. For example, if this is an AJAX request, the it returns a
-    JSON to client indicates that an error occured. If hides actual
-    exception from client unless the exception is a
-    UserFriendlyException as used in this sample. It also understands
-    and handles errors on client side and show appropriate messages to
+    client. For example, if this is an AJAX request, it returns a
+    JSON object to the client indicating that an error occurred. It hides the actual
+    exception from the client unless the exception is a
+    UserFriendlyException, as used in this sample. It also understands
+    and handles errors on the client side and show appropriate messages to the
     users.
--   **[Logging](/Pages/Documents/Logging)** : As you see, we can write
-    logs using the Logger object defined in base class. Log4Net is used
-    as default but it's changable or configurable.
--   **[Localization](/Pages/Documents/Localization)** : Notice that we
-    used L method while throwing exception. Thus, it's automatically
-    localized based on current user's culture. Surely, we're defining
-    CouldNotFoundTheTask<span lang="tr">Message </span>in somewhere (see
-    [localization](/Pages/Documents/Localization) document for more).
--   **[Auto Mapping](/Pages/Documents/Data-Transfer-Objects)** : In the
-    last line, we're using ABP's MapTo extension method to map input
-    properties to entity properties. It uses AutoMapper library to
-    perform mapping. Thus, we can easily map properties from one object
+-   **[Logging](/Pages/Documents/Logging)**: As you see, we can write logs using the Logger object defined in the base class.
+    Log4Net is used by default, but it's changeable and configurable.
+-   **[Localization](/Pages/Documents/Localization)**: Note that we used the 'L' method while throwing the exception?
+    This way, it's automatically localized based on the current user's culture. See the [localization](/Pages/Documents/Localization) document for more.
+-   **[Auto Mapping](/Pages/Documents/Data-Transfer-Objects)**: In the last line, we're using ABP's MapTo extension method to map input
+    properties to entity properties. It uses the AutoMapper library to
+    perform the mapping. We can easily map properties from one object
     to another based on naming conventions.
--   **[Dynamic Web API Layer](/Pages/Documents/Dynamic-Web-API)** :
-    TaskAppService is a simple class actually (even no need to deliver
-    from ApplicationService). We generally write a wrapper Web API
-    Controller to expose methods to javascript clients. ABP
-    automatically does that on runtime. Thus, we can use application
+-   **[Dynamic API Layer](/Pages/Documents/Dynamic-Web-API)**: TaskAppService is a simple class, actually. We generally have to write a wrapper API Controller to expose methods to JavaScript clients, but ABP
+    automatically does that on runtime. This way, we can use application
     service methods directly from clients.
--   **[Dynamic Javascript AJAX
-    Proxy](/Pages/Documents/Dynamic-Web-API#dynamic-javascript-proxies)** : ABP
-    creates javascript proxy methods those make calling application
-    service methods just as simple as calling javascript methods on the
-    client.
+-   **[Dynamic JavaScript AJAX Proxy](/Pages/Documents/Dynamic-Web-API#dynamic-javascript-proxies)** : ABP creates proxy methods those make calling application
+    service methods as simple as calling JavaScript methods on the client.
 
-We can see benefit of ABP in such a simple class. All these tasks
-normally take significiant time, but all they are automatically handled
-by ABP.
+We can see the benefits of ABP in this simple class. All these tasks normally take significant time,
+but are automatically handled by the framework.
 
-### What Else
+Besides this simple example, ABP provides a strong infrastructure and development model for
+[modularity](/Pages/Documents/Module-System), [multi-tenancy](Multi-Tenancy.md), [caching](Caching.md), [background jobs](Background-Jobs-And-Workers.md), [data filters](/Pages/Documents/Data-Filters), [setting management](/Pages/Documents/Setting-Management), [domain events](EventBus-Domain-Events.md), unit & integration testing and so on... You focus on your business code and don't repeat yourself!
 
-Beside this simple example, ABP provides a strong infrastructure and
-application model. Here, some other features of ABP:
+### Getting Started
 
--   **[Modularity](/Pages/Documents/Module-System)** : Provides a strong
-    infrastructure to build reusable modules.
--   **[Data Filters](/Pages/Documents/Data-Filters)** : Provides
-    automatic data filtering to implement some patterns like soft-delete
-    and multi-tenancy.
--   **[Multi Tenancy](Multi-Tenancy.md)**: It fully supports
-    multi-tenancy, including single database or database per tenant
-    architectures.
--   **[Setting Management](/Pages/Documents/Setting-Management)** :
-    Provides a strong infrastructure to get/change application, tenant
-    and user level settings.
--   **Unit & Integration Testing**: It's built testability in mind. Also
-    provides base classes to simplify unit & integration tests. See
-    [this
-    article](http://www.codeproject.com/Articles/871786/Unit-testing-in-Csharp-using-xUnit-Entity-Framewor)
-    for more information.
+You can start with the startup templates or the introduction tutorials.
 
-For all features, see [documentation](/Pages/Documents).
+#### Startup Templates
 
-### Startup Templates
+Directly create a modern looking startup project from the [startup templates](/Templates).
 
-Starting a new solution, creating layers, installing nuget packages,
-creating a simple layout and a menu... all these are also time consuming
-stuff.
+<img src="images/module-zero-core-template-ui-home.png" alt="Startup template" class="img-thumbnail" />
 
-ABP provides pre-built [startup
-templates](http://www.aspnetboilerplate.com/Templates) that makes
-starting a new solution is much more easier. Templates support **SPA**
-(Single-Page Application) and **MPA** (Multi-Page MVC Applications)
-architectures. Also, allows us to use different ORMs.
+Startup templates provides a basic layout and some common features for an application. There are several startup templates with different options.
 
-### How To Use
+##### ASP.NET Core
 
-ABP is developed on **[Github](https://github.com/aspnetboilerplate)**
-and distributed on **[Nuget](/Pages/Documents/Nuget-Packages)** .
-Easiest way of starting with ABP is creating a [startup
-template](http://www.aspnetboilerplate.com/Templates) and following the
-[documentation](/Pages/Documents).
+* [Single Page Application with ASP.NET Core & Angular](Zero/Startup-Template-Angular.md)
+* [Multi-Page Application with ASP.NET Core & jQuery](Zero/Startup-Template-Core.md)
+
+##### ASP.NET MVC 5.x
+
+* [ASP.NET MVC 5.x & AngularJS 1.x / ASP.NET MVC 5.x & jQuery](Zero/Startup-Template.md)
+
+See the [download page](/Templates) for other combinations.
+
+#### Introduction Tutorials
+
+Step by step tutorials introduces the framework and explains how to create your application based on the startup templates.
+
+##### ASP.NET Core
+
+-   [Introduction with ASP.NET Core & Entity Framework Core](Articles/Introduction-With-AspNet-Core-And-Entity-Framework-Core-Part-1/index.html)
+-   [Developing a multi-tenant (SaaS) application with ASP.NET Core, EntityFramework Core & Angular](Articles/Developing-MultiTenant-SaaS-ASP.NET-CORE-Angular/index.html)
+
+##### ASP.NET MVC 5.x
+
+-   [Introduction with ASP.NET MVC 5.x, Web API 2.x, EntityFramework 6.x & AngularJS 1.x](Articles/Introduction-With-AspNet-MVC-Web-API-EntityFramework-and-AngularJs/index.html)
+-   [Developing a multi-tenant (SaaS) application with ASP.NET MVC 5.x, EntityFramework 6.x & AngularJS 1.x](Articles/Developing-a-Multi-Tenant-SaaS-Application-with-ASP.NET-MVC-EntityFramework-AngularJs/index.html)
+
+### Samples
+
+There are many sample projects developed with the framework. See [the samples page](/Samples).
+
+### Community
+
+This is an open source project and open to contributions from the community.
+
+* Use [the GitHub repository](https://github.com/aspnetboilerplate/aspnetboilerplate) to access the latest **source code**, create [issues](https://github.com/aspnetboilerplate/aspnetboilerplate/issues) and send [pull requests](https://github.com/aspnetboilerplate/aspnetboilerplate/pulls).
+* Use [aspnetboilerplate tag on stackoverflow](https://stackoverflow.com/questions/tagged/aspnetboilerplate) to ask questions about the usage.
+* Follow [aspboilerplate on twitter](https://twitter.com/aspboilerplate) to be informed about the happenings.

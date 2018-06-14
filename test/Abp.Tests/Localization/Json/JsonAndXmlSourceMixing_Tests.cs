@@ -42,7 +42,7 @@ namespace Abp.Tests.Localization.Json
                 source.GetString("HowAreYou").ShouldBe("How are you?");
             }
 
-            using (CultureInfoHelper.Use("zh-CN"))
+            using (CultureInfoHelper.Use("zh-Hans"))
             {
                 var source = mananger.GetSource("Lang");
 

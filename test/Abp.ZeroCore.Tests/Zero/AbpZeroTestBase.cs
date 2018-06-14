@@ -9,6 +9,8 @@ using Abp.Runtime.Session;
 using Abp.TestBase;
 using Abp.Zero.TestData;
 using Abp.ZeroCore.SampleApp.Core;
+using Abp.ZeroCore.SampleApp.Core.EntityHistory;
+using Abp.ZeroCore.SampleApp.Core.Shop;
 using Abp.ZeroCore.SampleApp.EntityFramework;
 using Microsoft.EntityFrameworkCore;
 
@@ -19,6 +21,8 @@ namespace Abp.Zero
         protected AbpZeroTestBase()
         {
             SeedTestData();
+            SeedTestDataForEntityHistory();
+            SeedTestDataForMultiLingualEntities();
             LoginAsDefaultTenantAdmin();
         }
 
@@ -38,6 +42,80 @@ namespace Abp.Zero
                 NormalizeDbContext(context);
                 new TestDataBuilder(context, 1).Create();
             });
+        }
+
+        private void SeedTestDataForEntityHistory()
+        {
+            UsingDbContext(
+                context =>
+                {
+                    var blog1 = new Blog("test-blog-1", "http://testblog1.myblogs.com");
+
+                    context.Blogs.Add(blog1);
+                    context.SaveChanges();
+
+                    var post1 = new Post { Blog = blog1, Title = "test-post-1-title", Body = "test-post-1-body" };
+                    var post2 = new Post { Blog = blog1, Title = "test-post-2-title", Body = "test-post-2-body" };
+                    var post3 = new Post { Blog = blog1, Title = "test-post-3-title", Body = "test-post-3-body-deleted", IsDeleted = true };
+                    var post4 = new Post { Blog = blog1, Title = "test-post-4-title", Body = "test-post-4-body", TenantId = 42 };
+
+                    context.Posts.AddRange(post1, post2, post3, post4);
+
+                    var comment1 = new Comment { Post = post1, Content = "test-comment-1-content" };
+
+                    context.Comments.Add(comment1);
+                });
+        }
+
+        private void SeedTestDataForMultiLingualEntities()
+        {
+            UsingDbContext(
+                context =>
+                {
+                    var product1 = new Product
+                    {
+                        Price = 10,
+                        Stock = 1000
+                    };
+
+                    var product2 = new Product
+                    {
+                        Price = 99,
+                        Stock = 1000
+                    };
+
+                    var product3 = new Product
+                    {
+                        Price = 15,
+                        Stock = 500
+                    };
+
+                    context.Products.Add(product1);
+                    context.Products.Add(product2);
+                    context.Products.Add(product3);
+                    context.SaveChanges();
+
+                    //Product1 translations (Watch)
+                    var product1_en = new ProductTranslation { CoreId = product1.Id, Language = "en", Name = "Watch" };
+                    var product1_tr = new ProductTranslation { CoreId = product1.Id, Language = "tr", Name = "Saat" };
+
+                    context.ProductTranslations.Add(product1_en);
+                    context.ProductTranslations.Add(product1_tr);
+
+                    //Product2 translations (Bike)
+                    var product2_en = new ProductTranslation { CoreId = product2.Id, Language = "en", Name = "Bike" };
+                    var product2_fr = new ProductTranslation { CoreId = product2.Id, Language = "fr", Name = "Bicyclette" };
+
+                    context.ProductTranslations.Add(product2_en);
+                    context.ProductTranslations.Add(product2_fr);
+
+                    //Product3 translations (Newspaper)
+                    var product3_it = new ProductTranslation { CoreId = product3.Id, Language = "it", Name = "Giornale" };
+
+                    context.ProductTranslations.Add(product3_it);
+
+                    context.SaveChanges();
+                });
         }
 
         protected IDisposable UsingTenantId(int? tenantId)

@@ -52,7 +52,7 @@ namespace Abp.AspNetCore.SignalR.Notifications
                             continue;
                         }
 
-                        signalRClient.InvokeAsync("getNotification", userNotification);
+                        signalRClient.SendAsync("getNotification", userNotification);
                     }
                 }
                 catch (Exception ex)

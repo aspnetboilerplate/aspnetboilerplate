@@ -27,7 +27,7 @@ namespace Abp.EntityFrameworkCore.Tests
 
             //SupportDbContext
             RegisterSupportDbContextToSqliteInMemoryDb(IocManager);
-
+            
             //Custom repository
             Configuration.ReplaceService<IRepository<Post, Guid>>(() =>
             {

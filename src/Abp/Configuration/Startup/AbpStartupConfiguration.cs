@@ -1,10 +1,12 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using Abp.Application.Features;
 using Abp.Auditing;
 using Abp.BackgroundJobs;
 using Abp.Dependency;
 using Abp.Domain.Uow;
+using Abp.EntityHistory;
 using Abp.Events.Bus;
 using Abp.Notifications;
 using Abp.Resources.Embedded;
@@ -100,6 +102,27 @@ namespace Abp.Configuration.Startup
 
         public IEmbeddedResourcesConfiguration EmbeddedResources { get; private set; }
 
+        public IEntityHistoryConfiguration EntityHistory { get; private set; }
+
+        public IList<ICustomConfigProvider> CustomConfigProviders { get; private set; }
+
+        public Dictionary<string, object> GetCustomConfig()
+        {
+            var customConfig = new Dictionary<string, object>();
+
+            using (var scope = IocManager.CreateScope())
+            {
+                foreach (var provider in CustomConfigProviders)
+                {
+                    customConfig = customConfig
+                        .Concat(provider.GetConfig(new CustomConfigProviderContext(scope)))
+                        .ToDictionary(key => key.Key, value => value.Value);
+                }
+            }
+
+            return customConfig;
+        }
+
         /// <summary>
         /// Private constructor for singleton pattern.
         /// </summary>
@@ -125,7 +148,9 @@ namespace Abp.Configuration.Startup
             BackgroundJobs = IocManager.Resolve<IBackgroundJobConfiguration>();
             Notifications = IocManager.Resolve<INotificationConfiguration>();
             EmbeddedResources = IocManager.Resolve<IEmbeddedResourcesConfiguration>();
+            EntityHistory = IocManager.Resolve<IEntityHistoryConfiguration>();
 
+            CustomConfigProviders = new List<ICustomConfigProvider>();
             ServiceReplaceActions = new Dictionary<Type, Action>();
         }
 

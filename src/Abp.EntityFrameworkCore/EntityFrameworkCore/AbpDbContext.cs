@@ -21,7 +21,6 @@ using Abp.Timing;
 using Castle.Core.Logging;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.ChangeTracking;
-using Abp.Linq.Expressions;
 using Microsoft.EntityFrameworkCore.Metadata;
 
 namespace Abp.EntityFrameworkCore

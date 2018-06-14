@@ -1,0 +1,945 @@
+﻿<i id="abp-title" data-title="Developing a Multi-Tenant SaaS Application with ASP.NET MVC, EntityFramework and AngularJS"></i>
+ 
+<ul class="download">
+	<li>Get the source code from the <a href="https://github.com/aspnetboilerplate/eventcloud/tree/master/mvc-angularjs/src">GitHub repository.</a></li>
+</ul>
+
+<h2 class="abp-invisible">Contents</h2>
+
+<ul class="abp-invisible">
+	<li><a href="#ArticleIntroduction">Introduction</a></li>
+	<li><a href="#ArticleCreateTemplate">Creating Application From Template</a></li>
+	<li><a href="#ArticleEventCloudProject">Event Cloud Project</a>
+	<ul>
+		<li><a href="#ArticleEntities">Entities</a></li>
+		<li><a href="#ArticleEventRegistrationPolicy">Event Registration Policy</a></li>
+		<li><a href="#ArticleEventManager">Event Manager</a></li>
+		<li><a href="#ArticleDomainEvents">Domain Events</a></li>
+		<li><a href="#ArticleAppServices">Application Services</a></li>
+		<li><a href="#ArticlePresentation">Presentation Layer</a>
+		<ul>
+			<li><a href="#ArticleEventList">Event List</a></li>
+			<li><a href="#ArticleEventDetail">Event Detail</a></li>
+			<li><a href="#ArticleMainMenu">Main Menu</a></li>
+			<li><a href="#ArticleAngularRoute">Angular Route</a></li>
+		</ul>
+		</li>
+		<li><a href="#ArticleUnitTests">Unit and Integration Tests</a></li>
+	</ul>
+	</li>
+	<li><a href="#ArticleSocialLogins">Social Logins</a></li>
+	<li><a href="#ArticleTokenAuth">Token Based Authentication</a>
+	<ul>
+		<li><a href="#ArticleTokenAuthenticate">Authentication</a></li>
+		<li><a href="#ArticleTokenUseAPI">Use API</a></li>
+	</ul>
+	</li>
+	<li><a href="#ArticleSourceCode">Source Code</a></li>
+	<li><a href="#ArticleSummary">Summary</a></li>
+	<li><a href="#ArticleHistory">Article History</a></li>
+</ul>
+
+<p><img alt="Login page" src="login-page-v2.jpg"/></p>
+
+<h2 id="ArticleIntroduction">Introduction</h2>
+
+<p>In this article, we will see a SaaS (multi-tenant) application developed using the following frameworks:</p>
+
+<ul>
+	<li><strong><a href="https://aspnetboilerplate.com/">ASP.NET Boilerplate</a></strong> as application framework.</li>
+	<li><strong>ASP.NET MVC</strong> and <strong>ASP.NET Web API</strong> as Web Frameworks.</li>
+	<li><strong>Entity Framework</strong> as ORM.</li>
+	<li><strong>AngularJS</strong> as SPA framework.</li>
+	<li><strong>Bootstrap</strong> as HTML/CSS framework.</li>
+</ul>
+
+<p>You can see <a href="http://eventcloud-mvc5x.aspnetboilerplate.com">live demo</a> before reading the article.&nbsp;</p>
+
+<h2 id="ArticleCreateTemplate">Creating Application From Template</h2>
+
+<p>ASP.NET Boilerplate provides templates to make a project startup easier. We create the <strong>startup template</strong> from <a href="https://aspnetboilerplate.com/Templates"> https://aspnetboilerplate.com/Templates</a>:</p>
+
+<p><img alt="Create template" src="create-template-4.png"/></p>
+
+<p>I selected ASP.NET MVC 5.x, AngularJS and Entity Frameowork including &quot;<strong>Options</strong>&quot;. It creates a ready and working solution for us including a <strong>login page</strong>, <strong> navigation</strong> and a bootstrap based <strong>layout</strong>. After downloading and opening the solution with <strong>Visual Studio 2017+</strong>, we see a <strong>layered</strong> solution structure including a unit test project:</p>
+
+<p><img alt="Solution structure"  src="solution-structure.png"/></p>
+
+<p>First, we select <strong>EventCloud.Web</strong> as startup project. Solution comes with <strong>Entity Framework Code-First Migrations</strong>. So, (after restoring nuget packages) we open the <strong>Package Manager Console</strong> (PMC) and run <strong>Update-Database</strong> command to create the database:</p>
+
+<p><img alt="Update database command" src="pmc-update-database.png"/></p>
+
+<p>Package Manager Console's <strong>Default project</strong> should be <strong> EventCloud.EntityFramework</strong> (since it contains the migrations). This command creates <strong>EventCloud </strong>database<strong> </strong>in local SQL Server (you can change <strong>connection string</strong> from <strong>web.config</strong> file).</p>
+
+<p>Now, we can run the application. We see the pre-built <strong>login</strong> page. 
+We can enter <strong>default </strong>as tenancy name, <strong>admin </strong>as user and <strong>123qwe </strong>as password to login:</p>
+
+<p><img alt="Initial Login Page" src="initial-login-page.png" /></p>
+
+<p>After login, we see the following pages: <strong>Events</strong> and <strong>About</strong> pages</p>
+
+<p><img alt="Initial layout" src="initial-layout.png"/></p>
+
+<p>This is a localized UI with a dynamic menu. Angular layout, routing and basic infrastructure are working properly. I take this project as a base for the event cloud project.</p>
+
+<h2 id="ArticleEventCloudProject">Event Cloud Project</h2>
+
+<p>In this article, I will show the key parts of the project and explain it. So, please download the sample project, open in Visual Studio 2017+ and run migrations just like above before reading rest of the article (Be sure that there is no database named <strong>EventCloud</strong> before running the migrations). I will follow some <strong>DDD</strong> (Domain Driven Design) techniques to create <strong>domain (business) layer </strong>and <strong>application layer</strong>.</p>
+
+<p>Event Cloud is a free SaaS (multi-tenant) application. We can create a tenant which has it&#39;s own events, users, roles... There are some simple business rules applied while creating, canceling and registering to an event.</p>
+
+<p>So, let&#39;s start to review the source code.</p>
+
+<h3 id="ArticleEntities">Entities</h3>
+
+<p>Entities are parts of our domain layer and located under <strong> EventCloud.Core</strong> project. ASP.NET Boilerplate startup template comes with <strong>Tenant</strong>, <strong> User</strong>, <strong>Role</strong>... entities which are common for most applications. We can customize them based on our needs. Surely, we can add our application specific entities.</p>
+
+<p>The fundamental entity of event cloud project is the <strong> Event </strong>entity:</p>
+
+<pre lang="cs">
+[Table(&quot;AppEvents&quot;)]
+public class Event : FullAuditedEntity&lt;Guid&gt;, IMustHaveTenant
+{
+    public const int MaxTitleLength = 128;
+    public const int MaxDescriptionLength = 2048;
+
+    public virtual int TenantId { get; set; }
+
+    [Required]
+    [StringLength(MaxTitleLength)]
+    public virtual string Title { get; protected set; }
+
+    [StringLength(MaxDescriptionLength)]
+    public virtual string Description { get; protected set; }
+
+    public virtual DateTime Date { get; protected set; }
+
+    public virtual bool IsCancelled { get; protected set; }
+
+    /// &lt;summary&gt;
+    /// Gets or sets the maximum registration count.
+    /// 0: Unlimited.
+    /// &lt;/summary&gt;
+    [Range(0, int.MaxValue)]
+    public virtual int MaxRegistrationCount { get; protected set; }
+
+    [ForeignKey(&quot;EventId&quot;)]
+    public virtual ICollection&lt;EventRegistration&gt; Registrations { get; protected set; }
+
+    /// &lt;summary&gt;
+    /// We don&#39;t make constructor public and forcing to create events using &lt;see cref=&quot;Create&quot;/&gt; method.
+    /// But constructor can not be private since it&#39;s used by EntityFramework.
+    /// Thats why we did it protected.
+    /// &lt;/summary&gt;
+    protected Event()
+    {
+
+    }
+
+    public static Event Create(int tenantId, string title, DateTime date, string description = null, int maxRegistrationCount = 0)
+    {
+        var @event = new Event
+        {
+            Id = Guid.NewGuid(),
+            TenantId = tenantId,
+            Title = title,
+            Description = description,
+            MaxRegistrationCount = maxRegistrationCount
+        };
+
+        @event.SetDate(date);
+
+        @event.Registrations = new Collection&lt;EventRegistration&gt;();
+
+        return @event;
+    }
+
+    public bool IsInPast()
+    {
+        return Date &lt; Clock.Now;
+    }
+
+    public bool IsAllowedCancellationTimeEnded()
+    {
+        return Date.Subtract(Clock.Now).TotalHours &lt;= 2.0; //2 hours can be defined as Event property and determined per event
+    }
+
+    public void ChangeDate(DateTime date)
+    {
+        if (date == Date)
+        {
+            return;
+        }
+
+        SetDate(date);
+
+        DomainEvents.EventBus.Trigger(new EventDateChangedEvent(this));
+    }
+
+    internal void Cancel()
+    {
+        AssertNotInPast();
+        IsCancelled = true;
+    }
+
+    private void SetDate(DateTime date)
+    {
+        AssertNotCancelled();
+
+        if (date &lt; Clock.Now)
+        {
+            throw new UserFriendlyException(&quot;Can not set an event&#39;s date in the past!&quot;);
+        }
+
+        if (date &lt;= Clock.Now.AddHours(3)) //3 can be configurable per tenant
+        {
+            throw new UserFriendlyException(&quot;Should set an event&#39;s date 3 hours before at least!&quot;);
+        }
+
+        Date = date;
+
+        DomainEvents.EventBus.Trigger(new EventDateChangedEvent(this));
+    }
+
+    private void AssertNotInPast()
+    {
+        if (IsInPast())
+        {
+            throw new UserFriendlyException(&quot;This event was in the past&quot;);
+        }
+    }
+
+    private void AssertNotCancelled()
+    {
+        if (IsCancelled)
+        {
+            throw new UserFriendlyException(&quot;This event is canceled!&quot;);
+        }
+    }
+}</pre>
+
+<p>Event entity has not just get/set properties. Actually, it has not <strong>public setters</strong>, setters are protected. It has some <strong>domain logic</strong>. All properties must be changed by the Event entity itself to ensure domain logic is being executed.</p>
+
+<p>Event entity&#39;s <strong>constructor</strong> is also <strong>protected</strong>. So, the only way to create an Event is the <strong>Event.Create</strong> method (They can be private normally, but private setters don&#39;t work well with Entity Framework since Entity Framework can not set privates when retrieving an entity from database).</p>
+
+<p>Event implements <strong>IMustHaveTenant</strong> interface. This is an interface of ASP.NET Boilerplate (ABP) framework and ensures that this entity is per tenant. This is needed for <strong>multi-tenancy</strong>. Thus, different tenants will have different events and can not see each other&#39;s events. ABP automatically filters entities of current tenant.</p>
+
+<p>Event class inherits from <strong>FullAuditedEntity</strong> which contains creation, modification and deletion audit columns. FullAuditedEntity also implements <strong>ISoftDelete</strong>, so events can not be deleted from database. They are marked as deleted when you delete it 
+(soft delete). ABP automatically filters (hides) deleted entities when you query database.</p>
+
+<p>In DDD, entities have domain (business) logic. We have some simple business rules those can be understood easily when you check the entity.</p>
+
+<p>Second entity of our application is <strong>EventRegistration</strong>:</p>
+
+<pre lang="cs">
+[Table(&quot;AppEventRegistrations&quot;)]
+public class EventRegistration : CreationAuditedEntity, IMustHaveTenant
+{
+    public int TenantId { get; set; }
+
+    [ForeignKey(&quot;EventId&quot;)]
+    public virtual Event Event { get; protected set; }
+    public virtual Guid EventId { get; protected set; }
+
+    [ForeignKey(&quot;UserId&quot;)]
+    public virtual User User { get; protected set; }
+    public virtual long UserId { get; protected set; }
+
+    /// &lt;summary&gt;
+    /// We don&#39;t make constructor public and forcing to create registrations using &lt;see cref=&quot;CreateAsync&quot;/&gt; method.
+    /// But constructor can not be private since it&#39;s used by EntityFramework.
+    /// Thats why we did it protected.
+    /// &lt;/summary&gt;
+    protected EventRegistration()
+    {
+            
+    }
+
+    public async static Task&lt;EventRegistration&gt; CreateAsync(Event @event, User user, IEventRegistrationPolicy registrationPolicy)
+    {
+        await registrationPolicy.CheckRegistrationAttemptAsync(@event, user);
+
+        return new EventRegistration
+        {
+            TenantId = @event.TenantId,
+            EventId = @event.Id,
+            Event = @event,
+            UserId = @user.Id,
+            User = user
+        };
+    }
+
+    public async Task CancelAsync(IRepository&lt;EventRegistration&gt; repository)
+    {
+        if (repository == null) { throw new ArgumentNullException(&quot;repository&quot;); }
+
+        if (Event.IsInPast())
+        {
+            throw new UserFriendlyException(&quot;Can not cancel event which is in the past!&quot;);
+        }
+
+        if (Event.IsAllowedCancellationTimeEnded())
+        {
+            throw new UserFriendlyException(&quot;It&#39;s too late to cancel your registration!&quot;);
+        }
+
+        await repository.DeleteAsync(this);
+    }
+}</pre>
+
+<p>As similar to Event, we have a static create method. The only way of creating a new EventRegistration is this <strong>CreateAsync</strong> method. It gets an <strong>event</strong>, <strong>user</strong> and a <strong>registration policy</strong>. It checks if given user can register to the event using registrationPolicy.<strong>CheckRegistrationAttemptAsync</strong> method. This method throws exception if given user can not register to given event. With such a design, we ensure that all business rules are applied while creating a registration. There is no way of creating a registration without using registration policy.</p>
+
+<p>See <a href="http://aspnetboilerplate.com/Pages/Documents/Entities">Entity documentation</a> for more information on entities.</p>
+
+<h3 id="ArticleEventRegistrationPolicy">Event Registration Policy</h3>
+
+<p><strong>EventRegistrationPolicy</strong> class is defined as shown below:</p>
+
+<pre lang="cs">
+public class EventRegistrationPolicy : EventCloudServiceBase, IEventRegistrationPolicy
+{
+    private readonly IRepository&lt;EventRegistration&gt; _eventRegistrationRepository;
+
+    public EventRegistrationPolicy(IRepository&lt;EventRegistration&gt; eventRegistrationRepository)
+    {
+        _eventRegistrationRepository = eventRegistrationRepository;
+    }
+
+    public async Task CheckRegistrationAttemptAsync(Event @event, User user)
+    {
+        if (@event == null) { throw new ArgumentNullException(&quot;event&quot;); }
+        if (user == null) { throw new ArgumentNullException(&quot;user&quot;); }
+
+        CheckEventDate(@event);
+        await CheckEventRegistrationFrequencyAsync(user);
+    }
+
+    private static void CheckEventDate(Event @event)
+    {
+        if (@event.IsInPast())
+        {
+            throw new UserFriendlyException(&quot;Can not register event in the past!&quot;);
+        }
+    }
+
+    private async Task CheckEventRegistrationFrequencyAsync(User user)
+    {
+        var oneMonthAgo = Clock.Now.AddDays(-30);
+        var maxAllowedEventRegistrationCountInLast30DaysPerUser = await SettingManager.GetSettingValueAsync&lt;int&gt;(EventCloudSettingNames.MaxAllowedEventRegistrationCountInLast30DaysPerUser);
+        if (maxAllowedEventRegistrationCountInLast30DaysPerUser &gt; 0)
+        {
+            var registrationCountInLast30Days = await _eventRegistrationRepository.CountAsync(r =&gt; r.UserId == user.Id &amp;&amp; r.CreationTime &gt;= oneMonthAgo);
+            if (registrationCountInLast30Days &gt; maxAllowedEventRegistrationCountInLast30DaysPerUser)
+            {
+                throw new UserFriendlyException(string.Format(&quot;Can not register to more than {0}&quot;, maxAllowedEventRegistrationCountInLast30DaysPerUser));
+            }
+        }
+    }
+}</pre>
+
+<p>This is an important part of our domain. We have two rules while creating an event registration:</p>
+
+<ol>
+	<li>A used can not register to an event <strong>in the past</strong>.</li>
+	<li>A user can register to a <strong>maximum count </strong>of events in 30 days. So, we have registration frequency limit.</li>
+</ol>
+
+<h3 id="ArticleEventManager">Event Manager</h3>
+
+<p><strong>EventManager</strong> implements business (domain) logic for events. All Event operations should be executed using this class. It&#39;s defined as shown below:</p>
+
+<pre lang="cs">
+public class EventManager : IEventManager
+{
+    public IEventBus EventBus { get; set; }
+
+    private readonly IEventRegistrationPolicy _registrationPolicy;
+    private readonly IRepository&lt;EventRegistration&gt; _eventRegistrationRepository;
+    private readonly IRepository&lt;Event, Guid&gt; _eventRepository;
+
+    public EventManager(
+        IEventRegistrationPolicy registrationPolicy,
+        IRepository&lt;EventRegistration&gt; eventRegistrationRepository,
+        IRepository&lt;Event, Guid&gt; eventRepository)
+    {
+        _registrationPolicy = registrationPolicy;
+        _eventRegistrationRepository = eventRegistrationRepository;
+        _eventRepository = eventRepository;
+
+        EventBus = NullEventBus.Instance;
+    }
+
+    public async Task&lt;Event&gt; GetAsync(Guid id)
+    {
+        var @event = await _eventRepository.FirstOrDefaultAsync(id);
+        if (@event == null)
+        {
+            throw new UserFriendlyException(&quot;Could not found the event, maybe it&#39;s deleted!&quot;);
+        }
+
+        return @event;
+    }
+
+    public async Task CreateAsync(Event @event)
+    {
+        await _eventRepository.InsertAsync(@event);
+    }
+
+    public void Cancel(Event @event)
+    {
+        @event.Cancel();
+        EventBus.Trigger(new EventCancelledEvent(@event));
+    }
+
+    public async Task&lt;EventRegistration&gt; RegisterAsync(Event @event, User user)
+    {
+        return await _eventRegistrationRepository.InsertAsync(
+            await EventRegistration.CreateAsync(@event, user, _registrationPolicy)
+            );
+    }
+
+    public async Task CancelRegistrationAsync(Event @event, User user)
+    {
+        var registration = await _eventRegistrationRepository.FirstOrDefaultAsync(r =&gt; r.EventId == @event.Id &amp;&amp; r.UserId == user.Id);
+        if (registration == null)
+        {
+            //No need to cancel since there is no such a registration
+            return;
+        }
+
+        await registration.CancelAsync(_eventRegistrationRepository);
+    }
+
+    public async Task&lt;IReadOnlyList&lt;User&gt;&gt; GetRegisteredUsersAsync(Event @event)
+    {
+        return await _eventRegistrationRepository
+            .GetAll()
+            .Include(registration =&gt; registration.User)
+            .Where(registration =&gt; registration.EventId == @event.Id)
+            .Select(registration =&gt; registration.User)
+            .ToListAsync();
+    }
+}</pre>
+
+<p>It performs domain logic and triggers needed events.</p>
+
+<p>See <a href="http://aspnetboilerplate.com/Pages/Documents/Domain-Services"> domain services documentation</a> for more information on domain services.</p>
+
+<h3 id="ArticleDomainEvents">Domain Events</h3>
+
+<p>We may want to define and trigger some domain specific events on some state changes in our application. I defined 2 domain specific events:</p>
+
+<ul>
+	<li><strong>EventCancelledEvent</strong>: Triggered when an event is canceled. It&#39;s triggered in <strong>EventManager.Cancel</strong> method.</li>
+	<li><strong>EventDateChangedEvent</strong>: Triggered when date of an event changed. It&#39;s triggered in <strong>Event.ChangeDate</strong> method.</li>
+</ul>
+
+<p>We handle these events and notify related users about these changes. Also, I handle <strong>EntityCreatedEventDate&lt;Event&gt;</strong> (which is a pre-defined ABP event and triggered automatically).</p>
+
+<p>To handle an event, we should define an event handler class. I defined EventUserEmailer to send emails to users when needed:</p>
+
+<pre lang="cs">
+public class EventUserEmailer : 
+    IEventHandler&lt;EntityCreatedEventData&lt;Event&gt;&gt;,
+    IEventHandler&lt;EventDateChangedEvent&gt;, 
+    IEventHandler&lt;EventCancelledEvent&gt;,
+    ITransientDependency
+{
+    public ILogger Logger { get; set; }
+
+    private readonly IEventManager _eventManager;
+    private readonly UserManager _userManager;
+
+    public EventUserEmailer(
+        UserManager userManager, 
+        IEventManager eventManager)
+    {
+        _userManager = userManager;
+        _eventManager = eventManager;
+
+        Logger = NullLogger.Instance;
+    }
+
+    [UnitOfWork]
+    public virtual void HandleEvent(EntityCreatedEventData&lt;Event&gt; eventData)
+    {
+        //TODO: Send email to all tenant users as a notification
+
+        var users = _userManager
+            .Users
+            .Where(u =&gt; u.TenantId == eventData.Entity.TenantId)
+            .ToList();
+
+        foreach (var user in users)
+        {
+            var message = string.Format(&quot;Hey! There is a new event &#39;{0}&#39; on {1}! Want to register?&quot;,eventData.Entity.Title, eventData.Entity.Date);
+            Logger.Debug(string.Format(&quot;TODO: Send email to {0} -&gt; {1}&quot;, user.EmailAddress, message));
+        }
+    }
+
+    public void HandleEvent(EventDateChangedEvent eventData)
+    {
+        //TODO: Send email to all registered users!
+
+        var registeredUsers = AsyncHelper.RunSync(() =&gt; _eventManager.GetRegisteredUsersAsync(eventData.Entity));
+        foreach (var user in registeredUsers)
+        {
+            var message = eventData.Entity.Title + &quot; event&#39;s date is changed! New date is: &quot; + eventData.Entity.Date;
+            Logger.Debug(string.Format(&quot;TODO: Send email to {0} -&gt; {1}&quot;,user.EmailAddress, message));
+        }
+    }
+
+    public void HandleEvent(EventCancelledEvent eventData)
+    {
+        //TODO: Send email to all registered users!
+
+        var registeredUsers = AsyncHelper.RunSync(() =&gt; _eventManager.GetRegisteredUsersAsync(eventData.Entity));
+        foreach (var user in registeredUsers)
+        {
+            var message = eventData.Entity.Title + &quot; event is canceled!&quot;;
+            Logger.Debug(string.Format(&quot;TODO: Send email to {0} -&gt; {1}&quot;, user.EmailAddress, message));
+        }
+    }
+}</pre>
+
+<p>We can handle same events in different classes or different events in same class (as in this sample). Here, we handle these events and send email to related users as a notification (not implemented emailing actually to make the sample application simpler). An event handler should implement IEventHandler&lt;<em>event-type</em>&gt; interface. ABP automatically calls the handler when related events occur.</p>
+
+<p>See <a href="http://aspnetboilerplate.com/Pages/Documents/EventBus-Domain-Events"> EventBus documentation</a> for more information on domain events.</p>
+
+<h3 id="ArticleAppServices">Application Services</h3>
+
+<p>Application services use domain layer to implement use cases of the application (generally used by presentation layer). <strong> EventAppService</strong> performs application logic for events.</p>
+
+<pre lang="cs">
+[AbpAuthorize]
+public class EventAppService : EventCloudAppServiceBase, IEventAppService
+{
+    private readonly IEventManager _eventManager;
+    private readonly IRepository&lt;Event, Guid&gt; _eventRepository;
+
+    public EventAppService(
+        IEventManager eventManager, 
+        IRepository&lt;Event, Guid&gt; eventRepository)
+    {
+        _eventManager = eventManager;
+        _eventRepository = eventRepository;
+    }
+
+    public async Task&lt;ListResultOutput&lt;EventListDto&gt;&gt; GetList(GetEventListInput input)
+    {
+        var events = await _eventRepository
+            .GetAll()
+            .Include(e =&gt; e.Registrations)
+            .WhereIf(!input.IncludeCanceledEvents, e =&gt; !e.IsCancelled)
+            .OrderByDescending(e =&gt; e.CreationTime)
+            .ToListAsync();
+
+        return new ListResultOutput&lt;EventListDto&gt;(events.MapTo&lt;List&lt;EventListDto&gt;&gt;());
+    }
+
+    public async Task&lt;EventDetailOutput&gt; GetDetail(EntityRequestInput&lt;Guid&gt; input)
+    {
+        var @event = await _eventRepository
+            .GetAll()
+            .Include(e =&gt; e.Registrations)
+            .Where(e =&gt; e.Id == input.Id)
+            .FirstOrDefaultAsync();
+
+        if (@event == null)
+        {
+            throw new UserFriendlyException(&quot;Could not found the event, maybe it&#39;s deleted.&quot;);
+        }
+
+        return @event.MapTo&lt;EventDetailOutput&gt;();
+    }
+
+    public async Task Create(CreateEventInput input)
+    {
+        var @event = Event.Create(AbpSession.GetTenantId(), input.Title, input.Date, input.Description, input.MaxRegistrationCount);
+        await _eventManager.CreateAsync(@event);
+    }
+
+    public async Task Cancel(EntityRequestInput&lt;Guid&gt; input)
+    {
+        var @event = await _eventManager.GetAsync(input.Id);
+        _eventManager.Cancel(@event);
+    }
+
+    public async Task&lt;EventRegisterOutput&gt; Register(EntityRequestInput&lt;Guid&gt; input)
+    {
+        var registration = await RegisterAndSaveAsync(
+            await _eventManager.GetAsync(input.Id),
+            await GetCurrentUserAsync()
+            );
+
+        return new EventRegisterOutput
+        {
+            RegistrationId = registration.Id
+        };
+    }
+
+    public async Task CancelRegistration(EntityRequestInput&lt;Guid&gt; input)
+    {
+        await _eventManager.CancelRegistrationAsync(
+            await _eventManager.GetAsync(input.Id),
+            await GetCurrentUserAsync()
+            );
+    }
+
+    private async Task&lt;EventRegistration&gt; RegisterAndSaveAsync(Event @event, User user)
+    {
+        var registration = await _eventManager.RegisterAsync(@event, user);
+        await CurrentUnitOfWork.SaveChangesAsync();
+        return registration;
+    }
+}</pre>
+
+<p>As you see, application service does not implement domain logic itself. It just uses entities and domain services (EventManager) to perform the use cases.</p>
+
+<p>See <a href="http://aspnetboilerplate.com/Pages/Documents/Application-Services"> application service documentation</a> for more information on application services.</p>
+
+<h3 id="ArticlePresentation">Presentation Layer</h3>
+
+<p>Presentation layer for this application is built using AngularJS as a SPA.</p>
+
+<h4 id="ArticleEventList">Event List</h4>
+
+<p>When we login to the application, we first see a list of events:</p>
+
+<p><img alt="Event list page" src="event-list-page.png"/></p>
+
+<p>We directly use <strong>EventAppService</strong> to get list of events. Here, the Angular controller to create this page:</p>
+
+<pre lang="js">
+(function() {
+    var controllerId = &#39;app.views.events.index&#39;;
+    angular.module(&#39;app&#39;).controller(controllerId, [
+        &#39;$scope&#39;, &#39;$modal&#39;, &#39;abp.services.app.event&#39;,
+        function ($scope, $modal, eventService) {
+            var vm = this;
+
+            vm.events = [];
+            vm.filters = {
+                includeCanceledEvents: false
+            };
+
+            function loadEvents() {
+<strong>                eventService.getList(vm.filters).success(function (result) {
+                    vm.events = result.items;
+                });
+</strong>            };
+
+            vm.openNewEventDialog = function() {
+                var modalInstance = $modal.open({
+                    templateUrl: abp.appPath + &#39;App/Main/views/events/createDialog.cshtml&#39;,
+                    controller: &#39;app.views.events.createDialog as vm&#39;,
+                    size: &#39;md&#39;
+                });
+
+                modalInstance.result.then(function () {
+                    loadEvents();
+                });
+            };
+
+            $scope.$watch(&#39;vm.filters.includeCanceledEvents&#39;, function (newValue, oldValue) {
+                if (newValue != oldValue) {
+                    loadEvents();
+                }
+            });
+
+            loadEvents();
+        }
+    ]);
+})();</pre>
+
+<p>We inject <strong>EventAppService</strong> as &#39;<strong>abp.services.app.event</strong>&#39; into Angular controller. We used <a href="http://www.aspnetboilerplate.com/Pages/Documents/Dynamic-Web-API"> dynamic web api layer</a> feature of ABP. It creates needed Web API controller and AngularJS service <strong>automatically</strong> and <strong>dynamically</strong>. So, we can use application service methods like calling regular JavaScript functions. So, to call <strong>EventAppService.GetList</strong> C# method, we simply call <strong>eventService.getList</strong> JavaScript function which returns a <strong>promise</strong> ($q for angular).</p>
+
+<p>We also open a &quot;new event&quot; modal (dialog) when user clicks to &quot;+ New event&quot; button (which triggers vm.openNewEventDialog function). I will not go in details of Angular views, since they are simple, you can check it out in the source code.</p>
+
+<h4 id="ArticleEventDetail">Event Detail</h4>
+
+<p>When we click &quot;Details&quot; button for an event, we go to event details with a URL like &quot;http://eventcloud-mvc5x.aspnetboilerplate.com/<strong>#/events/b680ad0a-d751-4d85-a7ad-34df5c8a86c2</strong>&quot;. GUID is id of the event.</p>
+
+<p><img alt="Event details" src="event-detail-page.png"/></p>
+
+<p>Here, we see event details with registered users. We can register to the event or cancel registration. This view&#39;s controller is defined in detail.js as shown below:</p>
+
+<pre lang="js">
+(function () {
+    var controllerId = &#39;app.views.events.detail&#39;;
+    angular.module(&#39;app&#39;).controller(controllerId, [
+        &#39;$scope&#39;, &#39;$state&#39;,&#39;$stateParams&#39;, &#39;abp.services.app.event&#39;,
+        function ($scope, $state, $stateParams, eventService) {
+            var vm = this;
+
+            function loadEvent() {
+<strong>                eventService.getDetail({
+                    id: $stateParams.id
+                }).<span lang="tr">then</span>(function (result) {
+                    vm.event = result<span lang="tr">.data</span>;
+                });
+</strong>            }
+
+            vm.isRegistered = function () {
+                if (!vm.event) {
+                    return false;
+                }
+
+                return _.find(vm.event.registrations, function(registration) {
+                    return registration.userId == abp.session.userId;
+                });
+            };
+
+            vm.isEventCreator = function() {
+                return vm.event &amp;&amp; vm.event.creatorUserId == abp.session.userId;
+            };
+
+            vm.getUserThumbnail = function(registration) {
+                return registration.userName.substr(0, 1).toLocaleUpperCase();
+            };
+
+            vm.register = function() {
+<strong>                eventService.register({
+                    id: vm.event.id
+                }).<span lang="tr">then</span>(function (result) {
+                    abp.notify.success(&#39;Successfully registered to event. Your registration id: &#39; + result<span lang="tr">.data</span>.registrationId + &quot;.&quot;);
+                    loadEvent();
+                });
+</strong>            };
+
+            vm.cancelRegistertration = function() {
+<strong>                eventService.cancelRegistration({
+                    id: vm.event.id
+                }).<span lang="tr">then</span>(function () {
+                    abp.notify.info(&#39;Canceled your registration.&#39;);
+                    loadEvent();
+                });
+</strong>            };
+
+            vm.cancelEvent = function() {
+<strong>                eventService.cancel({
+                    id: vm.event.id
+                }).<span lang="tr">then</span>(function () {
+                    abp.notify.info(&#39;Canceled the event.&#39;);
+                    vm.backToEventsPage();
+                });
+</strong>            };
+
+            vm.backToEventsPage = function() {
+                $state.go(&#39;events&#39;);
+            };
+
+            loadEvent();
+        }
+    ]);
+})();</pre>
+
+<p>We simply use event application service to perform actions.</p>
+
+<h4 id="ArticleMainMenu">Main Menu</h4>
+
+<p>Top menu is automatically created by ABP template. We define menu items in EventCloudNavigationProvider class:</p>
+
+<pre lang="cs">
+public class EventCloudNavigationProvider : NavigationProvider
+{
+    public override void SetNavigation(INavigationProviderContext context)
+    {
+        context.Manager.MainMenu
+            .AddItem(
+                new MenuItemDefinition(
+                    AppPageNames.Events,
+                    new LocalizableString(&quot;Events&quot;, EventCloudConsts.LocalizationSourceName),
+                    url: &quot;#/&quot;,
+                    icon: &quot;fa fa-calendar-check-o&quot;
+                    )
+            ).AddItem(
+                new MenuItemDefinition(
+                    AppPageNames.About,
+                    new LocalizableString(&quot;About&quot;, EventCloudConsts.LocalizationSourceName),
+                    url: &quot;#/about&quot;,
+                    icon: &quot;fa fa-info&quot;
+                    )
+            );
+    }
+}</pre>
+
+<p>We can add new menu items here. See <a href="http://www.aspnetboilerplate.com/Pages/Documents/Navigation">navigation documentation</a> for more information.</p>
+
+<h4 id="ArticleAngularRoute">Angular Route</h4>
+
+<p>Defining the menu only shows it on the page. Angular has it&#39;s own route system. This application uses Angular ui-router. Routes are defined in app.js as shown below:</p>
+
+<pre lang="js">
+//Configuration for Angular UI routing.
+app.config([
+    &#39;$stateProvider&#39;, &#39;$urlRouterProvider&#39;,
+    function($stateProvider, $urlRouterProvider) {
+        $urlRouterProvider.otherwise(&#39;/events&#39;);
+        $stateProvider
+            .state(&#39;events&#39;, {
+                url: &#39;/events&#39;,
+                templateUrl: &#39;/App/Main/views/events/index.cshtml&#39;,
+                menu: &#39;Events&#39; //Matches to name of &#39;Events&#39; menu in EventCloudNavigationProvider
+            })
+            .state(&#39;eventDetail&#39;, {
+                url: &#39;/events/:id&#39;,
+                templateUrl: &#39;/App/Main/views/events/detail.cshtml&#39;,
+                menu: &#39;Events&#39; //Matches to name of &#39;Events&#39; menu in EventCloudNavigationProvider
+            })
+            .state(&#39;about&#39;, {
+                url: &#39;/about&#39;,
+                templateUrl: &#39;/App/Main/views/about/about.cshtml&#39;,
+                menu: &#39;About&#39; //Matches to name of &#39;About&#39; menu in EventCloudNavigationProvider
+            });
+    }
+]);</pre>
+
+<h2 id="ArticleUnitTests">Unit and Integration Tests</h2>
+
+<p>ASP.NET Boilerplate provides tools to make unit and integration tests easier. You can find all test code from <a href="https://github.com/aspnetboilerplate/eventcloud/tree/master/mvc-angularjs/src/Tests/EventCloud.Tests">source code</a> of the project. Here, I will briefly explain basic tests. Solution includes <strong>EventAppService_Tests</strong> class which tests the EventAppService. See 2 tests from this class:</p>
+
+<pre lang="js">
+public class EventAppService_Tests : EventCloudTestBase
+{
+    private readonly IEventAppService _eventAppService;
+
+    public EventAppService_Tests()
+    {
+        _eventAppService = Resolve&lt;IEventAppService&gt;();
+    }
+
+    [Fact]
+    <strong>public async Task Should_Create_Event()</strong>
+    {
+        //Arrange
+        var eventTitle = Guid.NewGuid().ToString();
+
+        //Act
+        await _eventAppService.Create(new CreateEventInput
+        {
+            Title = eventTitle,
+            Description = &quot;A description&quot;,
+            Date = Clock.Now.AddDays(2)
+        });
+
+        //Assert
+        UsingDbContext(context =&gt;
+        {
+            context.Events.FirstOrDefault(e =&gt; e.Title == eventTitle).ShouldNotBe(null);
+        });
+    }
+
+    [Fact]
+    <strong>public async Task Should_Not_Create_Events_In_The_Past()</strong>
+    {
+        //Arrange
+        var eventTitle = Guid.NewGuid().ToString();
+
+        //Act
+        await Assert.ThrowsAsync&lt;UserFriendlyException&gt;(async () =&gt;
+        {
+            await _eventAppService.Create(new CreateEventInput
+            {
+                Title = eventTitle,
+                Description = &quot;A description&quot;,
+                Date = Clock.Now.AddDays(-1)
+            });
+        });
+    }
+
+    private Event GetTestEvent()
+    {
+        return UsingDbContext(context =&gt; GetTestEvent(context));
+    }
+
+    private static Event GetTestEvent(EventCloudDbContext context)
+    {
+        return context.Events.Single(e =&gt; e.Title == TestDataBuilder.TestEventTitle);
+    }
+}</pre>
+
+<p>We use <strong>xUnit</strong> as test framework. In the first test, we simply create an event and check database if it&#39;s in there. In the second test, we intentionally trying to create an event in the past. Since our business rule don&#39;t allow it, we should get an exception here.</p>
+
+<p>With such tests, we tested everything starting from application service including all aspects of ASP.NET Boilerplate (like validation, unit of work and so on). See my <em> <a href="http://www.codeproject.com/Articles/871786/Unit-testing-in-Csharp-using-xUnit-Entity-Framewor" data-abp-href="/Pages/Articles/Unit-Testing-with-Entity-Framework,-xUnit-Effort/index.html">Unit testing in C# using xUnit, Entity Framework, Effort and ASP.NET Boilerplate</a></em> article for details on unit testing.</p>
+
+<h2 id="ArticleTokenAuth">Token Based Authentication</h2>
+
+<p>Startup template uses cookie based authentication for browsers. However, if you want to consume Web APIs or application services (those are exposed via <a href="http://www.aspnetboilerplate.com/Pages/Documents/Dynamic-Web-API">dynamic web api</a>) from a mobile application, you probably want a token based authentication mechanism. Startup template includes bearer token authentication infrastructure. <strong>AccountController</strong> in <strong>*.WebApi</strong> project contains <strong>Authenticate</strong> action to get the token. Then we can use the token for next requests.</p>
+
+<p>We will use<strong>
+<a href="https://chrome.google.com/webstore/detail/postman/fhbjgbiflinjbdggehcddcbncdddomop">Postman</a></strong> (chrome extension) to demonstrate requests and responses.</p>
+
+<h3 id="ArticleTokenAuthenticate">Authentication</h3>
+
+<p>Just send a <strong>POST</strong> request to <strong> http://localhost:6334/api/Account/Authenticate</strong> with <strong> Context-Type=&quot;application/json&quot;</strong> header as shown below:</p>
+
+<p><img alt="Token based auth" src="token-auth.png"/></p>
+
+<p>We sent a <strong>JSON request body</strong> includes <strong>tenancyName</strong>, <strong>userNameOrEmailAddress </strong>and <strong>password</strong>. <strong>tenancyName </strong>is not required for <strong>host</strong> users. As seen above, <strong>result</strong> property of returning JSON contains the token. We can save it and use for next requests.</p>
+
+<h3 id="ArticleTokenUseAPI">Use API</h3>
+
+<p>After authenticate and get the <strong>token</strong>, we can use it to call any <strong>authorized</strong> action. All <strong>application services </strong>are available to be used remotely. For example, we can use the <strong>EventAppService</strong> to get a <strong> list of events</strong>:</p>
+
+<p><img alt="Use application service via token" src="token-api-call.png"/></p>
+
+<p>Just made a <strong>POST</strong> request to <strong> http://localhost:6334/api/services/app/event/GetList</strong> with <strong> Content-Type=&quot;application/json&quot;</strong> and <strong>Authorization=&quot;Bearer your-auth-token&quot;</strong>. Request body was just empty <strong>{}</strong>. Surely, request and response body will be different for different APIs.</p>
+
+<p>Almost all operations available on UI also available as Web API (since UI uses the same Web API) and can be consumed easily.</p>
+
+<h2 id="ArticleSourceCode">Source Code</h2>
+
+<p>You can get the latest source code from <a href="https://github.com/aspnetboilerplate/eventcloud/tree/master/mvc-angularjs/src"> https://github.com/aspnetboilerplate/eventcloud/tree/master/mvc-angularjs/src</a></p>
+
+<h2 id="ArticleSummary" class="abp-invisible">Summary</h2>
+
+<p class="abp-invisible">In this article, I introduced a Multi Tenant (SaaS) application built on <a href="https://aspnetboilerplate.com/">ASP.NET Boilerplate</a> (ABP) framework. Use the following links for more information on ASP.NET Boilerplate:</p>
+
+<ul class="abp-invisible">
+	<li>Official site and documentation: <a href="https://aspnetboilerplate.com/">aspnetboilerplate.com</a></li>
+	<li>GitHub repositories: <a href="https://github.com/aspnetboilerplate">github.com/aspnetboilerplate</a></li>
+	<li>Follow on twitter: <a href="https://twitter.com/aspboilerplate"> @aspboilerplate</a></li>
+</ul>
+
+<h2 id="ArticleHistory" class="abp-invisible">Article History</h2>
+
+<ul class="abp-invisible">
+	<li>2018-02-18<ul class="abp-invisible">
+		<li>Upgraded to ABP v3.4.0.</li>
+		<li>Updated some screenshorts and text in the article.</li>
+	</ul>
+	</li>
+	<li>2017-06-28
+	<ul>
+		<li>Upgraded to ABP v2.1.3.</li>
+		<li>Updated project creation section.</li>
+	</ul>
+	</li>
+	<li>2016-07-19
+	<ul>
+		<li>Renewed images and revised content.</li>
+		<li>Added statistics to about page.</li>
+		<li>Upgraded Abp.* nuget packages to v0.10.</li>
+	</ul>
+	</li>
+	<li>2016-01-08
+	<ul>
+		<li>Added &#39;unit and integration tests&#39; section.</li>
+		<li>Upgraded Abp.* nuget packages to v0.7.7.1.</li>
+	</ul>
+	</li>
+	<li>2015-12-04
+	<ul>
+		<li>Added &#39;social media login&#39; and &#39;token based authentication&#39; sections.</li>
+		<li>Localized UI.</li>
+		<li>Upgraded to .NET framework 4.5.2.</li>
+		<li>Updated Abp.* nuget packages to v0.7.5.</li>
+	</ul>
+	</li>
+	<li>2015-10-26
+	<ul>
+		<li>First publish of the article.</li>
+	</ul>
+	</li>
+</ul>

@@ -2,13 +2,12 @@
 
 Sending emails is a very common task for most applications.
 ASP.NET Boilerplate provides the basic infrastructure to send
-emails in a simple way. It also seperates the email server configuration from the sending 
+emails in a simple way. It also separates the email server configuration from the sending 
 of emails.
 
 ### IEmailSender
 
-**IEmailSender** is a service to send emails without it knowing
-details. Example usage:
+**IEmailSender** is a service to send emails without knowing the details. Example usage:
 
     public class TaskManager : IDomainService
     {
@@ -36,14 +35,14 @@ details. Example usage:
 
 We simply [injected](Dependency-Injection.md) **IEmailSender** and
 used the **Send** method. The Send method has additional overloads. For example, it
-can also get a MailMessage object (not available for .net core since .net core
+can also get a MailMessage object (not available for .NET Core since .NET Core
 does not include SmtpClient and MailMessage).
 
 #### ISmtpEmailSender
 
 There is also an **ISmtpEmailSender** which extends IEmailSender and adds a
 **BuildClient** method to create an **SmtpClient** and then directly uses it
-(not available for .net core since .net core does not include SmtpClient
+(not available for .NET Core since .NET Core does not include SmtpClient
 and MailMessage). Using IEmailSender will be enough for most cases.
 
 #### NullEmailSender
@@ -57,7 +56,7 @@ injection](Dependency-Injection.md) pattern.
 ### Configuration
 
 Email Sender uses a [settings management](Setting-Management.md) system
-to read emal-sending configurations. All the setting names are defined in the
+to read email-sending configurations. All the setting names are defined in the
 Abp.Net.Mail.EmailSettingNames class as constant strings. 
 
 Their values and descriptions:
@@ -85,7 +84,7 @@ Their values and descriptions:
 
 ### MailKit Integration
 
-Since .net core does not support the standard System.Net.Mail.SmtpClient, 
+Since .NET Core does not support the standard System.Net.Mail.SmtpClient, 
 we need a 3rd-party vendor to send emails. Fortunately,
 [MailKit](https://github.com/jstedfast/MailKit) provides a good
 replacement for the default SmtpClient. It's also
@@ -98,7 +97,7 @@ can still use IEmailSender as described above to send emails via MailKit.
 #### Installation
 
 First, install the [Abp.MailKit](https://www.nuget.org/packages/Abp.MailKit)
-nuget package to your project:
+NuGet package to your project:
 
     Install-Package Abp.MailKit
 

@@ -80,7 +80,7 @@ namespace Abp.AspNetCore.Mvc.ExceptionHandling
             context.Exception = null; //Handled!
         }
 
-        private int GetStatusCode(ExceptionContext context)
+        protected virtual int GetStatusCode(ExceptionContext context)
         {
             if (context.Exception is AbpAuthorizationException)
             {

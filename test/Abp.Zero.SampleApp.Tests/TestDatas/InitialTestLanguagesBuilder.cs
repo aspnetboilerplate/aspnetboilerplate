@@ -29,7 +29,7 @@ namespace Abp.Zero.SampleApp.Tests.TestDatas
             _context.Languages.Add(new ApplicationLanguage { Name = "de", DisplayName = "German" });
 
             //Default tenant languages
-            _context.Languages.Add(new ApplicationLanguage { Name = "zh-CN", DisplayName = "简体中文", TenantId = defaultTenant.Id });
+            _context.Languages.Add(new ApplicationLanguage { Name = "zh-Hans", DisplayName = "简体中文", TenantId = defaultTenant.Id });
         }
     }
 }

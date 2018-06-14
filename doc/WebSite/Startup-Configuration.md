@@ -1,9 +1,9 @@
-ASP.NET Boilerplate provides an infrastructure and a model to configure
-it and [modules](/Pages/Documents/Module-System) on startup.
+ASP.NET Boilerplate provides the infrastructure and a model to configure
+its [modules](/Pages/Documents/Module-System) on startup.
 
 ### Configuring ASP.NET Boilerplate
 
-Configuring ASP.NET Boilerplate is made on **PreInitialize** event of
+Configuring ASP.NET Boilerplate is made on the **PreInitialize** method of
 your module. Example configuration:
 
     public class SimpleTaskSystemModule : AbpModule
@@ -32,34 +32,34 @@ your module. Example configuration:
         }
     }
 
-ASP.NET Boilerplate is designed **[modularity](Module-System.md)** in
+ASP.NET Boilerplate is designed with **[modularity](Module-System.md)** in
 mind. Different modules can configure ASP.NET Boilerplate. For example,
-different modules can add navigation provider to add their own menu
-items to the main menu. (See
+different modules can add navigation providers to add their own menu
+items to the main menu. (See the
 [localization](/Pages/Documents/Localization) and
 [navigation](/Pages/Documents/Navigation) documents for details on
 configuring them).
 
 #### Replacing Built-In Services
 
-**Configuration.ReplaceService** method can be used to **override** a
+The **Configuration.ReplaceService** method can be used to **override** a
 built-in service. For example, you can replace IAbpSession service with
 your custom implementation as shown below:
 
     Configuration.ReplaceService<IAbpSession, MySession>(DependencyLifeStyle.Transient);
 
-ReplaceService method has an overload to pass an **action** to make
-replacement in a custom way (you can directly use Castle Windsor for
+The ReplaceService method has an overload to pass an **action** to make a
+replacement in a custom way (you can directly use Castle Windsor with its
 advanced registration API).
 
-Same service can be replaced multiple times (especially, in different
-modules). Last replaced will be valid (As you know, module PreInitialize
-methods are executed by [dependency order](Module-System.md)).
+The same service can be replaced multiple times, especially in different
+modules. The last one replaced will be the one that is valid. The module PreInitialize
+methods are executed by the [dependency order](Module-System.md).
 
 ### Configuring Modules
 
-Beside framework's own startup configuration, a module can extend
-**IAbpModuleConfigurations** interface to provide configuration points
+Besides the framework's own startup configuration, a module can extend
+the **IAbpModuleConfigurations** interface to provide configuration points
 for the module. Example:
 
     ...
@@ -71,7 +71,7 @@ for the module. Example:
     }
     ...
 
-In this example, we configured AbpWebCommon module to send all
+In this example, we configured the AbpWebCommon module to send all
 exceptions to clients.
 
 Not every module should define this type of configuration. It's
@@ -81,7 +81,7 @@ applications and needs to be configured on startup.
 ### Creating Configuration For a Module
 
 Assume that we have a module named MyModule and it has some
-configuration properties. First, we create a class for these cofigurable
+configuration properties. First, we create a class for these configurable
 properties:
 
     public class MyModuleConfig
@@ -91,20 +91,20 @@ properties:
         public string SampleConfig2 { get; set; }
     }
 
-Then we register this class to [Dependency
-Injection](Dependency-Injection.md) on **PreInitialize** event of
+We then register this class via [Dependency
+Injection](Dependency-Injection.md) on the **PreInitialize** method of
 MyModule (Thus, it will be injectable):
 
     IocManager.Register<MyModuleConfig>();
 
-It should be registered as **Singleton** as in this sample. Now, we can
+It should be registered as a **Singleton** like in this example. We can now
 use the following code to configure MyModule in our module's
 PreInitialize method:
 
     Configuration.Get<MyModuleConfig>().SampleConfig1 = false;
 
-While we can use IAbpStartupConfiguration.Get method as shown below, we
-can create an extension method to IModuleConfigurations like that:
+While we can use the IAbpStartupConfiguration.Get method as shown below, we
+can create an extension method to the IModuleConfigurations like this:
 
     public static class MyModuleConfigurationExtensions
     {
@@ -114,17 +114,17 @@ can create an extension method to IModuleConfigurations like that:
         }
     }
 
-Now, other modules can configure this module using the extension method:
+Now other modules can configure this module using the extension method:
 
     Configuration.Modules.MyModule().SampleConfig1 = false;
     Configuration.Modules.MyModule().SampleConfig2 = "test";
 
-This makes easy to investigate module configurations and collect them in
+This makes it easy to investigate module configurations and collect them in
 a single place (Configuration.Modules...). ABP itself defines extension
 methods for it's own module configurations.
 
-At some point, MyModule needs to this configuration. You can inject
-MyModuleConfig and use configured values. Example:
+At some point, MyModule needs this configuration. You can inject
+MyModuleConfig and use the configured values. Example:
 
     public class MyService : ITransientDependency
     {
@@ -144,5 +144,5 @@ MyModuleConfig and use configured values. Example:
         }
     }
 
-Thus, modules can create central configuration points in ASP.NET
+This way, modules can create central configuration points in the ASP.NET
 Boilerplate system.

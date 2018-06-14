@@ -40,4 +40,24 @@ namespace Abp.Tests.Domain.Values
             Number = number;
         }
     }
+
+    public class Address3 : ValueObject<Address3>
+    {
+        [IgnoreOnCompare]
+        public Guid? CityId { get; }
+
+        public string Street { get; }
+
+        public int Number { get; }
+
+        public Address3(
+            Guid? cityId,
+            string street,
+            int number)
+        {
+            CityId = cityId;
+            Street = street;
+            Number = number;
+        }
+    }
 }

@@ -1,0 +1,7 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<localizationDictionary culture="zh-Hans">
+  <texts>
+    <text name="HowAreYou" value="你好吗?" />
+    <text name="ThisIsATest">这是一个测试.</text>
+  </texts>
+</localizationDictionary>

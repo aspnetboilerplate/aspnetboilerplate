@@ -5,6 +5,6 @@ namespace Abp.Quartz.Configuration
 {
     public class AbpQuartzConfiguration : IAbpQuartzConfiguration
     {
-        public IScheduler Scheduler => StdSchedulerFactory.GetDefaultScheduler();
+        public IScheduler Scheduler => StdSchedulerFactory.GetDefaultScheduler().Result;
     }
 }

@@ -1,9 +1,9 @@
-When you want to write some simple log in the client, you can use
-console.log('...') API as you know. But it's not supported by all
-browsers and your script may be broken. So, you should check it first if
-console is available. Also, you may want to write logs somewhere else.
-Even you may want to write logs in some level. ASP.NET Boilerplate
-defines safe logging functions:
+When you want to write a simple log in the client, you can use
+console.log('...') API as you may already know. However, it's not supported by all
+browsers and your script may break as a result. You must first check if
+console is available. You may also want to write logs somewhere else.
+You may evem want to write logs at some other level. ASP.NET Boilerplate
+defines these safe logging functions:
 
     abp.log.debug('...');
     abp.log.info('...');
@@ -11,7 +11,7 @@ defines safe logging functions:
     abp.log.error('...');
     abp.log.fatal('...');
 
-You can change log level by setting **abp.log.level** to one of
-abp.log.levels (ex: abp.log.levels.INFO to do not write debug logs).
-These functions write logs to browser's console by default. But you can
-override/extend this behaviour if you need.
+You can change the log-level by setting the **abp.log.level** to one of the
+abp.log.levels (ex: abp.log.levels.INFO does not write to the debug logs).
+These functions write logs to the browser's console by default, but you can
+override/extend this behavior if you need to.

@@ -1,19 +1,19 @@
 ### Introduction
 
 Most **SaaS** (multi-tenant) applications have **editions** (packages)
-those have different **features**. Thus, they can provide different
-**price and feature options** to thier tenants (customers).
+that have different **features**. This way, they can provide different
+**price and feature options** to their tenants (customers).
 
 #### About Features
 
-See [feature management
-documentation](/Pages/Documents/Feature-Management) to understand
-features.
+See the [feature management
+documentation](/Pages/Documents/Feature-Management) to better understand
+how features work.
 
 ### Edition Entity
 
-**Edition** is a simple entity represents an edition (or package) of the
-application. It has just **Name** and **DisplayName** properties.
+**Edition** is a simple entity representing an edition (or package) of the
+application. It just has the **Name** and **DisplayName** properties.
 
 ### Edition Manager
 
@@ -23,7 +23,7 @@ application. It has just **Name** and **DisplayName** properties.
     {
     }
 
-It's derived from **AbpEditionManager** class. You can inject and use
-EditionManager to create, delete, update editions. Also, EditionManager
-is used to **manage features** of editions. It internally **caches**
+It's derived from the **AbpEditionManager** class. You can inject and use
+the EditionManager to create, delete, and update editions. EditionManager
+is also used to **manage the features** of editions. It internally **caches**
 edition features for better performance.

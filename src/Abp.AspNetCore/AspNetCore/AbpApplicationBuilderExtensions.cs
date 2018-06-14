@@ -11,38 +11,45 @@ using Microsoft.AspNetCore.Localization;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using System.Globalization;
+using Abp.AspNetCore.Security;
+using Microsoft.AspNetCore.Hosting;
 
 namespace Abp.AspNetCore
 {
-	public static class AbpApplicationBuilderExtensions
+    public static class AbpApplicationBuilderExtensions
     {
         public static void UseAbp(this IApplicationBuilder app)
         {
             app.UseAbp(null);
         }
 
-	    public static void UseAbp([NotNull] this IApplicationBuilder app, Action<AbpApplicationBuilderOptions> optionsAction)
-	    {
-		    Check.NotNull(app, nameof(app));
+        public static void UseAbp([NotNull] this IApplicationBuilder app, Action<AbpApplicationBuilderOptions> optionsAction)
+        {
+            Check.NotNull(app, nameof(app));
 
-	        var options = new AbpApplicationBuilderOptions();
+            var options = new AbpApplicationBuilderOptions();
             optionsAction?.Invoke(options);
 
             if (options.UseCastleLoggerFactory)
-		    {
-			    app.UseCastleLoggerFactory();
-			}
+            {
+                app.UseCastleLoggerFactory();
+            }
 
-			InitializeAbp(app);
+            InitializeAbp(app);
 
-		    if (options.UseAbpRequestLocalization)
-		    {
+            if (options.UseAbpRequestLocalization)
+            {
                 //TODO: This should be added later than authorization middleware!
-			    app.UseAbpRequestLocalization();
-		    }
-	    }
+                app.UseAbpRequestLocalization();
+            }
 
-		public static void UseEmbeddedFiles(this IApplicationBuilder app)
+            if (options.UseSecurityHeaders)
+            {
+                app.UseAbpSecurityHeaders();
+            }
+        }
+
+        public static void UseEmbeddedFiles(this IApplicationBuilder app)
         {
             app.UseStaticFiles(
                 new StaticFileOptions
@@ -58,6 +65,9 @@ namespace Abp.AspNetCore
         {
             var abpBootstrapper = app.ApplicationServices.GetRequiredService<AbpBootstrapper>();
             abpBootstrapper.Initialize();
+
+            var applicationLifetime = app.ApplicationServices.GetService<IApplicationLifetime>();
+            applicationLifetime.ApplicationStopping.Register(() => abpBootstrapper.Dispose());
         }
 
         public static void UseCastleLoggerFactory(this IApplicationBuilder app)
@@ -90,7 +100,7 @@ namespace Abp.AspNetCore
                 };
 
                 var userProvider = new AbpUserRequestCultureProvider();
-                
+
                 //0: QueryStringRequestCultureProvider
                 options.RequestCultureProviders.Insert(1, userProvider);
                 options.RequestCultureProviders.Insert(2, new AbpLocalizationHeaderRequestCultureProvider());
@@ -105,6 +115,11 @@ namespace Abp.AspNetCore
 
                 app.UseRequestLocalization(options);
             }
+        }
+
+        public static void UseAbpSecurityHeaders(this IApplicationBuilder app)
+        {
+            app.UseMiddleware<AbpSecurityHeadersMiddleware>();
         }
     }
 }

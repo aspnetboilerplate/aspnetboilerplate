@@ -99,6 +99,11 @@ namespace Abp.Domain.Entities
         /// <inheritdoc/>
         public override int GetHashCode()
         {
+            if (Id == null)
+            {
+                return 0;
+            }
+
             return Id.GetHashCode();
         }
 
