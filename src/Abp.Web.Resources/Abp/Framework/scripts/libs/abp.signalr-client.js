@@ -89,9 +89,9 @@ var abp = abp || {};
                     abp.log.debug('Cannot start the connection using ' + signalR.HttpTransportType[transport] + ' transport. ' + error.message);
                     if (transport !== signalR.HttpTransportType.LongPolling) {
                         return start(transport + 1);
+                    } else {                                        
+                        return Promise.reject(error);
                     }
-
-                    return Promise.reject(error);
                 });
         }(signalR.HttpTransportType.WebSockets);
     }
