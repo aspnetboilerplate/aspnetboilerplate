@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Linq;
 using System.Threading.Tasks;
 using Abp.Application.Features;
@@ -45,6 +46,8 @@ namespace Abp.Authorization.Users
         }
 
         public ILocalizationManager LocalizationManager { get; set; }
+
+        protected string LocalizationSourceName { get; set; }
 
         public IAbpSession AbpSession { get; set; }
 
@@ -105,6 +108,8 @@ namespace Abp.Authorization.Users
 
             AbpStore = store;
             RoleManager = roleManager;
+            LocalizationManager = NullLocalizationManager.Instance;
+            LocalizationSourceName = AbpZeroConsts.LocalizationSourceName;
         }
 
         public override async Task<IdentityResult> CreateAsync(TUser user)
@@ -691,9 +696,14 @@ namespace Abp.Authorization.Users
                 : _settingManager.GetSettingValueForTenantAsync<T>(settingName, tenantId.Value);
         }
 
-        private string L(string name)
+        protected virtual string L(string name)
         {
-            return LocalizationManager.GetString(AbpZeroConsts.LocalizationSourceName, name);
+            return LocalizationManager.GetString(LocalizationSourceName, name);
+        }
+
+        protected virtual string L(string name, CultureInfo cultureInfo)
+        {
+            return LocalizationManager.GetString(LocalizationSourceName, name, cultureInfo);
         }
 
         private int? GetCurrentTenantId()
