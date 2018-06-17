@@ -70,6 +70,11 @@ namespace Abp.IdentityFramework
 
         public static string LocalizeErrors(this IdentityResult identityResult, ILocalizationManager localizationManager)
         {
+            return LocalizeErrors(identityResult, localizationManager, AbpZeroConsts.LocalizationSourceName);
+        }
+
+        public static string LocalizeErrors(this IdentityResult identityResult, ILocalizationManager localizationManager, string localizationSourceName)
+        {
             if (identityResult.Succeeded)
             {
                 throw new ArgumentException("identityResult.Succeeded should be false in order to localize errors.");
@@ -85,12 +90,12 @@ namespace Abp.IdentityFramework
                 return identityResult.Errors.JoinAsString(" ");
             }
 
-            return identityResult.Errors.Select(err => LocalizeErrorMessage(err, localizationManager)).JoinAsString(" ");
+            return identityResult.Errors.Select(err => LocalizeErrorMessage(err, localizationManager, localizationSourceName)).JoinAsString(" ");
         }
 
-        private static string LocalizeErrorMessage(string identityErrorMessage, ILocalizationManager localizationManager)
+        private static string LocalizeErrorMessage(string identityErrorMessage, ILocalizationManager localizationManager, string localizationSourceName)
         {
-            var localizationSource = localizationManager.GetSource(AbpZeroConsts.LocalizationSourceName);
+            var localizationSource = localizationManager.GetSource(localizationSourceName);
 
             foreach (var identityLocalization in IdentityLocalizations)
             {
