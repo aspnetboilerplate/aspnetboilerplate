@@ -87,14 +87,14 @@ namespace Abp.Zero.EntityFrameworkCore
                     ns.EntityTypeName,
                     ns.EntityId,
                     ns.UserId
-                });
+                }).HasName("IX_NotificationSubscriptionInfo_NNENEIUI");
 
             #endregion
 
             #region UserNotificationInfo.IX_UserId_State_CreationTime
 
             modelBuilder.Entity<UserNotificationInfo>()
-                .HasIndex(un => new { un.UserId, un.State, un.CreationTime });
+                .HasIndex(un => new { un.UserId, un.State, un.CreationTime }).HasName("IX_UserNotificationInfo_USCT");
             #endregion
 
             #region UserLoginAttempt.IX_TenancyName_UserNameOrEmailAddress_Result
@@ -105,14 +105,14 @@ namespace Abp.Zero.EntityFrameworkCore
                     ula.TenancyName,
                     ula.UserNameOrEmailAddress,
                     ula.Result
-                });
+                }).HasName("IX_UserLoginAttempt_TNUNORAR");
 
             #endregion
 
             #region UserLoginAttempt.IX_UserId_TenantId
 
             modelBuilder.Entity<UserLoginAttempt>()
-                .HasIndex(ula => new { ula.UserId, ula.TenantId });
+                .HasIndex(ula => new { ula.UserId, ula.TenantId }).HasName("IX_UserLoginAttempt_UITI");
 
             #endregion
         }
