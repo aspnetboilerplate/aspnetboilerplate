@@ -85,7 +85,7 @@ namespace Abp.Authorization.Users
         {
             AbpStore = userStore;
             RoleManager = roleManager;
-            LocalizationManager = NullLocalizationManager.Instance;
+            LocalizationManager = localizationManager;
             LocalizationSourceName = AbpZeroConsts.LocalizationSourceName;
             _settingManager = settingManager;
 
