@@ -92,10 +92,12 @@ ASP.NET Boilerplate can work with all the scenarios described above.
 
 #### Enabling Multi-Tenancy
 
-Multi-tenancy is disabled by default. We can enable it in PreInitialize method
+Multi-tenancy is disabled by default for Framework level. We can enable it in PreInitialize method
 of our module as shown below:
 
     Configuration.MultiTenancy.IsEnabled = true; 
+
+**Note:** Multi-tenancy is enabled in both ASP.NET Core and ASP.NET MVC 5.x startup templates.
 
 #### Host vs Tenant
 
