@@ -90,13 +90,12 @@ namespace Abp.IdentityFramework
                 return identityResult.Errors.JoinAsString(" ");
             }
 
-            return identityResult.Errors.Select(err => LocalizeErrorMessage(err, localizationManager, localizationSourceName)).JoinAsString(" ");
+            var localizationSource = localizationManager.GetSource(localizationSourceName);
+            return identityResult.Errors.Select(err => LocalizeErrorMessage(err, localizationSource)).JoinAsString(" ");
         }
 
-        private static string LocalizeErrorMessage(string identityErrorMessage, ILocalizationManager localizationManager, string localizationSourceName)
+        private static string LocalizeErrorMessage(string identityErrorMessage, ILocalizationSource localizationSource)
         {
-            var localizationSource = localizationManager.GetSource(localizationSourceName);
-
             foreach (var identityLocalization in IdentityLocalizations)
             {
                 string[] values;
