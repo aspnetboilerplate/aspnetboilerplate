@@ -1,5 +1,4 @@
-﻿using System.Linq.Dynamic.Core;
-using System.Threading.Tasks;
+﻿using System.Threading.Tasks;
 using Abp.Application.Services.Dto;
 using Abp.ZeroCore.SampleApp.Application.Users;
 using Shouldly;
