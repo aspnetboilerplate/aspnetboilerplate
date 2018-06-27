@@ -119,5 +119,25 @@ namespace Abp.EntityFrameworkCore.Tests.Tests
                 context.Posts.FirstOrDefault(p => p.Title == "a test title").ShouldNotBeNull();
             });
         }
+
+        [Fact]
+        public async Task Should_Delete_Cascade()
+        {
+            using (var uow = _uowManager.Begin())
+            {
+                var blog = await _blogRepository.GetAsync(1);
+                await _blogRepository.EnsureCollectionLoadedAsync(blog, b => b.Posts);
+                blog.Posts.Count.ShouldBeGreaterThan(0);
+
+                await _blogRepository.DeleteAsync(blog);
+                await uow.CompleteAsync();
+            }
+
+            using (_uowManager.Begin())
+            {
+                var posts = _postRepository.GetAll().Where(post => post.Blog.Id == 1);
+                posts.Count().ShouldBe(0);
+            }
+        }
     }
 }
