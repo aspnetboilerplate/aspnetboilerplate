@@ -281,6 +281,7 @@ namespace Abp.EntityFrameworkCore
             CancelDeletionForSoftDelete(entry);
             SetDeletionAuditProperties(entry.Entity, userId);
             changeReport.ChangedEntities.Add(new EntityChangeEntry(entry.Entity, EntityChangeType.Deleted));
+            CascadeDelete(entry, userId, changeReport);
         }
 
         protected virtual void AddDomainEvents(List<DomainEventEntry> domainEvents, object entityAsObj)
@@ -507,6 +508,59 @@ namespace Abp.EntityFrameworkCore
                 }
 
                 return base.Visit(node);
+            }
+        }
+
+        private void CascadeDelete(EntityEntry entry, long? userId, EntityChangeReport changeReport)
+        {
+            var dependentToPrincipalNavigations =
+               entry.Navigations.Where(x => !x.Metadata.IsDependentToPrincipal()).ToList();
+
+            foreach (var navigationEntry in dependentToPrincipalNavigations)
+            {
+                if (!typeof(ISoftDelete).IsAssignableFrom(navigationEntry.Metadata.ForeignKey
+                    .DeclaringEntityType.ClrType))
+                {
+                    continue;
+                }
+
+                if (navigationEntry.Metadata.ForeignKey.DeleteBehavior != DeleteBehavior.Cascade)
+                {
+                    continue;
+                }
+
+                if (!navigationEntry.IsLoaded)
+                {
+                    navigationEntry.Load();
+                }
+
+                if (navigationEntry.CurrentValue == null)
+                {
+                    continue;
+                }
+
+                switch (navigationEntry)
+                {
+                    case CollectionEntry collectionEntry:
+                        foreach (var x in collectionEntry.CurrentValue)
+                        {
+                            Entry(x).Entity.As<ISoftDelete>().IsDeleted = true;
+                            Entry(x).State = EntityState.Modified;
+
+                            SetDeletionAuditProperties(Entry(x).Entity, userId);
+                            changeReport.ChangedEntities.Add(new EntityChangeEntry(Entry(x).Entity, EntityChangeType.Deleted));
+                        }
+
+                        break;
+                    case ReferenceEntry referenceEntry:
+                        Entry(referenceEntry.CurrentValue).As<ISoftDelete>().IsDeleted = true;
+                        Entry(referenceEntry.CurrentValue).State = EntityState.Modified;
+
+                        SetDeletionAuditProperties(Entry(referenceEntry.CurrentValue).Entity, userId);
+                        changeReport.ChangedEntities.Add(new EntityChangeEntry(Entry(referenceEntry.CurrentValue).Entity, EntityChangeType.Deleted));
+
+                        break;
+                }
             }
         }
     }

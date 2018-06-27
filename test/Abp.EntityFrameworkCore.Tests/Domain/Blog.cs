@@ -6,7 +6,7 @@ using Abp.Timing;
 
 namespace Abp.EntityFrameworkCore.Tests.Domain
 {
-    public class Blog : AggregateRoot, IHasCreationTime
+    public class Blog : AggregateRoot, IHasCreationTime, ISoftDelete
     {
         public string Name { get; set; }
 
@@ -18,7 +18,7 @@ namespace Abp.EntityFrameworkCore.Tests.Domain
 
         public Blog()
         {
-            
+
         }
 
         public Blog(string name, string url)
@@ -49,9 +49,11 @@ namespace Abp.EntityFrameworkCore.Tests.Domain
 
             DomainEvents.Add(new BlogUrlChangedEventData(this, oldUrl));
         }
+
+        public bool IsDeleted { get; set; }
     }
 
-    public class BlogCategory: AggregateRoot, IHasCreationTime
+    public class BlogCategory : AggregateRoot, IHasCreationTime
     {
         public string Name { get; set; }
 
