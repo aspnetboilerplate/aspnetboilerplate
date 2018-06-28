@@ -160,8 +160,8 @@ need to explicitly inject it.
 
 ##### ISettingDefinitionManager
 
-And also `ISettingDefinitionManager` can be used to get setting definitions that they are defined in `AppSettingProvider`. We can inject
-and use it anywhere in the application as well. You can get definition name, default value, displayname and etc. by using `ISettingDefinitionManager`.
+Also `ISettingDefinitionManager` can be used to get setting definitions that are defined in `AppSettingProvider`. We can inject
+and use it anywhere in the application as well. You can get definition name, default value, display name and etc. by using `ISettingDefinitionManager`.
 
 #### Client-side
 
