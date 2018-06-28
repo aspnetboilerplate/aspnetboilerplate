@@ -132,6 +132,8 @@ and client.
 
 #### Server-side
 
+##### ISettingManager
+
 The **ISettingManager** is used to perform setting operations. We can inject
 and use it anywhere in the application. ISettingManager defines many
 methods to get a setting's value.
@@ -155,6 +157,11 @@ Since ISettingManager is widely used, some special **base classes**
 (like ApplicationService, DomainService and AbpController) have a
 property named **SettingManager**. If we derive from these classes, there's no
 need to explicitly inject it.
+
+##### ISettingDefinitionManager
+
+And also `ISettingDefinitionManager` can be used to get setting definitions that they are defined in `AppSettingProvider`. We can inject
+and use it anywhere in the application as well. You can get definition name, default value, displayname and etc. by using `ISettingDefinitionManager`.
 
 #### Client-side
 
