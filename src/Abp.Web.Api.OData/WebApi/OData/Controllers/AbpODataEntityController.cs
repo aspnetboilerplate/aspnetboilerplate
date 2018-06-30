@@ -3,9 +3,9 @@ using System.Linq;
 using System.Net;
 using System.Threading.Tasks;
 using System.Web.Http;
-using System.Web.OData;
 using Abp.Domain.Entities;
 using Abp.Domain.Repositories;
+using Microsoft.AspNet.OData;
 
 namespace Abp.WebApi.OData.Controllers
 {
