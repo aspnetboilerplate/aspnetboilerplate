@@ -49,13 +49,9 @@
             const el = document.createElement('div');
             el.innerHTML = message;
 
-            messageContent = {
-                content: el
-            }
+            messageContent.content = el;
         } else {
-            messageContent = {
-                text: message
-            }
+            messageContent.text = message;
         }
 
         var opts = $.extend(
@@ -95,7 +91,7 @@
             const el = document.createElement('div');
             el.innerHTML = message;
 
-            messageContent  = {
+            messageContent = {
                 content: el
             }
         } else {
