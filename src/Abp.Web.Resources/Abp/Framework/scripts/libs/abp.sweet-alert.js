@@ -41,19 +41,19 @@
             message = undefined;
         }
 
-        var messageContent;
+        var messageContent = {
+            title: title
+        };
 
         if (isHtml) {
             const el = document.createElement('div');
             el.innerHTML = message;
 
             messageContent = {
-                title: title,
                 content: el
             }
         } else {
             messageContent = {
-                title: title,
                 text: message
             }
         }
