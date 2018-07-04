@@ -9,6 +9,8 @@ namespace Abp.Web.Validation
 {
     public abstract class ActionInvocationValidatorBase : MethodInvocationValidator
     {
+        private bool IsSetDataAnnotationAttributeErrors { get; set; }
+
         protected IList<Type> ValidatorsToSkip => new List<Type>
         {
             typeof(DataAnnotationsValidator),
@@ -47,7 +49,11 @@ namespace Abp.Web.Validation
                 base.ValidateMethodParameter(parameterInfo, parameterValue);
             }
 
-            SetDataAnnotationAttributeErrors();
+            if (!IsSetDataAnnotationAttributeErrors)
+            {
+                SetDataAnnotationAttributeErrors();
+                IsSetDataAnnotationAttributeErrors = true;
+            }
         }
 
         protected virtual object[] GetParameterValues(MethodInfo method)
