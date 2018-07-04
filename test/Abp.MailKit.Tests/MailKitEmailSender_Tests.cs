@@ -53,7 +53,7 @@ namespace Abp.MailKit.Tests
             mailConfig.Port.Returns(587);
             mailConfig.EnableSsl.Returns(false);
 
-            var mailSender = new MailKitEmailSender(mailConfig, new DefaultMailKitSmtpBuilder(mailConfig));
+            var mailSender = new MailKitEmailSender(mailConfig, new DefaultMailKitSmtpBuilder(mailConfig, new AbpMailKitConfiguration()));
             return mailSender;
         }
     }
