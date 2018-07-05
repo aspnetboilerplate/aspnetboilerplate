@@ -11,7 +11,7 @@ namespace AbpAspNetCoreDemo.Controllers
         }
 
         [HttpPost]
-        public IActionResult CreateUser(UserModel model)
+        public IActionResult CreateUser(UserModel model, string test)
         {
             return View("Index", model);
         }
