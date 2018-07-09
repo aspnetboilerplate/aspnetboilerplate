@@ -24,7 +24,7 @@ NuGet package to your project (generally to your Web layer) and add a
 
 Then use the **AddSignalR** and **UseSignalR** methods in your Startup class:
 
-    using Abp.Web.SignalR.Hubs;
+    using Abp.AspNetCore.SignalR.Hubs;
 
     namespace MyProject.Web.Startup
     {
