@@ -69,7 +69,7 @@ var abp = abp || {};
 
         // Add query string: https://github.com/aspnet/SignalR/issues/680
         if (abp.signalr.qs) {
-            url += (url.indexOf('?') >= 0 ? '&' : '?') + abp.signalr.qs;
+            url += (url.indexOf('?') == -1 ? '?' : '&') + abp.signalr.qs;
         }
 
         return function start(transport) {
