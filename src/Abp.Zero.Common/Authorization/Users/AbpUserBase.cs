@@ -18,7 +18,7 @@ namespace Abp.Authorization.Users
         /// <summary>
         /// Maximum length of the <see cref="UserName"/> property.
         /// </summary>
-        public const int MaxUserNameLength = 32;
+        public const int MaxUserNameLength = 256;
 
         /// <summary>
         /// Maximum length of the <see cref="EmailAddress"/> property.

@@ -87,7 +87,9 @@ namespace Abp.Zero.SampleApp.Tests.Roles
             (await RoleManager.IsGrantedAsync(adminRole.Id, "Permission3")).ShouldBe(true);
             (await RoleManager.IsGrantedAsync(adminRole.Id, "Permission4")).ShouldBe(true);
             (await RoleManager.IsGrantedAsync(adminRole.Id, "Permission5")).ShouldBe(false);
-
+            (await RoleManager.IsGrantedAsync(adminRole.Id, "FirstLevelChilPermission1")).ShouldBe(true);
+            (await RoleManager.IsGrantedAsync(adminRole.Id, "SecondLevelChildPermission1")).ShouldBe(true);
+            
             (await RoleManager.IsGrantedAsync(supporterRole.Id, "Permission1")).ShouldBe(true);
             (await RoleManager.IsGrantedAsync(supporterRole.Id, "Permission2")).ShouldBe(true);
             (await RoleManager.IsGrantedAsync(supporterRole.Id, "Permission3")).ShouldBe(false);

@@ -1,5 +1,4 @@
 ﻿using Abp.AspNetCore;
-using Microsoft.AspNetCore.Http.Extensions;
 using Microsoft.AspNetCore.Mvc;
 
 namespace AbpAspNetCoreDemo.Controllers

@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using Abp.Configuration;
 using Abp.Configuration.Startup;
 
 namespace Abp.ZeroCore.SampleApp.Application

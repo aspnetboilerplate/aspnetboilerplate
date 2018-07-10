@@ -313,7 +313,7 @@ should add it in pre-initialize method of your module.
 
 You may want to register a specific class that does not fit into the
 conventional registration rules. ASP.NET Boilerplate provides the
-**ITransientDependency** and the **ISingletonDependency** interfaces as a
+**ITransientDependency**, the **IPerWebRequestDependency** and the **ISingletonDependency** interfaces as a
 shortcut. For example:
 
     public interface IPersonManager
@@ -332,6 +332,8 @@ dependency is declared as a **Singleton**. A single instance of
 MyPersonManager is created and the same object is passed to all needed
 classes. It's instantiated in it's first use, and then used in the
 whole life of the application.
+
+**NOTE:** The **IPerWebRequestDependency** can only be used in the web layer.
 
 ##### Custom/Direct Registration
 

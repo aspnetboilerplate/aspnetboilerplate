@@ -129,7 +129,7 @@ namespace Abp.Zero.SampleApp.Tests.Roles
 
                     var grantedPermissions = await RoleManager.GetGrantedPermissionsAsync(adminRole);
 
-                    grantedPermissions.Count.ShouldBe(4);
+                    grantedPermissions.Count.ShouldBe(6);
                     grantedPermissions.ShouldContain(p => p.Name == "Permission1");
                     grantedPermissions.ShouldContain(p => p.Name == "Permission2");
                     grantedPermissions.ShouldContain(p => p.Name == "Permission3");

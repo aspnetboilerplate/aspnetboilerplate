@@ -5,6 +5,7 @@ using Abp.AspNetCore.Configuration;
 using Abp.AspNetCore.Mvc.Extensions;
 using Abp.Castle.Logging.Log4Net;
 using Abp.PlugIns;
+using Abp.Web.Mvc.Alerts;
 using AbpAspNetCoreDemo.Controllers;
 using Castle.Facilities.Logging;
 using Microsoft.AspNetCore.Builder;
@@ -47,6 +48,9 @@ namespace AbpAspNetCoreDemo
             services.AddMvc(options =>
             {
                 options.Filters.Add(new AutoValidateAntiforgeryTokenAttribute());
+            }).AddJsonOptions(options =>
+            {
+                options.SerializerSettings.DateFormatString = "yyyy-MM-dd HH:mm:ss";
             });
 
             //Configure Abp and Dependency Injection. Should be called last.
@@ -85,7 +89,7 @@ namespace AbpAspNetCoreDemo
 
             app.UseStaticFiles();
             app.UseEmbeddedFiles(); //Allows to expose embedded files to the web!
-         
+
             app.UseMvc(routes =>
             {
                 app.ApplicationServices.GetRequiredService<IAbpAspNetCoreConfiguration>().RouteConfiguration.ConfigureAll(routes);

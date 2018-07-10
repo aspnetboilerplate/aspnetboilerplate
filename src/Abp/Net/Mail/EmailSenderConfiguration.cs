@@ -1,5 +1,4 @@
-﻿using System;
-using Abp.Configuration;
+﻿using Abp.Configuration;
 using Abp.Extensions;
 
 namespace Abp.Net.Mail

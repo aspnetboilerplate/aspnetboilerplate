@@ -21,6 +21,7 @@ using Abp.Modules;
 using Abp.MultiTenancy;
 using Abp.Net.Mail;
 using Abp.Notifications;
+using Abp.RealTime;
 using Abp.Reflection.Extensions;
 using Abp.Runtime;
 using Abp.Runtime.Caching;
@@ -63,6 +64,8 @@ namespace Abp
             }
 
             IocManager.IocContainer.Install(new EventBusInstaller(IocManager));
+
+            IocManager.Register(typeof(IOnlineClientManager<>), typeof(OnlineClientManager<>), DependencyLifeStyle.Singleton);
 
             IocManager.RegisterAssemblyByConvention(typeof(AbpKernelModule).GetAssembly(),
                 new ConventionalRegistrationConfig

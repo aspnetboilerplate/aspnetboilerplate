@@ -1,6 +1,6 @@
 ﻿using Abp.Dependency;
 
-namespace Abp.Configuration.Startup
+namespace Abp.Configuration
 {
     public class CustomConfigProviderContext
     {
