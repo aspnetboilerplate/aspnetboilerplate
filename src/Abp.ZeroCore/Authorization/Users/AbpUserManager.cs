@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Linq;
 using System.Threading.Tasks;
 using Abp.Application.Features;
@@ -45,6 +46,8 @@ namespace Abp.Authorization.Users
         }
 
         public ILocalizationManager LocalizationManager { get; set; }
+
+        protected string LocalizationSourceName { get; set; }
 
         public IAbpSession AbpSession { get; set; }
 
@@ -105,6 +108,8 @@ namespace Abp.Authorization.Users
 
             AbpStore = store;
             RoleManager = roleManager;
+            LocalizationManager = NullLocalizationManager.Instance;
+            LocalizationSourceName = AbpZeroConsts.LocalizationSourceName;
         }
 
         public override async Task<IdentityResult> CreateAsync(TUser user)
@@ -121,7 +126,15 @@ namespace Abp.Authorization.Users
                 user.TenantId = tenantId.Value;
             }
 
-            return await base.CreateAsync(user);
+            var isLockoutEnabled = user.IsLockoutEnabled;
+
+            var identityResult = await base.CreateAsync(user);
+            if (identityResult.Succeeded)
+            {
+                await SetLockoutEnabledAsync(user, isLockoutEnabled);
+            }
+
+            return identityResult;
         }
 
         /// <summary>
@@ -582,7 +595,7 @@ namespace Abp.Authorization.Users
         public virtual async Task InitializeOptionsAsync(int? tenantId)
         {
             Options = JsonConvert.DeserializeObject<IdentityOptions>(_optionsAccessor.Value.ToJsonString());
-            
+
             //Lockout
             Options.Lockout.AllowedForNewUsers = await IsTrueAsync(AbpZeroSettingNames.UserManagement.UserLockOut.IsEnabled, tenantId);
             Options.Lockout.DefaultLockoutTimeSpan = TimeSpan.FromSeconds(await GetSettingValueAsync<int>(AbpZeroSettingNames.UserManagement.UserLockOut.DefaultAccountLockoutSeconds, tenantId));
@@ -683,9 +696,14 @@ namespace Abp.Authorization.Users
                 : _settingManager.GetSettingValueForTenantAsync<T>(settingName, tenantId.Value);
         }
 
-        private string L(string name)
+        protected virtual string L(string name)
         {
-            return LocalizationManager.GetString(AbpZeroConsts.LocalizationSourceName, name);
+            return LocalizationManager.GetString(LocalizationSourceName, name);
+        }
+
+        protected virtual string L(string name, CultureInfo cultureInfo)
+        {
+            return LocalizationManager.GetString(LocalizationSourceName, name, cultureInfo);
         }
 
         private int? GetCurrentTenantId()
