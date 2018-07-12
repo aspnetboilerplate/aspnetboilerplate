@@ -27,7 +27,7 @@ namespace Abp.Application.Navigation
         /// <summary>
         /// Menu items (first level).
         /// </summary>
-        public IList<MenuItemDefinition> Items { get; set; }
+        public List<MenuItemDefinition> Items { get; set; }
 
         /// <summary>
         /// Creates a new <see cref="MenuDefinition"/> object.
@@ -63,6 +63,11 @@ namespace Abp.Application.Navigation
         {
             Items.Add(menuItem);
             return this;
+        }
+
+        public void RemoveItem(string name)
+        {
+            Items.RemoveAll(m => m.Name == name);
         }
     }
 }
