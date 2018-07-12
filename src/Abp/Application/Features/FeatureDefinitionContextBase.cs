@@ -53,5 +53,10 @@ namespace Abp.Application.Features
         {
             return Features.GetOrDefault(name);
         }
+
+        public void Remove(string name)
+        {
+            Features.Remove(name);
+        }
     }
 }
