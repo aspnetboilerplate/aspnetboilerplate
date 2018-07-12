@@ -151,6 +151,10 @@ namespace Abp.Application.Navigation
             return this;
         }
 
+        /// <summary>
+        /// Remove notification with given name
+        /// </summary>
+        /// <param name="name"></param>
         public void RemoveItem(string name)
         {
             Items.RemoveAll(m => m.Name == name);

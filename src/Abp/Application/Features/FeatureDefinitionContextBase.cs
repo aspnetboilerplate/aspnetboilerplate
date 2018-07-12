@@ -54,6 +54,10 @@ namespace Abp.Application.Features
             return Features.GetOrDefault(name);
         }
 
+        /// <summary>
+        /// Remove feature with given name
+        /// </summary>
+        /// <param name="name"></param>
         public void Remove(string name)
         {
             Features.Remove(name);
