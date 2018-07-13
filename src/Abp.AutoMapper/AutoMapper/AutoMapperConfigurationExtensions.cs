@@ -51,8 +51,6 @@ namespace Abp.AutoMapper
                     var targetPropertyInfo = targetType.GetProperty(sourcePropertyExpression.Member.Name);
 
                     //It happen if the property with AutoMapKeyAttribute does not exist in target
-                    //Maybe we should throw or maybe it's ok the compare only the existing match
-                    //???
                     if (targetPropertyInfo is null)
                     {
                         continue;
