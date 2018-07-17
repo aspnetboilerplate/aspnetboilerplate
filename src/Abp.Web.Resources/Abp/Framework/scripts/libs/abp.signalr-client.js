@@ -75,7 +75,7 @@ var abp = abp || {};
         return function start(transport) {
             abp.log.debug('Starting connection using ' + signalR.HttpTransportType[transport] + ' transport');
             var connection = new signalR.HubConnectionBuilder()
-                .withUrl(url, transport)
+                .withUrl(abp.appPath + url, transport)
                 .build();
             if (configureConnection && typeof configureConnection === 'function') {
                 configureConnection(connection);
