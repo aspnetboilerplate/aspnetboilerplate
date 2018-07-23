@@ -59,7 +59,7 @@ namespace Abp.AspNetCore.Mvc.ExceptionHandling
             }
         }
 
-        private void HandleAndWrapException(ExceptionContext context)
+        protected virtual void HandleAndWrapException(ExceptionContext context)
         {
             if (!ActionResultHelper.IsObjectResult(context.ActionDescriptor.GetMethodInfo().ReturnType))
             {
