@@ -300,6 +300,7 @@
     <Compile Include="Controllers\AlertsTestController.cs" />
     <Compile Include="Controllers\DemoControllerBase.cs" />
     <Compile Include="Controllers\HomeController.cs" />
+    <Compile Include="Controllers\TestFluentValidationController.cs" />
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
