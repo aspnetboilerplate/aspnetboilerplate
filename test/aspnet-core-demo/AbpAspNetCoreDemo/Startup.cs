@@ -1,12 +1,17 @@
 ﻿using System;
 using System.IO;
+using System.Linq;
 using Abp.AspNetCore;
 using Abp.AspNetCore.Configuration;
 using Abp.AspNetCore.Mvc.Extensions;
 using Abp.Castle.Logging.Log4Net;
+using Abp.Dependency;
 using Abp.PlugIns;
+using Abp.Web.Mvc.Alerts;
 using AbpAspNetCoreDemo.Controllers;
 using Castle.Facilities.Logging;
+using Castle.MicroKernel.ModelBuilder.Inspectors;
+using Castle.MicroKernel.SubSystems.Conversion;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc;
@@ -47,6 +52,9 @@ namespace AbpAspNetCoreDemo
             services.AddMvc(options =>
             {
                 options.Filters.Add(new AutoValidateAntiforgeryTokenAttribute());
+            }).AddJsonOptions(options =>
+            {
+                options.SerializerSettings.DateFormatString = "yyyy-MM-dd HH:mm:ss";
             });
 
             //Configure Abp and Dependency Injection. Should be called last.
@@ -62,6 +70,14 @@ namespace AbpAspNetCoreDemo
                 options.IocManager.IocContainer.AddFacility<LoggingFacility>(
                     f => f.UseAbpLog4Net().WithConfig("log4net.config")
                 );
+
+                var propInjector = options.IocManager.IocContainer.Kernel.ComponentModelBuilder
+                    .Contributors
+                    .OfType<PropertiesDependenciesModelInspector>()
+                    .Single();
+
+                options.IocManager.IocContainer.Kernel.ComponentModelBuilder.RemoveContributor(propInjector);
+                options.IocManager.IocContainer.Kernel.ComponentModelBuilder.AddContributor(new AbpPropertiesDependenciesModelInspector(new DefaultConversionManager()));
             });
         }
 
@@ -85,7 +101,7 @@ namespace AbpAspNetCoreDemo
 
             app.UseStaticFiles();
             app.UseEmbeddedFiles(); //Allows to expose embedded files to the web!
-         
+
             app.UseMvc(routes =>
             {
                 app.ApplicationServices.GetRequiredService<IAbpAspNetCoreConfiguration>().RouteConfiguration.ConfigureAll(routes);

@@ -306,12 +306,9 @@ namespace Abp.EntityFrameworkCore
             var entity = entry.Entity as IEntity<Guid>;
             if (entity != null && entity.Id == Guid.Empty)
             {
-                var dbGeneratedAttr = ReflectionHelper
-                    .GetSingleAttributeOrDefault<DatabaseGeneratedAttribute>(
-                    entry.Property("Id").Metadata.PropertyInfo
-                    );
+                var idPropertyEntry = entry.Property("Id");
 
-                if (dbGeneratedAttr == null || dbGeneratedAttr.DatabaseGeneratedOption == DatabaseGeneratedOption.None)
+                if (idPropertyEntry != null && idPropertyEntry.Metadata.ValueGenerated == ValueGenerated.Never)
                 {
                     entity.Id = GuidGenerator.Create();
                 }

@@ -10,6 +10,6 @@ namespace Abp.Application.Navigation
         /// <summary>
         /// List of menu items.
         /// </summary>
-        IList<MenuItemDefinition> Items { get; }
+        List<MenuItemDefinition> Items { get; }
     }
 }

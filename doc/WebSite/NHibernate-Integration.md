@@ -8,7 +8,7 @@ familar with NHibernate at some basic level.
 The NuGet package to use NHibernate as an O/RM in ASP.NET Boilerplate is
 [Abp.NHibernate](http://www.nuget.org/packages/Abp.NHibernate). You
 need to add it to your application. It's better to implement NHibernate
-in a seperated assembly (dll) in your application and depend on that
+in a separated assembly (dll) in your application and depend on that
 package from this assembly.
 
 ### Configuration

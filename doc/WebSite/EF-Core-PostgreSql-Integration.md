@@ -1,16 +1,16 @@
 ### Download Starter Template
 
-Download a starter template with **ASP.NET Core** and **Entity Framework Core** to integrate PostgreSQL. 
-[Multi-page template with **ASP.NET Core 2.x** + **.Net Core Framework** + **Authentication**](https://aspnetboilerplate.com/Templates) 
+Download the starter template with **ASP.NET Core** and **Entity Framework Core** to integrate PostgreSQL. 
+[Multi-page template with **ASP.NET Core 2.x** + **.NET Core Framework** + **Authentication**](https://aspnetboilerplate.com/Templates) 
 will be explained in this document.
 
 ### Install
 
-Install [`Npgsql.EntityFrameworkCore.PostgreSQL`](https://www.nuget.org/packages/Npgsql.EntityFrameworkCore.PostgreSQL/) NuGet package to ***.EntityFrameworkCore** project.
+Install the [`Npgsql.EntityFrameworkCore.PostgreSQL`](https://www.nuget.org/packages/Npgsql.EntityFrameworkCore.PostgreSQL/) NuGet package to the ***.EntityFrameworkCore** project.
 
 ### Configuration
 
-Some configuration and workaround are needed to use PostgreSQL with ASP.NET Core and Entity Framework Core. 
+Some configuration and workarounds are needed to use PostgreSQL with ASP.NET Core and Entity Framework Core. 
 
 #### Configure DbContext 
 
@@ -29,7 +29,7 @@ public static class PostgreSqlDemoDbContextConfigurer
         builder.UseNpgsql(connection);
     }
  }
- ```
+```
 
 #### Configure connection string 
 
@@ -46,14 +46,14 @@ Change the connection string to your PostgreSQL connection in ***.Web.Mvc/appset
 
 #### A workaround
 
-To prevent EF Core from calling `Program.BuildWebHost()` rename `BuildWebHost`. For example, change it to `InitWebHost`. 
+To prevent EF Core from calling `Program.BuildWebHost()`, rename `BuildWebHost`. For example, change it to `InitWebHost`. 
 To understand why it needs to be renamed, check the following issues:
 
 > **Reason** : [EF Core 2.0: design-time DbContext discovery changes](https://github.com/aspnet/EntityFrameworkCore/issues/9033)
 > 
 > **Workaround** : [Design: Allow IDesignTimeDbContextFactory to short-circuit service provider creation](https://github.com/aspnet/EntityFrameworkCore/issues/9076#issuecomment-313278753)
 >
-> **NOTE :** If you don't rename BuildWebHost, you'll get an error running BuildWebHost method.
+> **NOTE :** If you don't rename BuildWebHost, you'll get an error running the BuildWebHost method.
 
 ### Create Database
 
@@ -72,6 +72,8 @@ public class PostgreSqlDemoDbContext : AbpZeroDbContext<Tenant, Role, User, Post
     // we should set max length smaller than the PostgreSQL allowed size (10485760)
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
+    	base.OnModelCreating(modelBuilder);
+    	
         modelBuilder.Entity<ApplicationLanguageText>()
             .Property(p => p.Value)
             .HasMaxLength(100); // any integer that is smaller than 10485760
@@ -79,14 +81,14 @@ public class PostgreSqlDemoDbContext : AbpZeroDbContext<Tenant, Role, User, Post
 }
 ```
 
-Remove all migration classes in ***.EntityFrameworkCore/Migrations** folder,
+Delete the ***.EntityFrameworkCore/Migrations** folder,
 because `Npgsql.EntityFrameworkCore.PostgreSQL` will add some of its own configuration to work with Entity Framework Core.
 
 Now it's ready to build database.
 
-- Select **\*.Web.Mvc** as startup project.
-- Open **Package Manager Console** and select **\*.EntityFrameworkCore** project.
-- Run `add-migration Initial_Migration` command.
-- Run `update-database` command.
+- Select **\*.Web.Mvc** as the startup project.
+- Open **Package Manager Console** and select the **\*.EntityFrameworkCore** project.
+- Run the `add-migration Initial_Migration` command.
+- Run the `update-database` command.
 
-PostgreSQL integration is complete. Now you can run your project with PostgreSQL.
+The PostgreSQL integration is now complete. You can now run your project with PostgreSQL.

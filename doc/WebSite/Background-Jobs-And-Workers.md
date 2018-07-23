@@ -182,7 +182,7 @@ The default BackgroundJobManager needs a data store to save and get jobs. If
 you do not implement **IBackgroundJobStore** then it uses
 **InMemoryBackgroundJobStore** which does not save jobs in a persistent
 database. You can simply implement it to store jobs in a database or you
-can use **[module-zero](/Pages/Documents/Zero/Overall)** which already
+can use **[Module Zero](/Pages/Documents/Zero/Overall)** which already
 implements it.
 
 If you are using a 3rd party job manager (like
@@ -290,7 +290,7 @@ application in last 30 days. See the code:
     }
 
 This real code directly works in ASP.NET Boilerplate with
-[module-zero](/Pages/Documents/Zero/Overall).
+[Module Zero](/Pages/Documents/Zero/Overall).
 
 -   If you derive from **PeriodicBackgroundWorkerBase** (as in this
     sample), you should implement the **DoWork** method to perform your

@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Threading;
 using System.Threading.Tasks;
 using Abp.Dependency;
@@ -19,13 +19,11 @@ namespace Abp.Quartz.Tests
         {
             _quartzScheduleJobManager = LocalIocManager.Resolve<IQuartzScheduleJobManager>();
             _abpQuartzConfiguration = LocalIocManager.Resolve<IAbpQuartzConfiguration>();
-
-            ScheduleJobs();
         }
 
-        private void ScheduleJobs()
+        private async Task ScheduleJobs()
         {
-            _quartzScheduleJobManager.ScheduleAsync<HelloJob>(
+            await _quartzScheduleJobManager.ScheduleAsync<HelloJob>(
                 job =>
                 {
                     job.WithDescription("HelloJobDescription")
@@ -35,11 +33,11 @@ namespace Abp.Quartz.Tests
                 {
                     trigger.WithIdentity("HelloJobTrigger")
                            .WithDescription("HelloJobTriggerDescription")
-                           .WithSimpleSchedule(schedule => schedule.WithRepeatCount(5).WithInterval(TimeSpan.FromSeconds(1)).Build())
+                           .WithSimpleSchedule(schedule => schedule.WithRepeatCount(5).WithInterval(TimeSpan.FromSeconds(1)))
                            .StartNow();
                 });
 
-            _quartzScheduleJobManager.ScheduleAsync<GoodByeJob>(
+            await _quartzScheduleJobManager.ScheduleAsync<GoodByeJob>(
                 job =>
                 {
                     job.WithDescription("GoodByeJobDescription")
@@ -49,28 +47,27 @@ namespace Abp.Quartz.Tests
                 {
                     trigger.WithIdentity("GoodByeJobTrigger")
                            .WithDescription("GoodByeJobTriggerDescription")
-                           .WithSimpleSchedule(schedule => schedule.WithRepeatCount(5).WithInterval(TimeSpan.FromSeconds(1)).Build())
+                           .WithSimpleSchedule(schedule => schedule.WithRepeatCount(5).WithInterval(TimeSpan.FromSeconds(1)))
                            .StartNow();
                 });
         }
 
         [Fact]
-        public async Task QuartzScheduler_Jobs_ShouldBeRegistered()
+        public async Task QuartzScheduler_Jobs_ShouldBe_Registered_And_Executed_With_SingletonDependency()
         {
+            // There should be only one test case in this project, or the unit test may fail in AppVeyor
+            await ScheduleJobs();
+
+            var helloDependency = LocalIocManager.Resolve<IHelloDependency>();
+            var goodByeDependency = LocalIocManager.Resolve<IGoodByeDependency>();
+
             _abpQuartzConfiguration.Scheduler.ShouldNotBeNull();
             _abpQuartzConfiguration.Scheduler.IsStarted.ShouldBe(true);
             (await _abpQuartzConfiguration.Scheduler.CheckExists(JobKey.Create("HelloJobKey"))).ShouldBe(true);
             (await _abpQuartzConfiguration.Scheduler.CheckExists(JobKey.Create("GoodByeJobKey"))).ShouldBe(true);
-        }
-
-        [Fact]
-        public void QuartzScheduler_Jobs_ShouldBeExecuted_With_SingletonDependency()
-        {
-            var helloDependency = LocalIocManager.Resolve<IHelloDependency>();
-            var goodByeDependency = LocalIocManager.Resolve<IGoodByeDependency>();
 
             //Wait for execution!
-            Thread.Sleep(TimeSpan.FromSeconds(5));
+            await Task.Delay(TimeSpan.FromSeconds(5));
 
             helloDependency.ExecutionCount.ShouldBeGreaterThan(0);
             goodByeDependency.ExecutionCount.ShouldBeGreaterThan(0);

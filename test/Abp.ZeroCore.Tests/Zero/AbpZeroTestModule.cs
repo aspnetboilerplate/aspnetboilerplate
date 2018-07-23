@@ -1,5 +1,4 @@
-﻿using System;
-using Abp.AutoMapper;
+﻿using Abp.AutoMapper;
 using Abp.Modules;
 using Abp.Reflection.Extensions;
 using Abp.TestBase;

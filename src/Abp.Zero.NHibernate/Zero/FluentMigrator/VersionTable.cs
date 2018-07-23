@@ -1,4 +1,4 @@
-﻿using FluentMigrator.VersionTableInfo;
+﻿using FluentMigrator.Runner.VersionTableInfo;
 
 namespace Abp.Zero.FluentMigrator
 {

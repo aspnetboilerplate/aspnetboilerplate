@@ -28,7 +28,19 @@ namespace Abp.Events.Bus
         }
 
         /// <inheritdoc/>
+        public IDisposable AsyncRegister<TEventData>(Func<TEventData, Task> action) where TEventData : IEventData
+        {
+            return NullDisposable.Instance;
+        }
+
+        /// <inheritdoc/>
         public IDisposable Register<TEventData>(IEventHandler<TEventData> handler) where TEventData : IEventData
+        {
+            return NullDisposable.Instance;
+        }
+
+        /// <inheritdoc/>
+        public IDisposable AsyncRegister<TEventData>(IAsyncEventHandler<TEventData> handler) where TEventData : IEventData
         {
             return NullDisposable.Instance;
         }
@@ -36,7 +48,7 @@ namespace Abp.Events.Bus
         /// <inheritdoc/>
         public IDisposable Register<TEventData, THandler>()
             where TEventData : IEventData
-            where THandler : IEventHandler<TEventData>, new()
+            where THandler : IEventHandler, new()
         {
             return NullDisposable.Instance;
         }
@@ -65,7 +77,17 @@ namespace Abp.Events.Bus
         }
 
         /// <inheritdoc/>
+        public void AsyncUnregister<TEventData>(Func<TEventData, Task> action) where TEventData : IEventData
+        {
+        }
+
+        /// <inheritdoc/>
         public void Unregister<TEventData>(IEventHandler<TEventData> handler) where TEventData : IEventData
+        {
+        }
+
+        /// <inheritdoc/>
+        public void AsyncUnregister<TEventData>(IAsyncEventHandler<TEventData> handler) where TEventData : IEventData
         {
         }
 
@@ -117,25 +139,25 @@ namespace Abp.Events.Bus
         /// <inheritdoc/>
         public Task TriggerAsync<TEventData>(TEventData eventData) where TEventData : IEventData
         {
-            return new Task(() => { });
+            return Task.CompletedTask;
         }
 
         /// <inheritdoc/>
         public Task TriggerAsync<TEventData>(object eventSource, TEventData eventData) where TEventData : IEventData
         {
-            return new Task(() => { });
+            return Task.CompletedTask;
         }
 
         /// <inheritdoc/>
         public Task TriggerAsync(Type eventType, IEventData eventData)
         {
-            return new Task(() => { });
+            return Task.CompletedTask;
         }
 
         /// <inheritdoc/>
         public Task TriggerAsync(Type eventType, object eventSource, IEventData eventData)
         {
-            return new Task(() => { });
+            return Task.CompletedTask;
         }
     }
 }

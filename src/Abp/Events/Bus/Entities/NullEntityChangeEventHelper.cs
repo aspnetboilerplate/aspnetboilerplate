@@ -8,7 +8,7 @@ namespace Abp.Events.Bus.Entities
     public class NullEntityChangeEventHelper : IEntityChangeEventHelper
     {
         /// <summary>
-        /// Gets single instance of <see cref="NullEventBus"/> class.
+        /// Gets single instance of <see cref="NullEntityChangeEventHelper"/> class.
         /// </summary>
         public static NullEntityChangeEventHelper Instance { get; } = new NullEntityChangeEventHelper();
 

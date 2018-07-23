@@ -31,7 +31,8 @@
   </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Include="FluentMigrator" Version="1.6.2" />
+    <PackageReference Include="FluentMigrator" Version="3.0.0" />
+    <PackageReference Include="FluentMigrator.Runner" Version="3.0.0" />
   </ItemGroup>
 
   <ItemGroup Condition=" '$(TargetFramework)' == 'net461' ">

@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Linq;
 using System.Threading.Tasks;
 using Abp.Application.Features;
@@ -9,9 +10,11 @@ using Abp.Configuration.Startup;
 using Abp.Domain.Repositories;
 using Abp.Domain.Services;
 using Abp.Domain.Uow;
+using Abp.Json;
 using Abp.Localization;
 using Abp.MultiTenancy;
 using Abp.Organizations;
+using Abp.Reflection;
 using Abp.Runtime.Caching;
 using Abp.Runtime.Session;
 using Abp.UI;
@@ -21,6 +24,7 @@ using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
+using Newtonsoft.Json;
 
 namespace Abp.Authorization.Users
 {
@@ -43,6 +47,8 @@ namespace Abp.Authorization.Users
 
         public ILocalizationManager LocalizationManager { get; set; }
 
+        protected string LocalizationSourceName { get; set; }
+
         public IAbpSession AbpSession { get; set; }
 
         public FeatureDependencyContext FeatureDependencyContext { get; set; }
@@ -60,6 +66,7 @@ namespace Abp.Authorization.Users
         private readonly IRepository<UserOrganizationUnit, long> _userOrganizationUnitRepository;
         private readonly IOrganizationUnitSettings _organizationUnitSettings;
         private readonly ISettingManager _settingManager;
+        private readonly IOptions<IdentityOptions> _optionsAccessor;
 
         public AbpUserManager(
             AbpRoleManager<TRole, TUser> roleManager,
@@ -97,9 +104,12 @@ namespace Abp.Authorization.Users
             _userOrganizationUnitRepository = userOrganizationUnitRepository;
             _organizationUnitSettings = organizationUnitSettings;
             _settingManager = settingManager;
+            _optionsAccessor = optionsAccessor;
 
             AbpStore = store;
             RoleManager = roleManager;
+            LocalizationManager = NullLocalizationManager.Instance;
+            LocalizationSourceName = AbpZeroConsts.LocalizationSourceName;
         }
 
         public override async Task<IdentityResult> CreateAsync(TUser user)
@@ -116,7 +126,15 @@ namespace Abp.Authorization.Users
                 user.TenantId = tenantId.Value;
             }
 
-            return await base.CreateAsync(user);
+            var isLockoutEnabled = user.IsLockoutEnabled;
+
+            var identityResult = await base.CreateAsync(user);
+            if (identityResult.Succeeded)
+            {
+                await SetLockoutEnabledAsync(user, isLockoutEnabled);
+            }
+
+            return identityResult;
         }
 
         /// <summary>
@@ -158,6 +176,8 @@ namespace Abp.Authorization.Users
             //Check for depended features
             if (permission.FeatureDependency != null && GetCurrentMultiTenancySide() == MultiTenancySides.Tenant)
             {
+                FeatureDependencyContext.TenantId = GetCurrentTenantId();
+
                 if (!await permission.FeatureDependency.IsSatisfiedAsync(FeatureDependencyContext))
                 {
                     return false;
@@ -574,7 +594,7 @@ namespace Abp.Authorization.Users
 
         public virtual async Task InitializeOptionsAsync(int? tenantId)
         {
-            Options = new IdentityOptions();
+            Options = JsonConvert.DeserializeObject<IdentityOptions>(_optionsAccessor.Value.ToJsonString());
 
             //Lockout
             Options.Lockout.AllowedForNewUsers = await IsTrueAsync(AbpZeroSettingNames.UserManagement.UserLockOut.IsEnabled, tenantId);
@@ -676,9 +696,14 @@ namespace Abp.Authorization.Users
                 : _settingManager.GetSettingValueForTenantAsync<T>(settingName, tenantId.Value);
         }
 
-        private string L(string name)
+        protected virtual string L(string name)
         {
-            return LocalizationManager.GetString(AbpZeroConsts.LocalizationSourceName, name);
+            return LocalizationManager.GetString(LocalizationSourceName, name);
+        }
+
+        protected virtual string L(string name, CultureInfo cultureInfo)
+        {
+            return LocalizationManager.GetString(LocalizationSourceName, name, cultureInfo);
         }
 
         private int? GetCurrentTenantId()

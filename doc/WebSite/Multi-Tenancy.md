@@ -22,7 +22,7 @@ There are some different multi-tenant database & deployment approaches:
 ##### Multiple Deployment - Multiple Database
 
 This is **not multi-tenancy** actually, but if we run **one instance**
-of the application **for each** customer (tenant) with a **seperated
+of the application **for each** customer (tenant) with a **separated
 database**, we can serve **multiple tenants** on a single server. We
 just have to make sure that multiple instances of the application don't
 **conflict** with each other on the same server environment.
@@ -47,7 +47,7 @@ level, but most of the application can remain independent from it.
 We create and maintain a **separate database** for each tenant,
 this includes **database migrations**. If we have many customers with
 dedicated databases, it may take a long time to migrate the database schema during
-an application update. Since we have a seperated database for each tenant, we
+an application update. Since we have a separated database for each tenant, we
 can **backup** its database separately from other tenants. We can also
 **move** the tenant database to a stronger server if that tenant needs
 it.
@@ -92,10 +92,12 @@ ASP.NET Boilerplate can work with all the scenarios described above.
 
 #### Enabling Multi-Tenancy
 
-Multi-tenancy is disabled by default. We can enable it in PreInitialize method
+Multi-tenancy is disabled by default for Framework level. We can enable it in PreInitialize method
 of our module as shown below:
 
     Configuration.MultiTenancy.IsEnabled = true; 
+
+**Note:** Multi-tenancy is enabled in both ASP.NET Core and ASP.NET MVC 5.x startup templates.
 
 #### Host vs Tenant
 
@@ -166,7 +168,7 @@ tenant related to the current request in this given order:
         the TenantId from an "Abp.TenantId" cookie value, if present. This uses the
         same constant explained above.
 
-If none of these attemtps can resolve a TenantId, then the current requester
+If none of these attempts can resolve a TenantId, then the current requester
 is considered to be the host. Tenant resolvers are extensible. You can add
 resolvers to the **Configuration.MultiTenancy.Resolvers** collection, or
 remove an existing resolver.
@@ -181,9 +183,9 @@ The **DomainTenantResolveContributer** uses ITenantStore to find the tenant id
 by tenancy name. The default implementation of **ITenantStore** is
 **NullTenantStore** which does not contain any tenant and returns null
 for queries. You can implement and replace it to query tenants from any
-data source. [Module zero](Zero/Overall.md) properly implements it by
+data source. [Module Zero](Zero/Overall.md) properly implements it by
 getting it from its [tenant manager](Zero/Tenant-Management.md). So if you
-are using module zero, you don't need to worry about the tenant store.
+are using Module Zero, you don't need to worry about the tenant store.
 
 #### Data Filters
 

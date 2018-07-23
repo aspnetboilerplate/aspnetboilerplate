@@ -66,7 +66,7 @@ controllers easily.
 Here's an example on how to create an OData endpoint for the Person
 entity:
 
-    public class PersonsController : AbpODataEntityController<Person>
+    public class PersonsController : AbpODataEntityController<Person>, ITransientDependency 
     {
         public PersonsController(IRepository<Person> repository)
             : base(repository)

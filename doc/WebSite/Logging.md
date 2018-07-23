@@ -166,7 +166,7 @@ change to another library without changing your logging code.
 ABP uses the Castle Logging Facility for logging and it does not directly
 depend on log4net, as declared above. There is, however, a problem with
 Castle's Log4Net integration... It does not support the latest log4net. We
-created a nuget package,
+created a NuGet package,
 [**Abp.Castle.Log4Net**](http://nuget.org/packages/Abp.Castle.Log4Net),
 to solve this issue. After adding this package to our solution, all we
 have to do is to change the code in the application start method like this:

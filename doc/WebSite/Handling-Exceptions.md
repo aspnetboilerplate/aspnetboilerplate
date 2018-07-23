@@ -106,7 +106,7 @@ when exceptions occur. Sample return object for an error:
       "result": null,
       "success": false,
       "error": {
-        "message": "An internal error occured during your request!",
+        "message": "An internal error occurred during your request!",
         "details": "..."
       },
       "unAuthorizedRequest": false

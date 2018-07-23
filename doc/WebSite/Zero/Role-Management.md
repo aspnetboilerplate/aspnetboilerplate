@@ -8,8 +8,11 @@ derived from the **AbpRole** class as shown below:
         //add your own role properties here
     }
 
-This class is created when you
-[install](/Pages/Documents/Zero/Installation) Module Zero. Roles are
+This class will be created when you download an ABP template with the option in the below image is selected.
+
+<img src="../images/include_module_zero_checkbox.png" alt="Login Page" class="img-thumbnail" />
+
+Roles are
 stored in the **AbpRoles** table in the database. You can add your own custom
 properties to the Role class (and create database migrations for the
 changes).
@@ -76,7 +79,7 @@ as a result instead of throwing exceptions. See the [user
 management](/Pages/Documents/Zero/User-Management) document for more
 information.
 
-### Multi Tenancy
+### Multi-Tenancy
 
 Similar to user management, role management also works for a tenant
 in a multi-tenant application. See the [user

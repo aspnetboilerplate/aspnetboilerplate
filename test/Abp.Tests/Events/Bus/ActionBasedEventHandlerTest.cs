@@ -1,4 +1,6 @@
 ﻿using System;
+using System.Threading;
+using System.Threading.Tasks;
 using Xunit;
 
 namespace Abp.Tests.Events.Bus
@@ -89,6 +91,28 @@ namespace Abp.Tests.Events.Bus
             EventBus.Trigger(this, new MySimpleEventData(4));
 
             Assert.Equal(6, totalData);
+        }
+
+        [Fact]
+        public async Task Should_Call_Action_On_Event_With_Correct_Source_Async()
+        {
+            int totalData = 0;
+
+            EventBus.AsyncRegister<MySimpleEventData>(
+                async eventData =>
+                {
+                    await Task.Delay(20);
+                    Interlocked.Add(ref totalData, eventData.Value);
+                    await Task.Delay(20);
+                    Assert.Equal(this, eventData.EventSource);
+                });
+
+            await EventBus.TriggerAsync(this, new MySimpleEventData(1));
+            await EventBus.TriggerAsync(this, new MySimpleEventData(2));
+            await EventBus.TriggerAsync(this, new MySimpleEventData(3));
+            await EventBus.TriggerAsync(this, new MySimpleEventData(4));
+
+            Assert.Equal(10, totalData);
         }
     }
 }
