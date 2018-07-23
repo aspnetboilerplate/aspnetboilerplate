@@ -330,8 +330,6 @@ namespace Abp.EntityFramework
             if (entity != null && entity.Id == Guid.Empty)
             {
                 var entityType = ObjectContext.GetObjectType(entityAsObj.GetType());
-
-
                 var edmProperty = GetEdmProperty(entityType, nameof(Entity.Id));
                
                 if (edmProperty != null && edmProperty.StoreGeneratedPattern == StoreGeneratedPattern.None)
