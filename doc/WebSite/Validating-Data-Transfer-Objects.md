@@ -156,7 +156,7 @@ If we want to limit the value of MyCustomArgument1's Value field between 1 and 9
 ```
 public class MyCustomArgument1Validator : AbstractValidator<MyCustomArgument1>
 {
-	public ValidationTestArgument1Validator()
+	public MyCustomArgument1Validator()
 	{
 		RuleFor(x => x.Value).InclusiveBetween(1, 99);
 	}
