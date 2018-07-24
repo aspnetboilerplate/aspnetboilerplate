@@ -119,7 +119,7 @@ In order to use [FluentValidation](https://github.com/JeremySkinner/FluentValida
 Install-Package Abp.FluentValidation
 ```
 
-Then, You should set the dependency to AbpFluentValidationModule from your module. Example:
+Then, You should set a dependency to AbpFluentValidationModule from your module. Example:
 
 ```
 [DependsOn(typeof(AbpFluentValidationModule))]
@@ -131,7 +131,7 @@ public class MyProjectAppModule : AbpModule
 
 After all, you can define your [FluentValidation](https://github.com/JeremySkinner/FluentValidation) validators to validate matching input classes.
 
-As an example, if we have an input class and a Controller which uses this class as it's input parameter;
+As an example, if you have an input class and a Controller which uses this class as it's input parameter;
 
 ```
 public class MyCustomArgument1
@@ -151,7 +151,7 @@ public class MyTestController : AbpController {
 }
 ```
 
-If we want to limit the value of MyCustomArgument1's Value field between 1 and 99, we can define a validator like the one below;
+If you want to limit the value of MyCustomArgument1's Value field between 1 and 99, you can define a validator like the one below;
 
 ```
 public class MyCustomArgument1Validator : AbstractValidator<MyCustomArgument1>
@@ -163,7 +163,7 @@ public class MyCustomArgument1Validator : AbstractValidator<MyCustomArgument1>
 }
 ```
 
-ABP will run MyCustomArgument1Validator for MyCustomArgument1 class and throw exception if Value is not between 1 and 99.
+ABP will run MyCustomArgument1Validator to validate MyCustomArgument1 class automatically.
 
 ### Disabling Validation
 
