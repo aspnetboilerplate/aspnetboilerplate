@@ -38,12 +38,11 @@ namespace Abp.Zero.EntityFramework
 
         public override string GetNameOrConnectionString(ConnectionStringResolveArgs args)
         {
-            if (args.MultiTenancySide == MultiTenancySides.Host)
+            if (args.MultiTenancySide == MultiTenancySides.Tenant)
             {
-                return GetNameOrConnectionString(new DbPerTenantConnectionStringResolveArgs(null, args));
+                return GetNameOrConnectionString(new DbPerTenantConnectionStringResolveArgs(GetCurrentTenantId(), args));
             }
-
-            return GetNameOrConnectionString(new DbPerTenantConnectionStringResolveArgs(GetCurrentTenantId(), args));
+            return GetNameOrConnectionString(new DbPerTenantConnectionStringResolveArgs(null, args));
         }
 
         public virtual string GetNameOrConnectionString(DbPerTenantConnectionStringResolveArgs args)
