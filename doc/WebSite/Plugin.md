@@ -1,3 +1,7 @@
+### Introduction
+
+In this tutorial, a plugin example will be developed to learn how to crate a plugin and use it in an application. This plugin will remove audit logs in a period.
+
 ### Create a Plugin
 
 - Create a class library project
