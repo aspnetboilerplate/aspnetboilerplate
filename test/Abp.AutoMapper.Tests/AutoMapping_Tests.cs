@@ -56,6 +56,20 @@ namespace Abp.AutoMapper.Tests
         }
 
         [Fact]
+        public void Should_Map_Two_Way_When_AutoMAp_Attribute_Is_Used()
+        {
+            MyClass3 obj2 = new MyClass3
+            {
+                TestProp = "test",
+                AnotherValue = 1
+            };
+
+            var obj1 = _mapper.Map<MyClass1>(obj2);
+
+            obj1.TestProp.ShouldBe("test");
+        }
+
+        [Fact]
         public void MapTo_Existing_Object_Tests()
         {
             var obj1 = new MyClass1 { TestProp = "Test value" };
