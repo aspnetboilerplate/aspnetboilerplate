@@ -1,4 +1,4 @@
-### Create Plugin Project
+### Create a Plugin
 
 - Create a class library project
 
@@ -82,15 +82,15 @@ Project solution looks like following:
 
 <img src="images/plugin-solution.png" alt="plugin-solution" class="img-thumbnail" />
 
-#### Build Project
+#### Build Plugin
 
 Build project in release mode. `DatabaseMaintainer.dll` will be created in folder 
 `DatabaseMaintainer\DatabaseMaintainer\bin\Release\netcoreapp2.1`.
 
-### Add Plugin to project
+### Add Plugin to Application
 
-First following line should be added to project `Startup.cs`. You can change plugins folder location. 
-Following example, it will be loaded from wwwroot folder.
+Following example, it will be loaded from `wwwroot` folder. You can change plugins folder location.
+First following line should be added to project `Startup.cs` that you want to add to application (MVC or Host). 
 
 `options.PlugInSources.AddFolder(Path.Combine(_hostingEnvironment.WebRootPath, "Plugins"), SearchOption.AllDirectories);`
 
@@ -123,12 +123,12 @@ public class Startup
 ...
 ```
 
-And copy `DatabaseMaintainer.dll` to project *.Mvc/wwwroot/Plugins
+And copy `DatabaseMaintainer.dll` from plugin to application `.Mvc/wwwroot/Plugins` folder.
 
 <img src="images/plugin-wwwroot.png" alt="plugin-wwwroot" class="img-thumbnail" />
 
 ### Run Project
 
-Run project and see Logs.txt to see it works.
+Run project and see Logs.txt to check if it works.
 
 <img src="images/plugin-log.png" alt="plugin-log" class="img-thumbnail" />
