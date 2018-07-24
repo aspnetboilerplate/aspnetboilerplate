@@ -31,6 +31,9 @@ namespace Abp.Tests.Application.Navigation
             userAdminMenu.Items.FirstOrDefault(i => i.Name == "Abp.Zero.Administration.User").ShouldNotBe(null);
             userAdminMenu.Items.FirstOrDefault(i => i.Name == "Abp.Zero.Administration.Role").ShouldBe(null);
             userAdminMenu.Items.FirstOrDefault(i => i.Name == "Abp.Zero.Administration.Setting").ShouldNotBe(null);
+
+            mainMenuDefinition.RemoveItem(mainMenuDefinition.Items.FirstOrDefault()?.Name);
+            mainMenuDefinition.Items.Count.ShouldBe(0);
         }
     }
 }

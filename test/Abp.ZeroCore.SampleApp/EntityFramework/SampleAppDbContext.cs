@@ -1,9 +1,12 @@
-﻿using Abp.IdentityServer4;
+﻿using System.ComponentModel.DataAnnotations.Schema;
+using Abp.IdentityServer4;
 using Abp.Zero.EntityFrameworkCore;
 using Abp.ZeroCore.SampleApp.Core;
+using Abp.ZeroCore.SampleApp.Core.BookStore;
 using Abp.ZeroCore.SampleApp.Core.EntityHistory;
 using Abp.ZeroCore.SampleApp.Core.Shop;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Metadata;
 
 namespace Abp.ZeroCore.SampleApp.EntityFramework
 {
@@ -22,6 +25,7 @@ namespace Abp.ZeroCore.SampleApp.EntityFramework
 
         public DbSet<Comment> Comments { get; set; }
 
+        public DbSet<Author> Authors { get; set; }
 
         public SampleAppDbContext(DbContextOptions<SampleAppDbContext> options) 
             : base(options)
@@ -33,6 +37,9 @@ namespace Abp.ZeroCore.SampleApp.EntityFramework
             base.OnModelCreating(modelBuilder);
 
             modelBuilder.ConfigurePersistedGrantEntity();
+
+            modelBuilder.Entity<Book>().ToTable("Books");
+            modelBuilder.Entity<Book>().Property(e => e.Id).ValueGeneratedNever();
         }
     }
 }
