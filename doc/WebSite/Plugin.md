@@ -4,6 +4,10 @@
 
 <img src="images/create-plugin-project.png" alt="create-plugin-project" class="img-thumbnail" />
 
+**NOTE:** `Abp` and `Abp.ZeroCore` packages are needed in this plugin.
+
+<img src="images/plugin-nuget-packages.png" alt="plugin-nuget-packages" class="img-thumbnail" />
+
 - Add a module that is inherited from `AbpModule`
 
 ```c#
