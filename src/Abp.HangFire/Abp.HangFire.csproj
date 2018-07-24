@@ -34,4 +34,8 @@
     <PackageReference Include="Hangfire.Core" Version="1.6.19" />
   </ItemGroup>
 
+  <ItemGroup>
+    <PackageReference Update="SourceLink.Create.CommandLine" Version="2.8.3" />
+  </ItemGroup>
+
 </Project>
