@@ -61,17 +61,17 @@ And it's mapping configuration is;
 
 	Configuration.Modules.AbpAutoMapper().Configurators.Add(configuration =>
 	{
-		CustomDtoMapper.CreateMappings(configuration, new MultiLingualMapContext(
-			IocManager.Resolve<ISettingManager>()
-		));
+	    CustomDtoMapper.CreateMappings(configuration, new MultiLingualMapContext(
+	        IocManager.Resolve<ISettingManager>()
+	    ));
 	});
 
 	internal static class CustomDtoMapper
 	{
-		public static void CreateMappings(IMapperConfigurationExpression configuration, MultiLingualMapContext context)
-		{
-			configuration.CreateMultiLingualMap<Product, ProductTranslation, ProductListDto>(context);
-		}
+	    public static void CreateMappings(IMapperConfigurationExpression configuration, MultiLingualMapContext context)
+	    {
+	        configuration.CreateMultiLingualMap<Product, ProductTranslation, ProductListDto>(context);
+	    }
 	}
 
 
