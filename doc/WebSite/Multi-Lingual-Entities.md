@@ -61,17 +61,17 @@ And it's mapping configuration is;
 
 	Configuration.Modules.AbpAutoMapper().Configurators.Add(configuration =>
 	{
-		CustomDtoMapper.CreateMappings(configuration, new MultiLingualMapContext(
-			IocManager.Resolve<ISettingManager>()
-		));
+	    CustomDtoMapper.CreateMappings(configuration, new MultiLingualMapContext(
+	        IocManager.Resolve<ISettingManager>()
+	    ));
 	});
 
 	internal static class CustomDtoMapper
 	{
-		public static void CreateMappings(IMapperConfigurationExpression configuration, MultiLingualMapContext context)
-		{
-			configuration.CreateMultiLingualMap<Product, ProductTranslation, ProductListDto>(context);
-		}
+	    public static void CreateMappings(IMapperConfigurationExpression configuration, MultiLingualMapContext context)
+	    {
+	        configuration.CreateMultiLingualMap<Product, ProductTranslation, ProductListDto>(context);
+	    }
 	}
 
 
@@ -126,7 +126,7 @@ After defining such a Dto class, we can use it in our application service to cre
 	    public async Task CreateProduct(ProductDto input)
 	    {
 	        var product = ObjectMapper.Map<Product>(input);
-	    await _productRepository.InsertAsync(product);
+	        await _productRepository.InsertAsync(product);
 	    }
 	}
 
