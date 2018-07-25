@@ -168,7 +168,7 @@ and use it anywhere in the application as well. You can get definition name, def
 **ClientVisibilityProvider** property of a setting definition determines the visibility of a setting for the client-side. There are four implementations of ISettingClientVisibilityProvider.
 
 * **VisibleSettingClientVisibilityProvider**: Makes a setting definition visible to the client-side.
-* **HiddenSettingClientVisibilityProvider**: Makes a setting definition visible to the client-side.
+* **HiddenSettingClientVisibilityProvider**: Makes a setting definition hidden to the client-side.
 * **RequiresAuthenticationSettingClientVisibilityProvider**: Makes a setting definition visible to the client-side if a user is logged in.
 * **RequiresPermissionSettingClientVisibilityProvider**: Makes a setting definition visible to the client side if logged in user has a specific permission.
 
