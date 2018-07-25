@@ -16,7 +16,6 @@ namespace Abp.AutoMapper
                 autoMapAttribute.CreateMap(configuration, type);
             }
         }
-
         public static void CreateAutoAttributeMaps(this IMapperConfigurationExpression configuration, Type type, Type[] targetTypes, MemberList memberList)
         {
 
@@ -32,6 +31,7 @@ namespace Abp.AutoMapper
                     configuration.CreateMap(type, targetType, memberList);
                     continue;
                 }
+
                 BinaryExpression equalityComparer = null;
 
                 //In a lambda expression represent the source exemple : (source) => ...
@@ -63,9 +63,10 @@ namespace Abp.AutoMapper
                     //Exemple (source, target) => source.Id == target.Id
                     BinaryExpression equal = Expression.Equal(sourcePropertyExpression, targetPropertyExpression);
 
-
                     if (equalityComparer is null)
+                    {
                         equalityComparer = equal;
+                    }
                     else
                     {
                         //If we compare multiple key we want to make an and condition between
@@ -76,7 +77,6 @@ namespace Abp.AutoMapper
 
                 //If there is not match for AutoMapKey in the target
                 //In this case we add the default mapping
-                //???
                 if (equalityComparer is null)
                 {
                     configuration.CreateMap(type, targetType, memberList);

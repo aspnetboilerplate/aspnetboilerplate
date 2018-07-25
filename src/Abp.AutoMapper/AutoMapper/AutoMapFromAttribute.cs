@@ -27,7 +27,10 @@ namespace Abp.AutoMapper
                 return;
             }
 
-            configuration.CreateAutoAttributeMaps(type, TargetTypes, MemberList);
+            foreach (var targetType in TargetTypes)
+            {
+                configuration.CreateAutoAttributeMaps(targetType, new[] { type }, MemberList);
+            }
         }
     }
 }
