@@ -2,6 +2,7 @@ using System;
 using System.Reflection;
 using Abp.AspNetCore.Configuration;
 using Abp.Dependency;
+using Abp.Extensions;
 using Abp.Reflection;
 using Abp.Timing;
 using Microsoft.AspNetCore.Mvc;
@@ -57,7 +58,7 @@ namespace Abp.Json
                 }
 
                 // apply DateTimeFormat only if not empty
-                if (!string.IsNullOrWhiteSpace(_datetimeFormat))
+                if (!_datetimeFormat.IsNullOrWhiteSpace())
                 {
                     converter.DateTimeFormat = _datetimeFormat;
                 }
