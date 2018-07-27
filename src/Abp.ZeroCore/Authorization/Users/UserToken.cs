@@ -10,7 +10,10 @@ namespace Abp.Authorization.Users
     [Table("AbpUserTokens")]
     public class UserToken : Entity<long>, IMayHaveTenant
     {
-        public const int MaxLoginProviderLength = 64;
+        /// <summary>
+        /// Maximum length of the <see cref="LoginProvider"/> property.
+        /// </summary>
+        public const int MaxLoginProviderLength = 128;
 
         public virtual int? TenantId { get; set; }
 
