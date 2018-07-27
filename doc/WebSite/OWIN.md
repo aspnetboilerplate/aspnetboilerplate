@@ -1,18 +1,18 @@
-If you are using both of **ASP.NET MVC** and **ASP.NET Web API** in your
-application, you need to add
-[**Abp.Owin**](https://www.nuget.org/packages/Abp.Owin) nuget package to
+If you are using both **ASP.NET MVC** and **ASP.NET Web API** in your
+application, you need to add the
+[**Abp.Owin**](https://www.nuget.org/packages/Abp.Owin) NuGet package to
 your project.
 
 ### Installation
 
-Add [**Abp.Owin**](https://www.nuget.org/packages/Abp.Owin) nuget
+Add the [**Abp.Owin**](https://www.nuget.org/packages/Abp.Owin) NuGet
 package to your host project (generally, to the **Web** project).
 
     Install-Package Abp.Owin
 
 ### Usage
 
-Then call **UseAbp()** extension method in your OWIN **Startup** file as
+Then call the **UseAbp()** extension method in your OWIN **Startup** file as
 shown below:
 
     [assembly: OwinStartup(typeof(Startup))]
@@ -27,6 +27,6 @@ shown below:
     }
 
 If you are only using OWIN (say, in a self hosted Web API project), you
-can use override of UseAbp which takes a startup module to initialize
-ABP framework. Notice that; this should be done only if ABP is not
+can use the override of UseAbp which takes a startup module to initialize
+ABP framework. Note that this should only be done if ABP is not
 initialized in another way.

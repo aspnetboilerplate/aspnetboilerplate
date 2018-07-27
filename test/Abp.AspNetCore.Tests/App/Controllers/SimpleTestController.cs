@@ -1,9 +1,9 @@
 ﻿using System;
 using System.Globalization;
-using System.Threading;
 using System.Threading.Tasks;
 using Abp.AspNetCore.App.Models;
 using Abp.AspNetCore.Mvc.Controllers;
+using Abp.Timing;
 using Abp.UI;
 using Abp.Web.Models;
 using Microsoft.AspNetCore.Mvc;
@@ -48,7 +48,7 @@ namespace Abp.AspNetCore.App.Controllers
         [WrapResult]
         public void GetVoidTest()
         {
-            
+
         }
 
         [DontWrapResult]
@@ -88,6 +88,52 @@ namespace Abp.AspNetCore.App.Controllers
         public ActionResult GetCurrentCultureNameTest()
         {
             return Content(CultureInfo.CurrentCulture.Name);
+        }
+
+        [HttpGet]
+        public string GetDateTimeKind(SimpleDateModel input)
+        {
+            return input.Date.Kind.ToString().ToLower();
+        }
+
+        [HttpGet]
+        public string GetNotNormalizedDateTimeKindProperty(SimpleDateModel2 input)
+        {
+            return input.Date.Kind.ToString();
+        }
+
+
+        [HttpGet]
+        public SimpleDateModel2 GetNotNormalizedDateTimeKindProperty2(string date)
+        {
+            return new SimpleDateModel2
+            {
+                Date = Convert.ToDateTime(date)
+            };
+        }
+
+        [HttpGet]
+        public SimpleDateModel3 GetNotNormalizedDateTimeKindProperty3(string date)
+        {
+            return new SimpleDateModel3
+            {
+                Date = Convert.ToDateTime(date)
+            };
+        }
+
+        [HttpGet]
+        public SimpleDateModel4 GetNotNormalizedDateTimeKindProperty4([DisableDateTimeNormalization]DateTime date)
+        {
+            return new SimpleDateModel4
+            {
+                Date = date
+            };
+        }
+
+        [HttpGet]
+        public string GetNotNormalizedDateTimeKindClass(SimpleDateModel3 input)
+        {
+            return input.Date.Kind.ToString().ToLower();
         }
     }
 }

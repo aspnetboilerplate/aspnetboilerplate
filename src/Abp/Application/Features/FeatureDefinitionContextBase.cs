@@ -43,7 +43,7 @@ namespace Abp.Application.Features
         }
 
         /// <summary>
-        /// Gets a feature with given name or null if can not find.
+        /// Gets a feature with a given name, or null if can not be found.
         /// </summary>
         /// <param name="name">Unique name of the feature</param>
         /// <returns>
@@ -52,6 +52,15 @@ namespace Abp.Application.Features
         public Feature GetOrNull(string name)
         {
             return Features.GetOrDefault(name);
+        }
+
+        /// <summary>
+        /// Remove feature with given name
+        /// </summary>
+        /// <param name="name"></param>
+        public void Remove(string name)
+        {
+            Features.Remove(name);
         }
     }
 }

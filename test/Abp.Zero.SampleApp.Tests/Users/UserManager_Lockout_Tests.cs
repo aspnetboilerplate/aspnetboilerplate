@@ -52,7 +52,7 @@ namespace Abp.Zero.SampleApp.Tests.Users
             (await _userManager.IsLockedOutAsync(_testUser.Id)).ShouldBeTrue();
 
             await Task.Delay(TimeSpan.FromSeconds(1.5)); //Wait for unlock
-            
+
             (await _userManager.IsLockedOutAsync(_testUser.Id)).ShouldBeFalse();
         }
 
@@ -77,6 +77,28 @@ namespace Abp.Zero.SampleApp.Tests.Users
 
             (await _logInManager.LoginAsync("TestUser", "123qwe")).Result.ShouldBe(AbpLoginResultType.Success);
             (await _userManager.GetAccessFailedCountAsync(_testUser.Id)).ShouldBe(0);
+        }
+
+        [Theory]
+        [InlineData(true)]
+        [InlineData(false)]
+        public async Task Test_IsLockoutEnabled_On_User_Creation(bool isLockoutEnabled)
+        {
+            var user = new User
+            {
+                TenantId = AbpSession.TenantId,
+                UserName = "user1",
+                Name = "John",
+                Surname = "Doe",
+                EmailAddress = "user1@aspnetboilerplate.com",
+                IsEmailConfirmed = true,
+                Password = "AM4OLBpptxBYmM79lGOX9egzZk3vIQU3d/gFCJzaBjAPXzYIK3tQ2N7X4fcrHtElTw==", //123qwe
+                IsLockoutEnabled = isLockoutEnabled
+            };
+
+            await WithUnitOfWorkAsync(async () => await _userManager.CreateAsync(user));
+
+            (await _userManager.GetLockoutEnabledAsync(user.Id)).ShouldBe(isLockoutEnabled);
         }
     }
 }

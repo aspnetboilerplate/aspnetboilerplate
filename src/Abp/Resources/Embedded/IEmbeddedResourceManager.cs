@@ -1,4 +1,5 @@
 ﻿using JetBrains.Annotations;
+using System.Collections.Generic;
 
 namespace Abp.Resources.Embedded
 {
@@ -15,5 +16,12 @@ namespace Abp.Resources.Embedded
         /// <returns>The resource</returns>
         [CanBeNull]
         EmbeddedResourceItem GetResource([NotNull] string fullResourcePath);
+
+        /// <summary>
+        /// Used to get the list of embedded resource file.
+        /// </summary>
+        /// <param name="fullResourcePath">Full path of the resource</param>
+        /// <returns>The list of resource</returns>
+        IEnumerable<EmbeddedResourceItem> GetResources(string fullResourcePath);
     }
 }

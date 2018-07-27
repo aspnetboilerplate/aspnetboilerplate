@@ -4,6 +4,7 @@ using System.ComponentModel;
 using System.ComponentModel.DataAnnotations.Schema;
 using System.Data.Common;
 using System.Data.Entity;
+using System.Data.Entity.Core.Metadata.Edm;
 using System.Data.Entity.Core.Objects;
 using System.Data.Entity.Infrastructure;
 using System.Data.Entity.Validation;
@@ -195,6 +196,11 @@ namespace Abp.EntityFramework
         protected override void OnModelCreating(DbModelBuilder modelBuilder)
         {
             base.OnModelCreating(modelBuilder);
+            ConfigureFilters(modelBuilder);
+        }
+
+        protected virtual void ConfigureFilters(DbModelBuilder modelBuilder)
+        {
             modelBuilder.Filter(AbpDataFilters.SoftDelete, (ISoftDelete d) => d.IsDeleted, false);
             modelBuilder.Filter(AbpDataFilters.MustHaveTenant,
                 (IMustHaveTenant t, int tenantId) => t.TenantId == tenantId || (int?) t.TenantId == null,
@@ -324,14 +330,27 @@ namespace Abp.EntityFramework
             if (entity != null && entity.Id == Guid.Empty)
             {
                 var entityType = ObjectContext.GetObjectType(entityAsObj.GetType());
-                var idProperty = entityType.GetProperty("Id");
-                var dbGeneratedAttr =
-                    ReflectionHelper.GetSingleAttributeOrDefault<DatabaseGeneratedAttribute>(idProperty);
-                if (dbGeneratedAttr == null || dbGeneratedAttr.DatabaseGeneratedOption == DatabaseGeneratedOption.None)
+                var edmProperty = GetEdmProperty(entityType, nameof(Entity.Id));
+               
+                if (edmProperty != null && edmProperty.StoreGeneratedPattern == StoreGeneratedPattern.None)
                 {
                     entity.Id = GuidGenerator.Create();
                 }
             }
+        }
+
+        EdmProperty GetEdmProperty(Type type, string propertyName)
+        {
+            var metadata = ((IObjectContextAdapter)this).ObjectContext.MetadataWorkspace;
+
+            var objectItemCollection = ((ObjectItemCollection)metadata.GetItemCollection(DataSpace.OSpace));
+
+            var entityType = metadata.GetItems<EntityType>(DataSpace.OSpace).Single(t => objectItemCollection.GetClrType(t) == type);
+
+            var entitySet = metadata.GetItems<EntityContainer>(DataSpace.SSpace).Single().EntitySets
+                .Single(s => s.ElementType.Name == entityType.Name);
+
+            return entitySet.ElementType.Properties.Single(e => string.Equals(e.Name, propertyName, StringComparison.OrdinalIgnoreCase));
         }
 
         protected virtual void CheckAndSetMustHaveTenantIdProperty(object entityAsObj)

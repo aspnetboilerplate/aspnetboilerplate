@@ -21,6 +21,7 @@ using Abp.Reflection;
 using Abp.Runtime.Session;
 using Abp.Runtime.Validation;
 using Abp.Web.Models;
+using Abp.Web.Mvc.Alerts;
 using Abp.Web.Mvc.Configuration;
 using Abp.Web.Mvc.Controllers.Results;
 using Abp.Web.Mvc.Extensions;
@@ -107,6 +108,11 @@ namespace Abp.Web.Mvc.Controllers
                 return _localizationSource;
             }
         }
+
+        public IAlertManager AlertManager { get; set; }
+
+        public AlertList Alerts => AlertManager.Alerts;
+
         private ILocalizationSource _localizationSource;
 
         /// <summary>

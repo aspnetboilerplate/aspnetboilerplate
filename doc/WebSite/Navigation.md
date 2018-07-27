@@ -1,15 +1,15 @@
-Every web application has some menu to navigate between pages/screens.
-ASP.NET Boilerplate provides a common ifrastructure to create and show
-menu to users.
+Every web application has some kind of menu to navigate between pages/screens.
+ASP.NET Boilerplate provides a common infrastructure to create and show
+a menu to users.
 
 ### Creating Menus
 
-An application may be consists of different
-[modules](/Pages/Documents/Module-System) and each module can have it's
+An application may consist of different
+[modules](/Pages/Documents/Module-System) and each module may have it's
 own menu items. To define menu items, we need to create a class derived
-from **NavigationProvider**.
+from the **NavigationProvider**.
 
-Assume that we have a main menu as shown below:
+Imagine that we have a main menu like the one shown below:
 
 -   Tasks
 -   Reports
@@ -17,8 +17,8 @@ Assume that we have a main menu as shown below:
     -   User management
     -   Role management
 
-Here, Administration menu item has two **sub menu items**. Example
-navigation provider class to create such a menu can be as below:
+Here, the Administration menu item has two **sub menu items**. Here's a
+navigation provider class to create such a menu:
 
     public class SimpleTaskSystemNavigationProvider : NavigationProvider
     {
@@ -66,45 +66,45 @@ navigation provider class to create such a menu can be as below:
     }
 
 A MenuItemDefinition can basically have a unique **name**, a localizable
-**display name**, a **url** and an **icon**. Also,
+**display name**, an **url** and an **icon**. Also:
 
 -   A menu item may require a permission to show this menu to a
-    particular user (See [authorization](/Pages/Documents/Authorization)
-    document). **requiredPermissionName** property can be used in this
+    particular user (See the [authorization](/Pages/Documents/Authorization)
+    document). The **requiredPermissionName** property can be used in this
     case.
--   A menu item can be depend on a
+-   A menu item can be dependent on a
     [feature](/Pages/Documents/Feature-Management).
-    **featureDependency** property can be used in this case.
--   A menu item can define a **customData** and **order**.
+    The **featureDependency** property can be used in this case.
+-   A menu item can define **customData** and the **order** in which it appears.
 
-**INavigationProviderContext** has methods to get existing menu items,
-add menus and menu items. Thus, different modules can add it's own items
+The **INavigationProviderContext** has methods to get existing menu items,
+add menus, and edit menu items. This way, different modules can add their own items
 to the menu.
 
 There may be one or more menus in an application.
-**context.Manager.MainMenu** references the default, main menu. We can
-create and add more menus using **context.Manager.Menus** property.
+The **context.Manager.MainMenu** references the default main menu. We can
+create and add more menus using the **context.Manager.Menus** property.
 
 #### Registering Navigation Provider
 
-After creating the navigation provider, we should register it to ASP.NET
-Boilerplate configuration on **PreInitialize** event of our
+After creating the navigation provider, we need to register it to ASP.NET
+Boilerplate's configuration on the **PreInitialize** method of our
 [module](/Pages/Documents/Module-System):
 
     Configuration.Navigation.Providers.Add<SimpleTaskSystemNavigationProvider>(); 
 
 ### Showing Menu
 
-**IUserNavigationManager** can be
+The **IUserNavigationManager** can be
 [injected](/Pages/Documents/Dependency-Injection) and used to get menu
-items and show to the user. Thus, we can create menu in server side.
+items and show them to the user. This way, we can create a menu on the server-side.
 
-ASP.NET Boilerplate automatically generates a **javascript API** to get
-menu and items in client side. Methods and objects under **abp.nav**
+ASP.NET Boilerplate automatically generates a **JavaScript API** to get the
+menu and items on the client-side. Methods and objects under the **abp.nav**
 namespace can be used for this purpose. For instance,
-**abp.nav.menus.MainMenu** can be used to get main menu of the
-application. Thus, we can create menu in client side.
+**abp.nav.menus.MainMenu** can be used to get the main menu of the
+application. This way, we can create a menu on the client-side.
 
-ASP.NET Boilerplate [templates](/Templates) uses this system to create
-and show menu to the user. Try to create a template and see source codes
-for more.
+The ASP.NET Boilerplate [templates](/Templates) use this system to create
+and show a menu to the user. Create a template and see the source code
+for more info.

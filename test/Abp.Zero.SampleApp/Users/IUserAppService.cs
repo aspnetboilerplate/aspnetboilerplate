@@ -13,5 +13,7 @@ namespace Abp.Zero.SampleApp.Users
         void DeleteUser(long userId);
 
         Task ResetPassword(ResetPasswordInput input);
+
+        void CustomValidateMethod(CustomValidateMethodInput input);
     }
 }

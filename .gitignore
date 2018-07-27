@@ -8,6 +8,7 @@ Logs/
 # Generated files
 project.lock.json
 .vs/
+.dotnet/
 
 # Nuget packages
 nupkg/*.nupkg

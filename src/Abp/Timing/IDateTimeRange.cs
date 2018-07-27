@@ -16,5 +16,10 @@ namespace Abp.Timing
         /// End time of the datetime range.
         /// </summary>
         DateTime EndTime { get; set; }
+
+        /// <summary>
+        /// The time difference between the start and end times.
+        /// </summary>
+        TimeSpan TimeSpan { get; set; }
     }
 }

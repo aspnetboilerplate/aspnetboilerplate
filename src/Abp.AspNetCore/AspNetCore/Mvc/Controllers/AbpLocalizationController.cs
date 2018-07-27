@@ -26,7 +26,11 @@ namespace Abp.AspNetCore.Mvc.Controllers
             Response.Cookies.Append(
                 CookieRequestCultureProvider.DefaultCookieName,
                 cookieValue,
-                new CookieOptions {Expires = Clock.Now.AddYears(2)}
+                new CookieOptions
+                {
+                    Expires = Clock.Now.AddYears(2),
+                    HttpOnly = true 
+                }
             );
 
             if (AbpSession.UserId.HasValue)

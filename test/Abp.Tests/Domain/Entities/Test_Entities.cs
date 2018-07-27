@@ -1,4 +1,6 @@
-﻿using Xunit;
+﻿using System.Collections.Generic;
+using Abp.Domain.Entities;
+using Xunit;
 
 namespace Abp.Tests.Domain.Entities
 {
@@ -12,7 +14,7 @@ namespace Abp.Tests.Domain.Entities
 
             Assert.True(w1 == w2, "Same class with same Id must be equal");
             Assert.True(w1.Equals(w2), "Same class with same Id must be equal");
-            
+
             Worker w3 = null;
             Worker w4 = null;
 
@@ -21,8 +23,8 @@ namespace Abp.Tests.Domain.Entities
             var m1 = new Manager { Id = 5, Name = "Halil ibrahim Kalkan", Title = "Software Architect" };
 
             Assert.True(m1 == w1, "Derived classes must be equal if their Ids are equal");
-            
-            var d1 = new Department {Id = 5, Name = "IVR"};
+
+            var d1 = new Department { Id = 5, Name = "IVR" };
 
             Assert.False(m1 == d1, "Different classes must not be considered as equal even if their Ids are equal!");
 
@@ -40,6 +42,21 @@ namespace Abp.Tests.Domain.Entities
 
             Assert.True(w1.IsTransient());
             Assert.False(w2.IsTransient());
+        }
+
+        [Fact]
+        public void GetHashCode_ReferenceIdNull()
+        {
+            var e1 = new StringEntity();
+            var dic = new Dictionary<StringEntity, string>();
+            dic.Add(e1, string.Empty);
+            var a = dic[e1];
+            Assert.Equal(a, string.Empty);
+        }
+
+        private class StringEntity : Entity<string>
+        {
+
         }
     }
 }

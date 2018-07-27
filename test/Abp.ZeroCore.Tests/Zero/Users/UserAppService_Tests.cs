@@ -6,7 +6,7 @@ using Xunit;
 
 namespace Abp.Zero.Users
 {
-    public class UserAppService_Tests: AbpZeroTestBase
+    public class UserAppService_Tests : AbpZeroTestBase
     {
         private readonly IUserAppService _userAppService;
 

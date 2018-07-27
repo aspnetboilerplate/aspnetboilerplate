@@ -1,9 +1,11 @@
 ﻿using System;
+using System.Collections.Generic;
 using Abp.Application.Features;
 using Abp.Auditing;
 using Abp.BackgroundJobs;
 using Abp.Dependency;
 using Abp.Domain.Uow;
+using Abp.EntityHistory;
 using Abp.Events.Bus;
 using Abp.Notifications;
 using Abp.Resources.Embedded;
@@ -104,6 +106,11 @@ namespace Abp.Configuration.Startup
         IEmbeddedResourcesConfiguration EmbeddedResources { get; }
 
         /// <summary>
+        /// Used to configure entity history.
+        /// </summary>
+        IEntityHistoryConfiguration EntityHistory { get; }
+
+        /// <summary>
         /// Used to replace a service type.
         /// Given <see cref="replaceAction"/> should register an implementation for the <see cref="type"/>.
         /// </summary>
@@ -115,5 +122,9 @@ namespace Abp.Configuration.Startup
         /// Gets a configuration object.
         /// </summary>
         T Get<T>();
+
+        IList<ICustomConfigProvider> CustomConfigProviders { get; }
+
+        Dictionary<string, object> GetCustomConfig();
     }
 }

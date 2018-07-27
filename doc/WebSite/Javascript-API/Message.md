@@ -1,10 +1,10 @@
-Message API is used to show a message to the user or to get a
-confirmation from user.
+The Message API is used to show a message to the user or to get a
+confirmation from the user.
 
-Message API is implemented using
-[sweetalert](http://t4t5.github.io/sweetalert/) by default. To make
-sweetalert work, you should include it's css & javascript files, then
-include **abp.sweet-alert.js** to your page as adapter.
+By default, the Message API is implemented using
+[sweetalert](http://t4t5.github.io/sweetalert/). To make
+sweetalert work, you should include its CSS & JavaScript files, then
+include **abp.sweet-alert.js** to your page.
 
 ### Show message
 
@@ -15,7 +15,7 @@ Examples:
     abp.message.warn('some warning message', 'some optional title');
     abp.message.error('some error message', 'some optional title');
 
- A success message is shown below:
+A success message is shown below:
 
 <img src="../images/success_message.png" alt="Success message using sweetalert" class="img-thumbnail" />
 
@@ -33,13 +33,13 @@ Example:
         }
     );
 
-Second argument (title) is optional here (so, callback function can be
-second argument).
+The second argument (title) is optional here, so the callback function can be the
+second argument instead.
 
 A confirmation message is shown below:
 
 <img src="../images/confirmation_message.png" alt="Confirmation message using sweetalert" class="img-thumbnail" />
 
-ASP.NET Boilerplate internally uses Message API. For example, it calls
+ASP.NET Boilerplate internally uses the Message API. For example, it calls
 abp.message.error if an [AJAX](/Pages/Documents/Javascript-API/AJAX)
 call fails.

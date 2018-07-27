@@ -195,6 +195,10 @@
                 return;
             }
 
+            if (!abp.security.antiForgery.shouldSendToken(settings)) {
+                return;
+            }
+
             if (!settings.headers || settings.headers[abp.security.antiForgery.tokenHeaderName] === undefined) {
                 request.setRequestHeader(abp.security.antiForgery.tokenHeaderName, token);
             }
