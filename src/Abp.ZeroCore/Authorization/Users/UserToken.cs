@@ -14,7 +14,7 @@ namespace Abp.Authorization.Users
         /// <summary>
         /// Maximum length of the <see cref="LoginProvider"/> property.
         /// </summary>
-        public const int MaxLoginProviderLength = 64;
+        public const int MaxLoginProviderLength = 128;
 
         /// <summary>
         /// Maximum length of the <see cref="Name"/> property.
