@@ -266,10 +266,10 @@ Let's start by creating a **CreateTaskInput** class:
     public class CreateTaskInput
     {
         [Required]
-        [MaxLength(Task.MaxTitleLength)]
+        [StringLength(Task.MaxTitleLength)]
         public string Title { get; set; }
 
-        [MaxLength(Task.MaxDescriptionLength)]
+        [StringLength(Task.MaxDescriptionLength)]
         public string Description { get; set; }
 
         public Guid? AssignedPersonId { get; set; }

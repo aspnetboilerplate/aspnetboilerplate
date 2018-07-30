@@ -81,7 +81,7 @@ namespace Abp.Authorization.Users
         /// It's set to external authentication source name if created by an external source.
         /// Default: null.
         /// </summary>
-        [MaxLength(MaxAuthenticationSourceLength)]
+        [StringLength(MaxAuthenticationSourceLength)]
         public virtual string AuthenticationSource { get; set; }
 
         /// <summary>

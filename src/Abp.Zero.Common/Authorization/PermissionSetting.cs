@@ -22,7 +22,7 @@ namespace Abp.Authorization
         /// Unique name of the permission.
         /// </summary>
         [Required]
-        [MaxLength(MaxNameLength)]
+        [StringLength(MaxNameLength)]
         public virtual string Name { get; set; }
 
         /// <summary>
