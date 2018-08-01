@@ -108,19 +108,21 @@ namespace Abp.Configuration.Startup
 
         public Dictionary<string, object> GetCustomConfig()
         {
-            var customConfig = new Dictionary<string, object>();
+            var mergedConfig = new Dictionary<string, object>();
 
             using (var scope = IocManager.CreateScope())
             {
                 foreach (var provider in CustomConfigProviders)
                 {
-                    customConfig = customConfig
-                        .Concat(provider.GetConfig(new CustomConfigProviderContext(scope)))
-                        .ToDictionary(key => key.Key, value => value.Value);
+                    var config = provider.GetConfig(new CustomConfigProviderContext(scope));
+                    foreach (var keyValue in config)
+                    {
+                        mergedConfig[keyValue.Key] = keyValue.Value;
+                    }
                 }
             }
 
-            return customConfig;
+            return mergedConfig;
         }
 
         /// <summary>

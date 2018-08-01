@@ -34,6 +34,7 @@ namespace Abp.ZeroCore.SampleApp
             Configuration.Features.Providers.Add<AppFeatureProvider>();
 
             Configuration.CustomConfigProviders.Add(new TestCustomConfigProvider());
+            Configuration.CustomConfigProviders.Add(new TestCustomConfigProvider2());
         }
 
         public override void Initialize()
