@@ -46,7 +46,7 @@
         };
 
         if (isHtml) {
-            const el = document.createElement('div');
+            var el = document.createElement('div');
             el.innerHTML = message;
 
             messageContent.content = el;
@@ -88,7 +88,7 @@
         var messageContent;
 
         if (isHtml) {
-            const el = document.createElement('div');
+            var el = document.createElement('div');
             el.innerHTML = message;
 
             messageContent = {
