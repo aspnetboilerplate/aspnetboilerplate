@@ -1280,7 +1280,7 @@ namespace Abp.Authorization.Users
 
         private const string InternalLoginProvider = "[AspNetUserStore]";
         private const string AuthenticatorKeyTokenName = "AuthenticatorKey";
-        private const string TokenValidityProvider = "TokenValidityProvider";
+        private const string TokenValidityKeyProvider = "TokenValidityKeyProvider";
 
         public virtual async Task SetAuthenticatorKeyAsync(TUser user, string key, CancellationToken cancellationToken)
         {
@@ -1300,7 +1300,7 @@ namespace Abp.Authorization.Users
 
             await UserRepository.EnsureCollectionLoadedAsync(user, u => u.Tokens, cancellationToken);
 
-            user.Tokens.Add(new UserToken(user, TokenValidityProvider, tokenValidityKey, null, expireDate));
+            user.Tokens.Add(new UserToken(user, TokenValidityKeyProvider, tokenValidityKey, null, expireDate));
         }
 
         public virtual async Task<bool> IsTokenValidityKeyValidAsync([NotNull] TUser user, string tokenValidityKey, CancellationToken cancellationToken = default(CancellationToken))
@@ -1310,10 +1310,10 @@ namespace Abp.Authorization.Users
             Check.NotNull(user, nameof(user));
 
             await UserRepository.EnsureCollectionLoadedAsync(user, u => u.Tokens, cancellationToken);
-            user.Tokens.RemoveAll(t => t.LoginProvider == TokenValidityProvider && t.ExpireDate <= DateTime.UtcNow);
+            user.Tokens.RemoveAll(t => t.LoginProvider == TokenValidityKeyProvider && t.ExpireDate <= DateTime.UtcNow);
 
             return user.Tokens.
-                Any(t => t.LoginProvider == TokenValidityProvider &&
+                Any(t => t.LoginProvider == TokenValidityKeyProvider &&
                          t.Name == tokenValidityKey &&
                          t.ExpireDate > DateTime.UtcNow);
         }
