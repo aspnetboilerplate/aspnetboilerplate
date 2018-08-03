@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
+using System.Threading;
 using System.Threading.Tasks;
 using Abp.Application.Features;
 using Abp.Authorization.Roles;
@@ -724,6 +725,32 @@ namespace Abp.Authorization.Users
             }
 
             return AbpSession.MultiTenancySide;
+        }
+
+        public virtual async Task SetValidityToken(
+            TUser user,
+            string tokenName,
+            string tokenValue,
+            DateTime expireDate,
+            CancellationToken cancellationToken = default(CancellationToken))
+        {
+            await AbpUserStore.SetValidityTokenAsync(user, tokenName, tokenValue, expireDate, cancellationToken);
+        }
+
+        public virtual async Task GetValidityToken(
+            TUser user,
+            string tokenName,
+            CancellationToken cancellationToken = default(CancellationToken))
+        {
+            await AbpUserStore.GetValidityTokenAsync(user, tokenName, cancellationToken);
+        }
+
+        public virtual async Task RemoveValidityToken(
+            TUser user,
+            string tokenName,
+            CancellationToken cancellationToken = default(CancellationToken))
+        {
+            await AbpUserStore.RemoveValidityTokenAsync(user, tokenName, cancellationToken);
         }
     }
 }
