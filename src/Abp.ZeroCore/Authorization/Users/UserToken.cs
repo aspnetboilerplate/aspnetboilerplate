@@ -62,19 +62,7 @@ namespace Abp.Authorization.Users
 
         }
 
-        protected internal UserToken(AbpUserBase user, [NotNull] string loginProvider, [NotNull] string name, string value)
-        {
-            Check.NotNull(loginProvider, nameof(loginProvider));
-            Check.NotNull(name, nameof(name));
-
-            TenantId = user.TenantId;
-            UserId = user.Id;
-            LoginProvider = loginProvider;
-            Name = name;
-            Value = value;
-        }
-
-        protected internal UserToken(AbpUserBase user, [NotNull] string loginProvider, [NotNull] string name, string value, DateTime? expireDate)
+        protected internal UserToken(AbpUserBase user, [NotNull] string loginProvider, [NotNull] string name, string value, DateTime? expireDate = null)
         {
             Check.NotNull(loginProvider, nameof(loginProvider));
             Check.NotNull(name, nameof(name));
