@@ -727,30 +727,21 @@ namespace Abp.Authorization.Users
             return AbpSession.MultiTenancySide;
         }
 
-        public virtual async Task SetValidityToken(
+        public virtual async Task AddTokenValidityKeyAsync(
             TUser user,
-            string tokenName,
-            string tokenValue,
+            string tokenValidityKey,
             DateTime expireDate,
             CancellationToken cancellationToken = default(CancellationToken))
         {
-            await AbpUserStore.SetValidityTokenAsync(user, tokenName, tokenValue, expireDate, cancellationToken);
+            await AbpUserStore.AddTokenValidityKeyAsync(user, tokenValidityKey, expireDate, cancellationToken);
         }
 
-        public virtual async Task GetValidityToken(
+        public virtual async Task<bool> IsTokenValidityKeyValidAsync(
             TUser user,
-            string tokenName,
+            string tokenValidityKey,
             CancellationToken cancellationToken = default(CancellationToken))
         {
-            await AbpUserStore.GetValidityTokenAsync(user, tokenName, cancellationToken);
-        }
-
-        public virtual async Task RemoveValidityToken(
-            TUser user,
-            string tokenName,
-            CancellationToken cancellationToken = default(CancellationToken))
-        {
-            await AbpUserStore.RemoveValidityTokenAsync(user, tokenName, cancellationToken);
+            return await AbpUserStore.IsTokenValidityKeyValidAsync(user, tokenValidityKey, cancellationToken);
         }
     }
 }
