@@ -15,11 +15,11 @@ namespace Abp.AutoMapper.Tests
         {
             var config = new MapperConfiguration(configuration =>
             {
-                configuration.AddCollectionMappers();
                 configuration.CreateAutoAttributeMaps(typeof(MyClass1));
                 configuration.CreateAutoAttributeMaps(typeof(MyClass2));
                 configuration.CreateAutoAttributeMaps(typeof(MyAutoMapKeyClass1));
                 configuration.CreateAutoAttributeMaps(typeof(MyAutoMapKeyClass2));
+                configuration.AddCollectionMappers();
             });
 
             _mapper = config.CreateMapper();
