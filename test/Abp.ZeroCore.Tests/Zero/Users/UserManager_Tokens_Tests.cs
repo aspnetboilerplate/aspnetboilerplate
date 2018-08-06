@@ -79,5 +79,33 @@ namespace Abp.Zero.Users
                 allTokens.Count.ShouldBe(2);
             }
         }
+
+        [Fact]
+        public async Task Should_Remove_Given_Name_TokenValidityKey()
+        {
+            var tokenValidityKey = Guid.NewGuid().ToString();
+
+            using (_unitOfWorkManager.Begin())
+            {
+                var user = await _abpUserManager.GetUserByIdAsync(AbpSession.GetUserId());
+
+                await _abpUserManager.AddTokenValidityKeyAsync(user, tokenValidityKey, DateTime.UtcNow.AddDays(1));
+                _unitOfWorkManager.Current.SaveChanges();
+
+                var allTokens = _userTokenRepository.GetAllList(t => t.UserId == user.Id);
+                allTokens.Count.ShouldBe(1);
+            }
+
+            using (_unitOfWorkManager.Begin())
+            {
+                var user = await _abpUserManager.GetUserByIdAsync(AbpSession.GetUserId());
+
+                await _abpUserManager.RemoveTokenValidityKeyAsync(user, tokenValidityKey);
+                _unitOfWorkManager.Current.SaveChanges();
+
+                var allTokens = _userTokenRepository.GetAllList(t => t.UserId == user.Id);
+                allTokens.Count.ShouldBe(0);
+            }
+        }
     }
 }

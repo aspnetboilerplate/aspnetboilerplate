@@ -743,5 +743,13 @@ namespace Abp.Authorization.Users
         {
             return await AbpUserStore.IsTokenValidityKeyValidAsync(user, tokenValidityKey, cancellationToken);
         }
+
+        public virtual async Task RemoveTokenValidityKeyAsync(
+            TUser user,
+            string tokenValidityKey,
+            CancellationToken cancellationToken = default(CancellationToken))
+        {
+            await AbpUserStore.RemoveTokenValidityKeyAsync(user, tokenValidityKey, cancellationToken);
+        }
     }
 }
