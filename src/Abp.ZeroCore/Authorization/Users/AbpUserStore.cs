@@ -1310,12 +1310,25 @@ namespace Abp.Authorization.Users
             Check.NotNull(user, nameof(user));
 
             await UserRepository.EnsureCollectionLoadedAsync(user, u => u.Tokens, cancellationToken);
+            var isValidityKeyValid = user.Tokens.Any(t => t.LoginProvider == TokenValidityKeyProvider &&
+                                               t.Name == tokenValidityKey &&
+                                               t.ExpireDate > DateTime.UtcNow);
+            
             user.Tokens.RemoveAll(t => t.LoginProvider == TokenValidityKeyProvider && t.ExpireDate <= DateTime.UtcNow);
 
-            return user.Tokens.
-                Any(t => t.LoginProvider == TokenValidityKeyProvider &&
-                         t.Name == tokenValidityKey &&
-                         t.ExpireDate > DateTime.UtcNow);
+            return isValidityKeyValid;
+        }
+
+        public virtual async Task RemoveTokenValidityKeyAsync([NotNull] TUser user, string tokenValidityKey, CancellationToken cancellationToken = default(CancellationToken))
+        {
+            cancellationToken.ThrowIfCancellationRequested();
+
+            Check.NotNull(user, nameof(user));
+
+            await UserRepository.EnsureCollectionLoadedAsync(user, u => u.Tokens, cancellationToken);
+
+            user.Tokens.Remove(user.Tokens.FirstOrDefault(t =>
+                t.LoginProvider == TokenValidityKeyProvider && t.Name == tokenValidityKey));
         }
     }
 }
