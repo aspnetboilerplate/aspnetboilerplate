@@ -166,7 +166,7 @@ namespace Abp.Authorization
             {
                 await UserManager.InitializeOptionsAsync(tenantId);
 
-                //TryLoginFromExternalAuthenticationSources method may create the user, that's why we are calling it before AbpStore.FindByNameOrEmailAsync
+                //TryLoginFromExternalAuthenticationSources method may create the user, that's why we are calling it before AbpUserStore.FindByNameOrEmailAsync
                 var loggedInFromExternalSource = await TryLoginFromExternalAuthenticationSources(userNameOrEmailAddress, plainPassword, tenant);
 
                 var user = await UserManager.FindByNameOrEmailAsync(tenantId, userNameOrEmailAddress);
