@@ -55,9 +55,21 @@ namespace Abp.NHibernate.Uow
                     ? Session.BeginTransaction(Options.IsolationLevel.Value.ToSystemDataIsolationLevel())
                     : Session.BeginTransaction();
             }
-            
+
+            CheckAndSetSoftDelete();
             CheckAndSetMayHaveTenant();
             CheckAndSetMustHaveTenant();
+        }
+
+        protected virtual void CheckAndSetSoftDelete()
+        {
+            if (IsFilterEnabled(AbpDataFilters.SoftDelete))
+            {
+                return;
+            }
+
+            ApplyEnableFilter(AbpDataFilters.SoftDelete); //Enable Filters
+            ApplyFilterParameterValue(AbpDataFilters.SoftDelete, AbpDataFilters.Parameters.IsDeleted, false); // ApplyFilter
         }
 
         protected virtual void CheckAndSetMustHaveTenant()

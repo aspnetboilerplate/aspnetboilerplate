@@ -5,6 +5,7 @@ using System.Threading.Tasks;
 using Abp.Collections.Extensions;
 using Abp.Domain.Entities;
 using Abp.Domain.Repositories;
+using Abp.Domain.Uow;
 using NHibernate;
 using NHibernate.Linq;
 using NHibernate.Util;
