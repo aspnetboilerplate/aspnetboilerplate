@@ -1,8 +1,7 @@
-using System;
 using Abp.Domain.Entities;
 using Abp.NHibernate.Filters;
-using Abp.Runtime.Session;
 using FluentNHibernate.Mapping;
+using System;
 
 namespace Abp.NHibernate.EntityMappings
 {

@@ -1,14 +1,12 @@
-﻿using System;
+﻿using Abp.Collections.Extensions;
+using Abp.Domain.Entities;
+using Abp.Domain.Repositories;
+using NHibernate;
+using NHibernate.Linq;
+using System;
 using System.Linq;
 using System.Linq.Expressions;
 using System.Threading.Tasks;
-using Abp.Collections.Extensions;
-using Abp.Domain.Entities;
-using Abp.Domain.Repositories;
-using Abp.Domain.Uow;
-using NHibernate;
-using NHibernate.Linq;
-using NHibernate.Util;
 
 namespace Abp.NHibernate.Repositories
 {
