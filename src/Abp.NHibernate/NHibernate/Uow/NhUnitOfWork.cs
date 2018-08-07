@@ -81,7 +81,7 @@ namespace Abp.NHibernate.Uow
                 ApplyFilterParameterValue(AbpDataFilters.MustHaveTenant, AbpDataFilters.Parameters.TenantId, AbpSession.GetTenantId()); //ApplyFilter
             } else
             {
-                ApplyEnableFilter(AbpDataFilters.MustHaveTenant); //Disable Filters
+                ApplyDisableFilter(AbpDataFilters.MustHaveTenant); //Disable Filters
             }
         }
 
@@ -93,7 +93,7 @@ namespace Abp.NHibernate.Uow
                 ApplyFilterParameterValue(AbpDataFilters.MayHaveTenant, AbpDataFilters.Parameters.TenantId, AbpSession.TenantId); //ApplyFilter
             } else
             {
-                ApplyEnableFilter(AbpDataFilters.MayHaveTenant); //Disable Filters
+                ApplyDisableFilter(AbpDataFilters.MayHaveTenant); //Disable Filters
             }
         }
 
