@@ -40,13 +40,8 @@ namespace Abp.NHibernate.Tests
         [Fact]
         public void Should_Filter_SoftDelete()
         {
-
-            using (_unitOfWorkManager.Begin())
-            using (_unitOfWorkManager.Current.EnableFilter(AbpDataFilters.SoftDelete))
-            {
-                var books = _booksRepository.GetAllList();
-                books.All(p => !p.IsDeleted).ShouldBeTrue();
-            }
+            var books = _booksRepository.GetAllList();
+            books.All(p => !p.IsDeleted).ShouldBeTrue();
         }
 
         [Fact]
@@ -125,6 +120,7 @@ namespace Abp.NHibernate.Tests
             _personRepository.Delete(emrePeson.Id);
 
             triggerCount.ShouldBe(1);
+            _personRepository.FirstOrDefault(p => p.Name == "emre").ShouldBe(null);
         }
     }
 }
