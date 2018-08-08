@@ -94,7 +94,7 @@ namespace Abp.Dependency
         /// <param name="lifeStyle">Lifestyle of the objects of this type</param>
         public void Register<TType>(DependencyLifeStyle lifeStyle = DependencyLifeStyle.Singleton) where TType : class
         {
-            IocContainer.Register(ApplyLifestyle(Component.For<TType>(), lifeStyle));
+            IocContainer.Register(ApplyLifestyle(Component.For<TType>(), lifeStyle).IsDefault());
         }
 
         /// <summary>
@@ -104,7 +104,7 @@ namespace Abp.Dependency
         /// <param name="lifeStyle">Lifestyle of the objects of this type</param>
         public void Register(Type type, DependencyLifeStyle lifeStyle = DependencyLifeStyle.Singleton)
         {
-            IocContainer.Register(ApplyLifestyle(Component.For(type), lifeStyle));
+            IocContainer.Register(ApplyLifestyle(Component.For(type), lifeStyle).IsDefault());
         }
 
         /// <summary>
@@ -117,7 +117,7 @@ namespace Abp.Dependency
             where TType : class
             where TImpl : class, TType
         {
-            IocContainer.Register(ApplyLifestyle(Component.For<TType, TImpl>().ImplementedBy<TImpl>(), lifeStyle));
+            IocContainer.Register(ApplyLifestyle(Component.For<TType, TImpl>().ImplementedBy<TImpl>(), lifeStyle).IsDefault());
         }
 
         /// <summary>
@@ -128,7 +128,7 @@ namespace Abp.Dependency
         /// <param name="lifeStyle">Lifestyle of the objects of this type</param>
         public void Register(Type type, Type impl, DependencyLifeStyle lifeStyle = DependencyLifeStyle.Singleton)
         {
-            IocContainer.Register(ApplyLifestyle(Component.For(type, impl).ImplementedBy(impl), lifeStyle));
+            IocContainer.Register(ApplyLifestyle(Component.For(type, impl).ImplementedBy(impl), lifeStyle).IsDefault());
         }
 
         /// <summary>
