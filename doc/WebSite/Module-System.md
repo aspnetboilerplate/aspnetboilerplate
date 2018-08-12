@@ -96,7 +96,7 @@ the last module.
 While modules are investigated beginning from the startup module and go
 through the dependencies, ABP can also load modules **dynamically**.
 The **AbpBootstrapper** class defines the **PlugInSources** property which can
-be used to add sources to dynamically load plugin modules. A plugin
+be used to add sources to dynamically loaded [plugin modules](Plugin.md). A plugin
 source can be any class implementing the **IPlugInSource** interface.
 The **PlugInFolderSource** class implements it to get the plugin modules from
 assemblies located in a folder.
