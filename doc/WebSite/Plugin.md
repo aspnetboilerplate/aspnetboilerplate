@@ -1,6 +1,6 @@
 ### Introduction
 
-In this tutorial, a plugin example will be developed to learn how to crate a plugin and use it in an application. This plugin that named `DatabaseMaintainer` will remove audit logs in a period.
+In this tutorial, a plugin example will be developed to learn how to create a plugin and use it in an application. This plugin that is named `DatabaseMaintainer` will remove audit logs in a given period.
 
 ### Create a Plugin
 

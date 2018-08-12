@@ -33,7 +33,7 @@ ASP.NET Boilerplate calls some specific methods of modules on
 application startup and shutdown. You can override these methods to
 perform some specific tasks.
 
-ASP.NET Boilerplate calls these methods **ordered by dependecies**. If
+ASP.NET Boilerplate calls these methods **ordered by dependencies**. If
 module A depends on module B, module B is initialized before module A.
 
 The exact order of startup methods: PreInitialize-B, PreInitialize-A,
