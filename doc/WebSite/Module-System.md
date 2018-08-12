@@ -22,7 +22,7 @@ applications. The simplest module definition can be as shown below:
         }
     }
 
-The Module definition class is responsible for registering it's classes via
+The Module definition class is responsible for registering its classes via
 [dependency injection](Dependency-Injection.md), if needed (it can be done
 conventionally as shown above). It can also configure the application
 and other modules, add new features to the application, and so on...
@@ -138,7 +138,7 @@ overriding the **Application\_Start** in the **global.asax** as shown below:
 ##### Controllers in PlugIns
 
 If your modules include MVC or Web API Controllers,
-ASP.NET can not investigate your controllers. To overcome this issue,
+ASP.NET cannot investigate your controllers. To overcome this issue,
 you can change the global.asax file like below:
 
     using System.Web;
