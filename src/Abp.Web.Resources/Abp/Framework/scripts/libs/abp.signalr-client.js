@@ -41,7 +41,7 @@ var abp = abp || {};
 
     // Connect to the server
     abp.signalr.connect = function () {
-        var url = abp.signalr.url || '/signalr';
+        var url = abp.signalr.url || (abp.appPath + 'signalr');
 
         // Start the connection.
         startConnection(url, configureConnection)
@@ -75,7 +75,7 @@ var abp = abp || {};
         return function start(transport) {
             abp.log.debug('Starting connection using ' + signalR.HttpTransportType[transport] + ' transport');
             var connection = new signalR.HubConnectionBuilder()
-                .withUrl(abp.appPath + url, transport)
+                .withUrl(url, transport)
                 .build();
             if (configureConnection && typeof configureConnection === 'function') {
                 configureConnection(connection);

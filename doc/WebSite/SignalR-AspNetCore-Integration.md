@@ -176,7 +176,7 @@ our hub.
 
     var chatHub = null;
     
-    abp.signalr.startConnection('signalr-myChatHub', function (connection) {
+    abp.signalr.startConnection(abp.appPath + 'signalr-myChatHub', function (connection) {
         chatHub = connection; // Save a reference to the hub
     
         connection.on('getMessage', function (message) { // Register for incoming messages

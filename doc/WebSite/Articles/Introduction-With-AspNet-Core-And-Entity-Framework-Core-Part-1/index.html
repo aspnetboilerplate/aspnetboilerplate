@@ -133,10 +133,10 @@ namespace Acme.SimpleTaskApp.Tasks
         public const int MaxDescriptionLength = 64 * 1024; //64KB
 
         [Required]
-        [MaxLength(MaxTitleLength)]
+        [StringLength(MaxTitleLength)]
         public string Title { get; set; }
 
-        [MaxLength(MaxDescriptionLength)]
+        [StringLength(MaxDescriptionLength)]
         public string Description { get; set; }
 
         public DateTime CreationTime { get; set; }

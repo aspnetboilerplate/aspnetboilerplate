@@ -293,17 +293,17 @@
 
         //TODO: these methods return jQuery.Promise instead of any. fix it.
 
-        function info(message: string, title?: string): any;
+        function info(message: string, title?: string, isHtml?: boolean): any;
 
-        function success(message: string, title?: string): any;
+        function success(message: string, title?: string, isHtml?: boolean): any;
 
-        function warn(message: string, title?: string): any;
+        function warn(message: string, title?: string, isHtml?: boolean): any;
 
-        function error(message: string, title?: string): any;
+        function error(message: string, title?: string, isHtml?: boolean): any;
 
         function confirm(message: string, callback?: (result: boolean) => void): any;
 
-        function confirm(message: string, title?: string, callback?: (result: boolean) => void): any;
+        function confirm(message: string, title?: string, callback?: (result: boolean) => void, isHtml?: boolean): any;
 
     }
 

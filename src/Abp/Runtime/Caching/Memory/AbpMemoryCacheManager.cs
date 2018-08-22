@@ -17,7 +17,7 @@ namespace Abp.Runtime.Caching.Memory
         public AbpMemoryCacheManager(IIocManager iocManager, ICachingConfiguration configuration)
             : base(iocManager, configuration)
         {
-
+            Logger = NullLogger.Instance;
         }
 
         protected override ICache CreateCacheImplementation(string name)

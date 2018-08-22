@@ -19,7 +19,19 @@ namespace Abp.Castle.Logging.Log4Net
         {
         }
 
-        public Log4NetLoggerFactory(string configFileName, bool reloadOnChange = false)
+        public Log4NetLoggerFactory(string configFileName)
+        {
+            _loggerRepository = LogManager.CreateRepository(
+                typeof(Log4NetLoggerFactory).GetAssembly(),
+                typeof(log4net.Repository.Hierarchy.Hierarchy)
+            );
+
+            var log4NetConfig = new XmlDocument();
+            log4NetConfig.Load(File.OpenRead(configFileName));
+            XmlConfigurator.Configure(_loggerRepository, log4NetConfig["log4net"]);
+        }
+
+        public Log4NetLoggerFactory(string configFileName, bool reloadOnChange)
         {
             _loggerRepository = LogManager.CreateRepository(
                 typeof(Log4NetLoggerFactory).GetAssembly(),

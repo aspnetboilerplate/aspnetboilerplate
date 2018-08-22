@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
+using System.Threading;
 using System.Threading.Tasks;
 using Abp.Application.Features;
 using Abp.Authorization.Roles;
@@ -14,13 +15,11 @@ using Abp.Json;
 using Abp.Localization;
 using Abp.MultiTenancy;
 using Abp.Organizations;
-using Abp.Reflection;
 using Abp.Runtime.Caching;
 using Abp.Runtime.Session;
 using Abp.UI;
 using Abp.Zero;
 using Abp.Zero.Configuration;
-using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
@@ -55,7 +54,7 @@ namespace Abp.Authorization.Users
 
         protected AbpRoleManager<TRole, TUser> RoleManager { get; }
 
-        protected AbpUserStore<TRole, TUser> AbpStore { get; }
+        protected AbpUserStore<TRole, TUser> AbpUserStore { get; }
 
         public IMultiTenancyConfig MultiTenancy { get; set; }
 
@@ -70,7 +69,7 @@ namespace Abp.Authorization.Users
 
         public AbpUserManager(
             AbpRoleManager<TRole, TUser> roleManager,
-            AbpUserStore<TRole, TUser> store,
+            AbpUserStore<TRole, TUser> userStore,
             IOptions<IdentityOptions> optionsAccessor,
             IPasswordHasher<TUser> passwordHasher,
             IEnumerable<IUserValidator<TUser>> userValidators,
@@ -87,7 +86,7 @@ namespace Abp.Authorization.Users
             IOrganizationUnitSettings organizationUnitSettings,
             ISettingManager settingManager)
             : base(
-                store,
+                userStore,
                 optionsAccessor,
                 passwordHasher,
                 userValidators,
@@ -106,7 +105,7 @@ namespace Abp.Authorization.Users
             _settingManager = settingManager;
             _optionsAccessor = optionsAccessor;
 
-            AbpStore = store;
+            AbpUserStore = userStore;
             RoleManager = roleManager;
             LocalizationManager = NullLocalizationManager.Instance;
             LocalizationSourceName = AbpZeroConsts.LocalizationSourceName;
@@ -317,22 +316,22 @@ namespace Abp.Authorization.Users
 
         public virtual Task<TUser> FindByNameOrEmailAsync(string userNameOrEmailAddress)
         {
-            return AbpStore.FindByNameOrEmailAsync(userNameOrEmailAddress);
+            return AbpUserStore.FindByNameOrEmailAsync(userNameOrEmailAddress);
         }
 
         public virtual Task<List<TUser>> FindAllAsync(UserLoginInfo login)
         {
-            return AbpStore.FindAllAsync(login);
+            return AbpUserStore.FindAllAsync(login);
         }
 
         public virtual Task<TUser> FindAsync(int? tenantId, UserLoginInfo login)
         {
-            return AbpStore.FindAsync(tenantId, login);
+            return AbpUserStore.FindAsync(tenantId, login);
         }
 
         public virtual Task<TUser> FindByNameOrEmailAsync(int? tenantId, string userNameOrEmailAddress)
         {
-            return AbpStore.FindByNameOrEmailAsync(tenantId, userNameOrEmailAddress);
+            return AbpUserStore.FindByNameOrEmailAsync(tenantId, userNameOrEmailAddress);
         }
 
         /// <summary>
@@ -401,7 +400,7 @@ namespace Abp.Authorization.Users
                 return IdentityResult.Failed(errors.ToArray());
             }
 
-            await AbpStore.SetPasswordHashAsync(user, PasswordHasher.HashPassword(user, newPassword));
+            await AbpUserStore.SetPasswordHashAsync(user, PasswordHasher.HashPassword(user, newPassword));
             return IdentityResult.Success;
         }
 
@@ -424,7 +423,7 @@ namespace Abp.Authorization.Users
 
         public virtual async Task<IdentityResult> SetRoles(TUser user, string[] roleNames)
         {
-            await AbpStore.UserRepository.EnsureCollectionLoadedAsync(user, u => u.Roles);
+            await AbpUserStore.UserRepository.EnsureCollectionLoadedAsync(user, u => u.Roles);
 
             //Remove from removed roles
             foreach (var userRole in user.Roles.ToList())
@@ -611,7 +610,7 @@ namespace Abp.Authorization.Users
 
         protected virtual Task<string> GetOldUserNameAsync(long userId)
         {
-            return AbpStore.GetUserNameFromDatabaseAsync(userId);
+            return AbpUserStore.GetUserNameFromDatabaseAsync(userId);
         }
 
         private async Task<UserPermissionCacheItem> GetUserPermissionCacheItemAsync(long userId)
@@ -726,6 +725,31 @@ namespace Abp.Authorization.Users
             }
 
             return AbpSession.MultiTenancySide;
+        }
+
+        public virtual async Task AddTokenValidityKeyAsync(
+            TUser user,
+            string tokenValidityKey,
+            DateTime expireDate,
+            CancellationToken cancellationToken = default(CancellationToken))
+        {
+            await AbpUserStore.AddTokenValidityKeyAsync(user, tokenValidityKey, expireDate, cancellationToken);
+        }
+
+        public virtual async Task<bool> IsTokenValidityKeyValidAsync(
+            TUser user,
+            string tokenValidityKey,
+            CancellationToken cancellationToken = default(CancellationToken))
+        {
+            return await AbpUserStore.IsTokenValidityKeyValidAsync(user, tokenValidityKey, cancellationToken);
+        }
+
+        public virtual async Task RemoveTokenValidityKeyAsync(
+            TUser user,
+            string tokenValidityKey,
+            CancellationToken cancellationToken = default(CancellationToken))
+        {
+            await AbpUserStore.RemoveTokenValidityKeyAsync(user, tokenValidityKey, cancellationToken);
         }
     }
 }

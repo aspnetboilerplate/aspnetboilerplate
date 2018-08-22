@@ -76,10 +76,10 @@ namespace Abp.Authorization.Users
             IUnitOfWorkManager unitOfWorkManager,
             IRepository<TUser, long> userRepository,
             IRepository<TRole> roleRepository,
-            IAsyncQueryableExecuter asyncQueryableExecuter, 
-            IRepository<UserRole, long> userRoleRepository, 
-            IRepository<UserLogin, long> userLoginRepository, 
-            IRepository<UserClaim, long> userClaimRepository, 
+            IAsyncQueryableExecuter asyncQueryableExecuter,
+            IRepository<UserRole, long> userRoleRepository,
+            IRepository<UserLogin, long> userLoginRepository,
+            IRepository<UserClaim, long> userClaimRepository,
             IRepository<UserPermissionSetting, long> userPermissionSettingRepository)
         {
             _unitOfWorkManager = unitOfWorkManager;
@@ -367,7 +367,7 @@ namespace Abp.Authorization.Users
                 return;
             }
 
-            var role = await _roleRepository.FirstOrDefaultAsync(r => r.NormalizedName== normalizedRoleName);
+            var role = await _roleRepository.FirstOrDefaultAsync(r => r.NormalizedName == normalizedRoleName);
 
             if (role == null)
             {
@@ -465,7 +465,7 @@ namespace Abp.Authorization.Users
         /// </summary>
         public void Dispose()
         {
-            
+
         }
 
         /// <summary>
@@ -632,11 +632,11 @@ namespace Abp.Authorization.Users
             Check.NotNull(providerKey, nameof(providerKey));
 
             var query = from userLogin in _userLoginRepository.GetAll()
-                join user in UserRepository.GetAll() on userLogin.UserId equals user.Id
-                where userLogin.LoginProvider == loginProvider &&
-                      userLogin.ProviderKey == providerKey &&
-                      userLogin.TenantId == AbpSession.TenantId
-                select user;
+                        join user in UserRepository.GetAll() on userLogin.UserId equals user.Id
+                        where userLogin.LoginProvider == loginProvider &&
+                              userLogin.ProviderKey == providerKey &&
+                              userLogin.TenantId == AbpSession.TenantId
+                        select user;
 
             return _asyncQueryableExecuter.FirstOrDefaultAsync(query);
         }
@@ -1280,6 +1280,7 @@ namespace Abp.Authorization.Users
 
         private const string InternalLoginProvider = "[AspNetUserStore]";
         private const string AuthenticatorKeyTokenName = "AuthenticatorKey";
+        private const string TokenValidityKeyProvider = "TokenValidityKeyProvider";
 
         public virtual async Task SetAuthenticatorKeyAsync(TUser user, string key, CancellationToken cancellationToken)
         {
@@ -1289,6 +1290,45 @@ namespace Abp.Authorization.Users
         public async Task<string> GetAuthenticatorKeyAsync(TUser user, CancellationToken cancellationToken)
         {
             return await GetTokenAsync(user, InternalLoginProvider, AuthenticatorKeyTokenName, cancellationToken);
+        }
+
+        public virtual async Task AddTokenValidityKeyAsync([NotNull] TUser user, string tokenValidityKey, DateTime expireDate, CancellationToken cancellationToken = default(CancellationToken))
+        {
+            cancellationToken.ThrowIfCancellationRequested();
+
+            Check.NotNull(user, nameof(user));
+
+            await UserRepository.EnsureCollectionLoadedAsync(user, u => u.Tokens, cancellationToken);
+
+            user.Tokens.Add(new UserToken(user, TokenValidityKeyProvider, tokenValidityKey, null, expireDate));
+        }
+
+        public virtual async Task<bool> IsTokenValidityKeyValidAsync([NotNull] TUser user, string tokenValidityKey, CancellationToken cancellationToken = default(CancellationToken))
+        {
+            cancellationToken.ThrowIfCancellationRequested();
+
+            Check.NotNull(user, nameof(user));
+
+            await UserRepository.EnsureCollectionLoadedAsync(user, u => u.Tokens, cancellationToken);
+            var isValidityKeyValid = user.Tokens.Any(t => t.LoginProvider == TokenValidityKeyProvider &&
+                                               t.Name == tokenValidityKey &&
+                                               t.ExpireDate > DateTime.UtcNow);
+            
+            user.Tokens.RemoveAll(t => t.LoginProvider == TokenValidityKeyProvider && t.ExpireDate <= DateTime.UtcNow);
+
+            return isValidityKeyValid;
+        }
+
+        public virtual async Task RemoveTokenValidityKeyAsync([NotNull] TUser user, string tokenValidityKey, CancellationToken cancellationToken = default(CancellationToken))
+        {
+            cancellationToken.ThrowIfCancellationRequested();
+
+            Check.NotNull(user, nameof(user));
+
+            await UserRepository.EnsureCollectionLoadedAsync(user, u => u.Tokens, cancellationToken);
+
+            user.Tokens.Remove(user.Tokens.FirstOrDefault(t =>
+                t.LoginProvider == TokenValidityKeyProvider && t.Name == tokenValidityKey));
         }
     }
 }
