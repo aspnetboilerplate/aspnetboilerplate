@@ -89,7 +89,7 @@ Let's see some of ABP's benefits here:
 -   **[Dynamic API Layer](/Pages/Documents/Dynamic-Web-API)**: TaskAppService is a simple class, actually. We generally have to write a wrapper API Controller to expose methods to JavaScript clients, but ABP
     automatically does that on runtime. This way, we can use application
     service methods directly from clients.
--   **[Dynamic JavaScript AJAX Proxy](/Pages/Documents/Dynamic-Web-API#dynamic-javascript-proxies)** : ABP creates proxy methods those make calling application
+-   **[Dynamic JavaScript AJAX Proxy](/Pages/Documents/Dynamic-Web-API#dynamic-javascript-proxies)** : ABP creates proxy methods that make calling application
     service methods as simple as calling JavaScript methods on the client.
 
 We can see the benefits of ABP in this simple class. All these tasks normally take significant time,
