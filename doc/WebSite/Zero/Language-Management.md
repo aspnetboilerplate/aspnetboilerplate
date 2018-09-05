@@ -83,6 +83,9 @@ as you do normally. You must at least define it in the **default**
 language's XML file. Note: you don't need to add the default values of
 the localized texts to the database migration code.
 
+#### Note On Using L method in Application Service or Domain Service
+You must set the *LocalizationSourceName* in your services' constructor, otherwise will get Abp exception of "Must set LocalizationSourceName before, in order to get LocalizationSource".
+
 ### Managing Languages
 
 The **IApplicationLanguageManager** interface is
