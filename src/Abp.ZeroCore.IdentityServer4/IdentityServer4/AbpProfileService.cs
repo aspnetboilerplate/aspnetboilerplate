@@ -41,6 +41,8 @@ namespace Abp.IdentityServer4
             var tenantId = context.Subject.Identity.GetTenantId();
             using (_unitOfWorkManager.Current.SetTenantId(tenantId))
             {
+                await base.IsActiveAsync(context);
+
                 var sub = context.Subject.GetSubjectId();
                 var user = await _userManager.FindByIdAsync(sub);
 
