@@ -43,6 +43,11 @@ namespace Abp.IdentityServer4
             {
                 await base.IsActiveAsync(context);
 
+                if (!context.IsActive)
+                {
+                    return;
+                }
+
                 var sub = context.Subject.GetSubjectId();
                 var user = await _userManager.FindByIdAsync(sub);
 
