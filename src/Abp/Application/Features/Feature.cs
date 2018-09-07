@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Collections.Immutable;
+using System.Linq;
 using Abp.Collections.Extensions;
 using Abp.Localization;
 using Abp.UI.Inputs;
@@ -53,7 +54,7 @@ namespace Abp.Application.Features
         /// This can be used to show this feature's description on the UI. 
         /// </summary>
         public ILocalizableString Description { get; set; }
-        
+
         /// <summary>
         /// Input type.
         /// This can be used to prepare an input for changing this feature's value.
@@ -110,6 +111,13 @@ namespace Abp.Application.Features
             var feature = new Feature(name, defaultValue, displayName, description, scope, inputType) { Parent = this };
             _children.Add(feature);
             return feature;
+        }
+
+        public void RemoveChildFeature(string name)
+        {
+            var featureToRemove = _children.FirstOrDefault(f => f.Name == name);
+
+            _children.Remove(featureToRemove);
         }
 
         public override string ToString()
