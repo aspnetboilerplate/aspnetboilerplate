@@ -11,6 +11,7 @@ namespace Abp.TestBase.SampleApplication.ContacLists
             public const string Contacts = "ContactManager.Contacts";
             public const string MaxContactCount = "ContactManager.MaxContactCount";
             public const string ChildFeatureToOverride = "ContactManager.ChildFeatureToOverride";
+            public const string ChildFeatureToDelete = "ContactManager.ChildFeatureToDelete";
         }
 
         public override void SetFeatures(IFeatureDefinitionContext context)
@@ -21,6 +22,9 @@ namespace Abp.TestBase.SampleApplication.ContacLists
             contacts.CreateChildFeature(Names.ChildFeatureToOverride, "ChildFeature");
             contacts.RemoveChildFeature(Names.ChildFeatureToOverride);
             contacts.CreateChildFeature(Names.ChildFeatureToOverride, "ChildFeatureToOverride");
+
+            contacts.CreateChildFeature(Names.ChildFeatureToDelete, "ChildFeatureToDelete");
+            contacts.RemoveChildFeature(Names.ChildFeatureToDelete);
         }
     }
 }

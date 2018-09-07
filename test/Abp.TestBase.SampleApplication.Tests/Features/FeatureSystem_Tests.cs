@@ -81,11 +81,19 @@ namespace Abp.TestBase.SampleApplication.Tests.Features
         }
 
         [Fact]
-        public void Should_Remove_Child_Feature()
+        public void Should_Override_Child_Feature()
         {
             var childFeature = _featureManager.Get(SampleFeatureProvider.Names.ChildFeatureToOverride);
             childFeature.ShouldNotBeNull();
             childFeature.DefaultValue.ShouldBe("ChildFeatureToOverride");
+        }
+
+        [Fact]
+        public void Should_Remove_Child_Feature()
+        {
+            Should.Throw<AbpException>(() => {
+                var childFeature = _featureManager.Get(SampleFeatureProvider.Names.ChildFeatureToDelete);
+            });
         }
     }
 }
