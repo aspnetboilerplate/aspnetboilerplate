@@ -10,7 +10,7 @@ using Xunit;
 
 namespace Abp.TestBase.SampleApplication.Tests.Features
 {
-    public class FeatureSystem_Tests: SampleApplicationTestBase
+    public class FeatureSystem_Tests : SampleApplicationTestBase
     {
         private readonly IFeatureManager _featureManager;
 
@@ -78,6 +78,13 @@ namespace Abp.TestBase.SampleApplication.Tests.Features
 
             var contactListAppService = Resolve<IContactListAppService>();
             Assert.Throws<AbpAuthorizationException>(() => contactListAppService.Test());
+        }
+
+        [Fact]
+        public void Should_Remove_Child_Feature()
+        {
+            var childFeature = _featureManager.Get(SampleFeatureProvider.Names.ChildFeatureToOverride);
+            childFeature.ShouldNotBeNull();
         }
     }
 }
