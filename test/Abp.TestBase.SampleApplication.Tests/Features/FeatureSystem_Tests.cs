@@ -85,6 +85,7 @@ namespace Abp.TestBase.SampleApplication.Tests.Features
         {
             var childFeature = _featureManager.Get(SampleFeatureProvider.Names.ChildFeatureToOverride);
             childFeature.ShouldNotBeNull();
+            childFeature.DefaultValue.ShouldBe("ChildFeatureToOverride");
         }
     }
 }
