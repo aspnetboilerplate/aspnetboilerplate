@@ -67,6 +67,7 @@ Presentation Layer
 -   [Embedded Resources](Embedded-Resource-Files.md)
 -   [Javascript API](/Pages/Documents/Javascript-API)
 -   [CSRF/XSRF Protection](XSRF-CSRF-Protection.md)
+-   [Alerts](UI-Alerts.md)
 
 Background Services
 
