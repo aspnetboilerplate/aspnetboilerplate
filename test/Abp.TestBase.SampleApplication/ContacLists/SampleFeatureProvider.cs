@@ -27,4 +27,4 @@ namespace Abp.TestBase.SampleApplication.ContacLists
             contacts.RemoveChildFeature(Names.ChildFeatureToDelete);
         }
     }
-}
+};
