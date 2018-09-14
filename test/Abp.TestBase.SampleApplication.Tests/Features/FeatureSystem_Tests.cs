@@ -24,7 +24,7 @@ namespace Abp.TestBase.SampleApplication.Tests.Features
         {
             _featureManager.Get(SampleFeatureProvider.Names.Contacts).ShouldNotBe(null);
             _featureManager.Get(SampleFeatureProvider.Names.MaxContactCount).ShouldNotBe(null);
-            _featureManager.GetAll().Count.ShouldBe(2);
+            _featureManager.GetAll().Count.ShouldBe(3);
         }
 
         [Fact]
