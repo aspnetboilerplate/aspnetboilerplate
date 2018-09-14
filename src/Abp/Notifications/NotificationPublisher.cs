@@ -9,6 +9,7 @@ using Abp.Domain.Uow;
 using Abp.Extensions;
 using Abp.Json;
 using Abp.Runtime.Session;
+using Newtonsoft.Json;
 
 namespace Abp.Notifications
 {
@@ -87,12 +88,12 @@ namespace Abp.Notifications
                 NotificationName = notificationName,
                 EntityTypeName = entityIdentifier == null ? null : entityIdentifier.Type.FullName,
                 EntityTypeAssemblyQualifiedName = entityIdentifier == null ? null : entityIdentifier.Type.AssemblyQualifiedName,
-                EntityId = entityIdentifier == null ? null : entityIdentifier.Id.ToJsonString(),
+                EntityId = entityIdentifier == null ? null : entityIdentifier.Id.ToJsonString(referenceLoopHandling: ReferenceLoopHandling.Ignore),
                 Severity = severity,
                 UserIds = userIds.IsNullOrEmpty() ? null : userIds.Select(uid => uid.ToUserIdentifierString()).JoinAsString(","),
                 ExcludedUserIds = excludedUserIds.IsNullOrEmpty() ? null : excludedUserIds.Select(uid => uid.ToUserIdentifierString()).JoinAsString(","),
                 TenantIds = tenantIds.IsNullOrEmpty() ? null : tenantIds.JoinAsString(","),
-                Data = data == null ? null : data.ToJsonString(),
+                Data = data == null ? null : data.ToJsonString(referenceLoopHandling: ReferenceLoopHandling.Ignore),
                 DataTypeName = data == null ? null : data.GetType().AssemblyQualifiedName
             };
 

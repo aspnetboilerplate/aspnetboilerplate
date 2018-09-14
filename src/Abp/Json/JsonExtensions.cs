@@ -1,7 +1,6 @@
-﻿using JetBrains.Annotations;
+﻿using System;
+using JetBrains.Annotations;
 using Newtonsoft.Json;
-using Newtonsoft.Json.Serialization;
-using System;
 
 namespace Abp.Json
 {
@@ -13,22 +12,14 @@ namespace Abp.Json
         /// <returns></returns>
         public static string ToJsonString(this object obj, bool camelCase = false, bool indented = false)
         {
-            var options = new JsonSerializerSettings();
+            var options = CreateAbpSerializerSettings(camelCase, indented);
+            return JsonConvert.SerializeObject(obj, options);
+        }
 
-            if (camelCase)
-            {
-                options.ContractResolver = new AbpCamelCasePropertyNamesContractResolver();
-            }
-            else
-            {
-                options.ContractResolver = new AbpContractResolver();
-            }
-
-            if (indented)
-            {
-                options.Formatting = Formatting.Indented;
-            }
-            
+        public static string ToJsonString(this object obj, bool camelCase = false, bool indented = false, ReferenceLoopHandling referenceLoopHandling = ReferenceLoopHandling.Error)
+        {
+            var options = CreateAbpSerializerSettings(camelCase, indented);
+            options.ReferenceLoopHandling = ReferenceLoopHandling.Error;
             return JsonConvert.SerializeObject(obj, options);
         }
 
@@ -74,6 +65,27 @@ namespace Abp.Json
             return value != null
                 ? JsonConvert.DeserializeObject(value, type, settings)
                 : null;
+        }
+
+        private static JsonSerializerSettings CreateAbpSerializerSettings(bool camelCase, bool indented)
+        {
+            var options = new JsonSerializerSettings();
+
+            if (camelCase)
+            {
+                options.ContractResolver = new AbpCamelCasePropertyNamesContractResolver();
+            }
+            else
+            {
+                options.ContractResolver = new AbpContractResolver();
+            }
+
+            if (indented)
+            {
+                options.Formatting = Formatting.Indented;
+            }
+
+            return options;
         }
     }
 }
