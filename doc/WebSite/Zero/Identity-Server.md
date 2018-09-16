@@ -59,7 +59,7 @@ Highlighted, here are the **differences** from the standard IdentityServer4 usag
         public void ConfigureServices(IServiceCollection services)
         {
             //...
-            
+
                 services.AddIdentityServer()
                     .AddDeveloperSigningCredential()
                     .AddInMemoryIdentityResources(IdentityServerConfig.GetIdentityResources())
@@ -77,7 +77,7 @@ Highlighted, here are the **differences** from the standard IdentityServer4 usag
 
                 app.UseJwtTokenMiddleware("IdentityBearer");
                 app.UseIdentityServer();
-                
+
             //...
         }
     }
@@ -293,7 +293,7 @@ Change Program.cs as shown below:
                 }
             }
         }
-        
+
         internal class UserListDto
         {
             public int Id { get; set; }
