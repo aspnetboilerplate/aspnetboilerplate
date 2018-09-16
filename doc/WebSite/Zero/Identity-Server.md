@@ -194,12 +194,6 @@ We can then add the middleware to the Startup class as shown below:
 We added this just after the **services.AddIdentityServer()** line in the startup
 project.
 
-#### IdentityServer4.AccessTokenValidation Status
-
-The *IdentityServer4.AccessTokenValidation* package is not ready for ASP.NET
-Core 2.0 yet (at the time of this writing). See
-https://github.com/IdentityServer/IdentityServer4/issues/1055 for more info.
-
 ### Testing
 
 Our identity server is now ready to get requests from clients. We can
