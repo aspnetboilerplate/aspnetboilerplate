@@ -152,7 +152,7 @@ You can use the **IEntityChangeSetReasonProvider.Use(...)** method as shown belo
             {
                 ...
 
-                _unitOfWorkManager.Current.SaveChanges();
+                await _unitOfWorkManager.Current.SaveChangesAsync();
             }
         }
     }
