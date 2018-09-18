@@ -65,7 +65,7 @@ for the module. Example:
     ...
     using Abp.Web.Configuration;
     ...
-    public override void PreInitialize() 
+    public override void PreInitialize()
     {
         Configuration.Modules.AbpWebCommon().SendAllExceptionsToClients = true;
     }

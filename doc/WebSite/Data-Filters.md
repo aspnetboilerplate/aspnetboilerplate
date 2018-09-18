@@ -6,7 +6,7 @@ is used to not actually delete an entity from database but to only mark it as
 'deleted'. If an entity is soft-deleted, it should not be accidentally
 retrieved into the application. To provide for that, we would have to add an SQL
 **where** condition like 'IsDeleted = false' in every query where we select
-entities. This is not only tedious, but is more importantly a forgettable task. To keep 
+entities. This is not only tedious, but is more importantly a forgettable task. To keep
 things DRY, there should be an automatic way to do this.
 
 ASP.NET Boilerplate provides **data filters** that can be used to
@@ -85,7 +85,7 @@ Example:
         public string Name { get; set; }
     }
 
-**IMustHaveTenant** defines the **TenantId** property to distinguish between 
+**IMustHaveTenant** defines the **TenantId** property to distinguish between
 different tenant entities. ASP.NET Boilerplate uses the
 [IAbpSession](/Pages/Documents/Abp-Session) to get the current TenantId by
 default and automatically filters the query for the current tenant.
@@ -96,7 +96,7 @@ IMustHaveTenant is enabled by default.
 
 If the current user is not logged in to the system or the current user is a
 **host** user (Host user is an upper-level user that can manage tenants
-and tenant data), ASP.NET Boilerplate automatically **disables** the 
+and tenant data), ASP.NET Boilerplate automatically **disables** the
 IMustHaveTenant filter. Thus, all data of all tenants can be retrieved
 to the application. Notice that this is not about security, you should
 always [authorize](/Pages/Documents/Authorization) sensitive data!
@@ -306,7 +306,7 @@ so on.
 
 For NHibernate,
 data filtering is implemented in the [repository](Repositories.md)
-level. This means it only filters when you query over repositories. 
+level. This means it only filters when you query over repositories.
 
 Note: If you directly query via custom SQL,
 you have to handle the filtering yourself.

@@ -160,7 +160,7 @@ namespace Abp.TestBase.SampleApplication.Tests.ContactLists
             using (var unitOfWork = unitOfWorkManager.Begin())
             {
                 unitOfWorkManager.Current.GetTenantId().ShouldBe(null);
-                
+
                 //We can also set tenantId parameter's value without changing AbpSession.TenantId
                 using (unitOfWorkManager.Current.SetTenantId(1))
                 {

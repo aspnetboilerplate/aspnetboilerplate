@@ -9,7 +9,7 @@ and can easily change it later if needed.
 
 **[Log4Net](http://logging.apache.org/log4net/)** is one of the most
 popular logging libraries for .NET. The ASP.NET Boilerplate
-[templates](/Templates) come with Log4Net properly configured and ready to use. 
+[templates](/Templates) come with Log4Net properly configured and ready to use.
 There is just a single-line of code for the dependency to log4net (as
 seen in the [configuration](#config) section), so you can easily change it to
 your favourite library.
@@ -84,7 +84,7 @@ write logs, with no injection needed. Example:
     public class HomeController : SimpleTaskSystemControllerBase
     {
         public ActionResult Index()
-        { 
+        {
             Logger.Debug("A sample log message...");
             return View();
         }
