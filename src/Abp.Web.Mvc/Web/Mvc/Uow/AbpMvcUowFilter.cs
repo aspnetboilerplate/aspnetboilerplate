@@ -65,19 +65,14 @@ namespace Abp.Web.Mvc.Uow
             {
                 return;
             }
+            
+            if (filterContext.Exception == null)
+            {
+                uow.Complete();
+            }
 
-            try
-            {
-                if (filterContext.Exception == null)
-                {
-                    uow.Complete();
-                }
-            }
-            finally
-            {
-                uow.Dispose();
-                SetCurrentUow(filterContext.HttpContext, null);
-            }
+            uow.Dispose();
+            SetCurrentUow(filterContext.HttpContext, null);
         }
 
         private static IUnitOfWorkCompleteHandle GetCurrentUow(HttpContextBase httpContext)
