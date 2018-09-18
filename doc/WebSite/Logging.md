@@ -137,10 +137,10 @@ below:
 Log4Net is highly configurable and is a strong logging library. You can write
 logs in different formats and to different targets (text file,
 database...). You can set minimum log levels (as set for NHibernate in
-this configuration). You can write diffent loggers to different log
-files. It can automatically backup and create new log file when it
-reaches to a specific size (Rolling file adapter with 10000 KB per file
-in this configuration) and so on... Read it's own confuguration
+this configuration). You can write different loggers to different log
+files. It can automatically backup and create a new log file when it
+reaches a specific size (RollingFileAppender with 10000 KB per file
+in this configuration) and so on... Read its own configuration
 [documentation](http://logging.apache.org/log4net/release/config-examples.html)
 for more info.
 

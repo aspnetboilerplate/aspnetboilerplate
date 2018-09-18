@@ -91,7 +91,7 @@ We added **services.AddIdentityServer()** just after
 
 We have used the IdentityServerConfig class to get identity resources, api
 resources and clients. You can find more information about this class in
-it's own
+its own
 [documentation](https://identityserver4.readthedocs.io/en/release/quickstarts/1_client_credentials.html).
 For the simplest case, it can be a static class like below:
 

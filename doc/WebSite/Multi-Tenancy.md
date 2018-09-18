@@ -103,7 +103,7 @@ of our module as shown below:
 
 We define two terms used in a multi-tenant system:
 
--   **Tenant**: A customer which has it's own users, roles,
+-   **Tenant**: A customer which has its own users, roles,
     permissions, settings... and uses the application completely
     isolated from other tenants. A multi-tenant application will have
     one or more tenants. If this is a CRM application, different tenants

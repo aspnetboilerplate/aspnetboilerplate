@@ -37,7 +37,7 @@ browser clients**.
 
 #### Features
 
-ASP.NET MVC has it's own built-in AntiForgery system, but there are a few weaknesses:
+ASP.NET MVC has its own built-in AntiForgery system, but there are a few weaknesses:
 
 -   It requires you to add the **ValidateAntiForgeryToken** attribute to all
     actions that need to be protected. You could potentially **forget** to add

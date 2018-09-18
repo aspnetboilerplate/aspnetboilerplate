@@ -230,7 +230,7 @@ for example.
 
 #### ASP.NET Core
 
-ASP.NET Core has it's own mechanism to determine the current language.
+ASP.NET Core has its own mechanism to determine the current language.
 Abp.AspNetCore package automatically adds ASP.NET Core's
 **UseRequestLocalization** middleware to request pipeline. It also adds
 some special providers. Here is the default ordered list of all providers,
@@ -487,7 +487,7 @@ defaultSourceName is global and works for only one source at a time.
 
 ### Extending Localization Sources
 
-Assume that we use a module which defines it's own localization source.
+Assume that we use a module which defines its own localization source.
 We may need to change it's localized texts, add new text or translate
 to other languages. ASP.NET Boilerplate allows for extending a localization
 source. It currently works for XML and JSON files (Actually any

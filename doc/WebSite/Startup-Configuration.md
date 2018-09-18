@@ -121,7 +121,7 @@ Now other modules can configure this module using the extension method:
 
 This makes it easy to investigate module configurations and collect them in
 a single place (Configuration.Modules...). ABP itself defines extension
-methods for it's own module configurations.
+methods for its own module configurations.
 
 At some point, MyModule needs this configuration. You can inject
 MyModuleConfig and use the configured values. Example:
