@@ -256,7 +256,6 @@ namespace Abp.Domain.Uow
             catch (Exception ex)
             {
                 _exception = ex;
-                throw;
             }
         }
 
@@ -273,7 +272,6 @@ namespace Abp.Domain.Uow
             catch (Exception ex)
             {
                 _exception = ex;
-                throw;
             }
         }
 
