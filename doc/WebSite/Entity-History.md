@@ -117,6 +117,8 @@ The preferred approach is using the **UseCase** attribute. Example:
     public virtual async Task AssignIssueAsync(AssignIssueInput input)
     {
         // ...
+
+        await _unitOfWorkManager.Current.SaveChangesAsync();
     }
 
 ##### UseCase Attribute Restrictions
