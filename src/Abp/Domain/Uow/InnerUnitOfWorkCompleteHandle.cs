@@ -17,6 +17,8 @@ namespace Abp.Domain.Uow
         private volatile bool _isCompleteCalled;
         private volatile bool _isDisposed;
 
+        public Exception ExceptionOnComplete => null;
+
         public void Complete()
         {
             _isCompleteCalled = true;

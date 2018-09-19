@@ -116,7 +116,11 @@ namespace Abp.TestBase.SampleApplication.Tests.Uow
                     disposeCount++;
                 };
 
-                Assert.Throws<DbEntityValidationException>(() => uow.Complete());
+                Assert.ThrowsAsync<DbEntityValidationException>(() =>
+                {
+                    uow.Complete();
+                    throw uow.ExceptionOnComplete;
+                });
             }
 
             failedCount.ShouldBe(1);

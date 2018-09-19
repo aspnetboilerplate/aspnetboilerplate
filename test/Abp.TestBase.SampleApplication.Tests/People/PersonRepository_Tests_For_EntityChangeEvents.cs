@@ -23,7 +23,7 @@ namespace Abp.TestBase.SampleApplication.Tests.People
         {
             _personRepository = Resolve<IRepository<Person>>();
         }
-        
+
         [Theory]
         [InlineData(TransactionScopeOption.Required)]
         [InlineData(TransactionScopeOption.RequiresNew)]
@@ -155,22 +155,16 @@ namespace Abp.TestBase.SampleApplication.Tests.People
                 });
 
             //Act
-            try
-            {
-                using (var uow = Resolve<IUnitOfWorkManager>().Begin())
-                {
-                    var person = _personRepository.Single(p => p.Name == "halil");
-                    person.Name = "halil2";
-                    _personRepository.Update(person);
 
-                    uow.Complete();
-                }
-
-                Assert.True(false, "Should not come here since ApplicationException is thrown!");
-            }
-            catch (ApplicationException)
+            using (var uow = Resolve<IUnitOfWorkManager>().Begin())
             {
-                //hiding exception
+                var person = _personRepository.Single(p => p.Name == "halil");
+                person.Name = "halil2";
+                _personRepository.Update(person);
+
+                uow.Complete();
+
+                Assert.True(uow.ExceptionOnComplete != null, "");
             }
 
             //Assert
@@ -192,22 +186,15 @@ namespace Abp.TestBase.SampleApplication.Tests.People
                 });
 
             //Act
-            try
+            using (var uow = Resolve<IUnitOfWorkManager>().Begin())
             {
-                using (var uow = Resolve<IUnitOfWorkManager>().Begin())
-                {
-                    var person = _personRepository.Single(p => p.Name == "halil");
-                    _personRepository.Delete(person);
-                    uow.Complete();
-                }
+                var person = _personRepository.Single(p => p.Name == "halil");
+                _personRepository.Delete(person);
+                uow.Complete();
 
-                Assert.True(false, "Should not come here since ApplicationException is thrown!");
+                Assert.True(uow.ExceptionOnComplete != null, "");
             }
-            catch (ApplicationException)
-            {
-                //hiding exception
-            }
-            
+
             _personRepository
                 .FirstOrDefault(p => p.Name == "halil")
                 .ShouldNotBeNull();

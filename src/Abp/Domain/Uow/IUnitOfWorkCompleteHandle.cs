@@ -11,6 +11,11 @@ namespace Abp.Domain.Uow
     public interface IUnitOfWorkCompleteHandle : IDisposable
     {
         /// <summary>
+        /// Will be set if Complete method throw an exception
+        /// </summary>
+        Exception ExceptionOnComplete { get; }
+
+        /// <summary>
         /// Completes this unit of work.
         /// It saves all changes and commit transaction if exists.
         /// </summary>

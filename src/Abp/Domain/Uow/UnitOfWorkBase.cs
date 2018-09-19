@@ -59,6 +59,8 @@ namespace Abp.Domain.Uow
         /// </summary>
         public IAbpSession AbpSession { protected get; set; }
 
+        public Exception ExceptionOnComplete { get { return _exception; } }
+
         protected IUnitOfWorkFilterExecuter FilterExecuter { get; }
 
         /// <summary>
