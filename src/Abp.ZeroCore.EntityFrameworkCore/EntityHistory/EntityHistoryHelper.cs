@@ -168,6 +168,11 @@ namespace Abp.EntityHistory
                 TenantId = AbpSession.TenantId
             };
 
+            if (!shouldSaveEntityHistory && entityChange.PropertyChanges.Count == 0)
+            {
+                return null;
+            }
+
             return entityChange;
         }
 
