@@ -264,14 +264,14 @@ namespace Abp.EntityHistory
                 return false;
             }
 
-            if (entityType.GetTypeInfo().IsDefined(typeof(AuditedAttribute), true))
-            {
-                return true;
-            }
-
             if (entityType.GetTypeInfo().IsDefined(typeof(DisableAuditingAttribute), true))
             {
                 return false;
+            }
+
+            if (entityType.GetTypeInfo().IsDefined(typeof(AuditedAttribute), true))
+            {
+                return true;
             }
 
             if (_configuration.Selectors.Any(selector => selector.Predicate(entityType)))
