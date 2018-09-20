@@ -84,7 +84,7 @@ inherently implemented.
 
 The ApplicationService class has some basic functionality 
 that makes it easy to do **logging,** **localization** and so
-on... It's recommend that you create a special base class for your application
+on... It's recommended that you create a special base class for your application
 services that extends the ApplicationService class. This way, you can add some
 common functionality for all your application services. A sample
 application service class is shown below:
