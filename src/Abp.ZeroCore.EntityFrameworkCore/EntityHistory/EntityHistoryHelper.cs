@@ -87,7 +87,8 @@ namespace Abp.EntityHistory
 
             foreach (var entry in entityEntries)
             {
-                if (!ShouldSaveEntityHistory(entry))
+                var shouldSaveEntityHistory = ShouldSaveEntityHistory(entry);
+                if (!shouldSaveEntityHistory && !HasAuditedProperties(entry))
                 {
                     continue;
                 }
@@ -224,6 +225,12 @@ namespace Abp.EntityHistory
             return propertyChanges;
         }
 
+        private bool HasAuditedProperties(EntityEntry entityEntry)
+        {
+            var properties = entityEntry.Metadata.GetProperties();
+            return properties.Any(p => p.PropertyInfo?.IsDefined(typeof(AuditedAttribute)) ?? false);
+        }
+
         private bool IsCreated(EntityEntry entityEntry)
         {
             return entityEntry.State == EntityState.Added;
@@ -275,12 +282,6 @@ namespace Abp.EntityHistory
             }
 
             if (_configuration.Selectors.Any(selector => selector.Predicate(entityType)))
-            {
-                return true;
-            }
-
-            var properties = entityEntry.Metadata.GetProperties();
-            if (properties.Any(p => p.PropertyInfo?.IsDefined(typeof(AuditedAttribute)) ?? false))
             {
                 return true;
             }
