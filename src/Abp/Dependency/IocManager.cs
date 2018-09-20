@@ -56,8 +56,10 @@ namespace Abp.Dependency
 
             //Register self!
             IocContainer.Register(
-                Component.For<IocManager, IIocManager, IIocRegistrar, IIocResolver>().UsingFactoryMethod(() => this)
-                );
+                Component
+                    .For<IocManager, IIocManager, IIocRegistrar, IIocResolver>()
+                    .Instance(this)
+            );
         }
 
         /// <summary>
