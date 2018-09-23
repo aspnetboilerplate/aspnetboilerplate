@@ -20,9 +20,6 @@ namespace Abp.AspNetCore.OData.Configuration
                     routePrefix: "odata",
                     model: ODataModelBuilder.GetEdmModel()
                 );
-
-                // Workaround: https://github.com/OData/WebApi/issues/1175
-                routes.EnableDependencyInjection();
             };
         }
     }
