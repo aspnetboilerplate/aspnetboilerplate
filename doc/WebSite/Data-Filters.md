@@ -304,9 +304,9 @@ so on.
 
 #### Other ORMs
 
-For [Entity Framework Core](Entity-Framework-Core.md) and NHibernate,
+For NHibernate,
 data filtering is implemented in the [repository](Repositories.md)
 level. This means it only filters when you query over repositories. 
 
-Note: If you directly use DbContext (for EF Core) or query via custom SQL, 
+Note: If you directly query via custom SQL,
 you have to handle the filtering yourself.
