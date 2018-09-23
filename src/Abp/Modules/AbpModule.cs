@@ -13,7 +13,7 @@ namespace Abp.Modules
     /// This class must be implemented by all module definition classes.
     /// </summary>
     /// <remarks>
-    /// A module definition class is generally located in it's own assembly
+    /// A module definition class is generally located in its own assembly
     /// and implements some action in module events on application startup and shutdown.
     /// It also defines depended modules.
     /// </remarks>
@@ -40,7 +40,7 @@ namespace Abp.Modules
         }
 
         /// <summary>
-        /// This is the first event called on application startup. 
+        /// This is the first event called on application startup.
         /// Codes can be placed here to run before dependency injection registrations.
         /// </summary>
         public virtual void PreInitialize()
@@ -61,7 +61,7 @@ namespace Abp.Modules
         /// </summary>
         public virtual void PostInitialize()
         {
-            
+
         }
 
         /// <summary>
@@ -69,7 +69,7 @@ namespace Abp.Modules
         /// </summary>
         public virtual void Shutdown()
         {
-            
+
         }
 
         public virtual Assembly[] GetAdditionalAssemblies()

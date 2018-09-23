@@ -142,7 +142,7 @@ namespace Abp.TestBase.SampleApplication.Tests.ContactLists
         {
             AbpSession.UserId = 1;
 
-            //A tenant can reach to it's own data
+            //A tenant can reach its own data
             AbpSession.TenantId = 1;
             _messageRepository.Count().ShouldBe(2);
             _messageRepository.GetAllList().Any(m => m.TenantId != AbpSession.TenantId).ShouldBe(false);
@@ -151,7 +151,7 @@ namespace Abp.TestBase.SampleApplication.Tests.ContactLists
             AbpSession.TenantId = 999999;
             _messageRepository.Count().ShouldBe(0);
 
-            //Host can reach to it's own data (since MayHaveTenant filter is enabled by default)
+            //Host can reach its own data (since MayHaveTenant filter is enabled by default)
             AbpSession.TenantId = null;
             _messageRepository.Count().ShouldBe(1);
             _messageRepository.GetAllList().Any(m => m.TenantId != AbpSession.TenantId).ShouldBe(false);
@@ -160,7 +160,7 @@ namespace Abp.TestBase.SampleApplication.Tests.ContactLists
             using (var unitOfWork = unitOfWorkManager.Begin())
             {
                 unitOfWorkManager.Current.GetTenantId().ShouldBe(null);
-                
+
                 //We can also set tenantId parameter's value without changing AbpSession.TenantId
                 using (unitOfWorkManager.Current.SetTenantId(1))
                 {
