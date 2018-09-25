@@ -26,7 +26,7 @@ namespace Abp.Zero.SampleApp.EntityFramework
             base.OnModelCreating(modelBuilder);
 
             modelBuilder.Entity<Book>().ToTable("Books");
-            modelBuilder.Entity<Book>().Property(e => e.Id).HasDatabaseGeneratedOption(DatabaseGeneratedOption.Identity);
+            modelBuilder.Entity<Book>().Property(e => e.Id).HasColumnName("BookId").HasDatabaseGeneratedOption(DatabaseGeneratedOption.Identity);
         }
     }
 }
