@@ -441,6 +441,16 @@ namespace Abp.EntityFramework
                 return;
             }
 
+            // todo: make HardDelete enum
+            if (CurrentUnitOfWorkProvider.Current.ExtensionData.ContainsKey("HardDelete"))
+            {
+                var hardDeleteItems = CurrentUnitOfWorkProvider.Current.ExtensionData["HardDelete"];
+                if (hardDeleteItems as )
+                {
+
+                }
+            }
+
             var softDeleteEntry = entry.Cast<ISoftDelete>();
             softDeleteEntry.Reload();
             softDeleteEntry.State = EntityState.Modified;

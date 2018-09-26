@@ -3,8 +3,10 @@ using System.Collections.Generic;
 using System.Linq.Expressions;
 using System.Threading;
 using System.Threading.Tasks;
+using Abp.Collections.Extensions;
 using Abp.Dependency;
 using Abp.Domain.Entities;
+using Abp.Domain.Uow;
 using Abp.Reflection;
 using Abp.Threading;
 
@@ -76,6 +78,18 @@ namespace Abp.Domain.Repositories
             }
 
             throw new ArgumentException($"Given {nameof(repository)} is not inherited from {typeof(AbpRepositoryBase<TEntity, TPrimaryKey>).AssemblyQualifiedName}");
+        }
+
+        public static async Task HardDelete<TEntity, TPrimaryKey>(this IRepository<TEntity, TPrimaryKey> repository, TEntity entity)
+            where TEntity : class, IEntity<TPrimaryKey>, ISoftDelete
+        {
+            var repo = ProxyHelper.UnProxy(repository) as IRepository<TEntity, TPrimaryKey>;
+            if (repo != null)
+            {
+                var extensionData = ((IUnitOfWorkManagerAccessor)repo).UnitOfWorkManager.Current.ExtensionData;
+                var hardDeleteItems = extensionData.GetOrAdd("HardDelete", () => new Dictionary<string, object>()) as Dictionary<string, object>;
+                hardDeleteItems.Add(entity.GetType().FullName, entity.Id);
+            }
         }
     }
 }

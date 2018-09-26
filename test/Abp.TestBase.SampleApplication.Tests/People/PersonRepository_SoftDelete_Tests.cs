@@ -3,6 +3,7 @@ using System.Threading.Tasks;
 using Abp.Domain.Repositories;
 using Abp.Domain.Uow;
 using Abp.TestBase.SampleApplication.People;
+using JetBrains.Annotations;
 using Shouldly;
 using Xunit;
 
@@ -87,7 +88,7 @@ namespace Abp.TestBase.SampleApplication.Tests.People
             personToBeDeleted.IsDeleted.ShouldBe(false);
             personToBeDeleted.DeletionTime.ShouldBe(null);
             personToBeDeleted.DeleterUserId.ShouldBe(null);
-            
+
             //Delete it
             await _personRepository.DeleteAsync(personToBeDeleted.Id);
 
@@ -106,6 +107,39 @@ namespace Abp.TestBase.SampleApplication.Tests.People
                     personToBeDeleted.IsDeleted.ShouldBe(true);
                     personToBeDeleted.DeletionTime.ShouldNotBe(null);
                     personToBeDeleted.DeleterUserId.ShouldBe(userId);
+                }
+
+                ouw.Complete();
+            }
+        }
+
+        [Fact]
+        public async Task Should_Delete_SoftDelete_Entity_When_SoftDelete_Filter_Is_Disabled()
+        {
+            var uowManager = Resolve<IUnitOfWorkManager>();
+
+            using (var ouw = uowManager.Begin())
+            {
+                var people = _personRepository.GetAllList();
+
+                using (uowManager.Current.DisableFilter(AbpDataFilters.SoftDelete))
+                {
+                    foreach (var person in people)
+                    {
+                        await _personRepository.HardDelete(person);
+                    }
+                }
+
+                ouw.Complete();
+            }
+
+            using (var ouw = uowManager.Begin())
+            {
+                using (uowManager.Current.DisableFilter(AbpDataFilters.SoftDelete))
+                {
+                    var poeple = _personRepository.GetAllList();
+                    poeple.Count.ShouldBe(1);
+                    poeple.First().Name.ShouldBe("emre");
                 }
 
                 ouw.Complete();
