@@ -87,12 +87,13 @@ namespace Abp.EntityHistory
 
             foreach (var entry in entityEntries)
             {
-                if (!ShouldSaveEntityHistory(entry))
+                var shouldSaveEntityHistory = ShouldSaveEntityHistory(entry);
+                if (!shouldSaveEntityHistory && !HasAuditedProperties(entry))
                 {
                     continue;
                 }
 
-                var entityChange = CreateEntityChange(entry);
+                var entityChange = CreateEntityChange(entry, shouldSaveEntityHistory);
                 if (entityChange == null)
                 {
                     continue;
@@ -126,7 +127,7 @@ namespace Abp.EntityHistory
         }
 
         [CanBeNull]
-        private EntityChange CreateEntityChange(EntityEntry entityEntry)
+        private EntityChange CreateEntityChange(EntityEntry entityEntry, bool shouldSaveEntityHistory)
         {
             var entity = entityEntry.Entity;
 
@@ -163,9 +164,14 @@ namespace Abp.EntityHistory
                 EntityEntry = entityEntry, // [NotMapped]
                 EntityId = entityId,
                 EntityTypeFullName = entityType.FullName,
-                PropertyChanges = GetPropertyChanges(entityEntry),
+                PropertyChanges = GetPropertyChanges(entityEntry, shouldSaveEntityHistory),
                 TenantId = AbpSession.TenantId
             };
+
+            if (!shouldSaveEntityHistory && entityChange.PropertyChanges.Count == 0)
+            {
+                return null;
+            }
 
             return entityChange;
         }
@@ -198,7 +204,7 @@ namespace Abp.EntityHistory
         /// <summary>
         /// Gets the property changes for this entry.
         /// </summary>
-        private ICollection<EntityPropertyChange> GetPropertyChanges(EntityEntry entityEntry)
+        private ICollection<EntityPropertyChange> GetPropertyChanges(EntityEntry entityEntry, bool shouldSaveEntityHistory)
         {
             var propertyChanges = new List<EntityPropertyChange>();
             var properties = entityEntry.Metadata.GetProperties();
@@ -208,7 +214,7 @@ namespace Abp.EntityHistory
             foreach (var property in properties)
             {
                 var propertyEntry = entityEntry.Property(property.Name);
-                if (ShouldSavePropertyHistory(propertyEntry, isCreated || isDeleted))
+                if (ShouldSavePropertyHistory(propertyEntry, shouldSaveEntityHistory, isCreated || isDeleted))
                 {
                     propertyChanges.Add(new EntityPropertyChange
                     {
@@ -222,6 +228,12 @@ namespace Abp.EntityHistory
             }
 
             return propertyChanges;
+        }
+
+        private bool HasAuditedProperties(EntityEntry entityEntry)
+        {
+            var properties = entityEntry.Metadata.GetProperties();
+            return properties.Any(p => p.PropertyInfo?.IsDefined(typeof(AuditedAttribute)) ?? false);
         }
 
         private bool IsCreated(EntityEntry entityEntry)
@@ -264,14 +276,14 @@ namespace Abp.EntityHistory
                 return false;
             }
 
-            if (entityType.GetTypeInfo().IsDefined(typeof(AuditedAttribute), true))
-            {
-                return true;
-            }
-
             if (entityType.GetTypeInfo().IsDefined(typeof(DisableAuditingAttribute), true))
             {
                 return false;
+            }
+
+            if (entityType.GetTypeInfo().IsDefined(typeof(AuditedAttribute), true))
+            {
+                return true;
             }
 
             if (_configuration.Selectors.Any(selector => selector.Predicate(entityType)))
@@ -279,16 +291,10 @@ namespace Abp.EntityHistory
                 return true;
             }
 
-            var properties = entityEntry.Metadata.GetProperties();
-            if (properties.Any(p => p.PropertyInfo?.IsDefined(typeof(AuditedAttribute)) ?? false))
-            {
-                return true;
-            }
-
             return defaultValue;
         }
 
-        private bool ShouldSavePropertyHistory(PropertyEntry propertyEntry, bool defaultValue)
+        private bool ShouldSavePropertyHistory(PropertyEntry propertyEntry, bool shouldSaveEntityHistory, bool defaultValue)
         {
             if (propertyEntry.Metadata.Name == "Id")
             {
@@ -301,9 +307,9 @@ namespace Abp.EntityHistory
                 return false;
             }
 
-            var entityType = propertyEntry.EntityEntry.Entity.GetType();
-            if (entityType.GetTypeInfo().IsDefined(typeof(DisableAuditingAttribute), true))
+            if (!shouldSaveEntityHistory)
             {
+                // Should not save property history if property is not audited
                 if (propertyInfo == null || !propertyInfo.IsDefined(typeof(AuditedAttribute), true))
                 {
                     return false;
