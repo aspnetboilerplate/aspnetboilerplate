@@ -14,8 +14,7 @@ namespace Abp.Events.Bus
         /// <summary>
         /// Gets single instance of <see cref="NullEventBus"/> class.
         /// </summary>
-        public static NullEventBus Instance { get { return SingletonInstance; } }
-        private static readonly NullEventBus SingletonInstance = new NullEventBus();
+        public static NullEventBus Instance { get; } = new NullEventBus();
 
         private NullEventBus()
         {
