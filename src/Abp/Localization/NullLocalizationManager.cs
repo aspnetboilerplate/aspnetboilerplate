@@ -20,7 +20,7 @@ namespace Abp.Localization
 
         private NullLocalizationManager()
         {
-            
+
         }
 
         public IReadOnlyList<LanguageInfo> GetAllLanguages()
