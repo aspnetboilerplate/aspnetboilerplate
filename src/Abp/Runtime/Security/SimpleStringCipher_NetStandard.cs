@@ -12,7 +12,7 @@ namespace Abp.Runtime.Security
     /// </summary>
     public class SimpleStringCipher
     {
-        public static SimpleStringCipher Instance { get; } = new SimpleStringCipher();
+        public static SimpleStringCipher Instance { get; }
 
         /// <summary>
         /// This constant string is used as a "salt" value for the PasswordDeriveBytes function calls.
@@ -48,6 +48,7 @@ namespace Abp.Runtime.Security
             DefaultPassPhrase = "gsKnGZ041HLL4IM8";
             DefaultInitVectorBytes = Encoding.ASCII.GetBytes("jkE49230Tf093b42");
             DefaultSalt = Encoding.ASCII.GetBytes("hgt!16kl");
+            Instance = new SimpleStringCipher();
         }
 
         public SimpleStringCipher()
