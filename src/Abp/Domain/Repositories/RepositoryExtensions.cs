@@ -8,6 +8,7 @@ using Abp.Dependency;
 using Abp.Domain.Entities;
 using Abp.Domain.Uow;
 using Abp.Reflection;
+using Abp.Runtime.Session;
 using Abp.Threading;
 
 namespace Abp.Domain.Repositories
@@ -87,9 +88,25 @@ namespace Abp.Domain.Repositories
             if (repo != null)
             {
                 var extensionData = ((IUnitOfWorkManagerAccessor)repo).UnitOfWorkManager.Current.ExtensionData;
-                var hardDeleteItems = extensionData.GetOrAdd("HardDelete", () => new Dictionary<string, object>()) as Dictionary<string, object>;
-                hardDeleteItems.Add(entity.GetType().FullName, entity.Id);
+                var hardDeleteItems = extensionData.GetOrAdd(RepositoryExtensionDataTypes.HardDelete, () => new List<string>()) as List<string>;
+
+                var tenantId = GetCurrentTenantIdOrNull(repo.GetIocResolver());
+                var hardDeleteKey = EntityHelper.GetHardDeleteKey(entity, tenantId);
+                hardDeleteItems.Add(hardDeleteKey);
+
+                await repo.DeleteAsync(entity);
             }
+        }
+
+        private static int? GetCurrentTenantIdOrNull(IIocResolver iocResolver)
+        {
+            var currentUnitOfWorkProvider = iocResolver.Resolve<ICurrentUnitOfWorkProvider>();
+            if (currentUnitOfWorkProvider?.Current != null)
+            {
+                return currentUnitOfWorkProvider.Current.GetTenantId();
+            }
+
+            return iocResolver.Resolve<IAbpSession>().TenantId;
         }
     }
 }

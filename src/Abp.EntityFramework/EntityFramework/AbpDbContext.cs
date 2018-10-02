@@ -16,6 +16,7 @@ using Abp.Configuration.Startup;
 using Abp.Dependency;
 using Abp.Domain.Entities;
 using Abp.Domain.Entities.Auditing;
+using Abp.Domain.Repositories;
 using Abp.Domain.Uow;
 using Abp.Events.Bus;
 using Abp.Events.Bus.Entities;
@@ -146,7 +147,7 @@ namespace Abp.EntityFramework
 
         private void RegisterToChanges()
         {
-            ((IObjectContextAdapter) this)
+            ((IObjectContextAdapter)this)
                 .ObjectContext
                 .ObjectStateManager
                 .ObjectStateManagerChanged += ObjectStateManager_ObjectStateManagerChanged;
@@ -155,7 +156,7 @@ namespace Abp.EntityFramework
         protected virtual void ObjectStateManager_ObjectStateManagerChanged(object sender,
             System.ComponentModel.CollectionChangeEventArgs e)
         {
-            var contextAdapter = (IObjectContextAdapter) this;
+            var contextAdapter = (IObjectContextAdapter)this;
             if (e.Action != CollectionChangeAction.Add)
             {
                 return;
@@ -169,9 +170,9 @@ namespace Abp.EntityFramework
                     CheckAndSetMustHaveTenantIdProperty(entry.Entity);
                     SetCreationAuditProperties(entry.Entity, GetAuditUserId());
                     break;
-                //case EntityState.Deleted: //It's not going here at all
-                //    SetDeletionAuditProperties(entry.Entity, GetAuditUserId());
-                //    break;
+                    //case EntityState.Deleted: //It's not going here at all
+                    //    SetDeletionAuditProperties(entry.Entity, GetAuditUserId());
+                    //    break;
             }
         }
 
@@ -203,7 +204,7 @@ namespace Abp.EntityFramework
         {
             modelBuilder.Filter(AbpDataFilters.SoftDelete, (ISoftDelete d) => d.IsDeleted, false);
             modelBuilder.Filter(AbpDataFilters.MustHaveTenant,
-                (IMustHaveTenant t, int tenantId) => t.TenantId == tenantId || (int?) t.TenantId == null,
+                (IMustHaveTenant t, int tenantId) => t.TenantId == tenantId || (int?)t.TenantId == null,
                 0); //While "(int?)t.TenantId == null" seems wrong, it's needed. See https://github.com/jcachat/EntityFramework.DynamicFilters/issues/62#issuecomment-208198058
             modelBuilder.Filter(AbpDataFilters.MayHaveTenant,
                 (IMayHaveTenant t, int? tenantId) => t.TenantId == tenantId, 0);
@@ -299,6 +300,12 @@ namespace Abp.EntityFramework
 
         protected virtual void ApplyAbpConceptsForDeletedEntity(DbEntityEntry entry, long? userId, EntityChangeReport changeReport)
         {
+            if (IsHardDeleteEntity(entry))
+            {
+                changeReport.ChangedEntities.Add(new EntityChangeEntry(entry.Entity, EntityChangeType.Deleted));
+                return;
+            }
+
             CancelDeletionForSoftDelete(entry);
             SetDeletionAuditProperties(entry.Entity, userId);
             changeReport.ChangedEntities.Add(new EntityChangeEntry(entry.Entity, EntityChangeType.Deleted));
@@ -331,7 +338,7 @@ namespace Abp.EntityFramework
             {
                 var entityType = ObjectContext.GetObjectType(entityAsObj.GetType());
                 var edmProperty = GetEdmProperty(entityType, nameof(Entity.Id));
-               
+
                 if (edmProperty != null && edmProperty.StoreGeneratedPattern == StoreGeneratedPattern.None)
                 {
                     entity.Id = GuidGenerator.Create();
@@ -441,20 +448,33 @@ namespace Abp.EntityFramework
                 return;
             }
 
-            // todo: make HardDelete enum
-            if (CurrentUnitOfWorkProvider.Current.ExtensionData.ContainsKey("HardDelete"))
-            {
-                var hardDeleteItems = CurrentUnitOfWorkProvider.Current.ExtensionData["HardDelete"];
-                if (hardDeleteItems as )
-                {
-
-                }
-            }
-
             var softDeleteEntry = entry.Cast<ISoftDelete>();
             softDeleteEntry.Reload();
             softDeleteEntry.State = EntityState.Modified;
             softDeleteEntry.Entity.IsDeleted = true;
+        }
+
+        protected virtual bool IsHardDeleteEntity(DbEntityEntry entry)
+        {
+            if (CurrentUnitOfWorkProvider.Current?.ExtensionData == null)
+            {
+                return false;
+            }
+
+            if (!CurrentUnitOfWorkProvider.Current.ExtensionData.ContainsKey(RepositoryExtensionDataTypes.HardDelete))
+            {
+                return false;
+            }
+
+            var hardDeleteItems = CurrentUnitOfWorkProvider.Current.ExtensionData[RepositoryExtensionDataTypes.HardDelete];
+            if (!(hardDeleteItems is List<string> objects))
+            {
+                return false;
+            }
+
+            var currentTenantId = GetCurrentTenantIdOrNull();
+            var hardDeleteKey = EntityHelper.GetHardDeleteKey(entry.Entity, currentTenantId);
+            return objects.Any(key => key == hardDeleteKey);
         }
 
         protected virtual void SetDeletionAuditProperties(object entityAsObj, long? userId)

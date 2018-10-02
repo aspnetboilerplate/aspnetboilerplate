@@ -3,7 +3,6 @@ using System.Threading.Tasks;
 using Abp.Domain.Repositories;
 using Abp.Domain.Uow;
 using Abp.TestBase.SampleApplication.People;
-using JetBrains.Annotations;
 using Shouldly;
 using Xunit;
 
@@ -114,26 +113,23 @@ namespace Abp.TestBase.SampleApplication.Tests.People
         }
 
         [Fact]
-        public async Task Should_Delete_SoftDelete_Entity_When_SoftDelete_Filter_Is_Disabled()
+        public async Task Should_Permanently_Delete_SoftDelete_Entity_With_HarDelete_Method()
         {
             var uowManager = Resolve<IUnitOfWorkManager>();
 
-            using (var ouw = uowManager.Begin())
+            using (var uow = uowManager.Begin())
             {
                 var people = _personRepository.GetAllList();
 
-                using (uowManager.Current.DisableFilter(AbpDataFilters.SoftDelete))
+                foreach (var person in people)
                 {
-                    foreach (var person in people)
-                    {
-                        await _personRepository.HardDelete(person);
-                    }
+                    await _personRepository.HardDelete(person);
                 }
 
-                ouw.Complete();
+                uow.Complete();
             }
 
-            using (var ouw = uowManager.Begin())
+            using (var uow = uowManager.Begin())
             {
                 using (uowManager.Current.DisableFilter(AbpDataFilters.SoftDelete))
                 {
@@ -142,7 +138,7 @@ namespace Abp.TestBase.SampleApplication.Tests.People
                     poeple.First().Name.ShouldBe("emre");
                 }
 
-                ouw.Complete();
+                uow.Complete();
             }
         }
     }

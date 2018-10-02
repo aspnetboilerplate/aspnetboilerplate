@@ -1,5 +1,6 @@
 ﻿using Abp.Domain.Entities.Auditing;
 using Abp.Extensions;
+using Abp.MultiTenancy;
 
 namespace Abp.Domain.Entities
 {
