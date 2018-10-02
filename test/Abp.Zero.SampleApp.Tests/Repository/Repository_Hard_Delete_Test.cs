@@ -6,7 +6,7 @@ using Abp.Zero.SampleApp.Users;
 using Shouldly;
 using Xunit;
 
-namespace Abp.Zero.SampleApp.Tests.HardDelete
+namespace Abp.Zero.SampleApp.Tests.Repository
 {
     public class Repository_Hard_Delete_Test : SampleAppTestBase
     {
