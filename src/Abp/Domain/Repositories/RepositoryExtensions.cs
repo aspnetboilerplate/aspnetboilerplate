@@ -95,7 +95,13 @@ namespace Abp.Domain.Repositories
 
             var tenantId = GetCurrentTenantIdOrNull(repo.GetIocResolver());
             var hardDeleteKey = EntityHelper.GetHardDeleteKey(entity, tenantId);
-            hardDeleteEntities?.Add(hardDeleteKey);
+
+            if (hardDeleteEntities == null)
+            {
+                throw new ArgumentNullException(nameof(hardDeleteEntities));
+            }
+
+            hardDeleteEntities.Add(hardDeleteKey);
 
             await repo.DeleteAsync(entity);
         }
