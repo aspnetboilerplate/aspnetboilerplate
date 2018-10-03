@@ -20,7 +20,7 @@ namespace Abp.Zero.Repository
         [Fact]
         public async Task Should_Permanently_Delete_SoftDelete_Entity_With_HarDelete_Method()
         {
-            AbpSession.TenantId = 1;
+            LoginAsDefaultTenantAdmin();
 
             var uowManager = Resolve<IUnitOfWorkManager>();
 

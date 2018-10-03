@@ -311,6 +311,29 @@ namespace Abp.EntityFramework
             changeReport.ChangedEntities.Add(new EntityChangeEntry(entry.Entity, EntityChangeType.Deleted));
         }
 
+        protected virtual bool IsHardDeleteEntity(DbEntityEntry entry)
+        {
+            if (CurrentUnitOfWorkProvider.Current?.ExtensionData == null)
+            {
+                return false;
+            }
+
+            if (!CurrentUnitOfWorkProvider.Current.ExtensionData.ContainsKey(RepositoryExtensionDataTypes.HardDelete))
+            {
+                return false;
+            }
+
+            var hardDeleteItems = CurrentUnitOfWorkProvider.Current.ExtensionData[RepositoryExtensionDataTypes.HardDelete];
+            if (!(hardDeleteItems is List<string> objects))
+            {
+                return false;
+            }
+
+            var currentTenantId = GetCurrentTenantIdOrNull();
+            var hardDeleteKey = EntityHelper.GetHardDeleteKey(entry.Entity, currentTenantId);
+            return objects.Any(key => key == hardDeleteKey);
+        }
+
         protected virtual void AddDomainEvents(List<DomainEventEntry> domainEvents, object entityAsObj)
         {
             var generatesDomainEventsEntity = entityAsObj as IGeneratesDomainEvents;
@@ -453,30 +476,7 @@ namespace Abp.EntityFramework
             softDeleteEntry.State = EntityState.Modified;
             softDeleteEntry.Entity.IsDeleted = true;
         }
-
-        protected virtual bool IsHardDeleteEntity(DbEntityEntry entry)
-        {
-            if (CurrentUnitOfWorkProvider.Current?.ExtensionData == null)
-            {
-                return false;
-            }
-
-            if (!CurrentUnitOfWorkProvider.Current.ExtensionData.ContainsKey(RepositoryExtensionDataTypes.HardDelete))
-            {
-                return false;
-            }
-
-            var hardDeleteItems = CurrentUnitOfWorkProvider.Current.ExtensionData[RepositoryExtensionDataTypes.HardDelete];
-            if (!(hardDeleteItems is List<string> objects))
-            {
-                return false;
-            }
-
-            var currentTenantId = GetCurrentTenantIdOrNull();
-            var hardDeleteKey = EntityHelper.GetHardDeleteKey(entry.Entity, currentTenantId);
-            return objects.Any(key => key == hardDeleteKey);
-        }
-
+        
         protected virtual void SetDeletionAuditProperties(object entityAsObj, long? userId)
         {
             if (entityAsObj is IHasDeletionTime)
