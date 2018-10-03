@@ -297,12 +297,12 @@ namespace Abp.EntityFrameworkCore
                 return false;
             }
 
-            if (!CurrentUnitOfWorkProvider.Current.ExtensionData.ContainsKey(RepositoryExtensionDataTypes.HardDelete))
+            if (!CurrentUnitOfWorkProvider.Current.ExtensionData.ContainsKey(UnitOfWorkExtensionDataTypes.HardDelete))
             {
                 return false;
             }
 
-            var hardDeleteItems = CurrentUnitOfWorkProvider.Current.ExtensionData[RepositoryExtensionDataTypes.HardDelete];
+            var hardDeleteItems = CurrentUnitOfWorkProvider.Current.ExtensionData[UnitOfWorkExtensionDataTypes.HardDelete];
             if (!(hardDeleteItems is List<string> objects))
             {
                 return false;

@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel;
-using System.ComponentModel.DataAnnotations.Schema;
 using System.Data.Common;
 using System.Data.Entity;
 using System.Data.Entity.Core.Metadata.Edm;
@@ -21,8 +20,6 @@ using Abp.Domain.Uow;
 using Abp.Events.Bus;
 using Abp.Events.Bus.Entities;
 using Abp.Extensions;
-using Abp.MultiTenancy;
-using Abp.Reflection;
 using Abp.Runtime.Session;
 using Abp.Timing;
 using Castle.Core.Logging;
@@ -318,12 +315,12 @@ namespace Abp.EntityFramework
                 return false;
             }
 
-            if (!CurrentUnitOfWorkProvider.Current.ExtensionData.ContainsKey(RepositoryExtensionDataTypes.HardDelete))
+            if (!CurrentUnitOfWorkProvider.Current.ExtensionData.ContainsKey(UnitOfWorkExtensionDataTypes.HardDelete))
             {
                 return false;
             }
 
-            var hardDeleteItems = CurrentUnitOfWorkProvider.Current.ExtensionData[RepositoryExtensionDataTypes.HardDelete];
+            var hardDeleteItems = CurrentUnitOfWorkProvider.Current.ExtensionData[UnitOfWorkExtensionDataTypes.HardDelete];
             if (!(hardDeleteItems is List<string> objects))
             {
                 return false;

@@ -88,7 +88,7 @@ namespace Abp.Domain.Repositories
             if (repo != null)
             {
                 var extensionData = ((IUnitOfWorkManagerAccessor)repo).UnitOfWorkManager.Current.ExtensionData;
-                var hardDeleteItems = extensionData.GetOrAdd(RepositoryExtensionDataTypes.HardDelete, () => new List<string>()) as List<string>;
+                var hardDeleteItems = extensionData.GetOrAdd(UnitOfWorkExtensionDataTypes.HardDelete, () => new List<string>()) as List<string>;
 
                 var tenantId = GetCurrentTenantIdOrNull(repo.GetIocResolver());
                 var hardDeleteKey = EntityHelper.GetHardDeleteKey(entity, tenantId);

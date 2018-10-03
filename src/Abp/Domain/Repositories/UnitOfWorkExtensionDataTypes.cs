@@ -1,6 +1,6 @@
 ﻿namespace Abp.Domain.Repositories
 {
-    internal class RepositoryExtensionDataTypes
+    internal class UnitOfWorkExtensionDataTypes
     {
         public static string HardDelete { get; } = "HardDelete";
     }
