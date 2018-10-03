@@ -321,14 +321,14 @@ namespace Abp.EntityFramework
             }
 
             var hardDeleteItems = CurrentUnitOfWorkProvider.Current.ExtensionData[UnitOfWorkExtensionDataTypes.HardDelete];
-            if (!(hardDeleteItems is List<string> objects))
+            if (!(hardDeleteItems is HashSet<string> objects))
             {
                 return false;
             }
 
             var currentTenantId = GetCurrentTenantIdOrNull();
             var hardDeleteKey = EntityHelper.GetHardDeleteKey(entry.Entity, currentTenantId);
-            return objects.Any(key => key == hardDeleteKey);
+            return objects.Contains(hardDeleteKey);
         }
 
         protected virtual void AddDomainEvents(List<DomainEventEntry> domainEvents, object entityAsObj)

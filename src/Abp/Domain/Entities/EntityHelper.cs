@@ -48,13 +48,13 @@ namespace Abp.Domain.Entities
 
         public static string GetHardDeleteKey(object entity, int? tenantId)
         {
-            var tenantIdKey = "";
             if (MultiTenancyHelper.IsMultiTenantEntity(entity))
             {
-                tenantIdKey = ";TenantId=" + (tenantId.HasValue ? tenantId.ToString() : "null");
+                var tenantIdString = tenantId.HasValue ? tenantId.ToString() : "null";
+                return entity.GetType().FullName + ";TenantId=" + tenantIdString + ";Id=" + GetEntityId(entity);
             }
 
-            return entity.GetType().FullName + tenantIdKey + ";Id=" + GetEntityId(entity);
+            return entity.GetType().FullName + ";Id=" + GetEntityId(entity);
         }
     }
 }

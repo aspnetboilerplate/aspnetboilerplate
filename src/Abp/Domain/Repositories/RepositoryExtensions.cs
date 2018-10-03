@@ -84,26 +84,30 @@ namespace Abp.Domain.Repositories
         public static async Task HardDelete<TEntity, TPrimaryKey>(this IRepository<TEntity, TPrimaryKey> repository, TEntity entity)
             where TEntity : class, IEntity<TPrimaryKey>, ISoftDelete
         {
-            var repo = ProxyHelper.UnProxy(repository) as IRepository<TEntity, TPrimaryKey>;
-            if (repo != null)
+            if (ProxyHelper.UnProxy(repository) is IRepository<TEntity, TPrimaryKey> repo)
             {
                 var extensionData = ((IUnitOfWorkManagerAccessor)repo).UnitOfWorkManager.Current.ExtensionData;
-                var hardDeleteItems = extensionData.GetOrAdd(UnitOfWorkExtensionDataTypes.HardDelete, () => new List<string>()) as List<string>;
+                var hardDeleteEntities = extensionData.GetOrAdd(UnitOfWorkExtensionDataTypes.HardDelete, () => new HashSet<string>()) as HashSet<string>;
 
                 var tenantId = GetCurrentTenantIdOrNull(repo.GetIocResolver());
                 var hardDeleteKey = EntityHelper.GetHardDeleteKey(entity, tenantId);
-                hardDeleteItems.Add(hardDeleteKey);
+                hardDeleteEntities?.Add(hardDeleteKey);
 
                 await repo.DeleteAsync(entity);
             }
+
+            throw new ArgumentException($"Given {nameof(repository)} is not inherited from {typeof(IRepository<TEntity, TPrimaryKey>).AssemblyQualifiedName}");
         }
 
         private static int? GetCurrentTenantIdOrNull(IIocResolver iocResolver)
         {
-            var currentUnitOfWorkProvider = iocResolver.Resolve<ICurrentUnitOfWorkProvider>();
-            if (currentUnitOfWorkProvider?.Current != null)
+            using (var scope = iocResolver.CreateScope())
             {
-                return currentUnitOfWorkProvider.Current.GetTenantId();
+                var currentUnitOfWorkProvider = scope.Resolve<ICurrentUnitOfWorkProvider>();
+                if (currentUnitOfWorkProvider?.Current != null)
+                {
+                    return currentUnitOfWorkProvider.Current.GetTenantId();
+                }
             }
 
             return iocResolver.Resolve<IAbpSession>().TenantId;
