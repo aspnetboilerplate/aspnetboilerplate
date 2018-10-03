@@ -84,19 +84,20 @@ namespace Abp.Domain.Repositories
         public static async Task HardDelete<TEntity, TPrimaryKey>(this IRepository<TEntity, TPrimaryKey> repository, TEntity entity)
             where TEntity : class, IEntity<TPrimaryKey>, ISoftDelete
         {
-            if (ProxyHelper.UnProxy(repository) is IRepository<TEntity, TPrimaryKey> repo)
+            var repo = ProxyHelper.UnProxy(repository) as IRepository<TEntity, TPrimaryKey>;
+            if (repo == null)
             {
-                var extensionData = ((IUnitOfWorkManagerAccessor)repo).UnitOfWorkManager.Current.ExtensionData;
-                var hardDeleteEntities = extensionData.GetOrAdd(UnitOfWorkExtensionDataTypes.HardDelete, () => new HashSet<string>()) as HashSet<string>;
-
-                var tenantId = GetCurrentTenantIdOrNull(repo.GetIocResolver());
-                var hardDeleteKey = EntityHelper.GetHardDeleteKey(entity, tenantId);
-                hardDeleteEntities?.Add(hardDeleteKey);
-
-                await repo.DeleteAsync(entity);
+                throw new ArgumentException($"Given {nameof(repository)} is not inherited from {typeof(IRepository<TEntity, TPrimaryKey>).AssemblyQualifiedName}");
             }
 
-            throw new ArgumentException($"Given {nameof(repository)} is not inherited from {typeof(IRepository<TEntity, TPrimaryKey>).AssemblyQualifiedName}");
+            var extensionData = ((IUnitOfWorkManagerAccessor)repo).UnitOfWorkManager.Current.ExtensionData;
+            var hardDeleteEntities = extensionData.GetOrAdd(UnitOfWorkExtensionDataTypes.HardDelete, () => new HashSet<string>()) as HashSet<string>;
+
+            var tenantId = GetCurrentTenantIdOrNull(repo.GetIocResolver());
+            var hardDeleteKey = EntityHelper.GetHardDeleteKey(entity, tenantId);
+            hardDeleteEntities?.Add(hardDeleteKey);
+
+            await repo.DeleteAsync(entity);
         }
 
         private static int? GetCurrentTenantIdOrNull(IIocResolver iocResolver)
