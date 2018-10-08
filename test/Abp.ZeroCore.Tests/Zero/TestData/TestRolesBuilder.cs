@@ -29,6 +29,8 @@ namespace Abp.Zero.TestData
 
             _context.Roles.Add(role);
 
+            _context.Roles.Add(new Role(_tenantId, "MANAGER", "MANAGER"));
+
             _context.SaveChanges();
         }
     }
