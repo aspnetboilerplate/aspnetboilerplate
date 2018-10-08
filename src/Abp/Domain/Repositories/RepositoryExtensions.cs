@@ -90,16 +90,11 @@ namespace Abp.Domain.Repositories
                 throw new ArgumentException($"Given {nameof(repository)} is not inherited from {typeof(IRepository<TEntity, TPrimaryKey>).AssemblyQualifiedName}");
             }
 
-            var extensionData = ((IUnitOfWorkManagerAccessor)repo).UnitOfWorkManager.Current.ExtensionData;
-            var hardDeleteEntities = extensionData.GetOrAdd(UnitOfWorkExtensionDataTypes.HardDelete, () => new HashSet<string>()) as HashSet<string>;
+            var items = ((IUnitOfWorkManagerAccessor)repo).UnitOfWorkManager.Current.Items;
+            var hardDeleteEntities = items.GetOrAdd(UnitOfWorkExtensionDataTypes.HardDelete, () => new HashSet<string>()) as HashSet<string>;
 
             var tenantId = GetCurrentTenantIdOrNull(repo.GetIocResolver());
             var hardDeleteKey = EntityHelper.GetHardDeleteKey(entity, tenantId);
-
-            if (hardDeleteEntities == null)
-            {
-                throw new ArgumentNullException(nameof(hardDeleteEntities));
-            }
 
             hardDeleteEntities.Add(hardDeleteKey);
 

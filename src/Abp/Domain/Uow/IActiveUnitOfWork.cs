@@ -40,7 +40,7 @@ namespace Abp.Domain.Uow
         /// <summary>
         /// A dictionary to use for custom operations on unitOfWork
         /// </summary>
-        Dictionary<string, object> ExtensionData { get; set; }
+        Dictionary<string, object> Items { get; set; }
 
         /// <summary>
         /// Is this UOW disposed?

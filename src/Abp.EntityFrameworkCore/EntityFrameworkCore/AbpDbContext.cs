@@ -292,17 +292,17 @@ namespace Abp.EntityFrameworkCore
 
         protected virtual bool IsHardDeleteEntity(EntityEntry entry)
         {
-            if (CurrentUnitOfWorkProvider.Current?.ExtensionData == null)
+            if (CurrentUnitOfWorkProvider.Current?.Items == null)
             {
                 return false;
             }
 
-            if (!CurrentUnitOfWorkProvider.Current.ExtensionData.ContainsKey(UnitOfWorkExtensionDataTypes.HardDelete))
+            if (!CurrentUnitOfWorkProvider.Current.Items.ContainsKey(UnitOfWorkExtensionDataTypes.HardDelete))
             {
                 return false;
             }
 
-            var hardDeleteItems = CurrentUnitOfWorkProvider.Current.ExtensionData[UnitOfWorkExtensionDataTypes.HardDelete];
+            var hardDeleteItems = CurrentUnitOfWorkProvider.Current.Items[UnitOfWorkExtensionDataTypes.HardDelete];
             if (!(hardDeleteItems is HashSet<string> objects))
             {
                 return false;
