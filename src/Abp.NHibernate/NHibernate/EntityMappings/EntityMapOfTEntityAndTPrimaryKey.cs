@@ -27,13 +27,19 @@ namespace Abp.NHibernate.EntityMappings
             Id(x => x.Id);
 
             if (typeof(ISoftDelete).IsAssignableFrom(typeof(TEntity)))
+            {
                 ApplyFilter<SoftDeleteFilter>();
+            }
+
             if (typeof(IMustHaveTenant).IsAssignableFrom(typeof (TEntity)))
+            {
                 ApplyFilter<MustHaveTenantFilter>();
+            }
+
             if (typeof(IMayHaveTenant).IsAssignableFrom(typeof(TEntity)))
+            {
                 ApplyFilter<MayHaveTenantFilter>();
-
-
+            }
         }
     }
 }

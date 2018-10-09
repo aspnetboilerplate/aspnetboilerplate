@@ -31,12 +31,12 @@ namespace Abp.NHibernate.Uow
         /// Creates a new instance of <see cref="NhUnitOfWork"/>.
         /// </summary>
         public NhUnitOfWork(
-            ISessionFactory sessionFactory, 
-            IConnectionStringResolver connectionStringResolver, 
+            ISessionFactory sessionFactory,
+            IConnectionStringResolver connectionStringResolver,
             IUnitOfWorkDefaultOptions defaultOptions,
             IUnitOfWorkFilterExecuter filterExecuter)
             : base(
-                  connectionStringResolver, 
+                  connectionStringResolver,
                   defaultOptions,
                   filterExecuter)
         {
@@ -67,7 +67,8 @@ namespace Abp.NHibernate.Uow
             {
                 ApplyEnableFilter(AbpDataFilters.SoftDelete); //Enable Filters
                 ApplyFilterParameterValue(AbpDataFilters.SoftDelete, AbpDataFilters.Parameters.IsDeleted, false); //ApplyFilter
-            } else
+            }
+            else
             {
                 ApplyDisableFilter(AbpDataFilters.SoftDelete); //Disable filters
             }
@@ -79,7 +80,8 @@ namespace Abp.NHibernate.Uow
             {
                 ApplyEnableFilter(AbpDataFilters.MustHaveTenant); //Enable Filters
                 ApplyFilterParameterValue(AbpDataFilters.MustHaveTenant, AbpDataFilters.Parameters.TenantId, AbpSession.GetTenantId()); //ApplyFilter
-            } else
+            }
+            else
             {
                 ApplyDisableFilter(AbpDataFilters.MustHaveTenant); //Disable Filters
             }
@@ -91,7 +93,8 @@ namespace Abp.NHibernate.Uow
             {
                 ApplyEnableFilter(AbpDataFilters.MayHaveTenant); //Enable Filters
                 ApplyFilterParameterValue(AbpDataFilters.MayHaveTenant, AbpDataFilters.Parameters.TenantId, AbpSession.TenantId); //ApplyFilter
-            } else
+            }
+            else
             {
                 ApplyDisableFilter(AbpDataFilters.MayHaveTenant); //Disable Filters
             }
