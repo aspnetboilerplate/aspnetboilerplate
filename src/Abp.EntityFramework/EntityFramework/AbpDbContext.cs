@@ -358,8 +358,9 @@ namespace Abp.EntityFramework
             if (entity != null && entity.Id == Guid.Empty)
             {
                 var entityType = ObjectContext.GetObjectType(entityAsObj.GetType());
-                var edmProperty = GetEdmProperty(entityType);
-               
+                var idIdPropertyName = GetIdPropertyName(entityType);
+                var edmProperty = GetEdmProperty(entityType, idIdPropertyName);
+
                 if (edmProperty != null && edmProperty.StoreGeneratedPattern == StoreGeneratedPattern.None)
                 {
                     entity.Id = GuidGenerator.Create();
@@ -367,17 +368,30 @@ namespace Abp.EntityFramework
             }
         }
 
-        EdmProperty GetEdmProperty(Type type)
+        EdmProperty GetEdmProperty(Type type, string propertyName)
         {
-            var metadata = ((IObjectContextAdapter) this).ObjectContext.MetadataWorkspace;
+            var metadata = ((IObjectContextAdapter)this).ObjectContext.MetadataWorkspace;
 
-            var objectItemCollection = ((ObjectItemCollection) metadata.GetItemCollection(DataSpace.OSpace));
+            var objectItemCollection = ((ObjectItemCollection)metadata.GetItemCollection(DataSpace.OSpace));
 
             var entityType = metadata.GetItems<EntityType>(DataSpace.OSpace)
                 .Single(t => objectItemCollection.GetClrType(t) == type);
 
             var entitySet = metadata.GetItems<EntityContainer>(DataSpace.SSpace).Single().EntitySets
                 .Single(s => s.ElementType.Name == entityType.Name);
+
+            return entitySet.ElementType.Properties.Single(e =>
+                string.Equals(e.Name, propertyName, StringComparison.OrdinalIgnoreCase));
+        }
+
+        string GetIdPropertyName(Type type)
+        {
+            var metadata = ((IObjectContextAdapter)this).ObjectContext.MetadataWorkspace;
+
+            var objectItemCollection = ((ObjectItemCollection)metadata.GetItemCollection(DataSpace.OSpace));
+
+            var entityType = metadata.GetItems<EntityType>(DataSpace.OSpace)
+                .Single(t => objectItemCollection.GetClrType(t) == type);
 
             var entitySetCSpace = metadata
                 .GetItems<EntityContainer>(DataSpace.CSpace)
@@ -390,7 +404,7 @@ namespace Abp.EntityFramework
                 .EntitySetMappings
                 .Single(s => s.EntitySet == entitySetCSpace);
 
-            var columnName = mapping
+            return mapping
                 .EntityTypeMappings.Single()
                 .Fragments.Single()
                 .PropertyMappings
@@ -398,9 +412,6 @@ namespace Abp.EntityFramework
                 .Single(m => m.Property.Name == nameof(Entity.Id))
                 .Column
                 .Name;
-
-            return entitySet.ElementType.Properties.Single(e =>
-                string.Equals(e.Name, columnName, StringComparison.OrdinalIgnoreCase));
         }
 
         protected virtual void CheckAndSetMustHaveTenantIdProperty(object entityAsObj)
@@ -496,7 +507,7 @@ namespace Abp.EntityFramework
             softDeleteEntry.State = EntityState.Modified;
             softDeleteEntry.Entity.IsDeleted = true;
         }
-        
+
         protected virtual void SetDeletionAuditProperties(object entityAsObj, long? userId)
         {
             if (entityAsObj is IHasDeletionTime)
