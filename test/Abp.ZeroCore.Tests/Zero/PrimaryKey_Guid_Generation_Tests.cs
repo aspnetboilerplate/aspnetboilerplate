@@ -58,6 +58,31 @@ namespace Abp.Zero
 
         }
 
+        [Fact]
+        public void Guid_Id_Should_Be_Generated_By_GuidGenerator_When_Id_Field_Has_Different_Name()
+        {
+            var guid = Guid.NewGuid();
+
+            UsingDbContext(context =>
+            {
+                var testGuidGenerator = new TestGuidGenerator(guid);
+                context.GuidGenerator = testGuidGenerator;
+
+                var store = new Store
+                {
+                    Name = "Tesk book store"
+                };
+
+                context.Set<Store>().Add(store);
+
+                context.SaveChanges();
+
+                testGuidGenerator.CreateCalled.ShouldBeTrue();
+                guid.ShouldBe(store.Id);
+            });
+
+        }
+
         internal class TestGuidGenerator : IGuidGenerator
         {
             private readonly Guid _guid;

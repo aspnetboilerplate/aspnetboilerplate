@@ -12,8 +12,7 @@ namespace Abp.Application.Features
         /// <summary>
         /// Gets the singleton instance.
         /// </summary>
-        public static NullFeatureValueStore Instance { get { return SingletonInstance; } }
-        private static readonly NullFeatureValueStore SingletonInstance = new NullFeatureValueStore();
+        public static NullFeatureValueStore Instance { get; } = new NullFeatureValueStore();
 
         /// <inheritdoc/>
         public Task<string> GetValueOrNullAsync(int tenantId, Feature feature)

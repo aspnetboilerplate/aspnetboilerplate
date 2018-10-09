@@ -204,6 +204,8 @@ class that implements them all.
 -   NOTE 2: All of them also have an **AggregateRoot** version, like
     AuditedAggregateRoot.
 
+In some cases, soft-delete entities may be requested to be permanently deleted. In those cases, **IRepository.HardDelete** extension method can be used. This method is currently implemented for EntityFramework 6.x and Entity Framework Core.
+
 #### Active/Passive Entities
 
 Some entities need to be marked as Active or Passive. You may take an
