@@ -55,41 +55,46 @@ namespace Abp.NHibernate.Uow
                     ? Session.BeginTransaction(Options.IsolationLevel.Value.ToSystemDataIsolationLevel())
                     : Session.BeginTransaction();
             }
-            
+
+            CheckAndSetSoftDelete();
             CheckAndSetMayHaveTenant();
             CheckAndSetMustHaveTenant();
         }
 
+        protected virtual void CheckAndSetSoftDelete()
+        {
+            if (IsFilterEnabled(AbpDataFilters.SoftDelete))
+            {
+                ApplyEnableFilter(AbpDataFilters.SoftDelete); //Enable Filters
+                ApplyFilterParameterValue(AbpDataFilters.SoftDelete, AbpDataFilters.Parameters.IsDeleted, false); //ApplyFilter
+            } else
+            {
+                ApplyDisableFilter(AbpDataFilters.SoftDelete); //Disable filters
+            }
+        }
+
         protected virtual void CheckAndSetMustHaveTenant()
         {
-            if (IsFilterEnabled(AbpDataFilters.MustHaveTenant))
+            if (AbpSession.TenantId != null && IsFilterEnabled(AbpDataFilters.MustHaveTenant))
             {
-                return;
-            }
-
-            if (AbpSession.TenantId == null)
+                ApplyEnableFilter(AbpDataFilters.MustHaveTenant); //Enable Filters
+                ApplyFilterParameterValue(AbpDataFilters.MustHaveTenant, AbpDataFilters.Parameters.TenantId, AbpSession.GetTenantId()); //ApplyFilter
+            } else
             {
-                return;
+                ApplyDisableFilter(AbpDataFilters.MustHaveTenant); //Disable Filters
             }
-
-            ApplyEnableFilter(AbpDataFilters.MustHaveTenant); //Enable Filters
-            ApplyFilterParameterValue(AbpDataFilters.MustHaveTenant, AbpDataFilters.Parameters.TenantId, AbpSession.GetTenantId()); //ApplyFilter
         }
 
         protected virtual void CheckAndSetMayHaveTenant()
         {
-            if (IsFilterEnabled(AbpDataFilters.MayHaveTenant))
+            if (AbpSession.TenantId != null && IsFilterEnabled(AbpDataFilters.MayHaveTenant))
             {
-                return;
-            }
-
-            if (AbpSession.TenantId == null)
+                ApplyEnableFilter(AbpDataFilters.MayHaveTenant); //Enable Filters
+                ApplyFilterParameterValue(AbpDataFilters.MayHaveTenant, AbpDataFilters.Parameters.TenantId, AbpSession.TenantId); //ApplyFilter
+            } else
             {
-                return;
+                ApplyDisableFilter(AbpDataFilters.MayHaveTenant); //Disable Filters
             }
-
-            ApplyEnableFilter(AbpDataFilters.MayHaveTenant); //Enable Filters
-            ApplyFilterParameterValue(AbpDataFilters.MayHaveTenant, AbpDataFilters.Parameters.TenantId, AbpSession.TenantId); //ApplyFilter
         }
 
         public override void SaveChanges()
