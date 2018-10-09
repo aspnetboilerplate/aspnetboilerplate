@@ -15,17 +15,12 @@ namespace Abp.Json
     public class AbpMvcContractResolver : DefaultContractResolver
     {
         private readonly IIocResolver _iocResolver;
-        private bool _useMvcDateTimeFormat { get; set; }
+        private bool? _useMvcDateTimeFormat { get; set; }
         private string _datetimeFormat { get; set; } = null;
 
         public AbpMvcContractResolver(IIocResolver iocResolver)
         {
             _iocResolver = iocResolver;
-            using (var configuration = _iocResolver.ResolveAsDisposable<IAbpAspNetCoreConfiguration>())
-            {
-                _useMvcDateTimeFormat = configuration.Object.UseMvcDateTimeFormatForAppServices;
-            }
-
         }
 
         protected override JsonProperty CreateProperty(MemberInfo member, MemberSerialization memberSerialization)
@@ -48,8 +43,16 @@ namespace Abp.Json
             {
                 var converter = new AbpDateTimeConverter();
 
+                if (!_useMvcDateTimeFormat.HasValue)
+                {
+                    using (var configuration = _iocResolver.ResolveAsDisposable<IAbpAspNetCoreConfiguration>())
+                    {
+                        _useMvcDateTimeFormat = configuration.Object.UseMvcDateTimeFormatForAppServices;
+                    }
+                }
+
                 // try to resolve MvcJsonOptions
-                if (_useMvcDateTimeFormat)
+                if (_useMvcDateTimeFormat.Value)
                 {
                     using (var mvcJsonOptions = _iocResolver.ResolveAsDisposable<IOptions<MvcJsonOptions>>())
                     {
