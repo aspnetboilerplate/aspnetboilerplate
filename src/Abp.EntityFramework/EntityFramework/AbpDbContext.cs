@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data.Common;
 using System.Data.Entity;
+using System.Data.Entity.Core.Mapping;
 using System.Data.Entity.Core.Metadata.Edm;
 using System.Data.Entity.Core.Objects;
 using System.Data.Entity.Infrastructure;
@@ -357,8 +358,8 @@ namespace Abp.EntityFramework
             if (entity != null && entity.Id == Guid.Empty)
             {
                 var entityType = ObjectContext.GetObjectType(entityAsObj.GetType());
-                var edmProperty = GetEdmProperty(entityType, nameof(Entity.Id));
-
+                var edmProperty = GetEdmProperty(entityType);
+               
                 if (edmProperty != null && edmProperty.StoreGeneratedPattern == StoreGeneratedPattern.None)
                 {
                     entity.Id = GuidGenerator.Create();
@@ -366,18 +367,40 @@ namespace Abp.EntityFramework
             }
         }
 
-        EdmProperty GetEdmProperty(Type type, string propertyName)
+        EdmProperty GetEdmProperty(Type type)
         {
-            var metadata = ((IObjectContextAdapter)this).ObjectContext.MetadataWorkspace;
+            var metadata = ((IObjectContextAdapter) this).ObjectContext.MetadataWorkspace;
 
-            var objectItemCollection = ((ObjectItemCollection)metadata.GetItemCollection(DataSpace.OSpace));
+            var objectItemCollection = ((ObjectItemCollection) metadata.GetItemCollection(DataSpace.OSpace));
 
-            var entityType = metadata.GetItems<EntityType>(DataSpace.OSpace).Single(t => objectItemCollection.GetClrType(t) == type);
+            var entityType = metadata.GetItems<EntityType>(DataSpace.OSpace)
+                .Single(t => objectItemCollection.GetClrType(t) == type);
 
             var entitySet = metadata.GetItems<EntityContainer>(DataSpace.SSpace).Single().EntitySets
                 .Single(s => s.ElementType.Name == entityType.Name);
 
-            return entitySet.ElementType.Properties.Single(e => string.Equals(e.Name, propertyName, StringComparison.OrdinalIgnoreCase));
+            var entitySetCSpace = metadata
+                .GetItems<EntityContainer>(DataSpace.CSpace)
+                .Single()
+                .EntitySets
+                .Single(s => s.ElementType.Name == entityType.Name);
+
+            var mapping = metadata.GetItems<EntityContainerMapping>(DataSpace.CSSpace)
+                .Single()
+                .EntitySetMappings
+                .Single(s => s.EntitySet == entitySetCSpace);
+
+            var columnName = mapping
+                .EntityTypeMappings.Single()
+                .Fragments.Single()
+                .PropertyMappings
+                .OfType<ScalarPropertyMapping>()
+                .Single(m => m.Property.Name == nameof(Entity.Id))
+                .Column
+                .Name;
+
+            return entitySet.ElementType.Properties.Single(e =>
+                string.Equals(e.Name, columnName, StringComparison.OrdinalIgnoreCase));
         }
 
         protected virtual void CheckAndSetMustHaveTenantIdProperty(object entityAsObj)
