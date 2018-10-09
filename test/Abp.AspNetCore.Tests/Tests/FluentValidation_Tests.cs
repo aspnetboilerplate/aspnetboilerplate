@@ -29,6 +29,7 @@ namespace Abp.AspNetCore.Tests
             response.Result.Value.ShouldBe(42);
         }
 
+        [Fact]
         public async Task Should_Not_Throw_Exception_For_Nullable_Values_With_Null_Parameter()
         {
             // Act
