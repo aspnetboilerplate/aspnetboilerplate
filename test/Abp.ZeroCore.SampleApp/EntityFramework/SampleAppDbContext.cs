@@ -27,6 +27,8 @@ namespace Abp.ZeroCore.SampleApp.EntityFramework
 
         public DbSet<Author> Authors { get; set; }
 
+        public DbSet<Store> Stores { get; set; }
+
         public SampleAppDbContext(DbContextOptions<SampleAppDbContext> options) 
             : base(options)
         {
@@ -40,6 +42,8 @@ namespace Abp.ZeroCore.SampleApp.EntityFramework
 
             modelBuilder.Entity<Book>().ToTable("Books");
             modelBuilder.Entity<Book>().Property(e => e.Id).ValueGeneratedNever();
+
+            modelBuilder.Entity<Store>().Property(e => e.Id).HasColumnName("StoreId");
         }
     }
 }
