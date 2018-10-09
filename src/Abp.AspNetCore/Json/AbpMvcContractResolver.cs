@@ -15,8 +15,12 @@ namespace Abp.Json
     public class AbpMvcContractResolver : DefaultContractResolver
     {
         private readonly IIocResolver _iocResolver;
+
         private bool? _useMvcDateTimeFormat { get; set; }
+
         private string _datetimeFormat { get; set; } = null;
+
+        protected readonly object SyncObj = new object();
 
         public AbpMvcContractResolver(IIocResolver iocResolver)
         {
@@ -39,35 +43,42 @@ namespace Abp.Json
                 return;
             }
 
-            if (ReflectionHelper.GetSingleAttributeOfMemberOrDeclaringTypeOrDefault<DisableDateTimeNormalizationAttribute>(member) == null)
+            if (ReflectionHelper.GetSingleAttributeOfMemberOrDeclaringTypeOrDefault<DisableDateTimeNormalizationAttribute>(member) != null)
             {
-                var converter = new AbpDateTimeConverter();
-
-                if (!_useMvcDateTimeFormat.HasValue)
-                {
-                    using (var configuration = _iocResolver.ResolveAsDisposable<IAbpAspNetCoreConfiguration>())
-                    {
-                        _useMvcDateTimeFormat = configuration.Object.UseMvcDateTimeFormatForAppServices;
-                    }
-                }
-
-                // try to resolve MvcJsonOptions
-                if (_useMvcDateTimeFormat.Value)
-                {
-                    using (var mvcJsonOptions = _iocResolver.ResolveAsDisposable<IOptions<MvcJsonOptions>>())
-                    {
-                        _datetimeFormat = mvcJsonOptions.Object.Value.SerializerSettings.DateFormatString;
-                    }
-                }
-
-                // apply DateTimeFormat only if not empty
-                if (!_datetimeFormat.IsNullOrWhiteSpace())
-                {
-                    converter.DateTimeFormat = _datetimeFormat;
-                }
-
-                property.Converter = converter;
+                return;
             }
+
+            var converter = new AbpDateTimeConverter();
+
+            if (!_useMvcDateTimeFormat.HasValue)
+            {
+                lock (SyncObj)
+                {
+                    if (!_useMvcDateTimeFormat.HasValue)
+                    {
+                        using (var configuration = _iocResolver.ResolveAsDisposable<IAbpAspNetCoreConfiguration>())
+                        {
+                            _useMvcDateTimeFormat = configuration.Object.UseMvcDateTimeFormatForAppServices;
+
+                            if (_useMvcDateTimeFormat.Value)
+                            {
+                                using (var mvcJsonOptions = _iocResolver.ResolveAsDisposable<IOptions<MvcJsonOptions>>())
+                                {
+                                    _datetimeFormat = mvcJsonOptions.Object.Value.SerializerSettings.DateFormatString;
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+            
+            // apply DateTimeFormat only if not empty
+            if (!_datetimeFormat.IsNullOrWhiteSpace())
+            {
+                converter.DateTimeFormat = _datetimeFormat;
+            }
+
+            property.Converter = converter;
         }
     }
 }
