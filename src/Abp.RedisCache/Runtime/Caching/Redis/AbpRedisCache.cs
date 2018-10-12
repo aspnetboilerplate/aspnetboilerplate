@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
+using System.Threading.Tasks;
 using Abp.Domain.Entities;
 using Abp.Reflection.Extensions;
 using StackExchange.Redis;
@@ -43,6 +44,20 @@ namespace Abp.Runtime.Caching.Redis
             return objbytes.ToArray();
         }
 
+        public override async Task<object> GetOrDefaultAsync(string key)
+        {
+            var objbyte = await _database.StringGetAsync(GetLocalizedRedisKey(key));
+            return objbyte.HasValue ? Deserialize(objbyte) : null;
+        }
+
+        public override async Task<object[]> GetOrDefaultAsync(string[] keys)
+        {
+            var redisKeys = keys.Select(GetLocalizedRedisKey);
+            var redisValues = await _database.StringGetAsync(redisKeys.ToArray());
+            var objbytes = redisValues.Select(obj => obj.HasValue ? Deserialize(obj) : null);
+            return objbytes.ToArray();
+        }
+
         public override void Set(string key, object value, TimeSpan? slidingExpireTime = null, TimeSpan? absoluteExpireTime = null)
         {
             if (value == null)
@@ -51,6 +66,20 @@ namespace Abp.Runtime.Caching.Redis
             }
 
             _database.StringSet(
+                GetLocalizedRedisKey(key),
+                Serialize(value, GetSerializableType(value)),
+                absoluteExpireTime ?? slidingExpireTime ?? DefaultAbsoluteExpireTime ?? DefaultSlidingExpireTime
+                );
+        }
+
+        public override async Task SetAsync(string key, object value, TimeSpan? slidingExpireTime = null, TimeSpan? absoluteExpireTime = null)
+        {
+            if (value == null)
+            {
+                throw new AbpException("Can not insert null values to the cache!");
+            }
+
+            await _database.StringSetAsync(
                 GetLocalizedRedisKey(key),
                 Serialize(value, GetSerializableType(value)),
                 absoluteExpireTime ?? slidingExpireTime ?? DefaultAbsoluteExpireTime ?? DefaultSlidingExpireTime
@@ -72,15 +101,41 @@ namespace Abp.Runtime.Caching.Redis
             _database.StringSet(redisPairs.ToArray());
         }
 
+        public override async Task SetAsync(KeyValuePair<string, object>[] pairs, TimeSpan? slidingExpireTime = null, TimeSpan? absoluteExpireTime = null)
+        {
+            if (pairs.Any(p => p.Value == null))
+            {
+                throw new AbpException("Can not insert null values to the cache!");
+            }
+
+            var redisPairs = pairs.Select(p => new KeyValuePair<RedisKey, RedisValue>
+                                          (GetLocalizedRedisKey(p.Key), Serialize(p.Value, GetSerializableType(p.Value)))
+                                         );
+            //TODO: currently Redis does not have command to bulk insert key/value pairs and set expiry time at the same time
+            //See https://github.com/StackExchange/StackExchange.Redis/blob/master/src/StackExchange.Redis/Interfaces/IDatabase.cs#L1924
+            await _database.StringSetAsync(redisPairs.ToArray());
+        }
+
         public override void Remove(string key)
         {
             _database.KeyDelete(GetLocalizedRedisKey(key));
+        }
+
+        public override async Task RemoveAsync(string key)
+        {
+            await _database.KeyDeleteAsync(GetLocalizedRedisKey(key));
         }
 
         public override void Remove(string[] keys)
         {
             var redisKeys = keys.Select(GetLocalizedRedisKey);
             _database.KeyDelete(redisKeys.ToArray());
+        }
+
+        public override async Task RemoveAsync(string[] keys)
+        {
+            var redisKeys = keys.Select(GetLocalizedRedisKey);
+            await _database.KeyDeleteAsync(redisKeys.ToArray());
         }
 
         public override void Clear()
