@@ -15,6 +15,8 @@ namespace Abp.Zero.SampleApp.EntityFramework
 
         public DbSet<Author> Authors { get; set; }
 
+        public DbSet<Store> Stores { get; set; }
+
         public AppDbContext(DbConnection existingConnection)
             : base(existingConnection, true)
         {
@@ -27,6 +29,8 @@ namespace Abp.Zero.SampleApp.EntityFramework
 
             modelBuilder.Entity<Book>().ToTable("Books");
             modelBuilder.Entity<Book>().Property(e => e.Id).HasDatabaseGeneratedOption(DatabaseGeneratedOption.Identity);
+
+            modelBuilder.Entity<Store>().Property(e => e.Id).HasColumnName("StoreId");
         }
     }
 }

@@ -30,6 +30,36 @@ namespace Abp.AspNetCore.Tests
         }
 
         [Fact]
+        public async Task Should_Not_Throw_Exception_For_Nullable_Values_With_Null_Parameter()
+        {
+            // Act
+            var response = await GetResponseAsObjectAsync<AjaxResponse<FluentValidationTestController.ValidationTestArgument3>>(
+                GetUrl<FluentValidationTestController>(
+                    nameof(FluentValidationTestController.GetNullableJsonValue),
+                    new FluentValidationTestController.ValidationTestArgument3 { Value = null }
+                )
+            );
+
+            response.Success.ShouldBeTrue();
+            response.Result.Value.ShouldBe(null);
+        }
+
+        [Fact]
+        public async Task Should_Not_Throw_Exception_For_Nullable_Values_With_Null_Parameter_Post()
+        {
+            // Act
+            var response = await PostAsync<AjaxResponse<FluentValidationTestController.ValidationTestArgument3>>(
+                GetUrl<FluentValidationTestController>(
+                    nameof(FluentValidationTestController.GetNullableJsonValue2)
+                ),
+                new StringContent("{ \"value\": null }", Encoding.UTF8, "application/json")
+            );
+
+            response.Success.ShouldBeTrue();
+            response.Result.Value.ShouldBe(null);
+        }
+
+        [Fact]
         public async Task Should_Work_With_Valid_Array_Parameter()
         {
             // Act

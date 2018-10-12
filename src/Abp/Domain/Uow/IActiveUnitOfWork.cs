@@ -26,7 +26,7 @@ namespace Abp.Domain.Uow
         /// This event is raised when this UOW is disposed.
         /// </summary>
         event EventHandler Disposed;
-        
+
         /// <summary>
         /// Gets if this unit of work is transactional.
         /// </summary>
@@ -36,6 +36,11 @@ namespace Abp.Domain.Uow
         /// Gets data filter configurations for this unit of work.
         /// </summary>
         IReadOnlyList<DataFilterConfiguration> Filters { get; }
+
+        /// <summary>
+        /// A dictionary to use for custom operations on unitOfWork
+        /// </summary>
+        Dictionary<string, object> Items { get; set; }
 
         /// <summary>
         /// Is this UOW disposed?

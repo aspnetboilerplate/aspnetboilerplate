@@ -27,9 +27,9 @@ namespace Abp.TestBase
         /// </summary>
         protected TestAbpSession AbpSession { get; private set; }
 
-        protected AbpIntegratedTestBase(bool initializeAbp = true)
+        protected AbpIntegratedTestBase(bool initializeAbp = true, IIocManager localIocManager = null)
         {
-            LocalIocManager = new IocManager();
+            LocalIocManager = localIocManager ?? new IocManager();
 
             AbpBootstrapper = AbpBootstrapper.Create<TStartupModule>(options =>
             {

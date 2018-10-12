@@ -35,6 +35,7 @@ namespace Abp.NHibernate
             IocManager.Register<AbpNHibernateInterceptor>(DependencyLifeStyle.Transient);
 
             _sessionFactory = Configuration.Modules.AbpNHibernate().FluentConfiguration
+                .Mappings(m => m.FluentMappings.Add(typeof(SoftDeleteFilter)))
                 .Mappings(m => m.FluentMappings.Add(typeof(MayHaveTenantFilter)))
                 .Mappings(m => m.FluentMappings.Add(typeof(MustHaveTenantFilter)))
                 .ExposeConfiguration(config => config.SetInterceptor(IocManager.Resolve<AbpNHibernateInterceptor>()))

@@ -146,7 +146,7 @@ namespace Abp.Runtime.Caching
 
         public virtual Task SetAsync(string key, object value, TimeSpan? slidingExpireTime = null, TimeSpan? absoluteExpireTime = null)
         {
-            Set(key, value, slidingExpireTime);
+            Set(key, value, slidingExpireTime, absoluteExpireTime);
             return Task.FromResult(0);
         }
 
