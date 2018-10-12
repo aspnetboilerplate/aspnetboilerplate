@@ -84,7 +84,7 @@ namespace Abp.Authorization
                 return;
             }
 
-            if (IsPropertyGetterSetterMethod(methodInfo, type))
+            if (ReflectionHelper.IsPropertyGetterSetterMethod(methodInfo, type))
             {
                 return;
             }
@@ -101,21 +101,6 @@ namespace Abp.Authorization
             }
 
             await AuthorizeAsync(authorizeAttributes);
-        }
-
-        private static bool IsPropertyGetterSetterMethod(MethodInfo method, Type type)
-        {
-            if (!method.IsSpecialName)
-            {
-                return false;
-            }
-
-            if (method.Name.Length < 4)
-            {
-                return false;
-            }
-
-            return type.GetProperty(method.Name.Substring(4), BindingFlags.Instance | BindingFlags.Static | BindingFlags.NonPublic) != null;
         }
 
         private static bool AllowAnonymous(MemberInfo memberInfo, Type type)
