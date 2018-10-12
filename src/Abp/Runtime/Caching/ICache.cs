@@ -75,7 +75,7 @@ namespace Abp.Runtime.Caching
         object GetOrDefault(string key);
 
         /// <summary>
-        /// Gets items from the cache. For every key that is not found, the null is returned.
+        /// Gets items from the cache. For every key that is not found, a null value is returned.
         /// </summary>
         /// <param name="keys">Keys</param>
         /// <returns>Cached items</returns>
@@ -89,7 +89,7 @@ namespace Abp.Runtime.Caching
         Task<object> GetOrDefaultAsync(string key);
 
         /// <summary>
-        /// Gets items from the cache. For every key that is not found, the null is returned.
+        /// Gets items from the cache. For every key that is not found, a null value is returned.
         /// </summary>
         /// <param name="keys">Keys</param>
         /// <returns>Cached items</returns>
@@ -146,7 +146,7 @@ namespace Abp.Runtime.Caching
         Task SetAsync(KeyValuePair<string, object>[] pairs, TimeSpan? slidingExpireTime = null, TimeSpan? absoluteExpireTime = null);
 
         /// <summary>
-        /// Removes a cache item by it's key.
+        /// Removes a cache item by it's key (does nothing if given key does not exists in the cache).
         /// </summary>
         /// <param name="key">Key</param>
         void Remove(string key);
@@ -164,7 +164,7 @@ namespace Abp.Runtime.Caching
         Task RemoveAsync(string key);
 
         /// <summary>
-        /// Removes cache items by their keys (does nothing if given key does not exists in the cache).
+        /// Removes cache items by their keys.
         /// </summary>
         /// <param name="keys">Keys</param>
         Task RemoveAsync(string[] keys);
