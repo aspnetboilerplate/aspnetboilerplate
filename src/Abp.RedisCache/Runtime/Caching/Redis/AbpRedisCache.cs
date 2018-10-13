@@ -96,8 +96,11 @@ namespace Abp.Runtime.Caching.Redis
             var redisPairs = pairs.Select(p => new KeyValuePair<RedisKey, RedisValue>
                                           (GetLocalizedRedisKey(p.Key), Serialize(p.Value, GetSerializableType(p.Value)))
                                          );
-            //TODO: currently Redis does not have command to bulk insert key/value pairs and set expiry time at the same time
-            //See https://github.com/StackExchange/StackExchange.Redis/blob/master/src/StackExchange.Redis/Interfaces/IDatabase.cs#L1924
+
+            if (slidingExpireTime.HasValue || absoluteExpireTime.HasValue)
+            {
+                Logger.WarnFormat("{0}/{1} is not supported for Redis bulk insert of key-value pairs", nameof(slidingExpireTime), nameof(absoluteExpireTime));
+            }
             _database.StringSet(redisPairs.ToArray());
         }
 
@@ -111,8 +114,10 @@ namespace Abp.Runtime.Caching.Redis
             var redisPairs = pairs.Select(p => new KeyValuePair<RedisKey, RedisValue>
                                           (GetLocalizedRedisKey(p.Key), Serialize(p.Value, GetSerializableType(p.Value)))
                                          );
-            //TODO: currently Redis does not have command to bulk insert key/value pairs and set expiry time at the same time
-            //See https://github.com/StackExchange/StackExchange.Redis/blob/master/src/StackExchange.Redis/Interfaces/IDatabase.cs#L1924
+            if (slidingExpireTime.HasValue || absoluteExpireTime.HasValue)
+            {
+                Logger.WarnFormat("{0}/{1} is not supported for Redis bulk insert of key-value pairs", nameof(slidingExpireTime), nameof(absoluteExpireTime));
+            }
             await _database.StringSetAsync(redisPairs.ToArray());
         }
 
