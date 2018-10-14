@@ -19,7 +19,7 @@ namespace Abp.Collections.Extensions
         internal static bool TryGetValue<T>(this IDictionary<string, object> dictionary, string key, out T value)
         {
             object valueObj;
-            if (dictionary.TryGetValue(key, out valueObj) && valueObj is T)
+            if (dictionary.ContainsKey(key) && dictionary.TryGetValue(key, out valueObj) && valueObj is T)
             {
                 value = (T)valueObj;
                 return true;
