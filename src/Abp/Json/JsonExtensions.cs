@@ -1,6 +1,5 @@
 ﻿using JetBrains.Annotations;
 using Newtonsoft.Json;
-using Newtonsoft.Json.Serialization;
 using System;
 
 namespace Abp.Json
@@ -13,23 +12,34 @@ namespace Abp.Json
         /// <returns></returns>
         public static string ToJsonString(this object obj, bool camelCase = false, bool indented = false)
         {
-            var options = new JsonSerializerSettings();
+            var settings = new JsonSerializerSettings();
 
             if (camelCase)
             {
-                options.ContractResolver = new AbpCamelCasePropertyNamesContractResolver();
+                settings.ContractResolver = new AbpCamelCasePropertyNamesContractResolver();
             }
             else
             {
-                options.ContractResolver = new AbpContractResolver();
+                settings.ContractResolver = new AbpContractResolver();
             }
 
             if (indented)
             {
-                options.Formatting = Formatting.Indented;
+                settings.Formatting = Formatting.Indented;
             }
             
-            return JsonConvert.SerializeObject(obj, options);
+            return ToJsonString(obj, settings);
+        }
+
+        /// <summary>
+        /// Converts given object to JSON string using custom <see cref="JsonSerializerSettings"/>.
+        /// </summary>
+        /// <returns></returns>
+        public static string ToJsonString(this object obj, JsonSerializerSettings settings)
+        {
+            return obj != null
+                ? JsonConvert.SerializeObject(obj, settings)
+                : default(string);
         }
 
         /// <summary>
