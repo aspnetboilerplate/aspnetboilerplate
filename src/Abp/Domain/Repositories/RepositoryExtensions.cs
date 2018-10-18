@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Linq.Expressions;
 using System.Threading;
 using System.Threading.Tasks;
@@ -99,6 +100,15 @@ namespace Abp.Domain.Repositories
             hardDeleteEntities.Add(hardDeleteKey);
 
             await repo.DeleteAsync(entity);
+        }
+
+        public static async Task HardDelete<TEntity, TPrimaryKey>(this IRepository<TEntity, TPrimaryKey> repository, Expression<Func<TEntity, bool>> predicate)
+            where TEntity : class, IEntity<TPrimaryKey>, ISoftDelete
+        {
+            foreach (var entity in repository.GetAll().Where(predicate).ToList())
+            {
+                await repository.HardDelete(entity);
+            }
         }
 
         private static int? GetCurrentTenantIdOrNull(IIocResolver iocResolver)
