@@ -29,6 +29,14 @@
 
   <ItemGroup>
     <PackageReference Update="SourceLink.Create.CommandLine" Version="2.8.3" />
+    <PackageReference Include="BundlerMinifier.Core" Version="2.8.391" />
+    <DotNetCliToolReference Include="BundlerMinifier.Core" Version="2.8.391" />
   </ItemGroup>
+
+  <Target Name="PreBuild" AfterTargets="PreBuildEvent">
+    <Exec Command="dotnet bundle clean" />
+    <Exec Command="dotnet bundle" />
+  </Target>
+
 
 </Project>
