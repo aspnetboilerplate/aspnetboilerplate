@@ -29,6 +29,10 @@ namespace Abp.ZeroCore.SampleApp.EntityFramework
 
         public DbSet<Store> Stores { get; set; }
 
+        public DbSet<Order> Orders { get; set; }
+
+        public DbSet<OrderTranslation> OrderTranslations { get; set; }
+
         public SampleAppDbContext(DbContextOptions<SampleAppDbContext> options) 
             : base(options)
         {
