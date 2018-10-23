@@ -1,0 +1,80 @@
+[
+  {
+    "outputFileName": "Abp/Framework/scripts/libs/angularjs/abp.ng.min.js",
+    "inputFiles": [
+      "Abp/Framework/scripts/libs/angularjs/abp.ng.js"
+    ]
+  },
+  {
+    "outputFileName": "Abp/Framework/scripts/libs/requirejs/plugins/service.min.js",
+    "inputFiles": [
+      "Abp/Framework/scripts/libs/requirejs/plugins/service.js"
+    ]
+  },
+  {
+    "outputFileName": "Abp/Framework/scripts/libs/abp.blockUI.min.js",
+    "inputFiles": [
+      "Abp/Framework/scripts/libs/abp.blockUI.js"
+    ]
+  },
+  {
+    "outputFileName": "Abp/Framework/scripts/libs/abp.jquery.min.js",
+    "inputFiles": [
+      "Abp/Framework/scripts/libs/abp.jquery.js"
+    ]
+  },
+  {
+    "outputFileName": "Abp/Framework/scripts/libs/abp.jtable.min.js",
+    "inputFiles": [
+      "Abp/Framework/scripts/libs/abp.jtable.js"
+    ]
+  },
+  {
+    "outputFileName": "Abp/Framework/scripts/libs/abp.moment.min.js",
+    "inputFiles": [
+      "Abp/Framework/scripts/libs/abp.moment.js"
+    ]
+  },
+  {
+    "outputFileName": "Abp/Framework/scripts/libs/abp.signalr.min.js",
+    "inputFiles": [
+      "Abp/Framework/scripts/libs/abp.signalr.js"
+    ]
+  },
+  {
+    "outputFileName": "Abp/Framework/scripts/libs/abp.signalr-client.min.js",
+    "inputFiles": [
+      "Abp/Framework/scripts/libs/abp.signalr-client.js"
+    ]
+  },
+  {
+    "outputFileName": "Abp/Framework/scripts/libs/abp.spin.min.js",
+    "inputFiles": [
+      "Abp/Framework/scripts/libs/abp.spin.js"
+    ]
+  },
+  {
+    "outputFileName": "Abp/Framework/scripts/libs/abp.sweet-alert.min.js",
+    "inputFiles": [
+      "Abp/Framework/scripts/libs/abp.sweet-alert.js"
+    ]
+  },
+  {
+    "outputFileName": "Abp/Framework/scripts/libs/abp.toastr.min.js",
+    "inputFiles": [
+      "Abp/Framework/scripts/libs/abp.toastr.js"
+    ]
+  },
+  {
+    "outputFileName": "Abp/Framework/scripts/utils/ie10fix.min.js",
+    "inputFiles": [
+      "Abp/Framework/scripts/utils/ie10fix.js"
+    ]
+  },
+  {
+    "outputFileName": "Abp/Framework/scripts/abp.min.js",
+    "inputFiles": [
+      "Abp/Framework/scripts/abp.js"
+    ]
+  }
+]
