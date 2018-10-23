@@ -41,7 +41,7 @@ var abp = abp || {};
 
     // Connect to the server
     abp.signalr.connect = function () {
-        var url = abp.signalr.url || '/signalr';
+        var url = abp.signalr.url || (abp.appPath + 'signalr');
 
         // Start the connection.
         startConnection(url, configureConnection)
@@ -69,7 +69,7 @@ var abp = abp || {};
 
         // Add query string: https://github.com/aspnet/SignalR/issues/680
         if (abp.signalr.qs) {
-            url += '?' + abp.signalr.qs;
+            url += (url.indexOf('?') == -1 ? '?' : '&') + abp.signalr.qs;
         }
 
         return function start(transport) {

@@ -34,20 +34,31 @@
 
     /* MESSAGE **************************************************/
 
-    var showMessage = function (type, message, title) {
+    var showMessage = function (type, message, title, isHtml) {
+
         if (!title) {
             title = message;
             message = undefined;
+        }
+
+        var messageContent = {
+            title: title
+        };
+
+        if (isHtml) {
+            var el = document.createElement('div');
+            el.innerHTML = message;
+
+            messageContent.content = el;
+        } else {
+            messageContent.text = message;
         }
 
         var opts = $.extend(
             {},
             abp.libs.sweetAlert.config['default'],
             abp.libs.sweetAlert.config[type],
-            {
-                title: title,
-                text: message
-            }
+            messageContent
         );
 
         return $.Deferred(function ($dfd) {
@@ -57,38 +68,49 @@
         });
     };
 
-    abp.message.info = function (message, title) {
-        return showMessage('info', message, title);
+    abp.message.info = function (message, title, isHtml) {
+        return showMessage('info', message, title, isHtml);
     };
 
-    abp.message.success = function (message, title) {
-        return showMessage('success', message, title);
+    abp.message.success = function (message, title, isHtml) {
+        return showMessage('success', message, title, isHtml);
     };
 
-    abp.message.warn = function (message, title) {
-        return showMessage('warn', message, title);
+    abp.message.warn = function (message, title, isHtml) {
+        return showMessage('warn', message, title, isHtml);
     };
 
-    abp.message.error = function (message, title) {
-        return showMessage('error', message, title);
+    abp.message.error = function (message, title, isHtml) {
+        return showMessage('error', message, title, isHtml);
     };
 
-    abp.message.confirm = function (message, titleOrCallback, callback) {
-        var userOpts = {
-            text: message
-        };
+    abp.message.confirm = function (message, titleOrCallback, callback, isHtml) {
+        var messageContent;
+
+        if (isHtml) {
+            var el = document.createElement('div');
+            el.innerHTML = message;
+
+            messageContent = {
+                content: el
+            }
+        } else {
+            messageContent = {
+                text: message
+            }
+        }
 
         if ($.isFunction(titleOrCallback)) {
             callback = titleOrCallback;
         } else if (titleOrCallback) {
-            userOpts.title = titleOrCallback;
+            messageContent.title = titleOrCallback;
         };
 
         var opts = $.extend(
             {},
             abp.libs.sweetAlert.config['default'],
             abp.libs.sweetAlert.config.confirm,
-            userOpts
+            messageContent
         );
 
         return $.Deferred(function ($dfd) {

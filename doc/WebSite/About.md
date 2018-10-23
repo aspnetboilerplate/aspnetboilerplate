@@ -62,8 +62,8 @@ been rewritten because the code became too unmaintainable.
 
 An application should use and combine useful libraries & frameworks to
 accomplish well-known tasks. It should not try to re-invent the wheel if
-an existing tool meets it's requirements, and it should focus on it's
-own job (to it's own business logic) as much as possible. The
+an existing tool meets its requirements, and it should focus on its
+own job (do its own business logic) as much as possible. The
 application may use
 [EntityFramework](/Pages/Documents/EntityFramework-Integration) or
 [NHibernate](/Pages/Documents/NHibernate-Integration) for

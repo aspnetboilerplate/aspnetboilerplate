@@ -22,4 +22,19 @@ namespace Abp.ZeroCore.SampleApp.Application
             return config;
         }
     }
+
+    public class TestCustomConfigProvider2 : ICustomConfigProvider
+    {
+        public Dictionary<string, object> GetConfig(CustomConfigProviderContext customConfigProviderContext)
+        {
+            var config = new Dictionary<string, object>
+            {
+                {
+                    "test_config_int", 2
+                }
+            };
+
+            return config;
+        }
+    }
 }

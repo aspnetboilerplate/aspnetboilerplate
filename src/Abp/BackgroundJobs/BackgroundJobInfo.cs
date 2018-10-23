@@ -57,7 +57,7 @@ namespace Abp.BackgroundJobs
         /// Job arguments as JSON string.
         /// </summary>
         [Required]
-        [MaxLength(MaxJobArgsLength)]
+        [StringLength(MaxJobArgsLength)]
         public virtual string JobArgs { get; set; }
 
         /// <summary>

@@ -1,9 +1,9 @@
 ﻿using System.Reflection;
-using System.Web.OData;
 using Abp.Collections.Extensions;
 using Abp.Dependency;
 using Abp.Modules;
 using Abp.WebApi.OData.Configuration;
+using Microsoft.AspNet.OData;
 
 namespace Abp.WebApi.OData
 {

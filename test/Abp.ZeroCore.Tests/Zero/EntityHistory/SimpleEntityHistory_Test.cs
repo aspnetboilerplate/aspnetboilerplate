@@ -237,6 +237,24 @@ namespace Abp.Zero.EntityHistory
             _entityHistoryStore.DidNotReceive().SaveAsync(Arg.Any<EntityChangeSet>());
         }
 
+        [Fact]
+        public void Should_Not_Write_History_If_Property_Has_No_Audited_Attribute()
+        {
+            /* Post.Body does not have Audited attribute. */
+
+            using (var uow = Resolve<IUnitOfWorkManager>().Begin())
+            {
+                var post1 = _postRepository.Single(b => b.Body == "test-post-1-body");
+
+                post1.Body = null;
+                _postRepository.Update(post1);
+
+                uow.Complete();
+            }
+
+            _entityHistoryStore.DidNotReceive().SaveAsync(Arg.Any<EntityChangeSet>());
+        }
+
         #endregion
 
         private int CreateBlogAndGetId()

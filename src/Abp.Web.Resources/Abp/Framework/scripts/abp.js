@@ -804,7 +804,7 @@
         }
 
         var now = function () {
-            return new Date();
+            return toUtc(new Date());
         };
 
         var normalize = function (date) {

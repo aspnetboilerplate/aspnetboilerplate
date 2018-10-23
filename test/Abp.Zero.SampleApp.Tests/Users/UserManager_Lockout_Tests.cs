@@ -96,7 +96,8 @@ namespace Abp.Zero.SampleApp.Tests.Users
                 IsLockoutEnabled = isLockoutEnabled
             };
 
-            await _userManager.CreateAsync(user);
+            await WithUnitOfWorkAsync(async () => await _userManager.CreateAsync(user));
+
             (await _userManager.GetLockoutEnabledAsync(user.Id)).ShouldBe(isLockoutEnabled);
         }
     }

@@ -26,6 +26,8 @@ namespace Abp.AspNetCore.Configuration
 
         public bool SetNoCacheForAjaxResponses { get; set; }
 
+        public bool UseMvcDateTimeFormatForAppServices { get; set; }
+
         public List<Action<IRouteBuilder>> RouteConfiguration { get; }
 
         public AbpAspNetCoreConfiguration()
@@ -39,6 +41,7 @@ namespace Abp.AspNetCore.Configuration
             IsValidationEnabledForControllers = true;
             SetNoCacheForAjaxResponses = true;
             IsAuditingEnabled = true;
+            UseMvcDateTimeFormatForAppServices = false;
         }
        
         public AbpControllerAssemblySettingBuilder CreateControllersForAppServices(

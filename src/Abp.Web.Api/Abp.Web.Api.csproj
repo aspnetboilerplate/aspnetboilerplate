@@ -42,4 +42,8 @@
     <PackageReference Include="Microsoft.AspNet.WebApi" Version="5.2.6" />
   </ItemGroup>
 
+  <ItemGroup>
+    <PackageReference Update="SourceLink.Create.CommandLine" Version="2.8.3" />
+  </ItemGroup>
+
 </Project>

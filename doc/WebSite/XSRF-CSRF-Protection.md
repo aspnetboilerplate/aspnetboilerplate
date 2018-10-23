@@ -37,8 +37,7 @@ browser clients**.
 
 #### Features
 
-ASP.NET MVC has it's own built-in AntiForgery system as you probably
-know, but it has a few weaknesses:
+ASP.NET MVC has its own built-in AntiForgery system, but there are a few weaknesses:
 
 -   It requires you to add the **ValidateAntiForgeryToken** attribute to all
     actions that need to be protected. You could potentially **forget** to add
@@ -55,7 +54,7 @@ know, but it has a few weaknesses:
 -   Even if we can access to the token in JavaScript, we must **manually
     add** it to the header for every request.
 
-ABP does followings things to overcome these shortcomings:
+ABP does following things to overcome these problems:
 
 -   You do not need to add the **ValidateAntiForgeryToken** attribute for **POST**,
     **PUT, PATCH** and **DELETE** actions anymore, because they are
@@ -136,24 +135,24 @@ controller like the following:
     using System.Net.Http;
     using Abp.Web.Security.AntiForgery;
     using Abp.WebApi.Controllers;
-    
+
     namespace AngularForgeryDemo.Controllers
     {
         public class AntiForgeryController : AbpApiController
         {
             private readonly IAbpAntiForgeryManager _antiForgeryManager;
-    
+
             public AntiForgeryController(IAbpAntiForgeryManager antiForgeryManager)
             {
                 _antiForgeryManager = antiForgeryManager;
             }
-    
+
             public HttpResponseMessage GetTokenCookie()
             {
                 var response = new HttpResponseMessage();
-    
+
                 _antiForgeryManager.SetCookie(response.Headers);
-    
+
                 return response;
             }
         }

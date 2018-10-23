@@ -96,7 +96,7 @@ namespace Abp.EntityFrameworkCore.Uow
             return ActiveDbContexts.Values.ToImmutableList();
         }
 
-        public virtual TDbContext GetOrCreateDbContext<TDbContext>(MultiTenancySides? multiTenancySide = null)
+        public virtual TDbContext GetOrCreateDbContext<TDbContext>(MultiTenancySides? multiTenancySide = null, string name = null)
             where TDbContext : DbContext
         {
             var concreteDbContextType = _dbContextTypeMatcher.GetConcreteType(typeof(TDbContext));
@@ -107,6 +107,10 @@ namespace Abp.EntityFrameworkCore.Uow
             var connectionString = ResolveConnectionString(connectionStringResolveArgs);
 
             var dbContextKey = concreteDbContextType.FullName + "#" + connectionString;
+            if (name != null)
+            {
+                dbContextKey += "#" + name;
+            }
 
             DbContext dbContext;
             if (!ActiveDbContexts.TryGetValue(dbContextKey, out dbContext))

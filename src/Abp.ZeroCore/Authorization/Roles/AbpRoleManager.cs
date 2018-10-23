@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Globalization;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
@@ -24,6 +25,8 @@ namespace Abp.Authorization.Roles
         where TUser : AbpUser<TUser>
     {
         public ILocalizationManager LocalizationManager { get; set; }
+
+        protected string LocalizationSourceName { get; set; }
 
         public IAbpSession AbpSession { get; set; }
 
@@ -75,6 +78,7 @@ namespace Abp.Authorization.Roles
             AbpStore = store;
             AbpSession = NullAbpSession.Instance;
             LocalizationManager = NullLocalizationManager.Instance;
+            LocalizationSourceName = AbpZeroConsts.LocalizationSourceName;
         }
 
         /// <summary>
@@ -439,9 +443,14 @@ namespace Abp.Authorization.Roles
             });
         }
 
-        private string L(string name)
+        protected virtual string L(string name)
         {
-            return LocalizationManager.GetString(AbpZeroConsts.LocalizationSourceName, name);
+            return LocalizationManager.GetString(LocalizationSourceName, name);
+        }
+
+        protected virtual string L(string name, CultureInfo cultureInfo)
+        {
+            return LocalizationManager.GetString(LocalizationSourceName, name, cultureInfo);
         }
 
         private int? GetCurrentTenantId()

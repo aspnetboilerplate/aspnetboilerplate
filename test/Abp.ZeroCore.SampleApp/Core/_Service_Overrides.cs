@@ -18,7 +18,6 @@ using Abp.Organizations;
 using Abp.Runtime.Caching;
 using Abp.Zero.Configuration;
 using Microsoft.AspNetCore.Authentication;
-using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.Logging;
@@ -30,7 +29,7 @@ namespace Abp.ZeroCore.SampleApp.Core
     {
         public UserManager(
             RoleManager roleManager,
-            UserStore store,
+            UserStore userStore,
             IOptions<IdentityOptions> optionsAccessor,
             IPasswordHasher<User> passwordHasher,
             IEnumerable<IUserValidator<User>> userValidators,
@@ -47,7 +46,7 @@ namespace Abp.ZeroCore.SampleApp.Core
             IOrganizationUnitSettings organizationUnitSettings,
             ISettingManager settingManager) : base(
             roleManager,
-            store,
+            userStore,
             optionsAccessor,
             passwordHasher,
             userValidators,

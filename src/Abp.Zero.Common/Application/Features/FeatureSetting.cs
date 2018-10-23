@@ -29,14 +29,14 @@ namespace Abp.Application.Features
         /// Feature name.
         /// </summary>
         [Required]
-        [MaxLength(MaxNameLength)]
+        [StringLength(MaxNameLength)]
         public virtual string Name { get; set; }
 
         /// <summary>
         /// Value.
         /// </summary>
         [Required(AllowEmptyStrings = true)]
-        [MaxLength(MaxValueLength)]
+        [StringLength(MaxValueLength)]
         public virtual string Value { get; set; }
 
         /// <summary>
