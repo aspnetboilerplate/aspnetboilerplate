@@ -35,14 +35,15 @@ namespace Abp.AutoMapper
             return Mapper.Map(source, destination);
         }
 
-        public static void CreateMultiLingualMap<TMultiLingualEntity, TMultiLingualEntityPrimaryKey, TTranslation, TDestination>(
+        public static CreateMultiLingualMapResult<TMultiLingualEntity, TTranslation, TDestination> CreateMultiLingualMap<TMultiLingualEntity, TMultiLingualEntityPrimaryKey, TTranslation, TDestination>(
             this IMapperConfigurationExpression configuration, MultiLingualMapContext multiLingualMapContext)
             where TTranslation : class, IEntityTranslation<TMultiLingualEntity, TMultiLingualEntityPrimaryKey>
             where TMultiLingualEntity : IMultiLingualEntity<TTranslation>
         {
-            configuration.CreateMap<TTranslation, TDestination>();
+            var result = new CreateMultiLingualMapResult<TMultiLingualEntity, TTranslation, TDestination>();
 
-            configuration.CreateMap<TMultiLingualEntity, TDestination>().BeforeMap((source, destination, context) =>
+            result.TranslationMap = configuration.CreateMap<TTranslation, TDestination>();
+            result.EntityMap = configuration.CreateMap<TMultiLingualEntity, TDestination>().BeforeMap((source, destination, context) =>
             {
                 var translation = source.Translations.FirstOrDefault(pt => pt.Language == CultureInfo.CurrentUICulture.Name);
                 if (translation != null)
@@ -67,13 +68,15 @@ namespace Abp.AutoMapper
                     context.Mapper.Map(translation, destination);
                 }
             });
+
+            return result;
         }
 
-        public static void CreateMultiLingualMap<TMultiLingualEntity, TTranslation, TDestination>(this IMapperConfigurationExpression configuration, MultiLingualMapContext multiLingualMapContext)
+        public static CreateMultiLingualMapResult<TMultiLingualEntity, TTranslation, TDestination> CreateMultiLingualMap<TMultiLingualEntity, TTranslation, TDestination>(this IMapperConfigurationExpression configuration, MultiLingualMapContext multiLingualMapContext)
             where TTranslation : class, IEntity, IEntityTranslation<TMultiLingualEntity, int>
             where TMultiLingualEntity : IMultiLingualEntity<TTranslation>
         {
-            configuration.CreateMultiLingualMap<TMultiLingualEntity, int, TTranslation, TDestination>(multiLingualMapContext);
+            return configuration.CreateMultiLingualMap<TMultiLingualEntity, int, TTranslation, TDestination>(multiLingualMapContext);
         }
     }
 }
