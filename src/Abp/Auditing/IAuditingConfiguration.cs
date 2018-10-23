@@ -15,6 +15,12 @@ namespace Abp.Auditing
         bool IsEnabled { get; set; }
 
         /// <summary>
+        /// Used to save audit logs in background.
+        /// Default: false.
+        /// </summary>
+        bool RunInBackground { get; set; }
+
+        /// <summary>
         /// Set true to enable saving audit logs if current user is not logged in.
         /// Default: false.
         /// </summary>

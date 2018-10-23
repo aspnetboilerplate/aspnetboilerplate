@@ -129,6 +129,28 @@ namespace Abp.Auditing
 
         public void Save(AuditInfo auditInfo)
         {
+            if (_configuration.RunInBackground)
+            {
+                Task.Factory.StartNew(() =>
+                {
+                    try
+                    {
+                        SaveInternal(auditInfo);
+                    }
+                    catch (Exception exception)
+                    {
+                        Logger.Error(exception.Message, exception);
+                    }
+                });
+            }
+            else
+            {
+                SaveInternal(auditInfo);
+            }
+        }
+
+        private void SaveInternal(AuditInfo auditInfo)
+        {
             using (var uow = _unitOfWorkManager.Begin(TransactionScopeOption.Suppress))
             {
                 AuditingStore.Save(auditInfo);
@@ -137,6 +159,28 @@ namespace Abp.Auditing
         }
 
         public async Task SaveAsync(AuditInfo auditInfo)
+        {
+            if (_configuration.RunInBackground)
+            {
+                await Task.Factory.StartNew(async () =>
+                {
+                    try
+                    {
+                        await SaveInternalAsync(auditInfo);
+                    }
+                    catch (Exception exception)
+                    {
+                        Logger.Error(exception.Message, exception);
+                    }
+                });
+            }
+            else
+            {
+                await SaveInternalAsync(auditInfo);
+            }
+        }
+
+        private async Task SaveInternalAsync(AuditInfo auditInfo)
         {
             using (var uow = _unitOfWorkManager.Begin(TransactionScopeOption.Suppress))
             {
