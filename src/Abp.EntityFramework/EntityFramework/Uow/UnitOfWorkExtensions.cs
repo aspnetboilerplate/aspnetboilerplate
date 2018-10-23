@@ -16,13 +16,12 @@ namespace Abp.EntityFramework.Uow
         /// </summary>
         /// <typeparam name="TDbContext">Type of the DbContext</typeparam>
         /// <param name="unitOfWork">Current (active) unit of work</param>
-        public static TDbContext GetDbContext<TDbContext>(this IActiveUnitOfWork unitOfWork) 
-            where TDbContext : DbContext
-        {
-            return GetDbContext<TDbContext>(unitOfWork, null);
-        }
-
-        public static TDbContext GetDbContext<TDbContext>(this IActiveUnitOfWork unitOfWork, MultiTenancySides? multiTenancySide)
+        /// <param name="multiTenancySide">Multitenancy side</param>
+        /// <param name="name">
+        /// A custom name for the dbcontext to get a named dbcontext.
+        /// If there is no dbcontext in this unit of work with given name, then a new one is created.
+        /// </param>
+        public static TDbContext GetDbContext<TDbContext>(this IActiveUnitOfWork unitOfWork, MultiTenancySides? multiTenancySide = null, string name = null)
             where TDbContext : DbContext
         {
             if (unitOfWork == null)
@@ -35,7 +34,7 @@ namespace Abp.EntityFramework.Uow
                 throw new ArgumentException("unitOfWork is not type of " + typeof(EfUnitOfWork).FullName, nameof(unitOfWork));
             }
 
-            return (unitOfWork as EfUnitOfWork).GetOrCreateDbContext<TDbContext>(multiTenancySide);
+            return (unitOfWork as EfUnitOfWork).GetOrCreateDbContext<TDbContext>(multiTenancySide, name);
         }
     }
 }

@@ -1,6 +1,6 @@
 ### Introduction
 
-Developing a world-ready application, including an application that can be localized into one or more languages, requires localization features. 
+Developing a world-ready application, including an application that can be localized into one or more languages, requires localization features.
 ASP.NET Boilerplate provides extensive support for the development of world-ready and localized applications.
 
 ### Application Languages
@@ -230,7 +230,7 @@ for example.
 
 #### ASP.NET Core
 
-ASP.NET Core has it's own mechanism to determine the current language.
+ASP.NET Core has its own mechanism to determine the current language.
 Abp.AspNetCore package automatically adds ASP.NET Core's
 **UseRequestLocalization** middleware to request pipeline. It also adds
 some special providers. Here is the default ordered list of all providers,
@@ -275,13 +275,13 @@ language. Example usage:
         {
             options.UseAbpRequestLocalization = false; //disable automatic adding of request localization
         });
-    
+
         //...authentication middleware(s)
-    
+
         app.UseAbpRequestLocalization(); //manually add request localization
-    
+
         //...other middlewares
-    
+
         app.UseMvc(routes =>
         {
             //...
@@ -424,9 +424,9 @@ sets the source name:
 
     public abstract class SimpleTaskSystemWebViewPageBase : SimpleTaskSystemWebViewPageBase<dynamic>
     {
-    
+
     }
-    
+
     public abstract class SimpleTaskSystemWebViewPageBase<TModel> : AbpWebViewPage<TModel>
     {
         protected SimpleTaskSystemWebViewPageBase()
@@ -468,7 +468,7 @@ text:
 The localization method can also get additional format arguments. Example:
 
     abp.localization.localize('RoleDeleteWarningMessage', 'MySource', 'Admin');
-    
+
     //shortcut if the source is retrieved using getSource as shown above
     source('RoleDeleteWarningMessage', 'Admin');
 
@@ -487,7 +487,7 @@ defaultSourceName is global and works for only one source at a time.
 
 ### Extending Localization Sources
 
-Assume that we use a module which defines it's own localization source.
+Assume that we use a module which defines its own localization source.
 We may need to change it's localized texts, add new text or translate
 to other languages. ASP.NET Boilerplate allows for extending a localization
 source. It currently works for XML and JSON files (Actually any

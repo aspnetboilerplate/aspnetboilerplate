@@ -12,7 +12,7 @@ namespace Abp.TestBase.SampleApplication.People
         public const int MaxNameLength = 64;
 
         [Required]
-        [MaxLength(MaxNameLength)]
+        [StringLength(MaxNameLength)]
         public virtual string Name { get; set; }
 
         [ForeignKey("ContactListId")]

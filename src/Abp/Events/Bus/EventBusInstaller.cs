@@ -30,8 +30,8 @@ namespace Abp.Events.Bus
             if (_eventBusConfiguration.UseDefaultEventBus)
             {
                 container.Register(
-                    Component.For<IEventBus>().UsingFactoryMethod(() => EventBus.Default).LifestyleSingleton()
-                    );
+                    Component.For<IEventBus>().Instance(EventBus.Default).LifestyleSingleton()
+                );
             }
             else
             {

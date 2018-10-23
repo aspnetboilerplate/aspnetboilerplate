@@ -38,6 +38,12 @@ namespace Abp.WebApi.Controllers.Dynamic.Binders
                 }
             }
 
+            if (actionContext.ActionDescriptor == null)
+            {
+                bindingContext.Model = Clock.Normalize(date.Value);
+                return true;
+            }
+
             var parameter = actionContext.ActionDescriptor.GetParameters().FirstOrDefault(p => p.ParameterName == bindingContext.ModelName);
             if (parameter != null && parameter.GetCustomAttributes<DisableDateTimeNormalizationAttribute>().Count > 0)
             {

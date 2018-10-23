@@ -17,7 +17,7 @@ namespace Abp.NHibernate.Tests
             _connection.Open();
 
             LocalIocManager.IocContainer.Register(
-                Component.For<DbConnection>().UsingFactoryMethod(() => _connection).LifestyleSingleton()
+                Component.For<DbConnection>().Instance(_connection).LifestyleSingleton()
                 );
         }
 

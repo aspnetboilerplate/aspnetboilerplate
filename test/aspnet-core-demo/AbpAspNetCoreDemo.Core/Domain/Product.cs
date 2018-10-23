@@ -8,7 +8,7 @@ namespace AbpAspNetCoreDemo.Core.Domain
     public class Product : Entity
     {
         [Required]
-        [MaxLength(200)]
+        [StringLength(200)]
         public string Name { get; set; }
 
         public float? Price { get; set; }

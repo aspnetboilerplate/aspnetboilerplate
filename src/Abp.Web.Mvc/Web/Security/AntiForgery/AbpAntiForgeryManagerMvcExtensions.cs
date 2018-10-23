@@ -21,10 +21,12 @@ namespace Abp.Web.Security.AntiForgery
 
         public static bool IsValid(this IAbpAntiForgeryManager manager, HttpContextBase context)
         {
-            var cookieValue = GetCookieValue(context);
-            if (cookieValue.IsNullOrEmpty())
+            var authCookieValue = GetCookieValue(context, manager.Configuration.AuthorizationCookieName);
+            var antiForgeryCookieValue = GetCookieValue(context, AntiForgeryConfig.CookieName);
+
+            if (antiForgeryCookieValue.IsNullOrEmpty())
             {
-                return true;
+                return authCookieValue.IsNullOrEmpty();
             }
 
             var formOrHeaderValue = manager.Configuration.GetFormOrHeaderValue(context);
@@ -33,12 +35,12 @@ namespace Abp.Web.Security.AntiForgery
                 return false;
             }
 
-            return manager.As<IAbpAntiForgeryValidator>().IsValid(cookieValue, formOrHeaderValue);
+            return manager.As<IAbpAntiForgeryValidator>().IsValid(antiForgeryCookieValue, formOrHeaderValue);
         }
 
-        private static string GetCookieValue(HttpContextBase context)
+        private static string GetCookieValue(HttpContextBase context, string cookineName)
         {
-            var cookie = context.Request.Cookies[AntiForgeryConfig.CookieName];
+            var cookie = context.Request.Cookies[cookineName];
             return cookie?.Value;
         }
 

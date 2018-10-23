@@ -25,5 +25,11 @@ namespace Abp.Application.Features
         /// <param name="name">Unique name of the feature</param>
         /// <returns><see cref="Feature"/> object or null</returns>
         Feature GetOrNull(string name);
+
+        /// <summary>
+        /// Remove feature with given name
+        /// </summary>
+        /// <param name="name"></param>
+        void Remove(string name);
     }
 }

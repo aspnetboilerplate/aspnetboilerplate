@@ -40,5 +40,11 @@ namespace Abp.Notifications
         /// </summary>
         /// <param name="user">User.</param>
         Task<IReadOnlyList<NotificationDefinition>> GetAllAvailableAsync(UserIdentifier user);
+
+        /// <summary>
+        /// Remove notification with given name
+        /// </summary>
+        /// <param name="name"></param>
+        void Remove(string name);
     }
 }

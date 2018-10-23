@@ -132,6 +132,8 @@ and client.
 
 #### Server-side
 
+##### ISettingManager
+
 The **ISettingManager** is used to perform setting operations. We can inject
 and use it anywhere in the application. ISettingManager defines many
 methods to get a setting's value.
@@ -156,12 +158,17 @@ Since ISettingManager is widely used, some special **base classes**
 property named **SettingManager**. If we derive from these classes, there's no
 need to explicitly inject it.
 
+##### ISettingDefinitionManager
+
+Also `ISettingDefinitionManager` can be used to get setting definitions that are defined in `AppSettingProvider`. We can inject
+and use it anywhere in the application as well. You can get definition name, default value, display name and etc. by using `ISettingDefinitionManager`.
+
 #### Client-side
 
 **ClientVisibilityProvider** property of a setting definition determines the visibility of a setting for the client-side. There are four implementations of ISettingClientVisibilityProvider.
 
 * **VisibleSettingClientVisibilityProvider**: Makes a setting definition visible to the client-side.
-* **HiddenSettingClientVisibilityProvider**: Makes a setting definition visible to the client-side.
+* **HiddenSettingClientVisibilityProvider**: Makes a setting definition hidden to the client-side.
 * **RequiresAuthenticationSettingClientVisibilityProvider**: Makes a setting definition visible to the client-side if a user is logged in.
 * **RequiresPermissionSettingClientVisibilityProvider**: Makes a setting definition visible to the client side if logged in user has a specific permission.
 

@@ -1,6 +1,6 @@
 ﻿using System;
-using System.Web.OData.Builder;
 using Abp.Configuration.Startup;
+using Microsoft.AspNet.OData.Builder;
 
 namespace Abp.WebApi.OData.Configuration
 {

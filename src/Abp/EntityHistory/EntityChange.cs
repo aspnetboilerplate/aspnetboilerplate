@@ -40,13 +40,13 @@ namespace Abp.EntityHistory
         /// <summary>
         /// Gets/sets primary key of the entity.
         /// </summary>
-        [MaxLength(MaxEntityIdLength)]
+        [StringLength(MaxEntityIdLength)]
         public virtual string EntityId { get; set; }
 
         /// <summary>
         /// FullName of the entity type.
         /// </summary>
-        [MaxLength(MaxEntityTypeFullNameLength)]
+        [StringLength(MaxEntityTypeFullNameLength)]
         public virtual string EntityTypeFullName { get; set; }
 
         /// <summary>
