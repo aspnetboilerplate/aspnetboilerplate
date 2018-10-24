@@ -7,6 +7,8 @@ namespace Abp.Auditing
     {
         public bool IsEnabled { get; set; }
 
+        public bool RunInBackground { get; set; }
+
         public bool IsEnabledForAnonymousUsers { get; set; }
 
         public IAuditingSelectorList Selectors { get; }
@@ -18,6 +20,7 @@ namespace Abp.Auditing
             IsEnabled = true;
             Selectors = new AuditingSelectorList();
             IgnoredTypes = new List<Type>();
+            RunInBackground = false;
         }
     }
 }
