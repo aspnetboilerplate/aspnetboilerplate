@@ -2,12 +2,14 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
+using System.Threading;
 using System.Threading.Tasks;
 using System.Transactions;
 using Abp.Collections.Extensions;
 using Abp.Dependency;
 using Abp.Domain.Uow;
 using Abp.Runtime.Session;
+using Abp.Threading;
 using Abp.Timing;
 using Castle.Core.Logging;
 
@@ -162,11 +164,13 @@ namespace Abp.Auditing
         {
             if (_configuration.RunInBackground)
             {
-                await Task.Factory.StartNew(async () =>
+#pragma warning disable 4014
+                Task.Factory.StartNew(() =>
+#pragma warning restore 4014
                 {
                     try
                     {
-                        await SaveInternalAsync(auditInfo);
+                        SaveInternal(auditInfo);
                     }
                     catch (Exception exception)
                     {
