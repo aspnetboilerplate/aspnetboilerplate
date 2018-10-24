@@ -123,7 +123,7 @@ namespace Abp.TestBase.SampleApplication.Tests.People
 
                 foreach (var person in people)
                 {
-                    await _personRepository.HardDelete(person);
+                    await _personRepository.HardDeleteAsync(person);
                 }
 
                 uow.Complete();

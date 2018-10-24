@@ -39,7 +39,7 @@ namespace Abp.Zero.SampleApp.Tests.Repository
 
                 foreach (var user in users)
                 {
-                    await _useRepository.HardDelete(user);
+                    await _useRepository.HardDeleteAsync(user);
                 }
 
                 uow.Complete();
@@ -76,7 +76,7 @@ namespace Abp.Zero.SampleApp.Tests.Repository
 
             using (var uow = uowManager.Begin())
             {
-                await _useRepository.HardDelete(u => u.Id > 0);
+                await _useRepository.HardDeleteAsync(u => u.Id > 0);
 
                 uow.Complete();
             }

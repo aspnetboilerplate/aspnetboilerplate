@@ -39,7 +39,7 @@ namespace Abp.Zero.Repository
 
                 foreach (var role in roles)
                 {
-                    await _roleRepository.HardDelete(role);
+                    await _roleRepository.HardDeleteAsync(role);
                 }
 
                 uow.Complete();
@@ -76,7 +76,7 @@ namespace Abp.Zero.Repository
 
             using (var uow = uowManager.Begin())
             {
-                await _roleRepository.HardDelete(r => r.Id > 0);
+                await _roleRepository.HardDeleteAsync(r => r.Id > 0);
 
                 uow.Complete();
             }
