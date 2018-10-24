@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
 using Castle.DynamicProxy;
+using Castle.MicroKernel;
 using Castle.MicroKernel.Registration;
 using Castle.Windsor;
 using Castle.Windsor.Installer;
@@ -51,7 +52,7 @@ namespace Abp.Dependency
         /// </summary>
         public IocManager()
         {
-            IocContainer = new WindsorContainer(new DefaultProxyFactory(ProxyGeneratorInstance));
+            IocContainer = CreateContainer();
             _conventionalRegistrars = new List<IConventionalDependencyRegistrar>();
 
             //Register self!
@@ -60,6 +61,11 @@ namespace Abp.Dependency
                     .For<IocManager, IIocManager, IIocRegistrar, IIocResolver>()
                     .Instance(this)
             );
+        }
+
+        protected virtual IWindsorContainer CreateContainer()
+        {
+            return new WindsorContainer(new DefaultProxyFactory(ProxyGeneratorInstance));
         }
 
         /// <summary>
