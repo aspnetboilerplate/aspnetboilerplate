@@ -52,7 +52,7 @@ namespace Abp.Dependency
         /// </summary>
         public IocManager()
         {
-            IocContainer = ConstructContainer(new DefaultProxyFactory(ProxyGeneratorInstance));
+            IocContainer = CreateContainer();
             _conventionalRegistrars = new List<IConventionalDependencyRegistrar>();
 
             //Register self!
@@ -63,9 +63,9 @@ namespace Abp.Dependency
             );
         }
 
-        protected virtual IWindsorContainer ConstructContainer(IProxyFactory proxyFactory)
+        protected virtual IWindsorContainer CreateContainer()
         {
-            return new WindsorContainer(proxyFactory);
+            return new WindsorContainer(new DefaultProxyFactory(ProxyGeneratorInstance));
         }
 
         /// <summary>
