@@ -39,8 +39,44 @@ namespace Abp.Zero.Repository
 
                 foreach (var role in roles)
                 {
-                    await _roleRepository.HardDelete(role);
+                    await _roleRepository.HardDeleteAsync(role);
                 }
+
+                uow.Complete();
+            }
+
+            using (var uow = uowManager.Begin())
+            {
+                using (uowManager.Current.DisableFilter(AbpDataFilters.SoftDelete))
+                {
+                    var roles = _roleRepository.GetAllList();
+                    roles.Count.ShouldBe(1);
+                    roles.First().NormalizedName.ShouldBe("ADMIN");
+                }
+
+                uow.Complete();
+            }
+        }
+
+        [Fact]
+        public async Task Should_Permanently_Delete_Multiple_SoftDelete_Entities_With_HarDelete_Method()
+        {
+            LoginAsDefaultTenantAdmin();
+
+            var uowManager = Resolve<IUnitOfWorkManager>();
+
+            // Soft-Delete admin
+            using (var uow = uowManager.Begin())
+            {
+                var admin = await _roleRepository.FirstOrDefaultAsync(u => u.NormalizedName == "ADMIN");
+                await _roleRepository.DeleteAsync(admin);
+
+                uow.Complete();
+            }
+
+            using (var uow = uowManager.Begin())
+            {
+                await _roleRepository.HardDeleteAsync(r => r.Id > 0);
 
                 uow.Complete();
             }
