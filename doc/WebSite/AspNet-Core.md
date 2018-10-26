@@ -115,6 +115,8 @@ service **interfaces** for application services. This is not
 required for the ASP.NET Core integration.  The MVC attributes should be
 added to the service classes, even if you have interfaces.
 
+**Note**: To use Mvc datetime format options, you can set this property `Configuration.Modules.AbpAspNetCore().UseMvcDateTimeFormatForAppServices`. Its default value is `false`. 
+
 ### Filters
 
 ABP defines some **pre-built filters** for ASP.NET Core. All of them are
