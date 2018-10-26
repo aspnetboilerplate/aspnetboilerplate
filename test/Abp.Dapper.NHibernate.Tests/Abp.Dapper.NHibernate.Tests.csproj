@@ -5,8 +5,8 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="Shouldly" Version="3.0.0" />
-    <PackageReference Include="System.Data.SQLite" Version="1.0.108" />
+    <PackageReference Include="Shouldly" Version="3.0.1" />
+    <PackageReference Include="System.Data.SQLite" Version="1.0.109.2" />
     <PackageReference Include="xunit" Version="2.4.0" />
   </ItemGroup>
 
