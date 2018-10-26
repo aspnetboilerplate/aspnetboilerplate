@@ -20,8 +20,8 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <None Include="bin\Release\net461\Abp.NHibernate.pdb">
-      <PackagePath>lib/net461/</PackagePath>
+    <None Include="bin\Release\netstandard2.0\Abp.NHibernate.pdb">
+      <PackagePath>lib/netstandard2.0/</PackagePath>
       <Pack>true</Pack>
     </None>
   </ItemGroup>
