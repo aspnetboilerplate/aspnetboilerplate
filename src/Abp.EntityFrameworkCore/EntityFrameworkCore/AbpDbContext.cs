@@ -292,7 +292,7 @@ namespace Abp.EntityFrameworkCore
 
         protected virtual bool IsHardDeleteEntity(EntityEntry entry)
         {
-            if (CurrentUnitOfWorkProvider.Current?.Items == null)
+            if (CurrentUnitOfWorkProvider?.Current?.Items == null)
             {
                 return false;
             }
