@@ -311,7 +311,7 @@ namespace Abp.EntityFramework
 
         protected virtual bool IsHardDeleteEntity(DbEntityEntry entry)
         {
-            if (CurrentUnitOfWorkProvider.Current?.Items == null)
+            if (CurrentUnitOfWorkProvider?.Current?.Items == null)
             {
                 return false;
             }
