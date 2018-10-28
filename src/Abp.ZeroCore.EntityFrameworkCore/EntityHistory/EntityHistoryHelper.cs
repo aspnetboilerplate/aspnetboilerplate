@@ -250,7 +250,7 @@ namespace Abp.EntityHistory
             return entity is ISoftDelete && entity.As<ISoftDelete>().IsDeleted;
         }
 
-        private bool ShouldSaveEntityHistory(EntityEntry entityEntry, bool defaultValue = false)
+        private bool ShouldSaveEntityHistory(EntityEntry entityEntry)
         {
             if (entityEntry.State == EntityState.Detached ||
                 entityEntry.State == EntityState.Unchanged)
@@ -289,7 +289,7 @@ namespace Abp.EntityHistory
                 return true;
             }
 
-            return defaultValue;
+            return false;
         }
 
         private bool ShouldSavePropertyHistory(PropertyEntry propertyEntry, bool shouldSaveEntityHistory, bool defaultValue)
