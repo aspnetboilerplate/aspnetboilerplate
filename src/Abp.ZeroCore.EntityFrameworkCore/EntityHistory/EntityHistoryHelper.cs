@@ -129,8 +129,6 @@ namespace Abp.EntityHistory
         [CanBeNull]
         private EntityChange CreateEntityChange(EntityEntry entityEntry, bool shouldSaveEntityHistory)
         {
-            var entity = entityEntry.Entity;
-
             EntityChangeType changeType;
             switch (entityEntry.State)
             {
@@ -157,7 +155,7 @@ namespace Abp.EntityHistory
                 return null;
             }
 
-            var entityType = entity.GetType();
+            var entityType = entityEntry.Entity.GetType();
             var entityChange = new EntityChange
             {
                 ChangeType = changeType,
