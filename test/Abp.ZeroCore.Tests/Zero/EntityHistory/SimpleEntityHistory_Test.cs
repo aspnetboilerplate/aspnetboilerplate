@@ -263,7 +263,7 @@ namespace Abp.Zero.EntityHistory
 
             using (var uow = Resolve<IUnitOfWorkManager>().Begin())
             {
-                var blog2 = new Blog("test-blog-2", "http://testblog2.myblogs.com");
+                var blog2 = new Blog("test-blog-2", "http://testblog2.myblogs.com", "blogger-2");
 
                 blog2Id = _blogRepository.InsertAndGetId(blog2);
 
