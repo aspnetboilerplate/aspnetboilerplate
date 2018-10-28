@@ -150,7 +150,7 @@ namespace Abp.EntityHistory
                     return null;
             }
 
-            var entityId = GetEntityId(entity);
+            var entityId = GetEntityId(entityEntry);
             if (entityId == null && changeType != EntityChangeType.Created)
             {
                 Logger.Error("Unexpected null value for entityId!");
@@ -193,12 +193,10 @@ namespace Abp.EntityHistory
             }
         }
 
-        private string GetEntityId(object entityAsObj)
+        private string GetEntityId(EntityEntry entry)
         {
-            return entityAsObj
-                .GetType().GetProperty("Id")?
-                .GetValue(entityAsObj)?
-                .ToJsonString();
+            var primaryKeys = entry.Properties.Where(p => p.Metadata.IsPrimaryKey());
+            return primaryKeys.First().CurrentValue?.ToJsonString();
         }
 
         /// <summary>
@@ -296,7 +294,7 @@ namespace Abp.EntityHistory
 
         private bool ShouldSavePropertyHistory(PropertyEntry propertyEntry, bool shouldSaveEntityHistory, bool defaultValue)
         {
-            if (propertyEntry.Metadata.Name == "Id")
+            if (propertyEntry.Metadata.IsPrimaryKey())
             {
                 return false;
             }
@@ -339,7 +337,7 @@ namespace Abp.EntityHistory
                 /* Update entity id */
 
                 var entityEntry = entityChange.EntityEntry.As<EntityEntry>();
-                entityChange.EntityId = GetEntityId(entityEntry.Entity);
+                entityChange.EntityId = GetEntityId(entityEntry);
 
                 /* Update foreign keys */
 
