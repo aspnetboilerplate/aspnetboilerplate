@@ -269,6 +269,39 @@ namespace Abp.EntityHistory
                 return false;
             }
 
+            var shouldSaveEntityHistoryForType = ShouldSaveEntityHistoryForType(entityType);
+            if (shouldSaveEntityHistoryForType.HasValue)
+            {
+                return shouldSaveEntityHistoryForType.Value;
+            }
+
+            /*
+            if (!entityType.IsPublic)
+            {
+                return false;
+            }
+
+            if (entityType.GetTypeInfo().IsDefined(typeof(DisableAuditingAttribute), true))
+            {
+                return false;
+            }
+
+            if (entityType.GetTypeInfo().IsDefined(typeof(AuditedAttribute), true))
+            {
+                return true;
+            }
+
+            if (_configuration.Selectors.Any(selector => selector.Predicate(entityType)))
+            {
+                return true;
+            }
+            */
+
+            return false;
+        }
+
+        private bool? ShouldSaveEntityHistoryForType(Type entityType)
+        {
             if (!entityType.IsPublic)
             {
                 return false;
@@ -289,7 +322,7 @@ namespace Abp.EntityHistory
                 return true;
             }
 
-            return false;
+            return null;
         }
 
         private bool ShouldSavePropertyHistory(PropertyEntry propertyEntry, bool shouldSaveEntityHistory, bool defaultValue)
@@ -300,6 +333,40 @@ namespace Abp.EntityHistory
             }
 
             var propertyInfo = propertyEntry.Metadata.PropertyInfo;
+
+            var shouldSavePropertyHistoryForInfo = ShouldSavePropertyHistoryForInfo(propertyInfo, shouldSaveEntityHistory);
+            if (shouldSavePropertyHistoryForInfo.HasValue)
+            {
+                return shouldSavePropertyHistoryForInfo.Value;
+            }
+
+            /*
+            if (propertyInfo != null && propertyInfo.IsDefined(typeof(DisableAuditingAttribute), true))
+            {
+                return false;
+            }
+
+            if (!shouldSaveEntityHistory)
+            {
+                // Should not save property history if property is not audited
+                if (propertyInfo == null || !propertyInfo.IsDefined(typeof(AuditedAttribute), true))
+                {
+                    return false;
+                }
+            }
+            */
+
+            var isModified = !(propertyEntry.OriginalValue?.Equals(propertyEntry.CurrentValue) ?? propertyEntry.CurrentValue == null);
+            if (isModified)
+            {
+                return true;
+            }
+
+            return defaultValue;
+        }
+
+        private bool? ShouldSavePropertyHistoryForInfo(PropertyInfo propertyInfo, bool shouldSaveEntityHistory)
+        {
             if (propertyInfo != null && propertyInfo.IsDefined(typeof(DisableAuditingAttribute), true))
             {
                 return false;
@@ -314,13 +381,7 @@ namespace Abp.EntityHistory
                 }
             }
 
-            var isModified = !(propertyEntry.OriginalValue?.Equals(propertyEntry.CurrentValue) ?? propertyEntry.CurrentValue == null);
-            if (isModified)
-            {
-                return true;
-            }
-
-            return defaultValue;
+            return null;
         }
 
         /// <summary>
