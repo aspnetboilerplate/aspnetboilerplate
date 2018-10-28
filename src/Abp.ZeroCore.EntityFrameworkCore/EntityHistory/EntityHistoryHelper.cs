@@ -275,28 +275,6 @@ namespace Abp.EntityHistory
                 return shouldSaveEntityHistoryForType.Value;
             }
 
-            /*
-            if (!entityType.IsPublic)
-            {
-                return false;
-            }
-
-            if (entityType.GetTypeInfo().IsDefined(typeof(DisableAuditingAttribute), true))
-            {
-                return false;
-            }
-
-            if (entityType.GetTypeInfo().IsDefined(typeof(AuditedAttribute), true))
-            {
-                return true;
-            }
-
-            if (_configuration.Selectors.Any(selector => selector.Predicate(entityType)))
-            {
-                return true;
-            }
-            */
-
             return false;
         }
 
@@ -339,22 +317,6 @@ namespace Abp.EntityHistory
             {
                 return shouldSavePropertyHistoryForInfo.Value;
             }
-
-            /*
-            if (propertyInfo != null && propertyInfo.IsDefined(typeof(DisableAuditingAttribute), true))
-            {
-                return false;
-            }
-
-            if (!shouldSaveEntityHistory)
-            {
-                // Should not save property history if property is not audited
-                if (propertyInfo == null || !propertyInfo.IsDefined(typeof(AuditedAttribute), true))
-                {
-                    return false;
-                }
-            }
-            */
 
             var isModified = !(propertyEntry.OriginalValue?.Equals(propertyEntry.CurrentValue) ?? propertyEntry.CurrentValue == null);
             if (isModified)
