@@ -264,7 +264,9 @@ namespace Abp.EntityHistory
             }
 
             var entityType = entityEntry.Entity.GetType();
-            if (!EntityHelper.IsEntity(entityType))
+            var isOwnedEntity = entityEntry.Metadata.IsOwned();
+
+            if (!EntityHelper.IsEntity(entityType) && !isOwnedEntity)
             {
                 return false;
             }
@@ -273,6 +275,26 @@ namespace Abp.EntityHistory
             if (shouldSaveEntityHistoryForType.HasValue)
             {
                 return shouldSaveEntityHistoryForType.Value;
+            }
+
+            if (isOwnedEntity)
+            {
+                // Check if should save entity history for property that points to this owned entity
+                var foreignKey = entityEntry.Metadata.GetForeignKeys().First();
+                var propertyInfo = foreignKey.PrincipalToDependent.PropertyInfo;
+                var ownerType = foreignKey.PrincipalEntityType.ClrType;
+                var shouldSaveEntityHistoryForOwnerType = ShouldSaveEntityHistoryForType(ownerType);
+                var shouldSaveEntityHistoryForProperty = ShouldSavePropertyHistoryForInfo(propertyInfo, shouldSaveEntityHistoryForOwnerType ?? false);
+                if (shouldSaveEntityHistoryForProperty.HasValue)
+                {
+                    return shouldSaveEntityHistoryForProperty.Value;
+                }
+
+                // Check if should save entity history for owner type
+                if (shouldSaveEntityHistoryForOwnerType.HasValue)
+                {
+                    return shouldSaveEntityHistoryForOwnerType.Value;
+                }
             }
 
             return false;
