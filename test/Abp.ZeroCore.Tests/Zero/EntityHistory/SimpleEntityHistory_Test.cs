@@ -145,6 +145,48 @@ namespace Abp.Zero.EntityHistory
         }
 
         [Fact]
+        public void Should_Write_History_For_Tracked_Entities_Update_Owned()
+        {
+            /* Blog has Audited attribute. */
+
+            int blog1Id;
+            var newValue = "blogger-2";
+            string originalValue;
+
+            using (var uow = Resolve<IUnitOfWorkManager>().Begin())
+            {
+                var blog1 = _blogRepository.Single(b => b.Name == "test-blog-1");
+                blog1Id = blog1.Id;
+
+                originalValue = blog1.More.BloggerName;
+                blog1.More.BloggerName = newValue;
+
+                uow.Complete();
+            }
+
+            Predicate<EntityChangeSet> predicate = s =>
+            {
+                s.EntityChanges.Count.ShouldBe(1);
+
+                var entityChange = s.EntityChanges[0];
+                entityChange.ChangeType.ShouldBe(EntityChangeType.Updated);
+                entityChange.EntityId.ShouldBe(blog1Id.ToJsonString());
+                entityChange.EntityTypeFullName.ShouldBe(typeof(BlogEx).FullName);
+                entityChange.PropertyChanges.Count.ShouldBe(1);
+
+                var propertyChange = entityChange.PropertyChanges.First();
+                propertyChange.NewValue.ShouldBe(newValue.ToJsonString());
+                propertyChange.OriginalValue.ShouldBe(originalValue.ToJsonString());
+                propertyChange.PropertyName.ShouldBe(nameof(BlogEx.BloggerName));
+                propertyChange.PropertyTypeFullName.ShouldBe(typeof(BlogEx).GetProperty(nameof(BlogEx.BloggerName)).PropertyType.FullName);
+
+                return true;
+            };
+
+            _entityHistoryStore.Received().SaveAsync(Arg.Is<EntityChangeSet>(s => predicate(s)));
+        }
+
+        [Fact]
         public void Should_Write_History_For_Tracked_Property_Foreign_Key()
         {
             /* Post.BlogId has Audited attribute. */
