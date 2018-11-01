@@ -48,7 +48,7 @@ Auditing is **enabled by default**. You can disable it as shown below:
         {
             Configuration.Auditing.IsEnabled = false;
         }
-
+    
         //...
     }
 
@@ -60,6 +60,7 @@ Here are the auditing configuration properties:
     are saved for users that are not logged in to the system.
     Default: **false**.
 -   **Selectors**: Used to select other classes to save audit logs.
+-   **RunInBackground**: Used to save audit logs in a background thread.
 
 **Selectors** is a list of predicates to select other types of classes that save
 audit logs. A selector has a unique **name** and a **predicate**. The
@@ -96,13 +97,13 @@ individual **method**. Example:
         {
             //...
         }
-
+    
         [DisableAuditing]
         public void MyMethod2(string b)
         {
             //...
         }
-
+    
         public void MyMethod3(int a, int b)
         {
             //...
