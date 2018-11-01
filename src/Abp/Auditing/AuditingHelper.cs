@@ -135,13 +135,16 @@ namespace Abp.Auditing
             {
                 Task.Factory.StartNew(() =>
                 {
-                    try
+                    using (AbpSession.Use(auditInfo.TenantId, auditInfo.UserId))
                     {
-                        SaveInternal(auditInfo);
-                    }
-                    catch (Exception exception)
-                    {
-                        Logger.Error(exception.Message, exception);
+                        try
+                        {
+                            SaveInternal(auditInfo);
+                        }
+                        catch (Exception exception)
+                        {
+                            Logger.Error(exception.Message, exception);
+                        }
                     }
                 });
             }
@@ -168,13 +171,16 @@ namespace Abp.Auditing
                 Task.Factory.StartNew(() =>
 #pragma warning restore 4014
                 {
-                    try
+                    using (AbpSession.Use(auditInfo.TenantId, auditInfo.UserId))
                     {
-                        SaveInternal(auditInfo);
-                    }
-                    catch (Exception exception)
-                    {
-                        Logger.Error(exception.Message, exception);
+                        try
+                        {
+                            SaveInternal(auditInfo);
+                        }
+                        catch (Exception exception)
+                        {
+                            Logger.Error(exception.Message, exception);
+                        }
                     }
                 });
             }
