@@ -32,7 +32,8 @@ namespace Abp.AspNetCore.Mvc.Antiforgery
             }
 
             //Always perform antiforgery validation when request contains authentication cookie
-            if (context.HttpContext.Request.Cookies.ContainsKey(_cookieAuthenticationOptions.Cookie.Name))
+            if (_cookieAuthenticationOptions.Cookie.Name != null &&
+                context.HttpContext.Request.Cookies.ContainsKey(_cookieAuthenticationOptions.Cookie.Name))
             {
                 return true;
             }
