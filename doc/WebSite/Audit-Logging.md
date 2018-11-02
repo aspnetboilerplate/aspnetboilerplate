@@ -60,7 +60,6 @@ Here are the auditing configuration properties:
     are saved for users that are not logged in to the system.
     Default: **false**.
 -   **Selectors**: Used to select other classes to save audit logs.
--   **RunInBackground**: Used to save audit logs in a background thread.
 
 **Selectors** is a list of predicates to select other types of classes that save
 audit logs. A selector has a unique **name** and a **predicate**. The
