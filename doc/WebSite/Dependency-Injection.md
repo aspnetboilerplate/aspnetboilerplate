@@ -243,7 +243,7 @@ objects, and is made only once during the application's startup.
 
 Note that we also set the **life cycle** of the objects as **transient**.
 This means that whenever we resolve an object of these types, a new instance
-is created. There are many different life cycles, such as the **singletion**, 
+is created. There are many different life cycles, such as the **singleton**, 
 for example.
 
 ### ASP.NET Boilerplate Dependency Injection Infrastructure
