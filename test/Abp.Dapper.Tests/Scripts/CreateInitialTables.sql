@@ -24,6 +24,10 @@
 										,	TenantId INTEGER
 									);
 
- 
+  CREATE TABLE IF NOT EXISTS Person (
+											Id INTEGER PRIMARY KEY
+										,	Name varchar(100) 
+										,	TenantId INTEGER
+									);
 
  
