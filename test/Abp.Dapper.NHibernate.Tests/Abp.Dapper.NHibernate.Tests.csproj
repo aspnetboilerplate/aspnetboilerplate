@@ -5,8 +5,9 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <PackageReference Include="Microsoft.Data.Sqlite" Version="2.1.0" />
     <PackageReference Include="Shouldly" Version="3.0.1" />
-    <PackageReference Include="System.Data.SQLite" Version="1.0.109.2" />
+    <PackageReference Include="System.Data.SQLite.Core" Version="1.0.109.2" />
     <PackageReference Include="xunit" Version="2.4.0" />
   </ItemGroup>
 
@@ -15,12 +16,6 @@
     <ProjectReference Include="..\..\src\Abp.NHibernate\Abp.NHibernate.csproj" />
     <ProjectReference Include="..\..\src\Abp.TestBase\Abp.TestBase.csproj" />
     <ProjectReference Include="..\..\src\Abp\Abp.csproj" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <None Update="SQLite.Interop.dll">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </None>
   </ItemGroup>
 
 </Project>
