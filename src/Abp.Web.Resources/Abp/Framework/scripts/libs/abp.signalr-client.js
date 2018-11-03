@@ -41,7 +41,7 @@ var abp = abp || {};
 
     // Connect to the server
     abp.signalr.connect = function () {
-        var url = abp.signalr.url || '/signalr';
+        var url = abp.signalr.url || (abp.appPath + 'signalr');
 
         // Start the connection.
         startConnection(url, configureConnection)
@@ -69,12 +69,14 @@ var abp = abp || {};
 
         // Add query string: https://github.com/aspnet/SignalR/issues/680
         if (abp.signalr.qs) {
-            url += '?' + abp.signalr.qs;
+            url += (url.indexOf('?') == -1 ? '?' : '&') + abp.signalr.qs;
         }
 
         return function start(transport) {
-            abp.log.debug('Starting connection using ' + signalR.TransportType[transport] + ' transport');
-            var connection = new signalR.HubConnection(url, { transport: transport });
+            abp.log.debug('Starting connection using ' + signalR.HttpTransportType[transport] + ' transport');
+            var connection = new signalR.HubConnectionBuilder()
+                .withUrl(url, transport)
+                .build();
             if (configureConnection && typeof configureConnection === 'function') {
                 configureConnection(connection);
             }
@@ -84,14 +86,14 @@ var abp = abp || {};
                     return connection;
                 })
                 .catch(function (error) {
-                    abp.log.debug('Cannot start the connection using ' + signalR.TransportType[transport] + ' transport. ' + error.message);
-                    if (transport !== signalR.TransportType.LongPolling) {
+                    abp.log.debug('Cannot start the connection using ' + signalR.HttpTransportType[transport] + ' transport. ' + error.message);
+                    if (transport !== signalR.HttpTransportType.LongPolling) {
                         return start(transport + 1);
                     }
 
                     return Promise.reject(error);
                 });
-        }(signalR.TransportType.WebSockets);
+        }(signalR.HttpTransportType.WebSockets);
     }
 
     abp.signalr.startConnection = startConnection;

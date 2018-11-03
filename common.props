@@ -1,6 +1,6 @@
 <Project>
   <PropertyGroup>
-    <Version>3.5.0</Version>
+    <Version>4.0.1</Version>
     <NoWarn>$(NoWarn);CS1591</NoWarn>
     <PackageIconUrl>http://www.aspnetboilerplate.com/images/abp_nupkg.png</PackageIconUrl>
     <PackageProjectUrl>http://www.aspnetboilerplate.com/</PackageProjectUrl>
@@ -14,7 +14,7 @@
   </PropertyGroup>
   
   <ItemGroup>
-    <PackageReference Include="SourceLink.Create.CommandLine" Version="2.8.0" PrivateAssets="All" />
+    <PackageReference Include="SourceLink.Create.CommandLine" Version="2.8.1" PrivateAssets="All" />
   </ItemGroup>
 
 </Project>

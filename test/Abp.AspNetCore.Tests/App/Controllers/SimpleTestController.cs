@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Globalization;
-using System.Threading;
 using System.Threading.Tasks;
 using Abp.AspNetCore.App.Models;
 using Abp.AspNetCore.Mvc.Controllers;
@@ -49,7 +48,7 @@ namespace Abp.AspNetCore.App.Controllers
         [WrapResult]
         public void GetVoidTest()
         {
-            
+
         }
 
         [DontWrapResult]
@@ -119,6 +118,15 @@ namespace Abp.AspNetCore.App.Controllers
             return new SimpleDateModel3
             {
                 Date = Convert.ToDateTime(date)
+            };
+        }
+
+        [HttpGet]
+        public SimpleDateModel4 GetNotNormalizedDateTimeKindProperty4([DisableDateTimeNormalization]DateTime date)
+        {
+            return new SimpleDateModel4
+            {
+                Date = date
             };
         }
 

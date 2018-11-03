@@ -92,16 +92,18 @@ ASP.NET Boilerplate can work with all the scenarios described above.
 
 #### Enabling Multi-Tenancy
 
-Multi-tenancy is disabled by default. We can enable it in PreInitialize method
+Multi-tenancy is disabled by default for Framework level. We can enable it in PreInitialize method
 of our module as shown below:
 
     Configuration.MultiTenancy.IsEnabled = true; 
+
+**Note:** Multi-tenancy is enabled in both ASP.NET Core and ASP.NET MVC 5.x startup templates.
 
 #### Host vs Tenant
 
 We define two terms used in a multi-tenant system:
 
--   **Tenant**: A customer which has it's own users, roles,
+-   **Tenant**: A customer which has its own users, roles,
     permissions, settings... and uses the application completely
     isolated from other tenants. A multi-tenant application will have
     one or more tenants. If this is a CRM application, different tenants
@@ -202,9 +204,9 @@ IMustHaveTenant:
     public class Product : Entity, IMustHaveTenant
     {
         public int TenantId { get; set; }
-    
+
         public string Name { get; set; }
-    
+
         //...other properties
     }
 
@@ -221,9 +223,9 @@ in this case. An example entity that implements IMayHaveTenant:
     public class Role : Entity, IMayHaveTenant
     {
         public int? TenantId { get; set; }
-    
+
         public string RoleName { get; set; }
-    
+
         //...other properties
     }
 
@@ -260,13 +262,13 @@ this behavior and switch to another tenant's database. Example:
     {
         private readonly IRepository<Product> _productRepository;
         private readonly IUnitOfWorkManager _unitOfWorkManager;
-    
+
         public ProductService(IRepository<Product> productRepository, IUnitOfWorkManager unitOfWorkManager)
         {
             _productRepository = productRepository;
             _unitOfWorkManager = unitOfWorkManager;
         }
-    
+
         [UnitOfWork]
         public virtual List<Product> GetProducts(int tenantId)
         {

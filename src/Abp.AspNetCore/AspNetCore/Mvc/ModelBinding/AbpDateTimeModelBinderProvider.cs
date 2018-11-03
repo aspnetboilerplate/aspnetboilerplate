@@ -14,6 +14,11 @@ namespace Abp.AspNetCore.Mvc.ModelBinding
                 return null;
             }
 
+            if (context.Metadata.ContainerType == null)
+            {
+                return null;
+            }
+
             var dateNormalizationDisabledForClass = context.Metadata.ContainerType.IsDefined(typeof(DisableDateTimeNormalizationAttribute), true);
             var dateNormalizationDisabledForProperty = context.Metadata.ContainerType
                                                                         .GetProperty(context.Metadata.PropertyName)

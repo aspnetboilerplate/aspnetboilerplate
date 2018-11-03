@@ -48,7 +48,7 @@ public class Person : <strong>AuditedEntity&lt;Guid&gt;</strong>
     public const int MaxNameLength = 32;
 
     [Required]
-    [MaxLength(MaxNameLength)]
+    [StringLength(MaxNameLength)]
     public string Name { get; set; }
 
     public Person()
@@ -307,10 +307,10 @@ namespace Acme.SimpleTaskApp.Tasks.Dtos
     public class CreateTaskInput
     {
         [Required]
-        [MaxLength(<strong>Task.MaxTitleLength</strong>)]
+        [StringLength(<strong>Task.MaxTitleLength</strong>)]
         public string Title { get; set; }
 
-        [MaxLength(<strong>Task.MaxDescriptionLength</strong>)]
+        [StringLength(<strong>Task.MaxDescriptionLength</strong>)]
         public string Description { get; set; }
 
         public Guid? AssignedPersonId { get; set; }

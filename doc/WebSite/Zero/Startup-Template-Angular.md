@@ -81,9 +81,13 @@ actual dashboard.
 #### Deployment of Angular Application
 
 We used the **angular-cli** tooling to build an Angular solution. You can use the
-`ng build -prod` command to publish your project. It publishes to the **dist**
+`ng build --prod` command to publish your project. It publishes to the **dist**
 folder by default. You can then host this folder on IIS or any web
 server you like.
+
+##### Merged Project
+
+If you have merged Angular UI project into ASP.NET Core project then you only need to publish your .Host project. After publish .Host project, you should copy files that are in .Host/wwwroot/dist folder to publish_folder/wwwroot. For example: Move files in .Host/wwwroot/dist to C:\inetpub\wwwroot\my-website\wwwroot
 
 ### Solution Details & Other Features
 

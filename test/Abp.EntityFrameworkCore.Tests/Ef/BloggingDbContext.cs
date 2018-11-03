@@ -9,6 +9,8 @@ namespace Abp.EntityFrameworkCore.Tests.Ef
 
         public DbSet<Post> Posts { get; set; }
 
+        public DbSet<Comment> Comments { get; set; }
+
         public DbSet<BlogCategory> BlogCategories { get; set; }
 
         public DbSet<SubBlogCategory> SubBlogCategories { get; set; }

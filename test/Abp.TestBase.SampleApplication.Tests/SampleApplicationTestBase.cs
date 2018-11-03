@@ -113,15 +113,15 @@ namespace Abp.TestBase.SampleApplication.Tests
             UsingDbContext(
               context =>
               {
-                  AddCompany(context, 
+                  AddCompany(context,
                       "Volosoft",
                       "Turkey",
-                      "Istanbul", 
-                      "Denizkoskler Mah. Avcilar", 
+                      "Istanbul",
+                      "Denizkoskler Mah. Avcilar",
                       "Halil",
                       "Gumuspala Mah. Avcilar",
-                      "Ismail", 
-                      "Headquarter", 
+                      "Ismail",
+                      "Headquarter",
                       "Europe Headquarter");
 
                   AddCompany(context,
@@ -137,7 +137,7 @@ namespace Abp.TestBase.SampleApplication.Tests
               });
         }
 
-        private void AddCompany(SampleApplicationDbContext context,string name,string country, string city, string address1, string modifier1, string address2, string modifier2, string branchName1, string branchName2)
+        private void AddCompany(SampleApplicationDbContext context, string name, string country, string city, string address1, string modifier1, string address2, string modifier2, string branchName1, string branchName2)
         {
             var company = new Company
             {
@@ -184,7 +184,7 @@ namespace Abp.TestBase.SampleApplication.Tests
 
             context.Companies.Add(company);
         }
-        
+
         public void UsingDbContext(Action<SampleApplicationDbContext> action)
         {
             using (var context = LocalIocManager.Resolve<SampleApplicationDbContext>())

@@ -26,7 +26,20 @@ namespace Abp.EntityFrameworkCore.Tests
                     context.Blogs.Add(blog1);
                     context.SaveChanges();
 
-                    var post1 = new Post { Blog = blog1, Title = "test-post-1-title", Body = "test-post-1-body" };
+                    var post1 = new Post
+                    {
+                        Blog = blog1,
+                        Title = "test-post-1-title",
+                        Body = "test-post-1-body",
+                        Comments = new List<Comment>
+                        {
+                            new Comment
+                            {
+                                Content = "This is a great post !"
+                            }
+                        }
+                    };
+
                     var post2 = new Post { Blog = blog1, Title = "test-post-2-title", Body = "test-post-2-body" };
                     var post3 = new Post { Blog = blog1, Title = "test-post-3-title", Body = "test-post-3-body-deleted", IsDeleted = true };
                     var post4 = new Post { Blog = blog1, Title = "test-post-4-title", Body = "test-post-4-body", TenantId = 42 };
@@ -54,8 +67,8 @@ namespace Abp.EntityFrameworkCore.Tests
             {
                 context.Tickets.AddRange(
                     new Ticket { EmailAddress = "john@aspnetboilerplate.com", Message = "an active message", TenantId = 1 },
-                    new Ticket { EmailAddress = "david@aspnetboilerplate.com", Message = "an inactive message", IsActive = false, TenantId = 1},
-                    new Ticket { EmailAddress = "smith@aspnetboilerplate.com", Message = "an active message of tenant 42", TenantId = 42}
+                    new Ticket { EmailAddress = "david@aspnetboilerplate.com", Message = "an inactive message", IsActive = false, TenantId = 1 },
+                    new Ticket { EmailAddress = "smith@aspnetboilerplate.com", Message = "an active message of tenant 42", TenantId = 42 }
                 );
 
                 context.SaveChanges();

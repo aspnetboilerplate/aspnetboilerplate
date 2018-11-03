@@ -11,7 +11,7 @@ namespace Abp.Web.Mvc.ModelBinding.Binders
             var date = base.BindModel(controllerContext, bindingContext) as DateTime?;
             if (date == null)
             {
-                return true;
+                return null;
             }
 
             if (bindingContext.ModelMetadata.ContainerType != null)

@@ -132,7 +132,7 @@ and pass it to the constructor of the PersonAppService:
 
     var repository = new PersonRepository();
     var personService = new PersonAppService(repository);
-    personService.CreatePerson("Yunus Emre", 19);
+    personService.CreatePerson("John Doe", 32);
 
 Constructor Injection is a great way of making a class independent to the
 creation of dependent objects, but there are some problems with the code
@@ -192,7 +192,7 @@ set the Logger property after creating the PersonAppService object:
 
     var personService = new PersonAppService(new PersonRepository());
     personService.Logger = new Log4NetLogger();
-    personService.CreatePerson("Yunus Emre", 19);
+    personService.CreatePerson("John Doe", 32);
 
 Assume that Log4NetLogger implements ILogger and it writes logs using the
 Log4Net library so that PersonAppService can actually write logs. If we
@@ -230,7 +230,7 @@ resolve (create) an object. In Castle Windsor, it's something like that:
         );
 
     var personService = container.Resolve<IPersonAppService>();
-    personService.CreatePerson("Yunus Emre", 19);
+    personService.CreatePerson("John Doe", 32);
 
 First, we created the **WindsorContainer** and **registered** 
 PersonRepository and PersonAppService with their interfaces. We then
@@ -313,7 +313,7 @@ should add it in pre-initialize method of your module.
 
 You may want to register a specific class that does not fit into the
 conventional registration rules. ASP.NET Boilerplate provides the
-**ITransientDependency** and the **ISingletonDependency** interfaces as a
+**ITransientDependency**, the **IPerWebRequestDependency** and the **ISingletonDependency** interfaces as a
 shortcut. For example:
 
     public interface IPersonManager
@@ -332,6 +332,8 @@ dependency is declared as a **Singleton**. A single instance of
 MyPersonManager is created and the same object is passed to all needed
 classes. It's instantiated in it's first use, and then used in the
 whole life of the application.
+
+**NOTE:** The **IPerWebRequestDependency** can only be used in the web layer.
 
 ##### Custom/Direct Registration
 
@@ -415,13 +417,13 @@ injected and used easily. Example:
         {
             //Resolving, using and releasing manually
             var personService1 = _iocResolver.Resolve<PersonAppService>();
-            personService1.CreatePerson(new CreatePersonInput { Name = "Yunus", Surname = "Emre" });
+            personService1.CreatePerson(new CreatePersonInput { Name = "John", Surname = "Doe" });
             _iocResolver.Release(personService1);
 
             //Resolving and using in a safe way
             using (var personService2 = _iocResolver.ResolveAsDisposable<PersonAppService>())
             {
-                personService2.Object.CreatePerson(new CreatePersonInput { Name = "Yunus", Surname = "Emre" });
+                personService2.Object.CreatePerson(new CreatePersonInput { Name = "John", Surname = "Doe" });
             }
         }
     }

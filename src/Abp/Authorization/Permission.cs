@@ -87,15 +87,20 @@ namespace Abp.Authorization
         /// </summary>
         /// <returns>Returns newly created child permission</returns>
         public Permission CreateChildPermission(
-            string name, 
-            ILocalizableString displayName = null, 
-            ILocalizableString description = null, 
+            string name,
+            ILocalizableString displayName = null,
+            ILocalizableString description = null,
             MultiTenancySides multiTenancySides = MultiTenancySides.Host | MultiTenancySides.Tenant,
             IFeatureDependency featureDependency = null)
         {
             var permission = new Permission(name, displayName, description, multiTenancySides, featureDependency) { Parent = this };
             _children.Add(permission);
             return permission;
+        }
+
+        public void RemoveChildPermission(string name)
+        {
+            _children.RemoveAll(p => p.Name == name);
         }
 
         public override string ToString()

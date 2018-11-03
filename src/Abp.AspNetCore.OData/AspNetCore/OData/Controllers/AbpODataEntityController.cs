@@ -44,7 +44,7 @@ namespace Abp.AspNetCore.OData.Controllers
             return SingleResult.Create(entity);
         }
 
-        public virtual async Task<IActionResult> Post(TEntity entity)
+        public virtual async Task<IActionResult> Post([FromBody] TEntity entity)
         {
             if (!ModelState.IsValid)
             {
@@ -57,7 +57,7 @@ namespace Abp.AspNetCore.OData.Controllers
             return Created(createdEntity);
         }
 
-        public virtual async Task<IActionResult> Patch([FromODataUri] TPrimaryKey key, Delta<TEntity> entity)
+        public virtual async Task<IActionResult> Patch([FromODataUri] TPrimaryKey key, [FromBody] Delta<TEntity> entity)
         {
             if (!ModelState.IsValid)
             {
@@ -75,7 +75,7 @@ namespace Abp.AspNetCore.OData.Controllers
             return Updated(entity);
         }
 
-        public virtual async Task<IActionResult> Put([FromODataUri] TPrimaryKey key, TEntity update)
+        public virtual async Task<IActionResult> Put([FromODataUri] TPrimaryKey key, [FromBody] TEntity update)
         {
             if (!ModelState.IsValid)
             {

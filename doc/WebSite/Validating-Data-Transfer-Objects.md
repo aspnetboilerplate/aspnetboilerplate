@@ -30,7 +30,7 @@ task by when it gets an input as shown below:
     public class CreateTaskInput
     {
         public int? AssignedPersonId { get; set; }
-
+    
         [Required]
         public string Description { get; set; }
     }
@@ -46,22 +46,22 @@ implementation:
     {
         private readonly ITaskRepository _taskRepository;
         private readonly IPersonRepository _personRepository;
-
+    
         public TaskAppService(ITaskRepository taskRepository, IPersonRepository personRepository)
         {
             _taskRepository = taskRepository;
             _personRepository = personRepository;
         }
-
+    
         public void CreateTask(CreateTaskInput input)
         {
             var task = new Task { Description = input.Description };
-
+    
             if (input.AssignedPersonId.HasValue)
             {
                 task.AssignedPerson = _personRepository.Load(input.AssignedPersonId.Value);
             }
-
+    
             _taskRepository.Insert(task);
         }
     }
@@ -84,13 +84,13 @@ the **ICustomValidate** interface as shown below:
     public class CreateTaskInput : ICustomValidate
     {
         public int? AssignedPersonId { get; set; }
-
+    
         public bool SendEmailToAssignedPerson { get; set; }
-
+    
         [Required]
         public string Description { get; set; }
-
-        public void AddValidationErrors(CustomValidatationContext context)
+    
+        public void AddValidationErrors(CustomValidationContext context)
         {
             if (SendEmailToAssignedPerson && (!AssignedPersonId.HasValue || AssignedPersonId.Value <= 0))
             {
@@ -110,6 +110,60 @@ In addition to ICustomValidate, ABP also supports .NET's standard
 IValidatableObject interface. You can also implement it to perform
 additional custom validations. If you implement both interfaces, both of
 them will be called.
+
+### Fluent Validation
+
+In order to use [FluentValidation](https://github.com/JeremySkinner/FluentValidation), you need to install [Abp.FluentValidation](https://www.nuget.org/packages/Abp.FluentValidation) package first.
+
+```
+Install-Package Abp.FluentValidation
+```
+
+Then, You should set a dependency to AbpFluentValidationModule from your module. Example:
+
+```
+[DependsOn(typeof(AbpFluentValidationModule))]
+public class MyProjectAppModule : AbpModule
+{
+	
+}
+```
+
+After all, you can define your [FluentValidation](https://github.com/JeremySkinner/FluentValidation) validators to validate matching input classes.
+
+As an example, if you have an input class and a Controller which uses this class as it's input parameter;
+
+```
+public class MyCustomArgument1
+{
+	public int Value { get; set; }
+}
+
+public class MyTestController : AbpController {
+
+	public JsonResult GetJsonValue([FromQuery] MyCustomArgument1 arg1)
+	{
+		return Json(new MyCustomArgument1
+		{
+			Value = arg1.Value
+		});
+	}
+}
+```
+
+If you want to limit the value of MyCustomArgument1's Value field between 1 and 99, you can define a validator like the one below;
+
+```
+public class MyCustomArgument1Validator : AbstractValidator<MyCustomArgument1>
+{
+	public MyCustomArgument1Validator()
+	{
+		RuleFor(x => x.Value).InclusiveBetween(1, 99);
+	}
+}
+```
+
+ABP will run MyCustomArgument1Validator to validate MyCustomArgument1 class automatically.
 
 ### Disabling Validation
 
@@ -133,7 +187,7 @@ it's not supplied, we want to set a default sorting:
     public class GetTasksInput : IShouldNormalize
     {
         public string Sorting { get; set; }
-
+    
         public void Normalize()
         {
             if (string.IsNullOrWhiteSpace(Sorting))

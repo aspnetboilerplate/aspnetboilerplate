@@ -21,12 +21,12 @@ insert an entity into a database:
     public class PersonAppService : IPersonAppService
     {
         private readonly IRepository<Person> _personRepository;
-
+    
         public PersonAppService(IRepository<Person> personRepository)
         {
             _personRepository = personRepository;
         }
-
+    
         public void CreatePerson(CreatePersonInput input)
         {        
             person = new Person { Name = input.Name, EmailAddress = input.EmailAddress };
@@ -48,7 +48,7 @@ A repository definition for a Person entity is shown below:
 
     public interface IPersonRepository : IRepository<Person>
     {
-
+    
     }
 
 IPersonRepository extends **IRepository&lt;TEntity&gt;**. It's used to
@@ -58,7 +58,7 @@ entity's primary key is not an int, you can extend the
 
     public interface IPersonRepository : IRepository<Person, long>
     {
-
+    
     }
 
 #### Custom Repository Implementation
@@ -124,6 +124,7 @@ does not implements it, the Load method works identically to the Get method.
     List<TEntity> GetAllList(Expression<Func<TEntity, bool>> predicate);
     Task<List<TEntity>> GetAllListAsync(Expression<Func<TEntity, bool>> predicate);
     IQueryable<TEntity> GetAll();
+    IQueryable<TEntity> GetAllIncluding(params Expression<Func<TEntity, object>>[] propertySelectors)
 
 The **GetAllList** method is used to retrieve all entities from the database. An overload
 of it can be used to filter entities. Examples:
@@ -140,12 +141,18 @@ after it. Examples:
                 orderby person.Name
                 select person;
     var people = query.ToList();
-
+    
     //Example 2:
     List<Person> personList2 = _personRepository.GetAll().Where(p => p.Name.Contains("H")).OrderBy(p => p.Name).Skip(40).Take(20).ToList();
 
 When using GetAll, almost all queries can be written in Linq. It
 can even be used in a join expression!
+
+The **GetAllIncluding** allows to specify related data to be included in query results. In the following example, people will be retrieved with their Addresses property populated.
+
+```
+var allPeople = await _personRepository.GetAllIncluding(p => p.Addresses).ToListAsync();
+```
 
 #### About IQueryable&lt;T&gt;
 
@@ -253,16 +260,16 @@ model:
     public class PersonAppService : AbpWpfDemoAppServiceBase, IPersonAppService
     {
         private readonly IRepository<Person> _personRepository;
-
+    
         public PersonAppService(IRepository<Person> personRepository)
         {
             _personRepository = personRepository;
         }
-
+    
         public async Task<GetPeopleOutput> GetAllPeople()
         {
             var people = await _personRepository.GetAllListAsync();
-
+    
             return new GetPeopleOutput
             {
                 People = Mapper.Map<List<PersonDto>>(people)

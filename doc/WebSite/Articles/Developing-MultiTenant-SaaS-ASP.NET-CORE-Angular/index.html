@@ -1,5 +1,5 @@
 <i id="abp-title" data-title="Developing a Multi-Tenant SaaS Application with ASP.NET Core, Entity Framework and Angular"></i>
- 
+
 <ul class="download">
 	<li>Get the source code from the <a href="https://github.com/aspnetboilerplate/eventcloud/tree/master/aspnet-core-angular">GitHub repository.</a></li>
 </ul>
@@ -64,7 +64,7 @@
 
 <p>In this article, I will show key parts of the project and explain it. So, please download the sample project, open in <strong>Visual Studio 2017+</strong> and run migrations just like above before reading rest of the article (Be sure that there is no database named EventCloud before running the migrations). I will follow some <strong>DDD (Domain Driven Design)</strong> techniques to create domain (business) layer and application layer.</p>
 
-<p>Event Cloud is a free SaaS (multi-tenant) application. We can create a tenant which has it's own events, users, roles... There are some simple business rules applied while creating, canceling and registering to an event.</p>
+<p>Event Cloud is a free SaaS (multi-tenant) application. We can create a tenant which has its own events, users, roles... There are some simple business rules applied while creating, canceling and registering to an event.</p>
 
 <p>So, let's start to investigate the source code.</p>
 
@@ -599,8 +599,8 @@ public class EventAppService : EventCloudAppServiceBase, IEventAppService
 <pre><code class="ts language-ts">import { Component, Injector, ViewChild } from '@angular/core';
 import { appModuleAnimation } from '@shared/animations/routerTransition';
 import { EventServiceProxy, EventListDto, ListResultDtoOfEventListDto, EntityDtoOfGuid } from '@shared/service-proxies/service-proxies';
-import { PagedListingComponentBase, PagedRequestDto } from "shared/paged-listing-component-base";
-import { CreateEventComponent } from "app/events/create-event/create-event.component";
+import { PagedListingComponentBase, PagedRequestDto } from 'shared/paged-listing-component-base';
+import { CreateEventComponent } from 'app/events/create-event/create-event.component';
 
 @Component({
     templateUrl: './events.component.html',
@@ -781,12 +781,12 @@ export class SideBarNavComponent extends AppComponentBase {
         new MenuItem(this.l("Events"), "Pages.Events", "event", "/app/events"),
         new MenuItem(this.l("About"), "", "info", "/app/about"),
 
-...        
+...
 </code></pre>
 
 <h4 id="angularroute">Angular Route</h4>
 
-<p>Defining the menu only shows it on the page. Angular has it's own route system. Routes are defined in app-routing-module.ts as shown below:</p>
+<p>Defining the menu only shows it on the page. Angular has its own route system. Routes are defined in app-routing-module.ts as shown below:</p>
 
 <pre><code class="ts language-ts">import { NgModule } from '@angular/core';
 import { RouterModule } from '@angular/router';
@@ -796,9 +796,9 @@ import { HomeComponent } from './home/home.component';
 import { AboutComponent } from './about/about.component';
 import { UsersComponent } from './users/users.component';
 import { TenantsComponent } from './tenants/tenants.component';
-import { RolesComponent } from "app/roles/roles.component";
-import { EventsComponent } from "app/events/events.component";
-import { EventDetailComponent } from "app/events/event-detail/event-detail.component";
+import { RolesComponent } from 'app/roles/roles.component';
+import { EventsComponent } from 'app/events/events.component';
+import { EventDetailComponent } from 'app/events/event-detail/event-detail.component';
 
 @NgModule({
     imports: [

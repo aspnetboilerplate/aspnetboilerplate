@@ -19,4 +19,9 @@ namespace Abp.AspNetCore.App.Models
     {
         public DateTime Date { get; set; }
     }
+
+    public class SimpleDateModel4
+    {
+        public DateTime Date { get; set; }
+    }
 }

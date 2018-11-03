@@ -18,6 +18,7 @@ $projects = (
     "Abp.EntityFramework.GraphDiff",
     "Abp.EntityFrameworkCore",
     "Abp.FluentMigrator",
+	"Abp.FluentValidation",
     "Abp.HangFire",
     "Abp.HangFire.AspNetCore",
     "Abp.MailKit",

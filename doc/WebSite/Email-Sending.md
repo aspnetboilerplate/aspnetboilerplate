@@ -7,8 +7,7 @@ of emails.
 
 ### IEmailSender
 
-**IEmailSender** is a service to send emails without it knowing
-details. Example usage:
+**IEmailSender** is a service to send emails without knowing the details. Example usage:
 
     public class TaskManager : IDomainService
     {
@@ -57,7 +56,7 @@ injection](Dependency-Injection.md) pattern.
 ### Configuration
 
 Email Sender uses a [settings management](Setting-Management.md) system
-to read emal-sending configurations. All the setting names are defined in the
+to read email-sending configurations. All the setting names are defined in the
 Abp.Net.Mail.EmailSettingNames class as constant strings. 
 
 Their values and descriptions:

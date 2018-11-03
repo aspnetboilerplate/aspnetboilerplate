@@ -22,6 +22,8 @@ If a unit of work method calls another unit of work method, both use the
 same connection & transaction. The first entered method manages the
 connection & transaction and then the others reuse it.
 
+The default **IsolationLevel** for a unit of work is **ReadUncommitted** if it is not configured. It can be easily configured using unit of work [options](#options).
+
 #### Conventional Unit Of Work Methods
 
 Some methods are unit of work methods by default:
@@ -38,13 +40,13 @@ service](/Pages/Documents/Application-Services) method like the one below:
     {
         private readonly IPersonRepository _personRepository;
         private readonly IStatisticsRepository _statisticsRepository;
-
+    
         public PersonAppService(IPersonRepository personRepository, IStatisticsRepository statisticsRepository)
         {
             _personRepository = personRepository;
             _statisticsRepository = statisticsRepository;
         }
-
+    
         public void CreatePerson(CreatePersonInput input)
         {
             var person = new Person { Name = input.Name, EmailAddress = input.EmailAddress };
@@ -95,7 +97,7 @@ This way, the CreatePerson method becomes a unit of work and manages the databas
 connection and transaction. Both repositories use the same unit of work.
 Note that you do not need the UnitOfWork attribute if this is an application
 service method. See the '[unit of work method
-restrictions](#uow-restrictions)' section.
+restrictions](#unitofwork-attribute-restrictions)' section.
 
 There are options for the UnitOfWork attribute. See the 'unit of work in
 detail' section. The UnitOfWork attribute can also be used on classes to
@@ -112,23 +114,23 @@ as shown below:
         private readonly IUnitOfWorkManager _unitOfWorkManager;
         private readonly IPersonRepository _personRepository;
         private readonly IStatisticsRepository _statisticsRepository;
-
+    
         public MyService(IUnitOfWorkManager unitOfWorkManager, IPersonRepository personRepository, IStatisticsRepository statisticsRepository)
         {
             _unitOfWorkManager = unitOfWorkManager;
             _personRepository = personRepository;
             _statisticsRepository = statisticsRepository;
         }
-
+    
         public void CreatePerson(CreatePersonInput input)
         {
             var person = new Person { Name = input.Name, EmailAddress = input.EmailAddress };
-
+    
             using (var unitOfWork = _unitOfWorkManager.Begin())
             {
                 _personRepository.Insert(person);
                 _statisticsRepository.IncrementPeopleCount();
-
+    
                 unitOfWork.Complete();
             }
         }
@@ -159,7 +161,7 @@ property. Example usage:
     {
         _friendshipRepository.Delete(input.Id);
     }
-                
+
 
 Normally, you don't want to do this, but in some situations you may want
 to disable the unit of work:
@@ -240,7 +242,7 @@ update the name of a person:
     }
 
 That's all you have to do! The name was updated. We didn't even have to call
-the \_personRepository.Update method. The O/RM framework keeps track of all
+the \_personRepository.Update method. The ORM framework keeps track of all
 the changes of entities in a unit of work and reflects these changes to the
 database.
 
@@ -263,21 +265,21 @@ Consider the example below:
     {
         // get IQueryable<Person>
         var query = _personRepository.GetAll();
-
+    
         // add some filters if selected
         if (!string.IsNullOrEmpty(input.SearchedName))
         {
             query = query.Where(person => person.Name.StartsWith(input.SearchedName));
         }
-
+    
         if (input.IsActive.HasValue)
         {
             query = query.Where(person => person.IsActive == input.IsActive.Value);
         }
-
+    
         // get paged result list
         var people = query.Skip(input.SkipCount).Take(input.MaxResultCount).ToList();
-
+    
         return new SearchPeopleOutput { People = Mapper.Map<List<PersonDto>>(people) };
     }
 
@@ -324,7 +326,7 @@ generally done in the PreInitialize method of our
             Configuration.UnitOfWork.IsolationLevel = IsolationLevel.ReadCommitted;
             Configuration.UnitOfWork.Timeout = TimeSpan.FromMinutes(30);
         }
-
+    
         //...other module methods
     }
 
@@ -373,12 +375,12 @@ successfully completes. Example:
     public void CreateTask(CreateTaskInput input)
     {
         var task = new Task { Description = input.Description };
-
+    
         if (input.AssignedPersonId.HasValue)
         {
             task.AssignedPersonId = input.AssignedPersonId.Value;
             _unitOfWorkManager.Current.Completed += (sender, args) => { /* TODO: Send email to assigned person */ };
         }
-
+    
         _taskRepository.Insert(task);
     }

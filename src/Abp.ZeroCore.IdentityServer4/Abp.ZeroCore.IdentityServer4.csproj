@@ -20,7 +20,7 @@
 
   <ItemGroup>
     <PackageReference Include="IdentityServer4.AspNetIdentity" Version="2.1.0" />
-    <PackageReference Include="IdentityServer4" Version="2.1.2" />
+    <PackageReference Include="IdentityServer4" Version="2.2.0" />
   </ItemGroup>
 
   <ItemGroup>
@@ -33,6 +33,10 @@
   <ItemGroup>
     <ProjectReference Include="..\Abp.AutoMapper\Abp.AutoMapper.csproj" />
     <ProjectReference Include="..\Abp.ZeroCore\Abp.ZeroCore.csproj" />
+  </ItemGroup>
+  
+  <ItemGroup>
+    <PackageReference Update="SourceLink.Create.CommandLine" Version="2.8.3" />
   </ItemGroup>
   
 </Project>

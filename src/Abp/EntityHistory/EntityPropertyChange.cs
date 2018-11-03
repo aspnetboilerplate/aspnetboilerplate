@@ -33,26 +33,26 @@ namespace Abp.EntityHistory
         /// <summary>
         /// NewValue.
         /// </summary>
-        [MaxLength(MaxValueLength)]
+        [StringLength(MaxValueLength)]
         public virtual string NewValue { get; set; }
 
         /// <summary>
         /// OriginalValue.
         /// </summary>
-        [MaxLength(MaxValueLength)]
+        [StringLength(MaxValueLength)]
         public virtual string OriginalValue { get; set; }
 
         /// <summary>
         /// PropertyName.
         /// </summary>
-        [MaxLength(MaxPropertyNameLength)]
+        [StringLength(MaxPropertyNameLength)]
         public virtual string PropertyName { get; set; }
 
         /// <summary>
         /// Type of the JSON serialized <see cref="NewValue"/> and <see cref="OriginalValue"/>.
         /// It's the FullName of the type.
         /// </summary>
-        [MaxLength(MaxPropertyTypeFullNameLength)]
+        [StringLength(MaxPropertyTypeFullNameLength)]
         public virtual string PropertyTypeFullName { get; set; }
 
         /// <summary>

@@ -37,8 +37,7 @@ browser clients**.
 
 #### Features
 
-ASP.NET MVC has it's own built-in AntiForgery system as you probably
-know, but it has a few weaknesses:
+ASP.NET MVC has its own built-in AntiForgery system, but there are a few weaknesses:
 
 -   It requires you to add the **ValidateAntiForgeryToken** attribute to all
     actions that need to be protected. You could potentially **forget** to add
@@ -55,7 +54,7 @@ know, but it has a few weaknesses:
 -   Even if we can access to the token in JavaScript, we must **manually
     add** it to the header for every request.
 
-ABP does followings things to overcome these shortcomings:
+ABP does following things to overcome these problems:
 
 -   You do not need to add the **ValidateAntiForgeryToken** attribute for **POST**,
     **PUT, PATCH** and **DELETE** actions anymore, because they are
@@ -166,7 +165,7 @@ You can then call this action from the client to set the cookie.
 #### Features
 
 **ASP.NET Core** MVC has a better [Anti
-Forgery](https://docs.asp.net/en/latest/security/anti-request-forgery.md)
+Forgery](<https://docs.microsoft.com/en-us/aspnet/core/security/anti-request-forgery?view=aspnetcore-2.0>)
 mechanism compared to previous versions (ASP.NET MVC 5.x):
 
 -   It has the **AutoValidateAntiforgeryTokenAttribute** class that

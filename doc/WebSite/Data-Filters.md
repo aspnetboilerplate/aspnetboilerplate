@@ -6,7 +6,7 @@ is used to not actually delete an entity from database but to only mark it as
 'deleted'. If an entity is soft-deleted, it should not be accidentally
 retrieved into the application. To provide for that, we would have to add an SQL
 **where** condition like 'IsDeleted = false' in every query where we select
-entities. This is not only tedious, but is more importantly a forgettable task. To keep 
+entities. This is not only tedious, but is more importantly a forgettable task. To keep
 things DRY, there should be an automatic way to do this.
 
 ASP.NET Boilerplate provides **data filters** that can be used to
@@ -26,7 +26,7 @@ property. Example:
     public class Person : Entity, ISoftDelete
     {
         public virtual string Name { get; set; }
-
+    
         public virtual bool IsDeleted { get; set; }
     }
 
@@ -37,6 +37,8 @@ done automatically by ASP.NET Boilerplate when you use the
 method (you can manually set IsDeleted to true, but the Delete method is the
 more natural and preferred way).
 
+In some cases, soft-delete entities may be requested to be permanently deleted. In those cases, **IRepository.HardDelete** extension method can be used. This method is currently implemented for EntityFramework 6.x and Entity Framework Core.
+
 When you get a list of People entities that implement ISoftDelete from the
 database, deleted people are not retrieved. Here is an example class that
 uses a person repository to get all people:
@@ -44,12 +46,12 @@ uses a person repository to get all people:
     public class MyService
     {
         private readonly IRepository<Person> _personRepository;
-
+    
         public MyService(IRepository<Person> personRepository)
         {
             _personRepository = personRepository;
         }
-
+    
         public List<Person> GetPeople()
         {
             return _personRepository.GetAllList();
@@ -81,11 +83,11 @@ Example:
     public class Product : Entity, IMustHaveTenant
     {
         public int TenantId { get; set; }
-
+    
         public string Name { get; set; }
     }
 
-**IMustHaveTenant** defines the **TenantId** property to distinguish between 
+**IMustHaveTenant** defines the **TenantId** property to distinguish between
 different tenant entities. ASP.NET Boilerplate uses the
 [IAbpSession](/Pages/Documents/Abp-Session) to get the current TenantId by
 default and automatically filters the query for the current tenant.
@@ -96,7 +98,7 @@ IMustHaveTenant is enabled by default.
 
 If the current user is not logged in to the system or the current user is a
 **host** user (Host user is an upper-level user that can manage tenants
-and tenant data), ASP.NET Boilerplate automatically **disables** the 
+and tenant data), ASP.NET Boilerplate automatically **disables** the
 IMustHaveTenant filter. Thus, all data of all tenants can be retrieved
 to the application. Notice that this is not about security, you should
 always [authorize](/Pages/Documents/Authorization) sensitive data!
@@ -111,7 +113,7 @@ filter. The **IMayHaveTenant** interface defines **TenantId** but it's
     public class Role : Entity, IMayHaveTenant
     {
         public int? TenantId { get; set; }
-
+    
         public string RoleName { get; set; }
     }
 
@@ -133,12 +135,12 @@ work](/Pages/Documents/Unit-Of-Work) by calling the **DisableFilter** method
 as shown below:
 
     var people1 = _personRepository.GetAllList();
-
+    
     using (_unitOfWorkManager.Current.DisableFilter(AbpDataFilters.SoftDelete))
     {
         var people2 = _personRepository.GetAllList();                
     }
-
+    
     var people3 = _personRepository.GetAllList();
 
 The DisableFilter method gets one or more filter names as strings.
@@ -212,7 +214,7 @@ While you can use the SetFilterParameter method to change the filter value for t
 MayHaveTenant and MustHaveTenant filters, there is a better way to
 change the tenant filter: **SetTenantId()**. SetTenantId changes the parameter
 value for both filters, and also works for single database and database
-per tenant approaches. **It is highly recommended that you use use SetTenantId**
+per tenant approaches. **It is highly recommended that you use SetTenantId**
 to change tenancy filter parameter values. See the [Multi-Tenancy
 document](Multi-Tenancy.md) for more information.
 
@@ -249,7 +251,7 @@ entity:
         [ForeignKey("PersonId")]
         public virtual Person Person { get; set; }
         public virtual int PersonId { get; set; }
-
+    
         public virtual string Number { get; set; }
     }
 
@@ -259,7 +261,7 @@ override **OnModelCreating** and define a filter as shown below:
     protected override void OnModelCreating(DbModelBuilder modelBuilder)
     {
         base.OnModelCreating(modelBuilder);
-
+    
         modelBuilder.Filter("PersonFilter", (IHasPerson entity, int personId) => entity.PersonId == personId, 0);
     }
 
@@ -304,9 +306,9 @@ so on.
 
 #### Other ORMs
 
-For [Entity Framework Core](Entity-Framework-Core.md) and NHibernate,
+For NHibernate,
 data filtering is implemented in the [repository](Repositories.md)
-level. This means it only filters when you query over repositories. 
+level. This means it only filters when you query over repositories.
 
-Note: If you directly use DbContext (for EF Core) or query via custom SQL, 
+Note: If you directly query via custom SQL,
 you have to handle the filtering yourself.

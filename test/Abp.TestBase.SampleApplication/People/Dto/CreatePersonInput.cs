@@ -10,7 +10,7 @@ namespace Abp.TestBase.SampleApplication.People.Dto
         public int ContactListId { get; set; }
 
         [Required]
-        [MaxLength(Person.MaxNameLength)]
+        [StringLength(Person.MaxNameLength)]
         public string Name { get; set; }
     }
 }

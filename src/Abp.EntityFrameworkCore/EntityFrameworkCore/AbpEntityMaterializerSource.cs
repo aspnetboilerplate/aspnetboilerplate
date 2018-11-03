@@ -19,18 +19,18 @@ namespace Abp.EntityFrameworkCore
         private static readonly MethodInfo NormalizeNullableDateTimeMethod =
             typeof(AbpEntityMaterializerSource).GetTypeInfo().GetMethod(nameof(NormalizeNullableDateTime), BindingFlags.Static | BindingFlags.NonPublic);
 
-        public override Expression CreateReadValueExpression(Expression valueBuffer, Type type, int index, IProperty property = null)
+        public override Expression CreateReadValueExpression(Expression valueBuffer, Type type, int index, IPropertyBase propertyBase)
         {
-            if (ShouldDisableDateTimeNormalization(property))
+            if (ShouldDisableDateTimeNormalization(propertyBase))
             {
-                return base.CreateReadValueExpression(valueBuffer, type, index, property);
+                return base.CreateReadValueExpression(valueBuffer, type, index, propertyBase);
             }
 
             if (type == typeof(DateTime))
             {
                 return Expression.Call(
                     NormalizeDateTimeMethod,
-                    base.CreateReadValueExpression(valueBuffer, type, index, property)
+                    base.CreateReadValueExpression(valueBuffer, type, index, propertyBase)
                 );
             }
 
@@ -38,11 +38,11 @@ namespace Abp.EntityFrameworkCore
             {
                 return Expression.Call(
                     NormalizeNullableDateTimeMethod,
-                    base.CreateReadValueExpression(valueBuffer, type, index, property)
+                    base.CreateReadValueExpression(valueBuffer, type, index, propertyBase)
                 );
             }
 
-            return base.CreateReadValueExpression(valueBuffer, type, index, property);
+            return base.CreateReadValueExpression(valueBuffer, type, index, propertyBase);
         }
 
         private static DateTime NormalizeDateTime(DateTime value)
@@ -60,19 +60,24 @@ namespace Abp.EntityFrameworkCore
             return Clock.Normalize(value.Value);
         }
 
-        private static bool ShouldDisableDateTimeNormalization(IProperty property)
+        private static bool ShouldDisableDateTimeNormalization(IPropertyBase propertyBase)
         {
-            if (property == null)
+            if (propertyBase == null)
             {
                 return false;
             }
 
-            if (property.PropertyInfo.IsDefined(typeof(DisableDateTimeNormalizationAttribute), true))
+            if (propertyBase.PropertyInfo == null)
+            {
+                return false;
+            }
+
+            if (propertyBase.PropertyInfo.IsDefined(typeof(DisableDateTimeNormalizationAttribute), true))
             {
                 return true;
             }
 
-            property.TryGetMemberInfo(false, false, out var memberInfo, out _);
+            propertyBase.TryGetMemberInfo(false, false, out var memberInfo, out _);
             return ReflectionHelper.GetSingleAttributeOfMemberOrDeclaringTypeOrDefault<DisableDateTimeNormalizationAttribute>(memberInfo) != null;
         }
     }

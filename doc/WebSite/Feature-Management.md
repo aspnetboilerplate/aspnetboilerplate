@@ -239,13 +239,13 @@ On the client side (JavaScript), we can use the **abp.features** namespace
 to get the current values of features.
 
 ##### isEnabled
-
+```csharp
     var isEnabled = abp.features.isEnabled('SampleBooleanFeature');
-
+```
 ##### getValue
-
+```csharp
     var value = abp.features.getValue('SampleNumericFeature');
-
+```
 ### Feature Manager
 
 If you need the definitions of features, you can inject and use

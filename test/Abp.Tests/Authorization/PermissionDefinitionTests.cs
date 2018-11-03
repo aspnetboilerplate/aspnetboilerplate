@@ -1,4 +1,5 @@
-﻿using Abp.Application.Features;
+﻿using System.Linq;
+using Abp.Application.Features;
 using Abp.Authorization;
 using Abp.Configuration.Startup;
 using Abp.Localization;
@@ -38,6 +39,12 @@ namespace Abp.Tests.Authorization
             changePermissions.Parent.ShouldBeSameAs(userManagement);
 
             permissionManager.GetPermissionOrNull("NonExistingPermissionName").ShouldBe(null);
+
+            userManagement.RemoveChildPermission(userManagement.Children.FirstOrDefault()?.Name);
+            userManagement.Children.Count.ShouldBe(0);
+
+            permissionManager.RemovePermission("Abp.Zero.Administration");
+            permissionManager.GetPermissionOrNull("Abp.Zero.Administration").ShouldBe(null);
         }
     }
 

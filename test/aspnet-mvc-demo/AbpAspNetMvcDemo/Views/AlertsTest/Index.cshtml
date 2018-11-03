@@ -1,0 +1,26 @@
+﻿@using Abp.Dependency
+@using Abp.Web.Mvc.Alerts
+@{
+    ViewData["Title"] = "Index";
+    AlertList alerts = null;
+    IocManager.Instance.Using<IAlertManager>(alertManager => alerts = alertManager.Alerts);
+}
+<h2>Alerts test page</h2>
+@if (alerts.Any())
+{
+    <div id="AbpPageAlerts">
+        @foreach (var alertMessage in alerts)
+        {
+            <div class="alert alert-@alertMessage.Type.ToString().ToLower() @(alertMessage.Dismissible ? "alert-dismisable" : "")" role="alert">
+                <h4 class="alert-heading">
+                    @alertMessage.Title
+                    @if (alertMessage.Dismissible)
+                    {
+                        <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                    }
+                </h4>
+                <p>@alertMessage.Text</p>
+            </div>
+        }
+    </div>
+}

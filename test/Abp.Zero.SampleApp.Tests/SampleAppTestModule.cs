@@ -1,6 +1,8 @@
 using System;
 using Abp.Modules;
+using Abp.MultiTenancy;
 using Abp.TestBase;
+using Abp.Zero.Configuration;
 using Abp.Zero.Ldap;
 using Abp.Zero.SampleApp.EntityFramework;
 using Castle.MicroKernel.Registration;

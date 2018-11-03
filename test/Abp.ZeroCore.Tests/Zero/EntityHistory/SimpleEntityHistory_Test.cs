@@ -24,6 +24,7 @@ namespace Abp.Zero.EntityHistory
     {
         private readonly IRepository<Blog> _blogRepository;
         private readonly IRepository<Post, Guid> _postRepository;
+        private readonly IRepository<Comment> _commentRepository;
 
         private IEntityHistoryStore _entityHistoryStore;
 
@@ -31,6 +32,7 @@ namespace Abp.Zero.EntityHistory
         {
             _blogRepository = Resolve<IRepository<Blog>>();
             _postRepository = Resolve<IRepository<Post, Guid>>();
+            _commentRepository = Resolve<IRepository<Comment>>();
 
             Resolve<IEntityHistoryConfiguration>().IsEnabledForAnonymousUsers = true;
         }
@@ -171,9 +173,33 @@ namespace Abp.Zero.EntityHistory
         }
 
         [Fact]
+        public void Should_Write_History_For_Tracked_Property_Foreign_Key_Shadow()
+        {
+            /* Comment has Audited attribute. */
+
+            using (var uow = Resolve<IUnitOfWorkManager>().Begin())
+            {
+                var comment1 = _commentRepository.Single(b => b.Content == "test-comment-1-content");
+                var post2 = _postRepository.Single(b => b.Body == "test-post-2-body");
+
+                // Change foreign key by assigning navigation property
+                comment1.Post = post2;
+                _commentRepository.Update(comment1);
+
+                uow.Complete();
+            }
+
+            _entityHistoryStore.Received().SaveAsync(Arg.Is<EntityChangeSet>(
+                s => s.EntityChanges.Count == 1 &&
+                     s.EntityChanges[0].PropertyChanges.Count == 1 &&
+                     s.EntityChanges[0].PropertyChanges.First().PropertyName == "PostId"
+            ));
+        }
+
+        [Fact]
         public void Should_Write_History_But_Not_For_Property_If_Disabled_History_Tracking()
         {
-            /* Blog.Name has DisableHistoryTracking attribute. */
+            /* Blog.Name has DisableAuditing attribute. */
 
             using (var uow = Resolve<IUnitOfWorkManager>().Begin())
             {
@@ -207,6 +233,24 @@ namespace Abp.Zero.EntityHistory
 
             var newValue = "http://testblog1-changed.myblogs.com";
             var originalValue = UpdateBlogUrlAndGetOriginalValue(newValue);
+
+            _entityHistoryStore.DidNotReceive().SaveAsync(Arg.Any<EntityChangeSet>());
+        }
+
+        [Fact]
+        public void Should_Not_Write_History_If_Property_Has_No_Audited_Attribute()
+        {
+            /* Post.Body does not have Audited attribute. */
+
+            using (var uow = Resolve<IUnitOfWorkManager>().Begin())
+            {
+                var post1 = _postRepository.Single(b => b.Body == "test-post-1-body");
+
+                post1.Body = null;
+                _postRepository.Update(post1);
+
+                uow.Complete();
+            }
 
             _entityHistoryStore.DidNotReceive().SaveAsync(Arg.Any<EntityChangeSet>());
         }

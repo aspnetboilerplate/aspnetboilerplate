@@ -143,3 +143,9 @@ constructor:
 **Note**: UseHangfireDashboard should be called after the authentication
 middleware in your Startup class (probably as the last line). Otherwise,
 authorization will always fail.
+
+#### Limitations
+
+More than one background jobs in a single transaction isn't supported by Hangfire. Because, Hangfire does not participate the current transaction. It does not use the ambient transaction (TransactionScope).
+
+It works with default background job manager since it simply performs a db command and it belongs to the current transaction as expected.

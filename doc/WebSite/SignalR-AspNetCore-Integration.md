@@ -24,8 +24,8 @@ NuGet package to your project (generally to your Web layer) and add a
 
 Then use the **AddSignalR** and **UseSignalR** methods in your Startup class:
 
-    using Abp.Web.SignalR.Hubs;
-
+    using Abp.AspNetCore.SignalR.Hubs;
+    
     namespace MyProject.Web.Startup
     {
         public class Startup
@@ -34,7 +34,7 @@ Then use the **AddSignalR** and **UseSignalR** methods in your Startup class:
             {
                 services.AddSignalR();
             }
-
+    
             public void Configure(IApplicationBuilder app)
             {
                 app.UseSignalR(routes =>
@@ -47,9 +47,9 @@ Then use the **AddSignalR** and **UseSignalR** methods in your Startup class:
 
 #### Client-Side (Angular)
 
-The **@aspnet/signalr** package should be added in package.json, and the signalr.min.js included under **scripts** in .angular-cli.json.
+The **@aspnet/signalr** package should be added in package.json, and the signalr.min.js included under **scripts** in angular.json.
 
-The **abp.signalr-client.js** script should be included under **assets** in .angular-cli.json.
+The **abp.signalr-client.js** script should be included under **assets** in angular.json.
 
 SignalR cannot send authorization headers, so encryptedAuthToken is sent in the query string. The startup template includes SignalRAspNetCoreHelper. We should call it in ngOnInit in app.component.ts:
 
@@ -126,26 +126,26 @@ that we want to add a Hub to our application:
     public class MyChatHub : Hub, ITransientDependency
     {
         public IAbpSession AbpSession { get; set; }
-
+    
         public ILogger Logger { get; set; }
-
+    
         public MyChatHub()
         {
             AbpSession = NullAbpSession.Instance;
             Logger = NullLogger.Instance;
         }
-
+    
         public async Task SendMessage(string message)
         {
             await Clients.All.SendAsync("getMessage", string.Format("User {0}: {1}", AbpSession.UserId, message));
         }
-
+    
         public override async Task OnConnectedAsync()
         {
             await base.OnConnectedAsync();
             Logger.Debug("A client connected to MyChatHub: " + Context.ConnectionId);
         }
-
+    
         public override async Task OnDisconnectedAsync(Exception exception)
         {
             await base.OnDisconnectedAsync(exception);
@@ -175,10 +175,10 @@ Here is the **client-side** JavaScript code to send/receive messages using
 our hub.
 
     var chatHub = null;
-
-    abp.signalr.startConnection('/signalr-myChatHub', function (connection) {
+    
+    abp.signalr.startConnection(abp.appPath + 'signalr-myChatHub', function (connection) {
         chatHub = connection; // Save a reference to the hub
-
+    
         connection.on('getMessage', function (message) { // Register for incoming messages
             console.log('received message: ' + message);
         });
@@ -186,7 +186,7 @@ our hub.
         abp.log.debug('Connected to myChatHub server!');
         abp.event.trigger('myChatHub.connected');
     });
-
+    
     abp.event.on('myChatHub.connected', function() { // Register for connect event
         chatHub.invoke('sendMessage', "Hi everybody, I'm connected to the chat!"); // Send a message to the server
     });

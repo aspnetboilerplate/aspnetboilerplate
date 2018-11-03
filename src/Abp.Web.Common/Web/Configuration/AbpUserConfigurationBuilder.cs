@@ -20,6 +20,8 @@ namespace Abp.Web.Configuration
 {
     public class AbpUserConfigurationBuilder : ITransientDependency
     {
+        private readonly IAbpStartupConfiguration _startupConfiguration;
+
         protected IMultiTenancyConfig MultiTenancyConfig { get; }
         protected ILanguageManager LanguageManager { get; }
         protected ILocalizationManager LocalizationManager { get; }
@@ -32,6 +34,9 @@ namespace Abp.Web.Configuration
         protected IAbpAntiForgeryConfiguration AbpAntiForgeryConfiguration { get; }
         protected IAbpSession AbpSession { get; }
         protected IPermissionChecker PermissionChecker { get; }
+        protected Dictionary<string, object> CustomDataConfig { get; }
+
+        private readonly IIocResolver _iocResolver;
 
         public AbpUserConfigurationBuilder(
             IMultiTenancyConfig multiTenancyConfig,
@@ -45,7 +50,9 @@ namespace Abp.Web.Configuration
             ISettingManager settingManager,
             IAbpAntiForgeryConfiguration abpAntiForgeryConfiguration,
             IAbpSession abpSession,
-            IPermissionChecker permissionChecker)
+            IPermissionChecker permissionChecker,
+            IIocResolver iocResolver,
+            IAbpStartupConfiguration startupConfiguration)
         {
             MultiTenancyConfig = multiTenancyConfig;
             LanguageManager = languageManager;
@@ -59,6 +66,10 @@ namespace Abp.Web.Configuration
             AbpAntiForgeryConfiguration = abpAntiForgeryConfiguration;
             AbpSession = abpSession;
             PermissionChecker = permissionChecker;
+            _iocResolver = iocResolver;
+            _startupConfiguration = startupConfiguration;
+
+            CustomDataConfig = new Dictionary<string, object>();
         }
 
         public virtual async Task<AbpUserConfigurationDto> GetAll()
@@ -74,7 +85,8 @@ namespace Abp.Web.Configuration
                 Setting = await GetUserSettingConfig(),
                 Clock = GetUserClockConfig(),
                 Timing = await GetUserTimingConfig(),
-                Security = GetUserSecurityConfig()
+                Security = GetUserSecurityConfig(),
+                Custom = _startupConfiguration.GetCustomConfig()
             };
         }
 
@@ -213,13 +225,20 @@ namespace Abp.Web.Configuration
             };
 
             var settingDefinitions = SettingDefinitionManager
-                .GetAllSettingDefinitions()
-                .Where(sd => sd.IsVisibleToClients);
+                .GetAllSettingDefinitions();
 
-            foreach (var settingDefinition in settingDefinitions)
+            using (var scope = _iocResolver.CreateScope())
             {
-                var settingValue = await SettingManager.GetSettingValueAsync(settingDefinition.Name);
-                config.Values.Add(settingDefinition.Name, settingValue);
+                foreach (var settingDefinition in settingDefinitions)
+                {
+                    if (!await settingDefinition.ClientVisibilityProvider.CheckVisible(scope))
+                    {
+                        continue;
+                    }
+
+                    var settingValue = await SettingManager.GetSettingValueAsync(settingDefinition.Name);
+                    config.Values.Add(settingDefinition.Name, settingValue);
+                }
             }
 
             return config;

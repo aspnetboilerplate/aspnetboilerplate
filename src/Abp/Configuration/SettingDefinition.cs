@@ -52,7 +52,13 @@ namespace Abp.Configuration
         /// It maybe dangerous for some settings to be visible to clients (such as email server password).
         /// Default: false.
         /// </summary>
+        [Obsolete("Use ClientVisibilityProvider instead.")]
         public bool IsVisibleToClients { get; set; }
+
+        /// <summary>
+        /// Client visibility definition for the setting.
+        /// </summary>
+        public ISettingClientVisibilityProvider ClientVisibilityProvider { get; set; }
 
         /// <summary>
         /// Can be used to store a custom object related to this setting.
@@ -71,16 +77,18 @@ namespace Abp.Configuration
         /// <param name="isVisibleToClients">Can clients see this setting and it's value. Default: false</param>
         /// <param name="isInherited">Is this setting inherited from parent scopes. Default: True.</param>
         /// <param name="customData">Can be used to store a custom object related to this setting</param>
+        /// <param name="clientVisibilityProvider">Client visibility definition for the setting. Default: invisible</param>
         public SettingDefinition(
-            string name, 
-            string defaultValue, 
-            ILocalizableString displayName = null, 
-            SettingDefinitionGroup group = null, 
-            ILocalizableString description = null, 
-            SettingScopes scopes = SettingScopes.Application, 
-            bool isVisibleToClients = false, 
+            string name,
+            string defaultValue,
+            ILocalizableString displayName = null,
+            SettingDefinitionGroup group = null,
+            ILocalizableString description = null,
+            SettingScopes scopes = SettingScopes.Application,
+            bool isVisibleToClients = false,
             bool isInherited = true,
-            object customData = null)
+            object customData = null,
+            ISettingClientVisibilityProvider clientVisibilityProvider = null)
         {
             if (string.IsNullOrEmpty(name))
             {
@@ -96,6 +104,17 @@ namespace Abp.Configuration
             IsVisibleToClients = isVisibleToClients;
             IsInherited = isInherited;
             CustomData = customData;
+
+            ClientVisibilityProvider = new HiddenSettingClientVisibilityProvider();
+
+            if (isVisibleToClients)
+            {
+                ClientVisibilityProvider = new VisibleSettingClientVisibilityProvider();
+            }
+            else if (clientVisibilityProvider != null)
+            {
+                ClientVisibilityProvider = clientVisibilityProvider;
+            }
         }
     }
 }
