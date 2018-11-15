@@ -2,14 +2,12 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
-using System.Threading;
 using System.Threading.Tasks;
 using System.Transactions;
 using Abp.Collections.Extensions;
 using Abp.Dependency;
 using Abp.Domain.Uow;
 using Abp.Runtime.Session;
-using Abp.Threading;
 using Abp.Timing;
 using Castle.Core.Logging;
 
@@ -131,31 +129,6 @@ namespace Abp.Auditing
 
         public void Save(AuditInfo auditInfo)
         {
-            if (_configuration.RunInBackground)
-            {
-                Task.Factory.StartNew(() =>
-                {
-                    using (AbpSession.Use(auditInfo.TenantId, auditInfo.UserId))
-                    {
-                        try
-                        {
-                            SaveInternal(auditInfo);
-                        }
-                        catch (Exception exception)
-                        {
-                            Logger.Error(exception.Message, exception);
-                        }
-                    }
-                });
-            }
-            else
-            {
-                SaveInternal(auditInfo);
-            }
-        }
-
-        private void SaveInternal(AuditInfo auditInfo)
-        {
             using (var uow = _unitOfWorkManager.Begin(TransactionScopeOption.Suppress))
             {
                 AuditingStore.Save(auditInfo);
@@ -164,33 +137,6 @@ namespace Abp.Auditing
         }
 
         public async Task SaveAsync(AuditInfo auditInfo)
-        {
-            if (_configuration.RunInBackground)
-            {
-#pragma warning disable 4014
-                Task.Factory.StartNew(() =>
-#pragma warning restore 4014
-                {
-                    using (AbpSession.Use(auditInfo.TenantId, auditInfo.UserId))
-                    {
-                        try
-                        {
-                            SaveInternal(auditInfo);
-                        }
-                        catch (Exception exception)
-                        {
-                            Logger.Error(exception.Message, exception);
-                        }
-                    }
-                });
-            }
-            else
-            {
-                await SaveInternalAsync(auditInfo);
-            }
-        }
-
-        private async Task SaveInternalAsync(AuditInfo auditInfo)
         {
             using (var uow = _unitOfWorkManager.Begin(TransactionScopeOption.Suppress))
             {

@@ -3,7 +3,6 @@ using System.Threading.Tasks;
 using Abp.AspNetCore.App.Controllers;
 using Abp.AspNetCore.App.Models;
 using Abp.AspNetCore.Mocks;
-using Abp.Auditing;
 using Abp.Web.Models;
 using Shouldly;
 using Xunit;
@@ -36,33 +35,6 @@ namespace Abp.AspNetCore.Tests
                        }),
                    HttpStatusCode.InternalServerError
                );
-
-            //Assert
-
-            _mockAuditingStore.Logs.Count.ShouldBe(1);
-            var auditLog = _mockAuditingStore.Logs.ToArray()[0];
-            auditLog.MethodName.ShouldBe(nameof(SimpleTestController.SimpleJsonException));
-        }
-
-        [Fact]
-        public async Task Should_Write_Audit_Logs_When_RunInBackground_Is_True()
-        {
-            Resolve<IAuditingConfiguration>().RunInBackground = true;
-
-            _mockAuditingStore.Logs.Count.ShouldBe(0);
-
-            //Act
-
-            await GetResponseAsObjectAsync<AjaxResponse<SimpleViewModel>>(
-                GetUrl<SimpleTestController>(
-                    nameof(SimpleTestController.SimpleJsonException),
-                    new
-                    {
-                        message = "A test message",
-                        userFriendly = true
-                    }),
-                HttpStatusCode.InternalServerError
-            );
 
             //Assert
 
