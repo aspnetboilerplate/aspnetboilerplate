@@ -22,16 +22,13 @@ namespace Abp.Dapper.Filters.Action
             long? userId = GetAuditUserId();
             CheckAndSetId(entity);
             var entityWithCreationTime = entity as IHasCreationTime;
-            if (entityWithCreationTime == null)
+            if (entityWithCreationTime != null)
             {
-                return;
+                if (entityWithCreationTime.CreationTime == default(DateTime))
+                {
+                    entityWithCreationTime.CreationTime = Clock.Now;
+                }
             }
-
-            if (entityWithCreationTime.CreationTime == default(DateTime))
-            {
-                entityWithCreationTime.CreationTime = Clock.Now;
-            }
-
             CheckAndSetMustHaveTenantIdProperty(entity);
             CheckAndSetMayHaveTenantIdProperty(entity);
 

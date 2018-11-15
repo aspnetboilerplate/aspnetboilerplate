@@ -21,6 +21,8 @@ namespace Abp.Dapper.Tests
         private readonly IUnitOfWorkManager _unitOfWorkManager;
         private readonly IRepository<ProductDetail> _productDetailRepository;
         private readonly IDapperRepository<ProductDetail> _productDetailDapperRepository;
+        private readonly IRepository<Person> _personRepository;
+        private readonly IDapperRepository<Person> _personDapperRepository;
 
         public DapperRepository_Tests()
         {
@@ -29,6 +31,8 @@ namespace Abp.Dapper.Tests
             _unitOfWorkManager = Resolve<IUnitOfWorkManager>();
             _productDetailRepository = Resolve<IRepository<ProductDetail>>();
             _productDetailDapperRepository = Resolve<IDapperRepository<ProductDetail>>();
+            _personRepository = Resolve<IRepository<Person>>();
+            _personDapperRepository = Resolve<IDapperRepository<Person>>();
         }
 
         [Fact]
@@ -147,6 +151,24 @@ namespace Abp.Dapper.Tests
 
                 uow.Complete();
             }
+        }
+        //About issue-#3990
+        [Fact]
+        public void Should_Insert_Only_Have_IMustHaveTenant()
+        {
+            using (IUnitOfWorkCompleteHandle uow = _unitOfWorkManager.Begin())
+            {
+                using (_unitOfWorkManager.Current.SetTenantId(AbpSession.TenantId))
+                {
+                    int personWithTenantId40 = _personDapperRepository.InsertAndGetId(new Person("PersonWithTenantId40"));
+
+                    Person personWithTenant40 = _personRepository.Get(personWithTenantId40);
+
+                    personWithTenant40.TenantId.ShouldBe(AbpSession.TenantId.Value);
+                }
+
+            }
+
         }
     }
 }
