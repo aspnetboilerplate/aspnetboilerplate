@@ -44,6 +44,8 @@ namespace Abp.ZeroCore.SampleApp.EntityFramework
 
             modelBuilder.ConfigurePersistedGrantEntity();
 
+            modelBuilder.Entity<Blog>().OwnsOne(x => x.More);
+
             modelBuilder.Entity<Book>().ToTable("Books");
             modelBuilder.Entity<Book>().Property(e => e.Id).ValueGeneratedNever();
 

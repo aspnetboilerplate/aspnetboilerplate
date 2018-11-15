@@ -49,7 +49,7 @@ namespace Abp.Zero
             UsingDbContext(
                 context =>
                 {
-                    var blog1 = new Blog("test-blog-1", "http://testblog1.myblogs.com");
+                    var blog1 = new Blog("test-blog-1", "http://testblog1.myblogs.com", "blogger-1");
 
                     context.Blogs.Add(blog1);
                     context.SaveChanges();
