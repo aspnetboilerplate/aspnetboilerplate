@@ -22,5 +22,10 @@
     <text name="Identity.DuplicateEmail" value="邮箱地址 '{0}' 已被占用." />
     <text name="Identity.ExternalLoginExists" value="已存在此外部登陆用户." />
     <text name="Identity.DefaultError" value="发生了一个未知的异常错误." />
+    <text name="Email">邮箱</text>
+    <text name="EmailSecurityCodeSubject">安全码</text>
+    <text name="EmailSecurityCodeBody">你的安全码是: {0}</text>
+    <text name="Sms">短信</text>
+    <text name="SmsSecurityCodeMessage">你的安全码是: {0}</text>
   </texts>
 </localizationDictionary>
