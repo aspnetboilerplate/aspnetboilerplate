@@ -9,6 +9,7 @@
 										,	CreationTime DATETIME
 										,	CreatorUserId BIGINT
 										,	TenantId INTEGER NULLABLE
+										, Status BOOLEAN
 									);
 
  CREATE TABLE IF NOT EXISTS ProductDetails (

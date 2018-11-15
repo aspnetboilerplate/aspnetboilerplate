@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 
 using Abp.Dapper.Repositories;
 using Abp.Dapper.Tests.Entities;
@@ -31,7 +32,7 @@ namespace Abp.Dapper.Tests
         }
 
         [Fact]
-        public void Dapper_Repository_Tests()
+        public async Task Dapper_Repository_Tests()
         {
             using (IUnitOfWorkCompleteHandle uow = _unitOfWorkManager.Begin())
             {
@@ -120,6 +121,9 @@ namespace Abp.Dapper.Tests
                 Product productWithTenantId3FromDapper = _productDapperRepository.FirstOrDefault(x => x.Name == "ProductWithTenant3");
                 productWithTenantId3FromDapper.ShouldBeNull();
 
+                Product p = await _productDapperRepository.FirstOrDefaultAsync(x => x.Status == Status.Active);
+                p.ShouldNotBeNull();
+
                 using (_unitOfWorkManager.Current.SetTenantId(3))
                 {
                     Product productWithTenantId3FromDapperInsideTenantScope = _productDapperRepository.FirstOrDefault(x => x.Name == "ProductWithTenant3");
@@ -137,11 +141,9 @@ namespace Abp.Dapper.Tests
                     productWithTenant40.CreatorUserId.ShouldBe(AbpSession.UserId);
                 }
 
-
                 //Second DbContext tests
-                int productDetailId =_productDetailRepository.InsertAndGetId(new ProductDetail("Woman"));
+                int productDetailId = _productDetailRepository.InsertAndGetId(new ProductDetail("Woman"));
                 _productDetailDapperRepository.Get(productDetailId).ShouldNotBeNull();
-
 
                 uow.Complete();
             }
