@@ -92,3 +92,5 @@ Now it's ready to build database.
 - Run the `update-database` command.
 
 The PostgreSQL integration is now complete. You can now run your project with PostgreSQL.
+
+**Note:** By default ABP's UnitOfWork uses IsolationLevel.ReadUncommitted but it is treated as IsolationLevel.ReadCommitted in PostgreSQL. This behavior can cause problems in some cases. For more information [see](https://github.com/aspnetboilerplate/aspnetboilerplate/issues/3369#issuecomment-433733606).
