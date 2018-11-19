@@ -66,7 +66,7 @@ Highlighted, here are the **differences** from the standard IdentityServer4 usag
                     .AddInMemoryApiResources(IdentityServerConfig.GetApiResources())
                     .AddInMemoryClients(IdentityServerConfig.GetClients())
                     .AddAbpPersistedGrants<IAbpPersistedGrantDbContext>()
-                    .AddAbpIdentityServer<User>(); ;
+                    .AddAbpIdentityServer<User>();
 
             //...
         }

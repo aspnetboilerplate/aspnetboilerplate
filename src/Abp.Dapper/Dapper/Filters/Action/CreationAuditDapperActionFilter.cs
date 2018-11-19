@@ -1,5 +1,4 @@
 ﻿using System;
-
 using Abp.Configuration.Startup;
 using Abp.Domain.Entities;
 using Abp.Domain.Entities.Auditing;
@@ -20,16 +19,16 @@ namespace Abp.Dapper.Filters.Action
         public void ExecuteFilter<TEntity, TPrimaryKey>(TEntity entity) where TEntity : class, IEntity<TPrimaryKey>
         {
             long? userId = GetAuditUserId();
-            CheckAndSetId(entity);
-            var entityWithCreationTime = entity as IHasCreationTime;
-            if (entityWithCreationTime == null)
-            {
-                return;
-            }
 
-            if (entityWithCreationTime.CreationTime == default(DateTime))
+            CheckAndSetId(entity);
+
+            var entityWithCreationTime = entity as IHasCreationTime;
+            if (entityWithCreationTime != null)
             {
-                entityWithCreationTime.CreationTime = Clock.Now;
+                if (entityWithCreationTime.CreationTime == default(DateTime))
+                {
+                    entityWithCreationTime.CreationTime = Clock.Now;
+                }
             }
 
             CheckAndSetMustHaveTenantIdProperty(entity);

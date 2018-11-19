@@ -8,5 +8,6 @@
     <text name="CanNotDeleteStaticRole" value="不能删除系统预定义角色: {0}" />
     <text name="CanNotRenameAdminUser" value="不能重命名默认管理员的用户名 {0}" />
     <text name="CanNotDeleteAdminUser" value="不能删除默认管理员{0}!" />
+    <text name="OrganizationUnitDuplicateDisplayNameWarning" value="已存在名为 {0} 的组织单位. 无法在同一级别创建相同名称的组织单位." />
   </texts>
 </localizationDictionary>

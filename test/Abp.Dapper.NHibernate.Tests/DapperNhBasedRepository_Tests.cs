@@ -1,16 +1,11 @@
 ﻿using System;
 using System.Linq;
-
 using Abp.Dapper.Repositories;
 using Abp.Domain.Repositories;
 using Abp.Domain.Uow;
 using Abp.Events.Bus;
 using Abp.Events.Bus.Entities;
-
-using NHibernate.Linq;
-
 using Shouldly;
-
 using Xunit;
 
 namespace Abp.Dapper.NHibernate.Tests
@@ -172,7 +167,7 @@ namespace Abp.Dapper.NHibernate.Tests
             }
 
             _personDapperRepository.FirstOrDefault(x => x.Name == "Oguzhan_Same_Uow").ShouldBeNull();
-            _personRepository.FirstOrDefault(x=>x.Name== "Oguzhan_Same_Uow").ShouldBeNull();
+            _personRepository.FirstOrDefault(x => x.Name == "Oguzhan_Same_Uow").ShouldBeNull();
         }
     }
 }

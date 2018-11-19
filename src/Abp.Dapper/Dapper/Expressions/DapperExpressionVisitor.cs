@@ -203,11 +203,6 @@ namespace Abp.Dapper.Expressions
 
         protected override Expression VisitUnary(UnaryExpression node)
         {
-            if (node.NodeType != ExpressionType.Not)
-            {
-                throw new NotSupportedException($"The unary operator '{node.NodeType}' is not supported");
-            }
-
             _unarySpecified = true;
 
             return base.VisitUnary(node); // returning base because we want to continue further processing - ie subsequent call to VisitMethodCall

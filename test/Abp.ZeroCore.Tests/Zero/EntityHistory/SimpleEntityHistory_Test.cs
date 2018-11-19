@@ -56,12 +56,17 @@ namespace Abp.Zero.EntityHistory
             var blog2Id = CreateBlogAndGetId();
 
             _entityHistoryStore.Received().SaveAsync(Arg.Is<EntityChangeSet>(
-                s => s.EntityChanges.Count == 1 &&
+                s => s.EntityChanges.Count == 2 &&
                      s.EntityChanges[0].ChangeTime == s.EntityChanges[0].EntityEntry.As<EntityEntry>().Entity.As<IHasCreationTime>().CreationTime &&
                      s.EntityChanges[0].ChangeType == EntityChangeType.Created &&
                      s.EntityChanges[0].EntityId == blog2Id.ToJsonString(false, false) &&
                      s.EntityChanges[0].EntityTypeFullName == typeof(Blog).FullName &&
                      s.EntityChanges[0].PropertyChanges.Count == 2 && // Blog.Name, Blog.Url
+
+                     s.EntityChanges[1].ChangeType == EntityChangeType.Created &&
+                     s.EntityChanges[1].EntityId == blog2Id.ToJsonString(false, false) &&
+                     s.EntityChanges[1].EntityTypeFullName == typeof(BlogEx).FullName &&
+                     s.EntityChanges[1].PropertyChanges.Count == 1 && // BlogEx.BloggerName
 
                      // Check "who did this change"
                      s.ImpersonatorTenantId == AbpSession.ImpersonatorTenantId &&
@@ -103,7 +108,7 @@ namespace Abp.Zero.EntityHistory
 
             UsingDbContext(tenantId, (context) =>
             {
-                context.EntityChanges.Count(f => f.TenantId == tenantId).ShouldBe(1);
+                context.EntityChanges.Count(f => f.TenantId == tenantId).ShouldBe(2);
             });
 
             UsingDbContext(tenantId, (context) =>
@@ -114,7 +119,7 @@ namespace Abp.Zero.EntityHistory
 
             UsingDbContext(tenantId, (context) =>
             {
-                context.EntityPropertyChanges.Count(f => f.TenantId == tenantId).ShouldBe(2);
+                context.EntityPropertyChanges.Count(f => f.TenantId == tenantId).ShouldBe(3);
             });
         }
 
@@ -137,6 +142,48 @@ namespace Abp.Zero.EntityHistory
                      s.EntityChanges[0].PropertyChanges.FirstOrDefault().PropertyName == nameof(Blog.Url) &&
                      s.EntityChanges[0].PropertyChanges.FirstOrDefault().PropertyTypeFullName == typeof(Blog).GetProperty(nameof(Blog.Url)).PropertyType.FullName
             ));
+        }
+
+        [Fact]
+        public void Should_Write_History_For_Tracked_Entities_Update_Owned()
+        {
+            /* Blog has Audited attribute. */
+
+            int blog1Id;
+            var newValue = "blogger-2";
+            string originalValue;
+
+            using (var uow = Resolve<IUnitOfWorkManager>().Begin())
+            {
+                var blog1 = _blogRepository.Single(b => b.Name == "test-blog-1");
+                blog1Id = blog1.Id;
+
+                originalValue = blog1.More.BloggerName;
+                blog1.More.BloggerName = newValue;
+
+                uow.Complete();
+            }
+
+            Predicate<EntityChangeSet> predicate = s =>
+            {
+                s.EntityChanges.Count.ShouldBe(1);
+
+                var entityChange = s.EntityChanges[0];
+                entityChange.ChangeType.ShouldBe(EntityChangeType.Updated);
+                entityChange.EntityId.ShouldBe(blog1Id.ToJsonString());
+                entityChange.EntityTypeFullName.ShouldBe(typeof(BlogEx).FullName);
+                entityChange.PropertyChanges.Count.ShouldBe(1);
+
+                var propertyChange = entityChange.PropertyChanges.First();
+                propertyChange.NewValue.ShouldBe(newValue.ToJsonString());
+                propertyChange.OriginalValue.ShouldBe(originalValue.ToJsonString());
+                propertyChange.PropertyName.ShouldBe(nameof(BlogEx.BloggerName));
+                propertyChange.PropertyTypeFullName.ShouldBe(typeof(BlogEx).GetProperty(nameof(BlogEx.BloggerName)).PropertyType.FullName);
+
+                return true;
+            };
+
+            _entityHistoryStore.Received().SaveAsync(Arg.Is<EntityChangeSet>(s => predicate(s)));
         }
 
         [Fact]
@@ -263,7 +310,7 @@ namespace Abp.Zero.EntityHistory
 
             using (var uow = Resolve<IUnitOfWorkManager>().Begin())
             {
-                var blog2 = new Blog("test-blog-2", "http://testblog2.myblogs.com");
+                var blog2 = new Blog("test-blog-2", "http://testblog2.myblogs.com", "blogger-2");
 
                 blog2Id = _blogRepository.InsertAndGetId(blog2);
 
