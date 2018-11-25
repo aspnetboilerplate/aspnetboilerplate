@@ -121,17 +121,9 @@ namespace Abp.Authorization.Users
                 user.TenantId = tenantId.Value;
             }
 
-            var isLockoutEnabled = user.IsLockoutEnabled;
+            InitializeLockoutSettings(user.TenantId);
 
-            var identityResult = await base.CreateAsync(user);
-
-            if (identityResult.Succeeded)
-            {
-                await _unitOfWorkManager.Current.SaveChangesAsync();
-                await SetLockoutEnabledAsync(user.Id, isLockoutEnabled);
-            }
-
-            return identityResult;
+            return await base.CreateAsync(user);
         }
 
         /// <summary>

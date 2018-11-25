@@ -3,6 +3,7 @@ using System.Threading.Tasks;
 using Abp.Authorization;
 using Abp.Authorization.Users;
 using Abp.Configuration;
+using Abp.Dependency;
 using Abp.Threading;
 using Abp.Zero.Configuration;
 using Abp.Zero.SampleApp.Authorization;
@@ -82,8 +83,24 @@ namespace Abp.Zero.SampleApp.Tests.Users
         [Theory]
         [InlineData(true)]
         [InlineData(false)]
-        public async Task Test_IsLockoutEnabled_On_User_Creation(bool isLockoutEnabled)
+        public async Task Test_IsLockoutEnabled_On_User_Creation_Should_Use_Setting_By_Default(bool isLockoutEnabledByDefault)
         {
+            // Arrange
+
+            LocalIocManager.Using<ISettingManager>(async settingManager =>
+            {
+                if (AbpSession.TenantId is int tenantId)
+                {
+                    await settingManager.ChangeSettingForTenantAsync(tenantId, AbpZeroSettingNames.UserManagement.UserLockOut.IsEnabled, isLockoutEnabledByDefault.ToString());
+                }
+                else
+                {
+                    await settingManager.ChangeSettingForApplicationAsync(AbpZeroSettingNames.UserManagement.UserLockOut.IsEnabled, isLockoutEnabledByDefault.ToString());
+                }
+            });
+
+            // Act
+
             var user = new User
             {
                 TenantId = AbpSession.TenantId,
@@ -93,12 +110,14 @@ namespace Abp.Zero.SampleApp.Tests.Users
                 EmailAddress = "user1@aspnetboilerplate.com",
                 IsEmailConfirmed = true,
                 Password = "AM4OLBpptxBYmM79lGOX9egzZk3vIQU3d/gFCJzaBjAPXzYIK3tQ2N7X4fcrHtElTw==", //123qwe
-                IsLockoutEnabled = isLockoutEnabled
+                // IsLockoutEnabled = isLockoutEnabled
             };
 
             await WithUnitOfWorkAsync(async () => await _userManager.CreateAsync(user));
 
-            (await _userManager.GetLockoutEnabledAsync(user.Id)).ShouldBe(isLockoutEnabled);
+            // Assert
+
+            (await _userManager.GetLockoutEnabledAsync(user.Id)).ShouldBe(isLockoutEnabledByDefault);
         }
     }
 }
