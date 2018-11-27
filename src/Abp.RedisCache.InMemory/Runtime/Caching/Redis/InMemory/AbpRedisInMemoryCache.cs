@@ -13,7 +13,7 @@ namespace Abp.Runtime.Caching.Redis.InMemory
         public IIocManager IocManager { get; set; }
 
 
-        protected AbpRedisInMemoryCache(string name) : base(name)
+        public AbpRedisInMemoryCache(string name) : base(name)
         {
             _memoryCache = IocManager.Resolve<AbpMemoryCache>(name);
             _redisCache = IocManager.Resolve<AbpRedisCache>(new { name });
