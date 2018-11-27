@@ -27,6 +27,7 @@ $projects = (
     "Abp.NHibernate",
     "Abp.Owin",
     "Abp.RedisCache",
+	"Abp.RedisCache.InMemory",
     "Abp.RedisCache.ProtoBuf",
     "Abp.Quartz",
     "Abp.TestBase",
