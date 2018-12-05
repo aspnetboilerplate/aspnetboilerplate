@@ -54,6 +54,7 @@ namespace Abp
             ConfigureCaches();
             AddIgnoredTypes();
             AddMethodParameterValidators();
+            AddDefaultNotificationDistributor();
         }
 
         public override void Initialize()
@@ -180,6 +181,11 @@ namespace Abp
             Configuration.Validation.Validators.Add<DataAnnotationsValidator>();
             Configuration.Validation.Validators.Add<ValidatableObjectValidator>();
             Configuration.Validation.Validators.Add<CustomValidator>();
+        }
+
+        private void AddDefaultNotificationDistributor()
+        {
+            Configuration.Notifications.Distributers.Add<NotificationDistributer>();
         }
 
         private void RegisterMissingComponents()
