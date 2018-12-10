@@ -27,9 +27,6 @@ namespace Abp.Notifications
         {
             foreach (var notificationDistributorType in _notificationConfiguration.Distributers)
             {
-                //var notificationDistributer = _iocResolver.Resolve<INotificationDistributer>(notificationDistributorType);
-                //AsyncHelper.RunSync(() => notificationDistributer.DistributeAsync(args.NotificationId));
-
                 using (var notificationDistributer = _iocResolver.ResolveAsDisposable<INotificationDistributer>(notificationDistributorType))
                 {
                     AsyncHelper.RunSync(() => notificationDistributer.Object.DistributeAsync(args.NotificationId));

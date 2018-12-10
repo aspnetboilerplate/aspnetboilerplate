@@ -185,7 +185,7 @@ namespace Abp
 
         private void AddDefaultNotificationDistributor()
         {
-            Configuration.Notifications.Distributers.Add<NotificationDistributer>();
+            Configuration.Notifications.Distributers.Add<DefaultNotificationDistributer>();
         }
 
         private void RegisterMissingComponents()

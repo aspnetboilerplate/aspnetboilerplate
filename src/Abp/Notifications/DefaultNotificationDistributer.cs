@@ -13,7 +13,7 @@ namespace Abp.Notifications
     /// <summary>
     /// Used to distribute notifications to users.
     /// </summary>
-    public class NotificationDistributer : DomainService, INotificationDistributer
+    public class DefaultNotificationDistributer : DomainService, INotificationDistributer
     {
         public IRealTimeNotifier RealTimeNotifier { get; set; }
 
@@ -25,7 +25,7 @@ namespace Abp.Notifications
         /// <summary>
         /// Initializes a new instance of the <see cref="NotificationDistributionJob"/> class.
         /// </summary>
-        public NotificationDistributer(
+        public DefaultNotificationDistributer(
             INotificationDefinitionManager notificationDefinitionManager,
             INotificationStore notificationStore,
             IUnitOfWorkManager unitOfWorkManager, 

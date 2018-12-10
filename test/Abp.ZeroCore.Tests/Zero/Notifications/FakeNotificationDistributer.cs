@@ -4,7 +4,7 @@ using Abp.Notifications;
 
 namespace Abp.Zero.Notifications
 {
-    public class NullNotificationDistributer : INotificationDistributer
+    public class FakeNotificationDistributer : INotificationDistributer
     {
         public bool IsDistributeCalled { get; set; }
 

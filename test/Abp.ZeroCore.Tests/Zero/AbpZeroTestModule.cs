@@ -23,7 +23,7 @@ namespace Abp.Zero
             Configuration.BackgroundJobs.IsJobExecutionEnabled = false;
             Configuration.Modules.Zero().LanguageManagement.EnableDbLocalization();
             Configuration.UnitOfWork.IsTransactional = false;
-            Configuration.Notifications.Distributers.Add<NullNotificationDistributer>();
+            Configuration.Notifications.Distributers.Add<FakeNotificationDistributer>();
         }
 
         public override void Initialize()
@@ -32,8 +32,7 @@ namespace Abp.Zero
 
             IocManager.IocContainer.Register(
                 Component
-                    .For<NullNotificationDistributer>()
-                    .ImplementedBy<NullNotificationDistributer>()
+                    .For<FakeNotificationDistributer>()
                     .LifestyleSingleton()
             );
 

@@ -9,12 +9,12 @@ namespace Abp.Zero.Notifications
     public class NotificationDistributer_Tests : AbpZeroTestBase
     {
         private readonly INotificationPublisher _publisher;
-        private readonly NullNotificationDistributer _nullNotificationDistributer;
+        private readonly FakeNotificationDistributer _fakeNotificationDistributer;
 
         public NotificationDistributer_Tests()
         {
             _publisher = LocalIocManager.Resolve<INotificationPublisher>();
-            _nullNotificationDistributer = LocalIocManager.Resolve<NullNotificationDistributer>();
+            _fakeNotificationDistributer = LocalIocManager.Resolve<FakeNotificationDistributer>();
         }
 
         [Fact]
@@ -27,7 +27,7 @@ namespace Abp.Zero.Notifications
             await _publisher.PublishAsync("TestNotification", notificationData, severity: NotificationSeverity.Success, userIds: new[] { AbpSession.ToUserIdentifier() });
 
             //Assert
-            _nullNotificationDistributer.IsDistributeCalled.ShouldBeTrue();
+            _fakeNotificationDistributer.IsDistributeCalled.ShouldBeTrue();
         }
     }
 }
