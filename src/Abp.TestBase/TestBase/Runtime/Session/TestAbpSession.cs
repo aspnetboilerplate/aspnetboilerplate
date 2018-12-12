@@ -23,6 +23,8 @@ namespace Abp.TestBase.Runtime.Session
             set { _userId = value; }
         }
 
+        public virtual string UserName { get; set; }
+
         public virtual int? TenantId
         {
             get

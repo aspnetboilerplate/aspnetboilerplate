@@ -18,6 +18,9 @@ namespace Abp.Runtime.Session
         public override long? UserId => null;
 
         /// <inheritdoc/>
+        public override string UserName => null;
+
+        /// <inheritdoc/>
         public override int? TenantId => null;
 
         public override MultiTenancySides MultiTenancySide => MultiTenancySides.Tenant;
