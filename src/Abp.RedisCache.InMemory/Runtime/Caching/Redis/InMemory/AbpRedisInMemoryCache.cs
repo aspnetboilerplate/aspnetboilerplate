@@ -10,13 +10,15 @@ namespace Abp.Runtime.Caching.Redis.InMemory
         private readonly AbpMemoryCache _memoryCache;
         private readonly AbpRedisCache _redisCache;
 
-        public IIocManager IocManager { get; set; }
-
-
-        public AbpRedisInMemoryCache(string name) : base(name)
+        public AbpRedisInMemoryCache(IIocManager iocManager, string name) : base(name)
         {
-            _memoryCache = IocManager.Resolve<AbpMemoryCache>(name);
-            _redisCache = IocManager.Resolve<AbpRedisCache>(new { name });
+            _memoryCache = new AbpMemoryCache(name)
+            {
+                Logger = Logger
+            }; 
+
+            _redisCache = iocManager.Resolve<AbpRedisCache>(new { name });
+           
         }
 
         public override object GetOrDefault(string key)
