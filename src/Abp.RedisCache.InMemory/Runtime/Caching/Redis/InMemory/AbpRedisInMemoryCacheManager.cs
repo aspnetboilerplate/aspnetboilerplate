@@ -15,8 +15,9 @@ namespace Abp.Runtime.Caching.Redis.InMemory
         private readonly AbpRedisCacheOptions _options;
         private readonly Lazy<ConnectionMultiplexer> _connectionMultiplexer;
         private IIocManager IocManager { get; set; }
-
-        public AbpRedisInMemoryCacheManager(IIocManager iocManager, ICachingConfiguration configuration) : base(iocManager, configuration)
+    
+        public AbpRedisInMemoryCacheManager(IIocManager iocManager, 
+                    ICachingConfiguration configuration) : base(iocManager, configuration)
         {
             Logger = NullLogger.Instance;
             _options = iocManager.Resolve<AbpRedisCacheOptions>();
@@ -40,29 +41,40 @@ namespace Abp.Runtime.Caching.Redis.InMemory
 
             subscriber.Subscribe($"__keyspace*__:*", (channel, value) =>
                 {
-                    if (this.GetCacheName(channel.ToString(), out string cacheName))
+                    if (this.GetCacheNameAndKey(channel.ToString(), out string cacheName, out string key))
                     {
-                        var cache = (AbpRedisInMemoryCache)this.GetCache(channel);
-                        //cache.SetMemory(channel, value);
 
-                        //events i'm interested in
-                        //update - I can clear memory and refresh from cache
+                        this.Caches.TryGetValue(cacheName, out ICache cache);
 
-                        //HSET - Sets field in the hash stored at key to value. If key does not exist, a new key holding a hash is created.
-                        //If field already exists in the hash, it is overwritten.
+                        if (cache != null)
+                        {
+                            var castedCache = (AbpRedisInMemoryCache)cache;
 
-                        //DEL - Removes the specified keys. A key is ignored if it does not exist.
+                            if (value.ToString() == "set")
+                            {
+                                //events i'm interested in
+                                //update - I can clear memory and refresh from cache
 
-                        //EXPIRE - Set a timeout on key. After the timeout has expired, the key will automatically be deleted.
+                                //HSET - Sets field in the hash stored at key to value. If key does not exist, a new key holding a hash is created.
+                                //If field already exists in the hash, it is overwritten.
+
+                                //DEL - Removes the specified keys. A key is ignored if it does not exist.
+
+                                //EXPIRE - Set a timeout on key. After the timeout has expired, the key will automatically be deleted.
+                                castedCache.SetMemoryOnly(key);
+                            }
+                            
+                        }
                     }
                 }
             );
         }
 
-        private bool GetCacheName(string redisLocalizedKeyName, out string cacheName)
+        private bool GetCacheNameAndKey(string redisLocalizedKeyName, out string cacheName, out string key)
         {
             //example value - __keyspace@0__:n:AbpUserSettingsCache,c:1
             cacheName = string.Empty;
+            key = string.Empty;
             bool cacheFound = false;
 
             //split on the comma
@@ -70,11 +82,13 @@ namespace Abp.Runtime.Caching.Redis.InMemory
 
             if (commaSplit.Length == 2)
             {
-                var colonSplit = commaSplit[0].Split(':');
+                var colonSplitCacheName = commaSplit[0].Split(':');
+                var colonSplitKeyName = commaSplit[1].Split(':');
 
-                if (colonSplit.Length == 3)
+                if (colonSplitCacheName.Length == 3 && colonSplitKeyName.Length == 2)
                 {
-                    cacheName = colonSplit[2];
+                    cacheName = colonSplitCacheName[2];
+                    key = colonSplitKeyName[1];
                     cacheFound = true;
                 }
             }

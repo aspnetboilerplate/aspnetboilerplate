@@ -18,7 +18,6 @@ namespace Abp.Runtime.Caching.Redis.InMemory
             }; 
 
             _redisCache = iocManager.Resolve<AbpRedisCache>(new { name });
-           
         }
 
         public override object GetOrDefault(string key)
@@ -28,10 +27,7 @@ namespace Abp.Runtime.Caching.Redis.InMemory
 
         public override void Set(string key, object value, TimeSpan? slidingExpireTime = null, TimeSpan? absoluteExpireTime = null)
         {
-            var memSlidingExpireTime = slidingExpireTime?.Add(new TimeSpan(0, 5, 0));
-            var memAbsoluteExpireTime = absoluteExpireTime?.Add(new TimeSpan(0, 5, 0));
-
-            SetMemory(key, value, memSlidingExpireTime, memAbsoluteExpireTime);
+            SetMemory(key, value, slidingExpireTime, absoluteExpireTime);
             _redisCache.Set(key, value, slidingExpireTime, absoluteExpireTime);
         }
 
@@ -55,15 +51,16 @@ namespace Abp.Runtime.Caching.Redis.InMemory
             base.Dispose();
         }
 
-        public void SetMemory(string key, object value, TimeSpan? slidingExpireTime = null, TimeSpan? absoluteExpireTime = null)
+        private void SetMemory(string key, object value, TimeSpan? slidingExpireTime = null, TimeSpan? absoluteExpireTime = null)
         {
             _memoryCache.Set(key, value, slidingExpireTime, absoluteExpireTime);
         }
 
-        public Task SetMemoryAsync(string key, object value, TimeSpan? slidingExpireTime = null, TimeSpan? absoluteExpireTime = null)
+        public void SetMemoryOnly(string key, TimeSpan? slidingExpireTime = null, TimeSpan? absoluteExpireTime = null)
         {
-            SetMemory(key, value, slidingExpireTime, absoluteExpireTime);
-            return Task.FromResult(0);
+            _memoryCache.Clear();
+            var value = _redisCache.GetOrDefault(key);
+            _memoryCache.Set(key, value, slidingExpireTime, absoluteExpireTime);
         }
     }
 }
