@@ -12,6 +12,8 @@ namespace Abp.Runtime.Session
 
         public abstract long? UserId { get; }
 
+        public abstract string UserName { get; }
+
         public abstract int? TenantId { get; }
 
         public abstract long? ImpersonatorUserId { get; }

@@ -39,6 +39,15 @@ namespace Abp.Runtime.Session
             }
         }
 
+        public override string UserName
+        {
+            get
+            {
+                var userIdClaim = PrincipalAccessor.Principal?.Claims.FirstOrDefault(c => c.Type == AbpClaimTypes.UserName);
+                return userIdClaim?.Value;
+            }
+        }
+
         public override int? TenantId
         {
             get
@@ -64,7 +73,7 @@ namespace Abp.Runtime.Session
                     //Resolve tenant id from request only if user has not logged in!
                     return TenantResolver.ResolveTenantId();
                 }
-                
+
                 return null;
             }
         }
@@ -111,7 +120,7 @@ namespace Abp.Runtime.Session
             ITenantResolver tenantResolver,
             IAmbientScopeProvider<SessionOverride> sessionOverrideScopeProvider)
             : base(
-                  multiTenancy, 
+                  multiTenancy,
                   sessionOverrideScopeProvider)
         {
             TenantResolver = tenantResolver;
