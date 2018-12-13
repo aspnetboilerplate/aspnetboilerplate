@@ -1,17 +1,16 @@
 using System;
 using System.Threading.Tasks;
-using Abp.Events.Bus;
+using Abp.Threading;
 
 namespace Abp.BackgroundJobs
 {
-    public abstract class AsyncBackgroundJob<T> : BackgroundJob<T>
+    public abstract class AsyncBackgroundJob<TArgs> : BackgroundJob<TArgs>
     {
-        public override void Execute(T args)
+        public override void Execute(TArgs args)
         {
-            ExecuteAsync(args).Wait();
+            AsyncHelper.RunSync(() => ExecuteAsync(args));
         }
 
-        protected abstract Task ExecuteAsync(T args);
+        protected abstract Task ExecuteAsync(TArgs args);
     }
-
 }

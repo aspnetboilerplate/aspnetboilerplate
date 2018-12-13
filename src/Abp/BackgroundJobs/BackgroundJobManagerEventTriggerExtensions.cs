@@ -6,12 +6,11 @@ namespace Abp.BackgroundJobs
 {
     public static class BackgroundJobManagerEventTriggerExtensions
     {
-        
-        public static Task EnqueueEventAsync<T>(this IBackgroundJobManager t,
-            T e,BackgroundJobPriority priority = BackgroundJobPriority.Normal,
-            TimeSpan? delay = null) where T:EventData
+        public static Task EnqueueEventAsync<TEvent>(this IBackgroundJobManager backgroundJobManager,
+            TEvent e,BackgroundJobPriority priority = BackgroundJobPriority.Normal,
+            TimeSpan? delay = null) where TEvent:EventData
         {
-            return t.EnqueueAsync<EventTriggerAsyncBackgroundJob<T>,T>(e,priority,delay);
+            return backgroundJobManager.EnqueueAsync<EventTriggerAsyncBackgroundJob<TEvent>,TEvent>(e,priority,delay);
         }
     }
 }
