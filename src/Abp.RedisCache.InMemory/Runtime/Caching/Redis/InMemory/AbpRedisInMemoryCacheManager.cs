@@ -41,30 +41,35 @@ namespace Abp.Runtime.Caching.Redis.InMemory
 
             subscriber.Subscribe($"__keyspace*__:*", (channel, value) =>
                 {
+                    this.Logger.Debug($"KeySpaceEvent|{channel.ToString()}|{value.ToString()}");
+
                     if (this.GetCacheNameAndKey(channel.ToString(), out string cacheName, out string key))
                     {
-
+                        
                         this.Caches.TryGetValue(cacheName, out ICache cache);
 
                         if (cache != null)
                         {
                             var castedCache = (AbpRedisInMemoryCache)cache;
 
-                            if (value.ToString() == "set")
+                            if (value.ToString().Trim() == "set")
                             {
-                                //events i'm interested in
-                                //update - I can clear memory and refresh from cache
-
-                                //HSET - Sets field in the hash stored at key to value. If key does not exist, a new key holding a hash is created.
-                                //If field already exists in the hash, it is overwritten.
-
-                                //DEL - Removes the specified keys. A key is ignored if it does not exist.
-
-                                //EXPIRE - Set a timeout on key. After the timeout has expired, the key will automatically be deleted.
                                 castedCache.SetMemoryOnly(key);
                             }
-                            
+                            else if (value.ToString().Trim() == "expired" || value.ToString().Trim() == "del")
+                            {
+                                //DEL - Removes the specified keys. A key is ignored if it does not exist.
+                                castedCache.RemoveMemoryOnly(key);
+                            }
                         }
+                        else
+                        {
+                            this.Logger.Debug($"KeySpaceEvent FAILED Caches.TryGetValue for cache {cacheName}");
+                        }
+                    }
+                    else
+                    {
+                        this.Logger.Debug($"KeySpaceEvent FAILED GetCacheNameAndKey for channel {channel.ToString()} and value {value.ToString()}");
                     }
                 }
             );
@@ -98,6 +103,8 @@ namespace Abp.Runtime.Caching.Redis.InMemory
 
         protected override ICache CreateCacheImplementation(string name)
         {
+            this.Logger.Debug($"CreateCacheImplementation|{name}");
+
             return new AbpRedisInMemoryCache(IocManager, name)
             {
                 Logger = Logger
