@@ -14,10 +14,10 @@
     <text name="Identity.InvalidUserName" value="用户名{0}不符合要求, 只能包含字母和数字." />
     <text name="Identity.LoginAlreadyAssociated">登录的用户已存在.</text>
     <text name="Identity.PasswordMismatch" value="密码错误." />
-    <text name="Identity.PasswordRequiresDigit" value="密码至少要包含一位数字 ('0'-'9')." />
-    <text name="Identity.PasswordRequiresLower" value="密码至少要包含一位小写字母 ('a'-'z')." />
-    <text name="Identity.PasswordRequiresNonAlphanumeric" value="密码必须包含一位非字母特殊符号或数字." />
-    <text name="Identity.PasswordRequiresUpper" value="密码至少要包含一位大写字母 ('A'-'Z')." />
+    <text name="Identity.PasswordRequireDigit" value="密码至少要包含一位数字 ('0'-'9')." />
+    <text name="Identity.PasswordRequireLower" value="密码至少要包含一位小写字母 ('a'-'z')." />
+    <text name="Identity.PasswordRequireNonAlphanumeric" value="密码必须包含一位非字母特殊符号或数字." />
+    <text name="Identity.PasswordRequireUpper" value="密码至少要包含一位大写字母 ('A'-'Z')." />
     <text name="Identity.PasswordTooShort" value="密码至少要{0}位." />
     <text name="Identity.RoleNotFound" value="角色{0}不存在." />
     <text name="Identity.UserAlreadyHasPassword" value="用户已设置密码." />
