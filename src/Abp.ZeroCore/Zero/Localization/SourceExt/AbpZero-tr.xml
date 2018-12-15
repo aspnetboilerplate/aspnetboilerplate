@@ -14,10 +14,10 @@
     <text name="Identity.InvalidUserName">'{0}' kullanıcı adı geçersiz, sadece harf ve rakamlardan oluşmalı.</text>
     <text name="Identity.LoginAlreadyAssociated">Bu giriş bilgilerine sahip bir kullanıcı zaten var.</text>
     <text name="Identity.PasswordMismatch">Hatalı şifre.</text>
-    <text name="Identity.PasswordRequiresDigit">Şifre en az bir sayı içermeli ('0'-'9').</text>
-    <text name="Identity.PasswordRequiresLower">Şifre en az bir küçük harf içermeli ('a'-'z').</text>
-    <text name="Identity.PasswordRequiresNonAlphanumeric">Şifre en az bir sayı ya da harf olmayan karakter içermeli.</text>
-    <text name="Identity.PasswordRequiresUpper">Şifre en az bir büyük harf içermeli ('A'-'Z').</text>
+    <text name="Identity.PasswordRequireDigit">Şifre en az bir sayı içermeli ('0'-'9').</text>
+    <text name="Identity.PasswordRequireLower">Şifre en az bir küçük harf içermeli ('a'-'z').</text>
+    <text name="Identity.PasswordRequireNonAlphanumeric">Şifre en az bir sayı ya da harf olmayan karakter içermeli.</text>
+    <text name="Identity.PasswordRequireUpper">Şifre en az bir büyük harf içermeli ('A'-'Z').</text>
     <text name="Identity.PasswordTooShort">Şifre en az {0} karakter uzunluğunda olmalı.</text>
     <text name="Identity.RoleNotFound">{0} rolü bulunamadı.</text>
     <text name="Identity.UserAlreadyHasPassword">Kullanıcının zaten bir şifresi var.</text>
