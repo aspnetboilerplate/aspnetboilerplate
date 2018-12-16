@@ -38,7 +38,7 @@ namespace Abp.AspNetCore.Mvc.Providers
             }
 
             var configuration = _iocResolver.Resolve<AbpAspNetCoreConfiguration>().ControllerAssemblySettings.GetSettingOrNull(type);
-            return configuration != null && configuration.TypePredicate(type);
+            return configuration != null;
         }
     }
 }

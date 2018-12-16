@@ -11,7 +11,10 @@ namespace Abp.AspNetCore.Configuration
         [CanBeNull]
         public AbpControllerAssemblySetting GetSettingOrNull(Type controllerType)
         {
-            return this.FirstOrDefault(controllerSetting => controllerSetting.Assembly == controllerType.GetAssembly());
+            return this.FirstOrDefault(
+                controllerSetting => controllerSetting.Assembly == controllerType.GetAssembly()
+                 && controllerSetting.TypePredicate(controllerType)
+                );
         }
     }
 }
