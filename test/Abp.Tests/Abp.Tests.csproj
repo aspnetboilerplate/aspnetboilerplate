@@ -35,12 +35,12 @@
   </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Include="Microsoft.NET.Test.Sdk" Version="15.8.0" />
+    <PackageReference Include="Microsoft.NET.Test.Sdk" Version="15.9.0" />
     <PackageReference Include="xunit.runner.visualstudio" Version="2.4.0" />
     <PackageReference Include="NSubstitute" Version="3.1.0" />
-    <PackageReference Include="Shouldly" Version="3.0.0" />
+    <PackageReference Include="Shouldly" Version="3.0.1" />
     <PackageReference Include="xunit" Version="2.4.0" />
-    <PackageReference Include="TimeZoneConverter" Version="2.4.1"></PackageReference>
+    <PackageReference Include="TimeZoneConverter" Version="2.4.2"></PackageReference>
   </ItemGroup>
 
   <ItemGroup Condition=" '$(TargetFramework)' == 'netcoreapp2.1' ">

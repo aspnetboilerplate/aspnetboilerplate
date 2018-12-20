@@ -3,7 +3,7 @@
   <Import Project="..\..\common.props" />
   
   <PropertyGroup>
-    <TargetFramework>net461</TargetFramework>
+    <TargetFramework>netstandard2.0</TargetFramework>
     <GenerateDocumentationFile>true</GenerateDocumentationFile>
     <AssemblyName>Abp.NHibernate</AssemblyName>
     <PackageId>Abp.NHibernate</PackageId>
@@ -20,8 +20,8 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <None Include="bin\Release\net461\Abp.NHibernate.pdb">
-      <PackagePath>lib/net461/</PackagePath>
+    <None Include="bin\Release\netstandard2.0\Abp.NHibernate.pdb">
+      <PackagePath>lib/netstandard2.0/</PackagePath>
       <Pack>true</Pack>
     </None>
   </ItemGroup>

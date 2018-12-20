@@ -1,10 +1,10 @@
-﻿using System.Linq;
-using Abp.Domain.Repositories;
+﻿using Abp.Domain.Repositories;
+using Abp.Domain.Uow;
 using Abp.Events.Bus;
 using Abp.Events.Bus.Entities;
 using Abp.NHibernate.Tests.Entities;
-using NHibernate.Linq;
 using Shouldly;
+using System.Linq;
 using Xunit;
 
 namespace Abp.NHibernate.Tests
@@ -12,17 +12,18 @@ namespace Abp.NHibernate.Tests
     public class Basic_Repository_Tests : NHibernateTestBase
     {
         private readonly IRepository<Person> _personRepository;
+        private readonly IRepository<Book> _booksRepository;
+        private readonly IUnitOfWorkManager _unitOfWorkManager;
 
         public Basic_Repository_Tests()
         {
             _personRepository = Resolve<IRepository<Person>>();
-            UsingSession(session => session.Save(new Person() { Name = "emre" }));
-        }
+            _booksRepository = Resolve<IRepository<Book>>();
+            _unitOfWorkManager = Resolve<IUnitOfWorkManager>();
 
-        [Fact]
-        public void Should_Get_All_People()
-        {
-            _personRepository.GetAllList().Count.ShouldBe(1);
+            UsingSession(session => session.Save(new Person() { Name = "emre" }));
+            UsingSession(session => session.Save(new Book { Name = "Hitchhikers Guide to the Galaxy" }));
+            UsingSession(session => session.Save(new Book { Name = "My First ABCs", IsDeleted = true }));
         }
 
         [Fact]
@@ -34,6 +35,24 @@ namespace Abp.NHibernate.Tests
             insertedPerson.ShouldNotBe(null);
             insertedPerson.IsTransient().ShouldBe(false);
             insertedPerson.Name.ShouldBe("halil");
+        }
+
+        [Fact]
+        public void Should_Filter_SoftDelete()
+        {
+            var books = _booksRepository.GetAllList();
+            books.All(p => !p.IsDeleted).ShouldBeTrue();
+        }
+
+        [Fact]
+        public void Should_Get_SoftDeleted_Entities_If_Filter_Is_Disabled()
+        {
+            using (_unitOfWorkManager.Begin())
+            using (_unitOfWorkManager.Current.DisableFilter(AbpDataFilters.SoftDelete))
+            {
+                var books = _booksRepository.GetAllList();
+                books.Any(x => x.IsDeleted).ShouldBe(true);
+            }
         }
 
         [Fact]
@@ -90,7 +109,6 @@ namespace Abp.NHibernate.Tests
         public void Should_Trigger_Event_On_Delete()
         {
             var triggerCount = 0;
-
             Resolve<IEventBus>().Register<EntityDeletedEventData<Person>>(
                 eventData =>
                 {

@@ -68,9 +68,9 @@ notifications. Examples:
         }
 
         //Subscribe to a general notification
-        public async Task Subscribe_SentFrendshipRequest(int? tenantId, long userId)
+        public async Task Subscribe_SentFriendshipRequest(int? tenantId, long userId)
         {
-            await _notificationSubscriptionManager.SubscribeAsync(new UserIdentifier(tenantId, userId), "SentFrendshipRequest");    
+            await _notificationSubscriptionManager.SubscribeAsync(new UserIdentifier(tenantId, userId), "SentFriendshipRequest");    
         }
 
         //Subscribe to an entity notification

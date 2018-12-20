@@ -49,7 +49,7 @@ namespace Abp.Zero
             UsingDbContext(
                 context =>
                 {
-                    var blog1 = new Blog("test-blog-1", "http://testblog1.myblogs.com");
+                    var blog1 = new Blog("test-blog-1", "http://testblog1.myblogs.com", "blogger-1");
 
                     context.Blogs.Add(blog1);
                     context.SaveChanges();
@@ -116,6 +116,26 @@ namespace Abp.Zero
 
                     context.SaveChanges();
                 });
+
+            UsingDbContext(context =>
+            {
+                var products = context.Products.ToList();
+                var order = new Order
+                {
+                    Price = 100,
+                    Products = products
+                };
+
+                context.Orders.Add(order);
+                context.SaveChanges();
+
+                var order_en = new OrderTranslation { CoreId = order.Id, Language = "en", Name = "Test" };
+                var order_fr = new OrderTranslation { CoreId = order.Id, Language = "fr", Name = "Tester" };
+
+                context.OrderTranslations.Add(order_en);
+                context.OrderTranslations.Add(order_fr);
+                context.SaveChanges();
+            });
         }
 
         protected IDisposable UsingTenantId(int? tenantId)

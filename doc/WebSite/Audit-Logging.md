@@ -48,7 +48,7 @@ Auditing is **enabled by default**. You can disable it as shown below:
         {
             Configuration.Auditing.IsEnabled = false;
         }
-
+    
         //...
     }
 
@@ -96,13 +96,13 @@ individual **method**. Example:
         {
             //...
         }
-
+    
         [DisableAuditing]
         public void MyMethod2(string b)
         {
             //...
         }
-
+    
         public void MyMethod3(int a, int b)
         {
             //...

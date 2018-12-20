@@ -6,6 +6,7 @@ using Abp.Auditing;
 using Abp.Extensions;
 using Abp.Localization;
 using Abp.Web.Authorization;
+using Abp.Web.Configuration;
 using Abp.Web.Features;
 using Abp.Web.Localization;
 using Abp.Web.MultiTenancy;
@@ -31,6 +32,7 @@ namespace Abp.AspNetCore.Mvc.Controllers
         private readonly IFeaturesScriptManager _featuresScriptManager;
         private readonly ISessionScriptManager _sessionScriptManager;
         private readonly ITimingScriptManager _timingScriptManager;
+        private readonly ICustomConfigScriptManager _customConfigScriptManager;
 
         /// <summary>
         /// Constructor.
@@ -43,7 +45,8 @@ namespace Abp.AspNetCore.Mvc.Controllers
             IAuthorizationScriptManager authorizationScriptManager,
             IFeaturesScriptManager featuresScriptManager,
             ISessionScriptManager sessionScriptManager, 
-            ITimingScriptManager timingScriptManager)
+            ITimingScriptManager timingScriptManager, 
+            ICustomConfigScriptManager customConfigScriptManager)
         {
             _multiTenancyScriptManager = multiTenancyScriptManager;
             _settingScriptManager = settingScriptManager;
@@ -53,6 +56,7 @@ namespace Abp.AspNetCore.Mvc.Controllers
             _featuresScriptManager = featuresScriptManager;
             _sessionScriptManager = sessionScriptManager;
             _timingScriptManager = timingScriptManager;
+            _customConfigScriptManager = customConfigScriptManager;
         }
 
         /// <summary>
@@ -91,6 +95,9 @@ namespace Abp.AspNetCore.Mvc.Controllers
             sb.AppendLine();
 
             sb.AppendLine(await _timingScriptManager.GetScriptAsync());
+            sb.AppendLine();
+
+            sb.AppendLine(_customConfigScriptManager.GetScript());
             sb.AppendLine();
 
             sb.AppendLine(GetTriggerScript());

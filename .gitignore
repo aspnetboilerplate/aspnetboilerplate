@@ -9,6 +9,7 @@ Logs/
 project.lock.json
 .vs/
 .dotnet/
+.idea/
 
 # Nuget packages
 nupkg/*.nupkg

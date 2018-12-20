@@ -1,5 +1,4 @@
-﻿using System.Reflection;
-using Abp.AspNetCore;
+﻿using Abp.AspNetCore;
 using Abp.AspNetCore.Configuration;
 using Abp.Castle.Logging.Log4Net;
 using Abp.EntityFrameworkCore;

@@ -1,4 +1,5 @@
 ﻿using System.Globalization;
+using System.Linq;
 using System.Threading.Tasks;
 using Abp.ZeroCore.SampleApp.Application.Shop;
 using Shouldly;
@@ -9,10 +10,12 @@ namespace Abp.Zero.MultiLingual
     public class MultiLingual_Mapping_Tests : AbpZeroTestBase
     {
         private readonly IProductAppService _productAppService;
+        private readonly IOrderAppService _orderAppService;
 
         public MultiLingual_Mapping_Tests()
         {
             _productAppService = Resolve<IProductAppService>();
+            _orderAppService = Resolve<IOrderAppService>();
         }
 
         [Fact]
@@ -70,6 +73,23 @@ namespace Abp.Zero.MultiLingual
             product1.Language.ShouldBe("tr");
             product1.Name.ShouldBe("Saat");
             product1.Id.ShouldBe(1);
+        }
+
+        [Fact]
+        public async Task Allow_Modifying_CreateMultiLingualMap_Mapping()
+        {
+            CultureInfo.CurrentUICulture = new CultureInfo("fr");
+
+            var orders = await _orderAppService.GetOrders();
+
+            orders.Items.Count.ShouldBe(1);
+
+            var testOrder = orders.Items.First();
+
+            testOrder.Price.ShouldBe(100);
+            testOrder.Language.ShouldBe("fr");
+            testOrder.Name.ShouldBe("Tester");
+            testOrder.ProductCount.ShouldBe(3);
         }
     }
 }

@@ -2,9 +2,12 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
+using Castle.DynamicProxy;
+using Castle.MicroKernel;
 using Castle.MicroKernel.Registration;
 using Castle.Windsor;
 using Castle.Windsor.Installer;
+using Castle.Windsor.Proxy;
 
 namespace Abp.Dependency
 {
@@ -17,6 +20,15 @@ namespace Abp.Dependency
         /// The Singleton instance.
         /// </summary>
         public static IocManager Instance { get; private set; }
+
+        /// <summary>
+        /// Singletone instance for Castle ProxyGenerator.
+        /// From Castle.Core documentation it is highly recomended to use single instance of ProxyGenerator to avoid memoryleaks and performance issues
+        /// Follow next links for more details:
+        /// <a href="https://github.com/castleproject/Core/blob/master/docs/dynamicproxy.md">Castle.Core documentation</a>,
+        /// <a href="http://kozmic.net/2009/07/05/castle-dynamic-proxy-tutorial-part-xii-caching/">Article</a>
+        /// </summary>
+        private static readonly ProxyGenerator ProxyGeneratorInstance = new ProxyGenerator();
 
         /// <summary>
         /// Reference to the Castle Windsor Container.
@@ -40,13 +52,20 @@ namespace Abp.Dependency
         /// </summary>
         public IocManager()
         {
-            IocContainer = new WindsorContainer();
+            IocContainer = CreateContainer();
             _conventionalRegistrars = new List<IConventionalDependencyRegistrar>();
 
             //Register self!
             IocContainer.Register(
-                Component.For<IocManager, IIocManager, IIocRegistrar, IIocResolver>().UsingFactoryMethod(() => this)
-                );
+                Component
+                    .For<IocManager, IIocManager, IIocRegistrar, IIocResolver>()
+                    .Instance(this)
+            );
+        }
+
+        protected virtual IWindsorContainer CreateContainer()
+        {
+            return new WindsorContainer(new DefaultProxyFactory(ProxyGeneratorInstance));
         }
 
         /// <summary>
