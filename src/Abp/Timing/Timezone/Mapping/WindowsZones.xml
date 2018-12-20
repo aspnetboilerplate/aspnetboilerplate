@@ -707,6 +707,7 @@ For terms of use, see http://www.unicode.org/copyright.html
       <mapZone other="Malay Peninsula Standard Time" territory="001" type="Asia/Kuala_Lumpur"/>
       <mapZone other="Sudan Standard Time" territory="001" type="Africa/Khartoum"/>
       <mapZone other="Sao Tome Standard Time" territory="001" type="Africa/Sao_Tome"/>
+      <mapZone other="Volgograd Standard Time" territory="001" type="Europe/Volgograd"/>
     </mapTimezones>
   </windowsZones>
 </supplementalData>
