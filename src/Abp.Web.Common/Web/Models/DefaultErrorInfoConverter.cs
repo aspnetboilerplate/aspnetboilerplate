@@ -106,7 +106,7 @@ namespace Abp.Web.Models
                 return new ErrorInfo(authorizationException.Message);
             }
 
-            return new ErrorInfo(L("InternalServerError"));
+            return new ErrorInfo(L("InternalServerError"), exception.Message);
         }
 
         private ErrorInfo CreateDetailedErrorInfoFromException(Exception exception)
@@ -204,7 +204,9 @@ namespace Abp.Web.Models
 
             foreach (var validationResult in validationException.ValidationErrors)
             {
-                detailBuilder.AppendFormat(" - {0}", validationResult.ErrorMessage);
+                detailBuilder.AppendFormat(" - {0}", !validationResult.ErrorMessage.IsNullOrEmpty() 
+                    ? validationResult.ErrorMessage 
+                    : string.Join(", ", validationResult.MemberNames));
                 detailBuilder.AppendLine();
             }
 
