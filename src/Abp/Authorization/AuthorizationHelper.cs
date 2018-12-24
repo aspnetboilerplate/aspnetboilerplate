@@ -66,6 +66,11 @@ namespace Abp.Authorization
                 return;
             }
 
+            if (AbpSession.UserId.HasValue && !AbpSession.TenantId.HasValue)
+            {
+                throw new AbpException("RequiresFeatureAttribute should not be used during host user authorization");
+            }
+
             foreach (var featureAttribute in featureAttributes)
             {
                 await _featureChecker.CheckEnabledAsync(featureAttribute.RequiresAll, featureAttribute.Features);
