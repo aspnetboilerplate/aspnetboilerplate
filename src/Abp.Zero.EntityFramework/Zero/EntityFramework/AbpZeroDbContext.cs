@@ -2,12 +2,14 @@ using System.Data.Common;
 using System.Data.Entity;
 using System.Data.Entity.Core.Objects;
 using System.Data.Entity.Infrastructure;
+using System.Data.Entity.ModelConfiguration.Conventions;
 using Abp.Application.Editions;
 using Abp.Application.Features;
 using Abp.Auditing;
 using Abp.Authorization.Roles;
 using Abp.Authorization.Users;
 using Abp.BackgroundJobs;
+using Abp.Domain.Entities;
 using Abp.EntityFramework.Extensions;
 using Abp.MultiTenancy;
 using Abp.Notifications;
@@ -212,6 +214,13 @@ namespace Abp.Zero.EntityFramework
 
             #endregion
 
+            #region Common Indexes
+
+            modelBuilder.Conventions.AddAfter<IndexAttributeConvention>(new IndexingPropertyConvention<ISoftDelete, bool>(m => m.IsDeleted));
+            modelBuilder.Conventions.AddAfter<IndexAttributeConvention>(new IndexingPropertyConvention<IMayHaveTenant, int?>(m => m.TenantId));
+            modelBuilder.Conventions.AddAfter<IndexAttributeConvention>(new IndexingPropertyConvention<IMustHaveTenant, int>(m => m.TenantId));
+
+            #endregion
         }
     }
 }

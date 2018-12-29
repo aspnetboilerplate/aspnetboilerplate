@@ -23,7 +23,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\Abp.Zero\Abp.Zero.csproj" />
-    <PackageReference Include="Microsoft.AspNetCore.Mvc" Version="2.1.1" />
+    <PackageReference Include="Microsoft.AspNetCore.Mvc" Version="2.2.0" />
   </ItemGroup>
 
   <ItemGroup>

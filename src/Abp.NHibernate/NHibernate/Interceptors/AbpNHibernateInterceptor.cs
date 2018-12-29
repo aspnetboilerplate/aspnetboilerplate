@@ -1,7 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using Abp.Collections.Extensions;
+﻿using Abp.Collections.Extensions;
 using Abp.Dependency;
 using Abp.Domain.Entities;
 using Abp.Domain.Entities.Auditing;
@@ -10,9 +7,11 @@ using Abp.Events.Bus.Entities;
 using Abp.Extensions;
 using Abp.Runtime.Session;
 using Abp.Timing;
-using FluentNHibernate.Utils.Reflection;
 using NHibernate;
 using NHibernate.Type;
+using System;
+using System.Collections.Generic;
+using System.Linq;
 
 namespace Abp.NHibernate.Interceptors
 {

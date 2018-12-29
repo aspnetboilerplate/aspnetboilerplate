@@ -31,6 +31,7 @@ namespace Abp.Web.Common.Tests.Configuration
             userConfiguration.Clock.ShouldNotBe(null);
             userConfiguration.Timing.ShouldNotBe(null);
             userConfiguration.Security.ShouldNotBe(null);
+            userConfiguration.Custom.ShouldNotBe(null);
         }
 
         [Fact]

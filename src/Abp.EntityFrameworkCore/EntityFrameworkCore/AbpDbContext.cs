@@ -11,7 +11,9 @@ using Abp.Configuration.Startup;
 using Abp.Dependency;
 using Abp.Domain.Entities;
 using Abp.Domain.Entities.Auditing;
+using Abp.Domain.Repositories;
 using Abp.Domain.Uow;
+using Abp.EntityFrameworkCore.Extensions;
 using Abp.Events.Bus;
 using Abp.Events.Bus.Entities;
 using Abp.Extensions;
@@ -229,6 +231,11 @@ namespace Abp.EntityFrameworkCore
 
             foreach (var entry in ChangeTracker.Entries().ToList())
             {
+                if (entry.State != EntityState.Modified && entry.CheckOwnedEntityChange())
+                {
+                    Entry(entry.Entity).State = EntityState.Modified;
+                }
+
                 ApplyAbpConcepts(entry, userId, changeReport);
             }
 
@@ -278,9 +285,38 @@ namespace Abp.EntityFrameworkCore
 
         protected virtual void ApplyAbpConceptsForDeletedEntity(EntityEntry entry, long? userId, EntityChangeReport changeReport)
         {
+            if (IsHardDeleteEntity(entry))
+            {
+                changeReport.ChangedEntities.Add(new EntityChangeEntry(entry.Entity, EntityChangeType.Deleted));
+                return;
+            }
+
             CancelDeletionForSoftDelete(entry);
             SetDeletionAuditProperties(entry.Entity, userId);
             changeReport.ChangedEntities.Add(new EntityChangeEntry(entry.Entity, EntityChangeType.Deleted));
+        }
+
+        protected virtual bool IsHardDeleteEntity(EntityEntry entry)
+        {
+            if (CurrentUnitOfWorkProvider?.Current?.Items == null)
+            {
+                return false;
+            }
+
+            if (!CurrentUnitOfWorkProvider.Current.Items.ContainsKey(UnitOfWorkExtensionDataTypes.HardDelete))
+            {
+                return false;
+            }
+
+            var hardDeleteItems = CurrentUnitOfWorkProvider.Current.Items[UnitOfWorkExtensionDataTypes.HardDelete];
+            if (!(hardDeleteItems is HashSet<string> objects))
+            {
+                return false;
+            }
+
+            var currentTenantId = GetCurrentTenantIdOrNull();
+            var hardDeleteKey = EntityHelper.GetHardDeleteKey(entry.Entity, currentTenantId);
+            return objects.Contains(hardDeleteKey);
         }
 
         protected virtual void AddDomainEvents(List<DomainEventEntry> domainEvents, object entityAsObj)

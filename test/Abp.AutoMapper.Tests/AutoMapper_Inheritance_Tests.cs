@@ -51,7 +51,7 @@ namespace Abp.AutoMapper.Tests
             public string Value { get; set; }
         }
 
-        //[Fact] //TODO: That's a problem but related to AutoMapper rather than ABP.
+        [Fact]
         public void Should_Map_EntityProxy_To_EntityDto_And_To_DrivedEntityDto()
         {
             var proxy = new EntityProxy() { Value = "42" };
@@ -169,6 +169,7 @@ namespace Abp.AutoMapper.Tests
 
             public int Value { get; set; }
         }
+
         [Fact]
         public void AutoMapKey_MapTo_DerivedCollection_Tests()
         {
@@ -177,36 +178,43 @@ namespace Abp.AutoMapper.Tests
                             new MyAutoMapKeyClass1 { Id = 1, TestProp = "New test value 1"},
                             new MyAutoMapKeyClass1 { Id = 2, TestProp = "New test value 2"}
                         };
+
             var list2 = new List<MyAutoMapKeyClass2>
                         {
                             new MyAutoMapKeyClass2 { Id = 1, TestProp = "Test value 1", Value = 5},
                             new MyAutoMapKeyClass2 { Id = 2, TestProp = "Test value 2", Value = 10}
                         };
+
             var list3 = new List<MyAutoMapKeyClass3>
                         {
                             new MyAutoMapKeyClass3 { Id = 1, TestProp = "New test value 1"},
                             new MyAutoMapKeyClass3 { Id = 2, TestProp = "New test value 2"}
                         };
+
             var list4 = new List<MyAutoMapKeyClass4>
                         {
                             new MyAutoMapKeyClass4 { Id = 1, TestProp = "Test value 1", Value = 5},
                             new MyAutoMapKeyClass4 { Id = 2, TestProp = "Test value 2", Value = 10}
                         };
+
             var list5 = new List<MyAutoMapKeyClass5>
                         {
                             new MyAutoMapKeyClass5 { Id = 1, SecondId = 2, TestProp = "New test value 1"},
                             new MyAutoMapKeyClass5 { Id = 2, SecondId = 3, TestProp = "New test value 2"}
                         };
+
             var list6 = new List<MyAutoMapKeyClass6>
                         {
                             new MyAutoMapKeyClass6 { Id = 1, SecondId = 2,  TestProp = "Test value 1", Value = 5},
                             new MyAutoMapKeyClass6 { Id = 2, SecondId = 3,  TestProp = "Test value 2", Value = 10}
                         };
+
             var list7 = new List<MyAutoMapKeyClass7>
                         {
                             new MyAutoMapKeyClass7 { Id = 1, SecondId = 2,  TestProp = "New test value 1"},
                             new MyAutoMapKeyClass7 { Id = 2, SecondId = 3,  TestProp = "New test value 2"}
                         };
+
             var list8 = new List<MyAutoMapKeyClass8>
                         {
                             new MyAutoMapKeyClass8 { Id = 1, SecondId = 2,  TestProp = "Test value 1", Value = 5},

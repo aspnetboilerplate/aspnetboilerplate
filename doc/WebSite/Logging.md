@@ -189,6 +189,19 @@ and
 [Castle.Core-log4net](https://www.nuget.org/packages/Castle.Core-log4net/)
 packages.
 
+If you need to change your log4Net configuration file on runtime and want to make changes take effect immediately without restarting the application you can use as follows:
+
+    public class MvcApplication : AbpWebApplication
+    {
+        protected override void Application_Start(object sender, EventArgs e)
+        {
+            options.IocManager.IocContainer.AddFacility<LoggingFacility>(
+                f => f.LogUsing(new Log4NetLoggerFactory("log4net.config", reloadOnChange:true))
+            );
+            base.Application_Start(sender, e);
+        }
+    }
+
 ### Client-Side
 
 ASP.NET Boilerplate defines a simple JavaScript logging API for the client

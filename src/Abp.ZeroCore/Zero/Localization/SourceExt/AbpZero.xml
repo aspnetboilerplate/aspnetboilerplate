@@ -14,10 +14,10 @@
     <text name="Identity.InvalidUserName">User name '{0}' is invalid, can only contain letters or digits.</text>
     <text name="Identity.LoginAlreadyAssociated">A user with this login already exists.</text>
     <text name="Identity.PasswordMismatch">Incorrect password.</text>
-    <text name="Identity.PasswordRequiresDigit">Passwords must have at least one digit ('0'-'9').</text>
-    <text name="Identity.PasswordRequiresLower">Passwords must have at least one lowercase ('a'-'z').</text>
-    <text name="Identity.PasswordRequiresNonAlphanumeric">Passwords must have at least one non alphanumeric character.</text>
-    <text name="Identity.PasswordRequiresUpper">Passwords must have at least one uppercase ('A'-'Z').</text>
+    <text name="Identity.PasswordRequireDigit">Passwords must have at least one digit ('0'-'9').</text>
+    <text name="Identity.PasswordRequireLower">Passwords must have at least one lowercase ('a'-'z').</text>
+    <text name="Identity.PasswordRequireNonAlphanumeric">Passwords must have at least one non alphanumeric character.</text>
+    <text name="Identity.PasswordRequireUpper">Passwords must have at least one uppercase ('A'-'Z').</text>
     <text name="Identity.PasswordTooShort">Passwords must be at least {0} characters.</text>
     <text name="Identity.RoleNotFound">Role {0} does not exist.</text>
     <text name="Identity.UserAlreadyHasPassword">User already has a password set.</text>

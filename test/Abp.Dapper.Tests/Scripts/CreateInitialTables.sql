@@ -9,6 +9,7 @@
 										,	CreationTime DATETIME
 										,	CreatorUserId BIGINT
 										,	TenantId INTEGER NULLABLE
+										, Status BOOLEAN
 									);
 
  CREATE TABLE IF NOT EXISTS ProductDetails (
@@ -24,6 +25,10 @@
 										,	TenantId INTEGER
 									);
 
- 
+  CREATE TABLE IF NOT EXISTS Person (
+											Id INTEGER PRIMARY KEY
+										,	Name varchar(100) 
+										,	TenantId INTEGER
+									);
 
  
