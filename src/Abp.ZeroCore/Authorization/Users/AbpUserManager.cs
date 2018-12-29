@@ -316,7 +316,7 @@ namespace Abp.Authorization.Users
 
         public virtual Task<TUser> FindByNameOrEmailAsync(string userNameOrEmailAddress)
         {
-            return AbpUserStore.FindByNameOrEmailAsync(userNameOrEmailAddress);
+            return AbpUserStore.FindByNameOrEmailAsync(NormalizeKey(userNameOrEmailAddress));
         }
 
         public virtual Task<List<TUser>> FindAllAsync(UserLoginInfo login)
@@ -331,7 +331,7 @@ namespace Abp.Authorization.Users
 
         public virtual Task<TUser> FindByNameOrEmailAsync(int? tenantId, string userNameOrEmailAddress)
         {
-            return AbpUserStore.FindByNameOrEmailAsync(tenantId, userNameOrEmailAddress);
+            return AbpUserStore.FindByNameOrEmailAsync(tenantId, NormalizeKey(userNameOrEmailAddress));
         }
 
         /// <summary>

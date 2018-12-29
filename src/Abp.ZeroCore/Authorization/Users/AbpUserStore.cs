@@ -1153,29 +1153,30 @@ namespace Abp.Authorization.Users
         }
 
         /// <summary>
-        /// Tries to find a user with user name or email address in current tenant.
+        /// Tries to find a user with normalized user name or normalized email address in current tenant.
         /// </summary>
-        /// <param name="userNameOrEmailAddress">User name or email address</param>
+        /// <param name="normalizedUserNameOrEmailAddress">Normalized user name or normalized email address</param>
         /// <returns>User or null</returns>
-        public virtual async Task<TUser> FindByNameOrEmailAsync(string userNameOrEmailAddress)
+        public virtual async Task<TUser> FindByNameOrEmailAsync(string normalizedUserNameOrEmailAddress)
         {
             return await UserRepository.FirstOrDefaultAsync(
-                user => (user.UserName == userNameOrEmailAddress || user.EmailAddress == userNameOrEmailAddress)
-                );
+                user => (user.NormalizedUserName == normalizedUserNameOrEmailAddress ||
+                         user.NormalizedEmailAddress == normalizedUserNameOrEmailAddress)
+            );
         }
 
         /// <summary>
-        /// Tries to find a user with user name or email address in given tenant.
+        /// Tries to find a user with normalized user name or normalized email address in given tenant.
         /// </summary>
         /// <param name="tenantId">Tenant Id</param>
-        /// <param name="userNameOrEmailAddress">User name or email address</param>
+        /// <param name="normalizedUserNameOrEmailAddress">Normalized user name or normalized email address</param>
         /// <returns>User or null</returns>
         [UnitOfWork]
-        public virtual async Task<TUser> FindByNameOrEmailAsync(int? tenantId, string userNameOrEmailAddress)
+        public virtual async Task<TUser> FindByNameOrEmailAsync(int? tenantId, string normalizedUserNameOrEmailAddress)
         {
             using (_unitOfWorkManager.Current.SetTenantId(tenantId))
             {
-                return await FindByNameOrEmailAsync(userNameOrEmailAddress);
+                return await FindByNameOrEmailAsync(normalizedUserNameOrEmailAddress);
             }
         }
 

@@ -66,7 +66,7 @@ namespace Abp.Authorization.Roles
         public virtual async Task<TRole> FindByNameAsync(string roleName)
         {
             return await _roleRepository.FirstOrDefaultAsync(
-                role => role.Name == roleName
+                role => role.Name.ToUpper() == roleName.ToUpper()
                 );
         }
 

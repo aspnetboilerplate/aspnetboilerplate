@@ -99,14 +99,14 @@ namespace Abp.Authorization.Users
         public virtual async Task<TUser> FindByNameAsync(string userName)
         {
             return await _userRepository.FirstOrDefaultAsync(
-                user => user.UserName == userName
+                user => user.UserName.ToUpper() == userName.ToUpper()
             );
         }
 
         public virtual async Task<TUser> FindByEmailAsync(string email)
         {
             return await _userRepository.FirstOrDefaultAsync(
-                user => user.EmailAddress == email
+                user => user.EmailAddress.ToUpper() == email.ToUpper()
             );
         }
 
@@ -118,7 +118,7 @@ namespace Abp.Authorization.Users
         public virtual async Task<TUser> FindByNameOrEmailAsync(string userNameOrEmailAddress)
         {
             return await _userRepository.FirstOrDefaultAsync(
-                user => (user.UserName == userNameOrEmailAddress || user.EmailAddress == userNameOrEmailAddress)
+                user => (user.UserName.ToUpper() == userNameOrEmailAddress.ToUpper() || user.EmailAddress.ToUpper() == userNameOrEmailAddress.ToUpper())
                 );
         }
 
