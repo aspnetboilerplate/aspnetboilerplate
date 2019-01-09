@@ -7,12 +7,12 @@ namespace Abp.BackgroundJobs
     public class EventTriggerAsyncBackgroundJob<TEvent> : AsyncBackgroundJob<TEvent>, ITransientDependency
         where TEvent : EventData
     {
-        public EventTriggerAsyncBackgroundJob(IEventBus eventBus)
+        public IEventBus EventBus { get; set; }
+
+        public EventTriggerAsyncBackgroundJob()
         {
             EventBus = NullEventBus.Instance;
         }
-
-        public IEventBus EventBus { get; set; }
 
         protected override async Task ExecuteAsync(TEvent e)
         {
