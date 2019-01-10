@@ -150,7 +150,7 @@ tenant related to the current request in this given order:
 2.  If the user has not logged in, then it tries to resolve the TenantId from the
     *tenant resolve contributor*s. There are 3 pre-defined tenant
     contributors and are run in a given order (first successful resolver 'wins'):
-    1.  **DomainTenantResolveContributer**: Tries to resolve tenancy
+    1.  **DomainTenantResolveContributor**: Tries to resolve tenancy
         name from an url, generally from a domain or subdomain. You can
         configure the domain format in the PreInitialize method of your module
         (like
@@ -160,11 +160,11 @@ tenant related to the current request in this given order:
         tenancy name is resolved as "acme". The next step is to query
         ITenantStore to find the TenantId by the given tenancy name. If a
         tenant is found, then it's resolved as the current TenantId.
-    2.  **HttpHeaderTenantResolveContributer**: Tries to resolve
+    2.  **HttpHeaderTenantResolveContributor**: Tries to resolve
         TenantId from an "Abp.TenantId" header value, if present. This is a
         constant defined in
         Abp.MultiTenancy.MultiTenancyConsts.TenantIdResolveKey.
-    3.  **HttpCookieTenantResolveContributer**: Tries to resolve
+    3.  **HttpCookieTenantResolveContributor**: Tries to resolve
         the TenantId from an "Abp.TenantId" cookie value, if present. This uses the
         same constant explained above.
 
@@ -179,7 +179,7 @@ once in a request, and only if the current user has not already logged in.
 
 ##### Tenant Store
 
-The **DomainTenantResolveContributer** uses ITenantStore to find the tenant id
+The **DomainTenantResolveContributor** uses ITenantStore to find the tenant id
 by tenancy name. The default implementation of **ITenantStore** is
 **NullTenantStore** which does not contain any tenant and returns null
 for queries. You can implement and replace it to query tenants from any

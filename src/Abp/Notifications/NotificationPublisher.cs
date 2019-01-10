@@ -37,8 +37,9 @@ namespace Abp.Notifications
 
         private readonly INotificationStore _store;
         private readonly IBackgroundJobManager _backgroundJobManager;
-        private readonly INotificationDistributer _notificationDistributer;
+        private readonly INotificationConfiguration _notificationConfiguration;
         private readonly IGuidGenerator _guidGenerator;
+        private readonly IIocResolver _iocResolver;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="NotificationPublisher"/> class.
@@ -46,13 +47,15 @@ namespace Abp.Notifications
         public NotificationPublisher(
             INotificationStore store,
             IBackgroundJobManager backgroundJobManager,
-            INotificationDistributer notificationDistributer,
-            IGuidGenerator guidGenerator)
+            INotificationConfiguration notificationConfiguration,
+            IGuidGenerator guidGenerator,
+            IIocResolver iocResolver)
         {
             _store = store;
             _backgroundJobManager = backgroundJobManager;
-            _notificationDistributer = notificationDistributer;
+            _notificationConfiguration = notificationConfiguration;
             _guidGenerator = guidGenerator;
+            _iocResolver = iocResolver;
             AbpSession = NullAbpSession.Instance;
         }
 
@@ -79,7 +82,7 @@ namespace Abp.Notifications
 
             if (tenantIds.IsNullOrEmpty() && userIds.IsNullOrEmpty())
             {
-                tenantIds = new[] {AbpSession.TenantId};
+                tenantIds = new[] { AbpSession.TenantId };
             }
 
             var notificationInfo = new NotificationInfo(_guidGenerator.Create())
@@ -103,7 +106,13 @@ namespace Abp.Notifications
             if (userIds != null && userIds.Length <= MaxUserCountToDirectlyDistributeANotification)
             {
                 //We can directly distribute the notification since there are not much receivers
-                await _notificationDistributer.DistributeAsync(notificationInfo.Id);
+                foreach (var notificationDistributorType in _notificationConfiguration.Distributers)
+                {
+                    using (var notificationDistributer = _iocResolver.ResolveAsDisposable<INotificationDistributer>(notificationDistributorType))
+                    {
+                        await notificationDistributer.Object.DistributeAsync(notificationInfo.Id);
+                    }
+                }
             }
             else
             {

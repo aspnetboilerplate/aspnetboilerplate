@@ -15,6 +15,7 @@ namespace Abp.EntityFrameworkCore.Tests.Tests
         private readonly IRepository<Post, Guid> _postRepository;
         private readonly IRepository<Ticket> _ticketRepository;
         private readonly IUnitOfWorkManager _unitOfWorkManager;
+        private readonly IRepository<TicketListItem> _ticketListItemRepository;
 
         public Repository_Filtering_Tests()
         {
@@ -22,6 +23,7 @@ namespace Abp.EntityFrameworkCore.Tests.Tests
 
             _postRepository = Resolve<IRepository<Post, Guid>>();
             _ticketRepository = Resolve<IRepository<Ticket>>();
+            _ticketListItemRepository = Resolve<IRepository<TicketListItem>>();
         }
 
         override protected void PostInitialize()
@@ -105,6 +107,21 @@ namespace Abp.EntityFrameworkCore.Tests.Tests
 
             //TODO: Create unit test
             //TODO: Change filter
+        }
+
+        [Fact]
+        public async Task Should_Filter_View_With_MustHaveTenantId()
+        {
+            //Should get all entities for the host
+            var ticketsDefault = await _ticketListItemRepository.GetAllListAsync();
+            ticketsDefault.Any(t => t.TenantId == 1).ShouldBeTrue();
+            ticketsDefault.Any(t => t.TenantId == 42).ShouldBeTrue();
+
+            //Switch to tenant 42
+            AbpSession.TenantId = 42;
+            ticketsDefault = await _ticketListItemRepository.GetAllListAsync();
+            ticketsDefault.Any(t => t.TenantId == 42).ShouldBeTrue();
+            ticketsDefault.Any(t => t.TenantId != 42).ShouldBeFalse();
         }
     }
 }

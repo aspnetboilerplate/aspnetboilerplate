@@ -13,6 +13,7 @@ using Abp.Domain.Entities;
 using Abp.Domain.Entities.Auditing;
 using Abp.Domain.Repositories;
 using Abp.Domain.Uow;
+using Abp.EntityFrameworkCore.Extensions;
 using Abp.Events.Bus;
 using Abp.Events.Bus.Entities;
 using Abp.Extensions;
@@ -125,7 +126,14 @@ namespace Abp.EntityFrameworkCore
                 var filterExpression = CreateFilterExpression<TEntity>();
                 if (filterExpression != null)
                 {
-                    modelBuilder.Entity<TEntity>().HasQueryFilter(filterExpression);
+                    if (entityType.IsQueryType)
+                    {
+                        modelBuilder.Query<TEntity>().HasQueryFilter(filterExpression);
+                    }
+                    else
+                    {
+                        modelBuilder.Entity<TEntity>().HasQueryFilter(filterExpression);
+                    }
                 }
             }
         }
@@ -230,6 +238,11 @@ namespace Abp.EntityFrameworkCore
 
             foreach (var entry in ChangeTracker.Entries().ToList())
             {
+                if (entry.State != EntityState.Modified && entry.CheckOwnedEntityChange())
+                {
+                    Entry(entry.Entity).State = EntityState.Modified;
+                }
+
                 ApplyAbpConcepts(entry, userId, changeReport);
             }
 

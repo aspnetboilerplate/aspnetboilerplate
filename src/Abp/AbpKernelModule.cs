@@ -54,6 +54,7 @@ namespace Abp
             ConfigureCaches();
             AddIgnoredTypes();
             AddMethodParameterValidators();
+            AddDefaultNotificationDistributor();
         }
 
         public override void Initialize()
@@ -67,11 +68,14 @@ namespace Abp
 
             IocManager.Register(typeof(IOnlineClientManager<>), typeof(OnlineClientManager<>), DependencyLifeStyle.Singleton);
 
+            IocManager.Register(typeof(EventTriggerAsyncBackgroundJob<>),DependencyLifeStyle.Transient);
+            
             IocManager.RegisterAssemblyByConvention(typeof(AbpKernelModule).GetAssembly(),
                 new ConventionalRegistrationConfig
                 {
                     InstallInstallers = false
                 });
+            
         }
 
         public override void PostInitialize()
@@ -180,6 +184,11 @@ namespace Abp
             Configuration.Validation.Validators.Add<DataAnnotationsValidator>();
             Configuration.Validation.Validators.Add<ValidatableObjectValidator>();
             Configuration.Validation.Validators.Add<CustomValidator>();
+        }
+
+        private void AddDefaultNotificationDistributor()
+        {
+            Configuration.Notifications.Distributers.Add<DefaultNotificationDistributer>();
         }
 
         private void RegisterMissingComponents()
