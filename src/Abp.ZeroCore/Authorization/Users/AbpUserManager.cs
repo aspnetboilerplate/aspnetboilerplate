@@ -346,6 +346,16 @@ namespace Abp.Authorization.Users
             return user;
         }
 
+        /// <summary>
+        /// Gets user by user id list
+        /// </summary>
+        /// <param name="idList">User id list</param>
+        /// <returns>User List</returns>
+        public virtual async Task<List<TUser>> GetUserByIdListAsync(List<long> idList)
+        {
+            return await AbpUserStore.FindByIdListAsync(idList);
+        }
+
         public override async Task<IdentityResult> UpdateAsync(TUser user)
         {
             var result = await CheckDuplicateUsernameOrEmailAddressAsync(user.Id, user.UserName, user.EmailAddress);

@@ -1205,6 +1205,16 @@ namespace Abp.Authorization.Users
         }
 
         [UnitOfWork]
+        public virtual Task<List<TUser>> FindByIdListAsync(List<long> idList)
+        {
+            var query = from user in UserRepository.GetAll()
+                        where idList.Contains(user.Id)
+                        select user;
+
+            return Task.FromResult(query.ToList());
+        }
+
+        [UnitOfWork]
         public virtual Task<TUser> FindAsync(int? tenantId, UserLoginInfo login)
         {
             using (_unitOfWorkManager.Current.SetTenantId(tenantId))
