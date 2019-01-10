@@ -165,7 +165,7 @@ namespace Abp.AspNetCore.Mvc.Proxying
 
             foreach (var controllerSetting in _configuration.ControllerAssemblySettings)
             {
-                if (Equals(controllerType.GetAssembly(), controllerSetting.Assembly))
+                if (Equals(controllerType.GetAssembly(), controllerSetting.Assembly) && controllerSetting.TypePredicate(controllerType))
                 {
                     return controllerSetting.ModuleName;
                 }
