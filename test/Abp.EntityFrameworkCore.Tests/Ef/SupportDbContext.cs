@@ -21,10 +21,21 @@ namespace Abp.EntityFrameworkCore.Tests.Ef
     {
         public DbSet<Ticket> Tickets { get; set; }
 
+        public DbQuery<TicketListItem> TicketListItems { get; set; }
+
+        public const string TicketViewSql = @"CREATE VIEW TicketListItemView AS SELECT Id, EmailAddress, TenantId, IsActive FROM Tickets";
+
         public SupportDbContext(DbContextOptions<SupportDbContext> options) 
             : base(options)
         {
 
+        }
+
+        protected override void OnModelCreating(ModelBuilder modelBuilder)
+        {
+            base.OnModelCreating(modelBuilder);
+
+            modelBuilder.Query<TicketListItem>().ToView("TicketListItemView");
         }
     }
 

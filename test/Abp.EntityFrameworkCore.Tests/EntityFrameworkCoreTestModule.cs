@@ -37,6 +37,8 @@ namespace Abp.EntityFrameworkCore.Tests
                         .LifestyleTransient()
                 );
             });
+
+            Configuration.IocManager.Register<IRepository<TicketListItem>, TicketListItemRepository>();
         }
 
         public override void Initialize()
@@ -81,7 +83,16 @@ namespace Abp.EntityFrameworkCore.Tests
             );
 
             inMemorySqlite.Open();
-            new SupportDbContext(builder.Options).Database.EnsureCreated();
+            var ctx = new SupportDbContext(builder.Options);
+            ctx.Database.EnsureCreated();
+
+            using (var command = ctx.Database.GetDbConnection().CreateCommand())
+            {
+                command.CommandText = SupportDbContext.TicketViewSql;
+                ctx.Database.OpenConnection();
+
+                command.ExecuteNonQuery();
+            }
         }
     }
 }
