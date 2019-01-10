@@ -11,8 +11,8 @@ namespace Abp.EntityFrameworkCore.Tests.Domain
         public virtual bool IsActive { get; set; }
 
         public virtual int TenantId { get; set; }
-        
-         public bool IsTransient()
+
+        public bool IsTransient()
         {
             return Id <= 0;
         }
