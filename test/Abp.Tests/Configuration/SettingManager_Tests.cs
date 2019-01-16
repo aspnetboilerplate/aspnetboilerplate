@@ -21,15 +21,22 @@ namespace Abp.Tests.Configuration
         private const string MyAllLevelsSetting = "MyAllLevelsSetting";
         private const string MyNotInheritedSetting = "MyNotInheritedSetting";
 
-        private SettingManager CreateSettingManager()
+        private SettingManager CreateSettingManager(bool multiTenancyIsEnabled = true)
         {
-            return new SettingManager(
+            var settingManager = new SettingManager(
                 CreateMockSettingDefinitionManager(),
                 new AbpMemoryCacheManager(
                     LocalIocManager,
                     new CachingConfiguration(Substitute.For<IAbpStartupConfiguration>())
                     )
                 );
+
+            settingManager.MultiTenancyConfig = new MultiTenancyConfig()
+            {
+                IsEnabled = multiTenancyIsEnabled
+            };
+
+            return settingManager;
         }
 
         [Fact]
@@ -101,7 +108,7 @@ namespace Abp.Tests.Configuration
             (await settingManager.GetAllSettingValuesForTenantAsync(2)).Count.ShouldBe(0);
             (await settingManager.GetAllSettingValuesForTenantAsync(3)).Count.ShouldBe(0);
 
-            (await settingManager.GetAllSettingValuesForUserAsync(new UserIdentifier(1,1))).Count.ShouldBe(1);
+            (await settingManager.GetAllSettingValuesForUserAsync(new UserIdentifier(1, 1))).Count.ShouldBe(1);
             (await settingManager.GetAllSettingValuesForUserAsync(new UserIdentifier(1, 2))).Count.ShouldBe(1);
             (await settingManager.GetAllSettingValuesForUserAsync(new UserIdentifier(1, 3))).Count.ShouldBe(0);
         }
@@ -137,17 +144,6 @@ namespace Abp.Tests.Configuration
             session.UserId = 1;
             await settingManager.ChangeSettingForUserAsync(1, MyAllLevelsSetting, "user 1 changed value");
             (await settingManager.GetSettingValueAsync(MyAllLevelsSetting)).ShouldBe("user 1 changed value");
-        }
-
-        private static TestAbpSession CreateTestAbpSession()
-        {
-            return new TestAbpSession(
-                new MultiTenancyConfig {IsEnabled = true},
-                new DataContextAmbientScopeProvider<SessionOverride>(
-                    new AsyncLocalAmbientDataContext()
-                ),
-                Substitute.For<ITenantResolver>()
-            );
         }
 
         [Fact]
@@ -191,6 +187,35 @@ namespace Abp.Tests.Configuration
             (await settingManager.GetSettingValueAsync(MyAllLevelsSetting)).ShouldBe("application level default value");
         }
 
+        [Fact]
+        public async Task Should_Save_Application_Level_Setting_As_Tenant_Setting_When_Multi_Tenancy_Is_Disabled()
+        {
+            // Arrange
+            var session = CreateTestAbpSession(multiTenancyIsEnabled: false);
+
+            var settingManager = CreateSettingManager(multiTenancyIsEnabled: false);
+            settingManager.SettingStore = new MemorySettingStore();
+            settingManager.AbpSession = session;
+
+            // Act
+            await settingManager.ChangeSettingForApplicationAsync(MyAllLevelsSetting, "53");
+
+            // Assert
+            var value = await settingManager.GetSettingValueAsync(MyAllLevelsSetting);
+            value.ShouldBe("53");
+        }
+
+        private static TestAbpSession CreateTestAbpSession(bool multiTenancyIsEnabled = true)
+        {
+            return new TestAbpSession(
+                new MultiTenancyConfig { IsEnabled = multiTenancyIsEnabled },
+                new DataContextAmbientScopeProvider<SessionOverride>(
+                    new AsyncLocalAmbientDataContext()
+                ),
+                Substitute.For<ITenantResolver>()
+            );
+        }
+
         private static ISettingDefinitionManager CreateMockSettingDefinitionManager()
         {
             var settings = new Dictionary<string, SettingDefinition>
@@ -232,19 +257,19 @@ namespace Abp.Tests.Configuration
                 return Task.FromResult(_settings.FirstOrDefault(s => s.TenantId == tenantId && s.UserId == userId && s.Name == name));
             }
 
-            #pragma warning disable 1998
+#pragma warning disable 1998
             public async Task DeleteAsync(SettingInfo setting)
             {
                 _settings.RemoveAll(s => s.TenantId == setting.TenantId && s.UserId == setting.UserId && s.Name == setting.Name);
             }
-            #pragma warning restore 1998
+#pragma warning restore 1998
 
-            #pragma warning disable 1998
+#pragma warning disable 1998
             public async Task CreateAsync(SettingInfo setting)
             {
                 _settings.Add(setting);
             }
-            #pragma warning restore 1998
+#pragma warning restore 1998
 
             public async Task UpdateAsync(SettingInfo setting)
             {

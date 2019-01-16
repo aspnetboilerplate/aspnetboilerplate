@@ -3,6 +3,7 @@ using System.Collections.Immutable;
 using System.Linq;
 using System.Threading.Tasks;
 using Abp.Collections.Extensions;
+using Abp.Configuration.Startup;
 using Abp.Dependency;
 using Abp.Domain.Uow;
 using Abp.Runtime.Caching;
@@ -26,6 +27,11 @@ namespace Abp.Configuration
         /// Reference to the setting store.
         /// </summary>
         public ISettingStore SettingStore { get; set; }
+
+        /// <summary>
+        /// Reference to multi tenancy configuration.
+        /// </summary>
+        public IMultiTenancyConfig MultiTenancyConfig { get; set; }
 
         private readonly ISettingDefinitionManager _settingDefinitionManager;
         private readonly ITypedCache<string, Dictionary<string, SettingInfo>> _applicationSettingCache;
@@ -196,7 +202,16 @@ namespace Abp.Configuration
         [UnitOfWork]
         public virtual async Task ChangeSettingForApplicationAsync(string name, string value)
         {
-            await InsertOrUpdateOrDeleteSettingValueAsync(name, value, null, null);
+            if (MultiTenancyConfig.IsEnabled)
+            {
+                await InsertOrUpdateOrDeleteSettingValueAsync(name, value, null, null);
+            }
+            else
+            {
+                // If MultiTenancy is disabled, then we should change default tenant's setting
+                await InsertOrUpdateOrDeleteSettingValueAsync(name, value, AbpSession.TenantId, null);
+            }
+
             await _applicationSettingCache.RemoveAsync(ApplicationSettingsCacheKey);
         }
 
