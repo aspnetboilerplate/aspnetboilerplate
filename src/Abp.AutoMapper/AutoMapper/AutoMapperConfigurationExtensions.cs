@@ -9,16 +9,21 @@ namespace Abp.AutoMapper
 {
     internal static class AutoMapperConfigurationExtensions
     {
+        private static readonly object SyncObj = new object();
+
         public static void CreateAutoAttributeMaps(this IMapperConfigurationExpression configuration, Type type)
         {
-            foreach (var autoMapAttribute in type.GetTypeInfo().GetCustomAttributes<AutoMapAttributeBase>())
+            lock (SyncObj)
             {
-                autoMapAttribute.CreateMap(configuration, type);
+                foreach (var autoMapAttribute in type.GetTypeInfo().GetCustomAttributes<AutoMapAttributeBase>())
+                {
+                    autoMapAttribute.CreateMap(configuration, type);
+                }   
             }
         }
+
         public static void CreateAutoAttributeMaps(this IMapperConfigurationExpression configuration, Type type, Type[] targetTypes, MemberList memberList)
         {
-
             //Get all the properties in the source that have the AutoMapKeyAttribute
             var sourceKeysPropertyInfo = type.GetProperties()
                                              .Where(w => w.GetCustomAttribute<AutoMapKeyAttribute>() != null)
