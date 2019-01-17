@@ -17,9 +17,16 @@ namespace Abp.Tests.Configuration
 {
     public class SettingManager_Tests : TestBaseWithLocalIocManager
     {
+        private enum MyEnumSettingType
+        {
+            Setting1 = 0,
+            Setting2 = 1,
+        }
+
         private const string MyAppLevelSetting = "MyAppLevelSetting";
         private const string MyAllLevelsSetting = "MyAllLevelsSetting";
         private const string MyNotInheritedSetting = "MyNotInheritedSetting";
+        private const string MyEnumTypeSetting = "MyEnumTypeSetting";
 
         private SettingManager CreateSettingManager()
         {
@@ -85,6 +92,8 @@ namespace Abp.Tests.Configuration
             (await settingManager.GetSettingValueForApplicationAsync(MyNotInheritedSetting)).ShouldBe("application value");
             (await settingManager.GetSettingValueForTenantAsync(MyNotInheritedSetting, session.TenantId.Value)).ShouldBe("default-value");
             (await settingManager.GetSettingValueAsync(MyNotInheritedSetting)).ShouldBe("default-value");
+
+            (await settingManager.GetSettingValueAsync<MyEnumSettingType>(MyEnumTypeSetting)).ShouldBe(MyEnumSettingType.Setting1);
         }
 
         [Fact]
@@ -93,7 +102,7 @@ namespace Abp.Tests.Configuration
             var settingManager = CreateSettingManager();
             settingManager.SettingStore = new MemorySettingStore();
 
-            (await settingManager.GetAllSettingValuesAsync()).Count.ShouldBe(3);
+            (await settingManager.GetAllSettingValuesAsync()).Count.ShouldBe(4);
 
             (await settingManager.GetAllSettingValuesForApplicationAsync()).Count.ShouldBe(3);
 
@@ -198,6 +207,7 @@ namespace Abp.Tests.Configuration
                 {MyAppLevelSetting, new SettingDefinition(MyAppLevelSetting, "42")},
                 {MyAllLevelsSetting, new SettingDefinition(MyAllLevelsSetting, "application level default value", scopes: SettingScopes.Application | SettingScopes.Tenant | SettingScopes.User)},
                 {MyNotInheritedSetting, new SettingDefinition(MyNotInheritedSetting, "default-value", scopes: SettingScopes.Application | SettingScopes.Tenant, isInherited: false)},
+                {MyEnumTypeSetting, new SettingDefinition(MyEnumTypeSetting, MyEnumSettingType.Setting1.ToString())},
             };
 
             var definitionManager = Substitute.For<ISettingDefinitionManager>();
