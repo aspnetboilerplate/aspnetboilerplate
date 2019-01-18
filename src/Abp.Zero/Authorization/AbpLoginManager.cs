@@ -220,12 +220,6 @@ namespace Abp.Authorization
                 return new AbpLoginResult<TTenant, TUser>(AbpLoginResultType.UserEmailIsNotConfirmed);
             }
 
-            user.LastLoginTime = Clock.Now;
-
-            await UserManager.AbpStore.UpdateAsync(user);
-
-            await UnitOfWorkManager.Current.SaveChangesAsync();
-
             return new AbpLoginResult<TTenant, TUser>(
                 tenant,
                 user,

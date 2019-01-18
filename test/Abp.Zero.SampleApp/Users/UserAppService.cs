@@ -50,7 +50,6 @@ namespace Abp.Zero.SampleApp.Users
             user.Surname = input.Surname;
             user.EmailAddress = input.EmailAddress;
             user.IsEmailConfirmed = true;
-            user.LastLoginTime = input.LastLoginTime;
             user.Password = "AM4OLBpptxBYmM79lGOX9egzZk3vIQU3d/gFCJzaBjAPXzYIK3tQ2N7X4fcrHtElTw=="; //123qwe
 
             _userRepository.Update(user);
