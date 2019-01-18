@@ -23,20 +23,16 @@ namespace Abp.Tests.Configuration
 
         private SettingManager CreateSettingManager(bool multiTenancyIsEnabled = true)
         {
-            var settingManager = new SettingManager(
+            return new SettingManager(
                 CreateMockSettingDefinitionManager(),
                 new AbpMemoryCacheManager(
                     LocalIocManager,
                     new CachingConfiguration(Substitute.For<IAbpStartupConfiguration>())
-                    )
-                );
-
-            settingManager.MultiTenancyConfig = new MultiTenancyConfig()
-            {
-                IsEnabled = multiTenancyIsEnabled
-            };
-
-            return settingManager;
+                    ),
+                new MultiTenancyConfig
+                {
+                    IsEnabled = multiTenancyIsEnabled
+                });
         }
 
         [Fact]

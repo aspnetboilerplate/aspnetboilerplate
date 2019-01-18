@@ -28,20 +28,20 @@ namespace Abp.Configuration
         /// </summary>
         public ISettingStore SettingStore { get; set; }
 
-        /// <summary>
-        /// Reference to multi tenancy configuration.
-        /// </summary>
-        public IMultiTenancyConfig MultiTenancyConfig { get; set; }
-
         private readonly ISettingDefinitionManager _settingDefinitionManager;
+        private readonly IMultiTenancyConfig _multiTenancyConfig;
         private readonly ITypedCache<string, Dictionary<string, SettingInfo>> _applicationSettingCache;
         private readonly ITypedCache<int, Dictionary<string, SettingInfo>> _tenantSettingCache;
         private readonly ITypedCache<string, Dictionary<string, SettingInfo>> _userSettingCache;
 
         /// <inheritdoc/>
-        public SettingManager(ISettingDefinitionManager settingDefinitionManager, ICacheManager cacheManager)
+        public SettingManager(
+            ISettingDefinitionManager settingDefinitionManager, 
+            ICacheManager cacheManager,
+            IMultiTenancyConfig multiTenancyConfig)
         {
             _settingDefinitionManager = settingDefinitionManager;
+            _multiTenancyConfig = multiTenancyConfig;
 
             AbpSession = NullAbpSession.Instance;
             SettingStore = DefaultConfigSettingStore.Instance;
@@ -202,7 +202,7 @@ namespace Abp.Configuration
         [UnitOfWork]
         public virtual async Task ChangeSettingForApplicationAsync(string name, string value)
         {
-            if (MultiTenancyConfig.IsEnabled)
+            if (_multiTenancyConfig.IsEnabled)
             {
                 await InsertOrUpdateOrDeleteSettingValueAsync(name, value, null, null);
             }
