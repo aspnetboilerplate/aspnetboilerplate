@@ -171,7 +171,12 @@ namespace Abp.EntityFrameworkCore
                  * So, we made a workaround to make it working. It works same as above.
                  */
 
-                Expression<Func<TEntity, bool>> softDeleteFilter = e => !((ISoftDelete)e).IsDeleted || ((ISoftDelete)e).IsDeleted != IsSoftDeleteFilterEnabled;
+                /* The ORACLE names of disk groups, pluggable databases (PDBs), rollback segments, tablespaces, and tablespace sets are limited to 30 bytes.
+                 * See https://github.com/aspnetboilerplate/aspnetboilerplate/issues/4155
+                 */
+
+                var enabled = IsSoftDeleteFilterEnabled;
+                Expression<Func<TEntity, bool>> softDeleteFilter = e => !((ISoftDelete)e).IsDeleted || ((ISoftDelete)e).IsDeleted != enabled;
                 expression = expression == null ? softDeleteFilter : CombineExpressions(expression, softDeleteFilter);
             }
 
@@ -182,7 +187,13 @@ namespace Abp.EntityFrameworkCore
                  * But this causes a problem with EF Core (see https://github.com/aspnet/EntityFrameworkCore/issues/9502)
                  * So, we made a workaround to make it working. It works same as above.
                  */
-                Expression<Func<TEntity, bool>> mayHaveTenantFilter = e => ((IMayHaveTenant)e).TenantId == CurrentTenantId || (((IMayHaveTenant)e).TenantId == CurrentTenantId) == IsMayHaveTenantFilterEnabled;
+
+                /* The ORACLE names of disk groups, pluggable databases (PDBs), rollback segments, tablespaces, and tablespace sets are limited to 30 bytes.
+                 * See https://github.com/aspnetboilerplate/aspnetboilerplate/issues/4155
+                 */
+
+                var enabled = IsMayHaveTenantFilterEnabled;
+                Expression<Func<TEntity, bool>> mayHaveTenantFilter = e => ((IMayHaveTenant)e).TenantId == CurrentTenantId || (((IMayHaveTenant)e).TenantId == CurrentTenantId) == enabled;
                 expression = expression == null ? mayHaveTenantFilter : CombineExpressions(expression, mayHaveTenantFilter);
             }
 
@@ -193,7 +204,13 @@ namespace Abp.EntityFrameworkCore
                  * But this causes a problem with EF Core (see https://github.com/aspnet/EntityFrameworkCore/issues/9502)
                  * So, we made a workaround to make it working. It works same as above.
                  */
-                Expression<Func<TEntity, bool>> mustHaveTenantFilter = e => ((IMustHaveTenant)e).TenantId == CurrentTenantId || (((IMustHaveTenant)e).TenantId == CurrentTenantId) == IsMustHaveTenantFilterEnabled;
+
+                /* The ORACLE names of disk groups, pluggable databases (PDBs), rollback segments, tablespaces, and tablespace sets are limited to 30 bytes.
+                 * See https://github.com/aspnetboilerplate/aspnetboilerplate/issues/4155
+                 */
+
+                var enabled = IsMustHaveTenantFilterEnabled;
+                Expression<Func<TEntity, bool>> mustHaveTenantFilter = e => ((IMustHaveTenant)e).TenantId == CurrentTenantId || (((IMustHaveTenant)e).TenantId == CurrentTenantId) == enabled;
                 expression = expression == null ? mustHaveTenantFilter : CombineExpressions(expression, mustHaveTenantFilter);
             }
 
