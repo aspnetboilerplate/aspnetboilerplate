@@ -36,23 +36,30 @@ namespace Abp.TestBase.SampleApplication.Tests.Auditing
         #region CASES WRITE AUDIT LOGS
 
         [Fact]
-   
+
         public async Task Should_Write_Audits_For_Conventional_Methods()
         {
             /* All application service methods are audited as conventional. */
 
             await _personAppService.CreatePersonAsync(new CreatePersonInput { ContactListId = 1, Name = "john" });
 
-            #pragma warning disable 4014
+#pragma warning disable 4014
             _auditingStore.Received().SaveAsync(Arg.Any<AuditInfo>());
-            #pragma warning restore 4014
+#pragma warning restore 4014
         }
 
         [Fact]
         public void Should_Write_Audits_For_Audited_Class_Virtual_Methods_As_Default()
         {
             Resolve<MyServiceWithClassAudited>().Test1();
-            _auditingStore.Received().SaveAsync(Arg.Any<AuditInfo>());
+            _auditingStore.Received().SaveAsync(Arg.Is<AuditInfo>(a => a.ReturnValue == "1"));
+        }
+
+        [Fact]
+        public async Task Should_Write_Audits_For_Audited_Class_Async_Methods_As_Default()
+        {
+            await Resolve<MyServiceWithClassAudited>().Test3().ConfigureAwait(false);
+            await _auditingStore.Received().SaveAsync(Arg.Is<AuditInfo>(a => a.ReturnValue == "1"));
         }
 
         [Fact]
@@ -117,14 +124,22 @@ namespace Abp.TestBase.SampleApplication.Tests.Auditing
         [Audited]
         public class MyServiceWithClassAudited
         {
-            public virtual void Test1()
+            public virtual int Test1()
             {
-
+                return 1;
             }
 
             public void Test2()
             {
 
+            }
+
+            public virtual async Task<int> Test3()
+            {
+                var result = await Task.Factory.StartNew(() => 1).ConfigureAwait(false);
+                await Task.Run(() => result + 1).ConfigureAwait(false);
+
+                return result;
             }
         }
 

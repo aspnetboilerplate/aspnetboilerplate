@@ -1,9 +1,11 @@
 ﻿using System;
 using System.Diagnostics;
+using System.Reflection;
 using System.Threading.Tasks;
 using Abp.Aspects;
 using Abp.Threading;
 using Castle.DynamicProxy;
+using Newtonsoft.Json;
 
 namespace Abp.Auditing
 {
@@ -59,6 +61,8 @@ namespace Abp.Auditing
             {
                 stopwatch.Stop();
                 auditInfo.ExecutionDuration = Convert.ToInt32(stopwatch.Elapsed.TotalMilliseconds);
+                if (invocation.ReturnValue != null)
+                    auditInfo.ReturnValue = JsonConvert.SerializeObject(invocation.ReturnValue);
                 _auditingHelper.Save(auditInfo);
             }
         }
@@ -72,8 +76,8 @@ namespace Abp.Auditing
             if (invocation.Method.ReturnType == typeof(Task))
             {
                 invocation.ReturnValue = InternalAsyncHelper.AwaitTaskWithFinally(
-                    (Task) invocation.ReturnValue,
-                    exception => SaveAuditInfo(auditInfo, stopwatch, exception)
+                    (Task)invocation.ReturnValue,
+                    exception => SaveAuditInfo(auditInfo, stopwatch, exception, null)
                     );
             }
             else //Task<TResult>
@@ -81,18 +85,27 @@ namespace Abp.Auditing
                 invocation.ReturnValue = InternalAsyncHelper.CallAwaitTaskWithFinallyAndGetResult(
                     invocation.Method.ReturnType.GenericTypeArguments[0],
                     invocation.ReturnValue,
-                    exception => SaveAuditInfo(auditInfo, stopwatch, exception)
+                    (exception, task) => SaveAuditInfo(auditInfo, stopwatch, exception, task)
                     );
             }
         }
 
-        private void SaveAuditInfo(AuditInfo auditInfo, Stopwatch stopwatch, Exception exception)
+        private void SaveAuditInfo(AuditInfo auditInfo, Stopwatch stopwatch, Exception exception, Task task)
         {
             stopwatch.Stop();
             auditInfo.Exception = exception;
             auditInfo.ExecutionDuration = Convert.ToInt32(stopwatch.Elapsed.TotalMilliseconds);
+            GetTaskResult(task, auditInfo);
 
             _auditingHelper.Save(auditInfo);
+        }
+
+        private void GetTaskResult(Task task, AuditInfo auditInfo)
+        {
+            if (task != null && task.Status == TaskStatus.RanToCompletion)
+                auditInfo.ReturnValue = JsonConvert.SerializeObject(task.GetType().GetTypeInfo()
+                    .GetProperty("Result")
+                    ?.GetValue(task, null));
         }
     }
 }
