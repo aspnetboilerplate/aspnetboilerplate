@@ -12,10 +12,12 @@ namespace Abp.Auditing
     internal class AuditingInterceptor : IInterceptor
     {
         private readonly IAuditingHelper _auditingHelper;
+        private readonly IAuditingConfiguration _auditingConfiguration;
 
-        public AuditingInterceptor(IAuditingHelper auditingHelper)
+        public AuditingInterceptor(IAuditingHelper auditingHelper, IAuditingConfiguration auditingConfiguration)
         {
             _auditingHelper = auditingHelper;
+            _auditingConfiguration = auditingConfiguration;
         }
 
         public void Intercept(IInvocation invocation)
@@ -61,7 +63,7 @@ namespace Abp.Auditing
             {
                 stopwatch.Stop();
                 auditInfo.ExecutionDuration = Convert.ToInt32(stopwatch.Elapsed.TotalMilliseconds);
-                if (invocation.ReturnValue != null)
+                if (_auditingConfiguration.IsAuditReturnValues && invocation.ReturnValue != null)
                     auditInfo.ReturnValue = JsonConvert.SerializeObject(invocation.ReturnValue);
                 _auditingHelper.Save(auditInfo);
             }
@@ -102,7 +104,7 @@ namespace Abp.Auditing
 
         private void GetTaskResult(Task task, AuditInfo auditInfo)
         {
-            if (task != null && task.Status == TaskStatus.RanToCompletion)
+            if (_auditingConfiguration.IsAuditReturnValues && task != null && task.Status == TaskStatus.RanToCompletion)
                 auditInfo.ReturnValue = JsonConvert.SerializeObject(task.GetType().GetTypeInfo()
                     .GetProperty("Result")
                     ?.GetValue(task, null));

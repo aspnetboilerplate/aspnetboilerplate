@@ -14,6 +14,7 @@ namespace Abp.Auditing
         public IAuditingSelectorList Selectors { get; }
 
         public List<Type> IgnoredTypes { get; }
+        public bool IsAuditReturnValues { get; set; }
 
         public AuditingConfiguration()
         {
@@ -21,6 +22,7 @@ namespace Abp.Auditing
             Selectors = new AuditingSelectorList();
             IgnoredTypes = new List<Type>();
             RunInBackground = false;
+            IsAuditReturnValues = false;
         }
     }
 }
