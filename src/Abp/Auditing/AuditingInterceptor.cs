@@ -63,7 +63,7 @@ namespace Abp.Auditing
             {
                 stopwatch.Stop();
                 auditInfo.ExecutionDuration = Convert.ToInt32(stopwatch.Elapsed.TotalMilliseconds);
-                if (_auditingConfiguration.IsAuditReturnValues && invocation.ReturnValue != null)
+                if (_auditingConfiguration.SaveReturnValues && invocation.ReturnValue != null)
                     auditInfo.ReturnValue = JsonConvert.SerializeObject(invocation.ReturnValue);
                 _auditingHelper.Save(auditInfo);
             }
@@ -104,7 +104,7 @@ namespace Abp.Auditing
 
         private void GetTaskResult(Task task, AuditInfo auditInfo)
         {
-            if (_auditingConfiguration.IsAuditReturnValues && task != null && task.Status == TaskStatus.RanToCompletion)
+            if (_auditingConfiguration.SaveReturnValues && task != null && task.Status == TaskStatus.RanToCompletion)
                 auditInfo.ReturnValue = JsonConvert.SerializeObject(task.GetType().GetTypeInfo()
                     .GetProperty("Result")
                     ?.GetValue(task, null));

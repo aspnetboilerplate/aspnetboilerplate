@@ -34,6 +34,6 @@ namespace Abp.Auditing
         /// Used to decide whether to record return values.
         /// Default false.
         /// </summary>
-        bool IsAuditReturnValues { get; set; }
+        bool SaveReturnValues { get; set; }
     }
 }
