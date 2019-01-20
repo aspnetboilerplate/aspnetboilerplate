@@ -22,6 +22,7 @@ namespace Abp.TestBase.SampleApplication.Tests.Auditing
             _personAppService = Resolve<IPersonAppService>();
             _asyncCompanyAppService = Resolve<AsyncCompanyAppService>();
             Resolve<IAuditingConfiguration>().IsEnabledForAnonymousUsers = true;
+            Resolve<IAuditingConfiguration>().SaveReturnValues = true;
         }
 
         protected override void PreInitialize()
