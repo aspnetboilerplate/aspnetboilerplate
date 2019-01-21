@@ -417,6 +417,7 @@ namespace Abp.Authorization.Roles
 
                 var staticRoleDefinition = RoleManagementConfig.StaticRoles.FirstOrDefault(r =>
                     r.RoleName == role.Name && r.Side == role.GetMultiTenancySide());
+
                 if (staticRoleDefinition != null)
                 {
                     foreach (var permission in PermissionManager.GetAllPermissions())

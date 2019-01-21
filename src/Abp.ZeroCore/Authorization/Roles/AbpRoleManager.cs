@@ -415,7 +415,9 @@ namespace Abp.Authorization.Roles
                     throw new AbpException("There is no role with given id: " + roleId);
                 }
 
-                var staticRoleDefinition = RoleManagementConfig.StaticRoles.FirstOrDefault(r => r.RoleName == role.Name);
+                var staticRoleDefinition = RoleManagementConfig.StaticRoles.FirstOrDefault(r =>
+                    r.RoleName == role.Name && r.Side == role.GetMultiTenancySide());
+
                 if (staticRoleDefinition != null)
                 {
                     foreach (var permission in _permissionManager.GetAllPermissions())
