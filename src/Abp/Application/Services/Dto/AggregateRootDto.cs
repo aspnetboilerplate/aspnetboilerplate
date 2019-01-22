@@ -6,21 +6,19 @@ using Abp.Events.Bus;
 
 namespace Abp.Application.Services.Dto
 {
-
-    public class AggregateRootDto : AggregateRootDto<int>, IAggregateRoot
+    public abstract class AggregateRootDto : AggregateRootDto<int>
     {
 
     }
 
-    public class AggregateRootDto<TPrimaryKey> : Entity<TPrimaryKey>, IAggregateRoot<TPrimaryKey>
+    public abstract class AggregateRootDto<TPrimaryKey> : EntityDto<TPrimaryKey>, IGeneratesDomainEvents
     {
         [NotMapped]
         public virtual ICollection<IEventData> DomainEvents { get; }
 
-        public AggregateRootDto()
+        protected AggregateRootDto()
         {
             DomainEvents = new Collection<IEventData>();
         }
     }
-
 }
