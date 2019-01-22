@@ -97,12 +97,12 @@ namespace Abp.Auditing
             stopwatch.Stop();
             auditInfo.Exception = exception;
             auditInfo.ExecutionDuration = Convert.ToInt32(stopwatch.Elapsed.TotalMilliseconds);
-            GetTaskResult(task, auditInfo);
+            FillTaskResult(task, auditInfo);
 
             _auditingHelper.Save(auditInfo);
         }
 
-        private void GetTaskResult(Task task, AuditInfo auditInfo)
+        private void FillTaskResult(Task task, AuditInfo auditInfo)
         {
             if (_auditingConfiguration.SaveReturnValues && task != null && task.Status == TaskStatus.RanToCompletion)
             {
