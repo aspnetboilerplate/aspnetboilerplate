@@ -43,7 +43,7 @@ namespace Abp.Auditing
         public string Parameters { get; set; }
 
         /// <summary>
-        ///     Return values.
+        /// Return values.
         /// </summary>
         public string ReturnValue { get; set; }
 

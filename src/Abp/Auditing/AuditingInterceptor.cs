@@ -105,9 +105,11 @@ namespace Abp.Auditing
         private void GetTaskResult(Task task, AuditInfo auditInfo)
         {
             if (_auditingConfiguration.SaveReturnValues && task != null && task.Status == TaskStatus.RanToCompletion)
+            {
                 auditInfo.ReturnValue = JsonConvert.SerializeObject(task.GetType().GetTypeInfo()
                     .GetProperty("Result")
                     ?.GetValue(task, null));
+            }
         }
     }
 }

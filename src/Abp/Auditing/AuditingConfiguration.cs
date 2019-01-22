@@ -14,6 +14,7 @@ namespace Abp.Auditing
         public IAuditingSelectorList Selectors { get; }
 
         public List<Type> IgnoredTypes { get; }
+
         public bool SaveReturnValues { get; set; }
 
         public AuditingConfiguration()
