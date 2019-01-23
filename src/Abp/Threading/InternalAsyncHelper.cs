@@ -174,5 +174,58 @@ namespace Abp.Threading
                 .MakeGenericMethod(taskReturnType)
                 .Invoke(null, new object[] { actualReturnValue, preAction, postAction, finalAction });
         }
+
+        public static async Task AwaitTaskWithUsingActionAndFinally(Func<IDisposable> usingAction, Func<Task> action, Action<Exception> finalAction)
+        {
+            Exception exception = null;
+
+            try
+            {
+                using (usingAction())
+                {
+                    await action();
+                }
+            }
+            catch (Exception ex)
+            {
+                exception = ex;
+                throw;
+            }
+            finally
+            {
+                finalAction(exception);
+            }
+        }
+
+
+        public static async Task<T> AwaitTaskWithUsingActionAndFinallyAndGetResult<T>(Func<IDisposable> usingAction, Func<object> action, Action<Exception> finalAction)
+        {
+            Exception exception = null;
+
+            try
+            {
+                using (usingAction())
+                {
+                    return await (Task<T>)action();
+                }
+            }
+            catch (Exception ex)
+            {
+                exception = ex;
+                throw;
+            }
+            finally
+            {
+                finalAction(exception);
+            }
+        }
+
+        public static object CallAwaitTaskWithUsingActionAndFinallyAndGetResult(Type taskReturnType, Func<IDisposable> usingAction, Func<object> action, Action<Exception> finalAction)
+        {
+            return typeof(InternalAsyncHelper)
+                .GetMethod("AwaitTaskWithUsingActionAndFinallyAndGetResult", BindingFlags.Public | BindingFlags.Static)
+                .MakeGenericMethod(taskReturnType)
+                .Invoke(null, new object[] { usingAction, action, finalAction });
+        }
     }
 }
