@@ -2,6 +2,7 @@
 using Abp.AspNetCore.Mvc.Authorization;
 using Abp.AspNetCore.Mvc.Conventions;
 using Abp.AspNetCore.Mvc.ExceptionHandling;
+using Abp.AspNetCore.Mvc.Filters;
 using Abp.AspNetCore.Mvc.ModelBinding;
 using Abp.AspNetCore.Mvc.Results;
 using Abp.AspNetCore.Mvc.Uow;
@@ -16,23 +17,13 @@ namespace Abp.AspNetCore.Mvc
         public static void AddAbp(this MvcOptions options, IServiceCollection services)
         {
             AddConventions(options, services);
-            AddFilters(options);
+            AbpMvcFilters.Register(options.Filters);
             AddModelBinders(options);
         }
 
         private static void AddConventions(MvcOptions options, IServiceCollection services)
         {
             options.Conventions.Add(new AbpAppServiceConvention(services));
-        }
-
-        private static void AddFilters(MvcOptions options)
-        {
-            options.Filters.AddService(typeof(AbpAuthorizationFilter));
-            options.Filters.AddService(typeof(AbpAuditActionFilter));
-            options.Filters.AddService(typeof(AbpValidationActionFilter));
-            options.Filters.AddService(typeof(AbpUowActionFilter));
-            options.Filters.AddService(typeof(AbpExceptionFilter));
-            options.Filters.AddService(typeof(AbpResultFilter));
         }
 
         private static void AddModelBinders(MvcOptions options)
