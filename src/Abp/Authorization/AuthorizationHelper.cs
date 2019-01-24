@@ -67,7 +67,7 @@ namespace Abp.Authorization
                 return;
             }
 
-            if (AbpSession.UserId.HasValue && AbpSession.TenantId == null)
+            if (AbpSession.TenantId == null)
             {
                 if (_multiTenancyConfig.IgnoreFeatureCheckForHostUsers)
                 {
