@@ -6,31 +6,32 @@ using Castle.MicroKernel.Registration;
 using Microsoft.AspNetCore.Mvc.Testing;
 using Xunit;
 using NSubstitute;
-using System;
 using System.Collections.Generic;
 
 namespace AbpAspNetCoreDemo.IntegrationTests.Tests
 {
-    public class RazorAuditPageFilterTests : IClassFixture<WebApplicationFactory<Startup>>
+    public class RazorAuditPageFilterTests
     {
         private readonly WebApplicationFactory<Startup> _factory;
+        
         private IAuditingStore _auditingStore;
 
-        public RazorAuditPageFilterTests(WebApplicationFactory<Startup> factory)
+        public RazorAuditPageFilterTests()
         {
-            _factory = factory;
-
+            _factory = new WebApplicationFactory<Startup>();
+            
             RegisterFakeAuditingStore();
         }
 
         private void RegisterFakeAuditingStore()
         {
-            _auditingStore = Substitute.For<IAuditingStore>();
+            Startup.IocManager.Value = new IocManager();
 
-            IocManager.Instance.IocContainer.Register(
+            _auditingStore = Substitute.For<IAuditingStore>();
+            Startup.IocManager.Value.IocContainer.Register(
                 Component.For<IAuditingStore>().Instance(
                     _auditingStore
-                ).IsDefault().Named(Guid.NewGuid().ToString())
+                ).IsDefault()
             );
         }
 
@@ -99,10 +100,10 @@ namespace AbpAspNetCoreDemo.IntegrationTests.Tests
             var client = _factory.CreateClient();
 
             // Act
-            
+
             var response = await client.PostAsync("/AuditFilterPageDemo", new FormUrlEncodedContent(new KeyValuePair<string, string>[]
             {
-                new KeyValuePair<string, string>("Message","My test message"), 
+                new KeyValuePair<string, string>("Message","My test message"),
             }));
 
             // Assert
