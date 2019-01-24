@@ -39,6 +39,7 @@ namespace Abp.AspNetCore.Mvc
         private static void AddPageFilters(MvcOptions options)
         {
             options.Filters.AddService(typeof(AbpUowPageFilter));
+            options.Filters.AddService(typeof(AbpAuditPageFilter));
         }
 
         private static void AddModelBinders(MvcOptions options)
