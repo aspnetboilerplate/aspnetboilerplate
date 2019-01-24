@@ -20,11 +20,13 @@ namespace Abp.Authorization
 
         private readonly IFeatureChecker _featureChecker;
         private readonly IAuthorizationConfiguration _authConfiguration;
+        private readonly IMultiTenancyConfig _multiTenancyConfig;
 
-        public AuthorizationHelper(IFeatureChecker featureChecker, IAuthorizationConfiguration authConfiguration)
+        public AuthorizationHelper(IFeatureChecker featureChecker, IAuthorizationConfiguration authConfiguration, IMultiTenancyConfig multiTenancyConfig)
         {
             _featureChecker = featureChecker;
             _authConfiguration = authConfiguration;
+            _multiTenancyConfig = multiTenancyConfig;
             AbpSession = NullAbpSession.Instance;
             PermissionChecker = NullPermissionChecker.Instance;
             LocalizationManager = NullLocalizationManager.Instance;
@@ -63,6 +65,14 @@ namespace Abp.Authorization
             if (featureAttributes.Count <= 0)
             {
                 return;
+            }
+
+            if (AbpSession.TenantId == null)
+            {
+                if (_multiTenancyConfig.IgnoreFeatureCheckForHostUsers)
+                {
+                    return;
+                }
             }
 
             foreach (var featureAttribute in featureAttributes)
