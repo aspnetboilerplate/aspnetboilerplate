@@ -16,7 +16,6 @@ namespace Abp.Authorization
     {
         public IAbpSession AbpSession { get; set; }
         public IPermissionChecker PermissionChecker { get; set; }
-        public IFeatureChecker FeatureChecker { get; set; }
         public ILocalizationManager LocalizationManager { get; set; }
 
         private readonly IFeatureChecker _featureChecker;
