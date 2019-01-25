@@ -31,5 +31,18 @@ namespace Abp.Zero.SampleApp.Tests.Users
                 uow.Complete();
             }
         }
+
+        [Fact]
+        public void Should_Delete_User()
+        {
+            using (var uow = _unitOfWorkManager.Begin())
+            {
+                var user = _userManager.FindByName("manager");
+
+                _userManager.Delete(user).Succeeded.ShouldBeTrue();
+
+                uow.Complete();
+            }
+        }
     }
 }
