@@ -6,7 +6,6 @@
     <text name="RoleNameIsAlreadyTaken" value="El rol {0} ya ha sido tomado." />
     <text name="RoleDisplayNameIsAlreadyTaken" value="El nombre de rol {0} ya ha sido tomado." />
     <text name="CanNotDeleteStaticRole" value="No puede borrar un rol estático: {0}" />
-    <text name="CanNotRenameAdminUser" value="No puede renombrar el nombre de usuario {0} pues es el de administración predeterminado!" />
     <text name="CanNotDeleteAdminUser" value="No puede borrar el usuario {0} pues es el de administración predeterminado!" />
     <text name="OrganizationUnitDuplicateDisplayNameWarning" value="Ya existe una unidad de organización con el nombre {0}. Dos unidades con el mismo nombre no pueden ser creadas en el mismo nivel." />
   </texts>

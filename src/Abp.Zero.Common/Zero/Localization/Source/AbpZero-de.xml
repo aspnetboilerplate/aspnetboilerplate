@@ -6,7 +6,6 @@
     <text name="RoleNameIsAlreadyTaken" value="Der Rollen Name {0} ist bereits vergeben." />
     <text name="RoleDisplayNameIsAlreadyTaken" value="Der Rollen Anzeigename {0} ist bereits vergeben." />
     <text name="CanNotDeleteStaticRole" value="Kann die statische Rolle nicht löschen: {0}" />
-    <text name="CanNotRenameAdminUser" value="Der Administrator Account {0} kann nicht umbenannt werden!" />
     <text name="CanNotDeleteAdminUser" value="Der Administrator Account {0} kann nicht gelöscht werden!" />
   </texts>
 </localizationDictionary>

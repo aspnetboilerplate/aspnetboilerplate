@@ -6,7 +6,6 @@
     <text name="RoleNameIsAlreadyTaken" value="اسم الدور {0} مأخوذ بالفعل." />
     <text name="RoleDisplayNameIsAlreadyTaken" value="اسم العرض للدور {0} مأخوذ بالفعل." />
     <text name="CanNotDeleteStaticRole" value="لا يمكن حذف دور ثابت: {0}" />
-    <text name="CanNotRenameAdminUser" value="لا يمكن إعادة تسمية اسم المستخدم من {0} لأن هذا هو المستخدم المسؤول الافتراضي!" />
     <text name="CanNotDeleteAdminUser" value="لا يمكن حذف المستخدم {0} لأن هذا هو المستخدم المشرف الافتراضي!" />
     <text name="OrganizationUnitDuplicateDisplayNameWarning" value="هناك بالفعل وحدة تنظيمية باسم {0}. لا يمكن إنشاء وحدتين بنفس الاسم في نفس المستوى." />
   </texts>
