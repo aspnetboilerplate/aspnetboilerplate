@@ -7,14 +7,16 @@ namespace AbpAspNetCoreDemo
     {
         public static void Main(string[] args)
         {
-            var host = new WebHostBuilder()
+            CreateWebHostBuilder(args).Build().Run();
+        }
+
+        public static IWebHostBuilder CreateWebHostBuilder(string[] args)
+        {
+            return new WebHostBuilder()
                 .UseKestrel(opt => opt.AddServerHeader = false)
                 .UseContentRoot(Directory.GetCurrentDirectory())
                 .UseIISIntegration()
-                .UseStartup<Startup>()
-                .Build();
-
-            host.Run();
+                .UseStartup<Startup>();
         }
     }
 }
