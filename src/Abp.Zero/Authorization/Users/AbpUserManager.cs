@@ -358,7 +358,7 @@ namespace Abp.Authorization.Users
         {
             if (user.IsAdministrator)
             {
-                return AbpIdentityResult.Failed(string.Format(L("CanNotDeleteAdminUser"), AbpUser<TUser>.AdminUserName));
+                return AbpIdentityResult.Failed(string.Format(L("CanNotDeleteAdminUser"), user.UserName));
             }
 
             return await base.DeleteAsync(user);
