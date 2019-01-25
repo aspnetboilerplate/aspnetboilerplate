@@ -359,7 +359,7 @@ namespace Abp.Authorization.Users
 
         public override async Task<IdentityResult> DeleteAsync(TUser user)
         {
-            if (user.UserName == AbpUserBase.AdminUserName)
+            if (user.IsAdministrator)
             {
                 throw new UserFriendlyException(string.Format(L("CanNotDeleteAdminUser"), user.UserName));
             }
