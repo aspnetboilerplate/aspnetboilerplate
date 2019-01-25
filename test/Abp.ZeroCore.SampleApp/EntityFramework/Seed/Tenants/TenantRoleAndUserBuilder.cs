@@ -75,6 +75,7 @@ namespace Abp.ZeroCore.SampleApp.EntityFramework.Seed.Tenants
                 adminUser.Password = new PasswordHasher<User>(new OptionsWrapper<PasswordHasherOptions>(new PasswordHasherOptions())).HashPassword(adminUser, "123qwe");
                 adminUser.IsEmailConfirmed = true;
                 adminUser.IsActive = true;
+                adminUser.IsAdministrator = true;
 
                 _context.Users.Add(adminUser);
                 _context.SaveChanges();

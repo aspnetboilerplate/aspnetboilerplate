@@ -47,6 +47,7 @@ namespace Abp.ZeroCore.SampleApp.EntityFramework.Seed.Host
                     EmailAddress = "admin@aspnetzero.com",
                     IsEmailConfirmed = true,
                     IsActive = true,
+                    IsAdministrator = true,
                     Password = "AM4OLBpptxBYmM79lGOX9egzZk3vIQU3d/gFCJzaBjAPXzYIK3tQ2N7X4fcrHtElTw==" //123qwe
                 };
 
