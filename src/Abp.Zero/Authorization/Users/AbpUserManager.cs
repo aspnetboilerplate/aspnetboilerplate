@@ -351,15 +351,6 @@ namespace Abp.Authorization.Users
                 return result;
             }
 
-            //Admin user's username can not be changed!
-            if (user.UserName != AbpUser<TUser>.AdminUserName)
-            {
-                if ((await GetOldUserNameAsync(user.Id)) == AbpUser<TUser>.AdminUserName)
-                {
-                    return AbpIdentityResult.Failed(string.Format(L("CanNotRenameAdminUser"), AbpUser<TUser>.AdminUserName));
-                }
-            }
-
             return await base.UpdateAsync(user);
         }
 
