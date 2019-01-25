@@ -354,15 +354,6 @@ namespace Abp.Authorization.Users
                 return result;
             }
 
-            //Admin user's username can not be changed!
-            if (user.UserName != AbpUserBase.AdminUserName)
-            {
-                if ((await GetOldUserNameAsync(user.Id)) == AbpUserBase.AdminUserName)
-                {
-                    throw new UserFriendlyException(string.Format(L("CanNotRenameAdminUser"), AbpUserBase.AdminUserName));
-                }
-            }
-
             return await base.UpdateAsync(user);
         }
 
@@ -370,7 +361,7 @@ namespace Abp.Authorization.Users
         {
             if (user.UserName == AbpUserBase.AdminUserName)
             {
-                throw new UserFriendlyException(string.Format(L("CanNotDeleteAdminUser"), AbpUserBase.AdminUserName));
+                throw new UserFriendlyException(string.Format(L("CanNotDeleteAdminUser"), user.UserName));
             }
 
             return await base.DeleteAsync(user);
