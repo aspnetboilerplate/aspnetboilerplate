@@ -32,7 +32,8 @@ namespace Abp.Zero.SampleApp.Tests.TestDatas
                     Surname = "Administrator",
                     UserName = User.AdminUserName,
                     Password = new PasswordHasher().HashPassword("123qwe"),
-                    EmailAddress = "admin@aspnetboilerplate.com"
+                    EmailAddress = "admin@aspnetboilerplate.com",
+                    IsAdministrator = true
                 });
 
             _context.Users.Add(
