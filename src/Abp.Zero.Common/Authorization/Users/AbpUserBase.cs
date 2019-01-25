@@ -223,6 +223,12 @@ namespace Abp.Authorization.Users
         /// If as user is not active, he/she can not use the application.
         /// </summary>
         public virtual bool IsActive { get; set; }
+
+        /// <summary>
+        /// Is this user administrator?
+        /// If as user is administrator, he/she can not delete.
+        /// </summary>
+        public virtual bool IsAdministrator { get; set; }
         
         protected AbpUserBase()
         {
