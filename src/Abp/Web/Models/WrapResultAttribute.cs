@@ -38,16 +38,17 @@ namespace Abp.Web.Models
         /// <param name="namingStrategyType"></param>
         public WrapResultAttribute(bool wrapOnSuccess = true, bool wrapOnError = true, Type namingStrategyType = null)
         {
-            WrapOnSuccess = wrapOnSuccess;
-            WrapOnError = wrapOnError;
-
-            LogError = true;
-
-            NamingStrategyType = namingStrategyType ?? typeof(CamelCaseNamingStrategy);
             if (namingStrategyType != null && !(typeof(NamingStrategy).IsAssignableFrom(namingStrategyType)))
             {
                 throw new ArgumentException($"{nameof(namingStrategyType)} must be a subclass of {nameof(NamingStrategy)}");
             }
+
+            WrapOnSuccess = wrapOnSuccess;
+            WrapOnError = wrapOnError;
+
+            LogError = true;
+            
+            NamingStrategyType = namingStrategyType ?? typeof(CamelCaseNamingStrategy);
         }
     }
 }

@@ -33,28 +33,32 @@ namespace Abp.AspNetCore.Mvc.Results.Wrapping
                 throw new ArgumentException($"{nameof(actionResult)} should be ObjectResult!");
             }
 
-            if (!(objectResult.Value is AjaxResponseBase))
+            if (objectResult.Value is AjaxResponseBase)
             {
-                objectResult.Value = new AjaxResponse(objectResult.Value);
-                if (!objectResult.Formatters.Any(f => f is JsonOutputFormatter))
-                {
-                    var serializerSettings = JsonSerializerSettingsProvider.CreateSerializerSettings();
-                    serializerSettings.ContractResolver = SharedContractResolver.GetOrAdd(
-                        wrapResultAttribute.NamingStrategyType, namingStrategyType =>
-                            new AbpMvcContractResolver(_serviceProvider.GetRequiredService<IIocResolver>())
-                            {
-                                NamingStrategy =
-                                    (NamingStrategy)Activator.CreateInstance(namingStrategyType)
-                            });
-
-                    objectResult.Formatters.Add(
-                        new JsonOutputFormatter(
-                            serializerSettings,
-                            _serviceProvider.GetRequiredService<ArrayPool<char>>()
-                        )
-                    );
-                }
+                return;
             }
+
+            objectResult.Value = new AjaxResponse(objectResult.Value);
+            if (objectResult.Formatters.Any(f => f is JsonOutputFormatter))
+            {
+                return;
+            }
+
+            var serializerSettings = JsonSerializerSettingsProvider.CreateSerializerSettings();
+            serializerSettings.ContractResolver = SharedContractResolver.GetOrAdd(
+                wrapResultAttribute.NamingStrategyType, namingStrategyType =>
+                    new AbpMvcContractResolver(_serviceProvider.GetRequiredService<IIocResolver>())
+                    {
+                        NamingStrategy =
+                            (NamingStrategy)Activator.CreateInstance(namingStrategyType)
+                    });
+
+            objectResult.Formatters.Add(
+                new JsonOutputFormatter(
+                    serializerSettings,
+                    _serviceProvider.GetRequiredService<ArrayPool<char>>()
+                )
+            );
         }
     }
 }
