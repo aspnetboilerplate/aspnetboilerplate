@@ -96,14 +96,7 @@ Add a field that is store organization unit of current user:
 
     protected virtual int? CurrentOUId => GetCurrentUsersOuIdOrNull();
 
-This field filling from `PrincipalAccessor`.
-
-You can enable or disable organization unit filter:
-
-    //protected virtual bool IsOUFilterEnabled => CurrentUnitOfWorkProvider?.Current?.IsFilterEnabled("MustHaveOU") == true;
-        protected bool IsOUFilterEnabled = true;
-
-Here is the latest DbContext look:
+This field filling from `PrincipalAccessor`. Here is the latest DbContext look:
 
 ````csharp
 public class CustomFilterSampleDbContext : AbpZeroDbContext<Tenant, Role, User, CustomFilterSampleDbContext>
@@ -114,8 +107,7 @@ public class CustomFilterSampleDbContext : AbpZeroDbContext<Tenant, Role, User, 
 
     protected virtual int? CurrentOUId => GetCurrentUsersOuIdOrNull();
 
-    //protected virtual bool IsOUFilterEnabled => CurrentUnitOfWorkProvider?.Current?.IsFilterEnabled("MustHaveOU") == true;
-    protected bool IsOUFilterEnabled = true;
+    protected virtual bool IsOUFilterEnabled => CurrentUnitOfWorkProvider?.Current?.IsFilterEnabled("MayHaveOrganizationUnit") == true;
 
     public CustomFilterSampleDbContext(DbContextOptions<CustomFilterSampleDbContext> options)
         : base(options)
@@ -165,6 +157,20 @@ public class CustomFilterSampleDbContext : AbpZeroDbContext<Tenant, Role, User, 
 }
 ````
 
+### Register Filter
+
+Register filter in PreInitialize method in `YourProjectNameEntityFrameworkModule` to get it from current unit of work manager.
+
+````csharp
+public override void PreInitialize()
+{
+    ...
+
+    //register filter with default value
+    Configuration.UnitOfWork.RegisterFilter("MayHaveOrganizationUnit", true);
+}
+````
+
 ### Filtering Test
 
 Create an organization unit and set its `UserId = 2` and `TenantId = 1`. Set `OrganizationUnitId` of user and document with created one's id.
@@ -195,3 +201,33 @@ public class HomeController : CustomFilterSampleControllerBase
 When you log in as host user you should not see anything. But if you log in as tenant user, you will see the document titles:
 
 <img src="images/document-titles-output.png" alt="Document Titles" class="img-thumbnail" />
+
+### Disable filter
+
+You can disable filter like following:
+
+````csharp
+[AbpMvcAuthorize]
+public class HomeController : CustomFilterSampleControllerBase
+{
+    private readonly IRepository<Document> _documentRepository;
+    private readonly IUnitOfWorkManager _unitOfWorkManager;
+
+    public HomeController(IRepository<Document> documentRepository, IUnitOfWorkManager unitOfWorkManager)
+    {
+        _documentRepository = documentRepository;
+        _unitOfWorkManager = unitOfWorkManager;
+    }
+
+    public ActionResult Index()
+    {
+        using (_unitOfWorkManager.Current.DisableFilter("MayHaveOrganizationUnit"))
+        {
+            var documents = _documentRepository.GetAllList();
+            var documentTitles = string.Join(",", documents.Select(e => e.Title).ToArray());
+
+            return Content(documentTitles);
+        }
+    }
+}
+````
