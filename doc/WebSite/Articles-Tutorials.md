@@ -9,3 +9,4 @@
   - [Aspect Oriented Programming using Interceptors](Articles/Aspect-Oriented-Programming-using-Interceptors/index.html)
   - [Running in Docker Containers and building a Web Farm / Load Balancer Scenario](Articles/Running-in-Docker-Containers-and-Building-a-Web-Farm-Load-Balancer-Scenario/index.html)
   - [Using Stored Procedures, User Defined Functions and Views](Articles/Using-Stored-Procedures,-User-Defined-Functions-and-Views/index.html)
+  - [How To Add Custom Field To AbpSession in ASP.NET Core](Articles\How-To\custom-session-fields.md)
