@@ -37,7 +37,40 @@ namespace Abp.AspNetCore.Tests
             response.Result.ShouldBe(42);
         }
 
-        [Fact]
+		[Fact]
+		public async Task HttpHeaderTenantAlternateResolveContributor_Test()
+		{
+			Client.DefaultRequestHeaders.Add(MultiTenancyConsts.TenantIdResolveAlternateKey, "42");
+
+			// Act
+			var response = await GetResponseAsObjectAsync<AjaxResponse<int?>>(
+				GetUrl<MultiTenancyTestController>(
+					nameof(MultiTenancyTestController.GetTenantId)
+				)
+			);
+
+			//Assert
+			response.Result.ShouldBe(42);
+		}
+
+		[Fact]
+		public async Task Normal_Header_Should_Have_High_Priority_Than_Alternate_Header()
+		{
+			Client.DefaultRequestHeaders.Add(MultiTenancyConsts.TenantIdResolveKey, "42");
+			Client.DefaultRequestHeaders.Add(MultiTenancyConsts.TenantIdResolveAlternateKey, "43");
+
+			// Act
+			var response = await GetResponseAsObjectAsync<AjaxResponse<int?>>(
+				GetUrl<MultiTenancyTestController>(
+					nameof(MultiTenancyTestController.GetTenantId)
+				)
+			);
+
+			//Assert
+			response.Result.ShouldBe(42);
+		}
+
+		[Fact]
         public async Task HttpCookieTenantResolveContributor_Test()
         {
             Client.DefaultRequestHeaders.Add("Cookie", new CookieHeaderValue(MultiTenancyConsts.TenantIdResolveKey, "42").ToString());

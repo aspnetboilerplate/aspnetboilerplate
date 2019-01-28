@@ -8,5 +8,6 @@ namespace Abp.MultiTenancy
         public const int DefaultTenantId = 1;
 
         public const string TenantIdResolveKey = "Abp.TenantId";
+        public const string TenantIdResolveAlternateKey = "Abp-TenantId";
     }
 }

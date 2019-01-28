@@ -27,17 +27,22 @@ namespace Abp.AspNetCore.MultiTenancy
             {
                 return null;
             }
-
-            var tenantIdHeader = httpContext.Request.Headers[MultiTenancyConsts.TenantIdResolveKey];
+			string headerFound = MultiTenancyConsts.TenantIdResolveKey;
+			var tenantIdHeader = httpContext.Request.Headers[MultiTenancyConsts.TenantIdResolveKey];
             if (tenantIdHeader == string.Empty || tenantIdHeader.Count < 1)
             {
-                return null;
+				headerFound = MultiTenancyConsts.TenantIdResolveAlternateKey;
+				tenantIdHeader = httpContext.Request.Headers[MultiTenancyConsts.TenantIdResolveAlternateKey];
+				if (tenantIdHeader == string.Empty || tenantIdHeader.Count < 1)
+				{
+					return null;
+				}
             }
 
             if (tenantIdHeader.Count > 1)
             { 
                 Logger.Warn(
-                    $"HTTP request includes more than one {MultiTenancyConsts.TenantIdResolveKey} header value. First one will be used. All of them: {tenantIdHeader.JoinAsString(", ")}"
+                    $"HTTP request includes more than one {headerFound} or  header value. First one will be used. All of them: {tenantIdHeader.JoinAsString(", ")}"
                     );
             }
 

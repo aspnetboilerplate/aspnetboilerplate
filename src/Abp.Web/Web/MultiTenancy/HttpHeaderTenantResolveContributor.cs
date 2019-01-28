@@ -26,7 +26,11 @@ namespace Abp.Web.MultiTenancy
             var tenantIdHeader = httpContext.Request.Headers[MultiTenancyConsts.TenantIdResolveKey];
             if (tenantIdHeader.IsNullOrEmpty())
             {
-                return null;
+				tenantIdHeader = httpContext.Request.Headers[MultiTenancyConsts.TenantIdResolveAlternateKey];
+				if (tenantIdHeader.IsNullOrEmpty())
+				{
+					return null;
+				}
             }
 
             int tenantId;
