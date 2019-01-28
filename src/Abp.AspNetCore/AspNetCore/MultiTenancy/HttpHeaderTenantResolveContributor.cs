@@ -42,7 +42,7 @@ namespace Abp.AspNetCore.MultiTenancy
             if (tenantIdHeader.Count > 1)
             { 
                 Logger.Warn(
-                    $"HTTP request includes more than one {headerFound} or  header value. First one will be used. All of them: {tenantIdHeader.JoinAsString(", ")}"
+                    $"HTTP request includes more than one {headerFound} header value. First one will be used. All of them: {tenantIdHeader.JoinAsString(", ")}"
                     );
             }
 
