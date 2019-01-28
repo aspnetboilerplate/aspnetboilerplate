@@ -37,7 +37,7 @@ public class MyAppSession : ClaimsAbpSession, ITransientDependency
 
 ### Create Claim
 
-Override `CreateAsync` method in `UserClaimsPrincipalFactory.cs` to add your custom claim.
+Override `CreateAsync` method in `UserClaimsPrincipalFactory.cs` to add your custom claim when the user is logged in.
 
 ````csharp
 public override async Task<ClaimsPrincipal> CreateAsync(User user)
