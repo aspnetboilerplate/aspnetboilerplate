@@ -1,14 +1,17 @@
 ## Introduction
 
-In this article, i will explain how to add organization unit filterto DbContext.
+In this article, I will explain how to add a custom data filter in Entity Framework Core. 
+
+We will create a filter for OrganizationUnit and filter entities inherited from a specific interface (`IMayHaveOrganizationUnit` for this article) automatically according to logged in users belonging organization unit.
 
 We will use ASP.NET Core & JQuery version of [ASP.NET Boilerplate](https://aspnetboilerplate.com).
+You can create a project on [https://aspnetboilerplate.com/Templates](https://aspnetboilerplate.com/Templates) and apply the steps below to see custom organization unit filter in action.
 
 ### Create and Update Entities
 
 #### Create an entity
 
-Create an entity that named `Document` that inherited from `IMayHaveOrganizationUnit`.
+Create an entity that named `Document` inherited from `IMayHaveOrganizationUnit`. `IMayHaveOrganizationUnit` interface is defined in ABP Framework.
 
 ````csharp
 public class Document : Entity, IMayHaveOrganizationUnit
@@ -21,11 +24,11 @@ public class Document : Entity, IMayHaveOrganizationUnit
 }
 ````
 
-And this entity to DbContext, as well.
+Add `Document` entity to your DbContext.
 
 #### Update User class
 
-Add `OrganizationUnitId` to `User.cs`.
+Add `OrganizationUnitId` to `User.cs`. We will use `OrganizationUnitId` field of the User to filter `Document` entities.
 
 ````csharp
 public class User : AbpUser<User>
@@ -59,11 +62,11 @@ public class User : AbpUser<User>
 
 #### Add migration
 
-Add migration and run `update-database` to apply changes to database.
+Add migration using `update-database` command and run `update-database` to apply changes to database.
 
-### Create Claim for Organization Unit ID of User
+### Create Claim
 
-We are storing organization unit id of user in session, and getting it from logged in user session to filter by it.
+We need to store `OrganizationUnitId` of user in claims, so we can get it in order to filter `IMayHaveOrganizationUnit` entities in our DbContext. In order to do that, override the `CreateAsync` method of `UserClaimsPrincipalFactory` class and add logged in users `OrganizationUnitId` to claims like below.
 
 ````csharp
 public class UserClaimsPrincipalFactory : AbpUserClaimsPrincipalFactory<User, Role>
@@ -90,74 +93,9 @@ public class UserClaimsPrincipalFactory : AbpUserClaimsPrincipalFactory<User, Ro
 }
 ````
 
-### Configure DbContext
-
-Add a field that is store organization unit of current user:
-
-    protected virtual int? CurrentOUId => GetCurrentUsersOuIdOrNull();
-
-This field filling from `PrincipalAccessor`. Here is the latest DbContext look:
-
-````csharp
-public class CustomFilterSampleDbContext : AbpZeroDbContext<Tenant, Role, User, CustomFilterSampleDbContext>
-{
-    public DbSet<Document> Documents { get; set; }
-
-    public IPrincipalAccessor PrincipalAccessor { get; set; }
-
-    protected virtual int? CurrentOUId => GetCurrentUsersOuIdOrNull();
-
-    protected virtual bool IsOUFilterEnabled => CurrentUnitOfWorkProvider?.Current?.IsFilterEnabled("MayHaveOrganizationUnit") == true;
-
-    public CustomFilterSampleDbContext(DbContextOptions<CustomFilterSampleDbContext> options)
-        : base(options)
-    {
-        //MyAppSession = NullAbpSession.Instance;
-    }
-
-    protected override bool ShouldFilterEntity<TEntity>(IMutableEntityType entityType)
-    {
-        if (typeof(IMayHaveOrganizationUnit).IsAssignableFrom(typeof(TEntity)))
-        {
-            return true;
-        }
-
-        return base.ShouldFilterEntity<TEntity>(entityType);
-    }
-
-    protected override Expression<Func<TEntity, bool>> CreateFilterExpression<TEntity>()
-    {
-        var expression = base.CreateFilterExpression<TEntity>();
-
-        if (typeof(IMayHaveOrganizationUnit).IsAssignableFrom(typeof(TEntity)))
-        {
-                /* This condition should normally be defined as below:
-                 * !IsSoftDeleteFilterEnabled || !((ISoftDelete) e).IsDeleted
-                 * But this causes a problem with EF Core (see https://github.com/aspnet/EntityFrameworkCore/issues/9502)
-                 * So, we made a workaround to make it working. It works same as above.
-                 */
-
-            Expression<Func<TEntity, bool>> mayHaveOUFilter = e => ((IMayHaveOrganizationUnit)e).OrganizationUnitId == CurrentOUId || (((IMayHaveOrganizationUnit)e).OrganizationUnitId == CurrentOUId) == IsOUFilterEnabled;
-            expression = expression == null ? mayHaveOUFilter : CombineExpressions(expression, mayHaveOUFilter);
-        }
-
-        return expression;
-    }
-
-    protected virtual int? GetCurrentUsersOuIdOrNull()
-    {
-        var userOuClaim = PrincipalAccessor.Principal?.Claims.FirstOrDefault(c => c.Type == "Application_OrganizationUnitId");
-        if (string.IsNullOrEmpty(userOuClaim?.Value))
-        {
-                return null;
-        }
-
-        return Convert.ToInt32(userOuClaim.Value);
-    }
-}
-````
-
 ### Register Filter
+
+Before filtering entities in our DbContext, we will register our filter, so we can disable it if we want to for some cases in our code.
 
 Register filter in PreInitialize method in `YourProjectNameEntityFrameworkModule` to get it from current unit of work manager.
 
@@ -171,11 +109,146 @@ public override void PreInitialize()
 }
 ````
 
-### Filtering Test
+### Configure DbContext
 
-Create an organization unit and set its `UserId = 2` and `TenantId = 1`. Set `OrganizationUnitId` of user and document with created one's id.
+After all, we need to use the value of `OrganizationUnitId` we have added to claims to filter `IMayHaveOrganizationUnit` entities in our DbContext.
 
-Getting data from db in HomeController:
+In order to do that, first add a field like below to your DbContext:
+
+````csharp
+protected virtual int? CurrentOUId => GetCurrentUsersOuIdOrNull();
+````
+
+And define `GetCurrentUsersOuIdOrNull` method like below in your DbContext and also inject `IPrincipalAccessor` into your DbContext using propert injection;
+
+````csharp
+public class CustomFilterSampleDbContext : AbpZeroDbContext<Tenant, Role, User, CustomFilterSampleDbContext>
+{
+    public DbSet<Document> Documents { get; set; }
+
+    public IPrincipalAccessor PrincipalAccessor { get; set; }
+
+    protected virtual int? CurrentOUId => GetCurrentUsersOuIdOrNull();
+
+    public CustomFilterSampleDbContext(DbContextOptions<CustomFilterSampleDbContext> options)
+        : base(options)
+    {
+        
+    }
+
+    protected virtual int? GetCurrentUsersOuIdOrNull()
+	{
+		var userOuClaim = PrincipalAccessor.Principal?.Claims.FirstOrDefault(c => c.Type == "Application_OrganizationUnitId");
+		if (string.IsNullOrEmpty(userOuClaim?.Value))
+		{
+			return null;
+		}
+
+		return Convert.ToInt32(userOuClaim.Value);
+	}	
+}
+````
+
+After that, let's add a property to our DbContext in order to get if the `MayHaveOrganizationUnit` filter is enabled or not.
+
+````csharp
+protected virtual bool IsOUFilterEnabled => CurrentUnitOfWorkProvider?.Current?.IsFilterEnabled("MayHaveOrganizationUnit") == true;
+````
+
+AbpDbContext defines two methods related to data filters. One is `ShouldFilterEntity` and the other one is `CreateFilterExpression`. `ShouldFilterEntity` method decides to filter an entity or not. `CreateFilterExpression` method creates filter expressions for entities to filter. 
+
+In order to filter entities inherited from `IMayHaveOrganizationUnit`, we need to override both methods.
+
+First, override `ShouldFilterEntity` method like below;
+
+````csharp
+protected override bool ShouldFilterEntity<TEntity>(IMutableEntityType entityType)
+{
+    if (typeof(IMayHaveOrganizationUnit).IsAssignableFrom(typeof(TEntity)))
+    {
+        return true;
+    }
+
+    return base.ShouldFilterEntity<TEntity>(entityType);
+}
+````    
+
+Then, override `CreateFilterExpression` method like below;
+
+````csharp
+protected override Expression<Func<TEntity, bool>> CreateFilterExpression<TEntity>()
+{
+    var expression = base.CreateFilterExpression<TEntity>();
+
+    if (typeof(IMayHaveOrganizationUnit).IsAssignableFrom(typeof(TEntity)))
+    {
+        Expression<Func<TEntity, bool>> mayHaveOUFilter = e => ((IMayHaveOrganizationUnit)e).OrganizationUnitId == CurrentOUId || (((IMayHaveOrganizationUnit)e).OrganizationUnitId == CurrentOUId) == IsOUFilterEnabled;
+        expression = expression == null ? mayHaveOUFilter : CombineExpressions(expression, mayHaveOUFilter);
+    }
+
+    return expression;
+}
+````
+
+Here is the final version of our DbContext:
+
+````csharp
+public class CustomFilterSampleDbContext : AbpZeroDbContext<Tenant, Role, User, CustomFilterSampleDbContext>
+{
+    public DbSet<Document> Documents { get; set; }
+	
+    public IPrincipalAccessor PrincipalAccessor { get; set; }
+	
+    protected virtual int? CurrentOUId => GetCurrentUsersOuIdOrNull();
+	
+    protected virtual bool IsOUFilterEnabled => CurrentUnitOfWorkProvider?.Current?.IsFilterEnabled("MayHaveOrganizationUnit") == true;
+	
+    public CustomFilterSampleDbContext(DbContextOptions<CustomFilterSampleDbContext> options)
+        : base(options)
+    {
+        
+    }
+	
+    protected override bool ShouldFilterEntity<TEntity>(IMutableEntityType entityType)
+    {
+        if (typeof(IMayHaveOrganizationUnit).IsAssignableFrom(typeof(TEntity)))
+        {
+            return true;
+        }
+         return base.ShouldFilterEntity<TEntity>(entityType);
+    }
+	
+    protected override Expression<Func<TEntity, bool>> CreateFilterExpression<TEntity>()
+    {
+        var expression = base.CreateFilterExpression<TEntity>();
+        if (typeof(IMayHaveOrganizationUnit).IsAssignableFrom(typeof(TEntity)))
+        {
+            Expression<Func<TEntity, bool>> mayHaveOUFilter = e => ((IMayHaveOrganizationUnit)e).OrganizationUnitId == CurrentOUId || (((IMayHaveOrganizationUnit)e).OrganizationUnitId == CurrentOUId) == IsOUFilterEnabled;
+            expression = expression == null ? mayHaveOUFilter : CombineExpressions(expression, mayHaveOUFilter);
+        }
+		
+        return expression;
+    }
+	
+    protected virtual int? GetCurrentUsersOuIdOrNull()
+    {
+        var userOuClaim = PrincipalAccessor.Principal?.Claims.FirstOrDefault(c => c.Type == "Application_OrganizationUnitId");
+        if (string.IsNullOrEmpty(userOuClaim?.Value))
+        {
+            return null;
+        }
+		
+        return Convert.ToInt32(userOuClaim.Value);
+    }
+}
+````
+
+### Testing the Filter
+
+In order to test the `MayHaveOrganizationUnit` filter, create an organization unit and set its `UserId = 2` (Default tenant's admin user) and `TenantId = 1`. Then, create document records on the database as well.
+Set `OrganizationUnitId` of default tenant admin and document(s) you have created with id of the created organization unit.
+
+Getting data from database in HomeController:
 
 ````csharp
 [AbpMvcAuthorize]
@@ -198,7 +271,7 @@ public class HomeController : CustomFilterSampleControllerBase
 }
 ````
 
-When you log in as host user you should not see anything. But if you log in as tenant user, you will see the document titles:
+When you log in as host user you should see an emtpy page. But if you log in as tenant user, you will see the document titles as below:
 
 <img src="images/document-titles-output.png" alt="Document Titles" class="img-thumbnail" />
 
@@ -231,3 +304,5 @@ public class HomeController : CustomFilterSampleControllerBase
     }
 }
 ````
+
+In this case, all document records will be retrieved from database regardless of the logged in users OrganizationUnitId.
