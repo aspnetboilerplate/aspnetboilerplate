@@ -78,7 +78,7 @@ namespace Abp.Authorization.Roles
             SetNormalizedName();
         }
 
-        public void SetNormalizedName()
+        public virtual void SetNormalizedName()
         {
             NormalizedName = Name.ToUpperInvariant();
         }
