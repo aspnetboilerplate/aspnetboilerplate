@@ -2,16 +2,16 @@
 
 In this article, I will explain how to add a custom data filter in Entity Framework Core. 
 
-We will create a filter for OrganizationUnit and filter entities inherited from a specific interface (`IMayHaveOrganizationUnit` for this article) automatically according to logged in users belonging organization unit.
+We will create a filter for OrganizationUnit and filter entities inherited from `IMayHaveOrganizationUnit` interface automatically according to organization unit of logged in user.
 
-We will use ASP.NET Core & JQuery version of [ASP.NET Boilerplate](https://aspnetboilerplate.com).
+We will use ASP.NET Core & JQuery template of [ASP.NET Boilerplate](https://aspnetboilerplate.com).
 You can create a project on [https://aspnetboilerplate.com/Templates](https://aspnetboilerplate.com/Templates) and apply the steps below to see custom organization unit filter in action.
 
 ### Create and Update Entities
 
 #### Create an entity
 
-Create an entity that named `Document` inherited from `IMayHaveOrganizationUnit`. `IMayHaveOrganizationUnit` interface is defined in ABP Framework.
+Create an entity named `Document` inherited from `IMayHaveOrganizationUnit` (`IMayHaveOrganizationUnit` interface is defined in ABP Framework).
 
 ````csharp
 public class Document : Entity, IMayHaveOrganizationUnit
@@ -62,11 +62,11 @@ public class User : AbpUser<User>
 
 #### Add migration
 
-Add migration using `update-database` command and run `update-database` to apply changes to database.
+Add migration using `add-migration` command and run `update-database` to apply changes to your database.
 
 ### Create Claim
 
-We need to store `OrganizationUnitId` of user in claims, so we can get it in order to filter `IMayHaveOrganizationUnit` entities in our DbContext. In order to do that, override the `CreateAsync` method of `UserClaimsPrincipalFactory` class and add logged in users `OrganizationUnitId` to claims like below.
+We need to store `OrganizationUnitId` of logged in user in claims, so we can get it in order to filter `IMayHaveOrganizationUnit` entities in our DbContext. In order to do that, override the `CreateAsync` method of `UserClaimsPrincipalFactory` class and add logged in users `OrganizationUnitId` to claims like below.
 
 ````csharp
 public class UserClaimsPrincipalFactory : AbpUserClaimsPrincipalFactory<User, Role>
@@ -82,7 +82,6 @@ public class UserClaimsPrincipalFactory : AbpUserClaimsPrincipalFactory<User, Ro
     {
     }
 
-    //Override CreateAsync method to add your custom claim
     public override async Task<ClaimsPrincipal> CreateAsync(User user)
     {
         var claim = await base.CreateAsync(user);
@@ -111,7 +110,7 @@ public override void PreInitialize()
 
 ### Configure DbContext
 
-After all, we need to use the value of `OrganizationUnitId` we have added to claims to filter `IMayHaveOrganizationUnit` entities in our DbContext.
+We need to use the value of `OrganizationUnitId` we have added to claims to filter `IMayHaveOrganizationUnit` entities in our DbContext.
 
 In order to do that, first add a field like below to your DbContext:
 
@@ -245,8 +244,8 @@ public class CustomFilterSampleDbContext : AbpZeroDbContext<Tenant, Role, User, 
 
 ### Testing the Filter
 
-In order to test the `MayHaveOrganizationUnit` filter, create an organization unit and set its `UserId = 2` (Default tenant's admin user) and `TenantId = 1`. Then, create document records on the database as well.
-Set `OrganizationUnitId` of default tenant admin and document(s) you have created with id of the created organization unit.
+In order to test the `MayHaveOrganizationUnit` filter, create an organization unit and set its `UserId = 2` (Id of the Default Tenant's admin user) and `TenantId = 1` (Id of the Default Tenant). Then, create document records on the database as well.
+Set `OrganizationUnitId` of Default Tenant's admin user and document(s) you have created with id of the created organization unit.
 
 Getting data from database in HomeController:
 
@@ -271,7 +270,7 @@ public class HomeController : CustomFilterSampleControllerBase
 }
 ````
 
-When you log in as host user you should see an emtpy page. But if you log in as tenant user, you will see the document titles as below:
+When you log in as host user you should see an emtpy page. But if you log in as admin user of Default Tenant, you will see the document titles as below:
 
 <img src="images/document-titles-output.png" alt="Document Titles" class="img-thumbnail" />
 
