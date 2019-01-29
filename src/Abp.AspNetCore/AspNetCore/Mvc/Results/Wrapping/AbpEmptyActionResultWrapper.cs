@@ -6,7 +6,7 @@ namespace Abp.AspNetCore.Mvc.Results.Wrapping
 {
     public class AbpEmptyActionResultWrapper : IAbpActionResultWrapper
     {
-        public void Wrap(ResultExecutingContext actionResult)
+        public void Wrap(ResultExecutingContext actionResult, WrapResultAttribute wrapResultAttribute)
         {
             actionResult.Result = new ObjectResult(new AjaxResponse());
         }

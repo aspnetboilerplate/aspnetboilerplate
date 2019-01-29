@@ -18,7 +18,6 @@ namespace Abp.Zero.NHibernate.EntityMappings
             Map(x => x.EmailConfirmationCode);
             Map(x => x.Password);
             Map(x => x.PasswordResetCode);
-            Map(x => x.LastLoginTime);
             Map(x => x.IsActive);
             Map(x => x.AuthenticationSource);
             Map(x => x.IsLockoutEnabled);
