@@ -1,10 +1,10 @@
 ## Introduction
 
-In this article, i will explain how to add custom field to AbpSession in ASP.NET Core.
+In this article, I will explain how to add custom field to AbpSession in ASP.NET Core.
 
 ### Create Custom Session
 
-First, create a custom session object that implement `ClaimsAbpSession`. Define your own session and add your custom field to it. Then, you can inject `MyAppSession` and use it's new property in your project.
+First, create a custom session object that implements `ClaimsAbpSession`. Define your own session and add your custom field to it. Then, you can inject `MyAppSession` and use it's new property in your project.
 
 ````csharp
 public class MyAppSession : ClaimsAbpSession, ITransientDependency
