@@ -44,6 +44,8 @@ namespace Abp.Authorization.Users
         private readonly IRepository<TRole> _roleRepository;
         private readonly IRepository<UserPermissionSetting, long> _userPermissionSettingRepository;
         private readonly IUnitOfWorkManager _unitOfWorkManager;
+        private readonly IRepository<UserOrganizationUnit, long> _userOrganizationUnitRepository;
+        private readonly IRepository<RoleOrganizationUnit, long> _roleOrganizationUnitRepository;
 
         /// <summary>
         /// Constructor.
@@ -55,7 +57,9 @@ namespace Abp.Authorization.Users
             IRepository<TRole> roleRepository,
             IRepository<UserPermissionSetting, long> userPermissionSettingRepository,
             IUnitOfWorkManager unitOfWorkManager,
-            IRepository<UserClaim, long> userClaimRepository)
+            IRepository<UserClaim, long> userClaimRepository,
+            IRepository<UserOrganizationUnit, long> userOrganizationUnitRepository,
+            IRepository<RoleOrganizationUnit, long> roleOrganizationUnitRepository)
         {
             _userRepository = userRepository;
             _userLoginRepository = userLoginRepository;
@@ -63,6 +67,8 @@ namespace Abp.Authorization.Users
             _roleRepository = roleRepository;
             _unitOfWorkManager = unitOfWorkManager;
             _userClaimRepository = userClaimRepository;
+            _userOrganizationUnitRepository = userOrganizationUnitRepository;
+            _roleOrganizationUnitRepository = roleOrganizationUnitRepository;
             _userPermissionSettingRepository = userPermissionSettingRepository;
 
             AsyncQueryableExecuter = NullAsyncQueryableExecuter.Instance;
@@ -278,18 +284,23 @@ namespace Abp.Authorization.Users
         [UnitOfWork]
         public virtual async Task<IList<string>> GetRolesAsync(TUser user)
         {
-            var query = from userRole in _userRoleRepository.GetAll()
-                        join role in _roleRepository.GetAll() on userRole.RoleId equals role.Id
-                        where userRole.UserId == user.Id
-                        select role.Name;
+            var userRoles = from userRole in _userRoleRepository.GetAll()
+                            join role in _roleRepository.GetAll() on userRole.RoleId equals role.Id
+                            where userRole.UserId == user.Id
+                            select role.Name;
 
-            return await AsyncQueryableExecuter.ToListAsync(query);
+            var userOrganizationUnitRoles = from userOu in _userOrganizationUnitRepository.GetAll()
+                                            join roleOu in _roleOrganizationUnitRepository.GetAll() on userOu.OrganizationUnitId equals roleOu.OrganizationUnitId
+                                            join userOuRoles in _roleRepository.GetAll() on roleOu.RoleId equals userOuRoles.Id
+                                            where userOu.UserId == user.Id
+                                            select userOuRoles.Name;
+
+            return await AsyncQueryableExecuter.ToListAsync(userRoles.Concat(userOrganizationUnitRoles));
         }
 
         public virtual async Task<bool> IsInRoleAsync(TUser user, string roleName)
         {
-            var role = await GetRoleByNameAsync(roleName);
-            return await _userRoleRepository.FirstOrDefaultAsync(ur => ur.UserId == user.Id && ur.RoleId == role.Id) != null;
+            return (await GetRolesAsync(user)).Any(r => r == roleName);
         }
 
         #endregion
