@@ -92,6 +92,11 @@ namespace Abp.Zero.EntityFrameworkCore
         public virtual DbSet<UserOrganizationUnit> UserOrganizationUnits { get; set; }
 
         /// <summary>
+        /// RoleOrganizationUnits.
+        /// </summary>
+        public virtual DbSet<RoleOrganizationUnit> RoleOrganizationUnits { get; set; }
+
+        /// <summary>
         /// Notifications.
         /// </summary>
         public virtual DbSet<NotificationInfo> Notifications { get; set; }
