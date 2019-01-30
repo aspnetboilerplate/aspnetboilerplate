@@ -4,7 +4,6 @@ using Abp.IdentityFramework;
 using Abp.Organizations;
 using Abp.Zero.SampleApp.MultiTenancy;
 using Abp.Zero.SampleApp.Users;
-using Abp.Zero.SampleApp.Users.Dto;
 using Microsoft.AspNet.Identity;
 using Shouldly;
 using Xunit;
