@@ -439,7 +439,7 @@ namespace Abp.Authorization.Users
                 where userOu.UserId == user.Id
                 select userOuRoles.Name;
 
-            return await _asyncQueryableExecuter.ToListAsync(userRoles.Concat(userOrganizationUnitRoles));
+            return await _asyncQueryableExecuter.ToListAsync(userRoles.Union(userOrganizationUnitRoles));
         }
 
         /// <summary>

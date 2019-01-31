@@ -295,7 +295,7 @@ namespace Abp.Authorization.Users
                                             where userOu.UserId == user.Id
                                             select userOuRoles.Name;
 
-            return await AsyncQueryableExecuter.ToListAsync(userRoles.Concat(userOrganizationUnitRoles));
+            return await AsyncQueryableExecuter.ToListAsync(userRoles.Union(userOrganizationUnitRoles));
         }
 
         public virtual async Task<bool> IsInRoleAsync(TUser user, string roleName)
