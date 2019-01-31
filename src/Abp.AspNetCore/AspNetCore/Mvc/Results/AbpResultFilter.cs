@@ -46,7 +46,7 @@ namespace Abp.AspNetCore.Mvc.Results
                 return;
             }
 
-            _actionResultWrapperFactory.CreateFor(context).Wrap(context, wrapResultAttribute);
+            _actionResultWrapperFactory.CreateFor(context).Wrap(context);
         }
 
         public virtual void OnResultExecuted(ResultExecutedContext context)
