@@ -1,15 +1,12 @@
 using System;
 using System.Buffers;
-using System.Collections.Concurrent;
 using System.Linq;
-using Abp.Dependency;
-using Abp.Json;
 using Abp.Web.Models;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Filters;
 using Microsoft.AspNetCore.Mvc.Formatters;
 using Microsoft.Extensions.DependencyInjection;
-using Newtonsoft.Json.Serialization;
+using Microsoft.Extensions.Options;
 
 namespace Abp.AspNetCore.Mvc.Results.Wrapping
 {
@@ -17,15 +14,12 @@ namespace Abp.AspNetCore.Mvc.Results.Wrapping
     {
         private readonly IServiceProvider _serviceProvider;
 
-        private static readonly ConcurrentDictionary<Type, AbpMvcContractResolver> SharedContractResolver =
-            new ConcurrentDictionary<Type, AbpMvcContractResolver>();
-
         public AbpObjectActionResultWrapper(IServiceProvider serviceProvider)
         {
             _serviceProvider = serviceProvider;
         }
 
-        public void Wrap(ResultExecutingContext actionResult, WrapResultAttribute wrapResultAttribute)
+        public void Wrap(ResultExecutingContext actionResult)
         {
             var objectResult = actionResult.Result as ObjectResult;
             if (objectResult == null)
@@ -35,13 +29,16 @@ namespace Abp.AspNetCore.Mvc.Results.Wrapping
 
             if (objectResult.Value is AjaxResponseBase)
             {
-                return;
-            }
-
-            objectResult.Value = new AjaxResponse(objectResult.Value);
-            if (objectResult.Formatters.Any(f => f is JsonOutputFormatter))
-            {
-                return;
+                objectResult.Value = new AjaxResponse(objectResult.Value);
+                if (!objectResult.Formatters.Any(f => f is JsonOutputFormatter))
+                {
+                    objectResult.Formatters.Add(
+                        new JsonOutputFormatter(
+                            _serviceProvider.GetRequiredService<IOptions<MvcJsonOptions>>().Value.SerializerSettings,
+                            _serviceProvider.GetRequiredService<ArrayPool<char>>()
+                        )
+                    );
+                }
             }
 
             var serializerSettings = JsonSerializerSettingsProvider.CreateSerializerSettings();
