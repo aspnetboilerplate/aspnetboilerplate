@@ -368,6 +368,8 @@ namespace Abp.Authorization.Roles
                         IsStatic = true
                     };
 
+                    role.SetNormalizedName();
+
                     var identityResult = await CreateAsync(role);
                     if (!identityResult.Succeeded)
                     {

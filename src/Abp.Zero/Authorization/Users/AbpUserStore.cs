@@ -454,10 +454,11 @@ namespace Abp.Authorization.Users
 
         private async Task<TRole> GetRoleByNameAsync(string roleName)
         {
-            var role = await _roleRepository.FirstOrDefaultAsync(r => r.Name == roleName);
+            var normalizedName = roleName.ToUpper();
+            var role = await _roleRepository.FirstOrDefaultAsync(r => r.NormalizedName == normalizedName);
             if (role == null)
             {
-                throw new AbpException("Could not find a role with name: " + roleName);
+                throw new AbpException("Could not find a role with name: " + normalizedName);
             }
 
             return role;
