@@ -98,15 +98,19 @@ namespace Abp.Authorization.Users
 
         public virtual async Task<TUser> FindByNameAsync(string userName)
         {
+            var normalizedUsername = userName.ToUpperInvariant();
+
             return await _userRepository.FirstOrDefaultAsync(
-                user => user.UserName == userName
+                user => user.NormalizedUserName == normalizedUsername
             );
         }
 
         public virtual async Task<TUser> FindByEmailAsync(string email)
         {
+            var normalizedEmail = email.ToUpperInvariant();
+
             return await _userRepository.FirstOrDefaultAsync(
-                user => user.EmailAddress == email
+                user => user.NormalizedEmailAddress == normalizedEmail
             );
         }
 
@@ -117,9 +121,11 @@ namespace Abp.Authorization.Users
         /// <returns>User or null</returns>
         public virtual async Task<TUser> FindByNameOrEmailAsync(string userNameOrEmailAddress)
         {
+            var normalizedUserNameOrEmailAddress = userNameOrEmailAddress.ToUpperInvariant();
+
             return await _userRepository.FirstOrDefaultAsync(
-                user => (user.UserName == userNameOrEmailAddress || user.EmailAddress == userNameOrEmailAddress)
-                );
+                user => (user.NormalizedUserName == normalizedUserNameOrEmailAddress || user.NormalizedEmailAddress == normalizedUserNameOrEmailAddress)
+            );
         }
 
         /// <summary>
