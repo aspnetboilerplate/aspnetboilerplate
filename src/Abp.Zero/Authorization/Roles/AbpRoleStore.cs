@@ -65,7 +65,7 @@ namespace Abp.Authorization.Roles
 
         public virtual async Task<TRole> FindByNameAsync(string roleName)
         {
-            var normalizedName = roleName.ToUpperInvariant();
+            var normalizedName = NormalizeKey(roleName);
 
             return await _roleRepository.FirstOrDefaultAsync(
                 role => role.NormalizedName == normalizedName
@@ -134,6 +134,11 @@ namespace Abp.Authorization.Roles
         public virtual async Task RemoveAllPermissionSettingsAsync(TRole role)
         {
             await _rolePermissionSettingRepository.DeleteAsync(s => s.RoleId == role.Id);
+        }
+
+        protected virtual string NormalizeKey(string key)
+        {
+            return key.ToUpperInvariant();
         }
 
         public virtual void Dispose()

@@ -98,7 +98,7 @@ namespace Abp.Authorization.Users
 
         public virtual async Task<TUser> FindByNameAsync(string userName)
         {
-            var normalizedUsername = userName.ToUpperInvariant();
+            var normalizedUsername = NormalizeKey(userName);
 
             return await _userRepository.FirstOrDefaultAsync(
                 user => user.NormalizedUserName == normalizedUsername
@@ -107,7 +107,7 @@ namespace Abp.Authorization.Users
 
         public virtual async Task<TUser> FindByEmailAsync(string email)
         {
-            var normalizedEmail = email.ToUpperInvariant();
+            var normalizedEmail = NormalizeKey(email);
 
             return await _userRepository.FirstOrDefaultAsync(
                 user => user.NormalizedEmailAddress == normalizedEmail
@@ -121,7 +121,7 @@ namespace Abp.Authorization.Users
         /// <returns>User or null</returns>
         public virtual async Task<TUser> FindByNameOrEmailAsync(string userNameOrEmailAddress)
         {
-            var normalizedUserNameOrEmailAddress = userNameOrEmailAddress.ToUpperInvariant();
+            var normalizedUserNameOrEmailAddress = NormalizeKey(userNameOrEmailAddress);
 
             return await _userRepository.FirstOrDefaultAsync(
                 user => (user.NormalizedUserName == normalizedUserNameOrEmailAddress || user.NormalizedEmailAddress == normalizedUserNameOrEmailAddress)
@@ -458,9 +458,14 @@ namespace Abp.Authorization.Users
 
         #region Helpers
 
+        protected virtual string NormalizeKey(string key)
+        {
+            return key.ToUpperInvariant();
+        }
+
         private async Task<TRole> GetRoleByNameAsync(string roleName)
         {
-            var normalizedName = roleName.ToUpper();
+            var normalizedName = NormalizeKey(roleName);
             var role = await _roleRepository.FirstOrDefaultAsync(r => r.NormalizedName == normalizedName);
             if (role == null)
             {

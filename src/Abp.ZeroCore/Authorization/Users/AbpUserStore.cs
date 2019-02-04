@@ -1159,7 +1159,7 @@ namespace Abp.Authorization.Users
         /// <returns>User or null</returns>
         public virtual async Task<TUser> FindByNameOrEmailAsync(string userNameOrEmailAddress)
         {
-            var normalizedUserNameOrEmailAddress = userNameOrEmailAddress.ToUpperInvariant();
+            var normalizedUserNameOrEmailAddress = NormalizeKey(userNameOrEmailAddress);
 
             return await UserRepository.FirstOrDefaultAsync(
                 user => (user.NormalizedUserName == normalizedUserNameOrEmailAddress || user.NormalizedEmailAddress == normalizedUserNameOrEmailAddress)
@@ -1331,6 +1331,11 @@ namespace Abp.Authorization.Users
 
             user.Tokens.Remove(user.Tokens.FirstOrDefault(t =>
                 t.LoginProvider == TokenValidityKeyProvider && t.Name == tokenValidityKey));
+        }
+
+        protected virtual string NormalizeKey(string key)
+        {
+            return key.ToUpperInvariant();
         }
     }
 }
