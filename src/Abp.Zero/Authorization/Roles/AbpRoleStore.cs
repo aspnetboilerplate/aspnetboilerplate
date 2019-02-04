@@ -14,7 +14,6 @@ namespace Abp.Authorization.Roles
     public abstract class AbpRoleStore<TRole, TUser> :
         IQueryableRoleStore<TRole, int>,
         IRolePermissionStore<TRole>,
-
         ITransientDependency
 
         where TRole : AbpRole<TUser>
