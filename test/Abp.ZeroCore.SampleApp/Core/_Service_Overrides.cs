@@ -241,7 +241,7 @@ namespace Abp.ZeroCore.SampleApp.Core
             IRepository<UserClaim, long> userClaimRepository,
             IRepository<UserPermissionSetting, long> userPermissionSettingRepository,
             IRepository<UserOrganizationUnit, long> userOrganizationUnitRepository,
-            IRepository<RoleOrganizationUnit, long> roleOrganizationUnitRepository
+            IRepository<OrganizationUnitRole, long> organizationUnitRoleRepository
             ): base(
             unitOfWorkManager,
             userRepository,
@@ -252,7 +252,7 @@ namespace Abp.ZeroCore.SampleApp.Core
             userClaimRepository,
             userPermissionSettingRepository,
             userOrganizationUnitRepository,
-            roleOrganizationUnitRepository)
+            organizationUnitRoleRepository)
         {
         }
     }

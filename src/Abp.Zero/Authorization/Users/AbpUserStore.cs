@@ -9,6 +9,7 @@ using Abp.Dependency;
 using Abp.Domain.Repositories;
 using Abp.Domain.Uow;
 using Abp.Linq;
+using Abp.Organizations;
 using Microsoft.AspNet.Identity;
 
 namespace Abp.Authorization.Users
@@ -45,7 +46,7 @@ namespace Abp.Authorization.Users
         private readonly IRepository<UserPermissionSetting, long> _userPermissionSettingRepository;
         private readonly IUnitOfWorkManager _unitOfWorkManager;
         private readonly IRepository<UserOrganizationUnit, long> _userOrganizationUnitRepository;
-        private readonly IRepository<RoleOrganizationUnit, long> _roleOrganizationUnitRepository;
+        private readonly IRepository<OrganizationUnitRole, long> _organizationUnitRoleRepository;
 
         /// <summary>
         /// Constructor.
@@ -59,7 +60,7 @@ namespace Abp.Authorization.Users
             IUnitOfWorkManager unitOfWorkManager,
             IRepository<UserClaim, long> userClaimRepository,
             IRepository<UserOrganizationUnit, long> userOrganizationUnitRepository,
-            IRepository<RoleOrganizationUnit, long> roleOrganizationUnitRepository)
+            IRepository<OrganizationUnitRole, long> organizationUnitRoleRepository)
         {
             _userRepository = userRepository;
             _userLoginRepository = userLoginRepository;
@@ -68,7 +69,7 @@ namespace Abp.Authorization.Users
             _unitOfWorkManager = unitOfWorkManager;
             _userClaimRepository = userClaimRepository;
             _userOrganizationUnitRepository = userOrganizationUnitRepository;
-            _roleOrganizationUnitRepository = roleOrganizationUnitRepository;
+            _organizationUnitRoleRepository = organizationUnitRoleRepository;
             _userPermissionSettingRepository = userPermissionSettingRepository;
 
             AsyncQueryableExecuter = NullAsyncQueryableExecuter.Instance;
@@ -290,7 +291,7 @@ namespace Abp.Authorization.Users
                             select role.Name;
 
             var userOrganizationUnitRoles = from userOu in _userOrganizationUnitRepository.GetAll()
-                                            join roleOu in _roleOrganizationUnitRepository.GetAll() on userOu.OrganizationUnitId equals roleOu.OrganizationUnitId
+                                            join roleOu in _organizationUnitRoleRepository.GetAll() on userOu.OrganizationUnitId equals roleOu.OrganizationUnitId
                                             join userOuRoles in _roleRepository.GetAll() on roleOu.RoleId equals userOuRoles.Id
                                             where userOu.UserId == user.Id
                                             select userOuRoles.Name;

@@ -51,7 +51,7 @@ namespace Abp.Zero.SampleApp.Tests.Users
                     context.SaveChanges();
 
                     context.UserOrganizationUnits.Add(new UserOrganizationUnit(AbpSession.TenantId, user1.Id, ou1.Id));
-                    context.RoleOrganizationUnits.Add(new RoleOrganizationUnit(AbpSession.TenantId, role3.Id, ou1.Id));
+                    context.OrganizationUnitRoles.Add(new OrganizationUnitRole(AbpSession.TenantId, role3.Id, ou1.Id));
                     context.UserRoles.Add(new UserRole(AbpSession.TenantId, user1.Id, role1.Id));
                 });
         }

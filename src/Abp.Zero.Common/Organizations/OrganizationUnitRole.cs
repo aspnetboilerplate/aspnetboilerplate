@@ -1,15 +1,14 @@
 ﻿using System.ComponentModel.DataAnnotations.Schema;
 using Abp.Domain.Entities;
 using Abp.Domain.Entities.Auditing;
-using Abp.Organizations;
 
-namespace Abp.Authorization.Roles
+namespace Abp.Organizations
 {
     /// <summary>
     /// Represents membership of a User to an OU.
     /// </summary>
-    [Table("AbpRoleOrganizationUnit")]
-    public class RoleOrganizationUnit : CreationAuditedEntity<long>, IMayHaveTenant, ISoftDelete
+    [Table("AbpOrganizationUnitRoles")]
+    public class OrganizationUnitRole : CreationAuditedEntity<long>, IMayHaveTenant
     {
         /// <summary>
         /// TenantId of this entity.
@@ -32,20 +31,20 @@ namespace Abp.Authorization.Roles
         public virtual bool IsDeleted { get; set; }
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="RoleOrganizationUnit"/> class.
+        /// Initializes a new instance of the <see cref="OrganizationUnitRole"/> class.
         /// </summary>
-        public RoleOrganizationUnit()
+        public OrganizationUnitRole()
         {
             
         }
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="RoleOrganizationUnit"/> class.
+        /// Initializes a new instance of the <see cref="OrganizationUnitRole"/> class.
         /// </summary>
         /// <param name="tenantId">TenantId</param>
         /// <param name="roleId">Id of the User.</param>
         /// <param name="organizationUnitId">Id of the <see cref="OrganizationUnit"/>.</param>
-        public RoleOrganizationUnit(int? tenantId, int roleId, long organizationUnitId)
+        public OrganizationUnitRole(int? tenantId, int roleId, long organizationUnitId)
         {
             TenantId = tenantId;
             RoleId = roleId;

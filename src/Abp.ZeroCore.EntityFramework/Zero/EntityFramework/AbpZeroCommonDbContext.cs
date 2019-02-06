@@ -106,9 +106,9 @@ namespace Abp.Zero.EntityFramework
         public virtual DbSet<UserOrganizationUnit> UserOrganizationUnits { get; set; }
 
         /// <summary>
-        /// RoleOrganizationUnits.
+        /// OrganizationUnitRoles.
         /// </summary>
-        public virtual DbSet<RoleOrganizationUnit> RoleOrganizationUnits { get; set; }
+        public virtual DbSet<OrganizationUnitRole> OrganizationUnitRoles { get; set; }
 
         /// <summary>
         /// Tenant notifications.
@@ -517,25 +517,25 @@ namespace Abp.Zero.EntityFramework
 
             #endregion
 
-            #region RoleOrganizationUnit.IX_TenantId_RoleId
+            #region OrganizationUnitRole.IX_TenantId_RoleId
 
-            modelBuilder.Entity<RoleOrganizationUnit>()
+            modelBuilder.Entity<OrganizationUnitRole>()
                 .Property(e => e.TenantId)
                 .CreateIndex("IX_TenantId_RoleId", 1);
 
-            modelBuilder.Entity<RoleOrganizationUnit>()
+            modelBuilder.Entity<OrganizationUnitRole>()
                 .Property(e => e.RoleId)
                 .CreateIndex("IX_TenantId_RoleId", 2);
 
             #endregion
 
-            #region RoleOrganizationUnit.IX_TenantId_OrganizationUnitId
+            #region OrganizationUnitRole.IX_TenantId_OrganizationUnitId
 
-            modelBuilder.Entity<RoleOrganizationUnit>()
+            modelBuilder.Entity<OrganizationUnitRole>()
                 .Property(e => e.TenantId)
                 .CreateIndex("IX_TenantId_OrganizationUnitId", 1);
 
-            modelBuilder.Entity<RoleOrganizationUnit>()
+            modelBuilder.Entity<OrganizationUnitRole>()
                 .Property(e => e.OrganizationUnitId)
                 .CreateIndex("IX_TenantId_OrganizationUnitId", 2);
 

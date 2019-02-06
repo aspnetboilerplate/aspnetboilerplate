@@ -1,12 +1,12 @@
-using Abp.Authorization.Roles;
 using Abp.NHibernate.EntityMappings;
+using Abp.Organizations;
 
 namespace Abp.Zero.NHibernate.EntityMappings
 {
-    public class RoleOrganizationUnitMap : EntityMap<RoleOrganizationUnit, long>
+    public class OrganizationUnitRoleMap : EntityMap<OrganizationUnitRole, long>
     {
-        public RoleOrganizationUnitMap()
-            : base("AbpRoleOrganizationUnits")
+        public OrganizationUnitRoleMap()
+            : base("AbpOrganizationUnitRoles")
         {
             Map(x => x.TenantId);
             Map(x => x.RoleId);

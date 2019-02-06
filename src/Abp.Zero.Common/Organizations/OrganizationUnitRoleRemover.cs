@@ -1,26 +1,27 @@
-﻿using Abp.Dependency;
+﻿using Abp.Authorization.Roles;
+using Abp.Dependency;
 using Abp.Domain.Repositories;
 using Abp.Domain.Uow;
 using Abp.Events.Bus.Entities;
 using Abp.Events.Bus.Handlers;
 
-namespace Abp.Authorization.Roles
+namespace Abp.Organizations
 {
     /// <summary>
     /// Removes the role from all organization units when a role is deleted.
     /// </summary>
-    public class RoleOrganizationUnitRemover : 
+    public class OrganizationUnitRoleRemover : 
         IEventHandler<EntityDeletedEventData<AbpRoleBase>>, 
         ITransientDependency
     {
-        private readonly IRepository<RoleOrganizationUnit, long> _roleOrganizationUnitRepository;
+        private readonly IRepository<OrganizationUnitRole, long> _organizationUnitRoleRepository;
         private readonly IUnitOfWorkManager _unitOfWorkManager;
 
-        public RoleOrganizationUnitRemover(
-            IRepository<RoleOrganizationUnit, long> roleOrganizationUnitRepository, 
+        public OrganizationUnitRoleRemover(
+            IRepository<OrganizationUnitRole, long> organizationUnitRoleRepository, 
             IUnitOfWorkManager unitOfWorkManager)
         {
-            _roleOrganizationUnitRepository = roleOrganizationUnitRepository;
+            _organizationUnitRoleRepository = organizationUnitRoleRepository;
             _unitOfWorkManager = unitOfWorkManager;
         }
 
@@ -29,7 +30,7 @@ namespace Abp.Authorization.Roles
         {
             using (_unitOfWorkManager.Current.SetTenantId(eventData.Entity.TenantId))
             {
-                _roleOrganizationUnitRepository.Delete(
+                _organizationUnitRoleRepository.Delete(
                     uou => uou.RoleId == eventData.Entity.Id
                 );
             }

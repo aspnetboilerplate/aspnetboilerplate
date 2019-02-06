@@ -94,9 +94,9 @@ namespace Abp.Zero.EntityFramework
         public virtual IDbSet<UserOrganizationUnit> UserOrganizationUnits { get; set; }
 
         /// <summary>
-        /// RoleOrganizationUnits.
+        /// OrganizationUnitRoles.
         /// </summary>
-        public virtual IDbSet<RoleOrganizationUnit> RoleOrganizationUnits { get; set; }
+        public virtual IDbSet<OrganizationUnitRole> OrganizationUnitRoles { get; set; }
 
         /// <summary>
         /// Notifications.
