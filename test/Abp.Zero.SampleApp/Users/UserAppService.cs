@@ -1,9 +1,7 @@
-﻿using System;
-using System.Threading.Tasks;
+﻿using System.Threading.Tasks;
 using Abp.Domain.Repositories;
 using Abp.Domain.Uow;
 using Abp.Extensions;
-using Abp.Runtime.Security;
 using Abp.UI;
 using Abp.Zero.SampleApp.Users.Dto;
 using Microsoft.AspNet.Identity;
@@ -28,7 +26,7 @@ namespace Abp.Zero.SampleApp.Users
 
         public void CreateUser(CreateUserInput input)
         {
-            _userRepository.Insert(new User
+            _userManager.Create(new User
             {
                 TenantId = null,
                 UserName = input.UserName,

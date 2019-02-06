@@ -109,6 +109,8 @@ namespace Abp.Authorization.Users
 
         public override async Task<IdentityResult> CreateAsync(TUser user)
         {
+            user.SetNormalizedNames();
+
             var result = await CheckDuplicateUsernameOrEmailAddressAsync(user.Id, user.UserName, user.EmailAddress);
             if (!result.Succeeded)
             {
@@ -345,6 +347,8 @@ namespace Abp.Authorization.Users
 
         public async override Task<IdentityResult> UpdateAsync(TUser user)
         {
+            user.SetNormalizedNames();
+
             var result = await CheckDuplicateUsernameOrEmailAddressAsync(user.Id, user.UserName, user.EmailAddress);
             if (!result.Succeeded)
             {

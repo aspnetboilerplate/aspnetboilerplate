@@ -105,15 +105,19 @@ namespace Abp.Authorization.Users
 
         public virtual async Task<TUser> FindByNameAsync(string userName)
         {
+            var normalizedUsername = NormalizeKey(userName);
+
             return await _userRepository.FirstOrDefaultAsync(
-                user => user.UserName == userName
+                user => user.NormalizedUserName == normalizedUsername
             );
         }
 
         public virtual async Task<TUser> FindByEmailAsync(string email)
         {
+            var normalizedEmail = NormalizeKey(email);
+
             return await _userRepository.FirstOrDefaultAsync(
-                user => user.EmailAddress == email
+                user => user.NormalizedEmailAddress == normalizedEmail
             );
         }
 
@@ -124,9 +128,11 @@ namespace Abp.Authorization.Users
         /// <returns>User or null</returns>
         public virtual async Task<TUser> FindByNameOrEmailAsync(string userNameOrEmailAddress)
         {
+            var normalizedUserNameOrEmailAddress = NormalizeKey(userNameOrEmailAddress);
+
             return await _userRepository.FirstOrDefaultAsync(
-                user => (user.UserName == userNameOrEmailAddress || user.EmailAddress == userNameOrEmailAddress)
-                );
+                user => (user.NormalizedUserName == normalizedUserNameOrEmailAddress || user.NormalizedEmailAddress == normalizedUserNameOrEmailAddress)
+            );
         }
 
         /// <summary>
@@ -464,12 +470,18 @@ namespace Abp.Authorization.Users
 
         #region Helpers
 
+        protected virtual string NormalizeKey(string key)
+        {
+            return key.ToUpperInvariant();
+        }
+
         private async Task<TRole> GetRoleByNameAsync(string roleName)
         {
-            var role = await _roleRepository.FirstOrDefaultAsync(r => r.Name == roleName);
+            var normalizedName = NormalizeKey(roleName);
+            var role = await _roleRepository.FirstOrDefaultAsync(r => r.NormalizedName == normalizedName);
             if (role == null)
             {
-                throw new AbpException("Could not find a role with name: " + roleName);
+                throw new AbpException("Could not find a role with name: " + normalizedName);
             }
 
             return role;

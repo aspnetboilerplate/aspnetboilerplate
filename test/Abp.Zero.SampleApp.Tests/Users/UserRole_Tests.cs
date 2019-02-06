@@ -24,7 +24,7 @@ namespace Abp.Zero.SampleApp.Tests.Users
 
                     AbpSession.TenantId = tenant1.Id;
 
-                    var user1 = context.Users.Add(new User
+                    var user1 = new User
                     {
                         TenantId = AbpSession.TenantId,
                         UserName = "user1",
@@ -34,7 +34,11 @@ namespace Abp.Zero.SampleApp.Tests.Users
                         IsEmailConfirmed = true,
                         Password = "AM4OLBpptxBYmM79lGOX9egzZk3vIQU3d/gFCJzaBjAPXzYIK3tQ2N7X4fcrHtElTw=="
                         //123qwe
-                    });
+                    };
+
+                    user1.SetNormalizedNames();
+
+                    context.Users.Add(user1);
                     context.SaveChanges();
 
                     var role1 = context.Roles.Add(new Role(AbpSession.TenantId, "role1", "Role 1"));
