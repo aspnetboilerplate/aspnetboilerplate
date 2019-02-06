@@ -12,6 +12,7 @@ using Abp.Domain.Repositories;
 using Abp.Domain.Uow;
 using Abp.Extensions;
 using Abp.Linq;
+using Abp.Organizations;
 using Abp.Runtime.Session;
 using Abp.Zero;
 using Castle.Core.Logging;
@@ -69,6 +70,8 @@ namespace Abp.Authorization.Users
         private readonly IRepository<UserLogin, long> _userLoginRepository;
         private readonly IRepository<UserClaim, long> _userClaimRepository;
         private readonly IRepository<UserPermissionSetting, long> _userPermissionSettingRepository;
+        private readonly IRepository<UserOrganizationUnit, long> _userOrganizationUnitRepository;
+        private readonly IRepository<OrganizationUnitRole, long> _organizationUnitRoleRepository;
 
         private readonly IUnitOfWorkManager _unitOfWorkManager;
 
@@ -80,7 +83,9 @@ namespace Abp.Authorization.Users
             IRepository<UserRole, long> userRoleRepository,
             IRepository<UserLogin, long> userLoginRepository,
             IRepository<UserClaim, long> userClaimRepository,
-            IRepository<UserPermissionSetting, long> userPermissionSettingRepository)
+            IRepository<UserPermissionSetting, long> userPermissionSettingRepository, 
+            IRepository<UserOrganizationUnit, long> userOrganizationUnitRepository, 
+            IRepository<OrganizationUnitRole, long> organizationUnitRoleRepository)
         {
             _unitOfWorkManager = unitOfWorkManager;
             UserRepository = userRepository;
@@ -90,6 +95,8 @@ namespace Abp.Authorization.Users
             _userLoginRepository = userLoginRepository;
             _userClaimRepository = userClaimRepository;
             _userPermissionSettingRepository = userPermissionSettingRepository;
+            _userOrganizationUnitRepository = userOrganizationUnitRepository;
+            _organizationUnitRoleRepository = organizationUnitRoleRepository;
 
             AbpSession = NullAbpSession.Instance;
             ErrorDescriber = new IdentityErrorDescriber();
@@ -420,14 +427,20 @@ namespace Abp.Authorization.Users
         {
             cancellationToken.ThrowIfCancellationRequested();
 
-            Check.NotNull(user, nameof(user));
+            Check.NotNull(user, nameof(user));;
 
-            var query = from userRole in _userRoleRepository.GetAll()
-                        join role in _roleRepository.GetAll() on userRole.RoleId equals role.Id
-                        where userRole.UserId == user.Id
-                        select role.Name;
+            var userRoles = from userRole in _userRoleRepository.GetAll()
+                            join role in _roleRepository.GetAll() on userRole.RoleId equals role.Id
+                            where userRole.UserId == user.Id
+                            select role.Name;
 
-            return await _asyncQueryableExecuter.ToListAsync(query);
+            var userOrganizationUnitRoles = from userOu in _userOrganizationUnitRepository.GetAll()
+                join roleOu in _organizationUnitRoleRepository.GetAll() on userOu.OrganizationUnitId equals roleOu.OrganizationUnitId
+                join userOuRoles in _roleRepository.GetAll() on roleOu.RoleId equals userOuRoles.Id
+                where userOu.UserId == user.Id
+                select userOuRoles.Name;
+
+            return await _asyncQueryableExecuter.ToListAsync(userRoles.Union(userOrganizationUnitRoles));
         }
 
         /// <summary>
@@ -449,15 +462,7 @@ namespace Abp.Authorization.Users
                 throw new ArgumentException(nameof(normalizedRoleName) + " can not be null or whitespace");
             }
 
-            var role = await _roleRepository.FirstOrDefaultAsync(r => r.NormalizedName == normalizedRoleName);
-            if (role == null)
-            {
-                return false;
-            }
-
-            await UserRepository.EnsureCollectionLoadedAsync(user, u => u.Roles, cancellationToken);
-
-            return user.Roles.Any(r => r.RoleId == role.Id);
+            return (await GetRolesAsync(user, cancellationToken)).Any(r => r.ToUpperInvariant() == normalizedRoleName);
         }
 
         /// <summary>

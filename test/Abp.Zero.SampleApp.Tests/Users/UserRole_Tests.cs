@@ -1,7 +1,9 @@
 using System.Threading.Tasks;
+using Abp.Authorization.Roles;
 using Abp.Authorization.Users;
 using Abp.Domain.Uow;
 using Abp.IdentityFramework;
+using Abp.Organizations;
 using Abp.Zero.SampleApp.MultiTenancy;
 using Abp.Zero.SampleApp.Roles;
 using Abp.Zero.SampleApp.Users;
@@ -40,9 +42,20 @@ namespace Abp.Zero.SampleApp.Tests.Users
                     context.SaveChanges();
 
                     var role1 = context.Roles.Add(new Role(AbpSession.TenantId, "role1", "Role 1"));
-                    var role2 = context.Roles.Add(new Role(AbpSession.TenantId, "role2", "Role 1"));
+                    var role2 = context.Roles.Add(new Role(AbpSession.TenantId, "role2", "Role 2"));
+                    var role3 = context.Roles.Add(new Role(AbpSession.TenantId, "organizationUnitRole", "Organization Unit Role"));
                     context.SaveChanges();
 
+                    var ou1 = context.OrganizationUnits.Add(new OrganizationUnit
+                    {
+                        TenantId = AbpSession.TenantId,
+                        DisplayName = "ou 1",
+                        Code = "ou1"
+                    });
+                    context.SaveChanges();
+
+                    context.UserOrganizationUnits.Add(new UserOrganizationUnit(AbpSession.TenantId, user1.Id, ou1.Id));
+                    context.OrganizationUnitRoles.Add(new OrganizationUnitRole(AbpSession.TenantId, role3.Id, ou1.Id));
                     context.UserRoles.Add(new UserRole(AbpSession.TenantId, user1.Id, role1.Id));
                 });
         }
@@ -77,6 +90,24 @@ namespace Abp.Zero.SampleApp.Tests.Users
                 roles = await UserManager.GetRolesAsync(user.Id);
                 roles.ShouldContain("role1");
                 roles.ShouldContain("role2");
+
+                await uow.CompleteAsync();
+            }
+        }
+
+        [Fact]
+        public async Task Should_Get_User_OrganizationUnit_Roles()
+        {
+            var unitOfWorkManager = LocalIocManager.Resolve<IUnitOfWorkManager>();
+            using (var uow = unitOfWorkManager.Begin())
+            {
+                var user = await UserManager.FindByNameAsync("user1");
+
+                //Check initial role assignments
+                var roles = await UserManager.GetRolesAsync(user.Id);
+                roles.ShouldContain("role1");
+                roles.ShouldNotContain("role2");
+                roles.ShouldContain("organizationUnitRole");
 
                 await uow.CompleteAsync();
             }
