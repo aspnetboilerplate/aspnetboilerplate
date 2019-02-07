@@ -99,6 +99,15 @@ of our module as shown below:
 
 **Note:** Multi-tenancy is enabled in both ASP.NET Core and ASP.NET MVC 5.x startup templates.
 
+#### Ignore Feature Check For Host Users
+
+There is another configuration to ignore feature check for host users. We can enable it in PreInitialize method
+of our module as shown below:
+
+    Configuration.MultiTenancy.IgnoreFeatureCheckForHostUsers = true; 
+
+**Note:** `IgnoreFeatureCheckForHostUsers` default value is `false`;
+
 #### Host vs Tenant
 
 We define two terms used in a multi-tenant system:
