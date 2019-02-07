@@ -5,7 +5,6 @@ using System.Threading.Tasks;
 using Abp.Aspects;
 using Abp.Threading;
 using Castle.DynamicProxy;
-using Newtonsoft.Json;
 
 namespace Abp.Auditing
 {
@@ -13,11 +12,16 @@ namespace Abp.Auditing
     {
         private readonly IAuditingHelper _auditingHelper;
         private readonly IAuditingConfiguration _auditingConfiguration;
+        private readonly IAuditSerializer _auditSerializer;
 
-        public AuditingInterceptor(IAuditingHelper auditingHelper, IAuditingConfiguration auditingConfiguration)
+        public AuditingInterceptor(
+            IAuditingHelper auditingHelper, 
+            IAuditingConfiguration auditingConfiguration, 
+            IAuditSerializer auditSerializer)
         {
             _auditingHelper = auditingHelper;
             _auditingConfiguration = auditingConfiguration;
+            _auditSerializer = auditSerializer;
         }
 
         public void Intercept(IInvocation invocation)
@@ -63,8 +67,12 @@ namespace Abp.Auditing
             {
                 stopwatch.Stop();
                 auditInfo.ExecutionDuration = Convert.ToInt32(stopwatch.Elapsed.TotalMilliseconds);
+
                 if (_auditingConfiguration.SaveReturnValues && invocation.ReturnValue != null)
-                    auditInfo.ReturnValue = JsonConvert.SerializeObject(invocation.ReturnValue);
+                {
+                    auditInfo.ReturnValue = _auditSerializer.Serialize(invocation.ReturnValue);
+                }
+
                 _auditingHelper.Save(auditInfo);
             }
         }
@@ -106,7 +114,7 @@ namespace Abp.Auditing
         {
             if (_auditingConfiguration.SaveReturnValues && task != null && task.Status == TaskStatus.RanToCompletion)
             {
-                auditInfo.ReturnValue = JsonConvert.SerializeObject(task.GetType().GetTypeInfo()
+                auditInfo.ReturnValue = _auditSerializer.Serialize(task.GetType().GetTypeInfo()
                     .GetProperty("Result")
                     ?.GetValue(task, null));
             }

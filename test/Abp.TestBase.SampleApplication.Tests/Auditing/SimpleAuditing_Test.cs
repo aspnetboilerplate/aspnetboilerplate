@@ -64,6 +64,16 @@ namespace Abp.TestBase.SampleApplication.Tests.Auditing
         }
 
         [Fact]
+        public async Task AuditInfo_ReturnValue_DisableAudit_Test()
+        {
+            Resolve<MyServiceWithClassAudited>().Test4();
+
+            await _auditingStore.Received().SaveAsync(Arg.Is<AuditInfo>(a =>
+                !a.ReturnValue.Contains("123qwe")
+            ));
+        }
+
+        [Fact]
         public void Should_Write_Audits_For_Audited_Methods()
         {
             Resolve<MyServiceWithMethodAudited>().Test1();
@@ -142,6 +152,23 @@ namespace Abp.TestBase.SampleApplication.Tests.Auditing
 
                 return result;
             }
+
+            public virtual MyServiceWithClassAuditedTest4Output Test4()
+            {
+                return new MyServiceWithClassAuditedTest4Output
+                {
+                    Username = "admin",
+                    Password = "123qwe"
+                };
+            }
+        }
+
+        public class MyServiceWithClassAuditedTest4Output
+        {
+            public string Username { get; set; }
+
+            [DisableAuditing]
+            public string Password { get; set; }
         }
 
         public class MyServiceWithMethodAudited
