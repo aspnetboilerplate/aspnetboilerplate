@@ -60,6 +60,8 @@ Here are the auditing configuration properties:
     are saved for users that are not logged in to the system.
     Default: **false**.
 -   **Selectors**: Used to select other classes to save audit logs.
+-   **SaveReturnValues**: Used to enable/disable to save return values. Default: **false**.
+-   **IgnoredTypes**: Used to ignore defined types.
 
 **Selectors** is a list of predicates to select other types of classes that save
 audit logs. A selector has a unique **name** and a **predicate**. The
