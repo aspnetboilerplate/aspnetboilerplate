@@ -262,6 +262,8 @@ namespace Abp.Authorization.Roles
         /// <param name="role">Role</param>
         public override async Task<IdentityResult> CreateAsync(TRole role)
         {
+            role.SetNormalizedName();
+
             var result = await CheckDuplicateRoleNameAsync(role.Id, role.Name, role.DisplayName);
             if (!result.Succeeded)
             {
