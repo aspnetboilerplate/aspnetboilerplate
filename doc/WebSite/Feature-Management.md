@@ -249,7 +249,7 @@ to get the current values of features.
 
 #### Ignore Feature Check For Host Users
 
-You can also ignore feature check for host users by configuring it in PreInitialize method of our module as shown below:
+If you enabled Multi-Tenancy, then you can also ignore feature check for host users by configuring it in PreInitialize method of our module as shown below:
 
     Configuration.MultiTenancy.IgnoreFeatureCheckForHostUsers = true;
     
