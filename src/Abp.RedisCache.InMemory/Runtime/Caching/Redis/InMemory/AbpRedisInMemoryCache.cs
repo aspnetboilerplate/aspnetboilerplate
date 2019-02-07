@@ -33,12 +33,12 @@ namespace Abp.Runtime.Caching.Redis.InMemory
         public override void Set(string key, object value, TimeSpan? slidingExpireTime = null, TimeSpan? absoluteExpireTime = null)
         {
             this.Logger.Debug($"Set|{this.Name}|{key}");
+            
+            var memorySlidingExpireTime = slidingExpireTime ?? _redisCache.DefaultSlidingExpireTime.Add(new TimeSpan(0, 1, 0));
 
-            var memorySlidingExpireTime = slidingExpireTime ?? _redisCache.DefaultSlidingExpireTime.Add(new TimeSpan(0,1,0));
+            _memoryCache.Set(key, value, memorySlidingExpireTime, absoluteExpireTime);
 
-            SetMemory(key, value, memorySlidingExpireTime, absoluteExpireTime);
-           
-            _redisCache.Set(key, value, slidingExpireTime, absoluteExpireTime);
+            _redisCache.Set(key, value, slidingExpireTime, absoluteExpireTime);           
         }
 
         public override void Remove(string key)
@@ -70,10 +70,6 @@ namespace Abp.Runtime.Caching.Redis.InMemory
             base.Dispose();
         }
 
-        private void SetMemory(string key, object value, TimeSpan? slidingExpireTime = null, TimeSpan? absoluteExpireTime = null)
-        {
-            _memoryCache.Set(key, value, slidingExpireTime, absoluteExpireTime);
-        }
 
         public void SetMemoryOnly(string key, TimeSpan? slidingExpireTime = null, TimeSpan? absoluteExpireTime = null)
         {
@@ -85,7 +81,10 @@ namespace Abp.Runtime.Caching.Redis.InMemory
             var value = _redisCache.GetOrDefault(key);
 
             //this.Logger.Debug($"\tMemCache Key Set");
-            _memoryCache.Set(key, value, slidingExpireTime, absoluteExpireTime);
+            if (value != null)
+            {
+                _memoryCache.Set(key, value, slidingExpireTime, absoluteExpireTime);
+            }
         }
     }
 }
