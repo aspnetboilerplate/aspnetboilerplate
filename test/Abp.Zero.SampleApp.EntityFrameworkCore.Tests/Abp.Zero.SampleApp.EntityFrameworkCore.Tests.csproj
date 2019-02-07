@@ -23,7 +23,7 @@
     </PackageReference>
     <PackageReference Include="Shouldly" Version="3.0.2" />
     <PackageReference Include="Microsoft.EntityFrameworkCore.InMemory" Version="2.2.1" />
-    <PackageReference Include="NSubstitute" Version="3.1.0" />
+    <PackageReference Include="NSubstitute" Version="4.0.0" />
   </ItemGroup>
 
   <ItemGroup>
