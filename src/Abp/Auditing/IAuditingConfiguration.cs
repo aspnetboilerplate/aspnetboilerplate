@@ -29,5 +29,11 @@ namespace Abp.Auditing
         /// Ignored types for serialization on audit logging.
         /// </summary>
         List<Type> IgnoredTypes { get; }
+
+        /// <summary>
+        /// Used to decide whether to record return values.
+        /// Default false.
+        /// </summary>
+        bool SaveReturnValues { get; set; }
     }
 }

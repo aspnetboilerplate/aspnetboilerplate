@@ -30,7 +30,6 @@ namespace Abp.Zero.SampleApp.Tests.Users
                     userAccount.TenantId.ShouldBe(user.TenantId);
                     userAccount.UserName.ShouldBe(user.UserName);
                     userAccount.EmailAddress.ShouldBe(user.EmailAddress);
-                    userAccount.LastLoginTime.ShouldBe(user.LastLoginTime);
                 });
         }
 
@@ -58,7 +57,6 @@ namespace Abp.Zero.SampleApp.Tests.Users
                     userAccount.TenantId.ShouldBe(user.TenantId);
                     userAccount.UserName.ShouldBe("y.emre");
                     userAccount.EmailAddress.ShouldBe("y.emre@aspnetboilerplate.com");
-                    userAccount.LastLoginTime.ShouldBe(now);
                 });
         }
 

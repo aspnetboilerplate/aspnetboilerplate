@@ -1,4 +1,5 @@
-﻿using Abp.AspNetCore.EntityHistory;
+﻿using System.Threading.Tasks;
+using Abp.AspNetCore.EntityHistory;
 using Abp.Dependency;
 using Abp.EntityHistory;
 using Shouldly;
@@ -42,6 +43,19 @@ namespace Abp.AspNetCore.Tests
         }
 
         [Fact]
+        public async Task Should_Intercept_UseCase_Marked_Async_Methods()
+        {
+            await _nonUseCaseMarkedClass.UseCaseMarkedAsyncMethod();
+        }
+
+
+        [Fact]
+        public async Task Should_Intercept_UseCase_Marked_Async_Methods_WithResult()
+        {
+            await _nonUseCaseMarkedClass.UseCaseMarkedAsyncMethodWithResult();
+        }
+
+        [Fact]
         public void Should_Not_Intercept_No_UseCase_Marked_Method()
         {
             _nonUseCaseMarkedClass.AnotherMethod();
@@ -66,6 +80,21 @@ namespace Abp.AspNetCore.Tests
         public virtual void UseCaseMarkedMethod()
         {
             ReasonProvider.Reason.ShouldBe(Consts.UseCaseDescription);
+        }
+
+        [UseCase(Description = Consts.UseCaseDescription)]
+        public virtual async Task UseCaseMarkedAsyncMethod()
+        {
+            ReasonProvider.Reason.ShouldBe(Consts.UseCaseDescription);
+
+            await Task.CompletedTask;
+        }
+
+        [UseCase(Description = Consts.UseCaseDescription)]
+        public virtual async Task<string> UseCaseMarkedAsyncMethodWithResult()
+        {
+            ReasonProvider.Reason.ShouldBe(Consts.UseCaseDescription);
+            return await Task.FromResult("");
         }
 
         public virtual void AnotherMethod()

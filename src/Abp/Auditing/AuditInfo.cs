@@ -43,6 +43,11 @@ namespace Abp.Auditing
         public string Parameters { get; set; }
 
         /// <summary>
+        /// Return values.
+        /// </summary>
+        public string ReturnValue { get; set; }
+
+        /// <summary>
         /// Start time of the method execution.
         /// </summary>
         public DateTime ExecutionTime { get; set; }

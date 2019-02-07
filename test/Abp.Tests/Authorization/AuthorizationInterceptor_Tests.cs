@@ -24,6 +24,7 @@ namespace Abp.Tests.Authorization
                 );
 
             LocalIocManager.Register<IAuthorizationConfiguration, AuthorizationConfiguration>();
+            LocalIocManager.Register<IMultiTenancyConfig, MultiTenancyConfig>();
             LocalIocManager.Register<AuthorizationInterceptor>(DependencyLifeStyle.Transient);
             LocalIocManager.Register<IAuthorizationHelper, AuthorizationHelper>(DependencyLifeStyle.Transient);
             LocalIocManager.IocContainer.Register(

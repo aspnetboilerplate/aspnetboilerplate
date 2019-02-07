@@ -45,7 +45,7 @@ namespace Abp.Notifications
         /// <summary>
         /// Initializes a new instance of the <see cref="UserNotificationInfo"/> class.
         /// </summary>
-        /// <param name="create"></param>
+        /// <param name="id"></param>
         public UserNotificationInfo(Guid id)
         {
             Id = id;
