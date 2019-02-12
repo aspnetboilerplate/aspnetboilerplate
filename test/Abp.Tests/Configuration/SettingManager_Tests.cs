@@ -9,6 +9,7 @@ using Abp.Runtime.Caching.Memory;
 using Abp.Runtime.Remoting;
 using Abp.Runtime.Session;
 using Abp.TestBase.Runtime.Session;
+using JetBrains.Annotations;
 using NSubstitute;
 using Shouldly;
 using Xunit;
@@ -207,6 +208,25 @@ namespace Abp.Tests.Configuration
 
             // Assert
             var value = await settingManager.GetSettingValueAsync(MyAllLevelsSetting);
+            value.ShouldBe("53");
+        }
+
+        [CanBeNull]
+        [Fact]
+        public async Task Should_Get_Tenant_Setting_Fo_Application_Level_Setting_When_Multi_Tenancy_Is_Disabled()
+        {
+            // Arrange
+            var session = CreateTestAbpSession(multiTenancyIsEnabled: false);
+
+            var settingManager = CreateSettingManager(multiTenancyIsEnabled: false);
+            settingManager.SettingStore = new MemorySettingStore();
+            settingManager.AbpSession = session;
+
+            // Act
+            await settingManager.ChangeSettingForApplicationAsync(MyAllLevelsSetting, "53");
+
+            // Assert
+            var value = await settingManager.GetSettingValueForApplicationAsync(MyAllLevelsSetting);
             value.ShouldBe("53");
         }
 

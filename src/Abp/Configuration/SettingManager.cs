@@ -36,7 +36,7 @@ namespace Abp.Configuration
 
         /// <inheritdoc/>
         public SettingManager(
-            ISettingDefinitionManager settingDefinitionManager, 
+            ISettingDefinitionManager settingDefinitionManager,
             ICacheManager cacheManager,
             IMultiTenancyConfig multiTenancyConfig)
         {
@@ -209,7 +209,8 @@ namespace Abp.Configuration
             else
             {
                 // If MultiTenancy is disabled, then we should change default tenant's setting
-                await InsertOrUpdateOrDeleteSettingValueAsync(name, value, AbpSession.TenantId, null);
+                await InsertOrUpdateOrDeleteSettingValueAsync(name, value, AbpSession.GetTenantId(), null);
+                await _tenantSettingCache.RemoveAsync(AbpSession.GetTenantId());
             }
 
             await _applicationSettingCache.RemoveAsync(ApplicationSettingsCacheKey);
@@ -375,7 +376,12 @@ namespace Abp.Configuration
 
         private async Task<SettingInfo> GetSettingValueForApplicationOrNullAsync(string name)
         {
-            return (await GetApplicationSettingsAsync()).GetOrDefault(name);
+            if (_multiTenancyConfig.IsEnabled)
+            {
+                return (await GetApplicationSettingsAsync()).GetOrDefault(name);
+            }
+
+            return (await GetReadOnlyTenantSettings(AbpSession.GetTenantId())).GetOrDefault(name);
         }
 
         private async Task<SettingInfo> GetSettingValueForTenantOrNullAsync(int tenantId, string name)
