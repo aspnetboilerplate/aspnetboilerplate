@@ -57,6 +57,7 @@ namespace Abp.Zero.EntityFrameworkCore
             SetTableName<TenantNotificationInfo>(modelBuilder, prefix + "TenantNotifications", schemaName);
             SetTableName<UserNotificationInfo>(modelBuilder, prefix + "UserNotifications", schemaName);
             SetTableName<UserOrganizationUnit>(modelBuilder, prefix + "UserOrganizationUnits", schemaName);
+            SetTableName<OrganizationUnitRole>(modelBuilder, prefix + "OrganizationUnitRoles", schemaName);
             SetTableName<UserRole>(modelBuilder, prefix + "UserRoles", schemaName);
             SetTableName<TUser>(modelBuilder, prefix + "Users", schemaName);
             SetTableName<UserAccount>(modelBuilder, prefix + "UserAccounts", schemaName);

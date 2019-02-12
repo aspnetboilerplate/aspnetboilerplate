@@ -109,6 +109,8 @@ namespace Abp.Authorization.Users
 
         public override async Task<IdentityResult> CreateAsync(TUser user)
         {
+            user.SetNormalizedNames();
+
             var result = await CheckDuplicateUsernameOrEmailAddressAsync(user.Id, user.UserName, user.EmailAddress);
             if (!result.Succeeded)
             {
@@ -121,17 +123,9 @@ namespace Abp.Authorization.Users
                 user.TenantId = tenantId.Value;
             }
 
-            var isLockoutEnabled = user.IsLockoutEnabled;
+            InitializeLockoutSettings(user.TenantId);
 
-            var identityResult = await base.CreateAsync(user);
-
-            if (identityResult.Succeeded)
-            {
-                await _unitOfWorkManager.Current.SaveChangesAsync();
-                await SetLockoutEnabledAsync(user.Id, isLockoutEnabled);
-            }
-
-            return identityResult;
+            return await base.CreateAsync(user);
         }
 
         /// <summary>
@@ -353,6 +347,8 @@ namespace Abp.Authorization.Users
 
         public async override Task<IdentityResult> UpdateAsync(TUser user)
         {
+            user.SetNormalizedNames();
+
             var result = await CheckDuplicateUsernameOrEmailAddressAsync(user.Id, user.UserName, user.EmailAddress);
             if (!result.Succeeded)
             {

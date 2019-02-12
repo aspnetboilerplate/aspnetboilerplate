@@ -1,4 +1,5 @@
-﻿using Abp.Authorization.Users;
+﻿using System.ComponentModel.DataAnnotations;
+using Abp.Authorization.Users;
 using Abp.Domain.Entities.Auditing;
 using Microsoft.AspNet.Identity;
 
@@ -17,6 +18,13 @@ namespace Abp.Authorization.Roles
     public abstract class AbpRole<TUser> : AbpRoleBase, IRole<int>, IFullAudited<TUser>
         where TUser : AbpUser<TUser>
     {
+        /// <summary>
+        /// Unique name of this role.
+        /// </summary>
+        [Required]
+        [StringLength(MaxNameLength)]
+        public virtual string NormalizedName { get; set; }
+
         public virtual TUser DeleterUser { get; set; }
 
         public virtual TUser CreatorUser { get; set; }
@@ -25,6 +33,7 @@ namespace Abp.Authorization.Roles
 
         protected AbpRole()
         {
+            SetNormalizedName();
         }
 
         /// <summary>
@@ -35,6 +44,7 @@ namespace Abp.Authorization.Roles
         protected AbpRole(int? tenantId, string displayName)
             : base(tenantId, displayName)
         {
+            SetNormalizedName();
         }
 
         /// <summary>
@@ -46,6 +56,12 @@ namespace Abp.Authorization.Roles
         protected AbpRole(int? tenantId, string name, string displayName)
             : base(tenantId, name, displayName)
         {
+            SetNormalizedName();
+        }
+
+        public virtual void SetNormalizedName()
+        {
+            NormalizedName = Name.ToUpperInvariant();
         }
     }
 }

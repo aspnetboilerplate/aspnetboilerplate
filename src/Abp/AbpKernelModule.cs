@@ -68,11 +68,14 @@ namespace Abp
 
             IocManager.Register(typeof(IOnlineClientManager<>), typeof(OnlineClientManager<>), DependencyLifeStyle.Singleton);
 
+            IocManager.Register(typeof(EventTriggerAsyncBackgroundJob<>),DependencyLifeStyle.Transient);
+            
             IocManager.RegisterAssemblyByConvention(typeof(AbpKernelModule).GetAssembly(),
                 new ConventionalRegistrationConfig
                 {
                     InstallInstallers = false
                 });
+            
         }
 
         public override void PostInitialize()

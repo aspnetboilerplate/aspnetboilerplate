@@ -255,7 +255,8 @@ namespace Abp.AspNetCore.Mvc.Conventions
         [CanBeNull]
         private AbpControllerAssemblySetting GetControllerSettingOrNull(Type controllerType)
         {
-            return _configuration.Value.ControllerAssemblySettings.GetSettingOrNull(controllerType);
+            var settings = _configuration.Value.ControllerAssemblySettings.GetSettings(controllerType);
+            return settings.FirstOrDefault(setting => setting.TypePredicate(controllerType));
         }
 
         private static AttributeRouteModel CreateAbpServiceAttributeRouteModel(string moduleName, string controllerName, ActionModel action)

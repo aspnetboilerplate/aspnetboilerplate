@@ -24,7 +24,7 @@ injection](/Pages/Documents/Dependency-Injection) to get a reference to the
     public class TaskAppService : ApplicationService
     {
         public IEventBus EventBus { get; set; }
-
+    
         public TaskAppService()
         {
             EventBus = NullEventBus.Instance;
@@ -107,12 +107,12 @@ Triggering an event is simple:
     public class TaskAppService : ApplicationService
     {
         public IEventBus EventBus { get; set; }
-
+    
         public TaskAppService()
         {
             EventBus = NullEventBus.Instance;
         }
-
+    
         public void CompleteTask(CompleteTaskInput input)
         {
             //TODO: complete the task in the database...
@@ -162,12 +162,12 @@ and **TaskCreatedEventData**:
     {
         public Task Task { get; set; }
     }
-
+    
     public class TaskCreatedEventData : TaskEventData
     {
         public User CreatorUser { get; set; }
     }
-
+    
     public class TaskCompletedEventData : TaskEventData
     {
         public User CompletorUser { get; set; }
@@ -216,7 +216,7 @@ you should implement IEventHandler&lt;T&gt; for each event. Example:
         {
             //TODO: handle the event...
         }
-
+    
         public void HandleEvent(TaskCreatedEventData eventData)
         {
             //TODO: handle the event...
@@ -283,7 +283,7 @@ of handlers. A handler factory has two methods: **GetHandler** and
         {
             return new ActivityWriter();
         }
-
+    
         public void ReleaseHandler(IEventHandler handler)
         {
             //TODO: release/dispose the activity writer instance (handler)
@@ -304,7 +304,7 @@ event is disposing the return value of the **Register** method. Example:
 
     //Register to an event...
     var registration = EventBus.Register<TaskCompletedEventData>(eventData => WriteActivity("A task is completed by id = " + eventData.TaskId) );
-
+    
     //Unregister from event
     registration.Dispose();
 
@@ -318,10 +318,10 @@ The EventBus also provides the **Unregister** method. Example usage:
 
     //Create a handler
     var handler = new ActivityWriter();
-
+    
     //Register to the event
     EventBus.Register<TaskCompletedEventData>(handler);
-
+    
     //Unregister from event
     EventBus.Unregister<TaskCompletedEventData>(handler);
 
@@ -333,3 +333,23 @@ before.
 Lastly, EventBus provides a **UnregisterAll&lt;T&gt;()** method to
 unregister all the handlers of an event and a **UnregisterAll()** method to
 unregister all the handlers of all the events.
+
+### Background Events
+
+If you don't want to execute event handlers right away, you can queue events in a background job like below;
+
+	public class MyService
+	{
+		private readonly IBackgroundJobManager _backgroundJobManager;
+	
+		public MyService(IBackgroundJobManager backgroundJobManager)
+		{
+			_backgroundJobManager = backgroundJobManager;
+		}
+	
+		public void Test()
+		{
+			_backgroundJobManager.EnqueueEventAsync(new MySimpleEventData());
+		}
+	}
+Using this approach, related event will be triggered when the background job is executed.

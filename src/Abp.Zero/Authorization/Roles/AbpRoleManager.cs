@@ -262,6 +262,8 @@ namespace Abp.Authorization.Roles
         /// <param name="role">Role</param>
         public override async Task<IdentityResult> CreateAsync(TRole role)
         {
+            role.SetNormalizedName();
+
             var result = await CheckDuplicateRoleNameAsync(role.Id, role.Name, role.DisplayName);
             if (!result.Succeeded)
             {
@@ -279,6 +281,8 @@ namespace Abp.Authorization.Roles
 
         public override async Task<IdentityResult> UpdateAsync(TRole role)
         {
+            role.SetNormalizedName();
+
             var result = await CheckDuplicateRoleNameAsync(role.Id, role.Name, role.DisplayName);
             if (!result.Succeeded)
             {
@@ -368,6 +372,8 @@ namespace Abp.Authorization.Roles
                         IsStatic = true
                     };
 
+                    role.SetNormalizedName();
+
                     var identityResult = await CreateAsync(role);
                     if (!identityResult.Succeeded)
                     {
@@ -417,6 +423,7 @@ namespace Abp.Authorization.Roles
 
                 var staticRoleDefinition = RoleManagementConfig.StaticRoles.FirstOrDefault(r =>
                     r.RoleName == role.Name && r.Side == role.GetMultiTenancySide());
+
                 if (staticRoleDefinition != null)
                 {
                     foreach (var permission in PermissionManager.GetAllPermissions())

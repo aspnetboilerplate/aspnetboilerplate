@@ -24,7 +24,7 @@
 
         defaultError404: {
             message: 'Resource not found!',
-            details: 'The resource requested could not found on the server.'
+            details: 'The resource requested could not be found on the server.'
         },
 
         logError: function (error) {

@@ -55,7 +55,7 @@ namespace Abp.Authorization.Users
         /// <summary>
         /// Gets or sets the token expire date
         /// </summary>
-        public DateTime? ExpireDate { get; set; }
+        public virtual DateTime? ExpireDate { get; set; }
 
         protected UserToken()
         {

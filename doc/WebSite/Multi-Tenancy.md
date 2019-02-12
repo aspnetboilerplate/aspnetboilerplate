@@ -2,11 +2,11 @@
 
 "*Software* ***Multitenancy*** *refers to a software* ***architecture***
 *in which a* ***single instance*** *of a software runs on a server and
-serves* ***multiple tenants****. A tenant is a group of users who share
+serves ***multiple tenants***. A tenant is a group of users who share
 a common access with specific privileges to the software instance. With
 a multitenant architecture, a software application is designed to
-provide every tenant a* ***dedicated share of the instance including its
-data****, configuration, user management, tenant individual
+provide every tenant a ***dedicated share of the instance including its
+data***, configuration, user management, tenant individual
 functionality and non-functional properties. Multitenancy contrasts with
 multi-instance architectures, where separate software instances operate
 on behalf of different tenants*"
@@ -98,6 +98,15 @@ of our module as shown below:
     Configuration.MultiTenancy.IsEnabled = true; 
 
 **Note:** Multi-tenancy is enabled in both ASP.NET Core and ASP.NET MVC 5.x startup templates.
+
+#### Ignore Feature Check For Host Users
+
+There is another configuration to ignore feature check for host users. We can enable it in PreInitialize method
+of our module as shown below:
+
+    Configuration.MultiTenancy.IgnoreFeatureCheckForHostUsers = true; 
+
+**Note:** `IgnoreFeatureCheckForHostUsers` default value is `false`;
 
 #### Host vs Tenant
 

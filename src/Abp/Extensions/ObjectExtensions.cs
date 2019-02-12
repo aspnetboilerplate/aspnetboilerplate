@@ -23,7 +23,7 @@ namespace Abp.Extensions
         }
 
         /// <summary>
-        /// Converts given object to a value type using <see cref="Convert.ChangeType(object,System.TypeCode)"/> method.
+        /// Converts given object to a value or enum type using <see cref="Convert.ChangeType(object,TypeCode)"/> or <see cref="Enum.Parse(Type,string)"/> method.
         /// </summary>
         /// <param name="obj">Object to be converted</param>
         /// <typeparam name="T">Type of the target object</typeparam>
@@ -34,6 +34,18 @@ namespace Abp.Extensions
             if (typeof(T) == typeof(Guid))
             {
                 return (T)TypeDescriptor.GetConverter(typeof(T)).ConvertFromInvariantString(obj.ToString());
+            }
+
+            if (typeof(T).IsEnum)
+            {
+                if (Enum.IsDefined(typeof(T), obj))
+                {
+                    return (T)Enum.Parse(typeof(T), obj.ToString());
+                }
+                else
+                {
+                    throw new ArgumentException($"Enum type undefined '{obj}'.");
+                }
             }
 
             return (T)Convert.ChangeType(obj, typeof(T), CultureInfo.InvariantCulture);

@@ -1,13 +1,13 @@
 ﻿using System;
 using System.IO;
 using System.Linq;
+using System.Threading;
 using Abp.AspNetCore;
 using Abp.AspNetCore.Configuration;
 using Abp.AspNetCore.Mvc.Extensions;
 using Abp.Castle.Logging.Log4Net;
 using Abp.Dependency;
 using Abp.PlugIns;
-using Abp.Web.Mvc.Alerts;
 using AbpAspNetCoreDemo.Controllers;
 using Castle.Facilities.Logging;
 using Castle.MicroKernel.ModelBuilder.Inspectors;
@@ -24,6 +24,8 @@ namespace AbpAspNetCoreDemo
     public class Startup
     {
         private readonly IHostingEnvironment _env;
+
+        public static readonly AsyncLocal<IocManager> IocManager = new AsyncLocal<IocManager>();
 
         public Startup(IHostingEnvironment env)
         {
@@ -60,6 +62,8 @@ namespace AbpAspNetCoreDemo
             //Configure Abp and Dependency Injection. Should be called last.
             return services.AddAbp<AbpAspNetCoreDemoModule>(options =>
             {
+                options.IocManager = IocManager.Value ?? new IocManager();
+
                 options.PlugInSources.Add(
                     new AssemblyFileListPlugInSource(
                         Path.Combine(_env.ContentRootPath, @"..\AbpAspNetCoreDemo.PlugIn\bin\Debug\netstandard2.0\AbpAspNetCoreDemo.PlugIn.dll")

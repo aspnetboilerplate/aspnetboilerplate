@@ -70,16 +70,19 @@ namespace Abp.Zero.SampleApp.Tests.Users
 
             public override Task<User> CreateUserAsync(string userNameOrEmailAddress, Tenant tenant)
             {
-                return Task.FromResult(
-                    new User
-                    {
-                        UserName = userNameOrEmailAddress,
-                        Name = userNameOrEmailAddress,
-                        Surname = userNameOrEmailAddress,
-                        EmailAddress = userNameOrEmailAddress,
-                        IsEmailConfirmed = true,
-                        IsActive = true
-                    });
+                var user = new User
+                {
+                    UserName = userNameOrEmailAddress,
+                    Name = userNameOrEmailAddress,
+                    Surname = userNameOrEmailAddress,
+                    EmailAddress = userNameOrEmailAddress,
+                    IsEmailConfirmed = true,
+                    IsActive = true
+                };
+
+                user.SetNormalizedNames();
+
+                return Task.FromResult(user);
             }
         }
     }

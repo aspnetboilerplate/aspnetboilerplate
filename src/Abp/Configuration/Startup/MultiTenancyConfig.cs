@@ -14,6 +14,12 @@ namespace Abp.Configuration.Startup
         /// </summary>
         public bool IsEnabled { get; set; }
 
+        /// <summary>
+        /// Ignore feature check for host users
+        /// Default value: false.
+        /// </summary>
+        public bool IgnoreFeatureCheckForHostUsers { get; set; }
+
         public ITypeList<ITenantResolveContributor> Resolvers { get; }
 
         public MultiTenancyConfig()
