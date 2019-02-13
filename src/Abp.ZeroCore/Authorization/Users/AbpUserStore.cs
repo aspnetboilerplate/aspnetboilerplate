@@ -381,6 +381,7 @@ namespace Abp.Authorization.Users
                 throw new InvalidOperationException(string.Format(CultureInfo.CurrentCulture, "Role {0} does not exist!", normalizedRoleName));
             }
 
+            await UserRepository.EnsureCollectionLoadedAsync(user, u => u.Roles, cancellationToken);
             user.Roles.Add(new UserRole(user.TenantId, user.Id, role.Id));
         }
 
