@@ -2,9 +2,11 @@
 using System.Threading.Tasks;
 using Abp.Application.Editions;
 using Abp.Application.Features;
+using Abp.Configuration.Startup;
 using Abp.Zero.SampleApp.Editions;
 using Abp.Zero.SampleApp.Features;
 using Abp.Zero.SampleApp.MultiTenancy;
+using NSubstitute;
 using Shouldly;
 using Xunit;
 
@@ -15,9 +17,11 @@ namespace Abp.Zero.SampleApp.Tests.Application.Editions
         private readonly EditionManager _editionManager;
         private readonly TenantManager _tenantManager;
         private readonly IFeatureChecker _featureChecker;
+        private readonly IMultiTenancyConfig _multiTenancyConfig;
 
         public EditionAndFeature_Tests()
         {
+            _multiTenancyConfig = Resolve<IMultiTenancyConfig>();
             _editionManager = Resolve<EditionManager>();
             _tenantManager = Resolve<TenantManager>();
             _featureChecker = Resolve<FeatureChecker>();
@@ -78,6 +82,23 @@ namespace Abp.Zero.SampleApp.Tests.Application.Editions
 
             //Should get edition values for tenant
             (await _featureChecker.GetValueAsync(AppFeatureProvider.MyNumericFeature)).ShouldBe("43");
+            (await _featureChecker.IsEnabledAsync(AppFeatureProvider.MyBoolFeature)).ShouldBeTrue();
+        }
+
+        [Fact]
+        public async Task Should_Ignore_Feature_Check_For_Host_Users()
+        {
+            var standardEdition = await CreateEditionAsync("Standard");
+            var defaultTenant = GetDefaultTenant();
+
+            defaultTenant.EditionId = standardEdition.Id;
+            await _tenantManager.UpdateAsync(defaultTenant);
+
+            //Set edition values
+            await _editionManager.SetFeatureValueAsync(standardEdition.Id, AppFeatureProvider.MyBoolFeature, "true");
+
+            _multiTenancyConfig.IgnoreFeatureCheckForHostUsers = true;
+            AbpSession.TenantId = null;
             (await _featureChecker.IsEnabledAsync(AppFeatureProvider.MyBoolFeature)).ShouldBeTrue();
         }
 
