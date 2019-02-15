@@ -30,7 +30,6 @@ using Abp.Runtime.Validation.Interception;
 using Abp.Threading;
 using Abp.Threading.BackgroundWorkers;
 using Abp.Timing;
-using Abp.Utils.Minifier;
 using Castle.MicroKernel.Registration;
 
 namespace Abp
@@ -213,7 +212,6 @@ namespace Abp
             IocManager.RegisterIfNot<ITenantStore, NullTenantStore>(DependencyLifeStyle.Singleton);
             IocManager.RegisterIfNot<ITenantResolverCache, NullTenantResolverCache>(DependencyLifeStyle.Singleton);
             IocManager.RegisterIfNot<IEntityHistoryStore, NullEntityHistoryStore>(DependencyLifeStyle.Singleton);
-            IocManager.RegisterIfNot<IJavaScriptMinifier, NullJavaScriptMinifier>(DependencyLifeStyle.Singleton);
 
             if (Configuration.BackgroundJobs.IsJobExecutionEnabled)
             {

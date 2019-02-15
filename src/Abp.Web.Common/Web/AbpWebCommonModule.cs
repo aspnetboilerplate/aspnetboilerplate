@@ -8,7 +8,6 @@ using Abp.Web.Configuration;
 using Abp.Web.MultiTenancy;
 using Abp.Web.Security.AntiForgery;
 using Abp.Reflection.Extensions;
-using Abp.Utils.Minifier;
 using Abp.Web.Minifier;
 
 namespace Abp.Web

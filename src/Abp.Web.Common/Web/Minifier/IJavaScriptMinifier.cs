@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-
-namespace Abp.Utils.Minifier
+﻿namespace Abp.Web.Minifier
 {
     /// <summary>
     /// Interface to minify JavaScript code.

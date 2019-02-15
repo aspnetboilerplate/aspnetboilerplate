@@ -1,7 +1,7 @@
 ﻿using Abp.AspNetCore.Mvc.Controllers;
 using Abp.Auditing;
-using Abp.Utils.Minifier;
 using Abp.Web.Api.ProxyScripting;
+using Abp.Web.Minifier;
 using Abp.Web.Models;
 using Microsoft.AspNetCore.Mvc;
 

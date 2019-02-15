@@ -1,7 +1,7 @@
 ﻿using System.Net.Http;
 using System.Net.Http.Headers;
 using Abp.Auditing;
-using Abp.Utils.Minifier;
+using Abp.Web.Minifier;
 using Abp.Web.Models;
 using Abp.Web.Security.AntiForgery;
 using Abp.WebApi.Controllers.Dynamic.Formatters;
