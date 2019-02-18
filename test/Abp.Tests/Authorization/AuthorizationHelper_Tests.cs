@@ -14,7 +14,7 @@ namespace Abp.Tests.Authorization
 
         public AuthorizationHelper_Tests()
         {
-            _authorizeHelper = GetAuthorizationHelper(false, false, true);
+            _authorizeHelper = GetAuthorizationHelper(false, false);
         }
 
         [Fact]
@@ -54,7 +54,7 @@ namespace Abp.Tests.Authorization
         [Fact]
         public async Task NotAuthorizedFeatureDependentMethodsCanBeCalledAnonymously()
         {
-            var authorizeHelper = GetAuthorizationHelper(false, false, true);
+            var authorizeHelper = GetAuthorizationHelper(true, false);
 
             await authorizeHelper.AuthorizeAsync(
                 typeof(MyNonAuthorizedClass).GetTypeInfo().GetMethod(nameof(MyNonAuthorizedClass.Test_FeatureDependent)),
@@ -99,22 +99,19 @@ namespace Abp.Tests.Authorization
 
         private static AuthorizationHelper GetAuthorizationHelper(
             bool featureCheckerValue,
-            bool isGranted,
-            bool ignoreFeatureCheckForHostUsers)
+            bool isGranted)
         {
             var featureChecker = Substitute.For<IFeatureChecker>();
-            featureChecker.GetValueAsync(Arg.Any<string>()).Returns(featureCheckerValue.ToString().ToLower());
-
+            featureChecker.GetValueAsync(Arg.Any<string>()).Returns(featureCheckerValue.ToString().ToLower());    
+            featureChecker.IsEnabledAsync(Arg.Any<string>()).Returns(featureCheckerValue);
+            
             var permissionChecker = Substitute.For<IPermissionChecker>();
             permissionChecker.IsGrantedAsync(Arg.Any<string>()).Returns(isGranted);
 
             var configuration = Substitute.For<IAuthorizationConfiguration>();
             configuration.IsEnabled.Returns(true);
 
-            var multiTenancyConfig = Substitute.For<IMultiTenancyConfig>();
-            multiTenancyConfig.IgnoreFeatureCheckForHostUsers.Returns(ignoreFeatureCheckForHostUsers);
-
-            var authorizeHelper = new AuthorizationHelper(featureChecker, configuration, multiTenancyConfig)
+            var authorizeHelper = new AuthorizationHelper(featureChecker, configuration)
             {
                 PermissionChecker = permissionChecker
             };
