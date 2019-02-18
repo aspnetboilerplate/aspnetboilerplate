@@ -18,9 +18,12 @@ namespace Abp.AspNetCore.Mvc.Proxying
 
         public string Actions { get; set; }
 
+        public bool Minify { get; set; }
+
         public ApiProxyGenerationModel()
         {
             UseCache = true;
+            Minify = false;
         }
 
         public void Normalize()
