@@ -9,6 +9,7 @@ using Abp.Runtime.Caching.Memory;
 using Abp.Runtime.Remoting;
 using Abp.Runtime.Session;
 using Abp.TestBase.Runtime.Session;
+using Abp.Tests.MultiTenancy;
 using JetBrains.Annotations;
 using NSubstitute;
 using Shouldly;
@@ -40,7 +41,7 @@ namespace Abp.Tests.Configuration
                 new MultiTenancyConfig
                 {
                     IsEnabled = multiTenancyIsEnabled
-                });
+                }, new TestTenantStore());
         }
 
         [Fact]
@@ -213,7 +214,7 @@ namespace Abp.Tests.Configuration
 
         [CanBeNull]
         [Fact]
-        public async Task Should_Get_Tenant_Setting_Fo_Application_Level_Setting_When_Multi_Tenancy_Is_Disabled()
+        public async Task Should_Get_Tenant_Setting_For_Application_Level_Setting_When_Multi_Tenancy_Is_Disabled()
         {
             // Arrange
             var session = CreateTestAbpSession(multiTenancyIsEnabled: false);
