@@ -6,26 +6,43 @@ using Abp.Dependency;
 using Abp.Domain.Entities;
 using Abp.Domain.Repositories;
 using Abp.Domain.Uow;
+using Abp.Linq.Expressions;
 using Abp.Runtime.Session;
 using Microsoft.EntityFrameworkCore;
 using Z.EntityFramework.Plus;
 
 namespace Abp.EntityFrameworkCore.EFPlus
 {
+    /// <summary>
+    /// 
+    /// </summary>
     public static class AbpEntityFrameworkCoreEfPlusExtensions
     {
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="repository"></param>
+        /// <typeparam name="TEntity"></typeparam>
+        /// <returns></returns>
         public static async Task<int> BatchDeleteAllAsync<TEntity>(this IRepository<TEntity> repository) where TEntity : Entity<int>
         {
             return await repository.BatchDeleteAsync(null);
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="repository"></param>
+        /// <param name="predicate"></param>
+        /// <typeparam name="TEntity"></typeparam>
+        /// <returns></returns>
         public static async Task<int> BatchDeleteAsync<TEntity>(this IRepository<TEntity> repository, Expression<Func<TEntity, bool>> predicate) where TEntity : Entity<int>
         {
             var query = repository.GetAll().IgnoreQueryFilters();
 
-            var abpFilterExpression = GetFilterExpressionOrNull(query, repository.GetIocResolver());
-            var filterExpression = CombineExpressions(predicate, abpFilterExpression);
-            
+            var abpFilterExpression = GetFilterExpressionOrNull<TEntity>(repository.GetIocResolver());
+            var filterExpression = ExpressionCombiner.Combine(predicate, abpFilterExpression);
+
             if (filterExpression != null)
             {
                 query = query.Where(filterExpression);
@@ -34,27 +51,42 @@ namespace Abp.EntityFrameworkCore.EFPlus
             return await query.DeleteAsync();
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="repository"></param>
+        /// <param name="updateExpression"></param>
+        /// <typeparam name="TEntity"></typeparam>
+        /// <returns></returns>
         public static async Task<int> BatchUpdateAllAsync<TEntity>(this IRepository<TEntity> repository, Expression<Func<TEntity, TEntity>> updateExpression) where TEntity : Entity<int>
         {
             return await repository.BatchUpdateAsync(updateExpression, null);
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="repository"></param>
+        /// <param name="updateExpression"></param>
+        /// <param name="predicate"></param>
+        /// <typeparam name="TEntity"></typeparam>
+        /// <returns></returns>
         public static async Task<int> BatchUpdateAsync<TEntity>(this IRepository<TEntity> repository, Expression<Func<TEntity, TEntity>> updateExpression, Expression<Func<TEntity, bool>> predicate) where TEntity : Entity<int>
         {
             var query = repository.GetAll().IgnoreQueryFilters();
 
-            var abpFilterExpression = GetFilterExpressionOrNull(query, repository.GetIocResolver());
-            var filterExpression = CombineExpressions(predicate, abpFilterExpression);
-            
+            var abpFilterExpression = GetFilterExpressionOrNull<TEntity>(repository.GetIocResolver());
+            var filterExpression = ExpressionCombiner.Combine(predicate, abpFilterExpression);
+
             if (filterExpression != null)
             {
                 query = query.Where(filterExpression);
             }
-            
+
             return await query.UpdateAsync(updateExpression);
         }
 
-        private static Expression<Func<TEntity, bool>> GetFilterExpressionOrNull<TEntity>(IQueryable<TEntity> query, IIocResolver iocResolver) where TEntity : Entity<int>
+        private static Expression<Func<TEntity, bool>> GetFilterExpressionOrNull<TEntity>(IIocResolver iocResolver) where TEntity : Entity<int>
         {
             Expression<Func<TEntity, bool>> expression = null;
 
@@ -64,7 +96,7 @@ namespace Abp.EntityFrameworkCore.EFPlus
                 if (isSoftDeleteFilterEnabled)
                 {
                     Expression<Func<TEntity, bool>> softDeleteFilter = e => !((ISoftDelete)e).IsDeleted;
-                    expression = expression == null ? softDeleteFilter : CombineExpressions(expression, softDeleteFilter);
+                    expression = softDeleteFilter;
                 }
             }
 
@@ -76,7 +108,7 @@ namespace Abp.EntityFrameworkCore.EFPlus
                 if (isMayHaveTenantFilterEnabled)
                 {
                     Expression<Func<TEntity, bool>> mayHaveTenantFilter = e => ((IMayHaveTenant)e).TenantId == currentTenantId;
-                    expression = expression == null ? mayHaveTenantFilter : CombineExpressions(expression, mayHaveTenantFilter);
+                    expression = expression == null ? mayHaveTenantFilter : ExpressionCombiner.Combine(expression, mayHaveTenantFilter);
                 }
             }
 
@@ -88,7 +120,7 @@ namespace Abp.EntityFrameworkCore.EFPlus
                 if (isMustHaveTenantFilterEnabled)
                 {
                     Expression<Func<TEntity, bool>> mustHaveTenantFilter = e => ((IMustHaveTenant)e).TenantId == currentTenantId;
-                    expression = expression == null ? mustHaveTenantFilter : CombineExpressions(expression, mustHaveTenantFilter);
+                    expression = expression == null ? mustHaveTenantFilter : ExpressionCombiner.Combine(expression, mustHaveTenantFilter);
                 }
             }
 
@@ -106,56 +138,6 @@ namespace Abp.EntityFrameworkCore.EFPlus
             }
 
             return iocResolver.Resolve<IAbpSession>().TenantId;
-        }
-
-        private static Expression<Func<T, bool>> CombineExpressions<T>(Expression<Func<T, bool>> expression1, Expression<Func<T, bool>> expression2)
-        {
-            if (expression1 == null && expression2 == null)
-            {
-                return null;
-            }
-
-            if (expression1 == null)
-            {
-                return expression2;
-            }
-
-            if (expression2 == null)
-            {
-                return expression1;
-            }
-
-            var parameter = Expression.Parameter(typeof(T));
-
-            var leftVisitor = new ReplaceExpressionVisitor(expression1.Parameters[0], parameter);
-            var left = leftVisitor.Visit(expression1.Body);
-
-            var rightVisitor = new ReplaceExpressionVisitor(expression2.Parameters[0], parameter);
-            var right = rightVisitor.Visit(expression2.Body);
-
-            return Expression.Lambda<Func<T, bool>>(Expression.AndAlso(left, right), parameter);
-        }
-
-        class ReplaceExpressionVisitor : ExpressionVisitor
-        {
-            private readonly Expression _oldValue;
-            private readonly Expression _newValue;
-
-            public ReplaceExpressionVisitor(Expression oldValue, Expression newValue)
-            {
-                _oldValue = oldValue;
-                _newValue = newValue;
-            }
-
-            public override Expression Visit(Expression node)
-            {
-                if (node == _oldValue)
-                {
-                    return _newValue;
-                }
-
-                return base.Visit(node);
-            }
         }
     }
 }
