@@ -8,39 +8,33 @@ using Abp.Domain.Repositories;
 using Abp.Domain.Uow;
 using Abp.Linq.Expressions;
 using Abp.Runtime.Session;
+using JetBrains.Annotations;
 using Microsoft.EntityFrameworkCore;
 using Z.EntityFramework.Plus;
 
 namespace Abp.EntityFrameworkCore.EFPlus
 {
     /// <summary>
-    /// 
+    /// Defines batch delete and update extension methods for IRepository
     /// </summary>
     public static class AbpEntityFrameworkCoreEfPlusExtensions
     {
         /// <summary>
-        /// 
+        /// Deletes all matching entities for given predicate
         /// </summary>
-        /// <param name="repository"></param>
-        /// <typeparam name="TEntity"></typeparam>
+        /// <typeparam name="TEntity">Entity type</typeparam>
+        /// <typeparam name="TPrimaryKey">Primary key type</typeparam>
+        /// <param name="repository">Repository</param>
+        /// <param name="predicate">Predicate to filter entities</param>
         /// <returns></returns>
-        public static async Task<int> BatchDeleteAllAsync<TEntity>(this IRepository<TEntity> repository) where TEntity : Entity<int>
+        public static async Task<int> BatchDeleteAsync<TEntity, TPrimaryKey>([NotNull] this IRepository<TEntity, TPrimaryKey> repository, Expression<Func<TEntity, bool>> predicate)
+            where TEntity : Entity<TPrimaryKey>
         {
-            return await repository.BatchDeleteAsync(null);
-        }
+            Check.NotNull(repository, nameof(repository));
 
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <param name="repository"></param>
-        /// <param name="predicate"></param>
-        /// <typeparam name="TEntity"></typeparam>
-        /// <returns></returns>
-        public static async Task<int> BatchDeleteAsync<TEntity>(this IRepository<TEntity> repository, Expression<Func<TEntity, bool>> predicate) where TEntity : Entity<int>
-        {
             var query = repository.GetAll().IgnoreQueryFilters();
 
-            var abpFilterExpression = GetFilterExpressionOrNull<TEntity>(repository.GetIocResolver());
+            var abpFilterExpression = GetFilterExpressionOrNull<TEntity, TPrimaryKey>(repository.GetIocResolver());
             var filterExpression = ExpressionCombiner.Combine(predicate, abpFilterExpression);
 
             if (filterExpression != null)
@@ -52,30 +46,35 @@ namespace Abp.EntityFrameworkCore.EFPlus
         }
 
         /// <summary>
-        /// 
+        /// Deletes all matching entities for given predicate
         /// </summary>
-        /// <param name="repository"></param>
-        /// <param name="updateExpression"></param>
-        /// <typeparam name="TEntity"></typeparam>
+        /// <typeparam name="TEntity">Entity type</typeparam>
+        /// <param name="repository">Repository</param>
+        /// <param name="predicate">Predicate to filter entities</param>
         /// <returns></returns>
-        public static async Task<int> BatchUpdateAllAsync<TEntity>(this IRepository<TEntity> repository, Expression<Func<TEntity, TEntity>> updateExpression) where TEntity : Entity<int>
+        public static async Task<int> BatchDeleteAsync<TEntity>([NotNull] this IRepository<TEntity> repository, Expression<Func<TEntity, bool>> predicate)
+            where TEntity : Entity<int>
         {
-            return await repository.BatchUpdateAsync(updateExpression, null);
+            return await repository.BatchDeleteAsync<TEntity, int>(predicate);
         }
 
         /// <summary>
-        /// 
+        /// Updates all matching entities using given updateExpression for given predicate
         /// </summary>
-        /// <param name="repository"></param>
-        /// <param name="updateExpression"></param>
-        /// <param name="predicate"></param>
-        /// <typeparam name="TEntity"></typeparam>
+        /// <typeparam name="TEntity">Entity type</typeparam>
+        /// <typeparam name="TPrimaryKey">Primary key type</typeparam>
+        /// <param name="repository">Repository</param>
+        /// /// <param name="updateExpression">Update expression</param>
+        /// <param name="predicate">Predicate to filter entities</param>
         /// <returns></returns>
-        public static async Task<int> BatchUpdateAsync<TEntity>(this IRepository<TEntity> repository, Expression<Func<TEntity, TEntity>> updateExpression, Expression<Func<TEntity, bool>> predicate) where TEntity : Entity<int>
+        public static async Task<int> BatchUpdateAsync<TEntity, TPrimaryKey>([NotNull]this IRepository<TEntity, TPrimaryKey> repository, Expression<Func<TEntity, TEntity>> updateExpression, Expression<Func<TEntity, bool>> predicate)
+            where TEntity : Entity<TPrimaryKey>
         {
+            Check.NotNull(repository, nameof(repository));
+
             var query = repository.GetAll().IgnoreQueryFilters();
 
-            var abpFilterExpression = GetFilterExpressionOrNull<TEntity>(repository.GetIocResolver());
+            var abpFilterExpression = GetFilterExpressionOrNull<TEntity, TPrimaryKey>(repository.GetIocResolver());
             var filterExpression = ExpressionCombiner.Combine(predicate, abpFilterExpression);
 
             if (filterExpression != null)
@@ -86,7 +85,23 @@ namespace Abp.EntityFrameworkCore.EFPlus
             return await query.UpdateAsync(updateExpression);
         }
 
-        private static Expression<Func<TEntity, bool>> GetFilterExpressionOrNull<TEntity>(IIocResolver iocResolver) where TEntity : Entity<int>
+        /// <summary>
+        /// Updates all matching entities using given updateExpression for given predicate
+        /// </summary>
+        /// <typeparam name="TEntity">Entity type</typeparam>
+        /// <param name="repository">Repository</param>
+        /// /// <param name="updateExpression">Update expression</param>
+        /// <param name="predicate">Predicate to filter entities</param>
+        /// <returns></returns>
+        public static async Task<int> BatchUpdateAsync<TEntity>(
+            this IRepository<TEntity> repository, Expression<Func<TEntity, TEntity>> updateExpression,
+            Expression<Func<TEntity, bool>> predicate)
+            where TEntity : Entity<int>
+        {
+            return await repository.BatchUpdateAsync<TEntity, int>(updateExpression, predicate);
+        }
+
+        private static Expression<Func<TEntity, bool>> GetFilterExpressionOrNull<TEntity, TPrimaryKey>(IIocResolver iocResolver) where TEntity : Entity<TPrimaryKey>
         {
             Expression<Func<TEntity, bool>> expression = null;
 
@@ -131,8 +146,7 @@ namespace Abp.EntityFrameworkCore.EFPlus
         {
             var currentUnitOfWorkProvider = iocResolver.Resolve<ICurrentUnitOfWorkProvider>();
 
-            if (currentUnitOfWorkProvider != null &&
-                currentUnitOfWorkProvider.Current != null)
+            if (currentUnitOfWorkProvider?.Current != null)
             {
                 return currentUnitOfWorkProvider.Current.GetTenantId();
             }
