@@ -20,7 +20,7 @@ namespace Abp.Authorization
 
         private readonly IFeatureChecker _featureChecker;
         private readonly IAuthorizationConfiguration _authConfiguration;
-        
+
         public AuthorizationHelper(IFeatureChecker featureChecker, IAuthorizationConfiguration authConfiguration)
         {
             _featureChecker = featureChecker;
@@ -64,7 +64,7 @@ namespace Abp.Authorization
             {
                 return;
             }
-            
+
             foreach (var featureAttribute in featureAttributes)
             {
                 await _featureChecker.CheckEnabledAsync(featureAttribute.RequiresAll, featureAttribute.Features);
@@ -84,6 +84,11 @@ namespace Abp.Authorization
             }
 
             if (ReflectionHelper.IsPropertyGetterSetterMethod(methodInfo, type))
+            {
+                return;
+            }
+
+            if (!methodInfo.IsPublic && !methodInfo.GetCustomAttributes().OfType<IAbpAuthorizeAttribute>().Any())
             {
                 return;
             }
