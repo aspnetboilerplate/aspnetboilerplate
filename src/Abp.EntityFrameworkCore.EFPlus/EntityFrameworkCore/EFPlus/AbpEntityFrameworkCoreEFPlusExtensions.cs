@@ -20,7 +20,7 @@ namespace Abp.EntityFrameworkCore.EFPlus
     public static class AbpEntityFrameworkCoreEfPlusExtensions
     {
         /// <summary>
-        /// Deletes all matching entities for given predicate
+        /// Deletes all matching entities permanently for given predicate
         /// </summary>
         /// <typeparam name="TEntity">Entity type</typeparam>
         /// <typeparam name="TPrimaryKey">Primary key type</typeparam>
@@ -46,7 +46,7 @@ namespace Abp.EntityFrameworkCore.EFPlus
         }
 
         /// <summary>
-        /// Deletes all matching entities for given predicate
+        /// Deletes all matching entities permanently for given predicate
         /// </summary>
         /// <typeparam name="TEntity">Entity type</typeparam>
         /// <param name="repository">Repository</param>
