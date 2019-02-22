@@ -67,7 +67,7 @@ Here's an example **Address** that inherits from the **ValueObject** class:
         }
     }
 
-**ValueObject&lt;T&gt;**
+#### **ValueObject&lt;T&gt;**
 
 Here's the same Address class that inherits from the **ValueObject&lt;T&gt;**.
 
