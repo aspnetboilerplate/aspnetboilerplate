@@ -18,23 +18,33 @@ domain.
 
 ### Value Object Base Class
 
-ABP has a **ValueObject&lt;T&gt;** base class which can be inherited in
+ABP has two base classes for Value Objects. The one is **ValueObject** (recommended) and the other is **ValueObject&lt;T&gt;** which can be inherited in
 order to easily create Value Object types. Here's an example **Address** Value
 Object type:
 
-    public class Address : ValueObject<Address>
+    public class Address : ValueObject
     {
-        public Guid CityId { get; private set; } //A reference to a City entity.
+        public Guid CityId { get; }
 
-        public string Street { get; private set; }
+        public string Street { get; }
 
-        public int Number { get; private set; }
+        public int Number { get; }
 
-        public Address(Guid cityId, string street, int number)
+        public Address(
+            Guid cityId,
+            string street,
+            int number)
         {
             CityId = cityId;
             Street = street;
             Number = number;
+        }
+
+        protected override IEnumerable<object> GetAtomicValues()
+        {
+            yield return Street;
+            yield return CityId;
+            yield return Number;
         }
     }
 
