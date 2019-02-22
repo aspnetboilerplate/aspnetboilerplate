@@ -40,32 +40,34 @@ So, the **ValueObject&lt;T&gt;** is simpler to inherit, but the **ValueObject** 
 
 Here's an example **Address** that inherits from the **ValueObject** class:
 
-    public class Address : ValueObject
+```csharp
+public class Address : ValueObject
+{
+    public Guid CityId { get; }
+
+    public string Street { get; }
+
+    public int Number { get; }
+
+    public Address(
+        Guid cityId,
+        string street,
+        int number)
     {
-        public Guid CityId { get; }
-    
-        public string Street { get; }
-    
-        public int Number { get; }
-    
-        public Address(
-            Guid cityId,
-            string street,
-            int number)
-        {
-            CityId = cityId;
-            Street = street;
-            Number = number;
-        }
-    
-        //Requires to implement this method to return properties.
-        protected override IEnumerable<object> GetAtomicValues()
-        {
-            yield return Street;
-            yield return CityId;
-            yield return Number;
-        }
+        CityId = cityId;
+        Street = street;
+        Number = number;
     }
+
+    //Requires to implement this method to return properties.
+    protected override IEnumerable<object> GetAtomicValues()
+    {
+        yield return Street;
+        yield return CityId;
+        yield return Number;
+    }
+}
+```
 
 #### **ValueObject&lt;T&gt;**
 
