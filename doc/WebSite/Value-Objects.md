@@ -16,20 +16,38 @@ In Domain Driven Design (DDD), the Value Object is another type of domain
 object which can include business logic and is an essential part of the
 domain.
 
-### Value Object Base Class
+### Value Object Base Classes
 
-ABP has two base classes for Value Objects. The one is **ValueObject** (recommended) and the other is **ValueObject&lt;T&gt;** which can be inherited in
-order to easily create Value Object types. Here's an example **Address** Value
-Object type:
+ABP has two base classes for value objects: **ValueObject** and **ValueObject&lt;T&gt;** . Both classes override the equality operator (and other related operator and methods) to compare the two value objects and assumes that they are identical if all the properties are the same. For example, all of these tests pass:
+
+```
+var address1 = new Address(new Guid("21C67A65-ED5A-4512-AA29-66308FAAB5AF"), "Baris Manco Street", 42);
+var address2 = new Address(new Guid("21C67A65-ED5A-4512-AA29-66308FAAB5AF"), "Baris Manco Street", 42);
+
+Assert.Equal(address1, address2);
+Assert.Equal(address1.GetHashCode(), address2.GetHashCode());
+Assert.True(address1 == address2);
+Assert.False(address1 != address2);
+```
+
+Even if they are different objects in memory, they are identical for our domain.
+
+The difference between **ValueObject** and **ValueObject&lt;T&gt;** is the implementation of comparison. The **ValueObject&lt;T&gt;** uses reflection, while the **ValueObject** waits from you to return a list of properties.
+
+So, the **ValueObject&lt;T&gt;** is simpler to inherit, but the **ValueObject** is more efficient.
+
+#### ValueObject
+
+Here's an example **Address** that inherits from the **ValueObject** class:
 
     public class Address : ValueObject
     {
         public Guid CityId { get; }
-
+    
         public string Street { get; }
-
+    
         public int Number { get; }
-
+    
         public Address(
             Guid cityId,
             string street,
@@ -39,7 +57,8 @@ Object type:
             Street = street;
             Number = number;
         }
-
+    
+        //Requires to implement this method to return properties.
         protected override IEnumerable<object> GetAtomicValues()
         {
             yield return Street;
@@ -48,21 +67,32 @@ Object type:
         }
     }
 
-The ValueObject base class overrides the equality operator (and other related
-operator and methods) to compare the two value objects and assumes that they
-are identical if all the properties are the same. For example, all of these tests
-pass:
+**ValueObject&lt;T&gt;**
 
-    var address1 = new Address(new Guid("21C67A65-ED5A-4512-AA29-66308FAAB5AF"), "Baris Manco Street", 42);
-    var address2 = new Address(new Guid("21C67A65-ED5A-4512-AA29-66308FAAB5AF"), "Baris Manco Street", 42);
+Here's the same Address class that inherits from the **ValueObject&lt;T&gt;**.
 
-    Assert.Equal(address1, address2);
-    Assert.Equal(address1.GetHashCode(), address2.GetHashCode());
-    Assert.True(address1 == address2);
-    Assert.False(address1 != address2);
+````csharp
+public class Address : ValueObject<Address>
+{
+    public Guid CityId { get; }
 
-Even if they are different objects in memory, they are identical for our
-domain.
+    public string Street { get; }
+
+    public int Number { get; }
+
+    public AddressAnother(
+        Guid cityId,
+        string street,
+        int number)
+    {
+        CityId = cityId;
+        Street = street;
+        Number = number;
+    }
+}
+````
+
+
 
 ### Best Practices
 
