@@ -27,20 +27,18 @@ namespace Abp.EntityFrameworkCore.EFPlus
         /// <param name="repository">Repository</param>
         /// <param name="predicate">Predicate to filter entities</param>
         /// <returns></returns>
-        public static async Task<int> BatchDeleteAsync<TEntity, TPrimaryKey>([NotNull] this IRepository<TEntity, TPrimaryKey> repository, Expression<Func<TEntity, bool>> predicate)
+        public static async Task<int> BatchDeleteAsync<TEntity, TPrimaryKey>([NotNull] this IRepository<TEntity, TPrimaryKey> repository, [NotNull] Expression<Func<TEntity, bool>> predicate)
             where TEntity : Entity<TPrimaryKey>
         {
             Check.NotNull(repository, nameof(repository));
+            Check.NotNull(predicate, nameof(predicate));
 
             var query = repository.GetAll().IgnoreQueryFilters();
 
             var abpFilterExpression = GetFilterExpressionOrNull<TEntity, TPrimaryKey>(repository.GetIocResolver());
             var filterExpression = ExpressionCombiner.Combine(predicate, abpFilterExpression);
 
-            if (filterExpression != null)
-            {
-                query = query.Where(filterExpression);
-            }
+            query = query.Where(filterExpression);
 
             return await query.DeleteAsync();
         }
@@ -52,7 +50,7 @@ namespace Abp.EntityFrameworkCore.EFPlus
         /// <param name="repository">Repository</param>
         /// <param name="predicate">Predicate to filter entities</param>
         /// <returns></returns>
-        public static async Task<int> BatchDeleteAsync<TEntity>([NotNull] this IRepository<TEntity> repository, Expression<Func<TEntity, bool>> predicate)
+        public static async Task<int> BatchDeleteAsync<TEntity>([NotNull] this IRepository<TEntity> repository, [NotNull]Expression<Func<TEntity, bool>> predicate)
             where TEntity : Entity<int>
         {
             return await repository.BatchDeleteAsync<TEntity, int>(predicate);
@@ -67,20 +65,19 @@ namespace Abp.EntityFrameworkCore.EFPlus
         /// /// <param name="updateExpression">Update expression</param>
         /// <param name="predicate">Predicate to filter entities</param>
         /// <returns></returns>
-        public static async Task<int> BatchUpdateAsync<TEntity, TPrimaryKey>([NotNull]this IRepository<TEntity, TPrimaryKey> repository, Expression<Func<TEntity, TEntity>> updateExpression, Expression<Func<TEntity, bool>> predicate)
+        public static async Task<int> BatchUpdateAsync<TEntity, TPrimaryKey>([NotNull]this IRepository<TEntity, TPrimaryKey> repository, [NotNull]Expression<Func<TEntity, TEntity>> updateExpression, [NotNull]Expression<Func<TEntity, bool>> predicate)
             where TEntity : Entity<TPrimaryKey>
         {
             Check.NotNull(repository, nameof(repository));
+            Check.NotNull(updateExpression, nameof(updateExpression));
+            Check.NotNull(predicate, nameof(predicate));
 
             var query = repository.GetAll().IgnoreQueryFilters();
 
             var abpFilterExpression = GetFilterExpressionOrNull<TEntity, TPrimaryKey>(repository.GetIocResolver());
             var filterExpression = ExpressionCombiner.Combine(predicate, abpFilterExpression);
 
-            if (filterExpression != null)
-            {
-                query = query.Where(filterExpression);
-            }
+            query = query.Where(filterExpression);
 
             return await query.UpdateAsync(updateExpression);
         }
@@ -94,8 +91,8 @@ namespace Abp.EntityFrameworkCore.EFPlus
         /// <param name="predicate">Predicate to filter entities</param>
         /// <returns></returns>
         public static async Task<int> BatchUpdateAsync<TEntity>(
-            this IRepository<TEntity> repository, Expression<Func<TEntity, TEntity>> updateExpression,
-            Expression<Func<TEntity, bool>> predicate)
+            [NotNull]this IRepository<TEntity> repository, [NotNull]Expression<Func<TEntity, TEntity>> updateExpression,
+            [NotNull]Expression<Func<TEntity, bool>> predicate)
             where TEntity : Entity<int>
         {
             return await repository.BatchUpdateAsync<TEntity, int>(updateExpression, predicate);
@@ -105,37 +102,42 @@ namespace Abp.EntityFrameworkCore.EFPlus
         {
             Expression<Func<TEntity, bool>> expression = null;
 
-            if (typeof(ISoftDelete).IsAssignableFrom(typeof(TEntity)))
+            using (var scope = iocResolver.CreateScope())
             {
-                var isSoftDeleteFilterEnabled = iocResolver.Resolve<ICurrentUnitOfWorkProvider>().Current?.IsFilterEnabled(AbpDataFilters.SoftDelete) == true;
-                if (isSoftDeleteFilterEnabled)
+                var currentUnitOfWorkProvider = scope.Resolve<ICurrentUnitOfWorkProvider>();
+
+                if (typeof(ISoftDelete).IsAssignableFrom(typeof(TEntity)))
                 {
-                    Expression<Func<TEntity, bool>> softDeleteFilter = e => !((ISoftDelete)e).IsDeleted;
-                    expression = softDeleteFilter;
+                    var isSoftDeleteFilterEnabled = currentUnitOfWorkProvider.Current?.IsFilterEnabled(AbpDataFilters.SoftDelete) == true;
+                    if (isSoftDeleteFilterEnabled)
+                    {
+                        Expression<Func<TEntity, bool>> softDeleteFilter = e => !((ISoftDelete)e).IsDeleted;
+                        expression = softDeleteFilter;
+                    }
                 }
-            }
 
-            if (typeof(IMayHaveTenant).IsAssignableFrom(typeof(TEntity)))
-            {
-                var isMayHaveTenantFilterEnabled = iocResolver.Resolve<ICurrentUnitOfWorkProvider>().Current?.IsFilterEnabled(AbpDataFilters.MayHaveTenant) == true;
-                var currentTenantId = GetCurrentTenantIdOrNull(iocResolver);
-
-                if (isMayHaveTenantFilterEnabled)
+                if (typeof(IMayHaveTenant).IsAssignableFrom(typeof(TEntity)))
                 {
-                    Expression<Func<TEntity, bool>> mayHaveTenantFilter = e => ((IMayHaveTenant)e).TenantId == currentTenantId;
-                    expression = expression == null ? mayHaveTenantFilter : ExpressionCombiner.Combine(expression, mayHaveTenantFilter);
+                    var isMayHaveTenantFilterEnabled = currentUnitOfWorkProvider.Current?.IsFilterEnabled(AbpDataFilters.MayHaveTenant) == true;
+                    var currentTenantId = GetCurrentTenantIdOrNull(iocResolver);
+
+                    if (isMayHaveTenantFilterEnabled)
+                    {
+                        Expression<Func<TEntity, bool>> mayHaveTenantFilter = e => ((IMayHaveTenant)e).TenantId == currentTenantId;
+                        expression = expression == null ? mayHaveTenantFilter : ExpressionCombiner.Combine(expression, mayHaveTenantFilter);
+                    }
                 }
-            }
 
-            if (typeof(IMustHaveTenant).IsAssignableFrom(typeof(TEntity)))
-            {
-                var isMustHaveTenantFilterEnabled = iocResolver.Resolve<ICurrentUnitOfWorkProvider>().Current?.IsFilterEnabled(AbpDataFilters.MustHaveTenant) == true;
-                var currentTenantId = GetCurrentTenantIdOrNull(iocResolver);
-
-                if (isMustHaveTenantFilterEnabled)
+                if (typeof(IMustHaveTenant).IsAssignableFrom(typeof(TEntity)))
                 {
-                    Expression<Func<TEntity, bool>> mustHaveTenantFilter = e => ((IMustHaveTenant)e).TenantId == currentTenantId;
-                    expression = expression == null ? mustHaveTenantFilter : ExpressionCombiner.Combine(expression, mustHaveTenantFilter);
+                    var isMustHaveTenantFilterEnabled = currentUnitOfWorkProvider.Current?.IsFilterEnabled(AbpDataFilters.MustHaveTenant) == true;
+                    var currentTenantId = GetCurrentTenantIdOrNull(iocResolver);
+
+                    if (isMustHaveTenantFilterEnabled)
+                    {
+                        Expression<Func<TEntity, bool>> mustHaveTenantFilter = e => ((IMustHaveTenant)e).TenantId == currentTenantId;
+                        expression = expression == null ? mustHaveTenantFilter : ExpressionCombiner.Combine(expression, mustHaveTenantFilter);
+                    }
                 }
             }
 
@@ -144,14 +146,17 @@ namespace Abp.EntityFrameworkCore.EFPlus
 
         private static int? GetCurrentTenantIdOrNull(IIocResolver iocResolver)
         {
-            var currentUnitOfWorkProvider = iocResolver.Resolve<ICurrentUnitOfWorkProvider>();
-
-            if (currentUnitOfWorkProvider?.Current != null)
+            using (var scope = iocResolver.CreateScope())
             {
-                return currentUnitOfWorkProvider.Current.GetTenantId();
-            }
+                var currentUnitOfWorkProvider = scope.Resolve<ICurrentUnitOfWorkProvider>();
 
-            return iocResolver.Resolve<IAbpSession>().TenantId;
+                if (currentUnitOfWorkProvider?.Current != null)
+                {
+                    return currentUnitOfWorkProvider.Current.GetTenantId();
+                }
+
+                return iocResolver.Resolve<IAbpSession>().TenantId;
+            }
         }
     }
 }
