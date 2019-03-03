@@ -16,32 +16,30 @@ namespace Abp.Notifications
     /// </summary>
     public class DefaultNotificationDistributer : DomainService, INotificationDistributer
     {
-        public IRealTimeNotifier RealTimeNotifier { get; set; }
-
-        // TODO: Use constructor injection
-        public INotificationConfiguration NotificationConfiguration { get; set; }
-        public IIocResolver IocResolver { get; set; }
-
+        private readonly INotificationConfiguration _notificationConfiguration;
         private readonly INotificationDefinitionManager _notificationDefinitionManager;
         private readonly INotificationStore _notificationStore;
         private readonly IUnitOfWorkManager _unitOfWorkManager;
         private readonly IGuidGenerator _guidGenerator;
+        private readonly IIocResolver _iocResolver;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="NotificationDistributionJob"/> class.
         /// </summary>
         public DefaultNotificationDistributer(
+            INotificationConfiguration notificationConfiguration,
             INotificationDefinitionManager notificationDefinitionManager,
             INotificationStore notificationStore,
             IUnitOfWorkManager unitOfWorkManager, 
-            IGuidGenerator guidGenerator)
+            IGuidGenerator guidGenerator,
+            IIocResolver iocResolver)
         {
+            _notificationConfiguration = notificationConfiguration;
             _notificationDefinitionManager = notificationDefinitionManager;
             _notificationStore = notificationStore;
             _unitOfWorkManager = unitOfWorkManager;
             _guidGenerator = guidGenerator;
-
-            RealTimeNotifier = NullRealTimeNotifier.Instance;
+            _iocResolver = iocResolver;
         }
 
         public async Task DistributeAsync(Guid notificationId)
@@ -199,26 +197,11 @@ namespace Abp.Notifications
 
         protected virtual async Task NotifyAsync(UserNotification[] userNotifications)
         {
-            // TODO: Use constructor injection
-            if (NotificationConfiguration == null || IocResolver == null)
+            foreach (var notifierType in _notificationConfiguration.Notifiers)
             {
                 try
                 {
-                    await RealTimeNotifier.SendNotificationsAsync(userNotifications);
-                }
-                catch (Exception ex)
-                {
-                    Logger.Warn(ex.ToString(), ex);
-                }
-
-                return;
-            }
-
-            foreach (var notifierType in NotificationConfiguration.Notifiers)
-            {
-                try
-                {
-                    using (var notifier = IocResolver.ResolveAsDisposable<IRealTimeNotifier>(notifierType))
+                    using (var notifier = _iocResolver.ResolveAsDisposable<IRealTimeNotifier>(notifierType))
                     {
                         await notifier.Object.SendNotificationsAsync(userNotifications);
                     }
