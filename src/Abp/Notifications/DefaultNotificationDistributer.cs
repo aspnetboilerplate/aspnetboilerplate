@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Abp.Configuration;
+using Abp.Dependency;
 using Abp.Domain.Services;
 using Abp.Domain.Uow;
 using Abp.Extensions;
@@ -16,6 +17,10 @@ namespace Abp.Notifications
     public class DefaultNotificationDistributer : DomainService, INotificationDistributer
     {
         public IRealTimeNotifier RealTimeNotifier { get; set; }
+
+        // TODO: Use constructor injection
+        public INotificationConfiguration NotificationConfiguration { get; set; }
+        public IIocResolver IocResolver { get; set; }
 
         private readonly INotificationDefinitionManager _notificationDefinitionManager;
         private readonly INotificationStore _notificationStore;
@@ -54,14 +59,7 @@ namespace Abp.Notifications
 
             await _notificationStore.DeleteNotificationAsync(notificationInfo);
 
-            try
-            {
-                await RealTimeNotifier.SendNotificationsAsync(userNotifications.ToArray());
-            }
-            catch (Exception ex)
-            {
-                Logger.Warn(ex.ToString(), ex);
-            }
+            await NotifyAsync(userNotifications.ToArray());
         }
 
         [UnitOfWork]
@@ -196,5 +194,42 @@ namespace Abp.Notifications
 
             return userNotifications;
         }
+
+        #region Protected methods
+
+        protected virtual async Task NotifyAsync(UserNotification[] userNotifications)
+        {
+            // TODO: Use constructor injection
+            if (NotificationConfiguration == null || IocResolver == null)
+            {
+                try
+                {
+                    await RealTimeNotifier.SendNotificationsAsync(userNotifications);
+                }
+                catch (Exception ex)
+                {
+                    Logger.Warn(ex.ToString(), ex);
+                }
+
+                return;
+            }
+
+            foreach (var notifierType in NotificationConfiguration.Notifiers)
+            {
+                try
+                {
+                    using (var notifier = IocResolver.ResolveAsDisposable<IRealTimeNotifier>(notifierType))
+                    {
+                        await notifier.Object.SendNotificationsAsync(userNotifications);
+                    }
+                }
+                catch (Exception ex)
+                {
+                    Logger.Warn(ex.ToString(), ex);
+                }
+            }
+        }
+
+        #endregion
     }
 }

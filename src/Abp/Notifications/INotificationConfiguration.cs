@@ -16,5 +16,10 @@ namespace Abp.Notifications
         /// A list of contributors for notification distribution process.
         /// </summary>
         ITypeList<INotificationDistributer> Distributers { get; }
+
+        /// <summary>
+        /// A list of contributors for notification notifying process.
+        /// </summary>
+        ITypeList<IRealTimeNotifier> Notifiers { get; }
     }
 }

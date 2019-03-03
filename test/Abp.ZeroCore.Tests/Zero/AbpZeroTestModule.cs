@@ -24,6 +24,8 @@ namespace Abp.Zero
             Configuration.Modules.Zero().LanguageManagement.EnableDbLocalization();
             Configuration.UnitOfWork.IsTransactional = false;
             Configuration.Notifications.Distributers.Add<FakeNotificationDistributer>();
+            Configuration.Notifications.Notifiers.Add<FakeRealTimeNotifier1>();
+            Configuration.Notifications.Notifiers.Add<FakeRealTimeNotifier2>();
         }
 
         public override void Initialize()
@@ -33,6 +35,18 @@ namespace Abp.Zero
             IocManager.IocContainer.Register(
                 Component
                     .For<FakeNotificationDistributer>()
+                    .LifestyleSingleton()
+            );
+
+            IocManager.IocContainer.Register(
+                Component
+                    .For<FakeRealTimeNotifier1>()
+                    .LifestyleSingleton()
+            );
+
+            IocManager.IocContainer.Register(
+                Component
+                    .For<FakeRealTimeNotifier2>()
                     .LifestyleSingleton()
             );
 
