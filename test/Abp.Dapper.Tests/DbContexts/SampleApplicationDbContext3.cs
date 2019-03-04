@@ -23,6 +23,8 @@ namespace Abp.Dapper.Tests.DbContexts
         }
 
         public virtual IDbSet<Person> Person { get; set; }
+
+        public virtual IDbSet<Good> Goods { get; set; }
     }
 
     public class DapperDbContextConfiguration3 : DbConfiguration
