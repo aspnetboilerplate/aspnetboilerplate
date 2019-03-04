@@ -8,9 +8,13 @@ using Abp.Authorization.Roles;
 using Abp.Authorization.Users;
 using Abp.Configuration;
 using Abp.EntityFramework;
+using Abp.EntityHistory;
 using Abp.Localization;
 using Abp.Notifications;
 using Abp.Organizations;
+using System.Linq;
+using System.Threading;
+using System.Threading.Tasks;
 
 namespace Abp.Zero.EntityFramework
 {
@@ -119,6 +123,23 @@ namespace Abp.Zero.EntityFramework
         public virtual IDbSet<NotificationSubscriptionInfo> NotificationSubscriptions { get; set; }
 
         /// <summary>
+        /// Entity changes.
+        /// </summary>
+        public virtual IDbSet<EntityChange> EntityChanges { get; set; }
+
+        /// <summary>
+        /// Entity change sets.
+        /// </summary>
+        public virtual IDbSet<EntityChangeSet> EntityChangeSets { get; set; }
+
+        /// <summary>
+        /// Entity property changes.
+        /// </summary>
+        public virtual IDbSet<EntityPropertyChange> EntityPropertyChanges { get; set; }
+
+        public IEntityHistoryHelper EntityHistoryHelper { get; set; }
+
+        /// <summary>
         /// Default constructor.
         /// Do not directly instantiate this class. Instead, use dependency injection!
         /// </summary>
@@ -169,6 +190,31 @@ namespace Abp.Zero.EntityFramework
         protected AbpZeroCommonDbContext(DbConnection existingConnection, DbCompiledModel model, bool contextOwnsConnection)
             : base(existingConnection, model, contextOwnsConnection)
         {
+        }
+
+        public override int SaveChanges()
+        {
+            var changeSet = EntityHistoryHelper?.CreateEntityChangeSet(this);
+
+            var result = base.SaveChanges();
+
+            EntityHistoryHelper?.Save(this, changeSet);
+
+            return result;
+        }
+
+        public override async Task<int> SaveChangesAsync(CancellationToken cancellationToken = default(CancellationToken))
+        {
+            var changeSet = EntityHistoryHelper?.CreateEntityChangeSet(this);
+
+            var result = await base.SaveChangesAsync(cancellationToken);
+
+            if (EntityHistoryHelper != null)
+            {
+                await EntityHistoryHelper.SaveAsync(this, changeSet);
+            }
+
+            return result;
         }
     }
 }
