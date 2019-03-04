@@ -15,6 +15,7 @@ using Abp.Organizations;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
+using Abp.EntityFramework.Extensions;
 
 namespace Abp.Zero.EntityFramework
 {
@@ -215,6 +216,90 @@ namespace Abp.Zero.EntityFramework
             }
 
             return result;
+        }
+
+        /// <summary>
+        ///
+        /// </summary>
+        /// <param name="modelBuilder"></param>
+        protected override void OnModelCreating(DbModelBuilder modelBuilder)
+        {
+            base.OnModelCreating(modelBuilder);
+
+            modelBuilder.Entity<EntityChange>()
+                .HasMany(e => e.PropertyChanges)
+                .WithRequired()
+                .HasForeignKey(e => e.EntityChangeId);
+
+            #region EntityChange.IX_EntityChangeSetId
+
+            modelBuilder.Entity<EntityChange>()
+                .Property(e => e.EntityChangeSetId)
+                .CreateIndex("IX_EntityChangeSetId", 1);
+
+            #endregion
+
+            #region EntityChange.IX_EntityTypeFullName_EntityId
+
+            modelBuilder.Entity<EntityChange>()
+                .Property(e => e.EntityTypeFullName)
+                .CreateIndex("IX_EntityTypeFullName_EntityId", 1);
+
+            modelBuilder.Entity<EntityChange>()
+                .Property(e => e.EntityId)
+                .CreateIndex("IX_EntityTypeFullName_EntityId", 2);
+
+            #endregion
+
+            modelBuilder.Entity<EntityChangeSet>()
+                .HasMany(e => e.EntityChanges)
+                .WithRequired()
+                .HasForeignKey(e => e.EntityChangeSetId);
+
+            #region EntityChangeSet.IX_TenantId_UserId
+            
+            modelBuilder.Entity<EntityChangeSet>()
+                .Property(e => e.TenantId)
+                .CreateIndex("IX_TenantId_UserId", 1);
+
+            modelBuilder.Entity<EntityChangeSet>()
+                .Property(e => e.UserId)
+                .CreateIndex("IX_TenantId_UserId", 2);
+
+            #endregion
+
+            #region EntityChangeSet.IX_TenantId_CreationTime
+
+            modelBuilder.Entity<EntityChangeSet>()
+                .Property(e => e.TenantId)
+                .CreateIndex("IX_TenantId_CreationTime", 1);
+
+            modelBuilder.Entity<EntityChangeSet>()
+                .Property(e => e.CreationTime)
+                .CreateIndex("IX_TenantId_CreationTime", 2);
+
+            #endregion
+
+            #region EntityChangeSet.IX_TenantId_Reason
+
+            modelBuilder.Entity<EntityChangeSet>()
+                .Property(e => e.TenantId)
+                .CreateIndex("IX_TenantId_Reason", 1);
+
+            modelBuilder.Entity<EntityChangeSet>()
+                .Property(e => e.Reason)
+                .CreateIndex("IX_TenantId_Reason", 2);
+
+            #endregion
+
+            #region EntityPropertyChange.IX_EntityChangeId
+
+            modelBuilder.Entity<EntityPropertyChange>()
+                .Property(e => e.EntityChangeId)
+                .CreateIndex("IX_EntityChangeId", 1);
+
+            #endregion
+
         }
     }
 }
