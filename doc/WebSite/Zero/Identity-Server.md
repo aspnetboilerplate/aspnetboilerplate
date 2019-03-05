@@ -52,6 +52,14 @@ to integrate it into Abp.ZeroCore.
 
 In the ASP.NET Core **Startup class**, we must add IdentityServer to the
 **service collection** and to the ASP.NET Core **middleware pipeline**.
+
+You have to install the [**Abp.ZeroCore.IdentityServer4**](https://www.nuget.org/packages/Abp.ZeroCore.IdentityServer4) package to your project.
+(.Web.Host project for default templates)
+
+```
+Install-Package Abp.ZeroCore.IdentityServer4
+```
+
 Highlighted, here are the **differences** from the standard IdentityServer4 usage:
 
     public class Startup
