@@ -226,6 +226,15 @@ Framework](EntityFramework-Integration.md) 6.x and [Entity Framework
 Core](Entity-Framework-Core.md). Currently, you can only define custom
 filters for Entity Framework 6.x.
 
+#### Entity Framework Core
+
+For [Entity Framework Core](Entity-Framework-Core.md),
+automatic data filtering is implemented using the
+**[EntityFrameworkCore Global Qurty Filters](https://docs.microsoft.com/en-us/ef/core/querying/filters)**.
+
+To create a custom filter for Entity Framework Core and integrate it into ASP.NET
+Boilerplate, see **[Add Custom Data Filters with EntityFrameworkCore](Articles\How-To\add-custom-data-filter-ef-core.md)**.
+
 #### Entity Framework
 
 For [Entity Framework integration](EntityFramework-Integration.md),
