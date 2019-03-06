@@ -3,25 +3,19 @@ using System.Threading.Tasks;
 using Abp.IdentityFramework;
 using Abp.Organizations;
 using Abp.Zero.SampleApp.Roles;
-using Abp.Zero.SampleApp.Users;
 using Shouldly;
 using Xunit;
 
 namespace Abp.Zero.SampleApp.Tests.Roles
 {
-    public class UserOrganizationUnit_Tests : SampleAppTestBase
+    public class OrganizationUnitRole_Tests : SampleAppTestBase
     {
         private readonly RoleManager _roleManager;
-        private readonly User _defaultTenantAdmin;
 
-        public UserOrganizationUnit_Tests()
+        public OrganizationUnitRole_Tests()
         {
             var defaultTenant = GetDefaultTenant();
-            _defaultTenantAdmin = GetDefaultTenantAdmin();
-
             AbpSession.TenantId = defaultTenant.Id;
-            AbpSession.UserId = _defaultTenantAdmin.Id;
-
             _roleManager = Resolve<RoleManager>();
         }
 
@@ -52,11 +46,11 @@ namespace Abp.Zero.SampleApp.Tests.Roles
 
             //Assert
             (await _roleManager.IsInOrganizationUnitAsync(role, ou11)).ShouldBe(false);
-            UsingDbContext(context => context.OrganizationUnitRoles.FirstOrDefault(ou => ou.RoleId == role.Id && ou.OrganizationUnitId == ou11.Id).IsDeleted.ShouldBeTrue());
+            UsingDbContext(context => context.OrganizationUnitRoles.FirstOrDefault(ou => ou.RoleId == role.Id && ou.OrganizationUnitId == ou11.Id).ShouldBeNull());
         }
 
         [Fact]
-        public async Task Should_Remove_User_From_Organization_When_User_Is_Deleted()
+        public async Task Should_Remove_Role_From_Organization_When_Role_Is_Deleted()
         {
             //Arrange
             var role = await CreateRole("role_1");
@@ -88,8 +82,8 @@ namespace Abp.Zero.SampleApp.Tests.Roles
             //Assert
             UsingDbContext(context =>
             {
-                context.UserOrganizationUnits
-                    .Count(uou => uou.UserId == _defaultTenantAdmin.Id && organizationUnitIds.Contains(uou.OrganizationUnitId))
+                context.OrganizationUnitRoles
+                    .Count(uou => uou.RoleId == role.Id && organizationUnitIds.Contains(uou.OrganizationUnitId))
                     .ShouldBe(organizationUnitIds.Length);
             });
         }
