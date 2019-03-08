@@ -2,7 +2,6 @@
 using System.Threading.Tasks;
 using Abp.IdentityFramework;
 using Abp.Organizations;
-using Abp.Zero.SampleApp.Roles;
 using Shouldly;
 using Xunit;
 
@@ -74,7 +73,7 @@ namespace Abp.Zero.SampleApp.Tests.Roles
             var organizationUnitIds = organizationUnitNames.Select(oun => GetOu(oun).Id).ToArray();
 
             //Act
-            await RoleManager.SetOrganizationUnitsAsync(role, AbpSession.TenantId, organizationUnitIds);
+            await RoleManager.SetOrganizationUnitsAsync(role, organizationUnitIds);
 
             //Assert
             UsingDbContext(context =>

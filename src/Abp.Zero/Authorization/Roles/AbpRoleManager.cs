@@ -435,16 +435,15 @@ namespace Abp.Authorization.Roles
             }
         }
 
-        public virtual async Task SetOrganizationUnitsAsync(int roleId, int? tenantId, params long[] organizationUnitIds)
+        public virtual async Task SetOrganizationUnitsAsync(int roleId, params long[] organizationUnitIds)
         {
             await SetOrganizationUnitsAsync(
                 await GetRoleByIdAsync(roleId),
-                tenantId,
                 organizationUnitIds
             );
         }
 
-        public virtual async Task SetOrganizationUnitsAsync(TRole role, int? tenantId, params long[] organizationUnitIds)
+        public virtual async Task SetOrganizationUnitsAsync(TRole role, params long[] organizationUnitIds)
         {
             if (organizationUnitIds == null)
             {
@@ -470,7 +469,7 @@ namespace Abp.Authorization.Roles
                     await AddToOrganizationUnitAsync(
                         role,
                         await _organizationUnitRepository.GetAsync(organizationUnitId),
-                        tenantId
+                        role.TenantId
                     );
                 }
             }
