@@ -501,9 +501,7 @@ namespace Abp.Authorization.Roles
 
         public virtual async Task AddToOrganizationUnitAsync(TRole role, OrganizationUnit ou, int? tenantId)
         {
-            var currentOus = await GetOrganizationUnitsAsync(role);
-
-            if (currentOus.Any(cou => cou.Id == ou.Id))
+            if ( await IsInOrganizationUnitAsync(role, ou))
             {
                 return;
             }
