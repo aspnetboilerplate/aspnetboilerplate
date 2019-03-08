@@ -22,9 +22,12 @@ namespace Abp.Configuration.Startup
 
         public ITypeList<ITenantResolveContributor> Resolvers { get; }
 
+        public string TenantIdResolveKey { get; set; }
+
         public MultiTenancyConfig()
         {
             Resolvers = new TypeList<ITenantResolveContributor>();
+            TenantIdResolveKey = "Abp.TenantId";
         }
     }
 }
