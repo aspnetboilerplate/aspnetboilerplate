@@ -2,7 +2,6 @@
 using System.Threading.Tasks;
 using Abp.AspNetCore.App.Controllers;
 using Abp.Configuration.Startup;
-using Abp.MultiTenancy;
 using Abp.Web.Models;
 using Abp.Web.MultiTenancy;
 using Microsoft.Net.Http.Headers;
