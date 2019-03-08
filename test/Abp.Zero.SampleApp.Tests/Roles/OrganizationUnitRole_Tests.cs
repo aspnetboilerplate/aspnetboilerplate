@@ -10,13 +10,10 @@ namespace Abp.Zero.SampleApp.Tests.Roles
 {
     public class OrganizationUnitRole_Tests : SampleAppTestBase
     {
-        private readonly RoleManager _roleManager;
-
         public OrganizationUnitRole_Tests()
         {
             var defaultTenant = GetDefaultTenant();
             AbpSession.TenantId = defaultTenant.Id;
-            _roleManager = Resolve<RoleManager>();
         }
 
         [Fact]
@@ -27,10 +24,10 @@ namespace Abp.Zero.SampleApp.Tests.Roles
             var role = await CreateRole("role_1");
 
             //Act
-            await _roleManager.AddToOrganizationUnitAsync(role, ou2, AbpSession.TenantId);
+            await RoleManager.AddToOrganizationUnitAsync(role, ou2, AbpSession.TenantId);
 
             //Assert
-            (await _roleManager.IsInOrganizationUnitAsync(role, ou2)).ShouldBe(true);
+            (await RoleManager.IsInOrganizationUnitAsync(role, ou2)).ShouldBe(true);
             UsingDbContext(context => context.OrganizationUnitRoles.FirstOrDefault(ou => ou.RoleId == role.Id && ou.OrganizationUnitId == ou2.Id).ShouldNotBeNull());
         }
 
@@ -42,10 +39,10 @@ namespace Abp.Zero.SampleApp.Tests.Roles
             var role = await CreateRole("role_1");
 
             //Act
-            await _roleManager.RemoveFromOrganizationUnitAsync(role, ou11);
+            await RoleManager.RemoveFromOrganizationUnitAsync(role, ou11);
 
             //Assert
-            (await _roleManager.IsInOrganizationUnitAsync(role, ou11)).ShouldBe(false);
+            (await RoleManager.IsInOrganizationUnitAsync(role, ou11)).ShouldBe(false);
             UsingDbContext(context => context.OrganizationUnitRoles.FirstOrDefault(ou => ou.RoleId == role.Id && ou.OrganizationUnitId == ou11.Id).ShouldBeNull());
         }
 
@@ -56,14 +53,14 @@ namespace Abp.Zero.SampleApp.Tests.Roles
             var role = await CreateRole("role_1");
             var ou11 = GetOu("OU11");
 
-            await _roleManager.AddToOrganizationUnitAsync(role, ou11, AbpSession.TenantId);
-            (await _roleManager.IsInOrganizationUnitAsync(role, ou11)).ShouldBe(true);
+            await RoleManager.AddToOrganizationUnitAsync(role, ou11, AbpSession.TenantId);
+            (await RoleManager.IsInOrganizationUnitAsync(role, ou11)).ShouldBe(true);
 
             //Act
-            (await _roleManager.DeleteAsync(role)).CheckErrors();
+            (await RoleManager.DeleteAsync(role)).CheckErrors();
 
             //Assert
-            (await _roleManager.IsInOrganizationUnitAsync(role, ou11)).ShouldBe(false);
+            (await RoleManager.IsInOrganizationUnitAsync(role, ou11)).ShouldBe(false);
         }
 
         [Theory]
@@ -77,7 +74,7 @@ namespace Abp.Zero.SampleApp.Tests.Roles
             var organizationUnitIds = organizationUnitNames.Select(oun => GetOu(oun).Id).ToArray();
 
             //Act
-            await _roleManager.SetOrganizationUnitsAsync(role, AbpSession.TenantId, organizationUnitIds);
+            await RoleManager.SetOrganizationUnitsAsync(role, AbpSession.TenantId, organizationUnitIds);
 
             //Assert
             UsingDbContext(context =>
@@ -86,6 +83,15 @@ namespace Abp.Zero.SampleApp.Tests.Roles
                     .Count(uou => uou.RoleId == role.Id && organizationUnitIds.Contains(uou.OrganizationUnitId))
                     .ShouldBe(organizationUnitIds.Length);
             });
+        }
+
+        [Fact]
+        public async Task Test_GetRolesInOrganizationUnit()
+        {
+            //Act & Assert
+            (await RoleManager.GetRolesInOrganizationUnit(GetOu("OU11"))).Count.ShouldBe(1);
+            (await RoleManager.GetRolesInOrganizationUnit(GetOu("OU1"))).Count.ShouldBe(0);
+            (await RoleManager.GetRolesInOrganizationUnit(GetOu("OU1"), true)).Count.ShouldBe(1);
         }
 
         private OrganizationUnit GetOu(string displayName)
