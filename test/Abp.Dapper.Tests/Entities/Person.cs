@@ -6,7 +6,6 @@ namespace Abp.Dapper.Tests.Entities
     [Table("Person")]
     public class Person : Entity, IMustHaveTenant
     {
-
         protected Person()
         {
         }

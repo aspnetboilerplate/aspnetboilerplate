@@ -1,12 +1,8 @@
 ﻿using System;
 using System.ComponentModel.DataAnnotations.Schema;
 using System.Linq;
-using Abp.Authorization;
-using Abp.BackgroundJobs;
 using Abp.Domain.Entities;
-using Abp.Domain.Uow;
 using Abp.Extensions;
-using Abp.Json;
 using Abp.Runtime.Validation;
 using Abp.UI;
 
@@ -32,6 +28,11 @@ namespace Abp.Auditing
         /// Maximum length of <see cref="Parameters"/> property.
         /// </summary>
         public static int MaxParametersLength = 1024;
+
+        /// <summary>
+        /// Maximum length of <see cref="ReturnValue"/> property.
+        /// </summary>
+        public static int MaxReturnValueLength = 1024;
 
         /// <summary>
         /// Maximum length of <see cref="ClientIpAddress"/> property.
@@ -82,6 +83,11 @@ namespace Abp.Auditing
         /// Calling parameters.
         /// </summary>
         public virtual string Parameters { get; set; }
+
+        /// <summary>
+        /// Return values.
+        /// </summary>
+        public virtual string ReturnValue { get; set; }
 
         /// <summary>
         /// Start time of the method execution.
@@ -143,6 +149,7 @@ namespace Abp.Auditing
                        ServiceName = auditInfo.ServiceName.TruncateWithPostfix(MaxServiceNameLength),
                        MethodName = auditInfo.MethodName.TruncateWithPostfix(MaxMethodNameLength),
                        Parameters = auditInfo.Parameters.TruncateWithPostfix(MaxParametersLength),
+                       ReturnValue = auditInfo.ReturnValue.TruncateWithPostfix(MaxReturnValueLength),
                        ExecutionTime = auditInfo.ExecutionTime,
                        ExecutionDuration = auditInfo.ExecutionDuration,
                        ClientIpAddress = auditInfo.ClientIpAddress.TruncateWithPostfix(MaxClientIpAddressLength),

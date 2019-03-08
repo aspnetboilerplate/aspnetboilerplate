@@ -1,4 +1,3 @@
-using System;
 using System.Threading.Tasks;
 using Abp.Authorization;
 using Abp.Collections.Extensions;
@@ -36,34 +35,6 @@ namespace Abp.Application.Features
         public static string GetValue(this IFeatureChecker featureChecker, int tenantId, string featureName)
         {
             return AsyncHelper.RunSync(() => featureChecker.GetValueAsync(tenantId, featureName));
-        }
-
-        /// <summary>
-        /// Checks if a given feature is enabled.
-        /// This should be used for boolean-value features.
-        /// 
-        /// This is a shortcut for <see cref="IsEnabledAsync(IFeatureChecker, int, string)"/> that uses <see cref="IAbpSession.TenantId"/>.
-        /// Note: This method should be used only if the TenantId can be obtained from the session.
-        /// </summary>
-        /// <param name="featureChecker"><see cref="IFeatureChecker"/> instance</param>
-        /// <param name="featureName">Unique feature name</param>
-        /// <returns>True, if the current feature's value is "true".</returns>
-        public static async Task<bool> IsEnabledAsync(this IFeatureChecker featureChecker, string featureName)
-        {
-            return string.Equals(await featureChecker.GetValueAsync(featureName), "true", StringComparison.OrdinalIgnoreCase);
-        }
-
-        /// <summary>
-        /// Checks if a given feature is enabled.
-        /// This should be used for boolean-value features.
-        /// </summary>
-        /// <param name="featureChecker"><see cref="IFeatureChecker"/> instance</param>
-        /// <param name="tenantId">Tenant's Id</param>
-        /// <param name="featureName">Unique feature name</param>
-        /// <returns>True, if the current feature's value is "true".</returns>
-        public static async Task<bool> IsEnabledAsync(this IFeatureChecker featureChecker, int tenantId, string featureName)
-        {
-            return string.Equals(await featureChecker.GetValueAsync(tenantId, featureName), "true", StringComparison.OrdinalIgnoreCase);
         }
 
         /// <summary>

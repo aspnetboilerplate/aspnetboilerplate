@@ -9,6 +9,7 @@ using Abp.Localization;
 using Abp.Web.Authorization;
 using Abp.Web.Features;
 using Abp.Web.Localization;
+using Abp.Web.Minifier;
 using Abp.Web.MultiTenancy;
 using Abp.Web.Navigation;
 using Abp.Web.Security;
@@ -33,6 +34,7 @@ namespace Abp.Web.Mvc.Controllers
         private readonly ISessionScriptManager _sessionScriptManager;
         private readonly ITimingScriptManager _timingScriptManager;
         private readonly ISecurityScriptManager _securityScriptManager;
+        private readonly IJavaScriptMinifier _javaScriptMinifier;
 
         /// <summary>
         /// Constructor.
@@ -46,7 +48,8 @@ namespace Abp.Web.Mvc.Controllers
             IFeaturesScriptManager featuresScriptManager,
             ISessionScriptManager sessionScriptManager, 
             ITimingScriptManager timingScriptManager,
-            ISecurityScriptManager securityScriptManager)
+            ISecurityScriptManager securityScriptManager, 
+            IJavaScriptMinifier javaScriptMinifier)
         {
             _multiTenancyScriptManager = multiTenancyScriptManager;
             _settingScriptManager = settingScriptManager;
@@ -57,13 +60,14 @@ namespace Abp.Web.Mvc.Controllers
             _sessionScriptManager = sessionScriptManager;
             _timingScriptManager = timingScriptManager;
             _securityScriptManager = securityScriptManager;
+            _javaScriptMinifier = javaScriptMinifier;
         }
 
         /// <summary>
         /// Gets all needed scripts.
         /// </summary>
         [DisableAuditing]
-        public async Task<ActionResult> GetScripts(string culture = "")
+        public async Task<ActionResult> GetScripts(string culture = "", bool minify = false)
         {
             if (!culture.IsNullOrEmpty())
             {
@@ -101,7 +105,8 @@ namespace Abp.Web.Mvc.Controllers
 
             sb.AppendLine(GetTriggerScript());
 
-            return Content(sb.ToString(), "application/x-javascript", Encoding.UTF8);
+            return Content(minify ? _javaScriptMinifier.Minify(sb.ToString()) : sb.ToString(),
+                "application/x-javascript", Encoding.UTF8);
         }
 
         private static string GetTriggerScript()

@@ -40,9 +40,8 @@ namespace Abp.Tests.Domain.Values
         public void Value_Objects_Should_Not_Be_Same_If_One_Of_Them_Is_Null()
         {
             Assert.NotEqual(
-                new Address(new Guid("21C67A65-ED5A-4512-AA29-66308FAAB5AF"), "Baris Manco Street", 42),
-                null
-            );
+                null,
+                new Address(new Guid("21C67A65-ED5A-4512-AA29-66308FAAB5AF"), "Baris Manco Street", 42));
 
             Assert.True(new Address(new Guid("21C67A65-ED5A-4512-AA29-66308FAAB5AF"), "Baris Manco Street", 42) != null);
         }

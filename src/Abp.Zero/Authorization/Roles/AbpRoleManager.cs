@@ -262,6 +262,8 @@ namespace Abp.Authorization.Roles
         /// <param name="role">Role</param>
         public override async Task<IdentityResult> CreateAsync(TRole role)
         {
+            role.SetNormalizedName();
+
             var result = await CheckDuplicateRoleNameAsync(role.Id, role.Name, role.DisplayName);
             if (!result.Succeeded)
             {
@@ -279,6 +281,8 @@ namespace Abp.Authorization.Roles
 
         public override async Task<IdentityResult> UpdateAsync(TRole role)
         {
+            role.SetNormalizedName();
+
             var result = await CheckDuplicateRoleNameAsync(role.Id, role.Name, role.DisplayName);
             if (!result.Succeeded)
             {
@@ -367,6 +371,8 @@ namespace Abp.Authorization.Roles
                         DisplayName = staticRoleDefinition.RoleName,
                         IsStatic = true
                     };
+
+                    role.SetNormalizedName();
 
                     var identityResult = await CreateAsync(role);
                     if (!identityResult.Succeeded)

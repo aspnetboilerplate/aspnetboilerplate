@@ -31,7 +31,7 @@ namespace Abp.Domain.Repositories
 
         static AbpRepositoryBase()
         {
-            var attr = typeof (TEntity).GetSingleAttributeOfTypeOrBaseTypesOrNull<MultiTenancySideAttribute>();
+            var attr = typeof(TEntity).GetSingleAttributeOfTypeOrBaseTypesOrNull<MultiTenancySideAttribute>();
             if (attr != null)
             {
                 MultiTenancySide = attr.Side;
@@ -54,7 +54,7 @@ namespace Abp.Domain.Repositories
         {
             return Task.FromResult(GetAllList());
         }
-        
+
         public virtual List<TEntity> GetAllList(Expression<Func<TEntity, bool>> predicate)
         {
             return GetAll().Where(predicate).ToList();
@@ -69,7 +69,7 @@ namespace Abp.Domain.Repositories
         {
             return queryMethod(GetAll());
         }
-        
+
         public virtual TEntity Get(TPrimaryKey id)
         {
             var entity = FirstOrDefault(id);
@@ -91,7 +91,7 @@ namespace Abp.Domain.Repositories
 
             return entity;
         }
-        
+
         public virtual TEntity Single(Expression<Func<TEntity, bool>> predicate)
         {
             return GetAll().Single(predicate);
@@ -101,7 +101,7 @@ namespace Abp.Domain.Repositories
         {
             return Task.FromResult(Single(predicate));
         }
-        
+
         public virtual TEntity FirstOrDefault(TPrimaryKey id)
         {
             return GetAll().FirstOrDefault(CreateEqualityExpressionForId(id));
@@ -111,7 +111,7 @@ namespace Abp.Domain.Repositories
         {
             return Task.FromResult(FirstOrDefault(id));
         }
-        
+
         public virtual TEntity FirstOrDefault(Expression<Func<TEntity, bool>> predicate)
         {
             return GetAll().FirstOrDefault(predicate);
@@ -121,14 +121,14 @@ namespace Abp.Domain.Repositories
         {
             return Task.FromResult(FirstOrDefault(predicate));
         }
-        
+
         public virtual TEntity Load(TPrimaryKey id)
         {
             return Get(id);
         }
 
         public abstract TEntity Insert(TEntity entity);
-        
+
         public virtual Task<TEntity> InsertAsync(TEntity entity)
         {
             return Task.FromResult(Insert(entity));
@@ -150,7 +150,7 @@ namespace Abp.Domain.Repositories
                 ? Insert(entity)
                 : Update(entity);
         }
-        
+
         public virtual async Task<TEntity> InsertOrUpdateAsync(TEntity entity)
         {
             return entity.IsTransient()
@@ -169,7 +169,7 @@ namespace Abp.Domain.Repositories
         }
 
         public abstract TEntity Update(TEntity entity);
-        
+
         public virtual Task<TEntity> UpdateAsync(TEntity entity)
         {
             return Task.FromResult(Update(entity));
@@ -190,7 +190,7 @@ namespace Abp.Domain.Repositories
         }
 
         public abstract void Delete(TEntity entity);
-        
+
         public virtual Task DeleteAsync(TEntity entity)
         {
             Delete(entity);
@@ -198,7 +198,7 @@ namespace Abp.Domain.Repositories
         }
 
         public abstract void Delete(TPrimaryKey id);
-        
+
         public virtual Task DeleteAsync(TPrimaryKey id)
         {
             Delete(id);
@@ -263,10 +263,12 @@ namespace Abp.Domain.Repositories
         {
             var lambdaParam = Expression.Parameter(typeof(TEntity));
 
-            var lambdaBody = Expression.Equal(
-                Expression.PropertyOrField(lambdaParam, "Id"),
-                Expression.Constant(id, typeof(TPrimaryKey))
-                );
+            var leftExpression = Expression.PropertyOrField(lambdaParam, "Id");
+
+            Expression<Func<object>> closure = () => id;
+            var rightExpression = Expression.Convert(closure.Body, leftExpression.Type);
+
+            var lambdaBody = Expression.Equal(leftExpression, rightExpression);
 
             return Expression.Lambda<Func<TEntity, bool>>(lambdaBody, lambdaParam);
         }

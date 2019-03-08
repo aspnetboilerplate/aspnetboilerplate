@@ -23,12 +23,14 @@ results) deleted entities while querying the database. If an
 implement the **ISoftDelete** interface which defines the **IsDeleted**
 property. Example:
 
+```csharp
     public class Person : Entity, ISoftDelete
     {
         public virtual string Name { get; set; }
     
         public virtual bool IsDeleted { get; set; }
     }
+```
 
 A **Person** entity is not actually deleted from the database, instead, the
 **IsDeleted** property is set to true. This is
@@ -43,6 +45,7 @@ When you get a list of People entities that implement ISoftDelete from the
 database, deleted people are not retrieved. Here is an example class that
 uses a person repository to get all people:
 
+```csharp
     public class MyService
     {
         private readonly IRepository<Person> _personRepository;
@@ -57,6 +60,7 @@ uses a person repository to get all people:
             return _personRepository.GetAllList();
         }
     }
+```
 
 The GetPeople method only returns the Person entities where IsDeleted = false
 (not deleted). All repository methods and navigation properties
@@ -80,12 +84,14 @@ in single database, you definitely do not want a tenant accidentally seeing
 other tenants' data. You can implement **IMustHaveTenant** in that case.
 Example:
 
+```csharp
     public class Product : Entity, IMustHaveTenant
     {
         public int TenantId { get; set; }
     
         public string Name { get; set; }
     }
+```
 
 **IMustHaveTenant** defines the **TenantId** property to distinguish between
 different tenant entities. ASP.NET Boilerplate uses the
@@ -110,12 +116,14 @@ object may be owned by a tenant or the host), you can use the IMayHaveTenant
 filter. The **IMayHaveTenant** interface defines **TenantId** but it's
 **nullable**.
 
+```csharp
     public class Role : Entity, IMayHaveTenant
     {
         public int? TenantId { get; set; }
     
         public string RoleName { get; set; }
     }
+```
 
 A **null** value means this is a **host** entity, a **non-null** value
 means this entity is owned by a **tenant** in which the Id is the TenantId.
@@ -134,6 +142,7 @@ You can disable a filter per [unit of
 work](/Pages/Documents/Unit-Of-Work) by calling the **DisableFilter** method
 as shown below:
 
+```csharp
     var people1 = _personRepository.GetAllList();
     
     using (_unitOfWorkManager.Current.DisableFilter(AbpDataFilters.SoftDelete))
@@ -142,6 +151,7 @@ as shown below:
     }
     
     var people3 = _personRepository.GetAllList();
+```
 
 The DisableFilter method gets one or more filter names as strings.
 AbpDataFilters.SoftDelete is a constant string that contains the name of the
@@ -181,7 +191,9 @@ If you need to, you can disable pre-defined filters globally. For example,
 to disable the soft-delete filter globally, add this code to the PreInitialize
 method of your module:
 
+```csharp
     Configuration.UnitOfWork.OverrideFilter(AbpDataFilters.SoftDelete, false);
+```
 
 ### Enable Filters
 
@@ -197,12 +209,16 @@ these types of filters since the current tenant's Id is determined at
 runtime. For such filters, we can change the filter value if needed.
 Example:
 
+```csharp
     CurrentUnitOfWork.SetFilterParameter("PersonFilter", "personId", 42);
+```
 
 Here's an example on how to set the tenantId value for the IMayHaveTenant
 filter:
 
+```csharp
     CurrentUnitOfWork.SetFilterParameter(AbpDataFilters.MayHaveTenant, AbpDataFilters.Parameters.TenantId, 42);
+```
 
 The SetFilterParameter method also returns an IDisposable. So, we can use it
 in a **using** statement to automatically **restore the old value**
@@ -226,6 +242,15 @@ Framework](EntityFramework-Integration.md) 6.x and [Entity Framework
 Core](Entity-Framework-Core.md). Currently, you can only define custom
 filters for Entity Framework 6.x.
 
+#### Entity Framework Core
+
+For [Entity Framework Core](Entity-Framework-Core.md),
+automatic data filtering is implemented using the
+**[EntityFrameworkCore Global Qurty Filters](https://docs.microsoft.com/en-us/ef/core/querying/filters)**.
+
+To create a custom filter for Entity Framework Core and integrate it into ASP.NET
+Boilerplate, see **[Add Custom Data Filters with EntityFrameworkCore](Articles\How-To\add-custom-data-filter-ef-core.md)**.
+
 #### Entity Framework
 
 For [Entity Framework integration](EntityFramework-Integration.md),
@@ -238,14 +263,17 @@ Boilerplate, first we need to define an interface that will be
 implemented by entities which use this filter. Assume that we want to
 automatically filter entities by PersonId. Example interface:
 
+```csharp
     public interface IHasPerson
     {
         int PersonId { get; set; }
     }
+```
 
 We can then implement this interface for the needed entities. Example
 entity:
 
+```csharp
     public class Phone : Entity, IHasPerson
     {
         [ForeignKey("PersonId")]
@@ -254,16 +282,19 @@ entity:
     
         public virtual string Number { get; set; }
     }
+```
 
 We use it's rules to define the filter. In our **DbContext** class, we
 override **OnModelCreating** and define a filter as shown below:
 
+```csharp
     protected override void OnModelCreating(DbModelBuilder modelBuilder)
     {
         base.OnModelCreating(modelBuilder);
     
         modelBuilder.Filter("PersonFilter", (IHasPerson entity, int personId) => entity.PersonId == personId, 0);
     }
+```
 
 "PersonFilter" is the unique name of the filter here. The second parameter
 defines the filter interface and personId filter parameter (not needed if
@@ -274,13 +305,16 @@ Finally, we must register this filter to ASP.NET Boilerplate's
 unit of work system in the PreInitialize method of our
 [module](/Pages/Documents/Module-System):
 
+```csharp
     Configuration.UnitOfWork.RegisterFilter("PersonFilter", false);
+```
 
 The first parameter is the same unique name we defined before. The second parameter
 indicates whether this filter is enabled or disabled by default. After
 declaring such a parametric filter, we can use it by supplying it's
 value at runtime.
 
+```csharp
     using (CurrentUnitOfWork.EnableFilter("PersonFilter"))
     {
         using(CurrentUnitOfWork.SetFilterParameter("PersonFilter", "personId", 42))
@@ -289,6 +323,7 @@ value at runtime.
             //...
         }
     }
+```
 
 We could get the personId from some source instead of it being statically coded.
 The example above was for parametric filters. A filter can have zero or

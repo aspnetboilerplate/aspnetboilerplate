@@ -102,7 +102,7 @@ var abp = abp || {};
         abp.signalr.autoConnect = true;
     }
 
-    if (abp.signalr.autoConnect) {
+    if (abp.signalr.autoConnect && !abp.signalr.hubs.common) {
         abp.signalr.connect();
     }
 

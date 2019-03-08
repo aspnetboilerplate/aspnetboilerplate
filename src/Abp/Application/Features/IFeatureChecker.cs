@@ -24,5 +24,25 @@ namespace Abp.Application.Features
         /// <param name="name">Unique feature name</param>
         /// <returns>Feature's current value</returns>
         Task<string> GetValueAsync(int tenantId, string name);
+
+        /// <summary>
+        /// Checks if a given feature is enabled.
+        /// This should be used for boolean-value features.
+        /// 
+        /// This is a shortcut for <see cref="IsEnabledAsync(int, string)"/> that uses <see cref="IAbpSession.TenantId"/>.
+        /// Note: This method should be used only if the TenantId can be obtained from the session.
+        /// </summary>
+        /// <param name="featureName">Unique feature name</param>
+        /// <returns>True, if the current feature's value is "true".</returns>
+        Task<bool> IsEnabledAsync(string featureName);
+
+        /// <summary>
+        /// Checks if a given feature is enabled.
+        /// This should be used for boolean-value features.
+        /// </summary>
+        /// <param name="tenantId">Tenant's Id</param>
+        /// <param name="featureName">Unique feature name</param>
+        /// <returns>True, if the current feature's value is "true".</returns>
+        Task<bool> IsEnabledAsync(int tenantId, string featureName);
     }
 }

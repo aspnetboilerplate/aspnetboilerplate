@@ -4,8 +4,6 @@ using System.Data.Entity;
 using System.Linq;
 using System.Threading.Tasks;
 using Abp.Authorization;
-using Abp.Dependency;
-using Abp.Domain.Uow;
 using Abp.IdentityFramework;
 using Abp.Modules;
 using Abp.MultiTenancy;
