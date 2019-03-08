@@ -40,6 +40,24 @@ namespace Abp.AspNetCore.Tests
         }
 
         [Fact]
+        public async Task HttpHeaderTenantResolveContributor_Configure_Test()
+        {
+            _multiTenancyConfig.TenantIdResolveKey = "Abp-TenantId";
+
+            Client.DefaultRequestHeaders.Add(_multiTenancyConfig.TenantIdResolveKey, "42");
+
+            // Act
+            var response = await GetResponseAsObjectAsync<AjaxResponse<int?>>(
+                GetUrl<MultiTenancyTestController>(
+                    nameof(MultiTenancyTestController.GetTenantId)
+                )
+            );
+
+            //Assert
+            response.Result.ShouldBe(42);
+        }
+
+        [Fact]
         public async Task HttpCookieTenantResolveContributor_Test()
         {
             Client.DefaultRequestHeaders.Add("Cookie", new CookieHeaderValue(_multiTenancyConfig.TenantIdResolveKey, "42").ToString());
