@@ -404,23 +404,29 @@ namespace Abp.Authorization.Roles
             return IdentityResult.Success;
         }
 
+        /// <summary>
+        /// Gets roles of a given organizationUnit
+        /// </summary>
+        /// <param name="organizationUnit">OrganizationUnit to get belonging roles </param>
+        /// <param name="includeChildren">Includes roles for children organization units to result when true. Default is false</param>
+        /// <returns></returns>
         [UnitOfWork]
         public virtual Task<List<TRole>> GetRolesInOrganizationUnit(OrganizationUnit organizationUnit, bool includeChildren = false)
         {
             if (!includeChildren)
             {
-                var query = from uor in _organizationUnitRoleRepository.GetAll()
-                    join role in Roles on uor.RoleId equals role.Id
-                    where uor.OrganizationUnitId == organizationUnit.Id
+                var query = from organizationUnitRole in _organizationUnitRoleRepository.GetAll()
+                    join role in Roles on organizationUnitRole.RoleId equals role.Id
+                    where organizationUnitRole.OrganizationUnitId == organizationUnit.Id
                     select role;
 
                 return Task.FromResult(query.ToList());
             }
             else
             {
-                var query = from uor in _organizationUnitRoleRepository.GetAll()
-                    join role in Roles on uor.RoleId equals role.Id
-                    join ou in _organizationUnitRepository.GetAll() on uor.OrganizationUnitId equals ou.Id
+                var query = from organizationUnitRole in _organizationUnitRoleRepository.GetAll()
+                    join role in Roles on organizationUnitRole.RoleId equals role.Id
+                    join ou in _organizationUnitRepository.GetAll() on organizationUnitRole.OrganizationUnitId equals ou.Id
                     where ou.Code.StartsWith(organizationUnit.Code)
                     select role;
 
