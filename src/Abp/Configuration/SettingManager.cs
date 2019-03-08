@@ -318,8 +318,8 @@ namespace Abp.Configuration
 
             if (settingDefinition.IsInherited)
             {
-                //For Tenant and User, Application's value overrides Setting Definition's default value.
-                if (tenantId.HasValue || userId.HasValue)
+                //For Tenant and User, Application's value overrides Setting Definition's default value when multi tenancy is enabled.
+                if (_multiTenancyConfig.IsEnabled && (tenantId.HasValue || userId.HasValue))
                 {
                     var applicationValue = await GetSettingValueForApplicationOrNullAsync(name);
                     if (applicationValue != null)

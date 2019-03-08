@@ -212,7 +212,6 @@ namespace Abp.Tests.Configuration
             value.ShouldBe("53");
         }
 
-        [CanBeNull]
         [Fact]
         public async Task Should_Get_Tenant_Setting_For_Application_Level_Setting_When_Multi_Tenancy_Is_Disabled()
         {
@@ -229,6 +228,29 @@ namespace Abp.Tests.Configuration
             // Assert
             var value = await settingManager.GetSettingValueForApplicationAsync(MyAllLevelsSetting);
             value.ShouldBe("53");
+        }
+
+        [Fact]
+        public async Task Should_Change_Setting_Value_When_Multi_Tenancy_Is_Disabled()
+        {
+            // Arrange
+            var session = CreateTestAbpSession(multiTenancyIsEnabled: false);
+
+            var settingManager = CreateSettingManager(multiTenancyIsEnabled: false);
+            settingManager.SettingStore = new MemorySettingStore();
+            settingManager.AbpSession = session;
+
+            //change setting value with "B"
+            await settingManager.ChangeSettingForApplicationAsync(MyAppLevelSetting, "B");
+
+            // it's ok
+            ( await settingManager.GetSettingValueForApplicationAsync(MyAppLevelSetting) ).ShouldBe("B");
+
+            //change setting with same value "B" again,
+            await settingManager.ChangeSettingForApplicationAsync(MyAppLevelSetting, "B");
+
+            //but was "A" ,that's wrong
+            ( await settingManager.GetSettingValueForApplicationAsync(MyAppLevelSetting) ).ShouldBe("B");
         }
 
         private static TestAbpSession CreateTestAbpSession(bool multiTenancyIsEnabled = true)
