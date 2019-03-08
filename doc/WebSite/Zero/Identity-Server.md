@@ -175,7 +175,7 @@ consent responses will be stored in an in-memory data store in that case
 
 If we want to authorize clients against the same application we can use the
 [IdentityServer authentication
-middleware](http://docs.identityserver.io/en/release/topics/apis.html?highlight=UseIdentityServerAuthentication#the-identityserver-authentication-middleware)
+middleware](https://identityserver4.readthedocs.io/en/latest/topics/apis.html?highlight=UseIdentityServerAuthentication#the-identityserver-authentication-middleware)
 for that.
 
 First, install the IdentityServer4.AccessTokenValidation package from NuGet
