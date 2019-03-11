@@ -337,7 +337,15 @@ namespace Abp.EntityHistory
                 return shouldSavePropertyHistoryForInfo.Value;
             }
 
-            var isModified = !(propertyEntry.OriginalValue?.Equals(propertyEntry.CurrentValue) ?? propertyEntry.CurrentValue == null);
+            var isModified = false;
+            if (propertyEntry.EntityEntry.State == EntityState.Added)
+            {
+                isModified = propertyEntry.CurrentValue != null;
+            }
+            else
+            {
+                isModified = !(propertyEntry.OriginalValue?.Equals(propertyEntry.CurrentValue) ?? propertyEntry.CurrentValue == null);
+            }
             if (isModified)
             {
                 return true;
