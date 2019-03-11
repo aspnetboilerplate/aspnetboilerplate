@@ -468,8 +468,7 @@ namespace Abp.Authorization.Roles
                 {
                     await AddToOrganizationUnitAsync(
                         role,
-                        await _organizationUnitRepository.GetAsync(organizationUnitId),
-                        role.TenantId
+                        await _organizationUnitRepository.GetAsync(organizationUnitId)
                     );
                 }
             }
@@ -490,23 +489,22 @@ namespace Abp.Authorization.Roles
                    ) > 0;
         }
 
-        public virtual async Task AddToOrganizationUnitAsync(int roleId, long ouId, int? tenantId)
+        public virtual async Task AddToOrganizationUnitAsync(int roleId, long ouId)
         {
             await AddToOrganizationUnitAsync(
                 await GetRoleByIdAsync(roleId),
-                await _organizationUnitRepository.GetAsync(ouId),
-                tenantId
+                await _organizationUnitRepository.GetAsync(ouId)
             );
         }
 
-        public virtual async Task AddToOrganizationUnitAsync(TRole role, OrganizationUnit ou, int? tenantId)
+        public virtual async Task AddToOrganizationUnitAsync(TRole role, OrganizationUnit ou)
         {
             if ( await IsInOrganizationUnitAsync(role, ou))
             {
                 return;
             }
 
-            await _organizationUnitRoleRepository.InsertAsync(new OrganizationUnitRole(tenantId, role.Id, ou.Id));
+            await _organizationUnitRoleRepository.InsertAsync(new OrganizationUnitRole(role.TenantId, role.Id, ou.Id));
         }
 
         public async Task RemoveFromOrganizationUnitAsync(int roleId, long organizationUnitId)
