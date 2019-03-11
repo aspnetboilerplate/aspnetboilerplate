@@ -1,4 +1,5 @@
 ﻿using System.Reflection;
+using Abp.AspNetCore.SignalR.Notifications;
 using Abp.Modules;
 
 namespace Abp.AspNetCore.SignalR
@@ -13,6 +14,8 @@ namespace Abp.AspNetCore.SignalR
         public override void Initialize()
         {
             IocManager.RegisterAssemblyByConvention(Assembly.GetExecutingAssembly());
+
+            Configuration.Notifications.Notifiers.Add<SignalRRealTimeNotifier>();
         }
     }
 }
