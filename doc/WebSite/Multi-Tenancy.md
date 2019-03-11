@@ -225,7 +225,7 @@ IMustHaveTenant:
     public class Product : Entity, IMustHaveTenant
     {
         public int TenantId { get; set; }
-    
+
         public string Name { get; set; }
     
         //...other properties
