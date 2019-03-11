@@ -185,7 +185,7 @@ Configuration.MultiTenancy.TenantIdResolveKey = "Abp-TenantId";
 
 You also need to configure it on the client side:
 
-````javascript
+````js
 abp.multiTenancy.tenantIdCookieName = 'Abp-TenantId';
 ````
 
