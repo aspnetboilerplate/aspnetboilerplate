@@ -417,19 +417,19 @@ namespace Abp.Authorization.Roles
             if (!includeChildren)
             {
                 var query = from uor in _organizationUnitRoleRepository.GetAll()
-                    join role in Roles on uor.RoleId equals role.Id
-                    where uor.OrganizationUnitId == organizationUnit.Id
-                    select role;
+                            join role in Roles on uor.RoleId equals role.Id
+                            where uor.OrganizationUnitId == organizationUnit.Id
+                            select role;
 
                 return Task.FromResult(query.ToList());
             }
             else
             {
                 var query = from uor in _organizationUnitRoleRepository.GetAll()
-                    join role in Roles on uor.RoleId equals role.Id
-                    join ou in _organizationUnitRepository.GetAll() on uor.OrganizationUnitId equals ou.Id
-                    where ou.Code.StartsWith(organizationUnit.Code)
-                    select role;
+                            join role in Roles on uor.RoleId equals role.Id
+                            join ou in _organizationUnitRepository.GetAll() on uor.OrganizationUnitId equals ou.Id
+                            where ou.Code.StartsWith(organizationUnit.Code)
+                            select role;
 
                 return Task.FromResult(query.ToList());
             }
@@ -499,7 +499,7 @@ namespace Abp.Authorization.Roles
 
         public virtual async Task AddToOrganizationUnitAsync(TRole role, OrganizationUnit ou)
         {
-            if ( await IsInOrganizationUnitAsync(role, ou))
+            if (await IsInOrganizationUnitAsync(role, ou))
             {
                 return;
             }

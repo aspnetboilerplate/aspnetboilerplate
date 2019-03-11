@@ -63,10 +63,10 @@ namespace Abp.Authorization.Roles
             IdentityErrorDescriber errors,
             ILogger<AbpRoleManager<TRole, TUser>> logger,
             IPermissionManager permissionManager,
-            ICacheManager cacheManager, 
+            ICacheManager cacheManager,
             IUnitOfWorkManager unitOfWorkManager,
-            IRoleManagementConfig roleManagementConfig, 
-            IRepository<OrganizationUnit, long> organizationUnitRepository, 
+            IRoleManagementConfig roleManagementConfig,
+            IRepository<OrganizationUnit, long> organizationUnitRepository,
             IRepository<OrganizationUnitRole, long> organizationUnitRoleRepository)
             : base(
                   store,
@@ -416,19 +416,19 @@ namespace Abp.Authorization.Roles
             if (!includeChildren)
             {
                 var query = from organizationUnitRole in _organizationUnitRoleRepository.GetAll()
-                    join role in Roles on organizationUnitRole.RoleId equals role.Id
-                    where organizationUnitRole.OrganizationUnitId == organizationUnit.Id
-                    select role;
+                            join role in Roles on organizationUnitRole.RoleId equals role.Id
+                            where organizationUnitRole.OrganizationUnitId == organizationUnit.Id
+                            select role;
 
                 return Task.FromResult(query.ToList());
             }
             else
             {
                 var query = from organizationUnitRole in _organizationUnitRoleRepository.GetAll()
-                    join role in Roles on organizationUnitRole.RoleId equals role.Id
-                    join ou in _organizationUnitRepository.GetAll() on organizationUnitRole.OrganizationUnitId equals ou.Id
-                    where ou.Code.StartsWith(organizationUnit.Code)
-                    select role;
+                            join role in Roles on organizationUnitRole.RoleId equals role.Id
+                            join ou in _organizationUnitRepository.GetAll() on organizationUnitRole.OrganizationUnitId equals ou.Id
+                            where ou.Code.StartsWith(organizationUnit.Code)
+                            select role;
 
                 return Task.FromResult(query.ToList());
             }
@@ -498,7 +498,7 @@ namespace Abp.Authorization.Roles
 
         public virtual async Task AddToOrganizationUnitAsync(TRole role, OrganizationUnit ou)
         {
-            if ( await IsInOrganizationUnitAsync(role, ou))
+            if (await IsInOrganizationUnitAsync(role, ou))
             {
                 return;
             }
@@ -523,9 +523,9 @@ namespace Abp.Authorization.Roles
         public virtual Task<List<OrganizationUnit>> GetOrganizationUnitsAsync(TRole role)
         {
             var query = from uor in _organizationUnitRoleRepository.GetAll()
-                join ou in _organizationUnitRepository.GetAll() on uor.OrganizationUnitId equals ou.Id
-                where uor.RoleId == role.Id
-                select ou;
+                        join ou in _organizationUnitRepository.GetAll() on uor.OrganizationUnitId equals ou.Id
+                        where uor.RoleId == role.Id
+                        select ou;
 
             return Task.FromResult(query.ToList());
         }
