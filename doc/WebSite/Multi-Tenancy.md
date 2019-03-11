@@ -183,7 +183,7 @@ By default, ASP.NET Boilerplate uses "Abp.TenantId" to find TenantId from Cookie
 Configuration.MultiTenancy.TenantIdResolveKey = "Abp-TenantId";
 ````
 
-You also need to configure it for the client side like below;
+You also need to configure it on the client side:
 
 ````javascript
 abp.multiTenancy.tenantIdCookieName = 'Abp-TenantId';
