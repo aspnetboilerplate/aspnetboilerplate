@@ -95,7 +95,7 @@ namespace Abp.EntityHistory
                     continue;
                 }
 
-                var entityChange = CreateEntityChange(entry, GetEntityKey(context, entry), shouldSaveEntityHistory);
+                var entityChange = CreateEntityChange(entry, GetEntityType(context, entry), shouldSaveEntityHistory);
                 if (entityChange == null)
                 {
                     continue;
@@ -129,7 +129,7 @@ namespace Abp.EntityHistory
         }
 
         [CanBeNull]
-        private EntityChange CreateEntityChange(DbEntityEntry entityEntry, EntityKey entityKey, bool shouldSaveEntityHistory)
+        private EntityChange CreateEntityChange(DbEntityEntry entityEntry, EntityType entityType, bool shouldSaveEntityHistory)
         {
             EntityChangeType changeType;
             switch (entityEntry.State)
@@ -150,21 +150,20 @@ namespace Abp.EntityHistory
                     return null;
             }
 
-            var entityId = GetEntityId(entityKey);
+            var entityId = GetEntityId(entityEntry, entityType);
             if (entityId == null && changeType != EntityChangeType.Created)
             {
                 Logger.Error("Unexpected null value for entityId!");
                 return null;
             }
 
-            var entityType = entityEntry.Entity.GetType();
             var entityChange = new EntityChange
             {
                 ChangeType = changeType,
                 EntityEntry = entityEntry, // [NotMapped]
                 EntityId = entityId,
                 EntityTypeFullName = entityType.FullName,
-                PropertyChanges = GetPropertyChanges(entityEntry, entityKey, shouldSaveEntityHistory),
+                PropertyChanges = GetPropertyChanges(entityEntry, entityType, shouldSaveEntityHistory),
                 TenantId = AbpSession.TenantId
             };
 
@@ -193,22 +192,27 @@ namespace Abp.EntityHistory
             }
         }
 
-        private EntityKey GetEntityKey(DbContext context, DbEntityEntry entry)
+        private EntityType GetEntityType(DbContext context, DbEntityEntry entityEntry)
         {
-            var objectStateEntry = ((IObjectContextAdapter)context).ObjectContext.ObjectStateManager.GetObjectStateEntry(entry.Entity);
-            return objectStateEntry.EntityKey;
+            var metadataWorkspace = ((IObjectContextAdapter)context).ObjectContext.MetadataWorkspace;
+            /* Get the mapping between Clr types and metadata OSpace */
+            var objectItemCollection = ((ObjectItemCollection)metadataWorkspace.GetItemCollection(DataSpace.OSpace));
+            /* Get metadata for given Clr type */
+            return metadataWorkspace
+                .GetItems<EntityType>(DataSpace.OSpace)
+                .Single(e => objectItemCollection.GetClrType(e) == entityEntry.Entity.GetType());
         }
 
-        private string GetEntityId(EntityKey entityKey)
+        private string GetEntityId(DbEntityEntry entityEntry, EntityType entityType)
         {
-            var primaryKeys = entityKey.EntityKeyValues;
-            return primaryKeys.First().Value?.ToJsonString();
+            var primaryKey = entityType.KeyProperties.First();
+            return entityEntry.Property(primaryKey.Name)?.CurrentValue?.ToJsonString();
         }
 
         /// <summary>
         /// Gets the property changes for this entry.
         /// </summary>
-        private ICollection<EntityPropertyChange> GetPropertyChanges(DbEntityEntry entityEntry, EntityKey entityKey, bool shouldSaveEntityHistory)
+        private ICollection<EntityPropertyChange> GetPropertyChanges(DbEntityEntry entityEntry, EntityType entityType, bool shouldSaveEntityHistory)
         {
             var propertyChanges = new List<EntityPropertyChange>();
             var propertyNames = entityEntry.CurrentValues.PropertyNames;
@@ -218,7 +222,7 @@ namespace Abp.EntityHistory
             foreach (var propertyName in propertyNames)
             {
                 var propertyEntry = entityEntry.Property(propertyName);
-                if (ShouldSavePropertyHistory(propertyEntry, entityKey, shouldSaveEntityHistory, isCreated || isDeleted))
+                if (ShouldSavePropertyHistory(propertyEntry, entityType, shouldSaveEntityHistory, isCreated || isDeleted))
                 {
                     var propertyInfo = entityEntry.Entity.GetType().GetProperty(propertyEntry.Name);
                     propertyChanges.Add(new EntityPropertyChange
@@ -312,14 +316,14 @@ namespace Abp.EntityHistory
             return null;
         }
 
-        private bool ShouldSavePropertyHistory(DbPropertyEntry propertyEntry, EntityKey entityKey, bool shouldSaveEntityHistory, bool defaultValue)
+        private bool ShouldSavePropertyHistory(DbPropertyEntry propertyEntry, EntityType entityType, bool shouldSaveEntityHistory, bool defaultValue)
         {
-            if (entityKey.EntityKeyValues.Any(k => k.Key ==  propertyEntry.Name))
+            if (entityType.KeyMembers.Any(k => k.Name ==  propertyEntry.Name))
             {
                 return false;
             }
 
-            var propertyInfo = propertyEntry.EntityEntry.GetType().GetProperty(propertyEntry.Name);
+            var propertyInfo = propertyEntry.EntityEntry.Entity.GetType().GetProperty(propertyEntry.Name);
 
             var shouldSavePropertyHistoryForInfo = ShouldSavePropertyHistoryForInfo(propertyInfo, shouldSaveEntityHistory);
             if (shouldSavePropertyHistoryForInfo.HasValue)
@@ -369,7 +373,7 @@ namespace Abp.EntityHistory
                 /* Update entity id */
 
                 var entityEntry = entityChange.EntityEntry.As<DbEntityEntry>();
-                entityChange.EntityId = GetEntityId(GetEntityKey(context, entityEntry));
+                entityChange.EntityId = GetEntityId(entityEntry, GetEntityType(context, entityEntry));
 
                 /* Update foreign keys */
 
