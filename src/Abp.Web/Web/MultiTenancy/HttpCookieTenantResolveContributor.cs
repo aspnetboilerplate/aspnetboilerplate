@@ -23,7 +23,7 @@ namespace Abp.Web.MultiTenancy
                 return null;
             }
 
-            return !int.TryParse(cookie.Value, out var tenantId) ? (int?) null : tenantId;
+            return int.TryParse(cookie.Value, out var tenantId) ? tenantId : (int?) null;
         }
     }
 }

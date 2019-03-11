@@ -27,7 +27,8 @@ namespace Abp.Configuration.Startup
         ITypeList<ITenantResolveContributor> Resolvers { get; }
 
         /// <summary>
-        /// TenantId resolve key, default value is Abp.TenantId
+        /// TenantId resolve key
+        /// Default value: "Abp.TenantId"
         /// </summary>
         string TenantIdResolveKey { get; set; }
     }

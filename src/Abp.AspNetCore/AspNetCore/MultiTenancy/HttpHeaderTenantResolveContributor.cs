@@ -46,7 +46,7 @@ namespace Abp.AspNetCore.MultiTenancy
                     );
             }
 
-            return !int.TryParse(tenantIdHeader.First(), out var tenantId) ? (int?) null : tenantId;
+            return int.TryParse(tenantIdHeader.First(), out var tenantId) ? tenantId : (int?) null;
         }
     }
 }
