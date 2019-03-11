@@ -224,6 +224,10 @@ namespace Abp.EntityHistory
             foreach (var propertyName in propertyNames)
             {
                 var propertyEntry = entityEntry.Property(propertyName);
+                if (propertyEntry is DbComplexPropertyEntry)
+                {
+                    continue;
+                }
                 if (ShouldSavePropertyHistory(propertyEntry, entityType, shouldSaveEntityHistory, isCreated || isDeleted))
                 {
                     var propertyInfo = entityEntry.Entity.GetType().GetProperty(propertyEntry.Name);
