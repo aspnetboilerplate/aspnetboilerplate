@@ -23,7 +23,7 @@ namespace Abp.Zero.SampleApp.Tests.Roles
             var role = await CreateRole("role_1");
 
             //Act
-            await RoleManager.AddToOrganizationUnitAsync(role, ou2, AbpSession.TenantId);
+            await RoleManager.AddToOrganizationUnitAsync(role, ou2);
 
             //Assert
             (await RoleManager.IsInOrganizationUnitAsync(role, ou2)).ShouldBe(true);
@@ -52,7 +52,7 @@ namespace Abp.Zero.SampleApp.Tests.Roles
             var role = await CreateRole("role_1");
             var ou11 = GetOu("OU11");
 
-            await RoleManager.AddToOrganizationUnitAsync(role, ou11, AbpSession.TenantId);
+            await RoleManager.AddToOrganizationUnitAsync(role, ou11);
             (await RoleManager.IsInOrganizationUnitAsync(role, ou11)).ShouldBe(true);
 
             //Act
