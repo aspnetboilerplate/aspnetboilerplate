@@ -1,4 +1,5 @@
 ﻿using System.Web;
+using Abp.Configuration.Startup;
 using Abp.Dependency;
 using Abp.Extensions;
 using Abp.MultiTenancy;
@@ -10,8 +11,12 @@ namespace Abp.Web.MultiTenancy
     {
         public ILogger Logger { get; set; }
 
-        public HttpHeaderTenantResolveContributor()
+        private readonly IMultiTenancyConfig _multiTenancyConfig;
+
+        public HttpHeaderTenantResolveContributor(IMultiTenancyConfig multiTenancyConfig)
         {
+            _multiTenancyConfig = multiTenancyConfig;
+
             Logger = NullLogger.Instance;
         }
 
@@ -23,14 +28,13 @@ namespace Abp.Web.MultiTenancy
                 return null;
             }
 
-            var tenantIdHeader = httpContext.Request.Headers[MultiTenancyConsts.TenantIdResolveKey];
+            var tenantIdHeader = httpContext.Request.Headers[_multiTenancyConfig.TenantIdResolveKey];
             if (tenantIdHeader.IsNullOrEmpty())
             {
                 return null;
             }
 
-            int tenantId;
-            return !int.TryParse(tenantIdHeader, out tenantId) ? (int?) null : tenantId;
+            return int.TryParse(tenantIdHeader, out var tenantId) ? tenantId : (int?) null;
         }
     }
 }

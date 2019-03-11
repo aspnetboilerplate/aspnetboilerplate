@@ -25,5 +25,11 @@ namespace Abp.Configuration.Startup
         /// A list of contributors for tenant resolve process.
         /// </summary>
         ITypeList<ITenantResolveContributor> Resolvers { get; }
+
+        /// <summary>
+        /// TenantId resolve key
+        /// Default value: "Abp.TenantId"
+        /// </summary>
+        string TenantIdResolveKey { get; set; }
     }
 }
