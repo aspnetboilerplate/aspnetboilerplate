@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Data.Entity;
 using System.Data.Entity.Core;
 using System.Data.Entity.Core.Metadata.Edm;
+using System.Data.Entity.Core.Objects;
 using System.Data.Entity.Infrastructure;
 using System.Linq;
 using System.Reflection;
@@ -198,9 +199,10 @@ namespace Abp.EntityHistory
             /* Get the mapping between Clr types and metadata OSpace */
             var objectItemCollection = ((ObjectItemCollection)metadataWorkspace.GetItemCollection(DataSpace.OSpace));
             /* Get metadata for given Clr type */
+            var entityBaseType = ObjectContext.GetObjectType(entityEntry.Entity.GetType());
             return metadataWorkspace
                 .GetItems<EntityType>(DataSpace.OSpace)
-                .Single(e => objectItemCollection.GetClrType(e) == entityEntry.Entity.GetType());
+                .Single(e => objectItemCollection.GetClrType(e) == entityBaseType);
         }
 
         private string GetEntityId(DbEntityEntry entityEntry, EntityType entityType)
@@ -377,14 +379,8 @@ namespace Abp.EntityHistory
 
                 /* Update foreign keys */
 
-                var metadataWorkspace = ((IObjectContextAdapter)context).ObjectContext.MetadataWorkspace;
-                /* Get the mapping between Clr types and metadata OSpace */
-                var objectItemCollection = ((ObjectItemCollection)metadataWorkspace.GetItemCollection(DataSpace.OSpace));
-                /* Get metadata for given Clr type */
-                var entityMetadata = metadataWorkspace
-                    .GetItems<EntityType>(DataSpace.OSpace)
-                    .Single(e => objectItemCollection.GetClrType(e) == entityEntry.Entity.GetType());
-                var foreignKeys = entityMetadata.NavigationProperties;
+                var entityType = GetEntityType(context, entityEntry);
+                var foreignKeys = entityType.NavigationProperties;
 
                 foreach (var foreignKey in foreignKeys)
                 {
