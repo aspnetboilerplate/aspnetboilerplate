@@ -23,6 +23,7 @@ namespace Abp.Zero.SampleApp.Tests.TestDatas
             new InitialTestOrganizationUnitsBuilder(_context).Build();
             new InitialUserOrganizationUnitsBuilder(_context).Build();
             new InitialOrganizationUnitRolesBuilder(_context).Build();
+            new InitialTestBlogBuilder(_context).Build();
         }
     }
 }
