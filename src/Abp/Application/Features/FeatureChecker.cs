@@ -9,7 +9,7 @@ namespace Abp.Application.Features
     /// <summary>
     /// Default implementation for <see cref="IFeatureChecker"/>.
     /// </summary>
-    public class FeatureChecker : IFeatureChecker, ITransientDependency
+    public class FeatureChecker : IFeatureChecker, ITransientDependency, IIocManagerAccessor
     {
         /// <summary>
         /// Reference to the current session.
@@ -20,6 +20,8 @@ namespace Abp.Application.Features
         /// Reference to the store used to get feature values.
         /// </summary>
         public IFeatureValueStore FeatureValueStore { get; set; }
+
+        public IIocManager IocManager { get; set; }
 
         private readonly IFeatureManager _featureManager;
         private readonly IMultiTenancyConfig _multiTenancyConfig;
