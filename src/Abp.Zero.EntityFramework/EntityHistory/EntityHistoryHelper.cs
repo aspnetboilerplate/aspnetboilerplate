@@ -234,6 +234,7 @@ namespace Abp.EntityHistory
                 .Single(e => e.ElementType.Name == entityType.Name);
         }
 
+        [CanBeNull]
         private string GetEntityId(DbEntityEntry entityEntry, EntityType entityType)
         {
             var primaryKey = entityType.KeyProperties.First();
@@ -327,7 +328,7 @@ namespace Abp.EntityHistory
                     .FirstOrDefault();
                 if (navigationPropertyName == null)
                 {
-                    Logger.ErrorFormat("Unexpected navigation property for relationship {0}", relationshipName);
+                    Logger.ErrorFormat("Unable to find navigation property for relationship {0}", relationshipName);
                     continue;
                 }
 
@@ -446,10 +447,31 @@ namespace Abp.EntityHistory
             {
                 isModified = propertyEntry.CurrentValue != null;
             }
+            else if (propertyEntry.EntityEntry.State == EntityState.Deleted)
+            {
+                isModified = propertyEntry.OriginalValue != null;
+            }
             else
             {
-                isModified = !(propertyEntry.OriginalValue?.Equals(propertyEntry.CurrentValue) ?? propertyEntry.CurrentValue == null);
+                isModified = !(propertyEntry.OriginalValue?.Equals(propertyEntry.CurrentValue)) ?? false;
             }
+            if (isModified)
+            {
+                return true;
+            }
+
+            return defaultValue;
+        }
+
+        private bool ShouldSaveRelationshipHistory(ICollection<ObjectStateEntry> relationshipChanges, PropertyInfo propertyInfo, bool shouldSaveEntityHistory, bool defaultValue)
+        {
+            var shouldSavePropertyHistoryForInfo = ShouldSavePropertyHistoryForInfo(propertyInfo, shouldSaveEntityHistory);
+            if (shouldSavePropertyHistoryForInfo.HasValue)
+            {
+                return shouldSavePropertyHistoryForInfo.Value;
+            }
+
+            var isModified = relationshipChanges.Any(change => change.State == EntityState.Added || change.State == EntityState.Deleted);
             if (isModified)
             {
                 return true;
@@ -491,7 +513,7 @@ namespace Abp.EntityHistory
                 /* Update entity id */
 
                 var entityEntry = entityChange.EntityEntry.As<DbEntityEntry>();
-                var entityType = GetEntityType(context.As<ObjectContext>(), GetEntityBaseType(entityEntry));
+                var entityType = GetEntityType(context.As<IObjectContextAdapter>().ObjectContext, GetEntityBaseType(entityEntry));
                 entityChange.EntityId = GetEntityId(entityEntry, entityType);
 
                 /* Update foreign keys */

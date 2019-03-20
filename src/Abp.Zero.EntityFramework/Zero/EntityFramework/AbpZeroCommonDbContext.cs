@@ -8,14 +8,13 @@ using Abp.Authorization.Roles;
 using Abp.Authorization.Users;
 using Abp.Configuration;
 using Abp.EntityFramework;
+using Abp.EntityFramework.Extensions;
 using Abp.EntityHistory;
 using Abp.Localization;
 using Abp.Notifications;
 using Abp.Organizations;
-using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
-using Abp.EntityFramework.Extensions;
 
 namespace Abp.Zero.EntityFramework
 {

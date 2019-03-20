@@ -143,8 +143,6 @@ namespace Abp.Zero.SampleApp.Tests.EntityHistory
             /* Post.BlogId has Audited attribute. */
 
             var blogId = CreateBlogAndGetId();
-            _entityHistoryStore.ClearReceivedCalls();
-
             Guid post1Id;
 
             using (var uow = Resolve<IUnitOfWorkManager>().Begin())
