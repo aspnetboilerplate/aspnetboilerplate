@@ -88,15 +88,36 @@ namespace Abp.EntityHistory
                 return changeSet;
             }
 
-            foreach (var entry in context.ChangeTracker.Entries())
+            var objectContext = ((IObjectContextAdapter)context).ObjectContext;
+            var relationshipChanges = objectContext.ObjectStateManager
+                .GetObjectStateEntries(EntityState.Added | EntityState.Deleted)
+                .Where(state => state.IsRelationship)
+                .ToList();
+            foreach (var entityEntry in context.ChangeTracker.Entries())
             {
-                var shouldSaveEntityHistory = ShouldSaveEntityHistory(entry);
-                if (!shouldSaveEntityHistory && !HasAuditedProperties(entry))
+                var shouldSaveEntityHistory = ShouldSaveEntityHistory(entityEntry);
+                if (!shouldSaveEntityHistory && !HasAuditedProperties(entityEntry))
                 {
                     continue;
                 }
+                
+                var entityBaseType = GetEntityBaseType(entityEntry);
+                var entityType = GetEntityType(objectContext, entityBaseType);
+                var entitySet = GetEntitySet(objectContext, entityType);
+                var entityChange = CreateEntityChange(entityEntry, entityType);
+                if (entityChange != null)
+                {
+                    var propertyChanges = new List<EntityPropertyChange>();
+                    propertyChanges.AddRange(GetPropertyChanges(entityEntry, entityType, shouldSaveEntityHistory));
+                    propertyChanges.AddRange(GetRelationshipChanges(entityEntry, entityType, entitySet, relationshipChanges, shouldSaveEntityHistory));
+                    entityChange.PropertyChanges = propertyChanges;
+                    
+                    if (!shouldSaveEntityHistory && entityChange.PropertyChanges.Count == 0)
+                    {
+                        continue;
+                    }
+                }
 
-                var entityChange = CreateEntityChange(entry, GetEntityType(context, entry), shouldSaveEntityHistory);
                 if (entityChange == null)
                 {
                     continue;
@@ -130,7 +151,7 @@ namespace Abp.EntityHistory
         }
 
         [CanBeNull]
-        private EntityChange CreateEntityChange(DbEntityEntry entityEntry, EntityType entityType, bool shouldSaveEntityHistory)
+        private EntityChange CreateEntityChange(DbEntityEntry entityEntry, EntityType entityType)
         {
             EntityChangeType changeType;
             switch (entityEntry.State)
@@ -164,14 +185,8 @@ namespace Abp.EntityHistory
                 EntityEntry = entityEntry, // [NotMapped]
                 EntityId = entityId,
                 EntityTypeFullName = entityType.FullName,
-                PropertyChanges = GetPropertyChanges(entityEntry, entityType, shouldSaveEntityHistory),
                 TenantId = AbpSession.TenantId
             };
-
-            if (!shouldSaveEntityHistory && entityChange.PropertyChanges.Count == 0)
-            {
-                return null;
-            }
 
             return entityChange;
         }
