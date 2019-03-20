@@ -429,15 +429,8 @@ namespace Abp.EntityHistory
             return null;
         }
 
-        private bool ShouldSavePropertyHistory(DbPropertyEntry propertyEntry, EntityType entityType, bool shouldSaveEntityHistory, bool defaultValue)
+        private bool ShouldSavePropertyHistory(DbPropertyEntry propertyEntry, PropertyInfo propertyInfo, bool shouldSaveEntityHistory, bool defaultValue)
         {
-            if (entityType.KeyMembers.Any(k => k.Name ==  propertyEntry.Name))
-            {
-                return false;
-            }
-
-            var propertyInfo = propertyEntry.EntityEntry.Entity.GetType().GetProperty(propertyEntry.Name);
-
             var shouldSavePropertyHistoryForInfo = ShouldSavePropertyHistoryForInfo(propertyInfo, shouldSaveEntityHistory);
             if (shouldSavePropertyHistoryForInfo.HasValue)
             {
