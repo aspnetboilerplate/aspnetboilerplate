@@ -94,17 +94,17 @@ namespace Abp.Web.Navigation
 
             if (!string.IsNullOrEmpty(menuItem.Icon))
             {
-                sb.AppendLine(new string(' ', indentLength + 4) + "icon: '" + HttpEncode.JavaScriptStringEncode(menuItem.Icon.Replace("'", @"\'")) + "',");
+                sb.AppendLine(new string(' ', indentLength + 4) + "icon: '" + HttpEncode.JavaScriptStringEncode(menuItem.Icon) + "',");
             }
 
             if (!string.IsNullOrEmpty(menuItem.Url))
             {
-                sb.AppendLine(new string(' ', indentLength + 4) + "url: '" + HttpEncode.JavaScriptStringEncode(menuItem.Url.Replace("'", @"\'")) + "',");
+                sb.AppendLine(new string(' ', indentLength + 4) + "url: '" + HttpEncode.JavaScriptStringEncode(menuItem.Url) + "',");
             }
 
             if (menuItem.DisplayName != null)
             {
-                sb.AppendLine(new string(' ', indentLength + 4) + "displayName: '" + HttpEncode.JavaScriptStringEncode(menuItem.DisplayName.Replace("'", @"\'")) + "',");
+                sb.AppendLine(new string(' ', indentLength + 4) + "displayName: '" + HttpEncode.JavaScriptStringEncode(menuItem.DisplayName) + "',");
             }
 
             if (menuItem.CustomData != null)
@@ -114,7 +114,7 @@ namespace Abp.Web.Navigation
 
             if (menuItem.Target != null)
             {
-                sb.AppendLine(new string(' ', indentLength + 4) + "target: '" + HttpEncode.JavaScriptStringEncode(menuItem.Target.Replace("'", @"\'")) + "',");
+                sb.AppendLine(new string(' ', indentLength + 4) + "target: '" + HttpEncode.JavaScriptStringEncode(menuItem.Target) + "',");
             }
 
             sb.AppendLine(new string(' ', indentLength + 4) + "isEnabled: " + menuItem.IsEnabled.ToString().ToLowerInvariant() + ",");
