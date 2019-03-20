@@ -173,10 +173,15 @@ namespace Abp.Zero.SampleApp.Tests.EntityHistory
         {
             /* Comment has Audited attribute. */
 
+            var post1KeyValue = new Dictionary<string, object>();
+            var post2KeyValue = new Dictionary<string, object>();
+
             using (var uow = Resolve<IUnitOfWorkManager>().Begin())
             {
                 var comment1 = _commentRepository.Single(b => b.Content == "test-comment-1-content");
                 var post2 = _postRepository.Single(b => b.Body == "test-post-2-body");
+                post1KeyValue.Add("Id", comment1.Post.Id);
+                post2KeyValue.Add("Id", post2.Id);
 
                 // Change foreign key by assigning navigation property
                 comment1.Post = post2;
@@ -188,7 +193,10 @@ namespace Abp.Zero.SampleApp.Tests.EntityHistory
             _entityHistoryStore.Received().SaveAsync(Arg.Is<EntityChangeSet>(
                 s => s.EntityChanges.Count == 1 &&
                      s.EntityChanges[0].PropertyChanges.Count == 1 &&
-                     s.EntityChanges[0].PropertyChanges.First().PropertyName == "PostId"
+                     s.EntityChanges[0].PropertyChanges.First().PropertyName == "Post" &&
+                     s.EntityChanges[0].PropertyChanges.First().PropertyTypeFullName == typeof(Post).FullName &&
+                     s.EntityChanges[0].PropertyChanges.First().NewValue == post2KeyValue.ToJsonString(false, false) &&
+                     s.EntityChanges[0].PropertyChanges.First().OriginalValue == post1KeyValue.ToJsonString(false, false)
             ));
         }
 
