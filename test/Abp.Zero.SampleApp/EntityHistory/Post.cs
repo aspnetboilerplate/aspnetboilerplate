@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using Abp.Auditing;
 using Abp.Domain.Entities.Auditing;
@@ -10,6 +11,8 @@ namespace Abp.Zero.SampleApp.EntityHistory
     {
         [Required]
         public virtual Blog Blog { get; set; }
+
+        public virtual ICollection<Comment> Comments { get; set; }
 
         [Audited]
         public int BlogId { get; set; }

@@ -34,6 +34,8 @@ namespace Abp.Zero.SampleApp.EntityFramework
         {
             base.OnModelCreating(modelBuilder);
 
+            modelBuilder.Entity<Comment>().HasRequired(e => e.Post).WithMany(e => e.Comments);
+
             modelBuilder.Entity<Book>().ToTable("Books");
             modelBuilder.Entity<Book>().Property(e => e.Id).HasDatabaseGeneratedOption(DatabaseGeneratedOption.Identity);
 

@@ -6,7 +6,7 @@ namespace Abp.Zero.SampleApp.EntityHistory
     [Audited]
     public class Comment : Entity
     {
-        public Post Post { get; set; }
+        public virtual Post Post { get; set; }
 
         public string Content { get; set; }
     }
