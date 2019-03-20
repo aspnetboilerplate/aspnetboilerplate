@@ -184,7 +184,7 @@ namespace Abp.EntityHistory
                 ChangeType = changeType,
                 EntityEntry = entityEntry, // [NotMapped]
                 EntityId = entityId,
-                EntityTypeFullName = entityType.FullName,
+                EntityTypeFullName = GetEntityBaseType(entityEntry).FullName,
                 TenantId = AbpSession.TenantId
             };
 
@@ -310,14 +310,13 @@ namespace Abp.EntityHistory
                 return false;
             }
 
-            var entityType = entityEntry.Entity.GetType();
-
-            if (!EntityHelper.IsEntity(entityType))
+            var entityBaseType = GetEntityBaseType(entityEntry);
+            if (!EntityHelper.IsEntity(entityBaseType))
             {
                 return false;
             }
 
-            var shouldSaveEntityHistoryForType = ShouldSaveEntityHistoryForType(entityType);
+            var shouldSaveEntityHistoryForType = ShouldSaveEntityHistoryForType(entityBaseType);
             if (shouldSaveEntityHistoryForType.HasValue)
             {
                 return shouldSaveEntityHistoryForType.Value;
@@ -416,11 +415,12 @@ namespace Abp.EntityHistory
                 /* Update entity id */
 
                 var entityEntry = entityChange.EntityEntry.As<DbEntityEntry>();
-                entityChange.EntityId = GetEntityId(entityEntry, GetEntityType(context, entityEntry));
+                var entityType = GetEntityType(context.As<ObjectContext>(), GetEntityBaseType(entityEntry));
+                entityChange.EntityId = GetEntityId(entityEntry, entityType);
 
                 /* Update foreign keys */
 
-                var entityType = GetEntityType(context, entityEntry);
+                
                 var foreignKeys = entityType.NavigationProperties;
 
                 foreach (var foreignKey in foreignKeys)
