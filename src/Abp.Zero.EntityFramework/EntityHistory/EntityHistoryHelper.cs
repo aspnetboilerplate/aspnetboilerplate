@@ -335,12 +335,14 @@ namespace Abp.EntityHistory
                 var propertyInfo = GetEntityBaseType(entityEntry).GetProperty(navigationPropertyName);
                 if (ShouldSaveRelationshipHistory(entityRelationshipChanges, propertyInfo, shouldSaveEntityHistory, isCreated || isDeleted))
                 {
-                    var added = relationship.FirstOrDefault(p => p.Item2 == EntityState.Added);
-                    var deleted = relationship.FirstOrDefault(p => p.Item2 == EntityState.Deleted);
+                    var addedRelationship = relationship.FirstOrDefault(p => p.Item2 == EntityState.Added);
+                    var deletedRelationship = relationship.FirstOrDefault(p => p.Item2 == EntityState.Deleted);
+                    var newValue = addedRelationship?.Item3.EntityKeyValues.ToDictionary(keyValue => keyValue.Key, keyValue => keyValue.Value);
+                    var oldValue = deletedRelationship?.Item3.EntityKeyValues.ToDictionary(keyValue => keyValue.Key, keyValue => keyValue.Value);
                     propertyChanges.Add(new EntityPropertyChange
                     {
-                        NewValue = added?.Item3.EntityKeyValues.ToJsonString().TruncateWithPostfix(EntityPropertyChange.MaxValueLength),
-                        OriginalValue = deleted?.Item3.EntityKeyValues.ToJsonString().TruncateWithPostfix(EntityPropertyChange.MaxValueLength),
+                        NewValue = newValue?.ToJsonString().TruncateWithPostfix(EntityPropertyChange.MaxValueLength),
+                        OriginalValue = oldValue?.ToJsonString().TruncateWithPostfix(EntityPropertyChange.MaxValueLength),
                         PropertyName = navigationPropertyName,
                         PropertyTypeFullName = propertyInfo.PropertyType.FullName,
                         TenantId = AbpSession.TenantId
