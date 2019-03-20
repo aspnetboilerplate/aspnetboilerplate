@@ -246,25 +246,101 @@ namespace Abp.EntityHistory
         private ICollection<EntityPropertyChange> GetPropertyChanges(DbEntityEntry entityEntry, EntityType entityType, bool shouldSaveEntityHistory)
         {
             var propertyChanges = new List<EntityPropertyChange>();
-            var propertyNames = entityEntry.CurrentValues.PropertyNames;
+            var propertyNames = entityType.Members.Select(e => e.Name);
             var isCreated = IsCreated(entityEntry);
             var isDeleted = IsDeleted(entityEntry);
-
+            
             foreach (var propertyName in propertyNames)
             {
-                var propertyEntry = entityEntry.Property(propertyName);
-                if (propertyEntry is DbComplexPropertyEntry)
+                if (entityType.KeyMembers.Any(m => m.Name == propertyName))
                 {
                     continue;
                 }
-                if (ShouldSavePropertyHistory(propertyEntry, entityType, shouldSaveEntityHistory, isCreated || isDeleted))
+
+                var memberEntry = entityEntry.Member(propertyName);
+                if (!(memberEntry is DbPropertyEntry))
                 {
-                    var propertyInfo = entityEntry.Entity.GetType().GetProperty(propertyEntry.Name);
+                    continue;
+                }
+
+                var propertyEntry = memberEntry as DbPropertyEntry;
+                var propertyInfo = GetEntityBaseType(propertyEntry.EntityEntry).GetProperty(propertyEntry.Name);
+                if (ShouldSavePropertyHistory(propertyEntry, propertyInfo, shouldSaveEntityHistory, isCreated || isDeleted))
+                {
                     propertyChanges.Add(new EntityPropertyChange
                     {
                         NewValue = isDeleted ? null : propertyEntry.CurrentValue.ToJsonString().TruncateWithPostfix(EntityPropertyChange.MaxValueLength),
                         OriginalValue = isCreated ? null : propertyEntry.OriginalValue.ToJsonString().TruncateWithPostfix(EntityPropertyChange.MaxValueLength),
-                        PropertyName = propertyEntry.Name,
+                        PropertyName = propertyName,
+                        PropertyTypeFullName = propertyInfo.PropertyType.FullName,
+                        TenantId = AbpSession.TenantId
+                    });
+                }
+            }
+
+            return propertyChanges;
+        }
+
+        /// <summary>
+        /// Gets the property changes for this entry.
+        /// </summary>
+        private ICollection<EntityPropertyChange> GetRelationshipChanges(DbEntityEntry entityEntry, EntityType entityType, EntitySet entitySet, ICollection<ObjectStateEntry> relationshipChanges, bool shouldSaveEntityHistory)
+        {
+            var propertyChanges = new List<EntityPropertyChange>();
+            var navigationProperties = entityType.NavigationProperties;
+
+            var isCreated = IsCreated(entityEntry);
+            var isDeleted = IsDeleted(entityEntry);
+
+            // Filter out relationship changes that are irrelevant to current entry
+            var entityRelationshipChanges = relationshipChanges
+                .Where(change => change.EntitySet is AssociationSet)
+                .Where(change => change.EntitySet.As<AssociationSet>()
+                    .AssociationSetEnds
+                    .Select(set => set.EntitySet.ElementType.FullName).Contains(entitySet.ElementType.FullName)
+                )
+                .ToList();
+
+            var relationshipGroups = entityRelationshipChanges
+                .SelectMany(change =>
+                {
+                    var values = change.State == EntityState.Added ? change.CurrentValues : change.OriginalValues;
+                    var valuesChangeSet = new object[values.FieldCount];
+                    values.GetValues(valuesChangeSet);
+                    
+                    return valuesChangeSet
+                        .Select(value => ((EntityKey)value))
+                        .Where(value => value.EntitySetName != entitySet.Name)
+                        .Select(value => new Tuple<string, EntityState, EntityKey>(change.EntitySet.Name, change.State, value));
+                })
+                .GroupBy(t =>
+                {
+                    return t.Item1;
+                });
+
+            foreach(var relationship in relationshipGroups)
+            {
+                var relationshipName = relationship.Key;
+                var navigationPropertyName = navigationProperties
+                    .Where(p => p.RelationshipType.Name == relationshipName)
+                    .Select(p => p.Name)
+                    .FirstOrDefault();
+                if (navigationPropertyName == null)
+                {
+                    Logger.ErrorFormat("Unexpected navigation property for relationship {0}", relationshipName);
+                    continue;
+                }
+
+                var propertyInfo = GetEntityBaseType(entityEntry).GetProperty(navigationPropertyName);
+                if (ShouldSaveRelationshipHistory(entityRelationshipChanges, propertyInfo, shouldSaveEntityHistory, isCreated || isDeleted))
+                {
+                    var added = relationship.FirstOrDefault(p => p.Item2 == EntityState.Added);
+                    var deleted = relationship.FirstOrDefault(p => p.Item2 == EntityState.Deleted);
+                    propertyChanges.Add(new EntityPropertyChange
+                    {
+                        NewValue = added?.Item3.EntityKeyValues.ToJsonString().TruncateWithPostfix(EntityPropertyChange.MaxValueLength),
+                        OriginalValue = deleted?.Item3.EntityKeyValues.ToJsonString().TruncateWithPostfix(EntityPropertyChange.MaxValueLength),
+                        PropertyName = navigationPropertyName,
                         PropertyTypeFullName = propertyInfo.PropertyType.FullName,
                         TenantId = AbpSession.TenantId
                     });
