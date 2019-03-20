@@ -193,16 +193,30 @@ namespace Abp.EntityHistory
             }
         }
 
-        private EntityType GetEntityType(DbContext context, DbEntityEntry entityEntry)
+        private Type GetEntityBaseType(DbEntityEntry entityEntry)
         {
-            var metadataWorkspace = ((IObjectContextAdapter)context).ObjectContext.MetadataWorkspace;
-            /* Get the mapping between Clr types and metadata OSpace */
+            return ObjectContext.GetObjectType(entityEntry.Entity.GetType());
+        }
+
+        private EntityType GetEntityType(ObjectContext context, Type entityClrType)
+        {
+            var metadataWorkspace = context.MetadataWorkspace;
+            /* Get the mapping between Clr types in OSpace */
             var objectItemCollection = ((ObjectItemCollection)metadataWorkspace.GetItemCollection(DataSpace.OSpace));
-            /* Get metadata for given Clr type */
-            var entityBaseType = ObjectContext.GetObjectType(entityEntry.Entity.GetType());
             return metadataWorkspace
                 .GetItems<EntityType>(DataSpace.OSpace)
-                .Single(e => objectItemCollection.GetClrType(e) == entityBaseType);
+                .Single(e => objectItemCollection.GetClrType(e) == entityClrType);
+        }
+
+        private EntitySet GetEntitySet(ObjectContext context, EntityType entityType)
+        {
+            var metadataWorkspace = context.MetadataWorkspace;
+            /* Get the mapping between entity set/type in CSpace */
+            return metadataWorkspace
+                .GetItems<EntityContainer>(DataSpace.CSpace)
+                .Single()
+                .EntitySets
+                .Single(e => e.ElementType.Name == entityType.Name);
         }
 
         private string GetEntityId(DbEntityEntry entityEntry, EntityType entityType)
