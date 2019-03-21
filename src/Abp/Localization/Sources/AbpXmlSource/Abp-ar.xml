@@ -16,6 +16,9 @@
     <text name="TimeZone">المنطقة الزمنية</text>
     <text name="AllOfThesePermissionsMustBeGranted">لم يتم منح التصاريح المطلوبة. يجب أن يتم منح كل من هذه التصاريح: {0}</text>
     <text name="AtLeastOneOfThesePermissionsMustBeGranted">لم يتم منح التصاريح المطلوبة. يجب منح واحد على الأقل من هذه التصاريح: {0}</text>
+    <text name="FeatureIsNotEnabled">لم يتم تمكين الميزة: {0}</text>
+    <text name="AllOfTheseFeaturesMustBeEnabled">الميزات المطلوبة غير ممكّنة. يجب تمكين كل هذه الميزات: {0}</text>
+    <text name="AtLeastOneOfTheseFeaturesMustBeEnabled">الميزات المطلوبة غير ممكّنة. يجب تمكين واحدة على الأقل من هذه الميزات: {0}</text>
     <text name="MainMenu">القائمة الرئيسية</text>
   </texts>
 </localizationDictionary>

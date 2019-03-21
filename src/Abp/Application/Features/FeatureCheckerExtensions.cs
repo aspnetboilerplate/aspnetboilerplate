@@ -1,6 +1,8 @@
 using System.Threading.Tasks;
 using Abp.Authorization;
 using Abp.Collections.Extensions;
+using Abp.Dependency;
+using Abp.Localization;
 using Abp.Runtime.Session;
 using Abp.Threading;
 
@@ -173,7 +175,14 @@ namespace Abp.Application.Features
         {
             if (!(await featureChecker.IsEnabledAsync(featureName)))
             {
-                throw new AbpAuthorizationException("Feature is not enabled: " + featureName);
+                throw new AbpAuthorizationException(string.Format(
+                    L(
+                        featureChecker,
+                        "FeatureIsNotEnabled",
+                        "Feature is not enabled: {0}"
+                    ),
+                    featureName
+                ));
             }
         }
 
@@ -186,7 +195,14 @@ namespace Abp.Application.Features
         {
             if (!featureChecker.IsEnabled(featureName))
             {
-                throw new AbpAuthorizationException("Feature is not enabled: " + featureName);
+                throw new AbpAuthorizationException(string.Format(
+                    L(
+                        featureChecker,
+                        "FeatureIsNotEnabled",
+                        "Feature is not enabled: {0}"
+                    ),
+                    featureName
+                ));
             }
         }
 
@@ -210,9 +226,15 @@ namespace Abp.Application.Features
                     if (!(await featureChecker.IsEnabledAsync(featureName)))
                     {
                         throw new AbpAuthorizationException(
-                            "Required features are not enabled. All of these features must be enabled: " +
-                            string.Join(", ", featureNames)
-                            );
+                            string.Format(
+                                L(
+                                    featureChecker,
+                                    "AllOfTheseFeaturesMustBeEnabled",
+                                    "Required features are not enabled. All of these features must be enabled: {0}"
+                                ),
+                                string.Join(", ", featureNames)
+                            )
+                        );
                     }
                 }
             }
@@ -227,9 +249,15 @@ namespace Abp.Application.Features
                 }
 
                 throw new AbpAuthorizationException(
-                    "Required features are not enabled. At least one of these features must be enabled: " +
-                    string.Join(", ", featureNames)
-                    );
+                    string.Format(
+                        L(
+                            featureChecker,
+                            "AtLeastOneOfTheseFeaturesMustBeEnabled",
+                            "Required features are not enabled. At least one of these features must be enabled: {0}"
+                        ),
+                        string.Join(", ", featureNames)
+                    )
+                );
             }
         }
 
@@ -254,9 +282,15 @@ namespace Abp.Application.Features
                     if (!(await featureChecker.IsEnabledAsync(tenantId, featureName)))
                     {
                         throw new AbpAuthorizationException(
-                            "Required features are not enabled. All of these features must be enabled: " +
-                            string.Join(", ", featureNames)
-                            );
+                            string.Format(
+                                L(
+                                    featureChecker,
+                                    "AllOfTheseFeaturesMustBeEnabled",
+                                    "Required features are not enabled. All of these features must be enabled: {0}"
+                                ),
+                                string.Join(", ", featureNames)
+                            )
+                        );
                     }
                 }
             }
@@ -271,9 +305,15 @@ namespace Abp.Application.Features
                 }
 
                 throw new AbpAuthorizationException(
-                    "Required features are not enabled. At least one of these features must be enabled: " +
-                    string.Join(", ", featureNames)
-                    );
+                    string.Format(
+                        L(
+                            featureChecker,
+                            "AtLeastOneOfTheseFeaturesMustBeEnabled",
+                            "Required features are not enabled. At least one of these features must be enabled: {0}"
+                        ),
+                        string.Join(", ", featureNames)
+                    )
+                );
             }
         }
 
@@ -298,6 +338,20 @@ namespace Abp.Application.Features
         public static void CheckEnabled(this IFeatureChecker featureChecker, int tenantId, bool requiresAll, params string[] featureNames)
         {
             AsyncHelper.RunSync(() => featureChecker.CheckEnabledAsync(tenantId, requiresAll, featureNames));
+        }
+
+        public static string L(IFeatureChecker featureChecker, string name, string defaultValue)
+        {
+            if (!(featureChecker is IIocManagerAccessor))
+            {
+                return defaultValue;
+            }
+
+            var iocManager = (featureChecker as IIocManagerAccessor).IocManager;
+            using (var localizationManager = iocManager.ResolveAsDisposable<ILocalizationManager>())
+            {
+                return localizationManager.Object.GetString(AbpConsts.LocalizationSourceName, name);
+            }
         }
     }
 }

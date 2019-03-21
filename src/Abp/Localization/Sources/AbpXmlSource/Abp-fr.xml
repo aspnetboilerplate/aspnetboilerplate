@@ -16,6 +16,9 @@
     <text name="TimeZone">Fuseau horaire</text>
     <text name="AllOfThesePermissionsMustBeGranted">Les autorisations requises ne sont pas accordées. Les autorisations suivantes doivent toutes être accordées : {0}</text>
     <text name="AtLeastOneOfThesePermissionsMustBeGranted">Les autorisations requises ne sont pas accordées. Au moins une des autorisations suivantes doit être accordée : {0}</text>
+    <text name="FeatureIsNotEnabled">La fonctionnalité n'est pas activée:{0}</text>
+    <text name="AllOfTheseFeaturesMustBeEnabled">Les fonctionnalités requises ne sont pas activées. Toutes ces fonctionnalités doivent être activées: {0}</text>
+    <text name="AtLeastOneOfTheseFeaturesMustBeEnabled">Les fonctionnalités requises ne sont pas activées. Au moins une de ces fonctionnalités doit être activée: {0}</text>
     <text name="MainMenu">Menu principal</text>    
   </texts>
 </localizationDictionary>

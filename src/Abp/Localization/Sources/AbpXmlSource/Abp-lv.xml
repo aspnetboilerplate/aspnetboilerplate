@@ -14,5 +14,11 @@
     <text name="ReceiveNotifications">Saņemt paziņojumus</text>
     <text name="CurrentUserDidNotLoginToTheApplication">Pašreizējais lietotājs nav pieslēdzies lietotnei!</text>
     <text name="TimeZone">Laika zona</text>
+    <text name="AllOfThesePermissionsMustBeGranted">Nepieciešamās atļaujas netiek piešķirtas. Visas šīs atļaujas ir jāpiešķir: {0}</text>
+    <text name="AtLeastOneOfThesePermissionsMustBeGranted">Nepieciešamās atļaujas netiek piešķirtas. Vismaz viena no šīm atļaujām ir jāpiešķir: {0}</text>
+    <text name="FeatureIsNotEnabled">Funkcija nav iespējota: {0}</text>
+    <text name="AllOfTheseFeaturesMustBeEnabled">Nepieciešamās funkcijas nav iespējotas. Visām šīm funkcijām jābūt iespējotām: {0}</text>
+    <text name="AtLeastOneOfTheseFeaturesMustBeEnabled">Nepieciešamās funkcijas nav iespējotas. Vismaz vienai no šīm funkcijām jābūt iespējotai: {0}</text>
+    <text name="MainMenu">Galvenā izvēlne</text>
   </texts>
 </localizationDictionary>
