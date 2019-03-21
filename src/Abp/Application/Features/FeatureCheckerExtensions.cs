@@ -229,7 +229,7 @@ namespace Abp.Application.Features
                             string.Format(
                                 L(
                                     featureChecker,
-                                    "AllOfTheseFeaturesMustBeGranted",
+                                    "AllOfTheseFeaturesMustBeEnabled",
                                     "Required features are not enabled. All of these features must be enabled: {0}"
                                 ),
                                 string.Join(", ", featureNames)
@@ -252,7 +252,7 @@ namespace Abp.Application.Features
                     string.Format(
                         L(
                             featureChecker,
-                            "AtLeastOneOfTheseFeaturesMustBeGranted",
+                            "AtLeastOneOfTheseFeaturesMustBeEnabled",
                             "Required features are not enabled. At least one of these features must be enabled: {0}"
                         ),
                         string.Join(", ", featureNames)
@@ -285,7 +285,7 @@ namespace Abp.Application.Features
                             string.Format(
                                 L(
                                     featureChecker,
-                                    "AllOfTheseFeaturesMustBeGranted",
+                                    "AllOfTheseFeaturesMustBeEnabled",
                                     "Required features are not enabled. All of these features must be enabled: {0}"
                                 ),
                                 string.Join(", ", featureNames)
@@ -308,7 +308,7 @@ namespace Abp.Application.Features
                     string.Format(
                         L(
                             featureChecker,
-                            "AtLeastOneOfTheseFeaturesMustBeGranted",
+                            "AtLeastOneOfTheseFeaturesMustBeEnabled",
                             "Required features are not enabled. At least one of these features must be enabled: {0}"
                         ),
                         string.Join(", ", featureNames)
