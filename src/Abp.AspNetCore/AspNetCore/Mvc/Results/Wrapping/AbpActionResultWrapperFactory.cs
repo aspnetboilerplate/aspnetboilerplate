@@ -11,7 +11,7 @@ namespace Abp.AspNetCore.Mvc.Results.Wrapping
 
             if (actionResult.Result is ObjectResult)
             {
-                return new AbpObjectActionResultWrapper(actionResult.HttpContext.RequestServices);
+                return new AbpObjectActionResultWrapper();
             }
 
             if (actionResult.Result is JsonResult)
