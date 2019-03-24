@@ -103,10 +103,10 @@ namespace Abp.EntityHistory
                 
                 var entityBaseType = GetEntityBaseType(entityEntry);
                 var entityType = GetEntityType(objectContext, entityBaseType);
-                var entitySet = GetEntitySet(objectContext, entityType);
                 var entityChange = CreateEntityChange(entityEntry, entityType);
                 if (entityChange != null)
                 {
+                    var entitySet = GetEntitySet(objectContext, entityType);
                     var propertyChanges = new List<EntityPropertyChange>();
                     propertyChanges.AddRange(GetPropertyChanges(entityEntry, entityType, shouldSaveEntityHistory));
                     propertyChanges.AddRange(GetRelationshipChanges(entityEntry, entityType, entitySet, relationshipChanges, shouldSaveEntityHistory));
@@ -310,7 +310,7 @@ namespace Abp.EntityHistory
                     values.GetValues(valuesChangeSet);
                     
                     return valuesChangeSet
-                        .Select(value => ((EntityKey)value))
+                        .Select(value => value.As<EntityKey>())
                         .Where(value => value.EntitySetName != entitySet.Name)
                         .Select(value => new Tuple<string, EntityState, EntityKey>(change.EntitySet.Name, change.State, value));
                 })

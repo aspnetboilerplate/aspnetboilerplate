@@ -27,8 +27,9 @@ namespace Abp.Zero.SampleApp.Tests.TestDatas
             _context.Posts.AddRange(new Post[] { post1, post2, post3, post4 });
 
             var comment1 = new Comment { Post = post1, Content = "test-comment-1-content" };
+            var comment2 = new Comment { Post = post2, Content = "test-comment-2-content" };
 
-            _context.Comments.Add(comment1);
+            _context.Comments.AddRange(new Comment[] { comment1, comment2 });
         }
     }
 }

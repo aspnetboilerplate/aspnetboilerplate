@@ -83,17 +83,9 @@ namespace Abp.Zero.SampleApp.Tests.EntityHistory
 
             UsingDbContext((context) =>
             {
-                context.EntityChanges.Count(f => f.TenantId == null).ShouldBe(0);
-            });
-
-            UsingDbContext((context) =>
-            {
-                context.EntityChangeSets.Count(f => f.TenantId == null).ShouldBe(0);
-            });
-
-            UsingDbContext((context) =>
-            {
-                context.EntityPropertyChanges.Count(f => f.TenantId == null).ShouldBe(0);
+                context.EntityChanges.Count(e => e.TenantId == null).ShouldBe(0);
+                context.EntityChangeSets.Count(e => e.TenantId == null).ShouldBe(0);
+                context.EntityPropertyChanges.Count(e => e.TenantId == null).ShouldBe(0);
             });
 
             var justNow = Clock.Now;
@@ -101,18 +93,10 @@ namespace Abp.Zero.SampleApp.Tests.EntityHistory
 
             UsingDbContext((context) =>
             {
-                context.EntityChanges.Count(f => f.TenantId == null).ShouldBe(1);
-            });
-
-            UsingDbContext((context) =>
-            {
-                context.EntityChangeSets.Count(f => f.TenantId == null).ShouldBe(1);
+                context.EntityChanges.Count(e => e.TenantId == null).ShouldBe(1);
+                context.EntityChangeSets.Count(e => e.TenantId == null).ShouldBe(1);
                 context.EntityChangeSets.Single().CreationTime.ShouldBeGreaterThan(justNow);
-            });
-
-            UsingDbContext((context) =>
-            {
-                context.EntityPropertyChanges.Count(f => f.TenantId == null).ShouldBe(2);
+                context.EntityPropertyChanges.Count(e => e.TenantId == null).ShouldBe(2);
             });
         }
 
@@ -147,9 +131,8 @@ namespace Abp.Zero.SampleApp.Tests.EntityHistory
 
             using (var uow = Resolve<IUnitOfWorkManager>().Begin())
             {
-                var blog1 = _blogRepository.Single(b => b.Id == 1);
                 var blog2 = _blogRepository.Single(b => b.Id == 2);
-                var post1 = _postRepository.Single(b => b.Body == "test-post-1-body");
+                var post1 = _postRepository.Single(p => p.Body == "test-post-1-body");
                 post1Id = post1.Id;
 
                 // Change foreign key by assigning navigation property
@@ -169,6 +152,33 @@ namespace Abp.Zero.SampleApp.Tests.EntityHistory
         }
 
         [Fact]
+        public void Should_Write_History_For_Tracked_Property_Foreign_Key_Collection()
+        {
+            using (var uow = Resolve<IUnitOfWorkManager>().Begin())
+            {
+                var blog1 = _blogRepository.Single(b => b.Name == "test-blog-1");
+                var post5 = new Post { Blog = blog1, Title = "test-post-5-title", Body = "test-post-5-body" };
+
+                // Change navigation property by adding into collection
+                blog1.Posts.Add(post5);
+                _blogRepository.Update(blog1);
+
+                uow.Complete();
+            }
+
+            _entityHistoryStore.Received().SaveAsync(Arg.Is<EntityChangeSet>(
+                s => s.EntityChanges.Count == 2 &&
+                     s.EntityChanges[0].ChangeType == EntityChangeType.Created &&
+                     s.EntityChanges[0].EntityTypeFullName == typeof(Post).FullName &&
+                     s.EntityChanges[0].PropertyChanges.Count == 1 && // Post.BlogId
+
+                     s.EntityChanges[1].ChangeType == EntityChangeType.Updated &&
+                     s.EntityChanges[1].EntityTypeFullName == typeof(Blog).FullName &&
+                     s.EntityChanges[1].PropertyChanges.Count == 0
+            ));
+        }
+
+        [Fact]
         public void Should_Write_History_For_Tracked_Property_Foreign_Key_Shadow()
         {
             /* Comment has Audited attribute. */
@@ -178,10 +188,11 @@ namespace Abp.Zero.SampleApp.Tests.EntityHistory
 
             using (var uow = Resolve<IUnitOfWorkManager>().Begin())
             {
-                var comment1 = _commentRepository.Single(b => b.Content == "test-comment-1-content");
-                var post2 = _postRepository.Single(b => b.Body == "test-post-2-body");
-                post1KeyValue.Add("Id", comment1.Post.Id);
+                var post2 = _postRepository.Single(p => p.Body == "test-post-2-body");
                 post2KeyValue.Add("Id", post2.Id);
+
+                var comment1 = _commentRepository.Single(c => c.Content == "test-comment-1-content");
+                post1KeyValue.Add("Id", comment1.Post.Id);
 
                 // Change foreign key by assigning navigation property
                 comment1.Post = post2;
@@ -248,7 +259,7 @@ namespace Abp.Zero.SampleApp.Tests.EntityHistory
 
             using (var uow = Resolve<IUnitOfWorkManager>().Begin())
             {
-                var post1 = _postRepository.Single(b => b.Body == "test-post-1-body");
+                var post1 = _postRepository.Single(p => p.Body == "test-post-1-body");
 
                 post1.Body = null;
                 _postRepository.Update(post1);
