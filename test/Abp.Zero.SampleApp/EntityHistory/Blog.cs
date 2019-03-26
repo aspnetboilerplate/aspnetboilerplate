@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations.Schema;
 using Abp.Auditing;
 using Abp.Domain.Entities;
 using Abp.Domain.Entities.Auditing;
@@ -16,14 +17,16 @@ namespace Abp.Zero.SampleApp.EntityHistory
 
         public DateTime CreationTime { get; set; }
 
+        public BlogEx More { get; set; }
+
         public virtual ICollection<Post> Posts { get; set; }
 
         public Blog()
         {
-            
+
         }
 
-        public Blog(string name, string url)
+        public Blog(string name, string url, string bloggerName)
         {
             if (string.IsNullOrWhiteSpace(name))
             {
@@ -37,6 +40,7 @@ namespace Abp.Zero.SampleApp.EntityHistory
 
             Name = name;
             Url = url;
+            More = new BlogEx { BloggerName = bloggerName };
         }
 
         public void ChangeUrl(string url)
@@ -49,5 +53,11 @@ namespace Abp.Zero.SampleApp.EntityHistory
             var oldUrl = Url;
             Url = url;
         }
+    }
+
+    [ComplexType]
+    public class BlogEx
+    {
+        public string BloggerName { get; set; }
     }
 }

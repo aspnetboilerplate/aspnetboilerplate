@@ -100,29 +100,26 @@ namespace Abp.EntityHistory
                 {
                     continue;
                 }
-                
+
                 var entityBaseType = GetEntityBaseType(entityEntry);
                 var entityType = GetEntityType(objectContext, entityBaseType);
                 var entityChange = CreateEntityChange(entityEntry, entityType);
-                if (entityChange != null)
-                {
-                    var entitySet = GetEntitySet(objectContext, entityType);
-                    var propertyChanges = new List<EntityPropertyChange>();
-                    propertyChanges.AddRange(GetPropertyChanges(entityEntry, entityType, shouldSaveEntityHistory));
-                    propertyChanges.AddRange(GetRelationshipChanges(entityEntry, entityType, entitySet, relationshipChanges, shouldSaveEntityHistory));
-                    entityChange.PropertyChanges = propertyChanges;
-                    
-                    if (!shouldSaveEntityHistory && entityChange.PropertyChanges.Count == 0)
-                    {
-                        continue;
-                    }
-                }
-
                 if (entityChange == null)
                 {
                     continue;
                 }
 
+                var entitySet = GetEntitySet(objectContext, entityType);
+                var propertyChanges = new List<EntityPropertyChange>();
+                propertyChanges.AddRange(GetPropertyChanges(entityEntry, entityType, entitySet, shouldSaveEntityHistory));
+                propertyChanges.AddRange(GetRelationshipChanges(entityEntry, entityType, entitySet, relationshipChanges, shouldSaveEntityHistory));
+
+                if (!shouldSaveEntityHistory && propertyChanges.Count == 0)
+                {
+                    continue;
+                }
+
+                entityChange.PropertyChanges = propertyChanges;
                 changeSet.EntityChanges.Add(entityChange);
             }
 
@@ -244,13 +241,14 @@ namespace Abp.EntityHistory
         /// <summary>
         /// Gets the property changes for this entry.
         /// </summary>
-        private ICollection<EntityPropertyChange> GetPropertyChanges(DbEntityEntry entityEntry, EntityType entityType, bool shouldSaveEntityHistory)
+        private ICollection<EntityPropertyChange> GetPropertyChanges(DbEntityEntry entityEntry, EntityType entityType, EntitySet entitySet, bool shouldSaveEntityHistory)
         {
             var propertyChanges = new List<EntityPropertyChange>();
             var propertyNames = entityType.Members.Select(e => e.Name);
+            var complexTypeProperties = entitySet.ElementType.Properties.Where(e => e.IsComplexType).ToList();
             var isCreated = IsCreated(entityEntry);
             var isDeleted = IsDeleted(entityEntry);
-            
+
             foreach (var propertyName in propertyNames)
             {
                 if (entityType.KeyMembers.Any(m => m.Name == propertyName))
@@ -263,10 +261,10 @@ namespace Abp.EntityHistory
                 {
                     continue;
                 }
-
+                
                 var propertyEntry = memberEntry as DbPropertyEntry;
                 var propertyInfo = GetEntityBaseType(propertyEntry.EntityEntry).GetProperty(propertyEntry.Name);
-                if (ShouldSavePropertyHistory(propertyEntry, propertyInfo, shouldSaveEntityHistory, isCreated || isDeleted))
+                if (ShouldSavePropertyHistory(propertyEntry, propertyInfo, complexTypeProperties, shouldSaveEntityHistory, isCreated || isDeleted))
                 {
                     propertyChanges.Add(new EntityPropertyChange
                     {
@@ -308,7 +306,7 @@ namespace Abp.EntityHistory
                     var values = change.State == EntityState.Added ? change.CurrentValues : change.OriginalValues;
                     var valuesChangeSet = new object[values.FieldCount];
                     values.GetValues(valuesChangeSet);
-                    
+
                     return valuesChangeSet
                         .Select(value => value.As<EntityKey>())
                         .Where(value => value.EntitySetName != entitySet.Name)
@@ -429,7 +427,7 @@ namespace Abp.EntityHistory
             return null;
         }
 
-        private bool ShouldSavePropertyHistory(DbPropertyEntry propertyEntry, PropertyInfo propertyInfo, bool shouldSaveEntityHistory, bool defaultValue)
+        private bool ShouldSavePropertyHistory(DbPropertyEntry propertyEntry, PropertyInfo propertyInfo, ICollection<EdmProperty> complexTypeProperties, bool shouldSaveEntityHistory, bool defaultValue)
         {
             var shouldSavePropertyHistoryForInfo = ShouldSavePropertyHistoryForInfo(propertyInfo, shouldSaveEntityHistory);
             if (shouldSavePropertyHistoryForInfo.HasValue)
@@ -437,25 +435,88 @@ namespace Abp.EntityHistory
                 return shouldSavePropertyHistoryForInfo.Value;
             }
 
-            var isModified = false;
-            if (propertyEntry.EntityEntry.State == EntityState.Added)
+            var shouldSave = false;
+            if (propertyEntry is DbComplexPropertyEntry)
             {
-                isModified = propertyEntry.CurrentValue != null;
-            }
-            else if (propertyEntry.EntityEntry.State == EntityState.Deleted)
-            {
-                isModified = propertyEntry.OriginalValue != null;
+                var complexTypeProperty = complexTypeProperties.Where(t => t.Name == propertyInfo.Name).First();
+                shouldSave = ShouldSavePropertyHistoryForComplexType(propertyEntry.As<DbComplexPropertyEntry>(), complexTypeProperty);
             }
             else
             {
-                isModified = !(propertyEntry.OriginalValue?.Equals(propertyEntry.CurrentValue)) ?? false;
+                shouldSave = ShouldSavePropertyHistoryForScalarType(propertyEntry);
             }
-            if (isModified)
+            if (shouldSave)
             {
                 return true;
             }
 
             return defaultValue;
+        }
+
+        private bool ShouldSavePropertyHistoryForComplexType(DbComplexPropertyEntry propertyEntry, EdmProperty complexTypeProperty)
+        {
+            var newValue = propertyEntry.EntityEntry.State == EntityState.Deleted ? propertyEntry.OriginalValue : propertyEntry.CurrentValue;
+            var oldValue = propertyEntry.EntityEntry.State == EntityState.Added ? propertyEntry.CurrentValue : propertyEntry.OriginalValue;
+            return IsComplexTypePropertyModified(complexTypeProperty, newValue, oldValue);
+        }
+
+        private bool IsComplexTypePropertyModified(EdmProperty complexTypeProperty, object newValue, object oldValue)
+        {
+            if (!complexTypeProperty.IsComplexType)
+            {
+                Logger.WarnFormat("{0} is called with non complex type property, {1}", nameof(IsComplexTypePropertyModified), complexTypeProperty.Name);
+                return false;
+            }
+
+            if (newValue == null && oldValue == null)
+            {
+                return false;
+            }
+
+            var isModified = false;
+            foreach (var property in complexTypeProperty.ComplexType.Properties)
+            {
+                var propertyNewValue = newValue?.GetType()?.GetProperty(property.Name)?.GetValue(newValue);
+                var propertyOldValue = oldValue?.GetType()?.GetProperty(property.Name)?.GetValue(oldValue);
+                if (property.IsPrimitiveType)
+                {
+                    isModified = !(propertyNewValue?.Equals(propertyOldValue)) ?? false;
+                }
+                else if (property.IsComplexType)
+                {
+                    isModified = IsComplexTypePropertyModified(property, propertyNewValue, propertyOldValue);
+                }
+
+                if (isModified)
+                {
+                    break;
+                }
+            }
+            return isModified;
+        }
+
+        private bool ShouldSavePropertyHistoryForScalarType(DbPropertyEntry propertyEntry)
+        {
+            if (propertyEntry is DbComplexPropertyEntry)
+            {
+                Logger.WarnFormat("{0} is called with complex type property, {1}", nameof(ShouldSavePropertyHistoryForScalarType), propertyEntry.Name);
+                return false;
+            }
+
+            return IsScalarTypePropertyModified(propertyEntry);
+        }
+
+        private bool IsScalarTypePropertyModified(DbPropertyEntry propertyEntry)
+        {
+            switch (propertyEntry.EntityEntry.State)
+            {
+                case EntityState.Added:
+                    return propertyEntry.CurrentValue != null;
+                case EntityState.Deleted:
+                    return propertyEntry.OriginalValue != null;
+                default:
+                    return !(propertyEntry.OriginalValue?.Equals(propertyEntry.CurrentValue)) ?? false;
+            }
         }
 
         private bool ShouldSaveRelationshipHistory(ICollection<ObjectStateEntry> relationshipChanges, PropertyInfo propertyInfo, bool shouldSaveEntityHistory, bool defaultValue)
@@ -513,7 +574,6 @@ namespace Abp.EntityHistory
 
                 /* Update foreign keys */
 
-                
                 var foreignKeys = entityType.NavigationProperties;
 
                 foreach (var foreignKey in foreignKeys)

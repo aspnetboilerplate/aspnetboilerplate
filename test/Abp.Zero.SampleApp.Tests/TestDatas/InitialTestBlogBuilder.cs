@@ -14,7 +14,7 @@ namespace Abp.Zero.SampleApp.Tests.TestDatas
 
         public void Build()
         {
-            var blog1 = new Blog("test-blog-1", "http://testblog1.myblogs.com");
+            var blog1 = new Blog("test-blog-1", "http://testblog1.myblogs.com", "blogger-1");
 
             _context.Blogs.Add(blog1);
             _context.SaveChanges();
