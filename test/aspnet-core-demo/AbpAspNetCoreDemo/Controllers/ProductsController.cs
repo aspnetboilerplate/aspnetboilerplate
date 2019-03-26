@@ -9,11 +9,11 @@ namespace AbpAspNetCoreDemo.Controllers
     {
         public ProductsController(IRepository<Product> repository) : base(repository)
         {
-            //GetPermissionName = "GetProductPermission";
-            //GetAllPermissionName = "GetAllCompaniesPermission";
-            //CreatePermissionName = "CreateProductPermission";
-            //UpdatePermissionName = "UpdateProductPermission";
-            //DeletePermissionName = "DeleteProductPermission";
+            GetPermissionName = "GetProductPermission";
+            GetAllPermissionName = "GetAllProductsPermission";
+            CreatePermissionName = "CreateProductPermission";
+            UpdatePermissionName = "UpdateProductPermission";
+            DeletePermissionName = "DeleteProductPermission";
         }
     }
 }
