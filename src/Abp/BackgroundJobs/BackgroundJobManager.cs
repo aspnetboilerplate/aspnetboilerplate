@@ -2,6 +2,7 @@
 using System.Reflection;
 using System.Threading.Tasks;
 using Abp.Dependency;
+using Abp.Domain.Uow;
 using Abp.Events.Bus;
 using Abp.Events.Bus.Exceptions;
 using Abp.Json;
@@ -51,7 +52,8 @@ namespace Abp.BackgroundJobs
             Timer.Period = JobPollPeriod;
         }
 
-        public async Task<string> EnqueueAsync<TJob, TArgs>(TArgs args, BackgroundJobPriority priority = BackgroundJobPriority.Normal, TimeSpan? delay = null)
+        [UnitOfWork]
+        public virtual async Task<string> EnqueueAsync<TJob, TArgs>(TArgs args, BackgroundJobPriority priority = BackgroundJobPriority.Normal, TimeSpan? delay = null)
             where TJob : IBackgroundJob<TArgs>
         {
             var jobInfo = new BackgroundJobInfo
@@ -67,6 +69,7 @@ namespace Abp.BackgroundJobs
             }
 
             await _store.InsertAsync(jobInfo);
+            await CurrentUnitOfWork.SaveChangesAsync();
 
             return jobInfo.Id.ToString();
         }
@@ -79,10 +82,6 @@ namespace Abp.BackgroundJobs
             }
 
             BackgroundJobInfo jobInfo = await _store.GetAsync(finalJobId);
-            if (jobInfo == null)
-            {
-                return false;
-            }
 
             await _store.DeleteAsync(jobInfo);
             return true;
