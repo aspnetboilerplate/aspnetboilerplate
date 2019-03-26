@@ -63,7 +63,7 @@ namespace Abp.Web.Settings
                     var settingValue = await _settingManager.GetSettingValueAsync(settingDefinition.Name);
 
                     script.Append("        '" +
-                                  settingDefinition.Name.Replace("'", @"\'") + "': " +
+                                  HttpEncode.JavaScriptStringEncode(settingDefinition.Name) + "': " +
                                   (settingValue == null ? "null" : "'" + HttpEncode.JavaScriptStringEncode(settingValue) + "'"));
 
                     ++added;
