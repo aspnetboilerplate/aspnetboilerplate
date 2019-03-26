@@ -1,7 +1,7 @@
-﻿using System.IO;
+﻿using Microsoft.Data.Sqlite;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Design;
-using Microsoft.Extensions.Configuration;
+
 
 namespace AbpAspNetCoreDemo.Db
 {
@@ -9,17 +9,14 @@ namespace AbpAspNetCoreDemo.Db
     {
         public MyDbContext CreateDbContext(string[] args)
         {
-            var builder = new ConfigurationBuilder()
-                .SetBasePath(Directory.GetCurrentDirectory()) //TODO: .SetBasePath(options.ContentRootPath) ???
-                .AddJsonFile("appsettings.json", optional: true, reloadOnChange: true)
-                .AddEnvironmentVariables();
-            var configuration = builder.Build();
-
+            var inMemorySqlite = new SqliteConnection("Data Source=:memory:");
             var opts = new DbContextOptionsBuilder<MyDbContext>()
-                .UseSqlServer(configuration.GetConnectionString("Default"))
+                .UseSqlite(inMemorySqlite)
                 .Options;
 
-            return new MyDbContext(opts);
+            var dbContext = new MyDbContext(opts);
+
+            return dbContext;
         }
     }
 }
