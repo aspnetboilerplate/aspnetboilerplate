@@ -55,20 +55,27 @@ namespace Abp.Zero.SampleApp.Tests.EntityHistory
 
             var blog2Id = CreateBlogAndGetId();
 
-            _entityHistoryStore.Received().SaveAsync(Arg.Is<EntityChangeSet>(
-                s => s.EntityChanges.Count == 1 &&
-                     s.EntityChanges[0].ChangeTime == s.EntityChanges[0].EntityEntry.As<DbEntityEntry>().Entity.As<IHasCreationTime>().CreationTime &&
-                     s.EntityChanges[0].ChangeType == EntityChangeType.Created &&
-                     s.EntityChanges[0].EntityId == blog2Id.ToJsonString(false, false) &&
-                     s.EntityChanges[0].EntityTypeFullName == typeof(Blog).FullName &&
-                     s.EntityChanges[0].PropertyChanges.Count == 2 && // Blog.Name, Blog.Url
+            Predicate<EntityChangeSet> predicate = s =>
+            {
+                s.EntityChanges.Count.ShouldBe(1);
 
-                     // Check "who did this change"
-                     s.ImpersonatorTenantId == AbpSession.ImpersonatorTenantId &&
-                     s.ImpersonatorUserId == AbpSession.ImpersonatorUserId &&
-                     s.TenantId == AbpSession.TenantId &&
-                     s.UserId == AbpSession.UserId
-            ));
+                var entityChange = s.EntityChanges[0];
+                entityChange.ChangeTime.ShouldBe(entityChange.EntityEntry.As<DbEntityEntry>().Entity.As<IHasCreationTime>().CreationTime);
+                entityChange.ChangeType.ShouldBe(EntityChangeType.Created);
+                entityChange.EntityId.ShouldBe(blog2Id.ToJsonString());
+                entityChange.EntityTypeFullName.ShouldBe(typeof(Blog).FullName);
+                entityChange.PropertyChanges.Count.ShouldBe(3);  // Blog.Name, Blog.Url, Blog.More
+
+                // Check "who did this change"
+                s.ImpersonatorTenantId.ShouldBe(AbpSession.ImpersonatorTenantId);
+                s.ImpersonatorUserId.ShouldBe(AbpSession.ImpersonatorUserId);
+                s.TenantId.ShouldBe(AbpSession.TenantId);
+                s.UserId.ShouldBe(AbpSession.UserId);
+
+                return true;
+            };
+
+            _entityHistoryStore.Received().SaveAsync(Arg.Is<EntityChangeSet>(s => predicate(s)));
         }
 
         [Fact]
@@ -96,7 +103,7 @@ namespace Abp.Zero.SampleApp.Tests.EntityHistory
                 context.EntityChanges.Count(e => e.TenantId == null).ShouldBe(1);
                 context.EntityChangeSets.Count(e => e.TenantId == null).ShouldBe(1);
                 context.EntityChangeSets.Single().CreationTime.ShouldBeGreaterThan(justNow);
-                context.EntityPropertyChanges.Count(e => e.TenantId == null).ShouldBe(2);
+                context.EntityPropertyChanges.Count(e => e.TenantId == null).ShouldBe(3);
             });
         }
 
@@ -108,17 +115,68 @@ namespace Abp.Zero.SampleApp.Tests.EntityHistory
             var newValue = "http://testblog1-changed.myblogs.com";
             var originalValue = UpdateBlogUrlAndGetOriginalValue(newValue);
 
-            _entityHistoryStore.Received().SaveAsync(Arg.Is<EntityChangeSet>(
-                s => s.EntityChanges.Count == 1 &&
-                     s.EntityChanges[0].ChangeType == EntityChangeType.Updated &&
-                     s.EntityChanges[0].EntityId == s.EntityChanges[0].EntityEntry.As<DbEntityEntry>().Entity.As<IEntity>().Id.ToJsonString(false, false) &&
-                     s.EntityChanges[0].EntityTypeFullName == typeof(Blog).FullName &&
-                     s.EntityChanges[0].PropertyChanges.Count == 1 &&
-                     s.EntityChanges[0].PropertyChanges.FirstOrDefault().NewValue == newValue.ToJsonString(false, false) &&
-                     s.EntityChanges[0].PropertyChanges.FirstOrDefault().OriginalValue == originalValue.ToJsonString(false, false) &&
-                     s.EntityChanges[0].PropertyChanges.FirstOrDefault().PropertyName == nameof(Blog.Url) &&
-                     s.EntityChanges[0].PropertyChanges.FirstOrDefault().PropertyTypeFullName == typeof(Blog).GetProperty(nameof(Blog.Url)).PropertyType.FullName
-            ));
+            Predicate<EntityChangeSet> predicate = s =>
+            {
+                s.EntityChanges.Count.ShouldBe(1);
+
+                var entityChange = s.EntityChanges[0];
+                entityChange.ChangeType.ShouldBe(EntityChangeType.Updated);
+                entityChange.EntityId.ShouldBe(entityChange.EntityEntry.As<DbEntityEntry>().Entity.As<IEntity>().Id.ToJsonString());
+                entityChange.EntityTypeFullName.ShouldBe(typeof(Blog).FullName);
+                entityChange.PropertyChanges.Count.ShouldBe(1);
+
+                var propertyChange = entityChange.PropertyChanges.First();
+                propertyChange.NewValue.ShouldBe(newValue.ToJsonString());
+                propertyChange.OriginalValue.ShouldBe(originalValue.ToJsonString());
+                propertyChange.PropertyName.ShouldBe(nameof(Blog.Url));
+                propertyChange.PropertyTypeFullName.ShouldBe(typeof(Blog).GetProperty(nameof(Blog.Url)).PropertyType.FullName);
+
+                return true;
+            };
+
+            _entityHistoryStore.Received().SaveAsync(Arg.Is<EntityChangeSet>(s => predicate(s)));
+        }
+
+        [Fact]
+        public void Should_Write_History_For_Tracked_Entities_Update_Complex()
+        {
+            /* Blog has Audited attribute. */
+
+            int blog1Id;
+            var newValue = new BlogEx { BloggerName = "blogger-2" };
+            BlogEx originalValue;
+
+            using (var uow = Resolve<IUnitOfWorkManager>().Begin())
+            {
+                var blog1 = _blogRepository.Single(b => b.More.BloggerName == "blogger-1");
+                blog1Id = blog1.Id;
+
+                originalValue = new BlogEx { BloggerName = blog1.More.BloggerName };
+                blog1.More.BloggerName = newValue.BloggerName;
+
+                uow.Complete();
+            }
+
+            Predicate<EntityChangeSet> predicate = s =>
+            {
+                s.EntityChanges.Count.ShouldBe(1);
+
+                var entityChange = s.EntityChanges[0];
+                entityChange.ChangeType.ShouldBe(EntityChangeType.Updated);
+                entityChange.EntityId.ShouldBe(blog1Id.ToJsonString());
+                entityChange.EntityTypeFullName.ShouldBe(typeof(Blog).FullName);
+                entityChange.PropertyChanges.Count.ShouldBe(1);
+
+                var propertyChange = entityChange.PropertyChanges.First();
+                propertyChange.NewValue.ShouldBe(newValue.ToJsonString());
+                propertyChange.OriginalValue.ShouldBe(originalValue.ToJsonString());
+                propertyChange.PropertyName.ShouldBe(nameof(Blog.More));
+                propertyChange.PropertyTypeFullName.ShouldBe(typeof(Blog).GetProperty(nameof(Blog.More)).PropertyType.FullName);
+
+                return true;
+            };
+
+            _entityHistoryStore.Received().SaveAsync(Arg.Is<EntityChangeSet>(s => predicate(s)));
         }
 
         [Fact]
@@ -142,13 +200,26 @@ namespace Abp.Zero.SampleApp.Tests.EntityHistory
                 uow.Complete();
             }
 
-            _entityHistoryStore.Received().SaveAsync(Arg.Is<EntityChangeSet>(
-                s => s.EntityChanges.Count == 1 &&
-                     s.EntityChanges[0].ChangeType == EntityChangeType.Updated &&
-                     s.EntityChanges[0].EntityId == post1Id.ToJsonString(false, false) &&
-                     s.EntityChanges[0].EntityTypeFullName == typeof(Post).FullName &&
-                     s.EntityChanges[0].PropertyChanges.Count == 1 // Post.BlogId
-            ));
+            Predicate<EntityChangeSet> predicate = s =>
+            {
+                s.EntityChanges.Count.ShouldBe(1);
+
+                var entityChange = s.EntityChanges[0];
+                entityChange.ChangeType.ShouldBe(EntityChangeType.Updated);
+                entityChange.EntityId.ShouldBe(post1Id.ToJsonString());
+                entityChange.EntityTypeFullName.ShouldBe(typeof(Post).FullName);
+                entityChange.PropertyChanges.Count.ShouldBe(1);
+
+                var propertyChange = entityChange.PropertyChanges.First();
+                propertyChange.NewValue.ShouldBe("2");
+                propertyChange.OriginalValue.ShouldBe("1");
+                propertyChange.PropertyName.ShouldBe(nameof(Post.BlogId));
+                propertyChange.PropertyTypeFullName.ShouldBe(typeof(Post).GetProperty(nameof(Post.BlogId)).PropertyType.FullName);
+
+                return true;
+            };
+
+            _entityHistoryStore.Received().SaveAsync(Arg.Is<EntityChangeSet>(s => predicate(s)));
         }
 
         [Fact]
@@ -166,16 +237,26 @@ namespace Abp.Zero.SampleApp.Tests.EntityHistory
                 uow.Complete();
             }
 
-            _entityHistoryStore.Received().SaveAsync(Arg.Is<EntityChangeSet>(
-                s => s.EntityChanges.Count == 2 &&
-                     s.EntityChanges[0].ChangeType == EntityChangeType.Created &&
-                     s.EntityChanges[0].EntityTypeFullName == typeof(Post).FullName &&
-                     s.EntityChanges[0].PropertyChanges.Count == 1 && // Post.BlogId
+            Predicate<EntityChangeSet> predicate = s =>
+            {
+                s.EntityChanges.Count.ShouldBe(2);
 
-                     s.EntityChanges[1].ChangeType == EntityChangeType.Updated &&
-                     s.EntityChanges[1].EntityTypeFullName == typeof(Blog).FullName &&
-                     s.EntityChanges[1].PropertyChanges.Count == 0
-            ));
+                var entityChangePost = s.EntityChanges[0];
+                entityChangePost.ChangeType.ShouldBe(EntityChangeType.Created);
+                entityChangePost.EntityTypeFullName.ShouldBe(typeof(Post).FullName);
+                entityChangePost.PropertyChanges.Count.ShouldBe(1); // Post.BlogId
+
+                /* Blog has Audited attribute. */
+
+                var entityChangeBlog = s.EntityChanges[1];
+                entityChangeBlog.ChangeType.ShouldBe(EntityChangeType.Updated);
+                entityChangeBlog.EntityTypeFullName.ShouldBe(typeof(Blog).FullName);
+                entityChangeBlog.PropertyChanges.Count.ShouldBe(0);
+
+                return true;
+            };
+
+            _entityHistoryStore.Received().SaveAsync(Arg.Is<EntityChangeSet>(s => predicate(s)));
         }
 
         [Fact]
@@ -201,14 +282,23 @@ namespace Abp.Zero.SampleApp.Tests.EntityHistory
                 uow.Complete();
             }
 
-            _entityHistoryStore.Received().SaveAsync(Arg.Is<EntityChangeSet>(
-                s => s.EntityChanges.Count == 1 &&
-                     s.EntityChanges[0].PropertyChanges.Count == 1 &&
-                     s.EntityChanges[0].PropertyChanges.First().PropertyName == "Post" &&
-                     s.EntityChanges[0].PropertyChanges.First().PropertyTypeFullName == typeof(Post).FullName &&
-                     s.EntityChanges[0].PropertyChanges.First().NewValue == post2KeyValue.ToJsonString(false, false) &&
-                     s.EntityChanges[0].PropertyChanges.First().OriginalValue == post1KeyValue.ToJsonString(false, false)
-            ));
+            Predicate<EntityChangeSet> predicate = s =>
+            {
+                s.EntityChanges.Count.ShouldBe(1);
+
+                var entityChange = s.EntityChanges[0];
+                entityChange.PropertyChanges.Count.ShouldBe(1);
+
+                var propertyChange = entityChange.PropertyChanges.First();
+                propertyChange.NewValue.ShouldBe(post2KeyValue.ToJsonString());
+                propertyChange.OriginalValue.ShouldBe(post1KeyValue.ToJsonString());
+                propertyChange.PropertyName.ShouldBe(nameof(Comment.Post));
+                propertyChange.PropertyTypeFullName.ShouldBe(typeof(Comment).GetProperty(nameof(Comment.Post)).PropertyType.FullName);
+
+                return true;
+            };
+
+            _entityHistoryStore.Received().SaveAsync(Arg.Is<EntityChangeSet>(s => predicate(s)));
         }
 
         [Fact]
@@ -226,13 +316,20 @@ namespace Abp.Zero.SampleApp.Tests.EntityHistory
                 uow.Complete();
             }
 
-            _entityHistoryStore.Received().SaveAsync(Arg.Is<EntityChangeSet>(
-                s => s.EntityChanges.Count == 1 &&
-                     s.EntityChanges[0].ChangeType == EntityChangeType.Updated &&
-                     s.EntityChanges[0].EntityId == s.EntityChanges[0].EntityEntry.As<DbEntityEntry>().Entity.As<IEntity>().Id.ToJsonString(false, false) &&
-                     s.EntityChanges[0].EntityTypeFullName == typeof(Blog).FullName &&
-                     s.EntityChanges[0].PropertyChanges.Count == 0
-            ));
+            Predicate<EntityChangeSet> predicate = s =>
+            {
+                s.EntityChanges.Count.ShouldBe(1);
+
+                var entityChange = s.EntityChanges[0];
+                entityChange.ChangeType.ShouldBe(EntityChangeType.Updated);
+                entityChange.EntityId.ShouldBe(entityChange.EntityEntry.As<DbEntityEntry>().Entity.As<IEntity>().Id.ToJsonString());
+                entityChange.EntityTypeFullName.ShouldBe(typeof(Blog).FullName);
+                entityChange.PropertyChanges.Count.ShouldBe(0);
+
+                return true;
+            };
+
+            _entityHistoryStore.Received().SaveAsync(Arg.Is<EntityChangeSet>(s => predicate(s)));
         }
 
         #endregion
@@ -278,7 +375,7 @@ namespace Abp.Zero.SampleApp.Tests.EntityHistory
 
             using (var uow = Resolve<IUnitOfWorkManager>().Begin())
             {
-                var blog2 = new Blog("test-blog-2", "http://testblog2.myblogs.com");
+                var blog2 = new Blog("test-blog-2", "http://testblog2.myblogs.com", "blogger-2");
 
                 blog2Id = _blogRepository.InsertAndGetId(blog2);
 
