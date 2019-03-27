@@ -210,14 +210,23 @@ namespace Abp.EntityHistory
             return ObjectContext.GetObjectType(entityEntry.Entity.GetType());
         }
 
-        private EntityType GetEntityType(ObjectContext context, Type entityClrType)
+        private EntityType GetEntityType(ObjectContext context, Type entityType, bool useClrType = true)
         {
             var metadataWorkspace = context.MetadataWorkspace;
-            /* Get the mapping between Clr types in OSpace */
-            var objectItemCollection = ((ObjectItemCollection)metadataWorkspace.GetItemCollection(DataSpace.OSpace));
-            return metadataWorkspace
-                .GetItems<EntityType>(DataSpace.OSpace)
-                .Single(e => objectItemCollection.GetClrType(e) == entityClrType);
+            if (useClrType)
+            {
+                /* Get the mapping between Clr types in OSpace */
+                var objectItemCollection = ((ObjectItemCollection)metadataWorkspace.GetItemCollection(DataSpace.OSpace));
+                return metadataWorkspace
+                    .GetItems<EntityType>(DataSpace.OSpace)
+                    .Single(e => objectItemCollection.GetClrType(e) == entityType);
+            }
+            else
+            {
+                return metadataWorkspace
+                    .GetItems<EntityType>(DataSpace.CSpace)
+                    .Single(e => e.Name == entityType.Name);
+            }
         }
 
         private EntitySet GetEntitySet(ObjectContext context, EntityType entityType)
@@ -569,7 +578,8 @@ namespace Abp.EntityHistory
                 /* Update entity id */
 
                 var entityEntry = entityChange.EntityEntry.As<DbEntityEntry>();
-                var entityType = GetEntityType(context.As<IObjectContextAdapter>().ObjectContext, GetEntityBaseType(entityEntry));
+                var entityBaseType = GetEntityBaseType(entityEntry);
+                var entityType = GetEntityType(context.As<IObjectContextAdapter>().ObjectContext, entityBaseType, useClrType: false);
                 entityChange.EntityId = GetEntityId(entityEntry, entityType);
 
                 /* Update foreign keys */
@@ -587,13 +597,15 @@ namespace Abp.EntityHistory
                         {
                             if (!(propertyEntry.OriginalValue?.Equals(propertyEntry.CurrentValue) ?? propertyEntry.CurrentValue == null))
                             {
+                                var propertyInfo = GetEntityBaseType(entityEntry).GetProperty(property.Name);
+
                                 // Add foreign key
                                 entityChange.PropertyChanges.Add(new EntityPropertyChange
                                 {
                                     NewValue = propertyEntry.CurrentValue.ToJsonString(),
                                     OriginalValue = propertyEntry.OriginalValue.ToJsonString(),
                                     PropertyName = property.Name,
-                                    PropertyTypeFullName = property.TypeUsage.EdmType.FullName
+                                    PropertyTypeFullName = propertyInfo.PropertyType.FullName
                                 });
                             }
 
