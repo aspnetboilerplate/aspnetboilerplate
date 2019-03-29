@@ -1,6 +1,6 @@
 ﻿# ASP.NET Boilerplate
 
-[![Build status](https://ci.appveyor.com/api/projects/status/tvad583r9lbimxh4/branch/dev?svg=true)](https://ci.appveyor.com/project/hikalkan/aspnetboilerplate)
+[![Build Status](http://ci.volosoft.com:5480/job/aspnet-boilerplate-nightly/badge/icon)](http://ci.volosoft.com:5480/blue/organizations/jenkins/aspnet-boilerplate-nightly/activity)
 
 ## What is ABP?
 
