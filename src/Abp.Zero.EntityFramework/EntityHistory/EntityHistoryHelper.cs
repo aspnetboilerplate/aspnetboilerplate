@@ -14,6 +14,7 @@ using Abp.Dependency;
 using Abp.Domain.Entities;
 using Abp.Domain.Entities.Auditing;
 using Abp.Domain.Uow;
+using Abp.EntityHistory.Extensions;
 using Abp.Events.Bus.Entities;
 using Abp.Extensions;
 using Abp.Json;
@@ -93,6 +94,7 @@ namespace Abp.EntityHistory
                 .GetObjectStateEntries(EntityState.Added | EntityState.Deleted)
                 .Where(state => state.IsRelationship)
                 .ToList();
+
             foreach (var entityEntry in context.ChangeTracker.Entries())
             {
                 var shouldSaveEntityHistory = ShouldSaveEntityHistory(entityEntry);
@@ -315,10 +317,7 @@ namespace Abp.EntityHistory
                         .Where(value => value.EntitySetName != entitySet.Name)
                         .Select(value => new Tuple<string, EntityState, EntityKey>(change.EntitySet.Name, change.State, value));
                 })
-                .GroupBy(t =>
-                {
-                    return t.Item1;
-                });
+                .GroupBy(t => t.Item1);
 
             foreach(var relationship in relationshipGroups)
             {
@@ -327,6 +326,7 @@ namespace Abp.EntityHistory
                     .Where(p => p.RelationshipType.Name == relationshipName)
                     .Select(p => p.Name)
                     .FirstOrDefault();
+
                 if (navigationPropertyName == null)
                 {
                     Logger.ErrorFormat("Unable to find navigation property for relationship {0} in entity {1}", relationshipName, entityType.Name);
@@ -340,6 +340,7 @@ namespace Abp.EntityHistory
                     var deletedRelationship = relationship.FirstOrDefault(p => p.Item2 == EntityState.Deleted);
                     var newValue = addedRelationship?.Item3.EntityKeyValues.ToDictionary(keyValue => keyValue.Key, keyValue => keyValue.Value);
                     var oldValue = deletedRelationship?.Item3.EntityKeyValues.ToDictionary(keyValue => keyValue.Key, keyValue => keyValue.Value);
+
                     propertyChanges.Add(new EntityPropertyChange
                     {
                         NewValue = newValue?.ToJsonString().TruncateWithPostfix(EntityPropertyChange.MaxValueLength),
@@ -536,128 +537,4 @@ namespace Abp.EntityHistory
             }
         }
     }
-
-    #region Helpers
-
-    internal static class DbEntityEntryExtensions
-    {
-        internal static Type GetEntityBaseType(this DbEntityEntry entityEntry)
-        {
-            return ObjectContext.GetObjectType(entityEntry.Entity.GetType());
-        }
-
-        internal static PropertyInfo GetPropertyInfo(this DbEntityEntry entityEntry, string propertyName)
-        {
-            return entityEntry.GetEntityBaseType().GetProperty(propertyName);
-        }
-
-        internal static DbPropertyValues GetPropertyValues(this DbEntityEntry entityEntry)
-        {
-            if (entityEntry.State == EntityState.Deleted)
-            {
-                return entityEntry.OriginalValues;
-            }
-            return entityEntry.CurrentValues;
-        }
-
-        internal static bool HasAuditedProperties(this DbEntityEntry entityEntry)
-        {
-            var propertyNames = entityEntry.GetPropertyValues().PropertyNames;
-            var entityType = entityEntry.GetEntityBaseType();
-            return propertyNames.Any(p => entityType.GetProperty(p)?.IsDefined(typeof(AuditedAttribute)) ?? false);
-        }
-
-        internal static bool IsCreated(this DbEntityEntry entityEntry)
-        {
-            return entityEntry.State == EntityState.Added;
-        }
-
-        internal static bool IsDeleted(this DbEntityEntry entityEntry)
-        {
-            if (entityEntry.State == EntityState.Deleted)
-            {
-                return true;
-            }
-            var entity = entityEntry.Entity;
-            return entity is ISoftDelete && entity.As<ISoftDelete>().IsDeleted;
-        }
-    }
-
-    internal static class DbPropertyEntryExtensions
-    {
-        internal static object GetNewValue(this DbPropertyEntry propertyEntry)
-        {
-            if (propertyEntry.EntityEntry.State == EntityState.Deleted)
-            {
-                return propertyEntry.OriginalValue;
-            }
-            return propertyEntry.CurrentValue;
-        }
-
-        internal static object GetOriginalValue(this DbPropertyEntry propertyEntry)
-        {
-            if (propertyEntry.EntityEntry.State == EntityState.Added)
-            {
-                return propertyEntry.CurrentValue;
-            }
-            return propertyEntry.OriginalValue;
-        }
-
-        internal static bool HasChanged(this DbPropertyEntry propertyEntry)
-        {
-            if (propertyEntry.EntityEntry.State == EntityState.Added)
-            {
-                return propertyEntry.CurrentValue != null;
-            }
-            else if (propertyEntry.EntityEntry.State == EntityState.Deleted)
-            {
-                return propertyEntry.OriginalValue != null;
-            }
-            return !(propertyEntry.OriginalValue?.Equals(propertyEntry.CurrentValue)) ?? propertyEntry.CurrentValue == null;
-        }
-    }
-
-    internal static class DbComplexPropertyEntryExtensions
-    {
-        internal static bool HasChanged(this DbComplexPropertyEntry propertyEntry, EdmProperty complexProperty)
-        {
-            return HasModifications(complexProperty, propertyEntry.GetNewValue(), propertyEntry.GetOriginalValue());
-        }
-
-        private static bool HasModifications(EdmProperty complexTypeProperty, object newValue, object originalValue)
-        {
-            if (!complexTypeProperty.IsComplexType)
-            {
-                return false;
-            }
-
-            if (newValue == null && originalValue == null)
-            {
-                return false;
-            }
-
-            var isModified = false;
-            foreach (var property in complexTypeProperty.ComplexType.Properties)
-            {
-                var propertyNewValue = newValue?.GetType()?.GetProperty(property.Name)?.GetValue(newValue);
-                var propertyOldValue = originalValue?.GetType()?.GetProperty(property.Name)?.GetValue(originalValue);
-                if (property.IsPrimitiveType)
-                {
-                    isModified = !(propertyNewValue?.Equals(propertyOldValue)) ?? false;
-                }
-                else if (property.IsComplexType)
-                {
-                    isModified = HasModifications(property, propertyNewValue, propertyOldValue);
-                }
-
-                if (isModified)
-                {
-                    break;
-                }
-            }
-            return isModified;
-        }
-    }
-
-    #endregion
 }
