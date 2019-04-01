@@ -5,6 +5,7 @@ using System.Security.Cryptography;
 using Abp.Configuration.Startup;
 using Abp.RealTime;
 using Abp.RealTime.Redis;
+using Abp.TestBase;
 using Abp.Tests;
 using Castle.MicroKernel.Registration;
 using NSubstitute;
@@ -13,24 +14,18 @@ using Xunit;
 
 namespace Abp.OnlineClientStore.Redis.Tests
 {
-    public class RedisOnlineClientStore_Tests : TestBaseWithLocalIocManager
+    public class RedisOnlineClientStore_Tests : AbpIntegratedTestBase<AbpRedisOnlineClientStoreTestModule>
     {
         private static readonly RNGCryptoServiceProvider _keyGenerator = new RNGCryptoServiceProvider();
         
-        public RedisOnlineClientStore_Tests()
-        {
-            LocalIocManager.Register<IAbpRedisOnlineClientStoreOptions, AbpRedisOnlineClientStoreOptions>();
-            LocalIocManager.Register<IAbpRedisOnlineClientStoreDatabaseProvider, AbpRedisOnlineClientStoreDatabaseProvider>();
-            LocalIocManager.Register<IOnlineClientStore, AbpRedisOnlineClientStore>();
-            LocalIocManager.Register<IOnlineClientManager, OnlineClientManager>();
-            LocalIocManager.Register<IRedisOnlineClientStoreSerializer, DefaultRedisOnlineClientStoreSerializer>();
-            LocalIocManager.IocContainer.Register(Component.For<IAbpStartupConfiguration>().Instance(Substitute.For<IAbpStartupConfiguration>()));
-        }
-
         [Fact]
         public void Test_All()
         {
-            var store = LocalIocManager.Resolve<IOnlineClientStore>();
+            //Test module configuration
+            LocalIocManager.Resolve<IAbpRedisOnlineClientStoreOptions>().DatabaseId.ShouldBe(2);
+
+            //Test store registration
+            var store = LocalIocManager.Resolve<IOnlineClientStore>().ShouldBeOfType<AbpRedisOnlineClientStore>();
 
             store.Clear();
 
