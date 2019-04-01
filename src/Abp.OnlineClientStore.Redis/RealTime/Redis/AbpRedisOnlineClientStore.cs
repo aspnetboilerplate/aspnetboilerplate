@@ -1,6 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using Abp.Data;
+﻿using System.Collections.Generic;
 
 namespace Abp.RealTime.Redis
 {
@@ -16,22 +14,29 @@ namespace Abp.RealTime.Redis
             Store.TryAdd(client.ConnectionId, client as OnlineClient);
         }
 
-        public ConditionalValue<IOnlineClient> Remove(string connectionId)
+        public bool Remove(string connectionId)
         {
-            Store.TryGetValue(connectionId, out OnlineClient value);
-
-            if (value != null)
-            {
-               bool removed = Store.Remove(connectionId);
-               return new ConditionalValue<IOnlineClient>(removed, value);
-            }
-
-            return new ConditionalValue<IOnlineClient>(false, null);
+            return TryRemove(connectionId, out IOnlineClient _);
         }
 
-        public ConditionalValue<IOnlineClient> Get(string connectionId)
+        public bool TryRemove(string connectionId, out IOnlineClient client)
         {
-            return Store.TryGetValue(connectionId, out OnlineClient found) ? new ConditionalValue<IOnlineClient>(true, found) : new ConditionalValue<IOnlineClient>(false, null);
+            Store.TryGetValue(connectionId, out OnlineClient found);
+          
+            bool removed = false;
+            
+            if (found != null)
+                removed = Store.Remove(connectionId);
+            client = removed ? found : null;
+
+            return removed;
+        }
+
+        public bool TryGet(string connectionId, out IOnlineClient client)
+        {
+            bool result = Store.TryGetValue(connectionId, out OnlineClient found);
+            client = found;
+            return result;
         }
 
         public bool Contains(string connectionId)
@@ -42,6 +47,11 @@ namespace Abp.RealTime.Redis
         public IReadOnlyList<IOnlineClient> GetAll()
         {
             return Store.Values;
+        }
+
+        public void Clear()
+        {
+            Store.Clear();
         }
 
         private IRedisKeyValueStore<string, OnlineClient> Store { get; }

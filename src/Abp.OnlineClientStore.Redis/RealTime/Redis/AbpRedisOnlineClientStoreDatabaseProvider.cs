@@ -23,15 +23,12 @@ namespace Abp.RealTime.Redis
         /// </summary>
         public IDatabase GetDatabase()
         {
-            return _connectionMultiplexer.Value.GetDatabase();
+            return _connectionMultiplexer.Value.GetDatabase(_options.DatabaseId);
         }
 
         private ConnectionMultiplexer CreateConnectionMultiplexer()
         {
-            var configuration = ConfigurationOptions.Parse(_options.ConnectionString);
-            configuration.DefaultDatabase = _options.DatabaseId;
-
-            return ConnectionMultiplexer.Connect(configuration);
+            return ConnectionMultiplexer.Connect(_options.ConnectionString);
         }
     }
 }
