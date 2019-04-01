@@ -67,12 +67,9 @@ namespace Abp.RealTime
         {
             lock (SyncObj)
             {
-                var result = Store.Remove(connectionId);
-
-                if (result.HasValue)
+                var result = Store.TryRemove(connectionId, out IOnlineClient client);
+                if (result)
                 {
-                    IOnlineClient client = result.Value;
-
                     if (UserDisconnected != null)
                     {
                         var user = client.ToUserIdentifierOrNull();
@@ -86,7 +83,7 @@ namespace Abp.RealTime
                     ClientDisconnected?.Invoke(this, new OnlineClientEventArgs(client));
                 }
 
-                return result.HasValue;
+                return result;
             }
         }
 
@@ -94,7 +91,13 @@ namespace Abp.RealTime
         {
             lock (SyncObj)
             {
-                return Store.Get(connectionId).Value;
+                if (Store.TryGet(connectionId, out IOnlineClient client))
+                {
+                    return client;
+                } else
+                {
+                    return null;
+                }
             }
         }
         

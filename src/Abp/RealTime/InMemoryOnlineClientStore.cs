@@ -22,14 +22,19 @@ namespace Abp.RealTime
             Clients.AddOrUpdate(client.ConnectionId, client, (s, o) => client);
         }
 
-        public ConditionalValue<IOnlineClient> Remove(string connectionId)
+        public bool Remove(string connectionId)
         {
-           return Clients.TryRemove(connectionId, out IOnlineClient removed) ? new ConditionalValue<IOnlineClient>(true, removed) : new ConditionalValue<IOnlineClient>(false, null);
+           return TryRemove(connectionId, out IOnlineClient removed);
+        }
+        
+        public bool TryRemove(string connectionId, out IOnlineClient client)
+        {
+           return Clients.TryRemove(connectionId, out client);
         }
 
-        public ConditionalValue<IOnlineClient> Get(string connectionId)
+        public bool TryGet(string connectionId, out IOnlineClient client)
         {
-            return Clients.TryGetValue(connectionId, out IOnlineClient found) ? new ConditionalValue<IOnlineClient>(true, found) : new ConditionalValue<IOnlineClient>(false, null);
+            return Clients.TryGetValue(connectionId, out client);
         }
 
         public bool Contains(string connectionId)

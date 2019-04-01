@@ -20,11 +20,11 @@ namespace Abp.Tests.RealTime
             var connectionId = Guid.NewGuid().ToString("N");
 
             _store.Add(new OnlineClient(connectionId, "127.0.0.1", 1, 2));
-            _store.Get(connectionId).HasValue.ShouldBeTrue();
+            _store.TryGet(connectionId, out IOnlineClient client).ShouldBeTrue();
 
             _store.Contains(connectionId).ShouldBeTrue();
             _store.GetAll().Count.ShouldBe(1);
-            _store.Remove(connectionId).HasValue.ShouldBeTrue();
+            _store.Remove(connectionId).ShouldBeTrue();
             _store.GetAll().Count.ShouldBe(0);
         }
     }
