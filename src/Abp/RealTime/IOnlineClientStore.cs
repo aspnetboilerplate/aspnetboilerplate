@@ -15,14 +15,22 @@ namespace Abp.RealTime
         /// Removes a client by connection id.
         /// </summary>
         /// <param name="connectionId">The connection id.</param>
-        /// <returns>Tuple indicating whether the client was removed and if so, the value</returns>
-        ConditionalValue<IOnlineClient> Remove(string connectionId);
-
+        /// <returns>true if the client is removed, otherwise, false</returns>
+        bool Remove(string connectionId);
+        
         /// <summary>
-        /// Get's a client by connection id.
+        /// Removes a client by connection id.
         /// </summary>
         /// <param name="connectionId">The connection id.</param>
-        ConditionalValue<IOnlineClient> Get(string connectionId);
+        /// <returns>true if the client is removed, otherwise, false</returns>
+        bool TryRemove(string connectionId, out IOnlineClient client);
+
+        /// <summary>
+        /// Gets a client by connection id.
+        /// </summary>
+        /// <param name="connectionId">The connection id.</param>
+        /// <returns>true if the client exists, otherwise, false</returns>
+        bool TryGet(string connectionId, out IOnlineClient client);
 
         /// <summary>
         /// Determines if store contains client with connection id.
