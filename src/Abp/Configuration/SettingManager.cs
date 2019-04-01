@@ -176,6 +176,13 @@ namespace Abp.Configuration
         /// <inheritdoc/>
         public async Task<IReadOnlyList<ISettingValue>> GetAllSettingValuesForApplicationAsync()
         {
+            if (!_multiTenancyConfig.IsEnabled)
+            {
+                return (await GetReadOnlyTenantSettings(AbpSession.GetTenantId())).Values
+                    .Select(setting => new SettingValueObject(setting.Name, setting.Value))
+                    .ToImmutableList();
+            }
+
             return (await GetApplicationSettingsAsync()).Values
                 .Select(setting => new SettingValueObject(setting.Name, setting.Value))
                 .ToImmutableList();
