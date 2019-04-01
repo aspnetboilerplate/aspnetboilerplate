@@ -16,5 +16,9 @@
     <text name="TimeZone" value="موقعیت زمانی" />
     <text name="AllOfThesePermissionsMustBeGranted" value="دسترسی مورد نیاز کاربر تعریف نشده است. تمام این حق دسترسی ها باید برای کاربر تعریف شود: {0}" />
     <text name="AtLeastOneOfThesePermissionsMustBeGranted" value="دسترسی مورد نیاز کاربر تعریف نشده است. حداقل یکی از این دسترسی ها باید برای کاربر تعیین شود : {0}" />
+    <text name="FeatureIsNotEnabled">ویژگیفعالنیست: {0}</text>
+    <text name="AllOfTheseFeaturesMustBeEnabled">ویژگی های مورد نیاز فعال نیستند همه این ویژگی ها باید فعال شوند: {0}</text>
+    <text name="AtLeastOneOfTheseFeaturesMustBeEnabled">ویژگی های مورد نیاز فعال نیستند حداقل یکی از این ویژگی ها باید فعال باشد: {0}</text>
+    <text name="MainMenu">منویاصلی</text>
   </texts>
 </localizationDictionary>

@@ -16,6 +16,9 @@
     <text name="TimeZone">Huso horario</text>
     <text name="AllOfThesePermissionsMustBeGranted">Los permisos requeridos no han sido otorgados. Todos estos permisos deben ser otorgados: {0}</text>
     <text name="AtLeastOneOfThesePermissionsMustBeGranted">Los permisos requeridos no han sido otorgados. Al menos uno de estos permisos deben ser otorgados: {0}</text>
+    <text name="FeatureIsNotEnabled">La función no está habilitada: {0}</text>
+    <text name="AllOfTheseFeaturesMustBeEnabled">Las características requeridas no están habilitadas. Todas estas características deben estar habilitadas: {0}</text>
+    <text name="AtLeastOneOfTheseFeaturesMustBeEnabled">Las características requeridas no están habilitadas. Al menos una de estas características debe estar habilitada: {0}</text>
     <text name="MainMenu">Menú principal</text>
   </texts>
 </localizationDictionary>

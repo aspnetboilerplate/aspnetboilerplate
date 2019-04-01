@@ -16,6 +16,9 @@
     <text name="TimeZone">Fuso orario</text>
     <text name="AllOfThesePermissionsMustBeGranted">Le autorizzazioni necessarie non vengono concesse. Tutte queste autorizzazioni devono essere concesse: {0}</text>
     <text name="AtLeastOneOfThesePermissionsMustBeGranted">Le autorizzazioni necessarie non vengono concesse. Almeno una di queste autorizzazioni deve essere concessa: {0}</text>
+    <text name="FeatureIsNotEnabled">La funzione non è abilitata: {0}</text>
+    <text name="AllOfTheseFeaturesMustBeEnabled">Le funzionalità richieste non sono abilitate. Tutte queste funzionalità devono essere abilitate: {0}</text>
+    <text name="AtLeastOneOfTheseFeaturesMustBeEnabled">Le funzionalità richieste non sono abilitate. Almeno una di queste funzioni deve essere abilitata: {0}</text>
     <text name="MainMenu">Menu principale</text>
   </texts>
 </localizationDictionary>

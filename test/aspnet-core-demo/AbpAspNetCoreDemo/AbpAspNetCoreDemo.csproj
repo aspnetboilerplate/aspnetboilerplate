@@ -23,9 +23,12 @@
     <PackageReference Include="Microsoft.AspNetCore.App" />
     <PackageReference Include="Microsoft.VisualStudio.Web.BrowserLink" Version="2.2.0" />
     <PackageReference Include="Microsoft.VisualStudio.Web.CodeGeneration.Design" Version="2.2.1" />
+    <PackageReference Include="Microsoft.Data.Sqlite" Version="2.2.1" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore.Sqlite" Version="2.2.1" />
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\..\..\src\Abp.AspNetCore.OData\Abp.AspNetCore.OData.csproj" />
     <ProjectReference Include="..\..\..\src\Abp.AspNetCore\Abp.AspNetCore.csproj" />
     <ProjectReference Include="..\..\..\src\Abp.EntityFrameworkCore\Abp.EntityFrameworkCore.csproj" />
     <ProjectReference Include="..\..\..\src\Abp.Castle.Log4Net\Abp.Castle.Log4Net.csproj" />
