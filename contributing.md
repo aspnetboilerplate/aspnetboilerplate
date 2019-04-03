@@ -52,4 +52,29 @@ If you would like to write tutorials or blog posts for ASP.NET Boilerplate, plea
 
 If you would like to report a bug, please [create an issue on the GitHub repository](https://github.com/aspnetboilerplate/aspnetboilerplate/issues/new)
 
+## GitHub Issues
+
+GitHub issues are for bug reports, feature requests and other discussions about the framework.
+
+If you're creating a bug/problem report, please include followings:
+
+```markdown
+* Your Abp package version.
+* Your base framework: .Net Framework or .Net Core.
+* Exception message and stack trace if available.
+* Steps needed to reproduce the problem.
+```
+
+Only English!
+
+### Stack Overflow
+
+You can use StackOverflow for your questions about using the framework, templates and samples:
+
+https://stackoverflow.com/questions/tagged/aspnetboilerplate
+
+Use `aspnetboilerplate` tag in your questions.
+
+
+
 
