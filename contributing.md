@@ -1,5 +1,4 @@
-﻿**DRAFT**: This doc has been created as a draft. 
-See https://help.github.com/en/articles/setting-guidelines-for-repository-contributors
+﻿**DRAFT**: This doc is draft. See https://help.github.com/en/articles/setting-guidelines-for-repository-contributors
 
 # Contributing to ASP.NET Boilerplate
 
