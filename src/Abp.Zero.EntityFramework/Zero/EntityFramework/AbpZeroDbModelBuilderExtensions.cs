@@ -29,6 +29,7 @@ namespace Abp.Zero.EntityFramework
         /// <typeparam name="TUser">The type of the user entity.</typeparam>
         /// <param name="modelBuilder">Model builder.</param>
         /// <param name="prefix">Table prefix, or null to clear prefix.</param>
+        /// <param name="schemaName">Schema name</param>
         public static void ChangeAbpTablePrefix<TTenant, TRole, TUser>(this DbModelBuilder modelBuilder, string prefix, string schemaName = null)
             where TTenant : AbpTenant<TUser>
             where TRole : AbpRole<TUser>
@@ -66,6 +67,7 @@ namespace Abp.Zero.EntityFramework
             SetTableName<TUser>(modelBuilder, prefix + "Users", schemaName);
             SetTableName<UserAccount>(modelBuilder, prefix + "UserAccounts", schemaName);
             SetTableName<UserClaim>(modelBuilder, prefix + "UserClaims", schemaName);
+            SetTableName<RoleClaim>(modelBuilder, prefix + "RoleClaims", schemaName);
         }
 
         private static void SetTableName<TEntity>(DbModelBuilder modelBuilder, string tableName, string schemaName)

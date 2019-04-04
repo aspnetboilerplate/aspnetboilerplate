@@ -29,6 +29,7 @@ namespace Abp.Zero.EntityFrameworkCore
         /// <typeparam name="TUser">The type of the user entity.</typeparam>
         /// <param name="modelBuilder">Model builder.</param>
         /// <param name="prefix">Table prefix, or null to clear prefix.</param>
+        /// <param name="schemaName">Schema name</param>
         public static void ChangeAbpTablePrefix<TTenant, TRole, TUser>(this ModelBuilder modelBuilder, string prefix, string schemaName = null)
             where TTenant : AbpTenant<TUser>
             where TRole : AbpRole<TUser>
