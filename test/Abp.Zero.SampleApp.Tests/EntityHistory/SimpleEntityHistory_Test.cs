@@ -64,7 +64,7 @@ namespace Abp.Zero.SampleApp.Tests.EntityHistory
                 entityChange.ChangeType.ShouldBe(EntityChangeType.Created);
                 entityChange.EntityId.ShouldBe(blog2Id.ToJsonString());
                 entityChange.EntityTypeFullName.ShouldBe(typeof(Blog).FullName);
-                entityChange.PropertyChanges.Count.ShouldBe(3);  // Blog.Name, Blog.Url, Blog.More
+                entityChange.PropertyChanges.Count.ShouldBe(4);  // Blog.Name, Blog.Url, Blog.Category Blog.More
 
                 // Check "who did this change"
                 s.ImpersonatorTenantId.ShouldBe(AbpSession.ImpersonatorTenantId);
@@ -103,7 +103,7 @@ namespace Abp.Zero.SampleApp.Tests.EntityHistory
                 context.EntityChanges.Count(e => e.TenantId == null).ShouldBe(1);
                 context.EntityChangeSets.Count(e => e.TenantId == null).ShouldBe(1);
                 context.EntityChangeSets.Single().CreationTime.ShouldBeGreaterThan(justNow);
-                context.EntityPropertyChanges.Count(e => e.TenantId == null).ShouldBe(3);
+                context.EntityPropertyChanges.Count(e => e.TenantId == null).ShouldBe(4);
             });
         }
 
@@ -138,6 +138,45 @@ namespace Abp.Zero.SampleApp.Tests.EntityHistory
         }
 
         [Fact]
+        public void Should_Write_History_For_Tracked_Entities_Update_Only_Modified_Properties()
+        {
+            var originalValue = "http://testblog2.myblogs.com";
+            var newValue = "http://testblog2-changed.myblogs.com";
+
+            using (var uow = Resolve<IUnitOfWorkManager>().Begin())
+            {
+                var blog2 = _blogRepository.Single(b => b.Url == originalValue && b.Category == null);
+
+                // Update only the Url of the Blog
+                blog2.ChangeUrl(newValue);
+                _blogRepository.Update(blog2);
+
+                uow.Complete();
+            }
+
+            Predicate<EntityChangeSet> predicate = s =>
+            {
+                s.EntityChanges.Count.ShouldBe(1);
+
+                var entityChange = s.EntityChanges[0];
+                entityChange.ChangeType.ShouldBe(EntityChangeType.Updated);
+                entityChange.EntityId.ShouldBe(entityChange.EntityEntry.As<DbEntityEntry>().Entity.As<IEntity>().Id.ToJsonString());
+                entityChange.EntityTypeFullName.ShouldBe(typeof(Blog).FullName);
+                entityChange.PropertyChanges.Count.ShouldBe(1);
+
+                var propertyChange = entityChange.PropertyChanges.First();
+                propertyChange.PropertyName.ShouldBe(nameof(Blog.Url));
+                propertyChange.NewValue.ShouldBe(newValue.ToJsonString());
+                propertyChange.OriginalValue.ShouldBe(originalValue.ToJsonString());
+                propertyChange.PropertyTypeFullName.ShouldBe(typeof(Blog).GetProperty(nameof(Blog.Url)).PropertyType.FullName);
+
+                return true;
+            };
+
+            _entityHistoryStore.Received().SaveAsync(Arg.Is<EntityChangeSet>(s => predicate(s)));
+        }
+
+        [Fact]
         public void Should_Write_History_For_Tracked_Entities_Update_Complex()
         {
             /* Blog has Audited attribute. */
@@ -153,6 +192,7 @@ namespace Abp.Zero.SampleApp.Tests.EntityHistory
 
                 originalValue = new BlogEx { BloggerName = blog1.More.BloggerName };
                 blog1.More.BloggerName = newValue.BloggerName;
+                _blogRepository.Update(blog1);
 
                 uow.Complete();
             }
@@ -228,10 +268,10 @@ namespace Abp.Zero.SampleApp.Tests.EntityHistory
             using (var uow = Resolve<IUnitOfWorkManager>().Begin())
             {
                 var blog1 = _blogRepository.Single(b => b.Name == "test-blog-1");
-                var post5 = new Post { Blog = blog1, Title = "test-post-5-title", Body = "test-post-5-body" };
+                var post10 = new Post { Blog = blog1, Title = "test-post-10-title", Body = "test-post-10-body" };
 
                 // Change navigation property by adding into collection
-                blog1.Posts.Add(post5);
+                blog1.Posts.Add(post10);
                 _blogRepository.Update(blog1);
 
                 uow.Complete();

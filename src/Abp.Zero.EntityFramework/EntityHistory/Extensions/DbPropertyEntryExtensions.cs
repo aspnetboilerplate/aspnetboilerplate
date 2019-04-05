@@ -37,7 +37,7 @@ namespace Abp.EntityHistory.Extensions
                 return propertyEntry.OriginalValue != null;
             }
 
-            return !(propertyEntry.OriginalValue?.Equals(propertyEntry.CurrentValue)) ?? propertyEntry.CurrentValue == null;
+            return !(propertyEntry.OriginalValue?.Equals(propertyEntry.CurrentValue) ?? propertyEntry.CurrentValue == null);
         }
     }
 }
