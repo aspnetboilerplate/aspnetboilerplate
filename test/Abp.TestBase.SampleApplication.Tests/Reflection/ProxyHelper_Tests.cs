@@ -1,6 +1,6 @@
 ﻿using Abp.Domain.Repositories;
 using Abp.Reflection;
-using Abp.TestBase.SampleApplication.ContacLists;
+using Abp.TestBase.SampleApplication.ContactLists;
 using Abp.TestBase.SampleApplication.EntityFramework.Repositories;
 using Shouldly;
 using Xunit;

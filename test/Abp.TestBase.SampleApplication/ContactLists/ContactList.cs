@@ -3,7 +3,7 @@ using System.ComponentModel.DataAnnotations.Schema;
 using Abp.Domain.Entities;
 using Abp.TestBase.SampleApplication.People;
 
-namespace Abp.TestBase.SampleApplication.ContacLists
+namespace Abp.TestBase.SampleApplication.ContactLists
 {
     [Table("ContactLists")]
     public class ContactList : Entity, IMustHaveTenant

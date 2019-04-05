@@ -4,7 +4,7 @@ using Abp.Application.Services;
 using Abp.AutoMapper;
 using Abp.Domain.Repositories;
 
-namespace Abp.TestBase.SampleApplication.ContacLists
+namespace Abp.TestBase.SampleApplication.ContactLists
 {
     public class ContactListAppService : ApplicationService, IContactListAppService
     {
