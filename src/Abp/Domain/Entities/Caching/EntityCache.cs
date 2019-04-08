@@ -25,7 +25,8 @@ namespace Abp.Domain.Entities.Caching
 
     public class EntityCache<TEntity, TCacheItem, TPrimaryKey> :
         EntityCacheBase<TEntity, TCacheItem, TPrimaryKey>,
-        IEventHandler<EntityChangedEventData<TEntity>>, IEntityCache<TCacheItem, TPrimaryKey>
+        IEventHandler<EntityChangedEventData<TEntity>>, 
+        IEntityCache<TCacheItem, TPrimaryKey>
         where TEntity : class, IEntity<TPrimaryKey>
     {
         public ITypedCache<TPrimaryKey, TCacheItem> InternalCache
