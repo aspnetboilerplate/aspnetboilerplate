@@ -116,7 +116,7 @@ namespace Abp.Dapper.Expressions
 
             Visit(node.Left);
 
-            if (node.Left is MemberExpression)
+            if (node.Left is MemberExpression || node.Left is UnaryExpression)
             {
                 IFieldPredicate field = GetCurrentField();
                 field.Operator = DetermineOperator(node);

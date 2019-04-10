@@ -9,13 +9,13 @@ The first thing to do is to declare which languages are supported. This is
 done in the **PreInitialize** method of your
 [module](/Pages/Documents/Module-System) as shown below:
 
-    Configuration.Localization.Languages.Add(new LanguageInfo("en", "English", "famfamfam-flag-england", true));
-    Configuration.Localization.Languages.Add(new LanguageInfo("tr", "Türkçe", "famfamfam-flag-tr"));
+    Configuration.Localization.Languages.Add(new LanguageInfo("en", "English", "famfamfam-flags gb", true));
+    Configuration.Localization.Languages.Add(new LanguageInfo("tr", "Türkçe", "famfamfam-flags tr"));
 
 On the server side, you can [inject](/Pages/Documents/Dependency-Injection)
 and use the **ILocalizationManager**. On the client side, you can use the
 **abp.localization** JavaScript API to get a list of all available
-languages, as well as the current language. famfamfam-flag-england (and tr) is
+languages, as well as the current language. "famfamfam-flags gb" (and "famfamfam-flags tr") is
 just a CSS class, which you can change based on your needs. You can then use it
 in the UI to show the related flag.
 
@@ -275,13 +275,13 @@ language. Example usage:
         {
             options.UseAbpRequestLocalization = false; //disable automatic adding of request localization
         });
-
+    
         //...authentication middleware(s)
-
+    
         app.UseAbpRequestLocalization(); //manually add request localization
-
+    
         //...other middlewares
-
+    
         app.UseMvc(routes =>
         {
             //...
@@ -424,9 +424,9 @@ sets the source name:
 
     public abstract class SimpleTaskSystemWebViewPageBase : SimpleTaskSystemWebViewPageBase<dynamic>
     {
-
+    
     }
-
+    
     public abstract class SimpleTaskSystemWebViewPageBase<TModel> : AbpWebViewPage<TModel>
     {
         protected SimpleTaskSystemWebViewPageBase()
@@ -468,7 +468,7 @@ text:
 The localization method can also get additional format arguments. Example:
 
     abp.localization.localize('RoleDeleteWarningMessage', 'MySource', 'Admin');
-
+    
     //shortcut if the source is retrieved using getSource as shown above
     source('RoleDeleteWarningMessage', 'Admin');
 

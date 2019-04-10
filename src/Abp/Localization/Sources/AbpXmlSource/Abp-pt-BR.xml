@@ -11,5 +11,14 @@
     <text name="DefaultFromSenderEmailAddress">E-mail padrão para o remetente</text>
     <text name="DefaultFromSenderDisplayName">Nome padrão para o remetente</text>
     <text name="DefaultLanguage">Lingua padrão</text>
+    <text name="ReceiveNotifications">Receber notificações</text>
+    <text name="CurrentUserDidNotLoginToTheApplication">Usuário atual não fez o login no aplicativo!</text>
+    <text name="TimeZone">Fuso horário</text>
+    <text name="AllOfThesePermissionsMustBeGranted">Permissões necessárias não são concedidas. Todas essas permissões devem ser concedidas: {0}</text>
+    <text name="AtLeastOneOfThesePermissionsMustBeGranted">Permissões necessárias não são concedidas. Pelo menos uma dessas permissões deve ser concedida: {0}</text>
+    <text name="FeatureIsNotEnabled">O recurso não está ativado: {0}</text>
+    <text name="AllOfTheseFeaturesMustBeEnabled">Recursos necessários não estão habilitados. Todos esses recursos devem estar ativados: {0}</text>
+    <text name="AtLeastOneOfTheseFeaturesMustBeEnabled">Recursos necessários não estão habilitados. Pelo menos um desses recursos deve estar ativado: {0}</text>
+    <text name="MainMenu">Menu principal</text>
   </texts>
 </localizationDictionary>

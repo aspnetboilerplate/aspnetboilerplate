@@ -16,6 +16,9 @@
     <text name="TimeZone">Zeitzone</text>
     <text name="AllOfThesePermissionsMustBeGranted">Die benötigten Berechtigungen wurden nicht vergeben. Alle der folgenden Berechtigungen werden benötigt: {0}</text>
     <text name="AtLeastOneOfThesePermissionsMustBeGranted">Die benötigten Berechtigungen wurden nicht vergeben. Mindestens eine der folgenden Berechtigungen wird benötigt: {0}</text>
+    <text name="FeatureIsNotEnabled">Funktion ist nicht aktiviert: {0}</text>
+    <text name="AllOfTheseFeaturesMustBeEnabled">Erforderliche Funktionen sind nicht aktiviert. Alle diese Funktionen müssen aktiviert sein: {0}</text>
+    <text name="AtLeastOneOfTheseFeaturesMustBeEnabled">Erforderliche Funktionen sind nicht aktiviert. Mindestens eine dieser Funktionen muss aktiviert sein: {0}</text>
     <text name="MainMenu">Hauptmenü</text>
   </texts>
 </localizationDictionary>

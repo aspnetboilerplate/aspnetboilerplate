@@ -219,12 +219,6 @@ namespace Abp.Authorization
                 return new AbpLoginResult<TTenant, TUser>(AbpLoginResultType.UserPhoneNumberIsNotConfirmed);
             }
 
-            user.LastLoginTime = Clock.Now;
-
-            await UserManager.UpdateAsync(user);
-
-            await UnitOfWorkManager.Current.SaveChangesAsync();
-
             var principal = await _claimsPrincipalFactory.CreateAsync(user);
 
             return new AbpLoginResult<TTenant, TUser>(

@@ -12,7 +12,7 @@ project.
 This document assumes that you have already created an ASP.NET Core based
 project (including Module Zero) from the [startup templates](/Templates) and
 have set it up to work. We created an [ASP.NET Core MVC startup
-project](Startup-Template-Core.md) for this demonstration.
+project](/Pages/Documents/Zero/Startup-Template-Core) for this demonstration.
 
 ### Installation
 
@@ -59,7 +59,7 @@ Highlighted, here are the **differences** from the standard IdentityServer4 usag
         public void ConfigureServices(IServiceCollection services)
         {
             //...
-
+    
                 services.AddIdentityServer()
                     .AddDeveloperSigningCredential()
                     .AddInMemoryIdentityResources(IdentityServerConfig.GetIdentityResources())
@@ -67,17 +67,17 @@ Highlighted, here are the **differences** from the standard IdentityServer4 usag
                     .AddInMemoryClients(IdentityServerConfig.GetClients())
                     .AddAbpPersistedGrants<IAbpPersistedGrantDbContext>()
                     .AddAbpIdentityServer<User>();
-
+    
             //...
         }
-
+    
         public void Configure(IApplicationBuilder app)
         {
             //...
-
+    
                 app.UseJwtTokenMiddleware("IdentityBearer");
                 app.UseIdentityServer();
-
+    
             //...
         }
     }
@@ -92,7 +92,7 @@ We added **services.AddIdentityServer()** just after
 We have used the IdentityServerConfig class to get identity resources, api
 resources and clients. You can find more information about this class in
 its own
-[documentation](https://identityserver4.readthedocs.io/en/release/quickstarts/1_client_credentials.html).
+[documentation](http://docs.identityserver.io/en/latest/quickstarts/1_client_credentials.html).
 For the simplest case, it can be a static class like below:
 
     public static class IdentityServerConfig
@@ -104,7 +104,7 @@ For the simplest case, it can be a static class like below:
                 new ApiResource("default-api", "Default (all) API")
             };
         }
-
+    
         public static IEnumerable<IdentityResource> GetIdentityResources()
         {
             return new List<IdentityResource>
@@ -115,7 +115,7 @@ For the simplest case, it can be a static class like below:
                 new IdentityResources.Phone()
             };
         }
-
+    
         public static IEnumerable<Client> GetClients()
         {
             return new List<Client>
@@ -143,16 +143,16 @@ implement the **IAbpPersistedGrantDbContext** interface as shown below:
     public class YourDbContext : AbpZeroDbContext<Tenant, Role, User, YourDbContext>, IAbpPersistedGrantDbContext
     {
         public DbSet<PersistedGrantEntity> PersistedGrants { get; set; }
-
+    
         public YourDbContext(DbContextOptions<YourDbContext> options)
             : base(options)
         {
         }
-
+    
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             base.OnModelCreating(modelBuilder);
-
+    
             modelBuilder.ConfigurePersistedGrantEntity();
         }
     }
@@ -175,7 +175,7 @@ consent responses will be stored in an in-memory data store in that case
 
 If we want to authorize clients against the same application we can use the
 [IdentityServer authentication
-middleware](http://docs.identityserver.io/en/release/topics/apis.html?highlight=UseIdentityServerAuthentication#the-identityserver-authentication-middleware)
+middleware](https://identityserver4.readthedocs.io/en/latest/topics/apis.html?highlight=UseIdentityServerAuthentication#the-identityserver-authentication-middleware)
 for that.
 
 First, install the IdentityServer4.AccessTokenValidation package from NuGet
@@ -227,7 +227,7 @@ Change Program.cs as shown below:
     using Abp.Web.Models;
     using IdentityServerIntegrationDemo.Users.Dto;
     using Newtonsoft.Json;
-
+    
     namespace IdentityServerIntegrationDemo.ConsoleApiClient
     {
         class Program
@@ -237,52 +237,52 @@ Change Program.cs as shown below:
                 RunDemoAsync().Wait();
                 Console.ReadLine();
             }
-
+    
             public static async Task RunDemoAsync()
             {
                 var accessToken = await GetAccessTokenViaOwnerPasswordAsync();
                 await GetUsersListAsync(accessToken);
             }
-
+    
             private static async Task<string> GetAccessTokenViaOwnerPasswordAsync()
             {
                 var disco = await DiscoveryClient.GetAsync("http://localhost:62114");
-
+    
                 var httpHandler = new HttpClientHandler();
                 httpHandler.CookieContainer.Add(new Uri("http://localhost:62114/"), new Cookie(MultiTenancyConsts.TenantIdResolveKey, "1")); //Set TenantId
                 var tokenClient = new TokenClient(disco.TokenEndpoint, "client", "secret", httpHandler);
                 var tokenResponse = await tokenClient.RequestResourceOwnerPasswordAsync("admin", "123qwe");
-
+    
                 if (tokenResponse.IsError)
                 {
                     Console.WriteLine("Error: ");
                     Console.WriteLine(tokenResponse.Error);
                 }
-
+    
                 Console.WriteLine(tokenResponse.Json);
-
+    
                 return tokenResponse.AccessToken;
             }
-
+    
             private static async Task GetUsersListAsync(string accessToken)
             {
                 var client = new HttpClient();
                 client.SetBearerToken(accessToken);
-
+    
                 var response = await client.GetAsync("http://localhost:62114/api/services/app/user/GetAll");
                 if (!response.IsSuccessStatusCode)
                 {
                     Console.WriteLine(response.StatusCode);
                     return;
                 }
-
+    
                 var content = await response.Content.ReadAsStringAsync();
                 var ajaxResponse = JsonConvert.DeserializeObject<AjaxResponse<PagedResultDto<UserListDto>>>(content);
                 if (!ajaxResponse.Success)
                 {
                     throw new Exception(ajaxResponse.Error?.Message ?? "Remote service throws exception!");
                 }
-
+    
                 Console.WriteLine();
                 Console.WriteLine("Total user count: " + ajaxResponse.Result.TotalCount);
                 Console.WriteLine();
@@ -293,7 +293,7 @@ Change Program.cs as shown below:
                 }
             }
         }
-
+    
         internal class UserListDto
         {
             public int Id { get; set; }

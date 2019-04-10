@@ -2,14 +2,13 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-
+using Abp.Dapper.Filters.Query;
 using Abp.Dapper.Repositories;
 using Abp.Dapper.Tests.Entities;
 using Abp.Domain.Repositories;
 using Abp.Domain.Uow;
-
+using DapperExtensions;
 using Shouldly;
-
 using Xunit;
 
 namespace Abp.Dapper.Tests
@@ -23,6 +22,8 @@ namespace Abp.Dapper.Tests
         private readonly IDapperRepository<ProductDetail> _productDetailDapperRepository;
         private readonly IRepository<Person> _personRepository;
         private readonly IDapperRepository<Person> _personDapperRepository;
+        private readonly IDapperRepository<Good> _goodDapperRepository;
+        private readonly IDapperQueryFilterExecuter _dapperQueryFilterExecuter;
 
         public DapperRepository_Tests()
         {
@@ -33,6 +34,8 @@ namespace Abp.Dapper.Tests
             _productDetailDapperRepository = Resolve<IDapperRepository<ProductDetail>>();
             _personRepository = Resolve<IRepository<Person>>();
             _personDapperRepository = Resolve<IDapperRepository<Person>>();
+            _goodDapperRepository = Resolve<IDapperRepository<Good>>();
+            _dapperQueryFilterExecuter = Resolve<IDapperQueryFilterExecuter>();
         }
 
         [Fact]
@@ -152,6 +155,7 @@ namespace Abp.Dapper.Tests
                 uow.Complete();
             }
         }
+
         //About issue-#3990
         [Fact]
         public void Should_Insert_Only_Have_IMustHaveTenant()
@@ -166,7 +170,27 @@ namespace Abp.Dapper.Tests
 
                     personWithTenant40.TenantId.ShouldBe(AbpSession.TenantId.Value);
                 }
+            }
 
+        }
+
+        [Fact]
+        public async Task Dapper_Repository_Count_Should_Return_Correct_Value_For_Nullable_Int_Filter()
+        {
+            using (IUnitOfWorkCompleteHandle uow = _unitOfWorkManager.Begin())
+            {
+                using (_unitOfWorkManager.Current.SetTenantId(AbpSession.TenantId))
+                {
+                    await _goodDapperRepository.InsertAsync(new Good { Name = "AbpTest" });
+                    await _unitOfWorkManager.Current.SaveChangesAsync();
+
+                    int? id = 1;
+
+                    var dapperCount = await _goodDapperRepository.CountAsync(a => a.Id != id && a.Name == "AbpTest");
+                    dapperCount.ShouldBe(0);
+                }
+
+                uow.Complete();
             }
 
         }

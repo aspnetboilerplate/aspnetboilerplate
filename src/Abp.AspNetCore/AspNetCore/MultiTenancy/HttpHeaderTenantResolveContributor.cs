@@ -1,5 +1,6 @@
 ﻿using System.Linq;
 using Abp.Collections.Extensions;
+using Abp.Configuration.Startup;
 using Abp.Dependency;
 using Abp.MultiTenancy;
 using Castle.Core.Logging;
@@ -12,10 +13,14 @@ namespace Abp.AspNetCore.MultiTenancy
         public ILogger Logger { get; set; }
 
         private readonly IHttpContextAccessor _httpContextAccessor;
+        private readonly IMultiTenancyConfig _multiTenancyConfig;
 
-        public HttpHeaderTenantResolveContributor(IHttpContextAccessor httpContextAccessor)
+        public HttpHeaderTenantResolveContributor(
+            IHttpContextAccessor httpContextAccessor, 
+            IMultiTenancyConfig multiTenancyConfig)
         {
             _httpContextAccessor = httpContextAccessor;
+            _multiTenancyConfig = multiTenancyConfig;
 
             Logger = NullLogger.Instance;
         }
@@ -28,7 +33,7 @@ namespace Abp.AspNetCore.MultiTenancy
                 return null;
             }
 
-            var tenantIdHeader = httpContext.Request.Headers[MultiTenancyConsts.TenantIdResolveKey];
+            var tenantIdHeader = httpContext.Request.Headers[_multiTenancyConfig.TenantIdResolveKey];
             if (tenantIdHeader == string.Empty || tenantIdHeader.Count < 1)
             {
                 return null;
@@ -37,12 +42,11 @@ namespace Abp.AspNetCore.MultiTenancy
             if (tenantIdHeader.Count > 1)
             { 
                 Logger.Warn(
-                    $"HTTP request includes more than one {MultiTenancyConsts.TenantIdResolveKey} header value. First one will be used. All of them: {tenantIdHeader.JoinAsString(", ")}"
+                    $"HTTP request includes more than one {_multiTenancyConfig.TenantIdResolveKey} header value. First one will be used. All of them: {tenantIdHeader.JoinAsString(", ")}"
                     );
             }
 
-            int tenantId;
-            return !int.TryParse(tenantIdHeader.First(), out tenantId) ? (int?) null : tenantId;
+            return int.TryParse(tenantIdHeader.First(), out var tenantId) ? tenantId : (int?) null;
         }
     }
 }

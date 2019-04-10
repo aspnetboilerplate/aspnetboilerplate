@@ -125,7 +125,7 @@ namespace Abp.Web.Api.ProxyScripting.Generators
 
             foreach (var prm in parameters)
             {
-                sb.AppendLine($"{new string(' ', indent)}  '{prm.Name}': {GetParamNameInJsFunc(prm)}");
+                sb.AppendLine($"{new string(' ', indent)}  '{prm.Name}': {GetParamNameInJsFunc(prm)},");
             }
 
             sb.Append(new string(' ', indent) + "}");

@@ -43,7 +43,7 @@ namespace Abp.MailKit
         {
             using (var client = BuildSmtpClient())
             {
-                var message = mail.ToMimeMessage();
+                var message = MimeMessage.CreateFromMailMessage(mail);
                 await client.SendAsync(message);
                 await client.DisconnectAsync(true);
             }
@@ -53,7 +53,7 @@ namespace Abp.MailKit
         {
             using (var client = BuildSmtpClient())
             {
-                var message = mail.ToMimeMessage();
+                var message = MimeMessage.CreateFromMailMessage(mail);
                 client.Send(message);
                 client.Disconnect(true);
             }

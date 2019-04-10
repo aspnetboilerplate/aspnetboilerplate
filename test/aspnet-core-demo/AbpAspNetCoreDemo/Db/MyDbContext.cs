@@ -12,5 +12,15 @@ namespace AbpAspNetCoreDemo.Db
             : base(options)
         {
         }
+
+        protected override void OnModelCreating(ModelBuilder modelBuilder)
+        {
+            base.OnModelCreating(modelBuilder);
+
+            modelBuilder.Entity<Product>().HasData(new Product("Test product", 100)
+            {
+                Id = 1
+            });
+        }
     }
 }

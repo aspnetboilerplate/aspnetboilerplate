@@ -1,3 +1,4 @@
+using Abp.Configuration.Startup;
 using Abp.Dependency;
 using Abp.Extensions;
 using Abp.MultiTenancy;
@@ -8,10 +9,14 @@ namespace Abp.AspNetCore.MultiTenancy
     public class HttpCookieTenantResolveContributor : ITenantResolveContributor, ITransientDependency
     {
         private readonly IHttpContextAccessor _httpContextAccessor;
+        private readonly IMultiTenancyConfig _multiTenancyConfig;
 
-        public HttpCookieTenantResolveContributor(IHttpContextAccessor httpContextAccessor)
+        public HttpCookieTenantResolveContributor(
+            IHttpContextAccessor httpContextAccessor, 
+            IMultiTenancyConfig multiTenancyConfig)
         {
             _httpContextAccessor = httpContextAccessor;
+            _multiTenancyConfig = multiTenancyConfig;
         }
 
         public int? ResolveTenantId()
@@ -22,14 +27,13 @@ namespace Abp.AspNetCore.MultiTenancy
                 return null;
             }
 
-            var tenantIdValue = httpContext.Request.Cookies[MultiTenancyConsts.TenantIdResolveKey];
+            var tenantIdValue = httpContext.Request.Cookies[_multiTenancyConfig.TenantIdResolveKey];
             if (tenantIdValue.IsNullOrEmpty())
             {
                 return null;
             }
 
-            int tenantId;
-            return !int.TryParse(tenantIdValue, out tenantId) ? (int?) null : tenantId;
+            return int.TryParse(tenantIdValue, out var tenantId) ? tenantId : (int?) null;
         }
     }
 }

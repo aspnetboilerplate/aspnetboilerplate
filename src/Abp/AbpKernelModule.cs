@@ -54,6 +54,7 @@ namespace Abp
             ConfigureCaches();
             AddIgnoredTypes();
             AddMethodParameterValidators();
+            AddDefaultNotificationDistributor();
         }
 
         public override void Initialize()
@@ -67,11 +68,14 @@ namespace Abp
 
             IocManager.Register(typeof(IOnlineClientManager<>), typeof(OnlineClientManager<>), DependencyLifeStyle.Singleton);
 
+            IocManager.Register(typeof(EventTriggerAsyncBackgroundJob<>),DependencyLifeStyle.Transient);
+            
             IocManager.RegisterAssemblyByConvention(typeof(AbpKernelModule).GetAssembly(),
                 new ConventionalRegistrationConfig
                 {
                     InstallInstallers = false
                 });
+            
         }
 
         public override void PostInitialize()
@@ -182,6 +186,11 @@ namespace Abp
             Configuration.Validation.Validators.Add<CustomValidator>();
         }
 
+        private void AddDefaultNotificationDistributor()
+        {
+            Configuration.Notifications.Distributers.Add<DefaultNotificationDistributer>();
+        }
+
         private void RegisterMissingComponents()
         {
             if (!IocManager.IsRegistered<IGuidGenerator>())
@@ -203,6 +212,7 @@ namespace Abp
             IocManager.RegisterIfNot<ITenantStore, NullTenantStore>(DependencyLifeStyle.Singleton);
             IocManager.RegisterIfNot<ITenantResolverCache, NullTenantResolverCache>(DependencyLifeStyle.Singleton);
             IocManager.RegisterIfNot<IEntityHistoryStore, NullEntityHistoryStore>(DependencyLifeStyle.Singleton);
+            IocManager.RegisterIfNot<IOnlineClientStore, InMemoryOnlineClientStore>(DependencyLifeStyle.Singleton);
 
             if (Configuration.BackgroundJobs.IsJobExecutionEnabled)
             {

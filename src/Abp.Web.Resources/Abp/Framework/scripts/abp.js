@@ -21,6 +21,7 @@
     abp.multiTenancy = abp.multiTenancy || {};
 
     abp.multiTenancy.isEnabled = false;
+    abp.multiTenancy.ignoreFeatureCheckForHostUsers = false;
 
     abp.multiTenancy.sides = {
         TENANT: 1,
