@@ -106,6 +106,11 @@ namespace Abp.Zero.EntityFrameworkCore
         public virtual DbSet<UserOrganizationUnit> UserOrganizationUnits { get; set; }
 
         /// <summary>
+        /// OrganizationUnitRoles.
+        /// </summary>
+        public virtual DbSet<OrganizationUnitRole> OrganizationUnitRoles { get; set; }
+
+        /// <summary>
         /// Tenant notifications.
         /// </summary>
         public virtual DbSet<TenantNotificationInfo> TenantNotifications { get; set; }
@@ -307,6 +312,12 @@ namespace Abp.Zero.EntityFrameworkCore
             modelBuilder.Entity<UserOrganizationUnit>(b =>
             {
                 b.HasIndex(e => new { e.TenantId, e.UserId });
+                b.HasIndex(e => new { e.TenantId, e.OrganizationUnitId });
+            });
+
+            modelBuilder.Entity<OrganizationUnitRole>(b =>
+            {
+                b.HasIndex(e => new { e.TenantId, e.RoleId });
                 b.HasIndex(e => new { e.TenantId, e.OrganizationUnitId });
             });
 

@@ -9,6 +9,7 @@ using Abp.Dependency;
 using Abp.Domain.Repositories;
 using Abp.Domain.Uow;
 using Abp.Linq;
+using Abp.Organizations;
 using Microsoft.AspNet.Identity;
 
 namespace Abp.Authorization.Users
@@ -44,6 +45,8 @@ namespace Abp.Authorization.Users
         private readonly IRepository<TRole> _roleRepository;
         private readonly IRepository<UserPermissionSetting, long> _userPermissionSettingRepository;
         private readonly IUnitOfWorkManager _unitOfWorkManager;
+        private readonly IRepository<UserOrganizationUnit, long> _userOrganizationUnitRepository;
+        private readonly IRepository<OrganizationUnitRole, long> _organizationUnitRoleRepository;
 
         /// <summary>
         /// Constructor.
@@ -55,7 +58,9 @@ namespace Abp.Authorization.Users
             IRepository<TRole> roleRepository,
             IRepository<UserPermissionSetting, long> userPermissionSettingRepository,
             IUnitOfWorkManager unitOfWorkManager,
-            IRepository<UserClaim, long> userClaimRepository)
+            IRepository<UserClaim, long> userClaimRepository,
+            IRepository<UserOrganizationUnit, long> userOrganizationUnitRepository,
+            IRepository<OrganizationUnitRole, long> organizationUnitRoleRepository)
         {
             _userRepository = userRepository;
             _userLoginRepository = userLoginRepository;
@@ -63,6 +68,8 @@ namespace Abp.Authorization.Users
             _roleRepository = roleRepository;
             _unitOfWorkManager = unitOfWorkManager;
             _userClaimRepository = userClaimRepository;
+            _userOrganizationUnitRepository = userOrganizationUnitRepository;
+            _organizationUnitRoleRepository = organizationUnitRoleRepository;
             _userPermissionSettingRepository = userPermissionSettingRepository;
 
             AsyncQueryableExecuter = NullAsyncQueryableExecuter.Instance;
@@ -98,15 +105,19 @@ namespace Abp.Authorization.Users
 
         public virtual async Task<TUser> FindByNameAsync(string userName)
         {
+            var normalizedUsername = NormalizeKey(userName);
+
             return await _userRepository.FirstOrDefaultAsync(
-                user => user.UserName == userName
+                user => user.NormalizedUserName == normalizedUsername
             );
         }
 
         public virtual async Task<TUser> FindByEmailAsync(string email)
         {
+            var normalizedEmail = NormalizeKey(email);
+
             return await _userRepository.FirstOrDefaultAsync(
-                user => user.EmailAddress == email
+                user => user.NormalizedEmailAddress == normalizedEmail
             );
         }
 
@@ -117,9 +128,11 @@ namespace Abp.Authorization.Users
         /// <returns>User or null</returns>
         public virtual async Task<TUser> FindByNameOrEmailAsync(string userNameOrEmailAddress)
         {
+            var normalizedUserNameOrEmailAddress = NormalizeKey(userNameOrEmailAddress);
+
             return await _userRepository.FirstOrDefaultAsync(
-                user => (user.UserName == userNameOrEmailAddress || user.EmailAddress == userNameOrEmailAddress)
-                );
+                user => (user.NormalizedUserName == normalizedUserNameOrEmailAddress || user.NormalizedEmailAddress == normalizedUserNameOrEmailAddress)
+            );
         }
 
         /// <summary>
@@ -278,18 +291,25 @@ namespace Abp.Authorization.Users
         [UnitOfWork]
         public virtual async Task<IList<string>> GetRolesAsync(TUser user)
         {
-            var query = from userRole in _userRoleRepository.GetAll()
-                        join role in _roleRepository.GetAll() on userRole.RoleId equals role.Id
-                        where userRole.UserId == user.Id
-                        select role.Name;
+            var userRoles = await AsyncQueryableExecuter.ToListAsync(from userRole in _userRoleRepository.GetAll()
+                join role in _roleRepository.GetAll() on userRole.RoleId equals role.Id
+                where userRole.UserId == user.Id
+                select role.Name);
 
-            return await AsyncQueryableExecuter.ToListAsync(query);
+            var userOrganizationUnitRoles = await AsyncQueryableExecuter.ToListAsync(
+                from userOu in _userOrganizationUnitRepository.GetAll()
+                join roleOu in _organizationUnitRoleRepository.GetAll() on userOu.OrganizationUnitId equals roleOu
+                    .OrganizationUnitId
+                join userOuRoles in _roleRepository.GetAll() on roleOu.RoleId equals userOuRoles.Id
+                where userOu.UserId == user.Id
+                select userOuRoles.Name);
+
+            return  userRoles.Union(userOrganizationUnitRoles).ToList();
         }
 
         public virtual async Task<bool> IsInRoleAsync(TUser user, string roleName)
         {
-            var role = await GetRoleByNameAsync(roleName);
-            return await _userRoleRepository.FirstOrDefaultAsync(ur => ur.UserId == user.Id && ur.RoleId == role.Id) != null;
+            return (await GetRolesAsync(user)).Any(r => r == roleName);
         }
 
         #endregion
@@ -452,12 +472,18 @@ namespace Abp.Authorization.Users
 
         #region Helpers
 
+        protected virtual string NormalizeKey(string key)
+        {
+            return key.ToUpperInvariant();
+        }
+
         private async Task<TRole> GetRoleByNameAsync(string roleName)
         {
-            var role = await _roleRepository.FirstOrDefaultAsync(r => r.Name == roleName);
+            var normalizedName = NormalizeKey(roleName);
+            var role = await _roleRepository.FirstOrDefaultAsync(r => r.NormalizedName == normalizedName);
             if (role == null)
             {
-                throw new AbpException("Could not find a role with name: " + roleName);
+                throw new AbpException("Could not find a role with name: " + normalizedName);
             }
 
             return role;

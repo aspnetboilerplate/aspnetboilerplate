@@ -13,9 +13,11 @@ using Abp.Domain.Entities;
 using Abp.Domain.Entities.Auditing;
 using Abp.Domain.Repositories;
 using Abp.Domain.Uow;
+using Abp.EntityFrameworkCore.Extensions;
 using Abp.Events.Bus;
 using Abp.Events.Bus.Entities;
 using Abp.Extensions;
+using Abp.Linq.Expressions;
 using Abp.Reflection;
 using Abp.Runtime.Session;
 using Abp.Timing;
@@ -125,7 +127,14 @@ namespace Abp.EntityFrameworkCore
                 var filterExpression = CreateFilterExpression<TEntity>();
                 if (filterExpression != null)
                 {
-                    modelBuilder.Entity<TEntity>().HasQueryFilter(filterExpression);
+                    if (entityType.IsQueryType)
+                    {
+                        modelBuilder.Query<TEntity>().HasQueryFilter(filterExpression);
+                    }
+                    else
+                    {
+                        modelBuilder.Entity<TEntity>().HasQueryFilter(filterExpression);
+                    }
                 }
             }
         }
@@ -230,6 +239,11 @@ namespace Abp.EntityFrameworkCore
 
             foreach (var entry in ChangeTracker.Entries().ToList())
             {
+                if (entry.State != EntityState.Modified && entry.CheckOwnedEntityChange())
+                {
+                    Entry(entry.Entity).State = EntityState.Modified;
+                }
+
                 ApplyAbpConcepts(entry, userId, changeReport);
             }
 
@@ -504,37 +518,7 @@ namespace Abp.EntityFrameworkCore
 
         protected virtual Expression<Func<T, bool>> CombineExpressions<T>(Expression<Func<T, bool>> expression1, Expression<Func<T, bool>> expression2)
         {
-            var parameter = Expression.Parameter(typeof(T));
-
-            var leftVisitor = new ReplaceExpressionVisitor(expression1.Parameters[0], parameter);
-            var left = leftVisitor.Visit(expression1.Body);
-
-            var rightVisitor = new ReplaceExpressionVisitor(expression2.Parameters[0], parameter);
-            var right = rightVisitor.Visit(expression2.Body);
-
-            return Expression.Lambda<Func<T, bool>>(Expression.AndAlso(left, right), parameter);
-        }
-
-        class ReplaceExpressionVisitor : ExpressionVisitor
-        {
-            private readonly Expression _oldValue;
-            private readonly Expression _newValue;
-
-            public ReplaceExpressionVisitor(Expression oldValue, Expression newValue)
-            {
-                _oldValue = oldValue;
-                _newValue = newValue;
-            }
-
-            public override Expression Visit(Expression node)
-            {
-                if (node == _oldValue)
-                {
-                    return _newValue;
-                }
-
-                return base.Visit(node);
-            }
+            return ExpressionCombiner.Combine(expression1, expression2);
         }
     }
 }

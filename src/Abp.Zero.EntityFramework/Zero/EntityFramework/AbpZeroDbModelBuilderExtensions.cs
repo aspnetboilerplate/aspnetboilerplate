@@ -5,6 +5,7 @@ using Abp.Auditing;
 using Abp.Authorization;
 using Abp.Authorization.Roles;
 using Abp.Authorization.Users;
+using Abp.EntityHistory;
 using Abp.BackgroundJobs;
 using Abp.Configuration;
 using Abp.Localization;
@@ -28,6 +29,7 @@ namespace Abp.Zero.EntityFramework
         /// <typeparam name="TUser">The type of the user entity.</typeparam>
         /// <param name="modelBuilder">Model builder.</param>
         /// <param name="prefix">Table prefix, or null to clear prefix.</param>
+        /// <param name="schemaName">Schema name</param>
         public static void ChangeAbpTablePrefix<TTenant, TRole, TUser>(this DbModelBuilder modelBuilder, string prefix, string schemaName = null)
             where TTenant : AbpTenant<TUser>
             where TRole : AbpRole<TUser>
@@ -38,6 +40,9 @@ namespace Abp.Zero.EntityFramework
             SetTableName<AuditLog>(modelBuilder, prefix + "AuditLogs", schemaName);
             SetTableName<BackgroundJobInfo>(modelBuilder, prefix + "BackgroundJobs", schemaName);
             SetTableName<Edition>(modelBuilder, prefix + "Editions", schemaName);
+            SetTableName<EntityChange>(modelBuilder, prefix + "EntityChanges", schemaName);
+            SetTableName<EntityChangeSet>(modelBuilder, prefix + "EntityChangeSets", schemaName);
+            SetTableName<EntityPropertyChange>(modelBuilder, prefix + "EntityPropertyChanges", schemaName);
             SetTableName<FeatureSetting>(modelBuilder, prefix + "Features", schemaName);
             SetTableName<TenantFeatureSetting>(modelBuilder, prefix + "Features", schemaName);
             SetTableName<EditionFeatureSetting>(modelBuilder, prefix + "Features", schemaName);
@@ -57,10 +62,12 @@ namespace Abp.Zero.EntityFramework
             SetTableName<TenantNotificationInfo>(modelBuilder, prefix + "TenantNotifications", schemaName);
             SetTableName<UserNotificationInfo>(modelBuilder, prefix + "UserNotifications", schemaName);
             SetTableName<UserOrganizationUnit>(modelBuilder, prefix + "UserOrganizationUnits", schemaName);
+            SetTableName<OrganizationUnitRole>(modelBuilder, prefix + "OrganizationUnitRoles", schemaName);
             SetTableName<UserRole>(modelBuilder, prefix + "UserRoles", schemaName);
             SetTableName<TUser>(modelBuilder, prefix + "Users", schemaName);
             SetTableName<UserAccount>(modelBuilder, prefix + "UserAccounts", schemaName);
             SetTableName<UserClaim>(modelBuilder, prefix + "UserClaims", schemaName);
+            SetTableName<RoleClaim>(modelBuilder, prefix + "RoleClaims", schemaName);
         }
 
         private static void SetTableName<TEntity>(DbModelBuilder modelBuilder, string tableName, string schemaName)

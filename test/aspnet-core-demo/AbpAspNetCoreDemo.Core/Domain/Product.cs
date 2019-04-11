@@ -13,7 +13,7 @@ namespace AbpAspNetCoreDemo.Core.Domain
 
         public float? Price { get; set; }
 
-        protected Product()
+        public Product()
         {
             
         }

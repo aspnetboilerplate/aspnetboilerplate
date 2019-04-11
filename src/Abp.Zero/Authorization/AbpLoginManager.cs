@@ -220,12 +220,6 @@ namespace Abp.Authorization
                 return new AbpLoginResult<TTenant, TUser>(AbpLoginResultType.UserEmailIsNotConfirmed);
             }
 
-            user.LastLoginTime = Clock.Now;
-
-            await UserManager.AbpStore.UpdateAsync(user);
-
-            await UnitOfWorkManager.Current.SaveChangesAsync();
-
             return new AbpLoginResult<TTenant, TUser>(
                 tenant,
                 user,
@@ -306,6 +300,7 @@ namespace Abp.Authorization
                                 user.TenantId = tenantId;
                                 user.AuthenticationSource = source.Object.Name;
                                 user.Password = UserManager.PasswordHasher.HashPassword(Guid.NewGuid().ToString("N").Left(16)); //Setting a random password since it will not be used
+                                user.SetNormalizedNames();
 
                                 if (user.Roles == null)
                                 {

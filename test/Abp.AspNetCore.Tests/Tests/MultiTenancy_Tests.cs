@@ -2,7 +2,6 @@
 using System.Threading.Tasks;
 using Abp.AspNetCore.App.Controllers;
 using Abp.Configuration.Startup;
-using Abp.MultiTenancy;
 using Abp.Web.Models;
 using Abp.Web.MultiTenancy;
 using Microsoft.Net.Http.Headers;
@@ -14,17 +13,37 @@ namespace Abp.AspNetCore.Tests
     public class MultiTenancy_Tests : AppTestBase
     {
         private readonly IWebMultiTenancyConfiguration _multiTenancyConfiguration;
+        private readonly IMultiTenancyConfig _multiTenancyConfig;
 
         public MultiTenancy_Tests()
         {
-            IocManager.Resolve<IMultiTenancyConfig>().IsEnabled = true;
+            _multiTenancyConfig = IocManager.Resolve<IMultiTenancyConfig>();
+            _multiTenancyConfig.IsEnabled = true;
             _multiTenancyConfiguration = Resolve<IWebMultiTenancyConfiguration>();
         }
 
         [Fact]
         public async Task HttpHeaderTenantResolveContributor_Test()
         {
-            Client.DefaultRequestHeaders.Add(MultiTenancyConsts.TenantIdResolveKey, "42");
+            Client.DefaultRequestHeaders.Add(_multiTenancyConfig.TenantIdResolveKey, "42");
+
+            // Act
+            var response = await GetResponseAsObjectAsync<AjaxResponse<int?>>(
+                GetUrl<MultiTenancyTestController>(
+                    nameof(MultiTenancyTestController.GetTenantId)
+                )
+            );
+
+            //Assert
+            response.Result.ShouldBe(42);
+        }
+
+        [Fact]
+        public async Task HttpHeaderTenantResolveContributor_Configure_Test()
+        {
+            _multiTenancyConfig.TenantIdResolveKey = "Abp-TenantId";
+
+            Client.DefaultRequestHeaders.Add(_multiTenancyConfig.TenantIdResolveKey, "42");
 
             // Act
             var response = await GetResponseAsObjectAsync<AjaxResponse<int?>>(
@@ -40,7 +59,7 @@ namespace Abp.AspNetCore.Tests
         [Fact]
         public async Task HttpCookieTenantResolveContributor_Test()
         {
-            Client.DefaultRequestHeaders.Add("Cookie", new CookieHeaderValue(MultiTenancyConsts.TenantIdResolveKey, "42").ToString());
+            Client.DefaultRequestHeaders.Add("Cookie", new CookieHeaderValue(_multiTenancyConfig.TenantIdResolveKey, "42").ToString());
 
             // Act
             var response = await GetResponseAsObjectAsync<AjaxResponse<int?>>(
@@ -56,8 +75,8 @@ namespace Abp.AspNetCore.Tests
         [Fact]
         public async Task Header_Should_Have_High_Priority_Than_Cookie()
         {
-            Client.DefaultRequestHeaders.Add("Cookie", new CookieHeaderValue(MultiTenancyConsts.TenantIdResolveKey, "43").ToString());
-            Client.DefaultRequestHeaders.Add(MultiTenancyConsts.TenantIdResolveKey, "42");
+            Client.DefaultRequestHeaders.Add("Cookie", new CookieHeaderValue(_multiTenancyConfig.TenantIdResolveKey, "43").ToString());
+            Client.DefaultRequestHeaders.Add(_multiTenancyConfig.TenantIdResolveKey, "42");
 
             // Act
             var response = await GetResponseAsObjectAsync<AjaxResponse<int?>>(

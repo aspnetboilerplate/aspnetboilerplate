@@ -5,6 +5,7 @@ using System.Threading.Tasks;
 using Abp.Application.Features;
 using Abp.Dependency;
 using Abp.Runtime.Session;
+using Abp.Web.Http;
 
 namespace Abp.Web.Features
 {
@@ -59,8 +60,8 @@ namespace Abp.Web.Features
             for (var i = 0; i < allFeatures.Count; i++)
             {
                 var feature = allFeatures[i];
-                script.AppendLine("        '" + feature.Name.Replace("'", @"\'") + "': {");
-                script.AppendLine("             value: '" + currentValues[feature.Name].Replace(@"\", @"\\").Replace("'", @"\'") + "'");
+                script.AppendLine("        '" + HttpEncode.JavaScriptStringEncode(feature.Name) + "': {");
+                script.AppendLine("             value: '" + HttpEncode.JavaScriptStringEncode(currentValues[feature.Name]) + "'");
                 script.Append("        }");
 
                 if (i < allFeatures.Count - 1)

@@ -31,4 +31,18 @@
 										,	TenantId INTEGER
 									);
 
+ CREATE TABLE IF NOT EXISTS Goods (
+											Id INTEGER PRIMARY KEY
+										,	Name varchar(100) 
+										,	IsDeleted BOOLEAN
+										,	DeleterUserId BIGINT
+										,	DeletionTime DATETIME
+										,	LastModificationTime DATETIME
+										,	LastModifierUserId BIGINT
+										,	CreationTime DATETIME
+										,	CreatorUserId BIGINT
+										,	ParentId INTEGER NULLABLE
+										,	TenantId INTEGER
+									);
+
  

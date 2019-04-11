@@ -5,11 +5,13 @@ using System.Threading.Tasks;
 using Abp.Application.Features;
 using Abp.Authorization.Users;
 using Abp.Collections.Extensions;
+using Abp.Domain.Repositories;
 using Abp.Domain.Services;
 using Abp.Domain.Uow;
 using Abp.IdentityFramework;
 using Abp.Localization;
 using Abp.MultiTenancy;
+using Abp.Organizations;
 using Abp.Runtime.Caching;
 using Abp.Runtime.Session;
 using Abp.Zero;
@@ -59,6 +61,9 @@ namespace Abp.Authorization.Roles
 
         protected IUnitOfWorkManager UnitOfWorkManager { get; }
 
+        private readonly IRepository<OrganizationUnit, long> _organizationUnitRepository;
+        private readonly IRepository<OrganizationUnitRole, long> _organizationUnitRoleRepository;
+
         /// <summary>
         /// Constructor.
         /// </summary>
@@ -67,12 +72,16 @@ namespace Abp.Authorization.Roles
             IPermissionManager permissionManager,
             IRoleManagementConfig roleManagementConfig,
             ICacheManager cacheManager,
-            IUnitOfWorkManager unitOfWorkManager)
+            IUnitOfWorkManager unitOfWorkManager,
+            IRepository<OrganizationUnit, long> organizationUnitRepository,
+            IRepository<OrganizationUnitRole, long> organizationUnitRoleRepository)
             : base(store)
         {
             PermissionManager = permissionManager;
             CacheManager = cacheManager;
             UnitOfWorkManager = unitOfWorkManager;
+            _organizationUnitRepository = organizationUnitRepository;
+            _organizationUnitRoleRepository = organizationUnitRoleRepository;
 
             RoleManagementConfig = roleManagementConfig;
             AbpStore = store;
@@ -262,6 +271,8 @@ namespace Abp.Authorization.Roles
         /// <param name="role">Role</param>
         public override async Task<IdentityResult> CreateAsync(TRole role)
         {
+            role.SetNormalizedName();
+
             var result = await CheckDuplicateRoleNameAsync(role.Id, role.Name, role.DisplayName);
             if (!result.Succeeded)
             {
@@ -279,6 +290,8 @@ namespace Abp.Authorization.Roles
 
         public override async Task<IdentityResult> UpdateAsync(TRole role)
         {
+            role.SetNormalizedName();
+
             var result = await CheckDuplicateRoleNameAsync(role.Id, role.Name, role.DisplayName);
             if (!result.Succeeded)
             {
@@ -368,6 +381,8 @@ namespace Abp.Authorization.Roles
                         IsStatic = true
                     };
 
+                    role.SetNormalizedName();
+
                     var identityResult = await CreateAsync(role);
                     if (!identityResult.Succeeded)
                     {
@@ -396,6 +411,126 @@ namespace Abp.Authorization.Roles
             return IdentityResult.Success;
         }
 
+        [UnitOfWork]
+        public virtual Task<List<TRole>> GetRolesInOrganizationUnit(OrganizationUnit organizationUnit, bool includeChildren = false)
+        {
+            if (!includeChildren)
+            {
+                var query = from uor in _organizationUnitRoleRepository.GetAll()
+                            join role in Roles on uor.RoleId equals role.Id
+                            where uor.OrganizationUnitId == organizationUnit.Id
+                            select role;
+
+                return Task.FromResult(query.ToList());
+            }
+            else
+            {
+                var query = from uor in _organizationUnitRoleRepository.GetAll()
+                            join role in Roles on uor.RoleId equals role.Id
+                            join ou in _organizationUnitRepository.GetAll() on uor.OrganizationUnitId equals ou.Id
+                            where ou.Code.StartsWith(organizationUnit.Code)
+                            select role;
+
+                return Task.FromResult(query.ToList());
+            }
+        }
+
+        public virtual async Task SetOrganizationUnitsAsync(int roleId, params long[] organizationUnitIds)
+        {
+            await SetOrganizationUnitsAsync(
+                await GetRoleByIdAsync(roleId),
+                organizationUnitIds
+            );
+        }
+
+        public virtual async Task SetOrganizationUnitsAsync(TRole role, params long[] organizationUnitIds)
+        {
+            if (organizationUnitIds == null)
+            {
+                organizationUnitIds = new long[0];
+            }
+
+            var currentOus = await GetOrganizationUnitsAsync(role);
+
+            //Remove from removed OUs
+            foreach (var currentOu in currentOus)
+            {
+                if (!organizationUnitIds.Contains(currentOu.Id))
+                {
+                    await RemoveFromOrganizationUnitAsync(role, currentOu);
+                }
+            }
+
+            //Add to added OUs
+            foreach (var organizationUnitId in organizationUnitIds)
+            {
+                if (currentOus.All(ou => ou.Id != organizationUnitId))
+                {
+                    await AddToOrganizationUnitAsync(
+                        role,
+                        await _organizationUnitRepository.GetAsync(organizationUnitId)
+                    );
+                }
+            }
+        }
+
+        public virtual async Task<bool> IsInOrganizationUnitAsync(int roleId, long ouId)
+        {
+            return await IsInOrganizationUnitAsync(
+                await GetRoleByIdAsync(roleId),
+                await _organizationUnitRepository.GetAsync(ouId)
+            );
+        }
+
+        public virtual async Task<bool> IsInOrganizationUnitAsync(TRole role, OrganizationUnit ou)
+        {
+            return await _organizationUnitRoleRepository.CountAsync(uou =>
+                       uou.RoleId == role.Id && uou.OrganizationUnitId == ou.Id
+                   ) > 0;
+        }
+
+        public virtual async Task AddToOrganizationUnitAsync(int roleId, long ouId)
+        {
+            await AddToOrganizationUnitAsync(
+                await GetRoleByIdAsync(roleId),
+                await _organizationUnitRepository.GetAsync(ouId)
+            );
+        }
+
+        public virtual async Task AddToOrganizationUnitAsync(TRole role, OrganizationUnit ou)
+        {
+            if (await IsInOrganizationUnitAsync(role, ou))
+            {
+                return;
+            }
+
+            await _organizationUnitRoleRepository.InsertAsync(new OrganizationUnitRole(role.TenantId, role.Id, ou.Id));
+        }
+
+        public async Task RemoveFromOrganizationUnitAsync(int roleId, long organizationUnitId)
+        {
+            await RemoveFromOrganizationUnitAsync(
+                await GetRoleByIdAsync(roleId),
+                await _organizationUnitRepository.GetAsync(organizationUnitId)
+            );
+        }
+
+        public virtual async Task RemoveFromOrganizationUnitAsync(TRole role, OrganizationUnit ou)
+        {
+            await _organizationUnitRoleRepository.DeleteAsync(uor => uor.RoleId == role.Id && uor.OrganizationUnitId == ou.Id);
+        }
+
+        [UnitOfWork]
+        public virtual Task<List<OrganizationUnit>> GetOrganizationUnitsAsync(TRole role)
+        {
+            var query = from uor in _organizationUnitRoleRepository.GetAll()
+                        join ou in _organizationUnitRepository.GetAll() on uor.OrganizationUnitId equals ou.Id
+                        where uor.RoleId == role.Id
+                        select ou;
+
+            return Task.FromResult(query.ToList());
+        }
+
         private Task<TRole> FindByDisplayNameAsync(string displayName)
         {
             return AbpStore.FindByDisplayNameAsync(displayName);
@@ -417,6 +552,7 @@ namespace Abp.Authorization.Roles
 
                 var staticRoleDefinition = RoleManagementConfig.StaticRoles.FirstOrDefault(r =>
                     r.RoleName == role.Name && r.Side == role.GetMultiTenancySide());
+
                 if (staticRoleDefinition != null)
                 {
                     foreach (var permission in PermissionManager.GetAllPermissions())

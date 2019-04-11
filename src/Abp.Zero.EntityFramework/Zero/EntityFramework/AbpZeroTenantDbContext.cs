@@ -7,7 +7,7 @@ using Abp.MultiTenancy;
 
 namespace Abp.Zero.EntityFramework
 {
-    [MultiTenancySide(MultiTenancySides.Host)]
+    [MultiTenancySide(MultiTenancySides.Tenant)]
     public abstract class AbpZeroTenantDbContext<TRole, TUser> : AbpZeroCommonDbContext<TRole, TUser>
         where TRole : AbpRole<TUser>
         where TUser : AbpUser<TUser>

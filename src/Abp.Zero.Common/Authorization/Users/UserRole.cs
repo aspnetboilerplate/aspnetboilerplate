@@ -33,6 +33,7 @@ namespace Abp.Authorization.Users
         /// <summary>
         /// Creates a new <see cref="UserRole"/> object.
         /// </summary>
+        /// <param name="tenantId">Tenant id</param>
         /// <param name="userId">User id</param>
         /// <param name="roleId">Role id</param>
         public UserRole(int? tenantId, long userId, int roleId)

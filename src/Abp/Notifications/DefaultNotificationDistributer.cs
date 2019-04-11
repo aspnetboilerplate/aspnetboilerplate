@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Abp.Configuration;
+using Abp.Dependency;
 using Abp.Domain.Services;
 using Abp.Domain.Uow;
 using Abp.Extensions;
@@ -15,28 +16,30 @@ namespace Abp.Notifications
     /// </summary>
     public class DefaultNotificationDistributer : DomainService, INotificationDistributer
     {
-        public IRealTimeNotifier RealTimeNotifier { get; set; }
-
+        private readonly INotificationConfiguration _notificationConfiguration;
         private readonly INotificationDefinitionManager _notificationDefinitionManager;
         private readonly INotificationStore _notificationStore;
         private readonly IUnitOfWorkManager _unitOfWorkManager;
         private readonly IGuidGenerator _guidGenerator;
+        private readonly IIocResolver _iocResolver;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="NotificationDistributionJob"/> class.
         /// </summary>
         public DefaultNotificationDistributer(
+            INotificationConfiguration notificationConfiguration,
             INotificationDefinitionManager notificationDefinitionManager,
             INotificationStore notificationStore,
             IUnitOfWorkManager unitOfWorkManager, 
-            IGuidGenerator guidGenerator)
+            IGuidGenerator guidGenerator,
+            IIocResolver iocResolver)
         {
+            _notificationConfiguration = notificationConfiguration;
             _notificationDefinitionManager = notificationDefinitionManager;
             _notificationStore = notificationStore;
             _unitOfWorkManager = unitOfWorkManager;
             _guidGenerator = guidGenerator;
-
-            RealTimeNotifier = NullRealTimeNotifier.Instance;
+            _iocResolver = iocResolver;
         }
 
         public async Task DistributeAsync(Guid notificationId)
@@ -54,14 +57,7 @@ namespace Abp.Notifications
 
             await _notificationStore.DeleteNotificationAsync(notificationInfo);
 
-            try
-            {
-                await RealTimeNotifier.SendNotificationsAsync(userNotifications.ToArray());
-            }
-            catch (Exception ex)
-            {
-                Logger.Warn(ex.ToString(), ex);
-            }
+            await NotifyAsync(userNotifications.ToArray());
         }
 
         [UnitOfWork]
@@ -196,5 +192,27 @@ namespace Abp.Notifications
 
             return userNotifications;
         }
+
+        #region Protected methods
+
+        protected virtual async Task NotifyAsync(UserNotification[] userNotifications)
+        {
+            foreach (var notifierType in _notificationConfiguration.Notifiers)
+            {
+                try
+                {
+                    using (var notifier = _iocResolver.ResolveAsDisposable<IRealTimeNotifier>(notifierType))
+                    {
+                        await notifier.Object.SendNotificationsAsync(userNotifications);
+                    }
+                }
+                catch (Exception ex)
+                {
+                    Logger.Warn(ex.ToString(), ex);
+                }
+            }
+        }
+
+        #endregion
     }
 }

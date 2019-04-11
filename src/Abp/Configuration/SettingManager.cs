@@ -3,8 +3,11 @@ using System.Collections.Immutable;
 using System.Linq;
 using System.Threading.Tasks;
 using Abp.Collections.Extensions;
+using Abp.Configuration.Startup;
 using Abp.Dependency;
+using Abp.Domain.Repositories;
 using Abp.Domain.Uow;
+using Abp.MultiTenancy;
 using Abp.Runtime.Caching;
 using Abp.Runtime.Session;
 
@@ -28,14 +31,21 @@ namespace Abp.Configuration
         public ISettingStore SettingStore { get; set; }
 
         private readonly ISettingDefinitionManager _settingDefinitionManager;
+        private readonly IMultiTenancyConfig _multiTenancyConfig;
         private readonly ITypedCache<string, Dictionary<string, SettingInfo>> _applicationSettingCache;
         private readonly ITypedCache<int, Dictionary<string, SettingInfo>> _tenantSettingCache;
         private readonly ITypedCache<string, Dictionary<string, SettingInfo>> _userSettingCache;
+        private readonly ITenantStore _tenantStore;
 
         /// <inheritdoc/>
-        public SettingManager(ISettingDefinitionManager settingDefinitionManager, ICacheManager cacheManager)
+        public SettingManager(
+            ISettingDefinitionManager settingDefinitionManager,
+            ICacheManager cacheManager,
+            IMultiTenancyConfig multiTenancyConfig, ITenantStore tenantStore)
         {
             _settingDefinitionManager = settingDefinitionManager;
+            _multiTenancyConfig = multiTenancyConfig;
+            _tenantStore = tenantStore;
 
             AbpSession = NullAbpSession.Instance;
             SettingStore = DefaultConfigSettingStore.Instance;
@@ -166,6 +176,13 @@ namespace Abp.Configuration
         /// <inheritdoc/>
         public async Task<IReadOnlyList<ISettingValue>> GetAllSettingValuesForApplicationAsync()
         {
+            if (!_multiTenancyConfig.IsEnabled)
+            {
+                return (await GetReadOnlyTenantSettings(AbpSession.GetTenantId())).Values
+                    .Select(setting => new SettingValueObject(setting.Name, setting.Value))
+                    .ToImmutableList();
+            }
+
             return (await GetApplicationSettingsAsync()).Values
                 .Select(setting => new SettingValueObject(setting.Name, setting.Value))
                 .ToImmutableList();
@@ -196,7 +213,17 @@ namespace Abp.Configuration
         [UnitOfWork]
         public virtual async Task ChangeSettingForApplicationAsync(string name, string value)
         {
-            await InsertOrUpdateOrDeleteSettingValueAsync(name, value, null, null);
+            if (_multiTenancyConfig.IsEnabled)
+            {
+                await InsertOrUpdateOrDeleteSettingValueAsync(name, value, null, null);
+            }
+            else
+            {
+                // If MultiTenancy is disabled, then we should change default tenant's setting
+                await InsertOrUpdateOrDeleteSettingValueAsync(name, value, AbpSession.GetTenantId(), null);
+                await _tenantSettingCache.RemoveAsync(AbpSession.GetTenantId());
+            }
+
             await _applicationSettingCache.RemoveAsync(ApplicationSettingsCacheKey);
         }
 
@@ -298,8 +325,8 @@ namespace Abp.Configuration
 
             if (settingDefinition.IsInherited)
             {
-                //For Tenant and User, Application's value overrides Setting Definition's default value.
-                if (tenantId.HasValue || userId.HasValue)
+                //For Tenant and User, Application's value overrides Setting Definition's default value when multi tenancy is enabled.
+                if (_multiTenancyConfig.IsEnabled && (tenantId.HasValue || userId.HasValue))
                 {
                     var applicationValue = await GetSettingValueForApplicationOrNullAsync(name);
                     if (applicationValue != null)
@@ -360,7 +387,12 @@ namespace Abp.Configuration
 
         private async Task<SettingInfo> GetSettingValueForApplicationOrNullAsync(string name)
         {
-            return (await GetApplicationSettingsAsync()).GetOrDefault(name);
+            if (_multiTenancyConfig.IsEnabled)
+            {
+                return (await GetApplicationSettingsAsync()).GetOrDefault(name);
+            }
+
+            return (await GetReadOnlyTenantSettings(AbpSession.GetTenantId())).GetOrDefault(name);
         }
 
         private async Task<SettingInfo> GetSettingValueForTenantOrNullAsync(int tenantId, string name)
@@ -414,6 +446,11 @@ namespace Abp.Configuration
                 async () =>
                 {
                     var dictionary = new Dictionary<string, SettingInfo>();
+
+                    if (!_multiTenancyConfig.IsEnabled && _tenantStore.Find(tenantId) == null)
+                    {
+                        return dictionary;
+                    }
 
                     var settingValues = await SettingStore.GetAllListAsync(tenantId, null);
                     foreach (var settingValue in settingValues)

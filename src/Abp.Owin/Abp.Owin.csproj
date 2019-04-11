@@ -32,8 +32,8 @@
 
   <ItemGroup>
     <PackageReference Include="Owin" Version="1.0.0" />
-    <PackageReference Include="Microsoft.Owin" Version="4.0.0" />
-    <PackageReference Include="Microsoft.Owin.StaticFiles" Version="4.0.0" />
+    <PackageReference Include="Microsoft.Owin" Version="4.0.1" />
+    <PackageReference Include="Microsoft.Owin.StaticFiles" Version="4.0.1" />
   </ItemGroup>
 
   <ItemGroup Condition=" '$(TargetFramework)' == 'net461' ">
