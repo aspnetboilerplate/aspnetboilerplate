@@ -5,5 +5,7 @@ namespace Abp.AspNetCore.Mvc.Results.Wrapping
     public interface IAbpActionResultWrapper
     {
         void Wrap(ResultExecutingContext actionResult);
+
+        void Wrap(PageHandlerExecutedContext actionResult);
     }
 }

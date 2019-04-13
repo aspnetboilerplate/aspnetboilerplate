@@ -10,5 +10,10 @@ namespace Abp.AspNetCore.Mvc.Results.Wrapping
         {
             actionResult.Result = new ObjectResult(new AjaxResponse());
         }
+
+        public void Wrap(PageHandlerExecutedContext actionResult)
+        {
+            actionResult.Result = new ObjectResult(new AjaxResponse());
+        }
     }
 }

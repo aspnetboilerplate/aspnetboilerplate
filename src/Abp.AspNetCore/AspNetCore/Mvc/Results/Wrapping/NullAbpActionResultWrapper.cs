@@ -8,5 +8,10 @@ namespace Abp.AspNetCore.Mvc.Results.Wrapping
         {
             
         }
+
+        public void Wrap(PageHandlerExecutedContext actionResult)
+        {
+            
+        }
     }
 }

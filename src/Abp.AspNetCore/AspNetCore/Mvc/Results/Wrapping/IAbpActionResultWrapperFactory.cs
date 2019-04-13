@@ -7,5 +7,7 @@ namespace Abp.AspNetCore.Mvc.Results.Wrapping
     public interface IAbpActionResultWrapperFactory : ITransientDependency
     {
         IAbpActionResultWrapper CreateFor([NotNull] ResultExecutingContext actionResult);
+
+        IAbpActionResultWrapper CreateFor([NotNull] PageHandlerExecutedContext actionResult);
     }
 }

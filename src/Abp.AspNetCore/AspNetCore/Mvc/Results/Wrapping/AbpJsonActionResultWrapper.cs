@@ -20,5 +20,19 @@ namespace Abp.AspNetCore.Mvc.Results.Wrapping
                 jsonResult.Value = new AjaxResponse(jsonResult.Value);
             }
         }
+
+        public void Wrap(PageHandlerExecutedContext actionResult)
+        {
+            var jsonResult = actionResult.Result as JsonResult;
+            if (jsonResult == null)
+            {
+                throw new ArgumentException($"{nameof(actionResult)} should be JsonResult!");
+            }
+
+            if (!(jsonResult.Value is AjaxResponseBase))
+            {
+                jsonResult.Value = new AjaxResponse(jsonResult.Value);
+            }
+        }
     }
 }

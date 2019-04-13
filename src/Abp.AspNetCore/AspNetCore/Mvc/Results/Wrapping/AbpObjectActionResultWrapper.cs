@@ -21,5 +21,20 @@ namespace Abp.AspNetCore.Mvc.Results.Wrapping
                 objectResult.DeclaredType = typeof(AjaxResponse);
             }
         }
+
+        public void Wrap(PageHandlerExecutedContext actionResult)
+        {
+            var objectResult = actionResult.Result as ObjectResult;
+            if (objectResult == null)
+            {
+                throw new ArgumentException($"{nameof(actionResult)} should be ObjectResult!");
+            }
+
+            if (!(objectResult.Value is AjaxResponseBase))
+            {
+                objectResult.Value = new AjaxResponse(objectResult.Value);
+                objectResult.DeclaredType = typeof(AjaxResponse);
+            }
+        }
     }
 }
