@@ -36,9 +36,9 @@ namespace Abp.AspNetCore.Mvc.ExceptionHandling
             EventBus = NullEventBus.Instance;
         }
 
-        public async Task OnPageHandlerSelectionAsync(PageHandlerSelectedContext context)
+        public Task OnPageHandlerSelectionAsync(PageHandlerSelectedContext context)
         {
-            await Task.CompletedTask;
+            return Task.CompletedTask;
         }
 
         public async Task OnPageHandlerExecutionAsync(PageHandlerExecutingContext context, PageHandlerExecutionDelegate next)

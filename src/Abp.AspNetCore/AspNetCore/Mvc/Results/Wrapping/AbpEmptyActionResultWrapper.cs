@@ -6,14 +6,18 @@ namespace Abp.AspNetCore.Mvc.Results.Wrapping
 {
     public class AbpEmptyActionResultWrapper : IAbpActionResultWrapper
     {
-        public void Wrap(ResultExecutingContext actionResult)
+        public void Wrap(FilterContext context)
         {
-            actionResult.Result = new ObjectResult(new AjaxResponse());
-        }
+            switch (context)
+            {
+                case ResultExecutingContext resultExecutingContext:
+                    resultExecutingContext.Result = new ObjectResult(new AjaxResponse());
+                    return;
 
-        public void Wrap(PageHandlerExecutedContext actionResult)
-        {
-            actionResult.Result = new ObjectResult(new AjaxResponse());
+                case PageHandlerExecutedContext pageHandlerExecutedContext:
+                    pageHandlerExecutedContext.Result = new ObjectResult(new AjaxResponse());
+                    return;
+            }
         }
     }
 }

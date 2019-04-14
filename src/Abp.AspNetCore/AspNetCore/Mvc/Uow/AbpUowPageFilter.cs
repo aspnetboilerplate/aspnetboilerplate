@@ -22,9 +22,9 @@ namespace Abp.AspNetCore.Mvc.Uow
             _unitOfWorkDefaultOptions = unitOfWorkDefaultOptions;
         }
 
-        public async Task OnPageHandlerSelectionAsync(PageHandlerSelectedContext context)
+        public Task OnPageHandlerSelectionAsync(PageHandlerSelectedContext context)
         {
-            await Task.CompletedTask;
+            return Task.CompletedTask;
         }
 
         public async Task OnPageHandlerExecutionAsync(PageHandlerExecutingContext context, PageHandlerExecutionDelegate next)

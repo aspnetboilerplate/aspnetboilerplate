@@ -7,26 +7,24 @@ namespace Abp.AspNetCore.Mvc.Results.Wrapping
 {
     public class AbpJsonActionResultWrapper : IAbpActionResultWrapper
     {
-        public void Wrap(ResultExecutingContext actionResult)
+        public void Wrap(FilterContext context)
         {
-            var jsonResult = actionResult.Result as JsonResult;
-            if (jsonResult == null)
+            JsonResult jsonResult = null;
+
+            switch (context)
             {
-                throw new ArgumentException($"{nameof(actionResult)} should be JsonResult!");
+                case ResultExecutingContext resultExecutingContext:
+                    jsonResult = resultExecutingContext.Result as JsonResult;
+                    break;
+
+                case PageHandlerExecutedContext pageHandlerExecutedContext:
+                    jsonResult = pageHandlerExecutedContext.Result as JsonResult;
+                    break;
             }
 
-            if (!(jsonResult.Value is AjaxResponseBase))
-            {
-                jsonResult.Value = new AjaxResponse(jsonResult.Value);
-            }
-        }
-
-        public void Wrap(PageHandlerExecutedContext actionResult)
-        {
-            var jsonResult = actionResult.Result as JsonResult;
             if (jsonResult == null)
             {
-                throw new ArgumentException($"{nameof(actionResult)} should be JsonResult!");
+                throw new ArgumentException("Action Result should be JsonResult!");
             }
 
             if (!(jsonResult.Value is AjaxResponseBase))
