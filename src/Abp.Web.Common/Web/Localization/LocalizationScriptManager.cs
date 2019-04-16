@@ -110,7 +110,7 @@ namespace Abp.Web.Localization
 
                 var stringValues = source.GetAllStrings(cultureInfo).OrderBy(s => s.Name).ToList();
                 var stringJson = stringValues
-                    .ToDictionary(_ => HttpEncode.JavaScriptStringEncode(_.Name), _ => HttpEncode.JavaScriptStringEncode(_.Value))
+                    .ToDictionary(_ => _.Name, _ => _.Value)
                     .ToJsonString(indented: true);
                 script.Append(stringJson);
 
