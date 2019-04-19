@@ -45,7 +45,7 @@
     <PackageReference Include="Nito.AsyncEx.Context" Version="1.1.0" />
     <PackageReference Include="Nito.AsyncEx.Coordination" Version="1.0.2" />
     <PackageReference Include="Castle.Core" Version="4.3.1" />
-    <PackageReference Include="TimeZoneConverter" Version="2.5.1"></PackageReference>
+    <PackageReference Include="TimeZoneConverter" Version="3.1.0" />
   </ItemGroup>
 
   <ItemGroup>
