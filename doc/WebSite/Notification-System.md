@@ -195,6 +195,53 @@ document](/Pages/Documents/SignalR-Integration) for more information.
 in a [**background job**](/Pages/Documents/Background-Jobs-And-Workers).
 Because of this, notifications may be sent with a small delay.
 
+#### Multiple Notifiers
+
+ASP.NET Boilerplate supports multiple **IRealTimeNotifiers** to notify
+users in different ways.
+
+For example, you can implement an **EmailRealTimeNotifier**:
+
+```c#
+public class EmailRealTimeNotifier : IRealTimeNotifier, ITransientDependency
+{
+    private readonly IEmailSender _emailSender;
+    private readonly UserManager _userManager;
+
+    public EmailRealTimeNotifier(
+        IEmailSender emailSender,
+        UserManager userManager)
+    {
+        _emailSender = emailSender;
+        _userManager = userManager;
+    }
+
+    public async Task SendNotificationsAsync(UserNotification[] userNotifications)
+    {
+        foreach (var userNotification in userNotifications)
+        {
+            if (userNotification.Notification.Data is MessageNotificationData data)
+            {
+                var user = await _userManager.GetUserByIdAsync(userNotification.UserId);
+                
+                _emailSender.Send(
+                    to: user.EmailAddress,
+                    subject: "You have a new notification!",
+                    body: data.Message,
+                    isBodyHtml: true
+                );
+            }
+        }
+    }
+}
+```
+
+Add it in the **PreInitialize** method of your module:
+
+```c#
+Configuration.Notifications.Notifiers.Add<EmailRealTimeNotifier>();
+```
+
 #### Client-Side
 
 When a real-time notification is received, ASP.NET Boilerplate triggers
