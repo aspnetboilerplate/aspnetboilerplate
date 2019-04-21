@@ -3,7 +3,6 @@ using System.Threading.Tasks;
 using Abp.Application.Features;
 using Abp.Authorization;
 using Abp.Configuration;
-using Abp.Dependency;
 using Abp.Domain.Uow;
 using Abp.Events.Bus;
 using Abp.Localization;
@@ -19,7 +18,7 @@ namespace Abp.AspNetCore.Mvc.RazorPages
     /// <summary>
     /// Base class for all MVC Controllers in Abp system.
     /// </summary>
-    public abstract class AbpPageModel : PageModel, ITransientDependency
+    public abstract class AbpPageModel : PageModel
     {
         /// <summary>
         /// Gets current session information.
