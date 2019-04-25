@@ -42,7 +42,7 @@ Let's see some of ABP's benefits here:
 
 -   **[Dependency Injection](/Pages/Documents/Dependency-Injection)**: ABP uses and provides a conventional DI infrastructure.
     Since this class is an application service, it's conventionally
-    registered to the DI container as transient (created per request). It
+    registered to the DI container as scoped (created per request). It
     can simply inject any dependencies (such as the IRepository&lt;Task&gt; in
     this sample).
 -   **[Repository](/Pages/Documents/Repositories)**: ABP can create a default repository for each entity (such as IRepository&lt;Task&gt; in
