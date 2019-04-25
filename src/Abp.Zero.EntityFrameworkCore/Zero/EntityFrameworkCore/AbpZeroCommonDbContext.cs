@@ -148,6 +148,11 @@ namespace Abp.Zero.EntityFrameworkCore
                     .WithMany()
                     .HasForeignKey(p => p.LastModifierUserId);
             });
+
+            modelBuilder.Entity<Setting>(b =>
+            {
+                b.HasIndex(e => new { e.TenantId, e.Name, e.UserId }).IsUnique().HasFilter(null);
+            });
         }
     }
 }
