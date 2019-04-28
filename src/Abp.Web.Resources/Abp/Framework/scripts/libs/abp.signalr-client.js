@@ -15,6 +15,15 @@ var abp = abp || {};
         // Set the common hub
         abp.signalr.hubs.common = connection;
 
+        // Reconnect loop
+        function start() {
+            connection.start().catch(function () {
+                setTimeout(function () {
+                    start();
+                }, 5000);
+            });
+        }
+
         // Reconnect if hub disconnects
         connection.onclose(function (e) {
             if (e) {
@@ -28,9 +37,7 @@ var abp = abp || {};
                 return;
             }
 
-            setTimeout(function () {
-                connection.start();
-            }, 5000);
+            start();
         });
 
         // Register to get notifications
