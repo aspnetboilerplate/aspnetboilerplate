@@ -29,6 +29,12 @@ namespace Abp.AspNetCore.Mvc.Uow
 
         public async Task OnPageHandlerExecutionAsync(PageHandlerExecutingContext context, PageHandlerExecutionDelegate next)
         {
+            if (context.HandlerMethod == null)
+            {
+                await next();
+                return;
+            }
+
             var unitOfWorkAttr = _unitOfWorkDefaultOptions
                                      .GetUnitOfWorkAttributeOrNull(context.HandlerMethod.MethodInfo) ??
                                  _aspnetCoreConfiguration.DefaultUnitOfWorkAttribute;

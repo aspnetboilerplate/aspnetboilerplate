@@ -28,7 +28,7 @@ namespace Abp.AspNetCore.Mvc.Auditing
 
         public async Task OnPageHandlerExecutionAsync(PageHandlerExecutingContext context, PageHandlerExecutionDelegate next)
         {
-            if (!ShouldSaveAudit(context))
+            if (context.HandlerMethod == null || !ShouldSaveAudit(context))
             {
                 await next();
                 return;
