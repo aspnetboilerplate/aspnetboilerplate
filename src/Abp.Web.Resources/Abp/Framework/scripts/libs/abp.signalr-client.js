@@ -33,7 +33,7 @@ var abp = abp || {};
                 abp.log.debug('Disconnected');
             }
 
-            if (!abp.signalr.autoConnect) {
+            if (!abp.signalr.autoReconnect) {
                 return;
             }
 
@@ -103,6 +103,7 @@ var abp = abp || {};
         }(signalR.HttpTransportType.WebSockets);
     }
 
+    abp.signalr.autoReconnect = abp.signalr.autoReconnect === undefined ? true : abp.signalr.autoReconnect;
     abp.signalr.startConnection = startConnection;
 
     if (abp.signalr.autoConnect === undefined) {
