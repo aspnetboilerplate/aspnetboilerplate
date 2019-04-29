@@ -35,6 +35,12 @@ namespace Abp.AspNetCore.Mvc.Results
 
         public async Task OnPageHandlerExecutionAsync(PageHandlerExecutingContext context, PageHandlerExecutionDelegate next)
         {
+            if (context.HandlerMethod == null)
+            {
+                await next();
+                return;
+            }
+
             var pageHandlerExecutedContext = await next();
 
             var methodInfo = context.HandlerMethod.MethodInfo;
