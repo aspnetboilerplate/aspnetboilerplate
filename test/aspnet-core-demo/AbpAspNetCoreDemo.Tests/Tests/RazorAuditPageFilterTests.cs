@@ -7,6 +7,7 @@ using Microsoft.AspNetCore.Mvc.Testing;
 using Xunit;
 using NSubstitute;
 using System.Collections.Generic;
+using Shouldly;
 
 namespace AbpAspNetCoreDemo.IntegrationTests.Tests
 {
@@ -114,6 +115,29 @@ namespace AbpAspNetCoreDemo.IntegrationTests.Tests
             _auditingStore.Received().SaveAsync(Arg.Is<AuditInfo>(a => a.ServiceName.Contains("AuditFilterPageDemo") && a.Parameters.Contains("My test message")));
 
 #pragma warning restore 4014
+        }
+
+
+        [Theory]
+        [InlineData("Get")]
+        [InlineData("Post")]
+        public async Task RazorPage_RazorAuditPageFilter_NoAction_Test(string method)
+        {
+            // Arrange
+            var client = _factory.CreateClient();
+
+            // Act
+            var requestMessage = new HttpRequestMessage(new HttpMethod(method), "/AuditFilterPageDemo4");
+            var response = await client.SendAsync(requestMessage);
+
+            // Assert
+            response.EnsureSuccessStatusCode();
+            (await response.Content.ReadAsStringAsync()).ShouldContain("<title>AuditFilterPageDemo4</title>");
+
+#pragma warning disable 4014
+            _auditingStore.DidNotReceive().SaveAsync(Arg.Any<AuditInfo>());
+#pragma warning restore 4014
+
         }
     }
 }

@@ -52,5 +52,23 @@ namespace AbpAspNetCoreDemo.IntegrationTests.Tests
             var result = await response.Content.ReadAsStringAsync();
             result.ShouldContain(responseText);
         }
+
+
+        [Theory]
+        [InlineData("Get")]
+        [InlineData("Post")]
+        public async Task RazorPage_UowPageFilter_NoAction_Test(string method)
+        {
+            // Arrange
+            var client = _factory.CreateClient();
+
+            // Act
+            var requestMessage = new HttpRequestMessage(new HttpMethod(method), "/UowFilterPageDemo3");
+            var response = await client.SendAsync(requestMessage);
+
+            // Assert
+            response.EnsureSuccessStatusCode();
+            (await response.Content.ReadAsStringAsync()).ShouldContain("<title>UowFilterPageDemo3</title>");
+        }
     }
 }
