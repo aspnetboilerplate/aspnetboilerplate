@@ -15,28 +15,28 @@ The main interface for caching is **ICacheManager**. We can
 cache. Example:
 
 ```csharp
-    public class TestAppService : ApplicationService
+public class TestAppService : ApplicationService
+{
+    private readonly ICacheManager _cacheManager;
+
+    public TestAppService(ICacheManager cacheManager)
     {
-        private readonly ICacheManager _cacheManager;
-
-        public TestAppService(ICacheManager cacheManager)
-        {
-            _cacheManager = cacheManager;
-        }
-
-        public Item GetItem(int id)
-        {
-            //Try to get from cache
-            return _cacheManager
-                    .GetCache("MyCache")
-                    .Get(id.ToString(), () => GetFromDatabase(id)) as Item;
-        }
-
-        public Item GetFromDatabase(int id)
-        {
-            //... retrieve item from database
-        }
+        _cacheManager = cacheManager;
     }
+
+    public Item GetItem(int id)
+    {
+        //Try to get from cache
+        return _cacheManager
+                .GetCache("MyCache")
+                .Get(id.ToString(), () => GetFromDatabase(id)) as Item;
+    }
+
+    public Item GetFromDatabase(int id)
+    {
+        //... retrieve item from database
+    }
+}
 ```
 
 In this example, we're injecting **ICacheManager** and getting a cache
@@ -70,7 +70,7 @@ cache. We can use the generic GetCache extension method to get an
 ITypedCache:
 
 ```csharp
-    ITypedCache<int, Item> myCache = _cacheManager.GetCache<int, Item>("MyCache");
+ITypedCache<int, Item> myCache = _cacheManager.GetCache<int, Item>("MyCache");
 ```
 
 We can also use the **AsTyped** extension method to convert an existing
@@ -83,17 +83,17 @@ use an item in the cache for 60 minutes, it's automatically removed from
 the cache. You can configure it for all caches or for a specific cache.
 
 ```csharp
-    //Configuration for all caches
-    Configuration.Caching.ConfigureAll(cache =>
-    {
-        cache.DefaultSlidingExpireTime = TimeSpan.FromHours(2);
-    });
+//Configuration for all caches
+Configuration.Caching.ConfigureAll(cache =>
+{
+    cache.DefaultSlidingExpireTime = TimeSpan.FromHours(2);
+});
 
-    //Configuration for a specific cache
-    Configuration.Caching.Configure("MyCache", cache =>
-    {
-        cache.DefaultSlidingExpireTime = TimeSpan.FromHours(8);
-    });
+//Configuration for a specific cache
+Configuration.Caching.Configure("MyCache", cache =>
+{
+    cache.DefaultSlidingExpireTime = TimeSpan.FromHours(8);
+});
 ```
 
 This code should be placed in the
@@ -115,12 +115,12 @@ we want to **cache them by Id**, so as to not query from the database repeatedly
 Assume that we have a Person entity like that:
 
 ```csharp
-    public class Person : Entity
-    {
-        public string Name { get; set; }
+public class Person : Entity
+{
+    public string Name { get; set; }
 
-        public int Age { get; set; }
-    }
+    public int Age { get; set; }
+}
 ```
 
 Assume that we frequently want to get the **Name** of people while we
@@ -128,11 +128,11 @@ know their **Id**. First, we create a class to store **cache
 items**:
 
 ```csharp
-    [AutoMapFrom(typeof(Person))]
-    public class PersonCacheItem
-    {
-        public string Name { get; set; }
-    }
+[AutoMapFrom(typeof(Person))]
+public class PersonCacheItem
+{
+    public string Name { get; set; }
+}
 ```
 
 **Do not directly store entities in the cache**, since caching may
@@ -148,23 +148,23 @@ While it's **not required**, we may want to define an interface for our
 cache class:
 
 ```csharp
-    public interface IPersonCache : IEntityCache<PersonCacheItem>
-    {
+public interface IPersonCache : IEntityCache<PersonCacheItem>
+{
 
-    }
+}
 ```
 
 Finally, we can create the cache class to cache Person entities:
 
 ```csharp
-    public class PersonCache : EntityCache<Person, PersonCacheItem>, IPersonCache, ITransientDependency
+public class PersonCache : EntityCache<Person, PersonCacheItem>, IPersonCache, ITransientDependency
+{
+    public PersonCache(ICacheManager cacheManager, IRepository<Person> repository)
+        : base(cacheManager, repository)
     {
-        public PersonCache(ICacheManager cacheManager, IRepository<Person> repository)
-            : base(cacheManager, repository)
-        {
 
-        }
     }
+}
 ```
 
 That's it. Our person cache is ready to use! Cache class can be
@@ -176,20 +176,20 @@ Whenever we need the **Name** of a person, we can get it from the cache by using
 the person's **Id**. Here's an example class that uses the Person cache:
 
 ```csharp
-    public class MyPersonService : ITransientDependency
+public class MyPersonService : ITransientDependency
+{
+    private readonly IPersonCache _personCache;
+
+    public MyPersonService(IPersonCache personCache)
     {
-        private readonly IPersonCache _personCache;
-
-        public MyPersonService(IPersonCache personCache)
-        {
-            _personCache = personCache;
-        }
-
-        public string GetPersonNameById(int id)
-        {
-            return _personCache[id].Name; //alternative: _personCache.Get(id).Name;
-        }
+        _personCache = personCache;
     }
+
+    public string GetPersonNameById(int id)
+    {
+        return _personCache[id].Name; //alternative: _personCache.Get(id).Name;
+    }
+}
 ```
 
 We simply [injected](Dependency-Injection.md) IPersonCache, got the
@@ -214,68 +214,65 @@ cache item and then got the Name property.
 If you need more complex caching requirements, you can extend
 EntityCache or create your own solution.
 
-### Multi Tenancy Entity Caching
+### Multi-Tenancy Entity Caching
 
 While **EntityCache** can help you cache entities, it is not multi-tenancy safe.
 For example, an entity that is retrieved and cached by tenant A should not be cached for tenant B.
 To cache multi-tenancy entity correctly, we introduce **MustHaveTenantEntityCache** and **MayHaveTenantEntityCache**
-which accepts entity class that implements **IMustHaveTenant** or **IMayHaveTenant** interface.
+which accept an entity class that implements **IMustHaveTenant** or **IMayHaveTenant** interface.
 
 Similar to entity caching, we can have **IMayHaveTenant** entity and cache item like this:
 
 ```csharp
-    public class Phone : Entity, IMayHaveTenant
-    {
-        public int? TenantId { get; set; }
+public class Phone : Entity, IMayHaveTenant
+{
+    public int? TenantId { get; set; }
 
-        public string Number { get; set; }
-    }
+    public string Number { get; set; }
+}
 ```
 
 
 ```csharp
-    [AutoMapFrom(typeof(Phone))]
-    public class PhoneCacheItem
-    {
-        public string Number { get; set; }
-    }
+[AutoMapFrom(typeof(Phone))]
+public class PhoneCacheItem
+{
+    public string Number { get; set; }
+}
 ```
 
-Same as entity caching, it is optional to define an interface for the
+Similar to entity caching, it is optional to define an interface for the
 cache class:
 
 ```csharp
-    public interface IPhoneCache : IMultiTenantEntityCache<IPhoneCache>
-    {
-
-    }
+public interface IPhoneCache : IMultiTenantEntityCache<IPhoneCache>
+{
+}
 ```
 
 Then, create cache class to cache Phone entities:
 
 ```csharp
-    public class PhoneCache : MayHaveTenantEntityCache<Phone, PhoneCacheItem>, IPhoneCache, ITransientDependency
+public class PhoneCache : MayHaveTenantEntityCache<Phone, PhoneCacheItem>, IPhoneCache, ITransientDependency
+{
+    public PhoneCache(ICacheManager cacheManager, IUnitOfWorkManager unitOfWorkManager, IRepository<Phone> repository)
+        : base(cacheManager, unitOfWorkManager, repository)
     {
-        public PhoneCache(ICacheManager cacheManager, IUnitOfWorkManager unitOfWorkManager, IRepository<Phone> repository)
-            : base(cacheManager, unitOfWorkManager, repository)
-        {
-
-        }
     }
+}
 ```
 
 Now we can access Phone entity cache in a multi-tenancy safe manner in your application.
 It also has all the benefits of **EntityCache**, e.g. cache globally, cache class can be transient/singleton.
 
 
-#### How MustHaveTeantEntityCache/MayHaveTeantEntityCache Works
+#### How MustHaveTenantEntityCache/MayHaveTenantEntityCache Works
 
--   It works the same way as **EntityCache**.
--   It gets the entity from the repository (the database) in it's first call. It then
-    gets from the cache in subsequent calls. (using **TenantId** when constructing the cache key, e.g. "{EntityId}@{TenantId}")
+It works similar to [How EntityCache Works](#how-entitycache-works), with some differences.
+-   It uses **TenantId** when constructing the cache key, e.g. "{EntityId}@{TenantId}".
 -   It's multi-tenancy safe.
 
-If you need more complex mutl-tenancy caching requirements, you can extend
+If you need more complex multi-tenancy caching requirements, you can extend
 **MultiTenancyEntityCache** and add your own solution.
 
 ### Redis Cache Integration
@@ -294,26 +291,26 @@ for the **AbpRedisCacheModule** and call the **UseRedis** extension method in th
 below:
 
 ```csharp
-    //...other namespaces
-    using Abp.Runtime.Caching.Redis;
+//...other namespaces
+using Abp.Runtime.Caching.Redis;
 
-    namespace MyProject.AbpZeroTemplate.Web
+namespace MyProject.AbpZeroTemplate.Web
+{
+    [DependsOn(
+        //...other module dependencies
+        typeof(AbpRedisCacheModule))]
+    public class MyProjectWebModule : AbpModule
     {
-        [DependsOn(
-            //...other module dependencies
-            typeof(AbpRedisCacheModule))]
-        public class MyProjectWebModule : AbpModule
+        public override void PreInitialize()
         {
-            public override void PreInitialize()
-            {
-                //...other configurations
+            //...other configurations
 
-                Configuration.Caching.UseRedis();
-            }
-
-            //...other code
+            Configuration.Caching.UseRedis();
         }
+
+        //...other code
     }
+}
 ```
 
 The Abp.RedisCache package uses "**localhost**" as the **connection string** by
@@ -321,14 +318,14 @@ default. You can add a connection string to your config file to override
 it. Example:
 
 ```xml
-    <add name="Abp.Redis.Cache" connectionString="localhost"/>
+<add name="Abp.Redis.Cache" connectionString="localhost"/>
 ```
 
 Also, you can add a setting to appSettings to set the database id of Redis.
 Example:
 
 ```xml
-    <add key="Abp.Redis.Cache.DatabaseId" value="2"/>
+<add key="Abp.Redis.Cache.DatabaseId" value="2"/>
 ```
 
 Different database ids are useful to create different key spaces
