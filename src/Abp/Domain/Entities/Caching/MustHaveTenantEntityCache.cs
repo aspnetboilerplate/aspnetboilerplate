@@ -1,14 +1,11 @@
 ﻿using Abp.Domain.Repositories;
 using Abp.Domain.Uow;
-using Abp.Events.Bus.Entities;
-using Abp.Events.Bus.Handlers;
 using Abp.Runtime.Caching;
 
 namespace Abp.Domain.Entities.Caching
 {
-    public class MustHaveTenantEntityCache<TEntity, TCacheItem> :
-        MustHaveTenantEntityCache<TEntity, TCacheItem, int>,
-        IMultiTenanyEntityCache<TCacheItem>
+    public class MustHaveTenantEntityCache<TEntity, TCacheItem> : MustHaveTenantEntityCache<TEntity, TCacheItem, int>,
+        IMultiTenancyEntityCache<TCacheItem>
         where TEntity : class, IEntity<int>, IMustHaveTenant
     {
         public MustHaveTenantEntityCache(
@@ -25,10 +22,7 @@ namespace Abp.Domain.Entities.Caching
         }
     }
 
-    public class MustHaveTenantEntityCache<TEntity, TCacheItem, TPrimaryKey> :
-        MultiTenancyEntityCache<TEntity, TCacheItem, TPrimaryKey>,
-        IEventHandler<EntityChangedEventData<TEntity>>,
-        IMultiTenanyEntityCache<TCacheItem, TPrimaryKey>
+    public class MustHaveTenantEntityCache<TEntity, TCacheItem, TPrimaryKey> : MultiTenancyEntityCache<TEntity, TCacheItem, TPrimaryKey>
         where TEntity : class, IEntity<TPrimaryKey>, IMustHaveTenant
     {
         public MustHaveTenantEntityCache(

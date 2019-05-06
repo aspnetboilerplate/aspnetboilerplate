@@ -176,12 +176,12 @@ namespace Abp.TestBase.SampleApplication.Tests.Domain.Entities.Caching
             cachedContact1.Name.ShouldBe(contact1.Name);
         }
 
-        public interface IMessageCache : IMultiTenanyEntityCache<MessageCacheItem>
+        public interface IMessageCache : IMultiTenancyEntityCache<MessageCacheItem>
         {
 
         }
 
-        public interface IContactListCache : IMultiTenanyEntityCache<ContactListCacheItem>
+        public interface IContactListCache : IMultiTenancyEntityCache<ContactListCacheItem>
         {
 
         }

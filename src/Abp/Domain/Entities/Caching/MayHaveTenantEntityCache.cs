@@ -1,14 +1,12 @@
 ﻿using Abp.Domain.Repositories;
 using Abp.Domain.Uow;
-using Abp.Events.Bus.Entities;
-using Abp.Events.Bus.Handlers;
 using Abp.Runtime.Caching;
 
 namespace Abp.Domain.Entities.Caching
 {
     public class MayHaveTenantEntityCache<TEntity, TCacheItem> :
         MayHaveTenantEntityCache<TEntity, TCacheItem, int>,
-        IMultiTenanyEntityCache<TCacheItem>
+        IMultiTenancyEntityCache<TCacheItem>
         where TEntity : class, IEntity<int>, IMayHaveTenant
     {
         public MayHaveTenantEntityCache(
@@ -25,10 +23,7 @@ namespace Abp.Domain.Entities.Caching
         }
     }
 
-    public class MayHaveTenantEntityCache<TEntity, TCacheItem, TPrimaryKey> :
-        MultiTenancyEntityCache<TEntity, TCacheItem, TPrimaryKey>,
-        IEventHandler<EntityChangedEventData<TEntity>>,
-        IMultiTenanyEntityCache<TCacheItem, TPrimaryKey>
+    public class MayHaveTenantEntityCache<TEntity, TCacheItem, TPrimaryKey> : MultiTenancyEntityCache<TEntity, TCacheItem, TPrimaryKey>
         where TEntity : class, IEntity<TPrimaryKey>, IMayHaveTenant
     {
         public MayHaveTenantEntityCache(
@@ -51,7 +46,7 @@ namespace Abp.Domain.Entities.Caching
 
         public override string ToString()
         {
-            return string.Format("MayHaveTenantEntityCache {0}", CacheName);
+            return "MayHaveTenantEntityCache {CacheName}";
         }
     }
 }

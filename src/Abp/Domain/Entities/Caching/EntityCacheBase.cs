@@ -8,10 +8,7 @@ namespace Abp.Domain.Entities.Caching
     public abstract class EntityCacheBase<TEntity, TCacheItem, TPrimaryKey>
         where TEntity : class, IEntity<TPrimaryKey>
     {
-        public TCacheItem this[TPrimaryKey id]
-        {
-            get { return Get(id); }
-        }
+        public TCacheItem this[TPrimaryKey id] => Get(id);
 
         public string CacheName { get; private set; }
 

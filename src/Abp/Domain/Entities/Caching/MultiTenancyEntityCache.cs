@@ -11,16 +11,10 @@ namespace Abp.Domain.Entities.Caching
     public abstract class MultiTenancyEntityCache<TEntity, TCacheItem, TPrimaryKey> :
         EntityCacheBase<TEntity, TCacheItem, TPrimaryKey>,
         IEventHandler<EntityChangedEventData<TEntity>>,
-        IMultiTenanyEntityCache<TCacheItem, TPrimaryKey>
+        IMultiTenancyEntityCache<TCacheItem, TPrimaryKey>
         where TEntity : class, IEntity<TPrimaryKey>
     {
-        public ITypedCache<string, TCacheItem> InternalCache
-        {
-            get
-            {
-                return CacheManager.GetCache<string, TCacheItem>(CacheName);
-            }
-        }
+        public ITypedCache<string, TCacheItem> InternalCache => CacheManager.GetCache<string, TCacheItem>(CacheName);
 
         public IAbpSession AbpSession { get; set; }
 
