@@ -59,7 +59,7 @@ namespace Abp.Domain.Entities.Caching
             {
                 throw new AbpException(
                     string.Format(
-                        "MapToCacheItem method should be overrided or IObjectMapper should be implemented in order to map {0} to {1}",
+                        "MapToCacheItem method should be overridden or IObjectMapper should be implemented in order to map {0} to {1}",
                         typeof (TEntity),
                         typeof (TCacheItem)
                         )

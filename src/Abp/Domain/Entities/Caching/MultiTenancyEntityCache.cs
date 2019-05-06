@@ -74,7 +74,7 @@ namespace Abp.Domain.Entities.Caching
 
         public override string ToString()
         {
-            return string.Format("MultiTenancyEntityCache {0}", CacheName);
+            return $"MultiTenancyEntityCache {CacheName}";
         }
     }
 }
