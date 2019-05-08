@@ -120,7 +120,10 @@ namespace Abp
         /// <inheritdoc/>
         public override int GetHashCode()
         {
-            return TenantId == null ? (int)UserId : (int)(TenantId.Value ^ UserId);
+            var hash = 17;
+            hash = TenantId.HasValue ? hash * 23 + TenantId.GetHashCode() : hash;
+            hash = hash * 23 + UserId.GetHashCode();
+            return hash;
         }
 
         /// <inheritdoc/>
