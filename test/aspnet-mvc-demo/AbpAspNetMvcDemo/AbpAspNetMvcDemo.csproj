@@ -124,15 +124,6 @@
     <Reference Include="Newtonsoft.Json, Version=12.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
       <HintPath>..\..\..\packages\Newtonsoft.Json.12.0.1\lib\net45\Newtonsoft.Json.dll</HintPath>
     </Reference>
-    <Reference Include="Nito.AsyncEx.Context, Version=1.1.0.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\..\..\packages\Nito.AsyncEx.Context.1.1.0\lib\net46\Nito.AsyncEx.Context.dll</HintPath>
-    </Reference>
-    <Reference Include="Nito.AsyncEx.Coordination, Version=1.0.2.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\..\..\packages\Nito.AsyncEx.Coordination.1.0.2\lib\net46\Nito.AsyncEx.Coordination.dll</HintPath>
-    </Reference>
-    <Reference Include="Nito.AsyncEx.Tasks, Version=1.1.0.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\..\..\packages\Nito.AsyncEx.Tasks.1.1.0\lib\net46\Nito.AsyncEx.Tasks.dll</HintPath>
-    </Reference>
     <Reference Include="Nito.Collections.Deque, Version=1.0.4.0, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\..\..\packages\Nito.Collections.Deque.1.0.4\lib\netstandard2.0\Nito.Collections.Deque.dll</HintPath>
     </Reference>
@@ -280,8 +271,8 @@
     <Reference Include="System.Xml.XPath.XmlDocument, Version=4.0.2.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
       <HintPath>..\..\..\packages\System.Xml.XPath.XmlDocument.4.3.0\lib\net46\System.Xml.XPath.XmlDocument.dll</HintPath>
     </Reference>
-    <Reference Include="TimeZoneConverter, Version=2.5.1.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\..\..\packages\TimeZoneConverter.2.5.1\lib\net45\TimeZoneConverter.dll</HintPath>
+    <Reference Include="TimeZoneConverter, Version=3.1.0.0, Culture=neutral, PublicKeyToken=e20ab7d0d9479841, processorArchitecture=MSIL">
+      <HintPath>..\..\..\packages\TimeZoneConverter.3.1.0\lib\net461\TimeZoneConverter.dll</HintPath>
     </Reference>
     <Reference Include="WebGrease">
       <Private>True</Private>
