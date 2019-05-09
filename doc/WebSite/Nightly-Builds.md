@@ -9,7 +9,7 @@ All framework packages are deployed to MyGet every night in weekdays. So, you ca
 1. Go to `Tools > Options > NuGet Package Manager > Package Source`.
 2. Click the green `+` icon.
 3. Set `ABP Nightly` as *Name* and `https://www.myget.org/F/abp-nightly/api/v3/index.json` as the *Source* as shown below:
-   ![night-build-add-nuget-source](images/night-build-add-nuget-source.png)
+<img src="images/night-build-add-nuget-source.png" alt="Nightly builds add nuget source" class="img-thumbnail" />
 4. Click the `Update` button.
 5. Click the `OK` button to save changes.
 
@@ -17,7 +17,7 @@ All framework packages are deployed to MyGet every night in weekdays. So, you ca
 
 Now, you can install preview / nightly packages to your project from Nuget Browser or Package Manager Console.
 
-![night-build-add-nuget-package](images/night-build-add-nuget-package.png)
+<img src="images/night-build-add-nuget-package.png" alt="Nightly builds add nuget package" class="img-thumbnail" />
 
 1. In the nuget browser, select "Include prereleases".
 2. Change package source to "All".
