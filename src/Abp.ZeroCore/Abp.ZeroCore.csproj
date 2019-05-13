@@ -23,6 +23,10 @@
   </ItemGroup>
 
   <ItemGroup>
+    <None Remove="Zero\Localization\SourceExt\AbpZero-nl.xml" />
+  </ItemGroup>
+
+  <ItemGroup>
     <None Include="bin\Release\netstandard2.0\Abp.ZeroCore.pdb">
       <PackagePath>lib/netstandard2.0/</PackagePath>
       <Pack>true</Pack>

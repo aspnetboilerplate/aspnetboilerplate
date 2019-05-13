@@ -20,6 +20,7 @@
 
   <ItemGroup>
     <EmbeddedResource Include="Localization\Sources\AbpXmlSource\*.xml;Timing\Timezone\Mapping\*.xml" Exclude="bin\**;obj\**;**\*.xproj;packages\**;@(EmbeddedResource)" />
+    <None Remove="Localization\Sources\AbpXmlSource\Abp-nl.xml" />
     <None Include="bin\Release\netstandard2.0\Abp.pdb">
       <PackagePath>lib/netstandard2.0/</PackagePath>
       <Pack>true</Pack>
