@@ -1,0 +1,35 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<localizationDictionary culture="nl">
+  <texts>
+    <text name="Identity.ConcurrencyFailure">Optimistische parallelle fout, object is gewijzigd.</text>
+    <text name="Identity.DefaultError">Er is een onbekende fout opgetreden.</text>
+    <text name="Identity.DuplicateEmail">E-mail '{0}' is al in gebruik.</text>
+    <text name="Identity.DuplicateRoleName">Rolnaam '{0}' is al in gebruik.</text>
+    <text name="Identity.DuplicateUserName">Gebruikersnaam '{0}' is al in gebruik.</text>
+    <text name="Identity.InvalidEmail">E-mail '{0}' is ongeldig.</text>
+    <text name="Identity.InvalidPasswordHasherCompatibilityMode">De verstrekte PasswordHasherCompatibilityMode is ongeldig.</text>
+    <text name="Identity.InvalidPasswordHasherIterationCount">Het aantal herhalingen moet een positief geheel getal zijn.</text>
+    <text name="Identity.InvalidRoleName">Rolnaam '{0}' is ongeldig.</text>
+    <text name="Identity.InvalidToken">Ongeldige token.</text>
+    <text name="Identity.InvalidUserName">Gebruikersnaam '{0}' is ongeldig, kan alleen letters of cijfers bevatten.</text>
+    <text name="Identity.LoginAlreadyAssociated">Er bestaat al een gebruiker met deze login.</text>
+    <text name="Identity.PasswordMismatch">Incorrect wachtwoord.</text>
+    <text name="Identity.PasswordRequireDigit">Wachtwoorden moeten minstens één cijfer hebben ('0'-'9').</text>
+    <text name="Identity.PasswordRequireLower">Wachtwoorden moeten minstens één kleine letter ('a'-'z') bevatten.</text>
+    <text name="Identity.PasswordRequireNonAlphanumeric">Wachtwoorden moeten minstens één niet-alfanumeriek teken bevatten.</text>
+    <text name="Identity.PasswordRequireUpper">Wachtwoorden moeten minstens één hoofdletter hebben ('A'-'Z').</text>
+    <text name="Identity.PasswordTooShort">Wachtwoorden moeten ten minste {0} tekens bevatten.</text>
+    <text name="Identity.RoleNotFound">Rol {0} bestaat niet.</text>
+    <text name="Identity.UserAlreadyHasPassword">Gebruiker heeft al een wachtwoord ingesteld.</text>
+    <text name="Identity.UserAlreadyInRole">Gebruiker al in rol '{0}'.</text>
+    <text name="Identity.UserLockedOut">Het gebruikersaccount is geblokkeerd.</text>
+    <text name="Identity.UserLockoutNotEnabled">Vergrendeling is niet ingeschakeld voor deze gebruiker.</text>
+    <text name="Identity.UserNameNotFound">Gebruiker {0} bestaat niet.</text>
+    <text name="Identity.UserNotInRole">Gebruiker bevindt zich niet in rol '{0}'.</text>
+    <text name="Email">E-mail</text>
+    <text name="EmailSecurityCodeSubject">Beveiligingscode</text>
+    <text name="EmailSecurityCodeBody">Uw beveiligingscode is: {0}</text>
+    <text name="Sms">Sms</text>
+    <text name="SmsSecurityCodeMessage">Uw beveiligingscode is: {0}</text>
+  </texts>
+</localizationDictionary>
