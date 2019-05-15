@@ -1,6 +1,8 @@
 ﻿using System.Threading.Tasks;
 using Abp.Configuration;
+using Abp.Configuration.Startup;
 using Abp.Dependency;
+using Abp.Extensions;
 using Abp.Zero.Configuration;
 using Abp.ZeroCore.SampleApp.Core;
 using Shouldly;
@@ -11,10 +13,12 @@ namespace Abp.Zero.Users
     public class UserManager_Lockout_Tests : AbpZeroTestBase
     {
         private readonly UserManager _userManager;
+        private readonly IMultiTenancyConfig _multiTenancyConfig;
 
         public UserManager_Lockout_Tests()
         {
             _userManager = Resolve<UserManager>();
+            _multiTenancyConfig = Resolve<IMultiTenancyConfig>();
         }
 
         [Theory]
@@ -86,7 +90,7 @@ namespace Abp.Zero.Users
 
             LocalIocManager.Using<ISettingManager>(settingManager =>
             {
-                if (AbpSession.TenantId is int tenantId)
+                if (_multiTenancyConfig.IsEnabled && AbpSession.TenantId is int tenantId)
                 {
                     settingManager.ChangeSettingForTenant(tenantId, AbpZeroSettingNames.UserManagement.UserLockOut.IsEnabled, isLockoutEnabledByDefault.ToString());
                 }
