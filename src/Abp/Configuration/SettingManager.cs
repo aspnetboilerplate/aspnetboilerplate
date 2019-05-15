@@ -176,13 +176,6 @@ namespace Abp.Configuration
         /// <inheritdoc/>
         public async Task<IReadOnlyList<ISettingValue>> GetAllSettingValuesForApplicationAsync()
         {
-            if (!_multiTenancyConfig.IsEnabled)
-            {
-                return (await GetReadOnlyTenantSettings(AbpSession.GetTenantId())).Values
-                    .Select(setting => new SettingValueObject(setting.Name, setting.Value))
-                    .ToImmutableList();
-            }
-
             return (await GetApplicationSettingsAsync()).Values
                 .Select(setting => new SettingValueObject(setting.Name, setting.Value))
                 .ToImmutableList();
@@ -213,17 +206,7 @@ namespace Abp.Configuration
         [UnitOfWork]
         public virtual async Task ChangeSettingForApplicationAsync(string name, string value)
         {
-            if (_multiTenancyConfig.IsEnabled)
-            {
-                await InsertOrUpdateOrDeleteSettingValueAsync(name, value, null, null);
-            }
-            else
-            {
-                // If MultiTenancy is disabled, then we should change default tenant's setting
-                await InsertOrUpdateOrDeleteSettingValueAsync(name, value, AbpSession.GetTenantId(), null);
-                await _tenantSettingCache.RemoveAsync(AbpSession.GetTenantId());
-            }
-
+            await InsertOrUpdateOrDeleteSettingValueAsync(name, value, null, null);
             await _applicationSettingCache.RemoveAsync(ApplicationSettingsCacheKey);
         }
 
@@ -277,7 +260,7 @@ namespace Abp.Configuration
             }
 
             //Get for tenant if defined
-            if (settingDefinition.Scopes.HasFlag(SettingScopes.Tenant) && tenantId.HasValue)
+            if (settingDefinition.Scopes.HasFlag(SettingScopes.Tenant) && _multiTenancyConfig.IsEnabled && tenantId.HasValue)
             {
                 var settingValue = await GetSettingValueForTenantOrNullAsync(tenantId.Value, name);
                 if (settingValue != null)
@@ -387,12 +370,7 @@ namespace Abp.Configuration
 
         private async Task<SettingInfo> GetSettingValueForApplicationOrNullAsync(string name)
         {
-            if (_multiTenancyConfig.IsEnabled)
-            {
-                return (await GetApplicationSettingsAsync()).GetOrDefault(name);
-            }
-
-            return (await GetReadOnlyTenantSettings(AbpSession.GetTenantId())).GetOrDefault(name);
+            return (await GetApplicationSettingsAsync()).GetOrDefault(name);
         }
 
         private async Task<SettingInfo> GetSettingValueForTenantOrNullAsync(int tenantId, string name)
