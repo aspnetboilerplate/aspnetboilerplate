@@ -11,7 +11,7 @@ namespace Abp.Tests.RealTime
     public class InMemoryOnlineClientManager_Tests
     {
         private readonly IOnlineClientManager _clientManager;
-        private static readonly RNGCryptoServiceProvider _keyGenerator = new RNGCryptoServiceProvider();
+        private static readonly RNGCryptoServiceProvider KeyGenerator = new RNGCryptoServiceProvider();
 
         public InMemoryOnlineClientManager_Tests()
         {
@@ -26,10 +26,14 @@ namespace Abp.Tests.RealTime
             Dictionary<string, int> connections = new Dictionary<string, int>();
 
             for (int i = 0; i < 100; i++)
+            {
                 connections.Add(MakeNewConnectionId(), i + 1);
+            }
 
             foreach (var pair in connections)
+            {
                 _clientManager.Add(new OnlineClient(pair.Key, "127.0.0.1", tenantId, pair.Value));
+            }
 
             var testId = connections.Keys.ToList()[5];
 
@@ -45,7 +49,7 @@ namespace Abp.Tests.RealTime
         private static string MakeNewConnectionId()
         {
             var buffer = new byte[16];
-            _keyGenerator.GetBytes(buffer);
+            KeyGenerator.GetBytes(buffer);
             return Convert.ToBase64String(buffer);
         }
     }

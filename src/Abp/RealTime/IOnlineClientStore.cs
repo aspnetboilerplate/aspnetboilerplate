@@ -3,6 +3,11 @@ using Abp.Data;
 
 namespace Abp.RealTime
 {
+    public interface IOnlineClientStore<T> : IOnlineClientStore
+    {
+
+    }
+
     public interface IOnlineClientStore
     {
         /// <summary>
@@ -17,7 +22,7 @@ namespace Abp.RealTime
         /// <param name="connectionId">The connection id.</param>
         /// <returns>true if the client is removed, otherwise, false</returns>
         bool Remove(string connectionId);
-        
+
         /// <summary>
         /// Removes a client by connection id.
         /// </summary>

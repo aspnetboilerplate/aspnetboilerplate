@@ -67,6 +67,7 @@ namespace Abp
             IocManager.IocContainer.Install(new EventBusInstaller(IocManager));
 
             IocManager.Register(typeof(IOnlineClientManager<>), typeof(OnlineClientManager<>), DependencyLifeStyle.Singleton);
+            IocManager.Register(typeof(IOnlineClientStore<>), typeof(InMemoryOnlineClientStore<>), DependencyLifeStyle.Singleton);
 
             IocManager.Register(typeof(EventTriggerAsyncBackgroundJob<>),DependencyLifeStyle.Transient);
             
@@ -212,7 +213,6 @@ namespace Abp
             IocManager.RegisterIfNot<ITenantStore, NullTenantStore>(DependencyLifeStyle.Singleton);
             IocManager.RegisterIfNot<ITenantResolverCache, NullTenantResolverCache>(DependencyLifeStyle.Singleton);
             IocManager.RegisterIfNot<IEntityHistoryStore, NullEntityHistoryStore>(DependencyLifeStyle.Singleton);
-            IocManager.RegisterIfNot<IOnlineClientStore, InMemoryOnlineClientStore>(DependencyLifeStyle.Singleton);
 
             if (Configuration.BackgroundJobs.IsJobExecutionEnabled)
             {

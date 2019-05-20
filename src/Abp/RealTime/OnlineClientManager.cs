@@ -9,8 +9,9 @@ namespace Abp.RealTime
 {
     public class OnlineClientManager<T> : OnlineClientManager, IOnlineClientManager<T>
     {
-        public OnlineClientManager(IOnlineClientStore store) : base(store)
+        public OnlineClientManager(IOnlineClientStore<T> store) : base(store)
         {
+
         }
     }
 
