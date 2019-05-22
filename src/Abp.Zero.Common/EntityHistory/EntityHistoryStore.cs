@@ -23,5 +23,10 @@ namespace Abp.EntityHistory
         {
             return _changeSetRepository.InsertAsync(changeSet);
         }
+
+        public virtual void Save(EntityChangeSet changeSet)
+        {
+            _changeSetRepository.Insert(changeSet);
+        }
     }
 }

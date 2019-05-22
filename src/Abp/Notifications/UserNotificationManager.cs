@@ -29,9 +29,22 @@ namespace Abp.Notifications
                 .ToList();
         }
 
+        public List<UserNotification> GetUserNotifications(UserIdentifier user, UserNotificationState? state = null, int skipCount = 0, int maxResultCount = int.MaxValue)
+        {
+            var userNotifications =  _store.GetUserNotificationsWithNotifications(user, state, skipCount, maxResultCount);
+            return userNotifications
+                .Select(un => un.ToUserNotification())
+                .ToList();
+        }
+
         public Task<int> GetUserNotificationCountAsync(UserIdentifier user, UserNotificationState? state = null)
         {
             return _store.GetUserNotificationCountAsync(user, state);
+        }
+
+        public int GetUserNotificationCount(UserIdentifier user, UserNotificationState? state = null)
+        {
+            return _store.GetUserNotificationCount(user, state);
         }
 
         public async Task<UserNotification> GetUserNotificationAsync(int? tenantId, Guid userNotificationId)
@@ -45,9 +58,25 @@ namespace Abp.Notifications
             return userNotification.ToUserNotification();
         }
 
+        public UserNotification GetUserNotification(int? tenantId, Guid userNotificationId)
+        {
+            var userNotification =  _store.GetUserNotificationWithNotificationOrNull(tenantId, userNotificationId);
+            if (userNotification == null)
+            {
+                return null;
+            }
+
+            return userNotification.ToUserNotification();
+        }
+
         public Task UpdateUserNotificationStateAsync(int? tenantId, Guid userNotificationId, UserNotificationState state)
         {
             return _store.UpdateUserNotificationStateAsync(tenantId, userNotificationId, state);
+        }
+
+        public void UpdateUserNotificationState(int? tenantId, Guid userNotificationId, UserNotificationState state)
+        {
+            _store.UpdateUserNotificationState(tenantId, userNotificationId, state);
         }
 
         public Task UpdateAllUserNotificationStatesAsync(UserIdentifier user, UserNotificationState state)
@@ -55,14 +84,29 @@ namespace Abp.Notifications
             return _store.UpdateAllUserNotificationStatesAsync(user, state);
         }
 
+        public void UpdateAllUserNotificationStates(UserIdentifier user, UserNotificationState state)
+        {
+            _store.UpdateAllUserNotificationStates(user, state);
+        }
+
         public Task DeleteUserNotificationAsync(int? tenantId, Guid userNotificationId)
         {
             return _store.DeleteUserNotificationAsync(tenantId, userNotificationId);
         }
 
+        public void DeleteUserNotification(int? tenantId, Guid userNotificationId)
+        {
+            _store.DeleteUserNotification(tenantId, userNotificationId);
+        }
+
         public Task DeleteAllUserNotificationsAsync(UserIdentifier user)
         {
             return _store.DeleteAllUserNotificationsAsync(user);
+        }
+
+        public void DeleteAllUserNotifications(UserIdentifier user)
+        {
+            _store.DeleteAllUserNotifications(user);
         }
     }
 }

@@ -126,6 +126,27 @@ namespace Abp.EntityHistory
             }
         }
 
+        public virtual void Save(EntityChangeSet changeSet)
+        {
+            if (!IsEntityHistoryEnabled)
+            {
+                return;
+            }
+
+            if (changeSet.EntityChanges.Count == 0)
+            {
+                return;
+            }
+
+            UpdateChangeSet(changeSet);
+
+            using (var uow = _unitOfWorkManager.Begin(TransactionScopeOption.Suppress))
+            {
+                EntityHistoryStore.Save(changeSet);
+                uow.Complete();
+            }
+        }
+
         [CanBeNull]
         private EntityChange CreateEntityChange(EntityEntry entityEntry, bool shouldSaveEntityHistory)
         {

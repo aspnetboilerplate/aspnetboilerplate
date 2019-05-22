@@ -75,7 +75,7 @@ namespace Abp.Zero.SampleApp.Tests.EntityHistory
                 return true;
             };
 
-            _entityHistoryStore.Received().SaveAsync(Arg.Is<EntityChangeSet>(s => predicate(s)));
+            _entityHistoryStore.Received().Save(Arg.Is<EntityChangeSet>(s => predicate(s)));
         }
 
         [Fact]
@@ -87,6 +87,8 @@ namespace Abp.Zero.SampleApp.Tests.EntityHistory
                 .Do(callback => AsyncHelper.RunSync(() =>
                     entityHistoryStore.SaveAsync(callback.Arg<EntityChangeSet>()))
                 );
+            _entityHistoryStore.When(x => x.Save(Arg.Any<EntityChangeSet>()))
+                .Do(callback => entityHistoryStore.Save(callback.Arg<EntityChangeSet>()));
 
             UsingDbContext((context) =>
             {
@@ -134,7 +136,7 @@ namespace Abp.Zero.SampleApp.Tests.EntityHistory
                 return true;
             };
 
-            _entityHistoryStore.Received().SaveAsync(Arg.Is<EntityChangeSet>(s => predicate(s)));
+            _entityHistoryStore.Received().Save(Arg.Is<EntityChangeSet>(s => predicate(s)));
         }
 
         [Fact]
@@ -173,7 +175,7 @@ namespace Abp.Zero.SampleApp.Tests.EntityHistory
                 return true;
             };
 
-            _entityHistoryStore.Received().SaveAsync(Arg.Is<EntityChangeSet>(s => predicate(s)));
+            _entityHistoryStore.Received().Save(Arg.Is<EntityChangeSet>(s => predicate(s)));
         }
 
         [Fact]
@@ -216,7 +218,7 @@ namespace Abp.Zero.SampleApp.Tests.EntityHistory
                 return true;
             };
 
-            _entityHistoryStore.Received().SaveAsync(Arg.Is<EntityChangeSet>(s => predicate(s)));
+            _entityHistoryStore.Received().Save(Arg.Is<EntityChangeSet>(s => predicate(s)));
         }
 
         [Fact]
@@ -259,7 +261,7 @@ namespace Abp.Zero.SampleApp.Tests.EntityHistory
                 return true;
             };
 
-            _entityHistoryStore.Received().SaveAsync(Arg.Is<EntityChangeSet>(s => predicate(s)));
+            _entityHistoryStore.Received().Save(Arg.Is<EntityChangeSet>(s => predicate(s)));
         }
 
         [Fact]
@@ -296,7 +298,7 @@ namespace Abp.Zero.SampleApp.Tests.EntityHistory
                 return true;
             };
 
-            _entityHistoryStore.Received().SaveAsync(Arg.Is<EntityChangeSet>(s => predicate(s)));
+            _entityHistoryStore.Received().Save(Arg.Is<EntityChangeSet>(s => predicate(s)));
         }
 
         [Fact]
@@ -338,7 +340,7 @@ namespace Abp.Zero.SampleApp.Tests.EntityHistory
                 return true;
             };
 
-            _entityHistoryStore.Received().SaveAsync(Arg.Is<EntityChangeSet>(s => predicate(s)));
+            _entityHistoryStore.Received().Save(Arg.Is<EntityChangeSet>(s => predicate(s)));
         }
 
         [Fact]
@@ -369,7 +371,7 @@ namespace Abp.Zero.SampleApp.Tests.EntityHistory
                 return true;
             };
 
-            _entityHistoryStore.Received().SaveAsync(Arg.Is<EntityChangeSet>(s => predicate(s)));
+            _entityHistoryStore.Received().Save(Arg.Is<EntityChangeSet>(s => predicate(s)));
         }
 
         #endregion

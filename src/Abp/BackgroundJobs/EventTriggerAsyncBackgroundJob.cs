@@ -18,5 +18,10 @@ namespace Abp.BackgroundJobs
         {
             await EventBus.TriggerAsync(e);
         }
+
+        public override void Execute(TEvent e)
+        {
+            EventBus.Trigger(e);
+        }
     }
 }

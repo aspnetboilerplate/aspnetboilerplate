@@ -8,10 +8,10 @@ namespace Abp.Authorization
     public static class AbpLogInManagerExtensions
     {
         public static AbpLoginResult<TTenant, TUser> Login<TTenant, TRole, TUser>(
-            this AbpLogInManager<TTenant, TRole, TUser> logInManager, 
-            string userNameOrEmailAddress, 
-            string plainPassword, 
-            string tenancyName = null, 
+            this AbpLogInManager<TTenant, TRole, TUser> logInManager,
+            string userNameOrEmailAddress,
+            string plainPassword,
+            string tenancyName = null,
             bool shouldLockout = true)
                 where TTenant : AbpTenant<TUser>
                 where TRole : AbpRole<TUser>, new()

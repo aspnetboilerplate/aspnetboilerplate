@@ -34,9 +34,19 @@ namespace Abp.Application.Editions
             return _featureValueStore.GetEditionValueOrNullAsync(editionId, featureName);
         }
 
+        public virtual string GetFeatureValueOrNull(int editionId, string featureName)
+        {
+            return _featureValueStore.GetEditionValueOrNull(editionId, featureName);
+        }
+
         public virtual Task SetFeatureValueAsync(int editionId, string featureName, string value)
         {
             return _featureValueStore.SetEditionFeatureValueAsync(editionId, featureName, value);
+        }
+
+        public virtual void SetFeatureValue(int editionId, string featureName, string value)
+        {
+            _featureValueStore.SetEditionFeatureValue(editionId, featureName, value);
         }
 
         public virtual async Task<IReadOnlyList<NameValue>> GetFeatureValuesAsync(int editionId)
@@ -46,6 +56,18 @@ namespace Abp.Application.Editions
             foreach (var feature in FeatureManager.GetAll())
             {
                 values.Add(new NameValue(feature.Name, await GetFeatureValueOrNullAsync(editionId, feature.Name) ?? feature.DefaultValue));
+            }
+
+            return values;
+        }
+
+        public virtual IReadOnlyList<NameValue> GetFeatureValues(int editionId)
+        {
+            var values = new List<NameValue>();
+
+            foreach (var feature in FeatureManager.GetAll())
+            {
+                values.Add(new NameValue(feature.Name, GetFeatureValueOrNull(editionId, feature.Name) ?? feature.DefaultValue));
             }
 
             return values;
@@ -64,9 +86,27 @@ namespace Abp.Application.Editions
             }
         }
 
+        public virtual void SetFeatureValues(int editionId, params NameValue[] values)
+        {
+            if (values.IsNullOrEmpty())
+            {
+                return;
+            }
+
+            foreach (var value in values)
+            {
+                SetFeatureValue(editionId, value.Name, value.Value);
+            }
+        }
+
         public virtual Task CreateAsync(Edition edition)
         {
             return EditionRepository.InsertAsync(edition);
+        }
+
+        public virtual void Create(Edition edition)
+        {
+            EditionRepository.Insert(edition);
         }
 
         public virtual Task<Edition> FindByNameAsync(string name)
@@ -74,9 +114,19 @@ namespace Abp.Application.Editions
             return EditionRepository.FirstOrDefaultAsync(edition => edition.Name == name);
         }
 
+        public virtual Edition FindByName(string name)
+        {
+            return EditionRepository.FirstOrDefault(edition => edition.Name == name);
+        }
+
         public virtual Task<Edition> FindByIdAsync(int id)
         {
             return EditionRepository.FirstOrDefaultAsync(id);
+        }
+
+        public virtual Edition FindById(int id)
+        {
+            return EditionRepository.FirstOrDefault(id);
         }
 
         public virtual Task<Edition> GetByIdAsync(int id)
@@ -84,9 +134,19 @@ namespace Abp.Application.Editions
             return EditionRepository.GetAsync(id);
         }
 
+        public virtual Edition GetById(int id)
+        {
+            return EditionRepository.Get(id);
+        }
+
         public virtual Task DeleteAsync(Edition edition)
         {
             return EditionRepository.DeleteAsync(edition);
+        }
+
+        public virtual void Delete(Edition edition)
+        {
+            EditionRepository.Delete(edition);
         }
     }
 }

@@ -55,7 +55,7 @@ namespace Abp.Zero.EntityHistory
 
             var blog2Id = CreateBlogAndGetId();
 
-            _entityHistoryStore.Received().SaveAsync(Arg.Is<EntityChangeSet>(
+            _entityHistoryStore.Received().Save(Arg.Is<EntityChangeSet>(
                 s => s.EntityChanges.Count == 2 &&
                      s.EntityChanges[0].ChangeTime == s.EntityChanges[0].EntityEntry.As<EntityEntry>().Entity.As<IHasCreationTime>().CreationTime &&
                      s.EntityChanges[0].ChangeType == EntityChangeType.Created &&
@@ -85,6 +85,8 @@ namespace Abp.Zero.EntityHistory
                 .Do(callback => AsyncHelper.RunSync(() =>
                     entityHistoryStore.SaveAsync(callback.Arg<EntityChangeSet>()))
                 );
+            _entityHistoryStore.When(x => x.Save(Arg.Any<EntityChangeSet>()))
+                .Do(callback => entityHistoryStore.Save(callback.Arg<EntityChangeSet>()));
 
             const int tenantId = 1;
 
@@ -131,7 +133,7 @@ namespace Abp.Zero.EntityHistory
             var newValue = "http://testblog1-changed.myblogs.com";
             var originalValue = UpdateBlogUrlAndGetOriginalValue(newValue);
 
-            _entityHistoryStore.Received().SaveAsync(Arg.Is<EntityChangeSet>(
+            _entityHistoryStore.Received().Save(Arg.Is<EntityChangeSet>(
                 s => s.EntityChanges.Count == 1 &&
                      s.EntityChanges[0].ChangeType == EntityChangeType.Updated &&
                      s.EntityChanges[0].EntityId == s.EntityChanges[0].EntityEntry.As<EntityEntry>().Entity.As<IEntity>().Id.ToJsonString(false, false) &&
@@ -183,7 +185,7 @@ namespace Abp.Zero.EntityHistory
                 return true;
             };
 
-            _entityHistoryStore.Received().SaveAsync(Arg.Is<EntityChangeSet>(s => predicate(s)));
+            _entityHistoryStore.Received().Save(Arg.Is<EntityChangeSet>(s => predicate(s)));
         }
 
         [Fact]
@@ -210,7 +212,7 @@ namespace Abp.Zero.EntityHistory
                 uow.Complete();
             }
 
-            _entityHistoryStore.Received().SaveAsync(Arg.Is<EntityChangeSet>(
+            _entityHistoryStore.Received().Save(Arg.Is<EntityChangeSet>(
                 s => s.EntityChanges.Count == 1 &&
                      s.EntityChanges[0].ChangeType == EntityChangeType.Updated &&
                      s.EntityChanges[0].EntityId == post1Id.ToJsonString(false, false) &&
@@ -236,7 +238,7 @@ namespace Abp.Zero.EntityHistory
                 uow.Complete();
             }
 
-            _entityHistoryStore.Received().SaveAsync(Arg.Is<EntityChangeSet>(
+            _entityHistoryStore.Received().Save(Arg.Is<EntityChangeSet>(
                 s => s.EntityChanges.Count == 1 &&
                      s.EntityChanges[0].PropertyChanges.Count == 1 &&
                      s.EntityChanges[0].PropertyChanges.First().PropertyName == "PostId"
@@ -258,7 +260,7 @@ namespace Abp.Zero.EntityHistory
                 uow.Complete();
             }
 
-            _entityHistoryStore.Received().SaveAsync(Arg.Is<EntityChangeSet>(
+            _entityHistoryStore.Received().Save(Arg.Is<EntityChangeSet>(
                 s => s.EntityChanges.Count == 1 &&
                      s.EntityChanges[0].ChangeType == EntityChangeType.Updated &&
                      s.EntityChanges[0].EntityId == s.EntityChanges[0].EntityEntry.As<EntityEntry>().Entity.As<IEntity>().Id.ToJsonString(false, false) &&

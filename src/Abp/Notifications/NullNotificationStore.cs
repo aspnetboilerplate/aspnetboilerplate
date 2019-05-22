@@ -98,5 +98,85 @@ namespace Abp.Notifications
         {
             return Task.FromResult(0);
         }
+
+        public void InsertSubscription(NotificationSubscriptionInfo subscription)
+        {
+        }
+
+        public void DeleteSubscription(UserIdentifier user, string notificationName, string entityTypeName, string entityId)
+        {
+        }
+
+        public void InsertNotification(NotificationInfo notification)
+        {
+        }
+
+        public NotificationInfo GetNotificationOrNull(Guid notificationId)
+        {
+            return new NotificationInfo();
+        }
+
+        public void InsertUserNotification(UserNotificationInfo userNotification)
+        {
+        }
+
+        public List<NotificationSubscriptionInfo> GetSubscriptions(string notificationName, string entityTypeName, string entityId)
+        {
+            return new List<NotificationSubscriptionInfo>();
+        }
+
+        public List<NotificationSubscriptionInfo> GetSubscriptions(int?[] tenantIds, string notificationName, string entityTypeName, string entityId)
+        {
+            return new List<NotificationSubscriptionInfo>();
+        }
+
+        public List<NotificationSubscriptionInfo> GetSubscriptions(UserIdentifier user)
+        {
+            return new List<NotificationSubscriptionInfo>();
+        }
+
+        public bool IsSubscribed(UserIdentifier user, string notificationName, string entityTypeName, string entityId)
+        {
+            return false;
+        }
+
+        public void UpdateUserNotificationState(int? tenantId, Guid userNotificationId, UserNotificationState state)
+        {
+        }
+
+        public void UpdateAllUserNotificationStates(UserIdentifier user, UserNotificationState state)
+        {
+        }
+
+        public void DeleteUserNotification(int? tenantId, Guid userNotificationId)
+        {
+        }
+
+        public void DeleteAllUserNotifications(UserIdentifier user)
+        {
+        }
+
+        public List<UserNotificationInfoWithNotificationInfo> GetUserNotificationsWithNotifications(UserIdentifier user, UserNotificationState? state = null, int skipCount = 0, int maxResultCount = int.MaxValue)
+        {
+            return new List<UserNotificationInfoWithNotificationInfo>();
+        }
+
+        public int GetUserNotificationCount(UserIdentifier user, UserNotificationState? state = null)
+        {
+            return 0;
+        }
+
+        public UserNotificationInfoWithNotificationInfo GetUserNotificationWithNotificationOrNull(int? tenantId, Guid userNotificationId)
+        {
+            return (UserNotificationInfoWithNotificationInfo)null;
+        }
+
+        public void InsertTenantNotification(TenantNotificationInfo tenantNotificationInfo)
+        {
+        }
+
+        public void DeleteNotification(NotificationInfo notification)
+        {
+        }
     }
 }

@@ -18,5 +18,9 @@ namespace Abp.Notifications
         {
             return Task.FromResult(0);
         }
+
+        public void SendNotifications(UserNotification[] userNotifications)
+        {
+        }
     }
 }
