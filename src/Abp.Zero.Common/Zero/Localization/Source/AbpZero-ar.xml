@@ -9,5 +9,6 @@
     <text name="CanNotRenameAdminUser" value="لا يمكن إعادة تسمية اسم المستخدم من {0} لأن هذا هو المستخدم المسؤول الافتراضي!" />
     <text name="CanNotDeleteAdminUser" value="لا يمكن حذف المستخدم {0} لأن هذا هو المستخدم المشرف الافتراضي!" />
     <text name="OrganizationUnitDuplicateDisplayNameWarning" value="هناك بالفعل وحدة تنظيمية باسم {0}. لا يمكن إنشاء وحدتين بنفس الاسم في نفس المستوى." />
+    <text name="InvalidFeatureValue" value="{0} قيمة الميزة غير صالحة!" />
   </texts>
 </localizationDictionary>

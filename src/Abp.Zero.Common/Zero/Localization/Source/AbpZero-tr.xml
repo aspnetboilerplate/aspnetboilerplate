@@ -9,5 +9,6 @@
     <text name="CanNotRenameAdminUser" value="{0} kullanıcı adı varsayılan yönetici kullanıcısı olduğu için değiştirilemez." />
     <text name="CanNotDeleteAdminUser" value="{0} kullanıcısı varsayılan yönetici kullanıcısı olduğu için silinemez." />
     <text name="OrganizationUnitDuplicateDisplayNameWarning" value="{0} isminde bir birim zaten var. Aynı seviyede aynı isimli iki birim olamaz." />
+    <text name="InvalidFeatureValue" value="{0} özellik değeri geçerli değil!" />
   </texts>
 </localizationDictionary>

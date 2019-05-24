@@ -9,5 +9,6 @@
     <text name="CanNotRenameAdminUser" value="Can not rename user name of the {0} since this is the default admin user!" />
     <text name="CanNotDeleteAdminUser" value="Can not delete user {0} since this is the default admin user!" />
     <text name="OrganizationUnitDuplicateDisplayNameWarning" value="There is already an organization unit with name {0}. Two units with same name can not be created in same level." />
+    <text name="InvalidFeatureValue" value="{0} feature value is not valid!" />
   </texts>
 </localizationDictionary>
