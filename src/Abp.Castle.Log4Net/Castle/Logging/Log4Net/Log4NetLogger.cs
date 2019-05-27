@@ -68,6 +68,62 @@ namespace Abp.Castle.Logging.Log4Net
             return Factory.Create(Logger.Name + "." + name);
         }
 
+        public void Trace(string message)
+        {
+            if (IsTraceEnabled)
+            {
+                Logger.Log(DeclaringType, Level.Trace, message, null);
+            }
+        }
+
+        public void Trace(Func<string> messageFactory)
+        {
+            if (IsTraceEnabled)
+            {
+                Logger.Log(DeclaringType, Level.Trace, messageFactory.Invoke(), null);
+            }
+        }
+
+        public void Trace(string message, Exception exception)
+        {
+            if (IsTraceEnabled)
+            {
+                Logger.Log(DeclaringType, Level.Trace, message, exception);
+            }
+        }
+
+        public void TraceFormat(string format, params object[] args)
+        {
+            if (IsTraceEnabled)
+            {
+                Logger.Log(DeclaringType, Level.Trace, new SystemStringFormat(CultureInfo.InvariantCulture, format, args), null);
+            }
+        }
+
+        public void TraceFormat(Exception exception, string format, params object[] args)
+        {
+            if (IsTraceEnabled)
+            {
+                Logger.Log(DeclaringType, Level.Trace, new SystemStringFormat(CultureInfo.InvariantCulture, format, args), null);
+            }
+        }
+
+        public void TraceFormat(IFormatProvider formatProvider, string format, params object[] args)
+        {
+            if (IsTraceEnabled)
+            {
+                Logger.Log(DeclaringType, Level.Trace, new SystemStringFormat(formatProvider, format, args), null);
+            }
+        }
+
+        public void TraceFormat(Exception exception, IFormatProvider formatProvider, string format, params object[] args)
+        {
+            if (IsTraceEnabled)
+            {
+                Logger.Log(DeclaringType, Level.Trace, new SystemStringFormat(formatProvider, format, args), exception);
+            }
+        }
+
         public void Debug(string message)
         {
             if (IsDebugEnabled)
@@ -347,5 +403,7 @@ namespace Abp.Castle.Logging.Log4Net
                 Logger.Log(DeclaringType, Level.Warn, new SystemStringFormat(formatProvider, format, args), exception);
             }
         }
+
+        public bool IsTraceEnabled { get; }
     }
 }

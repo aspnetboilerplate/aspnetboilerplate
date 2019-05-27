@@ -200,7 +200,7 @@ namespace Abp.Dependency
         /// <returns>The instance object</returns>
         public T Resolve<T>(object argumentsAsAnonymousType)
         {
-            return IocContainer.Resolve<T>(argumentsAsAnonymousType);
+            return IocContainer.Resolve<T>(Arguments.FromProperties(argumentsAsAnonymousType));
         }
 
         /// <summary>
@@ -223,7 +223,7 @@ namespace Abp.Dependency
         /// <returns>The instance object</returns>
         public object Resolve(Type type, object argumentsAsAnonymousType)
         {
-            return IocContainer.Resolve(type, argumentsAsAnonymousType);
+            return IocContainer.Resolve(type, Arguments.FromProperties(argumentsAsAnonymousType));
         }
 
         ///<inheritdoc/>
@@ -235,7 +235,7 @@ namespace Abp.Dependency
         ///<inheritdoc/>
         public T[] ResolveAll<T>(object argumentsAsAnonymousType)
         {
-            return IocContainer.ResolveAll<T>(argumentsAsAnonymousType);
+            return IocContainer.ResolveAll<T>(Arguments.FromProperties(argumentsAsAnonymousType));
         }
 
         ///<inheritdoc/>
@@ -247,7 +247,7 @@ namespace Abp.Dependency
         ///<inheritdoc/>
         public object[] ResolveAll(Type type, object argumentsAsAnonymousType)
         {
-            return IocContainer.ResolveAll(type, argumentsAsAnonymousType).Cast<object>().ToArray();
+            return IocContainer.ResolveAll(type, Arguments.FromProperties(argumentsAsAnonymousType)).Cast<object>().ToArray();
         }
 
         /// <summary>
