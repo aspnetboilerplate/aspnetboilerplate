@@ -414,6 +414,7 @@ namespace Abp.Authorization.Users
                 return;
             }
 
+            await UserRepository.EnsureCollectionLoadedAsync(user, u => u.Roles, cancellationToken);
             user.Roles.RemoveAll(r => r.RoleId == role.Id);
         }
 
