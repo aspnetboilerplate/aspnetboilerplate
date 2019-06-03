@@ -1,9 +1,9 @@
-﻿namespace Abp.EntityFrameworkCore.Tests.Domain
-{
-    public class BlogView
-    {
-        public int Id { get; set; }
+﻿using Abp.Domain.Entities;
 
+namespace Abp.EntityFrameworkCore.Tests.Domain
+{
+    public class BlogView : Entity
+    {
         public string Name { get; set; }
 
         public string Url { get; set; }
