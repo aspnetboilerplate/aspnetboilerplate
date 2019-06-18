@@ -59,7 +59,7 @@ namespace Abp.TestBase.SampleApplication.Tests.Auditing
         [Fact]
         public async Task Should_Write_Audits_For_Audited_Class_Async_Methods_As_Default()
         {
-            await Resolve<MyServiceWithClassAudited>().Test3().ConfigureAwait(false);
+            await Resolve<MyServiceWithClassAudited>().Test3();
             await _auditingStore.Received().SaveAsync(Arg.Is<AuditInfo>(a => a.ReturnValue == "1"));
         }
 
@@ -81,10 +81,10 @@ namespace Abp.TestBase.SampleApplication.Tests.Auditing
         }
 
         [Fact]
-        public void Should_Write_Audits_For_AsyncCrudAppService_With_Correct_Service_Name()
+        public async Task Should_Write_Audits_For_AsyncCrudAppService_With_Correct_Service_Name()
         {
-            _asyncCompanyAppService.Delete(new EntityDto(1));
-            _auditingStore.Received().SaveAsync(Arg.Is<AuditInfo>(a => a.ServiceName.Contains("AsyncCompanyAppService")));
+            await _asyncCompanyAppService.Delete(new EntityDto(1));
+            await _auditingStore.Received().SaveAsync(Arg.Is<AuditInfo>(a => a.ServiceName.Contains("AsyncCompanyAppService")));
         }
 
         #endregion
@@ -147,8 +147,8 @@ namespace Abp.TestBase.SampleApplication.Tests.Auditing
 
             public virtual async Task<int> Test3()
             {
-                var result = await Task.Factory.StartNew(() => 1).ConfigureAwait(false);
-                await Task.Run(() => result + 1).ConfigureAwait(false);
+                var result = await Task.Factory.StartNew(() => 1);
+                await Task.Run(() => result + 1);
 
                 return result;
             }

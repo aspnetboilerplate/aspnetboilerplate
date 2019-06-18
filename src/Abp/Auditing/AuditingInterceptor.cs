@@ -3,20 +3,19 @@ using System.Diagnostics;
 using System.Reflection;
 using System.Threading.Tasks;
 using Abp.Aspects;
-using Abp.Threading;
-using Castle.DynamicProxy;
+using Abp.Dependency;
 
 namespace Abp.Auditing
 {
-    internal class AuditingInterceptor : IInterceptor
+    internal class AuditingInterceptor : CastleAbpInterceptorAdapter<AuditingInterceptor>
     {
         private readonly IAuditingHelper _auditingHelper;
         private readonly IAuditingConfiguration _auditingConfiguration;
         private readonly IAuditSerializer _auditSerializer;
 
         public AuditingInterceptor(
-            IAuditingHelper auditingHelper, 
-            IAuditingConfiguration auditingConfiguration, 
+            IAuditingHelper auditingHelper,
+            IAuditingConfiguration auditingConfiguration,
             IAuditSerializer auditSerializer)
         {
             _auditingHelper = auditingHelper;
@@ -24,34 +23,31 @@ namespace Abp.Auditing
             _auditSerializer = auditSerializer;
         }
 
-        public void Intercept(IInvocation invocation)
+        protected bool ShouldIntercept(IAbpMethodInvocation invocation)
         {
-            if (AbpCrossCuttingConcerns.IsApplied(invocation.InvocationTarget, AbpCrossCuttingConcerns.Auditing))
+            if (AbpCrossCuttingConcerns.IsApplied(invocation.TargetObject, AbpCrossCuttingConcerns.Auditing))
             {
-                invocation.Proceed();
-                return;
+                return false;
             }
 
-            if (!_auditingHelper.ShouldSaveAudit(invocation.MethodInvocationTarget))
+            if (!_auditingHelper.ShouldSaveAudit(invocation.Method))
             {
-                invocation.Proceed();
-                return;
+                return false;
             }
 
-            var auditInfo = _auditingHelper.CreateAuditInfo(invocation.TargetType, invocation.MethodInvocationTarget, invocation.Arguments);
-
-            if (invocation.Method.IsAsync())
-            {
-                PerformAsyncAuditing(invocation, auditInfo);
-            }
-            else
-            {
-                PerformSyncAuditing(invocation, auditInfo);
-            }
+            return true;
         }
 
-        private void PerformSyncAuditing(IInvocation invocation, AuditInfo auditInfo)
+        protected override void InterceptSync(IAbpMethodInvocation invocation)
         {
+            if (!ShouldIntercept(invocation))
+            {
+                invocation.Proceed();
+                return;
+            }
+
+            var auditInfo = _auditingHelper.CreateAuditInfo(invocation.TargetObject.GetType(), invocation.Method, invocation.Arguments);
+
             var stopwatch = Stopwatch.StartNew();
 
             try
@@ -77,37 +73,41 @@ namespace Abp.Auditing
             }
         }
 
-        private void PerformAsyncAuditing(IInvocation invocation, AuditInfo auditInfo)
+        protected override async Task InterceptAsync(IAbpMethodInvocation invocation)
         {
+            if (!ShouldIntercept(invocation))
+            {
+                await invocation.ProceedAsync();
+                return;
+            }
+
+            var auditInfo = _auditingHelper.CreateAuditInfo(invocation.TargetObject.GetType(), invocation.Method, invocation.Arguments);
+
             var stopwatch = Stopwatch.StartNew();
 
-            invocation.Proceed();
-
-            if (invocation.Method.ReturnType == typeof(Task))
+            try
             {
-                invocation.ReturnValue = InternalAsyncHelper.AwaitTaskWithFinally(
-                    (Task)invocation.ReturnValue,
-                    exception => SaveAuditInfo(auditInfo, stopwatch, exception, null)
-                    );
+                await invocation.ProceedAsync();
             }
-            else //Task<TResult>
+            catch (Exception ex)
             {
-                invocation.ReturnValue = InternalAsyncHelper.CallAwaitTaskWithFinallyAndGetResult(
-                    invocation.Method.ReturnType.GenericTypeArguments[0],
-                    invocation.ReturnValue,
-                    (exception, task) => SaveAuditInfo(auditInfo, stopwatch, exception, task)
-                    );
+                auditInfo.Exception = ex;
+                throw;
+            }
+            finally
+            {
+                var task = invocation.ReturnValue as Task;
+                await SaveAuditInfoAsync(auditInfo, stopwatch, task);
             }
         }
 
-        private void SaveAuditInfo(AuditInfo auditInfo, Stopwatch stopwatch, Exception exception, Task task)
+        private async Task SaveAuditInfoAsync(AuditInfo auditInfo, Stopwatch stopwatch, Task task)
         {
             stopwatch.Stop();
-            auditInfo.Exception = exception;
             auditInfo.ExecutionDuration = Convert.ToInt32(stopwatch.Elapsed.TotalMilliseconds);
             FillTaskResult(task, auditInfo);
 
-            _auditingHelper.Save(auditInfo);
+            await _auditingHelper.SaveAsync(auditInfo);
         }
 
         private void FillTaskResult(Task task, AuditInfo auditInfo)
@@ -119,5 +119,6 @@ namespace Abp.Auditing
                     ?.GetValue(task, null));
             }
         }
+
     }
 }
