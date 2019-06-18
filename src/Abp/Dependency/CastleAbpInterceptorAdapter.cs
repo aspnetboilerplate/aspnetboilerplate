@@ -98,6 +98,8 @@ namespace Abp.Dependency
 
         object TargetObject { get; }
 
+        Type TargetObjectType { get; }
+
         MethodInfo Method { get; }
 
         object ReturnValue { get; set; }
@@ -117,6 +119,8 @@ namespace Abp.Dependency
         public Type[] GenericArguments => Invocation.GenericArguments;
 
         public object TargetObject => Invocation.InvocationTarget ?? Invocation.MethodInvocationTarget;
+
+        public Type TargetObjectType => Invocation.TargetType;
 
         public MethodInfo Method => Invocation.MethodInvocationTarget ?? Invocation.Method;
 

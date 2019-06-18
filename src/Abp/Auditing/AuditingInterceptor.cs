@@ -46,7 +46,7 @@ namespace Abp.Auditing
                 return;
             }
 
-            var auditInfo = _auditingHelper.CreateAuditInfo(invocation.TargetObject.GetType(), invocation.Method, invocation.Arguments);
+            var auditInfo = _auditingHelper.CreateAuditInfo(invocation.TargetObjectType, invocation.Method, invocation.Arguments);
 
             var stopwatch = Stopwatch.StartNew();
 
@@ -81,7 +81,7 @@ namespace Abp.Auditing
                 return;
             }
 
-            var auditInfo = _auditingHelper.CreateAuditInfo(invocation.TargetObject.GetType(), invocation.Method, invocation.Arguments);
+            var auditInfo = _auditingHelper.CreateAuditInfo(invocation.TargetObjectType, invocation.Method, invocation.Arguments);
 
             var stopwatch = Stopwatch.StartNew();
 
