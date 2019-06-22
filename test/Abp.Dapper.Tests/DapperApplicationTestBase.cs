@@ -1,15 +1,14 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Data.Common;
-using System.Data.SqlClient;
 using System.Data.SQLite;
 using System.IO;
+using System.Linq;
 using System.Reflection;
-
 using Abp.Configuration.Startup;
+using Abp.Extensions;
 using Abp.TestBase;
-
 using Castle.MicroKernel.Registration;
-
 using Dapper;
 
 namespace Abp.Dapper.Tests
@@ -54,14 +53,20 @@ namespace Abp.Dapper.Tests
 
         private string ReadScriptFile(string name)
         {
-            string fileName = GetType().Namespace + ".Scripts" + "." + name + ".sql";
-            using (Stream resource = Assembly.GetExecutingAssembly().GetManifestResourceStream(fileName))
+            var fileName = Assembly.GetExecutingAssembly()
+                .GetManifestResourceNames().FirstOrDefault(x =>
+                    x.Contains(name) && x.EndsWith(".sql", StringComparison.CurrentCultureIgnoreCase));
+
+            if (!fileName.IsNullOrWhiteSpace())
             {
-                if (resource != null)
+                using (Stream resource = Assembly.GetExecutingAssembly().GetManifestResourceStream(fileName))
                 {
-                    using (var sr = new StreamReader(resource))
+                    if (resource != null)
                     {
-                        return sr.ReadToEnd();
+                        using (var sr = new StreamReader(resource))
+                        {
+                            return sr.ReadToEnd();
+                        }
                     }
                 }
             }
