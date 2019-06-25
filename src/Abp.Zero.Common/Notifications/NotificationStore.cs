@@ -5,6 +5,7 @@ using System.Threading.Tasks;
 using Abp.Dependency;
 using Abp.Domain.Repositories;
 using Abp.Domain.Uow;
+using Abp.Linq.Expressions;
 using Abp.Linq.Extensions;
 
 namespace Abp.Notifications
@@ -125,7 +126,7 @@ namespace Abp.Notifications
                 return await _notificationSubscriptionRepository.GetAllListAsync(s => s.UserId == user.UserId);
             }
         }
-        
+
         [UnitOfWork]
         protected virtual async Task<List<NotificationSubscriptionInfo>> GetSubscriptionsAsync(int? tenantId, string notificationName, string entityTypeName, string entityId)
         {
@@ -196,17 +197,35 @@ namespace Abp.Notifications
         }
 
         [UnitOfWork]
-        public virtual async Task DeleteAllUserNotificationsAsync(UserIdentifier user)
+        public virtual async Task DeleteAllUserNotificationsAsync(UserIdentifier user, UserNotificationState? state = null, DateTime? startDate = null, DateTime? endDate = null)
         {
             using (_unitOfWorkManager.Current.SetTenantId(user.TenantId))
             {
-                await _userNotificationRepository.DeleteAsync(un => un.UserId == user.UserId);
+                var predicate = PredicateBuilder.True<UserNotificationInfo>();
+                predicate = predicate.And(p => p.UserId == user.UserId);
+
+                if (startDate.HasValue)
+                {
+                    predicate = predicate.And(p => p.CreationTime >= startDate);
+                }
+
+                if (endDate.HasValue)
+                {
+                    predicate = predicate.And(p => p.CreationTime <= endDate);
+                }
+
+                if (state.HasValue)
+                {
+                    predicate = predicate.And(p => p.State == state);
+                }
+
+                await _userNotificationRepository.DeleteAsync(predicate);
                 await _unitOfWorkManager.Current.SaveChangesAsync();
             }
         }
 
         [UnitOfWork]
-        public virtual Task<List<UserNotificationInfoWithNotificationInfo>> GetUserNotificationsWithNotificationsAsync(UserIdentifier user, UserNotificationState? state = null, int skipCount = 0, int maxResultCount = int.MaxValue)
+        public virtual Task<List<UserNotificationInfoWithNotificationInfo>> GetUserNotificationsWithNotificationsAsync(UserIdentifier user, UserNotificationState? state = null, int skipCount = 0, int maxResultCount = int.MaxValue, DateTime? startDate = null, DateTime? endDate = null)
         {
             using (_unitOfWorkManager.Current.SetTenantId(user.TenantId))
             {
@@ -215,6 +234,11 @@ namespace Abp.Notifications
                             where userNotificationInfo.UserId == user.UserId && (state == null || userNotificationInfo.State == state.Value)
                             orderby tenantNotificationInfo.CreationTime descending
                             select new { userNotificationInfo, tenantNotificationInfo = tenantNotificationInfo };
+
+                if (startDate.HasValue)
+                    query = query.Where(x => x.tenantNotificationInfo.CreationTime >= startDate);
+                if (endDate.HasValue)
+                    query = query.Where(x => x.tenantNotificationInfo.CreationTime <= endDate);
 
                 query = query.PageBy(skipCount, maxResultCount);
 
