@@ -52,7 +52,7 @@ namespace Abp.Runtime.Validation.Interception
 
         protected bool ShouldIntercept(IAbpMethodInvocation invocation)
         {
-            return AbpCrossCuttingConcerns.IsApplied(invocation.GetMethodInvocationTarget(), AbpCrossCuttingConcerns.Validation);
+            return !AbpCrossCuttingConcerns.IsApplied(invocation.GetMethodInvocationTarget(), AbpCrossCuttingConcerns.Validation);
         }
     }
 }
