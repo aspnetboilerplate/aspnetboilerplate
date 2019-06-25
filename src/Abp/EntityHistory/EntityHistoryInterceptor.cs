@@ -1,11 +1,10 @@
-﻿using Castle.DynamicProxy;
-using System.Linq;
+﻿using System.Linq;
 using System.Threading.Tasks;
-using Abp.Threading;
+using Abp.Dependency;
 
 namespace Abp.EntityHistory
 {
-    internal class EntityHistoryInterceptor : IInterceptor
+    internal class EntityHistoryInterceptor : CastleAbpInterceptorAdapter<EntityHistoryInterceptor>
     {
         public IEntityChangeSetReasonProvider ReasonProvider { get; set; }
 
@@ -14,63 +13,48 @@ namespace Abp.EntityHistory
             ReasonProvider = NullEntityChangeSetReasonProvider.Instance;
         }
 
-        public void Intercept(IInvocation invocation)
+        protected override void InterceptSync(IAbpMethodInvocation invocation)
         {
-            var methodInfo = invocation.MethodInvocationTarget;
-            var useCaseAttribute = methodInfo.GetCustomAttributes(true).OfType<UseCaseAttribute>().FirstOrDefault()
-                  ?? methodInfo.DeclaringType.GetCustomAttributes(true).OfType<UseCaseAttribute>().FirstOrDefault();
-
-            if (useCaseAttribute?.Description == null)
+            if (!ShouldIntercept(invocation))
             {
                 invocation.Proceed();
                 return;
             }
 
-            if (invocation.Method.IsAsync())
-            {
-                PerformAsyncUow(invocation, useCaseAttribute);
-            }
-            else
-            {
-                PerformSyncUow(invocation, useCaseAttribute);
-            }
-        }
-
-        private void PerformSyncUow(IInvocation invocation, UseCaseAttribute useCaseAttribute)
-        {
+            var useCaseAttribute = GetUseCaseAttribute(invocation);
             using (ReasonProvider.Use(useCaseAttribute.Description))
             {
                 invocation.Proceed();
             }
         }
 
-        private void PerformAsyncUow(IInvocation invocation, UseCaseAttribute useCaseAttribute)
+        protected override async Task InterceptAsync(IAbpMethodInvocation invocation)
         {
-            if (invocation.Method.ReturnType == typeof(Task))
+            if (!ShouldIntercept(invocation))
             {
-                invocation.ReturnValue = InternalAsyncHelper.AwaitTaskWithUsingActionAndFinally(
-                    () => ReasonProvider.Use(useCaseAttribute.Description),
-                    () =>
-                    {
-                        invocation.Proceed();
-                        return (Task) invocation.ReturnValue;
-                    },
-                    exception => { }
-                );
+                await invocation.ProceedAsync();
+                return;
             }
-            else //Task<TResult>
+
+            var useCaseAttribute = GetUseCaseAttribute(invocation);
+            using (ReasonProvider.Use(useCaseAttribute.Description))
             {
-                invocation.ReturnValue = InternalAsyncHelper.CallAwaitTaskWithUsingActionAndFinallyAndGetResult(
-                    invocation.Method.ReturnType.GenericTypeArguments[0],
-                    () => ReasonProvider.Use(useCaseAttribute.Description),
-                    () =>
-                    {
-                        invocation.Proceed();
-                        return invocation.ReturnValue;
-                    },
-                    exception => { }
-                );
+                await invocation.ProceedAsync();
             }
+        }
+
+        private UseCaseAttribute GetUseCaseAttribute(IAbpMethodInvocation invocation)
+        {
+            var methodInfo = invocation.GetMethodInvocationTarget();
+            var useCaseAttribute = methodInfo.GetCustomAttributes(true).OfType<UseCaseAttribute>().FirstOrDefault()
+                                   ?? methodInfo.DeclaringType.GetCustomAttributes(true).OfType<UseCaseAttribute>().FirstOrDefault();
+            return useCaseAttribute;
+        }
+
+        protected bool ShouldIntercept(IAbpMethodInvocation invocation)
+        {
+            var useCaseAttribute = GetUseCaseAttribute(invocation);
+            return useCaseAttribute?.Description != null;
         }
     }
 }

@@ -1,4 +1,4 @@
-﻿using Castle.DynamicProxy;
+﻿using Abp.Dependency;
 using Castle.MicroKernel.Registration;
 using Shouldly;
 using Xunit;
@@ -28,9 +28,9 @@ namespace Abp.Tests.Dependency.Interceptors
             }
         }
 
-        public class BracketInterceptor : IInterceptor
+        public class BracketInterceptor : CastleAbpInterceptorAdapter<BracketInterceptor>
         {
-            public void Intercept(IInvocation invocation)
+            protected override void InterceptSync(IAbpMethodInvocation invocation)
             {
                 invocation.Proceed();
                 invocation.ReturnValue = "(" + invocation.ReturnValue + ")";

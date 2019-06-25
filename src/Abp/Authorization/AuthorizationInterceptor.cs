@@ -1,11 +1,12 @@
-﻿using Castle.DynamicProxy;
+﻿using System.Threading.Tasks;
+using Abp.Dependency;
 
 namespace Abp.Authorization
 {
     /// <summary>
     /// This class is used to intercept methods to make authorization if the method defined <see cref="AbpAuthorizeAttribute"/>.
     /// </summary>
-    public class AuthorizationInterceptor : IInterceptor
+    public class AuthorizationInterceptor : CastleAbpInterceptorAdapter<AuthorizationInterceptor>
     {
         private readonly IAuthorizationHelper _authorizationHelper;
 
@@ -14,10 +15,16 @@ namespace Abp.Authorization
             _authorizationHelper = authorizationHelper;
         }
 
-        public void Intercept(IInvocation invocation)
+        protected override void InterceptSync(IAbpMethodInvocation invocation)
         {
-            _authorizationHelper.Authorize(invocation.MethodInvocationTarget, invocation.TargetType);
+            _authorizationHelper.Authorize(invocation.GetMethodInvocationTarget(), invocation.TargetObjectType);
             invocation.Proceed();
+        }
+
+        protected override async Task InterceptAsync(IAbpMethodInvocation invocation)
+        {
+            _authorizationHelper.Authorize(invocation.GetMethodInvocationTarget(), invocation.TargetObjectType);
+            await invocation.ProceedAsync();
         }
     }
 }

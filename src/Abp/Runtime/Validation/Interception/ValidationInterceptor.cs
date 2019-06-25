@@ -1,13 +1,13 @@
-﻿using Abp.Aspects;
+﻿using System.Threading.Tasks;
+using Abp.Aspects;
 using Abp.Dependency;
-using Castle.DynamicProxy;
 
 namespace Abp.Runtime.Validation.Interception
 {
     /// <summary>
     /// This interceptor is used intercept method calls for classes which's methods must be validated.
     /// </summary>
-    public class ValidationInterceptor : IInterceptor
+    public class ValidationInterceptor : CastleAbpInterceptorAdapter<ValidationInterceptor>
     {
         private readonly IIocResolver _iocResolver;
 
@@ -16,9 +16,9 @@ namespace Abp.Runtime.Validation.Interception
             _iocResolver = iocResolver;
         }
 
-        public void Intercept(IInvocation invocation)
+        protected override void InterceptSync(IAbpMethodInvocation invocation)
         {
-            if (AbpCrossCuttingConcerns.IsApplied(invocation.InvocationTarget, AbpCrossCuttingConcerns.Validation))
+            if (!ShouldIntercept(invocation))
             {
                 invocation.Proceed();
                 return;
@@ -26,11 +26,33 @@ namespace Abp.Runtime.Validation.Interception
 
             using (var validator = _iocResolver.ResolveAsDisposable<MethodInvocationValidator>())
             {
-                validator.Object.Initialize(invocation.MethodInvocationTarget, invocation.Arguments);
+                validator.Object.Initialize(invocation.GetMethodInvocationTarget(), invocation.Arguments);
                 validator.Object.Validate();
             }
-            
+
             invocation.Proceed();
+        }
+
+        protected override async Task InterceptAsync(IAbpMethodInvocation invocation)
+        {
+            if (!ShouldIntercept(invocation))
+            {
+                await invocation.ProceedAsync();
+                return;
+            }
+
+            using (var validator = _iocResolver.ResolveAsDisposable<MethodInvocationValidator>())
+            {
+                validator.Object.Initialize(invocation.GetMethodInvocationTarget(), invocation.Arguments);
+                validator.Object.Validate();
+            }
+
+            await invocation.ProceedAsync();
+        }
+
+        protected bool ShouldIntercept(IAbpMethodInvocation invocation)
+        {
+            return AbpCrossCuttingConcerns.IsApplied(invocation.GetMethodInvocationTarget(), AbpCrossCuttingConcerns.Validation);
         }
     }
 }
