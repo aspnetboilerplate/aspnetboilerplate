@@ -16,7 +16,9 @@ namespace Abp.Notifications
         /// <param name="state">State</param>
         /// <param name="skipCount">Skip count.</param>
         /// <param name="maxResultCount">Maximum result count.</param>
-        Task<List<UserNotification>> GetUserNotificationsAsync(UserIdentifier user, UserNotificationState? state = null, int skipCount = 0, int maxResultCount = int.MaxValue);
+        /// <param name="startDate">List notifications published after startDateTime</param>
+        /// <param name="endDate">List notifications published before startDateTime</param>
+        Task<List<UserNotification>> GetUserNotificationsAsync(UserIdentifier user, UserNotificationState? state = null, int skipCount = 0, int maxResultCount = int.MaxValue, DateTime? startDate = null, DateTime? endDate = null);
 
         /// <summary>
         /// Gets user notification count.
@@ -58,6 +60,9 @@ namespace Abp.Notifications
         /// Deletes all notifications of a user.
         /// </summary>
         /// <param name="user">User.</param>
-        Task DeleteAllUserNotificationsAsync(UserIdentifier user);
+        /// <param name="state">State</param>
+        /// <param name="startDate">Delete notifications published after startDateTime</param>
+        /// <param name="endDate">Delete notifications published before startDateTime</param>
+        Task DeleteAllUserNotificationsAsync(UserIdentifier user, UserNotificationState? state = null, DateTime? startDate = null, DateTime? endDate = null);
     }
 }
