@@ -104,7 +104,7 @@ namespace Abp.Zero.Notifications
 
 
             //delete all added notification
-            await _notificationStore.DeleteAllUserNotificationsAsync(userIdentifier, state: null, startDate: now, now.AddSeconds(30));
+            await _notificationStore.DeleteAllUserNotificationsAsync(userIdentifier, state: null, startDate: now, endDate: now.AddSeconds(30));
 
             //check
             allNotifications = await
