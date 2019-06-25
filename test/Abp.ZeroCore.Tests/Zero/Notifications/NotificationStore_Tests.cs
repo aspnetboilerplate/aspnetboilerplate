@@ -1,9 +1,6 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
-using Abp.Dependency;
 using Abp.Notifications;
 using Abp.Runtime.Session;
 using Shouldly;
@@ -13,8 +10,8 @@ namespace Abp.Zero.Notifications
 {
     public class NotificationStore_Tests : AbpZeroTestBase
     {
-        private INotificationStore _notificationStore;
-        private INotificationPublisher _notificationPublisher;
+        private readonly INotificationStore _notificationStore;
+        private readonly INotificationPublisher _notificationPublisher;
 
         public NotificationStore_Tests()
         {
@@ -37,7 +34,6 @@ namespace Abp.Zero.Notifications
         [Fact]
         public async Task Should_Get_All_Notifications_Between_StartDate_EndDate()
         {
-
             var userIdentifier = AbpSession.ToUserIdentifier();
 
             var now = DateTime.Now;
@@ -55,14 +51,20 @@ namespace Abp.Zero.Notifications
 
 
             //this should get second added notification
-            var notifications = await
-                _notificationStore.GetUserNotificationsWithNotificationsAsync(userIdentifier, startDate: now.AddSeconds(5), endDate: now.AddSeconds(10));
+            var notifications = await _notificationStore.GetUserNotificationsWithNotificationsAsync(
+                userIdentifier,
+                startDate: now.AddSeconds(5),
+                endDate: now.AddSeconds(10)
+            );
 
             notifications.Count.ShouldBe(1);
 
             //this should get all added notification
-            var allNotifications = await
-                _notificationStore.GetUserNotificationsWithNotificationsAsync(userIdentifier, startDate: now, endDate: now.AddSeconds(30));
+            var allNotifications = await _notificationStore.GetUserNotificationsWithNotificationsAsync(
+                userIdentifier,
+                startDate: now,
+                endDate: now.AddSeconds(30)
+            );
 
             allNotifications.Count.ShouldBe(3);
         }
@@ -84,31 +86,53 @@ namespace Abp.Zero.Notifications
             //this notification's creation time will be more than now+10sec
             await _notificationPublisher.PublishAsync("TestNotification3", userIds: new[] { userIdentifier });
 
-            var allNotifications = await
-                _notificationStore.GetUserNotificationsWithNotificationsAsync(userIdentifier, startDate: now, endDate: now.AddSeconds(30));
+            var allNotifications = await _notificationStore.GetUserNotificationsWithNotificationsAsync(
+                userIdentifier,
+                startDate: now,
+                endDate: now.AddSeconds(30)
+            );
+
             allNotifications.Count.ShouldBe(3);
 
             //delete second added notification
-            await _notificationStore.DeleteAllUserNotificationsAsync(userIdentifier, state: null, startDate: now.AddSeconds(5), endDate: now.AddSeconds(10));
+            await _notificationStore.DeleteAllUserNotificationsAsync(
+                userIdentifier,
+                state: null,
+                startDate: now.AddSeconds(5),
+                endDate: now.AddSeconds(10)
+            );
 
             //check
-            var notifications = await
-                _notificationStore.GetUserNotificationsWithNotificationsAsync(userIdentifier, startDate: now.AddSeconds(5), endDate: now.AddSeconds(10));
+            var notifications = await _notificationStore.GetUserNotificationsWithNotificationsAsync(
+                userIdentifier,
+                startDate: now.AddSeconds(5),
+                endDate: now.AddSeconds(10)
+            );
 
             notifications.Count.ShouldBe(0);
 
-            allNotifications = await
-                _notificationStore.GetUserNotificationsWithNotificationsAsync(userIdentifier, startDate: now, endDate: now.AddSeconds(30));
+            allNotifications = await _notificationStore.GetUserNotificationsWithNotificationsAsync(
+                userIdentifier,
+                startDate: now,
+                endDate: now.AddSeconds(30)
+            );
 
             allNotifications.Count.ShouldBe(2);
-
-
+            
             //delete all added notification
-            await _notificationStore.DeleteAllUserNotificationsAsync(userIdentifier, state: null, startDate: now, endDate: now.AddSeconds(30));
+            await _notificationStore.DeleteAllUserNotificationsAsync(
+                userIdentifier,
+                state: null,
+                startDate: now,
+                endDate: now.AddSeconds(30)
+            );
 
             //check
-            allNotifications = await
-                _notificationStore.GetUserNotificationsWithNotificationsAsync(userIdentifier, startDate: now, endDate: now.AddSeconds(30));
+            allNotifications = await _notificationStore.GetUserNotificationsWithNotificationsAsync(
+                userIdentifier,
+                startDate: now,
+                endDate: now.AddSeconds(30)
+            );
 
             allNotifications.Count.ShouldBe(0);
         }

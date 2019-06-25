@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Linq.Expressions;
 using System.Threading.Tasks;
 using Abp.Dependency;
 using Abp.Domain.Repositories;
@@ -201,27 +202,34 @@ namespace Abp.Notifications
         {
             using (_unitOfWorkManager.Current.SetTenantId(user.TenantId))
             {
-                var predicate = PredicateBuilder.True<UserNotificationInfo>();
-                predicate = predicate.And(p => p.UserId == user.UserId);
-
-                if (startDate.HasValue)
-                {
-                    predicate = predicate.And(p => p.CreationTime >= startDate);
-                }
-
-                if (endDate.HasValue)
-                {
-                    predicate = predicate.And(p => p.CreationTime <= endDate);
-                }
-
-                if (state.HasValue)
-                {
-                    predicate = predicate.And(p => p.State == state);
-                }
+                var predicate = CreateNotificationFilterPredicate(user, state, startDate, endDate);
 
                 await _userNotificationRepository.DeleteAsync(predicate);
                 await _unitOfWorkManager.Current.SaveChangesAsync();
             }
+        }
+
+        private Expression<Func<UserNotificationInfo, bool>> CreateNotificationFilterPredicate(UserIdentifier user, UserNotificationState? state = null, DateTime? startDate = null, DateTime? endDate = null)
+        {
+            var predicate = PredicateBuilder.True<UserNotificationInfo>();
+            predicate = predicate.And(p => p.UserId == user.UserId);
+
+            if (startDate.HasValue)
+            {
+                predicate = predicate.And(p => p.CreationTime >= startDate);
+            }
+
+            if (endDate.HasValue)
+            {
+                predicate = predicate.And(p => p.CreationTime <= endDate);
+            }
+
+            if (state.HasValue)
+            {
+                predicate = predicate.And(p => p.State == state);
+            }
+
+            return predicate;
         }
 
         [UnitOfWork]
@@ -231,14 +239,24 @@ namespace Abp.Notifications
             {
                 var query = from userNotificationInfo in _userNotificationRepository.GetAll()
                             join tenantNotificationInfo in _tenantNotificationRepository.GetAll() on userNotificationInfo.TenantNotificationId equals tenantNotificationInfo.Id
-                            where userNotificationInfo.UserId == user.UserId && (state == null || userNotificationInfo.State == state.Value)
+                            where userNotificationInfo.UserId == user.UserId
                             orderby tenantNotificationInfo.CreationTime descending
                             select new { userNotificationInfo, tenantNotificationInfo = tenantNotificationInfo };
 
+                if (state.HasValue)
+                {
+                    query = query.Where(x => x.userNotificationInfo.State == state.Value);
+                }
+
                 if (startDate.HasValue)
+                {
                     query = query.Where(x => x.tenantNotificationInfo.CreationTime >= startDate);
+                }
+
                 if (endDate.HasValue)
+                {
                     query = query.Where(x => x.tenantNotificationInfo.CreationTime <= endDate);
+                }
 
                 query = query.PageBy(skipCount, maxResultCount);
 
@@ -246,7 +264,7 @@ namespace Abp.Notifications
 
                 return Task.FromResult(list.Select(
                     a => new UserNotificationInfoWithNotificationInfo(a.userNotificationInfo, a.tenantNotificationInfo)
-                    ).ToList());
+                ).ToList());
             }
         }
 
