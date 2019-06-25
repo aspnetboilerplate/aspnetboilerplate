@@ -25,11 +25,10 @@ namespace Abp.Zero.SampleApp.Tests.Users
 
             _testUser = AsyncHelper.RunSync(() => CreateUser("TestUser"));
 
-            Resolve<ISettingManager>()
-                .ChangeSettingForApplicationAsync(
-                    AbpZeroSettingNames.UserManagement.UserLockOut.DefaultAccountLockoutSeconds,
-                    "1"
-                );
+            AsyncHelper.RunSync(() => Resolve<ISettingManager>().ChangeSettingForApplicationAsync(
+                AbpZeroSettingNames.UserManagement.UserLockOut.DefaultAccountLockoutSeconds,
+                "1"
+            ));
         }
 
         [Fact]

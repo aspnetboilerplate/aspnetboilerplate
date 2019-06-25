@@ -100,6 +100,8 @@ namespace Abp.Dependency
 
         Type TargetObjectType { get; }
 
+        MethodInfo GetMethodInvocationTarget();
+
         MethodInfo Method { get; }
 
         object ReturnValue { get; set; }
@@ -121,6 +123,18 @@ namespace Abp.Dependency
         public object TargetObject => Invocation.InvocationTarget ?? Invocation.MethodInvocationTarget;
 
         public Type TargetObjectType => Invocation.TargetType;
+
+        public MethodInfo GetMethodInvocationTarget()
+        {
+            try
+            {
+                return Invocation.MethodInvocationTarget;
+            }
+            catch
+            {
+                return  Invocation.GetConcreteMethod();
+            }
+        }
 
         public MethodInfo Method => Invocation.MethodInvocationTarget ?? Invocation.Method;
 
