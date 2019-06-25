@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Threading.Tasks;
 using Abp.Authorization.Users;
+using Abp.BackgroundJobs;
 using Abp.Domain.Repositories;
 using Abp.Domain.Uow;
 using Abp.Runtime.Session;
@@ -58,8 +59,11 @@ namespace Abp.Zero.Users
 
     internal class MyUserTokenExpirationWorker : UserTokenExpirationWorker
     {
-        public MyUserTokenExpirationWorker(AbpTimer timer, IRepository<UserToken, long> userTokenRepository)
-            : base(timer, userTokenRepository)
+        public MyUserTokenExpirationWorker(
+            AbpTimer timer, 
+            IRepository<UserToken, long> userTokenRepository, 
+            IBackgroundJobConfiguration backgroundJobConfiguration)
+            : base(timer, userTokenRepository, backgroundJobConfiguration)
         {   
         }
 

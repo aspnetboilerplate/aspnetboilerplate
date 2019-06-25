@@ -13,6 +13,11 @@ namespace Abp.BackgroundJobs
         bool IsJobExecutionEnabled { get; set; }
 
         /// <summary>
+        /// Period in milliseconds.
+        /// </summary>
+        int? CleanUserTokenPeriod { get; set; }
+
+        /// <summary>
         /// Gets the ABP configuration object.
         /// </summary>
         IAbpStartupConfiguration AbpConfiguration { get; }
