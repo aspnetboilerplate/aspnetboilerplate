@@ -149,6 +149,13 @@ namespace Abp.EntityHistory
         }
 
         [CanBeNull]
+        protected virtual string GetEntityId(DbEntityEntry entityEntry, EntityType entityType)
+        {
+            var primaryKey = entityType.KeyProperties.First();
+            return entityEntry.Property(primaryKey.Name)?.GetNewValue()?.ToJsonString();
+        }
+
+        [CanBeNull]
         private EntityChange CreateEntityChange(DbEntityEntry entityEntry, EntityType entityType)
         {
             EntityChangeType changeType;
@@ -234,13 +241,6 @@ namespace Abp.EntityHistory
                 .Single()
                 .EntitySets
                 .Single(e => e.ElementType.Name == entityType.Name);
-        }
-
-        [CanBeNull]
-        private string GetEntityId(DbEntityEntry entityEntry, EntityType entityType)
-        {
-            var primaryKey = entityType.KeyProperties.First();
-            return entityEntry.Property(primaryKey.Name)?.GetNewValue()?.ToJsonString();
         }
 
         /// <summary>
