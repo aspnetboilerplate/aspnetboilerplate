@@ -551,6 +551,10 @@ namespace Abp.Zero.EntityFramework
                 .Property(e => e.UserId)
                 .CreateIndex("IX_TenantId_UserId", 2);
 
+            modelBuilder.Entity<Setting>()
+                .HasIndex(e => new { e.TenantId, e.Name, e.UserId })
+                .IsUnique();
+
             #endregion
 
             #region UserRole.IX_TenantId_RoleId

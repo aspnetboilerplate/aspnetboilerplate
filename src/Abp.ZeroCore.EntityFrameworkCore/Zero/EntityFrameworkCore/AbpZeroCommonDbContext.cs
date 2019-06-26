@@ -279,7 +279,7 @@ namespace Abp.Zero.EntityFrameworkCore
 
             modelBuilder.Entity<Setting>(b =>
             {
-                b.HasIndex(e => new { e.TenantId, e.Name });
+                b.HasIndex(e => new { e.TenantId, e.Name, e.UserId }).IsUnique().HasFilter(null);
             });
 
             modelBuilder.Entity<TenantNotificationInfo>(b =>

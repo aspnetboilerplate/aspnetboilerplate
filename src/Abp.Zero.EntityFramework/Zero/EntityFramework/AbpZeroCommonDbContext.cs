@@ -299,6 +299,9 @@ namespace Abp.Zero.EntityFramework
 
             #endregion
 
+            modelBuilder.Entity<Setting>()
+                .HasIndex(e => new { e.TenantId, e.Name, e.UserId })
+                .IsUnique();
         }
     }
 }
