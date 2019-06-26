@@ -1,7 +1,7 @@
 using Abp.Application.Services.Dto;
 using Abp.AutoMapper;
 
-namespace Abp.TestBase.SampleApplication.ContacLists
+namespace Abp.TestBase.SampleApplication.ContactLists
 {
     [AutoMapFrom(typeof(ContactList))]
     public class ContactListDto : EntityDto

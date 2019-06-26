@@ -2,7 +2,7 @@
 using Abp.Application.Features;
 using Abp.Authorization;
 using Abp.Extensions;
-using Abp.TestBase.SampleApplication.ContacLists;
+using Abp.TestBase.SampleApplication.ContactLists;
 using Castle.MicroKernel.Registration;
 using NSubstitute;
 using Shouldly;
