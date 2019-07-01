@@ -28,7 +28,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Include="NUglify" Version="1.5.12" />
+    <PackageReference Include="NUglify" Version="1.5.13" />
   </ItemGroup>
 
   <ItemGroup>
