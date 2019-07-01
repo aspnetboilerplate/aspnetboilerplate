@@ -43,7 +43,7 @@
     <PackageReference Include="NSubstitute" Version="4.0.0" />
     <PackageReference Include="Shouldly" Version="3.0.2" />
     <PackageReference Include="xunit" Version="2.4.1" />
-    <PackageReference Include="TimeZoneConverter" Version="2.5.1"></PackageReference>
+    <PackageReference Include="TimeZoneConverter" Version="3.1.0" />
   </ItemGroup>
 
   <ItemGroup Condition=" '$(TargetFramework)' == 'netcoreapp2.2' ">

@@ -22,7 +22,8 @@
 
       abp.multiTenancy = abp.multiTenancy || {};
 
-      abp.multiTenancy.isEnabled = false;
+    abp.multiTenancy.isEnabled = false;
+    abp.multiTenancy.ignoreFeatureCheckForHostUsers = false;
 
       abp.multiTenancy.sides = {
         TENANT: 1,
@@ -408,7 +409,7 @@
 
       abp.message = abp.message || {};
 
-      var showMessage = function (message, title) {
+    var showMessage = function (message, title, isHtml, options) {
         alert((title || '') + ' ' + message);
 
         if (!$) {
@@ -421,27 +422,27 @@
         });
       };
 
-      abp.message.info = function (message, title) {
+    abp.message.info = function (message, title, isHtml, options) {
         abp.log.warn('abp.message.info is not implemented!');
-        return showMessage(message, title);
-      };
+        return showMessage(message, title, isHtml, options);
+    };
 
-      abp.message.success = function (message, title) {
+    abp.message.success = function (message, title, isHtml, options) {
         abp.log.warn('abp.message.success is not implemented!');
-        return showMessage(message, title);
-      };
+        return showMessage(message, title, isHtml, options);
+    };
 
-      abp.message.warn = function (message, title) {
+    abp.message.warn = function (message, title, isHtml, options) {
         abp.log.warn('abp.message.warn is not implemented!');
-        return showMessage(message, title);
-      };
+        return showMessage(message, title, isHtml, options);
+    };
 
-      abp.message.error = function (message, title) {
+    abp.message.error = function (message, title, isHtml, options) {
         abp.log.warn('abp.message.error is not implemented!');
-        return showMessage(message, title);
-      };
+        return showMessage(message, title, isHtml, options);
+    };
 
-      abp.message.confirm = function (message, titleOrCallback, callback) {
+    abp.message.confirm = function (message, titleOrCallback, callback, isHtml, options) {
         abp.log.warn('abp.message.confirm is not implemented!');
 
         if (titleOrCallback && !(typeof titleOrCallback == 'string')) {

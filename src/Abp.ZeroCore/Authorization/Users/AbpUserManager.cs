@@ -423,7 +423,7 @@ namespace Abp.Authorization.Users
             foreach (var userRole in user.Roles.ToList())
             {
                 var role = await RoleManager.FindByIdAsync(userRole.RoleId.ToString());
-                if (roleNames.All(roleName => role.Name != roleName))
+                if (role != null && roleNames.All(roleName => role.Name != roleName))
                 {
                     var result = await RemoveFromRoleAsync(user, role.Name);
                     if (!result.Succeeded)

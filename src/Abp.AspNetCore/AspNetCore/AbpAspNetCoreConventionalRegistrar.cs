@@ -3,6 +3,7 @@ using Castle.MicroKernel.Registration;
 using Microsoft.AspNetCore.Mvc;
 using System.Reflection;
 using Castle.Windsor.MsDependencyInjection;
+using Microsoft.AspNetCore.Mvc.RazorPages;
 
 namespace Abp.AspNetCore
 {
@@ -10,6 +11,14 @@ namespace Abp.AspNetCore
     {
         public void RegisterAssembly(IConventionalRegistrationContext context)
         {
+            //Razor Pages
+            context.IocManager.IocContainer.Register(
+                Classes.FromAssembly(context.Assembly)
+                    .BasedOn<PageModel>()
+                    .If(type => !type.GetTypeInfo().IsGenericTypeDefinition && !type.IsAbstract)
+                    .LifestyleTransient()
+            );
+
             //ViewComponents
             context.IocManager.IocContainer.Register(
                 Classes.FromAssembly(context.Assembly)

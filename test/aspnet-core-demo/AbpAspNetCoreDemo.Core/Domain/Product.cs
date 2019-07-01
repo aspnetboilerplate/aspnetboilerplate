@@ -1,11 +1,11 @@
 ﻿using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
-using Abp.Domain.Entities;
+using Abp.Domain.Entities.Auditing;
 
 namespace AbpAspNetCoreDemo.Core.Domain
 {
     [Table("AppProducts")]
-    public class Product : Entity
+    public class Product : FullAuditedEntity
     {
         [Required]
         [StringLength(200)]
@@ -13,7 +13,7 @@ namespace AbpAspNetCoreDemo.Core.Domain
 
         public float? Price { get; set; }
 
-        protected Product()
+        public Product()
         {
             
         }

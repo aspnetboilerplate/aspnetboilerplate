@@ -7,6 +7,7 @@ using Abp.Authorization.Roles;
 using Abp.Authorization.Users;
 using Abp.BackgroundJobs;
 using Abp.Configuration;
+using Abp.EntityHistory;
 using Abp.Localization;
 using Abp.MultiTenancy;
 using Abp.Notifications;
@@ -39,6 +40,9 @@ namespace Abp.Zero.EntityFramework
             SetTableName<AuditLog>(modelBuilder, prefix + "AuditLogs", schemaName);
             SetTableName<BackgroundJobInfo>(modelBuilder, prefix + "BackgroundJobs", schemaName);
             SetTableName<Edition>(modelBuilder, prefix + "Editions", schemaName);
+            SetTableName<EntityChange>(modelBuilder, prefix + "EntityChanges", schemaName);
+            SetTableName<EntityChangeSet>(modelBuilder, prefix + "EntityChangeSets", schemaName);
+            SetTableName<EntityPropertyChange>(modelBuilder, prefix + "EntityPropertyChanges", schemaName);
             SetTableName<FeatureSetting>(modelBuilder, prefix + "Features", schemaName);
             SetTableName<TenantFeatureSetting>(modelBuilder, prefix + "Features", schemaName);
             SetTableName<EditionFeatureSetting>(modelBuilder, prefix + "Features", schemaName);

@@ -41,7 +41,7 @@ namespace Abp.Threading.BackgroundWorkers
         /// <summary>
         /// Handles the Elapsed event of the Timer.
         /// </summary>
-        private void Timer_Elapsed(object sender, System.EventArgs e)
+        private void Timer_Elapsed(object sender, EventArgs e)
         {
             try
             {

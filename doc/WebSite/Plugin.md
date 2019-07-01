@@ -105,10 +105,12 @@ Latest Startup.cs
 ```c#
 public class Startup
 {
+    private readonly IHostingEnvironment _hostingEnvironment;
     private readonly IConfigurationRoot _appConfiguration;
 
     public Startup(IHostingEnvironment env)
     {
+        _hostingEnvironment = env;
         _appConfiguration = env.GetAppConfiguration();
     }
 

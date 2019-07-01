@@ -1,0 +1,24 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<localizationDictionary culture="nl">
+  <texts>
+    <text name="SmtpHost">SMTP host</text>
+    <text name="SmtpPort">SMTP poort</text>
+    <text name="Username">Gebruikersnaam</text>
+    <text name="Password">Wachtwoord</text>
+    <text name="DomainName">Domeinnaam</text>
+    <text name="UseSSL">Gebruik SSL</text>
+    <text name="UseDefaultCredentials">Gebruik standaard referenties</text>
+    <text name="DefaultFromSenderEmailAddress">Standaard van (afzender) emailadres</text>
+    <text name="DefaultFromSenderDisplayName">Standaard van (afzender) weergave naam</text>
+    <text name="DefaultLanguage">Standaard taal</text>
+    <text name="ReceiveNotifications">Ontvang notificaties</text>
+    <text name="CurrentUserDidNotLoginToTheApplication">Huidige gebruiker is niet ingelogd in de applicatie!</text>
+    <text name="TimeZone">Tijdzone</text>
+    <text name="AllOfThesePermissionsMustBeGranted">Verplichte rechten zijn niet toegekend. De volgende rechten dienen alleen toegekend te zijn: {0}</text>
+    <text name="AtLeastOneOfThesePermissionsMustBeGranted">Verplichte rechten zijn niet toegekend. Minimaal één van de volgende rechten dient toegekend te zijn: {0}</text>
+    <text name="FeatureIsNotEnabled">Functie is niet ingeschakeld: {0}</text>
+    <text name="AllOfTheseFeaturesMustBeEnabled">Vereiste functies zijn niet ingeschakeld. Al deze functies moeten zijn ingeschakeld: {0}</text>
+    <text name="AtLeastOneOfTheseFeaturesMustBeEnabled">Vereiste functies zijn niet ingeschakeld. Ten minste één van deze functies moet zijn ingeschakeld: {0}</text>
+    <text name="MainMenu">Hoofdmenu</text>
+  </texts>
+</localizationDictionary>

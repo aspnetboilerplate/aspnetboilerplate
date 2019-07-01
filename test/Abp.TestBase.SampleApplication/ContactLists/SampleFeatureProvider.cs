@@ -2,7 +2,7 @@ using Abp.Application.Features;
 using Abp.Runtime.Validation;
 using Abp.UI.Inputs;
 
-namespace Abp.TestBase.SampleApplication.ContacLists
+namespace Abp.TestBase.SampleApplication.ContactLists
 {
     public class SampleFeatureProvider : FeatureProvider
     {

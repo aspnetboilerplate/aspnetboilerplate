@@ -1,4 +1,5 @@
 ﻿using Abp.Collections;
+using System;
 
 namespace Abp.Notifications
 {
@@ -15,6 +16,12 @@ namespace Abp.Notifications
         /// <summary>
         /// A list of contributors for notification distribution process.
         /// </summary>
+        [Obsolete]
         ITypeList<INotificationDistributer> Distributers { get; }
+
+        /// <summary>
+        /// A list of contributors for notification notifying process.
+        /// </summary>
+        ITypeList<IRealTimeNotifier> Notifiers { get; }
     }
 }

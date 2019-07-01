@@ -9,5 +9,6 @@
     <text name="CanNotRenameAdminUser" value="Impossibile rinominare l'utente {0} perché è un amministratore predefinito!" />
     <text name="CanNotDeleteAdminUser" value="Impossibile eliminare l'utente {0} perché è un amministratore predefinito!" />
     <text name="OrganizationUnitDuplicateDisplayNameWarning" value="Esiste già un'organizzazione con il nome {0}. Due Organizzazioni con lo stesso nome a pari livello non possono essere create." />
+    <text name="InvalidFeatureValue" value="{0} feature value is not valid!" />
   </texts>
 </localizationDictionary>

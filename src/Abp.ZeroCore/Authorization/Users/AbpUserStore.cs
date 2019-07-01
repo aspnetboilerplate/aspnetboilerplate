@@ -381,6 +381,7 @@ namespace Abp.Authorization.Users
                 throw new InvalidOperationException(string.Format(CultureInfo.CurrentCulture, "Role {0} does not exist!", normalizedRoleName));
             }
 
+            await UserRepository.EnsureCollectionLoadedAsync(user, u => u.Roles, cancellationToken);
             user.Roles.Add(new UserRole(user.TenantId, user.Id, role.Id));
         }
 
@@ -413,6 +414,7 @@ namespace Abp.Authorization.Users
                 return;
             }
 
+            await UserRepository.EnsureCollectionLoadedAsync(user, u => u.Roles, cancellationToken);
             user.Roles.RemoveAll(r => r.RoleId == role.Id);
         }
 
@@ -429,18 +431,20 @@ namespace Abp.Authorization.Users
 
             Check.NotNull(user, nameof(user));;
 
-            var userRoles = from userRole in _userRoleRepository.GetAll()
-                            join role in _roleRepository.GetAll() on userRole.RoleId equals role.Id
-                            where userRole.UserId == user.Id
-                            select role.Name;
+            var userRoles = await _asyncQueryableExecuter.ToListAsync(from userRole in _userRoleRepository.GetAll()
+                join role in _roleRepository.GetAll() on userRole.RoleId equals role.Id
+                where userRole.UserId == user.Id
+                select role.Name);
 
-            var userOrganizationUnitRoles = from userOu in _userOrganizationUnitRepository.GetAll()
-                join roleOu in _organizationUnitRoleRepository.GetAll() on userOu.OrganizationUnitId equals roleOu.OrganizationUnitId
+            var userOrganizationUnitRoles = await _asyncQueryableExecuter.ToListAsync(
+                from userOu in _userOrganizationUnitRepository.GetAll()
+                join roleOu in _organizationUnitRoleRepository.GetAll() on userOu.OrganizationUnitId equals roleOu
+                    .OrganizationUnitId
                 join userOuRoles in _roleRepository.GetAll() on roleOu.RoleId equals userOuRoles.Id
                 where userOu.UserId == user.Id
-                select userOuRoles.Name;
+                select userOuRoles.Name);
 
-            return await _asyncQueryableExecuter.ToListAsync(userRoles.Union(userOrganizationUnitRoles));
+            return userRoles.Union(userOrganizationUnitRoles).ToList();
         }
 
         /// <summary>
@@ -1317,13 +1321,10 @@ namespace Abp.Authorization.Users
             Check.NotNull(user, nameof(user));
 
             await UserRepository.EnsureCollectionLoadedAsync(user, u => u.Tokens, cancellationToken);
-            var isValidityKeyValid = user.Tokens.Any(t => t.LoginProvider == TokenValidityKeyProvider &&
-                                               t.Name == tokenValidityKey &&
-                                               t.ExpireDate > DateTime.UtcNow);
-            
-            user.Tokens.RemoveAll(t => t.LoginProvider == TokenValidityKeyProvider && t.ExpireDate <= DateTime.UtcNow);
 
-            return isValidityKeyValid;
+            return user.Tokens.Any(t => t.LoginProvider == TokenValidityKeyProvider &&
+                                        t.Name == tokenValidityKey &&
+                                        t.ExpireDate > DateTime.UtcNow);
         }
 
         public virtual async Task RemoveTokenValidityKeyAsync([NotNull] TUser user, string tokenValidityKey, CancellationToken cancellationToken = default(CancellationToken))
@@ -1334,8 +1335,7 @@ namespace Abp.Authorization.Users
 
             await UserRepository.EnsureCollectionLoadedAsync(user, u => u.Tokens, cancellationToken);
 
-            user.Tokens.Remove(user.Tokens.FirstOrDefault(t =>
-                t.LoginProvider == TokenValidityKeyProvider && t.Name == tokenValidityKey));
+            user.Tokens.RemoveAll(t => t.LoginProvider == TokenValidityKeyProvider && t.Name == tokenValidityKey);
         }
 
         protected virtual string NormalizeKey(string key)

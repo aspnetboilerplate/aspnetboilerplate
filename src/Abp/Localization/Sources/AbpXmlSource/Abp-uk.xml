@@ -13,5 +13,12 @@
     <text name="DefaultLanguage">Мова за замовчуванням</text>
     <text name="ReceiveNotifications">Отримувати сповіщення</text>
     <text name="CurrentUserDidNotLoginToTheApplication">Поточний користувач не увійшов в додаток!</text>
+    <text name="TimeZone">Часовий пояс</text>
+    <text name="AllOfThesePermissionsMustBeGranted">Необхідні дозволи не надаються. Усі ці дозволи повинні бути надані: {0}</text>
+    <text name="AtLeastOneOfThesePermissionsMustBeGranted">Необхідні дозволи не надаються. Щонайменше одне з цих дозволів має бути надано: {0}</text>
+    <text name="FeatureIsNotEnabled">Функція не активована: {0}</text>
+    <text name="AllOfTheseFeaturesMustBeEnabled">Обов'язкові функції не ввімкнено. Усі ці функції повинні бути активовані: {0}</text>
+    <text name="AtLeastOneOfTheseFeaturesMustBeEnabled">Обов'язкові функції не ввімкнено. Потрібно ввімкнути принаймні одну з цих функцій: {0}</text>
+    <text name="MainMenu">Головне меню</text>
   </texts>
 </localizationDictionary>

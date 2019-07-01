@@ -177,6 +177,18 @@ tenant related to the current request in this given order:
         the TenantId from an "Abp.TenantId" cookie value, if present. This uses the
         same constant explained above.
 
+By default, ASP.NET Boilerplate uses "Abp.TenantId" to find TenantId from Cookie or Request Headers. You can change it using multi-tenancy configuration:
+
+````c#
+Configuration.MultiTenancy.TenantIdResolveKey = "Abp-TenantId";
+````
+
+You also need to configure it on the client side:
+
+````js
+abp.multiTenancy.tenantIdCookieName = 'Abp-TenantId';
+````
+
 If none of these attempts can resolve a TenantId, then the current requester
 is considered to be the host. Tenant resolvers are extensible. You can add
 resolvers to the **Configuration.MultiTenancy.Resolvers** collection, or

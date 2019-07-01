@@ -1,5 +1,7 @@
-﻿using System.Threading.Tasks;
+﻿using System;
+using System.Threading.Tasks;
 using Abp.BackgroundJobs;
+using Abp.Dependency;
 using Abp.Events.Bus;
 using Shouldly;
 using Xunit;
@@ -29,6 +31,13 @@ namespace Abp.Zero.BackgroundJobs
             eventCount.Count.ShouldBe(5);
         }
 
+        [Fact]
+        public async Task Queue_Event_Should_Return_Id_Of_Background_Job()
+        {
+            var id = await _backgroundJobManager.EnqueueAsync<TestJob, TestJobArgs>(new TestJobArgs());
+            Convert.ToInt64(id).ShouldBeGreaterThan(0);
+        }
+
         public class MySimpleEventData : EventData
         {
             public int Value { get; set; }
@@ -37,6 +46,20 @@ namespace Abp.Zero.BackgroundJobs
             {
                 Value = value;
             }
+        }
+
+        public class TestJob : BackgroundJob<TestJobArgs>, ITransientDependency
+        {
+            public override void Execute(TestJobArgs args)
+            {
+
+            }
+        }
+
+        [Serializable]
+        public class TestJobArgs
+        {
+
         }
     }
 }

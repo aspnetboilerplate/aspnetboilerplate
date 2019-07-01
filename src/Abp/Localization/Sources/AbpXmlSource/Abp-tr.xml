@@ -16,6 +16,9 @@
     <text name="TimeZone">Zaman dilimi</text>
     <text name="AllOfThesePermissionsMustBeGranted">Gereken izinler sağlanamadı. Şu izinlerin tamamı sağlanmış olmalı: {0}</text>
     <text name="AtLeastOneOfThesePermissionsMustBeGranted">Gereken izinler sağlanamadı. Şu izinlerin en az birisi sağlanmış olmalı: {0}</text>
+    <text name="FeatureIsNotEnabled">Özellik etkin değil: {0}</text>
+    <text name="AllOfTheseFeaturesMustBeEnabled">Gerekli özellikler etkin değil. Bu özelliklerin tümü etkinleştirilmelidir: {0}</text>
+    <text name="AtLeastOneOfTheseFeaturesMustBeEnabled">Gerekli özellikler etkin değil. Bu özelliklerden en az biri etkinleştirilmelidir: {0}</text>
     <text name="MainMenu">Ana menü</text>
   </texts>
 </localizationDictionary>

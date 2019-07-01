@@ -2,7 +2,7 @@
 using System.Data.Entity;
 using Abp.Domain.Repositories;
 using Abp.EntityFramework;
-using Abp.TestBase.SampleApplication.ContacLists;
+using Abp.TestBase.SampleApplication.ContactLists;
 using Abp.TestBase.SampleApplication.Crm;
 using Abp.TestBase.SampleApplication.EntityFramework.Repositories;
 using Abp.TestBase.SampleApplication.GuidEntities;

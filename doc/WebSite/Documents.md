@@ -91,6 +91,7 @@ Object-Relational Mapping
 Releases
 
 -   [Nuget Packages](Nuget-Packages.md)
+-   [Nightly Builds](Nightly-Builds.md)
 -   [Change Logs & Releases](https://github.com/aspnetboilerplate/aspnetboilerplate/releases)
 
 ### Module Zero

@@ -1,3 +1,4 @@
+using System.Globalization;
 using System.Threading.Tasks;
 using Abp.Application.Editions;
 using Abp.Authorization.Users;
@@ -7,8 +8,11 @@ using Abp.Domain.Repositories;
 using Abp.Domain.Uow;
 using Abp.Events.Bus.Entities;
 using Abp.Events.Bus.Handlers;
+using Abp.Localization;
 using Abp.MultiTenancy;
 using Abp.Runtime.Caching;
+using Abp.UI;
+using Abp.Zero;
 
 namespace Abp.Application.Features
 {
@@ -31,6 +35,9 @@ namespace Abp.Application.Features
         private readonly IFeatureManager _featureManager;
         private readonly IUnitOfWorkManager _unitOfWorkManager;
 
+        public ILocalizationManager LocalizationManager { get; set; }
+        protected string LocalizationSourceName { get; set; }
+
         /// <summary>
         /// Initializes a new instance of the <see cref="AbpFeatureValueStore{TTenant, TUser}"/> class.
         /// </summary>
@@ -48,6 +55,9 @@ namespace Abp.Application.Features
             _editionFeatureRepository = editionFeatureRepository;
             _featureManager = featureManager;
             _unitOfWorkManager = unitOfWorkManager;
+
+            LocalizationManager = NullLocalizationManager.Instance;
+            LocalizationSourceName = AbpZeroConsts.LocalizationSourceName;
         }
 
         /// <inheritdoc/>
@@ -104,6 +114,12 @@ namespace Abp.Application.Features
                     }
 
                     return;
+                }
+
+                if (!feature.InputType.Validator.IsValid(value))
+                {
+                    throw new UserFriendlyException(string.Format(
+                        L("InvalidFeatureValue"), feature.Name));
                 }
 
                 if (currentFeature == null)
@@ -196,6 +212,16 @@ namespace Abp.Application.Features
             }
 
             _cacheManager.GetEditionFeatureCache().Remove(eventData.Entity.Id);
+        }
+
+        protected virtual string L(string name)
+        {
+            return LocalizationManager.GetString(LocalizationSourceName, name);
+        }
+
+        protected virtual string L(string name, CultureInfo cultureInfo)
+        {
+            return LocalizationManager.GetString(LocalizationSourceName, name, cultureInfo);
         }
     }
 }

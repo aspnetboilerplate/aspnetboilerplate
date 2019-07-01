@@ -1,0 +1,31 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<localizationDictionary culture="nl">
+  <texts>
+    <text name="Identity.UserAlreadyInRole" value="Gebruiker al in rol." />
+    <text name="Identity.UserNotInRole" value="Gebruiker is niet in rol." />
+    <text name="Identity.RoleNotFound" value="Rol {0} bestaat niet." />
+    <text name="Identity.PasswordMismatch" value="Incorrect wachtwoord." />
+    <text name="Identity.InvalidUserName" value="Gebruikersnaam {0} is ongeldig, kan alleen letters of cijfers bevatten." />
+    <text name="Identity.PasswordTooShort" value="Het wachtwoord moet uit minimaal {0} tekens bestaan." />
+    <text name="Identity.PropertyTooShort" value="{0} kan niet leeg zijn." />
+    <text name="Identity.DuplicateUserName" value="Gebruikersnaam {0} is al in gebruik." />
+    <text name="Identity.UserAlreadyHasPassword" value="Gebruiker heeft al een wachtwoord ingesteld." />
+    <text name="Identity.PasswordRequireNonLetterOrDigit" value="Wachtwoorden moeten ten minste één niet-letter of cijfer bevatten." />
+    <text name="Identity.UserIdNotFound" value="Gebruikers ID niet gevonden." />
+    <text name="Identity.InvalidToken" value="Ongeldige token." />
+    <text name="Identity.InvalidEmail" value="E-mail '{0}' is ongeldig." />
+    <text name="Identity.UserNameNotFound" value="Gebruiker {0} bestaat neit." />
+    <text name="Identity.LockoutNotEnabled" value="Lockout is niet ingeschakeld voor deze gebruiker." />
+    <text name="Identity.PasswordRequireUpper" value="Wachtwoorden moeten ten minste één hoofdletter hebben ('A'-'Z')." />
+    <text name="Identity.PasswordRequireDigit" value="Wachtwoorden moeten minstens één cijfer hebben ('0'-'9')." />
+    <text name="Identity.PasswordRequireLower" value="Wachtwoorden moeten minstens één kleine letter ('a'-'z') bevatten." />
+    <text name="Identity.DuplicateEmail" value="E-mail '{0}' is al in gebruik." />
+    <text name="Identity.ExternalLoginExists" value="Er bestaat al een gebruiker met die externe login." />
+    <text name="Identity.DefaultError" value="Er is een onbekende fout opgetreden." />
+    <text name="Email">E-mail</text>
+    <text name="EmailSecurityCodeSubject">Beveiligingscode</text>
+    <text name="EmailSecurityCodeBody">Uw beveiligingscode is: {0}</text>
+    <text name="Sms">Sms</text>
+    <text name="SmsSecurityCodeMessage">Uw beveiligingscode is: {0}</text>
+  </texts>
+</localizationDictionary>

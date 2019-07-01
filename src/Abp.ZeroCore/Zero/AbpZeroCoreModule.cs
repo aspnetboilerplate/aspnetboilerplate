@@ -1,7 +1,9 @@
-﻿using Abp.Localization.Dictionaries.Xml;
+﻿using Abp.Authorization.Users;
+using Abp.Localization.Dictionaries.Xml;
 using Abp.Localization.Sources;
 using Abp.Modules;
 using Abp.Reflection.Extensions;
+using Abp.Threading.BackgroundWorkers;
 
 namespace Abp.Zero
 {
@@ -23,6 +25,15 @@ namespace Abp.Zero
         public override void Initialize()
         {
             IocManager.RegisterAssemblyByConvention(typeof(AbpZeroCoreModule).GetAssembly());
+        }
+
+        public override void PostInitialize()
+        {
+            if (Configuration.BackgroundJobs.IsJobExecutionEnabled)
+            {
+                var workerManager = IocManager.Resolve<IBackgroundWorkerManager>();
+                workerManager.Add(IocManager.Resolve<UserTokenExpirationWorker>());
+            }
         }
     }
 }

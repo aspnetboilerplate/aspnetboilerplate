@@ -257,6 +257,17 @@ scripts on your page:
     <script src="~/Abp/Framework/scripts/libs/angularjs/abp.ng.js"></script>
     <script src="~/api/AbpServiceProxies/GetAll?type=angular"></script>
 
+#### Minification
+
+ASP.NET Boilerplate dynamic api, as well as localization javascript can also
+be returned minifed, by setting the *minify** flag:
+
+    <script src="~/api/AbpServiceProxies/GetAll?minify=true"></script>
+    <script src="~/api/AbpServiceProxies/GetAll?type=angular&minify=true"></script>
+	<script src="/api/AbpServiceProxies/Get?name=tasksystem/task&minify=true" type="text/javascript"></script>
+
+Default minification value is **false**.
+
 ### Enable/Disable
 
 If you used the **ForAll** method as defined above, then you can use

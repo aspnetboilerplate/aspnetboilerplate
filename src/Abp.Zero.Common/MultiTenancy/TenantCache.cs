@@ -117,7 +117,7 @@ namespace Abp.MultiTenancy
             }
         }
 
-        public void HandleEvent(EntityChangedEventData<TTenant> eventData)
+        public virtual void HandleEvent(EntityChangedEventData<TTenant> eventData)
         {
             var existingCacheItem = _cacheManager.GetTenantCache().GetOrDefault(eventData.Entity.Id);
 

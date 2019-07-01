@@ -92,7 +92,7 @@ We added **services.AddIdentityServer()** just after
 We have used the IdentityServerConfig class to get identity resources, api
 resources and clients. You can find more information about this class in
 its own
-[documentation](https://identityserver4.readthedocs.io/en/release/quickstarts/1_client_credentials.html).
+[documentation](http://docs.identityserver.io/en/latest/quickstarts/1_client_credentials.html).
 For the simplest case, it can be a static class like below:
 
     public static class IdentityServerConfig
@@ -175,7 +175,7 @@ consent responses will be stored in an in-memory data store in that case
 
 If we want to authorize clients against the same application we can use the
 [IdentityServer authentication
-middleware](http://docs.identityserver.io/en/release/topics/apis.html?highlight=UseIdentityServerAuthentication#the-identityserver-authentication-middleware)
+middleware](https://identityserver4.readthedocs.io/en/latest/topics/apis.html?highlight=UseIdentityServerAuthentication#the-identityserver-authentication-middleware)
 for that.
 
 First, install the IdentityServer4.AccessTokenValidation package from NuGet

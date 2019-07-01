@@ -1,4 +1,5 @@
 using Abp.Dependency;
+using Abp.Web.Security.AntiForgery;
 using Microsoft.AspNetCore.Antiforgery;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Mvc.Filters;
@@ -11,17 +12,20 @@ namespace Abp.AspNetCore.Mvc.Antiforgery
     public class AbpAutoValidateAntiforgeryTokenAuthorizationFilter : AutoValidateAntiforgeryTokenAuthorizationFilter, ITransientDependency
     {
         private readonly AntiforgeryOptions _antiforgeryOptions;
-        private readonly CookieAuthenticationOptions _cookieAuthenticationOptions;
+        private readonly IOptionsSnapshot<CookieAuthenticationOptions> _namedOptionsAccessor;
+        private readonly IAbpAntiForgeryConfiguration _antiForgeryConfiguration;
 
         public AbpAutoValidateAntiforgeryTokenAuthorizationFilter(
             IAntiforgery antiforgery, 
             ILoggerFactory loggerFactory,
-            IOptions<AntiforgeryOptions> antiforgeryOptions,
-            IOptions<CookieAuthenticationOptions> cookieAuthenticationOptions)
+            IOptions<AntiforgeryOptions> antiforgeryOptions, 
+            IAbpAntiForgeryConfiguration antiForgeryConfiguration,
+            IOptionsSnapshot<CookieAuthenticationOptions> namedOptionsAccessor)
             : base(antiforgery, loggerFactory)
         {
+            _namedOptionsAccessor = namedOptionsAccessor;
+            _antiForgeryConfiguration = antiForgeryConfiguration;
             _antiforgeryOptions = antiforgeryOptions.Value;
-            _cookieAuthenticationOptions = cookieAuthenticationOptions.Value;
         }
 
         protected override bool ShouldValidate(AuthorizationFilterContext context)
@@ -30,10 +34,12 @@ namespace Abp.AspNetCore.Mvc.Antiforgery
             {
                 return false;
             }
+            
+            var cookieAuthenticationOptions = _namedOptionsAccessor.Get(_antiForgeryConfiguration.AuthorizationCookieName);
 
             //Always perform antiforgery validation when request contains authentication cookie
-            if (_cookieAuthenticationOptions.Cookie.Name != null &&
-                context.HttpContext.Request.Cookies.ContainsKey(_cookieAuthenticationOptions.Cookie.Name))
+            if (cookieAuthenticationOptions?.Cookie.Name != null &&
+                context.HttpContext.Request.Cookies.ContainsKey(cookieAuthenticationOptions.Cookie.Name))
             {
                 return true;
             }

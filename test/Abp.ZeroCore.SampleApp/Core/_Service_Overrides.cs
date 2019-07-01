@@ -107,7 +107,9 @@ namespace Abp.ZeroCore.SampleApp.Core
             IPermissionManager permissionManager,
             ICacheManager cacheManager,
             IUnitOfWorkManager unitOfWorkManager,
-            IRoleManagementConfig roleManagementConfig
+            IRoleManagementConfig roleManagementConfig,
+            IRepository<OrganizationUnit, long> organizationUnitRepository,
+            IRepository<OrganizationUnitRole, long> organizationUnitRoleRepository
         ) : base(
             store,
             roleValidators,
@@ -117,7 +119,9 @@ namespace Abp.ZeroCore.SampleApp.Core
             permissionManager,
             cacheManager,
             unitOfWorkManager,
-            roleManagementConfig)
+            roleManagementConfig,
+            organizationUnitRepository,
+            organizationUnitRoleRepository)
         {
         }
     }
@@ -242,7 +246,7 @@ namespace Abp.ZeroCore.SampleApp.Core
             IRepository<UserPermissionSetting, long> userPermissionSettingRepository,
             IRepository<UserOrganizationUnit, long> userOrganizationUnitRepository,
             IRepository<OrganizationUnitRole, long> organizationUnitRoleRepository
-            ): base(
+            ) : base(
             unitOfWorkManager,
             userRepository,
             roleRepository,

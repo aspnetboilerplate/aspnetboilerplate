@@ -14,7 +14,7 @@ need to derive from the **AbpDbContext** as shown below:
     public class MyDbContext : AbpDbContext
     {
         public DbSet<Product> Products { get; set; }
-
+    
         public MyDbContext(DbContextOptions<MyDbContext> options)
             : base(options)
         {
@@ -90,16 +90,16 @@ repository methods. Example:
     public class PersonAppService : IPersonAppService
     {
         private readonly IRepository<Person> _personRepository;
-
+    
         public PersonAppService(IRepository<Person> personRepository)
         {
             _personRepository = personRepository;
         }
-
+    
         public void CreatePerson(CreatePersonInput input)
         {        
             person = new Person { Name = input.Name, EmailAddress = input.EmailAddress };
-
+    
             _personRepository.Insert(person);
         }
     }
@@ -131,10 +131,10 @@ class for all the repositories of a *SimpleTaskSystem* application:
             : base(dbContextProvider)
         {
         }
-
+    
         //add common methods for all repositories
     }
-
+    
     //A shortcut for entities which have an integer Id
     public class SimpleTaskSystemRepositoryBase<TEntity> : SimpleTaskSystemRepositoryBase<TEntity, int>
         where TEntity : class, IEntity<int>
@@ -143,7 +143,7 @@ class for all the repositories of a *SimpleTaskSystem* application:
             : base(dbContextProvider)
         {
         }
-
+    
         //do not add a method here, add it to the class above (because this class inherits it)
     }
 
@@ -184,28 +184,28 @@ single database query. See the following code:
     {
         List<Task> GetAllWithPeople(int? assignedPersonId, TaskState? state);
     }
-
+    
     public class TaskRepository : SimpleTaskSystemRepositoryBase<Task, long>, ITaskRepository
     {
         public TaskRepository(IDbContextProvider<SimpleTaskSystemDbContext> dbContextProvider)
             : base(dbContextProvider)
         {
         }
-
+    
         public List<Task> GetAllWithPeople(int? assignedPersonId, TaskState? state)
         {
             var query = GetAll();
-
+    
             if (assignedPersonId.HasValue)
             {
                 query = query.Where(task => task.AssignedPerson.Id == assignedPersonId.Value);
             }
-
+    
             if (state.HasValue)
             {
                 query = query.Where(task => task.State == state);
             }
-
+    
             return query
                 .OrderByDescending(task => task.CreationTime)
                 .Include(task => task.AssignedPerson)
@@ -250,6 +250,10 @@ repository implementation with the default one like shown below:
 We registered the TaskRepository for IRepository&lt;Task, Guid&gt;,
 ITaskRepository and TaskRepository. This way, any one of these can be injected
 to use the TaskRepository.
+
+#### Batch Operations
+
+ASP.NET Boilerplate is integrated with [Entity Framework Plus](https://github.com/zzzprojects/EntityFramework-Plus) to provide batch delete and update operations. In order to use those methods on your repositories, you need to add [Abp.EntityFrameworkCore.EFPlus](https://www.nuget.org/packages/Abp.EntityFrameworkCore.EFPlus) NuGet package to your project. Note that `BatchDeleteAsync` method deletes entities permanently even if the entity is [**soft-delete**](/Pages/Documents/Entities#soft-delete).
 
 #### Repository Best Practices
 

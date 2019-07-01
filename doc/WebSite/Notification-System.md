@@ -182,11 +182,19 @@ application.
 ### Real-Time Notifications
 
 While you can use IUserNotificationManager to query notifications, we
-generally want to push real time notifications to the client.
+generally want to push real-time notifications to the client.
 
-The notification system uses **IRealTimeNotifier** to send real time
-notifications to users. This can be implemented with any type of real
-time communication system. It's implemented using **SignalR** in a
+The notification system uses **IRealTimeNotifier** to send real-time
+notifications to users. This can be implemented with any type of real-time
+communication system.
+
+Examples of real-time notifiers:
+
+- SignalR
+- Email
+- SMS
+
+It's implemented using **SignalR** in a
 separated package. The [startup templates](/Templates) already have SignalR
 installed. See the [SignalR Integration
 document](/Pages/Documents/SignalR-Integration) for more information.
@@ -195,9 +203,56 @@ document](/Pages/Documents/SignalR-Integration) for more information.
 in a [**background job**](/Pages/Documents/Background-Jobs-And-Workers).
 Because of this, notifications may be sent with a small delay.
 
+#### Multiple Notifiers
+
+ASP.NET Boilerplate supports multiple **IRealTimeNotifiers** to notify
+users in different ways.
+
+For example, you can implement an **EmailRealTimeNotifier**:
+
+```c#
+public class EmailRealTimeNotifier : IRealTimeNotifier, ITransientDependency
+{
+    private readonly IEmailSender _emailSender;
+    private readonly UserManager _userManager;
+
+    public EmailRealTimeNotifier(
+        IEmailSender emailSender,
+        UserManager userManager)
+    {
+        _emailSender = emailSender;
+        _userManager = userManager;
+    }
+
+    public async Task SendNotificationsAsync(UserNotification[] userNotifications)
+    {
+        foreach (var userNotification in userNotifications)
+        {
+            if (userNotification.Notification.Data is MessageNotificationData data)
+            {
+                var user = await _userManager.GetUserByIdAsync(userNotification.UserId);
+                
+                _emailSender.Send(
+                    to: user.EmailAddress,
+                    subject: "You have a new notification!",
+                    body: data.Message,
+                    isBodyHtml: true
+                );
+            }
+        }
+    }
+}
+```
+
+Add it in the **PreInitialize** method of your module:
+
+```c#
+Configuration.Notifications.Notifiers.Add<EmailRealTimeNotifier>();
+```
+
 #### Client-Side
 
-When a real-time notification is received, ASP.NET Boilerplate triggers
+When a real-time notification is received via SignalR, ASP.NET Boilerplate triggers
 a **global event** on the client-side. You can register it like this to get
 notifications:
 

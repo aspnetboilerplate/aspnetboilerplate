@@ -28,6 +28,10 @@
   </ItemGroup>
 
   <ItemGroup>
+    <PackageReference Include="NUglify" Version="1.5.12" />
+  </ItemGroup>
+
+  <ItemGroup>
     <ProjectReference Include="..\Abp\Abp.csproj" />
   </ItemGroup>
 

@@ -3,6 +3,7 @@ using System.Collections.Generic;
 
 namespace Abp.UI.Inputs
 {
+    [Serializable]
     public class StaticLocalizableComboboxItemSource : ILocalizableComboboxItemSource
     {
         public ICollection<ILocalizableComboboxItem> Items { get; private set; }

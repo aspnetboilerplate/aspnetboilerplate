@@ -5,19 +5,26 @@ using System.Threading;
 using Abp.AspNetCore;
 using Abp.AspNetCore.Configuration;
 using Abp.AspNetCore.Mvc.Extensions;
+using Abp.AspNetCore.OData.Configuration;
 using Abp.Castle.Logging.Log4Net;
 using Abp.Dependency;
+using Abp.Json;
 using Abp.PlugIns;
 using AbpAspNetCoreDemo.Controllers;
+using AbpAspNetCoreDemo.Core.Domain;
 using Castle.Facilities.Logging;
 using Castle.MicroKernel.ModelBuilder.Inspectors;
 using Castle.MicroKernel.SubSystems.Conversion;
+using Microsoft.AspNet.OData.Extensions;
+using Microsoft.AspNet.OData.Formatter;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
+using Microsoft.Net.Http.Headers;
+using Newtonsoft.Json.Serialization;
 
 namespace AbpAspNetCoreDemo
 {
@@ -56,7 +63,26 @@ namespace AbpAspNetCoreDemo
                 options.Filters.Add(new AutoValidateAntiforgeryTokenAttribute());
             }).AddJsonOptions(options =>
             {
-                options.SerializerSettings.DateFormatString = "yyyy-MM-dd HH:mm:ss";
+                options.SerializerSettings.ContractResolver = new AbpMvcContractResolver(IocManager.Value)
+                {
+                    NamingStrategy = new CamelCaseNamingStrategy()
+                };
+            });
+
+            services.AddOData();
+
+            // Workaround: https://github.com/OData/WebApi/issues/1177
+            services.AddMvcCore(options =>
+            {
+                foreach (var outputFormatter in options.OutputFormatters.OfType<ODataOutputFormatter>().Where(_ => _.SupportedMediaTypes.Count == 0))
+                {
+                    outputFormatter.SupportedMediaTypes.Add(new MediaTypeHeaderValue("application/prs.odatatestxx-odata"));
+                }
+
+                foreach (var inputFormatter in options.InputFormatters.OfType<ODataInputFormatter>().Where(_ => _.SupportedMediaTypes.Count == 0))
+                {
+                    inputFormatter.SupportedMediaTypes.Add(new MediaTypeHeaderValue("application/prs.odatatestxx-odata"));
+                }
             });
 
             //Configure Abp and Dependency Injection. Should be called last.
@@ -90,6 +116,17 @@ namespace AbpAspNetCoreDemo
         {
             app.UseAbp(); //Initializes ABP framework. Should be called first.
 
+            app.UseOData(builder =>
+            {
+                builder.EntitySet<Product>("Products").EntityType.Expand().Filter().OrderBy().Page().Select();
+            });
+
+            // Return IQueryable from controllers
+            app.UseUnitOfWork(options =>
+            {
+                options.Filter = httpContext => httpContext.Request.Path.Value.StartsWith("/odata");
+            });
+
             loggerFactory.AddConsole(Configuration.GetSection("Logging"));
             loggerFactory.AddDebug();
 
@@ -109,6 +146,7 @@ namespace AbpAspNetCoreDemo
             app.UseMvc(routes =>
             {
                 app.ApplicationServices.GetRequiredService<IAbpAspNetCoreConfiguration>().RouteConfiguration.ConfigureAll(routes);
+                routes.MapODataServiceRoute(app);
             });
         }
     }
