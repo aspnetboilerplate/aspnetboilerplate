@@ -526,6 +526,7 @@ namespace Abp.Authorization.Users
                 }
             }
 
+            await _unitOfWorkManager.Current.SaveChangesAsync();
             //Add to added OUs
             foreach (var organizationUnitId in organizationUnitIds)
             {
