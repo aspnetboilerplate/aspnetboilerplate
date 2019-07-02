@@ -22,8 +22,9 @@ namespace Abp.Application.Features
     public class AbpFeatureValueStore<TTenant, TUser> :
         IAbpZeroFeatureValueStore,
         ITransientDependency,
-        IEventHandler<EntityChangedEventData<Edition>>,
-        IEventHandler<EntityChangedEventData<EditionFeatureSetting>>
+        IEventHandler<EntityChangingEventData<Edition>>,
+        IEventHandler<EntityChangingEventData<EditionFeatureSetting>>,
+        IEventHandler<EntityChangingEventData<TenantFeatureSetting>>
 
         where TTenant : AbpTenant<TUser>
         where TUser : AbpUserBase
@@ -199,12 +200,12 @@ namespace Abp.Application.Features
             return newCacheItem;
         }
 
-        public virtual void HandleEvent(EntityChangedEventData<EditionFeatureSetting> eventData)
+        public virtual void HandleEvent(EntityChangingEventData<EditionFeatureSetting> eventData)
         {
             _cacheManager.GetEditionFeatureCache().Remove(eventData.Entity.EditionId);
         }
 
-        public virtual void HandleEvent(EntityChangedEventData<Edition> eventData)
+        public virtual void HandleEvent(EntityChangingEventData<Edition> eventData)
         {
             if (eventData.Entity.IsTransient())
             {
@@ -212,6 +213,14 @@ namespace Abp.Application.Features
             }
 
             _cacheManager.GetEditionFeatureCache().Remove(eventData.Entity.Id);
+        }
+
+        public virtual void HandleEvent(EntityChangingEventData<TenantFeatureSetting> eventData)
+        {
+            if (eventData.Entity.TenantId.HasValue)
+            {
+                _cacheManager.GetTenantFeatureCache().Remove(eventData.Entity.TenantId.Value);
+            }
         }
 
         protected virtual string L(string name)
