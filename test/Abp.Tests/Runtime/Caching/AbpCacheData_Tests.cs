@@ -21,7 +21,7 @@ namespace Abp.Tests.Runtime.Caching
             };
 
             var result = AbpCacheData.Serialize(source);
-            result.Type.ShouldBe("System.Collections.Generic.List`1[[System.String, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089]], mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089");
+            result.Type.ShouldStartWith("System.Collections.Generic.List`1[[System.String,");
             result.Payload.ShouldBe("[\"Stranger Things\",\"The OA\",\"Lost in Space\"]");
         }
 
