@@ -30,7 +30,7 @@ namespace Abp.RedisCache.Tests
             };
 
             var result = _redisCacheSerializer.Serialize(source, typeof(List<string>));
-            result.ShouldBe("{\"Payload\":\"[\\\"Stranger Things\\\",\\\"The OA\\\",\\\"Lost in Space\\\"]\",\"Type\":\"System.Collections.Generic.List`1[[System.String, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089]], mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089\"}");
+            result.ShouldStartWith("{\"Payload\":\"[\\\"Stranger Things\\\",\\\"The OA\\\",\\\"Lost in Space\\\"]\",\"Type\":\"System.Collections.Generic.List`1[[System.String,");
         }
 
         [Fact]
