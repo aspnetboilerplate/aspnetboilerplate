@@ -506,6 +506,7 @@ namespace Abp.Authorization.Users
             }
         }
 
+        [UnitOfWork]
         public virtual async Task SetOrganizationUnitsAsync(TUser user, params long[] organizationUnitIds)
         {
             if (organizationUnitIds == null)
@@ -527,6 +528,7 @@ namespace Abp.Authorization.Users
             }
 
             await _unitOfWorkManager.Current.SaveChangesAsync();
+
             //Add to added OUs
             foreach (var organizationUnitId in organizationUnitIds)
             {
