@@ -414,6 +414,7 @@ namespace Abp.Authorization.Users
                 return;
             }
 
+            await UserRepository.EnsureCollectionLoadedAsync(user, u => u.Roles, cancellationToken);
             user.Roles.RemoveAll(r => r.RoleId == role.Id);
         }
 
@@ -1320,13 +1321,10 @@ namespace Abp.Authorization.Users
             Check.NotNull(user, nameof(user));
 
             await UserRepository.EnsureCollectionLoadedAsync(user, u => u.Tokens, cancellationToken);
-            var isValidityKeyValid = user.Tokens.Any(t => t.LoginProvider == TokenValidityKeyProvider &&
-                                               t.Name == tokenValidityKey &&
-                                               t.ExpireDate > DateTime.UtcNow);
-            
-            user.Tokens.RemoveAll(t => t.LoginProvider == TokenValidityKeyProvider && t.ExpireDate <= DateTime.UtcNow);
 
-            return isValidityKeyValid;
+            return user.Tokens.Any(t => t.LoginProvider == TokenValidityKeyProvider &&
+                                        t.Name == tokenValidityKey &&
+                                        t.ExpireDate > DateTime.UtcNow);
         }
 
         public virtual async Task RemoveTokenValidityKeyAsync([NotNull] TUser user, string tokenValidityKey, CancellationToken cancellationToken = default(CancellationToken))
@@ -1337,8 +1335,7 @@ namespace Abp.Authorization.Users
 
             await UserRepository.EnsureCollectionLoadedAsync(user, u => u.Tokens, cancellationToken);
 
-            user.Tokens.Remove(user.Tokens.FirstOrDefault(t =>
-                t.LoginProvider == TokenValidityKeyProvider && t.Name == tokenValidityKey));
+            user.Tokens.RemoveAll(t => t.LoginProvider == TokenValidityKeyProvider && t.Name == tokenValidityKey);
         }
 
         protected virtual string NormalizeKey(string key)

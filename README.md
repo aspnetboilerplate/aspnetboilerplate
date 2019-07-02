@@ -1,7 +1,9 @@
 ﻿# ASP.NET Boilerplate
 
 [![Build Status](http://ci.volosoft.com:5480/job/aspnet-boilerplate-nightly/badge/icon)](http://ci.volosoft.com:5480/blue/organizations/jenkins/aspnet-boilerplate-nightly/activity)
-
+[![NuGet](https://img.shields.io/nuget/v/Abp.svg?style=flat-square)](https://www.nuget.org/packages/Abp)
+[![NuGet Download](https://img.shields.io/nuget/dt/Abp.svg?style=flat-square)](https://www.nuget.org/packages/Abp)
+[![MyGet (with prereleases)](https://img.shields.io/myget/abp-nightly/vpre/Abp.svg?style=flat-square)](https://aspnetboilerplate.com/Pages/Documents/Nightly-Builds)
 ## What is ABP?
 
 ASP.NET Boilerplate is a general purpose **application framework** specially designed for new modern web applications. It uses already **familiar tools** and implements **best practices** around them to provide you a **SOLID development experience**.

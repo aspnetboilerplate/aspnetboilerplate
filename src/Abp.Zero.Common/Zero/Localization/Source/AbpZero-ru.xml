@@ -9,5 +9,6 @@
     <text name="CanNotRenameAdminUser" value="Невозможно переименовать пользователя {0}, так как это пользователь администратор по умолчанию!" />
     <text name="CanNotDeleteAdminUser" value="Невозможно удалить пользователя {0}, так как это пользователь администратор по умолчанию!" />
     <text name="OrganizationUnitDuplicateDisplayNameWarning" value="В организации уже существует {0}. Две записи с одинаковым именем не могут быть созданы на одном уровне." />
+    <text name="InvalidFeatureValue" value="Недопустимое значение функции {0}!" />
   </texts>
 </localizationDictionary>

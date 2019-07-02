@@ -1,5 +1,6 @@
-﻿using System.Linq;
+using System.Linq;
 using System.Threading.Tasks;
+using Abp.Application.Features;
 using Abp.Domain.Uow;
 using Abp.ZeroCore.SampleApp.Application;
 using Abp.ZeroCore.SampleApp.Core;
@@ -12,11 +13,13 @@ namespace Abp.Zero.Tenants
     {
         private readonly TenantManager _tenantManager;
         private readonly IUnitOfWorkManager _unitOfWorkManager;
+        private readonly IFeatureChecker _featureChecker;
 
         public TenantManagerTests()
         {
             _tenantManager = Resolve<TenantManager>();
             _unitOfWorkManager = Resolve<IUnitOfWorkManager>();
+            _featureChecker = Resolve<IFeatureChecker>();
         }
 
         [Fact]
@@ -82,6 +85,24 @@ namespace Abp.Zero.Tenants
             {
                 context.FeatureSettings.Count(f => f.TenantId == tenantId).ShouldBe(0);
             });
+        }
+
+
+        [Fact]
+        public async Task SetFeatureValue_Test()
+        {
+            var tenant = new Tenant("TestTenant", "TestTenant");
+            await _tenantManager.CreateAsync(tenant);
+
+            using (var uow = _unitOfWorkManager.Begin())
+            {
+                await _tenantManager.SetFeatureValueAsync(tenant.Id, AppFeatures.SimpleBooleanFeature, "true");
+                await _unitOfWorkManager.Current.SaveChangesAsync();
+
+                (await _featureChecker.IsEnabledAsync(tenant.Id, AppFeatures.SimpleBooleanFeature)).ShouldBeTrue();
+
+                await uow.CompleteAsync();
+            }
         }
 
         private async Task ChangeTenantFeatureValueAsync(int tenantId, string name, string value)

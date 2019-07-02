@@ -8,6 +8,7 @@ using Abp.AspNetCore.Mvc.Extensions;
 using Abp.AspNetCore.OData.Configuration;
 using Abp.Castle.Logging.Log4Net;
 using Abp.Dependency;
+using Abp.Json;
 using Abp.PlugIns;
 using AbpAspNetCoreDemo.Controllers;
 using AbpAspNetCoreDemo.Core.Domain;
@@ -23,6 +24,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using Microsoft.Net.Http.Headers;
+using Newtonsoft.Json.Serialization;
 
 namespace AbpAspNetCoreDemo
 {
@@ -61,7 +63,10 @@ namespace AbpAspNetCoreDemo
                 options.Filters.Add(new AutoValidateAntiforgeryTokenAttribute());
             }).AddJsonOptions(options =>
             {
-                options.SerializerSettings.DateFormatString = "yyyy-MM-dd HH:mm:ss";
+                options.SerializerSettings.ContractResolver = new AbpMvcContractResolver(IocManager.Value)
+                {
+                    NamingStrategy = new CamelCaseNamingStrategy()
+                };
             });
 
             services.AddOData();
@@ -73,6 +78,7 @@ namespace AbpAspNetCoreDemo
                 {
                     outputFormatter.SupportedMediaTypes.Add(new MediaTypeHeaderValue("application/prs.odatatestxx-odata"));
                 }
+
                 foreach (var inputFormatter in options.InputFormatters.OfType<ODataInputFormatter>().Where(_ => _.SupportedMediaTypes.Count == 0))
                 {
                     inputFormatter.SupportedMediaTypes.Add(new MediaTypeHeaderValue("application/prs.odatatestxx-odata"));
@@ -112,7 +118,7 @@ namespace AbpAspNetCoreDemo
 
             app.UseOData(builder =>
             {
-                builder.EntitySet<Product>("Products").EntityType.Expand().Filter().OrderBy().Page();
+                builder.EntitySet<Product>("Products").EntityType.Expand().Filter().OrderBy().Page().Select();
             });
 
             // Return IQueryable from controllers

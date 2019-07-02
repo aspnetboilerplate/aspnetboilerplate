@@ -3,6 +3,7 @@ using System.Threading.Tasks;
 using Abp.Application.Editions;
 using Abp.Application.Features;
 using Abp.Configuration.Startup;
+using Abp.UI;
 using Abp.Zero.SampleApp.Editions;
 using Abp.Zero.SampleApp.Features;
 using Abp.Zero.SampleApp.MultiTenancy;
@@ -83,6 +84,22 @@ namespace Abp.Zero.SampleApp.Tests.Application.Editions
             //Should get edition values for tenant
             (await _featureChecker.GetValueAsync(AppFeatureProvider.MyNumericFeature)).ShouldBe("43");
             (await _featureChecker.IsEnabledAsync(AppFeatureProvider.MyBoolFeature)).ShouldBeTrue();
+        }
+
+        [Fact]
+        public async Task SetFeatureValue_Value_Should_Valid()
+        {
+            var standardEdition = await CreateEditionAsync("Standard");
+            var defaultTenant = GetDefaultTenant();
+
+            defaultTenant.EditionId = standardEdition.Id;
+            await _tenantManager.UpdateAsync(defaultTenant);
+
+            AbpSession.TenantId = defaultTenant.Id;
+
+            await Assert.ThrowsAsync<UserFriendlyException>(async () =>
+                await _editionManager.SetFeatureValueAsync(standardEdition.Id, AppFeatureProvider.MyNumericFeature,
+                    "101")); // 101 not valid
         }
 
         [Fact]

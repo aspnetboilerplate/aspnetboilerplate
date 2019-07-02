@@ -1,3 +1,4 @@
+using System.Globalization;
 using System.Threading.Tasks;
 using Abp.Application.Editions;
 using Abp.Authorization.Users;
@@ -7,8 +8,11 @@ using Abp.Domain.Repositories;
 using Abp.Domain.Uow;
 using Abp.Events.Bus.Entities;
 using Abp.Events.Bus.Handlers;
+using Abp.Localization;
 using Abp.MultiTenancy;
 using Abp.Runtime.Caching;
+using Abp.UI;
+using Abp.Zero;
 
 namespace Abp.Application.Features
 {
@@ -18,8 +22,9 @@ namespace Abp.Application.Features
     public class AbpFeatureValueStore<TTenant, TUser> :
         IAbpZeroFeatureValueStore,
         ITransientDependency,
-        IEventHandler<EntityChangedEventData<Edition>>,
-        IEventHandler<EntityChangedEventData<EditionFeatureSetting>>
+        IEventHandler<EntityChangingEventData<Edition>>,
+        IEventHandler<EntityChangingEventData<EditionFeatureSetting>>,
+        IEventHandler<EntityChangingEventData<TenantFeatureSetting>>
 
         where TTenant : AbpTenant<TUser>
         where TUser : AbpUserBase
@@ -30,6 +35,9 @@ namespace Abp.Application.Features
         private readonly IRepository<EditionFeatureSetting, long> _editionFeatureRepository;
         private readonly IFeatureManager _featureManager;
         private readonly IUnitOfWorkManager _unitOfWorkManager;
+
+        public ILocalizationManager LocalizationManager { get; set; }
+        protected string LocalizationSourceName { get; set; }
 
         /// <summary>
         /// Initializes a new instance of the <see cref="AbpFeatureValueStore{TTenant, TUser}"/> class.
@@ -48,6 +56,9 @@ namespace Abp.Application.Features
             _editionFeatureRepository = editionFeatureRepository;
             _featureManager = featureManager;
             _unitOfWorkManager = unitOfWorkManager;
+
+            LocalizationManager = NullLocalizationManager.Instance;
+            LocalizationSourceName = AbpZeroConsts.LocalizationSourceName;
         }
 
         /// <inheritdoc/>
@@ -104,6 +115,12 @@ namespace Abp.Application.Features
                     }
 
                     return;
+                }
+
+                if (!feature.InputType.Validator.IsValid(value))
+                {
+                    throw new UserFriendlyException(string.Format(
+                        L("InvalidFeatureValue"), feature.Name));
                 }
 
                 if (currentFeature == null)
@@ -183,12 +200,12 @@ namespace Abp.Application.Features
             return newCacheItem;
         }
 
-        public virtual void HandleEvent(EntityChangedEventData<EditionFeatureSetting> eventData)
+        public virtual void HandleEvent(EntityChangingEventData<EditionFeatureSetting> eventData)
         {
             _cacheManager.GetEditionFeatureCache().Remove(eventData.Entity.EditionId);
         }
 
-        public virtual void HandleEvent(EntityChangedEventData<Edition> eventData)
+        public virtual void HandleEvent(EntityChangingEventData<Edition> eventData)
         {
             if (eventData.Entity.IsTransient())
             {
@@ -196,6 +213,24 @@ namespace Abp.Application.Features
             }
 
             _cacheManager.GetEditionFeatureCache().Remove(eventData.Entity.Id);
+        }
+
+        public virtual void HandleEvent(EntityChangingEventData<TenantFeatureSetting> eventData)
+        {
+            if (eventData.Entity.TenantId.HasValue)
+            {
+                _cacheManager.GetTenantFeatureCache().Remove(eventData.Entity.TenantId.Value);
+            }
+        }
+
+        protected virtual string L(string name)
+        {
+            return LocalizationManager.GetString(LocalizationSourceName, name);
+        }
+
+        protected virtual string L(string name, CultureInfo cultureInfo)
+        {
+            return LocalizationManager.GetString(LocalizationSourceName, name, cultureInfo);
         }
     }
 }

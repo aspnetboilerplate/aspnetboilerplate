@@ -27,12 +27,12 @@
   </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Include="JetBrains.Annotations" Version="2018.3.0" />
-    <PackageReference Include="Newtonsoft.Json" Version="12.0.1" />
+    <PackageReference Include="JetBrains.Annotations" Version="2019.1.1" />
+    <PackageReference Include="Newtonsoft.Json" Version="12.0.2" />
     <PackageReference Include="System.Collections.Immutable" Version="1.5.0" />
     <PackageReference Include="System.Configuration.ConfigurationManager" Version="4.5.0" />
-    <PackageReference Include="System.Linq.Dynamic.Core" Version="1.0.10" />
-    <PackageReference Include="Castle.LoggingFacility" Version="4.1.1" />
+    <PackageReference Include="System.Linq.Dynamic.Core" Version="1.0.16" />
+    <PackageReference Include="Castle.LoggingFacility" Version="5.0.0" />
     <PackageReference Include="System.Linq.Queryable" Version="4.3.0" />
     <PackageReference Include="System.Data.Common" Version="4.3.0" />
     <PackageReference Include="System.Threading" Version="4.3.0" />
@@ -44,8 +44,8 @@
     <PackageReference Include="Microsoft.Extensions.Options" Version="2.2.0" />
     <PackageReference Include="Nito.AsyncEx.Context" Version="5.0.0" />
     <PackageReference Include="Nito.AsyncEx.Coordination" Version="5.0.0" />
-    <PackageReference Include="Castle.Core" Version="4.3.1" />
-    <PackageReference Include="TimeZoneConverter" Version="3.1.0" />
+    <PackageReference Include="Castle.Core" Version="4.4.0" />
+    <PackageReference Include="TimeZoneConverter" Version="3.2.0" />
   </ItemGroup>
 
   <ItemGroup>
