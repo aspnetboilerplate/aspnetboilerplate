@@ -245,7 +245,7 @@ Similar to entity caching, it is optional to define an interface for the
 cache class:
 
 ```csharp
-public interface IPhoneCache : IMultiTenantEntityCache<IPhoneCache>
+public interface IPhoneCache : IMultiTenancyEntityCache<PhoneCacheItem>
 {
 }
 ```
