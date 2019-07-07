@@ -3,7 +3,7 @@ using System.Threading.Tasks;
 using Abp.Configuration.Startup;
 using Abp.Domain.Repositories;
 using Abp.EntityFramework.Repositories;
-using Abp.TestBase.SampleApplication.ContacLists;
+using Abp.TestBase.SampleApplication.ContactLists;
 using Shouldly;
 using Xunit;
 

@@ -24,7 +24,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\Abp\Abp.csproj" />
-    <PackageReference Include="Dapper" Version="1.50.5" />
+    <PackageReference Include="Dapper" Version="1.60.6" />
     <Reference Include="System.ComponentModel.DataAnnotations" />
     <PackageReference Include="System.Data.Common" Version="4.3.0" />
     <PackageReference Include="DapperExtensions.DotnetCore" Version="1.0.1" />

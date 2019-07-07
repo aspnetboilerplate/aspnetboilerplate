@@ -1,15 +1,13 @@
 ﻿using System.Collections.Generic;
 using System.Reflection;
 using Abp.AutoMapper;
-using Abp.Configuration;
 using Abp.EntityFramework;
 using Abp.EntityFramework.GraphDiff;
 using Abp.EntityFramework.GraphDiff.Configuration;
 using Abp.EntityFramework.GraphDiff.Mapping;
 using Abp.Modules;
-using Abp.TestBase.SampleApplication.ContacLists;
+using Abp.TestBase.SampleApplication.ContactLists;
 using Abp.TestBase.SampleApplication.People;
-using AutoMapper;
 using RefactorThis.GraphDiff;
 
 namespace Abp.TestBase.SampleApplication

@@ -94,6 +94,8 @@ In some cases like editing a multi lingual entity on the UI, all translations ma
 	public class ProductTranslationDto
 	{
 	    public string Name { get; set; }
+
+	    public string Language { get; set; }
 	}
 
 

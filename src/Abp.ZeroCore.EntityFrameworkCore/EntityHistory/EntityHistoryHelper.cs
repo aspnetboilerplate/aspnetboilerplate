@@ -126,6 +126,12 @@ namespace Abp.EntityHistory
             }
         }
 
+        protected virtual string GetEntityId(EntityEntry entry)
+        {
+            var primaryKeys = entry.Properties.Where(p => p.Metadata.IsPrimaryKey());
+            return primaryKeys.First().CurrentValue?.ToJsonString();
+        }
+
         [CanBeNull]
         private EntityChange CreateEntityChange(EntityEntry entityEntry, bool shouldSaveEntityHistory)
         {
@@ -189,12 +195,6 @@ namespace Abp.EntityHistory
                     Logger.Error("Unexpected EntityState!");
                     return Clock.Now;
             }
-        }
-
-        private string GetEntityId(EntityEntry entry)
-        {
-            var primaryKeys = entry.Properties.Where(p => p.Metadata.IsPrimaryKey());
-            return primaryKeys.First().CurrentValue?.ToJsonString();
         }
 
         /// <summary>

@@ -1,7 +1,7 @@
 ﻿using System.Collections.Generic;
 using Abp.Application.Services;
 
-namespace Abp.TestBase.SampleApplication.ContacLists
+namespace Abp.TestBase.SampleApplication.ContactLists
 {
     public interface IContactListAppService : IApplicationService
     {

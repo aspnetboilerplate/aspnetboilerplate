@@ -1,11 +1,15 @@
 ﻿using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Collections.Immutable;
-using Abp.Data;
+using Abp.Dependency;
 
 namespace Abp.RealTime
 {
-    public class InMemoryOnlineClientStore : IOnlineClientStore
+    public class InMemoryOnlineClientStore<T> : InMemoryOnlineClientStore, IOnlineClientStore<T>
+    {
+    }
+
+    public class InMemoryOnlineClientStore : IOnlineClientStore, ISingletonDependency
     {
         /// <summary>
         /// Online clients.
@@ -24,12 +28,12 @@ namespace Abp.RealTime
 
         public bool Remove(string connectionId)
         {
-           return TryRemove(connectionId, out IOnlineClient removed);
+            return TryRemove(connectionId, out IOnlineClient removed);
         }
-        
+
         public bool TryRemove(string connectionId, out IOnlineClient client)
         {
-           return Clients.TryRemove(connectionId, out client);
+            return Clients.TryRemove(connectionId, out client);
         }
 
         public bool TryGet(string connectionId, out IOnlineClient client)

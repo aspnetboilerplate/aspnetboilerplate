@@ -46,6 +46,14 @@ namespace Abp.EntityFrameworkCore.Tests
             IocManager.RegisterAssemblyByConvention(typeof(EntityFrameworkCoreTestModule).GetAssembly());
         }
 
+        public override void PostInitialize()
+        {
+            using (var context = IocManager.Resolve<BloggingDbContext>())
+            {
+                context.Database.ExecuteSqlCommand("CREATE VIEW BlogView AS SELECT Id, Name, Url FROM Blogs");
+            }
+        }
+
         private static void RegisterBloggingDbContextToSqliteInMemoryDb(IIocManager iocManager)
         {
             var builder = new DbContextOptionsBuilder<BloggingDbContext>();

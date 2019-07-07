@@ -72,11 +72,6 @@ namespace Abp.Application.Features
         /// <inheritdoc/>
         public async Task<bool> IsEnabledAsync(int tenantId, string featureName)
         {
-            if (_multiTenancyConfig.IgnoreFeatureCheckForHostUsers)
-            {
-                return true;
-            }
-
             return string.Equals(await GetValueAsync(tenantId, featureName), "true", StringComparison.OrdinalIgnoreCase);
         }
     }

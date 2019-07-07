@@ -59,7 +59,7 @@ namespace Abp.Runtime.Caching
                 return typeNameBuilder;
             }
 
-            var assemblyName = type.GetTypeInfo().Assembly.GetName().Name;
+            var assemblyName = type.GetTypeInfo().Assembly.GetName().FullName;
 
             if (!SystemAssemblyNames.Contains(assemblyName))
             {
