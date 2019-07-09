@@ -57,7 +57,7 @@ namespace Abp.Authorization
         /// </summary>
         public object this[string key]
         {
-            get => CustomProperties[key];
+            get => CustomProperties.ContainsKey(key) ? CustomProperties[key] : null;
             set => CustomProperties[key] = value;
         }
         /// <summary>

@@ -71,6 +71,9 @@ namespace Abp.Tests.Authorization
             customPermission.CustomProperties.Count.ShouldBe(2);
             customPermission["MyProp1"].ShouldBe("Test");
             ((MyAuthorizationProviderWithCustomProperties.MyTestPropertyClass)customPermission["MyProp2"]).Prop1.ShouldBe("Test");
+
+            //its not exist
+            customPermission["MyProp3"].ShouldBeNull();
         }
     }
 
