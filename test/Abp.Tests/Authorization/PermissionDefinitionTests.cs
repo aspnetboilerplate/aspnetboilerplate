@@ -62,25 +62,29 @@ namespace Abp.Tests.Authorization
             var permissionManager = new PermissionManager(LocalIocManager, authorizationConfiguration);
             permissionManager.Initialize();
 
-            permissionManager.GetAllPermissions().Count.ShouldBe(2);
+            permissionManager.GetAllPermissions().Count.ShouldBe(4);
 
             var customPermission = permissionManager.GetPermissionOrNull("Abp.Zero.MyCustomPermission");
             customPermission.ShouldNotBe(null);
-            customPermission.Children.Count.ShouldBe(0);
+            customPermission.Children.Count.ShouldBe(2);
 
-            customPermission.CustomProperties.Count.ShouldBe(2);
+            customPermission.Properties.Count.ShouldBe(2);
             customPermission["MyProp1"].ShouldBe("Test");
             ((MyAuthorizationProviderWithCustomProperties.MyTestPropertyClass)customPermission["MyProp2"]).Prop1.ShouldBe("Test");
 
             //its not exist
             customPermission["MyProp3"].ShouldBeNull();
 
+            customPermission.Children[0]["MyProp1"].ShouldBeNull();
+            customPermission.Children[1]["MyProp1"].ShouldBe("TestChild");
+
+
 
             var customPermission2 = permissionManager.GetPermissionOrNull("Abp.Zero.MyCustomPermission2");
             customPermission2.ShouldNotBe(null);
             customPermission2.Children.Count.ShouldBe(0);
 
-            customPermission2.CustomProperties.ShouldBeNull();
+            customPermission2.Properties.Count.ShouldBe(0);
             customPermission2["MyProp1"].ShouldBeNull();
 
             customPermission2["MyProp1"] = "Test";
@@ -134,12 +138,23 @@ namespace Abp.Tests.Authorization
         {
             var myPermission = context.CreatePermission("Abp.Zero.MyCustomPermission",
                 new FixedLocalizableString("Administration"),
-                customProperties: new Dictionary<string, object>()
+                properties: new Dictionary<string, object>()
                 {
                     {"MyProp1", "Test"},
                     {"MyProp2", new MyTestPropertyClass {Prop1 = "Test"}}
                 }
             );
+            //add children to permission
+            myPermission.CreateChildPermission("Abp.Zero.MyCustomChildPermission",
+                new FixedLocalizableString("Role management")
+             );
+            myPermission.CreateChildPermission("Abp.Zero.MyCustomChildPermission2",
+                new FixedLocalizableString("Role management"),
+                properties: new Dictionary<string, object>()
+                {
+                        {"MyProp1", "TestChild"},
+                        {"MyProp2", new MyTestPropertyClass {Prop1 = "TestChild"}}
+                });
 
             var myPermission2 = context.CreatePermission("Abp.Zero.MyCustomPermission2",
                 new FixedLocalizableString("Administration")
