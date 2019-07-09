@@ -47,6 +47,20 @@ namespace Abp.Authorization
         public IFeatureDependency FeatureDependency { get; set; }
 
         /// <summary>
+        /// Custom Properties. Use this to add your own properties to permission.
+        /// <para>You can use this with indexer like Permission["mykey"]=data; </para>
+        /// <para>object mydata=Permission["mykey"]; </para>
+        /// </summary>
+        public Dictionary<string, object> CustomProperties { get; set; }
+        /// <summary>
+        /// Custom Properties. Use this to add your own properties to permission.
+        /// </summary>
+        public object this[string key]
+        {
+            get => CustomProperties[key];
+            set => CustomProperties[key] = value;
+        }
+        /// <summary>
         /// List of child permissions. A child permission can be granted only if parent is granted.
         /// </summary>
         public IReadOnlyList<Permission> Children => _children.ToImmutableList();
@@ -60,12 +74,14 @@ namespace Abp.Authorization
         /// <param name="description">A brief description for this permission</param>
         /// <param name="multiTenancySides">Which side can use this permission</param>
         /// <param name="featureDependency">Depended feature(s) of this permission</param>
+        /// <param name="customProperties">Custom Properties. Use this to add your own properties to permission.</param>
         public Permission(
             string name,
             ILocalizableString displayName = null,
             ILocalizableString description = null,
             MultiTenancySides multiTenancySides = MultiTenancySides.Host | MultiTenancySides.Tenant,
-            IFeatureDependency featureDependency = null)
+            IFeatureDependency featureDependency = null,
+            Dictionary<string, object> customProperties = null)
         {
             if (name == null)
             {
@@ -77,6 +93,7 @@ namespace Abp.Authorization
             Description = description;
             MultiTenancySides = multiTenancySides;
             FeatureDependency = featureDependency;
+            CustomProperties = customProperties;
 
             _children = new List<Permission>();
         }

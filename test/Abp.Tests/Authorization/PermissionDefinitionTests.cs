@@ -1,4 +1,5 @@
-﻿using System.Linq;
+﻿using System.Collections.Generic;
+using System.Linq;
 using Abp.Application.Features;
 using Abp.Authorization;
 using Abp.Configuration.Startup;
@@ -46,6 +47,31 @@ namespace Abp.Tests.Authorization
             permissionManager.RemovePermission("Abp.Zero.Administration");
             permissionManager.GetPermissionOrNull("Abp.Zero.Administration").ShouldBe(null);
         }
+        [Fact]
+        public void Should_Manage_Permission_With_Custom_Properties()
+        {
+            var authorizationConfiguration = new AuthorizationConfiguration();
+            authorizationConfiguration.Providers.Add<MyAuthorizationProviderWithCustomProperties>();
+
+            LocalIocManager.IocContainer.Register(
+                Component.For<IFeatureDependencyContext, FeatureDependencyContext>()
+                    .UsingFactoryMethod(() => new FeatureDependencyContext(LocalIocManager, Substitute.For<IFeatureChecker>())),
+                Component.For<MyAuthorizationProviderWithCustomProperties>().LifestyleTransient()
+            );
+
+            var permissionManager = new PermissionManager(LocalIocManager, authorizationConfiguration);
+            permissionManager.Initialize();
+
+            permissionManager.GetAllPermissions().Count.ShouldBe(1);
+
+            var customPermission = permissionManager.GetPermissionOrNull("Abp.Zero.MyCustomPermission");
+            customPermission.ShouldNotBe(null);
+            customPermission.Children.Count.ShouldBe(0);
+
+            customPermission.CustomProperties.Count.ShouldBe(2);
+            customPermission["MyProp1"].ShouldBe("Test");
+            ((MyAuthorizationProviderWithCustomProperties.MyTestPropertyClass)customPermission["MyProp2"]).Prop1.ShouldBe("Test");
+        }
     }
 
     public class MyAuthorizationProvider1 : AuthorizationProvider
@@ -76,6 +102,26 @@ namespace Abp.Tests.Authorization
 
             //Create 'Create role' (to be able to create a new role) permission  as child of 'Role management' permission.
             roleManegement.CreateChildPermission("Abp.Zero.Administration.RoleManagement.CreateRole", new FixedLocalizableString("Create role"));
+        }
+    }
+
+    public class MyAuthorizationProviderWithCustomProperties : AuthorizationProvider
+    {
+        public class MyTestPropertyClass
+        {
+            public string Prop1 { get; set; }
+        }
+        public override void SetPermissions(IPermissionDefinitionContext context)
+        {
+            //Get existing root permission group 'Administration'
+            var myPermission = context.CreatePermission("Abp.Zero.MyCustomPermission",
+                new FixedLocalizableString("Administration"),
+                customProperties: new Dictionary<string, object>()
+                {
+                    {"MyProp1", "Test"},
+                    {"MyProp2", new MyTestPropertyClass {Prop1 = "Test"}}
+                }
+            );
         }
     }
 }
