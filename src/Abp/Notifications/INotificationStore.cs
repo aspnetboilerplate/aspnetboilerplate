@@ -78,9 +78,9 @@ namespace Abp.Notifications
         /// Gets notifications of a user.
         /// </summary>
         /// <param name="user">User.</param>
+        /// <param name="state">State</param>
         /// <param name="skipCount">Skip count.</param>
         /// <param name="maxResultCount">Maximum result count.</param>
-        /// <param name="state">State</param>
         /// <param name="startDate">List notifications published after startDateTime</param>
         /// <param name="endDate">List notifications published before startDateTime</param>
         Task<List<UserNotificationInfoWithNotificationInfo>> GetUserNotificationsWithNotificationsAsync(UserIdentifier user, UserNotificationState? state = null, int skipCount = 0, int maxResultCount = int.MaxValue, DateTime? startDate = null, DateTime? endDate = null);
@@ -90,7 +90,9 @@ namespace Abp.Notifications
         /// </summary>
         /// <param name="user">User.</param>
         /// <param name="state">The state.</param>
-        Task<int> GetUserNotificationCountAsync(UserIdentifier user, UserNotificationState? state = null);
+        /// <param name="startDate">List notifications published after startDateTime</param>
+        /// <param name="endDate">List notifications published before startDateTime</param>
+        Task<int> GetUserNotificationCountAsync(UserIdentifier user, UserNotificationState? state = null, DateTime? startDate = null, DateTime? endDate = null);
 
         /// <summary>
         /// Gets a user notification.
