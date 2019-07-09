@@ -113,7 +113,6 @@ namespace Abp.Tests.Authorization
         }
         public override void SetPermissions(IPermissionDefinitionContext context)
         {
-            //Get existing root permission group 'Administration'
             var myPermission = context.CreatePermission("Abp.Zero.MyCustomPermission",
                 new FixedLocalizableString("Administration"),
                 customProperties: new Dictionary<string, object>()
