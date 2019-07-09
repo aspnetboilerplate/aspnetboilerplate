@@ -12,7 +12,6 @@ namespace Abp.Runtime.Caching
     /// </summary>
     public abstract class CacheManagerBase : ICacheManager, ISingletonDependency
     {
-        protected readonly IIocManager IocManager;
 
         protected readonly ICachingConfiguration Configuration;
 
@@ -21,11 +20,9 @@ namespace Abp.Runtime.Caching
         /// <summary>
         /// Constructor.
         /// </summary>
-        /// <param name="iocManager"></param>
         /// <param name="configuration"></param>
-        protected CacheManagerBase(IIocManager iocManager, ICachingConfiguration configuration)
+        protected CacheManagerBase(ICachingConfiguration configuration)
         {
-            IocManager = iocManager;
             Configuration = configuration;
             Caches = new ConcurrentDictionary<string, ICache>();
         }
@@ -34,7 +31,7 @@ namespace Abp.Runtime.Caching
         {
             return Caches.Values.ToImmutableList();
         }
-        
+
         public virtual ICache GetCache(string name)
         {
             Check.NotNull(name, nameof(name));
@@ -53,19 +50,11 @@ namespace Abp.Runtime.Caching
                 return cache;
             });
         }
-
+        protected abstract void DisposeCaches();
         public virtual void Dispose()
         {
             DisposeCaches();
             Caches.Clear();
-        }
-
-        protected virtual void DisposeCaches()
-        {
-            foreach (var cache in Caches)
-            {
-                IocManager.Release(cache.Value);
-            }
         }
 
         /// <summary>
