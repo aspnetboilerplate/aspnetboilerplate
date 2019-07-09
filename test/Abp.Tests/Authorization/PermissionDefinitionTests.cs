@@ -62,7 +62,7 @@ namespace Abp.Tests.Authorization
             var permissionManager = new PermissionManager(LocalIocManager, authorizationConfiguration);
             permissionManager.Initialize();
 
-            permissionManager.GetAllPermissions().Count.ShouldBe(1);
+            permissionManager.GetAllPermissions().Count.ShouldBe(2);
 
             var customPermission = permissionManager.GetPermissionOrNull("Abp.Zero.MyCustomPermission");
             customPermission.ShouldNotBe(null);
@@ -74,6 +74,22 @@ namespace Abp.Tests.Authorization
 
             //its not exist
             customPermission["MyProp3"].ShouldBeNull();
+
+
+            var customPermission2 = permissionManager.GetPermissionOrNull("Abp.Zero.MyCustomPermission2");
+            customPermission2.ShouldNotBe(null);
+            customPermission2.Children.Count.ShouldBe(0);
+
+            customPermission2.CustomProperties.ShouldBeNull();
+            customPermission2["MyProp1"].ShouldBeNull();
+
+            customPermission2["MyProp1"] = "Test";
+
+            var customPermission21 = permissionManager.GetPermissionOrNull("Abp.Zero.MyCustomPermission2");
+            customPermission2.ShouldBeSameAs(customPermission21);
+
+            customPermission21["MyProp1"].ShouldBe("Test");
+
         }
     }
 
@@ -123,6 +139,10 @@ namespace Abp.Tests.Authorization
                     {"MyProp1", "Test"},
                     {"MyProp2", new MyTestPropertyClass {Prop1 = "Test"}}
                 }
+            );
+
+            var myPermission2 = context.CreatePermission("Abp.Zero.MyCustomPermission2",
+                new FixedLocalizableString("Administration")
             );
         }
     }

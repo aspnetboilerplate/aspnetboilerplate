@@ -52,13 +52,20 @@ namespace Abp.Authorization
         /// <para>object mydata=Permission["mykey"]; </para>
         /// </summary>
         public Dictionary<string, object> CustomProperties { get; set; }
+
         /// <summary>
         /// Custom Properties. Use this to add your own properties to permission.
         /// </summary>
         public object this[string key]
         {
-            get => CustomProperties.ContainsKey(key) ? CustomProperties[key] : null;
-            set => CustomProperties[key] = value;
+            get => (CustomProperties == null || !CustomProperties.ContainsKey(key)) ? null : CustomProperties[key];
+            set
+            {
+                if (CustomProperties == null)
+                    CustomProperties = new Dictionary<string, object>();
+
+                CustomProperties[key] = value;
+            }
         }
         /// <summary>
         /// List of child permissions. A child permission can be granted only if parent is granted.
