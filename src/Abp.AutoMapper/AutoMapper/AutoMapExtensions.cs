@@ -20,7 +20,7 @@ namespace Abp.AutoMapper
         [Obsolete("Automapper will remove static API, Please use ObjectMapper instead. See https://github.com/aspnetboilerplate/aspnetboilerplate/issues/4667")]
         public static TDestination MapTo<TDestination>(this object source)
         {
-            return Mapper.Map<TDestination>(source);
+            return AbpEmulateAutoMapper.Mapper != null ? AbpEmulateAutoMapper.Mapper.Map<TDestination>(source) : default;
         }
 
         /// <summary>
@@ -35,7 +35,7 @@ namespace Abp.AutoMapper
         [Obsolete("Automapper will remove static API, Please use ObjectMapper instead. See https://github.com/aspnetboilerplate/aspnetboilerplate/issues/4667")]
         public static TDestination MapTo<TSource, TDestination>(this TSource source, TDestination destination)
         {
-            return Mapper.Map(source, destination);
+            return AbpEmulateAutoMapper.Mapper != null ? AbpEmulateAutoMapper.Mapper.Map(source, destination) : default;
         }
 
         public static CreateMultiLingualMapResult<TMultiLingualEntity, TTranslation, TDestination> CreateMultiLingualMap<TMultiLingualEntity, TMultiLingualEntityPrimaryKey, TTranslation, TDestination>(
