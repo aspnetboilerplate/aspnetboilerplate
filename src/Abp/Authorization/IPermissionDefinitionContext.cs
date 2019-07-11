@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using Abp.Application.Features;
 using Abp.Localization;
 using Abp.MultiTenancy;
@@ -17,13 +18,15 @@ namespace Abp.Authorization
         /// <param name="description">A brief description for this permission</param>
         /// <param name="multiTenancySides">Which side can use this permission</param>
         /// <param name="featureDependency">Depended feature(s) of this permission</param>
+        /// <param name="properties">Custom Properties. Use this to add your own properties to permission.</param>
         /// <returns>New created permission</returns>
         Permission CreatePermission(
-            string name, 
-            ILocalizableString displayName = null, 
-            ILocalizableString description = null, 
+            string name,
+            ILocalizableString displayName = null,
+            ILocalizableString description = null,
             MultiTenancySides multiTenancySides = MultiTenancySides.Host | MultiTenancySides.Tenant,
-            IFeatureDependency featureDependency = null
+            IFeatureDependency featureDependency = null,
+            Dictionary<string, object> properties = null
             );
 
         /// <summary>

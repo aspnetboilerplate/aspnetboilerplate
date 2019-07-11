@@ -1,4 +1,5 @@
-﻿using Abp.Application.Features;
+﻿using System.Collections.Generic;
+using Abp.Application.Features;
 using Abp.Collections.Extensions;
 using Abp.Localization;
 using Abp.MultiTenancy;
@@ -19,14 +20,15 @@ namespace Abp.Authorization
             ILocalizableString displayName = null,
             ILocalizableString description = null,
             MultiTenancySides multiTenancySides = MultiTenancySides.Host | MultiTenancySides.Tenant,
-            IFeatureDependency featureDependency = null)
+            IFeatureDependency featureDependency = null,
+            Dictionary<string, object> properties = null)
         {
             if (Permissions.ContainsKey(name))
             {
                 throw new AbpException("There is already a permission with name: " + name);
             }
 
-            var permission = new Permission(name, displayName, description, multiTenancySides, featureDependency);
+            var permission = new Permission(name, displayName, description, multiTenancySides, featureDependency, properties);
             Permissions[permission.Name] = permission;
             return permission;
         }
