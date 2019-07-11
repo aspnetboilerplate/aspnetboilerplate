@@ -1,6 +1,9 @@
 ﻿using System;
 using Abp.Dependency;
+using Abp.RealTime;
 using Abp.Runtime.Caching.Configuration;
+using Abp.Runtime.Caching.Redis.OnlineClientStore;
+using Abp.Configuration.Startup;
 
 namespace Abp.Runtime.Caching.Redis
 {
@@ -28,8 +31,23 @@ namespace Abp.Runtime.Caching.Redis
             var iocManager = cachingConfiguration.AbpConfiguration.IocManager;
 
             iocManager.RegisterIfNot<ICacheManager, AbpRedisCacheManager>();
-
             optionsAction(iocManager.Resolve<AbpRedisCacheOptions>());
+
+            var options = new AbpRedisCacheOptions(cachingConfiguration.AbpConfiguration);
+            optionsAction.Invoke(options);
+
+            if (!options.UseOnlineClientStoreWithRedisCache) return;
+
+            if (iocManager.IsRegistered<IOnlineClientStore>())
+            {
+                cachingConfiguration.AbpConfiguration.ReplaceService<IOnlineClientStore, AbpRedisOnlineClientStore>();
+            }
+            else
+            {
+                iocManager.Register<IOnlineClientStore, AbpRedisOnlineClientStore>();
+            }
+
+
         }
     }
 }

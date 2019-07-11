@@ -51,5 +51,8 @@ namespace Abp.Runtime.Caching.Redis
 
             return connStr.ConnectionString;
         }
+
+        //this might not be a good place for this option
+        public bool UseOnlineClientStoreWithRedisCache { get; set; }
     }
 }

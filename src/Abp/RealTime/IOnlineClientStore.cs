@@ -47,5 +47,10 @@ namespace Abp.RealTime
         /// Gets all online clients.
         /// </summary>
         IReadOnlyList<IOnlineClient> GetAll();
+
+        /// <summary>
+        /// Clear all clients
+        /// </summary>
+        void Clear();
     }
 }

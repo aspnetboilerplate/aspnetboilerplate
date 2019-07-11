@@ -50,5 +50,10 @@ namespace Abp.RealTime
         {
             return Clients.Values.ToImmutableList();
         }
+
+        public void Clear()
+        {
+            Clients.Clear();
+        }
     }
 }
