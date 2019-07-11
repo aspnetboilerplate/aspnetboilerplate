@@ -35,7 +35,6 @@ namespace Abp.Tests.Configuration
             return new SettingManager(
                 CreateMockSettingDefinitionManager(),
                 new AbpMemoryCacheManager(
-                    LocalIocManager,
                     new CachingConfiguration(Substitute.For<IAbpStartupConfiguration>())
                     ),
                 new MultiTenancyConfig

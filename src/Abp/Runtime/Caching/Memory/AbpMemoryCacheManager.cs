@@ -14,8 +14,8 @@ namespace Abp.Runtime.Caching.Memory
         /// <summary>
         /// Constructor.
         /// </summary>
-        public AbpMemoryCacheManager(IIocManager iocManager, ICachingConfiguration configuration)
-            : base(iocManager, configuration)
+        public AbpMemoryCacheManager(ICachingConfiguration configuration)
+            : base(configuration)
         {
             Logger = NullLogger.Instance;
         }
