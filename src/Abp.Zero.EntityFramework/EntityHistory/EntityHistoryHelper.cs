@@ -487,6 +487,22 @@ namespace Abp.EntityHistory
                 var entityType = GetEntityType(context.As<IObjectContextAdapter>().ObjectContext, entityEntry.GetEntityBaseType(), useClrType: false);
                 entityChange.EntityId = GetEntityId(entityEntry, entityType);
 
+                /* Update audit field */
+
+                foreach (var propertyChange in entityChange.PropertyChanges.
+                    Where(x => x.PropertyName == nameof(IFullAudited.CreationTime) ||
+                               x.PropertyName == nameof(IFullAudited.CreatorUserId) ||
+                               x.PropertyName == nameof(IFullAudited.LastModificationTime) ||
+                               x.PropertyName == nameof(IFullAudited.LastModifierUserId)))
+                {
+                    var propertyEntry = entityEntry.Property(propertyChange.PropertyName);
+                    if (propertyEntry != null && propertyChange.NewValue != propertyEntry.CurrentValue.ToJsonString().TruncateWithPostfix(EntityPropertyChange.MaxValueLength))
+                    {
+                        propertyChange.NewValue = propertyEntry.CurrentValue.ToJsonString()
+                            .TruncateWithPostfix(EntityPropertyChange.MaxValueLength);
+                    }
+                }
+
                 /* Update foreign keys */
 
                 var foreignKeys = entityType.NavigationProperties;

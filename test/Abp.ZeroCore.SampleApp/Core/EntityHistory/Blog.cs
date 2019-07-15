@@ -7,14 +7,12 @@ using Abp.Domain.Entities.Auditing;
 namespace Abp.ZeroCore.SampleApp.Core.EntityHistory
 {
     [Audited]
-    public class Blog : AggregateRoot, IHasCreationTime
+    public class Blog : AuditedAggregateRoot
     {
         [DisableAuditing]
         public string Name { get; set; }
 
         public string Url { get; protected set; }
-
-        public DateTime CreationTime { get; set; }
 
         public BlogEx More { get; set; }
 
@@ -22,7 +20,7 @@ namespace Abp.ZeroCore.SampleApp.Core.EntityHistory
 
         public Blog()
         {
-            
+
         }
 
         public Blog(string name, string url, string bloggerName)

@@ -56,12 +56,12 @@ namespace Abp.Zero.EntityHistory
             var blog2Id = CreateBlogAndGetId();
 
             _entityHistoryStore.Received().SaveAsync(Arg.Is<EntityChangeSet>(
-                s => s.EntityChanges.Count == 2 &&
+                s =>  s.EntityChanges.Count == 2 &&
                      s.EntityChanges[0].ChangeTime == s.EntityChanges[0].EntityEntry.As<EntityEntry>().Entity.As<IHasCreationTime>().CreationTime &&
                      s.EntityChanges[0].ChangeType == EntityChangeType.Created &&
                      s.EntityChanges[0].EntityId == blog2Id.ToJsonString(false, false) &&
                      s.EntityChanges[0].EntityTypeFullName == typeof(Blog).FullName &&
-                     s.EntityChanges[0].PropertyChanges.Count == 2 && // Blog.Name, Blog.Url
+                     s.EntityChanges[0].PropertyChanges.Count == 5 && // Blog.Url, Blog.CreationTime, Blog.CreatorUserId, Blog.LastModificationTime, Blog.LastModifierUserId
 
                      s.EntityChanges[1].ChangeType == EntityChangeType.Created &&
                      s.EntityChanges[1].EntityId == blog2Id.ToJsonString(false, false) &&
@@ -119,7 +119,7 @@ namespace Abp.Zero.EntityHistory
 
             UsingDbContext(tenantId, (context) =>
             {
-                context.EntityPropertyChanges.Count(f => f.TenantId == tenantId).ShouldBe(3);
+                context.EntityPropertyChanges.Count(f => f.TenantId == tenantId).ShouldBe(6); //BloggerName, Url, CreationTime, CreatorUserId, LastModificationTime, LastModifierUserId
             });
         }
 
@@ -134,7 +134,7 @@ namespace Abp.Zero.EntityHistory
             _entityHistoryStore.Received().SaveAsync(Arg.Is<EntityChangeSet>(
                 s => s.EntityChanges.Count == 1 &&
                      s.EntityChanges[0].ChangeType == EntityChangeType.Updated &&
-                     s.EntityChanges[0].EntityId == s.EntityChanges[0].EntityEntry.As<EntityEntry>().Entity.As<IEntity>().Id.ToJsonString(false, false) &&
+                     s.EntityChanges[0].EntityId == s.EntityChanges[0].EntityEntry.As<EntityEntry>().Entity.As<Blog>().Id.ToJsonString(false, false) &&
                      s.EntityChanges[0].EntityTypeFullName == typeof(Blog).FullName &&
                      s.EntityChanges[0].PropertyChanges.Count == 1 &&
                      s.EntityChanges[0].PropertyChanges.FirstOrDefault().NewValue == newValue.ToJsonString(false, false) &&
@@ -261,7 +261,7 @@ namespace Abp.Zero.EntityHistory
             _entityHistoryStore.Received().SaveAsync(Arg.Is<EntityChangeSet>(
                 s => s.EntityChanges.Count == 1 &&
                      s.EntityChanges[0].ChangeType == EntityChangeType.Updated &&
-                     s.EntityChanges[0].EntityId == s.EntityChanges[0].EntityEntry.As<EntityEntry>().Entity.As<IEntity>().Id.ToJsonString(false, false) &&
+                     s.EntityChanges[0].EntityId == s.EntityChanges[0].EntityEntry.As<EntityEntry>().Entity.As<Blog>().Id.ToJsonString(false, false) &&
                      s.EntityChanges[0].EntityTypeFullName == typeof(Blog).FullName &&
                      s.EntityChanges[0].PropertyChanges.Count == 0
             ));

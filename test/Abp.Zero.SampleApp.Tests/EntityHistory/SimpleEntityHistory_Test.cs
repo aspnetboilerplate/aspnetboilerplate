@@ -64,7 +64,8 @@ namespace Abp.Zero.SampleApp.Tests.EntityHistory
                 entityChange.ChangeType.ShouldBe(EntityChangeType.Created);
                 entityChange.EntityId.ShouldBe(blog2Id.ToJsonString());
                 entityChange.EntityTypeFullName.ShouldBe(typeof(Blog).FullName);
-                entityChange.PropertyChanges.Count.ShouldBe(4);  // Blog.Name, Blog.Url, Blog.Category Blog.More
+                //Blog.Url, Blog.Category Blog.More, Blog.CreationTime, Blog.CreatorUserId, Blog.LastModificationTime, Blog.LastModifierUserId
+                entityChange.PropertyChanges.Count.ShouldBe(7);
 
                 // Check "who did this change"
                 s.ImpersonatorTenantId.ShouldBe(AbpSession.ImpersonatorTenantId);
@@ -103,7 +104,8 @@ namespace Abp.Zero.SampleApp.Tests.EntityHistory
                 context.EntityChanges.Count(e => e.TenantId == null).ShouldBe(1);
                 context.EntityChangeSets.Count(e => e.TenantId == null).ShouldBe(1);
                 context.EntityChangeSets.Single().CreationTime.ShouldBeGreaterThan(justNow);
-                context.EntityPropertyChanges.Count(e => e.TenantId == null).ShouldBe(4);
+                //Blog.Url, Blog.Category Blog.More, Blog.CreationTime, Blog.CreatorUserId, Blog.LastModificationTime, Blog.LastModifierUserId
+                context.EntityPropertyChanges.Count(e => e.TenantId == null).ShouldBe(7);
             });
         }
 
@@ -121,7 +123,7 @@ namespace Abp.Zero.SampleApp.Tests.EntityHistory
 
                 var entityChange = s.EntityChanges[0];
                 entityChange.ChangeType.ShouldBe(EntityChangeType.Updated);
-                entityChange.EntityId.ShouldBe(entityChange.EntityEntry.As<DbEntityEntry>().Entity.As<IEntity>().Id.ToJsonString());
+                entityChange.EntityId.ShouldBe(entityChange.EntityEntry.As<DbEntityEntry>().Entity.As<Blog>().Id.ToJsonString());
                 entityChange.EntityTypeFullName.ShouldBe(typeof(Blog).FullName);
                 entityChange.PropertyChanges.Count.ShouldBe(1);
 
@@ -160,7 +162,7 @@ namespace Abp.Zero.SampleApp.Tests.EntityHistory
 
                 var entityChange = s.EntityChanges[0];
                 entityChange.ChangeType.ShouldBe(EntityChangeType.Updated);
-                entityChange.EntityId.ShouldBe(entityChange.EntityEntry.As<DbEntityEntry>().Entity.As<IEntity>().Id.ToJsonString());
+                entityChange.EntityId.ShouldBe(entityChange.EntityEntry.As<DbEntityEntry>().Entity.As<Blog>().Id.ToJsonString());
                 entityChange.EntityTypeFullName.ShouldBe(typeof(Blog).FullName);
                 entityChange.PropertyChanges.Count.ShouldBe(1);
 
@@ -362,7 +364,7 @@ namespace Abp.Zero.SampleApp.Tests.EntityHistory
 
                 var entityChange = s.EntityChanges[0];
                 entityChange.ChangeType.ShouldBe(EntityChangeType.Updated);
-                entityChange.EntityId.ShouldBe(entityChange.EntityEntry.As<DbEntityEntry>().Entity.As<IEntity>().Id.ToJsonString());
+                entityChange.EntityId.ShouldBe(entityChange.EntityEntry.As<DbEntityEntry>().Entity.As<Blog>().Id.ToJsonString());
                 entityChange.EntityTypeFullName.ShouldBe(typeof(Blog).FullName);
                 entityChange.PropertyChanges.Count.ShouldBe(0);
 
