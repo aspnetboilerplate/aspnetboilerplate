@@ -56,7 +56,7 @@ namespace Abp.Zero.EntityHistory
             var blog2Id = CreateBlogAndGetId();
 
             _entityHistoryStore.Received().SaveAsync(Arg.Is<EntityChangeSet>(
-                s =>  s.EntityChanges.Count == 2 &&
+                s => s.EntityChanges.Count == 2 &&
                      s.EntityChanges[0].ChangeTime == s.EntityChanges[0].EntityEntry.As<EntityEntry>().Entity.As<IHasCreationTime>().CreationTime &&
                      s.EntityChanges[0].ChangeType == EntityChangeType.Created &&
                      s.EntityChanges[0].EntityId == blog2Id.ToJsonString(false, false) &&
