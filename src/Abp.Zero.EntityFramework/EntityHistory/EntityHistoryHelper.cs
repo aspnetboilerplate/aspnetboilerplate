@@ -496,9 +496,9 @@ namespace Abp.EntityHistory
                                x.PropertyName == nameof(IFullAudited.LastModifierUserId)))
                 {
                     var propertyEntry = entityEntry.Property(propertyChange.PropertyName);
-                    if (propertyEntry != null && propertyChange.NewValue != propertyEntry.CurrentValue.ToJsonString().TruncateWithPostfix(EntityPropertyChange.MaxValueLength))
+                    if (propertyEntry != null)
                     {
-                        propertyChange.NewValue = propertyEntry.CurrentValue.ToJsonString()
+                        propertyChange.NewValue = propertyEntry.GetNewValue().ToJsonString()
                             .TruncateWithPostfix(EntityPropertyChange.MaxValueLength);
                     }
                 }
