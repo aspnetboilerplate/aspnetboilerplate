@@ -31,10 +31,9 @@ namespace Abp.Runtime.Caching.Redis
             var iocManager = cachingConfiguration.AbpConfiguration.IocManager;
 
             iocManager.RegisterIfNot<ICacheManager, AbpRedisCacheManager>();
-            optionsAction(iocManager.Resolve<AbpRedisCacheOptions>());
 
-            var options = new AbpRedisCacheOptions(cachingConfiguration.AbpConfiguration);
-            optionsAction.Invoke(options);
+            var options = iocManager.Resolve<AbpRedisCacheOptions>();
+            optionsAction(options);
 
             if (!options.UseOnlineClientStoreWithRedisCache) return;
 

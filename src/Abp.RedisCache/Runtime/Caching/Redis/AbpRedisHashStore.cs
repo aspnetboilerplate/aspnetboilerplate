@@ -15,7 +15,7 @@ namespace Abp.Runtime.Caching.Redis
     /// <typeparam name="TValue"></typeparam>
     public class AbpRedisHashStore<TKey, TValue> : IAbpRedisHashStore<TKey, TValue>
     {
-        private readonly Lazy<IDatabase> _database;
+        private readonly IDatabase _database;
         private readonly IRedisCacheSerializer _serializer;
         public string StoreName { get; private set; }
 
@@ -23,9 +23,9 @@ namespace Abp.Runtime.Caching.Redis
         {
             StoreName = "HashStore:" + storeName;
             _serializer = serializer;
-            _database = new Lazy<IDatabase>(databaseProvider.GetDatabase);
+            _database = databaseProvider.GetDatabase();
         }
-        public long Count => _database.Value.HashLength(StoreName);
+        public long Count => _database.HashLength(StoreName);
 
         public void Add(TKey key, TValue value)
         {
@@ -42,19 +42,19 @@ namespace Abp.Runtime.Caching.Redis
 
         public bool ContainsKey(TKey key)
         {
-            return _database.Value.HashExists(StoreName, _serializer.Serialize(key, typeof(TKey)));
+            return _database.HashExists(StoreName, _serializer.Serialize(key, typeof(TKey)));
         }
 
         public bool Remove(TKey key)
         {
-            return _database.Value.HashDelete(StoreName, _serializer.Serialize(key, typeof(TKey)));
+            return _database.HashDelete(StoreName, _serializer.Serialize(key, typeof(TKey)));
         }
 
         public bool TryGetValue(TKey key, out TValue value)
         {
             value = default(TValue);
 
-            var redisValue = _database.Value.HashGet(StoreName, _serializer.Serialize(key, typeof(TKey)));
+            var redisValue = _database.HashGet(StoreName, _serializer.Serialize(key, typeof(TKey)));
 
             if (redisValue.IsNullOrEmpty)
                 return false;
@@ -75,23 +75,23 @@ namespace Abp.Runtime.Caching.Redis
 
         public void Clear()
         {
-            _database.Value.KeyDelete(StoreName);
+            _database.KeyDelete(StoreName);
         }
 
         private bool Set([NotNull] TKey key, TValue value)
         {
-            return _database.Value.HashSet(StoreName, _serializer.Serialize(key, typeof(TKey)), _serializer.Serialize(value, typeof(TValue)));
+            return _database.HashSet(StoreName, _serializer.Serialize(key, typeof(TKey)), _serializer.Serialize(value, typeof(TValue)));
         }
 
         public IImmutableList<TKey> GetAllKeys()
         {
-            return _database.Value.HashKeys(StoreName).Select(key => (TKey)_serializer.Deserialize(key)).ToImmutableList();
+            return _database.HashKeys(StoreName).Select(key => (TKey)_serializer.Deserialize(key)).ToImmutableList();
         }
 
 
         public IImmutableList<TValue> GetAllValues()
         {
-            return _database.Value.HashValues(StoreName).Select(val => (TValue)_serializer.Deserialize(val)).ToImmutableList();
+            return _database.HashValues(StoreName).Select(val => (TValue)_serializer.Deserialize(val)).ToImmutableList();
         }
 
     }
