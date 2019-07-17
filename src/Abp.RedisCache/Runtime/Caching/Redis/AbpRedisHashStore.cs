@@ -30,7 +30,9 @@ namespace Abp.Runtime.Caching.Redis
         public void Add(TKey key, TValue value)
         {
             if (ContainsKey(key))
+            {
                 throw new ArgumentException("An item with the same key has already been added");
+            }
 
             Set(key, value);
         }
@@ -57,7 +59,9 @@ namespace Abp.Runtime.Caching.Redis
             var redisValue = _database.HashGet(StoreName, _serializer.Serialize(key, typeof(TKey)));
 
             if (redisValue.IsNullOrEmpty)
+            {
                 return false;
+            }
 
             var obj = _serializer.Deserialize(redisValue);
 
