@@ -10,10 +10,10 @@ namespace Abp.Web.Mvc.Alerts
     {
         public string DisplayType { get; } = AlertDisplayType.PageAlert;
 
-        public virtual string Render(AlertList alertList)
+        public virtual string Render(List<AlertMessage> alertList)
         {
             StringBuilder sb = new StringBuilder();
-            foreach (var alertMessage in alertList.Where(a => a.DisplayType == DisplayType))
+            foreach (var alertMessage in alertList)
             {
                 sb.Append($"<div class=\"alert alert-{alertMessage.Type.ToString().ToLowerInvariant()}\" {(alertMessage.Dismissible ? "alert-dismisable" : "")} role=\"alert\">" +
                               $"<h4 class=\"alert-heading\">{alertMessage.Title}" +

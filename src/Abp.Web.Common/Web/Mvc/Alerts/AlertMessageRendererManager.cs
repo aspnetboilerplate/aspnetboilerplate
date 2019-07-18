@@ -10,7 +10,7 @@ namespace Abp.Web.Mvc.Alerts
         private readonly IEnumerable<IAlertMessageRenderer> _alertMessageRenderers;
         private readonly IAlertManager _alertManager;
 
-        public AlertMessageRendererManager(IEnumerable<IAlertMessageRenderer> alertMessageRenderers,IAlertManager AlertManager)
+        public AlertMessageRendererManager(IEnumerable<IAlertMessageRenderer> alertMessageRenderers, IAlertManager AlertManager)
         {
             _alertMessageRenderers = alertMessageRenderers;
             _alertManager = AlertManager;
@@ -25,7 +25,7 @@ namespace Abp.Web.Mvc.Alerts
 
             var alertMessageRenderer = _alertMessageRenderers.FirstOrDefault(x => x.DisplayType == alertDisplayType);
 
-            return alertMessageRenderer?.Render(_alertManager.Alerts);
+            return alertMessageRenderer?.Render(_alertManager.Alerts.Where(a => a.DisplayType == alertDisplayType).ToList());
         }
     }
 }

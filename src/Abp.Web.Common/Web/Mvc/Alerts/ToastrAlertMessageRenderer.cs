@@ -9,10 +9,10 @@ namespace Abp.Web.Mvc.Alerts
     {
         public string DisplayType { get; } = AlertDisplayType.Toastr;
 
-        public virtual string Render(AlertList alertList)
+        public virtual string Render(List<AlertMessage> alertList)
         {
             StringBuilder sb = new StringBuilder("<script type=\"text/javascript\">");
-            foreach (var alertMessage in alertList.Where(a => a.DisplayType == DisplayType))
+            foreach (var alertMessage in alertList)
             {
                 sb.Append(
                     string.Format("abp.notify.{0}('{1}','{2}', {{ 'closeButton':  {3} }});",

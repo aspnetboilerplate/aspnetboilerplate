@@ -8,6 +8,6 @@ namespace Abp.Web.Mvc.Alerts
     public interface IAlertMessageRenderer : ITransientDependency
     {
         string DisplayType { get; }
-        string Render(AlertList alertList);
+        string Render(List<AlertMessage> alertList);
     }
 }
