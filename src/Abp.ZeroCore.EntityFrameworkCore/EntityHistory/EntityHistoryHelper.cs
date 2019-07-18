@@ -214,8 +214,8 @@ namespace Abp.EntityHistory
                 {
                     propertyChanges.Add(new EntityPropertyChange
                     {
-                        NewValue = isDeleted ? null : propertyEntry.CurrentValue.ToJsonString().TruncateWithPostfix(EntityPropertyChange.MaxValueLength),
-                        OriginalValue = isCreated ? null : propertyEntry.OriginalValue.ToJsonString().TruncateWithPostfix(EntityPropertyChange.MaxValueLength),
+                        NewValue = isDeleted && !IsAuditField(propertyEntry.Metadata.Name) ? null : propertyEntry.CurrentValue.ToJsonString().TruncateWithPostfix(EntityPropertyChange.MaxValueLength),
+                        OriginalValue = isCreated && !IsAuditField(propertyEntry.Metadata.Name, nameof(IFullAudited.CreationTime)) ? null : propertyEntry.OriginalValue.ToJsonString().TruncateWithPostfix(EntityPropertyChange.MaxValueLength),
                         PropertyName = property.Name,
                         PropertyTypeFullName = property.ClrType.FullName,
                         TenantId = AbpSession.TenantId
@@ -224,6 +224,22 @@ namespace Abp.EntityHistory
             }
 
             return propertyChanges;
+        }
+
+        private bool IsAuditField(string propertyName, params string[] excludeFields)
+        {
+            if (excludeFields != null && excludeFields.Contains(propertyName))
+            {
+                return false;
+            }
+
+            return propertyName == nameof(IFullAudited.CreationTime) ||
+                   propertyName == nameof(IFullAudited.CreatorUserId) ||
+                   propertyName == nameof(IFullAudited.LastModificationTime) ||
+                   propertyName == nameof(IFullAudited.LastModifierUserId) ||
+                   propertyName == nameof(IFullAudited.DeleterUserId) ||
+                   propertyName == nameof(IFullAudited.IsDeleted) ||
+                   propertyName == nameof(IFullAudited.DeletionTime);
         }
 
         private bool HasAuditedProperties(EntityEntry entityEntry)
@@ -344,6 +360,12 @@ namespace Abp.EntityHistory
                 return true;
             }
 
+            // If the audit field is not modified. It will be removed from EntityPropertyChange.
+            if (IsAuditField(propertyEntry.Metadata.Name))
+            {
+                return true;
+            }
+
             return defaultValue;
         }
 
@@ -383,19 +405,30 @@ namespace Abp.EntityHistory
                 entityChange.EntityId = GetEntityId(entityEntry);
 
                 /* Update audit field */
-
+                var removePropertyChanges = new List<EntityPropertyChange>();
                 foreach (var propertyChange in entityChange.PropertyChanges.
-                    Where(x => x.PropertyName == nameof(IFullAudited.CreationTime) || 
-                               x.PropertyName == nameof(IFullAudited.CreatorUserId) ||
-                               x.PropertyName == nameof(IFullAudited.LastModificationTime) ||
-                               x.PropertyName == nameof(IFullAudited.LastModifierUserId)))
+                    Where(x => IsAuditField(x.PropertyName)))
                 {
                     var propertyEntry = entityEntry.Property(propertyChange.PropertyName);
                     if (propertyEntry != null)
                     {
-                        propertyChange.NewValue = propertyEntry.CurrentValue.ToJsonString()
-                            .TruncateWithPostfix(EntityPropertyChange.MaxValueLength);
+                        if (propertyChange.NewValue == propertyEntry.CurrentValue.ToJsonString().TruncateWithPostfix(EntityPropertyChange.MaxValueLength) && 
+                            propertyChange.OriginalValue == propertyChange.NewValue)
+                        {
+                            removePropertyChanges.Add(propertyChange);
+                        }
+                        else
+                        {
+                            propertyChange.NewValue = propertyEntry.CurrentValue.ToJsonString()
+                                .TruncateWithPostfix(EntityPropertyChange.MaxValueLength);
+                        }
                     }
+                }
+
+                // Remove unchanged audit fields
+                foreach (var change in removePropertyChanges)
+                {
+                    entityChange.PropertyChanges.Remove(change);
                 }
 
                 /* Update foreign keys */

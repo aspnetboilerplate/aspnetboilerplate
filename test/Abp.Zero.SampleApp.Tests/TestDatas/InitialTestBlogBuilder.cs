@@ -1,4 +1,6 @@
-﻿using Abp.Zero.SampleApp.EntityFramework;
+﻿using System;
+using System.Linq;
+using Abp.Zero.SampleApp.EntityFramework;
 using Abp.Zero.SampleApp.EntityHistory;
 
 namespace Abp.Zero.SampleApp.Tests.TestDatas
@@ -31,6 +33,13 @@ namespace Abp.Zero.SampleApp.Tests.TestDatas
             var comment2 = new Comment { Post = post2, Content = "test-comment-2-content" };
 
             _context.Comments.AddRange(new Comment[] { comment1, comment2 });
+
+            var ad = new Ad("test-ad-zero", "test-ad-zero-content")
+            {
+                CreationTime = DateTime.Now,
+                CreatorUserId = _context.Users.FirstOrDefault()?.Id
+            };
+            _context.Ads.Add(ad);
         }
     }
 }

@@ -25,6 +25,7 @@ namespace Abp.Zero.SampleApp.Tests.EntityHistory
         private readonly IRepository<Blog> _blogRepository;
         private readonly IRepository<Post, Guid> _postRepository;
         private readonly IRepository<Comment> _commentRepository;
+        private readonly IRepository<Ad> _adRepository;
 
         private IEntityHistoryStore _entityHistoryStore;
 
@@ -33,6 +34,7 @@ namespace Abp.Zero.SampleApp.Tests.EntityHistory
             _blogRepository = Resolve<IRepository<Blog>>();
             _postRepository = Resolve<IRepository<Post, Guid>>();
             _commentRepository = Resolve<IRepository<Comment>>();
+            _adRepository = Resolve<IRepository<Ad>>();
 
             Resolve<IEntityHistoryConfiguration>().IsEnabledForAnonymousUsers = true;
         }
@@ -64,8 +66,7 @@ namespace Abp.Zero.SampleApp.Tests.EntityHistory
                 entityChange.ChangeType.ShouldBe(EntityChangeType.Created);
                 entityChange.EntityId.ShouldBe(blog2Id.ToJsonString());
                 entityChange.EntityTypeFullName.ShouldBe(typeof(Blog).FullName);
-                //Blog.Url, Blog.Category Blog.More, Blog.CreationTime, Blog.CreatorUserId, Blog.LastModificationTime, Blog.LastModifierUserId
-                entityChange.PropertyChanges.Count.ShouldBe(7);
+                entityChange.PropertyChanges.Count.ShouldBe(4);  // Blog.Name, Blog.Url, Blog.Category Blog.More
 
                 // Check "who did this change"
                 s.ImpersonatorTenantId.ShouldBe(AbpSession.ImpersonatorTenantId);
@@ -104,8 +105,7 @@ namespace Abp.Zero.SampleApp.Tests.EntityHistory
                 context.EntityChanges.Count(e => e.TenantId == null).ShouldBe(1);
                 context.EntityChangeSets.Count(e => e.TenantId == null).ShouldBe(1);
                 context.EntityChangeSets.Single().CreationTime.ShouldBeGreaterThan(justNow);
-                //Blog.Url, Blog.Category Blog.More, Blog.CreationTime, Blog.CreatorUserId, Blog.LastModificationTime, Blog.LastModifierUserId
-                context.EntityPropertyChanges.Count(e => e.TenantId == null).ShouldBe(7);
+                context.EntityPropertyChanges.Count(e => e.TenantId == null).ShouldBe(4);
             });
         }
 
@@ -123,7 +123,7 @@ namespace Abp.Zero.SampleApp.Tests.EntityHistory
 
                 var entityChange = s.EntityChanges[0];
                 entityChange.ChangeType.ShouldBe(EntityChangeType.Updated);
-                entityChange.EntityId.ShouldBe(entityChange.EntityEntry.As<DbEntityEntry>().Entity.As<IEntity<int>>().Id.ToJsonString());
+                entityChange.EntityId.ShouldBe(entityChange.EntityEntry.As<DbEntityEntry>().Entity.As<IEntity>().Id.ToJsonString());
                 entityChange.EntityTypeFullName.ShouldBe(typeof(Blog).FullName);
                 entityChange.PropertyChanges.Count.ShouldBe(1);
 
@@ -162,7 +162,7 @@ namespace Abp.Zero.SampleApp.Tests.EntityHistory
 
                 var entityChange = s.EntityChanges[0];
                 entityChange.ChangeType.ShouldBe(EntityChangeType.Updated);
-                entityChange.EntityId.ShouldBe(entityChange.EntityEntry.As<DbEntityEntry>().Entity.As<IEntity<int>>().Id.ToJsonString());
+                entityChange.EntityId.ShouldBe(entityChange.EntityEntry.As<DbEntityEntry>().Entity.As<IEntity>().Id.ToJsonString());
                 entityChange.EntityTypeFullName.ShouldBe(typeof(Blog).FullName);
                 entityChange.PropertyChanges.Count.ShouldBe(1);
 
@@ -364,7 +364,7 @@ namespace Abp.Zero.SampleApp.Tests.EntityHistory
 
                 var entityChange = s.EntityChanges[0];
                 entityChange.ChangeType.ShouldBe(EntityChangeType.Updated);
-                entityChange.EntityId.ShouldBe(entityChange.EntityEntry.As<DbEntityEntry>().Entity.As<IEntity<int>>().Id.ToJsonString());
+                entityChange.EntityId.ShouldBe(entityChange.EntityEntry.As<DbEntityEntry>().Entity.As<IEntity>().Id.ToJsonString());
                 entityChange.EntityTypeFullName.ShouldBe(typeof(Blog).FullName);
                 entityChange.PropertyChanges.Count.ShouldBe(0);
 
@@ -372,6 +372,112 @@ namespace Abp.Zero.SampleApp.Tests.EntityHistory
             };
 
             _entityHistoryStore.Received().SaveAsync(Arg.Is<EntityChangeSet>(s => predicate(s)));
+        }
+
+        [Fact]
+        public void Should_Write_History_For_Tracked_Entities_And_AuditFields_Create()
+        {
+            /* Ad has Audited attribute. */
+            using (AbpSession.Use(1, 1))
+            {
+                var adId = 0;
+
+                using (var uow = Resolve<IUnitOfWorkManager>().Begin())
+                {
+                    var ad = new Ad("test-ad", "welcome to buy zero");
+                    adId = _adRepository.InsertAndGetId(ad);
+                    uow.Complete();
+                }
+
+                _entityHistoryStore.Received().SaveAsync(Arg.Is<EntityChangeSet>(
+                    s => s.EntityChanges.Count == 1 &&
+                         s.EntityChanges[0].ChangeTime == s.EntityChanges[0].EntityEntry.As<DbEntityEntry>().Entity.As<IHasCreationTime>().CreationTime &&
+                         s.EntityChanges[0].ChangeType == EntityChangeType.Created &&
+                         s.EntityChanges[0].EntityId == adId.ToJsonString(false, false) &&
+                         s.EntityChanges[0].EntityTypeFullName == typeof(Ad).FullName &&
+                         // Name,Content,CreationTime,CreatorUserId
+                         s.EntityChanges[0].PropertyChanges.Count == 4 &&
+
+                         // Check "who did this change"
+                         s.ImpersonatorTenantId == AbpSession.ImpersonatorTenantId &&
+                         s.ImpersonatorUserId == AbpSession.ImpersonatorUserId &&
+                         s.TenantId == AbpSession.TenantId &&
+                         s.UserId == AbpSession.UserId
+                ));
+            }
+           
+        }
+
+        [Fact]
+        public void Should_Write_History_For_Tracked_Entities_And_AuditFields_Update()
+        {
+            /* Ad has Audited attribute. */
+            using (AbpSession.Use(1, 1))
+            {
+                var adId = 0;
+
+                using (var uow = Resolve<IUnitOfWorkManager>().Begin())
+                {
+                    var ad = _adRepository.FirstOrDefault(x => x.Name == "test-ad-zero");
+                    ad.Name = "new-test-ad-zero";
+                    ad.Content = "new-test-ad-zero-content";
+
+                    adId = ad.Id;
+                    _adRepository.Update(ad);
+                    uow.Complete();
+                }
+
+                _entityHistoryStore.Received().SaveAsync(Arg.Is<EntityChangeSet>(
+                    s => s.EntityChanges.Count == 1 &&
+                         s.EntityChanges[0].ChangeTime == s.EntityChanges[0].EntityEntry.As<DbEntityEntry>().Entity.As<IHasModificationTime>().LastModificationTime &&
+                         s.EntityChanges[0].ChangeType == EntityChangeType.Updated &&
+                         s.EntityChanges[0].EntityId == adId.ToJsonString(false, false) &&
+                         s.EntityChanges[0].EntityTypeFullName == typeof(Ad).FullName &&
+                         // Name,Content,LastModifierUserId,LastModificationTime
+                         s.EntityChanges[0].PropertyChanges.Count == 4 &&
+
+                         // Check "who did this change"
+                         s.ImpersonatorTenantId == AbpSession.ImpersonatorTenantId &&
+                         s.ImpersonatorUserId == AbpSession.ImpersonatorUserId &&
+                         s.TenantId == AbpSession.TenantId &&
+                         s.UserId == AbpSession.UserId
+                ));
+            }
+        }
+
+        [Fact]
+        public void Should_Write_History_For_Tracked_Entities_And_AuditFields_Delete()
+        {
+            /* Ad has Audited attribute. */
+            using (AbpSession.Use(1, 1))
+            {
+                var adId = 0;
+
+                using (var uow = Resolve<IUnitOfWorkManager>().Begin())
+                {
+                    var ad = _adRepository.FirstOrDefault(x => x.Name == "test-ad-zero");
+
+                    adId = ad.Id;
+                    _adRepository.Delete(ad);
+                    uow.Complete();
+                }
+
+                _entityHistoryStore.Received().SaveAsync(Arg.Is<EntityChangeSet>(
+                    s => s.EntityChanges.Count == 1 &&
+                         s.EntityChanges[0].ChangeTime == s.EntityChanges[0].EntityEntry.As<DbEntityEntry>().Entity.As<IHasDeletionTime>().DeletionTime &&
+                         s.EntityChanges[0].ChangeType == EntityChangeType.Deleted &&
+                         s.EntityChanges[0].EntityId == adId.ToJsonString(false, false) &&
+                         s.EntityChanges[0].EntityTypeFullName == typeof(Ad).FullName &&
+                         // Name,Content,IsDeleted,DeletionTime,DeleterUserId
+                         s.EntityChanges[0].PropertyChanges.Count == 5 &&
+
+                         // Check "who did this change"
+                         s.ImpersonatorTenantId == AbpSession.ImpersonatorTenantId &&
+                         s.ImpersonatorUserId == AbpSession.ImpersonatorUserId &&
+                         s.TenantId == AbpSession.TenantId &&
+                         s.UserId == AbpSession.UserId
+                ));
+            }
         }
 
         #endregion

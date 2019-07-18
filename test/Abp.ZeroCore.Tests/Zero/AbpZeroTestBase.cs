@@ -64,6 +64,13 @@ namespace Abp.Zero
                     var comment1 = new Comment { Post = post1, Content = "test-comment-1-content" };
 
                     context.Comments.Add(comment1);
+
+                    var ad = new Ad("test-ad-zero", "test-ad-zero-content")
+                    {
+                        CreationTime = DateTime.Now,
+                        CreatorUserId = context.Users.FirstOrDefault()?.Id
+                    };
+                    context.Ads.Add(ad);
                 });
         }
 

@@ -25,6 +25,7 @@ namespace Abp.Zero.EntityHistory
         private readonly IRepository<Blog> _blogRepository;
         private readonly IRepository<Post, Guid> _postRepository;
         private readonly IRepository<Comment> _commentRepository;
+        private readonly IRepository<Ad> _adRepository;
 
         private IEntityHistoryStore _entityHistoryStore;
 
@@ -33,6 +34,7 @@ namespace Abp.Zero.EntityHistory
             _blogRepository = Resolve<IRepository<Blog>>();
             _postRepository = Resolve<IRepository<Post, Guid>>();
             _commentRepository = Resolve<IRepository<Comment>>();
+            _adRepository = Resolve<IRepository<Ad>>();
 
             Resolve<IEntityHistoryConfiguration>().IsEnabledForAnonymousUsers = true;
         }
@@ -61,8 +63,7 @@ namespace Abp.Zero.EntityHistory
                      s.EntityChanges[0].ChangeType == EntityChangeType.Created &&
                      s.EntityChanges[0].EntityId == blog2Id.ToJsonString(false, false) &&
                      s.EntityChanges[0].EntityTypeFullName == typeof(Blog).FullName &&
-                     s.EntityChanges[0].PropertyChanges.Count == 5 && // Blog.Url, Blog.CreationTime, Blog.CreatorUserId, Blog.LastModificationTime, Blog.LastModifierUserId
-
+                     s.EntityChanges[0].PropertyChanges.Count == 2 && // Blog.Name, Blog.Url
                      s.EntityChanges[1].ChangeType == EntityChangeType.Created &&
                      s.EntityChanges[1].EntityId == blog2Id.ToJsonString(false, false) &&
                      s.EntityChanges[1].EntityTypeFullName == typeof(BlogEx).FullName &&
@@ -119,7 +120,7 @@ namespace Abp.Zero.EntityHistory
 
             UsingDbContext(tenantId, (context) =>
             {
-                context.EntityPropertyChanges.Count(f => f.TenantId == tenantId).ShouldBe(6); //BloggerName, Url, CreationTime, CreatorUserId, LastModificationTime, LastModifierUserId
+                context.EntityPropertyChanges.Count(f => f.TenantId == tenantId).ShouldBe(3);
             });
         }
 
@@ -134,7 +135,7 @@ namespace Abp.Zero.EntityHistory
             _entityHistoryStore.Received().SaveAsync(Arg.Is<EntityChangeSet>(
                 s => s.EntityChanges.Count == 1 &&
                      s.EntityChanges[0].ChangeType == EntityChangeType.Updated &&
-                     s.EntityChanges[0].EntityId == s.EntityChanges[0].EntityEntry.As<EntityEntry>().Entity.As<IEntity<int>>().Id.ToJsonString(false, false) &&
+                     s.EntityChanges[0].EntityId == s.EntityChanges[0].EntityEntry.As<EntityEntry>().Entity.As<IEntity>().Id.ToJsonString(false, false) &&
                      s.EntityChanges[0].EntityTypeFullName == typeof(Blog).FullName &&
                      s.EntityChanges[0].PropertyChanges.Count == 1 &&
                      s.EntityChanges[0].PropertyChanges.FirstOrDefault().NewValue == newValue.ToJsonString(false, false) &&
@@ -261,9 +262,106 @@ namespace Abp.Zero.EntityHistory
             _entityHistoryStore.Received().SaveAsync(Arg.Is<EntityChangeSet>(
                 s => s.EntityChanges.Count == 1 &&
                      s.EntityChanges[0].ChangeType == EntityChangeType.Updated &&
-                     s.EntityChanges[0].EntityId == s.EntityChanges[0].EntityEntry.As<EntityEntry>().Entity.As<IEntity<int>>().Id.ToJsonString(false, false) &&
+                     s.EntityChanges[0].EntityId == s.EntityChanges[0].EntityEntry.As<EntityEntry>().Entity.As<IEntity>().Id.ToJsonString(false, false) &&
                      s.EntityChanges[0].EntityTypeFullName == typeof(Blog).FullName &&
                      s.EntityChanges[0].PropertyChanges.Count == 0
+            ));
+        }
+
+        [Fact]
+        public void Should_Write_History_For_Tracked_Entities_And_AuditFields_Create()
+        {
+            /* Ad has Audited attribute. */
+            LoginAsDefaultTenantAdmin();
+            var adId = 0;
+
+            using (var uow = Resolve<IUnitOfWorkManager>().Begin())
+            {
+                var ad = new Ad("test-ad", "welcome to buy zero");
+                adId = _adRepository.InsertAndGetId(ad);
+                uow.Complete();
+            }
+
+            _entityHistoryStore.Received().SaveAsync(Arg.Is<EntityChangeSet>(
+                s => s.EntityChanges.Count == 1 &&
+                     s.EntityChanges[0].ChangeTime == s.EntityChanges[0].EntityEntry.As<EntityEntry>().Entity.As<IHasCreationTime>().CreationTime &&
+                     s.EntityChanges[0].ChangeType == EntityChangeType.Created &&
+                     s.EntityChanges[0].EntityId == adId.ToJsonString(false, false) &&
+                     s.EntityChanges[0].EntityTypeFullName == typeof(Ad).FullName &&
+                     // Name,Content,CreationTime,CreatorUserId
+                     s.EntityChanges[0].PropertyChanges.Count == 4 && 
+
+                     // Check "who did this change"
+                     s.ImpersonatorTenantId == AbpSession.ImpersonatorTenantId &&
+                     s.ImpersonatorUserId == AbpSession.ImpersonatorUserId &&
+                     s.TenantId == AbpSession.TenantId &&
+                     s.UserId == AbpSession.UserId
+            ));
+        }
+
+        [Fact]
+        public void Should_Write_History_For_Tracked_Entities_And_AuditFields_Update()
+        {
+            /* Ad has Audited attribute. */
+            var adId = 0;
+
+            using (var uow = Resolve<IUnitOfWorkManager>().Begin())
+            {
+                var ad = _adRepository.FirstOrDefault(x => x.Name == "test-ad-zero");
+                ad.Name = "new-test-ad-zero";
+                ad.Content = "new-test-ad-zero-content";
+
+                adId = ad.Id;
+                _adRepository.Update(ad);
+                uow.Complete();
+            }
+
+            _entityHistoryStore.Received().SaveAsync(Arg.Is<EntityChangeSet>(
+                s => s.EntityChanges.Count == 1 &&
+                     s.EntityChanges[0].ChangeTime == s.EntityChanges[0].EntityEntry.As<EntityEntry>().Entity.As<IHasModificationTime>().LastModificationTime &&
+                     s.EntityChanges[0].ChangeType == EntityChangeType.Updated &&
+                     s.EntityChanges[0].EntityId == adId.ToJsonString(false, false) &&
+                     s.EntityChanges[0].EntityTypeFullName == typeof(Ad).FullName &&
+                     // Name,Content,LastModificationTime,LastModifierUserId
+                     s.EntityChanges[0].PropertyChanges.Count == 4 &&
+
+                     // Check "who did this change"
+                     s.ImpersonatorTenantId == AbpSession.ImpersonatorTenantId &&
+                     s.ImpersonatorUserId == AbpSession.ImpersonatorUserId &&
+                     s.TenantId == AbpSession.TenantId &&
+                     s.UserId == AbpSession.UserId
+            ));
+        }
+
+        [Fact]
+        public void Should_Write_History_For_Tracked_Entities_And_AuditFields_Delete()
+        {
+            /* Ad has Audited attribute. */
+            var adId = 0;
+
+            using (var uow = Resolve<IUnitOfWorkManager>().Begin())
+            {
+                var ad = _adRepository.FirstOrDefault(x => x.Name == "test-ad-zero");
+
+                adId = ad.Id;
+                _adRepository.Delete(ad);
+                uow.Complete();
+            }
+
+            _entityHistoryStore.Received().SaveAsync(Arg.Is<EntityChangeSet>(
+                s => s.EntityChanges.Count == 1 &&
+                     s.EntityChanges[0].ChangeTime == s.EntityChanges[0].EntityEntry.As<EntityEntry>().Entity.As<IHasDeletionTime>().DeletionTime &&
+                     s.EntityChanges[0].ChangeType == EntityChangeType.Deleted &&
+                     s.EntityChanges[0].EntityId == adId.ToJsonString(false, false) &&
+                     s.EntityChanges[0].EntityTypeFullName == typeof(Ad).FullName &&
+                     // Name,Content,DeleterUserId,IsDeleted,DeletionTime
+                     s.EntityChanges[0].PropertyChanges.Count == 5 &&
+
+                     // Check "who did this change"
+                     s.ImpersonatorTenantId == AbpSession.ImpersonatorTenantId &&
+                     s.ImpersonatorUserId == AbpSession.ImpersonatorUserId &&
+                     s.TenantId == AbpSession.TenantId &&
+                     s.UserId == AbpSession.UserId
             ));
         }
 
