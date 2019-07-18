@@ -1,8 +1,8 @@
 ﻿namespace Abp.Web.Mvc.Alerts
 {
-    public enum AlertDisplayType
+    public class AlertDisplayType
     {
-        PageAlert,
-        Toastr
+        public static string PageAlert = "PageAlert";
+        public static string Toastr = "Toastr";
     }
 }
