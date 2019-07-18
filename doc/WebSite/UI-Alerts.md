@@ -21,7 +21,7 @@ public class AlertsTestController : AbpControllerBase
 {
     public IActionResult Index()
     {
-        Alerts.Danger("Danger alert message!", "Test Alert");//AlertDisplayType.Toastr is default.
+        Alerts.Danger("Danger alert message!", "Test Alert");//AlertDisplayType.PageAlert is default.
         Alerts.Warning("Warning alert message!", "Test Alert");
         Alerts.Info("Info alert message!", "Test Alert");
         Alerts.Success("Success alert message!", "Test Alert");
