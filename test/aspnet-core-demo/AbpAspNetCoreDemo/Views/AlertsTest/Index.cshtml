@@ -1,5 +1,5 @@
 ﻿@using Abp.Web.Mvc.Alerts
-@inject IAlertManager AlertManager
+@inject IAlertMessageRendererManager AlertMessageRendererManager
 
 @{
     ViewData["Title"] = "Index";
@@ -11,41 +11,15 @@
 
 <h2>Alerts test page</h2>
 
-@if (AlertManager.Alerts.Any(a => a.DisplayType == AlertDisplayType.PageAlert))
-{
-    <div id="AbpPageAlerts">
-        @foreach (var alertMessage in AlertManager.Alerts.Where(a => a.DisplayType == AlertDisplayType.PageAlert))
-        {
-            <div class="alert alert-@alertMessage.Type.ToString().ToLowerInvariant() @(alertMessage.Dismissible ? "alert-dismisable" : "")" role="alert">
-                <h4 class="alert-heading">
-                    @alertMessage.Title
-                    @if (alertMessage.Dismissible)
-                    {
-                        <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-                    }
-                </h4>
 
-                <p>@alertMessage.Text</p>
-            </div>
-        }
-    </div>
-}
+<div id="AbpPageAlerts">
+    @Html.Raw(AlertMessageRendererManager.Render(AlertDisplayType.PageAlert))
+</div>
+
 
 @section scripts{
     <script src="~/lib/toastr/toastr.min.js" type="text/javascript"></script>
     <script src="~/Abp/Framework/scripts/libs/abp.toastr.js" type="text/javascript"></script>
 
-    @if (AlertManager.Alerts.Any(a => a.DisplayType == AlertDisplayType.Toastr))
-    {
-        <script type="text/javascript">
-        @foreach (var toastrMessage in AlertManager.Alerts.Where(a => a.DisplayType == AlertDisplayType.Toastr))
-        {
-            @Html.Raw(string.Format("abp.notify.{0}('{1}','{2}', {{ 'closeButton':  {3} }});",
-               toastrMessage.Type.ToString().ToLowerInvariant().Replace("warning", "warn").Replace("danger", "error"),
-               toastrMessage.Text,
-               toastrMessage.Title,
-               toastrMessage.Dismissible.ToString().ToLower()));
-        }
-        </script>
-    }
+    @Html.Raw(AlertMessageRendererManager.Render(AlertDisplayType.Toastr))
 }
