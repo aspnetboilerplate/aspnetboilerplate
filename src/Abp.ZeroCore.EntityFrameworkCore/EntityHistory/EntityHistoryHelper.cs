@@ -215,7 +215,7 @@ namespace Abp.EntityHistory
                     propertyChanges.Add(new EntityPropertyChange
                     {
                         NewValue = isDeleted && !IsAuditField(propertyEntry.Metadata.Name) ? null : propertyEntry.CurrentValue.ToJsonString().TruncateWithPostfix(EntityPropertyChange.MaxValueLength),
-                        OriginalValue = isCreated && !IsAuditField(propertyEntry.Metadata.Name, nameof(IFullAudited.CreationTime)) ? null : propertyEntry.OriginalValue.ToJsonString().TruncateWithPostfix(EntityPropertyChange.MaxValueLength),
+                        OriginalValue = isCreated && !IsAuditField(propertyEntry.Metadata.Name, nameof(IFullAudited.CreatorUserId), nameof(IFullAudited.CreationTime)) ? null : propertyEntry.OriginalValue.ToJsonString().TruncateWithPostfix(EntityPropertyChange.MaxValueLength),
                         PropertyName = property.Name,
                         PropertyTypeFullName = property.ClrType.FullName,
                         TenantId = AbpSession.TenantId
