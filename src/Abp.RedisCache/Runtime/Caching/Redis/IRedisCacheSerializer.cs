@@ -12,17 +12,18 @@ namespace Abp.Runtime.Caching.Redis
         /// <summary>
         ///     Creates an instance of the object from its serialized string representation.
         /// </summary>
-        /// <param name="redisValue">String representation of the object from the Redis server.</param>
+        /// <param name="objbyte">String representation of the object from the Redis server.</param>
         /// <returns>Returns a newly constructed object.</returns>
         /// <seealso cref="Serialize" />
-        T Deserialize<T>(RedisValue redisValue);
+        object Deserialize(RedisValue objbyte);
 
         /// <summary>
         ///     Produce a string representation of the supplied object.
         /// </summary>
         /// <param name="value">Instance to serialize.</param>
+        /// <param name="type">Type of the object.</param>
         /// <returns>Returns a string representing the object instance that can be placed into the Redis cache.</returns>
-        /// <seealso cref="Deserialize{T}" />
-        string Serialize(object value);
+        /// <seealso cref="Deserialize" />
+        string Serialize(object value, Type type);
     }
 }

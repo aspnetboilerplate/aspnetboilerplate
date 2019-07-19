@@ -8,30 +8,32 @@ namespace Abp.Runtime.Caching.Redis
 {
     public class ProtoBufRedisCacheSerializer : DefaultRedisCacheSerializer
     {
+        private const string TypeSeperator = "|";
         private const string ProtoBufPrefix = "PB^";
 
         /// <summary>
         ///     Creates an instance of the object from its serialized string representation.
         /// </summary>
-        /// <param name="redisValue">String representation of the object from the Redis server.</param>
+        /// <param name="objbyte">String representation of the object from the Redis server.</param>
         /// <returns>Returns a newly constructed object.</returns>
         /// <seealso cref="IRedisCacheSerializer.Serialize" />
-        public override T Deserialize<T>(RedisValue redisValue)
+        public override object Deserialize(RedisValue objbyte)
         {
-            string serializedObj = redisValue;
+            string serializedObj = objbyte;
             if (!serializedObj.StartsWith(ProtoBufPrefix))
             {
-                return base.Deserialize<T>(redisValue);
+                return base.Deserialize(objbyte);
             }
 
             serializedObj = serializedObj.Substring(ProtoBufPrefix.Length);
-            var protoBufPrefixIndex = serializedObj.IndexOf(ProtoBufPrefix, StringComparison.OrdinalIgnoreCase);
-            var serialized = serializedObj.Substring(protoBufPrefixIndex + 1);
+            var typeSeperatorIndex = serializedObj.IndexOf(TypeSeperator, StringComparison.OrdinalIgnoreCase);
+            var type = Type.GetType(serializedObj.Substring(0, typeSeperatorIndex));
+            var serialized = serializedObj.Substring(typeSeperatorIndex + 1);
             var byteAfter64 = Convert.FromBase64String(serialized);
 
             using (var memoryStream = new MemoryStream(byteAfter64))
             {
-                return Serializer.Deserialize<T>(memoryStream);
+                return Serializer.Deserialize(type, memoryStream);
             }
         }
 
@@ -39,13 +41,14 @@ namespace Abp.Runtime.Caching.Redis
         ///     Produce a string representation of the supplied object.
         /// </summary>
         /// <param name="value">Instance to serialize.</param>
+        /// <param name="type">Type of the object.</param>
         /// <returns>Returns a string representing the object instance that can be placed into the Redis cache.</returns>
         /// <seealso cref="IRedisCacheSerializer.Deserialize" />
-        public override string Serialize(object value)
+        public override string Serialize(object value, Type type)
         {
-            if (!value.GetType().GetTypeInfo().IsDefined(typeof(ProtoContractAttribute), false))
+            if (!type.GetTypeInfo().IsDefined(typeof(ProtoContractAttribute), false))
             {
-                return base.Serialize(value);
+                return base.Serialize(value, type);
             }
 
             using (var memoryStream = new MemoryStream())
@@ -53,7 +56,7 @@ namespace Abp.Runtime.Caching.Redis
                 Serializer.Serialize(memoryStream, value);
                 var byteArray = memoryStream.ToArray();
                 var serialized = Convert.ToBase64String(byteArray, 0, byteArray.Length);
-                return $"{ProtoBufPrefix}{serialized}";
+                return $"{ProtoBufPrefix}{type.AssemblyQualifiedName}{TypeSeperator}{serialized}";
             }
         }
     }
