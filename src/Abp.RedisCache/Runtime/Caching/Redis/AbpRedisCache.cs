@@ -32,30 +32,30 @@ namespace Abp.Runtime.Caching.Redis
 
         public override object GetOrDefault(string key)
         {
-            var objbyte = _database.StringGet(GetLocalizedRedisKey(key));
-            return objbyte.HasValue ? Deserialize(objbyte) : null;
+            var redisValue = _database.StringGet(GetLocalizedRedisKey(key));
+            return redisValue.HasValue ? Deserialize(redisValue) : null;
         }
 
         public override object[] GetOrDefault(string[] keys)
         {
             var redisKeys = keys.Select(GetLocalizedRedisKey);
             var redisValues = _database.StringGet(redisKeys.ToArray());
-            var objbytes = redisValues.Select(obj => obj.HasValue ? Deserialize(obj) : null);
-            return objbytes.ToArray();
+            var values = redisValues.Select(obj => obj.HasValue ? Deserialize(obj) : null);
+            return values.ToArray();
         }
 
         public override async Task<object> GetOrDefaultAsync(string key)
         {
-            var objbyte = await _database.StringGetAsync(GetLocalizedRedisKey(key));
-            return objbyte.HasValue ? Deserialize(objbyte) : null;
+            var redisValue = await _database.StringGetAsync(GetLocalizedRedisKey(key));
+            return redisValue.HasValue ? Deserialize(redisValue) : null;
         }
 
         public override async Task<object[]> GetOrDefaultAsync(string[] keys)
         {
             var redisKeys = keys.Select(GetLocalizedRedisKey);
             var redisValues = await _database.StringGetAsync(redisKeys.ToArray());
-            var objbytes = redisValues.Select(obj => obj.HasValue ? Deserialize(obj) : null);
-            return objbytes.ToArray();
+            var values = redisValues.Select(obj => obj.HasValue ? Deserialize(obj) : null);
+            return values.ToArray();
         }
 
         public override void Set(string key, object value, TimeSpan? slidingExpireTime = null, TimeSpan? absoluteExpireTime = null)
@@ -67,7 +67,7 @@ namespace Abp.Runtime.Caching.Redis
 
             _database.StringSet(
                 GetLocalizedRedisKey(key),
-                Serialize(value, GetSerializableType(value)),
+                Serialize(value),
                 absoluteExpireTime ?? slidingExpireTime ?? DefaultAbsoluteExpireTime ?? DefaultSlidingExpireTime
                 );
         }
@@ -81,7 +81,7 @@ namespace Abp.Runtime.Caching.Redis
 
             await _database.StringSetAsync(
                 GetLocalizedRedisKey(key),
-                Serialize(value, GetSerializableType(value)),
+                Serialize(value),
                 absoluteExpireTime ?? slidingExpireTime ?? DefaultAbsoluteExpireTime ?? DefaultSlidingExpireTime
                 );
         }
@@ -94,7 +94,7 @@ namespace Abp.Runtime.Caching.Redis
             }
 
             var redisPairs = pairs.Select(p => new KeyValuePair<RedisKey, RedisValue>
-                                          (GetLocalizedRedisKey(p.Key), Serialize(p.Value, GetSerializableType(p.Value)))
+                                          (GetLocalizedRedisKey(p.Key), Serialize(p.Value))
                                          );
 
             if (slidingExpireTime.HasValue || absoluteExpireTime.HasValue)
@@ -112,7 +112,7 @@ namespace Abp.Runtime.Caching.Redis
             }
 
             var redisPairs = pairs.Select(p => new KeyValuePair<RedisKey, RedisValue>
-                                          (GetLocalizedRedisKey(p.Key), Serialize(p.Value, GetSerializableType(p.Value)))
+                                          (GetLocalizedRedisKey(p.Key), Serialize(p.Value))
                                          );
             if (slidingExpireTime.HasValue || absoluteExpireTime.HasValue)
             {
@@ -148,26 +148,14 @@ namespace Abp.Runtime.Caching.Redis
             _database.KeyDeleteWithPrefix(GetLocalizedRedisKey("*"));
         }
 
-        protected virtual Type GetSerializableType(object value)
+        protected virtual string Serialize(object value)
         {
-            //TODO: This is a workaround for serialization problems of entities.
-            //TODO: Normally, entities should not be stored in the cache, but currently Abp.Zero packages does it. It will be fixed in the future.
-            var type = value.GetType();
-            if (EntityHelper.IsEntity(type) && type.GetAssembly().FullName.Contains("EntityFrameworkDynamicProxies"))
-            {
-                type = type.GetTypeInfo().BaseType;
-            }
-            return type;
+            return _serializer.Serialize(value);
         }
 
-        protected virtual string Serialize(object value, Type type)
+        protected virtual object Deserialize(RedisValue redisValue)
         {
-            return _serializer.Serialize(value, type);
-        }
-
-        protected virtual object Deserialize(RedisValue objbyte)
-        {
-            return _serializer.Deserialize(objbyte);
+            return _serializer.Deserialize<object>(redisValue);
         }
 
         protected virtual RedisKey GetLocalizedRedisKey(string key)

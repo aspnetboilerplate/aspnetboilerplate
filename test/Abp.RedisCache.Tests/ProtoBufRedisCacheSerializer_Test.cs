@@ -27,17 +27,14 @@ namespace Abp.RedisCache.Tests
 
             //Act
             string classSerializedString = protoBufSerializer.Serialize(
-                objectToSerialize,
-                typeof(ClassToSerialize)
+                objectToSerialize
             );
 
-            object classUnSerialized = protoBufSerializer.Deserialize(classSerializedString);
+            var classUnSerialized = protoBufSerializer.Deserialize<ClassToSerialize>(classSerializedString);
 
             //Assert
-            classUnSerialized.ShouldBeOfType<ClassToSerialize>();
-            ClassToSerialize classUnSerializedTyped = (ClassToSerialize) classUnSerialized;
-            classUnSerializedTyped.Age.ShouldBe(10);
-            classUnSerializedTyped.Name.ShouldBe("John");
+            classUnSerialized.Age.ShouldBe(10);
+            classUnSerialized.Name.ShouldBe("John");
         }
     }
 }

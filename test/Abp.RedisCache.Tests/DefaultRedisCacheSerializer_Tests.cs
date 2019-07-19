@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
+using Abp.Json;
 using Abp.Runtime.Caching;
 using Abp.Runtime.Caching.Redis;
 using Abp.Tests;
@@ -29,8 +30,8 @@ namespace Abp.RedisCache.Tests
                 "Lost in Space"
             };
 
-            var result = _redisCacheSerializer.Serialize(source, typeof(List<string>));
-            result.ShouldStartWith("{\"Payload\":\"[\\\"Stranger Things\\\",\\\"The OA\\\",\\\"Lost in Space\\\"]\",\"Type\":\"System.Collections.Generic.List`1[[System.String,");
+            var result = _redisCacheSerializer.Serialize(source);
+            result.ShouldBe(source.ToJsonString());
         }
 
         [Fact]
@@ -42,33 +43,30 @@ namespace Abp.RedisCache.Tests
                 Field2 = "Stranger Things"
             };
 
-            var result = _redisCacheSerializer.Serialize(source, typeof(MyTestClass));
-            result.ShouldBe("{\"Payload\":\"{\\\"Field1\\\":42,\\\"Field2\\\":\\\"Stranger Things\\\"}\",\"Type\":\"Abp.RedisCache.Tests.DefaultRedisCacheSerializer_Tests+MyTestClass, Abp.RedisCache.Tests, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null\"}");
+            var result = _redisCacheSerializer.Serialize(source);
+            result.ShouldBe(source.ToJsonString());
         }
 
         [Fact]
         public void Deserialize_List_Test()
         {
-            var json = "{\"Payload\":\"[\\\"Stranger Things\\\",\\\"The OA\\\",\\\"Lost in Space\\\"]\",\"Type\":\"System.Collections.Generic.List`1[[System.String]]\"}";
-            var cacheData = _redisCacheSerializer.Deserialize(json);
+            var json = "[\"Stranger Things\",\"The OA\",\"Lost in Space\"]";
+            var list = _redisCacheSerializer.Deserialize<List<string>>(json);
 
-            var typedCacheData = cacheData as List<string>;
-            typedCacheData.ShouldNotBeNull();
-            typedCacheData.Count.ShouldBe(3);
-            typedCacheData.First().ShouldBe("Stranger Things");
+            list.ShouldNotBeNull();
+            list.Count.ShouldBe(3);
+            list.First().ShouldBe("Stranger Things");
         }
 
         [Fact]
         public void Deserialize_Class_Test()
         {
-            var json = "{\"Payload\": \"{\\\"Field1\\\": 42,\\\"Field2\\\":\\\"Stranger Things\\\"}\",\"Type\":\"Abp.RedisCache.Tests.DefaultRedisCacheSerializer_Tests+MyTestClass, Abp.RedisCache.Tests\"}";
+            var json = "{\"Field1\":42,\"Field2\":\"Stranger Things\"}";
+            var myTestClass = _redisCacheSerializer.Deserialize<MyTestClass>(json);
 
-            var cacheData = _redisCacheSerializer.Deserialize(json);
-
-            var typedCacheData = cacheData as MyTestClass;
-            typedCacheData.ShouldNotBeNull();
-            typedCacheData.Field1.ShouldBe(42);
-            typedCacheData.Field2.ShouldBe("Stranger Things");
+            myTestClass.ShouldNotBeNull();
+            myTestClass.Field1.ShouldBe(42);
+            myTestClass.Field2.ShouldBe("Stranger Things");
         }
 
         class MyTestClass
