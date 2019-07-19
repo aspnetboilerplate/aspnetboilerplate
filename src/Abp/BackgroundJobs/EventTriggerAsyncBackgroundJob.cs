@@ -4,8 +4,8 @@ using Abp.Events.Bus;
 
 namespace Abp.BackgroundJobs
 {
-    public class EventTriggerAsyncBackgroundJob<TEvent> : AsyncBackgroundJob<TEvent>, ITransientDependency
-        where TEvent : EventData
+    public class EventTriggerAsyncBackgroundJob<TEventData> : AsyncBackgroundJob<TEventData>, ITransientDependency
+        where TEventData : EventData
     {
         public IEventBus EventBus { get; set; }
 
@@ -14,9 +14,9 @@ namespace Abp.BackgroundJobs
             EventBus = NullEventBus.Instance;
         }
 
-        protected override async Task ExecuteAsync(TEvent e)
+        protected override async Task ExecuteAsync(TEventData eventData)
         {
-            await EventBus.TriggerAsync(e);
+            await EventBus.TriggerAsync(eventData);
         }
     }
 }

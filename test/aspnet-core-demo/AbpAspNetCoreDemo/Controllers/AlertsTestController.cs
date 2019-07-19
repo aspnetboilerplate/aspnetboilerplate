@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Abp.Web.Mvc.Alerts;
+using Microsoft.AspNetCore.Mvc;
 
 namespace AbpAspNetCoreDemo.Controllers
 {
@@ -10,6 +11,16 @@ namespace AbpAspNetCoreDemo.Controllers
             Alerts.Warning("Warning alert message!", "Test Alert");
             Alerts.Info("Info alert message!", "Test Alert");
             Alerts.Success("Success alert message!", "Test Alert");
+
+            Alerts.Danger("Danger toast message!", "Test Toast", displayType: AlertDisplayType.Toastr);
+            Alerts.Warning("Warning toast message!", "Test Toast", displayType: AlertDisplayType.Toastr);
+            Alerts.Info("Info toast message!", "Test Toast", displayType: AlertDisplayType.Toastr);
+            Alerts.Success("Success toast message!", "Test Toast", displayType: AlertDisplayType.Toastr);
+
+            Alerts.Danger("Danger toast message!", "Test Toast", dismissible: false, displayType: AlertDisplayType.Toastr);
+            Alerts.Warning("Warning toast message!", "Test Toast", dismissible: false, displayType: AlertDisplayType.Toastr);
+            Alerts.Info("Info toast message!", "Test Toast", dismissible: false, displayType: AlertDisplayType.Toastr);
+            Alerts.Success("Success toast message!", "Test Toast", dismissible: false, displayType: AlertDisplayType.Toastr);
 
             return View();
         }

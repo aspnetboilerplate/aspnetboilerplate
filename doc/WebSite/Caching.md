@@ -245,7 +245,7 @@ Similar to entity caching, it is optional to define an interface for the
 cache class:
 
 ```csharp
-public interface IPhoneCache : IMultiTenantEntityCache<IPhoneCache>
+public interface IPhoneCache : IMultiTenancyEntityCache<PhoneCacheItem>
 {
 }
 ```
@@ -326,6 +326,16 @@ Example:
 
 ```xml
 <add key="Abp.Redis.Cache.DatabaseId" value="2"/>
+```
+
+For ASP.NET Core you can override it with the delegate parameter of UseRedis. Example:
+
+```csharp
+Configuration.Caching.UseRedis(options =>
+{
+    options.ConnectionString = _appConfiguration["RedisCache:ConnectionString"];
+    options.DatabaseId = _appConfiguration.GetValue<int>("RedisCache:DatabaseId");
+});
 ```
 
 Different database ids are useful to create different key spaces
