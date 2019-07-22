@@ -557,8 +557,8 @@ namespace Abp.EntityHistory
                                 // Add foreign key
                                 entityChange.PropertyChanges.Add(new EntityPropertyChange
                                 {
-                                    NewValue = propertyEntry.CurrentValue.ToJsonString(),
-                                    OriginalValue = propertyEntry.OriginalValue.ToJsonString(),
+                                    NewValue = propertyEntry.CurrentValue.ToJsonString().TruncateWithPostfix(EntityPropertyChange.MaxValueLength),
+                                    OriginalValue = propertyEntry.OriginalValue.ToJsonString().TruncateWithPostfix(EntityPropertyChange.MaxValueLength),
                                     PropertyName = property.Name,
                                     PropertyTypeFullName = propertyInfo.PropertyType.FullName
                                 });
