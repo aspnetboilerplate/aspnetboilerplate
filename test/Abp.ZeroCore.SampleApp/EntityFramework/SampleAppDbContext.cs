@@ -19,7 +19,7 @@ namespace Abp.ZeroCore.SampleApp.EntityFramework
 
         public DbSet<Post> Posts { get; set; }
 
-        public DbSet<Ad> Ads { get; set; }
+        public DbSet<Advertisement> Advertisements { get; set; }
 
         public DbSet<Product> Products { get; set; }
 

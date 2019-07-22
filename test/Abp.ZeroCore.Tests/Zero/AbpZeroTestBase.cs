@@ -65,12 +65,12 @@ namespace Abp.Zero
 
                     context.Comments.Add(comment1);
 
-                    var ad = new Ad("test-ad-zero", "test-ad-zero-content")
+                    var ad = new Advertisement("test-ad-zero", "test-ad-zero-content")
                     {
                         CreationTime = DateTime.Now,
                         CreatorUserId = context.Users.FirstOrDefault()?.Id
                     };
-                    context.Ads.Add(ad);
+                    context.Advertisements.Add(ad);
                 });
         }
 

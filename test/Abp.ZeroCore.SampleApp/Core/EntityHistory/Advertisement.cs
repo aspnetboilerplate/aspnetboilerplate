@@ -4,13 +4,13 @@ using Abp.Domain.Entities.Auditing;
 namespace Abp.ZeroCore.SampleApp.Core.EntityHistory
 {
     [Audited]
-    public class Ad : FullAuditedEntity
+    public class Advertisement : FullAuditedEntity
     {
-        public Ad()
+        public Advertisement()
         {
         }
 
-        public Ad(string name, string content)
+        public Advertisement(string name, string content)
         {
             Name = name;
             Content = content;
@@ -18,6 +18,7 @@ namespace Abp.ZeroCore.SampleApp.Core.EntityHistory
 
         public string Name { get; set; }
 
+        [DisableAuditing]
         public string Content { get; set; }
     }
 }

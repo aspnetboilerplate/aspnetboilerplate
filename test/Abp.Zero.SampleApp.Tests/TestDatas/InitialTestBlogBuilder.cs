@@ -34,12 +34,12 @@ namespace Abp.Zero.SampleApp.Tests.TestDatas
 
             _context.Comments.AddRange(new Comment[] { comment1, comment2 });
 
-            var ad = new Ad("test-ad-zero", "test-ad-zero-content")
+            var ad = new Advertisement("test-ad-zero", "test-ad-zero-content")
             {
                 CreationTime = DateTime.Now,
                 CreatorUserId = _context.Users.FirstOrDefault()?.Id
             };
-            _context.Ads.Add(ad);
+            _context.Advertisements.Add(ad);
         }
     }
 }

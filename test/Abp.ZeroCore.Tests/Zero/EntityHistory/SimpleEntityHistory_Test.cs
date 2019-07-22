@@ -25,7 +25,7 @@ namespace Abp.Zero.EntityHistory
         private readonly IRepository<Blog> _blogRepository;
         private readonly IRepository<Post, Guid> _postRepository;
         private readonly IRepository<Comment> _commentRepository;
-        private readonly IRepository<Ad> _adRepository;
+        private readonly IRepository<Advertisement> _advertisementRepository;
 
         private IEntityHistoryStore _entityHistoryStore;
 
@@ -34,7 +34,7 @@ namespace Abp.Zero.EntityHistory
             _blogRepository = Resolve<IRepository<Blog>>();
             _postRepository = Resolve<IRepository<Post, Guid>>();
             _commentRepository = Resolve<IRepository<Comment>>();
-            _adRepository = Resolve<IRepository<Ad>>();
+            _advertisementRepository = Resolve<IRepository<Advertisement>>();
 
             Resolve<IEntityHistoryConfiguration>().IsEnabledForAnonymousUsers = true;
         }
@@ -277,8 +277,8 @@ namespace Abp.Zero.EntityHistory
 
             using (var uow = Resolve<IUnitOfWorkManager>().Begin())
             {
-                var ad = new Ad("test-ad", "welcome to buy zero");
-                adId = _adRepository.InsertAndGetId(ad);
+                var ad = new Advertisement("test-ad", "welcome to buy zero");
+                adId = _advertisementRepository.InsertAndGetId(ad);
                 uow.Complete();
             }
 
@@ -287,9 +287,9 @@ namespace Abp.Zero.EntityHistory
                      s.EntityChanges[0].ChangeTime == s.EntityChanges[0].EntityEntry.As<EntityEntry>().Entity.As<IHasCreationTime>().CreationTime &&
                      s.EntityChanges[0].ChangeType == EntityChangeType.Created &&
                      s.EntityChanges[0].EntityId == adId.ToJsonString(false, false) &&
-                     s.EntityChanges[0].EntityTypeFullName == typeof(Ad).FullName &&
-                     // Name,Content,CreationTime,CreatorUserId
-                     s.EntityChanges[0].PropertyChanges.Count == 4 && 
+                     s.EntityChanges[0].EntityTypeFullName == typeof(Advertisement).FullName &&
+                     // Name,CreationTime,CreatorUserId
+                     s.EntityChanges[0].PropertyChanges.Count == 3 && 
 
                      // Check "who did this change"
                      s.ImpersonatorTenantId == AbpSession.ImpersonatorTenantId &&
@@ -307,12 +307,12 @@ namespace Abp.Zero.EntityHistory
 
             using (var uow = Resolve<IUnitOfWorkManager>().Begin())
             {
-                var ad = _adRepository.FirstOrDefault(x => x.Name == "test-ad-zero");
+                var ad = _advertisementRepository.FirstOrDefault(x => x.Name == "test-ad-zero");
                 ad.Name = "new-test-ad-zero";
                 ad.Content = "new-test-ad-zero-content";
 
                 adId = ad.Id;
-                _adRepository.Update(ad);
+                _advertisementRepository.Update(ad);
                 uow.Complete();
             }
 
@@ -321,9 +321,9 @@ namespace Abp.Zero.EntityHistory
                      s.EntityChanges[0].ChangeTime == s.EntityChanges[0].EntityEntry.As<EntityEntry>().Entity.As<IHasModificationTime>().LastModificationTime &&
                      s.EntityChanges[0].ChangeType == EntityChangeType.Updated &&
                      s.EntityChanges[0].EntityId == adId.ToJsonString(false, false) &&
-                     s.EntityChanges[0].EntityTypeFullName == typeof(Ad).FullName &&
-                     // Name,Content,LastModificationTime,LastModifierUserId
-                     s.EntityChanges[0].PropertyChanges.Count == 4 &&
+                     s.EntityChanges[0].EntityTypeFullName == typeof(Advertisement).FullName &&
+                     // Name,LastModificationTime,LastModifierUserId
+                     s.EntityChanges[0].PropertyChanges.Count == 3 &&
 
                      // Check "who did this change"
                      s.ImpersonatorTenantId == AbpSession.ImpersonatorTenantId &&
@@ -341,10 +341,10 @@ namespace Abp.Zero.EntityHistory
 
             using (var uow = Resolve<IUnitOfWorkManager>().Begin())
             {
-                var ad = _adRepository.FirstOrDefault(x => x.Name == "test-ad-zero");
+                var ad = _advertisementRepository.FirstOrDefault(x => x.Name == "test-ad-zero");
 
                 adId = ad.Id;
-                _adRepository.Delete(ad);
+                _advertisementRepository.Delete(ad);
                 uow.Complete();
             }
 
@@ -353,9 +353,9 @@ namespace Abp.Zero.EntityHistory
                      s.EntityChanges[0].ChangeTime == s.EntityChanges[0].EntityEntry.As<EntityEntry>().Entity.As<IHasDeletionTime>().DeletionTime &&
                      s.EntityChanges[0].ChangeType == EntityChangeType.Deleted &&
                      s.EntityChanges[0].EntityId == adId.ToJsonString(false, false) &&
-                     s.EntityChanges[0].EntityTypeFullName == typeof(Ad).FullName &&
-                     // Name,Content,DeleterUserId,IsDeleted,DeletionTime
-                     s.EntityChanges[0].PropertyChanges.Count == 5 &&
+                     s.EntityChanges[0].EntityTypeFullName == typeof(Advertisement).FullName &&
+                     // Name,DeleterUserId,IsDeleted,DeletionTime
+                     s.EntityChanges[0].PropertyChanges.Count == 4 &&
 
                      // Check "who did this change"
                      s.ImpersonatorTenantId == AbpSession.ImpersonatorTenantId &&
