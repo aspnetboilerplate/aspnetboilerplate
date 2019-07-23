@@ -337,4 +337,213 @@ namespace Abp.Runtime.Caching
 
         }
     }
+
+    /// <summary>
+    /// Base class for caches with multiple keys operations.
+    /// </summary>
+    public abstract class CacheBase<TKey, TSingleValue, TMultipleValues> : CacheBase<TKey, TSingleValue>, ICacheMultipleKeysOperations<TKey, TSingleValue, TMultipleValues>
+    {
+        protected CacheBase(string name) : base(name)
+        {
+        }
+
+        public abstract TMultipleValues Get(TKey[] keys, Func<TKey, TSingleValue> factory);
+
+        public abstract Task<TMultipleValues> GetAsync(TKey[] keys, Func<TKey, Task<TSingleValue>> factory);
+
+        public abstract TMultipleValues GetOrDefault(TKey[] keys);
+
+        public abstract Task<TMultipleValues> GetOrDefaultAsync(TKey[] keys);
+
+        public virtual void Set(KeyValuePair<TKey, TSingleValue>[] pairs, TimeSpan? slidingExpireTime = null, TimeSpan? absoluteExpireTime = null)
+        {
+            foreach (var pair in pairs)
+            {
+                Set(pair.Key, pair.Value, slidingExpireTime, absoluteExpireTime);
+            }
+        }
+
+        public virtual Task SetAsync(KeyValuePair<TKey, TSingleValue>[] pairs, TimeSpan? slidingExpireTime = null, TimeSpan? absoluteExpireTime = null)
+        {
+            return Task.WhenAll(pairs.Select(p => SetAsync(p.Key, p.Value, slidingExpireTime, absoluteExpireTime)));
+        }
+
+        public virtual void Remove(TKey[] keys)
+        {
+            foreach (var key in keys)
+            {
+                Remove(key);
+            }
+        }
+
+        public virtual Task RemoveAsync(TKey[] keys)
+        {
+            return Task.WhenAll(keys.Select(RemoveAsync));
+        }
+    }
+
+    /// <summary>
+    /// Base class for caches with single key operations.
+    /// </summary>
+    public abstract class CacheBase<TKey, TValue> : IDisposable, ICacheOptions, ICacheOperations, ICacheSingleKeyOperations<TKey, TValue>
+    {
+        public ILogger Logger { get; set; }
+
+        public string Name { get; }
+
+        public TimeSpan DefaultSlidingExpireTime { get; set; }
+
+        public TimeSpan? DefaultAbsoluteExpireTime { get; set; }
+
+        protected readonly object SyncObj = new object();
+
+        protected readonly AsyncLock AsyncLock = new AsyncLock();
+
+        /// <summary>
+        /// Constructor.
+        /// </summary>
+        /// <param name="name"></param>
+        protected CacheBase(string name)
+        {
+            Name = name;
+            DefaultSlidingExpireTime = TimeSpan.FromHours(1);
+
+            Logger = NullLogger.Instance;
+        }
+
+        public virtual TValue Get(TKey key, Func<TKey, TValue> factory)
+        {
+            TValue item = default(TValue);
+
+            try
+            {
+                item = GetOrDefault(key);
+            }
+            catch (Exception ex)
+            {
+                Logger.Error(ex.ToString(), ex);
+            }
+
+            if (item == null)
+            {
+                lock (SyncObj)
+                {
+                    try
+                    {
+                        item = GetOrDefault(key);
+                    }
+                    catch (Exception ex)
+                    {
+                        Logger.Error(ex.ToString(), ex);
+                    }
+
+                    if (item == null)
+                    {
+                        item = factory(key);
+
+                        if (item == null)
+                        {
+                            return default(TValue);
+                        }
+
+                        try
+                        {
+                            Set(key, item);
+                        }
+                        catch (Exception ex)
+                        {
+                            Logger.Error(ex.ToString(), ex);
+                        }
+                    }
+                }
+            }
+
+            return item;
+        }
+
+        public virtual async Task<TValue> GetAsync(TKey key, Func<TKey, Task<TValue>> factory)
+        {
+            TValue item = default(TValue);
+
+            try
+            {
+                item = await GetOrDefaultAsync(key);
+            }
+            catch (Exception ex)
+            {
+                Logger.Error(ex.ToString(), ex);
+            }
+
+            if (item == null)
+            {
+                using (await AsyncLock.LockAsync())
+                {
+                    try
+                    {
+                        item = await GetOrDefaultAsync(key);
+                    }
+                    catch (Exception ex)
+                    {
+                        Logger.Error(ex.ToString(), ex);
+                    }
+
+                    if (item == null)
+                    {
+                        item = await factory(key);
+
+                        if (item == null)
+                        {
+                            return default(TValue);
+                        }
+
+                        try
+                        {
+                            await SetAsync(key, item);
+                        }
+                        catch (Exception ex)
+                        {
+                            Logger.Error(ex.ToString(), ex);
+                        }
+                    }
+                }
+            }
+
+            return item;
+        }
+
+        public abstract TValue GetOrDefault(TKey key);
+
+        public virtual Task<TValue> GetOrDefaultAsync(TKey key)
+        {
+            return Task.FromResult(GetOrDefault(key));
+        }
+
+        public abstract void Set(TKey key, TValue value, TimeSpan? slidingExpireTime = null, TimeSpan? absoluteExpireTime = null);
+
+        public virtual Task SetAsync(TKey key, TValue value, TimeSpan? slidingExpireTime = null, TimeSpan? absoluteExpireTime = null)
+        {
+            Set(key, value, slidingExpireTime, absoluteExpireTime);
+            return Task.CompletedTask;
+        }
+
+        public abstract void Remove(TKey key);
+
+        public virtual Task RemoveAsync(TKey key)
+        {
+            Remove(key);
+            return Task.CompletedTask;
+        }
+
+        public abstract void Clear();
+
+        public virtual Task ClearAsync()
+        {
+            Clear();
+            return Task.CompletedTask;
+        }
+
+        public virtual void Dispose()
+        {
+        }
+    }
 }
