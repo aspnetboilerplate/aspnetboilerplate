@@ -6,6 +6,7 @@ using System.Data.Entity.Core.Metadata.Edm;
 using System.Data.Entity.Core.Objects;
 using System.Data.Entity.Infrastructure;
 using System.Linq;
+using System.Linq.Expressions;
 using System.Reflection;
 using System.Threading.Tasks;
 using System.Transactions;
@@ -13,13 +14,17 @@ using Abp.Auditing;
 using Abp.Dependency;
 using Abp.Domain.Entities;
 using Abp.Domain.Entities.Auditing;
+using Abp.Domain.Repositories;
 using Abp.Domain.Uow;
+using Abp.EntityFramework;
+using Abp.EntityFramework.Repositories;
 using Abp.EntityHistory.Extensions;
 using Abp.Events.Bus.Entities;
 using Abp.Extensions;
 using Abp.Json;
 using Abp.Runtime.Session;
 using Abp.Timing;
+using Abp.Zero.EntityFramework;
 using Castle.Core.Logging;
 using JetBrains.Annotations;
 
@@ -35,6 +40,9 @@ namespace Abp.EntityHistory
 
         private readonly IEntityHistoryConfiguration _configuration;
         private readonly IUnitOfWorkManager _unitOfWorkManager;
+
+        private readonly IRepository<EntityChange, long> _entityChangeRepository;
+
 
         private bool IsEntityHistoryEnabled
         {
@@ -56,10 +64,13 @@ namespace Abp.EntityHistory
 
         public EntityHistoryHelper(
             IEntityHistoryConfiguration configuration,
-            IUnitOfWorkManager unitOfWorkManager)
+            IUnitOfWorkManager unitOfWorkManager,
+            IRepository<EntityChange, long> entityChangeRepository
+            )
         {
             _configuration = configuration;
             _unitOfWorkManager = unitOfWorkManager;
+            _entityChangeRepository = entityChangeRepository;
 
             AbpSession = NullAbpSession.Instance;
             Logger = NullLogger.Instance;
@@ -319,7 +330,7 @@ namespace Abp.EntityHistory
                 })
                 .GroupBy(t => t.Item1);
 
-            foreach(var relationship in relationshipGroups)
+            foreach (var relationship in relationshipGroups)
             {
                 var relationshipName = relationship.Key;
                 var navigationPropertyName = navigationProperties
@@ -535,6 +546,88 @@ namespace Abp.EntityHistory
                     }
                 }
             }
+        }
+
+
+        public async Task<EntityHistorySnapshot> GetEntitySnapshotAsync<TEntity>(int id, DateTime snapShotTime) where TEntity : class, IEntity<int>
+        {
+            return await GetEntitySnapshotAsync<TEntity, int>(id, snapShotTime);
+        }
+
+        public async Task<EntityHistorySnapshot> GetEntitySnapshotAsync<TEntity, TPrimaryKey>(TPrimaryKey id, DateTime snapShotTime) where TEntity : class, IEntity<TPrimaryKey>
+        {
+            var entity =  _entityChangeRepository.GetDbContext()
+                .Set<TEntity>().AsQueryable().FirstOrDefault(CreateEqualityExpressionForId<TEntity, TPrimaryKey>(id));
+
+            var changedPropertiesDictionary = new Dictionary<string, string>();
+            var propertyChangesStackTreeDictionary = new Dictionary<string, string>();
+
+            if (entity != null)
+            {
+                string fullName = typeof(TEntity).FullName;
+                var idJson = id.ToJsonString();
+
+                var changes = await _entityChangeRepository.GetAll()//select all changes which created after snapshot time 
+                    .Where(x => x.EntityTypeFullName == fullName && x.EntityId == idJson && x.ChangeTime > snapShotTime && x.ChangeType != EntityChangeType.Created)
+                    .OrderByDescending(x => x.ChangeTime)
+                    .Select(x => new { x.ChangeType, x.PropertyChanges }).ToListAsync();
+
+                //and revoke all changes
+
+                foreach (var changedProperties in changes)// desc ordered changes
+                {
+                    foreach (var entityPropertyChange in changedProperties.PropertyChanges)
+                    {
+                        if (changedPropertiesDictionary.ContainsKey(entityPropertyChange.PropertyName))
+                        {
+                            changedPropertiesDictionary[entityPropertyChange.PropertyName] = entityPropertyChange.OriginalValue;//set back to orginal value
+                        }
+                        else
+                        {
+                            changedPropertiesDictionary.Add(entityPropertyChange.PropertyName, entityPropertyChange.OriginalValue);//set back to orginal value
+                        }
+
+                        //create change stack tree
+                        if (propertyChangesStackTreeDictionary.ContainsKey(entityPropertyChange.PropertyName))
+                        {
+                            propertyChangesStackTreeDictionary[entityPropertyChange.PropertyName] += "->" + entityPropertyChange.OriginalValue;
+                        }
+                        else
+                        {
+                            string propertyCurrentValue = "NotExist";
+
+                            var propertyInfo = typeof(TEntity).GetProperty(entityPropertyChange.PropertyName);
+                            if (propertyInfo != null)
+                            {
+                                var val = propertyInfo.GetValue(entity);
+                                if (val == null)
+                                {
+                                    propertyCurrentValue = "null";
+                                }
+                                else
+                                {
+                                    propertyCurrentValue = val.ToJsonString();
+                                }
+                            }
+                            propertyChangesStackTreeDictionary.Add(entityPropertyChange.PropertyName, "->" + entityPropertyChange.OriginalValue);
+                        }
+                    }
+                }
+            }
+            return new EntityHistorySnapshot(changedPropertiesDictionary, propertyChangesStackTreeDictionary);
+        }
+        protected virtual Expression<Func<TEntity, bool>> CreateEqualityExpressionForId<TEntity, TPrimaryKey>(TPrimaryKey id)
+        {
+            var lambdaParam = Expression.Parameter(typeof(TEntity));
+
+            var leftExpression = Expression.PropertyOrField(lambdaParam, "Id");
+
+            Expression<Func<object>> closure = () => id;
+            var rightExpression = Expression.Convert(closure.Body, leftExpression.Type);
+
+            var lambdaBody = Expression.Equal(leftExpression, rightExpression);
+
+            return Expression.Lambda<Func<TEntity, bool>>(lambdaBody, lambdaParam);
         }
     }
 }

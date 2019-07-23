@@ -8,7 +8,11 @@ using Abp.Auditing;
 using Abp.Dependency;
 using Abp.Domain.Entities;
 using Abp.Domain.Entities.Auditing;
+using Abp.Domain.Repositories;
 using Abp.Domain.Uow;
+using Abp.EntityFramework;
+using Abp.EntityFrameworkCore;
+using Abp.EntityFrameworkCore.Repositories;
 using Abp.Events.Bus.Entities;
 using Abp.Extensions;
 using Abp.Json;
@@ -31,6 +35,7 @@ namespace Abp.EntityHistory
 
         private readonly IEntityHistoryConfiguration _configuration;
         private readonly IUnitOfWorkManager _unitOfWorkManager;
+        private readonly IRepository<EntityChange, long> _entityChangeRepository;
 
         private bool IsEntityHistoryEnabled
         {
@@ -52,10 +57,12 @@ namespace Abp.EntityHistory
 
         public EntityHistoryHelper(
             IEntityHistoryConfiguration configuration,
-            IUnitOfWorkManager unitOfWorkManager)
+            IUnitOfWorkManager unitOfWorkManager,
+            IRepository<EntityChange, long> entityChangeRepository)
         {
             _configuration = configuration;
             _unitOfWorkManager = unitOfWorkManager;
+            _entityChangeRepository = entityChangeRepository;
 
             AbpSession = NullAbpSession.Instance;
             Logger = NullLogger.Instance;
@@ -428,5 +435,74 @@ namespace Abp.EntityHistory
                 }
             }
         }
+        public async Task<EntityHistorySnapshot> GetEntitySnapshotAsync<TEntity>(int id, DateTime snapShotTime) where TEntity : Entity<int>
+        {
+            return await GetEntitySnapshotAsync<TEntity, int>(id, snapShotTime);
+        }
+        public async Task<EntityHistorySnapshot> GetEntitySnapshotAsync<TEntity, TPrimaryKey>(TPrimaryKey id, DateTime snapShotTime) where TEntity : Entity<TPrimaryKey>
+        {
+            var entity = _entityChangeRepository.GetDbContext()
+                .Set<TEntity>().AsQueryable().FirstOrDefault(x => x.Id.Equals(id));
+
+            var snapshotPropertiesDictionary = new Dictionary<string, string>();
+            var propertyChangesStackTreeDictionary = new Dictionary<string, string>();
+
+            if (entity != null)
+            {
+                string fullName = typeof(TEntity).FullName;
+                var idJson = id.ToJsonString();
+
+                var allChanges = _entityChangeRepository.GetAll().Include(x => x.PropertyChanges).ToList();
+                var changes = await _entityChangeRepository.GetAll()//select all changes which created after snapshot time 
+                    .Where(x => x.EntityTypeFullName == fullName && x.EntityId == idJson && x.ChangeTime > snapShotTime && x.ChangeType != EntityChangeType.Created)
+                    .OrderByDescending(x => x.ChangeTime)
+                    .Select(x => new { x.ChangeType, x.PropertyChanges }).ToListAsync();
+
+                //and revoke all changes
+
+                foreach (var changedProperties in changes)// desc ordered changes
+                {
+                    foreach (var entityPropertyChange in changedProperties.PropertyChanges)
+                    {
+                        if (snapshotPropertiesDictionary.ContainsKey(entityPropertyChange.PropertyName))
+                        {
+                            snapshotPropertiesDictionary[entityPropertyChange.PropertyName] = entityPropertyChange.OriginalValue;//set back to orginal value
+                        }
+                        else
+                        {
+                            snapshotPropertiesDictionary.Add(entityPropertyChange.PropertyName, entityPropertyChange.OriginalValue);//set back to orginal value
+                        }
+
+                        //create change stack tree
+                        if (propertyChangesStackTreeDictionary.ContainsKey(entityPropertyChange.PropertyName))
+                        {
+                            propertyChangesStackTreeDictionary[entityPropertyChange.PropertyName] += " -> " + entityPropertyChange.OriginalValue;
+                        }
+                        else
+                        {
+                            string propertyCurrentValue = "NotExist";
+
+                            var propertyInfo = typeof(TEntity).GetProperty(entityPropertyChange.PropertyName);
+                            if (propertyInfo != null)
+                            {
+                                var val = propertyInfo.GetValue(entity);
+                                if (val == null)
+                                {
+                                    propertyCurrentValue = "null";
+                                }
+                                else
+                                {
+                                    propertyCurrentValue = val.ToJsonString();
+                                }
+                            }
+                            propertyChangesStackTreeDictionary.Add(entityPropertyChange.PropertyName, propertyCurrentValue + " -> " + entityPropertyChange.OriginalValue);
+                        }
+                    }
+                }
+            }
+            return new EntityHistorySnapshot(snapshotPropertiesDictionary, propertyChangesStackTreeDictionary);
+        }
+     
+
     }
 }
