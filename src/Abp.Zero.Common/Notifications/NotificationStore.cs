@@ -211,7 +211,7 @@ namespace Abp.Notifications
 
         private Expression<Func<UserNotificationInfo, bool>> CreateNotificationFilterPredicate(UserIdentifier user, UserNotificationState? state = null, DateTime? startDate = null, DateTime? endDate = null)
         {
-            var predicate = PredicateBuilder.True<UserNotificationInfo>();
+            var predicate = PredicateBuilder.New<UserNotificationInfo>();
             predicate = predicate.And(p => p.UserId == user.UserId);
 
             if (startDate.HasValue)
