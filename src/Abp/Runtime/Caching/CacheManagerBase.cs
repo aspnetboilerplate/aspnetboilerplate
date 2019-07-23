@@ -1,4 +1,5 @@
-﻿using System.Collections.Concurrent;
+﻿using System;
+using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Collections.Immutable;
 using System.Linq;
@@ -7,6 +8,14 @@ using Abp.Runtime.Caching.Configuration;
 
 namespace Abp.Runtime.Caching
 {
+    [Obsolete("Use CacheManagerBase<TCache> instead.")]
+    public abstract class CacheManagerBase : CacheManagerBase<ICache>, ICacheManager
+    {
+        public CacheManagerBase(ICachingConfiguration configuration) : base(configuration)
+        {
+        }
+    }
+
     /// <summary>
     /// Base class for cache managers.
     /// </summary>
