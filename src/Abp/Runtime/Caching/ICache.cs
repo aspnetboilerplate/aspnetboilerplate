@@ -7,7 +7,7 @@ namespace Abp.Runtime.Caching
     /// <summary>
     /// Defines a cache that can be store and get items by keys.
     /// </summary>
-    public interface ICache : IDisposable, ICacheOptions
+    public interface ICache : IDisposable, ICacheOptions, ICacheOperations
     {
         /// <summary>
         /// Unique name of the cache.
@@ -155,15 +155,5 @@ namespace Abp.Runtime.Caching
         /// </summary>
         /// <param name="keys">Keys</param>
         Task RemoveAsync(string[] keys);
-
-        /// <summary>
-        /// Clears all items in this cache.
-        /// </summary>
-        void Clear();
-
-        /// <summary>
-        /// Clears all items in this cache.
-        /// </summary>
-        Task ClearAsync();
     }
 }

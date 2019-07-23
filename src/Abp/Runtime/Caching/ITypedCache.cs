@@ -11,7 +11,7 @@ namespace Abp.Runtime.Caching
     /// </summary>
     /// <typeparam name="TKey">Key type for cache items</typeparam>
     /// <typeparam name="TValue">Value type for cache items</typeparam>
-    public interface ITypedCache<TKey, TValue> : IDisposable, ICacheOptions
+    public interface ITypedCache<TKey, TValue> : IDisposable, ICacheOptions, ICacheOperations
     {
         /// <summary>
         /// Unique name of the cache.
@@ -140,15 +140,5 @@ namespace Abp.Runtime.Caching
         /// </summary>
         /// <param name="keys">Keys</param>
         Task RemoveAsync(TKey[] keys);
-
-        /// <summary>
-        /// Clears all items in this cache.
-        /// </summary>
-        void Clear();
-
-        /// <summary>
-        /// Clears all items in this cache.
-        /// </summary>
-        Task ClearAsync();
     }
 }
