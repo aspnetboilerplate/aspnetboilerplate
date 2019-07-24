@@ -27,7 +27,11 @@ namespace Abp.EntityFramework
         /// <returns>Changed property. If dictionary is not contain key this will return null</returns>
         public string this[string key] => ChangedPropertiesSnapshots.ContainsKey(key) ? ChangedPropertiesSnapshots[key] : null;
 
-
+        /// <summary>
+        /// returns whether entity property changed in this snapshot.  (ChangedPropertiesSnapshots.ContainsKey(key))
+        /// </summary>
+        /// <param name="key"></param>
+        /// <returns></returns>
         public bool IsPropertyChanged(string key) => ChangedPropertiesSnapshots.ContainsKey(key);
     }
 }
