@@ -22,6 +22,7 @@ namespace Abp.Zero.SampleApp.Tests.EntityHistory
         {
             _userRepository = Resolve<IRepository<UserTestEntity>>();
             _entityHistoryHelper = Resolve<IEntityHistoryHelper>();
+            Resolve<IEntityHistoryConfiguration>().IsEnabledForAnonymousUsers = true;
         }
 
         [Fact]

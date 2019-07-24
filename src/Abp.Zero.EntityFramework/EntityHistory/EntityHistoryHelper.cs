@@ -590,7 +590,7 @@ namespace Abp.EntityHistory
                         //create change stack tree
                         if (propertyChangesStackTreeDictionary.ContainsKey(entityPropertyChange.PropertyName))
                         {
-                            propertyChangesStackTreeDictionary[entityPropertyChange.PropertyName] += "->" + entityPropertyChange.OriginalValue;
+                            propertyChangesStackTreeDictionary[entityPropertyChange.PropertyName] += " -> " + entityPropertyChange.OriginalValue;
                         }
                         else
                         {
@@ -609,7 +609,7 @@ namespace Abp.EntityHistory
                                     propertyCurrentValue = val.ToJsonString();
                                 }
                             }
-                            propertyChangesStackTreeDictionary.Add(entityPropertyChange.PropertyName, "->" + entityPropertyChange.OriginalValue);
+                            propertyChangesStackTreeDictionary.Add(entityPropertyChange.PropertyName, propertyCurrentValue+" -> " + entityPropertyChange.OriginalValue);
                         }
                     }
                 }
