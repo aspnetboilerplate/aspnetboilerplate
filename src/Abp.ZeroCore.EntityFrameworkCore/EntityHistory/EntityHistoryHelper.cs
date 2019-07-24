@@ -435,11 +435,11 @@ namespace Abp.EntityHistory
                 }
             }
         }
-        public async Task<EntityHistorySnapshot> GetEntitySnapshotAsync<TEntity>(int id, DateTime snapShotTime) where TEntity : Entity<int>
+        public async Task<EntityHistorySnapshot> GetEntitySnapshotAsync<TEntity>(int id, DateTime snapshotTime) where TEntity : class, IEntity<int>
         {
-            return await GetEntitySnapshotAsync<TEntity, int>(id, snapShotTime);
+            return await GetEntitySnapshotAsync<TEntity, int>(id, snapshotTime);
         }
-        public async Task<EntityHistorySnapshot> GetEntitySnapshotAsync<TEntity, TPrimaryKey>(TPrimaryKey id, DateTime snapShotTime) where TEntity : Entity<TPrimaryKey>
+        public async Task<EntityHistorySnapshot> GetEntitySnapshotAsync<TEntity, TPrimaryKey>(TPrimaryKey id, DateTime snapshotTime) where TEntity : class, IEntity<TPrimaryKey>
         {
             var entity = _entityChangeRepository.GetDbContext()
                 .Set<TEntity>().AsQueryable().FirstOrDefault(x => x.Id.Equals(id));
@@ -454,7 +454,7 @@ namespace Abp.EntityHistory
 
                 var allChanges = _entityChangeRepository.GetAll().Include(x => x.PropertyChanges).ToList();
                 var changes = await _entityChangeRepository.GetAll()//select all changes which created after snapshot time 
-                    .Where(x => x.EntityTypeFullName == fullName && x.EntityId == idJson && x.ChangeTime > snapShotTime && x.ChangeType != EntityChangeType.Created)
+                    .Where(x => x.EntityTypeFullName == fullName && x.EntityId == idJson && x.ChangeTime > snapshotTime && x.ChangeType != EntityChangeType.Created)
                     .OrderByDescending(x => x.ChangeTime)
                     .Select(x => new { x.ChangeType, x.PropertyChanges }).ToListAsync();
 
@@ -480,7 +480,7 @@ namespace Abp.EntityHistory
                         }
                         else
                         {
-                            string propertyCurrentValue = "NotExist";
+                            string propertyCurrentValue = "PropertyNotExist";
 
                             var propertyInfo = typeof(TEntity).GetProperty(entityPropertyChange.PropertyName);
                             if (propertyInfo != null)
@@ -502,7 +502,7 @@ namespace Abp.EntityHistory
             }
             return new EntityHistorySnapshot(snapshotPropertiesDictionary, propertyChangesStackTreeDictionary);
         }
-     
+
 
     }
 }
