@@ -1,28 +1,27 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 using Abp.Domain.Repositories;
 using Abp.Domain.Uow;
+using Abp.EntityFramework;
 using Abp.EntityHistory;
-using Abp.Zero.SampleApp.EntityHistory;
+using Abp.ZeroCore.SampleApp.Core.EntityHistory;
 using Shouldly;
 using Xunit;
 
-namespace Abp.Zero.SampleApp.Tests.EntityHistory
+namespace Abp.Zero.EntityHistory
 {
- public class EntityHistoryHelper_Tests : SampleAppTestBase
+    public class EntitySnapshotManager_Tests : AbpZeroTestBase
     {
         private readonly IRepository<UserTestEntity> _userRepository;
-        private IEntityHistoryHelper _entityHistoryHelper;
+        private IEntitySnapshotManager _entitySnapshotManager;
 
-        public EntityHistoryHelper_Tests()
+        public EntitySnapshotManager_Tests()
         {
             _userRepository = Resolve<IRepository<UserTestEntity>>();
-            _entityHistoryHelper = Resolve<IEntityHistoryHelper>();
-            Resolve<IEntityHistoryConfiguration>().IsEnabledForAnonymousUsers = true;
+            _entitySnapshotManager = Resolve<IEntitySnapshotManager>();
         }
 
         [Fact]
@@ -33,7 +32,7 @@ namespace Abp.Zero.SampleApp.Tests.EntityHistory
 
             using (var uow = Resolve<IUnitOfWorkManager>().Begin())
             {
-                var snapshot = await _entityHistoryHelper.GetEntitySnapshotAsync<UserTestEntity, int>(id, DateTime.Now);
+                var snapshot = await _entitySnapshotManager.GetSnapshotAsync<UserTestEntity, int>(id, DateTime.Now);
                 snapshot.ChangedPropertiesSnapshots.Count.ShouldBe(0);
                 snapshot.PropertyChangesStackTree.Count.ShouldBe(0);
             }
@@ -58,7 +57,7 @@ namespace Abp.Zero.SampleApp.Tests.EntityHistory
             using (var uow = Resolve<IUnitOfWorkManager>().Begin())
             {
                 //undo last update
-                var snapshot = await _entityHistoryHelper.GetEntitySnapshotAsync<UserTestEntity, int>(id, DateTime.Now.AddSeconds(-2));
+                var snapshot = await _entitySnapshotManager.GetSnapshotAsync<UserTestEntity, int>(id, DateTime.Now.AddSeconds(-2));
 
                 snapshot.ChangedPropertiesSnapshots.Count.ShouldBe(1);
                 snapshot.PropertyChangesStackTree.Count.ShouldBe(1);
@@ -69,7 +68,7 @@ namespace Abp.Zero.SampleApp.Tests.EntityHistory
 
 
                 //undo all changes
-                var snapshot2 = await _entityHistoryHelper.GetEntitySnapshotAsync<UserTestEntity>(id, DateTime.Now.AddDays(-1));
+                var snapshot2 = await _entitySnapshotManager.GetSnapshotAsync<UserTestEntity>(id, DateTime.Now.AddDays(-1));
 
                 snapshot2.ChangedPropertiesSnapshots.Count.ShouldBe(2);
                 snapshot2.PropertyChangesStackTree.Count.ShouldBe(2);
@@ -97,5 +96,3 @@ namespace Abp.Zero.SampleApp.Tests.EntityHistory
         }
     }
 }
-
-
