@@ -1,9 +1,6 @@
-﻿using System;
-using Microsoft.EntityFrameworkCore.ChangeTracking;
+﻿using Microsoft.EntityFrameworkCore.ChangeTracking;
 using System.Collections.Generic;
 using System.Threading.Tasks;
-using Abp.Domain.Entities;
-using Abp.EntityFramework;
 using Abp.Threading;
 
 namespace Abp.EntityHistory

@@ -1,8 +1,5 @@
-﻿using System;
-using System.Data.Entity;
+﻿using System.Data.Entity;
 using System.Threading.Tasks;
-using Abp.Domain.Entities;
-using Abp.EntityFramework;
 using Abp.Threading;
 
 namespace Abp.EntityHistory
