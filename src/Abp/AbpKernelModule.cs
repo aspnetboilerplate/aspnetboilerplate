@@ -69,6 +69,8 @@ namespace Abp
             IocManager.Register(typeof(IOnlineClientManager<>), typeof(OnlineClientManager<>), DependencyLifeStyle.Singleton);
             IocManager.Register(typeof(IOnlineClientStore<>), typeof(InMemoryOnlineClientStore<>), DependencyLifeStyle.Singleton);
 
+            IocManager.Register(typeof(EventTriggerAsyncBackgroundJob<>), DependencyLifeStyle.Transient);
+
             IocManager.RegisterAssemblyByConvention(typeof(AbpKernelModule).GetAssembly(),
                 new ConventionalRegistrationConfig
                 {
