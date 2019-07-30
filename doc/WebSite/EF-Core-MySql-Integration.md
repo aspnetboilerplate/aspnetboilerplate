@@ -69,7 +69,7 @@ To understand why it needs to be renamed, check the following issues:
 
 ### Create Database
 
-Remove all migration classes under **\*.EntityFrameworkCore/Migrations** folder. 
+Remove all migration classes(include `DbContextModelSnapshot`) under **\*.EntityFrameworkCore/Migrations** folder. 
 Because `Pomelo.EntityFrameworkCore.MySql` will add some of its own configurations to work with Entity Framework Core.
 
 Now it's ready to build the database.
