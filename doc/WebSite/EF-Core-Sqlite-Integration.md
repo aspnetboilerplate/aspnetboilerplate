@@ -67,7 +67,7 @@ Change the connection string to your SQLite connection in ***.Web.Mvc/appsetting
 
 ### Create Database
 
-Remove all migration classes under **\*.EntityFrameworkCore/Migrations** folder before creating database.
+Remove all migration classes(include `DbContextModelSnapshot`) under **\*.EntityFrameworkCore/Migrations** folder before creating database.
 `Microsoft.EntityFrameworkCore.Sqlite` will add some of its own configuration to work with Entity Framework Core.
 
 Now it's ready to build the database.
