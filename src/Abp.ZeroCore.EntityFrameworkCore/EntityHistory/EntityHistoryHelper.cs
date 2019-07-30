@@ -330,6 +330,11 @@ namespace Abp.EntityHistory
                 return false;
             }
 
+            if (propertyEntry.OriginalValue == null && propertyEntry.CurrentValue == null)
+            {
+                return false;
+            }
+
             var propertyInfo = propertyEntry.Metadata.PropertyInfo;
 
             var shouldSavePropertyHistoryForInfo = ShouldSavePropertyHistoryForInfo(propertyInfo, shouldSaveEntityHistory);
