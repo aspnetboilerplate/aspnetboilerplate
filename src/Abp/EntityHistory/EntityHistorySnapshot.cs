@@ -1,17 +1,19 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Text;
-using Abp.Events.Bus.Entities;
 
-namespace Abp.EntityFramework
+namespace Abp.EntityHistory
 {
     public class EntityHistorySnapshot
     {
         /// <summary>
-        /// if dictionary contains value it means EntityPropertyChange has that value
+        /// if dictionary contains value it means EntityPropertyChange has that value. Keys are propertyNames, values are snapshot values
         /// </summary>
         public Dictionary<string, string> ChangedPropertiesSnapshots { get; }
 
+        /// <summary>
+        /// Keys are propertyNames, values are stack tree string from present to past
+        /// </summary>
         public Dictionary<string, string> PropertyChangesStackTree { get; }
 
         public EntityHistorySnapshot(Dictionary<string, string> snapshotProperties, Dictionary<string, string> propertyChangesStackTree)
@@ -23,15 +25,15 @@ namespace Abp.EntityFramework
         /// <summary>
         /// Shortcut of ChangedProperties
         /// </summary>
-        /// <param name="key"></param>
+        /// <param name="propertyName"></param>
         /// <returns>Changed property. If dictionary is not contain key this will return null</returns>
-        public string this[string key] => ChangedPropertiesSnapshots.ContainsKey(key) ? ChangedPropertiesSnapshots[key] : null;
+        public string this[string propertyName] => ChangedPropertiesSnapshots.ContainsKey(propertyName) ? ChangedPropertiesSnapshots[propertyName] : null;
 
         /// <summary>
         /// returns whether entity property changed in this snapshot.  (ChangedPropertiesSnapshots.ContainsKey(key))
         /// </summary>
-        /// <param name="key"></param>
+        /// <param name="propertyName"></param>
         /// <returns></returns>
-        public bool IsPropertyChanged(string key) => ChangedPropertiesSnapshots.ContainsKey(key);
+        public bool IsPropertyChanged(string propertyName) => ChangedPropertiesSnapshots.ContainsKey(propertyName);
     }
 }

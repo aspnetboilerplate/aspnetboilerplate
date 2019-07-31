@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.Text;
 using System.Threading.Tasks;
 using Abp.Domain.Entities;
-using Abp.EntityFramework;
 
 namespace Abp.EntityHistory
 {
