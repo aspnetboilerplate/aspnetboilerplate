@@ -39,7 +39,6 @@ namespace Abp.EntityHistory
                 string fullName = typeof(TEntity).FullName;
                 var idJson = id.ToJsonString();
 
-                var allChanges = _entityChangeRepository.GetAll().Include(x => x.PropertyChanges).ToList();
                 var changes = await _entityChangeRepository.GetAll()//select all changes which created after snapshot time 
                     .Where(x => x.EntityTypeFullName == fullName && x.EntityId == idJson && x.ChangeTime > snapshotTime && x.ChangeType != EntityChangeType.Created)
                     .OrderByDescending(x => x.ChangeTime)
