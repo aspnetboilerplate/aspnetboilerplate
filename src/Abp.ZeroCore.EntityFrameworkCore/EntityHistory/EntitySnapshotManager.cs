@@ -26,7 +26,7 @@ namespace Abp.EntityHistory
         protected override async Task<TEntity> GetEntityById<TEntity, TPrimaryKey>(TPrimaryKey id)
         {
             return await _entityChangeRepository.GetDbContext()
-                .Set<TEntity>().AsQueryable().FirstOrDefaultAsync(base.CreateEqualityExpressionForId<TEntity, TPrimaryKey>(id));
+                .Set<TEntity>().AsQueryable().FirstOrDefaultAsync(CreateEqualityExpressionForId<TEntity, TPrimaryKey>(id));
         }
 
         protected override IQueryable<EntityChange> GetEntityChanges<TEntity, TPrimaryKey>(TPrimaryKey id, DateTime snapshotTime)
