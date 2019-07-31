@@ -8,7 +8,6 @@ namespace Abp.EntityHistory
 {
     public interface IEntitySnapshotManager
     {
-        
         /// <summary>
         /// Returns snapshot of entity at given snapshotTime.
         /// <para>
@@ -20,11 +19,7 @@ namespace Abp.EntityHistory
         /// <typeparam name="TPrimaryKey">typeof primary key</typeparam>
         /// <param name="id">entity id</param>
         /// <param name="snapshotTime"></param>
-        Task<EntityHistorySnapshot> GetSnapshotAsync<TEntity, TPrimaryKey>(TPrimaryKey id, DateTime snapshotTime) where TEntity : class, IEntity<TPrimaryKey>;
-
-        /// <summary>
-        /// shortcut of GetEntitySnapshotAsync &lt;TEntity, int &gt;
-        /// </summary>
-        Task<EntityHistorySnapshot> GetSnapshotAsync<TEntity>(int id, DateTime snapshotTime) where TEntity : class, IEntity<int>;
+        Task<EntityHistorySnapshot> GetSnapshotAsync<TEntity, TPrimaryKey>(TPrimaryKey id, DateTime snapshotTime) 
+            where TEntity : class, IEntity<TPrimaryKey>;
     }
 }
