@@ -14,24 +14,23 @@ namespace Abp.EntityHistory
     public abstract class EntitySnapshotManagerBase : IEntitySnapshotManager, ITransientDependency
     {
         protected readonly IRepository<EntityChange, long> EntityChangeRepository;
-        private readonly IAsyncQueryableExecuter _asyncQueryableExecuter;
+        public IAsyncQueryableExecuter AsyncQueryableExecuter { get; set; }
 
-        protected EntitySnapshotManagerBase(IRepository<EntityChange, long> entityChangeRepository, IAsyncQueryableExecuter asyncQueryableExecuter)
+        protected EntitySnapshotManagerBase(IRepository<EntityChange, long> entityChangeRepository)
         {
             EntityChangeRepository = entityChangeRepository;
-            _asyncQueryableExecuter = asyncQueryableExecuter;
+            AsyncQueryableExecuter = NullAsyncQueryableExecuter.Instance;
         }
 
         protected abstract Task<TEntity> GetEntityById<TEntity, TPrimaryKey>(TPrimaryKey id)
-            where TEntity : class, IEntity<TPrimaryKey>;
+           where TEntity : class, IEntity<TPrimaryKey>;
 
         protected abstract IQueryable<EntityChange> GetEntityChanges<TEntity, TPrimaryKey>(TPrimaryKey id, DateTime snapshotTime)
-            where TEntity : class, IEntity<TPrimaryKey>;
+           where TEntity : class, IEntity<TPrimaryKey>;
 
         protected virtual Expression<Func<TEntity, bool>> CreateEqualityExpressionForId<TEntity, TPrimaryKey>(TPrimaryKey id)
         {
             var lambdaParam = Expression.Parameter(typeof(TEntity));
-
             var leftExpression = Expression.PropertyOrField(lambdaParam, "Id");
 
             Expression<Func<object>> closure = () => id;
@@ -43,7 +42,7 @@ namespace Abp.EntityHistory
         }
 
         public virtual async Task<EntityHistorySnapshot> GetSnapshotAsync<TEntity, TPrimaryKey>(TPrimaryKey id, DateTime snapshotTime)
-            where TEntity : class, IEntity<TPrimaryKey>
+           where TEntity : class, IEntity<TPrimaryKey>
         {
             var entity = await GetEntityById<TEntity, TPrimaryKey>(id);
 
@@ -55,20 +54,17 @@ namespace Abp.EntityHistory
                 return new EntityHistorySnapshot(snapshotPropertiesDictionary, propertyChangesStackTreeDictionary);
             }
 
-            var changes = await _asyncQueryableExecuter.ToListAsync(
+            var changes = await AsyncQueryableExecuter.ToListAsync(
                 GetEntityChanges<TEntity, TPrimaryKey>(id, snapshotTime)
                     .Select(x => new { x.ChangeType, x.PropertyChanges })
             );
 
-            foreach (var change in changes) // desc ordered changes
+            //revoke all changes
+            foreach (var change in changes)// desc ordered changes
             {
                 foreach (var entityPropertyChange in change.PropertyChanges)
                 {
-                    RevokeChange<TEntity, TPrimaryKey>(
-                        snapshotPropertiesDictionary,
-                        entityPropertyChange,
-                        entity
-                    );
+                    RevokeChange<TEntity, TPrimaryKey>(snapshotPropertiesDictionary, entityPropertyChange, entity);
 
                     AddChangeToPropertyChangesStackTree<TEntity, TPrimaryKey>(
                         entityPropertyChange,

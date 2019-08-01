@@ -12,8 +12,8 @@ namespace Abp.EntityHistory
 {
     public class EntitySnapshotManager : EntitySnapshotManagerBase
     {
-        public EntitySnapshotManager(IRepository<EntityChange, long> entityChangeRepository, IAsyncQueryableExecuter asyncQueryableExecuter)
-            : base(entityChangeRepository, asyncQueryableExecuter)
+        public EntitySnapshotManager(IRepository<EntityChange, long> entityChangeRepository)
+            : base(entityChangeRepository)
         {
         }
 
