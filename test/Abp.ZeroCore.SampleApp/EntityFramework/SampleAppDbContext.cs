@@ -33,6 +33,8 @@ namespace Abp.ZeroCore.SampleApp.EntityFramework
 
         public DbSet<OrderTranslation> OrderTranslations { get; set; }
 
+        public DbSet<UserTestEntity> UserTestEntities { get; set; }
+
         public SampleAppDbContext(DbContextOptions<SampleAppDbContext> options) 
             : base(options)
         {

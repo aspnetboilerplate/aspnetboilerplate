@@ -23,6 +23,8 @@ namespace Abp.Zero.SampleApp.EntityFramework
         public DbSet<Author> Authors { get; set; }
 
         public DbSet<Store> Stores { get; set; }
+        
+        public DbSet<UserTestEntity> UserTestEntities { get; set; }
 
         public AppDbContext(DbConnection existingConnection)
             : base(existingConnection, true)

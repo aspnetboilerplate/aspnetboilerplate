@@ -22,7 +22,7 @@ namespace Abp.ZeroCore.SampleApp.Core.EntityHistory
 
         public Blog()
         {
-            
+
         }
 
         public Blog(string name, string url, string bloggerName)
