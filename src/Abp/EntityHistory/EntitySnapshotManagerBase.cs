@@ -14,12 +14,12 @@ namespace Abp.EntityHistory
     public abstract class EntitySnapshotManagerBase : IEntitySnapshotManager, ITransientDependency
     {
         protected readonly IRepository<EntityChange, long> EntityChangeRepository;
-        private readonly IAsyncQueryableExecuter _asyncQueryableExecuter;
+        public IAsyncQueryableExecuter AsyncQueryableExecuter { get; set; }
 
-        protected EntitySnapshotManagerBase(IRepository<EntityChange, long> entityChangeRepository, IAsyncQueryableExecuter asyncQueryableExecuter)
+        protected EntitySnapshotManagerBase(IRepository<EntityChange, long> entityChangeRepository)
         {
             EntityChangeRepository = entityChangeRepository;
-            _asyncQueryableExecuter = asyncQueryableExecuter;
+            AsyncQueryableExecuter = NullAsyncQueryableExecuter.Instance;
         }
 
         protected abstract Task<TEntity> GetEntityById<TEntity, TPrimaryKey>(TPrimaryKey id)
@@ -27,7 +27,7 @@ namespace Abp.EntityHistory
 
         protected abstract IQueryable<EntityChange> GetEntityChanges<TEntity, TPrimaryKey>(TPrimaryKey id, DateTime snapshotTime)
             where TEntity : class, IEntity<TPrimaryKey>;
-  
+
         protected virtual Expression<Func<TEntity, bool>> CreateEqualityExpressionForId<TEntity, TPrimaryKey>(TPrimaryKey id)
         {
             var lambdaParam = Expression.Parameter(typeof(TEntity));
@@ -52,7 +52,7 @@ namespace Abp.EntityHistory
 
             if (entity != null)
             {
-                var changes = await _asyncQueryableExecuter.ToListAsync(
+                var changes = await AsyncQueryableExecuter.ToListAsync(
                             GetEntityChanges<TEntity, TPrimaryKey>(id, snapshotTime)
                                 .Select(x => new { x.ChangeType, x.PropertyChanges })
                             );
@@ -93,7 +93,5 @@ namespace Abp.EntityHistory
             }
             return new EntityHistorySnapshot(snapshotPropertiesDictionary, propertyChangesStackTreeDictionary);
         }
-
-     
     }
 }
