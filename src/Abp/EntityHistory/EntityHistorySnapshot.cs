@@ -1,6 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
+﻿using System.Collections.Generic;
 
 namespace Abp.EntityHistory
 {
@@ -26,11 +24,11 @@ namespace Abp.EntityHistory
         /// Shortcut of ChangedProperties
         /// </summary>
         /// <param name="propertyName"></param>
-        /// <returns>Changed property. If dictionary is not contain key this will return null</returns>
+        /// <returns>Changed property. If dictionary doesn't contain key, this will return null</returns>
         public string this[string propertyName] => ChangedPropertiesSnapshots.ContainsKey(propertyName) ? ChangedPropertiesSnapshots[propertyName] : null;
 
         /// <summary>
-        /// returns whether entity property changed in this snapshot.  (ChangedPropertiesSnapshots.ContainsKey(key))
+        /// returns whether entity property changed in this snapshot. (ChangedPropertiesSnapshots.ContainsKey(key))
         /// </summary>
         /// <param name="propertyName"></param>
         /// <returns></returns>

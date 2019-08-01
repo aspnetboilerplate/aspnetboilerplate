@@ -1,7 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 using Abp.Domain.Repositories;
@@ -16,12 +13,13 @@ namespace Abp.Zero.SampleApp.Tests.EntityHistory
  public class EntitySnapshotManager_Tests : SampleAppTestBase
     {
         private readonly IRepository<UserTestEntity> _userRepository;
-        private IEntitySnapshotManager _entitySnapshotManager;
+        private readonly IEntitySnapshotManager _entitySnapshotManager;
 
         public EntitySnapshotManager_Tests()
         {
             _userRepository = Resolve<IRepository<UserTestEntity>>();
             _entitySnapshotManager = Resolve<IEntitySnapshotManager>();
+
             Resolve<IEntityHistoryConfiguration>().IsEnabledForAnonymousUsers = true;
         }
 
@@ -36,6 +34,8 @@ namespace Abp.Zero.SampleApp.Tests.EntityHistory
                 var snapshot = await _entitySnapshotManager.GetSnapshotAsync<UserTestEntity, int>(id, DateTime.Now);
                 snapshot.ChangedPropertiesSnapshots.Count.ShouldBe(0);
                 snapshot.PropertyChangesStackTree.Count.ShouldBe(0);
+
+                uow.Complete();
             }
 
             Thread.Sleep(3 * 1000);
@@ -44,6 +44,7 @@ namespace Abp.Zero.SampleApp.Tests.EntityHistory
                 var user = _userRepository.Get(id);
                 user.Name = "test-user-name-updated";
                 user.Surname = "test-user-surname-updated";
+
                 uow.Complete();
             }
 
@@ -52,6 +53,7 @@ namespace Abp.Zero.SampleApp.Tests.EntityHistory
             {
                 var user = _userRepository.Get(id);
                 user.Name = "test-user-name-updated-2";
+
                 uow.Complete();
             }
 
@@ -78,13 +80,19 @@ namespace Abp.Zero.SampleApp.Tests.EntityHistory
                 snapshot2.PropertyChangesStackTree["Surname"].ShouldBe("\"test-user-surname-updated\" -> \"test-user-surname-start\"");
             }
         }
+
         private int CreateUserAndGetId()
         {
             int userId;
 
             using (var uow = Resolve<IUnitOfWorkManager>().Begin())
             {
-                var user = new UserTestEntity() { Name = "test-user-name-start", Surname = "test-user-surname-start", Age = 18 };
+                var user = new UserTestEntity
+                {
+                    Name = "test-user-name-start", 
+                    Surname = "test-user-surname-start", 
+                    Age = 18
+                };
 
                 userId = _userRepository.InsertAndGetId(user);
 

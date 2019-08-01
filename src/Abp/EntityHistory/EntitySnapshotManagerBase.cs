@@ -27,7 +27,7 @@ namespace Abp.EntityHistory
 
         protected abstract IQueryable<EntityChange> GetEntityChanges<TEntity, TPrimaryKey>(TPrimaryKey id, DateTime snapshotTime)
             where TEntity : class, IEntity<TPrimaryKey>;
-  
+
         protected virtual Expression<Func<TEntity, bool>> CreateEqualityExpressionForId<TEntity, TPrimaryKey>(TPrimaryKey id)
         {
             var lambdaParam = Expression.Parameter(typeof(TEntity));
@@ -50,50 +50,72 @@ namespace Abp.EntityHistory
             var snapshotPropertiesDictionary = new Dictionary<string, string>();
             var propertyChangesStackTreeDictionary = new Dictionary<string, string>();
 
-            if (entity != null)
+            if (entity == null)
             {
-                var changes = await _asyncQueryableExecuter.ToListAsync(
-                            GetEntityChanges<TEntity, TPrimaryKey>(id, snapshotTime)
-                                .Select(x => new { x.ChangeType, x.PropertyChanges })
-                            );
+                return new EntityHistorySnapshot(snapshotPropertiesDictionary, propertyChangesStackTreeDictionary);
+            }
 
-                //revoke all changes
-                foreach (var change in changes)// desc ordered changes
+            var changes = await _asyncQueryableExecuter.ToListAsync(
+                GetEntityChanges<TEntity, TPrimaryKey>(id, snapshotTime)
+                    .Select(x => new { x.ChangeType, x.PropertyChanges })
+            );
+
+            foreach (var change in changes) // desc ordered changes
+            {
+                foreach (var entityPropertyChange in change.PropertyChanges)
                 {
-                    foreach (var entityPropertyChange in change.PropertyChanges)
-                    {
-                        snapshotPropertiesDictionary[entityPropertyChange.PropertyName] = entityPropertyChange.OriginalValue;//set back to orginal value
+                    RevokeChange<TEntity, TPrimaryKey>(
+                        snapshotPropertiesDictionary,
+                        entityPropertyChange,
+                        entity
+                    );
 
-                        //create change stack tree
-                        if (propertyChangesStackTreeDictionary.ContainsKey(entityPropertyChange.PropertyName))
-                        {
-                            propertyChangesStackTreeDictionary[entityPropertyChange.PropertyName] += " -> " + entityPropertyChange.OriginalValue;
-                        }
-                        else
-                        {
-                            string propertyCurrentValue = "PropertyNotExist";
-
-                            var propertyInfo = typeof(TEntity).GetProperty(entityPropertyChange.PropertyName);
-                            if (propertyInfo != null)
-                            {
-                                var val = propertyInfo.GetValue(entity);
-                                if (val == null)
-                                {
-                                    propertyCurrentValue = "null";
-                                }
-                                else
-                                {
-                                    propertyCurrentValue = val.ToJsonString();
-                                }
-                            }
-                            propertyChangesStackTreeDictionary.Add(entityPropertyChange.PropertyName, propertyCurrentValue + " -> " + entityPropertyChange.OriginalValue);
-                        }
-                    }
+                    AddChangeToPropertyChangesStackTree<TEntity, TPrimaryKey>(
+                        entityPropertyChange,
+                        propertyChangesStackTreeDictionary,
+                        entity
+                    );
                 }
             }
+
             return new EntityHistorySnapshot(snapshotPropertiesDictionary, propertyChangesStackTreeDictionary);
         }
 
-     
+        private static void RevokeChange<TEntity, TPrimaryKey>(
+            Dictionary<string, string> snapshotPropertiesDictionary,
+            EntityPropertyChange entityPropertyChange,
+            TEntity entity)
+            where TEntity : class, IEntity<TPrimaryKey>
+        {
+            snapshotPropertiesDictionary[entityPropertyChange.PropertyName] = entityPropertyChange.OriginalValue;
+        }
+
+        private static void AddChangeToPropertyChangesStackTree<TEntity, TPrimaryKey>(
+            EntityPropertyChange entityPropertyChange, 
+            Dictionary<string, string> propertyChangesStackTreeDictionary, 
+            TEntity entity)
+            where TEntity : class, IEntity<TPrimaryKey>
+        {
+            if (propertyChangesStackTreeDictionary.ContainsKey(entityPropertyChange.PropertyName))
+            {
+                propertyChangesStackTreeDictionary[entityPropertyChange.PropertyName] += " -> " + entityPropertyChange.OriginalValue;
+            }
+            else
+            {
+                var propertyCurrentValue = "PropertyNotExist";
+
+                var propertyInfo = typeof(TEntity).GetProperty(entityPropertyChange.PropertyName);
+                if (propertyInfo != null)
+                {
+                    var val = propertyInfo.GetValue(entity);
+                    propertyCurrentValue = val == null ? "null" : val.ToJsonString();
+                }
+
+                propertyChangesStackTreeDictionary.Add(
+                    entityPropertyChange.PropertyName,
+                    propertyCurrentValue + " -> " + entityPropertyChange.OriginalValue
+                );
+            }
+        }
     }
 }
