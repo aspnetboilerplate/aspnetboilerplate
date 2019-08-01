@@ -188,6 +188,42 @@ You can use the **IEntityChangeSetReasonProvider.Use(...)** method as shown belo
 The Use method returns an IDisposable and it **must be disposed**. Once the return
 value is disposed, the Reason is automatically restored to the previous value.
 
+
+
+### IEntitySnapshotManager
+
+You may need to get snapshot of your entity on a date. To get snapshot of your entity you can use `IEntitySnapshotManager.GetSnapshotAsync(...)` method as shown below.
+
+```csharp
+  public class MyService
+    {
+        private readonly IEntitySnapshotManager _entitySnapshotManager;
+
+        public MyService(IEntitySnapshotManager entitySnapshotManager)
+        {
+            _entitySnapshotManager = entitySnapshotManager;
+        }
+
+        public Task<EntityHistorySnapshot> GetMySnapshot(long id,DateTime time)
+        {
+            return _entitySnapshotManager.GetSnapshotAsync<MyEntity, long>(id,time);
+        }
+      
+        public async Task<string> GetMyProperty(long id,DateTime time)
+        {
+           var snapshot = await GetMySnapshot(id, time);
+           if(snapshot.IsPropertyChanged(nameof(MyEntity.MyProperty)))
+           {
+               var stacktree = snapshot.PropertyChangesStackTree[nameof(MyEntity.MyProperty)];
+               return snapshot[nameof(MyEntity.MyProperty)];               
+           }
+           return null;
+        }
+    }
+```
+
+It returns `EntityHistorySnapshot` which contains all snapshot on the given date and stack tree of them
+
 ## ORM Integrations
 
 Entity History in **Module Zero** project is implemented for
