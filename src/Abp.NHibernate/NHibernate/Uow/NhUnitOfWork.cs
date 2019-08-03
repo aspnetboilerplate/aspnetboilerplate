@@ -107,8 +107,7 @@ namespace Abp.NHibernate.Uow
 
         public override Task SaveChangesAsync()
         {
-            Session.Flush();
-            return Task.FromResult(0);
+            return Session.FlushAsync();
         }
 
         /// <summary>
@@ -117,16 +116,13 @@ namespace Abp.NHibernate.Uow
         protected override void CompleteUow()
         {
             SaveChanges();
-            if (_transaction != null)
-            {
-                _transaction.Commit();
-            }
+            _transaction?.Commit();
         }
 
-        protected override Task CompleteUowAsync()
+        protected override async Task CompleteUowAsync()
         {
-            CompleteUow();
-            return Task.FromResult(0);
+            await SaveChangesAsync();
+            _transaction?.Commit();
         }
 
         /// <summary>
@@ -134,11 +130,8 @@ namespace Abp.NHibernate.Uow
         /// </summary>
         protected override void DisposeUow()
         {
-            if (_transaction != null)
-            {
-                _transaction.Dispose();
-                _transaction = null;
-            }
+            _transaction?.Dispose();
+            _transaction = null;
 
             Session.Dispose();
         }

@@ -139,9 +139,10 @@ namespace Abp.Domain.Repositories
             return Insert(entity).Id;
         }
 
-        public virtual Task<TPrimaryKey> InsertAndGetIdAsync(TEntity entity)
+        public virtual async Task<TPrimaryKey> InsertAndGetIdAsync(TEntity entity)
         {
-            return Task.FromResult(InsertAndGetId(entity));
+            await InsertAsync(entity);
+            return entity.Id;
         }
 
         public virtual TEntity InsertOrUpdate(TEntity entity)
@@ -163,9 +164,10 @@ namespace Abp.Domain.Repositories
             return InsertOrUpdate(entity).Id;
         }
 
-        public virtual Task<TPrimaryKey> InsertOrUpdateAndGetIdAsync(TEntity entity)
+        public virtual async Task<TPrimaryKey> InsertOrUpdateAndGetIdAsync(TEntity entity)
         {
-            return Task.FromResult(InsertOrUpdateAndGetId(entity));
+            await InsertOrUpdateAsync(entity);
+            return entity.Id;
         }
 
         public abstract TEntity Update(TEntity entity);
@@ -231,7 +233,7 @@ namespace Abp.Domain.Repositories
 
         public virtual int Count(Expression<Func<TEntity, bool>> predicate)
         {
-            return GetAll().Where(predicate).Count();
+            return GetAll().Count(predicate);
         }
 
         public virtual Task<int> CountAsync(Expression<Func<TEntity, bool>> predicate)
@@ -251,7 +253,7 @@ namespace Abp.Domain.Repositories
 
         public virtual long LongCount(Expression<Func<TEntity, bool>> predicate)
         {
-            return GetAll().Where(predicate).LongCount();
+            return GetAll().LongCount(predicate);
         }
 
         public virtual Task<long> LongCountAsync(Expression<Func<TEntity, bool>> predicate)
