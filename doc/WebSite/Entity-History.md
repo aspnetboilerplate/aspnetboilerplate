@@ -213,7 +213,7 @@ You may need to get a snapshot of your entity on a given date. You can use the `
            var snapshot = await GetMyEntitySnapshot(id, time);
            if (snapshot.IsPropertyChanged(nameof(MyEntity.MyProperty)))
            {
-               var stacktree = snapshot.PropertyChangesStackTree[nameof(MyEntity.MyProperty)];
+               // var stacktree = snapshot.PropertyChangesStackTree[nameof(MyEntity.MyProperty)];
                return snapshot[nameof(MyEntity.MyProperty)];               
            }
            return null;
