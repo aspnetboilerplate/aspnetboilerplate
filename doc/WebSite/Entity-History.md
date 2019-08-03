@@ -222,7 +222,8 @@ You may need to get snapshot of your entity on a date. To get snapshot of your e
     }
 ```
 
-It returns `EntityHistorySnapshot` which contains all snapshot on the given date and stack tree of them
+`IEntitySnapshotManager.GetSnapshotAsync(...)` returns an `EntityHistorySnapshot` that contains the snapshot value of all changed properties on the given date and a stack tree of the changes.
+
 
 ## ORM Integrations
 
