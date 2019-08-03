@@ -195,7 +195,7 @@ value is disposed, the Reason is automatically restored to the previous value.
 You may need to get a snapshot of your entity on a given date. You can use the `IEntitySnapshotManager.GetSnapshotAsync(...)` method as shown below:
 
 ```csharp
-  public class MyService
+    public class MyService
     {
         private readonly IEntitySnapshotManager _entitySnapshotManager;
 
