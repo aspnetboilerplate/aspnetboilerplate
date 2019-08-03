@@ -5,6 +5,7 @@ using Abp.Events.Bus.Entities;
 using Abp.NHibernate.Tests.Entities;
 using Shouldly;
 using System.Linq;
+using System.Threading.Tasks;
 using Xunit;
 
 namespace Abp.NHibernate.Tests
@@ -38,9 +39,27 @@ namespace Abp.NHibernate.Tests
         }
 
         [Fact]
+        public async Task Should_Insert_People_Async()
+        {
+            await _personRepository.InsertAsync(new Person() { Name = "halil" });
+
+            var insertedPerson = UsingSession(session => session.Query<Person>().FirstOrDefault(p => p.Name == "halil"));
+            insertedPerson.ShouldNotBeNull();
+            insertedPerson.IsTransient().ShouldBeFalse();
+            insertedPerson.Name.ShouldBe("halil");
+        }
+
+        [Fact]
         public void Should_Filter_SoftDelete()
         {
             var books = _booksRepository.GetAllList();
+            books.All(p => !p.IsDeleted).ShouldBeTrue();
+        }
+
+        [Fact]
+        public async Task Should_Filter_SoftDelete_Async()
+        {
+            var books = await _booksRepository.GetAllListAsync();
             books.All(p => !p.IsDeleted).ShouldBeTrue();
         }
 
@@ -87,6 +106,24 @@ namespace Abp.NHibernate.Tests
         }
 
         [Fact]
+        public async Task Should_Trigger_Event_On_Insert_Async()
+        {
+            var triggerCount = 0;
+
+            Resolve<IEventBus>().Register<EntityCreatedEventData<Person>>(
+                eventData =>
+                {
+                    eventData.Entity.Name.ShouldBe("halil");
+                    eventData.Entity.IsTransient().ShouldBeFalse();
+                    triggerCount++;
+                });
+
+            await _personRepository.InsertAsync(new Person { Name = "halil" });
+
+            triggerCount.ShouldBe(1);
+        }
+
+        [Fact]
         public void Should_Trigger_Event_On_Update()
         {
             var triggerCount = 0;
@@ -101,6 +138,25 @@ namespace Abp.NHibernate.Tests
             var emrePeson = _personRepository.Single(p => p.Name == "emre");
             emrePeson.Name = "emre2";
             _personRepository.Update(emrePeson);
+
+            triggerCount.ShouldBe(1);
+        }
+
+        [Fact]
+        public async Task Should_Trigger_Event_On_Update_Async()
+        {
+            var triggerCount = 0;
+
+            Resolve<IEventBus>().Register<EntityUpdatedEventData<Person>>(
+                eventData =>
+                {
+                    eventData.Entity.Name.ShouldBe("emre2");
+                    triggerCount++;
+                });
+
+            var emrePeson = await _personRepository.SingleAsync(p => p.Name == "emre");
+            emrePeson.Name = "emre2";
+            await _personRepository.UpdateAsync(emrePeson);
 
             triggerCount.ShouldBe(1);
         }
@@ -121,6 +177,25 @@ namespace Abp.NHibernate.Tests
 
             triggerCount.ShouldBe(1);
             _personRepository.FirstOrDefault(p => p.Name == "emre").ShouldBe(null);
+        }
+
+        [Fact]
+        public async Task Should_Trigger_Event_On_Delete_Async()
+        {
+            var triggerCount = 0;
+            Resolve<IEventBus>().Register<EntityDeletedEventData<Person>>(
+                eventData =>
+                {
+                    eventData.Entity.Name.ShouldBe("emre");
+                    triggerCount++;
+                });
+
+            var emrePeson = await _personRepository.SingleAsync(p => p.Name == "emre");
+            await _personRepository.DeleteAsync(emrePeson.Id);
+
+            triggerCount.ShouldBe(1);
+            var deletedPerson = await _personRepository.FirstOrDefaultAsync(p => p.Name == "emre");
+            deletedPerson.ShouldBeNull();
         }
     }
 }
