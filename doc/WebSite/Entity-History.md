@@ -192,7 +192,7 @@ value is disposed, the Reason is automatically restored to the previous value.
 
 ### IEntitySnapshotManager
 
-You may need to get snapshot of your entity on a date. To get snapshot of your entity you can use `IEntitySnapshotManager.GetSnapshotAsync(...)` method as shown below.
+You may need to get a snapshot of your entity on a given date. You can use the `IEntitySnapshotManager.GetSnapshotAsync(...)` method as shown below:
 
 ```csharp
   public class MyService
