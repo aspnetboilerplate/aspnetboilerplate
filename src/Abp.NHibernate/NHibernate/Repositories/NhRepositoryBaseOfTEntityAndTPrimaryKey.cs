@@ -169,6 +169,16 @@ namespace Abp.NHibernate.Repositories
             await DeleteAsync(entity);
         }
 
+        public override async Task DeleteAsync(Expression<Func<TEntity, bool>> predicate)
+        {
+            var entities = await GetAllListAsync(predicate);
+
+            foreach (var entity in entities)
+            {
+                await DeleteAsync(entity);
+            }
+        }
+
         public override Task<int> CountAsync()
         {
             return GetAll().CountAsync();
