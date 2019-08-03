@@ -206,7 +206,7 @@ You may need to get a snapshot of your entity on a given date. You can use the `
 
         public Task<EntityHistorySnapshot> GetMyEntitySnapshot(long id, DateTime time)
         {
-            return _entitySnapshotManager.GetSnapshotAsync<MyEntity, long>(id,time);
+            return _entitySnapshotManager.GetSnapshotAsync<MyEntity, long>(id, time);
         }
       
         public async Task<string> GetMyEntityMyPropertySnapshotValue(long id, DateTime time)
