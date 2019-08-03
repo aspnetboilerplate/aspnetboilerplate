@@ -209,7 +209,7 @@ You may need to get a snapshot of your entity on a given date. You can use the `
             return _entitySnapshotManager.GetSnapshotAsync<MyEntity, long>(id,time);
         }
       
-        public async Task<string> GetMyProperty(long id,DateTime time)
+        public async Task<string> GetMyEntityMyPropertySnapshotValue(long id, DateTime time)
         {
            var snapshot = await GetMyEntitySnapshot(id, time);
            if(snapshot.IsPropertyChanged(nameof(MyEntity.MyProperty)))
