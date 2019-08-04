@@ -122,7 +122,7 @@ namespace Abp.NHibernate.Uow
         protected override async Task CompleteUowAsync()
         {
             await SaveChangesAsync();
-            _transaction?.Commit();
+            await _transaction?.CommitAsync();
         }
 
         /// <summary>
