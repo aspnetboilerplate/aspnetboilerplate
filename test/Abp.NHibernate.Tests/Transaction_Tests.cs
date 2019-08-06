@@ -21,6 +21,34 @@ namespace Abp.NHibernate.Tests
         }
 
         [Fact]
+        public void Should_Complete_Uow_Without_Transation()
+        {
+            var unitOfWorkOptions = new UnitOfWorkOptions
+            {
+                IsTransactional = false
+            };
+
+            using (var uow = _unitOfWorkManager.Begin(unitOfWorkOptions))
+            {
+                uow.Complete();
+            }
+        }
+
+        [Fact]
+        public async Task Should_Complete_Uow_Without_Transation_Async()
+        {
+            var unitOfWorkOptions = new UnitOfWorkOptions
+            {
+                IsTransactional = false
+            };
+
+            using (var uow = _unitOfWorkManager.Begin(unitOfWorkOptions))
+            {
+                await uow.CompleteAsync();
+            }
+        }
+
+        [Fact]
         public void Should_Rollback_Transaction_On_Failure()
         {
             const string bookName = "Hitchhikers Guide to the Galaxy";
