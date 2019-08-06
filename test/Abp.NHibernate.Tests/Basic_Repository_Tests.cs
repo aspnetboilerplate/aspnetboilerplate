@@ -28,6 +28,16 @@ namespace Abp.NHibernate.Tests
         }
 
         [Fact]
+        public async Task Should_Get_Null_On_Not_Found()
+        {
+            var person = _personRepository.FirstOrDefault(-1);
+            person.ShouldBeNull();
+
+            person = await _personRepository.FirstOrDefaultAsync(-1);
+            person.ShouldBeNull();
+        }
+
+        [Fact]
         public void Should_Insert_People()
         {
             _personRepository.Insert(new Person() { Name = "halil" });
