@@ -116,13 +116,19 @@ namespace Abp.NHibernate.Uow
         protected override void CompleteUow()
         {
             SaveChanges();
-            _transaction?.Commit();
+            if (_transaction != null)
+            {
+                _transaction.Commit();
+            }
         }
 
         protected override async Task CompleteUowAsync()
         {
             await SaveChangesAsync();
-            await _transaction?.CommitAsync();
+            if (_transaction != null)
+            {
+                await _transaction.CommitAsync();
+            }
         }
 
         /// <summary>
@@ -130,8 +136,11 @@ namespace Abp.NHibernate.Uow
         /// </summary>
         protected override void DisposeUow()
         {
-            _transaction?.Dispose();
-            _transaction = null;
+            if (_transaction != null)
+            {
+                _transaction.Dispose();
+                _transaction = null;
+            }
 
             Session.Dispose();
         }
