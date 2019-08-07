@@ -253,14 +253,14 @@ which determine the current language for an HTTP request:
 -   **CookieRequestCultureProvider** (ASP.NET Core's default provider):
     Use **.AspNetCore.Culture** cookie value if present. Example value:
     "c=en|uic=en-US".
--   **AbpDefaultRequestCultureProvider** (ABP's provider): If there is
-    an default/application/tenant **setting value** for the language
-    (named "Abp.Localization.DefaultLanguageName"), then use the
-    setting's value.
 -   **AcceptLanguageHeaderRequestCultureProvider** (ASP.NET Core's
     default provider): Use the **Accept-Language** header value if present
     (automatically sent by browsers). Example value:
     "tr-TR,tr;q=0.8,en-US;q=0.6,en;q=0.4".
+-   **AbpDefaultRequestCultureProvider** (ABP's provider): If there is
+    an default/application/tenant **setting value** for the language
+    (named "Abp.Localization.DefaultLanguageName"), then use the
+    setting's value.
 
 The **UseRequestLocalization** middleware is automatically added when
 you call the **app.UseAbp()** method. However, it's suggested that you manually add
@@ -313,12 +313,12 @@ determines it by default. ABP will:
     "**Abp.Localization.CultureName**" by default.
 -   Try to get it from a special **cookie** value, named
     "**Abp.Localization.CultureName**" by default.
+-   Try to get it from the **browser's default language**
+    (HttpContext.Request.UserLanguages).
 -   Try to get it from **default culture** setting (setting name is
     "Abp.Localization.DefaultLanguageName", which is a constant defined
     in Abp.Localization.LocalizationSettingNames.DefaultLanguage and can
     be changed using the [setting management](Setting-Management.md)).
--   Try to get it from the **browser's default language**
-    (HttpContext.Request.UserLanguages).
 
 If you need to, you can change the special cookie/header/querystring name
 in your module's PreInitialize method. Example:
