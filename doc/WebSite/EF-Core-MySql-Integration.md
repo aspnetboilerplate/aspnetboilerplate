@@ -11,9 +11,9 @@ There are two Entity Framework Core providers for MySQL that are mentioned in th
 [Official MySQL EF Core Database Provider](https://docs.microsoft.com/en-us/ef/core/providers/mysql/) and the
 other is [Pomelo EF Core Database Provider for MySQL](https://docs.microsoft.com/en-us/ef/core/providers/pomelo/).
 
-> **NOTE:** The official provider doesn't support EF Core 2.0 just yet, so the Pomelo EF Core Database Provider will be used in this example, instead.
+> **NOTE:** The official provider supported EF Core 2.0 in version 6.10, [the nuget package url](https://www.nuget.org/packages/MySql.Data.EntityFrameworkCore), but you have to do a lot change when using it,so the Pomelo EF Core Database Provider will be used in this example, instead.
 > 
-> Related issue: https://github.com/aspnet/EntityFrameworkCore/issues/10065#issuecomment-336495475
+> Related issue: https://github.com/aspnetboilerplate/aspnetboilerplate/issues/4007
 
 ### Install 
 
@@ -69,7 +69,7 @@ To understand why it needs to be renamed, check the following issues:
 
 ### Create Database
 
-Remove all migration classes(include `DbContextModelSnapshot`) under **\*.EntityFrameworkCore/Migrations** folder. 
+Remove all migration classes under **\*.EntityFrameworkCore/Migrations** folder. 
 Because `Pomelo.EntityFrameworkCore.MySql` will add some of its own configurations to work with Entity Framework Core.
 
 Now it's ready to build the database.
