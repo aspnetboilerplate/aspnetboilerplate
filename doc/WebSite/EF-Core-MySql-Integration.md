@@ -15,7 +15,7 @@ other is [Pomelo EF Core Database Provider for MySQL](https://docs.microsoft.com
 > 
 > Related issue: https://github.com/aspnetboilerplate/aspnetboilerplate/issues/4007
 
-> Related link:  https://dev.mysql.com/doc/connector-net/en/connector-net-entityframework-core.html
+> Related guide:  https://dev.mysql.com/doc/connector-net/en/connector-net-entityframework-core.html
 
 ### Install 
 
