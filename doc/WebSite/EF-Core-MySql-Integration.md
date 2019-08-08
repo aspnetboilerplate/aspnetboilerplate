@@ -14,7 +14,7 @@ other is [Pomelo EF Core Database Provider for MySQL](https://docs.microsoft.com
 > **NOTE:** The official provider [`MySql.Data.EntityFrameworkCore`](https://www.nuget.org/packages/MySql.Data.EntityFrameworkCore) [supports EF Core 2.0 after version 6.10.5](https://dev.mysql.com/doc/connector-net/en/connector-net-entityframework-core.html), but you have to make a lot of changes when using it. So, the Pomelo EF Core Database Provider will be used in this example instead.
 > 
 > Related issue: https://github.com/aspnetboilerplate/aspnetboilerplate/issues/4007
-
+>
 > Related guide:  https://dev.mysql.com/doc/connector-net/en/connector-net-entityframework-core.html
 
 ### Install 
