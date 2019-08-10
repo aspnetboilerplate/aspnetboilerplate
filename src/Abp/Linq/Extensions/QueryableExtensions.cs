@@ -2,6 +2,7 @@
 using System.Linq;
 using System.Linq.Expressions;
 using Abp.Application.Services.Dto;
+using System.Data.Entity;
 
 namespace Abp.Linq.Extensions
 {
@@ -20,7 +21,7 @@ namespace Abp.Linq.Extensions
                 throw new ArgumentNullException("query");
             }
 
-            return query.Skip(skipCount).Take(maxResultCount);
+            return query.Skip(() => skipCount).Take(() => maxResultCount);
         }
 
         /// <summary>
