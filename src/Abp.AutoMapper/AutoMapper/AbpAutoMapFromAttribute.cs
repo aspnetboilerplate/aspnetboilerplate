@@ -4,17 +4,17 @@ using AutoMapper;
 
 namespace Abp.AutoMapper
 {
-    public class AutoMapFromAttribute : AutoMapAttributeBase
+    public class AbpAutoMapFromAttribute : AbpAutoMapAttributeBase
     {
         public MemberList MemberList { get; set; } = MemberList.Destination;
 
-        public AutoMapFromAttribute(params Type[] targetTypes)
+        public AbpAutoMapFromAttribute(params Type[] targetTypes)
             : base(targetTypes)
         {
 
         }
 
-        public AutoMapFromAttribute(MemberList memberList, params Type[] targetTypes)
+        public AbpAutoMapFromAttribute(MemberList memberList, params Type[] targetTypes)
             : this(targetTypes)
         {
             MemberList = memberList;

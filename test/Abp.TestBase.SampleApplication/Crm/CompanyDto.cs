@@ -4,7 +4,7 @@ using Abp.AutoMapper;
 
 namespace Abp.TestBase.SampleApplication.Crm
 {
-    [AutoMapFrom(typeof(Company))]
+    [AbpAutoMapFrom(typeof(Company))]
     public class CompanyDto : EntityDto
     {
         public string Name { get; set; }

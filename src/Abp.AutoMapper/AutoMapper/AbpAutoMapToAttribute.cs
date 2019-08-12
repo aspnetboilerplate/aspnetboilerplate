@@ -11,17 +11,17 @@ using Abp.Reflection.Extensions;
 
 namespace Abp.AutoMapper
 {
-    public class AutoMapToAttribute : AutoMapAttributeBase
+    public class AbpAutoMapToAttribute : AbpAutoMapAttributeBase
     {
         public MemberList MemberList { get; set; } = MemberList.Source;
 
-        public AutoMapToAttribute(params Type[] targetTypes)
+        public AbpAutoMapToAttribute(params Type[] targetTypes)
             : base(targetTypes)
         {
 
         }
 
-        public AutoMapToAttribute(MemberList memberList, params Type[] targetTypes)
+        public AbpAutoMapToAttribute(MemberList memberList, params Type[] targetTypes)
             : this(targetTypes)
         {
             MemberList = memberList;

@@ -4,9 +4,9 @@ using AutoMapper;
 
 namespace Abp.AutoMapper
 {
-    public class AutoMapAttribute : AutoMapAttributeBase
+    public class AbpAutoMapAttribute : AbpAutoMapAttributeBase
     {
-        public AutoMapAttribute(params Type[] targetTypes)
+        public AbpAutoMapAttribute(params Type[] targetTypes)
             : base(targetTypes)
         {
 

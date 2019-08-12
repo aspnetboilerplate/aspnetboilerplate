@@ -3,7 +3,7 @@ using Abp.AutoMapper;
 
 namespace Abp.TestBase.SampleApplication.People.Dto
 {
-    [AutoMap(typeof(Person))]
+    [AbpAutoMap(typeof(Person))]
     public class PersonDto : EntityDto
     {
         public int ContactListId { get; set; }

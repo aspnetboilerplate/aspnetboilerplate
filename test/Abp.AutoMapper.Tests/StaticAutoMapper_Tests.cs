@@ -42,7 +42,7 @@ namespace Abp.AutoMapper.Tests
             public string Name { get; set; }
         }
 
-        [AutoMapFrom(typeof(ClassA))]
+        [AbpAutoMapFrom(typeof(ClassA))]
         private class ClassB
         {
             public int Id { get; set; }

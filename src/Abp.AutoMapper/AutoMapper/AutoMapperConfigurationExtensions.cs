@@ -15,7 +15,7 @@ namespace Abp.AutoMapper
         {
             lock (SyncObj)
             {
-                foreach (var autoMapAttribute in type.GetTypeInfo().GetCustomAttributes<AutoMapAttributeBase>())
+                foreach (var autoMapAttribute in type.GetTypeInfo().GetCustomAttributes<AbpAutoMapAttributeBase>())
                 {
                     autoMapAttribute.CreateMap(configuration, type);
                 }   
@@ -24,9 +24,9 @@ namespace Abp.AutoMapper
 
         public static void CreateAutoAttributeMaps(this IMapperConfigurationExpression configuration, Type type, Type[] targetTypes, MemberList memberList)
         {
-            //Get all the properties in the source that have the AutoMapKeyAttribute
+            //Get all the properties in the source that have the AbpAutoMapKeyAttribute
             var sourceKeysPropertyInfo = type.GetProperties()
-                                             .Where(w => w.GetCustomAttribute<AutoMapKeyAttribute>() != null)
+                                             .Where(w => w.GetCustomAttribute<AbpAutoMapKeyAttribute>() != null)
                                              .Select(s => s).ToList();
 
             foreach (var targetType in targetTypes)
@@ -55,7 +55,7 @@ namespace Abp.AutoMapper
                     //Exemple if we have in source the attribut AutoMapKey on the Property Id we want to get Id in the target to compare agaisnt
                     var targetPropertyInfo = targetType.GetProperty(sourcePropertyExpression.Member.Name);
 
-                    //It happen if the property with AutoMapKeyAttribute does not exist in target
+                    //It happen if the property with AbpAutoMapKeyAttribute does not exist in target
                     if (targetPropertyInfo is null)
                     {
                         continue;

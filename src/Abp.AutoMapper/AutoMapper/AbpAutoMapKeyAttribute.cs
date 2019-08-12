@@ -4,7 +4,7 @@ using AutoMapper;
 
 namespace Abp.AutoMapper
 {
-    public class AutoMapKeyAttribute : Attribute
+    public class AbpAutoMapKeyAttribute : Attribute
     {
 
     }

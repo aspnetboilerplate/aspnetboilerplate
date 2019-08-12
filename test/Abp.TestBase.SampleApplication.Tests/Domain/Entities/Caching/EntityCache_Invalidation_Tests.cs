@@ -52,7 +52,7 @@ namespace Abp.TestBase.SampleApplication.Tests.Domain.Entities.Caching
             }
         }
 
-        [AutoMapFrom(typeof(Message))]
+        [AbpAutoMapFrom(typeof(Message))]
         public class MessageCacheItem
         {
             public string Text { get; set; }

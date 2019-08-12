@@ -180,7 +180,7 @@ namespace Abp.AutoMapper.Tests
             obj2.NullableValue.ShouldBe(42);
         }
 
-        [AutoMap(typeof(MyClass2), typeof(MyClass3))]
+        [AbpAutoMap(typeof(MyClass2), typeof(MyClass3))]
         private class MyClass1
         {
             public string TestProp { get; set; }
@@ -188,7 +188,7 @@ namespace Abp.AutoMapper.Tests
             public long? NullableValue { get; set; }
         }
 
-        [AutoMapTo(typeof(MyClass3))]
+        [AbpAutoMapTo(typeof(MyClass3))]
         private class MyClass2
         {
             public string TestProp { get; set; }
@@ -206,24 +206,24 @@ namespace Abp.AutoMapper.Tests
             public int AnotherValue { get; set; }
         }
 
-        [AutoMapTo(typeof(MyAutoMapKeyClass2))]
+        [AbpAutoMapTo(typeof(MyAutoMapKeyClass2))]
         private class MyAutoMapKeyClass1
         {
-            [AutoMapKey]
+            [AbpAutoMapKey]
             public int Id { get; set; }
 
             public string TestProp { get; set; }
         }
 
-        [AutoMapTo(typeof(MyAutoMapKeyClass3))]
+        [AbpAutoMapTo(typeof(MyAutoMapKeyClass3))]
         private class MyAutoMapKeyClass2
         {
             public int Id { get; set; }
 
-            [AutoMapKey]
+            [AbpAutoMapKey]
             public int SecondId { get; set; }
 
-            [AutoMapKey]
+            [AbpAutoMapKey]
             public int ThirdId { get; set; }
 
             public string TestProp { get; set; }

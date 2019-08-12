@@ -45,7 +45,7 @@ namespace Abp.AutoMapper.Tests
 
         }
 
-        [AutoMapFrom(typeof(MyBaseClass))]
+        [AbpAutoMapFrom(typeof(MyBaseClass))]
         public class MyTargetClassToMap
         {
             public string Value { get; set; }
@@ -68,42 +68,42 @@ namespace Abp.AutoMapper.Tests
         public class DerivedEntity : Entity { }
         public class EntityProxy : DerivedEntity { }
 
-        [AutoMapFrom(typeof(Entity))]
+        [AbpAutoMapFrom(typeof(Entity))]
         public class EntityDto
         {
             public string Value { get; set; }
         }
 
-        [AutoMapFrom(typeof(DerivedEntity))]
+        [AbpAutoMapFrom(typeof(DerivedEntity))]
         public class DerivedEntityDto : EntityDto { }
 
         private class MyEntityDto
         {
-            [AutoMapKey]
+            [AbpAutoMapKey]
             public int Id { get; set; }
         }
 
         private class MyDerivedEntityDto : Abp.Application.Services.Dto.EntityDto
         {
-            [AutoMapKey]
+            [AbpAutoMapKey]
             public new int Id { get; set; }
         }
 
         private class MyDualKeyEntityDto
         {
-            [AutoMapKey]
+            [AbpAutoMapKey]
             public int Id { get; set; }
 
-            [AutoMapKey]
+            [AbpAutoMapKey]
             public int SecondId { get; set; }
         }
 
         private class MyDerivedDualKeyEntityDto : Abp.Application.Services.Dto.EntityDto
         {
-            [AutoMapKey]
+            [AbpAutoMapKey]
             public new int Id { get; set; }
 
-            [AutoMapKey]
+            [AbpAutoMapKey]
             public int SecondId { get; set; }
         }
 
@@ -114,7 +114,7 @@ namespace Abp.AutoMapper.Tests
             public int SecondId { get; set; }
         }
 
-        [AutoMapTo(typeof(MyAutoMapKeyClass2))]
+        [AbpAutoMapTo(typeof(MyAutoMapKeyClass2))]
         private class MyAutoMapKeyClass1 : MyEntityDto
         {
             public string TestProp { get; set; }
@@ -128,7 +128,7 @@ namespace Abp.AutoMapper.Tests
             public int Value { get; set; }
         }
 
-        [AutoMapTo(typeof(MyAutoMapKeyClass4))]
+        [AbpAutoMapTo(typeof(MyAutoMapKeyClass4))]
         private class MyAutoMapKeyClass3 : MyDerivedEntityDto
         {
             public string TestProp { get; set; }
@@ -142,7 +142,7 @@ namespace Abp.AutoMapper.Tests
             public int Value { get; set; }
         }
 
-        [AutoMapTo(typeof(MyAutoMapKeyClass6))]
+        [AbpAutoMapTo(typeof(MyAutoMapKeyClass6))]
         private class MyAutoMapKeyClass5 : MyDualKeyEntityDto
         {
             public string TestProp { get; set; }
@@ -156,7 +156,7 @@ namespace Abp.AutoMapper.Tests
             public int Value { get; set; }
         }
 
-        [AutoMapTo(typeof(MyAutoMapKeyClass8))]
+        [AbpAutoMapTo(typeof(MyAutoMapKeyClass8))]
         private class MyAutoMapKeyClass7 : MyDerivedDualKeyEntityDto
         {
             public string TestProp { get; set; }
