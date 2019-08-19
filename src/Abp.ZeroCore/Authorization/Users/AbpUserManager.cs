@@ -363,7 +363,16 @@ namespace Abp.Authorization.Users
                 }
             }
 
-            return await base.UpdateAsync(user);
+            bool isUserCredentialsSameWithStored = await IsUserCredentialsSameWithStored(user);
+
+            var updateResult = await base.UpdateAsync(user);
+
+            if (!isUserCredentialsSameWithStored)//update security stamp too, if any credential is changed
+            {
+                await UpdateSecurityStampAsync(user);
+            }
+
+            return updateResult;
         }
 
         public override async Task<IdentityResult> DeleteAsync(TUser user)
@@ -395,6 +404,9 @@ namespace Abp.Authorization.Users
             }
 
             await AbpUserStore.SetPasswordHashAsync(user, PasswordHasher.HashPassword(user, newPassword));
+
+            await UpdateSecurityStampAsync(user);
+
             return IdentityResult.Success;
         }
 
@@ -747,6 +759,23 @@ namespace Abp.Authorization.Users
             CancellationToken cancellationToken = default(CancellationToken))
         {
             await AbpUserStore.RemoveTokenValidityKeyAsync(user, tokenValidityKey, cancellationToken);
+        }
+
+        /// <summary>
+        /// Check if stored users critic credentials are same with given.
+        /// </summary>
+        public virtual async Task<bool> IsUserCredentialsSameWithStored(TUser user)
+        {
+            var storedUser = await GetUserByIdAsync(user.Id);
+            if (
+                storedUser.UserName != user.UserName ||
+                storedUser.EmailAddress != user.EmailAddress ||
+                storedUser.Password != user.Password
+                )
+            {
+                return false;
+            }
+            return true;
         }
     }
 }
