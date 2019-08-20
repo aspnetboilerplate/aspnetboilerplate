@@ -29,7 +29,7 @@ namespace Abp.EntityHistory.Extensions
                 var propertyOldValue = originalValue?.GetType()?.GetProperty(property.Name)?.GetValue(originalValue);
                 if (property.IsPrimitiveType)
                 {
-                    isModified = !(propertyNewValue?.Equals(propertyOldValue)) ?? false;
+                    isModified = !(propertyOldValue?.Equals(propertyNewValue) ?? propertyNewValue == null);
                 }
                 else if (property.IsComplexType)
                 {
