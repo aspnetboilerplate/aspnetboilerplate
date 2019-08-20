@@ -96,7 +96,22 @@ namespace Abp.NHibernate.Tests
             var userAfter = UsingSession(session => session.Get<Person>(userBefore.Id));
             userAfter.Name.ShouldBe("yunus");
         }
+        [Fact]
+        public async Task Update_With_Action_Test_Async()
+        {
+            var userBefore = UsingSession(session => session.Query<Person>().Single(p => p.Name == "emre"));
 
+            var updatedUser =await _personRepository.UpdateAsync(userBefore.Id, user =>
+            {
+                user.Name = "yunus";
+                return Task.FromResult(user);
+            });
+            updatedUser.Id.ShouldBe(userBefore.Id);
+            updatedUser.Name.ShouldBe("yunus");
+
+            var userAfter = UsingSession(session => session.Get<Person>(userBefore.Id));
+            userAfter.Name.ShouldBe("yunus");
+        }
         [Fact]
         public void Should_Trigger_Event_On_Insert()
         {
@@ -145,9 +160,9 @@ namespace Abp.NHibernate.Tests
                     triggerCount++;
                 });
 
-            var emrePeson = _personRepository.Single(p => p.Name == "emre");
-            emrePeson.Name = "emre2";
-            _personRepository.Update(emrePeson);
+            var emrePerson = _personRepository.Single(p => p.Name == "emre");
+            emrePerson.Name = "emre2";
+            _personRepository.Update(emrePerson);
 
             triggerCount.ShouldBe(1);
         }
@@ -164,9 +179,9 @@ namespace Abp.NHibernate.Tests
                     triggerCount++;
                 });
 
-            var emrePeson = await _personRepository.SingleAsync(p => p.Name == "emre");
-            emrePeson.Name = "emre2";
-            await _personRepository.UpdateAsync(emrePeson);
+            var emrePerson = await _personRepository.SingleAsync(p => p.Name == "emre");
+            emrePerson.Name = "emre2";
+            await _personRepository.UpdateAsync(emrePerson);
 
             triggerCount.ShouldBe(1);
         }
@@ -182,8 +197,8 @@ namespace Abp.NHibernate.Tests
                     triggerCount++;
                 });
 
-            var emrePeson = _personRepository.Single(p => p.Name == "emre");
-            _personRepository.Delete(emrePeson.Id);
+            var emrePerson = _personRepository.Single(p => p.Name == "emre");
+            _personRepository.Delete(emrePerson.Id);
 
             triggerCount.ShouldBe(1);
             _personRepository.FirstOrDefault(p => p.Name == "emre").ShouldBe(null);
@@ -200,8 +215,8 @@ namespace Abp.NHibernate.Tests
                     triggerCount++;
                 });
 
-            var emrePeson = await _personRepository.SingleAsync(p => p.Name == "emre");
-            await _personRepository.DeleteAsync(emrePeson.Id);
+            var emrePerson = await _personRepository.SingleAsync(p => p.Name == "emre");
+            await _personRepository.DeleteAsync(emrePerson.Id);
 
             triggerCount.ShouldBe(1);
             var deletedPerson = await _personRepository.FirstOrDefaultAsync(p => p.Name == "emre");
