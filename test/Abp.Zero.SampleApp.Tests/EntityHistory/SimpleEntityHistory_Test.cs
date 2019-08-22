@@ -64,7 +64,19 @@ namespace Abp.Zero.SampleApp.Tests.EntityHistory
                 entityChange.ChangeType.ShouldBe(EntityChangeType.Created);
                 entityChange.EntityId.ShouldBe(blog2Id.ToJsonString());
                 entityChange.EntityTypeFullName.ShouldBe(typeof(Blog).FullName);
-                entityChange.PropertyChanges.Count.ShouldBe(4);  // Blog.Name, Blog.Url, Blog.Category Blog.More
+                entityChange.PropertyChanges.Count.ShouldBe(4);
+
+                var propertyChange1 = entityChange.PropertyChanges.Single(pc => pc.PropertyName == nameof(Blog.Url));
+                propertyChange1.OriginalValue.ShouldBeNull();
+                propertyChange1.NewValue.ShouldNotBeNull();
+
+                var propertyChange2 = entityChange.PropertyChanges.Single(pc => pc.PropertyName == nameof(Blog.More));
+                propertyChange2.OriginalValue.ShouldBeNull();
+                propertyChange2.NewValue.ShouldNotBeNull();
+
+                var propertyChange3 = entityChange.PropertyChanges.Single(pc => pc.PropertyName == nameof(Blog.CreationTime));
+                propertyChange3.OriginalValue.ShouldBeNull();
+                propertyChange3.NewValue.ShouldNotBeNull();
 
                 // Check "who did this change"
                 s.ImpersonatorTenantId.ShouldBe(AbpSession.ImpersonatorTenantId);
