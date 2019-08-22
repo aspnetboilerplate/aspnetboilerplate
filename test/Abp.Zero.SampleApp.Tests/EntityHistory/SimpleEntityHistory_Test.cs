@@ -67,9 +67,7 @@ namespace Abp.Zero.SampleApp.Tests.EntityHistory
                 entityChange.ChangeType.ShouldBe(EntityChangeType.Created);
                 entityChange.EntityId.ShouldBe(blog2Id.ToJsonString());
                 entityChange.EntityTypeFullName.ShouldBe(typeof(Blog).FullName);
-                entityChange.PropertyChanges.Count.ShouldBe(4);
-                // TODO: 3 should be the correct value, Blog.Category is null for both new/original values
-                // entityChange.PropertyChanges.Count.ShouldBe(3);
+                entityChange.PropertyChanges.Count.ShouldBe(3);
 
                 var propertyChange1 = entityChange.PropertyChanges.Single(pc => pc.PropertyName == nameof(Blog.Url));
                 propertyChange1.OriginalValue.ShouldBeNull();
@@ -122,9 +120,7 @@ namespace Abp.Zero.SampleApp.Tests.EntityHistory
                 context.EntityChanges.Count(e => e.TenantId == 1).ShouldBe(1);
                 context.EntityChangeSets.Count(e => e.TenantId == 1).ShouldBe(1);
                 context.EntityChangeSets.Single().CreationTime.ShouldBeGreaterThan(justNow);
-                context.EntityPropertyChanges.Count(e => e.TenantId == 1).ShouldBe(4);
-                // TODO: 3 should be the correct value, Blog.Category is null for both new/original values
-                // context.EntityPropertyChanges.Count(e => e.TenantId == 1).ShouldBe(3);
+                context.EntityPropertyChanges.Count(e => e.TenantId == 1).ShouldBe(3);
             });
         }
 
