@@ -15,9 +15,10 @@ namespace Abp.Localization.Dictionaries
             Dictionaries = new Dictionary<string, ILocalizationDictionary>();
         }
 
-        public virtual void Initialize(string sourceName)
+        public void Initialize(string sourceName)
         {
             SourceName = sourceName;
+            InitializeDictionaries();
         }
 
         public void Extend(ILocalizationDictionary dictionary)
@@ -36,6 +37,10 @@ namespace Abp.Localization.Dictionaries
             {
                 existingDictionary[localizedString.Name] = localizedString.Value;
             }
+        }
+
+        protected virtual void InitializeDictionaries()
+        {
         }
     }
 }
