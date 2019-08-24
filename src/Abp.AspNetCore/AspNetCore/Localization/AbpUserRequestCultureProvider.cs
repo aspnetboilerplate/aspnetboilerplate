@@ -48,6 +48,7 @@ namespace Abp.AspNetCore.Localization
             }
 
             ProviderCultureResult result = null;
+            string cultureName = null;
             var cookieResult = await GetResultOrNull(httpContext, CookieProvider);
             if (cookieResult != null && cookieResult.Cultures.Any())
             {
@@ -58,6 +59,7 @@ namespace Abp.AspNetCore.Localization
                 Logger.DebugFormat("Using Culture:{0} , UICulture:{1}", cookieCulture, cookieUICulture);
 
                 result = cookieResult;
+                cultureName = cookieCulture ?? cookieUICulture;
             }
 
             if (result == null || !result.Cultures.Any())
@@ -72,15 +74,19 @@ namespace Abp.AspNetCore.Localization
                     Logger.DebugFormat("Using Culture:{0} , UICulture:{1}", headerCulture, headerUICulture);
 
                     result = headerResult;
+                    cultureName = headerCulture ?? headerUICulture;
                 }
             }
 
-            //Try to set user's language setting from cookie if available.
-            await settingManager.ChangeSettingForUserAsync(
-                abpSession.ToUserIdentifier(),
-                LocalizationSettingNames.DefaultLanguage,
-                result.Cultures.First().Value
-            );
+            if (!cultureName.IsNullOrEmpty())
+            {
+                //Try to set user's language setting from cookie/header if available.
+                await settingManager.ChangeSettingForUserAsync(
+                    abpSession.ToUserIdentifier(),
+                    LocalizationSettingNames.DefaultLanguage,
+                    cultureName
+                );
+            }
 
             return result;
         }
