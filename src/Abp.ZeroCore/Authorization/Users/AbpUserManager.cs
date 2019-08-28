@@ -395,9 +395,12 @@ namespace Abp.Authorization.Users
             }
 
             await AbpUserStore.SetPasswordHashAsync(user, PasswordHasher.HashPassword(user, newPassword));
+
+            await UpdateSecurityStampAsync(user);
+
             return IdentityResult.Success;
         }
-
+        
         public virtual async Task<IdentityResult> CheckDuplicateUsernameOrEmailAddressAsync(long? expectedUserId, string userName, string emailAddress)
         {
             var user = (await FindByNameAsync(userName));
@@ -748,5 +751,6 @@ namespace Abp.Authorization.Users
         {
             await AbpUserStore.RemoveTokenValidityKeyAsync(user, tokenValidityKey, cancellationToken);
         }
+
     }
 }
