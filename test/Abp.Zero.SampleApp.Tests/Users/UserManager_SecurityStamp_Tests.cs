@@ -61,35 +61,6 @@ namespace Abp.Zero.SampleApp.Tests.Users
             User passwordChangedUser = await _userManager.FindByIdAsync(firstUser.Id);
             var passwordChangedUserSecurityStamp = passwordChangedUser.SecurityStamp;
             passwordChangedUserSecurityStamp.ShouldNotBe(firstSecurityStamp);
-
-            //change password2
-            var passwordHash = new PasswordHasher().HashPassword("asd123456");
-            passwordChangedUser.Password = passwordHash;
-            await _userManager.UpdateAsync(passwordChangedUser);
-
-            User passwordChangedUser2 = await _userManager.FindByIdAsync(firstUser.Id);
-            var passwordChangedUserSecurityStamp2 = passwordChangedUser2.SecurityStamp;
-            passwordChangedUserSecurityStamp2.ShouldNotBe(passwordChangedUserSecurityStamp);
-
-            //update username
-            passwordChangedUser.UserName = "SecurityStamp2";
-            await _userManager.UpdateAsync(passwordChangedUser);
-
-            User userNameUpdatedUser = await _userManager.FindByIdAsync(firstUser.Id);
-            userNameUpdatedUser.ShouldNotBeNull();
-            userNameUpdatedUser.UserName.ShouldBe("SecurityStamp2");
-            var userNameUpdateUserSecurityStamp = userNameUpdatedUser.SecurityStamp;
-            userNameUpdateUserSecurityStamp.ShouldNotBe(passwordChangedUserSecurityStamp2);
-
-            //update email
-            userNameUpdatedUser.EmailAddress = "test@hotmail.com";
-            await _userManager.UpdateAsync(userNameUpdatedUser);
-
-            User emailUpdatedUser = await _userManager.FindByIdAsync(firstUser.Id);
-            emailUpdatedUser.ShouldNotBeNull();
-            emailUpdatedUser.EmailAddress.ShouldBe("test@hotmail.com");
-            var emailUpdatedUserSecurityStamp = emailUpdatedUser.SecurityStamp;
-            emailUpdatedUserSecurityStamp.ShouldNotBe(userNameUpdateUserSecurityStamp);
         }
     }
 }
