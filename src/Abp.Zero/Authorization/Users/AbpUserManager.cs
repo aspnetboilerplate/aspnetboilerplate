@@ -364,16 +364,7 @@ namespace Abp.Authorization.Users
                 }
             }
 
-            bool isUserCredentialsSameWithStored = await IsUserCredentialsSameWithStored(user);
-
-            var updateResult = await base.UpdateAsync(user);
-
-            if (!isUserCredentialsSameWithStored)//update security stamp too, if any credential is changed
-            {
-                await UpdateSecurityStampAsync(user.Id);
-            }
-
-            return updateResult;
+            return await base.UpdateAsync(user);
         }
 
         public override async Task<IdentityResult> DeleteAsync(TUser user)
@@ -748,23 +739,6 @@ namespace Abp.Authorization.Users
             }
 
             return AbpSession.MultiTenancySide;
-        }
-
-        /// <summary>
-        /// Check if stored users critic credentials are same with given.
-        /// </summary>
-        public virtual async Task<bool> IsUserCredentialsSameWithStored(TUser user)
-        {
-            var storedUser = await GetUserByIdAsync(user.Id);
-            if (
-                storedUser.UserName != user.UserName ||
-                storedUser.EmailAddress != user.EmailAddress ||
-                storedUser.Password != user.Password
-            )
-            {
-                return false;
-            }
-            return true;
         }
     }
 }
