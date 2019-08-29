@@ -1,4 +1,5 @@
 ﻿using System.IO;
+using Abp.Localization.Sources;
 
 namespace Abp.Localization.Dictionaries.Json
 {
@@ -17,14 +18,14 @@ namespace Abp.Localization.Dictionaries.Json
         {
             _directoryPath = directoryPath;
         }
-        
-        public override void Initialize(string sourceName)
+
+        protected override void InitializeDictionaries()
         {
             var fileNames = Directory.GetFiles(_directoryPath, "*.json", SearchOption.TopDirectoryOnly);
 
             foreach (var fileName in fileNames)
             {
-                CommonInitialize(() => CreateJsonLocalizationDictionary(fileName), fileName, sourceName, ".json");
+                InitializeDictionary(CreateJsonLocalizationDictionary(fileName), isDefault: fileName.EndsWith(SourceName + ".json"));
             }
         }
 

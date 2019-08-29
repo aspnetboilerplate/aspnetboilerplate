@@ -1,7 +1,6 @@
 using System.Globalization;
 using System.Linq;
 using System.Reflection;
-using Abp.Localization.Dictionaries.Xml;
 
 namespace Abp.Localization.Dictionaries.Json
 {
@@ -34,12 +33,12 @@ namespace Abp.Localization.Dictionaries.Json
             _rootNamespace = rootNamespace;
         }
 
-        public override void Initialize(string sourceName)
+        protected override void InitializeDictionaries()
         {
             var allCultureInfos = CultureInfo.GetCultures(CultureTypes.AllCultures);
             var resourceNames = _assembly.GetManifestResourceNames().Where(resouceName =>
-                allCultureInfos.Any(culture => resouceName.EndsWith($"{sourceName}.json", true, null) ||
-                                               resouceName.EndsWith($"{sourceName}-{culture.Name}.json", true,
+                allCultureInfos.Any(culture => resouceName.EndsWith($"{SourceName}.json", true, null) ||
+                                               resouceName.EndsWith($"{SourceName}-{culture.Name}.json", true,
                                                    null))).ToList();
             foreach (var resourceName in resourceNames)
             {
@@ -48,8 +47,7 @@ namespace Abp.Localization.Dictionaries.Json
                     using (var stream = _assembly.GetManifestResourceStream(resourceName))
                     {
                         var jsonString = Utf8Helper.ReadStringFromStream(stream);
-
-                        CommonInitialize(() => CreateJsonLocalizationDictionary(jsonString), resourceName, sourceName, ".json");
+                        InitializeDictionary(CreateJsonLocalizationDictionary(jsonString), isDefault: resourceName.EndsWith(SourceName + ".json"));
                     }
                 }
             }

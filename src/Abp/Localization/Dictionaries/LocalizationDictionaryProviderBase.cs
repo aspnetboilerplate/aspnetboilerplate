@@ -16,9 +16,10 @@ namespace Abp.Localization.Dictionaries
             Dictionaries = new Dictionary<string, ILocalizationDictionary>();
         }
 
-        public virtual void Initialize(string sourceName)
+        public void Initialize(string sourceName)
         {
             SourceName = sourceName;
+            InitializeDictionaries();
         }
 
         public void Extend(ILocalizationDictionary dictionary)
@@ -39,22 +40,25 @@ namespace Abp.Localization.Dictionaries
             }
         }
 
-        protected void CommonInitialize(Func<LocalizationDictionary> localizationDictionaryFactory,
-            string resourceName, string sourceName, string fileExtension)
+        protected virtual void InitializeDictionaries()
         {
-            var dictionary = localizationDictionaryFactory();
+        }
+
+        protected virtual void InitializeDictionary<TDictionary>(TDictionary dictionary, bool isDefault = false)
+            where TDictionary : ILocalizationDictionary
+        {
             if (Dictionaries.ContainsKey(dictionary.CultureInfo.Name))
             {
-                throw new AbpInitializationException(sourceName + " source contains more than one dictionary for the culture: " + dictionary.CultureInfo.Name);
+                throw new AbpInitializationException(SourceName + " source contains more than one dictionary for the culture: " + dictionary.CultureInfo.Name);
             }
 
             Dictionaries[dictionary.CultureInfo.Name] = dictionary;
 
-            if (resourceName.EndsWith(sourceName + fileExtension))
+            if (isDefault)
             {
                 if (DefaultDictionary != null)
                 {
-                    throw new AbpInitializationException("Only one default localization dictionary can be for source: " + sourceName);
+                    throw new AbpInitializationException("Only one default localization dictionary can be for source: " + SourceName);
                 }
 
                 DefaultDictionary = dictionary;

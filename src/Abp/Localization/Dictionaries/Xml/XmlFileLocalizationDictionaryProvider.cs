@@ -18,13 +18,13 @@ namespace Abp.Localization.Dictionaries.Xml
             _directoryPath = directoryPath;
         }
 
-        public override void Initialize(string sourceName)
+        protected override void InitializeDictionaries()
         {
             var fileNames = Directory.GetFiles(_directoryPath, "*.xml", SearchOption.TopDirectoryOnly);
 
             foreach (var fileName in fileNames)
             {
-                CommonInitialize(() => CreateXmlLocalizationDictionary(fileName) , fileName, sourceName, ".xml");
+                InitializeDictionary(CreateXmlLocalizationDictionary(fileName), isDefault: fileName.EndsWith(SourceName + ".xml"));
             }
         }
 
