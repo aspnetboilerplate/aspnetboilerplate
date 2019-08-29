@@ -264,6 +264,9 @@ namespace Abp.EntityHistory
                 var memberEntry = entityEntry.Member(propertyName);
                 if (!(memberEntry is DbPropertyEntry))
                 {
+                    // Skipping other types of properties
+                    // - Reference navigation properties (DbReferenceEntry)
+                    // - Collection navigation properties (DbCollectionEntry)
                     continue;
                 }
 
@@ -514,6 +517,43 @@ namespace Abp.EntityHistory
                         else
                         {
                             // Update foreign key
+                            propertyChange.NewValue = newValue;
+                        }
+                    }
+                }
+
+                /* Update tracked properties */
+                var auditedPropertyChanges = entityChange.PropertyChanges
+                                             .Where(pc => !foreignKeyPropertyNames.Contains(pc.PropertyName))
+                                             .ToList();
+
+                foreach (var propertyChange in auditedPropertyChanges)
+                {
+                    var memberEntry = entityEntry.Member(propertyChange.PropertyName);
+                    if (!(memberEntry is DbPropertyEntry))
+                    {
+                        // Skipping other types of properties
+                        // - Reference navigation properties (DbReferenceEntry)
+                        // - Collection navigation properties (DbCollectionEntry)
+                        continue;
+                    }
+
+                    var propertyEntry = entityEntry.Property(propertyChange.PropertyName);
+                    var propertyInfo = entityEntry.GetPropertyInfo(propertyChange.PropertyName);
+
+                    // TODO: fix new value comparison before truncation
+                    var newValue = propertyEntry.GetNewValue()?.ToJsonString().TruncateWithPostfix(EntityPropertyChange.MaxValueLength);
+
+                    if (propertyChange.OriginalValue == propertyChange.NewValue)
+                    {
+                        if (propertyChange.NewValue == newValue)
+                        {
+                            // No change
+                            entityChange.PropertyChanges.Remove(propertyChange);
+                        }
+                        else
+                        {
+                            // Update audited property
                             propertyChange.NewValue = newValue;
                         }
                     }
