@@ -459,7 +459,7 @@ namespace Abp.EntityHistory
         }
 
         /// <summary>
-        /// Updates change time, entity id and foreign keys after SaveChanges is called.
+        /// Updates change time, entity id, tracked properties and adds/removes/updates foreign keys after SaveChanges is called.
         /// </summary>
         private void UpdateChangeSet(DbContext context, EntityChangeSet changeSet)
         {
@@ -475,50 +475,46 @@ namespace Abp.EntityHistory
                 var entityType = GetEntityType(context.As<IObjectContextAdapter>().ObjectContext, entityEntry.GetEntityBaseType(), useClrType: false);
                 entityChange.EntityId = GetEntityId(entityEntry, entityType);
 
-                /* Update foreign keys */
+                /* Add/Remove/Update foreign keys*/
+                var foreignKeyPropertyNames = entityType.NavigationProperties
+                                                .SelectMany(foreignKeys => foreignKeys.GetDependentProperties())
+                                                .Select(p => p.Name)
+                                                .Distinct()
+                                                .ToList();
 
-                var foreignKeys = entityType.NavigationProperties;
-
-                foreach (var foreignKey in foreignKeys)
+                foreach (var propertyName in foreignKeyPropertyNames)
                 {
-                    foreach (var property in foreignKey.GetDependentProperties())
+                    var propertyEntry = entityEntry.Property(propertyName);
+                    var propertyInfo = entityEntry.GetPropertyInfo(propertyName);
+                    var propertyChange = entityChange.PropertyChanges.FirstOrDefault(pc => pc.PropertyName == propertyName);
+
+                    // TODO: fix new value comparison before truncation
+                    var newValue = propertyEntry.GetNewValue()?.ToJsonString().TruncateWithPostfix(EntityPropertyChange.MaxValueLength);
+
+                    if (propertyChange == null)
                     {
-                        var propertyEntry = entityEntry.Property(property.Name);
-                        var propertyChange = entityChange.PropertyChanges.FirstOrDefault(pc => pc.PropertyName == property.Name);
-
-                        //make sure test case cover post saving (for foreign key update)
-                        if (propertyChange == null)
+                        if (propertyEntry.HasChanged())
                         {
-                            if (propertyEntry.HasChanged())
-                            {
-                                var propertyInfo = entityEntry.GetPropertyInfo(property.Name);
+                            var oldValue = propertyEntry.GetOriginalValue()?.ToJsonString().TruncateWithPostfix(EntityPropertyChange.MaxValueLength);
 
-                                // Add foreign key
-                                entityChange.PropertyChanges.Add(new EntityPropertyChange
-                                {
-                                    NewValue = propertyEntry.CurrentValue.ToJsonString(),
-                                    OriginalValue = propertyEntry.OriginalValue.ToJsonString(),
-                                    PropertyName = property.Name,
-                                    PropertyTypeFullName = propertyInfo.PropertyType.FullName
-                                });
-                            }
-
-                            continue;
+                            // Add foreign key
+                            entityChange.PropertyChanges.Add(CreateEntityPropertyChange(oldValue, newValue, propertyInfo));
                         }
 
-                        if (propertyChange.OriginalValue == propertyChange.NewValue)
+                        continue;
+                    }
+
+                    if (propertyChange.OriginalValue == propertyChange.NewValue)
+                    {
+                        if (propertyChange.NewValue == newValue)
                         {
-                            var newValue = propertyEntry.GetNewValue().ToJsonString();
-                            if (newValue == propertyChange.NewValue)
-                            {
-                                // No change
-                                entityChange.PropertyChanges.Remove(propertyChange);
-                            }
-                            else
-                            {
-                                // Update foreign key
-                                propertyChange.NewValue = newValue.TruncateWithPostfix(EntityPropertyChange.MaxValueLength);
-                            }
+                            // No change
+                            entityChange.PropertyChanges.Remove(propertyChange);
+                        }
+                        else
+                        {
+                            // Update foreign key
+                            propertyChange.NewValue = newValue;
                         }
                     }
                 }
