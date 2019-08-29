@@ -13,7 +13,6 @@ namespace Abp.Zero.SampleApp.Tests.Users
     {
         private readonly IUserAppService _userAppService;
         private readonly UserManager _userManager;
-
         public UserAppService_Tests()
         {
             _userAppService = Resolve<IUserAppService>();
@@ -49,7 +48,7 @@ namespace Abp.Zero.SampleApp.Tests.Users
         }
 
         [Fact]
-        public async Task Shoudl_Reset_Password()
+        public async Task Should_Reset_Password()
         {
             AbpSession.TenantId = 1; //Default tenant   
             var managerUser = await _userManager.FindByNameAsync("manager");

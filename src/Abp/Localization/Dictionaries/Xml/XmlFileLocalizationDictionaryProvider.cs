@@ -1,5 +1,4 @@
 ﻿using System.IO;
-using Abp.Localization.Sources;
 
 namespace Abp.Localization.Dictionaries.Xml
 {
