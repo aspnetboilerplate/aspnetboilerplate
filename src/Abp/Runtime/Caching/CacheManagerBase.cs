@@ -1,4 +1,5 @@
-﻿using System.Collections.Concurrent;
+﻿using System;
+using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Collections.Immutable;
 using System.Linq;
@@ -7,15 +8,24 @@ using Abp.Runtime.Caching.Configuration;
 
 namespace Abp.Runtime.Caching
 {
+    [Obsolete("Use CacheManagerBase<TCache> instead.")]
+    public abstract class CacheManagerBase : CacheManagerBase<ICache>, ICacheManager
+    {
+        public CacheManagerBase(ICachingConfiguration configuration) : base(configuration)
+        {
+        }
+    }
+
     /// <summary>
     /// Base class for cache managers.
     /// </summary>
-    public abstract class CacheManagerBase : ICacheManager, ISingletonDependency
+    public abstract class CacheManagerBase<TCache> : ICacheManager<TCache>, ISingletonDependency
+        where TCache : class, ICacheOptions
     {
 
         protected readonly ICachingConfiguration Configuration;
 
-        protected readonly ConcurrentDictionary<string, ICache> Caches;
+        protected readonly ConcurrentDictionary<string, TCache> Caches;
 
         /// <summary>
         /// Constructor.
@@ -24,15 +34,15 @@ namespace Abp.Runtime.Caching
         protected CacheManagerBase(ICachingConfiguration configuration)
         {
             Configuration = configuration;
-            Caches = new ConcurrentDictionary<string, ICache>();
+            Caches = new ConcurrentDictionary<string, TCache>();
         }
 
-        public IReadOnlyList<ICache> GetAllCaches()
+        public IReadOnlyList<TCache> GetAllCaches()
         {
             return Caches.Values.ToImmutableList();
         }
 
-        public virtual ICache GetCache(string name)
+        public virtual TCache GetCache(string name)
         {
             Check.NotNull(name, nameof(name));
 
@@ -62,6 +72,6 @@ namespace Abp.Runtime.Caching
         /// </summary>
         /// <param name="name">Name of the cache</param>
         /// <returns>Cache object</returns>
-        protected abstract ICache CreateCacheImplementation(string name);
+        protected abstract TCache CreateCacheImplementation(string name);
     }
 }

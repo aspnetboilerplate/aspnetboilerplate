@@ -6,7 +6,7 @@ namespace Abp.Runtime.Caching.Redis
     /// <summary>
     /// Used to create <see cref="AbpRedisCache"/> instances.
     /// </summary>
-    public class AbpRedisCacheManager : CacheManagerBase
+    public class AbpRedisCacheManager : CacheManagerBase<ICache>, ICacheManager
     {
         private readonly IIocManager _iocManager;
 
