@@ -1,4 +1,4 @@
-﻿using JetBrains.Annotations;
+using JetBrains.Annotations;
 using Newtonsoft.Json;
 using System;
 
@@ -6,6 +6,15 @@ namespace Abp.Json
 {
     public static class JsonExtensions
     {
+        private static readonly AbpCamelCasePropertyNamesContractResolver SharedAbpCamelCasePropertyNamesContractResolver;
+        private static readonly AbpContractResolver SharedAbpContractResolver;
+
+        static JsonExtensions()
+        {
+            SharedAbpCamelCasePropertyNamesContractResolver = new AbpCamelCasePropertyNamesContractResolver();
+            SharedAbpContractResolver = new AbpContractResolver();
+        }
+
         /// <summary>
         /// Converts given object to JSON string.
         /// </summary>
@@ -16,11 +25,11 @@ namespace Abp.Json
 
             if (camelCase)
             {
-                settings.ContractResolver = new AbpCamelCasePropertyNamesContractResolver();
+                settings.ContractResolver = SharedAbpCamelCasePropertyNamesContractResolver;
             }
             else
             {
-                settings.ContractResolver = new AbpContractResolver();
+                settings.ContractResolver = SharedAbpContractResolver;
             }
 
             if (indented)

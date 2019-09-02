@@ -8,13 +8,18 @@ namespace Abp.Runtime.Caching
     /// An upper level container for <see cref="ICache"/> objects. 
     /// A cache manager should work as Singleton and track and manage <see cref="ICache"/> objects.
     /// </summary>
-    public interface ICacheManager : IDisposable
+    public interface ICacheManager : ICacheManager<ICache>
+    {
+    }
+
+    public interface ICacheManager<TCache> : IDisposable
+        where TCache : class
     {
         /// <summary>
         /// Gets all caches.
         /// </summary>
         /// <returns>List of caches</returns>
-        IReadOnlyList<ICache> GetAllCaches();
+        IReadOnlyList<TCache> GetAllCaches();
 
         /// <summary>
         /// Gets a <see cref="ICache"/> instance.
@@ -24,6 +29,6 @@ namespace Abp.Runtime.Caching
         /// Unique and case sensitive name of the cache.
         /// </param>
         /// <returns>The cache reference</returns>
-        [NotNull] ICache GetCache([NotNull] string name);
+        [NotNull] TCache GetCache([NotNull] string name);
     }
 }

@@ -1,4 +1,5 @@
-﻿using System.Globalization;
+﻿using System;
+using System.Globalization;
 using Abp.Configuration;
 using Abp.Dependency;
 using Abp.Domain.Entities;
@@ -16,9 +17,10 @@ namespace Abp.AutoMapper
         /// </summary>
         /// <typeparam name="TDestination">Type of the destination object</typeparam>
         /// <param name="source">Source object</param>
+        [Obsolete("Automapper will remove static API, Please use ObjectMapper instead. See https://github.com/aspnetboilerplate/aspnetboilerplate/issues/4667")]
         public static TDestination MapTo<TDestination>(this object source)
         {
-            return Mapper.Map<TDestination>(source);
+            return AbpEmulateAutoMapper.Mapper != null ? AbpEmulateAutoMapper.Mapper.Map<TDestination>(source) : default(TDestination);
         }
 
         /// <summary>
@@ -30,9 +32,10 @@ namespace Abp.AutoMapper
         /// <param name="source">Source object</param>
         /// <param name="destination">Destination object</param>
         /// <returns></returns>
+        [Obsolete("Automapper will remove static API, Please use ObjectMapper instead. See https://github.com/aspnetboilerplate/aspnetboilerplate/issues/4667")]
         public static TDestination MapTo<TSource, TDestination>(this TSource source, TDestination destination)
         {
-            return Mapper.Map(source, destination);
+            return AbpEmulateAutoMapper.Mapper != null ? AbpEmulateAutoMapper.Mapper.Map(source, destination) : default(TDestination);
         }
 
         public static CreateMultiLingualMapResult<TMultiLingualEntity, TTranslation, TDestination> CreateMultiLingualMap<TMultiLingualEntity, TMultiLingualEntityPrimaryKey, TTranslation, TDestination>(

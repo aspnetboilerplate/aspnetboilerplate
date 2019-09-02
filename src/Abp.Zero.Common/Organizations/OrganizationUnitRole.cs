@@ -8,7 +8,7 @@ namespace Abp.Organizations
     /// Represents membership of a User to an OU.
     /// </summary>
     [Table("AbpOrganizationUnitRoles")]
-    public class OrganizationUnitRole : CreationAuditedEntity<long>, IMayHaveTenant
+    public class OrganizationUnitRole : CreationAuditedEntity<long>, IMayHaveTenant, ISoftDelete
     {
         /// <summary>
         /// TenantId of this entity.

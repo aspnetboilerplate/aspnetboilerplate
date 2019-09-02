@@ -211,7 +211,7 @@ namespace Abp.Notifications
 
         private Expression<Func<UserNotificationInfo, bool>> CreateNotificationFilterPredicate(UserIdentifier user, UserNotificationState? state = null, DateTime? startDate = null, DateTime? endDate = null)
         {
-            var predicate = PredicateBuilder.True<UserNotificationInfo>();
+            var predicate = PredicateBuilder.New<UserNotificationInfo>();
             predicate = predicate.And(p => p.UserId == user.UserId);
 
             if (startDate.HasValue)
@@ -269,11 +269,12 @@ namespace Abp.Notifications
         }
 
         [UnitOfWork]
-        public virtual async Task<int> GetUserNotificationCountAsync(UserIdentifier user, UserNotificationState? state = null)
+        public virtual async Task<int> GetUserNotificationCountAsync(UserIdentifier user, UserNotificationState? state = null, DateTime? startDate = null, DateTime? endDate = null)
         {
             using (_unitOfWorkManager.Current.SetTenantId(user.TenantId))
             {
-                return await _userNotificationRepository.CountAsync(un => un.UserId == user.UserId && (state == null || un.State == state.Value));
+                var predicate = CreateNotificationFilterPredicate(user, state, startDate, endDate);
+                return await _userNotificationRepository.CountAsync(predicate);
             }
         }
 

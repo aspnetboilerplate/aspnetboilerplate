@@ -25,7 +25,9 @@ namespace Abp.Notifications
         /// </summary>
         /// <param name="user">User.</param>
         /// <param name="state">State.</param>
-        Task<int> GetUserNotificationCountAsync(UserIdentifier user, UserNotificationState? state = null);
+        /// <param name="startDate">List notifications published after startDateTime</param>
+        /// <param name="endDate">List notifications published before startDateTime</param>
+        Task<int> GetUserNotificationCountAsync(UserIdentifier user, UserNotificationState? state = null, DateTime? startDate = null, DateTime? endDate = null);
 
         /// <summary>
         /// Gets a user notification by given id.

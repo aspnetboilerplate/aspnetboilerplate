@@ -81,7 +81,7 @@ namespace Abp.Notifications
             return Task.FromResult(new List<UserNotificationInfoWithNotificationInfo>());
         }
 
-        public Task<int> GetUserNotificationCountAsync(UserIdentifier user, UserNotificationState? state = null)
+        public Task<int> GetUserNotificationCountAsync(UserIdentifier user, UserNotificationState? state = null, DateTime? startDate = null, DateTime? endDate = null)
         {
             return Task.FromResult(0);
         }

@@ -30,7 +30,7 @@ Let's investigate a simple class to see ABP's benefits:
                 throw new UserFriendlyException(L("CouldNotFindTheTaskMessage"));
             }
 
-            input.MapTo(task);
+            ObjectMapper.MapTo(input, task);
         }
     }
 
@@ -82,7 +82,7 @@ Let's see some of ABP's benefits here:
     Log4Net is used by default, but it's changeable and configurable.
 -   **[Localization](/Pages/Documents/Localization)**: Note that we used the 'L' method while throwing the exception?
     This way, it's automatically localized based on the current user's culture. See the [localization](/Pages/Documents/Localization) document for more.
--   **[Auto Mapping](/Pages/Documents/Data-Transfer-Objects)**: In the last line, we're using ABP's MapTo extension method to map input
+-   **[Auto Mapping](/Pages/Documents/Data-Transfer-Objects)**: In the last line, we map input using the MapTo method of ABP's IObjectMapper.
     properties to entity properties. It uses the AutoMapper library to
     perform the mapping. We can easily map properties from one object
     to another based on naming conventions.
