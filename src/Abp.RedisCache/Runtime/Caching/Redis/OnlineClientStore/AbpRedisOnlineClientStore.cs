@@ -1,31 +1,25 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Collections.Immutable;
 using System.Linq;
+using System.Text;
 using Abp.RealTime;
 
 namespace Abp.Runtime.Caching.Redis.OnlineClientStore
 {
     public class AbpRedisOnlineClientStore : IOnlineClientStore
     {
-        protected readonly object SyncObj = new object();
-
         //TODO: Get this from options
         private const string CacheStoreName = "Abp.Redis.OnlineClientStore.DefaultCacheStoreName";
-        private readonly AbpRedisHashCacheManager _cacheManager;
+        private readonly IAbpRedisHashStore<string, OnlineClient> _redisHashStore;
 
-        public AbpRedisOnlineClientStore(AbpRedisHashCacheManager cacheManager)
+        public AbpRedisOnlineClientStore(IAbpRedisHashStoreProvider abpRedisHashStoreProvider)
         {
-            _cacheManager = cacheManager;
+            _redisHashStore = abpRedisHashStoreProvider.GetAbpRedisHashStore<string, OnlineClient>(CacheStoreName);
         }
-
-        private ICache GetCache()
-        {
-            return _cacheManager.GetCache(CacheStoreName);
-        }
-
         public void Add(IOnlineClient client)
         {
-            _cacheManager.GetCache(CacheStoreName).Set(client.ConnectionId, client as OnlineClient);
+            _redisHashStore.TryAdd(client.ConnectionId, client as OnlineClient);
         }
 
         public bool Remove(string connectionId)
@@ -35,36 +29,37 @@ namespace Abp.Runtime.Caching.Redis.OnlineClientStore
 
         public bool TryRemove(string connectionId, out IOnlineClient client)
         {
-            var cache = GetCache();
+            _redisHashStore.TryGetValue(connectionId, out OnlineClient found);
 
-            lock (SyncObj)
-            {
-                cache.Remove(connectionId);
-                client = cache.GetOrDefault(connectionId) as IOnlineClient;
+            bool removed = false;
 
-                return client == null;
-            }
+            if (found != null)
+                removed = _redisHashStore.Remove(connectionId);
+            client = removed ? found : null;
+
+            return removed;
         }
 
         public bool TryGet(string connectionId, out IOnlineClient client)
         {
-            client = GetCache().GetOrDefault(connectionId) as IOnlineClient;
-            return client != null;
+            bool result = _redisHashStore.TryGetValue(connectionId, out OnlineClient found);
+            client = found;
+            return result;
         }
 
         public bool Contains(string connectionId)
         {
-            return _cacheManager.Contains(CacheStoreName, connectionId);
+            return _redisHashStore.ContainsKey(connectionId);
         }
 
         public IReadOnlyList<IOnlineClient> GetAll()
         {
-            return _cacheManager.GetAllValues(CacheStoreName).Select(item => (IOnlineClient)item).ToImmutableList();
+            return _redisHashStore.GetAllValues();
         }
 
         public void Clear()
         {
-            GetCache().Clear();
+            _redisHashStore.Clear();
         }
     }
 }
