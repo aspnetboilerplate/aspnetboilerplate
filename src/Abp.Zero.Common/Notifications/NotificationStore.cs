@@ -367,6 +367,22 @@ namespace Abp.Notifications
             }
         }
 
+        
+        [UnitOfWork]
+        public virtual void DeleteAllUserNotifications(UserIdentifier user, 
+            UserNotificationState? state = null,
+            DateTime? startDate = null, 
+            DateTime? endDate = null)
+        {
+            using (_unitOfWorkManager.Current.SetTenantId(user.TenantId))
+            {
+                var predicate = CreateNotificationFilterPredicate(user, state, startDate, endDate);
+
+                _userNotificationRepository.Delete(predicate);
+                _unitOfWorkManager.Current.SaveChanges();
+            }
+        }
+
         private Expression<Func<UserNotificationInfo, bool>> CreateNotificationFilterPredicate(UserIdentifier user, UserNotificationState? state = null, DateTime? startDate = null, DateTime? endDate = null)
         {
             var predicate = PredicateBuilder.New<UserNotificationInfo>();
@@ -388,16 +404,6 @@ namespace Abp.Notifications
             }
 
             return predicate;
-        }
-
-        [UnitOfWork]
-        public virtual void DeleteAllUserNotifications(UserIdentifier user)
-        {
-            using (_unitOfWorkManager.Current.SetTenantId(user.TenantId))
-            {
-                _userNotificationRepository.Delete(un => un.UserId == user.UserId);
-                _unitOfWorkManager.Current.SaveChanges();
-            }
         }
 
         [UnitOfWork]
@@ -437,15 +443,30 @@ namespace Abp.Notifications
         }
 
         [UnitOfWork]
-        public virtual List<UserNotificationInfoWithNotificationInfo> GetUserNotificationsWithNotifications(UserIdentifier user, UserNotificationState? state = null, int skipCount = 0, int maxResultCount = int.MaxValue)
+        public virtual List<UserNotificationInfoWithNotificationInfo> GetUserNotificationsWithNotifications(UserIdentifier user, UserNotificationState? state = null, int skipCount = 0, int maxResultCount = int.MaxValue, DateTime? startDate = null, DateTime? endDate = null)
         {
             using (_unitOfWorkManager.Current.SetTenantId(user.TenantId))
             {
                 var query = from userNotificationInfo in _userNotificationRepository.GetAll()
-                            join tenantNotificationInfo in _tenantNotificationRepository.GetAll() on userNotificationInfo.TenantNotificationId equals tenantNotificationInfo.Id
-                            where userNotificationInfo.UserId == user.UserId && (state == null || userNotificationInfo.State == state.Value)
-                            orderby tenantNotificationInfo.CreationTime descending
-                            select new { userNotificationInfo, tenantNotificationInfo = tenantNotificationInfo };
+                    join tenantNotificationInfo in _tenantNotificationRepository.GetAll() on userNotificationInfo.TenantNotificationId equals tenantNotificationInfo.Id
+                    where userNotificationInfo.UserId == user.UserId
+                    orderby tenantNotificationInfo.CreationTime descending
+                    select new { userNotificationInfo, tenantNotificationInfo = tenantNotificationInfo };
+
+                if (state.HasValue)
+                {
+                    query = query.Where(x => x.userNotificationInfo.State == state.Value);
+                }
+
+                if (startDate.HasValue)
+                {
+                    query = query.Where(x => x.tenantNotificationInfo.CreationTime >= startDate);
+                }
+
+                if (endDate.HasValue)
+                {
+                    query = query.Where(x => x.tenantNotificationInfo.CreationTime <= endDate);
+                }
 
                 query = query.PageBy(skipCount, maxResultCount);
 
@@ -453,7 +474,7 @@ namespace Abp.Notifications
 
                 return list.Select(
                     a => new UserNotificationInfoWithNotificationInfo(a.userNotificationInfo, a.tenantNotificationInfo)
-                    ).ToList();
+                ).ToList();
             }
         }
 
@@ -468,11 +489,12 @@ namespace Abp.Notifications
         }
 
         [UnitOfWork]
-        public virtual int GetUserNotificationCount(UserIdentifier user, UserNotificationState? state = null)
+        public virtual int GetUserNotificationCount(UserIdentifier user, UserNotificationState? state = null, DateTime? startDate = null, DateTime? endDate = null)
         {
             using (_unitOfWorkManager.Current.SetTenantId(user.TenantId))
             {
-                return _userNotificationRepository.Count(un => un.UserId == user.UserId && (state == null || un.State == state.Value));
+                var predicate = CreateNotificationFilterPredicate(user, state, startDate, endDate);
+                return _userNotificationRepository.Count(predicate);
             }
         }
 

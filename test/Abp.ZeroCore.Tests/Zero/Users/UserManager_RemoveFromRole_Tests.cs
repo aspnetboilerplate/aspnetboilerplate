@@ -25,7 +25,6 @@ namespace Abp.Zero.Users
                 await uow.CompleteAsync();
             }
 
-
             using (var uow = Resolve<IUnitOfWorkManager>().Begin())
             {
                 var userManager = LocalIocManager.Resolve<UserManager>();

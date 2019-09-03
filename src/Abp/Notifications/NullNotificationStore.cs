@@ -69,8 +69,11 @@ namespace Abp.Notifications
             return Task.FromResult(0);
         }
 
-        public Task DeleteAllUserNotificationsAsync(UserIdentifier user, UserNotificationState? state = null,
-            DateTime? startDate = null, DateTime? endDate = null)
+        public Task DeleteAllUserNotificationsAsync(
+            UserIdentifier user, 
+            UserNotificationState? state = null,
+            DateTime? startDate = null, 
+            DateTime? endDate = null)
         {
             return Task.FromResult(0);
         }
@@ -154,16 +157,19 @@ namespace Abp.Notifications
         {
         }
 
-        public void DeleteAllUserNotifications(UserIdentifier user)
+        public void DeleteAllUserNotifications(UserIdentifier user, 
+            UserNotificationState? state = null,
+            DateTime? startDate = null, 
+            DateTime? endDate = null)
         {
         }
 
-        public List<UserNotificationInfoWithNotificationInfo> GetUserNotificationsWithNotifications(UserIdentifier user, UserNotificationState? state = null, int skipCount = 0, int maxResultCount = int.MaxValue)
+        public List<UserNotificationInfoWithNotificationInfo> GetUserNotificationsWithNotifications(UserIdentifier user, UserNotificationState? state = null, int skipCount = 0, int maxResultCount = int.MaxValue, DateTime? startDate = null, DateTime? endDate = null)
         {
             return new List<UserNotificationInfoWithNotificationInfo>();
         }
 
-        public int GetUserNotificationCount(UserIdentifier user, UserNotificationState? state = null)
+        public int GetUserNotificationCount(UserIdentifier user, UserNotificationState? state = null, DateTime? startDate = null, DateTime? endDate = null)
         {
             return 0;
         }

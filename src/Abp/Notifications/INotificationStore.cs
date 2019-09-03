@@ -137,7 +137,7 @@ namespace Abp.Notifications
         /// <summary>
         /// Deletes all notifications of a user.
         /// </summary>
-        void DeleteAllUserNotifications(UserIdentifier user);
+        void DeleteAllUserNotifications(UserIdentifier user, UserNotificationState? state = null, DateTime? startDate = null, DateTime? endDate = null);
 
         /// <summary>
         /// Gets notifications of a user.
@@ -157,7 +157,7 @@ namespace Abp.Notifications
         /// <param name="skipCount">Skip count.</param>
         /// <param name="maxResultCount">Maximum result count.</param>
         /// <param name="state">State</param>
-        List<UserNotificationInfoWithNotificationInfo> GetUserNotificationsWithNotifications(UserIdentifier user, UserNotificationState? state = null, int skipCount = 0, int maxResultCount = int.MaxValue);
+        List<UserNotificationInfoWithNotificationInfo> GetUserNotificationsWithNotifications(UserIdentifier user, UserNotificationState? state = null, int skipCount = 0, int maxResultCount = int.MaxValue, DateTime? startDate = null, DateTime? endDate = null);
 
         /// <summary>
         /// Gets user notification count.
@@ -173,7 +173,9 @@ namespace Abp.Notifications
         /// </summary>
         /// <param name="user">User.</param>
         /// <param name="state">The state.</param>
-        int GetUserNotificationCount(UserIdentifier user, UserNotificationState? state = null);
+        /// <param name="startDate">List notifications published after startDateTime</param>
+        /// <param name="endDate">List notifications published before startDateTime</param>
+        int GetUserNotificationCount(UserIdentifier user, UserNotificationState? state = null, DateTime? startDate = null, DateTime? endDate = null);
 
         /// <summary>
         /// Gets a user notification.
