@@ -1,6 +1,7 @@
+using System;
 using System.Collections.Generic;
 
-namespace Abp.Localization.Dictionaries.Xml
+namespace Abp.Localization.Dictionaries
 {
     public abstract class LocalizationDictionaryProviderBase : ILocalizationDictionaryProvider
     {
@@ -15,9 +16,10 @@ namespace Abp.Localization.Dictionaries.Xml
             Dictionaries = new Dictionary<string, ILocalizationDictionary>();
         }
 
-        public virtual void Initialize(string sourceName)
+        public void Initialize(string sourceName)
         {
             SourceName = sourceName;
+            InitializeDictionaries();
         }
 
         public void Extend(ILocalizationDictionary dictionary)
@@ -35,6 +37,31 @@ namespace Abp.Localization.Dictionaries.Xml
             foreach (var localizedString in localizedStrings)
             {
                 existingDictionary[localizedString.Name] = localizedString.Value;
+            }
+        }
+
+        protected virtual void InitializeDictionaries()
+        {
+        }
+
+        protected virtual void InitializeDictionary<TDictionary>(TDictionary dictionary, bool isDefault = false)
+            where TDictionary : ILocalizationDictionary
+        {
+            if (Dictionaries.ContainsKey(dictionary.CultureInfo.Name))
+            {
+                throw new AbpInitializationException(SourceName + " source contains more than one dictionary for the culture: " + dictionary.CultureInfo.Name);
+            }
+
+            Dictionaries[dictionary.CultureInfo.Name] = dictionary;
+
+            if (isDefault)
+            {
+                if (DefaultDictionary != null)
+                {
+                    throw new AbpInitializationException("Only one default localization dictionary can be for source: " + SourceName);
+                }
+
+                DefaultDictionary = dictionary;
             }
         }
     }

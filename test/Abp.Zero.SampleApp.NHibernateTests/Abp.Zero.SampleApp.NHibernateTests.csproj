@@ -12,12 +12,6 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <None Update="SQLite.Interop.dll">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </None>
-  </ItemGroup>
-
-  <ItemGroup>
     <ProjectReference Include="..\..\src\Abp.TestBase\Abp.TestBase.csproj" />
     <ProjectReference Include="..\Abp.Zero.SampleApp\Abp.Zero.SampleApp.csproj" />
     <ProjectReference Include="..\..\src\Abp.Zero.NHibernate\Abp.Zero.NHibernate.csproj" />

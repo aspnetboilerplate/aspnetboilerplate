@@ -319,7 +319,7 @@ namespace Abp.EntityHistory
                 })
                 .GroupBy(t => t.Item1);
 
-            foreach(var relationship in relationshipGroups)
+            foreach (var relationship in relationshipGroups)
             {
                 var relationshipName = relationship.Key;
                 var navigationPropertyName = navigationProperties

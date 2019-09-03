@@ -1,5 +1,4 @@
 ﻿using System.IO;
-using Abp.Localization.Dictionaries.Xml;
 using Abp.Localization.Sources;
 
 namespace Abp.Localization.Dictionaries.Json
@@ -19,30 +18,14 @@ namespace Abp.Localization.Dictionaries.Json
         {
             _directoryPath = directoryPath;
         }
-        
-        public override void Initialize(string sourceName)
+
+        protected override void InitializeDictionaries()
         {
             var fileNames = Directory.GetFiles(_directoryPath, "*.json", SearchOption.TopDirectoryOnly);
 
             foreach (var fileName in fileNames)
             {
-                var dictionary = CreateJsonLocalizationDictionary(fileName);
-                if (Dictionaries.ContainsKey(dictionary.CultureInfo.Name))
-                {
-                    throw new AbpInitializationException(sourceName + " source contains more than one dictionary for the culture: " + dictionary.CultureInfo.Name);
-                }
-
-                Dictionaries[dictionary.CultureInfo.Name] = dictionary;
-
-                if (fileName.EndsWith(sourceName + ".json"))
-                {
-                    if (DefaultDictionary != null)
-                    {
-                        throw new AbpInitializationException("Only one default localization dictionary can be for source: " + sourceName);
-                    }
-
-                    DefaultDictionary = dictionary;
-                }
+                InitializeDictionary(CreateJsonLocalizationDictionary(fileName), isDefault: fileName.EndsWith(SourceName + ".json"));
             }
         }
 

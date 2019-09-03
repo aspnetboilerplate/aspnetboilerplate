@@ -103,8 +103,8 @@ while all other cache items will expire in 2 hours.
 
 Your configuration action is called once the cache is first created (on
 first request). Configuration is not restricted to
-DefaultSlidingExpireTime only, since the cache object is an ICache, you can
-use it's properties and methods to freely configure and initialize it.
+DefaultSlidingExpireTime only, since the cache object is an **ICacheOptions**, you can
+use it's properties to freely configure and initialize it.
 
 ### Entity Caching
 

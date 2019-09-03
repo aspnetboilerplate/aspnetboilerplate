@@ -9,7 +9,7 @@ namespace Abp.EntityHistory.Extensions
         {
             if (propertyEntry.EntityEntry.State == EntityState.Deleted)
             {
-                return propertyEntry.OriginalValue;
+                return null;
             }
 
             return propertyEntry.CurrentValue;
@@ -19,7 +19,7 @@ namespace Abp.EntityHistory.Extensions
         {
             if (propertyEntry.EntityEntry.State == EntityState.Added)
             {
-                return propertyEntry.CurrentValue;
+                return null;
             }
 
             return propertyEntry.OriginalValue;

@@ -1,4 +1,5 @@
 ﻿using NHibernate;
+using Shouldly;
 using Xunit;
 
 namespace Abp.NHibernate.Tests
@@ -17,7 +18,7 @@ namespace Abp.NHibernate.Tests
         {
             using (var session = _sessionFactory.OpenSession())
             {
-                //nothing...
+                session.IsOpen.ShouldBeTrue();
             }
         }
     }

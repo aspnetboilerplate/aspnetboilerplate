@@ -1,16 +1,25 @@
 ﻿using System;
+using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Localization;
+using Castle.Core.Logging;
 
 namespace Abp.AspNetCore.Localization
 {
     public class AbpLocalizationHeaderRequestCultureProvider : RequestCultureProvider
     {
+        public ILogger Logger { get; set; }
+
         private static readonly char[] Separator = { '|' };
 
         private static readonly string _culturePrefix = "c=";
         private static readonly string _uiCulturePrefix = "uic=";
+
+        public AbpLocalizationHeaderRequestCultureProvider()
+        {
+            Logger = NullLogger.Instance;
+        }
 
         /// <inheritdoc />
         public override Task<ProviderCultureResult> DetermineProviderCultureResult(HttpContext httpContext)
@@ -27,7 +36,12 @@ namespace Abp.AspNetCore.Localization
                 return Task.FromResult((ProviderCultureResult) null);
             }
 
-            return Task.FromResult(ParseHeaderValue(localizationHeader));
+            var cultureResult = ParseHeaderValue(localizationHeader);
+            var culture = cultureResult.Cultures.First().Value;
+            var uiCulture = cultureResult.UICultures.First().Value;
+            Logger.DebugFormat("{0} - Using Culture:{1} , UICulture:{2}", nameof(AbpLocalizationHeaderRequestCultureProvider), culture, uiCulture);
+
+            return Task.FromResult(cultureResult);
         }
 
         /// <summary>
