@@ -440,7 +440,7 @@ namespace Abp.Authorization.Users
             return identity;
         }
 
-        public async override Task<IdentityResult> UpdateAsync(TUser user)
+        public override async Task<IdentityResult> UpdateAsync(TUser user)
         {
             user.SetNormalizedNames();
 
@@ -462,7 +462,7 @@ namespace Abp.Authorization.Users
             return await base.UpdateAsync(user);
         }
 
-        public async override Task<IdentityResult> DeleteAsync(TUser user)
+        public override async Task<IdentityResult> DeleteAsync(TUser user)
         {
             if (user.UserName == AbpUser<TUser>.AdminUserName)
             {
@@ -481,6 +481,9 @@ namespace Abp.Authorization.Users
             }
 
             await AbpStore.SetPasswordHashAsync(user, PasswordHasher.HashPassword(newPassword));
+
+            await UpdateSecurityStampAsync(user.Id);
+
             return IdentityResult.Success;
         }
 
@@ -601,6 +604,7 @@ namespace Abp.Authorization.Users
             }
         }
 
+        [UnitOfWork]
         public virtual async Task SetOrganizationUnitsAsync(TUser user, params long[] organizationUnitIds)
         {
             if (organizationUnitIds == null)
@@ -620,6 +624,8 @@ namespace Abp.Authorization.Users
                     await RemoveFromOrganizationUnitAsync(user, currentOu);
                 }
             }
+
+            await _unitOfWorkManager.Current.SaveChangesAsync();
 
             //Add to added OUs
             foreach (var organizationUnitId in organizationUnitIds)

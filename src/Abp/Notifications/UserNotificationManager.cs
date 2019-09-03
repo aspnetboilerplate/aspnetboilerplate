@@ -21,9 +21,9 @@ namespace Abp.Notifications
             _store = store;
         }
 
-        public async Task<List<UserNotification>> GetUserNotificationsAsync(UserIdentifier user, UserNotificationState? state = null, int skipCount = 0, int maxResultCount = int.MaxValue)
+        public async Task<List<UserNotification>> GetUserNotificationsAsync(UserIdentifier user, UserNotificationState? state = null, int skipCount = 0, int maxResultCount = int.MaxValue, DateTime? startDate = null, DateTime? endDate = null)
         {
-            var userNotifications = await _store.GetUserNotificationsWithNotificationsAsync(user, state, skipCount, maxResultCount);
+            var userNotifications = await _store.GetUserNotificationsWithNotificationsAsync(user, state, skipCount, maxResultCount, startDate, endDate);
             return userNotifications
                 .Select(un => un.ToUserNotification())
                 .ToList();
@@ -39,7 +39,7 @@ namespace Abp.Notifications
 
         public Task<int> GetUserNotificationCountAsync(UserIdentifier user, UserNotificationState? state = null)
         {
-            return _store.GetUserNotificationCountAsync(user, state);
+            return _store.GetUserNotificationCountAsync(user, state, startDate, endDate);
         }
 
         public int GetUserNotificationCount(UserIdentifier user, UserNotificationState? state = null)
@@ -94,14 +94,15 @@ namespace Abp.Notifications
             return _store.DeleteUserNotificationAsync(tenantId, userNotificationId);
         }
 
+        
         public void DeleteUserNotification(int? tenantId, Guid userNotificationId)
         {
             _store.DeleteUserNotification(tenantId, userNotificationId);
         }
 
-        public Task DeleteAllUserNotificationsAsync(UserIdentifier user)
+        public Task DeleteAllUserNotificationsAsync(UserIdentifier user, UserNotificationState? state = null, DateTime? startDate = null, DateTime? endDate = null)
         {
-            return _store.DeleteAllUserNotificationsAsync(user);
+            return _store.DeleteAllUserNotificationsAsync(user, state, startDate, endDate);
         }
 
         public void DeleteAllUserNotifications(UserIdentifier user)

@@ -1,7 +1,9 @@
 ﻿using System.Linq;
 using System.Threading.Tasks;
+using Abp.Configuration;
 using Abp.IdentityFramework;
 using Abp.Organizations;
+using Abp.Zero.Configuration;
 using Abp.Zero.SampleApp.MultiTenancy;
 using Abp.Zero.SampleApp.Users;
 using Microsoft.AspNet.Identity;
@@ -15,6 +17,7 @@ namespace Abp.Zero.SampleApp.Tests.Users
         private readonly UserManager _userManager;
         private readonly Tenant _defaultTenant;
         private readonly User _defaultTenantAdmin;
+        private ISettingManager _settingManager;
 
         public UserOrganizationUnit_Tests()
         {
@@ -25,6 +28,7 @@ namespace Abp.Zero.SampleApp.Tests.Users
             AbpSession.UserId = _defaultTenantAdmin.Id;
 
             _userManager = Resolve<UserManager>();
+            _settingManager = Resolve<ISettingManager>();
         }
 
         [Fact]
@@ -137,5 +141,21 @@ namespace Abp.Zero.SampleApp.Tests.Users
                     return context.Users.Single(u => u.UserName == "yunus.emre");
                 });
         }
+        [Fact]
+        public async Task Test_SetOrganizationUnitsAsync_With_MaxUserMembershipCount()
+        {
+            await WithUnitOfWorkAsync(async () =>
+             {
+                 await _settingManager.ChangeSettingForApplicationAsync(
+                     AbpZeroSettingNames.OrganizationUnits.MaxUserMembershipCount,
+                     "1");
+
+                 var organizationUnitIds = (new[] { /*"OU11", "OU12",*/ "OU2" }).Select(oun => GetOU(oun).Id).ToArray();
+
+                 await _userManager.SetOrganizationUnitsAsync(_defaultTenantAdmin, organizationUnitIds);
+             });
+        }
+
+
     }
 }

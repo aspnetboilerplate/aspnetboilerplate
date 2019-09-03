@@ -627,6 +627,9 @@ namespace Abp.Authorization.Users
             }
 
             await AbpUserStore.SetPasswordHashAsync(user, PasswordHasher.HashPassword(user, newPassword));
+
+            await UpdateSecurityStampAsync(user);
+
             return IdentityResult.Success;
         }
 
@@ -696,7 +699,7 @@ namespace Abp.Authorization.Users
             foreach (var userRole in user.Roles.ToList())
             {
                 var role = await RoleManager.FindByIdAsync(userRole.RoleId.ToString());
-                if (roleNames.All(roleName => role.Name != roleName))
+                if (role != null && roleNames.All(roleName => role.Name != roleName))
                 {
                     var result = await RemoveFromRoleAsync(user, role.Name);
                     if (!result.Succeeded)
@@ -861,6 +864,7 @@ namespace Abp.Authorization.Users
             }
         }
 
+        [UnitOfWork]
         public virtual async Task SetOrganizationUnitsAsync(TUser user, params long[] organizationUnitIds)
         {
             if (organizationUnitIds == null)
@@ -880,6 +884,8 @@ namespace Abp.Authorization.Users
                     await RemoveFromOrganizationUnitAsync(user, currentOu);
                 }
             }
+
+            await _unitOfWorkManager.Current.SaveChangesAsync();
 
             //Add to added OUs
             foreach (var organizationUnitId in organizationUnitIds)

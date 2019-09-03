@@ -44,17 +44,6 @@ Change the connection string to your PostgreSQL connection in ***.Web.Mvc/appset
 }
 ```
 
-#### A workaround
-
-To prevent EF Core from calling `Program.BuildWebHost()`, rename `BuildWebHost`. For example, change it to `InitWebHost`. 
-To understand why it needs to be renamed, check the following issues:
-
-> **Reason** : [EF Core 2.0: design-time DbContext discovery changes](https://github.com/aspnet/EntityFrameworkCore/issues/9033)
-> 
-> **Workaround** : [Design: Allow IDesignTimeDbContextFactory to short-circuit service provider creation](https://github.com/aspnet/EntityFrameworkCore/issues/9076#issuecomment-313278753)
->
-> **NOTE :** If you don't rename BuildWebHost, you'll get an error running the BuildWebHost method.
-
 ### Create Database
 
 Before you create the database, you should change the max length of the "Value" property of ApplicationLanguageText by adding the following lines to DbContext.
@@ -81,7 +70,7 @@ public class PostgreSqlDemoDbContext : AbpZeroDbContext<Tenant, Role, User, Post
 }
 ```
 
-Delete the ***.EntityFrameworkCore/Migrations** folder,
+Remove all migration classes(include `DbContextModelSnapshot`) under **\*.EntityFrameworkCore/Migrations** folder.
 because `Npgsql.EntityFrameworkCore.PostgreSQL` will add some of its own configuration to work with Entity Framework Core.
 
 Now it's ready to build database.

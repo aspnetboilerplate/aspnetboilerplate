@@ -170,6 +170,13 @@ namespace Abp.EntityHistory
         }
 
         [CanBeNull]
+        protected virtual string GetEntityId(DbEntityEntry entityEntry, EntityType entityType)
+        {
+            var primaryKey = entityType.KeyProperties.First();
+            return entityEntry.Property(primaryKey.Name)?.GetNewValue()?.ToJsonString();
+        }
+
+        [CanBeNull]
         private EntityChange CreateEntityChange(DbEntityEntry entityEntry, EntityType entityType)
         {
             EntityChangeType changeType;
@@ -257,13 +264,6 @@ namespace Abp.EntityHistory
                 .Single(e => e.ElementType.Name == entityType.Name);
         }
 
-        [CanBeNull]
-        private string GetEntityId(DbEntityEntry entityEntry, EntityType entityType)
-        {
-            var primaryKey = entityType.KeyProperties.First();
-            return entityEntry.Property(primaryKey.Name)?.GetNewValue()?.ToJsonString();
-        }
-
         /// <summary>
         /// Gets the property changes for this entry.
         /// </summary>
@@ -340,7 +340,7 @@ namespace Abp.EntityHistory
                 })
                 .GroupBy(t => t.Item1);
 
-            foreach(var relationship in relationshipGroups)
+            foreach (var relationship in relationshipGroups)
             {
                 var relationshipName = relationship.Key;
                 var navigationPropertyName = navigationProperties

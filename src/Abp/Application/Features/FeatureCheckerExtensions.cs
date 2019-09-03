@@ -1,3 +1,4 @@
+using System.Linq;
 using System.Threading.Tasks;
 using Abp.Authorization;
 using Abp.Collections.Extensions;
@@ -171,6 +172,8 @@ namespace Abp.Application.Features
         /// <param name="featureName">Unique feature name</param>
         public static async Task CheckEnabledAsync(this IFeatureChecker featureChecker, string featureName)
         {
+            var localizedFeatureNames = LocalizeFeatureNames(featureChecker, new []{ featureName });
+
             if (!(await featureChecker.IsEnabledAsync(featureName)))
             {
                 throw new AbpAuthorizationException(string.Format(
@@ -179,7 +182,7 @@ namespace Abp.Application.Features
                         "FeatureIsNotEnabled",
                         "Feature is not enabled: {0}"
                     ),
-                    featureName
+                    localizedFeatureNames.First()
                 ));
             }
         }
@@ -191,6 +194,8 @@ namespace Abp.Application.Features
         /// <param name="featureName">Unique feature name</param>
         public static void CheckEnabled(this IFeatureChecker featureChecker, string featureName)
         {
+            var localizedFeatureNames = LocalizeFeatureNames(featureChecker, new[] { featureName });
+
             if (!featureChecker.IsEnabled(featureName))
             {
                 throw new AbpAuthorizationException(string.Format(
@@ -199,7 +204,7 @@ namespace Abp.Application.Features
                         "FeatureIsNotEnabled",
                         "Feature is not enabled: {0}"
                     ),
-                    featureName
+                    localizedFeatureNames.First()
                 ));
             }
         }
@@ -217,6 +222,8 @@ namespace Abp.Application.Features
                 return;
             }
 
+            var localizedFeatureNames = LocalizeFeatureNames(featureChecker, featureNames);
+
             if (requiresAll)
             {
                 foreach (var featureName in featureNames)
@@ -230,7 +237,7 @@ namespace Abp.Application.Features
                                     "AllOfTheseFeaturesMustBeEnabled",
                                     "Required features are not enabled. All of these features must be enabled: {0}"
                                 ),
-                                string.Join(", ", featureNames)
+                                string.Join(", ", localizedFeatureNames)
                             )
                         );
                     }
@@ -253,7 +260,7 @@ namespace Abp.Application.Features
                             "AtLeastOneOfTheseFeaturesMustBeEnabled",
                             "Required features are not enabled. At least one of these features must be enabled: {0}"
                         ),
-                        string.Join(", ", featureNames)
+                        string.Join(", ", localizedFeatureNames)
                     )
                 );
             }
@@ -272,6 +279,8 @@ namespace Abp.Application.Features
                 return;
             }
 
+            var localizedFeatureNames = LocalizeFeatureNames(featureChecker, featureNames);
+
             if (requiresAll)
             {
                 foreach (var featureName in featureNames)
@@ -285,7 +294,7 @@ namespace Abp.Application.Features
                                     "AllOfTheseFeaturesMustBeEnabled",
                                     "Required features are not enabled. All of these features must be enabled: {0}"
                                 ),
-                                string.Join(", ", featureNames)
+                                string.Join(", ", localizedFeatureNames)
                             )
                         );
                     }
@@ -308,7 +317,7 @@ namespace Abp.Application.Features
                             "AtLeastOneOfTheseFeaturesMustBeEnabled",
                             "Required features are not enabled. At least one of these features must be enabled: {0}"
                         ),
-                        string.Join(", ", featureNames)
+                        string.Join(", ", localizedFeatureNames)
                     )
                 );
             }
@@ -437,6 +446,29 @@ namespace Abp.Application.Features
             using (var localizationManager = iocManager.ResolveAsDisposable<ILocalizationManager>())
             {
                 return localizationManager.Object.GetString(AbpConsts.LocalizationSourceName, name);
+            }
+        }
+
+        public static string[] LocalizeFeatureNames(IFeatureChecker featureChecker, string[] featureNames)
+        {
+            if (!(featureChecker is IIocManagerAccessor))
+            {
+                return featureNames;
+            }
+
+            var iocManager = (featureChecker as IIocManagerAccessor).IocManager;
+            using (var localizationContext = iocManager.ResolveAsDisposable<ILocalizationContext>())
+            {
+                using (var featureManager = iocManager.ResolveAsDisposable<IFeatureManager>())
+                {
+                    return featureNames.Select(featureName =>
+                    {
+                        var feature = featureManager.Object.GetOrNull(featureName);
+                        return feature?.DisplayName == null
+                            ? featureName
+                            : feature.DisplayName.Localize(localizationContext.Object);
+                    }).ToArray();
+                }
             }
         }
     }

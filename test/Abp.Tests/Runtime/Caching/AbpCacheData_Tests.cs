@@ -21,7 +21,7 @@ namespace Abp.Tests.Runtime.Caching
             };
 
             var result = AbpCacheData.Serialize(source);
-            result.Type.ShouldBe("System.Collections.Generic.List`1[[System.String]]");
+            result.Type.ShouldStartWith("System.Collections.Generic.List`1[[System.String,");
             result.Payload.ShouldBe("[\"Stranger Things\",\"The OA\",\"Lost in Space\"]");
         }
 
@@ -35,7 +35,7 @@ namespace Abp.Tests.Runtime.Caching
             };
 
             var result = AbpCacheData.Serialize(source);
-            result.Type.ShouldBe("Abp.Tests.Runtime.Caching.AbpCacheData_Tests+MyTestClass, Abp.Tests");
+            result.Type.ShouldBe("Abp.Tests.Runtime.Caching.AbpCacheData_Tests+MyTestClass, Abp.Tests, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null");
             result.Payload.ShouldBe("{\"Field1\":42,\"Field2\":\"Stranger Things\"}");
         }
 

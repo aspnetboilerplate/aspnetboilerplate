@@ -105,8 +105,8 @@ namespace Abp.AspNetCore
                 options.RequestCultureProviders.Insert(1, userProvider);
                 options.RequestCultureProviders.Insert(2, new AbpLocalizationHeaderRequestCultureProvider());
                 //3: CookieRequestCultureProvider
-                options.RequestCultureProviders.Insert(4, new AbpDefaultRequestCultureProvider());
-                //5: AcceptLanguageHeaderRequestCultureProvider
+                //4: AcceptLanguageHeaderRequestCultureProvider
+                options.RequestCultureProviders.Insert(5, new AbpDefaultRequestCultureProvider());
 
                 optionsAction?.Invoke(options);
 

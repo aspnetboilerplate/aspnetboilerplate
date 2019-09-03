@@ -64,7 +64,21 @@ namespace Abp.Zero.SampleApp.Tests.EntityHistory
                 entityChange.ChangeType.ShouldBe(EntityChangeType.Created);
                 entityChange.EntityId.ShouldBe(blog2Id.ToJsonString());
                 entityChange.EntityTypeFullName.ShouldBe(typeof(Blog).FullName);
-                entityChange.PropertyChanges.Count.ShouldBe(4);  // Blog.Name, Blog.Url, Blog.Category Blog.More
+                entityChange.PropertyChanges.Count.ShouldBe(4);
+                // TODO: 3 should be the correct value, Blog.Category is null for both new/original values
+                // entityChange.PropertyChanges.Count.ShouldBe(3);
+
+                var propertyChange1 = entityChange.PropertyChanges.Single(pc => pc.PropertyName == nameof(Blog.Url));
+                propertyChange1.OriginalValue.ShouldBeNull();
+                propertyChange1.NewValue.ShouldNotBeNull();
+
+                var propertyChange2 = entityChange.PropertyChanges.Single(pc => pc.PropertyName == nameof(Blog.More));
+                propertyChange2.OriginalValue.ShouldBeNull();
+                propertyChange2.NewValue.ShouldNotBeNull();
+
+                var propertyChange3 = entityChange.PropertyChanges.Single(pc => pc.PropertyName == nameof(Blog.CreationTime));
+                propertyChange3.OriginalValue.ShouldBeNull();
+                propertyChange3.NewValue.ShouldNotBeNull();
 
                 // Check "who did this change"
                 s.ImpersonatorTenantId.ShouldBe(AbpSession.ImpersonatorTenantId);
@@ -106,6 +120,8 @@ namespace Abp.Zero.SampleApp.Tests.EntityHistory
                 context.EntityChangeSets.Count(e => e.TenantId == null).ShouldBe(1);
                 context.EntityChangeSets.Single().CreationTime.ShouldBeGreaterThan(justNow);
                 context.EntityPropertyChanges.Count(e => e.TenantId == null).ShouldBe(4);
+                // TODO: 3 should be the correct value, Blog.Category is null for both new/original values
+                // context.EntityPropertyChanges.Count(e => e.TenantId == 1).ShouldBe(3);
             });
         }
 
@@ -145,16 +161,14 @@ namespace Abp.Zero.SampleApp.Tests.EntityHistory
             var originalValue = "http://testblog2.myblogs.com";
             var newValue = "http://testblog2-changed.myblogs.com";
 
-            using (var uow = Resolve<IUnitOfWorkManager>().Begin())
+            WithUnitOfWork(() =>
             {
                 var blog2 = _blogRepository.Single(b => b.Url == originalValue && b.Category == null);
 
                 // Update only the Url of the Blog
                 blog2.ChangeUrl(newValue);
                 _blogRepository.Update(blog2);
-
-                uow.Complete();
-            }
+            });
 
             Predicate<EntityChangeSet> predicate = s =>
             {
@@ -183,11 +197,11 @@ namespace Abp.Zero.SampleApp.Tests.EntityHistory
         {
             /* Blog has Audited attribute. */
 
-            int blog1Id;
+            int blog1Id = 0;
             var newValue = new BlogEx { BloggerName = "blogger-2" };
-            BlogEx originalValue;
+            BlogEx originalValue = null;
 
-            using (var uow = Resolve<IUnitOfWorkManager>().Begin())
+            WithUnitOfWork(() =>
             {
                 var blog1 = _blogRepository.Single(b => b.More.BloggerName == "blogger-1");
                 blog1Id = blog1.Id;
@@ -195,9 +209,7 @@ namespace Abp.Zero.SampleApp.Tests.EntityHistory
                 originalValue = new BlogEx { BloggerName = blog1.More.BloggerName };
                 blog1.More.BloggerName = newValue.BloggerName;
                 _blogRepository.Update(blog1);
-
-                uow.Complete();
-            }
+            });
 
             Predicate<EntityChangeSet> predicate = s =>
             {
@@ -227,9 +239,9 @@ namespace Abp.Zero.SampleApp.Tests.EntityHistory
             /* Post.BlogId has Audited attribute. */
 
             var blogId = CreateBlogAndGetId();
-            Guid post1Id;
+            Guid post1Id = Guid.Empty;
 
-            using (var uow = Resolve<IUnitOfWorkManager>().Begin())
+            WithUnitOfWork(() =>
             {
                 var blog2 = _blogRepository.Single(b => b.Id == 2);
                 var post1 = _postRepository.Single(p => p.Body == "test-post-1-body");
@@ -238,9 +250,7 @@ namespace Abp.Zero.SampleApp.Tests.EntityHistory
                 // Change foreign key by assigning navigation property
                 post1.Blog = blog2;
                 _postRepository.Update(post1);
-
-                uow.Complete();
-            }
+            });
 
             Predicate<EntityChangeSet> predicate = s =>
             {
@@ -267,7 +277,7 @@ namespace Abp.Zero.SampleApp.Tests.EntityHistory
         [Fact]
         public void Should_Write_History_For_Tracked_Property_Foreign_Key_Collection()
         {
-            using (var uow = Resolve<IUnitOfWorkManager>().Begin())
+            WithUnitOfWork(() =>
             {
                 var blog1 = _blogRepository.Single(b => b.Name == "test-blog-1");
                 var post10 = new Post { Blog = blog1, Title = "test-post-10-title", Body = "test-post-10-body" };
@@ -275,9 +285,7 @@ namespace Abp.Zero.SampleApp.Tests.EntityHistory
                 // Change navigation property by adding into collection
                 blog1.Posts.Add(post10);
                 _blogRepository.Update(blog1);
-
-                uow.Complete();
-            }
+            });
 
             Predicate<EntityChangeSet> predicate = s =>
             {
@@ -309,7 +317,7 @@ namespace Abp.Zero.SampleApp.Tests.EntityHistory
             var post1KeyValue = new Dictionary<string, object>();
             var post2KeyValue = new Dictionary<string, object>();
 
-            using (var uow = Resolve<IUnitOfWorkManager>().Begin())
+            WithUnitOfWork(() =>
             {
                 var post2 = _postRepository.Single(p => p.Body == "test-post-2-body");
                 post2KeyValue.Add("Id", post2.Id);
@@ -320,9 +328,7 @@ namespace Abp.Zero.SampleApp.Tests.EntityHistory
                 // Change foreign key by assigning navigation property
                 comment1.Post = post2;
                 _commentRepository.Update(comment1);
-
-                uow.Complete();
-            }
+            });
 
             Predicate<EntityChangeSet> predicate = s =>
             {
@@ -348,15 +354,12 @@ namespace Abp.Zero.SampleApp.Tests.EntityHistory
         {
             /* Blog.Name has DisableAuditing attribute. */
 
-            using (var uow = Resolve<IUnitOfWorkManager>().Begin())
+            WithUnitOfWork(() =>
             {
                 var blog1 = _blogRepository.Single(b => b.Name == "test-blog-1");
-
                 blog1.Name = null;
                 _blogRepository.Update(blog1);
-
-                uow.Complete();
-            }
+            });
 
             Predicate<EntityChangeSet> predicate = s =>
             {
@@ -396,15 +399,12 @@ namespace Abp.Zero.SampleApp.Tests.EntityHistory
         {
             /* Post.Body does not have Audited attribute. */
 
-            using (var uow = Resolve<IUnitOfWorkManager>().Begin())
+            WithUnitOfWork(() =>
             {
                 var post1 = _postRepository.Single(p => p.Body == "test-post-1-body");
-
                 post1.Body = null;
                 _postRepository.Update(post1);
-
-                uow.Complete();
-            }
+            });
 
             _entityHistoryStore.DidNotReceive().SaveAsync(Arg.Any<EntityChangeSet>());
         }
@@ -413,34 +413,29 @@ namespace Abp.Zero.SampleApp.Tests.EntityHistory
 
         private int CreateBlogAndGetId()
         {
-            int blog2Id;
+            int blog2Id = 0;
 
-            using (var uow = Resolve<IUnitOfWorkManager>().Begin())
+            WithUnitOfWork(() =>
             {
                 var blog2 = new Blog("test-blog-2", "http://testblog2.myblogs.com", "blogger-2");
-
                 blog2Id = _blogRepository.InsertAndGetId(blog2);
-
-                uow.Complete();
-            }
+            });
 
             return blog2Id;
         }
 
         private string UpdateBlogUrlAndGetOriginalValue(string newValue)
         {
-            string originalValue;
+            string originalValue = null;
 
-            using (var uow = Resolve<IUnitOfWorkManager>().Begin())
+            WithUnitOfWork(() =>
             {
                 var blog1 = _blogRepository.Single(b => b.Name == "test-blog-1");
                 originalValue = blog1.Url;
 
                 blog1.ChangeUrl(newValue);
                 _blogRepository.Update(blog1);
-
-                uow.Complete();
-            }
+            });
 
             return originalValue;
         }

@@ -100,23 +100,23 @@ subscriptions.
 
     public class MyService : ITransientDependency
     {
-        private readonly INotificationPublisher _notiticationPublisher;
+        private readonly INotificationPublisher _notificationPublisher;
 
-        public MyService(INotificationPublisher notiticationPublisher)
+        public MyService(INotificationPublisher notificationPublisher)
         {
-            _notiticationPublisher = notiticationPublisher;
+            _notificationPublisher = notificationPublisher;
         }
 
         //Send a general notification to a specific user
         public async Task Publish_SentFrendshipRequest(string senderUserName, string friendshipMessage, UserIdentifier targetUserId)
         {
-            await _notiticationPublisher.PublishAsync("SentFrendshipRequest", new SentFrendshipRequestNotificationData(senderUserName, friendshipMessage), userIds: new[] { targetUserId });
+            await _notificationPublisher.PublishAsync("SentFrendshipRequest", new SentFrendshipRequestNotificationData(senderUserName, friendshipMessage), userIds: new[] { targetUserId });
         }
 
         //Send an entity notification to a specific user
         public async Task Publish_CommentPhoto(string commenterUserName, string comment, Guid photoId, UserIdentifier photoOwnerUserId)
         {
-            await _notiticationPublisher.PublishAsync("CommentPhoto", new CommentPhotoNotificationData(commenterUserName, comment), new EntityIdentifier(typeof(Photo), photoId), userIds: new[] { photoOwnerUserId });
+            await _notificationPublisher.PublishAsync("CommentPhoto", new CommentPhotoNotificationData(commenterUserName, comment), new EntityIdentifier(typeof(Photo), photoId), userIds: new[] { photoOwnerUserId });
         }
 
         //Send a general notification to all subscribed users in current tenant (tenant in the session)
@@ -126,7 +126,7 @@ subscriptions.
             var data = new LocalizableMessageNotificationData(new LocalizableString("LowDiskWarningMessage", "MyLocalizationSourceName"));
             data["remainingDiskInMb"] = remainingDiskInMb;
 
-            await _notiticationPublisher.PublishAsync("System.LowDisk", data, severity: NotificationSeverity.Warn);    
+            await _notificationPublisher.PublishAsync("System.LowDisk", data, severity: NotificationSeverity.Warn);    
         }
     }
 

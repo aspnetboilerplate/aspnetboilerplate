@@ -1,8 +1,11 @@
-﻿using System.Threading.Tasks;
+﻿using System.Globalization;
+using System.Threading.Tasks;
 using Abp.Application.Features;
 using Abp.Authorization;
 using Abp.Extensions;
-using Abp.TestBase.SampleApplication.ContacLists;
+using Abp.Localization;
+using Abp.Localization.Sources;
+using Abp.TestBase.SampleApplication.ContactLists;
 using Castle.MicroKernel.Registration;
 using NSubstitute;
 using Shouldly;
@@ -82,6 +85,21 @@ namespace Abp.TestBase.SampleApplication.Tests.Features
             var contactListAppService = Resolve<IContactListAppService>();
             Assert.Throws<AbpAuthorizationException>(() => contactListAppService.Test());
         }
+
+
+        [Fact]
+        public void Feature_Checker_Exception_Should_Use_Localized_DisplayName()
+        {
+            CultureInfo.CurrentUICulture = new CultureInfo("en");
+
+            var featureValueStore = Substitute.For<IFeatureValueStore>();
+            featureValueStore.GetValueOrNullAsync(1, _featureManager.Get(SampleFeatureProvider.Names.Contacts)).Returns(Task.FromResult("false"));
+
+            var contactListAppService = Resolve<IContactListAppService>();
+            var ex = Assert.Throws<AbpAuthorizationException>(() => contactListAppService.Test());
+            ex.Message.ShouldContain("My Contacts");
+        }
+
 
         [Fact]
         public void Should_Override_Child_Feature()

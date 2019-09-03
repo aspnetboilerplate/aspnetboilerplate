@@ -126,6 +126,12 @@ namespace Abp.EntityHistory
             }
         }
 
+        protected virtual string GetEntityId(EntityEntry entry)
+        {
+            var primaryKeys = entry.Properties.Where(p => p.Metadata.IsPrimaryKey());
+            return primaryKeys.First().CurrentValue?.ToJsonString();
+        }
+
         public virtual void Save(EntityChangeSet changeSet)
         {
             if (!IsEntityHistoryEnabled)
@@ -210,12 +216,6 @@ namespace Abp.EntityHistory
                     Logger.Error("Unexpected EntityState!");
                     return Clock.Now;
             }
-        }
-
-        private string GetEntityId(EntityEntry entry)
-        {
-            var primaryKeys = entry.Properties.Where(p => p.Metadata.IsPrimaryKey());
-            return primaryKeys.First().CurrentValue?.ToJsonString();
         }
 
         /// <summary>

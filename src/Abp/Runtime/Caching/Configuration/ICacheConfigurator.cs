@@ -16,6 +16,6 @@ namespace Abp.Runtime.Caching.Configuration
         /// <summary>
         /// Configuration action. Called just after the cache is created.
         /// </summary>
-        Action<ICache> InitAction { get; }
+        Action<ICacheOptions> InitAction { get; }
     }
 }
