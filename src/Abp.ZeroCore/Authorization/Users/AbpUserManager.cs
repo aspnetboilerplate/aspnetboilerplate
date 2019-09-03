@@ -294,56 +294,6 @@ namespace Abp.Authorization.Users
             return false;
         }
 
-        // Microsoft.AspNetCore.Identity.UserManager doesn't have required sync version for method calls in this function
-        //public virtual bool IsGranted(long userId, Permission permission)
-        //{
-        //    //Check for multi-tenancy side
-        //    if (!permission.MultiTenancySides.HasFlag(GetCurrentMultiTenancySide()))
-        //    {
-        //        return false;
-        //    }
-
-        //    //Check for depended features
-        //    if (permission.FeatureDependency != null && GetCurrentMultiTenancySide() == MultiTenancySides.Tenant)
-        //    {
-        //        FeatureDependencyContext.TenantId = GetCurrentTenantId();
-
-        //        if (!permission.FeatureDependency.IsSatisfied(FeatureDependencyContext))
-        //        {
-        //            return false;
-        //        }
-        //    }
-
-        //    //Get cached user permissions
-        //    var cacheItem = GetUserPermissionCacheItem(userId);
-        //    if (cacheItem == null)
-        //    {
-        //        return false;
-        //    }
-
-        //    //Check for user-specific value
-        //    if (cacheItem.GrantedPermissions.Contains(permission.Name))
-        //    {
-        //        return true;
-        //    }
-
-        //    if (cacheItem.ProhibitedPermissions.Contains(permission.Name))
-        //    {
-        //        return false;
-        //    }
-
-        //    //Check for roles
-        //    foreach (var roleId in cacheItem.RoleIds)
-        //    {
-        //        if (RoleManager.IsGranted(roleId, permission))
-        //        {
-        //            return true;
-        //        }
-        //    }
-
-        //    return false;
-        //}
-
         /// <summary>
         /// Gets granted permissions for a user.
         /// </summary>
