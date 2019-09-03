@@ -29,9 +29,9 @@ namespace Abp.Notifications
                 .ToList();
         }
 
-        public List<UserNotification> GetUserNotifications(UserIdentifier user, UserNotificationState? state = null, int skipCount = 0, int maxResultCount = int.MaxValue)
+        public List<UserNotification> GetUserNotifications(UserIdentifier user, UserNotificationState? state = null, int skipCount = 0, int maxResultCount = int.MaxValue, DateTime? startDate = null, DateTime? endDate = null)
         {
-            var userNotifications =  _store.GetUserNotificationsWithNotifications(user, state, skipCount, maxResultCount);
+            var userNotifications =  _store.GetUserNotificationsWithNotifications(user, state, skipCount, maxResultCount, startDate, endDate);
             return userNotifications
                 .Select(un => un.ToUserNotification())
                 .ToList();
@@ -42,9 +42,9 @@ namespace Abp.Notifications
             return _store.GetUserNotificationCountAsync(user, state, startDate, endDate);
         }
 
-        public int GetUserNotificationCount(UserIdentifier user, UserNotificationState? state = null)
+        public int GetUserNotificationCount(UserIdentifier user, UserNotificationState? state = null, DateTime? startDate = null, DateTime? endDate = null)
         {
-            return _store.GetUserNotificationCount(user, state);
+            return _store.GetUserNotificationCount(user, state, startDate, endDate);
         }
 
         public async Task<UserNotification> GetUserNotificationAsync(int? tenantId, Guid userNotificationId)
@@ -105,9 +105,9 @@ namespace Abp.Notifications
             return _store.DeleteAllUserNotificationsAsync(user, state, startDate, endDate);
         }
 
-        public void DeleteAllUserNotifications(UserIdentifier user)
+        public void DeleteAllUserNotifications(UserIdentifier user, UserNotificationState? state = null, DateTime? startDate = null, DateTime? endDate = null)
         {
-            _store.DeleteAllUserNotifications(user);
+            _store.DeleteAllUserNotifications(user, state, startDate, endDate);
         }
     }
 }
