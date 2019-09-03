@@ -111,7 +111,6 @@ namespace Abp.Notifications
         /// <param name="startDate">Delete notifications published after startDateTime</param>
         /// <param name="endDate">Delete notifications published before startDateTime</param>
         Task DeleteAllUserNotificationsAsync(UserIdentifier user, UserNotificationState? state = null, DateTime? startDate = null, DateTime? endDate = null);
-        Task DeleteAllUserNotificationsAsync(UserIdentifier user);
 
         /// <summary>
         /// Deletes all notifications of a user.

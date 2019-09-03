@@ -19,9 +19,9 @@ namespace Abp.BackgroundJobs
             await EventBus.TriggerAsync(eventData);
         }
 
-        public override void Execute(TEvent e)
+        public override void Execute(TEventData eventData)
         {
-            EventBus.Trigger(e);
+            EventBus.Trigger(eventData);
         }
     }
 }

@@ -37,7 +37,7 @@ namespace Abp.Notifications
                 .ToList();
         }
 
-        public Task<int> GetUserNotificationCountAsync(UserIdentifier user, UserNotificationState? state = null)
+        public Task<int> GetUserNotificationCountAsync(UserIdentifier user, UserNotificationState? state = null, DateTime? startDate = null, DateTime? endDate = null)
         {
             return _store.GetUserNotificationCountAsync(user, state, startDate, endDate);
         }
