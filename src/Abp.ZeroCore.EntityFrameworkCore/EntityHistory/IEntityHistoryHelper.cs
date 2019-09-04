@@ -1,7 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore.ChangeTracking;
 using System.Collections.Generic;
 using System.Threading.Tasks;
-using Abp.Threading;
 
 namespace Abp.EntityHistory
 {
@@ -12,9 +11,5 @@ namespace Abp.EntityHistory
         Task SaveAsync(EntityChangeSet changeSet);
 
         void Save(EntityChangeSet changeSet);
-    }
-
-    public static class EntityHistoryHelperExtensions
-    {
     }
 }

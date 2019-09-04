@@ -15,7 +15,6 @@ using Abp.Domain.Uow;
 using Abp.Extensions;
 using Abp.IdentityFramework;
 using Abp.MultiTenancy;
-using Abp.Timing;
 using Abp.Zero.Configuration;
 using Microsoft.AspNetCore.Identity;
 
@@ -310,27 +309,6 @@ namespace Abp.Authorization
                 }
             }
         }
-
-        //protected virtual bool TryLockOut(int? tenantId, long userId)
-        //{
-        //    using (var uow = UnitOfWorkManager.Begin(TransactionScopeOption.Suppress))
-        //    {
-        //        using (UnitOfWorkManager.Current.SetTenantId(tenantId))
-        //        {
-        //            var user = UserManager.GetUserById(userId);
-
-        //            ++user.AccessFailedCount; // increment count & lock out if it exceeds maximum allowed
-
-        //            var isLockOut = UserManager.IsLockedOut(user);
-
-        //            UnitOfWorkManager.Current.SaveChanges();
-
-        //            uow.Complete();
-
-        //            return isLockOut;
-        //        }
-        //    }
-        //}
 
         protected virtual async Task<bool> TryLoginFromExternalAuthenticationSourcesAsync(string userNameOrEmailAddress, string plainPassword, TTenant tenant)
         {
