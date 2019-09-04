@@ -14,5 +14,11 @@ namespace Abp.Auditing
         /// </summary>
         /// <param name="auditInfo">Audit informations</param>
         Task SaveAsync(AuditInfo auditInfo);
+
+        /// <summary>
+        /// Should save audits to a persistent store.
+        /// </summary>
+        /// <param name="auditInfo">Audit informations</param>
+        void Save(AuditInfo auditInfo);
     }
 }

@@ -43,6 +43,8 @@ namespace Abp.TestBase.SampleApplication.Tests.Features
             var featureValueStore = Substitute.For<IFeatureValueStore>();
             featureValueStore.GetValueOrNullAsync(1, _featureManager.Get(SampleFeatureProvider.Names.Contacts)).Returns(Task.FromResult("true"));
             featureValueStore.GetValueOrNullAsync(1, _featureManager.Get(SampleFeatureProvider.Names.MaxContactCount)).Returns(Task.FromResult("20"));
+            featureValueStore.GetValueOrNull(1, _featureManager.Get(SampleFeatureProvider.Names.Contacts)).Returns("true");
+            featureValueStore.GetValueOrNull(1, _featureManager.Get(SampleFeatureProvider.Names.MaxContactCount)).Returns("20");
 
             LocalIocManager.IocContainer.Register(
                 Component.For<IFeatureValueStore>().Instance(featureValueStore).LifestyleSingleton()
@@ -59,6 +61,7 @@ namespace Abp.TestBase.SampleApplication.Tests.Features
         {
             var featureValueStore = Substitute.For<IFeatureValueStore>();
             featureValueStore.GetValueOrNullAsync(1, _featureManager.Get(SampleFeatureProvider.Names.Contacts)).Returns(Task.FromResult("true"));
+            featureValueStore.GetValueOrNull(1, _featureManager.Get(SampleFeatureProvider.Names.Contacts)).Returns("true");
 
             LocalIocManager.IocContainer.Register(
                 Component.For<IFeatureValueStore>().Instance(featureValueStore).LifestyleSingleton()

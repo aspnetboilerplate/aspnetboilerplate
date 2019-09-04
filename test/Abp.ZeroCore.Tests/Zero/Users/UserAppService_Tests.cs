@@ -18,7 +18,7 @@ namespace Abp.Zero.Users
         [Fact]
         public async Task Should_Get_All_Users()
         {
-            var users = await _userAppService.GetAll(new PagedAndSortedResultRequestDto());
+            var users = await _userAppService.GetAllAsync(new PagedAndSortedResultRequestDto());
             users.TotalCount.ShouldBeGreaterThan(0);
             users.Items.Count.ShouldBeGreaterThan(0);
         }

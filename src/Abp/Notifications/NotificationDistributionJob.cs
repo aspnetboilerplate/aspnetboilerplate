@@ -29,7 +29,7 @@ namespace Abp.Notifications
             {
                 using (var notificationDistributer = _iocResolver.ResolveAsDisposable<INotificationDistributer>(notificationDistributorType))
                 {
-                    AsyncHelper.RunSync(() => notificationDistributer.Object.DistributeAsync(args.NotificationId));
+                    notificationDistributer.Object.Distribute(args.NotificationId);
                 }
             }
         }

@@ -50,5 +50,13 @@ namespace Abp.Authorization
                 ? context.PermissionChecker.IsGrantedAsync(context.User, RequiresAll, Permissions)
                 : context.PermissionChecker.IsGrantedAsync(RequiresAll, Permissions);
         }
+
+        /// <inheritdoc/>
+        public bool IsSatisfied(IPermissionDependencyContext context)
+        {
+            return context.User != null
+                ? context.PermissionChecker.IsGranted(context.User, RequiresAll, Permissions)
+                : context.PermissionChecker.IsGranted(RequiresAll, Permissions);
+        }
     }
 }

@@ -103,11 +103,25 @@ namespace Abp.Authorization.Users
             return await _userRepository.FirstOrDefaultAsync(userId);
         }
 
+        public virtual TUser FindById(long userId)
+        {
+            return _userRepository.FirstOrDefault(userId);
+        }
+
         public virtual async Task<TUser> FindByNameAsync(string userName)
         {
             var normalizedUsername = NormalizeKey(userName);
 
             return await _userRepository.FirstOrDefaultAsync(
+                user => user.NormalizedUserName == normalizedUsername
+            );
+        }
+
+        public virtual TUser FindByName(string userName)
+        {
+            var normalizedUsername = NormalizeKey(userName);
+
+            return _userRepository.FirstOrDefault(
                 user => user.NormalizedUserName == normalizedUsername
             );
         }
@@ -292,9 +306,9 @@ namespace Abp.Authorization.Users
         public virtual async Task<IList<string>> GetRolesAsync(TUser user)
         {
             var userRoles = await AsyncQueryableExecuter.ToListAsync(from userRole in _userRoleRepository.GetAll()
-                join role in _roleRepository.GetAll() on userRole.RoleId equals role.Id
-                where userRole.UserId == user.Id
-                select role.Name);
+                                                                     join role in _roleRepository.GetAll() on userRole.RoleId equals role.Id
+                                                                     where userRole.UserId == user.Id
+                                                                     select role.Name);
 
             var userOrganizationUnitRoles = await AsyncQueryableExecuter.ToListAsync(
                 from userOu in _userOrganizationUnitRepository.GetAll()
@@ -304,7 +318,29 @@ namespace Abp.Authorization.Users
                 where userOu.UserId == user.Id
                 select userOuRoles.Name);
 
-            return  userRoles.Union(userOrganizationUnitRoles).ToList();
+            return userRoles.Union(userOrganizationUnitRoles).ToList();
+        }
+
+        [UnitOfWork]
+        public virtual IList<string> GetRoles(TUser user) => GetRoles(user.Id);
+
+        [UnitOfWork]
+        public virtual IList<string> GetRoles(long userId)
+        {
+            var userRoles = AsyncQueryableExecuter.ToList(from userRole in _userRoleRepository.GetAll()
+                                                          join role in _roleRepository.GetAll() on userRole.RoleId equals role.Id
+                                                          where userRole.UserId == userId
+                                                          select role.Name);
+
+            var userOrganizationUnitRoles = AsyncQueryableExecuter.ToList(
+                from userOu in _userOrganizationUnitRepository.GetAll()
+                join roleOu in _organizationUnitRoleRepository.GetAll() on userOu.OrganizationUnitId equals roleOu
+                    .OrganizationUnitId
+                join userOuRoles in _roleRepository.GetAll() on roleOu.RoleId equals userOuRoles.Id
+                where userOu.UserId == userId
+                select userOuRoles.Name);
+
+            return userRoles.Union(userOrganizationUnitRoles).ToList();
         }
 
         public virtual async Task<bool> IsInRoleAsync(TUser user, string roleName)
@@ -333,9 +369,35 @@ namespace Abp.Authorization.Users
                 });
         }
 
+        public virtual void AddPermission(TUser user, PermissionGrantInfo permissionGrant)
+        {
+            if (HasPermission(user.Id, permissionGrant))
+            {
+                return;
+            }
+
+            _userPermissionSettingRepository.Insert(
+                new UserPermissionSetting
+                {
+                    TenantId = user.TenantId,
+                    UserId = user.Id,
+                    Name = permissionGrant.Name,
+                    IsGranted = permissionGrant.IsGranted
+                });
+        }
+
         public virtual async Task RemovePermissionAsync(TUser user, PermissionGrantInfo permissionGrant)
         {
             await _userPermissionSettingRepository.DeleteAsync(
+                permissionSetting => permissionSetting.UserId == user.Id &&
+                                     permissionSetting.Name == permissionGrant.Name &&
+                                     permissionSetting.IsGranted == permissionGrant.IsGranted
+            );
+        }
+
+        public virtual void RemovePermission(TUser user, PermissionGrantInfo permissionGrant)
+        {
+            _userPermissionSettingRepository.Delete(
                 permissionSetting => permissionSetting.UserId == user.Id &&
                                      permissionSetting.Name == permissionGrant.Name &&
                                      permissionSetting.IsGranted == permissionGrant.IsGranted
@@ -349,6 +411,13 @@ namespace Abp.Authorization.Users
                 .ToList();
         }
 
+        public virtual IList<PermissionGrantInfo> GetPermissions(long userId)
+        {
+            return (_userPermissionSettingRepository.GetAllList(p => p.UserId == userId))
+                .Select(p => new PermissionGrantInfo(p.Name, p.IsGranted))
+                .ToList();
+        }
+
         public virtual async Task<bool> HasPermissionAsync(long userId, PermissionGrantInfo permissionGrant)
         {
             return await _userPermissionSettingRepository.FirstOrDefaultAsync(
@@ -358,9 +427,23 @@ namespace Abp.Authorization.Users
                    ) != null;
         }
 
+        public virtual bool HasPermission(long userId, PermissionGrantInfo permissionGrant)
+        {
+            return _userPermissionSettingRepository.FirstOrDefault(
+                       p => p.UserId == userId &&
+                            p.Name == permissionGrant.Name &&
+                            p.IsGranted == permissionGrant.IsGranted
+                   ) != null;
+        }
+
         public virtual async Task RemoveAllPermissionSettingsAsync(TUser user)
         {
             await _userPermissionSettingRepository.DeleteAsync(s => s.UserId == user.Id);
+        }
+
+        public virtual void RemoveAllPermissionSettings(TUser user)
+        {
+            _userPermissionSettingRepository.Delete(s => s.UserId == user.Id);
         }
 
         #endregion
@@ -374,6 +457,14 @@ namespace Abp.Authorization.Users
                     ? new DateTimeOffset(DateTime.SpecifyKind(user.LockoutEndDateUtc.Value, DateTimeKind.Utc))
                     : new DateTimeOffset()
             );
+        }
+
+        public DateTimeOffset GetLockoutEndDate(TUser user)
+        {
+            return 
+                user.LockoutEndDateUtc.HasValue
+                    ? new DateTimeOffset(DateTime.SpecifyKind(user.LockoutEndDateUtc.Value, DateTimeKind.Utc))
+                    : new DateTimeOffset();
         }
 
         public Task SetLockoutEndDateAsync(TUser user, DateTimeOffset lockoutEnd)
@@ -391,6 +482,11 @@ namespace Abp.Authorization.Users
         {
             user.AccessFailedCount = 0;
             return Task.FromResult(0);
+        }
+
+        public void ResetAccessFailedCount(TUser user)
+        {
+            user.AccessFailedCount = 0;
         }
 
         public Task<int> GetAccessFailedCountAsync(TUser user)

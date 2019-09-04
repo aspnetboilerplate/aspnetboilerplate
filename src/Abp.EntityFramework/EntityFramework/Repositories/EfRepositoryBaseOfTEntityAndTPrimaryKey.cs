@@ -261,10 +261,30 @@ namespace Abp.EntityFramework.Repositories
                 .LoadAsync(cancellationToken);
         }
 
+        public void EnsureCollectionLoaded<TProperty>(TEntity entity, Expression<Func<TEntity, IEnumerable<TProperty>>> collectionExpression,
+            CancellationToken cancellationToken) where TProperty : class
+        {
+            var expression = collectionExpression.Body as MemberExpression;
+            if (expression == null)
+            {
+                throw new AbpException($"Given {nameof(collectionExpression)} is not a {typeof(MemberExpression).FullName}");
+            }
+
+            Context.Entry(entity)
+                .Collection(expression.Member.Name)
+                .Load();
+        }
+
         public Task EnsurePropertyLoadedAsync<TProperty>(TEntity entity, Expression<Func<TEntity, TProperty>> propertyExpression,
             CancellationToken cancellationToken) where TProperty : class
         {
             return Context.Entry(entity).Reference(propertyExpression).LoadAsync(cancellationToken);
+        }
+
+        public void EnsurePropertyLoaded<TProperty>(TEntity entity, Expression<Func<TEntity, TProperty>> propertyExpression,
+            CancellationToken cancellationToken) where TProperty : class
+        {
+            Context.Entry(entity).Reference(propertyExpression).Load();
         }
     }
 }

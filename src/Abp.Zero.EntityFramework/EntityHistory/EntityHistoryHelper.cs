@@ -148,6 +148,27 @@ namespace Abp.EntityHistory
             }
         }
 
+        public virtual void Save(DbContext context, EntityChangeSet changeSet)
+        {
+            if (!IsEntityHistoryEnabled)
+            {
+                return;
+            }
+
+            if (changeSet.EntityChanges.Count == 0)
+            {
+                return;
+            }
+
+            UpdateChangeSet(context, changeSet);
+
+            using (var uow = _unitOfWorkManager.Begin(TransactionScopeOption.Suppress))
+            {
+                EntityHistoryStore.Save(changeSet);
+                uow.Complete();
+            }
+        }
+
         [CanBeNull]
         protected virtual string GetEntityId(DbEntityEntry entityEntry, EntityType entityType)
         {
