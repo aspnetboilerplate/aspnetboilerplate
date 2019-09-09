@@ -26,7 +26,7 @@ namespace Abp.EntityHistory
         public EntityHistoryHelper(
             IEntityHistoryConfiguration configuration,
             IUnitOfWorkManager unitOfWorkManager)
-            : base (configuration, unitOfWorkManager)
+            : base(configuration, unitOfWorkManager)
         {
         }
 
