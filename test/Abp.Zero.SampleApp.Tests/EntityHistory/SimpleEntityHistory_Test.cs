@@ -1,7 +1,6 @@
 ﻿using Abp.Domain.Entities;
 using Abp.Domain.Entities.Auditing;
 using Abp.Domain.Repositories;
-using Abp.Domain.Uow;
 using Abp.EntityHistory;
 using Abp.Events.Bus.Entities;
 using Abp.Extensions;
@@ -33,6 +32,10 @@ namespace Abp.Zero.SampleApp.Tests.EntityHistory
             _blogRepository = Resolve<IRepository<Blog>>();
             _postRepository = Resolve<IRepository<Post, Guid>>();
             _commentRepository = Resolve<IRepository<Comment>>();
+
+            var user = GetDefaultTenantAdmin();
+            AbpSession.TenantId = user.TenantId;
+            AbpSession.UserId = user.Id;
 
             Resolve<IEntityHistoryConfiguration>().IsEnabledForAnonymousUsers = true;
         }
@@ -106,9 +109,9 @@ namespace Abp.Zero.SampleApp.Tests.EntityHistory
 
             UsingDbContext((context) =>
             {
-                context.EntityChanges.Count(e => e.TenantId == null).ShouldBe(0);
-                context.EntityChangeSets.Count(e => e.TenantId == null).ShouldBe(0);
-                context.EntityPropertyChanges.Count(e => e.TenantId == null).ShouldBe(0);
+                context.EntityChanges.Count(e => e.TenantId == 1).ShouldBe(0);
+                context.EntityChangeSets.Count(e => e.TenantId == 1).ShouldBe(0);
+                context.EntityPropertyChanges.Count(e => e.TenantId == 1).ShouldBe(0);
             });
 
             var justNow = Clock.Now;
@@ -116,10 +119,10 @@ namespace Abp.Zero.SampleApp.Tests.EntityHistory
 
             UsingDbContext((context) =>
             {
-                context.EntityChanges.Count(e => e.TenantId == null).ShouldBe(1);
-                context.EntityChangeSets.Count(e => e.TenantId == null).ShouldBe(1);
+                context.EntityChanges.Count(e => e.TenantId == 1).ShouldBe(1);
+                context.EntityChangeSets.Count(e => e.TenantId == 1).ShouldBe(1);
                 context.EntityChangeSets.Single().CreationTime.ShouldBeGreaterThan(justNow);
-                context.EntityPropertyChanges.Count(e => e.TenantId == null).ShouldBe(4);
+                context.EntityPropertyChanges.Count(e => e.TenantId == 1).ShouldBe(4);
                 // TODO: 3 should be the correct value, Blog.Category is null for both new/original values
                 // context.EntityPropertyChanges.Count(e => e.TenantId == 1).ShouldBe(3);
             });
