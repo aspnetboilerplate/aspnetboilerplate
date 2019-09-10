@@ -8,6 +8,7 @@ using Abp.Auditing;
 using Abp.Dependency;
 using Abp.Domain.Entities;
 using Abp.Domain.Uow;
+using Abp.EntityHistory.Extensions;
 using Abp.Events.Bus.Entities;
 using Abp.Extensions;
 using Abp.Json;
@@ -128,7 +129,7 @@ namespace Abp.EntityHistory
                     changeType = EntityChangeType.Deleted;
                     break;
                 case EntityState.Modified:
-                    changeType = IsDeleted(entityEntry) ? EntityChangeType.Deleted : EntityChangeType.Updated;
+                    changeType = entityEntry.IsDeleted() ? EntityChangeType.Deleted : EntityChangeType.Updated;
                     break;
                 case EntityState.Detached:
                 case EntityState.Unchanged:
@@ -170,8 +171,8 @@ namespace Abp.EntityHistory
         {
             var propertyChanges = new List<EntityPropertyChange>();
             var properties = entityEntry.Metadata.GetProperties();
-            var isCreated = IsCreated(entityEntry);
-            var isDeleted = IsDeleted(entityEntry);
+            var isCreated = entityEntry.IsCreated();
+            var isDeleted = entityEntry.IsDeleted();
 
             foreach (var property in properties)
             {
@@ -196,22 +197,6 @@ namespace Abp.EntityHistory
         {
             var properties = entityEntry.Metadata.GetProperties();
             return properties.Any(p => p.PropertyInfo?.IsDefined(typeof(AuditedAttribute)) ?? false);
-        }
-
-        private bool IsCreated(EntityEntry entityEntry)
-        {
-            return entityEntry.State == EntityState.Added;
-        }
-
-        private bool IsDeleted(EntityEntry entityEntry)
-        {
-            if (entityEntry.State == EntityState.Deleted)
-            {
-                return true;
-            }
-
-            var entity = entityEntry.Entity;
-            return entity is ISoftDelete && entity.As<ISoftDelete>().IsDeleted;
         }
 
         private bool ShouldSaveEntityHistory(EntityEntry entityEntry)
