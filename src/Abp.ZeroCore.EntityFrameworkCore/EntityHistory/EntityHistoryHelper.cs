@@ -15,6 +15,7 @@ using Abp.Json;
 using JetBrains.Annotations;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.ChangeTracking;
+using Microsoft.EntityFrameworkCore.Metadata;
 
 namespace Abp.EntityHistory
 {
@@ -179,14 +180,13 @@ namespace Abp.EntityHistory
                 var propertyEntry = entityEntry.Property(property.Name);
                 if (ShouldSavePropertyHistory(propertyEntry, shouldSaveEntityHistory, isCreated || isDeleted))
                 {
-                    propertyChanges.Add(new EntityPropertyChange
-                    {
-                        NewValue = isDeleted ? null : propertyEntry.CurrentValue.ToJsonString().TruncateWithPostfix(EntityPropertyChange.MaxValueLength),
-                        OriginalValue = isCreated ? null : propertyEntry.OriginalValue.ToJsonString().TruncateWithPostfix(EntityPropertyChange.MaxValueLength),
-                        PropertyName = property.Name,
-                        PropertyTypeFullName = property.ClrType.FullName,
-                        TenantId = AbpSession.TenantId
-                    });
+                    propertyChanges.Add(
+                        CreateEntityPropertyChange(
+                            propertyEntry.GetOriginalValue(),
+                            propertyEntry.GetNewValue(),
+                            property
+                        )
+                    );
                 }
             }
 
@@ -348,13 +348,12 @@ namespace Abp.EntityHistory
                             if (!(propertyEntry.OriginalValue?.Equals(propertyEntry.CurrentValue) ?? propertyEntry.CurrentValue == null))
                             {
                                 // Add foreign key
-                                entityChange.PropertyChanges.Add(new EntityPropertyChange
-                                {
-                                    NewValue = propertyEntry.CurrentValue.ToJsonString(),
-                                    OriginalValue = propertyEntry.OriginalValue.ToJsonString(),
-                                    PropertyName = property.Name,
-                                    PropertyTypeFullName = property.ClrType.FullName
-                                });
+                                entityChange.PropertyChanges.Add(
+                                    CreateEntityPropertyChange(
+                                        propertyEntry.GetOriginalValue(),
+                                        propertyEntry.GetNewValue(),
+                                        property
+                                ));
                             }
 
                             continue;
@@ -377,6 +376,18 @@ namespace Abp.EntityHistory
                     }
                 }
             }
+        }
+
+        private EntityPropertyChange CreateEntityPropertyChange(object oldValue, object newValue, IProperty property)
+        {
+            return new EntityPropertyChange()
+            {
+                OriginalValue = oldValue?.ToJsonString().TruncateWithPostfix(EntityPropertyChange.MaxValueLength),
+                NewValue = newValue?.ToJsonString().TruncateWithPostfix(EntityPropertyChange.MaxValueLength),
+                PropertyName = property.Name.TruncateWithPostfix(EntityPropertyChange.MaxPropertyNameLength),
+                PropertyTypeFullName = property.ClrType.FullName.TruncateWithPostfix(EntityPropertyChange.MaxPropertyTypeFullNameLength),
+                TenantId = AbpSession.TenantId
+            };
         }
     }
 }
