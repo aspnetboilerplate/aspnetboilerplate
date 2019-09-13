@@ -59,25 +59,38 @@ namespace Abp.EntityHistory
 
             foreach (var entityEntry in context.ChangeTracker.Entries())
             {
-                var shouldSaveEntityHistory = ShouldSaveEntityHistory(entityEntry);
-                if (!shouldSaveEntityHistory && !entityEntry.HasAuditedProperties())
+                var typeOfEntity = entityEntry.GetEntityBaseType();
+                var shouldTrackEntity = IsTypeOfTrackedEntity(typeOfEntity);
+                if (shouldTrackEntity.HasValue && !shouldTrackEntity.Value)
                 {
                     continue;
                 }
 
-                var entityType = GetEntityType(objectContext, entityEntry.GetEntityBaseType());
+                if (!IsTypeOfEntity(typeOfEntity))
+                {
+                    continue;
+                }
+
+                var shouldAuditEntity = IsTypeOfAuditedEntity(typeOfEntity);
+                if (shouldAuditEntity.HasValue && !shouldAuditEntity.Value)
+                {
+                    continue;
+                }
+
+                var entityType = GetEntityType(objectContext, typeOfEntity);
                 var entityChange = CreateEntityChange(entityEntry, entityType);
                 if (entityChange == null)
                 {
                     continue;
                 }
 
+                var shouldSaveAuditedPropertiesOnly = !shouldAuditEntity.HasValue && !entityEntry.IsCreated() && !entityEntry.IsDeleted();
                 var entitySet = GetEntitySet(objectContext, entityType);
-                var propertyChanges = new List<EntityPropertyChange>();
-                propertyChanges.AddRange(GetPropertyChanges(entityEntry, entityType, entitySet, shouldSaveEntityHistory));
-                propertyChanges.AddRange(GetRelationshipChanges(entityEntry, entityType, entitySet, relationshipChanges, shouldSaveEntityHistory));
 
-                if (!shouldSaveEntityHistory && propertyChanges.Count == 0)
+                var propertyChanges = new List<EntityPropertyChange>();
+                propertyChanges.AddRange(GetPropertyChanges(entityEntry, entityType, entitySet, shouldSaveAuditedPropertiesOnly));
+                propertyChanges.AddRange(GetRelationshipChanges(entityEntry, entityType, entitySet, relationshipChanges, shouldSaveAuditedPropertiesOnly));
+                if (propertyChanges.Count == 0)
                 {
                     continue;
                 }
@@ -167,7 +180,7 @@ namespace Abp.EntityHistory
                 return null;
             }
 
-            var entityChange = new EntityChange
+            return new EntityChange
             {
                 ChangeType = changeType,
                 EntityEntry = entityEntry, // [NotMapped]
@@ -175,8 +188,6 @@ namespace Abp.EntityHistory
                 EntityTypeFullName = entityEntry.GetEntityBaseType().FullName,
                 TenantId = AbpSession.TenantId
             };
-
-            return entityChange;
         }
 
         private EntityType GetEntityType(ObjectContext context, Type entityType, bool useClrType = true)
@@ -212,12 +223,9 @@ namespace Abp.EntityHistory
         /// <summary>
         /// Gets the property changes for this entry.
         /// </summary>
-        private ICollection<EntityPropertyChange> GetPropertyChanges(DbEntityEntry entityEntry, EntityType entityType, EntitySet entitySet, bool shouldSaveEntityHistory)
+        private ICollection<EntityPropertyChange> GetPropertyChanges(DbEntityEntry entityEntry, EntityType entityType, EntitySet entitySet, bool auditedPropertiesOnly)
         {
             var propertyChanges = new List<EntityPropertyChange>();
-            var complexTypeProperties = entitySet.ElementType.Properties.Where(e => e.IsComplexType).ToList();
-            var isCreated = entityEntry.IsCreated();
-            var isDeleted = entityEntry.IsDeleted();
 
             foreach (var property in entityType.Properties)
             {
@@ -233,7 +241,8 @@ namespace Abp.EntityHistory
 
                 var propertyEntry = entityEntry.Property(property.Name);
                 var propertyInfo = propertyEntry.EntityEntry.GetPropertyInfo(propertyEntry.Name);
-                if (ShouldSavePropertyHistory(propertyEntry, propertyInfo, complexTypeProperties, shouldSaveEntityHistory, isCreated || isDeleted))
+                var shouldSaveProperty = IsAuditedPropertyInfo(propertyInfo) ?? !auditedPropertiesOnly;
+                if (shouldSaveProperty)
                 {
                     propertyChanges.Add(
                         CreateEntityPropertyChange(
@@ -251,7 +260,7 @@ namespace Abp.EntityHistory
         /// <summary>
         /// Gets the property changes for this entry.
         /// </summary>
-        private ICollection<EntityPropertyChange> GetRelationshipChanges(DbEntityEntry entityEntry, EntityType entityType, EntitySet entitySet, ICollection<ObjectStateEntry> relationshipChanges, bool shouldSaveEntityHistory)
+        private ICollection<EntityPropertyChange> GetRelationshipChanges(DbEntityEntry entityEntry, EntityType entityType, EntitySet entitySet, ICollection<ObjectStateEntry> relationshipChanges, bool auditedPropertiesOnly)
         {
             var propertyChanges = new List<EntityPropertyChange>();
             var navigationProperties = entityType.NavigationProperties;
@@ -296,7 +305,8 @@ namespace Abp.EntityHistory
                 }
 
                 var propertyInfo = entityEntry.GetPropertyInfo(navigationProperty.Name);
-                if (ShouldSaveRelationshipHistory(entityRelationshipChanges, propertyInfo, shouldSaveEntityHistory, isCreated || isDeleted))
+                var shouldSaveProperty = IsAuditedPropertyInfo(propertyInfo) ?? !auditedPropertiesOnly;
+                if (shouldSaveProperty)
                 {
                     var addedRelationship = relationship.FirstOrDefault(p => p.Item2 == EntityState.Added);
                     var deletedRelationship = relationship.FirstOrDefault(p => p.Item2 == EntityState.Deleted);
@@ -308,121 +318,6 @@ namespace Abp.EntityHistory
             }
 
             return propertyChanges;
-        }
-
-        private bool ShouldSaveEntityHistory(DbEntityEntry entityEntry)
-        {
-            if (entityEntry.State == EntityState.Detached ||
-                entityEntry.State == EntityState.Unchanged)
-            {
-                return false;
-            }
-
-            if (EntityHistoryConfiguration.IgnoredTypes.Any(t => t.IsInstanceOfType(entityEntry.Entity)))
-            {
-                return false;
-            }
-
-            var entityType = entityEntry.GetEntityBaseType();
-            if (!EntityHelper.IsEntity(entityType))
-            {
-                return false;
-            }
-
-            var shouldSaveEntityHistoryForType = ShouldSaveEntityHistoryForType(entityType);
-            if (shouldSaveEntityHistoryForType.HasValue)
-            {
-                return shouldSaveEntityHistoryForType.Value;
-            }
-
-            return false;
-        }
-
-        private bool? ShouldSaveEntityHistoryForType(Type entityType)
-        {
-            if (!entityType.IsPublic)
-            {
-                return false;
-            }
-
-            if (entityType.GetTypeInfo().IsDefined(typeof(DisableAuditingAttribute), true))
-            {
-                return false;
-            }
-
-            if (entityType.GetTypeInfo().IsDefined(typeof(AuditedAttribute), true))
-            {
-                return true;
-            }
-
-            if (EntityHistoryConfiguration.Selectors.Any(selector => selector.Predicate(entityType)))
-            {
-                return true;
-            }
-
-            return null;
-        }
-
-        private bool ShouldSavePropertyHistory(DbPropertyEntry propertyEntry, PropertyInfo propertyInfo, ICollection<EdmProperty> complexTypeProperties, bool shouldSaveEntityHistory, bool defaultValue)
-        {
-            var shouldSavePropertyHistoryForInfo = ShouldSavePropertyHistoryForInfo(propertyInfo, shouldSaveEntityHistory);
-            if (shouldSavePropertyHistoryForInfo.HasValue)
-            {
-                return shouldSavePropertyHistoryForInfo.Value;
-            }
-
-            var isModified = false;
-            if (propertyEntry is DbComplexPropertyEntry)
-            {
-                var complexProperty = complexTypeProperties.Single(t => t.Name == propertyInfo.Name);
-                isModified = propertyEntry.As<DbComplexPropertyEntry>().HasChanged(complexProperty);
-            }
-            else
-            {
-                isModified = propertyEntry.HasChanged();
-            }
-            if (isModified)
-            {
-                return true;
-            }
-
-            return defaultValue;
-        }
-
-        private bool ShouldSaveRelationshipHistory(ICollection<ObjectStateEntry> relationshipChanges, PropertyInfo propertyInfo, bool shouldSaveEntityHistory, bool defaultValue)
-        {
-            var shouldSavePropertyHistoryForInfo = ShouldSavePropertyHistoryForInfo(propertyInfo, shouldSaveEntityHistory);
-            if (shouldSavePropertyHistoryForInfo.HasValue)
-            {
-                return shouldSavePropertyHistoryForInfo.Value;
-            }
-
-            var isModified = relationshipChanges.Any(change => change.State == EntityState.Added || change.State == EntityState.Deleted);
-            if (isModified)
-            {
-                return true;
-            }
-
-            return defaultValue;
-        }
-
-        private bool? ShouldSavePropertyHistoryForInfo(PropertyInfo propertyInfo, bool shouldSaveEntityHistory)
-        {
-            if (propertyInfo != null && propertyInfo.IsDefined(typeof(DisableAuditingAttribute), true))
-            {
-                return false;
-            }
-
-            if (!shouldSaveEntityHistory)
-            {
-                // Should not save property history if property is not audited
-                if (propertyInfo == null || !propertyInfo.IsDefined(typeof(AuditedAttribute), true))
-                {
-                    return false;
-                }
-            }
-
-            return null;
         }
 
         /// <summary>
