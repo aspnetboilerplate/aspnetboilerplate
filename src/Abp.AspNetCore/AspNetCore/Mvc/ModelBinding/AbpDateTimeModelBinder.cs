@@ -14,7 +14,8 @@ namespace Abp.AspNetCore.Mvc.ModelBinding
         public AbpDateTimeModelBinder(Type type)
         {
             _type = type;
-            _simpleTypeModelBinder = new SimpleTypeModelBinder(type);
+            // TODO: Core3.0 update
+            _simpleTypeModelBinder = new SimpleTypeModelBinder(type, null);
         }
         
         public async Task BindModelAsync(ModelBindingContext bindingContext)
