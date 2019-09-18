@@ -58,15 +58,36 @@ namespace Abp.EntityHistory
                     continue;
                 }
 
-                if (!IsTypeOfEntity(typeOfEntity))
+                if (!IsTypeOfEntity(typeOfEntity) && !entityEntry.Metadata.IsOwned())
                 {
                     continue;
                 }
 
                 var shouldAuditEntity = IsTypeOfAuditedEntity(typeOfEntity);
+                bool? shouldAuditOwnerProperty = null;
+                bool? shouldAuditOwnerEntity = null;
                 if (shouldAuditEntity.HasValue && !shouldAuditEntity.Value)
                 {
                     continue;
+                }
+                else if (!shouldAuditEntity.HasValue && entityEntry.Metadata.IsOwned())
+                {
+                    // Check if owner entity has auditing attribute
+                    var foreignKey = entityEntry.Metadata.GetForeignKeys().First();
+                    var ownerEntity = foreignKey.PrincipalEntityType.ClrType;
+
+                    shouldAuditOwnerEntity = IsTypeOfAuditedEntity(ownerEntity);
+                    if (shouldAuditOwnerEntity.HasValue && !shouldAuditOwnerEntity.Value)
+                    {
+                        continue;
+                    }
+
+                    var ownerPropertyInfo = foreignKey.PrincipalToDependent.PropertyInfo;
+                    shouldAuditOwnerProperty = IsAuditedPropertyInfo(ownerPropertyInfo);
+                    if (shouldAuditOwnerProperty.HasValue && !shouldAuditOwnerProperty.Value)
+                    {
+                        continue;
+                    }
                 }
 
                 var entityChange = CreateEntityChange(entityEntry);
@@ -75,7 +96,9 @@ namespace Abp.EntityHistory
                     continue;
                 }
 
-                var shouldSaveAuditedPropertiesOnly = !shouldAuditEntity.HasValue && !entityEntry.IsCreated() && !entityEntry.IsDeleted();
+                var shouldSaveAuditedPropertiesOnly = !(shouldAuditEntity.HasValue || shouldAuditOwnerEntity.HasValue || shouldAuditOwnerProperty.HasValue) && 
+                                                      !entityEntry.IsCreated() &&
+                                                      !entityEntry.IsDeleted();
                 var propertyChanges = GetPropertyChanges(entityEntry, shouldSaveAuditedPropertiesOnly);
                 if (propertyChanges.Count == 0)
                 {
