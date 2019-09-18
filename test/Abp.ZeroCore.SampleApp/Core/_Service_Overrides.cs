@@ -219,7 +219,8 @@ namespace Abp.ZeroCore.SampleApp.Core
             ILogger<SignInManager<User>> logger,
             IUnitOfWorkManager unitOfWorkManager,
             ISettingManager settingManager,
-            IAuthenticationSchemeProvider schemes
+            IAuthenticationSchemeProvider schemes,
+            IUserConfirmation<User> userConfirmation
         ) : base(
             userManager,
             contextAccessor,
@@ -228,7 +229,8 @@ namespace Abp.ZeroCore.SampleApp.Core
             logger,
             unitOfWorkManager,
             settingManager,
-            schemes)
+            schemes,
+            userConfirmation)
         {
         }
     }

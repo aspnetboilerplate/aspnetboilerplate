@@ -34,6 +34,10 @@
     <ProjectReference Include="..\AbpAspNetCoreDemo.Core\AbpAspNetCoreDemo.Core.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="Migrations\" />
+  </ItemGroup>
+
   <Target Name="PrepublishScript" BeforeTargets="PrepareForPublish">
     <Exec Command="bower install" />
     <Exec Command="dotnet bundle" />

@@ -61,7 +61,7 @@ namespace AbpAspNetCoreDemo
             services.AddMvc(options =>
             {
                 options.Filters.Add(new AutoValidateAntiforgeryTokenAttribute());
-            }).AddJsonOptions(options =>
+            }).AddNewtonsoftJson(options =>
             {
                 options.SerializerSettings.ContractResolver = new AbpMvcContractResolver(IocManager.Value)
                 {
@@ -127,8 +127,9 @@ namespace AbpAspNetCoreDemo
                 options.Filter = httpContext => httpContext.Request.Path.Value.StartsWith("/odata");
             });
 
-            loggerFactory.AddConsole(Configuration.GetSection("Logging"));
-            loggerFactory.AddDebug();
+            // TODO: Core3.0 update
+            //loggerFactory.AddConsole(Configuration.GetSection("Logging"));
+            //loggerFactory.AddDebug();
 
             if (env.IsDevelopment())
             {
@@ -143,10 +144,12 @@ namespace AbpAspNetCoreDemo
             app.UseStaticFiles();
             app.UseEmbeddedFiles(); //Allows to expose embedded files to the web!
 
-            app.UseMvc(routes =>
+            app.UseEndpoints(endpoints =>
             {
-                app.ApplicationServices.GetRequiredService<IAbpAspNetCoreConfiguration>().RouteConfiguration.ConfigureAll(routes);
-                routes.MapODataServiceRoute(app);
+                app.ApplicationServices.GetRequiredService<IAbpAspNetCoreConfiguration>().EndpointConfiguration.ConfigureAllEndpoints(endpoints);
+
+                //TODO@3.0 related: https://github.com/OData/WebApi/issues/1707
+                //routes.MapODataServiceRoute(app); ???
             });
         }
     }
