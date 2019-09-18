@@ -31,7 +31,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Include="mongocsharpdriver" Version="2.8.1" />
+    <PackageReference Include="mongocsharpdriver" Version="2.9.1" />
   </ItemGroup>
 
   <ItemGroup>

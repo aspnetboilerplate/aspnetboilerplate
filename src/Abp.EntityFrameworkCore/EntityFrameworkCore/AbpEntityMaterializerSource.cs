@@ -5,6 +5,8 @@ using Abp.Reflection;
 using Abp.Timing;
 using Microsoft.EntityFrameworkCore.Metadata;
 using Microsoft.EntityFrameworkCore.Metadata.Internal;
+using Microsoft.EntityFrameworkCore.Query;
+using JetBrains.Annotations;
 
 namespace Abp.EntityFrameworkCore
 {
@@ -18,6 +20,11 @@ namespace Abp.EntityFrameworkCore
 
         private static readonly MethodInfo NormalizeNullableDateTimeMethod =
             typeof(AbpEntityMaterializerSource).GetTypeInfo().GetMethod(nameof(NormalizeNullableDateTime), BindingFlags.Static | BindingFlags.NonPublic);
+
+        public AbpEntityMaterializerSource([NotNull] EntityMaterializerSourceDependencies dependencies)
+            : base(dependencies)
+        {
+        }
 
         public override Expression CreateReadValueExpression(Expression valueBuffer, Type type, int index, IPropertyBase propertyBase)
         {
