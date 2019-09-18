@@ -119,24 +119,18 @@ namespace Abp.EntityHistory
                 return;
             }
 
+            UpdateChangeSet(changeSet);
+
             if (changeSet.EntityChanges.Count == 0)
             {
                 return;
             }
-
-            UpdateChangeSet(changeSet);
 
             using (var uow = UnitOfWorkManager.Begin(TransactionScopeOption.Suppress))
             {
                 await EntityHistoryStore.SaveAsync(changeSet);
                 await uow.CompleteAsync();
             }
-        }
-
-        protected virtual string GetEntityId(EntityEntry entry)
-        {
-            var primaryKeys = entry.Properties.Where(p => p.Metadata.IsPrimaryKey());
-            return primaryKeys.First().CurrentValue?.ToJsonString();
         }
 
         public virtual void Save(EntityChangeSet changeSet)
@@ -146,18 +140,24 @@ namespace Abp.EntityHistory
                 return;
             }
 
+            UpdateChangeSet(changeSet);
+
             if (changeSet.EntityChanges.Count == 0)
             {
                 return;
             }
-
-            UpdateChangeSet(changeSet);
 
             using (var uow = UnitOfWorkManager.Begin(TransactionScopeOption.Suppress))
             {
                 EntityHistoryStore.Save(changeSet);
                 uow.Complete();
             }
+        }
+
+        protected virtual string GetEntityId(EntityEntry entry)
+        {
+            var primaryKeys = entry.Properties.Where(p => p.Metadata.IsPrimaryKey());
+            return primaryKeys.First().CurrentValue?.ToJsonString();
         }
 
         [CanBeNull]
@@ -237,9 +237,11 @@ namespace Abp.EntityHistory
         /// </summary>
         private void UpdateChangeSet(EntityChangeSet changeSet)
         {
+            var entityChangesToRemove = new List<EntityChange>();
             foreach (var entityChange in changeSet.EntityChanges)
             {
                 var entityEntry = entityChange.EntityEntry.As<EntityEntry>();
+                var isAuditedEntity = IsTypeOfAuditedEntity(entityEntry.Entity.GetType()) == true;
 
                 /* Update change time */
                 entityChange.ChangeTime = GetChangeTime(entityChange.ChangeType, entityEntry.Entity);
@@ -263,6 +265,14 @@ namespace Abp.EntityHistory
                 {
                     foreach (var property in foreignKey.Properties)
                     {
+                        var shouldSaveProperty = property.IsShadowProperty ? 
+                                                   null :
+                                                   IsAuditedPropertyInfo(property.PropertyInfo);
+                        if (shouldSaveProperty.HasValue && !shouldSaveProperty.Value)
+                        {
+                            continue;
+                        }
+
                         var propertyEntry = entityEntry.Property(property.Name);
                         // TODO: fix new value comparison before truncation
                         var newValue = propertyEntry.GetNewValue()?.ToJsonString().TruncateWithPostfix(EntityPropertyChange.MaxValueLength);
@@ -273,18 +283,36 @@ namespace Abp.EntityHistory
                 }
 
                 /* Update/Remove property changes */
+                var propertyChangesToRemove = new List<EntityPropertyChange>();
                 foreach (var propertyChange in entityChange.PropertyChanges)
                 {
                     var propertyEntry = entityEntry.Property(propertyChange.PropertyName);
+                    var isAuditedProperty = !propertyEntry.Metadata.IsShadowProperty && 
+                                            IsAuditedPropertyInfo(propertyEntry.Metadata.PropertyInfo) == true;
 
                     // TODO: fix new value comparison before truncation
                     propertyChange.NewValue = propertyEntry.GetNewValue()?.ToJsonString().TruncateWithPostfix(EntityPropertyChange.MaxValueLength);
-                    if (propertyChange.OriginalValue == propertyChange.NewValue)
+                    if (!isAuditedProperty && propertyChange.OriginalValue == propertyChange.NewValue)
                     {
                         // No change
-                        entityChange.PropertyChanges.Remove(propertyChange);
+                        propertyChangesToRemove.Add(propertyChange);
                     }
                 }
+
+                foreach (var propertyChange in propertyChangesToRemove)
+                {
+                    entityChange.PropertyChanges.Remove(propertyChange);
+                }
+
+                if (!isAuditedEntity && entityChange.PropertyChanges.Count == 0)
+                {
+                    entityChangesToRemove.Add(entityChange);
+                }
+            }
+
+            foreach (var entityChange in entityChangesToRemove)
+            {
+                changeSet.EntityChanges.Remove(entityChange);
             }
         }
 
