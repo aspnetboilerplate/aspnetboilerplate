@@ -12,6 +12,7 @@ using Abp.Dependency;
 using Abp.Reflection.Extensions;
 using Microsoft.Data.Sqlite;
 using Microsoft.EntityFrameworkCore.Metadata.Internal;
+using Microsoft.EntityFrameworkCore.Query;
 
 namespace Abp.EntityFrameworkCore.Tests
 {

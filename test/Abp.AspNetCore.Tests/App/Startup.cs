@@ -32,9 +32,11 @@ namespace Abp.AspNetCore.App
         {
             app.UseAbp(); //Initializes ABP framework.
 
-            app.UseMvc(routes =>
+            app.UseEndpoints(endpoints =>
             {
-                app.ApplicationServices.GetRequiredService<IAbpAspNetCoreConfiguration>().RouteConfiguration.ConfigureAll(routes);
+                app.ApplicationServices.GetRequiredService<IAbpAspNetCoreConfiguration>()
+                                        .EndpointConfiguration
+                                        .ConfigureAllEndpoints(endpoints);
             });
         }
     }
