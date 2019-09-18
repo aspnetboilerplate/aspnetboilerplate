@@ -22,7 +22,8 @@ namespace Abp.Authorization
             : base(
                 options, 
                 signInManager,
-                systemClock)
+                systemClock,
+                null) // TODO: Core3.0 update
         {
         }
 

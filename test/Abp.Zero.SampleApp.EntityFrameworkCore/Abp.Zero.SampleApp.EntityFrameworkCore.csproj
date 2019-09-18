@@ -16,7 +16,6 @@
 
   <ItemGroup>
     <ProjectReference Include="..\Abp.Zero.SampleApp\Abp.Zero.SampleApp.csproj" />
-    <ProjectReference Include="..\..\src\Abp.Zero.EntityFrameworkCore\Abp.Zero.EntityFrameworkCore.csproj" />
   </ItemGroup>
 
   <ItemGroup>
