@@ -32,6 +32,8 @@ namespace Abp.AspNetCore.App
         {
             app.UseAbp(); //Initializes ABP framework.
 
+            app.UseRouting();
+
             app.UseEndpoints(endpoints =>
             {
                 app.ApplicationServices.GetRequiredService<IAbpAspNetCoreConfiguration>()
