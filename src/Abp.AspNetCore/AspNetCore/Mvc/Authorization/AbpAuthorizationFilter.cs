@@ -9,6 +9,8 @@ using Abp.Events.Bus;
 using Abp.Events.Bus.Exceptions;
 using Abp.Web.Models;
 using Castle.Core.Logging;
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Authorization;
 using Microsoft.AspNetCore.Mvc.Filters;
@@ -36,8 +38,9 @@ namespace Abp.AspNetCore.Mvc.Authorization
 
         public async Task OnAuthorizationAsync(AuthorizationFilterContext context)
         {
+            var endpoint = context?.HttpContext?.GetEndpoint();
             // Allow Anonymous skips all authorization
-            if (context.Filters.Any(item => item is IAllowAnonymousFilter))
+            if (endpoint?.Metadata.GetMetadata<IAllowAnonymous>() != null)
             {
                 return;
             }

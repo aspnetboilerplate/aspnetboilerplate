@@ -19,6 +19,11 @@ namespace Abp.AspNetCore.App
 
             mvc.PartManager.ApplicationParts.Add(new AssemblyPart(typeof(AbpAspNetCoreModule).GetAssembly()));
 
+            services.AddAuthentication(options =>
+            {
+                options.DefaultScheme = "Cookies";
+            }).AddCookie();
+
             //Configure Abp and Dependency Injection
             return services.AddAbp<AppModule>(options =>
             {
@@ -34,8 +39,14 @@ namespace Abp.AspNetCore.App
 
             app.UseRouting();
 
+            app.UseAuthentication();
+            app.UseAuthorization();
+
             app.UseEndpoints(endpoints =>
             {
+                endpoints.MapControllerRoute("defaultWithArea", "{area}/{controller=Home}/{action=Index}/{id?}");
+                endpoints.MapControllerRoute("default", "{controller=Home}/{action=Index}/{id?}");
+
                 app.ApplicationServices.GetRequiredService<IAbpAspNetCoreConfiguration>()
                                         .EndpointConfiguration
                                         .ConfigureAllEndpoints(endpoints);
