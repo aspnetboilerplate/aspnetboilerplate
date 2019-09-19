@@ -7,7 +7,7 @@ namespace Abp.EntityFrameworkCore.Tests.Ef
     {
         public DbSet<Blog> Blogs { get; set; }
 
-        public DbQuery<BlogView> BlogView { get; set; }
+        public DbSet<BlogView> BlogView { get; set; }
 
         public DbSet<Post> Posts { get; set; }
 
@@ -21,6 +21,16 @@ namespace Abp.EntityFrameworkCore.Tests.Ef
             : base(options)
         {
             
+        }
+
+        protected override void OnModelCreating(ModelBuilder modelBuilder)
+        {
+            base.OnModelCreating(modelBuilder);
+
+            modelBuilder
+                .Entity<BlogView>()
+                .HasNoKey()
+                .ToView("BlogView");
         }
     }
 }
