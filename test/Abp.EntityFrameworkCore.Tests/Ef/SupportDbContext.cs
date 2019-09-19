@@ -67,8 +67,9 @@ namespace Abp.EntityFrameworkCore.Tests.Ef
             if (typeof(IPassivable).GetTypeInfo().IsAssignableFrom(typeof(TEntity)))
             {
                 return GetAll()
-                    .Cast<IPassivable>()
-                    .Where(e => e.IsActive)
+                    //.Cast<IPassivable>() 
+                    //TODO: Core3.0 update, see https://github.com/aspnet/EntityFrameworkCore/issues/17794
+                    .Where(e => ((IPassivable)e).IsActive)
                     .Cast<TEntity>()
                     .ToList();
             }
