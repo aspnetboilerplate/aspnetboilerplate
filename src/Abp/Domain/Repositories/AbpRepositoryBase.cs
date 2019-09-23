@@ -7,6 +7,7 @@ using Abp.Dependency;
 using Abp.Domain.Entities;
 using Abp.Domain.Uow;
 using Abp.MultiTenancy;
+using Abp.Reflection;
 using Abp.Reflection.Extensions;
 
 namespace Abp.Domain.Repositories
@@ -104,7 +105,7 @@ namespace Abp.Domain.Repositories
 
         public virtual TEntity FirstOrDefault(TPrimaryKey id)
         {
-            return GetAll().FirstOrDefault(e => e.Id.Equals(id));
+            return GetAll().FirstOrDefault(CreateEqualityExpressionForId(id));
         }
 
         public virtual Task<TEntity> FirstOrDefaultAsync(TPrimaryKey id)
@@ -263,6 +264,25 @@ namespace Abp.Domain.Repositories
         public virtual Task<long> LongCountAsync(Expression<Func<TEntity, bool>> predicate)
         {
             return Task.FromResult(LongCount(predicate));
+        }
+
+        protected virtual Expression<Func<TEntity, bool>> CreateEqualityExpressionForId(TPrimaryKey id)
+        {
+            if (typeof(TPrimaryKey) == typeof(Int32))
+            {
+                return e => e.Id.Equals(id);
+            }
+
+            var lambdaParam = Expression.Parameter(typeof(TEntity));
+
+            var leftExpression = Expression.PropertyOrField(lambdaParam, "Id");
+
+            Expression<Func<object>> closure = () => id;
+            var rightExpression = Expression.Convert(closure.Body, leftExpression.Type);
+
+            var lambdaBody = Expression.Equal(leftExpression, rightExpression);
+
+            return Expression.Lambda<Func<TEntity, bool>>(lambdaBody, lambdaParam);
         }
     }
 }

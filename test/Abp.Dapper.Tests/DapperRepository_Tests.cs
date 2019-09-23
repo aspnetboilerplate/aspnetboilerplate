@@ -111,7 +111,7 @@ namespace Abp.Dapper.Tests
                 {
                     int productWithTenant2Id = _productDapperRepository.InsertAndGetId(new Product("ProductWithTenant2"));
 
-                    Product productWithTenant2 = _productRepository.Get(productWithTenant2Id);
+                    var productWithTenant2 = _productRepository.Get(productWithTenant2Id);
 
                     productWithTenant2.TenantId.ShouldBe(1); //Not sure about that?,Because we changed TenantId to 2 in this scope !!! Abp.TenantId = 2 now NOT 1 !!!
                 }
