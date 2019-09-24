@@ -409,6 +409,52 @@ namespace Abp.Zero.SampleApp.Tests.EntityHistory
             _entityHistoryStore.DidNotReceive().SaveAsync(Arg.Any<EntityChangeSet>());
         }
 
+        [Fact]
+        public void Should_Not_Write_History_If_Invalid_Entity_Has_Property_With_Audited_Attribute_Created()
+        {
+            //Arrange
+            Post post1 = null;
+
+            //Act
+            WithUnitOfWork(() =>
+            {
+                post1 = _postRepository.Single(b => b.Body == "test-post-1-body");
+                /* Category does not inherit from Entity<> and is not an owned entity*/
+                post1.Category = new Category { DisplayName = "My Category" };
+                _postRepository.Update(post1);
+            });
+
+            //Assert
+            _entityHistoryStore.DidNotReceive().Save(Arg.Any<EntityChangeSet>());
+        }
+
+        [Fact]
+        public void Should_Not_Write_History_If_Invalid_Entity_Has_Property_With_Audited_Attribute_Updated()
+        {
+            //Arrange
+            Post post1 = null;
+            WithUnitOfWork(() =>
+            {
+                post1 = _postRepository.Single(b => b.Body == "test-post-1-body");
+                /* Category does not inherit from Entity<> and is not an owned entity*/
+                post1.Category = new Category { DisplayName = "My Category" };
+                _postRepository.Update(post1);
+
+            });
+            _entityHistoryStore.ClearReceivedCalls();
+
+            //Act
+            WithUnitOfWork(() =>
+            {
+                post1 = _postRepository.GetAllIncluding(e => e.Category).Single(b => b.Body == "test-post-1-body");
+                post1.Category.DisplayName = "Invalid Category";
+                _postRepository.Update(post1);
+            });
+
+            //Assert
+            _entityHistoryStore.DidNotReceive().Save(Arg.Any<EntityChangeSet>());
+        }
+
         #endregion
 
         private int CreateBlogAndGetId()
