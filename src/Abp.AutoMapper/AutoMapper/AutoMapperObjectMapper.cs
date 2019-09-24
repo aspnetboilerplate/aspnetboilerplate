@@ -1,4 +1,5 @@
-﻿using AutoMapper;
+﻿using System.Linq;
+using AutoMapper;
 using IObjectMapper = Abp.ObjectMapping.IObjectMapper;
 
 namespace Abp.AutoMapper
@@ -20,6 +21,11 @@ namespace Abp.AutoMapper
         public TDestination Map<TSource, TDestination>(TSource source, TDestination destination)
         {
             return _mapper.Map(source, destination);
+        }
+
+        public IQueryable<TDestination> ProjectTo<TDestination>(IQueryable source)
+        {
+            return _mapper.ProjectTo<TDestination>(source);
         }
     }
 }
