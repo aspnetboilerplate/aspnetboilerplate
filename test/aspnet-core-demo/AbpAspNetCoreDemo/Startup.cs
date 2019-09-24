@@ -69,21 +69,23 @@ namespace AbpAspNetCoreDemo
                 };
             });
 
-            services.AddOData();
+            // Waiting for OData .NET Core 3.0 support, see https://github.com/OData/WebApi/issues/1748
+            // services.AddOData();
 
             // Workaround: https://github.com/OData/WebApi/issues/1177
-            services.AddMvcCore(options =>
-            {
-                foreach (var outputFormatter in options.OutputFormatters.OfType<ODataOutputFormatter>().Where(_ => _.SupportedMediaTypes.Count == 0))
-                {
-                    outputFormatter.SupportedMediaTypes.Add(new MediaTypeHeaderValue("application/prs.odatatestxx-odata"));
-                }
+            // Waiting for OData .NET Core 3.0 support, see https://github.com/OData/WebApi/issues/1748
+            //services.AddMvcCore(options =>
+            //{
+            //    foreach (var outputFormatter in options.OutputFormatters.OfType<ODataOutputFormatter>().Where(_ => _.SupportedMediaTypes.Count == 0))
+            //    {
+            //        outputFormatter.SupportedMediaTypes.Add(new MediaTypeHeaderValue("application/prs.odatatestxx-odata"));
+            //    }
 
-                foreach (var inputFormatter in options.InputFormatters.OfType<ODataInputFormatter>().Where(_ => _.SupportedMediaTypes.Count == 0))
-                {
-                    inputFormatter.SupportedMediaTypes.Add(new MediaTypeHeaderValue("application/prs.odatatestxx-odata"));
-                }
-            });
+            //    foreach (var inputFormatter in options.InputFormatters.OfType<ODataInputFormatter>().Where(_ => _.SupportedMediaTypes.Count == 0))
+            //    {
+            //        inputFormatter.SupportedMediaTypes.Add(new MediaTypeHeaderValue("application/prs.odatatestxx-odata"));
+            //    }
+            //});
 
             //Configure Abp and Dependency Injection. Should be called last.
             return services.AddAbp<AbpAspNetCoreDemoModule>(options =>
@@ -116,20 +118,17 @@ namespace AbpAspNetCoreDemo
         {
             app.UseAbp(); //Initializes ABP framework. Should be called first.
 
-            app.UseOData(builder =>
-            {
-                builder.EntitySet<Product>("Products").EntityType.Expand().Filter().OrderBy().Page().Select();
-            });
+            // Waiting for OData .NET Core 3.0 support, see https://github.com/OData/WebApi/issues/1748
+            // app.UseOData(builder =>
+            // {
+            //     builder.EntitySet<Product>("Products").EntityType.Expand().Filter().OrderBy().Page().Select();
+            // });
 
             // Return IQueryable from controllers
-            app.UseUnitOfWork(options =>
-            {
-                options.Filter = httpContext => httpContext.Request.Path.Value.StartsWith("/odata");
-            });
-
-            // TODO: Core3.0 update
-            //loggerFactory.AddConsole(Configuration.GetSection("Logging"));
-            //loggerFactory.AddDebug();
+            //app.UseUnitOfWork(options =>
+            //{
+            //    options.Filter = httpContext => httpContext.Request.Path.Value.StartsWith("/odata");
+            //});
 
             if (env.IsDevelopment())
             {
@@ -143,6 +142,8 @@ namespace AbpAspNetCoreDemo
 
             app.UseStaticFiles();
             app.UseEmbeddedFiles(); //Allows to expose embedded files to the web!
+
+            app.UseRouting();
 
             app.UseEndpoints(endpoints =>
             {
