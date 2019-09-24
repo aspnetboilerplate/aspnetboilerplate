@@ -32,7 +32,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Include="EntityFramework" Version="6.3.0-rc1-19458-04" />
+    <PackageReference Include="EntityFramework" Version="6.3.0" />
     <PackageReference Include="EntityFramework.DynamicFilters" Version="3.1.0" />
   </ItemGroup>
 

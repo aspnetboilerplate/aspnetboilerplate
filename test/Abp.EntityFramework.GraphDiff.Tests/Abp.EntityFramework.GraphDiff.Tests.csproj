@@ -24,7 +24,7 @@
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers</IncludeAssets>
     </PackageReference>
-    <PackageReference Include="EntityFramework" Version="6.3.0-rc1-19458-04" />
+    <PackageReference Include="EntityFramework" Version="6.3.0" />
     <PackageReference Include="RefactorThis.GraphDiff" Version="3.1.0" />
   </ItemGroup>
 
