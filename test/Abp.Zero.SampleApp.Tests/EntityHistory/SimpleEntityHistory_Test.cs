@@ -391,7 +391,7 @@ namespace Abp.Zero.SampleApp.Tests.EntityHistory
             var newValue = "http://testblog1-changed.myblogs.com";
             var originalValue = UpdateBlogUrlAndGetOriginalValue(newValue);
 
-            _entityHistoryStore.DidNotReceive().SaveAsync(Arg.Any<EntityChangeSet>());
+            _entityHistoryStore.DidNotReceive().Save(Arg.Any<EntityChangeSet>());
         }
 
         [Fact]
@@ -406,7 +406,7 @@ namespace Abp.Zero.SampleApp.Tests.EntityHistory
                 _postRepository.Update(post1);
             });
 
-            _entityHistoryStore.DidNotReceive().SaveAsync(Arg.Any<EntityChangeSet>());
+            _entityHistoryStore.DidNotReceive().Save(Arg.Any<EntityChangeSet>());
         }
 
         #endregion
