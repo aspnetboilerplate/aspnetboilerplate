@@ -236,6 +236,9 @@ namespace Abp.EntityHistory
 
                 if (!(property.IsPrimitiveType || property.IsComplexType))
                 {
+                    // Skipping other types of properties
+                    // - Reference navigation properties (DbReferenceEntry)
+                    // - Collection navigation properties (DbCollectionEntry)
                     continue;
                 }
 
@@ -321,66 +324,66 @@ namespace Abp.EntityHistory
         }
 
         /// <summary>
-        /// Updates change time, entity id and foreign keys after SaveChanges is called.
+        /// Updates change time, entity id, Adds foreign keys, Removes/Updates property changes after SaveChanges is called.
         /// </summary>
         private void UpdateChangeSet(DbContext context, EntityChangeSet changeSet)
         {
             foreach (var entityChange in changeSet.EntityChanges)
             {
+                var objectContext = context.As<IObjectContextAdapter>().ObjectContext;
                 var entityEntry = entityChange.EntityEntry.As<DbEntityEntry>();
 
                 /* Update change time */
                 entityChange.ChangeTime = GetChangeTime(entityChange.ChangeType, entityEntry.Entity);
 
                 /* Update entity id */
-                var entityType = GetEntityType(context.As<IObjectContextAdapter>().ObjectContext, entityEntry.GetEntityBaseType(), useClrType: false);
+                var entityType = GetEntityType(objectContext, entityEntry.GetEntityBaseType(), useClrType: false);
                 entityChange.EntityId = GetEntityId(entityEntry, entityType);
 
-                /* Update foreign keys */
+                /* Update property changes */
+                var trackedPropertyNames = entityChange.PropertyChanges.Select(pc => pc.PropertyName);
+                var trackedNavigationProperties = entityType.NavigationProperties
+                                                    .Where(np => trackedPropertyNames.Contains(np.Name))
+                                                    .ToList();
+                var additionalForeignKeys = trackedNavigationProperties
+                                                  .SelectMany(p => p.GetDependentProperties())
+                                                  .Where(p => !trackedPropertyNames.Contains(p.Name))
+                                                  .Distinct()
+                                                  .ToList();
 
-                var foreignKeys = entityType.NavigationProperties;
-
-                foreach (var foreignKey in foreignKeys)
+                /* Add additional foreign keys from navigation properties */
+                foreach (var foreignKey in additionalForeignKeys)
                 {
-                    foreach (var property in foreignKey.GetDependentProperties())
+                    var propertyEntry = entityEntry.Property(foreignKey.Name);
+                    var propertyInfo = entityEntry.GetPropertyInfo(foreignKey.Name);
+
+                    // TODO: fix new value comparison before truncation
+                    var newValue = propertyEntry.GetNewValue()?.ToJsonString().TruncateWithPostfix(EntityPropertyChange.MaxValueLength);
+                    var oldValue = propertyEntry.GetOriginalValue()?.ToJsonString().TruncateWithPostfix(EntityPropertyChange.MaxValueLength);
+
+                    // Add foreign key
+                    entityChange.PropertyChanges.Add(CreateEntityPropertyChange(oldValue, newValue, propertyInfo));
+                }
+
+                /* Update/Remove property changes */
+                foreach (var propertyChange in entityChange.PropertyChanges)
+                {
+                    var memberEntry = entityEntry.Member(propertyChange.PropertyName);
+                    if (!(memberEntry is DbPropertyEntry))
                     {
-                        var propertyEntry = entityEntry.Property(property.Name);
-                        var propertyChange = entityChange.PropertyChanges.FirstOrDefault(pc => pc.PropertyName == property.Name);
+                        // Skipping other types of properties
+                        // - Reference navigation properties (DbReferenceEntry)
+                        // - Collection navigation properties (DbCollectionEntry)
+                        continue;
+                    }
 
-                        //make sure test case cover post saving (for foreign key update)
-                        if (propertyChange == null)
-                        {
-                            if (propertyEntry.HasChanged())
-                            {
-                                var propertyInfo = entityEntry.GetPropertyInfo(property.Name);
-
-                                // Add foreign key
-                                entityChange.PropertyChanges.Add(new EntityPropertyChange
-                                {
-                                    NewValue = propertyEntry.CurrentValue.ToJsonString(),
-                                    OriginalValue = propertyEntry.OriginalValue.ToJsonString(),
-                                    PropertyName = property.Name,
-                                    PropertyTypeFullName = propertyInfo.PropertyType.FullName
-                                });
-                            }
-
-                            continue;
-                        }
-
-                        if (propertyChange.OriginalValue == propertyChange.NewValue)
-                        {
-                            var newValue = propertyEntry.GetNewValue().ToJsonString();
-                            if (newValue == propertyChange.NewValue)
-                            {
-                                // No change
-                                entityChange.PropertyChanges.Remove(propertyChange);
-                            }
-                            else
-                            {
-                                // Update foreign key
-                                propertyChange.NewValue = newValue.TruncateWithPostfix(EntityPropertyChange.MaxValueLength);
-                            }
-                        }
+                    var propertyEntry = memberEntry.As<DbPropertyEntry>();
+                    // TODO: fix new value comparison before truncation
+                    propertyChange.NewValue = propertyEntry.GetNewValue()?.ToJsonString().TruncateWithPostfix(EntityPropertyChange.MaxValueLength);
+                    if (propertyChange.OriginalValue == propertyChange.NewValue)
+                    {
+                        // No change
+                        entityChange.PropertyChanges.Remove(propertyChange);
                     }
                 }
             }
