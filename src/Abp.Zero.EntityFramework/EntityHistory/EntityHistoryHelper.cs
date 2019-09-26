@@ -215,36 +215,33 @@ namespace Abp.EntityHistory
         private ICollection<EntityPropertyChange> GetPropertyChanges(DbEntityEntry entityEntry, EntityType entityType, EntitySet entitySet, bool shouldSaveEntityHistory)
         {
             var propertyChanges = new List<EntityPropertyChange>();
-            var propertyNames = entityType.Properties.Select(e => e.Name);
             var complexTypeProperties = entitySet.ElementType.Properties.Where(e => e.IsComplexType).ToList();
             var isCreated = entityEntry.IsCreated();
             var isDeleted = entityEntry.IsDeleted();
 
-            foreach (var propertyName in propertyNames)
+            foreach (var property in entityType.Properties)
             {
-                if (entityType.KeyProperties.Any(m => m.Name == propertyName))
+                if (entityType.KeyProperties.Any(m => m.Name == property.Name))
                 {
                     continue;
                 }
 
-                var memberEntry = entityEntry.Member(propertyName);
-                if (!(memberEntry is DbPropertyEntry))
+                if (!(property.IsPrimitiveType || property.IsComplexType))
                 {
                     continue;
                 }
 
-                var propertyEntry = memberEntry as DbPropertyEntry;
+                var propertyEntry = entityEntry.Property(property.Name);
                 var propertyInfo = propertyEntry.EntityEntry.GetPropertyInfo(propertyEntry.Name);
                 if (ShouldSavePropertyHistory(propertyEntry, propertyInfo, complexTypeProperties, shouldSaveEntityHistory, isCreated || isDeleted))
                 {
-                    propertyChanges.Add(new EntityPropertyChange
-                    {
-                        NewValue = isDeleted ? null : propertyEntry.GetNewValue().ToJsonString().TruncateWithPostfix(EntityPropertyChange.MaxValueLength),
-                        OriginalValue = isCreated ? null : propertyEntry.GetOriginalValue().ToJsonString().TruncateWithPostfix(EntityPropertyChange.MaxValueLength),
-                        PropertyName = propertyName,
-                        PropertyTypeFullName = propertyInfo.PropertyType.FullName,
-                        TenantId = AbpSession.TenantId
-                    });
+                    propertyChanges.Add(
+                        CreateEntityPropertyChange(
+                            propertyEntry.GetOriginalValue(),
+                            propertyEntry.GetNewValue(),
+                            propertyInfo
+                        )
+                    );
                 }
             }
 
@@ -288,18 +285,17 @@ namespace Abp.EntityHistory
             foreach (var relationship in relationshipGroups)
             {
                 var relationshipName = relationship.Key;
-                var navigationPropertyName = navigationProperties
+                var navigationProperty = navigationProperties
                     .Where(p => p.RelationshipType.Name == relationshipName)
-                    .Select(p => p.Name)
                     .FirstOrDefault();
 
-                if (navigationPropertyName == null)
+                if (navigationProperty == null)
                 {
                     Logger.ErrorFormat("Unable to find navigation property for relationship {0} in entity {1}", relationshipName, entityType.Name);
                     continue;
                 }
 
-                var propertyInfo = entityEntry.GetPropertyInfo(navigationPropertyName);
+                var propertyInfo = entityEntry.GetPropertyInfo(navigationProperty.Name);
                 if (ShouldSaveRelationshipHistory(entityRelationshipChanges, propertyInfo, shouldSaveEntityHistory, isCreated || isDeleted))
                 {
                     var addedRelationship = relationship.FirstOrDefault(p => p.Item2 == EntityState.Added);
@@ -307,14 +303,7 @@ namespace Abp.EntityHistory
                     var newValue = addedRelationship?.Item3.EntityKeyValues.ToDictionary(keyValue => keyValue.Key, keyValue => keyValue.Value);
                     var oldValue = deletedRelationship?.Item3.EntityKeyValues.ToDictionary(keyValue => keyValue.Key, keyValue => keyValue.Value);
 
-                    propertyChanges.Add(new EntityPropertyChange
-                    {
-                        NewValue = newValue?.ToJsonString().TruncateWithPostfix(EntityPropertyChange.MaxValueLength),
-                        OriginalValue = oldValue?.ToJsonString().TruncateWithPostfix(EntityPropertyChange.MaxValueLength),
-                        PropertyName = navigationPropertyName,
-                        PropertyTypeFullName = propertyInfo.PropertyType.FullName,
-                        TenantId = AbpSession.TenantId
-                    });
+                    propertyChanges.Add(CreateEntityPropertyChange(oldValue, newValue, propertyInfo));
                 }
             }
 
@@ -500,6 +489,18 @@ namespace Abp.EntityHistory
                     }
                 }
             }
+        }
+
+        private EntityPropertyChange CreateEntityPropertyChange(object oldValue, object newValue, PropertyInfo propertyInfo)
+        {
+            return new EntityPropertyChange()
+            {
+                OriginalValue = oldValue?.ToJsonString().TruncateWithPostfix(EntityPropertyChange.MaxValueLength),
+                NewValue = newValue?.ToJsonString().TruncateWithPostfix(EntityPropertyChange.MaxValueLength),
+                PropertyName = propertyInfo.Name.TruncateWithPostfix(EntityPropertyChange.MaxPropertyNameLength),
+                PropertyTypeFullName = propertyInfo.PropertyType.FullName.TruncateWithPostfix(EntityPropertyChange.MaxPropertyTypeFullNameLength),
+                TenantId = AbpSession.TenantId
+            };
         }
     }
 }
