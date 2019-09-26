@@ -31,6 +31,9 @@ namespace Abp.Zero.SampleApp.Tests.TestDatas
             var comment2 = new Comment { Post = post2, Content = "test-comment-2-content" };
 
             _context.Comments.AddRange(new Comment[] { comment1, comment2 });
+
+            var advertisement1 = new Advertisement { Title = "test-advertisement-1" };
+            _context.Advertisements.Add(advertisement1);
         }
     }
 }

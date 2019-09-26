@@ -23,6 +23,7 @@ namespace Abp.Zero.SampleApp.Tests.EntityHistory
     public class SimpleEntityHistory_Test : SampleAppTestBase
     {
         private readonly IRepository<Blog> _blogRepository;
+        private readonly IRepository<Advertisement> _advertisementRepository;
         private readonly IRepository<Post, Guid> _postRepository;
         private readonly IRepository<Comment> _commentRepository;
 
@@ -31,6 +32,7 @@ namespace Abp.Zero.SampleApp.Tests.EntityHistory
         public SimpleEntityHistory_Test()
         {
             _blogRepository = Resolve<IRepository<Blog>>();
+            _advertisementRepository = Resolve<IRepository<Advertisement>>();
             _postRepository = Resolve<IRepository<Post, Guid>>();
             _commentRepository = Resolve<IRepository<Comment>>();
 
@@ -47,6 +49,148 @@ namespace Abp.Zero.SampleApp.Tests.EntityHistory
         }
 
         #region CASES WRITE HISTORY
+
+        [Fact]
+        public void Should_Write_History_For_Creation_Audited_Entities()
+        {
+            int? advertisementId = null;
+
+            WithUnitOfWork(() =>
+            {
+                var advertisement = new Advertisement { Title = "test-advertisement-2" };
+                advertisementId = _advertisementRepository.InsertAndGetId(advertisement);
+            });
+
+            Predicate<EntityChangeSet> predicate = s =>
+            {
+                s.EntityChanges.Count.ShouldBe(1);
+
+                var entityChange = s.EntityChanges[0];
+                entityChange.ChangeType.ShouldBe(EntityChangeType.Created);
+                entityChange.EntityId.ShouldBe(advertisementId.ToJsonString());
+                entityChange.EntityTypeFullName.ShouldBe(typeof(Advertisement).FullName);
+                entityChange.PropertyChanges.Count.ShouldBe(4);
+
+                var propertyChange1 = entityChange.PropertyChanges
+                                       .First(pc => pc.PropertyName == nameof(Advertisement.Title));
+                propertyChange1.NewValue.ShouldBe("test-advertisement-2".ToJsonString(false, false));
+                propertyChange1.OriginalValue.ShouldBeNull();
+                propertyChange1.PropertyTypeFullName.ShouldBe(typeof(Advertisement).GetProperty(nameof(Advertisement.Title)).PropertyType.FullName);
+
+                var propertyChange2 = entityChange.PropertyChanges
+                                       .First(pc => pc.PropertyName == nameof(Advertisement.CreatorUserId));
+                propertyChange2.NewValue.ShouldNotBeNullOrEmpty();
+                propertyChange2.OriginalValue.ShouldBeNull();
+                propertyChange2.PropertyTypeFullName.ShouldBe(typeof(Advertisement).GetProperty(nameof(Advertisement.CreatorUserId)).PropertyType.FullName);
+
+                var propertyChange3 = entityChange.PropertyChanges
+                                       .First(pc => pc.PropertyName == nameof(Advertisement.CreationTime));
+                propertyChange3.NewValue.ShouldNotBeNullOrEmpty();
+                propertyChange3.OriginalValue.ShouldBeNull();
+                propertyChange3.PropertyTypeFullName.ShouldBe(typeof(Advertisement).GetProperty(nameof(Advertisement.CreationTime)).PropertyType.FullName);
+
+                var propertyChange4 = entityChange.PropertyChanges
+                                       .First(pc => pc.PropertyName == nameof(Advertisement.IsDeleted));
+                propertyChange4.NewValue.ShouldBe("false");
+                propertyChange4.OriginalValue.ShouldBeNull();
+                propertyChange4.PropertyTypeFullName.ShouldBe(typeof(Advertisement).GetProperty(nameof(Advertisement.IsDeleted)).PropertyType.FullName);
+
+                return true;
+            };
+
+            _entityHistoryStore.Received().Save(Arg.Is<EntityChangeSet>(s => predicate(s)));
+        }
+
+        [Fact]
+        public void Should_Write_History_For_Modification_Audited_Entities()
+        {
+            Advertisement advertisement = null;
+
+            WithUnitOfWork(() =>
+            {
+                advertisement = _advertisementRepository.Single(a => a.Title == "test-advertisement-1");
+                advertisement.Title = "test-advertisement-1-updated";
+                _advertisementRepository.Update(advertisement);
+            });
+
+            Predicate<EntityChangeSet> predicate = s =>
+            {
+                s.EntityChanges.Count.ShouldBe(1);
+
+                var entityChange = s.EntityChanges[0];
+                entityChange.ChangeType.ShouldBe(EntityChangeType.Updated);
+                entityChange.EntityId.ShouldBe(advertisement.Id.ToJsonString());
+                entityChange.EntityTypeFullName.ShouldBe(typeof(Advertisement).FullName);
+                entityChange.PropertyChanges.Count.ShouldBe(3);
+
+                var propertyChange1 = entityChange.PropertyChanges
+                                       .First(pc => pc.PropertyName == nameof(Advertisement.Title));
+                propertyChange1.NewValue.ShouldBe("test-advertisement-1-updated".ToJsonString(false, false));
+                propertyChange1.OriginalValue.ShouldBe("test-advertisement-1".ToJsonString(false, false));
+                propertyChange1.PropertyTypeFullName.ShouldBe(typeof(Advertisement).GetProperty(nameof(Advertisement.Title)).PropertyType.FullName);
+
+                var propertyChange2 = entityChange.PropertyChanges
+                                       .First(pc => pc.PropertyName == nameof(Advertisement.LastModifierUserId));
+                propertyChange2.NewValue.ShouldNotBeNullOrEmpty();
+                propertyChange2.OriginalValue.ShouldBeNull();
+                propertyChange2.PropertyTypeFullName.ShouldBe(typeof(Advertisement).GetProperty(nameof(Advertisement.LastModifierUserId)).PropertyType.FullName);
+
+                var propertyChange3 = entityChange.PropertyChanges
+                                       .First(pc => pc.PropertyName == nameof(Advertisement.LastModificationTime));
+                propertyChange3.NewValue.ShouldNotBeNullOrEmpty();
+                propertyChange3.OriginalValue.ShouldBeNull();
+                propertyChange3.PropertyTypeFullName.ShouldBe(typeof(Advertisement).GetProperty(nameof(Advertisement.LastModificationTime)).PropertyType.FullName);
+
+                return true;
+            };
+
+            _entityHistoryStore.Received().Save(Arg.Is<EntityChangeSet>(s => predicate(s)));
+        }
+
+        [Fact]
+        public void Should_Write_History_For_Deletion_Audited_Entities()
+        {
+            Advertisement advertisement = null;
+
+            WithUnitOfWork(() =>
+            {
+                advertisement = _advertisementRepository.Single(a => a.Title == "test-advertisement-1");
+                _advertisementRepository.Delete(advertisement);
+            });
+
+            Predicate<EntityChangeSet> predicate = s =>
+            {
+                s.EntityChanges.Count.ShouldBe(1);
+
+                var entityChange = s.EntityChanges[0];
+                entityChange.ChangeType.ShouldBe(EntityChangeType.Deleted);
+                entityChange.EntityId.ShouldBe(advertisement.Id.ToJsonString());
+                entityChange.EntityTypeFullName.ShouldBe(typeof(Advertisement).FullName);
+                entityChange.PropertyChanges.Count.ShouldBe(3);
+
+                var propertyChange1 = entityChange.PropertyChanges
+                                       .First(pc => pc.PropertyName == nameof(Advertisement.IsDeleted));
+                propertyChange1.NewValue.ShouldBe("true");
+                propertyChange1.OriginalValue.ShouldBe("false");
+                propertyChange1.PropertyTypeFullName.ShouldBe(typeof(Advertisement).GetProperty(nameof(Advertisement.IsDeleted)).PropertyType.FullName);
+
+                var propertyChange2 = entityChange.PropertyChanges
+                                       .First(pc => pc.PropertyName == nameof(Advertisement.DeleterUserId));
+                propertyChange2.NewValue.ShouldNotBeNullOrEmpty();
+                propertyChange2.OriginalValue.ShouldBeNull();
+                propertyChange2.PropertyTypeFullName.ShouldBe(typeof(Advertisement).GetProperty(nameof(Advertisement.DeleterUserId)).PropertyType.FullName);
+
+                var propertyChange3 = entityChange.PropertyChanges
+                                       .First(pc => pc.PropertyName == nameof(Advertisement.DeletionTime));
+                propertyChange3.NewValue.ShouldNotBeNullOrEmpty();
+                propertyChange3.OriginalValue.ShouldBeNull();
+                propertyChange3.PropertyTypeFullName.ShouldBe(typeof(Advertisement).GetProperty(nameof(Advertisement.DeletionTime)).PropertyType.FullName);
+
+                return true;
+            };
+
+            _entityHistoryStore.Received().Save(Arg.Is<EntityChangeSet>(s => predicate(s)));
+        }
 
         [Fact]
         public void Should_Write_History_For_Tracked_Entities_Create()
