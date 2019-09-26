@@ -1,5 +1,6 @@
 using System;
 using System.ComponentModel.DataAnnotations.Schema;
+using Abp.Auditing;
 using Abp.Timing;
 
 namespace Abp.Domain.Entities.Auditing
@@ -23,11 +24,13 @@ namespace Abp.Domain.Entities.Auditing
         /// <summary>
         /// Creation time of this entity.
         /// </summary>
+        [Audited]
         public virtual DateTime CreationTime { get; set; }
 
         /// <summary>
         /// Creator of this entity.
         /// </summary>
+        [Audited]
         public virtual long? CreatorUserId { get; set; }
 
         /// <summary>

@@ -1,5 +1,6 @@
 using System;
 using System.ComponentModel.DataAnnotations.Schema;
+using Abp.Auditing;
 
 namespace Abp.Domain.Entities.Auditing
 {
@@ -22,11 +23,13 @@ namespace Abp.Domain.Entities.Auditing
         /// <summary>
         /// Last modification date of this entity.
         /// </summary>
+        [Audited]
         public virtual DateTime? LastModificationTime { get; set; }
 
         /// <summary>
         /// Last modifier user of this entity.
         /// </summary>
+        [Audited]
         public virtual long? LastModifierUserId { get; set; }
     }
 

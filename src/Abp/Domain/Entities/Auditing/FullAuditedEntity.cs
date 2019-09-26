@@ -1,5 +1,6 @@
 using System;
 using System.ComponentModel.DataAnnotations.Schema;
+using Abp.Auditing;
 
 namespace Abp.Domain.Entities.Auditing
 {
@@ -22,16 +23,19 @@ namespace Abp.Domain.Entities.Auditing
         /// <summary>
         /// Is this entity Deleted?
         /// </summary>
+        [Audited]
         public virtual bool IsDeleted { get; set; }
 
         /// <summary>
         /// Which user deleted this entity?
         /// </summary>
+        [Audited]
         public virtual long? DeleterUserId { get; set; }
 
         /// <summary>
         /// Deletion time of this entity.
         /// </summary>
+        [Audited]
         public virtual DateTime? DeletionTime { get; set; }
     }
 
@@ -47,6 +51,7 @@ namespace Abp.Domain.Entities.Auditing
         /// <summary>
         /// Is this entity Deleted?
         /// </summary>
+        [Audited]
         public virtual bool IsDeleted { get; set; }
 
         /// <summary>
@@ -58,11 +63,13 @@ namespace Abp.Domain.Entities.Auditing
         /// <summary>
         /// Which user deleted this entity?
         /// </summary>
+        [Audited]
         public virtual long? DeleterUserId { get; set; }
 
         /// <summary>
         /// Deletion time of this entity.
         /// </summary>
+        [Audited]
         public virtual DateTime? DeletionTime { get; set; }
     }
 }
