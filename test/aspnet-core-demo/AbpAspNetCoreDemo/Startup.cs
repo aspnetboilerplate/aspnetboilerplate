@@ -5,36 +5,32 @@ using System.Threading;
 using Abp.AspNetCore;
 using Abp.AspNetCore.Configuration;
 using Abp.AspNetCore.Mvc.Extensions;
-using Abp.AspNetCore.OData.Configuration;
 using Abp.Castle.Logging.Log4Net;
 using Abp.Dependency;
 using Abp.Json;
 using Abp.PlugIns;
 using AbpAspNetCoreDemo.Controllers;
-using AbpAspNetCoreDemo.Core.Domain;
+using Castle.Core.Logging;
 using Castle.Facilities.Logging;
 using Castle.MicroKernel.ModelBuilder.Inspectors;
 using Castle.MicroKernel.SubSystems.Conversion;
-using Microsoft.AspNet.OData.Extensions;
-using Microsoft.AspNet.OData.Formatter;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.Logging;
-using Microsoft.Net.Http.Headers;
+using Microsoft.Extensions.Hosting;
 using Newtonsoft.Json.Serialization;
 
 namespace AbpAspNetCoreDemo
 {
     public class Startup
     {
-        private readonly IHostingEnvironment _env;
+        private readonly IWebHostEnvironment _env;
 
         public static readonly AsyncLocal<IocManager> IocManager = new AsyncLocal<IocManager>();
 
-        public Startup(IHostingEnvironment env)
+        public Startup(IWebHostEnvironment env)
         {
             _env = env;
             var builder = new ConfigurationBuilder()
@@ -114,7 +110,7 @@ namespace AbpAspNetCoreDemo
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
-        public void Configure(IApplicationBuilder app, IHostingEnvironment env, ILoggerFactory loggerFactory)
+        public void Configure(IApplicationBuilder app, IWebHostEnvironment env, ILoggerFactory loggerFactory)
         {
             app.UseAbp(); //Initializes ABP framework. Should be called first.
 
@@ -147,6 +143,10 @@ namespace AbpAspNetCoreDemo
 
             app.UseEndpoints(endpoints =>
             {
+                endpoints.MapControllerRoute("defaultWithArea", "{area}/{controller=Home}/{action=Index}/{id?}");
+                endpoints.MapControllerRoute("default", "{controller=Home}/{action=Index}/{id?}");
+                endpoints.MapRazorPages();
+
                 app.ApplicationServices.GetRequiredService<IAbpAspNetCoreConfiguration>().EndpointConfiguration.ConfigureAllEndpoints(endpoints);
 
                 //TODO@3.0 related: https://github.com/OData/WebApi/issues/1707
