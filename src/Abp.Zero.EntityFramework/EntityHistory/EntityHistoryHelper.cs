@@ -109,12 +109,12 @@ namespace Abp.EntityHistory
                 return;
             }
 
+            UpdateChangeSet(context, changeSet);
+
             if (changeSet.EntityChanges.Count == 0)
             {
                 return;
             }
-
-            UpdateChangeSet(context, changeSet);
 
             using (var uow = UnitOfWorkManager.Begin(TransactionScopeOption.Suppress))
             {
@@ -130,12 +130,12 @@ namespace Abp.EntityHistory
                 return;
             }
 
+            UpdateChangeSet(context, changeSet);
+
             if (changeSet.EntityChanges.Count == 0)
             {
                 return;
             }
-
-            UpdateChangeSet(context, changeSet);
 
             using (var uow = UnitOfWorkManager.Begin(TransactionScopeOption.Suppress))
             {
@@ -328,16 +328,19 @@ namespace Abp.EntityHistory
         /// </summary>
         private void UpdateChangeSet(DbContext context, EntityChangeSet changeSet)
         {
+            var entityChangesToRemove = new List<EntityChange>();
             foreach (var entityChange in changeSet.EntityChanges)
             {
                 var objectContext = context.As<IObjectContextAdapter>().ObjectContext;
                 var entityEntry = entityChange.EntityEntry.As<DbEntityEntry>();
+                var typeOfEntity = entityEntry.GetEntityBaseType();
+                var isAuditedEntity = IsTypeOfAuditedEntity(typeOfEntity) == true;
 
                 /* Update change time */
                 entityChange.ChangeTime = GetChangeTime(entityChange.ChangeType, entityEntry.Entity);
 
                 /* Update entity id */
-                var entityType = GetEntityType(objectContext, entityEntry.GetEntityBaseType(), useClrType: false);
+                var entityType = GetEntityType(objectContext, typeOfEntity, useClrType: false);
                 entityChange.EntityId = GetEntityId(entityEntry, entityType);
 
                 /* Update property changes */
@@ -357,6 +360,12 @@ namespace Abp.EntityHistory
                     var propertyEntry = entityEntry.Property(foreignKey.Name);
                     var propertyInfo = entityEntry.GetPropertyInfo(foreignKey.Name);
 
+                    var shouldSaveProperty = IsAuditedPropertyInfo(propertyInfo);
+                    if (shouldSaveProperty.HasValue && !shouldSaveProperty.Value)
+                    {
+                        continue;
+                    }
+
                     // TODO: fix new value comparison before truncation
                     var newValue = propertyEntry.GetNewValue()?.ToJsonString().TruncateWithPostfix(EntityPropertyChange.MaxValueLength);
                     var oldValue = propertyEntry.GetOriginalValue()?.ToJsonString().TruncateWithPostfix(EntityPropertyChange.MaxValueLength);
@@ -366,6 +375,7 @@ namespace Abp.EntityHistory
                 }
 
                 /* Update/Remove property changes */
+                var propertyChangesToRemove = new List<EntityPropertyChange>();
                 foreach (var propertyChange in entityChange.PropertyChanges)
                 {
                     var memberEntry = entityEntry.Member(propertyChange.PropertyName);
@@ -378,14 +388,32 @@ namespace Abp.EntityHistory
                     }
 
                     var propertyEntry = memberEntry.As<DbPropertyEntry>();
+                    var propertyInfo = entityEntry.GetPropertyInfo(propertyChange.PropertyName);
+                    var isAuditedProperty = IsAuditedPropertyInfo(propertyInfo) == true;
+
                     // TODO: fix new value comparison before truncation
                     propertyChange.NewValue = propertyEntry.GetNewValue()?.ToJsonString().TruncateWithPostfix(EntityPropertyChange.MaxValueLength);
-                    if (propertyChange.OriginalValue == propertyChange.NewValue)
+                    if (!isAuditedProperty && propertyChange.OriginalValue == propertyChange.NewValue)
                     {
                         // No change
-                        entityChange.PropertyChanges.Remove(propertyChange);
+                        propertyChangesToRemove.Add(propertyChange);
                     }
                 }
+
+                foreach (var propertyChange in propertyChangesToRemove)
+                {
+                    entityChange.PropertyChanges.Remove(propertyChange);
+                }
+
+                if (!isAuditedEntity && entityChange.PropertyChanges.Count == 0)
+                {
+                    entityChangesToRemove.Add(entityChange);
+                }
+            }
+
+            foreach (var entityChange in entityChangesToRemove)
+            {
+                changeSet.EntityChanges.Remove(entityChange);
             }
         }
 
