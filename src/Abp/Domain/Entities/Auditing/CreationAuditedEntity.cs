@@ -1,5 +1,6 @@
 using System;
 using System.ComponentModel.DataAnnotations.Schema;
+using Abp.Auditing;
 using Abp.Timing;
 
 namespace Abp.Domain.Entities.Auditing
@@ -18,6 +19,7 @@ namespace Abp.Domain.Entities.Auditing
     /// </summary>
     /// <typeparam name="TPrimaryKey">Type of the primary key of the entity</typeparam>
     [Serializable]
+    [Audited]
     public abstract class CreationAuditedEntity<TPrimaryKey> : Entity<TPrimaryKey>, ICreationAudited
     {
         /// <summary>
