@@ -438,8 +438,9 @@ namespace Abp.Zero.SampleApp.Tests.EntityHistory
         public void Should_Write_History_For_Audited_Property_Foreign_Key()
         {
             /* Post.BlogId has Audited attribute. */
-
             var blogId = CreateBlogAndGetId();
+            _entityHistoryStore.ClearReceivedCalls();
+
             Guid post1Id = Guid.Empty;
 
             WithUnitOfWork(() =>
@@ -460,12 +461,22 @@ namespace Abp.Zero.SampleApp.Tests.EntityHistory
                 var entityChange = s.EntityChanges.Single(ec => ec.EntityTypeFullName == typeof(Post).FullName);
                 entityChange.ChangeType.ShouldBe(EntityChangeType.Updated);
                 entityChange.EntityId.ShouldBe(post1Id.ToJsonString());
-                entityChange.PropertyChanges.Count.ShouldBe(1);
+                entityChange.PropertyChanges.Count.ShouldBe(3);
 
-                var propertyChange = entityChange.PropertyChanges.Single(pc => pc.PropertyName == nameof(Post.BlogId));
-                propertyChange.NewValue.ShouldBe("2");
-                propertyChange.OriginalValue.ShouldBe("1");
-                propertyChange.PropertyTypeFullName.ShouldBe(typeof(Post).GetProperty(nameof(Post.BlogId)).PropertyType.FullName);
+                var propertyChange1 = entityChange.PropertyChanges.Single(pc => pc.PropertyName == nameof(Post.BlogId));
+                propertyChange1.NewValue.ShouldBe("2");
+                propertyChange1.OriginalValue.ShouldBe("1");
+                propertyChange1.PropertyTypeFullName.ShouldBe(typeof(Post).GetProperty(nameof(Post.BlogId)).PropertyType.FullName);
+
+                var propertyChange2 = entityChange.PropertyChanges.Single(pc => pc.PropertyName == nameof(Post.LastModifierUserId));
+                propertyChange2.NewValue.ShouldNotBeNullOrEmpty();
+                propertyChange2.OriginalValue.ShouldBeNull();
+                propertyChange2.PropertyTypeFullName.ShouldBe(typeof(Post).GetProperty(nameof(Post.LastModifierUserId)).PropertyType.FullName);
+
+                var propertyChange3 = entityChange.PropertyChanges.Single(pc => pc.PropertyName == nameof(Post.LastModificationTime));
+                propertyChange3.NewValue.ShouldNotBeNullOrEmpty();
+                propertyChange3.OriginalValue.ShouldBeNull();
+                propertyChange3.PropertyTypeFullName.ShouldBe(typeof(Post).GetProperty(nameof(Post.LastModificationTime)).PropertyType.FullName);
 
                 return true;
             };
