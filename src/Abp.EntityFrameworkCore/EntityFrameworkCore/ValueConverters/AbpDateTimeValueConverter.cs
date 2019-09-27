@@ -6,9 +6,9 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 namespace Abp.EntityFrameworkCore.ValueConverters
 {
-    public class AbpDateTimeConverter : ValueConverter<DateTime?, DateTime?>
+    public class AbpDateTimeValueConverter : ValueConverter<DateTime?, DateTime?>
     {
-        public AbpDateTimeConverter([CanBeNull] ConverterMappingHints mappingHints = default)
+        public AbpDateTimeValueConverter([CanBeNull] ConverterMappingHints mappingHints = default)
             : base(Normalize, Normalize, mappingHints)
         {
         }

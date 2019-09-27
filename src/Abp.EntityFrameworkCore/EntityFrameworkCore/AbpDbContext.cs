@@ -201,16 +201,19 @@ namespace Abp.EntityFrameworkCore
         protected void ConfigureGlobalValueConverter<TEntity>(ModelBuilder modelBuilder, IMutableEntityType entityType)
             where TEntity : class
         {
-            if (entityType.BaseType == null && !typeof(TEntity).IsDefined(typeof(DisableDateTimeNormalizationAttribute), true))
+            if (entityType.BaseType == null && 
+                !typeof(TEntity).IsDefined(typeof(DisableDateTimeNormalizationAttribute), true) &&
+                !typeof(TEntity).IsDefined(typeof(OwnedAttribute), true) &&
+                !entityType.IsOwned())
             {
-                var dateTimeConverter = new AbpDateTimeConverter();
+                var dateTimeValueConverter = new AbpDateTimeValueConverter();
                 var dateTimePropertyInfos = DateTimePropertyInfoHelper.GetDatePropertyInfos(typeof(TEntity));
                 dateTimePropertyInfos.DateTimePropertyInfos.ForEach(property =>
                 {
                     modelBuilder
                         .Entity<TEntity>()
                         .Property(property.Name)
-                        .HasConversion(dateTimeConverter);
+                        .HasConversion(dateTimeValueConverter);
                 });
             }
         }

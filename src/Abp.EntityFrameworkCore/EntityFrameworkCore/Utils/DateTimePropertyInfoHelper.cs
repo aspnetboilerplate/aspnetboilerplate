@@ -6,6 +6,7 @@ using System.Linq;
 using System.Reflection;
 using Abp.Reflection;
 using Abp.Timing;
+using Microsoft.EntityFrameworkCore;
 
 namespace Abp.EntityFrameworkCore.Utils
 {
@@ -96,7 +97,7 @@ namespace Abp.EntityFrameworkCore.Utils
 
             var complexTypeProperties = entityType.GetProperties()
                 .Where(p =>
-                    p.PropertyType.IsDefined(typeof(ComplexTypeAttribute), true) &&
+                    p.PropertyType.IsDefined(typeof(OwnedAttribute), true) &&
                     !p.IsDefined(typeof(DisableDateTimeNormalizationAttribute), true)
                 )
                 .ToList();
@@ -116,7 +117,7 @@ namespace Abp.EntityFrameworkCore.Utils
 
         private static void AddComplexTypeDateTimePropertyPaths(string pathPrefix, PropertyInfo complexProperty, List<string> complexTypeDateTimePropertyPaths)
         {
-            if (!complexProperty.PropertyType.IsDefined(typeof(ComplexTypeAttribute), true))
+            if (!complexProperty.PropertyType.IsDefined(typeof(OwnedAttribute), true))
             {
                 return;
             }
@@ -134,7 +135,7 @@ namespace Abp.EntityFrameworkCore.Utils
 
             var complexTypeProperties = complexProperty.PropertyType.GetProperties()
                 .Where(p =>
-                    p.PropertyType.IsDefined(typeof(ComplexTypeAttribute), true) &&
+                    p.PropertyType.IsDefined(typeof(OwnedAttribute), true) &&
                     !p.IsDefined(typeof(DisableDateTimeNormalizationAttribute), true)
                 )
                 .ToList();

@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using Abp.Domain.Entities;
 using Abp.Domain.Entities.Auditing;
 using Abp.Timing;
+using Microsoft.EntityFrameworkCore;
 
 namespace Abp.EntityFrameworkCore.Tests.Domain
 {
@@ -17,6 +18,8 @@ namespace Abp.EntityFrameworkCore.Tests.Domain
         public DateTime? DeletionTime { get; set; }
 
         public ICollection<Post> Posts { get; set; }
+
+        public BlogTime BlogTime { get; set; }
 
         public Blog()
         {
@@ -69,5 +72,14 @@ namespace Abp.EntityFrameworkCore.Tests.Domain
         public string Name { get; set; }
 
         public DateTime CreationTime { get; set; }
+    }
+
+    [Owned]
+    public class BlogTime
+    {
+        public DateTime LastAccessTime { get; set; }
+
+        [DisableDateTimeNormalization]
+        public DateTime LatestPosTime { get; set; }
     }
 }
