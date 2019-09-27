@@ -52,8 +52,6 @@ namespace AbpAspNetCoreDemo
         {
             var builder = new DbContextOptionsBuilder<MyDbContext>();
 
-            builder.ReplaceService<IEntityMaterializerSource, AbpEntityMaterializerSource>();
-
             var inMemorySqlite = new SqliteConnection("Data Source=:memory:");
             builder.UseSqlite(inMemorySqlite);
 
