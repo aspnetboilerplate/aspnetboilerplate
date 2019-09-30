@@ -133,7 +133,7 @@ namespace Abp.EntityFramework.Uow
                     dbContext.Database.CommandTimeout = Options.Timeout.Value.TotalSeconds.To<int>();
                 }
 
-                if (Clock.Provider.SupportsMultipleTimezone)
+                if (Clock.SupportsMultipleTimezone)
                 {
                     ((IObjectContextAdapter)dbContext).ObjectContext.ObjectMaterialized += (sender, args) =>
                     {

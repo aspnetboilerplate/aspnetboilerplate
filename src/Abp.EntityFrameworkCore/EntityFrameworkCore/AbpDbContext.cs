@@ -124,11 +124,6 @@ namespace Abp.EntityFrameworkCore
                 ConfigureGlobalValueConverterMethodInfo
                     .MakeGenericMethod(entityType.ClrType)
                     .Invoke(this, new object[] { modelBuilder, entityType });
-
-                if (Clock.Provider.SupportsMultipleTimezone)
-                {
-                    
-                }
             }
         }
 
