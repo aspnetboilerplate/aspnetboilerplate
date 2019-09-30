@@ -1,6 +1,7 @@
 ﻿using System.Globalization;
 using System.Linq;
 using System.Threading.Tasks;
+using Abp.Configuration.Startup;
 using Abp.ZeroCore.SampleApp.Application.Shop;
 using Shouldly;
 using Xunit;
@@ -16,6 +17,7 @@ namespace Abp.Zero.MultiLingual
         {
             _productAppService = Resolve<IProductAppService>();
             _orderAppService = Resolve<IOrderAppService>();
+            Resolve<IMultiTenancyConfig>().IsEnabled = true;
         }
 
         [Fact]
