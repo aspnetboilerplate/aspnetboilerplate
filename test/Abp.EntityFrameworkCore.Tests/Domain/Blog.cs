@@ -40,6 +40,7 @@ namespace Abp.EntityFrameworkCore.Tests.Domain
 
             Name = name;
             Url = url;
+            BlogTime = new BlogTime();
         }
 
         public void ChangeUrl(string url)
