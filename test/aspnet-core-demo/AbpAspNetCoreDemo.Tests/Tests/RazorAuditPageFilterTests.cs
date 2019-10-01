@@ -1,5 +1,4 @@
-﻿using System;
-using System.Net.Http;
+﻿using System.Net.Http;
 using System.Threading.Tasks;
 using Abp.Auditing;
 using Abp.Dependency;
@@ -10,8 +9,6 @@ using NSubstitute;
 using System.Collections.Generic;
 using AngleSharp;
 using AngleSharp.Html.Dom;
-using Microsoft.AspNetCore.Antiforgery;
-using Microsoft.AspNetCore.Http;
 using Shouldly;
 
 namespace AbpAspNetCoreDemo.IntegrationTests.Tests
@@ -142,8 +139,10 @@ namespace AbpAspNetCoreDemo.IntegrationTests.Tests
             // Act (Post)
             var postRequestMessage = new HttpRequestMessage(new HttpMethod("Post"), "/AuditFilterPageDemo4");
             var requestVerificationToken = await GetRequestVerificationTokenAsync(content);
-            postRequestMessage.Headers.Add("__RequestVerificationToken",requestVerificationToken);
-            await client.SendAsync(postRequestMessage);
+            postRequestMessage.Headers.Add("X-XSRF-TOKEN", requestVerificationToken);
+
+            response = await client.SendAsync(postRequestMessage);
+            response.EnsureSuccessStatusCode();
 
 #pragma warning disable 4014
             _auditingStore.DidNotReceive().SaveAsync(Arg.Any<AuditInfo>());

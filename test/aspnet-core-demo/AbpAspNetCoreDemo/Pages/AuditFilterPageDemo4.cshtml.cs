@@ -1,9 +1,11 @@
 ﻿using System.Threading.Tasks;
 using Abp.AspNetCore.Mvc.RazorPages;
+using Abp.Auditing;
 using Microsoft.AspNetCore.Mvc;
 
 namespace AbpAspNetCoreDemo.Pages
 {
+    [DisableAuditing]
     public class AuditFilterPageDemo4Model : AbpPageModel
     {
         public IActionResult OnGet()

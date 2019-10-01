@@ -22,6 +22,7 @@ using Microsoft.AspNetCore.Mvc.ViewComponents;
 using Microsoft.Extensions.Options;
 using Newtonsoft.Json.Serialization;
 using Microsoft.AspNetCore.Mvc.Razor.RuntimeCompilation;
+using Microsoft.AspNetCore.Mvc.ViewFeatures;
 
 namespace Abp.AspNetCore
 {
@@ -57,11 +58,6 @@ namespace Abp.AspNetCore
 
             //Use DI to create view components
             services.Replace(ServiceDescriptor.Singleton<IViewComponentActivator, ServiceBasedViewComponentActivator>());
-
-            //Change anti forgery filters (to work proper with non-browser clients)
-            // TODO: Core3.0 update
-            //services.Replace(ServiceDescriptor.Transient<AutoValidateAntiforgeryTokenAuthorizationFilter, AbpAutoValidateAntiforgeryTokenAuthorizationFilter>());
-            //services.Replace(ServiceDescriptor.Transient<ValidateAntiforgeryTokenAuthorizationFilter, AbpValidateAntiforgeryTokenAuthorizationFilter>());
 
             //Add feature providers
             var partManager = services.GetSingletonServiceOrNull<ApplicationPartManager>();
