@@ -8,7 +8,7 @@ namespace Abp.EntityFrameworkCore.ValueConverters
 {
     public class AbpDateTimeValueConverter : ValueConverter<DateTime?, DateTime?>
     {
-        public AbpDateTimeValueConverter([CanBeNull] ConverterMappingHints mappingHints = default)
+        public AbpDateTimeValueConverter([CanBeNull] ConverterMappingHints mappingHints = null)
             : base(Normalize, Normalize, mappingHints)
         {
         }
