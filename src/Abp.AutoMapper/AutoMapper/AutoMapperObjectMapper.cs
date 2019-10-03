@@ -6,7 +6,7 @@ namespace Abp.AutoMapper
 {
     public class AutoMapperObjectMapper : IObjectMapper
     {
-        protected readonly IMapper _mapper;
+        protected readonly IMapper Mapper;
 
         public AutoMapperObjectMapper(IMapper mapper)
         {
