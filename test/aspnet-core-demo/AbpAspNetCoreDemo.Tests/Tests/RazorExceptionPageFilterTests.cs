@@ -1,13 +1,10 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Net;
 using System.Net.Http;
 using System.Threading.Tasks;
 using Abp.Web.Models;
 using Microsoft.AspNetCore.Mvc.Testing;
 using Newtonsoft.Json;
-using Newtonsoft.Json.Serialization;
 using Shouldly;
 using Xunit;
 
@@ -54,7 +51,7 @@ namespace AbpAspNetCoreDemo.IntegrationTests.Tests
 
             var result = await response.Content.ReadAsStringAsync();
 
-            result.IndexOf("<h2 class=\"stackerror\">UserFriendlyException: OnPost</h2>",
+            result.IndexOf("UserFriendlyException: OnPost",
                 StringComparison.InvariantCultureIgnoreCase).ShouldNotBe(-1);
         }
     }
