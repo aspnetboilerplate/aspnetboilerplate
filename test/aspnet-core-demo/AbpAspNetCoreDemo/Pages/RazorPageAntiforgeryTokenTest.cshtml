@@ -1,0 +1,22 @@
+﻿@page
+@model AbpAspNetCoreDemo.Pages.RazorPageAntiforgeryTokenTestModel
+@{
+    Layout = null;
+}
+
+<!DOCTYPE html>
+
+<html>
+<head>
+    <meta name="viewport" content="width=device-width" />
+    <title>RazorPageAntiforgeryTokenTest</title>
+</head>
+<body>
+    <p>@Model.Message</p>
+
+    <form method="post">
+        @Html.AntiForgeryToken()
+        <input type="submit" />
+    </form>
+</body>
+</html>
