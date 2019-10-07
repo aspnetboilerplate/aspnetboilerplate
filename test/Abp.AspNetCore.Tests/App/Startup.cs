@@ -15,7 +15,8 @@ namespace Abp.AspNetCore.App
     {
         public IServiceProvider ConfigureServices(IServiceCollection services)
         {
-            var mvc = services.AddMvc().AddXmlSerializerFormatters();
+            var mvc = services.AddMvc()
+                    .AddXmlSerializerFormatters();
 
             mvc.PartManager.ApplicationParts.Add(new AssemblyPart(typeof(AbpAspNetCoreModule).GetAssembly()));
 
