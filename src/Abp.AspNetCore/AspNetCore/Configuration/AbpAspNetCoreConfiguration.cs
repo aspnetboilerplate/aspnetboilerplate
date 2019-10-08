@@ -28,8 +28,6 @@ namespace Abp.AspNetCore.Configuration
 
         public bool UseMvcDateTimeFormatForAppServices { get; set; }
 
-        //public List<Action<IRouteBuilder>> RouteConfiguration { get; }
-
         public List<Action<IEndpointRouteBuilder>> EndpointConfiguration { get; }
 
 
@@ -40,7 +38,6 @@ namespace Abp.AspNetCore.Configuration
             DefaultUnitOfWorkAttribute = new UnitOfWorkAttribute();
             ControllerAssemblySettings = new ControllerAssemblySettingList();
             FormBodyBindingIgnoredTypes = new List<Type>();
-            //RouteConfiguration = new List<Action<IRouteBuilder>>();
             EndpointConfiguration = new List<Action<IEndpointRouteBuilder>>();
             IsValidationEnabledForControllers = true;
             SetNoCacheForAjaxResponses = true;

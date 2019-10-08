@@ -11,7 +11,6 @@ using Microsoft.Extensions.Options;
 
 namespace Abp.AspNetCore.Mvc.Antiforgery
 {
-    // TODO: Core 3.0 update
     public class AbpValidateAntiforgeryTokenAuthorizationFilter : IAsyncAuthorizationFilter, IAntiforgeryPolicy
     {
         private IAntiforgery _antiforgery;

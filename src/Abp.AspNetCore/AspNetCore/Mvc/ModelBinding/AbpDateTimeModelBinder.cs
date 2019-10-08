@@ -15,7 +15,6 @@ namespace Abp.AspNetCore.Mvc.ModelBinding
         public AbpDateTimeModelBinder(Type type)
         {
             _type = type;
-            //TODO: Core3.0 update -> Should we replace NullLoggerFactory.Instance ?
             _simpleTypeModelBinder = new SimpleTypeModelBinder(type, NullLoggerFactory.Instance);
         }
         

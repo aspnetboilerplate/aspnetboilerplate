@@ -41,6 +41,7 @@ namespace Abp.AspNetCore.App
             app.UseRouting();
 
             app.UseAuthentication();
+            app.UseAbpAuthorizationExceptionHandling();
             app.UseAuthorization();
 
             app.UseEndpoints(endpoints =>
