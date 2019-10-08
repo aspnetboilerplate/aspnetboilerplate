@@ -7,7 +7,6 @@ $srcPath = Join-Path $slnPath "src"
 $projects = (
     "Abp",
     "Abp.AspNetCore",
-    "Abp.AspNetCore.OData",
     "Abp.AspNetCore.SignalR",
     "Abp.AspNetCore.TestBase",
     "Abp.AutoMapper",
@@ -39,10 +38,8 @@ $projects = (
     "Abp.Web.SignalR",
     "Abp.Web.Resources",
     "Abp.Zero",
-    "Abp.Zero.AspNetCore",
     "Abp.Zero.Common",
     "Abp.Zero.EntityFramework",
-    "Abp.Zero.EntityFrameworkCore",
     "Abp.Zero.Ldap",
     "Abp.Zero.NHibernate",
     "Abp.Zero.Owin",
