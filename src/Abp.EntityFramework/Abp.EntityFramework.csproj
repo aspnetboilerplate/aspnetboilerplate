@@ -24,6 +24,10 @@
       <PackagePath>lib/net461/</PackagePath>
       <Pack>true</Pack>
     </None>
+    <None Include="bin\Release\netstandard2.1\Abp.EntityFramework.pdb">
+      <PackagePath>lib/netstandard2.1/</PackagePath>
+      <Pack>true</Pack>
+    </None>
   </ItemGroup>
 
   <ItemGroup>

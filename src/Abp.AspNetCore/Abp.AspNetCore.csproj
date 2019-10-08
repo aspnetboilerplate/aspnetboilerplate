@@ -28,8 +28,8 @@
   </ItemGroup>
 
   <ItemGroup>
-    <None Include="bin\Release\netstandard2.0\Abp.AspNetCore.pdb">
-      <PackagePath>lib/netstandard2.0/</PackagePath>
+    <None Include="bin\Release\netcoreapp3.0\Abp.AspNetCore.pdb">
+      <PackagePath>lib/netcoreapp3.0/</PackagePath>
       <Pack>true</Pack>
     </None>
   </ItemGroup>

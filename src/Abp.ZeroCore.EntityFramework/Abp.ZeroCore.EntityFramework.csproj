@@ -13,8 +13,8 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <None Include="bin\Release\net461\Abp.ZeroCore.EntityFramework.pdb">
-      <PackagePath>lib/net461/</PackagePath>
+    <None Include="bin\Release\netcoreapp3.0\Abp.ZeroCore.EntityFramework.pdb">
+      <PackagePath>lib/netcoreapp3.0/</PackagePath>
       <Pack>true</Pack>
     </None>
   </ItemGroup>

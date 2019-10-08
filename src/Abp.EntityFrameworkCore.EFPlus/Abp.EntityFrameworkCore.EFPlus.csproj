@@ -29,8 +29,8 @@
   </ItemGroup>
 
   <ItemGroup>
-    <None Include="bin\Release\netstandard2.0\Abp.EntityFrameworkCore.EFPlus.pdb">
-      <PackagePath>lib/netstandard2.0/</PackagePath>
+    <None Include="bin\Release\netstandard2.1\Abp.EntityFrameworkCore.EFPlus.pdb">
+      <PackagePath>lib/netstandard2.1/</PackagePath>
       <Pack>true</Pack>
     </None>
   </ItemGroup>
