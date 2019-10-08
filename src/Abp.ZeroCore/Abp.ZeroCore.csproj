@@ -14,6 +14,7 @@
     <GenerateAssemblyCompanyAttribute>false</GenerateAssemblyCompanyAttribute>
     <GenerateAssemblyProductAttribute>false</GenerateAssemblyProductAttribute>
     <GenerateAssemblyCopyrightAttribute>false</GenerateAssemblyCopyrightAttribute>
+    <IsPackable>true</IsPackable>
     <RootNamespace>Abp</RootNamespace>
     <Description>Abp.ZeroCore</Description>
     <OutputType>Library</OutputType>
