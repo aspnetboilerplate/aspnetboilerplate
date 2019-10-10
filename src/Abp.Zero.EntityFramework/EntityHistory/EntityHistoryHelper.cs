@@ -135,7 +135,8 @@ namespace Abp.EntityHistory
         protected virtual string GetEntityId(DbEntityEntry entityEntry, EntityType entityType)
         {
             var primaryKey = entityType.KeyProperties.First();
-            return entityEntry.Property(primaryKey.Name)?.GetNewValue()?.ToJsonString();
+            var property = entityEntry.Property(primaryKey.Name);
+            return (property.GetNewValue() ?? property.GetOriginalValue())?.ToJsonString();
         }
 
         [CanBeNull]
