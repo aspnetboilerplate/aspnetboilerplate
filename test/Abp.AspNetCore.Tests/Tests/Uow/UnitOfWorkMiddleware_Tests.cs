@@ -2,7 +2,9 @@
 using System.Threading.Tasks;
 using Abp.AspNetCore.TestBase;
 using Abp.Domain.Uow;
+using Abp.FluentValidation;
 using Abp.Modules;
+using Abp.Reflection.Extensions;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
@@ -33,7 +35,7 @@ namespace Abp.AspNetCore.Tests.Uow
                 });
             }
 
-            public void Configure(IApplicationBuilder app, IWebHostEnvironment env, ILoggerFactory loggerFactory)
+            public void Configure(IApplicationBuilder app, IHostingEnvironment env, ILoggerFactory loggerFactory)
             {
                 app.UseAbp();
 

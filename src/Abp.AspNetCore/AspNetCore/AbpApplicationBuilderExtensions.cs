@@ -129,7 +129,6 @@ namespace Abp.AspNetCore
         public static IApplicationBuilder UseUnitOfWork(this IApplicationBuilder app)
         {
             return app
-                .UseAbpAuthorizationExceptionHandling()
                 .UseMiddleware<AbpUnitOfWorkMiddleware>();
         }
 

@@ -1,5 +1,4 @@
-﻿using System;
-using System.Net.Http;
+﻿using System.Net.Http;
 using System.Threading.Tasks;
 using Abp.Auditing;
 using Abp.Dependency;
@@ -8,7 +7,6 @@ using Microsoft.AspNetCore.Mvc.Testing;
 using Xunit;
 using NSubstitute;
 using System.Collections.Generic;
-using Abp.Extensions;
 using Shouldly;
 
 namespace AbpAspNetCoreDemo.IntegrationTests.Tests
@@ -104,7 +102,7 @@ namespace AbpAspNetCoreDemo.IntegrationTests.Tests
 
             // Act
 
-            var response = await client.PostAsync("/AuditFilterPageDemo", new FormUrlEncodedContent(new KeyValuePair<string, string>[]
+            var response = await client.PostAsync("/AuditFilterPageDemo", new FormUrlEncodedContent(new[]
             {
                 new KeyValuePair<string, string>("Message","My test message"),
             }));
@@ -120,37 +118,28 @@ namespace AbpAspNetCoreDemo.IntegrationTests.Tests
         }
 
 
-        [Fact]
-        public async Task RazorPage_RazorAuditPageFilter_NoAction_Test()
+       
+        [Theory]
+        [InlineData("Get")]
+        [InlineData("Post")]
+        public async Task RazorPage_RazorAuditPageFilter_NoAction_Test(string method)
         {
             // Arrange
             var client = _factory.CreateClient();
 
-            // Act (Get)
-            var getRequestMessage = new HttpRequestMessage(new HttpMethod("Get"), "/AuditFilterPageDemo4");
-
-            var response = await client.SendAsync(getRequestMessage);
+            // Act
+            var requestMessage = new HttpRequestMessage(new HttpMethod(method), "/AuditFilterPageDemo4");
+            var response = await client.SendAsync(requestMessage);
 
             // Assert
             response.EnsureSuccessStatusCode();
-            var content = await response.Content.ReadAsStringAsync();
-            content.ShouldContain("<title>AuditFilterPageDemo4</title>");
-
-            // Act (Post)
-            var postRequestMessage = new HttpRequestMessage(new HttpMethod("Post"), "/AuditFilterPageDemo4");
-            var requestVerificationToken = await GetRequestVerificationTokenAsync(content);
-            postRequestMessage.Headers.Add("X-XSRF-TOKEN", requestVerificationToken);
-
-            response = await client.SendAsync(postRequestMessage);
-            response.EnsureSuccessStatusCode();
+            (await response.Content.ReadAsStringAsync()).ShouldContain("<title>AuditFilterPageDemo4</title>");
 
 #pragma warning disable 4014
             _auditingStore.DidNotReceive().SaveAsync(Arg.Any<AuditInfo>());
 #pragma warning restore 4014
-        }
 
         }
-
 
         [Theory]
         [InlineData("Json")]
@@ -159,9 +148,9 @@ namespace AbpAspNetCoreDemo.IntegrationTests.Tests
         {
             // Arrange
             AbpAspNetCoreDemoModule.ConfigurationAction.Value = configuration =>
-                {
-                    configuration.Auditing.SaveReturnValues = true;
-                };
+            {
+                configuration.Auditing.SaveReturnValues = true;
+            };
 
             var client = _factory.CreateClient();
 
