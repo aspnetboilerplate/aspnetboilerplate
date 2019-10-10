@@ -14,6 +14,8 @@ using Abp.Domain.Entities.Auditing;
 using Abp.Domain.Repositories;
 using Abp.Domain.Uow;
 using Abp.EntityFrameworkCore.Extensions;
+using Abp.EntityFrameworkCore.Utils;
+using Abp.EntityFrameworkCore.ValueConverters;
 using Abp.Events.Bus;
 using Abp.Events.Bus.Entities;
 using Abp.Extensions;
@@ -84,6 +86,8 @@ namespace Abp.EntityFrameworkCore
 
         private static MethodInfo ConfigureGlobalFiltersMethodInfo = typeof(AbpDbContext).GetMethod(nameof(ConfigureGlobalFilters), BindingFlags.Instance | BindingFlags.NonPublic);
 
+        private static MethodInfo ConfigureGlobalValueConverterMethodInfo = typeof(AbpDbContext).GetMethod(nameof(ConfigureGlobalValueConverter), BindingFlags.Instance | BindingFlags.NonPublic);
+
         /// <summary>
         /// Constructor.
         /// </summary>
@@ -114,6 +118,10 @@ namespace Abp.EntityFrameworkCore
             foreach (var entityType in modelBuilder.Model.GetEntityTypes())
             {
                 ConfigureGlobalFiltersMethodInfo
+                    .MakeGenericMethod(entityType.ClrType)
+                    .Invoke(this, new object[] { modelBuilder, entityType });
+
+                ConfigureGlobalValueConverterMethodInfo
                     .MakeGenericMethod(entityType.ClrType)
                     .Invoke(this, new object[] { modelBuilder, entityType });
             }
@@ -183,6 +191,26 @@ namespace Abp.EntityFrameworkCore
             }
 
             return expression;
+        }
+
+        protected void ConfigureGlobalValueConverter<TEntity>(ModelBuilder modelBuilder, IMutableEntityType entityType)
+            where TEntity : class
+        {
+            if (entityType.BaseType == null && 
+                !typeof(TEntity).IsDefined(typeof(DisableDateTimeNormalizationAttribute), true) &&
+                !typeof(TEntity).IsDefined(typeof(OwnedAttribute), true) &&
+                !entityType.IsOwned())
+            {
+                var dateTimeValueConverter = new AbpDateTimeValueConverter();
+                var dateTimePropertyInfos = DateTimePropertyInfoHelper.GetDatePropertyInfos(typeof(TEntity));
+                dateTimePropertyInfos.DateTimePropertyInfos.ForEach(property =>
+                {
+                    modelBuilder
+                        .Entity<TEntity>()
+                        .Property(property.Name)
+                        .HasConversion(dateTimeValueConverter);
+                });
+            }
         }
 
         public override int SaveChanges()

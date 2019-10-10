@@ -1,4 +1,5 @@
 ﻿using Abp.EntityFrameworkCore.Tests.Domain;
+using Abp.EntityFrameworkCore.ValueConverters;
 using Microsoft.EntityFrameworkCore;
 
 namespace Abp.EntityFrameworkCore.Tests.Ef
@@ -25,12 +26,20 @@ namespace Abp.EntityFrameworkCore.Tests.Ef
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
-            base.OnModelCreating(modelBuilder);
+            modelBuilder.Entity<Blog>(b =>
+            {
+                b.OwnsOne(t => t.BlogTime, x =>
+                    {
+                        x.Property(p => p.LastAccessTime).HasConversion(new AbpDateTimeValueConverter());
+                    });
+            });
 
             modelBuilder
                 .Entity<BlogView>()
                 .HasNoKey()
                 .ToView("BlogView");
+
+            base.OnModelCreating(modelBuilder);
         }
     }
 }
