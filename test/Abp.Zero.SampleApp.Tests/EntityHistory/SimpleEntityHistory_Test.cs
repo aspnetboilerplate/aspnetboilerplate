@@ -33,6 +33,10 @@ namespace Abp.Zero.SampleApp.Tests.EntityHistory
             _postRepository = Resolve<IRepository<Post, Guid>>();
             _commentRepository = Resolve<IRepository<Comment>>();
 
+            var user = GetDefaultTenantAdmin();
+            AbpSession.TenantId = user.TenantId;
+            AbpSession.UserId = user.Id;
+
             Resolve<IEntityHistoryConfiguration>().IsEnabledForAnonymousUsers = true;
         }
 
@@ -62,9 +66,8 @@ namespace Abp.Zero.SampleApp.Tests.EntityHistory
                 entityChange.ChangeTime.ShouldBe(entityChange.EntityEntry.As<DbEntityEntry>().Entity.As<IHasCreationTime>().CreationTime);
                 entityChange.ChangeType.ShouldBe(EntityChangeType.Created);
                 entityChange.EntityId.ShouldBe(blog2Id.ToJsonString());
-                entityChange.PropertyChanges.Count.ShouldBe(4);
-                // TODO: 3 should be the correct value, Blog.Category is null for both new/original values
-                // entityChange.PropertyChanges.Count.ShouldBe(3);
+                entityChange.EntityTypeFullName.ShouldBe(typeof(Blog).FullName);
+                entityChange.PropertyChanges.Count.ShouldBe(3);
 
                 var propertyChange1 = entityChange.PropertyChanges.Single(pc => pc.PropertyName == nameof(Blog.Url));
                 propertyChange1.OriginalValue.ShouldBeNull();
@@ -104,9 +107,9 @@ namespace Abp.Zero.SampleApp.Tests.EntityHistory
 
             UsingDbContext((context) =>
             {
-                context.EntityChanges.Count(e => e.TenantId == null).ShouldBe(0);
-                context.EntityChangeSets.Count(e => e.TenantId == null).ShouldBe(0);
-                context.EntityPropertyChanges.Count(e => e.TenantId == null).ShouldBe(0);
+                context.EntityChanges.Count(e => e.TenantId == 1).ShouldBe(0);
+                context.EntityChangeSets.Count(e => e.TenantId == 1).ShouldBe(0);
+                context.EntityPropertyChanges.Count(e => e.TenantId == 1).ShouldBe(0);
             });
 
             var justNow = Clock.Now;
@@ -114,12 +117,10 @@ namespace Abp.Zero.SampleApp.Tests.EntityHistory
 
             UsingDbContext((context) =>
             {
-                context.EntityChanges.Count(e => e.TenantId == null).ShouldBe(1);
-                context.EntityChangeSets.Count(e => e.TenantId == null).ShouldBe(1);
+                context.EntityChanges.Count(e => e.TenantId == 1).ShouldBe(1);
+                context.EntityChangeSets.Count(e => e.TenantId == 1).ShouldBe(1);
                 context.EntityChangeSets.Single().CreationTime.ShouldBeGreaterThan(justNow);
-                context.EntityPropertyChanges.Count(e => e.TenantId == null).ShouldBe(4);
-                // TODO: 3 should be the correct value, Blog.Category is null for both new/original values
-                // context.EntityPropertyChanges.Count(e => e.TenantId == 1).ShouldBe(3);
+                context.EntityPropertyChanges.Count(e => e.TenantId == 1).ShouldBe(3);
             });
         }
 
@@ -283,10 +284,29 @@ namespace Abp.Zero.SampleApp.Tests.EntityHistory
 
                 var entityChangePost = s.EntityChanges.Single(ec => ec.EntityTypeFullName == typeof(Post).FullName);
                 entityChangePost.ChangeType.ShouldBe(EntityChangeType.Created);
-                entityChangePost.PropertyChanges.Count.ShouldBe(1); // Post.BlogId
+                entityChangePost.PropertyChanges.Count.ShouldBe(5);
+
+                var propertyChange1 = entityChangePost.PropertyChanges.Single(pc => pc.PropertyName == nameof(Post.BlogId));
+                propertyChange1.OriginalValue.ShouldBeNull();
+                propertyChange1.NewValue.ShouldNotBeNull();
+
+                var propertyChange2 = entityChangePost.PropertyChanges.Single(pc => pc.PropertyName == nameof(Post.Title));
+                propertyChange2.OriginalValue.ShouldBeNull();
+                propertyChange2.NewValue.ShouldNotBeNull();
+
+                var propertyChange3 = entityChangePost.PropertyChanges.Single(pc => pc.PropertyName == nameof(Post.Body));
+                propertyChange3.OriginalValue.ShouldBeNull();
+                propertyChange3.NewValue.ShouldNotBeNull();
+
+                var propertyChange4 = entityChangePost.PropertyChanges.Single(pc => pc.PropertyName == nameof(Post.IsDeleted));
+                propertyChange4.OriginalValue.ShouldBeNull();
+                propertyChange4.NewValue.ShouldNotBeNull();
+
+                var propertyChange5 = entityChangePost.PropertyChanges.Single(pc => pc.PropertyName == nameof(Post.CreationTime));
+                propertyChange5.OriginalValue.ShouldBeNull();
+                propertyChange5.NewValue.ShouldNotBeNull();
 
                 /* Blog has Audited attribute. */
-
                 var entityChangeBlog = s.EntityChanges.Single(ec => ec.EntityTypeFullName == typeof(Blog).FullName);
                 entityChangeBlog.ChangeType.ShouldBe(EntityChangeType.Updated);
                 entityChangeBlog.PropertyChanges.Count.ShouldBe(0);
@@ -392,6 +412,52 @@ namespace Abp.Zero.SampleApp.Tests.EntityHistory
                 _postRepository.Update(post1);
             });
 
+            _entityHistoryStore.DidNotReceive().Save(Arg.Any<EntityChangeSet>());
+        }
+
+        [Fact]
+        public void Should_Not_Write_History_If_Invalid_Entity_Has_Property_With_Audited_Attribute_Created()
+        {
+            //Arrange
+            Post post1 = null;
+
+            //Act
+            WithUnitOfWork(() =>
+            {
+                post1 = _postRepository.Single(b => b.Body == "test-post-1-body");
+                /* Category does not inherit from Entity<> and is not an owned entity*/
+                post1.Category = new Category { DisplayName = "My Category" };
+                _postRepository.Update(post1);
+            });
+
+            //Assert
+            _entityHistoryStore.DidNotReceive().Save(Arg.Any<EntityChangeSet>());
+        }
+
+        [Fact]
+        public void Should_Not_Write_History_If_Invalid_Entity_Has_Property_With_Audited_Attribute_Updated()
+        {
+            //Arrange
+            Post post1 = null;
+            WithUnitOfWork(() =>
+            {
+                post1 = _postRepository.Single(b => b.Body == "test-post-1-body");
+                /* Category does not inherit from Entity<> and is not an owned entity*/
+                post1.Category = new Category { DisplayName = "My Category" };
+                _postRepository.Update(post1);
+
+            });
+            _entityHistoryStore.ClearReceivedCalls();
+
+            //Act
+            WithUnitOfWork(() =>
+            {
+                post1 = _postRepository.GetAllIncluding(e => e.Category).Single(b => b.Body == "test-post-1-body");
+                post1.Category.DisplayName = "Invalid Category";
+                _postRepository.Update(post1);
+            });
+
+            //Assert
             _entityHistoryStore.DidNotReceive().Save(Arg.Any<EntityChangeSet>());
         }
 
