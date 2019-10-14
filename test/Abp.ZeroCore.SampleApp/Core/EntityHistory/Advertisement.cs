@@ -2,7 +2,7 @@
 
 namespace Abp.ZeroCore.SampleApp.Core.EntityHistory
 {
-    public class Advertisment : Entity
+    public class Advertisement : Entity
     {
         public string Banner { get; set; }
     }
