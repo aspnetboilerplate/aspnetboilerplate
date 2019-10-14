@@ -64,6 +64,10 @@ namespace Abp.Zero
                     var comment1 = new Comment { Post = post1, Content = "test-comment-1-content" };
 
                     context.Comments.Add(comment1);
+
+                    var advertisment1 = new Advertisment { Banner = "test-advertisment-1" };
+
+                    context.Advertisments.Add(advertisment1);
                 });
         }
 
