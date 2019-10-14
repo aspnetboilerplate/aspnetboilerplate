@@ -6,7 +6,6 @@ using Abp.ZeroCore.SampleApp.Core.BookStore;
 using Abp.ZeroCore.SampleApp.Core.EntityHistory;
 using Abp.ZeroCore.SampleApp.Core.Shop;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.EntityFrameworkCore.Metadata;
 
 namespace Abp.ZeroCore.SampleApp.EntityFramework
 {
@@ -15,7 +14,7 @@ namespace Abp.ZeroCore.SampleApp.EntityFramework
     {
         public DbSet<PersistedGrantEntity> PersistedGrants { get; set; }
 
-        public DbSet<Advertisment> Advertisments { get; set; }
+        public DbSet<Advertisement> Advertisements { get; set; }
 
         public DbSet<Blog> Blogs { get; set; }
 

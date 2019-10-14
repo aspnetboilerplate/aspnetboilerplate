@@ -21,7 +21,7 @@ namespace Abp.Zero.SampleApp.Tests.EntityHistory
 {
     public class SimpleEntityHistory_Test : SampleAppTestBase
     {
-        private readonly IRepository<Advertisment> _advertismentRepository;
+        private readonly IRepository<Advertisement> _advertisementRepository;
         private readonly IRepository<Blog> _blogRepository;
         private readonly IRepository<Post, Guid> _postRepository;
         private readonly IRepository<Comment> _commentRepository;
@@ -30,7 +30,7 @@ namespace Abp.Zero.SampleApp.Tests.EntityHistory
 
         public SimpleEntityHistory_Test()
         {
-            _advertismentRepository = Resolve<IRepository<Advertisment>>();
+            _advertisementRepository = Resolve<IRepository<Advertisement>>();
             _blogRepository = Resolve<IRepository<Blog>>();
             _postRepository = Resolve<IRepository<Post, Guid>>();
             _commentRepository = Resolve<IRepository<Comment>>();
@@ -405,13 +405,13 @@ namespace Abp.Zero.SampleApp.Tests.EntityHistory
         [Fact]
         public void Should_Not_Write_History_If_Property_Has_No_Audited_Attribute()
         {
-            /* Advertisment.Banner does not have Audited attribute. */
+            /* Advertisement.Banner does not have Audited attribute. */
 
             WithUnitOfWork(() =>
             {
-                var advertisment1 = _advertismentRepository.Single(a => a.Banner == "test-advertisment-1");
-                advertisment1.Banner = null;
-                _advertismentRepository.Update(advertisment1);
+                var advertisement1 = _advertisementRepository.Single(a => a.Banner == "test-advertisement-1");
+                advertisement1.Banner = null;
+                _advertisementRepository.Update(advertisement1);
             });
 
             _entityHistoryStore.DidNotReceive().Save(Arg.Any<EntityChangeSet>());

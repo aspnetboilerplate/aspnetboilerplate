@@ -14,7 +14,7 @@ namespace Abp.Zero.SampleApp.EntityFramework
     {
         public DbSet<Book> Books { get; set; }
 
-        public DbSet<Advertisment> Advertisments { get; set; }
+        public DbSet<Advertisement> Advertisements { get; set; }
 
         public DbSet<Blog> Blogs { get; set; }
 

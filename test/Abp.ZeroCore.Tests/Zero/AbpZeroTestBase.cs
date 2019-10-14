@@ -65,9 +65,9 @@ namespace Abp.Zero
 
                     context.Comments.Add(comment1);
 
-                    var advertisment1 = new Advertisment { Banner = "test-advertisment-1" };
+                    var advertisement1 = new Advertisement { Banner = "test-advertisement-1" };
 
-                    context.Advertisments.Add(advertisment1);
+                    context.Advertisements.Add(advertisement1);
                 });
         }
 
