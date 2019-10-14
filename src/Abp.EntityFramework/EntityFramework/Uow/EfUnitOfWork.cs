@@ -10,6 +10,7 @@ using Abp.Domain.Uow;
 using Abp.EntityFramework.Utils;
 using Abp.Extensions;
 using Abp.MultiTenancy;
+using Abp.Timing;
 using Castle.Core.Internal;
 
 namespace Abp.EntityFramework.Uow
@@ -132,10 +133,13 @@ namespace Abp.EntityFramework.Uow
                     dbContext.Database.CommandTimeout = Options.Timeout.Value.TotalSeconds.To<int>();
                 }
 
-                ((IObjectContextAdapter)dbContext).ObjectContext.ObjectMaterialized += (sender, args) =>
+                if (Clock.SupportsMultipleTimezone)
                 {
-                    ObjectContext_ObjectMaterialized(dbContext, args);
-                };
+                    ((IObjectContextAdapter)dbContext).ObjectContext.ObjectMaterialized += (sender, args) =>
+                    {
+                        ObjectContext_ObjectMaterialized(dbContext, args);
+                    };
+                }
 
                 FilterExecuter.As<IEfUnitOfWorkFilterExecuter>().ApplyCurrentFilters(this, dbContext);
                 

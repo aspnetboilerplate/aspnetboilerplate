@@ -15,8 +15,6 @@ namespace Abp.Zero.SampleApp.EntityHistory
 
         public string Url { get; protected set; }
 
-        public string Category { get; set; }
-
         public DateTime CreationTime { get; set; }
 
         public BlogEx More { get; set; }

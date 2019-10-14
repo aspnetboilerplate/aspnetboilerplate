@@ -20,7 +20,7 @@ namespace Abp.Zero.Users
                 var adminUser = await userManager.FindByNameAsync("admin");
                 var managerRole = await roleManager.FindByNameAsync("MANAGER");
 
-                await userManager.SetRoles(adminUser, new[] { managerRole.Name });
+                await userManager.SetRolesAsync(adminUser, new[] { managerRole.Name });
                 await roleManager.DeleteAsync(managerRole);
 
                 await uow.CompleteAsync();
@@ -34,7 +34,7 @@ namespace Abp.Zero.Users
                 var adminUser = await userManager.FindByNameAsync("admin");
                 var useRole = await roleManager.FindByNameAsync("user");
 
-                await userManager.SetRoles(adminUser, new[] { useRole.Name });
+                await userManager.SetRolesAsync(adminUser, new[] { useRole.Name });
 
                 var adminRoles = await userManager.GetRolesAsync(adminUser);
 

@@ -31,7 +31,7 @@ namespace Abp.Authorization
 
             if (user.TenantId.HasValue)
             {
-                principal.Identities.First().AddClaim(new Claim(AbpClaimTypes.TenantId,user.TenantId.ToString()));
+                principal.Identities.First().AddClaim(new Claim(AbpClaimTypes.TenantId, user.TenantId.ToString()));
             }
 
             return principal;

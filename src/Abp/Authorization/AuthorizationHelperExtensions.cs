@@ -13,19 +13,9 @@ namespace Abp.Authorization
             await authorizationHelper.AuthorizeAsync(new[] { authorizeAttribute });
         }
 
-        public static void Authorize(this IAuthorizationHelper authorizationHelper, IEnumerable<IAbpAuthorizeAttribute> authorizeAttributes)
-        {
-            AsyncHelper.RunSync(() => authorizationHelper.AuthorizeAsync(authorizeAttributes));
-        }
-
         public static void Authorize(this IAuthorizationHelper authorizationHelper, IAbpAuthorizeAttribute authorizeAttribute)
         {
             authorizationHelper.Authorize(new[] { authorizeAttribute });
-        }
-
-        public static void Authorize(this IAuthorizationHelper authorizationHelper, MethodInfo methodInfo, Type type)
-        {
-            AsyncHelper.RunSync(() => authorizationHelper.AuthorizeAsync(methodInfo, type));
         }
     }
 }

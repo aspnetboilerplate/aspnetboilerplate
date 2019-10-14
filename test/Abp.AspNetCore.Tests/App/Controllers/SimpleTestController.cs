@@ -22,6 +22,16 @@ namespace Abp.AspNetCore.App.Controllers
             return Json(new SimpleViewModel("Forty Two", 42));
         }
 
+        public ObjectResult SimpleObject()
+        {
+            return new ObjectResult(new SimpleViewModel("Forty Two", 42));
+        }
+
+        public string SimpleString()
+        {
+            return "test";
+        }
+
         public JsonResult SimpleJsonException(string message, bool userFriendly)
         {
             if (userFriendly)

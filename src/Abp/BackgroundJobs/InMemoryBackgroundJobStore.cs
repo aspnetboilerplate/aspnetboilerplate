@@ -30,12 +30,23 @@ namespace Abp.BackgroundJobs
             return Task.FromResult(_jobs[jobId]);
         }
 
+        public BackgroundJobInfo Get(long jobId)
+        {
+            return _jobs[jobId];
+        }
+
         public Task InsertAsync(BackgroundJobInfo jobInfo)
         {
             jobInfo.Id = Interlocked.Increment(ref _lastId);
             _jobs[jobInfo.Id] = jobInfo;
 
             return Task.FromResult(0);
+        }
+
+        public void Insert(BackgroundJobInfo jobInfo)
+        {
+            jobInfo.Id = Interlocked.Increment(ref _lastId);
+            _jobs[jobInfo.Id] = jobInfo;
         }
 
         public Task<List<BackgroundJobInfo>> GetWaitingJobsAsync(int maxResultCount)
@@ -51,11 +62,29 @@ namespace Abp.BackgroundJobs
             return Task.FromResult(waitingJobs);
         }
 
+        public List<BackgroundJobInfo> GetWaitingJobs(int maxResultCount)
+        {
+            var waitingJobs = _jobs.Values
+                .Where(t => !t.IsAbandoned && t.NextTryTime <= Clock.Now)
+                .OrderByDescending(t => t.Priority)
+                .ThenBy(t => t.TryCount)
+                .ThenBy(t => t.NextTryTime)
+                .Take(maxResultCount)
+                .ToList();
+
+            return waitingJobs;
+        }
+
         public Task DeleteAsync(BackgroundJobInfo jobInfo)
         {
             _jobs.TryRemove(jobInfo.Id, out _);
 
             return Task.FromResult(0);
+        }
+
+        public void Delete(BackgroundJobInfo jobInfo)
+        {
+            _jobs.TryRemove(jobInfo.Id, out _);
         }
 
         public Task UpdateAsync(BackgroundJobInfo jobInfo)
@@ -66,6 +95,14 @@ namespace Abp.BackgroundJobs
             }
 
             return Task.FromResult(0);
+        }
+
+        public void Update(BackgroundJobInfo jobInfo)
+        {
+            if (jobInfo.IsAbandoned)
+            {
+                Delete(jobInfo);
+            }
         }
     }
 }

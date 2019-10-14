@@ -282,12 +282,21 @@ namespace Abp.EntityFrameworkCore.Repositories
         }
 
         public Task EnsureCollectionLoadedAsync<TProperty>(
-            TEntity entity, 
-            Expression<Func<TEntity, IEnumerable<TProperty>>> collectionExpression, 
+            TEntity entity,
+            Expression<Func<TEntity, IEnumerable<TProperty>>> collectionExpression,
             CancellationToken cancellationToken)
             where TProperty : class
         {
             return Context.Entry(entity).Collection(collectionExpression).LoadAsync(cancellationToken);
+        }
+
+        public void EnsureCollectionLoaded<TProperty>(
+            TEntity entity,
+            Expression<Func<TEntity, IEnumerable<TProperty>>> collectionExpression,
+            CancellationToken cancellationToken)
+            where TProperty : class
+        {
+            Context.Entry(entity).Collection(collectionExpression).Load();
         }
 
         public Task EnsurePropertyLoadedAsync<TProperty>(
@@ -297,6 +306,15 @@ namespace Abp.EntityFrameworkCore.Repositories
             where TProperty : class
         {
             return Context.Entry(entity).Reference(propertyExpression).LoadAsync(cancellationToken);
+        }
+
+        public void EnsurePropertyLoaded<TProperty>(
+            TEntity entity,
+            Expression<Func<TEntity, TProperty>> propertyExpression,
+            CancellationToken cancellationToken)
+            where TProperty : class
+        {
+            Context.Entry(entity).Reference(propertyExpression).Load();
         }
 
         private TEntity GetFromChangeTrackerOrNull(TPrimaryKey id)

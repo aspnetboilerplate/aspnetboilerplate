@@ -33,5 +33,17 @@ namespace Abp.Auditing
 
             return Task.FromResult(0);
         }
+
+        public void Save(AuditInfo auditInfo)
+        {
+            if (auditInfo.Exception == null)
+            {
+                Logger.Info(auditInfo.ToString());
+            }
+            else
+            {
+                Logger.Warn(auditInfo.ToString());
+            }
+        }
     }
 }

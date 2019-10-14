@@ -14,10 +14,18 @@ namespace Abp.BackgroundJobs
         {
             return Task.FromResult(new BackgroundJobInfo());
         }
+        public BackgroundJobInfo Get(long jobId)
+        {
+            return new BackgroundJobInfo();
+        }
 
         public Task InsertAsync(BackgroundJobInfo jobInfo)
         {
             return Task.FromResult(0);
+        }
+
+        public void Insert(BackgroundJobInfo jobInfo)
+        {
         }
 
         public Task<List<BackgroundJobInfo>> GetWaitingJobsAsync(int maxResultCount)
@@ -25,14 +33,27 @@ namespace Abp.BackgroundJobs
             return Task.FromResult(new List<BackgroundJobInfo>());
         }
 
+        public List<BackgroundJobInfo> GetWaitingJobs(int maxResultCount)
+        {
+            return new List<BackgroundJobInfo>();
+        }
+
         public Task DeleteAsync(BackgroundJobInfo jobInfo)
         {
             return Task.FromResult(0);
         }
 
+        public void Delete(BackgroundJobInfo jobInfo)
+        {
+        }
+
         public Task UpdateAsync(BackgroundJobInfo jobInfo)
         {
             return Task.FromResult(0);
+        }
+
+        public void Update(BackgroundJobInfo jobInfo)
+        {
         }
     }
 }
