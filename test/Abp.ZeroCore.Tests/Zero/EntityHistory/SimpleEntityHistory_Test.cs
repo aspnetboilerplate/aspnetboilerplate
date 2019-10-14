@@ -22,6 +22,7 @@ namespace Abp.Zero.EntityHistory
 {
     public class SimpleEntityHistory_Test : AbpZeroTestBase
     {
+        private readonly IRepository<Advertisment> _advertismentRepository;
         private readonly IRepository<Blog> _blogRepository;
         private readonly IRepository<Post, Guid> _postRepository;
         private readonly IRepository<Comment> _commentRepository;
@@ -30,6 +31,7 @@ namespace Abp.Zero.EntityHistory
 
         public SimpleEntityHistory_Test()
         {
+            _advertismentRepository = Resolve<IRepository<Advertisment>>();
             _blogRepository = Resolve<IRepository<Blog>>();
             _postRepository = Resolve<IRepository<Post, Guid>>();
             _commentRepository = Resolve<IRepository<Comment>>();
@@ -332,17 +334,14 @@ namespace Abp.Zero.EntityHistory
         [Fact]
         public void Should_Not_Write_History_If_Property_Has_No_Audited_Attribute()
         {
-            /* Post.Body does not have Audited attribute. */
+            /* Advertisment.Banner does not have Audited attribute. */
 
-            using (var uow = Resolve<IUnitOfWorkManager>().Begin())
+            WithUnitOfWork(() =>
             {
-                var post1 = _postRepository.Single(b => b.Body == "test-post-1-body");
-
-                post1.Body = null;
-                _postRepository.Update(post1);
-
-                uow.Complete();
-            }
+                var advertisment1 = _advertismentRepository.Single(a => a.Banner == "test-advertisment-1");
+                advertisment1.Banner = null;
+                _advertismentRepository.Update(advertisment1);
+            });
 
             _entityHistoryStore.DidNotReceive().Save(Arg.Any<EntityChangeSet>());
         }

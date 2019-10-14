@@ -15,6 +15,8 @@ namespace Abp.ZeroCore.SampleApp.EntityFramework
     {
         public DbSet<PersistedGrantEntity> PersistedGrants { get; set; }
 
+        public DbSet<Advertisment> Advertisments { get; set; }
+
         public DbSet<Blog> Blogs { get; set; }
 
         public DbSet<Post> Posts { get; set; }
