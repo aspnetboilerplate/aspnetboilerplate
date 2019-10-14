@@ -25,10 +25,6 @@ namespace Abp.Zero.SampleApp.EntityHistory
 
         public int? TenantId { get; set; }
 
-        public int? CategoryId { get; set; }
-
-        public Category Category { get; set; }
-
         public Post()
         {
             Id = Guid.NewGuid();
