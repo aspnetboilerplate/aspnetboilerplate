@@ -68,6 +68,10 @@ namespace Abp.Zero
                     var advertisement1 = new Advertisement { Banner = "test-advertisement-1" };
 
                     context.Advertisements.Add(advertisement1);
+
+                    var reaction1 = new Reaction { Name = "test-reaction-1" };
+
+                    context.Reactions.Add(reaction1);
                 });
         }
 

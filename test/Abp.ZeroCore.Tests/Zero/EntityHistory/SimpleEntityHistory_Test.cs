@@ -26,6 +26,7 @@ namespace Abp.Zero.EntityHistory
         private readonly IRepository<Blog> _blogRepository;
         private readonly IRepository<Post, Guid> _postRepository;
         private readonly IRepository<Comment> _commentRepository;
+        private readonly IRepository<Reaction> _reactionRepository;
 
         private IEntityHistoryStore _entityHistoryStore;
 
@@ -35,6 +36,7 @@ namespace Abp.Zero.EntityHistory
             _blogRepository = Resolve<IRepository<Blog>>();
             _postRepository = Resolve<IRepository<Post, Guid>>();
             _commentRepository = Resolve<IRepository<Comment>>();
+            _reactionRepository = Resolve<IRepository<Reaction>>();
 
             Resolve<IEntityHistoryConfiguration>().IsEnabledForAnonymousUsers = true;
         }
@@ -49,6 +51,135 @@ namespace Abp.Zero.EntityHistory
         }
 
         #region CASES WRITE HISTORY
+
+        [Fact]
+        public void Should_Write_History_For_Creation_Audited_Entities()
+        {
+            int? reactionId = null;
+
+            WithUnitOfWork(() =>
+            {
+                var reaction = new Reaction { Name = "test-reaction-2" };
+                reactionId = _reactionRepository.InsertAndGetId(reaction);
+            });
+
+            Predicate<EntityChangeSet> predicate = s =>
+            {
+                s.EntityChanges.Count.ShouldBe(1);
+
+                var entityChange = s.EntityChanges.Single(ec => ec.EntityTypeFullName == typeof(Reaction).FullName);
+                entityChange.ChangeType.ShouldBe(EntityChangeType.Created);
+                entityChange.EntityId.ShouldBe(reactionId.ToJsonString());
+                entityChange.PropertyChanges.Count.ShouldBe(4);
+
+                var propertyChange1 = entityChange.PropertyChanges.Single(pc => pc.PropertyName == nameof(Reaction.Name));
+                propertyChange1.NewValue.ShouldBe("test-reaction-2".ToJsonString(false, false));
+                propertyChange1.OriginalValue.ShouldBeNull();
+                propertyChange1.PropertyTypeFullName.ShouldBe(typeof(Reaction).GetProperty(nameof(Reaction.Name)).PropertyType.FullName);
+
+                var propertyChange2 = entityChange.PropertyChanges.Single(pc => pc.PropertyName == nameof(Reaction.CreatorUserId));
+                propertyChange2.NewValue.ShouldNotBeNullOrEmpty();
+                propertyChange2.OriginalValue.ShouldBeNull();
+                propertyChange2.PropertyTypeFullName.ShouldBe(typeof(Reaction).GetProperty(nameof(Reaction.CreatorUserId)).PropertyType.FullName);
+
+                var propertyChange3 = entityChange.PropertyChanges.Single(pc => pc.PropertyName == nameof(Reaction.CreationTime));
+                propertyChange3.NewValue.ShouldNotBeNullOrEmpty();
+                propertyChange3.OriginalValue.ShouldBeNull();
+                propertyChange3.PropertyTypeFullName.ShouldBe(typeof(Reaction).GetProperty(nameof(Reaction.CreationTime)).PropertyType.FullName);
+
+                var propertyChange4 = entityChange.PropertyChanges.Single(pc => pc.PropertyName == nameof(Reaction.IsDeleted));
+                propertyChange4.NewValue.ShouldBe("false");
+                propertyChange4.OriginalValue.ShouldBeNull();
+                propertyChange4.PropertyTypeFullName.ShouldBe(typeof(Reaction).GetProperty(nameof(Reaction.IsDeleted)).PropertyType.FullName);
+
+                return true;
+            };
+
+            _entityHistoryStore.Received().Save(Arg.Is<EntityChangeSet>(s => predicate(s)));
+        }
+
+        [Fact]
+        public void Should_Write_History_For_Modification_Audited_Entities()
+        {
+            Reaction reaction = null;
+
+            WithUnitOfWork(() =>
+            {
+                reaction = _reactionRepository.Single(r => r.Name == "test-reaction-1");
+                reaction.Name = "test-reaction-1-updated";
+                _reactionRepository.Update(reaction);
+            });
+
+            Predicate<EntityChangeSet> predicate = s =>
+            {
+                s.EntityChanges.Count.ShouldBe(1);
+
+                var entityChange = s.EntityChanges.Single(ec => ec.EntityTypeFullName == typeof(Reaction).FullName);
+                entityChange.ChangeType.ShouldBe(EntityChangeType.Updated);
+                entityChange.EntityId.ShouldBe(reaction.Id.ToJsonString());
+                entityChange.PropertyChanges.Count.ShouldBe(3);
+
+                var propertyChange1 = entityChange.PropertyChanges.Single(pc => pc.PropertyName == nameof(Reaction.Name));
+                propertyChange1.NewValue.ShouldBe("test-reaction-1-updated".ToJsonString(false, false));
+                propertyChange1.OriginalValue.ShouldBe("test-reaction-1".ToJsonString(false, false));
+                propertyChange1.PropertyTypeFullName.ShouldBe(typeof(Reaction).GetProperty(nameof(Reaction.Name)).PropertyType.FullName);
+
+                var propertyChange2 = entityChange.PropertyChanges.Single(pc => pc.PropertyName == nameof(Reaction.LastModifierUserId));
+                propertyChange2.NewValue.ShouldNotBeNullOrEmpty();
+                propertyChange2.OriginalValue.ShouldBeNull();
+                propertyChange2.PropertyTypeFullName.ShouldBe(typeof(Reaction).GetProperty(nameof(Reaction.LastModifierUserId)).PropertyType.FullName);
+
+                var propertyChange3 = entityChange.PropertyChanges.Single(pc => pc.PropertyName == nameof(Reaction.LastModificationTime));
+                propertyChange3.NewValue.ShouldNotBeNullOrEmpty();
+                propertyChange3.OriginalValue.ShouldBeNull();
+                propertyChange3.PropertyTypeFullName.ShouldBe(typeof(Reaction).GetProperty(nameof(Reaction.LastModificationTime)).PropertyType.FullName);
+
+                return true;
+            };
+
+            _entityHistoryStore.Received().Save(Arg.Is<EntityChangeSet>(s => predicate(s)));
+        }
+
+        [Fact]
+        public void Should_Write_History_For_Deletion_Audited_Entities()
+        {
+            Reaction reaction = null;
+
+            WithUnitOfWork(() =>
+            {
+                reaction = _reactionRepository.Single(r => r.Name == "test-reaction-1");
+                _reactionRepository.Delete(reaction);
+            });
+
+            Predicate<EntityChangeSet> predicate = s =>
+            {
+                s.EntityChanges.Count.ShouldBe(1);
+
+                var entityChange = s.EntityChanges.Single(ec => ec.EntityTypeFullName == typeof(Reaction).FullName);
+                entityChange.ChangeType.ShouldBe(EntityChangeType.Deleted);
+                entityChange.EntityId.ShouldBe(reaction.Id.ToJsonString());
+                entityChange.PropertyChanges.Count.ShouldBe(3);
+
+                var propertyChange1 = entityChange.PropertyChanges.Single(pc => pc.PropertyName == nameof(Reaction.IsDeleted));
+                propertyChange1.NewValue.ShouldBe("true");
+                propertyChange1.OriginalValue.ShouldBe("false");
+                propertyChange1.PropertyTypeFullName.ShouldBe(typeof(Reaction).GetProperty(nameof(Reaction.IsDeleted)).PropertyType.FullName);
+
+                var propertyChange2 = entityChange.PropertyChanges.Single(pc => pc.PropertyName == nameof(Reaction.DeleterUserId));
+                propertyChange2.NewValue.ShouldNotBeNullOrEmpty();
+                propertyChange2.OriginalValue.ShouldBeNull();
+                propertyChange2.PropertyTypeFullName.ShouldBe(typeof(Reaction).GetProperty(nameof(Reaction.DeleterUserId)).PropertyType.FullName);
+
+                var propertyChange3 = entityChange.PropertyChanges.Single(pc => pc.PropertyName == nameof(Reaction.DeletionTime));
+                propertyChange3.NewValue.ShouldNotBeNullOrEmpty();
+                propertyChange3.OriginalValue.ShouldBeNull();
+                propertyChange3.PropertyTypeFullName.ShouldBe(typeof(Reaction).GetProperty(nameof(Reaction.DeletionTime)).PropertyType.FullName);
+
+                return true;
+            };
+
+            _entityHistoryStore.Received().Save(Arg.Is<EntityChangeSet>(s => predicate(s)));
+        }
 
         [Fact]
         public void Should_Write_History_For_Tracked_Entities_Create()
