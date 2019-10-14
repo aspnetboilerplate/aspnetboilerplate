@@ -34,6 +34,9 @@ namespace Abp.Zero.SampleApp.Tests.TestDatas
 
             var advertisement1 = new Advertisement { Banner = "test-advertisement-1" };
             _context.Advertisements.Add(advertisement1);
+
+            var reaction1 = new Reaction { Name = "test-reaction-1" };
+            _context.Reactions.Add(reaction1);
         }
     }
 }
