@@ -10,22 +10,22 @@ namespace Abp.AutoMapper
 
         public AutoMapperObjectMapper(IMapper mapper)
         {
-            _mapper = mapper;
+            Mapper = mapper;
         }
 
         public TDestination Map<TDestination>(object source)
         {
-            return _mapper.Map<TDestination>(source);
+            return Mapper.Map<TDestination>(source);
         }
 
         public TDestination Map<TSource, TDestination>(TSource source, TDestination destination)
         {
-            return _mapper.Map(source, destination);
+            return Mapper.Map(source, destination);
         }
 
         public IQueryable<TDestination> ProjectTo<TDestination>(IQueryable source)
         {
-            return _mapper.ProjectTo<TDestination>(source);
+            return Mapper.ProjectTo<TDestination>(source);
         }
     }
 }

@@ -14,16 +14,20 @@ namespace Abp.Zero.SampleApp.EntityFramework
     {
         public DbSet<Book> Books { get; set; }
 
-        public DbSet<Comment> Comments { get; set; }
+        public DbSet<Advertisement> Advertisements { get; set; }
 
         public DbSet<Blog> Blogs { get; set; }
 
         public DbSet<Post> Posts { get; set; }
 
+        public DbSet<Category> Categories { get; set; }
+
+        public DbSet<Comment> Comments { get; set; }
+
         public DbSet<Author> Authors { get; set; }
 
         public DbSet<Store> Stores { get; set; }
-        
+
         public DbSet<UserTestEntity> UserTestEntities { get; set; }
 
         public AppDbContext(DbConnection existingConnection)

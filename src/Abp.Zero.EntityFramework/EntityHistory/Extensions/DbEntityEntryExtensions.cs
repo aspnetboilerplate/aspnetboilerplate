@@ -2,9 +2,7 @@ using System;
 using System.Data.Entity;
 using System.Data.Entity.Core.Objects;
 using System.Data.Entity.Infrastructure;
-using System.Linq;
 using System.Reflection;
-using Abp.Auditing;
 using Abp.Domain.Entities;
 using Abp.Extensions;
 
@@ -20,22 +18,6 @@ namespace Abp.EntityHistory.Extensions
         internal static PropertyInfo GetPropertyInfo(this DbEntityEntry entityEntry, string propertyName)
         {
             return entityEntry.GetEntityBaseType().GetProperty(propertyName);
-        }
-
-        internal static DbPropertyValues GetPropertyValues(this DbEntityEntry entityEntry)
-        {
-            if (entityEntry.State == EntityState.Deleted)
-            {
-                return entityEntry.OriginalValues;
-            }
-            return entityEntry.CurrentValues;
-        }
-
-        internal static bool HasAuditedProperties(this DbEntityEntry entityEntry)
-        {
-            var propertyNames = entityEntry.GetPropertyValues().PropertyNames;
-            var entityType = entityEntry.GetEntityBaseType();
-            return propertyNames.Any(p => entityType.GetProperty(p)?.IsDefined(typeof(AuditedAttribute)) ?? false);
         }
 
         internal static bool IsCreated(this DbEntityEntry entityEntry)
