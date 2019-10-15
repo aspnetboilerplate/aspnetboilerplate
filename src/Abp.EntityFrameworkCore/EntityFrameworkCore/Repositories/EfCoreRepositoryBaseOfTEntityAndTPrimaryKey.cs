@@ -45,7 +45,7 @@ namespace Abp.EntityFrameworkCore.Repositories
         /// <summary>
         /// Gets DbQuery for given entity.
         /// </summary>
-        public virtual DbQuery<TEntity> DbQueryTable => Context.Query<TEntity>();
+        public virtual DbSet<TEntity> DbQueryTable => Context.Set<TEntity>();
 
         private static readonly ConcurrentDictionary<Type, bool> EntityIsDbQuery =
             new ConcurrentDictionary<Type, bool>();

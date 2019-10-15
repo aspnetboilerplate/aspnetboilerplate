@@ -7,6 +7,7 @@ using Abp.Dependency;
 using Abp.Domain.Entities;
 using Abp.Domain.Uow;
 using Abp.MultiTenancy;
+using Abp.Reflection;
 using Abp.Reflection.Extensions;
 
 namespace Abp.Domain.Repositories
@@ -271,7 +272,9 @@ namespace Abp.Domain.Repositories
 
             var leftExpression = Expression.PropertyOrField(lambdaParam, "Id");
 
-            Expression<Func<object>> closure = () => id;
+            var idValue = Convert.ChangeType(id, typeof(TPrimaryKey));
+
+            Expression<Func<object>> closure = () => idValue;
             var rightExpression = Expression.Convert(closure.Body, leftExpression.Type);
 
             var lambdaBody = Expression.Equal(leftExpression, rightExpression);

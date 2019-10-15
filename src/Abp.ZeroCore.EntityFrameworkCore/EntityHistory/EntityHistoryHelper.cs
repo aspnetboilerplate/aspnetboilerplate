@@ -211,7 +211,7 @@ namespace Abp.EntityHistory
                     continue;
                 }
 
-                var shouldSaveProperty = property.IsShadowProperty ||
+                var shouldSaveProperty = property.IsShadowProperty() ||
                                          (IsAuditedPropertyInfo(property.PropertyInfo) ?? !auditedPropertiesOnly);
                 if (shouldSaveProperty)
                 {
@@ -262,7 +262,7 @@ namespace Abp.EntityHistory
                 {
                     foreach (var property in foreignKey.Properties)
                     {
-                        var shouldSaveProperty = property.IsShadowProperty ? 
+                        var shouldSaveProperty = property.IsShadowProperty() ? 
                                                    null :
                                                    IsAuditedPropertyInfo(property.PropertyInfo);
                         if (shouldSaveProperty.HasValue && !shouldSaveProperty.Value)
@@ -284,7 +284,7 @@ namespace Abp.EntityHistory
                 foreach (var propertyChange in entityChange.PropertyChanges)
                 {
                     var propertyEntry = entityEntry.Property(propertyChange.PropertyName);
-                    var isAuditedProperty = !propertyEntry.Metadata.IsShadowProperty && 
+                    var isAuditedProperty = !propertyEntry.Metadata.IsShadowProperty() && 
                                             IsAuditedPropertyInfo(propertyEntry.Metadata.PropertyInfo) == true;
 
                     // TODO: fix new value comparison before truncation

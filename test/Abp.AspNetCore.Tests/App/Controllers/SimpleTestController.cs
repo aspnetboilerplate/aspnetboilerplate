@@ -74,21 +74,21 @@ namespace Abp.AspNetCore.App.Controllers
         }
 
         [HttpGet]
-        public async Task<ActionResult> GetActionResultTestAsync()
+        public async Task<ActionResult> GetActionResultTest2()
         {
             await Task.Delay(0);
             return Content("GetActionResultTestAsync-Result");
         }
 
         [HttpGet]
-        public async Task GetVoidExceptionTestAsync()
+        public async Task GetVoidExceptionTest()
         {
             await Task.Delay(0);
             throw new UserFriendlyException("GetVoidExceptionTestAsync-Exception");
         }
 
         [HttpGet]
-        public async Task<ActionResult> GetActionResultExceptionTestAsync()
+        public async Task<ActionResult> GetActionResultExceptionTest()
         {
             await Task.Delay(0);
             throw new UserFriendlyException("GetActionResultExceptionTestAsync-Exception");

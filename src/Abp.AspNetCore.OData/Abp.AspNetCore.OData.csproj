@@ -1,9 +1,9 @@
-<Project Sdk="Microsoft.NET.Sdk">
+﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <Import Project="..\..\common.props" />
 
   <PropertyGroup>
-    <TargetFramework>netstandard2.0</TargetFramework>
+    <TargetFramework>netcoreapp3.0</TargetFramework>
     <GenerateDocumentationFile>true</GenerateDocumentationFile>
     <AssemblyName>Abp.AspNetCore.OData</AssemblyName>
     <PackageId>Abp.AspNetCore.OData</PackageId>
@@ -20,8 +20,8 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <None Include="bin\Release\netstandard2.0\Abp.AspNetCore.OData.pdb">
-      <PackagePath>lib/netstandard2.0/</PackagePath>
+    <None Include="bin\Release\netcoreapp3.0\Abp.AspNetCore.OData.pdb">
+      <PackagePath>lib/netcoreapp3.0/</PackagePath>
       <Pack>true</Pack>
     </None>
   </ItemGroup>
@@ -32,7 +32,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Include="Microsoft.AspNetCore.OData" Version="7.1.0" />
+    <PackageReference Include="Microsoft.AspNetCore.OData" Version="7.2.1" />
   </ItemGroup>
 
   <ItemGroup>

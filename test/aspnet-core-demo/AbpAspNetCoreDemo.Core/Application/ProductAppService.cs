@@ -28,7 +28,6 @@ namespace AbpAspNetCoreDemo.Core.Application
         
         public int CreateProduct(ProductCreateInput input)
         {
-            input.Name = "";
             var product = ObjectMapper.Map<Product>(input);
             return _productRepository.InsertAndGetId(product);
         }

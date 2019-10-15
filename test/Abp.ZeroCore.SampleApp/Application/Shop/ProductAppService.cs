@@ -5,7 +5,6 @@ using Abp.Application.Services.Dto;
 using Abp.Domain.Repositories;
 using Abp.ZeroCore.SampleApp.Core.Shop;
 using Microsoft.EntityFrameworkCore;
-using System.Linq;
 
 namespace Abp.ZeroCore.SampleApp.Application.Shop
 {
