@@ -1,4 +1,5 @@
-﻿using Abp.Dependency;
+﻿using System;
+using Abp.Dependency;
 using Abp.EntityHistory;
 using Abp.Runtime;
 using JetBrains.Annotations;
@@ -21,7 +22,15 @@ namespace Abp.Web.EntityHistory
                     return OverridedValue.Reason;
                 }
 
-                return HttpContext.Current?.Request.Url.AbsoluteUri;
+                try
+                {
+                    return HttpContext.Current?.Request.Url.AbsoluteUri;
+                }
+                catch (Exception ex)
+                {
+                    Logger.Warn(ex.ToString(), ex);
+                    return null;
+                }
             }
         }
 
