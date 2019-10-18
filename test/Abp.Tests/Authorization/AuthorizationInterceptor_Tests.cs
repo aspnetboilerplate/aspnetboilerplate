@@ -48,6 +48,11 @@ namespace Abp.Tests.Authorization
             permissionChecker.IsGrantedAsync("Permission1").Returns(true);
             permissionChecker.IsGrantedAsync("Permission2").Returns(true);
             permissionChecker.IsGrantedAsync("Permission3").Returns(false); //Permission3 is not granted
+
+            permissionChecker.IsGranted("Permission1").Returns(true);
+            permissionChecker.IsGranted("Permission2").Returns(true);
+            permissionChecker.IsGranted("Permission3").Returns(false); //Permission3 is not granted
+
             LocalIocManager.IocContainer.Register(Component.For<IPermissionChecker>().Instance(permissionChecker));
 
             _syncObj = LocalIocManager.Resolve<MyTestClassToBeAuthorized_Sync>();

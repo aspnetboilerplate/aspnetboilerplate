@@ -13,8 +13,9 @@ namespace AbpAspNetCoreDemo
         public static IWebHostBuilder CreateWebHostBuilder(string[] args)
         {
             return new WebHostBuilder()
-                .UseKestrel(opt => opt.AddServerHeader = false)
+                .UseKestrel()
                 .UseContentRoot(Directory.GetCurrentDirectory())
+                .UseIIS()
                 .UseIISIntegration()
                 .UseStartup<Startup>();
         }

@@ -1,3 +1,4 @@
+using System.Linq;
 using Abp.Dependency;
 
 namespace Abp.ObjectMapping
@@ -15,6 +16,11 @@ namespace Abp.ObjectMapping
         }
 
         public TDestination Map<TSource, TDestination>(TSource source, TDestination destination)
+        {
+            throw new AbpException("Abp.ObjectMapping.IObjectMapper should be implemented in order to map objects.");
+        }
+
+        public IQueryable<TDestination> ProjectTo<TDestination>(IQueryable source)
         {
             throw new AbpException("Abp.ObjectMapping.IObjectMapper should be implemented in order to map objects.");
         }

@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Mvc.RazorPages;
 
 namespace AbpAspNetCoreDemo.Pages
 {
+    [IgnoreAntiforgeryToken]
     public class AuditFilterPageDemoModel : PageModel
     {
         [BindProperty]

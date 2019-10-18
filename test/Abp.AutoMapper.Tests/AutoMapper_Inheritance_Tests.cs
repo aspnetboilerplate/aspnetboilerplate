@@ -22,6 +22,7 @@ namespace Abp.AutoMapper.Tests
                 configuration.CreateAutoAttributeMaps(typeof(MyAutoMapKeyClass5));
                 configuration.CreateAutoAttributeMaps(typeof(MyAutoMapKeyClass7));
                 configuration.AddCollectionMappers();
+                configuration.CreateMap<MyAutoMapKeyClass1, MyAutoMapKeyClass2>().EqualityComparison((x, y) => x.Id == y.Id);
             });
 
             _mapper = config.CreateMapper();
@@ -114,7 +115,6 @@ namespace Abp.AutoMapper.Tests
             public int SecondId { get; set; }
         }
 
-        [AutoMapTo(typeof(MyAutoMapKeyClass2))]
         private class MyAutoMapKeyClass1 : MyEntityDto
         {
             public string TestProp { get; set; }

@@ -1,4 +1,9 @@
 ﻿@page
+@using Microsoft.AspNetCore.Antiforgery
 @model AbpAspNetCoreDemo.Pages.RazorPageDemo
+@inject IAntiforgery AntiForgery
+@AntiForgery.GetAndStoreTokens(HttpContext)
 
-This is a demo to test Razor page functionality!
+<p>
+    This is a demo to test Razor page functionality!
+</p>

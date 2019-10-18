@@ -56,14 +56,14 @@ namespace Abp.Application.Services
         where TGetInput : IEntityDto<TPrimaryKey>
         where TDeleteInput : IEntityDto<TPrimaryKey>
     {
-        Task<TEntityDto> Get(TGetInput input);
+        Task<TEntityDto> GetAsync(TGetInput input);
 
-        Task<PagedResultDto<TEntityDto>> GetAll(TGetAllInput input);
+        Task<PagedResultDto<TEntityDto>> GetAllAsync(TGetAllInput input);
 
-        Task<TEntityDto> Create(TCreateInput input);
+        Task<TEntityDto> CreateAsync(TCreateInput input);
 
-        Task<TEntityDto> Update(TUpdateInput input);
+        Task<TEntityDto> UpdateAsync(TUpdateInput input);
 
-        Task Delete(TDeleteInput input);
+        Task DeleteAsync(TDeleteInput input);
     }
 }

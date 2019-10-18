@@ -1,8 +1,10 @@
-﻿using Microsoft.AspNetCore.Mvc.RazorPages;
+﻿using Abp.AspNetCore.Mvc.RazorPages;
+using Microsoft.AspNetCore.Mvc;
 
 namespace AbpAspNetCoreDemo.Pages
 {
-    public class UowFilterPageDemo3 : PageModel
+    [IgnoreAntiforgeryToken]
+    public class UowFilterPageDemo3 : AbpPageModel
     {
        
     }

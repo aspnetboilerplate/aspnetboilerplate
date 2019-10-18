@@ -35,12 +35,17 @@ namespace Abp.Domain.Repositories
         public static void EnsureCollectionLoaded<TEntity, TPrimaryKey, TProperty>(
             this IRepository<TEntity, TPrimaryKey> repository,
             TEntity entity,
-            Expression<Func<TEntity, IEnumerable<TProperty>>> collectionExpression
+            Expression<Func<TEntity, IEnumerable<TProperty>>> collectionExpression,
+            CancellationToken cancellationToken = default(CancellationToken)
         )
             where TEntity : class, IEntity<TPrimaryKey>
             where TProperty : class
         {
-            AsyncHelper.RunSync(() => repository.EnsureCollectionLoadedAsync(entity, collectionExpression));
+            var repo = ProxyHelper.UnProxy(repository) as ISupportsExplicitLoading<TEntity, TPrimaryKey>;
+            if (repo != null)
+            {
+                repo.EnsureCollectionLoaded(entity, collectionExpression, cancellationToken);
+            }
         }
 
         public static async Task EnsurePropertyLoadedAsync<TEntity, TPrimaryKey, TProperty>(
@@ -62,12 +67,17 @@ namespace Abp.Domain.Repositories
         public static void EnsurePropertyLoaded<TEntity, TPrimaryKey, TProperty>(
             this IRepository<TEntity, TPrimaryKey> repository,
             TEntity entity,
-            Expression<Func<TEntity, TProperty>> propertyExpression
+            Expression<Func<TEntity, TProperty>> propertyExpression,
+            CancellationToken cancellationToken = default(CancellationToken)
         )
             where TEntity : class, IEntity<TPrimaryKey>
             where TProperty : class
         {
-            AsyncHelper.RunSync(() => repository.EnsurePropertyLoadedAsync(entity, propertyExpression));
+            var repo = ProxyHelper.UnProxy(repository) as ISupportsExplicitLoading<TEntity, TPrimaryKey>;
+            if (repo != null)
+            {
+                repo.EnsurePropertyLoaded(entity, propertyExpression, cancellationToken);
+            }
         }
 
         public static IIocResolver GetIocResolver<TEntity, TPrimaryKey>(this IRepository<TEntity, TPrimaryKey> repository)

@@ -1,7 +1,10 @@
-﻿using Abp.AspNetCore;
+﻿using System;
+using System.Threading;
+using Abp.AspNetCore;
 using Abp.AspNetCore.Configuration;
 using Abp.AspNetCore.OData;
 using Abp.Castle.Logging.Log4Net;
+using Abp.Configuration.Startup;
 using Abp.Dependency;
 using Abp.EntityFrameworkCore;
 using Abp.Modules;
@@ -12,7 +15,7 @@ using Castle.MicroKernel.Registration;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.Data.Sqlite;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.EntityFrameworkCore.Metadata.Internal;
+using Microsoft.EntityFrameworkCore.Query;
 
 namespace AbpAspNetCoreDemo
 {
@@ -25,6 +28,9 @@ namespace AbpAspNetCoreDemo
         )]
     public class AbpAspNetCoreDemoModule : AbpModule
     {
+        public static AsyncLocal<Action<IAbpStartupConfiguration>> ConfigurationAction =
+            new AsyncLocal<Action<IAbpStartupConfiguration>>();
+
         public override void PreInitialize()
         {
             RegisterDbContextToSqliteInMemoryDb(IocManager);
@@ -35,12 +41,14 @@ namespace AbpAspNetCoreDemo
                 );
 
 
-            Configuration.IocManager.Resolve<IAbpAspNetCoreConfiguration>().RouteConfiguration.Add(routes =>
+            Configuration.IocManager.Resolve<IAbpAspNetCoreConfiguration>().EndpointConfiguration.Add(endpoints =>
             {
-                routes.MapRoute(
-                    name: "default",
-                    template: "{controller=Home}/{action=Index}/{id?}");
+                endpoints.MapControllerRoute("defaultWithArea", "{area}/{controller=Home}/{action=Index}/{id?}");
+                endpoints.MapControllerRoute("default", "{controller=Home}/{action=Index}/{id?}");
+                endpoints.MapRazorPages();
             });
+
+            ConfigurationAction.Value?.Invoke(Configuration);
         }
 
         public override void Initialize()
@@ -51,8 +59,6 @@ namespace AbpAspNetCoreDemo
         private static void RegisterDbContextToSqliteInMemoryDb(IIocManager iocManager)
         {
             var builder = new DbContextOptionsBuilder<MyDbContext>();
-
-            builder.ReplaceService<IEntityMaterializerSource, AbpEntityMaterializerSource>();
 
             var inMemorySqlite = new SqliteConnection("Data Source=:memory:");
             builder.UseSqlite(inMemorySqlite);

@@ -3,7 +3,7 @@
   <Import Project="..\..\common.props" />
 
   <PropertyGroup>
-    <TargetFramework>netstandard2.0</TargetFramework>
+    <TargetFrameworks>netstandard2.1</TargetFrameworks>
     <GenerateDocumentationFile>true</GenerateDocumentationFile>
     <AssemblyName>Abp.EntityFrameworkCore.EFPlus</AssemblyName>
     <PackageId>Abp.EntityFrameworkCore.EFPlus</PackageId>
@@ -21,7 +21,7 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="Z.EntityFramework.Plus.EFCore" Version="2.0.3" />
+    <PackageReference Include="Z.EntityFramework.Plus.EFCore" Version="3.0.9-preview9-01" />
   </ItemGroup>
 
   <ItemGroup>
@@ -29,8 +29,8 @@
   </ItemGroup>
 
   <ItemGroup>
-    <None Include="bin\Release\netstandard2.0\Abp.EntityFrameworkCore.EFPlus.pdb">
-      <PackagePath>lib/netstandard2.0/</PackagePath>
+    <None Include="bin\Release\netstandard2.1\Abp.EntityFrameworkCore.EFPlus.pdb">
+      <PackagePath>lib/netstandard2.1/</PackagePath>
       <Pack>true</Pack>
     </None>
   </ItemGroup>

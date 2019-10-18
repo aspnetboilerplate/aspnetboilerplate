@@ -32,7 +32,7 @@
   
   <ItemGroup>
     <PackageReference Include="System.Runtime" Version="4.3.1" />
-    <PackageReference Include="MailKit" Version="2.2.0" />
+    <PackageReference Include="MailKit" Version="2.3.1.6" />
   </ItemGroup>
   
   <ItemGroup>

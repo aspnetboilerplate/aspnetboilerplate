@@ -17,7 +17,13 @@ namespace Abp.Application.Features
         /// <inheritdoc/>
         public Task<string> GetValueOrNullAsync(int tenantId, Feature feature)
         {
-            return Task.FromResult((string) null);
+            return Task.FromResult((string)null);
+        }
+
+        /// <inheritdoc/>
+        public string GetValueOrNull(int tenantId, Feature feature)
+        {
+            return (string)null;
         }
     }
 }

@@ -14,5 +14,11 @@ namespace Abp.Notifications
         /// </summary>
         /// <param name="notificationId">The notification id.</param>
         Task DistributeAsync(Guid notificationId);
+
+        /// <summary>
+        /// Distributes given notification to users.
+        /// </summary>
+        /// <param name="notificationId">The notification id.</param>
+        void Distribute(Guid notificationId);
     }
 }

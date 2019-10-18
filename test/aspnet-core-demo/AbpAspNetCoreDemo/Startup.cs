@@ -4,37 +4,33 @@ using System.Linq;
 using System.Threading;
 using Abp.AspNetCore;
 using Abp.AspNetCore.Configuration;
+using Abp.AspNetCore.Mvc.Antiforgery;
 using Abp.AspNetCore.Mvc.Extensions;
-using Abp.AspNetCore.OData.Configuration;
 using Abp.Castle.Logging.Log4Net;
 using Abp.Dependency;
 using Abp.Json;
 using Abp.PlugIns;
 using AbpAspNetCoreDemo.Controllers;
-using AbpAspNetCoreDemo.Core.Domain;
+using Castle.Core.Logging;
 using Castle.Facilities.Logging;
 using Castle.MicroKernel.ModelBuilder.Inspectors;
 using Castle.MicroKernel.SubSystems.Conversion;
-using Microsoft.AspNet.OData.Extensions;
-using Microsoft.AspNet.OData.Formatter;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
-using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.Logging;
-using Microsoft.Net.Http.Headers;
+using Microsoft.Extensions.Hosting;
 using Newtonsoft.Json.Serialization;
 
 namespace AbpAspNetCoreDemo
 {
     public class Startup
     {
-        private readonly IHostingEnvironment _env;
+        private readonly IWebHostEnvironment _env;
 
         public static readonly AsyncLocal<IocManager> IocManager = new AsyncLocal<IocManager>();
 
-        public Startup(IHostingEnvironment env)
+        public Startup(IWebHostEnvironment env)
         {
             _env = env;
             var builder = new ConfigurationBuilder()
@@ -60,8 +56,8 @@ namespace AbpAspNetCoreDemo
             //Add framework services
             services.AddMvc(options =>
             {
-                options.Filters.Add(new AutoValidateAntiforgeryTokenAttribute());
-            }).AddJsonOptions(options =>
+                options.Filters.Add(new AbpAutoValidateAntiforgeryTokenAttribute());
+            }).AddNewtonsoftJson(options =>
             {
                 options.SerializerSettings.ContractResolver = new AbpMvcContractResolver(IocManager.Value)
                 {
@@ -69,21 +65,23 @@ namespace AbpAspNetCoreDemo
                 };
             });
 
-            services.AddOData();
+            // Waiting for OData .NET Core 3.0 support, see https://github.com/OData/WebApi/issues/1748
+            // services.AddOData();
 
             // Workaround: https://github.com/OData/WebApi/issues/1177
-            services.AddMvcCore(options =>
-            {
-                foreach (var outputFormatter in options.OutputFormatters.OfType<ODataOutputFormatter>().Where(_ => _.SupportedMediaTypes.Count == 0))
-                {
-                    outputFormatter.SupportedMediaTypes.Add(new MediaTypeHeaderValue("application/prs.odatatestxx-odata"));
-                }
+            // Waiting for OData .NET Core 3.0 support, see https://github.com/OData/WebApi/issues/1748
+            //services.AddMvcCore(options =>
+            //{
+            //    foreach (var outputFormatter in options.OutputFormatters.OfType<ODataOutputFormatter>().Where(_ => _.SupportedMediaTypes.Count == 0))
+            //    {
+            //        outputFormatter.SupportedMediaTypes.Add(new MediaTypeHeaderValue("application/prs.odatatestxx-odata"));
+            //    }
 
-                foreach (var inputFormatter in options.InputFormatters.OfType<ODataInputFormatter>().Where(_ => _.SupportedMediaTypes.Count == 0))
-                {
-                    inputFormatter.SupportedMediaTypes.Add(new MediaTypeHeaderValue("application/prs.odatatestxx-odata"));
-                }
-            });
+            //    foreach (var inputFormatter in options.InputFormatters.OfType<ODataInputFormatter>().Where(_ => _.SupportedMediaTypes.Count == 0))
+            //    {
+            //        inputFormatter.SupportedMediaTypes.Add(new MediaTypeHeaderValue("application/prs.odatatestxx-odata"));
+            //    }
+            //});
 
             //Configure Abp and Dependency Injection. Should be called last.
             return services.AddAbp<AbpAspNetCoreDemoModule>(options =>
@@ -92,7 +90,7 @@ namespace AbpAspNetCoreDemo
 
                 options.PlugInSources.Add(
                     new AssemblyFileListPlugInSource(
-                        Path.Combine(_env.ContentRootPath, @"..\AbpAspNetCoreDemo.PlugIn\bin\Debug\netstandard2.0\AbpAspNetCoreDemo.PlugIn.dll")
+                        Path.Combine(_env.ContentRootPath, @"..\AbpAspNetCoreDemo.PlugIn\bin\Debug\netcoreapp3.0\AbpAspNetCoreDemo.PlugIn.dll")
                     )
                 );
 
@@ -112,23 +110,21 @@ namespace AbpAspNetCoreDemo
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
-        public void Configure(IApplicationBuilder app, IHostingEnvironment env, ILoggerFactory loggerFactory)
+        public void Configure(IApplicationBuilder app, IWebHostEnvironment env, ILoggerFactory loggerFactory)
         {
             app.UseAbp(); //Initializes ABP framework. Should be called first.
 
-            app.UseOData(builder =>
-            {
-                builder.EntitySet<Product>("Products").EntityType.Expand().Filter().OrderBy().Page().Select();
-            });
+            // Waiting for OData .NET Core 3.0 support, see https://github.com/OData/WebApi/issues/1748
+            // app.UseOData(builder =>
+            // {
+            //     builder.EntitySet<Product>("Products").EntityType.Expand().Filter().OrderBy().Page().Select();
+            // });
 
             // Return IQueryable from controllers
-            app.UseUnitOfWork(options =>
-            {
-                options.Filter = httpContext => httpContext.Request.Path.Value.StartsWith("/odata");
-            });
-
-            loggerFactory.AddConsole(Configuration.GetSection("Logging"));
-            loggerFactory.AddDebug();
+            //app.UseUnitOfWork(options =>
+            //{
+            //    options.Filter = httpContext => httpContext.Request.Path.Value.StartsWith("/odata");
+            //});
 
             if (env.IsDevelopment())
             {
@@ -143,10 +139,18 @@ namespace AbpAspNetCoreDemo
             app.UseStaticFiles();
             app.UseEmbeddedFiles(); //Allows to expose embedded files to the web!
 
-            app.UseMvc(routes =>
+            app.UseRouting();
+
+            app.UseEndpoints(endpoints =>
             {
-                app.ApplicationServices.GetRequiredService<IAbpAspNetCoreConfiguration>().RouteConfiguration.ConfigureAll(routes);
-                routes.MapODataServiceRoute(app);
+                endpoints.MapControllerRoute("defaultWithArea", "{area}/{controller=Home}/{action=Index}/{id?}");
+                endpoints.MapControllerRoute("default", "{controller=Home}/{action=Index}/{id?}");
+                endpoints.MapRazorPages();
+
+                app.ApplicationServices.GetRequiredService<IAbpAspNetCoreConfiguration>().EndpointConfiguration.ConfigureAllEndpoints(endpoints);
+
+                //TODO@3.0 related: https://github.com/OData/WebApi/issues/1707
+                //routes.MapODataServiceRoute(app); ???
             });
         }
     }

@@ -22,12 +22,12 @@ namespace Abp.Runtime.Caching.Configuration
             _configurators = new List<ICacheConfigurator>();
         }
 
-        public void ConfigureAll(Action<ICache> initAction)
+        public void ConfigureAll(Action<ICacheOptions> initAction)
         {
             _configurators.Add(new CacheConfigurator(initAction));
         }
 
-        public void Configure(string cacheName, Action<ICache> initAction)
+        public void Configure(string cacheName, Action<ICacheOptions> initAction)
         {
             _configurators.Add(new CacheConfigurator(cacheName, initAction));
         }

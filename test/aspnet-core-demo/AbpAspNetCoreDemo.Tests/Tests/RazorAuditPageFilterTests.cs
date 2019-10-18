@@ -14,13 +14,13 @@ namespace AbpAspNetCoreDemo.IntegrationTests.Tests
     public class RazorAuditPageFilterTests
     {
         private readonly WebApplicationFactory<Startup> _factory;
-        
+
         private IAuditingStore _auditingStore;
 
         public RazorAuditPageFilterTests()
         {
             _factory = new WebApplicationFactory<Startup>();
-            
+
             RegisterFakeAuditingStore();
         }
 
@@ -102,7 +102,7 @@ namespace AbpAspNetCoreDemo.IntegrationTests.Tests
 
             // Act
 
-            var response = await client.PostAsync("/AuditFilterPageDemo", new FormUrlEncodedContent(new KeyValuePair<string, string>[]
+            var response = await client.PostAsync("/AuditFilterPageDemo", new FormUrlEncodedContent(new[]
             {
                 new KeyValuePair<string, string>("Message","My test message"),
             }));
@@ -118,6 +118,7 @@ namespace AbpAspNetCoreDemo.IntegrationTests.Tests
         }
 
 
+       
         [Theory]
         [InlineData("Get")]
         [InlineData("Post")]
@@ -138,6 +139,58 @@ namespace AbpAspNetCoreDemo.IntegrationTests.Tests
             _auditingStore.DidNotReceive().SaveAsync(Arg.Any<AuditInfo>());
 #pragma warning restore 4014
 
+        }
+
+        [Theory]
+        [InlineData("Json")]
+        [InlineData("Object")]
+        public async Task RazorPage_RazorAuditPageFilter_Set_ReturnValue_When_Return_JsonResult_Or_ObjectResult(string handler)
+        {
+            // Arrange
+            AbpAspNetCoreDemoModule.ConfigurationAction.Value = configuration =>
+            {
+                configuration.Auditing.SaveReturnValues = true;
+            };
+
+            var client = _factory.CreateClient();
+
+            // Act
+            var response = await client.PostAsync("/AuditFilterPageDemo5?handler=" + handler, null);
+
+            // Assert
+            response.EnsureSuccessStatusCode();
+
+#pragma warning disable 4014
+            _auditingStore.Received().SaveAsync(Arg.Is<AuditInfo>(a =>
+                a.ServiceName.Contains("AuditFilterPageDemo5") &&
+                a.MethodName.Contains(handler) &&
+                a.ReturnValue == "{\"strValue\":\"Forty Two\",\"intValue\":42}"));
+#pragma warning restore 4014
+        }
+
+        [Fact]
+        public async Task RazorPage_RazorAuditPageFilter_Set_ReturnValue_When_Return_Content()
+        {
+            // Arrange
+            AbpAspNetCoreDemoModule.ConfigurationAction.Value = configuration =>
+            {
+                configuration.Auditing.SaveReturnValues = true;
+            };
+
+            var client = _factory.CreateClient();
+
+            // Act
+            var response = await client.PostAsync("/AuditFilterPageDemo5?handler=String", null);
+
+            // Assert
+            response.EnsureSuccessStatusCode();
+
+#pragma warning disable 4014
+            _auditingStore.Received().SaveAsync(Arg.Is<AuditInfo>(a =>
+                a.ServiceName.Contains("AuditFilterPageDemo5") &&
+                a.MethodName.Contains("String") &&
+                a.ReturnValue == "test"));
+#pragma warning restore 4014
         }
     }
 }

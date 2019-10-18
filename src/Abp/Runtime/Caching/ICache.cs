@@ -7,25 +7,12 @@ namespace Abp.Runtime.Caching
     /// <summary>
     /// Defines a cache that can be store and get items by keys.
     /// </summary>
-    public interface ICache : IDisposable
+    public interface ICache : IDisposable, ICacheOptions
     {
         /// <summary>
         /// Unique name of the cache.
         /// </summary>
         string Name { get; }
-
-        /// <summary>
-        /// Default sliding expire time of cache items.
-        /// Default value: 60 minutes (1 hour).
-        /// Can be changed by configuration.
-        /// </summary>
-        TimeSpan DefaultSlidingExpireTime { get; set; }
-
-        /// <summary>
-        /// Default absolute expire time of cache items.
-        /// Default value: null (not used).
-        /// </summary>
-        TimeSpan? DefaultAbsoluteExpireTime { get; set; }
 
         /// <summary>
         /// Gets an item from the cache.
@@ -99,7 +86,7 @@ namespace Abp.Runtime.Caching
         /// Saves/Overrides an item in the cache by a key.
         /// Use one of the expire times at most (<paramref name="slidingExpireTime"/> or <paramref name="absoluteExpireTime"/>).
         /// If none of them is specified, then
-        /// <see cref="DefaultAbsoluteExpireTime"/> will be used if it's not null. Othewise, <see cref="DefaultSlidingExpireTime"/>
+        /// <see cref="ICacheOptions.DefaultAbsoluteExpireTime"/> will be used if it's not null. Othewise, <see cref="ICacheOptions.DefaultSlidingExpireTime"/>
         /// will be used.
         /// </summary>
         /// <param name="key">Key</param>
@@ -124,7 +111,7 @@ namespace Abp.Runtime.Caching
         /// Saves/Overrides an item in the cache by a key.
         /// Use one of the expire times at most (<paramref name="slidingExpireTime"/> or <paramref name="absoluteExpireTime"/>).
         /// If none of them is specified, then
-        /// <see cref="DefaultAbsoluteExpireTime"/> will be used if it's not null. Othewise, <see cref="DefaultSlidingExpireTime"/>
+        /// <see cref="ICacheOptions.DefaultAbsoluteExpireTime"/> will be used if it's not null. Othewise, <see cref="ICacheOptions.DefaultSlidingExpireTime"/>
         /// will be used.
         /// </summary>
         /// <param name="key">Key</param>

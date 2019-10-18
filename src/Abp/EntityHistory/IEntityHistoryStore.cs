@@ -13,5 +13,11 @@ namespace Abp.EntityHistory
         /// </summary>
         /// <param name="entityChangeSet">Entity change set</param>
         Task SaveAsync(EntityChangeSet entityChangeSet);
+
+        /// <summary>
+        /// Should save entity change set to a persistent store.
+        /// </summary>
+        /// <param name="entityChangeSet">Entity change set</param>
+        void Save(EntityChangeSet entityChangeSet);
     }
 }
