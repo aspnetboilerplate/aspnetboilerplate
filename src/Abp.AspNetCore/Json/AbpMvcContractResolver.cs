@@ -62,7 +62,7 @@ namespace Abp.Json
 
                             if (_useMvcDateTimeFormat.Value)
                             {
-                                using (var mvcJsonOptions = _iocResolver.ResolveAsDisposable<IOptions<MvcJsonOptions>>())
+                                using (var mvcJsonOptions = _iocResolver.ResolveAsDisposable<IOptions<MvcNewtonsoftJsonOptions>>())
                                 {
                                     _datetimeFormat = mvcJsonOptions.Object.Value.SerializerSettings.DateFormatString;
                                 }

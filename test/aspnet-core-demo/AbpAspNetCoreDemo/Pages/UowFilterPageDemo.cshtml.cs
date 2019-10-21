@@ -1,10 +1,12 @@
-﻿using Abp.Domain.Uow;
+﻿using Abp.AspNetCore.Mvc.RazorPages;
+using Abp.Domain.Uow;
 using Abp.UI;
-using Microsoft.AspNetCore.Mvc.RazorPages;
+using Microsoft.AspNetCore.Mvc;
 
 namespace AbpAspNetCoreDemo.Pages
 {
-    public class UowFilterPageDemo : PageModel
+    [IgnoreAntiforgeryToken]
+    public class UowFilterPageDemo : AbpPageModel
     {
         private readonly IUnitOfWorkManager _unitOfWorkManager;
 

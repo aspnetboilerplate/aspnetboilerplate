@@ -60,7 +60,7 @@ namespace Abp.Dapper.Repositories
         }
 
         public abstract int Execute(string query, object parameters = null);
-        
+
         public virtual Task<int> ExecuteAsync(string query, object parameters = null)
         {
             return Task.FromResult(Execute(query, parameters));
@@ -179,9 +179,12 @@ namespace Abp.Dapper.Repositories
         {
             ParameterExpression lambdaParam = Expression.Parameter(typeof(TEntity));
 
+            var value = Convert.ChangeType(id, typeof(TPrimaryKey));
+            var valueExpression = Expression.Constant(value, typeof(TPrimaryKey));
+
             BinaryExpression lambdaBody = Expression.Equal(
                 Expression.PropertyOrField(lambdaParam, "Id"),
-                Expression.Constant(id, typeof(TPrimaryKey))
+                valueExpression
             );
 
             return Expression.Lambda<Func<TEntity, bool>>(lambdaBody, lambdaParam);

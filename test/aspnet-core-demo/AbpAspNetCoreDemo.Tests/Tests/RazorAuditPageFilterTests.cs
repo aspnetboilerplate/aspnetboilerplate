@@ -1,5 +1,4 @@
-﻿using System;
-using System.Net.Http;
+﻿using System.Net.Http;
 using System.Threading.Tasks;
 using Abp.Auditing;
 using Abp.Dependency;
@@ -8,7 +7,6 @@ using Microsoft.AspNetCore.Mvc.Testing;
 using Xunit;
 using NSubstitute;
 using System.Collections.Generic;
-using Abp.Extensions;
 using Shouldly;
 
 namespace AbpAspNetCoreDemo.IntegrationTests.Tests
@@ -16,13 +14,13 @@ namespace AbpAspNetCoreDemo.IntegrationTests.Tests
     public class RazorAuditPageFilterTests
     {
         private readonly WebApplicationFactory<Startup> _factory;
-        
+
         private IAuditingStore _auditingStore;
 
         public RazorAuditPageFilterTests()
         {
             _factory = new WebApplicationFactory<Startup>();
-            
+
             RegisterFakeAuditingStore();
         }
 
@@ -104,7 +102,7 @@ namespace AbpAspNetCoreDemo.IntegrationTests.Tests
 
             // Act
 
-            var response = await client.PostAsync("/AuditFilterPageDemo", new FormUrlEncodedContent(new KeyValuePair<string, string>[]
+            var response = await client.PostAsync("/AuditFilterPageDemo", new FormUrlEncodedContent(new[]
             {
                 new KeyValuePair<string, string>("Message","My test message"),
             }));
@@ -120,6 +118,7 @@ namespace AbpAspNetCoreDemo.IntegrationTests.Tests
         }
 
 
+       
         [Theory]
         [InlineData("Get")]
         [InlineData("Post")]
@@ -142,7 +141,6 @@ namespace AbpAspNetCoreDemo.IntegrationTests.Tests
 
         }
 
-
         [Theory]
         [InlineData("Json")]
         [InlineData("Object")]
@@ -150,9 +148,9 @@ namespace AbpAspNetCoreDemo.IntegrationTests.Tests
         {
             // Arrange
             AbpAspNetCoreDemoModule.ConfigurationAction.Value = configuration =>
-                {
-                    configuration.Auditing.SaveReturnValues = true;
-                };
+            {
+                configuration.Auditing.SaveReturnValues = true;
+            };
 
             var client = _factory.CreateClient();
 

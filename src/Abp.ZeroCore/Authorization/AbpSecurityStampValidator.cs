@@ -6,6 +6,7 @@ using Abp.MultiTenancy;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Identity;
+using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 
 namespace Abp.Authorization
@@ -18,11 +19,13 @@ namespace Abp.Authorization
         public AbpSecurityStampValidator(
             IOptions<SecurityStampValidatorOptions> options,
             AbpSignInManager<TTenant, TRole, TUser> signInManager,
-            ISystemClock systemClock)
+            ISystemClock systemClock,
+            ILoggerFactory loggerFactory)
             : base(
                 options, 
                 signInManager,
-                systemClock)
+                systemClock,
+                loggerFactory)
         {
         }
 

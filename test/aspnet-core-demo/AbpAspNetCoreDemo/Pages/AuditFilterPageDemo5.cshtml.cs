@@ -1,9 +1,9 @@
 ﻿using Abp.AspNetCore.Mvc.RazorPages;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Mvc.RazorPages;
 
 namespace AbpAspNetCoreDemo.Pages
 {
+    [IgnoreAntiforgeryToken]
     public class AuditFilterPageDemo5Model : AbpPageModel
     {
         public JsonResult OnPostJson()

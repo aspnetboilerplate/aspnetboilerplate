@@ -102,7 +102,7 @@ namespace Abp.AspNetCore.Tests
             response.Error.ValidationErrors.Length.ShouldBe(1);
             response.Error.ValidationErrors.ShouldNotBeNull();
             response.Error.ValidationErrors[0].Members.Length.ShouldBe(1);
-            response.Error.ValidationErrors[0].Members[0].ShouldBe("value");
+            response.Error.ValidationErrors[0].Members[0].ShouldBe("$.value");
         }
 
         [Fact]

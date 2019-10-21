@@ -3,7 +3,7 @@
   <Import Project="..\..\common.props" />
 
   <PropertyGroup>
-    <TargetFramework>netstandard2.0</TargetFramework>
+    <TargetFramework>netcoreapp3.0</TargetFramework>
     <GenerateDocumentationFile>true</GenerateDocumentationFile>
     <AssemblyName>Abp.ZeroCore.IdentityServer4</AssemblyName>
     <PackageId>Abp.ZeroCore.IdentityServer4</PackageId>
@@ -19,13 +19,13 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="IdentityServer4.AspNetIdentity" Version="2.5.0" />
-    <PackageReference Include="IdentityServer4" Version="2.5.0" />
+    <PackageReference Include="IdentityServer4.AspNetIdentity" Version="3.0.0" />
+    <PackageReference Include="IdentityServer4" Version="3.0.0" />
   </ItemGroup>
 
   <ItemGroup>
-    <None Include="bin\Release\netstandard2.0\Abp.ZeroCore.IdentityServer4.pdb">
-      <PackagePath>lib/netstandard2.0/</PackagePath>
+    <None Include="bin\Release\netcoreapp3.0\Abp.ZeroCore.IdentityServer4.pdb">
+      <PackagePath>lib/netcoreapp3.0/</PackagePath>
       <Pack>true</Pack>
     </None>
   </ItemGroup>

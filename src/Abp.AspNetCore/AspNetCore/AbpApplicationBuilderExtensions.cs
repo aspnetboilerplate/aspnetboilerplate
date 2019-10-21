@@ -11,13 +11,17 @@ using Microsoft.AspNetCore.Localization;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using System.Globalization;
+using Abp.AspNetCore.ExceptionHandling;
 using Abp.AspNetCore.Security;
+using Abp.AspNetCore.Uow;
 using Microsoft.AspNetCore.Hosting;
 
 namespace Abp.AspNetCore
 {
     public static class AbpApplicationBuilderExtensions
     {
+        private const string AuthorizationExceptionHandlingMiddlewareMarker = "_AbpAuthorizationExceptionHandlingMiddleware_Added";
+
         public static void UseAbp(this IApplicationBuilder app)
         {
             app.UseAbp(null);
@@ -120,6 +124,23 @@ namespace Abp.AspNetCore
         public static void UseAbpSecurityHeaders(this IApplicationBuilder app)
         {
             app.UseMiddleware<AbpSecurityHeadersMiddleware>();
+        }
+
+        public static IApplicationBuilder UseUnitOfWork(this IApplicationBuilder app)
+        {
+            return app
+                .UseMiddleware<AbpUnitOfWorkMiddleware>();
+        }
+
+        public static IApplicationBuilder UseAbpAuthorizationExceptionHandling(this IApplicationBuilder app)
+        {
+            if (app.Properties.ContainsKey(AuthorizationExceptionHandlingMiddlewareMarker))
+            {
+                return app;
+            }
+
+            app.Properties[AuthorizationExceptionHandlingMiddlewareMarker] = true;
+            return app.UseMiddleware<AbpAuthorizationExceptionHandlingMiddleware>();
         }
     }
 }
