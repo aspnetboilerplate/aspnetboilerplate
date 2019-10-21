@@ -154,7 +154,8 @@ namespace Abp.EntityHistory
         private EntityChange CreateEntityChange(DbEntityEntry entityEntry, EntityType entityType)
         {
             var entityId = GetEntityId(entityEntry, entityType);
-            var entityTypeFullName = entityEntry.GetEntityBaseType().FullName)
+            var entityTypeFullName = entityEntry.GetEntityBaseType().FullName;
+
             EntityChangeType changeType;
             switch (entityEntry.State)
             {
