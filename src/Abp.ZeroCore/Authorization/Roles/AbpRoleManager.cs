@@ -370,7 +370,9 @@ namespace Abp.Authorization.Roles
         /// <exception cref="AbpException">Throws exception if no role with given roleName</exception>
         public virtual TRole GetRoleByName(string roleName)
         {
-            var role = AbpStore.FindByName(roleName);
+            var normalizedRoleName = roleName.ToUpperInvariant();
+
+            var role = AbpStore.FindByName(normalizedRoleName);
             if (role == null)
             {
                 throw new AbpException("There is no role with name: " + roleName);
