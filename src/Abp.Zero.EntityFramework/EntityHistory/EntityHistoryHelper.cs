@@ -169,7 +169,7 @@ namespace Abp.EntityHistory
                     break;
                 case EntityState.Detached:
                 case EntityState.Unchanged:
-                    Logger.DebugFormat("Skip Entity Change Creation for {0}, Id:{1}", entityTypeFullName, entityId);
+                    Logger.DebugFormat("Skipping Entity Change Creation for {0}, Id:{1}", entityTypeFullName, entityId);
                     return null;
                 default:
                     Logger.ErrorFormat("Unexpected {0} - {1}", nameof(entityEntry.State), entityEntry.State);

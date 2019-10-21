@@ -53,7 +53,7 @@ namespace Abp.Domain.Entities
         }
 
         /// <inheritdoc/>
-        public bool EntityEquals(object obj)
+        public virtual bool EntityEquals(object obj)
         {
             if (obj == null || !(obj is Entity<TPrimaryKey>))
             {
