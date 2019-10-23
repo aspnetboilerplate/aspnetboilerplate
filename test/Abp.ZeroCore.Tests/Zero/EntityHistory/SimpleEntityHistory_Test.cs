@@ -53,6 +53,82 @@ namespace Abp.Zero.EntityHistory
         [Fact]
         public void Should_Write_History_For_Tracked_Entities_Create()
         {
+            /* Advertisement does not have Audited attribute. */
+            Resolve<IEntityHistoryConfiguration>().Selectors.Add("Selected", typeof(Advertisement));
+
+            int? advertisementId = null;
+            WithUnitOfWork(() =>
+            {
+                var advertisement = new Advertisement { Banner = "tracked-advertisement" };
+                advertisementId = _advertisementRepository.InsertAndGetId(advertisement);
+            });
+
+            Predicate<EntityChangeSet> predicate = s =>
+            {
+                s.EntityChanges.Count.ShouldBe(1);
+
+                var entityChange = s.EntityChanges.Single(ec => ec.EntityTypeFullName == typeof(Advertisement).FullName);
+                entityChange.ChangeTime.ShouldNotBeNull();
+                entityChange.ChangeType.ShouldBe(EntityChangeType.Created);
+                entityChange.EntityId.ShouldBe(advertisementId.ToJsonString());
+                entityChange.PropertyChanges.Count.ShouldBe(1);
+
+                var propertyChange1 = entityChange.PropertyChanges.Single(pc => pc.PropertyName == nameof(Advertisement.Banner));
+                propertyChange1.OriginalValue.ShouldBeNull();
+                propertyChange1.NewValue.ShouldNotBeNull();
+
+                // Check "who did this change"
+                s.ImpersonatorTenantId.ShouldBe(AbpSession.ImpersonatorTenantId);
+                s.ImpersonatorUserId.ShouldBe(AbpSession.ImpersonatorUserId);
+                s.TenantId.ShouldBe(AbpSession.TenantId);
+                s.UserId.ShouldBe(AbpSession.UserId);
+
+                return true;
+            };
+
+            _entityHistoryStore.Received().Save(Arg.Is<EntityChangeSet>(s => predicate(s)));
+        }
+
+        [Fact]
+        public void Should_Write_History_For_Tracked_Entities_Create_To_Database()
+        {
+            // Forward calls from substitute to implementation
+            var entityHistoryStore = Resolve<EntityHistoryStore>();
+            _entityHistoryStore.When(x => x.SaveAsync(Arg.Any<EntityChangeSet>()))
+                .Do(callback => AsyncHelper.RunSync(() =>
+                    entityHistoryStore.SaveAsync(callback.Arg<EntityChangeSet>()))
+                );
+            _entityHistoryStore.When(x => x.Save(Arg.Any<EntityChangeSet>()))
+                .Do(callback => entityHistoryStore.Save(callback.Arg<EntityChangeSet>()));
+
+            UsingDbContext((context) =>
+            {
+                context.EntityChanges.Count(e => e.TenantId == 1).ShouldBe(0);
+                context.EntityChangeSets.Count(e => e.TenantId == 1).ShouldBe(0);
+                context.EntityPropertyChanges.Count(e => e.TenantId == 1).ShouldBe(0);
+            });
+
+            /* Advertisement does not have Audited attribute. */
+            Resolve<IEntityHistoryConfiguration>().Selectors.Add("Selected", typeof(Advertisement));
+
+            var justNow = Clock.Now;
+            WithUnitOfWork(() =>
+            {
+                _advertisementRepository.InsertAndGetId(new Advertisement { Banner = "tracked-advertisement" });
+            });
+
+            UsingDbContext((context) =>
+            {
+                context.EntityChanges.Count(e => e.TenantId == 1).ShouldBe(1);
+                context.EntityChangeSets.Count(e => e.TenantId == 1).ShouldBe(1);
+                context.EntityChangeSets.Single().CreationTime.ShouldBeGreaterThan(justNow);
+                context.EntityPropertyChanges.Count(e => e.TenantId == 1).ShouldBe(1);
+            });
+        }
+
+        [Fact]
+        public void Should_Write_History_For_Audited_Entities_Create()
+        {
             /* Blog has Audited attribute. */
 
             var blog2Id = CreateBlogAndGetId();
@@ -87,7 +163,7 @@ namespace Abp.Zero.EntityHistory
         }
 
         [Fact]
-        public void Should_Write_History_For_Tracked_Entities_Create_To_Database()
+        public void Should_Write_History_For_Audited_Entities_Create_To_Database()
         {
             // Forward calls from substitute to implementation
             var entityHistoryStore = Resolve<EntityHistoryStore>();
@@ -136,7 +212,7 @@ namespace Abp.Zero.EntityHistory
         }
 
         [Fact]
-        public void Should_Write_History_For_Tracked_Entities_Update()
+        public void Should_Write_History_For_Audited_Entities_Update()
         {
             /* Blog has Audited attribute. */
 
@@ -165,7 +241,7 @@ namespace Abp.Zero.EntityHistory
         }
 
         [Fact]
-        public void Should_Write_History_For_Tracked_Entities_Update_Owned()
+        public void Should_Write_History_For_Audited_Entities_Update_Owned()
         {
             /* Blog has Audited attribute. */
 
@@ -206,7 +282,7 @@ namespace Abp.Zero.EntityHistory
         }
 
         [Fact]
-        public void Should_Write_History_For_Tracked_Property_Foreign_Key()
+        public void Should_Write_History_For_Audited_Property_Foreign_Key()
         {
             /* Post.BlogId has Audited attribute. */
 
@@ -249,7 +325,7 @@ namespace Abp.Zero.EntityHistory
         }
 
         [Fact]
-        public void Should_Write_History_For_Tracked_Property_Foreign_Key_Shadow()
+        public void Should_Write_History_For_Audited_Property_Foreign_Key_Shadow()
         {
             /* Comment has Audited attribute. */
 
@@ -322,6 +398,33 @@ namespace Abp.Zero.EntityHistory
         public void Should_Not_Write_History_If_Disabled()
         {
             Resolve<IEntityHistoryConfiguration>().IsEnabled = false;
+
+            /* Blog has Audited attribute. */
+
+            var newValue = "http://testblog1-changed.myblogs.com";
+            var originalValue = UpdateBlogUrlAndGetOriginalValue(newValue);
+
+            _entityHistoryStore.DidNotReceive().Save(Arg.Any<EntityChangeSet>());
+        }
+
+        [Fact]
+        public void Should_Not_Write_History_If_Ignored()
+        {
+            Resolve<IEntityHistoryConfiguration>().IgnoredTypes.Add(typeof(Blog));
+
+            /* Blog has Audited attribute. */
+
+            var newValue = "http://testblog1-changed.myblogs.com";
+            var originalValue = UpdateBlogUrlAndGetOriginalValue(newValue);
+
+            _entityHistoryStore.DidNotReceive().Save(Arg.Any<EntityChangeSet>());
+        }
+
+        [Fact]
+        public void Should_Not_Write_History_If_Selected_But_Ignored()
+        {
+            Resolve<IEntityHistoryConfiguration>().Selectors.Add("Selected", typeof(Blog));
+            Resolve<IEntityHistoryConfiguration>().IgnoredTypes.Add(typeof(Blog));
 
             /* Blog has Audited attribute. */
 
