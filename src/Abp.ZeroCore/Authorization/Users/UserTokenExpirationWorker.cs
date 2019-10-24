@@ -1,4 +1,6 @@
-﻿using Abp.BackgroundJobs;
+﻿using System.Collections.Generic;
+using System.Linq;
+using Abp.BackgroundJobs;
 using Abp.Dependency;
 using Abp.Domain.Repositories;
 using Abp.Domain.Uow;
@@ -42,13 +44,28 @@ namespace Abp.Authorization.Users
 
         protected override void DoWork()
         {
+            List<UserToken> expireUserTokens;
             using (var uow = _unitOfWorkManager.Begin())
             {
                 using (_unitOfWorkManager.Current.DisableFilter(AbpDataFilters.MayHaveTenant))
                 {
                     var utcNow = Clock.Now.ToUniversalTime();
-                    _userTokenRepository.Delete(t => t.ExpireDate <= utcNow);
+                    expireUserTokens = _userTokenRepository.GetAll().Where(t => t.ExpireDate <= utcNow).ToList();
                     uow.Complete();
+                }
+            }
+
+            var expireUserTokensGroups = expireUserTokens.GroupBy(x => x.TenantId);
+            foreach (var expireUserTokensGroup in expireUserTokensGroups)
+            {
+                using (var uow = _unitOfWorkManager.Begin())
+                {
+                    using (_unitOfWorkManager.Current.SetTenantId(expireUserTokensGroup.Key))
+                    {
+                        var userTokenIds = expireUserTokensGroup.Select(x => x.Id).ToList();
+                        _userTokenRepository.Delete(x => userTokenIds.Contains(x.Id));
+                        uow.Complete();
+                    }
                 }
             }
         }
