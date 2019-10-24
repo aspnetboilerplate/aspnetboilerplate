@@ -1,6 +1,7 @@
 ﻿using Abp.BackgroundJobs;
 using Abp.Dependency;
 using Abp.Domain.Repositories;
+using Abp.Domain.Uow;
 using Abp.Threading.BackgroundWorkers;
 using Abp.Threading.Timers;
 using Abp.Timing;
@@ -13,15 +14,18 @@ namespace Abp.Authorization.Users
 
         private readonly IRepository<UserToken, long> _userTokenRepository;
         private readonly IBackgroundJobConfiguration _backgroundJobConfiguration;
+        private readonly IUnitOfWorkManager _unitOfWorkManager;
 
         public UserTokenExpirationWorker(
             AbpTimer timer,
             IRepository<UserToken, long> userTokenRepository,
-            IBackgroundJobConfiguration backgroundJobConfiguration)
+            IBackgroundJobConfiguration backgroundJobConfiguration, 
+            IUnitOfWorkManager unitOfWorkManager)
             : base(timer)
         {
             _userTokenRepository = userTokenRepository;
             _backgroundJobConfiguration = backgroundJobConfiguration;
+            _unitOfWorkManager = unitOfWorkManager;
 
             Timer.Period = GetTimerPeriod();
         }
@@ -38,8 +42,15 @@ namespace Abp.Authorization.Users
 
         protected override void DoWork()
         {
-            var utcNow = Clock.Now.ToUniversalTime();
-            _userTokenRepository.Delete(t => t.ExpireDate <= utcNow);
+            using (var uow = _unitOfWorkManager.Begin())
+            {
+                using (_unitOfWorkManager.Current.DisableFilter(AbpDataFilters.MayHaveTenant))
+                {
+                    var utcNow = Clock.Now.ToUniversalTime();
+                    _userTokenRepository.Delete(t => t.ExpireDate <= utcNow);
+                    uow.Complete();
+                }
+            }
         }
     }
 }
