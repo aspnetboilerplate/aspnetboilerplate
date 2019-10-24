@@ -44,6 +44,22 @@ namespace Abp.Zero.Users
                 allTokens.Count.ShouldBe(3);
             }
 
+            using (_unitOfWorkManager.Begin())
+            {
+                using (_unitOfWorkManager.Current.SetTenantId(null))
+                {
+                    var user = await _abpUserManager.FindByNameOrEmailAsync(AbpUserBase.AdminUserName);
+
+                    await _abpUserManager.AddTokenValidityKeyAsync(user, Guid.NewGuid().ToString(), DateTime.UtcNow);
+                    await _abpUserManager.AddTokenValidityKeyAsync(user, Guid.NewGuid().ToString(), DateTime.UtcNow.AddDays(1));
+                    await _abpUserManager.AddTokenValidityKeyAsync(user, Guid.NewGuid().ToString(), DateTime.UtcNow.AddDays(1));
+                    _unitOfWorkManager.Current.SaveChanges();
+
+                    var allTokens = _userTokenRepository.GetAllList(t => t.UserId == user.Id);
+                    allTokens.Count.ShouldBe(3);
+                }
+            }
+
             //Act
             _userTokenExpirationWorker.Start();
 
@@ -54,17 +70,25 @@ namespace Abp.Zero.Users
                 var allTokens = _userTokenRepository.GetAllList(t => t.UserId == user.Id);
                 allTokens.Count.ShouldBe(2);
             }
+
+            using (_unitOfWorkManager.Begin())
+            {
+                using (_unitOfWorkManager.Current.SetTenantId(null))
+                {
+                    var user = await _abpUserManager.FindByNameOrEmailAsync(AbpUserBase.AdminUserName);
+                    var allTokens = _userTokenRepository.GetAllList(t => t.UserId == user.Id);
+                    allTokens.Count.ShouldBe(2);
+                }
+            }
         }
     }
 
     internal class MyUserTokenExpirationWorker : UserTokenExpirationWorker
     {
-        public MyUserTokenExpirationWorker(
-            AbpTimer timer, 
-            IRepository<UserToken, long> userTokenRepository, 
-            IBackgroundJobConfiguration backgroundJobConfiguration)
-            : base(timer, userTokenRepository, backgroundJobConfiguration)
-        {   
+        public MyUserTokenExpirationWorker(AbpTimer timer, IRepository<UserToken, long> userTokenRepository,
+            IBackgroundJobConfiguration backgroundJobConfiguration, IUnitOfWorkManager unitOfWorkManager) : base(timer,
+            userTokenRepository, backgroundJobConfiguration, unitOfWorkManager)
+        {
         }
 
         public override void Start()
