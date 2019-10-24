@@ -46,7 +46,6 @@ namespace Abp.AspNetCore.EntityHistory
         {
             if (request == null)
             {
-                Logger.Debug("Unable to get URL from HttpRequest, fallback to null");
                 return null;
             }
 
