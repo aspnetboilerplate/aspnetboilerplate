@@ -42,6 +42,7 @@
         }
 
         if (options.isHtml) {
+            delete options.isHtml;
             var el = document.createElement('div');
             //https://github.com/t4t5/sweetalert/issues/842
             el.style = 'position: relative;';
