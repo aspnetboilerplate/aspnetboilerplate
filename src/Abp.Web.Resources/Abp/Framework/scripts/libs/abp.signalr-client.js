@@ -15,13 +15,28 @@ var abp = abp || {};
         // Set the common hub
         abp.signalr.hubs.common = connection;
 
+        let reconnectTime = 5000;
+        let tries = 1;
+        let maxTries = 8;
+
         // Reconnect loop
         function start() {
-            connection.start().catch(function () {
-                setTimeout(function () {
-                    start();
-                }, 5000);
-            });
+            if (tries > maxTries) {
+                return;
+            } else {
+                connection.start()
+                    .then(() => {
+                        reconnectTime = 5000;
+                        tries = 1;
+                    })
+                    .catch(() => {
+                        setTimeout(() => {
+                            start();
+                        }, reconnectTime);
+                        reconnectTime *= 2;
+                        tries += 1;
+                    });
+            }
         }
 
         // Reconnect if hub disconnects
@@ -83,6 +98,7 @@ var abp = abp || {};
             var connection = new signalR.HubConnectionBuilder()
                 .withUrl(url, transport)
                 .build();
+
             if (configureConnection && typeof configureConnection === 'function') {
                 configureConnection(connection);
             }
@@ -110,5 +126,4 @@ var abp = abp || {};
     if (abp.signalr.autoConnect && !abp.signalr.hubs.common) {
         abp.signalr.connect();
     }
-
 })();
