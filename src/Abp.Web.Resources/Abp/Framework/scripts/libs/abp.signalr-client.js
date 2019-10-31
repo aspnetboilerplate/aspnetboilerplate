@@ -32,7 +32,7 @@ var abp = abp || {};
                     .catch(() => {
                         setTimeout(() => {
                             start();
-                        }, reconnectTime);
+                        }, abp.signalr.reconnectTime);
                         abp.signalr.reconnectTime *= 2;
                         tries += 1;
                     });
