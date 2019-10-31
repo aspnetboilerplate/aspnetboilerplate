@@ -9,31 +9,31 @@ var abp = abp || {};
     // Create namespaces
     abp.signalr = abp.signalr || {};
     abp.signalr.hubs = abp.signalr.hubs || {};
+    abp.signalr.reconnectTime = 5000;
+    abp.signalr.maxTries = 8;
 
     // Configure the connection for abp.signalr.hubs.common
     function configureConnection(connection) {
         // Set the common hub
         abp.signalr.hubs.common = connection;
 
-        let reconnectTime = 5000;
         let tries = 1;
-        let maxTries = 8;
 
         // Reconnect loop
         function start() {
-            if (tries > maxTries) {
+            if (tries > abp.signalr.maxTries) {
                 return;
             } else {
                 connection.start()
                     .then(() => {
-                        reconnectTime = 5000;
+                        abp.signalr.reconnectTime = 5000;
                         tries = 1;
                     })
                     .catch(() => {
                         setTimeout(() => {
                             start();
                         }, reconnectTime);
-                        reconnectTime *= 2;
+                        abp.signalr.reconnectTime *= 2;
                         tries += 1;
                     });
             }
