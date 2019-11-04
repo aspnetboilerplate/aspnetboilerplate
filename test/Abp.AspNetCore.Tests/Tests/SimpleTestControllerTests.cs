@@ -164,7 +164,7 @@ namespace Abp.AspNetCore.Tests
             // Act
             var response = await GetResponseAsStringAsync(
                 GetUrl<SimpleTestController>(
-                    nameof(SimpleTestController.GetActionResultTestAsync)
+                    nameof(SimpleTestController.GetActionResultTest2)
                 ));
 
             //Assert
@@ -177,7 +177,7 @@ namespace Abp.AspNetCore.Tests
             // Act
             var response = await GetResponseAsObjectAsync<AjaxResponse>(
                 GetUrl<SimpleTestController>(
-                    nameof(SimpleTestController.GetVoidExceptionTestAsync)
+                    nameof(SimpleTestController.GetVoidExceptionTest)
                 ), HttpStatusCode.InternalServerError);
 
             response.Error.ShouldNotBeNull();
@@ -193,7 +193,7 @@ namespace Abp.AspNetCore.Tests
             {
                 await GetResponseAsStringAsync(
                     GetUrl<SimpleTestController>(
-                        nameof(SimpleTestController.GetActionResultExceptionTestAsync)
+                        nameof(SimpleTestController.GetActionResultExceptionTest)
                     ), HttpStatusCode.InternalServerError);
             })).Message.ShouldBe("GetActionResultExceptionTestAsync-Exception");
         }

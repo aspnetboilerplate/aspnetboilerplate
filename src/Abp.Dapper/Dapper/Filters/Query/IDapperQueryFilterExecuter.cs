@@ -1,8 +1,6 @@
 ﻿using System;
 using System.Linq.Expressions;
-
 using Abp.Domain.Entities;
-
 using DapperExtensions;
 
 namespace Abp.Dapper.Filters.Query

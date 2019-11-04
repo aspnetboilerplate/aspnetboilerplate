@@ -29,6 +29,7 @@ namespace Abp.Zero.EntityFrameworkCore
         /// <typeparam name="TUser">The type of the user entity.</typeparam>
         /// <param name="modelBuilder">Model builder.</param>
         /// <param name="prefix">Table prefix, or null to clear prefix.</param>
+        /// <param name="schemaName">Schema name</param>
         public static void ChangeAbpTablePrefix<TTenant, TRole, TUser>(this ModelBuilder modelBuilder, string prefix, string schemaName = null)
             where TTenant : AbpTenant<TUser>
             where TRole : AbpRole<TUser>
@@ -43,16 +44,12 @@ namespace Abp.Zero.EntityFrameworkCore
             SetTableName<EntityChangeSet>(modelBuilder, prefix + "EntityChangeSets", schemaName);
             SetTableName<EntityPropertyChange>(modelBuilder, prefix + "EntityPropertyChanges", schemaName);
             SetTableName<FeatureSetting>(modelBuilder, prefix + "Features", schemaName);
-            SetTableName<TenantFeatureSetting>(modelBuilder, prefix + "Features", schemaName);
-            SetTableName<EditionFeatureSetting>(modelBuilder, prefix + "Features", schemaName);
             SetTableName<ApplicationLanguage>(modelBuilder, prefix + "Languages", schemaName);
             SetTableName<ApplicationLanguageText>(modelBuilder, prefix + "LanguageTexts", schemaName);
             SetTableName<NotificationInfo>(modelBuilder, prefix + "Notifications", schemaName);
             SetTableName<NotificationSubscriptionInfo>(modelBuilder, prefix + "NotificationSubscriptions", schemaName);
             SetTableName<OrganizationUnit>(modelBuilder, prefix + "OrganizationUnits", schemaName);
             SetTableName<PermissionSetting>(modelBuilder, prefix + "Permissions", schemaName);
-            SetTableName<RolePermissionSetting>(modelBuilder, prefix + "Permissions", schemaName);
-            SetTableName<UserPermissionSetting>(modelBuilder, prefix + "Permissions", schemaName);
             SetTableName<TRole>(modelBuilder, prefix + "Roles", schemaName);
             SetTableName<Setting>(modelBuilder, prefix + "Settings", schemaName);
             SetTableName<TTenant>(modelBuilder, prefix + "Tenants", schemaName);
@@ -61,6 +58,7 @@ namespace Abp.Zero.EntityFrameworkCore
             SetTableName<TenantNotificationInfo>(modelBuilder, prefix + "TenantNotifications", schemaName);
             SetTableName<UserNotificationInfo>(modelBuilder, prefix + "UserNotifications", schemaName);
             SetTableName<UserOrganizationUnit>(modelBuilder, prefix + "UserOrganizationUnits", schemaName);
+            SetTableName<OrganizationUnitRole>(modelBuilder, prefix + "OrganizationUnitRoles", schemaName);
             SetTableName<UserRole>(modelBuilder, prefix + "UserRoles", schemaName);
             SetTableName<TUser>(modelBuilder, prefix + "Users", schemaName);
             SetTableName<UserAccount>(modelBuilder, prefix + "UserAccounts", schemaName);

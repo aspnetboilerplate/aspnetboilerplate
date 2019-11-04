@@ -4,9 +4,10 @@ namespace Abp.AspNetCore.Mvc.Results.Wrapping
 {
     public class NullAbpActionResultWrapper : IAbpActionResultWrapper
     {
-        public void Wrap(ResultExecutingContext actionResult)
+        public void Wrap(FilterContext context)
         {
             
         }
+
     }
 }

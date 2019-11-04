@@ -16,7 +16,7 @@ namespace Abp.Localization
         /// <summary>
         /// The maximum name length.
         /// </summary>
-        public const int MaxNameLength = 10;
+        public const int MaxNameLength = 128;
 
         /// <summary>
         /// The maximum display name length.

@@ -6,8 +6,9 @@
     <text name="RoleNameIsAlreadyTaken" value="نام گروه {0} قبلا گرفته شده است." />
     <text name="RoleDisplayNameIsAlreadyTaken" value="نام نمایشی گروه نقش {0} قبلا گرفته شده است." />
     <text name="CanNotDeleteStaticRole" value="نمی تواند گروه پیش فرض سامانه را حذف کنید: {0}" />
-    <text name="CanNotRenameAdminUser" value="به علت اینکه کاربر {0}، کاربر پیش فرش و مدیر سیستم است. قابلیت تغییر نام ندارد!" />
-    <text name="CanNotDeleteAdminUser" value="به علت اینکه کاربر {0}، کاربر پیش فرش و مدیر سیستم است. قابلیت حذف ندارد!" />
+    <text name="CanNotRenameAdminUser" value="به علت اینکه کاربر {0}، کاربر پیش فرض و مدیر سیستم است. قابلیت تغییر نام ندارد!" />
+    <text name="CanNotDeleteAdminUser" value="به علت اینکه کاربر {0}، کاربر پیش فرض و مدیر سیستم است. قابلیت حذف ندارد!" />
     <text name="OrganizationUnitDuplicateDisplayNameWarning" value="در حال حاضر یک واحد سازمانی با نام {0} وجود دارد. شما نمی توانید دو واحد با همین نام سازمانی در همان سطح ایجاد کنید." />
+    <text name="InvalidFeatureValue" value="{0} مقدار ویژگی معتبر نیست!" />
   </texts>
 </localizationDictionary>

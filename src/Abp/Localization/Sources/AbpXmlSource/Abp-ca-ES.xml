@@ -13,5 +13,12 @@
     <text name="DefaultLanguage">Idioma predeterminat</text>
     <text name="ReceiveNotifications">Rebre notificacions</text>
     <text name="CurrentUserDidNotLoginToTheApplication">L'usuari actual no ha iniciat sessió a l'aplicació!</text>
+    <text name="TimeZone">Zona horària</text>
+    <text name="AllOfThesePermissionsMustBeGranted">No es concedeixen els permisos necessaris. S'ha de concedir tots aquests permisos: {0}</text>
+    <text name="AtLeastOneOfThesePermissionsMustBeGranted">No es concedeixen els permisos necessaris. Almenys un d’aquests permisos s’ha de concedir: {0}</text>
+    <text name="FeatureIsNotEnabled">La funció no està habilitada {0}</text>
+    <text name="AllOfTheseFeaturesMustBeEnabled">Les funcions necessàries no estan activades. Cal habilitar totes aquestes funcions: {0}</text>
+    <text name="AtLeastOneOfTheseFeaturesMustBeEnabled">Les funcions necessàries no estan activades. Almenys una d’aquestes funcions ha d’estar habilitada: {0}</text>
+    <text name="MainMenu">Menú principal</text>
   </texts>
 </localizationDictionary>

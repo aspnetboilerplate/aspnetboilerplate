@@ -1,4 +1,5 @@
-﻿using System.Threading.Tasks;
+﻿using System;
+using System.Threading.Tasks;
 using Abp.Application.Features;
 using Abp.Authorization;
 using Abp.Configuration.Startup;
@@ -15,6 +16,8 @@ namespace Abp.Tests.Authorization
     {
         private readonly MyTestClassToBeAuthorized_Sync _syncObj;
         private readonly MyTestClassToBeAuthorized_Async _asyncObj;
+        private readonly MyTestClassToBeAllowProtected_Async _asyncObjForProtectedMethod;
+        private readonly MyTestClassToBeAllowProtected_Sync _syncObjForProtectedMethod;
 
         public AuthorizationInterceptor_Tests()
         {
@@ -24,11 +27,14 @@ namespace Abp.Tests.Authorization
                 );
 
             LocalIocManager.Register<IAuthorizationConfiguration, AuthorizationConfiguration>();
+            LocalIocManager.Register<IMultiTenancyConfig, MultiTenancyConfig>();
             LocalIocManager.Register<AuthorizationInterceptor>(DependencyLifeStyle.Transient);
             LocalIocManager.Register<IAuthorizationHelper, AuthorizationHelper>(DependencyLifeStyle.Transient);
             LocalIocManager.IocContainer.Register(
                 Component.For<MyTestClassToBeAuthorized_Sync>().Interceptors<AuthorizationInterceptor>().LifestyleTransient(),
-                Component.For<MyTestClassToBeAuthorized_Async>().Interceptors<AuthorizationInterceptor>().LifestyleTransient()
+                Component.For<MyTestClassToBeAuthorized_Async>().Interceptors<AuthorizationInterceptor>().LifestyleTransient(),
+                Component.For<MyTestClassToBeAllowProtected_Async>().Interceptors<AuthorizationInterceptor>().LifestyleTransient(),
+                Component.For<MyTestClassToBeAllowProtected_Sync>().Interceptors<AuthorizationInterceptor>().LifestyleTransient()
                 );
 
             //Mock session
@@ -42,17 +48,25 @@ namespace Abp.Tests.Authorization
             permissionChecker.IsGrantedAsync("Permission1").Returns(true);
             permissionChecker.IsGrantedAsync("Permission2").Returns(true);
             permissionChecker.IsGrantedAsync("Permission3").Returns(false); //Permission3 is not granted
+
+            permissionChecker.IsGranted("Permission1").Returns(true);
+            permissionChecker.IsGranted("Permission2").Returns(true);
+            permissionChecker.IsGranted("Permission3").Returns(false); //Permission3 is not granted
+
             LocalIocManager.IocContainer.Register(Component.For<IPermissionChecker>().Instance(permissionChecker));
 
             _syncObj = LocalIocManager.Resolve<MyTestClassToBeAuthorized_Sync>();
             _asyncObj = LocalIocManager.Resolve<MyTestClassToBeAuthorized_Async>();
+
+            _syncObjForProtectedMethod = LocalIocManager.Resolve<MyTestClassToBeAllowProtected_Sync>();
+            _asyncObjForProtectedMethod = LocalIocManager.Resolve<MyTestClassToBeAllowProtected_Async>();
         }
 
         [Fact]
         public void Test_Authorization_Sync()
         {
             //Authorized methods
-            
+
             _syncObj.MethodWithoutPermission();
             _syncObj.Called_MethodWithoutPermission.ShouldBe(true);
 
@@ -64,7 +78,7 @@ namespace Abp.Tests.Authorization
 
             _syncObj.MethodWithPermission1AndPermission3();
             _syncObj.Called_MethodWithPermission1AndPermission3.ShouldBe(true);
-            
+
             //Non authorized methods
 
             Assert.Throws<AbpAuthorizationException>(() => _syncObj.MethodWithPermission3());
@@ -91,6 +105,9 @@ namespace Abp.Tests.Authorization
             await _asyncObj.MethodWithPermission1AndPermission3Async();
             _asyncObj.Called_MethodWithPermission1AndPermission3.ShouldBe(true);
 
+            await _asyncObj.MethodWithoutPermission();
+            _asyncObj.Called_MethodWithoutPermission.ShouldBe(true);
+
             //Non authorized methods
 
             await Assert.ThrowsAsync<AbpAuthorizationException>(async () => await _asyncObj.MethodWithPermission3Async());
@@ -98,6 +115,40 @@ namespace Abp.Tests.Authorization
 
             await Assert.ThrowsAsync<AbpAuthorizationException>(async () => await _asyncObj.MethodWithPermission1AndPermission3WithRequireAllAsync());
             _asyncObj.Called_MethodWithPermission1AndPermission3WithRequireAll.ShouldBe(false);
+        }
+
+        [Fact]
+        public void Test_Authorization_For_Protected_Sync()
+        {
+            EmptySession();
+
+            _syncObjForProtectedMethod.MethodWithoutForProtectedPermission();
+            _syncObjForProtectedMethod.Called_AnonymousProtectedMethod.ShouldBe(true);
+
+            //Non authorized methods
+
+            Assert.Throws<AbpAuthorizationException>(() => _syncObjForProtectedMethod.MethodWithPermissionForProtected());
+            _syncObjForProtectedMethod.Called_AuthorizedProtectedMethod.ShouldBe(false);
+        }
+
+        [Fact]
+        public async Task Test_Authorization_For_Protected_Async()
+        {
+            EmptySession();
+
+            await _asyncObjForProtectedMethod.MethodWithoutPermissionForProtectedAsync();
+            _asyncObjForProtectedMethod.Called_AnonymousProtectedMethod.ShouldBe(true);
+
+            //Non authorized methods
+
+            await Assert.ThrowsAsync<AbpAuthorizationException>(async () => await _asyncObjForProtectedMethod.MethodWithPermissionForProtectedAsync());
+            _asyncObjForProtectedMethod.Called_AuthorizedProtectedMethod.ShouldBe(false);
+        }
+
+        private void EmptySession()
+        {
+            LocalIocManager.Resolve<IAbpSession>().TenantId.Returns((int?) null);
+            LocalIocManager.Resolve<IAbpSession>().UserId.Returns((int?) null);
         }
 
         public class MyTestClassToBeAuthorized_Sync
@@ -158,15 +209,15 @@ namespace Abp.Tests.Authorization
         public class MyTestClassToBeAuthorized_Async
         {
             public bool Called_MethodWithoutPermission { get; private set; }
-            
+
             public bool Called_MethodWithPermission1 { get; private set; }
-            
+
             public bool Called_MethodWithPermission3 { get; private set; }
-            
+
             public bool Called_MethodWithPermission1AndPermission2 { get; private set; }
-            
+
             public bool Called_MethodWithPermission1AndPermission3 { get; private set; }
-            
+
             public bool Called_MethodWithPermission1AndPermission3WithRequireAll { get; private set; }
 
             public virtual async Task MethodWithoutPermission()
@@ -213,6 +264,70 @@ namespace Abp.Tests.Authorization
             {
                 Called_MethodWithPermission1AndPermission3WithRequireAll = true;
                 await Task.Delay(1);
+            }
+        }
+
+        [AbpAuthorize]
+        public class MyTestClassToBeAllowProtected_Async
+        {
+            public bool Called_AnonymousProtectedMethod { get; private set; }
+
+            public bool Called_AuthorizedProtectedMethod { get; private set; }
+
+            [AbpAllowAnonymous]
+            public virtual async Task MethodWithoutPermissionForProtectedAsync()
+            {
+                await AnonymousProtectedMethod();
+            }
+
+            [AbpAllowAnonymous]
+            public virtual async Task MethodWithPermissionForProtectedAsync()
+            {
+                await AuthorizedProtectedMethod();
+            }
+
+            protected virtual async Task AnonymousProtectedMethod()
+            {
+                Called_AnonymousProtectedMethod = true;
+                await Task.Delay(1);
+            }
+
+            [AbpAuthorize]
+            protected virtual async Task AuthorizedProtectedMethod()
+            {
+                Called_AuthorizedProtectedMethod = true;
+                await Task.Delay(1);
+            }
+        }
+
+        [AbpAuthorize]
+        public class MyTestClassToBeAllowProtected_Sync
+        {
+            public bool Called_AnonymousProtectedMethod { get; private set; }
+
+            public bool Called_AuthorizedProtectedMethod { get; private set; }
+
+            [AbpAllowAnonymous]
+            public virtual void MethodWithoutForProtectedPermission()
+            {
+                AnonymousProtectedMethod();
+            }
+
+            [AbpAllowAnonymous]
+            public virtual void MethodWithPermissionForProtected()
+            {
+                AuthorizedProtectedMethod();
+            }
+
+            protected virtual void AnonymousProtectedMethod()
+            {
+                Called_AnonymousProtectedMethod = true;
+            }
+
+            [AbpAuthorize]
+            protected virtual void AuthorizedProtectedMethod()
+            {
+                Called_AuthorizedProtectedMethod = true;
             }
         }
     }

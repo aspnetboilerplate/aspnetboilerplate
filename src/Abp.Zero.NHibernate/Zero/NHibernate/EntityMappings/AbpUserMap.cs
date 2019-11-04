@@ -11,14 +11,15 @@ namespace Abp.Zero.NHibernate.EntityMappings
         {
             Map(x => x.TenantId);
             Map(x => x.UserName);
+            Map(x => x.NormalizedUserName);
             Map(x => x.Name);
             Map(x => x.Surname);
             Map(x => x.EmailAddress);
+            Map(x => x.NormalizedEmailAddress);
             Map(x => x.IsEmailConfirmed);
             Map(x => x.EmailConfirmationCode);
             Map(x => x.Password);
             Map(x => x.PasswordResetCode);
-            Map(x => x.LastLoginTime);
             Map(x => x.IsActive);
             Map(x => x.AuthenticationSource);
             Map(x => x.IsLockoutEnabled);

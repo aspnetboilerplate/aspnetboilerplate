@@ -32,7 +32,7 @@ namespace Abp.Quartz
         {
             if (jobException == null)
             {
-                Logger.Debug($"Job {context.JobDetail.JobType.Name} sucessfully executed.");
+                Logger.Debug($"Job {context.JobDetail.JobType.Name} successfully executed.");
             }
             else
             {

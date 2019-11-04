@@ -2,6 +2,7 @@
 using System.Linq;
 using System.Net;
 using System.Threading.Tasks;
+using Abp.Authorization;
 using Abp.Domain.Entities;
 using Abp.Domain.Repositories;
 using Microsoft.AspNet.OData;
@@ -30,15 +31,29 @@ namespace Abp.AspNetCore.OData.Controllers
             Repository = repository;
         }
 
+        protected virtual string GetPermissionName { get; set; }
+
+        protected virtual string GetAllPermissionName { get; set; }
+
+        protected virtual string CreatePermissionName { get; set; }
+
+        protected virtual string UpdatePermissionName { get; set; }
+
+        protected virtual string DeletePermissionName { get; set; }
+
         [EnableQuery]
         public virtual IQueryable<TEntity> Get()
         {
+            CheckGetAllPermission();
+
             return Repository.GetAll();
         }
 
         [EnableQuery]
         public virtual SingleResult<TEntity> Get([FromODataUri] TPrimaryKey key)
         {
+            CheckGetPermission();
+
             var entity = Repository.GetAll().Where(e => e.Id.Equals(key));
 
             return SingleResult.Create(entity);
@@ -46,6 +61,8 @@ namespace Abp.AspNetCore.OData.Controllers
 
         public virtual async Task<IActionResult> Post([FromBody] TEntity entity)
         {
+            CheckCreatePermission();
+
             if (!ModelState.IsValid)
             {
                 return BadRequest(ModelState);
@@ -59,6 +76,8 @@ namespace Abp.AspNetCore.OData.Controllers
 
         public virtual async Task<IActionResult> Patch([FromODataUri] TPrimaryKey key, [FromBody] Delta<TEntity> entity)
         {
+            CheckUpdatePermission();
+
             if (!ModelState.IsValid)
             {
                 return BadRequest(ModelState);
@@ -77,6 +96,8 @@ namespace Abp.AspNetCore.OData.Controllers
 
         public virtual async Task<IActionResult> Put([FromODataUri] TPrimaryKey key, [FromBody] TEntity update)
         {
+            CheckUpdatePermission();
+            
             if (!ModelState.IsValid)
             {
                 return BadRequest(ModelState);
@@ -94,6 +115,8 @@ namespace Abp.AspNetCore.OData.Controllers
 
         public virtual async Task<IActionResult> Delete([FromODataUri] TPrimaryKey key)
         {
+            CheckDeletePermission();
+
             var product = await Repository.GetAsync(key);
             if (product == null)
             {
@@ -103,6 +126,39 @@ namespace Abp.AspNetCore.OData.Controllers
             await Repository.DeleteAsync(key);
 
             return StatusCode((int)HttpStatusCode.NoContent);
+        }
+
+        protected virtual void CheckPermission(string permissionName)
+        {
+            if (!string.IsNullOrEmpty(permissionName))
+            {
+                PermissionChecker.Authorize(permissionName);
+            }
+        }
+
+        protected virtual void CheckGetPermission()
+        {
+            CheckPermission(GetPermissionName);
+        }
+
+        protected virtual void CheckGetAllPermission()
+        {
+            CheckPermission(GetAllPermissionName);
+        }
+
+        protected virtual void CheckCreatePermission()
+        {
+            CheckPermission(CreatePermissionName);
+        }
+
+        protected virtual void CheckUpdatePermission()
+        {
+            CheckPermission(UpdatePermissionName);
+        }
+
+        protected virtual void CheckDeletePermission()
+        {
+            CheckPermission(DeletePermissionName);
         }
     }
 }

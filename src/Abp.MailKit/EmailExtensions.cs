@@ -10,10 +10,11 @@ namespace Abp.MailKit
     public static class EmailExtensions
     {
         /// <summary>
-        /// A modified version of CreateFromMailMessage() method in https://github.com/jstedfast/MimeKit/blob/master/MimeKit/MimeMessage.cs
+        /// Use MimeMessage.CreateFromMailMessage() instead
         /// </summary>
         /// <param name="mail"></param>
         /// <returns></returns>
+        [Obsolete]
         public static MimeMessage ToMimeMessage(this MailMessage mail)
         {
             if (mail == null)

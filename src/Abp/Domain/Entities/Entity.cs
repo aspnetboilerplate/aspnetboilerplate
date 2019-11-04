@@ -53,7 +53,7 @@ namespace Abp.Domain.Entities
         }
 
         /// <inheritdoc/>
-        public override bool Equals(object obj)
+        public virtual bool EntityEquals(object obj)
         {
             if (obj == null || !(obj is Entity<TPrimaryKey>))
             {
@@ -95,36 +95,7 @@ namespace Abp.Domain.Entities
 
             return Id.Equals(other.Id);
         }
-
-        /// <inheritdoc/>
-        public override int GetHashCode()
-        {
-            if (Id == null)
-            {
-                return 0;
-            }
-
-            return Id.GetHashCode();
-        }
-
-        /// <inheritdoc/>
-        public static bool operator ==(Entity<TPrimaryKey> left, Entity<TPrimaryKey> right)
-        {
-            if (Equals(left, null))
-            {
-                return Equals(right, null);
-            }
-
-            return left.Equals(right);
-        }
-
-        /// <inheritdoc/>
-        public static bool operator !=(Entity<TPrimaryKey> left, Entity<TPrimaryKey> right)
-        {
-            return !(left == right);
-        }
-
-        /// <inheritdoc/>
+     
         public override string ToString()
         {
             return $"[{GetType().Name} {Id}]";

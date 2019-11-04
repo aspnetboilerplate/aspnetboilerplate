@@ -1,5 +1,6 @@
 ﻿using Abp.Application.Features;
 using Abp.Dependency;
+using Abp.Runtime.Validation;
 using Abp.UI.Inputs;
 
 namespace Abp.Zero.SampleApp.Features
@@ -19,7 +20,7 @@ namespace Abp.Zero.SampleApp.Features
         public override void SetFeatures(IFeatureDefinitionContext context)
         {
             var boolFeature = context.Create(MyBoolFeature, "false", inputType: new CheckboxInputType());
-            var numericFrature = boolFeature.CreateChildFeature(MyNumericFeature, "42");
+            var numericFrature = boolFeature.CreateChildFeature(MyNumericFeature, "42", inputType: new SingleLineStringInputType(new NumericValueValidator(1,99)));
         }
     }
 }

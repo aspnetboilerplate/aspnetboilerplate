@@ -19,6 +19,7 @@ using Abp;
 [assembly: InternalsVisibleTo("Abp.Application")]
 [assembly: InternalsVisibleTo("Abp.EntityFramework")]
 [assembly: InternalsVisibleTo("Abp.EntityFrameworkCore")]
+[assembly: InternalsVisibleTo("Abp.EntityFrameworkCore.EFPlus")]
 [assembly: InternalsVisibleTo("Abp.NHibernate")]
 [assembly: InternalsVisibleTo("Abp.Web.Common")]
 [assembly: InternalsVisibleTo("Abp.AspNetCore")]

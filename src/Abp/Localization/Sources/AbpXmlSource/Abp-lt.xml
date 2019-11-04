@@ -16,6 +16,9 @@
     <text name="TimeZone">Laiko juosta</text>
     <text name="AllOfThesePermissionsMustBeGranted">Reikalingi leidimai nėra suteikti. Privalo būti suteikti visi šie leidimai: {0}</text>
     <text name="AtLeastOneOfThesePermissionsMustBeGranted">Reikalingi leidimai nėra suteikti. Bent vienas iš šių leidimų privalo būti suteiktas: {0}</text>
+    <text name="FeatureIsNotEnabled">Funkcija neįgalinta: {0}</text>
+    <text name="AllOfTheseFeaturesMustBeEnabled">Privalomos funkcijos neįjungtos. Visos šios funkcijos turi būti įjungtos: {0}</text>
+    <text name="AtLeastOneOfTheseFeaturesMustBeEnabled">Privalomos funkcijos neįjungtos. Bent viena iš šių funkcijų turi būti įjungta: {0}</text>
     <text name="MainMenu">Pagrindinis meniu</text>
   </texts>
 </localizationDictionary>

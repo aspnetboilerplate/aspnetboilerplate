@@ -20,7 +20,7 @@ namespace Abp.NHibernate.EntityMappings
         {
             if (string.IsNullOrWhiteSpace(tableName))
             {
-                throw new ArgumentNullException("tableName");
+                throw new ArgumentNullException(nameof(tableName));
             }
 
             Table(tableName);

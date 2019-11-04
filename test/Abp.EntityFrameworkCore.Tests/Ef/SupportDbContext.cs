@@ -21,10 +21,21 @@ namespace Abp.EntityFrameworkCore.Tests.Ef
     {
         public DbSet<Ticket> Tickets { get; set; }
 
+        public DbQuery<TicketListItem> TicketListItems { get; set; }
+
+        public const string TicketViewSql = @"CREATE VIEW TicketListItemView AS SELECT Id, EmailAddress, TenantId, IsActive FROM Tickets";
+
         public SupportDbContext(DbContextOptions<SupportDbContext> options) 
             : base(options)
         {
 
+        }
+
+        protected override void OnModelCreating(ModelBuilder modelBuilder)
+        {
+            base.OnModelCreating(modelBuilder);
+
+            modelBuilder.Query<TicketListItem>().ToView("TicketListItemView");
         }
     }
 
@@ -56,8 +67,9 @@ namespace Abp.EntityFrameworkCore.Tests.Ef
             if (typeof(IPassivable).GetTypeInfo().IsAssignableFrom(typeof(TEntity)))
             {
                 return GetAll()
-                    .Cast<IPassivable>()
-                    .Where(e => e.IsActive)
+                    //.Cast<IPassivable>() 
+                    //TODO: Core3.0 update, see https://github.com/aspnet/EntityFrameworkCore/issues/17794
+                    .Where(e => ((IPassivable)e).IsActive)
                     .Cast<TEntity>()
                     .ToList();
             }

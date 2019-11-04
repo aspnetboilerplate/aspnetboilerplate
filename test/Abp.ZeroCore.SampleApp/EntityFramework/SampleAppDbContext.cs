@@ -6,7 +6,6 @@ using Abp.ZeroCore.SampleApp.Core.BookStore;
 using Abp.ZeroCore.SampleApp.Core.EntityHistory;
 using Abp.ZeroCore.SampleApp.Core.Shop;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.EntityFrameworkCore.Metadata;
 
 namespace Abp.ZeroCore.SampleApp.EntityFramework
 {
@@ -15,15 +14,19 @@ namespace Abp.ZeroCore.SampleApp.EntityFramework
     {
         public DbSet<PersistedGrantEntity> PersistedGrants { get; set; }
 
+        public DbSet<Advertisement> Advertisements { get; set; }
+
         public DbSet<Blog> Blogs { get; set; }
 
         public DbSet<Post> Posts { get; set; }
 
+        public DbSet<Category> Categories { get; set; }
+
+        public DbSet<Comment> Comments { get; set; }
+
         public DbSet<Product> Products { get; set; }
 
         public DbSet<ProductTranslation> ProductTranslations { get; set; }
-
-        public DbSet<Comment> Comments { get; set; }
 
         public DbSet<Author> Authors { get; set; }
 
@@ -32,6 +35,8 @@ namespace Abp.ZeroCore.SampleApp.EntityFramework
         public DbSet<Order> Orders { get; set; }
 
         public DbSet<OrderTranslation> OrderTranslations { get; set; }
+
+        public DbSet<UserTestEntity> UserTestEntities { get; set; }
 
         public SampleAppDbContext(DbContextOptions<SampleAppDbContext> options) 
             : base(options)

@@ -14,7 +14,6 @@ namespace Abp.Authorization.Roles
     public abstract class AbpRoleStore<TRole, TUser> :
         IQueryableRoleStore<TRole, int>,
         IRolePermissionStore<TRole>,
-
         ITransientDependency
 
         where TRole : AbpRole<TUser>
@@ -63,10 +62,26 @@ namespace Abp.Authorization.Roles
             return await _roleRepository.FirstOrDefaultAsync(roleId);
         }
 
+        public virtual TRole FindById(int roleId)
+        {
+            return _roleRepository.FirstOrDefault(roleId);
+        }
+
         public virtual async Task<TRole> FindByNameAsync(string roleName)
         {
+            var normalizedName = NormalizeKey(roleName);
+
             return await _roleRepository.FirstOrDefaultAsync(
-                role => role.Name == roleName
+                role => role.NormalizedName == normalizedName
+                );
+        }
+
+        public virtual TRole FindByName(string roleName)
+        {
+            var normalizedName = NormalizeKey(roleName);
+
+            return _roleRepository.FirstOrDefault(
+                role => role.NormalizedName == normalizedName
                 );
         }
 
@@ -111,9 +126,22 @@ namespace Abp.Authorization.Roles
             return GetPermissionsAsync(role.Id);
         }
 
+        /// <inheritdoc/>
+        public virtual IList<PermissionGrantInfo> GetPermissions(TRole role)
+        {
+            return GetPermissions(role.Id);
+        }
+
         public async Task<IList<PermissionGrantInfo>> GetPermissionsAsync(int roleId)
         {
             return (await _rolePermissionSettingRepository.GetAllListAsync(p => p.RoleId == roleId))
+                .Select(p => new PermissionGrantInfo(p.Name, p.IsGranted))
+                .ToList();
+        }
+
+        public IList<PermissionGrantInfo> GetPermissions(int roleId)
+        {
+            return (_rolePermissionSettingRepository.GetAllList(p => p.RoleId == roleId))
                 .Select(p => new PermissionGrantInfo(p.Name, p.IsGranted))
                 .ToList();
         }
@@ -132,6 +160,11 @@ namespace Abp.Authorization.Roles
         public virtual async Task RemoveAllPermissionSettingsAsync(TRole role)
         {
             await _rolePermissionSettingRepository.DeleteAsync(s => s.RoleId == role.Id);
+        }
+
+        protected virtual string NormalizeKey(string key)
+        {
+            return key.ToUpperInvariant();
         }
 
         public virtual void Dispose()

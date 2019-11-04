@@ -94,7 +94,8 @@ namespace Abp.Web.Configuration
         {
             return new AbpMultiTenancyConfigDto
             {
-                IsEnabled = MultiTenancyConfig.IsEnabled
+                IsEnabled = MultiTenancyConfig.IsEnabled,
+                IgnoreFeatureCheckForHostUsers = MultiTenancyConfig.IgnoreFeatureCheckForHostUsers
             };
         }
 

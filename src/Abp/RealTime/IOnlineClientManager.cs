@@ -47,6 +47,10 @@ namespace Abp.RealTime
         /// </summary>
         IReadOnlyList<IOnlineClient> GetAllClients();
 
+        /// <summary>
+        /// Gets all online clients by user id.
+        /// </summary>
+        /// <param name="user">user identifier</param>
         IReadOnlyList<IOnlineClient> GetAllByUserId([NotNull] IUserIdentifier user);
     }
 }

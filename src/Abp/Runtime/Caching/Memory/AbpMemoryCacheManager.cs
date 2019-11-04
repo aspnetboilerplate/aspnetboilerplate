@@ -1,5 +1,4 @@
-﻿using Abp.Dependency;
-using Abp.Runtime.Caching.Configuration;
+﻿using Abp.Runtime.Caching.Configuration;
 using Castle.Core.Logging;
 
 namespace Abp.Runtime.Caching.Memory
@@ -7,15 +6,15 @@ namespace Abp.Runtime.Caching.Memory
     /// <summary>
     /// Implements <see cref="ICacheManager"/> to work with MemoryCache.
     /// </summary>
-    public class AbpMemoryCacheManager : CacheManagerBase
+    public class AbpMemoryCacheManager : CacheManagerBase<ICache>, ICacheManager
     {
         public ILogger Logger { get; set; }
 
         /// <summary>
         /// Constructor.
         /// </summary>
-        public AbpMemoryCacheManager(IIocManager iocManager, ICachingConfiguration configuration)
-            : base(iocManager, configuration)
+        public AbpMemoryCacheManager(ICachingConfiguration configuration)
+            : base(configuration)
         {
             Logger = NullLogger.Instance;
         }

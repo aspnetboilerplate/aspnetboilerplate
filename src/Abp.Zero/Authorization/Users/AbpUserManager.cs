@@ -109,6 +109,8 @@ namespace Abp.Authorization.Users
 
         public override async Task<IdentityResult> CreateAsync(TUser user)
         {
+            user.SetNormalizedNames();
+
             var result = await CheckDuplicateUsernameOrEmailAddressAsync(user.Id, user.UserName, user.EmailAddress);
             if (!result.Succeeded)
             {
@@ -121,17 +123,9 @@ namespace Abp.Authorization.Users
                 user.TenantId = tenantId.Value;
             }
 
-            var isLockoutEnabled = user.IsLockoutEnabled;
+            InitializeLockoutSettings(user.TenantId);
 
-            var identityResult = await base.CreateAsync(user);
-
-            if (identityResult.Succeeded)
-            {
-                await _unitOfWorkManager.Current.SaveChangesAsync();
-                await SetLockoutEnabledAsync(user.Id, isLockoutEnabled);
-            }
-
-            return identityResult;
+            return await base.CreateAsync(user);
         }
 
         /// <summary>
@@ -150,11 +144,34 @@ namespace Abp.Authorization.Users
         /// <summary>
         /// Check whether a user is granted for a permission.
         /// </summary>
+        /// <param name="userId">User id</param>
+        /// <param name="permissionName">Permission name</param>
+        public virtual bool IsGranted(long userId, string permissionName)
+        {
+            return IsGranted(
+                userId,
+                _permissionManager.GetPermission(permissionName)
+                );
+        }
+
+        /// <summary>
+        /// Check whether a user is granted for a permission.
+        /// </summary>
         /// <param name="user">User</param>
         /// <param name="permission">Permission</param>
         public virtual Task<bool> IsGrantedAsync(TUser user, Permission permission)
         {
             return IsGrantedAsync(user.Id, permission);
+        }
+
+        /// <summary>
+        /// Check whether a user is granted for a permission.
+        /// </summary>
+        /// <param name="user">User</param>
+        /// <param name="permission">Permission</param>
+        public virtual bool IsGranted(TUser user, Permission permission)
+        {
+            return IsGranted(user.Id, permission);
         }
 
         /// <summary>
@@ -203,6 +220,60 @@ namespace Abp.Authorization.Users
             foreach (var roleId in cacheItem.RoleIds)
             {
                 if (await RoleManager.IsGrantedAsync(roleId, permission))
+                {
+                    return true;
+                }
+            }
+
+            return false;
+        }
+
+        /// <summary>
+        /// Check whether a user is granted for a permission.
+        /// </summary>
+        /// <param name="userId">User id</param>
+        /// <param name="permission">Permission</param>
+        public virtual bool IsGranted(long userId, Permission permission)
+        {
+            //Check for multi-tenancy side
+            if (!permission.MultiTenancySides.HasFlag(GetCurrentMultiTenancySide()))
+            {
+                return false;
+            }
+
+            //Check for depended features
+            if (permission.FeatureDependency != null && GetCurrentMultiTenancySide() == MultiTenancySides.Tenant)
+            {
+                FeatureDependencyContext.TenantId = GetCurrentTenantId();
+
+                if (!permission.FeatureDependency.IsSatisfied(FeatureDependencyContext))
+                {
+                    return false;
+                }
+            }
+
+            //Get cached user permissions
+            var cacheItem = GetUserPermissionCacheItem(userId);
+            if (cacheItem == null)
+            {
+                return false;
+            }
+
+            //Check for user-specific value
+            if (cacheItem.GrantedPermissions.Contains(permission.Name))
+            {
+                return true;
+            }
+
+            if (cacheItem.ProhibitedPermissions.Contains(permission.Name))
+            {
+                return false;
+            }
+
+            //Check for roles
+            foreach (var roleId in cacheItem.RoleIds)
+            {
+                if (RoleManager.IsGranted(roleId, permission))
                 {
                     return true;
                 }
@@ -340,6 +411,24 @@ namespace Abp.Authorization.Users
             return user;
         }
 
+        /// <summary>
+        /// Gets a user by given id.
+        /// Throws exception if no user found with given id.
+        /// </summary>
+        /// <param name="userId">User id</param>
+        /// <returns>User</returns>
+        /// <exception cref="AbpException">Throws exception if no user found with given id</exception>
+        public virtual TUser GetUserById(long userId)
+        {
+            var user = AbpStore.FindById(userId);
+            if (user == null)
+            {
+                throw new AbpException("There is no user with id: " + userId);
+            }
+
+            return user;
+        }
+
         public async override Task<ClaimsIdentity> CreateIdentityAsync(TUser user, string authenticationType)
         {
             var identity = await base.CreateIdentityAsync(user, authenticationType);
@@ -351,8 +440,10 @@ namespace Abp.Authorization.Users
             return identity;
         }
 
-        public async override Task<IdentityResult> UpdateAsync(TUser user)
+        public override async Task<IdentityResult> UpdateAsync(TUser user)
         {
+            user.SetNormalizedNames();
+
             var result = await CheckDuplicateUsernameOrEmailAddressAsync(user.Id, user.UserName, user.EmailAddress);
             if (!result.Succeeded)
             {
@@ -371,7 +462,7 @@ namespace Abp.Authorization.Users
             return await base.UpdateAsync(user);
         }
 
-        public async override Task<IdentityResult> DeleteAsync(TUser user)
+        public override async Task<IdentityResult> DeleteAsync(TUser user)
         {
             if (user.UserName == AbpUser<TUser>.AdminUserName)
             {
@@ -390,6 +481,9 @@ namespace Abp.Authorization.Users
             }
 
             await AbpStore.SetPasswordHashAsync(user, PasswordHasher.HashPassword(newPassword));
+
+            await UpdateSecurityStampAsync(user.Id);
+
             return IdentityResult.Success;
         }
 
@@ -510,6 +604,7 @@ namespace Abp.Authorization.Users
             }
         }
 
+        [UnitOfWork]
         public virtual async Task SetOrganizationUnitsAsync(TUser user, params long[] organizationUnitIds)
         {
             if (organizationUnitIds == null)
@@ -529,6 +624,8 @@ namespace Abp.Authorization.Users
                     await RemoveFromOrganizationUnitAsync(user, currentOu);
                 }
             }
+
+            await _unitOfWorkManager.Current.SaveChangesAsync();
 
             //Add to added OUs
             foreach (var organizationUnitId in organizationUnitIds)
@@ -695,6 +792,40 @@ namespace Abp.Authorization.Users
             });
         }
 
+        private UserPermissionCacheItem GetUserPermissionCacheItem(long userId)
+        {
+            var cacheKey = userId + "@" + (GetCurrentTenantId() ?? 0);
+            return _cacheManager.GetUserPermissionCache().Get(cacheKey, () =>
+            {
+                var user = AbpStore.FindById(userId);
+                if (user == null)
+                {
+                    return null;
+                }
+
+                var newCacheItem = new UserPermissionCacheItem(userId);
+
+                foreach (var roleName in AbpStore.GetRoles(userId))
+                {
+                    newCacheItem.RoleIds.Add((RoleManager.GetRoleByName(roleName)).Id);
+                }
+
+                foreach (var permissionInfo in UserPermissionStore.GetPermissions(userId))
+                {
+                    if (permissionInfo.IsGranted)
+                    {
+                        newCacheItem.GrantedPermissions.Add(permissionInfo.Name);
+                    }
+                    else
+                    {
+                        newCacheItem.ProhibitedPermissions.Add(permissionInfo.Name);
+                    }
+                }
+
+                return newCacheItem;
+            });
+        }
+
         private bool IsTrue(string settingName, int? tenantId)
         {
             return GetSettingValue<bool>(settingName, tenantId);
@@ -737,6 +868,29 @@ namespace Abp.Authorization.Users
             }
 
             return AbpSession.MultiTenancySide;
+        }
+
+        public bool IsLockedOut(long userId)
+        {
+            var user = AbpStore.FindById(userId);
+            if (user == null)
+            {
+                throw new AbpException("There is no user with id: " + userId);
+            }
+
+            var lockoutEndDateUtc = AbpStore.GetLockoutEndDate(user);
+            return lockoutEndDateUtc > DateTimeOffset.UtcNow;
+        }
+
+        public bool IsLockedOut(TUser user)
+        {
+            var lockoutEndDateUtc = AbpStore.GetLockoutEndDate(user);
+            return lockoutEndDateUtc > DateTimeOffset.UtcNow;
+        }
+
+        public void ResetAccessFailedCount(TUser user)
+        {
+            AbpStore.ResetAccessFailedCountAsync(user);
         }
     }
 }

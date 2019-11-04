@@ -145,6 +145,47 @@ namespace Abp.Domain.Uow
             Timeout = TimeSpan.FromMilliseconds(timeout);
         }
 
+        /// <summary>
+        /// Creates a new <see cref="UnitOfWorkAttribute"/> object.
+        /// <see cref="IsTransactional"/> is automatically set to true.
+        /// </summary>
+        /// <param name="scope">Transaction scope</param>
+        /// <param name="isolationLevel">Transaction isolation level</param>
+        public UnitOfWorkAttribute(TransactionScopeOption scope, IsolationLevel isolationLevel)
+        {
+            IsTransactional = true;
+            Scope = scope;
+            IsolationLevel = isolationLevel;
+        }
+
+        /// <summary>
+        /// Creates a new <see cref="UnitOfWorkAttribute"/> object.
+        /// <see cref="IsTransactional"/> is automatically set to true.
+        /// </summary>
+        /// <param name="scope">Transaction scope</param>
+        /// <param name="isolationLevel">Transaction isolation level</param>
+        /// <param name="timeout">Transaction  timeout as milliseconds</param>
+        public UnitOfWorkAttribute(TransactionScopeOption scope, IsolationLevel isolationLevel, int timeout)
+        {
+            IsTransactional = true;
+            Scope = scope;
+            IsolationLevel = isolationLevel;
+            Timeout = TimeSpan.FromMilliseconds(timeout);
+        }
+
+        /// <summary>
+        /// Creates a new <see cref="UnitOfWorkAttribute"/> object.
+        /// </summary>
+        /// <param name="scope">Transaction scope</param>
+        /// <param name="isTransactional"/>
+        /// <param name="timeout">Transaction  timeout as milliseconds</param>
+        public UnitOfWorkAttribute(TransactionScopeOption scope, bool isTransactional, int timeout)
+        {
+            Scope = scope;
+            IsTransactional = isTransactional;
+            Timeout = TimeSpan.FromMilliseconds(timeout);
+        }
+
         internal UnitOfWorkOptions CreateOptions()
         {
             return new UnitOfWorkOptions

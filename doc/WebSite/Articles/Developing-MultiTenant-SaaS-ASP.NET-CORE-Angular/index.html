@@ -518,7 +518,7 @@ public class EventAppService : EventCloudAppServiceBase, IEventAppService
             .Take(64)
             .ToListAsync();
 
-        return new ListResultDto&lt;EventListDto&gt;(events.MapTo&lt;List&lt;EventListDto&gt;&gt;());
+        return new ListResultDto&lt;EventListDto&gt;(ObjectMapper.MapTo&lt;List&lt;EventListDto&gt;&gt;(events));
     }
 
     public async Task&lt;EventDetailOutput&gt; GetDetailAsync(EntityDto&lt;Guid&gt; input)
@@ -535,7 +535,7 @@ public class EventAppService : EventCloudAppServiceBase, IEventAppService
             throw new UserFriendlyException("Could not found the event, maybe it's deleted.");
         }
 
-        return @event.MapTo&lt;EventDetailOutput&gt;();
+        return ObjectMapper.MapTo&lt;EventDetailOutput&gt;(@event);
     }
 
     public async Task CreateAsync(CreateEventInput input)

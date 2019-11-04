@@ -2,11 +2,9 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
-
 using Abp.Dapper.Expressions;
 using Abp.Dependency;
 using Abp.Domain.Entities;
-
 using DapperExtensions;
 
 namespace Abp.Dapper.Filters.Query
