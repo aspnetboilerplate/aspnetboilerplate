@@ -1,5 +1,4 @@
-﻿using System.ComponentModel.DataAnnotations.Schema;
-using Abp.IdentityServer4;
+﻿using Abp.IdentityServer4;
 using Abp.Zero.EntityFrameworkCore;
 using Abp.ZeroCore.SampleApp.Core;
 using Abp.ZeroCore.SampleApp.Core.BookStore;
@@ -23,6 +22,8 @@ namespace Abp.ZeroCore.SampleApp.EntityFramework
         public DbSet<Category> Categories { get; set; }
 
         public DbSet<Comment> Comments { get; set; }
+
+        public DbSet<Reaction> Reactions { get; set; }
 
         public DbSet<Product> Products { get; set; }
 
