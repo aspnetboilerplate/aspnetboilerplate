@@ -4,17 +4,21 @@ using Abp.BackgroundJobs;
 using Abp.Dependency;
 using Abp.Domain.Repositories;
 using Abp.Domain.Uow;
+using Abp.MultiTenancy;
 using Abp.Threading.BackgroundWorkers;
 using Abp.Threading.Timers;
 using Abp.Timing;
 
 namespace Abp.Authorization.Users
 {
-    public class UserTokenExpirationWorker : PeriodicBackgroundWorkerBase, ISingletonDependency
+    public class UserTokenExpirationWorker<TTenant, TUser> : PeriodicBackgroundWorkerBase
+        where TTenant : AbpTenant<TUser>
+        where TUser : AbpUserBase
     {
         private const int IntervalInMilliseconds = 1 * 60 * 60 * 1000; // 1 hour
 
         private readonly IRepository<UserToken, long> _userTokenRepository;
+        private readonly IRepository<TTenant> _tenantRepository;
         private readonly IBackgroundJobConfiguration _backgroundJobConfiguration;
         private readonly IUnitOfWorkManager _unitOfWorkManager;
 
@@ -22,12 +26,14 @@ namespace Abp.Authorization.Users
             AbpTimer timer,
             IRepository<UserToken, long> userTokenRepository,
             IBackgroundJobConfiguration backgroundJobConfiguration, 
-            IUnitOfWorkManager unitOfWorkManager)
+            IUnitOfWorkManager unitOfWorkManager, 
+            IRepository<TTenant> tenantRepository)
             : base(timer)
         {
             _userTokenRepository = userTokenRepository;
             _backgroundJobConfiguration = backgroundJobConfiguration;
             _unitOfWorkManager = unitOfWorkManager;
+            _tenantRepository = tenantRepository;
 
             Timer.Period = GetTimerPeriod();
         }
@@ -44,26 +50,32 @@ namespace Abp.Authorization.Users
 
         protected override void DoWork()
         {
-            List<UserToken> expireUserTokens;
+            var utcNow = Clock.Now.ToUniversalTime();
+
             using (var uow = _unitOfWorkManager.Begin())
             {
-                using (_unitOfWorkManager.Current.DisableFilter(AbpDataFilters.MayHaveTenant))
+                using (_unitOfWorkManager.Current.SetTenantId(null))
                 {
-                    var utcNow = Clock.Now.ToUniversalTime();
-                    expireUserTokens = _userTokenRepository.GetAll().Where(t => t.ExpireDate <= utcNow).ToList();
+                    _userTokenRepository.Delete(t => t.ExpireDate <= utcNow);
                     uow.Complete();
                 }
             }
 
-            var expireUserTokensGroups = expireUserTokens.GroupBy(x => x.TenantId);
-            foreach (var expireUserTokensGroup in expireUserTokensGroups)
+            List<int> tenantIds;
+
+            using (var uow = _unitOfWorkManager.Begin())
+            {
+                tenantIds = _tenantRepository.GetAll().Select(t => t.Id).ToList();
+                uow.Complete();
+            }
+
+            foreach (var tenantId in tenantIds)
             {
                 using (var uow = _unitOfWorkManager.Begin())
                 {
-                    using (_unitOfWorkManager.Current.SetTenantId(expireUserTokensGroup.Key))
+                    using (_unitOfWorkManager.Current.SetTenantId(tenantId))
                     {
-                        var userTokenIds = expireUserTokensGroup.Select(x => x.Id).ToList();
-                        _userTokenRepository.Delete(x => userTokenIds.Contains(x.Id));
+                        _userTokenRepository.Delete(t => t.ExpireDate <= utcNow);
                         uow.Complete();
                     }
                 }
