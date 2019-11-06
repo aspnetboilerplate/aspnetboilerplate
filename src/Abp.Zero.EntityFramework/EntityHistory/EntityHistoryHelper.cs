@@ -220,9 +220,18 @@ namespace Abp.EntityHistory
                 .GetItems<EntityContainer>(DataSpace.CSpace)
                 .Single()
                 .EntitySets
-                .Single(e =>
-                    e.ElementType.Name == entityType.Name ||
-                    entityType.BaseType != null && entityType.BaseType.Name == e.ElementType.Name);
+                .Single(e => e.ElementType.Name == entityType.Name ||
+                             entityType.BaseType != null && RecursiveFindBaseType(e, entityType.BaseType));
+        }
+
+        private bool RecursiveFindBaseType(EntitySet e, EdmType entityEdmType)
+        {
+            if (e.ElementType.Name == entityEdmType.Name)
+            {
+                return true;
+            }
+
+            return entityEdmType.BaseType != null && RecursiveFindBaseType(e, entityEdmType.BaseType);
         }
 
         /// <summary>
