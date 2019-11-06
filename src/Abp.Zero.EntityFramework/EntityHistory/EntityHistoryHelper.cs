@@ -239,8 +239,7 @@ namespace Abp.EntityHistory
                 .GetItems<EntityContainer>(DataSpace.CSpace)
                 .Single()
                 .EntitySets
-                .Single(e => e.ElementType.Name == entityType.Name ||
-                             entityType.BaseType != null && entityType.BaseType.Name == e.ElementType.Name);
+                .Single(e => e.ElementType.Name == entityType.Name);
         }
 
         /// <summary>
