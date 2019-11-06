@@ -43,14 +43,8 @@ namespace Abp.AspNetCore.Mvc.Auditing
             {
                 var httpContext = _httpContextAccessor.HttpContext ?? _httpContext;
 
-                var clientIp = httpContext?.Request?.Headers["HTTP_X_FORWARDED_FOR"].ToString();
+                return httpContext?.Connection?.RemoteIpAddress?.ToString();
 
-                if (clientIp.IsNullOrEmpty())
-                {
-                    clientIp = httpContext?.Connection?.RemoteIpAddress?.ToString();
-                }
-
-                return clientIp.Remove(clientIp.IndexOf(':'));
             }
             catch (Exception ex)
             {
