@@ -1,4 +1,4 @@
-﻿using Abp.Domain.Entities;
+using Abp.Domain.Entities;
 using Abp.Domain.Entities.Auditing;
 using Abp.Domain.Repositories;
 using Abp.EntityHistory;
@@ -15,6 +15,8 @@ using System;
 using System.Collections.Generic;
 using System.Data.Entity.Infrastructure;
 using System.Linq;
+using Abp.Application.Editions;
+using Abp.Application.Features;
 using Xunit;
 
 namespace Abp.Zero.SampleApp.Tests.EntityHistory
@@ -25,6 +27,8 @@ namespace Abp.Zero.SampleApp.Tests.EntityHistory
         private readonly IRepository<Blog> _blogRepository;
         private readonly IRepository<Post, Guid> _postRepository;
         private readonly IRepository<Comment> _commentRepository;
+        private readonly AbpEditionManager _editionManager;
+        private readonly IRepository<EditionFeatureSetting, long> _editionFeatureRepository;
 
         private IEntityHistoryStore _entityHistoryStore;
 
@@ -34,6 +38,8 @@ namespace Abp.Zero.SampleApp.Tests.EntityHistory
             _blogRepository = Resolve<IRepository<Blog>>();
             _postRepository = Resolve<IRepository<Post, Guid>>();
             _commentRepository = Resolve<IRepository<Comment>>();
+            _editionManager = Resolve<AbpEditionManager>();
+            _editionFeatureRepository = Resolve<IRepository<EditionFeatureSetting, long>>();
 
             var user = GetDefaultTenantAdmin();
             AbpSession.TenantId = user.TenantId;
@@ -126,6 +132,98 @@ namespace Abp.Zero.SampleApp.Tests.EntityHistory
                 context.EntityChangeSets.Count(e => e.TenantId == 1).ShouldBe(1);
                 context.EntityChangeSets.Single().CreationTime.ShouldBeGreaterThan(justNow);
                 context.EntityPropertyChanges.Count(e => e.TenantId == 1).ShouldBe(1);
+            });
+        }
+
+        [Fact]
+        public void Should_Write_History_For_TPH_Tracked_Entities_Create()
+        {
+            var entityHistoryConfiguration = Resolve<IEntityHistoryConfiguration>();
+            entityHistoryConfiguration.Selectors.Add("Selected", typeof(EditionFeatureSetting));
+            entityHistoryConfiguration.IgnoredTypes.Add(typeof(Edition));
+
+            var edition = new Edition("Test Edition");
+            WithUnitOfWork(async () =>
+            {
+                await _editionManager.CreateAsync(edition);
+            });
+            _editionFeatureRepository.Insert(new EditionFeatureSetting(edition.Id, "TestFeature", "test"));
+
+            Predicate<EntityChangeSet> predicate = s =>
+            {
+                s.EntityChanges.Count.ShouldBe(1);
+
+                var entityChange = s.EntityChanges.Single(ec => ec.EntityTypeFullName == typeof(EditionFeatureSetting).FullName);
+                entityChange.ChangeTime.ShouldNotBeNull();
+                entityChange.ChangeType.ShouldBe(EntityChangeType.Created);
+                entityChange.EntityId.ShouldBe(edition.Id.ToJsonString());
+                entityChange.PropertyChanges.Count.ShouldBe(4);//Name,Value,EditionId,CreationTime
+
+                var propertyChange1 = entityChange.PropertyChanges.Single(pc => pc.PropertyName == nameof(EditionFeatureSetting.Name));
+                propertyChange1.OriginalValue.ShouldBeNull();
+                propertyChange1.NewValue.ShouldNotBeNull();
+
+                var propertyChange2 = entityChange.PropertyChanges.Single(pc => pc.PropertyName == nameof(EditionFeatureSetting.Value));
+                propertyChange2.OriginalValue.ShouldBeNull();
+                propertyChange2.NewValue.ShouldNotBeNull();
+
+                var propertyChange3 = entityChange.PropertyChanges.Single(pc => pc.PropertyName == nameof(EditionFeatureSetting.EditionId));
+                propertyChange3.OriginalValue.ShouldBeNull();
+                propertyChange3.NewValue.ShouldNotBeNull();
+
+                var propertyChange4 = entityChange.PropertyChanges.Single(pc => pc.PropertyName == nameof(EditionFeatureSetting.CreationTime));
+                propertyChange4.OriginalValue.ShouldBeNull();
+                propertyChange4.NewValue.ShouldNotBeNull();
+
+                // Check "who did this change"
+                s.ImpersonatorTenantId.ShouldBe(AbpSession.ImpersonatorTenantId);
+                s.ImpersonatorUserId.ShouldBe(AbpSession.ImpersonatorUserId);
+                s.TenantId.ShouldBe(AbpSession.TenantId);
+                s.UserId.ShouldBe(AbpSession.UserId);
+
+                return true;
+            };
+
+            _entityHistoryStore.Received().Save(Arg.Is<EntityChangeSet>(s => predicate(s)));
+        }
+
+        [Fact]
+        public void Should_Write_History_For_TPH_Tracked_Entities_Create_To_Database()
+        {
+            // Forward calls from substitute to implementation
+            var entityHistoryStore = Resolve<EntityHistoryStore>();
+            _entityHistoryStore.When(x => x.SaveAsync(Arg.Any<EntityChangeSet>()))
+                .Do(callback => AsyncHelper.RunSync(() =>
+                    entityHistoryStore.SaveAsync(callback.Arg<EntityChangeSet>()))
+                );
+            _entityHistoryStore.When(x => x.Save(Arg.Any<EntityChangeSet>()))
+                .Do(callback => entityHistoryStore.Save(callback.Arg<EntityChangeSet>()));
+
+            UsingDbContext((context) =>
+            {
+                context.EntityChanges.Count(e => e.TenantId == 1).ShouldBe(0);
+                context.EntityChangeSets.Count(e => e.TenantId == 1).ShouldBe(0);
+                context.EntityPropertyChanges.Count(e => e.TenantId == 1).ShouldBe(0);
+            });
+
+            var entityHistoryConfiguration = Resolve<IEntityHistoryConfiguration>();
+            entityHistoryConfiguration.Selectors.Add("Selected", typeof(EditionFeatureSetting));
+            entityHistoryConfiguration.IgnoredTypes.Add(typeof(Edition));
+
+            var justNow = Clock.Now;
+            var edition = new Edition("Test Edition");
+            WithUnitOfWork(async () =>
+            {
+                await _editionManager.CreateAsync(edition);
+            });
+            _editionFeatureRepository.Insert(new EditionFeatureSetting(edition.Id, "TestFeature", "test"));
+
+            UsingDbContext((context) =>
+            {
+                context.EntityChanges.Count(e => e.TenantId == 1).ShouldBe(1);
+                context.EntityChangeSets.Count(e => e.TenantId == 1).ShouldBe(1);
+                context.EntityChangeSets.Single().CreationTime.ShouldBeGreaterThan(justNow);
+                context.EntityPropertyChanges.Count(e => e.TenantId == 1).ShouldBe(4);//Name,Value,EditionId,CreationTime
             });
         }
 
