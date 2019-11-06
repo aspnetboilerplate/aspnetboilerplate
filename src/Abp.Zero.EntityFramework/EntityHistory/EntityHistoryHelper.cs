@@ -58,10 +58,18 @@ namespace Abp.EntityHistory
             foreach (var entityEntry in context.ChangeTracker.Entries())
             {
                 var typeOfEntity = entityEntry.GetEntityBaseType();
-                var shouldTrackEntity = IsTypeOfTrackedEntity(typeOfEntity);
-                if (shouldTrackEntity.HasValue && !shouldTrackEntity.Value)
+
+                bool shouldTrackEntity = false;
+
+                var isTypeOfTrackedEntity = IsTypeOfTrackedEntity(typeOfEntity);
+                if (isTypeOfTrackedEntity.HasValue)
                 {
-                    continue;
+                    if (!isTypeOfTrackedEntity.Value)
+                    {
+                        continue;
+                    }
+
+                    shouldTrackEntity = true;
                 }
 
                 if (!IsTypeOfEntity(typeOfEntity))
@@ -69,8 +77,18 @@ namespace Abp.EntityHistory
                     continue;
                 }
 
-                var shouldAuditEntity = IsTypeOfAuditedEntity(typeOfEntity);
-                if (shouldAuditEntity.HasValue && !shouldAuditEntity.Value)
+                var shouldAuditEntity = IsTypeOfAuditedEntity(typeOfEntity);//check if it is set by attribute.
+                if (shouldAuditEntity.HasValue)
+                {
+                    if (!shouldAuditEntity.Value)
+                    {
+                        continue;
+                    }
+
+                    shouldTrackEntity = true;
+                }
+
+                if (!shouldTrackEntity)
                 {
                     continue;
                 }
@@ -221,7 +239,8 @@ namespace Abp.EntityHistory
                 .GetItems<EntityContainer>(DataSpace.CSpace)
                 .Single()
                 .EntitySets
-                .Single(e => e.ElementType.Name == entityType.Name);
+                .Single(e => e.ElementType.Name == entityType.Name ||
+                             entityType.BaseType != null && entityType.BaseType.Name == e.ElementType.Name);
         }
 
         /// <summary>
