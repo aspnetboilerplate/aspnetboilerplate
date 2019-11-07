@@ -228,6 +228,39 @@ namespace Abp.Zero.SampleApp.Tests.EntityHistory
         }
 
         [Fact]
+        public void Should_Write_History_For_Tracked_Entities_Update()
+        {
+            /* Advertisement does not have Audited attribute. */
+            Resolve<IEntityHistoryConfiguration>().Selectors.Add("Selected", typeof(Advertisement));
+
+            WithUnitOfWork(() =>
+            {
+                var advertisement1 = _advertisementRepository.Single(a => a.Banner == "test-advertisement-1");
+                advertisement1.Banner = "test-advertisement-1-updated";
+                _advertisementRepository.Update(advertisement1);
+            });
+
+            Predicate<EntityChangeSet> predicate = s =>
+            {
+                s.EntityChanges.Count.ShouldBe(1);
+
+                var entityChange = s.EntityChanges.Single(ec => ec.EntityTypeFullName == typeof(Advertisement).FullName);
+                entityChange.ChangeType.ShouldBe(EntityChangeType.Updated);
+                entityChange.EntityId.ShouldBe(entityChange.EntityEntry.As<DbEntityEntry>().Entity.As<IEntity>().Id.ToJsonString());
+                entityChange.PropertyChanges.Count.ShouldBe(1);
+
+                var propertyChange = entityChange.PropertyChanges.Single(pc => pc.PropertyName == nameof(Advertisement.Banner));
+                propertyChange.NewValue.ShouldBe("test-advertisement-1-updated".ToJsonString());
+                propertyChange.OriginalValue.ShouldBe("test-advertisement-1".ToJsonString());
+                propertyChange.PropertyTypeFullName.ShouldBe(typeof(Advertisement).GetProperty(nameof(Advertisement.Banner)).PropertyType.FullName);
+
+                return true;
+            };
+
+            _entityHistoryStore.Received().Save(Arg.Is<EntityChangeSet>(s => predicate(s)));
+        }
+
+        [Fact]
         public void Should_Write_History_For_Audited_Entities_Create()
         {
             /* Blog has Audited attribute. */
@@ -457,29 +490,15 @@ namespace Abp.Zero.SampleApp.Tests.EntityHistory
             {
                 s.EntityChanges.Count.ShouldBe(2);
 
+                /* Post is not in Configuration.Selectors */
+                /* Post.Blog has Audited attribute */
                 var entityChangePost = s.EntityChanges.Single(ec => ec.EntityTypeFullName == typeof(Post).FullName);
                 entityChangePost.ChangeType.ShouldBe(EntityChangeType.Created);
-                entityChangePost.PropertyChanges.Count.ShouldBe(5);
+                entityChangePost.PropertyChanges.Count.ShouldBe(1);
 
                 var propertyChange1 = entityChangePost.PropertyChanges.Single(pc => pc.PropertyName == nameof(Post.BlogId));
                 propertyChange1.OriginalValue.ShouldBeNull();
                 propertyChange1.NewValue.ShouldNotBeNull();
-
-                var propertyChange2 = entityChangePost.PropertyChanges.Single(pc => pc.PropertyName == nameof(Post.Title));
-                propertyChange2.OriginalValue.ShouldBeNull();
-                propertyChange2.NewValue.ShouldNotBeNull();
-
-                var propertyChange3 = entityChangePost.PropertyChanges.Single(pc => pc.PropertyName == nameof(Post.Body));
-                propertyChange3.OriginalValue.ShouldBeNull();
-                propertyChange3.NewValue.ShouldNotBeNull();
-
-                var propertyChange4 = entityChangePost.PropertyChanges.Single(pc => pc.PropertyName == nameof(Post.IsDeleted));
-                propertyChange4.OriginalValue.ShouldBeNull();
-                propertyChange4.NewValue.ShouldNotBeNull();
-
-                var propertyChange5 = entityChangePost.PropertyChanges.Single(pc => pc.PropertyName == nameof(Post.CreationTime));
-                propertyChange5.OriginalValue.ShouldBeNull();
-                propertyChange5.NewValue.ShouldNotBeNull();
 
                 /* Blog has Audited attribute. */
                 var entityChangeBlog = s.EntityChanges.Single(ec => ec.EntityTypeFullName == typeof(Blog).FullName);
@@ -571,6 +590,24 @@ namespace Abp.Zero.SampleApp.Tests.EntityHistory
 
             var newValue = "http://testblog1-changed.myblogs.com";
             var originalValue = UpdateBlogUrlAndGetOriginalValue(newValue);
+
+            _entityHistoryStore.DidNotReceive().Save(Arg.Any<EntityChangeSet>());
+        }
+
+        [Fact]
+        public void Should_Not_Write_History_If_Not_Audited_And_Not_Selected()
+        {
+            /* Advertisement does not have Audited attribute. */
+
+            Resolve<IEntityHistoryConfiguration>().Selectors.Clear();
+            
+            WithUnitOfWork(() =>
+            {
+                _advertisementRepository.Insert(new Advertisement
+                {
+                    Banner = "not-selected-advertisement"
+                });
+            });
 
             _entityHistoryStore.DidNotReceive().Save(Arg.Any<EntityChangeSet>());
         }

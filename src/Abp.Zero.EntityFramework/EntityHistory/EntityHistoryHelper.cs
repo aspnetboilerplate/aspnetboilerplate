@@ -82,9 +82,11 @@ namespace Abp.EntityHistory
                     continue;
                 }
 
-                var shouldSaveAuditedPropertiesOnly = !shouldAuditEntity.HasValue && !entityEntry.IsCreated() && !entityEntry.IsDeleted();
-                var entitySet = GetEntitySet(objectContext, entityType);
+                var isAuditableEntity = shouldAuditEntity.HasValue && shouldAuditEntity.Value;
+                var isTrackableEntity = shouldTrackEntity.HasValue && shouldTrackEntity.Value;
+                var shouldSaveAuditedPropertiesOnly = !isAuditableEntity && !isTrackableEntity;
 
+                var entitySet = GetEntitySet(objectContext, entityType);
                 var propertyChanges = new List<EntityPropertyChange>();
                 propertyChanges.AddRange(GetPropertyChanges(entityEntry, entityType, entitySet, shouldSaveAuditedPropertiesOnly));
                 propertyChanges.AddRange(GetRelationshipChanges(entityEntry, entityType, entitySet, relationshipChanges, shouldSaveAuditedPropertiesOnly));
