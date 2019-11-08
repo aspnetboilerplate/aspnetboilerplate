@@ -50,6 +50,7 @@ namespace Abp.Authorization.Users
 
         protected override void DoWork()
         {
+            List<int> tenantIds;
             var utcNow = Clock.Now.ToUniversalTime();
 
             using (var uow = _unitOfWorkManager.Begin())
@@ -57,16 +58,9 @@ namespace Abp.Authorization.Users
                 using (_unitOfWorkManager.Current.SetTenantId(null))
                 {
                     _userTokenRepository.Delete(t => t.ExpireDate <= utcNow);
+                    tenantIds = _tenantRepository.GetAll().Select(t => t.Id).ToList();
                     uow.Complete();
                 }
-            }
-
-            List<int> tenantIds;
-
-            using (var uow = _unitOfWorkManager.Begin())
-            {
-                tenantIds = _tenantRepository.GetAll().Select(t => t.Id).ToList();
-                uow.Complete();
             }
 
             foreach (var tenantId in tenantIds)
