@@ -645,7 +645,7 @@ namespace Abp.Zero.SampleApp.Tests.EntityHistory
                 entityChange.PropertyChanges.Count.ShouldBe(1);
 
                 entityChange.PropertyChanges.Single(p => p.PropertyName == nameof(CitizenshipInformation.CitizenShipId))
-                    .NewValue.ShouldBe("123qwe");
+                    .NewValue.ShouldBe("\"123qwe\"");
 
                 return true;
             };
