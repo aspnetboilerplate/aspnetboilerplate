@@ -199,6 +199,7 @@ namespace Abp.EntityFrameworkCore
             if (entityType.BaseType == null && 
                 !typeof(TEntity).IsDefined(typeof(DisableDateTimeNormalizationAttribute), true) &&
                 !typeof(TEntity).IsDefined(typeof(OwnedAttribute), true) &&
+                !entityType.IsQueryType &&
                 !entityType.IsOwned())
             {
                 var dateTimeValueConverter = new AbpDateTimeValueConverter();
