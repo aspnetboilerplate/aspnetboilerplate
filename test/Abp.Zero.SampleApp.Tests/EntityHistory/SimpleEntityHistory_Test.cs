@@ -579,7 +579,7 @@ namespace Abp.Zero.SampleApp.Tests.EntityHistory
         }
 
         [Fact]
-        public void Should_Write_History_For_TPH_Tracked_Entities_With_One_To_Many_Relationship_Changes()
+        public void Should_Write_History_For_TPH_Tracked_Entities_With_One_To_Many_Relationship_Create()
         {
             var studentId = CreateStudentAndGetId();
             Resolve<IEntityHistoryConfiguration>().Selectors.Add("Selected", typeof(Student), typeof(StudentLectureNote));
