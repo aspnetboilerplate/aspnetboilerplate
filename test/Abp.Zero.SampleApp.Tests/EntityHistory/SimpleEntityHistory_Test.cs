@@ -584,6 +584,8 @@ namespace Abp.Zero.SampleApp.Tests.EntityHistory
             var studentId = CreateStudentAndGetId();
             Resolve<IEntityHistoryConfiguration>().Selectors.Add("Selected", typeof(Student), typeof(StudentLectureNote));
 
+            _entityHistoryStore.ClearReceivedCalls();
+
             WithUnitOfWork(() =>
             {
                 var student = _studentRepository.Get(studentId);
@@ -622,6 +624,8 @@ namespace Abp.Zero.SampleApp.Tests.EntityHistory
             var studentId = CreateStudentAndGetId();
             Resolve<IEntityHistoryConfiguration>().Selectors.Add("Selected", typeof(Student), typeof(CitizenshipInformation));
 
+            _entityHistoryStore.ClearReceivedCalls();
+
             WithUnitOfWork(() =>
             {
                 var student = _studentRepository.Get(studentId);
@@ -658,6 +662,8 @@ namespace Abp.Zero.SampleApp.Tests.EntityHistory
         {
             var studentId = CreateStudentWithCitizenshipAndGetId();
             Resolve<IEntityHistoryConfiguration>().Selectors.Add("Selected", typeof(Student), typeof(CitizenshipInformation));
+
+            _entityHistoryStore.ClearReceivedCalls();
 
             WithUnitOfWork(() =>
             {
