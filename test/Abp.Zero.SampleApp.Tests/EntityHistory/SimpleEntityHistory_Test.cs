@@ -13,6 +13,7 @@ using NSubstitute;
 using Shouldly;
 using System;
 using System.Collections.Generic;
+using System.Data.Entity;
 using System.Data.Entity.Infrastructure;
 using System.Linq;
 using Abp.Application.Editions;
@@ -577,6 +578,149 @@ namespace Abp.Zero.SampleApp.Tests.EntityHistory
             _entityHistoryStore.Received().Save(Arg.Is<EntityChangeSet>(s => predicate(s)));
         }
 
+        [Fact]
+        public void Should_Write_History_For_TPH_Tracked_Entities_With_One_To_Many_Relationship_Create()
+        {
+            var studentId = CreateStudentAndGetId();
+            Resolve<IEntityHistoryConfiguration>().Selectors.Add("Selected", typeof(Student), typeof(StudentLectureNote));
+
+            _entityHistoryStore.ClearReceivedCalls();
+
+            WithUnitOfWork(() =>
+            {
+                var student = _studentRepository.Get(studentId);
+                var lectureNote = new StudentLectureNote()
+                {
+                    Student = student,
+                    CourseName = "Course1",
+                    Note = 100
+                };
+                student.LectureNotes.Add(lectureNote);
+
+                _studentRepository.Update(student);
+            });
+
+            Predicate<EntityChangeSet> predicate = s =>
+            {
+                s.EntityChanges.Count.ShouldBe(1);
+
+                var entityChange = s.EntityChanges.Single(ec => ec.EntityTypeFullName == typeof(StudentLectureNote).FullName);
+                entityChange.ChangeTime.ShouldNotBeNull();
+                entityChange.ChangeType.ShouldBe(EntityChangeType.Created);
+                entityChange.PropertyChanges.Count.ShouldBe(3);
+
+                entityChange.PropertyChanges.Single(p => p.PropertyName == nameof(StudentLectureNote.StudentId))
+                    .NewValue.ShouldBe(studentId.ToString());
+
+                return true;
+            };
+
+            _entityHistoryStore.Received().Save(Arg.Is<EntityChangeSet>(s => predicate(s)));
+        }
+
+        [Fact]
+        public void Should_Write_History_For_TPH_Tracked_Entities_With_One_To_One_Relationship_Changes_Create()
+        {
+            var studentId = CreateStudentAndGetId();
+            Resolve<IEntityHistoryConfiguration>().Selectors.Add("Selected", typeof(Student), typeof(CitizenshipInformation));
+
+            _entityHistoryStore.ClearReceivedCalls();
+
+            WithUnitOfWork(() =>
+            {
+                var student = _studentRepository.Get(studentId);
+                var citizenshipInformation = new CitizenshipInformation()
+                {
+                    Student = student,
+                    CitizenShipId = "123qwe"
+                };
+
+                student.CitizenshipInformation = citizenshipInformation;
+                _studentRepository.Update(student);
+            });
+
+            Predicate<EntityChangeSet> predicate = s =>
+            {
+                s.EntityChanges.Count.ShouldBe(1);
+
+                var entityChange = s.EntityChanges.Single(ec => ec.EntityTypeFullName == typeof(CitizenshipInformation).FullName);
+                entityChange.ChangeTime.ShouldNotBeNull();
+                entityChange.ChangeType.ShouldBe(EntityChangeType.Created);
+                entityChange.PropertyChanges.Count.ShouldBe(1);
+
+                entityChange.PropertyChanges.Single(p => p.PropertyName == nameof(CitizenshipInformation.CitizenShipId))
+                    .NewValue.ShouldBe("\"123qwe\"");
+
+                return true;
+            };
+
+            _entityHistoryStore.Received().Save(Arg.Is<EntityChangeSet>(s => predicate(s)));
+        }
+
+        [Fact]
+        public void Should_Write_History_For_TPH_Tracked_Entities_With_One_To_One_Relationship_Changes_Update()
+        {
+            var studentId = CreateStudentWithCitizenshipAndGetId();
+            Resolve<IEntityHistoryConfiguration>().Selectors.Add("Selected", typeof(Student), typeof(CitizenshipInformation));
+
+            _entityHistoryStore.ClearReceivedCalls();
+
+            WithUnitOfWork(() =>
+            {
+                var student = _studentRepository.GetAll().Include(x => x.CitizenshipInformation).Single(x => x.Id == studentId);
+                student.CitizenshipInformation.CitizenShipId = "qwe123";
+                _studentRepository.Update(student);
+            });
+
+            Predicate<EntityChangeSet> predicate = s =>
+            {
+                s.EntityChanges.Count.ShouldBe(1);
+
+                var entityChange = s.EntityChanges.Single(ec => ec.EntityTypeFullName == typeof(CitizenshipInformation).FullName);
+                entityChange.ChangeTime.ShouldNotBeNull();
+                entityChange.ChangeType.ShouldBe(EntityChangeType.Updated);
+                entityChange.PropertyChanges.Count.ShouldBe(1);
+
+                var idChange = entityChange.PropertyChanges.Single(p => p.PropertyName == nameof(CitizenshipInformation.CitizenShipId));
+                idChange.OriginalValue.ShouldBe("\"123qwe\"");
+                idChange.NewValue.ShouldBe("\"qwe123\"");
+
+                return true;
+            };
+
+            _entityHistoryStore.Received().Save(Arg.Is<EntityChangeSet>(s => predicate(s)));
+        }
+
+        private int CreateStudentAndGetId()
+        {
+            var student = new Student()
+            {
+                Name = "TestName",
+                IdCard = "TestIdCard",
+                Address = "TestAddress",
+                Grade = 1,
+            };
+
+            return _studentRepository.InsertAndGetId(student);
+        }
+
+        private int CreateStudentWithCitizenshipAndGetId()
+        {
+            var student = new Student()
+            {
+                Name = "TestName",
+                IdCard = "TestIdCard",
+                Address = "TestAddress",
+                Grade = 1,
+                CitizenshipInformation = new CitizenshipInformation()
+                {
+                    CitizenShipId = "123qwe"
+                }
+            };
+
+            return _studentRepository.InsertAndGetId(student);
+        }
+
         #endregion
 
         #region CASES DON'T WRITE HISTORY
@@ -600,7 +744,7 @@ namespace Abp.Zero.SampleApp.Tests.EntityHistory
             /* Advertisement does not have Audited attribute. */
 
             Resolve<IEntityHistoryConfiguration>().Selectors.Clear();
-            
+
             WithUnitOfWork(() =>
             {
                 _advertisementRepository.Insert(new Advertisement
