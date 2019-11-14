@@ -22,9 +22,6 @@ namespace Abp.AspNetCore.EntityHistory
                     return OverridedValue.Reason;
                 }
 
-                // TODO: Use back HttpContextAccessor.HttpContext?.Request.GetDisplayUrl()
-                // after moved to net core 3.0
-                // see https://github.com/aspnet/AspNetCore/issues/2718#issuecomment-482347489
                 return GetDisplayUrl(HttpContextAccessor.HttpContext?.Request);
             }
         }
@@ -46,7 +43,6 @@ namespace Abp.AspNetCore.EntityHistory
         {
             if (request == null)
             {
-                Logger.Debug("Unable to get URL from HttpRequest, fallback to null");
                 return null;
             }
 
