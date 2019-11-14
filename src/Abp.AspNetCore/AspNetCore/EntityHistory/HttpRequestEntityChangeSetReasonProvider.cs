@@ -22,6 +22,9 @@ namespace Abp.AspNetCore.EntityHistory
                     return OverridedValue.Reason;
                 }
 
+                // The code for GetDisplayUrl comes from asp net core 3.0. 
+                // This method is not implemented in asp net core 2.x, so we need to implement it manually.
+                // https://github.com/aspnet/AspNetCore/blob/master/src/Http/Http.Extensions/src/UriHelper.cs#L196
                 return GetDisplayUrl(HttpContextAccessor.HttpContext?.Request);
             }
         }
