@@ -21,7 +21,7 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="Z.EntityFramework.Plus.EFCore" Version="3.0.9-preview9-01" />
+    <PackageReference Include="Z.EntityFramework.Plus.EFCore" Version="3.0.22" />
   </ItemGroup>
 
   <ItemGroup>
