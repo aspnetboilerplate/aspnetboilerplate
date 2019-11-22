@@ -2,10 +2,8 @@
 using Abp.AspNetCore.Configuration;
 using Abp.AspNetCore.Mvc.Extensions;
 using Abp.AspNetCore.TestBase;
-using Abp.Reflection.Extensions;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
-using Microsoft.AspNetCore.Mvc.ApplicationParts;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 
@@ -15,10 +13,8 @@ namespace Abp.AspNetCore.App
     {
         public IServiceProvider ConfigureServices(IServiceCollection services)
         {
-            var mvc = services.AddMvc()
-                    .AddXmlSerializerFormatters();
-
-            mvc.PartManager.ApplicationParts.Add(new AssemblyPart(typeof(AbpAspNetCoreModule).GetAssembly()));
+            services.AddMvc()
+                .AddXmlSerializerFormatters();
 
             services.AddAuthentication(options =>
             {
