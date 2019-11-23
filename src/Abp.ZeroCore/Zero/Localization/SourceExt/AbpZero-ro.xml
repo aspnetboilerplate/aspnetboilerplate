@@ -1,0 +1,35 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<localizationDictionary culture="ro">
+  <texts>
+    <text name="Identity.ConcurrencyFailure">Eșecul optim al concurentei, obiectul a fost modificat.</text>
+    <text name="Identity.DefaultError">A apărut un eroare necunoscută.</text>
+    <text name="Identity.DuplicateEmail">Email-ul '{0}' este deja luat.</text>
+    <text name="Identity.DuplicateRoleName">Numele rolului '{0}' este deja luat.</text>
+    <text name="Identity.DuplicateUserName">Numele de utilizator '{0}' este deja luat.</text>
+    <text name="Identity.InvalidEmail">Email-ul '{0}' este invalid.</text>
+    <text name="Identity.InvalidPasswordHasherCompatibilityMode">Providerul PasswordHasherCompatibilityMode este invalid.</text>
+    <text name="Identity.InvalidPasswordHasherIterationCount">Numărul de iterații trebuie să fie un număr întreg pozitiv.</text>
+    <text name="Identity.InvalidRoleName">Numele rolului '{0}' este invalid.</text>
+    <text name="Identity.InvalidToken">Token invalid.</text>
+    <text name="Identity.InvalidUserName">Numele de utilizator '{0}' este invalid, can only contain letters or digits.</text>
+    <text name="Identity.LoginAlreadyAssociated">Un utilizator cu acest nume de utilizator există deja.</text>
+    <text name="Identity.PasswordMismatch">Parola incorectă.</text>
+    <text name="Identity.PasswordRequireDigit">Parolele trebuie să aibă cel puțin o cifră ('0'-'9').</text>
+    <text name="Identity.PasswordRequireLower">Parolele trebuie să aibă cel puțin o minusculă ('a'-'z').</text>
+    <text name="Identity.PasswordRequireNonAlphanumeric">Parolele trebuie să aibă cel puțin un caracter non-alfanumeric.</text>
+    <text name="Identity.PasswordRequireUpper">Parolele trebuie să aibă cel puțin o majusculă ('A'-'Z').</text>
+    <text name="Identity.PasswordTooShort">Parolele trebuie să fie cel puțin {0} caractere.</text>
+    <text name="Identity.RoleNotFound">Rolul {0} nu există.</text>
+    <text name="Identity.UserAlreadyHasPassword">Utilizatorul are deja o parolă setată.</text>
+    <text name="Identity.UserAlreadyInRole">Utilizatorul are deja rolul '{0}'.</text>
+    <text name="Identity.UserLockedOut">Utilizatorul este blocat.</text>
+    <text name="Identity.UserLockoutNotEnabled">Blocarea nu este activată pentru acest utilizator.</text>
+    <text name="Identity.UserNameNotFound">Utilizatorul {0} nu există.</text>
+    <text name="Identity.UserNotInRole">Utilizatorul nu are rolul '{0}'.</text>
+    <text name="Email">Email</text>
+    <text name="EmailSecurityCodeSubject">Cod securitate</text>
+    <text name="EmailSecurityCodeBody">Codul dumneavoastră de securitate este: {0}</text>
+    <text name="Sms">Sms</text>
+    <text name="SmsSecurityCodeMessage">Codul dumneavoastră de securitate este: {0}</text>
+  </texts>
+</localizationDictionary>

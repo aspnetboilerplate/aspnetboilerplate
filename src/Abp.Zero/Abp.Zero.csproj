@@ -21,6 +21,10 @@
   <ItemGroup>
     <EmbeddedResource Include="Zero\Localization\SourceExt\*.xml" />
   </ItemGroup>
+
+  <ItemGroup>
+    <None Remove="Zero\Localization\SourceExt\AbpZero-ro.xml" />
+  </ItemGroup>
   
   <ItemGroup>
     <None Include="bin\Release\net461\Abp.Zero.pdb">
