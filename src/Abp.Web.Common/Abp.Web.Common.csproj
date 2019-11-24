@@ -21,8 +21,6 @@
 
   <ItemGroup>
     <EmbeddedResource Include="Web\Localization\AbpWebXmlSource\*.xml" Exclude="bin\**;obj\**;**\*.xproj;packages\**;@(EmbeddedResource)" />
-    <None Remove="Web\Localization\AbpWebXmlSource\AbpWeb+ro.xml" />
-    <EmbeddedResource Include="Web\Localization\AbpWebXmlSource\AbpWeb+ro.xml" />
     <None Include="bin\Release\netstandard2.0\Abp.Web.Common.pdb">
       <PackagePath>lib/netstandard2.0/</PackagePath>
       <Pack>true</Pack>
