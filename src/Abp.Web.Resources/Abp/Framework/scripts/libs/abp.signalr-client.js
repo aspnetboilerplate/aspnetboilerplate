@@ -9,8 +9,8 @@ var abp = abp || {};
     // Create namespaces
     abp.signalr = abp.signalr || {};
     abp.signalr.hubs = abp.signalr.hubs || {};
-    abp.signalr.reconnectTime = 5000;
-    abp.signalr.maxTries = 8;
+    abp.signalr.reconnectTime = abp.signalr.reconnectTime || 5000;
+    abp.signalr.maxTries = abp.signalr.maxTries || 8;
 
     // Configure the connection for abp.signalr.hubs.common
     function configureConnection(connection) {
@@ -18,24 +18,23 @@ var abp = abp || {};
         abp.signalr.hubs.common = connection;
 
         let tries = 1;
+        let reconnectTime = abp.signalr.reconnectTime;
 
         // Reconnect loop
-        function start() {
+        async function tryReconnect() {
             if (tries > abp.signalr.maxTries) {
                 return;
             } else {
-                connection.start()
-                    .then(() => {
-                        abp.signalr.reconnectTime = 5000;
-                        tries = 1;
-                    })
-                    .catch(() => {
-                        setTimeout(() => {
-                            start();
-                        }, abp.signalr.reconnectTime);
-                        abp.signalr.reconnectTime *= 2;
-                        tries += 1;
-                    });
+                try {
+                    await connection.start();
+                    reconnectTime = abp.signalr.reconnectTime;
+                    tries = 1;
+                    console.log('Reconnected to SignalR CHAT server!');
+                } catch (err) {
+                    setTimeout(() => tryReconnect(), reconnectTime);
+                    tries += 1;
+                    reconnectTime *= 2;
+                }
             }
         }
 
@@ -51,7 +50,7 @@ var abp = abp || {};
                 return;
             }
 
-            start();
+            await tryReconnect();
         });
 
         // Register to get notifications
