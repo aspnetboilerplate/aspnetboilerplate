@@ -29,7 +29,7 @@ var abp = abp || {};
                     await connection.start();
                     reconnectTime = abp.signalr.reconnectTime;
                     tries = 1;
-                    console.log('Reconnected to SignalR CHAT server!');
+                    console.log('Reconnected to SignalR server!');
                 } catch (err) {
                     setTimeout(() => tryReconnect(), reconnectTime);
                     tries += 1;
