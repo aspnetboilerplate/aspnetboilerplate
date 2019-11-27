@@ -57,6 +57,20 @@ namespace Abp.Localization
 
             return languageInfos;
         }
+        /// <summary>
+        /// Gets the active languages for current tenant.
+        /// </summary>
+        public IReadOnlyList<LanguageInfo> GetActiveLanguages()
+        {
+            var languageInfos = _applicationLanguageManager.GetLanguages(AbpSession.TenantId)
+               .OrderBy(l => l.DisplayName)
+               .Select(l => l.ToLanguageInfo())
+               .ToList();
+
+            SetDefaultLanguage(languageInfos);
+
+            return languageInfos;
+        }
 
         private async Task SetDefaultLanguageAsync(List<LanguageInfo> languageInfos)
         {
