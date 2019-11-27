@@ -93,7 +93,7 @@ namespace Abp.AspNetCore
             using (var languageManager = iocResolver.ResolveAsDisposable<ILanguageManager>())
             {
                 var supportedCultures = languageManager.Object
-                    .GetLanguages()
+                    .GetActiveLanguages()
                     .Select(l => CultureInfo.GetCultureInfo(l.Name))
                     .ToArray();
 

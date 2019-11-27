@@ -62,7 +62,7 @@ namespace Abp.Localization
         /// </summary>
         public IReadOnlyList<LanguageInfo> GetActiveLanguages()
         {
-            var languageInfos = _applicationLanguageManager.GetLanguages(AbpSession.TenantId)
+            var languageInfos = _applicationLanguageManager.GetActiveLanguages(AbpSession.TenantId)
                .OrderBy(l => l.DisplayName)
                .Select(l => l.ToLanguageInfo())
                .ToList();
