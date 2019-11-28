@@ -99,10 +99,11 @@ namespace Abp.AspNetCore
 
                 if (iocResolver.IsRegistered<ILogger<RequestLocalizationOptions>>())
                 {
-                    using var logger = iocResolver.ResolveAsDisposable<ILogger<RequestLocalizationOptions>>();
-                    logger.Object.LogInformation($"Supported Request Localization Cultures: {string.Join(",", supportedCultures.Select(c => c))}");
+                    using (var logger = iocResolver.ResolveAsDisposable<ILogger<RequestLocalizationOptions>>())
+                    {
+                        logger.Object.LogInformation($"Supported Request Localization Cultures: {string.Join(",", supportedCultures.Select(c => c))}");                
+                    }
                 }
-
                 var options = new RequestLocalizationOptions
                 {
                     SupportedCultures = supportedCultures,
