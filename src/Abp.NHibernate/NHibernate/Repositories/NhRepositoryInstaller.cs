@@ -18,10 +18,10 @@ namespace Abp.NHibernate.Repositories
         public void Install(IWindsorContainer container, IConfigurationStore store)
         {
             container.Register(
-                Component.For<ISessionFactory>().UsingFactoryMethod(() => _sessionFactory).LifeStyle.Singleton,
-                Component.For(typeof (IRepository<>)).ImplementedBy(typeof (NhRepositoryBase<>)).LifestyleTransient(),
-                Component.For(typeof (IRepository<,>)).ImplementedBy(typeof (NhRepositoryBase<,>)).LifestyleTransient()
-                );
+                Component.For<ISessionFactory>().Instance(_sessionFactory).LifeStyle.Singleton,
+                Component.For(typeof(IRepository<>)).ImplementedBy(typeof(NhRepositoryBase<>)).LifestyleTransient(),
+                Component.For(typeof(IRepository<,>)).ImplementedBy(typeof(NhRepositoryBase<,>)).LifestyleTransient()
+            );
         }
     }
 }

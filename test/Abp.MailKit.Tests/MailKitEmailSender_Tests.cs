@@ -24,7 +24,7 @@ namespace Abp.MailKit.Tests
         }
 
         //[Fact]
-        public async Task ShouldSendMailMessage()
+        public async Task ShouldSendMailMessageAsync()
         {
             var mailSender = CreateMailKitEmailSender();
             var mailMessage = new MailMessage("from_mail_address", "to_mail_address", "subject", "body")
@@ -34,7 +34,7 @@ namespace Abp.MailKit.Tests
         }
 
         //[Fact]
-        public void ShouldSendMailMessageAsync()
+        public void ShouldSendMailMessage()
         {
             var mailSender = CreateMailKitEmailSender();
             var mailMessage = new MailMessage("from_mail_address", "to_mail_address", "subject", "body")
@@ -53,7 +53,7 @@ namespace Abp.MailKit.Tests
             mailConfig.Port.Returns(587);
             mailConfig.EnableSsl.Returns(false);
 
-            var mailSender = new MailKitEmailSender(mailConfig, new DefaultMailKitSmtpBuilder(mailConfig));
+            var mailSender = new MailKitEmailSender(mailConfig, new DefaultMailKitSmtpBuilder(mailConfig, new AbpMailKitConfiguration()));
             return mailSender;
         }
     }

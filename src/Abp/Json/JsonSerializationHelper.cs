@@ -52,8 +52,10 @@ namespace Abp.Json
             var type = Type.GetType(serializedObj.Substring(0, typeSeperatorIndex));
             var serialized = serializedObj.Substring(typeSeperatorIndex + 1);
 
-            var options = new JsonSerializerSettings();
-            options.Converters.Insert(0, new AbpDateTimeConverter());
+            var options = new JsonSerializerSettings
+            {
+                ContractResolver = new AbpCamelCasePropertyNamesContractResolver()
+            };
 
             return JsonConvert.DeserializeObject(serialized, type, options);
         }

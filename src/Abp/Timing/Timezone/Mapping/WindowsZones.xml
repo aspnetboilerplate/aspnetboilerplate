@@ -122,7 +122,7 @@ For terms of use, see http://www.unicode.org/copyright.html
       <!-- (UTC-04:00) Asuncion -->
       <mapZone other="Paraguay Standard Time" territory="001" type="America/Asuncion"/>
       <mapZone other="Paraguay Standard Time" territory="PY" type="America/Asuncion"/>
-
+      
       <!-- (UTC-04:00) Atlantic Time (Canada) -->
       <mapZone other="Atlantic Standard Time" territory="001" type="America/Halifax"/>
       <mapZone other="Atlantic Standard Time" territory="BM" type="Atlantic/Bermuda"/>
@@ -481,6 +481,10 @@ For terms of use, see http://www.unicode.org/copyright.html
       <mapZone other="Pakistan Standard Time" territory="001" type="Asia/Karachi"/>
       <mapZone other="Pakistan Standard Time" territory="PK" type="Asia/Karachi"/>
 
+      <!-- (UTC+05:00) Qyzylorda -->
+      <mapZone other="Qyzylorda Standard Time" territory="001" type="Asia/Qyzylorda"/>
+      <mapZone other="Qyzylorda Standard Time" territory="KZ" type="Asia/Qyzylorda"/>
+      
       <!-- (UTC+05:30) Chennai, Kolkata, Mumbai, New Delhi -->
       <mapZone other="India Standard Time" territory="001" type="Asia/Calcutta"/>
       <mapZone other="India Standard Time" territory="IN" type="Asia/Calcutta"/>
@@ -706,6 +710,8 @@ For terms of use, see http://www.unicode.org/copyright.html
       <mapZone other="Magallanes Standard Time" territory="001" type="America/Punta_Arenas"/>
       <mapZone other="Malay Peninsula Standard Time" territory="001" type="Asia/Kuala_Lumpur"/>
       <mapZone other="Sudan Standard Time" territory="001" type="Africa/Khartoum"/>
+      <mapZone other="Sao Tome Standard Time" territory="001" type="Africa/Sao_Tome"/>
+      <mapZone other="Volgograd Standard Time" territory="001" type="Europe/Volgograd"/>
     </mapTimezones>
   </windowsZones>
 </supplementalData>

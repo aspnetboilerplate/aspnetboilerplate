@@ -14,7 +14,7 @@ namespace Abp.Web.Mvc.Security.AntiForgery
             var antiForgeryWorkerField = typeof(System.Web.Helpers.AntiForgery).GetField("_worker", BindingFlags.NonPublic | BindingFlags.Static);
             if (antiForgeryWorkerField == null)
             {
-                throw new AbpException("Can not get _worker field of System.Web.Helpers.AntiForgery class. It's internal implementation might be changed. Please create an issue on Github repository to solve this.");
+                throw new AbpException("Can not get _worker field of System.Web.Helpers.AntiForgery class. It's internal implementation might be changed. Please create an issue on GitHub repository to solve this.");
             }
 
             return antiForgeryWorkerField.GetValue(null);

@@ -1,8 +1,11 @@
 ﻿using System.Linq;
 using System.Reflection;
 using Abp.Application.Features;
+using Abp.Auditing;
 using Abp.Authorization.Roles;
 using Abp.Authorization.Users;
+using Abp.Collections.Extensions;
+using Abp.Configuration.Startup;
 using Abp.Dependency;
 using Abp.Localization;
 using Abp.Localization.Dictionaries;
@@ -10,9 +13,8 @@ using Abp.Localization.Dictionaries.Xml;
 using Abp.Modules;
 using Abp.MultiTenancy;
 using Abp.Reflection;
-using Abp.Zero.Configuration;
-using Abp.Configuration.Startup;
 using Abp.Reflection.Extensions;
+using Abp.Zero.Configuration;
 using Castle.MicroKernel.Registration;
 
 namespace Abp.Zero
@@ -44,6 +46,8 @@ namespace Abp.Zero
                         )));
 
             IocManager.IocContainer.Kernel.ComponentRegistered += Kernel_ComponentRegistered;
+
+            AddIgnoredTypes();
         }
 
         public override void Initialize()
@@ -63,6 +67,19 @@ namespace Abp.Zero
                 IocManager.IocContainer.Register(
                     Component.For<IAbpZeroFeatureValueStore>().ImplementedBy(handler.ComponentModel.Implementation).Named("AbpZeroFeatureValueStore").LifestyleTransient()
                     );
+            }
+        }
+
+        private void AddIgnoredTypes()
+        {
+            var ignoredTypes = new[]
+            {
+                typeof(AuditLog)
+            };
+
+            foreach (var ignoredType in ignoredTypes)
+            {
+                Configuration.EntityHistory.IgnoredTypes.AddIfNotContains(ignoredType);
             }
         }
 

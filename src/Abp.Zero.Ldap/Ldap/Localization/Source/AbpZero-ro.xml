@@ -1,0 +1,11 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<localizationDictionary culture="ro">
+  <texts>
+    <text name="Ldap_IsEnabled" value="Activat" />
+    <text name="Ldap_ContextType" value="Tip context" />
+    <text name="Ldap_Container" value="Container" />
+    <text name="Ldap_Domain" value="Domeniu" />
+    <text name="Ldap_UserName" value="Utilizator" />
+    <text name="Ldap_Password" value="Parola" />
+  </texts>
+</localizationDictionary>

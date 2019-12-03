@@ -2,8 +2,9 @@ using System.Net.Http;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Web.Http.Controllers;
-using System.Web.OData;
+using Abp.Authorization;
 using Abp.Domain.Uow;
+using Microsoft.AspNet.OData;
 
 namespace Abp.WebApi.OData.Controllers
 {
@@ -14,6 +15,13 @@ namespace Abp.WebApi.OData.Controllers
         protected IUnitOfWorkCompleteHandle UnitOfWorkCompleteHandler { get; private set; }
 
         protected bool IsDisposed { get; set; }
+
+        public IPermissionChecker PermissionChecker { protected get; set; }
+
+        protected AbpODataController()
+        {
+            PermissionChecker = NullPermissionChecker.Instance;
+        }
 
         public override Task<HttpResponseMessage> ExecuteAsync(HttpControllerContext controllerContext, CancellationToken cancellationToken)
         {

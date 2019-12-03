@@ -3,7 +3,9 @@ using System.Diagnostics;
 using System.Web.Mvc;
 using Abp.Auditing;
 using Abp.Dependency;
+using Abp.Web.Models;
 using Abp.Web.Mvc.Configuration;
+using Abp.Web.Mvc.Controllers.Results;
 using Abp.Web.Mvc.Extensions;
 
 namespace Abp.Web.Mvc.Auditing
@@ -12,11 +14,18 @@ namespace Abp.Web.Mvc.Auditing
     {
         private readonly IAbpMvcConfiguration _configuration;
         private readonly IAuditingHelper _auditingHelper;
+        private readonly IAuditingConfiguration _auditingConfiguration;
+        private readonly IAuditSerializer _auditSerializer;
 
-        public AbpMvcAuditFilter(IAbpMvcConfiguration configuration, IAuditingHelper auditingHelper)
+        public AbpMvcAuditFilter(IAbpMvcConfiguration configuration, 
+            IAuditingHelper auditingHelper, 
+            IAuditingConfiguration auditingConfiguration, 
+            IAuditSerializer auditSerializer)
         {
             _configuration = configuration;
             _auditingHelper = auditingHelper;
+            _auditingConfiguration = auditingConfiguration;
+            _auditSerializer = auditSerializer;
         }
 
         public void OnActionExecuting(ActionExecutingContext filterContext)
@@ -56,6 +65,32 @@ namespace Abp.Web.Mvc.Auditing
 
             auditData.AuditInfo.ExecutionDuration = Convert.ToInt32(auditData.Stopwatch.Elapsed.TotalMilliseconds);
             auditData.AuditInfo.Exception = filterContext.Exception;
+
+            if (_auditingConfiguration.SaveReturnValues && filterContext.Result != null)
+            {
+                switch (filterContext.Result)
+                {
+                    case AbpJsonResult abpJsonResult:
+                        if (abpJsonResult.Data is AjaxResponse ajaxResponse)
+                        {
+                            auditData.AuditInfo.ReturnValue = _auditSerializer.Serialize(ajaxResponse.Result);
+                        }
+                        else
+                        {
+                            auditData.AuditInfo.ReturnValue = _auditSerializer.Serialize(abpJsonResult.Data);
+                        }
+                        break;
+
+                    case JsonResult jsonResult:
+                        auditData.AuditInfo.ReturnValue = _auditSerializer.Serialize(jsonResult.Data);
+                        break;
+
+                    case ContentResult contentResult:
+                        auditData.AuditInfo.ReturnValue = contentResult.Content;
+                        break;
+
+                }
+            }
 
             _auditingHelper.Save(auditData.AuditInfo);
         }

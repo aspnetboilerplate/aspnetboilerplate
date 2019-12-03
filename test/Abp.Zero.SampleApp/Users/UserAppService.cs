@@ -1,9 +1,7 @@
-﻿using System;
-using System.Threading.Tasks;
+﻿using System.Threading.Tasks;
 using Abp.Domain.Repositories;
 using Abp.Domain.Uow;
 using Abp.Extensions;
-using Abp.Runtime.Security;
 using Abp.UI;
 using Abp.Zero.SampleApp.Users.Dto;
 using Microsoft.AspNet.Identity;
@@ -28,7 +26,7 @@ namespace Abp.Zero.SampleApp.Users
 
         public void CreateUser(CreateUserInput input)
         {
-            _userRepository.Insert(new User
+            _userManager.Create(new User
             {
                 TenantId = null,
                 UserName = input.UserName,
@@ -50,7 +48,6 @@ namespace Abp.Zero.SampleApp.Users
             user.Surname = input.Surname;
             user.EmailAddress = input.EmailAddress;
             user.IsEmailConfirmed = true;
-            user.LastLoginTime = input.LastLoginTime;
             user.Password = "AM4OLBpptxBYmM79lGOX9egzZk3vIQU3d/gFCJzaBjAPXzYIK3tQ2N7X4fcrHtElTw=="; //123qwe
 
             _userRepository.Update(user);
@@ -76,6 +73,12 @@ namespace Abp.Zero.SampleApp.Users
             user.IsEmailConfirmed = true;
 
             await _userManager.UpdateAsync(user);
+        }
+
+        public void CustomValidateMethod(CustomValidateMethodInput input)
+        {
+            //Becasue of the validation error in AddValidationErrors method of CustomValidateMethodInput, 
+            //this method will not be called.
         }
     }
 }

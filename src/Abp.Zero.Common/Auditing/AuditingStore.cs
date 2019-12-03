@@ -23,5 +23,10 @@ namespace Abp.Auditing
         {
             return _auditLogRepository.InsertAsync(AuditLog.CreateFromAuditInfo(auditInfo));
         }
+
+        public virtual void Save(AuditInfo auditInfo)
+        {
+            _auditLogRepository.Insert(AuditLog.CreateFromAuditInfo(auditInfo));
+        }
     }
 }

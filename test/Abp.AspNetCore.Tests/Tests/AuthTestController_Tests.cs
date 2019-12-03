@@ -61,7 +61,7 @@ namespace Abp.AspNetCore.Tests
             var response = await GetResponseAsObjectAsync<AjaxResponse>(
                     GetUrl<AuthTestController>(
                         nameof(AuthTestController.AbpMvcAuthorizedActionReturnsObject)
-                    ),
+                    ) + "?X-Requested-With=XMLHttpRequest",
                     HttpStatusCode.Unauthorized
                 );
 

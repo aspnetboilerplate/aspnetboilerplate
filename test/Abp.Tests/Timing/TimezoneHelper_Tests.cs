@@ -23,6 +23,7 @@ namespace Abp.Tests.Timing
         [InlineData("South Africa Standard Time", "Africa/Johannesburg")]
         [InlineData("Mauritius Standard Time", "Indian/Mauritius")]
         [InlineData("Malay Peninsula Standard Time", "Asia/Kuala_Lumpur")]
+        [InlineData("Qyzylorda Standard Time", "Asia/Qyzylorda")]
         public void Windows_Timezone_Id_To_Iana_Tests(string windowsTimezoneId, string ianaTimezoneId)
         {
             TimezoneHelper.WindowsToIana(windowsTimezoneId).ShouldBe(ianaTimezoneId);
@@ -47,7 +48,8 @@ namespace Abp.Tests.Timing
         [Fact]
         public void All_Windows_Timezones_Should_Be_Convertable_To_Iana()
         {
-            var allTimezones = TimeZoneInfo.GetSystemTimeZones();
+            var allTimezones = TimezoneHelper.GetWindowsTimeZoneIds();
+
             Should.NotThrow(() =>
             {
                 var exceptions = new List<string>();
@@ -56,7 +58,7 @@ namespace Abp.Tests.Timing
                 {
                     try
                     {
-                        TimezoneHelper.WindowsToIana(timezone.Id);
+                        TimezoneHelper.WindowsToIana(timezone);
                     }
                     catch (Exception ex)
                     {
@@ -95,6 +97,53 @@ namespace Abp.Tests.Timing
             var now = DateTime.UtcNow;
             TimezoneHelper.ConvertTimeFromUtcByIanaTimeZoneId(now, "Asia/Shanghai")
                 .ShouldBe(TimezoneHelper.ConvertFromUtc(now, "China Standard Time"));
+        }
+
+        [Fact]
+        public void ConvertToDateTimeOffset_Date_With_America_NewYork_TimeZone_Should_Return_Correct_DateTimeOffset()
+        {
+            var testDate = new DateTime(1980,11,20);
+            var timeSpan = new TimeSpan(-5,0,0);
+
+            var dateTimeOffset = TimezoneHelper.ConvertToDateTimeOffset(testDate, "America/New_York");
+
+            dateTimeOffset.ShouldNotBeNull();
+            dateTimeOffset.Offset.ShouldBe(timeSpan);
+            dateTimeOffset.DateTime.ShouldBe(testDate);
+        }
+
+        [Fact]
+        public void ConvertToDateTimeOffset_Date_With_America_NewYork_TimeZone_Should_Return_Correct_DateTimeOffset_With_DaylightSavings()
+        {
+            var testDate = new DateTime(1980, 5, 20);
+            var timeSpan = new TimeSpan(-4, 0, 0);
+
+            var dateTimeOffset = TimezoneHelper.ConvertToDateTimeOffset(testDate, "America/New_York");
+
+            dateTimeOffset.ShouldNotBeNull();
+            dateTimeOffset.Offset.ShouldBe(timeSpan);
+            dateTimeOffset.DateTime.ShouldBe(testDate);
+        }
+
+        [Fact]
+        public void ConvertToDateTimeOffset_Dates_With_America_Phoenix_TimeZone_Should_Return_Correct_DateTimeOffsests_With_No_DaylightSavings()
+        {
+            var testDate = new DateTime(1980, 5, 20);
+            var timeSpan = new TimeSpan(-7, 0, 0);
+
+            var dateTimeOffset = TimezoneHelper.ConvertToDateTimeOffset(testDate, "America/Phoenix");
+
+            dateTimeOffset.ShouldNotBeNull();
+            dateTimeOffset.Offset.ShouldBe(timeSpan);
+            dateTimeOffset.DateTime.ShouldBe(testDate);
+
+            var testDate2 = new DateTime(1980, 11, 20);
+
+            var dateTimeOffset2 = TimezoneHelper.ConvertToDateTimeOffset(testDate2, "America/Phoenix");
+
+            dateTimeOffset2.ShouldNotBeNull();
+            dateTimeOffset2.Offset.ShouldBe(timeSpan); // should be the same timespan as previous date
+            dateTimeOffset2.DateTime.ShouldBe(testDate2);
         }
     }
 }

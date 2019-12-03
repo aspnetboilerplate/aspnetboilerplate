@@ -1,5 +1,6 @@
-﻿using System.Reflection;
-using Abp.Localization.Dictionaries.Xml;
+using System.Globalization;
+using System.Linq;
+using System.Reflection;
 
 namespace Abp.Localization.Dictionaries.Json
 {
@@ -32,9 +33,13 @@ namespace Abp.Localization.Dictionaries.Json
             _rootNamespace = rootNamespace;
         }
 
-        public override void Initialize(string sourceName)
+        protected override void InitializeDictionaries()
         {
-            var resourceNames = _assembly.GetManifestResourceNames();
+            var allCultureInfos = CultureInfo.GetCultures(CultureTypes.AllCultures);
+            var resourceNames = _assembly.GetManifestResourceNames().Where(resouceName =>
+                allCultureInfos.Any(culture => resouceName.EndsWith($"{SourceName}.json", true, null) ||
+                                               resouceName.EndsWith($"{SourceName}-{culture.Name}.json", true,
+                                                   null))).ToList();
             foreach (var resourceName in resourceNames)
             {
                 if (resourceName.StartsWith(_rootNamespace))
@@ -42,24 +47,7 @@ namespace Abp.Localization.Dictionaries.Json
                     using (var stream = _assembly.GetManifestResourceStream(resourceName))
                     {
                         var jsonString = Utf8Helper.ReadStringFromStream(stream);
-
-                        var dictionary = CreateJsonLocalizationDictionary(jsonString);
-                        if (Dictionaries.ContainsKey(dictionary.CultureInfo.Name))
-                        {
-                            throw new AbpInitializationException(sourceName + " source contains more than one dictionary for the culture: " + dictionary.CultureInfo.Name);
-                        }
-
-                        Dictionaries[dictionary.CultureInfo.Name] = dictionary;
-
-                        if (resourceName.EndsWith(sourceName + ".json"))
-                        {
-                            if (DefaultDictionary != null)
-                            {
-                                throw new AbpInitializationException("Only one default localization dictionary can be for source: " + sourceName);
-                            }
-
-                            DefaultDictionary = dictionary;
-                        }
+                        InitializeDictionary(CreateJsonLocalizationDictionary(jsonString), isDefault: resourceName.EndsWith(SourceName + ".json"));
                     }
                 }
             }

@@ -18,7 +18,6 @@ using Abp.Organizations;
 using Abp.Runtime.Caching;
 using Abp.Zero.Configuration;
 using Microsoft.AspNetCore.Authentication;
-using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.Logging;
@@ -30,7 +29,7 @@ namespace Abp.ZeroCore.SampleApp.Core
     {
         public UserManager(
             RoleManager roleManager,
-            UserStore store,
+            UserStore userStore,
             IOptions<IdentityOptions> optionsAccessor,
             IPasswordHasher<User> passwordHasher,
             IEnumerable<IUserValidator<User>> userValidators,
@@ -47,7 +46,7 @@ namespace Abp.ZeroCore.SampleApp.Core
             IOrganizationUnitSettings organizationUnitSettings,
             ISettingManager settingManager) : base(
             roleManager,
-            store,
+            userStore,
             optionsAccessor,
             passwordHasher,
             userValidators,
@@ -108,7 +107,9 @@ namespace Abp.ZeroCore.SampleApp.Core
             IPermissionManager permissionManager,
             ICacheManager cacheManager,
             IUnitOfWorkManager unitOfWorkManager,
-            IRoleManagementConfig roleManagementConfig
+            IRoleManagementConfig roleManagementConfig,
+            IRepository<OrganizationUnit, long> organizationUnitRepository,
+            IRepository<OrganizationUnitRole, long> organizationUnitRoleRepository
         ) : base(
             store,
             roleValidators,
@@ -118,7 +119,9 @@ namespace Abp.ZeroCore.SampleApp.Core
             permissionManager,
             cacheManager,
             unitOfWorkManager,
-            roleManagementConfig)
+            roleManagementConfig,
+            organizationUnitRepository,
+            organizationUnitRoleRepository)
         {
         }
     }
@@ -200,8 +203,9 @@ namespace Abp.ZeroCore.SampleApp.Core
         public SecurityStampValidator(
             IOptions<SecurityStampValidatorOptions> options,
             SignInManager signInManager,
-            ISystemClock systemClock)
-            : base(options, signInManager, systemClock)
+            ISystemClock systemClock,
+            ILoggerFactory loggerFactory)
+            : base(options, signInManager, systemClock, loggerFactory)
         {
         }
     }
@@ -216,7 +220,8 @@ namespace Abp.ZeroCore.SampleApp.Core
             ILogger<SignInManager<User>> logger,
             IUnitOfWorkManager unitOfWorkManager,
             ISettingManager settingManager,
-            IAuthenticationSchemeProvider schemes
+            IAuthenticationSchemeProvider schemes,
+            IUserConfirmation<User> userConfirmation
         ) : base(
             userManager,
             contextAccessor,
@@ -225,7 +230,8 @@ namespace Abp.ZeroCore.SampleApp.Core
             logger,
             unitOfWorkManager,
             settingManager,
-            schemes)
+            schemes,
+            userConfirmation)
         {
         }
     }
@@ -240,8 +246,10 @@ namespace Abp.ZeroCore.SampleApp.Core
             IRepository<UserRole, long> userRoleRepository,
             IRepository<UserLogin, long> userLoginRepository,
             IRepository<UserClaim, long> userClaimRepository,
-            IRepository<UserPermissionSetting, long> userPermissionSettingRepository
-        ) : base(
+            IRepository<UserPermissionSetting, long> userPermissionSettingRepository,
+            IRepository<UserOrganizationUnit, long> userOrganizationUnitRepository,
+            IRepository<OrganizationUnitRole, long> organizationUnitRoleRepository
+            ) : base(
             unitOfWorkManager,
             userRepository,
             roleRepository,
@@ -249,7 +257,9 @@ namespace Abp.ZeroCore.SampleApp.Core
             userRoleRepository,
             userLoginRepository,
             userClaimRepository,
-            userPermissionSettingRepository)
+            userPermissionSettingRepository,
+            userOrganizationUnitRepository,
+            organizationUnitRoleRepository)
         {
         }
     }

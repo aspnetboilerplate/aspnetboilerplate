@@ -1,0 +1,642 @@
+﻿<i id="abp-title" data-title="Introduction With AspNet Core And Entity Framework Core Part 2"></i>
+
+<ul class="download">
+	<li>Get the source code from the <a href="https://github.com/aspnetboilerplate/aspnetboilerplate-samples/tree/master/SimpleTaskSystem-Core">GitHub repository.</a></li>
+</ul>
+
+<h2 class="abp-invisible">Contents</h2>
+
+<ul class="abp-invisible">
+	<li><a href="#ArticleIntro">Introduction</a></li>
+	<li><a href="#ArticleDevelopApp">Developing the Application</a>
+	<ul>
+		<li><a href="#ArticleCreatePersonEntity">Creating the Person Entity</a></li>
+		<li><a href="#ArticleRelateToTask">Relating Person to the Task Entity</a></li>
+		<li><a href="#ArticleAddPersonToDbContext">Adding Person to DbContext</a></li>
+		<li><a href="#ArticleAddPersonMigration">Adding a New Migration for Person Entity</a></li>
+		<li><a href="#ArticleRetPersonInTaskList">Return Assigned Person in the Task List</a></li>
+		<li><a href="#ArticleUnitTestAssignedPerson">Change Unit Test to Test Assigned Person</a></li>
+		<li><a href="#ArticleShowPersonInTaskList">Show Assigned Person Name in the Task List Page</a></li>
+		<li><a href="#ArticleTaskCreateService">New Application Service Method for Task Creation</a></li>
+		<li><a href="#ArticleTaskCreateServiceTest">Testing Task Creation Service</a></li>
+		<li><a href="#ArticleTaskCreatePage">Task Creation Page</a></li>
+	</ul>
+	</li>
+	<li><a href="#ArticleRemoveHomeAndAbout">Remove Home and About Page</a></li>
+	<li><a href="#ArticleHistory">Article History</a></li>
+</ul>
+
+<h2 id="ArticleIntro">Introduction</h2>
+
+<p>This is the second part of the &quot;<em>Using ASP.NET Core, Entity Framework Core and ASP.NET Boilerplate to Create NLayered Web Application</em>&quot; article series. See other parts:</p>
+
+<ul>
+	<li><a href="https://aspnetboilerplate.com/Pages/Articles/aspnet-core-ef-core-abp-nlayered-web-application/Part1/index.html" data-abp-href="/Pages/Articles/Introduction-With-AspNet-Core-And-Entity-Framework-Core-Part-1/index.html">Part I - Using ASP.NET Core, Entity Framework Core and ASP.NET Boilerplate to Create NLayered Web Application</a></li>
+	<li>Part II (this one) - Using ASP.NET Core, Entity Framework Core and ASP.NET Boilerplate to Create NLayered Web Application</li>
+</ul>
+
+<h2 id="ArticleDevelopApp">Developing the Application</h2>
+
+<h3 id="ArticleCreatePersonEntity">Creating the Person Entity</h3>
+
+<p>I&#39;ll add <strong>Person</strong> concept to the application to <strong>assign tasks</strong> to people. So, I define a simple <strong>Person entity</strong>:</p>
+
+<pre lang="cs">
+[Table(&quot;AppPersons&quot;)]
+public class Person : <strong>AuditedEntity&lt;Guid&gt;</strong>
+{
+    public const int MaxNameLength = 32;
+
+    [Required]
+    [StringLength(MaxNameLength)]
+    public string Name { get; set; }
+
+    public Person()
+    {
+            
+    }
+
+    public Person(string name)
+    {
+        Name = name;
+    }
+}</pre>
+
+<p>This time, I set Id (primary key)&nbsp; type as <strong>Guid</strong>, for demonstration. I also derived from <strong>AuditedEntity</strong> (which has CreationTime, CreaterUserId, LastModificationTime and LastModifierUserId properties) instead of base Entity class.</p>
+
+<h3 id="ArticleRelateToTask">Relating Person to the Task Entity</h3>
+
+<p>I&#39;m also adding <strong>AssignedPerson</strong> property to the <strong>Task</strong> entity (only sharing the changed parts here):</p>
+
+<pre lang="cs">
+[Table(&quot;AppTasks&quot;)]
+public class Task : Entity, IHasCreationTime
+{
+    //...
+
+<strong>    [ForeignKey(nameof(AssignedPersonId))]
+    public Person AssignedPerson { get; set; }
+    public Guid? AssignedPersonId { get; set; }</strong>
+
+    public Task(string title, string description = null, <strong>Guid? assignedPersonId = null</strong>)
+        : this()
+    {
+        Title = title;
+        Description = description;
+        <strong>AssignedPersonId = assignedPersonId;</strong>
+    }
+}</pre>
+
+<p>AssignedPerson is <strong>optional</strong>. So, as task can be assigned to a person or can be unassigned.</p>
+
+<h3 id="ArticleAddPersonToDbContext">Adding Person to DbContext</h3>
+
+<p>Finally, I&#39;m adding new Person entity to the DbContext class:</p>
+
+<pre lang="cs">
+public class SimpleTaskAppDbContext : AbpDbContext
+{
+    <strong>public DbSet&lt;Person&gt; People { get; set; }</strong>
+    
+    //...
+}</pre>
+
+<h3 id="ArticleAddPersonMigration">Adding a New Migration for Person Entity</h3>
+
+<p>Now, I&#39;m running the following command in the <strong>Package Manager Console</strong>:</p>
+
+<p><img alt="Add new migration" height="69" src="migration-add-person-2.png" width="707" /></p>
+
+<p>And it creates a new migration class in the project:</p>
+
+<pre lang="cs">
+public partial class Added_Person : Migration
+{
+    protected override void Up(MigrationBuilder migrationBuilder)
+    {
+        migrationBuilder.CreateTable(
+            name: &quot;AppPersons&quot;,
+            columns: table =&gt; new
+            {
+                Id = table.Column&lt;Guid&gt;(nullable: false),
+                CreationTime = table.Column&lt;DateTime&gt;(nullable: false),
+                CreatorUserId = table.Column&lt;long&gt;(nullable: true),
+                LastModificationTime = table.Column&lt;DateTime&gt;(nullable: true),
+                LastModifierUserId = table.Column&lt;long&gt;(nullable: true),
+                Name = table.Column&lt;string&gt;(maxLength: 32, nullable: false)
+            },
+            constraints: table =&gt;
+            {
+                table.PrimaryKey(&quot;PK_AppPersons&quot;, x =&gt; x.Id);
+            });
+
+        migrationBuilder.AddColumn&lt;Guid&gt;(
+            name: &quot;AssignedPersonId&quot;,
+            table: &quot;AppTasks&quot;,
+            nullable: true);
+
+        migrationBuilder.CreateIndex(
+            name: &quot;IX_AppTasks_AssignedPersonId&quot;,
+            table: &quot;AppTasks&quot;,
+            column: &quot;AssignedPersonId&quot;);
+
+        migrationBuilder.AddForeignKey(
+            name: &quot;FK_AppTasks_AppPersons_AssignedPersonId&quot;,
+            table: &quot;AppTasks&quot;,
+            column: &quot;AssignedPersonId&quot;,
+            principalTable: &quot;AppPersons&quot;,
+            principalColumn: &quot;Id&quot;,
+            onDelete: <strong>ReferentialAction.SetNull</strong>);
+    }
+
+    //...
+}</pre>
+
+<p>I just changed ReferentialAction.Restrict to ReferentialAction.SetNull. It does that: if I delete a person, assigned tasks to that person become unassigned. This is not important in this demo. But I wanted to show that you can change the migration code if you need. Actually, you always review the generated code before applying it to the database. After that, we can <strong> apply migration</strong> to our database:</p>
+
+<p><img alt="Update-Database" height="74" src="migration-person-update-2.png" width="706" /></p>
+
+<p>When we open the database, we can see the new table and columns and add some test data:</p>
+
+<p><img alt="Person table" height="79" src="person-table.png" width="668" /></p>
+
+<p>I added a person and assigned to the first task:</p>
+
+<p><img alt="Tasks table" height="118" src="tasks-table-with-person.png" width="649" /></p>
+
+<h3 id="ArticleRetPersonInTaskList">Return Assigned Person in the Task List</h3>
+
+<p>I&#39;ll change the <strong>TaskAppService</strong> to return assigned person information. First, I&#39;m adding two properties to <strong>TaskListDto</strong>:</p>
+
+<pre lang="cs">
+[AutoMapFrom(typeof(Task))]
+public class TaskListDto : EntityDto, IHasCreationTime
+{
+    //...
+
+<strong>    public Guid? AssignedPersonId { get; set; }
+
+    public string AssignedPersonName { get; set; }</strong>
+}</pre>
+
+<p>And including the Task.AssignedPerson property to the query. Just added the <strong>Include</strong> line:</p>
+
+<pre lang="cs">
+public class TaskAppService : SimpleTaskAppAppServiceBase, ITaskAppService
+{
+    //...
+
+    public async Task&lt;ListResultDto&lt;TaskListDto&gt;&gt; GetAll(GetAllTasksInput input)
+    {
+        var tasks = await _taskRepository
+            .GetAll()
+            <strong>.Include(t =&gt; t.AssignedPerson)</strong>
+            .WhereIf(input.State.HasValue, t =&gt; t.State == input.State.Value)
+            .OrderByDescending(t =&gt; t.CreationTime)
+            .ToListAsync();
+
+        return new ListResultDto&lt;TaskListDto&gt;(
+            ObjectMapper.Map&lt;List&lt;TaskListDto&gt;&gt;(tasks)
+        );
+    }
+}</pre>
+
+<p>Thus, GetAll method will return Assigned person information with the tasks. Since we used AutoMapper, new properties will also be copied to DTO automatically.</p>
+
+<h3 id="ArticleUnitTestAssignedPerson">Change Unit Test to Test Assigned Person</h3>
+
+<p>At this point, we can change unit tests to see if assigned people are retrieved while getting the task list. First, I changed initial test data in the TestDataBuilder class to assign a person to a task:</p>
+
+<pre lang="cs">
+public class TestDataBuilder
+{
+    //...
+
+    public void Build()
+    {
+<strong>        var neo = new Person(&quot;Neo&quot;);
+        _context.People.Add(neo);
+        _context.SaveChanges();</strong>
+
+        _context.Tasks.AddRange(
+            new Task(&quot;Follow the white rabbit&quot;, &quot;Follow the white rabbit in order to know the reality.&quot;, <strong>neo.Id</strong>),
+            new Task(&quot;Clean your room&quot;) { State = TaskState.Completed }
+            );
+    }
+}</pre>
+
+<p>Then I&#39;m changing TaskAppService_Tests.Should_Get_All_Tasks() method to check if one of the retrieved tasks has a person assigned (see the last line added):</p>
+
+<pre lang="cs">
+[Fact]
+public async System.Threading.Tasks.Task Should_Get_All_Tasks()
+{
+    //Act
+    var output = await _taskAppService.GetAll(new GetAllTasksInput());
+
+    //Assert
+    output.Items.Count.ShouldBe(2);
+    <strong>output.Items.Count(t =&gt; t.AssignedPersonName != null).ShouldBe(1);
+</strong>}</pre>
+
+<p>Note: Count extension method requires <em>using System.Linq;</em> statement.</p>
+
+<h3 id="ArticleShowPersonInTaskList">Show Assigned Person Name in the Task List Page</h3>
+
+<p>Finally, we can change <strong>Tasks\Index.cshtml</strong> to show <strong> AssignedPersonName</strong>:</p>
+
+<pre lang="xml">
+@foreach (var task in Model.Tasks)
+{
+    &lt;li class=&quot;list-group-item&quot;&gt;
+        &lt;span class=&quot;pull-right label label-lg @Model.GetTaskLabel(task)&quot;&gt;@L($&quot;TaskState_{task.State}&quot;)&lt;/span&gt;
+        &lt;h4 class=&quot;list-group-item-heading&quot;&gt;@task.Title&lt;/h4&gt;
+        &lt;div class=&quot;list-group-item-text&quot;&gt;
+            @task.CreationTime.ToString(&quot;yyyy-MM-dd HH:mm:ss&quot;)<strong> | @(task.AssignedPersonName ?? L(&quot;Unassigned&quot;))</strong>
+        &lt;/div&gt;
+    &lt;/li&gt;
+}</pre>
+
+<p>When we run the application, we can see it in the task list:</p>
+
+<p><img alt="Task list with person name" height="311" src="task-list-assigned-person.png" width="446" /></p>
+
+<h3 id="ArticleTaskCreateService">New Application Service Method for Task Creation</h3>
+
+<p>We can list tasks, but we don&#39;t have a <strong>task creation page</strong> yet. First, adding a <strong>Create</strong> method to the <strong>ITaskAppService</strong> interface:</p>
+
+<pre lang="cs">
+public interface ITaskAppService : IApplicationService
+{
+    //...
+
+    System.Threading.Tasks.Task Create(CreateTaskInput input);
+}</pre>
+
+<p>And implementing it in TaskAppService class:</p>
+
+<pre lang="cs">
+public class TaskAppService : SimpleTaskAppAppServiceBase, ITaskAppService
+{
+    private readonly IRepository&lt;Task&gt; _taskRepository;
+
+    public TaskAppService(IRepository&lt;Task&gt; taskRepository)
+    {
+        _taskRepository = taskRepository;
+    }
+
+    //...
+
+<strong>    public async System.Threading.Tasks.Task Create(CreateTaskInput input)
+    {
+        var task = ObjectMapper.Map&lt;Task&gt;(input);
+        await _taskRepository.InsertAsync(task);
+    }</strong>
+}</pre>
+
+<p>Create method automatically <strong>maps</strong> given input to a Task entity and inserting to the database using the repository. <strong>CreateTaskInput</strong> <a href="http://www.aspnetboilerplate.com/Pages/Documents/Data-Transfer-Objects" target="_blank">DTO</a> is like that:</p>
+
+<pre lang="cs">
+using System;
+using System.ComponentModel.DataAnnotations;
+using Abp.AutoMapper;
+
+namespace Acme.SimpleTaskApp.Tasks.Dtos
+{
+    <strong>[AutoMapTo(typeof(Task))]</strong>
+    public class CreateTaskInput
+    {
+        [Required]
+        [StringLength(<strong>Task.MaxTitleLength</strong>)]
+        public string Title { get; set; }
+
+        [StringLength(<strong>Task.MaxDescriptionLength</strong>)]
+        public string Description { get; set; }
+
+        public Guid? AssignedPersonId { get; set; }
+    }
+}</pre>
+
+<p>Configured to map it to Task entity (using AutoMapTo attribute) and added data annotations to apply <a href="http://www.aspnetboilerplate.com/Pages/Documents/Validating-Data-Transfer-Objects" target="_blank"> validation</a>. We used constants from Task entity to use same max lengths.</p>
+
+<h3 id="ArticleTaskCreateServiceTest">Testing Task Creation Service</h3>
+
+<p>I&#39;m adding some integration tests into TaskAppService_Tests class to test the Create method:</p>
+
+<pre lang="cs">
+using Acme.SimpleTaskApp.Tasks;
+using Acme.SimpleTaskApp.Tasks.Dtos;
+using Shouldly;
+using Xunit;
+using System.Linq;
+using Abp.Runtime.Validation;
+
+namespace Acme.SimpleTaskApp.Tests.Tasks
+{
+    public class TaskAppService_Tests : SimpleTaskAppTestBase
+    {
+        private readonly ITaskAppService _taskAppService;
+
+        public TaskAppService_Tests()
+        {
+            _taskAppService = Resolve&lt;ITaskAppService&gt;();
+        }
+
+        //...
+
+        [Fact]
+        public async System.Threading.Tasks.Task <strong>Should_Create_New_Task_With_Title</strong>()
+        {
+            await _taskAppService.Create(new CreateTaskInput
+            {
+                Title = &quot;Newly created task #1&quot;
+            });
+
+            UsingDbContext(context =&gt;
+            {
+                var task1 = context.Tasks.FirstOrDefault(t =&gt; t.Title == &quot;Newly created task #1&quot;);
+                <strong>task1.ShouldNotBeNull();</strong>
+            });
+        }
+
+        [Fact]
+        public async System.Threading.Tasks.Task <strong>Should_Create_New_Task_With_Title_And_Assigned_Person</strong>()
+        {
+            <strong>var neo = UsingDbContext(context =&gt; context.People.Single(p =&gt; p.Name == &quot;Neo&quot;));
+</strong>
+            await _taskAppService.Create(new CreateTaskInput
+            {
+                Title = &quot;Newly created task #1&quot;,
+                <strong>AssignedPersonId = neo.Id</strong>
+            });
+
+            UsingDbContext(context =&gt;
+            {
+                var task1 = context.Tasks.FirstOrDefault(t =&gt; t.Title == &quot;Newly created task #1&quot;);
+                task1.ShouldNotBeNull();
+                <strong>task1.AssignedPersonId.ShouldBe(neo.Id);</strong>
+            });
+        }
+
+        [Fact]
+        public async System.Threading.Tasks.Task <strong>Should_Not_Create_New_Task_Without_Title</strong>()
+        {
+            await <strong>Assert.ThrowsAsync&lt;AbpValidationException&gt;</strong>(async () =&gt;
+            {
+                await _taskAppService.Create(new CreateTaskInput
+                {
+                    Title = null
+                });
+            });
+        }
+    }
+}</pre>
+
+<p>First test creates a task with a <strong>title</strong>, second one creates a task with a <strong>title</strong> and <strong>assigned person</strong>, the last one tries to create an <strong>invalid</strong> task to show the <strong> exception</strong> case.</p>
+
+<h3 id="ArticleTaskCreatePage">Task Creation Page</h3>
+
+<p>We know that TaskAppService.Create is properly working. Now, we can create a page to add a new task. Final page will be like that:</p>
+
+<p><img alt="Create task page" height="450" src="create-task-page-view.png" width="742" /></p>
+
+<p>First, I added a <strong>Create</strong> action to the TaskController in order to prepare the page above:</p>
+
+<pre lang="cs">
+using System.Threading.Tasks;
+using Abp.Application.Services.Dto;
+using Acme.SimpleTaskApp.Tasks;
+using Acme.SimpleTaskApp.Tasks.Dtos;
+using Acme.SimpleTaskApp.Web.Models.Tasks;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.Rendering;
+using System.Linq;
+using Acme.SimpleTaskApp.Common;
+using Acme.SimpleTaskApp.Web.Models.People;
+
+namespace Acme.SimpleTaskApp.Web.Controllers
+{
+    public class TasksController : SimpleTaskAppControllerBase
+    {
+        private readonly ITaskAppService _taskAppService;
+        private readonly ILookupAppService _lookupAppService;
+
+        public TasksController(
+            ITaskAppService taskAppService,
+            <strong>ILookupAppService lookupAppService</strong>)
+        {
+            _taskAppService = taskAppService;
+            _lookupAppService = lookupAppService;
+        }
+
+        //...
+        
+<strong>        public async Task&lt;ActionResult&gt; Create()
+        {
+            var peopleSelectListItems = (await _lookupAppService.GetPeopleComboboxItems()).Items
+                .Select(p =&gt; p.ToSelectListItem())
+                .ToList();
+
+            peopleSelectListItems.Insert(0, new SelectListItem { Value = string.Empty, Text = L(&quot;Unassigned&quot;), Selected = true });
+
+            return View(new CreateTaskViewModel(peopleSelectListItems));
+        }</strong>
+    }
+}</pre>
+
+<p>I injected ILookupAppService that is used to get people combobox items. While I could directly inject and use IRepository&lt;Person, Guid&gt; here, I preferred this to make a better layering and re-usability. ILookupAppService.GetPeopleComboboxItems is defined in application layer as shown below:</p>
+
+<pre lang="cs">
+public interface ILookupAppService : IApplicationService
+{
+    Task&lt;ListResultDto&lt;ComboboxItemDto&gt;&gt; GetPeopleComboboxItems();
+}
+
+public class LookupAppService : SimpleTaskAppAppServiceBase, ILookupAppService
+{
+    private readonly IRepository&lt;Person, Guid&gt; _personRepository;
+
+    public LookupAppService(<strong>IRepository&lt;Person, Guid&gt; personRepository</strong>)
+    {
+        _personRepository = personRepository;
+    }
+
+<strong>    public async Task&lt;ListResultDto&lt;ComboboxItemDto&gt;&gt; GetPeopleComboboxItems()
+    {
+        var people = await _personRepository.GetAllListAsync();
+        return new ListResultDto&lt;ComboboxItemDto&gt;(
+            people.Select(p =&gt; new ComboboxItemDto(p.Id.ToString(&quot;D&quot;), p.Name)).ToList()
+        );
+    }</strong>
+}</pre>
+
+<p><strong>ComboboxItemDto</strong> is a simple class (defined in ABP) to transfer a combobox item data. TaskController.Create method simply uses this method and converts the returned list to a list of <strong>SelectListItem</strong> (defined in AspNet Core) and passes to the view using CreateTaskViewModel class:</p>
+
+<pre lang="cs">
+using System.Collections.Generic;
+using Microsoft.AspNetCore.Mvc.Rendering;
+
+namespace Acme.SimpleTaskApp.Web.Models.People
+{
+    public class CreateTaskViewModel
+    {
+        <strong>public List&lt;SelectListItem&gt; People { get; set; }</strong>
+
+        public CreateTaskViewModel(List&lt;SelectListItem&gt; people)
+        {
+            People = people;
+        }
+    }
+}</pre>
+
+<p>Create view is shown below:</p>
+
+<pre lang="xml">
+@using Acme.SimpleTaskApp.Web.Models.People
+@model CreateTaskViewModel
+
+@section scripts
+{
+    &lt;environment names=&quot;Development&quot;&gt;
+        &lt;script src=&quot;~/js/views/tasks/create.js&quot;&gt;&lt;/script&gt;
+    &lt;/environment&gt;
+
+    &lt;environment names=&quot;Staging,Production&quot;&gt;
+        &lt;script src=&quot;~/js/views/tasks/create.min.js&quot;&gt;&lt;/script&gt;
+    &lt;/environment&gt;
+}
+
+&lt;h2&gt;
+    @L(&quot;NewTask&quot;)
+&lt;/h2&gt;
+
+&lt;form id=&quot;TaskCreationForm&quot;&gt;
+    
+<strong>    &lt;div class=&quot;form-group&quot;&gt;
+        &lt;label for=&quot;Title&quot;&gt;@L(&quot;Title&quot;)&lt;/label&gt;
+        &lt;input type=&quot;text&quot; name=&quot;Title&quot; class=&quot;form-control&quot; placeholder=&quot;@L(&quot;Title&quot;)&quot; required maxlength=&quot;@Acme.SimpleTaskApp.Tasks.Task.MaxTitleLength&quot;&gt;
+    &lt;/div&gt;
+
+    &lt;div class=&quot;form-group&quot;&gt;
+        &lt;label for=&quot;Description&quot;&gt;@L(&quot;Description&quot;)&lt;/label&gt;
+        &lt;input type=&quot;text&quot; name=&quot;Description&quot; class=&quot;form-control&quot; placeholder=&quot;@L(&quot;Description&quot;)&quot; maxlength=&quot;@Acme.SimpleTaskApp.Tasks.Task.MaxDescriptionLength&quot;&gt;
+    &lt;/div&gt;
+
+    &lt;div class=&quot;form-group&quot;&gt;
+        @Html.Label(L(&quot;AssignedPerson&quot;))
+        @Html.DropDownList(
+            &quot;AssignedPersonId&quot;,
+            Model.People,
+            new
+            {
+                @class = &quot;form-control&quot;,
+                id = &quot;AssignedPersonCombobox&quot;
+            })
+    &lt;/div&gt;</strong>
+
+    &lt;button type=&quot;submit&quot; class=&quot;btn btn-default&quot;&gt;@L(&quot;Save&quot;)&lt;/button&gt;
+
+&lt;/form&gt;</pre>
+
+<p>I included <strong>create.js</strong> defined like that:</p>
+
+<pre lang="js">
+(function($) {
+    $(function() {
+
+        var _$form = $(&#39;<strong>#TaskCreationForm</strong>&#39;);
+
+        _$form.find(&#39;input:first&#39;).focus();
+
+        _$form.<strong>validate()</strong>;
+
+        _$form.find(&#39;button[type=submit]&#39;)
+            .click(function(e) {
+                e.preventDefault();
+
+                if (<strong>!_$form.valid()</strong>) {
+                    return;
+                }
+
+                var input = <strong>_$form.serializeFormToObject()</strong>;
+                <strong>abp.services.app.task.create</strong>(input)
+                    .done(function() {
+                        location.href = &#39;/Tasks&#39;;
+                    });
+            });
+    });
+})(jQuery);</pre>
+
+<p>Let&#39;s see what&#39;s done in this JavaScript code:</p>
+
+<ul>
+	<li>Prepares <strong>validatation</strong> for the form (using <a href="https://jqueryvalidation.org/" target="_blank">jquery validation</a> plugin) and validates it on Save button&#39;s click.</li>
+	<li>Uses <strong>serializeFormToObject</strong> jquery plugin (defined in jquery-extensions.js in the solution) to convert form data to a JSON object (I included jquery-extensions.js to the _Layout.cshtml as the last script file).</li>
+	<li>Uses <strong>abp.services.task.create</strong> method to call TaskAppService.Create method. This is one of the important features of ABP. We can use application services from JavaScript code just like calling a JavaScript method in our code. See <a href="http://www.aspnetboilerplate.com/Pages/Documents/AspNet-Core#application-services-as-controllers"> details</a>.</li>
+</ul>
+
+<p>
+Here is the content of jquery-extensions.js:
+</p>
+<pre lang="js">
+(function ($) {
+    //serializeFormToObject plugin for jQuery
+    $.fn.serializeFormToObject = function () {
+        //serialize to array
+        var data = $(this).serializeArray();
+
+        //add also disabled items
+        $(&#x27;:disabled[name]&#x27;, this)
+            .each(function () {
+                data.push({ name: this.name, value: $(this).val() });
+            });
+
+        //map to object
+        var obj = {};
+        data.map(function (x) { obj[x.name] = x.value; });
+
+        return obj;
+    };
+})(jQuery);
+</pre>
+
+<p>Finally, I added an &quot;Add Task&quot; button to the <em>task list</em> page in order to navigate to the <em>task creation page</em>:</p>
+
+<pre lang="xml">
+&lt;a class=&quot;btn btn-primary btn-sm&quot; asp-action=&quot;<strong>Create</strong>&quot;&gt;@L(&quot;AddNew&quot;)&lt;/a&gt;</pre>
+
+<h2 id="ArticleRemoveHomeAndAbout">Remove Home and About Page</h2>
+
+<p>We can remove Home and About page from the application if we don&#39;t need. To do that, first change <strong>HomeController</strong> like that:</p>
+
+<pre lang="cs">
+using Microsoft.AspNetCore.Mvc;
+
+namespace Acme.SimpleTaskApp.Web.Controllers
+{
+    public class HomeController : SimpleTaskAppControllerBase
+    {
+        public ActionResult Index()
+        {
+            <strong>return RedirectToAction(&quot;Index&quot;, &quot;Tasks&quot;);</strong>
+        }
+    }
+}</pre>
+
+<p>Then delete <strong>Views/Home</strong> folder and remove menu items from SimpleTaskApp<strong>NavigationProvider</strong> class. You can also remove unnecessary keys from localization JSON files.</p>
+
+
+<h2 id="ArticleSourceCode">Source Code</h2>
+
+<p>You can get the latest source code here <a href="https://github.com/aspnetboilerplate/aspnetboilerplate-samples/tree/master/SimpleTaskSystem-Core">https://github.com/aspnetboilerplate/aspnetboilerplate-samples/tree/master/SimpleTaskSystem-Core</a></p>
+
+	
+<h2 id="ArticleHistory" class="abp-invisible">Article History</h2>
+
+<ul class="abp-invisible">
+	<li><strong>2018-02-14</strong>: Upgraded source code to ABP v3.4 and updated the download link.</li>
+	<li><strong>2017-07-30</strong>: Replaced ListResultOutput by ListResultDto in the article.</li>
+	<li><strong>2017-06-02</strong>: Changed article and solution to support .net core.</li>
+	<li><strong>2016-08-09</strong>: Revised article based on feedbacks.</li>
+	<li><strong>2016-08-08</strong>: Initial publication.</li>
+</ul>

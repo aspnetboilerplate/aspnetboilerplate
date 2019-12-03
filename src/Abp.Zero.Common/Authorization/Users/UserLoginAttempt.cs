@@ -37,7 +37,7 @@ namespace Abp.Authorization.Users
         /// <summary>
         /// Maximum length of <see cref="BrowserInfo"/> property.
         /// </summary>
-        public const int MaxBrowserInfoLength = 256;
+        public const int MaxBrowserInfoLength = 512;
 
         /// <summary>
         /// Tenant's Id, if <see cref="TenancyName"/> was a valid tenant name.
@@ -47,7 +47,7 @@ namespace Abp.Authorization.Users
         /// <summary>
         /// Tenancy name.
         /// </summary>
-        [MaxLength(MaxTenancyNameLength)]
+        [StringLength(MaxTenancyNameLength)]
         public virtual string TenancyName { get; set; }
 
         /// <summary>
@@ -58,25 +58,25 @@ namespace Abp.Authorization.Users
         /// <summary>
         /// User name or email address
         /// </summary>
-        [MaxLength(MaxUserNameOrEmailAddressLength)]
+        [StringLength(MaxUserNameOrEmailAddressLength)]
         public virtual string UserNameOrEmailAddress { get; set; }
 
         /// <summary>
         /// IP address of the client.
         /// </summary>
-        [MaxLength(MaxClientIpAddressLength)]
+        [StringLength(MaxClientIpAddressLength)]
         public virtual string ClientIpAddress { get; set; }
 
         /// <summary>
         /// Name (generally computer name) of the client.
         /// </summary>
-        [MaxLength(MaxClientNameLength)]
+        [StringLength(MaxClientNameLength)]
         public virtual string ClientName { get; set; }
 
         /// <summary>
         /// Browser information if this method is called in a web request.
         /// </summary>
-        [MaxLength(MaxBrowserInfoLength)]
+        [StringLength(MaxBrowserInfoLength)]
         public virtual string BrowserInfo { get; set; }
 
         /// <summary>

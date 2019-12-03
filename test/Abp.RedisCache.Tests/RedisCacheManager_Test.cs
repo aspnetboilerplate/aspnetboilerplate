@@ -22,7 +22,7 @@ namespace Abp.RedisCache.Tests
             LocalIocManager.Register<IAbpRedisCacheDatabaseProvider, AbpRedisCacheDatabaseProvider>();
             LocalIocManager.Register<ICacheManager, AbpRedisCacheManager>();
             LocalIocManager.Register<IRedisCacheSerializer,DefaultRedisCacheSerializer>();
-            LocalIocManager.IocContainer.Register(Component.For<IAbpStartupConfiguration>().UsingFactoryMethod(() => Substitute.For<IAbpStartupConfiguration>()));
+            LocalIocManager.IocContainer.Register(Component.For<IAbpStartupConfiguration>().Instance(Substitute.For<IAbpStartupConfiguration>()));
 
             var defaultSlidingExpireTime = TimeSpan.FromHours(24);
             LocalIocManager.Resolve<ICachingConfiguration>().Configure("MyTestCacheItems", cache =>

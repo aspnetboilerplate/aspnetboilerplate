@@ -21,6 +21,11 @@ namespace Abp.Authorization.Roles
         where TUser : AbpUser<TUser>
     {
         /// <summary>
+        /// Maximum length of the <see cref="ConcurrencyStamp"/> property.
+        /// </summary>
+        public const int MaxConcurrencyStampLength = 128;
+
+        /// <summary>
         /// Unique name of this role.
         /// </summary>
         [Required]
@@ -36,6 +41,7 @@ namespace Abp.Authorization.Roles
         /// <summary>
         /// A random value that must change whenever a user is persisted to the store
         /// </summary>
+        [StringLength(MaxConcurrencyStampLength)]
         public virtual string ConcurrencyStamp { get; set; } = Guid.NewGuid().ToString();
 
         public virtual TUser DeleterUser { get; set; }
@@ -72,7 +78,7 @@ namespace Abp.Authorization.Roles
             SetNormalizedName();
         }
 
-        public void SetNormalizedName()
+        public virtual void SetNormalizedName()
         {
             NormalizedName = Name.ToUpperInvariant();
         }

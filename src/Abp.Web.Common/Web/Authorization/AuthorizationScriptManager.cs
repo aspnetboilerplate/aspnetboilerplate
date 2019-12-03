@@ -5,6 +5,7 @@ using System.Threading.Tasks;
 using Abp.Authorization;
 using Abp.Dependency;
 using Abp.Runtime.Session;
+using Abp.Web.Http;
 
 namespace Abp.Web.Authorization
 {
@@ -77,11 +78,11 @@ namespace Abp.Web.Authorization
                 var permission = permissions[i];
                 if (i < permissions.Count - 1)
                 {
-                    script.AppendLine("        '" + permission + "': true,");
+                    script.AppendLine("        '" + HttpEncode.JavaScriptStringEncode(permission) + "': true,");
                 }
                 else
                 {
-                    script.AppendLine("        '" + permission + "': true");
+                    script.AppendLine("        '" + HttpEncode.JavaScriptStringEncode(permission) + "': true");
                 }
             }
 

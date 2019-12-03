@@ -7,7 +7,6 @@ using Castle.Windsor.MsDependencyInjection;
 using Abp.Reflection;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.ApplicationModels;
-using Microsoft.AspNetCore.Mvc.Internal;
 using Microsoft.Extensions.DependencyInjection;
 using System.Linq;
 using System.Reflection;
@@ -15,6 +14,7 @@ using Abp.Collections.Extensions;
 using Abp.Web.Api.ProxyScripting.Generators;
 using JetBrains.Annotations;
 using Microsoft.AspNetCore.Mvc.ModelBinding;
+using Microsoft.AspNetCore.Mvc.ActionConstraints;
 
 namespace Abp.AspNetCore.Mvc.Conventions
 {
@@ -199,6 +199,12 @@ namespace Abp.AspNetCore.Mvc.Conventions
         {
             RemoveEmptySelectors(action.Selectors);
 
+            var remoteServiceAtt = ReflectionHelper.GetSingleAttributeOrDefault<RemoteServiceAttribute>(action.ActionMethod);
+            if (remoteServiceAtt != null && !remoteServiceAtt.IsEnabledFor(action.ActionMethod))
+            {
+                return;
+            }
+
             if (!action.Selectors.Any())
             {
                 AddAbpServiceSelector(moduleName, controllerName, action, configuration);
@@ -249,7 +255,8 @@ namespace Abp.AspNetCore.Mvc.Conventions
         [CanBeNull]
         private AbpControllerAssemblySetting GetControllerSettingOrNull(Type controllerType)
         {
-            return _configuration.Value.ControllerAssemblySettings.GetSettingOrNull(controllerType);
+            var settings = _configuration.Value.ControllerAssemblySettings.GetSettings(controllerType);
+            return settings.FirstOrDefault(setting => setting.TypePredicate(controllerType));
         }
 
         private static AttributeRouteModel CreateAbpServiceAttributeRouteModel(string moduleName, string controllerName, ActionModel action)

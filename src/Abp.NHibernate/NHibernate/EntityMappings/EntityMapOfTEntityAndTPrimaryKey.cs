@@ -1,8 +1,7 @@
-using System;
 using Abp.Domain.Entities;
 using Abp.NHibernate.Filters;
-using Abp.Runtime.Session;
 using FluentNHibernate.Mapping;
+using System;
 
 namespace Abp.NHibernate.EntityMappings
 {
@@ -21,7 +20,7 @@ namespace Abp.NHibernate.EntityMappings
         {
             if (string.IsNullOrWhiteSpace(tableName))
             {
-                throw new ArgumentNullException("tableName");
+                throw new ArgumentNullException(nameof(tableName));
             }
 
             Table(tableName);
@@ -29,15 +28,18 @@ namespace Abp.NHibernate.EntityMappings
 
             if (typeof(ISoftDelete).IsAssignableFrom(typeof(TEntity)))
             {
-                Where("IsDeleted = 0");
+                ApplyFilter<SoftDeleteFilter>();
             }
 
             if (typeof(IMustHaveTenant).IsAssignableFrom(typeof (TEntity)))
+            {
                 ApplyFilter<MustHaveTenantFilter>();
+            }
+
             if (typeof(IMayHaveTenant).IsAssignableFrom(typeof(TEntity)))
+            {
                 ApplyFilter<MayHaveTenantFilter>();
-
-
+            }
         }
     }
 }

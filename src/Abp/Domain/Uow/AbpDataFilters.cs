@@ -38,6 +38,11 @@ namespace Abp.Domain.Uow
             /// "tenantId".
             /// </summary>
             public const string TenantId = "tenantId";
+
+            /// <summary>
+            /// "isDeleted".
+            /// </summary>
+            public const string IsDeleted = "isDeleted";
         }
     }
 }

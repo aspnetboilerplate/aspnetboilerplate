@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using System.Globalization;
 using System.Linq;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
@@ -34,6 +35,8 @@ namespace Abp.MultiTenancy
 
         public ILocalizationManager LocalizationManager { get; set; }
 
+        protected string LocalizationSourceName { get; set; }
+
         public ICacheManager CacheManager { get; set; }
 
         public IFeatureManager FeatureManager { get; set; }
@@ -57,6 +60,7 @@ namespace Abp.MultiTenancy
             TenantFeatureRepository = tenantFeatureRepository;
             EditionManager = editionManager;
             LocalizationManager = NullLocalizationManager.Instance;
+            LocalizationSourceName = AbpZeroConsts.LocalizationSourceName;
         }
 
         public virtual IQueryable<TTenant> Tenants { get { return TenantRepository.GetAll(); } }
@@ -73,7 +77,19 @@ namespace Abp.MultiTenancy
             await TenantRepository.InsertAsync(tenant);
         }
 
-        public async Task UpdateAsync(TTenant tenant)
+        public virtual void Create(TTenant tenant)
+        {
+            ValidateTenant(tenant);
+
+            if (TenantRepository.FirstOrDefault(t => t.TenancyName == tenant.TenancyName) != null)
+            {
+                throw new UserFriendlyException(string.Format(L("TenancyNameIsAlreadyTaken"), tenant.TenancyName));
+            }
+
+            TenantRepository.Insert(tenant);
+        }
+
+        public virtual async Task UpdateAsync(TTenant tenant)
         {
             if (await TenantRepository.FirstOrDefaultAsync(t => t.TenancyName == tenant.TenancyName && t.Id != tenant.Id) != null)
             {
@@ -83,9 +99,24 @@ namespace Abp.MultiTenancy
             await TenantRepository.UpdateAsync(tenant);
         }
 
+        public virtual void Update(TTenant tenant)
+        {
+            if (TenantRepository.FirstOrDefault(t => t.TenancyName == tenant.TenancyName && t.Id != tenant.Id) != null)
+            {
+                throw new UserFriendlyException(string.Format(L("TenancyNameIsAlreadyTaken"), tenant.TenancyName));
+            }
+
+            TenantRepository.Update(tenant);
+        }
+
         public virtual async Task<TTenant> FindByIdAsync(int id)
         {
             return await TenantRepository.FirstOrDefaultAsync(id);
+        }
+
+        public virtual TTenant FindById(int id)
+        {
+            return TenantRepository.FirstOrDefault(id);
         }
 
         public virtual async Task<TTenant> GetByIdAsync(int id)
@@ -99,9 +130,25 @@ namespace Abp.MultiTenancy
             return tenant;
         }
 
+        public virtual TTenant GetById(int id)
+        {
+            var tenant = FindById(id);
+            if (tenant == null)
+            {
+                throw new AbpException("There is no tenant with id: " + id);
+            }
+
+            return tenant;
+        }
+
         public virtual Task<TTenant> FindByTenancyNameAsync(string tenancyName)
         {
             return TenantRepository.FirstOrDefaultAsync(t => t.TenancyName == tenancyName);
+        }
+
+        public virtual TTenant FindByTenancyName(string tenancyName)
+        {
+            return TenantRepository.FirstOrDefault(t => t.TenancyName == tenancyName);
         }
 
         public virtual async Task DeleteAsync(TTenant tenant)
@@ -109,9 +156,19 @@ namespace Abp.MultiTenancy
             await TenantRepository.DeleteAsync(tenant);
         }
 
+        public virtual void Delete(TTenant tenant)
+        {
+            TenantRepository.Delete(tenant);
+        }
+
         public Task<string> GetFeatureValueOrNullAsync(int tenantId, string featureName)
         {
             return _featureValueStore.GetValueOrNullAsync(tenantId, featureName);
+        }
+
+        public string GetFeatureValueOrNull(int tenantId, string featureName)
+        {
+            return _featureValueStore.GetValueOrNull(tenantId, featureName);
         }
 
         public virtual async Task<IReadOnlyList<NameValue>> GetFeatureValuesAsync(int tenantId)
@@ -121,6 +178,18 @@ namespace Abp.MultiTenancy
             foreach (var feature in FeatureManager.GetAll())
             {
                 values.Add(new NameValue(feature.Name, await GetFeatureValueOrNullAsync(tenantId, feature.Name) ?? feature.DefaultValue));
+            }
+
+            return values;
+        }
+
+        public virtual IReadOnlyList<NameValue> GetFeatureValues(int tenantId)
+        {
+            var values = new List<NameValue>();
+
+            foreach (var feature in FeatureManager.GetAll())
+            {
+                values.Add(new NameValue(feature.Name, GetFeatureValueOrNull(tenantId, feature.Name) ?? feature.DefaultValue));
             }
 
             return values;
@@ -139,10 +208,29 @@ namespace Abp.MultiTenancy
             }
         }
 
+        public virtual void SetFeatureValues(int tenantId, params NameValue[] values)
+        {
+            if (values.IsNullOrEmpty())
+            {
+                return;
+            }
+
+            foreach (var value in values)
+            {
+                SetFeatureValue(tenantId, value.Name, value.Value);
+            }
+        }
+
         [UnitOfWork]
         public virtual async Task SetFeatureValueAsync(int tenantId, string featureName, string value)
         {
             await SetFeatureValueAsync(await GetByIdAsync(tenantId), featureName, value);
+        }
+
+        [UnitOfWork]
+        public virtual void SetFeatureValue(int tenantId, string featureName, string value)
+        {
+            SetFeatureValue(GetById(tenantId), featureName, value);
         }
 
         [UnitOfWork]
@@ -200,6 +288,61 @@ namespace Abp.MultiTenancy
             }
         }
 
+        [UnitOfWork]
+        public virtual void SetFeatureValue(TTenant tenant, string featureName, string value)
+        {
+            //No need to change if it's already equals to the current value
+            if (GetFeatureValueOrNull(tenant.Id, featureName) == value)
+            {
+                return;
+            }
+
+            //Get the current feature setting
+            TenantFeatureSetting currentSetting;
+            using (UnitOfWorkManager.Current.SetTenantId(tenant.Id))
+            {
+                currentSetting = TenantFeatureRepository.FirstOrDefault(f => f.Name == featureName);
+            }
+
+            //Get the feature
+            var feature = FeatureManager.GetOrNull(featureName);
+            if (feature == null)
+            {
+                if (currentSetting != null)
+                {
+                    TenantFeatureRepository.Delete(currentSetting);
+                }
+
+                return;
+            }
+
+            //Determine default value
+            var defaultValue = tenant.EditionId.HasValue
+                ? (EditionManager.GetFeatureValueOrNull(tenant.EditionId.Value, featureName) ?? feature.DefaultValue)
+                : feature.DefaultValue;
+
+            //No need to store value if it's default
+            if (value == defaultValue)
+            {
+                if (currentSetting != null)
+                {
+                    TenantFeatureRepository.Delete(currentSetting);
+                }
+
+                return;
+            }
+
+            //Insert/update the feature value
+            if (currentSetting == null)
+            {
+                TenantFeatureRepository.Insert(new TenantFeatureSetting(tenant.Id, featureName, value));
+            }
+            else
+            {
+                currentSetting.Value = value;
+            }
+        }
+
         /// <summary>
         /// Resets all custom feature settings for a tenant.
         /// Tenant will have features according to it's edition.
@@ -214,9 +357,28 @@ namespace Abp.MultiTenancy
             }
         }
 
+        /// <summary>
+        /// Resets all custom feature settings for a tenant.
+        /// Tenant will have features according to it's edition.
+        /// </summary>
+        /// <param name="tenantId">Tenant Id</param>
+        [UnitOfWork]
+        public virtual void ResetAllFeatures(int tenantId)
+        {
+            using (UnitOfWorkManager.Current.SetTenantId(tenantId))
+            {
+                TenantFeatureRepository.Delete(f => f.TenantId == tenantId);
+            }
+        }
+
         protected virtual async Task ValidateTenantAsync(TTenant tenant)
         {
             await ValidateTenancyNameAsync(tenant.TenancyName);
+        }
+
+        protected virtual void ValidateTenant(TTenant tenant)
+        {
+            ValidateTenancyName(tenant.TenancyName);
         }
 
         protected virtual Task ValidateTenancyNameAsync(string tenancyName)
@@ -229,9 +391,22 @@ namespace Abp.MultiTenancy
             return Task.FromResult(0);
         }
 
-        private string L(string name)
+        protected virtual void ValidateTenancyName(string tenancyName)
         {
-            return LocalizationManager.GetString(AbpZeroConsts.LocalizationSourceName, name);
+            if (!Regex.IsMatch(tenancyName, AbpTenant<TUser>.TenancyNameRegex))
+            {
+                throw new UserFriendlyException(L("InvalidTenancyName"));
+            }
+        }
+
+        protected virtual string L(string name)
+        {
+            return LocalizationManager.GetString(LocalizationSourceName, name);
+        }
+
+        protected virtual string L(string name, CultureInfo cultureInfo)
+        {
+            return LocalizationManager.GetString(LocalizationSourceName, name, cultureInfo);
         }
 
         public void HandleEvent(EntityChangedEventData<TTenant> eventData)

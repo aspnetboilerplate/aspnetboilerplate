@@ -44,7 +44,7 @@ namespace Abp.Web.Timing
         private async Task<string> GetUsersTimezoneScriptsAsync()
         {
             var timezoneId = await _settingManager.GetSettingValueAsync(TimingSettingNames.TimeZone);
-            var timezone = TimeZoneInfo.FindSystemTimeZoneById(timezoneId);
+            var timezone = TimezoneHelper.FindTimeZoneInfo(timezoneId);
 
             return " {" +
                    "        windows: {" +

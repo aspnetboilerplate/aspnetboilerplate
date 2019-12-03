@@ -29,10 +29,10 @@ namespace Abp.IdentityFramework
                   {"User name '{0}' is invalid, can only contain letters or digits.", "Identity.InvalidUserName"},
                   {"A user with this login already exists.", "Identity.LoginAlreadyAssociated"},
                   {"Incorrect password.", "Identity.PasswordMismatch"},
-                  {"Passwords must have at least one digit ('0'-'9').", "Identity.PasswordRequiresDigit"},
-                  {"Passwords must have at least one lowercase ('a'-'z').", "Identity.PasswordRequiresLower"},
-                  {"Passwords must have at least one non alphanumeric character.", "Identity.PasswordRequiresNonAlphanumeric"},
-                  {"Passwords must have at least one uppercase ('A'-'Z').", "Identity.PasswordRequiresUpper"},
+                  {"Passwords must have at least one digit ('0'-'9').", "Identity.PasswordRequireDigit"},
+                  {"Passwords must have at least one lowercase ('a'-'z').", "Identity.PasswordRequireLower"},
+                  {"Passwords must have at least one non alphanumeric character.", "Identity.PasswordRequireNonAlphanumeric"},
+                  {"Passwords must have at least one uppercase ('A'-'Z').", "Identity.PasswordRequireUpper"},
                   {"Passwords must be at least {0} characters.", "Identity.PasswordTooShort"},
                   {"Role {0} does not exist.", "Identity.RoleNotFound"},
                   {"User already has a password set.", "Identity.UserAlreadyHasPassword"},
@@ -54,7 +54,7 @@ namespace Abp.IdentityFramework
                 return;
             }
 
-            throw new UserFriendlyException(identityResult.Errors.JoinAsString(", "));
+            throw new UserFriendlyException(identityResult.Errors.Select(err => err.Description).JoinAsString(", "));
         }
 
         /// <summary>
@@ -74,6 +74,11 @@ namespace Abp.IdentityFramework
 
         public static string LocalizeErrors(this IdentityResult identityResult, ILocalizationManager localizationManager)
         {
+            return LocalizeErrors(identityResult, localizationManager, AbpZeroConsts.LocalizationSourceName);
+        }
+
+        public static string LocalizeErrors(this IdentityResult identityResult, ILocalizationManager localizationManager, string localizationSourceName)
+        {
             if (identityResult.Succeeded)
             {
                 throw new ArgumentException("identityResult.Succeeded should be false in order to localize errors.");
@@ -84,13 +89,12 @@ namespace Abp.IdentityFramework
                 throw new ArgumentException("identityResult.Errors should not be null.");
             }
 
-            return identityResult.Errors.Select(err => LocalizeErrorMessage(err.Description, localizationManager)).JoinAsString(" ");
+            var localizationSource = localizationManager.GetSource(localizationSourceName);
+            return identityResult.Errors.Select(err => LocalizeErrorMessage(err.Description, localizationSource)).JoinAsString(" ");
         }
 
-        private static string LocalizeErrorMessage(string identityErrorMessage, ILocalizationManager localizationManager)
+        private static string LocalizeErrorMessage(string identityErrorMessage, ILocalizationSource localizationSource)
         {
-            var localizationSource = localizationManager.GetSource(AbpZeroConsts.LocalizationSourceName);
-
             foreach (var identityLocalization in IdentityLocalizations)
             {
                 string[] values;

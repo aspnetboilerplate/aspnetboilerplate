@@ -9,7 +9,7 @@ the best software design practices without repeating themselves. DRY -
 
 All applications have some common problems and need some common
 structures. ASP.NET Boilerplate works for small projects to large
-enterprise web applications, providing a qick start with maintanable
+enterprise web applications, providing a quick start with maintainable
 code bases.
 
 ### Considerations
@@ -23,7 +23,7 @@ It should be easy to share [entities](/Pages/Documents/Entities),
 [services](/Pages/Documents/Application-Services) and views between web
 applications. They should be packaged into
 [modules](/Pages/Documents/Module-System) and can be easily distributed
-(preferred as public/private nuget packages). Modules may depend on and
+(preferred as public/private NuGet packages). Modules may depend on and
 use other modules. We should be able to extend models in a module for
 our application needs.
 
@@ -62,8 +62,8 @@ been rewritten because the code became too unmaintainable.
 
 An application should use and combine useful libraries & frameworks to
 accomplish well-known tasks. It should not try to re-invent the wheel if
-an existing tool meets it's requirements, and it should focus on it's
-own job (to it's own business logic) as much as possible. The
+an existing tool meets its requirements, and it should focus on its
+own job (do its own business logic) as much as possible. The
 application may use
 [EntityFramework](/Pages/Documents/EntityFramework-Integration) or
 [NHibernate](/Pages/Documents/NHibernate-Integration) for
@@ -89,7 +89,7 @@ Authorization,
 handling](/Pages/Documents/Handling-Exceptions),
 [logging](/Pages/Documents/Logging), caching are common things all
 applications implement at some level. The code should be generic and
-shared by different applications. It should also be seperated from the
+shared by different applications. It should also be separated from the
 business logic code and should be automated as much as possible. This
 allows us to focus more on our application specific business logic and
 prevents us from re-coding the same stuff over and over again (DRY!).
@@ -117,7 +117,7 @@ Project/Solution [templates](/Templates) is a proper way of doing it.
 
 ### Source code
 
-ASP.NET Boilerplate is an open source project developed under Github.
+ASP.NET Boilerplate is an open source project developed on GitHub.
 
 -   Source code:
     <https://github.com/aspnetboilerplate/aspnetboilerplate>
@@ -125,14 +125,14 @@ ASP.NET Boilerplate is an open source project developed under Github.
     <https://github.com/aspnetboilerplate/aspnetboilerplate-templates>
 -   Sample projects:
     <https://github.com/aspnetboilerplate/aspnetboilerplate-samples>
--   Module-Zero: <https://github.com/aspnetboilerplate/module-zero>
+-   Module Zero: <https://github.com/aspnetboilerplate/module-zero>
 
 ### Contributors
 
 ASP.NET Boilerplate is designed and developed by [Halil İbrahim
 Kalkan](http://www.halilibrahimkalkan.com/). There are also many
 [contributors](https://github.com/aspnetboilerplate/aspnetboilerplate/graphs/contributors)
-on github. Please feel free to fork our repositories and send pull
+on GitHub. Please feel free to fork our repositories and send pull
 requests!
 
 ### Contact
@@ -140,7 +140,7 @@ requests!
 For your questions and other discussions, use [official
 forum](http://forum.aspnetboilerplate.com/).
 
-For feature requests or bug reports, use [Github
+For feature requests or bug reports, use [GitHub
 issues](https://github.com/aspnetboilerplate/aspnetboilerplate/issues).
 
 For personal contact with me, visit my [web

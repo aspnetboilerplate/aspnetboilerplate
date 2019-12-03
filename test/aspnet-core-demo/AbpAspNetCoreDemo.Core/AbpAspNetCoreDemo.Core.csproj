@@ -2,7 +2,7 @@
 
   <PropertyGroup>
     <Version>1.5.0.0</Version>
-    <TargetFramework>netstandard2.0</TargetFramework>
+    <TargetFramework>netcoreapp3.0</TargetFramework>
     <AssemblyName>AbpAspNetCoreDemo.Core</AssemblyName>
     <PackageId>AbpAspNetCoreDemo.Core</PackageId>
     <GenerateAssemblyConfigurationAttribute>false</GenerateAssemblyConfigurationAttribute>

@@ -67,6 +67,11 @@ namespace Abp.Notifications
             return _notificationDefinitions.GetOrDefault(name);
         }
 
+        public void Remove(string name)
+        {
+            _notificationDefinitions.Remove(name);
+        }
+
         public IReadOnlyList<NotificationDefinition> GetAll()
         {
             return _notificationDefinitions.Values.ToImmutableList();
@@ -109,6 +114,43 @@ namespace Abp.Notifications
             return true;
         }
 
+        public bool IsAvailable(string name, UserIdentifier user)
+        {
+            var notificationDefinition = GetOrNull(name);
+            if (notificationDefinition == null)
+            {
+                return true;
+            }
+
+            if (notificationDefinition.FeatureDependency != null)
+            {
+                using (var featureDependencyContext = _iocManager.ResolveAsDisposable<FeatureDependencyContext>())
+                {
+                    featureDependencyContext.Object.TenantId = user.TenantId;
+
+                    if (! notificationDefinition.FeatureDependency.IsSatisfied(featureDependencyContext.Object))
+                    {
+                        return false;
+                    }
+                }
+            }
+
+            if (notificationDefinition.PermissionDependency != null)
+            {
+                using (var permissionDependencyContext = _iocManager.ResolveAsDisposable<PermissionDependencyContext>())
+                {
+                    permissionDependencyContext.Object.User = user;
+
+                    if (! notificationDefinition.PermissionDependency.IsSatisfied(permissionDependencyContext.Object))
+                    {
+                        return false;
+                    }
+                }
+            }
+
+            return true;
+        }
+
         public async Task<IReadOnlyList<NotificationDefinition>> GetAllAvailableAsync(UserIdentifier user)
         {
             var availableDefinitions = new List<NotificationDefinition>();
@@ -132,6 +174,41 @@ namespace Abp.Notifications
                         if (user.TenantId.HasValue &&
                             notificationDefinition.FeatureDependency != null &&
                             !await notificationDefinition.FeatureDependency.IsSatisfiedAsync(featureDependencyContext.Object))
+                        {
+                            continue;
+                        }
+
+                        availableDefinitions.Add(notificationDefinition);
+                    }
+                }
+            }
+
+            return availableDefinitions.ToImmutableList();
+        }
+
+        public IReadOnlyList<NotificationDefinition> GetAllAvailable(UserIdentifier user)
+        {
+            var availableDefinitions = new List<NotificationDefinition>();
+
+            using (var permissionDependencyContext = _iocManager.ResolveAsDisposable<PermissionDependencyContext>())
+            {
+                permissionDependencyContext.Object.User = user;
+
+                using (var featureDependencyContext = _iocManager.ResolveAsDisposable<FeatureDependencyContext>())
+                {
+                    featureDependencyContext.Object.TenantId = user.TenantId;
+
+                    foreach (var notificationDefinition in GetAll())
+                    {
+                        if (notificationDefinition.PermissionDependency != null &&
+                            ! notificationDefinition.PermissionDependency.IsSatisfied(permissionDependencyContext.Object))
+                        {
+                            continue;
+                        }
+
+                        if (user.TenantId.HasValue &&
+                            notificationDefinition.FeatureDependency != null &&
+                            ! notificationDefinition.FeatureDependency.IsSatisfied(featureDependencyContext.Object))
                         {
                             continue;
                         }

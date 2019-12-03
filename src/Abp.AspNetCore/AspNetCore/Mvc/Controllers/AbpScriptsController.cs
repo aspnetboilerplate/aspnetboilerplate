@@ -6,8 +6,10 @@ using Abp.Auditing;
 using Abp.Extensions;
 using Abp.Localization;
 using Abp.Web.Authorization;
+using Abp.Web.Configuration;
 using Abp.Web.Features;
 using Abp.Web.Localization;
+using Abp.Web.Minifier;
 using Abp.Web.MultiTenancy;
 using Abp.Web.Navigation;
 using Abp.Web.Sessions;
@@ -31,6 +33,8 @@ namespace Abp.AspNetCore.Mvc.Controllers
         private readonly IFeaturesScriptManager _featuresScriptManager;
         private readonly ISessionScriptManager _sessionScriptManager;
         private readonly ITimingScriptManager _timingScriptManager;
+        private readonly ICustomConfigScriptManager _customConfigScriptManager;
+        private readonly IJavaScriptMinifier _javaScriptMinifier;
 
         /// <summary>
         /// Constructor.
@@ -43,7 +47,9 @@ namespace Abp.AspNetCore.Mvc.Controllers
             IAuthorizationScriptManager authorizationScriptManager,
             IFeaturesScriptManager featuresScriptManager,
             ISessionScriptManager sessionScriptManager, 
-            ITimingScriptManager timingScriptManager)
+            ITimingScriptManager timingScriptManager, 
+            ICustomConfigScriptManager customConfigScriptManager, 
+            IJavaScriptMinifier javaScriptMinifier)
         {
             _multiTenancyScriptManager = multiTenancyScriptManager;
             _settingScriptManager = settingScriptManager;
@@ -53,13 +59,15 @@ namespace Abp.AspNetCore.Mvc.Controllers
             _featuresScriptManager = featuresScriptManager;
             _sessionScriptManager = sessionScriptManager;
             _timingScriptManager = timingScriptManager;
+            _customConfigScriptManager = customConfigScriptManager;
+            _javaScriptMinifier = javaScriptMinifier;
         }
 
         /// <summary>
         /// Gets all needed scripts.
         /// </summary>
         [DisableAuditing]
-        public async Task<ActionResult> GetScripts(string culture = "")
+        public async Task<ActionResult> GetScripts(string culture = "", bool minify = false)
         {
             if (!culture.IsNullOrEmpty())
             {
@@ -93,9 +101,13 @@ namespace Abp.AspNetCore.Mvc.Controllers
             sb.AppendLine(await _timingScriptManager.GetScriptAsync());
             sb.AppendLine();
 
+            sb.AppendLine(_customConfigScriptManager.GetScript());
+            sb.AppendLine();
+
             sb.AppendLine(GetTriggerScript());
-            
-            return Content(sb.ToString(), "application/x-javascript", Encoding.UTF8);
+
+            return Content(minify ? _javaScriptMinifier.Minify(sb.ToString()) : sb.ToString(),
+                "application/x-javascript", Encoding.UTF8);
         }
 
         private static string GetTriggerScript()

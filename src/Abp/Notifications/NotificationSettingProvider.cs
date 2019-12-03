@@ -15,7 +15,7 @@ namespace Abp.Notifications
                     "true",
                     L("ReceiveNotifications"),
                     scopes: SettingScopes.User,
-                    isVisibleToClients: true)
+                    clientVisibilityProvider: new VisibleSettingClientVisibilityProvider())
             };
         }
 

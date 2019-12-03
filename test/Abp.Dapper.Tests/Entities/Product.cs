@@ -20,7 +20,15 @@ namespace Abp.Dapper.Tests.Entities
 
         [Required]
         public string Name { get; set; }
+        
+        public Status Status { get; set; }
 
         public int? TenantId { get; set; }
+    }
+
+    public enum Status
+    {
+        Active,
+        Passive
     }
 }

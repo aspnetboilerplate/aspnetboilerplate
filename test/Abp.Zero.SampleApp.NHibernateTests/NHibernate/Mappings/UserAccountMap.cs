@@ -15,7 +15,6 @@ namespace Abp.Zero.SampleApp.NHibernate.Mappings
             Map(x => x.UserName);
             Map(x => x.EmailAddress);
             Map(x => x.UserLinkId);
-            Map(x => x.LastLoginTime);
 
             this.MapFullAudited();
         }

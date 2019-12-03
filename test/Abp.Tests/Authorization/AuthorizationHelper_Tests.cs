@@ -14,19 +14,7 @@ namespace Abp.Tests.Authorization
 
         public AuthorizationHelper_Tests()
         {
-            var featureChecker = Substitute.For<IFeatureChecker>();
-            featureChecker.GetValueAsync(Arg.Any<string>()).Returns("false");
-
-            var permissionChecker = Substitute.For<IPermissionChecker>();
-            permissionChecker.IsGrantedAsync(Arg.Any<string>()).Returns(false);
-
-            var configuration = Substitute.For<IAuthorizationConfiguration>();
-            configuration.IsEnabled.Returns(true);
-
-            _authorizeHelper = new AuthorizationHelper(featureChecker, configuration)
-            {
-                PermissionChecker = permissionChecker
-            };
+            _authorizeHelper = GetAuthorizationHelper(false, false);
         }
 
         [Fact]
@@ -63,6 +51,17 @@ namespace Abp.Tests.Authorization
             });
         }
 
+        [Fact]
+        public async Task NotAuthorizedFeatureDependentMethodsCanBeCalledAnonymously()
+        {
+            var authorizeHelper = GetAuthorizationHelper(true, false);
+
+            await authorizeHelper.AuthorizeAsync(
+                typeof(MyNonAuthorizedClass).GetTypeInfo().GetMethod(nameof(MyNonAuthorizedClass.Test_FeatureDependent)),
+                typeof(MyNonAuthorizedClass)
+            );
+        }
+
         public class MyNonAuthorizedClass
         {
             public void Test_NotAuthorized()
@@ -72,6 +71,12 @@ namespace Abp.Tests.Authorization
 
             [AbpAuthorize]
             public void Test_Authorized()
+            {
+
+            }
+
+            [RequiresFeature("Test")]
+            public void Test_FeatureDependent()
             {
 
             }
@@ -90,6 +95,28 @@ namespace Abp.Tests.Authorization
             {
 
             }
+        }
+
+        private static AuthorizationHelper GetAuthorizationHelper(
+            bool featureCheckerValue,
+            bool isGranted)
+        {
+            var featureChecker = Substitute.For<IFeatureChecker>();
+            featureChecker.GetValueAsync(Arg.Any<string>()).Returns(featureCheckerValue.ToString().ToLower());    
+            featureChecker.IsEnabledAsync(Arg.Any<string>()).Returns(featureCheckerValue);
+            
+            var permissionChecker = Substitute.For<IPermissionChecker>();
+            permissionChecker.IsGrantedAsync(Arg.Any<string>()).Returns(isGranted);
+
+            var configuration = Substitute.For<IAuthorizationConfiguration>();
+            configuration.IsEnabled.Returns(true);
+
+            var authorizeHelper = new AuthorizationHelper(featureChecker, configuration)
+            {
+                PermissionChecker = permissionChecker
+            };
+
+            return authorizeHelper;
         }
     }
 }

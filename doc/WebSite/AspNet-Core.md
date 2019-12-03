@@ -1,9 +1,9 @@
 ### Introduction
 
-This document describes the ASP.NET Core integration for ASP.NET Boilerplate. 
-The ASP.NET Core integration is implemented in the 
-[Abp.AspNetCore](https://www.nuget.org/packages/Abp.AspNetCore) nuget
-package
+This document describes the ASP.NET Core integration for ASP.NET Boilerplate.
+The ASP.NET Core integration is implemented in the
+[Abp.AspNetCore](https://www.nuget.org/packages/Abp.AspNetCore) NuGet
+package.
 
 #### Migrating to ASP.NET Core?
 
@@ -44,8 +44,8 @@ Startup class:
         public void Configure(IApplicationBuilder app, IHostingEnvironment env, ILoggerFactory loggerFactory)
         {
             //Initializes ABP framework and all modules. Should be called first.
-            app.UseAbp(); 
-            
+            app.UseAbp();
+
             //...
         }
     }
@@ -53,7 +53,7 @@ Startup class:
 #### Module Configuration
 
 You can use the [startup configuration](Startup-Configuration.md) to
-configure the AspNet Core Module by using
+configure the AspNetCore Module by using
 *Configuration.Modules.AbpAspNetCore()* in the PreInitialize method of your
 module.
 
@@ -115,9 +115,11 @@ service **interfaces** for application services. This is not
 required for the ASP.NET Core integration.  The MVC attributes should be
 added to the service classes, even if you have interfaces.
 
+**Note**: To use Mvc datetime format options, you can set this property `Configuration.Modules.AbpAspNetCore().UseMvcDateTimeFormatForAppServices`. Its default value is `false`. 
+
 ### Filters
 
-ABP defines some **pre-built filters** for AspNet Core. All of them are
+ABP defines some **pre-built filters** for ASP.NET Core. All of them are
 added to **all actions of all controllers** by default.
 
 #### Authorization Filter
@@ -136,7 +138,7 @@ system](Feature-Management.md).
 #### Audit Action Filter
 
 **AbpAuditActionFilter** is used to integrate with the [audit logging
-system](Audit-Logging.md). If auditing is not disabled, it logs all requests 
+system](Audit-Logging.md). If auditing is not disabled, it logs all requests
 to all actions by default . You can control audit logging
 by using the **Audited** and **DisableAuditing** attributes on actions and
 controllers.
@@ -156,7 +158,7 @@ You can control validation using the **EnableValidation** and
 
 **AbpUowActionFilter** integrates with the [Unit of
 Work](Unit-Of-Work.md) system. It automatically begins a new unit of
-work before an action execution, and if no exception is thrown, completes the unit of 
+work before an action execution, and if no exception is thrown, completes the unit of
 work after the action execution.
 
 You can use the **UnitOfWork** attribute to control the behaviour of the UOW for an
@@ -172,9 +174,9 @@ controller actions. It **handles** and **logs** exceptions and returns a
 -   **This only handles object results**, and not view results. Actions
     returning any object, JsonResult or ObjectResult will be handled.
     Actions are not handled if they return a view or any other result type implementing
-    IActionsResult. It is recommend that you use the built-in UseExceptionHandler extension 
+    IActionsResult. It is recommend that you use the built-in UseExceptionHandler extension
     method defined in the Microsoft.AspNetCore.Diagnostics package to handle view exceptions.
--   Exception handling and logging behaviour can be changed using the 
+-   Exception handling and logging behaviour can be changed using the
     **WrapResult** and **DontWrapResult** attributes for methods and
     classes.
 
@@ -210,7 +212,7 @@ Nullable&lt;DateTime&gt;) inputs using the **Clock.Normalize** method.
 
 ### Views
 
-MVC Views can be inherited from **AbpRazorPage** to automatically inject the 
+MVC Views can be inherited from **AbpRazorPage** to automatically inject the
 most commonly used infrastructure (LocalizationManager, PermissionChecker,
 SettingManager... etc.). It also has shortcut methods, like L(...) for
 localized texts. The startup template inherits this by default.
@@ -220,17 +222,17 @@ ViewComponent to take advantage of it's base properties and methods.
 
 ### Client Proxies
 
-ABP can automatically create javascript proxies for all MVC Controllers
+ABP can automatically create JavaScript proxies for all MVC Controllers
 (not only application services). It's created for *Application Services
 as Controllers* (see the section above) by default. You can add the
 \[RemoteService\] attribute to any MVC controller to create a client proxy
-for it. Javascript proxies are dynamically generated on runtime. You
+for it. JavaScript proxies are dynamically generated on runtime. You
 need to add a given script definition to your page:
 
     <script src="~/AbpServiceProxies/GetAll?type=jquery" type="text/javascript"></script>
 
-Currently, only JQuery proxies are generated. We can then call an MVC
-method with javascript as shown below:
+Currently, only jQuery proxies are generated. We can then call an MVC
+method with JavaScript as shown below:
 
     abp.services.app.product.create({
         name: 'My test product',
@@ -242,9 +244,9 @@ method with javascript as shown below:
 ### Integration Testing
 
 Integration testing is fairly easy for ASP.NET Core and it's [documented on
-it's own web
+its own web
 site](https://docs.asp.net/en/latest/testing/integration-testing.html)
-in detail. ABP follows these guidelines and provides a 
+in detail. ABP follows these guidelines and provides a
 **AbpAspNetCoreIntegratedTestBase** class in the
 [Abp.AspNetCore.TestBase](https://www.nuget.org/packages/Abp.AspNetCore.TestBase)
 package. It makes integration testing even easier.

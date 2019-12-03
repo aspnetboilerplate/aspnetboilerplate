@@ -1,0 +1,31 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<localizationDictionary culture="ro">
+  <texts>
+    <text name="Identity.UserAlreadyInRole" value="Utilizatorul are deja rolul '{0}'." />
+    <text name="Identity.UserNotInRole" value="Utilizatorul nu are rolul '{0}'." />
+    <text name="Identity.RoleNotFound" value="Rolul {0} nu există." />
+    <text name="Identity.PasswordMismatch" value="Parola incorectă." />
+    <text name="Identity.InvalidUserName" value="Numele de utilizator '{0}' este invalid, can only contain letters or digits." />
+    <text name="Identity.PasswordTooShort" value="Parolele trebuie să fie cel puțin {0} caractere." />
+    <text name="Identity.PropertyTooShort" value="Câmpul {0} nu poate fi null sau gol." />
+    <text name="Identity.DuplicateUserName" value="Numele de utilizator '{0}' este deja luat." />
+    <text name="Identity.UserAlreadyHasPassword" value="Utilizatorul are deja o parolă setată." />
+    <text name="Identity.PasswordRequireNonLetterOrDigit" value="Parolele trebuie să aibă cel puțin un caracter non-literă sau cifre." />
+    <text name="Identity.UserIdNotFound" value="UserId-ul nu exista." />
+    <text name="Identity.InvalidToken" value="Token invalid." />
+    <text name="Identity.InvalidEmail" value="Email-ul '{0}' este invalid." />
+    <text name="Identity.UserNameNotFound" value="Utilizatorul {0} nu există." />
+    <text name="Identity.LockoutNotEnabled" value="Blocarea nu este activată pentru acest utilizator." />
+    <text name="Identity.PasswordRequireUpper" value="Parolele trebuie să aibă cel puțin o majusculă ('A'-'Z')." />
+    <text name="Identity.PasswordRequireDigit" value="Parolele trebuie să aibă cel puțin o cifră ('0'-'9')." />
+    <text name="Identity.PasswordRequireLower" value="Parolele trebuie să aibă cel puțin o minusculă ('a'-'z')." />
+    <text name="Identity.DuplicateEmail" value="Email-ul '{0}' este deja luat." />
+    <text name="Identity.ExternalLoginExists" value="Un utilizator cu acest login extern există deja." />
+    <text name="Identity.DefaultError" value="A apărut un eroare necunoscută." />
+    <text name="Email">Email</text>
+    <text name="EmailSecurityCodeSubject">Cod securitate</text>
+    <text name="EmailSecurityCodeBody">Codul dumneavoastră de securitate este: {0}</text>
+    <text name="Sms">Sms</text>
+    <text name="SmsSecurityCodeMessage">Codul dumneavoastră de securitate este: {0}</text>
+  </texts>
+</localizationDictionary>

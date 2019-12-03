@@ -2,7 +2,7 @@
 using System.Data.Entity;
 using Abp.Domain.Repositories;
 using Abp.EntityFramework;
-using Abp.TestBase.SampleApplication.ContacLists;
+using Abp.TestBase.SampleApplication.ContactLists;
 using Abp.TestBase.SampleApplication.Crm;
 using Abp.TestBase.SampleApplication.EntityFramework.Repositories;
 using Abp.TestBase.SampleApplication.GuidEntities;
@@ -28,6 +28,10 @@ namespace Abp.TestBase.SampleApplication.EntityFramework
         public virtual IDbSet<Company> Companies { get; set; }
 
         public virtual IDbSet<Branch> Branches { get; set; }
+
+        public virtual IDbSet<Hotel> Hotels { get; set; }
+
+        public virtual IDbSet<Room> Rooms { get; set; }
 
         public virtual IDbSet<TestEntityWithGuidPk> TestEntityWithGuidPks { get; set; }
 

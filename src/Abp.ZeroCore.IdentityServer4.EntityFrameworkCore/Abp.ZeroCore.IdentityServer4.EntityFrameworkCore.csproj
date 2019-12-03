@@ -3,7 +3,7 @@
   <Import Project="..\..\common.props" />
 
   <PropertyGroup>
-    <TargetFramework>netstandard2.0</TargetFramework>
+    <TargetFramework>netcoreapp3.0</TargetFramework>
     <GenerateDocumentationFile>true</GenerateDocumentationFile>
     <AssemblyName>Abp.ZeroCore.IdentityServer4.EntityFrameworkCore</AssemblyName>
     <PackageId>Abp.ZeroCore.IdentityServer4.EntityFrameworkCore</PackageId>
@@ -24,10 +24,14 @@
   </ItemGroup>
 
   <ItemGroup>
-    <None Include="bin\Release\netstandard2.0\Abp.ZeroCore.IdentityServer4.EntityFrameworkCore.pdb">
-      <PackagePath>lib/netstandard2.0/</PackagePath>
+    <None Include="bin\Release\netcoreapp3.0\Abp.ZeroCore.IdentityServer4.EntityFrameworkCore.pdb">
+      <PackagePath>lib/netcoreapp3.0/</PackagePath>
       <Pack>true</Pack>
     </None>
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Update="SourceLink.Create.CommandLine" Version="2.8.3" />
   </ItemGroup>
   
 </Project>

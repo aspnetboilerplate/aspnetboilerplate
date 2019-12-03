@@ -102,7 +102,74 @@ namespace Abp.AspNetCore.Tests
             response.Error.ValidationErrors.Length.ShouldBe(1);
             response.Error.ValidationErrors.ShouldNotBeNull();
             response.Error.ValidationErrors[0].Members.Length.ShouldBe(1);
+            response.Error.ValidationErrors[0].Members[0].ShouldBe("$.value");
+        }
+
+        [Fact]
+        public async Task Should_Not_Work_With_Invalid_Parameters_Validatable_Object()
+        {
+            // Act
+            var response = await PostAsync<AjaxResponse<ValidationTestController.ValidationTestArgument3>>(
+                GetUrl<ValidationTestController>(
+                    nameof(ValidationTestController.GetJsonValueWithValidatableObject)
+                ),
+                new StringContent("{ \"value\": -1 }", Encoding.UTF8, "application/json"),
+                HttpStatusCode.BadRequest
+            );
+
+            response.Success.ShouldBeFalse();
+            response.Result.ShouldBeNull();
+            response.Error.ShouldNotBeNull();
+            response.Error.ValidationErrors.Length.ShouldBe(1);
+            response.Error.ValidationErrors.ShouldNotBeNull();
+            response.Error.ValidationErrors[0].Members.Length.ShouldBe(1);
             response.Error.ValidationErrors[0].Members[0].ShouldBe("value");
+            response.Error.ValidationErrors[0].Message.ShouldBe("Value must be higher than 0");
+        }
+
+        [Fact]
+        public async Task Should_Not_Work_With_Invalid_Parameters_Custom_Validate()
+        {
+            // Act
+            var response = await PostAsync<AjaxResponse<ValidationTestController.ValidationTestArgument4>>(
+                GetUrl<ValidationTestController>(
+                    nameof(ValidationTestController.GetJsonValueWithCustomValidate)
+                ),
+                new StringContent("{ \"value\": \"asd\" }", Encoding.UTF8, "application/json"),
+                HttpStatusCode.BadRequest
+            );
+
+            response.Success.ShouldBeFalse();
+            response.Result.ShouldBeNull();
+            response.Error.ShouldNotBeNull();
+            response.Error.ValidationErrors.Length.ShouldBe(1);
+            response.Error.ValidationErrors.ShouldNotBeNull();
+            response.Error.ValidationErrors[0].Members.Length.ShouldBe(1);
+            response.Error.ValidationErrors[0].Members[0].ShouldBe("value");
+            response.Error.ValidationErrors[0].Message.ShouldBe("Value must be \"abp\"");
+        }
+
+        [Fact]
+        public async Task Should_Not_Work_With_Invalid_Parameters_Combined_Validators()
+        {
+            // Act
+            var response = await PostAsync<AjaxResponse<ValidationTestController.ValidationTestArgument5>>(
+                GetUrl<ValidationTestController>(
+                    nameof(ValidationTestController.GetJsonValueWithCombinedValidators)
+                ),
+                new StringContent("{ \"value\": -1 }", Encoding.UTF8, "application/json"),
+                HttpStatusCode.BadRequest
+            );
+
+            response.Success.ShouldBeFalse();
+            response.Result.ShouldBeNull();
+            response.Error.ShouldNotBeNull();
+            response.Error.ValidationErrors.Length.ShouldBe(2);
+            response.Error.ValidationErrors.ShouldNotBeNull();
+            response.Error.ValidationErrors[0].Members.Length.ShouldBe(1);
+            response.Error.ValidationErrors[0].Members[0].ShouldBe("value");
+            response.Error.ValidationErrors[1].Members.Length.ShouldBe(1);
+            response.Error.ValidationErrors[1].Members[0].ShouldBe("value");
         }
     }
 }

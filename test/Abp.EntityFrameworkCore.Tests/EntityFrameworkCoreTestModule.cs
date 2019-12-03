@@ -12,6 +12,7 @@ using Abp.Dependency;
 using Abp.Reflection.Extensions;
 using Microsoft.Data.Sqlite;
 using Microsoft.EntityFrameworkCore.Metadata.Internal;
+using Microsoft.EntityFrameworkCore.Query;
 
 namespace Abp.EntityFrameworkCore.Tests
 {
@@ -27,7 +28,7 @@ namespace Abp.EntityFrameworkCore.Tests
 
             //SupportDbContext
             RegisterSupportDbContextToSqliteInMemoryDb(IocManager);
-
+            
             //Custom repository
             Configuration.ReplaceService<IRepository<Post, Guid>>(() =>
             {
@@ -37,6 +38,8 @@ namespace Abp.EntityFrameworkCore.Tests
                         .LifestyleTransient()
                 );
             });
+
+            Configuration.IocManager.Register<IRepository<TicketListItem>, TicketListItemRepository>();
         }
 
         public override void Initialize()
@@ -44,11 +47,17 @@ namespace Abp.EntityFrameworkCore.Tests
             IocManager.RegisterAssemblyByConvention(typeof(EntityFrameworkCoreTestModule).GetAssembly());
         }
 
+        public override void PostInitialize()
+        {
+            using (var context = IocManager.Resolve<BloggingDbContext>())
+            {
+                context.Database.ExecuteSqlCommand("CREATE VIEW BlogView AS SELECT Id, Name, Url FROM Blogs");
+            }
+        }
+
         private static void RegisterBloggingDbContextToSqliteInMemoryDb(IIocManager iocManager)
         {
             var builder = new DbContextOptionsBuilder<BloggingDbContext>();
-
-            builder.ReplaceService<IEntityMaterializerSource, AbpEntityMaterializerSource>();
 
             var inMemorySqlite = new SqliteConnection("Data Source=:memory:");
             builder.UseSqlite(inMemorySqlite);
@@ -68,8 +77,6 @@ namespace Abp.EntityFrameworkCore.Tests
         {
             var builder = new DbContextOptionsBuilder<SupportDbContext>();
 
-            builder.ReplaceService<IEntityMaterializerSource, AbpEntityMaterializerSource>();
-
             var inMemorySqlite = new SqliteConnection("Data Source=:memory:");
             builder.UseSqlite(inMemorySqlite);
 
@@ -81,7 +88,16 @@ namespace Abp.EntityFrameworkCore.Tests
             );
 
             inMemorySqlite.Open();
-            new SupportDbContext(builder.Options).Database.EnsureCreated();
+            var ctx = new SupportDbContext(builder.Options);
+            ctx.Database.EnsureCreated();
+
+            using (var command = ctx.Database.GetDbConnection().CreateCommand())
+            {
+                command.CommandText = SupportDbContext.TicketViewSql;
+                ctx.Database.OpenConnection();
+
+                command.ExecuteNonQuery();
+            }
         }
     }
 }

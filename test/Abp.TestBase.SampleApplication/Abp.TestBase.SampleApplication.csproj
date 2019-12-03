@@ -13,6 +13,14 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <None Remove="Localization\Sources\SampleApplication.xml" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <EmbeddedResource Include="Localization\Sources\SampleApplication.xml" />
+  </ItemGroup>
+
+  <ItemGroup>
     <ProjectReference Include="..\..\src\Abp.AutoMapper\Abp.AutoMapper.csproj" />
     <ProjectReference Include="..\..\src\Abp.EntityFramework\Abp.EntityFramework.csproj" />
     <ProjectReference Include="..\..\src\Abp.TestBase\Abp.TestBase.csproj" />

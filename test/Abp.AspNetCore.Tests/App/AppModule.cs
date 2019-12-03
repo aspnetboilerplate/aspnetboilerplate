@@ -6,13 +6,15 @@ using Abp.Modules;
 using Abp.AspNetCore.Configuration;
 using Abp.AspNetCore.Mocks;
 using Abp.Auditing;
+using Abp.FluentValidation;
 using Abp.Localization;
 using Abp.MultiTenancy;
 using Abp.Reflection.Extensions;
+using Microsoft.AspNetCore.Builder;
 
 namespace Abp.AspNetCore.App
 {
-    [DependsOn(typeof(AbpAspNetCoreTestBaseModule))]
+    [DependsOn(typeof(AbpAspNetCoreTestBaseModule), typeof(AbpFluentValidationModule))]
     public class AppModule : AbpModule
     {
         public override void PreInitialize()
@@ -27,6 +29,13 @@ namespace Abp.AspNetCore.App
                 .CreateControllersForAppServices(
                     typeof(AppModule).GetAssembly()
                 );
+
+            Configuration.IocManager.Resolve<IAbpAspNetCoreConfiguration>().EndpointConfiguration.Add(endpoints =>
+            {
+                endpoints.MapControllerRoute("defaultWithArea", "{area}/{controller=Home}/{action=Index}/{id?}");
+                endpoints.MapControllerRoute("default", "{controller=Home}/{action=Index}/{id?}");
+                endpoints.MapRazorPages();
+            });
         }
 
         public override void Initialize()

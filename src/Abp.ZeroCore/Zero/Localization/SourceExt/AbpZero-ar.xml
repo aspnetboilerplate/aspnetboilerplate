@@ -14,10 +14,10 @@
     <text name="Identity.InvalidUserName" value="اسم المستخدم {0} غير صالح، يمكن أن يحتوي فقط على أحرف أو أرقام." />
     <text name="Identity.ExternalLoginExists" value="هناك مستخدم لديه نفس معلومات تسجيل دخول خارجية." />
     <text name="Identity.PasswordMismatch">كلمة المرور غير متوافقة</text>
-    <text name="Identity.PasswordRequiresDigit" value="يجب أن تحتوي كلمات المرور على رقم واحد على الأقل ('0' - '9')." />
-    <text name="Identity.PasswordRequiresLower" value="يجب أن تحتوي كلمات المرور على حرف صغير واحد على الأقل ('a' - 'z')." />
-    <text name="Identity.PasswordRequiresNonAlphanumeric" value="يجب أن تحتوي كلمة المرور على حرف خاص أو رقم على الأقل." />
-    <text name="Identity.PasswordRequiresUpper" value="يجب أن تحتوي كلمات المرور على حرف واحد كبير على الأقل ('A' - 'Z')." />
+    <text name="Identity.PasswordRequireDigit" value="يجب أن تحتوي كلمات المرور على رقم واحد على الأقل ('0' - '9')." />
+    <text name="Identity.PasswordRequireLower" value="يجب أن تحتوي كلمات المرور على حرف صغير واحد على الأقل ('a' - 'z')." />
+    <text name="Identity.PasswordRequireNonAlphanumeric" value="يجب أن تحتوي كلمة المرور على حرف خاص أو رقم على الأقل." />
+    <text name="Identity.PasswordRequireUpper" value="يجب أن تحتوي كلمات المرور على حرف واحد كبير على الأقل ('A' - 'Z')." />
     <text name="Identity.PasswordTooShort" value="يجب أن تكون كلمات المرور {0} حرفا على الأقل." />
     <text name="Identity.RoleNotFound" value="الدور {0} غير موجود." />
     <text name="Identity.UserAlreadyHasPassword" value="لدى المستخدم بالفعل كلمة مرور محددة." />

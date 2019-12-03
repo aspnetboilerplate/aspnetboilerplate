@@ -1,7 +1,10 @@
 ﻿using System;
 using System.ComponentModel.DataAnnotations.Schema;
+using System.Linq;
 using Abp.Domain.Entities;
 using Abp.Extensions;
+using Abp.Runtime.Validation;
+using Abp.UI;
 
 namespace Abp.Auditing
 {
@@ -27,6 +30,11 @@ namespace Abp.Auditing
         public static int MaxParametersLength = 1024;
 
         /// <summary>
+        /// Maximum length of <see cref="ReturnValue"/> property.
+        /// </summary>
+        public static int MaxReturnValueLength = 1024;
+
+        /// <summary>
         /// Maximum length of <see cref="ClientIpAddress"/> property.
         /// </summary>
         public static int MaxClientIpAddressLength = 64;
@@ -39,7 +47,7 @@ namespace Abp.Auditing
         /// <summary>
         /// Maximum length of <see cref="BrowserInfo"/> property.
         /// </summary>
-        public static int MaxBrowserInfoLength = 256;
+        public static int MaxBrowserInfoLength = 512;
 
         /// <summary>
         /// Maximum length of <see cref="Exception"/> property.
@@ -75,6 +83,11 @@ namespace Abp.Auditing
         /// Calling parameters.
         /// </summary>
         public virtual string Parameters { get; set; }
+
+        /// <summary>
+        /// Return values.
+        /// </summary>
+        public virtual string ReturnValue { get; set; }
 
         /// <summary>
         /// Start time of the method execution.
@@ -128,7 +141,7 @@ namespace Abp.Auditing
         /// <returns>The <see cref="AuditLog"/> object that is created using <see cref="auditInfo"/></returns>
         public static AuditLog CreateFromAuditInfo(AuditInfo auditInfo)
         {
-            var exceptionMessage = auditInfo.Exception != null ? auditInfo.Exception.ToString() : null;
+            var exceptionMessage = GetAbpClearException(auditInfo.Exception);
             return new AuditLog
                    {
                        TenantId = auditInfo.TenantId,
@@ -136,6 +149,7 @@ namespace Abp.Auditing
                        ServiceName = auditInfo.ServiceName.TruncateWithPostfix(MaxServiceNameLength),
                        MethodName = auditInfo.MethodName.TruncateWithPostfix(MaxMethodNameLength),
                        Parameters = auditInfo.Parameters.TruncateWithPostfix(MaxParametersLength),
+                       ReturnValue = auditInfo.ReturnValue.TruncateWithPostfix(MaxReturnValueLength),
                        ExecutionTime = auditInfo.ExecutionTime,
                        ExecutionDuration = auditInfo.ExecutionDuration,
                        ClientIpAddress = auditInfo.ClientIpAddress.TruncateWithPostfix(MaxClientIpAddressLength),
@@ -154,6 +168,42 @@ namespace Abp.Auditing
                 "AUDIT LOG: {0}.{1} is executed by user {2} in {3} ms from {4} IP address.",
                 ServiceName, MethodName, UserId, ExecutionDuration, ClientIpAddress
                 );
+        }
+
+        /// <summary>
+        /// Make audit exceptions more explicit.
+        /// </summary>
+        /// <param name="exception"></param>
+        /// <returns></returns>
+        public static string GetAbpClearException(Exception exception)
+        {
+            var clearMessage = "";
+            switch (exception)
+            {
+                case null:
+                    return null;
+
+                case AbpValidationException abpValidationException:
+                    clearMessage = "There are " + abpValidationException.ValidationErrors.Count + " validation errors:";
+                    foreach (var validationResult in abpValidationException.ValidationErrors) 
+                    {
+                        var memberNames = "";
+                        if (validationResult.MemberNames != null && validationResult.MemberNames.Any())
+                        {
+                            memberNames = " (" + string.Join(", ", validationResult.MemberNames) + ")";
+                        }
+
+                        clearMessage += "\r\n" + validationResult.ErrorMessage + memberNames;
+                    }
+                    break;
+
+                case UserFriendlyException userFriendlyException:
+                    clearMessage =
+                        $"UserFriendlyException.Code:{userFriendlyException.Code}\r\nUserFriendlyException.Details:{userFriendlyException.Details}";
+                    break;
+            }
+
+            return exception + (clearMessage.IsNullOrWhiteSpace() ? "" : "\r\n\r\n" + clearMessage);
         }
     }
 }

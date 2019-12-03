@@ -50,5 +50,13 @@ namespace Abp.Application.Features
                 ? context.FeatureChecker.IsEnabledAsync(context.TenantId.Value, RequiresAll, Features)
                 : context.FeatureChecker.IsEnabledAsync(RequiresAll, Features);
         }
+
+        /// <inheritdoc/>
+        public bool IsSatisfied(IFeatureDependencyContext context)
+        {
+            return context.TenantId.HasValue
+                ? context.FeatureChecker.IsEnabled(context.TenantId.Value, RequiresAll, Features)
+                : context.FeatureChecker.IsEnabled(RequiresAll, Features);
+        }
     }
 }

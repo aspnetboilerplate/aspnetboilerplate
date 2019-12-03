@@ -54,19 +54,19 @@ queue:
     {
         private readonly IRepository<User, long> _userRepository;
         private readonly IEmailSender _emailSender;
-
+    
         public SimpleSendEmailJob(IRepository<User, long> userRepository, IEmailSender emailSender)
         {
             _userRepository = userRepository;
             _emailSender = emailSender;
         }
-
+    
         [UnitOfWork]
         public override void Execute(SimpleSendEmailJobArgs args)
         {
             var senderUser = _userRepository.Get(args.SenderUserId);
             var targetUser = _userRepository.Get(args.TargetUserId);
-
+    
             _emailSender.Send(senderUser.EmailAddress, targetUser.EmailAddress, args.Subject, args.Body);
         }
     }
@@ -82,11 +82,11 @@ below:
     public class SimpleSendEmailJobArgs
     {
         public long SenderUserId { get; set; }
-
+    
         public long TargetUserId { get; set; }
-
+    
         public string Subject { get; set; }
-
+    
         public string Body { get; set; }
     }
 
@@ -112,12 +112,12 @@ TestJob as defined above:
     public class MyService
     {
         private readonly IBackgroundJobManager _backgroundJobManager;
-
+    
         public MyService(IBackgroundJobManager backgroundJobManager)
         {
             _backgroundJobManager = backgroundJobManager;
         }
-
+    
         public void Test()
         {
             _backgroundJobManager.Enqueue<TestJob, int>(42);
@@ -133,12 +133,12 @@ Let's add a new job for SimpleSendEmailJob, as we defined before:
     public class MyEmailAppService : ApplicationService, IMyEmailAppService
     {
         private readonly IBackgroundJobManager _backgroundJobManager;
-
+    
         public MyEmailAppService(IBackgroundJobManager backgroundJobManager)
         {
             _backgroundJobManager = backgroundJobManager;
         }
-
+    
         public async Task SendEmail(SendEmailInput input)
         {
                 await _backgroundJobManager.EnqueueAsync<SimpleSendEmailJob, SimpleSendEmailJobArgs>(
@@ -182,7 +182,7 @@ The default BackgroundJobManager needs a data store to save and get jobs. If
 you do not implement **IBackgroundJobStore** then it uses
 **InMemoryBackgroundJobStore** which does not save jobs in a persistent
 database. You can simply implement it to store jobs in a database or you
-can use **[module-zero](/Pages/Documents/Zero/Overall)** which already
+can use **[Module Zero](/Pages/Documents/Zero/Overall)** which already
 implements it.
 
 If you are using a 3rd party job manager (like
@@ -205,7 +205,7 @@ You may want to disable background job execution for your application:
         {
             Configuration.BackgroundJobs.IsJobExecutionEnabled = false;
         }
-
+    
         //...
     }
 
@@ -221,6 +221,19 @@ other problems. To prevent it, you have two options:
     application and create a separated, standalone application (example:
     a Windows Service) that executes background jobs.
 
+#### User token removal period
+
+ABP Framework defines a background worker named UserTokenExpirationWorker which cleans the records in table AbpUserTokens. If you disable background job execution, this worker will not run. By default, UserTokenExpirationWorker runs every one hour. If you want to change this period, you can configure it like below:
+
+    public class MyProjectWebModule : AbpModule
+    {
+        public override void PreInitialize()
+        {
+            Configuration.BackgroundJobs.CleanUserTokenPeriod = 1 * 60 * 60 * 1000; // 1 hour
+        }
+    
+        //...
+    }
 #### Exception Handling
 
 Since the default background job manager should re-try failed jobs, it
@@ -258,39 +271,39 @@ application in last 30 days. See the code:
     public class MakeInactiveUsersPassiveWorker : PeriodicBackgroundWorkerBase, ISingletonDependency
     {
         private readonly IRepository<User, long> _userRepository;
-
+    
         public MakeInactiveUsersPassiveWorker(AbpTimer timer, IRepository<User, long> userRepository)
             : base(timer)
         {
             _userRepository = userRepository;
             Timer.Period = 5000; //5 seconds (good for tests, but normally will be more)
         }
-
+    
         [UnitOfWork]
         protected override void DoWork()
         {
             using (CurrentUnitOfWork.DisableFilter(AbpDataFilters.MayHaveTenant))
             {
                 var oneMonthAgo = Clock.Now.Subtract(TimeSpan.FromDays(30));
-
+    
                 var inactiveUsers = _userRepository.GetAllList(u =>
                     u.IsActive &&
                     ((u.LastLoginTime < oneMonthAgo && u.LastLoginTime != null) || (u.CreationTime < oneMonthAgo && u.LastLoginTime == null))
                     );
-
+    
                 foreach (var inactiveUser in inactiveUsers)
                 {
                     inactiveUser.IsActive = false;
                     Logger.Info(inactiveUser + " made passive since he/she did not login in last 30 days.");
                 }
-
+    
                 CurrentUnitOfWork.SaveChanges();
             }
         }
     }
 
 This real code directly works in ASP.NET Boilerplate with
-[module-zero](/Pages/Documents/Zero/Overall).
+[Module Zero](/Pages/Documents/Zero/Overall).
 
 -   If you derive from **PeriodicBackgroundWorkerBase** (as in this
     sample), you should implement the **DoWork** method to perform your
@@ -310,7 +323,7 @@ method of your module:
     public class MyProjectWebModule : AbpModule
     {
         //...
-
+    
         public override void PostInitialize()
         {
             var workManager = IocManager.Resolve<IBackgroundWorkerManager>();

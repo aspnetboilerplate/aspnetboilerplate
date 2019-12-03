@@ -31,8 +31,12 @@
   </ItemGroup>
   
   <ItemGroup>
-    <PackageReference Include="System.Runtime" Version="4.3.0" />
-    <PackageReference Include="MailKit" Version="1.22.0" />
+    <PackageReference Include="System.Runtime" Version="4.3.1" />
+    <PackageReference Include="MailKit" Version="2.3.1.6" />
+  </ItemGroup>
+  
+  <ItemGroup>
+    <PackageReference Update="SourceLink.Create.CommandLine" Version="2.8.3" />
   </ItemGroup>
 
 </Project>

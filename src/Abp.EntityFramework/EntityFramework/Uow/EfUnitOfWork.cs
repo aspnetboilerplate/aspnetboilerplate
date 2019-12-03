@@ -10,6 +10,7 @@ using Abp.Domain.Uow;
 using Abp.EntityFramework.Utils;
 using Abp.Extensions;
 using Abp.MultiTenancy;
+using Abp.Timing;
 using Castle.Core.Internal;
 
 namespace Abp.EntityFramework.Uow
@@ -99,7 +100,7 @@ namespace Abp.EntityFramework.Uow
             }
         }
         
-        public virtual TDbContext GetOrCreateDbContext<TDbContext>(MultiTenancySides? multiTenancySide = null)
+        public virtual TDbContext GetOrCreateDbContext<TDbContext>(MultiTenancySides? multiTenancySide = null, string name = null)
             where TDbContext : DbContext
         {
             var concreteDbContextType = _dbContextTypeMatcher.GetConcreteType(typeof(TDbContext));
@@ -110,6 +111,10 @@ namespace Abp.EntityFramework.Uow
             var connectionString = ResolveConnectionString(connectionStringResolveArgs);
 
             var dbContextKey = concreteDbContextType.FullName + "#" + connectionString;
+            if (name != null)
+            {
+                dbContextKey += "#" + name;
+            }
 
             DbContext dbContext;
             if (!ActiveDbContexts.TryGetValue(dbContextKey, out dbContext))
@@ -128,10 +133,13 @@ namespace Abp.EntityFramework.Uow
                     dbContext.Database.CommandTimeout = Options.Timeout.Value.TotalSeconds.To<int>();
                 }
 
-                ((IObjectContextAdapter)dbContext).ObjectContext.ObjectMaterialized += (sender, args) =>
+                if (Clock.SupportsMultipleTimezone)
                 {
-                    ObjectContext_ObjectMaterialized(dbContext, args);
-                };
+                    ((IObjectContextAdapter)dbContext).ObjectContext.ObjectMaterialized += (sender, args) =>
+                    {
+                        ObjectContext_ObjectMaterialized(dbContext, args);
+                    };
+                }
 
                 FilterExecuter.As<IEfUnitOfWorkFilterExecuter>().ApplyCurrentFilters(this, dbContext);
                 

@@ -8,8 +8,13 @@ namespace Abp.Application.Features
     public interface IFeatureDependency
     {
         /// <summary>
-        /// Checks depended features and returns true if dependencies are satisfied.
+        /// Checks dependent features and returns true if the dependencies are satisfied.
         /// </summary>
         Task<bool> IsSatisfiedAsync(IFeatureDependencyContext context);
+
+        /// <summary>
+        /// Checks dependent features and returns true if the dependencies are satisfied.
+        /// </summary>
+        bool IsSatisfied(IFeatureDependencyContext context);
     }
 }

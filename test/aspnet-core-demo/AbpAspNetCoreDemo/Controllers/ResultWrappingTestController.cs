@@ -8,7 +8,7 @@ namespace AbpAspNetCoreDemo.Controllers
 {
     public class ResultWrappingTestController : AbpController
     {
-        public ResultWrappingTestController(IHostingEnvironment environment)
+        public ResultWrappingTestController(IWebHostEnvironment environment)
         {
             
         }
@@ -32,7 +32,7 @@ namespace AbpAspNetCoreDemo.Controllers
     [DontWrapResult]
     public class ResultWrappingTest2Controller : Controller, ITransientDependency
     {
-        public ResultWrappingTest2Controller(IHostingEnvironment environment)
+        public ResultWrappingTest2Controller(IWebHostEnvironment environment)
         {
             
         }

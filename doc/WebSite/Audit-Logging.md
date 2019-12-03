@@ -32,7 +32,7 @@ are automatically audited by default.
 
 The auditing system uses **IAuditingStore** to
 save audit information. While you can implement it in your own way,
-it's fully implemented in the **module-zero** project. If you don't
+it's fully implemented in the **Module Zero** project. If you don't
 implement it, SimpleLogAuditingStore is used and it writes audit
 information to the [log](/Pages/Documents/Logging).
 
@@ -48,7 +48,7 @@ Auditing is **enabled by default**. You can disable it as shown below:
         {
             Configuration.Auditing.IsEnabled = false;
         }
-
+    
         //...
     }
 
@@ -60,6 +60,8 @@ Here are the auditing configuration properties:
     are saved for users that are not logged in to the system.
     Default: **false**.
 -   **Selectors**: Used to select other classes to save audit logs.
+-   **SaveReturnValues**: Used to enable/disable to save return values. Default: **false**.
+-   **IgnoredTypes**: Used to ignore defined types.
 
 **Selectors** is a list of predicates to select other types of classes that save
 audit logs. A selector has a unique **name** and a **predicate**. The
@@ -96,13 +98,13 @@ individual **method**. Example:
         {
             //...
         }
-
+    
         [DisableAuditing]
         public void MyMethod2(string b)
         {
             //...
         }
-
+    
         public void MyMethod3(int a, int b)
         {
             //...

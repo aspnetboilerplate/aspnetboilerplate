@@ -1,5 +1,4 @@
-﻿using System.Linq.Dynamic.Core;
-using System.Threading.Tasks;
+﻿using System.Threading.Tasks;
 using Abp.Application.Services.Dto;
 using Abp.ZeroCore.SampleApp.Application.Users;
 using Shouldly;
@@ -19,7 +18,7 @@ namespace Abp.Zero.Users
         [Fact]
         public async Task Should_Get_All_Users()
         {
-            var users = await _userAppService.GetAll(new PagedAndSortedResultRequestDto());
+            var users = await _userAppService.GetAllAsync(new PagedAndSortedResultRequestDto());
             users.TotalCount.ShouldBeGreaterThan(0);
             users.Items.Count.ShouldBeGreaterThan(0);
         }

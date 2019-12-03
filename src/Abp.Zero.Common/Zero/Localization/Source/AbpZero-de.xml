@@ -1,12 +1,14 @@
 ﻿<?xml version="1.0" encoding="utf-8" ?>
 <localizationDictionary culture="de">
   <texts>
-    <text name="InvalidTenancyName" value="Tenancy name is not valid!" />
-    <text name="TenancyNameIsAlreadyTaken" value="Der Mandant (Tenant) Name {0} ist bereits vergeben." />
+    <text name="InvalidTenancyName" value="Mandant Name ist nicht gültig!" />
+    <text name="TenancyNameIsAlreadyTaken" value="Der Mandant Name {0} ist bereits vergeben." />
     <text name="RoleNameIsAlreadyTaken" value="Der Rollen Name {0} ist bereits vergeben." />
     <text name="RoleDisplayNameIsAlreadyTaken" value="Der Rollen Anzeigename {0} ist bereits vergeben." />
     <text name="CanNotDeleteStaticRole" value="Kann die statische Rolle nicht löschen: {0}" />
     <text name="CanNotRenameAdminUser" value="Der Administrator Account {0} kann nicht umbenannt werden!" />
     <text name="CanNotDeleteAdminUser" value="Der Administrator Account {0} kann nicht gelöscht werden!" />
+    <text name="OrganizationUnitDuplicateDisplayNameWarning" value="Es gibt bereits eine Organisationseinheit mit dem Namen {0}. Zwei Einheiten mit demselben Namen können nicht auf derselben Ebene erstellt werden." />
+    <text name="InvalidFeatureValue" value="Der {0} -Feature-Wert ist ungültig!" />
   </texts>
 </localizationDictionary>

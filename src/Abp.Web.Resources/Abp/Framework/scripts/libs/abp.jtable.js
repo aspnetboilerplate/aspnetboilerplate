@@ -54,8 +54,8 @@
                         .done(function (result) {
                             $dfd.resolve({
                                 "Result": "OK",
-                                "Records": result.items || result[originalListAction.recordsField],
-                                "TotalRecordCount": result.totalCount,
+                                "Records": result.items || result[originalListAction.recordsField] || result,
+                                "TotalRecordCount": result.totalCount || result.length,
                                 originalResult: result
                             });
                         })
