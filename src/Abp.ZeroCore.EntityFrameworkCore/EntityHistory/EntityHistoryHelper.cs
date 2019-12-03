@@ -65,7 +65,7 @@ namespace Abp.EntityHistory
                 {
                     continue;
                 }
-                
+
                 bool? shouldAuditOwnerEntity = null;
                 bool? shouldAuditOwnerProperty = null;
                 if (!shouldAuditEntity.HasValue && entityEntry.Metadata.IsOwned())
@@ -95,7 +95,7 @@ namespace Abp.EntityHistory
                 }
 
                 var isAuditableEntity = (shouldAuditEntity.HasValue && shouldAuditEntity.Value) ||
-                                        (shouldAuditOwnerEntity.HasValue && shouldAuditOwnerEntity.Value) || 
+                                        (shouldAuditOwnerEntity.HasValue && shouldAuditOwnerEntity.Value) ||
                                         (shouldAuditOwnerProperty.HasValue && shouldAuditOwnerProperty.Value);
                 var isTrackableEntity = shouldTrackEntity.HasValue && shouldTrackEntity.Value;
                 var shouldSaveAuditedPropertiesOnly = !isAuditableEntity && !isTrackableEntity;
@@ -180,7 +180,6 @@ namespace Abp.EntityHistory
                     break;
                 case EntityState.Detached:
                 case EntityState.Unchanged:
-                    Logger.DebugFormat("Skipping Entity Change Creation for {0}, Id:{1}", entityTypeFullName, entityId);
                     return null;
                 default:
                     Logger.ErrorFormat("Unexpected {0} - {1}", nameof(entityEntry.State), entityEntry.State);
@@ -269,7 +268,7 @@ namespace Abp.EntityHistory
                 {
                     foreach (var property in foreignKey.Properties)
                     {
-                        var shouldSaveProperty = property.IsShadowProperty ? 
+                        var shouldSaveProperty = property.IsShadowProperty ?
                                                    null :
                                                    IsAuditedPropertyInfo(property.PropertyInfo);
                         if (shouldSaveProperty.HasValue && !shouldSaveProperty.Value)
@@ -291,7 +290,7 @@ namespace Abp.EntityHistory
                 foreach (var propertyChange in entityChange.PropertyChanges)
                 {
                     var propertyEntry = entityEntry.Property(propertyChange.PropertyName);
-                    var isAuditedProperty = !propertyEntry.Metadata.IsShadowProperty && 
+                    var isAuditedProperty = !propertyEntry.Metadata.IsShadowProperty &&
                                             IsAuditedPropertyInfo(propertyEntry.Metadata.PropertyInfo) == true;
 
                     // TODO: fix new value comparison before truncation
