@@ -1,5 +1,4 @@
 using System;
-using System.Threading;
 using System.Threading.Tasks;
 using Abp.Dependency;
 using Abp.Quartz.Configuration;
@@ -33,7 +32,7 @@ namespace Abp.Quartz.Tests
                 {
                     trigger.WithIdentity("HelloJobTrigger")
                            .WithDescription("HelloJobTriggerDescription")
-                           .WithSimpleSchedule(schedule => schedule.WithRepeatCount(5).WithInterval(TimeSpan.FromSeconds(1)))
+                           .WithSimpleSchedule(schedule => schedule.WithRepeatCount(50).WithInterval(TimeSpan.FromSeconds(1)))
                            .StartNow();
                 });
 
@@ -47,9 +46,25 @@ namespace Abp.Quartz.Tests
                 {
                     trigger.WithIdentity("GoodByeJobTrigger")
                            .WithDescription("GoodByeJobTriggerDescription")
-                           .WithSimpleSchedule(schedule => schedule.WithRepeatCount(5).WithInterval(TimeSpan.FromSeconds(1)))
+                           .WithSimpleSchedule(schedule => schedule.WithRepeatCount(50).WithInterval(TimeSpan.FromSeconds(1)))
                            .StartNow();
                 });
+        }
+
+        private async Task RescheduleJob()
+        {
+            await _quartzScheduleJobManager.RescheduleAsync(new TriggerKey("HelloJobTrigger"),
+                trigger =>
+                {
+                    trigger.WithIdentity("HelloJobRescheduleTrigger")
+                           .WithSimpleSchedule(schedule => schedule.WithRepeatCount(50).WithInterval(TimeSpan.FromSeconds(1)))
+                           .StartNow();
+                });
+        }
+
+        private async Task UnscheduleJob()
+        {
+            await _quartzScheduleJobManager.UnscheduleAsync(new TriggerKey("GoodByeJobTrigger"));
         }
 
         [Fact]
@@ -71,6 +86,13 @@ namespace Abp.Quartz.Tests
 
             helloDependency.ExecutionCount.ShouldBeGreaterThan(0);
             goodByeDependency.ExecutionCount.ShouldBeGreaterThan(0);
+
+            await RescheduleJob();
+            (await _abpQuartzConfiguration.Scheduler.CheckExists(new TriggerKey("HelloJobTrigger"))).ShouldBe(false);
+            (await _abpQuartzConfiguration.Scheduler.CheckExists(new TriggerKey("HelloJobRescheduleTrigger"))).ShouldBe(true);
+
+            await UnscheduleJob();
+            (await _abpQuartzConfiguration.Scheduler.CheckExists(new TriggerKey("GoodByeJobTrigger"))).ShouldBe(false);
         }
     }
 
@@ -101,7 +123,7 @@ namespace Abp.Quartz.Tests
         {
             _goodByeDependency = goodByeDependency;
         }
-        
+
         public override Task Execute(IJobExecutionContext context)
         {
             _goodByeDependency.ExecutionCount++;

@@ -18,5 +18,20 @@ namespace Abp.Quartz
         /// <param name="configureTrigger">Job specific trigger options which means calendar or time interval.</param>
         /// <returns></returns>
         Task ScheduleAsync<TJob>(Action<JobBuilder> configureJob, Action<TriggerBuilder> configureTrigger) where TJob : IJob;
+
+        /// <summary>
+        /// Reschedules a job.
+        /// </summary>
+        /// <param name="triggerKey">Key that identifies job's previous trigger.</param>
+        /// <param name="configureTrigger">Job specific trigger options which means calendar or time interval.</param>
+        /// <returns></returns>
+        Task RescheduleAsync(TriggerKey triggerKey, Action<TriggerBuilder> configureTrigger);
+
+        /// <summary>
+        /// Unschedules a job.
+        /// </summary>
+        /// <param name="triggerKey">Key that identifies job's trigger.</param>
+        /// <returns></returns>
+        Task UnscheduleAsync(TriggerKey triggerKey);
     }
 }
