@@ -32,7 +32,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Include="Castle.Facilities.AspNet.SystemWeb" Version="5.0.0" />
+    <PackageReference Include="Castle.Facilities.AspNet.SystemWeb" Version="5.0.1" />
   </ItemGroup>
 
   <ItemGroup Condition=" '$(TargetFramework)' == 'net461' ">
