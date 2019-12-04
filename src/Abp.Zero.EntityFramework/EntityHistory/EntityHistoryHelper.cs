@@ -153,6 +153,9 @@ namespace Abp.EntityHistory
         [CanBeNull]
         private EntityChange CreateEntityChange(DbEntityEntry entityEntry, EntityType entityType)
         {
+            var entityId = GetEntityId(entityEntry, entityType);
+            var entityTypeFullName = entityEntry.GetEntityBaseType().FullName;
+
             EntityChangeType changeType;
             switch (entityEntry.State)
             {
@@ -167,12 +170,13 @@ namespace Abp.EntityHistory
                     break;
                 case EntityState.Detached:
                 case EntityState.Unchanged:
+                    Logger.DebugFormat("Skipping Entity Change Creation for {0}, Id:{1}", entityTypeFullName, entityId);
+                    return null;
                 default:
                     Logger.ErrorFormat("Unexpected {0} - {1}", nameof(entityEntry.State), entityEntry.State);
                     return null;
             }
 
-            var entityId = GetEntityId(entityEntry, entityType);
             if (entityId == null && changeType != EntityChangeType.Created)
             {
                 Logger.ErrorFormat("EntityChangeType {0} must have non-empty entity id", changeType);
@@ -184,7 +188,7 @@ namespace Abp.EntityHistory
                 ChangeType = changeType,
                 EntityEntry = entityEntry, // [NotMapped]
                 EntityId = entityId,
-                EntityTypeFullName = entityEntry.GetEntityBaseType().FullName,
+                EntityTypeFullName = entityTypeFullName,
                 TenantId = AbpSession.TenantId
             };
         }

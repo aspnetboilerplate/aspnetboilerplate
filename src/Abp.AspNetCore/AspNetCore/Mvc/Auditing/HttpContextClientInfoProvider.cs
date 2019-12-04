@@ -2,6 +2,7 @@
 using Abp.Auditing;
 using Castle.Core.Logging;
 using Microsoft.AspNetCore.Http;
+using Abp.Extensions;
 
 namespace Abp.AspNetCore.Mvc.Auditing
 {
@@ -41,7 +42,9 @@ namespace Abp.AspNetCore.Mvc.Auditing
             try
             {
                 var httpContext = _httpContextAccessor.HttpContext ?? _httpContext;
+
                 return httpContext?.Connection?.RemoteIpAddress?.ToString();
+
             }
             catch (Exception ex)
             {

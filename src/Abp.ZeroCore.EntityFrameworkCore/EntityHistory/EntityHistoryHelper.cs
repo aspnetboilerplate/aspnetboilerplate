@@ -93,7 +93,7 @@ namespace Abp.EntityHistory
                     continue;
                 }
 
-                var shouldSaveAuditedPropertiesOnly = !(shouldAuditEntity.HasValue || shouldAuditOwnerEntity.HasValue || shouldAuditOwnerProperty.HasValue) && 
+                var shouldSaveAuditedPropertiesOnly = !(shouldAuditEntity.HasValue || shouldAuditOwnerEntity.HasValue || shouldAuditOwnerProperty.HasValue) &&
                                                       !entityEntry.IsCreated() &&
                                                       !entityEntry.IsDeleted();
                 var propertyChanges = GetPropertyChanges(entityEntry, shouldSaveAuditedPropertiesOnly);
@@ -160,6 +160,8 @@ namespace Abp.EntityHistory
         [CanBeNull]
         private EntityChange CreateEntityChange(EntityEntry entityEntry)
         {
+            var entityId = GetEntityId(entityEntry);
+            var entityTypeFullName = entityEntry.Entity.GetType().FullName;
             EntityChangeType changeType;
             switch (entityEntry.State)
             {
@@ -174,12 +176,13 @@ namespace Abp.EntityHistory
                     break;
                 case EntityState.Detached:
                 case EntityState.Unchanged:
+                    Logger.DebugFormat("Skipping Entity Change Creation for {0}, Id:{1}", entityTypeFullName, entityId);
+                    return null;
                 default:
                     Logger.ErrorFormat("Unexpected {0} - {1}", nameof(entityEntry.State), entityEntry.State);
                     return null;
             }
 
-            var entityId = GetEntityId(entityEntry);
             if (entityId == null && changeType != EntityChangeType.Created)
             {
                 Logger.ErrorFormat("EntityChangeType {0} must have non-empty entity id", changeType);
@@ -191,7 +194,7 @@ namespace Abp.EntityHistory
                 ChangeType = changeType,
                 EntityEntry = entityEntry, // [NotMapped]
                 EntityId = entityId,
-                EntityTypeFullName = entityEntry.Entity.GetType().FullName,
+                EntityTypeFullName = entityTypeFullName,
                 TenantId = AbpSession.TenantId
             };
         }
@@ -262,7 +265,7 @@ namespace Abp.EntityHistory
                 {
                     foreach (var property in foreignKey.Properties)
                     {
-                        var shouldSaveProperty = property.IsShadowProperty() ? 
+                        var shouldSaveProperty = property.IsShadowProperty() ?
                                                    null :
                                                    IsAuditedPropertyInfo(property.PropertyInfo);
                         if (shouldSaveProperty.HasValue && !shouldSaveProperty.Value)
@@ -284,7 +287,7 @@ namespace Abp.EntityHistory
                 foreach (var propertyChange in entityChange.PropertyChanges)
                 {
                     var propertyEntry = entityEntry.Property(propertyChange.PropertyName);
-                    var isAuditedProperty = !propertyEntry.Metadata.IsShadowProperty() && 
+                    var isAuditedProperty = !propertyEntry.Metadata.IsShadowProperty() &&
                                             IsAuditedPropertyInfo(propertyEntry.Metadata.PropertyInfo) == true;
 
                     // TODO: fix new value comparison before truncation

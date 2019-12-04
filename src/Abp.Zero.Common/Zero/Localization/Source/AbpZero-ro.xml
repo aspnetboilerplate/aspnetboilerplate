@@ -1,0 +1,14 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<localizationDictionary culture="ro">
+  <texts>
+    <text name="InvalidTenancyName" value="Numele locației nu este valid!" />
+    <text name="TenancyNameIsAlreadyTaken" value="Numele locației {0} este deja luat." />
+    <text name="RoleNameIsAlreadyTaken" value="Numele de rol {0} este deja luat." />
+    <text name="RoleDisplayNameIsAlreadyTaken" value="Numele afișării rolului {0} este deja luat." />
+    <text name="CanNotDeleteStaticRole" value="Nu se poate șterge un rol static: {0}" />
+    <text name="CanNotRenameAdminUser" value="Nu puteri redenumiți utilizatorul {0} deoarece acesta este administratorul!" />
+    <text name="CanNotDeleteAdminUser" value="Nu puteri șterge utilizatorul {0} deoarece acesta este un administratorul!" />
+    <text name="OrganizationUnitDuplicateDisplayNameWarning" value="Există deja o unitate de organizare cu nume {0}. Două unități cu același nume nu pot fi create la același nivel." />
+    <text name="InvalidFeatureValue" value="{0} valoarea funcționalități nu este validă!" />
+  </texts>
+</localizationDictionary>
