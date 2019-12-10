@@ -15,10 +15,22 @@ namespace Abp.Localization
         Task<IReadOnlyList<ApplicationLanguage>> GetLanguagesAsync(int? tenantId);
 
         /// <summary>
+        /// Gets list of all active languages available to given tenant (or null for host)
+        /// </summary>
+        /// <param name="tenantId">TenantId or null for host</param>
+        Task<IReadOnlyList<ApplicationLanguage>> GetActiveLanguagesAsync(int? tenantId);
+
+        /// <summary>
         /// Gets list of all languages available to given tenant (or null for host)
         /// </summary>
         /// <param name="tenantId">TenantId or null for host</param>
         IReadOnlyList<ApplicationLanguage> GetLanguages(int? tenantId);
+
+        /// <summary>
+        /// Gets list of all active languages available to given tenant (or null for host)
+        /// </summary>
+        /// <param name="tenantId">TenantId or null for host</param>
+        IReadOnlyList<ApplicationLanguage> GetActiveLanguages(int? tenantId);
 
         /// <summary>
         /// Adds a new language.

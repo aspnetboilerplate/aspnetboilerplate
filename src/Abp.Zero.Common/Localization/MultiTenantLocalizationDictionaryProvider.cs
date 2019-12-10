@@ -51,7 +51,7 @@ namespace Abp.Localization
 
         protected virtual IDictionary<string, ILocalizationDictionary> GetDictionaries()
         {
-            var languages = _languageManager.GetLanguages();
+            var languages = _languageManager.GetActiveLanguages();
 
             foreach (var language in languages)
             {
@@ -63,7 +63,7 @@ namespace Abp.Localization
 
         protected virtual ILocalizationDictionary GetDefaultDictionary()
         {
-            var languages = _languageManager.GetLanguages();
+            var languages = _languageManager.GetActiveLanguages();
             if (!languages.Any())
             {
                 throw new AbpException("No language defined!");

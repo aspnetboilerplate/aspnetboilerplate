@@ -93,9 +93,17 @@ namespace Abp.AspNetCore
             using (var languageManager = iocResolver.ResolveAsDisposable<ILanguageManager>())
             {
                 var supportedCultures = languageManager.Object
-                    .GetLanguages()
+                    .GetActiveLanguages()
                     .Select(l => CultureInfo.GetCultureInfo(l.Name))
                     .ToArray();
+
+                if (iocResolver.IsRegistered<ILogger<RequestLocalizationOptions>>())
+                {
+                    using (var logger = iocResolver.ResolveAsDisposable<ILogger<RequestLocalizationOptions>>())
+                    {
+                        logger.Object.LogInformation($"Supported Request Localization Cultures: {string.Join(",", supportedCultures.Select(c => c))}");
+                    }
+                }
 
                 var options = new RequestLocalizationOptions
                 {
