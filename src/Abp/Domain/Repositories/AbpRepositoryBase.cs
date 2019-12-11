@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
+using System.Threading;
 using System.Threading.Tasks;
 using Abp.Dependency;
 using Abp.Domain.Entities;
@@ -50,7 +51,7 @@ namespace Abp.Domain.Repositories
             return GetAll().ToList();
         }
 
-        public virtual Task<List<TEntity>> GetAllListAsync()
+        public virtual Task<List<TEntity>> GetAllListAsync(CancellationToken cancellationToken = default)
         {
             return Task.FromResult(GetAllList());
         }
@@ -60,7 +61,7 @@ namespace Abp.Domain.Repositories
             return GetAll().Where(predicate).ToList();
         }
 
-        public virtual Task<List<TEntity>> GetAllListAsync(Expression<Func<TEntity, bool>> predicate)
+        public virtual Task<List<TEntity>> GetAllListAsync(Expression<Func<TEntity, bool>> predicate, CancellationToken cancellationToken = default)
         {
             return Task.FromResult(GetAllList(predicate));
         }
@@ -81,7 +82,7 @@ namespace Abp.Domain.Repositories
             return entity;
         }
 
-        public virtual async Task<TEntity> GetAsync(TPrimaryKey id)
+        public virtual async Task<TEntity> GetAsync(TPrimaryKey id, CancellationToken cancellationToken = default)
         {
             var entity = await FirstOrDefaultAsync(id);
             if (entity == null)
@@ -97,7 +98,7 @@ namespace Abp.Domain.Repositories
             return GetAll().Single(predicate);
         }
 
-        public virtual Task<TEntity> SingleAsync(Expression<Func<TEntity, bool>> predicate)
+        public virtual Task<TEntity> SingleAsync(Expression<Func<TEntity, bool>> predicate, CancellationToken cancellationToken = default)
         {
             return Task.FromResult(Single(predicate));
         }
@@ -107,7 +108,7 @@ namespace Abp.Domain.Repositories
             return GetAll().FirstOrDefault(CreateEqualityExpressionForId(id));
         }
 
-        public virtual Task<TEntity> FirstOrDefaultAsync(TPrimaryKey id)
+        public virtual Task<TEntity> FirstOrDefaultAsync(TPrimaryKey id, CancellationToken cancellationToken = default)
         {
             return Task.FromResult(FirstOrDefault(id));
         }
@@ -117,7 +118,7 @@ namespace Abp.Domain.Repositories
             return GetAll().FirstOrDefault(predicate);
         }
 
-        public virtual Task<TEntity> FirstOrDefaultAsync(Expression<Func<TEntity, bool>> predicate)
+        public virtual Task<TEntity> FirstOrDefaultAsync(Expression<Func<TEntity, bool>> predicate, CancellationToken cancellationToken = default)
         {
             return Task.FromResult(FirstOrDefault(predicate));
         }
@@ -129,7 +130,7 @@ namespace Abp.Domain.Repositories
 
         public abstract TEntity Insert(TEntity entity);
 
-        public virtual Task<TEntity> InsertAsync(TEntity entity)
+        public virtual Task<TEntity> InsertAsync(TEntity entity, CancellationToken cancellationToken = default)
         {
             return Task.FromResult(Insert(entity));
         }
@@ -139,7 +140,7 @@ namespace Abp.Domain.Repositories
             return Insert(entity).Id;
         }
 
-        public virtual async Task<TPrimaryKey> InsertAndGetIdAsync(TEntity entity)
+        public virtual async Task<TPrimaryKey> InsertAndGetIdAsync(TEntity entity, CancellationToken cancellationToken = default)
         {
             var insertedEntity = await InsertAsync(entity);
             return insertedEntity.Id;
@@ -152,11 +153,11 @@ namespace Abp.Domain.Repositories
                 : Update(entity);
         }
 
-        public virtual async Task<TEntity> InsertOrUpdateAsync(TEntity entity)
+        public virtual async Task<TEntity> InsertOrUpdateAsync(TEntity entity, CancellationToken cancellationToken = default)
         {
             return entity.IsTransient()
-                ? await InsertAsync(entity)
-                : await UpdateAsync(entity);
+                ? await InsertAsync(entity, cancellationToken)
+                : await UpdateAsync(entity, cancellationToken);
         }
 
         public virtual TPrimaryKey InsertOrUpdateAndGetId(TEntity entity)
@@ -164,15 +165,15 @@ namespace Abp.Domain.Repositories
             return InsertOrUpdate(entity).Id;
         }
 
-        public virtual async Task<TPrimaryKey> InsertOrUpdateAndGetIdAsync(TEntity entity)
+        public virtual async Task<TPrimaryKey> InsertOrUpdateAndGetIdAsync(TEntity entity, CancellationToken cancellationToken = default)
         {
-            var insertedEntity = await InsertOrUpdateAsync(entity);
+            var insertedEntity = await InsertOrUpdateAsync(entity, cancellationToken);
             return insertedEntity.Id;
         }
 
         public abstract TEntity Update(TEntity entity);
 
-        public virtual Task<TEntity> UpdateAsync(TEntity entity)
+        public virtual Task<TEntity> UpdateAsync(TEntity entity, CancellationToken cancellationToken = default)
         {
             return Task.FromResult(Update(entity));
         }
@@ -184,16 +185,16 @@ namespace Abp.Domain.Repositories
             return entity;
         }
 
-        public virtual async Task<TEntity> UpdateAsync(TPrimaryKey id, Func<TEntity, Task> updateAction)
+        public virtual async Task<TEntity> UpdateAsync(TPrimaryKey id, Func<TEntity, Task> updateAction, CancellationToken cancellationToken = default)
         {
-            var entity = await GetAsync(id);
+            var entity = await GetAsync(id, cancellationToken);
             await updateAction(entity);
             return entity;
         }
 
         public abstract void Delete(TEntity entity);
 
-        public virtual Task DeleteAsync(TEntity entity)
+        public virtual Task DeleteAsync(TEntity entity, CancellationToken cancellationToken = default)
         {
             Delete(entity);
             return Task.CompletedTask;
@@ -201,7 +202,7 @@ namespace Abp.Domain.Repositories
 
         public abstract void Delete(TPrimaryKey id);
 
-        public virtual Task DeleteAsync(TPrimaryKey id)
+        public virtual Task DeleteAsync(TPrimaryKey id, CancellationToken cancellationToken = default)
         {
             Delete(id);
             return Task.CompletedTask;
@@ -215,7 +216,7 @@ namespace Abp.Domain.Repositories
             }
         }
 
-        public virtual async Task DeleteAsync(Expression<Func<TEntity, bool>> predicate)
+        public virtual async Task DeleteAsync(Expression<Func<TEntity, bool>> predicate, CancellationToken cancellationToken = default)
         {
             var entities = await GetAllListAsync(predicate);
 
@@ -230,7 +231,7 @@ namespace Abp.Domain.Repositories
             return GetAll().Count();
         }
 
-        public virtual Task<int> CountAsync()
+        public virtual Task<int> CountAsync(CancellationToken cancellationToken = default)
         {
             return Task.FromResult(Count());
         }
@@ -240,7 +241,7 @@ namespace Abp.Domain.Repositories
             return GetAll().Count(predicate);
         }
 
-        public virtual Task<int> CountAsync(Expression<Func<TEntity, bool>> predicate)
+        public virtual Task<int> CountAsync(Expression<Func<TEntity, bool>> predicate, CancellationToken cancellationToken = default)
         {
             return Task.FromResult(Count(predicate));
         }
@@ -250,7 +251,7 @@ namespace Abp.Domain.Repositories
             return GetAll().LongCount();
         }
 
-        public virtual Task<long> LongCountAsync()
+        public virtual Task<long> LongCountAsync(CancellationToken cancellationToken = default)
         {
             return Task.FromResult(LongCount());
         }
@@ -260,7 +261,7 @@ namespace Abp.Domain.Repositories
             return GetAll().LongCount(predicate);
         }
 
-        public virtual Task<long> LongCountAsync(Expression<Func<TEntity, bool>> predicate)
+        public virtual Task<long> LongCountAsync(Expression<Func<TEntity, bool>> predicate, CancellationToken cancellationToken = default)
         {
             return Task.FromResult(LongCount(predicate));
         }
