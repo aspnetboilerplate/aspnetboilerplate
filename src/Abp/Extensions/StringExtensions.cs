@@ -4,6 +4,7 @@ using System.Security.Cryptography;
 using System.Text;
 using System.Text.RegularExpressions;
 using Abp.Collections.Extensions;
+using JetBrains.Annotations;
 
 namespace Abp.Extensions
 {
@@ -103,7 +104,7 @@ namespace Abp.Extensions
         /// <summary>
         /// Indicates whether this string is null or an System.String.Empty string.
         /// </summary>
-        [ContractAnnotation("str:null => true")]
+        [ContractAnnotation("null => true")]
         public static bool IsNullOrEmpty(this string str)
         {
             return string.IsNullOrEmpty(str);
@@ -112,7 +113,7 @@ namespace Abp.Extensions
         /// <summary>
         /// indicates whether this string is null, empty, or consists only of white-space characters.
         /// </summary>
-        [ContractAnnotation("str:null => true")]
+        [ContractAnnotation("null => true")]
         public static bool IsNullOrWhiteSpace(this string str)
         {
             return string.IsNullOrWhiteSpace(str);
