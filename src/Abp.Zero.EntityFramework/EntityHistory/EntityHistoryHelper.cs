@@ -221,17 +221,17 @@ namespace Abp.EntityHistory
                 .Single()
                 .EntitySets
                 .Single(e => e.ElementType.Name == entityType.Name ||
-                             entityType.BaseType != null && RecursiveFindBaseType(e, entityType.BaseType));
+                             entityType.BaseType != null && IsBaseTypeHasElementTypeName(e.ElementType.Name, entityType.BaseType));
         }
 
-        private bool RecursiveFindBaseType(EntitySet e, EdmType entityEdmType)
+        private static bool IsBaseTypeHasElementTypeName(string elementTypeName, EdmType entityEdmType)
         {
-            if (e.ElementType.Name == entityEdmType.Name)
+            if (elementTypeName == entityEdmType.Name)
             {
                 return true;
             }
 
-            return entityEdmType.BaseType != null && RecursiveFindBaseType(e, entityEdmType.BaseType);
+            return entityEdmType.BaseType != null && IsBaseTypeHasElementTypeName(elementTypeName, entityEdmType.BaseType);
         }
 
         /// <summary>
