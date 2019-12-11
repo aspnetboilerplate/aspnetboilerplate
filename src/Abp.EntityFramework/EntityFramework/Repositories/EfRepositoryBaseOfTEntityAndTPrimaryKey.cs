@@ -128,9 +128,6 @@ namespace Abp.EntityFramework.Repositories
 
         public override Task<TEntity> InsertAsync(TEntity entity, CancellationToken cancellationToken = default)
         {
-            //Todo: probably better implementation of cancellationtoken
-            if (cancellationToken.IsCancellationRequested)
-                return Task.FromCanceled<TEntity>(cancellationToken);
             return Task.FromResult(Table.Add(entity));
         }
 
@@ -193,9 +190,6 @@ namespace Abp.EntityFramework.Repositories
         {
             AttachIfNot(entity);
             Context.Entry(entity).State = EntityState.Modified;
-            //Todo: probably better implementation of cancellationtoken
-            if (cancellationToken.IsCancellationRequested)
-                return Task.FromCanceled<TEntity>(cancellationToken);
             return Task.FromResult(entity);
         }
 
