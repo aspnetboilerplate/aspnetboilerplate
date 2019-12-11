@@ -9,19 +9,33 @@ var abp = abp || {};
     // Create namespaces
     abp.signalr = abp.signalr || {};
     abp.signalr.hubs = abp.signalr.hubs || {};
+    abp.signalr.reconnectTime = abp.signalr.reconnectTime || 5000;
+    abp.signalr.maxTries = abp.signalr.maxTries || 8;
 
     // Configure the connection for abp.signalr.hubs.common
     function configureConnection(connection) {
         // Set the common hub
         abp.signalr.hubs.common = connection;
 
+        let tries = 1;
+        let reconnectTime = abp.signalr.reconnectTime;
+
         // Reconnect loop
-        function start() {
-            connection.start().catch(function () {
-                setTimeout(function () {
-                    start();
-                }, 5000);
-            });
+        function tryReconnect() {
+            if (tries > abp.signalr.maxTries) {
+                return;
+            } else {
+                connection.start()
+                    .then(() => {
+                        reconnectTime = abp.signalr.reconnectTime;
+                        tries = 1;
+                        console.log('Reconnected to SignalR server!');
+                    }).catch(() => {
+                        tries += 1;
+                        reconnectTime *= 2;
+                        setTimeout(() => tryReconnect(), reconnectTime);
+                    });
+            }
         }
 
         // Reconnect if hub disconnects
@@ -36,7 +50,7 @@ var abp = abp || {};
                 return;
             }
 
-            start();
+            tryReconnect();
         });
 
         // Register to get notifications
@@ -83,6 +97,7 @@ var abp = abp || {};
             var connection = new signalR.HubConnectionBuilder()
                 .withUrl(url, transport)
                 .build();
+
             if (configureConnection && typeof configureConnection === 'function') {
                 configureConnection(connection);
             }
@@ -110,5 +125,4 @@ var abp = abp || {};
     if (abp.signalr.autoConnect && !abp.signalr.hubs.common) {
         abp.signalr.connect();
     }
-
 })();

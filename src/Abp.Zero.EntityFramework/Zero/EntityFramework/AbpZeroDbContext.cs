@@ -112,6 +112,18 @@ namespace Abp.Zero.EntityFramework
                 .Property(j => j.NextTryTime)
                 .CreateIndex("IX_IsAbandoned_NextTryTime", 2);
 
+            modelBuilder.Entity<BackgroundJobInfo>()
+                .Property(j => j.Priority)
+                .CreateIndex("IX_Priority_TryCount_NextTryTime", 1);
+
+            modelBuilder.Entity<BackgroundJobInfo>()
+                .Property(j => j.TryCount)
+                .CreateIndex("IX_Priority_TryCount_NextTryTime", 2);
+
+            modelBuilder.Entity<BackgroundJobInfo>()
+                .Property(j => j.NextTryTime)
+                .CreateIndex("IX_Priority_TryCount_NextTryTime", 3);
+            
             #endregion
 
             #region NotificationSubscriptionInfo.IX_NotificationName_EntityTypeName_EntityId_UserId

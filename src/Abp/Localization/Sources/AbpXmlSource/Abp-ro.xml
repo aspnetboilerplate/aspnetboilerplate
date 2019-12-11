@@ -1,0 +1,24 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<localizationDictionary culture="ro">
+  <texts>
+    <text name="SmtpHost">Host SMTP</text>
+    <text name="SmtpPort">Port SMTP</text>
+    <text name="Username">Nume utilizator</text>
+    <text name="Password">Parola</text>
+    <text name="DomainName">Nume domeniu</text>
+    <text name="UseSSL">Folosește SSL</text>
+    <text name="UseDefaultCredentials">Utilizați datele de autentificare implicite</text>
+    <text name="DefaultFromSenderEmailAddress">Adresa de e-mail (expeditor) implicită</text>
+    <text name="DefaultFromSenderDisplayName">Numele afișat implicit de la (expeditor)</text>
+    <text name="DefaultLanguage">Limba implicită</text>
+    <text name="ReceiveNotifications">Primiți notificări</text>
+    <text name="CurrentUserDidNotLoginToTheApplication">Utilizatorul curent nu s-a autentificat în aplicație!</text>
+    <text name="TimeZone">Fus orar</text>
+    <text name="AllOfThesePermissionsMustBeGranted">Permisiunile necesare nu sunt acordate. Toate aceste permisiuni trebuie să fie acordate: {0}</text>
+    <text name="AtLeastOneOfThesePermissionsMustBeGranted">Permisiunile necesare nu sunt acordate. Cel puțin una dintre aceste permisiuni trebuie să fie acordată: {0}</text>
+    <text name="FeatureIsNotEnabled">Funcționalitatea nu este activată: {0}</text>
+    <text name="AllOfTheseFeaturesMustBeEnabled">Funcționalităţile obligatorii nu sunt activate. Toate aceste funcții trebuie să fie activate: {0}</text>
+    <text name="AtLeastOneOfTheseFeaturesMustBeEnabled">Funcționalităţile obligatorii nu sunt activate. Cel puțin una dintre aceste funcții trebuie să fie activată: {0}</text>
+    <text name="MainMenu">Meniu principal</text>
+  </texts>
+</localizationDictionary>

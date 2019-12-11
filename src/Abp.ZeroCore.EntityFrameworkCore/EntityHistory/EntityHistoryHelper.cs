@@ -61,13 +61,14 @@ namespace Abp.EntityHistory
                 }
 
                 var shouldAuditEntity = IsTypeOfAuditedEntity(typeOfEntity);
-                bool? shouldAuditOwnerProperty = null;
-                bool? shouldAuditOwnerEntity = null;
                 if (shouldAuditEntity.HasValue && !shouldAuditEntity.Value)
                 {
                     continue;
                 }
-                else if (!shouldAuditEntity.HasValue && entityEntry.Metadata.IsOwned())
+                
+                bool? shouldAuditOwnerEntity = null;
+                bool? shouldAuditOwnerProperty = null;
+                if (!shouldAuditEntity.HasValue && entityEntry.Metadata.IsOwned())
                 {
                     // Check if owner entity has auditing attribute
                     var foreignKey = entityEntry.Metadata.GetForeignKeys().First();
@@ -93,9 +94,11 @@ namespace Abp.EntityHistory
                     continue;
                 }
 
-                var shouldSaveAuditedPropertiesOnly = !(shouldAuditEntity.HasValue || shouldAuditOwnerEntity.HasValue || shouldAuditOwnerProperty.HasValue) &&
-                                                      !entityEntry.IsCreated() &&
-                                                      !entityEntry.IsDeleted();
+                var isAuditableEntity = (shouldAuditEntity.HasValue && shouldAuditEntity.Value) ||
+                                        (shouldAuditOwnerEntity.HasValue && shouldAuditOwnerEntity.Value) || 
+                                        (shouldAuditOwnerProperty.HasValue && shouldAuditOwnerProperty.Value);
+                var isTrackableEntity = shouldTrackEntity.HasValue && shouldTrackEntity.Value;
+                var shouldSaveAuditedPropertiesOnly = !isAuditableEntity && !isTrackableEntity;
                 var propertyChanges = GetPropertyChanges(entityEntry, shouldSaveAuditedPropertiesOnly);
                 if (propertyChanges.Count == 0)
                 {
@@ -176,7 +179,6 @@ namespace Abp.EntityHistory
                     break;
                 case EntityState.Detached:
                 case EntityState.Unchanged:
-                    Logger.DebugFormat("Skipping Entity Change Creation for {0}, Id:{1}", entityTypeFullName, entityId);
                     return null;
                 default:
                     Logger.ErrorFormat("Unexpected {0} - {1}", nameof(entityEntry.State), entityEntry.State);

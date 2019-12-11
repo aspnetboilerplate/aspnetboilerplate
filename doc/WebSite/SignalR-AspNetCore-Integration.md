@@ -79,6 +79,8 @@ connecting:
     <script>
         abp.signalr = abp.signalr || {};
         abp.signalr.autoConnect = false;
+        abp.signalr.reconnectTime = 5000;
+        abp.signalr.maxTries = 8;
     </script>
 
 In this case, you can call the **abp.signalr.connect()** function manually
@@ -86,7 +88,7 @@ whenever you need to connect to the server.
 
 ASP.NET Boilerplate also **automatically reconnects** to the server
 (from the client) when the client disconnects, if
-**abp.signalr.autoConnect** is true.
+**abp.signalr.autoConnect** is true. At most **abp.signalr.maxTries** times it tries to connect to the server. It starts to wait for **abp.signalr.reconnectTime** ms, then each time connection fails, it waits 2 times longer. (for example: 5000ms - 10000ms - 20000ms...)
 
 The **"abp.signalr.connected"** global event is triggered when the client
 connects to the server. You can register to this event to take actions
