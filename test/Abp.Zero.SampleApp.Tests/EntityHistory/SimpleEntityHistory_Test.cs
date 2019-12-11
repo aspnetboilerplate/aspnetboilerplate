@@ -1,4 +1,4 @@
-﻿using Abp.Domain.Entities;
+using Abp.Domain.Entities;
 using Abp.Domain.Entities.Auditing;
 using Abp.Domain.Repositories;
 using Abp.EntityHistory;
@@ -15,6 +15,9 @@ using System;
 using System.Collections.Generic;
 using System.Data.Entity.Infrastructure;
 using System.Linq;
+using Abp.Application.Editions;
+using Abp.Application.Features;
+using Abp.Zero.SampleApp.TPH;
 using Xunit;
 
 namespace Abp.Zero.SampleApp.Tests.EntityHistory
@@ -25,6 +28,7 @@ namespace Abp.Zero.SampleApp.Tests.EntityHistory
         private readonly IRepository<Blog> _blogRepository;
         private readonly IRepository<Post, Guid> _postRepository;
         private readonly IRepository<Comment> _commentRepository;
+        private readonly IRepository<Student> _studentRepository;
 
         private IEntityHistoryStore _entityHistoryStore;
 
@@ -34,6 +38,7 @@ namespace Abp.Zero.SampleApp.Tests.EntityHistory
             _blogRepository = Resolve<IRepository<Blog>>();
             _postRepository = Resolve<IRepository<Post, Guid>>();
             _commentRepository = Resolve<IRepository<Comment>>();
+            _studentRepository = Resolve<IRepository<Student>>();
 
             var user = GetDefaultTenantAdmin();
             AbpSession.TenantId = user.TenantId;
@@ -126,6 +131,99 @@ namespace Abp.Zero.SampleApp.Tests.EntityHistory
                 context.EntityChangeSets.Count(e => e.TenantId == 1).ShouldBe(1);
                 context.EntityChangeSets.Single().CreationTime.ShouldBeGreaterThan(justNow);
                 context.EntityPropertyChanges.Count(e => e.TenantId == 1).ShouldBe(1);
+            });
+        }
+
+        [Fact]
+        public void Should_Write_History_For_TPH_Tracked_Entities_Create()
+        {
+            Resolve<IEntityHistoryConfiguration>().Selectors.Add("Selected", typeof(Student));
+
+            var student = new Student()
+            {
+                Name = "TestName",
+                IdCard = "TestIdCard",
+                Address = "TestAddress",
+                Grade = 1
+            };
+
+            _studentRepository.Insert(student);
+
+            Predicate<EntityChangeSet> predicate = s =>
+            {
+                s.EntityChanges.Count.ShouldBe(1);
+
+                var entityChange = s.EntityChanges.Single(ec => ec.EntityTypeFullName == typeof(Student).FullName);
+                entityChange.ChangeTime.ShouldNotBeNull();
+                entityChange.ChangeType.ShouldBe(EntityChangeType.Created);
+                entityChange.EntityId.ShouldBe(student.Id.ToJsonString());
+                entityChange.PropertyChanges.Count.ShouldBe(4); //Name,IdCard,Address,Grade
+
+                var propertyChange1 = entityChange.PropertyChanges.Single(pc => pc.PropertyName == nameof(Student.Name));
+                propertyChange1.OriginalValue.ShouldBeNull();
+                propertyChange1.NewValue.ShouldNotBeNull();
+
+                var propertyChange2 = entityChange.PropertyChanges.Single(pc => pc.PropertyName == nameof(Student.IdCard));
+                propertyChange2.OriginalValue.ShouldBeNull();
+                propertyChange2.NewValue.ShouldNotBeNull();
+
+                var propertyChange3 = entityChange.PropertyChanges.Single(pc => pc.PropertyName == nameof(Student.Address));
+                propertyChange3.OriginalValue.ShouldBeNull();
+                propertyChange3.NewValue.ShouldNotBeNull();
+
+                var propertyChange4 = entityChange.PropertyChanges.Single(pc => pc.PropertyName == nameof(Student.Grade));
+                propertyChange4.OriginalValue.ShouldBeNull();
+                propertyChange4.NewValue.ShouldNotBeNull();
+
+                // Check "who did this change"
+                s.ImpersonatorTenantId.ShouldBe(AbpSession.ImpersonatorTenantId);
+                s.ImpersonatorUserId.ShouldBe(AbpSession.ImpersonatorUserId);
+                s.TenantId.ShouldBe(AbpSession.TenantId);
+                s.UserId.ShouldBe(AbpSession.UserId);
+
+                return true;
+            };
+
+            _entityHistoryStore.Received().Save(Arg.Is<EntityChangeSet>(s => predicate(s)));
+        }
+
+        [Fact]
+        public void Should_Write_History_For_TPH_Tracked_Entities_Create_To_Database()
+        {
+            // Forward calls from substitute to implementation
+            var entityHistoryStore = Resolve<EntityHistoryStore>();
+            _entityHistoryStore.When(x => x.SaveAsync(Arg.Any<EntityChangeSet>()))
+                .Do(callback => AsyncHelper.RunSync(() =>
+                    entityHistoryStore.SaveAsync(callback.Arg<EntityChangeSet>()))
+                );
+            _entityHistoryStore.When(x => x.Save(Arg.Any<EntityChangeSet>()))
+                .Do(callback => entityHistoryStore.Save(callback.Arg<EntityChangeSet>()));
+
+            UsingDbContext((context) =>
+            {
+                context.EntityChanges.Count(e => e.TenantId == 1).ShouldBe(0);
+                context.EntityChangeSets.Count(e => e.TenantId == 1).ShouldBe(0);
+                context.EntityPropertyChanges.Count(e => e.TenantId == 1).ShouldBe(0);
+            });
+
+            Resolve<IEntityHistoryConfiguration>().Selectors.Add("Selected", typeof(Student));
+
+            var justNow = Clock.Now;
+            var student = new Student()
+            {
+                Name = "TestName",
+                IdCard = "TestIdCard",
+                Address = "TestAddress",
+                Grade = 1
+            };
+            _studentRepository.Insert(student);
+
+            UsingDbContext((context) =>
+            {
+                context.EntityChanges.Count(e => e.TenantId == 1).ShouldBe(1);
+                context.EntityChangeSets.Count(e => e.TenantId == 1).ShouldBe(1);
+                context.EntityChangeSets.Single().CreationTime.ShouldBeGreaterThan(justNow);
+                context.EntityPropertyChanges.Count(e => e.TenantId == 1).ShouldBe(4); //Name,IdCard,Address,Grade
             });
         }
 
