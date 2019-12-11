@@ -66,8 +66,6 @@ namespace Abp.EntityFramework.Repositories
 
         public IActiveTransactionProvider TransactionProvider { private get; set; }
 
-        public ICancellationTokenProvider CancellationTokenProvider { get; set; }
-
         /// <summary>
         /// Constructor
         /// </summary>
@@ -75,14 +73,7 @@ namespace Abp.EntityFramework.Repositories
         public EfRepositoryBase(IDbContextProvider<TDbContext> dbContextProvider)
         {
             _dbContextProvider = dbContextProvider;
-            CancellationTokenProvider = NullCancellationTokenProvider.Instance;
         }
-
-        protected virtual CancellationToken GetCancellationToken(CancellationToken prefferedValue = default)
-        {
-            return CancellationTokenProvider.FallbackToProvider(prefferedValue);
-        }
-
         public override IQueryable<TEntity> GetAll()
         {
             return Table;
@@ -138,7 +129,7 @@ namespace Abp.EntityFramework.Repositories
         public override Task<TEntity> InsertAsync(TEntity entity, CancellationToken cancellationToken = default)
         {
             //Todo: probably better implementation of cancellationtoken
-            if(cancellationToken.IsCancellationRequested)
+            if (cancellationToken.IsCancellationRequested)
                 return Task.FromCanceled<TEntity>(cancellationToken);
             return Task.FromResult(Table.Add(entity));
         }
@@ -203,7 +194,7 @@ namespace Abp.EntityFramework.Repositories
             AttachIfNot(entity);
             Context.Entry(entity).State = EntityState.Modified;
             //Todo: probably better implementation of cancellationtoken
-            if(cancellationToken.IsCancellationRequested)
+            if (cancellationToken.IsCancellationRequested)
                 return Task.FromCanceled<TEntity>(cancellationToken);
             return Task.FromResult(entity);
         }

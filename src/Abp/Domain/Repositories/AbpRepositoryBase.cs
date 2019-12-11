@@ -10,6 +10,7 @@ using Abp.Domain.Uow;
 using Abp.MultiTenancy;
 using Abp.Reflection;
 using Abp.Reflection.Extensions;
+using Abp.Threading;
 
 namespace Abp.Domain.Repositories
 {
@@ -30,6 +31,7 @@ namespace Abp.Domain.Repositories
         public IUnitOfWorkManager UnitOfWorkManager { get; set; }
 
         public IIocResolver IocResolver { get; set; }
+        public ICancellationTokenProvider CancellationTokenProvider { get; set; }
 
         static AbpRepositoryBase()
         {
@@ -38,6 +40,16 @@ namespace Abp.Domain.Repositories
             {
                 MultiTenancySide = attr.Side;
             }
+        }
+
+        protected AbpRepositoryBase()
+        {
+            CancellationTokenProvider = NullCancellationTokenProvider.Instance;
+        }
+
+        protected virtual CancellationToken GetCancellationToken(CancellationToken prefferedValue = default)
+        {
+            return CancellationTokenProvider.FallbackToProvider(prefferedValue);
         }
 
         public abstract IQueryable<TEntity> GetAll();
