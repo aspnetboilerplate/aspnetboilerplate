@@ -11,6 +11,7 @@ namespace Abp.Domain.Entities
         /// <summary>
         /// Check if this Entity is null of marked as deleted.
         /// </summary>
+        [ContractAnnotation("entity:null => true")]
         public static bool IsNullOrDeleted(this ISoftDelete entity)
         {
             return entity == null || entity.IsDeleted;
