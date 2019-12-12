@@ -18,7 +18,7 @@ namespace Abp.FluentValidation
             if (!configuration.LocalizationSourceName.IsNullOrEmpty())
             {
                 var source = localizationManager.GetSource(configuration.LocalizationSourceName);
-                var languages = languageManager.GetLanguages();
+                var languages = languageManager.GetActiveLanguages();
 
                 AddAllTranslations(source, languages);
             }

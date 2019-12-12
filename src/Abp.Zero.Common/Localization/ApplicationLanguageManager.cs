@@ -57,6 +57,11 @@ namespace Abp.Localization
             return (await GetLanguageDictionaryAsync(tenantId)).Values.ToImmutableList();
         }
 
+        public virtual async Task<IReadOnlyList<ApplicationLanguage>> GetActiveLanguagesAsync(int? tenantId)
+        {
+            return (await GetLanguagesAsync(tenantId)).Where(l => !l.IsDisabled).ToImmutableList();
+        }
+
         /// <summary>
         /// Gets list of all languages available to given tenant (or null for host)
         /// </summary>
@@ -64,6 +69,11 @@ namespace Abp.Localization
         public virtual IReadOnlyList<ApplicationLanguage> GetLanguages(int? tenantId)
         {
             return (GetLanguageDictionary(tenantId)).Values.ToImmutableList();
+        }
+
+        public virtual IReadOnlyList<ApplicationLanguage> GetActiveLanguages(int? tenantId)
+        {
+            return GetLanguages(tenantId).Where(l => !l.IsDisabled).ToImmutableList();
         }
 
         /// <summary>

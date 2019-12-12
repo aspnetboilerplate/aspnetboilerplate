@@ -14,7 +14,7 @@ using System.Globalization;
 using Abp.AspNetCore.ExceptionHandling;
 using Abp.AspNetCore.Security;
 using Abp.AspNetCore.Uow;
-using Microsoft.AspNetCore.Hosting;
+using Microsoft.Extensions.Hosting;
 
 namespace Abp.AspNetCore
 {
@@ -70,7 +70,7 @@ namespace Abp.AspNetCore
             var abpBootstrapper = app.ApplicationServices.GetRequiredService<AbpBootstrapper>();
             abpBootstrapper.Initialize();
 
-            var applicationLifetime = app.ApplicationServices.GetService<IApplicationLifetime>();
+            var applicationLifetime = app.ApplicationServices.GetService<IHostApplicationLifetime>();
             applicationLifetime.ApplicationStopping.Register(() => abpBootstrapper.Dispose());
         }
 
@@ -93,9 +93,17 @@ namespace Abp.AspNetCore
             using (var languageManager = iocResolver.ResolveAsDisposable<ILanguageManager>())
             {
                 var supportedCultures = languageManager.Object
-                    .GetLanguages()
+                    .GetActiveLanguages()
                     .Select(l => CultureInfo.GetCultureInfo(l.Name))
                     .ToArray();
+
+                if (iocResolver.IsRegistered<ILogger<RequestLocalizationOptions>>())
+                {
+                    using (var logger = iocResolver.ResolveAsDisposable<ILogger<RequestLocalizationOptions>>())
+                    {
+                        logger.Object.LogInformation($"Supported Request Localization Cultures: {string.Join(",", supportedCultures.Select(c => c))}");
+                    }
+                }
 
                 var options = new RequestLocalizationOptions
                 {
