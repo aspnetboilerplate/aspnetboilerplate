@@ -67,7 +67,7 @@ namespace Abp.Web.Localization
             }
 
             // 5 & 6: Default / Browser
-            culture = GetDefaultCulture() ?? GetBrowserCulture(httpContext);
+            culture = GetBrowserCulture(httpContext) ?? GetDefaultCulture();
             if (culture != null)
             {
                 SetCurrentCulture(culture);
