@@ -330,12 +330,12 @@ the logic described above.
 
 ### Change the Current Language
 
-ABP has built-in `AbpLocalizationController`, its `ChangeCulture` method to change the current language by writing cookies.
+ABP has built-in `AbpLocalizationController`, its `ChangeCulture` method changes the current language by writing cookies.
 It also changes the user's default language setting if the current user exists.
 
     <a href="~/AbpLocalization/ChangeCulture?cultureName=en-AU&returnUrl=Home"></a>
 
-You can also change the current language in other ways based on the above principles of determines the current language.
+You can also change the current language in other ways based on the principles explained above for determining the current language.
 
 ### Getting A Localized Text
 
