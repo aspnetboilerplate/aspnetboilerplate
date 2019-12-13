@@ -79,7 +79,7 @@ namespace Abp.Domain.Repositories
 
         /// <summary>
         /// Gets an entity with given primary key.
-        /// </summary>        
+        /// </summary>
         /// <param name="id">Primary key of the entity to get</param>
         /// <param name="cancellationToken">A <see cref="T:System.Threading.CancellationToken" /> to observe while waiting for the task to complete.</param>
         /// <returns>Entity</returns>
