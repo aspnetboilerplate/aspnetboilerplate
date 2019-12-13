@@ -11,7 +11,6 @@ using Abp.Collections.Extensions;
 using Abp.Data;
 using Abp.Domain.Entities;
 using Abp.Domain.Repositories;
-using Abp.Threading;
 
 namespace Abp.EntityFramework.Repositories
 {
