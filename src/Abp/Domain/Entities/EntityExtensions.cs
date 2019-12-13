@@ -1,5 +1,6 @@
 ﻿using Abp.Domain.Entities.Auditing;
 using Abp.Extensions;
+using JetBrains.Annotations;
 
 namespace Abp.Domain.Entities
 {
@@ -11,6 +12,7 @@ namespace Abp.Domain.Entities
         /// <summary>
         /// Check if this Entity is null of marked as deleted.
         /// </summary>
+        [ContractAnnotation("null => true")]
         public static bool IsNullOrDeleted(this ISoftDelete entity)
         {
             return entity == null || entity.IsDeleted;

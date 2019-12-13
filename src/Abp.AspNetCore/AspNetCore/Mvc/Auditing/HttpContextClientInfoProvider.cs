@@ -2,6 +2,7 @@
 using Abp.Auditing;
 using Castle.Core.Logging;
 using Microsoft.AspNetCore.Http;
+using Abp.Extensions;
 
 namespace Abp.AspNetCore.Mvc.Auditing
 {
@@ -17,22 +18,19 @@ namespace Abp.AspNetCore.Mvc.Auditing
 
         private readonly IHttpContextAccessor _httpContextAccessor;
 
-        private readonly HttpContext _httpContext;
-
         /// <summary>
         /// Creates a new <see cref="HttpContextClientInfoProvider"/>.
         /// </summary>
         public HttpContextClientInfoProvider(IHttpContextAccessor httpContextAccessor)
         {
             _httpContextAccessor = httpContextAccessor;
-            _httpContext = httpContextAccessor.HttpContext;
 
             Logger = NullLogger.Instance;
         }
 
         protected virtual string GetBrowserInfo()
         {
-            var httpContext = _httpContextAccessor.HttpContext ?? _httpContext;
+            var httpContext = _httpContextAccessor.HttpContext;
             return httpContext?.Request?.Headers?["User-Agent"];
         }
 
@@ -40,8 +38,10 @@ namespace Abp.AspNetCore.Mvc.Auditing
         {
             try
             {
-                var httpContext = _httpContextAccessor.HttpContext ?? _httpContext;
+                var httpContext = _httpContextAccessor.HttpContext;
+
                 return httpContext?.Connection?.RemoteIpAddress?.ToString();
+
             }
             catch (Exception ex)
             {

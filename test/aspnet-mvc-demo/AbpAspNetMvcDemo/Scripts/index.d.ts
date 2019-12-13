@@ -35,6 +35,18 @@ declare namespace Popper {
 
   export type ModifierFn = (data: Data, options: Object) => Data;
 
+  export interface Attributes {
+    'x-out-of-boundaries': '' | false;
+    'x-placement': Placement;
+  }
+
+  export interface Padding {
+    top?: number,
+    bottom?: number,
+    left?: number,
+    right?: number,
+  }
+
   export interface BaseModifier {
     order?: number;
     enabled?: boolean;
@@ -48,7 +60,7 @@ declare namespace Popper {
     };
     preventOverflow?: BaseModifier & {
       priority?: Position[],
-      padding?: number,
+      padding?: number | Padding,
       boundariesElement?: Boundary | Element,
       escapeWithReference?: boolean
     };
@@ -58,8 +70,10 @@ declare namespace Popper {
     };
     flip?: BaseModifier & {
       behavior?: Behavior | Position[],
-      padding?: number,
+      padding?: number | Padding,
       boundariesElement?: Boundary | Element,
+      flipVariations?: boolean,
+      flipVariationsByContent?: boolean,
     };
     inner?: BaseModifier;
     hide?: BaseModifier;
@@ -91,6 +105,8 @@ declare namespace Popper {
     hide: boolean;
     arrowElement: Element;
     styles: CSSStyleDeclaration;
+    arrowStyles: CSSStyleDeclaration;
+    attributes: Attributes;
     boundaries: Object;
     offsets: {
       popper: Offset,
@@ -117,6 +133,7 @@ declare namespace Popper {
   export interface ReferenceObject {
     clientHeight: number;
     clientWidth: number;
+    referenceNode?: Node;
 
     getBoundingClientRect(): ClientRect;
   }
@@ -124,6 +141,7 @@ declare namespace Popper {
 
 // Re-export types in the Popper namespace so that they can be accessed as top-level named exports.
 // These re-exports should be removed in 2.x when the "declare namespace Popper" syntax is removed.
+export type Padding = Popper.Padding;
 export type Position = Popper.Position;
 export type Placement = Popper.Placement;
 export type Boundary = Popper.Boundary;
@@ -142,6 +160,8 @@ declare class Popper {
   static Defaults: PopperOptions;
 
   options: PopperOptions;
+  popper: Element;
+  reference: Element | ReferenceObject;
 
   constructor(reference: Element | ReferenceObject, popper: Element, options?: PopperOptions);
 

@@ -145,5 +145,29 @@ namespace Abp.AspNetCore.App.Controllers
         {
             return input.Date.Kind.ToString().ToLower();
         }
+
+        [HttpGet]
+        public string GetSimpleTypeDateTimeKind(DateTime date)
+        {
+            return date.Date.Kind.ToString().ToLower();
+        }
+
+        [HttpGet]
+        public string GetNotNormalizedSimpleTypeKind([DisableDateTimeNormalization]DateTime date)
+        {
+            return date.Date.Kind.ToString().ToLower();
+        }
+
+        [HttpGet]
+        public string GetNullableSimpleTypeDateTimeKind(DateTime? date)
+        {
+            return date.Value.Kind.ToString().ToLower();
+        }
+
+        [HttpGet]
+        public string GetNotNormalizedNullableSimpleTypeDateTimeKind([DisableDateTimeNormalization]DateTime? date)
+        {
+            return date.Value.Date.Kind.ToString().ToLower();
+        }
     }
 }
