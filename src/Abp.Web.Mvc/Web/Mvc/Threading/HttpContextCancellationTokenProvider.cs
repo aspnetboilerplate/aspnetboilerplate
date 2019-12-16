@@ -7,6 +7,6 @@ namespace Abp.Web.Mvc.Threading
 {
     public class HttpContextCancellationTokenProvider : ICancellationTokenProvider, ITransientDependency
     {
-        public CancellationToken Token => CancellationTokenSource.CreateLinkedTokenSource(default(CancellationToken), HttpContext.Current.Response.ClientDisconnectedToken)?.Token ?? CancellationToken.None;
+        public CancellationToken Token => HttpContext.Current?.Response.ClientDisconnectedToken ?? CancellationToken.None;
     }
 }

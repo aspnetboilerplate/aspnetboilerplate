@@ -46,9 +46,9 @@ namespace Abp.Domain.Repositories
             CancellationTokenProvider = NullCancellationTokenProvider.Instance;
         }
 
-        protected virtual CancellationToken GetCancellationToken(CancellationToken preferredValue = default)
+        protected virtual CancellationToken GetCancellationToken(CancellationToken? preferredValue = default)
         {
-            return CancellationTokenProvider.FallbackToProvider(preferredValue);
+            return preferredValue ?? CancellationTokenProvider.Token;
         }
 
         public abstract IQueryable<TEntity> GetAll();
