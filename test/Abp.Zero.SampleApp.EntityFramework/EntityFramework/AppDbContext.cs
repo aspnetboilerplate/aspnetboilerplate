@@ -6,6 +6,7 @@ using Abp.Zero.SampleApp.BookStore;
 using Abp.Zero.SampleApp.EntityHistory;
 using Abp.Zero.SampleApp.MultiTenancy;
 using Abp.Zero.SampleApp.Roles;
+using Abp.Zero.SampleApp.TPH;
 using Abp.Zero.SampleApp.Users;
 
 namespace Abp.Zero.SampleApp.EntityFramework
@@ -29,6 +30,16 @@ namespace Abp.Zero.SampleApp.EntityFramework
         public DbSet<Store> Stores { get; set; }
 
         public DbSet<UserTestEntity> UserTestEntities { get; set; }
+
+        public DbSet<Person> Persons { get; set; }
+
+        public DbSet<Teacher> Teachers { get; set; }
+
+        public DbSet<Student> Students { get; set; }
+
+        public DbSet<StudentLectureNote> StudentLectureNotes { get; set; }
+
+        public DbSet<CitizenshipInformation> CitizenshipInformation { get; set; }
 
         public AppDbContext(DbConnection existingConnection)
             : base(existingConnection, true)

@@ -1,9 +1,11 @@
 ﻿using Abp.Authorization.Users;
+using Abp.Dependency;
 using Abp.Localization.Dictionaries.Xml;
 using Abp.Localization.Sources;
 using Abp.Modules;
 using Abp.Reflection.Extensions;
 using Abp.Threading.BackgroundWorkers;
+using Abp.Zero.Configuration;
 
 namespace Abp.Zero
 {
@@ -25,14 +27,30 @@ namespace Abp.Zero
         public override void Initialize()
         {
             IocManager.RegisterAssemblyByConvention(typeof(AbpZeroCoreModule).GetAssembly());
+            RegisterUserTokenExpirationWorker();
         }
 
         public override void PostInitialize()
         {
             if (Configuration.BackgroundJobs.IsJobExecutionEnabled)
             {
-                var workerManager = IocManager.Resolve<IBackgroundWorkerManager>();
-                workerManager.Add(IocManager.Resolve<UserTokenExpirationWorker>());
+                using (var entityTypes = IocManager.ResolveAsDisposable<IAbpZeroEntityTypes>())
+                {
+                    var implType = typeof(UserTokenExpirationWorker<,>)
+                        .MakeGenericType(entityTypes.Object.Tenant, entityTypes.Object.User);
+                    var workerManager = IocManager.Resolve<IBackgroundWorkerManager>();
+                    workerManager.Add(IocManager.Resolve(implType) as IBackgroundWorker);
+                }
+            }
+        }
+
+        private void RegisterUserTokenExpirationWorker()
+        {
+            using (var entityTypes = IocManager.ResolveAsDisposable<IAbpZeroEntityTypes>())
+            {
+                var implType = typeof(UserTokenExpirationWorker<,>)
+                    .MakeGenericType(entityTypes.Object.Tenant, entityTypes.Object.User);
+                IocManager.Register(implType);
             }
         }
     }
