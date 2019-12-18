@@ -53,7 +53,6 @@ namespace Abp.Auditing
 
             try
             {
-
                 foreach (var hostAddress in Dns.GetHostAddresses(clientIp))
                 {
                     if (hostAddress.AddressFamily == AddressFamily.InterNetwork)
