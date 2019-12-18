@@ -48,10 +48,11 @@ namespace Abp.Auditing
             var clientIp = httpContext.Request.ServerVariables["HTTP_X_FORWARDED_FOR"] ??
                            httpContext.Request.ServerVariables["REMOTE_ADDR"];
 
-            
+            // Remove port if present
+            clientIp = clientIp.Contains(":") ? clientIp.Remove(clientIp.IndexOf(':')) : clientIp;
+
             try
             {
-                clientIp = clientIp.Contains(":") ? clientIp.Remove(clientIp.IndexOf(':')) : clientIp;
 
                 foreach (var hostAddress in Dns.GetHostAddresses(clientIp))
                 {
