@@ -3,6 +3,7 @@ using System.Threading.Tasks;
 using Abp.Timing;
 using Microsoft.AspNetCore.Mvc.ModelBinding;
 using Microsoft.AspNetCore.Mvc.ModelBinding.Binders;
+using Microsoft.Extensions.Logging.Abstractions;
 
 namespace Abp.AspNetCore.Mvc.ModelBinding
 {
@@ -14,7 +15,7 @@ namespace Abp.AspNetCore.Mvc.ModelBinding
         public AbpDateTimeModelBinder(Type type)
         {
             _type = type;
-            _simpleTypeModelBinder = new SimpleTypeModelBinder(type);
+            _simpleTypeModelBinder = new SimpleTypeModelBinder(type, NullLoggerFactory.Instance);
         }
         
         public async Task BindModelAsync(ModelBindingContext bindingContext)

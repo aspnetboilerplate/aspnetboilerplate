@@ -250,5 +250,20 @@ namespace Abp.Reflection
             property = currentType.GetProperty(properties.Last());
             property.SetValue(obj, value);
         }
+
+        internal static bool IsPropertyGetterSetterMethod(MethodInfo method, Type type)
+        {
+            if (!method.IsSpecialName)
+            {
+                return false;
+            }
+
+            if (method.Name.Length < 5)
+            {
+                return false;
+            }
+
+            return type.GetProperty(method.Name.Substring(4), BindingFlags.Instance | BindingFlags.Static | BindingFlags.NonPublic) != null;
+        }
     }
 }

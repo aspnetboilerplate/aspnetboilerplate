@@ -14,7 +14,7 @@ namespace Abp.Zero.SampleApp.Tests.Users
 
             userRepository.FirstOrDefault(u => u.EmailAddress == "admin@aspnetboilerplate.com").ShouldBe(null);
 
-            userRepository.Insert(new User
+            var user = new User
             {
                 TenantId = null,
                 UserName = "admin",
@@ -23,7 +23,10 @@ namespace Abp.Zero.SampleApp.Tests.Users
                 EmailAddress = "admin@aspnetboilerplate.com",
                 IsEmailConfirmed = true,
                 Password = "AM4OLBpptxBYmM79lGOX9egzZk3vIQU3d/gFCJzaBjAPXzYIK3tQ2N7X4fcrHtElTw==" //123qwe
-            });
+            };
+
+            user.SetNormalizedNames();
+            userRepository.Insert(user);
 
             userRepository.FirstOrDefault(u => u.EmailAddress == "admin@aspnetboilerplate.com").ShouldNotBe(null);
         }

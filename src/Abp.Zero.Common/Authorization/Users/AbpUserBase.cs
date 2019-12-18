@@ -28,12 +28,12 @@ namespace Abp.Authorization.Users
         /// <summary>
         /// Maximum length of the <see cref="Name"/> property.
         /// </summary>
-        public const int MaxNameLength = 32;
+        public const int MaxNameLength = 64;
 
         /// <summary>
         /// Maximum length of the <see cref="Surname"/> property.
         /// </summary>
-        public const int MaxSurnameLength = 32;
+        public const int MaxSurnameLength = 64;
 
         /// <summary>
         /// Maximum length of the <see cref="AuthenticationSource"/> property.
@@ -223,16 +223,10 @@ namespace Abp.Authorization.Users
         /// If as user is not active, he/she can not use the application.
         /// </summary>
         public virtual bool IsActive { get; set; }
-
-        /// <summary>
-        /// The last time this user entered to the system.
-        /// </summary>
-        public virtual DateTime? LastLoginTime { get; set; }
-
+        
         protected AbpUserBase()
         {
             IsActive = true;
-            IsLockoutEnabled = true;
             SecurityStamp = SequentialGuidGenerator.Instance.Create().ToString();
         }
 

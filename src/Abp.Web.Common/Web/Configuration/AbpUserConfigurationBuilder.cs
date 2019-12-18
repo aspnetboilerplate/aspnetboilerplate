@@ -94,7 +94,8 @@ namespace Abp.Web.Configuration
         {
             return new AbpMultiTenancyConfigDto
             {
-                IsEnabled = MultiTenancyConfig.IsEnabled
+                IsEnabled = MultiTenancyConfig.IsEnabled,
+                IgnoreFeatureCheckForHostUsers = MultiTenancyConfig.IgnoreFeatureCheckForHostUsers
             };
         }
 
@@ -113,7 +114,7 @@ namespace Abp.Web.Configuration
         protected virtual AbpUserLocalizationConfigDto GetUserLocalizationConfig()
         {
             var currentCulture = CultureInfo.CurrentUICulture;
-            var languages = LanguageManager.GetLanguages();
+            var languages = LanguageManager.GetActiveLanguages();
 
             var config = new AbpUserLocalizationConfigDto
             {

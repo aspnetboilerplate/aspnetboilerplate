@@ -1,35 +1,54 @@
-﻿using JetBrains.Annotations;
+using JetBrains.Annotations;
 using Newtonsoft.Json;
-using Newtonsoft.Json.Serialization;
 using System;
 
 namespace Abp.Json
 {
     public static class JsonExtensions
     {
+        private static readonly AbpCamelCasePropertyNamesContractResolver SharedAbpCamelCasePropertyNamesContractResolver;
+        private static readonly AbpContractResolver SharedAbpContractResolver;
+
+        static JsonExtensions()
+        {
+            SharedAbpCamelCasePropertyNamesContractResolver = new AbpCamelCasePropertyNamesContractResolver();
+            SharedAbpContractResolver = new AbpContractResolver();
+        }
+
         /// <summary>
         /// Converts given object to JSON string.
         /// </summary>
         /// <returns></returns>
         public static string ToJsonString(this object obj, bool camelCase = false, bool indented = false)
         {
-            var options = new JsonSerializerSettings();
+            var settings = new JsonSerializerSettings();
 
             if (camelCase)
             {
-                options.ContractResolver = new AbpCamelCasePropertyNamesContractResolver();
+                settings.ContractResolver = SharedAbpCamelCasePropertyNamesContractResolver;
             }
             else
             {
-                options.ContractResolver = new AbpContractResolver();
+                settings.ContractResolver = SharedAbpContractResolver;
             }
 
             if (indented)
             {
-                options.Formatting = Formatting.Indented;
+                settings.Formatting = Formatting.Indented;
             }
             
-            return JsonConvert.SerializeObject(obj, options);
+            return ToJsonString(obj, settings);
+        }
+
+        /// <summary>
+        /// Converts given object to JSON string using custom <see cref="JsonSerializerSettings"/>.
+        /// </summary>
+        /// <returns></returns>
+        public static string ToJsonString(this object obj, JsonSerializerSettings settings)
+        {
+            return obj != null
+                ? JsonConvert.SerializeObject(obj, settings)
+                : default(string);
         }
 
         /// <summary>

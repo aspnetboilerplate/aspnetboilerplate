@@ -4,6 +4,7 @@ using Abp.Application.Navigation;
 using Abp.Dependency;
 using Abp.Json;
 using Abp.Runtime.Session;
+using Abp.Web.Http;
 
 namespace Abp.Web.Navigation
 {
@@ -23,87 +24,87 @@ namespace Abp.Web.Navigation
         {
             var userMenus = await _userNavigationManager.GetMenusAsync(AbpSession.ToUserIdentifier());
 
-            var sb = new StringBuilder();
-            sb.AppendLine("(function() {");
+            var script = new StringBuilder();
+            script.AppendLine("(function() {");
 
-            sb.AppendLine("    abp.nav = {};");
-            sb.AppendLine("    abp.nav.menus = {");
+            script.AppendLine("    abp.nav = {};");
+            script.AppendLine("    abp.nav.menus = {");
 
             for (int i = 0; i < userMenus.Count; i++)
             {
-                AppendMenu(sb, userMenus[i]);
+                AppendMenu(script, userMenus[i]);
                 if (userMenus.Count - 1 > i)
                 {
-                    sb.Append(" , ");
+                    script.Append(" , ");
                 }
             }
 
-            sb.AppendLine("    };");
+            script.AppendLine("    };");
 
-            sb.AppendLine("})();");
+            script.AppendLine("})();");
 
-            return sb.ToString();
+            return script.ToString();
         }
 
-        private static void AppendMenu(StringBuilder sb, UserMenu menu)
+        private static void AppendMenu(StringBuilder script, UserMenu menu)
         {
-            sb.AppendLine("        '" + menu.Name + "': {");
+            script.AppendLine("        '" + HttpEncode.JavaScriptStringEncode(menu.Name) + "': {");
 
-            sb.AppendLine("            name: '" + menu.Name + "',");
+            script.AppendLine("            name: '" + HttpEncode.JavaScriptStringEncode(menu.Name) + "',");
 
             if (menu.DisplayName != null)
             {
-                sb.AppendLine("            displayName: '" + menu.DisplayName + "',");
+                script.AppendLine("            displayName: '" + HttpEncode.JavaScriptStringEncode(menu.DisplayName) + "',");
             }
 
             if (menu.CustomData != null)
             {
-                sb.AppendLine("            customData: " + menu.CustomData.ToJsonString(true) + ",");
+                script.AppendLine("            customData: " + menu.CustomData.ToJsonString(true) + ",");
             }
 
-            sb.Append("            items: ");
+            script.Append("            items: ");
 
             if (menu.Items.Count <= 0)
             {
-                sb.AppendLine("[]");
+                script.AppendLine("[]");
             }
             else
             {
-                sb.Append("[");
+                script.Append("[");
                 for (int i = 0; i < menu.Items.Count; i++)
                 {
-                    AppendMenuItem(16, sb, menu.Items[i]);
+                    AppendMenuItem(16, script, menu.Items[i]);
                     if (menu.Items.Count - 1 > i)
                     {
-                        sb.Append(" , ");
+                        script.Append(" , ");
                     }
                 }
-                sb.AppendLine("]");
+                script.AppendLine("]");
             }
 
-            sb.AppendLine("            }");
+            script.AppendLine("            }");
         }
 
         private static void AppendMenuItem(int indentLength, StringBuilder sb, UserMenuItem menuItem)
         {
             sb.AppendLine("{");
 
-            sb.AppendLine(new string(' ', indentLength + 4) + "name: '" + menuItem.Name + "',");
+            sb.AppendLine(new string(' ', indentLength + 4) + "name: '" + HttpEncode.JavaScriptStringEncode(menuItem.Name) + "',");
             sb.AppendLine(new string(' ', indentLength + 4) + "order: " + menuItem.Order + ",");
 
             if (!string.IsNullOrEmpty(menuItem.Icon))
             {
-                sb.AppendLine(new string(' ', indentLength + 4) + "icon: '" + menuItem.Icon.Replace("'", @"\'") + "',");
+                sb.AppendLine(new string(' ', indentLength + 4) + "icon: '" + HttpEncode.JavaScriptStringEncode(menuItem.Icon) + "',");
             }
 
             if (!string.IsNullOrEmpty(menuItem.Url))
             {
-                sb.AppendLine(new string(' ', indentLength + 4) + "url: '" + menuItem.Url.Replace("'", @"\'") + "',");
+                sb.AppendLine(new string(' ', indentLength + 4) + "url: '" + HttpEncode.JavaScriptStringEncode(menuItem.Url) + "',");
             }
 
             if (menuItem.DisplayName != null)
             {
-                sb.AppendLine(new string(' ', indentLength + 4) + "displayName: '" + menuItem.DisplayName.Replace("'", @"\'") + "',");
+                sb.AppendLine(new string(' ', indentLength + 4) + "displayName: '" + HttpEncode.JavaScriptStringEncode(menuItem.DisplayName) + "',");
             }
 
             if (menuItem.CustomData != null)
@@ -113,7 +114,7 @@ namespace Abp.Web.Navigation
 
             if (menuItem.Target != null)
             {
-                sb.AppendLine(new string(' ', indentLength + 4) + "target: '" + menuItem.Target.Replace("'", @"\'") + "',");
+                sb.AppendLine(new string(' ', indentLength + 4) + "target: '" + HttpEncode.JavaScriptStringEncode(menuItem.Target) + "',");
             }
 
             sb.AppendLine(new string(' ', indentLength + 4) + "isEnabled: " + menuItem.IsEnabled.ToString().ToLowerInvariant() + ",");

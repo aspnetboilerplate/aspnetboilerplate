@@ -10,7 +10,7 @@ namespace Abp.Tests.Linq.Expressions
         public void Test1()
         {
             var args = new TestArgs();
-            var predicate = PredicateBuilder.True<TestObj>();
+            var predicate = PredicateBuilder.New<TestObj>();
 
             predicate = predicate.And(t => args.Value == t.Value);
 
@@ -37,7 +37,7 @@ namespace Abp.Tests.Linq.Expressions
         public void Test2()
         {
             var args = new TestArgs();
-            var predicate = PredicateBuilder.True<TestObj>();
+            var predicate = PredicateBuilder.New<TestObj>();
 
             predicate = predicate.And(t => !args.Value);
 

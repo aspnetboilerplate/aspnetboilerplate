@@ -6,8 +6,8 @@ using System;
 using System.Data.Common;
 using System.Reflection;
 using JetBrains.Annotations;
-using Microsoft.EntityFrameworkCore.Metadata.Internal;
 using System.Linq;
+using Microsoft.EntityFrameworkCore.Query;
 
 namespace Abp.EntityFrameworkCore
 {
@@ -83,7 +83,6 @@ namespace Abp.EntityFrameworkCore
             if (_iocResolver.IsRegistered<IAbpDbContextConfigurer<TDbContext>>())
             {
                 var configuration = new AbpDbContextConfiguration<TDbContext>(connectionString, existingConnection);
-                ReplaceServices(configuration);
 
                 using (var configurer = _iocResolver.ResolveAsDisposable<IAbpDbContextConfigurer<TDbContext>>())
                 {
@@ -99,11 +98,6 @@ namespace Abp.EntityFrameworkCore
             }
 
             throw new AbpException($"Could not resolve DbContextOptions for {typeof(TDbContext).AssemblyQualifiedName}.");
-        }
-
-        protected virtual void ReplaceServices<TDbContext>(AbpDbContextConfiguration<TDbContext> configuration) where TDbContext : DbContext
-        {
-            configuration.DbContextOptions.ReplaceService<IEntityMaterializerSource, AbpEntityMaterializerSource>();
         }
     }
 }

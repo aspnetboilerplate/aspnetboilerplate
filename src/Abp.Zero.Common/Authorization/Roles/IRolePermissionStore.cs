@@ -33,9 +33,23 @@ namespace Abp.Authorization.Roles
         /// <summary>
         /// Gets permission grant setting informations for a role.
         /// </summary>
+        /// <param name="role">Role</param>
+        /// <returns>List of permission setting informations</returns>
+        IList<PermissionGrantInfo> GetPermissions(TRole role);
+
+        /// <summary>
+        /// Gets permission grant setting informations for a role.
+        /// </summary>
         /// <param name="roleId">Role id</param>
         /// <returns>List of permission setting informations</returns>
         Task<IList<PermissionGrantInfo>> GetPermissionsAsync(int roleId);
+
+        /// <summary>
+        /// Gets permission grant setting informations for a role.
+        /// </summary>
+        /// <param name="roleId">Role id</param>
+        /// <returns>List of permission setting informations</returns>
+        IList<PermissionGrantInfo> GetPermissions(int roleId);
 
         /// <summary>
         /// Checks whether a role has a permission grant setting info.

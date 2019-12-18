@@ -20,5 +20,13 @@ namespace Abp.AspNetCore.App.Controllers
         {
             return 42;
         }
+
+        [HttpGet]
+        [Route("WrapResultTest/GetXml")]
+        [Produces("application/xml")]
+        public int GetXml()
+        {
+            return 42;
+        }
     }
 }

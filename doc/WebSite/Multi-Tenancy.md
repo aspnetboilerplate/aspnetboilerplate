@@ -2,11 +2,11 @@
 
 "*Software* ***Multitenancy*** *refers to a software* ***architecture***
 *in which a* ***single instance*** *of a software runs on a server and
-serves* ***multiple tenants****. A tenant is a group of users who share
+serves ***multiple tenants***. A tenant is a group of users who share
 a common access with specific privileges to the software instance. With
 a multitenant architecture, a software application is designed to
-provide every tenant a* ***dedicated share of the instance including its
-data****, configuration, user management, tenant individual
+provide every tenant a ***dedicated share of the instance including its
+data***, configuration, user management, tenant individual
 functionality and non-functional properties. Multitenancy contrasts with
 multi-instance architectures, where separate software instances operate
 on behalf of different tenants*"
@@ -99,11 +99,20 @@ of our module as shown below:
 
 **Note:** Multi-tenancy is enabled in both ASP.NET Core and ASP.NET MVC 5.x startup templates.
 
+#### Ignore Feature Check For Host Users
+
+There is another configuration to ignore feature check for host users. We can enable it in PreInitialize method
+of our module as shown below:
+
+    Configuration.MultiTenancy.IgnoreFeatureCheckForHostUsers = true; 
+
+**Note:** `IgnoreFeatureCheckForHostUsers` default value is `false`;
+
 #### Host vs Tenant
 
 We define two terms used in a multi-tenant system:
 
--   **Tenant**: A customer which has it's own users, roles,
+-   **Tenant**: A customer which has its own users, roles,
     permissions, settings... and uses the application completely
     isolated from other tenants. A multi-tenant application will have
     one or more tenants. If this is a CRM application, different tenants
@@ -150,7 +159,7 @@ tenant related to the current request in this given order:
 2.  If the user has not logged in, then it tries to resolve the TenantId from the
     *tenant resolve contributor*s. There are 3 pre-defined tenant
     contributors and are run in a given order (first successful resolver 'wins'):
-    1.  **DomainTenantResolveContributer**: Tries to resolve tenancy
+    1.  **DomainTenantResolveContributor**: Tries to resolve tenancy
         name from an url, generally from a domain or subdomain. You can
         configure the domain format in the PreInitialize method of your module
         (like
@@ -160,13 +169,25 @@ tenant related to the current request in this given order:
         tenancy name is resolved as "acme". The next step is to query
         ITenantStore to find the TenantId by the given tenancy name. If a
         tenant is found, then it's resolved as the current TenantId.
-    2.  **HttpHeaderTenantResolveContributer**: Tries to resolve
+    2.  **HttpHeaderTenantResolveContributor**: Tries to resolve
         TenantId from an "Abp.TenantId" header value, if present. This is a
         constant defined in
         Abp.MultiTenancy.MultiTenancyConsts.TenantIdResolveKey.
-    3.  **HttpCookieTenantResolveContributer**: Tries to resolve
+    3.  **HttpCookieTenantResolveContributor**: Tries to resolve
         the TenantId from an "Abp.TenantId" cookie value, if present. This uses the
         same constant explained above.
+
+By default, ASP.NET Boilerplate uses "Abp.TenantId" to find TenantId from Cookie or Request Headers. You can change it using multi-tenancy configuration:
+
+````c#
+Configuration.MultiTenancy.TenantIdResolveKey = "Abp-TenantId";
+````
+
+You also need to configure it on the client side:
+
+````js
+abp.multiTenancy.tenantIdCookieName = 'Abp-TenantId';
+````
 
 If none of these attempts can resolve a TenantId, then the current requester
 is considered to be the host. Tenant resolvers are extensible. You can add
@@ -179,7 +200,7 @@ once in a request, and only if the current user has not already logged in.
 
 ##### Tenant Store
 
-The **DomainTenantResolveContributer** uses ITenantStore to find the tenant id
+The **DomainTenantResolveContributor** uses ITenantStore to find the tenant id
 by tenancy name. The default implementation of **ITenantStore** is
 **NullTenantStore** which does not contain any tenant and returns null
 for queries. You can implement and replace it to query tenants from any
@@ -204,9 +225,9 @@ IMustHaveTenant:
     public class Product : Entity, IMustHaveTenant
     {
         public int TenantId { get; set; }
-    
+
         public string Name { get; set; }
-    
+
         //...other properties
     }
 
@@ -223,9 +244,9 @@ in this case. An example entity that implements IMayHaveTenant:
     public class Role : Entity, IMayHaveTenant
     {
         public int? TenantId { get; set; }
-    
+
         public string RoleName { get; set; }
-    
+
         //...other properties
     }
 
@@ -262,13 +283,13 @@ this behavior and switch to another tenant's database. Example:
     {
         private readonly IRepository<Product> _productRepository;
         private readonly IUnitOfWorkManager _unitOfWorkManager;
-    
+
         public ProductService(IRepository<Product> productRepository, IUnitOfWorkManager unitOfWorkManager)
         {
             _productRepository = productRepository;
             _unitOfWorkManager = unitOfWorkManager;
         }
-    
+
         [UnitOfWork]
         public virtual List<Product> GetProducts(int tenantId)
         {

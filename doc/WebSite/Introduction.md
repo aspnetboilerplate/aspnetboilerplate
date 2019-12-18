@@ -30,7 +30,7 @@ Let's investigate a simple class to see ABP's benefits:
                 throw new UserFriendlyException(L("CouldNotFindTheTaskMessage"));
             }
 
-            input.MapTo(task);
+            ObjectMapper.MapTo(input, task);
         }
     }
 
@@ -82,14 +82,14 @@ Let's see some of ABP's benefits here:
     Log4Net is used by default, but it's changeable and configurable.
 -   **[Localization](/Pages/Documents/Localization)**: Note that we used the 'L' method while throwing the exception?
     This way, it's automatically localized based on the current user's culture. See the [localization](/Pages/Documents/Localization) document for more.
--   **[Auto Mapping](/Pages/Documents/Data-Transfer-Objects)**: In the last line, we're using ABP's MapTo extension method to map input
+-   **[Auto Mapping](/Pages/Documents/Data-Transfer-Objects)**: In the last line, we map input using the MapTo method of ABP's IObjectMapper.
     properties to entity properties. It uses the AutoMapper library to
     perform the mapping. We can easily map properties from one object
     to another based on naming conventions.
 -   **[Dynamic API Layer](/Pages/Documents/Dynamic-Web-API)**: TaskAppService is a simple class, actually. We generally have to write a wrapper API Controller to expose methods to JavaScript clients, but ABP
     automatically does that on runtime. This way, we can use application
     service methods directly from clients.
--   **[Dynamic JavaScript AJAX Proxy](/Pages/Documents/Dynamic-Web-API#dynamic-javascript-proxies)** : ABP creates proxy methods those make calling application
+-   **[Dynamic JavaScript AJAX Proxy](/Pages/Documents/Dynamic-Web-API#dynamic-javascript-proxies)** : ABP creates proxy methods that make calling application
     service methods as simple as calling JavaScript methods on the client.
 
 We can see the benefits of ABP in this simple class. All these tasks normally take significant time,

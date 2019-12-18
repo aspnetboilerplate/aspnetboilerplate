@@ -1,6 +1,6 @@
 ### Introduction
 
-Developing a world-ready application, including an application that can be localized into one or more languages, requires localization features. 
+Developing a world-ready application, including an application that can be localized into one or more languages, requires localization features.
 ASP.NET Boilerplate provides extensive support for the development of world-ready and localized applications.
 
 ### Application Languages
@@ -9,13 +9,13 @@ The first thing to do is to declare which languages are supported. This is
 done in the **PreInitialize** method of your
 [module](/Pages/Documents/Module-System) as shown below:
 
-    Configuration.Localization.Languages.Add(new LanguageInfo("en", "English", "famfamfam-flag-england", true));
-    Configuration.Localization.Languages.Add(new LanguageInfo("tr", "Türkçe", "famfamfam-flag-tr"));
+    Configuration.Localization.Languages.Add(new LanguageInfo("en", "English", "famfamfam-flags gb", true));
+    Configuration.Localization.Languages.Add(new LanguageInfo("tr", "Türkçe", "famfamfam-flags tr"));
 
 On the server side, you can [inject](/Pages/Documents/Dependency-Injection)
 and use the **ILocalizationManager**. On the client side, you can use the
 **abp.localization** JavaScript API to get a list of all available
-languages, as well as the current language. famfamfam-flag-england (and tr) is
+languages, as well as the current language. "famfamfam-flags gb" (and "famfamfam-flags tr") is
 just a CSS class, which you can change based on your needs. You can then use it
 in the UI to show the related flag.
 
@@ -230,7 +230,7 @@ for example.
 
 #### ASP.NET Core
 
-ASP.NET Core has it's own mechanism to determine the current language.
+ASP.NET Core has its own mechanism to determine the current language.
 Abp.AspNetCore package automatically adds ASP.NET Core's
 **UseRequestLocalization** middleware to request pipeline. It also adds
 some special providers. Here is the default ordered list of all providers,
@@ -253,14 +253,14 @@ which determine the current language for an HTTP request:
 -   **CookieRequestCultureProvider** (ASP.NET Core's default provider):
     Use **.AspNetCore.Culture** cookie value if present. Example value:
     "c=en|uic=en-US".
--   **AbpDefaultRequestCultureProvider** (ABP's provider): If there is
-    an default/application/tenant **setting value** for the language
-    (named "Abp.Localization.DefaultLanguageName"), then use the
-    setting's value.
 -   **AcceptLanguageHeaderRequestCultureProvider** (ASP.NET Core's
     default provider): Use the **Accept-Language** header value if present
     (automatically sent by browsers). Example value:
     "tr-TR,tr;q=0.8,en-US;q=0.6,en;q=0.4".
+-   **AbpDefaultRequestCultureProvider** (ABP's provider): If there is
+    an default/application/tenant **setting value** for the language
+    (named "Abp.Localization.DefaultLanguageName"), then use the
+    setting's value.
 
 The **UseRequestLocalization** middleware is automatically added when
 you call the **app.UseAbp()** method. However, it's suggested that you manually add
@@ -309,16 +309,14 @@ determines it by default. ABP will:
     that information.
 -   Try to get it from a special **header** value, named
     "**Abp.Localization.CultureName**" by default.
--   Try to get it from a special **header** value, named
-    "**Abp.Localization.CultureName**" by default.
 -   Try to get it from a special **cookie** value, named
     "**Abp.Localization.CultureName**" by default.
+-   Try to get it from the **browser's default language**
+    (HttpContext.Request.UserLanguages).
 -   Try to get it from **default culture** setting (setting name is
     "Abp.Localization.DefaultLanguageName", which is a constant defined
     in Abp.Localization.LocalizationSettingNames.DefaultLanguage and can
     be changed using the [setting management](Setting-Management.md)).
--   Try to get it from the **browser's default language**
-    (HttpContext.Request.UserLanguages).
 
 If you need to, you can change the special cookie/header/querystring name
 in your module's PreInitialize method. Example:
@@ -329,6 +327,15 @@ ABP overrides **Application\_PostAuthenticateRequest** (in global.asax)
 to implement that logic. You can override **SetCurrentCulture** in the
 global.asax or replace **ICurrentCultureSetter** in order to override
 the logic described above.
+
+### Change the Current Language
+
+ABP has built-in `AbpLocalizationController`, its `ChangeCulture` method changes the current language by writing cookies.
+It also changes the user's default language setting if the current user exists.
+
+    <a href="~/AbpLocalization/ChangeCulture?cultureName=en-AU&returnUrl=Home"></a>
+
+You can also change the current language in other ways based on the principles explained above for determining the current language.
 
 ### Getting A Localized Text
 
@@ -487,7 +494,7 @@ defaultSourceName is global and works for only one source at a time.
 
 ### Extending Localization Sources
 
-Assume that we use a module which defines it's own localization source.
+Assume that we use a module which defines its own localization source.
 We may need to change it's localized texts, add new text or translate
 to other languages. ASP.NET Boilerplate allows for extending a localization
 source. It currently works for XML and JSON files (Actually any

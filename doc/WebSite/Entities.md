@@ -204,6 +204,8 @@ class that implements them all.
 -   NOTE 2: All of them also have an **AggregateRoot** version, like
     AuditedAggregateRoot.
 
+In some cases, soft-delete entities may be requested to be permanently deleted. In those cases, **IRepository.HardDelete** extension method can be used. This method is currently implemented for EntityFramework 6.x and Entity Framework Core.
+
 #### Active/Passive Entities
 
 Some entities need to be marked as Active or Passive. You may take an
@@ -276,6 +278,10 @@ We can then use **GetData** to get the values:
 
     var randomValue = person.GetData<int>("RandomValue");
     var customData = person.GetData<MyCustomObject>("CustomData");
+    
+Of course, we can also use the **RemoveData** method to remove data:
+    
+    person.RemoveData("RandomValue");
 
 While this technique can be very useful in some cases (when you need to
 provide the ability to dynamically add extra data to an entity), you

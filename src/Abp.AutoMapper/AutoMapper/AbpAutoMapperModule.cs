@@ -14,9 +14,6 @@ namespace Abp.AutoMapper
     {
         private readonly ITypeFinder _typeFinder;
 
-        private static volatile bool _createdMappingsBefore;
-        private static readonly object SyncObj = new object();
-
         public AbpAutoMapperModule(ITypeFinder typeFinder)
         {
             _typeFinder = typeFinder;
@@ -38,44 +35,25 @@ namespace Abp.AutoMapper
 
         private void CreateMappings()
         {
-            lock (SyncObj)
+            Action<IMapperConfigurationExpression> configurer = configuration =>
             {
-                Action<IMapperConfigurationExpression> configurer = configuration =>
+                FindAndAutoMapTypes(configuration);
+                foreach (var configurator in Configuration.Modules.AbpAutoMapper().Configurators)
                 {
-                    FindAndAutoMapTypes(configuration);
-                    foreach (var configurator in Configuration.Modules.AbpAutoMapper().Configurators)
-                    {
-                        configurator(configuration);
-                    }
-                };
-
-                if (Configuration.Modules.AbpAutoMapper().UseStaticMapper)
-                {
-                    //We should prevent duplicate mapping in an application, since Mapper is static.
-                    if (!_createdMappingsBefore)
-                    {
-                        Mapper.Initialize(configurer);
-                        _createdMappingsBefore = true;
-                    }
-
-                    IocManager.IocContainer.Register(
-                        Component.For<IConfigurationProvider>().Instance(Mapper.Configuration).LifestyleSingleton()
-                    );
-                    IocManager.IocContainer.Register(
-                        Component.For<IMapper>().Instance(Mapper.Instance).LifestyleSingleton()
-                    );
+                    configurator(configuration);
                 }
-                else
-                {
-                    var config = new MapperConfiguration(configurer);
-                    IocManager.IocContainer.Register(
-                        Component.For<IConfigurationProvider>().Instance(config).LifestyleSingleton()
-                    );
-                    IocManager.IocContainer.Register(
-                        Component.For<IMapper>().Instance(config.CreateMapper()).LifestyleSingleton()
-                    );
-                }
-            }
+            };
+
+            var config = new MapperConfiguration(configurer);
+            IocManager.IocContainer.Register(
+                Component.For<IConfigurationProvider>().Instance(config).LifestyleSingleton()
+            );
+
+            var mapper = config.CreateMapper();
+            IocManager.IocContainer.Register(
+                Component.For<IMapper>().Instance(mapper).LifestyleSingleton()
+            );
+            AbpEmulateAutoMapper.Mapper = mapper;
         }
 
         private void FindAndAutoMapTypes(IMapperConfigurationExpression configuration)
@@ -102,7 +80,7 @@ namespace Abp.AutoMapper
         {
             var localizationContext = IocManager.Resolve<ILocalizationContext>();
 
-            configuration.CreateMap<ILocalizableString, string>().ConvertUsing(ls => ls?.Localize(localizationContext));
+            configuration.CreateMap<ILocalizableString, string>().ConvertUsing(ls => ls == null ? null : ls.Localize(localizationContext));
             configuration.CreateMap<LocalizableString, string>().ConvertUsing(ls => ls == null ? null : localizationContext.LocalizationManager.GetString(ls));
         }
     }

@@ -4,6 +4,6 @@
     {
         public string ConnectionString { get; set; }
 
-        public string DatatabaseName { get; set; }
+        public string DatabaseName { get; set; }
     }
 }

@@ -25,6 +25,22 @@ namespace Abp.AspNetCore.App.Controllers
             });
         }
 
+        public JsonResult GetNullableJsonValue([FromQuery] ValidationTestArgument3 arg1)
+        {
+            return Json(new ValidationTestArgument3
+            {
+                Value = arg1.Value
+            });
+        }
+
+        public JsonResult GetNullableJsonValue2([FromBody]ValidationTestArgument3 arg1)
+        {
+            return Json(new ValidationTestArgument3
+            {
+                Value = arg1.Value
+            });
+        }
+
         #endregion
 
         #region Arguments
@@ -42,6 +58,11 @@ namespace Abp.AspNetCore.App.Controllers
         public class ArrayItem
         {
             public int Value { get; set; }
+        }
+
+        public class ValidationTestArgument3
+        {
+            public int? Value { get; set; }
         }
 
         #endregion

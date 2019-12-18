@@ -17,7 +17,7 @@ namespace Abp.Tests.Notifications
         {
             _store = Substitute.For<INotificationStore>();
             _backgroundJobManager = Substitute.For<IBackgroundJobManager>();
-            _publisher = new NotificationPublisher(_store, _backgroundJobManager, Substitute.For<INotificationDistributer>(), SequentialGuidGenerator.Instance);
+            _publisher = new NotificationPublisher(_store, _backgroundJobManager, Substitute.For<INotificationConfiguration>(), SequentialGuidGenerator.Instance, LocalIocManager);
             _publisher.UnitOfWorkManager = Substitute.For<IUnitOfWorkManager>();
             _publisher.UnitOfWorkManager.Current.Returns(Substitute.For<IActiveUnitOfWork>());
         }

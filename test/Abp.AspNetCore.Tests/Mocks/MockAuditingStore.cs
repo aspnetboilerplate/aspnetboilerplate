@@ -18,5 +18,10 @@ namespace Abp.AspNetCore.Mocks
             Logs.Add(auditInfo);
             return Task.FromResult(0);
         }
+
+        public void Save(AuditInfo auditInfo)
+        {
+            Logs.Add(auditInfo);
+        }
     }
 }

@@ -1,4 +1,6 @@
-﻿namespace Abp.ObjectMapping
+﻿using System.Linq;
+
+namespace Abp.ObjectMapping
 {
     /// <summary>
     /// Defines a simple interface to map objects.
@@ -21,5 +23,14 @@
         /// <param name="destination">Destination object</param>
         /// <returns>Returns the same <see cref="destination"/> object after mapping operation</returns>
         TDestination Map<TSource, TDestination>(TSource source, TDestination destination);
+
+        /// <summary>
+        /// Project the input queryable.
+        /// </summary>
+        /// <remarks>Projections are only calculated once and cached</remarks>
+        /// <typeparam name="TDestination">Destination type</typeparam>
+        /// <param name="source">Queryable source</param>
+        /// <returns>Queryable result, use queryable extension methods to project and execute result</returns>
+        IQueryable<TDestination> ProjectTo<TDestination>(IQueryable source);
     }
 }

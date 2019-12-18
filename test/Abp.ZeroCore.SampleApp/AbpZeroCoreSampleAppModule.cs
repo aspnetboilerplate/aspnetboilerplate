@@ -65,6 +65,9 @@ namespace Abp.ZeroCore.SampleApp
             configuration.CreateMap<ProductUpdateDto, Product>();
 
             configuration.CreateMap<ProductTranslationDto, ProductTranslation>();
+
+            configuration.CreateMultiLingualMap<Order, OrderTranslation, OrderListDto>(context)
+                .EntityMap.ForMember(dest => dest.ProductCount, opt => opt.MapFrom(src => src.Products.Count));
         }
     }
 }

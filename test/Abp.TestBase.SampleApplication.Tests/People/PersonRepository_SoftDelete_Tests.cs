@@ -87,7 +87,7 @@ namespace Abp.TestBase.SampleApplication.Tests.People
             personToBeDeleted.IsDeleted.ShouldBe(false);
             personToBeDeleted.DeletionTime.ShouldBe(null);
             personToBeDeleted.DeleterUserId.ShouldBe(null);
-            
+
             //Delete it
             await _personRepository.DeleteAsync(personToBeDeleted.Id);
 
@@ -109,6 +109,36 @@ namespace Abp.TestBase.SampleApplication.Tests.People
                 }
 
                 ouw.Complete();
+            }
+        }
+
+        [Fact]
+        public async Task Should_Permanently_Delete_SoftDelete_Entity_With_HarDelete_Method()
+        {
+            var uowManager = Resolve<IUnitOfWorkManager>();
+
+            using (var uow = uowManager.Begin())
+            {
+                var people = _personRepository.GetAllList();
+
+                foreach (var person in people)
+                {
+                    await _personRepository.HardDeleteAsync(person);
+                }
+
+                uow.Complete();
+            }
+
+            using (var uow = uowManager.Begin())
+            {
+                using (uowManager.Current.DisableFilter(AbpDataFilters.SoftDelete))
+                {
+                    var poeple = _personRepository.GetAllList();
+                    poeple.Count.ShouldBe(1);
+                    poeple.First().Name.ShouldBe("emre");
+                }
+
+                uow.Complete();
             }
         }
     }

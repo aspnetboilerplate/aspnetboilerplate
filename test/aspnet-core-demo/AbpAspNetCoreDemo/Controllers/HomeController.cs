@@ -5,9 +5,8 @@ namespace AbpAspNetCoreDemo.Controllers
 {
     public class HomeController : DemoControllerBase
     {
-        public IActionResult Index(string returnUrl = "")
+        public IActionResult Index()
         {
-            var islocal = AbpUrlHelper.IsLocalUrl(Request, returnUrl);
             return View();
         }
 

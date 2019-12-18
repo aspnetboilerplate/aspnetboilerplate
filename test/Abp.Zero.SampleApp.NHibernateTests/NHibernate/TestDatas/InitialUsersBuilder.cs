@@ -25,16 +25,19 @@ namespace Abp.Zero.SampleApp.NHibernate.TestDatas
         {
             var defaultTenant = _session.Query<Tenant>().Single(t => t.Name == Tenant.DefaultTenantName);
 
-            _session.Save(
-                new User
-                {
-                    TenantId = defaultTenant.Id,
-                    Name = "System",
-                    Surname = "Administrator",
-                    UserName = User.AdminUserName,
-                    Password = new PasswordHasher().HashPassword("123qwe"),
-                    EmailAddress = "admin@aspnetboilerplate.com"
-                });
+            var user = new User
+            {
+                TenantId = defaultTenant.Id,
+                Name = "System",
+                Surname = "Administrator",
+                UserName = User.AdminUserName,
+                Password = new PasswordHasher().HashPassword("123qwe"),
+                EmailAddress = "admin@aspnetboilerplate.com"
+            };
+
+            user.SetNormalizedNames();
+
+            _session.Save(user);
         }
     }
 }

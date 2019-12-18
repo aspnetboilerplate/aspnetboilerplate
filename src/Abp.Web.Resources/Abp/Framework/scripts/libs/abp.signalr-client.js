@@ -9,28 +9,48 @@ var abp = abp || {};
     // Create namespaces
     abp.signalr = abp.signalr || {};
     abp.signalr.hubs = abp.signalr.hubs || {};
+    abp.signalr.reconnectTime = abp.signalr.reconnectTime || 5000;
+    abp.signalr.maxTries = abp.signalr.maxTries || 8;
 
-    // Configure the connection
+    // Configure the connection for abp.signalr.hubs.common
     function configureConnection(connection) {
         // Set the common hub
         abp.signalr.hubs.common = connection;
+
+        let tries = 1;
+        let reconnectTime = abp.signalr.reconnectTime;
+
+        // Reconnect loop
+        function tryReconnect() {
+            if (tries > abp.signalr.maxTries) {
+                return;
+            } else {
+                connection.start()
+                    .then(() => {
+                        reconnectTime = abp.signalr.reconnectTime;
+                        tries = 1;
+                        console.log('Reconnected to SignalR server!');
+                    }).catch(() => {
+                        tries += 1;
+                        reconnectTime *= 2;
+                        setTimeout(() => tryReconnect(), reconnectTime);
+                    });
+            }
+        }
 
         // Reconnect if hub disconnects
         connection.onclose(function (e) {
             if (e) {
                 abp.log.debug('Connection closed with error: ' + e);
-            }
-            else {
+            } else {
                 abp.log.debug('Disconnected');
             }
 
-            if (!abp.signalr.autoConnect) {
+            if (!abp.signalr.autoReconnect) {
                 return;
             }
 
-            setTimeout(function () {
-                connection.start();
-            }, 5000);
+            tryReconnect();
         });
 
         // Register to get notifications
@@ -39,16 +59,16 @@ var abp = abp || {};
         });
     }
 
-    // Connect to the server
-    abp.signalr.connect = function () {
+    // Connect to the server for abp.signalr.hubs.common
+    function connect() {
         var url = abp.signalr.url || (abp.appPath + 'signalr');
 
-        // Start the connection.
+        // Start the connection
         startConnection(url, configureConnection)
             .then(function (connection) {
                 abp.log.debug('Connected to SignalR server!'); //TODO: Remove log
                 abp.event.trigger('abp.signalr.connected');
-                // Call the Register method on the hub.
+                // Call the Register method on the hub
                 connection.invoke('register').then(function () {
                     abp.log.debug('Registered to the SignalR server!'); //TODO: Remove log
                 });
@@ -56,7 +76,7 @@ var abp = abp || {};
             .catch(function (error) {
                 abp.log.debug(error.message);
             });
-    };
+    }
 
     // Starts a connection with transport fallback - if the connection cannot be started using
     // the webSockets transport the function will fallback to the serverSentEvents transport and
@@ -77,6 +97,7 @@ var abp = abp || {};
             var connection = new signalR.HubConnectionBuilder()
                 .withUrl(url, transport)
                 .build();
+
             if (configureConnection && typeof configureConnection === 'function') {
                 configureConnection(connection);
             }
@@ -96,14 +117,12 @@ var abp = abp || {};
         }(signalR.HttpTransportType.WebSockets);
     }
 
-    abp.signalr.startConnection = startConnection;
+    abp.signalr.autoConnect = abp.signalr.autoConnect === undefined ? true : abp.signalr.autoConnect;
+    abp.signalr.autoReconnect = abp.signalr.autoReconnect === undefined ? true : abp.signalr.autoReconnect;
+    abp.signalr.connect = abp.signalr.connect || connect;
+    abp.signalr.startConnection = abp.signalr.startConnection || startConnection;
 
-    if (abp.signalr.autoConnect === undefined) {
-        abp.signalr.autoConnect = true;
-    }
-
-    if (abp.signalr.autoConnect) {
+    if (abp.signalr.autoConnect && !abp.signalr.hubs.common) {
         abp.signalr.connect();
     }
-
 })();

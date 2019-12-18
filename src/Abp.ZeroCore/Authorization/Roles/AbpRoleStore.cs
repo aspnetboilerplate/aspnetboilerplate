@@ -210,7 +210,20 @@ namespace Abp.Authorization.Roles
         {
             cancellationToken.ThrowIfCancellationRequested();
 
-            return _roleRepository.GetAsync(id.To<int>());
+            return _roleRepository.FirstOrDefaultAsync(id.To<int>());
+        }
+
+        /// <summary>
+        /// Finds the role who has the specified ID as an asynchronous operation.
+        /// </summary>
+        /// <param name="id">The role ID to look for.</param>
+        /// <param name="cancellationToken">The <see cref="CancellationToken"/> used to propagate notifications that the operation should be canceled.</param>
+        /// <returns>A <see cref="Task{TResult}"/> that result of the look up.</returns>
+        public virtual TRole FindById(string id, CancellationToken cancellationToken = default(CancellationToken))
+        {
+            cancellationToken.ThrowIfCancellationRequested();
+
+            return _roleRepository.FirstOrDefault(id.To<int>());
         }
 
         /// <summary>
@@ -226,6 +239,21 @@ namespace Abp.Authorization.Roles
             Check.NotNull(normalizedName, nameof(normalizedName));
 
             return _roleRepository.FirstOrDefaultAsync(r => r.NormalizedName == normalizedName);
+        }
+
+        /// <summary>
+        /// Finds the role who has the specified normalized name as an asynchronous operation.
+        /// </summary>
+        /// <param name="normalizedName">The normalized role name to look for.</param>
+        /// <param name="cancellationToken">The <see cref="CancellationToken"/> used to propagate notifications that the operation should be canceled.</param>
+        /// <returns>A <see cref="Task{TResult}"/> that result of the look up.</returns>
+        public virtual TRole FindByName([NotNull] string normalizedName, CancellationToken cancellationToken = default(CancellationToken))
+        {
+            cancellationToken.ThrowIfCancellationRequested();
+
+            Check.NotNull(normalizedName, nameof(normalizedName));
+
+            return _roleRepository.FirstOrDefault(r => r.NormalizedName == normalizedName);
         }
 
         /// <summary>
@@ -361,9 +389,22 @@ namespace Abp.Authorization.Roles
             return GetPermissionsAsync(role.Id);
         }
 
+        /// <inheritdoc/>
+        public virtual IList<PermissionGrantInfo> GetPermissions(TRole role)
+        {
+            return GetPermissions(role.Id);
+        }
+
         public async Task<IList<PermissionGrantInfo>> GetPermissionsAsync(int roleId)
         {
             return (await _rolePermissionSettingRepository.GetAllListAsync(p => p.RoleId == roleId))
+                .Select(p => new PermissionGrantInfo(p.Name, p.IsGranted))
+                .ToList();
+        }
+
+        public IList<PermissionGrantInfo> GetPermissions(int roleId)
+        {
+            return (_rolePermissionSettingRepository.GetAllList(p => p.RoleId == roleId))
                 .Select(p => new PermissionGrantInfo(p.Name, p.IsGranted))
                 .ToList();
         }

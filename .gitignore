@@ -9,10 +9,12 @@ Logs/
 project.lock.json
 .vs/
 .dotnet/
+.idea/
 
 # Nuget packages
 nupkg/*.nupkg
 nupkg/push.bat
+nupkg/push_packages.ps1
 
 # Profile images
 ProfileImages/

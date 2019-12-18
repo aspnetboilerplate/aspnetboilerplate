@@ -161,61 +161,6 @@ different named Email property. We can define the mapping as shown below:
 AutoMapper has many more options and abilities for object to object
 mapping. See it's [documentation](http://automapper.org/) for more info.
 
-#### MapTo Extension Methods
-
-It's recommended that you inject and use the IObjectMapper interface as defined
-above. This makes our project independent from AutoMapper as much as
-possible. It also makes unit testing easier since we can replace (mock)
-the mapping in unit tests.
-
-The Abp.AutoMapper module also defines MapTo extension methods which can be
-used on any object to map it to another object without injecting
-IObjectMapper. Example usage:
-
-    public class UserAppService : ApplicationService
-    {
-        private readonly IRepository<User> _userRepository;
-
-        public UserAppService(IRepository<User> userRepository)
-        {
-            _userRepository = userRepository;
-        }
-
-        public void CreateUser(CreateUserInput input)
-        {
-            var user = input.MapTo<User>();
-            _userRepository.Insert(user);
-        }
-
-        public void UpdateUser(UpdateUserInput input)
-        {
-            var user = _userRepository.Get(input.Id);
-            input.MapTo(user);
-        }
-    }
-
-The MapTo extension methods are defined in the Abp.AutoMapper namespace, so you must
-first import this namespaces into your code file.
-
-Since the MapTo extension methods are static, they use AutoMapper's static
-instance (Mapper.Instance). This is simple and fine for the application
-code, but you can have problems in unit tests since the static configuration and
-mapper is shared among different tests, all effecting each other.
-
-#### Unit Tests
-
-We want to isolate tests from each other. To do that, we should design
-our project with the following rules:
-
-1. Always use IObjectMapper, do not use MapTo extension methods.
-
-2. Configure the Abp.AutoMapper module to use a local Mapper instance
-(registered as a singleton via dependency injection) rather than the static
-one (Abp.AutoMapper uses the static Mapper.Instance by default to allow you
-to use the MapTo extension methods as defined above):
-
-    Configuration.Modules.AbpAutoMapper().UseStaticMapper = false;
-
 #### Pre Defined Mappings
 
 ##### LocalizableString -&gt; string

@@ -10,7 +10,7 @@ namespace Abp.NHibernate.Uow
         {
             if (unitOfWork == null)
             {
-                throw new ArgumentNullException("unitOfWork");
+                throw new ArgumentNullException(nameof(unitOfWork));
             }
 
             if (!(unitOfWork is NhUnitOfWork))

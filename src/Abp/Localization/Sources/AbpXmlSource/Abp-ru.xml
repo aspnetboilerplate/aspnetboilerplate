@@ -13,5 +13,12 @@
     <text name="DefaultLanguage">Язык по умолчанию</text>
     <text name="ReceiveNotifications">Получать уведомления</text>
     <text name="CurrentUserDidNotLoginToTheApplication">Текущий пользователь не вошёл в приложение!</text>
+    <text name="TimeZone">Часовой пояс</text>
+    <text name="AllOfThesePermissionsMustBeGranted">Требуемые разрешения не предоставляются. Все эти разрешения должны быть предоставлены: {0}</text>
+    <text name="AtLeastOneOfThesePermissionsMustBeGranted">Требуемые разрешения не предоставляются. По крайней мере одно из этих разрешений должно быть предоставлено: {0}</text>
+    <text name="FeatureIsNotEnabled">Функция не включена: {0}</text>
+    <text name="AllOfTheseFeaturesMustBeEnabled">Требуемые функции не включены. Все эти функции должны быть включены: {0}</text>
+    <text name="AtLeastOneOfTheseFeaturesMustBeEnabled">Требуемые функции не включены. По крайней мере одна из этих функций должна быть включена: {0}</text>
+    <text name="MainMenu">Главное меню</text>
   </texts>
 </localizationDictionary>

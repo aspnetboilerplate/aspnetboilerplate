@@ -16,14 +16,16 @@ namespace Abp.ZeroCore.SampleApp.Core.EntityHistory
 
         public DateTime CreationTime { get; set; }
 
+        public BlogEx More { get; set; }
+
         public ICollection<Post> Posts { get; set; }
 
         public Blog()
         {
-            
+
         }
 
-        public Blog(string name, string url)
+        public Blog(string name, string url, string bloggerName)
         {
             if (string.IsNullOrWhiteSpace(name))
             {
@@ -37,6 +39,7 @@ namespace Abp.ZeroCore.SampleApp.Core.EntityHistory
 
             Name = name;
             Url = url;
+            More = new BlogEx { BloggerName = bloggerName };
         }
 
         public void ChangeUrl(string url)
@@ -49,5 +52,10 @@ namespace Abp.ZeroCore.SampleApp.Core.EntityHistory
             var oldUrl = Url;
             Url = url;
         }
+    }
+
+    public class BlogEx
+    {
+        public string BloggerName { get; set; }
     }
 }

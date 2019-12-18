@@ -33,9 +33,6 @@ Example:
         }
     );
 
-The second argument (title) is optional here, so the callback function can be the
-second argument instead.
-
 A confirmation message is shown below:
 
 <img src="../images/confirmation_message.png" alt="Confirmation message using sweetalert" class="img-thumbnail" />

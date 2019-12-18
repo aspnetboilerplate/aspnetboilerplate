@@ -2,7 +2,9 @@
 using System.Threading.Tasks;
 using Abp.AspNetCore.TestBase;
 using Abp.Domain.Uow;
+using Abp.FluentValidation;
 using Abp.Modules;
+using Abp.Reflection.Extensions;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
