@@ -82,7 +82,7 @@
 
         function localize(key: string, sourceName: string): string;
 
-        function getSource(sourceName: string): (key: string) => string;
+        function getSource(sourceName: string): (...key: string[]) => string;
 
         function isCurrentCulture(name: string): boolean;
     }
