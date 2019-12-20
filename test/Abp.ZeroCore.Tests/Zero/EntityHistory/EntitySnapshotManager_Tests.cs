@@ -66,8 +66,6 @@ namespace Abp.Zero.EntityHistory
                 snapshot["Name"].ShouldBe("\"test-user-name-updated\"");
                 snapshot.PropertyChangesStackTree["Name"].ShouldBe("\"test-user-name-updated-2\" -> \"test-user-name-updated\"");
 
-
-
                 //undo all changes
                 var snapshot2 = await _entitySnapshotManager.GetSnapshotAsync<UserTestEntity>(id, DateTime.Now.AddDays(-1));
 
