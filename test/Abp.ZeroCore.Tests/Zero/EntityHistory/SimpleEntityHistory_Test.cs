@@ -16,6 +16,7 @@ using Shouldly;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using Abp.Authorization.Roles;
 using Xunit;
 
 namespace Abp.Zero.EntityHistory
@@ -423,6 +424,45 @@ namespace Abp.Zero.EntityHistory
             _entityHistoryStore.Received().Save(Arg.Is<EntityChangeSet>(s => predicate(s)));
         }
 
+        [Fact]
+        public void Should_Write_History_For_Entity_With_Shadow_Property_Discriminator()
+        {
+            Resolve<IEntityHistoryConfiguration>().IsEnabled = true;
+            Resolve<IEntityHistoryConfiguration>().Selectors.Clear();
+
+            _entityHistoryStore.ClearReceivedCalls();
+            //Arrange
+            UsingDbContext((context) =>
+            {
+                var role = context.Roles.FirstOrDefault();
+                role.ShouldNotBeNull();
+
+                context.RolePermissions.Add(new RolePermissionSetting()
+                {
+                    Name = "Test",
+                    RoleId = role.Id
+                });
+                context.SaveChanges();
+            });
+
+            //Assert
+            Predicate<EntityChangeSet> predicate = s =>
+            {
+                s.EntityChanges.Count.ShouldBe(1);
+
+                var entityChange = s.EntityChanges[0];
+                entityChange.ChangeType.ShouldBe(EntityChangeType.Created);
+                entityChange.EntityTypeFullName.ShouldBe(typeof(RolePermissionSetting).FullName);
+                entityChange.PropertyChanges.Count.ShouldBe(1);
+                entityChange.PropertyChanges.Single().PropertyName.ShouldBe("Discriminator");
+
+                return true;
+            };
+
+            _entityHistoryStore.Received().Save(Arg.Is<EntityChangeSet>(s => predicate(s)));
+        }
+
+
         #endregion
 
         #region CASES DON'T WRITE HISTORY
@@ -562,6 +602,29 @@ namespace Abp.Zero.EntityHistory
             _entityHistoryStore.DidNotReceive().Save(Arg.Any<EntityChangeSet>());
         }
 
+        [Fact]
+        public void Should_Not_Write_History_For_Full_Audited_Entity()
+        {
+            Resolve<IEntityHistoryConfiguration>().IsEnabled = true;
+
+            _entityHistoryStore.ClearReceivedCalls();
+
+            //Arrange
+            UsingDbContext((context) =>
+            {
+                context.Countries.Add(new Country() { CountryCode = "My Country" });
+                context.SaveChanges();
+            });
+
+            //Assert
+            _entityHistoryStore.DidNotReceive().Save(Arg.Any<EntityChangeSet>());
+
+            UsingDbContext((context) =>
+            {
+                context.Countries.ToList().Count.ShouldBe(1);
+            });
+        }
+        
         #endregion
 
         private int CreateBlogAndGetId()
