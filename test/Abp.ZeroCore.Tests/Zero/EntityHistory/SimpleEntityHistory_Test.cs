@@ -618,11 +618,6 @@ namespace Abp.Zero.EntityHistory
 
             //Assert
             _entityHistoryStore.DidNotReceive().Save(Arg.Any<EntityChangeSet>());
-
-            UsingDbContext((context) =>
-            {
-                context.Countries.ToList().Count.ShouldBe(1);
-            });
         }
         
         #endregion
