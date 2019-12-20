@@ -16,7 +16,7 @@ var branch = Argument("branch", EnvironmentVariable("APPVEYOR_REPO_BRANCH"));
 var vsLatest  = VSWhereLatest();
 var msBuildPathX64 = (vsLatest==null)
                             ? null
-                            : vsLatest.CombineWithFilePath("./MSBuild/15.0/Bin/amd64/MSBuild.exe");
+                            : vsLatest.CombineWithFilePath("./MSBuild/Current/Bin/MSBuild.exe");
 
 var testProjects = new List<Tuple<string, string[]>>
                 {
