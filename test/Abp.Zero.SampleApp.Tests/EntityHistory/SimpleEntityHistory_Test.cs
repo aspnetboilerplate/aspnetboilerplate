@@ -866,7 +866,7 @@ namespace Abp.Zero.SampleApp.Tests.EntityHistory
         }
 
         [Fact]
-        public void Should_Not_Write_History_For_Entity_With_Shadow_Property_Discriminator()
+        public void Should_Not_Write_History_For_Not_Audited_Entities_Shadow_Property()
         {
             Resolve<IEntityHistoryConfiguration>().IsEnabled = true;
             Resolve<IEntityHistoryConfiguration>().Selectors.Clear();
