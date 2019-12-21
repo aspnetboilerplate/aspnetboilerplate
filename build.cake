@@ -86,7 +86,7 @@ Task("Run-Unit-Tests")
     {
       foreach (string targetFramework in testProject.Item2)
       {
-        Information($"Test execution started for target frameowork: {targetFramework}...");
+        Information($"Test execution started for target framework: {targetFramework}...");
         var testProj = GetFiles($"./test/**/*{testProject.Item1}.csproj").First();
         DotNetCoreTest(testProj.FullPath, new DotNetCoreTestSettings { Configuration = "Release", Framework = targetFramework });                              
       }
