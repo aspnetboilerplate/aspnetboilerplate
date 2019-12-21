@@ -20,7 +20,7 @@ var msBuildPathX64 = (vsLatest==null)
 
 var testProjects = new List<Tuple<string, string[]>>
                 {
-                    new Tuple<string, string[]>("Abp.AspNetCore.Tests", new[] { "net461", "netcoreapp3.1" }),
+                    new Tuple<string, string[]>("Abp.AspNetCore.Tests", new[] { "netcoreapp3.1" }),
                     new Tuple<string, string[]>("Abp.AutoMapper.Tests", new[] { "net461", "netcoreapp3.1" }),
                     new Tuple<string, string[]>("Abp.Castle.Log4Net.Tests", new[] { "net461", "netcoreapp3.1" }),
                     new Tuple<string, string[]>("Abp.Dapper.NHibernate.Tests", new[] { "net461"}),
@@ -28,7 +28,7 @@ var testProjects = new List<Tuple<string, string[]>>
                     new Tuple<string, string[]>("Abp.EntityFramework.GraphDiff.Tests", new[] { "net461" }),
                     new Tuple<string, string[]>("Abp.EntityFramework.Tests", new[] { "net461" }),
                     new Tuple<string, string[]>("Abp.EntityFrameworkCore.Dapper.Tests", new[] { "netcoreapp3.1" }),
-                    new Tuple<string, string[]>("Abp.EntityFrameworkCore.Tests", new[] { "net461", "netcoreapp3.1" }),
+                    new Tuple<string, string[]>("Abp.EntityFrameworkCore.Tests", new[] { "netcoreapp3.1" }),
                     new Tuple<string, string[]>("Abp.MailKit.Tests", new[] { "net461", "netcoreapp3.1" }),
                     new Tuple<string, string[]>("Abp.MemoryDb.Tests", new[] { "net461", "netcoreapp3.1" }),
                     new Tuple<string, string[]>("Abp.NHibernate.Tests", new[] { "net461" }),
