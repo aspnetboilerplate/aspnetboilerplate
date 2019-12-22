@@ -31,11 +31,10 @@ namespace Abp.Extensions
         public static T To<T>(this object obj)
             where T : struct
         {
-            if (typeof(T) == typeof(Guid))
+            if (typeof(T) == typeof(Guid) || typeof(T) == typeof(TimeSpan))
             {
                 return (T)TypeDescriptor.GetConverter(typeof(T)).ConvertFromInvariantString(obj.ToString());
             }
-
             if (typeof(T).IsEnum)
             {
                 if (Enum.IsDefined(typeof(T), obj))
