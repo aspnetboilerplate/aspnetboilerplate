@@ -407,7 +407,7 @@ namespace Abp.Authorization.Roles
                     {
                         TenantId = tenantId,
                         Name = staticRoleDefinition.RoleName,
-                        DisplayName = staticRoleDefinition.RoleName,
+                        DisplayName = staticRoleDefinition.RoleDisplayName,
                         IsStatic = true
                     };
 
