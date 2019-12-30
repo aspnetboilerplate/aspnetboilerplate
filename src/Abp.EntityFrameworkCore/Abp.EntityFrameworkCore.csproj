@@ -3,7 +3,7 @@
   <Import Project="..\..\common.props" />
   
   <PropertyGroup>
-    <TargetFramework>netstandard2.1</TargetFramework>
+    <TargetFramework>netstandard2.0</TargetFramework>
     <GenerateDocumentationFile>true</GenerateDocumentationFile>
     <AssemblyName>Abp.EntityFrameworkCore</AssemblyName>
     <PackageId>Abp.EntityFrameworkCore</PackageId>
@@ -21,8 +21,8 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <None Include="bin\Release\netstandard2.1\Abp.EntityFrameworkCore.pdb">
-      <PackagePath>lib/netstandard2.1/</PackagePath>
+    <None Include="bin\Release\netstandard2.0\Abp.EntityFrameworkCore.pdb">
+      <PackagePath>lib/netstandard2.0/</PackagePath>
       <Pack>true</Pack>
     </None>
   </ItemGroup>
