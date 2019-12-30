@@ -19,9 +19,9 @@
 
         var options = $.extend(true, {}, abp.ajax.defaultOpts, userOptions);
         var oldBeforeSendOption = options.beforeSend;
-        options.beforeSend = function (xhr) {
+        options.beforeSend = function (xhr, settings) {
           if (oldBeforeSendOption) {
-            oldBeforeSendOption(xhr);
+            oldBeforeSendOption(xhr, settings);
           }
 
           xhr.setRequestHeader("Pragma", "no-cache");
