@@ -10,6 +10,7 @@ using Abp.Linq.Expressions;
 using Abp.Runtime.Session;
 using JetBrains.Annotations;
 using Microsoft.EntityFrameworkCore;
+using Z.EntityFramework.Extensions;
 using Z.EntityFramework.Plus;
 
 namespace Abp.EntityFrameworkCore.EFPlus
