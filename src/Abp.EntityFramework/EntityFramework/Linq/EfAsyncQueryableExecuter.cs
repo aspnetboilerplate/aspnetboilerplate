@@ -38,5 +38,10 @@ namespace Abp.EntityFramework.Linq
         {
             return queryable.FirstOrDefault();
         }
+
+        public Task<bool> AnyAsync<T>(IQueryable<T> queryable)
+        {
+            return queryable.AnyAsync();
+        }
     }
 }
