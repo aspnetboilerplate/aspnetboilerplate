@@ -20,7 +20,6 @@ namespace Abp.WebHooks.BackgroundWorker
             _webHooksConfiguration = webHooksConfiguration;
         }
 
-        [UnitOfWork]
         public override void Execute(WebHookSenderInput args)
         {
             using (var webHookSender = _iocResolver.ResolveAsDisposable<IWebHookSender>())

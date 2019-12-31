@@ -40,13 +40,13 @@ namespace Abp.WebHooks
         /// Updates webhook subscription to a persistent store.
         /// </summary>
         /// <param name="webHookSubscription">webhook subscription information</param>
-        Task UpdateSubscriptionAsync(WebHookSubscriptionInfo webHookSubscription);
+        Task UpdateAsync(WebHookSubscriptionInfo webHookSubscription);
 
         /// <summary>
         /// Updates webhook subscription to a persistent store.
         /// </summary>
         /// <param name="webHookSubscription">webhook subscription information</param>
-        void UpdateSubscription(WebHookSubscriptionInfo webHookSubscription);
+        void Update(WebHookSubscriptionInfo webHookSubscription);
 
         /// <summary>
         /// Deletes subscription if exists with given id

@@ -9,7 +9,7 @@ namespace Abp.WebHooks
     /// Null pattern implementation of <see cref="IWebHookSubscriptionsStore"/>.
     /// It's used if <see cref="IWebHookSubscriptionsStore"/> is not implemented by actual persistent store
     /// </summary>
-    public class NullWebHookSubscriptionsStore : IWebHookSubscriptionsStore, ISingletonDependency
+    public class NullWebHookSubscriptionsStore : IWebHookSubscriptionsStore
     {
         public static NullWebHookSubscriptionsStore Instance { get; } = new NullWebHookSubscriptionsStore();
 
@@ -32,12 +32,12 @@ namespace Abp.WebHooks
         {
         }
 
-        public Task UpdateSubscriptionAsync(WebHookSubscriptionInfo webHookSubscription)
+        public Task UpdateAsync(WebHookSubscriptionInfo webHookSubscription)
         {
             return Task.CompletedTask;
         }
 
-        public void UpdateSubscription(WebHookSubscriptionInfo webHookSubscription)
+        public void Update(WebHookSubscriptionInfo webHookSubscription)
         {
 
         }
@@ -89,7 +89,7 @@ namespace Abp.WebHooks
 
         public void SetActive(Guid id, bool active)
         {
-            
+
         }
     }
 }

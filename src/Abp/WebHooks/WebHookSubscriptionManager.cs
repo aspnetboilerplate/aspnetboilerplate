@@ -85,7 +85,7 @@ namespace Abp.WebHooks
                 return WebHookSubscriptionsStore.InsertAsync(webHookSubscription.ToWebHookSubscriptionInfo());
             }
 
-            return WebHookSubscriptionsStore.UpdateSubscriptionAsync(webHookSubscription.ToWebHookSubscriptionInfo());
+            return WebHookSubscriptionsStore.UpdateAsync(webHookSubscription.ToWebHookSubscriptionInfo());
         }
 
         public void AddOrUpdateSubscription(WebHookSubscription webHookSubscription)
@@ -97,7 +97,7 @@ namespace Abp.WebHooks
             }
             else
             {
-                WebHookSubscriptionsStore.UpdateSubscription(webHookSubscription.ToWebHookSubscriptionInfo());
+                WebHookSubscriptionsStore.Update(webHookSubscription.ToWebHookSubscriptionInfo());
             }
         }
 
