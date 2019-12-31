@@ -3,7 +3,10 @@ using System.Threading.Tasks;
 
 namespace Abp.WebHooks
 {
-    public interface IWebHookStore
+    /// <summary>
+    /// Uses <see cref="IWebHookStore"/>, works with cache
+    /// </summary>
+    public interface IWebhookStoreManager
     {
         /// <summary>
         /// Inserts to persistent store

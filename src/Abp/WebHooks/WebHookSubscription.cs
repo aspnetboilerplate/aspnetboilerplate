@@ -36,6 +36,11 @@ namespace Abp.WebHooks
         /// </summary>
         public List<string> WebHookDefinitions { get; set; }
 
+        /// <summary>
+        /// Gets a set of additional HTTP headers.That headers will be sent with the webhook.
+        /// </summary>
+        public IDictionary<string, string> Headers { get; set; }
+            
         public WebHookSubscription()
         {
             IsActive = true;

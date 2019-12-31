@@ -7,6 +7,16 @@ namespace Abp.WebHooks
     public interface IWebHookSubscriptionManager
     {
         /// <summary>
+        /// Returns subscription for given id. 
+        /// </summary>
+        Task<WebHookSubscription> GetAsync(Guid id);
+
+        /// <summary>
+        /// Returns subscription for given id. 
+        /// </summary>
+        WebHookSubscription Get(Guid id);
+
+        /// <summary>
         /// Gets all subscription for given webhook. 
         /// </summary>
         /// <param name="webHookName">Name of the webhook</param>

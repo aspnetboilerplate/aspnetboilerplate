@@ -13,9 +13,9 @@ namespace Abp.WebHooks
 
         void Update(WebHookWorkItem webHookWorkItem);
 
-        Task<WebHookInfo> GetAsync(Guid id);
+        Task<WebHookWorkItem> GetAsync(Guid id);
 
-        WebHookInfo Get(Guid id);
+        WebHookWorkItem Get(Guid id);
 
         /// <summary>
         /// Returns work item count by given web hook id and subscription id, (How many times publisher tried to send web hook)

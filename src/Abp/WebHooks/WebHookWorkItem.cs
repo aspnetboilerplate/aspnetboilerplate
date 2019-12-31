@@ -10,7 +10,7 @@ namespace Abp.WebHooks
     /// Table for store webhook work items. Each item stores web hook send attempt of <see cref="WebHookInfo"/> to subscribed users
     /// </summary>
     [Table("AbpWebHookWorkItems")]
-    public class WebHookWorkItem : CreationAuditedEntity<Guid>, ISoftDelete
+    public class WebHookWorkItem : FullAuditedEntity<Guid>
     {
         /// <summary>
         /// <see cref="WebHookInfo"/> foreign id 
@@ -21,14 +21,14 @@ namespace Abp.WebHooks
         /// <see cref="WebHookSubscription"/> foreign id 
         /// </summary>
         public Guid WebHookSubscriptionId { get; set; }
-        
-        /// <summary>
-        /// Response that webhook endpoint send back
-        /// </summary>
-        public string Response { get; set; }
 
         /// <summary>
-        /// Webhook response status code
+        /// Webhook response content that webhook endpoint send back
+        /// </summary>
+        public string ResponseContent { get; set; }
+
+        /// <summary>
+        /// Webhook response status code that webhook endpoint send back
         /// </summary>
         public HttpStatusCode? ResponseStatusCode { get; set; }
 
@@ -36,7 +36,5 @@ namespace Abp.WebHooks
         /// Is webhook transmitted successfully.
         /// </summary>
         public bool Transmitted { get; set; }
-
-        public bool IsDeleted { get; set; }
     }
 }

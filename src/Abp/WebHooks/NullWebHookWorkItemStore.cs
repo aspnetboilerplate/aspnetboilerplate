@@ -5,6 +5,8 @@ namespace Abp.WebHooks
 {
     public class NullWebHookWorkItemStore : IWebHookWorkItemStore
     {
+        public static NullWebHookWorkItemStore Instance = new NullWebHookWorkItemStore();
+
         public Task InsertAsync(WebHookWorkItem webHookWorkItem)
         {
             return Task.CompletedTask;
@@ -23,14 +25,14 @@ namespace Abp.WebHooks
         {
         }
 
-        public Task<WebHookInfo> GetAsync(Guid id)
+        public Task<WebHookWorkItem> GetAsync(Guid id)
         {
-            return Task.FromResult<WebHookInfo>(null);
+            return Task.FromResult<WebHookWorkItem>(default);
         }
 
-        public WebHookInfo Get(Guid id)
+        public WebHookWorkItem Get(Guid id)
         {
-            return null;
+            return default;
         }
 
         public Task<int> GetRepetitionCountAsync(Guid webHookId, Guid webHookSubscriptionId)

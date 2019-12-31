@@ -37,7 +37,7 @@ namespace Abp.WebHooks
         public bool IsActive { get; set; }
 
         /// <summary>
-        /// Subscribed webhook definitions unique names. (separator is ';')
+        /// Subscribed webhook definitions unique names.It contains webhook definitions list as json
         /// <para>
         /// Do not change it manually. Use <see cref="WebHookSubscriptionExtensions.AddWebHookDefinition"/>,
         /// <see cref="WebHookSubscriptionExtensions.RemoveWebHookDefinition"/> and
@@ -45,6 +45,11 @@ namespace Abp.WebHooks
         /// </para> 
         /// </summary>
         public string WebHookDefinitions { get; set; }
+
+        /// <summary>
+        /// Gets a set of additional HTTP headers.That headers will be sent with the webhook. It contains webhook header dictionary as json
+        /// </summary>
+        public string Headers { get; set; }
 
         public WebHookSubscriptionInfo()
         {

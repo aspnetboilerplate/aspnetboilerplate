@@ -2,79 +2,90 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Abp.Domain.Services;
 using Abp.Domain.Uow;
 
 namespace Abp.WebHooks
 {
-    public class WebHookSubscriptionManager : IWebHookSubscriptionManager
+    public class WebHookSubscriptionManager : DomainService, IWebHookSubscriptionManager
     {
-        private readonly IWebHookSubscriptionsStore _webHookSubscriptionsStore;
+        public IWebHookSubscriptionsStore WebHookSubscriptionsStore { get; set; }
         private readonly IGuidGenerator _guidGenerator;
 
         public WebHookSubscriptionManager(
-            IWebHookSubscriptionsStore webHookSubscriptionsStore,
             IGuidGenerator guidGenerator)
         {
-            _webHookSubscriptionsStore = webHookSubscriptionsStore;
             _guidGenerator = guidGenerator;
+
+            WebHookSubscriptionsStore = NullWebHookSubscriptionsStore.Instance;
+        }
+
+        public async Task<WebHookSubscription> GetAsync(Guid id)
+        {
+            return (await WebHookSubscriptionsStore.GetAsync(id)).ToWebHookSubscription();
+        }
+
+        public WebHookSubscription Get(Guid id)
+        {
+            return WebHookSubscriptionsStore.Get(id).ToWebHookSubscription();
         }
 
         public async Task<List<WebHookSubscription>> GetAllSubscriptionsAsync(string webHookName)
         {
-            return (await _webHookSubscriptionsStore.GetAllSubscriptionsAsync(webHookName))
+            return (await WebHookSubscriptionsStore.GetAllSubscriptionsAsync(webHookName))
                 .Select(x => x.ToWebHookSubscription())
                 .ToList();
         }
 
         public List<WebHookSubscription> GetAllSubscriptions(string webHookName)
         {
-            return _webHookSubscriptionsStore.GetAllSubscriptions(webHookName)
+            return WebHookSubscriptionsStore.GetAllSubscriptions(webHookName)
                 .Select(x => x.ToWebHookSubscription())
                 .ToList();
         }
 
         public Task<bool> IsSubscribedAsync(UserIdentifier user, string webHookName)
         {
-            return _webHookSubscriptionsStore.IsSubscribedAsync(user, webHookName);
+            return WebHookSubscriptionsStore.IsSubscribedAsync(user, webHookName);
         }
 
         public bool IsSubscribed(UserIdentifier user, string webHookName)
         {
-            return _webHookSubscriptionsStore.IsSubscribed(user, webHookName);
+            return WebHookSubscriptionsStore.IsSubscribed(user, webHookName);
         }
 
         [UnitOfWork]
         public Task ActivateSubscriptionAsync(Guid id)
         {
-            return _webHookSubscriptionsStore.SetActiveAsync(id, true);
+            return WebHookSubscriptionsStore.SetActiveAsync(id, true);
         }
 
         [UnitOfWork]
         public void ActivateSubscription(Guid id)
         {
-            _webHookSubscriptionsStore.SetActive(id, true);
+            WebHookSubscriptionsStore.SetActive(id, true);
         }
 
         [UnitOfWork]
         public Task DeactivateSubscriptionAsync(Guid id)
         {
-            return _webHookSubscriptionsStore.SetActiveAsync(id, false);
+            return WebHookSubscriptionsStore.SetActiveAsync(id, false);
         }
 
         [UnitOfWork]
         public void DeactivateSubscription(Guid id)
         {
-            _webHookSubscriptionsStore.SetActive(id, false);
+            WebHookSubscriptionsStore.SetActive(id, false);
         }
 
         public Task AddOrUpdateSubscriptionAsync(WebHookSubscription webHookSubscription)
         {
             if (webHookSubscription.Id == default)
             {
-                return _webHookSubscriptionsStore.InsertAsync(webHookSubscription.ToWebHookSubscriptionInfo());
+                return WebHookSubscriptionsStore.InsertAsync(webHookSubscription.ToWebHookSubscriptionInfo());
             }
 
-            return _webHookSubscriptionsStore.UpdateSubscriptionAsync(webHookSubscription.ToWebHookSubscriptionInfo());
+            return WebHookSubscriptionsStore.UpdateSubscriptionAsync(webHookSubscription.ToWebHookSubscriptionInfo());
         }
 
         public void AddOrUpdateSubscription(WebHookSubscription webHookSubscription)
@@ -82,38 +93,38 @@ namespace Abp.WebHooks
             if (webHookSubscription.Id == default)
             {
                 webHookSubscription.Id = _guidGenerator.Create();
-                _webHookSubscriptionsStore.Insert(webHookSubscription.ToWebHookSubscriptionInfo());
+                WebHookSubscriptionsStore.Insert(webHookSubscription.ToWebHookSubscriptionInfo());
             }
             else
             {
-                _webHookSubscriptionsStore.UpdateSubscription(webHookSubscription.ToWebHookSubscriptionInfo());
+                WebHookSubscriptionsStore.UpdateSubscription(webHookSubscription.ToWebHookSubscriptionInfo());
             }
         }
 
         [UnitOfWork]
         public async Task AddWebHookAsync(Guid id, string webHookName)
         {
-            var subscription = await _webHookSubscriptionsStore.GetAsync(id);
+            var subscription = await WebHookSubscriptionsStore.GetAsync(id);
             subscription.AddWebHookDefinition(webHookName);
         }
 
         [UnitOfWork]
         public void AddWebHook(Guid id, string webHookName)
         {
-            var subscription = _webHookSubscriptionsStore.Get(id);
+            var subscription = WebHookSubscriptionsStore.Get(id);
             subscription.AddWebHookDefinition(webHookName);
         }
 
         public async Task<List<WebHookSubscription>> GetSubscribedWebHooksAsync(UserIdentifier user)
         {
-            return (await _webHookSubscriptionsStore.GetSubscribedWebHooksAsync(user))
+            return (await WebHookSubscriptionsStore.GetSubscribedWebHooksAsync(user))
                 .Select(x => x.ToWebHookSubscription())
                 .ToList();
         }
 
         public List<WebHookSubscription> GetSubscribedWebHooks(UserIdentifier user)
         {
-            return _webHookSubscriptionsStore.GetSubscribedWebHooks(user)
+            return WebHookSubscriptionsStore.GetSubscribedWebHooks(user)
                 .Select(x => x.ToWebHookSubscription())
                 .ToList();
         }
