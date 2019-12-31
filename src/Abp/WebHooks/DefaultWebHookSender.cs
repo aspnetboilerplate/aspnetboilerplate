@@ -17,62 +17,41 @@ namespace Abp.WebHooks
         internal const string SignatureHeaderValueTemplate = SignatureHeaderKey + "={0}";
         internal const string SignatureHeaderName = "abp-webhook-signature";
 
-        private readonly IWebHookSubscriptionManager _webHookSubscriptionManager;
-        private readonly IWebhookStoreManager _webhookStoreManager;
         private readonly IWebHooksConfiguration _webHooksConfiguration;
-
-
         public IWebHookWorkItemStore WebHookWorkItemStore { get; set; }
 
-        public DefaultWebHookSender(
-            IWebHookSubscriptionManager webHookSubscriptionManager,
-            IWebhookStoreManager webhookStoreManager,
-            IWebHooksConfiguration webHooksConfiguration)
+        public DefaultWebHookSender(IWebHooksConfiguration webHooksConfiguration)
         {
-            _webHookSubscriptionManager = webHookSubscriptionManager;
-            _webhookStoreManager = webhookStoreManager;
             _webHooksConfiguration = webHooksConfiguration;
 
             WebHookWorkItemStore = NullWebHookWorkItemStore.Instance;
         }
 
-        public async Task<bool> TrySendWebHookAsync(Guid webHookId, Guid webHookSubscriptionId)
+        public async Task<bool> TrySendWebHookAsync(WebHookSenderInput webHookSenderArgs)
         {
-            if (webHookId == default)
+            if (webHookSenderArgs.WebHookId == default)
             {
-                throw new ArgumentNullException(nameof(webHookId));
+                throw new ArgumentNullException(nameof(webHookSenderArgs.WebHookId));
             }
 
-            if (webHookSubscriptionId == default)
+            if (webHookSenderArgs.WebHookSubscriptionId == default)
             {
-                throw new ArgumentNullException(nameof(webHookSubscriptionId));
+                throw new ArgumentNullException(nameof(webHookSenderArgs.WebHookSubscriptionId));
             }
 
-            var webhook = await _webhookStoreManager.GetAsync(webHookId);
-            if (webhook == null)
-            {
-                throw new Exception("DefaultWebHookSender can not send webhook since could not found webhook by id: " + webHookId);
-            }
+            var workItemId = await InsertAndGetIdWebHookWorkItemAsync(webHookSenderArgs);
 
-            var subscription = await _webHookSubscriptionManager.GetAsync(webHookSubscriptionId);
-            if (subscription == null)
-            {
-                throw new Exception("DefaultWebHookSender can not send webhook since could not found web hook subscription by id: " + webHookSubscriptionId);
-            }
+            var request = CreateWebHookRequestMessage(webHookSenderArgs);
 
-            var workItemId = await InsertAndGetIdWebHookWorkItemAsync(webhook, subscription);
-
-            var request = CreateWebHookRequestMessage(subscription);
-
-            var webHookBody = await GetWebhookBodyAsync(webhook, subscription);
+            var webHookBody = await GetWebhookBodyAsync(webHookSenderArgs);
 
             var serializedBody = _webHooksConfiguration.JsonSerializerSettings != null
                 ? webHookBody.ToJsonString(_webHooksConfiguration.JsonSerializerSettings)
                 : webHookBody.ToJsonString();
 
-            SignWebHookRequest(request, serializedBody, subscription.Secret);
+            SignWebHookRequest(request, serializedBody, webHookSenderArgs.Secret);
 
-            AddAdditionalHeaders(request, subscription);
+            AddAdditionalHeaders(request, webHookSenderArgs);
 
             bool isSucceed;
             //TODO:Use client factory
@@ -86,43 +65,31 @@ namespace Abp.WebHooks
             return isSucceed;
         }
 
-        public bool TrySendWebHook(Guid webHookId, Guid webHookSubscriptionId)
+        public bool TrySendWebHook(WebHookSenderInput webHookSenderArgs)
         {
-            if (webHookId == default)
+            if (webHookSenderArgs.WebHookId == default)
             {
-                throw new ArgumentNullException(nameof(webHookId));
+                throw new ArgumentNullException(nameof(webHookSenderArgs.WebHookId));
             }
 
-            if (webHookSubscriptionId == default)
+            if (webHookSenderArgs.WebHookSubscriptionId == default)
             {
-                throw new ArgumentNullException(nameof(webHookSubscriptionId));
+                throw new ArgumentNullException(nameof(webHookSenderArgs.WebHookSubscriptionId));
             }
 
-            var webhook = _webhookStoreManager.Get(webHookId);
-            if (webhook == null)
-            {
-                throw new Exception("DefaultWebHookSender can not send webhook since could not found webhook by id: " + webHookId);
-            }
+            var workItemId = InsertAndGetIdWebHookWorkItem(webHookSenderArgs);
 
-            var subscription = _webHookSubscriptionManager.Get(webHookSubscriptionId);
-            if (subscription == null)
-            {
-                throw new Exception("DefaultWebHookSender can not send webhook since could not found web hook subscription by id: " + webHookSubscriptionId);
-            }
+            var request = CreateWebHookRequestMessage(webHookSenderArgs);
 
-            var workItemId = InsertAndGetIdWebHookWorkItem(webhook, subscription);
-
-            var request = CreateWebHookRequestMessage(subscription);
-
-            var webHookBody = GetWebhookBody(webhook, subscription);
+            var webHookBody = GetWebhookBody(webHookSenderArgs);
 
             var serializedBody = _webHooksConfiguration.JsonSerializerSettings != null
                 ? webHookBody.ToJsonString(_webHooksConfiguration.JsonSerializerSettings)
                 : webHookBody.ToJsonString();
 
-            SignWebHookRequest(request, serializedBody, subscription.Secret);
+            SignWebHookRequest(request, serializedBody, webHookSenderArgs.Secret);
 
-            AddAdditionalHeaders(request, subscription);
+            AddAdditionalHeaders(request, webHookSenderArgs);
 
             bool isSucceed;
             //TODO:Use client factory
@@ -137,17 +104,12 @@ namespace Abp.WebHooks
         }
 
         [UnitOfWork]
-        protected virtual async Task<Guid> InsertAndGetIdWebHookWorkItemAsync(WebHookInfo webhook, WebHookSubscription subscription)
+        protected virtual async Task<Guid> InsertAndGetIdWebHookWorkItemAsync(WebHookSenderInput webHookSenderArgs)
         {
-            if (!subscription.IsSubscribed(webhook.WebHookDefinition))
-            {
-                throw new ApplicationException($"Subscription does not contain webhook subscription for {webhook.WebHookDefinition}");
-            }
-
             var workItem = new WebHookWorkItem()
             {
-                WebHookId = webhook.Id,
-                WebHookSubscriptionId = subscription.Id
+                WebHookId = webHookSenderArgs.WebHookId,
+                WebHookSubscriptionId = webHookSenderArgs.WebHookSubscriptionId
             };
 
             await WebHookWorkItemStore.InsertAsync(workItem);
@@ -157,17 +119,12 @@ namespace Abp.WebHooks
         }
 
         [UnitOfWork]
-        protected virtual Guid InsertAndGetIdWebHookWorkItem(WebHookInfo webhook, WebHookSubscription subscription)
+        protected virtual Guid InsertAndGetIdWebHookWorkItem(WebHookSenderInput webHookSenderArgs)
         {
-            if (!subscription.IsSubscribed(webhook.WebHookDefinition))
-            {
-                throw new ApplicationException($"Subscription does not contain webhook subscription for {webhook.WebHookDefinition}");
-            }
-
             var workItem = new WebHookWorkItem()
             {
-                WebHookId = webhook.Id,
-                WebHookSubscriptionId = subscription.Id
+                WebHookId = webHookSenderArgs.WebHookId,
+                WebHookSubscriptionId = webHookSenderArgs.WebHookSubscriptionId
             };
 
             WebHookWorkItemStore.Insert(workItem);
@@ -203,30 +160,29 @@ namespace Abp.WebHooks
         /// <summary>
         /// You can override this to change request message
         /// </summary>
-        /// <param name="subscription"></param>
         /// <returns></returns>
-        protected virtual HttpRequestMessage CreateWebHookRequestMessage(WebHookSubscription subscription)
+        protected virtual HttpRequestMessage CreateWebHookRequestMessage(WebHookSenderInput webHookSenderArgs)
         {
-            return new HttpRequestMessage(HttpMethod.Post, subscription.WebHookUri);
+            return new HttpRequestMessage(HttpMethod.Post, webHookSenderArgs.WebHookUri);
         }
 
-        protected virtual async Task<WebhookBody> GetWebhookBodyAsync(WebHookInfo webhook, WebHookSubscription subscription)
+        protected virtual async Task<WebhookBody> GetWebhookBodyAsync(WebHookSenderInput webHookSenderArgs)
         {
             return new WebhookBody
             {
-                Event = webhook.WebHookDefinition,
-                Data = webhook.Data,
-                Attempt = await WebHookWorkItemStore.GetRepetitionCountAsync(webhook.Id, subscription.Id) + 1
+                Event = webHookSenderArgs.WebHookDefinition,
+                Data = webHookSenderArgs.Data,
+                Attempt = await WebHookWorkItemStore.GetRepetitionCountAsync(webHookSenderArgs.WebHookId, webHookSenderArgs.WebHookSubscriptionId) + 1
             };
         }
 
-        protected virtual WebhookBody GetWebhookBody(WebHookInfo webhook, WebHookSubscription subscription)
+        protected virtual WebhookBody GetWebhookBody(WebHookSenderInput webHookSenderArgs)
         {
             return new WebhookBody
             {
-                Event = webhook.WebHookDefinition,
-                Data = webhook.Data,
-                Attempt = WebHookWorkItemStore.GetRepetitionCount(webhook.Id, subscription.Id) + 1
+                Event = webHookSenderArgs.WebHookDefinition,
+                Data = webHookSenderArgs.Data,
+                Attempt = WebHookWorkItemStore.GetRepetitionCount(webHookSenderArgs.WebHookId, webHookSenderArgs.WebHookSubscriptionId) + 1
             };
         }
 
@@ -257,9 +213,9 @@ namespace Abp.WebHooks
             }
         }
 
-        protected virtual void AddAdditionalHeaders(HttpRequestMessage request, WebHookSubscription subscription)
+        protected virtual void AddAdditionalHeaders(HttpRequestMessage request, WebHookSenderInput webHookSenderArgs)
         {
-            foreach (var header in subscription.Headers)
+            foreach (var header in webHookSenderArgs.Headers)
             {
                 if (request.Headers.TryAddWithoutValidation(header.Key, header.Value))
                 {
@@ -270,7 +226,7 @@ namespace Abp.WebHooks
                     continue;
                 }
 
-                throw new Exception($"Invalid Header.SubscriptionId:{subscription.Id},Header: {header.Key}:{header.Value}");
+                throw new Exception($"Invalid Header. SubscriptionId:{webHookSenderArgs.WebHookSubscriptionId},Header: {header.Key}:{header.Value}");
             }
         }
     }

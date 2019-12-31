@@ -34,16 +34,22 @@ namespace Abp.WebHooks
         [UnitOfWork]
         public virtual async Task PublishAsync(string webHookName, object data)
         {
-            var webHookId = await SaveWebHookAndGetIdAsync(webHookName, data);
+            var webHook = await SaveWebHookAndGetAsync(webHookName, data);
 
             var subscriptions = await _webHookSubscriptionManager.GetAllSubscriptionsAsync(webHookName);
 
             foreach (var webHookSubscription in subscriptions)
             {
-                await _backgroundJobManager.EnqueueAsync<WebHookSenderJob, WebHookSenderJobArgs>(new WebHookSenderJobArgs()
+                await _backgroundJobManager.EnqueueAsync<WebHookSenderJob, WebHookSenderInput>(new WebHookSenderInput()
                 {
-                    WebHookId = webHookId,
-                    WebHookSubscriptionId = webHookSubscription.Id
+                    WebHookId = webHook.Id,
+                    Data = webHook.Data,
+                    WebHookDefinition = webHook.WebHookDefinition,
+
+                    WebHookSubscriptionId = webHookSubscription.Id,
+                    Headers = webHookSubscription.Headers,
+                    Secret = webHookSubscription.Secret,
+                    WebHookUri = webHookSubscription.WebHookUri
                 });
             }
         }
@@ -51,21 +57,27 @@ namespace Abp.WebHooks
         [UnitOfWork]
         public virtual void Publish(string webHookName, object data)
         {
-            var webHookId = SaveWebHookAndGetId(webHookName, data);
+            var webHook = SaveWebHookAndGet(webHookName, data);
 
             var subscriptions = _webHookSubscriptionManager.GetAllSubscriptions(webHookName);
 
             foreach (var webHookSubscription in subscriptions)
             {
-                _backgroundJobManager.Enqueue<WebHookSenderJob, WebHookSenderJobArgs>(new WebHookSenderJobArgs()
+                _backgroundJobManager.Enqueue<WebHookSenderJob, WebHookSenderInput>(new WebHookSenderInput()
                 {
-                    WebHookId = webHookId,
-                    WebHookSubscriptionId = webHookSubscription.Id
+                    WebHookId = webHook.Id,
+                    Data = webHook.Data,
+                    WebHookDefinition = webHook.WebHookDefinition,
+
+                    WebHookSubscriptionId = webHookSubscription.Id,
+                    Headers = webHookSubscription.Headers,
+                    Secret = webHookSubscription.Secret,
+                    WebHookUri = webHookSubscription.WebHookUri
                 });
             }
         }
 
-        protected virtual Task<Guid> SaveWebHookAndGetIdAsync(string webHookName, object data)
+        protected virtual async Task<WebHookInfo> SaveWebHookAndGetAsync(string webHookName, object data)
         {
             var webHookInfo = new WebHookInfo()
             {
@@ -76,10 +88,11 @@ namespace Abp.WebHooks
                     : data.ToJsonString()
             };
 
-            return WebHookStore.InsertAndGetIdAsync(webHookInfo);
+            await WebHookStore.InsertAndGetIdAsync(webHookInfo);
+            return webHookInfo;
         }
 
-        protected virtual Guid SaveWebHookAndGetId(string webHookName, object data)
+        protected virtual WebHookInfo SaveWebHookAndGet(string webHookName, object data)
         {
             var webHookInfo = new WebHookInfo()
             {
@@ -90,7 +103,8 @@ namespace Abp.WebHooks
                     : data.ToJsonString()
             };
 
-            return WebHookStore.InsertAndGetId(webHookInfo);
+            WebHookStore.InsertAndGetId(webHookInfo);
+            return webHookInfo;
         }
     }
 }
