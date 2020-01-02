@@ -90,8 +90,13 @@ namespace Abp.WebHooks
         [UnitOfWork]
         public Task<bool> IsSubscribedAsync(UserIdentifier user, string webHookName)
         {
-            //TODO: change it after AsyncQueryableExecuter.AnyAsync implemented
-            return Task.FromResult(IsSubscribed(user, webHookName));
+            return AsyncQueryableExecuter.AnyAsync(_webhookSubscriptionRepository.GetAll()
+                .Where(s =>
+                    s.IsActive &&
+                    s.TenantId == user.TenantId &&
+                    s.UserId == user.UserId &&
+                    s.WebHookDefinitions.Contains("\"" + webHookName + "\"")
+                ));
         }
 
         [UnitOfWork]
