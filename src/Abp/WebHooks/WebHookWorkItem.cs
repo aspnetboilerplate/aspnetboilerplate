@@ -31,10 +31,5 @@ namespace Abp.WebHooks
         /// Webhook response status code that webhook endpoint send back
         /// </summary>
         public HttpStatusCode? ResponseStatusCode { get; set; }
-
-        /// <summary>
-        /// Is webhook transmitted successfully.
-        /// </summary>
-        public bool Transmitted { get; set; }
     }
 }

@@ -1,4 +1,5 @@
-﻿using Abp.BackgroundJobs;
+﻿using System;
+using Abp.BackgroundJobs;
 using Abp.Dependency;
 using Abp.Domain.Uow;
 
@@ -22,6 +23,16 @@ namespace Abp.WebHooks.BackgroundWorker
 
         public override void Execute(WebHookSenderInput args)
         {
+            if (args.WebHookId == default)
+            {
+                throw new ArgumentNullException(nameof(args.WebHookId));
+            }
+
+            if (args.WebHookSubscriptionId == default)
+            {
+                throw new ArgumentNullException(nameof(args.WebHookSubscriptionId));
+            }
+
             using (var webHookSender = _iocResolver.ResolveAsDisposable<IWebHookSender>())
             {
                 if (webHookSender.Object.TrySendWebHook(args))

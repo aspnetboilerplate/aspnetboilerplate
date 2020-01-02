@@ -6,14 +6,14 @@ namespace Abp.WebHooks
     public class WebHookSenderInput
     {
         //Webhook information 
-         
+
         /// <summary>
         /// <see cref="WebHookInfo"/> foreign id 
         /// </summary>
         public Guid WebHookId { get; set; }
 
         /// <summary>
-        /// Webhook unique name id
+        /// Webhook unique name
         /// </summary>
         public string WebHookDefinition { get; set; }
 

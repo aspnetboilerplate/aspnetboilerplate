@@ -29,78 +29,94 @@ namespace Abp.WebHooks
 
         public async Task<bool> TrySendWebHookAsync(WebHookSenderInput webHookSenderArgs)
         {
-            if (webHookSenderArgs.WebHookId == default)
+            try
             {
-                throw new ArgumentNullException(nameof(webHookSenderArgs.WebHookId));
-            }
+                if (webHookSenderArgs.WebHookId == default)
+                {
+                    throw new ArgumentNullException(nameof(webHookSenderArgs.WebHookId));
+                }
 
-            if (webHookSenderArgs.WebHookSubscriptionId == default)
+                if (webHookSenderArgs.WebHookSubscriptionId == default)
+                {
+                    throw new ArgumentNullException(nameof(webHookSenderArgs.WebHookSubscriptionId));
+                }
+
+                var workItemId = await InsertAndGetIdWebHookWorkItemAsync(webHookSenderArgs);
+
+                var request = CreateWebHookRequestMessage(webHookSenderArgs);
+
+                var webHookBody = await GetWebhookBodyAsync(webHookSenderArgs);
+
+                var serializedBody = _webHooksConfiguration.JsonSerializerSettings != null
+                    ? webHookBody.ToJsonString(_webHooksConfiguration.JsonSerializerSettings)
+                    : webHookBody.ToJsonString();
+
+                SignWebHookRequest(request, serializedBody, webHookSenderArgs.Secret);
+
+                AddAdditionalHeaders(request, webHookSenderArgs);
+
+                bool isSucceed;
+                //TODO:Use client factory
+                using (var client = new HttpClient())
+                {
+                    var response = await client.SendAsync(request);
+                    await StoreResponseOnWebHookWorkItemAsync(workItemId, response);
+                    isSucceed = response.IsSuccessStatusCode;
+                }
+
+                return isSucceed;
+            }
+            catch (Exception e)
             {
-                throw new ArgumentNullException(nameof(webHookSenderArgs.WebHookSubscriptionId));
+                Logger.Error("Error while sending web hook", e);
+                return false;
             }
-
-            var workItemId = await InsertAndGetIdWebHookWorkItemAsync(webHookSenderArgs);
-
-            var request = CreateWebHookRequestMessage(webHookSenderArgs);
-
-            var webHookBody = await GetWebhookBodyAsync(webHookSenderArgs);
-
-            var serializedBody = _webHooksConfiguration.JsonSerializerSettings != null
-                ? webHookBody.ToJsonString(_webHooksConfiguration.JsonSerializerSettings)
-                : webHookBody.ToJsonString();
-
-            SignWebHookRequest(request, serializedBody, webHookSenderArgs.Secret);
-
-            AddAdditionalHeaders(request, webHookSenderArgs);
-
-            bool isSucceed;
-            //TODO:Use client factory
-            using (var client = new HttpClient())
-            {
-                var response = await client.SendAsync(request);
-                await StoreResponseOnWebHookWorkItemAsync(workItemId, response);
-                isSucceed = response.IsSuccessStatusCode;
-            }
-
-            return isSucceed;
         }
 
         public bool TrySendWebHook(WebHookSenderInput webHookSenderArgs)
         {
-            if (webHookSenderArgs.WebHookId == default)
+            try
             {
-                throw new ArgumentNullException(nameof(webHookSenderArgs.WebHookId));
-            }
+                if (webHookSenderArgs.WebHookId == default)
+                {
+                    throw new ArgumentNullException(nameof(webHookSenderArgs.WebHookId));
+                }
 
-            if (webHookSenderArgs.WebHookSubscriptionId == default)
+                if (webHookSenderArgs.WebHookSubscriptionId == default)
+                {
+                    throw new ArgumentNullException(nameof(webHookSenderArgs.WebHookSubscriptionId));
+                }
+
+                var workItemId = InsertAndGetIdWebHookWorkItem(webHookSenderArgs);
+
+                var request = CreateWebHookRequestMessage(webHookSenderArgs);
+
+                var webHookBody = GetWebhookBody(webHookSenderArgs);
+
+                var serializedBody = _webHooksConfiguration.JsonSerializerSettings != null
+                    ? webHookBody.ToJsonString(_webHooksConfiguration.JsonSerializerSettings)
+                    : webHookBody.ToJsonString();
+
+                SignWebHookRequest(request, serializedBody, webHookSenderArgs.Secret);
+
+                AddAdditionalHeaders(request, webHookSenderArgs);
+
+                bool isSucceed;
+                //TODO:Use client factory
+                using (var client = new HttpClient())
+                {
+                    var response = AsyncHelper.RunSync(() => client.SendAsync(request));
+                    StoreResponseOnWebHookWorkItem(workItemId, response);
+                    isSucceed = response.IsSuccessStatusCode;
+                }
+
+                return isSucceed;
+            }
+            catch (Exception e)
             {
-                throw new ArgumentNullException(nameof(webHookSenderArgs.WebHookSubscriptionId));
+                Logger.Error("Error while sending web hook", e);
+                return false;
             }
-
-            var workItemId = InsertAndGetIdWebHookWorkItem(webHookSenderArgs);
-
-            var request = CreateWebHookRequestMessage(webHookSenderArgs);
-
-            var webHookBody = GetWebhookBody(webHookSenderArgs);
-
-            var serializedBody = _webHooksConfiguration.JsonSerializerSettings != null
-                ? webHookBody.ToJsonString(_webHooksConfiguration.JsonSerializerSettings)
-                : webHookBody.ToJsonString();
-
-            SignWebHookRequest(request, serializedBody, webHookSenderArgs.Secret);
-
-            AddAdditionalHeaders(request, webHookSenderArgs);
-
-            bool isSucceed;
-            //TODO:Use client factory
-            using (var client = new HttpClient())
-            {
-                var response = AsyncHelper.RunSync(() => client.SendAsync(request));
-                StoreResponseOnWebHookWorkItem(workItemId, response);
-                isSucceed = response.IsSuccessStatusCode;
-            }
-
-            return isSucceed;
         }
 
         [UnitOfWork]
@@ -138,7 +154,6 @@ namespace Abp.WebHooks
         {
             var webHookWorkItem = await WebHookWorkItemStore.GetAsync(webHookWorkItemId);
 
-            webHookWorkItem.Transmitted = responseMessage.IsSuccessStatusCode;
             webHookWorkItem.ResponseStatusCode = responseMessage.StatusCode;
             webHookWorkItem.ResponseContent = await responseMessage.Content.ReadAsStringAsync();
 
@@ -150,7 +165,6 @@ namespace Abp.WebHooks
         {
             var webHookWorkItem = WebHookWorkItemStore.Get(webHookWorkItemId);
 
-            webHookWorkItem.Transmitted = responseMessage.IsSuccessStatusCode;
             webHookWorkItem.ResponseStatusCode = responseMessage.StatusCode;
             webHookWorkItem.ResponseContent = AsyncHelper.RunSync(() => responseMessage.Content.ReadAsStringAsync());
 
