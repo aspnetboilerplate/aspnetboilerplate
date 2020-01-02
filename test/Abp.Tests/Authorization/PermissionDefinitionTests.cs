@@ -3,6 +3,7 @@ using System.Linq;
 using Abp.Application.Features;
 using Abp.Authorization;
 using Abp.Configuration.Startup;
+using Abp.Domain.Uow;
 using Abp.Localization;
 using Castle.MicroKernel.Registration;
 using NSubstitute;
@@ -23,10 +24,13 @@ namespace Abp.Tests.Authorization
             LocalIocManager.IocContainer.Register(
                 Component.For<IFeatureDependencyContext, FeatureDependencyContext>().UsingFactoryMethod(() => new FeatureDependencyContext(LocalIocManager, Substitute.For<IFeatureChecker>())),
                 Component.For<MyAuthorizationProvider1>().LifestyleTransient(),
-                Component.For<MyAuthorizationProvider2>().LifestyleTransient()
+                Component.For<MyAuthorizationProvider2>().LifestyleTransient(),
+                Component.For<IUnitOfWorkManager, UnitOfWorkManager>().LifestyleTransient(),
+                Component.For<ICurrentUnitOfWorkProvider, AsyncLocalCurrentUnitOfWorkProvider>().LifestyleTransient(),
+                Component.For<IUnitOfWorkDefaultOptions, UnitOfWorkDefaultOptions>().LifestyleTransient()
                 );
 
-            var permissionManager = new PermissionManager(LocalIocManager, authorizationConfiguration);
+            var permissionManager = new PermissionManager(LocalIocManager, authorizationConfiguration, LocalIocManager.Resolve<IUnitOfWorkManager>());
             permissionManager.Initialize();
 
             permissionManager.GetAllPermissions().Count.ShouldBe(5);
@@ -56,10 +60,13 @@ namespace Abp.Tests.Authorization
             LocalIocManager.IocContainer.Register(
                 Component.For<IFeatureDependencyContext, FeatureDependencyContext>()
                     .UsingFactoryMethod(() => new FeatureDependencyContext(LocalIocManager, Substitute.For<IFeatureChecker>())),
-                Component.For<MyAuthorizationProviderWithCustomProperties>().LifestyleTransient()
+                Component.For<MyAuthorizationProviderWithCustomProperties>().LifestyleTransient(),
+                Component.For<IUnitOfWorkManager, UnitOfWorkManager>().LifestyleTransient(),
+                Component.For<ICurrentUnitOfWorkProvider, AsyncLocalCurrentUnitOfWorkProvider>().LifestyleTransient(),
+                Component.For<IUnitOfWorkDefaultOptions, UnitOfWorkDefaultOptions>().LifestyleTransient()
             );
 
-            var permissionManager = new PermissionManager(LocalIocManager, authorizationConfiguration);
+            var permissionManager = new PermissionManager(LocalIocManager, authorizationConfiguration, LocalIocManager.Resolve<IUnitOfWorkManager>());
             permissionManager.Initialize();
 
             permissionManager.GetAllPermissions().Count.ShouldBe(4);
