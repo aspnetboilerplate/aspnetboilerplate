@@ -117,5 +117,19 @@ namespace Abp.WebHooks
         /// <param name="id">WebHookSubscriptionInfo.Id</param>
         /// <param name="active">IsActive</param>
         void SetActive(Guid id, bool active);
+
+        /// <summary>
+        /// Returns all subscriptions of given user which are subscribed to given webhook.
+        /// </summary>
+        /// <param name="user"></param>
+        /// <param name="webHookName"></param>
+        Task<List<WebHookSubscriptionInfo>> GetAllSubscriptionsAsync(UserIdentifier user, string webHookName);
+
+        /// <summary>
+        /// Returns all subscriptions of given user which are subscribed to given webhook.
+        /// </summary>
+        /// <param name="user"></param>
+        /// <param name="webHookName"></param>
+        List<WebHookSubscriptionInfo> GetAllSubscriptions(UserIdentifier user, string webHookName);
     }
 }

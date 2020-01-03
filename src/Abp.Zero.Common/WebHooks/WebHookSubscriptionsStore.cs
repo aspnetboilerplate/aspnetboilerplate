@@ -137,5 +137,19 @@ namespace Abp.WebHooks
             var subscription = _webhookSubscriptionRepository.Get(id);
             subscription.IsActive = active;
         }
+
+        [UnitOfWork]
+        public Task<List<WebHookSubscriptionInfo>> GetAllSubscriptionsAsync(UserIdentifier user, string webHookName)
+        {
+            return AsyncQueryableExecuter.ToListAsync(_webhookSubscriptionRepository.GetAll()
+                .Where(s => s.TenantId == user.TenantId && s.UserId == user.UserId && s.WebHookDefinitions.Contains("\"" + webHookName + "\"")));
+        }
+
+        [UnitOfWork]
+        public List<WebHookSubscriptionInfo> GetAllSubscriptions(UserIdentifier user, string webHookName)
+        {
+            return _webhookSubscriptionRepository.GetAll()
+                .Where(s => s.TenantId == user.TenantId && s.UserId == user.UserId && s.WebHookDefinitions.Contains("\"" + webHookName + "\"")).ToList();
+        }
     }
 }

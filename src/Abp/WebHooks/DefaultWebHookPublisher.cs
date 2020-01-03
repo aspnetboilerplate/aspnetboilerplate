@@ -35,7 +35,7 @@ namespace Abp.WebHooks
         {
             var webHook = await SaveWebHookAndGetAsync(webHookName, data);
 
-            var subscriptions = await _webHookSubscriptionManager.GetAllSubscriptionsAsync(webHookName);
+            var subscriptions = await _webHookSubscriptionManager.GetAllSubscriptionsPermissionGrantedAsync(webHookName);
 
             foreach (var webHookSubscription in subscriptions)
             {
@@ -56,9 +56,65 @@ namespace Abp.WebHooks
         [UnitOfWork]
         public virtual void Publish(string webHookName, object data)
         {
+            var subscriptions = _webHookSubscriptionManager.GetAllSubscriptionsPermissionGranted(webHookName);
+            if (subscriptions.Count == 0)
+            {
+                return;
+            }
+
             var webHook = SaveWebHookAndGet(webHookName, data);
 
-            var subscriptions = _webHookSubscriptionManager.GetAllSubscriptions(webHookName);
+            foreach (var webHookSubscription in subscriptions)
+            {
+                _backgroundJobManager.Enqueue<WebHookSenderJob, WebHookSenderInput>(new WebHookSenderInput()
+                {
+                    WebHookId = webHook.Id,
+                    Data = webHook.Data,
+                    WebHookDefinition = webHook.WebHookDefinition,
+
+                    WebHookSubscriptionId = webHookSubscription.Id,
+                    Headers = webHookSubscription.Headers,
+                    Secret = webHookSubscription.Secret,
+                    WebHookUri = webHookSubscription.WebHookUri
+                });
+            }
+        }
+
+        public async Task PublishAsync(UserIdentifier user, string webHookName, object data)
+        {
+            var subscriptions = await _webHookSubscriptionManager.GetAllSubscriptionsPermissionGrantedAsync(user, webHookName);
+            if (subscriptions.Count == 0)
+            {
+                return;
+            }
+
+            var webHook = SaveWebHookAndGet(webHookName, data);
+
+            foreach (var webHookSubscription in subscriptions)
+            {
+                await _backgroundJobManager.EnqueueAsync<WebHookSenderJob, WebHookSenderInput>(new WebHookSenderInput()
+                {
+                    WebHookId = webHook.Id,
+                    Data = webHook.Data,
+                    WebHookDefinition = webHook.WebHookDefinition,
+
+                    WebHookSubscriptionId = webHookSubscription.Id,
+                    Headers = webHookSubscription.Headers,
+                    Secret = webHookSubscription.Secret,
+                    WebHookUri = webHookSubscription.WebHookUri
+                });
+            }
+        }
+
+        public void Publish(UserIdentifier user, string webHookName, object data)
+        {
+            var subscriptions = _webHookSubscriptionManager.GetAllSubscriptionsPermissionGranted(user, webHookName);
+            if (subscriptions.Count == 0)
+            {
+                return;
+            }
+
+            var webHook = SaveWebHookAndGet(webHookName, data);
 
             foreach (var webHookSubscription in subscriptions)
             {

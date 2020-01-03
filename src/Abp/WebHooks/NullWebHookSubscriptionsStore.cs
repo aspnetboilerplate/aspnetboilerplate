@@ -91,5 +91,15 @@ namespace Abp.WebHooks
         {
 
         }
+
+        public Task<List<WebHookSubscriptionInfo>> GetAllSubscriptionsAsync(UserIdentifier user, string webHookName)
+        {
+            return Task.FromResult(new List<WebHookSubscriptionInfo>());
+        }
+
+        public List<WebHookSubscriptionInfo> GetAllSubscriptions(UserIdentifier user, string webHookName)
+        {
+            return new List<WebHookSubscriptionInfo>();
+        }
     }
 }
