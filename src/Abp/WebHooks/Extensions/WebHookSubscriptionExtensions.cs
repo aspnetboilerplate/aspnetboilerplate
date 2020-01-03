@@ -1,7 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Collections.Immutable;
-using System.Collections.ObjectModel;
 using System.Linq;
 using Abp.Json;
 
@@ -55,7 +53,7 @@ namespace Abp.WebHooks
         {
             name = name.Trim();
             if (string.IsNullOrWhiteSpace(name))
-            {  
+            {
                 throw new ArgumentNullException(nameof(name), $"{nameof(name)} can not be null, empty or whitespace!");
             }
 
@@ -142,7 +140,7 @@ namespace Abp.WebHooks
         /// <returns></returns>
         public static IDictionary<string, string> GetWebHookHeaders(this WebHookSubscriptionInfo webHookSubscription)
         {
-            if (string.IsNullOrWhiteSpace(webHookSubscription.WebHookDefinitions))
+            if (string.IsNullOrWhiteSpace(webHookSubscription.Headers))
             {
                 return new Dictionary<string, string>();
             }
@@ -155,15 +153,20 @@ namespace Abp.WebHooks
         /// </summary>
         /// <param name="webHookSubscription"></param>
         /// <param name="header">header to add</param>
-        public static void AddWebHookHeader(this WebHookSubscriptionInfo webHookSubscription, KeyValuePair<string, string> header)
+        public static void AddWebHookHeader(this WebHookSubscriptionInfo webHookSubscription, string key, string value)
         {
-            if (string.IsNullOrWhiteSpace(header.Key) || string.IsNullOrWhiteSpace(header.Value))
+            if (string.IsNullOrWhiteSpace(key) )
             {
-                throw new ArgumentNullException(nameof(header), $"{nameof(header.Key)} and {nameof(header.Value)} can not be null, empty or whitespace!");
+                throw new ArgumentNullException(nameof(key), $"{nameof(key)} can not be null, empty or whitespace!");
+            }
+
+            if (string.IsNullOrWhiteSpace(value))
+            {
+                throw new ArgumentNullException(nameof(value), $"{nameof(value)} can not be null, empty or whitespace!");
             }
 
             var headers = webHookSubscription.GetWebHookHeaders();
-            headers[header.Key] = header.Value;
+            headers[key] = value;
 
             webHookSubscription.Headers = headers.ToJsonString();
         }

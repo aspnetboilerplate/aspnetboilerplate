@@ -82,7 +82,7 @@ namespace Abp.WebHooks
             return _webHookDefinitions.ContainsKey(name);
         }
 
-        public async Task<bool> IsAvailableAsync(string name, UserIdentifier user)
+        public async Task<bool> IsAvailableAsync(UserIdentifier user, string name)
         {
             var webHookDefinition = GetOrNull(name);
             if (webHookDefinition == null)
@@ -119,7 +119,7 @@ namespace Abp.WebHooks
             return true;
         }
 
-        public bool IsAvailable(string name, UserIdentifier user)
+        public bool IsAvailable(UserIdentifier user, string name)
         {
             var webHookDefinition = GetOrNull(name);
             if (webHookDefinition == null)

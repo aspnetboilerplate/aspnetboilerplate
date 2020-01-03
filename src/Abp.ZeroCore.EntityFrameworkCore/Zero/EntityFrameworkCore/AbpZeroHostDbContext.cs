@@ -5,6 +5,7 @@ using Abp.Authorization.Users;
 using Abp.BackgroundJobs;
 using Abp.MultiTenancy;
 using Abp.Notifications;
+using Abp.WebHooks;
 using Microsoft.EntityFrameworkCore;
 
 namespace Abp.Zero.EntityFrameworkCore
@@ -55,6 +56,21 @@ namespace Abp.Zero.EntityFrameworkCore
         /// Notifications.
         /// </summary>
         public virtual DbSet<NotificationInfo> Notifications { get; set; }
+        
+        /// <summary>
+        /// Webhook information
+        /// </summary>
+        public virtual DbSet<WebHookInfo> WebHooks { get; set; }
+
+        /// <summary>
+        /// Web subscriptions
+        /// </summary>
+        public virtual DbSet<WebHookSubscriptionInfo> WebHookSubscriptions { get; set; }
+
+        /// <summary>
+        /// Webhook work items
+        /// </summary>
+        public virtual DbSet<WebHookWorkItem> WebHookWorkItems { get; set; }
 
         /// <summary>
         /// 

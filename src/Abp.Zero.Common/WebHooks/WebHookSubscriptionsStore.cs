@@ -112,14 +112,14 @@ namespace Abp.WebHooks
         }
 
         [UnitOfWork]
-        public Task<List<WebHookSubscriptionInfo>> GetSubscribedWebHooksAsync(UserIdentifier user)
+        public Task<List<WebHookSubscriptionInfo>> GetAllSubscriptionsAsync(UserIdentifier user)
         {
             return AsyncQueryableExecuter.ToListAsync(_webhookSubscriptionRepository.GetAll()
                 .Where(s => s.TenantId == user.TenantId && s.UserId == user.UserId));
         }
 
         [UnitOfWork]
-        public List<WebHookSubscriptionInfo> GetSubscribedWebHooks(UserIdentifier user)
+        public List<WebHookSubscriptionInfo> GetAllSubscriptions(UserIdentifier user)
         {
             return _webhookSubscriptionRepository.GetAll().Where(s => s.TenantId == user.TenantId && s.UserId == user.UserId).ToList();
         }
@@ -128,14 +128,14 @@ namespace Abp.WebHooks
         public async Task SetActiveAsync(Guid id, bool active)
         {
             var subscription = await _webhookSubscriptionRepository.GetAsync(id);
-            subscription.IsActive = true;
+            subscription.IsActive = active;
         }
 
         [UnitOfWork]
         public void SetActive(Guid id, bool active)
         {
             var subscription = _webhookSubscriptionRepository.Get(id);
-            subscription.IsActive = true;
+            subscription.IsActive = active;
         }
     }
 }

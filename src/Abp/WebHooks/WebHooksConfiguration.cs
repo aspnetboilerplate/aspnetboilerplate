@@ -1,10 +1,9 @@
 ﻿using Abp.Collections;
-using Abp.Dependency;
 using Newtonsoft.Json;
 
 namespace Abp.WebHooks
 {
-    internal class WebHooksConfiguration : IWebHooksConfiguration, ISingletonDependency
+    internal class WebHooksConfiguration : IWebHooksConfiguration
     {
         public ITypeList<WebHookDefinitionProvider> Providers { get; }
 

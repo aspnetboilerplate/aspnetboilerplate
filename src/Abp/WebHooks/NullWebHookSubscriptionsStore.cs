@@ -72,12 +72,12 @@ namespace Abp.WebHooks
             return false;
         }
 
-        public Task<List<WebHookSubscriptionInfo>> GetSubscribedWebHooksAsync(UserIdentifier user)
+        public Task<List<WebHookSubscriptionInfo>> GetAllSubscriptionsAsync(UserIdentifier user)
         {
             return Task.FromResult(new List<WebHookSubscriptionInfo>());
         }
 
-        public List<WebHookSubscriptionInfo> GetSubscribedWebHooks(UserIdentifier user)
+        public List<WebHookSubscriptionInfo> GetAllSubscriptions(UserIdentifier user)
         {
             return new List<WebHookSubscriptionInfo>();
         }

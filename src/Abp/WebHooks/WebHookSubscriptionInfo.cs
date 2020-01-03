@@ -23,7 +23,7 @@ namespace Abp.WebHooks
         /// Subscription webhook endpoint
         /// </summary>
         [Required]
-        public Uri WebHookUri { get; set; }
+        public string WebHookUri { get; set; }
 
         /// <summary>
         /// User webhook secret

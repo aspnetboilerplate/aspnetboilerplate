@@ -47,11 +47,11 @@ namespace Abp.WebHooks
         /// <summary>
         /// Checks if given webhook name is available for given user.
         /// </summary>
-        Task<bool> IsAvailableAsync(string name, UserIdentifier user);
+        Task<bool> IsAvailableAsync(UserIdentifier user, string name);
 
         /// <summary>
         /// Checks if given webhook name is available for given user.
         /// </summary>
-        bool IsAvailable(string name, UserIdentifier user);
+        bool IsAvailable(UserIdentifier user, string name);
     }
 }

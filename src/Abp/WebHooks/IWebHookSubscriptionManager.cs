@@ -17,13 +17,13 @@ namespace Abp.WebHooks
         WebHookSubscription Get(Guid id);
 
         /// <summary>
-        /// Gets all subscription for given webhook. 
+        /// Returns all subscriptions for given webhook. 
         /// </summary>
         /// <param name="webHookName">Name of the webhook</param>
         Task<List<WebHookSubscription>> GetAllSubscriptionsAsync(string webHookName);
 
         /// <summary>
-        /// Gets all subscription for given webhook. 
+        /// Returns all subscriptions for given webhook. 
         /// </summary>
         /// <param name="webHookName">Name of the webhook</param>
         List<WebHookSubscription> GetAllSubscriptions(string webHookName);
@@ -88,17 +88,17 @@ namespace Abp.WebHooks
         void AddWebHook(Guid id, string webHookName);
 
         /// <summary>
-        /// Returns all subscribed webhook for given user
+        /// Returns all subscriptions of given user
         /// </summary>
         /// <param name="user"></param>
         /// <returns></returns>
-        Task<List<WebHookSubscription>> GetSubscribedWebHooksAsync(UserIdentifier user);
+        Task<List<WebHookSubscription>> GetAllSubscriptionsAsync(UserIdentifier user);
 
         /// <summary>
-        /// Returns all subscribed webhook for given user
+        /// Returns all subscriptions of given user
         /// </summary>
         /// <param name="user"></param>
         /// <returns></returns>
-        List<WebHookSubscription> GetSubscribedWebHooks(UserIdentifier user);
+        List<WebHookSubscription> GetAllSubscriptions(UserIdentifier user);
     }
 }

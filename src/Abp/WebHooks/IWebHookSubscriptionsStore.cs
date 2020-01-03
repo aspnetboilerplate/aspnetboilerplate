@@ -63,14 +63,14 @@ namespace Abp.WebHooks
         void Delete(Guid id);
 
         /// <summary>
-        /// Should return webhook subscriptions which subscribe to given webhook
+        /// Returns webhook subscriptions which subscribe to given webhook
         /// </summary>
         /// <param name="webHookDefinitionName">webhook definition name</param>
         /// <returns></returns>
         Task<List<WebHookSubscriptionInfo>> GetAllSubscriptionsAsync(string webHookDefinitionName);
 
         /// <summary>
-        /// Should return webhook subscriptions which subscribe to given webhook
+        /// Returns webhook subscriptions which subscribe to given webhook
         /// </summary>
         /// <param name="webHookDefinitionName">webhook definition name</param>
         /// <returns></returns>
@@ -91,18 +91,18 @@ namespace Abp.WebHooks
         bool IsSubscribed(UserIdentifier user, string webHookName);
 
         /// <summary>
-        /// Returns all subscribed webhook for given user
+        /// Returns all subscriptions of given user
         /// </summary>
         /// <param name="user"></param>
         /// <returns></returns>
-        Task<List<WebHookSubscriptionInfo>> GetSubscribedWebHooksAsync(UserIdentifier user);
+        Task<List<WebHookSubscriptionInfo>> GetAllSubscriptionsAsync(UserIdentifier user);
 
         /// <summary>
-        /// Returns all subscribed webhook for given user
+        /// Returns all subscriptions of given user
         /// </summary>
         /// <param name="user"></param>
         /// <returns></returns>
-        List<WebHookSubscriptionInfo> GetSubscribedWebHooks(UserIdentifier user);
+        List<WebHookSubscriptionInfo> GetAllSubscriptions(UserIdentifier user);
 
         /// <summary>
         /// Change <see cref="WebHookSubscriptionInfo.IsActive"/> with given parameter

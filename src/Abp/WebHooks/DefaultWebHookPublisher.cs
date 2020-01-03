@@ -1,14 +1,13 @@
-﻿using System;
-using System.Threading.Tasks;
+﻿using System.Threading.Tasks;
 using Abp.BackgroundJobs;
-using Abp.Dependency;
+using Abp.Domain.Services;
 using Abp.Domain.Uow;
 using Abp.Json;
 using Abp.WebHooks.BackgroundWorker;
 
 namespace Abp.WebHooks
 {
-    public class DefaultWebHookPublisher : AbpServiceBase, IWebHookPublisher, ITransientDependency
+    public class DefaultWebHookPublisher : DomainService, IWebHookPublisher
     {
         private readonly IGuidGenerator _guidGenerator;
         private readonly IBackgroundJobManager _backgroundJobManager;

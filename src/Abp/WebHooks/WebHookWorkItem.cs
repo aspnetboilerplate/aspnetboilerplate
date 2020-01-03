@@ -1,7 +1,6 @@
 ﻿using System;
 using System.ComponentModel.DataAnnotations.Schema;
 using System.Net;
-using Abp.Domain.Entities;
 using Abp.Domain.Entities.Auditing;
 
 namespace Abp.WebHooks
