@@ -7,8 +7,6 @@ namespace Abp.Localization
 {
     public static class CultureInfoHelper
     {
-        private static readonly ConcurrentDictionary<string, CultureInfoCacheEntry> Cache = new ConcurrentDictionary<string, CultureInfoCacheEntry>();
-
         public static IDisposable Use([NotNull] string culture, string uiCulture = null)
         {
             Check.NotNull(culture, nameof(culture));
@@ -31,16 +29,6 @@ namespace Abp.Localization
                 CultureInfo.CurrentCulture = currentCulture;
                 CultureInfo.CurrentUICulture = currentUiCulture;
             });
-        }
-
-        private class CultureInfoCacheEntry
-        {
-            public CultureInfo CultureInfo { get; }
-
-            public CultureInfoCacheEntry(CultureInfo cultureInfo)
-            {
-                CultureInfo = cultureInfo;
-            }
         }
     }
 }
