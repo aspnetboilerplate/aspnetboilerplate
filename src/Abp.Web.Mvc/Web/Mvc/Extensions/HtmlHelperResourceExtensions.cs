@@ -6,6 +6,8 @@ using System.Web.Mvc;
 using Abp.Logging;
 using Abp.Web.Mvc.Resources;
 using System.Text.RegularExpressions;
+using Abp.Resources.Embedded;
+using Abp.Dependency;
 
 namespace Abp.Web.Mvc.Extensions
 {
@@ -101,8 +103,8 @@ namespace Abp.Web.Mvc.Extensions
             {
                 embeddedResourcePath = embeddedResourcePath.Substring(1);                
             }
-
-            var resource = WebResourceHelper.GetEmbeddedResource(embeddedResourcePath);
+            
+            var resource = SingletonDependency<IEmbeddedResourceManager>.Instance.GetResource(embeddedResourcePath);
             var fileVersion = new FileInfo(resource.Assembly.Location).LastWriteTime.Ticks;
             return VirtualPathUtility.ToAbsolute(path) + "?v=" + fileVersion;
         }

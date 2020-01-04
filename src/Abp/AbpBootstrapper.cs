@@ -97,35 +97,6 @@ namespace Abp
             return new AbpBootstrapper(startupModule, optionsAction);
         }
 
-        /// <summary>
-        /// Creates a new <see cref="AbpBootstrapper"/> instance.
-        /// </summary>
-        /// <typeparam name="TStartupModule">Startup module of the application which depends on other used modules. Should be derived from <see cref="AbpModule"/>.</typeparam>
-        /// <param name="iocManager">IIocManager that is used to bootstrap the ABP system</param>
-        [Obsolete("Use overload with parameter type: Action<AbpBootstrapperOptions> optionsAction")]
-        public static AbpBootstrapper Create<TStartupModule>([NotNull] IIocManager iocManager)
-            where TStartupModule : AbpModule
-        {
-            return new AbpBootstrapper(typeof(TStartupModule), options =>
-            {
-                options.IocManager = iocManager;
-            });
-        }
-
-        /// <summary>
-        /// Creates a new <see cref="AbpBootstrapper"/> instance.
-        /// </summary>
-        /// <param name="startupModule">Startup module of the application which depends on other used modules. Should be derived from <see cref="AbpModule"/>.</param>
-        /// <param name="iocManager">IIocManager that is used to bootstrap the ABP system</param>
-        [Obsolete("Use overload with parameter type: Action<AbpBootstrapperOptions> optionsAction")]
-        public static AbpBootstrapper Create([NotNull] Type startupModule, [NotNull] IIocManager iocManager)
-        {
-            return new AbpBootstrapper(startupModule, options =>
-            {
-                options.IocManager = iocManager;
-            });
-        }
-
         private void AddInterceptorRegistrars()
         {
             ValidationInterceptorRegistrar.Initialize(IocManager);

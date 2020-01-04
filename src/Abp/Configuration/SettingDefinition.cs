@@ -101,7 +101,6 @@ namespace Abp.Configuration
             Group = @group;
             Description = description;
             Scopes = scopes;
-            IsVisibleToClients = isVisibleToClients;
             IsInherited = isInherited;
             CustomData = customData;
 
