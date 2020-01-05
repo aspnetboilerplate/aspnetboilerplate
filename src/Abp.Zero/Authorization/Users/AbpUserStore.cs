@@ -327,18 +327,21 @@ namespace Abp.Authorization.Users
         [UnitOfWork]
         public virtual IList<string> GetRoles(long userId)
         {
-            var userRoles = AsyncQueryableExecuter.ToList(from userRole in _userRoleRepository.GetAll()
-                                                          join role in _roleRepository.GetAll() on userRole.RoleId equals role.Id
-                                                          where userRole.UserId == userId
-                                                          select role.Name);
+            var userRoles = (
+                from userRole in _userRoleRepository.GetAll()
+                join role in _roleRepository.GetAll() on userRole.RoleId equals role.Id
+                where userRole.UserId == userId
+                select role.Name
+                ).ToList();
 
-            var userOrganizationUnitRoles = AsyncQueryableExecuter.ToList(
+            var userOrganizationUnitRoles = (
                 from userOu in _userOrganizationUnitRepository.GetAll()
                 join roleOu in _organizationUnitRoleRepository.GetAll() on userOu.OrganizationUnitId equals roleOu
                     .OrganizationUnitId
                 join userOuRoles in _roleRepository.GetAll() on roleOu.RoleId equals userOuRoles.Id
                 where userOu.UserId == userId
-                select userOuRoles.Name);
+                select userOuRoles.Name
+                ).ToList();
 
             return userRoles.Union(userOrganizationUnitRoles).ToList();
         }
