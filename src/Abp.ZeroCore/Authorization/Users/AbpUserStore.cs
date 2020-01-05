@@ -741,18 +741,21 @@ namespace Abp.Authorization.Users
 
             Check.NotNull(user, nameof(user)); ;
 
-            var userRoles = _asyncQueryableExecuter.ToList(from userRole in _userRoleRepository.GetAll()
-                                                                      join role in _roleRepository.GetAll() on userRole.RoleId equals role.Id
-                                                                      where userRole.UserId == user.Id
-                                                                      select role.Name);
+            var userRoles = (
+                from userRole in _userRoleRepository.GetAll()
+                join role in _roleRepository.GetAll() on userRole.RoleId equals role.Id
+                where userRole.UserId == user.Id
+                select role.Name
+                ).ToList();
 
-            var userOrganizationUnitRoles = _asyncQueryableExecuter.ToList(
+            var userOrganizationUnitRoles = (
                 from userOu in _userOrganizationUnitRepository.GetAll()
                 join roleOu in _organizationUnitRoleRepository.GetAll() on userOu.OrganizationUnitId equals roleOu
                     .OrganizationUnitId
                 join userOuRoles in _roleRepository.GetAll() on roleOu.RoleId equals userOuRoles.Id
                 where userOu.UserId == user.Id
-                select userOuRoles.Name);
+                select userOuRoles.Name
+                ).ToList();
 
             return userRoles.Union(userOrganizationUnitRoles).ToList();
         }
@@ -1152,7 +1155,7 @@ namespace Abp.Authorization.Users
                               userLogin.TenantId == AbpSession.TenantId
                         select user;
 
-            return _asyncQueryableExecuter.FirstOrDefault(query);
+            return query.FirstOrDefault();
         }
 
         /// <summary>
@@ -1956,7 +1959,7 @@ namespace Abp.Authorization.Users
                         where userclaims.ClaimValue == claim.Value && userclaims.ClaimType == claim.Type && userclaims.TenantId == AbpSession.TenantId
                         select user;
 
-            return _asyncQueryableExecuter.ToList(query);
+            return query.ToList();
         }
 
         /// <summary>
@@ -2022,7 +2025,7 @@ namespace Abp.Authorization.Users
                         where userrole.RoleId.Equals(role.Id)
                         select user;
 
-            return _asyncQueryableExecuter.ToList(query);
+            return query.ToList();
         }
 
         /// <summary>
