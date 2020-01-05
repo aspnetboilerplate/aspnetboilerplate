@@ -101,9 +101,9 @@ namespace Abp.Web.Mvc.Extensions
 
             if (embeddedResourcePath.StartsWith("/"))
             {
-                embeddedResourcePath = embeddedResourcePath.Substring(1);                
+                embeddedResourcePath = embeddedResourcePath.Substring(1);
             }
-            
+
             var resource = SingletonDependency<IEmbeddedResourceManager>.Instance.GetResource(embeddedResourcePath);
             var fileVersion = new FileInfo(resource.Assembly.Location).LastWriteTime.Ticks;
             return VirtualPathUtility.ToAbsolute(path) + "?v=" + fileVersion;
