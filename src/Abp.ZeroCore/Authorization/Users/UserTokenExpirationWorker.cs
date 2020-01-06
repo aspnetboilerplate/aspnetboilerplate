@@ -18,7 +18,6 @@ namespace Abp.Authorization.Users
     {
         private readonly IRepository<UserToken, long> _userTokenRepository;
         private readonly IRepository<TTenant> _tenantRepository;
-        private readonly IBackgroundJobConfiguration _backgroundJobConfiguration;
         private readonly IUnitOfWorkManager _unitOfWorkManager;
 
         public UserTokenExpirationWorker(
@@ -30,12 +29,11 @@ namespace Abp.Authorization.Users
             : base(timer)
         {
             _userTokenRepository = userTokenRepository;
-            _backgroundJobConfiguration = backgroundJobConfiguration;
             _unitOfWorkManager = unitOfWorkManager;
             _tenantRepository = tenantRepository;
 
-            Timer.Period = _backgroundJobConfiguration.UserTokenExpirationPeriod?.TotalMilliseconds.To<int>()
-                           ?? _backgroundJobConfiguration.CleanUserTokenPeriod
+            Timer.Period = backgroundJobConfiguration.UserTokenExpirationPeriod?.TotalMilliseconds.To<int>()
+                           ?? backgroundJobConfiguration.CleanUserTokenPeriod
                            ?? TimeSpan.FromHours(1).TotalMilliseconds.To<int>();
         }
 
