@@ -23,16 +23,6 @@ namespace Abp.Threading
         }
 
         /// <summary>
-        /// Checks if given method is an async method.
-        /// </summary>
-        /// <param name="method">A method to check</param>
-        [Obsolete("Use MethodInfo.IsAsync() extension method!")]
-        public static bool IsAsyncMethod(MethodInfo method)
-        {
-            return method.IsAsync();
-        }
-
-        /// <summary>
         /// Runs a async method synchronously.
         /// </summary>
         /// <param name="func">A function that returns a result</param>

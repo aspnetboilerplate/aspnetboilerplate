@@ -1,11 +1,12 @@
 ﻿using System;
 using System.Collections.Concurrent;
 using System.IO;
+using System.Text.RegularExpressions;
 using System.Web;
 using System.Web.Mvc;
+using Abp.Dependency;
 using Abp.Logging;
-using Abp.Web.Mvc.Resources;
-using System.Text.RegularExpressions;
+using Abp.Resources.Embedded;
 
 namespace Abp.Web.Mvc.Extensions
 {
@@ -99,10 +100,10 @@ namespace Abp.Web.Mvc.Extensions
 
             if (embeddedResourcePath.StartsWith("/"))
             {
-                embeddedResourcePath = embeddedResourcePath.Substring(1);                
+                embeddedResourcePath = embeddedResourcePath.Substring(1);
             }
 
-            var resource = WebResourceHelper.GetEmbeddedResource(embeddedResourcePath);
+            var resource = SingletonDependency<IEmbeddedResourceManager>.Instance.GetResource(embeddedResourcePath);
             var fileVersion = new FileInfo(resource.Assembly.Location).LastWriteTime.Ticks;
             return VirtualPathUtility.ToAbsolute(path) + "?v=" + fileVersion;
         }
