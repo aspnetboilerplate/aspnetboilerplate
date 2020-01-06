@@ -33,9 +33,13 @@ namespace Abp.WebHooks
         [UnitOfWork]
         public virtual async Task PublishAsync(string webHookName, object data)
         {
-            var webHook = await SaveWebHookAndGetAsync(webHookName, data);
-
             var subscriptions = await _webHookSubscriptionManager.GetAllSubscriptionsPermissionGrantedAsync(webHookName);
+            if (subscriptions.Count == 0)
+            {
+                return;
+            }
+
+            var webHook = await SaveAndGetWebHookAsync(webHookName, data);
 
             foreach (var webHookSubscription in subscriptions)
             {
@@ -62,7 +66,7 @@ namespace Abp.WebHooks
                 return;
             }
 
-            var webHook = SaveWebHookAndGet(webHookName, data);
+            var webHook = SaveAndGetWebHook(webHookName, data);
 
             foreach (var webHookSubscription in subscriptions)
             {
@@ -88,7 +92,7 @@ namespace Abp.WebHooks
                 return;
             }
 
-            var webHook = SaveWebHookAndGet(webHookName, data);
+            var webHook = SaveAndGetWebHook(webHookName, data);
 
             foreach (var webHookSubscription in subscriptions)
             {
@@ -114,7 +118,7 @@ namespace Abp.WebHooks
                 return;
             }
 
-            var webHook = SaveWebHookAndGet(webHookName, data);
+            var webHook = SaveAndGetWebHook(webHookName, data);
 
             foreach (var webHookSubscription in subscriptions)
             {
@@ -132,7 +136,7 @@ namespace Abp.WebHooks
             }
         }
 
-        protected virtual async Task<WebHookInfo> SaveWebHookAndGetAsync(string webHookName, object data)
+        protected virtual async Task<WebHookInfo> SaveAndGetWebHookAsync(string webHookName, object data)
         {
             var webHookInfo = new WebHookInfo()
             {
@@ -147,7 +151,7 @@ namespace Abp.WebHooks
             return webHookInfo;
         }
 
-        protected virtual WebHookInfo SaveWebHookAndGet(string webHookName, object data)
+        protected virtual WebHookInfo SaveAndGetWebHook(string webHookName, object data)
         {
             var webHookInfo = new WebHookInfo()
             {

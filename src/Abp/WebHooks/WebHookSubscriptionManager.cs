@@ -50,7 +50,7 @@ namespace Abp.WebHooks
 
         public async Task<List<WebHookSubscription>> GetAllSubscriptionsPermissionGrantedAsync(UserIdentifier user, string webHookName)
         {
-            if (await _webHookDefinitionManager.IsAvailableAsync(new UserIdentifier(user.TenantId, user.UserId), webHookName))
+            if (!await _webHookDefinitionManager.IsAvailableAsync(new UserIdentifier(user.TenantId, user.UserId), webHookName))
             {
                 return new List<WebHookSubscription>();
             }
@@ -62,7 +62,7 @@ namespace Abp.WebHooks
 
         public List<WebHookSubscription> GetAllSubscriptionsPermissionGranted(UserIdentifier user, string webHookName)
         {
-            if (_webHookDefinitionManager.IsAvailable(new UserIdentifier(user.TenantId, user.UserId), webHookName))
+            if (!_webHookDefinitionManager.IsAvailable(new UserIdentifier(user.TenantId, user.UserId), webHookName))
             {
                 return new List<WebHookSubscription>();
             }

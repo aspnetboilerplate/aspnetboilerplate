@@ -97,7 +97,7 @@ namespace Abp.WebHooks
         void DeactivateSubscription(Guid id);
 
         /// <summary>
-        /// If id is the default(Guid) adds it, else updates it. (Checks if webhook permissions are granted)
+        /// If id is the default(Guid) adds new subscription, else updates current one. (Checks if webhook permissions are granted)
         /// </summary>
         Task AddOrUpdateSubscriptionAsync(WebHookSubscription webHookSubscription);
 
