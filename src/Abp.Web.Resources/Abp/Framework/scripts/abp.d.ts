@@ -111,6 +111,19 @@
         function getToken(): string;
 
         function clearToken(): void;
+
+        let refreshTokenCookieName: string;
+
+        /**
+         * Saves refreshToken token.
+         * @param refreshToken The token to be saved.
+         * @param expireDate Optional expire date. If not specified, token will be deleted at end of the session.
+         */
+        function setRefreshToken(refreshToken: string, expireDate?: Date): void;
+
+        function getRefreshToken(): string;
+
+        function clearRefreshToken(): void;
     }
 
     namespace features {
@@ -202,7 +215,7 @@
             READ
         }
 
-        //TODO: We can extend this interface to define built-in notification types, like ILocalizableMessageNotificationData 
+        //TODO: We can extend this interface to define built-in notification types, like ILocalizableMessageNotificationData
         interface INotificationData {
 
             type: string;
@@ -359,7 +372,7 @@
         * This is a simple implementation created to be used by ABP.
         * Please use a complete cookie library if you need.
         * @param {string} key
-        * @param {string} value 
+        * @param {string} value
         * @param {Date} expireDate (optional). If not specified the cookie will expire at the end of session.
         * @param {string} path (optional)
         */
