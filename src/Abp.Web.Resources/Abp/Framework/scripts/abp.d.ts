@@ -111,6 +111,19 @@
         function getToken(): string;
 
         function clearToken(): void;
+
+        let refreshTokenCookieName: string;
+
+        /**
+         * Saves refreshToken token.
+         * @param refreshToken The token to be saved.
+         * @param expireDate Optional expire date. If not specified, token will be deleted at end of the session.
+         */
+        function setRefreshToken(refreshToken: string, expireDate?: Date): void;
+
+        function getRefreshToken(): string;
+
+        function clearRefreshToken(): void;
     }
 
     namespace features {
