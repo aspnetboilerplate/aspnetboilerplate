@@ -4,6 +4,7 @@ using System.Linq;
 using Abp.BackgroundJobs;
 using Abp.Domain.Repositories;
 using Abp.Domain.Uow;
+using Abp.Extensions;
 using Abp.MultiTenancy;
 using Abp.Threading.BackgroundWorkers;
 using Abp.Threading.Timers;
@@ -35,7 +36,7 @@ namespace Abp.Authorization.Users
 
             Timer.Period = _backgroundJobConfiguration.UserTokenExpirationPeriod?.TotalMilliseconds.To<int>()
                            ?? _backgroundJobConfiguration.CleanUserTokenPeriod
-                           ?? TimeSpan.FromHours(1).TotalMilliseconds.To<int>()
+                           ?? TimeSpan.FromHours(1).TotalMilliseconds.To<int>();
         }
 
         protected override void DoWork()
