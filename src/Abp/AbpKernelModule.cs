@@ -76,6 +76,8 @@ namespace Abp
                 {
                     InstallInstallers = false
                 });
+
+            IocManager.Register(typeof(AbpAsyncDeterminationInterceptor<>), DependencyLifeStyle.Transient);
         }
 
         public override void PostInitialize()
