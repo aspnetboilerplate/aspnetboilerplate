@@ -2,6 +2,7 @@
 using System.Linq;
 using System.Reflection;
 using Abp.Dependency;
+using Abp.Domain.Uow;
 using Castle.Core;
 
 namespace Abp.Auditing
@@ -21,7 +22,7 @@ namespace Abp.Auditing
 
                 if (ShouldIntercept(auditingConfiguration, handler.ComponentModel.Implementation))
                 {
-                    handler.ComponentModel.Interceptors.Add(new InterceptorReference(typeof(AuditingInterceptor)));
+                    handler.ComponentModel.Interceptors.Add(new InterceptorReference(typeof(AbpAsyncDeterminationInterceptor<AuditingInterceptor>)));
                 }
             };
         }

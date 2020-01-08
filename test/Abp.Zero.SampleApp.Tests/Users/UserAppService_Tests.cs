@@ -37,6 +37,8 @@ namespace Abp.Zero.SampleApp.Tests.Users
                 {
                     context.Users.FirstOrDefault(u => u.UserName == "yunus.emre").ShouldNotBe(null);
 
+                    var logs = context.AuditLogs.ToList();
+
                     var auditLog = context.AuditLogs.FirstOrDefault();
                     auditLog.ShouldNotBe(null);
                     auditLog.TenantId.ShouldBe(AbpSession.TenantId);
