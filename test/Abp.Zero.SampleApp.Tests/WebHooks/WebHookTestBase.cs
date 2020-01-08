@@ -1,11 +1,15 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Data.Entity;
 using System.Linq;
 using System.Threading.Tasks;
 using Abp.Application.Features;
 using Abp.Authorization;
+using Abp.Domain.Repositories;
 using Abp.Localization;
 using Abp.Modules;
+using Abp.MultiTenancy;
+using Abp.UI.Inputs;
 using Abp.WebHooks;
 using Abp.Zero.SampleApp.Application;
 using Abp.Zero.SampleApp.Users;
@@ -16,15 +20,6 @@ namespace Abp.Zero.SampleApp.Tests.WebHooks
 {
     public class WebHookTestBase : SampleAppTestBase<WebHookPublishTestModule>
     {
-        protected IWebHookSubscriptionManager WebHookSubscriptionManager;
-        private UserManager _userManager;
-
-        public WebHookTestBase()
-        {
-            WebHookSubscriptionManager = Resolve<IWebHookSubscriptionManager>();
-            _userManager = Resolve<UserManager>();
-        }
-
         protected T RegisterFake<T>() where T : class
         {
             var substitute = Substitute.For<T>();
@@ -47,7 +42,7 @@ namespace Abp.Zero.SampleApp.Tests.WebHooks
                 TenantId = AbpSession.TenantId,
                 UserId = user.Id,
                 Secret = "secret",
-                WebHookUri = "www.mywehhook.com",
+                WebHookUri = "www.mywebhook.com",
                 WebHookDefinitions = webHookDefinitionNames,
                 Headers = new Dictionary<string, string>()
                 {
@@ -55,7 +50,9 @@ namespace Abp.Zero.SampleApp.Tests.WebHooks
                 }
             };
 
-            await WebHookSubscriptionManager.AddOrUpdateSubscriptionAsync(subscription);
+            var webHookSubscriptionManager = Resolve<IWebHookSubscriptionManager>();
+
+            await webHookSubscriptionManager.AddOrUpdateSubscriptionAsync(subscription);
 
             return (user, subscription);
         }
@@ -83,6 +80,20 @@ namespace Abp.Zero.SampleApp.Tests.WebHooks
             }
 
             return user;
+        }
+
+        public async Task AddOrReplaceFeatureToTenant(int tenantId, string featureName, string featureValue)
+        {
+            await WithUnitOfWorkAsync(async () =>
+            {
+                var tenantFeatureRepository = Resolve<IRepository<TenantFeatureSetting, long>>();
+                if (await tenantFeatureRepository.GetAll().AnyAsync(x => x.TenantId == tenantId && x.Name == featureName))
+                {
+                    await tenantFeatureRepository.DeleteAsync(x => x.TenantId == tenantId && x.Name == featureName);
+                }
+
+                await tenantFeatureRepository.InsertAsync(new TenantFeatureSetting(tenantId, featureName, featureValue));
+            });
         }
     }
 
@@ -136,7 +147,7 @@ namespace Abp.Zero.SampleApp.Tests.WebHooks
                     AppWebHookDefinitionNames.Tenant.Deleted,
                     L("TenantDeletedWebHook"),
                     L("DescriptionTenantDeleted"),
-                    new SimplePermissionDependency(true, AppPermissions.WebHookMainPermission, AppPermissions.WebHook.Tenant.TenantDeleted)
+                    new SimplePermissionDependency(true, AppPermissions.WebHookMainPermission, AppPermissions.WebHook.TenantMainPermission, AppPermissions.WebHook.Tenant.TenantDeleted)
                 ));
 
             context.Manager.Add(
@@ -149,7 +160,25 @@ namespace Abp.Zero.SampleApp.Tests.WebHooks
                 ));
         }
 
-        private static ILocalizableString L(string name)
+        private ILocalizableString L(string name)
+        {
+            return new LocalizableString(name, AbpZeroConsts.LocalizationSourceName);
+        }
+    }
+
+    public class TestWebHookFeatureProvider : FeatureProvider
+    {
+        public override void SetFeatures(IFeatureDefinitionContext context)
+        {
+            var chatFeature = context.Create(
+               AppFeatures.ChatFeature,
+               defaultValue: "false",
+               displayName: L("ChatFeature"),
+               inputType: new CheckboxInputType()
+           );
+        }
+
+        private ILocalizableString L(string name)
         {
             return new LocalizableString(name, AbpZeroConsts.LocalizationSourceName);
         }
@@ -163,6 +192,8 @@ namespace Abp.Zero.SampleApp.Tests.WebHooks
             Configuration.WebHooks.Providers.Add<TestWebHookDefinitionProvider>();
 
             Configuration.Authorization.Providers.Add<TestWebHookAuthorizationProvider>();
+
+            Configuration.Features.Providers.Add<TestWebHookFeatureProvider>();
 
             IocManager.RegisterAssemblyByConvention(typeof(WebHookPublishTestModule).Assembly);
         }

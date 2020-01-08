@@ -50,7 +50,7 @@ namespace Abp.WebHooks
 
         public async Task<List<WebHookSubscription>> GetAllSubscriptionsPermissionGrantedAsync(UserIdentifier user, string webHookName)
         {
-            if (!await _webHookDefinitionManager.IsAvailableAsync(new UserIdentifier(user.TenantId, user.UserId), webHookName))
+            if (!await _webHookDefinitionManager.IsAvailableAsync(user, webHookName))
             {
                 return new List<WebHookSubscription>();
             }
@@ -62,7 +62,7 @@ namespace Abp.WebHooks
 
         public List<WebHookSubscription> GetAllSubscriptionsPermissionGranted(UserIdentifier user, string webHookName)
         {
-            if (!_webHookDefinitionManager.IsAvailable(new UserIdentifier(user.TenantId, user.UserId), webHookName))
+            if (!_webHookDefinitionManager.IsAvailable(user, webHookName))
             {
                 return new List<WebHookSubscription>();
             }
@@ -97,35 +97,41 @@ namespace Abp.WebHooks
                 .ToList();
         }
 
-        public Task<bool> IsSubscribedAsync(UserIdentifier user, string webHookName)
+        public async Task<bool> IsSubscribedAsync(UserIdentifier user, string webHookName)
         {
-            return WebHookSubscriptionsStore.IsSubscribedAsync(user, webHookName);
+            if (!await _webHookDefinitionManager.IsAvailableAsync(user, webHookName))
+            {
+                return false;
+            }
+
+            return await WebHookSubscriptionsStore.IsSubscribedAsync(user, webHookName);
         }
 
         public bool IsSubscribed(UserIdentifier user, string webHookName)
         {
+            if (!_webHookDefinitionManager.IsAvailable(user, webHookName))
+            {
+                return false;
+            }
+
             return WebHookSubscriptionsStore.IsSubscribed(user, webHookName);
         }
 
-        [UnitOfWork]
         public Task ActivateSubscriptionAsync(Guid id)
         {
             return WebHookSubscriptionsStore.SetActiveAsync(id, true);
         }
 
-        [UnitOfWork]
         public void ActivateSubscription(Guid id)
         {
             WebHookSubscriptionsStore.SetActive(id, true);
         }
 
-        [UnitOfWork]
         public Task DeactivateSubscriptionAsync(Guid id)
         {
             return WebHookSubscriptionsStore.SetActiveAsync(id, false);
         }
 
-        [UnitOfWork]
         public void DeactivateSubscription(Guid id)
         {
             WebHookSubscriptionsStore.SetActive(id, false);
@@ -140,8 +146,10 @@ namespace Abp.WebHooks
                 webHookSubscription.Id = _guidGenerator.Create();
                 await WebHookSubscriptionsStore.InsertAsync(webHookSubscription.ToWebHookSubscriptionInfo());
             }
-
-            await WebHookSubscriptionsStore.UpdateAsync(webHookSubscription.ToWebHookSubscriptionInfo());
+            else
+            {
+                await WebHookSubscriptionsStore.UpdateAsync(webHookSubscription.ToWebHookSubscriptionInfo());
+            }
         }
 
         public void AddOrUpdateSubscription(WebHookSubscription webHookSubscription)

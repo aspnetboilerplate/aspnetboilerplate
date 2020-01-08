@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using Abp.Authorization;
 using Abp.BackgroundJobs;
 using Abp.Json;
 using Abp.WebHooks;
@@ -110,8 +109,7 @@ namespace Abp.Zero.SampleApp.Tests.WebHooks
             Predicate<WebHookSenderInput> predicate = w =>
             {
                 w.Secret.ShouldBe("secret");
-                w.WebHookDefinition.ShouldContain(AppPermissions.WebHook.TenantMainPermission);
-                w.WebHookDefinition.ShouldContain(AppPermissions.WebHook.Tenant.TenantDeleted);
+                w.WebHookDefinition.ShouldContain(AppWebHookDefinitionNames.Tenant.Deleted);
 
                 w.Headers.Count.ShouldBe(1);
                 w.Headers.Single().Key.ShouldBe("Key");
@@ -134,12 +132,13 @@ namespace Abp.Zero.SampleApp.Tests.WebHooks
         [Fact]
         public async Task Should_Not_Send_Webhook_To_If_User_Does_Not_Have_All_Permissions_When_Its_Required_All()
         {
+            //subscribe to webhook with permissions
             var subscriptionResult = await CreateUserAndSubscribeToWebhook(new List<string>() { AppWebHookDefinitionNames.Tenant.Deleted },
                 new List<string>() { AppPermissions.WebHook.TenantMainPermission, AppPermissions.WebHook.Tenant.TenantDeleted });
 
             //then remove permission from user 
             await UserManager.ProhibitPermissionAsync(subscriptionResult.user, PermissionManager.GetPermission(AppPermissions.WebHook.TenantMainPermission));
-
+            
             await _webhookPublisher.PublishAsync(
                 new UserIdentifier(subscriptionResult.user.TenantId, subscriptionResult.user.Id),
                 AppWebHookDefinitionNames.Tenant.Deleted, new { Name = "Musa", Surname = "Demir" });
@@ -147,7 +146,5 @@ namespace Abp.Zero.SampleApp.Tests.WebHooks
             //should not try to send
             await _backgroundJobManagerSubstitute.DidNotReceive().EnqueueAsync<WebHookSenderJob, WebHookSenderInput>(Arg.Any<WebHookSenderInput>());
         }
-
-
     }
 }

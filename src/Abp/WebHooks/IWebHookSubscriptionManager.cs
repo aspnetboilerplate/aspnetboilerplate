@@ -58,14 +58,14 @@ namespace Abp.WebHooks
         List<WebHookSubscription> GetAllSubscriptionsPermissionGranted(string webHookName);
 
         /// <summary>
-        /// Checks if a user subscribed for a webhook
+        /// Checks if a user subscribed for a webhook. (Checks if webhook permissions are granted)
         /// </summary>
         /// <param name="user">User.</param>
         /// <param name="webHookName"><see cref="WebHookDefinition.Name"/></param>
         Task<bool> IsSubscribedAsync(UserIdentifier user, string webHookName);
 
         /// <summary>
-        /// Checks if a user subscribed for a webhook
+        /// Checks if a user subscribed for a webhook. (Checks if webhook permissions are granted)
         /// </summary>
         /// <param name="user">User.</param>
         /// <param name="webHookName"><see cref="WebHookDefinition.Name"/></param>

@@ -6,6 +6,7 @@ using System.Text;
 using System.Threading.Tasks;
 using Abp.Domain.Services;
 using Abp.Domain.Uow;
+using Abp.Extensions;
 using Abp.Json;
 using Abp.Threading;
 
@@ -13,9 +14,9 @@ namespace Abp.WebHooks
 {
     public class DefaultWebHookSender : DomainService, IWebHookSender
     {
-        internal const string SignatureHeaderKey = "sha256";
-        internal const string SignatureHeaderValueTemplate = SignatureHeaderKey + "={0}";
-        internal const string SignatureHeaderName = "abp-webhook-signature";
+        protected const string SignatureHeaderKey = "sha256";
+        protected const string SignatureHeaderValueTemplate = SignatureHeaderKey + "={0}";
+        protected const string SignatureHeaderName = "abp-webhook-signature";
 
         private readonly IWebHooksConfiguration _webHooksConfiguration;
         public IWebHookWorkItemStore WebHookWorkItemStore { get; set; }
@@ -182,20 +183,28 @@ namespace Abp.WebHooks
 
         protected virtual async Task<WebhookBody> GetWebhookBodyAsync(WebHookSenderInput webHookSenderArgs)
         {
+            dynamic data = _webHooksConfiguration.JsonSerializerSettings != null
+                ? webHookSenderArgs.Data.FromJsonString<dynamic>(_webHooksConfiguration.JsonSerializerSettings)
+                : webHookSenderArgs.Data.FromJsonString<dynamic>();
+
             return new WebhookBody
             {
                 Event = webHookSenderArgs.WebHookDefinition,
-                Data = webHookSenderArgs.Data,
+                Data = data,
                 Attempt = await WebHookWorkItemStore.GetRepetitionCountAsync(webHookSenderArgs.WebHookId, webHookSenderArgs.WebHookSubscriptionId) + 1
             };
         }
 
         protected virtual WebhookBody GetWebhookBody(WebHookSenderInput webHookSenderArgs)
         {
+            dynamic data = _webHooksConfiguration.JsonSerializerSettings != null
+                ? webHookSenderArgs.Data.FromJsonString<dynamic>(_webHooksConfiguration.JsonSerializerSettings)
+                : webHookSenderArgs.Data.FromJsonString<dynamic>();
+
             return new WebhookBody
             {
                 Event = webHookSenderArgs.WebHookDefinition,
-                Data = webHookSenderArgs.Data,
+                Data = data,
                 Attempt = WebHookWorkItemStore.GetRepetitionCount(webHookSenderArgs.WebHookId, webHookSenderArgs.WebHookSubscriptionId) + 1
             };
         }

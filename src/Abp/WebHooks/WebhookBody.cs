@@ -6,6 +6,6 @@
 
         public int Attempt { get; set; }
 
-        public object Data { get; set; }
+        public dynamic Data { get; set; }
     }
 }
