@@ -34,9 +34,9 @@ namespace Abp.Zero.SampleApp.Tests.WebHooks
         /// <param name="permissions">User's permission</param>
         /// <returns>User and subscription</returns>
 
-        protected async Task<(User user, WebHookSubscription webHookSubscription)> CreateUserAndSubscribeToWebhook(List<string> webHookDefinitionNames, List<string> permissions = null)
+        protected async Task<(User user, WebHookSubscription webHookSubscription)> CreateUserAndSubscribeToWebhookAsync(List<string> webHookDefinitionNames, List<string> permissions = null)
         {
-            var user = await CreateNewUserWithWebhookPermissions(permissions);
+            var user = await CreateNewUserWithWebhookPermissionsAsync(permissions);
             var subscription = new WebHookSubscription()
             {
                 TenantId = AbpSession.TenantId,
@@ -57,13 +57,13 @@ namespace Abp.Zero.SampleApp.Tests.WebHooks
             return (user, subscription);
         }
 
-        protected Task<(User user, WebHookSubscription webHookSubscription)> CreateUserAndSubscribeToWebhook(string webHookDefinitionNames, string permissions = null)
+        protected Task<(User user, WebHookSubscription webHookSubscription)> CreateUserAndSubscribeToWebhookAsync(string webHookDefinitionNames, string permissions = null)
         {
-            return CreateUserAndSubscribeToWebhook(new List<string>() { webHookDefinitionNames },
+            return CreateUserAndSubscribeToWebhookAsync(new List<string>() { webHookDefinitionNames },
                 new List<string>() { permissions });
         }
 
-        protected async Task<User> CreateNewUserWithWebhookPermissions(List<string> permissions = null)
+        protected async Task<User> CreateNewUserWithWebhookPermissionsAsync(List<string> permissions = null)
         {
             var user = await CreateUser(Guid.NewGuid().ToString().Replace("-", ""));
 
@@ -82,7 +82,7 @@ namespace Abp.Zero.SampleApp.Tests.WebHooks
             return user;
         }
 
-        public async Task AddOrReplaceFeatureToTenant(int tenantId, string featureName, string featureValue)
+        public async Task AddOrReplaceFeatureToTenantAsync(int tenantId, string featureName, string featureValue)
         {
             await WithUnitOfWorkAsync(async () =>
             {
