@@ -44,12 +44,13 @@ namespace Abp.Domain.Uow
 
         private async Task InternalInterceptAsynchronous(IInvocation invocation)
         {
+            var proceedInfo = invocation.CaptureProceedInfo();
             var method = GetMethodInfo(invocation);
             var unitOfWorkAttr = _unitOfWorkOptions.GetUnitOfWorkAttributeOrNull(method);
 
             if (unitOfWorkAttr == null || unitOfWorkAttr.IsDisabled)
             {
-                invocation.Proceed();
+                proceedInfo.Invoke();
                 var task = (Task)invocation.ReturnValue;
                 await task.ConfigureAwait(false);
                 return;
@@ -57,10 +58,10 @@ namespace Abp.Domain.Uow
 
             using (var uow = _unitOfWorkManager.Begin(unitOfWorkAttr.CreateOptions()))
             {
-                invocation.Proceed();
+                proceedInfo.Invoke();
                 var task = (Task)invocation.ReturnValue;
-                await task;
-                await uow.CompleteAsync();
+                await task.ConfigureAwait(false);
+                await uow.CompleteAsync().ConfigureAwait(false);
             }
         }
 
@@ -71,23 +72,27 @@ namespace Abp.Domain.Uow
 
         private async Task<TResult> InternalInterceptAsynchronous<TResult>(IInvocation invocation)
         {
+            var proceedInfo = invocation.CaptureProceedInfo();
             var method = GetMethodInfo(invocation);
             var unitOfWorkAttr = _unitOfWorkOptions.GetUnitOfWorkAttributeOrNull(method);
 
             if (unitOfWorkAttr == null || unitOfWorkAttr.IsDisabled)
             {
-                invocation.Proceed();
-                var task = (Task<TResult>)invocation.ReturnValue;
-                return await task;
+                proceedInfo.Invoke();
+                var taskResult = (Task<TResult>)invocation.ReturnValue;
+                return await taskResult.ConfigureAwait(false);
             }
 
             using (var uow = _unitOfWorkManager.Begin(unitOfWorkAttr.CreateOptions()))
             {
-                invocation.Proceed();
-                var task = await (Task<TResult>)invocation.ReturnValue;
+                proceedInfo.Invoke();
+                
+                var taskResult = (Task<TResult>)invocation.ReturnValue;
+                var result = await taskResult.ConfigureAwait(false);
+
                 await uow.CompleteAsync().ConfigureAwait(false);
 
-                return task;
+                return result;
             }
         }
 
@@ -104,14 +109,6 @@ namespace Abp.Domain.Uow
             }
 
             return method;
-        }
-    }
-
-    public class AbpAsyncDeterminationInterceptor<TInterceptor> : AsyncDeterminationInterceptor
-        where TInterceptor : IAsyncInterceptor
-    {
-        public AbpAsyncDeterminationInterceptor(TInterceptor asyncInterceptor) : base(asyncInterceptor)
-        {
         }
     }
 }
