@@ -7,6 +7,7 @@ namespace Abp.Domain.Uow
     {
         public AbpAsyncDeterminationInterceptor(TInterceptor asyncInterceptor) : base(asyncInterceptor)
         {
+
         }
     }
 }

@@ -30,6 +30,7 @@ using Abp.Runtime.Validation.Interception;
 using Abp.Threading;
 using Abp.Threading.BackgroundWorkers;
 using Abp.Timing;
+using Castle.DynamicProxy;
 using Castle.MicroKernel.Registration;
 
 namespace Abp
@@ -77,7 +78,8 @@ namespace Abp
                     InstallInstallers = false
                 });
 
-            IocManager.Register(typeof(AbpAsyncDeterminationInterceptor<>), DependencyLifeStyle.Transient);
+            IocManager.Register(typeof(AbpAsyncDeterminationInterceptor<UnitOfWorkInterceptor>), DependencyLifeStyle.Transient);
+            IocManager.Register(typeof(AbpAsyncDeterminationInterceptor<AuditingInterceptor>), DependencyLifeStyle.Transient);
         }
 
         public override void PostInitialize()
