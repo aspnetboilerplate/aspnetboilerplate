@@ -3,6 +3,7 @@ using System.Linq;
 using System.Reflection;
 using Abp.Application.Features;
 using Abp.Dependency;
+using Abp.Domain.Uow;
 using Castle.Core;
 using Castle.MicroKernel;
 
@@ -22,7 +23,7 @@ namespace Abp.Authorization
         {
             if (ShouldIntercept(handler.ComponentModel.Implementation))
             {
-                handler.ComponentModel.Interceptors.Add(new InterceptorReference(typeof(AuthorizationInterceptor))); 
+                handler.ComponentModel.Interceptors.Add(new InterceptorReference(typeof(AbpAsyncDeterminationInterceptor<AuthorizationInterceptor>))); 
             }
         }
 

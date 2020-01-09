@@ -1,11 +1,13 @@
-﻿using Castle.DynamicProxy;
+﻿using System.Threading.Tasks;
+using Abp.Dependency;
+using Castle.DynamicProxy;
 
 namespace Abp.Authorization
 {
     /// <summary>
     /// This class is used to intercept methods to make authorization if the method defined <see cref="AbpAuthorizeAttribute"/>.
     /// </summary>
-    public class AuthorizationInterceptor : IInterceptor
+    public class AuthorizationInterceptor : IAsyncInterceptor, ITransientDependency
     {
         private readonly IAuthorizationHelper _authorizationHelper;
 
@@ -18,6 +20,44 @@ namespace Abp.Authorization
         {
             _authorizationHelper.Authorize(invocation.MethodInvocationTarget, invocation.TargetType);
             invocation.Proceed();
+        }
+
+        public void InterceptSynchronous(IInvocation invocation)
+        {
+            _authorizationHelper.Authorize(invocation.MethodInvocationTarget, invocation.TargetType);
+            invocation.Proceed();
+        }
+
+        public void InterceptAsynchronous(IInvocation invocation)
+        {
+            invocation.ReturnValue = InternalInterceptAsynchronous(invocation);
+        }
+
+        private async Task InternalInterceptAsynchronous(IInvocation invocation)
+        {
+            var proceedInfo = invocation.CaptureProceedInfo();
+            
+            await _authorizationHelper.AuthorizeAsync(invocation.MethodInvocationTarget, invocation.TargetType);
+
+            proceedInfo.Invoke();
+            var task = (Task)invocation.ReturnValue;
+            await task.ConfigureAwait(false);
+        }
+
+        public void InterceptAsynchronous<TResult>(IInvocation invocation)
+        {
+            invocation.ReturnValue = InternalInterceptAsynchronous<TResult>(invocation);
+        }
+
+        private async Task<TResult> InternalInterceptAsynchronous<TResult>(IInvocation invocation)
+        {
+            var proceedInfo = invocation.CaptureProceedInfo();
+
+            await _authorizationHelper.AuthorizeAsync(invocation.MethodInvocationTarget, invocation.TargetType);
+
+            proceedInfo.Invoke();
+            var taskResult = (Task<TResult>)invocation.ReturnValue;
+            return await taskResult.ConfigureAwait(false);
         }
     }
 }
