@@ -1,6 +1,6 @@
 using Castle.DynamicProxy;
 
-namespace Abp.Domain.Uow
+namespace Abp.Dependency
 {
     public class AbpAsyncDeterminationInterceptor<TInterceptor> : AsyncDeterminationInterceptor
         where TInterceptor : IAsyncInterceptor
