@@ -1,4 +1,5 @@
-﻿using Abp.Collections;
+﻿using System;
+using Abp.Collections;
 using Abp.Json;
 using Newtonsoft.Json;
 
@@ -6,6 +7,11 @@ namespace Abp.WebHooks
 {
     public interface IWebHooksConfiguration
     {
+        /// <summary>
+        /// HttpClient timeout. Sender will wait <c>WebHookTimeout</c> second before throw timeout exception
+        /// </summary>
+        TimeSpan WebHookTimeout { get; set; }
+
         /// <summary>
         ///  How many times <see cref="IWebHookPublisher"/> will try resend webhook until gets HttpStatusCode.OK 
         /// </summary>

@@ -1,9 +1,7 @@
 ﻿using System;
-using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 using Abp.Domain.Entities;
 using Abp.Domain.Entities.Auditing;
-using Abp.MultiTenancy;
 
 namespace Abp.WebHooks
 {
@@ -11,7 +9,7 @@ namespace Abp.WebHooks
     /// Store created web hooks. To see who get that webhook check with <see cref="WebHookWorkItem.WebHookId"/> and you can get <see cref="WebHookWorkItem.WebHookSubscriptionId"/>
     /// </summary>
     [Table("AbpWebHooks")]
-    public class WebHookInfo : FullAuditedEntity<Guid>, IMayHaveTenant
+    public class WebHookInfo : Entity<Guid>, IMayHaveTenant, IHasCreationTime, ISoftDelete
     {
         /// <summary>
         /// Webhook unique name id
@@ -24,5 +22,9 @@ namespace Abp.WebHooks
         public string Data { get; set; }
 
         public int? TenantId { get; set; }
+
+        public DateTime CreationTime { get; set; }
+
+        public bool IsDeleted { get; set; }
     }
 }

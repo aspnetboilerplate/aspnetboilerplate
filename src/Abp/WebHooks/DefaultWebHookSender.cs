@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Globalization;
+using System.Net;
 using System.Net.Http;
 using System.Security.Cryptography;
 using System.Text;
@@ -56,15 +57,30 @@ namespace Abp.WebHooks
 
                 AddAdditionalHeaders(request, webHookSenderArgs);
 
-                bool isSucceed;
-                //TODO:Use client factory
-                using (var client = new HttpClient())
+                bool isSucceed = false;
+                HttpStatusCode statusCode;
+                string content;
+                try
                 {
-                    var response = await client.SendAsync(request);
-                    await StoreResponseOnWebHookWorkItemAsync(webHookSenderArgs.TenantId, workItemId, response);
-                    isSucceed = response.IsSuccessStatusCode;
+                    using (var client = new HttpClient()
+                    {
+                        Timeout = _webHooksConfiguration.WebHookTimeout
+                    })
+                    {
+                        var response = await client.SendAsync(request);
+
+                        isSucceed = response.IsSuccessStatusCode;
+                        statusCode = response.StatusCode;
+                        content = await response.Content.ReadAsStringAsync();
+                    }
+                }
+                catch (TaskCanceledException)
+                {
+                    statusCode = HttpStatusCode.RequestTimeout;
+                    content = "Request Timeout";
                 }
 
+                await StoreResponseOnWebHookWorkItemAsync(webHookSenderArgs.TenantId, workItemId, statusCode, content);
                 return isSucceed;
             }
             catch (Exception e)
@@ -102,15 +118,30 @@ namespace Abp.WebHooks
 
                 AddAdditionalHeaders(request, webHookSenderArgs);
 
-                bool isSucceed;
-                //TODO:Use client factory
-                using (var client = new HttpClient())
+                bool isSucceed = false;
+                HttpStatusCode statusCode;
+                string content;
+                try
                 {
-                    var response = AsyncHelper.RunSync(() => client.SendAsync(request));
-                    StoreResponseOnWebHookWorkItem(webHookSenderArgs.TenantId, workItemId, response);
-                    isSucceed = response.IsSuccessStatusCode;
+                    using (var client = new HttpClient()
+                    {
+                        Timeout = _webHooksConfiguration.WebHookTimeout
+                    })
+                    {
+                        var response = AsyncHelper.RunSync(() => client.SendAsync(request));
+
+                        isSucceed = response.IsSuccessStatusCode;
+                        statusCode = response.StatusCode;
+                        content = AsyncHelper.RunSync(() => response.Content.ReadAsStringAsync());
+                    }
+                }
+                catch (TaskCanceledException)
+                {
+                    statusCode = HttpStatusCode.RequestTimeout;
+                    content = "Request Timeout";
                 }
 
+                StoreResponseOnWebHookWorkItem(webHookSenderArgs.TenantId, workItemId, statusCode, content);
                 return isSucceed;
             }
             catch (Exception e)
@@ -153,23 +184,23 @@ namespace Abp.WebHooks
         }
 
         [UnitOfWork]
-        protected virtual async Task StoreResponseOnWebHookWorkItemAsync(int? tenantId, Guid webHookWorkItemId, HttpResponseMessage responseMessage)
+        protected virtual async Task StoreResponseOnWebHookWorkItemAsync(int? tenantId, Guid webHookWorkItemId, HttpStatusCode statusCode, string content)
         {
             var webHookWorkItem = await WebHookWorkItemStore.GetAsync(tenantId, webHookWorkItemId);
 
-            webHookWorkItem.ResponseStatusCode = responseMessage.StatusCode;
-            webHookWorkItem.ResponseContent = await responseMessage.Content.ReadAsStringAsync();
+            webHookWorkItem.ResponseStatusCode = statusCode;
+            webHookWorkItem.ResponseContent = content;
 
             await WebHookWorkItemStore.UpdateAsync(webHookWorkItem);
         }
 
         [UnitOfWork]
-        protected virtual void StoreResponseOnWebHookWorkItem(int? tenantId, Guid webHookWorkItemId, HttpResponseMessage responseMessage)
+        protected virtual void StoreResponseOnWebHookWorkItem(int? tenantId, Guid webHookWorkItemId, HttpStatusCode statusCode, string content)
         {
             var webHookWorkItem = WebHookWorkItemStore.Get(tenantId, webHookWorkItemId);
 
-            webHookWorkItem.ResponseStatusCode = responseMessage.StatusCode;
-            webHookWorkItem.ResponseContent = AsyncHelper.RunSync(() => responseMessage.Content.ReadAsStringAsync());
+            webHookWorkItem.ResponseStatusCode = statusCode;
+            webHookWorkItem.ResponseContent = content;
 
             WebHookWorkItemStore.Update(webHookWorkItem);
         }

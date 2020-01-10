@@ -5,7 +5,7 @@ using Abp.Domain.Uow;
 
 namespace Abp.WebHooks.BackgroundWorker
 {
-    public class WebHookSenderJob : BackgroundJob<WebHookSenderInput>
+    public class WebHookSenderJob : BackgroundJob<WebHookSenderInput>, ITransientDependency
     {
         private readonly IIocResolver _iocResolver;
         private readonly IBackgroundJobManager _backgroundJobManager;
