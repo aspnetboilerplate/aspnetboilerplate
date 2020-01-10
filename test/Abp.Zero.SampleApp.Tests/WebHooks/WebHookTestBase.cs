@@ -42,7 +42,6 @@ namespace Abp.Zero.SampleApp.Tests.WebHooks
             var subscription = new WebHookSubscription
             {
                 TenantId = tenantId,
-                Secret = "secret",
                 WebHookUri = "www.mywebhook.com",
                 WebHookDefinitions = webHookDefinitionNames,
                 Headers = new Dictionary<string, string>
