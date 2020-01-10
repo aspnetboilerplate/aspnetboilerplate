@@ -8,7 +8,7 @@ namespace Abp.WebHooks
     public static class WebHookSubscriptionExtensions
     {
         /// <summary>
-        /// Return is of subscribed webhooks definitions <see cref="WebHookSubscriptionInfo.WebHookDefinitions"/>
+        /// Return List of subscribed webhooks definitions <see cref="WebHookSubscriptionInfo.WebHookDefinitions"/>
         /// </summary>
         /// <returns></returns>
         public static List<string> GetWebHookDefinitions(this WebHookSubscriptionInfo webHookSubscription)
