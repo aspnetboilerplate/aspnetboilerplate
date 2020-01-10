@@ -42,7 +42,7 @@ namespace Abp.WebHooks.BackgroundWorker
 
                 using (var workItemStore = _iocResolver.ResolveAsDisposable<IWebHookWorkItemStore>())
                 {
-                    var repetitionCount = workItemStore.Object.GetRepetitionCount(args.WebHookId, args.WebHookSubscriptionId);
+                    var repetitionCount = workItemStore.Object.GetRepetitionCount(args.TenantId, args.WebHookId, args.WebHookSubscriptionId);
 
                     if (repetitionCount < _webHooksConfiguration.MaxRepetitionCount)
                     {

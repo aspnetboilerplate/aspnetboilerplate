@@ -5,6 +5,8 @@ namespace Abp.WebHooks
 {
     public class WebHookSenderInput
     {
+        public int? TenantId { get; set; }
+
         //Webhook information 
 
         /// <summary>

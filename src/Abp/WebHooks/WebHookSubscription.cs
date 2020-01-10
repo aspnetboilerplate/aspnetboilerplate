@@ -7,22 +7,17 @@ namespace Abp.WebHooks
     public class WebHookSubscription : EntityDto<Guid>
     {
         /// <summary>
-        /// Tenant id of the subscribed user.
+        /// Tenant id of the subscribed.
         /// </summary>
         public int? TenantId { get; set; }
-
-        /// <summary>
-        /// User Id.
-        /// </summary>
-        public long UserId { get; set; }
-
+        
         /// <summary>
         /// Subscription webhook endpoint
         /// </summary>
         public string WebHookUri { get; set; }
 
         /// <summary>
-        /// User webhook secret
+        /// Webhook secret
         /// </summary>
         public string Secret { get; set; }
 

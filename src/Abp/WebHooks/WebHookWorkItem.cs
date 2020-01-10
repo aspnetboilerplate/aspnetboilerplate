@@ -1,6 +1,7 @@
 ﻿using System;
 using System.ComponentModel.DataAnnotations.Schema;
 using System.Net;
+using Abp.Domain.Entities;
 using Abp.Domain.Entities.Auditing;
 
 namespace Abp.WebHooks
@@ -9,7 +10,7 @@ namespace Abp.WebHooks
     /// Table for store webhook work items. Each item stores web hook send attempt of <see cref="WebHookInfo"/> to subscribed users
     /// </summary>
     [Table("AbpWebHookWorkItems")]
-    public class WebHookWorkItem : FullAuditedEntity<Guid>
+    public class WebHookWorkItem : FullAuditedEntity<Guid>, IMayHaveTenant
     {
         /// <summary>
         /// <see cref="WebHookInfo"/> foreign id 
@@ -30,5 +31,7 @@ namespace Abp.WebHooks
         /// Webhook response status code that webhook endpoint send back
         /// </summary>
         public HttpStatusCode? ResponseStatusCode { get; set; }
+
+        public int? TenantId { get; set; }
     }
 }

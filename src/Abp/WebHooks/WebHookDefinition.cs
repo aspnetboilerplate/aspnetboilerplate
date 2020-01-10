@@ -25,18 +25,12 @@ namespace Abp.WebHooks
         public ILocalizableString Description { get; set; }
 
         /// <summary>
-        /// A permission dependency. This webhook will be available to a user if this dependency is satisfied.
-        /// Optional.
-        /// </summary>
-        public IPermissionDependency PermissionDependency { get; set; }
-
-        /// <summary>
         /// A feature dependency. This webhook will be available to a tenant if this feature is enabled.
         /// Optional.
         /// </summary>
         public IFeatureDependency FeatureDependency { get; set; }
 
-        public WebHookDefinition(string name, ILocalizableString displayName = null, ILocalizableString description = null, IPermissionDependency permissionDependency = null, IFeatureDependency featureDependency = null)
+        public WebHookDefinition(string name, ILocalizableString displayName = null, ILocalizableString description = null, IFeatureDependency featureDependency = null)
         {
             if (string.IsNullOrWhiteSpace(name))
             {
@@ -51,7 +45,6 @@ namespace Abp.WebHooks
             Name = name;
             DisplayName = displayName;
             Description = description;
-            PermissionDependency = permissionDependency;
             FeatureDependency = featureDependency;
         }
     }

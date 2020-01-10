@@ -1,20 +1,22 @@
-﻿using System.Threading.Tasks;
+﻿using System.Collections.Generic;
+using System.Threading.Tasks;
 using Abp.BackgroundJobs;
 using Abp.Domain.Services;
-using Abp.Domain.Uow;
 using Abp.Json;
+using Abp.Runtime.Session;
 using Abp.WebHooks.BackgroundWorker;
 
 namespace Abp.WebHooks
 {
     public class DefaultWebHookPublisher : DomainService, IWebHookPublisher
     {
+        public IAbpSession AbpSession { get; set; }
+        public IWebHookStore WebHookStore { get; set; }
+
         private readonly IGuidGenerator _guidGenerator;
         private readonly IBackgroundJobManager _backgroundJobManager;
         private readonly IWebHookSubscriptionManager _webHookSubscriptionManager;
         private readonly IWebHooksConfiguration _webHooksConfiguration;
-
-        public IWebHookStore WebHookStore { get; set; }
 
         public DefaultWebHookPublisher(
             IWebHookSubscriptionManager webHookSubscriptionManager,
@@ -28,26 +30,38 @@ namespace Abp.WebHooks
             _webHooksConfiguration = webHooksConfiguration;
 
             WebHookStore = NullWebHookStore.Instance;
+            AbpSession = NullAbpSession.Instance;
         }
 
-        [UnitOfWork]
-        public virtual async Task PublishAsync(string webHookName, object data)
+        public async Task PublishAsync(string webHookName, object data)
         {
-            var subscriptions = await _webHookSubscriptionManager.GetAllSubscriptionsPermissionGrantedAsync(webHookName);
-            if (subscriptions.Count == 0)
+            var subscriptions = await _webHookSubscriptionManager.GetAllSubscriptionsIfFeaturesGrantedAsync(AbpSession.TenantId, webHookName);
+            await PublishAsync(AbpSession.TenantId, webHookName, data, subscriptions);
+        }
+
+        public async Task PublishAsync(string webHookName, object data, int? tenantId)
+        {
+            var subscriptions = await _webHookSubscriptionManager.GetAllSubscriptionsIfFeaturesGrantedAsync(tenantId, webHookName);
+            await PublishAsync(tenantId, webHookName, data, subscriptions);
+        }
+
+        private async Task PublishAsync(int? tenantId, string webHookName, object data, List<WebHookSubscription> webHookSubscriptions)
+        {
+            if (webHookSubscriptions == null || webHookSubscriptions.Count == 0)
             {
                 return;
             }
 
-            var webHook = await SaveAndGetWebHookAsync(webHookName, data);
+            var webHookInfo = await SaveAndGetWebHookAsync(tenantId, webHookName, data);
 
-            foreach (var webHookSubscription in subscriptions)
+            foreach (var webHookSubscription in webHookSubscriptions)
             {
                 await _backgroundJobManager.EnqueueAsync<WebHookSenderJob, WebHookSenderInput>(new WebHookSenderInput()
                 {
-                    WebHookId = webHook.Id,
-                    Data = webHook.Data,
-                    WebHookDefinition = webHook.WebHookDefinition,
+                    TenantId = webHookSubscription.TenantId,
+                    WebHookId = webHookInfo.Id,
+                    Data = webHookInfo.Data,
+                    WebHookDefinition = webHookInfo.WebHookDefinition,
 
                     WebHookSubscriptionId = webHookSubscription.Id,
                     Headers = webHookSubscription.Headers,
@@ -57,24 +71,35 @@ namespace Abp.WebHooks
             }
         }
 
-        [UnitOfWork]
-        public virtual void Publish(string webHookName, object data)
+        public void Publish(string webHookName, object data)
         {
-            var subscriptions = _webHookSubscriptionManager.GetAllSubscriptionsPermissionGranted(webHookName);
-            if (subscriptions.Count == 0)
+            var subscriptions = _webHookSubscriptionManager.GetAllSubscriptionsIfFeaturesGranted(AbpSession.TenantId, webHookName);
+            Publish(AbpSession.TenantId, webHookName, data, subscriptions);
+        }
+
+        public void Publish(string webHookName, object data, int? tenantId)
+        {
+            var subscriptions = _webHookSubscriptionManager.GetAllSubscriptionsIfFeaturesGranted(tenantId, webHookName);
+            Publish(tenantId, webHookName, data, subscriptions);
+        }
+
+        private void Publish(int? tenantId, string webHookName, object data, List<WebHookSubscription> webHookSubscriptions)
+        {
+            if (webHookSubscriptions == null || webHookSubscriptions.Count == 0)
             {
                 return;
             }
 
-            var webHook = SaveAndGetWebHook(webHookName, data);
+            var webHookInfo = SaveAndGetWebHook(tenantId, webHookName, data);
 
-            foreach (var webHookSubscription in subscriptions)
+            foreach (var webHookSubscription in webHookSubscriptions)
             {
                 _backgroundJobManager.Enqueue<WebHookSenderJob, WebHookSenderInput>(new WebHookSenderInput()
                 {
-                    WebHookId = webHook.Id,
-                    Data = webHook.Data,
-                    WebHookDefinition = webHook.WebHookDefinition,
+                    TenantId = webHookSubscription.TenantId,
+                    WebHookId = webHookInfo.Id,
+                    Data = webHookInfo.Data,
+                    WebHookDefinition = webHookInfo.WebHookDefinition,
 
                     WebHookSubscriptionId = webHookSubscription.Id,
                     Headers = webHookSubscription.Headers,
@@ -84,59 +109,7 @@ namespace Abp.WebHooks
             }
         }
 
-        public async Task PublishAsync(UserIdentifier user, string webHookName, object data)
-        {
-            var subscriptions = await _webHookSubscriptionManager.GetAllSubscriptionsPermissionGrantedAsync(user, webHookName);
-            if (subscriptions.Count == 0)
-            {
-                return;
-            }
-
-            var webHook = SaveAndGetWebHook(webHookName, data);
-
-            foreach (var webHookSubscription in subscriptions)
-            {
-                await _backgroundJobManager.EnqueueAsync<WebHookSenderJob, WebHookSenderInput>(new WebHookSenderInput()
-                {
-                    WebHookId = webHook.Id,
-                    Data = webHook.Data,
-                    WebHookDefinition = webHook.WebHookDefinition,
-
-                    WebHookSubscriptionId = webHookSubscription.Id,
-                    Headers = webHookSubscription.Headers,
-                    Secret = webHookSubscription.Secret,
-                    WebHookUri = webHookSubscription.WebHookUri
-                });
-            }
-        }
-
-        public void Publish(UserIdentifier user, string webHookName, object data)
-        {
-            var subscriptions = _webHookSubscriptionManager.GetAllSubscriptionsPermissionGranted(user, webHookName);
-            if (subscriptions.Count == 0)
-            {
-                return;
-            }
-
-            var webHook = SaveAndGetWebHook(webHookName, data);
-
-            foreach (var webHookSubscription in subscriptions)
-            {
-                _backgroundJobManager.Enqueue<WebHookSenderJob, WebHookSenderInput>(new WebHookSenderInput()
-                {
-                    WebHookId = webHook.Id,
-                    Data = webHook.Data,
-                    WebHookDefinition = webHook.WebHookDefinition,
-
-                    WebHookSubscriptionId = webHookSubscription.Id,
-                    Headers = webHookSubscription.Headers,
-                    Secret = webHookSubscription.Secret,
-                    WebHookUri = webHookSubscription.WebHookUri
-                });
-            }
-        }
-
-        protected virtual async Task<WebHookInfo> SaveAndGetWebHookAsync(string webHookName, object data)
+        protected virtual async Task<WebHookInfo> SaveAndGetWebHookAsync(int? tenantId, string webHookName, object data)
         {
             var webHookInfo = new WebHookInfo()
             {
@@ -144,14 +117,15 @@ namespace Abp.WebHooks
                 WebHookDefinition = webHookName,
                 Data = _webHooksConfiguration.JsonSerializerSettings != null
                     ? data.ToJsonString(_webHooksConfiguration.JsonSerializerSettings)
-                    : data.ToJsonString()
+                    : data.ToJsonString(),
+                TenantId = tenantId
             };
 
             await WebHookStore.InsertAndGetIdAsync(webHookInfo);
             return webHookInfo;
         }
 
-        protected virtual WebHookInfo SaveAndGetWebHook(string webHookName, object data)
+        protected virtual WebHookInfo SaveAndGetWebHook(int? tenantId, string webHookName, object data)
         {
             var webHookInfo = new WebHookInfo()
             {
@@ -159,7 +133,8 @@ namespace Abp.WebHooks
                 WebHookDefinition = webHookName,
                 Data = _webHooksConfiguration.JsonSerializerSettings != null
                     ? data.ToJsonString(_webHooksConfiguration.JsonSerializerSettings)
-                    : data.ToJsonString()
+                    : data.ToJsonString(),
+                TenantId = tenantId
             };
 
             WebHookStore.InsertAndGetId(webHookInfo);

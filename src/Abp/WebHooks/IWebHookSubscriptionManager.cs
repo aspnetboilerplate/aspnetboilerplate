@@ -19,105 +19,65 @@ namespace Abp.WebHooks
         WebHookSubscription Get(Guid id);
 
         /// <summary>
-        /// Returns all subscriptions of given user
+        /// Returns all subscriptions of tenant
         /// </summary>
-        /// <param name="user"></param>
         /// <returns></returns>
-        Task<List<WebHookSubscription>> GetAllSubscriptionsAsync(UserIdentifier user);
+        Task<List<WebHookSubscription>> GetAllSubscriptionsAsync(int? tenantId);
 
         /// <summary>
-        /// Returns all subscriptions of given user
+        /// Returns all subscriptions of tenant
         /// </summary>
-        /// <param name="user"></param>
-        List<WebHookSubscription> GetAllSubscriptions(UserIdentifier user);
+        /// <param name="tenantId">
+        /// Target tenant id(s).
+        /// </param>
+        List<WebHookSubscription> GetAllSubscriptions(int? tenantId);
 
         /// <summary>
-        /// Returns all subscriptions of given user which are subscribed to given webhook. If user does not have permission to subscribe given webhook, returns empty
-        /// </summary>
-        /// <param name="user"></param>
-        /// <param name="webHookName"><see cref="WebHookDefinition.Name"/></param>
-        Task<List<WebHookSubscription>> GetAllSubscriptionsPermissionGrantedAsync(UserIdentifier user, string webHookName);
-
-        /// <summary>
-        /// Returns all subscriptions of given user which are subscribed to given webhook. If user does not have permission to subscribe given webhook, returns empty
-        /// </summary>
-        /// <param name="user"></param>
-        /// <param name="webHookName"><see cref="WebHookDefinition.Name"/></param>
-        List<WebHookSubscription> GetAllSubscriptionsPermissionGranted(UserIdentifier user, string webHookName);
-
-        /// <summary>
-        /// Returns all subscriptions for given webhook. Includes only users who has permissions to webhook
+        /// Returns all subscriptions for given webhook.
         /// </summary>
         /// <param name="webHookName"><see cref="WebHookDefinition.Name"/></param>
-        Task<List<WebHookSubscription>> GetAllSubscriptionsPermissionGrantedAsync(string webHookName);
+        /// <param name="tenantId">
+        /// Target tenant id(s).
+        /// </param>
+        Task<List<WebHookSubscription>> GetAllSubscriptionsIfFeaturesGrantedAsync(int? tenantId, string webHookName);
 
         /// <summary>
-        /// Returns all subscriptions for given webhook. Includes only users who has permissions to webhook
+        /// Returns all subscriptions for given webhook.
         /// </summary>
+        /// <param name="tenantId">
+        /// Target tenant id(s).
+        /// </param>
         /// <param name="webHookName"><see cref="WebHookDefinition.Name"/></param>
-        List<WebHookSubscription> GetAllSubscriptionsPermissionGranted(string webHookName);
+        List<WebHookSubscription> GetAllSubscriptionsIfFeaturesGranted(int? tenantId, string webHookName);
 
         /// <summary>
-        /// Checks if a user subscribed for a webhook. (Checks if webhook permissions are granted)
+        /// Checks if tenant subscribed for a webhook. (Checks if webhook features are granted)
         /// </summary>
-        /// <param name="user">User.</param>
+        /// <param name="tenantId">
+        /// Target tenant id(s).
+        /// </param>
         /// <param name="webHookName"><see cref="WebHookDefinition.Name"/></param>
-        Task<bool> IsSubscribedAsync(UserIdentifier user, string webHookName);
+        Task<bool> IsSubscribedAsync(int? tenantId, string webHookName);
 
         /// <summary>
-        /// Checks if a user subscribed for a webhook. (Checks if webhook permissions are granted)
+        /// Checks if tenant subscribed for a webhook. (Checks if webhook features are granted)
         /// </summary>
-        /// <param name="user">User.</param>
+        /// <param name="tenantId">
+        /// Target tenant id(s).
+        /// </param>
         /// <param name="webHookName"><see cref="WebHookDefinition.Name"/></param>
-        bool IsSubscribed(UserIdentifier user, string webHookName);
+        bool IsSubscribed(int? tenantId, string webHookName);
+
 
         /// <summary>
-        /// Activates subscription
-        /// </summary>
-        /// <param name="id">Unique identifier of <see cref="WebHookSubscriptionInfo"/></param>
-        /// <returns></returns>
-        Task ActivateSubscriptionAsync(Guid id);
-
-        /// <summary>
-        /// Activates subscription
-        /// </summary>
-        /// <param name="id">Unique identifier of <see cref="WebHookSubscriptionInfo"/></param>
-        void ActivateSubscription(Guid id);
-
-        /// <summary>
-        /// Deactivates subscription
-        /// </summary>
-        /// <param name="id">Unique identifier of <see cref="WebHookSubscriptionInfo"/></param>
-        Task DeactivateSubscriptionAsync(Guid id);
-
-        /// <summary>
-        /// Deactivates subscription
-        /// </summary>
-        /// <param name="id">Unique identifier of <see cref="WebHookSubscriptionInfo"/></param>
-        void DeactivateSubscription(Guid id);
-
-        /// <summary>
-        /// If id is the default(Guid) adds new subscription, else updates current one. (Checks if webhook permissions are granted)
+        /// If id is the default(Guid) adds new subscription, else updates current one. (Checks if webhook features are granted)
         /// </summary>
         Task AddOrUpdateSubscriptionAsync(WebHookSubscription webHookSubscription);
 
         /// <summary>
-        /// If id is the default(Guid) adds it, else updates it. (Checks if webhook permissions are granted)
+        /// If id is the default(Guid) adds it, else updates it. (Checks if webhook features are granted)
         /// </summary>
         void AddOrUpdateSubscription(WebHookSubscription webHookSubscription);
 
-        /// <summary>
-        /// Adds subscription. (Checks if webhook permissions are granted)
-        /// </summary>
-        /// <param name="id">Unique identifier of <see cref="WebHookSubscriptionInfo"/></param>
-        /// <param name="webHookName"><see cref="WebHookDefinition.Name"/></param>
-        Task AddWebHookAsync(Guid id, string webHookName);
-
-        /// <summary>
-        /// Adds subscription. (Checks if webhook permissions are granted)
-        /// </summary>
-        /// <param name="id">Unique identifier of <see cref="WebHookSubscriptionInfo"/></param>
-        /// <param name="webHookName"><see cref="WebHookDefinition.Name"/></param>
-        void AddWebHook(Guid id, string webHookName);
     }
 }

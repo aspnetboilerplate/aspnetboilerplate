@@ -18,11 +18,11 @@ namespace Abp.WebHooks
         /// <summary>
         /// Gets Webhook info by id
         /// </summary>
-        Task<WebHookInfo> GetAsync(Guid id);
+        Task<WebHookInfo> GetAsync(int? tenantId, Guid id);
 
         /// <summary>
         /// Gets Webhook info by id
         /// </summary>
-        WebHookInfo Get(Guid id);
+        WebHookInfo Get(int? tenantId, Guid id);
     }
 }

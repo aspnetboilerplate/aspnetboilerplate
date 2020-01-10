@@ -45,13 +45,13 @@ namespace Abp.WebHooks
         bool Contains(string name);
 
         /// <summary>
-        /// Checks if given webhook name is available for given user.
+        /// Checks if given webhook name is available for given tenant.
         /// </summary>
-        Task<bool> IsAvailableAsync(UserIdentifier user, string name);
+        Task<bool> IsAvailableAsync(int? tenantId, string name);
 
         /// <summary>
-        /// Checks if given webhook name is available for given user.
+        /// Checks if given webhook name is available for given tenant.
         /// </summary>
-        bool IsAvailable(UserIdentifier user, string name);
+        bool IsAvailable(int? tenantId, string name);
     }
 }

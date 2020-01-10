@@ -3,13 +3,10 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Abp.Authorization;
-using Abp.Domain.Repositories;
 using Abp.Json;
-using Abp.MultiTenancy;
 using Abp.Threading;
 using Abp.WebHooks;
 using Abp.Zero.SampleApp.Application;
-using JetBrains.Annotations;
 using NSubstitute;
 using Shouldly;
 using Xunit;
@@ -18,108 +15,83 @@ namespace Abp.Zero.SampleApp.Tests.WebHooks
 {
     public class WebHookSubscriptionManager_Tests : WebHookTestBase
     {
+        private WebHookSubscription NewWebHookSubscription(int? tenantId, params string[] webHookDefinitions)
+        {
+            return new WebHookSubscription
+            {
+                TenantId = tenantId,
+                WebHookDefinitions = webHookDefinitions.ToList(),
+                WebHookUri = "www.mywebhook.com",
+                Headers = new Dictionary<string, string>
+                {
+                    {"Key", "Value"}
+                }
+            };
+        }
+
+        private WebHookSubscription NewWebHookSubscription(string seed, int? tenantId, params string[] webHookDefinitions)
+        {
+            return new WebHookSubscription
+            {
+                TenantId = tenantId,
+                WebHookDefinitions = webHookDefinitions.ToList(),
+                WebHookUri = "www.mywebhook.com/" + seed,
+                Headers = new Dictionary<string, string>
+                {
+                    {"Key", "Value_" + seed}
+                }
+            };
+        }
+
+        private void CompareSubscriptions(WebHookSubscription subscription1, WebHookSubscription subscription2)
+        {
+            subscription1.WebHookDefinitions.ShouldBe(subscription2.WebHookDefinitions);
+            subscription1.TenantId.ShouldBe(subscription2.TenantId);
+            subscription1.Secret.ShouldNotBeNullOrEmpty();
+            subscription1.Secret.ShouldStartWith("whs_");
+            subscription1.WebHookUri.ShouldBe(subscription2.WebHookUri);
+            subscription1.WebHookDefinitions.ShouldBe(subscription2.WebHookDefinitions);
+            subscription1.Headers.ShouldBe(subscription2.Headers);
+        }
+
         #region Async
 
         [Fact]
-        public async Task Should_Get_Subscription_Async()
+        public async Task Should_Insert_And_Get_Subscription_Async()
         {
-            var user = await CreateNewUserWithWebhookPermissionsAsync(new List<string> { AppPermissions.WebHook.UserCreated });
+            var tenantId = await CreateAndGetTenantIdWithFeaturesAsync(AppFeatures.WebHookFeature, "true");
 
-            var newSubscription = new WebHookSubscription
-            {
-                TenantId = AbpSession.TenantId,
-                UserId = user.Id,
-                Secret = "secret",
-                WebHookUri = "www.mywebhook.com",
-                WebHookDefinitions = new List<string> { AppWebHookDefinitionNames.Users.Created },
-                Headers = new Dictionary<string, string>
-                {
-                    { "Key","Value"}
-                }
-            };
+            var newSubscription = NewWebHookSubscription(tenantId, AppWebHookDefinitionNames.Users.Created);
 
             var webHookSubscriptionManager = Resolve<IWebHookSubscriptionManager>();
             await webHookSubscriptionManager.AddOrUpdateSubscriptionAsync(newSubscription);
 
-            var subscription = webHookSubscriptionManager.Get(newSubscription.Id);
-            subscription.ShouldNotBeNull();
-            subscription.WebHookDefinitions.ShouldContain(AppWebHookDefinitionNames.Users.Created);
-            subscription.TenantId.ShouldBe(AbpSession.TenantId);
-            subscription.UserId.ShouldBe(newSubscription.UserId);
-            subscription.Secret.ShouldBe(newSubscription.Secret);
-            subscription.WebHookUri.ShouldBe(newSubscription.WebHookUri);
-            subscription.WebHookDefinitions.ShouldBe(newSubscription.WebHookDefinitions);
-            subscription.Headers.ShouldBe(newSubscription.Headers);
-        }
-
-        [Fact]
-        public async Task Should_Insert_Subscription_Async()
-        {
-            var user = await CreateNewUserWithWebhookPermissionsAsync(new List<string> { AppPermissions.WebHook.UserCreated });
-
-            var newSubscription = new WebHookSubscription
-            {
-                TenantId = AbpSession.TenantId,
-                UserId = user.Id,
-                Secret = "secret",
-                WebHookUri = "www.mywebhook.com",
-                WebHookDefinitions = new List<string> { AppWebHookDefinitionNames.Users.Created },
-                Headers = new Dictionary<string, string>
-                {
-                    { "Key","Value"}
-                }
-            };
-
-            var webHookSubscriptionManager = Resolve<IWebHookSubscriptionManager>();
-            await webHookSubscriptionManager.AddOrUpdateSubscriptionAsync(newSubscription);
-
-            var subscription = webHookSubscriptionManager.Get(newSubscription.Id);
-
-            subscription.ShouldNotBeNull();
-            subscription.WebHookDefinitions.ShouldContain(AppWebHookDefinitionNames.Users.Created);
-            subscription.TenantId.ShouldBe(AbpSession.TenantId);
-            subscription.UserId.ShouldBe(newSubscription.UserId);
-            subscription.Secret.ShouldBe(newSubscription.Secret);
-            subscription.WebHookUri.ShouldBe(newSubscription.WebHookUri);
-            subscription.WebHookDefinitions.ShouldBe(newSubscription.WebHookDefinitions);
-            subscription.Headers.ShouldBe(newSubscription.Headers);
+            await WithUnitOfWorkAsync(tenantId, async () =>
+             {
+                 var storedSubscription = webHookSubscriptionManager.Get(newSubscription.Id);
+                 storedSubscription.ShouldNotBeNull();
+                 CompareSubscriptions(storedSubscription, newSubscription);
+             });
         }
 
         [Fact]
         public async Task Should_Update_Subscription_Async()
         {
-            var user = await CreateNewUserWithWebhookPermissionsAsync(new List<string> { AppPermissions.WebHook.UserCreated });
+            var tenantId = await CreateAndGetTenantIdWithFeaturesAsync(AppFeatures.WebHookFeature, "true");
 
-            var newSubscription = new WebHookSubscription
-            {
-                TenantId = AbpSession.TenantId,
-                UserId = user.Id,
-                Secret = "secret",
-                WebHookUri = "www.mywebhook.com",
-                WebHookDefinitions = new List<string> { AppWebHookDefinitionNames.Users.Created },
-                Headers = new Dictionary<string, string>
-                {
-                    { "Key","Value"}
-                }
-            };
+            var newSubscription = NewWebHookSubscription(tenantId, AppWebHookDefinitionNames.Users.Created);
 
             var webHookSubscriptionManager = Resolve<IWebHookSubscriptionManager>();
             await webHookSubscriptionManager.AddOrUpdateSubscriptionAsync(newSubscription);
 
-            var subscription = webHookSubscriptionManager.Get(newSubscription.Id);
-            subscription.ShouldNotBeNull();
-            subscription.WebHookDefinitions.ShouldContain(AppWebHookDefinitionNames.Users.Created);
-            subscription.TenantId.ShouldBe(AbpSession.TenantId);
-            subscription.UserId.ShouldBe(newSubscription.UserId);
-            subscription.Secret.ShouldBe(newSubscription.Secret);
-            subscription.WebHookUri.ShouldBe(newSubscription.WebHookUri);
-            subscription.WebHookDefinitions.ShouldBe(newSubscription.WebHookDefinitions);
-            subscription.Headers.ShouldBe(newSubscription.Headers);
-
-            //update
-            string newSecret = "NewSecret";
-            subscription.Secret = newSecret;
-
+            WebHookSubscription subscription = null;
+            await WithUnitOfWorkAsync(tenantId, async () =>
+            {
+                subscription = await webHookSubscriptionManager.GetAsync(newSubscription.Id);
+                subscription.ShouldNotBeNull();
+                CompareSubscriptions(subscription, newSubscription);
+            });
+            
             var newWebHookUri = "www.mynewwebhook.com";
             subscription.WebHookUri = newWebHookUri;
 
@@ -129,67 +101,30 @@ namespace Abp.Zero.SampleApp.Tests.WebHooks
             subscription.Headers.Add(newHeader);
 
             await webHookSubscriptionManager.AddOrUpdateSubscriptionAsync(subscription);
-            //
 
-            var updatedSubscription = webHookSubscriptionManager.Get(newSubscription.Id);
-            updatedSubscription.ShouldNotBeNull();
-            updatedSubscription.Secret.ShouldBe(newSecret);
-            updatedSubscription.WebHookUri.ShouldBe(newWebHookUri);
+            await WithUnitOfWorkAsync(tenantId, async () =>
+             {
+                 var updatedSubscription = await webHookSubscriptionManager.GetAsync(newSubscription.Id);
+                 updatedSubscription.ShouldNotBeNull();
 
-            updatedSubscription.WebHookDefinitions.ShouldContain(AppWebHookDefinitionNames.Test);
-            updatedSubscription.WebHookDefinitions.ShouldContain(AppWebHookDefinitionNames.Users.Created);
+                 updatedSubscription.WebHookUri.ShouldBe(newWebHookUri);
 
-            updatedSubscription.TenantId.ShouldBe(AbpSession.TenantId);
-            updatedSubscription.UserId.ShouldBe(newSubscription.UserId);
+                 updatedSubscription.WebHookDefinitions.ShouldContain(AppWebHookDefinitionNames.Test);
+                 updatedSubscription.WebHookDefinitions.ShouldContain(AppWebHookDefinitionNames.Users.Created);
 
-            updatedSubscription.Headers.ShouldContain(newSubscription.Headers.First());
-            updatedSubscription.Headers.ShouldContain(newHeader);
-        }
+                 updatedSubscription.TenantId.ShouldBe(tenantId);
 
-        [Fact]
-        public async Task Should_Insert_Throw_Exception_If_Permissions_Are_Not_Granted_Async()
-        {
-            var user = await CreateNewUserWithWebhookPermissionsAsync();
-
-            var newSubscription = new WebHookSubscription
-            {
-                TenantId = AbpSession.TenantId,
-                UserId = user.Id,
-                Secret = "secret",
-                WebHookUri = "www.mywebhook.com",
-                WebHookDefinitions = new List<string> { AppWebHookDefinitionNames.Users.Created },
-                Headers = new Dictionary<string, string>
-                {
-                    { "Key","Value"}
-                }
-            };
-
-            var webHookSubscriptionManager = Resolve<IWebHookSubscriptionManager>();
-            await Assert.ThrowsAsync<AbpAuthorizationException>(async () =>
-            {
-                await webHookSubscriptionManager.AddOrUpdateSubscriptionAsync(newSubscription);
-            });
+                 updatedSubscription.Headers.ShouldContain(newSubscription.Headers.First());
+                 updatedSubscription.Headers.ShouldContain(newHeader);
+             });
         }
 
         [Fact]
         public async Task Should_Insert_Throw_Exception_If_Features_Are_Not_Granted_Async()
         {
-            AbpSession.TenantId = GetDefaultTenant().Id;
+            var tenantId = await CreateAndGetTenantIdWithFeaturesAsync();//needs AppFeatures.WebHookFeature feature
 
-            var user = await CreateNewUserWithWebhookPermissionsAsync();
-
-            var newSubscription = new WebHookSubscription
-            {
-                TenantId = AbpSession.TenantId,
-                UserId = user.Id,
-                Secret = "secret",
-                WebHookUri = "www.mywebhook.com",
-                WebHookDefinitions = new List<string> { AppWebHookDefinitionNames.Chat.NewMessageReceived },
-                Headers = new Dictionary<string, string>
-                {
-                    { "Key","Value"}
-                }
-            };
+            var newSubscription = NewWebHookSubscription(tenantId, AppWebHookDefinitionNames.Users.Created);
 
             var webHookSubscriptionManager = Resolve<IWebHookSubscriptionManager>();
             await Assert.ThrowsAsync<AbpAuthorizationException>(async () =>
@@ -197,58 +132,18 @@ namespace Abp.Zero.SampleApp.Tests.WebHooks
                 await webHookSubscriptionManager.AddOrUpdateSubscriptionAsync(newSubscription);
             });
 
-            await AddOrReplaceFeatureToTenantAsync(AbpSession.TenantId.Value, AppFeatures.ChatFeature, "true");
-
-            await webHookSubscriptionManager.AddOrUpdateSubscriptionAsync(newSubscription);//after we add feature to tenant it will not throw an exception
-        }
-
-        [Fact]
-        public async Task Should_Update_Throw_Exception_If_Permissions_Are_Not_Granted_Async()
-        {
-            var user = await CreateNewUserWithWebhookPermissionsAsync();
-
-            var newSubscription = new WebHookSubscription
-            {
-                Id = Guid.NewGuid(),
-                TenantId = AbpSession.TenantId,
-                UserId = user.Id,
-                Secret = "secret",
-                WebHookUri = "www.mywebhook.com",
-                WebHookDefinitions = new List<string> { AppWebHookDefinitionNames.Users.Created },
-                Headers = new Dictionary<string, string>
-                {
-                    { "Key","Value"}
-                }
-            };
-
-            var webHookSubscriptionManager = Resolve<IWebHookSubscriptionManager>();
-
-            await Assert.ThrowsAsync<AbpAuthorizationException>(async () =>
-            {
-                await webHookSubscriptionManager.AddOrUpdateSubscriptionAsync(newSubscription);
-            });
+            await AddOrReplaceFeatureToTenantAsync(tenantId, AppFeatures.WebHookFeature, "true");
+            await webHookSubscriptionManager.AddOrUpdateSubscriptionAsync(newSubscription);
         }
 
         [Fact]
         public async Task Should_Update_Throw_Exception_If_Features_Are_Not_Granted_Async()
         {
-            AbpSession.TenantId = GetDefaultTenant().Id;
+            var tenantId = await CreateAndGetTenantIdWithFeaturesAsync();//needs AppFeatures.WebHookFeature feature
 
-            var user = await CreateNewUserWithWebhookPermissionsAsync();
+            var newSubscription = NewWebHookSubscription(tenantId, AppWebHookDefinitionNames.Users.Created);
+            newSubscription.Id = Guid.NewGuid();
 
-            var newSubscription = new WebHookSubscription
-            {
-                Id = Guid.NewGuid(),
-                TenantId = AbpSession.TenantId,
-                UserId = user.Id,
-                Secret = "secret",
-                WebHookUri = "www.mywebhook.com",
-                WebHookDefinitions = new List<string> { AppWebHookDefinitionNames.Chat.NewMessageReceived },
-                Headers = new Dictionary<string, string>
-                {
-                    { "Key","Value"}
-                }
-            };
             var webHookStoreSubstitute = RegisterFake<IWebHookSubscriptionsStore>();
             var webHookSubscriptionManager = Resolve<IWebHookSubscriptionManager>();
 
@@ -257,43 +152,32 @@ namespace Abp.Zero.SampleApp.Tests.WebHooks
                 await webHookSubscriptionManager.AddOrUpdateSubscriptionAsync(newSubscription);
             });
 
-            await AddOrReplaceFeatureToTenantAsync(AbpSession.TenantId.Value, AppFeatures.ChatFeature, "true");
-
-            await webHookSubscriptionManager.AddOrUpdateSubscriptionAsync(newSubscription);//after we add feature to tenant it will not throw an exception
+            //check error reason
+            webHookStoreSubstitute.ClearReceivedCalls();
+            await AddOrReplaceFeatureToTenantAsync(tenantId, AppFeatures.WebHookFeature, "true");
 
             Predicate<WebHookSubscriptionInfo> predicate = w =>
             {
                 w.Id.ShouldBe(newSubscription.Id);
                 w.TenantId.ShouldBe(newSubscription.TenantId);
-                w.UserId.ShouldBe(newSubscription.UserId);
-                w.Secret.ShouldBe(newSubscription.Secret);
                 w.WebHookUri.ShouldBe(newSubscription.WebHookUri);
                 w.WebHookDefinitions.ShouldBe(newSubscription.WebHookDefinitions.ToJsonString());
                 w.Headers.ShouldBe(newSubscription.Headers.ToJsonString());
                 return true;
             };
+            await webHookSubscriptionManager.AddOrUpdateSubscriptionAsync(newSubscription);
 
             await webHookStoreSubstitute.DidNotReceive().InsertAsync(Arg.Any<WebHookSubscriptionInfo>());
             await webHookStoreSubstitute.Received().UpdateAsync(Arg.Is<WebHookSubscriptionInfo>(w => predicate(w)));
         }
 
         [Fact]
-        public async Task Should_Add_Or_Update_Subscription_Async_Method_Insert_If_Id_Is_Null_Async()
+        public async Task Should_Add_Or_Update_Subscription_Async_Method_Insert_If_Id_Is_Default_Async()
         {
-            var user = await CreateNewUserWithWebhookPermissionsAsync(new List<string> { AppPermissions.WebHook.UserCreated });
+            var tenantId = await CreateAndGetTenantIdWithFeaturesAsync();
 
-            var newSubscription = new WebHookSubscription
-            {
-                TenantId = AbpSession.TenantId,
-                UserId = user.Id,
-                Secret = "secret",
-                WebHookUri = "www.mywebhook.com",
-                WebHookDefinitions = new List<string> { AppWebHookDefinitionNames.Users.Created },
-                Headers = new Dictionary<string, string>
-                {
-                    { "Key","Value"}
-                }
-            };
+            var newSubscription = NewWebHookSubscription(tenantId, AppWebHookDefinitionNames.Test);
+            newSubscription.Id = default;
 
             var webHookStoreSubstitute = RegisterFake<IWebHookSubscriptionsStore>();
             var webHookSubscriptionManager = Resolve<IWebHookSubscriptionManager>();
@@ -302,8 +186,8 @@ namespace Abp.Zero.SampleApp.Tests.WebHooks
             Predicate<WebHookSubscriptionInfo> predicate = w =>
             {
                 w.TenantId.ShouldBe(newSubscription.TenantId);
-                w.UserId.ShouldBe(newSubscription.UserId);
-                w.Secret.ShouldBe(newSubscription.Secret);
+                w.Secret.ShouldNotBeNullOrEmpty();
+                w.Secret.ShouldStartWith("whs_");
                 w.WebHookUri.ShouldBe(newSubscription.WebHookUri);
                 w.WebHookDefinitions.ShouldBe(newSubscription.WebHookDefinitions.ToJsonString());
                 w.Headers.ShouldBe(newSubscription.Headers.ToJsonString());
@@ -315,23 +199,12 @@ namespace Abp.Zero.SampleApp.Tests.WebHooks
         }
 
         [Fact]
-        public async Task Should_Add_Or_Update_Subscription_Async_Method_Update_If_Id_Is_Not_Null_Async()
+        public async Task Should_Add_Or_Update_Subscription_Async_Method_Update_If_Id_Is_Not_Default_Async()
         {
-            var user = await CreateNewUserWithWebhookPermissionsAsync(new List<string> { AppPermissions.WebHook.UserCreated });
+            var tenantId = await CreateAndGetTenantIdWithFeaturesAsync(AppFeatures.WebHookFeature, "true");
 
-            var newSubscription = new WebHookSubscription
-            {
-                Id = Guid.NewGuid(),
-                TenantId = AbpSession.TenantId,
-                UserId = user.Id,
-                Secret = "secret",
-                WebHookUri = "www.mywebhook.com",
-                WebHookDefinitions = new List<string> { AppWebHookDefinitionNames.Users.Created },
-                Headers = new Dictionary<string, string>
-                {
-                    { "Key","Value"}
-                }
-            };
+            var newSubscription = NewWebHookSubscription(tenantId, AppWebHookDefinitionNames.Users.Created);
+            newSubscription.Id = Guid.NewGuid();
 
             var webHookStoreSubstitute = RegisterFake<IWebHookSubscriptionsStore>();
             var webHookSubscriptionManager = Resolve<IWebHookSubscriptionManager>();
@@ -341,8 +214,6 @@ namespace Abp.Zero.SampleApp.Tests.WebHooks
             {
                 w.Id.ShouldBe(newSubscription.Id);
                 w.TenantId.ShouldBe(newSubscription.TenantId);
-                w.UserId.ShouldBe(newSubscription.UserId);
-                w.Secret.ShouldBe(newSubscription.Secret);
                 w.WebHookUri.ShouldBe(newSubscription.WebHookUri);
                 w.WebHookDefinitions.ShouldBe(newSubscription.WebHookDefinitions.ToJsonString());
                 w.Headers.ShouldBe(newSubscription.Headers.ToJsonString());
@@ -354,87 +225,22 @@ namespace Abp.Zero.SampleApp.Tests.WebHooks
         }
 
         [Fact]
-        public async Task Should_Add_Or_Update_Subscription_Async_Method_Throw_Exception_Subscription_If_Permissions_Are_Not_Granted_Async()
-        {
-            var user = await CreateNewUserWithWebhookPermissionsAsync(new List<string> { AppPermissions.WebHook.UserCreated });
-
-            var newSubscription = new WebHookSubscription
-            {
-                TenantId = AbpSession.TenantId,
-                UserId = user.Id,
-                Secret = "secret",
-                WebHookUri = "www.mywebhook.com",
-                WebHookDefinitions = new List<string> { AppWebHookDefinitionNames.Users.Created },
-                Headers = new Dictionary<string, string>
-                {
-                    { "Key","Value"}
-                }
-            };
-
-            var webHookSubscriptionManager = Resolve<IWebHookSubscriptionManager>();
-            await webHookSubscriptionManager.AddOrUpdateSubscriptionAsync(newSubscription);
-
-            newSubscription.WebHookDefinitions.Add(AppWebHookDefinitionNames.Tenant.Deleted);
-
-            await Assert.ThrowsAsync<AbpAuthorizationException>(async () =>
-             {
-                 await webHookSubscriptionManager.AddOrUpdateSubscriptionAsync(newSubscription);
-             });
-        }
-
-        [Fact]
         public async Task Should_Get_All_Subscription_Async()
         {
-            var user = await CreateNewUserWithWebhookPermissionsAsync(new List<string> { AppPermissions.WebHook.UserCreated });
+            var tenantId = await CreateAndGetTenantIdWithFeaturesAsync(AppFeatures.WebHookFeature, "true");
 
             var webHookSubscriptionManager = Resolve<IWebHookSubscriptionManager>();
 
-            //Add 3 subscriptions
-            var userCreatedWebHookSubscription = new WebHookSubscription
-            {
-                TenantId = AbpSession.TenantId,
-                UserId = user.Id,
-                Secret = "secret",
-                WebHookUri = "www.mywebhook.com",
-                WebHookDefinitions = new List<string> { AppWebHookDefinitionNames.Users.Created },
-                Headers = new Dictionary<string, string>
-                {
-                    { "Key","Value"}
-                }
-            };
-
+            var userCreatedWebHookSubscription = NewWebHookSubscription("1", tenantId, AppWebHookDefinitionNames.Users.Created);
             await webHookSubscriptionManager.AddOrUpdateSubscriptionAsync(userCreatedWebHookSubscription);
 
-            var userCreatedWebHookSubscription2 = new WebHookSubscription
-            {
-                TenantId = AbpSession.TenantId,
-                UserId = user.Id,
-                Secret = "secret2",
-                WebHookUri = "www.mywebhook.com/webhook",
-                WebHookDefinitions = new List<string> { AppWebHookDefinitionNames.Users.Created },
-                Headers = new Dictionary<string, string>
-                {
-                    { "Key","Value2"}
-                }
-            };
+            var userCreatedWebHookSubscription2 = NewWebHookSubscription("2", tenantId, AppWebHookDefinitionNames.Users.Created);
             await webHookSubscriptionManager.AddOrUpdateSubscriptionAsync(userCreatedWebHookSubscription2);
 
-            var testWebHookSubscription = new WebHookSubscription
-            {
-                TenantId = AbpSession.TenantId,
-                UserId = user.Id,
-                Secret = "secret_test",
-                WebHookUri = "www.mywebhook.com/test",
-                WebHookDefinitions = new List<string> { AppWebHookDefinitionNames.Test },
-                Headers = new Dictionary<string, string>
-                {
-                    { "Key","Test"}
-                }
-            };
+            var testWebHookSubscription = NewWebHookSubscription("test", tenantId, AppWebHookDefinitionNames.Test);
             await webHookSubscriptionManager.AddOrUpdateSubscriptionAsync(testWebHookSubscription);
-            //
 
-            var allSubscriptions = await webHookSubscriptionManager.GetAllSubscriptionsAsync(new UserIdentifier(user.TenantId, user.Id));
+            var allSubscriptions = await webHookSubscriptionManager.GetAllSubscriptionsAsync(tenantId);
 
             allSubscriptions.Count.ShouldBe(3);
 
@@ -442,508 +248,221 @@ namespace Abp.Zero.SampleApp.Tests.WebHooks
             allSubscriptions.Select(s => s.Id).ShouldContain(userCreatedWebHookSubscription2.Id);
             allSubscriptions.Select(s => s.Id).ShouldContain(testWebHookSubscription.Id);
 
-            var userCreatedSubscription = allSubscriptions.Single(s => s.Id == userCreatedWebHookSubscription.Id);
-            userCreatedSubscription.TenantId.ShouldBe(userCreatedWebHookSubscription.TenantId);
-            userCreatedSubscription.UserId.ShouldBe(userCreatedWebHookSubscription.UserId);
-            userCreatedSubscription.Secret.ShouldBe(userCreatedWebHookSubscription.Secret);
-            userCreatedSubscription.WebHookUri.ShouldBe(userCreatedWebHookSubscription.WebHookUri);
-            userCreatedSubscription.WebHookDefinitions.ShouldBe(userCreatedWebHookSubscription.WebHookDefinitions);
-            userCreatedSubscription.Headers.ShouldBe(userCreatedWebHookSubscription.Headers);
+            var storedUserCreatedSubscription = allSubscriptions.Single(s => s.Id == userCreatedWebHookSubscription.Id);
+            CompareSubscriptions(storedUserCreatedSubscription, userCreatedWebHookSubscription);
 
-            var userCreatedSubscription2 = allSubscriptions.Single(s => s.Id == userCreatedWebHookSubscription2.Id);
-            userCreatedSubscription2.TenantId.ShouldBe(userCreatedWebHookSubscription2.TenantId);
-            userCreatedSubscription2.UserId.ShouldBe(userCreatedWebHookSubscription2.UserId);
-            userCreatedSubscription2.Secret.ShouldBe(userCreatedWebHookSubscription2.Secret);
-            userCreatedSubscription2.WebHookUri.ShouldBe(userCreatedWebHookSubscription2.WebHookUri);
-            userCreatedSubscription2.WebHookDefinitions.ShouldBe(userCreatedWebHookSubscription2.WebHookDefinitions);
-            userCreatedSubscription2.Headers.ShouldBe(userCreatedWebHookSubscription2.Headers);
+            var storedUserCreatedSubscription2 = allSubscriptions.Single(s => s.Id == userCreatedWebHookSubscription2.Id);
+            CompareSubscriptions(storedUserCreatedSubscription2, userCreatedWebHookSubscription2);
 
-            var testSubscription = allSubscriptions.Single(s => s.Id == testWebHookSubscription.Id);
-            testSubscription.TenantId.ShouldBe(testWebHookSubscription.TenantId);
-            testSubscription.UserId.ShouldBe(testWebHookSubscription.UserId);
-            testSubscription.Secret.ShouldBe(testWebHookSubscription.Secret);
-            testSubscription.WebHookUri.ShouldBe(testWebHookSubscription.WebHookUri);
-            testSubscription.WebHookDefinitions.ShouldBe(testWebHookSubscription.WebHookDefinitions);
-            testSubscription.Headers.ShouldBe(testWebHookSubscription.Headers);
+            var storedTestSubscription = allSubscriptions.Single(s => s.Id == testWebHookSubscription.Id);
+            CompareSubscriptions(storedTestSubscription, testWebHookSubscription);
         }
 
         [Fact]
-        public async Task Should_Get_All_Subscription_Permissions_Granted_By_User_Async()
+        public async Task Should_Get_All_Subscriptions_If_Features_Granted_Async()
         {
-            var user = await CreateNewUserWithWebhookPermissionsAsync(new List<string> { AppPermissions.WebHook.UserCreated });
+            var tenantId = await CreateAndGetTenantIdWithFeaturesAsync(new Dictionary<string, string>()
+            {
+                {AppFeatures.WebHookFeature, "true"},
+                {AppFeatures.ThemeFeature, "true"}
+            });
 
             var webHookSubscriptionManager = Resolve<IWebHookSubscriptionManager>();
 
-            //Add subscriptions
-            var userCreatedWebHookSubscription = new WebHookSubscription
-            {
-                TenantId = AbpSession.TenantId,
-                UserId = user.Id,
-                Secret = "secret",
-                WebHookUri = "www.mywebhook.com",
-                WebHookDefinitions = new List<string> { AppWebHookDefinitionNames.Users.Created },
-                Headers = new Dictionary<string, string>
-                {
-                    { "Key","Value"}
-                }
-            };
-
+            var userCreatedWebHookSubscription = NewWebHookSubscription(tenantId, AppWebHookDefinitionNames.Users.Created);
             await webHookSubscriptionManager.AddOrUpdateSubscriptionAsync(userCreatedWebHookSubscription);
 
-            var userCreatedWebHookSubscription2 = new WebHookSubscription
-            {
-                TenantId = AbpSession.TenantId,
-                UserId = user.Id,
-                Secret = "secret2",
-                WebHookUri = "www.mywebhook.com/webhook",
-                WebHookDefinitions = new List<string> { AppWebHookDefinitionNames.Users.Created, AppWebHookDefinitionNames.Test },
-                Headers = new Dictionary<string, string>
-                {
-                    { "Key","Value2"}
-                }
-            };
-            await webHookSubscriptionManager.AddOrUpdateSubscriptionAsync(userCreatedWebHookSubscription2);
-            //
+            var userCreatedAndThemeChangedWebHookSubscription = NewWebHookSubscription(tenantId,
+                AppWebHookDefinitionNames.Users.Created,
+                AppWebHookDefinitionNames.Theme.DefaultThemeChanged);
+            await webHookSubscriptionManager.AddOrUpdateSubscriptionAsync(userCreatedAndThemeChangedWebHookSubscription);
 
-            await UserManager.ProhibitPermissionAsync(user, PermissionManager.GetPermission(AppPermissions.WebHook.UserCreated)); //remove permission from user 
+            var defaultThemeChangedSubscription = NewWebHookSubscription(tenantId, AppWebHookDefinitionNames.Theme.DefaultThemeChanged);
+            await webHookSubscriptionManager.AddOrUpdateSubscriptionAsync(defaultThemeChangedSubscription);
 
-            var allSubscriptions = await webHookSubscriptionManager.GetAllSubscriptionsPermissionGrantedAsync(new UserIdentifier(user.TenantId, user.Id), AppWebHookDefinitionNames.Users.Created);
+            var userCreatedSubscriptions = await webHookSubscriptionManager.GetAllSubscriptionsIfFeaturesGrantedAsync(tenantId, AppWebHookDefinitionNames.Users.Created);
 
-            allSubscriptions.Count.ShouldBe(0);
+            userCreatedSubscriptions.Count.ShouldBe(2);
+            userCreatedSubscriptions.Select(s => s.Id).ShouldNotContain(defaultThemeChangedSubscription.Id);
+            userCreatedSubscriptions.Select(s => s.Id).ShouldContain(userCreatedAndThemeChangedWebHookSubscription.Id);
+            userCreatedSubscriptions.Select(s => s.Id).ShouldContain(userCreatedWebHookSubscription.Id);
+
+            CompareSubscriptions(userCreatedSubscriptions.Single(s => s.Id == userCreatedAndThemeChangedWebHookSubscription.Id), userCreatedAndThemeChangedWebHookSubscription);
+            CompareSubscriptions(userCreatedSubscriptions.Single(s => s.Id == userCreatedWebHookSubscription.Id), userCreatedWebHookSubscription);
+
+            var defaultThemeChangedSubscriptions = await webHookSubscriptionManager.GetAllSubscriptionsIfFeaturesGrantedAsync(tenantId, AppWebHookDefinitionNames.Theme.DefaultThemeChanged);
+            defaultThemeChangedSubscriptions.Count.ShouldBe(2);
+            defaultThemeChangedSubscriptions.Select(s => s.Id).ShouldContain(userCreatedAndThemeChangedWebHookSubscription.Id);
+            defaultThemeChangedSubscriptions.Select(s => s.Id).ShouldContain(defaultThemeChangedSubscription.Id);
+
+            CompareSubscriptions(defaultThemeChangedSubscriptions.Single(s => s.Id == userCreatedAndThemeChangedWebHookSubscription.Id), userCreatedAndThemeChangedWebHookSubscription);
+            CompareSubscriptions(defaultThemeChangedSubscriptions.Single(s => s.Id == defaultThemeChangedSubscription.Id), defaultThemeChangedSubscription);
         }
 
         [Fact]
-        public async Task Should_Get_All_Subscription_Features_Granted_By_User_Async()
+        public async Task Should_Not_Get_Subscriptions_If_Features_Not_Granted_Async()
         {
-            AbpSession.TenantId = GetDefaultTenant().Id;
-
-            var user = await CreateNewUserWithWebhookPermissionsAsync(new List<string> { AppPermissions.WebHook.UserCreated });
+            var tenantId = await CreateAndGetTenantIdWithFeaturesAsync(new Dictionary<string, string>()
+            {
+                {AppFeatures.WebHookFeature, "true"},
+                {AppFeatures.ThemeFeature, "true"}
+            });
 
             var webHookSubscriptionManager = Resolve<IWebHookSubscriptionManager>();
 
-            //Add subscriptions
-            var userCreatedWebHookSubscription = new WebHookSubscription
-            {
-                TenantId = AbpSession.TenantId,
-                UserId = user.Id,
-                Secret = "secret",
-                WebHookUri = "www.mywebhook.com",
-                WebHookDefinitions = new List<string> { AppWebHookDefinitionNames.Chat.NewMessageReceived },
-                Headers = new Dictionary<string, string>
-                {
-                    { "Key","Value"}
-                }
-            };
-
-            var userCreatedWebHookSubscription2 = new WebHookSubscription
-            {
-                TenantId = AbpSession.TenantId,
-                UserId = user.Id,
-                Secret = "secret2",
-                WebHookUri = "www.mywebhook.com/webhook",
-                WebHookDefinitions = new List<string> { AppWebHookDefinitionNames.Chat.NewMessageReceived, AppWebHookDefinitionNames.Test },
-                Headers = new Dictionary<string, string>
-                {
-                    { "Key","Value2"}
-                }
-            };
-
-            await AddOrReplaceFeatureToTenantAsync(AbpSession.TenantId.Value, AppFeatures.ChatFeature, "true");
-
+            var userCreatedWebHookSubscription = NewWebHookSubscription(tenantId, AppWebHookDefinitionNames.Users.Created);
             await webHookSubscriptionManager.AddOrUpdateSubscriptionAsync(userCreatedWebHookSubscription);
-            await webHookSubscriptionManager.AddOrUpdateSubscriptionAsync(userCreatedWebHookSubscription2);
 
-            var allSubscriptions = await webHookSubscriptionManager
-                .GetAllSubscriptionsPermissionGrantedAsync(
-                    new UserIdentifier(user.TenantId, user.Id),
-                    AppWebHookDefinitionNames.Chat.NewMessageReceived
-                );
-            allSubscriptions.Count.ShouldBe(2);
+            var userCreatedAndThemeChangedWebHookSubscription = NewWebHookSubscription(tenantId,
+                AppWebHookDefinitionNames.Users.Created,
+                AppWebHookDefinitionNames.Theme.DefaultThemeChanged);
+            await webHookSubscriptionManager.AddOrUpdateSubscriptionAsync(userCreatedAndThemeChangedWebHookSubscription);
 
-            await AddOrReplaceFeatureToTenantAsync(AbpSession.TenantId.Value, AppFeatures.ChatFeature, "false");
+            var defaultThemeChangedSubscription = NewWebHookSubscription(tenantId, AppWebHookDefinitionNames.Theme.DefaultThemeChanged);
+            await webHookSubscriptionManager.AddOrUpdateSubscriptionAsync(defaultThemeChangedSubscription);
 
-            allSubscriptions = await webHookSubscriptionManager
-               .GetAllSubscriptionsPermissionGrantedAsync(
-                   new UserIdentifier(user.TenantId, user.Id),
-                   AppWebHookDefinitionNames.Chat.NewMessageReceived
-               );
+            var userCreatedSubscriptions = await webHookSubscriptionManager.GetAllSubscriptionsIfFeaturesGrantedAsync(tenantId, AppWebHookDefinitionNames.Users.Created);
 
-            allSubscriptions.Count.ShouldBe(0);
-        }
+            userCreatedSubscriptions.Count.ShouldBe(2);
+            userCreatedSubscriptions.Select(s => s.Id).ShouldNotContain(defaultThemeChangedSubscription.Id);
+            userCreatedSubscriptions.Select(s => s.Id).ShouldContain(userCreatedAndThemeChangedWebHookSubscription.Id);
+            userCreatedSubscriptions.Select(s => s.Id).ShouldContain(userCreatedWebHookSubscription.Id);
 
-        [Fact]
-        public async Task Should_Get_All_Subscription_Permissions_Granted_Async()
-        {
-            var subscriptionResult1 = await CreateUserAndSubscribeToWebhookAsync(AppWebHookDefinitionNames.Users.Created, AppPermissions.WebHook.UserCreated);
-            var subscriptionResult2 = await CreateUserAndSubscribeToWebhookAsync(AppWebHookDefinitionNames.Users.Created, AppPermissions.WebHook.UserCreated);
-            var subscriptionResult3 = await CreateUserAndSubscribeToWebhookAsync(AppWebHookDefinitionNames.Users.Created, AppPermissions.WebHook.UserCreated);
+            CompareSubscriptions(userCreatedSubscriptions.Single(s => s.Id == userCreatedAndThemeChangedWebHookSubscription.Id), userCreatedAndThemeChangedWebHookSubscription);
+            CompareSubscriptions(userCreatedSubscriptions.Single(s => s.Id == userCreatedWebHookSubscription.Id), userCreatedWebHookSubscription);
 
-            await UserManager.ProhibitPermissionAsync(subscriptionResult2.user, PermissionManager.GetPermission(AppPermissions.WebHook.UserCreated)); //remove permission from user2
+            var defaultThemeChangedSubscriptions = await webHookSubscriptionManager.GetAllSubscriptionsIfFeaturesGrantedAsync(tenantId, AppWebHookDefinitionNames.Theme.DefaultThemeChanged);
+            defaultThemeChangedSubscriptions.Count.ShouldBe(2);
+            defaultThemeChangedSubscriptions.Select(s => s.Id).ShouldContain(userCreatedAndThemeChangedWebHookSubscription.Id);
+            defaultThemeChangedSubscriptions.Select(s => s.Id).ShouldContain(defaultThemeChangedSubscription.Id);
 
-            var webHookSubscriptionManager = Resolve<IWebHookSubscriptionManager>();
+            CompareSubscriptions(defaultThemeChangedSubscriptions.Single(s => s.Id == userCreatedAndThemeChangedWebHookSubscription.Id), userCreatedAndThemeChangedWebHookSubscription);
+            CompareSubscriptions(defaultThemeChangedSubscriptions.Single(s => s.Id == defaultThemeChangedSubscription.Id), defaultThemeChangedSubscription);
 
-            var allSubscriptions = await webHookSubscriptionManager.GetAllSubscriptionsPermissionGrantedAsync(AppWebHookDefinitionNames.Users.Created);
+            await AddOrReplaceFeatureToTenantAsync(tenantId, AppFeatures.ThemeFeature, "false");
 
-            allSubscriptions.Count.ShouldBe(2);
-            allSubscriptions.Select(s => s.Id).ShouldContain(subscriptionResult1.webHookSubscription.Id);
-            allSubscriptions.Select(s => s.Id).ShouldNotContain(subscriptionResult2.webHookSubscription.Id);
-            allSubscriptions.Select(s => s.Id).ShouldContain(subscriptionResult3.webHookSubscription.Id);
+            defaultThemeChangedSubscriptions = await webHookSubscriptionManager.GetAllSubscriptionsIfFeaturesGrantedAsync(tenantId, AppWebHookDefinitionNames.Theme.DefaultThemeChanged);
+            defaultThemeChangedSubscriptions.Count.ShouldBe(0);
 
-            var subscription1Result = allSubscriptions.Single(s => s.Id == subscriptionResult1.webHookSubscription.Id);
-            subscription1Result.TenantId.ShouldBe(subscriptionResult1.webHookSubscription.TenantId);
-            subscription1Result.UserId.ShouldBe(subscriptionResult1.user.Id);
-            subscription1Result.Secret.ShouldBe(subscriptionResult1.webHookSubscription.Secret);
-            subscription1Result.WebHookUri.ShouldBe(subscriptionResult1.webHookSubscription.WebHookUri);
-            subscription1Result.WebHookDefinitions.ShouldBe(subscriptionResult1.webHookSubscription.WebHookDefinitions);
-            subscription1Result.Headers.ShouldBe(subscriptionResult1.webHookSubscription.Headers);
-
-            var subscription3Result = allSubscriptions.Single(s => s.Id == subscriptionResult3.webHookSubscription.Id);
-            subscription3Result.TenantId.ShouldBe(subscriptionResult3.webHookSubscription.TenantId);
-            subscription3Result.UserId.ShouldBe(subscriptionResult3.user.Id);
-            subscription3Result.Secret.ShouldBe(subscriptionResult3.webHookSubscription.Secret);
-            subscription3Result.WebHookUri.ShouldBe(subscriptionResult3.webHookSubscription.WebHookUri);
-            subscription3Result.WebHookDefinitions.ShouldBe(subscriptionResult3.webHookSubscription.WebHookDefinitions);
-            subscription3Result.Headers.ShouldBe(subscriptionResult3.webHookSubscription.Headers);
-        }
-
-        [Fact]
-        public async Task Should_Get_All_Subscription_Features_Granted_Async()
-        {
-            AbpSession.TenantId = GetDefaultTenant().Id;
-            await AddOrReplaceFeatureToTenantAsync(AbpSession.TenantId.Value, AppFeatures.ChatFeature, "true");
-
-            var subscriptionResult1 = await CreateUserAndSubscribeToWebhookAsync(AppWebHookDefinitionNames.Chat.NewMessageReceived);
-            var subscriptionResult2 = await CreateUserAndSubscribeToWebhookAsync(AppWebHookDefinitionNames.Chat.NewMessageReceived);
-
-            var webHookSubscriptionManager = Resolve<IWebHookSubscriptionManager>();
-
-            var allSubscriptions = await webHookSubscriptionManager.GetAllSubscriptionsPermissionGrantedAsync(AppWebHookDefinitionNames.Chat.NewMessageReceived);
-
-            allSubscriptions.Count.ShouldBe(2);
-            allSubscriptions.Select(s => s.Id).ShouldContain(subscriptionResult1.webHookSubscription.Id);
-            allSubscriptions.Select(s => s.Id).ShouldContain(subscriptionResult2.webHookSubscription.Id);
-
-            await AddOrReplaceFeatureToTenantAsync(AbpSession.TenantId.Value, AppFeatures.ChatFeature, "false");
-
-            allSubscriptions = await webHookSubscriptionManager.GetAllSubscriptionsPermissionGrantedAsync(AppWebHookDefinitionNames.Chat.NewMessageReceived);
-            allSubscriptions.Count.ShouldBe(0);
+            userCreatedSubscriptions = await webHookSubscriptionManager.GetAllSubscriptionsIfFeaturesGrantedAsync(tenantId, AppWebHookDefinitionNames.Users.Created);
+            userCreatedSubscriptions.Count.ShouldBe(2);
         }
 
         [Fact]
         public async Task Should_Get_Is_Subscribed_Async()
         {
-            var subscriptionResult = await CreateUserAndSubscribeToWebhookAsync(
-                new List<string> { AppWebHookDefinitionNames.Users.Created, AppWebHookDefinitionNames.Test },
-                new List<string> { AppPermissions.WebHook.UserCreated }
-                );
-
-            var webHookSubscriptionManager = Resolve<IWebHookSubscriptionManager>();
-            var userIdentifier = new UserIdentifier(subscriptionResult.user.TenantId, subscriptionResult.user.Id);
-
-            (await webHookSubscriptionManager.IsSubscribedAsync(userIdentifier, AppWebHookDefinitionNames.Users.Created)).ShouldBeTrue();
-            (await webHookSubscriptionManager.IsSubscribedAsync(userIdentifier, AppWebHookDefinitionNames.Test)).ShouldBeTrue();
-
-            await UserManager.ProhibitPermissionAsync(subscriptionResult.user, PermissionManager.GetPermission(AppPermissions.WebHook.UserCreated)); //remove permission from user
-
-            (await webHookSubscriptionManager.IsSubscribedAsync(userIdentifier, AppWebHookDefinitionNames.Users.Created)).ShouldBeFalse();
-            (await webHookSubscriptionManager.IsSubscribedAsync(userIdentifier, AppWebHookDefinitionNames.Test)).ShouldBeTrue();
-        }
-
-        [Fact]
-        public async Task Should_DeActivate_Subscription_Async()
-        {
-            var subscriptionResult = await CreateUserAndSubscribeToWebhookAsync(AppWebHookDefinitionNames.Users.Created, AppPermissions.WebHook.UserCreated);
-
-            var webHookSubscriptionManager = Resolve<IWebHookSubscriptionManager>();
-
-            await webHookSubscriptionManager.DeactivateSubscriptionAsync(subscriptionResult.webHookSubscription.Id);
-
-            var subscription = await webHookSubscriptionManager.GetAsync(subscriptionResult.webHookSubscription.Id);
-            subscription.ShouldNotBeNull();
-            subscription.IsActive.ShouldBeFalse();
-        }
-
-        [Fact]
-        public async Task Should_Activate_Subscription_Async()
-        {
-            var subscriptionResult = await CreateUserAndSubscribeToWebhookAsync(AppWebHookDefinitionNames.Users.Created, AppPermissions.WebHook.UserCreated);
-
-            var webHookSubscriptionManager = Resolve<IWebHookSubscriptionManager>();
-
-            await webHookSubscriptionManager.DeactivateSubscriptionAsync(subscriptionResult.webHookSubscription.Id);
-
-            var subscription = await webHookSubscriptionManager.GetAsync(subscriptionResult.webHookSubscription.Id);
-            subscription.ShouldNotBeNull();
-            subscription.IsActive.ShouldBeFalse();
-
-            await webHookSubscriptionManager.ActivateSubscriptionAsync(subscriptionResult.webHookSubscription.Id);
-
-            var activatedSubscription = await webHookSubscriptionManager.GetAsync(subscriptionResult.webHookSubscription.Id);
-            activatedSubscription.ShouldNotBeNull();
-            activatedSubscription.IsActive.ShouldBeTrue();
-        }
-
-        [Fact]
-        public async Task Should_Add_WebHook_To_Subscription_Async()
-        {
-            var subscriptionResult = await CreateUserAndSubscribeToWebhookAsync(AppWebHookDefinitionNames.Users.Created, AppPermissions.WebHook.UserCreated);
-
-            var webHookSubscriptionManager = Resolve<IWebHookSubscriptionManager>();
-            var subscription = await webHookSubscriptionManager.GetAsync(subscriptionResult.webHookSubscription.Id);
-
-            subscription.WebHookDefinitions.Count.ShouldBe(1);
-            subscription.WebHookDefinitions.ShouldContain(AppWebHookDefinitionNames.Users.Created);
-
-            await webHookSubscriptionManager.AddWebHookAsync(subscription.Id, AppWebHookDefinitionNames.Test);
-        }
-
-        [Fact]
-        public async Task Should_Add_WebHook_Async_Throw_Exception_If_Permissions_Are_Not_Granted()
-        {
-            var subscriptionResult = await CreateUserAndSubscribeToWebhookAsync(AppWebHookDefinitionNames.Test);
-
-            var webHookSubscriptionManager = Resolve<IWebHookSubscriptionManager>();
-            var subscription = await webHookSubscriptionManager.GetAsync(subscriptionResult.webHookSubscription.Id);
-
-            subscription.WebHookDefinitions.Count.ShouldBe(1);
-            subscription.WebHookDefinitions.ShouldContain(AppWebHookDefinitionNames.Test);
-
-            await Assert.ThrowsAsync<AbpAuthorizationException>(async () =>
+            var tenantId = await CreateAndGetTenantIdWithFeaturesAsync(new Dictionary<string, string>()
             {
-                await webHookSubscriptionManager.AddWebHookAsync(subscription.Id, AppWebHookDefinitionNames.Users.Created);
-            });
-        }
-
-        [Fact]
-        public async Task Should_Add_WebHook_Async_Throw_Exception_If_Features_Are_Not_Granted()
-        {
-            AbpSession.TenantId = GetDefaultTenant().Id;
-
-            var subscriptionResult = await CreateUserAndSubscribeToWebhookAsync(AppWebHookDefinitionNames.Test);
-
-            var webHookSubscriptionManager = Resolve<IWebHookSubscriptionManager>();
-            var subscription = await webHookSubscriptionManager.GetAsync(subscriptionResult.webHookSubscription.Id);
-
-            subscription.WebHookDefinitions.Count.ShouldBe(1);
-            subscription.WebHookDefinitions.ShouldContain(AppWebHookDefinitionNames.Test);
-
-            await Assert.ThrowsAsync<AbpAuthorizationException>(async () =>
-            {
-                await webHookSubscriptionManager.AddWebHookAsync(subscription.Id, AppWebHookDefinitionNames.Chat.NewMessageReceived);
+                {AppFeatures.WebHookFeature, "true"},
+                {AppFeatures.TestFeature, "true"},
+                {AppFeatures.ThemeFeature, "true"}
             });
 
-            await AddOrReplaceFeatureToTenantAsync(AbpSession.TenantId.Value, AppFeatures.ChatFeature, "true");
+            var webHookSubscriptionManager = Resolve<IWebHookSubscriptionManager>();
 
-            await webHookSubscriptionManager.AddWebHookAsync(subscription.Id, AppWebHookDefinitionNames.Chat.NewMessageReceived);
+            var userCreatedWebHookSubscription = NewWebHookSubscription(tenantId, AppWebHookDefinitionNames.Users.Created);
+            await webHookSubscriptionManager.AddOrUpdateSubscriptionAsync(userCreatedWebHookSubscription);
+
+            var userDeletedWebHookSubscription = NewWebHookSubscription(tenantId, AppWebHookDefinitionNames.Users.Deleted);
+            await webHookSubscriptionManager.AddOrUpdateSubscriptionAsync(userDeletedWebHookSubscription);
+
+            var defaultThemeChangedWebHookSubscription = NewWebHookSubscription(tenantId, AppWebHookDefinitionNames.Theme.DefaultThemeChanged);
+            await webHookSubscriptionManager.AddOrUpdateSubscriptionAsync(defaultThemeChangedWebHookSubscription);
+
+            (await webHookSubscriptionManager.IsSubscribedAsync(tenantId, AppWebHookDefinitionNames.Users.Created)).ShouldBeTrue();
+            (await webHookSubscriptionManager.IsSubscribedAsync(tenantId, AppWebHookDefinitionNames.Users.Deleted)).ShouldBeTrue();
+            (await webHookSubscriptionManager.IsSubscribedAsync(tenantId, AppWebHookDefinitionNames.Theme.DefaultThemeChanged)).ShouldBeTrue();
+
+            await AddOrReplaceFeatureToTenantAsync(tenantId, AppFeatures.TestFeature, "false");//Users.Deleted requires it but not require all 
+
+            (await webHookSubscriptionManager.IsSubscribedAsync(tenantId, AppWebHookDefinitionNames.Users.Created)).ShouldBeTrue();
+            (await webHookSubscriptionManager.IsSubscribedAsync(tenantId, AppWebHookDefinitionNames.Users.Deleted)).ShouldBeTrue();
+            (await webHookSubscriptionManager.IsSubscribedAsync(tenantId, AppWebHookDefinitionNames.Theme.DefaultThemeChanged)).ShouldBeTrue();
+
+            await AddOrReplaceFeatureToTenantAsync(tenantId, AppFeatures.ThemeFeature, "false");//DefaultThemeChanged requires and it is require all 
+
+            (await webHookSubscriptionManager.IsSubscribedAsync(tenantId, AppWebHookDefinitionNames.Users.Created)).ShouldBeTrue();
+            (await webHookSubscriptionManager.IsSubscribedAsync(tenantId, AppWebHookDefinitionNames.Users.Deleted)).ShouldBeTrue();
+            (await webHookSubscriptionManager.IsSubscribedAsync(tenantId, AppWebHookDefinitionNames.Theme.DefaultThemeChanged)).ShouldBeFalse();
         }
 
         #endregion
 
-        #region Async
+        #region Sync
 
         [Fact]
-        public void Should_Get_Subscription_Sync()
+        public void Should_Insert_And_Get_Subscription_Sync()
         {
-            var user = AsyncHelper.RunSync(() => CreateNewUserWithWebhookPermissionsAsync(new List<string> { AppPermissions.WebHook.UserCreated }));
+            var tenantId = AsyncHelper.RunSync(() => CreateAndGetTenantIdWithFeaturesAsync(AppFeatures.WebHookFeature, "true"));
 
-            var newSubscription = new WebHookSubscription
-            {
-                TenantId = AbpSession.TenantId,
-                UserId = user.Id,
-                Secret = "secret",
-                WebHookUri = "www.mywebhook.com",
-                WebHookDefinitions = new List<string> { AppWebHookDefinitionNames.Users.Created },
-                Headers = new Dictionary<string, string>
-                {
-                    { "Key","Value"}
-                }
-            };
+            var newSubscription = NewWebHookSubscription(tenantId, AppWebHookDefinitionNames.Users.Created);
 
             var webHookSubscriptionManager = Resolve<IWebHookSubscriptionManager>();
             webHookSubscriptionManager.AddOrUpdateSubscription(newSubscription);
 
-            var subscription = webHookSubscriptionManager.Get(newSubscription.Id);
-            subscription.ShouldNotBeNull();
-            subscription.WebHookDefinitions.ShouldContain(AppWebHookDefinitionNames.Users.Created);
-            subscription.TenantId.ShouldBe(AbpSession.TenantId);
-            subscription.UserId.ShouldBe(newSubscription.UserId);
-            subscription.Secret.ShouldBe(newSubscription.Secret);
-            subscription.WebHookUri.ShouldBe(newSubscription.WebHookUri);
-            subscription.WebHookDefinitions.ShouldBe(newSubscription.WebHookDefinitions);
-            subscription.Headers.ShouldBe(newSubscription.Headers);
-        }
-
-        [Fact]
-        public void Should_Insert_Subscription_Sync()
-        {
-            var user = AsyncHelper.RunSync(() => CreateNewUserWithWebhookPermissionsAsync(new List<string> { AppPermissions.WebHook.UserCreated }));
-
-            var newSubscription = new WebHookSubscription
+            WithUnitOfWork(tenantId, () =>
             {
-                TenantId = AbpSession.TenantId,
-                UserId = user.Id,
-                Secret = "secret",
-                WebHookUri = "www.mywebhook.com",
-                WebHookDefinitions = new List<string> { AppWebHookDefinitionNames.Users.Created },
-                Headers = new Dictionary<string, string>
-                {
-                    { "Key","Value"}
-                }
-            };
-
-            var webHookSubscriptionManager = Resolve<IWebHookSubscriptionManager>();
-            webHookSubscriptionManager.AddOrUpdateSubscription(newSubscription);
-
-            var subscription = webHookSubscriptionManager.Get(newSubscription.Id);
-
-            subscription.ShouldNotBeNull();
-            subscription.WebHookDefinitions.ShouldContain(AppWebHookDefinitionNames.Users.Created);
-            subscription.TenantId.ShouldBe(AbpSession.TenantId);
-            subscription.UserId.ShouldBe(newSubscription.UserId);
-            subscription.Secret.ShouldBe(newSubscription.Secret);
-            subscription.WebHookUri.ShouldBe(newSubscription.WebHookUri);
-            subscription.WebHookDefinitions.ShouldBe(newSubscription.WebHookDefinitions);
-            subscription.Headers.ShouldBe(newSubscription.Headers);
+                var storedSubscription = webHookSubscriptionManager.Get(newSubscription.Id);
+                storedSubscription.ShouldNotBeNull();
+                CompareSubscriptions(storedSubscription, newSubscription);
+            });
         }
 
         [Fact]
         public void Should_Update_Subscription_Sync()
         {
-            var user = AsyncHelper.RunSync(() => CreateNewUserWithWebhookPermissionsAsync(new List<string> { AppPermissions.WebHook.UserCreated }));
+            var tenantId = AsyncHelper.RunSync(() => CreateAndGetTenantIdWithFeaturesAsync(AppFeatures.WebHookFeature, "true"));
 
-            //insert
-            var newSubscription = new WebHookSubscription
-            {
-                TenantId = AbpSession.TenantId,
-                UserId = user.Id,
-                Secret = "secret",
-                WebHookUri = "www.mywebhook.com",
-                WebHookDefinitions = new List<string> { AppWebHookDefinitionNames.Users.Created },
-                Headers = new Dictionary<string, string>
-                {
-                    { "Key","Value"}
-                }
-            };
+            var newSubscription = NewWebHookSubscription(tenantId, AppWebHookDefinitionNames.Users.Created);
+
             var webHookSubscriptionManager = Resolve<IWebHookSubscriptionManager>();
             webHookSubscriptionManager.AddOrUpdateSubscription(newSubscription);
 
-            var subscription = webHookSubscriptionManager.Get(newSubscription.Id);
-            subscription.ShouldNotBeNull();
-            subscription.WebHookDefinitions.ShouldContain(AppWebHookDefinitionNames.Users.Created);
-            subscription.TenantId.ShouldBe(AbpSession.TenantId);
-            subscription.UserId.ShouldBe(newSubscription.UserId);
-            subscription.Secret.ShouldBe(newSubscription.Secret);
-            subscription.WebHookUri.ShouldBe(newSubscription.WebHookUri);
-            subscription.WebHookDefinitions.ShouldBe(newSubscription.WebHookDefinitions);
-            subscription.Headers.ShouldBe(newSubscription.Headers);
+            WebHookSubscription storedSubscription = null;
+            WithUnitOfWork(tenantId, () =>
+            {
+                storedSubscription = webHookSubscriptionManager.Get(newSubscription.Id);
+                storedSubscription.ShouldNotBeNull();
+                CompareSubscriptions(storedSubscription, newSubscription);
+            });
 
             //update
-            string newSecret = "NewSecret";
-            subscription.Secret = newSecret;
-
             var newWebHookUri = "www.mynewwebhook.com";
-            subscription.WebHookUri = newWebHookUri;
+            storedSubscription.WebHookUri = newWebHookUri;
 
-            subscription.WebHookDefinitions.Add(AppWebHookDefinitionNames.Test);
+            storedSubscription.WebHookDefinitions.Add(AppWebHookDefinitionNames.Test);
 
             var newHeader = new KeyValuePair<string, string>("NewKey", "NewValue");
-            subscription.Headers.Add(newHeader);
+            storedSubscription.Headers.Add(newHeader);
 
-            webHookSubscriptionManager.AddOrUpdateSubscription(subscription);
-            //
+            webHookSubscriptionManager.AddOrUpdateSubscription(storedSubscription);
 
-            var updatedSubscription = webHookSubscriptionManager.Get(newSubscription.Id);
-            updatedSubscription.ShouldNotBeNull();
-            updatedSubscription.Secret.ShouldBe(newSecret);
-            updatedSubscription.WebHookUri.ShouldBe(newWebHookUri);
-
-            updatedSubscription.WebHookDefinitions.ShouldContain(AppWebHookDefinitionNames.Test);
-            updatedSubscription.WebHookDefinitions.ShouldContain(AppWebHookDefinitionNames.Users.Created);
-
-            updatedSubscription.TenantId.ShouldBe(AbpSession.TenantId);
-            updatedSubscription.UserId.ShouldBe(newSubscription.UserId);
-
-            updatedSubscription.Headers.ShouldContain(newSubscription.Headers.First());
-            updatedSubscription.Headers.ShouldContain(newHeader);
-        }
-
-        [Fact]
-        public void Should_Insert_Throw_Exception_If_Permissions_Are_Not_Granted_Sync()
-        {
-            var user = AsyncHelper.RunSync(() => CreateNewUserWithWebhookPermissionsAsync());
-
-            var newSubscription = new WebHookSubscription
+            WithUnitOfWork(tenantId, () =>
             {
-                TenantId = AbpSession.TenantId,
-                UserId = user.Id,
-                Secret = "secret",
-                WebHookUri = "www.mywebhook.com",
-                WebHookDefinitions = new List<string> { AppWebHookDefinitionNames.Users.Created },
-                Headers = new Dictionary<string, string>
-                {
-                    { "Key","Value"}
-                }
-            };
+                var updatedSubscription = webHookSubscriptionManager.Get(newSubscription.Id);
+                updatedSubscription.ShouldNotBeNull();
+                updatedSubscription.Secret.ShouldNotBeNullOrEmpty();
+                updatedSubscription.Secret.ShouldStartWith("whs_");
+                updatedSubscription.WebHookUri.ShouldBe(newWebHookUri);
 
-            var webHookSubscriptionManager = Resolve<IWebHookSubscriptionManager>();
-            Assert.Throws<AbpAuthorizationException>(() =>
-            {
-                webHookSubscriptionManager.AddOrUpdateSubscription(newSubscription);
+                updatedSubscription.WebHookDefinitions.ShouldContain(AppWebHookDefinitionNames.Test);
+                updatedSubscription.WebHookDefinitions.ShouldContain(AppWebHookDefinitionNames.Users.Created);
+
+                updatedSubscription.TenantId.ShouldBe(tenantId);
+
+                updatedSubscription.Headers.ShouldContain(newSubscription.Headers.First());
+                updatedSubscription.Headers.ShouldContain(newHeader);
             });
         }
 
         [Fact]
         public void Should_Insert_Throw_Exception_If_Features_Are_Not_Granted_Sync()
         {
-            AbpSession.TenantId = GetDefaultTenant().Id;
+            var tenantId = AsyncHelper.RunSync(() => CreateAndGetTenantIdWithFeaturesAsync());
 
-            var user = AsyncHelper.RunSync(() => CreateNewUserWithWebhookPermissionsAsync());
-
-            var newSubscription = new WebHookSubscription
-            {
-                TenantId = AbpSession.TenantId,
-                UserId = user.Id,
-                Secret = "secret",
-                WebHookUri = "www.mywebhook.com",
-                WebHookDefinitions = new List<string> { AppWebHookDefinitionNames.Chat.NewMessageReceived },
-                Headers = new Dictionary<string, string>
-                {
-                    { "Key","Value"}
-                }
-            };
+            var newSubscription = NewWebHookSubscription(tenantId, AppWebHookDefinitionNames.Users.Created);//needs AppFeatures.WebHookFeature
 
             var webHookSubscriptionManager = Resolve<IWebHookSubscriptionManager>();
-            Assert.Throws<AbpAuthorizationException>(() =>
-            {
-                webHookSubscriptionManager.AddOrUpdateSubscription(newSubscription);
-            });
-
-            AsyncHelper.RunSync(() => AddOrReplaceFeatureToTenantAsync(AbpSession.TenantId.Value, AppFeatures.ChatFeature, "true"));
-
-            webHookSubscriptionManager.AddOrUpdateSubscription(newSubscription);//after we add feature to tenant it will not throw an exception
-        }
-
-        [Fact]
-        public void Should_Update_Throw_Exception_If_Permissions_Are_Not_Granted_Sync()
-        {
-            var user = AsyncHelper.RunSync(() => CreateNewUserWithWebhookPermissionsAsync());
-
-            var newSubscription = new WebHookSubscription
-            {
-                Id = Guid.NewGuid(),
-                TenantId = AbpSession.TenantId,
-                UserId = user.Id,
-                Secret = "secret",
-                WebHookUri = "www.mywebhook.com",
-                WebHookDefinitions = new List<string> { AppWebHookDefinitionNames.Users.Created },
-                Headers = new Dictionary<string, string>
-                {
-                    { "Key","Value"}
-                }
-            };
-
-            var webHookSubscriptionManager = Resolve<IWebHookSubscriptionManager>();
-
             Assert.Throws<AbpAuthorizationException>(() =>
             {
                 webHookSubscriptionManager.AddOrUpdateSubscription(newSubscription);
@@ -953,23 +472,11 @@ namespace Abp.Zero.SampleApp.Tests.WebHooks
         [Fact]
         public void Should_Update_Throw_Exception_If_Features_Are_Not_Granted_Sync()
         {
-            AbpSession.TenantId = GetDefaultTenant().Id;
+            var tenantId = AsyncHelper.RunSync(() => CreateAndGetTenantIdWithFeaturesAsync());//needs AppFeatures.WebHookFeature feature
 
-            var user = AsyncHelper.RunSync(() => CreateNewUserWithWebhookPermissionsAsync());
+            var newSubscription = NewWebHookSubscription(tenantId, AppWebHookDefinitionNames.Users.Created);
+            newSubscription.Id = Guid.NewGuid();
 
-            var newSubscription = new WebHookSubscription
-            {
-                Id = Guid.NewGuid(),
-                TenantId = AbpSession.TenantId,
-                UserId = user.Id,
-                Secret = "secret",
-                WebHookUri = "www.mywebhook.com",
-                WebHookDefinitions = new List<string> { AppWebHookDefinitionNames.Chat.NewMessageReceived },
-                Headers = new Dictionary<string, string>
-                {
-                    { "Key","Value"}
-                }
-            };
             var webHookStoreSubstitute = RegisterFake<IWebHookSubscriptionsStore>();
             var webHookSubscriptionManager = Resolve<IWebHookSubscriptionManager>();
 
@@ -978,53 +485,43 @@ namespace Abp.Zero.SampleApp.Tests.WebHooks
                 webHookSubscriptionManager.AddOrUpdateSubscription(newSubscription);
             });
 
-            AsyncHelper.RunSync(() => AddOrReplaceFeatureToTenantAsync(AbpSession.TenantId.Value, AppFeatures.ChatFeature, "true"));
-
-            webHookSubscriptionManager.AddOrUpdateSubscription(newSubscription);//after we add feature to tenant it will not throw an exception
+            //check error reason
+            webHookStoreSubstitute.ClearReceivedCalls();
+            AsyncHelper.RunSync(() => AddOrReplaceFeatureToTenantAsync(tenantId, AppFeatures.WebHookFeature, "true"));
 
             Predicate<WebHookSubscriptionInfo> predicate = w =>
             {
                 w.Id.ShouldBe(newSubscription.Id);
                 w.TenantId.ShouldBe(newSubscription.TenantId);
-                w.UserId.ShouldBe(newSubscription.UserId);
-                w.Secret.ShouldBe(newSubscription.Secret);
                 w.WebHookUri.ShouldBe(newSubscription.WebHookUri);
                 w.WebHookDefinitions.ShouldBe(newSubscription.WebHookDefinitions.ToJsonString());
                 w.Headers.ShouldBe(newSubscription.Headers.ToJsonString());
                 return true;
             };
+            webHookSubscriptionManager.AddOrUpdateSubscription(newSubscription);
 
             webHookStoreSubstitute.DidNotReceive().Insert(Arg.Any<WebHookSubscriptionInfo>());
             webHookStoreSubstitute.Received().Update(Arg.Is<WebHookSubscriptionInfo>(w => predicate(w)));
         }
 
         [Fact]
-        public void Should_Add_Or_Update_Subscription_Sync_Method_Insert_If_Id_Is_Null_Sync()
+        public void Should_Add_Or_Update_Subscription_Sync_Method_Insert_If_Id_Is_Default_Sync()
         {
-            var user = AsyncHelper.RunSync(() => CreateNewUserWithWebhookPermissionsAsync(new List<string> { AppPermissions.WebHook.UserCreated }));
+            var tenantId = AsyncHelper.RunSync(() => CreateAndGetTenantIdWithFeaturesAsync(AppFeatures.WebHookFeature, "true"));
 
-            var newSubscription = new WebHookSubscription
-            {
-                TenantId = AbpSession.TenantId,
-                UserId = user.Id,
-                Secret = "secret",
-                WebHookUri = "www.mywebhook.com",
-                WebHookDefinitions = new List<string> { AppWebHookDefinitionNames.Users.Created },
-                Headers = new Dictionary<string, string>
-                {
-                    { "Key","Value"}
-                }
-            };
+            var newSubscription = NewWebHookSubscription(tenantId, AppWebHookDefinitionNames.Users.Deleted);
+            newSubscription.Id = default;
 
             var webHookStoreSubstitute = RegisterFake<IWebHookSubscriptionsStore>();
             var webHookSubscriptionManager = Resolve<IWebHookSubscriptionManager>();
+
             webHookSubscriptionManager.AddOrUpdateSubscription(newSubscription);
 
             Predicate<WebHookSubscriptionInfo> predicate = w =>
             {
                 w.TenantId.ShouldBe(newSubscription.TenantId);
-                w.UserId.ShouldBe(newSubscription.UserId);
-                w.Secret.ShouldBe(newSubscription.Secret);
+                w.Secret.ShouldNotBeNullOrEmpty();
+                w.Secret.ShouldStartWith("whs_");
                 w.WebHookUri.ShouldBe(newSubscription.WebHookUri);
                 w.WebHookDefinitions.ShouldBe(newSubscription.WebHookDefinitions.ToJsonString());
                 w.Headers.ShouldBe(newSubscription.Headers.ToJsonString());
@@ -1038,32 +535,20 @@ namespace Abp.Zero.SampleApp.Tests.WebHooks
         [Fact]
         public void Should_Add_Or_Update_Subscription_Sync_Method_Update_If_Id_Is_Not_Null_Sync()
         {
-            var user = AsyncHelper.RunSync(() => CreateNewUserWithWebhookPermissionsAsync(new List<string> { AppPermissions.WebHook.UserCreated }));
+            var tenantId = AsyncHelper.RunSync(() => CreateAndGetTenantIdWithFeaturesAsync(AppFeatures.WebHookFeature, "true"));
 
-            var newSubscription = new WebHookSubscription
-            {
-                Id = Guid.NewGuid(),
-                TenantId = AbpSession.TenantId,
-                UserId = user.Id,
-                Secret = "secret",
-                WebHookUri = "www.mywebhook.com",
-                WebHookDefinitions = new List<string> { AppWebHookDefinitionNames.Users.Created },
-                Headers = new Dictionary<string, string>
-                {
-                    { "Key","Value"}
-                }
-            };
+            var newSubscription = NewWebHookSubscription(tenantId, AppWebHookDefinitionNames.Users.Deleted);
+            newSubscription.Id = Guid.NewGuid();
 
             var webHookStoreSubstitute = RegisterFake<IWebHookSubscriptionsStore>();
             var webHookSubscriptionManager = Resolve<IWebHookSubscriptionManager>();
+
             webHookSubscriptionManager.AddOrUpdateSubscription(newSubscription);
 
             Predicate<WebHookSubscriptionInfo> predicate = w =>
             {
                 w.Id.ShouldBe(newSubscription.Id);
                 w.TenantId.ShouldBe(newSubscription.TenantId);
-                w.UserId.ShouldBe(newSubscription.UserId);
-                w.Secret.ShouldBe(newSubscription.Secret);
                 w.WebHookUri.ShouldBe(newSubscription.WebHookUri);
                 w.WebHookDefinitions.ShouldBe(newSubscription.WebHookDefinitions.ToJsonString());
                 w.Headers.ShouldBe(newSubscription.Headers.ToJsonString());
@@ -1075,27 +560,16 @@ namespace Abp.Zero.SampleApp.Tests.WebHooks
         }
 
         [Fact]
-        public void Should_Add_Or_Update_Subscription_Sync_Method_Throw_Exception_Subscription_If_Permissions_Are_Not_Granted_Sync()
+        public void Should_Add_Or_Update_Subscription_Sync_Method_Throw_Exception_Subscription_If_Features_Are_Not_Granted_Sync()
         {
-            var user = AsyncHelper.RunSync(() => CreateNewUserWithWebhookPermissionsAsync(new List<string> { AppPermissions.WebHook.UserCreated }));
+            var tenantId = AsyncHelper.RunSync(() => CreateAndGetTenantIdWithFeaturesAsync());
 
-            var newSubscription = new WebHookSubscription
-            {
-                TenantId = AbpSession.TenantId,
-                UserId = user.Id,
-                Secret = "secret",
-                WebHookUri = "www.mywebhook.com",
-                WebHookDefinitions = new List<string> { AppWebHookDefinitionNames.Users.Created },
-                Headers = new Dictionary<string, string>
-                {
-                    { "Key","Value"}
-                }
-            };
+            var newSubscription = NewWebHookSubscription(tenantId, AppWebHookDefinitionNames.Test);
 
             var webHookSubscriptionManager = Resolve<IWebHookSubscriptionManager>();
             webHookSubscriptionManager.AddOrUpdateSubscription(newSubscription);
 
-            newSubscription.WebHookDefinitions.Add(AppWebHookDefinitionNames.Tenant.Deleted);
+            newSubscription.WebHookDefinitions.Add(AppWebHookDefinitionNames.Users.Deleted);
 
             Assert.Throws<AbpAuthorizationException>(() =>
             {
@@ -1106,56 +580,20 @@ namespace Abp.Zero.SampleApp.Tests.WebHooks
         [Fact]
         public void Should_Get_All_Subscription_Sync()
         {
-            var user = AsyncHelper.RunSync(() => CreateNewUserWithWebhookPermissionsAsync(new List<string> { AppPermissions.WebHook.UserCreated }));
+            var tenantId = AsyncHelper.RunSync(() => CreateAndGetTenantIdWithFeaturesAsync(AppFeatures.WebHookFeature, "true"));
 
             var webHookSubscriptionManager = Resolve<IWebHookSubscriptionManager>();
 
-            //Add 3 subscriptions
-            var userCreatedWebHookSubscription = new WebHookSubscription
-            {
-                TenantId = AbpSession.TenantId,
-                UserId = user.Id,
-                Secret = "secret",
-                WebHookUri = "www.mywebhook.com",
-                WebHookDefinitions = new List<string> { AppWebHookDefinitionNames.Users.Created },
-                Headers = new Dictionary<string, string>
-                {
-                    { "Key","Value"}
-                }
-            };
-
+            var userCreatedWebHookSubscription = NewWebHookSubscription("1", tenantId, AppWebHookDefinitionNames.Users.Created);
             webHookSubscriptionManager.AddOrUpdateSubscription(userCreatedWebHookSubscription);
 
-            var userCreatedWebHookSubscription2 = new WebHookSubscription
-            {
-                TenantId = AbpSession.TenantId,
-                UserId = user.Id,
-                Secret = "secret2",
-                WebHookUri = "www.mywebhook.com/webhook",
-                WebHookDefinitions = new List<string> { AppWebHookDefinitionNames.Users.Created },
-                Headers = new Dictionary<string, string>
-                {
-                    { "Key","Value2"}
-                }
-            };
+            var userCreatedWebHookSubscription2 = NewWebHookSubscription("2", tenantId, AppWebHookDefinitionNames.Users.Created);
             webHookSubscriptionManager.AddOrUpdateSubscription(userCreatedWebHookSubscription2);
 
-            var testWebHookSubscription = new WebHookSubscription
-            {
-                TenantId = AbpSession.TenantId,
-                UserId = user.Id,
-                Secret = "secret_test",
-                WebHookUri = "www.mywebhook.com/test",
-                WebHookDefinitions = new List<string> { AppWebHookDefinitionNames.Test },
-                Headers = new Dictionary<string, string>
-                {
-                    { "Key","Test"}
-                }
-            };
+            var testWebHookSubscription = NewWebHookSubscription("test", tenantId, AppWebHookDefinitionNames.Test);
             webHookSubscriptionManager.AddOrUpdateSubscription(testWebHookSubscription);
-            //
 
-            var allSubscriptions = webHookSubscriptionManager.GetAllSubscriptions(new UserIdentifier(user.TenantId, user.Id));
+            var allSubscriptions = webHookSubscriptionManager.GetAllSubscriptions(tenantId);
 
             allSubscriptions.Count.ShouldBe(3);
 
@@ -1163,299 +601,143 @@ namespace Abp.Zero.SampleApp.Tests.WebHooks
             allSubscriptions.Select(s => s.Id).ShouldContain(userCreatedWebHookSubscription2.Id);
             allSubscriptions.Select(s => s.Id).ShouldContain(testWebHookSubscription.Id);
 
-            var userCreatedSubscription = allSubscriptions.Single(s => s.Id == userCreatedWebHookSubscription.Id);
-            userCreatedSubscription.TenantId.ShouldBe(userCreatedWebHookSubscription.TenantId);
-            userCreatedSubscription.UserId.ShouldBe(userCreatedWebHookSubscription.UserId);
-            userCreatedSubscription.Secret.ShouldBe(userCreatedWebHookSubscription.Secret);
-            userCreatedSubscription.WebHookUri.ShouldBe(userCreatedWebHookSubscription.WebHookUri);
-            userCreatedSubscription.WebHookDefinitions.ShouldBe(userCreatedWebHookSubscription.WebHookDefinitions);
-            userCreatedSubscription.Headers.ShouldBe(userCreatedWebHookSubscription.Headers);
+            var storedUserCreatedSubscription = allSubscriptions.Single(s => s.Id == userCreatedWebHookSubscription.Id);
+            CompareSubscriptions(storedUserCreatedSubscription, userCreatedWebHookSubscription);
 
-            var userCreatedSubscription2 = allSubscriptions.Single(s => s.Id == userCreatedWebHookSubscription2.Id);
-            userCreatedSubscription2.TenantId.ShouldBe(userCreatedWebHookSubscription2.TenantId);
-            userCreatedSubscription2.UserId.ShouldBe(userCreatedWebHookSubscription2.UserId);
-            userCreatedSubscription2.Secret.ShouldBe(userCreatedWebHookSubscription2.Secret);
-            userCreatedSubscription2.WebHookUri.ShouldBe(userCreatedWebHookSubscription2.WebHookUri);
-            userCreatedSubscription2.WebHookDefinitions.ShouldBe(userCreatedWebHookSubscription2.WebHookDefinitions);
-            userCreatedSubscription2.Headers.ShouldBe(userCreatedWebHookSubscription2.Headers);
+            var storedUserCreatedSubscription2 = allSubscriptions.Single(s => s.Id == userCreatedWebHookSubscription2.Id);
+            CompareSubscriptions(storedUserCreatedSubscription2, userCreatedWebHookSubscription2);
 
-            var testSubscription = allSubscriptions.Single(s => s.Id == testWebHookSubscription.Id);
-            testSubscription.TenantId.ShouldBe(testWebHookSubscription.TenantId);
-            testSubscription.UserId.ShouldBe(testWebHookSubscription.UserId);
-            testSubscription.Secret.ShouldBe(testWebHookSubscription.Secret);
-            testSubscription.WebHookUri.ShouldBe(testWebHookSubscription.WebHookUri);
-            testSubscription.WebHookDefinitions.ShouldBe(testWebHookSubscription.WebHookDefinitions);
-            testSubscription.Headers.ShouldBe(testWebHookSubscription.Headers);
+            var storedTestSubscription = allSubscriptions.Single(s => s.Id == testWebHookSubscription.Id);
+            CompareSubscriptions(storedTestSubscription, testWebHookSubscription);
         }
 
         [Fact]
-        public void Should_Get_All_Subscription_Permissions_Granted_By_User_Sync()
+        public void Should_Get_All_Subscriptions_If_Features_Granted_Sync()
         {
-            var user = AsyncHelper.RunSync(() => CreateNewUserWithWebhookPermissionsAsync(new List<string> { AppPermissions.WebHook.UserCreated }));
+            var tenantId = AsyncHelper.RunSync(() => CreateAndGetTenantIdWithFeaturesAsync(new Dictionary<string, string>()
+            {
+                {AppFeatures.WebHookFeature, "true"},
+                {AppFeatures.ThemeFeature, "true"}
+            }));
 
             var webHookSubscriptionManager = Resolve<IWebHookSubscriptionManager>();
 
-            //Add subscriptions
-            var userCreatedWebHookSubscription = new WebHookSubscription
-            {
-                TenantId = AbpSession.TenantId,
-                UserId = user.Id,
-                Secret = "secret",
-                WebHookUri = "www.mywebhook.com",
-                WebHookDefinitions = new List<string> { AppWebHookDefinitionNames.Users.Created },
-                Headers = new Dictionary<string, string>
-                {
-                    { "Key","Value"}
-                }
-            };
-
+            var userCreatedWebHookSubscription = NewWebHookSubscription(tenantId, AppWebHookDefinitionNames.Users.Created);
             webHookSubscriptionManager.AddOrUpdateSubscription(userCreatedWebHookSubscription);
 
-            var userCreatedWebHookSubscription2 = new WebHookSubscription
-            {
-                TenantId = AbpSession.TenantId,
-                UserId = user.Id,
-                Secret = "secret2",
-                WebHookUri = "www.mywebhook.com/webhook",
-                WebHookDefinitions = new List<string> { AppWebHookDefinitionNames.Users.Created, AppWebHookDefinitionNames.Test },
-                Headers = new Dictionary<string, string>
-                {
-                    { "Key","Value2"}
-                }
-            };
-            webHookSubscriptionManager.AddOrUpdateSubscription(userCreatedWebHookSubscription2);
-            //
+            var userCreatedAndThemeChangedWebHookSubscription = NewWebHookSubscription(tenantId,
+                AppWebHookDefinitionNames.Users.Created,
+                AppWebHookDefinitionNames.Theme.DefaultThemeChanged);
+            webHookSubscriptionManager.AddOrUpdateSubscription(userCreatedAndThemeChangedWebHookSubscription);
 
-            AsyncHelper.RunSync(() => UserManager.ProhibitPermissionAsync(user, PermissionManager.GetPermission(AppPermissions.WebHook.UserCreated))); //remove permission from user 
+            var defaultThemeChangedSubscription = NewWebHookSubscription(tenantId, AppWebHookDefinitionNames.Theme.DefaultThemeChanged);
+            webHookSubscriptionManager.AddOrUpdateSubscription(defaultThemeChangedSubscription);
 
-            var allSubscriptions = webHookSubscriptionManager.GetAllSubscriptionsPermissionGranted(new UserIdentifier(user.TenantId, user.Id), AppWebHookDefinitionNames.Users.Created);
+            var userCreatedSubscriptions = webHookSubscriptionManager.GetAllSubscriptionsIfFeaturesGranted(tenantId, AppWebHookDefinitionNames.Users.Created);
 
-            allSubscriptions.Count.ShouldBe(0);
+            userCreatedSubscriptions.Count.ShouldBe(2);
+            userCreatedSubscriptions.Select(s => s.Id).ShouldNotContain(defaultThemeChangedSubscription.Id);
+            userCreatedSubscriptions.Select(s => s.Id).ShouldContain(userCreatedAndThemeChangedWebHookSubscription.Id);
+            userCreatedSubscriptions.Select(s => s.Id).ShouldContain(userCreatedWebHookSubscription.Id);
+
+            CompareSubscriptions(userCreatedSubscriptions.Single(s => s.Id == userCreatedAndThemeChangedWebHookSubscription.Id), userCreatedAndThemeChangedWebHookSubscription);
+            CompareSubscriptions(userCreatedSubscriptions.Single(s => s.Id == userCreatedWebHookSubscription.Id), userCreatedWebHookSubscription);
+
+            var defaultThemeChangedSubscriptions = webHookSubscriptionManager.GetAllSubscriptionsIfFeaturesGranted(tenantId, AppWebHookDefinitionNames.Theme.DefaultThemeChanged);
+            defaultThemeChangedSubscriptions.Count.ShouldBe(2);
+            defaultThemeChangedSubscriptions.Select(s => s.Id).ShouldContain(userCreatedAndThemeChangedWebHookSubscription.Id);
+            defaultThemeChangedSubscriptions.Select(s => s.Id).ShouldContain(defaultThemeChangedSubscription.Id);
+
+            CompareSubscriptions(defaultThemeChangedSubscriptions.Single(s => s.Id == userCreatedAndThemeChangedWebHookSubscription.Id), userCreatedAndThemeChangedWebHookSubscription);
+            CompareSubscriptions(defaultThemeChangedSubscriptions.Single(s => s.Id == defaultThemeChangedSubscription.Id), defaultThemeChangedSubscription);
         }
 
         [Fact]
-        public void Should_Get_All_Subscription_Features_Granted_By_User_Sync()
+        public void Should_Not_Get_Subscriptions_If_Features_Not_Granted_Sync()
         {
-            AbpSession.TenantId = GetDefaultTenant().Id;
-
-            var user = AsyncHelper.RunSync(() => CreateNewUserWithWebhookPermissionsAsync(new List<string> { AppPermissions.WebHook.UserCreated }));
+            var tenantId = AsyncHelper.RunSync(() => CreateAndGetTenantIdWithFeaturesAsync(new Dictionary<string, string>()
+            {
+                {AppFeatures.WebHookFeature, "true"},
+                {AppFeatures.ThemeFeature, "true"}
+            }));
 
             var webHookSubscriptionManager = Resolve<IWebHookSubscriptionManager>();
 
-            //Add subscriptions
-            var userCreatedWebHookSubscription = new WebHookSubscription
-            {
-                TenantId = AbpSession.TenantId,
-                UserId = user.Id,
-                Secret = "secret",
-                WebHookUri = "www.mywebhook.com",
-                WebHookDefinitions = new List<string> { AppWebHookDefinitionNames.Chat.NewMessageReceived },
-                Headers = new Dictionary<string, string>
-                {
-                    { "Key","Value"}
-                }
-            };
-
-            var userCreatedWebHookSubscription2 = new WebHookSubscription
-            {
-                TenantId = AbpSession.TenantId,
-                UserId = user.Id,
-                Secret = "secret2",
-                WebHookUri = "www.mywebhook.com/webhook",
-                WebHookDefinitions = new List<string> { AppWebHookDefinitionNames.Chat.NewMessageReceived, AppWebHookDefinitionNames.Test },
-                Headers = new Dictionary<string, string>
-                {
-                    { "Key","Value2"}
-                }
-            };
-
-            AsyncHelper.RunSync(() => AddOrReplaceFeatureToTenantAsync(AbpSession.TenantId.Value, AppFeatures.ChatFeature, "true"));
-
+            var userCreatedWebHookSubscription = NewWebHookSubscription(tenantId, AppWebHookDefinitionNames.Users.Created);
             webHookSubscriptionManager.AddOrUpdateSubscription(userCreatedWebHookSubscription);
-            webHookSubscriptionManager.AddOrUpdateSubscription(userCreatedWebHookSubscription2);
 
-            var allSubscriptions = webHookSubscriptionManager
-                .GetAllSubscriptionsPermissionGranted(new UserIdentifier(user.TenantId, user.Id),
-                    AppWebHookDefinitionNames.Chat.NewMessageReceived
-                );
-            allSubscriptions.Count.ShouldBe(2);
+            var userCreatedAndThemeChangedWebHookSubscription = NewWebHookSubscription(tenantId,
+                AppWebHookDefinitionNames.Users.Created,
+                AppWebHookDefinitionNames.Theme.DefaultThemeChanged);
+            webHookSubscriptionManager.AddOrUpdateSubscription(userCreatedAndThemeChangedWebHookSubscription);
 
-            AsyncHelper.RunSync(() => AddOrReplaceFeatureToTenantAsync(AbpSession.TenantId.Value, AppFeatures.ChatFeature, "false"));
+            var defaultThemeChangedSubscription = NewWebHookSubscription(tenantId, AppWebHookDefinitionNames.Theme.DefaultThemeChanged);
+            webHookSubscriptionManager.AddOrUpdateSubscription(defaultThemeChangedSubscription);
 
-            allSubscriptions = webHookSubscriptionManager
-               .GetAllSubscriptionsPermissionGranted(new UserIdentifier(user.TenantId, user.Id),
-                   AppWebHookDefinitionNames.Chat.NewMessageReceived
-               );
+            var userCreatedSubscriptions = webHookSubscriptionManager.GetAllSubscriptionsIfFeaturesGranted(tenantId, AppWebHookDefinitionNames.Users.Created);
 
-            allSubscriptions.Count.ShouldBe(0);
-        }
+            userCreatedSubscriptions.Count.ShouldBe(2);
+            userCreatedSubscriptions.Select(s => s.Id).ShouldNotContain(defaultThemeChangedSubscription.Id);
+            userCreatedSubscriptions.Select(s => s.Id).ShouldContain(userCreatedAndThemeChangedWebHookSubscription.Id);
+            userCreatedSubscriptions.Select(s => s.Id).ShouldContain(userCreatedWebHookSubscription.Id);
 
-        [Fact]
-        public void Should_Get_All_Subscription_Permissions_Granted_Sync()
-        {
-            var subscriptionResult1 = AsyncHelper.RunSync(() => CreateUserAndSubscribeToWebhookAsync(AppWebHookDefinitionNames.Users.Created, AppPermissions.WebHook.UserCreated));
-            var subscriptionResult2 = AsyncHelper.RunSync(() => CreateUserAndSubscribeToWebhookAsync(AppWebHookDefinitionNames.Users.Created, AppPermissions.WebHook.UserCreated));
-            var subscriptionResult3 = AsyncHelper.RunSync(() => CreateUserAndSubscribeToWebhookAsync(AppWebHookDefinitionNames.Users.Created, AppPermissions.WebHook.UserCreated));
+            CompareSubscriptions(userCreatedSubscriptions.Single(s => s.Id == userCreatedAndThemeChangedWebHookSubscription.Id), userCreatedAndThemeChangedWebHookSubscription);
+            CompareSubscriptions(userCreatedSubscriptions.Single(s => s.Id == userCreatedWebHookSubscription.Id), userCreatedWebHookSubscription);
 
-            AsyncHelper.RunSync(() => UserManager.ProhibitPermissionAsync(subscriptionResult2.user, PermissionManager.GetPermission(AppPermissions.WebHook.UserCreated))); //remove permission from user2
+            var defaultThemeChangedSubscriptions = webHookSubscriptionManager.GetAllSubscriptionsIfFeaturesGranted(tenantId, AppWebHookDefinitionNames.Theme.DefaultThemeChanged);
+            defaultThemeChangedSubscriptions.Count.ShouldBe(2);
+            defaultThemeChangedSubscriptions.Select(s => s.Id).ShouldContain(userCreatedAndThemeChangedWebHookSubscription.Id);
+            defaultThemeChangedSubscriptions.Select(s => s.Id).ShouldContain(defaultThemeChangedSubscription.Id);
 
-            var webHookSubscriptionManager = Resolve<IWebHookSubscriptionManager>();
+            CompareSubscriptions(defaultThemeChangedSubscriptions.Single(s => s.Id == userCreatedAndThemeChangedWebHookSubscription.Id), userCreatedAndThemeChangedWebHookSubscription);
+            CompareSubscriptions(defaultThemeChangedSubscriptions.Single(s => s.Id == defaultThemeChangedSubscription.Id), defaultThemeChangedSubscription);
 
-            var allSubscriptions = webHookSubscriptionManager.GetAllSubscriptionsPermissionGranted(AppWebHookDefinitionNames.Users.Created);
+            AsyncHelper.RunSync(() => AddOrReplaceFeatureToTenantAsync(tenantId, AppFeatures.ThemeFeature, "false"));
 
-            allSubscriptions.Count.ShouldBe(2);
-            allSubscriptions.Select(s => s.Id).ShouldContain(subscriptionResult1.webHookSubscription.Id);
-            allSubscriptions.Select(s => s.Id).ShouldNotContain(subscriptionResult2.webHookSubscription.Id);
-            allSubscriptions.Select(s => s.Id).ShouldContain(subscriptionResult3.webHookSubscription.Id);
+            defaultThemeChangedSubscriptions = webHookSubscriptionManager.GetAllSubscriptionsIfFeaturesGranted(tenantId, AppWebHookDefinitionNames.Theme.DefaultThemeChanged);
+            defaultThemeChangedSubscriptions.Count.ShouldBe(0);
 
-            var subscription1Result = allSubscriptions.Single(s => s.Id == subscriptionResult1.webHookSubscription.Id);
-            subscription1Result.TenantId.ShouldBe(subscriptionResult1.webHookSubscription.TenantId);
-            subscription1Result.UserId.ShouldBe(subscriptionResult1.user.Id);
-            subscription1Result.Secret.ShouldBe(subscriptionResult1.webHookSubscription.Secret);
-            subscription1Result.WebHookUri.ShouldBe(subscriptionResult1.webHookSubscription.WebHookUri);
-            subscription1Result.WebHookDefinitions.ShouldBe(subscriptionResult1.webHookSubscription.WebHookDefinitions);
-            subscription1Result.Headers.ShouldBe(subscriptionResult1.webHookSubscription.Headers);
-
-            var subscription3Result = allSubscriptions.Single(s => s.Id == subscriptionResult3.webHookSubscription.Id);
-            subscription3Result.TenantId.ShouldBe(subscriptionResult3.webHookSubscription.TenantId);
-            subscription3Result.UserId.ShouldBe(subscriptionResult3.user.Id);
-            subscription3Result.Secret.ShouldBe(subscriptionResult3.webHookSubscription.Secret);
-            subscription3Result.WebHookUri.ShouldBe(subscriptionResult3.webHookSubscription.WebHookUri);
-            subscription3Result.WebHookDefinitions.ShouldBe(subscriptionResult3.webHookSubscription.WebHookDefinitions);
-            subscription3Result.Headers.ShouldBe(subscriptionResult3.webHookSubscription.Headers);
-        }
-
-        [Fact]
-        public void Should_Get_All_Subscription_Features_Granted_Sync()
-        {
-            AbpSession.TenantId = GetDefaultTenant().Id;
-            AsyncHelper.RunSync(() => AddOrReplaceFeatureToTenantAsync(AbpSession.TenantId.Value, AppFeatures.ChatFeature, "true"));
-
-            var subscriptionResult1 = AsyncHelper.RunSync(() => CreateUserAndSubscribeToWebhookAsync(AppWebHookDefinitionNames.Chat.NewMessageReceived));
-            var subscriptionResult2 = AsyncHelper.RunSync(() => CreateUserAndSubscribeToWebhookAsync(AppWebHookDefinitionNames.Chat.NewMessageReceived));
-
-            var webHookSubscriptionManager = Resolve<IWebHookSubscriptionManager>();
-
-            var allSubscriptions = webHookSubscriptionManager.GetAllSubscriptionsPermissionGranted(AppWebHookDefinitionNames.Chat.NewMessageReceived);
-
-            allSubscriptions.Count.ShouldBe(2);
-            allSubscriptions.Select(s => s.Id).ShouldContain(subscriptionResult1.webHookSubscription.Id);
-            allSubscriptions.Select(s => s.Id).ShouldContain(subscriptionResult2.webHookSubscription.Id);
-
-            AsyncHelper.RunSync(() => AddOrReplaceFeatureToTenantAsync(AbpSession.TenantId.Value, AppFeatures.ChatFeature, "false"));
-
-            allSubscriptions = webHookSubscriptionManager.GetAllSubscriptionsPermissionGranted(AppWebHookDefinitionNames.Chat.NewMessageReceived);
-            allSubscriptions.Count.ShouldBe(0);
+            userCreatedSubscriptions = webHookSubscriptionManager.GetAllSubscriptionsIfFeaturesGranted(tenantId, AppWebHookDefinitionNames.Users.Created);
+            userCreatedSubscriptions.Count.ShouldBe(2);
         }
 
         [Fact]
         public void Should_Get_Is_Subscribed_Sync()
         {
-            var subscriptionResult = AsyncHelper.RunSync(() => CreateUserAndSubscribeToWebhookAsync(new List<string> { AppWebHookDefinitionNames.Users.Created, AppWebHookDefinitionNames.Test },
-                new List<string> { AppPermissions.WebHook.UserCreated }
-                ));
-
-            var webHookSubscriptionManager = Resolve<IWebHookSubscriptionManager>();
-            var userIdentifier = new UserIdentifier(subscriptionResult.user.TenantId, subscriptionResult.user.Id);
-
-            (webHookSubscriptionManager.IsSubscribed(userIdentifier, AppWebHookDefinitionNames.Users.Created)).ShouldBeTrue();
-            (webHookSubscriptionManager.IsSubscribed(userIdentifier, AppWebHookDefinitionNames.Test)).ShouldBeTrue();
-
-            AsyncHelper.RunSync(() => UserManager.ProhibitPermissionAsync(subscriptionResult.user, PermissionManager.GetPermission(AppPermissions.WebHook.UserCreated))); //remove permission from user
-
-            (webHookSubscriptionManager.IsSubscribed(userIdentifier, AppWebHookDefinitionNames.Users.Created)).ShouldBeFalse();
-            (webHookSubscriptionManager.IsSubscribed(userIdentifier, AppWebHookDefinitionNames.Test)).ShouldBeTrue();
-        }
-
-        [Fact]
-        public void Should_DeActivate_Subscription_Sync()
-        {
-            var subscriptionResult = AsyncHelper.RunSync(() => CreateUserAndSubscribeToWebhookAsync(AppWebHookDefinitionNames.Users.Created, AppPermissions.WebHook.UserCreated));
-
-            var webHookSubscriptionManager = Resolve<IWebHookSubscriptionManager>();
-
-            webHookSubscriptionManager.DeactivateSubscription(subscriptionResult.webHookSubscription.Id);
-
-            var subscription = webHookSubscriptionManager.Get(subscriptionResult.webHookSubscription.Id);
-            subscription.ShouldNotBeNull();
-            subscription.IsActive.ShouldBeFalse();
-        }
-
-        [Fact]
-        public void Should_Activate_Subscription_Sync()
-        {
-            var subscriptionResult = AsyncHelper.RunSync(() => CreateUserAndSubscribeToWebhookAsync(AppWebHookDefinitionNames.Users.Created, AppPermissions.WebHook.UserCreated));
-
-            var webHookSubscriptionManager = Resolve<IWebHookSubscriptionManager>();
-
-            webHookSubscriptionManager.DeactivateSubscription(subscriptionResult.webHookSubscription.Id);
-
-            var subscription = webHookSubscriptionManager.Get(subscriptionResult.webHookSubscription.Id);
-            subscription.ShouldNotBeNull();
-            subscription.IsActive.ShouldBeFalse();
-
-            webHookSubscriptionManager.ActivateSubscription(subscriptionResult.webHookSubscription.Id);
-
-            var activatedSubscription = webHookSubscriptionManager.Get(subscriptionResult.webHookSubscription.Id);
-            activatedSubscription.ShouldNotBeNull();
-            activatedSubscription.IsActive.ShouldBeTrue();
-        }
-
-        [Fact]
-        public void Should_Add_WebHook_To_Subscription_Sync()
-        {
-            var subscriptionResult = AsyncHelper.RunSync(() => CreateUserAndSubscribeToWebhookAsync(AppWebHookDefinitionNames.Users.Created, AppPermissions.WebHook.UserCreated));
-
-            var webHookSubscriptionManager = Resolve<IWebHookSubscriptionManager>();
-            var subscription = webHookSubscriptionManager.Get(subscriptionResult.webHookSubscription.Id);
-
-            subscription.WebHookDefinitions.Count.ShouldBe(1);
-            subscription.WebHookDefinitions.ShouldContain(AppWebHookDefinitionNames.Users.Created);
-
-            webHookSubscriptionManager.AddWebHook(subscription.Id, AppWebHookDefinitionNames.Test);
-        }
-
-        [Fact]
-        public void Should_Add_WebHook_Sync_Throw_Exception_If_Permissions_Are_Not_Granted()
-        {
-            var subscriptionResult = AsyncHelper.RunSync(() => CreateUserAndSubscribeToWebhookAsync(AppWebHookDefinitionNames.Test));
-
-            var webHookSubscriptionManager = Resolve<IWebHookSubscriptionManager>();
-            var subscription = webHookSubscriptionManager.Get(subscriptionResult.webHookSubscription.Id);
-
-            subscription.WebHookDefinitions.Count.ShouldBe(1);
-            subscription.WebHookDefinitions.ShouldContain(AppWebHookDefinitionNames.Test);
-
-            Assert.Throws<AbpAuthorizationException>(() =>
+            var tenantId = AsyncHelper.RunSync(() => CreateAndGetTenantIdWithFeaturesAsync(new Dictionary<string, string>()
             {
-                webHookSubscriptionManager.AddWebHook(subscription.Id, AppWebHookDefinitionNames.Users.Created);
-            });
-        }
-
-        [Fact]
-        public void Should_Add_WebHook_Sync_Throw_Exception_If_Features_Are_Not_Granted()
-        {
-            AbpSession.TenantId = GetDefaultTenant().Id;
-
-            var subscriptionResult = AsyncHelper.RunSync(() => CreateUserAndSubscribeToWebhookAsync(AppWebHookDefinitionNames.Test));
+                {AppFeatures.WebHookFeature, "true"},
+                {AppFeatures.TestFeature, "true"},
+                {AppFeatures.ThemeFeature, "true"}
+            }));
 
             var webHookSubscriptionManager = Resolve<IWebHookSubscriptionManager>();
-            var subscription = webHookSubscriptionManager.Get(subscriptionResult.webHookSubscription.Id);
 
-            subscription.WebHookDefinitions.Count.ShouldBe(1);
-            subscription.WebHookDefinitions.ShouldContain(AppWebHookDefinitionNames.Test);
+            var userCreatedWebHookSubscription = NewWebHookSubscription(tenantId, AppWebHookDefinitionNames.Users.Created);
+            webHookSubscriptionManager.AddOrUpdateSubscription(userCreatedWebHookSubscription);
 
-            Assert.Throws<AbpAuthorizationException>(() =>
-            {
-                webHookSubscriptionManager.AddWebHook(subscription.Id,
-                    AppWebHookDefinitionNames.Chat.NewMessageReceived);
-            });
+            var userDeletedWebHookSubscription = NewWebHookSubscription(tenantId, AppWebHookDefinitionNames.Users.Deleted);
+            webHookSubscriptionManager.AddOrUpdateSubscription(userDeletedWebHookSubscription);
 
-            AsyncHelper.RunSync(() => AddOrReplaceFeatureToTenantAsync(AbpSession.TenantId.Value, AppFeatures.ChatFeature, "true"));
+            var defaultThemeChangedWebHookSubscription = NewWebHookSubscription(tenantId, AppWebHookDefinitionNames.Theme.DefaultThemeChanged);
+            webHookSubscriptionManager.AddOrUpdateSubscription(defaultThemeChangedWebHookSubscription);
 
-            webHookSubscriptionManager.AddWebHook(subscription.Id, AppWebHookDefinitionNames.Chat.NewMessageReceived);
+            (webHookSubscriptionManager.IsSubscribed(tenantId, AppWebHookDefinitionNames.Users.Created)).ShouldBeTrue();
+            (webHookSubscriptionManager.IsSubscribed(tenantId, AppWebHookDefinitionNames.Users.Deleted)).ShouldBeTrue();
+            (webHookSubscriptionManager.IsSubscribed(tenantId, AppWebHookDefinitionNames.Theme.DefaultThemeChanged)).ShouldBeTrue();
+
+            AsyncHelper.RunSync(() => AddOrReplaceFeatureToTenantAsync(tenantId, AppFeatures.TestFeature, "false"));//Users.Deleted requires it but not require all 
+
+            (webHookSubscriptionManager.IsSubscribed(tenantId, AppWebHookDefinitionNames.Users.Created)).ShouldBeTrue();
+            (webHookSubscriptionManager.IsSubscribed(tenantId, AppWebHookDefinitionNames.Users.Deleted)).ShouldBeTrue();
+            (webHookSubscriptionManager.IsSubscribed(tenantId, AppWebHookDefinitionNames.Theme.DefaultThemeChanged)).ShouldBeTrue();
+
+            AsyncHelper.RunSync(() => AddOrReplaceFeatureToTenantAsync(tenantId, AppFeatures.ThemeFeature, "false"));//DefaultThemeChanged requires and it is require all 
+
+            (webHookSubscriptionManager.IsSubscribed(tenantId, AppWebHookDefinitionNames.Users.Created)).ShouldBeTrue();
+            (webHookSubscriptionManager.IsSubscribed(tenantId, AppWebHookDefinitionNames.Users.Deleted)).ShouldBeTrue();
+            (webHookSubscriptionManager.IsSubscribed(tenantId, AppWebHookDefinitionNames.Theme.DefaultThemeChanged)).ShouldBeFalse();
         }
-
         #endregion
     }
 }

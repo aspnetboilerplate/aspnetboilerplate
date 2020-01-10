@@ -6,7 +6,6 @@ using System.Text;
 using System.Threading.Tasks;
 using Abp.Domain.Services;
 using Abp.Domain.Uow;
-using Abp.Extensions;
 using Abp.Json;
 using Abp.Threading;
 
@@ -14,12 +13,13 @@ namespace Abp.WebHooks
 {
     public class DefaultWebHookSender : DomainService, IWebHookSender
     {
+        public IWebHookWorkItemStore WebHookWorkItemStore { get; set; }
+
         protected const string SignatureHeaderKey = "sha256";
         protected const string SignatureHeaderValueTemplate = SignatureHeaderKey + "={0}";
         protected const string SignatureHeaderName = "abp-webhook-signature";
 
         private readonly IWebHooksConfiguration _webHooksConfiguration;
-        public IWebHookWorkItemStore WebHookWorkItemStore { get; set; }
 
         public DefaultWebHookSender(IWebHooksConfiguration webHooksConfiguration)
         {
@@ -61,7 +61,7 @@ namespace Abp.WebHooks
                 using (var client = new HttpClient())
                 {
                     var response = await client.SendAsync(request);
-                    await StoreResponseOnWebHookWorkItemAsync(workItemId, response);
+                    await StoreResponseOnWebHookWorkItemAsync(webHookSenderArgs.TenantId, workItemId, response);
                     isSucceed = response.IsSuccessStatusCode;
                 }
 
@@ -107,7 +107,7 @@ namespace Abp.WebHooks
                 using (var client = new HttpClient())
                 {
                     var response = AsyncHelper.RunSync(() => client.SendAsync(request));
-                    StoreResponseOnWebHookWorkItem(workItemId, response);
+                    StoreResponseOnWebHookWorkItem(webHookSenderArgs.TenantId, workItemId, response);
                     isSucceed = response.IsSuccessStatusCode;
                 }
 
@@ -126,7 +126,8 @@ namespace Abp.WebHooks
             var workItem = new WebHookWorkItem()
             {
                 WebHookId = webHookSenderArgs.WebHookId,
-                WebHookSubscriptionId = webHookSenderArgs.WebHookSubscriptionId
+                WebHookSubscriptionId = webHookSenderArgs.WebHookSubscriptionId,
+                TenantId = webHookSenderArgs.TenantId
             };
 
             await WebHookWorkItemStore.InsertAsync(workItem);
@@ -141,7 +142,8 @@ namespace Abp.WebHooks
             var workItem = new WebHookWorkItem()
             {
                 WebHookId = webHookSenderArgs.WebHookId,
-                WebHookSubscriptionId = webHookSenderArgs.WebHookSubscriptionId
+                WebHookSubscriptionId = webHookSenderArgs.WebHookSubscriptionId,
+                TenantId = webHookSenderArgs.TenantId
             };
 
             WebHookWorkItemStore.Insert(workItem);
@@ -151,9 +153,9 @@ namespace Abp.WebHooks
         }
 
         [UnitOfWork]
-        protected virtual async Task StoreResponseOnWebHookWorkItemAsync(Guid webHookWorkItemId, HttpResponseMessage responseMessage)
+        protected virtual async Task StoreResponseOnWebHookWorkItemAsync(int? tenantId, Guid webHookWorkItemId, HttpResponseMessage responseMessage)
         {
-            var webHookWorkItem = await WebHookWorkItemStore.GetAsync(webHookWorkItemId);
+            var webHookWorkItem = await WebHookWorkItemStore.GetAsync(tenantId, webHookWorkItemId);
 
             webHookWorkItem.ResponseStatusCode = responseMessage.StatusCode;
             webHookWorkItem.ResponseContent = await responseMessage.Content.ReadAsStringAsync();
@@ -162,9 +164,9 @@ namespace Abp.WebHooks
         }
 
         [UnitOfWork]
-        protected virtual void StoreResponseOnWebHookWorkItem(Guid webHookWorkItemId, HttpResponseMessage responseMessage)
+        protected virtual void StoreResponseOnWebHookWorkItem(int? tenantId, Guid webHookWorkItemId, HttpResponseMessage responseMessage)
         {
-            var webHookWorkItem = WebHookWorkItemStore.Get(webHookWorkItemId);
+            var webHookWorkItem = WebHookWorkItemStore.Get(tenantId, webHookWorkItemId);
 
             webHookWorkItem.ResponseStatusCode = responseMessage.StatusCode;
             webHookWorkItem.ResponseContent = AsyncHelper.RunSync(() => responseMessage.Content.ReadAsStringAsync());
@@ -191,7 +193,7 @@ namespace Abp.WebHooks
             {
                 Event = webHookSenderArgs.WebHookDefinition,
                 Data = data,
-                Attempt = await WebHookWorkItemStore.GetRepetitionCountAsync(webHookSenderArgs.WebHookId, webHookSenderArgs.WebHookSubscriptionId) + 1
+                Attempt = await WebHookWorkItemStore.GetRepetitionCountAsync(webHookSenderArgs.TenantId, webHookSenderArgs.WebHookId, webHookSenderArgs.WebHookSubscriptionId) + 1
             };
         }
 
@@ -205,7 +207,7 @@ namespace Abp.WebHooks
             {
                 Event = webHookSenderArgs.WebHookDefinition,
                 Data = data,
-                Attempt = WebHookWorkItemStore.GetRepetitionCount(webHookSenderArgs.WebHookId, webHookSenderArgs.WebHookSubscriptionId) + 1
+                Attempt = WebHookWorkItemStore.GetRepetitionCount(webHookSenderArgs.TenantId, webHookSenderArgs.WebHookId, webHookSenderArgs.WebHookSubscriptionId) + 1
             };
         }
 

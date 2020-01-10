@@ -12,34 +12,52 @@ namespace Abp.WebHooks
     public class WebHookStore : IWebHookStore, ITransientDependency
     {
         private readonly IRepository<WebHookInfo, Guid> _webHookRepository;
+        private readonly IUnitOfWorkManager _unitOfWorkManager;
 
-        public WebHookStore(IRepository<WebHookInfo, Guid> webHookRepository)
+        public WebHookStore(IRepository<WebHookInfo, Guid> webHookRepository, IUnitOfWorkManager unitOfWorkManager)
         {
             _webHookRepository = webHookRepository;
+            _unitOfWorkManager = unitOfWorkManager;
         }
 
         [UnitOfWork]
-        public Task<Guid> InsertAndGetIdAsync(WebHookInfo webHookInfo)
+        public virtual async Task<Guid> InsertAndGetIdAsync(WebHookInfo webHookInfo)
         {
-            return _webHookRepository.InsertAndGetIdAsync(webHookInfo);
+            using (_unitOfWorkManager.Current.SetTenantId(webHookInfo.TenantId))
+            {
+                var id = await _webHookRepository.InsertAndGetIdAsync(webHookInfo);
+                await _unitOfWorkManager.Current.SaveChangesAsync();
+                return id;
+            }
         }
 
         [UnitOfWork]
-        public Guid InsertAndGetId(WebHookInfo webHookInfo)
+        public virtual Guid InsertAndGetId(WebHookInfo webHookInfo)
         {
-            return _webHookRepository.InsertAndGetId(webHookInfo);
+            using (_unitOfWorkManager.Current.SetTenantId(webHookInfo.TenantId))
+            {
+                var id = _webHookRepository.InsertAndGetId(webHookInfo);
+                _unitOfWorkManager.Current.SaveChanges();
+                return id;
+            }
         }
 
         [UnitOfWork]
-        public Task<WebHookInfo> GetAsync(Guid id)
+        public virtual Task<WebHookInfo> GetAsync(int? tenantId, Guid id)
         {
-            return _webHookRepository.GetAsync(id);
+            using (_unitOfWorkManager.Current.SetTenantId(tenantId))
+            {
+                return _webHookRepository.GetAsync(id);
+            }
         }
 
         [UnitOfWork]
-        public WebHookInfo Get(Guid id)
+        public virtual WebHookInfo Get(int? tenantId, Guid id)
         {
-            return _webHookRepository.Get(id);
+            using (_unitOfWorkManager.Current.SetTenantId(tenantId))
+            {
+                return _webHookRepository.Get(id);
+            }
         }
     }
 }

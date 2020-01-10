@@ -25,22 +25,22 @@ namespace Abp.WebHooks
         {
         }
 
-        public Task<WebHookWorkItem> GetAsync(Guid id)
+        public Task<WebHookWorkItem> GetAsync(int? tenantId, Guid id)
         {
             return Task.FromResult<WebHookWorkItem>(default);
         }
 
-        public WebHookWorkItem Get(Guid id)
+        public WebHookWorkItem Get(int? tenantId, Guid id)
         {
             return default;
         }
 
-        public Task<int> GetRepetitionCountAsync(Guid webHookId, Guid webHookSubscriptionId)
+        public Task<int> GetRepetitionCountAsync(int? tenantId, Guid webHookId, Guid webHookSubscriptionId)
         {
             return Task.FromResult(int.MaxValue);
         }
 
-        public int GetRepetitionCount(Guid webHookId, Guid webHookSubscriptionId)
+        public int GetRepetitionCount(int? tenantId, Guid webHookId, Guid webHookSubscriptionId)
         {
             return int.MaxValue;
         }

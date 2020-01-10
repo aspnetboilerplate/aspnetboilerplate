@@ -13,18 +13,18 @@ namespace Abp.WebHooks
 
         void Update(WebHookWorkItem webHookWorkItem);
 
-        Task<WebHookWorkItem> GetAsync(Guid id);
+        Task<WebHookWorkItem> GetAsync(int? tenantId, Guid id);
 
-        WebHookWorkItem Get(Guid id);
+        WebHookWorkItem Get(int? tenantId, Guid id);
 
         /// <summary>
         /// Returns work item count by given web hook id and subscription id, (How many times publisher tried to send web hook)
         /// </summary>
-        Task<int> GetRepetitionCountAsync(Guid webHookId, Guid webHookSubscriptionId);
+        Task<int> GetRepetitionCountAsync(int? tenantId, Guid webHookId, Guid webHookSubscriptionId);
 
         /// <summary>
         /// Returns work item count by given web hook id and subscription id. (How many times publisher tried to send web hook)
         /// </summary>
-        int GetRepetitionCount(Guid webHookId, Guid webHookSubscriptionId);
+        int GetRepetitionCount(int? tenantId, Guid webHookId, Guid webHookSubscriptionId);
     }
 }

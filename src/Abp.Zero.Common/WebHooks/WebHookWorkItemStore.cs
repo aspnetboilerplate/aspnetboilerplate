@@ -14,70 +14,100 @@ namespace Abp.WebHooks
     public class WebHookWorkItemStore : IWebHookWorkItemStore, ITransientDependency
     {
         private readonly IRepository<WebHookWorkItem, Guid> _webhookWorkItemRepository;
+        private readonly IUnitOfWorkManager _unitOfWorkManager;
         public IAsyncQueryableExecuter AsyncQueryableExecuter { get; set; }
 
-        public WebHookWorkItemStore(IRepository<WebHookWorkItem, Guid> webhookWorkItemRepository)
+        public WebHookWorkItemStore(IRepository<WebHookWorkItem, Guid> webhookWorkItemRepository, IUnitOfWorkManager unitOfWorkManager)
         {
             _webhookWorkItemRepository = webhookWorkItemRepository;
+            _unitOfWorkManager = unitOfWorkManager;
 
             AsyncQueryableExecuter = NullAsyncQueryableExecuter.Instance;
         }
 
         [UnitOfWork]
-        public Task InsertAsync(WebHookWorkItem webHookWorkItem)
+        public virtual async Task InsertAsync(WebHookWorkItem webHookWorkItem)
         {
-            return _webhookWorkItemRepository.InsertAsync(webHookWorkItem);
+            using (_unitOfWorkManager.Current.SetTenantId(webHookWorkItem.TenantId))
+            {
+                await _webhookWorkItemRepository.InsertAsync(webHookWorkItem);
+                await _unitOfWorkManager.Current.SaveChangesAsync();
+            }
         }
 
         [UnitOfWork]
-        public void Insert(WebHookWorkItem webHookWorkItem)
+        public virtual void Insert(WebHookWorkItem webHookWorkItem)
         {
-            _webhookWorkItemRepository.Insert(webHookWorkItem);
+            using (_unitOfWorkManager.Current.SetTenantId(webHookWorkItem.TenantId))
+            {
+                _webhookWorkItemRepository.Insert(webHookWorkItem);
+                _unitOfWorkManager.Current.SaveChanges();
+            }
         }
 
         [UnitOfWork]
-        public Task UpdateAsync(WebHookWorkItem webHookWorkItem)
+        public virtual async Task UpdateAsync(WebHookWorkItem webHookWorkItem)
         {
-            return _webhookWorkItemRepository.UpdateAsync(webHookWorkItem);
+            using (_unitOfWorkManager.Current.SetTenantId(webHookWorkItem.TenantId))
+            {
+                await _webhookWorkItemRepository.UpdateAsync(webHookWorkItem);
+                await _unitOfWorkManager.Current.SaveChangesAsync();
+            }
         }
 
         [UnitOfWork]
-        public void Update(WebHookWorkItem webHookWorkItem)
+        public virtual void Update(WebHookWorkItem webHookWorkItem)
         {
-            _webhookWorkItemRepository.Update(webHookWorkItem);
+            using (_unitOfWorkManager.Current.SetTenantId(webHookWorkItem.TenantId))
+            {
+                _webhookWorkItemRepository.Update(webHookWorkItem);
+                _unitOfWorkManager.Current.SaveChanges();
+            }
         }
 
         [UnitOfWork]
-        public Task<WebHookWorkItem> GetAsync(Guid id)
+        public virtual async Task<WebHookWorkItem> GetAsync(int? tenantId, Guid id)
         {
-            return _webhookWorkItemRepository.GetAsync(id);
+            using (_unitOfWorkManager.Current.SetTenantId(tenantId))
+            {
+                return await _webhookWorkItemRepository.GetAsync(id);
+            }
         }
 
         [UnitOfWork]
-        public WebHookWorkItem Get(Guid id)
+        public virtual WebHookWorkItem Get(int? tenantId, Guid id)
         {
-            return _webhookWorkItemRepository.Get(id);
+            using (_unitOfWorkManager.Current.SetTenantId(tenantId))
+            {
+                return _webhookWorkItemRepository.Get(id);
+            }
         }
 
         [UnitOfWork]
-        public Task<int> GetRepetitionCountAsync(Guid webHookId, Guid webHookSubscriptionId)
+        public virtual async Task<int> GetRepetitionCountAsync(int? tenantId, Guid webHookId, Guid webHookSubscriptionId)
         {
-            return AsyncQueryableExecuter.CountAsync(
-                _webhookWorkItemRepository.GetAll()
-                    .Where(workItem =>
+            using (_unitOfWorkManager.Current.SetTenantId(tenantId))
+            {
+                return await AsyncQueryableExecuter.CountAsync(
+                    _webhookWorkItemRepository.GetAll()
+                        .Where(workItem =>
+                            workItem.WebHookId == webHookId &&
+                            workItem.WebHookSubscriptionId == webHookSubscriptionId
+                        )
+                );
+            }
+        }
+
+        [UnitOfWork]
+        public virtual int GetRepetitionCount(int? tenantId, Guid webHookId, Guid webHookSubscriptionId)
+        {
+            using (_unitOfWorkManager.Current.SetTenantId(tenantId))
+            {
+                return _webhookWorkItemRepository.GetAll()
+                    .Count(workItem =>
                         workItem.WebHookId == webHookId &&
-                        workItem.WebHookSubscriptionId == webHookSubscriptionId
-                    )
-            );
-        }
-
-        [UnitOfWork]
-        public int GetRepetitionCount(Guid webHookId, Guid webHookSubscriptionId)
-        {
-            return _webhookWorkItemRepository.GetAll()
-                .Count(workItem =>
-                    workItem.WebHookId == webHookId &&
-                    workItem.WebHookSubscriptionId == webHookSubscriptionId);
+                        workItem.WebHookSubscriptionId == webHookSubscriptionId);
+            }
         }
     }
 }

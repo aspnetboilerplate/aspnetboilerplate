@@ -82,7 +82,6 @@ namespace Abp.WebHooks
             {
                 Id = webHookSubscriptionInfo.Id,
                 TenantId = webHookSubscriptionInfo.TenantId,
-                UserId = webHookSubscriptionInfo.UserId,
                 IsActive = webHookSubscriptionInfo.IsActive,
                 Secret = webHookSubscriptionInfo.Secret,
                 WebHookUri = webHookSubscriptionInfo.WebHookUri,
@@ -97,7 +96,6 @@ namespace Abp.WebHooks
             {
                 Id = webHookSubscription.Id,
                 TenantId = webHookSubscription.TenantId,
-                UserId = webHookSubscription.UserId,
                 IsActive = webHookSubscription.IsActive,
                 Secret = webHookSubscription.Secret,
                 WebHookUri = webHookSubscription.WebHookUri,

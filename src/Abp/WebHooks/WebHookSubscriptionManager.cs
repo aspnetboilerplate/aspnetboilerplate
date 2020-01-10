@@ -11,7 +11,9 @@ namespace Abp.WebHooks
     public class WebHookSubscriptionManager : DomainService, IWebHookSubscriptionManager
     {
         public IWebHookSubscriptionsStore WebHookSubscriptionsStore { get; set; }
+
         private readonly IGuidGenerator _guidGenerator;
+
         private readonly IWebHookDefinitionManager _webHookDefinitionManager;
 
         public WebHookSubscriptionManager(
@@ -34,107 +36,58 @@ namespace Abp.WebHooks
             return WebHookSubscriptionsStore.Get(id).ToWebHookSubscription();
         }
 
-        public async Task<List<WebHookSubscription>> GetAllSubscriptionsAsync(UserIdentifier user)
+        public async Task<List<WebHookSubscription>> GetAllSubscriptionsAsync(int? tenantId)
         {
-            return (await WebHookSubscriptionsStore.GetAllSubscriptionsAsync(user))
-                .Select(x => x.ToWebHookSubscription())
-                .ToList();
+            return (await WebHookSubscriptionsStore.GetAllSubscriptionsAsync(tenantId))
+                .Select(x => x.ToWebHookSubscription()).ToList();
         }
 
-        public List<WebHookSubscription> GetAllSubscriptions(UserIdentifier user)
+        public List<WebHookSubscription> GetAllSubscriptions(int? tenantId)
         {
-            return WebHookSubscriptionsStore.GetAllSubscriptions(user)
-                .Select(x => x.ToWebHookSubscription())
-                .ToList();
+            return WebHookSubscriptionsStore.GetAllSubscriptions(tenantId)
+            .Select(x => x.ToWebHookSubscription()).ToList();
         }
 
-        public async Task<List<WebHookSubscription>> GetAllSubscriptionsPermissionGrantedAsync(UserIdentifier user, string webHookName)
+        public async Task<List<WebHookSubscription>> GetAllSubscriptionsIfFeaturesGrantedAsync(int? tenantId, string webHookName)
         {
-            if (!await _webHookDefinitionManager.IsAvailableAsync(user, webHookName))
+            if (!await _webHookDefinitionManager.IsAvailableAsync(tenantId, webHookName))
             {
                 return new List<WebHookSubscription>();
             }
 
-            return (await WebHookSubscriptionsStore.GetAllSubscriptionsAsync(user, webHookName))
-                .Select(x => x.ToWebHookSubscription())
-                .ToList();
+            return (await WebHookSubscriptionsStore.GetAllSubscriptionsAsync(tenantId, webHookName))
+                .Select(x => x.ToWebHookSubscription()).ToList();
         }
 
-        public List<WebHookSubscription> GetAllSubscriptionsPermissionGranted(UserIdentifier user, string webHookName)
+        public List<WebHookSubscription> GetAllSubscriptionsIfFeaturesGranted(int? tenantId, string webHookName)
         {
-            if (!_webHookDefinitionManager.IsAvailable(user, webHookName))
+            if (!_webHookDefinitionManager.IsAvailable(tenantId, webHookName))
             {
                 return new List<WebHookSubscription>();
             }
 
-            return WebHookSubscriptionsStore.GetAllSubscriptions(user)
-                .Select(x => x.ToWebHookSubscription())
-                .ToList();
+            return WebHookSubscriptionsStore.GetAllSubscriptions(tenantId, webHookName)
+                .Select(x => x.ToWebHookSubscription()).ToList();
         }
 
-        public async Task<List<WebHookSubscription>> GetAllSubscriptionsPermissionGrantedAsync(string webHookName)
+        public async Task<bool> IsSubscribedAsync(int? tenantId, string webHookName)
         {
-            var allList = await WebHookSubscriptionsStore.GetAllSubscriptionsAsync(webHookName);
-
-            var permissionGrantedList = new List<WebHookSubscription>();
-
-            foreach (var webHookSubscriptionInfo in allList)
-            {
-                if (await _webHookDefinitionManager.IsAvailableAsync(new UserIdentifier(webHookSubscriptionInfo.TenantId, webHookSubscriptionInfo.UserId), webHookName))
-                {
-                    permissionGrantedList.Add(webHookSubscriptionInfo.ToWebHookSubscription());
-                }
-            }
-
-            return permissionGrantedList;
-        }
-
-        public List<WebHookSubscription> GetAllSubscriptionsPermissionGranted(string webHookName)
-        {
-            return WebHookSubscriptionsStore.GetAllSubscriptions(webHookName)
-                .Select(x => x.ToWebHookSubscription())
-                .Where(x => _webHookDefinitionManager.IsAvailable(new UserIdentifier(x.TenantId, x.UserId), webHookName))
-                .ToList();
-        }
-
-        public async Task<bool> IsSubscribedAsync(UserIdentifier user, string webHookName)
-        {
-            if (!await _webHookDefinitionManager.IsAvailableAsync(user, webHookName))
+            if (!await _webHookDefinitionManager.IsAvailableAsync(tenantId, webHookName))
             {
                 return false;
             }
 
-            return await WebHookSubscriptionsStore.IsSubscribedAsync(user, webHookName);
+            return await WebHookSubscriptionsStore.IsSubscribedAsync(tenantId, webHookName);
         }
 
-        public bool IsSubscribed(UserIdentifier user, string webHookName)
+        public bool IsSubscribed(int? tenantId, string webHookName)
         {
-            if (!_webHookDefinitionManager.IsAvailable(user, webHookName))
+            if (!_webHookDefinitionManager.IsAvailable(tenantId, webHookName))
             {
                 return false;
             }
 
-            return WebHookSubscriptionsStore.IsSubscribed(user, webHookName);
-        }
-
-        public Task ActivateSubscriptionAsync(Guid id)
-        {
-            return WebHookSubscriptionsStore.SetActiveAsync(id, true);
-        }
-
-        public void ActivateSubscription(Guid id)
-        {
-            WebHookSubscriptionsStore.SetActive(id, true);
-        }
-
-        public Task DeactivateSubscriptionAsync(Guid id)
-        {
-            return WebHookSubscriptionsStore.SetActiveAsync(id, false);
-        }
-
-        public void DeactivateSubscription(Guid id)
-        {
-            WebHookSubscriptionsStore.SetActive(id, false);
+            return WebHookSubscriptionsStore.IsSubscribed(tenantId, webHookName);
         }
 
         public async Task AddOrUpdateSubscriptionAsync(WebHookSubscription webHookSubscription)
@@ -144,6 +97,7 @@ namespace Abp.WebHooks
             if (webHookSubscription.Id == default)
             {
                 webHookSubscription.Id = _guidGenerator.Create();
+                webHookSubscription.Secret = "whs_" + Guid.NewGuid().ToString().Replace("-", "");
                 await WebHookSubscriptionsStore.InsertAsync(webHookSubscription.ToWebHookSubscriptionInfo());
             }
             else
@@ -159,6 +113,7 @@ namespace Abp.WebHooks
             if (webHookSubscription.Id == default)
             {
                 webHookSubscription.Id = _guidGenerator.Create();
+                webHookSubscription.Secret = "whs_" + Guid.NewGuid().ToString().Replace("-", "");
                 WebHookSubscriptionsStore.Insert(webHookSubscription.ToWebHookSubscriptionInfo());
             }
             else
@@ -168,40 +123,22 @@ namespace Abp.WebHooks
         }
 
         [UnitOfWork]
-        public async Task AddWebHookAsync(Guid id, string webHookName)
+        public async Task AddWebHookAsync(WebHookSubscriptionInfo subscription, string webHookName)
         {
-            var subscription = await WebHookSubscriptionsStore.GetAsync(id);
-
-            await CheckPermissionsAsync(new UserIdentifier(subscription.TenantId, subscription.UserId), webHookName);
+            await CheckPermissionsAsync(subscription.TenantId, webHookName);
 
             subscription.AddWebHookDefinition(webHookName);
         }
 
         [UnitOfWork]
-        public void AddWebHook(Guid id, string webHookName)
+        public void AddWebHook(WebHookSubscriptionInfo subscription, string webHookName)
         {
-            var subscription = WebHookSubscriptionsStore.Get(id);
-
-            CheckPermissions(new UserIdentifier(subscription.TenantId, subscription.UserId), webHookName);
+            CheckPermissions(subscription.TenantId, webHookName);
 
             subscription.AddWebHookDefinition(webHookName);
         }
 
         #region PermissionCheck
-        private void CheckIfPermissionsGranted(WebHookSubscription webHookSubscription)
-        {
-            if (webHookSubscription.WebHookDefinitions == null || webHookSubscription.WebHookDefinitions.Count == 0)
-            {
-                return;
-            }
-
-            var userIdentifier = new UserIdentifier(webHookSubscription.TenantId, webHookSubscription.UserId);
-
-            foreach (var webHookDefinition in webHookSubscription.WebHookDefinitions)
-            {
-                CheckPermissions(userIdentifier, webHookDefinition);
-            }
-        }
 
         private async Task CheckIfPermissionsGrantedAsync(WebHookSubscription webHookSubscription)
         {
@@ -210,31 +147,44 @@ namespace Abp.WebHooks
                 return;
             }
 
-            var userIdentifier = new UserIdentifier(webHookSubscription.TenantId, webHookSubscription.UserId);
+            foreach (var webHookDefinition in webHookSubscription.WebHookDefinitions)
+            {
+                await CheckPermissionsAsync(webHookSubscription.TenantId, webHookDefinition);
+            }
+        }
+
+        private async Task CheckPermissionsAsync(int? tenantId, string webHookName)
+        {
+            if (!await _webHookDefinitionManager.IsAvailableAsync(tenantId, webHookName))
+            {
+                //TODO: improve exception message
+                throw new AbpAuthorizationException($"Tenant \"{tenantId}\" must have necessary feature(s) to use webhook \"{webHookName}\"");
+            }
+        }
+
+        private void CheckIfPermissionsGranted(WebHookSubscription webHookSubscription)
+        {
+            if (webHookSubscription.WebHookDefinitions == null || webHookSubscription.WebHookDefinitions.Count == 0)
+            {
+                return;
+            }
 
             foreach (var webHookDefinition in webHookSubscription.WebHookDefinitions)
             {
-                await CheckPermissionsAsync(userIdentifier, webHookDefinition);
+                CheckPermissions(webHookSubscription.TenantId, webHookDefinition);
             }
         }
 
-        private void CheckPermissions(UserIdentifier userIdentifier, string webHookName)
+        private void CheckPermissions(int? tenantId, string webHookName)
         {
-            if (!_webHookDefinitionManager.IsAvailable(userIdentifier, webHookName))
+            if (!_webHookDefinitionManager.IsAvailable(tenantId, webHookName))
             {
                 //TODO: improve exception message
-                throw new AbpAuthorizationException($"Necessary permissions to have \"{webHookName}\" are not granted to user \"{userIdentifier.ToUserIdentifierString()}\"");
+                throw new AbpAuthorizationException($"Tenant \"{tenantId}\" must have necessary feature(s) to use webhook \"{webHookName}\"");
             }
         }
 
-        private async Task CheckPermissionsAsync(UserIdentifier userIdentifier, string webHookName)
-        {
-            if (!await _webHookDefinitionManager.IsAvailableAsync(userIdentifier, webHookName))
-            {
-                //TODO: improve exception message
-                throw new AbpAuthorizationException($"Necessary permissions to have \"{webHookName}\" are not granted to user \"{userIdentifier.ToUserIdentifierString()}\"");
-            }
-        }
+
         #endregion
     }
 }

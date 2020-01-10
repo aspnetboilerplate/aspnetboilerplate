@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.Collections.Immutable;
 using System.Threading.Tasks;
 using Abp.Application.Features;
-using Abp.Authorization;
 using Abp.Dependency;
 
 namespace Abp.WebHooks
@@ -82,7 +81,7 @@ namespace Abp.WebHooks
             return _webHookDefinitions.ContainsKey(name);
         }
 
-        public async Task<bool> IsAvailableAsync(UserIdentifier user, string name)
+        public async Task<bool> IsAvailableAsync(int? tenantId, string name)
         {
             var webHookDefinition = GetOrNull(name);
             if (webHookDefinition == null)
@@ -94,22 +93,9 @@ namespace Abp.WebHooks
             {
                 using (var featureDependencyContext = _iocManager.ResolveAsDisposable<FeatureDependencyContext>())
                 {
-                    featureDependencyContext.Object.TenantId = user.TenantId;
+                    featureDependencyContext.Object.TenantId = tenantId;
 
                     if (!await webHookDefinition.FeatureDependency.IsSatisfiedAsync(featureDependencyContext.Object))
-                    {
-                        return false;
-                    }
-                }
-            }
-
-            if (webHookDefinition.PermissionDependency != null)
-            {
-                using (var permissionDependencyContext = _iocManager.ResolveAsDisposable<PermissionDependencyContext>())
-                {
-                    permissionDependencyContext.Object.User = user;
-
-                    if (!await webHookDefinition.PermissionDependency.IsSatisfiedAsync(permissionDependencyContext.Object))
                     {
                         return false;
                     }
@@ -119,7 +105,7 @@ namespace Abp.WebHooks
             return true;
         }
 
-        public bool IsAvailable(UserIdentifier user, string name)
+        public bool IsAvailable(int? tenantId, string name)
         {
             var webHookDefinition = GetOrNull(name);
             if (webHookDefinition == null)
@@ -131,22 +117,9 @@ namespace Abp.WebHooks
             {
                 using (var featureDependencyContext = _iocManager.ResolveAsDisposable<FeatureDependencyContext>())
                 {
-                    featureDependencyContext.Object.TenantId = user.TenantId;
+                    featureDependencyContext.Object.TenantId = tenantId;
 
                     if (!webHookDefinition.FeatureDependency.IsSatisfied(featureDependencyContext.Object))
-                    {
-                        return false;
-                    }
-                }
-            }
-
-            if (webHookDefinition.PermissionDependency != null)
-            {
-                using (var permissionDependencyContext = _iocManager.ResolveAsDisposable<PermissionDependencyContext>())
-                {
-                    permissionDependencyContext.Object.User = user;
-
-                    if (!webHookDefinition.PermissionDependency.IsSatisfied(permissionDependencyContext.Object))
                     {
                         return false;
                     }

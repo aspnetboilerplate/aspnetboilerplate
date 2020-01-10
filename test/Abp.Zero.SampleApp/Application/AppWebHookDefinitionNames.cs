@@ -6,17 +6,13 @@
 
         public class Users
         {
-            public const string Created = "user_created";
+            public const string Created = "user.new_user_created";
+            public const string Deleted = "user.user_deleted";
         }
 
-        public class Tenant
+        public class Theme
         {
-            public const string Deleted = "tenant_deleted";
-        }
-
-        public class Chat
-        {
-            public const string NewMessageReceived = "chat.new_message_received";
+            public const string DefaultThemeChanged = "theme.default_theme_changed";
         }
     }
 }

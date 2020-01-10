@@ -15,7 +15,6 @@ namespace Abp.WebHooks
     public class WebHookSubscriptionsStore : IWebHookSubscriptionsStore, ITransientDependency
     {
         private readonly IRepository<WebHookSubscriptionInfo, Guid> _webhookSubscriptionRepository;
-
         public IAsyncQueryableExecuter AsyncQueryableExecuter { get; set; }
 
         public WebHookSubscriptionsStore(IRepository<WebHookSubscriptionInfo, Guid> webhookSubscriptionRepository)
@@ -26,130 +25,103 @@ namespace Abp.WebHooks
         }
 
         [UnitOfWork]
-        public Task<WebHookSubscriptionInfo> GetAsync(Guid id)
+        public virtual Task<WebHookSubscriptionInfo> GetAsync(Guid id)
         {
             return _webhookSubscriptionRepository.GetAsync(id);
         }
 
         [UnitOfWork]
-        public WebHookSubscriptionInfo Get(Guid id)
+        public virtual WebHookSubscriptionInfo Get(Guid id)
         {
             return _webhookSubscriptionRepository.Get(id);
         }
 
         [UnitOfWork]
-        public Task InsertAsync(WebHookSubscriptionInfo webHookInfo)
+        public virtual async Task InsertAsync(WebHookSubscriptionInfo webHookInfo)
         {
-            return _webhookSubscriptionRepository.InsertAsync(webHookInfo);
+            await _webhookSubscriptionRepository.InsertAsync(webHookInfo);
         }
 
         [UnitOfWork]
-        public void Insert(WebHookSubscriptionInfo webHookInfo)
+        public virtual void Insert(WebHookSubscriptionInfo webHookInfo)
         {
             _webhookSubscriptionRepository.Insert(webHookInfo);
         }
 
         [UnitOfWork]
-        public Task UpdateAsync(WebHookSubscriptionInfo webHookSubscription)
+        public virtual async Task UpdateAsync(WebHookSubscriptionInfo webHookSubscription)
         {
-            return _webhookSubscriptionRepository.UpdateAsync(webHookSubscription);
+            await _webhookSubscriptionRepository.UpdateAsync(webHookSubscription);
         }
 
         [UnitOfWork]
-        public void Update(WebHookSubscriptionInfo webHookSubscription)
+        public virtual void Update(WebHookSubscriptionInfo webHookSubscription)
         {
             _webhookSubscriptionRepository.Update(webHookSubscription);
         }
 
         [UnitOfWork]
-        public Task DeleteAsync(Guid id)
+        public virtual async Task DeleteAsync(Guid id)
         {
-            return _webhookSubscriptionRepository.DeleteAsync(id);
+            await _webhookSubscriptionRepository.DeleteAsync(id);
         }
 
         [UnitOfWork]
-        public void Delete(Guid id)
+        public virtual void Delete(Guid id)
         {
             _webhookSubscriptionRepository.Delete(id);
         }
 
         [UnitOfWork]
-        public Task<List<WebHookSubscriptionInfo>> GetAllSubscriptionsAsync(string webHookDefinitionName)
+        public virtual async Task<List<WebHookSubscriptionInfo>> GetAllSubscriptionsAsync(int? tenantId, string webHookDefinitionName)
         {
-            return AsyncQueryableExecuter.ToListAsync(_webhookSubscriptionRepository.GetAll()
-                .Where(s => s.WebHookDefinitions.Contains("\"" + webHookDefinitionName + "\"")));
+            return await _webhookSubscriptionRepository.GetAllListAsync(s =>
+                s.TenantId == tenantId &&
+                s.IsActive &&
+                s.WebHookDefinitions.Contains("\"" + webHookDefinitionName + "\""));
         }
 
         [UnitOfWork]
-        public List<WebHookSubscriptionInfo> GetAllSubscriptions(string webHookDefinitionName)
+        public virtual List<WebHookSubscriptionInfo> GetAllSubscriptions(int? tenantId, string webHookDefinitionName)
         {
-            return _webhookSubscriptionRepository.GetAll()
-                .Where(s => s.WebHookDefinitions.Contains("\"" + webHookDefinitionName + "\"")).ToList();
+            return _webhookSubscriptionRepository.GetAllList(s =>
+               s.TenantId == tenantId &&
+               s.IsActive &&
+               s.WebHookDefinitions.Contains("\"" + webHookDefinitionName + "\""));
         }
 
         [UnitOfWork]
-        public Task<bool> IsSubscribedAsync(UserIdentifier user, string webHookName)
+        public virtual Task<bool> IsSubscribedAsync(int? tenantId, string webHookName)
         {
             return AsyncQueryableExecuter.AnyAsync(_webhookSubscriptionRepository.GetAll()
                 .Where(s =>
                     s.IsActive &&
-                    s.TenantId == user.TenantId &&
-                    s.UserId == user.UserId &&
+                    s.TenantId == tenantId &&
                     s.WebHookDefinitions.Contains("\"" + webHookName + "\"")
                 ));
         }
 
         [UnitOfWork]
-        public bool IsSubscribed(UserIdentifier user, string webHookName)
+        public virtual bool IsSubscribed(int? tenantId, string webHookName)
         {
             return _webhookSubscriptionRepository.GetAll()
                 .Any(s =>
                     s.IsActive &&
-                    s.TenantId == user.TenantId &&
-                    s.UserId == user.UserId &&
+                    s.TenantId == tenantId &&
                     s.WebHookDefinitions.Contains("\"" + webHookName + "\"")
                 );
         }
 
         [UnitOfWork]
-        public Task<List<WebHookSubscriptionInfo>> GetAllSubscriptionsAsync(UserIdentifier user)
+        public virtual Task<List<WebHookSubscriptionInfo>> GetAllSubscriptionsAsync(int? tenantId)
         {
-            return AsyncQueryableExecuter.ToListAsync(_webhookSubscriptionRepository.GetAll()
-                .Where(s => s.TenantId == user.TenantId && s.UserId == user.UserId));
+            return _webhookSubscriptionRepository.GetAllListAsync(s => s.TenantId == tenantId);
         }
 
         [UnitOfWork]
-        public List<WebHookSubscriptionInfo> GetAllSubscriptions(UserIdentifier user)
+        public virtual List<WebHookSubscriptionInfo> GetAllSubscriptions(int? tenantId)
         {
-            return _webhookSubscriptionRepository.GetAll().Where(s => s.TenantId == user.TenantId && s.UserId == user.UserId).ToList();
-        }
-
-        [UnitOfWork]
-        public async Task SetActiveAsync(Guid id, bool active)
-        {
-            var subscription = await _webhookSubscriptionRepository.GetAsync(id);
-            subscription.IsActive = active;
-        }
-
-        [UnitOfWork]
-        public void SetActive(Guid id, bool active)
-        {
-            var subscription = _webhookSubscriptionRepository.Get(id);
-            subscription.IsActive = active;
-        }
-
-        [UnitOfWork]
-        public Task<List<WebHookSubscriptionInfo>> GetAllSubscriptionsAsync(UserIdentifier user, string webHookName)
-        {
-            return AsyncQueryableExecuter.ToListAsync(_webhookSubscriptionRepository.GetAll()
-                .Where(s => s.TenantId == user.TenantId && s.UserId == user.UserId && s.WebHookDefinitions.Contains("\"" + webHookName + "\"")));
-        }
-
-        [UnitOfWork]
-        public List<WebHookSubscriptionInfo> GetAllSubscriptions(UserIdentifier user, string webHookName)
-        {
-            return _webhookSubscriptionRepository.GetAll()
-                .Where(s => s.TenantId == user.TenantId && s.UserId == user.UserId && s.WebHookDefinitions.Contains("\"" + webHookName + "\"")).ToList();
+            return _webhookSubscriptionRepository.GetAllList(s => s.TenantId == tenantId);
         }
     }
 }

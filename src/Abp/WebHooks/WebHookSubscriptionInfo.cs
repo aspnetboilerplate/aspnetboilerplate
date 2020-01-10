@@ -3,22 +3,19 @@ using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 using Abp.Domain.Entities;
 using Abp.Domain.Entities.Auditing;
+using Abp.MultiTenancy;
 
 namespace Abp.WebHooks
 {
     [Table("AbpWebHookSubscriptions")]
-    public class WebHookSubscriptionInfo : CreationAuditedEntity<Guid>, IMayHaveTenant, IPassivable
+    [MultiTenancySide(MultiTenancySides.Host)]
+    public class WebHookSubscriptionInfo : CreationAuditedEntity<Guid>, IPassivable
     {
         /// <summary>
-        /// Tenant id of the subscribed user.
+        /// Subscribed Tenant's id .
         /// </summary>
         public int? TenantId { get; set; }
-
-        /// <summary>
-        /// User Id.
-        /// </summary>
-        public long UserId { get; set; }
-
+        
         /// <summary>
         /// Subscription webhook endpoint
         /// </summary>

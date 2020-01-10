@@ -11,7 +11,6 @@ namespace Abp.WebHooks
     {
         public static NullWebHookStore Instance { get; } = new NullWebHookStore();
 
-
         public Task<Guid> InsertAndGetIdAsync(WebHookInfo webHookInfo)
         {
             return Task.FromResult<Guid>(default);
@@ -22,12 +21,12 @@ namespace Abp.WebHooks
             return default;
         }
 
-        public Task<WebHookInfo> GetAsync(Guid id)
+        public Task<WebHookInfo> GetAsync(int? tenantId, Guid id)
         {
             return Task.FromResult<WebHookInfo>(default);
         }
 
-        public WebHookInfo Get(Guid id)
+        public WebHookInfo Get(int? tenantId, Guid id)
         {
             return default;
         }

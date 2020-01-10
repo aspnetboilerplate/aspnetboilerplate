@@ -18,8 +18,8 @@ namespace Abp.Zero.SampleApp.Tests.WebHooks
             : base(Substitute.For<IWebHooksConfiguration>())
         {
             WebHookWorkItemStore = Substitute.For<IWebHookWorkItemStore>();
-            WebHookWorkItemStore.GetRepetitionCountAsync(Arg.Any<Guid>(), Arg.Any<Guid>()).Returns(Task.FromResult(0));
-            WebHookWorkItemStore.GetRepetitionCount(Arg.Any<Guid>(), Arg.Any<Guid>()).Returns(0);
+            WebHookWorkItemStore.GetRepetitionCountAsync(Arg.Any<int?>(), Arg.Any<Guid>(), Arg.Any<Guid>()).Returns(Task.FromResult(0));
+            WebHookWorkItemStore.GetRepetitionCount(Arg.Any<int?>(), Arg.Any<Guid>(), Arg.Any<Guid>()).Returns(0);
         }
 
         [Fact]
@@ -29,11 +29,12 @@ namespace Abp.Zero.SampleApp.Tests.WebHooks
 
             var webHookBody = await GetWebhookBodyAsync(new WebHookSenderInput()
             {
-                WebHookDefinition = AppWebHookDefinitionNames.Chat.NewMessageReceived,
+                TenantId = 1,
+                WebHookDefinition = AppWebHookDefinitionNames.Theme.DefaultThemeChanged,
                 Data = data
             });
 
-            webHookBody.Event.ShouldBe(AppWebHookDefinitionNames.Chat.NewMessageReceived);
+            webHookBody.Event.ShouldBe(AppWebHookDefinitionNames.Theme.DefaultThemeChanged);
             ((string)JsonConvert.SerializeObject(webHookBody.Data)).ShouldBe(data);
             webHookBody.Attempt.ShouldBe(1);
         }
@@ -43,7 +44,8 @@ namespace Abp.Zero.SampleApp.Tests.WebHooks
         {
             var webHookBody = await GetWebhookBodyAsync(new WebHookSenderInput()
             {
-                WebHookDefinition = AppWebHookDefinitionNames.Chat.NewMessageReceived,
+                TenantId = 1,
+                WebHookDefinition = AppWebHookDefinitionNames.Theme.DefaultThemeChanged,
                 Data = new { Test = "test" }.ToJsonString()
             });
 
@@ -57,7 +59,7 @@ namespace Abp.Zero.SampleApp.Tests.WebHooks
             content.ShouldBe(webHookBody.ToJsonString());
 
             request.Headers.GetValues(SignatureHeaderName).Single()
-                .ShouldBe("sha256=75-EF-72-4A-9B-AB-64-B6-F3-31-61-59-DB-BF-D5-2A-9F-C8-F5-F9-0B-BA-77-5D-91-DB-B9-86-42-A1-CE-C0");
+                .ShouldBe("sha256=3C-06-C6-E1-30-39-F0-5E-51-27-66-39-36-49-25-21-4D-01-AF-76-FC-D3-4B-14-F4-1E-8F-57-C7-F7-CD-A4");
         }
     }
 }
