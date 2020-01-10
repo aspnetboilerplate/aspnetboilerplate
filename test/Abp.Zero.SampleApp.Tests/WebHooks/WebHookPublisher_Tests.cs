@@ -250,6 +250,53 @@ namespace Abp.Zero.SampleApp.Tests.WebHooks
             await _backgroundJobManagerSubstitute.DidNotReceive().EnqueueAsync<WebHookSenderJob, WebHookSenderInput>(Arg.Any<WebHookSenderInput>());
         }
 
+        [Fact]
+        public async Task Should_Send_Webhook_To_Host_If_Subscribed_Async()
+        {
+            var subscription = new WebHookSubscription
+            {
+                TenantId = null,
+                Secret = "secret",
+                WebHookUri = "www.mywebhook.com",
+                WebHookDefinitions = new List<string>() { AppWebHookDefinitionNames.Users.Created },
+                Headers = new Dictionary<string, string>
+                {
+                    { "Key","Value"}
+                }
+            };
+
+            var webHookSubscriptionManager = Resolve<IWebHookSubscriptionManager>();
+            var webHooksConfiguration = Resolve<IWebHooksConfiguration>();
+
+            await webHookSubscriptionManager.AddOrUpdateSubscriptionAsync(subscription);
+
+            var data = new { Name = "Musa", Surname = "Demir" };
+
+            Predicate<WebHookSenderInput> predicate = w =>
+            {
+                w.Secret.ShouldNotBeNullOrEmpty();
+                w.Secret.ShouldStartWith("whs_");
+                w.WebHookDefinition.ShouldContain(AppWebHookDefinitionNames.Users.Created);
+
+                w.Headers.Count.ShouldBe(1);
+                w.Headers.Single().Key.ShouldBe("Key");
+                w.Headers.Single().Value.ShouldBe("Value");
+
+                w.WebHookSubscriptionId.ShouldBe(subscription.Id);
+                w.Data.ShouldBe(
+                    webHooksConfiguration.JsonSerializerSettings != null
+                        ? data.ToJsonString(webHooksConfiguration.JsonSerializerSettings)
+                        : data.ToJsonString()
+                );
+                return true;
+            };
+
+            await _webhookPublisher.PublishAsync(AppWebHookDefinitionNames.Users.Created, data, null);
+
+            await _backgroundJobManagerSubstitute.Received()
+                .EnqueueAsync<WebHookSenderJob, WebHookSenderInput>(Arg.Is<WebHookSenderInput>(w => predicate(w)));
+        }
+
         #endregion
 
         #region Sync
@@ -440,6 +487,52 @@ namespace Abp.Zero.SampleApp.Tests.WebHooks
             _backgroundJobManagerSubstitute.DidNotReceive().Enqueue<WebHookSenderJob, WebHookSenderInput>(Arg.Any<WebHookSenderInput>());
         }
 
+        [Fact]
+        public void Should_Send_Webhook_To_Host_If_Subscribed_Sync()
+        {
+            var subscription = new WebHookSubscription
+            {
+                TenantId = null,
+                Secret = "secret",
+                WebHookUri = "www.mywebhook.com",
+                WebHookDefinitions = new List<string>() { AppWebHookDefinitionNames.Users.Created },
+                Headers = new Dictionary<string, string>
+                {
+                    { "Key","Value"}
+                }
+            };
+
+            var webHookSubscriptionManager = Resolve<IWebHookSubscriptionManager>();
+            var webHooksConfiguration = Resolve<IWebHooksConfiguration>();
+
+            webHookSubscriptionManager.AddOrUpdateSubscription(subscription);
+
+            var data = new { Name = "Musa", Surname = "Demir" };
+
+            Predicate<WebHookSenderInput> predicate = w =>
+            {
+                w.Secret.ShouldNotBeNullOrEmpty();
+                w.Secret.ShouldStartWith("whs_");
+                w.WebHookDefinition.ShouldContain(AppWebHookDefinitionNames.Users.Created);
+
+                w.Headers.Count.ShouldBe(1);
+                w.Headers.Single().Key.ShouldBe("Key");
+                w.Headers.Single().Value.ShouldBe("Value");
+
+                w.WebHookSubscriptionId.ShouldBe(subscription.Id);
+                w.Data.ShouldBe(
+                    webHooksConfiguration.JsonSerializerSettings != null
+                        ? data.ToJsonString(webHooksConfiguration.JsonSerializerSettings)
+                        : data.ToJsonString()
+                );
+                return true;
+            };
+
+            _webhookPublisher.Publish(AppWebHookDefinitionNames.Users.Created, data, null);
+
+            _backgroundJobManagerSubstitute.Received()
+               .Enqueue<WebHookSenderJob, WebHookSenderInput>(Arg.Is<WebHookSenderInput>(w => predicate(w)));
+        }
         #endregion
     }
 }

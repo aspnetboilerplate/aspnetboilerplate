@@ -83,6 +83,11 @@ namespace Abp.WebHooks
 
         public async Task<bool> IsAvailableAsync(int? tenantId, string name)
         {
+            if (tenantId == null)//host allowed to subscribe all webhooks
+            {
+                return true;
+            }
+
             var webHookDefinition = GetOrNull(name);
             if (webHookDefinition == null)
             {
@@ -107,6 +112,11 @@ namespace Abp.WebHooks
 
         public bool IsAvailable(int? tenantId, string name)
         {
+            if (tenantId == null)//host allowed to subscribe all webhooks
+            {
+                return true;
+            }
+
             var webHookDefinition = GetOrNull(name);
             if (webHookDefinition == null)
             {

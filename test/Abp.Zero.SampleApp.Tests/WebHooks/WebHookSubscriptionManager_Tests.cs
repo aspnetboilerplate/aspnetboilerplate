@@ -91,7 +91,7 @@ namespace Abp.Zero.SampleApp.Tests.WebHooks
                 subscription.ShouldNotBeNull();
                 CompareSubscriptions(subscription, newSubscription);
             });
-            
+
             var newWebHookUri = "www.mynewwebhook.com";
             subscription.WebHookUri = newWebHookUri;
 
@@ -384,6 +384,20 @@ namespace Abp.Zero.SampleApp.Tests.WebHooks
             (await webHookSubscriptionManager.IsSubscribedAsync(tenantId, AppWebHookDefinitionNames.Users.Created)).ShouldBeTrue();
             (await webHookSubscriptionManager.IsSubscribedAsync(tenantId, AppWebHookDefinitionNames.Users.Deleted)).ShouldBeTrue();
             (await webHookSubscriptionManager.IsSubscribedAsync(tenantId, AppWebHookDefinitionNames.Theme.DefaultThemeChanged)).ShouldBeFalse();
+        }
+
+        [Fact]
+        public async Task Should_Allow_Host_To_Subscribe_Any_Webhooks_Async()
+        {
+            var webHookSubscriptionManager = Resolve<IWebHookSubscriptionManager>();
+            var userCreatedWebHookSubscription = NewWebHookSubscription(null, AppWebHookDefinitionNames.Users.Created);
+            await webHookSubscriptionManager.AddOrUpdateSubscriptionAsync(userCreatedWebHookSubscription);
+
+            var userDeletedWebHookSubscription = NewWebHookSubscription(null, AppWebHookDefinitionNames.Users.Deleted);
+            await webHookSubscriptionManager.AddOrUpdateSubscriptionAsync(userDeletedWebHookSubscription);
+
+            var defaultThemeChangedWebHookSubscription = NewWebHookSubscription(null, AppWebHookDefinitionNames.Theme.DefaultThemeChanged);
+            await webHookSubscriptionManager.AddOrUpdateSubscriptionAsync(defaultThemeChangedWebHookSubscription);
         }
 
         #endregion
@@ -737,6 +751,20 @@ namespace Abp.Zero.SampleApp.Tests.WebHooks
             (webHookSubscriptionManager.IsSubscribed(tenantId, AppWebHookDefinitionNames.Users.Created)).ShouldBeTrue();
             (webHookSubscriptionManager.IsSubscribed(tenantId, AppWebHookDefinitionNames.Users.Deleted)).ShouldBeTrue();
             (webHookSubscriptionManager.IsSubscribed(tenantId, AppWebHookDefinitionNames.Theme.DefaultThemeChanged)).ShouldBeFalse();
+        }
+
+        [Fact]
+        public void Should_Allow_Host_To_Subscribe_Any_Webhooks_Sync()
+        {
+            var webHookSubscriptionManager = Resolve<IWebHookSubscriptionManager>();
+            var userCreatedWebHookSubscription = NewWebHookSubscription(null, AppWebHookDefinitionNames.Users.Created);
+            webHookSubscriptionManager.AddOrUpdateSubscription(userCreatedWebHookSubscription);
+
+            var userDeletedWebHookSubscription = NewWebHookSubscription(null, AppWebHookDefinitionNames.Users.Deleted);
+            webHookSubscriptionManager.AddOrUpdateSubscription(userDeletedWebHookSubscription);
+
+            var defaultThemeChangedWebHookSubscription = NewWebHookSubscription(null, AppWebHookDefinitionNames.Theme.DefaultThemeChanged);
+            webHookSubscriptionManager.AddOrUpdateSubscription(defaultThemeChangedWebHookSubscription);
         }
         #endregion
     }
