@@ -32,11 +32,11 @@ namespace Abp.WebHooks
         /// </summary>
         public HttpStatusCode? ResponseStatusCode { get; set; }
 
-        public int? TenantId { get; set; }
-
         public DateTime CreationTime { get; set; }
 
         public DateTime? LastModificationTime { get; set; }
+
+        public int? TenantId { get; set; }
 
         public bool IsDeleted { get; set; }
     }
