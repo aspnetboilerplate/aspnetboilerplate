@@ -3,19 +3,19 @@ using System.Threading.Tasks;
 
 namespace Abp.WebHooks
 {
-    public interface IWebHookWorkItemStore
+    public interface IWebhookSendAttemptStore
     {
-        Task InsertAsync(WebHookWorkItem webHookWorkItem);
+        Task InsertAsync(WebhookSendAttempt webhookSendAttempt);
 
-        void Insert(WebHookWorkItem webHookWorkItem);
+        void Insert(WebhookSendAttempt webhookSendAttempt);
 
-        Task UpdateAsync(WebHookWorkItem webHookWorkItem);
+        Task UpdateAsync(WebhookSendAttempt webhookSendAttempt);
 
-        void Update(WebHookWorkItem webHookWorkItem);
+        void Update(WebhookSendAttempt webhookSendAttempt);
 
-        Task<WebHookWorkItem> GetAsync(int? tenantId, Guid id);
+        Task<WebhookSendAttempt> GetAsync(int? tenantId, Guid id);
 
-        WebHookWorkItem Get(int? tenantId, Guid id);
+        WebhookSendAttempt Get(int? tenantId, Guid id);
 
         /// <summary>
         /// Returns work item count by given web hook id and subscription id, (How many times publisher tried to send web hook)

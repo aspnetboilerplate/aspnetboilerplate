@@ -135,12 +135,7 @@ namespace Abp.Zero.EntityFramework
         /// Web subscriptions
         /// </summary>
         public virtual DbSet<WebHookSubscriptionInfo> WebHookSubscriptions { get; set; }
-
-        /// <summary>
-        /// Webhook work items
-        /// </summary>
-        public virtual DbSet<WebHookWorkItem> WebHookWorkItems { get; set; }
-
+        
         /// <summary>
         /// Default constructor.
         /// Do not directly instantiate this class. Instead, use dependency injection!

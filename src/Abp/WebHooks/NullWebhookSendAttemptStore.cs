@@ -3,34 +3,34 @@ using System.Threading.Tasks;
 
 namespace Abp.WebHooks
 {
-    public class NullWebHookWorkItemStore : IWebHookWorkItemStore
+    public class NullWebhookSendAttemptStore : IWebhookSendAttemptStore
     {
-        public static NullWebHookWorkItemStore Instance = new NullWebHookWorkItemStore();
+        public static NullWebhookSendAttemptStore Instance = new NullWebhookSendAttemptStore();
 
-        public Task InsertAsync(WebHookWorkItem webHookWorkItem)
+        public Task InsertAsync(WebhookSendAttempt webhookSendAttempt)
         {
             return Task.CompletedTask;
         }
 
-        public void Insert(WebHookWorkItem webHookWorkItem)
+        public void Insert(WebhookSendAttempt webhookSendAttempt)
         {
         }
 
-        public Task UpdateAsync(WebHookWorkItem webHookWorkItem)
+        public Task UpdateAsync(WebhookSendAttempt webhookSendAttempt)
         {
             return Task.CompletedTask;
         }
 
-        public void Update(WebHookWorkItem webHookWorkItem)
+        public void Update(WebhookSendAttempt webhookSendAttempt)
         {
         }
 
-        public Task<WebHookWorkItem> GetAsync(int? tenantId, Guid id)
+        public Task<WebhookSendAttempt> GetAsync(int? tenantId, Guid id)
         {
-            return Task.FromResult<WebHookWorkItem>(default);
+            return Task.FromResult<WebhookSendAttempt>(default);
         }
 
-        public WebHookWorkItem Get(int? tenantId, Guid id)
+        public WebhookSendAttempt Get(int? tenantId, Guid id)
         {
             return default;
         }

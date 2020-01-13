@@ -17,9 +17,9 @@ namespace Abp.Zero.SampleApp.Tests.WebHooks
         public DefaultWebHookSender_Tests()
             : base(Substitute.For<IWebHooksConfiguration>())
         {
-            WebHookWorkItemStore = Substitute.For<IWebHookWorkItemStore>();
-            WebHookWorkItemStore.GetRepetitionCountAsync(Arg.Any<int?>(), Arg.Any<Guid>(), Arg.Any<Guid>()).Returns(Task.FromResult(0));
-            WebHookWorkItemStore.GetRepetitionCount(Arg.Any<int?>(), Arg.Any<Guid>(), Arg.Any<Guid>()).Returns(0);
+            WebhookSendAttemptStore = Substitute.For<IWebhookSendAttemptStore>();
+            WebhookSendAttemptStore.GetRepetitionCountAsync(Arg.Any<int?>(), Arg.Any<Guid>(), Arg.Any<Guid>()).Returns(Task.FromResult(0));
+            WebhookSendAttemptStore.GetRepetitionCount(Arg.Any<int?>(), Arg.Any<Guid>(), Arg.Any<Guid>()).Returns(0);
         }
 
         [Fact]

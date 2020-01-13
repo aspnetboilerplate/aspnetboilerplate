@@ -40,7 +40,7 @@ namespace Abp.WebHooks.BackgroundWorker
                     return;
                 }
 
-                using (var workItemStore = _iocResolver.ResolveAsDisposable<IWebHookWorkItemStore>())
+                using (var workItemStore = _iocResolver.ResolveAsDisposable<IWebhookSendAttemptStore>())
                 {
                     var repetitionCount = workItemStore.Object.GetRepetitionCount(args.TenantId, args.WebHookId, args.WebHookSubscriptionId);
 

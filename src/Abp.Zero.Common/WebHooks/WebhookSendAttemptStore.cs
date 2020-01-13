@@ -9,77 +9,77 @@ using Abp.Linq;
 namespace Abp.WebHooks
 {
     /// <summary>
-    /// Implements <see cref="IWebHookWorkItemStore"/> using repositories.
+    /// Implements <see cref="IWebhookSendAttemptStore"/> using repositories.
     /// </summary>
-    public class WebHookWorkItemStore : IWebHookWorkItemStore, ITransientDependency
+    public class WebhookSendAttemptStore : IWebhookSendAttemptStore, ITransientDependency
     {
-        private readonly IRepository<WebHookWorkItem, Guid> _webhookWorkItemRepository;
+        private readonly IRepository<WebhookSendAttempt, Guid> _webhookSendAttemptRepository;
         private readonly IUnitOfWorkManager _unitOfWorkManager;
         public IAsyncQueryableExecuter AsyncQueryableExecuter { get; set; }
 
-        public WebHookWorkItemStore(IRepository<WebHookWorkItem, Guid> webhookWorkItemRepository, IUnitOfWorkManager unitOfWorkManager)
+        public WebhookSendAttemptStore(IRepository<WebhookSendAttempt, Guid> webhookSendAttemptRepository, IUnitOfWorkManager unitOfWorkManager)
         {
-            _webhookWorkItemRepository = webhookWorkItemRepository;
+            _webhookSendAttemptRepository = webhookSendAttemptRepository;
             _unitOfWorkManager = unitOfWorkManager;
 
             AsyncQueryableExecuter = NullAsyncQueryableExecuter.Instance;
         }
 
         [UnitOfWork]
-        public virtual async Task InsertAsync(WebHookWorkItem webHookWorkItem)
+        public virtual async Task InsertAsync(WebhookSendAttempt webhookSendAttempt)
         {
-            using (_unitOfWorkManager.Current.SetTenantId(webHookWorkItem.TenantId))
+            using (_unitOfWorkManager.Current.SetTenantId(webhookSendAttempt.TenantId))
             {
-                await _webhookWorkItemRepository.InsertAsync(webHookWorkItem);
+                await _webhookSendAttemptRepository.InsertAsync(webhookSendAttempt);
                 await _unitOfWorkManager.Current.SaveChangesAsync();
             }
         }
 
         [UnitOfWork]
-        public virtual void Insert(WebHookWorkItem webHookWorkItem)
+        public virtual void Insert(WebhookSendAttempt webhookSendAttempt)
         {
-            using (_unitOfWorkManager.Current.SetTenantId(webHookWorkItem.TenantId))
+            using (_unitOfWorkManager.Current.SetTenantId(webhookSendAttempt.TenantId))
             {
-                _webhookWorkItemRepository.Insert(webHookWorkItem);
+                _webhookSendAttemptRepository.Insert(webhookSendAttempt);
                 _unitOfWorkManager.Current.SaveChanges();
             }
         }
 
         [UnitOfWork]
-        public virtual async Task UpdateAsync(WebHookWorkItem webHookWorkItem)
+        public virtual async Task UpdateAsync(WebhookSendAttempt webhookSendAttempt)
         {
-            using (_unitOfWorkManager.Current.SetTenantId(webHookWorkItem.TenantId))
+            using (_unitOfWorkManager.Current.SetTenantId(webhookSendAttempt.TenantId))
             {
-                await _webhookWorkItemRepository.UpdateAsync(webHookWorkItem);
+                await _webhookSendAttemptRepository.UpdateAsync(webhookSendAttempt);
                 await _unitOfWorkManager.Current.SaveChangesAsync();
             }
         }
 
         [UnitOfWork]
-        public virtual void Update(WebHookWorkItem webHookWorkItem)
+        public virtual void Update(WebhookSendAttempt webhookSendAttempt)
         {
-            using (_unitOfWorkManager.Current.SetTenantId(webHookWorkItem.TenantId))
+            using (_unitOfWorkManager.Current.SetTenantId(webhookSendAttempt.TenantId))
             {
-                _webhookWorkItemRepository.Update(webHookWorkItem);
+                _webhookSendAttemptRepository.Update(webhookSendAttempt);
                 _unitOfWorkManager.Current.SaveChanges();
             }
         }
 
         [UnitOfWork]
-        public virtual async Task<WebHookWorkItem> GetAsync(int? tenantId, Guid id)
+        public virtual async Task<WebhookSendAttempt> GetAsync(int? tenantId, Guid id)
         {
             using (_unitOfWorkManager.Current.SetTenantId(tenantId))
             {
-                return await _webhookWorkItemRepository.GetAsync(id);
+                return await _webhookSendAttemptRepository.GetAsync(id);
             }
         }
 
         [UnitOfWork]
-        public virtual WebHookWorkItem Get(int? tenantId, Guid id)
+        public virtual WebhookSendAttempt Get(int? tenantId, Guid id)
         {
             using (_unitOfWorkManager.Current.SetTenantId(tenantId))
             {
-                return _webhookWorkItemRepository.Get(id);
+                return _webhookSendAttemptRepository.Get(id);
             }
         }
 
@@ -89,7 +89,7 @@ namespace Abp.WebHooks
             using (_unitOfWorkManager.Current.SetTenantId(tenantId))
             {
                 return await AsyncQueryableExecuter.CountAsync(
-                    _webhookWorkItemRepository.GetAll()
+                    _webhookSendAttemptRepository.GetAll()
                         .Where(workItem =>
                             workItem.WebHookId == webHookId &&
                             workItem.WebHookSubscriptionId == webHookSubscriptionId
@@ -103,7 +103,7 @@ namespace Abp.WebHooks
         {
             using (_unitOfWorkManager.Current.SetTenantId(tenantId))
             {
-                return _webhookWorkItemRepository.GetAll()
+                return _webhookSendAttemptRepository.GetAll()
                     .Count(workItem =>
                         workItem.WebHookId == webHookId &&
                         workItem.WebHookSubscriptionId == webHookSubscriptionId);

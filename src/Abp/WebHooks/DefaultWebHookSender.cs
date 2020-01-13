@@ -14,7 +14,7 @@ namespace Abp.WebHooks
 {
     public class DefaultWebHookSender : DomainService, IWebHookSender
     {
-        public IWebHookWorkItemStore WebHookWorkItemStore { get; set; }
+        public IWebhookSendAttemptStore WebhookSendAttemptStore { get; set; }
 
         protected const string SignatureHeaderKey = "sha256";
         protected const string SignatureHeaderValueTemplate = SignatureHeaderKey + "={0}";
@@ -26,7 +26,7 @@ namespace Abp.WebHooks
         {
             _webHooksConfiguration = webHooksConfiguration;
 
-            WebHookWorkItemStore = NullWebHookWorkItemStore.Instance;
+            WebhookSendAttemptStore = NullWebhookSendAttemptStore.Instance;
         }
 
         public async Task<bool> TrySendWebHookAsync(WebHookSenderInput webHookSenderArgs)
@@ -43,7 +43,7 @@ namespace Abp.WebHooks
                     throw new ArgumentNullException(nameof(webHookSenderArgs.WebHookSubscriptionId));
                 }
 
-                var workItemId = await InsertAndGetIdWebHookWorkItemAsync(webHookSenderArgs);
+                var workItemId = await InsertAndGetIdWebhookSendAttemptAsync(webHookSenderArgs);
 
                 var request = CreateWebHookRequestMessage(webHookSenderArgs);
 
@@ -80,7 +80,7 @@ namespace Abp.WebHooks
                     content = "Request Timeout";
                 }
 
-                await StoreResponseOnWebHookWorkItemAsync(webHookSenderArgs.TenantId, workItemId, statusCode, content);
+                await StoreResponseOnWebhookSendAttemptAsync(webHookSenderArgs.TenantId, workItemId, statusCode, content);
                 return isSucceed;
             }
             catch (Exception e)
@@ -104,7 +104,7 @@ namespace Abp.WebHooks
                     throw new ArgumentNullException(nameof(webHookSenderArgs.WebHookSubscriptionId));
                 }
 
-                var workItemId = InsertAndGetIdWebHookWorkItem(webHookSenderArgs);
+                var workItemId = InsertAndGetIdWebhookSendAttempt(webHookSenderArgs);
 
                 var request = CreateWebHookRequestMessage(webHookSenderArgs);
 
@@ -141,7 +141,7 @@ namespace Abp.WebHooks
                     content = "Request Timeout";
                 }
 
-                StoreResponseOnWebHookWorkItem(webHookSenderArgs.TenantId, workItemId, statusCode, content);
+                StoreResponseOnWebhookSendAttempt(webHookSenderArgs.TenantId, workItemId, statusCode, content);
                 return isSucceed;
             }
             catch (Exception e)
@@ -152,57 +152,57 @@ namespace Abp.WebHooks
         }
 
         [UnitOfWork]
-        protected virtual async Task<Guid> InsertAndGetIdWebHookWorkItemAsync(WebHookSenderInput webHookSenderArgs)
+        protected virtual async Task<Guid> InsertAndGetIdWebhookSendAttemptAsync(WebHookSenderInput webHookSenderArgs)
         {
-            var workItem = new WebHookWorkItem()
+            var workItem = new WebhookSendAttempt()
             {
                 WebHookId = webHookSenderArgs.WebHookId,
                 WebHookSubscriptionId = webHookSenderArgs.WebHookSubscriptionId,
                 TenantId = webHookSenderArgs.TenantId
             };
 
-            await WebHookWorkItemStore.InsertAsync(workItem);
+            await WebhookSendAttemptStore.InsertAsync(workItem);
             await CurrentUnitOfWork.SaveChangesAsync();
 
             return workItem.Id;
         }
 
         [UnitOfWork]
-        protected virtual Guid InsertAndGetIdWebHookWorkItem(WebHookSenderInput webHookSenderArgs)
+        protected virtual Guid InsertAndGetIdWebhookSendAttempt(WebHookSenderInput webHookSenderArgs)
         {
-            var workItem = new WebHookWorkItem()
+            var workItem = new WebhookSendAttempt()
             {
                 WebHookId = webHookSenderArgs.WebHookId,
                 WebHookSubscriptionId = webHookSenderArgs.WebHookSubscriptionId,
                 TenantId = webHookSenderArgs.TenantId
             };
 
-            WebHookWorkItemStore.Insert(workItem);
+            WebhookSendAttemptStore.Insert(workItem);
             CurrentUnitOfWork.SaveChanges();
 
             return workItem.Id;
         }
 
         [UnitOfWork]
-        protected virtual async Task StoreResponseOnWebHookWorkItemAsync(int? tenantId, Guid webHookWorkItemId, HttpStatusCode statusCode, string content)
+        protected virtual async Task StoreResponseOnWebhookSendAttemptAsync(int? tenantId, Guid webhookSendAttemptId, HttpStatusCode statusCode, string content)
         {
-            var webHookWorkItem = await WebHookWorkItemStore.GetAsync(tenantId, webHookWorkItemId);
+            var webhookSendAttempt = await WebhookSendAttemptStore.GetAsync(tenantId, webhookSendAttemptId);
 
-            webHookWorkItem.ResponseStatusCode = statusCode;
-            webHookWorkItem.ResponseContent = content;
+            webhookSendAttempt.ResponseStatusCode = statusCode;
+            webhookSendAttempt.ResponseContent = content;
 
-            await WebHookWorkItemStore.UpdateAsync(webHookWorkItem);
+            await WebhookSendAttemptStore.UpdateAsync(webhookSendAttempt);
         }
 
         [UnitOfWork]
-        protected virtual void StoreResponseOnWebHookWorkItem(int? tenantId, Guid webHookWorkItemId, HttpStatusCode statusCode, string content)
+        protected virtual void StoreResponseOnWebhookSendAttempt(int? tenantId, Guid webhookSendAttemptId, HttpStatusCode statusCode, string content)
         {
-            var webHookWorkItem = WebHookWorkItemStore.Get(tenantId, webHookWorkItemId);
+            var webhookSendAttempt = WebhookSendAttemptStore.Get(tenantId, webhookSendAttemptId);
 
-            webHookWorkItem.ResponseStatusCode = statusCode;
-            webHookWorkItem.ResponseContent = content;
+            webhookSendAttempt.ResponseStatusCode = statusCode;
+            webhookSendAttempt.ResponseContent = content;
 
-            WebHookWorkItemStore.Update(webHookWorkItem);
+            WebhookSendAttemptStore.Update(webhookSendAttempt);
         }
 
         /// <summary>
@@ -224,7 +224,7 @@ namespace Abp.WebHooks
             {
                 Event = webHookSenderArgs.WebHookDefinition,
                 Data = data,
-                Attempt = await WebHookWorkItemStore.GetRepetitionCountAsync(webHookSenderArgs.TenantId, webHookSenderArgs.WebHookId, webHookSenderArgs.WebHookSubscriptionId) + 1
+                Attempt = await WebhookSendAttemptStore.GetRepetitionCountAsync(webHookSenderArgs.TenantId, webHookSenderArgs.WebHookId, webHookSenderArgs.WebHookSubscriptionId) + 1
             };
         }
 
@@ -238,7 +238,7 @@ namespace Abp.WebHooks
             {
                 Event = webHookSenderArgs.WebHookDefinition,
                 Data = data,
-                Attempt = WebHookWorkItemStore.GetRepetitionCount(webHookSenderArgs.TenantId, webHookSenderArgs.WebHookId, webHookSenderArgs.WebHookSubscriptionId) + 1
+                Attempt = WebhookSendAttemptStore.GetRepetitionCount(webHookSenderArgs.TenantId, webHookSenderArgs.WebHookId, webHookSenderArgs.WebHookSubscriptionId) + 1
             };
         }
 

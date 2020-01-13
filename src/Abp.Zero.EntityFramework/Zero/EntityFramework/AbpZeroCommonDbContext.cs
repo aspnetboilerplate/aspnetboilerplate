@@ -153,7 +153,7 @@ namespace Abp.Zero.EntityFramework
         /// <summary>
         /// Webhook work items
         /// </summary>
-        public virtual IDbSet<WebHookWorkItem> WebHookWorkItems { get; set; }
+        public virtual IDbSet<WebhookSendAttempt> WebhookSendAttempts { get; set; }
 
         /// <summary>
         /// Default constructor.

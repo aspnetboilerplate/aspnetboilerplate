@@ -71,7 +71,7 @@ namespace Abp.Zero.EntityFramework
             SetTableName<RoleClaim>(modelBuilder, prefix + "RoleClaims", schemaName);
             SetTableName<WebHookInfo>(modelBuilder, prefix + "WebHooks", schemaName);
             SetTableName<WebHookSubscriptionInfo>(modelBuilder, prefix + "WebHookSubscriptions", schemaName);
-            SetTableName<WebHookWorkItem>(modelBuilder, prefix + "WebHookWorkItems", schemaName);
+            SetTableName<WebhookSendAttempt>(modelBuilder, prefix + "WebhookSendAttempts", schemaName);
         }
 
         private static void SetTableName<TEntity>(DbModelBuilder modelBuilder, string tableName, string schemaName)

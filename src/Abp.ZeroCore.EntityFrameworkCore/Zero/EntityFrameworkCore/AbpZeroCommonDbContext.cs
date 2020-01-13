@@ -154,7 +154,7 @@ namespace Abp.Zero.EntityFrameworkCore
         /// <summary>
         /// Webhook work items
         /// </summary>
-        public virtual DbSet<WebHookWorkItem> WebHookWorkItems { get; set; }
+        public virtual DbSet<WebhookSendAttempt> WebhookSendAttempts { get; set; }
 
         public IEntityHistoryHelper EntityHistoryHelper { get; set; }
 

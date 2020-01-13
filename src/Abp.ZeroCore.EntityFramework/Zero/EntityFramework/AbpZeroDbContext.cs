@@ -66,19 +66,9 @@ namespace Abp.Zero.EntityFramework
         public virtual DbSet<NotificationInfo> Notifications { get; set; }
 
         /// <summary>
-        /// Webhook information
-        /// </summary>
-        public virtual DbSet<WebHookInfo> WebHooks { get; set; }
-
-        /// <summary>
-        /// Web subscriptions
-        /// </summary>
-        public virtual DbSet<WebHookSubscriptionInfo> WebHookSubscriptions { get; set; }
-
-        /// <summary>
         /// Webhook work items
         /// </summary>
-        public virtual DbSet<WebHookWorkItem> WebHookWorkItems { get; set; }
+        public virtual DbSet<WebhookSendAttempt> WebhookSendAttempts { get; set; }
         
         protected AbpZeroDbContext()
         {

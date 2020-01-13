@@ -68,7 +68,7 @@ namespace Abp.Zero.EntityFrameworkCore
             SetTableName<UserToken>(modelBuilder, prefix + "UserTokens", schemaName);
             SetTableName<WebHookInfo>(modelBuilder, prefix + "WebHooks", schemaName);
             SetTableName<WebHookSubscriptionInfo>(modelBuilder, prefix + "WebHookSubscriptions", schemaName);
-            SetTableName<WebHookWorkItem>(modelBuilder, prefix + "WebHookWorkItems", schemaName);
+            SetTableName<WebhookSendAttempt>(modelBuilder, prefix + "WebhookSendAttempts", schemaName);
         }
 
         internal static void SetTableName<TEntity>(this ModelBuilder modelBuilder, string tableName, string schemaName)
