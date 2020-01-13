@@ -1,5 +1,4 @@
-﻿using System;
-using System.Threading.Tasks;
+﻿using System.Threading.Tasks;
 
 namespace Abp.Webhooks
 {
@@ -7,14 +6,14 @@ namespace Abp.Webhooks
     {
         /// <summary>
         /// Tries to send webhook with given transactionId and stores process in <see cref="WebhookSendAttempt"/>
+        /// Should throw exception if fails or response status not succeed
         /// </summary>
-        /// <returns>If progress done</returns>
-        Task<bool> TrySendWebhookAsync(WebhookSenderArgs webhookSenderArgs);
+        Task SendWebhookAsync(WebhookSenderArgs webhookSenderArgs);
 
         /// <summary>
         /// Tries to send webhook with given transactionId and stores process in <see cref="WebhookSendAttempt"/>
+        /// Should throw exception if fails or response status not succeed
         /// </summary>
-        /// <returns>If transaction done</returns>
-        bool TrySendWebhook(WebhookSenderArgs webhookSenderArgs);
+        void SendWebhook(WebhookSenderArgs webhookSenderArgs);
     }
 }

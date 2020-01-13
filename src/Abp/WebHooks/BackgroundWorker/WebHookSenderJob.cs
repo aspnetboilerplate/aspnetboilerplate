@@ -7,16 +7,13 @@ namespace Abp.Webhooks.BackgroundWorker
     public class WebhookSenderJob : BackgroundJob<WebhookSenderArgs>, ITransientDependency
     {
         private readonly IIocResolver _iocResolver;
-        private readonly IBackgroundJobManager _backgroundJobManager;
         private readonly IWebhooksConfiguration _webhooksConfiguration;
 
         public WebhookSenderJob(
             IIocResolver iocResolver,
-            IBackgroundJobManager backgroundJobManager,
             IWebhooksConfiguration webhooksConfiguration)
         {
             _iocResolver = iocResolver;
-            _backgroundJobManager = backgroundJobManager;
             _webhooksConfiguration = webhooksConfiguration;
         }
 
@@ -34,20 +31,16 @@ namespace Abp.Webhooks.BackgroundWorker
 
             using (var webhookSender = _iocResolver.ResolveAsDisposable<IWebhookSender>())
             {
-                if (webhookSender.Object.TrySendWebhook(args))
+                using (var webhookSendAttemptStore = _iocResolver.ResolveAsDisposable<IWebhookSendAttemptStore>())
                 {
-                    return;
-                }
+                    var sendAttemptCount = webhookSendAttemptStore.Object.GetSendAttemptCount(args.TenantId, args.WebhookId, args.WebhookSubscriptionId);
 
-                using (var workItemStore = _iocResolver.ResolveAsDisposable<IWebhookSendAttemptStore>())
-                {
-                    var sendAttemptCount = workItemStore.Object.GetSendAttemptCount(args.TenantId, args.WebhookId, args.WebhookSubscriptionId);
-
-                    if (sendAttemptCount < _webhooksConfiguration.MaxSendAttemptCount)
+                    if (sendAttemptCount > _webhooksConfiguration.MaxSendAttemptCount)
                     {
-                        //try send again
-                        _backgroundJobManager.Enqueue<WebhookSenderJob, WebhookSenderArgs>(args);
+                        return;
                     }
+
+                    webhookSender.Object.SendWebhook(args);
                 }
             }
         }
