@@ -23,7 +23,7 @@ namespace Abp.WebHooks
         public string WebHookUri { get; set; }
 
         /// <summary>
-        /// User webhook secret
+        /// Webhook secret
         /// </summary>
         [Required]
         public string Secret { get; set; }
@@ -36,9 +36,9 @@ namespace Abp.WebHooks
         /// <summary>
         /// Subscribed webhook definitions unique names.It contains webhook definitions list as json
         /// <para>
-        /// Do not change it manually. Use <see cref="WebHookSubscriptionExtensions.AddWebHookDefinition"/>,
-        /// <see cref="WebHookSubscriptionExtensions.RemoveWebHookDefinition"/> and
-        /// <see cref="WebHookSubscriptionExtensions.ClearAllSubscriptions"/> to change it.
+        /// Do not change it manually. Use <see cref="WebHookSubscriptionExtensions.SubscribeWebhook"/>,
+        /// <see cref="WebHookSubscriptionExtensions.UnsubscribeWebhook"/> and
+        /// <see cref="WebHookSubscriptionExtensions.RemoveAllSubscribedWebhooks"/> to change it.
         /// </para> 
         /// </summary>
         public string WebHookDefinitions { get; set; }

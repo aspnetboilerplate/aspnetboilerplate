@@ -42,9 +42,9 @@ namespace Abp.WebHooks.BackgroundWorker
 
                 using (var workItemStore = _iocResolver.ResolveAsDisposable<IWebhookSendAttemptStore>())
                 {
-                    var repetitionCount = workItemStore.Object.GetRepetitionCount(args.TenantId, args.WebHookId, args.WebHookSubscriptionId);
+                    var sendAttemptCount = workItemStore.Object.GetSendAttemptCount(args.TenantId, args.WebHookId, args.WebHookSubscriptionId);
 
-                    if (repetitionCount < _webHooksConfiguration.MaxRepetitionCount)
+                    if (sendAttemptCount < _webHooksConfiguration.MaxSendAttemptCount)
                     {
                         //try send again
                         _backgroundJobManager.Enqueue<WebHookSenderJob, WebHookSenderInput>(args);

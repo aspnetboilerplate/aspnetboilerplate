@@ -63,6 +63,11 @@ namespace Abp.WebHooks
 
         public WebHookDefinition Get(string name)
         {
+            if (!_webHookDefinitions.ContainsKey(name))
+            {
+                throw new KeyNotFoundException($"Webhook definitions does not contain a definition with the key \"{name}\".");
+            }
+
             return _webHookDefinitions[name];
         }
 

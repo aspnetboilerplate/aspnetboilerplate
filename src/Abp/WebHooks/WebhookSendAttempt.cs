@@ -10,7 +10,7 @@ namespace Abp.WebHooks
     /// Table for store webhook work items. Each item stores web hook send attempt of <see cref="WebHookInfo"/> to subscribed tenants
     /// </summary>
     [Table("AbpWebhookSendAttempts")]
-    public class WebhookSendAttempt : Entity<Guid>, IMayHaveTenant, IHasCreationTime, IHasModificationTime, ISoftDelete
+    public class WebhookSendAttempt : Entity<Guid>, IMayHaveTenant, IHasCreationTime, IHasModificationTime
     {
         /// <summary>
         /// <see cref="WebHookInfo"/> foreign id 
@@ -25,7 +25,7 @@ namespace Abp.WebHooks
         /// <summary>
         /// Webhook response content that webhook endpoint send back
         /// </summary>
-        public string ResponseContent { get; set; }
+        public string Response { get; set; }
 
         /// <summary>
         /// Webhook response status code that webhook endpoint send back
@@ -37,7 +37,5 @@ namespace Abp.WebHooks
         public DateTime? LastModificationTime { get; set; }
 
         public int? TenantId { get; set; }
-
-        public bool IsDeleted { get; set; }
     }
 }

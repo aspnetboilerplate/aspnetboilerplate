@@ -47,11 +47,11 @@ namespace Abp.WebHooks
 
                 var request = CreateWebHookRequestMessage(webHookSenderArgs);
 
-                var webHookBody = await GetWebhookBodyAsync(webHookSenderArgs);
+                var payload = await GetWebhookPayloadAsync(webHookSenderArgs);
 
                 var serializedBody = _webHooksConfiguration.JsonSerializerSettings != null
-                    ? webHookBody.ToJsonString(_webHooksConfiguration.JsonSerializerSettings)
-                    : webHookBody.ToJsonString();
+                    ? payload.ToJsonString(_webHooksConfiguration.JsonSerializerSettings)
+                    : payload.ToJsonString();
 
                 SignWebHookRequest(request, serializedBody, webHookSenderArgs.Secret);
 
@@ -64,7 +64,7 @@ namespace Abp.WebHooks
                 {
                     using (var client = new HttpClient()
                     {
-                        Timeout = _webHooksConfiguration.WebHookTimeout
+                        Timeout = _webHooksConfiguration.TimeoutDuration
                     })
                     {
                         var response = await client.SendAsync(request);
@@ -108,11 +108,11 @@ namespace Abp.WebHooks
 
                 var request = CreateWebHookRequestMessage(webHookSenderArgs);
 
-                var webHookBody = GetWebhookBody(webHookSenderArgs);
+                var payload = GetWebhookPayload(webHookSenderArgs);
 
                 var serializedBody = _webHooksConfiguration.JsonSerializerSettings != null
-                    ? webHookBody.ToJsonString(_webHooksConfiguration.JsonSerializerSettings)
-                    : webHookBody.ToJsonString();
+                    ? payload.ToJsonString(_webHooksConfiguration.JsonSerializerSettings)
+                    : payload.ToJsonString();
 
                 SignWebHookRequest(request, serializedBody, webHookSenderArgs.Secret);
 
@@ -125,7 +125,7 @@ namespace Abp.WebHooks
                 {
                     using (var client = new HttpClient()
                     {
-                        Timeout = _webHooksConfiguration.WebHookTimeout
+                        Timeout = _webHooksConfiguration.TimeoutDuration
                     })
                     {
                         var response = AsyncHelper.RunSync(() => client.SendAsync(request));
@@ -189,7 +189,7 @@ namespace Abp.WebHooks
             var webhookSendAttempt = await WebhookSendAttemptStore.GetAsync(tenantId, webhookSendAttemptId);
 
             webhookSendAttempt.ResponseStatusCode = statusCode;
-            webhookSendAttempt.ResponseContent = content;
+            webhookSendAttempt.Response = content;
 
             await WebhookSendAttemptStore.UpdateAsync(webhookSendAttempt);
         }
@@ -200,7 +200,7 @@ namespace Abp.WebHooks
             var webhookSendAttempt = WebhookSendAttemptStore.Get(tenantId, webhookSendAttemptId);
 
             webhookSendAttempt.ResponseStatusCode = statusCode;
-            webhookSendAttempt.ResponseContent = content;
+            webhookSendAttempt.Response = content;
 
             WebhookSendAttemptStore.Update(webhookSendAttempt);
         }
@@ -214,31 +214,31 @@ namespace Abp.WebHooks
             return new HttpRequestMessage(HttpMethod.Post, webHookSenderArgs.WebHookUri);
         }
 
-        protected virtual async Task<WebhookBody> GetWebhookBodyAsync(WebHookSenderInput webHookSenderArgs)
+        protected virtual async Task<WebhookPayload> GetWebhookPayloadAsync(WebHookSenderInput webHookSenderArgs)
         {
             dynamic data = _webHooksConfiguration.JsonSerializerSettings != null
                 ? webHookSenderArgs.Data.FromJsonString<dynamic>(_webHooksConfiguration.JsonSerializerSettings)
                 : webHookSenderArgs.Data.FromJsonString<dynamic>();
 
-            return new WebhookBody
+            return new WebhookPayload
             {
                 Event = webHookSenderArgs.WebHookDefinition,
                 Data = data,
-                Attempt = await WebhookSendAttemptStore.GetRepetitionCountAsync(webHookSenderArgs.TenantId, webHookSenderArgs.WebHookId, webHookSenderArgs.WebHookSubscriptionId) + 1
+                Attempt = await WebhookSendAttemptStore.GetSendAttemptCountAsync(webHookSenderArgs.TenantId, webHookSenderArgs.WebHookId, webHookSenderArgs.WebHookSubscriptionId) + 1
             };
         }
 
-        protected virtual WebhookBody GetWebhookBody(WebHookSenderInput webHookSenderArgs)
+        protected virtual WebhookPayload GetWebhookPayload(WebHookSenderInput webHookSenderArgs)
         {
             dynamic data = _webHooksConfiguration.JsonSerializerSettings != null
                 ? webHookSenderArgs.Data.FromJsonString<dynamic>(_webHooksConfiguration.JsonSerializerSettings)
                 : webHookSenderArgs.Data.FromJsonString<dynamic>();
 
-            return new WebhookBody
+            return new WebhookPayload
             {
                 Event = webHookSenderArgs.WebHookDefinition,
                 Data = data,
-                Attempt = WebhookSendAttemptStore.GetRepetitionCount(webHookSenderArgs.TenantId, webHookSenderArgs.WebHookId, webHookSenderArgs.WebHookSubscriptionId) + 1
+                Attempt = WebhookSendAttemptStore.GetSendAttemptCount(webHookSenderArgs.TenantId, webHookSenderArgs.WebHookId, webHookSenderArgs.WebHookSubscriptionId) + 1
             };
         }
 

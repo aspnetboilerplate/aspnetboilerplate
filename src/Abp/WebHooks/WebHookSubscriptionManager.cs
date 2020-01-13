@@ -127,7 +127,7 @@ namespace Abp.WebHooks
         {
             await CheckPermissionsAsync(subscription.TenantId, webHookName);
 
-            subscription.AddWebHookDefinition(webHookName);
+            subscription.SubscribeWebhook(webHookName);
         }
 
         [UnitOfWork]
@@ -135,7 +135,7 @@ namespace Abp.WebHooks
         {
             CheckPermissions(subscription.TenantId, webHookName);
 
-            subscription.AddWebHookDefinition(webHookName);
+            subscription.SubscribeWebhook(webHookName);
         }
 
         #region PermissionCheck

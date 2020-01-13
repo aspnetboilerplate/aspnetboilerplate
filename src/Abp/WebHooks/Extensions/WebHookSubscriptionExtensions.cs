@@ -11,7 +11,7 @@ namespace Abp.WebHooks
         /// Return List of subscribed webhooks definitions <see cref="WebHookSubscriptionInfo.WebHookDefinitions"/>
         /// </summary>
         /// <returns></returns>
-        public static List<string> GetWebHookDefinitions(this WebHookSubscriptionInfo webHookSubscription)
+        public static List<string> GetSubscribedWebhooks(this WebHookSubscriptionInfo webHookSubscription)
         {
             if (string.IsNullOrWhiteSpace(webHookSubscription.WebHookDefinitions))
             {
@@ -26,7 +26,7 @@ namespace Abp.WebHooks
         /// </summary>
         /// <param name="webHookSubscription"></param>
         /// <param name="name">webhook unique name</param>
-        public static void AddWebHookDefinition(this WebHookSubscriptionInfo webHookSubscription, string name)
+        public static void SubscribeWebhook(this WebHookSubscriptionInfo webHookSubscription, string name)
         {
             name = name.Trim();
             if (string.IsNullOrWhiteSpace(name))
@@ -34,7 +34,7 @@ namespace Abp.WebHooks
                 throw new ArgumentNullException(nameof(name), $"{nameof(name)} can not be null, empty or whitespace!");
             }
 
-            var webHookDefinitions = webHookSubscription.GetWebHookDefinitions();
+            var webHookDefinitions = webHookSubscription.GetSubscribedWebhooks();
             if (webHookDefinitions.Contains(name))
             {
                 return;
@@ -49,7 +49,7 @@ namespace Abp.WebHooks
         /// </summary>
         /// <param name="webHookSubscription"></param>
         /// <param name="name">webhook unique name</param>
-        public static void RemoveWebHookDefinition(this WebHookSubscriptionInfo webHookSubscription, string name)
+        public static void UnsubscribeWebhook(this WebHookSubscriptionInfo webHookSubscription, string name)
         {
             name = name.Trim();
             if (string.IsNullOrWhiteSpace(name))
@@ -57,7 +57,7 @@ namespace Abp.WebHooks
                 throw new ArgumentNullException(nameof(name), $"{nameof(name)} can not be null, empty or whitespace!");
             }
 
-            var webHookDefinitions = webHookSubscription.GetWebHookDefinitions();
+            var webHookDefinitions = webHookSubscription.GetSubscribedWebhooks();
             if (!webHookDefinitions.Contains(name))
             {
                 return;
@@ -71,7 +71,7 @@ namespace Abp.WebHooks
         /// Clears all <see cref="WebHookSubscriptionInfo.WebHookDefinitions"/> 
         /// </summary>
         /// <param name="webHookSubscription"></param> 
-        public static void ClearAllSubscriptions(this WebHookSubscriptionInfo webHookSubscription)
+        public static void RemoveAllSubscribedWebhooks(this WebHookSubscriptionInfo webHookSubscription)
         {
             webHookSubscription.WebHookDefinitions = null;
         }
@@ -85,7 +85,7 @@ namespace Abp.WebHooks
                 IsActive = webHookSubscriptionInfo.IsActive,
                 Secret = webHookSubscriptionInfo.Secret,
                 WebHookUri = webHookSubscriptionInfo.WebHookUri,
-                WebHookDefinitions = webHookSubscriptionInfo.GetWebHookDefinitions().ToList(),
+                WebHookDefinitions = webHookSubscriptionInfo.GetSubscribedWebhooks().ToList(),
                 Headers = webHookSubscriptionInfo.GetWebHookHeaders()
             };
         }
@@ -115,7 +115,7 @@ namespace Abp.WebHooks
                 return false;
             }
 
-            return webHookSubscription.GetWebHookDefinitions().Contains(webHookName);
+            return webHookSubscription.GetSubscribedWebhooks().Contains(webHookName);
         }
 
         /// <summary>

@@ -9,7 +9,7 @@ namespace Abp.WebHooks
     /// Store created web hooks. To see who get that webhook check with <see cref="WebhookSendAttempt.WebHookId"/> and you can get <see cref="WebhookSendAttempt.WebHookSubscriptionId"/>
     /// </summary>
     [Table("AbpWebHooks")]
-    public class WebHookInfo : Entity<Guid>, IMayHaveTenant, IHasCreationTime, ISoftDelete
+    public class WebHookInfo : Entity<Guid>, IMayHaveTenant, IHasCreationTime, ISoftDelete, IHasDeletionTime
     {
         /// <summary>
         /// Webhook unique name id
@@ -26,5 +26,7 @@ namespace Abp.WebHooks
         public int? TenantId { get; set; }
 
         public bool IsDeleted { get; set; }
+
+        public DateTime? DeletionTime { get; set; }
     }
 }

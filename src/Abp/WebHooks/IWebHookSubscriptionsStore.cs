@@ -98,7 +98,7 @@ namespace Abp.WebHooks
         List<WebHookSubscriptionInfo> GetAllSubscriptions(int? tenantId, string webHookName);
 
         /// <summary>
-        /// Checks if a user subscribed for a webhook
+        /// Checks if tenant subscribed for a webhook
         /// </summary>
         /// <param name="tenantId">
         /// Target tenant id(s).
@@ -107,7 +107,7 @@ namespace Abp.WebHooks
         Task<bool> IsSubscribedAsync(int? tenantId, string webHookName);
 
         /// <summary>
-        /// Checks if a user subscribed for a webhook
+        /// Checks if tenant subscribed for a webhook
         /// </summary>
         /// <param name="tenantId">
         /// Target tenant id(s).

@@ -84,7 +84,7 @@ namespace Abp.WebHooks
         }
 
         [UnitOfWork]
-        public virtual async Task<int> GetRepetitionCountAsync(int? tenantId, Guid webHookId, Guid webHookSubscriptionId)
+        public virtual async Task<int> GetSendAttemptCountAsync(int? tenantId, Guid webHookId, Guid webHookSubscriptionId)
         {
             using (_unitOfWorkManager.Current.SetTenantId(tenantId))
             {
@@ -99,7 +99,7 @@ namespace Abp.WebHooks
         }
 
         [UnitOfWork]
-        public virtual int GetRepetitionCount(int? tenantId, Guid webHookId, Guid webHookSubscriptionId)
+        public virtual int GetSendAttemptCount(int? tenantId, Guid webHookId, Guid webHookSubscriptionId)
         {
             using (_unitOfWorkManager.Current.SetTenantId(tenantId))
             {

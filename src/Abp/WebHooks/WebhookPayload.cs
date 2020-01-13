@@ -1,6 +1,6 @@
 ﻿namespace Abp.WebHooks
 {
-    public class WebhookBody
+    public class WebhookPayload
     {
         public string Event { get; set; }
 

@@ -8,14 +8,14 @@ namespace Abp.WebHooks
     public interface IWebHooksConfiguration
     {
         /// <summary>
-        /// HttpClient timeout. Sender will wait <c>WebHookTimeout</c> second before throw timeout exception
+        /// HttpClient timeout. Sender will wait <c>TimeoutDuration</c> second before throw timeout exception
         /// </summary>
-        TimeSpan WebHookTimeout { get; set; }
+        TimeSpan TimeoutDuration { get; set; }
 
         /// <summary>
         ///  How many times <see cref="IWebHookPublisher"/> will try resend webhook until gets HttpStatusCode.OK 
         /// </summary>
-        int MaxRepetitionCount { get; set; }
+        int MaxSendAttemptCount { get; set; }
 
         /// <summary>
         /// Json serializer settings for converting webhook data to json, If this is null default settings will be used. <see cref="JsonExtensions.ToJsonString(object,bool,bool)"/>

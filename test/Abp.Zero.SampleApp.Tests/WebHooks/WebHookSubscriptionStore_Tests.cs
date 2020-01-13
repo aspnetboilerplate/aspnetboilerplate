@@ -42,7 +42,7 @@ namespace Abp.Zero.SampleApp.Tests.WebHooks
 
                         foreach (var definition in webHookDefinition)
                         {
-                            subscription.AddWebHookDefinition(definition);
+                            subscription.SubscribeWebhook(definition);
                         }
 
                         await _webHookSubscriptionsStore.InsertAsync(subscription);
@@ -102,7 +102,7 @@ namespace Abp.Zero.SampleApp.Tests.WebHooks
 
             foreach (var webHookSubscriptionInfo in testSubscriptions)
             {
-                webHookSubscriptionInfo.GetWebHookDefinitions().Single().ShouldBe(AppWebHookDefinitionNames.Test);
+                webHookSubscriptionInfo.GetSubscribedWebhooks().Single().ShouldBe(AppWebHookDefinitionNames.Test);
             }
 
             var userCreatedSubscriptions = _webHookSubscriptionsStore.GetAllSubscriptions(AbpSession.TenantId, AppWebHookDefinitionNames.Users.Created);
@@ -159,14 +159,14 @@ namespace Abp.Zero.SampleApp.Tests.WebHooks
             var subscribedWebHooks = await _webHookSubscriptionsStore.GetAllSubscriptionsAsync(AbpSession.TenantId);
             subscribedWebHooks.Count.ShouldBe(3);
 
-            subscribedWebHooks[0].GetWebHookDefinitions().Count.ShouldBe(1);
+            subscribedWebHooks[0].GetSubscribedWebhooks().Count.ShouldBe(1);
             subscribedWebHooks[0].WebHookDefinitions.ShouldContain(AppWebHookDefinitionNames.Test);
 
-            subscribedWebHooks[1].GetWebHookDefinitions().Count.ShouldBe(2);
+            subscribedWebHooks[1].GetSubscribedWebhooks().Count.ShouldBe(2);
             subscribedWebHooks[1].WebHookDefinitions.ShouldContain(AppWebHookDefinitionNames.Test);
             subscribedWebHooks[1].WebHookDefinitions.ShouldContain(AppWebHookDefinitionNames.Users.Created);
 
-            subscribedWebHooks[2].GetWebHookDefinitions().Count.ShouldBe(3);
+            subscribedWebHooks[2].GetSubscribedWebhooks().Count.ShouldBe(3);
             subscribedWebHooks[2].WebHookDefinitions.ShouldContain(AppWebHookDefinitionNames.Test);
             subscribedWebHooks[2].WebHookDefinitions.ShouldContain(AppWebHookDefinitionNames.Users.Created);
             subscribedWebHooks[2].WebHookDefinitions.ShouldContain(AppWebHookDefinitionNames.Theme.DefaultThemeChanged);
@@ -180,7 +180,7 @@ namespace Abp.Zero.SampleApp.Tests.WebHooks
             string headerKey = "MyHeaderKey", headerValue = "MyHeaderValue";
 
             subscription.AddWebHookHeader(headerKey, headerValue);
-            subscription.RemoveWebHookDefinition(AppWebHookDefinitionNames.Users.Created);
+            subscription.UnsubscribeWebhook(AppWebHookDefinitionNames.Users.Created);
             subscription.WebHookUri = "www.aspnetboilerplate.com";
             subscription.Secret = "secret2";
 
@@ -198,7 +198,7 @@ namespace Abp.Zero.SampleApp.Tests.WebHooks
                 }
             }
 
-            var webHookDefinitionAsList = sub.GetWebHookDefinitions();
+            var webHookDefinitionAsList = sub.GetSubscribedWebhooks();
             webHookDefinitionAsList.Count.ShouldBe(2);
             webHookDefinitionAsList[0].ShouldBe(AppWebHookDefinitionNames.Test);
             webHookDefinitionAsList[1].ShouldBe(AppWebHookDefinitionNames.Theme.DefaultThemeChanged);
@@ -256,7 +256,7 @@ namespace Abp.Zero.SampleApp.Tests.WebHooks
 
                         foreach (var definition in webHookDefinition)
                         {
-                            subscription.AddWebHookDefinition(definition);
+                            subscription.SubscribeWebhook(definition);
                         }
 
                         _webHookSubscriptionsStore.Insert(subscription);
@@ -373,14 +373,14 @@ namespace Abp.Zero.SampleApp.Tests.WebHooks
             var subscribedWebHooks = _webHookSubscriptionsStore.GetAllSubscriptions(AbpSession.TenantId);
             subscribedWebHooks.Count.ShouldBe(3);
 
-            subscribedWebHooks[0].GetWebHookDefinitions().Count.ShouldBe(1);
+            subscribedWebHooks[0].GetSubscribedWebhooks().Count.ShouldBe(1);
             subscribedWebHooks[0].WebHookDefinitions.ShouldContain(AppWebHookDefinitionNames.Test);
 
-            subscribedWebHooks[1].GetWebHookDefinitions().Count.ShouldBe(2);
+            subscribedWebHooks[1].GetSubscribedWebhooks().Count.ShouldBe(2);
             subscribedWebHooks[1].WebHookDefinitions.ShouldContain(AppWebHookDefinitionNames.Test);
             subscribedWebHooks[1].WebHookDefinitions.ShouldContain(AppWebHookDefinitionNames.Users.Created);
 
-            subscribedWebHooks[2].GetWebHookDefinitions().Count.ShouldBe(3);
+            subscribedWebHooks[2].GetSubscribedWebhooks().Count.ShouldBe(3);
             subscribedWebHooks[2].WebHookDefinitions.ShouldContain(AppWebHookDefinitionNames.Test);
             subscribedWebHooks[2].WebHookDefinitions.ShouldContain(AppWebHookDefinitionNames.Users.Created);
             subscribedWebHooks[2].WebHookDefinitions.ShouldContain(AppWebHookDefinitionNames.Theme.DefaultThemeChanged);
@@ -394,7 +394,7 @@ namespace Abp.Zero.SampleApp.Tests.WebHooks
             string headerKey = "MyHeaderKey", headerValue = "MyHeaderValue";
 
             subscription.AddWebHookHeader(headerKey, headerValue);
-            subscription.RemoveWebHookDefinition(AppWebHookDefinitionNames.Users.Created);
+            subscription.UnsubscribeWebhook(AppWebHookDefinitionNames.Users.Created);
             subscription.WebHookUri = "www.aspnetboilerplate.com";
             subscription.Secret = "secret2";
 
@@ -412,7 +412,7 @@ namespace Abp.Zero.SampleApp.Tests.WebHooks
                 }
             }
 
-            var webHookDefinitionAsList = sub.GetWebHookDefinitions();
+            var webHookDefinitionAsList = sub.GetSubscribedWebhooks();
             webHookDefinitionAsList.Count.ShouldBe(2);
             webHookDefinitionAsList.ShouldNotContain(AppWebHookDefinitionNames.Users.Created);
             webHookDefinitionAsList[0].ShouldBe(AppWebHookDefinitionNames.Test);

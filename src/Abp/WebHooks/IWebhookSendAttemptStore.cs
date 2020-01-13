@@ -20,11 +20,11 @@ namespace Abp.WebHooks
         /// <summary>
         /// Returns work item count by given web hook id and subscription id, (How many times publisher tried to send web hook)
         /// </summary>
-        Task<int> GetRepetitionCountAsync(int? tenantId, Guid webHookId, Guid webHookSubscriptionId);
+        Task<int> GetSendAttemptCountAsync(int? tenantId, Guid webHookId, Guid webHookSubscriptionId);
 
         /// <summary>
         /// Returns work item count by given web hook id and subscription id. (How many times publisher tried to send web hook)
         /// </summary>
-        int GetRepetitionCount(int? tenantId, Guid webHookId, Guid webHookSubscriptionId);
+        int GetSendAttemptCount(int? tenantId, Guid webHookId, Guid webHookSubscriptionId);
     }
 }

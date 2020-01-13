@@ -6,9 +6,9 @@ namespace Abp.WebHooks
 {
     internal class WebHooksConfiguration : IWebHooksConfiguration
     {
-        public TimeSpan WebHookTimeout { get; set; } = TimeSpan.FromSeconds(60);
+        public TimeSpan TimeoutDuration { get; set; } = TimeSpan.FromSeconds(60);
 
-        public int MaxRepetitionCount { get; set; } = 5;
+        public int MaxSendAttemptCount { get; set; } = 5;
 
         public ITypeList<WebHookDefinitionProvider> Providers { get; }
 

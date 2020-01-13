@@ -37,7 +37,7 @@ namespace Abp.WebHooks
         public string WebHookUri { get; set; }
 
         /// <summary>
-        /// User webhook secret
+        /// Webhook secret
         /// </summary>
         public string Secret { get; set; }
 

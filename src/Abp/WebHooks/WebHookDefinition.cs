@@ -37,11 +37,6 @@ namespace Abp.WebHooks
                 throw new ArgumentNullException(nameof(name), $"{nameof(name)} can not be null, empty or whitespace!");
             }
 
-            if (name.Contains(";"))
-            {
-                throw new ArgumentException($"{nameof(name)} can not contain ';'", nameof(name));
-            }
-
             Name = name;
             DisplayName = displayName;
             Description = description;

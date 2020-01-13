@@ -35,12 +35,12 @@ namespace Abp.WebHooks
             return default;
         }
 
-        public Task<int> GetRepetitionCountAsync(int? tenantId, Guid webHookId, Guid webHookSubscriptionId)
+        public Task<int> GetSendAttemptCountAsync(int? tenantId, Guid webHookId, Guid webHookSubscriptionId)
         {
             return Task.FromResult(int.MaxValue);
         }
 
-        public int GetRepetitionCount(int? tenantId, Guid webHookId, Guid webHookSubscriptionId)
+        public int GetSendAttemptCount(int? tenantId, Guid webHookId, Guid webHookSubscriptionId)
         {
             return int.MaxValue;
         }
