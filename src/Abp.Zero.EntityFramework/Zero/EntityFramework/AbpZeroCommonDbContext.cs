@@ -143,7 +143,7 @@ namespace Abp.Zero.EntityFramework
         /// <summary>
         /// Webhook information
         /// </summary>
-        public virtual IDbSet<WebhookInfo> Webhooks { get; set; }
+        public virtual IDbSet<WebhookEvent> WebhookEvents { get; set; }
 
         /// <summary>
         /// Web subscriptions

@@ -11,39 +11,39 @@ namespace Abp.Webhooks
     /// </summary>
     public class WebhookStore : IWebhookStore, ITransientDependency
     {
-        private readonly IRepository<WebhookInfo, Guid> _webhookRepository;
+        private readonly IRepository<WebhookEvent, Guid> _webhookRepository;
         private readonly IUnitOfWorkManager _unitOfWorkManager;
 
-        public WebhookStore(IRepository<WebhookInfo, Guid> webhookRepository, IUnitOfWorkManager unitOfWorkManager)
+        public WebhookStore(IRepository<WebhookEvent, Guid> webhookRepository, IUnitOfWorkManager unitOfWorkManager)
         {
             _webhookRepository = webhookRepository;
             _unitOfWorkManager = unitOfWorkManager;
         }
 
         [UnitOfWork]
-        public virtual async Task<Guid> InsertAndGetIdAsync(WebhookInfo webhookInfo)
+        public virtual async Task<Guid> InsertAndGetIdAsync(WebhookEvent webhookEvent)
         {
-            using (_unitOfWorkManager.Current.SetTenantId(webhookInfo.TenantId))
+            using (_unitOfWorkManager.Current.SetTenantId(webhookEvent.TenantId))
             {
-                var id = await _webhookRepository.InsertAndGetIdAsync(webhookInfo);
+                var id = await _webhookRepository.InsertAndGetIdAsync(webhookEvent);
                 await _unitOfWorkManager.Current.SaveChangesAsync();
                 return id;
             }
         }
 
         [UnitOfWork]
-        public virtual Guid InsertAndGetId(WebhookInfo webhookInfo)
+        public virtual Guid InsertAndGetId(WebhookEvent webhookEvent)
         {
-            using (_unitOfWorkManager.Current.SetTenantId(webhookInfo.TenantId))
+            using (_unitOfWorkManager.Current.SetTenantId(webhookEvent.TenantId))
             {
-                var id = _webhookRepository.InsertAndGetId(webhookInfo);
+                var id = _webhookRepository.InsertAndGetId(webhookEvent);
                 _unitOfWorkManager.Current.SaveChanges();
                 return id;
             }
         }
 
         [UnitOfWork]
-        public virtual Task<WebhookInfo> GetAsync(int? tenantId, Guid id)
+        public virtual Task<WebhookEvent> GetAsync(int? tenantId, Guid id)
         {
             using (_unitOfWorkManager.Current.SetTenantId(tenantId))
             {
@@ -52,7 +52,7 @@ namespace Abp.Webhooks
         }
 
         [UnitOfWork]
-        public virtual WebhookInfo Get(int? tenantId, Guid id)
+        public virtual WebhookEvent Get(int? tenantId, Guid id)
         {
             using (_unitOfWorkManager.Current.SetTenantId(tenantId))
             {

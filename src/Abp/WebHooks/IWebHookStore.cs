@@ -8,21 +8,21 @@ namespace Abp.Webhooks
         /// <summary>
         /// Inserts to persistent store
         /// </summary>
-        Task<Guid> InsertAndGetIdAsync(WebhookInfo webhookInfo);
+        Task<Guid> InsertAndGetIdAsync(WebhookEvent webhookEvent);
 
         /// <summary>
         /// Inserts to persistent store
         /// </summary>
-        Guid InsertAndGetId(WebhookInfo webhookInfo);
+        Guid InsertAndGetId(WebhookEvent webhookEvent);
 
         /// <summary>
         /// Gets Webhook info by id
         /// </summary>
-        Task<WebhookInfo> GetAsync(int? tenantId, Guid id);
+        Task<WebhookEvent> GetAsync(int? tenantId, Guid id);
 
         /// <summary>
         /// Gets Webhook info by id
         /// </summary>
-        WebhookInfo Get(int? tenantId, Guid id);
+        WebhookEvent Get(int? tenantId, Guid id);
     }
 }

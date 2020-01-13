@@ -70,7 +70,7 @@ namespace Abp.Zero.EntityFramework
             SetTableName<UserClaim>(modelBuilder, prefix + "UserClaims", schemaName);
             SetTableName<RoleClaim>(modelBuilder, prefix + "RoleClaims", schemaName);
             SetTableName<UserToken>(modelBuilder, prefix + "UserTokens", schemaName);
-            SetTableName<WebhookInfo>(modelBuilder, prefix + "Webhooks", schemaName);
+            SetTableName<WebhookEvent>(modelBuilder, prefix + "WebhookEvents", schemaName);
             SetTableName<WebhookSubscriptionInfo>(modelBuilder, prefix + "WebhookSubscriptions", schemaName);
             SetTableName<WebhookSendAttempt>(modelBuilder, prefix + "WebhookSendAttempts", schemaName);
         }

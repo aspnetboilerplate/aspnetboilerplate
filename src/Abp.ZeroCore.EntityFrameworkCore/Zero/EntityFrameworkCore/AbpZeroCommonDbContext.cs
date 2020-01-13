@@ -144,7 +144,7 @@ namespace Abp.Zero.EntityFrameworkCore
         /// <summary>
         /// Webhook information
         /// </summary>
-        public virtual DbSet<WebhookInfo> Webhooks { get; set; }
+        public virtual DbSet<WebhookEvent> WebhookEvents { get; set; }
 
         /// <summary>
         /// Web subscriptions

@@ -10,7 +10,7 @@ namespace Abp.Webhooks
         //Webhook information 
 
         /// <summary>
-        /// <see cref="WebhookInfo"/> foreign id 
+        /// <see cref="WebhookEvent"/> foreign id 
         /// </summary>
         public Guid WebhookId { get; set; }
 

@@ -11,22 +11,22 @@ namespace Abp.Webhooks
     {
         public static NullWebhookStore Instance { get; } = new NullWebhookStore();
 
-        public Task<Guid> InsertAndGetIdAsync(WebhookInfo webhookInfo)
+        public Task<Guid> InsertAndGetIdAsync(WebhookEvent webhookEvent)
         {
             return Task.FromResult<Guid>(default);
         }
 
-        public Guid InsertAndGetId(WebhookInfo webhookInfo)
+        public Guid InsertAndGetId(WebhookEvent webhookEvent)
         {
             return default;
         }
 
-        public Task<WebhookInfo> GetAsync(int? tenantId, Guid id)
+        public Task<WebhookEvent> GetAsync(int? tenantId, Guid id)
         {
-            return Task.FromResult<WebhookInfo>(default);
+            return Task.FromResult<WebhookEvent>(default);
         }
 
-        public WebhookInfo Get(int? tenantId, Guid id)
+        public WebhookEvent Get(int? tenantId, Guid id)
         {
             return default;
         }

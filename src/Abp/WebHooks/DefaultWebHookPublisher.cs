@@ -109,9 +109,9 @@ namespace Abp.Webhooks
             }
         }
 
-        protected virtual async Task<WebhookInfo> SaveAndGetWebhookAsync(int? tenantId, string webhookName, object data)
+        protected virtual async Task<WebhookEvent> SaveAndGetWebhookAsync(int? tenantId, string webhookName, object data)
         {
-            var webhookInfo = new WebhookInfo()
+            var webhookInfo = new WebhookEvent()
             {
                 Id = _guidGenerator.Create(),
                 WebhookName = webhookName,
@@ -125,9 +125,9 @@ namespace Abp.Webhooks
             return webhookInfo;
         }
 
-        protected virtual WebhookInfo SaveAndGetWebhook(int? tenantId, string webhookName, object data)
+        protected virtual WebhookEvent SaveAndGetWebhook(int? tenantId, string webhookName, object data)
         {
-            var webhookInfo = new WebhookInfo()
+            var webhookInfo = new WebhookEvent()
             {
                 Id = _guidGenerator.Create(),
                 WebhookName = webhookName,

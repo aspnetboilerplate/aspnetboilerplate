@@ -7,13 +7,13 @@ using Abp.Domain.Entities.Auditing;
 namespace Abp.Webhooks
 {
     /// <summary>
-    /// Table for store webhook work items. Each item stores web hook send attempt of <see cref="WebhookInfo"/> to subscribed tenants
+    /// Table for store webhook work items. Each item stores web hook send attempt of <see cref="WebhookEvent"/> to subscribed tenants
     /// </summary>
     [Table("AbpWebhookSendAttempts")]
     public class WebhookSendAttempt : Entity<Guid>, IMayHaveTenant, IHasCreationTime, IHasModificationTime
     {
         /// <summary>
-        /// <see cref="WebhookInfo"/> foreign id 
+        /// <see cref="WebhookEvent"/> foreign id 
         /// </summary>
         public Guid WebhookId { get; set; }
 
