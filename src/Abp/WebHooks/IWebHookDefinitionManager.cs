@@ -11,11 +11,6 @@ namespace Abp.Webhooks
         void Add(WebhookDefinition webhookDefinition);
 
         /// <summary>
-        /// Adds the specified webhook definition.If there is already a definition with given name, replaces it with current one
-        /// </summary>
-        void AddOrReplace(WebhookDefinition webhookDefinition);
-
-        /// <summary>
         /// Gets a webhook definition by name.
         /// Returns null if there is no webhook definition with given name.
         /// </summary>
@@ -36,8 +31,7 @@ namespace Abp.Webhooks
         /// Remove webhook with given name
         /// </summary>
         /// <param name="name">webhook definition name</param>
-        /// <param name="webhookDefinition"></param>
-        bool TryRemove(string name, out WebhookDefinition webhookDefinition);
+        bool Remove(string name);
 
         /// <summary>
         /// Checks if webhook definitions contains given webhook name 

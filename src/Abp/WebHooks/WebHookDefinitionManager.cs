@@ -1,5 +1,4 @@
-﻿using System.Collections.Concurrent;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Collections.Immutable;
 using System.Threading.Tasks;
 using Abp.Application.Features;
@@ -11,7 +10,7 @@ namespace Abp.Webhooks
     {
         private readonly IWebhooksConfiguration _webhooksConfiguration;
         private readonly IocManager _iocManager;
-        private readonly ConcurrentDictionary<string, WebhookDefinition> _webhookDefinitions;
+        private readonly Dictionary<string, WebhookDefinition> _webhookDefinitions;
 
         public WebhookDefinitionManager(
             IWebhooksConfiguration webhooksConfiguration,
@@ -20,7 +19,7 @@ namespace Abp.Webhooks
         {
             _webhooksConfiguration = webhooksConfiguration;
             _iocManager = iocManager;
-            _webhookDefinitions = new ConcurrentDictionary<string, WebhookDefinition>();
+            _webhookDefinitions = new Dictionary<string, WebhookDefinition>();
         }
 
         public void Initialize()
@@ -43,12 +42,7 @@ namespace Abp.Webhooks
                 throw new AbpInitializationException("There is already a webhook definition with given name: " + webhookDefinition.Name + ". Webhook names must be unique!");
             }
 
-            _webhookDefinitions.AddOrUpdate(webhookDefinition.Name, webhookDefinition, (s, d) => d);
-        }
-
-        public void AddOrReplace(WebhookDefinition webhookDefinition)
-        {
-            _webhookDefinitions.AddOrUpdate(webhookDefinition.Name, webhookDefinition, (s, d) => webhookDefinition);
+            _webhookDefinitions.Add(webhookDefinition.Name, webhookDefinition);
         }
 
         public WebhookDefinition GetOrNull(string name)
@@ -76,9 +70,9 @@ namespace Abp.Webhooks
             return _webhookDefinitions.Values.ToImmutableList();
         }
 
-        public bool TryRemove(string name, out WebhookDefinition webhookDefinition)
+        public bool Remove(string name)
         {
-            return _webhookDefinitions.TryRemove(name, out webhookDefinition);
+            return _webhookDefinitions.Remove(name);
         }
 
         public bool Contains(string name)
