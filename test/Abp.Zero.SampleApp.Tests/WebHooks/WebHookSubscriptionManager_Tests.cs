@@ -20,7 +20,7 @@ namespace Abp.Zero.SampleApp.Tests.Webhooks
             return new WebhookSubscription
             {
                 TenantId = tenantId,
-                WebhookDefinitions = webhookDefinitions.ToList(),
+                Webhooks = webhookDefinitions.ToList(),
                 WebhookUri = "www.mywebhook.com",
                 Headers = new Dictionary<string, string>
                 {
@@ -34,7 +34,7 @@ namespace Abp.Zero.SampleApp.Tests.Webhooks
             return new WebhookSubscription
             {
                 TenantId = tenantId,
-                WebhookDefinitions = webhookDefinitions.ToList(),
+                Webhooks = webhookDefinitions.ToList(),
                 WebhookUri = "www.mywebhook.com/" + seed,
                 Headers = new Dictionary<string, string>
                 {
@@ -45,12 +45,12 @@ namespace Abp.Zero.SampleApp.Tests.Webhooks
 
         private void CompareSubscriptions(WebhookSubscription subscription1, WebhookSubscription subscription2)
         {
-            subscription1.WebhookDefinitions.ShouldBe(subscription2.WebhookDefinitions);
+            subscription1.Webhooks.ShouldBe(subscription2.Webhooks);
             subscription1.TenantId.ShouldBe(subscription2.TenantId);
             subscription1.Secret.ShouldNotBeNullOrEmpty();
             subscription1.Secret.ShouldStartWith("whs_");
             subscription1.WebhookUri.ShouldBe(subscription2.WebhookUri);
-            subscription1.WebhookDefinitions.ShouldBe(subscription2.WebhookDefinitions);
+            subscription1.Webhooks.ShouldBe(subscription2.Webhooks);
             subscription1.Headers.ShouldBe(subscription2.Headers);
         }
 
@@ -95,7 +95,7 @@ namespace Abp.Zero.SampleApp.Tests.Webhooks
             var newWebhookUri = "www.mynewwebhook.com";
             subscription.WebhookUri = newWebhookUri;
 
-            subscription.WebhookDefinitions.Add(AppWebhookDefinitionNames.Test);
+            subscription.Webhooks.Add(AppWebhookDefinitionNames.Test);
 
             var newHeader = new KeyValuePair<string, string>("NewKey", "NewValue");
             subscription.Headers.Add(newHeader);
@@ -109,8 +109,8 @@ namespace Abp.Zero.SampleApp.Tests.Webhooks
 
                  updatedSubscription.WebhookUri.ShouldBe(newWebhookUri);
 
-                 updatedSubscription.WebhookDefinitions.ShouldContain(AppWebhookDefinitionNames.Test);
-                 updatedSubscription.WebhookDefinitions.ShouldContain(AppWebhookDefinitionNames.Users.Created);
+                 updatedSubscription.Webhooks.ShouldContain(AppWebhookDefinitionNames.Test);
+                 updatedSubscription.Webhooks.ShouldContain(AppWebhookDefinitionNames.Users.Created);
 
                  updatedSubscription.TenantId.ShouldBe(tenantId);
 
@@ -161,7 +161,7 @@ namespace Abp.Zero.SampleApp.Tests.Webhooks
                 w.Id.ShouldBe(newSubscription.Id);
                 w.TenantId.ShouldBe(newSubscription.TenantId);
                 w.WebhookUri.ShouldBe(newSubscription.WebhookUri);
-                w.WebhookDefinitions.ShouldBe(newSubscription.WebhookDefinitions.ToJsonString());
+                w.Webhooks.ShouldBe(newSubscription.Webhooks.ToJsonString());
                 w.Headers.ShouldBe(newSubscription.Headers.ToJsonString());
                 return true;
             };
@@ -189,7 +189,7 @@ namespace Abp.Zero.SampleApp.Tests.Webhooks
                 w.Secret.ShouldNotBeNullOrEmpty();
                 w.Secret.ShouldStartWith("whs_");
                 w.WebhookUri.ShouldBe(newSubscription.WebhookUri);
-                w.WebhookDefinitions.ShouldBe(newSubscription.WebhookDefinitions.ToJsonString());
+                w.Webhooks.ShouldBe(newSubscription.Webhooks.ToJsonString());
                 w.Headers.ShouldBe(newSubscription.Headers.ToJsonString());
                 return true;
             };
@@ -215,7 +215,7 @@ namespace Abp.Zero.SampleApp.Tests.Webhooks
                 w.Id.ShouldBe(newSubscription.Id);
                 w.TenantId.ShouldBe(newSubscription.TenantId);
                 w.WebhookUri.ShouldBe(newSubscription.WebhookUri);
-                w.WebhookDefinitions.ShouldBe(newSubscription.WebhookDefinitions.ToJsonString());
+                w.Webhooks.ShouldBe(newSubscription.Webhooks.ToJsonString());
                 w.Headers.ShouldBe(newSubscription.Headers.ToJsonString());
                 return true;
             };
@@ -444,7 +444,7 @@ namespace Abp.Zero.SampleApp.Tests.Webhooks
             var newWebhookUri = "www.mynewwebhook.com";
             storedSubscription.WebhookUri = newWebhookUri;
 
-            storedSubscription.WebhookDefinitions.Add(AppWebhookDefinitionNames.Test);
+            storedSubscription.Webhooks.Add(AppWebhookDefinitionNames.Test);
 
             var newHeader = new KeyValuePair<string, string>("NewKey", "NewValue");
             storedSubscription.Headers.Add(newHeader);
@@ -459,8 +459,8 @@ namespace Abp.Zero.SampleApp.Tests.Webhooks
                 updatedSubscription.Secret.ShouldStartWith("whs_");
                 updatedSubscription.WebhookUri.ShouldBe(newWebhookUri);
 
-                updatedSubscription.WebhookDefinitions.ShouldContain(AppWebhookDefinitionNames.Test);
-                updatedSubscription.WebhookDefinitions.ShouldContain(AppWebhookDefinitionNames.Users.Created);
+                updatedSubscription.Webhooks.ShouldContain(AppWebhookDefinitionNames.Test);
+                updatedSubscription.Webhooks.ShouldContain(AppWebhookDefinitionNames.Users.Created);
 
                 updatedSubscription.TenantId.ShouldBe(tenantId);
 
@@ -508,7 +508,7 @@ namespace Abp.Zero.SampleApp.Tests.Webhooks
                 w.Id.ShouldBe(newSubscription.Id);
                 w.TenantId.ShouldBe(newSubscription.TenantId);
                 w.WebhookUri.ShouldBe(newSubscription.WebhookUri);
-                w.WebhookDefinitions.ShouldBe(newSubscription.WebhookDefinitions.ToJsonString());
+                w.Webhooks.ShouldBe(newSubscription.Webhooks.ToJsonString());
                 w.Headers.ShouldBe(newSubscription.Headers.ToJsonString());
                 return true;
             };
@@ -537,7 +537,7 @@ namespace Abp.Zero.SampleApp.Tests.Webhooks
                 w.Secret.ShouldNotBeNullOrEmpty();
                 w.Secret.ShouldStartWith("whs_");
                 w.WebhookUri.ShouldBe(newSubscription.WebhookUri);
-                w.WebhookDefinitions.ShouldBe(newSubscription.WebhookDefinitions.ToJsonString());
+                w.Webhooks.ShouldBe(newSubscription.Webhooks.ToJsonString());
                 w.Headers.ShouldBe(newSubscription.Headers.ToJsonString());
                 return true;
             };
@@ -564,7 +564,7 @@ namespace Abp.Zero.SampleApp.Tests.Webhooks
                 w.Id.ShouldBe(newSubscription.Id);
                 w.TenantId.ShouldBe(newSubscription.TenantId);
                 w.WebhookUri.ShouldBe(newSubscription.WebhookUri);
-                w.WebhookDefinitions.ShouldBe(newSubscription.WebhookDefinitions.ToJsonString());
+                w.Webhooks.ShouldBe(newSubscription.Webhooks.ToJsonString());
                 w.Headers.ShouldBe(newSubscription.Headers.ToJsonString());
                 return true;
             };
@@ -583,7 +583,7 @@ namespace Abp.Zero.SampleApp.Tests.Webhooks
             var webhookSubscriptionManager = Resolve<IWebhookSubscriptionManager>();
             webhookSubscriptionManager.AddOrUpdateSubscription(newSubscription);
 
-            newSubscription.WebhookDefinitions.Add(AppWebhookDefinitionNames.Users.Deleted);
+            newSubscription.Webhooks.Add(AppWebhookDefinitionNames.Users.Deleted);
 
             Assert.Throws<AbpAuthorizationException>(() =>
             {

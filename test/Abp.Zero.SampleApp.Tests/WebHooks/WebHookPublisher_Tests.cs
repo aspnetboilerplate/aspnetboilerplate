@@ -30,12 +30,12 @@ namespace Abp.Zero.SampleApp.Tests.Webhooks
 
         #region Async
         /// <summary>
-        /// Creates tenant with adding feature(s), then creates predicate for WebhookSenderInput which publisher should send to WebhookSenderJob
+        /// Creates tenant with adding feature(s), then creates predicate for WebhookSenderArgs which publisher should send to WebhookSenderJob
         /// </summary>
         /// <param name="webhookDefinition"></param>
         /// <param name="tenantFeatures"></param>
         /// <returns></returns>
-        private async Task<(int? tenantId, object data, Predicate<WebhookSenderInput> predicate)> InitializeTestCase(string webhookDefinition, Dictionary<string, string> tenantFeatures)
+        private async Task<(int? tenantId, object data, Predicate<WebhookSenderArgs> predicate)> InitializeTestCase(string webhookDefinition, Dictionary<string, string> tenantFeatures)
         {
             var subscription = await CreateTenantAndSubscribeToWebhookAsync(webhookDefinition, tenantFeatures);
 
@@ -43,7 +43,7 @@ namespace Abp.Zero.SampleApp.Tests.Webhooks
 
             var data = new { Name = "Musa", Surname = "Demir" };
 
-            Predicate<WebhookSenderInput> predicate = w =>
+            Predicate<WebhookSenderArgs> predicate = w =>
             {
                 w.Secret.ShouldNotBeNullOrEmpty();
                 w.Secret.ShouldStartWith("whs_");
@@ -80,7 +80,7 @@ namespace Abp.Zero.SampleApp.Tests.Webhooks
                     Surname = "Demir"
                 });
 
-            await _backgroundJobManagerSubstitute.DidNotReceive().EnqueueAsync<WebhookSenderJob, WebhookSenderInput>(Arg.Any<WebhookSenderInput>());
+            await _backgroundJobManagerSubstitute.DidNotReceive().EnqueueAsync<WebhookSenderJob, WebhookSenderArgs>(Arg.Any<WebhookSenderArgs>());
         }
 
         [Fact]
@@ -95,7 +95,7 @@ namespace Abp.Zero.SampleApp.Tests.Webhooks
             await _webhookPublisher.PublishAsync(AppWebhookDefinitionNames.Users.Created, data, tenantId);
 
             await _backgroundJobManagerSubstitute.Received()
-                .EnqueueAsync<WebhookSenderJob, WebhookSenderInput>(Arg.Is<WebhookSenderInput>(w => predicate(w)));
+                .EnqueueAsync<WebhookSenderJob, WebhookSenderArgs>(Arg.Is<WebhookSenderArgs>(w => predicate(w)));
         }
 
         [Fact]
@@ -112,7 +112,7 @@ namespace Abp.Zero.SampleApp.Tests.Webhooks
             await _webhookPublisher.PublishAsync(AppWebhookDefinitionNames.Users.Created, data);
 
             await _backgroundJobManagerSubstitute.Received()
-                .EnqueueAsync<WebhookSenderJob, WebhookSenderInput>(Arg.Is<WebhookSenderInput>(w => predicate(w)));
+                .EnqueueAsync<WebhookSenderJob, WebhookSenderArgs>(Arg.Is<WebhookSenderArgs>(w => predicate(w)));
         }
 
         [Fact]
@@ -126,7 +126,7 @@ namespace Abp.Zero.SampleApp.Tests.Webhooks
             await _webhookPublisher.PublishAsync(AppWebhookDefinitionNames.Users.Created, new { Name = "Musa", Surname = "Demir" }, subscription.TenantId);
 
             //should not try to send
-            await _backgroundJobManagerSubstitute.DidNotReceive().EnqueueAsync<WebhookSenderJob, WebhookSenderInput>(Arg.Any<WebhookSenderInput>());
+            await _backgroundJobManagerSubstitute.DidNotReceive().EnqueueAsync<WebhookSenderJob, WebhookSenderArgs>(Arg.Any<WebhookSenderArgs>());
         }
 
         [Fact]
@@ -142,7 +142,7 @@ namespace Abp.Zero.SampleApp.Tests.Webhooks
             await _webhookPublisher.PublishAsync(AppWebhookDefinitionNames.Users.Created, new { Name = "Musa", Surname = "Demir" });
 
             //should not try to send
-            await _backgroundJobManagerSubstitute.DidNotReceive().EnqueueAsync<WebhookSenderJob, WebhookSenderInput>(Arg.Any<WebhookSenderInput>());
+            await _backgroundJobManagerSubstitute.DidNotReceive().EnqueueAsync<WebhookSenderJob, WebhookSenderArgs>(Arg.Any<WebhookSenderArgs>());
         }
 
         [Fact]
@@ -158,7 +158,7 @@ namespace Abp.Zero.SampleApp.Tests.Webhooks
             await _webhookPublisher.PublishAsync(AppWebhookDefinitionNames.Users.Deleted, data, tenantId);
 
             await _backgroundJobManagerSubstitute.Received()
-                .EnqueueAsync<WebhookSenderJob, WebhookSenderInput>(Arg.Is<WebhookSenderInput>(w => predicate(w)));
+                .EnqueueAsync<WebhookSenderJob, WebhookSenderArgs>(Arg.Is<WebhookSenderArgs>(w => predicate(w)));
 
             _backgroundJobManagerSubstitute.ClearReceivedCalls();
 
@@ -173,7 +173,7 @@ namespace Abp.Zero.SampleApp.Tests.Webhooks
             await _webhookPublisher.PublishAsync(AppWebhookDefinitionNames.Theme.DefaultThemeChanged, data2, tenantId2);
 
             await _backgroundJobManagerSubstitute.Received()
-                .EnqueueAsync<WebhookSenderJob, WebhookSenderInput>(Arg.Is<WebhookSenderInput>(w => predicate2(w)));
+                .EnqueueAsync<WebhookSenderJob, WebhookSenderArgs>(Arg.Is<WebhookSenderArgs>(w => predicate2(w)));
         }
 
         [Fact]
@@ -190,7 +190,7 @@ namespace Abp.Zero.SampleApp.Tests.Webhooks
             await _webhookPublisher.PublishAsync(AppWebhookDefinitionNames.Users.Deleted, data);
 
             await _backgroundJobManagerSubstitute.Received()
-                .EnqueueAsync<WebhookSenderJob, WebhookSenderInput>(Arg.Is<WebhookSenderInput>(w => predicate(w)));
+                .EnqueueAsync<WebhookSenderJob, WebhookSenderArgs>(Arg.Is<WebhookSenderArgs>(w => predicate(w)));
 
             _backgroundJobManagerSubstitute.ClearReceivedCalls();
 
@@ -206,7 +206,7 @@ namespace Abp.Zero.SampleApp.Tests.Webhooks
             await _webhookPublisher.PublishAsync(AppWebhookDefinitionNames.Theme.DefaultThemeChanged, data2);
 
             await _backgroundJobManagerSubstitute.Received()
-                .EnqueueAsync<WebhookSenderJob, WebhookSenderInput>(Arg.Is<WebhookSenderInput>(w => predicate2(w)));
+                .EnqueueAsync<WebhookSenderJob, WebhookSenderArgs>(Arg.Is<WebhookSenderArgs>(w => predicate2(w)));
         }
 
         [Fact]
@@ -226,7 +226,7 @@ namespace Abp.Zero.SampleApp.Tests.Webhooks
             await _webhookPublisher.PublishAsync(AppWebhookDefinitionNames.Theme.DefaultThemeChanged, new { Name = "Musa", Surname = "Demir" }, subscription.TenantId);
 
             //should not try to send
-            await _backgroundJobManagerSubstitute.DidNotReceive().EnqueueAsync<WebhookSenderJob, WebhookSenderInput>(Arg.Any<WebhookSenderInput>());
+            await _backgroundJobManagerSubstitute.DidNotReceive().EnqueueAsync<WebhookSenderJob, WebhookSenderArgs>(Arg.Any<WebhookSenderArgs>());
         }
 
         [Fact]
@@ -247,7 +247,7 @@ namespace Abp.Zero.SampleApp.Tests.Webhooks
             await _webhookPublisher.PublishAsync(AppWebhookDefinitionNames.Theme.DefaultThemeChanged, new { Name = "Musa", Surname = "Demir" });
 
             //should not try to send
-            await _backgroundJobManagerSubstitute.DidNotReceive().EnqueueAsync<WebhookSenderJob, WebhookSenderInput>(Arg.Any<WebhookSenderInput>());
+            await _backgroundJobManagerSubstitute.DidNotReceive().EnqueueAsync<WebhookSenderJob, WebhookSenderArgs>(Arg.Any<WebhookSenderArgs>());
         }
 
         [Fact]
@@ -258,7 +258,7 @@ namespace Abp.Zero.SampleApp.Tests.Webhooks
                 TenantId = null,
                 Secret = "secret",
                 WebhookUri = "www.mywebhook.com",
-                WebhookDefinitions = new List<string>() { AppWebhookDefinitionNames.Users.Created },
+                Webhooks = new List<string>() { AppWebhookDefinitionNames.Users.Created },
                 Headers = new Dictionary<string, string>
                 {
                     { "Key","Value"}
@@ -272,7 +272,7 @@ namespace Abp.Zero.SampleApp.Tests.Webhooks
 
             var data = new { Name = "Musa", Surname = "Demir" };
 
-            Predicate<WebhookSenderInput> predicate = w =>
+            Predicate<WebhookSenderArgs> predicate = w =>
             {
                 w.Secret.ShouldNotBeNullOrEmpty();
                 w.Secret.ShouldStartWith("whs_");
@@ -294,7 +294,7 @@ namespace Abp.Zero.SampleApp.Tests.Webhooks
             await _webhookPublisher.PublishAsync(AppWebhookDefinitionNames.Users.Created, data, null);
 
             await _backgroundJobManagerSubstitute.Received()
-                .EnqueueAsync<WebhookSenderJob, WebhookSenderInput>(Arg.Is<WebhookSenderInput>(w => predicate(w)));
+                .EnqueueAsync<WebhookSenderJob, WebhookSenderArgs>(Arg.Is<WebhookSenderArgs>(w => predicate(w)));
         }
 
         #endregion
@@ -315,7 +315,7 @@ namespace Abp.Zero.SampleApp.Tests.Webhooks
                    Surname = "Demir"
                });
 
-            _backgroundJobManagerSubstitute.DidNotReceive().Enqueue<WebhookSenderJob, WebhookSenderInput>(Arg.Any<WebhookSenderInput>());
+            _backgroundJobManagerSubstitute.DidNotReceive().Enqueue<WebhookSenderJob, WebhookSenderArgs>(Arg.Any<WebhookSenderArgs>());
         }
 
         [Fact]
@@ -330,7 +330,7 @@ namespace Abp.Zero.SampleApp.Tests.Webhooks
             _webhookPublisher.Publish(AppWebhookDefinitionNames.Users.Created, data, tenantId);
 
             _backgroundJobManagerSubstitute.Received()
-               .Enqueue<WebhookSenderJob, WebhookSenderInput>(Arg.Is<WebhookSenderInput>(w => predicate(w)));
+               .Enqueue<WebhookSenderJob, WebhookSenderArgs>(Arg.Is<WebhookSenderArgs>(w => predicate(w)));
         }
 
         [Fact]
@@ -347,7 +347,7 @@ namespace Abp.Zero.SampleApp.Tests.Webhooks
             _webhookPublisher.Publish(AppWebhookDefinitionNames.Users.Created, data);
 
             _backgroundJobManagerSubstitute.Received()
-                .Enqueue<WebhookSenderJob, WebhookSenderInput>(Arg.Is<WebhookSenderInput>(w => predicate(w)));
+                .Enqueue<WebhookSenderJob, WebhookSenderArgs>(Arg.Is<WebhookSenderArgs>(w => predicate(w)));
         }
 
         [Fact]
@@ -361,7 +361,7 @@ namespace Abp.Zero.SampleApp.Tests.Webhooks
             _webhookPublisher.Publish(AppWebhookDefinitionNames.Users.Created, new { Name = "Musa", Surname = "Demir" }, subscription.TenantId);
 
             //should not try to send
-            _backgroundJobManagerSubstitute.DidNotReceive().Enqueue<WebhookSenderJob, WebhookSenderInput>(Arg.Any<WebhookSenderInput>());
+            _backgroundJobManagerSubstitute.DidNotReceive().Enqueue<WebhookSenderJob, WebhookSenderArgs>(Arg.Any<WebhookSenderArgs>());
         }
 
         [Fact]
@@ -377,7 +377,7 @@ namespace Abp.Zero.SampleApp.Tests.Webhooks
             _webhookPublisher.Publish(AppWebhookDefinitionNames.Users.Created, new { Name = "Musa", Surname = "Demir" });
 
             //should not try to send
-            _backgroundJobManagerSubstitute.DidNotReceive().Enqueue<WebhookSenderJob, WebhookSenderInput>(Arg.Any<WebhookSenderInput>());
+            _backgroundJobManagerSubstitute.DidNotReceive().Enqueue<WebhookSenderJob, WebhookSenderArgs>(Arg.Any<WebhookSenderArgs>());
         }
 
         [Fact]
@@ -394,7 +394,7 @@ namespace Abp.Zero.SampleApp.Tests.Webhooks
             _webhookPublisher.Publish(AppWebhookDefinitionNames.Users.Deleted, data, tenantId);
 
             _backgroundJobManagerSubstitute.Received()
-                .Enqueue<WebhookSenderJob, WebhookSenderInput>(Arg.Is<WebhookSenderInput>(w => predicate(w)));
+                .Enqueue<WebhookSenderJob, WebhookSenderArgs>(Arg.Is<WebhookSenderArgs>(w => predicate(w)));
 
             _backgroundJobManagerSubstitute.ClearReceivedCalls();
 
@@ -409,7 +409,7 @@ namespace Abp.Zero.SampleApp.Tests.Webhooks
             _webhookPublisher.Publish(AppWebhookDefinitionNames.Theme.DefaultThemeChanged, data2, tenantId2);
 
             _backgroundJobManagerSubstitute.Received()
-               .Enqueue<WebhookSenderJob, WebhookSenderInput>(Arg.Is<WebhookSenderInput>(w => predicate2(w)));
+               .Enqueue<WebhookSenderJob, WebhookSenderArgs>(Arg.Is<WebhookSenderArgs>(w => predicate2(w)));
         }
 
         [Fact]
@@ -427,7 +427,7 @@ namespace Abp.Zero.SampleApp.Tests.Webhooks
             _webhookPublisher.Publish(AppWebhookDefinitionNames.Users.Deleted, data);
 
             _backgroundJobManagerSubstitute.Received()
-                .Enqueue<WebhookSenderJob, WebhookSenderInput>(Arg.Is<WebhookSenderInput>(w => predicate(w)));
+                .Enqueue<WebhookSenderJob, WebhookSenderArgs>(Arg.Is<WebhookSenderArgs>(w => predicate(w)));
 
             _backgroundJobManagerSubstitute.ClearReceivedCalls();
 
@@ -443,7 +443,7 @@ namespace Abp.Zero.SampleApp.Tests.Webhooks
             _webhookPublisher.Publish(AppWebhookDefinitionNames.Theme.DefaultThemeChanged, data2, tenantId2);
 
             _backgroundJobManagerSubstitute.Received()
-                .Enqueue<WebhookSenderJob, WebhookSenderInput>(Arg.Is<WebhookSenderInput>(w => predicate2(w)));
+                .Enqueue<WebhookSenderJob, WebhookSenderArgs>(Arg.Is<WebhookSenderArgs>(w => predicate2(w)));
         }
 
         [Fact]
@@ -463,7 +463,7 @@ namespace Abp.Zero.SampleApp.Tests.Webhooks
             _webhookPublisher.Publish(AppWebhookDefinitionNames.Theme.DefaultThemeChanged, new { Name = "Musa", Surname = "Demir" }, subscription.TenantId);
 
             //should not try to send
-            _backgroundJobManagerSubstitute.DidNotReceive().Enqueue<WebhookSenderJob, WebhookSenderInput>(Arg.Any<WebhookSenderInput>());
+            _backgroundJobManagerSubstitute.DidNotReceive().Enqueue<WebhookSenderJob, WebhookSenderArgs>(Arg.Any<WebhookSenderArgs>());
         }
 
         [Fact]
@@ -484,7 +484,7 @@ namespace Abp.Zero.SampleApp.Tests.Webhooks
             _webhookPublisher.Publish(AppWebhookDefinitionNames.Theme.DefaultThemeChanged, new { Name = "Musa", Surname = "Demir" }, AbpSession.TenantId);
 
             //should not try to send
-            _backgroundJobManagerSubstitute.DidNotReceive().Enqueue<WebhookSenderJob, WebhookSenderInput>(Arg.Any<WebhookSenderInput>());
+            _backgroundJobManagerSubstitute.DidNotReceive().Enqueue<WebhookSenderJob, WebhookSenderArgs>(Arg.Any<WebhookSenderArgs>());
         }
 
         [Fact]
@@ -495,7 +495,7 @@ namespace Abp.Zero.SampleApp.Tests.Webhooks
                 TenantId = null,
                 Secret = "secret",
                 WebhookUri = "www.mywebhook.com",
-                WebhookDefinitions = new List<string>() { AppWebhookDefinitionNames.Users.Created },
+                Webhooks = new List<string>() { AppWebhookDefinitionNames.Users.Created },
                 Headers = new Dictionary<string, string>
                 {
                     { "Key","Value"}
@@ -509,7 +509,7 @@ namespace Abp.Zero.SampleApp.Tests.Webhooks
 
             var data = new { Name = "Musa", Surname = "Demir" };
 
-            Predicate<WebhookSenderInput> predicate = w =>
+            Predicate<WebhookSenderArgs> predicate = w =>
             {
                 w.Secret.ShouldNotBeNullOrEmpty();
                 w.Secret.ShouldStartWith("whs_");
@@ -531,7 +531,7 @@ namespace Abp.Zero.SampleApp.Tests.Webhooks
             _webhookPublisher.Publish(AppWebhookDefinitionNames.Users.Created, data, null);
 
             _backgroundJobManagerSubstitute.Received()
-               .Enqueue<WebhookSenderJob, WebhookSenderInput>(Arg.Is<WebhookSenderInput>(w => predicate(w)));
+               .Enqueue<WebhookSenderJob, WebhookSenderArgs>(Arg.Is<WebhookSenderArgs>(w => predicate(w)));
         }
         #endregion
     }

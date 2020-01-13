@@ -76,7 +76,7 @@ namespace Abp.Zero.SampleApp.Tests.Webhooks
             }
 
             sub.ShouldNotBeNull();
-            sub.WebhookDefinitions.ShouldContain("Test");
+            sub.Webhooks.ShouldContain("Test");
             sub.Secret.ShouldBe("secret");
         }
 
@@ -109,10 +109,10 @@ namespace Abp.Zero.SampleApp.Tests.Webhooks
             userCreatedSubscriptions.Count.ShouldBe(2);
             foreach (var webhookSubscriptionInfo in userCreatedSubscriptions)
             {
-                webhookSubscriptionInfo.WebhookDefinitions.ShouldContain(AppWebhookDefinitionNames.Users.Created);
+                webhookSubscriptionInfo.Webhooks.ShouldContain(AppWebhookDefinitionNames.Users.Created);
             }
 
-            userCreatedSubscriptions[1].WebhookDefinitions.ShouldContain(AppWebhookDefinitionNames.Theme.DefaultThemeChanged);
+            userCreatedSubscriptions[1].Webhooks.ShouldContain(AppWebhookDefinitionNames.Theme.DefaultThemeChanged);
         }
 
         [Fact]
@@ -132,9 +132,9 @@ namespace Abp.Zero.SampleApp.Tests.Webhooks
                 }
             }
 
-            sub.WebhookDefinitions.ShouldContain(AppWebhookDefinitionNames.Test);
-            sub.WebhookDefinitions.ShouldContain(AppWebhookDefinitionNames.Users.Created);
-            sub.WebhookDefinitions.ShouldContain(AppWebhookDefinitionNames.Theme.DefaultThemeChanged);
+            sub.Webhooks.ShouldContain(AppWebhookDefinitionNames.Test);
+            sub.Webhooks.ShouldContain(AppWebhookDefinitionNames.Users.Created);
+            sub.Webhooks.ShouldContain(AppWebhookDefinitionNames.Theme.DefaultThemeChanged);
 
             var testSubscriptions1 = _webhookSubscriptionsStore.GetAllSubscriptions(AbpSession.TenantId, AppWebhookDefinitionNames.Test);
             testSubscriptions1.Count.ShouldBe(1);
@@ -160,16 +160,16 @@ namespace Abp.Zero.SampleApp.Tests.Webhooks
             subscribedWebhooks.Count.ShouldBe(3);
 
             subscribedWebhooks[0].GetSubscribedWebhooks().Count.ShouldBe(1);
-            subscribedWebhooks[0].WebhookDefinitions.ShouldContain(AppWebhookDefinitionNames.Test);
+            subscribedWebhooks[0].Webhooks.ShouldContain(AppWebhookDefinitionNames.Test);
 
             subscribedWebhooks[1].GetSubscribedWebhooks().Count.ShouldBe(2);
-            subscribedWebhooks[1].WebhookDefinitions.ShouldContain(AppWebhookDefinitionNames.Test);
-            subscribedWebhooks[1].WebhookDefinitions.ShouldContain(AppWebhookDefinitionNames.Users.Created);
+            subscribedWebhooks[1].Webhooks.ShouldContain(AppWebhookDefinitionNames.Test);
+            subscribedWebhooks[1].Webhooks.ShouldContain(AppWebhookDefinitionNames.Users.Created);
 
             subscribedWebhooks[2].GetSubscribedWebhooks().Count.ShouldBe(3);
-            subscribedWebhooks[2].WebhookDefinitions.ShouldContain(AppWebhookDefinitionNames.Test);
-            subscribedWebhooks[2].WebhookDefinitions.ShouldContain(AppWebhookDefinitionNames.Users.Created);
-            subscribedWebhooks[2].WebhookDefinitions.ShouldContain(AppWebhookDefinitionNames.Theme.DefaultThemeChanged);
+            subscribedWebhooks[2].Webhooks.ShouldContain(AppWebhookDefinitionNames.Test);
+            subscribedWebhooks[2].Webhooks.ShouldContain(AppWebhookDefinitionNames.Users.Created);
+            subscribedWebhooks[2].Webhooks.ShouldContain(AppWebhookDefinitionNames.Theme.DefaultThemeChanged);
         }
 
         [Fact]
@@ -287,7 +287,7 @@ namespace Abp.Zero.SampleApp.Tests.Webhooks
                         var sub = _webhookSubscriptionsStore.Get(subscription.Id);
 
                         sub.ShouldNotBeNull();
-                        sub.WebhookDefinitions.ShouldContain("Test");
+                        sub.Webhooks.ShouldContain("Test");
                         sub.Secret.ShouldBe("secret");
                     }
                 }
@@ -316,17 +316,17 @@ namespace Abp.Zero.SampleApp.Tests.Webhooks
 
             foreach (var webhookSubscriptionInfo in testSubscriptions)
             {
-                webhookSubscriptionInfo.WebhookDefinitions.ShouldContain(AppWebhookDefinitionNames.Test);
+                webhookSubscriptionInfo.Webhooks.ShouldContain(AppWebhookDefinitionNames.Test);
             }
 
             var userCreatedSubscriptions = _webhookSubscriptionsStore.GetAllSubscriptions(AbpSession.TenantId, AppWebhookDefinitionNames.Users.Created);
             userCreatedSubscriptions.Count.ShouldBe(2);
             foreach (var webhookSubscriptionInfo in userCreatedSubscriptions)
             {
-                webhookSubscriptionInfo.WebhookDefinitions.ShouldContain(AppWebhookDefinitionNames.Users.Created);
+                webhookSubscriptionInfo.Webhooks.ShouldContain(AppWebhookDefinitionNames.Users.Created);
             }
 
-            userCreatedSubscriptions[1].WebhookDefinitions.ShouldContain(AppWebhookDefinitionNames.Theme.DefaultThemeChanged);
+            userCreatedSubscriptions[1].Webhooks.ShouldContain(AppWebhookDefinitionNames.Theme.DefaultThemeChanged);
         }
 
         [Fact]
@@ -346,9 +346,9 @@ namespace Abp.Zero.SampleApp.Tests.Webhooks
                 }
             }
 
-            sub.WebhookDefinitions.ShouldContain(AppWebhookDefinitionNames.Test);
-            sub.WebhookDefinitions.ShouldContain(AppWebhookDefinitionNames.Users.Created);
-            sub.WebhookDefinitions.ShouldContain(AppWebhookDefinitionNames.Theme.DefaultThemeChanged);
+            sub.Webhooks.ShouldContain(AppWebhookDefinitionNames.Test);
+            sub.Webhooks.ShouldContain(AppWebhookDefinitionNames.Users.Created);
+            sub.Webhooks.ShouldContain(AppWebhookDefinitionNames.Theme.DefaultThemeChanged);
 
             var testSubscriptions1 = _webhookSubscriptionsStore.GetAllSubscriptions(AbpSession.TenantId, AppWebhookDefinitionNames.Test);
             testSubscriptions1.Count.ShouldBe(1);
@@ -374,16 +374,16 @@ namespace Abp.Zero.SampleApp.Tests.Webhooks
             subscribedWebhooks.Count.ShouldBe(3);
 
             subscribedWebhooks[0].GetSubscribedWebhooks().Count.ShouldBe(1);
-            subscribedWebhooks[0].WebhookDefinitions.ShouldContain(AppWebhookDefinitionNames.Test);
+            subscribedWebhooks[0].Webhooks.ShouldContain(AppWebhookDefinitionNames.Test);
 
             subscribedWebhooks[1].GetSubscribedWebhooks().Count.ShouldBe(2);
-            subscribedWebhooks[1].WebhookDefinitions.ShouldContain(AppWebhookDefinitionNames.Test);
-            subscribedWebhooks[1].WebhookDefinitions.ShouldContain(AppWebhookDefinitionNames.Users.Created);
+            subscribedWebhooks[1].Webhooks.ShouldContain(AppWebhookDefinitionNames.Test);
+            subscribedWebhooks[1].Webhooks.ShouldContain(AppWebhookDefinitionNames.Users.Created);
 
             subscribedWebhooks[2].GetSubscribedWebhooks().Count.ShouldBe(3);
-            subscribedWebhooks[2].WebhookDefinitions.ShouldContain(AppWebhookDefinitionNames.Test);
-            subscribedWebhooks[2].WebhookDefinitions.ShouldContain(AppWebhookDefinitionNames.Users.Created);
-            subscribedWebhooks[2].WebhookDefinitions.ShouldContain(AppWebhookDefinitionNames.Theme.DefaultThemeChanged);
+            subscribedWebhooks[2].Webhooks.ShouldContain(AppWebhookDefinitionNames.Test);
+            subscribedWebhooks[2].Webhooks.ShouldContain(AppWebhookDefinitionNames.Users.Created);
+            subscribedWebhooks[2].Webhooks.ShouldContain(AppWebhookDefinitionNames.Theme.DefaultThemeChanged);
         }
 
         [Fact]

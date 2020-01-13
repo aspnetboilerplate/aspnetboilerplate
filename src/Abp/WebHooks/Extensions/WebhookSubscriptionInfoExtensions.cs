@@ -8,21 +8,21 @@ namespace Abp.Webhooks
     public static class WebhookSubscriptionInfoExtensions
     {
         /// <summary>
-        /// Return List of subscribed webhooks definitions <see cref="WebhookSubscriptionInfo.WebhookDefinitions"/>
+        /// Return List of subscribed webhooks definitions <see cref="WebhookSubscriptionInfo.Webhooks"/>
         /// </summary>
         /// <returns></returns>
         public static List<string> GetSubscribedWebhooks(this WebhookSubscriptionInfo webhookSubscription)
         {
-            if (string.IsNullOrWhiteSpace(webhookSubscription.WebhookDefinitions))
+            if (string.IsNullOrWhiteSpace(webhookSubscription.Webhooks))
             {
                 return new List<string>();
             }
 
-            return webhookSubscription.WebhookDefinitions.FromJsonString<List<string>>();
+            return webhookSubscription.Webhooks.FromJsonString<List<string>>();
         }
 
         /// <summary>
-        /// Adds webhook subscription to <see cref="WebhookSubscriptionInfo.WebhookDefinitions"/> if not exists
+        /// Adds webhook subscription to <see cref="WebhookSubscriptionInfo.Webhooks"/> if not exists
         /// </summary>
         /// <param name="webhookSubscription"></param>
         /// <param name="name">webhook unique name</param>
@@ -41,11 +41,11 @@ namespace Abp.Webhooks
             }
 
             webhookDefinitions.Add(name);
-            webhookSubscription.WebhookDefinitions = webhookDefinitions.ToJsonString();
+            webhookSubscription.Webhooks = webhookDefinitions.ToJsonString();
         }
 
         /// <summary>
-        ///  Removes webhook subscription from <see cref="WebhookSubscriptionInfo.WebhookDefinitions"/> if exists
+        ///  Removes webhook subscription from <see cref="WebhookSubscriptionInfo.Webhooks"/> if exists
         /// </summary>
         /// <param name="webhookSubscription"></param>
         /// <param name="name">webhook unique name</param>
@@ -64,16 +64,16 @@ namespace Abp.Webhooks
             }
 
             webhookDefinitions.Remove(name);
-            webhookSubscription.WebhookDefinitions = webhookDefinitions.ToJsonString();
+            webhookSubscription.Webhooks = webhookDefinitions.ToJsonString();
         }
 
         /// <summary>
-        /// Clears all <see cref="WebhookSubscriptionInfo.WebhookDefinitions"/> 
+        /// Clears all <see cref="WebhookSubscriptionInfo.Webhooks"/> 
         /// </summary>
         /// <param name="webhookSubscription"></param> 
         public static void RemoveAllSubscribedWebhooks(this WebhookSubscriptionInfo webhookSubscription)
         {
-            webhookSubscription.WebhookDefinitions = null;
+            webhookSubscription.Webhooks = null;
         }
 
         /// <summary>
@@ -82,7 +82,7 @@ namespace Abp.Webhooks
         /// <returns></returns>
         public static bool IsSubscribed(this WebhookSubscriptionInfo webhookSubscription, string webhookName)
         {
-            if (string.IsNullOrWhiteSpace(webhookSubscription.WebhookDefinitions))
+            if (string.IsNullOrWhiteSpace(webhookSubscription.Webhooks))
             {
                 return false;
             }
@@ -105,7 +105,7 @@ namespace Abp.Webhooks
         }
 
         /// <summary>
-        /// Adds webhook subscription to <see cref="WebhookSubscriptionInfo.WebhookDefinitions"/> if not exists
+        /// Adds webhook subscription to <see cref="WebhookSubscriptionInfo.Webhooks"/> if not exists
         /// </summary>
         public static void AddWebhookHeader(this WebhookSubscriptionInfo webhookSubscription, string key, string value)
         {
@@ -126,7 +126,7 @@ namespace Abp.Webhooks
         }
 
         /// <summary>
-        /// Adds webhook subscription to <see cref="WebhookSubscriptionInfo.WebhookDefinitions"/> if not exists
+        /// Adds webhook subscription to <see cref="WebhookSubscriptionInfo.Webhooks"/> if not exists
         /// </summary>
         /// <param name="webhookSubscription"></param>
         /// <param name="header">Key of header</param>
@@ -158,7 +158,7 @@ namespace Abp.Webhooks
                 IsActive = webhookSubscription.IsActive,
                 Secret = webhookSubscription.Secret,
                 WebhookUri = webhookSubscription.WebhookUri,
-                WebhookDefinitions = webhookSubscription.Webhooks.ToJsonString(),
+                Webhooks = webhookSubscription.Webhooks.ToJsonString(),
                 Headers = webhookSubscription.Headers.ToJsonString()
             };
         }

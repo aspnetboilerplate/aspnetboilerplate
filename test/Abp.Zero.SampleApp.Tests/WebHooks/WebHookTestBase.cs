@@ -29,11 +29,11 @@ namespace Abp.Zero.SampleApp.Tests.Webhooks
         /// <summary>
         /// Creates user, gives him given permissions than subscribe to webhooks.
         /// </summary>
-        /// <param name="webhookDefinitionNames">Webhook to subscribe</param>
+        /// <param name="webhookNames">Webhook to subscribe</param>
         /// <param name="tenantFeatures">Feature what will be added to created tenant</param>
         /// <returns>User and subscription</returns>
 
-        protected async Task<WebhookSubscription> CreateTenantAndSubscribeToWebhookAsync(List<string> webhookDefinitionNames, Dictionary<string, string> tenantFeatures = null)
+        protected async Task<WebhookSubscription> CreateTenantAndSubscribeToWebhookAsync(List<string> webhookNames, Dictionary<string, string> tenantFeatures = null)
         {
             var tenantId = await CreateAndGetTenantIdWithFeaturesAsync(tenantFeatures);
 
@@ -43,7 +43,7 @@ namespace Abp.Zero.SampleApp.Tests.Webhooks
             {
                 TenantId = tenantId,
                 WebhookUri = "www.mywebhook.com",
-                WebhookDefinitions = webhookDefinitionNames,
+                Webhooks = webhookNames,
                 Headers = new Dictionary<string, string>
                 {
                     { "Key","Value"}
