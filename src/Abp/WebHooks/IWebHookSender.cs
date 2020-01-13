@@ -9,12 +9,12 @@ namespace Abp.Webhooks
         /// Tries to send webhook with given transactionId and stores process in <see cref="WebhookSendAttempt"/>
         /// </summary>
         /// <returns>If progress done</returns>
-        Task<bool> TrySendWebhookAsync(WebhookSenderInput webhookSenderArgs);
+        Task<bool> TrySendWebhookAsync(WebhookSenderArgs webhookSenderArgs);
 
         /// <summary>
         /// Tries to send webhook with given transactionId and stores process in <see cref="WebhookSendAttempt"/>
         /// </summary>
         /// <returns>If transaction done</returns>
-        bool TrySendWebhook(WebhookSenderInput webhookSenderArgs);
+        bool TrySendWebhook(WebhookSenderArgs webhookSenderArgs);
     }
 }

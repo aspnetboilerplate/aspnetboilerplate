@@ -29,7 +29,7 @@ namespace Abp.Webhooks
             WebhookSendAttemptStore = NullWebhookSendAttemptStore.Instance;
         }
 
-        public async Task<bool> TrySendWebhookAsync(WebhookSenderInput webhookSenderArgs)
+        public async Task<bool> TrySendWebhookAsync(WebhookSenderArgs webhookSenderArgs)
         {
             try
             {
@@ -90,7 +90,7 @@ namespace Abp.Webhooks
             }
         }
 
-        public bool TrySendWebhook(WebhookSenderInput webhookSenderArgs)
+        public bool TrySendWebhook(WebhookSenderArgs webhookSenderArgs)
         {
             try
             {
@@ -152,7 +152,7 @@ namespace Abp.Webhooks
         }
 
         [UnitOfWork]
-        protected virtual async Task<Guid> InsertAndGetIdWebhookSendAttemptAsync(WebhookSenderInput webhookSenderArgs)
+        protected virtual async Task<Guid> InsertAndGetIdWebhookSendAttemptAsync(WebhookSenderArgs webhookSenderArgs)
         {
             var workItem = new WebhookSendAttempt()
             {
@@ -168,7 +168,7 @@ namespace Abp.Webhooks
         }
 
         [UnitOfWork]
-        protected virtual Guid InsertAndGetIdWebhookSendAttempt(WebhookSenderInput webhookSenderArgs)
+        protected virtual Guid InsertAndGetIdWebhookSendAttempt(WebhookSenderArgs webhookSenderArgs)
         {
             var workItem = new WebhookSendAttempt()
             {
@@ -209,12 +209,12 @@ namespace Abp.Webhooks
         /// You can override this to change request message
         /// </summary>
         /// <returns></returns>
-        protected virtual HttpRequestMessage CreateWebhookRequestMessage(WebhookSenderInput webhookSenderArgs)
+        protected virtual HttpRequestMessage CreateWebhookRequestMessage(WebhookSenderArgs webhookSenderArgs)
         {
             return new HttpRequestMessage(HttpMethod.Post, webhookSenderArgs.WebhookUri);
         }
 
-        protected virtual async Task<WebhookPayload> GetWebhookPayloadAsync(WebhookSenderInput webhookSenderArgs)
+        protected virtual async Task<WebhookPayload> GetWebhookPayloadAsync(WebhookSenderArgs webhookSenderArgs)
         {
             dynamic data = _webhooksConfiguration.JsonSerializerSettings != null
                 ? webhookSenderArgs.Data.FromJsonString<dynamic>(_webhooksConfiguration.JsonSerializerSettings)
@@ -228,7 +228,7 @@ namespace Abp.Webhooks
             };
         }
 
-        protected virtual WebhookPayload GetWebhookPayload(WebhookSenderInput webhookSenderArgs)
+        protected virtual WebhookPayload GetWebhookPayload(WebhookSenderArgs webhookSenderArgs)
         {
             dynamic data = _webhooksConfiguration.JsonSerializerSettings != null
                 ? webhookSenderArgs.Data.FromJsonString<dynamic>(_webhooksConfiguration.JsonSerializerSettings)
@@ -269,7 +269,7 @@ namespace Abp.Webhooks
             }
         }
 
-        protected virtual void AddAdditionalHeaders(HttpRequestMessage request, WebhookSenderInput webhookSenderArgs)
+        protected virtual void AddAdditionalHeaders(HttpRequestMessage request, WebhookSenderArgs webhookSenderArgs)
         {
             foreach (var header in webhookSenderArgs.Headers)
             {

@@ -3,7 +3,7 @@ using System.Collections.Generic;
 
 namespace Abp.Webhooks
 {
-    public class WebhookSenderInput
+    public class WebhookSenderArgs
     {
         public int? TenantId { get; set; }
 

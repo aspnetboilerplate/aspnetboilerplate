@@ -4,7 +4,7 @@ using Abp.Dependency;
 
 namespace Abp.Webhooks.BackgroundWorker
 {
-    public class WebhookSenderJob : BackgroundJob<WebhookSenderInput>, ITransientDependency
+    public class WebhookSenderJob : BackgroundJob<WebhookSenderArgs>, ITransientDependency
     {
         private readonly IIocResolver _iocResolver;
         private readonly IBackgroundJobManager _backgroundJobManager;
@@ -20,7 +20,7 @@ namespace Abp.Webhooks.BackgroundWorker
             _webhooksConfiguration = webhooksConfiguration;
         }
 
-        public override void Execute(WebhookSenderInput args)
+        public override void Execute(WebhookSenderArgs args)
         {
             if (args.WebhookId == default)
             {
@@ -46,7 +46,7 @@ namespace Abp.Webhooks.BackgroundWorker
                     if (sendAttemptCount < _webhooksConfiguration.MaxSendAttemptCount)
                     {
                         //try send again
-                        _backgroundJobManager.Enqueue<WebhookSenderJob, WebhookSenderInput>(args);
+                        _backgroundJobManager.Enqueue<WebhookSenderJob, WebhookSenderArgs>(args);
                     }
                 }
             }
