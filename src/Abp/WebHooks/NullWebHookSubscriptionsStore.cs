@@ -3,41 +3,41 @@ using System.Collections.Generic;
 using System.Threading.Tasks;
 using Abp.Dependency;
 
-namespace Abp.WebHooks
+namespace Abp.Webhooks
 {
     /// <summary>
-    /// Null pattern implementation of <see cref="IWebHookSubscriptionsStore"/>.
-    /// It's used if <see cref="IWebHookSubscriptionsStore"/> is not implemented by actual persistent store
+    /// Null pattern implementation of <see cref="IWebhookSubscriptionsStore"/>.
+    /// It's used if <see cref="IWebhookSubscriptionsStore"/> is not implemented by actual persistent store
     /// </summary>
-    public class NullWebHookSubscriptionsStore : IWebHookSubscriptionsStore
+    public class NullWebhookSubscriptionsStore : IWebhookSubscriptionsStore
     {
-        public static NullWebHookSubscriptionsStore Instance { get; } = new NullWebHookSubscriptionsStore();
+        public static NullWebhookSubscriptionsStore Instance { get; } = new NullWebhookSubscriptionsStore();
 
-        public Task<WebHookSubscriptionInfo> GetAsync(Guid id)
+        public Task<WebhookSubscriptionInfo> GetAsync(Guid id)
         {
-            return Task.FromResult<WebHookSubscriptionInfo>(default);
+            return Task.FromResult<WebhookSubscriptionInfo>(default);
         }
 
-        public WebHookSubscriptionInfo Get(Guid id)
+        public WebhookSubscriptionInfo Get(Guid id)
         {
             return default;
         }
 
-        public Task InsertAsync(WebHookSubscriptionInfo webHookSubscription)
+        public Task InsertAsync(WebhookSubscriptionInfo webhookSubscription)
         {
             return Task.CompletedTask;
         }
 
-        public void Insert(WebHookSubscriptionInfo webHookSubscription)
+        public void Insert(WebhookSubscriptionInfo webhookSubscription)
         {
         }
 
-        public Task UpdateAsync(WebHookSubscriptionInfo webHookSubscription)
+        public Task UpdateAsync(WebhookSubscriptionInfo webhookSubscription)
         {
             return Task.CompletedTask;
         }
 
-        public void Update(WebHookSubscriptionInfo webHookSubscription)
+        public void Update(WebhookSubscriptionInfo webhookSubscription)
         {
         }
 
@@ -50,32 +50,32 @@ namespace Abp.WebHooks
         {
         }
 
-        public Task<List<WebHookSubscriptionInfo>> GetAllSubscriptionsAsync(int? tenantId)
+        public Task<List<WebhookSubscriptionInfo>> GetAllSubscriptionsAsync(int? tenantId)
         {
-            return Task.FromResult(new List<WebHookSubscriptionInfo>());
+            return Task.FromResult(new List<WebhookSubscriptionInfo>());
         }
 
-        public List<WebHookSubscriptionInfo> GetAllSubscriptions(int? tenantId)
+        public List<WebhookSubscriptionInfo> GetAllSubscriptions(int? tenantId)
         {
-            return new List<WebHookSubscriptionInfo>();
+            return new List<WebhookSubscriptionInfo>();
         }
 
-        public Task<List<WebHookSubscriptionInfo>> GetAllSubscriptionsAsync(int? tenantId, string webHookName)
+        public Task<List<WebhookSubscriptionInfo>> GetAllSubscriptionsAsync(int? tenantId, string webhookName)
         {
-            return Task.FromResult(new List<WebHookSubscriptionInfo>());
+            return Task.FromResult(new List<WebhookSubscriptionInfo>());
         }
 
-        public List<WebHookSubscriptionInfo> GetAllSubscriptions(int? tenantId, string webHookName)
+        public List<WebhookSubscriptionInfo> GetAllSubscriptions(int? tenantId, string webhookName)
         {
-            return new List<WebHookSubscriptionInfo>();
+            return new List<WebhookSubscriptionInfo>();
         }
 
-        public Task<bool> IsSubscribedAsync(int? tenantId, string webHookName)
+        public Task<bool> IsSubscribedAsync(int? tenantId, string webhookName)
         {
             return Task.FromResult(false);
         }
 
-        public bool IsSubscribed(int? tenantId, string webHookName)
+        public bool IsSubscribed(int? tenantId, string webhookName)
         {
             return false;
         }

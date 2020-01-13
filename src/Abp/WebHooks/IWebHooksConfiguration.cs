@@ -3,9 +3,9 @@ using Abp.Collections;
 using Abp.Json;
 using Newtonsoft.Json;
 
-namespace Abp.WebHooks
+namespace Abp.Webhooks
 {
-    public interface IWebHooksConfiguration
+    public interface IWebhooksConfiguration
     {
         /// <summary>
         /// HttpClient timeout. Sender will wait <c>TimeoutDuration</c> second before throw timeout exception
@@ -13,7 +13,7 @@ namespace Abp.WebHooks
         TimeSpan TimeoutDuration { get; set; }
 
         /// <summary>
-        ///  How many times <see cref="IWebHookPublisher"/> will try resend webhook until gets HttpStatusCode.OK 
+        ///  How many times <see cref="IWebhookPublisher"/> will try resend webhook until gets HttpStatusCode.OK 
         /// </summary>
         int MaxSendAttemptCount { get; set; }
 
@@ -25,6 +25,6 @@ namespace Abp.WebHooks
         /// <summary>
         /// Notification providers.
         /// </summary>
-        ITypeList<WebHookDefinitionProvider> Providers { get; }
+        ITypeList<WebhookDefinitionProvider> Providers { get; }
     }
 }

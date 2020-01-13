@@ -2,62 +2,62 @@
 using System.Collections.Generic;
 using System.Threading.Tasks;
 
-namespace Abp.WebHooks
+namespace Abp.Webhooks
 {
     /// <summary>
     /// This interface should be implemented by vendors to make webhooks working.
     /// </summary>
-    public interface IWebHookSubscriptionsStore
+    public interface IWebhookSubscriptionsStore
     {
         /// <summary>
         /// returns subscription
         /// </summary>
         /// <param name="id">webhook subscription id</param>
         /// <returns></returns>
-        Task<WebHookSubscriptionInfo> GetAsync(Guid id);
+        Task<WebhookSubscriptionInfo> GetAsync(Guid id);
 
         /// <summary>
         /// returns subscription
         /// </summary>
         /// <param name="id">webhook subscription id</param>
         /// <returns></returns>
-        WebHookSubscriptionInfo Get(Guid id);
+        WebhookSubscriptionInfo Get(Guid id);
 
         /// <summary>
         /// Saves webhook subscription to a persistent store.
         /// </summary>
-        /// <param name="webHookSubscription">webhook subscription information</param>
-        Task InsertAsync(WebHookSubscriptionInfo webHookSubscription);
+        /// <param name="webhookSubscription">webhook subscription information</param>
+        Task InsertAsync(WebhookSubscriptionInfo webhookSubscription);
 
         /// <summary>
         /// Saves webhook subscription to a persistent store.
         /// </summary>
-        /// <param name="webHookSubscription">webhook subscription information</param>
-        void Insert(WebHookSubscriptionInfo webHookSubscription);
+        /// <param name="webhookSubscription">webhook subscription information</param>
+        void Insert(WebhookSubscriptionInfo webhookSubscription);
 
         /// <summary>
         /// Updates webhook subscription to a persistent store.
         /// </summary>
-        /// <param name="webHookSubscription">webhook subscription information</param>
-        Task UpdateAsync(WebHookSubscriptionInfo webHookSubscription);
+        /// <param name="webhookSubscription">webhook subscription information</param>
+        Task UpdateAsync(WebhookSubscriptionInfo webhookSubscription);
 
         /// <summary>
         /// Updates webhook subscription to a persistent store.
         /// </summary>
-        /// <param name="webHookSubscription">webhook subscription information</param>
-        void Update(WebHookSubscriptionInfo webHookSubscription);
+        /// <param name="webhookSubscription">webhook subscription information</param>
+        void Update(WebhookSubscriptionInfo webhookSubscription);
 
         /// <summary>
         /// Deletes subscription if exists
         /// </summary>
-        /// <param name="id"><see cref="WebHookSubscriptionInfo"/> primary key</param>
+        /// <param name="id"><see cref="WebhookSubscriptionInfo"/> primary key</param>
         /// <returns></returns>
         Task DeleteAsync(Guid id);
 
         /// <summary>
         /// Deletes subscription if exists 
         /// </summary>
-        /// <param name="id"><see cref="WebHookSubscriptionInfo"/> primary key</param>
+        /// <param name="id"><see cref="WebhookSubscriptionInfo"/> primary key</param>
         /// <returns></returns>
         void Delete(Guid id);
 
@@ -67,7 +67,7 @@ namespace Abp.WebHooks
         /// <param name="tenantId">
         /// Target tenant id(s).
         /// </param>
-        Task<List<WebHookSubscriptionInfo>> GetAllSubscriptionsAsync(int? tenantId);
+        Task<List<WebhookSubscriptionInfo>> GetAllSubscriptionsAsync(int? tenantId);
 
         /// <summary>
         /// Returns all subscriptions of given tenant including deactivated 
@@ -75,7 +75,7 @@ namespace Abp.WebHooks
         /// <param name="tenantId">
         /// Target tenant id(s).
         /// </param>
-        List<WebHookSubscriptionInfo> GetAllSubscriptions(int? tenantId);
+        List<WebhookSubscriptionInfo> GetAllSubscriptions(int? tenantId);
 
         /// <summary>
         /// Returns webhook subscriptions which subscribe to given webhook on tenant(s)
@@ -83,9 +83,9 @@ namespace Abp.WebHooks
         /// <param name="tenantId">
         /// Target tenant id(s).
         /// </param>
-        /// <param name="webHookName"><see cref="WebHookDefinition.Name"/></param>
+        /// <param name="webhookName"><see cref="WebhookDefinition.Name"/></param>
         /// <returns></returns>
-        Task<List<WebHookSubscriptionInfo>> GetAllSubscriptionsAsync(int? tenantId, string webHookName);
+        Task<List<WebhookSubscriptionInfo>> GetAllSubscriptionsAsync(int? tenantId, string webhookName);
 
         /// <summary>
         /// Returns webhook subscriptions which subscribe to given webhook on tenant(s)
@@ -93,9 +93,9 @@ namespace Abp.WebHooks
         /// <param name="tenantId">
         /// Target tenant id(s).
         /// </param>
-        /// <param name="webHookName"><see cref="WebHookDefinition.Name"/></param>
+        /// <param name="webhookName"><see cref="WebhookDefinition.Name"/></param>
         /// <returns></returns>
-        List<WebHookSubscriptionInfo> GetAllSubscriptions(int? tenantId, string webHookName);
+        List<WebhookSubscriptionInfo> GetAllSubscriptions(int? tenantId, string webhookName);
 
         /// <summary>
         /// Checks if tenant subscribed for a webhook
@@ -103,8 +103,8 @@ namespace Abp.WebHooks
         /// <param name="tenantId">
         /// Target tenant id(s).
         /// </param>
-        /// <param name="webHookName">Name of the webhook</param>
-        Task<bool> IsSubscribedAsync(int? tenantId, string webHookName);
+        /// <param name="webhookName">Name of the webhook</param>
+        Task<bool> IsSubscribedAsync(int? tenantId, string webhookName);
 
         /// <summary>
         /// Checks if tenant subscribed for a webhook
@@ -112,7 +112,7 @@ namespace Abp.WebHooks
         /// <param name="tenantId">
         /// Target tenant id(s).
         /// </param>
-        /// <param name="webHookName">Name of the webhook</param>
-        bool IsSubscribed(int? tenantId, string webHookName);
+        /// <param name="webhookName">Name of the webhook</param>
+        bool IsSubscribed(int? tenantId, string webhookName);
     }
 }

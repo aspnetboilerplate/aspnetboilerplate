@@ -1,6 +1,6 @@
 ﻿namespace Abp.Zero.SampleApp.Application
 {
-    public class AppWebHookDefinitionNames
+    public class AppWebhookDefinitionNames
     {
         public const string Test = "test";
 

@@ -5,85 +5,85 @@ using System.Threading.Tasks;
 using Abp.Application.Features;
 using Abp.Dependency;
 
-namespace Abp.WebHooks
+namespace Abp.Webhooks
 {
-    internal class WebHookDefinitionManager : IWebHookDefinitionManager, ISingletonDependency
+    internal class WebhookDefinitionManager : IWebhookDefinitionManager, ISingletonDependency
     {
-        private readonly IWebHooksConfiguration _webHooksConfiguration;
+        private readonly IWebhooksConfiguration _webhooksConfiguration;
         private readonly IocManager _iocManager;
-        private readonly ConcurrentDictionary<string, WebHookDefinition> _webHookDefinitions;
+        private readonly ConcurrentDictionary<string, WebhookDefinition> _webhookDefinitions;
 
-        public WebHookDefinitionManager(
-            IWebHooksConfiguration webHooksConfiguration,
+        public WebhookDefinitionManager(
+            IWebhooksConfiguration webhooksConfiguration,
             IocManager iocManager
             )
         {
-            _webHooksConfiguration = webHooksConfiguration;
+            _webhooksConfiguration = webhooksConfiguration;
             _iocManager = iocManager;
-            _webHookDefinitions = new ConcurrentDictionary<string, WebHookDefinition>();
+            _webhookDefinitions = new ConcurrentDictionary<string, WebhookDefinition>();
         }
 
         public void Initialize()
         {
-            var context = new WebHookDefinitionContext(this);
+            var context = new WebhookDefinitionContext(this);
 
-            foreach (var providerType in _webHooksConfiguration.Providers)
+            foreach (var providerType in _webhooksConfiguration.Providers)
             {
-                using (var provider = _iocManager.ResolveAsDisposable<WebHookDefinitionProvider>(providerType))
+                using (var provider = _iocManager.ResolveAsDisposable<WebhookDefinitionProvider>(providerType))
                 {
-                    provider.Object.SetWebHooks(context);
+                    provider.Object.SetWebhooks(context);
                 }
             }
         }
 
-        public void Add(WebHookDefinition webHookDefinition)
+        public void Add(WebhookDefinition webhookDefinition)
         {
-            if (_webHookDefinitions.ContainsKey(webHookDefinition.Name))
+            if (_webhookDefinitions.ContainsKey(webhookDefinition.Name))
             {
-                throw new AbpInitializationException("There is already a webhook definition with given name: " + webHookDefinition.Name + ". Webhook names must be unique!");
+                throw new AbpInitializationException("There is already a webhook definition with given name: " + webhookDefinition.Name + ". Webhook names must be unique!");
             }
 
-            _webHookDefinitions.AddOrUpdate(webHookDefinition.Name, webHookDefinition, (s, d) => d);
+            _webhookDefinitions.AddOrUpdate(webhookDefinition.Name, webhookDefinition, (s, d) => d);
         }
 
-        public void AddOrReplace(WebHookDefinition webHookDefinition)
+        public void AddOrReplace(WebhookDefinition webhookDefinition)
         {
-            _webHookDefinitions.AddOrUpdate(webHookDefinition.Name, webHookDefinition, (s, d) => webHookDefinition);
+            _webhookDefinitions.AddOrUpdate(webhookDefinition.Name, webhookDefinition, (s, d) => webhookDefinition);
         }
 
-        public WebHookDefinition GetOrNull(string name)
+        public WebhookDefinition GetOrNull(string name)
         {
-            if (!_webHookDefinitions.ContainsKey(name))
+            if (!_webhookDefinitions.ContainsKey(name))
             {
                 return null;
             }
 
-            return _webHookDefinitions[name];
+            return _webhookDefinitions[name];
         }
 
-        public WebHookDefinition Get(string name)
+        public WebhookDefinition Get(string name)
         {
-            if (!_webHookDefinitions.ContainsKey(name))
+            if (!_webhookDefinitions.ContainsKey(name))
             {
                 throw new KeyNotFoundException($"Webhook definitions does not contain a definition with the key \"{name}\".");
             }
 
-            return _webHookDefinitions[name];
+            return _webhookDefinitions[name];
         }
 
-        public IReadOnlyList<WebHookDefinition> GetAll()
+        public IReadOnlyList<WebhookDefinition> GetAll()
         {
-            return _webHookDefinitions.Values.ToImmutableList();
+            return _webhookDefinitions.Values.ToImmutableList();
         }
 
-        public bool TryRemove(string name, out WebHookDefinition webHookDefinition)
+        public bool TryRemove(string name, out WebhookDefinition webhookDefinition)
         {
-            return _webHookDefinitions.TryRemove(name, out webHookDefinition);
+            return _webhookDefinitions.TryRemove(name, out webhookDefinition);
         }
 
         public bool Contains(string name)
         {
-            return _webHookDefinitions.ContainsKey(name);
+            return _webhookDefinitions.ContainsKey(name);
         }
 
         public async Task<bool> IsAvailableAsync(int? tenantId, string name)
@@ -93,19 +93,19 @@ namespace Abp.WebHooks
                 return true;
             }
 
-            var webHookDefinition = GetOrNull(name);
-            if (webHookDefinition == null)
+            var webhookDefinition = GetOrNull(name);
+            if (webhookDefinition == null)
             {
                 return true;
             }
 
-            if (webHookDefinition.FeatureDependency != null)
+            if (webhookDefinition.FeatureDependency != null)
             {
                 using (var featureDependencyContext = _iocManager.ResolveAsDisposable<FeatureDependencyContext>())
                 {
                     featureDependencyContext.Object.TenantId = tenantId;
 
-                    if (!await webHookDefinition.FeatureDependency.IsSatisfiedAsync(featureDependencyContext.Object))
+                    if (!await webhookDefinition.FeatureDependency.IsSatisfiedAsync(featureDependencyContext.Object))
                     {
                         return false;
                     }
@@ -122,19 +122,19 @@ namespace Abp.WebHooks
                 return true;
             }
 
-            var webHookDefinition = GetOrNull(name);
-            if (webHookDefinition == null)
+            var webhookDefinition = GetOrNull(name);
+            if (webhookDefinition == null)
             {
                 return true;
             }
 
-            if (webHookDefinition.FeatureDependency != null)
+            if (webhookDefinition.FeatureDependency != null)
             {
                 using (var featureDependencyContext = _iocManager.ResolveAsDisposable<FeatureDependencyContext>())
                 {
                     featureDependencyContext.Object.TenantId = tenantId;
 
-                    if (!webHookDefinition.FeatureDependency.IsSatisfied(featureDependencyContext.Object))
+                    if (!webhookDefinition.FeatureDependency.IsSatisfied(featureDependencyContext.Object))
                     {
                         return false;
                     }

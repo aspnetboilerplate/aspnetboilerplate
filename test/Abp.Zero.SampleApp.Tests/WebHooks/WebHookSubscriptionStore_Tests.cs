@@ -4,20 +4,20 @@ using Abp.Dependency;
 using Abp.Domain.Entities;
 using Abp.Domain.Uow;
 using Abp.Runtime.Session;
-using Abp.WebHooks;
+using Abp.Webhooks;
 using Abp.Zero.SampleApp.Application;
 using Shouldly;
 using Xunit;
 
-namespace Abp.Zero.SampleApp.Tests.WebHooks
+namespace Abp.Zero.SampleApp.Tests.Webhooks
 {
-    public class WebHookSubscriptionStore_Tests : SampleAppTestBase
+    public class WebhookSubscriptionStore_Tests : SampleAppTestBase
     {
-        private readonly IWebHookSubscriptionsStore _webHookSubscriptionsStore;
+        private readonly IWebhookSubscriptionsStore _webhookSubscriptionsStore;
 
-        public WebHookSubscriptionStore_Tests()
+        public WebhookSubscriptionStore_Tests()
         {
-            _webHookSubscriptionsStore = Resolve<IWebHookSubscriptionsStore>();
+            _webhookSubscriptionsStore = Resolve<IWebhookSubscriptionsStore>();
 
             AbpSession.TenantId = null;
             AbpSession.UserId = 1;
@@ -26,7 +26,7 @@ namespace Abp.Zero.SampleApp.Tests.WebHooks
 
         #region Async
 
-        private async Task<WebHookSubscriptionInfo> CreateTestSubscriptionAsync(params string[] webHookDefinition)
+        private async Task<WebhookSubscriptionInfo> CreateTestSubscriptionAsync(params string[] webhookDefinition)
         {
             using (var uowManager = LocalIocManager.ResolveAsDisposable<IUnitOfWorkManager>())
             {
@@ -34,18 +34,18 @@ namespace Abp.Zero.SampleApp.Tests.WebHooks
                 {
                     using (uowManager.Object.Current.SetTenantId(AbpSession.TenantId))
                     {
-                        var subscription = new WebHookSubscriptionInfo()
+                        var subscription = new WebhookSubscriptionInfo()
                         {
-                            WebHookUri = "www.test.com",
+                            WebhookUri = "www.test.com",
                             Secret = "secret",
                         };
 
-                        foreach (var definition in webHookDefinition)
+                        foreach (var definition in webhookDefinition)
                         {
                             subscription.SubscribeWebhook(definition);
                         }
 
-                        await _webHookSubscriptionsStore.InsertAsync(subscription);
+                        await _webhookSubscriptionsStore.InsertAsync(subscription);
 
                         await uow.CompleteAsync();
                         return subscription;
@@ -54,168 +54,168 @@ namespace Abp.Zero.SampleApp.Tests.WebHooks
             }
         }
 
-        private Task<WebHookSubscriptionInfo> CreateTestSubscriptionAsync()
+        private Task<WebhookSubscriptionInfo> CreateTestSubscriptionAsync()
         {
-            return CreateTestSubscriptionAsync(AppWebHookDefinitionNames.Test);
+            return CreateTestSubscriptionAsync(AppWebhookDefinitionNames.Test);
         }
 
         [Fact]
         public async Task Should_Insert_Subscription_Async()
         {
             var subscription = await CreateTestSubscriptionAsync();
-            WebHookSubscriptionInfo sub;
+            WebhookSubscriptionInfo sub;
             using (var uowManager = LocalIocManager.ResolveAsDisposable<IUnitOfWorkManager>())
             {
                 using (uowManager.Object.Begin())
                 {
                     using (uowManager.Object.Current.SetTenantId(AbpSession.TenantId))
                     {
-                        sub = await _webHookSubscriptionsStore.GetAsync(subscription.Id);
+                        sub = await _webhookSubscriptionsStore.GetAsync(subscription.Id);
                     }
                 }
             }
 
             sub.ShouldNotBeNull();
-            sub.WebHookDefinitions.ShouldContain("Test");
+            sub.WebhookDefinitions.ShouldContain("Test");
             sub.Secret.ShouldBe("secret");
         }
 
         [Fact]
-        public async Task Should_Get_Is_Subscribed_To_WebHooks_Async()
+        public async Task Should_Get_Is_Subscribed_To_Webhooks_Async()
         {
             await CreateTestSubscriptionAsync();
 
-            (await _webHookSubscriptionsStore.IsSubscribedAsync(AbpSession.TenantId, AppWebHookDefinitionNames.Test)).ShouldBeTrue();
-            (await _webHookSubscriptionsStore.IsSubscribedAsync(AbpSession.TenantId, AppWebHookDefinitionNames.Test + "asd")).ShouldBeFalse();
+            (await _webhookSubscriptionsStore.IsSubscribedAsync(AbpSession.TenantId, AppWebhookDefinitionNames.Test)).ShouldBeTrue();
+            (await _webhookSubscriptionsStore.IsSubscribedAsync(AbpSession.TenantId, AppWebhookDefinitionNames.Test + "asd")).ShouldBeFalse();
         }
 
         [Fact]
         public async Task Should_Get_All_Subscriptions_Async()
         {
-            await CreateTestSubscriptionAsync();//AppWebHookDefinitionNames.Test
-            await CreateTestSubscriptionAsync(AppWebHookDefinitionNames.Users.Created);
-            await CreateTestSubscriptionAsync();//AppWebHookDefinitionNames.Test
-            await CreateTestSubscriptionAsync(AppWebHookDefinitionNames.Users.Created, AppWebHookDefinitionNames.Theme.DefaultThemeChanged);
+            await CreateTestSubscriptionAsync();//AppWebhookDefinitionNames.Test
+            await CreateTestSubscriptionAsync(AppWebhookDefinitionNames.Users.Created);
+            await CreateTestSubscriptionAsync();//AppWebhookDefinitionNames.Test
+            await CreateTestSubscriptionAsync(AppWebhookDefinitionNames.Users.Created, AppWebhookDefinitionNames.Theme.DefaultThemeChanged);
 
-            var testSubscriptions = _webHookSubscriptionsStore.GetAllSubscriptions(AbpSession.TenantId, AppWebHookDefinitionNames.Test);
+            var testSubscriptions = _webhookSubscriptionsStore.GetAllSubscriptions(AbpSession.TenantId, AppWebhookDefinitionNames.Test);
             testSubscriptions.Count.ShouldBe(2);
 
-            foreach (var webHookSubscriptionInfo in testSubscriptions)
+            foreach (var webhookSubscriptionInfo in testSubscriptions)
             {
-                webHookSubscriptionInfo.GetSubscribedWebhooks().Single().ShouldBe(AppWebHookDefinitionNames.Test);
+                webhookSubscriptionInfo.GetSubscribedWebhooks().Single().ShouldBe(AppWebhookDefinitionNames.Test);
             }
 
-            var userCreatedSubscriptions = _webHookSubscriptionsStore.GetAllSubscriptions(AbpSession.TenantId, AppWebHookDefinitionNames.Users.Created);
+            var userCreatedSubscriptions = _webhookSubscriptionsStore.GetAllSubscriptions(AbpSession.TenantId, AppWebhookDefinitionNames.Users.Created);
             userCreatedSubscriptions.Count.ShouldBe(2);
-            foreach (var webHookSubscriptionInfo in userCreatedSubscriptions)
+            foreach (var webhookSubscriptionInfo in userCreatedSubscriptions)
             {
-                webHookSubscriptionInfo.WebHookDefinitions.ShouldContain(AppWebHookDefinitionNames.Users.Created);
+                webhookSubscriptionInfo.WebhookDefinitions.ShouldContain(AppWebhookDefinitionNames.Users.Created);
             }
 
-            userCreatedSubscriptions[1].WebHookDefinitions.ShouldContain(AppWebHookDefinitionNames.Theme.DefaultThemeChanged);
+            userCreatedSubscriptions[1].WebhookDefinitions.ShouldContain(AppWebhookDefinitionNames.Theme.DefaultThemeChanged);
         }
 
         [Fact]
         public async Task Should_Subscribe_To_Multiple_Event_Async()
         {
-            var subscription = await CreateTestSubscriptionAsync(AppWebHookDefinitionNames.Test, AppWebHookDefinitionNames.Users.Created, AppWebHookDefinitionNames.Theme.DefaultThemeChanged);
+            var subscription = await CreateTestSubscriptionAsync(AppWebhookDefinitionNames.Test, AppWebhookDefinitionNames.Users.Created, AppWebhookDefinitionNames.Theme.DefaultThemeChanged);
 
-            WebHookSubscriptionInfo sub;
+            WebhookSubscriptionInfo sub;
             using (var uowManager = LocalIocManager.ResolveAsDisposable<IUnitOfWorkManager>())
             {
                 using (uowManager.Object.Begin())
                 {
                     using (uowManager.Object.Current.SetTenantId(AbpSession.TenantId))
                     {
-                        sub = await _webHookSubscriptionsStore.GetAsync(subscription.Id);
+                        sub = await _webhookSubscriptionsStore.GetAsync(subscription.Id);
                     }
                 }
             }
 
-            sub.WebHookDefinitions.ShouldContain(AppWebHookDefinitionNames.Test);
-            sub.WebHookDefinitions.ShouldContain(AppWebHookDefinitionNames.Users.Created);
-            sub.WebHookDefinitions.ShouldContain(AppWebHookDefinitionNames.Theme.DefaultThemeChanged);
+            sub.WebhookDefinitions.ShouldContain(AppWebhookDefinitionNames.Test);
+            sub.WebhookDefinitions.ShouldContain(AppWebhookDefinitionNames.Users.Created);
+            sub.WebhookDefinitions.ShouldContain(AppWebhookDefinitionNames.Theme.DefaultThemeChanged);
 
-            var testSubscriptions1 = _webHookSubscriptionsStore.GetAllSubscriptions(AbpSession.TenantId, AppWebHookDefinitionNames.Test);
+            var testSubscriptions1 = _webhookSubscriptionsStore.GetAllSubscriptions(AbpSession.TenantId, AppWebhookDefinitionNames.Test);
             testSubscriptions1.Count.ShouldBe(1);
             testSubscriptions1.Single().Id.ShouldBe(sub.Id);
 
-            var testSubscriptions2 = _webHookSubscriptionsStore.GetAllSubscriptions(AbpSession.TenantId, AppWebHookDefinitionNames.Users.Created);
+            var testSubscriptions2 = _webhookSubscriptionsStore.GetAllSubscriptions(AbpSession.TenantId, AppWebhookDefinitionNames.Users.Created);
             testSubscriptions2.Count.ShouldBe(1);
             testSubscriptions2.Single().Id.ShouldBe(sub.Id);
 
-            var testSubscriptions3 = _webHookSubscriptionsStore.GetAllSubscriptions(AbpSession.TenantId, AppWebHookDefinitionNames.Theme.DefaultThemeChanged);
+            var testSubscriptions3 = _webhookSubscriptionsStore.GetAllSubscriptions(AbpSession.TenantId, AppWebhookDefinitionNames.Theme.DefaultThemeChanged);
             testSubscriptions3.Count.ShouldBe(1);
             testSubscriptions3.Single().Id.ShouldBe(sub.Id);
         }
 
         [Fact]
-        public async Task Should_Get_Subscribed_WebHooks_Async()
+        public async Task Should_Get_Subscribed_Webhooks_Async()
         {
-            await CreateTestSubscriptionAsync(AppWebHookDefinitionNames.Test);
-            await CreateTestSubscriptionAsync(AppWebHookDefinitionNames.Test, AppWebHookDefinitionNames.Users.Created);
-            await CreateTestSubscriptionAsync(AppWebHookDefinitionNames.Test, AppWebHookDefinitionNames.Users.Created, AppWebHookDefinitionNames.Theme.DefaultThemeChanged);
+            await CreateTestSubscriptionAsync(AppWebhookDefinitionNames.Test);
+            await CreateTestSubscriptionAsync(AppWebhookDefinitionNames.Test, AppWebhookDefinitionNames.Users.Created);
+            await CreateTestSubscriptionAsync(AppWebhookDefinitionNames.Test, AppWebhookDefinitionNames.Users.Created, AppWebhookDefinitionNames.Theme.DefaultThemeChanged);
 
-            var subscribedWebHooks = await _webHookSubscriptionsStore.GetAllSubscriptionsAsync(AbpSession.TenantId);
-            subscribedWebHooks.Count.ShouldBe(3);
+            var subscribedWebhooks = await _webhookSubscriptionsStore.GetAllSubscriptionsAsync(AbpSession.TenantId);
+            subscribedWebhooks.Count.ShouldBe(3);
 
-            subscribedWebHooks[0].GetSubscribedWebhooks().Count.ShouldBe(1);
-            subscribedWebHooks[0].WebHookDefinitions.ShouldContain(AppWebHookDefinitionNames.Test);
+            subscribedWebhooks[0].GetSubscribedWebhooks().Count.ShouldBe(1);
+            subscribedWebhooks[0].WebhookDefinitions.ShouldContain(AppWebhookDefinitionNames.Test);
 
-            subscribedWebHooks[1].GetSubscribedWebhooks().Count.ShouldBe(2);
-            subscribedWebHooks[1].WebHookDefinitions.ShouldContain(AppWebHookDefinitionNames.Test);
-            subscribedWebHooks[1].WebHookDefinitions.ShouldContain(AppWebHookDefinitionNames.Users.Created);
+            subscribedWebhooks[1].GetSubscribedWebhooks().Count.ShouldBe(2);
+            subscribedWebhooks[1].WebhookDefinitions.ShouldContain(AppWebhookDefinitionNames.Test);
+            subscribedWebhooks[1].WebhookDefinitions.ShouldContain(AppWebhookDefinitionNames.Users.Created);
 
-            subscribedWebHooks[2].GetSubscribedWebhooks().Count.ShouldBe(3);
-            subscribedWebHooks[2].WebHookDefinitions.ShouldContain(AppWebHookDefinitionNames.Test);
-            subscribedWebHooks[2].WebHookDefinitions.ShouldContain(AppWebHookDefinitionNames.Users.Created);
-            subscribedWebHooks[2].WebHookDefinitions.ShouldContain(AppWebHookDefinitionNames.Theme.DefaultThemeChanged);
+            subscribedWebhooks[2].GetSubscribedWebhooks().Count.ShouldBe(3);
+            subscribedWebhooks[2].WebhookDefinitions.ShouldContain(AppWebhookDefinitionNames.Test);
+            subscribedWebhooks[2].WebhookDefinitions.ShouldContain(AppWebhookDefinitionNames.Users.Created);
+            subscribedWebhooks[2].WebhookDefinitions.ShouldContain(AppWebhookDefinitionNames.Theme.DefaultThemeChanged);
         }
 
         [Fact]
         public async Task Should_Update_Subscription_Async()
         {
-            var subscription = await CreateTestSubscriptionAsync(AppWebHookDefinitionNames.Test, AppWebHookDefinitionNames.Users.Created, AppWebHookDefinitionNames.Theme.DefaultThemeChanged);
+            var subscription = await CreateTestSubscriptionAsync(AppWebhookDefinitionNames.Test, AppWebhookDefinitionNames.Users.Created, AppWebhookDefinitionNames.Theme.DefaultThemeChanged);
 
             string headerKey = "MyHeaderKey", headerValue = "MyHeaderValue";
 
-            subscription.AddWebHookHeader(headerKey, headerValue);
-            subscription.UnsubscribeWebhook(AppWebHookDefinitionNames.Users.Created);
-            subscription.WebHookUri = "www.aspnetboilerplate.com";
+            subscription.AddWebhookHeader(headerKey, headerValue);
+            subscription.UnsubscribeWebhook(AppWebhookDefinitionNames.Users.Created);
+            subscription.WebhookUri = "www.aspnetboilerplate.com";
             subscription.Secret = "secret2";
 
-            await _webHookSubscriptionsStore.UpdateAsync(subscription);
+            await _webhookSubscriptionsStore.UpdateAsync(subscription);
 
-            WebHookSubscriptionInfo sub;
+            WebhookSubscriptionInfo sub;
             using (var uowManager = LocalIocManager.ResolveAsDisposable<IUnitOfWorkManager>())
             {
                 using (uowManager.Object.Begin())
                 {
                     using (uowManager.Object.Current.SetTenantId(AbpSession.TenantId))
                     {
-                        sub = await _webHookSubscriptionsStore.GetAsync(subscription.Id);
+                        sub = await _webhookSubscriptionsStore.GetAsync(subscription.Id);
                     }
                 }
             }
 
-            var webHookDefinitionAsList = sub.GetSubscribedWebhooks();
-            webHookDefinitionAsList.Count.ShouldBe(2);
-            webHookDefinitionAsList[0].ShouldBe(AppWebHookDefinitionNames.Test);
-            webHookDefinitionAsList[1].ShouldBe(AppWebHookDefinitionNames.Theme.DefaultThemeChanged);
+            var webhookDefinitionAsList = sub.GetSubscribedWebhooks();
+            webhookDefinitionAsList.Count.ShouldBe(2);
+            webhookDefinitionAsList[0].ShouldBe(AppWebhookDefinitionNames.Test);
+            webhookDefinitionAsList[1].ShouldBe(AppWebhookDefinitionNames.Theme.DefaultThemeChanged);
 
-            var additionalHeaderAsDictionary = sub.GetWebHookHeaders();
+            var additionalHeaderAsDictionary = sub.GetWebhookHeaders();
             additionalHeaderAsDictionary.Count.ShouldBe(1);
             additionalHeaderAsDictionary.ShouldContainKey(headerKey);
             additionalHeaderAsDictionary[headerKey].ShouldBe(headerValue);
 
-            sub.WebHookUri.ShouldBe(subscription.WebHookUri);
+            sub.WebhookUri.ShouldBe(subscription.WebhookUri);
             sub.Secret.ShouldBe(subscription.Secret);
         }
 
         [Fact]
         public async Task Should_Delete_Subscription_Async()
         {
-            var subscription = await CreateTestSubscriptionAsync(AppWebHookDefinitionNames.Test);
+            var subscription = await CreateTestSubscriptionAsync(AppWebhookDefinitionNames.Test);
 
             using (var uowManager = LocalIocManager.ResolveAsDisposable<IUnitOfWorkManager>())
             {
@@ -223,14 +223,14 @@ namespace Abp.Zero.SampleApp.Tests.WebHooks
                 {
                     using (uowManager.Object.Current.SetTenantId(AbpSession.TenantId))
                     {
-                        (await _webHookSubscriptionsStore.GetAsync(subscription.Id)).ShouldNotBeNull();
+                        (await _webhookSubscriptionsStore.GetAsync(subscription.Id)).ShouldNotBeNull();
 
-                        await _webHookSubscriptionsStore.DeleteAsync(subscription.Id);
+                        await _webhookSubscriptionsStore.DeleteAsync(subscription.Id);
                         await uow.CompleteAsync();
 
                         await Assert.ThrowsAsync<EntityNotFoundException>(async () =>
                         {
-                            await _webHookSubscriptionsStore.GetAsync(subscription.Id);
+                            await _webhookSubscriptionsStore.GetAsync(subscription.Id);
                         });
                     }
                 }
@@ -240,7 +240,7 @@ namespace Abp.Zero.SampleApp.Tests.WebHooks
         #endregion
 
         #region Sync
-        private WebHookSubscriptionInfo CreateTestSubscriptionSync(params string[] webHookDefinition)
+        private WebhookSubscriptionInfo CreateTestSubscriptionSync(params string[] webhookDefinition)
         {
             using (var uowManager = LocalIocManager.ResolveAsDisposable<IUnitOfWorkManager>())
             {
@@ -248,18 +248,18 @@ namespace Abp.Zero.SampleApp.Tests.WebHooks
                 {
                     using (uowManager.Object.Current.SetTenantId(AbpSession.TenantId))
                     {
-                        var subscription = new WebHookSubscriptionInfo()
+                        var subscription = new WebhookSubscriptionInfo()
                         {
-                            WebHookUri = "www.test.com",
+                            WebhookUri = "www.test.com",
                             Secret = "secret"
                         };
 
-                        foreach (var definition in webHookDefinition)
+                        foreach (var definition in webhookDefinition)
                         {
                             subscription.SubscribeWebhook(definition);
                         }
 
-                        _webHookSubscriptionsStore.Insert(subscription);
+                        _webhookSubscriptionsStore.Insert(subscription);
 
                         uow.Complete();
                         return subscription;
@@ -268,9 +268,9 @@ namespace Abp.Zero.SampleApp.Tests.WebHooks
             }
         }
 
-        private WebHookSubscriptionInfo CreateTestSubscriptionSync()
+        private WebhookSubscriptionInfo CreateTestSubscriptionSync()
         {
-            return CreateTestSubscriptionSync(AppWebHookDefinitionNames.Test);
+            return CreateTestSubscriptionSync(AppWebhookDefinitionNames.Test);
         }
 
         [Fact]
@@ -284,10 +284,10 @@ namespace Abp.Zero.SampleApp.Tests.WebHooks
                 {
                     using (uowManager.Object.Current.SetTenantId(AbpSession.TenantId))
                     {
-                        var sub = _webHookSubscriptionsStore.Get(subscription.Id);
+                        var sub = _webhookSubscriptionsStore.Get(subscription.Id);
 
                         sub.ShouldNotBeNull();
-                        sub.WebHookDefinitions.ShouldContain("Test");
+                        sub.WebhookDefinitions.ShouldContain("Test");
                         sub.Secret.ShouldBe("secret");
                     }
                 }
@@ -295,142 +295,142 @@ namespace Abp.Zero.SampleApp.Tests.WebHooks
         }
 
         [Fact]
-        public void Should_Get_Is_Subscribed_To_WebHooks_Sync()
+        public void Should_Get_Is_Subscribed_To_Webhooks_Sync()
         {
             CreateTestSubscriptionSync();
 
-            _webHookSubscriptionsStore.IsSubscribed(AbpSession.TenantId, AppWebHookDefinitionNames.Test).ShouldBeTrue();
-            _webHookSubscriptionsStore.IsSubscribed(AbpSession.TenantId, AppWebHookDefinitionNames.Test + "asd").ShouldBeFalse();
+            _webhookSubscriptionsStore.IsSubscribed(AbpSession.TenantId, AppWebhookDefinitionNames.Test).ShouldBeTrue();
+            _webhookSubscriptionsStore.IsSubscribed(AbpSession.TenantId, AppWebhookDefinitionNames.Test + "asd").ShouldBeFalse();
         }
 
         [Fact]
         public void Should_Get_All_Subscriptions_Sync()
         {
-            CreateTestSubscriptionSync();//AppWebHookDefinitionNames.Test
-            CreateTestSubscriptionSync(AppWebHookDefinitionNames.Users.Created);
-            CreateTestSubscriptionSync();//AppWebHookDefinitionNames.Test
-            CreateTestSubscriptionSync(AppWebHookDefinitionNames.Users.Created, AppWebHookDefinitionNames.Theme.DefaultThemeChanged);
+            CreateTestSubscriptionSync();//AppWebhookDefinitionNames.Test
+            CreateTestSubscriptionSync(AppWebhookDefinitionNames.Users.Created);
+            CreateTestSubscriptionSync();//AppWebhookDefinitionNames.Test
+            CreateTestSubscriptionSync(AppWebhookDefinitionNames.Users.Created, AppWebhookDefinitionNames.Theme.DefaultThemeChanged);
 
-            var testSubscriptions = _webHookSubscriptionsStore.GetAllSubscriptions(AbpSession.TenantId, AppWebHookDefinitionNames.Test);
+            var testSubscriptions = _webhookSubscriptionsStore.GetAllSubscriptions(AbpSession.TenantId, AppWebhookDefinitionNames.Test);
             testSubscriptions.Count.ShouldBe(2);
 
-            foreach (var webHookSubscriptionInfo in testSubscriptions)
+            foreach (var webhookSubscriptionInfo in testSubscriptions)
             {
-                webHookSubscriptionInfo.WebHookDefinitions.ShouldContain(AppWebHookDefinitionNames.Test);
+                webhookSubscriptionInfo.WebhookDefinitions.ShouldContain(AppWebhookDefinitionNames.Test);
             }
 
-            var userCreatedSubscriptions = _webHookSubscriptionsStore.GetAllSubscriptions(AbpSession.TenantId, AppWebHookDefinitionNames.Users.Created);
+            var userCreatedSubscriptions = _webhookSubscriptionsStore.GetAllSubscriptions(AbpSession.TenantId, AppWebhookDefinitionNames.Users.Created);
             userCreatedSubscriptions.Count.ShouldBe(2);
-            foreach (var webHookSubscriptionInfo in userCreatedSubscriptions)
+            foreach (var webhookSubscriptionInfo in userCreatedSubscriptions)
             {
-                webHookSubscriptionInfo.WebHookDefinitions.ShouldContain(AppWebHookDefinitionNames.Users.Created);
+                webhookSubscriptionInfo.WebhookDefinitions.ShouldContain(AppWebhookDefinitionNames.Users.Created);
             }
 
-            userCreatedSubscriptions[1].WebHookDefinitions.ShouldContain(AppWebHookDefinitionNames.Theme.DefaultThemeChanged);
+            userCreatedSubscriptions[1].WebhookDefinitions.ShouldContain(AppWebhookDefinitionNames.Theme.DefaultThemeChanged);
         }
 
         [Fact]
         public void Should_Subscribe_To_Multiple_Event_Sync()
         {
-            var subscription = CreateTestSubscriptionSync(AppWebHookDefinitionNames.Test, AppWebHookDefinitionNames.Users.Created, AppWebHookDefinitionNames.Theme.DefaultThemeChanged);
+            var subscription = CreateTestSubscriptionSync(AppWebhookDefinitionNames.Test, AppWebhookDefinitionNames.Users.Created, AppWebhookDefinitionNames.Theme.DefaultThemeChanged);
 
-            WebHookSubscriptionInfo sub;
+            WebhookSubscriptionInfo sub;
             using (var uowManager = LocalIocManager.ResolveAsDisposable<IUnitOfWorkManager>())
             {
                 using (uowManager.Object.Begin())
                 {
                     using (uowManager.Object.Current.SetTenantId(AbpSession.TenantId))
                     {
-                        sub = _webHookSubscriptionsStore.Get(subscription.Id);
+                        sub = _webhookSubscriptionsStore.Get(subscription.Id);
                     }
                 }
             }
 
-            sub.WebHookDefinitions.ShouldContain(AppWebHookDefinitionNames.Test);
-            sub.WebHookDefinitions.ShouldContain(AppWebHookDefinitionNames.Users.Created);
-            sub.WebHookDefinitions.ShouldContain(AppWebHookDefinitionNames.Theme.DefaultThemeChanged);
+            sub.WebhookDefinitions.ShouldContain(AppWebhookDefinitionNames.Test);
+            sub.WebhookDefinitions.ShouldContain(AppWebhookDefinitionNames.Users.Created);
+            sub.WebhookDefinitions.ShouldContain(AppWebhookDefinitionNames.Theme.DefaultThemeChanged);
 
-            var testSubscriptions1 = _webHookSubscriptionsStore.GetAllSubscriptions(AbpSession.TenantId, AppWebHookDefinitionNames.Test);
+            var testSubscriptions1 = _webhookSubscriptionsStore.GetAllSubscriptions(AbpSession.TenantId, AppWebhookDefinitionNames.Test);
             testSubscriptions1.Count.ShouldBe(1);
             testSubscriptions1.Single().Id.ShouldBe(sub.Id);
 
-            var testSubscriptions2 = _webHookSubscriptionsStore.GetAllSubscriptions(AbpSession.TenantId, AppWebHookDefinitionNames.Users.Created);
+            var testSubscriptions2 = _webhookSubscriptionsStore.GetAllSubscriptions(AbpSession.TenantId, AppWebhookDefinitionNames.Users.Created);
             testSubscriptions2.Count.ShouldBe(1);
             testSubscriptions2.Single().Id.ShouldBe(sub.Id);
 
-            var testSubscriptions3 = _webHookSubscriptionsStore.GetAllSubscriptions(AbpSession.TenantId, AppWebHookDefinitionNames.Theme.DefaultThemeChanged);
+            var testSubscriptions3 = _webhookSubscriptionsStore.GetAllSubscriptions(AbpSession.TenantId, AppWebhookDefinitionNames.Theme.DefaultThemeChanged);
             testSubscriptions3.Count.ShouldBe(1);
             testSubscriptions3.Single().Id.ShouldBe(sub.Id);
         }
 
         [Fact]
-        public void Should_Get_Subscribed_WebHooks_Sync()
+        public void Should_Get_Subscribed_Webhooks_Sync()
         {
-            CreateTestSubscriptionSync(AppWebHookDefinitionNames.Test);
-            CreateTestSubscriptionSync(AppWebHookDefinitionNames.Test, AppWebHookDefinitionNames.Users.Created);
-            CreateTestSubscriptionSync(AppWebHookDefinitionNames.Test, AppWebHookDefinitionNames.Users.Created, AppWebHookDefinitionNames.Theme.DefaultThemeChanged);
+            CreateTestSubscriptionSync(AppWebhookDefinitionNames.Test);
+            CreateTestSubscriptionSync(AppWebhookDefinitionNames.Test, AppWebhookDefinitionNames.Users.Created);
+            CreateTestSubscriptionSync(AppWebhookDefinitionNames.Test, AppWebhookDefinitionNames.Users.Created, AppWebhookDefinitionNames.Theme.DefaultThemeChanged);
 
-            var subscribedWebHooks = _webHookSubscriptionsStore.GetAllSubscriptions(AbpSession.TenantId);
-            subscribedWebHooks.Count.ShouldBe(3);
+            var subscribedWebhooks = _webhookSubscriptionsStore.GetAllSubscriptions(AbpSession.TenantId);
+            subscribedWebhooks.Count.ShouldBe(3);
 
-            subscribedWebHooks[0].GetSubscribedWebhooks().Count.ShouldBe(1);
-            subscribedWebHooks[0].WebHookDefinitions.ShouldContain(AppWebHookDefinitionNames.Test);
+            subscribedWebhooks[0].GetSubscribedWebhooks().Count.ShouldBe(1);
+            subscribedWebhooks[0].WebhookDefinitions.ShouldContain(AppWebhookDefinitionNames.Test);
 
-            subscribedWebHooks[1].GetSubscribedWebhooks().Count.ShouldBe(2);
-            subscribedWebHooks[1].WebHookDefinitions.ShouldContain(AppWebHookDefinitionNames.Test);
-            subscribedWebHooks[1].WebHookDefinitions.ShouldContain(AppWebHookDefinitionNames.Users.Created);
+            subscribedWebhooks[1].GetSubscribedWebhooks().Count.ShouldBe(2);
+            subscribedWebhooks[1].WebhookDefinitions.ShouldContain(AppWebhookDefinitionNames.Test);
+            subscribedWebhooks[1].WebhookDefinitions.ShouldContain(AppWebhookDefinitionNames.Users.Created);
 
-            subscribedWebHooks[2].GetSubscribedWebhooks().Count.ShouldBe(3);
-            subscribedWebHooks[2].WebHookDefinitions.ShouldContain(AppWebHookDefinitionNames.Test);
-            subscribedWebHooks[2].WebHookDefinitions.ShouldContain(AppWebHookDefinitionNames.Users.Created);
-            subscribedWebHooks[2].WebHookDefinitions.ShouldContain(AppWebHookDefinitionNames.Theme.DefaultThemeChanged);
+            subscribedWebhooks[2].GetSubscribedWebhooks().Count.ShouldBe(3);
+            subscribedWebhooks[2].WebhookDefinitions.ShouldContain(AppWebhookDefinitionNames.Test);
+            subscribedWebhooks[2].WebhookDefinitions.ShouldContain(AppWebhookDefinitionNames.Users.Created);
+            subscribedWebhooks[2].WebhookDefinitions.ShouldContain(AppWebhookDefinitionNames.Theme.DefaultThemeChanged);
         }
 
         [Fact]
         public void Should_Update_Subscription_Sync()
         {
-            var subscription = CreateTestSubscriptionSync(AppWebHookDefinitionNames.Test, AppWebHookDefinitionNames.Users.Created, AppWebHookDefinitionNames.Theme.DefaultThemeChanged);
+            var subscription = CreateTestSubscriptionSync(AppWebhookDefinitionNames.Test, AppWebhookDefinitionNames.Users.Created, AppWebhookDefinitionNames.Theme.DefaultThemeChanged);
 
             string headerKey = "MyHeaderKey", headerValue = "MyHeaderValue";
 
-            subscription.AddWebHookHeader(headerKey, headerValue);
-            subscription.UnsubscribeWebhook(AppWebHookDefinitionNames.Users.Created);
-            subscription.WebHookUri = "www.aspnetboilerplate.com";
+            subscription.AddWebhookHeader(headerKey, headerValue);
+            subscription.UnsubscribeWebhook(AppWebhookDefinitionNames.Users.Created);
+            subscription.WebhookUri = "www.aspnetboilerplate.com";
             subscription.Secret = "secret2";
 
-            _webHookSubscriptionsStore.Update(subscription);
+            _webhookSubscriptionsStore.Update(subscription);
 
-            WebHookSubscriptionInfo sub;
+            WebhookSubscriptionInfo sub;
             using (var uowManager = LocalIocManager.ResolveAsDisposable<IUnitOfWorkManager>())
             {
                 using (uowManager.Object.Begin())
                 {
                     using (uowManager.Object.Current.SetTenantId(AbpSession.TenantId))
                     {
-                        sub = _webHookSubscriptionsStore.Get(subscription.Id);
+                        sub = _webhookSubscriptionsStore.Get(subscription.Id);
                     }
                 }
             }
 
-            var webHookDefinitionAsList = sub.GetSubscribedWebhooks();
-            webHookDefinitionAsList.Count.ShouldBe(2);
-            webHookDefinitionAsList.ShouldNotContain(AppWebHookDefinitionNames.Users.Created);
-            webHookDefinitionAsList[0].ShouldBe(AppWebHookDefinitionNames.Test);
-            webHookDefinitionAsList[1].ShouldBe(AppWebHookDefinitionNames.Theme.DefaultThemeChanged);
+            var webhookDefinitionAsList = sub.GetSubscribedWebhooks();
+            webhookDefinitionAsList.Count.ShouldBe(2);
+            webhookDefinitionAsList.ShouldNotContain(AppWebhookDefinitionNames.Users.Created);
+            webhookDefinitionAsList[0].ShouldBe(AppWebhookDefinitionNames.Test);
+            webhookDefinitionAsList[1].ShouldBe(AppWebhookDefinitionNames.Theme.DefaultThemeChanged);
 
-            var additionalHeaderAsDictionary = sub.GetWebHookHeaders();
+            var additionalHeaderAsDictionary = sub.GetWebhookHeaders();
             additionalHeaderAsDictionary.Count.ShouldBe(1);
             additionalHeaderAsDictionary.ShouldContainKey(headerKey);
             additionalHeaderAsDictionary[headerKey].ShouldBe(headerValue);
 
-            sub.WebHookUri.ShouldBe(subscription.WebHookUri);
+            sub.WebhookUri.ShouldBe(subscription.WebhookUri);
             sub.Secret.ShouldBe(subscription.Secret);
         }
 
         [Fact]
         public void Should_Delete_Subscription_Sync()
         {
-            var subscription = CreateTestSubscriptionSync(AppWebHookDefinitionNames.Test);
+            var subscription = CreateTestSubscriptionSync(AppWebhookDefinitionNames.Test);
 
             using (var uowManager = LocalIocManager.ResolveAsDisposable<IUnitOfWorkManager>())
             {
@@ -438,11 +438,11 @@ namespace Abp.Zero.SampleApp.Tests.WebHooks
                 {
                     using (uowManager.Object.Current.SetTenantId(AbpSession.TenantId))
                     {
-                        _webHookSubscriptionsStore.Get(subscription.Id).ShouldNotBeNull();
+                        _webhookSubscriptionsStore.Get(subscription.Id).ShouldNotBeNull();
 
-                        _webHookSubscriptionsStore.Delete(subscription.Id);
+                        _webhookSubscriptionsStore.Delete(subscription.Id);
                         uow.Complete();
-                        Assert.Throws<EntityNotFoundException>(() => { _webHookSubscriptionsStore.Get(subscription.Id); });
+                        Assert.Throws<EntityNotFoundException>(() => { _webhookSubscriptionsStore.Get(subscription.Id); });
                     }
                 }
             }

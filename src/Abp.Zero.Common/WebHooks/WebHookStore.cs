@@ -4,59 +4,59 @@ using Abp.Dependency;
 using Abp.Domain.Repositories;
 using Abp.Domain.Uow;
 
-namespace Abp.WebHooks
+namespace Abp.Webhooks
 {
     /// <summary>
-    /// Implements <see cref="IWebHookStore"/> using repositories.
+    /// Implements <see cref="IWebhookStore"/> using repositories.
     /// </summary>
-    public class WebHookStore : IWebHookStore, ITransientDependency
+    public class WebhookStore : IWebhookStore, ITransientDependency
     {
-        private readonly IRepository<WebHookInfo, Guid> _webHookRepository;
+        private readonly IRepository<WebhookInfo, Guid> _webhookRepository;
         private readonly IUnitOfWorkManager _unitOfWorkManager;
 
-        public WebHookStore(IRepository<WebHookInfo, Guid> webHookRepository, IUnitOfWorkManager unitOfWorkManager)
+        public WebhookStore(IRepository<WebhookInfo, Guid> webhookRepository, IUnitOfWorkManager unitOfWorkManager)
         {
-            _webHookRepository = webHookRepository;
+            _webhookRepository = webhookRepository;
             _unitOfWorkManager = unitOfWorkManager;
         }
 
         [UnitOfWork]
-        public virtual async Task<Guid> InsertAndGetIdAsync(WebHookInfo webHookInfo)
+        public virtual async Task<Guid> InsertAndGetIdAsync(WebhookInfo webhookInfo)
         {
-            using (_unitOfWorkManager.Current.SetTenantId(webHookInfo.TenantId))
+            using (_unitOfWorkManager.Current.SetTenantId(webhookInfo.TenantId))
             {
-                var id = await _webHookRepository.InsertAndGetIdAsync(webHookInfo);
+                var id = await _webhookRepository.InsertAndGetIdAsync(webhookInfo);
                 await _unitOfWorkManager.Current.SaveChangesAsync();
                 return id;
             }
         }
 
         [UnitOfWork]
-        public virtual Guid InsertAndGetId(WebHookInfo webHookInfo)
+        public virtual Guid InsertAndGetId(WebhookInfo webhookInfo)
         {
-            using (_unitOfWorkManager.Current.SetTenantId(webHookInfo.TenantId))
+            using (_unitOfWorkManager.Current.SetTenantId(webhookInfo.TenantId))
             {
-                var id = _webHookRepository.InsertAndGetId(webHookInfo);
+                var id = _webhookRepository.InsertAndGetId(webhookInfo);
                 _unitOfWorkManager.Current.SaveChanges();
                 return id;
             }
         }
 
         [UnitOfWork]
-        public virtual Task<WebHookInfo> GetAsync(int? tenantId, Guid id)
+        public virtual Task<WebhookInfo> GetAsync(int? tenantId, Guid id)
         {
             using (_unitOfWorkManager.Current.SetTenantId(tenantId))
             {
-                return _webHookRepository.GetAsync(id);
+                return _webhookRepository.GetAsync(id);
             }
         }
 
         [UnitOfWork]
-        public virtual WebHookInfo Get(int? tenantId, Guid id)
+        public virtual WebhookInfo Get(int? tenantId, Guid id)
         {
             using (_unitOfWorkManager.Current.SetTenantId(tenantId))
             {
-                return _webHookRepository.Get(id);
+                return _webhookRepository.Get(id);
             }
         }
     }

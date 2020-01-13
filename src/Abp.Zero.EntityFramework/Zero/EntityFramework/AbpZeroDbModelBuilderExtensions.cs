@@ -12,7 +12,7 @@ using Abp.Localization;
 using Abp.MultiTenancy;
 using Abp.Notifications;
 using Abp.Organizations;
-using Abp.WebHooks;
+using Abp.Webhooks;
 
 namespace Abp.Zero.EntityFramework
 {
@@ -69,8 +69,8 @@ namespace Abp.Zero.EntityFramework
             SetTableName<UserAccount>(modelBuilder, prefix + "UserAccounts", schemaName);
             SetTableName<UserClaim>(modelBuilder, prefix + "UserClaims", schemaName);
             SetTableName<RoleClaim>(modelBuilder, prefix + "RoleClaims", schemaName);
-            SetTableName<WebHookInfo>(modelBuilder, prefix + "WebHooks", schemaName);
-            SetTableName<WebHookSubscriptionInfo>(modelBuilder, prefix + "WebHookSubscriptions", schemaName);
+            SetTableName<WebhookInfo>(modelBuilder, prefix + "Webhooks", schemaName);
+            SetTableName<WebhookSubscriptionInfo>(modelBuilder, prefix + "WebhookSubscriptions", schemaName);
             SetTableName<WebhookSendAttempt>(modelBuilder, prefix + "WebhookSendAttempts", schemaName);
         }
 

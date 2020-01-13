@@ -1,43 +1,43 @@
 ﻿using System.Collections.Generic;
 using System.Threading.Tasks;
 
-namespace Abp.WebHooks
+namespace Abp.Webhooks
 {
-    public interface IWebHookDefinitionManager
+    public interface IWebhookDefinitionManager
     {
         /// <summary>
         /// Adds the specified webhook definition. Throws exception if it is already added
         /// </summary>
-        void Add(WebHookDefinition webHookDefinition);
+        void Add(WebhookDefinition webhookDefinition);
 
         /// <summary>
         /// Adds the specified webhook definition.If there is already a definition with given name, replaces it with current one
         /// </summary>
-        void AddOrReplace(WebHookDefinition webHookDefinition);
+        void AddOrReplace(WebhookDefinition webhookDefinition);
 
         /// <summary>
         /// Gets a webhook definition by name.
         /// Returns null if there is no webhook definition with given name.
         /// </summary>
-        WebHookDefinition GetOrNull(string name);
+        WebhookDefinition GetOrNull(string name);
 
         /// <summary>
         /// Gets a webhook definition by name.
         /// Throws exception if there is no webhook definition with given name.
         /// </summary>
-        WebHookDefinition Get(string name);
+        WebhookDefinition Get(string name);
 
         /// <summary>
         /// Gets all webhook definitions.
         /// </summary>
-        IReadOnlyList<WebHookDefinition> GetAll();
+        IReadOnlyList<WebhookDefinition> GetAll();
 
         /// <summary>
         /// Remove webhook with given name
         /// </summary>
         /// <param name="name">webhook definition name</param>
-        /// <param name="webHookDefinition"></param>
-        bool TryRemove(string name, out WebHookDefinition webHookDefinition);
+        /// <param name="webhookDefinition"></param>
+        bool TryRemove(string name, out WebhookDefinition webhookDefinition);
 
         /// <summary>
         /// Checks if webhook definitions contains given webhook name 

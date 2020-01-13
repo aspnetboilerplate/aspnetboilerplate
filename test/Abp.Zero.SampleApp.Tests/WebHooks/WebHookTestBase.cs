@@ -9,15 +9,15 @@ using Abp.Localization;
 using Abp.Modules;
 using Abp.MultiTenancy;
 using Abp.UI.Inputs;
-using Abp.WebHooks;
+using Abp.Webhooks;
 using Abp.Zero.SampleApp.Application;
 using Abp.Zero.SampleApp.MultiTenancy;
 using Castle.MicroKernel.Registration;
 using NSubstitute;
 
-namespace Abp.Zero.SampleApp.Tests.WebHooks
+namespace Abp.Zero.SampleApp.Tests.Webhooks
 {
-    public class WebHookTestBase : SampleAppTestBase<WebHookPublishTestModule>
+    public class WebhookTestBase : SampleAppTestBase<WebhookPublishTestModule>
     {
         protected T RegisterFake<T>() where T : class
         {
@@ -29,28 +29,28 @@ namespace Abp.Zero.SampleApp.Tests.WebHooks
         /// <summary>
         /// Creates user, gives him given permissions than subscribe to webhooks.
         /// </summary>
-        /// <param name="webHookDefinitionNames">WebHook to subscribe</param>
+        /// <param name="webhookDefinitionNames">Webhook to subscribe</param>
         /// <param name="tenantFeatures">Feature what will be added to created tenant</param>
         /// <returns>User and subscription</returns>
 
-        protected async Task<WebHookSubscription> CreateTenantAndSubscribeToWebhookAsync(List<string> webHookDefinitionNames, Dictionary<string, string> tenantFeatures = null)
+        protected async Task<WebhookSubscription> CreateTenantAndSubscribeToWebhookAsync(List<string> webhookDefinitionNames, Dictionary<string, string> tenantFeatures = null)
         {
             var tenantId = await CreateAndGetTenantIdWithFeaturesAsync(tenantFeatures);
 
-            var webHookSubscriptionManager = Resolve<IWebHookSubscriptionManager>();
+            var webhookSubscriptionManager = Resolve<IWebhookSubscriptionManager>();
 
-            var subscription = new WebHookSubscription
+            var subscription = new WebhookSubscription
             {
                 TenantId = tenantId,
-                WebHookUri = "www.mywebhook.com",
-                WebHookDefinitions = webHookDefinitionNames,
+                WebhookUri = "www.mywebhook.com",
+                WebhookDefinitions = webhookDefinitionNames,
                 Headers = new Dictionary<string, string>
                 {
                     { "Key","Value"}
                 }
             };
 
-            await webHookSubscriptionManager.AddOrUpdateSubscriptionAsync(subscription);
+            await webhookSubscriptionManager.AddOrUpdateSubscriptionAsync(subscription);
 
             return subscription;
         }
@@ -58,26 +58,26 @@ namespace Abp.Zero.SampleApp.Tests.WebHooks
         /// <summary>
         /// Creates tenant, adds given feature with given value, then subscribes to webhook
         /// </summary>
-        /// <param name="webHookDefinitionName">webhook name to subscribe</param>
+        /// <param name="webhookDefinitionName">webhook name to subscribe</param>
         /// <param name="tenantFeatureKey"></param>
         /// <param name="tenantFeatureValue"></param>
         /// <returns></returns>
-        protected Task<WebHookSubscription> CreateTenantAndSubscribeToWebhookAsync(string webHookDefinitionName, string tenantFeatureKey = null, string tenantFeatureValue = null)
+        protected Task<WebhookSubscription> CreateTenantAndSubscribeToWebhookAsync(string webhookDefinitionName, string tenantFeatureKey = null, string tenantFeatureValue = null)
         {
-            return CreateTenantAndSubscribeToWebhookAsync(new List<string> { webHookDefinitionName },
+            return CreateTenantAndSubscribeToWebhookAsync(new List<string> { webhookDefinitionName },
                 new Dictionary<string, string> { { tenantFeatureKey, tenantFeatureValue } });
         }
 
         /// <summary>
         /// Creates tenant, adds given feature with given value, then subscribes to webhook
         /// </summary>
-        /// <param name="webHookDefinitionName">webhook name to subscribe</param>
+        /// <param name="webhookDefinitionName">webhook name to subscribe</param>
         /// <param name="tenantFeatureKey"></param>
         /// <param name="tenantFeatureValue"></param>
         /// <returns></returns>
-        protected Task<WebHookSubscription> CreateTenantAndSubscribeToWebhookAsync(string webHookDefinitionName, Dictionary<string, string> tenantFeatures = null)
+        protected Task<WebhookSubscription> CreateTenantAndSubscribeToWebhookAsync(string webhookDefinitionName, Dictionary<string, string> tenantFeatures = null)
         {
-            return CreateTenantAndSubscribeToWebhookAsync(new List<string> { webHookDefinitionName }, tenantFeatures);
+            return CreateTenantAndSubscribeToWebhookAsync(new List<string> { webhookDefinitionName }, tenantFeatures);
         }
 
         protected async Task<int> CreateAndGetTenantIdWithFeaturesAsync(string featureKey, string featureValue)
@@ -125,39 +125,39 @@ namespace Abp.Zero.SampleApp.Tests.WebHooks
         }
     }
 
-    public class TestWebHookDefinitionProvider : WebHookDefinitionProvider
+    public class TestWebhookDefinitionProvider : WebhookDefinitionProvider
     {
-        public override void SetWebHooks(IWebHookDefinitionContext context)
+        public override void SetWebhooks(IWebhookDefinitionContext context)
         {
             context.Manager.Add(
-                new WebHookDefinition(
-                    AppWebHookDefinitionNames.Test,
-                    L("TestWebHook"),
+                new WebhookDefinition(
+                    AppWebhookDefinitionNames.Test,
+                    L("TestWebhook"),
                     L("DefaultDescription")
                 ));
 
             context.Manager.Add(
-                new WebHookDefinition(
-                    AppWebHookDefinitionNames.Users.Created,
-                    L("UserCreatedWebHook"),
+                new WebhookDefinition(
+                    AppWebhookDefinitionNames.Users.Created,
+                    L("UserCreatedWebhook"),
                     L("DescriptionCreated"),
-                    new SimpleFeatureDependency(AppFeatures.WebHookFeature)
+                    new SimpleFeatureDependency(AppFeatures.WebhookFeature)
                 ));
 
             context.Manager.Add(
-                new WebHookDefinition(
-                    AppWebHookDefinitionNames.Users.Deleted,
-                    L("DeletedDeletedWebHook"),
+                new WebhookDefinition(
+                    AppWebhookDefinitionNames.Users.Deleted,
+                    L("DeletedDeletedWebhook"),
                     L("DescriptionDeletedDeleted"),
-                    new SimpleFeatureDependency(false, AppFeatures.WebHookFeature, AppFeatures.TestFeature)
+                    new SimpleFeatureDependency(false, AppFeatures.WebhookFeature, AppFeatures.TestFeature)
                 ));
 
             context.Manager.Add(
-                new WebHookDefinition(
-                    AppWebHookDefinitionNames.Theme.DefaultThemeChanged,
+                new WebhookDefinition(
+                    AppWebhookDefinitionNames.Theme.DefaultThemeChanged,
                     L("DefaultThemeChanged"),
                     L("TriggersWhenDefaultThemeChanged"),
-                    new SimpleFeatureDependency(true, AppFeatures.WebHookFeature, AppFeatures.ThemeFeature)
+                    new SimpleFeatureDependency(true, AppFeatures.WebhookFeature, AppFeatures.ThemeFeature)
                 ));
         }
 
@@ -167,7 +167,7 @@ namespace Abp.Zero.SampleApp.Tests.WebHooks
         }
     }
 
-    public class TestWebHookFeatureProvider : FeatureProvider
+    public class TestWebhookFeatureProvider : FeatureProvider
     {
         public override void SetFeatures(IFeatureDefinitionContext context)
         {
@@ -186,9 +186,9 @@ namespace Abp.Zero.SampleApp.Tests.WebHooks
             );
 
             context.Create(
-               AppFeatures.WebHookFeature,
+               AppFeatures.WebhookFeature,
                defaultValue: "false",
-               displayName: L("WebHookFeature"),
+               displayName: L("WebhookFeature"),
                inputType: new CheckboxInputType()
            );
         }
@@ -200,15 +200,15 @@ namespace Abp.Zero.SampleApp.Tests.WebHooks
     }
 
     [DependsOn(typeof(SampleAppTestModule))]
-    public class WebHookPublishTestModule : AbpModule
+    public class WebhookPublishTestModule : AbpModule
     {
         public override void PreInitialize()
         {
-            Configuration.WebHooks.Providers.Add<TestWebHookDefinitionProvider>();
+            Configuration.Webhooks.Providers.Add<TestWebhookDefinitionProvider>();
 
-            Configuration.Features.Providers.Add<TestWebHookFeatureProvider>();
+            Configuration.Features.Providers.Add<TestWebhookFeatureProvider>();
 
-            IocManager.RegisterAssemblyByConvention(typeof(WebHookPublishTestModule).Assembly);
+            IocManager.RegisterAssemblyByConvention(typeof(WebhookPublishTestModule).Assembly);
         }
     }
 }

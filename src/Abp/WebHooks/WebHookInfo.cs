@@ -3,21 +3,21 @@ using System.ComponentModel.DataAnnotations.Schema;
 using Abp.Domain.Entities;
 using Abp.Domain.Entities.Auditing;
 
-namespace Abp.WebHooks
+namespace Abp.Webhooks
 {
     /// <summary>
-    /// Store created web hooks. To see who get that webhook check with <see cref="WebhookSendAttempt.WebHookId"/> and you can get <see cref="WebhookSendAttempt.WebHookSubscriptionId"/>
+    /// Store created web hooks. To see who get that webhook check with <see cref="WebhookSendAttempt.WebhookId"/> and you can get <see cref="WebhookSendAttempt.WebhookSubscriptionId"/>
     /// </summary>
-    [Table("AbpWebHooks")]
-    public class WebHookInfo : Entity<Guid>, IMayHaveTenant, IHasCreationTime, ISoftDelete, IHasDeletionTime
+    [Table("AbpWebhooks")]
+    public class WebhookInfo : Entity<Guid>, IMayHaveTenant, IHasCreationTime, ISoftDelete, IHasDeletionTime
     {
         /// <summary>
         /// Webhook unique name id
         /// </summary>
-        public string WebHookDefinition { get; set; }
+        public string WebhookDefinition { get; set; }
 
         /// <summary>
-        /// WebHook data as JSON string.
+        /// Webhook data as JSON string.
         /// </summary>
         public string Data { get; set; }
 

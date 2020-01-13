@@ -15,7 +15,7 @@ using Abp.Notifications;
 using Abp.Organizations;
 using System.Threading;
 using System.Threading.Tasks;
-using Abp.WebHooks;
+using Abp.Webhooks;
 
 namespace Abp.Zero.EntityFramework
 {
@@ -143,12 +143,12 @@ namespace Abp.Zero.EntityFramework
         /// <summary>
         /// Webhook information
         /// </summary>
-        public virtual IDbSet<WebHookInfo> WebHooks { get; set; }
+        public virtual IDbSet<WebhookInfo> Webhooks { get; set; }
 
         /// <summary>
         /// Web subscriptions
         /// </summary>
-        public virtual IDbSet<WebHookSubscriptionInfo> WebHookSubscriptions { get; set; }
+        public virtual IDbSet<WebhookSubscriptionInfo> WebhookSubscriptions { get; set; }
 
         /// <summary>
         /// Webhook work items

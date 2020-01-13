@@ -5,11 +5,11 @@ using Abp.Domain.Entities;
 using Abp.Domain.Entities.Auditing;
 using Abp.MultiTenancy;
 
-namespace Abp.WebHooks
+namespace Abp.Webhooks
 {
-    [Table("AbpWebHookSubscriptions")]
+    [Table("AbpWebhookSubscriptions")]
     [MultiTenancySide(MultiTenancySides.Host)]
-    public class WebHookSubscriptionInfo : CreationAuditedEntity<Guid>, IPassivable
+    public class WebhookSubscriptionInfo : CreationAuditedEntity<Guid>, IPassivable
     {
         /// <summary>
         /// Subscribed Tenant's id .
@@ -20,7 +20,7 @@ namespace Abp.WebHooks
         /// Subscription webhook endpoint
         /// </summary>
         [Required]
-        public string WebHookUri { get; set; }
+        public string WebhookUri { get; set; }
 
         /// <summary>
         /// Webhook secret
@@ -36,19 +36,19 @@ namespace Abp.WebHooks
         /// <summary>
         /// Subscribed webhook definitions unique names.It contains webhook definitions list as json
         /// <para>
-        /// Do not change it manually. Use <see cref="WebHookSubscriptionExtensions.SubscribeWebhook"/>,
-        /// <see cref="WebHookSubscriptionExtensions.UnsubscribeWebhook"/> and
-        /// <see cref="WebHookSubscriptionExtensions.RemoveAllSubscribedWebhooks"/> to change it.
+        /// Do not change it manually. Use <see cref="WebHookSubscriptionExtensions.AddWebhookDefinition"/>,
+        /// <see cref="WebHookSubscriptionExtensions.RemoveWebhookDefinition"/> and
+        /// <see cref="WebHookSubscriptionExtensions.ClearAllSubscriptions"/> to change it.
         /// </para> 
         /// </summary>
-        public string WebHookDefinitions { get; set; }
+        public string WebhookDefinitions { get; set; }
 
         /// <summary>
         /// Gets a set of additional HTTP headers.That headers will be sent with the webhook. It contains webhook header dictionary as json
         /// </summary>
         public string Headers { get; set; }
 
-        public WebHookSubscriptionInfo()
+        public WebhookSubscriptionInfo()
         {
             IsActive = true;
         }

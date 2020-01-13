@@ -12,7 +12,7 @@ using Microsoft.EntityFrameworkCore;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
-using Abp.WebHooks;
+using Abp.Webhooks;
 
 namespace Abp.Zero.EntityFrameworkCore
 {
@@ -144,12 +144,12 @@ namespace Abp.Zero.EntityFrameworkCore
         /// <summary>
         /// Webhook information
         /// </summary>
-        public virtual DbSet<WebHookInfo> WebHooks { get; set; }
+        public virtual DbSet<WebhookInfo> Webhooks { get; set; }
 
         /// <summary>
         /// Web subscriptions
         /// </summary>
-        public virtual DbSet<WebHookSubscriptionInfo> WebHookSubscriptions { get; set; }
+        public virtual DbSet<WebhookSubscriptionInfo> WebhookSubscriptions { get; set; }
 
         /// <summary>
         /// Webhook work items

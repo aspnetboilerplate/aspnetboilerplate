@@ -3,9 +3,9 @@ using Abp.Application.Features;
 using Abp.Authorization;
 using Abp.Localization;
 
-namespace Abp.WebHooks
+namespace Abp.Webhooks
 {
-    public class WebHookDefinition
+    public class WebhookDefinition
     {
         /// <summary>
         /// Unique name of the webhook.
@@ -30,7 +30,7 @@ namespace Abp.WebHooks
         /// </summary>
         public IFeatureDependency FeatureDependency { get; set; }
 
-        public WebHookDefinition(string name, ILocalizableString displayName = null, ILocalizableString description = null, IFeatureDependency featureDependency = null)
+        public WebhookDefinition(string name, ILocalizableString displayName = null, ILocalizableString description = null, IFeatureDependency featureDependency = null)
         {
             if (string.IsNullOrWhiteSpace(name))
             {

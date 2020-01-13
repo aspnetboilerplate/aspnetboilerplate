@@ -1,32 +1,32 @@
 ﻿using System;
 using System.Threading.Tasks;
 
-namespace Abp.WebHooks
+namespace Abp.Webhooks
 {
     /// <summary>
-    /// Null pattern implementation of <see cref="IWebHookSubscriptionsStore"/>.
-    /// It's used if <see cref="IWebHookSubscriptionsStore"/> is not implemented by actual persistent store
+    /// Null pattern implementation of <see cref="IWebhookSubscriptionsStore"/>.
+    /// It's used if <see cref="IWebhookSubscriptionsStore"/> is not implemented by actual persistent store
     /// </summary>
-    public class NullWebHookStore : IWebHookStore
+    public class NullWebhookStore : IWebhookStore
     {
-        public static NullWebHookStore Instance { get; } = new NullWebHookStore();
+        public static NullWebhookStore Instance { get; } = new NullWebhookStore();
 
-        public Task<Guid> InsertAndGetIdAsync(WebHookInfo webHookInfo)
+        public Task<Guid> InsertAndGetIdAsync(WebhookInfo webhookInfo)
         {
             return Task.FromResult<Guid>(default);
         }
 
-        public Guid InsertAndGetId(WebHookInfo webHookInfo)
+        public Guid InsertAndGetId(WebhookInfo webhookInfo)
         {
             return default;
         }
 
-        public Task<WebHookInfo> GetAsync(int? tenantId, Guid id)
+        public Task<WebhookInfo> GetAsync(int? tenantId, Guid id)
         {
-            return Task.FromResult<WebHookInfo>(default);
+            return Task.FromResult<WebhookInfo>(default);
         }
 
-        public WebHookInfo Get(int? tenantId, Guid id)
+        public WebhookInfo Get(int? tenantId, Guid id)
         {
             return default;
         }

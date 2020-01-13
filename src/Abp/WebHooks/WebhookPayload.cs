@@ -1,4 +1,4 @@
-﻿namespace Abp.WebHooks
+﻿namespace Abp.Webhooks
 {
     public class WebhookPayload
     {

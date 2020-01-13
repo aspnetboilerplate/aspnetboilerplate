@@ -1,28 +1,28 @@
 ﻿using System;
 using System.Threading.Tasks;
 
-namespace Abp.WebHooks
+namespace Abp.Webhooks
 {
-    public interface IWebHookStore
+    public interface IWebhookStore
     {
         /// <summary>
         /// Inserts to persistent store
         /// </summary>
-        Task<Guid> InsertAndGetIdAsync(WebHookInfo webHookInfo);
+        Task<Guid> InsertAndGetIdAsync(WebhookInfo webhookInfo);
 
         /// <summary>
         /// Inserts to persistent store
         /// </summary>
-        Guid InsertAndGetId(WebHookInfo webHookInfo);
+        Guid InsertAndGetId(WebhookInfo webhookInfo);
 
         /// <summary>
         /// Gets Webhook info by id
         /// </summary>
-        Task<WebHookInfo> GetAsync(int? tenantId, Guid id);
+        Task<WebhookInfo> GetAsync(int? tenantId, Guid id);
 
         /// <summary>
         /// Gets Webhook info by id
         /// </summary>
-        WebHookInfo Get(int? tenantId, Guid id);
+        WebhookInfo Get(int? tenantId, Guid id);
     }
 }

@@ -1,10 +1,10 @@
-﻿namespace Abp.WebHooks
+﻿namespace Abp.Webhooks
 {
-    public class WebHookDefinitionContext : IWebHookDefinitionContext
+    public class WebhookDefinitionContext : IWebhookDefinitionContext
     {
-        public IWebHookDefinitionManager Manager { get; private set; }
+        public IWebhookDefinitionManager Manager { get; private set; }
         
-        public WebHookDefinitionContext(IWebHookDefinitionManager manager)
+        public WebhookDefinitionContext(IWebhookDefinitionManager manager)
         {
             Manager = manager;
         }

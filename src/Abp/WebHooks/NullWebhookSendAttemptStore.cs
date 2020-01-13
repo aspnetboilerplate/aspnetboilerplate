@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Threading.Tasks;
 
-namespace Abp.WebHooks
+namespace Abp.Webhooks
 {
     public class NullWebhookSendAttemptStore : IWebhookSendAttemptStore
     {
@@ -35,12 +35,12 @@ namespace Abp.WebHooks
             return default;
         }
 
-        public Task<int> GetSendAttemptCountAsync(int? tenantId, Guid webHookId, Guid webHookSubscriptionId)
+        public Task<int> GetSendAttemptCountAsync(int? tenantId, Guid webhookId, Guid webhookSubscriptionId)
         {
             return Task.FromResult(int.MaxValue);
         }
 
-        public int GetSendAttemptCount(int? tenantId, Guid webHookId, Guid webHookSubscriptionId)
+        public int GetSendAttemptCount(int? tenantId, Guid webhookId, Guid webhookSubscriptionId)
         {
             return int.MaxValue;
         }

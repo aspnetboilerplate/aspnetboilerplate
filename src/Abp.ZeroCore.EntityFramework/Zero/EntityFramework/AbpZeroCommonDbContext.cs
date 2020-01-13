@@ -12,7 +12,7 @@ using Abp.Localization;
 using Abp.Notifications;
 using Abp.Organizations;
 using Abp.EntityFramework.Extensions;
-using Abp.WebHooks;
+using Abp.Webhooks;
 
 namespace Abp.Zero.EntityFramework
 {
@@ -129,12 +129,12 @@ namespace Abp.Zero.EntityFramework
         /// <summary>
         /// Webhook information
         /// </summary>
-        public virtual DbSet<WebHookInfo> WebHooks { get; set; }
+        public virtual DbSet<WebhookInfo> Webhooks { get; set; }
 
         /// <summary>
         /// Web subscriptions
         /// </summary>
-        public virtual DbSet<WebHookSubscriptionInfo> WebHookSubscriptions { get; set; }
+        public virtual DbSet<WebhookSubscriptionInfo> WebhookSubscriptions { get; set; }
         
         /// <summary>
         /// Default constructor.

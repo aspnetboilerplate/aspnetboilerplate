@@ -10,7 +10,7 @@ using Abp.Events.Bus;
 using Abp.Notifications;
 using Abp.Resources.Embedded;
 using Abp.Runtime.Caching.Configuration;
-using Abp.WebHooks;
+using Abp.Webhooks;
 
 namespace Abp.Configuration.Startup
 {
@@ -114,7 +114,7 @@ namespace Abp.Configuration.Startup
         /// <summary>
         /// Used to configure webhook system.
         /// </summary>
-        IWebHooksConfiguration WebHooks { get; }
+        IWebhooksConfiguration Webhooks { get; }
 
         /// <summary>
         /// Used to replace a service type.

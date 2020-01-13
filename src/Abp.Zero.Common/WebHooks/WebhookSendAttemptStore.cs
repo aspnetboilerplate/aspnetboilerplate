@@ -6,7 +6,7 @@ using Abp.Domain.Repositories;
 using Abp.Domain.Uow;
 using Abp.Linq;
 
-namespace Abp.WebHooks
+namespace Abp.Webhooks
 {
     /// <summary>
     /// Implements <see cref="IWebhookSendAttemptStore"/> using repositories.
@@ -84,29 +84,29 @@ namespace Abp.WebHooks
         }
 
         [UnitOfWork]
-        public virtual async Task<int> GetSendAttemptCountAsync(int? tenantId, Guid webHookId, Guid webHookSubscriptionId)
+        public virtual async Task<int> GetSendAttemptCountAsync(int? tenantId, Guid webhookId, Guid webhookSubscriptionId)
         {
             using (_unitOfWorkManager.Current.SetTenantId(tenantId))
             {
                 return await AsyncQueryableExecuter.CountAsync(
                     _webhookSendAttemptRepository.GetAll()
                         .Where(workItem =>
-                            workItem.WebHookId == webHookId &&
-                            workItem.WebHookSubscriptionId == webHookSubscriptionId
+                            workItem.WebhookId == webhookId &&
+                            workItem.WebhookSubscriptionId == webhookSubscriptionId
                         )
                 );
             }
         }
 
         [UnitOfWork]
-        public virtual int GetSendAttemptCount(int? tenantId, Guid webHookId, Guid webHookSubscriptionId)
+        public virtual int GetSendAttemptCount(int? tenantId, Guid webhookId, Guid webhookSubscriptionId)
         {
             using (_unitOfWorkManager.Current.SetTenantId(tenantId))
             {
                 return _webhookSendAttemptRepository.GetAll()
                     .Count(workItem =>
-                        workItem.WebHookId == webHookId &&
-                        workItem.WebHookSubscriptionId == webHookSubscriptionId);
+                        workItem.WebhookId == webhookId &&
+                        workItem.WebhookSubscriptionId == webhookSubscriptionId);
             }
         }
     }

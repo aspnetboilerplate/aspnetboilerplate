@@ -1,40 +1,40 @@
 ﻿using System;
 using System.Collections.Generic;
 
-namespace Abp.WebHooks
+namespace Abp.Webhooks
 {
-    public class WebHookSenderInput
+    public class WebhookSenderInput
     {
         public int? TenantId { get; set; }
 
         //Webhook information 
 
         /// <summary>
-        /// <see cref="WebHookInfo"/> foreign id 
+        /// <see cref="WebhookInfo"/> foreign id 
         /// </summary>
-        public Guid WebHookId { get; set; }
+        public Guid WebhookId { get; set; }
 
         /// <summary>
         /// Webhook unique name
         /// </summary>
-        public string WebHookDefinition { get; set; }
+        public string WebhookDefinition { get; set; }
 
         /// <summary>
-        /// WebHook data as JSON string.
+        /// Webhook data as JSON string.
         /// </summary>
         public string Data { get; set; }
 
         //Subscription information
 
         /// <summary>
-        /// <see cref="WebHookSubscription"/> foreign id 
+        /// <see cref="WebhookSubscription"/> foreign id 
         /// </summary>
-        public Guid WebHookSubscriptionId { get; set; }
+        public Guid WebhookSubscriptionId { get; set; }
 
         /// <summary>
         /// Subscription webhook endpoint
         /// </summary>
-        public string WebHookUri { get; set; }
+        public string WebhookUri { get; set; }
 
         /// <summary>
         /// Webhook secret

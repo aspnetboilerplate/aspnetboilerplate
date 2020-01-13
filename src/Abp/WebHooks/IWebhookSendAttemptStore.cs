@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Threading.Tasks;
 
-namespace Abp.WebHooks
+namespace Abp.Webhooks
 {
     public interface IWebhookSendAttemptStore
     {
@@ -20,11 +20,11 @@ namespace Abp.WebHooks
         /// <summary>
         /// Returns work item count by given web hook id and subscription id, (How many times publisher tried to send web hook)
         /// </summary>
-        Task<int> GetSendAttemptCountAsync(int? tenantId, Guid webHookId, Guid webHookSubscriptionId);
+        Task<int> GetSendAttemptCountAsync(int? tenantId, Guid webhookId, Guid webhookSubscriptionId);
 
         /// <summary>
         /// Returns work item count by given web hook id and subscription id. (How many times publisher tried to send web hook)
         /// </summary>
-        int GetSendAttemptCount(int? tenantId, Guid webHookId, Guid webHookSubscriptionId);
+        int GetSendAttemptCount(int? tenantId, Guid webhookId, Guid webhookSubscriptionId);
     }
 }

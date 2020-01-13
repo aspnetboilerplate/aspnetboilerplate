@@ -1,53 +1,52 @@
 ﻿using System;
 using Abp.BackgroundJobs;
 using Abp.Dependency;
-using Abp.Domain.Uow;
 
-namespace Abp.WebHooks.BackgroundWorker
+namespace Abp.Webhooks.BackgroundWorker
 {
-    public class WebHookSenderJob : BackgroundJob<WebHookSenderInput>, ITransientDependency
+    public class WebhookSenderJob : BackgroundJob<WebhookSenderInput>, ITransientDependency
     {
         private readonly IIocResolver _iocResolver;
         private readonly IBackgroundJobManager _backgroundJobManager;
-        private readonly IWebHooksConfiguration _webHooksConfiguration;
+        private readonly IWebhooksConfiguration _webhooksConfiguration;
 
-        public WebHookSenderJob(
+        public WebhookSenderJob(
             IIocResolver iocResolver,
             IBackgroundJobManager backgroundJobManager,
-            IWebHooksConfiguration webHooksConfiguration)
+            IWebhooksConfiguration webhooksConfiguration)
         {
             _iocResolver = iocResolver;
             _backgroundJobManager = backgroundJobManager;
-            _webHooksConfiguration = webHooksConfiguration;
+            _webhooksConfiguration = webhooksConfiguration;
         }
 
-        public override void Execute(WebHookSenderInput args)
+        public override void Execute(WebhookSenderInput args)
         {
-            if (args.WebHookId == default)
+            if (args.WebhookId == default)
             {
-                throw new ArgumentNullException(nameof(args.WebHookId));
+                throw new ArgumentNullException(nameof(args.WebhookId));
             }
 
-            if (args.WebHookSubscriptionId == default)
+            if (args.WebhookSubscriptionId == default)
             {
-                throw new ArgumentNullException(nameof(args.WebHookSubscriptionId));
+                throw new ArgumentNullException(nameof(args.WebhookSubscriptionId));
             }
 
-            using (var webHookSender = _iocResolver.ResolveAsDisposable<IWebHookSender>())
+            using (var webhookSender = _iocResolver.ResolveAsDisposable<IWebhookSender>())
             {
-                if (webHookSender.Object.TrySendWebHook(args))
+                if (webhookSender.Object.TrySendWebhook(args))
                 {
                     return;
                 }
 
                 using (var workItemStore = _iocResolver.ResolveAsDisposable<IWebhookSendAttemptStore>())
                 {
-                    var sendAttemptCount = workItemStore.Object.GetSendAttemptCount(args.TenantId, args.WebHookId, args.WebHookSubscriptionId);
+                    var sendAttemptCount = workItemStore.Object.GetSendAttemptCount(args.TenantId, args.WebhookId, args.WebhookSubscriptionId);
 
-                    if (sendAttemptCount < _webHooksConfiguration.MaxSendAttemptCount)
+                    if (sendAttemptCount < _webhooksConfiguration.MaxSendAttemptCount)
                     {
                         //try send again
-                        _backgroundJobManager.Enqueue<WebHookSenderJob, WebHookSenderInput>(args);
+                        _backgroundJobManager.Enqueue<WebhookSenderJob, WebhookSenderInput>(args);
                     }
                 }
             }

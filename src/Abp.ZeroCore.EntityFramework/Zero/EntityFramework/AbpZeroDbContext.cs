@@ -11,7 +11,7 @@ using Abp.BackgroundJobs;
 using Abp.EntityFramework.Extensions;
 using Abp.MultiTenancy;
 using Abp.Notifications;
-using Abp.WebHooks;
+using Abp.Webhooks;
 
 namespace Abp.Zero.EntityFramework
 {

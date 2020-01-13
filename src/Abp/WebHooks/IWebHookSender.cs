@@ -1,20 +1,20 @@
 ﻿using System;
 using System.Threading.Tasks;
 
-namespace Abp.WebHooks
+namespace Abp.Webhooks
 {
-    public interface IWebHookSender
+    public interface IWebhookSender
     {
         /// <summary>
         /// Tries to send webhook with given transactionId and stores process in <see cref="WebhookSendAttempt"/>
         /// </summary>
         /// <returns>If progress done</returns>
-        Task<bool> TrySendWebHookAsync(WebHookSenderInput webHookSenderArgs);
+        Task<bool> TrySendWebhookAsync(WebhookSenderInput webhookSenderArgs);
 
         /// <summary>
         /// Tries to send webhook with given transactionId and stores process in <see cref="WebhookSendAttempt"/>
         /// </summary>
         /// <returns>If transaction done</returns>
-        bool TrySendWebHook(WebHookSenderInput webHookSenderArgs);
+        bool TrySendWebhook(WebhookSenderInput webhookSenderArgs);
     }
 }

@@ -4,23 +4,23 @@ using System.Net;
 using Abp.Domain.Entities;
 using Abp.Domain.Entities.Auditing;
 
-namespace Abp.WebHooks
+namespace Abp.Webhooks
 {
     /// <summary>
-    /// Table for store webhook work items. Each item stores web hook send attempt of <see cref="WebHookInfo"/> to subscribed tenants
+    /// Table for store webhook work items. Each item stores web hook send attempt of <see cref="WebhookInfo"/> to subscribed tenants
     /// </summary>
     [Table("AbpWebhookSendAttempts")]
     public class WebhookSendAttempt : Entity<Guid>, IMayHaveTenant, IHasCreationTime, IHasModificationTime
     {
         /// <summary>
-        /// <see cref="WebHookInfo"/> foreign id 
+        /// <see cref="WebhookInfo"/> foreign id 
         /// </summary>
-        public Guid WebHookId { get; set; }
+        public Guid WebhookId { get; set; }
 
         /// <summary>
-        /// <see cref="WebHookSubscription"/> foreign id 
+        /// <see cref="WebhookSubscription"/> foreign id 
         /// </summary>
-        public Guid WebHookSubscriptionId { get; set; }
+        public Guid WebhookSubscriptionId { get; set; }
 
         /// <summary>
         /// Webhook response content that webhook endpoint send back

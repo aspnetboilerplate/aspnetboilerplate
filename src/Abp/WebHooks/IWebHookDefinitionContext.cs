@@ -1,10 +1,10 @@
-﻿namespace Abp.WebHooks
+﻿namespace Abp.Webhooks
 {
-    public interface IWebHookDefinitionContext
+    public interface IWebhookDefinitionContext
     {
         /// <summary>
         /// Gets the webhook definition manager.
         /// </summary>
-        IWebHookDefinitionManager Manager { get; }
+        IWebhookDefinitionManager Manager { get; }
     }
 }

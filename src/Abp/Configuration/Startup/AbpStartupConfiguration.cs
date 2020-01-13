@@ -11,7 +11,7 @@ using Abp.Events.Bus;
 using Abp.Notifications;
 using Abp.Resources.Embedded;
 using Abp.Runtime.Caching.Configuration;
-using Abp.WebHooks;
+using Abp.Webhooks;
 
 namespace Abp.Configuration.Startup
 {
@@ -105,7 +105,7 @@ namespace Abp.Configuration.Startup
 
         public IEntityHistoryConfiguration EntityHistory { get; private set; }
 
-        public IWebHooksConfiguration WebHooks { get; private set; }
+        public IWebhooksConfiguration Webhooks { get; private set; }
 
         public IList<ICustomConfigProvider> CustomConfigProviders { get; private set; }
 
@@ -154,7 +154,7 @@ namespace Abp.Configuration.Startup
             Notifications = IocManager.Resolve<INotificationConfiguration>();
             EmbeddedResources = IocManager.Resolve<IEmbeddedResourcesConfiguration>();
             EntityHistory = IocManager.Resolve<IEntityHistoryConfiguration>();
-            WebHooks = IocManager.Resolve<IWebHooksConfiguration>();
+            Webhooks = IocManager.Resolve<IWebhooksConfiguration>();
 
             CustomConfigProviders = new List<ICustomConfigProvider>();
             ServiceReplaceActions = new Dictionary<Type, Action>();
