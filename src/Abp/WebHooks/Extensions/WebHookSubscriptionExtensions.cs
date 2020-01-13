@@ -10,12 +10,12 @@ namespace Abp.Webhooks
         /// <returns></returns>
         public static bool IsSubscribed(this WebhookSubscription webhookSubscription, string webhookName)
         {
-            if (webhookSubscription.WebhookDefinitions == null || webhookSubscription.WebhookDefinitions.Count == 0)
+            if (webhookSubscription.Webhooks == null || webhookSubscription.Webhooks.Count == 0)
             {
                 return false;
             }
 
-            return webhookSubscription.WebhookDefinitions.Contains(webhookName);
+            return webhookSubscription.Webhooks.Contains(webhookName);
         }
 
         public static WebhookSubscription ToWebhookSubscription(this WebhookSubscriptionInfo webhookSubscriptionInfo)
@@ -27,7 +27,7 @@ namespace Abp.Webhooks
                 IsActive = webhookSubscriptionInfo.IsActive,
                 Secret = webhookSubscriptionInfo.Secret,
                 WebhookUri = webhookSubscriptionInfo.WebhookUri,
-                WebhookDefinitions = webhookSubscriptionInfo.GetSubscribedWebhooks().ToList(),
+                Webhooks = webhookSubscriptionInfo.GetSubscribedWebhooks().ToList(),
                 Headers = webhookSubscriptionInfo.GetWebhookHeaders()
             };
         }

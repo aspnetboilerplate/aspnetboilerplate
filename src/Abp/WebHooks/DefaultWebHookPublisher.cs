@@ -61,7 +61,7 @@ namespace Abp.Webhooks
                     TenantId = webhookSubscription.TenantId,
                     WebhookId = webhookInfo.Id,
                     Data = webhookInfo.Data,
-                    WebhookDefinition = webhookInfo.WebhookDefinition,
+                    WebhookDefinition = webhookInfo.WebhookName,
 
                     WebhookSubscriptionId = webhookSubscription.Id,
                     Headers = webhookSubscription.Headers,
@@ -99,7 +99,7 @@ namespace Abp.Webhooks
                     TenantId = webhookSubscription.TenantId,
                     WebhookId = webhookInfo.Id,
                     Data = webhookInfo.Data,
-                    WebhookDefinition = webhookInfo.WebhookDefinition,
+                    WebhookDefinition = webhookInfo.WebhookName,
 
                     WebhookSubscriptionId = webhookSubscription.Id,
                     Headers = webhookSubscription.Headers,
@@ -114,7 +114,7 @@ namespace Abp.Webhooks
             var webhookInfo = new WebhookInfo()
             {
                 Id = _guidGenerator.Create(),
-                WebhookDefinition = webhookName,
+                WebhookName = webhookName,
                 Data = _webhooksConfiguration.JsonSerializerSettings != null
                     ? data.ToJsonString(_webhooksConfiguration.JsonSerializerSettings)
                     : data.ToJsonString(),
@@ -130,7 +130,7 @@ namespace Abp.Webhooks
             var webhookInfo = new WebhookInfo()
             {
                 Id = _guidGenerator.Create(),
-                WebhookDefinition = webhookName,
+                WebhookName = webhookName,
                 Data = _webhooksConfiguration.JsonSerializerSettings != null
                     ? data.ToJsonString(_webhooksConfiguration.JsonSerializerSettings)
                     : data.ToJsonString(),

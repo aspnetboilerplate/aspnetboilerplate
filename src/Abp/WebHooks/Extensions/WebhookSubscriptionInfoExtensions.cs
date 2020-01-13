@@ -158,7 +158,7 @@ namespace Abp.Webhooks
                 IsActive = webhookSubscription.IsActive,
                 Secret = webhookSubscription.Secret,
                 WebhookUri = webhookSubscription.WebhookUri,
-                WebhookDefinitions = webhookSubscription.WebhookDefinitions.ToJsonString(),
+                WebhookDefinitions = webhookSubscription.Webhooks.ToJsonString(),
                 Headers = webhookSubscription.Headers.ToJsonString()
             };
         }

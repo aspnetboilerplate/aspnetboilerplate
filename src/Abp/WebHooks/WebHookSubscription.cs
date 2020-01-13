@@ -28,9 +28,9 @@ namespace Abp.Webhooks
         public bool IsActive { get; set; }
 
         /// <summary>
-        /// Subscribed webhook definitions unique names.
+        /// Subscribed webhook definitions unique names. <see cref="WebhookDefinition.Name"/>
         /// </summary>
-        public List<string> WebhookDefinitions { get; set; }
+        public List<string> Webhooks { get; set; }
 
         /// <summary>
         /// Gets a set of additional HTTP headers.That headers will be sent with the webhook.

@@ -142,12 +142,12 @@ namespace Abp.Webhooks
 
         private async Task CheckIfPermissionsGrantedAsync(WebhookSubscription webhookSubscription)
         {
-            if (webhookSubscription.WebhookDefinitions == null || webhookSubscription.WebhookDefinitions.Count == 0)
+            if (webhookSubscription.Webhooks == null || webhookSubscription.Webhooks.Count == 0)
             {
                 return;
             }
 
-            foreach (var webhookDefinition in webhookSubscription.WebhookDefinitions)
+            foreach (var webhookDefinition in webhookSubscription.Webhooks)
             {
                 await CheckPermissionsAsync(webhookSubscription.TenantId, webhookDefinition);
             }
@@ -164,12 +164,12 @@ namespace Abp.Webhooks
 
         private void CheckIfPermissionsGranted(WebhookSubscription webhookSubscription)
         {
-            if (webhookSubscription.WebhookDefinitions == null || webhookSubscription.WebhookDefinitions.Count == 0)
+            if (webhookSubscription.Webhooks == null || webhookSubscription.Webhooks.Count == 0)
             {
                 return;
             }
 
-            foreach (var webhookDefinition in webhookSubscription.WebhookDefinitions)
+            foreach (var webhookDefinition in webhookSubscription.Webhooks)
             {
                 CheckPermissions(webhookSubscription.TenantId, webhookDefinition);
             }
