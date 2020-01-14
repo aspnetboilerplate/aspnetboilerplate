@@ -1,6 +1,6 @@
 ### Introduction
 
-Webhooks are used to **inform** users of specific events. ASP.NET Boilerplate provides a **pub/sub** (publish/subscribe) based webhook system.
+Webhooks are used to **inform** tenants of specific events. ASP.NET Boilerplate provides a **pub/sub** (publish/subscribe) based webhook system.
 
 
 
