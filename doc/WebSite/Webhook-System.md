@@ -8,7 +8,7 @@ Webhooks are used to **inform** tenants of specific events. ASP.NET Boilerplate 
 
 First of all, you have to define webhooks that your system allows.
 
-You must create a class inherited from `WebhookDefinitionProvider` and define your [WebhookDefinitions](https://aspnetboilerplate.com/Pages/Documents/Webhook-System#webhookdefinition) as seen below.
+You must create a class inherited from `WebhookDefinitionProvider` and define your **WebhookDefinition**s as seen below.
 
 ```csharp
 public class AppWebhookDefinitionProvider : WebhookDefinitionProvider
@@ -113,7 +113,7 @@ Examples:
 
 ##### **Check Signature**
 
-Abp currently uses the **SHA256** hash algorithm to create a signature. It creates a signature by hashing the HTTP request's body. You should hash received body and check whether it is equal with received one. 
+Abp currently uses the **SHA256** hash algorithm to create a signature. It creates a signature by hashing the HTTP request's body. Your other application which subscribed to a webhook should hash received body and check whether it is equal with received one. 
 
 ```csharp
 [HttpPost]
@@ -201,7 +201,7 @@ If you want to send webhook(s) to a specific tenant you can set tenant id as see
 ```csharp
  await _webHookPublisher.PublishAsync(AppWebHookNames.OnDataChanged, myDataChangedInput,5);//sends webhook(s) to subscriptions of the tenant whose id is 5
 
- await _webHookPublisher.PublishAsync(AppWebHookNames.TenantDeleted, tenantDeletedInput,null);//sends webhook(s) subscriptions of host
+ await _webHookPublisher.PublishAsync(AppWebHookNames.TenantDeleted, tenantDeletedInput,null);//sends webhook(s) to subscriptions of host
 ```
 
 
@@ -213,8 +213,8 @@ Webhook configurations:
 | Parameter                                                    |                           Summary                            |
 | :----------------------------------------------------------- | :----------------------------------------------------------: |
 | TimeoutDuration *(TimeSpan)*                                 | HttpClient timeout. **WebhookSender** will wait `TimeoutDuration` second before throw timeout exception. Then the webhook will be considered unsuccessful. |
-| MaxSendAttemptCount *(int)*                                  | Max send attempt count **IWebhookPublisher** will try to resend webhook until gets HttpStatusCode.OK |
-| JsonSerializerSettings *([JsonSerializerSettings](https://www.newtonsoft.com/json/help/html/T_Newtonsoft_Json_JsonSerializerSettings.htm))* | Json serializer settings for converting webhook data to json, If this is null default settings will be used.*( JsonExtensions.ToJsonString(object,bool,bool) )* |
+| MaxSendAttemptCount *(int)*                                  | Max send attempt count that **IWebhookPublisher** will try to resend webhook until gets HttpStatusCode.OK |
+| JsonSerializerSettings *([JsonSerializerSettings](https://www.newtonsoft.com/json/help/html/T_Newtonsoft_Json_JsonSerializerSettings.htm))* | Json serializer settings for converting webhook data to json, If this is null default settings will be used.*(JsonExtensions.ToJsonString(object,bool,bool))* |
 | Providers *(type list of WebhookDefinitionProvider(s))*      |                      Webhook providers.                      |
 | IsAutomaticSubscriptionDeactivationEnabled *(bool)*          | If you enable that, subscriptions will be automatically disabled if they fails `MaxConsecutiveFailCountBeforeDeactivateSubscription` times consecutively.<br/>         Tenants should activate it back manually. |
 | MaxConsecutiveFailCountBeforeDeactivateSubscription *(int)*  | Max consecutive fail count to deactivate subscription if `IsAutomaticSubscriptionDeactivationEnabled` is true |
@@ -223,7 +223,7 @@ Webhook configurations:
 
 ### Auto Subscription Deactivation
 
-Webhook has built-in auto subscription deactivation features. Sometimes webhook endpoints can be unreachable for a long time, not to send webhooks to that endpoints again and again, you can enable auto subscription deactivation. After webhook attempts of subscription fail `MaxConsecutiveFailCountBeforeDeactivateSubscription ` times,the subscription becomes inactive till tenant go and activate it back. 
+Webhook has built-in auto subscription deactivation features. Sometimes webhook endpoints can be unreachable for a long time, not to send webhooks to that endpoints again and again, you can enable auto subscription deactivation. After webhook attempts of subscription fail `MaxConsecutiveFailCountBeforeDeactivateSubscription ` times, the subscription becomes inactive till tenant go and activate it back. 
 
 ``````csharp
 public class AbpZeroTemplateCoreModule : AbpModule
@@ -231,9 +231,10 @@ public class AbpZeroTemplateCoreModule : AbpModule
     public override void PreInitialize()
     {
     	Configuration.Webhooks.IsAutomaticSubscriptionDeactivationEnabled = true;//default false
-		Configuration.Webhooks.MaxConsecutiveFailCountBeforeDeactivateSubscription = 15;
-        //if an endpoint fails 15 times consecutively,the subscription will be inactive.
-        //default is MaxSendAttemptCount x 3
+	Configuration.Webhooks.MaxConsecutiveFailCountBeforeDeactivateSubscription = 15;
+	
+        //if an endpoint fails 15 times consecutively, the subscription will be inactive.
+        //default value of MaxConsecutiveFailCountBeforeDeactivateSubscription is MaxSendAttemptCount x 3
     }
     //...
 }
