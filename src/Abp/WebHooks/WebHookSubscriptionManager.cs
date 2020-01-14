@@ -123,6 +123,20 @@ namespace Abp.Webhooks
         }
 
         [UnitOfWork]
+        public async Task ActivateWebhookSubscriptionAsync(Guid id, bool active)
+        {
+            var webhookSubscription = await WebhookSubscriptionsStore.GetAsync(id);
+            webhookSubscription.IsActive = active;
+        }
+
+        [UnitOfWork]
+        public void ActivateWebhookSubscription(Guid id, bool active)
+        {
+            var webhookSubscription = WebhookSubscriptionsStore.Get(id);
+            webhookSubscription.IsActive = active;
+        }
+
+        [UnitOfWork]
         public async Task AddWebhookAsync(WebhookSubscriptionInfo subscription, string webhookName)
         {
             await CheckPermissionsAsync(subscription.TenantId, webhookName);

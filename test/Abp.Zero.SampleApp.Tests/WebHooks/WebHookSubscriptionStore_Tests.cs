@@ -3,7 +3,6 @@ using System.Threading.Tasks;
 using Abp.Dependency;
 using Abp.Domain.Entities;
 using Abp.Domain.Uow;
-using Abp.Runtime.Session;
 using Abp.Webhooks;
 using Abp.Zero.SampleApp.Application;
 using Shouldly;
@@ -63,17 +62,13 @@ namespace Abp.Zero.SampleApp.Tests.Webhooks
         public async Task Should_Insert_Subscription_Async()
         {
             var subscription = await CreateTestSubscriptionAsync();
-            WebhookSubscriptionInfo sub;
-            using (var uowManager = LocalIocManager.ResolveAsDisposable<IUnitOfWorkManager>())
-            {
-                using (uowManager.Object.Begin())
+            WebhookSubscriptionInfo sub = null;
+
+            await WithUnitOfWorkAsync(AbpSession.TenantId,
+                async () =>
                 {
-                    using (uowManager.Object.Current.SetTenantId(AbpSession.TenantId))
-                    {
-                        sub = await _webhookSubscriptionsStore.GetAsync(subscription.Id);
-                    }
-                }
-            }
+                    sub = await _webhookSubscriptionsStore.GetAsync(subscription.Id);
+                });
 
             sub.ShouldNotBeNull();
             sub.Webhooks.ShouldContain("Test");

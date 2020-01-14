@@ -400,6 +400,31 @@ namespace Abp.Zero.SampleApp.Tests.Webhooks
             await webhookSubscriptionManager.AddOrUpdateSubscriptionAsync(defaultThemeChangedWebhookSubscription);
         }
 
+        [Fact]
+        public async Task Should_Activate_Subscription_Async()
+        {
+            var webhookSubscriptionManager = Resolve<IWebhookSubscriptionManager>();
+
+            var testWebhookSubscription = NewWebhookSubscription(null, AppWebhookDefinitionNames.Test);
+            await webhookSubscriptionManager.AddOrUpdateSubscriptionAsync(testWebhookSubscription);
+
+            var storedSubscription = await webhookSubscriptionManager.GetAsync(testWebhookSubscription.Id);
+            storedSubscription.Id.ShouldBe(testWebhookSubscription.Id);
+            storedSubscription.IsActive.ShouldBeTrue();
+
+            await webhookSubscriptionManager.ActivateWebhookSubscriptionAsync(testWebhookSubscription.Id, false);
+
+            storedSubscription = await webhookSubscriptionManager.GetAsync(testWebhookSubscription.Id);
+            storedSubscription.Id.ShouldBe(testWebhookSubscription.Id);
+            storedSubscription.IsActive.ShouldBeFalse();
+
+            await webhookSubscriptionManager.ActivateWebhookSubscriptionAsync(testWebhookSubscription.Id, true);
+
+            storedSubscription = await webhookSubscriptionManager.GetAsync(testWebhookSubscription.Id);
+            storedSubscription.Id.ShouldBe(testWebhookSubscription.Id);
+            storedSubscription.IsActive.ShouldBeTrue();
+        }
+
         #endregion
 
         #region Sync
@@ -765,6 +790,31 @@ namespace Abp.Zero.SampleApp.Tests.Webhooks
 
             var defaultThemeChangedWebhookSubscription = NewWebhookSubscription(null, AppWebhookDefinitionNames.Theme.DefaultThemeChanged);
             webhookSubscriptionManager.AddOrUpdateSubscription(defaultThemeChangedWebhookSubscription);
+        }
+
+        [Fact]
+        public void Should_Activate_Subscription_Sync()
+        {
+            var webhookSubscriptionManager = Resolve<IWebhookSubscriptionManager>();
+
+            var testWebhookSubscription = NewWebhookSubscription(null, AppWebhookDefinitionNames.Test);
+            webhookSubscriptionManager.AddOrUpdateSubscription(testWebhookSubscription);
+
+            var storedSubscription = webhookSubscriptionManager.Get(testWebhookSubscription.Id);
+            storedSubscription.Id.ShouldBe(testWebhookSubscription.Id);
+            storedSubscription.IsActive.ShouldBeTrue();
+
+            webhookSubscriptionManager.ActivateWebhookSubscription(testWebhookSubscription.Id, false);
+
+            storedSubscription = webhookSubscriptionManager.Get(testWebhookSubscription.Id);
+            storedSubscription.Id.ShouldBe(testWebhookSubscription.Id);
+            storedSubscription.IsActive.ShouldBeFalse();
+
+            webhookSubscriptionManager.ActivateWebhookSubscription(testWebhookSubscription.Id, true);
+
+            storedSubscription = webhookSubscriptionManager.Get(testWebhookSubscription.Id);
+            storedSubscription.Id.ShouldBe(testWebhookSubscription.Id);
+            storedSubscription.IsActive.ShouldBeTrue();
         }
         #endregion
     }

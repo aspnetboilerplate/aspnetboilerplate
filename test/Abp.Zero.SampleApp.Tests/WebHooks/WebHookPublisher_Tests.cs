@@ -29,13 +29,19 @@ namespace Abp.Zero.SampleApp.Tests.Webhooks
         }
 
         #region Async
+
+        private Task<(WebhookSubscription subscription, object data, Predicate<WebhookSenderArgs> predicate)> InitializeTestCase(string webhookDefinition)
+        {
+            return InitializeTestCase(webhookDefinition, null);
+        }
+
         /// <summary>
         /// Creates tenant with adding feature(s), then creates predicate for WebhookSenderArgs which publisher should send to WebhookSenderJob
         /// </summary>
         /// <param name="webhookDefinition"></param>
         /// <param name="tenantFeatures"></param>
         /// <returns></returns>
-        private async Task<(int? tenantId, object data, Predicate<WebhookSenderArgs> predicate)> InitializeTestCase(string webhookDefinition, Dictionary<string, string> tenantFeatures)
+        private async Task<(WebhookSubscription subscription, object data, Predicate<WebhookSenderArgs> predicate)> InitializeTestCase(string webhookDefinition, Dictionary<string, string> tenantFeatures)
         {
             var subscription = await CreateTenantAndSubscribeToWebhookAsync(webhookDefinition, tenantFeatures);
 
@@ -62,7 +68,7 @@ namespace Abp.Zero.SampleApp.Tests.Webhooks
                 return true;
             };
 
-            return (subscription.TenantId, data, predicate);
+            return (subscription, data, predicate);
         }
 
         [Fact]
@@ -86,13 +92,13 @@ namespace Abp.Zero.SampleApp.Tests.Webhooks
         [Fact]
         public async Task Should_Send_Webhook_To_Authorized_Tenant_Async()
         {
-            var (tenantId, data, predicate) = await InitializeTestCase(AppWebhookDefinitionNames.Users.Created,
+            var (subscription, data, predicate) = await InitializeTestCase(AppWebhookDefinitionNames.Users.Created,
                 new Dictionary<string, string>
                 {
                     {AppFeatures.WebhookFeature, "true"}
                 });
 
-            await _webhookPublisher.PublishAsync(AppWebhookDefinitionNames.Users.Created, data, tenantId);
+            await _webhookPublisher.PublishAsync(AppWebhookDefinitionNames.Users.Created, data, subscription.TenantId);
 
             await _backgroundJobManagerSubstitute.Received()
                 .EnqueueAsync<WebhookSenderJob, WebhookSenderArgs>(Arg.Is<WebhookSenderArgs>(w => predicate(w)));
@@ -101,13 +107,13 @@ namespace Abp.Zero.SampleApp.Tests.Webhooks
         [Fact]
         public async Task Should_Send_Webhook_To_Authorized_Current_Tenant_Async()
         {
-            var (tenantId, data, predicate) = await InitializeTestCase(AppWebhookDefinitionNames.Users.Created,
+            var (subscription, data, predicate) = await InitializeTestCase(AppWebhookDefinitionNames.Users.Created,
                 new Dictionary<string, string>
                 {
                     {AppFeatures.WebhookFeature, "true"}
                 });
 
-            AbpSession.TenantId = tenantId;
+            AbpSession.TenantId = subscription.TenantId;
 
             await _webhookPublisher.PublishAsync(AppWebhookDefinitionNames.Users.Created, data);
 
@@ -149,13 +155,13 @@ namespace Abp.Zero.SampleApp.Tests.Webhooks
         public async Task Should_Send_Webhook_To_Tenant_If_All_Required_Features_Granted_Async()
         {
             //user_deleted webhook requires AppFeatures.WebhookFeature, AppFeatures.TestFeature but not requires all
-            var (tenantId, data, predicate) = await InitializeTestCase(AppWebhookDefinitionNames.Users.Deleted,
+            var (subscription, data, predicate) = await InitializeTestCase(AppWebhookDefinitionNames.Users.Deleted,
                 new Dictionary<string, string>
                 {
                     {AppFeatures.WebhookFeature, "true"}
                 });
 
-            await _webhookPublisher.PublishAsync(AppWebhookDefinitionNames.Users.Deleted, data, tenantId);
+            await _webhookPublisher.PublishAsync(AppWebhookDefinitionNames.Users.Deleted, data, subscription.TenantId);
 
             await _backgroundJobManagerSubstitute.Received()
                 .EnqueueAsync<WebhookSenderJob, WebhookSenderArgs>(Arg.Is<WebhookSenderArgs>(w => predicate(w)));
@@ -163,14 +169,14 @@ namespace Abp.Zero.SampleApp.Tests.Webhooks
             _backgroundJobManagerSubstitute.ClearReceivedCalls();
 
             //DefaultThemeChanged webhook requires AppFeatures.WebhookFeature, AppFeatures.ThemeFeature and requires all
-            var (tenantId2, data2, predicate2) = await InitializeTestCase(AppWebhookDefinitionNames.Theme.DefaultThemeChanged,
+            var (subscription2, data2, predicate2) = await InitializeTestCase(AppWebhookDefinitionNames.Theme.DefaultThemeChanged,
                 new Dictionary<string, string>
                 {
                     {AppFeatures.WebhookFeature, "true"},
                     {AppFeatures.ThemeFeature, "true"}
                 });
 
-            await _webhookPublisher.PublishAsync(AppWebhookDefinitionNames.Theme.DefaultThemeChanged, data2, tenantId2);
+            await _webhookPublisher.PublishAsync(AppWebhookDefinitionNames.Theme.DefaultThemeChanged, data2, subscription2.TenantId);
 
             await _backgroundJobManagerSubstitute.Received()
                 .EnqueueAsync<WebhookSenderJob, WebhookSenderArgs>(Arg.Is<WebhookSenderArgs>(w => predicate2(w)));
@@ -180,13 +186,13 @@ namespace Abp.Zero.SampleApp.Tests.Webhooks
         public async Task Should_Send_Webhook_To_Current_Tenant_If_All_Required_Features_Granted_Async()
         {
             //user_deleted webhook requires AppFeatures.WebhookFeature, AppFeatures.TestFeature but not requires all
-            var (tenantId, data, predicate) = await InitializeTestCase(AppWebhookDefinitionNames.Users.Deleted,
+            var (subscription, data, predicate) = await InitializeTestCase(AppWebhookDefinitionNames.Users.Deleted,
                 new Dictionary<string, string>
                 {
                     {AppFeatures.WebhookFeature, "true"}
                 });
 
-            AbpSession.TenantId = tenantId;
+            AbpSession.TenantId = subscription.TenantId;
             await _webhookPublisher.PublishAsync(AppWebhookDefinitionNames.Users.Deleted, data);
 
             await _backgroundJobManagerSubstitute.Received()
@@ -195,14 +201,14 @@ namespace Abp.Zero.SampleApp.Tests.Webhooks
             _backgroundJobManagerSubstitute.ClearReceivedCalls();
 
             //DefaultThemeChanged webhook requires AppFeatures.WebhookFeature, AppFeatures.ThemeFeature and requires all
-            var (tenantId2, data2, predicate2) = await InitializeTestCase(AppWebhookDefinitionNames.Theme.DefaultThemeChanged,
+            var (subscription2, data2, predicate2) = await InitializeTestCase(AppWebhookDefinitionNames.Theme.DefaultThemeChanged,
                 new Dictionary<string, string>
                 {
                     {AppFeatures.WebhookFeature, "true"},
                     {AppFeatures.ThemeFeature, "true"}
                 });
 
-            AbpSession.TenantId = tenantId2;
+            AbpSession.TenantId = subscription2.TenantId;
             await _webhookPublisher.PublishAsync(AppWebhookDefinitionNames.Theme.DefaultThemeChanged, data2);
 
             await _backgroundJobManagerSubstitute.Received()
@@ -297,6 +303,49 @@ namespace Abp.Zero.SampleApp.Tests.Webhooks
                 .EnqueueAsync<WebhookSenderJob, WebhookSenderArgs>(Arg.Is<WebhookSenderArgs>(w => predicate(w)));
         }
 
+        [Fact]
+        public async Task Should_Deactivate_Subscription_If_Reached_To_Max_Fail_Count_Async()
+        {
+            var (subscription, data, predicate) = await InitializeTestCase(AppWebhookDefinitionNames.Test);
+
+            var webhooksConfiguration = Resolve<IWebhooksConfiguration>();
+            webhooksConfiguration.IsAutomaticSubscriptionDeactivationEnabled = true;
+            webhooksConfiguration.MaxConsecutiveFailCountBeforeDeactivateSubscription = 1;
+
+            var webhookSenderSubstitute = RegisterFake<IWebhookSender>();
+            webhookSenderSubstitute.When(w => w.SendWebhook(Arg.Any<WebhookSenderArgs>()))
+                .Do(x =>
+                    throw new Exception()
+                );
+
+            var webhookSubscriptionManager = Resolve<IWebhookSubscriptionManager>();
+
+            _backgroundJobManagerSubstitute.When(m => m.EnqueueAsync<WebhookSenderJob, WebhookSenderArgs>(Arg.Any<WebhookSenderArgs>()))
+                .Do((callback) =>
+                {
+                    var args = callback.Args();
+                    args[0].ShouldBeAssignableTo<WebhookSenderArgs>("Argument is not WebhookSenderArgs");
+
+                    var webhookSenderJob = Resolve<WebhookSenderJob>();
+                    webhookSenderJob.Execute(args[0] as WebhookSenderArgs);
+
+                    var sub = webhookSubscriptionManager.Get(subscription.Id);
+                    sub.IsActive.ShouldBeFalse();//after it get error MaxConsecutiveFailCountBeforeDeactivateSubscription times(in our case it is 1) subscription becomes deactivate
+                });
+
+            await webhookSubscriptionManager.AddOrUpdateSubscriptionAsync(subscription);
+
+            var storedSubscription = webhookSubscriptionManager.Get(subscription.Id);
+            storedSubscription.IsActive.ShouldBeTrue();//subscription is active 
+
+            await _webhookPublisher.PublishAsync(AppWebhookDefinitionNames.Test, data, subscription.TenantId);
+
+            await _backgroundJobManagerSubstitute.Received()
+                .EnqueueAsync<WebhookSenderJob, WebhookSenderArgs>(Arg.Is<WebhookSenderArgs>(w => predicate(w)));
+
+            webhookSenderSubstitute.Received().SendWebhook(Arg.Any<WebhookSenderArgs>());
+        }
+
         #endregion
 
         #region Sync
@@ -321,13 +370,13 @@ namespace Abp.Zero.SampleApp.Tests.Webhooks
         [Fact]
         public void Should_Send_Webhook_To_Authorized_Tenant_Sync()
         {
-            var (tenantId, data, predicate) = AsyncHelper.RunSync(() => InitializeTestCase(AppWebhookDefinitionNames.Users.Created,
+            var (subscription, data, predicate) = AsyncHelper.RunSync(() => InitializeTestCase(AppWebhookDefinitionNames.Users.Created,
                 new Dictionary<string, string>
                 {
                     {AppFeatures.WebhookFeature, "true"}
                 }));
 
-            _webhookPublisher.Publish(AppWebhookDefinitionNames.Users.Created, data, tenantId);
+            _webhookPublisher.Publish(AppWebhookDefinitionNames.Users.Created, data, subscription.TenantId);
 
             _backgroundJobManagerSubstitute.Received()
                .Enqueue<WebhookSenderJob, WebhookSenderArgs>(Arg.Is<WebhookSenderArgs>(w => predicate(w)));
@@ -336,13 +385,13 @@ namespace Abp.Zero.SampleApp.Tests.Webhooks
         [Fact]
         public void Should_Send_Webhook_To_Authorized_Current_Tenant_Sync()
         {
-            var (tenantId, data, predicate) = AsyncHelper.RunSync(() => InitializeTestCase(AppWebhookDefinitionNames.Users.Created,
+            var (subscription, data, predicate) = AsyncHelper.RunSync(() => InitializeTestCase(AppWebhookDefinitionNames.Users.Created,
                 new Dictionary<string, string>
                 {
                     {AppFeatures.WebhookFeature, "true"}
                 }));
 
-            AbpSession.TenantId = tenantId;
+            AbpSession.TenantId = subscription.TenantId;
 
             _webhookPublisher.Publish(AppWebhookDefinitionNames.Users.Created, data);
 
@@ -385,13 +434,13 @@ namespace Abp.Zero.SampleApp.Tests.Webhooks
         {
             //user_deleted webhook requires AppFeatures.WebhookFeature, AppFeatures.TestFeature but not requires all
 
-            var (tenantId, data, predicate) = AsyncHelper.RunSync(() => InitializeTestCase(AppWebhookDefinitionNames.Users.Deleted,
+            var (subscription, data, predicate) = AsyncHelper.RunSync(() => InitializeTestCase(AppWebhookDefinitionNames.Users.Deleted,
                 new Dictionary<string, string>
                 {
                     {AppFeatures.WebhookFeature, "true"}
                 }));
 
-            _webhookPublisher.Publish(AppWebhookDefinitionNames.Users.Deleted, data, tenantId);
+            _webhookPublisher.Publish(AppWebhookDefinitionNames.Users.Deleted, data, subscription.TenantId);
 
             _backgroundJobManagerSubstitute.Received()
                 .Enqueue<WebhookSenderJob, WebhookSenderArgs>(Arg.Is<WebhookSenderArgs>(w => predicate(w)));
@@ -399,14 +448,14 @@ namespace Abp.Zero.SampleApp.Tests.Webhooks
             _backgroundJobManagerSubstitute.ClearReceivedCalls();
 
             //DefaultThemeChanged webhook requires AppFeatures.WebhookFeature, AppFeatures.ThemeFeature and requires all
-            var (tenantId2, data2, predicate2) = AsyncHelper.RunSync(() => InitializeTestCase(AppWebhookDefinitionNames.Theme.DefaultThemeChanged,
+            var (subscription2, data2, predicate2) = AsyncHelper.RunSync(() => InitializeTestCase(AppWebhookDefinitionNames.Theme.DefaultThemeChanged,
                 new Dictionary<string, string>
                 {
                     {AppFeatures.WebhookFeature, "true"},
                     {AppFeatures.ThemeFeature, "true"}
                 }));
 
-            _webhookPublisher.Publish(AppWebhookDefinitionNames.Theme.DefaultThemeChanged, data2, tenantId2);
+            _webhookPublisher.Publish(AppWebhookDefinitionNames.Theme.DefaultThemeChanged, data2, subscription2.TenantId);
 
             _backgroundJobManagerSubstitute.Received()
                .Enqueue<WebhookSenderJob, WebhookSenderArgs>(Arg.Is<WebhookSenderArgs>(w => predicate2(w)));
@@ -417,13 +466,13 @@ namespace Abp.Zero.SampleApp.Tests.Webhooks
         {
             //user_deleted webhook requires AppFeatures.WebhookFeature, AppFeatures.TestFeature but not requires all
 
-            var (tenantId, data, predicate) = AsyncHelper.RunSync(() => InitializeTestCase(AppWebhookDefinitionNames.Users.Deleted,
+            var (subscription, data, predicate) = AsyncHelper.RunSync(() => InitializeTestCase(AppWebhookDefinitionNames.Users.Deleted,
                 new Dictionary<string, string>
                 {
                     {AppFeatures.WebhookFeature, "true"}
                 }));
 
-            AbpSession.TenantId = tenantId;
+            AbpSession.TenantId = subscription.TenantId;
             _webhookPublisher.Publish(AppWebhookDefinitionNames.Users.Deleted, data);
 
             _backgroundJobManagerSubstitute.Received()
@@ -432,15 +481,15 @@ namespace Abp.Zero.SampleApp.Tests.Webhooks
             _backgroundJobManagerSubstitute.ClearReceivedCalls();
 
             //DefaultThemeChanged webhook requires AppFeatures.WebhookFeature, AppFeatures.ThemeFeature and requires all
-            var (tenantId2, data2, predicate2) = AsyncHelper.RunSync(() => InitializeTestCase(AppWebhookDefinitionNames.Theme.DefaultThemeChanged,
+            var (subscription2, data2, predicate2) = AsyncHelper.RunSync(() => InitializeTestCase(AppWebhookDefinitionNames.Theme.DefaultThemeChanged,
                 new Dictionary<string, string>
                 {
                     {AppFeatures.WebhookFeature, "true"},
                     {AppFeatures.ThemeFeature, "true"}
                 }));
 
-            AbpSession.TenantId = tenantId;
-            _webhookPublisher.Publish(AppWebhookDefinitionNames.Theme.DefaultThemeChanged, data2, tenantId2);
+            AbpSession.TenantId = subscription2.TenantId;
+            _webhookPublisher.Publish(AppWebhookDefinitionNames.Theme.DefaultThemeChanged, data2, subscription2.TenantId);
 
             _backgroundJobManagerSubstitute.Received()
                 .Enqueue<WebhookSenderJob, WebhookSenderArgs>(Arg.Is<WebhookSenderArgs>(w => predicate2(w)));
@@ -533,6 +582,50 @@ namespace Abp.Zero.SampleApp.Tests.Webhooks
             _backgroundJobManagerSubstitute.Received()
                .Enqueue<WebhookSenderJob, WebhookSenderArgs>(Arg.Is<WebhookSenderArgs>(w => predicate(w)));
         }
+
+        [Fact]
+        public void Should_Deactivate_Subscription_If_Reached_To_Max_Fail_Count_Sync()
+        {
+            var (subscription, data, predicate) = AsyncHelper.RunSync(() => InitializeTestCase(AppWebhookDefinitionNames.Test));
+
+            var webhooksConfiguration = Resolve<IWebhooksConfiguration>();
+            webhooksConfiguration.IsAutomaticSubscriptionDeactivationEnabled = true;
+            webhooksConfiguration.MaxConsecutiveFailCountBeforeDeactivateSubscription = 1;
+
+            var webhookSenderSubstitute = RegisterFake<IWebhookSender>();
+            webhookSenderSubstitute.When(w => w.SendWebhook(Arg.Any<WebhookSenderArgs>()))
+                .Do(x =>
+                    throw new Exception()
+                );
+
+            var webhookSubscriptionManager = Resolve<IWebhookSubscriptionManager>();
+
+            _backgroundJobManagerSubstitute.When(m => m.Enqueue<WebhookSenderJob, WebhookSenderArgs>(Arg.Any<WebhookSenderArgs>()))
+                .Do(callback =>
+                {
+                    var args = callback.Args();
+                    args[0].ShouldBeAssignableTo<WebhookSenderArgs>("Argument is not WebhookSenderArgs");
+
+                    var webhookSenderJob = Resolve<WebhookSenderJob>();
+                    webhookSenderJob.Execute(args[0] as WebhookSenderArgs);
+
+                    var sub = webhookSubscriptionManager.Get(subscription.Id);
+                    sub.IsActive.ShouldBeFalse();//after it get error MaxConsecutiveFailCountBeforeDeactivateSubscription times(in our case it is 1) subscription becomes deactivate
+                });
+
+            webhookSubscriptionManager.AddOrUpdateSubscription(subscription);
+
+            var storedSubscription = webhookSubscriptionManager.Get(subscription.Id);
+            storedSubscription.IsActive.ShouldBeTrue();//subscription is active 
+
+            _webhookPublisher.Publish(AppWebhookDefinitionNames.Test, data, subscription.TenantId);
+
+            _backgroundJobManagerSubstitute.Received()
+               .Enqueue<WebhookSenderJob, WebhookSenderArgs>(Arg.Is<WebhookSenderArgs>(w => predicate(w)));
+
+            webhookSenderSubstitute.Received().SendWebhook(Arg.Any<WebhookSenderArgs>());
+        }
+
         #endregion
     }
 }

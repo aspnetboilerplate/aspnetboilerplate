@@ -72,8 +72,7 @@ namespace Abp.Zero.SampleApp.Tests.Webhooks
         /// Creates tenant, adds given feature with given value, then subscribes to webhook
         /// </summary>
         /// <param name="webhookDefinitionName">webhook name to subscribe</param>
-        /// <param name="tenantFeatureKey"></param>
-        /// <param name="tenantFeatureValue"></param>
+        /// <param name="tenantFeatures"></param>
         /// <returns></returns>
         protected Task<WebhookSubscription> CreateTenantAndSubscribeToWebhookAsync(string webhookDefinitionName, Dictionary<string, string> tenantFeatures = null)
         {

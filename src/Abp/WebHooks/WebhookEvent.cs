@@ -1,4 +1,5 @@
 ﻿using System;
+using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 using Abp.Domain.Entities;
 using Abp.Domain.Entities.Auditing;
@@ -14,6 +15,7 @@ namespace Abp.Webhooks
         /// <summary>
         /// Webhook unique name <see cref="WebhookDefinition.Name"/>
         /// </summary>
+        [Required]
         public string WebhookName { get; set; }
 
         /// <summary>

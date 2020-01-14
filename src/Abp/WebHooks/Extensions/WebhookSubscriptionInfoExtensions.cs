@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
 using Abp.Json;
 
 namespace Abp.Webhooks
@@ -147,6 +146,15 @@ namespace Abp.Webhooks
             headers.Remove(header);
 
             webhookSubscription.Headers = headers.ToJsonString();
+        }
+
+        /// <summary>
+        /// Clears all <see cref="WebhookSubscriptionInfo.Webhooks"/> 
+        /// </summary>
+        /// <param name="webhookSubscription"></param> 
+        public static void RemoveAllWebhookHeaders(this WebhookSubscriptionInfo webhookSubscription)
+        {
+            webhookSubscription.Headers = null;
         }
 
         public static WebhookSubscriptionInfo ToWebhookSubscriptionInfo(this WebhookSubscription webhookSubscription)

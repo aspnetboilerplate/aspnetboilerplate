@@ -68,7 +68,6 @@ namespace Abp.Webhooks
         /// <param name="webhookName"><see cref="WebhookDefinition.Name"/></param>
         bool IsSubscribed(int? tenantId, string webhookName);
 
-
         /// <summary>
         /// If id is the default(Guid) adds new subscription, else updates current one. (Checks if webhook features are granted)
         /// </summary>
@@ -79,5 +78,18 @@ namespace Abp.Webhooks
         /// </summary>
         void AddOrUpdateSubscription(WebhookSubscription webhookSubscription);
 
+        /// <summary>
+        /// Activates/Deactivates given webhook subscription
+        /// </summary>
+        /// <param name="id">unique identifier of <see cref="WebhookSubscriptionInfo"/></param>
+        /// <param name="active">IsActive</param>
+        Task ActivateWebhookSubscriptionAsync(Guid id, bool active);
+
+        /// <summary>
+        /// Activates/Deactivates given webhook subscription
+        /// </summary>
+        /// <param name="id">unique identifier of <see cref="WebhookSubscriptionInfo"/></param>
+        /// <param name="active">IsActive</param>
+        void ActivateWebhookSubscription(Guid id, bool active);
     }
 }

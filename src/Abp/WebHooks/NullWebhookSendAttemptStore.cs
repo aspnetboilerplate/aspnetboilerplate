@@ -44,5 +44,15 @@ namespace Abp.Webhooks
         {
             return int.MaxValue;
         }
+
+        public Task<bool> HasAnySuccessfulAttemptInLastXRecordAsync(int? tenantId, Guid subscriptionId, int searchCount)
+        {
+            return Task.FromResult(true);
+        }
+
+        public bool HasAnySuccessfulAttemptInLastXRecord(int? tenantId, Guid subscriptionId, int searchCount)
+        {
+            return true;
+        }
     }
 }

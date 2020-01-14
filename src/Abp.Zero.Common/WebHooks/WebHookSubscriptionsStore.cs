@@ -95,8 +95,8 @@ namespace Abp.Webhooks
         {
             return AsyncQueryableExecuter.AnyAsync(_webhookSubscriptionRepository.GetAll()
                 .Where(s =>
-                    s.IsActive &&
                     s.TenantId == tenantId &&
+                    s.IsActive &&
                     s.Webhooks.Contains("\"" + webhookName + "\"")
                 ));
         }
@@ -106,8 +106,8 @@ namespace Abp.Webhooks
         {
             return _webhookSubscriptionRepository.GetAll()
                 .Any(s =>
-                    s.IsActive &&
                     s.TenantId == tenantId &&
+                    s.IsActive &&
                     s.Webhooks.Contains("\"" + webhookName + "\"")
                 );
         }

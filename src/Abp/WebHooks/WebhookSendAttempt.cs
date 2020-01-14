@@ -1,4 +1,5 @@
 ﻿using System;
+using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 using System.Net;
 using Abp.Domain.Entities;
@@ -15,11 +16,13 @@ namespace Abp.Webhooks
         /// <summary>
         /// <see cref="WebhookEvent"/> foreign id 
         /// </summary>
+        [Required]
         public Guid WebhookId { get; set; }
 
         /// <summary>
         /// <see cref="WebhookSubscription"/> foreign id 
         /// </summary>
+        [Required]
         public Guid WebhookSubscriptionId { get; set; }
 
         /// <summary>

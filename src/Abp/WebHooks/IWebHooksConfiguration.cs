@@ -26,5 +26,16 @@ namespace Abp.Webhooks
         /// Notification providers.
         /// </summary>
         ITypeList<WebhookDefinitionProvider> Providers { get; }
+
+        /// <summary>
+        /// If you enable that, subscriptions will be automatically disabled if they fails <see cref="MaxConsecutiveFailCountBeforeDeactivateSubscription"/> times consecutively.
+        /// Users should activate it back manually.
+        /// </summary>
+        bool IsAutomaticSubscriptionDeactivationEnabled { get; set; }
+
+        /// <summary>
+        /// If you enable <see cref="IsAutomaticSubscriptionDeactivationEnabled"/>, subscriptions will be automatically disabled if they fails <see cref="MaxConsecutiveFailCountBeforeDeactivateSubscription"/> times consecutively.
+        /// </summary>
+        int MaxConsecutiveFailCountBeforeDeactivateSubscription { get; set; }
     }
 }

@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Linq;
+using System.Net;
 using System.Threading.Tasks;
 using Abp.Dependency;
 using Abp.Domain.Repositories;
@@ -90,9 +91,9 @@ namespace Abp.Webhooks
             {
                 return await AsyncQueryableExecuter.CountAsync(
                     _webhookSendAttemptRepository.GetAll()
-                        .Where(workItem =>
-                            workItem.WebhookId == webhookId &&
-                            workItem.WebhookSubscriptionId == webhookSubscriptionId
+                        .Where(attempt =>
+                            attempt.WebhookId == webhookId &&
+                            attempt.WebhookSubscriptionId == webhookSubscriptionId
                         )
                 );
             }
@@ -104,9 +105,39 @@ namespace Abp.Webhooks
             using (_unitOfWorkManager.Current.SetTenantId(tenantId))
             {
                 return _webhookSendAttemptRepository.GetAll()
-                    .Count(workItem =>
-                        workItem.WebhookId == webhookId &&
-                        workItem.WebhookSubscriptionId == webhookSubscriptionId);
+                    .Count(attempt =>
+                        attempt.WebhookId == webhookId &&
+                        attempt.WebhookSubscriptionId == webhookSubscriptionId);
+            }
+        }
+
+        [UnitOfWork]
+        public async Task<bool> HasAnySuccessfulAttemptInLastXRecordAsync(int? tenantId, Guid subscriptionId, int searchCount)
+        {
+            using (_unitOfWorkManager.Current.SetTenantId(tenantId))
+            {
+                if (await _webhookSendAttemptRepository.CountAsync(x => x.WebhookSubscriptionId == subscriptionId) < searchCount)
+                {
+                    return true;
+                }
+
+                return await AsyncQueryableExecuter.AnyAsync(_webhookSendAttemptRepository.GetAll().OrderByDescending(attempt => attempt.Id).Take(searchCount)
+                    .Where(x => x.ResponseStatusCode == HttpStatusCode.OK));
+            }
+        }
+
+        [UnitOfWork]
+        public bool HasAnySuccessfulAttemptInLastXRecord(int? tenantId, Guid subscriptionId, int searchCount)
+        {
+            using (_unitOfWorkManager.Current.SetTenantId(tenantId))
+            {
+                if (_webhookSendAttemptRepository.Count(x => x.WebhookSubscriptionId == subscriptionId) < searchCount)
+                {
+                    return true;
+                }
+
+                return _webhookSendAttemptRepository.GetAll().Where(x => x.WebhookSubscriptionId == subscriptionId).OrderByDescending(attempt => attempt.Id).Take(searchCount)
+                    .Any(x => x.ResponseStatusCode == HttpStatusCode.OK);
             }
         }
     }
