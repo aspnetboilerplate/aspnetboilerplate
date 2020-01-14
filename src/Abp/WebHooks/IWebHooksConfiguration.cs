@@ -29,7 +29,7 @@ namespace Abp.Webhooks
 
         /// <summary>
         /// If you enable that, subscriptions will be automatically disabled if they fails <see cref="MaxConsecutiveFailCountBeforeDeactivateSubscription"/> times consecutively.
-        /// Users should activate it back manually.
+        /// Tenants should activate it back manually.
         /// </summary>
         bool IsAutomaticSubscriptionDeactivationEnabled { get; set; }
 
