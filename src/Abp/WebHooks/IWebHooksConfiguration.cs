@@ -23,7 +23,7 @@ namespace Abp.Webhooks
         JsonSerializerSettings JsonSerializerSettings { get; set; }
 
         /// <summary>
-        /// Notification providers.
+        /// Webhook providers.
         /// </summary>
         ITypeList<WebhookDefinitionProvider> Providers { get; }
 

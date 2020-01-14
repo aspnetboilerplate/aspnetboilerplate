@@ -1,6 +1,5 @@
 ﻿using System;
 using Abp.Application.Features;
-using Abp.Authorization;
 using Abp.Localization;
 
 namespace Abp.Webhooks
@@ -10,7 +9,7 @@ namespace Abp.Webhooks
         /// <summary>
         /// Unique name of the webhook.
         /// </summary>
-        public string Name { get; private set; }
+        public string Name { get; }
 
         /// <summary>
         /// Display name of the webhook.
