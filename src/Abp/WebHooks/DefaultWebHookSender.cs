@@ -56,7 +56,7 @@ namespace Abp.Webhooks
             AddAdditionalHeaders(request, webhookSenderArgs);
 
             bool isSucceed = false;
-            HttpStatusCode statusCode;
+            HttpStatusCode? statusCode;
             string content;
             try
             {
@@ -76,6 +76,12 @@ namespace Abp.Webhooks
             {
                 statusCode = HttpStatusCode.RequestTimeout;
                 content = "Request Timeout";
+                isSucceed = false;
+            }
+            catch (HttpRequestException e)
+            {
+                content = e.Message;
+                statusCode = null;
                 isSucceed = false;
             }
 
@@ -114,7 +120,7 @@ namespace Abp.Webhooks
             AddAdditionalHeaders(request, webhookSenderArgs);
 
             bool isSucceed = false;
-            HttpStatusCode statusCode;
+            HttpStatusCode? statusCode;
             string content;
             try
             {
@@ -134,6 +140,12 @@ namespace Abp.Webhooks
             {
                 statusCode = HttpStatusCode.RequestTimeout;
                 content = "Request Timeout";
+                isSucceed = false;
+            }
+            catch (HttpRequestException e)
+            {
+                content = e.Message;
+                statusCode = null;
                 isSucceed = false;
             }
 
@@ -178,7 +190,7 @@ namespace Abp.Webhooks
         }
 
         [UnitOfWork]
-        protected virtual async Task StoreResponseOnWebhookSendAttemptAsync(Guid webhookSendAttemptId, int? tenantId, HttpStatusCode statusCode, string content)
+        protected virtual async Task StoreResponseOnWebhookSendAttemptAsync(Guid webhookSendAttemptId, int? tenantId, HttpStatusCode? statusCode, string content)
         {
             var webhookSendAttempt = await WebhookSendAttemptStore.GetAsync(tenantId, webhookSendAttemptId);
 
@@ -189,7 +201,7 @@ namespace Abp.Webhooks
         }
 
         [UnitOfWork]
-        protected virtual void StoreResponseOnWebhookSendAttempt(Guid webhookSendAttemptId, int? tenantId, HttpStatusCode statusCode, string content)
+        protected virtual void StoreResponseOnWebhookSendAttempt(Guid webhookSendAttemptId, int? tenantId, HttpStatusCode? statusCode, string content)
         {
             var webhookSendAttempt = WebhookSendAttemptStore.Get(tenantId, webhookSendAttemptId);
 
