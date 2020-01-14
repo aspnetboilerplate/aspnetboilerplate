@@ -9,7 +9,7 @@ package.
 
 If you have an existing project and are considering migrating to ASP.NET
 Core, you can read our [blog
-post](http://volosoft.com/migrating-from-asp-net-mvc-5x-to-asp-net-core/)
+post](https://medium.com/volosoft/migrating-from-asp-net-mvc-5-x-to-asp-net-core-520c9aa65e2c)
 about our experience on migrating.
 
 ### Startup Template
