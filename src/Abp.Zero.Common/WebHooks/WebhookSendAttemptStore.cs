@@ -121,7 +121,7 @@ namespace Abp.Webhooks
                     return true;
                 }
 
-                return await AsyncQueryableExecuter.AnyAsync(_webhookSendAttemptRepository.GetAll().OrderByDescending(attempt => attempt.Id).Take(searchCount)
+                return await AsyncQueryableExecuter.AnyAsync(_webhookSendAttemptRepository.GetAll().OrderByDescending(attempt => attempt.CreationTime).Take(searchCount)
                     .Where(x => x.ResponseStatusCode == HttpStatusCode.OK));
             }
         }
@@ -136,7 +136,7 @@ namespace Abp.Webhooks
                     return true;
                 }
 
-                return _webhookSendAttemptRepository.GetAll().Where(x => x.WebhookSubscriptionId == subscriptionId).OrderByDescending(attempt => attempt.Id).Take(searchCount)
+                return _webhookSendAttemptRepository.GetAll().Where(x => x.WebhookSubscriptionId == subscriptionId).OrderByDescending(attempt => attempt.CreationTime).Take(searchCount)
                     .Any(x => x.ResponseStatusCode == HttpStatusCode.OK);
             }
         }
