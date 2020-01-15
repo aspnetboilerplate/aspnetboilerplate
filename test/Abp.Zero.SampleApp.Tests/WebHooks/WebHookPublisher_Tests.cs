@@ -318,6 +318,11 @@ namespace Abp.Zero.SampleApp.Tests.Webhooks
                     throw new Exception()
                 );
 
+            var webhookSendAttemptStore = RegisterFake<IWebhookSendAttemptStore>();
+            webhookSendAttemptStore
+                .HasAnySuccessfulAttemptInLastXRecord(Arg.Any<int?>(), Arg.Any<Guid>(), Arg.Any<int>())
+                .Returns(false);
+
             var webhookSubscriptionManager = Resolve<IWebhookSubscriptionManager>();
 
             _backgroundJobManagerSubstitute.When(m => m.EnqueueAsync<WebhookSenderJob, WebhookSenderArgs>(Arg.Any<WebhookSenderArgs>()))
@@ -597,6 +602,11 @@ namespace Abp.Zero.SampleApp.Tests.Webhooks
                 .Do(x =>
                     throw new Exception()
                 );
+
+            var webhookSendAttemptStore = RegisterFake<IWebhookSendAttemptStore>();
+            webhookSendAttemptStore
+                .HasAnySuccessfulAttemptInLastXRecord(Arg.Any<int?>(), Arg.Any<Guid>(), Arg.Any<int>())
+                .Returns(false);
 
             var webhookSubscriptionManager = Resolve<IWebhookSubscriptionManager>();
 
