@@ -120,6 +120,40 @@ namespace Abp.Zero.SampleApp.Tests.Webhooks
         }
 
         [Fact]
+        public async Task Should_Not_Update_Subscription_Secret_Async()
+        {
+            var tenantId = await CreateAndGetTenantIdWithFeaturesAsync(AppFeatures.WebhookFeature, "true");
+
+            var newSubscription = NewWebhookSubscription(tenantId, AppWebhookDefinitionNames.Users.Created);
+
+            var webhookSubscriptionManager = Resolve<IWebhookSubscriptionManager>();
+            webhookSubscriptionManager.AddOrUpdateSubscription(newSubscription);
+
+            WebhookSubscription storedSubscription = null;
+            await WithUnitOfWorkAsync(tenantId, async () =>
+             {
+                 storedSubscription = await webhookSubscriptionManager.GetAsync(newSubscription.Id);
+                 storedSubscription.ShouldNotBeNull();
+                 CompareSubscriptions(storedSubscription, newSubscription);
+             });
+
+            //update
+            string currentSecret = storedSubscription.Secret;
+            storedSubscription.Secret = "TestSecret";
+
+            webhookSubscriptionManager.AddOrUpdateSubscription(storedSubscription);
+
+            await WithUnitOfWorkAsync(tenantId, async () =>
+            {
+                var updatedSubscription = await webhookSubscriptionManager.GetAsync(newSubscription.Id);
+                updatedSubscription.ShouldNotBeNull();
+                updatedSubscription.Secret.ShouldNotBeNullOrEmpty();
+                updatedSubscription.Secret.ShouldBe(currentSecret);
+            });
+        }
+
+
+        [Fact]
         public async Task Should_Insert_Throw_Exception_If_Features_Are_Not_Granted_Async()
         {
             var tenantId = await CreateAndGetTenantIdWithFeaturesAsync();//needs AppFeatures.WebhookFeature feature
@@ -145,12 +179,18 @@ namespace Abp.Zero.SampleApp.Tests.Webhooks
             newSubscription.Id = Guid.NewGuid();
 
             var webhookStoreSubstitute = RegisterFake<IWebhookSubscriptionsStore>();
+            webhookStoreSubstitute.GetAsync(Arg.Any<Guid>()).Returns(callback =>
+                new WebhookSubscriptionInfo()
+                {
+                    Id = (Guid)callback.Args()[0]
+                }
+            );
             var webhookSubscriptionManager = Resolve<IWebhookSubscriptionManager>();
 
             await Assert.ThrowsAsync<AbpAuthorizationException>(async () =>
-            {
-                await webhookSubscriptionManager.AddOrUpdateSubscriptionAsync(newSubscription);
-            });
+                {
+                    await webhookSubscriptionManager.AddOrUpdateSubscriptionAsync(newSubscription);
+                });
 
             //check error reason
             webhookStoreSubstitute.ClearReceivedCalls();
@@ -207,6 +247,12 @@ namespace Abp.Zero.SampleApp.Tests.Webhooks
             newSubscription.Id = Guid.NewGuid();
 
             var webhookStoreSubstitute = RegisterFake<IWebhookSubscriptionsStore>();
+            webhookStoreSubstitute.GetAsync(Arg.Any<Guid>()).Returns(callback =>
+                new WebhookSubscriptionInfo()
+                {
+                    Id = (Guid)callback.Args()[0]
+                }
+            );
             var webhookSubscriptionManager = Resolve<IWebhookSubscriptionManager>();
             await webhookSubscriptionManager.AddOrUpdateSubscriptionAsync(newSubscription);
 
@@ -495,6 +541,39 @@ namespace Abp.Zero.SampleApp.Tests.Webhooks
         }
 
         [Fact]
+        public void Should_Not_Update_Subscription_Secret_Sync()
+        {
+            var tenantId = AsyncHelper.RunSync(() => CreateAndGetTenantIdWithFeaturesAsync(AppFeatures.WebhookFeature, "true"));
+
+            var newSubscription = NewWebhookSubscription(tenantId, AppWebhookDefinitionNames.Users.Created);
+
+            var webhookSubscriptionManager = Resolve<IWebhookSubscriptionManager>();
+            webhookSubscriptionManager.AddOrUpdateSubscription(newSubscription);
+
+            WebhookSubscription storedSubscription = null;
+            WithUnitOfWork(tenantId, () =>
+            {
+                storedSubscription = webhookSubscriptionManager.Get(newSubscription.Id);
+                storedSubscription.ShouldNotBeNull();
+                CompareSubscriptions(storedSubscription, newSubscription);
+            });
+
+            //update
+            string currentSecret = storedSubscription.Secret;
+            storedSubscription.Secret = "TestSecret";
+
+            webhookSubscriptionManager.AddOrUpdateSubscription(storedSubscription);
+
+            WithUnitOfWork(tenantId, () =>
+            {
+                var updatedSubscription = webhookSubscriptionManager.Get(newSubscription.Id);
+                updatedSubscription.ShouldNotBeNull();
+                updatedSubscription.Secret.ShouldNotBeNullOrEmpty();
+                updatedSubscription.Secret.ShouldBe(currentSecret);
+            });
+        }
+
+        [Fact]
         public void Should_Insert_Throw_Exception_If_Features_Are_Not_Granted_Sync()
         {
             var tenantId = AsyncHelper.RunSync(() => CreateAndGetTenantIdWithFeaturesAsync());
@@ -517,6 +596,12 @@ namespace Abp.Zero.SampleApp.Tests.Webhooks
             newSubscription.Id = Guid.NewGuid();
 
             var webhookStoreSubstitute = RegisterFake<IWebhookSubscriptionsStore>();
+            webhookStoreSubstitute.Get(Arg.Any<Guid>()).Returns(callback =>
+                new WebhookSubscriptionInfo()
+                {
+                    Id = (Guid)callback.Args()[0]
+                }
+            );
             var webhookSubscriptionManager = Resolve<IWebhookSubscriptionManager>();
 
             Assert.Throws<AbpAuthorizationException>(() =>
@@ -580,6 +665,12 @@ namespace Abp.Zero.SampleApp.Tests.Webhooks
             newSubscription.Id = Guid.NewGuid();
 
             var webhookStoreSubstitute = RegisterFake<IWebhookSubscriptionsStore>();
+            webhookStoreSubstitute.Get(Arg.Any<Guid>()).Returns(callback =>
+                new WebhookSubscriptionInfo()
+                {
+                    Id = (Guid)callback.Args()[0]
+                }
+            );
             var webhookSubscriptionManager = Resolve<IWebhookSubscriptionManager>();
 
             webhookSubscriptionManager.AddOrUpdateSubscription(newSubscription);

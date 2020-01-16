@@ -102,6 +102,9 @@ namespace Abp.Webhooks
             }
             else
             {
+                var subscription = await GetAsync(webhookSubscription.Id);
+                webhookSubscription.Secret = subscription.Secret;
+
                 await WebhookSubscriptionsStore.UpdateAsync(webhookSubscription.ToWebhookSubscriptionInfo());
             }
         }
@@ -118,6 +121,9 @@ namespace Abp.Webhooks
             }
             else
             {
+                var subscription = Get(webhookSubscription.Id);
+                webhookSubscription.Secret = subscription.Secret;
+
                 WebhookSubscriptionsStore.Update(webhookSubscription.ToWebhookSubscriptionInfo());
             }
         }
