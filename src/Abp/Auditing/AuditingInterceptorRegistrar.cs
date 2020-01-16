@@ -2,7 +2,6 @@
 using System.Linq;
 using System.Reflection;
 using Abp.Dependency;
-using Abp.Domain.Uow;
 using Castle.Core;
 
 namespace Abp.Auditing

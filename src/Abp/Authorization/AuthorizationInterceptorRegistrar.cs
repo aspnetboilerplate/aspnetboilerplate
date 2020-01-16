@@ -3,7 +3,6 @@ using System.Linq;
 using System.Reflection;
 using Abp.Application.Features;
 using Abp.Dependency;
-using Abp.Domain.Uow;
 using Castle.Core;
 using Castle.MicroKernel;
 
