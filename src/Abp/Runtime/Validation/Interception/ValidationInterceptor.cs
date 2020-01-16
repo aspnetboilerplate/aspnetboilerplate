@@ -8,7 +8,7 @@ namespace Abp.Runtime.Validation.Interception
     /// <summary>
     /// This interceptor is used intercept method calls for classes which's methods must be validated.
     /// </summary>
-    public class ValidationInterceptor : IAsyncInterceptor, ITransientDependency
+    public class ValidationInterceptor : AbpInterceptorBase, ITransientDependency
     {
         private readonly IIocResolver _iocResolver;
 
@@ -17,7 +17,7 @@ namespace Abp.Runtime.Validation.Interception
             _iocResolver = iocResolver;
         }
 
-        public void InterceptSynchronous(IInvocation invocation)
+        public override void InterceptSynchronous(IInvocation invocation)
         {
             if (AbpCrossCuttingConcerns.IsApplied(invocation.InvocationTarget, AbpCrossCuttingConcerns.Validation))
             {
@@ -34,12 +34,8 @@ namespace Abp.Runtime.Validation.Interception
             invocation.Proceed();
         }
 
-        public void InterceptAsynchronous(IInvocation invocation)
-        {
-            invocation.ReturnValue = InternalInterceptAsynchronous(invocation);
-        }
 
-        private async Task InternalInterceptAsynchronous(IInvocation invocation)
+        protected override async Task InternalInterceptAsynchronous(IInvocation invocation)
         {
             var proceedInfo = invocation.CaptureProceedInfo();
 
@@ -60,12 +56,7 @@ namespace Abp.Runtime.Validation.Interception
             await ((Task)invocation.ReturnValue).ConfigureAwait(false);
         }
 
-        public void InterceptAsynchronous<TResult>(IInvocation invocation)
-        {
-            invocation.ReturnValue = InternalInterceptAsynchronous<TResult>(invocation);
-        }
-
-        private async Task<TResult> InternalInterceptAsynchronous<TResult>(IInvocation invocation)
+        protected override async Task<TResult> InternalInterceptAsynchronous<TResult>(IInvocation invocation)
         {
             var proceedInfo = invocation.CaptureProceedInfo();
 

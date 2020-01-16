@@ -8,7 +8,7 @@ namespace Abp.Domain.Uow
     /// <summary>
     /// This interceptor is used to manage database connection and transactions.
     /// </summary>
-    internal class UnitOfWorkInterceptor : IAsyncInterceptor, ITransientDependency
+    internal class UnitOfWorkInterceptor : AbpInterceptorBase, ITransientDependency
     {
         private readonly IUnitOfWorkManager _unitOfWorkManager;
         private readonly IUnitOfWorkDefaultOptions _unitOfWorkOptions;
@@ -19,7 +19,7 @@ namespace Abp.Domain.Uow
             _unitOfWorkOptions = unitOfWorkOptions;
         }
 
-        public void InterceptSynchronous(IInvocation invocation)
+        public override void InterceptSynchronous(IInvocation invocation)
         {
             var method = GetMethodInfo(invocation);
             var unitOfWorkAttr = _unitOfWorkOptions.GetUnitOfWorkAttributeOrNull(method);
@@ -37,12 +37,7 @@ namespace Abp.Domain.Uow
             }
         }
 
-        public void InterceptAsynchronous(IInvocation invocation)
-        {
-            invocation.ReturnValue = InternalInterceptAsynchronous(invocation);
-        }
-
-        private async Task InternalInterceptAsynchronous(IInvocation invocation)
+        protected override async Task InternalInterceptAsynchronous(IInvocation invocation)
         {
             var proceedInfo = invocation.CaptureProceedInfo();
             var method = GetMethodInfo(invocation);
@@ -65,12 +60,8 @@ namespace Abp.Domain.Uow
             }
         }
 
-        public void InterceptAsynchronous<TResult>(IInvocation invocation)
-        {
-            invocation.ReturnValue = InternalInterceptAsynchronous<TResult>(invocation);
-        }
 
-        private async Task<TResult> InternalInterceptAsynchronous<TResult>(IInvocation invocation)
+        protected override async Task<TResult> InternalInterceptAsynchronous<TResult>(IInvocation invocation)
         {
             var proceedInfo = invocation.CaptureProceedInfo();
             var method = GetMethodInfo(invocation);

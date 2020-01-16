@@ -7,7 +7,7 @@ using Castle.DynamicProxy;
 
 namespace Abp.Auditing
 {
-    internal class AuditingInterceptor : IAsyncInterceptor, ITransientDependency
+    internal class AuditingInterceptor : AbpInterceptorBase, ITransientDependency
     {
         private readonly IAuditingHelper _auditingHelper;
         private readonly IAuditingConfiguration _auditingConfiguration;
@@ -23,7 +23,7 @@ namespace Abp.Auditing
             _auditSerializer = auditSerializer;
         }
 
-        public void InterceptSynchronous(IInvocation invocation)
+        public override void InterceptSynchronous(IInvocation invocation)
         {
             if (AbpCrossCuttingConcerns.IsApplied(invocation.InvocationTarget, AbpCrossCuttingConcerns.Auditing))
             {
@@ -64,12 +64,7 @@ namespace Abp.Auditing
             }
         }
 
-        public void InterceptAsynchronous(IInvocation invocation)
-        {
-            invocation.ReturnValue = InternalInterceptAsynchronous(invocation);
-        }
-
-        private async Task InternalInterceptAsynchronous(IInvocation invocation)
+        protected override async Task InternalInterceptAsynchronous(IInvocation invocation)
         {
             var proceedInfo = invocation.CaptureProceedInfo();
 
@@ -113,12 +108,7 @@ namespace Abp.Auditing
             }
         }
 
-        public void InterceptAsynchronous<TResult>(IInvocation invocation)
-        {
-            invocation.ReturnValue = InternalInterceptAsynchronous<TResult>(invocation);
-        }
-
-        private async Task<TResult> InternalInterceptAsynchronous<TResult>(IInvocation invocation)
+        protected override async Task<TResult> InternalInterceptAsynchronous<TResult>(IInvocation invocation)
         {
             var proceedInfo = invocation.CaptureProceedInfo();
 

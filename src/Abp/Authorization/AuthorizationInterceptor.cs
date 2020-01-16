@@ -7,7 +7,7 @@ namespace Abp.Authorization
     /// <summary>
     /// This class is used to intercept methods to make authorization if the method defined <see cref="AbpAuthorizeAttribute"/>.
     /// </summary>
-    public class AuthorizationInterceptor : IAsyncInterceptor, ITransientDependency
+    public class AuthorizationInterceptor : AbpInterceptorBase, ITransientDependency
     {
         private readonly IAuthorizationHelper _authorizationHelper;
 
@@ -22,18 +22,13 @@ namespace Abp.Authorization
             invocation.Proceed();
         }
 
-        public void InterceptSynchronous(IInvocation invocation)
+        public override void InterceptSynchronous(IInvocation invocation)
         {
             _authorizationHelper.Authorize(invocation.MethodInvocationTarget, invocation.TargetType);
             invocation.Proceed();
         }
 
-        public void InterceptAsynchronous(IInvocation invocation)
-        {
-            invocation.ReturnValue = InternalInterceptAsynchronous(invocation);
-        }
-
-        private async Task InternalInterceptAsynchronous(IInvocation invocation)
+        protected override async Task InternalInterceptAsynchronous(IInvocation invocation)
         {
             var proceedInfo = invocation.CaptureProceedInfo();
             
@@ -43,13 +38,8 @@ namespace Abp.Authorization
             var task = (Task)invocation.ReturnValue;
             await task.ConfigureAwait(false);
         }
-
-        public void InterceptAsynchronous<TResult>(IInvocation invocation)
-        {
-            invocation.ReturnValue = InternalInterceptAsynchronous<TResult>(invocation);
-        }
-
-        private async Task<TResult> InternalInterceptAsynchronous<TResult>(IInvocation invocation)
+        
+        protected override async Task<TResult> InternalInterceptAsynchronous<TResult>(IInvocation invocation)
         {
             var proceedInfo = invocation.CaptureProceedInfo();
 

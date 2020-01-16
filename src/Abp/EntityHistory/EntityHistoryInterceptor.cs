@@ -5,7 +5,7 @@ using Abp.Dependency;
 
 namespace Abp.EntityHistory
 {
-    internal class EntityHistoryInterceptor : IAsyncInterceptor, ITransientDependency
+    internal class EntityHistoryInterceptor : AbpInterceptorBase, ITransientDependency
     {
         public IEntityChangeSetReasonProvider ReasonProvider { get; set; }
 
@@ -14,7 +14,7 @@ namespace Abp.EntityHistory
             ReasonProvider = NullEntityChangeSetReasonProvider.Instance;
         }
 
-        public void InterceptSynchronous(IInvocation invocation)
+        public override void InterceptSynchronous(IInvocation invocation)
         {
             var methodInfo = invocation.MethodInvocationTarget;
             var useCaseAttribute = methodInfo.GetCustomAttributes(true).OfType<UseCaseAttribute>().FirstOrDefault()
@@ -32,12 +32,7 @@ namespace Abp.EntityHistory
             }
         }
 
-        public void InterceptAsynchronous(IInvocation invocation)
-        {
-            invocation.ReturnValue = InternalInterceptAsynchronous(invocation);
-        }
-
-        private async Task InternalInterceptAsynchronous(IInvocation invocation)
+        protected override async Task InternalInterceptAsynchronous(IInvocation invocation)
         {
             var proceedInfo = invocation.CaptureProceedInfo();
 
@@ -61,12 +56,7 @@ namespace Abp.EntityHistory
             }
         }
 
-        public void InterceptAsynchronous<TResult>(IInvocation invocation)
-        {
-            invocation.ReturnValue = InternalInterceptAsynchronous<TResult>(invocation);
-        }
-
-        private async Task<TResult> InternalInterceptAsynchronous<TResult>(IInvocation invocation)
+        protected override async Task<TResult> InternalInterceptAsynchronous<TResult>(IInvocation invocation)
         {
             var proceedInfo = invocation.CaptureProceedInfo();
 
