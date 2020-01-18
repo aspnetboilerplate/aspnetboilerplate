@@ -16,6 +16,7 @@ using System.Collections.Generic;
 using System.Data.Entity;
 using System.Data.Entity.Infrastructure;
 using System.Linq;
+using System.Threading;
 using Abp.Application.Editions;
 using Abp.Application.Features;
 using Abp.Zero.SampleApp.TPH;
@@ -121,6 +122,8 @@ namespace Abp.Zero.SampleApp.Tests.EntityHistory
             Resolve<IEntityHistoryConfiguration>().Selectors.Add("Selected", typeof(Advertisement));
 
             var justNow = Clock.Now;
+            Thread.Sleep(1);
+
             WithUnitOfWork(() =>
             {
                 _advertisementRepository.InsertAndGetId(new Advertisement { Banner = "tracked-advertisement" });
@@ -210,6 +213,8 @@ namespace Abp.Zero.SampleApp.Tests.EntityHistory
             Resolve<IEntityHistoryConfiguration>().Selectors.Add("Selected", typeof(Student));
 
             var justNow = Clock.Now;
+            Thread.Sleep(1);
+
             var student = new Student()
             {
                 Name = "TestName",
@@ -322,6 +327,8 @@ namespace Abp.Zero.SampleApp.Tests.EntityHistory
             });
 
             var justNow = Clock.Now;
+            Thread.Sleep(1);
+
             var blog2Id = CreateBlogAndGetId();
 
             UsingDbContext((context) =>
