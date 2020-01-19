@@ -29,6 +29,7 @@ namespace Abp.Notifications
         /// <summary>
         /// Gets or sets the type of the entity.
         /// </summary>
+        [Obsolete("(De)serialization of System.Type is bad and not supported. See https://github.com/dotnet/corefx/issues/42712")]
         public Type EntityType { get; set; }
 
         /// <summary>
