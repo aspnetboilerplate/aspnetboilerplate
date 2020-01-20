@@ -182,7 +182,8 @@ namespace Abp.Zero.SampleApp.Tests.Webhooks
             webhookStoreSubstitute.GetAsync(Arg.Any<Guid>()).Returns(callback =>
                 new WebhookSubscriptionInfo()
                 {
-                    Id = (Guid)callback.Args()[0]
+                    Id = (Guid)callback.Args()[0],
+                    TenantId = newSubscription.TenantId
                 }
             );
             var webhookSubscriptionManager = Resolve<IWebhookSubscriptionManager>();
@@ -250,7 +251,8 @@ namespace Abp.Zero.SampleApp.Tests.Webhooks
             webhookStoreSubstitute.GetAsync(Arg.Any<Guid>()).Returns(callback =>
                 new WebhookSubscriptionInfo()
                 {
-                    Id = (Guid)callback.Args()[0]
+                    Id = (Guid)callback.Args()[0],
+                    TenantId = newSubscription.TenantId
                 }
             );
             var webhookSubscriptionManager = Resolve<IWebhookSubscriptionManager>();
@@ -599,7 +601,8 @@ namespace Abp.Zero.SampleApp.Tests.Webhooks
             webhookStoreSubstitute.Get(Arg.Any<Guid>()).Returns(callback =>
                 new WebhookSubscriptionInfo()
                 {
-                    Id = (Guid)callback.Args()[0]
+                    Id = (Guid)callback.Args()[0],
+                    TenantId = newSubscription.TenantId
                 }
             );
             var webhookSubscriptionManager = Resolve<IWebhookSubscriptionManager>();
@@ -668,7 +671,8 @@ namespace Abp.Zero.SampleApp.Tests.Webhooks
             webhookStoreSubstitute.Get(Arg.Any<Guid>()).Returns(callback =>
                 new WebhookSubscriptionInfo()
                 {
-                    Id = (Guid)callback.Args()[0]
+                    Id = (Guid)callback.Args()[0],
+                    TenantId = newSubscription.TenantId
                 }
             );
             var webhookSubscriptionManager = Resolve<IWebhookSubscriptionManager>();

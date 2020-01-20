@@ -17,7 +17,7 @@ namespace Abp.Webhooks
         /// <see cref="WebhookEvent"/> foreign id 
         /// </summary>
         [Required]
-        public Guid WebhookId { get; set; }
+        public Guid WebhookEventId { get; set; }
 
         /// <summary>
         /// <see cref="WebhookSubscription"/> foreign id 
@@ -40,5 +40,11 @@ namespace Abp.Webhooks
         public DateTime? LastModificationTime { get; set; }
 
         public int? TenantId { get; set; }
+
+        /// <summary>
+        /// WebhookEvent of this send attempt.
+        /// </summary>
+        [ForeignKey("WebhookEventId")]
+        public virtual WebhookEvent WebhookEvent { get; set; }
     }
 }

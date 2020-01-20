@@ -1,5 +1,7 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Threading.Tasks;
+using Abp.Application.Services.Dto;
 
 namespace Abp.Webhooks
 {
@@ -53,6 +55,28 @@ namespace Abp.Webhooks
         public bool HasAnySuccessfulAttemptInLastXRecord(int? tenantId, Guid subscriptionId, int searchCount)
         {
             return true;
+        }
+
+        public async Task<IPagedResult<WebhookSendAttempt>> GetAllSendAttemptsBySubscriptionAsPagedListAsync(int? tenantId, Guid subscriptionId, int maxResultCount,
+            int skipCount)
+        {
+            return new PagedResultDto<WebhookSendAttempt>();
+        }
+
+        public IPagedResult<WebhookSendAttempt> GetAllSendAttemptsBySubscriptionAsPagedList(int? tenantId, Guid subscriptionId, int maxResultCount,
+            int skipCount)
+        {
+            return new PagedResultDto<WebhookSendAttempt>();
+        }
+
+        public Task<List<WebhookSendAttempt>> GetAllSendAttemptsByWebhookEventIdAsync(int? tenantId, Guid webhookEventId)
+        {
+            return Task.FromResult(new List<WebhookSendAttempt>());
+        }
+
+        public List<WebhookSendAttempt> GetAllSendAttemptsByWebhookEventId(int? tenantId, Guid webhookEventId)
+        {
+            return new List<WebhookSendAttempt>();
         }
     }
 }

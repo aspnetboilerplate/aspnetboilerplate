@@ -7,7 +7,7 @@ using Abp.Domain.Entities.Auditing;
 namespace Abp.Webhooks
 {
     /// <summary>
-    /// Store created web hooks. To see who get that webhook check with <see cref="WebhookSendAttempt.WebhookId"/> and you can get <see cref="WebhookSendAttempt.WebhookSubscriptionId"/>
+    /// Store created web hooks. To see who get that webhook check with <see cref="WebhookSendAttempt.WebhookEventId"/> and you can get <see cref="WebhookSendAttempt.WebhookSubscriptionId"/>
     /// </summary>
     [Table("AbpWebhookEvents")]
     public class WebhookEvent : Entity<Guid>, IMayHaveTenant, IHasCreationTime, IHasDeletionTime

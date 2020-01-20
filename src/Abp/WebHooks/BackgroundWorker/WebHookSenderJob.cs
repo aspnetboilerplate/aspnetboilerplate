@@ -26,20 +26,42 @@ namespace Abp.Webhooks.BackgroundWorker
 
         public override void Execute(WebhookSenderArgs args)
         {
+            if (args.TryOnce)
+            {
+                try
+                {
+                    SendWebhook(args);
+                }
+                catch (Exception)
+                {
+                    // ignored
+                }
+            }
+            else
+            {
+                SendWebhook(args);
+            }
+        }
+
+        private void SendWebhook(WebhookSenderArgs args)
+        {
             if (args.WebhookId == default)
             {
-                throw new ArgumentNullException(nameof(args.WebhookId));
+                return;
             }
 
             if (args.WebhookSubscriptionId == default)
             {
-                throw new ArgumentNullException(nameof(args.WebhookSubscriptionId));
+                return;
             }
 
-            var sendAttemptCount = _webhookSendAttemptStore.GetSendAttemptCount(args.TenantId, args.WebhookId, args.WebhookSubscriptionId);
-            if (sendAttemptCount > _webhooksConfiguration.MaxSendAttemptCount)
+            if (!args.TryOnce)
             {
-                return;
+                var sendAttemptCount = _webhookSendAttemptStore.GetSendAttemptCount(args.TenantId, args.WebhookId, args.WebhookSubscriptionId);
+                if (sendAttemptCount > _webhooksConfiguration.MaxSendAttemptCount)
+                {
+                    return;
+                }
             }
 
             try

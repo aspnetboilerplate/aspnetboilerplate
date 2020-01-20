@@ -1,7 +1,9 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Net;
 using System.Threading.Tasks;
+using Abp.Application.Services.Dto;
 using Abp.Dependency;
 using Abp.Domain.Repositories;
 using Abp.Domain.Uow;
@@ -92,7 +94,7 @@ namespace Abp.Webhooks
                 return await AsyncQueryableExecuter.CountAsync(
                     _webhookSendAttemptRepository.GetAll()
                         .Where(attempt =>
-                            attempt.WebhookId == webhookId &&
+                            attempt.WebhookEventId == webhookId &&
                             attempt.WebhookSubscriptionId == webhookSubscriptionId
                         )
                 );
@@ -106,7 +108,7 @@ namespace Abp.Webhooks
             {
                 return _webhookSendAttemptRepository.GetAll()
                     .Count(attempt =>
-                        attempt.WebhookId == webhookId &&
+                        attempt.WebhookEventId == webhookId &&
                         attempt.WebhookSubscriptionId == webhookSubscriptionId);
             }
         }
@@ -138,6 +140,80 @@ namespace Abp.Webhooks
 
                 return _webhookSendAttemptRepository.GetAll().Where(x => x.WebhookSubscriptionId == subscriptionId).OrderByDescending(attempt => attempt.CreationTime).Take(searchCount)
                     .Any(x => x.ResponseStatusCode == HttpStatusCode.OK);
+            }
+        }
+
+        [UnitOfWork]
+        public async Task<IPagedResult<WebhookSendAttempt>> GetAllSendAttemptsBySubscriptionAsPagedListAsync(int? tenantId, Guid subscriptionId, int maxResultCount, int skipCount)
+        {
+            using (_unitOfWorkManager.Current.SetTenantId(tenantId))
+            {
+                var query = _webhookSendAttemptRepository.GetAllIncluding(attempt => attempt.WebhookEvent)
+                    .Where(attempt =>
+                        attempt.WebhookSubscriptionId == subscriptionId
+                    );
+
+                var totalCount = await AsyncQueryableExecuter.CountAsync(query);
+
+                var list = await AsyncQueryableExecuter.ToListAsync(query
+                    .OrderByDescending(a => a.CreationTime)
+                    .Skip(skipCount)
+                    .Take(maxResultCount)
+                );
+
+                return new PagedResultDto<WebhookSendAttempt>()
+                {
+                    TotalCount = totalCount,
+                    Items = list
+                };
+            }
+        }
+
+        [UnitOfWork]
+        public IPagedResult<WebhookSendAttempt> GetAllSendAttemptsBySubscriptionAsPagedList(int? tenantId, Guid subscriptionId, int maxResultCount, int skipCount)
+        {
+            using (_unitOfWorkManager.Current.SetTenantId(tenantId))
+            {
+                var query = _webhookSendAttemptRepository.GetAllIncluding(attempt => attempt.WebhookEvent)
+                    .Where(attempt =>
+                        attempt.WebhookSubscriptionId == subscriptionId
+                    );
+
+                var totalCount = query.Count();
+
+                var list = query
+                    .OrderByDescending(a => a.CreationTime)
+                    .Skip(skipCount)
+                    .Take(maxResultCount)
+                    .ToList();
+
+                return new PagedResultDto<WebhookSendAttempt>()
+                {
+                    TotalCount = totalCount,
+                    Items = list
+                };
+            }
+        }
+
+        [UnitOfWork]
+        public Task<List<WebhookSendAttempt>> GetAllSendAttemptsByWebhookEventIdAsync(int? tenantId, Guid webhookEventId)
+        {
+            using (_unitOfWorkManager.Current.SetTenantId(tenantId))
+            {
+                return AsyncQueryableExecuter.ToListAsync(
+                    _webhookSendAttemptRepository.GetAll().Where(attempt => attempt.WebhookEventId == webhookEventId)
+                        .OrderByDescending(x => x.CreationTime)
+                );
+            }
+        }
+
+        [UnitOfWork]
+        public List<WebhookSendAttempt> GetAllSendAttemptsByWebhookEventId(int? tenantId, Guid webhookEventId)
+        {
+            using (_unitOfWorkManager.Current.SetTenantId(tenantId))
+            {
+                return _webhookSendAttemptRepository.GetAll().Where(attempt => attempt.WebhookEventId == webhookEventId)
+                    .OrderByDescending(x => x.CreationTime).ToList();
             }
         }
     }

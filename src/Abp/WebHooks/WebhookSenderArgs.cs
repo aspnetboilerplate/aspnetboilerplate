@@ -45,5 +45,10 @@ namespace Abp.Webhooks
         /// Gets a set of additional HTTP headers.That headers will be sent with the webhook.
         /// </summary>
         public IDictionary<string, string> Headers { get; set; }
+
+        /// <summary>
+        /// Tries to send webhook only one time without checking to send attempt count
+        /// </summary>
+        public bool TryOnce { get; set; }
     }
 }

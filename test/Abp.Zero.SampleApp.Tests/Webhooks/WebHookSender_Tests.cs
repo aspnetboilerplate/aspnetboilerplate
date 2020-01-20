@@ -6,7 +6,7 @@ using Xunit;
 
 namespace Abp.Zero.SampleApp.Tests.Webhooks
 {
-    public class WebHookSender_Tests : WebhookTestBase
+    public class WebhookSender_Tests : WebhookTestBase
     {
         [Fact]
         public async Task Should_Throw_Exception_Async()

@@ -7,14 +7,14 @@ using Abp.Domain.Uow;
 namespace Abp.Webhooks
 {
     /// <summary>
-    /// Implements <see cref="IWebhookStore"/> using repositories.
+    /// Implements <see cref="IWebhookEventStore"/> using repositories.
     /// </summary>
-    public class WebhookStore : IWebhookStore, ITransientDependency
+    public class WebhookEventStore : IWebhookEventStore, ITransientDependency
     {
         private readonly IRepository<WebhookEvent, Guid> _webhookRepository;
         private readonly IUnitOfWorkManager _unitOfWorkManager;
 
-        public WebhookStore(IRepository<WebhookEvent, Guid> webhookRepository, IUnitOfWorkManager unitOfWorkManager)
+        public WebhookEventStore(IRepository<WebhookEvent, Guid> webhookRepository, IUnitOfWorkManager unitOfWorkManager)
         {
             _webhookRepository = webhookRepository;
             _unitOfWorkManager = unitOfWorkManager;

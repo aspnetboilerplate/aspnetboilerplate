@@ -3,7 +3,7 @@ using System.Threading.Tasks;
 
 namespace Abp.Webhooks
 {
-    public interface IWebhookStore
+    public interface IWebhookEventStore
     {
         /// <summary>
         /// Inserts to persistent store

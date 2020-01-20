@@ -36,7 +36,7 @@ namespace Abp.Webhooks
                 throw new ArgumentNullException(nameof(name), $"{nameof(name)} can not be null, empty or whitespace!");
             }
 
-            Name = name;
+            Name = name.Trim();
             DisplayName = displayName;
             Description = description;
             FeatureDependency = featureDependency;

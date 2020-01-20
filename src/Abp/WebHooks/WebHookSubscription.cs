@@ -40,6 +40,8 @@ namespace Abp.Webhooks
         public WebhookSubscription()
         {
             IsActive = true;
+            Headers = new Dictionary<string, string>();
+            Webhooks = new List<string>();
         }
     }
 }

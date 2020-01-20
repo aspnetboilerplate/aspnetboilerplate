@@ -162,7 +162,7 @@ namespace Abp.Webhooks
         {
             var workItem = new WebhookSendAttempt()
             {
-                WebhookId = webhookSenderArgs.WebhookId,
+                WebhookEventId = webhookSenderArgs.WebhookId,
                 WebhookSubscriptionId = webhookSenderArgs.WebhookSubscriptionId,
                 TenantId = webhookSenderArgs.TenantId
             };
@@ -178,7 +178,7 @@ namespace Abp.Webhooks
         {
             var workItem = new WebhookSendAttempt()
             {
-                WebhookId = webhookSenderArgs.WebhookId,
+                WebhookEventId = webhookSenderArgs.WebhookId,
                 WebhookSubscriptionId = webhookSenderArgs.WebhookSubscriptionId,
                 TenantId = webhookSenderArgs.TenantId
             };

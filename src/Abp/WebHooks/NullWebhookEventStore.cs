@@ -7,9 +7,9 @@ namespace Abp.Webhooks
     /// Null pattern implementation of <see cref="IWebhookSubscriptionsStore"/>.
     /// It's used if <see cref="IWebhookSubscriptionsStore"/> is not implemented by actual persistent store
     /// </summary>
-    public class NullWebhookStore : IWebhookStore
+    public class NullWebhookEventStore : IWebhookEventStore
     {
-        public static NullWebhookStore Instance { get; } = new NullWebhookStore();
+        public static NullWebhookEventStore Instance { get; } = new NullWebhookEventStore();
 
         public Task<Guid> InsertAndGetIdAsync(WebhookEvent webhookEvent)
         {

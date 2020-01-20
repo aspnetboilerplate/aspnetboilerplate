@@ -5,6 +5,7 @@ using System.Threading.Tasks;
 using Abp.Authorization;
 using Abp.Domain.Services;
 using Abp.Domain.Uow;
+using Abp.Json;
 
 namespace Abp.Webhooks
 {
@@ -90,6 +91,7 @@ namespace Abp.Webhooks
             return WebhookSubscriptionsStore.IsSubscribed(tenantId, webhookName);
         }
 
+        [UnitOfWork]
         public async Task AddOrUpdateSubscriptionAsync(WebhookSubscription webhookSubscription)
         {
             await CheckIfPermissionsGrantedAsync(webhookSubscription);
@@ -102,13 +104,15 @@ namespace Abp.Webhooks
             }
             else
             {
-                var subscription = await GetAsync(webhookSubscription.Id);
-                webhookSubscription.Secret = subscription.Secret;
-
-                await WebhookSubscriptionsStore.UpdateAsync(webhookSubscription.ToWebhookSubscriptionInfo());
+                var subscription = await WebhookSubscriptionsStore.GetAsync(webhookSubscription.Id);
+                subscription.WebhookUri = webhookSubscription.WebhookUri;
+                subscription.Webhooks = webhookSubscription.Webhooks.ToJsonString();
+                subscription.Headers = webhookSubscription.Headers.ToJsonString();
+                await WebhookSubscriptionsStore.UpdateAsync(subscription);
             }
         }
 
+        [UnitOfWork]
         public void AddOrUpdateSubscription(WebhookSubscription webhookSubscription)
         {
             CheckIfPermissionsGranted(webhookSubscription);
@@ -121,10 +125,11 @@ namespace Abp.Webhooks
             }
             else
             {
-                var subscription = Get(webhookSubscription.Id);
-                webhookSubscription.Secret = subscription.Secret;
-
-                WebhookSubscriptionsStore.Update(webhookSubscription.ToWebhookSubscriptionInfo());
+                var subscription = WebhookSubscriptionsStore.Get(webhookSubscription.Id);
+                subscription.WebhookUri = webhookSubscription.WebhookUri;
+                subscription.Webhooks = webhookSubscription.Webhooks.ToJsonString();
+                subscription.Headers = webhookSubscription.Headers.ToJsonString();
+                WebhookSubscriptionsStore.Update(subscription);
             }
         }
 

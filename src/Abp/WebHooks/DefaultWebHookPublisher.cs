@@ -11,7 +11,7 @@ namespace Abp.Webhooks
     public class DefaultWebhookPublisher : DomainService, IWebhookPublisher
     {
         public IAbpSession AbpSession { get; set; }
-        public IWebhookStore WebhookStore { get; set; }
+        public IWebhookEventStore WebhookEventStore { get; set; }
 
         private readonly IGuidGenerator _guidGenerator;
         private readonly IBackgroundJobManager _backgroundJobManager;
@@ -29,7 +29,7 @@ namespace Abp.Webhooks
             _webhookSubscriptionManager = webhookSubscriptionManager;
             _webhooksConfiguration = webhooksConfiguration;
 
-            WebhookStore = NullWebhookStore.Instance;
+            WebhookEventStore = NullWebhookEventStore.Instance;
             AbpSession = NullAbpSession.Instance;
         }
 
@@ -121,7 +121,7 @@ namespace Abp.Webhooks
                 TenantId = tenantId
             };
 
-            await WebhookStore.InsertAndGetIdAsync(webhookInfo);
+            await WebhookEventStore.InsertAndGetIdAsync(webhookInfo);
             return webhookInfo;
         }
 
@@ -137,7 +137,7 @@ namespace Abp.Webhooks
                 TenantId = tenantId
             };
 
-            WebhookStore.InsertAndGetId(webhookInfo);
+            WebhookEventStore.InsertAndGetId(webhookInfo);
             return webhookInfo;
         }
     }
