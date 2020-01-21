@@ -31,9 +31,9 @@ namespace Abp.Webhooks
 
         public async Task SendWebhookAsync(WebhookSenderArgs webhookSenderArgs)
         {
-            if (webhookSenderArgs.WebhookId == default)
+            if (webhookSenderArgs.WebhookEventId == default)
             {
-                throw new ArgumentNullException(nameof(webhookSenderArgs.WebhookId));
+                throw new ArgumentNullException(nameof(webhookSenderArgs.WebhookEventId));
             }
 
             if (webhookSenderArgs.WebhookSubscriptionId == default)
@@ -95,9 +95,9 @@ namespace Abp.Webhooks
 
         public void SendWebhook(WebhookSenderArgs webhookSenderArgs)
         {
-            if (webhookSenderArgs.WebhookId == default)
+            if (webhookSenderArgs.WebhookEventId == default)
             {
-                throw new ArgumentNullException(nameof(webhookSenderArgs.WebhookId));
+                throw new ArgumentNullException(nameof(webhookSenderArgs.WebhookEventId));
             }
 
             if (webhookSenderArgs.WebhookSubscriptionId == default)
@@ -162,7 +162,7 @@ namespace Abp.Webhooks
         {
             var workItem = new WebhookSendAttempt()
             {
-                WebhookEventId = webhookSenderArgs.WebhookId,
+                WebhookEventId = webhookSenderArgs.WebhookEventId,
                 WebhookSubscriptionId = webhookSenderArgs.WebhookSubscriptionId,
                 TenantId = webhookSenderArgs.TenantId
             };
@@ -178,7 +178,7 @@ namespace Abp.Webhooks
         {
             var workItem = new WebhookSendAttempt()
             {
-                WebhookEventId = webhookSenderArgs.WebhookId,
+                WebhookEventId = webhookSenderArgs.WebhookEventId,
                 WebhookSubscriptionId = webhookSenderArgs.WebhookSubscriptionId,
                 TenantId = webhookSenderArgs.TenantId
             };
@@ -226,11 +226,12 @@ namespace Abp.Webhooks
                 ? webhookSenderArgs.Data.FromJsonString<dynamic>(_webhooksConfiguration.JsonSerializerSettings)
                 : webhookSenderArgs.Data.FromJsonString<dynamic>();
 
-            return new WebhookPayload
+            var attemptNumber = await WebhookSendAttemptStore.GetSendAttemptCountAsync(webhookSenderArgs.TenantId,
+                                    webhookSenderArgs.WebhookEventId, webhookSenderArgs.WebhookSubscriptionId) + 1;
+
+            return new WebhookPayload(webhookSenderArgs.WebhookEventId.ToString(), webhookSenderArgs.WebhookDefinition, attemptNumber)
             {
-                Event = webhookSenderArgs.WebhookDefinition,
-                Data = data,
-                Attempt = await WebhookSendAttemptStore.GetSendAttemptCountAsync(webhookSenderArgs.TenantId, webhookSenderArgs.WebhookId, webhookSenderArgs.WebhookSubscriptionId) + 1
+                Data = data
             };
         }
 
@@ -240,11 +241,12 @@ namespace Abp.Webhooks
                 ? webhookSenderArgs.Data.FromJsonString<dynamic>(_webhooksConfiguration.JsonSerializerSettings)
                 : webhookSenderArgs.Data.FromJsonString<dynamic>();
 
-            return new WebhookPayload
+            var attemptNumber = WebhookSendAttemptStore.GetSendAttemptCount(webhookSenderArgs.TenantId,
+                                    webhookSenderArgs.WebhookEventId, webhookSenderArgs.WebhookSubscriptionId) + 1;
+
+            return new WebhookPayload(webhookSenderArgs.WebhookEventId.ToString(), webhookSenderArgs.WebhookDefinition, attemptNumber)
             {
-                Event = webhookSenderArgs.WebhookDefinition,
-                Data = data,
-                Attempt = WebhookSendAttemptStore.GetSendAttemptCount(webhookSenderArgs.TenantId, webhookSenderArgs.WebhookId, webhookSenderArgs.WebhookSubscriptionId) + 1
+                Data = data
             };
         }
 

@@ -4,6 +4,8 @@ namespace Abp.Webhooks
 {
     public class WebhookPayload
     {
+        public string Id { get; set; }
+
         public string Event { get; set; }
 
         public int Attempt { get; set; }
@@ -12,12 +14,12 @@ namespace Abp.Webhooks
 
         public DateTime CreationTime { get; set; }
 
-        public string IdempotencyKey { get; set; }
-
-        public WebhookPayload()
+        public WebhookPayload(string id, string webHookEvent, int attempt)
         {
+            Id = id;
+            Event = webHookEvent;
+            Attempt = attempt;
             CreationTime = DateTime.UtcNow;
-            IdempotencyKey = Guid.NewGuid().ToString();
         }
     }
 }

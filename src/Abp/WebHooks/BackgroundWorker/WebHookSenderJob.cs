@@ -45,7 +45,7 @@ namespace Abp.Webhooks.BackgroundWorker
 
         private void SendWebhook(WebhookSenderArgs args)
         {
-            if (args.WebhookId == default)
+            if (args.WebhookEventId == default)
             {
                 return;
             }
@@ -57,7 +57,7 @@ namespace Abp.Webhooks.BackgroundWorker
 
             if (!args.TryOnce)
             {
-                var sendAttemptCount = _webhookSendAttemptStore.GetSendAttemptCount(args.TenantId, args.WebhookId, args.WebhookSubscriptionId);
+                var sendAttemptCount = _webhookSendAttemptStore.GetSendAttemptCount(args.TenantId, args.WebhookEventId, args.WebhookSubscriptionId);
                 if (sendAttemptCount > _webhooksConfiguration.MaxSendAttemptCount)
                 {
                     return;

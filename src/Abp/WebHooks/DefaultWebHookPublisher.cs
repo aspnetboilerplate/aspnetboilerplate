@@ -59,7 +59,7 @@ namespace Abp.Webhooks
                 await _backgroundJobManager.EnqueueAsync<WebhookSenderJob, WebhookSenderArgs>(new WebhookSenderArgs()
                 {
                     TenantId = webhookSubscription.TenantId,
-                    WebhookId = webhookInfo.Id,
+                    WebhookEventId = webhookInfo.Id,
                     Data = webhookInfo.Data,
                     WebhookDefinition = webhookInfo.WebhookName,
 
@@ -97,7 +97,7 @@ namespace Abp.Webhooks
                 _backgroundJobManager.Enqueue<WebhookSenderJob, WebhookSenderArgs>(new WebhookSenderArgs()
                 {
                     TenantId = webhookSubscription.TenantId,
-                    WebhookId = webhookInfo.Id,
+                    WebhookEventId = webhookInfo.Id,
                     Data = webhookInfo.Data,
                     WebhookDefinition = webhookInfo.WebhookName,
 

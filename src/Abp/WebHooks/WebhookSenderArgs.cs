@@ -12,7 +12,7 @@ namespace Abp.Webhooks
         /// <summary>
         /// <see cref="WebhookEvent"/> foreign id 
         /// </summary>
-        public Guid WebhookId { get; set; }
+        public Guid WebhookEventId { get; set; }
 
         /// <summary>
         /// Webhook unique name

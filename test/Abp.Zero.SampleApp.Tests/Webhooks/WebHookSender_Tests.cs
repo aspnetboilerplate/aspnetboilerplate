@@ -20,7 +20,7 @@ namespace Abp.Zero.SampleApp.Tests.Webhooks
             var exception = await webhookSender
                 .SendWebhookAsync(new WebhookSenderArgs()
                 {
-                    WebhookId = Guid.NewGuid(),
+                    WebhookEventId = Guid.NewGuid(),
                     WebhookSubscriptionId = Guid.Empty
                 })
                 .ShouldThrowAsync<ArgumentNullException>();
@@ -30,12 +30,12 @@ namespace Abp.Zero.SampleApp.Tests.Webhooks
             var exception2 = await webhookSender
                 .SendWebhookAsync(new WebhookSenderArgs()
                 {
-                    WebhookId = Guid.Empty,
+                    WebhookEventId = Guid.Empty,
                     WebhookSubscriptionId = Guid.NewGuid()
                 })
                 .ShouldThrowAsync<ArgumentNullException>();
 
-            exception2.Message.ShouldContain(nameof(WebhookSenderArgs.WebhookId));
+            exception2.Message.ShouldContain(nameof(WebhookSenderArgs.WebhookEventId));
         }
 
         [Fact]
@@ -52,7 +52,7 @@ namespace Abp.Zero.SampleApp.Tests.Webhooks
             {
                 webhookSender.SendWebhook(new WebhookSenderArgs()
                 {
-                    WebhookId = Guid.NewGuid(),
+                    WebhookEventId = Guid.NewGuid(),
                     WebhookSubscriptionId = Guid.Empty
                 });
             });
@@ -63,12 +63,12 @@ namespace Abp.Zero.SampleApp.Tests.Webhooks
             {
                 webhookSender.SendWebhook(new WebhookSenderArgs()
                 {
-                    WebhookId = Guid.Empty,
+                    WebhookEventId = Guid.Empty,
                     WebhookSubscriptionId = Guid.NewGuid()
                 });
             });
 
-            exception2.Message.ShouldContain(nameof(WebhookSenderArgs.WebhookId));
+            exception2.Message.ShouldContain(nameof(WebhookSenderArgs.WebhookEventId));
         }
     }
 }
