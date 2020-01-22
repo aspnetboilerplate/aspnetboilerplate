@@ -12,6 +12,7 @@ using Abp.Domain.Repositories;
 using Abp.Domain.Services;
 using Abp.Domain.Uow;
 using Abp.Json;
+using Abp.Linq;
 using Abp.Localization;
 using Abp.MultiTenancy;
 using Abp.Organizations;
@@ -63,9 +64,11 @@ namespace Abp.Authorization.Users
         private readonly ICacheManager _cacheManager;
         private readonly IRepository<OrganizationUnit, long> _organizationUnitRepository;
         private readonly IRepository<UserOrganizationUnit, long> _userOrganizationUnitRepository;
+        private readonly IRepository<UserRole, long> _userRoleRepository;
         private readonly IOrganizationUnitSettings _organizationUnitSettings;
         private readonly ISettingManager _settingManager;
         private readonly IOptions<IdentityOptions> _optionsAccessor;
+        private readonly IAsyncQueryableExecuter _asyncQueryableExecuter;
 
         public AbpUserManager(
             AbpRoleManager<TRole, TUser> roleManager,
@@ -83,8 +86,10 @@ namespace Abp.Authorization.Users
             ICacheManager cacheManager,
             IRepository<OrganizationUnit, long> organizationUnitRepository,
             IRepository<UserOrganizationUnit, long> userOrganizationUnitRepository,
+            IRepository<UserRole, long> userRoleRepository,
             IOrganizationUnitSettings organizationUnitSettings,
-            ISettingManager settingManager)
+            ISettingManager settingManager, 
+            IAsyncQueryableExecuter asyncQueryableExecuter)
             : base(
                 userStore,
                 optionsAccessor,
@@ -101,8 +106,10 @@ namespace Abp.Authorization.Users
             _cacheManager = cacheManager;
             _organizationUnitRepository = organizationUnitRepository;
             _userOrganizationUnitRepository = userOrganizationUnitRepository;
+            _userRoleRepository = userRoleRepository;
             _organizationUnitSettings = organizationUnitSettings;
             _settingManager = settingManager;
+            _asyncQueryableExecuter = asyncQueryableExecuter;
             _optionsAccessor = optionsAccessor;
 
             AbpUserStore = userStore;
@@ -643,10 +650,11 @@ namespace Abp.Authorization.Users
 
         public virtual async Task<IdentityResult> SetRolesAsync(TUser user, string[] roleNames)
         {
-            await AbpUserStore.UserRepository.EnsureCollectionLoadedAsync(user, u => u.Roles);
+            var userRoles =
+                await _asyncQueryableExecuter.ToListAsync(_userRoleRepository.GetAll().Where(x => x.UserId == user.Id));
 
             //Remove from removed roles
-            foreach (var userRole in user.Roles.ToList())
+            foreach (var userRole in userRoles)
             {
                 var role = await RoleManager.FindByIdAsync(userRole.RoleId.ToString());
                 if (role != null && roleNames.All(roleName => role.Name != roleName))
@@ -663,7 +671,7 @@ namespace Abp.Authorization.Users
             foreach (var roleName in roleNames)
             {
                 var role = await RoleManager.GetRoleByNameAsync(roleName);
-                if (user.Roles.All(ur => ur.RoleId != role.Id))
+                if (userRoles.All(ur => ur.RoleId != role.Id))
                 {
                     var result = await AddToRoleAsync(user, roleName);
                     if (!result.Succeeded)

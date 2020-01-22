@@ -69,6 +69,7 @@ namespace Abp.Authorization.Users
         private readonly IAsyncQueryableExecuter _asyncQueryableExecuter;
         private readonly IRepository<UserLogin, long> _userLoginRepository;
         private readonly IRepository<UserClaim, long> _userClaimRepository;
+        private readonly IRepository<UserToken, long> _userTokenRepository;
         private readonly IRepository<UserPermissionSetting, long> _userPermissionSettingRepository;
         private readonly IRepository<UserOrganizationUnit, long> _userOrganizationUnitRepository;
         private readonly IRepository<OrganizationUnitRole, long> _organizationUnitRoleRepository;
@@ -83,6 +84,7 @@ namespace Abp.Authorization.Users
             IRepository<UserRole, long> userRoleRepository,
             IRepository<UserLogin, long> userLoginRepository,
             IRepository<UserClaim, long> userClaimRepository,
+            IRepository<UserToken, long> userTokenRepository,
             IRepository<UserPermissionSetting, long> userPermissionSettingRepository, 
             IRepository<UserOrganizationUnit, long> userOrganizationUnitRepository, 
             IRepository<OrganizationUnitRole, long> organizationUnitRoleRepository)
@@ -94,6 +96,7 @@ namespace Abp.Authorization.Users
             _userRoleRepository = userRoleRepository;
             _userLoginRepository = userLoginRepository;
             _userClaimRepository = userClaimRepository;
+            _userTokenRepository = userTokenRepository;
             _userPermissionSettingRepository = userPermissionSettingRepository;
             _userOrganizationUnitRepository = userOrganizationUnitRepository;
             _organizationUnitRoleRepository = organizationUnitRoleRepository;
@@ -600,8 +603,7 @@ namespace Abp.Authorization.Users
                 throw new InvalidOperationException(string.Format(CultureInfo.CurrentCulture, "Role {0} does not exist!", normalizedRoleName));
             }
 
-            await UserRepository.EnsureCollectionLoadedAsync(user, u => u.Roles, cancellationToken);
-            user.Roles.Add(new UserRole(user.TenantId, user.Id, role.Id));
+            await _userRoleRepository.InsertAsync(new UserRole(user.TenantId, user.Id, role.Id));
         }
 
         /// <summary>
@@ -663,8 +665,7 @@ namespace Abp.Authorization.Users
                 return;
             }
 
-            await UserRepository.EnsureCollectionLoadedAsync(user, u => u.Roles, cancellationToken);
-            user.Roles.RemoveAll(r => r.RoleId == role.Id);
+            await _userRoleRepository.DeleteAsync(x => x.UserId == user.Id && x.RoleId == role.Id);
         }
 
         /// <summary>
@@ -821,9 +822,9 @@ namespace Abp.Authorization.Users
 
             Check.NotNull(user, nameof(user));
 
-            await UserRepository.EnsureCollectionLoadedAsync(user, u => u.Claims, cancellationToken);
-
-            return user.Claims.Select(c => new Claim(c.ClaimType, c.ClaimValue)).ToList();
+            return await _asyncQueryableExecuter.ToListAsync(_userClaimRepository.GetAll()
+                .Where(x => x.UserId == user.Id)
+                .Select(c => new Claim(c.ClaimType, c.ClaimValue)));
         }
 
         /// <summary>
@@ -857,11 +858,9 @@ namespace Abp.Authorization.Users
             Check.NotNull(user, nameof(user));
             Check.NotNull(claims, nameof(claims));
 
-            await UserRepository.EnsureCollectionLoadedAsync(user, u => u.Claims, cancellationToken);
-
             foreach (var claim in claims)
             {
-                user.Claims.Add(new UserClaim(user, claim));
+                await _userClaimRepository.InsertAsync(new UserClaim(user, claim));
             }
         }
 
@@ -879,11 +878,9 @@ namespace Abp.Authorization.Users
             Check.NotNull(user, nameof(user));
             Check.NotNull(claims, nameof(claims));
 
-            UserRepository.EnsureCollectionLoaded(user, u => u.Claims, cancellationToken);
-
             foreach (var claim in claims)
             {
-                user.Claims.Add(new UserClaim(user, claim));
+                _userClaimRepository.Insert(new UserClaim(user, claim));
             }
         }
 
@@ -903,13 +900,17 @@ namespace Abp.Authorization.Users
             Check.NotNull(claim, nameof(claim));
             Check.NotNull(newClaim, nameof(newClaim));
 
-            await UserRepository.EnsureCollectionLoadedAsync(user, u => u.Claims, cancellationToken);
+            var userClaims = _userClaimRepository.GetAll().Where(uc =>
+                uc.UserId == user.Id &&
+                uc.ClaimValue == claim.Value &&
+                uc.ClaimType == claim.Type);
 
-            var userClaims = user.Claims.Where(uc => uc.ClaimValue == claim.Value && uc.ClaimType == claim.Type);
             foreach (var userClaim in userClaims)
             {
                 userClaim.ClaimType = claim.Type;
                 userClaim.ClaimValue = claim.Value;
+
+                await _userClaimRepository.UpdateAsync(userClaim);
             }
         }
 
@@ -929,13 +930,17 @@ namespace Abp.Authorization.Users
             Check.NotNull(claim, nameof(claim));
             Check.NotNull(newClaim, nameof(newClaim));
 
-            UserRepository.EnsureCollectionLoaded(user, u => u.Claims, cancellationToken);
+            var userClaims = _userClaimRepository.GetAll().Where(uc =>
+                uc.UserId == user.Id &&
+                uc.ClaimValue == claim.Value &&
+                uc.ClaimType == claim.Type);
 
-            var userClaims = user.Claims.Where(uc => uc.ClaimValue == claim.Value && uc.ClaimType == claim.Type);
             foreach (var userClaim in userClaims)
             {
                 userClaim.ClaimType = claim.Type;
                 userClaim.ClaimValue = claim.Value;
+                
+                _userClaimRepository.Update(userClaim);
             }
         }
 
@@ -953,11 +958,12 @@ namespace Abp.Authorization.Users
             Check.NotNull(user, nameof(user));
             Check.NotNull(claims, nameof(claims));
 
-            await UserRepository.EnsureCollectionLoadedAsync(user, u => u.Claims, cancellationToken);
-
             foreach (var claim in claims)
             {
-                user.Claims.RemoveAll(c => c.ClaimValue == claim.Value && c.ClaimType == claim.Type);
+                await _userClaimRepository.DeleteAsync(c =>
+                    c.UserId == user.Id &&
+                    c.ClaimValue == claim.Value &&
+                    c.ClaimType == claim.Type);
             }
         }
 
@@ -975,11 +981,12 @@ namespace Abp.Authorization.Users
             Check.NotNull(user, nameof(user));
             Check.NotNull(claims, nameof(claims));
 
-            UserRepository.EnsureCollectionLoaded(user, u => u.Claims, cancellationToken);
-
             foreach (var claim in claims)
             {
-                user.Claims.RemoveAll(c => c.ClaimValue == claim.Value && c.ClaimType == claim.Type);
+                _userClaimRepository.Delete(c =>
+                    c.UserId == user.Id &&
+                    c.ClaimValue == claim.Value &&
+                    c.ClaimType == claim.Type);
             }
         }
 
@@ -997,9 +1004,7 @@ namespace Abp.Authorization.Users
             Check.NotNull(user, nameof(user));
             Check.NotNull(login, nameof(login));
 
-            await UserRepository.EnsureCollectionLoadedAsync(user, u => u.Logins, cancellationToken);
-
-            user.Logins.Add(new UserLogin(user.TenantId, user.Id, login.LoginProvider, login.ProviderKey));
+            await _userLoginRepository.InsertAsync(new UserLogin(user.TenantId, user.Id, login.LoginProvider, login.ProviderKey));
         }
 
         /// <summary>
@@ -1016,9 +1021,7 @@ namespace Abp.Authorization.Users
             Check.NotNull(user, nameof(user));
             Check.NotNull(login, nameof(login));
 
-            UserRepository.EnsureCollectionLoaded(user, u => u.Logins, cancellationToken);
-
-            user.Logins.Add(new UserLogin(user.TenantId, user.Id, login.LoginProvider, login.ProviderKey));
+            _userLoginRepository.Insert(new UserLogin(user.TenantId, user.Id, login.LoginProvider, login.ProviderKey));
         }
 
         /// <summary>
@@ -1037,9 +1040,10 @@ namespace Abp.Authorization.Users
             Check.NotNull(loginProvider, nameof(loginProvider));
             Check.NotNull(providerKey, nameof(providerKey));
 
-            await UserRepository.EnsureCollectionLoadedAsync(user, u => u.Logins, cancellationToken);
-
-            user.Logins.RemoveAll(userLogin => userLogin.LoginProvider == loginProvider && userLogin.ProviderKey == providerKey);
+            await _userLoginRepository.DeleteAsync(userLogin => 
+                userLogin.UserId == user.Id && 
+                userLogin.LoginProvider == loginProvider && 
+                userLogin.ProviderKey == providerKey);
         }
 
         /// <summary>
@@ -1058,9 +1062,10 @@ namespace Abp.Authorization.Users
             Check.NotNull(loginProvider, nameof(loginProvider));
             Check.NotNull(providerKey, nameof(providerKey));
 
-            UserRepository.EnsureCollectionLoaded(user, u => u.Logins, cancellationToken);
-
-            user.Logins.RemoveAll(userLogin => userLogin.LoginProvider == loginProvider && userLogin.ProviderKey == providerKey);
+            _userLoginRepository.Delete(userLogin =>
+                userLogin.UserId == user.Id &&
+                userLogin.LoginProvider == loginProvider &&
+                userLogin.ProviderKey == providerKey);
         }
 
         /// <summary>
@@ -1077,9 +1082,9 @@ namespace Abp.Authorization.Users
 
             Check.NotNull(user, nameof(user));
 
-            await UserRepository.EnsureCollectionLoadedAsync(user, u => u.Logins, cancellationToken);
-
-            return user.Logins.Select(l => new UserLoginInfo(l.LoginProvider, l.ProviderKey, l.LoginProvider)).ToList();
+            return await _asyncQueryableExecuter.ToListAsync(_userLoginRepository.GetAll()
+                .Where(x => x.UserId == user.Id)
+                .Select(l => new UserLoginInfo(l.LoginProvider, l.ProviderKey, l.LoginProvider)));
         }
 
         /// <summary>
@@ -1096,9 +1101,9 @@ namespace Abp.Authorization.Users
 
             Check.NotNull(user, nameof(user));
 
-            UserRepository.EnsureCollectionLoaded(user, u => u.Logins, cancellationToken);
-
-            return user.Logins.Select(l => new UserLoginInfo(l.LoginProvider, l.ProviderKey, l.LoginProvider)).ToList();
+            return _userLoginRepository.GetAll()
+                .Where(x => x.UserId == user.Id)
+                .Select(l => new UserLoginInfo(l.LoginProvider, l.ProviderKey, l.LoginProvider)).ToList();
         }
 
         /// <summary>
@@ -2040,16 +2045,18 @@ namespace Abp.Authorization.Users
 
             Check.NotNull(user, nameof(user));
 
-            await UserRepository.EnsureCollectionLoadedAsync(user, u => u.Tokens, cancellationToken);
+            var token = await _asyncQueryableExecuter.FirstOrDefaultAsync(_userTokenRepository.GetAll()
+                .Where(t => t.UserId == user.Id && t.LoginProvider == loginProvider && t.Name == name));
 
-            var token = user.Tokens.FirstOrDefault(t => t.LoginProvider == loginProvider && t.Name == name);
+
             if (token == null)
             {
-                user.Tokens.Add(new UserToken(user, loginProvider, name, value));
+                await _userTokenRepository.InsertAsync(new UserToken(user, loginProvider, name, value));
             }
             else
             {
                 token.Value = value;
+                await _userTokenRepository.UpdateAsync(token);
             }
         }
 
@@ -2068,16 +2075,17 @@ namespace Abp.Authorization.Users
 
             Check.NotNull(user, nameof(user));
 
-            UserRepository.EnsureCollectionLoaded(user, u => u.Tokens, cancellationToken);
+            var token = _userTokenRepository.GetAll()
+                .FirstOrDefault(t => t.UserId == user.Id && t.LoginProvider == loginProvider && t.Name == name);
 
-            var token = user.Tokens.FirstOrDefault(t => t.LoginProvider == loginProvider && t.Name == name);
             if (token == null)
             {
-                user.Tokens.Add(new UserToken(user, loginProvider, name, value));
+                _userTokenRepository.Insert(new UserToken(user, loginProvider, name, value));
             }
             else
             {
                 token.Value = value;
+                _userTokenRepository.Update(token);
             }
         }
 
@@ -2095,9 +2103,10 @@ namespace Abp.Authorization.Users
 
             Check.NotNull(user, nameof(user));
 
-            await UserRepository.EnsureCollectionLoadedAsync(user, u => u.Tokens, cancellationToken);
-
-            user.Tokens.RemoveAll(t => t.LoginProvider == loginProvider && t.Name == name);
+            await _userTokenRepository.DeleteAsync(t =>
+                t.UserId == user.Id && 
+                t.LoginProvider == loginProvider && 
+                t.Name == name);
         }
 
         /// <summary>
@@ -2114,9 +2123,10 @@ namespace Abp.Authorization.Users
 
             Check.NotNull(user, nameof(user));
 
-            UserRepository.EnsureCollectionLoaded(user, u => u.Tokens, cancellationToken);
-
-            user.Tokens.RemoveAll(t => t.LoginProvider == loginProvider && t.Name == name);
+            _userTokenRepository.Delete(t =>
+                t.UserId == user.Id &&
+                t.LoginProvider == loginProvider &&
+                t.Name == name);
         }
 
         /// <summary>
@@ -2133,9 +2143,8 @@ namespace Abp.Authorization.Users
 
             Check.NotNull(user, nameof(user));
 
-            await UserRepository.EnsureCollectionLoadedAsync(user, u => u.Tokens, cancellationToken);
-
-            return user.Tokens.FirstOrDefault(t => t.LoginProvider == loginProvider && t.Name == name)?.Value;
+            return (await _asyncQueryableExecuter.FirstOrDefaultAsync(_userTokenRepository.GetAll()
+                .Where(t => t.UserId == user.Id && t.LoginProvider == loginProvider && t.Name == name)))?.Value;
         }
 
         /// <summary>
@@ -2152,9 +2161,8 @@ namespace Abp.Authorization.Users
 
             Check.NotNull(user, nameof(user));
 
-            UserRepository.EnsureCollectionLoaded(user, u => u.Tokens, cancellationToken);
-
-            return user.Tokens.FirstOrDefault(t => t.LoginProvider == loginProvider && t.Name == name)?.Value;
+            return _asyncQueryableExecuter.FirstOrDefault(_userTokenRepository.GetAll()
+                .Where(t => t.UserId == user.Id && t.LoginProvider == loginProvider && t.Name == name))?.Value;
         }
 
         /// <summary>
@@ -2443,9 +2451,8 @@ namespace Abp.Authorization.Users
 
             Check.NotNull(user, nameof(user));
 
-            await UserRepository.EnsureCollectionLoadedAsync(user, u => u.Tokens, cancellationToken);
-
-            user.Tokens.Add(new UserToken(user, TokenValidityKeyProvider, tokenValidityKey, null, expireDate));
+            await _userTokenRepository.InsertAsync(new UserToken(user, TokenValidityKeyProvider, tokenValidityKey, null,
+                expireDate));
         }
 
         public virtual void AddTokenValidityKey([NotNull] TUser user, string tokenValidityKey, DateTime expireDate, CancellationToken cancellationToken = default(CancellationToken))
@@ -2454,9 +2461,8 @@ namespace Abp.Authorization.Users
 
             Check.NotNull(user, nameof(user));
 
-            UserRepository.EnsureCollectionLoaded(user, u => u.Tokens, cancellationToken);
-
-            user.Tokens.Add(new UserToken(user, TokenValidityKeyProvider, tokenValidityKey, null, expireDate));
+            _userTokenRepository.Insert(new UserToken(user, TokenValidityKeyProvider, tokenValidityKey, null,
+                expireDate));
         }
 
         public virtual async Task<bool> IsTokenValidityKeyValidAsync([NotNull] TUser user, string tokenValidityKey, CancellationToken cancellationToken = default(CancellationToken))
@@ -2465,11 +2471,11 @@ namespace Abp.Authorization.Users
 
             Check.NotNull(user, nameof(user));
 
-            await UserRepository.EnsureCollectionLoadedAsync(user, u => u.Tokens, cancellationToken);
-
-            return user.Tokens.Any(t => t.LoginProvider == TokenValidityKeyProvider &&
-                                        t.Name == tokenValidityKey &&
-                                        t.ExpireDate > DateTime.UtcNow);
+            return await _asyncQueryableExecuter.AnyAsync(_userTokenRepository.GetAll().Where(t =>
+                t.UserId == user.Id &&
+                t.LoginProvider == TokenValidityKeyProvider &&
+                t.Name == tokenValidityKey &&
+                t.ExpireDate > DateTime.UtcNow));
         }
 
         public virtual bool IsTokenValidityKeyValid([NotNull] TUser user, string tokenValidityKey, CancellationToken cancellationToken = default(CancellationToken))
@@ -2478,14 +2484,11 @@ namespace Abp.Authorization.Users
 
             Check.NotNull(user, nameof(user));
 
-            UserRepository.EnsureCollectionLoaded(user, u => u.Tokens, cancellationToken);
-            var isValidityKeyValid = user.Tokens.Any(t => t.LoginProvider == TokenValidityKeyProvider &&
-                                               t.Name == tokenValidityKey &&
-                                               t.ExpireDate > DateTime.UtcNow);
-
-            user.Tokens.RemoveAll(t => t.LoginProvider == TokenValidityKeyProvider && t.ExpireDate <= DateTime.UtcNow);
-
-            return isValidityKeyValid;
+            return _userTokenRepository.GetAll().Any(t =>
+                t.UserId == user.Id &&
+                t.LoginProvider == TokenValidityKeyProvider &&
+                t.Name == tokenValidityKey &&
+                t.ExpireDate > DateTime.UtcNow);
         }
 
         public virtual async Task RemoveTokenValidityKeyAsync([NotNull] TUser user, string tokenValidityKey, CancellationToken cancellationToken = default(CancellationToken))
@@ -2494,9 +2497,10 @@ namespace Abp.Authorization.Users
 
             Check.NotNull(user, nameof(user));
 
-            await UserRepository.EnsureCollectionLoadedAsync(user, u => u.Tokens, cancellationToken);
-
-            user.Tokens.RemoveAll(t => t.LoginProvider == TokenValidityKeyProvider && t.Name == tokenValidityKey);
+            await _userTokenRepository.DeleteAsync(t =>
+                t.UserId == user.Id &&
+                t.LoginProvider == TokenValidityKeyProvider && 
+                t.Name == tokenValidityKey);
         }
 
         public virtual void RemoveTokenValidityKey([NotNull] TUser user, string tokenValidityKey, CancellationToken cancellationToken = default(CancellationToken))
@@ -2504,11 +2508,10 @@ namespace Abp.Authorization.Users
             cancellationToken.ThrowIfCancellationRequested();
 
             Check.NotNull(user, nameof(user));
-
-            UserRepository.EnsureCollectionLoaded(user, u => u.Tokens, cancellationToken);
-
-            user.Tokens.Remove(user.Tokens.FirstOrDefault(t =>
-                t.LoginProvider == TokenValidityKeyProvider && t.Name == tokenValidityKey));
+            _userTokenRepository.Delete(t =>
+                t.UserId == user.Id &&
+                t.LoginProvider == TokenValidityKeyProvider &&
+                t.Name == tokenValidityKey);
         }
 
         protected virtual string NormalizeKey(string key)

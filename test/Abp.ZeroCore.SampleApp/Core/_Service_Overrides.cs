@@ -27,41 +27,20 @@ namespace Abp.ZeroCore.SampleApp.Core
 {
     public class UserManager : AbpUserManager<Role, User>
     {
-        public UserManager(
-            RoleManager roleManager,
-            UserStore userStore,
-            IOptions<IdentityOptions> optionsAccessor,
-            IPasswordHasher<User> passwordHasher,
-            IEnumerable<IUserValidator<User>> userValidators,
-            IEnumerable<IPasswordValidator<User>> passwordValidators,
-            ILookupNormalizer keyNormalizer,
-            IdentityErrorDescriber errors,
-            IServiceProvider services,
-            ILogger<UserManager> logger,
-            IPermissionManager permissionManager,
-            IUnitOfWorkManager unitOfWorkManager,
-            ICacheManager cacheManager,
+        public UserManager(AbpRoleManager<Role, User> roleManager, AbpUserStore<Role, User> userStore,
+            IOptions<IdentityOptions> optionsAccessor, IPasswordHasher<User> passwordHasher,
+            IEnumerable<IUserValidator<User>> userValidators, IEnumerable<IPasswordValidator<User>> passwordValidators,
+            ILookupNormalizer keyNormalizer, IdentityErrorDescriber errors, IServiceProvider services,
+            ILogger<UserManager<User>> logger, IPermissionManager permissionManager,
+            IUnitOfWorkManager unitOfWorkManager, ICacheManager cacheManager,
             IRepository<OrganizationUnit, long> organizationUnitRepository,
             IRepository<UserOrganizationUnit, long> userOrganizationUnitRepository,
-            IOrganizationUnitSettings organizationUnitSettings,
-            ISettingManager settingManager) : base(
-            roleManager,
-            userStore,
-            optionsAccessor,
-            passwordHasher,
-            userValidators,
-            passwordValidators,
-            keyNormalizer,
-            errors,
-            services,
-            logger,
-            permissionManager,
-            unitOfWorkManager,
-            cacheManager,
-            organizationUnitRepository,
-            userOrganizationUnitRepository,
-            organizationUnitSettings,
-            settingManager)
+            IRepository<UserRole, long> userRoleRepository, IOrganizationUnitSettings organizationUnitSettings,
+            ISettingManager settingManager, IAsyncQueryableExecuter asyncQueryableExecuter) : base(roleManager,
+            userStore, optionsAccessor, passwordHasher, userValidators, passwordValidators, keyNormalizer, errors,
+            services, logger, permissionManager, unitOfWorkManager, cacheManager, organizationUnitRepository,
+            userOrganizationUnitRepository, userRoleRepository, organizationUnitSettings, settingManager,
+            asyncQueryableExecuter)
         {
         }
     }
@@ -186,14 +165,11 @@ namespace Abp.ZeroCore.SampleApp.Core
 
     public class RoleStore : AbpRoleStore<Role, User>
     {
-        public RoleStore(
-            IUnitOfWorkManager unitOfWorkManager,
-            IRepository<Role> roleRepository,
-            IRepository<RolePermissionSetting, long> rolePermissionSettingRepository
-        ) : base(
-            unitOfWorkManager,
-            roleRepository,
-            rolePermissionSettingRepository)
+        public RoleStore(IUnitOfWorkManager unitOfWorkManager, IRepository<Role> roleRepository,
+            IRepository<RolePermissionSetting, long> rolePermissionSettingRepository,
+            IRepository<RoleClaim, long> roleClaimRepository, IAsyncQueryableExecuter asyncQueryableExecuter) : base(
+            unitOfWorkManager, roleRepository, rolePermissionSettingRepository, roleClaimRepository,
+            asyncQueryableExecuter)
         {
         }
     }
@@ -238,27 +214,15 @@ namespace Abp.ZeroCore.SampleApp.Core
 
     public class UserStore : AbpUserStore<Role, User>
     {
-        public UserStore(
-            IUnitOfWorkManager unitOfWorkManager,
-            IRepository<User, long> userRepository,
-            IRepository<Role> roleRepository,
-            IAsyncQueryableExecuter asyncQueryableExecuter,
-            IRepository<UserRole, long> userRoleRepository,
-            IRepository<UserLogin, long> userLoginRepository,
-            IRepository<UserClaim, long> userClaimRepository,
+        public UserStore(IUnitOfWorkManager unitOfWorkManager, IRepository<User, long> userRepository,
+            IRepository<Role> roleRepository, IAsyncQueryableExecuter asyncQueryableExecuter,
+            IRepository<UserRole, long> userRoleRepository, IRepository<UserLogin, long> userLoginRepository,
+            IRepository<UserClaim, long> userClaimRepository, IRepository<UserToken, long> userTokenRepository,
             IRepository<UserPermissionSetting, long> userPermissionSettingRepository,
             IRepository<UserOrganizationUnit, long> userOrganizationUnitRepository,
-            IRepository<OrganizationUnitRole, long> organizationUnitRoleRepository
-            ) : base(
-            unitOfWorkManager,
-            userRepository,
-            roleRepository,
-            asyncQueryableExecuter,
-            userRoleRepository,
-            userLoginRepository,
-            userClaimRepository,
-            userPermissionSettingRepository,
-            userOrganizationUnitRepository,
+            IRepository<OrganizationUnitRole, long> organizationUnitRoleRepository) : base(unitOfWorkManager,
+            userRepository, roleRepository, asyncQueryableExecuter, userRoleRepository, userLoginRepository,
+            userClaimRepository, userTokenRepository, userPermissionSettingRepository, userOrganizationUnitRepository,
             organizationUnitRoleRepository)
         {
         }

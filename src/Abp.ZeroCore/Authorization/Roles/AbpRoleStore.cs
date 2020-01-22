@@ -9,6 +9,7 @@ using Abp.Dependency;
 using Abp.Domain.Repositories;
 using Abp.Domain.Uow;
 using Abp.Extensions;
+using Abp.Linq;
 using Abp.Zero;
 using Castle.Core.Logging;
 using JetBrains.Annotations;
@@ -49,15 +50,21 @@ namespace Abp.Authorization.Roles
         private readonly IRepository<TRole> _roleRepository;
         private readonly IUnitOfWorkManager _unitOfWorkManager;
         private readonly IRepository<RolePermissionSetting, long> _rolePermissionSettingRepository;
+        private readonly IRepository<RoleClaim, long> _roleClaimRepository;
+        private readonly IAsyncQueryableExecuter _asyncQueryableExecuter;
 
         public AbpRoleStore(
             IUnitOfWorkManager unitOfWorkManager,
             IRepository<TRole> roleRepository, 
-            IRepository<RolePermissionSetting, long> rolePermissionSettingRepository)
+            IRepository<RolePermissionSetting, long> rolePermissionSettingRepository, 
+            IRepository<RoleClaim, long> roleClaimRepository, 
+            IAsyncQueryableExecuter asyncQueryableExecuter)
         {
             _unitOfWorkManager = unitOfWorkManager;
             _roleRepository = roleRepository;
             _rolePermissionSettingRepository = rolePermissionSettingRepository;
+            _roleClaimRepository = roleClaimRepository;
+            _asyncQueryableExecuter = asyncQueryableExecuter;
 
             ErrorDescriber = new IdentityErrorDescriber();
             Logger = NullLogger.Instance;
@@ -308,9 +315,8 @@ namespace Abp.Authorization.Roles
 
             Check.NotNull(role, nameof(role));
 
-            await _roleRepository.EnsureCollectionLoadedAsync(role, u => u.Claims, cancellationToken);
-
-            return role.Claims.Select(c => new Claim(c.ClaimType, c.ClaimValue)).ToList();
+            return await _asyncQueryableExecuter.ToListAsync(_roleClaimRepository.GetAll()
+                .Where(x => x.RoleId == role.Id).Select(c => new Claim(c.ClaimType, c.ClaimValue)));
         }
 
         /// <summary>
@@ -327,9 +333,7 @@ namespace Abp.Authorization.Roles
             Check.NotNull(role, nameof(role));
             Check.NotNull(claim, nameof(claim));
 
-            await _roleRepository.EnsureCollectionLoadedAsync(role, u => u.Claims, cancellationToken);
-
-            role.Claims.Add(new RoleClaim(role, claim));
+            await _roleClaimRepository.InsertAsync(new RoleClaim(role, claim));
         }
 
         /// <summary>
@@ -344,9 +348,10 @@ namespace Abp.Authorization.Roles
             Check.NotNull(role, nameof(role));
             Check.NotNull(claim, nameof(claim));
 
-            await _roleRepository.EnsureCollectionLoadedAsync(role, u => u.Claims, cancellationToken);
-
-            role.Claims.RemoveAll(c => c.ClaimValue == claim.Value && c.ClaimType == claim.Type);
+            await _roleClaimRepository.DeleteAsync(x =>
+                x.RoleId == role.Id &&
+                x.ClaimValue == claim.Value &&
+                x.ClaimType == claim.Type);
         }
 
         public virtual async Task<TRole> FindByDisplayNameAsync(string displayName)

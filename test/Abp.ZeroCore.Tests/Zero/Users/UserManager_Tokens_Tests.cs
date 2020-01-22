@@ -31,6 +31,8 @@ namespace Abp.Zero.Users
                 var user = await _abpUserManager.GetUserByIdAsync(AbpSession.GetUserId());
                 var tokenValidityKey = Guid.NewGuid().ToString();
                 await _abpUserManager.AddTokenValidityKeyAsync(user, tokenValidityKey, DateTime.UtcNow.AddDays(1));
+                await _unitOfWorkManager.Current.SaveChangesAsync();
+
                 var isTokenValidityKeyValid = await _abpUserManager.IsTokenValidityKeyValidAsync(user, tokenValidityKey);
 
                 isTokenValidityKeyValid.ShouldBeTrue();
@@ -45,6 +47,8 @@ namespace Abp.Zero.Users
                 var user = await _abpUserManager.GetUserByIdAsync(AbpSession.GetUserId());
                 var tokenValidityKey = Guid.NewGuid().ToString();
                 await _abpUserManager.AddTokenValidityKeyAsync(user, tokenValidityKey, DateTime.UtcNow);
+                await _unitOfWorkManager.Current.SaveChangesAsync();
+
                 var isTokenValidityKeyValid = await _abpUserManager.IsTokenValidityKeyValidAsync(user, tokenValidityKey);
 
                 isTokenValidityKeyValid.ShouldBeFalse();
