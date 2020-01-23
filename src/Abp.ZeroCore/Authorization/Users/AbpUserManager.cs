@@ -45,6 +45,8 @@ namespace Abp.Authorization.Users
             }
         }
 
+        public IAsyncQueryableExecuter AsyncQueryableExecuter { get; set; }
+
         public ILocalizationManager LocalizationManager { get; set; }
 
         protected string LocalizationSourceName { get; set; }
@@ -68,7 +70,6 @@ namespace Abp.Authorization.Users
         private readonly IOrganizationUnitSettings _organizationUnitSettings;
         private readonly ISettingManager _settingManager;
         private readonly IOptions<IdentityOptions> _optionsAccessor;
-        private readonly IAsyncQueryableExecuter _asyncQueryableExecuter;
 
         public AbpUserManager(
             AbpRoleManager<TRole, TUser> roleManager,
@@ -88,8 +89,7 @@ namespace Abp.Authorization.Users
             IRepository<UserOrganizationUnit, long> userOrganizationUnitRepository,
             IRepository<UserRole, long> userRoleRepository,
             IOrganizationUnitSettings organizationUnitSettings,
-            ISettingManager settingManager, 
-            IAsyncQueryableExecuter asyncQueryableExecuter)
+            ISettingManager settingManager)
             : base(
                 userStore,
                 optionsAccessor,
@@ -109,13 +109,13 @@ namespace Abp.Authorization.Users
             _userRoleRepository = userRoleRepository;
             _organizationUnitSettings = organizationUnitSettings;
             _settingManager = settingManager;
-            _asyncQueryableExecuter = asyncQueryableExecuter;
             _optionsAccessor = optionsAccessor;
 
             AbpUserStore = userStore;
             RoleManager = roleManager;
             LocalizationManager = NullLocalizationManager.Instance;
             LocalizationSourceName = AbpZeroConsts.LocalizationSourceName;
+            AsyncQueryableExecuter = NullAsyncQueryableExecuter.Instance;
         }
 
         public override async Task<IdentityResult> CreateAsync(TUser user)
@@ -651,7 +651,7 @@ namespace Abp.Authorization.Users
         public virtual async Task<IdentityResult> SetRolesAsync(TUser user, string[] roleNames)
         {
             var userRoles =
-                await _asyncQueryableExecuter.ToListAsync(_userRoleRepository.GetAll().Where(x => x.UserId == user.Id));
+                await AsyncQueryableExecuter.ToListAsync(_userRoleRepository.GetAll().Where(x => x.UserId == user.Id));
 
             //Remove from removed roles
             foreach (var userRole in userRoles)

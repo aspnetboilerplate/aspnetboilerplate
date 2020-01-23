@@ -50,6 +50,8 @@ namespace Abp.Authorization.Users
         /// </summary>
         public IdentityErrorDescriber ErrorDescriber { get; set; }
 
+        public IAsyncQueryableExecuter AsyncQueryableExecuter { get; set; }
+
         /// <summary>
         /// Gets or sets a flag indicating if changes should be persisted after CreateAsync, UpdateAsync and DeleteAsync are called.
         /// </summary>
@@ -66,7 +68,6 @@ namespace Abp.Authorization.Users
 
         private readonly IRepository<TRole> _roleRepository;
         private readonly IRepository<UserRole, long> _userRoleRepository;
-        private readonly IAsyncQueryableExecuter _asyncQueryableExecuter;
         private readonly IRepository<UserLogin, long> _userLoginRepository;
         private readonly IRepository<UserClaim, long> _userClaimRepository;
         private readonly IRepository<UserToken, long> _userTokenRepository;
@@ -80,7 +81,6 @@ namespace Abp.Authorization.Users
             IUnitOfWorkManager unitOfWorkManager,
             IRepository<TUser, long> userRepository,
             IRepository<TRole> roleRepository,
-            IAsyncQueryableExecuter asyncQueryableExecuter,
             IRepository<UserRole, long> userRoleRepository,
             IRepository<UserLogin, long> userLoginRepository,
             IRepository<UserClaim, long> userClaimRepository,
@@ -92,7 +92,6 @@ namespace Abp.Authorization.Users
             _unitOfWorkManager = unitOfWorkManager;
             UserRepository = userRepository;
             _roleRepository = roleRepository;
-            _asyncQueryableExecuter = asyncQueryableExecuter;
             _userRoleRepository = userRoleRepository;
             _userLoginRepository = userLoginRepository;
             _userClaimRepository = userClaimRepository;
@@ -104,6 +103,7 @@ namespace Abp.Authorization.Users
             AbpSession = NullAbpSession.Instance;
             ErrorDescriber = new IdentityErrorDescriber();
             Logger = NullLogger.Instance;
+            AsyncQueryableExecuter = NullAsyncQueryableExecuter.Instance;
         }
 
         /// <summary>Saves the current store.</summary>
@@ -713,12 +713,12 @@ namespace Abp.Authorization.Users
 
             Check.NotNull(user, nameof(user)); ;
 
-            var userRoles = await _asyncQueryableExecuter.ToListAsync(from userRole in _userRoleRepository.GetAll()
+            var userRoles = await AsyncQueryableExecuter.ToListAsync(from userRole in _userRoleRepository.GetAll()
                                                                       join role in _roleRepository.GetAll() on userRole.RoleId equals role.Id
                                                                       where userRole.UserId == user.Id
                                                                       select role.Name);
 
-            var userOrganizationUnitRoles = await _asyncQueryableExecuter.ToListAsync(
+            var userOrganizationUnitRoles = await AsyncQueryableExecuter.ToListAsync(
                 from userOu in _userOrganizationUnitRepository.GetAll()
                 join roleOu in _organizationUnitRoleRepository.GetAll() on userOu.OrganizationUnitId equals roleOu
                     .OrganizationUnitId
@@ -742,12 +742,12 @@ namespace Abp.Authorization.Users
 
             Check.NotNull(user, nameof(user)); ;
 
-            var userRoles = _asyncQueryableExecuter.ToList(from userRole in _userRoleRepository.GetAll()
+            var userRoles = AsyncQueryableExecuter.ToList(from userRole in _userRoleRepository.GetAll()
                                                                       join role in _roleRepository.GetAll() on userRole.RoleId equals role.Id
                                                                       where userRole.UserId == user.Id
                                                                       select role.Name);
 
-            var userOrganizationUnitRoles = _asyncQueryableExecuter.ToList(
+            var userOrganizationUnitRoles = AsyncQueryableExecuter.ToList(
                 from userOu in _userOrganizationUnitRepository.GetAll()
                 join roleOu in _organizationUnitRoleRepository.GetAll() on userOu.OrganizationUnitId equals roleOu
                     .OrganizationUnitId
@@ -822,7 +822,7 @@ namespace Abp.Authorization.Users
 
             Check.NotNull(user, nameof(user));
 
-            return await _asyncQueryableExecuter.ToListAsync(_userClaimRepository.GetAll()
+            return await AsyncQueryableExecuter.ToListAsync(_userClaimRepository.GetAll()
                 .Where(x => x.UserId == user.Id)
                 .Select(c => new Claim(c.ClaimType, c.ClaimValue)));
         }
@@ -1082,7 +1082,7 @@ namespace Abp.Authorization.Users
 
             Check.NotNull(user, nameof(user));
 
-            return await _asyncQueryableExecuter.ToListAsync(_userLoginRepository.GetAll()
+            return await AsyncQueryableExecuter.ToListAsync(_userLoginRepository.GetAll()
                 .Where(x => x.UserId == user.Id)
                 .Select(l => new UserLoginInfo(l.LoginProvider, l.ProviderKey, l.LoginProvider)));
         }
@@ -1130,7 +1130,7 @@ namespace Abp.Authorization.Users
                               userLogin.TenantId == AbpSession.TenantId
                         select user;
 
-            return _asyncQueryableExecuter.FirstOrDefaultAsync(query);
+            return AsyncQueryableExecuter.FirstOrDefaultAsync(query);
         }
 
         /// <summary>
@@ -1157,7 +1157,7 @@ namespace Abp.Authorization.Users
                               userLogin.TenantId == AbpSession.TenantId
                         select user;
 
-            return _asyncQueryableExecuter.FirstOrDefault(query);
+            return AsyncQueryableExecuter.FirstOrDefault(query);
         }
 
         /// <summary>
@@ -1938,7 +1938,7 @@ namespace Abp.Authorization.Users
                         where userclaims.ClaimValue == claim.Value && userclaims.ClaimType == claim.Type && userclaims.TenantId == AbpSession.TenantId
                         select user;
 
-            return await _asyncQueryableExecuter.ToListAsync(query);
+            return await AsyncQueryableExecuter.ToListAsync(query);
         }
 
         /// <summary>
@@ -1961,7 +1961,7 @@ namespace Abp.Authorization.Users
                         where userclaims.ClaimValue == claim.Value && userclaims.ClaimType == claim.Type && userclaims.TenantId == AbpSession.TenantId
                         select user;
 
-            return _asyncQueryableExecuter.ToList(query);
+            return AsyncQueryableExecuter.ToList(query);
         }
 
         /// <summary>
@@ -1994,7 +1994,7 @@ namespace Abp.Authorization.Users
                         where userrole.RoleId.Equals(role.Id)
                         select user;
 
-            return await _asyncQueryableExecuter.ToListAsync(query);
+            return await AsyncQueryableExecuter.ToListAsync(query);
         }
 
         /// <summary>
@@ -2027,7 +2027,7 @@ namespace Abp.Authorization.Users
                         where userrole.RoleId.Equals(role.Id)
                         select user;
 
-            return _asyncQueryableExecuter.ToList(query);
+            return AsyncQueryableExecuter.ToList(query);
         }
 
         /// <summary>
@@ -2045,7 +2045,7 @@ namespace Abp.Authorization.Users
 
             Check.NotNull(user, nameof(user));
 
-            var token = await _asyncQueryableExecuter.FirstOrDefaultAsync(_userTokenRepository.GetAll()
+            var token = await AsyncQueryableExecuter.FirstOrDefaultAsync(_userTokenRepository.GetAll()
                 .Where(t => t.UserId == user.Id && t.LoginProvider == loginProvider && t.Name == name));
 
 
@@ -2143,7 +2143,7 @@ namespace Abp.Authorization.Users
 
             Check.NotNull(user, nameof(user));
 
-            return (await _asyncQueryableExecuter.FirstOrDefaultAsync(_userTokenRepository.GetAll()
+            return (await AsyncQueryableExecuter.FirstOrDefaultAsync(_userTokenRepository.GetAll()
                 .Where(t => t.UserId == user.Id && t.LoginProvider == loginProvider && t.Name == name)))?.Value;
         }
 
@@ -2161,7 +2161,7 @@ namespace Abp.Authorization.Users
 
             Check.NotNull(user, nameof(user));
 
-            return _asyncQueryableExecuter.FirstOrDefault(_userTokenRepository.GetAll()
+            return AsyncQueryableExecuter.FirstOrDefault(_userTokenRepository.GetAll()
                 .Where(t => t.UserId == user.Id && t.LoginProvider == loginProvider && t.Name == name))?.Value;
         }
 
@@ -2471,7 +2471,7 @@ namespace Abp.Authorization.Users
 
             Check.NotNull(user, nameof(user));
 
-            return await _asyncQueryableExecuter.AnyAsync(_userTokenRepository.GetAll().Where(t =>
+            return await AsyncQueryableExecuter.AnyAsync(_userTokenRepository.GetAll().Where(t =>
                 t.UserId == user.Id &&
                 t.LoginProvider == TokenValidityKeyProvider &&
                 t.Name == tokenValidityKey &&

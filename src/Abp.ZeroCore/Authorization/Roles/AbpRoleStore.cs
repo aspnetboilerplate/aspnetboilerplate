@@ -31,7 +31,9 @@ namespace Abp.Authorization.Roles
         where TUser : AbpUser<TUser>
     {
         public ILogger Logger { get; set; }
-        
+
+        public IAsyncQueryableExecuter AsyncQueryableExecuter { get; set; }
+
         /// <summary>
         /// Gets or sets the <see cref="IdentityErrorDescriber"/> for any error that occurred with the current operation.
         /// </summary>
@@ -51,23 +53,21 @@ namespace Abp.Authorization.Roles
         private readonly IUnitOfWorkManager _unitOfWorkManager;
         private readonly IRepository<RolePermissionSetting, long> _rolePermissionSettingRepository;
         private readonly IRepository<RoleClaim, long> _roleClaimRepository;
-        private readonly IAsyncQueryableExecuter _asyncQueryableExecuter;
 
         public AbpRoleStore(
             IUnitOfWorkManager unitOfWorkManager,
             IRepository<TRole> roleRepository, 
             IRepository<RolePermissionSetting, long> rolePermissionSettingRepository, 
-            IRepository<RoleClaim, long> roleClaimRepository, 
-            IAsyncQueryableExecuter asyncQueryableExecuter)
+            IRepository<RoleClaim, long> roleClaimRepository)
         {
             _unitOfWorkManager = unitOfWorkManager;
             _roleRepository = roleRepository;
             _rolePermissionSettingRepository = rolePermissionSettingRepository;
             _roleClaimRepository = roleClaimRepository;
-            _asyncQueryableExecuter = asyncQueryableExecuter;
 
             ErrorDescriber = new IdentityErrorDescriber();
             Logger = NullLogger.Instance;
+            AsyncQueryableExecuter = NullAsyncQueryableExecuter.Instance;
         }
 
         /// <summary>Saves the current store.</summary>
@@ -315,7 +315,7 @@ namespace Abp.Authorization.Roles
 
             Check.NotNull(role, nameof(role));
 
-            return await _asyncQueryableExecuter.ToListAsync(_roleClaimRepository.GetAll()
+            return await AsyncQueryableExecuter.ToListAsync(_roleClaimRepository.GetAll()
                 .Where(x => x.RoleId == role.Id).Select(c => new Claim(c.ClaimType, c.ClaimValue)));
         }
 
