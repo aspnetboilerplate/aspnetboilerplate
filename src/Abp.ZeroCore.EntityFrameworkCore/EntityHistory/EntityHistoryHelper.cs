@@ -71,16 +71,16 @@ namespace Abp.EntityHistory
                 if (!shouldAuditEntity.HasValue && entityEntry.Metadata.IsOwned())
                 {
                     // Check if owner entity has auditing attribute
-                    var foreignKey = entityEntry.Metadata.GetForeignKeys().First();
-                    var ownerEntity = foreignKey.PrincipalEntityType.ClrType;
+                    var ownerForeignKey = entityEntry.Metadata.GetForeignKeys().First(fk => fk.IsOwnership);
+                    var ownerEntityType = ownerForeignKey.PrincipalEntityType.ClrType;
 
-                    shouldAuditOwnerEntity = IsTypeOfAuditedEntity(ownerEntity);
+                    shouldAuditOwnerEntity = IsTypeOfAuditedEntity(ownerEntityType);
                     if (shouldAuditOwnerEntity.HasValue && !shouldAuditOwnerEntity.Value)
                     {
                         continue;
                     }
 
-                    var ownerPropertyInfo = foreignKey.PrincipalToDependent.PropertyInfo;
+                    var ownerPropertyInfo = ownerForeignKey.PrincipalToDependent.PropertyInfo;
                     shouldAuditOwnerProperty = IsAuditedPropertyInfo(ownerPropertyInfo);
                     if (shouldAuditOwnerProperty.HasValue && !shouldAuditOwnerProperty.Value)
                     {
