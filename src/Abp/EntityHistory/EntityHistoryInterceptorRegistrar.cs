@@ -2,6 +2,7 @@
 using System.Linq;
 using System.Reflection;
 using Abp.Dependency;
+using Abp.Domain.Uow;
 using Castle.Core;
 
 namespace Abp.EntityHistory
@@ -21,7 +22,7 @@ namespace Abp.EntityHistory
 
                 if (ShouldIntercept(entityHistoryConfiguration, handler.ComponentModel.Implementation))
                 {
-                    handler.ComponentModel.Interceptors.Add(new InterceptorReference(typeof(EntityHistoryInterceptor)));
+                    handler.ComponentModel.Interceptors.Add(new InterceptorReference(typeof(AbpAsyncDeterminationInterceptor<EntityHistoryInterceptor>)));
                 }
             };
         }
