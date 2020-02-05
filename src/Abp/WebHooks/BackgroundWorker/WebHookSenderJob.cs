@@ -74,7 +74,7 @@ namespace Abp.Webhooks.BackgroundWorker
                 if (!TryDeactivateSubscriptionIfReachedMaxConsecutiveFailCount(args.TenantId, args.WebhookSubscriptionId))
                 //no need to retry to send webhook since subscription disabled
                 {
-                    throw;
+                    throw;//Throw exception to re-try sending webhook
                 }
             }
         }

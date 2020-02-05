@@ -16,9 +16,9 @@ namespace Abp.Webhooks
     /// </summary>
     public class WebhookSendAttemptStore : IWebhookSendAttemptStore, ITransientDependency
     {
+        public IAsyncQueryableExecuter AsyncQueryableExecuter { get; set; }
         private readonly IRepository<WebhookSendAttempt, Guid> _webhookSendAttemptRepository;
         private readonly IUnitOfWorkManager _unitOfWorkManager;
-        public IAsyncQueryableExecuter AsyncQueryableExecuter { get; set; }
 
         public WebhookSendAttemptStore(
             IRepository<WebhookSendAttempt, Guid> webhookSendAttemptRepository,

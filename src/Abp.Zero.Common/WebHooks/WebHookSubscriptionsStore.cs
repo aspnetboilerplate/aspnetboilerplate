@@ -14,8 +14,8 @@ namespace Abp.Webhooks
     /// </summary>
     public class WebhookSubscriptionsStore : IWebhookSubscriptionsStore, ITransientDependency
     {
-        private readonly IRepository<WebhookSubscriptionInfo, Guid> _webhookSubscriptionRepository;
         public IAsyncQueryableExecuter AsyncQueryableExecuter { get; set; }
+        private readonly IRepository<WebhookSubscriptionInfo, Guid> _webhookSubscriptionRepository;
 
         public WebhookSubscriptionsStore(IRepository<WebhookSubscriptionInfo, Guid> webhookSubscriptionRepository)
         {
