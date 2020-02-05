@@ -570,10 +570,9 @@ namespace Abp.Zero.EntityHistory
             {
                 s.EntityChanges.Count.ShouldBe(1);
 
-                var entityChange = s.EntityChanges[0];
+                var entityChange = s.EntityChanges.Single(ec => ec.EntityTypeFullName == typeof(Post).FullName);
                 entityChange.ChangeType.ShouldBe(EntityChangeType.Updated);
                 entityChange.EntityId.ShouldBe(post1Id.ToJsonString(false, false));
-                entityChange.EntityTypeFullName.ShouldBe(typeof(Post).FullName);
                 entityChange.PropertyChanges.Count.ShouldBe(1);
 
                 var propertyChange = entityChange.PropertyChanges.Single();
@@ -590,7 +589,7 @@ namespace Abp.Zero.EntityHistory
         {
             /* Comment has Audited attribute. */
 
-            using (var uow = Resolve<IUnitOfWorkManager>().Begin())
+            WithUnitOfWork(() =>
             {
                 var comment1 = _commentRepository.Single(b => b.Content == "test-comment-1-content");
                 var post2 = _postRepository.Single(b => b.Body == "test-post-2-body");
@@ -598,9 +597,7 @@ namespace Abp.Zero.EntityHistory
                 // Change foreign key by assigning navigation property
                 comment1.Post = post2;
                 _commentRepository.Update(comment1);
-
-                uow.Complete();
-            }
+            });
 
             Predicate<EntityChangeSet> predicate = s =>
             {
@@ -625,15 +622,13 @@ namespace Abp.Zero.EntityHistory
         {
             /* Blog.Name has DisableAuditing attribute. */
 
-            using (var uow = Resolve<IUnitOfWorkManager>().Begin())
+            WithUnitOfWork(() =>
             {
                 var blog1 = _blogRepository.Single(b => b.Name == "test-blog-1");
 
                 blog1.Name = null;
                 _blogRepository.Update(blog1);
-
-                uow.Complete();
-            }
+            });
 
             Predicate<EntityChangeSet> predicate = s =>
             {
