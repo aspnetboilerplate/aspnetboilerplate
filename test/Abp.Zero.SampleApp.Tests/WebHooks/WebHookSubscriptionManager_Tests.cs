@@ -48,7 +48,7 @@ namespace Abp.Zero.SampleApp.Tests.Webhooks
             subscription1.Webhooks.ShouldBe(subscription2.Webhooks);
             subscription1.TenantId.ShouldBe(subscription2.TenantId);
             subscription1.Secret.ShouldNotBeNullOrEmpty();
-            subscription1.Secret.ShouldStartWith("whs_");
+            subscription1.Secret.ShouldStartWith(WebhookSubscriptionSecretPrefix);
             subscription1.WebhookUri.ShouldBe(subscription2.WebhookUri);
             subscription1.Webhooks.ShouldBe(subscription2.Webhooks);
             subscription1.Headers.ShouldBe(subscription2.Headers);
@@ -228,7 +228,7 @@ namespace Abp.Zero.SampleApp.Tests.Webhooks
             {
                 w.TenantId.ShouldBe(newSubscription.TenantId);
                 w.Secret.ShouldNotBeNullOrEmpty();
-                w.Secret.ShouldStartWith("whs_");
+                w.Secret.ShouldStartWith(WebhookSubscriptionSecretPrefix);
                 w.WebhookUri.ShouldBe(newSubscription.WebhookUri);
                 w.Webhooks.ShouldBe(newSubscription.Webhooks.ToJsonString());
                 w.Headers.ShouldBe(newSubscription.Headers.ToJsonString());
@@ -529,7 +529,7 @@ namespace Abp.Zero.SampleApp.Tests.Webhooks
                 var updatedSubscription = webhookSubscriptionManager.Get(newSubscription.Id);
                 updatedSubscription.ShouldNotBeNull();
                 updatedSubscription.Secret.ShouldNotBeNullOrEmpty();
-                updatedSubscription.Secret.ShouldStartWith("whs_");
+                updatedSubscription.Secret.ShouldStartWith(WebhookSubscriptionSecretPrefix);
                 updatedSubscription.WebhookUri.ShouldBe(newWebhookUri);
 
                 updatedSubscription.Webhooks.ShouldContain(AppWebhookDefinitionNames.Test);
@@ -648,7 +648,7 @@ namespace Abp.Zero.SampleApp.Tests.Webhooks
             {
                 w.TenantId.ShouldBe(newSubscription.TenantId);
                 w.Secret.ShouldNotBeNullOrEmpty();
-                w.Secret.ShouldStartWith("whs_");
+                w.Secret.ShouldStartWith(WebhookSubscriptionSecretPrefix);
                 w.WebhookUri.ShouldBe(newSubscription.WebhookUri);
                 w.Webhooks.ShouldBe(newSubscription.Webhooks.ToJsonString());
                 w.Headers.ShouldBe(newSubscription.Headers.ToJsonString());

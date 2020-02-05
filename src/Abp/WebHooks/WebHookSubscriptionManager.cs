@@ -19,6 +19,8 @@ namespace Abp.Webhooks
 
         private readonly IWebhookDefinitionManager _webhookDefinitionManager;
 
+        private const string WebhookSubscriptionSecretPrefix = "whs_";
+
         public WebhookSubscriptionManager(
             IGuidGenerator guidGenerator,
             IWebhookDefinitionManager webhookDefinitionManager)
@@ -101,7 +103,7 @@ namespace Abp.Webhooks
             if (webhookSubscription.Id == default)
             {
                 webhookSubscription.Id = _guidGenerator.Create();
-                webhookSubscription.Secret = "whs_" + Guid.NewGuid().ToString().Replace("-", "");
+                webhookSubscription.Secret = WebhookSubscriptionSecretPrefix + Guid.NewGuid().ToString().Replace("-", "");
                 await WebhookSubscriptionsStore.InsertAsync(webhookSubscription.ToWebhookSubscriptionInfo());
             }
             else
@@ -122,7 +124,7 @@ namespace Abp.Webhooks
             if (webhookSubscription.Id == default)
             {
                 webhookSubscription.Id = _guidGenerator.Create();
-                webhookSubscription.Secret = "whs_" + Guid.NewGuid().ToString().Replace("-", "");
+                webhookSubscription.Secret = WebhookSubscriptionSecretPrefix + Guid.NewGuid().ToString().Replace("-", "");
                 WebhookSubscriptionsStore.Insert(webhookSubscription.ToWebhookSubscriptionInfo());
             }
             else

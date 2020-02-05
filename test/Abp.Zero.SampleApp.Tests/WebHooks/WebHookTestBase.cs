@@ -19,6 +19,8 @@ namespace Abp.Zero.SampleApp.Tests.Webhooks
 {
     public class WebhookTestBase : SampleAppTestBase<WebhookPublishTestModule>
     {
+        protected const string WebhookSubscriptionSecretPrefix = "whs_";
+
         protected T RegisterFake<T>() where T : class
         {
             var substitute = Substitute.For<T>();

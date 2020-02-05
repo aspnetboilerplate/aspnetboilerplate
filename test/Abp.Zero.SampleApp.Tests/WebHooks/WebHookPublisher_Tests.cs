@@ -52,7 +52,7 @@ namespace Abp.Zero.SampleApp.Tests.Webhooks
             Predicate<WebhookSenderArgs> predicate = w =>
             {
                 w.Secret.ShouldNotBeNullOrEmpty();
-                w.Secret.ShouldStartWith("whs_");
+                w.Secret.ShouldStartWith(WebhookSubscriptionSecretPrefix);
                 w.WebhookDefinition.ShouldContain(webhookDefinition);
 
                 w.Headers.Count.ShouldBe(1);
@@ -281,7 +281,7 @@ namespace Abp.Zero.SampleApp.Tests.Webhooks
             Predicate<WebhookSenderArgs> predicate = w =>
             {
                 w.Secret.ShouldNotBeNullOrEmpty();
-                w.Secret.ShouldStartWith("whs_");
+                w.Secret.ShouldStartWith(WebhookSubscriptionSecretPrefix);
                 w.WebhookDefinition.ShouldContain(AppWebhookDefinitionNames.Users.Created);
 
                 w.Headers.Count.ShouldBe(1);
@@ -566,7 +566,7 @@ namespace Abp.Zero.SampleApp.Tests.Webhooks
             Predicate<WebhookSenderArgs> predicate = w =>
             {
                 w.Secret.ShouldNotBeNullOrEmpty();
-                w.Secret.ShouldStartWith("whs_");
+                w.Secret.ShouldStartWith(WebhookSubscriptionSecretPrefix);
                 w.WebhookDefinition.ShouldContain(AppWebhookDefinitionNames.Users.Created);
 
                 w.Headers.Count.ShouldBe(1);
