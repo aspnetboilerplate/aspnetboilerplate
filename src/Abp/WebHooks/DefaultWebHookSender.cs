@@ -122,6 +122,7 @@ namespace Abp.Webhooks
             bool isSucceed;
             HttpStatusCode? statusCode;
             string content;
+
             try
             {
                 using (var client = new HttpClient
@@ -160,7 +161,7 @@ namespace Abp.Webhooks
         [UnitOfWork]
         protected virtual async Task<Guid> InsertAndGetIdWebhookSendAttemptAsync(WebhookSenderArgs webhookSenderArgs)
         {
-            var workItem = new WebhookSendAttempt()
+            var workItem = new WebhookSendAttempt
             {
                 WebhookEventId = webhookSenderArgs.WebhookEventId,
                 WebhookSubscriptionId = webhookSenderArgs.WebhookSubscriptionId,
@@ -176,7 +177,7 @@ namespace Abp.Webhooks
         [UnitOfWork]
         protected virtual Guid InsertAndGetIdWebhookSendAttempt(WebhookSenderArgs webhookSenderArgs)
         {
-            var workItem = new WebhookSendAttempt()
+            var workItem = new WebhookSendAttempt
             {
                 WebhookEventId = webhookSenderArgs.WebhookEventId,
                 WebhookSubscriptionId = webhookSenderArgs.WebhookSubscriptionId,

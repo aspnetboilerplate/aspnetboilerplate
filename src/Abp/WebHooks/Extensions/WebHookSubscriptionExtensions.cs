@@ -1,16 +1,18 @@
 ﻿using System.Linq;
+using Abp.Collections.Extensions;
+using Abp.Webhooks;
 
-namespace Abp.Webhooks
+namespace Abp.WebHooks.Extensions
 {
     public static class WebhookSubscriptionExtensions
     {
         /// <summary>
-        /// if subscribed to given webhook
+        /// checks if subscribed to given webhook
         /// </summary>
         /// <returns></returns>
         public static bool IsSubscribed(this WebhookSubscription webhookSubscription, string webhookName)
         {
-            if (webhookSubscription.Webhooks == null || webhookSubscription.Webhooks.Count == 0)
+            if (webhookSubscription.Webhooks.IsNullOrEmpty())
             {
                 return false;
             }

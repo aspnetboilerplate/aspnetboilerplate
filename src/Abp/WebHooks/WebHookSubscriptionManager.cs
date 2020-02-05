@@ -3,9 +3,11 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Abp.Authorization;
+using Abp.Collections.Extensions;
 using Abp.Domain.Services;
 using Abp.Domain.Uow;
 using Abp.Json;
+using Abp.WebHooks.Extensions;
 
 namespace Abp.Webhooks
 {
@@ -189,7 +191,7 @@ namespace Abp.Webhooks
 
         private void CheckIfPermissionsGranted(WebhookSubscription webhookSubscription)
         {
-            if (webhookSubscription.Webhooks == null || webhookSubscription.Webhooks.Count == 0)
+            if (webhookSubscription.Webhooks.IsNullOrEmpty())
             {
                 return;
             }

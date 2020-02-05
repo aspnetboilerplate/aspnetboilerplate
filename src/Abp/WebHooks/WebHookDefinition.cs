@@ -1,5 +1,6 @@
 ﻿using System;
 using Abp.Application.Features;
+using Abp.Extensions;
 using Abp.Localization;
 
 namespace Abp.Webhooks
@@ -31,7 +32,7 @@ namespace Abp.Webhooks
 
         public WebhookDefinition(string name, ILocalizableString displayName = null, ILocalizableString description = null, IFeatureDependency featureDependency = null)
         {
-            if (string.IsNullOrWhiteSpace(name))
+            if (name.IsNullOrWhiteSpace())
             {
                 throw new ArgumentNullException(nameof(name), $"{nameof(name)} can not be null, empty or whitespace!");
             }

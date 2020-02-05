@@ -82,27 +82,25 @@ namespace Abp.Webhooks
 
         public async Task<bool> IsAvailableAsync(int? tenantId, string name)
         {
-            if (tenantId == null)//host allowed to subscribe all webhooks
+            if (tenantId == null) // host allowed to subscribe all webhooks
             {
                 return true;
             }
 
             var webhookDefinition = GetOrNull(name);
-            if (webhookDefinition == null)
+
+            if (webhookDefinition?.FeatureDependency == null)
             {
                 return true;
             }
 
-            if (webhookDefinition.FeatureDependency != null)
+            using (var featureDependencyContext = _iocManager.ResolveAsDisposable<FeatureDependencyContext>())
             {
-                using (var featureDependencyContext = _iocManager.ResolveAsDisposable<FeatureDependencyContext>())
-                {
-                    featureDependencyContext.Object.TenantId = tenantId;
+                featureDependencyContext.Object.TenantId = tenantId;
 
-                    if (!await webhookDefinition.FeatureDependency.IsSatisfiedAsync(featureDependencyContext.Object))
-                    {
-                        return false;
-                    }
+                if (!await webhookDefinition.FeatureDependency.IsSatisfiedAsync(featureDependencyContext.Object))
+                {
+                    return false;
                 }
             }
 
@@ -111,27 +109,25 @@ namespace Abp.Webhooks
 
         public bool IsAvailable(int? tenantId, string name)
         {
-            if (tenantId == null)//host allowed to subscribe all webhooks
+            if (tenantId == null) // host allowed to subscribe all webhooks
             {
                 return true;
             }
 
             var webhookDefinition = GetOrNull(name);
-            if (webhookDefinition == null)
+
+            if (webhookDefinition?.FeatureDependency == null)
             {
                 return true;
             }
 
-            if (webhookDefinition.FeatureDependency != null)
+            using (var featureDependencyContext = _iocManager.ResolveAsDisposable<FeatureDependencyContext>())
             {
-                using (var featureDependencyContext = _iocManager.ResolveAsDisposable<FeatureDependencyContext>())
-                {
-                    featureDependencyContext.Object.TenantId = tenantId;
+                featureDependencyContext.Object.TenantId = tenantId;
 
-                    if (!webhookDefinition.FeatureDependency.IsSatisfied(featureDependencyContext.Object))
-                    {
-                        return false;
-                    }
+                if (!webhookDefinition.FeatureDependency.IsSatisfied(featureDependencyContext.Object))
+                {
+                    return false;
                 }
             }
 
