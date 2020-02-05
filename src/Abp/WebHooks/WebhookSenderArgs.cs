@@ -17,7 +17,7 @@ namespace Abp.Webhooks
         /// <summary>
         /// Webhook unique name
         /// </summary>
-        public string WebhookDefinition { get; set; }
+        public string WebhookName { get; set; }
 
         /// <summary>
         /// Webhook data as JSON string.

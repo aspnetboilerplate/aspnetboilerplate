@@ -70,14 +70,15 @@ namespace Abp.Webhooks.BackgroundWorker
             }
             catch (Exception)
             {
-                if (!DeactivateSubscriptionIfReachedMaxConsecutiveFailCount(args.TenantId, args.WebhookSubscriptionId))//no need to retry to send webhook since subscription disabled
+                if (!TryDeactivateSubscriptionIfReachedMaxConsecutiveFailCount(args.TenantId, args.WebhookSubscriptionId))
+                    //no need to retry to send webhook since subscription disabled
                 {
                     throw;
                 }
             }
         }
 
-        private bool DeactivateSubscriptionIfReachedMaxConsecutiveFailCount(int? tenantId, Guid subscriptionId)
+        private bool TryDeactivateSubscriptionIfReachedMaxConsecutiveFailCount(int? tenantId, Guid subscriptionId)
         {
             if (!_webhooksConfiguration.IsAutomaticSubscriptionDeactivationEnabled)
             {

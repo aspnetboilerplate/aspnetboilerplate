@@ -74,29 +74,29 @@ namespace Abp.Webhooks
         [UnitOfWork]
         public virtual async Task<List<WebhookSubscriptionInfo>> GetAllSubscriptionsAsync(int? tenantId, string webhookDefinitionName)
         {
-            return await _webhookSubscriptionRepository.GetAllListAsync(s =>
-                s.TenantId == tenantId &&
-                s.IsActive &&
-                s.Webhooks.Contains("\"" + webhookDefinitionName + "\""));
+            return await _webhookSubscriptionRepository.GetAllListAsync(subscriptionInfo =>
+                subscriptionInfo.TenantId == tenantId &&
+                subscriptionInfo.IsActive &&
+                subscriptionInfo.Webhooks.Contains("\"" + webhookDefinitionName + "\""));
         }
 
         [UnitOfWork]
         public virtual List<WebhookSubscriptionInfo> GetAllSubscriptions(int? tenantId, string webhookDefinitionName)
         {
-            return _webhookSubscriptionRepository.GetAllList(s =>
-               s.TenantId == tenantId &&
-               s.IsActive &&
-               s.Webhooks.Contains("\"" + webhookDefinitionName + "\""));
+            return _webhookSubscriptionRepository.GetAllList(subscriptionInfo =>
+               subscriptionInfo.TenantId == tenantId &&
+               subscriptionInfo.IsActive &&
+               subscriptionInfo.Webhooks.Contains("\"" + webhookDefinitionName + "\""));
         }
 
         [UnitOfWork]
         public virtual Task<bool> IsSubscribedAsync(int? tenantId, string webhookName)
         {
             return AsyncQueryableExecuter.AnyAsync(_webhookSubscriptionRepository.GetAll()
-                .Where(s =>
-                    s.TenantId == tenantId &&
-                    s.IsActive &&
-                    s.Webhooks.Contains("\"" + webhookName + "\"")
+                .Where(subscriptionInfo =>
+                    subscriptionInfo.TenantId == tenantId &&
+                    subscriptionInfo.IsActive &&
+                    subscriptionInfo.Webhooks.Contains("\"" + webhookName + "\"")
                 ));
         }
 
@@ -104,23 +104,23 @@ namespace Abp.Webhooks
         public virtual bool IsSubscribed(int? tenantId, string webhookName)
         {
             return _webhookSubscriptionRepository.GetAll()
-                .Any(s =>
-                    s.TenantId == tenantId &&
-                    s.IsActive &&
-                    s.Webhooks.Contains("\"" + webhookName + "\"")
+                .Any(subscriptionInfo =>
+                    subscriptionInfo.TenantId == tenantId &&
+                    subscriptionInfo.IsActive &&
+                    subscriptionInfo.Webhooks.Contains("\"" + webhookName + "\"")
                 );
         }
 
         [UnitOfWork]
         public virtual Task<List<WebhookSubscriptionInfo>> GetAllSubscriptionsAsync(int? tenantId)
         {
-            return _webhookSubscriptionRepository.GetAllListAsync(s => s.TenantId == tenantId);
+            return _webhookSubscriptionRepository.GetAllListAsync(subscriptionInfo => subscriptionInfo.TenantId == tenantId);
         }
 
         [UnitOfWork]
         public virtual List<WebhookSubscriptionInfo> GetAllSubscriptions(int? tenantId)
         {
-            return _webhookSubscriptionRepository.GetAllList(s => s.TenantId == tenantId);
+            return _webhookSubscriptionRepository.GetAllList(subscriptionInfo => subscriptionInfo.TenantId == tenantId);
         }
     }
 }

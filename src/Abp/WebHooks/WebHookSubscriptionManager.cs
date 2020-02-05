@@ -44,13 +44,13 @@ namespace Abp.Webhooks
         public async Task<List<WebhookSubscription>> GetAllSubscriptionsAsync(int? tenantId)
         {
             return (await WebhookSubscriptionsStore.GetAllSubscriptionsAsync(tenantId))
-                .Select(x => x.ToWebhookSubscription()).ToList();
+                .Select(subscriptionInfo => subscriptionInfo.ToWebhookSubscription()).ToList();
         }
 
         public List<WebhookSubscription> GetAllSubscriptions(int? tenantId)
         {
             return WebhookSubscriptionsStore.GetAllSubscriptions(tenantId)
-            .Select(x => x.ToWebhookSubscription()).ToList();
+            .Select(subscriptionInfo => subscriptionInfo.ToWebhookSubscription()).ToList();
         }
 
         public async Task<List<WebhookSubscription>> GetAllSubscriptionsIfFeaturesGrantedAsync(int? tenantId, string webhookName)
@@ -61,7 +61,7 @@ namespace Abp.Webhooks
             }
 
             return (await WebhookSubscriptionsStore.GetAllSubscriptionsAsync(tenantId, webhookName))
-                .Select(x => x.ToWebhookSubscription()).ToList();
+                .Select(subscriptionInfo => subscriptionInfo.ToWebhookSubscription()).ToList();
         }
 
         public List<WebhookSubscription> GetAllSubscriptionsIfFeaturesGranted(int? tenantId, string webhookName)
@@ -72,7 +72,7 @@ namespace Abp.Webhooks
             }
 
             return WebhookSubscriptionsStore.GetAllSubscriptions(tenantId, webhookName)
-                .Select(x => x.ToWebhookSubscription()).ToList();
+                .Select(subscriptionInfo => subscriptionInfo.ToWebhookSubscription()).ToList();
         }
 
         public async Task<bool> IsSubscribedAsync(int? tenantId, string webhookName)

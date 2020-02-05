@@ -230,7 +230,7 @@ namespace Abp.Webhooks
             var attemptNumber = await WebhookSendAttemptStore.GetSendAttemptCountAsync(webhookSenderArgs.TenantId,
                                     webhookSenderArgs.WebhookEventId, webhookSenderArgs.WebhookSubscriptionId) + 1;
 
-            return new WebhookPayload(webhookSenderArgs.WebhookEventId.ToString(), webhookSenderArgs.WebhookDefinition, attemptNumber)
+            return new WebhookPayload(webhookSenderArgs.WebhookEventId.ToString(), webhookSenderArgs.WebhookName, attemptNumber)
             {
                 Data = data
             };
@@ -245,7 +245,7 @@ namespace Abp.Webhooks
             var attemptNumber = WebhookSendAttemptStore.GetSendAttemptCount(webhookSenderArgs.TenantId,
                                     webhookSenderArgs.WebhookEventId, webhookSenderArgs.WebhookSubscriptionId) + 1;
 
-            return new WebhookPayload(webhookSenderArgs.WebhookEventId.ToString(), webhookSenderArgs.WebhookDefinition, attemptNumber)
+            return new WebhookPayload(webhookSenderArgs.WebhookEventId.ToString(), webhookSenderArgs.WebhookName, attemptNumber)
             {
                 Data = data
             };

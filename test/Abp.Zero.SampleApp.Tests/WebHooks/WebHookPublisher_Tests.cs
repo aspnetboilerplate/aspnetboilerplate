@@ -53,7 +53,7 @@ namespace Abp.Zero.SampleApp.Tests.Webhooks
             {
                 w.Secret.ShouldNotBeNullOrEmpty();
                 w.Secret.ShouldStartWith(WebhookSubscriptionSecretPrefix);
-                w.WebhookDefinition.ShouldContain(webhookDefinition);
+                w.WebhookName.ShouldContain(webhookDefinition);
 
                 w.Headers.Count.ShouldBe(1);
                 w.Headers.Single().Key.ShouldBe("Key");
@@ -282,7 +282,7 @@ namespace Abp.Zero.SampleApp.Tests.Webhooks
             {
                 w.Secret.ShouldNotBeNullOrEmpty();
                 w.Secret.ShouldStartWith(WebhookSubscriptionSecretPrefix);
-                w.WebhookDefinition.ShouldContain(AppWebhookDefinitionNames.Users.Created);
+                w.WebhookName.ShouldContain(AppWebhookDefinitionNames.Users.Created);
 
                 w.Headers.Count.ShouldBe(1);
                 w.Headers.Single().Key.ShouldBe("Key");
@@ -567,7 +567,7 @@ namespace Abp.Zero.SampleApp.Tests.Webhooks
             {
                 w.Secret.ShouldNotBeNullOrEmpty();
                 w.Secret.ShouldStartWith(WebhookSubscriptionSecretPrefix);
-                w.WebhookDefinition.ShouldContain(AppWebhookDefinitionNames.Users.Created);
+                w.WebhookName.ShouldContain(AppWebhookDefinitionNames.Users.Created);
 
                 w.Headers.Count.ShouldBe(1);
                 w.Headers.Single().Key.ShouldBe("Key");

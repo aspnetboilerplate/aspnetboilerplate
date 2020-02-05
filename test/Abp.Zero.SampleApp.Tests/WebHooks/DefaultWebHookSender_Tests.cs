@@ -30,7 +30,7 @@ namespace Abp.Zero.SampleApp.Tests.Webhooks
             var payload = await GetWebhookPayloadAsync(new WebhookSenderArgs()
             {
                 TenantId = 1,
-                WebhookDefinition = AppWebhookDefinitionNames.Theme.DefaultThemeChanged,
+                WebhookName = AppWebhookDefinitionNames.Theme.DefaultThemeChanged,
                 Data = data
             });
 
@@ -47,7 +47,7 @@ namespace Abp.Zero.SampleApp.Tests.Webhooks
             var payload = GetWebhookPayload(new WebhookSenderArgs()
             {
                 TenantId = 1,
-                WebhookDefinition = AppWebhookDefinitionNames.Theme.DefaultThemeChanged,
+                WebhookName = AppWebhookDefinitionNames.Theme.DefaultThemeChanged,
                 Data = data
             });
 
@@ -63,7 +63,7 @@ namespace Abp.Zero.SampleApp.Tests.Webhooks
             var payload = await GetWebhookPayloadAsync(new WebhookSenderArgs()
             {
                 TenantId = 1,
-                WebhookDefinition = AppWebhookDefinitionNames.Theme.DefaultThemeChanged,
+                WebhookName = AppWebhookDefinitionNames.Theme.DefaultThemeChanged,
                 Data = new { Test = "test" }.ToJsonString()
             });
 

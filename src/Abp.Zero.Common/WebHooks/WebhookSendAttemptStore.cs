@@ -93,13 +93,11 @@ namespace Abp.Webhooks
         {
             using (_unitOfWorkManager.Current.SetTenantId(tenantId))
             {
-                return await AsyncQueryableExecuter.CountAsync(
-                    _webhookSendAttemptRepository.GetAll()
-                        .Where(attempt =>
-                            attempt.WebhookEventId == webhookId &&
-                            attempt.WebhookSubscriptionId == webhookSubscriptionId
-                        )
-                );
+                return await _webhookSendAttemptRepository
+                    .CountAsync(attempt =>
+                        attempt.WebhookEventId == webhookId &&
+                        attempt.WebhookSubscriptionId == webhookSubscriptionId
+                    );
             }
         }
 
@@ -129,7 +127,7 @@ namespace Abp.Webhooks
                     _webhookSendAttemptRepository.GetAll()
                         .OrderByDescending(attempt => attempt.CreationTime)
                         .Take(failCount)
-                        .Where(x => x.ResponseStatusCode == HttpStatusCode.OK)
+                        .Where(attempt => attempt.ResponseStatusCode == HttpStatusCode.OK)
                 );
             }
         }
@@ -145,10 +143,10 @@ namespace Abp.Webhooks
                 }
 
                 return !_webhookSendAttemptRepository.GetAll()
-                    .Where(x => x.WebhookSubscriptionId == subscriptionId)
+                    .Where(attempt => attempt.WebhookSubscriptionId == subscriptionId)
                     .OrderByDescending(attempt => attempt.CreationTime)
                     .Take(failCount)
-                    .Any(x => x.ResponseStatusCode == HttpStatusCode.OK);
+                    .Any(attempt => attempt.ResponseStatusCode == HttpStatusCode.OK);
             }
         }
 
@@ -165,7 +163,7 @@ namespace Abp.Webhooks
                 var totalCount = await AsyncQueryableExecuter.CountAsync(query);
 
                 var list = await AsyncQueryableExecuter.ToListAsync(query
-                    .OrderByDescending(a => a.CreationTime)
+                    .OrderByDescending(attempt => attempt.CreationTime)
                     .Skip(skipCount)
                     .Take(maxResultCount)
                 );
@@ -191,7 +189,7 @@ namespace Abp.Webhooks
                 var totalCount = query.Count();
 
                 var list = query
-                    .OrderByDescending(a => a.CreationTime)
+                    .OrderByDescending(attempt => attempt.CreationTime)
                     .Skip(skipCount)
                     .Take(maxResultCount)
                     .ToList();
@@ -211,7 +209,7 @@ namespace Abp.Webhooks
             {
                 return AsyncQueryableExecuter.ToListAsync(
                     _webhookSendAttemptRepository.GetAll().Where(attempt => attempt.WebhookEventId == webhookEventId)
-                        .OrderByDescending(x => x.CreationTime)
+                        .OrderByDescending(attempt => attempt.CreationTime)
                 );
             }
         }
@@ -222,7 +220,7 @@ namespace Abp.Webhooks
             using (_unitOfWorkManager.Current.SetTenantId(tenantId))
             {
                 return _webhookSendAttemptRepository.GetAll().Where(attempt => attempt.WebhookEventId == webhookEventId)
-                    .OrderByDescending(x => x.CreationTime).ToList();
+                    .OrderByDescending(attempt => attempt.CreationTime).ToList();
             }
         }
     }
