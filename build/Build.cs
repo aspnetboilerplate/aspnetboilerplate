@@ -1,9 +1,11 @@
+using System.IO;
 using System.Linq;
 using Nuke.Common;
 using Nuke.Common.CI;
 using Nuke.Common.CI.AppVeyor;
 using Nuke.Common.CI.AzurePipelines;
 using Nuke.Common.Execution;
+using Nuke.Common.IO;
 using Nuke.Common.ProjectModel;
 using Nuke.Common.Tooling;
 using Nuke.Common.Tools.DotNet;
@@ -39,6 +41,7 @@ class Build : NukeBuild
     [Parameter("Configuration to build - Default is 'Debug' (local) or 'Release' (server)")]
     readonly Configuration Configuration = IsLocalBuild ? Configuration.Debug : Configuration.Release;
 
+    [CI] readonly AzurePipelines AzurePipelines;
     [Solution] readonly Solution Solution;
 
     Target Clean => _ => _
@@ -90,6 +93,8 @@ class Build : NukeBuild
 
     [Partition(4)] readonly Partition TestPartition;
 
+    AbsolutePath TestResultDirectory => RootDirectory / "output" / "test-results";
+
     Target Test => _ => _
         .DependsOn(Compile)
         .Partition(() => TestPartition)
@@ -104,9 +109,17 @@ class Build : NukeBuild
             DotNetTest(_ => _
                     .SetConfiguration(Configuration.Release)
                     .SetNoBuild(InvokedTargets.Contains(Compile))
+                    .SetResultsDirectory(TestResultDirectory)
                     .CombineWith(relevantTestConfigurations, (_, v) => _
                             .SetProjectFile(v.project)
-                            .SetFramework(v.targetFramework)),
+                            .SetFramework(v.targetFramework)
+                            .SetLogger($"trx;LogFileName={v.project.Name}.trx")),
                 completeOnFailure: true);
+
+            TestResultDirectory.GlobFiles("*.trx").ForEach(x =>
+                AzurePipelines?.PublishTestResults(
+                    type: AzurePipelinesTestResultsType.VSTest,
+                    title: $"{Path.GetFileNameWithoutExtension(x)} ({AzurePipelines.StageDisplayName})",
+                    files: new string[] { x }));
         });
 }
