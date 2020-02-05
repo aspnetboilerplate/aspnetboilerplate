@@ -20,7 +20,9 @@ namespace Abp.Webhooks
         private readonly IUnitOfWorkManager _unitOfWorkManager;
         public IAsyncQueryableExecuter AsyncQueryableExecuter { get; set; }
 
-        public WebhookSendAttemptStore(IRepository<WebhookSendAttempt, Guid> webhookSendAttemptRepository, IUnitOfWorkManager unitOfWorkManager)
+        public WebhookSendAttemptStore(
+            IRepository<WebhookSendAttempt, Guid> webhookSendAttemptRepository,
+            IUnitOfWorkManager unitOfWorkManager)
         {
             _webhookSendAttemptRepository = webhookSendAttemptRepository;
             _unitOfWorkManager = unitOfWorkManager;
@@ -123,8 +125,12 @@ namespace Abp.Webhooks
                     return true;
                 }
 
-                return await AsyncQueryableExecuter.AnyAsync(_webhookSendAttemptRepository.GetAll().OrderByDescending(attempt => attempt.CreationTime).Take(searchCount)
-                    .Where(x => x.ResponseStatusCode == HttpStatusCode.OK));
+                return await AsyncQueryableExecuter.AnyAsync(
+                    _webhookSendAttemptRepository.GetAll()
+                        .OrderByDescending(attempt => attempt.CreationTime)
+                        .Take(searchCount)
+                        .Where(x => x.ResponseStatusCode == HttpStatusCode.OK)
+                );
             }
         }
 

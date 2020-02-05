@@ -20,7 +20,7 @@ namespace Abp.Webhooks
 
         public static WebhookSubscription ToWebhookSubscription(this WebhookSubscriptionInfo webhookSubscriptionInfo)
         {
-            return new WebhookSubscription()
+            return new WebhookSubscription
             {
                 Id = webhookSubscriptionInfo.Id,
                 TenantId = webhookSubscriptionInfo.TenantId,

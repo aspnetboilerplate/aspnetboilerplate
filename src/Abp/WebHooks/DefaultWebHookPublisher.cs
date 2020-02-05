@@ -5,6 +5,7 @@ using Abp.Domain.Services;
 using Abp.Json;
 using Abp.Runtime.Session;
 using Abp.Webhooks.BackgroundWorker;
+using Abp.Collections.Extensions;
 
 namespace Abp.Webhooks
 {
@@ -47,7 +48,7 @@ namespace Abp.Webhooks
 
         private async Task PublishAsync(int? tenantId, string webhookName, object data, List<WebhookSubscription> webhookSubscriptions)
         {
-            if (webhookSubscriptions == null || webhookSubscriptions.Count == 0)
+            if (webhookSubscriptions.IsNullOrEmpty())
             {
                 return;
             }
@@ -56,13 +57,12 @@ namespace Abp.Webhooks
 
             foreach (var webhookSubscription in webhookSubscriptions)
             {
-                await _backgroundJobManager.EnqueueAsync<WebhookSenderJob, WebhookSenderArgs>(new WebhookSenderArgs()
+                await _backgroundJobManager.EnqueueAsync<WebhookSenderJob, WebhookSenderArgs>(new WebhookSenderArgs
                 {
                     TenantId = webhookSubscription.TenantId,
                     WebhookEventId = webhookInfo.Id,
                     Data = webhookInfo.Data,
                     WebhookDefinition = webhookInfo.WebhookName,
-
                     WebhookSubscriptionId = webhookSubscription.Id,
                     Headers = webhookSubscription.Headers,
                     Secret = webhookSubscription.Secret,
@@ -85,7 +85,7 @@ namespace Abp.Webhooks
 
         private void Publish(int? tenantId, string webhookName, object data, List<WebhookSubscription> webhookSubscriptions)
         {
-            if (webhookSubscriptions == null || webhookSubscriptions.Count == 0)
+            if (webhookSubscriptions.IsNullOrEmpty())
             {
                 return;
             }
@@ -94,13 +94,12 @@ namespace Abp.Webhooks
 
             foreach (var webhookSubscription in webhookSubscriptions)
             {
-                _backgroundJobManager.Enqueue<WebhookSenderJob, WebhookSenderArgs>(new WebhookSenderArgs()
+                _backgroundJobManager.Enqueue<WebhookSenderJob, WebhookSenderArgs>(new WebhookSenderArgs
                 {
                     TenantId = webhookSubscription.TenantId,
                     WebhookEventId = webhookInfo.Id,
                     Data = webhookInfo.Data,
                     WebhookDefinition = webhookInfo.WebhookName,
-
                     WebhookSubscriptionId = webhookSubscription.Id,
                     Headers = webhookSubscription.Headers,
                     Secret = webhookSubscription.Secret,
@@ -111,7 +110,7 @@ namespace Abp.Webhooks
 
         protected virtual async Task<WebhookEvent> SaveAndGetWebhookAsync(int? tenantId, string webhookName, object data)
         {
-            var webhookInfo = new WebhookEvent()
+            var webhookInfo = new WebhookEvent
             {
                 Id = _guidGenerator.Create(),
                 WebhookName = webhookName,
@@ -127,7 +126,7 @@ namespace Abp.Webhooks
 
         protected virtual WebhookEvent SaveAndGetWebhook(int? tenantId, string webhookName, object data)
         {
-            var webhookInfo = new WebhookEvent()
+            var webhookInfo = new WebhookEvent
             {
                 Id = _guidGenerator.Create(),
                 WebhookName = webhookName,

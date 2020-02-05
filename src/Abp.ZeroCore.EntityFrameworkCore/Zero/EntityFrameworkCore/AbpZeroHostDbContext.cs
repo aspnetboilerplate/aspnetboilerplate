@@ -5,7 +5,6 @@ using Abp.Authorization.Users;
 using Abp.BackgroundJobs;
 using Abp.MultiTenancy;
 using Abp.Notifications;
-using Abp.Webhooks;
 using Microsoft.EntityFrameworkCore;
 
 namespace Abp.Zero.EntityFrameworkCore

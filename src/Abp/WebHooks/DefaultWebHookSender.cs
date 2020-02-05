@@ -60,7 +60,7 @@ namespace Abp.Webhooks
             string content;
             try
             {
-                using (var client = new HttpClient()
+                using (var client = new HttpClient
                 {
                     Timeout = _webhooksConfiguration.TimeoutDuration
                 })
@@ -119,12 +119,12 @@ namespace Abp.Webhooks
 
             AddAdditionalHeaders(request, webhookSenderArgs);
 
-            bool isSucceed = false;
+            bool isSucceed;
             HttpStatusCode? statusCode;
             string content;
             try
             {
-                using (var client = new HttpClient()
+                using (var client = new HttpClient
                 {
                     Timeout = _webhooksConfiguration.TimeoutDuration
                 })

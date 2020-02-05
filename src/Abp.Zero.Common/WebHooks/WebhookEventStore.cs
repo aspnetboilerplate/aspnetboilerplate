@@ -14,7 +14,9 @@ namespace Abp.Webhooks
         private readonly IRepository<WebhookEvent, Guid> _webhookRepository;
         private readonly IUnitOfWorkManager _unitOfWorkManager;
 
-        public WebhookEventStore(IRepository<WebhookEvent, Guid> webhookRepository, IUnitOfWorkManager unitOfWorkManager)
+        public WebhookEventStore(
+            IRepository<WebhookEvent, Guid> webhookRepository, 
+            IUnitOfWorkManager unitOfWorkManager)
         {
             _webhookRepository = webhookRepository;
             _unitOfWorkManager = unitOfWorkManager;

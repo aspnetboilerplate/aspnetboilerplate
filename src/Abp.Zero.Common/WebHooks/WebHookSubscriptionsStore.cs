@@ -20,7 +20,6 @@ namespace Abp.Webhooks
         public WebhookSubscriptionsStore(IRepository<WebhookSubscriptionInfo, Guid> webhookSubscriptionRepository)
         {
             _webhookSubscriptionRepository = webhookSubscriptionRepository;
-
             AsyncQueryableExecuter = NullAsyncQueryableExecuter.Instance;
         }
 

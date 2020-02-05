@@ -6,7 +6,6 @@ using Abp.Authorization.Users;
 using Abp.BackgroundJobs;
 using Abp.MultiTenancy;
 using Abp.Notifications;
-using Abp.Webhooks;
 using Microsoft.EntityFrameworkCore;
 
 namespace Abp.Zero.EntityFrameworkCore
@@ -61,7 +60,6 @@ namespace Abp.Zero.EntityFrameworkCore
         /// </summary>
         public virtual DbSet<NotificationInfo> Notifications { get; set; }
 
-  
         /// <summary>
         /// 
         /// </summary>
@@ -71,6 +69,7 @@ namespace Abp.Zero.EntityFrameworkCore
         {
 
         }
+
         /// <summary>
         /// 
         /// </summary>
