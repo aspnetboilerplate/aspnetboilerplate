@@ -84,24 +84,25 @@ namespace Abp.Webhooks.BackgroundWorker
                 return false;
             }
 
-            var hasAnySuccessfulAttempt = _webhookSendAttemptStore
-                .HasAnySuccessfulAttemptInLastXRecord(
+            var hasXConsecutiveFail = _webhookSendAttemptStore
+                .HasXConsecutiveFail(
                     tenantId,
                     subscriptionId,
                     _webhooksConfiguration.MaxConsecutiveFailCountBeforeDeactivateSubscription
                 );
 
-            if (!hasAnySuccessfulAttempt)
+            if (!hasXConsecutiveFail)
             {
-                using (var uow = UnitOfWorkManager.Begin(TransactionScopeOption.Required))
-                {
-                    _webhookSubscriptionManager.ActivateWebhookSubscription(subscriptionId, false);
-                    uow.Complete();
-                    return true;
-                }
+                return false;
             }
 
-            return false;
+            using (var uow = UnitOfWorkManager.Begin(TransactionScopeOption.Required))
+            {
+                _webhookSubscriptionManager.ActivateWebhookSubscription(subscriptionId, false);
+                uow.Complete();
+                return true;
+            }
+
         }
     }
 }

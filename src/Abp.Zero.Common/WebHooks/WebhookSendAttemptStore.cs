@@ -116,35 +116,38 @@ namespace Abp.Webhooks
         }
 
         [UnitOfWork]
-        public async Task<bool> HasAnySuccessfulAttemptInLastXRecordAsync(int? tenantId, Guid subscriptionId, int searchCount)
+        public async Task<bool> HasXConsecutiveFailAsync(int? tenantId, Guid subscriptionId, int failCount)
         {
             using (_unitOfWorkManager.Current.SetTenantId(tenantId))
             {
-                if (await _webhookSendAttemptRepository.CountAsync(x => x.WebhookSubscriptionId == subscriptionId) < searchCount)
+                if (await _webhookSendAttemptRepository.CountAsync(x => x.WebhookSubscriptionId == subscriptionId) < failCount)
                 {
-                    return true;
+                    return false;
                 }
 
-                return await AsyncQueryableExecuter.AnyAsync(
+                return !await AsyncQueryableExecuter.AnyAsync(
                     _webhookSendAttemptRepository.GetAll()
                         .OrderByDescending(attempt => attempt.CreationTime)
-                        .Take(searchCount)
+                        .Take(failCount)
                         .Where(x => x.ResponseStatusCode == HttpStatusCode.OK)
                 );
             }
         }
 
         [UnitOfWork]
-        public bool HasAnySuccessfulAttemptInLastXRecord(int? tenantId, Guid subscriptionId, int searchCount)
+        public bool HasXConsecutiveFail(int? tenantId, Guid subscriptionId, int failCount)
         {
             using (_unitOfWorkManager.Current.SetTenantId(tenantId))
             {
-                if (_webhookSendAttemptRepository.Count(x => x.WebhookSubscriptionId == subscriptionId) < searchCount)
+                if (_webhookSendAttemptRepository.Count(x => x.WebhookSubscriptionId == subscriptionId) < failCount)
                 {
-                    return true;
+                    return false;
                 }
 
-                return _webhookSendAttemptRepository.GetAll().Where(x => x.WebhookSubscriptionId == subscriptionId).OrderByDescending(attempt => attempt.CreationTime).Take(searchCount)
+                return !_webhookSendAttemptRepository.GetAll()
+                    .Where(x => x.WebhookSubscriptionId == subscriptionId)
+                    .OrderByDescending(attempt => attempt.CreationTime)
+                    .Take(failCount)
                     .Any(x => x.ResponseStatusCode == HttpStatusCode.OK);
             }
         }

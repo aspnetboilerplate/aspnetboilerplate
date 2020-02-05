@@ -177,8 +177,8 @@ namespace Abp.Zero.SampleApp.Tests.Webhooks
         [Fact]
         public async Task Should_Get_Has_Any_Successful_Attempt_In_Last_X_Record_Async()
         {
-            (await _webhookSendAttemptStore.HasAnySuccessfulAttemptInLastXRecordAsync(null,//if there is no record should return true
-                Guid.NewGuid(), 2)).ShouldBe(true);
+            (await _webhookSendAttemptStore.HasXConsecutiveFailAsync(null,//if there is no record should return true
+                Guid.NewGuid(), 2)).ShouldBe(false);
 
             var webhookEventId = CreateAndGetIdWebhookEvent();
             var sendAttempt = new WebhookSendAttempt()
@@ -202,18 +202,18 @@ namespace Abp.Zero.SampleApp.Tests.Webhooks
             Thread.Sleep(1000);
             await _webhookSendAttemptStore.InsertAsync(sendAttempt);
 
-            (await _webhookSendAttemptStore.HasAnySuccessfulAttemptInLastXRecordAsync(sendAttempt.TenantId,
-                sendAttempt.WebhookSubscriptionId, 2)).ShouldBe(false);
+            (await _webhookSendAttemptStore.HasXConsecutiveFailAsync(sendAttempt.TenantId,
+                sendAttempt.WebhookSubscriptionId, 2)).ShouldBe(true);
 
-            (await _webhookSendAttemptStore.HasAnySuccessfulAttemptInLastXRecordAsync(sendAttempt.TenantId,
-                sendAttempt.WebhookSubscriptionId, 3)).ShouldBe(true);
+            (await _webhookSendAttemptStore.HasXConsecutiveFailAsync(sendAttempt.TenantId,
+                sendAttempt.WebhookSubscriptionId, 3)).ShouldBe(false);
         }
 
         [Fact]
         public async Task Should_Get_All_Send_Attempts_By_Webhook_Event_Id_Async()
         {
-            (await _webhookSendAttemptStore.HasAnySuccessfulAttemptInLastXRecordAsync(null,//if there is no record should return true
-                Guid.NewGuid(), 2)).ShouldBe(true);
+            (await _webhookSendAttemptStore.HasXConsecutiveFailAsync(null,//if there is no record should return true
+                Guid.NewGuid(), 2)).ShouldBe(false);
 
             var webhookEventId = CreateAndGetIdWebhookEvent();
             var sendAttempt = new WebhookSendAttempt()
@@ -333,8 +333,8 @@ namespace Abp.Zero.SampleApp.Tests.Webhooks
         [Fact]
         public void Should_Get_Has_Any_Successful_Attempt_In_Last_X_Record_Sync()
         {
-            _webhookSendAttemptStore.HasAnySuccessfulAttemptInLastXRecord(null,//if there is no record should return true
-                Guid.NewGuid(), 2).ShouldBe(true);
+            _webhookSendAttemptStore.HasXConsecutiveFail(null,//if there is no record should return true
+                Guid.NewGuid(), 2).ShouldBe(false);
 
             var webhookEventId = CreateAndGetIdWebhookEvent();
             var sendAttempt = new WebhookSendAttempt()
@@ -358,18 +358,18 @@ namespace Abp.Zero.SampleApp.Tests.Webhooks
             Thread.Sleep(1000);
             _webhookSendAttemptStore.Insert(sendAttempt);
 
-            _webhookSendAttemptStore.HasAnySuccessfulAttemptInLastXRecord(sendAttempt.TenantId,
-                sendAttempt.WebhookSubscriptionId, 2).ShouldBe(false);
+            _webhookSendAttemptStore.HasXConsecutiveFail(sendAttempt.TenantId,
+                sendAttempt.WebhookSubscriptionId, 2).ShouldBe(true);
 
-            _webhookSendAttemptStore.HasAnySuccessfulAttemptInLastXRecord(sendAttempt.TenantId,
-                sendAttempt.WebhookSubscriptionId, 3).ShouldBe(true);
+            _webhookSendAttemptStore.HasXConsecutiveFail(sendAttempt.TenantId,
+                sendAttempt.WebhookSubscriptionId, 3).ShouldBe(false);
         }
 
         [Fact]
         public void Should_Get_All_Send_Attempts_By_Webhook_Event_Id_Sync()
         {
-            _webhookSendAttemptStore.HasAnySuccessfulAttemptInLastXRecord(null,//if there is no record should return true
-                Guid.NewGuid(), 2).ShouldBe(true);
+            _webhookSendAttemptStore.HasXConsecutiveFail(null,//if there is no record should return true
+                Guid.NewGuid(), 2).ShouldBe(false);
 
             var webhookEventId = CreateAndGetIdWebhookEvent();
             var sendAttempt = new WebhookSendAttempt()

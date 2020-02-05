@@ -47,14 +47,14 @@ namespace Abp.Webhooks
             return int.MaxValue;
         }
 
-        public Task<bool> HasAnySuccessfulAttemptInLastXRecordAsync(int? tenantId, Guid subscriptionId, int searchCount)
+        public Task<bool> HasXConsecutiveFailAsync(int? tenantId, Guid subscriptionId, int searchCount)
         {
-            return Task.FromResult(true);
+            return default;
         }
 
-        public bool HasAnySuccessfulAttemptInLastXRecord(int? tenantId, Guid subscriptionId, int searchCount)
+        public bool HasXConsecutiveFail(int? tenantId, Guid subscriptionId, int searchCount)
         {
-            return true;
+            return default;
         }
 
         public async Task<IPagedResult<WebhookSendAttempt>> GetAllSendAttemptsBySubscriptionAsPagedListAsync(int? tenantId, Guid subscriptionId, int maxResultCount,
