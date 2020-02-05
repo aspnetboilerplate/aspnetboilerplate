@@ -1,7 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Threading.Tasks;
+using Abp.Application.Services;
 using Abp.BackgroundJobs;
-using Abp.Domain.Services;
 using Abp.Json;
 using Abp.Runtime.Session;
 using Abp.Webhooks.BackgroundWorker;
@@ -9,7 +9,7 @@ using Abp.Collections.Extensions;
 
 namespace Abp.Webhooks
 {
-    public class DefaultWebhookPublisher : DomainService, IWebhookPublisher
+    public class DefaultWebhookPublisher : ApplicationService, IWebhookPublisher
     {
         public IAbpSession AbpSession { get; set; }
         public IWebhookEventStore WebhookEventStore { get; set; }

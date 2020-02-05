@@ -89,7 +89,12 @@ namespace Abp.Webhooks
 
             var webhookDefinition = GetOrNull(name);
 
-            if (webhookDefinition?.FeatureDependency == null)
+            if (webhookDefinition == null)
+            {
+                return false;
+            }
+
+            if (webhookDefinition.FeatureDependency == null)
             {
                 return true;
             }
@@ -116,7 +121,12 @@ namespace Abp.Webhooks
 
             var webhookDefinition = GetOrNull(name);
 
-            if (webhookDefinition?.FeatureDependency == null)
+            if (webhookDefinition == null)
+            {
+                return false;
+            }
+
+            if (webhookDefinition.FeatureDependency == null)
             {
                 return true;
             }
