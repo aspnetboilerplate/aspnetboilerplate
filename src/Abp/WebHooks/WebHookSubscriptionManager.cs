@@ -186,7 +186,6 @@ namespace Abp.Webhooks
         {
             if (!await _webhookDefinitionManager.IsAvailableAsync(tenantId, webhookName))
             {
-                //TODO: improve exception message
                 throw new AbpAuthorizationException($"Tenant \"{tenantId}\" must have necessary feature(s) to use webhook \"{webhookName}\"");
             }
         }
@@ -208,7 +207,6 @@ namespace Abp.Webhooks
         {
             if (!_webhookDefinitionManager.IsAvailable(tenantId, webhookName))
             {
-                //TODO: improve exception message
                 throw new AbpAuthorizationException($"Tenant \"{tenantId}\" must have necessary feature(s) to use webhook \"{webhookName}\"");
             }
         }

@@ -32,8 +32,9 @@ namespace Abp.Webhooks.BackgroundWorker
                 {
                     SendWebhook(args);
                 }
-                catch (Exception)
+                catch (Exception e)
                 {
+                    Logger.Warn("An error occured while sending webhook with try ones.", e);
                     // ignored
                 }
             }
@@ -71,7 +72,7 @@ namespace Abp.Webhooks.BackgroundWorker
             catch (Exception)
             {
                 if (!TryDeactivateSubscriptionIfReachedMaxConsecutiveFailCount(args.TenantId, args.WebhookSubscriptionId))
-                    //no need to retry to send webhook since subscription disabled
+                //no need to retry to send webhook since subscription disabled
                 {
                     throw;
                 }
