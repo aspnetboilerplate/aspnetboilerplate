@@ -564,15 +564,11 @@ namespace Abp.Zero.EntityHistory
         }
 
         [Fact]
-        public void Should_Not_Write_History_For_Full_Audited_Entity()
+        public void Should_Not_Write_History_For_Audited_Entity_By_Default()
         {
-            Resolve<IEntityHistoryConfiguration>().IsEnabled = true;
-
-            _entityHistoryStore.ClearReceivedCalls();
-            
             UsingDbContext((context) =>
             {
-                context.Countries.Add(new Country() { CountryCode = "My Country" });
+                context.Countries.Add(new Country { CountryCode = "My Country" });
                 context.SaveChanges();
             });
 
@@ -583,11 +579,8 @@ namespace Abp.Zero.EntityHistory
         [Fact]
         public void Should_Not_Write_History_For_Not_Audited_Entities_Shadow_Property()
         {
-            Resolve<IEntityHistoryConfiguration>().IsEnabled = true;
-            Resolve<IEntityHistoryConfiguration>().Selectors.Clear();
+            // PermissionSetting has Dscriminator Column (Shadow Property) for RolePermissionSetting
 
-            _entityHistoryStore.ClearReceivedCalls();
-            
             UsingDbContext((context) =>
             {
                 var role = context.Roles.FirstOrDefault();
