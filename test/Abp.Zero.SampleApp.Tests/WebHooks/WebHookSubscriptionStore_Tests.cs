@@ -80,8 +80,11 @@ namespace Abp.Zero.SampleApp.Tests.Webhooks
         {
             await CreateTestSubscriptionAsync();
 
-            (await _webhookSubscriptionsStore.IsSubscribedAsync(AbpSession.TenantId, AppWebhookDefinitionNames.Test)).ShouldBeTrue();
-            (await _webhookSubscriptionsStore.IsSubscribedAsync(AbpSession.TenantId, AppWebhookDefinitionNames.Test + "asd")).ShouldBeFalse();
+            await WithUnitOfWorkAsync(async () =>
+            {
+                (await _webhookSubscriptionsStore.IsSubscribedAsync(AbpSession.TenantId, AppWebhookDefinitionNames.Test)).ShouldBeTrue();
+                (await _webhookSubscriptionsStore.IsSubscribedAsync(AbpSession.TenantId, AppWebhookDefinitionNames.Test + "asd")).ShouldBeFalse();
+            });
         }
 
         [Fact]
@@ -294,8 +297,11 @@ namespace Abp.Zero.SampleApp.Tests.Webhooks
         {
             CreateTestSubscriptionSync();
 
-            _webhookSubscriptionsStore.IsSubscribed(AbpSession.TenantId, AppWebhookDefinitionNames.Test).ShouldBeTrue();
-            _webhookSubscriptionsStore.IsSubscribed(AbpSession.TenantId, AppWebhookDefinitionNames.Test + "asd").ShouldBeFalse();
+            WithUnitOfWork(() =>
+            {
+                _webhookSubscriptionsStore.IsSubscribed(AbpSession.TenantId, AppWebhookDefinitionNames.Test).ShouldBeTrue();
+                _webhookSubscriptionsStore.IsSubscribed(AbpSession.TenantId, AppWebhookDefinitionNames.Test + "asd").ShouldBeFalse();
+            });
         }
 
         [Fact]

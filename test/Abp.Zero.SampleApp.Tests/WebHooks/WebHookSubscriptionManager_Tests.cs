@@ -404,34 +404,48 @@ namespace Abp.Zero.SampleApp.Tests.Webhooks
                 {AppFeatures.WebhookFeature, "true"},
                 {AppFeatures.TestFeature, "true"},
                 {AppFeatures.ThemeFeature, "true"}
+
             });
 
             var webhookSubscriptionManager = Resolve<IWebhookSubscriptionManager>();
+            await WithUnitOfWorkAsync(async () =>
+                {
+                    var userCreatedWebhookSubscription = NewWebhookSubscription(tenantId, AppWebhookDefinitionNames.Users.Created);
+                    await webhookSubscriptionManager.AddOrUpdateSubscriptionAsync(userCreatedWebhookSubscription);
 
-            var userCreatedWebhookSubscription = NewWebhookSubscription(tenantId, AppWebhookDefinitionNames.Users.Created);
-            await webhookSubscriptionManager.AddOrUpdateSubscriptionAsync(userCreatedWebhookSubscription);
+                    var userDeletedWebhookSubscription = NewWebhookSubscription(tenantId, AppWebhookDefinitionNames.Users.Deleted);
+                    await webhookSubscriptionManager.AddOrUpdateSubscriptionAsync(userDeletedWebhookSubscription);
 
-            var userDeletedWebhookSubscription = NewWebhookSubscription(tenantId, AppWebhookDefinitionNames.Users.Deleted);
-            await webhookSubscriptionManager.AddOrUpdateSubscriptionAsync(userDeletedWebhookSubscription);
+                    var defaultThemeChangedWebhookSubscription = NewWebhookSubscription(tenantId, AppWebhookDefinitionNames.Theme.DefaultThemeChanged);
+                    await webhookSubscriptionManager.AddOrUpdateSubscriptionAsync(defaultThemeChangedWebhookSubscription);
+                });
 
-            var defaultThemeChangedWebhookSubscription = NewWebhookSubscription(tenantId, AppWebhookDefinitionNames.Theme.DefaultThemeChanged);
-            await webhookSubscriptionManager.AddOrUpdateSubscriptionAsync(defaultThemeChangedWebhookSubscription);
-
-            (await webhookSubscriptionManager.IsSubscribedAsync(tenantId, AppWebhookDefinitionNames.Users.Created)).ShouldBeTrue();
-            (await webhookSubscriptionManager.IsSubscribedAsync(tenantId, AppWebhookDefinitionNames.Users.Deleted)).ShouldBeTrue();
-            (await webhookSubscriptionManager.IsSubscribedAsync(tenantId, AppWebhookDefinitionNames.Theme.DefaultThemeChanged)).ShouldBeTrue();
+            await WithUnitOfWorkAsync(async () =>
+            {
+                (await webhookSubscriptionManager.IsSubscribedAsync(tenantId, AppWebhookDefinitionNames.Users.Created)).ShouldBeTrue();
+                (await webhookSubscriptionManager.IsSubscribedAsync(tenantId, AppWebhookDefinitionNames.Users.Deleted)).ShouldBeTrue();
+                (await webhookSubscriptionManager.IsSubscribedAsync(tenantId, AppWebhookDefinitionNames.Theme.DefaultThemeChanged)).ShouldBeTrue();
+            });
 
             await AddOrReplaceFeatureToTenantAsync(tenantId, AppFeatures.TestFeature, "false");//Users.Deleted requires it but not require all 
 
-            (await webhookSubscriptionManager.IsSubscribedAsync(tenantId, AppWebhookDefinitionNames.Users.Created)).ShouldBeTrue();
-            (await webhookSubscriptionManager.IsSubscribedAsync(tenantId, AppWebhookDefinitionNames.Users.Deleted)).ShouldBeTrue();
-            (await webhookSubscriptionManager.IsSubscribedAsync(tenantId, AppWebhookDefinitionNames.Theme.DefaultThemeChanged)).ShouldBeTrue();
+            await WithUnitOfWorkAsync(async () =>
+            {
+
+                (await webhookSubscriptionManager.IsSubscribedAsync(tenantId, AppWebhookDefinitionNames.Users.Created)).ShouldBeTrue();
+                (await webhookSubscriptionManager.IsSubscribedAsync(tenantId, AppWebhookDefinitionNames.Users.Deleted)).ShouldBeTrue();
+                (await webhookSubscriptionManager.IsSubscribedAsync(tenantId, AppWebhookDefinitionNames.Theme.DefaultThemeChanged)).ShouldBeTrue();
+            });
 
             await AddOrReplaceFeatureToTenantAsync(tenantId, AppFeatures.ThemeFeature, "false");//DefaultThemeChanged requires and it is require all 
 
-            (await webhookSubscriptionManager.IsSubscribedAsync(tenantId, AppWebhookDefinitionNames.Users.Created)).ShouldBeTrue();
-            (await webhookSubscriptionManager.IsSubscribedAsync(tenantId, AppWebhookDefinitionNames.Users.Deleted)).ShouldBeTrue();
-            (await webhookSubscriptionManager.IsSubscribedAsync(tenantId, AppWebhookDefinitionNames.Theme.DefaultThemeChanged)).ShouldBeFalse();
+            await WithUnitOfWorkAsync(async () =>
+            {
+
+                (await webhookSubscriptionManager.IsSubscribedAsync(tenantId, AppWebhookDefinitionNames.Users.Created)).ShouldBeTrue();
+                (await webhookSubscriptionManager.IsSubscribedAsync(tenantId, AppWebhookDefinitionNames.Users.Deleted)).ShouldBeTrue();
+                (await webhookSubscriptionManager.IsSubscribedAsync(tenantId, AppWebhookDefinitionNames.Theme.DefaultThemeChanged)).ShouldBeFalse();
+            });
         }
 
         [Fact]
@@ -847,30 +861,42 @@ namespace Abp.Zero.SampleApp.Tests.Webhooks
 
             var webhookSubscriptionManager = Resolve<IWebhookSubscriptionManager>();
 
-            var userCreatedWebhookSubscription = NewWebhookSubscription(tenantId, AppWebhookDefinitionNames.Users.Created);
-            webhookSubscriptionManager.AddOrUpdateSubscription(userCreatedWebhookSubscription);
+            WithUnitOfWork(() =>
+            {
+                var userCreatedWebhookSubscription = NewWebhookSubscription(tenantId, AppWebhookDefinitionNames.Users.Created);
+                webhookSubscriptionManager.AddOrUpdateSubscription(userCreatedWebhookSubscription);
 
-            var userDeletedWebhookSubscription = NewWebhookSubscription(tenantId, AppWebhookDefinitionNames.Users.Deleted);
-            webhookSubscriptionManager.AddOrUpdateSubscription(userDeletedWebhookSubscription);
+                var userDeletedWebhookSubscription = NewWebhookSubscription(tenantId, AppWebhookDefinitionNames.Users.Deleted);
+                webhookSubscriptionManager.AddOrUpdateSubscription(userDeletedWebhookSubscription);
 
-            var defaultThemeChangedWebhookSubscription = NewWebhookSubscription(tenantId, AppWebhookDefinitionNames.Theme.DefaultThemeChanged);
-            webhookSubscriptionManager.AddOrUpdateSubscription(defaultThemeChangedWebhookSubscription);
+                var defaultThemeChangedWebhookSubscription = NewWebhookSubscription(tenantId, AppWebhookDefinitionNames.Theme.DefaultThemeChanged);
+                webhookSubscriptionManager.AddOrUpdateSubscription(defaultThemeChangedWebhookSubscription);
+            });
 
-            (webhookSubscriptionManager.IsSubscribed(tenantId, AppWebhookDefinitionNames.Users.Created)).ShouldBeTrue();
-            (webhookSubscriptionManager.IsSubscribed(tenantId, AppWebhookDefinitionNames.Users.Deleted)).ShouldBeTrue();
-            (webhookSubscriptionManager.IsSubscribed(tenantId, AppWebhookDefinitionNames.Theme.DefaultThemeChanged)).ShouldBeTrue();
+            WithUnitOfWork(() =>
+            {
+                (webhookSubscriptionManager.IsSubscribed(tenantId, AppWebhookDefinitionNames.Users.Created)).ShouldBeTrue();
+                (webhookSubscriptionManager.IsSubscribed(tenantId, AppWebhookDefinitionNames.Users.Deleted)).ShouldBeTrue();
+                (webhookSubscriptionManager.IsSubscribed(tenantId, AppWebhookDefinitionNames.Theme.DefaultThemeChanged)).ShouldBeTrue();
+            });
 
             AsyncHelper.RunSync(() => AddOrReplaceFeatureToTenantAsync(tenantId, AppFeatures.TestFeature, "false"));//Users.Deleted requires it but not require all 
 
-            (webhookSubscriptionManager.IsSubscribed(tenantId, AppWebhookDefinitionNames.Users.Created)).ShouldBeTrue();
-            (webhookSubscriptionManager.IsSubscribed(tenantId, AppWebhookDefinitionNames.Users.Deleted)).ShouldBeTrue();
-            (webhookSubscriptionManager.IsSubscribed(tenantId, AppWebhookDefinitionNames.Theme.DefaultThemeChanged)).ShouldBeTrue();
+            WithUnitOfWork(() =>
+            {
+                (webhookSubscriptionManager.IsSubscribed(tenantId, AppWebhookDefinitionNames.Users.Created)).ShouldBeTrue();
+                (webhookSubscriptionManager.IsSubscribed(tenantId, AppWebhookDefinitionNames.Users.Deleted)).ShouldBeTrue();
+                (webhookSubscriptionManager.IsSubscribed(tenantId, AppWebhookDefinitionNames.Theme.DefaultThemeChanged)).ShouldBeTrue();
+            });
 
             AsyncHelper.RunSync(() => AddOrReplaceFeatureToTenantAsync(tenantId, AppFeatures.ThemeFeature, "false"));//DefaultThemeChanged requires and it is require all 
 
-            (webhookSubscriptionManager.IsSubscribed(tenantId, AppWebhookDefinitionNames.Users.Created)).ShouldBeTrue();
-            (webhookSubscriptionManager.IsSubscribed(tenantId, AppWebhookDefinitionNames.Users.Deleted)).ShouldBeTrue();
-            (webhookSubscriptionManager.IsSubscribed(tenantId, AppWebhookDefinitionNames.Theme.DefaultThemeChanged)).ShouldBeFalse();
+            WithUnitOfWork(() =>
+            {
+                (webhookSubscriptionManager.IsSubscribed(tenantId, AppWebhookDefinitionNames.Users.Created)).ShouldBeTrue();
+                (webhookSubscriptionManager.IsSubscribed(tenantId, AppWebhookDefinitionNames.Users.Deleted)).ShouldBeTrue();
+                (webhookSubscriptionManager.IsSubscribed(tenantId, AppWebhookDefinitionNames.Theme.DefaultThemeChanged)).ShouldBeFalse();
+            });
         }
 
         [Fact]
