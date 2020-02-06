@@ -866,12 +866,24 @@ namespace Abp.Zero.SampleApp.Tests.EntityHistory
         }
 
         [Fact]
+        public void Should_Not_Write_History_For_Audited_Entity_By_Default()
+        {
+            //Arrange
+            UsingDbContext((context) =>
+            {
+                context.Countries.Add(new Country { CountryCode = "My Country" });
+                context.SaveChanges();
+            });
+
+            //Assert
+            _entityHistoryStore.DidNotReceive().Save(Arg.Any<EntityChangeSet>());
+        }
+
+        [Fact]
         public void Should_Not_Write_History_For_Not_Audited_Entities_Shadow_Property()
         {
-            Resolve<IEntityHistoryConfiguration>().IsEnabled = true;
-            Resolve<IEntityHistoryConfiguration>().Selectors.Clear();
+            // PermissionSetting has Discriminator column (shadow property) for RolePermissionSetting
 
-            _entityHistoryStore.ClearReceivedCalls();
             //Arrange
             UsingDbContext((context) =>
             {
@@ -886,26 +898,10 @@ namespace Abp.Zero.SampleApp.Tests.EntityHistory
                 context.SaveChanges();
             });
 
-            _entityHistoryStore.DidNotReceive().Save(Arg.Any<EntityChangeSet>());
-        }
-
-        [Fact]
-        public void Should_Not_Write_History_For_Full_Audited_Entity()
-        {
-            Resolve<IEntityHistoryConfiguration>().IsEnabled = true;
-
-            _entityHistoryStore.ClearReceivedCalls();
-
-            //Arrange
-            UsingDbContext((context) =>
-            {
-                context.Countries.Add(new Country() { CountryCode = "My Country" });
-                context.SaveChanges();
-            });
-
             //Assert
             _entityHistoryStore.DidNotReceive().Save(Arg.Any<EntityChangeSet>());
         }
+
         #endregion
 
         private int CreateBlogAndGetId()
