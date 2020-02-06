@@ -38,6 +38,8 @@ namespace Abp.ZeroCore.SampleApp.EntityFramework
 
         public DbSet<UserTestEntity> UserTestEntities { get; set; }
 
+        public DbSet<Country> Countries { get; set; }
+
         public SampleAppDbContext(DbContextOptions<SampleAppDbContext> options) 
             : base(options)
         {
