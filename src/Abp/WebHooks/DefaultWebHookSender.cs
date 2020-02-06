@@ -21,6 +21,7 @@ namespace Abp.Webhooks
         protected const string SignatureHeaderName = "abp-webhook-signature";
 
         private readonly IWebhooksConfiguration _webhooksConfiguration;
+        private const string FailedRequestDefaultContent = "Webhook Send Request Failed";
 
         public DefaultWebhookSender(IWebhooksConfiguration webhooksConfiguration)
         {
@@ -56,8 +57,9 @@ namespace Abp.Webhooks
             AddAdditionalHeaders(request, webhookSenderArgs);
 
             bool isSucceed = false;
-            HttpStatusCode? statusCode;
-            string content;
+            HttpStatusCode? statusCode = null;
+            string content = FailedRequestDefaultContent;
+
             try
             {
                 var response = await SendHttpRequest(request);
@@ -69,16 +71,19 @@ namespace Abp.Webhooks
             {
                 statusCode = HttpStatusCode.RequestTimeout;
                 content = "Request Timeout";
-                isSucceed = false;
             }
             catch (HttpRequestException e)
             {
                 content = e.Message;
-                statusCode = null;
-                isSucceed = false;
             }
-
-            await StoreResponseOnWebhookSendAttemptAsync(webhookSendAttemptId, webhookSenderArgs.TenantId, statusCode, content);
+            catch (Exception e)
+            {
+                Logger.Error("An error occured while sending a webhook", e);
+            }
+            finally
+            {
+                await StoreResponseOnWebhookSendAttemptAsync(webhookSendAttemptId, webhookSenderArgs.TenantId, statusCode, content);
+            }
 
             if (!isSucceed)
             {
@@ -112,9 +117,9 @@ namespace Abp.Webhooks
 
             AddAdditionalHeaders(request, webhookSenderArgs);
 
-            bool isSucceed;
-            HttpStatusCode? statusCode;
-            string content;
+            bool isSucceed = false;
+            HttpStatusCode? statusCode = null;
+            string content = FailedRequestDefaultContent;
 
             try
             {
@@ -127,16 +132,19 @@ namespace Abp.Webhooks
             {
                 statusCode = HttpStatusCode.RequestTimeout;
                 content = "Request Timeout";
-                isSucceed = false;
             }
             catch (HttpRequestException e)
             {
                 content = e.Message;
-                statusCode = null;
-                isSucceed = false;
             }
-
-            StoreResponseOnWebhookSendAttempt(webhookSendAttemptId, webhookSenderArgs.TenantId, statusCode, content);
+            catch (Exception e)
+            {
+                Logger.Error("An error occured while sending a webhook", e);
+            }
+            finally
+            {
+                StoreResponseOnWebhookSendAttempt(webhookSendAttemptId, webhookSenderArgs.TenantId, statusCode, content);
+            }
 
             if (!isSucceed)
             {
