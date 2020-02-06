@@ -1,3 +1,4 @@
+using System;
 using System.IO;
 using System.Linq;
 using Nuke.Common;
@@ -106,20 +107,25 @@ class Build : NukeBuild
                 select (project, targetFramework);
             var relevantTestConfigurations = TestPartition.GetCurrent(allTestConfigurations);
 
-            DotNetTest(_ => _
-                    .SetConfiguration(Configuration.Release)
-                    .SetNoBuild(InvokedTargets.Contains(Compile))
-                    .SetResultsDirectory(TestResultDirectory)
-                    .CombineWith(relevantTestConfigurations, (_, v) => _
+            try
+            {
+                DotNetTest(_ => _
+                        .SetConfiguration(Configuration.Release)
+                        .SetNoBuild(InvokedTargets.Contains(Compile))
+                        .SetResultsDirectory(TestResultDirectory)
+                        .CombineWith(relevantTestConfigurations, (_, v) => _
                             .SetProjectFile(v.project)
                             .SetFramework(v.targetFramework)
                             .SetLogger($"trx;LogFileName={v.project.Name}.trx")),
-                completeOnFailure: true);
-
-            TestResultDirectory.GlobFiles("*.trx").ForEach(x =>
-                AzurePipelines?.PublishTestResults(
-                    type: AzurePipelinesTestResultsType.VSTest,
-                    title: $"{Path.GetFileNameWithoutExtension(x)} ({AzurePipelines.StageDisplayName})",
-                    files: new string[] { x }));
+                    completeOnFailure: true);
+            }
+            finally
+            {
+                TestResultDirectory.GlobFiles("*.trx").ForEach(x =>
+                    AzurePipelines?.PublishTestResults(
+                        type: AzurePipelinesTestResultsType.VSTest,
+                        title: $"{Path.GetFileNameWithoutExtension(x)} ({AzurePipelines.StageDisplayName})",
+                        files: new string[] { x }));
+            }
         });
 }
