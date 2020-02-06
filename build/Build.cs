@@ -1,4 +1,3 @@
-using System;
 using System.IO;
 using System.Linq;
 using Nuke.Common;
@@ -14,7 +13,6 @@ using Nuke.Common.Tools.MSBuild;
 using Nuke.Common.Tools.NuGet;
 using Nuke.Common.Utilities.Collections;
 using static Nuke.Common.IO.FileSystemTasks;
-using static Nuke.Common.IO.PathConstruction;
 using static Nuke.Common.Tools.DotNet.DotNetTasks;
 using static Nuke.Common.Tools.MSBuild.MSBuildTasks;
 using static Nuke.Common.Tools.NuGet.NuGetTasks;
@@ -24,12 +22,12 @@ using static Nuke.Common.Tools.NuGet.NuGetTasks;
 [MSBuildVerbosityMapping]
 [AzurePipelines(
     AzurePipelinesImage.WindowsLatest,
-    InvokedTargets = new[] {nameof(Test)},
+    InvokedTargets = new[] {nameof(Test), nameof(Pack)},
     ExcludedTargets = new[] {nameof(Clean)},
     NonEntryTargets = new[] {nameof(Restore), nameof(Compile)})]
 [AppVeyor(
     AppVeyorImage.VisualStudioLatest,
-    InvokedTargets = new[] {nameof(Test)})]
+    InvokedTargets = new[] {nameof(Test), nameof(Pack)})]
 class Build : NukeBuild
 {
     /// Support plugins are available for:
@@ -78,13 +76,16 @@ class Build : NukeBuild
                 .SetProperty("SourceLinkCreate", true));
         });
 
+    static AbsolutePath PackagesDirectory => RootDirectory / "output" / "packages";
+
     Target Pack => _ => _
         .DependsOn(Compile)
+        .Produces(PackagesDirectory / "*.nupkg")
         .Executes(() =>
         {
             DotNetPack(_ => _
                 .SetConfiguration(Configuration)
-                .SetOutputDirectory(RootDirectory / "output")
+                .SetOutputDirectory(PackagesDirectory)
                 .SetNoBuild(InvokedTargets.Contains(Compile))
                 .SetProperty("SourceLinkCreate", true)
                 .CombineWith(

@@ -18,5 +18,7 @@ image:
   - Visual Studio 2019
 
 build_script:
-  - ps: .\build.ps1 Test
+  - ps: .\build.ps1 Test Pack
 
+artifacts:
+  - path: output/packages/*.nupkg

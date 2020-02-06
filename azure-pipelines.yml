@@ -30,3 +30,14 @@ stages:
           - task: CmdLine@2
             inputs:
               script: './build.cmd Restore Compile Test --skip --test-partition $(System.JobPositionInPhase)'
+      - job: Pack
+        displayName: 'Pack'
+        dependsOn: [  ]
+        steps:
+          - task: CmdLine@2
+            inputs:
+              script: './build.cmd Restore Compile Pack --skip'
+          - task: PublishBuildArtifacts@1
+            inputs:
+              artifactName: packages
+              pathtoPublish: 'output/packages'
