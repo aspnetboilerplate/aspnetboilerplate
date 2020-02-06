@@ -60,17 +60,10 @@ namespace Abp.Webhooks
             string content;
             try
             {
-                using (var client = new HttpClient
-                {
-                    Timeout = _webhooksConfiguration.TimeoutDuration
-                })
-                {
-                    var response = await client.SendAsync(request);
-
-                    isSucceed = response.IsSuccessStatusCode;
-                    statusCode = response.StatusCode;
-                    content = await response.Content.ReadAsStringAsync();
-                }
+                var response = await SendHttpRequest(request);
+                isSucceed = response.isSucceed;
+                statusCode = response.statusCode;
+                content = response.content;
             }
             catch (TaskCanceledException)
             {
@@ -125,17 +118,10 @@ namespace Abp.Webhooks
 
             try
             {
-                using (var client = new HttpClient
-                {
-                    Timeout = _webhooksConfiguration.TimeoutDuration
-                })
-                {
-                    var response = AsyncHelper.RunSync(() => client.SendAsync(request));
-
-                    isSucceed = response.IsSuccessStatusCode;
-                    statusCode = response.StatusCode;
-                    content = AsyncHelper.RunSync(() => response.Content.ReadAsStringAsync());
-                }
+                var response = AsyncHelper.RunSync(() => SendHttpRequest(request));
+                isSucceed = response.isSucceed;
+                statusCode = response.statusCode;
+                content = response.content;
             }
             catch (TaskCanceledException)
             {
@@ -293,6 +279,23 @@ namespace Abp.Webhooks
                 }
 
                 throw new Exception($"Invalid Header. SubscriptionId:{webhookSenderArgs.WebhookSubscriptionId},Header: {header.Key}:{header.Value}");
+            }
+        }
+
+        protected virtual async Task<(bool isSucceed, HttpStatusCode statusCode, string content)> SendHttpRequest(HttpRequestMessage request)
+        {
+            using (var client = new HttpClient
+            {
+                Timeout = _webhooksConfiguration.TimeoutDuration
+            })
+            {
+                var response = await client.SendAsync(request);
+
+                var isSucceed = response.IsSuccessStatusCode;
+                var statusCode = response.StatusCode;
+                var content = await response.Content.ReadAsStringAsync();
+
+                return (isSucceed, statusCode, content);
             }
         }
     }
