@@ -74,6 +74,28 @@ namespace Abp.BackgroundJobs
             return jobInfo.Id.ToString();
         }
 
+        [UnitOfWork]
+        public virtual string Enqueue<TJob, TArgs>(TArgs args, BackgroundJobPriority priority = BackgroundJobPriority.Normal, TimeSpan? delay = null)
+            where TJob : IBackgroundJob<TArgs>
+        {
+            var jobInfo = new BackgroundJobInfo
+            {
+                JobType = typeof(TJob).AssemblyQualifiedName,
+                JobArgs = args.ToJsonString(),
+                Priority = priority
+            };
+
+            if (delay.HasValue)
+            {
+                jobInfo.NextTryTime = Clock.Now.Add(delay.Value);
+            }
+
+            _store.Insert(jobInfo);
+            CurrentUnitOfWork.SaveChanges();
+
+            return jobInfo.Id.ToString();
+        }
+
         public async Task<bool> DeleteAsync(string jobId)
         {
             if (long.TryParse(jobId, out long finalJobId) == false)
@@ -87,9 +109,22 @@ namespace Abp.BackgroundJobs
             return true;
         }
 
+        public bool Delete(string jobId)
+        {
+            if (long.TryParse(jobId, out long finalJobId) == false)
+            {
+                throw new ArgumentException($"The jobId '{jobId}' should be a number.", nameof(jobId));
+            }
+
+            BackgroundJobInfo jobInfo = _store.Get(finalJobId);
+
+            _store.Delete(jobInfo);
+            return true;
+        }
+
         protected override void DoWork()
         {
-            var waitingJobs = AsyncHelper.RunSync(() => _store.GetWaitingJobsAsync(1000));
+            var waitingJobs = _store.GetWaitingJobs(1000);
 
             foreach (var job in waitingJobs)
             {
@@ -115,7 +150,7 @@ namespace Abp.BackgroundJobs
 
                         jobExecuteMethod.Invoke(job.Object, new[] { argsObj });
 
-                        AsyncHelper.RunSync(() => _store.DeleteAsync(jobInfo));
+                        _store.Delete(jobInfo);
                     }
                     catch (Exception ex)
                     {
@@ -163,7 +198,7 @@ namespace Abp.BackgroundJobs
         {
             try
             {
-                _store.UpdateAsync(jobInfo);
+                _store.Update(jobInfo);
             }
             catch (Exception updateEx)
             {

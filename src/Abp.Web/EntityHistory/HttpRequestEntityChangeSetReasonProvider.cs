@@ -21,7 +21,20 @@ namespace Abp.Web.EntityHistory
                     return OverridedValue.Reason;
                 }
 
-                return HttpContext.Current?.Request.Url.AbsoluteUri;
+                try
+                {
+                    return HttpContext.Current?.Request.Url.AbsoluteUri;
+                }
+                catch (HttpException ex)
+                {
+                    /* Workaround:
+                     * Accessing HttpContext.Request during Application_Start or Application_End will throw exception.
+                     * This behavior is intentional from microsoft
+                     * See https://stackoverflow.com/questions/2518057/request-is-not-available-in-this-context/23908099#comment2514887_2518066
+                     */
+                    Logger.Warn("HttpContext.Request access when it is not suppose to", ex);
+                    return null;
+                }
             }
         }
 

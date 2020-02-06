@@ -22,6 +22,16 @@ namespace Abp.AspNetCore.App.Controllers
             return Json(new SimpleViewModel("Forty Two", 42));
         }
 
+        public ObjectResult SimpleObject()
+        {
+            return new ObjectResult(new SimpleViewModel("Forty Two", 42));
+        }
+
+        public string SimpleString()
+        {
+            return "test";
+        }
+
         public JsonResult SimpleJsonException(string message, bool userFriendly)
         {
             if (userFriendly)
@@ -64,21 +74,21 @@ namespace Abp.AspNetCore.App.Controllers
         }
 
         [HttpGet]
-        public async Task<ActionResult> GetActionResultTestAsync()
+        public async Task<ActionResult> GetActionResultTest2()
         {
             await Task.Delay(0);
             return Content("GetActionResultTestAsync-Result");
         }
 
         [HttpGet]
-        public async Task GetVoidExceptionTestAsync()
+        public async Task GetVoidExceptionTest()
         {
             await Task.Delay(0);
             throw new UserFriendlyException("GetVoidExceptionTestAsync-Exception");
         }
 
         [HttpGet]
-        public async Task<ActionResult> GetActionResultExceptionTestAsync()
+        public async Task<ActionResult> GetActionResultExceptionTest()
         {
             await Task.Delay(0);
             throw new UserFriendlyException("GetActionResultExceptionTestAsync-Exception");
@@ -134,6 +144,30 @@ namespace Abp.AspNetCore.App.Controllers
         public string GetNotNormalizedDateTimeKindClass(SimpleDateModel3 input)
         {
             return input.Date.Kind.ToString().ToLower();
+        }
+
+        [HttpGet]
+        public string GetSimpleTypeDateTimeKind(DateTime date)
+        {
+            return date.Date.Kind.ToString().ToLower();
+        }
+
+        [HttpGet]
+        public string GetNotNormalizedSimpleTypeKind([DisableDateTimeNormalization]DateTime date)
+        {
+            return date.Date.Kind.ToString().ToLower();
+        }
+
+        [HttpGet]
+        public string GetNullableSimpleTypeDateTimeKind(DateTime? date)
+        {
+            return date.Value.Kind.ToString().ToLower();
+        }
+
+        [HttpGet]
+        public string GetNotNormalizedNullableSimpleTypeDateTimeKind([DisableDateTimeNormalization]DateTime? date)
+        {
+            return date.Value.Date.Kind.ToString().ToLower();
         }
     }
 }

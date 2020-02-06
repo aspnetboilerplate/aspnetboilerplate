@@ -40,7 +40,7 @@ namespace Abp.TestBase.SampleApplication.Tests.Auditing
             var selectedMessage = _messageRepository.Get(createdMessage.Id);
 
             //Assert: Select should not change audit properties
-            selectedMessage.ShouldBe(createdMessage); //They should be same since Entity class overrides == operator.
+            selectedMessage.EntityEquals(createdMessage);
 
             selectedMessage.CreationTime.ShouldBe(createdMessage.CreationTime);
             selectedMessage.CreatorUserId.ShouldBe(createdMessage.CreatorUserId);

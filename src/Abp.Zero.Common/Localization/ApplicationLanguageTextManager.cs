@@ -1,4 +1,5 @@
 using System.Globalization;
+using System.Linq;
 using System.Threading.Tasks;
 using Abp.Dependency;
 using Abp.Domain.Repositories;
@@ -64,11 +65,11 @@ namespace Abp.Localization
         {
             using (_unitOfWorkManager.Current.SetTenantId(tenantId))
             {
-                var existingEntity = await _applicationTextRepository.FirstOrDefaultAsync(t =>
+                var existingEntity = (await _applicationTextRepository.GetAllListAsync(t =>
                     t.Source == sourceName &&
                     t.LanguageName == culture.Name &&
-                    t.Key == key
-                    );
+                    t.Key == key))
+                    .FirstOrDefault(t => t.Key == key);
 
                 if (existingEntity != null)
                 {

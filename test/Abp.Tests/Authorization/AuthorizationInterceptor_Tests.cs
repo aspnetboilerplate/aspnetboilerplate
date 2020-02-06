@@ -4,6 +4,7 @@ using Abp.Application.Features;
 using Abp.Authorization;
 using Abp.Configuration.Startup;
 using Abp.Dependency;
+using Abp.Domain.Uow;
 using Abp.Runtime.Session;
 using Castle.MicroKernel.Registration;
 using NSubstitute;
@@ -29,12 +30,13 @@ namespace Abp.Tests.Authorization
             LocalIocManager.Register<IAuthorizationConfiguration, AuthorizationConfiguration>();
             LocalIocManager.Register<IMultiTenancyConfig, MultiTenancyConfig>();
             LocalIocManager.Register<AuthorizationInterceptor>(DependencyLifeStyle.Transient);
+            LocalIocManager.Register<AbpAsyncDeterminationInterceptor<AuthorizationInterceptor>>(DependencyLifeStyle.Transient);
             LocalIocManager.Register<IAuthorizationHelper, AuthorizationHelper>(DependencyLifeStyle.Transient);
             LocalIocManager.IocContainer.Register(
-                Component.For<MyTestClassToBeAuthorized_Sync>().Interceptors<AuthorizationInterceptor>().LifestyleTransient(),
-                Component.For<MyTestClassToBeAuthorized_Async>().Interceptors<AuthorizationInterceptor>().LifestyleTransient(),
-                Component.For<MyTestClassToBeAllowProtected_Async>().Interceptors<AuthorizationInterceptor>().LifestyleTransient(),
-                Component.For<MyTestClassToBeAllowProtected_Sync>().Interceptors<AuthorizationInterceptor>().LifestyleTransient()
+                Component.For<MyTestClassToBeAuthorized_Sync>().Interceptors<AbpAsyncDeterminationInterceptor<AuthorizationInterceptor>>().LifestyleTransient(),
+                Component.For<MyTestClassToBeAuthorized_Async>().Interceptors<AbpAsyncDeterminationInterceptor<AuthorizationInterceptor>>().LifestyleTransient(),
+                Component.For<MyTestClassToBeAllowProtected_Async>().Interceptors<AbpAsyncDeterminationInterceptor<AuthorizationInterceptor>>().LifestyleTransient(),
+                Component.For<MyTestClassToBeAllowProtected_Sync>().Interceptors<AbpAsyncDeterminationInterceptor<AuthorizationInterceptor>>().LifestyleTransient()
                 );
 
             //Mock session
@@ -48,6 +50,11 @@ namespace Abp.Tests.Authorization
             permissionChecker.IsGrantedAsync("Permission1").Returns(true);
             permissionChecker.IsGrantedAsync("Permission2").Returns(true);
             permissionChecker.IsGrantedAsync("Permission3").Returns(false); //Permission3 is not granted
+
+            permissionChecker.IsGranted("Permission1").Returns(true);
+            permissionChecker.IsGranted("Permission2").Returns(true);
+            permissionChecker.IsGranted("Permission3").Returns(false); //Permission3 is not granted
+
             LocalIocManager.IocContainer.Register(Component.For<IPermissionChecker>().Instance(permissionChecker));
 
             _syncObj = LocalIocManager.Resolve<MyTestClassToBeAuthorized_Sync>();

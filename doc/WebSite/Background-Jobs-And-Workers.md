@@ -229,7 +229,7 @@ ABP Framework defines a background worker named UserTokenExpirationWorker which 
     {
         public override void PreInitialize()
         {
-            Configuration.BackgroundJobs.CleanUserTokenPeriod = 1 * 60 * 60 * 1000; // 1 hour
+            Configuration.BackgroundJobs.UserTokenExpirationPeriod = TimeSpan.FromHours(1);
         }
     
         //...

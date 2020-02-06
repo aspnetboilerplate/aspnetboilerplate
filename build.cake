@@ -16,34 +16,34 @@ var branch = Argument("branch", EnvironmentVariable("APPVEYOR_REPO_BRANCH"));
 var vsLatest  = VSWhereLatest();
 var msBuildPathX64 = (vsLatest==null)
                             ? null
-                            : vsLatest.CombineWithFilePath("./MSBuild/15.0/Bin/amd64/MSBuild.exe");
+                            : vsLatest.CombineWithFilePath("./MSBuild/Current/Bin/MSBuild.exe");
 
 var testProjects = new List<Tuple<string, string[]>>
                 {
-                    new Tuple<string, string[]>("Abp.AspNetCore.Tests", new[] { "net461", "netcoreapp2.2" }),
-                    new Tuple<string, string[]>("Abp.AutoMapper.Tests", new[] { "net461", "netcoreapp2.2" }),
-                    new Tuple<string, string[]>("Abp.Castle.Log4Net.Tests", new[] { "net461", "netcoreapp2.2" }),
+                    new Tuple<string, string[]>("Abp.AspNetCore.Tests", new[] { "netcoreapp3.1" }),
+                    new Tuple<string, string[]>("Abp.AutoMapper.Tests", new[] { "net461", "netcoreapp3.1" }),
+                    new Tuple<string, string[]>("Abp.Castle.Log4Net.Tests", new[] { "net461", "netcoreapp3.1" }),
                     new Tuple<string, string[]>("Abp.Dapper.NHibernate.Tests", new[] { "net461"}),
                     new Tuple<string, string[]>("Abp.Dapper.Tests", new[] { "net461" }),
                     new Tuple<string, string[]>("Abp.EntityFramework.GraphDiff.Tests", new[] { "net461" }),
                     new Tuple<string, string[]>("Abp.EntityFramework.Tests", new[] { "net461" }),
-                    new Tuple<string, string[]>("Abp.EntityFrameworkCore.Dapper.Tests", new[] { "netcoreapp2.2" }),
-                    new Tuple<string, string[]>("Abp.EntityFrameworkCore.Tests", new[] { "net461", "netcoreapp2.2" }),
-                    new Tuple<string, string[]>("Abp.MailKit.Tests", new[] { "net461", "netcoreapp2.2" }),
-                    new Tuple<string, string[]>("Abp.MemoryDb.Tests", new[] { "net461", "netcoreapp2.2" }),
+                    new Tuple<string, string[]>("Abp.EntityFrameworkCore.Dapper.Tests", new[] { "netcoreapp3.1" }),
+                    new Tuple<string, string[]>("Abp.EntityFrameworkCore.Tests", new[] { "netcoreapp3.1" }),
+                    new Tuple<string, string[]>("Abp.MailKit.Tests", new[] { "net461", "netcoreapp3.1" }),
+                    new Tuple<string, string[]>("Abp.MemoryDb.Tests", new[] { "net461", "netcoreapp3.1" }),
                     new Tuple<string, string[]>("Abp.NHibernate.Tests", new[] { "net461" }),
                     new Tuple<string, string[]>("Abp.Quartz.Tests", new[] { "net461" }),
-                    new Tuple<string, string[]>("Abp.RedisCache.Tests", new[] { "net461", "netcoreapp2.2" }),
+                    new Tuple<string, string[]>("Abp.RedisCache.Tests", new[] { "net461", "netcoreapp3.1" }),
                     new Tuple<string, string[]>("Abp.TestBase.SampleApplication.Tests", new[] { "net461" }),
-                    new Tuple<string, string[]>("Abp.Tests", new[] { "net461", "netcoreapp2.2" }),
+                    new Tuple<string, string[]>("Abp.Tests", new[] { "net461", "netcoreapp3.1" }),
                     new Tuple<string, string[]>("Abp.Web.Api.Tests", new[] { "net461" }),
-                    new Tuple<string, string[]>("Abp.Web.Common.Tests", new[] { "net461", "netcoreapp2.2" }),
+                    new Tuple<string, string[]>("Abp.Web.Common.Tests", new[] { "net461", "netcoreapp3.1" }),
                     new Tuple<string, string[]>("Abp.Web.Mvc.Tests", new[] { "net461" }),
                     new Tuple<string, string[]>("Abp.Web.Tests", new[] { "net461" }),
                     new Tuple<string, string[]>("Abp.Zero.SampleApp.NHibernateTests", new[] { "net461" }),
                     new Tuple<string, string[]>("Abp.Zero.SampleApp.Tests", new[] { "net461" }),
-                    new Tuple<string, string[]>("Abp.ZeroCore.Tests", new[] { "netcoreapp2.2" }),
-                    new Tuple<string, string[]>("Abp.ZeroCore.IdentityServer4.Tests", new[] { "netcoreapp2.2" })
+                    new Tuple<string, string[]>("Abp.ZeroCore.Tests", new[] { "netcoreapp3.1" }),
+                    new Tuple<string, string[]>("Abp.ZeroCore.IdentityServer4.Tests", new[] { "netcoreapp3.1" })
                 };
                       
 
@@ -86,7 +86,7 @@ Task("Run-Unit-Tests")
     {
       foreach (string targetFramework in testProject.Item2)
       {
-        Information($"Test execution started for target frameowork: {targetFramework}...");
+        Information($"Test execution started for target framework: {targetFramework}...");
         var testProj = GetFiles($"./test/**/*{testProject.Item1}.csproj").First();
         DotNetCoreTest(testProj.FullPath, new DotNetCoreTestSettings { Configuration = "Release", Framework = targetFramework });                              
       }

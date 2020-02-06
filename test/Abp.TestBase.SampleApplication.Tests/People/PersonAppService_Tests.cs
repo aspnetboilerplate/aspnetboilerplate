@@ -117,6 +117,7 @@ namespace Abp.TestBase.SampleApplication.Tests.People
                         await Task.Delay(10);
                         return true;
                     });
+            permissionChecker.IsGranted("CanDeletePerson").Returns(true);
 
             LocalIocManager.IocContainer.Register(
                 Component.For<IPermissionChecker>().Instance(permissionChecker).IsDefault()

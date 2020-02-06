@@ -50,7 +50,7 @@ namespace Abp.Web.Localization
             script.AppendLine();
             script.Append("    abp.localization.languages = [");
 
-            var languages = _languageManager.GetLanguages();
+            var languages = _languageManager.GetActiveLanguages();
             for (var i = 0; i < languages.Count; i++)
             {
                 var language = languages[i];

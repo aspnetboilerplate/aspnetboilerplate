@@ -40,5 +40,23 @@ namespace Abp.NHibernate.Tests
             var book2 = _bookRepository.Get(1);
             book2.LastModifierUserId.ShouldNotBeNull();
         }
+
+        [Fact]
+        public async Task Should_Set_CreatorUserId_When_DynamicInsert_Is_Enabled_Async()
+        {
+            AbpSession.UserId = 1;
+
+            using (var uow = _unitOfWorkManager.Begin())
+            {
+                var book = await _bookRepository.GetAsync(1);
+                book.ShouldNotBeNull();
+                book.Name = "Hitchhiker's Guide to the Galaxy";
+                await _bookRepository.UpdateAsync(book);
+                await uow.CompleteAsync();
+            }
+
+            var book2 = await _bookRepository.GetAsync(1);
+            book2.LastModifierUserId.ShouldNotBeNull();
+        }
     }
 }

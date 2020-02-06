@@ -97,7 +97,7 @@ the UserManager:
             //Disabling MayHaveTenant filter, so we can reach all users
             using (CurrentUnitOfWork.DisableFilter(AbpDataFilters.MayHaveTenant))
             {
-                //Now, we can search for a user name in all tenants
+                //Now, we can search for a username in all tenants
                 var users = _userManager.Users.Where(u => u.UserName == "sampleuser").ToList();
     
                 //Or we can add TenantId filter if we want to search for a specific tenant
@@ -159,7 +159,7 @@ the implementation of IExternalAuthenticationSource. Let's see an example:
         }
     }
 
-In the TryAuthenticateAsync method, we can check the user name and password from
+In the TryAuthenticateAsync method, we can check the username and password from
 some source and return true if a given user is authenticated by it.
 We can also override the CreateUser and UpdateUser methods to
 control user creation and updating for this source.
@@ -181,7 +181,7 @@ To register our authenciation source, we can use some code like this in the
 #### LDAP/Active Directory
 
 LdapAuthenticationSource is an implementation of external authentication
-to make users login with their LDAP (active directory) user name and
+to make users login with their LDAP (active directory) username and
 password.
 
 If we want to use LDAP authentication, we must first add the

@@ -31,7 +31,7 @@ namespace Abp.TestBase.SampleApplication.Tests.Auditing
             _auditingStore = Substitute.For<IAuditingStore>();
             LocalIocManager.IocContainer.Register(
                 Component.For<IAuditingStore>().Instance(_auditingStore).LifestyleSingleton()
-                );
+            );
         }
 
         #region CASES WRITE AUDIT LOGS
@@ -43,17 +43,14 @@ namespace Abp.TestBase.SampleApplication.Tests.Auditing
             /* All application service methods are audited as conventional. */
 
             await _personAppService.CreatePersonAsync(new CreatePersonInput { ContactListId = 1, Name = "john" });
-
-#pragma warning disable 4014
-            _auditingStore.Received().SaveAsync(Arg.Any<AuditInfo>());
-#pragma warning restore 4014
+            await _auditingStore.Received().SaveAsync(Arg.Any<AuditInfo>());
         }
 
         [Fact]
         public void Should_Write_Audits_For_Audited_Class_Virtual_Methods_As_Default()
         {
             Resolve<MyServiceWithClassAudited>().Test1();
-            _auditingStore.Received().SaveAsync(Arg.Is<AuditInfo>(a => a.ReturnValue == "1"));
+            _auditingStore.Received().Save(Arg.Is<AuditInfo>(a => a.ReturnValue == "1"));
         }
 
         [Fact]
@@ -68,7 +65,7 @@ namespace Abp.TestBase.SampleApplication.Tests.Auditing
         {
             Resolve<MyServiceWithClassAudited>().Test4();
 
-            await _auditingStore.Received().SaveAsync(Arg.Is<AuditInfo>(a =>
+            _auditingStore.Received().Save(Arg.Is<AuditInfo>(a =>
                 !a.ReturnValue.Contains("123qwe")
             ));
         }
@@ -77,14 +74,14 @@ namespace Abp.TestBase.SampleApplication.Tests.Auditing
         public void Should_Write_Audits_For_Audited_Methods()
         {
             Resolve<MyServiceWithMethodAudited>().Test1();
-            _auditingStore.Received().SaveAsync(Arg.Any<AuditInfo>());
+            _auditingStore.Received().Save(Arg.Any<AuditInfo>());
         }
 
         [Fact]
-        public void Should_Write_Audits_For_AsyncCrudAppService_With_Correct_Service_Name()
+        public async Task Should_Write_Audits_For_AsyncCrudAppService_With_Correct_Service_Name()
         {
-            _asyncCompanyAppService.Delete(new EntityDto(1));
-            _auditingStore.Received().SaveAsync(Arg.Is<AuditInfo>(a => a.ServiceName.Contains("AsyncCompanyAppService")));
+            await _asyncCompanyAppService.DeleteAsync(new EntityDto(1));
+            await _auditingStore.Received().SaveAsync(Arg.Is<AuditInfo>(a => a.ServiceName.Contains("AsyncCompanyAppService")));
         }
 
         #endregion

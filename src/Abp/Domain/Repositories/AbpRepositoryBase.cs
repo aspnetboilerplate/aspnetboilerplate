@@ -7,6 +7,7 @@ using Abp.Dependency;
 using Abp.Domain.Entities;
 using Abp.Domain.Uow;
 using Abp.MultiTenancy;
+using Abp.Reflection;
 using Abp.Reflection.Extensions;
 
 namespace Abp.Domain.Repositories
@@ -139,9 +140,10 @@ namespace Abp.Domain.Repositories
             return Insert(entity).Id;
         }
 
-        public virtual Task<TPrimaryKey> InsertAndGetIdAsync(TEntity entity)
+        public virtual async Task<TPrimaryKey> InsertAndGetIdAsync(TEntity entity)
         {
-            return Task.FromResult(InsertAndGetId(entity));
+            var insertedEntity = await InsertAsync(entity);
+            return insertedEntity.Id;
         }
 
         public virtual TEntity InsertOrUpdate(TEntity entity)
@@ -163,9 +165,10 @@ namespace Abp.Domain.Repositories
             return InsertOrUpdate(entity).Id;
         }
 
-        public virtual Task<TPrimaryKey> InsertOrUpdateAndGetIdAsync(TEntity entity)
+        public virtual async Task<TPrimaryKey> InsertOrUpdateAndGetIdAsync(TEntity entity)
         {
-            return Task.FromResult(InsertOrUpdateAndGetId(entity));
+            var insertedEntity = await InsertOrUpdateAsync(entity);
+            return insertedEntity.Id;
         }
 
         public abstract TEntity Update(TEntity entity);
@@ -194,7 +197,7 @@ namespace Abp.Domain.Repositories
         public virtual Task DeleteAsync(TEntity entity)
         {
             Delete(entity);
-            return Task.FromResult(0);
+            return Task.CompletedTask;
         }
 
         public abstract void Delete(TPrimaryKey id);
@@ -202,21 +205,25 @@ namespace Abp.Domain.Repositories
         public virtual Task DeleteAsync(TPrimaryKey id)
         {
             Delete(id);
-            return Task.FromResult(0);
+            return Task.CompletedTask;
         }
 
         public virtual void Delete(Expression<Func<TEntity, bool>> predicate)
         {
-            foreach (var entity in GetAll().Where(predicate).ToList())
+            foreach (var entity in GetAllList(predicate))
             {
                 Delete(entity);
             }
         }
 
-        public virtual Task DeleteAsync(Expression<Func<TEntity, bool>> predicate)
+        public virtual async Task DeleteAsync(Expression<Func<TEntity, bool>> predicate)
         {
-            Delete(predicate);
-            return Task.FromResult(0);
+            var entities = await GetAllListAsync(predicate);
+
+            foreach (var entity in entities)
+            {
+                await DeleteAsync(entity);
+            }
         }
 
         public virtual int Count()
@@ -231,7 +238,7 @@ namespace Abp.Domain.Repositories
 
         public virtual int Count(Expression<Func<TEntity, bool>> predicate)
         {
-            return GetAll().Where(predicate).Count();
+            return GetAll().Count(predicate);
         }
 
         public virtual Task<int> CountAsync(Expression<Func<TEntity, bool>> predicate)
@@ -251,7 +258,7 @@ namespace Abp.Domain.Repositories
 
         public virtual long LongCount(Expression<Func<TEntity, bool>> predicate)
         {
-            return GetAll().Where(predicate).LongCount();
+            return GetAll().LongCount(predicate);
         }
 
         public virtual Task<long> LongCountAsync(Expression<Func<TEntity, bool>> predicate)
@@ -265,7 +272,9 @@ namespace Abp.Domain.Repositories
 
             var leftExpression = Expression.PropertyOrField(lambdaParam, "Id");
 
-            Expression<Func<object>> closure = () => id;
+            var idValue = Convert.ChangeType(id, typeof(TPrimaryKey));
+
+            Expression<Func<object>> closure = () => idValue;
             var rightExpression = Expression.Convert(closure.Body, leftExpression.Type);
 
             var lambdaBody = Expression.Equal(leftExpression, rightExpression);

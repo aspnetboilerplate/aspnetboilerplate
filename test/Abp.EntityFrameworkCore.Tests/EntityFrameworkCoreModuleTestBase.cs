@@ -21,7 +21,15 @@ namespace Abp.EntityFrameworkCore.Tests
             UsingDbContext(
                 context =>
                 {
-                    var blog1 = new Blog("test-blog-1", "http://testblog1.myblogs.com");
+                    var blog1 = new Blog("test-blog-1", "http://testblog1.myblogs.com")
+                    {
+                        DeletionTime = DateTime.SpecifyKind(DateTime.Parse("2019-01-01T00:00:00"), DateTimeKind.Unspecified),
+                        BlogTime = new BlogTime()
+                        {
+                            LastAccessTime = DateTime.SpecifyKind(DateTime.Parse("2019-02-01T00:00:00"), DateTimeKind.Unspecified),
+                            LatestPosTime = DateTime.SpecifyKind(DateTime.Parse("2019-03-01T00:00:00"), DateTimeKind.Unspecified)
+                        }
+                    };
 
                     context.Blogs.Add(blog1);
                     context.SaveChanges();

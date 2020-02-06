@@ -278,6 +278,10 @@ We can then use **GetData** to get the values:
 
     var randomValue = person.GetData<int>("RandomValue");
     var customData = person.GetData<MyCustomObject>("CustomData");
+    
+Of course, we can also use the **RemoveData** method to remove data:
+    
+    person.RemoveData("RandomValue");
 
 While this technique can be very useful in some cases (when you need to
 provide the ability to dynamically add extra data to an entity), you

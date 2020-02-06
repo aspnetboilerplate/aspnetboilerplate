@@ -39,13 +39,6 @@ namespace Abp.Application.Navigation
         public string Url { get; set; }
 
         /// <summary>
-        /// A permission name. Only users that has this permission can see this menu item.
-        /// Optional.
-        /// </summary>
-        [Obsolete("Use PermissionDependency instead.")]
-        public string RequiredPermissionName { get; set; }
-
-        /// <summary>
         /// A permission dependency. Only users that can satisfy this permission dependency can see this menu item.
         /// Optional.
         /// </summary>
@@ -97,7 +90,6 @@ namespace Abp.Application.Navigation
         /// <param name="icon"></param>
         /// <param name="url"></param>
         /// <param name="requiresAuthentication"></param>
-        /// <param name="requiredPermissionName">This parameter is obsolete. Use <paramref name="permissionDependency"/> instead!</param>
         /// <param name="order"></param>
         /// <param name="customData"></param>
         /// <param name="featureDependency"></param>
@@ -111,7 +103,6 @@ namespace Abp.Application.Navigation
             string icon = null,
             string url = null,
             bool requiresAuthentication = false,
-            string requiredPermissionName = null,
             int order = 0,
             object customData = null,
             IFeatureDependency featureDependency = null,
@@ -128,7 +119,6 @@ namespace Abp.Application.Navigation
             Icon = icon;
             Url = url;
             RequiresAuthentication = requiresAuthentication;
-            RequiredPermissionName = requiredPermissionName;
             Order = order;
             CustomData = customData;
             FeatureDependency = featureDependency;

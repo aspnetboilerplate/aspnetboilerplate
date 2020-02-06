@@ -48,6 +48,9 @@ namespace Abp.Auditing
             var clientIp = httpContext.Request.ServerVariables["HTTP_X_FORWARDED_FOR"] ??
                            httpContext.Request.ServerVariables["REMOTE_ADDR"];
 
+            // Remove port if present
+            clientIp = clientIp.Contains(":") ? clientIp.Remove(clientIp.IndexOf(':')) : clientIp;
+
             try
             {
                 foreach (var hostAddress in Dns.GetHostAddresses(clientIp))
@@ -84,9 +87,7 @@ namespace Abp.Auditing
 
             try
             {
-                var clientIp = httpContext.Request.ServerVariables["HTTP_X_FORWARDED_FOR"] ??
-                               httpContext.Request.ServerVariables["REMOTE_ADDR"];
-                return Dns.GetHostEntry(IPAddress.Parse(clientIp)).HostName;
+                return Dns.GetHostEntry(IPAddress.Parse(GetClientIpAddress())).HostName;
             }
             catch
             {

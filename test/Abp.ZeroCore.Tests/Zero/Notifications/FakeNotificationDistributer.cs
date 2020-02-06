@@ -12,5 +12,10 @@ namespace Abp.Zero.Notifications
         {
             IsDistributeCalled = true;
         }
+
+        public void Distribute(Guid notificationId)
+        {
+            IsDistributeCalled = true;
+        }
     }
 }

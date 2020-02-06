@@ -48,7 +48,7 @@ requests and responses.
 
 Just send a **POST** request to
 **http://localhost:62114/api/TokenAuth/Authenticate** with a
-**Context-Type="application/json"** header as shown below:
+**Content-Type="application/json"** header as shown below:
 
 <img src="../images/aspnet-core-token-auth.png" alt="Request for token" class="img-thumbnail" />
 

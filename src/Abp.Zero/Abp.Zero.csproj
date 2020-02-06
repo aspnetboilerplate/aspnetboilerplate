@@ -21,7 +21,7 @@
   <ItemGroup>
     <EmbeddedResource Include="Zero\Localization\SourceExt\*.xml" />
   </ItemGroup>
-  
+
   <ItemGroup>
     <None Include="bin\Release\net461\Abp.Zero.pdb">
       <PackagePath>lib/net461/</PackagePath>
@@ -30,7 +30,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Include="Microsoft.AspNet.Identity.Core" Version="2.2.2" />
+    <PackageReference Include="Microsoft.AspNet.Identity.Core" Version="2.2.3" />
   </ItemGroup>
 
   <ItemGroup>

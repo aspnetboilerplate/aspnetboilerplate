@@ -21,7 +21,7 @@ namespace Abp.Auditing
 
                 if (ShouldIntercept(auditingConfiguration, handler.ComponentModel.Implementation))
                 {
-                    handler.ComponentModel.Interceptors.Add(new InterceptorReference(typeof(AuditingInterceptor)));
+                    handler.ComponentModel.Interceptors.Add(new InterceptorReference(typeof(AbpAsyncDeterminationInterceptor<AuditingInterceptor>)));
                 }
             };
         }

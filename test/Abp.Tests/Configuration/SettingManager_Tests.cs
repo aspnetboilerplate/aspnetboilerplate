@@ -305,8 +305,18 @@ namespace Abp.Tests.Configuration
                 return Task.FromResult(_settings.FirstOrDefault(s => s.TenantId == tenantId && s.UserId == userId && s.Name == name));
             }
 
+            public SettingInfo GetSettingOrNull(int? tenantId, long? userId, string name)
+            {
+                return _settings.FirstOrDefault(s => s.TenantId == tenantId && s.UserId == userId && s.Name == name);
+            }
+
 #pragma warning disable 1998
             public async Task DeleteAsync(SettingInfo setting)
+            {
+                _settings.RemoveAll(s => s.TenantId == setting.TenantId && s.UserId == setting.UserId && s.Name == setting.Name);
+            }
+
+            public void Delete(SettingInfo setting)
             {
                 _settings.RemoveAll(s => s.TenantId == setting.TenantId && s.UserId == setting.UserId && s.Name == setting.Name);
             }
@@ -314,6 +324,11 @@ namespace Abp.Tests.Configuration
 
 #pragma warning disable 1998
             public async Task CreateAsync(SettingInfo setting)
+            {
+                _settings.Add(setting);
+            }
+
+            public void Create(SettingInfo setting)
             {
                 _settings.Add(setting);
             }
@@ -328,9 +343,23 @@ namespace Abp.Tests.Configuration
                 }
             }
 
+            public void Update(SettingInfo setting)
+            {
+                var s = GetSettingOrNull(setting.TenantId, setting.UserId, setting.Name);
+                if (s != null)
+                {
+                    s.Value = setting.Value;
+                }
+            }
+
             public Task<List<SettingInfo>> GetAllListAsync(int? tenantId, long? userId)
             {
                 return Task.FromResult(_settings.Where(s => s.TenantId == tenantId && s.UserId == userId).ToList());
+            }
+
+            public List<SettingInfo> GetAllList(int? tenantId, long? userId)
+            {
+                return _settings.Where(s => s.TenantId == tenantId && s.UserId == userId).ToList();
             }
         }
     }

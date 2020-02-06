@@ -160,12 +160,6 @@ namespace Abp.Runtime.Caching.Redis
 
         protected virtual RedisKey GetLocalizedRedisKey(string key)
         {
-            return GetLocalizedKey(key);
-        }
-
-        [Obsolete]
-        protected virtual string GetLocalizedKey(string key)
-        {
             return "n:" + Name + ",c:" + key;
         }
     }
