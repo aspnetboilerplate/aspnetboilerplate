@@ -16,6 +16,7 @@ using Shouldly;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using Abp.Authorization.Roles;
 using Xunit;
 
 namespace Abp.Zero.EntityHistory
@@ -561,6 +562,41 @@ namespace Abp.Zero.EntityHistory
             //Assert
             _entityHistoryStore.DidNotReceive().Save(Arg.Any<EntityChangeSet>());
         }
+
+        [Fact]
+        public void Should_Not_Write_History_For_Audited_Entity_By_Default()
+        {
+            UsingDbContext((context) =>
+            {
+                context.Countries.Add(new Country { CountryCode = "My Country" });
+                context.SaveChanges();
+            });
+
+            //Assert
+            _entityHistoryStore.DidNotReceive().Save(Arg.Any<EntityChangeSet>());
+        }
+
+        [Fact]
+        public void Should_Not_Write_History_For_Not_Audited_Entities_Shadow_Property()
+        {
+            // PermissionSetting has Dscriminator Column (Shadow Property) for RolePermissionSetting
+
+            UsingDbContext((context) =>
+            {
+                var role = context.Roles.FirstOrDefault();
+                role.ShouldNotBeNull();
+
+                context.RolePermissions.Add(new RolePermissionSetting()
+                {
+                    Name = "Test",
+                    RoleId = role.Id
+                });
+                context.SaveChanges();
+            });
+
+            _entityHistoryStore.DidNotReceive().Save(Arg.Any<EntityChangeSet>());
+        }
+
 
         #endregion
 
