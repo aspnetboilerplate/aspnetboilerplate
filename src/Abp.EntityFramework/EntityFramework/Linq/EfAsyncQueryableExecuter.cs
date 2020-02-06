@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Data.Entity;
 using System.Linq;
 using System.Threading.Tasks;
@@ -14,6 +15,7 @@ namespace Abp.EntityFramework.Linq
             return queryable.CountAsync();
         }
 
+        [Obsolete("Use System.Linq.Queryable.Count() instead.")]
         public int Count<T>(IQueryable<T> queryable)
         {
             return queryable.Count();
@@ -24,6 +26,7 @@ namespace Abp.EntityFramework.Linq
             return queryable.ToListAsync();
         }
 
+        [Obsolete("Use System.Linq.Queryable.ToList() instead.")]
         public List<T> ToList<T>(IQueryable<T> queryable)
         {
             return queryable.ToList();
@@ -34,6 +37,7 @@ namespace Abp.EntityFramework.Linq
             return queryable.FirstOrDefaultAsync();
         }
 
+        [Obsolete("Use System.Linq.Queryable.FirstOrDefault() instead.")]
         public T FirstOrDefault<T>(IQueryable<T> queryable)
         {
             return queryable.FirstOrDefault();
