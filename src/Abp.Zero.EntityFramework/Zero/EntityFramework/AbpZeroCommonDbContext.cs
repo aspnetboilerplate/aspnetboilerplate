@@ -15,6 +15,7 @@ using Abp.Notifications;
 using Abp.Organizations;
 using System.Threading;
 using System.Threading.Tasks;
+using Abp.Webhooks;
 
 namespace Abp.Zero.EntityFramework
 {
@@ -140,6 +141,21 @@ namespace Abp.Zero.EntityFramework
         public IEntityHistoryHelper EntityHistoryHelper { get; set; }
 
         /// <summary>
+        /// Webhook information
+        /// </summary>
+        public virtual IDbSet<WebhookEvent> WebhookEvents { get; set; }
+
+        /// <summary>
+        /// Web subscriptions
+        /// </summary>
+        public virtual IDbSet<WebhookSubscriptionInfo> WebhookSubscriptions { get; set; }
+
+        /// <summary>
+        /// Webhook work items
+        /// </summary>
+        public virtual IDbSet<WebhookSendAttempt> WebhookSendAttempts { get; set; }
+
+        /// <summary>
         /// Default constructor.
         /// Do not directly instantiate this class. Instead, use dependency injection!
         /// </summary>
@@ -256,7 +272,7 @@ namespace Abp.Zero.EntityFramework
                 .HasForeignKey(e => e.EntityChangeSetId);
 
             #region EntityChangeSet.IX_TenantId_UserId
-            
+
             modelBuilder.Entity<EntityChangeSet>()
                 .Property(e => e.TenantId)
                 .CreateIndex("IX_TenantId_UserId", 1);
