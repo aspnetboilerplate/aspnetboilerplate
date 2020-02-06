@@ -171,7 +171,7 @@ namespace Abp.Webhooks
 
         private async Task CheckIfPermissionsGrantedAsync(WebhookSubscription webhookSubscription)
         {
-            if (webhookSubscription.Webhooks == null || webhookSubscription.Webhooks.Count == 0)
+            if (webhookSubscription.Webhooks.IsNullOrEmpty())
             {
                 return;
             }

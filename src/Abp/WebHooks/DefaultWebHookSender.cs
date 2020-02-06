@@ -78,7 +78,7 @@ namespace Abp.Webhooks
             }
             catch (Exception e)
             {
-                Logger.Error("An error occured while sending a webhook", e);
+                Logger.Error("An error occured while sending a webhook request", e);
             }
             finally
             {
@@ -139,7 +139,7 @@ namespace Abp.Webhooks
             }
             catch (Exception e)
             {
-                Logger.Error("An error occured while sending a webhook", e);
+                Logger.Error("An error occured while sending a webhook request", e);
             }
             finally
             {
