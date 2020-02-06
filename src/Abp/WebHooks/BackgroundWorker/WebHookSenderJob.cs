@@ -34,7 +34,7 @@ namespace Abp.Webhooks.BackgroundWorker
                 }
                 catch (Exception e)
                 {
-                    Logger.Warn("An error occured while sending webhook with try ones.", e);
+                    Logger.Warn("An error occured while sending webhook with try once.", e);
                     // ignored
                 }
             }
