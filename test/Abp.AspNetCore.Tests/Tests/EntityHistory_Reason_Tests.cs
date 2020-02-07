@@ -1,5 +1,5 @@
 ﻿using System.Threading.Tasks;
-using Abp.AspNetCore.EntityHistory;
+using Abp.AspNetCore.Http.EntityHistory;
 using Abp.Dependency;
 using Abp.EntityHistory;
 using Shouldly;

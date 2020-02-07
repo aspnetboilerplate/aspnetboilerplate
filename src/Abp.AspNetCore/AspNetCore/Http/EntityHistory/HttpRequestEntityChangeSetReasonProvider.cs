@@ -3,10 +3,9 @@ using Abp.EntityHistory;
 using Abp.Runtime;
 using JetBrains.Annotations;
 using Microsoft.AspNetCore.Http;
-using System.Text;
 using Microsoft.AspNetCore.Http.Extensions;
 
-namespace Abp.AspNetCore.EntityHistory
+namespace Abp.AspNetCore.Http.EntityHistory
 {
     /// <summary>
     /// Implements <see cref="IEntityChangeSetReasonProvider"/> to get reason from HTTP request.
@@ -19,8 +18,6 @@ namespace Abp.AspNetCore.EntityHistory
             : HttpContextAccessor.HttpContext?.Request.GetDisplayUrl();
 
         protected IHttpContextAccessor HttpContextAccessor { get; }
-
-        private const string SchemeDelimiter = "://";
 
         public HttpRequestEntityChangeSetReasonProvider(
             IHttpContextAccessor httpContextAccessor,

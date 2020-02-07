@@ -2,9 +2,8 @@
 using Abp.Auditing;
 using Castle.Core.Logging;
 using Microsoft.AspNetCore.Http;
-using Abp.Extensions;
 
-namespace Abp.AspNetCore.Mvc.Auditing
+namespace Abp.AspNetCore.Http.Auditing
 {
     public class HttpContextClientInfoProvider : IClientInfoProvider
     {
@@ -24,7 +23,6 @@ namespace Abp.AspNetCore.Mvc.Auditing
         public HttpContextClientInfoProvider(IHttpContextAccessor httpContextAccessor)
         {
             _httpContextAccessor = httpContextAccessor;
-
             Logger = NullLogger.Instance;
         }
 
