@@ -10,6 +10,7 @@ using Abp.Linq.Expressions;
 using Abp.Runtime.Session;
 using JetBrains.Annotations;
 using Microsoft.EntityFrameworkCore;
+using Z.EntityFramework.Extensions;
 using Z.EntityFramework.Plus;
 
 namespace Abp.EntityFrameworkCore.EFPlus
@@ -26,8 +27,12 @@ namespace Abp.EntityFrameworkCore.EFPlus
         /// <typeparam name="TPrimaryKey">Primary key type</typeparam>
         /// <param name="repository">Repository</param>
         /// <param name="predicate">Predicate to filter entities</param>
+        /// <param name="batchDeleteBuilder">The batch delete builder to change default configuration.</param>
         /// <returns></returns>
-        public static async Task<int> BatchDeleteAsync<TEntity, TPrimaryKey>([NotNull] this IRepository<TEntity, TPrimaryKey> repository, [NotNull] Expression<Func<TEntity, bool>> predicate)
+        public static async Task<int> BatchDeleteAsync<TEntity, TPrimaryKey>(
+            [NotNull] this IRepository<TEntity, TPrimaryKey> repository, 
+            [NotNull] Expression<Func<TEntity, bool>> predicate, 
+            Action<BatchDelete> batchDeleteBuilder = null)
             where TEntity : Entity<TPrimaryKey>
         {
             Check.NotNull(repository, nameof(repository));
@@ -40,7 +45,7 @@ namespace Abp.EntityFrameworkCore.EFPlus
 
             query = query.Where(filterExpression);
 
-            return await query.DeleteAsync();
+            return await query.DeleteAsync(batchDeleteBuilder);
         }
 
         /// <summary>
@@ -49,11 +54,15 @@ namespace Abp.EntityFrameworkCore.EFPlus
         /// <typeparam name="TEntity">Entity type</typeparam>
         /// <param name="repository">Repository</param>
         /// <param name="predicate">Predicate to filter entities</param>
+        /// <param name="batchDeleteBuilder">The batch delete builder to change default configuration.</param>
         /// <returns></returns>
-        public static async Task<int> BatchDeleteAsync<TEntity>([NotNull] this IRepository<TEntity> repository, [NotNull]Expression<Func<TEntity, bool>> predicate)
+        public static async Task<int> BatchDeleteAsync<TEntity>(
+            [NotNull] this IRepository<TEntity> repository, 
+            [NotNull]Expression<Func<TEntity, bool>> predicate, 
+            Action<BatchDelete> batchDeleteBuilder = null)
             where TEntity : Entity<int>
         {
-            return await repository.BatchDeleteAsync<TEntity, int>(predicate);
+            return await repository.BatchDeleteAsync<TEntity, int>(predicate, batchDeleteBuilder);
         }
 
         /// <summary>
@@ -64,8 +73,13 @@ namespace Abp.EntityFrameworkCore.EFPlus
         /// <param name="repository">Repository</param>
         /// /// <param name="updateExpression">Update expression</param>
         /// <param name="predicate">Predicate to filter entities</param>
+        /// <param name="batchUpdateBuilder">The batch delete builder to change default configuration.</param>
         /// <returns></returns>
-        public static async Task<int> BatchUpdateAsync<TEntity, TPrimaryKey>([NotNull]this IRepository<TEntity, TPrimaryKey> repository, [NotNull]Expression<Func<TEntity, TEntity>> updateExpression, [NotNull]Expression<Func<TEntity, bool>> predicate)
+        public static async Task<int> BatchUpdateAsync<TEntity, TPrimaryKey>(
+            [NotNull]this IRepository<TEntity, TPrimaryKey> repository, 
+            [NotNull]Expression<Func<TEntity, TEntity>> updateExpression, 
+            [NotNull]Expression<Func<TEntity, bool>> predicate, 
+            Action<BatchUpdate> batchUpdateBuilder = null)
             where TEntity : Entity<TPrimaryKey>
         {
             Check.NotNull(repository, nameof(repository));
@@ -79,7 +93,7 @@ namespace Abp.EntityFrameworkCore.EFPlus
 
             query = query.Where(filterExpression);
 
-            return await query.UpdateAsync(updateExpression);
+            return await query.UpdateAsync(updateExpression, batchUpdateBuilder);
         }
 
         /// <summary>
@@ -89,16 +103,19 @@ namespace Abp.EntityFrameworkCore.EFPlus
         /// <param name="repository">Repository</param>
         /// /// <param name="updateExpression">Update expression</param>
         /// <param name="predicate">Predicate to filter entities</param>
+        /// <param name="batchUpdateBuilder">The batch delete builder to change default configuration.</param>
         /// <returns></returns>
         public static async Task<int> BatchUpdateAsync<TEntity>(
             [NotNull]this IRepository<TEntity> repository, [NotNull]Expression<Func<TEntity, TEntity>> updateExpression,
-            [NotNull]Expression<Func<TEntity, bool>> predicate)
+            [NotNull]Expression<Func<TEntity, bool>> predicate,
+            Action<BatchUpdate> batchUpdateBuilder = null)
             where TEntity : Entity<int>
         {
-            return await repository.BatchUpdateAsync<TEntity, int>(updateExpression, predicate);
+            return await repository.BatchUpdateAsync<TEntity, int>(updateExpression, predicate, batchUpdateBuilder);
         }
 
-        private static Expression<Func<TEntity, bool>> GetFilterExpressionOrNull<TEntity, TPrimaryKey>(IIocResolver iocResolver) where TEntity : Entity<TPrimaryKey>
+        private static Expression<Func<TEntity, bool>> GetFilterExpressionOrNull<TEntity, TPrimaryKey>(IIocResolver iocResolver)
+            where TEntity : Entity<TPrimaryKey>
         {
             Expression<Func<TEntity, bool>> expression = null;
 

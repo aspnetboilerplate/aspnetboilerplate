@@ -309,8 +309,6 @@ determines it by default. ABP will:
     that information.
 -   Try to get it from a special **header** value, named
     "**Abp.Localization.CultureName**" by default.
--   Try to get it from a special **header** value, named
-    "**Abp.Localization.CultureName**" by default.
 -   Try to get it from a special **cookie** value, named
     "**Abp.Localization.CultureName**" by default.
 -   Try to get it from the **browser's default language**
@@ -329,6 +327,15 @@ ABP overrides **Application\_PostAuthenticateRequest** (in global.asax)
 to implement that logic. You can override **SetCurrentCulture** in the
 global.asax or replace **ICurrentCultureSetter** in order to override
 the logic described above.
+
+### Change the Current Language
+
+ABP has built-in `AbpLocalizationController`, its `ChangeCulture` method changes the current language by writing cookies.
+It also changes the user's default language setting if the current user exists.
+
+    <a href="~/AbpLocalization/ChangeCulture?cultureName=en-AU&returnUrl=Home"></a>
+
+You can also change the current language in other ways based on the principles explained above for determining the current language.
 
 ### Getting A Localized Text
 

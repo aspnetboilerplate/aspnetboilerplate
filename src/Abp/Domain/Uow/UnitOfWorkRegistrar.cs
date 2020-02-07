@@ -30,7 +30,7 @@ namespace Abp.Domain.Uow
         {
             if (IsUnitOfWorkType(implementationType) || AnyMethodHasUnitOfWork(implementationType))
             {
-                handler.ComponentModel.Interceptors.Add(new InterceptorReference(typeof(UnitOfWorkInterceptor)));
+                handler.ComponentModel.Interceptors.Add(new InterceptorReference(typeof(AbpAsyncDeterminationInterceptor<UnitOfWorkInterceptor>)));
             }
         }
 
@@ -45,7 +45,7 @@ namespace Abp.Domain.Uow
 
             if (uowOptions.IsConventionalUowClass(implementationType.AsType()))
             {
-                handler.ComponentModel.Interceptors.Add(new InterceptorReference(typeof(UnitOfWorkInterceptor)));
+                handler.ComponentModel.Interceptors.Add(new InterceptorReference(typeof(AbpAsyncDeterminationInterceptor<UnitOfWorkInterceptor>)));
             }
         }
 
