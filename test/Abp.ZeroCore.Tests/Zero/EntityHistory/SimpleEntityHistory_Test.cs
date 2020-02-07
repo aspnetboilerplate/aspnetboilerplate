@@ -274,6 +274,100 @@ namespace Abp.Zero.EntityHistory
         }
 
         [Fact]
+        public void Should_Write_History_For_Owned_Entity_Of_Audited_Entities_Create()
+        {
+            // Blog is the owner of BlogEx and has Audited attribute.
+            // Therefore, BlogEx should follow Blog and have entity history.
+
+            //Arrange
+            int blog2Id;
+            using (var uow = Resolve<IUnitOfWorkManager>().Begin())
+            {
+                // Owned entities are not available via DbContext -> DbSet,
+                var blog2 = _blogRepository.Single(b => b.Name == "test-blog-2");
+                blog2Id = blog2.Id;
+                blog2.More.ShouldBeNull();
+
+                blog2.More = new BlogEx() { BloggerName = "blogger-2" };
+                uow.Complete();
+            };
+
+            //Assert
+            WithUnitOfWork(() =>
+            {
+                // Owned entities are not available via DbContext -> DbSet,
+                var blog2 = _blogRepository.Single(b => b.Name == "test-blog-2");
+                blog2.More.ShouldNotBeNull();
+            });
+
+            Predicate<EntityChangeSet> predicate = s =>
+            {
+                s.EntityChanges.Count.ShouldBe(1);
+
+                var entityChange = s.EntityChanges.Single(ec => ec.EntityTypeFullName == typeof(BlogEx).FullName);
+                entityChange.ChangeType.ShouldBe(EntityChangeType.Created);
+                // The primary key of BlogEx is a shadow property,
+                // EF Core is keeping the values of PK of Blog and PK of BlogEx the same
+                // See https://docs.microsoft.com/en-us/ef/core/modeling/owned-entities#implicit-keys
+                entityChange.EntityId.ShouldBe(blog2Id.ToJsonString(false, false));
+                entityChange.PropertyChanges.Count.ShouldBe(1);
+
+                var propertyChange = entityChange.PropertyChanges.Single(pc => pc.PropertyName == nameof(BlogEx.BloggerName));
+                propertyChange.OriginalValue.ShouldBeNull();
+                propertyChange.NewValue.ShouldBe("blogger-2".ToJsonString(false, false));
+                propertyChange.PropertyTypeFullName.ShouldBe(typeof(BlogEx).GetProperty(nameof(BlogEx.BloggerName)).PropertyType.FullName);
+
+                return true;
+            };
+
+            _entityHistoryStore.Received().Save(Arg.Is<EntityChangeSet>(s => predicate(s)));
+        }
+
+        [Fact]
+        public void Should_Write_History_For_Owned_Entity_Of_Audited_Entities_Update()
+        {
+            // Blog is the owner of BlogEx and has Audited attribute.
+            // Therefore, BlogEx should follow Blog and have entity history.
+
+            //Arrange
+            int blog1Id;
+            using (var uow = Resolve<IUnitOfWorkManager>().Begin())
+            {
+                // Owned entities are not available via DbContext -> DbSet,
+                var blog1 = _blogRepository.Single(b => b.Name == "test-blog-1");
+                blog1Id = blog1.Id;
+                blog1.More.ShouldNotBeNull();
+
+                blog1.More.BloggerName = "blogger-1-updated";
+                uow.Complete();
+            };
+
+            //Assert
+            Predicate<EntityChangeSet> predicate = s =>
+            {
+                s.EntityChanges.Count.ShouldBe(1);
+
+                var entityChange = s.EntityChanges.Single(ec => ec.EntityTypeFullName == typeof(BlogEx).FullName);
+                entityChange.ChangeType.ShouldBe(EntityChangeType.Updated);
+                // The primary key of BlogEx is a shadow property,
+                // EF Core is keeping the values of PK of Blog and PK of BlogEx the same
+                // See https://docs.microsoft.com/en-us/ef/core/modeling/owned-entities#implicit-keys
+                entityChange.EntityId.ShouldBe(blog1Id.ToJsonString(false, false));
+                entityChange.PropertyChanges.Count.ShouldBe(1);
+
+                var propertyChange = entityChange.PropertyChanges.Single(pc => pc.PropertyName == nameof(BlogEx.BloggerName));
+                propertyChange.OriginalValue.ShouldBe("blogger-1".ToJsonString(false, false));
+                propertyChange.NewValue.ShouldBe("blogger-1-updated".ToJsonString(false, false));
+                propertyChange.PropertyTypeFullName.ShouldBe(typeof(BlogEx).GetProperty(nameof(BlogEx.BloggerName)).PropertyType.FullName);
+
+                return true;
+            };
+
+            _entityHistoryStore.Received().Save(Arg.Is<EntityChangeSet>(s => predicate(s)));
+        }
+
+
+        [Fact]
         public void Should_Write_History_For_Owned_Entities_Of_Audited_Entities_Create()
         {
             // Blog is the owner of BlogPromotion and has Audited attribute.
