@@ -566,6 +566,7 @@ namespace Abp.Zero.EntityHistory
         [Fact]
         public void Should_Not_Write_History_For_Audited_Entity_By_Default()
         {
+            //Arrange
             UsingDbContext((context) =>
             {
                 context.Countries.Add(new Country { CountryCode = "My Country" });
@@ -579,8 +580,9 @@ namespace Abp.Zero.EntityHistory
         [Fact]
         public void Should_Not_Write_History_For_Not_Audited_Entities_Shadow_Property()
         {
-            // PermissionSetting has Dscriminator Column (Shadow Property) for RolePermissionSetting
+            // PermissionSetting has Discriminator column (shadow property) for RolePermissionSetting
 
+            //Arrange
             UsingDbContext((context) =>
             {
                 var role = context.Roles.FirstOrDefault();
@@ -594,9 +596,9 @@ namespace Abp.Zero.EntityHistory
                 context.SaveChanges();
             });
 
+            //Assert
             _entityHistoryStore.DidNotReceive().Save(Arg.Any<EntityChangeSet>());
         }
-
 
         #endregion
 
