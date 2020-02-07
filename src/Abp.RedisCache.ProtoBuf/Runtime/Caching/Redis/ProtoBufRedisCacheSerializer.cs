@@ -44,7 +44,7 @@ namespace Abp.Runtime.Caching.Redis
         /// <param name="type">Type of the object.</param>
         /// <returns>Returns a string representing the object instance that can be placed into the Redis cache.</returns>
         /// <seealso cref="IRedisCacheSerializer.Deserialize" />
-        public override string Serialize(object value, Type type)
+        public override RedisValue Serialize(object value, Type type)
         {
             if (!type.GetTypeInfo().IsDefined(typeof(ProtoContractAttribute), false))
             {
