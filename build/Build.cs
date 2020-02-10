@@ -22,12 +22,12 @@ using static Nuke.Common.Tools.NuGet.NuGetTasks;
 [MSBuildVerbosityMapping]
 [AzurePipelines(
     AzurePipelinesImage.WindowsLatest,
-    InvokedTargets = new[] {nameof(Test), nameof(Pack)},
+    InvokedTargets = new[] {nameof(Test)},
     ExcludedTargets = new[] {nameof(Clean)},
     NonEntryTargets = new[] {nameof(Restore), nameof(Compile)})]
 [AppVeyor(
     AppVeyorImage.VisualStudioLatest,
-    InvokedTargets = new[] {nameof(Test), nameof(Pack)},
+    InvokedTargets = new[] {nameof(Test)},
     AutoGenerate = false)]
 class Build : NukeBuild
 {
