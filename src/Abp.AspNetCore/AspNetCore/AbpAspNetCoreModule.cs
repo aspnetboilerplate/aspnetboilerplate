@@ -1,6 +1,5 @@
 ﻿using System.Linq;
 using Abp.AspNetCore.Configuration;
-using Abp.AspNetCore.Http.Auditing;
 using Abp.AspNetCore.MultiTenancy;
 using Abp.AspNetCore.Mvc.Auditing;
 using Abp.AspNetCore.Runtime.Session;

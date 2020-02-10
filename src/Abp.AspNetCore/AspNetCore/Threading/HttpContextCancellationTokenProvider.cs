@@ -1,9 +1,9 @@
-﻿using System.Threading;
-using Abp.Dependency;
+﻿using Abp.Dependency;
 using Abp.Threading;
 using Microsoft.AspNetCore.Http;
+using System.Threading;
 
-namespace Abp.AspNetCore.Http.Threading
+namespace Abp.AspNetCore.Threading
 {
     public class HttpContextCancellationTokenProvider : ICancellationTokenProvider, ITransientDependency
     {
