@@ -114,16 +114,14 @@ namespace Abp.Runtime.Caching
                     var fetched = new List<KeyValuePair<TKey, TValue>>();
                     for (var i = 0; i < items.Length; i++)
                     {
-                        TKey key = keys[i];
-                        TValue value = items[i];
-                        if (value == null)
+                        if (items[i] == null)
                         {
-                            value = factory(key);
-                        }
-
-                        if (value != null)
-                        {
-                            fetched.Add(new KeyValuePair<TKey, TValue>(key, value));
+                            var key = keys[i];
+                            items[i] = factory(key);
+                            if (items[i] != null)
+                            {
+                                fetched.Add(new KeyValuePair<TKey, TValue>(key, items[i]));
+                            }
                         }
                     }
 
@@ -228,16 +226,14 @@ namespace Abp.Runtime.Caching
                     var fetched = new List<KeyValuePair<TKey, TValue>>();
                     for (var i = 0; i < items.Length; i++)
                     {
-                        TKey key = keys[i];
-                        TValue value = items[i];
-                        if (value == null)
+                        if (items[i] == null)
                         {
-                            value = await factory(key);
-                        }
-
-                        if (value != null)
-                        {
-                            fetched.Add(new KeyValuePair<TKey, TValue>(key, value));
+                            var key = keys[i];
+                            items[i] = await factory(key);
+                            if (items[i] != null)
+                            {
+                                fetched.Add(new KeyValuePair<TKey, TValue>(key, items[i]));
+                            }
                         }
                     }
 
