@@ -73,6 +73,7 @@ namespace Abp.EntityFramework.Repositories
         {
             _dbContextProvider = dbContextProvider;
         }
+
         public override IQueryable<TEntity> GetAll()
         {
             return Table;
