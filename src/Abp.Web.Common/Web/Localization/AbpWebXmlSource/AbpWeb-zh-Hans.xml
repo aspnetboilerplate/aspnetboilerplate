@@ -1,0 +1,20 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<localizationDictionary culture="zh-Hans">
+  <texts>
+    <text name="InternalServerError" value="对不起,在处理您的请求期间,产生了一个服务器内部错误!" />
+    <text name="ValidationError" value="您的请求无效!" />
+    <text name="AreYouSure" value="你确定吗?" />
+    <text name="Cancel" value="取消" />
+    <text name="Yes" value="确定" />
+    <text name="ValidationNarrativeTitle" value="在验证过程中发现以下错误." />
+    <text name="DefaultError" value="发生错误!" />
+    <text name="DefaultErrorDetail" value="服务器未发送错误的详细信息." />
+    <text name="DefaultError401" value="未通过身份验证!" />
+    <text name="DefaultErrorDetail401" value="你应该执行身份认证(登陆)后再执行此操作." />
+    <text name="DefaultError403" value="你没有权限!" />
+    <text name="DefaultErrorDetail403" value="你不能执行此操作." />
+    <text name="DefaultError404" value="未找到资源!" />
+    <text name="DefaultErrorDetail404" value="未在服务中找到请求的资源." />
+    <text name="EntityNotFound" value="实体 {0} 不存在,id = {1}!" />
+  </texts>
+</localizationDictionary>

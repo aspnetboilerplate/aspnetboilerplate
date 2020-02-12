@@ -3,7 +3,7 @@
   <Import Project="..\..\common.props" />
   
   <PropertyGroup>
-    <TargetFramework>net461</TargetFramework>
+    <TargetFramework>netstandard2.0</TargetFramework>
     <GenerateDocumentationFile>true</GenerateDocumentationFile>
     <AssemblyName>Abp.NHibernate</AssemblyName>
     <PackageId>Abp.NHibernate</PackageId>
@@ -20,8 +20,8 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <None Include="bin\Release\net461\Abp.NHibernate.pdb">
-      <PackagePath>lib/net461/</PackagePath>
+    <None Include="bin\Release\netstandard2.0\Abp.NHibernate.pdb">
+      <PackagePath>lib/netstandard2.0/</PackagePath>
       <Pack>true</Pack>
     </None>
   </ItemGroup>
@@ -31,8 +31,8 @@
   </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Include="FluentNHibernate" Version="2.0.3" />
-    <PackageReference Include="NHibernate" Version="5.0.3" />
+    <PackageReference Include="FluentNHibernate" Version="2.1.2" />
+    <PackageReference Include="NHibernate" Version="5.1.5" />
   </ItemGroup>
 
   <ItemGroup Condition=" '$(TargetFramework)' == 'net461' ">
@@ -42,6 +42,10 @@
 
   <ItemGroup>
     <Reference Include="System.Transactions" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Update="SourceLink.Create.CommandLine" Version="2.8.3" />
   </ItemGroup>
 
 </Project>

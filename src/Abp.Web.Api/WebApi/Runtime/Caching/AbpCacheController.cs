@@ -33,7 +33,7 @@ namespace Abp.WebApi.Runtime.Caching
                 throw new UserFriendlyException("Caches can not be null or empty!");
             }
 
-            await CheckPassword(model.Password);
+            await CheckPasswordAsync(model.Password);
 
             var caches = _cacheManager.GetAllCaches().Where(c => model.Caches.Contains(c.Name));
             foreach (var cache in caches)
@@ -53,7 +53,7 @@ namespace Abp.WebApi.Runtime.Caching
                 throw new UserFriendlyException("Password can not be null or empty!");
             }
 
-            await CheckPassword(model.Password);
+            await CheckPasswordAsync(model.Password);
 
             var caches = _cacheManager.GetAllCaches();
             foreach (var cache in caches)
@@ -64,9 +64,18 @@ namespace Abp.WebApi.Runtime.Caching
             return new AjaxResponse();
         }
 
-        private async Task CheckPassword(string password)
+        private async Task CheckPasswordAsync(string password)
         {
             var actualPassword = await SettingManager.GetSettingValueAsync(ClearCacheSettingNames.Password);
+            if (actualPassword != password)
+            {
+                throw new UserFriendlyException("Password is not correct!");
+            }
+        }
+
+        private void CheckPassword(string password)
+        {
+            var actualPassword = SettingManager.GetSettingValue(ClearCacheSettingNames.Password);
             if (actualPassword != password)
             {
                 throw new UserFriendlyException("Password is not correct!");

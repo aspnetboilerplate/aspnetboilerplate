@@ -21,13 +21,16 @@ using Abp.Modules;
 using Abp.MultiTenancy;
 using Abp.Net.Mail;
 using Abp.Notifications;
+using Abp.RealTime;
 using Abp.Reflection.Extensions;
 using Abp.Runtime;
 using Abp.Runtime.Caching;
 using Abp.Runtime.Remoting;
+using Abp.Runtime.Validation.Interception;
 using Abp.Threading;
 using Abp.Threading.BackgroundWorkers;
 using Abp.Timing;
+using Abp.Webhooks;
 using Castle.MicroKernel.Registration;
 
 namespace Abp
@@ -51,6 +54,8 @@ namespace Abp
             AddUnitOfWorkFilters();
             ConfigureCaches();
             AddIgnoredTypes();
+            AddMethodParameterValidators();
+            AddDefaultNotificationDistributor();
         }
 
         public override void Initialize()
@@ -62,11 +67,27 @@ namespace Abp
 
             IocManager.IocContainer.Install(new EventBusInstaller(IocManager));
 
+            IocManager.Register(typeof(IOnlineClientManager<>), typeof(OnlineClientManager<>), DependencyLifeStyle.Singleton);
+            IocManager.Register(typeof(IOnlineClientStore<>), typeof(InMemoryOnlineClientStore<>), DependencyLifeStyle.Singleton);
+
+            IocManager.Register(typeof(EventTriggerAsyncBackgroundJob<>), DependencyLifeStyle.Transient);
+
             IocManager.RegisterAssemblyByConvention(typeof(AbpKernelModule).GetAssembly(),
                 new ConventionalRegistrationConfig
                 {
                     InstallInstallers = false
                 });
+
+            RegisterInterceptors();
+        }
+
+        private void RegisterInterceptors()
+        {
+            IocManager.Register(typeof(AbpAsyncDeterminationInterceptor<UnitOfWorkInterceptor>), DependencyLifeStyle.Transient);
+            IocManager.Register(typeof(AbpAsyncDeterminationInterceptor<AuditingInterceptor>), DependencyLifeStyle.Transient);
+            IocManager.Register(typeof(AbpAsyncDeterminationInterceptor<AuthorizationInterceptor>), DependencyLifeStyle.Transient);
+            IocManager.Register(typeof(AbpAsyncDeterminationInterceptor<ValidationInterceptor>), DependencyLifeStyle.Transient);
+            IocManager.Register(typeof(AbpAsyncDeterminationInterceptor<EntityHistoryInterceptor>), DependencyLifeStyle.Transient);
         }
 
         public override void PostInitialize()
@@ -79,6 +100,7 @@ namespace Abp
             IocManager.Resolve<LocalizationManager>().Initialize();
             IocManager.Resolve<NotificationDefinitionManager>().Initialize();
             IocManager.Resolve<NavigationManager>().Initialize();
+            IocManager.Resolve<WebhookDefinitionManager>().Initialize();
 
             if (Configuration.BackgroundJobs.IsJobExecutionEnabled)
             {
@@ -168,6 +190,18 @@ namespace Abp
             {
                 Configuration.Validation.IgnoredTypes.AddIfNotContains(ignoredType);
             }
+        }
+
+        private void AddMethodParameterValidators()
+        {
+            Configuration.Validation.Validators.Add<DataAnnotationsValidator>();
+            Configuration.Validation.Validators.Add<ValidatableObjectValidator>();
+            Configuration.Validation.Validators.Add<CustomValidator>();
+        }
+
+        private void AddDefaultNotificationDistributor()
+        {
+            Configuration.Notifications.Distributers.Add<DefaultNotificationDistributer>();
         }
 
         private void RegisterMissingComponents()

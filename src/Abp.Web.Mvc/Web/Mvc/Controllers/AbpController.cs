@@ -21,6 +21,7 @@ using Abp.Reflection;
 using Abp.Runtime.Session;
 using Abp.Runtime.Validation;
 using Abp.Web.Models;
+using Abp.Web.Mvc.Alerts;
 using Abp.Web.Mvc.Configuration;
 using Abp.Web.Mvc.Controllers.Results;
 using Abp.Web.Mvc.Extensions;
@@ -107,6 +108,11 @@ namespace Abp.Web.Mvc.Controllers
                 return _localizationSource;
             }
         }
+
+        public IAlertManager AlertManager { get; set; }
+
+        public AlertList Alerts => AlertManager.Alerts;
+
         private ILocalizationSource _localizationSource;
 
         /// <summary>
@@ -368,6 +374,7 @@ namespace Abp.Web.Mvc.Controllers
             if (_wrapResultAttribute == null || !_wrapResultAttribute.WrapOnError)
             {
                 base.OnException(context);
+                context.HttpContext.Response.StatusCode = GetStatusCodeForException(context, _wrapResultAttribute.WrapOnError);
                 return;
             }
 
@@ -376,7 +383,7 @@ namespace Abp.Web.Mvc.Controllers
 
             //Return an error response to the client.
             context.HttpContext.Response.Clear();
-            context.HttpContext.Response.StatusCode = GetStatusCodeForException(context);
+            context.HttpContext.Response.StatusCode = GetStatusCodeForException(context, _wrapResultAttribute.WrapOnError);
 
             context.Result = MethodInfoHelper.IsJsonResult(_currentMethodInfo)
                 ? GenerateJsonExceptionResult(context)
@@ -391,7 +398,7 @@ namespace Abp.Web.Mvc.Controllers
             EventBus.Trigger(this, new AbpHandledExceptionData(context.Exception));
         }
 
-        protected virtual int GetStatusCodeForException(ExceptionContext context)
+        protected virtual int GetStatusCodeForException(ExceptionContext context, bool wrapOnError)
         {
             if (context.Exception is AbpAuthorizationException)
             {
@@ -410,7 +417,12 @@ namespace Abp.Web.Mvc.Controllers
                 return (int)HttpStatusCode.NotFound;
             }
 
-            return (int)HttpStatusCode.InternalServerError;
+            if (wrapOnError)
+            {
+                return (int)HttpStatusCode.InternalServerError;
+            }
+
+            return context.HttpContext.Response.StatusCode;
         }
 
         protected virtual ActionResult GenerateJsonExceptionResult(ExceptionContext context)

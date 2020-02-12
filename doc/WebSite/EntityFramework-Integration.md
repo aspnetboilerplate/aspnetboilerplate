@@ -3,12 +3,12 @@ integration with **EntityFramework**. This document will explain how to
 use EntityFramework with ASP.NET Boilerplate. It's assumed that you're
 already familar with EntityFramework at a basic level.
 
-### Nuget Package
+### NuGet Package
 
-The Nuget package to use EntityFramework as an O/RM in ASP.NET Boilerplate is
+The NuGet package to use EntityFramework as an O/RM in ASP.NET Boilerplate is
 [Abp.EntityFramework](http://www.nuget.org/packages/Abp.EntityFramework).
 You should add it to your application. It's better to implement
-EntityFramework in a seperated assembly (dll) in your application and
+EntityFramework in a separated assembly (dll) in your application and
 depend on that package from this assembly.
 
 ### DbContext
@@ -60,7 +60,7 @@ It's a regular DbContext class except with the following rules:
 -   It's derived from **AbpDbContext** instead of DbContext.
 -   It should have the constructors like the sample above (constructor
     parameter names should also be the same). Explanation:
-    -   The **Default** consturctor passes "Default" to the base bass as the
+    -   The **Default** constructor passes "Default" to the base class as the
         connection string. It expects a "Default" named connection
         string in the web.config/app.config file. This constructor is
         not used by ABP, but used by the EF command-line migration tool

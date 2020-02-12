@@ -9,7 +9,7 @@ and can easily change it later if needed.
 
 **[Log4Net](http://logging.apache.org/log4net/)** is one of the most
 popular logging libraries for .NET. The ASP.NET Boilerplate
-[templates](/Templates) come with Log4Net properly configured and ready to use. 
+[templates](/Templates) come with Log4Net properly configured and ready to use.
 There is just a single-line of code for the dependency to log4net (as
 seen in the [configuration](#config) section), so you can easily change it to
 your favourite library.
@@ -84,7 +84,7 @@ write logs, with no injection needed. Example:
     public class HomeController : SimpleTaskSystemControllerBase
     {
         public ActionResult Index()
-        { 
+        {
             Logger.Debug("A sample log message...");
             return View();
         }
@@ -137,10 +137,10 @@ below:
 Log4Net is highly configurable and is a strong logging library. You can write
 logs in different formats and to different targets (text file,
 database...). You can set minimum log levels (as set for NHibernate in
-this configuration). You can write diffent loggers to different log
-files. It can automatically backup and create new log file when it
-reaches to a specific size (Rolling file adapter with 10000 KB per file
-in this configuration) and so on... Read it's own confuguration
+this configuration). You can write different loggers to different log
+files. It can automatically backup and create a new log file when it
+reaches a specific size (RollingFileAppender with 10000 KB per file
+in this configuration) and so on... Read its own configuration
 [documentation](http://logging.apache.org/log4net/release/config-examples.html)
 for more info.
 
@@ -166,7 +166,7 @@ change to another library without changing your logging code.
 ABP uses the Castle Logging Facility for logging and it does not directly
 depend on log4net, as declared above. There is, however, a problem with
 Castle's Log4Net integration... It does not support the latest log4net. We
-created a nuget package,
+created a NuGet package,
 [**Abp.Castle.Log4Net**](http://nuget.org/packages/Abp.Castle.Log4Net),
 to solve this issue. After adding this package to our solution, all we
 have to do is to change the code in the application start method like this:
@@ -188,6 +188,19 @@ need** to use the
 and
 [Castle.Core-log4net](https://www.nuget.org/packages/Castle.Core-log4net/)
 packages.
+
+If you need to change your log4Net configuration file on runtime and want to make changes take effect immediately without restarting the application you can use as follows:
+
+    public class MvcApplication : AbpWebApplication
+    {
+        protected override void Application_Start(object sender, EventArgs e)
+        {
+            options.IocManager.IocContainer.AddFacility<LoggingFacility>(
+                f => f.LogUsing(new Log4NetLoggerFactory("log4net.config", reloadOnChange:true))
+            );
+            base.Application_Start(sender, e);
+        }
+    }
 
 ### Client-Side
 

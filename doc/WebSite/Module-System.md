@@ -3,14 +3,14 @@
 ASP.NET Boilerplate provides the infrastructure to build modules and
 compose them to create an application. A module can depend on another
 module. Generally, an assembly is considered a module. If you create
-an application with more than one assembly, it's recommened that you create a
+an application with more than one assembly, it's recommended that you create a
 module definition for each one.
 
 The module system is currently focused on the server-side rather than client-side.
 
 ### Module Definition
 
-A module is defined with a class that is derived from **AbpModule**. Say
+A module is defined with a class that is derived from **AbpModule** that is in the [ABP package](https://www.nuget.org/packages/Abp). Say
 that we're developing a Blog module that can be used in different
 applications. The simplest module definition can be as shown below:
 
@@ -22,7 +22,7 @@ applications. The simplest module definition can be as shown below:
         }
     }
 
-The Module definition class is responsible for registering it's classes via
+The Module definition class is responsible for registering its classes via
 [dependency injection](Dependency-Injection.md), if needed (it can be done
 conventionally as shown above). It can also configure the application
 and other modules, add new features to the application, and so on...
@@ -33,7 +33,7 @@ ASP.NET Boilerplate calls some specific methods of modules on
 application startup and shutdown. You can override these methods to
 perform some specific tasks.
 
-ASP.NET Boilerplate calls these methods **ordered by dependecies**. If
+ASP.NET Boilerplate calls these methods **ordered by dependencies**. If
 module A depends on module B, module B is initialized before module A.
 
 The exact order of startup methods: PreInitialize-B, PreInitialize-A,
@@ -96,7 +96,7 @@ the last module.
 While modules are investigated beginning from the startup module and go
 through the dependencies, ABP can also load modules **dynamically**.
 The **AbpBootstrapper** class defines the **PlugInSources** property which can
-be used to add sources to dynamically load plugin modules. A plugin
+be used to add sources to dynamically loaded [plugin modules](Plugin.md). A plugin
 source can be any class implementing the **IPlugInSource** interface.
 The **PlugInFolderSource** class implements it to get the plugin modules from
 assemblies located in a folder.
@@ -138,7 +138,7 @@ overriding the **Application\_Start** in the **global.asax** as shown below:
 ##### Controllers in PlugIns
 
 If your modules include MVC or Web API Controllers,
-ASP.NET can not investigate your controllers. To overcome this issue,
+ASP.NET cannot investigate your controllers. To overcome this issue,
 you can change the global.asax file like below:
 
     using System.Web;

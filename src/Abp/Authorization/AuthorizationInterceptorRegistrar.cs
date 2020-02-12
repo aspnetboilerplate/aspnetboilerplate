@@ -22,7 +22,7 @@ namespace Abp.Authorization
         {
             if (ShouldIntercept(handler.ComponentModel.Implementation))
             {
-                handler.ComponentModel.Interceptors.Add(new InterceptorReference(typeof(AuthorizationInterceptor))); 
+                handler.ComponentModel.Interceptors.Add(new InterceptorReference(typeof(AbpAsyncDeterminationInterceptor<AuthorizationInterceptor>))); 
             }
         }
 

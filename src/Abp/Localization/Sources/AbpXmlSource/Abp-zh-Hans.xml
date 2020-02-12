@@ -1,0 +1,24 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<localizationDictionary culture="zh-Hans">
+  <texts>
+    <text name="SmtpHost">SMTP主机</text>
+    <text name="SmtpPort">SMTP端口</text>
+    <text name="Username">用户名</text>
+    <text name="Password">密码</text>
+    <text name="DomainName">域名</text>
+    <text name="UseSSL">使用SSL</text>
+    <text name="UseDefaultCredentials">使用默认验证</text>
+    <text name="DefaultFromSenderEmailAddress">默认发件人邮箱地址</text>
+    <text name="DefaultFromSenderDisplayName">默认发件人名字</text>
+    <text name="DefaultLanguage">预设语言</text>
+    <text name="ReceiveNotifications">接收通知</text>
+    <text name="CurrentUserDidNotLoginToTheApplication">当前用户没有登录到系统！</text>
+    <text name="TimeZone">时区</text>
+    <text name="AllOfThesePermissionsMustBeGranted">您没有权限进行此操作,您需要以下权限：{0}</text>
+    <text name="AtLeastOneOfThesePermissionsMustBeGranted">您没有权限进行此操作,您至少需要下列权限的其中一项：{0}</text>
+    <text name="FeatureIsNotEnabled">功能未启用：{0}</text>
+    <text name="AllOfTheseFeaturesMustBeEnabled">未启用所需功能. 必须启用所有这些功能：{0}</text>
+    <text name="AtLeastOneOfTheseFeaturesMustBeEnabled">未启用所需功能. 必须至少启用其中一个功能：{0}</text>
+    <text name="MainMenu">主菜单</text>
+  </texts>
+</localizationDictionary>

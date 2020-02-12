@@ -1,23 +1,23 @@
 #### About Authorization
 
-It's strongly suggested to read [authorization
-documentation](/Pages/Documents/Authorization) before this document.
+We strongly recommend that you read the [authorization
+documentation](/Pages/Documents/Authorization) before this one.
 
 ### Introduction
 
-Module-zero implements **IPermissionChecker** interface of ASP.NET
-Boilerplate's authorization system. To define and check permissions, you
-can see [authorization document](/Pages/Documents/Authorization). In
-this document, we will see how to grant permissions for roles and users.
+Module Zero implements the **IPermissionChecker** interface of ASP.NET
+Boilerplate's authorization system. To define and check permissions,
+see the [authorization document](/Pages/Documents/Authorization). In
+this document, we will show you how to grant permissions for roles and users.
 
 ### Role Permissions
 
-If we **grant** a role for a permission, all users have this role are
+If we **grant** a permission to a role, all the users that have this role are
 authorized for the permission (unless explicitly prohibited for a
 specific user).
 
-We use **RoleManager** to change permissions of a Role. For example,
-**SetGrantedPermissionsAsync** can be used to change all permissions of
+We use the **RoleManager** to change the permissions of a Role. For example,
+**SetGrantedPermissionsAsync** can be used to change all the permissions of
 a role in one method call:
 
     public class RoleAppService : IRoleAppService
@@ -43,23 +43,23 @@ a role in one method call:
         }
     }
 
-In this example, we get a **RoleId** and list of granted permission
-names (input.GrantedPermissionNames is a List&lt;string&gt;) as input.
-We use **IPermissionManager** to find all **Permission** objects by
-name. Then we call **SetGrantedPermissionsAsync** method to update
-permissions of the role.
+In this example, we get a **RoleId** and a list of granted permission
+names (input.GrantedPermissionNames is a List&lt;string&gt;) as an input.
+We then use the **IPermissionManager** to find all the **Permission** objects by
+name. After that, we call the **SetGrantedPermissionsAsync** method to update
+the permissions of the role.
 
 There are also other methods like GrantPermissionAsync and
-ProhibitPermissionAsync to control permissions one by one.
+ProhibitPermissionAsync to control the permissions one-by-one.
 
 ### User Permissions
 
-While role-based permission management can be enough for most
-applications, we may need to control permissions per user. When we
-define a permission setting for a user, it overrides permission setting
-comes from roles of the user.
+While the role-based permission management can be enough for most
+applications, we may need to control the permissions per user. When we
+define a permission setting for a user, it overrides the permission setting
+defined for the roles of the user.
 
-As an example; Assume that we have an application service to prohibit a
+As an example, imagine that we have an application service method for prohibiting a
 permission for a user:
 
     public class UserAppService : IUserAppService
@@ -82,15 +82,15 @@ permission for a user:
         }
     }
 
-UserManager has many methods to control permissions for users. In this
-example, we're getting a UserId and PermissionName and using
+The UserManager has many methods to control the permissions of users. In this
+example, we're getting a UserId and PermissionName and using the
 UserManager's **ProhibitPermissionAsync** method to prohibit a
 permission for a user.
 
-When we **prohibit** a permission for a user, he/she **can not** be
+When we **prohibit** a permission for a user, he/she **cannot** be
 authorized for this permission even his/her roles are **granted** for
-the permission. We can say same principle for granting. When we
+the permission. We can use the same principle for granting permissions. When we
 **grant** a permission specifically for a user, this user **is granted**
-for the permission even roles of the user are not granted for the
-permission. We can use **ResetAllPermissionsAsync** for a user to delete
-all user-specific permission settings for the user.
+the permission even if the roles of the user are not granted the
+permission. We can use the **ResetAllPermissionsAsync** method to delete
+all user-specific permission settings for a user.

@@ -3,7 +3,7 @@ confirmation from the user.
 
 By default, the Message API is implemented using
 [sweetalert](http://t4t5.github.io/sweetalert/). To make
-sweetalert work, you should include its css & JavaScript files, then
+sweetalert work, you should include its CSS & JavaScript files, then
 include **abp.sweet-alert.js** to your page.
 
 ### Show message
@@ -32,9 +32,6 @@ Example:
             }
         }
     );
-
-The second argument (title) is optional here, so the callback function can be the
-second argument instead.
 
 A confirmation message is shown below:
 

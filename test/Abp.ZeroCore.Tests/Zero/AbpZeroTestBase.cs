@@ -10,6 +10,7 @@ using Abp.TestBase;
 using Abp.Zero.TestData;
 using Abp.ZeroCore.SampleApp.Core;
 using Abp.ZeroCore.SampleApp.Core.EntityHistory;
+using Abp.ZeroCore.SampleApp.Core.Shop;
 using Abp.ZeroCore.SampleApp.EntityFramework;
 using Microsoft.EntityFrameworkCore;
 
@@ -21,6 +22,7 @@ namespace Abp.Zero
         {
             SeedTestData();
             SeedTestDataForEntityHistory();
+            SeedTestDataForMultiLingualEntities();
             LoginAsDefaultTenantAdmin();
         }
 
@@ -47,9 +49,10 @@ namespace Abp.Zero
             UsingDbContext(
                 context =>
                 {
-                    var blog1 = new Blog("test-blog-1", "http://testblog1.myblogs.com");
+                    var blog1 = new Blog("test-blog-1", "http://testblog1.myblogs.com", "blogger-1");
+                    var blog2 = new Blog() { Name = "test-blog-2" };
 
-                    context.Blogs.Add(blog1);
+                    context.Blogs.AddRange(blog1, blog2);
                     context.SaveChanges();
 
                     var post1 = new Post { Blog = blog1, Title = "test-post-1-title", Body = "test-post-1-body" };
@@ -58,7 +61,87 @@ namespace Abp.Zero
                     var post4 = new Post { Blog = blog1, Title = "test-post-4-title", Body = "test-post-4-body", TenantId = 42 };
 
                     context.Posts.AddRange(post1, post2, post3, post4);
+
+                    var comment1 = new Comment { Post = post1, Content = "test-comment-1-content" };
+
+                    context.Comments.Add(comment1);
+
+                    var advertisement1 = new Advertisement { Banner = "test-advertisement-1" };
+                    var advertisement2 = new Advertisement { Banner = "test-advertisement-2" };
+
+                    context.Advertisements.AddRange(advertisement1, advertisement2);
                 });
+        }
+
+        private void SeedTestDataForMultiLingualEntities()
+        {
+            UsingDbContext(
+                context =>
+                {
+                    var product1 = new Product
+                    {
+                        Price = 10,
+                        Stock = 1000
+                    };
+
+                    var product2 = new Product
+                    {
+                        Price = 99,
+                        Stock = 1000
+                    };
+
+                    var product3 = new Product
+                    {
+                        Price = 15,
+                        Stock = 500
+                    };
+
+                    context.Products.Add(product1);
+                    context.Products.Add(product2);
+                    context.Products.Add(product3);
+                    context.SaveChanges();
+
+                    //Product1 translations (Watch)
+                    var product1_en = new ProductTranslation { CoreId = product1.Id, Language = "en", Name = "Watch" };
+                    var product1_tr = new ProductTranslation { CoreId = product1.Id, Language = "tr", Name = "Saat" };
+
+                    context.ProductTranslations.Add(product1_en);
+                    context.ProductTranslations.Add(product1_tr);
+
+                    //Product2 translations (Bike)
+                    var product2_en = new ProductTranslation { CoreId = product2.Id, Language = "en", Name = "Bike" };
+                    var product2_fr = new ProductTranslation { CoreId = product2.Id, Language = "fr", Name = "Bicyclette" };
+
+                    context.ProductTranslations.Add(product2_en);
+                    context.ProductTranslations.Add(product2_fr);
+
+                    //Product3 translations (Newspaper)
+                    var product3_it = new ProductTranslation { CoreId = product3.Id, Language = "it", Name = "Giornale" };
+
+                    context.ProductTranslations.Add(product3_it);
+
+                    context.SaveChanges();
+                });
+
+            UsingDbContext(context =>
+            {
+                var products = context.Products.ToList();
+                var order = new Order
+                {
+                    Price = 100,
+                    Products = products
+                };
+
+                context.Orders.Add(order);
+                context.SaveChanges();
+
+                var order_en = new OrderTranslation { CoreId = order.Id, Language = "en", Name = "Test" };
+                var order_fr = new OrderTranslation { CoreId = order.Id, Language = "fr", Name = "Tester" };
+
+                context.OrderTranslations.Add(order_en);
+                context.OrderTranslations.Add(order_fr);
+                context.SaveChanges();
+            });
         }
 
         protected IDisposable UsingTenantId(int? tenantId)

@@ -36,9 +36,26 @@ namespace Abp.Notifications
         Task<bool> IsAvailableAsync(string name, UserIdentifier user);
 
         /// <summary>
+        /// Checks if given notification (<see cref="name"/>) is available for given user.
+        /// </summary>
+        bool IsAvailable(string name, UserIdentifier user);
+
+        /// <summary>
         /// Gets all available notification definitions for given user.
         /// </summary>
         /// <param name="user">User.</param>
         Task<IReadOnlyList<NotificationDefinition>> GetAllAvailableAsync(UserIdentifier user);
+
+        /// <summary>
+        /// Gets all available notification definitions for given user.
+        /// </summary>
+        /// <param name="user">User.</param>
+        IReadOnlyList<NotificationDefinition> GetAllAvailable(UserIdentifier user);
+
+        /// <summary>
+        /// Remove notification with given name
+        /// </summary>
+        /// <param name="name"></param>
+        void Remove(string name);
     }
 }

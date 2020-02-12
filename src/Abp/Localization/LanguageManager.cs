@@ -22,6 +22,11 @@ namespace Abp.Localization
             return _languageProvider.GetLanguages();
         }
 
+        public IReadOnlyList<LanguageInfo> GetActiveLanguages()
+        {
+            return _languageProvider.GetActiveLanguages();
+        }
+
         private LanguageInfo GetCurrentLanguage()
         {
             var languages = _languageProvider.GetLanguages();

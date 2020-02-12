@@ -1,5 +1,6 @@
 ﻿using System.Reflection;
 using Abp.Modules;
+using Abp.Web.SignalR.Notifications;
 using Castle.MicroKernel.Registration;
 using Microsoft.AspNet.SignalR;
 using Newtonsoft.Json;
@@ -17,6 +18,8 @@ namespace Abp.Web.SignalR
         {
             GlobalHost.DependencyResolver = new WindsorDependencyResolver(IocManager.IocContainer);
             UseAbpSignalRContractResolver();
+
+            Configuration.Notifications.Notifiers.Add<SignalRRealTimeNotifier>();
         }
 
         /// <inheritdoc/>
@@ -32,10 +35,10 @@ namespace Abp.Web.SignalR
                 {
                     ContractResolver = new AbpSignalRContractResolver()
                 });
-            
+
             IocManager.IocContainer.Register(
-                Component.For<JsonSerializer>().UsingFactoryMethod(() => serializer)
-                );
+                Component.For<JsonSerializer>().Instance(serializer)
+            );
         }
     }
 }

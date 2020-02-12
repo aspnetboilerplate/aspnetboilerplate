@@ -33,11 +33,22 @@ namespace Abp.AspNetCore.Configuration
         /// Default: true.
         /// </summary>
         bool SetNoCacheForAjaxResponses { get; set; }
-        
+
+        /// <summary>
+        /// Default: false.
+        /// </summary>
+        bool UseMvcDateTimeFormatForAppServices { get; set; }
+
         /// <summary>
         /// Used to add route config for modules.
         /// </summary>
-        List<Action<IRouteBuilder>> RouteConfiguration { get; }
+        //[Obsolete("Use EndpointConfiguration instead !")]
+        //List<Action<IRouteBuilder>> RouteConfiguration { get; }
+
+        /// <summary>
+        /// Used to add route config for modules.
+        /// </summary>
+        List<Action<IEndpointRouteBuilder>> EndpointConfiguration { get; }
 
         AbpControllerAssemblySettingBuilder CreateControllersForAppServices(
             Assembly assembly,

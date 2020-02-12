@@ -28,7 +28,7 @@ package to your web project:
 You can then install any storage for Hangfire. The most common one is SQL
 Server (see the
 [**Hangfire.SqlServer**](https://www.nuget.org/packages/Hangfire.SqlServer)
-nuget package). After you have installed these nuget packages, you need to
+NuGet package). After you have installed these NuGet packages, you need to
 **configure** your project to use Hangfire.
 
 First, we change the Startup class to add Hangfire to dependency
@@ -82,7 +82,7 @@ documentation](http://docs.hangfire.io/en/latest/) for more information.
 
 ### ASP.NET MVC 5.x Integration
 
-The [**Abp.HangFire**](https://www.nuget.org/packages/Abp.HangFire) nuget
+The [**Abp.HangFire**](https://www.nuget.org/packages/Abp.HangFire) NuGet
 package is used for ASP.NET MVC 5.x projects:
 
     Install-Package Abp.HangFire
@@ -90,7 +90,7 @@ package is used for ASP.NET MVC 5.x projects:
 You can then install any storage for Hangfire. The most common one is SQL
 Server (see the
 [**Hangfire.SqlServer**](https://www.nuget.org/packages/Hangfire.SqlServer)
-nuget package). After you have installed these nuget packages, you can
+NuGet package). After you have installed these NuGet packages, you can
 **configure** your project to use Hangfire as shown below:
 
     [DependsOn(typeof (AbpHangfireModule))]
@@ -143,3 +143,9 @@ constructor:
 **Note**: UseHangfireDashboard should be called after the authentication
 middleware in your Startup class (probably as the last line). Otherwise,
 authorization will always fail.
+
+#### Limitations
+
+More than one background jobs in a single transaction isn't supported by Hangfire. Because, Hangfire does not participate the current transaction. It does not use the ambient transaction (TransactionScope).
+
+It works with default background job manager since it simply performs a db command and it belongs to the current transaction as expected.

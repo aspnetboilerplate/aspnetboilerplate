@@ -28,7 +28,15 @@
   </ItemGroup>
 
   <ItemGroup>
+    <PackageReference Include="NUglify" Version="1.5.13" />
+  </ItemGroup>
+
+  <ItemGroup>
     <ProjectReference Include="..\Abp\Abp.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Update="SourceLink.Create.CommandLine" Version="2.8.3" />
   </ItemGroup>
 
 </Project>

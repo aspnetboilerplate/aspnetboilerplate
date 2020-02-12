@@ -4,8 +4,6 @@ The [Abp.AspNetCore.SignalR](http://www.nuget.org/packages/Abp.AspNetCore.Signal
 package makes it easier to use **ASP.NET Core SignalR** in ASP.NET Boilerplate-based
 applications.
 
-> NOTE: This package is currently in preview. If you have a problem, please write to the Github issues: https://github.com/aspnetboilerplate/aspnetboilerplate/issues/new
-
 ### Installation
 
 #### Server-Side
@@ -24,8 +22,8 @@ NuGet package to your project (generally to your Web layer) and add a
 
 Then use the **AddSignalR** and **UseSignalR** methods in your Startup class:
 
-    using Abp.Web.SignalR.Hubs;
-
+    using Abp.AspNetCore.SignalR.Hubs;
+    
     namespace MyProject.Web.Startup
     {
         public class Startup
@@ -34,7 +32,7 @@ Then use the **AddSignalR** and **UseSignalR** methods in your Startup class:
             {
                 services.AddSignalR();
             }
-
+    
             public void Configure(IApplicationBuilder app)
             {
                 app.UseSignalR(routes =>
@@ -45,19 +43,30 @@ Then use the **AddSignalR** and **UseSignalR** methods in your Startup class:
         }
     }
 
+#### Client-Side (Angular)
+
+The **@aspnet/signalr** package should be added in package.json, and the signalr.min.js included under **scripts** in angular.json.
+
+The **abp.signalr-client.js** script should be included under **assets** in angular.json.
+
+SignalR cannot send authorization headers, so encryptedAuthToken is sent in the query string. The startup template includes SignalRAspNetCoreHelper. We should call it in ngOnInit in app.component.ts:
+
+    SignalRAspNetCoreHelper.initSignalR();
+
+That's all you have to do. SignalR is properly configured and integrated into your project.
+
 #### Client-Side (jQuery)
 
 The **abp.signalr-client.js** script should be included on the page. It's located
 in the
 **[Abp.Web.Resources](https://www.nuget.org/packages/Abp.Web.Resources)**
-package (It's already installed in the [startup templates](/Templates)). We
-should include it after the signalr-client.min.js:
+package (and already installed in the [startup templates](/Templates)). We
+should include it after the signalr.min.js:
 
-    <script src="~/lib/signalr-client/signalr-client.min.js"></script>
+    <script src="~/lib/signalr-client/signalr.min.js"></script>
     <script src="~/lib/abp-web-resources/Abp/Framework/scripts/libs/abp.signalr-client.js"></script>
 
-That's all you have to do. SignalR is properly configured and integrated in to your
-project.
+That's all you have to do. SignalR is properly configured and integrated into your project.
 
 ### Connection Establishment
 
@@ -70,6 +79,8 @@ connecting:
     <script>
         abp.signalr = abp.signalr || {};
         abp.signalr.autoConnect = false;
+        abp.signalr.reconnectTime = 5000;
+        abp.signalr.maxTries = 8;
     </script>
 
 In this case, you can call the **abp.signalr.connect()** function manually
@@ -77,7 +88,7 @@ whenever you need to connect to the server.
 
 ASP.NET Boilerplate also **automatically reconnects** to the server
 (from the client) when the client disconnects, if
-**abp.signalr.autoConnect** is true.
+**abp.signalr.autoConnect** is true. At most **abp.signalr.maxTries** times it tries to connect to the server. It starts to wait for **abp.signalr.reconnectTime** ms, then each time connection fails, it waits 2 times longer. (for example: 5000ms - 10000ms - 20000ms...)
 
 The **"abp.signalr.connected"** global event is triggered when the client
 connects to the server. You can register to this event to take actions
@@ -115,26 +126,26 @@ that we want to add a Hub to our application:
     public class MyChatHub : Hub, ITransientDependency
     {
         public IAbpSession AbpSession { get; set; }
-
+    
         public ILogger Logger { get; set; }
-
+    
         public MyChatHub()
         {
             AbpSession = NullAbpSession.Instance;
             Logger = NullLogger.Instance;
         }
-
+    
         public async Task SendMessage(string message)
         {
-            await Clients.All.InvokeAsync("getMessage", string.Format("User {0}: {1}", AbpSession.UserId, message));
+            await Clients.All.SendAsync("getMessage", string.Format("User {0}: {1}", AbpSession.UserId, message));
         }
-
+    
         public override async Task OnConnectedAsync()
         {
             await base.OnConnectedAsync();
             Logger.Debug("A client connected to MyChatHub: " + Context.ConnectionId);
         }
-
+    
         public override async Task OnDisconnectedAsync(Exception exception)
         {
             await base.OnDisconnectedAsync(exception);
@@ -144,7 +155,7 @@ that we want to add a Hub to our application:
 
 <!-- -->
 
-    routes.MapHub<MyChatHub>("/myChatHub");
+    routes.MapHub<MyChatHub>("/signalr-myChatHub"); // Prefix with '/signalr'
 
 We implemented the **ITransientDependency** interface to simply register our hub to the
 [dependency injection](/Pages/Documents/Dependency-Injection) system
@@ -152,6 +163,7 @@ We implemented the **ITransientDependency** interface to simply register our hub
 [property-injected](/Pages/Documents/Dependency-Injection#property-injection-pattern)
 the [session](/Pages/Documents/Abp-Session) and
 [logger](/Pages/Documents/Logging).
+Alternatively, we can inherit AbpHubBase.
 
 **SendMessage** is a method of our hub that can be used by clients. We
 call the **getMessage** function of **all** clients in this method. We can
@@ -163,16 +175,19 @@ Here is the **client-side** JavaScript code to send/receive messages using
 our hub.
 
     var chatHub = null;
-
-    abp.signalr.startConnection('/myChatHub', function (connection) {
+    
+    abp.signalr.startConnection(abp.appPath + 'signalr-myChatHub', function (connection) {
         chatHub = connection; // Save a reference to the hub
-
+    
         connection.on('getMessage', function (message) { // Register for incoming messages
             console.log('received message: ' + message);
         });
+    }).then(function (connection) {
+        abp.log.debug('Connected to myChatHub server!');
+        abp.event.trigger('myChatHub.connected');
     });
-
-    abp.event.on('abp.signalr.connected', function() { // Register for connect event
+    
+    abp.event.on('myChatHub.connected', function() { // Register for connect event
         chatHub.invoke('sendMessage', "Hi everybody, I'm connected to the chat!"); // Send a message to the server
     });
 

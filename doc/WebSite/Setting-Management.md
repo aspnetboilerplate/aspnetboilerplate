@@ -13,7 +13,7 @@ converting it to a string.
 
 The **ISettingStore** interface must be implemented in order to use the setting
 system. While you can implement it in your own way, it's fully
-implemented in the **module-zero** project. If it's not implemented,
+implemented in the **Module Zero** project. If it's not implemented,
 settings are read from the application's **configuration file** (web.config
 or app.config) but those settings cannot be changed. Scoping will also not
 work.
@@ -36,20 +36,20 @@ provider is shown below:
                             "SmtpServerAddress",
                             "127.0.0.1"
                             ),
-
+    
                         new SettingDefinition(
                             "PassiveUsersCanNotLogin",
                             "true",
                             scopes: SettingScopes.Application | SettingScopes.Tenant
                             ),
-
+    
                         new SettingDefinition(
                             "SiteColorPreference",
                             "red",
                             scopes: SettingScopes.User,
-                            isVisibleToClients: true
+                            clientVisibilityProvider: new VisibleSettingClientVisibilityProvider()
                             )
-
+    
                     };
         }
     }
@@ -70,8 +70,7 @@ constructor:
     setting's description later in the UI.
 -   **Group**: Can be used to group settings. This is just for the UI, and not
     used in setting management.
--   **IsVisibleToClients**: Set true to make a setting usable on the
-    client-side.
+-   **ClientVisibilityProvider**: Can be used to determine if a setting can be used on the client-side or not.
 -   **isInherited**: Used to set if this setting is inherited by tenant
     and users (See setting scope section).
 -   **customData**: Can be used to set custom data for this setting
@@ -117,7 +116,7 @@ the setting;
 -   If not, we get the application value if it's defined.
 -   If not, we get the **default value**.
 
-The default value can be **null** or an **empty** string. It's recommened that you
+The default value can be **null** or an **empty** string. It's recommended that you
 provide default values for settings where it's possible.
 
 #### Overriding Setting Definitions
@@ -133,6 +132,8 @@ and client.
 
 #### Server-side
 
+##### ISettingManager
+
 The **ISettingManager** is used to perform setting operations. We can inject
 and use it anywhere in the application. ISettingManager defines many
 methods to get a setting's value.
@@ -144,10 +145,9 @@ Setting scope section before). Examples:
 
     //Getting a boolean value (async call)
     var value1 = await SettingManager.GetSettingValueAsync<bool>("PassiveUsersCanNotLogin");
-
+    
     //Getting a string value (sync call)
     var value2 = SettingManager.GetSettingValue("SmtpServerAddress");
-                
 
 GetSettingValue has generic and async versions as shown above. There are
 also methods to get a specific tenant or user's setting value or list of
@@ -158,9 +158,21 @@ Since ISettingManager is widely used, some special **base classes**
 property named **SettingManager**. If we derive from these classes, there's no
 need to explicitly inject it.
 
+##### ISettingDefinitionManager
+
+Also `ISettingDefinitionManager` can be used to get setting definitions that are defined in `AppSettingProvider`. We can inject
+and use it anywhere in the application as well. You can get definition name, default value, display name and etc. by using `ISettingDefinitionManager`.
+
 #### Client-side
 
-If you set **IsVisibleToClients** as true while defining a setting, then
+**ClientVisibilityProvider** property of a setting definition determines the visibility of a setting for the client-side. There are four implementations of ISettingClientVisibilityProvider.
+
+* **VisibleSettingClientVisibilityProvider**: Makes a setting definition visible to the client-side.
+* **HiddenSettingClientVisibilityProvider**: Makes a setting definition hidden to the client-side.
+* **RequiresAuthenticationSettingClientVisibilityProvider**: Makes a setting definition visible to the client-side if a user is logged in.
+* **RequiresPermissionSettingClientVisibilityProvider**: Makes a setting definition visible to the client side if logged in user has a specific permission.
+
+If a setting is visible to client-side according to ClientVisibilityProvider of a setting definition , then
 you can get it's current value on the client-side using JavaScript.
 The **abp.setting** namespace defines the needed functions and objects. Example:
 

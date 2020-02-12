@@ -35,6 +35,7 @@ namespace Abp.Web.Models
             WrapOnError = wrapOnError;
 
             LogError = true;
+
         }
     }
 }

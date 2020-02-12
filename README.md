@@ -1,42 +1,46 @@
 ﻿# ASP.NET Boilerplate
 
-[![Build status](https://ci.appveyor.com/api/projects/status/tvad583r9lbimxh4?svg=true)](https://ci.appveyor.com/project/hikalkan/aspnetboilerplate)
-
+[![Build Status](http://ci.volosoft.com:5480/job/aspnet-boilerplate-nightly/badge/icon)](http://ci.volosoft.com:5480/blue/organizations/jenkins/aspnet-boilerplate-nightly/activity)
+[![NuGet](https://img.shields.io/nuget/v/Abp.svg?style=flat-square)](https://www.nuget.org/packages/Abp)
+[![NuGet Download](https://img.shields.io/nuget/dt/Abp.svg?style=flat-square)](https://www.nuget.org/packages/Abp)
+[![MyGet (with prereleases)](https://img.shields.io/myget/abp-nightly/vpre/Abp.svg?style=flat-square)](https://aspnetboilerplate.com/Pages/Documents/Nightly-Builds)
 ## What is ABP?
 
-ASP.NET Boilerplate is a general purpose **application framework** especially designed for new modern web applications. It uses already **familiar tools** and implements **best practices** arround them to provide you a **SOLID development experience**.
+ASP.NET Boilerplate is a general purpose **application framework** specially designed for new modern web applications. It uses already **familiar tools** and implements **best practices** around them to provide you a **SOLID development experience**.
+
+ASP.NET Boilerplate works with the latest **ASP.NET Core** & **EF Core** but also supports ASP.NET MVC 5.x & EF 6.x as well.
 
 ###### Modular Design
 
-Designed as <a href="https://aspnetboilerplate.com/Pages/Documents/Module-System" target="_blank">**modular**</a> and **extensible**. Provides infrastructure to build your own modules too.
+Designed to be <a href="https://aspnetboilerplate.com/Pages/Documents/Module-System" target="_blank">**modular**</a> and **extensible**, ABP provides the infrastructure to build your own modules, too.
 
-###### Multi Tenancy
+###### Multi-Tenancy
 
 **SaaS** applications made easy! Integrated <a href="https://aspnetboilerplate.com/Pages/Documents/Multi-Tenancy" target="_blank">multi-tenancy</a> from database to UI.
 
-###### Well Documented
+###### Well-Documented
 
-Compherensive <a href="https://aspnetboilerplate.com/Pages/Documents" target="_blank">**documentation**</a> and jump start tutorials.
+Comprehensive <a href="https://aspnetboilerplate.com/Pages/Documents" target="_blank">**documentation**</a> and quick start tutorials.
 
 ## How It Works
 
-Don't Repeat Yourself! ASP.NET Boilerplate automates common software development tasks by convention. You focus your business code.
+Don't Repeat Yourself! ASP.NET Boilerplate automates common software development tasks by convention. You focus on your business code!
 
 ![ASP.NET Boilerplate](doc/img/abp-concerns.png)
 
-See <a href="https://aspnetboilerplate.com/Pages/Documents/Introduction" target="_blank">introduction</a> document for details.
+See the <a href="https://aspnetboilerplate.com/Pages/Documents/Introduction" target="_blank">Introduction</a> document for more details.
 
 ## Layered Architecture
 
-ABP provides a layered architectural model based on **Domain Driven Design**. Provides a **SOLID** model for your application.
+ABP provides a layered architectural model based on **Domain Driven Design** and provides a **SOLID** model for your application.
 
 ![NLayer Architecture](doc/img/abp-nlayer-architecture.png)
 
-See <a href="https://aspnetboilerplate.com/Pages/Documents/NLayer-Architecture" target="_blank">NLayer Architecture</a> document for details.
+See the <a href="https://aspnetboilerplate.com/Pages/Documents/NLayer-Architecture" target="_blank">NLayer Architecture</a> document for more details.
 
 ## Nuget Packages
 
-ASP.NET Boilerplate is distributed as nuget packages.
+ASP.NET Boilerplate is distributed as NuGet packages.
 
 |Package|Status|
 |:------|:-----:|
@@ -72,9 +76,9 @@ ASP.NET Boilerplate is distributed as nuget packages.
 
 # Module Zero
 
-## What is 'module zero'?
+## What is 'Module Zero'?
 
-This is an <a href="https://aspnetboilerplate.com/" target="_blank">ASP.NET Boilerplate</a> module integrated to Microsoft <a href="https://docs.microsoft.com/en-us/aspnet/identity/overview/getting-started/introduction-to-aspnet-identity" target="_blank">ASP.NET Identity</a>.
+This is an <a href="https://aspnetboilerplate.com/" target="_blank">ASP.NET Boilerplate</a> module integrated with Microsoft <a href="https://docs.microsoft.com/en-us/aspnet/identity/overview/getting-started/introduction-to-aspnet-identity" target="_blank">ASP.NET Identity</a>.
 
 Implements abstract concepts of ASP.NET Boilerplate framework:
 
@@ -87,19 +91,19 @@ Implements abstract concepts of ASP.NET Boilerplate framework:
 
 Also adds common enterprise application features:
 
-* **<a href="https://aspnetboilerplate.com/Pages/Documents/Zero/User-Management" target="_blank">User</a>, <a href="https://aspnetboilerplate.com/Pages/Documents/Zero/Role-Management" target="_blank">Role</a> and <a href="https://aspnetboilerplate.com/Pages/Documents/Zero/Permission-Management" target="_blank">Permission</a>** management for applications require authentication and authorization.
+* **<a href="https://aspnetboilerplate.com/Pages/Documents/Zero/User-Management" target="_blank">User</a>, <a href="https://aspnetboilerplate.com/Pages/Documents/Zero/Role-Management" target="_blank">Role</a> and <a href="https://aspnetboilerplate.com/Pages/Documents/Zero/Permission-Management" target="_blank">Permission</a>** management for applications that require authentication and authorization.
 * **<a href="https://aspnetboilerplate.com/Pages/Documents/Zero/Tenant-Management" target="_blank">Tenant</a> and <a href="https://aspnetboilerplate.com/Pages/Documents/Zero/Edition-Management" target="_blank">Edition</a>** management for SaaS applications.
 * **<a href="https://aspnetboilerplate.com/Pages/Documents/Zero/Organization-Units" target="_blank">Organization Units</a>** management.
 * **<a href="https://aspnetboilerplate.com/Pages/Documents/Zero/Language-Management" target="_blank">Language and localization</a> text** management.
 * **<a href="https://aspnetboilerplate.com/Pages/Documents/Zero/Identity-Server" target="_blank">Identity Server 4</a>** integration.
 
-Module zero packages defines entities and implements base domain logic for these concepts.
+Module Zero packages define entities and implement base domain logic for these concepts.
 
-## Nuget Packages
+## NuGet Packages
 
 ### ASP.NET Core Identity Packages
 
-Packages integrated to <a href="https://docs.microsoft.com/en-us/aspnet/identity/overview/getting-started/introduction-to-aspnet-identity" target="_blank">ASP.NET Core Identity</a> and <a href="http://identityserver.io/" target="_blank">Identity Server 4</a> (supports .net standard).
+Packages integrated into <a href="https://docs.microsoft.com/en-us/aspnet/identity/overview/getting-started/introduction-to-aspnet-identity" target="_blank">ASP.NET Core Identity</a> and <a href="http://identityserver.io/" target="_blank">Identity Server 4</a> (supports .NET Standard).
 
 |Package|Status|
 |:------|:-----:|
@@ -110,7 +114,7 @@ Packages integrated to <a href="https://docs.microsoft.com/en-us/aspnet/identity
 
 ### ASP.NET Identity Packages
 
-Packages integrated to <a href="https://www.asp.net/identity" target="_blank">ASP.NET Identity</a> 2.x.
+Packages integrated into <a href="https://www.asp.net/identity" target="_blank">ASP.NET Identity</a> 2.x.
 
 |Package|Status|
 |:------|:-----:|
@@ -121,7 +125,7 @@ Packages integrated to <a href="https://www.asp.net/identity" target="_blank">AS
 
 ### Shared Packages
 
-Shared packages between Abp.ZeroCore.\* and Abp.Zero.\* packages.
+Shared packages between the Abp.ZeroCore.\* and Abp.Zero.\* packages.
 
 |Package|Status|
 |:------|:-----:|
@@ -130,15 +134,25 @@ Shared packages between Abp.ZeroCore.\* and Abp.Zero.\* packages.
 
 ## Startup Templates
 
-You can create your project from startup templates to easily start with module zero:
+You can create your project from startup templates to easily start with Module Zero:
 
 * <a href="https://aspnetboilerplate.com/Pages/Documents/Zero/Startup-Template-Angular" target="_blank">ASP.NET Core & Angular</a> based startup project.
 * <a href="https://aspnetboilerplate.com/Pages/Documents/Zero/Startup-Template-Core" target="_blank">ASP.NET Core MVC & jQuery</a> based startup project.
-* <a href="https://aspnetboilerplate.com/Pages/Documents/Zero/Startup-Template" target="_blank">ASP.NET Core MVC 5.x / Angularjs</a> based startup project.
+* <a href="https://aspnetboilerplate.com/Pages/Documents/Zero/Startup-Template" target="_blank">ASP.NET Core MVC 5.x / AngularJS</a> based startup project.
  
-A screenshot from ASP.NET Core based startup template:
+A screenshot of the ASP.NET Core based startup template:
 
 ![](doc/img/module-zero-core-template.png)
+
+### Docker Image
+
+You can directly run the startup template on your computer as a docker container:
+
+````
+docker run -p 9902:80 volosoft/abp-template
+````
+
+See https://hub.docker.com/r/volosoft/abp-template/ for more info.
 
 ## Links
 

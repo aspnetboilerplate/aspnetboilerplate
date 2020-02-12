@@ -1,6 +1,5 @@
 using System;
 using System.Collections.Generic;
-using System.Collections.ObjectModel;
 using System.ComponentModel.DataAnnotations;
 using Abp.Domain.Entities.Auditing;
 
@@ -12,6 +11,11 @@ namespace Abp.Authorization.Users
     public abstract class AbpUser<TUser> : AbpUserBase, IFullAudited<TUser>
         where TUser : AbpUser<TUser>
     {
+        /// <summary>
+        /// Maximum length of the <see cref="ConcurrencyStamp"/> property.
+        /// </summary>
+        public const int MaxConcurrencyStampLength = 128;
+
         /// <summary>
         /// User name.
         /// User name must be unique for it's tenant.
@@ -31,6 +35,7 @@ namespace Abp.Authorization.Users
         /// <summary>
         /// A random value that must change whenever a user is persisted to the store
         /// </summary>
+        [StringLength(MaxConcurrencyStampLength)]
         public virtual string ConcurrencyStamp { get; set; } = Guid.NewGuid().ToString();
 
         public virtual ICollection<UserToken> Tokens { get; set; }
@@ -45,7 +50,7 @@ namespace Abp.Authorization.Users
         {
         }
 
-        public void SetNormalizedNames()
+        public virtual void SetNormalizedNames()
         {
             NormalizedUserName = UserName.ToUpperInvariant();
             NormalizedEmailAddress = EmailAddress.ToUpperInvariant();

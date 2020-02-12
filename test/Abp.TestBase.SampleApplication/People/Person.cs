@@ -2,7 +2,7 @@
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 using Abp.Domain.Entities.Auditing;
-using Abp.TestBase.SampleApplication.ContacLists;
+using Abp.TestBase.SampleApplication.ContactLists;
 
 namespace Abp.TestBase.SampleApplication.People
 {
@@ -12,7 +12,7 @@ namespace Abp.TestBase.SampleApplication.People
         public const int MaxNameLength = 64;
 
         [Required]
-        [MaxLength(MaxNameLength)]
+        [StringLength(MaxNameLength)]
         public virtual string Name { get; set; }
 
         [ForeignKey("ContactListId")]

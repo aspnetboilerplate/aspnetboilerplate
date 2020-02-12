@@ -3,6 +3,7 @@ using Abp.EntityHistory;
 using Abp.Runtime;
 using JetBrains.Annotations;
 using Microsoft.AspNetCore.Http;
+using System.Text;
 using Microsoft.AspNetCore.Http.Extensions;
 
 namespace Abp.AspNetCore.EntityHistory
@@ -13,20 +14,13 @@ namespace Abp.AspNetCore.EntityHistory
     public class HttpRequestEntityChangeSetReasonProvider : EntityChangeSetReasonProviderBase, ISingletonDependency
     {
         [CanBeNull]
-        public override string Reason
-        {
-            get
-            {
-                if (OverridedValue != null)
-                {
-                    return OverridedValue.Reason;
-                }
-
-                return HttpContextAccessor.HttpContext?.Request.GetDisplayUrl();
-            }
-        }
+        public override string Reason => OverridedValue != null
+            ? OverridedValue.Reason
+            : HttpContextAccessor.HttpContext?.Request.GetDisplayUrl();
 
         protected IHttpContextAccessor HttpContextAccessor { get; }
+
+        private const string SchemeDelimiter = "://";
 
         public HttpRequestEntityChangeSetReasonProvider(
             IHttpContextAccessor httpContextAccessor,

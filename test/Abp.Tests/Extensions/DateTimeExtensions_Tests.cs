@@ -79,8 +79,6 @@ namespace Abp.Tests.Extensions
         {
             var localTime = Clock.Now;
 
-            localTime.Kind.ShouldBe(DateTimeKind.Local);
-
             var unspecified = localTime.ToDateTimeUnspecified();
 
             unspecified.Kind.ShouldBe(DateTimeKind.Unspecified);

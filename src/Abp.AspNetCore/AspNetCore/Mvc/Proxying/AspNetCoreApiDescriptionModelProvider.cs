@@ -163,7 +163,7 @@ namespace Abp.AspNetCore.Mvc.Proxying
                 return AbpControllerAssemblySetting.DefaultServiceModuleName;
             }
 
-            foreach (var controllerSetting in _configuration.ControllerAssemblySettings)
+            foreach (var controllerSetting in _configuration.ControllerAssemblySettings.Where(setting => setting.TypePredicate(controllerType)))
             {
                 if (Equals(controllerType.GetAssembly(), controllerSetting.Assembly))
                 {

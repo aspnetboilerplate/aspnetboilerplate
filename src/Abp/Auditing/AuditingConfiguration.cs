@@ -13,11 +13,14 @@ namespace Abp.Auditing
 
         public List<Type> IgnoredTypes { get; }
 
+        public bool SaveReturnValues { get; set; }
+
         public AuditingConfiguration()
         {
             IsEnabled = true;
             Selectors = new AuditingSelectorList();
             IgnoredTypes = new List<Type>();
+            SaveReturnValues = false;
         }
     }
 }

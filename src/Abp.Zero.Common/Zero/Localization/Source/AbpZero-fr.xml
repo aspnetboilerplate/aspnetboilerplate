@@ -9,5 +9,6 @@
     <text name="CanNotRenameAdminUser" value="Impossible de renommer le nom d'utilisateur : {0} car il s'agit de l'utilisateur administrateur par défaut !" />
     <text name="CanNotDeleteAdminUser" value="Impossible d'effacer le nom d'utilisateur : {0} car il s'agit de l'utilisateur administrateur par défaut !" />
     <text name="OrganizationUnitDuplicateDisplayNameWarning" value="Il existe déjà une unité organisationnelle portant le nom {0}. Deux unités avec la même appelation ne peuvent être créées au même niveau." />
+    <text name="InvalidFeatureValue" value="La valeur de fonctionnalité {0} n'est pas valide!" />
   </texts>
 </localizationDictionary>

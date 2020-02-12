@@ -35,6 +35,20 @@ namespace Abp.Quartz
             await _quartzConfiguration.Scheduler.ScheduleJob(job, trigger);
         }
 
+        public async Task RescheduleAsync(TriggerKey triggerKey, Action<TriggerBuilder> configureTrigger)
+        {
+            var triggerToBuild = TriggerBuilder.Create();
+            configureTrigger(triggerToBuild);
+            var trigger = triggerToBuild.Build();
+
+            await _quartzConfiguration.Scheduler.RescheduleJob(triggerKey, trigger);
+        }
+
+        public async Task UnscheduleAsync(TriggerKey triggerKey)
+        {
+            await _quartzConfiguration.Scheduler.UnscheduleJob(triggerKey);
+        }
+
         public override void Start()
         {
             base.Start();

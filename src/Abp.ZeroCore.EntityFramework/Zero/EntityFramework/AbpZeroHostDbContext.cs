@@ -10,6 +10,7 @@ using Abp.BackgroundJobs;
 using Abp.MultiTenancy;
 using Abp.Notifications;
 using Abp.EntityFramework.Extensions;
+using Abp.Webhooks;
 
 namespace Abp.Zero.EntityFramework
 {
@@ -59,7 +60,7 @@ namespace Abp.Zero.EntityFramework
         /// Notifications.
         /// </summary>
         public virtual DbSet<NotificationInfo> Notifications { get; set; }
-
+        
         protected AbpZeroHostDbContext()
         {
 
@@ -111,6 +112,18 @@ namespace Abp.Zero.EntityFramework
             modelBuilder.Entity<BackgroundJobInfo>()
                 .Property(e => e.NextTryTime)
                 .CreateIndex("IX_IsAbandoned_NextTryTime", 2);
+
+            modelBuilder.Entity<BackgroundJobInfo>()
+                .Property(j => j.Priority)
+                .CreateIndex("IX_Priority_TryCount_NextTryTime", 1);
+
+            modelBuilder.Entity<BackgroundJobInfo>()
+                .Property(j => j.TryCount)
+                .CreateIndex("IX_Priority_TryCount_NextTryTime", 2);
+
+            modelBuilder.Entity<BackgroundJobInfo>()
+                .Property(j => j.NextTryTime)
+                .CreateIndex("IX_Priority_TryCount_NextTryTime", 3);
 
             #endregion
 

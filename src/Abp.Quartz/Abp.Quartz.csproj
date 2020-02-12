@@ -3,7 +3,7 @@
   <Import Project="..\..\common.props" />
   
   <PropertyGroup>
-    <TargetFramework>net461</TargetFramework>
+    <TargetFramework>netstandard2.0</TargetFramework>
     <GenerateDocumentationFile>true</GenerateDocumentationFile>
     <AssemblyName>Abp.Quartz</AssemblyName>
     <PackageId>Abp.Quartz</PackageId>
@@ -20,8 +20,8 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <None Include="bin\Release\net461\Abp.Quartz.pdb">
-      <PackagePath>lib/net461/</PackagePath>
+    <None Include="bin\Release\netstandard2.0\Abp.Quartz.pdb">
+      <PackagePath>lib/netstandard2.0/</PackagePath>
       <Pack>true</Pack>
     </None>
   </ItemGroup>
@@ -31,12 +31,11 @@
   </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Include="Quartz" Version="3.0.2" />
+    <PackageReference Include="Quartz" Version="3.0.7" />
   </ItemGroup>
 
-  <ItemGroup Condition=" '$(TargetFramework)' == 'net461' ">
-    <Reference Include="System" />
-    <Reference Include="Microsoft.CSharp" />
+  <ItemGroup>
+    <PackageReference Update="SourceLink.Create.CommandLine" Version="2.8.3" />
   </ItemGroup>
 
 </Project>

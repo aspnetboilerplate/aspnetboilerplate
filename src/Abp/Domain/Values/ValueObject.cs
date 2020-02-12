@@ -1,96 +1,41 @@
-﻿using System;
-using System.Linq;
-using System.Reflection;
+﻿using System.Collections.Generic;
 
 namespace Abp.Domain.Values
 {
-    //Inspired from https://blogs.msdn.microsoft.com/cesardelatorre/2011/06/06/implementing-a-value-object-base-class-supertype-patternddd-patterns-related/
+    //Inspired from https://docs.microsoft.com/en-us/dotnet/standard/microservices-architecture/microservice-ddd-cqrs-patterns/implement-value-objects
     /// <summary>
     /// Base class for value objects.
     /// </summary>
-    /// <typeparam name="TValueObject">The type of the value object.</typeparam>
-    public abstract class ValueObject<TValueObject> : IEquatable<TValueObject>
-        where TValueObject : ValueObject<TValueObject>
+    public abstract class ValueObject
     {
-        public bool Equals(TValueObject other)
+        protected abstract IEnumerable<object> GetAtomicValues();
+
+        public bool ValueEquals(object obj)
         {
-            if ((object)other == null)
+            if (obj == null || obj.GetType() != GetType())
             {
                 return false;
             }
 
-            var publicProperties = GetType().GetTypeInfo().GetProperties();
-            if (!publicProperties.Any())
+            ValueObject other = (ValueObject)obj;
+            IEnumerator<object> thisValues = GetAtomicValues().GetEnumerator();
+            IEnumerator<object> otherValues = other.GetAtomicValues().GetEnumerator();
+            while (thisValues.MoveNext() && otherValues.MoveNext())
             {
-                return true;
-            }
-
-            return publicProperties.All(property => Equals(property.GetValue(this, null), property.GetValue(other, null)));
-        }
-
-        public override bool Equals(object obj)
-        {
-            if (obj == null)
-            {
-                return false;
-            }
-
-            var item = obj as ValueObject<TValueObject>;
-            return (object)item != null && Equals((TValueObject)item);
-
-        }
-
-        public override int GetHashCode()
-        {
-            const int index = 1;
-            const int initialHasCode = 31;
-
-            var publicProperties = GetType().GetTypeInfo().GetProperties();
-
-            if (!publicProperties.Any())
-            {
-                return initialHasCode;
-            }
-
-            var hashCode = initialHasCode;
-            var changeMultiplier = false;
-
-            foreach (var property in publicProperties)
-            {
-                var value = property.GetValue(this, null);
-
-                if (value == null)
+                if (ReferenceEquals(thisValues.Current, null) ^
+                    ReferenceEquals(otherValues.Current, null))
                 {
-                    //support {"a",null,null,"a"} != {null,"a","a",null}
-                    hashCode = hashCode ^ (index * 13);
-                    continue;
+                    return false;
                 }
 
-                hashCode = hashCode * (changeMultiplier ? 59 : 114) + value.GetHashCode();
-                changeMultiplier = !changeMultiplier;
+                if (thisValues.Current != null &&
+                    !thisValues.Current.Equals(otherValues.Current))
+                {
+                    return false;
+                }
             }
 
-            return hashCode;
-        }
-
-        public static bool operator ==(ValueObject<TValueObject> x, ValueObject<TValueObject> y)
-        {
-            if (ReferenceEquals(x, y))
-            {
-                return true;
-            }
-
-            if (((object)x == null) || ((object)y == null))
-            {
-                return false;
-            }
-
-            return x.Equals(y);
-        }
-
-        public static bool operator !=(ValueObject<TValueObject> x, ValueObject<TValueObject> y)
-        {
-            return !(x == y);
+            return !thisValues.MoveNext() && !otherValues.MoveNext();
         }
     }
 }

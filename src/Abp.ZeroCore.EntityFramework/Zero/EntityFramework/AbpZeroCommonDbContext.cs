@@ -6,13 +6,13 @@ using Abp.Auditing;
 using Abp.Authorization;
 using Abp.Authorization.Roles;
 using Abp.Authorization.Users;
-using Abp.BackgroundJobs;
 using Abp.Configuration;
 using Abp.EntityFramework;
 using Abp.Localization;
 using Abp.Notifications;
 using Abp.Organizations;
 using Abp.EntityFramework.Extensions;
+using Abp.Webhooks;
 
 namespace Abp.Zero.EntityFramework
 {
@@ -107,6 +107,11 @@ namespace Abp.Zero.EntityFramework
         public virtual DbSet<UserOrganizationUnit> UserOrganizationUnits { get; set; }
 
         /// <summary>
+        /// OrganizationUnitRoles.
+        /// </summary>
+        public virtual DbSet<OrganizationUnitRole> OrganizationUnitRoles { get; set; }
+
+        /// <summary>
         /// Tenant notifications.
         /// </summary>
         public virtual DbSet<TenantNotificationInfo> TenantNotifications { get; set; }
@@ -120,6 +125,21 @@ namespace Abp.Zero.EntityFramework
         /// Notification subscriptions.
         /// </summary>
         public virtual DbSet<NotificationSubscriptionInfo> NotificationSubscriptions { get; set; }
+
+        /// <summary>
+        /// Webhook information
+        /// </summary>
+        public virtual DbSet<WebhookEvent> WebhookEvents { get; set; }
+
+        /// <summary>
+        /// Web subscriptions
+        /// </summary>
+        public virtual DbSet<WebhookSubscriptionInfo> WebhookSubscriptions { get; set; }
+        
+        /// <summary>
+        /// Webhook work items
+        /// </summary>
+        public virtual DbSet<WebhookSendAttempt> WebhookSendAttempts { get; set; }
 
         /// <summary>
         /// Default constructor.
@@ -513,6 +533,30 @@ namespace Abp.Zero.EntityFramework
 
             #endregion
 
+            #region OrganizationUnitRole.IX_TenantId_RoleId
+
+            modelBuilder.Entity<OrganizationUnitRole>()
+                .Property(e => e.TenantId)
+                .CreateIndex("IX_TenantId_RoleId", 1);
+
+            modelBuilder.Entity<OrganizationUnitRole>()
+                .Property(e => e.RoleId)
+                .CreateIndex("IX_TenantId_RoleId", 2);
+
+            #endregion
+
+            #region OrganizationUnitRole.IX_TenantId_OrganizationUnitId
+
+            modelBuilder.Entity<OrganizationUnitRole>()
+                .Property(e => e.TenantId)
+                .CreateIndex("IX_TenantId_OrganizationUnitId", 1);
+
+            modelBuilder.Entity<OrganizationUnitRole>()
+                .Property(e => e.OrganizationUnitId)
+                .CreateIndex("IX_TenantId_OrganizationUnitId", 2);
+
+            #endregion
+
             #region UserRole.IX_TenantId_UserId
 
             modelBuilder.Entity<UserRole>()
@@ -522,6 +566,10 @@ namespace Abp.Zero.EntityFramework
             modelBuilder.Entity<UserRole>()
                 .Property(e => e.UserId)
                 .CreateIndex("IX_TenantId_UserId", 2);
+
+            modelBuilder.Entity<Setting>()
+                .HasIndex(e => new { e.TenantId, e.Name, e.UserId })
+                .IsUnique();
 
             #endregion
 

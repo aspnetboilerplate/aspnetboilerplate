@@ -33,10 +33,10 @@ namespace Abp.Tests.Localization.Json
             enDict["Apple"].ShouldBe("Apple");
             enDict["Banana"].ShouldBe("Banana");
 
-            var zhCNDict = dictionaries.FirstOrDefault(d => d.CultureInfo.Name == "zh-CN");
-            zhCNDict.ShouldNotBe(null);
-            zhCNDict["Apple"].ShouldBe("苹果");
-            zhCNDict["Banana"].ShouldBe("香蕉");
+            var zhHansDict = dictionaries.FirstOrDefault(d => d.CultureInfo.Name == "zh-Hans");
+            zhHansDict.ShouldNotBe(null);
+            zhHansDict["Apple"].ShouldBe("苹果");
+            zhHansDict["Banana"].ShouldBe("香蕉");
         }
     }
 }

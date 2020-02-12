@@ -1,16 +1,21 @@
-﻿using System.Reflection;
+﻿using System;
+using System.Threading;
 using Abp.AspNetCore;
 using Abp.AspNetCore.Configuration;
+using Abp.AspNetCore.OData;
 using Abp.Castle.Logging.Log4Net;
+using Abp.Configuration.Startup;
+using Abp.Dependency;
 using Abp.EntityFrameworkCore;
-using Abp.EntityFrameworkCore.Configuration;
 using Abp.Modules;
 using Abp.Reflection.Extensions;
 using AbpAspNetCoreDemo.Core;
 using AbpAspNetCoreDemo.Db;
+using Castle.MicroKernel.Registration;
 using Microsoft.AspNetCore.Builder;
+using Microsoft.Data.Sqlite;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.Configuration;
+using Microsoft.EntityFrameworkCore.Query;
 
 namespace AbpAspNetCoreDemo
 {
@@ -18,25 +23,17 @@ namespace AbpAspNetCoreDemo
         typeof(AbpAspNetCoreModule),
         typeof(AbpAspNetCoreDemoCoreModule),
         typeof(AbpEntityFrameworkCoreModule),
-        typeof(AbpCastleLog4NetModule)
+        typeof(AbpCastleLog4NetModule),
+        typeof(AbpAspNetCoreODataModule)
         )]
     public class AbpAspNetCoreDemoModule : AbpModule
     {
+        public static AsyncLocal<Action<IAbpStartupConfiguration>> ConfigurationAction =
+            new AsyncLocal<Action<IAbpStartupConfiguration>>();
+
         public override void PreInitialize()
         {
-            Configuration.DefaultNameOrConnectionString = IocManager.Resolve<IConfigurationRoot>().GetConnectionString("Default");
-
-            Configuration.Modules.AbpEfCore().AddDbContext<MyDbContext>(options =>
-            {
-                if (options.ExistingConnection != null)
-                {
-                    options.DbContextOptions.UseSqlServer(options.ExistingConnection);
-                }
-                else
-                {
-                    options.DbContextOptions.UseSqlServer(options.ConnectionString);
-                }
-            });
+            RegisterDbContextToSqliteInMemoryDb(IocManager);
 
             Configuration.Modules.AbpAspNetCore()
                 .CreateControllersForAppServices(
@@ -44,17 +41,38 @@ namespace AbpAspNetCoreDemo
                 );
 
 
-            Configuration.IocManager.Resolve<IAbpAspNetCoreConfiguration>().RouteConfiguration.Add(routes =>
+            Configuration.IocManager.Resolve<IAbpAspNetCoreConfiguration>().EndpointConfiguration.Add(endpoints =>
             {
-                routes.MapRoute(
-                    name: "default",
-                    template: "{controller=Home}/{action=Index}/{id?}");
+                endpoints.MapControllerRoute("defaultWithArea", "{area}/{controller=Home}/{action=Index}/{id?}");
+                endpoints.MapControllerRoute("default", "{controller=Home}/{action=Index}/{id?}");
+                endpoints.MapRazorPages();
             });
+
+            ConfigurationAction.Value?.Invoke(Configuration);
         }
 
         public override void Initialize()
         {
             IocManager.RegisterAssemblyByConvention(typeof(AbpAspNetCoreDemoModule).GetAssembly());
+        }
+
+        private static void RegisterDbContextToSqliteInMemoryDb(IIocManager iocManager)
+        {
+            var builder = new DbContextOptionsBuilder<MyDbContext>();
+
+            var inMemorySqlite = new SqliteConnection("Data Source=:memory:");
+            builder.UseSqlite(inMemorySqlite);
+
+            iocManager.IocContainer.Register(
+                Component
+                    .For<DbContextOptions<MyDbContext>>()
+                    .Instance(builder.Options)
+                    .LifestyleSingleton()
+            );
+
+            inMemorySqlite.Open();
+            var ctx = new MyDbContext(builder.Options);
+            ctx.Database.EnsureCreated();
         }
     }
 }

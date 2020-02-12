@@ -1,69 +1,30 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Reflection;
 using System.Threading.Tasks;
 using System.Transactions;
-using Abp.Auditing;
 using Abp.Dependency;
-using Abp.Domain.Entities;
-using Abp.Domain.Entities.Auditing;
 using Abp.Domain.Uow;
+using Abp.EntityHistory.Extensions;
 using Abp.Events.Bus.Entities;
 using Abp.Extensions;
 using Abp.Json;
-using Abp.Runtime.Session;
-using Abp.Timing;
-using Castle.Core.Logging;
 using JetBrains.Annotations;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.ChangeTracking;
+using Microsoft.EntityFrameworkCore.Metadata;
 
 namespace Abp.EntityHistory
 {
-    public class EntityHistoryHelper : IEntityHistoryHelper, ITransientDependency
+    public class EntityHistoryHelper : EntityHistoryHelperBase, IEntityHistoryHelper, ITransientDependency
     {
-        public ILogger Logger { get; set; }
-        public IAbpSession AbpSession { get; set; }
-        public IClientInfoProvider ClientInfoProvider { get; set; }
-        public IEntityChangeSetReasonProvider EntityChangeSetReasonProvider { get; set; }
-        public IEntityHistoryStore EntityHistoryStore { get; set; }
-
-        private readonly IEntityHistoryConfiguration _configuration;
-        private readonly IUnitOfWorkManager _unitOfWorkManager;
-
-        private bool IsEntityHistoryEnabled
-        {
-            get
-            {
-                if (!_configuration.IsEnabled)
-                {
-                    return false;
-                }
-
-                if (!_configuration.IsEnabledForAnonymousUsers && (AbpSession?.UserId == null))
-                {
-                    return false;
-                }
-
-                return true;
-            }
-        }
-
         public EntityHistoryHelper(
             IEntityHistoryConfiguration configuration,
             IUnitOfWorkManager unitOfWorkManager)
+            : base(configuration, unitOfWorkManager)
         {
-            _configuration = configuration;
-            _unitOfWorkManager = unitOfWorkManager;
-
-            AbpSession = NullAbpSession.Instance;
-            Logger = NullLogger.Instance;
-            ClientInfoProvider = NullClientInfoProvider.Instance;
-            EntityChangeSetReasonProvider = NullEntityChangeSetReasonProvider.Instance;
-            EntityHistoryStore = NullEntityHistoryStore.Instance;
         }
-        
+
         public virtual EntityChangeSet CreateEntityChangeSet(ICollection<EntityEntry> entityEntries)
         {
             var changeSet = new EntityChangeSet
@@ -85,20 +46,67 @@ namespace Abp.EntityHistory
                 return changeSet;
             }
 
-            foreach (var entry in entityEntries)
+            foreach (var entityEntry in entityEntries)
             {
-                if (!ShouldSaveEntityHistory(entry))
+                var typeOfEntity = entityEntry.Entity.GetType();
+                var shouldTrackEntity = IsTypeOfTrackedEntity(typeOfEntity);
+                if (shouldTrackEntity.HasValue && !shouldTrackEntity.Value)
                 {
                     continue;
                 }
 
-                var entityChangeInfo = CreateEntityChangeInfo(entry);
-                if (entityChangeInfo == null)
+                if (!IsTypeOfEntity(typeOfEntity) && !entityEntry.Metadata.IsOwned())
                 {
                     continue;
                 }
 
-                changeSet.EntityChanges.Add(entityChangeInfo);
+                var shouldAuditEntity = IsTypeOfAuditedEntity(typeOfEntity);
+                if (shouldAuditEntity.HasValue && !shouldAuditEntity.Value)
+                {
+                    continue;
+                }
+
+                bool? shouldAuditOwnerEntity = null;
+                bool? shouldAuditOwnerProperty = null;
+                if (!shouldAuditEntity.HasValue && entityEntry.Metadata.IsOwned())
+                {
+                    // Check if owner entity has auditing attribute
+                    var ownerForeignKey = entityEntry.Metadata.GetForeignKeys().First(fk => fk.IsOwnership);
+                    var ownerEntityType = ownerForeignKey.PrincipalEntityType.ClrType;
+
+                    shouldAuditOwnerEntity = IsTypeOfAuditedEntity(ownerEntityType);
+                    if (shouldAuditOwnerEntity.HasValue && !shouldAuditOwnerEntity.Value)
+                    {
+                        continue;
+                    }
+
+                    var ownerPropertyInfo = ownerForeignKey.PrincipalToDependent.PropertyInfo;
+                    shouldAuditOwnerProperty = IsAuditedPropertyInfo(ownerPropertyInfo);
+                    if (shouldAuditOwnerProperty.HasValue && !shouldAuditOwnerProperty.Value)
+                    {
+                        continue;
+                    }
+                }
+
+                var entityChange = CreateEntityChange(entityEntry);
+                if (entityChange == null)
+                {
+                    continue;
+                }
+
+                var isAuditableEntity = (shouldAuditEntity.HasValue && shouldAuditEntity.Value) ||
+                                        (shouldAuditOwnerEntity.HasValue && shouldAuditOwnerEntity.Value) ||
+                                        (shouldAuditOwnerProperty.HasValue && shouldAuditOwnerProperty.Value);
+                var isTrackableEntity = shouldTrackEntity.HasValue && shouldTrackEntity.Value;
+                var shouldSaveAuditedPropertiesOnly = !isAuditableEntity && !isTrackableEntity;
+                var propertyChanges = GetPropertyChanges(entityEntry, shouldSaveAuditedPropertiesOnly);
+                if (propertyChanges.Count == 0)
+                {
+                    continue;
+                }
+
+                entityChange.PropertyChanges = propertyChanges;
+                changeSet.EntityChanges.Add(entityChange);
             }
 
             return changeSet;
@@ -111,25 +119,52 @@ namespace Abp.EntityHistory
                 return;
             }
 
+            UpdateChangeSet(changeSet);
+
             if (changeSet.EntityChanges.Count == 0)
             {
                 return;
             }
 
-            UpdateChangeSet(changeSet);
-
-            using (var uow = _unitOfWorkManager.Begin(TransactionScopeOption.Suppress))
+            using (var uow = UnitOfWorkManager.Begin(TransactionScopeOption.Suppress))
             {
                 await EntityHistoryStore.SaveAsync(changeSet);
                 await uow.CompleteAsync();
             }
         }
 
-        [CanBeNull]
-        private EntityChange CreateEntityChangeInfo(EntityEntry entityEntry)
+        public virtual void Save(EntityChangeSet changeSet)
         {
-            var entity = entityEntry.Entity;
-            
+            if (!IsEntityHistoryEnabled)
+            {
+                return;
+            }
+
+            UpdateChangeSet(changeSet);
+
+            if (changeSet.EntityChanges.Count == 0)
+            {
+                return;
+            }
+
+            using (var uow = UnitOfWorkManager.Begin(TransactionScopeOption.Suppress))
+            {
+                EntityHistoryStore.Save(changeSet);
+                uow.Complete();
+            }
+        }
+
+        protected virtual string GetEntityId(EntityEntry entry)
+        {
+            var primaryKeys = entry.Properties.Where(p => p.Metadata.IsPrimaryKey());
+            return primaryKeys.First().CurrentValue?.ToJsonString();
+        }
+
+        [CanBeNull]
+        private EntityChange CreateEntityChange(EntityEntry entityEntry)
+        {
+            var entityId = GetEntityId(entityEntry);
+            var entityTypeFullName = entityEntry.Entity.GetType().FullName;
             EntityChangeType changeType;
             switch (entityEntry.State)
             {
@@ -140,240 +175,161 @@ namespace Abp.EntityHistory
                     changeType = EntityChangeType.Deleted;
                     break;
                 case EntityState.Modified:
-                    changeType = IsDeleted(entityEntry) ? EntityChangeType.Deleted : EntityChangeType.Updated;
+                    changeType = entityEntry.IsDeleted() ? EntityChangeType.Deleted : EntityChangeType.Updated;
                     break;
                 case EntityState.Detached:
                 case EntityState.Unchanged:
+                    return null;
                 default:
-                    Logger.Error("Unexpected EntityState!");
+                    Logger.ErrorFormat("Unexpected {0} - {1}", nameof(entityEntry.State), entityEntry.State);
                     return null;
             }
 
-            var entityId = GetEntityId(entity);
             if (entityId == null && changeType != EntityChangeType.Created)
             {
-                Logger.Error("Unexpected null value for entityId!");
+                Logger.ErrorFormat("EntityChangeType {0} must have non-empty entity id", changeType);
                 return null;
             }
 
-            var entityType = entity.GetType();
-            var entityChangeInfo = new EntityChange
+            return new EntityChange
             {
                 ChangeType = changeType,
                 EntityEntry = entityEntry, // [NotMapped]
                 EntityId = entityId,
-                EntityTypeFullName = entityType.FullName,
-                PropertyChanges = GetPropertyChanges(entityEntry)
+                EntityTypeFullName = entityTypeFullName,
+                TenantId = AbpSession.TenantId
             };
-
-            return entityChangeInfo;
-        }
-
-        private DateTime GetChangeTime(EntityChange entityChange)
-        {
-            var entity = entityChange.EntityEntry.As<EntityEntry>().Entity;
-            switch (entityChange.ChangeType)
-            {
-                case EntityChangeType.Created:
-                    return (entity as IHasCreationTime)?.CreationTime ?? Clock.Now;
-                case EntityChangeType.Deleted:
-                    return (entity as IHasDeletionTime)?.DeletionTime ?? Clock.Now;
-                case EntityChangeType.Updated:
-                    return (entity as IHasModificationTime)?.LastModificationTime ?? Clock.Now;
-                default:
-                    Logger.Error("Unexpected EntityState!");
-                    return Clock.Now;
-            }
-        }
-
-        private string GetEntityId(object entityAsObj)
-        {
-            return entityAsObj
-                .GetType().GetProperty("Id")?
-                .GetValue(entityAsObj)?
-                .ToJsonString();
         }
 
         /// <summary>
         /// Gets the property changes for this entry.
         /// </summary>
-        private ICollection<EntityPropertyChange> GetPropertyChanges(EntityEntry entityEntry)
+        private ICollection<EntityPropertyChange> GetPropertyChanges(EntityEntry entityEntry, bool auditedPropertiesOnly)
         {
             var propertyChanges = new List<EntityPropertyChange>();
             var properties = entityEntry.Metadata.GetProperties();
-            var isCreated = IsCreated(entityEntry);
-            var isDeleted = IsDeleted(entityEntry);
 
             foreach (var property in properties)
             {
-                var propertyEntry = entityEntry.Property(property.Name);
-                if (ShouldSavePropertyHistory(propertyEntry, isCreated || isDeleted))
+                if (property.IsPrimaryKey())
                 {
-                    propertyChanges.Add(new EntityPropertyChange
-                    {
-                        NewValue = isDeleted ? null : propertyEntry.CurrentValue.ToJsonString().TruncateWithPostfix(EntityPropertyChange.MaxValueLength),
-                        OriginalValue = isCreated ? null : propertyEntry.OriginalValue.ToJsonString().TruncateWithPostfix(EntityPropertyChange.MaxValueLength),
-                        PropertyName = property.Name,
-                        PropertyTypeFullName = property.ClrType.FullName
-                    });
+                    continue;
+                }
+
+                var shouldSaveProperty = property.IsShadowProperty() // i.e. property.PropertyInfo == null
+                    ? !auditedPropertiesOnly
+                    : IsAuditedPropertyInfo(property.PropertyInfo) ?? !auditedPropertiesOnly;
+
+                if (shouldSaveProperty)
+                {
+                    var propertyEntry = entityEntry.Property(property.Name);
+                    propertyChanges.Add(
+                        CreateEntityPropertyChange(
+                            propertyEntry.GetOriginalValue(),
+                            propertyEntry.GetNewValue(),
+                            property
+                        )
+                    );
                 }
             }
 
             return propertyChanges;
         }
 
-        private bool IsCreated(EntityEntry entityEntry)
-        {
-            return entityEntry.State == EntityState.Added;
-        }
-
-        private bool IsDeleted(EntityEntry entityEntry)
-        {
-            if (entityEntry.State == EntityState.Deleted)
-            {
-                return true;
-            }
-
-            var entity = entityEntry.Entity;
-            return entity is ISoftDelete && entity.As<ISoftDelete>().IsDeleted;
-        }
-
-        private bool ShouldSaveEntityHistory(EntityEntry entityEntry, bool defaultValue = false)
-        {
-            if (entityEntry.State == EntityState.Detached ||
-                entityEntry.State == EntityState.Unchanged)
-            {
-                return false;
-            }
-
-            if (_configuration.IgnoredTypes.Any(t => t.IsInstanceOfType(entityEntry.Entity)))
-            {
-                return false;
-            }
-
-            var entityType = entityEntry.Entity.GetType();
-            if (!EntityHelper.IsEntity(entityType))
-            {
-                return false;
-            }
-
-            if (!entityType.IsPublic)
-            {
-                return false;
-            }
-
-            if (entityType.GetTypeInfo().IsDefined(typeof(AuditedAttribute), true))
-            {
-                return true;
-            }
-
-            if (entityType.GetTypeInfo().IsDefined(typeof(DisableAuditingAttribute), true))
-            {
-                return false;
-            }
-
-            if (_configuration.Selectors.Any(selector => selector.Predicate(entityType)))
-            {
-                return true;
-            }
-
-            var properties = entityEntry.Metadata.GetProperties();
-            if (properties.Any(p => p.PropertyInfo?.IsDefined(typeof(AuditedAttribute)) ?? false))
-            {
-                return true;
-            }
-
-            return defaultValue;
-        }
-
-        private bool ShouldSavePropertyHistory(PropertyEntry propertyEntry, bool defaultValue)
-        {
-            var propertyInfo = propertyEntry.Metadata.PropertyInfo;
-            if (propertyInfo.IsDefined(typeof(DisableAuditingAttribute), true))
-            {
-                return false;
-            }
-
-            var classType = propertyInfo.DeclaringType;
-            if (classType != null)
-            {
-                if (classType.GetTypeInfo().IsDefined(typeof(DisableAuditingAttribute), true) &&
-                    !propertyInfo.IsDefined(typeof(AuditedAttribute), true))
-                {
-                    return false;
-                }
-            }
-
-            var isModified = !(propertyEntry.OriginalValue?.Equals(propertyEntry.CurrentValue) ?? propertyEntry.CurrentValue == null);
-            if (isModified)
-            {
-                return true;
-            }
-
-            return defaultValue;
-        }
-
         /// <summary>
-        /// Updates change time, entity id and foreign keys after SaveChanges is called.
+        /// Updates change time, entity id, Adds foreign keys, Removes/Updates property changes after SaveChanges is called.
         /// </summary>
         private void UpdateChangeSet(EntityChangeSet changeSet)
         {
-            foreach (var entityChangeInfo in changeSet.EntityChanges)
+            var entityChangesToRemove = new List<EntityChange>();
+            foreach (var entityChange in changeSet.EntityChanges)
             {
-                /* Update change time */
+                var entityEntry = entityChange.EntityEntry.As<EntityEntry>();
+                var isAuditedEntity = IsTypeOfAuditedEntity(entityEntry.Entity.GetType()) == true;
 
-                entityChangeInfo.ChangeTime = GetChangeTime(entityChangeInfo);
+                /* Update change time */
+                entityChange.ChangeTime = GetChangeTime(entityChange.ChangeType, entityEntry.Entity);
 
                 /* Update entity id */
+                entityChange.EntityId = GetEntityId(entityEntry);
 
-                var entityEntry = entityChangeInfo.EntityEntry.As<EntityEntry>();
-                entityChangeInfo.EntityId = GetEntityId(entityEntry.Entity);
+                /* Update property changes */
+                var trackedPropertyNames = entityChange.PropertyChanges.Select(pc => pc.PropertyName);
+                var trackedNavigationProperties = entityEntry.Navigations
+                                                    .Where(np => trackedPropertyNames.Contains(np.Metadata.Name))
+                                                    .ToList();
+                var additionalForeignKeys = trackedNavigationProperties
+                                                  .Where(np => !trackedPropertyNames.Contains(np.Metadata.Name))
+                                                  .Select(np => np.Metadata.ForeignKey)
+                                                  .Distinct()
+                                                  .ToList();
 
-                /* Update foreign keys */
-
-                var foreignKeys = entityEntry.Metadata.GetForeignKeys();
-
-                foreach (var foreignKey in foreignKeys)
+                /* Add additional foreign keys from navigation properties */
+                foreach (var foreignKey in additionalForeignKeys)
                 {
                     foreach (var property in foreignKey.Properties)
                     {
-                        var propertyEntry = entityEntry.Property(property.Name);
-                        var propertyChange = entityChangeInfo.PropertyChanges.FirstOrDefault(pc => pc.PropertyName == property.Name);
-
-                        if (propertyChange == null)
+                        var shouldSaveProperty = property.IsShadowProperty() ?
+                                                   null :
+                                                   IsAuditedPropertyInfo(property.PropertyInfo);
+                        if (shouldSaveProperty.HasValue && !shouldSaveProperty.Value)
                         {
-                            if (!(propertyEntry.OriginalValue?.Equals(propertyEntry.CurrentValue) ?? propertyEntry.CurrentValue == null))
-                            {
-                                // Add foreign key
-                                entityChangeInfo.PropertyChanges.Add(new EntityPropertyChange
-                                {
-                                    NewValue = propertyEntry.CurrentValue.ToJsonString(),
-                                    OriginalValue = propertyEntry.OriginalValue.ToJsonString(),
-                                    PropertyName = property.Name,
-                                    PropertyTypeFullName = property.ClrType.FullName
-                                });
-                            }
-
                             continue;
                         }
 
-                        if (propertyChange.OriginalValue == propertyChange.NewValue)
-                        {
-                            var newValue = propertyEntry.CurrentValue.ToJsonString();
-                            if (newValue == propertyChange.NewValue)
-                            {
-                                // No change
-                                entityChangeInfo.PropertyChanges.Remove(propertyChange);
-                            }
-                            else
-                            {
-                                // Update foreign key
-                                propertyChange.NewValue = newValue.TruncateWithPostfix(EntityPropertyChange.MaxValueLength);
-                            }
-                        }
+                        var propertyEntry = entityEntry.Property(property.Name);
+                        // TODO: fix new value comparison before truncation
+                        var newValue = propertyEntry.GetNewValue()?.ToJsonString().TruncateWithPostfix(EntityPropertyChange.MaxValueLength);
+                        var oldValue = propertyEntry.GetOriginalValue()?.ToJsonString().TruncateWithPostfix(EntityPropertyChange.MaxValueLength);
+                        // Add foreign key
+                        entityChange.PropertyChanges.Add(CreateEntityPropertyChange(oldValue, newValue, property));
                     }
                 }
+
+                /* Update/Remove property changes */
+                var propertyChangesToRemove = new List<EntityPropertyChange>();
+                foreach (var propertyChange in entityChange.PropertyChanges)
+                {
+                    var propertyEntry = entityEntry.Property(propertyChange.PropertyName);
+                    var isAuditedProperty = !propertyEntry.Metadata.IsShadowProperty() &&
+                                            IsAuditedPropertyInfo(propertyEntry.Metadata.PropertyInfo) == true;
+
+                    // TODO: fix new value comparison before truncation
+                    propertyChange.NewValue = propertyEntry.GetNewValue()?.ToJsonString().TruncateWithPostfix(EntityPropertyChange.MaxValueLength);
+                    if (!isAuditedProperty && propertyChange.OriginalValue == propertyChange.NewValue)
+                    {
+                        // No change
+                        propertyChangesToRemove.Add(propertyChange);
+                    }
+                }
+
+                foreach (var propertyChange in propertyChangesToRemove)
+                {
+                    entityChange.PropertyChanges.Remove(propertyChange);
+                }
+
+                if (!isAuditedEntity && entityChange.PropertyChanges.Count == 0)
+                {
+                    entityChangesToRemove.Add(entityChange);
+                }
             }
+
+            foreach (var entityChange in entityChangesToRemove)
+            {
+                changeSet.EntityChanges.Remove(entityChange);
+            }
+        }
+
+        private EntityPropertyChange CreateEntityPropertyChange(object oldValue, object newValue, IProperty property)
+        {
+            return new EntityPropertyChange()
+            {
+                OriginalValue = oldValue?.ToJsonString().TruncateWithPostfix(EntityPropertyChange.MaxValueLength),
+                NewValue = newValue?.ToJsonString().TruncateWithPostfix(EntityPropertyChange.MaxValueLength),
+                PropertyName = property.Name.TruncateWithPostfix(EntityPropertyChange.MaxPropertyNameLength),
+                PropertyTypeFullName = property.ClrType.FullName.TruncateWithPostfix(EntityPropertyChange.MaxPropertyTypeFullNameLength),
+                TenantId = AbpSession.TenantId
+            };
         }
     }
 }

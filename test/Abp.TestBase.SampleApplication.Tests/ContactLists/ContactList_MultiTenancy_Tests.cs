@@ -2,7 +2,7 @@
 using Abp.Configuration.Startup;
 using Abp.Domain.Repositories;
 using Abp.Domain.Uow;
-using Abp.TestBase.SampleApplication.ContacLists;
+using Abp.TestBase.SampleApplication.ContactLists;
 using Shouldly;
 using Xunit;
 
@@ -25,11 +25,11 @@ namespace Abp.TestBase.SampleApplication.Tests.ContactLists
         {
             AbpSession.UserId = 1;
 
-            //A tenant can reach to it's own data
+            //A tenant can reach its own data
             AbpSession.TenantId = 1;
             _contactListRepository.GetAllList().Any(cl => cl.TenantId != AbpSession.TenantId).ShouldBe(false);
 
-            //A tenant can reach to it's own data
+            //A tenant can reach its own data
             AbpSession.TenantId = 2;
             _contactListRepository.GetAllList().Any(cl => cl.TenantId != AbpSession.TenantId).ShouldBe(false);
 
@@ -37,7 +37,7 @@ namespace Abp.TestBase.SampleApplication.Tests.ContactLists
             AbpSession.TenantId = 999999;
             _contactListRepository.GetAllList().Count.ShouldBe(0);
 
-            //Host can reach to all tenant data (since MustHaveTenant filter is disabled for host as default)
+            //Host can reach all tenant data (since MustHaveTenant filter is disabled for host as default)
             AbpSession.TenantId = null;
             _contactListRepository.GetAllList().Count.ShouldBe(4);
 
@@ -50,7 +50,7 @@ namespace Abp.TestBase.SampleApplication.Tests.ContactLists
             var unitOfWorkManager = Resolve<IUnitOfWorkManager>();
             using (var unitOfWork = unitOfWorkManager.Begin())
             {
-                //Host can reach to all tenant data (since MustHaveTenant filter is disabled for host as default)
+                //Host can reach all tenant data (since MustHaveTenant filter is disabled for host as default)
                 _contactListRepository.GetAllList().Count.ShouldBe(4);
 
                 using (unitOfWorkManager.Current.EnableFilter(AbpDataFilters.MustHaveTenant))
@@ -79,7 +79,7 @@ namespace Abp.TestBase.SampleApplication.Tests.ContactLists
             var unitOfWorkManager = Resolve<IUnitOfWorkManager>();
             using (var unitOfWork = unitOfWorkManager.Begin())
             {
-                //Host can reach to all tenant data (since MustHaveTenant filter is disabled for host as default)
+                //Host can reach all tenant data (since MustHaveTenant filter is disabled for host as default)
                 _contactListRepository.GetAllList().Count.ShouldBe(4);
 
                 unitOfWorkManager.Current.SetTenantId(1);

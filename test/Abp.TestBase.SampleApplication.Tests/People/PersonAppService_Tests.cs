@@ -5,7 +5,7 @@ using Abp.Application.Services.Dto;
 using Abp.Authorization;
 using Abp.Domain.Uow;
 using Abp.Runtime.Validation;
-using Abp.TestBase.SampleApplication.ContacLists;
+using Abp.TestBase.SampleApplication.ContactLists;
 using Abp.TestBase.SampleApplication.People;
 using Abp.TestBase.SampleApplication.People.Dto;
 using Castle.MicroKernel.Registration;
@@ -117,6 +117,7 @@ namespace Abp.TestBase.SampleApplication.Tests.People
                         await Task.Delay(10);
                         return true;
                     });
+            permissionChecker.IsGranted("CanDeletePerson").Returns(true);
 
             LocalIocManager.IocContainer.Register(
                 Component.For<IPermissionChecker>().Instance(permissionChecker).IsDefault()

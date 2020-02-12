@@ -1,6 +1,6 @@
 ﻿using DapperExtensions.Mapper;
 
-namespace Abp.Dapper.NHibernate.Tests.Nhibernate
+namespace Abp.Dapper.NHibernate.Tests.Mappings.Dapper
 {
     public class PersonMap : ClassMapper<Person>
     {

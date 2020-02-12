@@ -7,6 +7,7 @@ using System.Web.Http.Controllers;
 using System.Web.Http.Filters;
 using Abp.Auditing;
 using Abp.Dependency;
+using Abp.Web.Models;
 using Abp.WebApi.Validation;
 
 namespace Abp.WebApi.Auditing
@@ -16,10 +17,16 @@ namespace Abp.WebApi.Auditing
         public bool AllowMultiple => false;
 
         private readonly IAuditingHelper _auditingHelper;
+        private readonly IAuditingConfiguration _auditingConfiguration;
+        private readonly IAuditSerializer _auditSerializer;
 
-        public AbpApiAuditFilter(IAuditingHelper auditingHelper)
+        public AbpApiAuditFilter(IAuditingHelper auditingHelper, 
+            IAuditingConfiguration auditingConfiguration,
+            IAuditSerializer auditSerializer)
         {
             _auditingHelper = auditingHelper;
+            _auditingConfiguration = auditingConfiguration;
+            _auditSerializer = auditSerializer;
         }
 
         public async Task<HttpResponseMessage> ExecuteActionFilterAsync(HttpActionContext actionContext, CancellationToken cancellationToken, Func<Task<HttpResponseMessage>> continuation)
@@ -38,9 +45,11 @@ namespace Abp.WebApi.Auditing
 
             var stopwatch = Stopwatch.StartNew();
 
+            HttpResponseMessage response = null;
             try
             {
-                return await continuation();
+                response = await continuation();
+                return response;
             }
             catch (Exception ex)
             {
@@ -51,6 +60,15 @@ namespace Abp.WebApi.Auditing
             {
                 stopwatch.Stop();
                 auditInfo.ExecutionDuration = Convert.ToInt32(stopwatch.Elapsed.TotalMilliseconds);
+
+                if (_auditingConfiguration.SaveReturnValues && response != null)
+                {
+                    if (response.TryGetContentValue(out object resultObject) )
+                    {
+                        auditInfo.ReturnValue = _auditSerializer.Serialize(resultObject);
+                    }
+                }
+
                 await _auditingHelper.SaveAsync(auditInfo);
             }
         }

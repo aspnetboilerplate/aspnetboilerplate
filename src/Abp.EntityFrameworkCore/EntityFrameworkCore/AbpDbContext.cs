@@ -11,10 +11,15 @@ using Abp.Configuration.Startup;
 using Abp.Dependency;
 using Abp.Domain.Entities;
 using Abp.Domain.Entities.Auditing;
+using Abp.Domain.Repositories;
 using Abp.Domain.Uow;
+using Abp.EntityFrameworkCore.Extensions;
+using Abp.EntityFrameworkCore.Utils;
+using Abp.EntityFrameworkCore.ValueConverters;
 using Abp.Events.Bus;
 using Abp.Events.Bus.Entities;
 using Abp.Extensions;
+using Abp.Linq.Expressions;
 using Abp.Reflection;
 using Abp.Runtime.Session;
 using Abp.Timing;
@@ -81,6 +86,8 @@ namespace Abp.EntityFrameworkCore
 
         private static MethodInfo ConfigureGlobalFiltersMethodInfo = typeof(AbpDbContext).GetMethod(nameof(ConfigureGlobalFilters), BindingFlags.Instance | BindingFlags.NonPublic);
 
+        private static MethodInfo ConfigureGlobalValueConverterMethodInfo = typeof(AbpDbContext).GetMethod(nameof(ConfigureGlobalValueConverter), BindingFlags.Instance | BindingFlags.NonPublic);
+
         /// <summary>
         /// Constructor.
         /// </summary>
@@ -113,6 +120,10 @@ namespace Abp.EntityFrameworkCore
                 ConfigureGlobalFiltersMethodInfo
                     .MakeGenericMethod(entityType.ClrType)
                     .Invoke(this, new object[] { modelBuilder, entityType });
+
+                ConfigureGlobalValueConverterMethodInfo
+                    .MakeGenericMethod(entityType.ClrType)
+                    .Invoke(this, new object[] { modelBuilder, entityType });
             }
         }
 
@@ -124,7 +135,14 @@ namespace Abp.EntityFrameworkCore
                 var filterExpression = CreateFilterExpression<TEntity>();
                 if (filterExpression != null)
                 {
-                    modelBuilder.Entity<TEntity>().HasQueryFilter(filterExpression);
+                    if (entityType.IsKeyless)
+                    {
+                        modelBuilder.Entity<TEntity>().HasQueryFilter(filterExpression);
+                    }
+                    else
+                    {
+                        modelBuilder.Entity<TEntity>().HasQueryFilter(filterExpression);
+                    }
                 }
             }
         }
@@ -156,39 +174,43 @@ namespace Abp.EntityFrameworkCore
 
             if (typeof(ISoftDelete).IsAssignableFrom(typeof(TEntity)))
             {
-                /* This condition should normally be defined as below:
-                 * !IsSoftDeleteFilterEnabled || !((ISoftDelete) e).IsDeleted
-                 * But this causes a problem with EF Core (see https://github.com/aspnet/EntityFrameworkCore/issues/9502)
-                 * So, we made a workaround to make it working. It works same as above.
-                 */
-
-                Expression<Func<TEntity, bool>> softDeleteFilter = e => !((ISoftDelete)e).IsDeleted || ((ISoftDelete)e).IsDeleted != IsSoftDeleteFilterEnabled;
+                Expression<Func<TEntity, bool>> softDeleteFilter = e => !IsSoftDeleteFilterEnabled || !((ISoftDelete) e).IsDeleted;
                 expression = expression == null ? softDeleteFilter : CombineExpressions(expression, softDeleteFilter);
             }
 
             if (typeof(IMayHaveTenant).IsAssignableFrom(typeof(TEntity)))
             {
-                /* This condition should normally be defined as below:
-                 * !IsMayHaveTenantFilterEnabled || ((IMayHaveTenant)e).TenantId == CurrentTenantId
-                 * But this causes a problem with EF Core (see https://github.com/aspnet/EntityFrameworkCore/issues/9502)
-                 * So, we made a workaround to make it working. It works same as above.
-                 */
-                Expression<Func<TEntity, bool>> mayHaveTenantFilter = e => ((IMayHaveTenant)e).TenantId == CurrentTenantId || (((IMayHaveTenant)e).TenantId == CurrentTenantId) == IsMayHaveTenantFilterEnabled;
+                Expression<Func<TEntity, bool>> mayHaveTenantFilter = e => !IsMayHaveTenantFilterEnabled || ((IMayHaveTenant)e).TenantId == CurrentTenantId;
                 expression = expression == null ? mayHaveTenantFilter : CombineExpressions(expression, mayHaveTenantFilter);
             }
 
             if (typeof(IMustHaveTenant).IsAssignableFrom(typeof(TEntity)))
             {
-                /* This condition should normally be defined as below:
-                 * !IsMustHaveTenantFilterEnabled || ((IMustHaveTenant)e).TenantId == CurrentTenantId
-                 * But this causes a problem with EF Core (see https://github.com/aspnet/EntityFrameworkCore/issues/9502)
-                 * So, we made a workaround to make it working. It works same as above.
-                 */
-                Expression<Func<TEntity, bool>> mustHaveTenantFilter = e => ((IMustHaveTenant)e).TenantId == CurrentTenantId || (((IMustHaveTenant)e).TenantId == CurrentTenantId) == IsMustHaveTenantFilterEnabled;
+                Expression<Func<TEntity, bool>> mustHaveTenantFilter = e => !IsMustHaveTenantFilterEnabled || ((IMustHaveTenant)e).TenantId == CurrentTenantId;
                 expression = expression == null ? mustHaveTenantFilter : CombineExpressions(expression, mustHaveTenantFilter);
             }
 
             return expression;
+        }
+
+        protected void ConfigureGlobalValueConverter<TEntity>(ModelBuilder modelBuilder, IMutableEntityType entityType)
+            where TEntity : class
+        {
+            if (entityType.BaseType == null && 
+                !typeof(TEntity).IsDefined(typeof(DisableDateTimeNormalizationAttribute), true) &&
+                !typeof(TEntity).IsDefined(typeof(OwnedAttribute), true) &&
+                !entityType.IsOwned())
+            {
+                var dateTimeValueConverter = new AbpDateTimeValueConverter();
+                var dateTimePropertyInfos = DateTimePropertyInfoHelper.GetDatePropertyInfos(typeof(TEntity));
+                dateTimePropertyInfos.DateTimePropertyInfos.ForEach(property =>
+                {
+                    modelBuilder
+                        .Entity<TEntity>()
+                        .Property(property.Name)
+                        .HasConversion(dateTimeValueConverter);
+                });
+            }
         }
 
         public override int SaveChanges()
@@ -229,6 +251,11 @@ namespace Abp.EntityFrameworkCore
 
             foreach (var entry in ChangeTracker.Entries().ToList())
             {
+                if (entry.State != EntityState.Modified && entry.CheckOwnedEntityChange())
+                {
+                    Entry(entry.Entity).State = EntityState.Modified;
+                }
+
                 ApplyAbpConcepts(entry, userId, changeReport);
             }
 
@@ -278,9 +305,38 @@ namespace Abp.EntityFrameworkCore
 
         protected virtual void ApplyAbpConceptsForDeletedEntity(EntityEntry entry, long? userId, EntityChangeReport changeReport)
         {
+            if (IsHardDeleteEntity(entry))
+            {
+                changeReport.ChangedEntities.Add(new EntityChangeEntry(entry.Entity, EntityChangeType.Deleted));
+                return;
+            }
+
             CancelDeletionForSoftDelete(entry);
             SetDeletionAuditProperties(entry.Entity, userId);
             changeReport.ChangedEntities.Add(new EntityChangeEntry(entry.Entity, EntityChangeType.Deleted));
+        }
+
+        protected virtual bool IsHardDeleteEntity(EntityEntry entry)
+        {
+            if (CurrentUnitOfWorkProvider?.Current?.Items == null)
+            {
+                return false;
+            }
+
+            if (!CurrentUnitOfWorkProvider.Current.Items.ContainsKey(UnitOfWorkExtensionDataTypes.HardDelete))
+            {
+                return false;
+            }
+
+            var hardDeleteItems = CurrentUnitOfWorkProvider.Current.Items[UnitOfWorkExtensionDataTypes.HardDelete];
+            if (!(hardDeleteItems is HashSet<string> objects))
+            {
+                return false;
+            }
+
+            var currentTenantId = GetCurrentTenantIdOrNull();
+            var hardDeleteKey = EntityHelper.GetHardDeleteKey(entry.Entity, currentTenantId);
+            return objects.Contains(hardDeleteKey);
         }
 
         protected virtual void AddDomainEvents(List<DomainEventEntry> domainEvents, object entityAsObj)
@@ -306,12 +362,9 @@ namespace Abp.EntityFrameworkCore
             var entity = entry.Entity as IEntity<Guid>;
             if (entity != null && entity.Id == Guid.Empty)
             {
-                var dbGeneratedAttr = ReflectionHelper
-                    .GetSingleAttributeOrDefault<DatabaseGeneratedAttribute>(
-                    entry.Property("Id").Metadata.PropertyInfo
-                    );
+                var idPropertyEntry = entry.Property("Id");
 
-                if (dbGeneratedAttr == null || dbGeneratedAttr.DatabaseGeneratedOption == DatabaseGeneratedOption.None)
+                if (idPropertyEntry != null && idPropertyEntry.Metadata.ValueGenerated == ValueGenerated.Never)
                 {
                     entity.Id = GuidGenerator.Create();
                 }
@@ -477,37 +530,7 @@ namespace Abp.EntityFrameworkCore
 
         protected virtual Expression<Func<T, bool>> CombineExpressions<T>(Expression<Func<T, bool>> expression1, Expression<Func<T, bool>> expression2)
         {
-            var parameter = Expression.Parameter(typeof(T));
-
-            var leftVisitor = new ReplaceExpressionVisitor(expression1.Parameters[0], parameter);
-            var left = leftVisitor.Visit(expression1.Body);
-
-            var rightVisitor = new ReplaceExpressionVisitor(expression2.Parameters[0], parameter);
-            var right = rightVisitor.Visit(expression2.Body);
-
-            return Expression.Lambda<Func<T, bool>>(Expression.AndAlso(left, right), parameter);
-        }
-
-        class ReplaceExpressionVisitor : ExpressionVisitor
-        {
-            private readonly Expression _oldValue;
-            private readonly Expression _newValue;
-
-            public ReplaceExpressionVisitor(Expression oldValue, Expression newValue)
-            {
-                _oldValue = oldValue;
-                _newValue = newValue;
-            }
-
-            public override Expression Visit(Expression node)
-            {
-                if (node == _oldValue)
-                {
-                    return _newValue;
-                }
-
-                return base.Visit(node);
-            }
+            return ExpressionCombiner.Combine(expression1, expression2);
         }
     }
 }

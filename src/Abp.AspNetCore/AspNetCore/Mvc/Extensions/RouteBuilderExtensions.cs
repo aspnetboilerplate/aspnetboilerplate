@@ -18,5 +18,18 @@ namespace Abp.AspNetCore.Mvc.Extensions
                 action(routes);
             });
         }
+
+        public static void ConfigureAllEndpoints(this List<Action<IEndpointRouteBuilder>> routeBuilderActions, IEndpointRouteBuilder routes)
+        {
+            if (routeBuilderActions == null)
+            {
+                throw new ArgumentNullException(nameof(routeBuilderActions));
+            }
+
+            routeBuilderActions.ForEach(action =>
+            {
+                action(routes);
+            });
+        }
     }
 }

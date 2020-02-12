@@ -47,6 +47,24 @@ namespace Abp.Authorization
         public IFeatureDependency FeatureDependency { get; set; }
 
         /// <summary>
+        /// Custom Properties. Use this to add your own properties to permission.
+        /// <para>You can use this with indexer like Permission["mykey"]=data; </para>
+        /// <para>object mydata=Permission["mykey"]; </para>
+        /// </summary>
+        public Dictionary<string, object> Properties { get; }
+
+        /// <summary>
+        /// Shortcut of Properties dictionary
+        /// </summary>
+        public object this[string key]
+        {
+            get => !Properties.ContainsKey(key) ? null : Properties[key];
+            set
+            {
+                Properties[key] = value;
+            }
+        }
+        /// <summary>
         /// List of child permissions. A child permission can be granted only if parent is granted.
         /// </summary>
         public IReadOnlyList<Permission> Children => _children.ToImmutableList();
@@ -60,12 +78,14 @@ namespace Abp.Authorization
         /// <param name="description">A brief description for this permission</param>
         /// <param name="multiTenancySides">Which side can use this permission</param>
         /// <param name="featureDependency">Depended feature(s) of this permission</param>
+        /// <param name="properties">Custom Properties. Use this to add your own properties to permission.</param>
         public Permission(
             string name,
             ILocalizableString displayName = null,
             ILocalizableString description = null,
             MultiTenancySides multiTenancySides = MultiTenancySides.Host | MultiTenancySides.Tenant,
-            IFeatureDependency featureDependency = null)
+            IFeatureDependency featureDependency = null,
+            Dictionary<string, object> properties = null)
         {
             if (name == null)
             {
@@ -77,6 +97,7 @@ namespace Abp.Authorization
             Description = description;
             MultiTenancySides = multiTenancySides;
             FeatureDependency = featureDependency;
+            Properties = properties ?? new Dictionary<string, object>();
 
             _children = new List<Permission>();
         }
@@ -87,15 +108,21 @@ namespace Abp.Authorization
         /// </summary>
         /// <returns>Returns newly created child permission</returns>
         public Permission CreateChildPermission(
-            string name, 
-            ILocalizableString displayName = null, 
-            ILocalizableString description = null, 
+            string name,
+            ILocalizableString displayName = null,
+            ILocalizableString description = null,
             MultiTenancySides multiTenancySides = MultiTenancySides.Host | MultiTenancySides.Tenant,
-            IFeatureDependency featureDependency = null)
+            IFeatureDependency featureDependency = null,
+            Dictionary<string, object> properties = null)
         {
-            var permission = new Permission(name, displayName, description, multiTenancySides, featureDependency) { Parent = this };
+            var permission = new Permission(name, displayName, description, multiTenancySides, featureDependency, properties) { Parent = this };
             _children.Add(permission);
             return permission;
+        }
+
+        public void RemoveChildPermission(string name)
+        {
+            _children.RemoveAll(p => p.Name == name);
         }
 
         public override string ToString()

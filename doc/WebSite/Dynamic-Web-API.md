@@ -35,13 +35,13 @@ least a one-level namespace, but you can define more deep namespaces like
 The address of the api controller will look like
 '/api/services/tasksystem/task' and the GetTasks method's address will be
 '/api/services/tasksystem/task/getTasks'. Method names are converted to
-**camelCase** since it's conventional in the world of javascript.
+**camelCase** since it's conventional in the world of JavaScript.
 
 #### ForAll Method
 
 We may have many application services in an application and building api
 controllers one by one may be a tedious and forgettable work.
-DynamicApiControllerBuilper provides a method to build web api
+DynamicApiControllerBuilder provides a method to build web api
 controllers for all application services in one call. Example:
 
     Configuration.Modules.AbpWebApi().DynamicApiControllerBuilder
@@ -67,7 +67,7 @@ We can override the configuration after the ForAll method. Example:
     Configuration.Modules.AbpWebApi().DynamicApiControllerBuilder
         .ForAll<IApplicationService>(Assembly.GetAssembly(typeof(SimpleTaskSystemApplicationModule)), "tasksystem")
         .Build();
-    
+
     Configuration.Modules.AbpWebApi().DynamicApiControllerBuilder
         .For<ITaskAppService>("tasksystem/task")
         .ForMethod("CreateTask").DontCreateAction().Build();
@@ -92,7 +92,7 @@ using the ForAll method. Example:
         })
         .Build();
 
-In this example, we used a custom attribute, MyIgnoreApiAttribute, to ignore a 
+In this example, we used a custom attribute, MyIgnoreApiAttribute, to ignore a
 dynamic web api controller's actions/methods when they are marked with it.
 
 #### Http Verbs
@@ -119,17 +119,17 @@ interface:
     {
         [HttpGet]
         GetTasksOutput GetTasks(GetTasksInput input);
-    
+
         [HttpPut]
         void UpdateTask(UpdateTaskInput input);
-    
+
         [HttpPost]
         void CreateTask(CreateTaskInput input);
     }
 
 In order to use these attributes, you need to add a reference to the
 [Microsoft.AspNet.WebApi.Core](https://www.nuget.org/packages/Microsoft.AspNet.WebApi.Core)
-nuget package to your project.
+NuGet package to your project.
 
 ##### Naming Convention
 
@@ -167,12 +167,12 @@ You can also use the **RemoteService** attribute for any **interface** or
 **method** definition to enable or disable (**IsEnabled**) the dynamic API or
 API explorer settings (**IsMetadataEnabled**).
 
-### Dynamic Javascript Proxies
+### Dynamic JavaScript Proxies
 
 You can use the dynamically created web api controller via ajax in
-javascript. ASP.NET Boilerplate also simplifies this by creating dynamic
-javascript proxies for dynamic web api controllers. You can call a
-dynamic web api controller's action from javascript like a function
+JavaScript. ASP.NET Boilerplate also simplifies this by creating dynamic
+JavaScript proxies for dynamic web api controllers. You can call a
+dynamic web api controller's action from JavaScript like a function
 call:
 
     abp.services.tasksystem.task.getTasks({
@@ -181,7 +181,7 @@ call:
         //use result.tasks here...
     });
 
-Javascript proxies are created dynamically. You should include the
+JavaScript proxies are created dynamically. You should include the
 dynamic script on your page before you use it:
 
     <script src="/api/AbpServiceProxies/GetAll" type="text/javascript"></script>
@@ -211,7 +211,7 @@ All the parameters of [jQuery.ajax](http://api.jquery.com/jQuery.ajax/) are
 valid here.
 
 In addition to standard jQuery.ajax parameters, you can add
-**abpHandleError: false** to AJAX options in order to disable 
+**abpHandleError: false** to AJAX options in order to disable
 messages displaying when errors occur.
 
 #### Single Service Script
@@ -244,10 +244,10 @@ services**. Consider the sample below:
     })();
 
 We can inject a **service** using it's name (with a namespace). We
-can call it's **functions** as regular javascript functions. Notice that
+can call it's **functions** as regular JavaScript functions. Notice that
 we registered to the **then** handler (instead of done) since it's similar to
 what is in angular's **$http** service. ASP.NET Boilerplate uses the $http
-service of AngularJs. If you want to pass the $http **configuration**, you
+service of AngularJS. If you want to pass the $http **configuration**, you
 can pass a configuration object as the last parameter of the service
 method.
 
@@ -256,6 +256,17 @@ scripts on your page:
 
     <script src="~/Abp/Framework/scripts/libs/angularjs/abp.ng.js"></script>
     <script src="~/api/AbpServiceProxies/GetAll?type=angular"></script>
+
+#### Minification
+
+ASP.NET Boilerplate dynamic api, as well as localization javascript can also
+be returned minifed, by setting the *minify** flag:
+
+    <script src="~/api/AbpServiceProxies/GetAll?minify=true"></script>
+    <script src="~/api/AbpServiceProxies/GetAll?type=angular&minify=true"></script>
+	<script src="/api/AbpServiceProxies/Get?name=tasksystem/task&minify=true" type="text/javascript"></script>
+
+Default minification value is **false**.
 
 ### Enable/Disable
 
@@ -291,7 +302,7 @@ handling](Handling-Exceptions.md) will be disabled (DontWrapResult
 attribute has WrapOnError properties that can be used to enable the handling
 and wrapping for exceptions).
 
-Note: Dynamic javascript proxies can understand if the result is unwrapped
+Note: Dynamic JavaScript proxies can understand if the result is unwrapped
 and will run properly in either case.
 
 ### About Parameter Binding
@@ -299,7 +310,7 @@ and will run properly in either case.
 ASP.NET Boilerplate creates Api Controllers on runtime. ASP.NET Web
 API's [model and parameter
 binding](http://www.asp.net/web-api/overview/formats-and-model-binding/parameter-binding-in-aspnet-web-api)
-is used to bind models and parameters. You can read the following 
+is used to bind models and parameters. You can read the following
 [documentation](http://www.asp.net/web-api/overview/formats-and-model-binding/parameter-binding-in-aspnet-web-api)
 for more information.
 
@@ -310,7 +321,7 @@ for advanced control binding.
 
 #### DTOs vs Primitive Types
 
-We strongly advise you to use 
+We strongly advise you to use
 [DTO](http://www.aspnetboilerplate.com/Pages/Documents/Data-Transfer-Objects)s
 as method parameters for application services and web api controllers.
 You can also use primitive types like string, int, bool... or

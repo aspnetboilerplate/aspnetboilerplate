@@ -18,7 +18,7 @@ namespace Abp.Authorization.Users
         /// <summary>
         /// Maximum length of the <see cref="UserName"/> property.
         /// </summary>
-        public const int MaxUserNameLength = 32;
+        public const int MaxUserNameLength = 256;
 
         /// <summary>
         /// Maximum length of the <see cref="EmailAddress"/> property.
@@ -28,12 +28,12 @@ namespace Abp.Authorization.Users
         /// <summary>
         /// Maximum length of the <see cref="Name"/> property.
         /// </summary>
-        public const int MaxNameLength = 32;
+        public const int MaxNameLength = 64;
 
         /// <summary>
         /// Maximum length of the <see cref="Surname"/> property.
         /// </summary>
-        public const int MaxSurnameLength = 32;
+        public const int MaxSurnameLength = 64;
 
         /// <summary>
         /// Maximum length of the <see cref="AuthenticationSource"/> property.
@@ -65,13 +65,23 @@ namespace Abp.Authorization.Users
         /// Maximum length of the <see cref="PasswordResetCode"/> property.
         /// </summary>
         public const int MaxPasswordResetCodeLength = 328;
-        
+
+        /// <summary>
+        /// Maximum length of the <see cref="PhoneNumber"/> property.
+        /// </summary>
+        public const int MaxPhoneNumberLength = 32;
+
+        /// <summary>
+        /// Maximum length of the <see cref="SecurityStamp"/> property.
+        /// </summary>
+        public const int MaxSecurityStampLength = 128;
+
         /// <summary>
         /// Authorization source name.
         /// It's set to external authentication source name if created by an external source.
         /// Default: null.
         /// </summary>
-        [MaxLength(MaxAuthenticationSourceLength)]
+        [StringLength(MaxAuthenticationSourceLength)]
         public virtual string AuthenticationSource { get; set; }
 
         /// <summary>
@@ -154,6 +164,7 @@ namespace Abp.Authorization.Users
         /// <summary>
         /// Gets or sets the phone number.
         /// </summary>
+        [StringLength(MaxPhoneNumberLength)]
         public virtual string PhoneNumber { get; set; }
 
         /// <summary>
@@ -164,6 +175,7 @@ namespace Abp.Authorization.Users
         /// <summary>
         /// Gets or sets the security stamp.
         /// </summary>
+        [StringLength(MaxSecurityStampLength)]
         public virtual string SecurityStamp { get; set; }
 
         /// <summary>
@@ -211,16 +223,10 @@ namespace Abp.Authorization.Users
         /// If as user is not active, he/she can not use the application.
         /// </summary>
         public virtual bool IsActive { get; set; }
-
-        /// <summary>
-        /// The last time this user entered to the system.
-        /// </summary>
-        public virtual DateTime? LastLoginTime { get; set; }
-
+        
         protected AbpUserBase()
         {
             IsActive = true;
-            IsLockoutEnabled = true;
             SecurityStamp = SequentialGuidGenerator.Instance.Create().ToString();
         }
 

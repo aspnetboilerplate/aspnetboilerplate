@@ -68,9 +68,9 @@ notifications. Examples:
         }
 
         //Subscribe to a general notification
-        public async Task Subscribe_SentFrendshipRequest(int? tenantId, long userId)
+        public async Task Subscribe_SentFriendshipRequest(int? tenantId, long userId)
         {
-            await _notificationSubscriptionManager.SubscribeAsync(new UserIdentifier(tenantId, userId), "SentFrendshipRequest");    
+            await _notificationSubscriptionManager.SubscribeAsync(new UserIdentifier(tenantId, userId), "SentFriendshipRequest");    
         }
 
         //Subscribe to an entity notification
@@ -100,23 +100,23 @@ subscriptions.
 
     public class MyService : ITransientDependency
     {
-        private readonly INotificationPublisher _notiticationPublisher;
+        private readonly INotificationPublisher _notificationPublisher;
 
-        public MyService(INotificationPublisher notiticationPublisher)
+        public MyService(INotificationPublisher notificationPublisher)
         {
-            _notiticationPublisher = notiticationPublisher;
+            _notificationPublisher = notificationPublisher;
         }
 
         //Send a general notification to a specific user
         public async Task Publish_SentFrendshipRequest(string senderUserName, string friendshipMessage, UserIdentifier targetUserId)
         {
-            await _notiticationPublisher.PublishAsync("SentFrendshipRequest", new SentFrendshipRequestNotificationData(senderUserName, friendshipMessage), userIds: new[] { targetUserId });
+            await _notificationPublisher.PublishAsync("SentFrendshipRequest", new SentFrendshipRequestNotificationData(senderUserName, friendshipMessage), userIds: new[] { targetUserId });
         }
 
         //Send an entity notification to a specific user
         public async Task Publish_CommentPhoto(string commenterUserName, string comment, Guid photoId, UserIdentifier photoOwnerUserId)
         {
-            await _notiticationPublisher.PublishAsync("CommentPhoto", new CommentPhotoNotificationData(commenterUserName, comment), new EntityIdentifier(typeof(Photo), photoId), userIds: new[] { photoOwnerUserId });
+            await _notificationPublisher.PublishAsync("CommentPhoto", new CommentPhotoNotificationData(commenterUserName, comment), new EntityIdentifier(typeof(Photo), photoId), userIds: new[] { photoOwnerUserId });
         }
 
         //Send a general notification to all subscribed users in current tenant (tenant in the session)
@@ -126,7 +126,7 @@ subscriptions.
             var data = new LocalizableMessageNotificationData(new LocalizableString("LowDiskWarningMessage", "MyLocalizationSourceName"));
             data["remainingDiskInMb"] = remainingDiskInMb;
 
-            await _notiticationPublisher.PublishAsync("System.LowDisk", data, severity: NotificationSeverity.Warn);    
+            await _notificationPublisher.PublishAsync("System.LowDisk", data, severity: NotificationSeverity.Warn);    
         }
     }
 
@@ -182,12 +182,20 @@ application.
 ### Real-Time Notifications
 
 While you can use IUserNotificationManager to query notifications, we
-generally want to push real time notifications to the client.
+generally want to push real-time notifications to the client.
 
-The notification system uses **IRealTimeNotifier** to send real time
-notifications to users. This can be implemented with any type of real
-time communication system. It's implemented using **SignalR** in a
-seperated package. The [startup templates](/Templates) already have SignalR
+The notification system uses **IRealTimeNotifier** to send real-time
+notifications to users. This can be implemented with any type of real-time
+communication system.
+
+Examples of real-time notifiers:
+
+- SignalR
+- Email
+- SMS
+
+It's implemented using **SignalR** in a
+separated package. The [startup templates](/Templates) already have SignalR
 installed. See the [SignalR Integration
 document](/Pages/Documents/SignalR-Integration) for more information.
 
@@ -195,9 +203,56 @@ document](/Pages/Documents/SignalR-Integration) for more information.
 in a [**background job**](/Pages/Documents/Background-Jobs-And-Workers).
 Because of this, notifications may be sent with a small delay.
 
+#### Multiple Notifiers
+
+ASP.NET Boilerplate supports multiple **IRealTimeNotifiers** to notify
+users in different ways.
+
+For example, you can implement an **EmailRealTimeNotifier**:
+
+```c#
+public class EmailRealTimeNotifier : IRealTimeNotifier, ITransientDependency
+{
+    private readonly IEmailSender _emailSender;
+    private readonly UserManager _userManager;
+
+    public EmailRealTimeNotifier(
+        IEmailSender emailSender,
+        UserManager userManager)
+    {
+        _emailSender = emailSender;
+        _userManager = userManager;
+    }
+
+    public async Task SendNotificationsAsync(UserNotification[] userNotifications)
+    {
+        foreach (var userNotification in userNotifications)
+        {
+            if (userNotification.Notification.Data is MessageNotificationData data)
+            {
+                var user = await _userManager.GetUserByIdAsync(userNotification.UserId);
+                
+                _emailSender.Send(
+                    to: user.EmailAddress,
+                    subject: "You have a new notification!",
+                    body: data.Message,
+                    isBodyHtml: true
+                );
+            }
+        }
+    }
+}
+```
+
+Add it in the **PreInitialize** method of your module:
+
+```c#
+Configuration.Notifications.Notifiers.Add<EmailRealTimeNotifier>();
+```
+
 #### Client-Side
 
-When a real-time notification is received, ASP.NET Boilerplate triggers
+When a real-time notification is received via SignalR, ASP.NET Boilerplate triggers
 a **global event** on the client-side. You can register it like this to get
 notifications:
 
@@ -294,7 +349,7 @@ real project, we will not use the alert function. We can use the
 nice UI notifications.
 
 If you need to implement logic like what is shown above, there is an easier and
-scaleable way. You can just use a single line of code to show a [UI
+scalable way. You can just use a single line of code to show a [UI
 notification](/Pages/Documents/Javascript-API/Notification) when a push
 notification is received:
 
@@ -331,7 +386,7 @@ notifications when a push notification is received.
 The notification system uses **INotificationStore** to persist
 notifications. This must be implemented in order to make the notification
 system properly work. You can implement it yourself or use
-**[module-zero](/Pages/Documents/Zero/Overall)** which already
+**[Module Zero](/Pages/Documents/Zero/Overall)** which already
 implements it.
 
 ### Notification Definitions

@@ -4,7 +4,7 @@ Fowler).
 
 Repositories, in practice, are used to perform database operations for
 domain objects ([Entity](/Pages/Documents/Entities) and Value types).
-Generally, a seperate repository is used for each Entity (or Aggregate
+Generally, a separate repository is used for each Entity (or Aggregate
 Root).
 
 ### Default Repositories
@@ -21,12 +21,12 @@ insert an entity into a database:
     public class PersonAppService : IPersonAppService
     {
         private readonly IRepository<Person> _personRepository;
-
+    
         public PersonAppService(IRepository<Person> personRepository)
         {
             _personRepository = personRepository;
         }
-
+    
         public void CreatePerson(CreatePersonInput input)
         {        
             person = new Person { Name = input.Name, EmailAddress = input.EmailAddress };
@@ -48,7 +48,7 @@ A repository definition for a Person entity is shown below:
 
     public interface IPersonRepository : IRepository<Person>
     {
-
+    
     }
 
 IPersonRepository extends **IRepository&lt;TEntity&gt;**. It's used to
@@ -58,7 +58,7 @@ entity's primary key is not an int, you can extend the
 
     public interface IPersonRepository : IRepository<Person, long>
     {
-
+    
     }
 
 #### Custom Repository Implementation
@@ -124,6 +124,7 @@ does not implements it, the Load method works identically to the Get method.
     List<TEntity> GetAllList(Expression<Func<TEntity, bool>> predicate);
     Task<List<TEntity>> GetAllListAsync(Expression<Func<TEntity, bool>> predicate);
     IQueryable<TEntity> GetAll();
+    IQueryable<TEntity> GetAllIncluding(params Expression<Func<TEntity, object>>[] propertySelectors)
 
 The **GetAllList** method is used to retrieve all entities from the database. An overload
 of it can be used to filter entities. Examples:
@@ -140,12 +141,18 @@ after it. Examples:
                 orderby person.Name
                 select person;
     var people = query.ToList();
-
+    
     //Example 2:
     List<Person> personList2 = _personRepository.GetAll().Where(p => p.Name.Contains("H")).OrderBy(p => p.Name).Skip(40).Take(20).ToList();
 
 When using GetAll, almost all queries can be written in Linq. It
 can even be used in a join expression!
+
+The **GetAllIncluding** allows to specify related data to be included in query results. In the following example, people will be retrieved with their Addresses property populated.
+
+```
+var allPeople = await _personRepository.GetAllIncluding(p => p.Addresses).ToListAsync();
+```
 
 #### About IQueryable&lt;T&gt;
 
@@ -167,7 +174,7 @@ can be usable out of a unit of work.
 
     T Query<T>(Func<IQueryable<TEntity>, T> queryMethod);
 
-The Query method accepts a lambda (or method) that recieves
+The Query method accepts a lambda (or method) that receives
 IQueryable&lt;T&gt; and returns any type of object. Example:
 
     var people = _personRepository.Query(q => q.Where(p => p.Name.Contains("H")).OrderBy(p => p.Name).ToList());
@@ -225,7 +232,7 @@ database
 The first method accepts an existing entity, the second one accepts an Id of the
 entity to delete. The last one accepts a condition to delete all
 entities that fit a given condition. Note that all entities matching a given
-predicate may be retrived from the database and then deleted (based on
+predicate may be retrieved from the database and then deleted (based on
 repository implementation). So use it carefully! It may cause
 performance problems if there are too many entities with a given
 condition.
@@ -253,16 +260,16 @@ model:
     public class PersonAppService : AbpWpfDemoAppServiceBase, IPersonAppService
     {
         private readonly IRepository<Person> _personRepository;
-
+    
         public PersonAppService(IRepository<Person> personRepository)
         {
             _personRepository = personRepository;
         }
-
+    
         public async Task<GetPeopleOutput> GetAllPeople()
         {
             var people = await _personRepository.GetAllListAsync();
-
+    
             return new GetPeopleOutput
             {
                 People = Mapper.Map<List<PersonDto>>(people)
@@ -286,7 +293,7 @@ Connection management is made automatically by ASP.NET Boilerplate.
 
 A database connection is **opened** and a **transaction** automatically begins while
 entering a repository method. When the method ends and
-returns, all changes are **saved**, the transaction is **commited** and
+returns, all changes are **saved**, the transaction is **committed** and
 the database connection is **closed** by ASP.NET Boilerplate.
 If your repository method throws any type of Exception, the transaction
 is automatically **rolled back** and the database connection is closed. This

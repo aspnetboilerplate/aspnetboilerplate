@@ -1,0 +1,35 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<localizationDictionary culture="zh-Hans">
+  <texts>
+    <text name="Identity.ConcurrencyFailure">乐观并发失败,对象已修改.</text>
+    <text name="Identity.DefaultError" value="发生了一个未知的异常错误." />
+    <text name="Identity.DuplicateEmail" value="邮箱地址 '{0}' 已被占用." />
+    <text name="Identity.DuplicateRoleName">角色名称 '{0}' 已经被使用.</text>
+    <text name="Identity.DuplicateUserName" value="名字{0}已被占用." />
+    <text name="Identity.InvalidEmail" value="邮箱地址 '{0}' 不符合要求." />
+    <text name="Identity.InvalidPasswordHasherCompatibilityMode">提供的哈希密码兼容模式无效.</text>
+    <text name="Identity.InvalidPasswordHasherIterationCount">迭代次数必须是一个正整数.</text>
+    <text name="Identity.InvalidRoleName">角色名称'{0}'无效.</text>
+    <text name="Identity.InvalidToken" value="无效的token." />
+    <text name="Identity.InvalidUserName" value="用户名{0}不符合要求, 只能包含字母和数字." />
+    <text name="Identity.LoginAlreadyAssociated">登录的用户已存在.</text>
+    <text name="Identity.PasswordMismatch" value="密码错误." />
+    <text name="Identity.PasswordRequireDigit" value="密码至少要包含一位数字 ('0'-'9')." />
+    <text name="Identity.PasswordRequireLower" value="密码至少要包含一位小写字母 ('a'-'z')." />
+    <text name="Identity.PasswordRequireNonAlphanumeric" value="密码必须包含一位非字母特殊符号或数字." />
+    <text name="Identity.PasswordRequireUpper" value="密码至少要包含一位大写字母 ('A'-'Z')." />
+    <text name="Identity.PasswordTooShort" value="密码至少要{0}位." />
+    <text name="Identity.RoleNotFound" value="角色{0}不存在." />
+    <text name="Identity.UserAlreadyHasPassword" value="用户已设置密码." />
+    <text name="Identity.UserAlreadyInRole" value="用户已拥有此角色." />
+    <text name="Identity.UserLockedOut">用户被锁定.</text>
+    <text name="Identity.UserLockoutNotEnabled" value="对此用户，不能启用锁定." />
+    <text name="Identity.UserNameNotFound" value="用户 {0} 不存在." />
+    <text name="Identity.UserNotInRole" value="用户不包含此角色." />
+    <text name="Email">邮箱</text>
+    <text name="EmailSecurityCodeSubject">安全码</text>
+    <text name="EmailSecurityCodeBody">您的安全码是: {0}</text>
+    <text name="Sms">短信</text>
+    <text name="SmsSecurityCodeMessage">您的短信验证码是: {0}</text>
+  </texts>
+</localizationDictionary>

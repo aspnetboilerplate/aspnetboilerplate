@@ -34,61 +34,31 @@
 
     /* MESSAGE **************************************************/
 
-    var showMessage = function (type, message, title) {
-        if (!title) {
-            title = message;
-            message = undefined;
+    var showMessage = function (type, message, title, callback, options) {
+        options = options || {};
+        var messageContent = {};
+        if(title){
+            messageContent.title = title;
+        }
+
+        if (options.isHtml) {
+            delete options.isHtml;
+            var el = document.createElement('div');
+            //https://github.com/t4t5/sweetalert/issues/842
+            el.style = 'position: relative;';
+            el.innerHTML = message;
+
+            messageContent.content = el;
+        } else {
+            messageContent.text = message;
         }
 
         var opts = $.extend(
             {},
             abp.libs.sweetAlert.config['default'],
             abp.libs.sweetAlert.config[type],
-            {
-                title: title,
-                text: message
-            }
-        );
-
-        return $.Deferred(function ($dfd) {
-            sweetAlert(opts).then(function () {
-                $dfd.resolve();
-            });
-        });
-    };
-
-    abp.message.info = function (message, title) {
-        return showMessage('info', message, title);
-    };
-
-    abp.message.success = function (message, title) {
-        return showMessage('success', message, title);
-    };
-
-    abp.message.warn = function (message, title) {
-        return showMessage('warn', message, title);
-    };
-
-    abp.message.error = function (message, title) {
-        return showMessage('error', message, title);
-    };
-
-    abp.message.confirm = function (message, titleOrCallback, callback) {
-        var userOpts = {
-            text: message
-        };
-
-        if ($.isFunction(titleOrCallback)) {
-            callback = titleOrCallback;
-        } else if (titleOrCallback) {
-            userOpts.title = titleOrCallback;
-        };
-
-        var opts = $.extend(
-            {},
-            abp.libs.sweetAlert.config['default'],
-            abp.libs.sweetAlert.config.confirm,
-            userOpts
+            messageContent,
+            options
         );
 
         return $.Deferred(function ($dfd) {
@@ -97,6 +67,26 @@
                 $dfd.resolve(isConfirmed);
             });
         });
+    };
+
+    abp.message.info = function (message, title, options) {
+        return showMessage('info', message, title, null, options);
+    };
+
+    abp.message.success = function (message, title, options) {
+        return showMessage('success', message, title, null, options);
+    };
+
+    abp.message.warn = function (message, title, options) {
+        return showMessage('warn', message, title, null, options);
+    };
+
+    abp.message.error = function (message, title, options) {
+        return showMessage('error', message, title, null, options);
+    };
+
+    abp.message.confirm = function (message, title, callback, options) {
+        return showMessage('confirm', message, title, callback, options);
     };
 
     abp.event.on('abp.dynamicScriptsInitialized', function () {

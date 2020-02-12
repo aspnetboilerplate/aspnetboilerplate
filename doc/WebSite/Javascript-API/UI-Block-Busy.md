@@ -16,7 +16,7 @@ Examples:
 
 The UI Block API is implemented using the
 [blockUI](http://malsup.com/jquery/block/) jQuery plug-in by default. To
-make it work, you must include it's javascript file, then include
+make it work, you must include it's JavaScript file, then include
 **abp.blockUI.js** to your page as the adapter (See this JavaScript file for the
 simple implementation and defaults).
 

@@ -26,7 +26,10 @@ namespace Abp.AspNetCore.Configuration
 
         public bool SetNoCacheForAjaxResponses { get; set; }
 
-        public List<Action<IRouteBuilder>> RouteConfiguration { get; }
+        public bool UseMvcDateTimeFormatForAppServices { get; set; }
+
+        public List<Action<IEndpointRouteBuilder>> EndpointConfiguration { get; }
+
 
         public AbpAspNetCoreConfiguration()
         {
@@ -35,10 +38,11 @@ namespace Abp.AspNetCore.Configuration
             DefaultUnitOfWorkAttribute = new UnitOfWorkAttribute();
             ControllerAssemblySettings = new ControllerAssemblySettingList();
             FormBodyBindingIgnoredTypes = new List<Type>();
-            RouteConfiguration = new List<Action<IRouteBuilder>>();
+            EndpointConfiguration = new List<Action<IEndpointRouteBuilder>>();
             IsValidationEnabledForControllers = true;
             SetNoCacheForAjaxResponses = true;
             IsAuditingEnabled = true;
+            UseMvcDateTimeFormatForAppServices = false;
         }
        
         public AbpControllerAssemblySettingBuilder CreateControllersForAppServices(

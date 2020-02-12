@@ -2,9 +2,9 @@
 using Abp.AspNetCore.Configuration;
 using Abp.AspNetCore.MultiTenancy;
 using Abp.AspNetCore.Mvc.Auditing;
-using Abp.AspNetCore.Mvc.Results.Wrapping;
 using Abp.AspNetCore.Runtime.Session;
 using Abp.AspNetCore.Security.AntiForgery;
+using Abp.AspNetCore.Webhook;
 using Abp.Auditing;
 using Abp.Configuration.Startup;
 using Abp.Dependency;
@@ -13,6 +13,7 @@ using Abp.Reflection.Extensions;
 using Abp.Runtime.Session;
 using Abp.Web;
 using Abp.Web.Security.AntiForgery;
+using Abp.Webhooks;
 using Microsoft.AspNetCore.Antiforgery;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc.ApplicationParts;
@@ -32,6 +33,7 @@ namespace Abp.AspNetCore
             Configuration.ReplaceService<IPrincipalAccessor, AspNetCorePrincipalAccessor>(DependencyLifeStyle.Transient);
             Configuration.ReplaceService<IAbpAntiForgeryManager, AbpAspNetCoreAntiForgeryManager>(DependencyLifeStyle.Transient);
             Configuration.ReplaceService<IClientInfoProvider, HttpContextClientInfoProvider>(DependencyLifeStyle.Transient);
+            Configuration.ReplaceService<IWebhookSender, AspNetCoreWebhookSender>(DependencyLifeStyle.Transient);
 
             Configuration.Modules.AbpAspNetCore().FormBodyBindingIgnoredTypes.Add(typeof(IFormFile));
 
@@ -57,16 +59,18 @@ namespace Abp.AspNetCore
             var partManager = IocManager.Resolve<ApplicationPartManager>();
             var moduleManager = IocManager.Resolve<IAbpModuleManager>();
 
+            partManager.AddApplicationPartsIfNotAddedBefore(typeof(AbpAspNetCoreModule).Assembly);
+
             var controllerAssemblies = configuration.ControllerAssemblySettings.Select(s => s.Assembly).Distinct();
             foreach (var controllerAssembly in controllerAssemblies)
             {
-                partManager.ApplicationParts.Add(new AssemblyPart(controllerAssembly));
+                partManager.AddApplicationPartsIfNotAddedBefore(controllerAssembly);
             }
 
             var plugInAssemblies = moduleManager.Modules.Where(m => m.IsLoadedAsPlugIn).Select(m => m.Assembly).Distinct();
             foreach (var plugInAssembly in plugInAssemblies)
             {
-                partManager.ApplicationParts.Add(new AssemblyPart(plugInAssembly));
+                partManager.AddApplicationPartsIfNotAddedBefore(plugInAssembly);
             }
         }
 

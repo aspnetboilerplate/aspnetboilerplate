@@ -17,10 +17,12 @@ namespace Abp.Web.Security.AntiForgery
 
         public static bool IsValid(this IAbpAntiForgeryManager manager, HttpRequestHeaders headers)
         {
-            var cookieTokenValue = GetCookieValue(manager, headers);
-            if (cookieTokenValue.IsNullOrEmpty())
+            var authCookieValue = GetCookieValue(manager.Configuration.AuthorizationCookieName, headers);
+            var antiForgeryCookieValue = GetCookieValue(manager.Configuration.TokenCookieName, headers);
+
+            if (antiForgeryCookieValue.IsNullOrEmpty())
             {
-                return true;
+                return authCookieValue.IsNullOrEmpty();
             }
 
             var headerTokenValue = GetHeaderValue(manager, headers);
@@ -29,18 +31,18 @@ namespace Abp.Web.Security.AntiForgery
                 return false;
             }
 
-            return manager.As<IAbpAntiForgeryValidator>().IsValid(cookieTokenValue, headerTokenValue);
+            return manager.As<IAbpAntiForgeryValidator>().IsValid(antiForgeryCookieValue, headerTokenValue);
         }
 
-        private static string GetCookieValue(IAbpAntiForgeryManager manager, HttpRequestHeaders headers)
+        private static string GetCookieValue(string cookieName, HttpRequestHeaders headers)
         {
-            var cookie = headers.GetCookies(manager.Configuration.TokenCookieName).LastOrDefault();
+            var cookie = headers.GetCookies(cookieName).LastOrDefault();
             if (cookie == null)
             {
                 return null;
             }
 
-            return cookie[manager.Configuration.TokenCookieName].Value;
+            return cookie[cookieName].Value;
         }
 
         private static string GetHeaderValue(IAbpAntiForgeryManager manager, HttpRequestHeaders headers)
@@ -56,7 +58,7 @@ namespace Abp.Web.Security.AntiForgery
             {
                 return null;
             }
-            
+
             return headersArray.Last().Split(", ").Last();
         }
     }

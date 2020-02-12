@@ -9,5 +9,6 @@
     <text name="CanNotRenameAdminUser" value="Lietotājvārdu {0} nevar pārdēvēt, jo tas ir noklusētais administrators!" />
     <text name="CanNotDeleteAdminUser" value="Lietotāju {0} nevar dzēst, jo tas ir noklusētais administrators!" />
     <text name="OrganizationUnitDuplicateDisplayNameWarning" value="Organizācija {0} jau eksistē. Vienā līmenī nevar tikt izveidotas divas vienības ar tādu pašu nosaukumu." />
+    <text name="InvalidFeatureValue" value="{0} funkciju vērtība nav derīga!" />
   </texts>
 </localizationDictionary>

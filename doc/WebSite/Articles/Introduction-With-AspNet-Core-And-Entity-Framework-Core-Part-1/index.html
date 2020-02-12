@@ -1,0 +1,778 @@
+﻿<i id="abp-title" data-title="Introduction With AspNet Core And Entity Framework Core Part 1"></i>
+
+<ul class="download">
+	<li>Get the source code from the <a href="https://github.com/aspnetboilerplate/aspnetboilerplate-samples/tree/master/SimpleTaskSystem-Core">GitHub repository.</a></li>
+</ul>
+
+<ul class="abp-invisible">
+	<li><a href="#ArticleIntro">Introduction</a>
+
+	<ul>
+		<li><a href="#ArticleRequirements">Prerequirements</a></li>
+	</ul>
+	</li>
+	<li><a href="#ArticleCreateApp">Create the Application</a></li>
+	<li><a href="#ArticleDevelopApp">Developing the Application</a>
+	<ul>
+		<li><a href="#ArticleCreateTaskEntity">Creating a Task Entity</a></li>
+		<li><a href="#ArticleAddTaskToDbContext">Adding Task to DbContext</a></li>
+		<li><a href="#ArticleCreateFirstMigration">Creating the First Database Migration</a></li>
+		<li><a href="#ArticleCreateDb">Creating the Database</a></li>
+		<li><a href="#ArticleTaskAppService">Task Application Service</a></li>
+		<li><a href="#ArticleTestTaskAppService">Testing the TaskAppService</a></li>
+		<li><a href="#ArticleTaskListView">Task List View</a>
+		<ul>
+			<li><a href="#ArticleAddTaskListMenuItem">Adding a New Menu Item</a></li>
+			<li><a href="#ArticleCreateTaskController">Creating the TaskController and ViewModel</a></li>
+			<li><a href="#ArticleTaskListPage">Task List Page</a></li>
+			<li><a href="#ArticleLocalization">Localization</a></li>
+			<li><a href="#ArticleFilterTasks">Filtering Tasks</a></li>
+		</ul>
+		</li>
+		<li><a href="#ArticleTaskListPageTest">Automated Testing Task List Page</a></li>
+	</ul>
+	</li>
+	<li><a href="#ArticleMore">More</a></li>
+	<li><a href="#ArticleHistory">Article History</a></li>
+</ul>
+
+<h2 id="ArticleIntro">Introduction</h2>
+
+<p>This is first part of the &quot;<em>Using ASP.NET Core, Entity Framework Core and ASP.NET Boilerplate to Create NLayered Web Application</em>&quot; article series. See other parts:</p>
+
+<ul>
+	<li>Part I (this one) - Using ASP.NET Core, Entity Framework Core and ASP.NET Boilerplate to Create NLayered Web Application</li>
+	<li><a href="http://www.codeproject.com/Articles/1117216/Using-ASP-NET-Core-Entity-Framework-Core-and-ASP" data-abp-href="/Pages/Articles/Introduction-With-AspNet-Core-And-Entity-Framework-Core-Part-2/index.html">Part II - Using ASP.NET Core, Entity Framework Core and ASP.NET Boilerplate to Create NLayered Web Application</a></li>
+</ul>
+
+<p>In this article, I&#39;ll show to create a simple cross platform <strong>layered</strong> web application using the following tools:</p>
+
+<ul>
+	<li><a href="https://www.microsoft.com/net/core#windowsvs2017" target="_blank">.Net Core</a> as base cross platform application development framework.</li>
+	<li><a href="http://www.aspnetboilerplate.com/" target="_blank">ASP.NET Boilerplate</a> (ABP) as startup template and application framework.</li>
+	<li><a href="https://docs.asp.net/" target="_blank">ASP.NET Core</a> as web framework.</li>
+	<li><a href="https://docs.efproject.net/" target="_blank">Entity Framework Core</a> as ORM framework.</li>
+	<li><a href="http://getbootstrap.com/" target="_blank">Twitter Bootstrap</a> as HTML&amp;CSS framework.</li>
+	<li><a href="http://jquery.com/" target="_blank">jQuery</a> as client side AJAX/DOM library.</li>
+	<li><a href="https://xunit.github.io/" target="_blank">xUnit</a> and <a href="http://shouldly.readthedocs.io/en/latest/" target="_blank">Shouldly</a> for server side unit/integrations tests.</li>
+</ul>
+
+<p>I will also use <a href="https://logging.apache.org/log4net/" target="_blank">Log4Net</a> and <a href="http://automapper.org/" target="_blank">AutoMapper</a> which are included in ABP <a href="http://www.aspnetboilerplate.com/Templates" target="_blank">startup template</a> by default. We will use the following techniques:</p>
+
+<ul>
+	<li><a href="http://aspnetboilerplate.com/Pages/Documents/NLayer-Architecture" target="_blank">Layered Architecture</a></li>
+	<li><a href="https://en.wikipedia.org/wiki/Domain-driven_design" target="_blank">Domain Driven Design</a> (DDD)</li>
+	<li><a href="http://www.aspnetboilerplate.com/Pages/Documents/Dependency-Injection" target="_blank">Dependency injection</a> (DI)</li>
+	<li><a href="https://en.wikipedia.org/wiki/Integration_testing" target="_blank">Integration Testing</a></li>
+</ul>
+
+<p>The project will be developed here is <strong>a simple task management application</strong> where tasks can be assigned to people. Instead of developing the application layer by layer, I will go to vertical and change the layers as the application grows. While the application grows, I will introduce some features of ABP and other frameworks as needed.</p>
+
+<h3 id="ArticleRequirements">Prerequirements</h3>
+
+<p>Following tools should be installed in your machine to be able to run/develop the sample application:</p>
+
+<ul>
+	<li><a href="https://www.visualstudio.com/" target="_blank">Visual Studio 2017</a></li>
+	<li>SQL Server (you can change connection string to localdb)</li>
+	<li>Visual Studio Extensions:
+	<ul>
+		<li><a href="https://visualstudiogallery.msdn.microsoft.com/9ec27da7-e24b-4d56-8064-fd7e88ac1c40" target="_blank">Bundler &amp; Minifier</a></li>
+		<li><a href="https://visualstudiogallery.msdn.microsoft.com/3b329021-cd7a-4a01-86fc-714c2d05bb6c" target="_blank">Web Compiler</a></li>
+	</ul>
+	</li>
+</ul>
+
+<h2 id="ArticleCreateApp">Create the Application</h2>
+
+<p>I used ABP&#39;s startup template (<a href="http://www.aspnetboilerplate.com/Templates">http://www.aspnetboilerplate.com/Templates</a>) to create a new web application named &quot;<strong>Acme.SimpleTaskApp</strong>&quot;. Company name (&quot;Acme&quot; here) is optional while creating templates. I also selected <strong>Multi Page Web Application</strong> since I don&#39;t want to use SPA in this article and I <strong>disabled Authentication</strong> since I want the most basic startup template:</p>
+
+<p><img alt="Template creation aspnetboilerplate" height="862" src="Template-Creation-3.png" width="638" /></p>
+
+<p>It creates a layered solution as shown below:&nbsp;</p>
+
+<p><img alt="Startup template projects" height="184" src="Template-Projects.png" width="303" /></p>
+
+<p>It includes 6 projects starting with the name that I entered as the project name:</p>
+
+<ul>
+	<li><strong>.Core</strong> project is for domain/business layer (entities, domain services...)</li>
+	<li><strong>.Application</strong> project is for application layer (DTOs, application services...)</li>
+	<li><strong>.EntityFramework</strong> project is for EF Core integration (abstracts EF Core from other layers).</li>
+	<li><strong>.Web</strong> project is for ASP.NET MVC layer.</li>
+	<li><strong>.Tests</strong> project is for unit and integration tests (up to application layer, excluding web layer)</li>
+	<li><strong>.Web.Tests</strong> project is for ASP.NET Core integrated tests (complete integration test including the web layer).</li>
+</ul>
+
+<p>When you run the application, you can see the user interface of the template:</p>
+
+<p><img alt="Template Home Page" height="377" src="template-default-home.png" width="768" /></p>
+
+<p>It contains a top menu, empty Home and About pages and a language switch dropdown.</p>
+
+<h2 id="ArticleDevelopApp">Developing the Application</h2>
+
+<h3 id="ArticleCreateTaskEntity">Creating a Task Entity</h3>
+
+<p>I want to start with a simple&nbsp;<strong>Task</strong> entity. Since an entity is part of the <strong>domain layer</strong>, I added it into the <strong>.Core </strong> project:</p>
+
+<pre lang="cs">
+using System;
+using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
+using Abp.Domain.Entities;
+using Abp.Domain.Entities.Auditing;
+using Abp.Timing;
+
+namespace Acme.SimpleTaskApp.Tasks
+{
+    [Table(&quot;AppTasks&quot;)]
+    public class Task : Entity, IHasCreationTime
+    {
+        public const int MaxTitleLength = 256;
+        public const int MaxDescriptionLength = 64 * 1024; //64KB
+
+        [Required]
+        [StringLength(MaxTitleLength)]
+        public string Title { get; set; }
+
+        [StringLength(MaxDescriptionLength)]
+        public string Description { get; set; }
+
+        public DateTime CreationTime { get; set; }
+
+        public TaskState State { get; set; }
+
+        public Task()
+        {
+            CreationTime = Clock.Now;
+            State = TaskState.Open;
+        }
+
+        public Task(string title, string description = null)
+            : this()
+        {
+            Title = title;
+            Description = description;
+        }
+    }
+
+    public enum TaskState : byte
+    {
+        Open = 0,
+        Completed = 1
+    }
+}</pre>
+
+<ul>
+	<li>I derived from ABP&#39;s base <strong> <a href="http://www.aspnetboilerplate.com/Pages/Documents/Entities" target="_blank"> Entity</a></strong>&nbsp;class, which includes <strong>Id</strong> property as <strong>int</strong> by default. We can use the generic version, <strong> Entity&lt;TPrimaryKey&gt;,</strong> to choice a different PK type.</li>
+	<li><strong>IHasCreationTime</strong> is a simple interface just defines <strong>CreationTime</strong> property (it&#39;s good to use a standard name for CreationTime).</li>
+	<li><strong>Task</strong> entity defines a required <strong>Title</strong> and an optional <strong>Description</strong>.</li>
+	<li><strong>TaskState</strong> is a simple enum to define states of a Task.</li>
+	<li><strong>Clock.Now</strong> returns DateTime.Now by default. But it provides an abstraction, so we can easily switch to DateTime.UtcNow in the feature if it&#39;s needed. Always use Clock.Now instead of DateTime.Now while working with ABP framework.</li>
+	<li>I wanted to store Task entities into <strong>AppTasks</strong> table in the database.</li>
+</ul>
+
+<h3 id="ArticleAddTaskToDbContext">Adding Task to DbContext</h3>
+
+<p><strong>.EntityFrameworkCore</strong> project includes a pre-defined <strong>DbContext</strong>. I should add a <strong>DbSet</strong> for the Task entity into the DbContext:</p>
+
+<pre lang="cs">
+public class SimpleTaskAppDbContext : AbpDbContext
+{
+    <strong>public DbSet&lt;Task&gt; Tasks { get; set; }</strong>
+
+    public SimpleTaskAppDbContext(DbContextOptions&lt;SimpleTaskAppDbContext&gt; options) 
+        : base(options)
+    {
+
+    }
+}</pre>
+
+<p>Now, EF Core knows that we have a Task entity.&nbsp;</p>
+
+<h3 id="ArticleCreateFirstMigration">Creating the First Database Migration&nbsp;</h3>
+
+<p>We will create an initial database migration to create database and the AppTasks table. I open the <strong>Package Manager Console from Visual Studio</strong> and run the <strong> Add-Migration</strong> command (Default project must be the .EntityFrameworkCore project):</p>
+
+<p><img alt="Entity Framework Core Add Migration" height="86" src="EF-Core-Initial-Migration-2.png" width="730" /></p>
+
+<p>This command creates a <strong>Migrations</strong>&nbsp;folder in the .EntityFrameworkCore project which includes a migration class and a snapshot of our database model:</p>
+
+<p><img alt="EF Core initial migration" height="216" src="EntityFrameworkCore-Project-Migrations-2.png" width="314" /></p>
+
+<p><strong>Automatically generated</strong> &quot;Initial&quot; migration class is&nbsp;shown below:</p>
+
+<pre lang="cs">
+public partial class Initial : Migration
+{
+    protected override void Up(MigrationBuilder migrationBuilder)
+    {
+        migrationBuilder.CreateTable(
+            name: &quot;AppTasks&quot;,
+            columns: table =&gt; new
+            {
+                Id = table.Column&lt;int&gt;(nullable: false)
+                    .Annotation(&quot;SqlServer:ValueGenerationStrategy&quot;, SqlServerValueGenerationStrategy.IdentityColumn),
+                CreationTime = table.Column&lt;DateTime&gt;(nullable: false),
+                Description = table.Column&lt;string&gt;(maxLength: 65536, nullable: true),
+                State = table.Column&lt;byte&gt;(nullable: false),
+                Title = table.Column&lt;string&gt;(maxLength: 256, nullable: false)
+            },
+            constraints: table =&gt;
+            {
+                table.PrimaryKey(&quot;PK_AppTasks&quot;, x =&gt; x.Id);
+            });
+    }
+
+    protected override void Down(MigrationBuilder migrationBuilder)
+    {
+        migrationBuilder.DropTable(
+            name: &quot;AppTasks&quot;);
+    }
+}</pre>
+
+<p>This code is used to create AppTasks table when we execute the migrations to the database (see <a href="https://docs.efproject.net/" target="_blank">entity framework documentation</a> for more information on migrations).</p>
+
+<h3 id="ArticleCreateDb">Creating the Database</h3>
+
+<p>To create the database, I run <strong>Update-Database</strong> command from Package Manager Console:</p>
+
+<p><img alt="EF Update-Database command" height="117" src="EF-Core-Database-Update-2.png" width="710" /></p>
+
+<p>This command created a database named <strong>SimpleTaskAppDb</strong> in the local SQL Server and executed migrations (currently, there is a single, &quot;Initial&quot;, migration):</p>
+
+<p><img alt="Created Database" height="140" src="Created-Database.png" width="211" /></p>
+
+<p>Now, I have a Task entity and corresponding table in the database.&nbsp; I entered a few sample Tasks to the table:</p>
+
+<p><img alt="AppTasks table" height="81" src="apptasks-table.png" width="579" /></p>
+
+<p>Note that, the database <strong>connection string</strong> is defined in <strong>appsettings.json</strong> in the <strong>.Web</strong> application.</p>
+
+<h3 id="ArticleTaskAppService">Task Application Service</h3>
+
+<p><em><a href="http://www.aspnetboilerplate.com/Pages/Documents/Application-Services" target="_blank">Application Services</a> are used to expose domain logic to the presentation layer. An Application Service is called from presentation layer with a <a href="http://www.aspnetboilerplate.com/Pages/Documents/Data-Transfer-Objects" target="_blank"> Data Transfer Object</a> (DTO) as parameter (if needed), uses domain objects to perform some specific business logic and returns a DTO back to the presentation layer (if needed).</em></p>
+
+<p>I&#39;m creating the first application service, <strong>TaskAppService</strong>,&nbsp;into the <strong>.Application</strong> project to perform task related application logic. First, I wanted to define an interface for the app service:</p>
+
+<pre lang="cs">
+public interface ITaskAppService : <strong>IApplicationService</strong>
+{
+    Task&lt;ListResultDto&lt;TaskListDto&gt;&gt; GetAll(GetAllTasksInput input);
+}</pre>
+
+<p>Defining an interface is not required, but suggested. By convention, all app services <strong>should</strong> implement <strong>IApplicationService</strong> interface in ABP (it&#39;s just an empty marker interface). I created a <strong>GetAll</strong> method to query tasks. To do that, I also defined the following DTOs:</p>
+
+<pre lang="cs">
+public class GetAllTasksInput
+{
+    public TaskState? State { get; set; }
+}
+
+<strong>[AutoMapFrom(typeof(Task))]</strong>
+public class TaskListDto : EntityDto, IHasCreationTime
+{
+    public string Title { get; set; }
+
+    public string Description { get; set; }
+
+    public DateTime CreationTime { get; set; }
+
+    public TaskState State { get; set; }
+}</pre>
+
+<ul>
+	<li><strong>GetAllTasksInput</strong> DTO defines input parameters of the <strong>GetAll</strong> app service method. Instead of directly defining the <strong>state</strong> as method parameter, I added it into a DTO object. Thus, I can add other parameters into this DTO later without breaking my existing clients (we could directly add a state parameter to the method).</li>
+	<li><strong>TaskListDto</strong> is used to return a Task data. It&#39;s derived from <strong>EntityDto</strong>, which just defines an <strong>Id </strong>property (we could add Id to our Dto and not derive from EntityDto). We defined [<strong>AutoMapFrom</strong>] attribute to create <a href="http://automapper.org/" target="_blank">AutoMapper</a> mapping from Task entity to TaskListDto. This attribute is defined in <a href="http://nuget.org/packages/Abp.AutoMapper" target="_blank"> Abp.AutoMapper</a> nuget package.</li>
+	<li>Lastly, <strong>ListResultDto</strong>&nbsp;is a simple class contains a list of items (we could directly return a List&lt;TaskListDto&gt;).</li>
+</ul>
+
+<p>Now, we can implement the <strong>ITaskAppService</strong> as shown below:</p>
+
+<pre lang="cs">
+using System.Collections.Generic;
+using System.Linq;
+using System.Threading.Tasks;
+using Abp.Application.Services.Dto;
+using Abp.Domain.Repositories;
+using Abp.Linq.Extensions;
+using Acme.SimpleTaskApp.Tasks.Dtos;
+using Microsoft.EntityFrameworkCore;
+
+namespace Acme.SimpleTaskApp.Tasks
+{
+    public class TaskAppService : SimpleTaskAppAppServiceBase, ITaskAppService
+    {
+        private readonly IRepository&lt;Task&gt; _taskRepository;
+
+        public TaskAppService(IRepository&lt;Task&gt; taskRepository)
+        {
+            _taskRepository = taskRepository;
+        }
+
+        public async Task&lt;ListResultDto&lt;TaskListDto&gt;&gt; GetAll(GetAllTasksInput input)
+        {
+            var tasks = await _taskRepository
+                .GetAll()
+                .WhereIf(input.State.HasValue, t =&gt; t.State == input.State.Value)
+                .OrderByDescending(t =&gt; t.CreationTime)
+                .ToListAsync();
+
+            return new ListResultDto&lt;TaskListDto&gt;(
+                ObjectMapper.Map&lt;List&lt;TaskListDto&gt;&gt;(tasks)
+            );
+        }
+    }
+}</pre>
+
+<ul>
+	<li><strong>TaskAppService</strong> is derived from <strong> SimpleTaskAppAppServiceBase</strong> included in the startup template (which is derived from ABP&#39;s ApplicationService class). This is not required, app services can be plain classes. But <strong>ApplicationService</strong> base class has some pre-injected services (like ObjectMapper used here).</li>
+	<li>I used <a href="http://www.aspnetboilerplate.com/Pages/Documents/Dependency-Injection" target="_blank"> dependency injection</a> to get a <a href="http://www.aspnetboilerplate.com/Pages/Documents/Repositories" target="_blank"> repository</a>.</li>
+	<li><strong>Repositories</strong> are used to abstract database operations for entities. ABP creates a pre-defined repository (like IRepository&lt;Task&gt; here) for each entity to perform common tasks. IRepository.<strong>GetAll() </strong>used here returns an <strong>IQueryable</strong> to query entities.</li>
+	<li><strong>WhereIf</strong> is an extension method of ABP to simplify conditional usage of IQueryable.Where method.</li>
+	<li><strong>ObjectMapper</strong> (which somes from the ApplicationService base class and implemented via AutoMapper by default) is used to map list of Task objects to list of TaskListDtos objects.</li>
+</ul>
+
+<h3 id="ArticleTestTaskAppService">Testing the TaskAppService</h3>
+
+<p>Before going further to create user interface, I want to <strong>test</strong> TaskAppService. You can skip this section if you don&#39;t interest in automated testing.</p>
+
+<p>Startup template contains <strong>.Tests</strong> project to test our code. It uses EF Core&#39;s <strong>InMemory</strong> database provider instead of SQL Server. Thus, our unit tests can work without a real database. It creates a <strong>separated database for each test</strong>. Thus, tests are <strong>isolated</strong> from each other. We can use <strong>TestDataBuilder</strong> class to add some initial test data to <strong>InMemory</strong> database before running tests. I changed TestDataBuilder as shown below:</p>
+
+<pre lang="cs">
+public class TestDataBuilder
+{
+    private readonly SimpleTaskAppDbContext _context;
+
+    public TestDataBuilder(SimpleTaskAppDbContext context)
+    {
+        _context = context;
+    }
+
+    public void Build()
+    {
+<strong>        _context.Tasks.AddRange(
+            new Task(&quot;Follow the white rabbit&quot;, &quot;Follow the white rabbit in order to know the reality.&quot;),
+            new Task(&quot;Clean your room&quot;) { State = TaskState.Completed }
+            );</strong>
+    }
+}</pre>
+
+<p>You can see the sample project&#39;s source code to understand where and how TestDataBuilder is used. I added two tasks (one of them is completed) to the dbcontext. So, I can write my tests assuming that there are two Tasks in the database. My first integration test tests the TaskAppService.GetAll method we created above.</p>
+
+<pre lang="cs">
+public class TaskAppService_Tests : SimpleTaskAppTestBase
+{
+    private readonly ITaskAppService _taskAppService;
+
+    public TaskAppService_Tests()
+    {
+        _taskAppService = Resolve&lt;ITaskAppService&gt;();
+    }
+
+    [Fact]
+    public async System.Threading.Tasks.Task <strong>Should_Get_All_Tasks</strong>()
+    {
+        //Act
+        var output = await <strong>_taskAppService.GetAll</strong>(new GetAllTasksInput());
+
+        //Assert
+        output.Items.Count.<strong>ShouldBe(2)</strong>;
+    }
+
+    [Fact]
+    public async System.Threading.Tasks.Task <strong>Should_Get_Filtered_Tasks</strong>()
+    {
+        //Act
+        var output = await <strong>_taskAppService.GetAll</strong>(new GetAllTasksInput { State = <strong>TaskState.Open</strong> });
+
+        //Assert
+        output.Items.<strong>ShouldAllBe(t =&gt; t.State == TaskState.Open)</strong>;
+    }
+}</pre>
+
+<p>I created two different tests to test GetAll method as shown above. Now, I can open Test Explorer (from Test\Windows\Test Explorer in the main menu of VS) and run the unit tests:</p>
+
+<p><img alt="Test explorer" height="255" src="test-explorer.png" width="521" /></p>
+
+<p>All of them succeed. The last one was a pre-built test in the startup template, which we can ignore for now.</p>
+
+<p>Notice that; ABP startup template comes with <a href="https://xunit.github.io/" target="_blank">xUnit</a> and <a href="http://shouldly.readthedocs.io/en/latest/" target="_blank">Shouldly</a> installed by default. So, we used them to write our tests.</p>
+
+<h3 id="ArticleTaskListView">Task List View</h3>
+
+<p>Now, I know that TaskAppService is properly working. I can start to create a page to list all tasks.</p>
+
+<h4 id="ArticleAddTaskListMenuItem">Adding a New Menu Item</h4>
+
+<p>&nbsp;First, I&#39;m adding a new item to the top menu:</p>
+
+<pre lang="cs">
+public class SimpleTaskAppNavigationProvider : NavigationProvider
+{
+    public override void SetNavigation(INavigationProviderContext context)
+    {
+        context.Manager.MainMenu
+            .AddItem(
+                new MenuItemDefinition(
+                    &quot;Home&quot;,
+                    L(&quot;HomePage&quot;),
+                    url: &quot;&quot;,
+                    icon: &quot;fa fa-home&quot;
+                    )
+            ).AddItem(
+                new MenuItemDefinition(
+                    &quot;About&quot;,
+                    L(&quot;About&quot;),
+                    url: &quot;Home/About&quot;,
+                    icon: &quot;fa fa-info&quot;
+                    )
+            )<strong>.AddItem(
+                new MenuItemDefinition(
+                    &quot;TaskList&quot;,
+                    L(&quot;TaskList&quot;),
+                    url: &quot;Tasks&quot;,
+                    icon: &quot;fa fa-tasks&quot;
+                    )
+            )</strong>;
+    }
+
+    private static ILocalizableString L(string name)
+    {
+        return new LocalizableString(name, SimpleTaskAppConsts.LocalizationSourceName);
+    }
+}</pre>
+
+<p>Startup template comes with two pages: Home and About, as shown above. We can change them or create new pages. I preferred to leave them for now and create a new menu item.</p>
+
+<h4 id="ArticleCreateTaskController">Creating the TaskController and ViewModel</h4>
+
+<p>I&#39;m creating a new controller class, <strong>TasksController</strong>, in the <strong>.Web</strong> project as shown below:</p>
+
+<pre lang="cs">
+public class TasksController : <strong>SimpleTaskAppControllerBase</strong>
+{
+    private readonly ITaskAppService _taskAppService;
+
+    public TasksController(<strong>ITaskAppService taskAppService</strong>)
+    {
+        _taskAppService = taskAppService;
+    }
+
+    public async Task&lt;ActionResult&gt; Index(GetAllTasksInput input)
+    {
+        var output = await _taskAppService.GetAll(input);
+        var model = new <strong>IndexViewModel</strong>(output.Items);
+        return View(model);
+    }
+}</pre>
+
+<ul>
+	<li>I derived from <strong>SimpleTaskAppControllerBase</strong> (which is derived from AbpController) that contains common base code for Controllers in this application.</li>
+	<li>I injected <strong>ITaskAppService</strong> in order to get list of tasks.</li>
+	<li>Instead of directly passing result of the GetAll method to the view, I created an IndexViewModel class in the .Web project which is shown below:</li>
+</ul>
+
+<pre lang="cs">
+public class IndexViewModel
+{
+    <strong>public IReadOnlyList&lt;TaskListDto&gt; Tasks { get; }</strong>
+
+    public IndexViewModel(IReadOnlyList&lt;TaskListDto&gt; tasks)
+    {
+        Tasks = tasks;
+    }
+
+    <strong>public string GetTaskLabel(TaskListDto task)</strong>
+    {
+        switch (task.State)
+        {
+            case TaskState.Open:
+                return &quot;label-success&quot;;
+            default:
+                return &quot;label-default&quot;;
+        }
+    }
+}</pre>
+
+<p>This simple view model gets a list of tasks (which is provided from ITaskAppService) in it&#39;s constructor. It also has GetTaskLabel method that will be used in the view to select a Bootstrap label class for given task.</p>
+
+<h4 id="ArticleTaskListPage">Task List Page</h4>
+
+<p>And finally, the Index view is shown below:</p>
+
+<pre lang="xml">
+<strong>@model Acme.SimpleTaskApp.Web.Models.Tasks.IndexViewModel</strong>
+
+@{
+    ViewBag.Title = L(&quot;TaskList&quot;);
+    ViewBag.ActiveMenu = &quot;TaskList&quot;; //Matches with the menu name in SimpleTaskAppNavigationProvider to highlight the menu item
+}
+
+&lt;h2&gt;<strong>@L(&quot;TaskList&quot;)</strong>&lt;/h2&gt;
+
+&lt;div class=&quot;row&quot;&gt;
+    &lt;div&gt;
+        &lt;ul class=&quot;list-group&quot; id=&quot;TaskList&quot;&gt;
+            <strong>@foreach (var task in Model.Tasks)</strong>
+            {
+                &lt;li class=&quot;list-group-item&quot;&gt;
+                    &lt;span class=&quot;pull-right label <strong>@Model.GetTaskLabel(task)</strong>&quot;&gt;<strong>@L($&quot;TaskState_{task.State}&quot;)</strong>&lt;/span&gt;
+                    &lt;h4 class=&quot;list-group-item-heading&quot;&gt;<strong>@task.Title</strong>&lt;/h4&gt;
+                    &lt;div class=&quot;list-group-item-text&quot;&gt;
+                        <strong>@task.CreationTime</strong>.ToString(&quot;yyyy-MM-dd HH:mm:ss&quot;)
+                    &lt;/div&gt;
+                &lt;/li&gt;
+            }
+        &lt;/ul&gt;
+    &lt;/div&gt;
+&lt;/div&gt;</pre>
+
+<p>We simply used given model to render the view using Bootstrap&#39;s <a href="http://getbootstrap.com/components/#list-group" target="_blank">list group</a> component. Here, we used IndexViewModel.<strong>GetTaskLabel()</strong> method to get label types for tasks. Rendered page will be like that:</p>
+
+<p><img alt="Task list" height="405" src="task-list-view-1.png" width="763" /></p>
+
+<h4 id="ArticleLocalization">Localization</h4>
+
+<p>We used <strong>L</strong> method in the view which comes from ABP framework. It&#39;s used to localize strings. We have define localized strings in <strong>Localization/Source</strong> folder in the <strong>.Core</strong> project as <strong>.json</strong> files. English localization is shown below:</p>
+
+<pre lang="xml">
+{
+  &quot;culture&quot;: &quot;en&quot;,
+  &quot;texts&quot;: {
+    &quot;HelloWorld&quot;: &quot;Hello World!&quot;,
+    &quot;ChangeLanguage&quot;: &quot;Change language&quot;,
+    &quot;HomePage&quot;: &quot;HomePage&quot;,
+    &quot;About&quot;: &quot;About&quot;,
+    &quot;Home_Description&quot;: &quot;Welcome to SimpleTaskApp...&quot;,
+    &quot;About_Description&quot;: &quot;This is a simple startup template to use ASP.NET Core with ABP framework.&quot;,
+<strong>    &quot;TaskList&quot;: &quot;Task List&quot;,
+    &quot;TaskState_Open&quot;: &quot;Open&quot;,
+    &quot;TaskState_Completed&quot;: &quot;Completed&quot;</strong>
+  }
+}</pre>
+
+<p>Most of the texts are coming from startup template and can be deleted. I just added the <strong>last 3 lines</strong> and used in the view above. While using ABP&#39;s localization is pretty simple, you can see <a href="http://www.aspnetboilerplate.com/Pages/Documents/Localization" target="_blank"> localization document</a> for more information on the localization system.</p>
+
+<h4 id="ArticleFilterTasks">Filtering Tasks</h4>
+
+<p>As shown above, TaskController actually gets a <strong>GetAllTasksInput</strong> that can be used to filter tasks. So, we can add a dropdown to task list view to filter tasks. First, I added the dropdown to the view (I added inside the header):</p>
+
+<pre lang="xml">
+&lt;h2&gt;
+    @L(&quot;TaskList&quot;)
+<strong>    &lt;span class=&quot;pull-right&quot;&gt;
+        @Html.DropDownListFor(
+           model =&gt; model.SelectedTaskState,
+           Model.GetTasksStateSelectListItems(LocalizationManager),
+           new
+           {
+               @class = &quot;form-control&quot;,
+               id = &quot;TaskStateCombobox&quot;
+           })
+    &lt;/span&gt;</strong>
+&lt;/h2&gt;</pre>
+
+<p>Then I changed <strong>IndexViewModel</strong> to add <strong> SelectedTaskState</strong> property and <strong>GetTasksStateSelectListItems</strong> method:</p>
+
+<pre lang="cs">
+public class IndexViewModel
+{
+    //...
+
+    <strong>public TaskState? SelectedTaskState { get; set; }</strong>
+
+<strong>    public List&lt;SelectListItem&gt; GetTasksStateSelectListItems(ILocalizationManager localizationManager)
+    {
+        var list = new List&lt;SelectListItem&gt;
+        {
+            new SelectListItem
+            {
+                Text = localizationManager.GetString(SimpleTaskAppConsts.LocalizationSourceName, &quot;AllTasks&quot;),
+                Value = &quot;&quot;,
+                Selected = SelectedTaskState == null
+            }
+        };
+
+        list.AddRange(Enum.GetValues(typeof(TaskState))
+                .Cast&lt;TaskState&gt;()
+                .Select(state =&gt;
+                    new SelectListItem
+                    {
+                        Text = localizationManager.GetString(SimpleTaskAppConsts.LocalizationSourceName, $&quot;TaskState_{state}&quot;),
+                        Value = state.ToString(),
+                        Selected = state == SelectedTaskState
+                    })
+        );
+
+        return list;
+    }</strong>
+}</pre>
+
+<p>We should set <strong>SelectedTaskState</strong> in the controller:</p>
+
+<pre lang="cs">
+public async Task&lt;ActionResult&gt; Index(GetAllTasksInput input)
+{
+    var output = await _taskAppService.GetAll(input);
+    var model = new IndexViewModel(output.Items)
+    {
+        <strong>SelectedTaskState = input.State</strong>
+    };
+    return View(model);
+}</pre>
+
+<p>Now, we can run the application to see the combobox at the top right of the view:</p>
+
+<p><img alt="Task list" height="405" src="task-list-view-2.png" width="763" /></p>
+
+<p>I added the combobox but it can not work yet. I&#39;ll write a simple JavaScript code to re-request/refresh task list page when combobox value changes. So, I&#39;m creating wwwroot\js\views\tasks\<strong>index.js</strong> file in the <strong>.Web</strong> project:</p>
+
+<pre lang="cs">
+(function ($) {
+    $(function () {
+
+        var _$taskStateCombobox = $(&#39;#TaskStateCombobox&#39;);
+
+<strong>        _$taskStateCombobox.change(function() {
+            location.href = &#39;/Tasks?state=&#39; + _$taskStateCombobox.val();
+        });</strong>
+
+    });
+})(jQuery);</pre>
+
+<p>Before including this JavaScript file into my view, I used <strong> <a href="https://github.com/madskristensen/BundlerMinifier" target="_blank"> Bundler &amp; Minifier</a></strong> VS extension (which is default way of minifying files in ASP.NET Core projects) to minify the script:</p>
+
+<p><img alt="Minify js" height="150" src="minify-js.png" width="586" /></p>
+
+<p>This adds the following lines into <strong>bundleconfig.json</strong> file in the .Web project:</p>
+
+<pre lang="js">
+{
+  &quot;outputFileName&quot;: <strong>&quot;wwwroot/js/views/tasks/index.min.js</strong>&quot;,
+  &quot;inputFiles&quot;: [
+    <strong>&quot;wwwroot/js/views/tasks/index.js</strong>&quot;
+  ]
+}</pre>
+
+<p>And creates a minified version of the script:</p>
+
+<p><img alt="Minified js file" height="167" src="minified-js.png" width="215" /></p>
+
+<p>Whenever I change the index.js, index.min.js is automatically re-generated. Now, I can include the JavaScript file into my page:</p>
+
+<pre lang="xml">
+@section scripts
+{
+    &lt;environment names=&quot;Development&quot;&gt;
+        <strong>&lt;script src=&quot;~/js/views/tasks/index.js&quot;&gt;&lt;/script&gt;</strong>
+    &lt;/environment&gt;
+
+    &lt;environment names=&quot;Staging,Production&quot;&gt;
+        <strong>&lt;script src=&quot;~/js/views/tasks/index.min.js&quot;&gt;&lt;/script&gt;</strong>
+    &lt;/environment&gt;
+}</pre>
+
+<p>With this code, our view will use index.js in development and index.min.js (minified version) in production. This is a common approach in ASP.NET Core MVC projects.</p>
+
+<h3 id="ArticleTaskListPageTest">Automated Testing Task List Page</h3>
+
+<p>We can create integration tests that is also integrated to ASP.NET Core MVC infrastructure. Thus, we can completely test our server side code. You can skip this section if you don&#39;t interest in automated testing.</p>
+
+<p>ABP startup template includes a <strong>.Web.Tests</strong> project to do that. I created a simple test to request to <strong>TaskController.Index</strong> and check the response:</p>
+
+<pre lang="cs">
+public class TasksController_Tests : SimpleTaskAppWebTestBase
+{
+    [Fact]
+    public async System.Threading.Tasks.Task Should_Get_Tasks_By_State()
+    {
+        //Act
+
+        var response = await GetResponseAsStringAsync(
+            GetUrl&lt;TasksController&gt;(nameof(TasksController.Index), new
+                {
+                    state = TaskState.Open
+                }
+            )
+        );
+
+        //Assert
+
+        response.ShouldNotBeNullOrWhiteSpace();
+    }
+}</pre>
+
+<p><strong>GetResponseAsStringAsync</strong> and <strong>GetUrl</strong> methods are some helper methods provided by <strong>AbpAspNetCoreIntegratedTestBase</strong> class of ABP. We can instead directly use the Client (an instance of HttpClient) property to make requests. But using these shortcut methods makes it easier. See <a href="https://docs.asp.net/en/latest/testing/integration-testing.html" target="_blank"> integration testing documentation</a> of ASP.NET Core for more.</p>
+
+<p>When I debug the test, I can see the response HTML:</p>
+
+<p><img alt="Web test" height="431" src="web-test-1.png" width="620" /></p>
+
+<p>That shows the Index page returned a response without any exception. But... we may want to go more and check if returned HTML is what we expect. There are some libraries can be used to parse HTML. <a href="https://anglesharp.github.io/" target="_blank">AngleSharp</a> is one of them and comes as pre-installed in ABP startup template&#39;s .Web.Tests project. So, I used it to check the created HTML code:</p>
+
+<pre lang="cs">
+public class TasksController_Tests : SimpleTaskAppWebTestBase
+{
+    [Fact]
+    public async System.Threading.Tasks.Task Should_Get_Tasks_By_State()
+    {
+        //Act
+
+        var response = await GetResponseAsStringAsync(
+            GetUrl&lt;TasksController&gt;(nameof(TasksController.Index), new
+                {
+                    state = TaskState.Open
+                }
+            )
+        );
+
+        //Assert
+
+        response.ShouldNotBeNullOrWhiteSpace();
+
+<strong>        //Get tasks from database
+        var tasksInDatabase = await UsingDbContextAsync(async dbContext =&gt;
+        {
+            return await dbContext.Tasks
+                .Where(t =&gt; t.State == TaskState.Open)
+                .ToListAsync();
+        });
+
+        //Parse HTML response to check if tasks in the database are returned
+        var document = new HtmlParser().Parse(response);
+        var listItems = document.QuerySelectorAll(&quot;#TaskList li&quot;);
+            
+        //Check task count
+        listItems.Length.ShouldBe(tasksInDatabase.Count);
+
+        //Check if returned list items are same those in the database
+        foreach (var listItem in listItems)
+        {
+            var header = listItem.QuerySelector(&quot;.list-group-item-heading&quot;);
+            var taskTitle = header.InnerHtml.Trim();
+            tasksInDatabase.Any(t =&gt; t.Title == taskTitle).ShouldBeTrue();
+        }</strong>
+    }
+}</pre>
+
+<p>You can check the HTML deeper and in more detailed. But in most cases, checking the fundamental tags will be enough.</p>
+
+<h2 id="ArticleMore">Part 2</h2>
+
+<p>See <a href="http://www.codeproject.com/Articles/1117216/Using-ASP-NET-Core-Entity-Framework-Core-and-ASP" data-abp-href="/Pages/Articles/Introduction-With-AspNet-Core-And-Entity-Framework-Core-Part-2/index.html">Using ASP.NET Core, Entity Framework Core and ASP.NET Boilerplate to Create NLayered Web Application - Part II </a></p>
+
+<h2 id="ArticleSourceCode">Source Code</h2>
+
+<p>You can get the latest source code here <a href="https://github.com/aspnetboilerplate/aspnetboilerplate-samples/tree/master/SimpleTaskSystem-Core"> https://github.com/aspnetboilerplate/aspnetboilerplate-samples/tree/master/SimpleTaskSystem-Core</a></p>
+
+<h2 id="ArticleHistory" class="abp-invisible">Article History</h2>
+
+<ul class="abp-invisible">
+	<li><strong>2018-02-14</strong>: Upgraded source code to ABP v3.4. Updated screenshots and article.</li>
+	<li><strong>2017-07-30</strong>: Replaced ListResultOutput by&nbsp;ListResultDto in the article.</li>
+	<li><strong>2017-06-02</strong>: Changed article and solution to support <strong>.net core</strong>.</li>
+	<li><strong>2016-08-08</strong>: Added link to the second article.</li>
+	<li><strong>2016-08-01</strong>: Initial publication.</li>
+</ul>

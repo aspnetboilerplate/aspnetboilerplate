@@ -1,5 +1,5 @@
 ASP.NET Boilerplate provides a set of objects and functions that are
-used to make javascript development easy and standards-based.
+used to make JavaScript development easy and standards-based.
 
 Here is a list of APIs in ASP.NET Boilerplate.  
 Click the headers to see more documentation about their usage.

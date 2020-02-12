@@ -72,7 +72,7 @@ datetime convertions by showing a datetime to the user in his/her timezone.
 
 ### Binders and Converters
 
--   ABP automatically normalizes DateTimes received from **clients** in
+-   ABP automatically normalizes DateTimes received (in an input class) from **clients** in
     MVC, Web API and ASP.NET Core applications, based on the current
     clock provider.
 -   ABP automatically normalizes DateTimes received from the **database**

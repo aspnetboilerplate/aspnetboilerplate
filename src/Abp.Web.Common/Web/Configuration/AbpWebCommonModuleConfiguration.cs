@@ -1,4 +1,5 @@
-﻿using Abp.Web.Api.ProxyScripting.Configuration;
+﻿using System.Collections.Generic;
+using Abp.Web.Api.ProxyScripting.Configuration;
 using Abp.Web.MultiTenancy;
 using Abp.Web.Security.AntiForgery;
 

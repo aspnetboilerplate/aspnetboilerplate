@@ -1,0 +1,321 @@
+﻿<i id="abp-title" data-title="Using Stored Procedures, User Defined Functions and Views"></i>
+ 
+<ul class="download">
+	<li>Get the source code from the <a href="https://github.com/aspnetboilerplate/aspnetboilerplate-samples/tree/master/storedProcedureDemo">GitHub repository.</a></li>
+</ul>
+
+<h2 id="DocIntroduction">Introduction</h2>
+<p>In this article, i will explain how to create custom repositories in <strong> <a href="https://aspnetboilerplate.com/"> ASP.NET Boilerplate</a> </strong>and 
+use stored procedure, view, user defined functions.</p>
+<p>To start with ASP.NET Boilerplate framework, you can download a startup template from 
+<a href="https://aspnetboilerplate.com/Templates"> https://aspnetboilerplate.com/Templates</a>. 
+I selected ASP.NET Core and Multi Page Web Application with Acme.PhoneBook 
+project name. If you need help with setting up the template, see 
+<a href="https://aspnetboilerplate.com/Pages/Documents/Zero/Startup-Template-Core">https://aspnetboilerplate.com/Pages/Documents/Zero/Startup-Template-Core</a></p>
+<p>After opening the downloaded solution in Visual Studio 2017, we see a 
+solution structure as like below:</p>
+<p><img alt="Projects" height="462" src="solutionExplorer.png" width="382" /></p>
+
+
+<h2 id="DocCreatingACustomRepository">Creating A Custom Repository</h2>
+
+
+
+<p>We will create a custom repository to do some basic operations on User entity using stored procedure, view and user defined function. To implement a custom repository, just derive from your application specific base repository class.</p>
+
+<p>Implement the interface in domain layer (Acme.PhoneBook.Core).</p>
+<pre>
+    public interface IUserRepository: <strong> IRepository&lt;User, long&gt; </strong>
+    {
+      ...
+      ...
+    }
+</pre>
+<p>Implement the repository in infrastructure layer (Acme.PhoneBook.EntityFrameworkCore).</p>
+<pre>
+    public class UserRepository : <strong>PhoneBookRepositoryBase&lt;User, long&gt;, IUserRepository </strong>
+    {
+        private readonly IActiveTransactionProvider _transactionProvider;
+
+        public UserRepository(IDbContextProvider&lt;PhoneBookDbContext&gt; dbContextProvider, IActiveTransactionProvider transactionProvider)
+            : base(dbContextProvider)
+        {
+            _transactionProvider = transactionProvider;
+        }
+        
+        ...
+        ...
+    }
+    
+</pre>
+
+<h2 id="DocHelperMethods">Helper Methods</h2>
+
+<p>First of all, we are creating some helper methods those will be shared by 
+other methods to perform some common tasks:</p>
+
+<pre>
+private DbCommand CreateCommand(string commandText, CommandType commandType, params SqlParameter[] parameters)
+{
+    var command = Context.Database.GetDbConnection().CreateCommand();
+
+    command.CommandText = commandText;
+    command.CommandType = commandType;
+    command.Transaction = GetActiveTransaction();
+
+    foreach (var parameter in parameters)
+    {
+        command.Parameters.Add(parameter);
+    }
+
+    return command;
+}
+
+private void EnsureConnectionOpen()
+{
+    var connection = Context.Database.GetDbConnection();
+
+    if (connection.State != ConnectionState.Open)
+    {
+        connection.Open();
+    }
+}
+
+private DbTransaction GetActiveTransaction()
+{
+    return (DbTransaction)_transactionProvider.GetActiveTransaction(new ActiveTransactionProviderArgs
+    {
+        {"ContextType", typeof(PhoneBookDbContext) },
+        {"MultiTenancySide", MultiTenancySide }
+    });
+}
+</pre>
+
+
+
+<h2 id="DocStoredProcedure">Stored Procedure</h2>
+
+<p> Here is a stored procedure call that gets username of all users. Added this 
+to the repository implementation (UserRepository).</p>
+
+<pre>
+public async Task&lt;List&lt;string&gt;&gt; GetUserNames()
+{
+    EnsureConnectionOpen();
+
+    using (var command = CreateCommand("GetUsernames", CommandType.storedProcedure))
+    {
+        using (var dataReader = await command.ExecuteReaderAsync())
+        {
+            var result = new List&lt;string&gt;();
+
+            while (dataReader.Read())
+            {
+                result.Add(dataReader["UserName"].ToString());
+            }
+
+            return result;
+        }
+    }
+}
+</pre>
+<p>And defined the GetUserNames method in the IUserRepository:</p>
+<pre>
+public interface IUserRepository: <strong> IRepository&lt;User, long&gt; </strong>
+{
+  ...
+  <strong>Task&lt;List&lt;string&gt;&gt; GetUserNames();</strong>
+  ...
+}
+</pre>
+
+<p>Here is the store procedure that is called:</p>
+
+<pre>
+USE [PhoneBookDb]
+GO
+
+SET ANSI_NULLS ON
+GO
+
+SET QUOTED_IDENTIFIER ON
+GO
+
+CREATE PROCEDURE [dbo].[GetUsernames] 
+AS
+BEGIN
+	SET NOCOUNT ON;
+	SELECT UserName FROM AbpUsers
+END
+GO
+</pre>
+
+<p>Now we implemented the functon that calls stored procedure from database. Let's use it in application service:</p>
+
+<pre>
+public class UserAppService : AsyncCrudAppService&lt;User, UserDto, long, PagedResultRequestDto, CreateUserDto, UserDto&gt;, IUserAppService
+{
+    <strong>private readonly IUserRepository _userRepository;</strong>
+	
+    public UserAppService(..., <strong>IUserRepository userRepository</strong>)
+        : base(repository)
+    {
+        ...
+        <strong>_userRepository = userRepository</strong>;
+    }
+    
+    ...
+    
+    <strong> public async Task&lt;List&lt;string&gt;&gt; GetUserNames()
+    {
+        return await _userRepository.GetUserNames();
+    }</strong>
+}
+</pre>
+
+<p>Here is another example that sends a parameter to a stored procedure to delete a user:</p>
+
+<pre>
+public async Task DeleteUser(EntityDto input)
+{
+await Context.Database.ExecuteSqlCommandAsync(
+    "EXEC DeleteUserById @id",
+    default(CancellationToken),
+    new SqlParameter("id", input.Id)
+);}
+</pre>
+
+<p>Stored procedure that is called for deletion:</p>
+
+<pre>
+USE [PhoneBookDb]
+GO
+SET ANSI_NULLS ON
+GO
+
+SET QUOTED_IDENTIFIER ON
+GO
+
+CREATE PROCEDURE [dbo].[DeleteUserById] 
+	@id int  
+AS
+BEGIN
+	SET NOCOUNT ON;
+	DELETE FROM AbpUsers WHERE [Id] = @id
+END
+GO
+</pre>
+
+
+<p>And another example that sends a parameter to update a user&#39;s email address:</p>
+<pre>
+public async Task UpdateEmail(UpdateEmailDto input)
+{
+await Context.Database.ExecuteSqlCommandAsync(
+    "EXEC UpdateEmailById @email, @id",
+    default(CancellationToken),
+    new SqlParameter("id", input.Id),
+    new SqlParameter("email", input.EmailAddress)
+);
+}
+</pre>
+
+<p>Stored procedure that is called for update method:</p>
+
+<pre>
+USE [PhoneBookDb]
+GO
+SET ANSI_NULLS ON
+GO
+
+SET QUOTED_IDENTIFIER ON
+GO
+CREATE PROCEDURE [dbo].[UpdateEmailById]
+@email nvarchar(256),
+@id int
+
+AS
+BEGIN
+	SET NOCOUNT ON;
+	UPDATE AbpUsers SET [EmailAddress] = @email WHERE [Id] = @id
+END
+
+GO
+</pre>
+
+
+<h2 id="DocView">View</h2>
+
+<p>You can call a view like that:</p>
+<pre>
+public async Task&lt;List&lt;string&gt;&gt; GetAdminUsernames()
+{
+    EnsureConnectionOpen();
+    using (var command = CreateCommand("SELECT * FROM dbo.UserAdminView", CommandType.Text))
+    {
+        using (var dataReader = await command.ExecuteReaderAsync())
+        {
+            var result = new List&lt;string&gt;();
+            while (dataReader.Read())
+            {
+                result.Add(dataReader["UserName"].ToString());
+            }
+            return result;
+        }
+    }
+}
+ </pre>
+ 
+<p>View for this method:</p>
+
+<pre>
+SELECT        *
+FROM            dbo.AbpUsers
+WHERE        (Name = 'admin')
+</pre>
+
+ 
+<h2 id="DocUserDefinedFunction">User Defined Function</h2>
+
+<p>You can call a User Defined Function like that:</p>
+
+<pre>
+public async Task&lt;GetUserByIdOutput&gt; GetUserById(EntityDto input)
+{
+    EnsureConnectionOpen();
+    
+    using (var command = CreateCommand("SELECT dbo.GetUsernameById(@id)", CommandType.Text, new SqlParameter("@id", input.Id)))
+    {
+        var username = (await command.ExecuteScalarAsync()).ToString();
+        return new GetUserByIdOutput() { Username = username };
+    }
+}
+</pre>
+
+<p>User Defined Function for this method:</p>
+
+<pre>
+USE [PhoneBookDb]
+GO
+SET ANSI_NULLS ON
+GO
+
+SET QUOTED_IDENTIFIER ON
+GO
+CREATE FUNCTION [dbo].[GetUsernameById] 
+	@id int
+)
+RETURNS nvarchar(32)
+AS
+BEGIN
+	DECLARE @username nvarchar(32)
+	SELECT @username = [UserName] FROM AbpUsers WHERE [ID] = @id
+	RETURN @username
+END
+
+GO</pre>
+
+
+<h2 id="ArticleSourceCode">Source Code</h2>
+
+<p>You can get the latest source code <a href="https://github.com/aspnetboilerplate/aspnetboilerplate-samples/tree/master/StoredProcedureDemo">https://github.com/aspnetboilerplate/aspnetboilerplate-samples/tree/master/StoredProcedureDemo</a></p>

@@ -132,7 +132,7 @@ and pass it to the constructor of the PersonAppService:
 
     var repository = new PersonRepository();
     var personService = new PersonAppService(repository);
-    personService.CreatePerson("Yunus Emre", 19);
+    personService.CreatePerson("John Doe", 32);
 
 Constructor Injection is a great way of making a class independent to the
 creation of dependent objects, but there are some problems with the code
@@ -192,7 +192,7 @@ set the Logger property after creating the PersonAppService object:
 
     var personService = new PersonAppService(new PersonRepository());
     personService.Logger = new Log4NetLogger();
-    personService.CreatePerson("Yunus Emre", 19);
+    personService.CreatePerson("John Doe", 32);
 
 Assume that Log4NetLogger implements ILogger and it writes logs using the
 Log4Net library so that PersonAppService can actually write logs. If we
@@ -213,7 +213,7 @@ framework. There will only be a few lines of code or classes that explicitly
 interact with the DI framework in your whole application.
 
 ASP.NET Boilerplate uses the [Castle
-Windsor](http://docs.castleproject.org/Default.aspx?Page=MainPage)
+Windsor](https://github.com/castleproject/Windsor/blob/master/docs/README.md)
 framework for Dependency Injection. It's one of the most mature DI
 frameworks out there. There are many other frameworks, such as Unity, Ninject,
 StructureMap, and Autofac.
@@ -230,7 +230,7 @@ resolve (create) an object. In Castle Windsor, it's something like that:
         );
 
     var personService = container.Resolve<IPersonAppService>();
-    personService.CreatePerson("Yunus Emre", 19);
+    personService.CreatePerson("John Doe", 32);
 
 First, we created the **WindsorContainer** and **registered** 
 PersonRepository and PersonAppService with their interfaces. We then
@@ -238,12 +238,12 @@ used the container to create an IPersonAppService. It created the concrete class
 PersonAppService with it's dependencies and then returned it. In this simple
 example, it may not be clear what the advantages are of using a DI framework.
 You will, however, have many classes and dependencies in a real enterprise
-application. The registration of dependencies are seperated from the creation and use of 
+application. The registration of dependencies are separated from the creation and use of 
 objects, and is made only once during the application's startup.
 
 Note that we also set the **life cycle** of the objects as **transient**.
 This means that whenever we resolve an object of these types, a new instance
-is created. There are many different life cycles, such as the **singletion**, 
+is created. There are many different life cycles, such as the **singleton**, 
 for example.
 
 ### ASP.NET Boilerplate Dependency Injection Infrastructure
@@ -313,7 +313,7 @@ should add it in pre-initialize method of your module.
 
 You may want to register a specific class that does not fit into the
 conventional registration rules. ASP.NET Boilerplate provides the
-**ITransientDependency** and the **ISingletonDependency** interfaces as a
+**ITransientDependency**, the **IPerWebRequestDependency** and the **ISingletonDependency** interfaces as a
 shortcut. For example:
 
     public interface IPersonManager
@@ -332,6 +332,8 @@ dependency is declared as a **Singleton**. A single instance of
 MyPersonManager is created and the same object is passed to all needed
 classes. It's instantiated in it's first use, and then used in the
 whole life of the application.
+
+**NOTE:** The **IPerWebRequestDependency** can only be used in the web layer.
 
 ##### Custom/Direct Registration
 
@@ -415,19 +417,19 @@ injected and used easily. Example:
         {
             //Resolving, using and releasing manually
             var personService1 = _iocResolver.Resolve<PersonAppService>();
-            personService1.CreatePerson(new CreatePersonInput { Name = "Yunus", Surname = "Emre" });
+            personService1.CreatePerson(new CreatePersonInput { Name = "John", Surname = "Doe" });
             _iocResolver.Release(personService1);
 
             //Resolving and using in a safe way
             using (var personService2 = _iocResolver.ResolveAsDisposable<PersonAppService>())
             {
-                personService2.Object.CreatePerson(new CreatePersonInput { Name = "Yunus", Surname = "Emre" });
+                personService2.Object.CreatePerson(new CreatePersonInput { Name = "John", Surname = "Doe" });
             }
         }
     }
 
 MySampleClass in an example class in an application. It is
-constructor-injected with **IIcResolver** and uses it to resolve and release
+constructor-injected with **IIocResolver** and uses it to resolve and release
 objects. There are a few overloads of the **Resolve** method which can be used as
 needed. The **Release** method is used to release a component (object). It's
 **critical** to call Release if you're manually resolving an object.

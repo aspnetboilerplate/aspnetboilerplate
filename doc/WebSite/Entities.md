@@ -137,7 +137,7 @@ There are also similar interfaces for modifications:
 ASP.NET Boilerplate automatically sets these properties when
 updating an entity. You just have to define them for your entity.
 
-If you want to implement all of the audit properties, you can direcly
+If you want to implement all of the audit properties, you can directly
 implement the **IAudited** interface:
 
     public interface IAudited : ICreationAudited, IModificationAudited
@@ -146,7 +146,7 @@ implement the **IAudited** interface:
     }
 
 As a shortcut, you can derive from the **AuditedEntity** class instead of
-direcly implementing **IAudited**. The AuditedEntity class also has a
+directly implementing **IAudited**. The AuditedEntity class also has a
 generic version for different types of Id properties.
 
 Note: ASP.NET Boilerplate gets the current user's Id from [ABP
@@ -155,7 +155,7 @@ Session](/Pages/Documents/Abp-Session).
 #### Soft Delete
 
 Soft delete is a commonly used pattern to mark an Entity as deleted
-instead of actually deleting it from database. For instace, you may not
+instead of actually deleting it from database. For instance, you may not
 want to hard delete a User from the database since it has many relations to
 other tables. The **ISoftDelete** interface is used for this purpose:
 
@@ -167,7 +167,7 @@ other tables. The **ISoftDelete** interface is used for this purpose:
 ASP.NET Boilerplate implements the soft delete pattern out-of-the-box. When
 a soft-delete entity is being deleted, ASP.NET Boilerplate detects this,
 prevents deleting, sets IsDeleted as true, and then updates the entity in the
-database. It also does not retrive (select) soft deleted entities from
+database. It also does not retrieve (select) soft deleted entities from
 the database by automatically filtering them.
 
 If you use soft delete, you may also want to store information of when an
@@ -204,6 +204,8 @@ class that implements them all.
 -   NOTE 2: All of them also have an **AggregateRoot** version, like
     AuditedAggregateRoot.
 
+In some cases, soft-delete entities may be requested to be permanently deleted. In those cases, **IRepository.HardDelete** extension method can be used. This method is currently implemented for EntityFramework 6.x and Entity Framework Core.
+
 #### Active/Passive Entities
 
 Some entities need to be marked as Active or Passive. You may take an
@@ -237,6 +239,10 @@ also corresponding interfaces for other entity classes. We don't recommend
 you do this unless you have a good reason not to derive from the
 Entity classes.
 
+### Multi-Lingual Entities
+
+ASP.NET Boilerplate provides a simple way for defining and using Multi-Lingual entities. For more information see [Multi-Lingual Entities](Multi-Lingual-Entities.md).
+
 ### IExtendableObject Interface
 
 ASP.NET Boilerplate provides a simple interface, **IExtendableObject**,
@@ -259,7 +265,7 @@ this simple entity:
 which is used to store **JSON formatted** name value objects. Example:
 
     var person = new Person("John");
-
+    
     person.SetData("RandomValue", RandomHelper.GetRandom(1, 1000));
     person.SetData("CustomData", new MyCustomObject { Value1 = 42, Value2 = "forty-two" });
 
@@ -272,6 +278,10 @@ We can then use **GetData** to get the values:
 
     var randomValue = person.GetData<int>("RandomValue");
     var customData = person.GetData<MyCustomObject>("CustomData");
+    
+Of course, we can also use the **RemoveData** method to remove data:
+    
+    person.RemoveData("RandomValue");
 
 While this technique can be very useful in some cases (when you need to
 provide the ability to dynamically add extra data to an entity), you

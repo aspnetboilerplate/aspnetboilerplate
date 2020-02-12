@@ -50,7 +50,7 @@ namespace Abp.TestBase.SampleApplication.Tests.Crud
 
             Should.Throw<AbpAuthorizationException>(async () =>
             {
-                await _asyncCompanyAppService.Delete(new EntityDto(1));
+                await _asyncCompanyAppService.DeleteAsync(new EntityDto(1));
             });
         }
 
@@ -59,8 +59,8 @@ namespace Abp.TestBase.SampleApplication.Tests.Crud
         {
             //Act
 
-            await _asyncCompanyAppService.Delete(new EntityDto(1));
-            (await _asyncCompanyAppService.GetAll(new PagedAndSortedResultRequestDto())).TotalCount.ShouldBe(1);
+            await _asyncCompanyAppService.DeleteAsync(new EntityDto(1));
+            (await _asyncCompanyAppService.GetAllAsync(new PagedAndSortedResultRequestDto())).TotalCount.ShouldBe(1);
         }
 
         private IPermissionChecker GetBlockerPermissionsChecker()

@@ -14,7 +14,7 @@ concepts (like [authorization](Authorization.md) and
 
 The feature system uses the **IFeatureValueStore** to get the values of features.
 While you can implement it in your own way, it's fully implemented in the
-**module-zero** project. If it's not implemented, NullFeatureValueStore
+**Module Zero** project. If it's not implemented, NullFeatureValueStore
 is used to return null for all features (so the default feature values are
 used in this case).
 
@@ -235,16 +235,25 @@ current tenantId, but for a **specified** tenantId as well.
 
 #### Client Side
 
-On the client side (javascript), we can use the **abp.features** namespace
+On the client side (JavaScript), we can use the **abp.features** namespace
 to get the current values of features.
 
 ##### isEnabled
-
+```csharp
     var isEnabled = abp.features.isEnabled('SampleBooleanFeature');
-
+```
 ##### getValue
-
+```csharp
     var value = abp.features.getValue('SampleNumericFeature');
+```
+
+#### Ignore Feature Check For Host Users
+
+If you enabled Multi-Tenancy, then you can also ignore feature check for host users by configuring it in PreInitialize method of our module as shown below:
+
+    Configuration.MultiTenancy.IgnoreFeatureCheckForHostUsers = true;
+    
+**Note:** `IgnoreFeatureCheckForHostUsers` default value is `false`;
 
 ### Feature Manager
 
@@ -256,6 +265,6 @@ If you need the definitions of features, you can inject and use
 The ASP.NET Boilerplate framework does not have a built-in edition system because
 such a system requires a database (to store editions, edition features,
 tenant-edition mappings and so on...). Therefore, the edition system is
-implemented in [module zero](/Pages/Documents/Zero/Edition-Management).
+implemented in [Module Zero](/Pages/Documents/Zero/Edition-Management).
 You can use it as a ready-made edition system or implement
 one yourself.

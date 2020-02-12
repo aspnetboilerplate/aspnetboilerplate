@@ -1,6 +1,8 @@
 using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Linq;
+using System.Threading;
 using System.Threading.Tasks;
 using Abp.Application.Features;
 using Abp.Authorization.Roles;
@@ -9,6 +11,7 @@ using Abp.Configuration.Startup;
 using Abp.Domain.Repositories;
 using Abp.Domain.Services;
 using Abp.Domain.Uow;
+using Abp.Json;
 using Abp.Localization;
 using Abp.MultiTenancy;
 using Abp.Organizations;
@@ -17,10 +20,10 @@ using Abp.Runtime.Session;
 using Abp.UI;
 using Abp.Zero;
 using Abp.Zero.Configuration;
-using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
+using Newtonsoft.Json;
 
 namespace Abp.Authorization.Users
 {
@@ -43,13 +46,15 @@ namespace Abp.Authorization.Users
 
         public ILocalizationManager LocalizationManager { get; set; }
 
+        protected string LocalizationSourceName { get; set; }
+
         public IAbpSession AbpSession { get; set; }
 
         public FeatureDependencyContext FeatureDependencyContext { get; set; }
 
         protected AbpRoleManager<TRole, TUser> RoleManager { get; }
 
-        public AbpUserStore<TRole, TUser> AbpStore { get; }
+        protected AbpUserStore<TRole, TUser> AbpUserStore { get; }
 
         public IMultiTenancyConfig MultiTenancy { get; set; }
 
@@ -60,10 +65,11 @@ namespace Abp.Authorization.Users
         private readonly IRepository<UserOrganizationUnit, long> _userOrganizationUnitRepository;
         private readonly IOrganizationUnitSettings _organizationUnitSettings;
         private readonly ISettingManager _settingManager;
+        private readonly IOptions<IdentityOptions> _optionsAccessor;
 
         public AbpUserManager(
             AbpRoleManager<TRole, TUser> roleManager,
-            AbpUserStore<TRole, TUser> store,
+            AbpUserStore<TRole, TUser> userStore,
             IOptions<IdentityOptions> optionsAccessor,
             IPasswordHasher<TUser> passwordHasher,
             IEnumerable<IUserValidator<TUser>> userValidators,
@@ -80,7 +86,7 @@ namespace Abp.Authorization.Users
             IOrganizationUnitSettings organizationUnitSettings,
             ISettingManager settingManager)
             : base(
-                store,
+                userStore,
                 optionsAccessor,
                 passwordHasher,
                 userValidators,
@@ -97,9 +103,12 @@ namespace Abp.Authorization.Users
             _userOrganizationUnitRepository = userOrganizationUnitRepository;
             _organizationUnitSettings = organizationUnitSettings;
             _settingManager = settingManager;
+            _optionsAccessor = optionsAccessor;
 
-            AbpStore = store;
+            AbpUserStore = userStore;
             RoleManager = roleManager;
+            LocalizationManager = NullLocalizationManager.Instance;
+            LocalizationSourceName = AbpZeroConsts.LocalizationSourceName;
         }
 
         public override async Task<IdentityResult> CreateAsync(TUser user)
@@ -115,6 +124,8 @@ namespace Abp.Authorization.Users
             {
                 user.TenantId = tenantId.Value;
             }
+
+            await InitializeOptionsAsync(user.TenantId);
 
             return await base.CreateAsync(user);
         }
@@ -135,11 +146,44 @@ namespace Abp.Authorization.Users
         /// <summary>
         /// Check whether a user is granted for a permission.
         /// </summary>
+        /// <param name="userId">User id</param>
+        /// <param name="permissionName">Permission name</param>
+        public virtual bool IsGranted(long userId, string permissionName)
+        {
+            return IsGranted(
+                userId,
+                _permissionManager.GetPermission(permissionName)
+                );
+        }
+
+        /// <summary>
+        /// Check whether a user is granted for a permission.
+        /// </summary>
         /// <param name="user">User</param>
         /// <param name="permission">Permission</param>
         public virtual Task<bool> IsGrantedAsync(TUser user, Permission permission)
         {
+            if (user == null)
+            {
+                throw new ArgumentNullException(nameof(user));
+            }
+
             return IsGrantedAsync(user.Id, permission);
+        }
+
+        /// <summary>
+        /// Check whether a user is granted for a permission.
+        /// </summary>
+        /// <param name="user">User</param>
+        /// <param name="permission">Permission</param>
+        public virtual bool IsGranted(TUser user, Permission permission)
+        {
+            if (user == null)
+            {
+                throw new ArgumentNullException(nameof(user));
+            }
+
+            return IsGranted(user.Id, permission);
         }
 
         /// <summary>
@@ -158,6 +202,8 @@ namespace Abp.Authorization.Users
             //Check for depended features
             if (permission.FeatureDependency != null && GetCurrentMultiTenancySide() == MultiTenancySides.Tenant)
             {
+                FeatureDependencyContext.TenantId = GetCurrentTenantId();
+
                 if (!await permission.FeatureDependency.IsSatisfiedAsync(FeatureDependencyContext))
                 {
                     return false;
@@ -195,6 +241,60 @@ namespace Abp.Authorization.Users
         }
 
         /// <summary>
+        /// Check whether a user is granted for a permission.
+        /// </summary>
+        /// <param name="userId">User id</param>
+        /// <param name="permission">Permission</param>
+        public virtual bool IsGranted(long userId, Permission permission)
+        {
+            //Check for multi-tenancy side
+            if (!permission.MultiTenancySides.HasFlag(GetCurrentMultiTenancySide()))
+            {
+                return false;
+            }
+
+            //Check for depended features
+            if (permission.FeatureDependency != null && GetCurrentMultiTenancySide() == MultiTenancySides.Tenant)
+            {
+                FeatureDependencyContext.TenantId = GetCurrentTenantId();
+
+                if (!permission.FeatureDependency.IsSatisfied(FeatureDependencyContext))
+                {
+                    return false;
+                }
+            }
+
+            //Get cached user permissions
+            var cacheItem = GetUserPermissionCacheItem(userId);
+            if (cacheItem == null)
+            {
+                return false;
+            }
+
+            //Check for user-specific value
+            if (cacheItem.GrantedPermissions.Contains(permission.Name))
+            {
+                return true;
+            }
+
+            if (cacheItem.ProhibitedPermissions.Contains(permission.Name))
+            {
+                return false;
+            }
+
+            //Check for roles
+            foreach (var roleId in cacheItem.RoleIds)
+            {
+                if (RoleManager.IsGranted(roleId, permission))
+                {
+                    return true;
+                }
+            }
+
+            return false;
+        }
+
+        /// <summary>
         /// Gets granted permissions for a user.
         /// </summary>
         /// <param name="user">Role</param>
@@ -213,7 +313,7 @@ namespace Abp.Authorization.Users
 
             return permissionList;
         }
-
+        
         /// <summary>
         /// Sets all granted permissions of a user at once.
         /// Prohibits all other permissions.
@@ -235,7 +335,7 @@ namespace Abp.Authorization.Users
                 await GrantPermissionAsync(user, permission);
             }
         }
-
+        
         /// <summary>
         /// Prohibits all permissions for a user.
         /// </summary>
@@ -262,6 +362,19 @@ namespace Abp.Authorization.Users
         }
 
         /// <summary>
+        /// Resets all permission settings for a user.
+        /// It removes all permission settings for the user.
+        /// User will have permissions according to his roles.
+        /// This method does not prohibit all permissions.
+        /// For that, use <see cref="ProhibitAllPermissionsAsync"/>.
+        /// </summary>
+        /// <param name="user">User</param>
+        public void ResetAllPermissions(TUser user)
+        {
+            UserPermissionStore.RemoveAllPermissionSettings(user);
+        }
+
+        /// <summary>
         /// Grants a permission for a user if not already granted.
         /// </summary>
         /// <param name="user">User</param>
@@ -277,7 +390,7 @@ namespace Abp.Authorization.Users
 
             await UserPermissionStore.AddPermissionAsync(user, new PermissionGrantInfo(permission.Name, true));
         }
-
+        
         /// <summary>
         /// Prohibits a permission for a user if it's granted.
         /// </summary>
@@ -294,15 +407,45 @@ namespace Abp.Authorization.Users
 
             await UserPermissionStore.AddPermissionAsync(user, new PermissionGrantInfo(permission.Name, false));
         }
-
-        public virtual async Task<TUser> FindByNameOrEmailAsync(string userNameOrEmailAddress)
+        
+        public virtual Task<TUser> FindByNameOrEmailAsync(string userNameOrEmailAddress)
         {
-            return await AbpStore.FindByNameOrEmailAsync(userNameOrEmailAddress);
+            return AbpUserStore.FindByNameOrEmailAsync(userNameOrEmailAddress);
+        }
+
+        public virtual TUser FindByNameOrEmail(string userNameOrEmailAddress)
+        {
+            return AbpUserStore.FindByNameOrEmail(userNameOrEmailAddress);
         }
 
         public virtual Task<List<TUser>> FindAllAsync(UserLoginInfo login)
         {
-            return AbpStore.FindAllAsync(login);
+            return AbpUserStore.FindAllAsync(login);
+        }
+
+        public virtual List<TUser> FindAll(UserLoginInfo login)
+        {
+            return AbpUserStore.FindAll(login);
+        }
+
+        public virtual Task<TUser> FindAsync(int? tenantId, UserLoginInfo login)
+        {
+            return AbpUserStore.FindAsync(tenantId, login);
+        }
+
+        public virtual TUser Find(int? tenantId, UserLoginInfo login)
+        {
+            return AbpUserStore.Find(tenantId, login);
+        }
+
+        public virtual Task<TUser> FindByNameOrEmailAsync(int? tenantId, string userNameOrEmailAddress)
+        {
+            return AbpUserStore.FindByNameOrEmailAsync(tenantId, userNameOrEmailAddress);
+        }
+
+        public virtual TUser FindByNameOrEmail(int? tenantId, string userNameOrEmailAddress)
+        {
+            return AbpUserStore.FindByNameOrEmail(tenantId, userNameOrEmailAddress);
         }
 
         /// <summary>
@@ -322,6 +465,36 @@ namespace Abp.Authorization.Users
 
             return user;
         }
+
+        /// <summary>
+        /// Gets a user by given id.
+        /// Throws exception if no user found with given id.
+        /// </summary>
+        /// <param name="userId">User id</param>
+        /// <returns>User</returns>
+        /// <exception cref="AbpException">Throws exception if no user found with given id</exception>
+        public virtual TUser GetUserById(long userId)
+        {
+            var user = AbpUserStore.FindById(userId.ToString());
+            if (user == null)
+            {
+                throw new AbpException("There is no user with id: " + userId);
+            }
+
+            return user;
+        }
+
+        // Microsoft.AspNetCore.Identity.UserManager doesn't have required sync version for method calls in this function
+        //public virtual TUser GetUserById(long userId)
+        //{
+        //    var user = FindById(userId.ToString());
+        //    if (user == null)
+        //    {
+        //        throw new AbpException("There is no user with id: " + userId);
+        //    }
+
+        //    return user;
+        //}
 
         public override async Task<IdentityResult> UpdateAsync(TUser user)
         {
@@ -343,6 +516,27 @@ namespace Abp.Authorization.Users
             return await base.UpdateAsync(user);
         }
 
+        // Microsoft.AspNetCore.Identity.UserManager doesn't have required sync version for method calls in this function
+        //public override IdentityResult Update(TUser user)
+        //{
+        //    var result = CheckDuplicateUsernameOrEmailAddress(user.Id, user.UserName, user.EmailAddress);
+        //    if (!result.Succeeded)
+        //    {
+        //        return result;
+        //    }
+
+        //    //Admin user's username can not be changed!
+        //    if (user.UserName != AbpUserBase.AdminUserName)
+        //    {
+        //        if ((GetOldUserName(user.Id)) == AbpUserBase.AdminUserName)
+        //        {
+        //            throw new UserFriendlyException(string.Format(L("CanNotRenameAdminUser"), AbpUserBase.AdminUserName));
+        //        }
+        //    }
+
+        //    return base.Update(user);
+        //}
+
         public override async Task<IdentityResult> DeleteAsync(TUser user)
         {
             if (user.UserName == AbpUserBase.AdminUserName)
@@ -352,6 +546,17 @@ namespace Abp.Authorization.Users
 
             return await base.DeleteAsync(user);
         }
+
+        // Microsoft.AspNetCore.Identity.UserManager doesn't have required sync version for method calls in this function
+        //public override IdentityResult Delete(TUser user)
+        //{
+        //    if (user.UserName == AbpUserBase.AdminUserName)
+        //    {
+        //        throw new UserFriendlyException(string.Format(L("CanNotDeleteAdminUser"), AbpUserBase.AdminUserName));
+        //    }
+
+        //    return base.Delete(user);
+        //}
 
         public virtual async Task<IdentityResult> ChangePasswordAsync(TUser user, string newPassword)
         {
@@ -371,9 +576,35 @@ namespace Abp.Authorization.Users
                 return IdentityResult.Failed(errors.ToArray());
             }
 
-            await AbpStore.SetPasswordHashAsync(user, PasswordHasher.HashPassword(user, newPassword));
+            await AbpUserStore.SetPasswordHashAsync(user, PasswordHasher.HashPassword(user, newPassword));
+
+            await UpdateSecurityStampAsync(user);
+
             return IdentityResult.Success;
         }
+
+        // IPasswordValidator doesn't have a sync version of Validate(...)
+        //public virtual IdentityResult ChangePassword(TUser user, string newPassword)
+        //{
+        //    var errors = new List<IdentityError>();
+
+        //    foreach (var validator in PasswordValidators)
+        //    {
+        //        var validationResult = validator.Validate(this, user, newPassword);
+        //        if (!validationResult.Succeeded)
+        //        {
+        //            errors.AddRange(validationResult.Errors);
+        //        }
+        //    }
+
+        //    if (errors.Any())
+        //    {
+        //        return IdentityResult.Failed(errors.ToArray());
+        //    }
+
+        //    AbpUserStore.SetPasswordHash(user, PasswordHasher.HashPassword(user, newPassword));
+        //    return IdentityResult.Success;
+        //}
 
         public virtual async Task<IdentityResult> CheckDuplicateUsernameOrEmailAddressAsync(long? expectedUserId, string userName, string emailAddress)
         {
@@ -392,15 +623,33 @@ namespace Abp.Authorization.Users
             return IdentityResult.Success;
         }
 
-        public virtual async Task<IdentityResult> SetRoles(TUser user, string[] roleNames)
+        // Microsoft.AspNetCore.Identity doesn't have a sync version of FindByName(...), FindByEmail(...)
+        //public virtual IdentityResult CheckDuplicateUsernameOrEmailAddress(long? expectedUserId, string userName, string emailAddress)
+        //{
+        //    var user = (FindByName(userName));
+        //    if (user != null && user.Id != expectedUserId)
+        //    {
+        //        throw new UserFriendlyException(string.Format(L("Identity.DuplicateUserName"), userName));
+        //    }
+
+        //    user = (FindByEmail(emailAddress));
+        //    if (user != null && user.Id != expectedUserId)
+        //    {
+        //        throw new UserFriendlyException(string.Format(L("Identity.DuplicateEmail"), emailAddress));
+        //    }
+
+        //    return IdentityResult.Success;
+        //}
+
+        public virtual async Task<IdentityResult> SetRolesAsync(TUser user, string[] roleNames)
         {
-            await AbpStore.UserRepository.EnsureCollectionLoadedAsync(user, u => u.Roles);
+            await AbpUserStore.UserRepository.EnsureCollectionLoadedAsync(user, u => u.Roles);
 
             //Remove from removed roles
             foreach (var userRole in user.Roles.ToList())
             {
                 var role = await RoleManager.FindByIdAsync(userRole.RoleId.ToString());
-                if (roleNames.All(roleName => role.Name != roleName))
+                if (role != null && roleNames.All(roleName => role.Name != roleName))
                 {
                     var result = await RemoveFromRoleAsync(user, role.Name);
                     if (!result.Succeeded)
@@ -427,6 +676,42 @@ namespace Abp.Authorization.Users
             return IdentityResult.Success;
         }
 
+        // Microsoft.AspNetCore.Identity doesn't have a sync version of FindById(...), RemoveFromRole(...), GetRoleByName(...), AddToRole(...)
+        //public virtual IdentityResult SetRoles(TUser user, string[] roleNames)
+        //{
+        //    AbpUserStore.UserRepository.EnsureCollectionLoaded(user, u => u.Roles);
+
+        //    //Remove from removed roles
+        //    foreach (var userRole in user.Roles.ToList())
+        //    {
+        //        var role = RoleManager.FindById(userRole.RoleId.ToString());
+        //        if (roleNames.All(roleName => role.Name != roleName))
+        //        {
+        //            var result = RemoveFromRole(user, role.Name);
+        //            if (!result.Succeeded)
+        //            {
+        //                return result;
+        //            }
+        //        }
+        //    }
+
+        //    //Add to added roles
+        //    foreach (var roleName in roleNames)
+        //    {
+        //        var role = RoleManager.GetRoleByName(roleName);
+        //        if (user.Roles.All(ur => ur.RoleId != role.Id))
+        //        {
+        //            var result = AddToRole(user, roleName);
+        //            if (!result.Succeeded)
+        //            {
+        //                return result;
+        //            }
+        //        }
+        //    }
+
+        //    return IdentityResult.Success;
+        //}
+
         public virtual async Task<bool> IsInOrganizationUnitAsync(long userId, long ouId)
         {
             return await IsInOrganizationUnitAsync(
@@ -438,6 +723,13 @@ namespace Abp.Authorization.Users
         public virtual async Task<bool> IsInOrganizationUnitAsync(TUser user, OrganizationUnit ou)
         {
             return await _userOrganizationUnitRepository.CountAsync(uou =>
+                uou.UserId == user.Id && uou.OrganizationUnitId == ou.Id
+                ) > 0;
+        }
+
+        public virtual bool IsInOrganizationUnit(TUser user, OrganizationUnit ou)
+        {
+            return _userOrganizationUnitRepository.Count(uou =>
                 uou.UserId == user.Id && uou.OrganizationUnitId == ou.Id
                 ) > 0;
         }
@@ -464,6 +756,20 @@ namespace Abp.Authorization.Users
             await _userOrganizationUnitRepository.InsertAsync(new UserOrganizationUnit(user.TenantId, user.Id, ou.Id));
         }
 
+        public virtual void AddToOrganizationUnit(TUser user, OrganizationUnit ou)
+        {
+            var currentOus = GetOrganizationUnits(user);
+
+            if (currentOus.Any(cou => cou.Id == ou.Id))
+            {
+                return;
+            }
+
+            CheckMaxUserOrganizationUnitMembershipCount(user.TenantId, currentOus.Count + 1);
+
+            _userOrganizationUnitRepository.Insert(new UserOrganizationUnit(user.TenantId, user.Id, ou.Id));
+        }
+
         public virtual async Task RemoveFromOrganizationUnitAsync(long userId, long ouId)
         {
             await RemoveFromOrganizationUnitAsync(
@@ -475,6 +781,11 @@ namespace Abp.Authorization.Users
         public virtual async Task RemoveFromOrganizationUnitAsync(TUser user, OrganizationUnit ou)
         {
             await _userOrganizationUnitRepository.DeleteAsync(uou => uou.UserId == user.Id && uou.OrganizationUnitId == ou.Id);
+        }
+
+        public virtual void RemoveFromOrganizationUnit(TUser user, OrganizationUnit ou)
+        {
+            _userOrganizationUnitRepository.Delete(uou => uou.UserId == user.Id && uou.OrganizationUnitId == ou.Id);
         }
 
         public virtual async Task SetOrganizationUnitsAsync(long userId, params long[] organizationUnitIds)
@@ -494,6 +805,16 @@ namespace Abp.Authorization.Users
             }
         }
 
+        private void CheckMaxUserOrganizationUnitMembershipCount(int? tenantId, int requestedCount)
+        {
+            var maxCount = _organizationUnitSettings.GetMaxUserMembershipCount(tenantId);
+            if (requestedCount > maxCount)
+            {
+                throw new AbpException($"Can not set more than {maxCount} organization unit for a user!");
+            }
+        }
+
+        [UnitOfWork]
         public virtual async Task SetOrganizationUnitsAsync(TUser user, params long[] organizationUnitIds)
         {
             if (organizationUnitIds == null)
@@ -514,6 +835,8 @@ namespace Abp.Authorization.Users
                 }
             }
 
+            await _unitOfWorkManager.Current.SaveChangesAsync();
+
             //Add to added OUs
             foreach (var organizationUnitId in organizationUnitIds)
             {
@@ -522,6 +845,39 @@ namespace Abp.Authorization.Users
                     await AddToOrganizationUnitAsync(
                         user,
                         await _organizationUnitRepository.GetAsync(organizationUnitId)
+                        );
+                }
+            }
+        }
+
+        public virtual void SetOrganizationUnits(TUser user, params long[] organizationUnitIds)
+        {
+            if (organizationUnitIds == null)
+            {
+                organizationUnitIds = new long[0];
+            }
+
+            CheckMaxUserOrganizationUnitMembershipCount(user.TenantId, organizationUnitIds.Length);
+
+            var currentOus = GetOrganizationUnits(user);
+
+            //Remove from removed OUs
+            foreach (var currentOu in currentOus)
+            {
+                if (!organizationUnitIds.Contains(currentOu.Id))
+                {
+                    RemoveFromOrganizationUnit(user, currentOu);
+                }
+            }
+
+            //Add to added OUs
+            foreach (var organizationUnitId in organizationUnitIds)
+            {
+                if (currentOus.All(ou => ou.Id != organizationUnitId))
+                {
+                    AddToOrganizationUnit(
+                        user,
+                        _organizationUnitRepository.Get(organizationUnitId)
                         );
                 }
             }
@@ -539,7 +895,18 @@ namespace Abp.Authorization.Users
         }
 
         [UnitOfWork]
-        public virtual Task<List<TUser>> GetUsersInOrganizationUnit(OrganizationUnit organizationUnit, bool includeChildren = false)
+        public virtual List<OrganizationUnit> GetOrganizationUnits(TUser user)
+        {
+            var query = from uou in _userOrganizationUnitRepository.GetAll()
+                        join ou in _organizationUnitRepository.GetAll() on uou.OrganizationUnitId equals ou.Id
+                        where uou.UserId == user.Id
+                        select ou;
+
+            return query.ToList();
+        }
+
+        [UnitOfWork]
+        public virtual Task<List<TUser>> GetUsersInOrganizationUnitAsync(OrganizationUnit organizationUnit, bool includeChildren = false)
         {
             if (!includeChildren)
             {
@@ -562,9 +929,33 @@ namespace Abp.Authorization.Users
             }
         }
 
+        [UnitOfWork]
+        public virtual List<TUser> GetUsersInOrganizationUnit(OrganizationUnit organizationUnit, bool includeChildren = false)
+        {
+            if (!includeChildren)
+            {
+                var query = from uou in _userOrganizationUnitRepository.GetAll()
+                            join user in Users on uou.UserId equals user.Id
+                            where uou.OrganizationUnitId == organizationUnit.Id
+                            select user;
+
+                return query.ToList();
+            }
+            else
+            {
+                var query = from uou in _userOrganizationUnitRepository.GetAll()
+                            join user in Users on uou.UserId equals user.Id
+                            join ou in _organizationUnitRepository.GetAll() on uou.OrganizationUnitId equals ou.Id
+                            where ou.Code.StartsWith(organizationUnit.Code)
+                            select user;
+
+                return query.ToList();
+            }
+        }
+
         public virtual async Task InitializeOptionsAsync(int? tenantId)
         {
-            Options = new IdentityOptions();
+            Options = JsonConvert.DeserializeObject<IdentityOptions>(_optionsAccessor.Value.ToJsonString());
 
             //Lockout
             Options.Lockout.AllowedForNewUsers = await IsTrueAsync(AbpZeroSettingNames.UserManagement.UserLockOut.IsEnabled, tenantId);
@@ -579,9 +970,31 @@ namespace Abp.Authorization.Users
             Options.Password.RequiredLength = await GetSettingValueAsync<int>(AbpZeroSettingNames.UserManagement.PasswordComplexity.RequiredLength, tenantId);
         }
 
+        public virtual void InitializeOptions(int? tenantId)
+        {
+            Options = JsonConvert.DeserializeObject<IdentityOptions>(_optionsAccessor.Value.ToJsonString());
+
+            //Lockout
+            Options.Lockout.AllowedForNewUsers = IsTrue(AbpZeroSettingNames.UserManagement.UserLockOut.IsEnabled, tenantId);
+            Options.Lockout.DefaultLockoutTimeSpan = TimeSpan.FromSeconds(GetSettingValue<int>(AbpZeroSettingNames.UserManagement.UserLockOut.DefaultAccountLockoutSeconds, tenantId));
+            Options.Lockout.MaxFailedAccessAttempts = GetSettingValue<int>(AbpZeroSettingNames.UserManagement.UserLockOut.MaxFailedAccessAttemptsBeforeLockout, tenantId);
+
+            //Password complexity
+            Options.Password.RequireDigit = GetSettingValue<bool>(AbpZeroSettingNames.UserManagement.PasswordComplexity.RequireDigit, tenantId);
+            Options.Password.RequireLowercase = GetSettingValue<bool>(AbpZeroSettingNames.UserManagement.PasswordComplexity.RequireLowercase, tenantId);
+            Options.Password.RequireNonAlphanumeric = GetSettingValue<bool>(AbpZeroSettingNames.UserManagement.PasswordComplexity.RequireNonAlphanumeric, tenantId);
+            Options.Password.RequireUppercase = GetSettingValue<bool>(AbpZeroSettingNames.UserManagement.PasswordComplexity.RequireUppercase, tenantId);
+            Options.Password.RequiredLength = GetSettingValue<int>(AbpZeroSettingNames.UserManagement.PasswordComplexity.RequiredLength, tenantId);
+        }
+
         protected virtual Task<string> GetOldUserNameAsync(long userId)
         {
-            return AbpStore.GetUserNameFromDatabaseAsync(userId);
+            return AbpUserStore.GetUserNameFromDatabaseAsync(userId);
+        }
+
+        protected virtual string GetOldUserName(long userId)
+        {
+            return AbpUserStore.GetUserNameFromDatabase(userId);
         }
 
         private async Task<UserPermissionCacheItem> GetUserPermissionCacheItemAsync(long userId)
@@ -603,6 +1016,40 @@ namespace Abp.Authorization.Users
                 }
 
                 foreach (var permissionInfo in await UserPermissionStore.GetPermissionsAsync(userId))
+                {
+                    if (permissionInfo.IsGranted)
+                    {
+                        newCacheItem.GrantedPermissions.Add(permissionInfo.Name);
+                    }
+                    else
+                    {
+                        newCacheItem.ProhibitedPermissions.Add(permissionInfo.Name);
+                    }
+                }
+
+                return newCacheItem;
+            });
+        }
+
+        private UserPermissionCacheItem GetUserPermissionCacheItem(long userId)
+        {
+            var cacheKey = userId + "@" + (GetCurrentTenantId() ?? 0);
+            return _cacheManager.GetUserPermissionCache().Get(cacheKey, () =>
+            {
+                var user = AbpUserStore.FindById(userId.ToString());
+                if (user == null)
+                {
+                    return null;
+                }
+
+                var newCacheItem = new UserPermissionCacheItem(userId);
+
+                foreach (var roleName in AbpUserStore.GetRoles(user))
+                {
+                    newCacheItem.RoleIds.Add((RoleManager.GetRoleByName(roleName)).Id);
+                }
+
+                foreach (var permissionInfo in UserPermissionStore.GetPermissions(userId))
                 {
                     if (permissionInfo.IsGranted)
                     {
@@ -642,6 +1089,31 @@ namespace Abp.Authorization.Users
             return providers;
         }
 
+        // no sync version available for GetValidTwoFactorProviders()
+        //public override IList<string> GetValidTwoFactorProviders(TUser user)
+        //{
+        //    var providers = new List<string>();
+
+        //    foreach (var provider in base.GetValidTwoFactorProviders(user)) 
+        //    {
+        //        if (provider == "Email" &&
+        //            !IsTrue(AbpZeroSettingNames.UserManagement.TwoFactorLogin.IsEmailProviderEnabled, user.TenantId))
+        //        {
+        //            continue;
+        //        }
+
+        //        if (provider == "Phone" &&
+        //            !IsTrue(AbpZeroSettingNames.UserManagement.TwoFactorLogin.IsSmsProviderEnabled, user.TenantId))
+        //        {
+        //            continue;
+        //        }
+
+        //        providers.Add(provider);
+        //    }
+
+        //    return providers;
+        //}
+
         private bool IsTrue(string settingName, int? tenantId)
         {
             return GetSettingValue<bool>(settingName, tenantId);
@@ -666,9 +1138,14 @@ namespace Abp.Authorization.Users
                 : _settingManager.GetSettingValueForTenantAsync<T>(settingName, tenantId.Value);
         }
 
-        private string L(string name)
+        protected virtual string L(string name)
         {
-            return LocalizationManager.GetString(AbpZeroConsts.LocalizationSourceName, name);
+            return LocalizationManager.GetString(LocalizationSourceName, name);
+        }
+
+        protected virtual string L(string name, CultureInfo cultureInfo)
+        {
+            return LocalizationManager.GetString(LocalizationSourceName, name, cultureInfo);
         }
 
         private int? GetCurrentTenantId()
@@ -691,6 +1168,79 @@ namespace Abp.Authorization.Users
             }
 
             return AbpSession.MultiTenancySide;
+        }
+
+        public virtual async Task AddTokenValidityKeyAsync(
+            TUser user,
+            string tokenValidityKey,
+            DateTime expireDate,
+            CancellationToken cancellationToken = default(CancellationToken))
+        {
+            await AbpUserStore.AddTokenValidityKeyAsync(user, tokenValidityKey, expireDate, cancellationToken);
+        }
+
+        public virtual void AddTokenValidityKey(
+            TUser user,
+            string tokenValidityKey,
+            DateTime expireDate,
+            CancellationToken cancellationToken = default(CancellationToken))
+        {
+            AbpUserStore.AddTokenValidityKey(user, tokenValidityKey, expireDate, cancellationToken);
+        }
+
+        public virtual async Task<bool> IsTokenValidityKeyValidAsync(
+            TUser user,
+            string tokenValidityKey,
+            CancellationToken cancellationToken = default(CancellationToken))
+        {
+            return await AbpUserStore.IsTokenValidityKeyValidAsync(user, tokenValidityKey, cancellationToken);
+        }
+
+        public virtual bool IsTokenValidityKeyValid(
+            TUser user,
+            string tokenValidityKey,
+            CancellationToken cancellationToken = default(CancellationToken))
+        {
+            return AbpUserStore.IsTokenValidityKeyValid(user, tokenValidityKey, cancellationToken);
+        }
+
+        public virtual async Task RemoveTokenValidityKeyAsync(
+            TUser user,
+            string tokenValidityKey,
+            CancellationToken cancellationToken = default(CancellationToken))
+        {
+            await AbpUserStore.RemoveTokenValidityKeyAsync(user, tokenValidityKey, cancellationToken);
+        }
+
+        public virtual void RemoveTokenValidityKey(
+            TUser user,
+            string tokenValidityKey,
+            CancellationToken cancellationToken = default(CancellationToken))
+        {
+            AbpUserStore.RemoveTokenValidityKey(user, tokenValidityKey, cancellationToken);
+        }
+
+        public bool IsLockedOut(string userId)
+        {
+            var user = AbpUserStore.FindById(userId);
+            if (user == null)
+            {
+                throw new AbpException("There is no user with id: " + userId);
+            }
+
+            var lockoutEndDateUtc = AbpUserStore.GetLockoutEndDate(user);
+            return lockoutEndDateUtc > DateTimeOffset.UtcNow;
+        }
+
+        public bool IsLockedOut(TUser user)
+        {
+            var lockoutEndDateUtc = AbpUserStore.GetLockoutEndDate(user);
+            return lockoutEndDateUtc > DateTimeOffset.UtcNow;
+        }
+
+        public void ResetAccessFailedCount(TUser user)
+        {
+            AbpUserStore.ResetAccessFailedCount(user);
         }
     }
 }

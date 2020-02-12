@@ -1,3 +1,4 @@
+using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
@@ -13,7 +14,7 @@ namespace Abp.BackgroundJobs
     /// </summary>
     public class InMemoryBackgroundJobStore : IBackgroundJobStore
     {
-        private readonly Dictionary<long, BackgroundJobInfo> _jobs;
+        private readonly ConcurrentDictionary<long, BackgroundJobInfo> _jobs;
         private long _lastId;
 
         /// <summary>
@@ -21,12 +22,17 @@ namespace Abp.BackgroundJobs
         /// </summary>
         public InMemoryBackgroundJobStore()
         {
-            _jobs = new Dictionary<long, BackgroundJobInfo>();
+            _jobs = new ConcurrentDictionary<long, BackgroundJobInfo>();
         }
 
         public Task<BackgroundJobInfo> GetAsync(long jobId)
         {
             return Task.FromResult(_jobs[jobId]);
+        }
+
+        public BackgroundJobInfo Get(long jobId)
+        {
+            return _jobs[jobId];
         }
 
         public Task InsertAsync(BackgroundJobInfo jobInfo)
@@ -35,6 +41,12 @@ namespace Abp.BackgroundJobs
             _jobs[jobInfo.Id] = jobInfo;
 
             return Task.FromResult(0);
+        }
+
+        public void Insert(BackgroundJobInfo jobInfo)
+        {
+            jobInfo.Id = Interlocked.Increment(ref _lastId);
+            _jobs[jobInfo.Id] = jobInfo;
         }
 
         public Task<List<BackgroundJobInfo>> GetWaitingJobsAsync(int maxResultCount)
@@ -50,16 +62,29 @@ namespace Abp.BackgroundJobs
             return Task.FromResult(waitingJobs);
         }
 
+        public List<BackgroundJobInfo> GetWaitingJobs(int maxResultCount)
+        {
+            var waitingJobs = _jobs.Values
+                .Where(t => !t.IsAbandoned && t.NextTryTime <= Clock.Now)
+                .OrderByDescending(t => t.Priority)
+                .ThenBy(t => t.TryCount)
+                .ThenBy(t => t.NextTryTime)
+                .Take(maxResultCount)
+                .ToList();
+
+            return waitingJobs;
+        }
+
         public Task DeleteAsync(BackgroundJobInfo jobInfo)
         {
-            if (!_jobs.ContainsKey(jobInfo.Id))
-            {
-                return Task.FromResult(0);
-            }
-
-            _jobs.Remove(jobInfo.Id);
+            _jobs.TryRemove(jobInfo.Id, out _);
 
             return Task.FromResult(0);
+        }
+
+        public void Delete(BackgroundJobInfo jobInfo)
+        {
+            _jobs.TryRemove(jobInfo.Id, out _);
         }
 
         public Task UpdateAsync(BackgroundJobInfo jobInfo)
@@ -70,6 +95,14 @@ namespace Abp.BackgroundJobs
             }
 
             return Task.FromResult(0);
+        }
+
+        public void Update(BackgroundJobInfo jobInfo)
+        {
+            if (jobInfo.IsAbandoned)
+            {
+                Delete(jobInfo);
+            }
         }
     }
 }

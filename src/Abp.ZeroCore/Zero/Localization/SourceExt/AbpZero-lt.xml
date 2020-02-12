@@ -14,10 +14,10 @@
     <text name="Identity.InvalidUserName">Vartotojo vardas '{0}' yra netaisyklingas - gali būti tik iš raidžių ar skaičių.</text>
     <text name="Identity.LoginAlreadyAssociated">Vartotojas su tokiu prisijungimu jau egzistuoja.</text>
     <text name="Identity.PasswordMismatch">Neteisingas slaptažodis.</text>
-    <text name="Identity.PasswordRequiresDigit">Slaptažodį sudaryti turi bent vienas skaičius ('0'-'9').</text>
-    <text name="Identity.PasswordRequiresLower">Slaptažodį sudaryti turi bent viena mažoji raidė ('a'-'z').</text>
-    <text name="Identity.PasswordRequiresNonAlphanumeric">Slaptažodis turi turėti bent vieną specialų simbolį.</text>
-    <text name="Identity.PasswordRequiresUpper">Slaptažodį sudaryti turi bent viena didžioji raidė ('A'-'Z').</text>
+    <text name="Identity.PasswordRequireDigit">Slaptažodį sudaryti turi bent vienas skaičius ('0'-'9').</text>
+    <text name="Identity.PasswordRequireLower">Slaptažodį sudaryti turi bent viena mažoji raidė ('a'-'z').</text>
+    <text name="Identity.PasswordRequireNonAlphanumeric">Slaptažodis turi turėti bent vieną specialų simbolį.</text>
+    <text name="Identity.PasswordRequireUpper">Slaptažodį sudaryti turi bent viena didžioji raidė ('A'-'Z').</text>
     <text name="Identity.PasswordTooShort">Slaptažodis turi būti bent {0} simbolių ilgio.</text>
     <text name="Identity.RoleNotFound">Rolė {0} neegzistuoja.</text>
     <text name="Identity.UserAlreadyHasPassword">Vartotojas jau turi nustatytą slaptažodį.</text>

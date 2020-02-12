@@ -23,6 +23,7 @@ namespace Abp.Tests.Timing
         [InlineData("South Africa Standard Time", "Africa/Johannesburg")]
         [InlineData("Mauritius Standard Time", "Indian/Mauritius")]
         [InlineData("Malay Peninsula Standard Time", "Asia/Kuala_Lumpur")]
+        [InlineData("Qyzylorda Standard Time", "Asia/Qyzylorda")]
         public void Windows_Timezone_Id_To_Iana_Tests(string windowsTimezoneId, string ianaTimezoneId)
         {
             TimezoneHelper.WindowsToIana(windowsTimezoneId).ShouldBe(ianaTimezoneId);
@@ -47,7 +48,7 @@ namespace Abp.Tests.Timing
         [Fact]
         public void All_Windows_Timezones_Should_Be_Convertable_To_Iana()
         {
-            var allTimezones = TimezoneHelper.GetWindowsTimeZoneInfos();
+            var allTimezones = TimezoneHelper.GetWindowsTimeZoneIds();
 
             Should.NotThrow(() =>
             {
@@ -57,7 +58,7 @@ namespace Abp.Tests.Timing
                 {
                     try
                     {
-                        TimezoneHelper.WindowsToIana(timezone.Id);
+                        TimezoneHelper.WindowsToIana(timezone);
                     }
                     catch (Exception ex)
                     {

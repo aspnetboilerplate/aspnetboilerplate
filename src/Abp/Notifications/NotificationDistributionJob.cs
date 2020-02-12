@@ -9,19 +9,29 @@ namespace Abp.Notifications
     /// </summary>
     public class NotificationDistributionJob : BackgroundJob<NotificationDistributionJobArgs>, ITransientDependency
     {
-        private readonly INotificationDistributer _notificationDistributer;
+        private readonly INotificationConfiguration _notificationConfiguration;
+        private readonly IIocResolver _iocResolver;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="NotificationDistributionJob"/> class.
         /// </summary>
-        public NotificationDistributionJob(INotificationDistributer notificationDistributer)
+        public NotificationDistributionJob(
+            INotificationConfiguration notificationConfiguration,
+            IIocResolver iocResolver)
         {
-            _notificationDistributer = notificationDistributer;
+            _notificationConfiguration = notificationConfiguration;
+            _iocResolver = iocResolver;
         }
 
         public override void Execute(NotificationDistributionJobArgs args)
         {
-            AsyncHelper.RunSync(() => _notificationDistributer.DistributeAsync(args.NotificationId));
+            foreach (var notificationDistributorType in _notificationConfiguration.Distributers)
+            {
+                using (var notificationDistributer = _iocResolver.ResolveAsDisposable<INotificationDistributer>(notificationDistributorType))
+                {
+                    notificationDistributer.Object.Distribute(args.NotificationId);
+                }
+            }
         }
     }
 }

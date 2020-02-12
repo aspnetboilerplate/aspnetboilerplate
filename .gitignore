@@ -8,10 +8,13 @@ Logs/
 # Generated files
 project.lock.json
 .vs/
+.dotnet/
+.idea/
 
 # Nuget packages
 nupkg/*.nupkg
 nupkg/push.bat
+nupkg/push_packages.ps1
 
 # Profile images
 ProfileImages/
@@ -127,3 +130,4 @@ src/.vs/config/applicationhost.config
 !nuget.exe
 !SQLite.Interop.dll
 /tools
+nupkg/push-hikalkan.bat

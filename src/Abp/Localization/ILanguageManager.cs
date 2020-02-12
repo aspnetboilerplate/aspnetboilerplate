@@ -7,5 +7,7 @@ namespace Abp.Localization
         LanguageInfo CurrentLanguage { get; }
 
         IReadOnlyList<LanguageInfo> GetLanguages();
+
+        IReadOnlyList<LanguageInfo> GetActiveLanguages();
     }
 }

@@ -15,12 +15,7 @@ namespace Abp.Configuration
         /// Maximum length of the <see cref="Name"/> property.
         /// </summary>
         public const int MaxNameLength = 256;
-
-        /// <summary>
-        /// Maximum length of the <see cref="Value"/> property.
-        /// </summary>
-        public const int MaxValueLength = 2000;
-
+     
         /// <summary>
         /// TenantId for this setting.
         /// TenantId is null if this setting is not Tenant level.
@@ -37,13 +32,12 @@ namespace Abp.Configuration
         /// Unique name of the setting.
         /// </summary>
         [Required]
-        [MaxLength(MaxNameLength)]
+        [StringLength(MaxNameLength)]
         public virtual string Name { get; set; }
 
         /// <summary>
         /// Value of the setting.
         /// </summary>
-        [MaxLength(MaxValueLength)]
         public virtual string Value { get; set; }
 
         /// <summary>

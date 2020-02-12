@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using Abp.Application.Features;
 using Abp.Auditing;
 using Abp.BackgroundJobs;
@@ -9,6 +10,7 @@ using Abp.Events.Bus;
 using Abp.Notifications;
 using Abp.Resources.Embedded;
 using Abp.Runtime.Caching.Configuration;
+using Abp.Webhooks;
 
 namespace Abp.Configuration.Startup
 {
@@ -110,6 +112,11 @@ namespace Abp.Configuration.Startup
         IEntityHistoryConfiguration EntityHistory { get; }
 
         /// <summary>
+        /// Used to configure webhook system.
+        /// </summary>
+        IWebhooksConfiguration Webhooks { get; }
+
+        /// <summary>
         /// Used to replace a service type.
         /// Given <see cref="replaceAction"/> should register an implementation for the <see cref="type"/>.
         /// </summary>
@@ -121,5 +128,9 @@ namespace Abp.Configuration.Startup
         /// Gets a configuration object.
         /// </summary>
         T Get<T>();
+
+        IList<ICustomConfigProvider> CustomConfigProviders { get; }
+
+        Dictionary<string, object> GetCustomConfig();
     }
 }

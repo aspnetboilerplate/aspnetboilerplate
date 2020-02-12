@@ -1,5 +1,6 @@
 ﻿using Abp.Data;
 using Abp.Domain.Entities;
+using Abp.Domain.Uow;
 using Abp.Transactions;
 
 namespace Abp.Dapper.Repositories
@@ -9,7 +10,9 @@ namespace Abp.Dapper.Repositories
         where TDbContext : class
 
     {
-        public DapperEfRepositoryBase(IActiveTransactionProvider activeTransactionProvider) : base(activeTransactionProvider)
+        public DapperEfRepositoryBase(IActiveTransactionProvider activeTransactionProvider,
+            ICurrentUnitOfWorkProvider currentUnitOfWorkProvider)
+            : base(activeTransactionProvider, currentUnitOfWorkProvider)
         {
         }
     }

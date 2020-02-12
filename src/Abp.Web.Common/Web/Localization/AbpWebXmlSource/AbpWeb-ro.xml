@@ -1,0 +1,20 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<localizationDictionary culture="ro">
+  <texts>
+    <text name="InternalServerError" value="A intervenit o eroare internă în timpul cererii dumneavoastră!" />
+    <text name="ValidationError" value="Cererea dumneavoastră nu este validă!" />
+    <text name="AreYouSure" value="Sunteți sigur(a)?" />
+    <text name="Cancel" value="Anulează" />
+    <text name="Yes" value="Da" />
+    <text name="ValidationNarrativeTitle" value="Următoarele erori au fost detectate in timpul validării." />
+    <text name="DefaultError" value="O eroare a intervenit!" />
+    <text name="DefaultErrorDetail" value="Detaliile erori nu au fost afișate de server." />
+    <text name="DefaultError401" value="Nu sunteți autentificat!" />
+    <text name="DefaultErrorDetail401" value="Ar trebui să fiți autentificat (conectați-vă) pentru a efectua această operație." />
+    <text name="DefaultError403" value="Nu sunteți autorizat!" />
+    <text name="DefaultErrorDetail403" value="Nu aveți voie să efectuați această operație." />
+    <text name="DefaultError404" value="Resursa nu a fost găsită!" />
+    <text name="DefaultErrorDetail404" value="Resursa solicitată nu a putut fi găsită pe server." />
+    <text name="EntityNotFound" value="Nu există entitate {0} cu id = {1}!" />
+  </texts>
+</localizationDictionary>
