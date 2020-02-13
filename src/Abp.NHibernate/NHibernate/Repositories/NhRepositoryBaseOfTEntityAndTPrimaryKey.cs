@@ -7,7 +7,6 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
-using System.Threading;
 using System.Threading.Tasks;
 
 namespace Abp.NHibernate.Repositories
@@ -59,19 +58,19 @@ namespace Abp.NHibernate.Repositories
             return query;
         }
 
-        public override Task<List<TEntity>> GetAllListAsync(CancellationToken cancellationToken = default)
+        public override Task<List<TEntity>> GetAllListAsync()
         {
-            return GetAll().ToListAsync(GetCancellationToken(cancellationToken));
+            return GetAll().ToListAsync(CancellationTokenProvider.Token);
         }
 
-        public override Task<List<TEntity>> GetAllListAsync(Expression<Func<TEntity, bool>> predicate, CancellationToken cancellationToken = default)
+        public override Task<List<TEntity>> GetAllListAsync(Expression<Func<TEntity, bool>> predicate)
         {
-            return GetAll().Where(predicate).ToListAsync(GetCancellationToken(cancellationToken));
+            return GetAll().Where(predicate).ToListAsync(CancellationTokenProvider.Token);
         }
 
-        public override Task<TEntity> SingleAsync(Expression<Func<TEntity, bool>> predicate, CancellationToken cancellationToken = default)
+        public override Task<TEntity> SingleAsync(Expression<Func<TEntity, bool>> predicate)
         {
-            return GetAll().SingleAsync(predicate, GetCancellationToken(cancellationToken));
+            return GetAll().SingleAsync(predicate, CancellationTokenProvider.Token);
         }
 
         public override TEntity FirstOrDefault(TPrimaryKey id)
@@ -79,14 +78,14 @@ namespace Abp.NHibernate.Repositories
             return Session.Get<TEntity>(id);
         }
 
-        public override Task<TEntity> FirstOrDefaultAsync(TPrimaryKey id, CancellationToken cancellationToken = default)
+        public override Task<TEntity> FirstOrDefaultAsync(TPrimaryKey id)
         {
-            return Session.GetAsync<TEntity>(id, GetCancellationToken(cancellationToken));
+            return Session.GetAsync<TEntity>(id, CancellationTokenProvider.Token);
         }
 
-        public override async Task<TEntity> FirstOrDefaultAsync(Expression<Func<TEntity, bool>> predicate, CancellationToken cancellationToken = default)
+        public override async Task<TEntity> FirstOrDefaultAsync(Expression<Func<TEntity, bool>> predicate)
         {
-            return await GetAll().FirstOrDefaultAsync(predicate, GetCancellationToken(cancellationToken));
+            return await GetAll().FirstOrDefaultAsync(predicate, CancellationTokenProvider.Token);
         }
 
         public override TEntity Load(TPrimaryKey id)
@@ -100,9 +99,9 @@ namespace Abp.NHibernate.Repositories
             return entity;
         }
 
-        public override async Task<TEntity> InsertAsync(TEntity entity, CancellationToken cancellationToken = default)
+        public override async Task<TEntity> InsertAsync(TEntity entity)
         {
-            await Session.SaveAsync(entity, GetCancellationToken(cancellationToken));
+            await Session.SaveAsync(entity, CancellationTokenProvider.Token);
             return entity;
         }
 
@@ -112,9 +111,9 @@ namespace Abp.NHibernate.Repositories
             return entity;
         }
 
-        public override async Task<TEntity> InsertOrUpdateAsync(TEntity entity, CancellationToken cancellationToken = default)
+        public override async Task<TEntity> InsertOrUpdateAsync(TEntity entity)
         {
-            await Session.SaveOrUpdateAsync(entity, GetCancellationToken(cancellationToken));
+            await Session.SaveOrUpdateAsync(entity, CancellationTokenProvider.Token);
             return entity;
         }
 
@@ -124,9 +123,9 @@ namespace Abp.NHibernate.Repositories
             return entity;
         }
 
-        public override async Task<TEntity> UpdateAsync(TEntity entity, CancellationToken cancellationToken = default)
+        public override async Task<TEntity> UpdateAsync(TEntity entity)
         {
-            await Session.UpdateAsync(entity, GetCancellationToken(cancellationToken));
+            await Session.UpdateAsync(entity, CancellationTokenProvider.Token);
             return entity;
         }
 
@@ -150,54 +149,54 @@ namespace Abp.NHibernate.Repositories
             Delete(entity);
         }
 
-        public override async Task DeleteAsync(TEntity entity, CancellationToken cancellationToken = default)
+        public override async Task DeleteAsync(TEntity entity)
         {
             if (entity is ISoftDelete softDeleteEntity)
             {
                 softDeleteEntity.IsDeleted = true;
-                await UpdateAsync(entity, GetCancellationToken(cancellationToken));
+                await UpdateAsync(entity);
             }
             else
             {
-                await Session.DeleteAsync(entity, GetCancellationToken(cancellationToken));
+                await Session.DeleteAsync(entity, CancellationTokenProvider.Token);
             }
         }
 
-        public override async Task DeleteAsync(TPrimaryKey id, CancellationToken cancellationToken = default)
+        public override async Task DeleteAsync(TPrimaryKey id)
         {
             var entity = Load(id);
 
-            await DeleteAsync(entity, GetCancellationToken(cancellationToken));
+            await DeleteAsync(entity);
         }
 
-        public override async Task DeleteAsync(Expression<Func<TEntity, bool>> predicate, CancellationToken cancellationToken = default)
+        public override async Task DeleteAsync(Expression<Func<TEntity, bool>> predicate)
         {
-            var entities = await GetAllListAsync(predicate, GetCancellationToken(cancellationToken));
+            var entities = await GetAllListAsync(predicate);
 
             foreach (var entity in entities)
             {
-                await DeleteAsync(entity, GetCancellationToken(cancellationToken));
+                await DeleteAsync(entity);
             }
         }
 
-        public override Task<int> CountAsync(CancellationToken cancellationToken = default)
+        public override Task<int> CountAsync()
         {
-            return GetAll().CountAsync(GetCancellationToken(cancellationToken));
+            return GetAll().CountAsync(CancellationTokenProvider.Token);
         }
 
-        public override Task<int> CountAsync(Expression<Func<TEntity, bool>> predicate, CancellationToken cancellationToken = default)
+        public override Task<int> CountAsync(Expression<Func<TEntity, bool>> predicate)
         {
-            return GetAll().CountAsync(predicate, GetCancellationToken(cancellationToken));
+            return GetAll().CountAsync(predicate, CancellationTokenProvider.Token);
         }
 
-        public override Task<long> LongCountAsync(CancellationToken cancellationToken = default)
+        public override Task<long> LongCountAsync()
         {
-            return GetAll().LongCountAsync(GetCancellationToken(cancellationToken));
+            return GetAll().LongCountAsync(CancellationTokenProvider.Token);
         }
 
-        public override Task<long> LongCountAsync(Expression<Func<TEntity, bool>> predicate, CancellationToken cancellationToken = default)
+        public override Task<long> LongCountAsync(Expression<Func<TEntity, bool>> predicate)
         {
-            return GetAll().LongCountAsync(predicate, GetCancellationToken(cancellationToken));
+            return GetAll().LongCountAsync(predicate, CancellationTokenProvider.Token);
         }
     }
 }

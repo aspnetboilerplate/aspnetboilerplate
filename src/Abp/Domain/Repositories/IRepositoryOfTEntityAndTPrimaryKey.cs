@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
-using System.Threading;
 using System.Threading.Tasks;
 using Abp.Domain.Entities;
 using Abp.Domain.Uow;
@@ -41,9 +40,8 @@ namespace Abp.Domain.Repositories
         /// <summary>
         /// Used to get all entities.
         /// </summary>
-        /// <param name="cancellationToken">A <see cref="T:System.Threading.CancellationToken" /> to observe while waiting for the task to complete.</param>
         /// <returns>List of all entities</returns>
-        Task<List<TEntity>> GetAllListAsync(CancellationToken cancellationToken = default);
+        Task<List<TEntity>> GetAllListAsync();
 
         /// <summary>
         /// Used to get all entities based on given <paramref name="predicate"/>.
@@ -56,9 +54,8 @@ namespace Abp.Domain.Repositories
         /// Used to get all entities based on given <paramref name="predicate"/>.
         /// </summary>
         /// <param name="predicate">A condition to filter entities</param>
-        /// <param name="cancellationToken">A <see cref="T:System.Threading.CancellationToken" /> to observe while waiting for the task to complete.</param>
         /// <returns>List of all entities</returns>
-        Task<List<TEntity>> GetAllListAsync(Expression<Func<TEntity, bool>> predicate, CancellationToken cancellationToken = default);
+        Task<List<TEntity>> GetAllListAsync(Expression<Func<TEntity, bool>> predicate);
 
         /// <summary>
         /// Used to run a query over entire entities.
@@ -81,9 +78,8 @@ namespace Abp.Domain.Repositories
         /// Gets an entity with given primary key.
         /// </summary>
         /// <param name="id">Primary key of the entity to get</param>
-        /// <param name="cancellationToken">A <see cref="T:System.Threading.CancellationToken" /> to observe while waiting for the task to complete.</param>
         /// <returns>Entity</returns>
-        Task<TEntity> GetAsync(TPrimaryKey id, CancellationToken cancellationToken = default);
+        Task<TEntity> GetAsync(TPrimaryKey id);
 
         /// <summary>
         /// Gets exactly one entity with given predicate.
@@ -97,8 +93,7 @@ namespace Abp.Domain.Repositories
         /// Throws exception if no entity or more than one entity.
         /// </summary>
         /// <param name="predicate">Entity</param>
-        /// <param name="cancellationToken">A <see cref="T:System.Threading.CancellationToken" /> to observe while waiting for the task to complete.</param>
-        Task<TEntity> SingleAsync(Expression<Func<TEntity, bool>> predicate, CancellationToken cancellationToken = default);
+        Task<TEntity> SingleAsync(Expression<Func<TEntity, bool>> predicate);
 
         /// <summary>
         /// Gets an entity with given primary key or null if not found.
@@ -111,9 +106,8 @@ namespace Abp.Domain.Repositories
         /// Gets an entity with given primary key or null if not found.
         /// </summary>
         /// <param name="id">Primary key of the entity to get</param>
-        /// <param name="cancellationToken">A <see cref="T:System.Threading.CancellationToken" /> to observe while waiting for the task to complete.</param>
         /// <returns>Entity or null</returns>
-        Task<TEntity> FirstOrDefaultAsync(TPrimaryKey id, CancellationToken cancellationToken = default);
+        Task<TEntity> FirstOrDefaultAsync(TPrimaryKey id);
 
         /// <summary>
         /// Gets an entity with given given predicate or null if not found.
@@ -125,8 +119,7 @@ namespace Abp.Domain.Repositories
         /// Gets an entity with given given predicate or null if not found.
         /// </summary>
         /// <param name="predicate">Predicate to filter entities</param>
-        /// <param name="cancellationToken">A <see cref="T:System.Threading.CancellationToken" /> to observe while waiting for the task to complete.</param>
-        Task<TEntity> FirstOrDefaultAsync(Expression<Func<TEntity, bool>> predicate, CancellationToken cancellationToken = default);
+        Task<TEntity> FirstOrDefaultAsync(Expression<Func<TEntity, bool>> predicate);
 
         /// <summary>
         /// Creates an entity with given primary key without database access.
@@ -149,8 +142,7 @@ namespace Abp.Domain.Repositories
         /// Inserts a new entity.
         /// </summary>
         /// <param name="entity">Inserted entity</param>
-        /// <param name="cancellationToken">A <see cref="T:System.Threading.CancellationToken" /> to observe while waiting for the task to complete.</param>
-        Task<TEntity> InsertAsync(TEntity entity, CancellationToken cancellationToken = default);
+        Task<TEntity> InsertAsync(TEntity entity);
 
         /// <summary>
         /// Inserts a new entity and gets it's Id.
@@ -167,9 +159,8 @@ namespace Abp.Domain.Repositories
         /// to be able to retrieve id.
         /// </summary>
         /// <param name="entity">Entity</param>
-        /// <param name="cancellationToken">A <see cref="T:System.Threading.CancellationToken" /> to observe while waiting for the task to complete.</param>
         /// <returns>Id of the entity</returns>
-        Task<TPrimaryKey> InsertAndGetIdAsync(TEntity entity, CancellationToken cancellationToken = default);
+        Task<TPrimaryKey> InsertAndGetIdAsync(TEntity entity);
 
         /// <summary>
         /// Inserts or updates given entity depending on Id's value.
@@ -181,8 +172,7 @@ namespace Abp.Domain.Repositories
         /// Inserts or updates given entity depending on Id's value.
         /// </summary>
         /// <param name="entity">Entity</param>
-        /// <param name="cancellationToken">A <see cref="T:System.Threading.CancellationToken" /> to observe while waiting for the task to complete.</param>
-        Task<TEntity> InsertOrUpdateAsync(TEntity entity, CancellationToken cancellationToken = default);
+        Task<TEntity> InsertOrUpdateAsync(TEntity entity);
 
         /// <summary>
         /// Inserts or updates given entity depending on Id's value.
@@ -201,9 +191,8 @@ namespace Abp.Domain.Repositories
         /// to be able to retrieve id.
         /// </summary>
         /// <param name="entity">Entity</param>
-        /// <param name="cancellationToken">A <see cref="T:System.Threading.CancellationToken" /> to observe while waiting for the task to complete.</param>
         /// <returns>Id of the entity</returns>
-        Task<TPrimaryKey> InsertOrUpdateAndGetIdAsync(TEntity entity, CancellationToken cancellationToken = default);
+        Task<TPrimaryKey> InsertOrUpdateAndGetIdAsync(TEntity entity);
 
         #endregion
 
@@ -219,8 +208,7 @@ namespace Abp.Domain.Repositories
         /// Updates an existing entity. 
         /// </summary>
         /// <param name="entity">Entity</param>
-        /// <param name="cancellationToken">A <see cref="T:System.Threading.CancellationToken" /> to observe while waiting for the task to complete.</param>
-        Task<TEntity> UpdateAsync(TEntity entity, CancellationToken cancellationToken = default);
+        Task<TEntity> UpdateAsync(TEntity entity);
 
         /// <summary>
         /// Updates an existing entity.
@@ -235,9 +223,8 @@ namespace Abp.Domain.Repositories
         /// </summary>
         /// <param name="id">Id of the entity</param>
         /// <param name="updateAction">Action that can be used to change values of the entity</param>
-        /// <param name="cancellationToken">A <see cref="T:System.Threading.CancellationToken" /> to observe while waiting for the task to complete.</param>
         /// <returns>Updated entity</returns>
-        Task<TEntity> UpdateAsync(TPrimaryKey id, Func<TEntity, Task> updateAction, CancellationToken cancellationToken = default);
+        Task<TEntity> UpdateAsync(TPrimaryKey id, Func<TEntity, Task> updateAction);
 
         #endregion
 
@@ -253,8 +240,7 @@ namespace Abp.Domain.Repositories
         /// Deletes an entity.
         /// </summary>
         /// <param name="entity">Entity to be deleted</param>
-        /// <param name="cancellationToken">A <see cref="T:System.Threading.CancellationToken" /> to observe while waiting for the task to complete.</param>
-        Task DeleteAsync(TEntity entity, CancellationToken cancellationToken = default);
+        Task DeleteAsync(TEntity entity);
 
         /// <summary>
         /// Deletes an entity by primary key.
@@ -266,8 +252,7 @@ namespace Abp.Domain.Repositories
         /// Deletes an entity by primary key.
         /// </summary>
         /// <param name="id">Primary key of the entity</param>
-        /// <param name="cancellationToken">A <see cref="T:System.Threading.CancellationToken" /> to observe while waiting for the task to complete.</param>
-        Task DeleteAsync(TPrimaryKey id, CancellationToken cancellationToken = default);
+        Task DeleteAsync(TPrimaryKey id);
 
         /// <summary>
         /// Deletes many entities by function.
@@ -285,8 +270,7 @@ namespace Abp.Domain.Repositories
         /// given predicate.
         /// </summary>
         /// <param name="predicate">A condition to filter entities</param>
-        /// <param name="cancellationToken">A <see cref="T:System.Threading.CancellationToken" /> to observe while waiting for the task to complete.</param>
-        Task DeleteAsync(Expression<Func<TEntity, bool>> predicate, CancellationToken cancellationToken = default);
+        Task DeleteAsync(Expression<Func<TEntity, bool>> predicate);
 
         #endregion
 
@@ -302,7 +286,7 @@ namespace Abp.Domain.Repositories
         /// Gets count of all entities in this repository.
         /// </summary>
         /// <returns>Count of entities</returns>
-        Task<int> CountAsync(CancellationToken cancellationToken = default);
+        Task<int> CountAsync();
 
         /// <summary>
         /// Gets count of all entities in this repository based on given <paramref name="predicate"/>.
@@ -315,25 +299,24 @@ namespace Abp.Domain.Repositories
         /// Gets count of all entities in this repository based on given <paramref name="predicate"/>.
         /// </summary>
         /// <param name="predicate">A method to filter count</param>
-        /// <param name="cancellationToken">A <see cref="T:System.Threading.CancellationToken" /> to observe while waiting for the task to complete.</param>
         /// <returns>Count of entities</returns>
-        Task<int> CountAsync(Expression<Func<TEntity, bool>> predicate, CancellationToken cancellationToken = default);
+        Task<int> CountAsync(Expression<Func<TEntity, bool>> predicate);
 
         /// <summary>
-        /// Gets count of all entities in this repository (use if expected return value is greather than <see cref="int.MaxValue"/>.
+        /// Gets count of all entities in this repository (use if expected return value is greater than <see cref="int.MaxValue"/>.
         /// </summary>
         /// <returns>Count of entities</returns>
         long LongCount();
 
         /// <summary>
-        /// Gets count of all entities in this repository (use if expected return value is greather than <see cref="int.MaxValue"/>.
+        /// Gets count of all entities in this repository (use if expected return value is greater than <see cref="int.MaxValue"/>.
         /// </summary>
         /// <returns>Count of entities</returns>
-        Task<long> LongCountAsync(CancellationToken cancellationToken = default);
+        Task<long> LongCountAsync();
 
         /// <summary>
         /// Gets count of all entities in this repository based on given <paramref name="predicate"/>
-        /// (use this overload if expected return value is greather than <see cref="int.MaxValue"/>).
+        /// (use this overload if expected return value is greater than <see cref="int.MaxValue"/>).
         /// </summary>
         /// <param name="predicate">A method to filter count</param>
         /// <returns>Count of entities</returns>
@@ -341,12 +324,11 @@ namespace Abp.Domain.Repositories
 
         /// <summary>
         /// Gets count of all entities in this repository based on given <paramref name="predicate"/>
-        /// (use this overload if expected return value is greather than <see cref="int.MaxValue"/>).
+        /// (use this overload if expected return value is greater than <see cref="int.MaxValue"/>).
         /// </summary>
         /// <param name="predicate">A method to filter count</param>
-        /// <param name="cancellationToken">A <see cref="T:System.Threading.CancellationToken" /> to observe while waiting for the task to complete.</param>
         /// <returns>Count of entities</returns>
-        Task<long> LongCountAsync(Expression<Func<TEntity, bool>> predicate, CancellationToken cancellationToken = default);
+        Task<long> LongCountAsync(Expression<Func<TEntity, bool>> predicate);
 
         #endregion
     }
