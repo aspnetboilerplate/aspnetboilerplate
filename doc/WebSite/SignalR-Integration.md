@@ -70,17 +70,25 @@ generally fine, but there may be cases where you might not want to. You can add
 these lines just before including **abp.signalr.js** to disable auto
 connecting:
 
-    <script>
-        abp.signalr = abp.signalr || {};
-        abp.signalr.autoConnect = false;
-    </script>
+```javascript
+<script>
+    abp.signalr = abp.signalr || {};
+    abp.signalr.autoConnect = false; //connects server automatically after page load (default true)
+    abp.signalr.autoReconnect = true; //tries to reconnect when the client disconnects (default true)
+    abp.signalr.reconnectTime = 5000; //time to wait before reconnect to the server (default is 5000 milisecond)
+    abp.signalr.maxTries = 8; //max reconnect try count (default is 8)
+    abp.signalr.increaseReconnectTime = function (time) { //anytime reconnection request gets fail abp will increase the time to wait before next request with using that function. 
+        return time * 2; //(default is twice of previous time)
+    };
+</script>
+```
 
 In this case, you can call the **abp.signalr.connect()** function manually
 whenever you need to connect to the server.
 
 ASP.NET Boilerplate also **automatically reconnects** to the server
 (from the client) when the client disconnects, if
-**abp.signalr.autoConnect** is true.
+**abp.signalr.autoReconnect ** is true.
 
 The **"abp.signalr.connected"** global event is triggered when the client
 connects to the server. You can register to this event to take actions
