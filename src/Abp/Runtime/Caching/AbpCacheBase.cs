@@ -67,7 +67,7 @@ namespace Abp.Runtime.Caching
 
                         try
                         {
-                            Set(key, item);
+                            Set(key, item, DefaultSlidingExpireTime, DefaultAbsoluteExpireTime);
                         }
                         catch (Exception ex)
                         {
@@ -131,7 +131,7 @@ namespace Abp.Runtime.Caching
                     {
                         try
                         {
-                            Set(fetched.ToArray());
+                            Set(fetched.ToArray(), DefaultSlidingExpireTime, DefaultAbsoluteExpireTime);
                         }
                         catch (Exception ex)
                         {
@@ -181,7 +181,7 @@ namespace Abp.Runtime.Caching
 
                         try
                         {
-                            await SetAsync(key, item);
+                            await SetAsync(key, item, DefaultSlidingExpireTime, DefaultAbsoluteExpireTime);
                         }
                         catch (Exception ex)
                         {
@@ -245,7 +245,7 @@ namespace Abp.Runtime.Caching
                     {
                         try
                         {
-                            await SetAsync(fetched.ToArray());
+                            await SetAsync(fetched.ToArray(), DefaultSlidingExpireTime, DefaultAbsoluteExpireTime);
                         }
                         catch (Exception ex)
                         {
