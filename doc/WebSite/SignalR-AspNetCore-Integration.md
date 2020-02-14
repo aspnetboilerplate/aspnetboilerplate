@@ -81,6 +81,9 @@ connecting:
         abp.signalr.autoConnect = false;
         abp.signalr.reconnectTime = 5000;
         abp.signalr.maxTries = 8;
+        abp.signalr.increaseReconnectTime = function (time) { //anytime reconnection request gets fail abp will increase the time to wait before next request with using that function. 
+            return time * 2; //(default is twice of previous time)
+        };
     </script>
 
 In this case, you can call the **abp.signalr.connect()** function manually
@@ -88,7 +91,7 @@ whenever you need to connect to the server.
 
 ASP.NET Boilerplate also **automatically reconnects** to the server
 (from the client) when the client disconnects, if
-**abp.signalr.autoConnect** is true. At most **abp.signalr.maxTries** times it tries to connect to the server. It starts to wait for **abp.signalr.reconnectTime** ms, then each time connection fails, it waits 2 times longer. (for example: 5000ms - 10000ms - 20000ms...)
+**abp.signalr.autoConnect** is true. At most **abp.signalr.maxTries** times it tries to connect to the server. It starts to wait for **abp.signalr.reconnectTime** ms, then each time connection fails, it waits 2 times longer. (for example: 5000ms - 10000ms - 20000ms...). (You can override **abp.signalr.increaseReconnectTime** to change increasing method)
 
 The **"abp.signalr.connected"** global event is triggered when the client
 connects to the server. You can register to this event to take actions
