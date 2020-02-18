@@ -2,7 +2,6 @@
 
   <PropertyGroup>
     <TargetFrameworks>net461;netcoreapp3.1</TargetFrameworks>
-    <TargetFrameworks Condition=" '$(OS)' != 'Windows_NT' ">netcoreapp3.1</TargetFrameworks>
     <AssemblyName>Abp.AutoMapper.Tests</AssemblyName>
     <PackageId>Abp.AutoMapper.Tests</PackageId>
     <GenerateRuntimeConfigurationFiles>true</GenerateRuntimeConfigurationFiles>
@@ -33,7 +32,7 @@
     <Reference Include="System" />
     <Reference Include="Microsoft.CSharp" />
   </ItemGroup>
-  
+
   <ItemGroup Condition=" '$(TargetFramework)' == 'netcoreapp3.1' ">
     <PackageReference Include="System.Runtime" Version="4.3.1" />
   </ItemGroup>

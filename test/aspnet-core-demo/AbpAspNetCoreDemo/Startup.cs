@@ -88,11 +88,20 @@ namespace AbpAspNetCoreDemo
             {
                 options.IocManager = IocManager.Value ?? new IocManager();
 
-                options.PlugInSources.Add(
-                    new AssemblyFileListPlugInSource(
-                        Path.Combine(_env.ContentRootPath, @"..\AbpAspNetCoreDemo.PlugIn\bin\Debug\netcoreapp3.1\AbpAspNetCoreDemo.PlugIn.dll")
-                    )
-                );
+                string plugDllInPath = "";
+#if DEBUG
+                plugDllInPath = Path.Combine(_env.ContentRootPath,
+                    @"..\AbpAspNetCoreDemo.PlugIn\bin\Debug\netcoreapp3.1\AbpAspNetCoreDemo.PlugIn.dll");
+#else
+                plugDllInPath = Path.Combine(_env.ContentRootPath,
+                    @"..\AbpAspNetCoreDemo.PlugIn\bin\Release\netcoreapp3.1\AbpAspNetCoreDemo.PlugIn.dll");
+#endif
+                if (!File.Exists(plugDllInPath))
+                {
+                    throw new FileNotFoundException("There is no plugin dll file in the given path.", plugDllInPath);
+                }
+
+                options.PlugInSources.Add(new AssemblyFileListPlugInSource(plugDllInPath));
 
                 //Configure Log4Net logging
                 options.IocManager.IocContainer.AddFacility<LoggingFacility>(
