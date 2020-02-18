@@ -43,9 +43,15 @@ namespace Abp.Tests.Extensions
 
             "ABC".To<TestEnum>().ShouldBe(TestEnum.ABC);
             "BDE".To<TestEnum>().ShouldBe(TestEnum.BDE);
+            "08:00:00".To<TimeSpan>().ShouldBe(TimeSpan.FromHours(8));
+            "1".To<TimeSpan>().ShouldBe(TimeSpan.FromDays(1));
+            "1:0".To<TimeSpan>().ShouldBe(TimeSpan.FromHours(1));
+            "0:0:1".To<TimeSpan>().ShouldBe(TimeSpan.FromSeconds(1));
+            "0:0:0.5".To<TimeSpan>().ShouldBe(TimeSpan.FromMilliseconds(500));
 
             Assert.Throws<FormatException>(() => "test".To<bool>());
             Assert.Throws<FormatException>(() => "test".To<int>());
+            Assert.Throws<FormatException>(() => "a".To<TimeSpan>());
             Assert.Throws<ArgumentException>(() => "0".To<TestEnum>());
             Assert.Throws<ArgumentException>(() => "abc".To<TestEnum>());
         }

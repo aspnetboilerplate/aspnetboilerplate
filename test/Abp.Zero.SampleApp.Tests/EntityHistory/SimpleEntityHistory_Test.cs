@@ -16,8 +16,10 @@ using System.Collections.Generic;
 using System.Data.Entity;
 using System.Data.Entity.Infrastructure;
 using System.Linq;
+using System.Threading;
 using Abp.Application.Editions;
 using Abp.Application.Features;
+using Abp.Authorization.Roles;
 using Abp.Zero.SampleApp.TPH;
 using Xunit;
 
@@ -121,6 +123,8 @@ namespace Abp.Zero.SampleApp.Tests.EntityHistory
             Resolve<IEntityHistoryConfiguration>().Selectors.Add("Selected", typeof(Advertisement));
 
             var justNow = Clock.Now;
+            Thread.Sleep(1);
+
             WithUnitOfWork(() =>
             {
                 _advertisementRepository.InsertAndGetId(new Advertisement { Banner = "tracked-advertisement" });
@@ -210,6 +214,8 @@ namespace Abp.Zero.SampleApp.Tests.EntityHistory
             Resolve<IEntityHistoryConfiguration>().Selectors.Add("Selected", typeof(Student));
 
             var justNow = Clock.Now;
+            Thread.Sleep(1);
+
             var student = new Student()
             {
                 Name = "TestName",
@@ -322,6 +328,8 @@ namespace Abp.Zero.SampleApp.Tests.EntityHistory
             });
 
             var justNow = Clock.Now;
+            Thread.Sleep(1);
+
             var blog2Id = CreateBlogAndGetId();
 
             UsingDbContext((context) =>
@@ -720,7 +728,6 @@ namespace Abp.Zero.SampleApp.Tests.EntityHistory
 
             return _studentRepository.InsertAndGetId(student);
         }
-
         #endregion
 
         #region CASES DON'T WRITE HISTORY
@@ -851,6 +858,43 @@ namespace Abp.Zero.SampleApp.Tests.EntityHistory
             {
                 var category = context.Categories.Single(c => c.DisplayName == "My Category");
                 context.Categories.Remove(category);
+                context.SaveChanges();
+            });
+
+            //Assert
+            _entityHistoryStore.DidNotReceive().Save(Arg.Any<EntityChangeSet>());
+        }
+
+        [Fact]
+        public void Should_Not_Write_History_For_Audited_Entity_By_Default()
+        {
+            //Arrange
+            UsingDbContext((context) =>
+            {
+                context.Countries.Add(new Country { CountryCode = "My Country" });
+                context.SaveChanges();
+            });
+
+            //Assert
+            _entityHistoryStore.DidNotReceive().Save(Arg.Any<EntityChangeSet>());
+        }
+
+        [Fact]
+        public void Should_Not_Write_History_For_Not_Audited_Entities_Shadow_Property()
+        {
+            // PermissionSetting has Discriminator column (shadow property) for RolePermissionSetting
+
+            //Arrange
+            UsingDbContext((context) =>
+            {
+                var role = context.Roles.FirstOrDefault();
+                role.ShouldNotBeNull();
+
+                context.RolePermissions.Add(new RolePermissionSetting()
+                {
+                    Name = "Test",
+                    RoleId = role.Id
+                });
                 context.SaveChanges();
             });
 

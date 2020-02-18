@@ -11,6 +11,7 @@ using Abp.Localization;
 using Abp.MultiTenancy;
 using Abp.Notifications;
 using Abp.Organizations;
+using Abp.Webhooks;
 using Microsoft.EntityFrameworkCore;
 
 namespace Abp.Zero.EntityFrameworkCore
@@ -65,6 +66,9 @@ namespace Abp.Zero.EntityFrameworkCore
             SetTableName<UserClaim>(modelBuilder, prefix + "UserClaims", schemaName);
             SetTableName<RoleClaim>(modelBuilder, prefix + "RoleClaims", schemaName);
             SetTableName<UserToken>(modelBuilder, prefix + "UserTokens", schemaName);
+            SetTableName<WebhookEvent>(modelBuilder, prefix + "WebhookEvents", schemaName);
+            SetTableName<WebhookSubscriptionInfo>(modelBuilder, prefix + "WebhookSubscriptions", schemaName);
+            SetTableName<WebhookSendAttempt>(modelBuilder, prefix + "WebhookSendAttempts", schemaName);
         }
 
         internal static void SetTableName<TEntity>(this ModelBuilder modelBuilder, string tableName, string schemaName)

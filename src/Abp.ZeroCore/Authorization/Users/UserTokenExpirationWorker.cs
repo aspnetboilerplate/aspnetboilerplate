@@ -1,9 +1,10 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using Abp.BackgroundJobs;
-using Abp.Dependency;
 using Abp.Domain.Repositories;
 using Abp.Domain.Uow;
+using Abp.Extensions;
 using Abp.MultiTenancy;
 using Abp.Threading.BackgroundWorkers;
 using Abp.Threading.Timers;
@@ -15,37 +16,25 @@ namespace Abp.Authorization.Users
         where TTenant : AbpTenant<TUser>
         where TUser : AbpUserBase
     {
-        private const int IntervalInMilliseconds = 1 * 60 * 60 * 1000; // 1 hour
-
         private readonly IRepository<UserToken, long> _userTokenRepository;
         private readonly IRepository<TTenant> _tenantRepository;
-        private readonly IBackgroundJobConfiguration _backgroundJobConfiguration;
         private readonly IUnitOfWorkManager _unitOfWorkManager;
 
         public UserTokenExpirationWorker(
             AbpTimer timer,
             IRepository<UserToken, long> userTokenRepository,
-            IBackgroundJobConfiguration backgroundJobConfiguration, 
-            IUnitOfWorkManager unitOfWorkManager, 
+            IBackgroundJobConfiguration backgroundJobConfiguration,
+            IUnitOfWorkManager unitOfWorkManager,
             IRepository<TTenant> tenantRepository)
             : base(timer)
         {
             _userTokenRepository = userTokenRepository;
-            _backgroundJobConfiguration = backgroundJobConfiguration;
             _unitOfWorkManager = unitOfWorkManager;
             _tenantRepository = tenantRepository;
 
-            Timer.Period = GetTimerPeriod();
-        }
-
-        private int GetTimerPeriod()
-        {
-            if (_backgroundJobConfiguration.CleanUserTokenPeriod.HasValue)
-            {
-                return _backgroundJobConfiguration.CleanUserTokenPeriod.Value;
-            }
-
-            return IntervalInMilliseconds;
+            Timer.Period = backgroundJobConfiguration.UserTokenExpirationPeriod?.TotalMilliseconds.To<int>()
+                           ?? backgroundJobConfiguration.CleanUserTokenPeriod
+                           ?? TimeSpan.FromHours(1).TotalMilliseconds.To<int>();
         }
 
         protected override void DoWork()

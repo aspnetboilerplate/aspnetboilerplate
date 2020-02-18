@@ -65,22 +65,22 @@ namespace Abp.EntityHistory
                 {
                     continue;
                 }
-                
+
                 bool? shouldAuditOwnerEntity = null;
                 bool? shouldAuditOwnerProperty = null;
                 if (!shouldAuditEntity.HasValue && entityEntry.Metadata.IsOwned())
                 {
                     // Check if owner entity has auditing attribute
-                    var foreignKey = entityEntry.Metadata.GetForeignKeys().First();
-                    var ownerEntity = foreignKey.PrincipalEntityType.ClrType;
+                    var ownerForeignKey = entityEntry.Metadata.GetForeignKeys().First(fk => fk.IsOwnership);
+                    var ownerEntityType = ownerForeignKey.PrincipalEntityType.ClrType;
 
-                    shouldAuditOwnerEntity = IsTypeOfAuditedEntity(ownerEntity);
+                    shouldAuditOwnerEntity = IsTypeOfAuditedEntity(ownerEntityType);
                     if (shouldAuditOwnerEntity.HasValue && !shouldAuditOwnerEntity.Value)
                     {
                         continue;
                     }
 
-                    var ownerPropertyInfo = foreignKey.PrincipalToDependent.PropertyInfo;
+                    var ownerPropertyInfo = ownerForeignKey.PrincipalToDependent.PropertyInfo;
                     shouldAuditOwnerProperty = IsAuditedPropertyInfo(ownerPropertyInfo);
                     if (shouldAuditOwnerProperty.HasValue && !shouldAuditOwnerProperty.Value)
                     {
@@ -95,7 +95,7 @@ namespace Abp.EntityHistory
                 }
 
                 var isAuditableEntity = (shouldAuditEntity.HasValue && shouldAuditEntity.Value) ||
-                                        (shouldAuditOwnerEntity.HasValue && shouldAuditOwnerEntity.Value) || 
+                                        (shouldAuditOwnerEntity.HasValue && shouldAuditOwnerEntity.Value) ||
                                         (shouldAuditOwnerProperty.HasValue && shouldAuditOwnerProperty.Value);
                 var isTrackableEntity = shouldTrackEntity.HasValue && shouldTrackEntity.Value;
                 var shouldSaveAuditedPropertiesOnly = !isAuditableEntity && !isTrackableEntity;
@@ -216,8 +216,10 @@ namespace Abp.EntityHistory
                     continue;
                 }
 
-                var shouldSaveProperty = property.IsShadowProperty() ||
-                                         (IsAuditedPropertyInfo(property.PropertyInfo) ?? !auditedPropertiesOnly);
+                var shouldSaveProperty = property.IsShadowProperty() // i.e. property.PropertyInfo == null
+                    ? !auditedPropertiesOnly
+                    : IsAuditedPropertyInfo(property.PropertyInfo) ?? !auditedPropertiesOnly;
+
                 if (shouldSaveProperty)
                 {
                     var propertyEntry = entityEntry.Property(property.Name);

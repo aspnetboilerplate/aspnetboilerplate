@@ -71,7 +71,7 @@ namespace Abp.Web.Mvc.Controllers
         {
             if (!culture.IsNullOrEmpty())
             {
-                Thread.CurrentThread.CurrentUICulture = CultureInfoHelper.Get(culture);
+                Thread.CurrentThread.CurrentUICulture = CultureInfo.GetCultureInfo(culture);
             }
 
             var sb = new StringBuilder();

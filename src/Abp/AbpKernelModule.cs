@@ -30,6 +30,7 @@ using Abp.Runtime.Validation.Interception;
 using Abp.Threading;
 using Abp.Threading.BackgroundWorkers;
 using Abp.Timing;
+using Abp.Webhooks;
 using Castle.MicroKernel.Registration;
 
 namespace Abp
@@ -76,6 +77,17 @@ namespace Abp
                 {
                     InstallInstallers = false
                 });
+
+            RegisterInterceptors();
+        }
+
+        private void RegisterInterceptors()
+        {
+            IocManager.Register(typeof(AbpAsyncDeterminationInterceptor<UnitOfWorkInterceptor>), DependencyLifeStyle.Transient);
+            IocManager.Register(typeof(AbpAsyncDeterminationInterceptor<AuditingInterceptor>), DependencyLifeStyle.Transient);
+            IocManager.Register(typeof(AbpAsyncDeterminationInterceptor<AuthorizationInterceptor>), DependencyLifeStyle.Transient);
+            IocManager.Register(typeof(AbpAsyncDeterminationInterceptor<ValidationInterceptor>), DependencyLifeStyle.Transient);
+            IocManager.Register(typeof(AbpAsyncDeterminationInterceptor<EntityHistoryInterceptor>), DependencyLifeStyle.Transient);
         }
 
         public override void PostInitialize()
@@ -88,6 +100,7 @@ namespace Abp
             IocManager.Resolve<LocalizationManager>().Initialize();
             IocManager.Resolve<NotificationDefinitionManager>().Initialize();
             IocManager.Resolve<NavigationManager>().Initialize();
+            IocManager.Resolve<WebhookDefinitionManager>().Initialize();
 
             if (Configuration.BackgroundJobs.IsJobExecutionEnabled)
             {

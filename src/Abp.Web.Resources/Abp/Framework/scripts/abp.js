@@ -1,7 +1,7 @@
 ﻿(function (define) {
   define(['jquery'], function ($) {
     return (function () {
-      var abp = abp || {};
+      var abp = window.abp || {};
 
       /* Application paths *****************************************/
 

@@ -60,17 +60,17 @@ namespace Abp.NHibernate.Repositories
 
         public override Task<List<TEntity>> GetAllListAsync()
         {
-            return GetAll().ToListAsync();
+            return GetAll().ToListAsync(CancellationTokenProvider.Token);
         }
 
         public override Task<List<TEntity>> GetAllListAsync(Expression<Func<TEntity, bool>> predicate)
         {
-            return GetAll().Where(predicate).ToListAsync();
+            return GetAll().Where(predicate).ToListAsync(CancellationTokenProvider.Token);
         }
 
         public override Task<TEntity> SingleAsync(Expression<Func<TEntity, bool>> predicate)
         {
-            return GetAll().SingleAsync(predicate);
+            return GetAll().SingleAsync(predicate, CancellationTokenProvider.Token);
         }
 
         public override TEntity FirstOrDefault(TPrimaryKey id)
@@ -80,12 +80,12 @@ namespace Abp.NHibernate.Repositories
 
         public override Task<TEntity> FirstOrDefaultAsync(TPrimaryKey id)
         {
-            return Session.GetAsync<TEntity>(id);
+            return Session.GetAsync<TEntity>(id, CancellationTokenProvider.Token);
         }
 
         public override async Task<TEntity> FirstOrDefaultAsync(Expression<Func<TEntity, bool>> predicate)
         {
-            return await GetAll().FirstOrDefaultAsync(predicate);
+            return await GetAll().FirstOrDefaultAsync(predicate, CancellationTokenProvider.Token);
         }
 
         public override TEntity Load(TPrimaryKey id)
@@ -101,7 +101,7 @@ namespace Abp.NHibernate.Repositories
 
         public override async Task<TEntity> InsertAsync(TEntity entity)
         {
-            await Session.SaveAsync(entity);
+            await Session.SaveAsync(entity, CancellationTokenProvider.Token);
             return entity;
         }
 
@@ -113,7 +113,7 @@ namespace Abp.NHibernate.Repositories
 
         public override async Task<TEntity> InsertOrUpdateAsync(TEntity entity)
         {
-            await Session.SaveOrUpdateAsync(entity);
+            await Session.SaveOrUpdateAsync(entity, CancellationTokenProvider.Token);
             return entity;
         }
 
@@ -125,7 +125,7 @@ namespace Abp.NHibernate.Repositories
 
         public override async Task<TEntity> UpdateAsync(TEntity entity)
         {
-            await Session.UpdateAsync(entity);
+            await Session.UpdateAsync(entity, CancellationTokenProvider.Token);
             return entity;
         }
 
@@ -158,7 +158,7 @@ namespace Abp.NHibernate.Repositories
             }
             else
             {
-                await Session.DeleteAsync(entity);
+                await Session.DeleteAsync(entity, CancellationTokenProvider.Token);
             }
         }
 
@@ -181,22 +181,22 @@ namespace Abp.NHibernate.Repositories
 
         public override Task<int> CountAsync()
         {
-            return GetAll().CountAsync();
+            return GetAll().CountAsync(CancellationTokenProvider.Token);
         }
 
         public override Task<int> CountAsync(Expression<Func<TEntity, bool>> predicate)
         {
-            return GetAll().CountAsync(predicate);
+            return GetAll().CountAsync(predicate, CancellationTokenProvider.Token);
         }
 
         public override Task<long> LongCountAsync()
         {
-            return GetAll().LongCountAsync();
+            return GetAll().LongCountAsync(CancellationTokenProvider.Token);
         }
 
         public override Task<long> LongCountAsync(Expression<Func<TEntity, bool>> predicate)
         {
-            return GetAll().LongCountAsync(predicate);
+            return GetAll().LongCountAsync(predicate, CancellationTokenProvider.Token);
         }
     }
 }

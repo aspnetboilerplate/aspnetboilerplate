@@ -10,6 +10,7 @@ using Abp.BackgroundJobs;
 using Abp.MultiTenancy;
 using Abp.Notifications;
 using Abp.EntityFramework.Extensions;
+using Abp.Webhooks;
 
 namespace Abp.Zero.EntityFramework
 {
@@ -59,7 +60,7 @@ namespace Abp.Zero.EntityFramework
         /// Notifications.
         /// </summary>
         public virtual DbSet<NotificationInfo> Notifications { get; set; }
-
+        
         protected AbpZeroHostDbContext()
         {
 

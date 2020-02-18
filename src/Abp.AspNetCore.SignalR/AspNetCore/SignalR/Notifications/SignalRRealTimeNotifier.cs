@@ -52,6 +52,7 @@ namespace Abp.AspNetCore.SignalR.Notifications
                             continue;
                         }
 
+                        userNotification.Notification.EntityType = null; // Serialization of System.Type causes SignalR to disconnect. See https://github.com/aspnetboilerplate/aspnetboilerplate/issues/5230
                         signalRClient.SendAsync("getNotification", userNotification);
                     }
                 }
@@ -82,6 +83,7 @@ namespace Abp.AspNetCore.SignalR.Notifications
                             continue;
                         }
 
+                        userNotification.Notification.EntityType = null; // Serialization of System.Type causes SignalR to disconnect. See https://github.com/aspnetboilerplate/aspnetboilerplate/issues/5230
                         //signalRClient.SendAsync("getNotification", userNotification);
                         Threading.AsyncHelper.RunSync(() => signalRClient.SendAsync("getNotification", userNotification));
                     }

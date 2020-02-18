@@ -1,10 +1,11 @@
 version: 1.0.{build}
-configuration: Release
-image: Visual Studio 2017
+
+image:
+  - Visual Studio 2019
+
 pull_requests:
   do_not_increment_build_number: true
-  
-build_script:
-- ps: .\build.ps1
 
-test: off
+build_script:
+  - ps: .\build.ps1 Test
+

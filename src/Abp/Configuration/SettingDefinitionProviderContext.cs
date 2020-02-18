@@ -7,7 +7,7 @@
     {
         public ISettingDefinitionManager Manager { get; }
 
-        internal SettingDefinitionProviderContext(ISettingDefinitionManager manager)
+        public SettingDefinitionProviderContext(ISettingDefinitionManager manager)
         {
             Manager = manager;
         }

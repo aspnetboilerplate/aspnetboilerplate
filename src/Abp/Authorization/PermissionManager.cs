@@ -5,6 +5,7 @@ using Abp.Application.Features;
 using Abp.Collections.Extensions;
 using Abp.Configuration.Startup;
 using Abp.Dependency;
+using Abp.Domain.Uow;
 using Abp.MultiTenancy;
 using Abp.Runtime.Session;
 
@@ -19,16 +20,19 @@ namespace Abp.Authorization
 
         private readonly IIocManager _iocManager;
         private readonly IAuthorizationConfiguration _authorizationConfiguration;
+        private readonly IUnitOfWorkManager _unitOfWorkManager;
 
         /// <summary>
         /// Constructor.
         /// </summary>
         public PermissionManager(
             IIocManager iocManager,
-            IAuthorizationConfiguration authorizationConfiguration)
+            IAuthorizationConfiguration authorizationConfiguration,
+            IUnitOfWorkManager unitOfWorkManager)
         {
             _iocManager = iocManager;
             _authorizationConfiguration = authorizationConfiguration;
+            _unitOfWorkManager = unitOfWorkManager;
 
             AbpSession = NullAbpSession.Instance;
         }
@@ -62,6 +66,8 @@ namespace Abp.Authorization
             using (var featureDependencyContext = _iocManager.ResolveAsDisposable<FeatureDependencyContext>())
             {
                 var featureDependencyContextObject = featureDependencyContext.Object;
+                featureDependencyContextObject.TenantId = GetCurrentTenantId();
+
                 return Permissions.Values
                     .WhereIf(tenancyFilter, p => p.MultiTenancySides.HasFlag(AbpSession.MultiTenancySide))
                     .Where(p =>
@@ -77,6 +83,8 @@ namespace Abp.Authorization
             using (var featureDependencyContext = _iocManager.ResolveAsDisposable<FeatureDependencyContext>())
             {
                 var featureDependencyContextObject = featureDependencyContext.Object;
+                featureDependencyContextObject.TenantId = GetCurrentTenantId();
+
                 return Permissions.Values
                     .Where(p => p.MultiTenancySides.HasFlag(multiTenancySides))
                     .Where(p =>
@@ -87,6 +95,16 @@ namespace Abp.Authorization
                         p.FeatureDependency.IsSatisfied(featureDependencyContextObject)
                     ).ToImmutableList();
             }
+        }
+
+        private int? GetCurrentTenantId()
+        {
+            if (_unitOfWorkManager.Current != null)
+            {
+                return _unitOfWorkManager.Current.GetTenantId();
+            }
+
+            return AbpSession.TenantId;
         }
     }
 }

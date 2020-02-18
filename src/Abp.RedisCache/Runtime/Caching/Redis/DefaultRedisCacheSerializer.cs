@@ -36,7 +36,7 @@ namespace Abp.Runtime.Caching.Redis
         /// <param name="type">Type of the object.</param>
         /// <returns>Returns a string representing the object instance that can be placed into the Redis cache.</returns>
         /// <seealso cref="IRedisCacheSerializer.Deserialize" />
-        public virtual string Serialize(object value, Type type)
+        public virtual RedisValue Serialize(object value, Type type)
         {
             return JsonConvert.SerializeObject(AbpCacheData.Serialize(value));
         }
