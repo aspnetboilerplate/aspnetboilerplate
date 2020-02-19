@@ -97,11 +97,16 @@ namespace Abp.Runtime.Caching.Redis
                                           (GetLocalizedRedisKey(p.Key), Serialize(p.Value, GetSerializableType(p.Value)))
                                          );
 
+            _database.StringSet(redisPairs.ToArray());
+
             if (slidingExpireTime.HasValue || absoluteExpireTime.HasValue)
             {
-                Logger.WarnFormat("{0}/{1} is not supported for Redis bulk insert of key-value pairs", nameof(slidingExpireTime), nameof(absoluteExpireTime));
+                var expireTime = absoluteExpireTime ?? slidingExpireTime ?? DefaultAbsoluteExpireTime ?? DefaultSlidingExpireTime;
+                foreach (var pair in redisPairs)
+                {
+                    _database.KeyExpire(pair.Key, expireTime);
+                }
             }
-            _database.StringSet(redisPairs.ToArray());
         }
 
         public override async Task SetAsync(KeyValuePair<string, object>[] pairs, TimeSpan? slidingExpireTime = null, TimeSpan? absoluteExpireTime = null)
@@ -114,11 +119,17 @@ namespace Abp.Runtime.Caching.Redis
             var redisPairs = pairs.Select(p => new KeyValuePair<RedisKey, RedisValue>
                                           (GetLocalizedRedisKey(p.Key), Serialize(p.Value, GetSerializableType(p.Value)))
                                          );
+
+            await _database.StringSetAsync(redisPairs.ToArray());
+
             if (slidingExpireTime.HasValue || absoluteExpireTime.HasValue)
             {
-                Logger.WarnFormat("{0}/{1} is not supported for Redis bulk insert of key-value pairs", nameof(slidingExpireTime), nameof(absoluteExpireTime));
+                var expireTime = absoluteExpireTime ?? slidingExpireTime ?? DefaultAbsoluteExpireTime ?? DefaultSlidingExpireTime;
+                foreach (var pair in redisPairs)
+                {
+                    await _database.KeyExpireAsync(pair.Key, expireTime);
+                }
             }
-            await _database.StringSetAsync(redisPairs.ToArray());
         }
 
         public override void Remove(string key)
