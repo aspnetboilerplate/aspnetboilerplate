@@ -41,8 +41,8 @@ public class AppWebhookDefinitionProvider : WebhookDefinitionProvider
 <table class="table table-responsive">
     <thead>
     	<tr>
-        	<th>Parameter</th>
-        	<th>Summary</th>
+        	<th class="font-weight-bold">Parameter</th>
+        	<th class="font-weight-bold">Summary</th>
         </tr>
     </thead>
     <tbody>
@@ -122,8 +122,8 @@ Examples:
  <table class="table table-responsive">
     <thead>
     	<tr>
-        	<th>Parameter</th>
-        	<th>Summary</th>
+        	<th class="font-weight-bold">Parameter</th>
+        	<th class="font-weight-bold">Summary</th>
         </tr>
     </thead>
     <tbody>
@@ -149,6 +149,7 @@ Examples:
         </tr>
     </tbody>
 <table>
+
 
 ##### **Check Signature**
 
@@ -252,8 +253,8 @@ Webhook configurations:
  <table class="table table-responsive">
     <thead>
     	<tr>
-        	<th>Parameter</th>
-        	<th>Summary</th>
+        	<th class="font-weight-bold">Parameter</th>
+        	<th class="font-weight-bold">Summary</th>
         </tr>
     </thead>
     <tbody>
@@ -283,6 +284,7 @@ Webhook configurations:
         </tr>
     </tbody>
 <table>
+
 
 ### Auto Subscription Deactivation
 
