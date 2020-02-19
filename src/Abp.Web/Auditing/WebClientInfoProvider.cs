@@ -104,7 +104,7 @@ namespace Abp.Auditing
 
         public virtual HttpContextBase GetCurrentHttpContext()
         {
-            return new HttpContextWrapper(HttpContext.Current);
+            return HttpContext.Current == null ? null : new HttpContextWrapper(HttpContext.Current);
         }
     }
 }
