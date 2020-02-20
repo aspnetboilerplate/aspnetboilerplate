@@ -41,6 +41,8 @@ namespace Abp.Zero.SampleApp.EntityFramework
 
         public DbSet<CitizenshipInformation> CitizenshipInformation { get; set; }
 
+        public DbSet<Country> Countries { get; set; }
+
         public AppDbContext(DbConnection existingConnection)
             : base(existingConnection, true)
         {

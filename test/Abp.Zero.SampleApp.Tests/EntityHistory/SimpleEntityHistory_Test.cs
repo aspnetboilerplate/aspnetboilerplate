@@ -18,6 +18,7 @@ using System.Data.Entity.Infrastructure;
 using System.Linq;
 using Abp.Application.Editions;
 using Abp.Application.Features;
+using Abp.Authorization.Roles;
 using Abp.Zero.SampleApp.TPH;
 using Xunit;
 
@@ -720,7 +721,6 @@ namespace Abp.Zero.SampleApp.Tests.EntityHistory
 
             return _studentRepository.InsertAndGetId(student);
         }
-
         #endregion
 
         #region CASES DON'T WRITE HISTORY
@@ -855,6 +855,40 @@ namespace Abp.Zero.SampleApp.Tests.EntityHistory
             });
 
             //Assert
+            _entityHistoryStore.DidNotReceive().Save(Arg.Any<EntityChangeSet>());
+        }
+
+        [Fact]
+        public void Should_Not_Write_History_For_Audited_Entity_By_Default()
+        {
+            UsingDbContext((context) =>
+            {
+                context.Countries.Add(new Country { CountryCode = "My Country" });
+                context.SaveChanges();
+            });
+
+            //Assert
+            _entityHistoryStore.DidNotReceive().Save(Arg.Any<EntityChangeSet>());
+        }
+
+        [Fact]
+        public void Should_Not_Write_History_For_Not_Audited_Entities_Shadow_Property()
+        {
+            // PermissionSetting has Dscriminator Column (Shadow Property) for RolePermissionSetting
+
+            UsingDbContext((context) =>
+            {
+                var role = context.Roles.FirstOrDefault();
+                role.ShouldNotBeNull();
+
+                context.RolePermissions.Add(new RolePermissionSetting()
+                {
+                    Name = "Test",
+                    RoleId = role.Id
+                });
+                context.SaveChanges();
+            });
+
             _entityHistoryStore.DidNotReceive().Save(Arg.Any<EntityChangeSet>());
         }
 

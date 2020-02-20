@@ -217,8 +217,9 @@ namespace Abp.EntityHistory
                     continue;
                 }
 
-                var shouldSaveProperty = property.IsShadowProperty ||
-                                         (IsAuditedPropertyInfo(property.PropertyInfo) ?? !auditedPropertiesOnly);
+                var shouldSaveProperty = property.IsShadowProperty // i.e. property.PropertyInfo == null
+                    ? !auditedPropertiesOnly
+                    : IsAuditedPropertyInfo(property.PropertyInfo) ?? !auditedPropertiesOnly;
                 if (shouldSaveProperty)
                 {
                     var propertyEntry = entityEntry.Property(property.Name);
