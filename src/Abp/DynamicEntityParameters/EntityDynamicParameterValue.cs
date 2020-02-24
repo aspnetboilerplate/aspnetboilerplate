@@ -1,8 +1,10 @@
 ﻿using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 using Abp.Domain.Entities;
 
 namespace Abp.DynamicEntityParameters
 {
+    [Table("AbpEntityDynamicParameterValues")]
     public class EntityDynamicParameterValue : Entity
     {
         /// <summary>

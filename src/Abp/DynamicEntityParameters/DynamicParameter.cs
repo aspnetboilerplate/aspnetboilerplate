@@ -1,8 +1,10 @@
 ﻿using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations.Schema;
 using Abp.Domain.Entities;
 
 namespace Abp.DynamicEntityParameters
 {
+    [Table("AbpDynamicParameters")]
     public class DynamicParameter : Entity
     {
         public string ParameterName { get; set; }
@@ -11,6 +13,6 @@ namespace Abp.DynamicEntityParameters
 
         public string Permission { get; set; }
 
-        public virtual ICollection<DynamicParameterValues> DynamicParameterValues { get; set; }
+        public virtual ICollection<DynamicParameterValue> DynamicParameterValues { get; set; }
     }
 }

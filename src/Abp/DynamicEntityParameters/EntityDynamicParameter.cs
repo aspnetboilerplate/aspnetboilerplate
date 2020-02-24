@@ -4,6 +4,7 @@ using Abp.Domain.Entities;
 
 namespace Abp.DynamicEntityParameters
 {
+    [Table("AbpEntityDynamicParameters")]
     public class EntityDynamicParameter : Entity
     {
         public string EntityFullName { get; set; }

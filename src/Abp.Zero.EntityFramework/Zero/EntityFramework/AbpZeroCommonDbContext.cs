@@ -15,6 +15,7 @@ using Abp.Notifications;
 using Abp.Organizations;
 using System.Threading;
 using System.Threading.Tasks;
+using Abp.DynamicEntityParameters;
 using Abp.Webhooks;
 
 namespace Abp.Zero.EntityFramework
@@ -154,6 +155,26 @@ namespace Abp.Zero.EntityFramework
         /// Webhook work items
         /// </summary>
         public virtual IDbSet<WebhookSendAttempt> WebhookSendAttempts { get; set; }
+
+        /// <summary>
+        /// DynamicParameters
+        /// </summary>
+        public virtual IDbSet<DynamicParameter> DynamicParameters { get; set; }
+
+        /// <summary>
+        /// DynamicParameter selectable values
+        /// </summary>
+        public virtual IDbSet<DynamicParameterValue> DynamicParameterValues { get; set; }
+
+        /// <summary>
+        /// Entities dynamic parameters. Which parameters that entity has
+        /// </summary>
+        public virtual IDbSet<EntityDynamicParameter> EntityDynamicParameters { get; set; }
+
+        /// <summary>
+        /// Entities dynamic parameter's values
+        /// </summary>
+        public virtual IDbSet<EntityDynamicParameterValue> EntityDynamicParameterValues { get; set; }
 
         /// <summary>
         /// Default constructor.

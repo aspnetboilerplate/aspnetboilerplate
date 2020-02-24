@@ -7,6 +7,7 @@ using Abp.Authorization;
 using Abp.Authorization.Roles;
 using Abp.Authorization.Users;
 using Abp.Configuration;
+using Abp.DynamicEntityParameters;
 using Abp.EntityFramework;
 using Abp.Localization;
 using Abp.Notifications;
@@ -135,11 +136,31 @@ namespace Abp.Zero.EntityFramework
         /// Web subscriptions
         /// </summary>
         public virtual DbSet<WebhookSubscriptionInfo> WebhookSubscriptions { get; set; }
-        
+
         /// <summary>
         /// Webhook work items
         /// </summary>
         public virtual DbSet<WebhookSendAttempt> WebhookSendAttempts { get; set; }
+
+        /// <summary>
+        /// DynamicParameters
+        /// </summary>
+        public virtual DbSet<DynamicParameter> DynamicParameters { get; set; }
+
+        /// <summary>
+        /// DynamicParameter selectable values
+        /// </summary>
+        public virtual DbSet<DynamicParameterValue> DynamicParameterValues { get; set; }
+
+        /// <summary>
+        /// Entities dynamic parameters. Which parameters that entity has
+        /// </summary>
+        public virtual DbSet<EntityDynamicParameter> EntityDynamicParameters { get; set; }
+
+        /// <summary>
+        /// Entities dynamic parameter's values
+        /// </summary>
+        public virtual DbSet<EntityDynamicParameterValue> EntityDynamicParameterValues { get; set; }
 
         /// <summary>
         /// Default constructor.
