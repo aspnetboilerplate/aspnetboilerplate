@@ -8,6 +8,13 @@ namespace Abp.Zero.SampleApp.Tests.DynamicEntityParameters
 {
     public class EntityDynamicParameterValueManager_Tests : DynamicEntityParametersTestBase
     {
+        private readonly IEntityDynamicParameterValueManager _entityDynamicParameterValueManager;
+
+        public EntityDynamicParameterValueManager_Tests()
+        {
+            _entityDynamicParameterValueManager = Resolve<IEntityDynamicParameterValueManager>();
+        }
+
         [Fact]
         public void Should_Add_Parameter_Value()
         {
@@ -21,12 +28,12 @@ namespace Abp.Zero.SampleApp.Tests.DynamicEntityParameters
 
             RunAndCheckIfPermissionControlled(() =>
             {
-                EntityDynamicParameterValueManager.Add(val);
+                _entityDynamicParameterValueManager.Add(val);
             });
 
             WithUnitOfWork(() =>
             {
-                var val2 = EntityDynamicParameterValueManager.Get(val.Id);
+                var val2 = _entityDynamicParameterValueManager.Get(val.Id);
 
                 val.ShouldNotBeNull();
                 val2.ShouldNotBeNull();
@@ -48,28 +55,28 @@ namespace Abp.Zero.SampleApp.Tests.DynamicEntityParameters
                 Value = "TestValue"
             };
 
-            WithUnitOfWork(() => { EntityDynamicParameterValueManager.Add(parameterValue); });
+            WithUnitOfWork(() => { _entityDynamicParameterValueManager.Add(parameterValue); });
 
             parameterValue.Value = "TestValue2";
             RunAndCheckIfPermissionControlled(() =>
             {
-                EntityDynamicParameterValueManager.Update(parameterValue);
+                _entityDynamicParameterValueManager.Update(parameterValue);
             });
 
             WithUnitOfWork(() =>
             {
-                EntityDynamicParameterValueManager.Add(parameterValue);
+                _entityDynamicParameterValueManager.Add(parameterValue);
             });
 
             RunAndCheckIfPermissionControlled(() =>
             {
                 parameterValue.Value = "TestValue2";
-                EntityDynamicParameterValueManager.Update(parameterValue);
+                _entityDynamicParameterValueManager.Update(parameterValue);
             });
 
             WithUnitOfWork(() =>
             {
-                var parameterValueLatest = EntityDynamicParameterValueManager.Get(parameterValue.Id);
+                var parameterValueLatest = _entityDynamicParameterValueManager.Get(parameterValue.Id);
                 parameterValueLatest.Value.ShouldBe("TestValue2");
                 parameterValueLatest.EntityRowId.ShouldBe(parameterValue.EntityRowId);
                 parameterValueLatest.EntityDynamicParameterId.ShouldBe(parameterValue.EntityDynamicParameterId);
@@ -89,19 +96,19 @@ namespace Abp.Zero.SampleApp.Tests.DynamicEntityParameters
 
             WithUnitOfWork(() =>
             {
-                EntityDynamicParameterValueManager.Add(parameterValue);
+                _entityDynamicParameterValueManager.Add(parameterValue);
             });
 
             RunAndCheckIfPermissionControlled(() =>
             {
-                EntityDynamicParameterValueManager.Delete(parameterValue.Id);
+                _entityDynamicParameterValueManager.Delete(parameterValue.Id);
             });
 
             WithUnitOfWork(() =>
             {
                 try
                 {
-                    var dynamicParameterValue = EntityDynamicParameterValueManager.Get(parameterValue.Id);
+                    var dynamicParameterValue = _entityDynamicParameterValueManager.Get(parameterValue.Id);
                     dynamicParameterValue.ShouldBeNull();
                 }
                 catch (EntityNotFoundException)
@@ -121,11 +128,11 @@ namespace Abp.Zero.SampleApp.Tests.DynamicEntityParameters
                 Value = "TestValue"
             };
 
-            await RunAndCheckIfPermissionControlledAsync(() => EntityDynamicParameterValueManager.AddAsync(val));
+            await RunAndCheckIfPermissionControlledAsync(() => _entityDynamicParameterValueManager.AddAsync(val));
 
             await WithUnitOfWorkAsync(async () =>
              {
-                 var val2 = await EntityDynamicParameterValueManager.GetAsync(val.Id);
+                 var val2 = await _entityDynamicParameterValueManager.GetAsync(val.Id);
                  val.ShouldNotBeNull();
                  val2.ShouldNotBeNull();
 
@@ -148,18 +155,18 @@ namespace Abp.Zero.SampleApp.Tests.DynamicEntityParameters
 
             await WithUnitOfWorkAsync(async () =>
             {
-                await EntityDynamicParameterValueManager.AddAsync(parameterValue);
+                await _entityDynamicParameterValueManager.AddAsync(parameterValue);
             });
 
             await RunAndCheckIfPermissionControlledAsync(async () =>
              {
                  parameterValue.Value = "TestValue2";
-                 await EntityDynamicParameterValueManager.UpdateAsync(parameterValue);
+                 await _entityDynamicParameterValueManager.UpdateAsync(parameterValue);
              });
 
             await WithUnitOfWorkAsync(async () =>
             {
-                var parameterValueLatest = await EntityDynamicParameterValueManager.GetAsync(parameterValue.Id);
+                var parameterValueLatest = await _entityDynamicParameterValueManager.GetAsync(parameterValue.Id);
                 parameterValueLatest.Value.ShouldBe("TestValue2");
                 parameterValueLatest.EntityRowId.ShouldBe(parameterValue.EntityRowId);
                 parameterValueLatest.EntityDynamicParameterId.ShouldBe(parameterValue.EntityDynamicParameterId);
@@ -179,19 +186,19 @@ namespace Abp.Zero.SampleApp.Tests.DynamicEntityParameters
 
             await WithUnitOfWorkAsync(async () =>
             {
-                await EntityDynamicParameterValueManager.AddAsync(parameterValue);
+                await _entityDynamicParameterValueManager.AddAsync(parameterValue);
             });
 
             await RunAndCheckIfPermissionControlledAsync(async () =>
             {
-                await EntityDynamicParameterValueManager.DeleteAsync(parameterValue.Id);
+                await _entityDynamicParameterValueManager.DeleteAsync(parameterValue.Id);
             });
 
             await WithUnitOfWorkAsync(async () =>
                 {
                     try
                     {
-                        var dynamicParameterValue = await EntityDynamicParameterValueManager.GetAsync(parameterValue.Id);
+                        var dynamicParameterValue = await _entityDynamicParameterValueManager.GetAsync(parameterValue.Id);
                         dynamicParameterValue.ShouldBeNull();
                     }
                     catch (EntityNotFoundException)

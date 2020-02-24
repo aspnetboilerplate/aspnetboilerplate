@@ -13,13 +13,11 @@ namespace Abp.Zero.SampleApp.Tests.DynamicEntityParameters
         public const string TestPermission = "Abp.Zero.TestPermission";
         public const string TestEntityFullName = "Abp.Zero.TestEntity";
 
-        protected readonly IEntityDynamicParameterValueManager EntityDynamicParameterValueManager;
         protected readonly IDynamicParameterStore DynamicParameterStore;
         protected readonly IEntityDynamicParameterStore EntityDynamicParameterStore;
 
         public DynamicEntityParametersTestBase()
         {
-            EntityDynamicParameterValueManager = Resolve<IEntityDynamicParameterValueManager>();
             DynamicParameterStore = Resolve<IDynamicParameterStore>();
             EntityDynamicParameterStore = Resolve<IEntityDynamicParameterStore>();
 

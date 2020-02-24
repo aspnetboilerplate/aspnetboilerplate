@@ -60,7 +60,7 @@ namespace Abp.DynamicEntityParameters
             }
 
             _dynamicParameterPermissionChecker.CheckPermissions(entityDynamicParameter.DynamicParameterId);
-            EntityDynamicParameterStore.Update(entityDynamicParameter);
+            EntityDynamicParameterStore.Delete(entityDynamicParameter.Id);
         }
 
         public async Task DeleteAsync(int id)
@@ -72,7 +72,7 @@ namespace Abp.DynamicEntityParameters
             }
 
             await _dynamicParameterPermissionChecker.CheckPermissionsAsync(entityDynamicParameter.DynamicParameterId);
-            await EntityDynamicParameterStore.UpdateAsync(entityDynamicParameter);
+            await EntityDynamicParameterStore.DeleteAsync(entityDynamicParameter.Id);
         }
     }
 }
