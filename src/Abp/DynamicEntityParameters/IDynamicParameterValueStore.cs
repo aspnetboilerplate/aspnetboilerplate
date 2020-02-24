@@ -1,23 +1,28 @@
-﻿using System.Threading.Tasks;
+﻿using System.Collections.Generic;
+using System.Threading.Tasks;
 
 namespace Abp.DynamicEntityParameters
 {
     public interface IDynamicParameterValueStore
     {
-        DynamicParameterValues Get(int id);
+        DynamicParameterValue Get(int id);
 
-        Task<DynamicParameterValues> GetAsync(int id);
+        Task<DynamicParameterValue> GetAsync(int id);
 
-        void Add(DynamicParameterValues dynamicParameterValue);
+        void Add(DynamicParameterValue dynamicParameterValue);
 
-        Task AddAsync(DynamicParameterValues dynamicParameterValue);
+        Task AddAsync(DynamicParameterValue dynamicParameterValue);
 
-        void Update(DynamicParameterValues dynamicParameterValue);
+        void Update(DynamicParameterValue dynamicParameterValue);
 
-        Task UpdateAsync(DynamicParameterValues dynamicParameterValue);
+        Task UpdateAsync(DynamicParameterValue dynamicParameterValue);
 
         void Delete(int id);
 
         Task DeleteAsync(int id);
+
+        List<string> GetAllPossibleValues(int dynamicParameterId);
+
+        Task<List<string>> GetAllPossibleValuesAsync(int dynamicParameterId);
     }
 }

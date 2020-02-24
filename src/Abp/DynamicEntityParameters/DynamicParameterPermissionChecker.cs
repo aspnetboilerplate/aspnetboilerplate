@@ -9,19 +9,19 @@ namespace Abp.DynamicEntityParameters
     public class DynamicParameterPermissionChecker : IDynamicParameterPermissionChecker, ITransientDependency
     {
         private readonly IPermissionChecker _permissionChecker;
-        private readonly IDynamicParameterStore _dynamicParameterStore;
+        public IDynamicParameterStore DynamicParameterStore { get; set; }
 
         public DynamicParameterPermissionChecker(
-            IPermissionChecker permissionChecker,
-            IDynamicParameterStore dynamicParameterStore
+            IPermissionChecker permissionChecker
             )
         {
             _permissionChecker = permissionChecker;
-            _dynamicParameterStore = dynamicParameterStore;
+            DynamicParameterStore = NullDynamicParameterStore.Instance;
         }
+
         public void CheckPermissions(int dynamicParameterId)
         {
-            var dynamicParameter = _dynamicParameterStore.Get(dynamicParameterId);
+            var dynamicParameter = DynamicParameterStore.Get(dynamicParameterId);
             if (dynamicParameter == null)
             {
                 throw new EntityNotFoundException(typeof(DynamicParameter), dynamicParameterId);
@@ -35,7 +35,7 @@ namespace Abp.DynamicEntityParameters
 
         public async Task CheckPermissionsAsync(int dynamicParameterId)
         {
-            var dynamicParameter = await _dynamicParameterStore.GetAsync(dynamicParameterId);
+            var dynamicParameter = await DynamicParameterStore.GetAsync(dynamicParameterId);
             if (dynamicParameter == null)
             {
                 throw new EntityNotFoundException(typeof(DynamicParameter), dynamicParameterId);

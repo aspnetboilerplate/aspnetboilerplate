@@ -17,16 +17,6 @@ namespace Abp.DynamicEntityParameters
             return Task.FromResult<EntityDynamicParameterValue>(default);
         }
 
-        public EntityDynamicParameterValue Get(string entityId)
-        {
-            return default;
-        }
-
-        public Task<EntityDynamicParameterValue> GetAsync(string entityId)
-        {
-            return Task.FromResult<EntityDynamicParameterValue>(default);
-        }
-
         public void Add(EntityDynamicParameterValue dynamicParameterValue)
         {
         }
@@ -54,14 +44,23 @@ namespace Abp.DynamicEntityParameters
             return Task.CompletedTask;
         }
 
-        public List<string> GetAllPossibleValueOfDynamicParameter(int dynamicParameterId)
+        public List<EntityDynamicParameterValue> GetValues(string entityRowId, int parameterId)
         {
-            return new List<string>();
+            return new List<EntityDynamicParameterValue>();
         }
 
-        public Task<List<string>> GetAllPossibleValueOfDynamicParameterAsync(int dynamicParameterId)
+        public Task<List<EntityDynamicParameterValue>> GetValuesAsync(string entityRowId, int parameterId)
         {
-            return Task.FromResult(new List<string>());
+            return Task.FromResult(new List<EntityDynamicParameterValue>());
+        }
+
+        public void CleanValues(string entityRowId, int parameterId)
+        {
+        }
+
+        public Task CleanValuesAsync(string entityRowId, int parameterId)
+        {
+            return Task.CompletedTask;
         }
     }
 }
