@@ -60,11 +60,11 @@ namespace Abp.Zero.SampleApp.Tests.DynamicEntityParameters
 
             WithUnitOfWork(() =>
             {
-                var val = _entityDynamicParameterManager.Get(entityDynamicParameter.Id);
+                entityDynamicParameter = _entityDynamicParameterManager.Get(entityDynamicParameter.Id);
 
-                val.ShouldNotBeNull();
-                val.DynamicParameterId.ShouldBe(entityDynamicParameter.DynamicParameterId);
-                val.EntityFullName.ShouldBe(entityDynamicParameter.EntityFullName);
+                entityDynamicParameter.ShouldNotBeNull();
+                entityDynamicParameter.DynamicParameterId.ShouldBe(entityDynamicParameter.DynamicParameterId);
+                entityDynamicParameter.EntityFullName.ShouldBe(entityDynamicParameter.EntityFullName);
             });
 
             entityDynamicParameter.EntityFullName = "Test2";
@@ -103,11 +103,11 @@ namespace Abp.Zero.SampleApp.Tests.DynamicEntityParameters
 
             WithUnitOfWork(() =>
             {
-                var val = _entityDynamicParameterManager.Get(entityDynamicParameter.Id);
+                entityDynamicParameter = _entityDynamicParameterManager.Get(entityDynamicParameter.Id);
 
-                val.ShouldNotBeNull();
-                val.DynamicParameterId.ShouldBe(entityDynamicParameter.DynamicParameterId);
-                val.EntityFullName.ShouldBe(entityDynamicParameter.EntityFullName);
+                entityDynamicParameter.ShouldNotBeNull();
+                entityDynamicParameter.DynamicParameterId.ShouldBe(entityDynamicParameter.DynamicParameterId);
+                entityDynamicParameter.EntityFullName.ShouldBe(entityDynamicParameter.EntityFullName);
             });
 
             RunAndCheckIfPermissionControlled(() =>
@@ -174,11 +174,11 @@ namespace Abp.Zero.SampleApp.Tests.DynamicEntityParameters
 
             await WithUnitOfWorkAsync(async () =>
             {
-                var val = await _entityDynamicParameterManager.GetAsync(entityDynamicParameter.Id);
+                entityDynamicParameter = await _entityDynamicParameterManager.GetAsync(entityDynamicParameter.Id);
 
-                val.ShouldNotBeNull();
-                val.DynamicParameterId.ShouldBe(entityDynamicParameter.DynamicParameterId);
-                val.EntityFullName.ShouldBe(entityDynamicParameter.EntityFullName);
+                entityDynamicParameter.ShouldNotBeNull();
+                entityDynamicParameter.DynamicParameterId.ShouldBe(entityDynamicParameter.DynamicParameterId);
+                entityDynamicParameter.EntityFullName.ShouldBe(entityDynamicParameter.EntityFullName);
             });
 
             entityDynamicParameter.EntityFullName = "Test2";
