@@ -45,6 +45,20 @@ namespace Abp.AspNetCore
             return WindsorRegistrationHelper.CreateServiceProvider(abpBootstrapper.IocManager.IocContainer, services);
         }
 
+        /// <summary>
+        /// Integrates ABP to AspNet Core without creating a IServiceProvider.
+        /// </summary>
+        /// <typeparam name="TStartupModule">Startup module of the application which depends on other used modules. Should be derived from <see cref="AbpModule"/>.</typeparam>
+        /// <param name="services">Services.</param>
+        /// <param name="optionsAction">An action to get/modify options</param>
+        public static void AddAbpWithoutCreateServiceProvider<TStartupModule>(this IServiceCollection services, [CanBeNull] Action<AbpBootstrapperOptions> optionsAction = null)
+            where TStartupModule : AbpModule
+        {
+            var abpBootstrapper = AddAbpBootstrapper<TStartupModule>(services, optionsAction);
+
+            ConfigureAspNetCore(services, abpBootstrapper.IocManager);
+        }
+
         private static void ConfigureAspNetCore(IServiceCollection services, IIocResolver iocResolver)
         {
             //See https://github.com/aspnet/Mvc/issues/3936 to know why we added these services.
