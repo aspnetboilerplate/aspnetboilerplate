@@ -5,6 +5,8 @@ using Abp.DynamicEntityParameters;
 using Abp.Localization;
 using Abp.Modules;
 using Abp.Threading;
+using Castle.MicroKernel.Registration;
+using NSubstitute;
 
 namespace Abp.Zero.SampleApp.Tests.DynamicEntityParameters
 {
@@ -118,6 +120,13 @@ namespace Abp.Zero.SampleApp.Tests.DynamicEntityParameters
                 EntityDynamicParameterStore.Add(entityDynamicParameter);
             });
             return entityDynamicParameter;
+        }
+
+        protected T RegisterFake<T>() where T : class
+        {
+            var substitute = Substitute.For<T>();
+            LocalIocManager.IocContainer.Register(Component.For<T>().Instance(substitute).IsDefault());
+            return substitute;
         }
     }
 
