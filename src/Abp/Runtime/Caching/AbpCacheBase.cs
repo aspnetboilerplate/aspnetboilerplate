@@ -254,7 +254,35 @@ namespace Abp.Runtime.Caching
             return items;
         }
 
-        public abstract TValue GetOrDefault(TKey key);
+        protected abstract bool TryGetValue(TKey key, out TValue value);
+
+        protected virtual KeyValuePair<bool, TValue>[] TryGetValues(TKey[] keys)
+        {
+            var pairs = new List<KeyValuePair<bool, TValue>>();
+            foreach (var key in keys)
+            {
+                var found = TryGetValue(key, out TValue value);
+                pairs.Add(new KeyValuePair<bool, TValue>(found, value));
+            }
+            return pairs.ToArray();
+        }
+
+        protected virtual Task<KeyValuePair<bool, TValue>> TryGetValueAsync(TKey key)
+        {
+            var found = TryGetValue(key, out TValue value);
+            return Task.FromResult(new KeyValuePair<bool, TValue>(found, value));
+        }
+
+        protected virtual Task<KeyValuePair<bool, TValue>[]> TryGetValuesAsync(TKey[] keys)
+        {
+            return Task.FromResult(TryGetValues(keys));
+        }
+
+        public virtual TValue GetOrDefault(TKey key)
+        {
+            TryGetValue(key, out TValue value);
+            return value;
+        }
 
         public virtual TValue[] GetOrDefault(TKey[] keys)
         {
