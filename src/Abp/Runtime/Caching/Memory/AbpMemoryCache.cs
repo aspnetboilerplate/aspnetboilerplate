@@ -21,9 +21,9 @@ namespace Abp.Runtime.Caching.Memory
             _memoryCache = new MemoryCache(new OptionsWrapper<MemoryCacheOptions>(new MemoryCacheOptions()));
         }
 
-        public override object GetOrDefault(string key)
+        protected override bool TryGetValue(string key, out object value)
         {
-            return _memoryCache.Get(key);
+            return _memoryCache.TryGetValue(key, out value);
         }
 
         public override void Set(string key, object value, TimeSpan? slidingExpireTime = null, TimeSpan? absoluteExpireTime = null)
