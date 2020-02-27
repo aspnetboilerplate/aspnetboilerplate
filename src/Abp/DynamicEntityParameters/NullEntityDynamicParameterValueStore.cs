@@ -17,20 +17,20 @@ namespace Abp.DynamicEntityParameters
             return Task.FromResult<EntityDynamicParameterValue>(default);
         }
 
-        public void Add(EntityDynamicParameterValue dynamicParameterValue)
+        public void Add(EntityDynamicParameterValue entityDynamicParameterValue)
         {
         }
 
-        public Task AddAsync(EntityDynamicParameterValue dynamicParameterValue)
+        public Task AddAsync(EntityDynamicParameterValue entityDynamicParameterValue)
         {
             return Task.CompletedTask;
         }
 
-        public void Update(EntityDynamicParameterValue dynamicParameterValue)
+        public void Update(EntityDynamicParameterValue entityDynamicParameterValue)
         {
         }
 
-        public Task UpdateAsync(EntityDynamicParameterValue dynamicParameterValue)
+        public Task UpdateAsync(EntityDynamicParameterValue entityDynamicParameterValue)
         {
             return Task.CompletedTask;
         }
@@ -44,21 +44,21 @@ namespace Abp.DynamicEntityParameters
             return Task.CompletedTask;
         }
 
-        public List<EntityDynamicParameterValue> GetValues(string entityRowId, int parameterId)
+        public List<EntityDynamicParameterValue> GetValues(string entityRowId, int entityDynamicParameterId)
         {
             return new List<EntityDynamicParameterValue>();
         }
 
-        public Task<List<EntityDynamicParameterValue>> GetValuesAsync(string entityRowId, int parameterId)
+        public Task<List<EntityDynamicParameterValue>> GetValuesAsync(string entityRowId, int entityDynamicParameterId)
         {
             return Task.FromResult(new List<EntityDynamicParameterValue>());
         }
 
-        public void CleanValues(string entityRowId, int parameterId)
+        public void CleanValues(string entityRowId, int entityDynamicParameterId)
         {
         }
 
-        public Task CleanValuesAsync(string entityRowId, int parameterId)
+        public Task CleanValuesAsync(string entityRowId, int entityDynamicParameterId)
         {
             return Task.CompletedTask;
         }

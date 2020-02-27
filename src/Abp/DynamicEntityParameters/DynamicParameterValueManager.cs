@@ -30,6 +30,18 @@ namespace Abp.DynamicEntityParameters
             return val;
         }
 
+        public virtual List<DynamicParameterValue> GetAll(int dynamicParameterId)
+        {
+            _dynamicParameterPermissionChecker.CheckPermissions(dynamicParameterId);
+            return DynamicParameterValueStore.GetAll(dynamicParameterId);
+        }
+
+        public virtual async Task<List<DynamicParameterValue>> GetAllAsync(int dynamicParameterId)
+        {
+            await _dynamicParameterPermissionChecker.CheckPermissionsAsync(dynamicParameterId);
+            return await DynamicParameterValueStore.GetAllAsync(dynamicParameterId);
+        }
+
         public virtual void Add(DynamicParameterValue dynamicParameterValue)
         {
             _dynamicParameterPermissionChecker.CheckPermissions(dynamicParameterValue.DynamicParameterId);
@@ -70,18 +82,6 @@ namespace Abp.DynamicEntityParameters
             {
                 await DynamicParameterValueStore.DeleteAsync(id);
             }
-        }
-
-        public virtual List<string> GetAllPossibleValues(int dynamicParameterId)
-        {
-            _dynamicParameterPermissionChecker.CheckPermissions(dynamicParameterId);
-            return DynamicParameterValueStore.GetAllPossibleValues(dynamicParameterId);
-        }
-
-        public virtual async Task<List<string>> GetAllPossibleValuesAsync(int dynamicParameterId)
-        {
-            await _dynamicParameterPermissionChecker.CheckPermissionsAsync(dynamicParameterId);
-            return await DynamicParameterValueStore.GetAllPossibleValuesAsync(dynamicParameterId);
         }
     }
 }

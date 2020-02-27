@@ -9,6 +9,10 @@ namespace Abp.DynamicEntityParameters
 
         Task<DynamicParameterValue> GetAsync(int id);
 
+        List<DynamicParameterValue> GetAll(int dynamicParameterId);
+
+        Task<List<DynamicParameterValue>> GetAllAsync(int dynamicParameterId);
+
         void Add(DynamicParameterValue dynamicParameterValue);
 
         Task AddAsync(DynamicParameterValue dynamicParameterValue);
@@ -20,9 +24,5 @@ namespace Abp.DynamicEntityParameters
         void Delete(int id);
 
         Task DeleteAsync(int id);
-
-        List<string> GetAllPossibleValues(int dynamicParameterId);
-
-        Task<List<string>> GetAllPossibleValuesAsync(int dynamicParameterId);
     }
 }

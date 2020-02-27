@@ -1,16 +1,21 @@
-﻿using System.Threading.Tasks;
+﻿using System.Collections.Generic;
+using System.Linq;
+using System.Threading.Tasks;
 using Abp.Dependency;
 using Abp.Domain.Repositories;
+using Abp.Linq;
 
 namespace Abp.DynamicEntityParameters
 {
     public class EntityDynamicParameterStore : IEntityDynamicParameterStore, ITransientDependency
     {
         private readonly IRepository<EntityDynamicParameter> _entityDynamicParameterRepository;
+        private readonly IAsyncQueryableExecuter _asyncQueryableExecuter;
 
-        public EntityDynamicParameterStore(IRepository<EntityDynamicParameter> entityDynamicParameterRepository)
+        public EntityDynamicParameterStore(IRepository<EntityDynamicParameter> entityDynamicParameterRepository, IAsyncQueryableExecuter asyncQueryableExecuter)
         {
             _entityDynamicParameterRepository = entityDynamicParameterRepository;
+            _asyncQueryableExecuter = asyncQueryableExecuter;
         }
 
         public virtual EntityDynamicParameter Get(int id)
@@ -21,6 +26,16 @@ namespace Abp.DynamicEntityParameters
         public virtual Task<EntityDynamicParameter> GetAsync(int id)
         {
             return _entityDynamicParameterRepository.GetAsync(id);
+        }
+
+        public virtual List<EntityDynamicParameter> GetAllParameters(string entityFullName)
+        {
+            return _entityDynamicParameterRepository.GetAll().Where(x => x.EntityFullName == entityFullName).ToList();
+        }
+
+        public virtual Task<List<EntityDynamicParameter>> GetAllParametersAsync(string entityFullName)
+        {
+            return _asyncQueryableExecuter.ToListAsync(_entityDynamicParameterRepository.GetAll().Where(x => x.EntityFullName == entityFullName));
         }
 
         public virtual void Add(EntityDynamicParameter entityDynamicParameter)

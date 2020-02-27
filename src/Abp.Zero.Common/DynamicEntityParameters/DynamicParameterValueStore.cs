@@ -27,6 +27,18 @@ namespace Abp.DynamicEntityParameters
             return _dynamicParameterValuesRepository.GetAsync(id);
         }
 
+        public virtual List<DynamicParameterValue> GetAll(int dynamicParameterId)
+        {
+            return _dynamicParameterValuesRepository.GetAll()
+                .Where(parameterValue => parameterValue.DynamicParameterId == dynamicParameterId).ToList();
+        }
+
+        public virtual Task<List<DynamicParameterValue>> GetAllAsync(int dynamicParameterId)
+        {
+            return _asyncQueryableExecuter.ToListAsync(_dynamicParameterValuesRepository.GetAll()
+                .Where(parameterValue => parameterValue.DynamicParameterId == dynamicParameterId));
+        }
+
         public virtual void Add(DynamicParameterValue dynamicParameterValue)
         {
             _dynamicParameterValuesRepository.Insert(dynamicParameterValue);
@@ -57,18 +69,5 @@ namespace Abp.DynamicEntityParameters
             return _dynamicParameterValuesRepository.DeleteAsync(id);
         }
 
-        public virtual List<string> GetAllPossibleValues(int dynamicParameterId)
-        {
-            return _dynamicParameterValuesRepository.GetAll()
-                .Where(parameterValue => parameterValue.DynamicParameterId == dynamicParameterId)
-                .Select(parameterValue => parameterValue.Value).ToList();
-        }
-
-        public virtual Task<List<string>> GetAllPossibleValuesAsync(int dynamicParameterId)
-        {
-            return _asyncQueryableExecuter.ToListAsync(_dynamicParameterValuesRepository.GetAll()
-                .Where(parameterValue => parameterValue.DynamicParameterId == dynamicParameterId)
-                .Select(parameterValue => parameterValue.Value));
-        }
     }
 }

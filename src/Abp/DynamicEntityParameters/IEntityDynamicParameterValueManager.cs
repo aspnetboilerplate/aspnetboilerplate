@@ -9,16 +9,24 @@ namespace Abp.DynamicEntityParameters
 
         Task<EntityDynamicParameterValue> GetAsync(int id);
 
-        void Add(EntityDynamicParameterValue dynamicParameterValue);
+        void Add(EntityDynamicParameterValue entityDynamicParameterValue);
 
-        Task AddAsync(EntityDynamicParameterValue dynamicParameterValue);
+        Task AddAsync(EntityDynamicParameterValue entityDynamicParameterValue);
 
-        void Update(EntityDynamicParameterValue dynamicParameterValue);
+        void Update(EntityDynamicParameterValue entityDynamicParameterValue);
 
-        Task UpdateAsync(EntityDynamicParameterValue dynamicParameterValue);
+        Task UpdateAsync(EntityDynamicParameterValue entityDynamicParameterValue);
 
         void Delete(int id);
 
         Task DeleteAsync(int id);
+
+        List<EntityDynamicParameterValue> GetValues(string entityRowId, int parameterId);
+
+        Task<List<EntityDynamicParameterValue>> GetValuesAsync(string entityRowId, int parameterId);
+
+        void CleanValues(string entityRowId, int parameterId);
+
+        Task CleanValuesAsync(string entityRowId, int parameterId);
     }
 }

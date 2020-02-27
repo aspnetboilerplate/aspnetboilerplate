@@ -17,6 +17,16 @@ namespace Abp.DynamicEntityParameters
             return Task.FromResult<DynamicParameterValue>(default);
         }
 
+        public List<DynamicParameterValue> GetAll(int dynamicParameterId)
+        {
+            return new List<DynamicParameterValue>();
+        }
+
+        public Task<List<DynamicParameterValue>> GetAllAsync(int dynamicParameterId)
+        {
+            return Task.FromResult(new List<DynamicParameterValue>());
+        }
+
         public void Add(DynamicParameterValue dynamicParameterValue)
         {
         }
@@ -42,16 +52,6 @@ namespace Abp.DynamicEntityParameters
         public Task DeleteAsync(int id)
         {
             return Task.CompletedTask;
-        }
-
-        public List<string> GetAllPossibleValues(int dynamicParameterId)
-        {
-            return new List<string>();
-        }
-
-        public Task<List<string>> GetAllPossibleValuesAsync(int dynamicParameterId)
-        {
-            return Task.FromResult(new List<string>());
         }
     }
 }
