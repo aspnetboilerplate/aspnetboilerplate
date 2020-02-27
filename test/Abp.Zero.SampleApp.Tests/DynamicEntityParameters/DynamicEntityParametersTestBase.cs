@@ -10,7 +10,12 @@ using NSubstitute;
 
 namespace Abp.Zero.SampleApp.Tests.DynamicEntityParameters
 {
-    public class DynamicEntityParametersTestBase : SampleAppTestBase<DynamicEntityParametersTestModule>
+    public class DynamicEntityParametersTestBase : DynamicEntityParametersTestBase<DynamicEntityParametersTestModule>
+    {
+    }
+
+    public class DynamicEntityParametersTestBase<TModule> : SampleAppTestBase<TModule>
+        where TModule : AbpModule
     {
         public const string TestPermission = "Abp.Zero.TestPermission";
         public const string TestEntityFullName = "Abp.Zero.TestEntity";
@@ -46,6 +51,10 @@ namespace Abp.Zero.SampleApp.Tests.DynamicEntityParameters
                 {
                     isExceptionThrown = true;
                 }
+                else
+                {
+                    throw;
+                }
             }
 
             if (!isExceptionThrown)
@@ -75,6 +84,10 @@ namespace Abp.Zero.SampleApp.Tests.DynamicEntityParameters
                 {
                     isExceptionThrown = true;
                 }
+                else
+                {
+                    throw;
+                }
             }
 
             if (!isExceptionThrown)
@@ -88,13 +101,14 @@ namespace Abp.Zero.SampleApp.Tests.DynamicEntityParameters
         }
 
 
-        protected DynamicParameter CreateAndGetDynamicParameter()
+        protected DynamicParameter CreateAndGetDynamicParameterWithTestPermission()
         {
             var dynamicParameter = new DynamicParameter()
             {
                 InputType = "string",
                 ParameterName = "City",
-                Permission = TestPermission
+                Permission = TestPermission,
+                TenantId = AbpSession.TenantId
             };
 
             WithUnitOfWork(() =>
@@ -107,12 +121,13 @@ namespace Abp.Zero.SampleApp.Tests.DynamicEntityParameters
 
         protected EntityDynamicParameter CreateAndGetEntityDynamicParameter()
         {
-            var dynamicParameter = CreateAndGetDynamicParameter();
+            var dynamicParameter = CreateAndGetDynamicParameterWithTestPermission();
 
             var entityDynamicParameter = new EntityDynamicParameter()
             {
                 DynamicParameterId = dynamicParameter.Id,
-                EntityFullName = TestEntityFullName
+                EntityFullName = TestEntityFullName,
+                TenantId = AbpSession.TenantId
             };
 
             WithUnitOfWork(() =>

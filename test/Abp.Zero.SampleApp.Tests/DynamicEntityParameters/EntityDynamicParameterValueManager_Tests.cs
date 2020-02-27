@@ -23,7 +23,8 @@ namespace Abp.Zero.SampleApp.Tests.DynamicEntityParameters
             {
                 EntityDynamicParameterId = entityDynamicParameter.Id,
                 EntityRowId = "123",
-                Value = "TestValue"
+                Value = "TestValue",
+                TenantId = AbpSession.TenantId
             };
 
             RunAndCheckIfPermissionControlled(() =>
@@ -52,7 +53,8 @@ namespace Abp.Zero.SampleApp.Tests.DynamicEntityParameters
             {
                 EntityDynamicParameterId = entityDynamicParameter.Id,
                 EntityRowId = "123",
-                Value = "TestValue"
+                Value = "TestValue",
+                TenantId = AbpSession.TenantId
             };
 
             WithUnitOfWork(() => { _entityDynamicParameterValueManager.Add(parameterValue); });
@@ -91,7 +93,8 @@ namespace Abp.Zero.SampleApp.Tests.DynamicEntityParameters
             {
                 EntityDynamicParameterId = entityDynamicParameter.Id,
                 EntityRowId = "123",
-                Value = "TestValue"
+                Value = "TestValue",
+                TenantId = AbpSession.TenantId
             };
 
             WithUnitOfWork(() =>
@@ -116,7 +119,7 @@ namespace Abp.Zero.SampleApp.Tests.DynamicEntityParameters
                 }
             });
         }
-        
+
         [Fact]
         public async Task Should_Add_Parameter_Value_Async()
         {
@@ -125,7 +128,8 @@ namespace Abp.Zero.SampleApp.Tests.DynamicEntityParameters
             {
                 EntityDynamicParameterId = entityDynamicParameter.Id,
                 EntityRowId = "123",
-                Value = "TestValue"
+                Value = "TestValue",
+                TenantId = AbpSession.TenantId
             };
 
             await RunAndCheckIfPermissionControlledAsync(() => _entityDynamicParameterValueManager.AddAsync(val));
@@ -150,7 +154,8 @@ namespace Abp.Zero.SampleApp.Tests.DynamicEntityParameters
             {
                 EntityDynamicParameterId = entityDynamicParameter.Id,
                 EntityRowId = "123",
-                Value = "TestValue"
+                Value = "TestValue",
+                TenantId = AbpSession.TenantId
             };
 
             await WithUnitOfWorkAsync(async () =>
@@ -181,7 +186,8 @@ namespace Abp.Zero.SampleApp.Tests.DynamicEntityParameters
             {
                 EntityDynamicParameterId = entityDynamicParameter.Id,
                 EntityRowId = "123",
-                Value = "TestValue"
+                Value = "TestValue",
+                TenantId = AbpSession.TenantId
             };
 
             await WithUnitOfWorkAsync(async () =>

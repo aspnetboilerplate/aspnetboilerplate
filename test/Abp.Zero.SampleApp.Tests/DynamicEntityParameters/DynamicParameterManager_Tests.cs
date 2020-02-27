@@ -59,7 +59,7 @@ namespace Abp.Zero.SampleApp.Tests.DynamicEntityParameters
         [Fact]
         public void Should_Get_From_Db_If_Cache_Not_Exists()
         {
-            var dynamicParameter = CreateAndGetDynamicParameter();
+            var dynamicParameter = CreateAndGetDynamicParameterWithTestPermission();
 
             var dynamicParameterStoreSubstitute = RegisterFake<IDynamicParameterStore>();
             dynamicParameterStoreSubstitute.Get(dynamicParameter.Id).Returns(dynamicParameter);
@@ -94,7 +94,7 @@ namespace Abp.Zero.SampleApp.Tests.DynamicEntityParameters
         [Fact]
         public void Should_Update_And_Change_Cache()
         {
-            var testDynamicParameter = CreateAndGetDynamicParameter();
+            var testDynamicParameter = CreateAndGetDynamicParameterWithTestPermission();
 
             var (cacheManager, dynamicParameterStoreSubstitute, cacheSubstitute) = InitializeFakes();
 
@@ -112,7 +112,7 @@ namespace Abp.Zero.SampleApp.Tests.DynamicEntityParameters
         [Fact]
         public void Should_Delete_And_Change_Cache()
         {
-            var testDynamicParameter = CreateAndGetDynamicParameter();
+            var testDynamicParameter = CreateAndGetDynamicParameterWithTestPermission();
 
             var (cacheManager, dynamicParameterStoreSubstitute, cacheSubstitute) = InitializeFakes();
 
@@ -152,7 +152,7 @@ namespace Abp.Zero.SampleApp.Tests.DynamicEntityParameters
         [Fact]
         public async Task Should_Get_From_Db_If_Cache_Not_Exists_Async()
         {
-            var dynamicParameter = CreateAndGetDynamicParameter();
+            var dynamicParameter = CreateAndGetDynamicParameterWithTestPermission();
 
             var dynamicParameterStoreSubstitute = RegisterFake<IDynamicParameterStore>();
             dynamicParameterStoreSubstitute.GetAsync(dynamicParameter.Id).Returns(dynamicParameter);
@@ -186,7 +186,7 @@ namespace Abp.Zero.SampleApp.Tests.DynamicEntityParameters
         [Fact]
         public async Task Should_Update_And_Change_Cache_Async()
         {
-            var testDynamicParameter = CreateAndGetDynamicParameter();
+            var testDynamicParameter = CreateAndGetDynamicParameterWithTestPermission();
 
             var (cacheManager, dynamicParameterStoreSubstitute, cacheSubstitute) = InitializeFakes();
 
@@ -203,7 +203,7 @@ namespace Abp.Zero.SampleApp.Tests.DynamicEntityParameters
         [Fact]
         public async Task Should_Delete_And_Change_Cache_Async()
         {
-            var testDynamicParameter = CreateAndGetDynamicParameter();
+            var testDynamicParameter = CreateAndGetDynamicParameterWithTestPermission();
 
             var (cacheManager, dynamicParameterStoreSubstitute, cacheSubstitute) = InitializeFakes();
 

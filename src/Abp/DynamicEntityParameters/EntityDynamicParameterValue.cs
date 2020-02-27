@@ -5,7 +5,7 @@ using Abp.Domain.Entities;
 namespace Abp.DynamicEntityParameters
 {
     [Table("AbpEntityDynamicParameterValues")]
-    public class EntityDynamicParameterValue : Entity
+    public class EntityDynamicParameterValue : Entity, IMayHaveTenant
     {
         /// <summary>
         /// Value.
@@ -18,5 +18,7 @@ namespace Abp.DynamicEntityParameters
         public int EntityDynamicParameterId { get; set; }
 
         public virtual EntityDynamicParameter EntityDynamicParameter { get; set; }
+
+        public int? TenantId { get; set; }
     }
 }

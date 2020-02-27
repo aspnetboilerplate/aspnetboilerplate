@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Threading.Tasks;
 using Abp.Dependency;
 
@@ -7,64 +8,97 @@ namespace Abp.DynamicEntityParameters
     public class EntityDynamicParameterValueManager : IEntityDynamicParameterValueManager, ITransientDependency
     {
         private readonly IDynamicParameterPermissionChecker _dynamicParameterPermissionChecker;
+        private readonly IDynamicParameterManager _dynamicParameterManager;
 
         public IEntityDynamicParameterValueStore EntityDynamicParameterValueStore { get; set; }
 
         public EntityDynamicParameterValueManager(
-            IDynamicParameterPermissionChecker dynamicParameterPermissionChecker
+            IDynamicParameterPermissionChecker dynamicParameterPermissionChecker,
+            IDynamicParameterManager dynamicParameterManager
             )
         {
             _dynamicParameterPermissionChecker = dynamicParameterPermissionChecker;
+            _dynamicParameterManager = dynamicParameterManager;
             EntityDynamicParameterValueStore = NullEntityDynamicParameterValueStore.Instance;
         }
 
-        public EntityDynamicParameterValue Get(int id)
+        private int GetDynamicParameterId(EntityDynamicParameterValue entityDynamicParameterValue)
         {
-            return EntityDynamicParameterValueStore.Get(id);
+            if (entityDynamicParameterValue.EntityDynamicParameterId == default)
+            {
+                throw new ArgumentNullException(nameof(entityDynamicParameterValue.EntityDynamicParameterId));
+            }
+
+            return entityDynamicParameterValue.EntityDynamicParameter?.DynamicParameterId ??
+                   _dynamicParameterManager.Get(entityDynamicParameterValue.EntityDynamicParameterId).Id;
         }
 
-        public Task<EntityDynamicParameterValue> GetAsync(int id)
+        private async Task<int> GetDynamicParameterIdAsync(EntityDynamicParameterValue entityDynamicParameterValue)
         {
-            return EntityDynamicParameterValueStore.GetAsync(id);
+            if (entityDynamicParameterValue.EntityDynamicParameterId == default)
+            {
+                throw new ArgumentNullException(nameof(entityDynamicParameterValue.EntityDynamicParameterId));
+            }
+
+            return entityDynamicParameterValue.EntityDynamicParameter?.DynamicParameterId ??
+                 (await _dynamicParameterManager.GetAsync(entityDynamicParameterValue.EntityDynamicParameterId)).Id;
         }
 
-        public void Add(EntityDynamicParameterValue dynamicParameterValue)
+        public virtual EntityDynamicParameterValue Get(int id)
         {
-            _dynamicParameterPermissionChecker.CheckPermissions(dynamicParameterValue.EntityDynamicParameterId);
+            var value = EntityDynamicParameterValueStore.Get(id);
+            _dynamicParameterPermissionChecker.CheckPermissions(GetDynamicParameterId(value));
+            return value;
+        }
+
+        public virtual async Task<EntityDynamicParameterValue> GetAsync(int id)
+        {
+            var value = await EntityDynamicParameterValueStore.GetAsync(id);
+            await _dynamicParameterPermissionChecker.CheckPermissionsAsync(await GetDynamicParameterIdAsync(value));
+            return value;
+        }
+
+        public virtual void Add(EntityDynamicParameterValue dynamicParameterValue)
+        {
+            _dynamicParameterPermissionChecker.CheckPermissions(GetDynamicParameterId(dynamicParameterValue));
             EntityDynamicParameterValueStore.Add(dynamicParameterValue);
         }
 
-        public async Task AddAsync(EntityDynamicParameterValue dynamicParameterValue)
+        public virtual async Task AddAsync(EntityDynamicParameterValue dynamicParameterValue)
         {
-            await _dynamicParameterPermissionChecker.CheckPermissionsAsync(dynamicParameterValue.EntityDynamicParameterId);
+            await _dynamicParameterPermissionChecker.CheckPermissionsAsync(await GetDynamicParameterIdAsync(dynamicParameterValue));
             await EntityDynamicParameterValueStore.AddAsync(dynamicParameterValue);
         }
 
-        public void Update(EntityDynamicParameterValue dynamicParameterValue)
+        public virtual void Update(EntityDynamicParameterValue dynamicParameterValue)
         {
-            _dynamicParameterPermissionChecker.CheckPermissions(dynamicParameterValue.EntityDynamicParameterId);
+            _dynamicParameterPermissionChecker.CheckPermissions(GetDynamicParameterId(dynamicParameterValue));
             EntityDynamicParameterValueStore.Update(dynamicParameterValue);
         }
 
-        public async Task UpdateAsync(EntityDynamicParameterValue dynamicParameterValue)
+        public virtual async Task UpdateAsync(EntityDynamicParameterValue dynamicParameterValue)
         {
-            await _dynamicParameterPermissionChecker.CheckPermissionsAsync(dynamicParameterValue.EntityDynamicParameterId);
+            await _dynamicParameterPermissionChecker.CheckPermissionsAsync(await GetDynamicParameterIdAsync(dynamicParameterValue));
             await EntityDynamicParameterValueStore.UpdateAsync(dynamicParameterValue);
         }
 
-        public void Delete(int id)
+        public virtual void Delete(int id)
         {
-            var dynamicParameterValue = Get(id);
-
-            _dynamicParameterPermissionChecker.CheckPermissions(dynamicParameterValue.EntityDynamicParameterId);
+            var dynamicParameterValue = Get(id);//Get checks permission, no need to check it again
+            if (dynamicParameterValue == null)
+            {
+                return;
+            }
             EntityDynamicParameterValueStore.Delete(id);
         }
 
-        public async Task DeleteAsync(int id)
+        public virtual async Task DeleteAsync(int id)
         {
-            var dynamicParameterValue = await GetAsync(id);
-
-            await _dynamicParameterPermissionChecker.CheckPermissionsAsync(dynamicParameterValue.EntityDynamicParameterId);
+            var dynamicParameterValue = await GetAsync(id);//Get checks permission, no need to check it again
+            if (dynamicParameterValue == null)
+            {
+                return;
+            }
             await EntityDynamicParameterValueStore.DeleteAsync(id);
         }
     }

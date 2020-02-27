@@ -15,9 +15,9 @@ namespace Abp.DynamicEntityParameters
 
         public int? TenantId { get; set; }
 
-        public int DynamicEntityParameterId { get; set; }
+        public int DynamicParameterId { get; set; }
 
-        [ForeignKey("DynamicEntityParameterId")]
-        public virtual DynamicParameter DynamicEntityParameter { get; set; }
+        [ForeignKey("DynamicParameterId")]
+        public virtual DynamicParameter DynamicParameter { get; set; }
     }
 }

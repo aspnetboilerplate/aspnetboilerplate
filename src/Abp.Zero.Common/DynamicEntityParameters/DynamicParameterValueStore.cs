@@ -60,14 +60,14 @@ namespace Abp.DynamicEntityParameters
         public virtual List<string> GetAllPossibleValues(int dynamicParameterId)
         {
             return _dynamicParameterValuesRepository.GetAll()
-                .Where(parameterValue => parameterValue.DynamicEntityParameterId == dynamicParameterId)
+                .Where(parameterValue => parameterValue.DynamicParameterId == dynamicParameterId)
                 .Select(parameterValue => parameterValue.Value).ToList();
         }
 
         public virtual Task<List<string>> GetAllPossibleValuesAsync(int dynamicParameterId)
         {
             return _asyncQueryableExecuter.ToListAsync(_dynamicParameterValuesRepository.GetAll()
-                .Where(parameterValue => parameterValue.DynamicEntityParameterId == dynamicParameterId)
+                .Where(parameterValue => parameterValue.DynamicParameterId == dynamicParameterId)
                 .Select(parameterValue => parameterValue.Value));
         }
     }

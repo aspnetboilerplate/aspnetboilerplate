@@ -1,4 +1,5 @@
-﻿using System.Threading.Tasks;
+﻿using System.Collections.Generic;
+using System.Threading.Tasks;
 using Abp.Dependency;
 using Abp.Domain.Repositories;
 
@@ -21,6 +22,16 @@ namespace Abp.DynamicEntityParameters
         public virtual Task<DynamicParameter> GetAsync(int id)
         {
             return _dynamicParameterRepository.GetAsync(id);
+        }
+
+        public virtual List<DynamicParameter> GetAll()
+        {
+            return _dynamicParameterRepository.GetAllList();
+        }
+
+        public virtual async Task<List<DynamicParameter>> GetAllAsync()
+        {
+            return await _dynamicParameterRepository.GetAllListAsync();
         }
 
         public virtual void Add(DynamicParameter dynamicParameter)

@@ -1,4 +1,5 @@
-﻿using System.Threading.Tasks;
+﻿using System.Collections.Generic;
+using System.Threading.Tasks;
 
 namespace Abp.DynamicEntityParameters
 {
@@ -14,6 +15,16 @@ namespace Abp.DynamicEntityParameters
         public Task<DynamicParameter> GetAsync(int id)
         {
             return Task.FromResult<DynamicParameter>(default);
+        }
+
+        public List<DynamicParameter> GetAll()
+        {
+            return new List<DynamicParameter>();
+        }
+
+        public Task<List<DynamicParameter>> GetAllAsync()
+        {
+            return Task.FromResult(new List<DynamicParameter>());
         }
 
         public void Add(DynamicParameter dynamicParameter)

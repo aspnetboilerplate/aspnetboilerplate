@@ -26,17 +26,17 @@ namespace Abp.DynamicEntityParameters
             _unitOfWorkManager = unitOfWorkManager;
         }
 
-        public DynamicParameter Get(int id)
+        public virtual DynamicParameter Get(int id)
         {
             return DynamicParameterCache.Get(id, () => _dynamicParameterStore.Get(id));
         }
 
-        public Task<DynamicParameter> GetAsync(int id)
+        public virtual Task<DynamicParameter> GetAsync(int id)
         {
             return DynamicParameterCache.GetAsync(id, (i) => _dynamicParameterStore.GetAsync(id));
         }
 
-        public void Add(DynamicParameter dynamicParameter)
+        public virtual void Add(DynamicParameter dynamicParameter)
         {
             using (var uow = _unitOfWorkManager.Begin(TransactionScopeOption.RequiresNew))
             {
@@ -47,7 +47,7 @@ namespace Abp.DynamicEntityParameters
             DynamicParameterCache.Set(dynamicParameter.Id, dynamicParameter);
         }
 
-        public async Task AddAsync(DynamicParameter dynamicParameter)
+        public virtual async Task AddAsync(DynamicParameter dynamicParameter)
         {
             using (var uow = _unitOfWorkManager.Begin(TransactionScopeOption.RequiresNew))
             {
@@ -58,7 +58,7 @@ namespace Abp.DynamicEntityParameters
             await DynamicParameterCache.SetAsync(dynamicParameter.Id, dynamicParameter);
         }
 
-        public void Update(DynamicParameter dynamicParameter)
+        public virtual void Update(DynamicParameter dynamicParameter)
         {
             using (var uow = _unitOfWorkManager.Begin(TransactionScopeOption.RequiresNew))
             {
@@ -69,7 +69,7 @@ namespace Abp.DynamicEntityParameters
             DynamicParameterCache.Set(dynamicParameter.Id, dynamicParameter);
         }
 
-        public async Task UpdateAsync(DynamicParameter dynamicParameter)
+        public virtual async Task UpdateAsync(DynamicParameter dynamicParameter)
         {
             using (var uow = _unitOfWorkManager.Begin(TransactionScopeOption.RequiresNew))
             {
@@ -80,7 +80,7 @@ namespace Abp.DynamicEntityParameters
             await DynamicParameterCache.SetAsync(dynamicParameter.Id, dynamicParameter);
         }
 
-        public void Delete(int id)
+        public virtual void Delete(int id)
         {
             using (var uow = _unitOfWorkManager.Begin(TransactionScopeOption.RequiresNew))
             {
@@ -91,7 +91,7 @@ namespace Abp.DynamicEntityParameters
             DynamicParameterCache.Remove(id);
         }
 
-        public async Task DeleteAsync(int id)
+        public virtual async Task DeleteAsync(int id)
         {
             using (var uow = _unitOfWorkManager.Begin(TransactionScopeOption.RequiresNew))
             {
