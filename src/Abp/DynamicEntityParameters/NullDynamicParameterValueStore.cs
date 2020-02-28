@@ -17,12 +17,12 @@ namespace Abp.DynamicEntityParameters
             return Task.FromResult<DynamicParameterValue>(default);
         }
 
-        public List<DynamicParameterValue> GetAll(int dynamicParameterId)
+        public List<DynamicParameterValue> GetAllValuesOfDynamicParameter(int dynamicParameterId)
         {
             return new List<DynamicParameterValue>();
         }
 
-        public Task<List<DynamicParameterValue>> GetAllAsync(int dynamicParameterId)
+        public Task<List<DynamicParameterValue>> GetAllValuesOfDynamicParameterAsync(int dynamicParameterId)
         {
             return Task.FromResult(new List<DynamicParameterValue>());
         }

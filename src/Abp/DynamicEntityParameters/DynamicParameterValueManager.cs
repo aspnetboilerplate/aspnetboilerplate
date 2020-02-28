@@ -19,50 +19,50 @@ namespace Abp.DynamicEntityParameters
         public virtual DynamicParameterValue Get(int id)
         {
             var val = DynamicParameterValueStore.Get(id);
-            _dynamicParameterPermissionChecker.CheckPermissions(val.DynamicParameterId);
+            _dynamicParameterPermissionChecker.CheckPermission(val.DynamicParameterId);
             return val;
         }
 
         public virtual async Task<DynamicParameterValue> GetAsync(int id)
         {
             var val = await DynamicParameterValueStore.GetAsync(id);
-            await _dynamicParameterPermissionChecker.CheckPermissionsAsync(val.DynamicParameterId);
+            await _dynamicParameterPermissionChecker.CheckPermissionAsync(val.DynamicParameterId);
             return val;
         }
 
-        public virtual List<DynamicParameterValue> GetAll(int dynamicParameterId)
+        public virtual List<DynamicParameterValue> GetAllValuesOfDynamicParameter(int dynamicParameterId)
         {
-            _dynamicParameterPermissionChecker.CheckPermissions(dynamicParameterId);
-            return DynamicParameterValueStore.GetAll(dynamicParameterId);
+            _dynamicParameterPermissionChecker.CheckPermission(dynamicParameterId);
+            return DynamicParameterValueStore.GetAllValuesOfDynamicParameter(dynamicParameterId);
         }
 
-        public virtual async Task<List<DynamicParameterValue>> GetAllAsync(int dynamicParameterId)
+        public virtual async Task<List<DynamicParameterValue>> GetAllValuesOfDynamicParameterAsync(int dynamicParameterId)
         {
-            await _dynamicParameterPermissionChecker.CheckPermissionsAsync(dynamicParameterId);
-            return await DynamicParameterValueStore.GetAllAsync(dynamicParameterId);
+            await _dynamicParameterPermissionChecker.CheckPermissionAsync(dynamicParameterId);
+            return await DynamicParameterValueStore.GetAllValuesOfDynamicParameterAsync(dynamicParameterId);
         }
 
         public virtual void Add(DynamicParameterValue dynamicParameterValue)
         {
-            _dynamicParameterPermissionChecker.CheckPermissions(dynamicParameterValue.DynamicParameterId);
+            _dynamicParameterPermissionChecker.CheckPermission(dynamicParameterValue.DynamicParameterId);
             DynamicParameterValueStore.Add(dynamicParameterValue);
         }
 
         public virtual async Task AddAsync(DynamicParameterValue dynamicParameterValue)
         {
-            await _dynamicParameterPermissionChecker.CheckPermissionsAsync(dynamicParameterValue.DynamicParameterId);
+            await _dynamicParameterPermissionChecker.CheckPermissionAsync(dynamicParameterValue.DynamicParameterId);
             await DynamicParameterValueStore.AddAsync(dynamicParameterValue);
         }
 
         public virtual void Update(DynamicParameterValue dynamicParameterValue)
         {
-            _dynamicParameterPermissionChecker.CheckPermissions(dynamicParameterValue.DynamicParameterId);
+            _dynamicParameterPermissionChecker.CheckPermission(dynamicParameterValue.DynamicParameterId);
             DynamicParameterValueStore.Update(dynamicParameterValue);
         }
 
         public virtual async Task UpdateAsync(DynamicParameterValue dynamicParameterValue)
         {
-            await _dynamicParameterPermissionChecker.CheckPermissionsAsync(dynamicParameterValue.DynamicParameterId);
+            await _dynamicParameterPermissionChecker.CheckPermissionAsync(dynamicParameterValue.DynamicParameterId);
             await DynamicParameterValueStore.UpdateAsync(dynamicParameterValue);
         }
 

@@ -27,13 +27,13 @@ namespace Abp.DynamicEntityParameters
             return _dynamicParameterValuesRepository.GetAsync(id);
         }
 
-        public virtual List<DynamicParameterValue> GetAll(int dynamicParameterId)
+        public virtual List<DynamicParameterValue> GetAllValuesOfDynamicParameter(int dynamicParameterId)
         {
             return _dynamicParameterValuesRepository.GetAll()
                 .Where(parameterValue => parameterValue.DynamicParameterId == dynamicParameterId).ToList();
         }
 
-        public virtual Task<List<DynamicParameterValue>> GetAllAsync(int dynamicParameterId)
+        public virtual Task<List<DynamicParameterValue>> GetAllValuesOfDynamicParameterAsync(int dynamicParameterId)
         {
             return _asyncQueryableExecuter.ToListAsync(_dynamicParameterValuesRepository.GetAll()
                 .Where(parameterValue => parameterValue.DynamicParameterId == dynamicParameterId));

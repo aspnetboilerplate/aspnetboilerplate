@@ -9,9 +9,9 @@ namespace Abp.DynamicEntityParameters
 
         Task<DynamicParameterValue> GetAsync(int id);
 
-        List<DynamicParameterValue> GetAll(int dynamicParameterId);
+        List<DynamicParameterValue> GetAllValuesOfDynamicParameter(int dynamicParameterId);
 
-        Task<List<DynamicParameterValue>> GetAllAsync(int dynamicParameterId);
+        Task<List<DynamicParameterValue>> GetAllValuesOfDynamicParameterAsync(int dynamicParameterId);
 
         void Add(DynamicParameterValue dynamicParameterValue);
 

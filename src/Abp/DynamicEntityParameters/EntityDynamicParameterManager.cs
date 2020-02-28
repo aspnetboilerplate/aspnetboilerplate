@@ -1,4 +1,6 @@
-﻿using System.Threading.Tasks;
+﻿using System.Collections.Generic;
+using System.Linq;
+using System.Threading.Tasks;
 using System.Transactions;
 using Abp.Dependency;
 using Abp.Domain.Uow;
@@ -36,20 +38,45 @@ namespace Abp.DynamicEntityParameters
                 {
                     return EntityDynamicParameterStore.Get(id);
                 });
-            _dynamicParameterPermissionChecker.CheckPermissions(entityParameter.DynamicParameterId);
+            _dynamicParameterPermissionChecker.CheckPermission(entityParameter.DynamicParameterId);
             return entityParameter;
         }
 
         public virtual async Task<EntityDynamicParameter> GetAsync(int id)
         {
             var entityParameter = await EntityDynamicParameterCache.GetAsync(id, () => EntityDynamicParameterStore.GetAsync(id));
-            await _dynamicParameterPermissionChecker.CheckPermissionsAsync(entityParameter.DynamicParameterId);
+            await _dynamicParameterPermissionChecker.CheckPermissionAsync(entityParameter.DynamicParameterId);
             return entityParameter;
+        }
+
+        public List<EntityDynamicParameter> GetAll(string entityFullName)
+        {
+            var allParameters = EntityDynamicParameterStore.GetAllParameters(entityFullName);
+            allParameters = allParameters
+                .Where(entityDynamicParameter =>
+                    _dynamicParameterPermissionChecker.IsGranted(entityDynamicParameter.DynamicParameterId))
+                .ToList();
+            return allParameters;
+        }
+
+        public async Task<List<EntityDynamicParameter>> GetAllAsync(string entityFullName)
+        {
+            var allParameters = await EntityDynamicParameterStore.GetAllParametersAsync(entityFullName);
+
+            var controlledParameters = new List<EntityDynamicParameter>();
+            foreach (var entityDynamicParameter in allParameters)
+            {
+                if (await _dynamicParameterPermissionChecker.IsGrantedAsync(entityDynamicParameter.DynamicParameterId))
+                {
+                    controlledParameters.Add(entityDynamicParameter);
+                }
+            }
+            return controlledParameters;
         }
 
         public virtual void Add(EntityDynamicParameter entityDynamicParameter)
         {
-            _dynamicParameterPermissionChecker.CheckPermissions(entityDynamicParameter.DynamicParameterId);
+            _dynamicParameterPermissionChecker.CheckPermission(entityDynamicParameter.DynamicParameterId);
             using (var uow = _unitOfWorkManager.Begin(TransactionScopeOption.RequiresNew))
             {
                 EntityDynamicParameterStore.Add(entityDynamicParameter);
@@ -61,7 +88,7 @@ namespace Abp.DynamicEntityParameters
 
         public virtual async Task AddAsync(EntityDynamicParameter entityDynamicParameter)
         {
-            await _dynamicParameterPermissionChecker.CheckPermissionsAsync(entityDynamicParameter.DynamicParameterId);
+            await _dynamicParameterPermissionChecker.CheckPermissionAsync(entityDynamicParameter.DynamicParameterId);
             using (var uow = _unitOfWorkManager.Begin(TransactionScopeOption.RequiresNew))
             {
                 await EntityDynamicParameterStore.AddAsync(entityDynamicParameter);
@@ -72,7 +99,7 @@ namespace Abp.DynamicEntityParameters
 
         public virtual void Update(EntityDynamicParameter entityDynamicParameter)
         {
-            _dynamicParameterPermissionChecker.CheckPermissions(entityDynamicParameter.DynamicParameterId);
+            _dynamicParameterPermissionChecker.CheckPermission(entityDynamicParameter.DynamicParameterId);
             using (var uow = _unitOfWorkManager.Begin(TransactionScopeOption.RequiresNew))
             {
                 EntityDynamicParameterStore.Update(entityDynamicParameter);
@@ -83,7 +110,7 @@ namespace Abp.DynamicEntityParameters
 
         public virtual async Task UpdateAsync(EntityDynamicParameter entityDynamicParameter)
         {
-            await _dynamicParameterPermissionChecker.CheckPermissionsAsync(entityDynamicParameter.DynamicParameterId);
+            await _dynamicParameterPermissionChecker.CheckPermissionAsync(entityDynamicParameter.DynamicParameterId);
             using (var uow = _unitOfWorkManager.Begin(TransactionScopeOption.RequiresNew))
             {
                 await EntityDynamicParameterStore.UpdateAsync(entityDynamicParameter);

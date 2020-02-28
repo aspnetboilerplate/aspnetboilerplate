@@ -20,7 +20,7 @@ namespace Abp.DynamicEntityParameters
             _dynamicParameterManager = dynamicParameterManager;
         }
 
-        public void CheckPermissions(int dynamicParameterId)
+        public void CheckPermission(int dynamicParameterId)
         {
             var dynamicParameter = _dynamicParameterManager.Get(dynamicParameterId);
             if (dynamicParameter == null)
@@ -34,7 +34,7 @@ namespace Abp.DynamicEntityParameters
             }
         }
 
-        public async Task CheckPermissionsAsync(int dynamicParameterId)
+        public async Task CheckPermissionAsync(int dynamicParameterId)
         {
             var dynamicParameter = await _dynamicParameterManager.GetAsync(dynamicParameterId);
             if (dynamicParameter == null)
@@ -46,6 +46,28 @@ namespace Abp.DynamicEntityParameters
             {
                 throw new Exception($"Permission \"{dynamicParameter.Permission}\" is not granted");
             }
+        }
+
+        public bool IsGranted(int dynamicParameterId)
+        {
+            var dynamicParameter = _dynamicParameterManager.Get(dynamicParameterId);
+            if (dynamicParameter == null)
+            {
+                throw new EntityNotFoundException(typeof(DynamicParameter), dynamicParameterId);
+            }
+
+            return _permissionChecker.IsGranted(dynamicParameter.Permission);
+        }
+
+        public async Task<bool> IsGrantedAsync(int dynamicParameterId)
+        {
+            var dynamicParameter = await _dynamicParameterManager.GetAsync(dynamicParameterId);
+            if (dynamicParameter == null)
+            {
+                throw new EntityNotFoundException(typeof(DynamicParameter), dynamicParameterId);
+            }
+
+            return await _permissionChecker.IsGrantedAsync(dynamicParameter.Permission);
         }
     }
 }

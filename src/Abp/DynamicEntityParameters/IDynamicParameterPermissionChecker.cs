@@ -4,8 +4,12 @@ namespace Abp.DynamicEntityParameters
 {
     public interface IDynamicParameterPermissionChecker
     {
-        void CheckPermissions(int dynamicParameterId);
+        void CheckPermission(int dynamicParameterId);
 
-        Task CheckPermissionsAsync(int dynamicParameterId);
+        Task CheckPermissionAsync(int dynamicParameterId);
+
+        bool IsGranted(int dynamicParameterId);
+
+        Task<bool> IsGrantedAsync(int dynamicParameterId);
     }
 }
