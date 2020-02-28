@@ -53,6 +53,29 @@ namespace Abp.ZeroCore.SampleApp.EntityFramework
 
             modelBuilder.Entity<Blog>().OwnsOne(x => x.More);
 
+            modelBuilder.Entity<Blog>().OwnsMany(x => x.Promotions, b =>
+            {
+                b.HasForeignKey(bp => bp.BlogId);
+                b.Property<int>("Id");
+                b.HasKey("Id");
+
+                b.HasOne<Blog>()
+                 .WithOne()
+                 .HasForeignKey<BlogPromotion>(bp => bp.AdvertisementId)
+                 .IsRequired();
+            });
+
+            modelBuilder.Entity<Advertisement>().OwnsMany(a => a.Feedbacks, b =>
+            {
+                b.HasForeignKey(af => af.AdvertisementId);
+                b.Property<int>("Id");
+                b.HasKey("Id");
+
+                b.HasOne<Comment>()
+                 .WithOne()
+                 .HasForeignKey<AdvertisementFeedback>(af => af.CommentId);
+            });
+
             modelBuilder.Entity<Book>().ToTable("Books");
             modelBuilder.Entity<Book>().Property(e => e.Id).ValueGeneratedNever();
 
