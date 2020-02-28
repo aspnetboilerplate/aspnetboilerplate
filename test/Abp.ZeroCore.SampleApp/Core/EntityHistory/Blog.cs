@@ -24,7 +24,8 @@ namespace Abp.ZeroCore.SampleApp.Core.EntityHistory
 
         public Blog()
         {
-
+            More = new BlogEx();
+            Promotions = new List<BlogPromotion>();
         }
 
         public Blog(string name, string url, string bloggerName)
