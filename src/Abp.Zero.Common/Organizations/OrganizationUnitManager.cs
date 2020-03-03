@@ -77,14 +77,16 @@ namespace Abp.Organizations
 
         public virtual async Task<OrganizationUnit> GetLastChildOrNullAsync(long? parentId)
         {
-            var children = await OrganizationUnitRepository.GetAllListAsync(ou => ou.ParentId == parentId);
-            return children.OrderBy(c => c.Code).LastOrDefault();
+            return await OrganizationUnitRepository.GetAll()
+                .OrderByDescending(c => c.Code)
+                .FirstOrDefaultAsync(ou => ou.ParentId == parentId);
         }
 
         public virtual OrganizationUnit GetLastChildOrNull(long? parentId)
         {
-            var children = OrganizationUnitRepository.GetAllList(ou => ou.ParentId == parentId);
-            return children.OrderBy(c => c.Code).LastOrDefault();
+            return OrganizationUnitRepository.GetAll()
+                .OrderByDescending(c => c.Code)
+                .FirstOrDefault(ou => ou.ParentId == parentId);
         }
 
         public virtual async Task<string> GetCodeAsync(long id)
