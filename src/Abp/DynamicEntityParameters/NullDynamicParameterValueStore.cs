@@ -53,5 +53,14 @@ namespace Abp.DynamicEntityParameters
         {
             return Task.CompletedTask;
         }
+
+        public void CleanValues(int dynamicParameterId)
+        {
+        }
+
+        public Task CleanValuesAsync(int dynamicParameterId)
+        {
+            return Task.CompletedTask;
+        }
     }
 }

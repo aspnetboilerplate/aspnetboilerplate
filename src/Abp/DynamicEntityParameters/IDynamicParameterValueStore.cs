@@ -24,5 +24,9 @@ namespace Abp.DynamicEntityParameters
         void Delete(int id);
 
         Task DeleteAsync(int id);
+
+        void CleanValues(int dynamicParameterId);
+
+        Task CleanValuesAsync(int dynamicParameterId);
     }
 }

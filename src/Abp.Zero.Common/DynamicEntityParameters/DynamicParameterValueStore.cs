@@ -69,5 +69,14 @@ namespace Abp.DynamicEntityParameters
             return _dynamicParameterValuesRepository.DeleteAsync(id);
         }
 
+        public virtual void CleanValues(int dynamicParameterId)
+        {
+            _dynamicParameterValuesRepository.Delete(value => value.DynamicParameterId == dynamicParameterId);
+        }
+
+        public virtual Task CleanValuesAsync(int dynamicParameterId)
+        {
+            return _dynamicParameterValuesRepository.DeleteAsync(value => value.DynamicParameterId == dynamicParameterId);
+        }
     }
 }

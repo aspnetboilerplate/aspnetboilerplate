@@ -147,6 +147,43 @@ namespace Abp.Zero.SampleApp.Tests.DynamicEntityParameters
         }
 
         [Fact]
+        public void Should_Clean_Value()
+        {
+            var dynamicParameter = CreateAndGetDynamicParameterWithTestPermission();
+
+            var dynamicParameterValue = new DynamicParameterValue()
+            {
+                DynamicParameterId = dynamicParameter.Id,
+                Value = "Test",
+                TenantId = AbpSession.TenantId
+            };
+
+            var dynamicParameterValue2 = new DynamicParameterValue()
+            {
+                DynamicParameterId = dynamicParameter.Id,
+                Value = "Test2",
+                TenantId = AbpSession.TenantId
+            };
+
+            WithUnitOfWork(() =>
+            {
+                _dynamicParameterValueManager.Add(dynamicParameterValue);
+                _dynamicParameterValueManager.Add(dynamicParameterValue2);
+            });
+
+            RunAndCheckIfPermissionControlled(() =>
+            {
+                _dynamicParameterValueManager.CleanValues(dynamicParameter.Id);
+            });
+
+            WithUnitOfWork(() =>
+            {
+                var entity = _dynamicParameterValueManager.GetAllValuesOfDynamicParameter(dynamicParameter.Id);
+                entity.ShouldBeEmpty();
+            });
+        }
+
+        [Fact]
         public async Task Should_Get_Value_Async()
         {
             var dynamicParameter = CreateAndGetDynamicParameterWithTestPermission();
@@ -264,6 +301,43 @@ namespace Abp.Zero.SampleApp.Tests.DynamicEntityParameters
                 catch (EntityNotFoundException)
                 {
                 }
+            });
+        }
+
+        [Fact]
+        public async Task Should_Clean_Value_Async()
+        {
+            var dynamicParameter = CreateAndGetDynamicParameterWithTestPermission();
+
+            var dynamicParameterValue = new DynamicParameterValue()
+            {
+                DynamicParameterId = dynamicParameter.Id,
+                Value = "Test",
+                TenantId = AbpSession.TenantId
+            };
+
+            var dynamicParameterValue2 = new DynamicParameterValue()
+            {
+                DynamicParameterId = dynamicParameter.Id,
+                Value = "Test2",
+                TenantId = AbpSession.TenantId
+            };
+
+            await WithUnitOfWorkAsync(async () =>
+            {
+                await _dynamicParameterValueManager.AddAsync(dynamicParameterValue);
+                await _dynamicParameterValueManager.AddAsync(dynamicParameterValue2);
+            });
+
+            await RunAndCheckIfPermissionControlledAsync(async () =>
+            {
+                await _dynamicParameterValueManager.CleanValuesAsync(dynamicParameter.Id);
+            });
+
+            await WithUnitOfWorkAsync(async () =>
+            {
+                var entity = await _dynamicParameterValueManager.GetAllValuesOfDynamicParameterAsync(dynamicParameter.Id);
+                entity.ShouldBeEmpty();
             });
         }
     }
