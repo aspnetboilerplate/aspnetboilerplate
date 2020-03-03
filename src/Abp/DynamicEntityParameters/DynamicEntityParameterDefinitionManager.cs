@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using Abp.Dependency;
+using Abp.Domain.Entities;
 using Abp.Extensions;
 using Abp.UI.Inputs;
 
@@ -14,6 +15,8 @@ namespace Abp.DynamicEntityParameters
 
         private readonly Dictionary<string, Type> _allowedInputTypes;
 
+        private readonly HashSet<string> _entities;
+
         public DynamicEntityParameterDefinitionManager(
             IDynamicEntityParameterConfiguration dynamicEntityParametersConfiguration,
             IocManager iocManager
@@ -23,6 +26,7 @@ namespace Abp.DynamicEntityParameters
             _iocManager = iocManager;
 
             _allowedInputTypes = new Dictionary<string, Type>();
+            _entities = new HashSet<string>();
         }
 
         public void Initialize()
@@ -76,6 +80,32 @@ namespace Abp.DynamicEntityParameters
         public bool ContainsInputType(string name)
         {
             return _allowedInputTypes.ContainsKey(name);
+        }
+
+        public void AddEntity<TEntity, TPrimaryKey>() where TEntity : IEntity<TPrimaryKey>
+        {
+            string entityName = typeof(TEntity).FullName;
+            if (_entities.Contains(entityName))
+            {
+                throw new ApplicationException($"Entity already registered {entityName}");
+            }
+
+            _entities.Add(entityName);
+        }
+
+        public List<string> GetAllEntities()
+        {
+            return _entities.ToList();
+        }
+
+        public bool ContainsEntity(string entityFullName)
+        {
+            return _entities.Contains(entityFullName);
+        }
+
+        public bool ContainsEntity<TEntity, TPrimaryKey>() where TEntity : IEntity<TPrimaryKey>
+        {
+            return ContainsEntity(typeof(TEntity).FullName);
         }
     }
 }

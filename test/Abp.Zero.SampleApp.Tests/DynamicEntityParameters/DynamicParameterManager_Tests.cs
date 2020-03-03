@@ -104,6 +104,7 @@ namespace Abp.Zero.SampleApp.Tests.DynamicEntityParameters
             try
             {
                 dynamicParameterManager.Add(testDynamicParameter);
+                throw new Exception("Should check if input type exists");
             }
             catch (Exception e)
             {
@@ -139,6 +140,7 @@ namespace Abp.Zero.SampleApp.Tests.DynamicEntityParameters
             try
             {
                 dynamicParameterManager.Update(testDynamicParameter);
+                throw new Exception("Should check if input type exists");
             }
             catch (Exception e)
             {
@@ -233,6 +235,7 @@ namespace Abp.Zero.SampleApp.Tests.DynamicEntityParameters
             try
             {
                 await dynamicParameterManager.AddAsync(testDynamicParameter);
+                throw new Exception("Should check if input type exists");
             }
             catch (Exception e)
             {
@@ -262,18 +265,18 @@ namespace Abp.Zero.SampleApp.Tests.DynamicEntityParameters
         {
             var testDynamicParameter = CreateAndGetDynamicParameterWithTestPermission();
             testDynamicParameter.InputType = "asd123";
-
+            var dynamicParameterManager = Resolve<IDynamicParameterManager>();
             try
             {
-                var dynamicParameterManager = Resolve<IDynamicParameterManager>();
                 await dynamicParameterManager.UpdateAsync(testDynamicParameter);
+                throw new Exception("Should check if input type exists");
             }
             catch (Exception e)
             {
                 e.Message.ShouldContain("asd123");
             }
         }
-        
+
         [Fact]
         public async Task Should_Delete_And_Change_Cache_Async()
         {

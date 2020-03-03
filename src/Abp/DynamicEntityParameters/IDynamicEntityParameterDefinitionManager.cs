@@ -1,4 +1,6 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
+using Abp.Domain.Entities;
 using Abp.UI.Inputs;
 
 namespace Abp.DynamicEntityParameters
@@ -12,7 +14,6 @@ namespace Abp.DynamicEntityParameters
 
         /// <summary>
         /// Gets a Input Type by name.
-        /// Returns null if there is no webhook definition with given name.
         /// </summary>
         IInputType GetOrNullAllowedInputType(string name);
 
@@ -30,5 +31,27 @@ namespace Abp.DynamicEntityParameters
         /// Returns if allowed input types contains the given name
         /// </summary>
         bool ContainsInputType(string name);
+
+        /// <summary>
+        /// Adds the specified entity to entity list. Throws exception if it is already added
+        /// </summary>
+        void AddEntity<TEntity, TPrimaryKey>()
+            where TEntity : IEntity<TPrimaryKey>;
+
+        /// <summary>
+        /// Returns all entities
+        /// </summary>
+        List<string> GetAllEntities();
+
+        /// <summary>
+        /// Returns if contains entity
+        /// </summary>
+        bool ContainsEntity(string entityFullName);
+
+        /// <summary>
+        /// Returns if contains entity
+        /// </summary>
+        bool ContainsEntity<TEntity, TPrimaryKey>()
+            where TEntity : IEntity<TPrimaryKey>;
     }
 }

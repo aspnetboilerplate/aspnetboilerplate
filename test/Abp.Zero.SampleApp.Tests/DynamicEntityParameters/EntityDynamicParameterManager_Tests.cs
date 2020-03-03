@@ -4,6 +4,7 @@ using Abp.Domain.Entities;
 using Abp.Domain.Uow;
 using Abp.DynamicEntityParameters;
 using Abp.Runtime.Caching;
+using Abp.Zero.SampleApp.EntityHistory;
 using NSubstitute;
 using Shouldly;
 using Xunit;
@@ -33,7 +34,8 @@ namespace Abp.Zero.SampleApp.Tests.DynamicEntityParameters
             var entityDynamicParameterManager = new EntityDynamicParameterManager(
                     Resolve<IDynamicParameterPermissionChecker>(),
                     cacheManager,
-                    Resolve<IUnitOfWorkManager>()
+                    Resolve<IUnitOfWorkManager>(),
+                    Resolve<IDynamicEntityParameterDefinitionManager>()
                 )
             {
                 EntityDynamicParameterStore = Resolve<IEntityDynamicParameterStore>()
@@ -68,7 +70,7 @@ namespace Abp.Zero.SampleApp.Tests.DynamicEntityParameters
             entityDynamicParameterManagerCache
                 .Get(entityDynamicParameter.Id.ToString(), Arg.Any<Func<string, object>>())
                 .Returns(entityDynamicParameter);
-            
+
             var entity = entityDynamicParameterManager.Get(entityDynamicParameter.Id);
             CheckEquality(entity, entityDynamicParameter);
 
@@ -132,7 +134,81 @@ namespace Abp.Zero.SampleApp.Tests.DynamicEntityParameters
         }
 
         [Fact]
+        public void Should_Not_Add_Parameter_If_Entity_Not_Registered()
+        {
+            var (entityDynamicParameterManagerCache, entityDynamicParameterManager) = InitializeEntityDynamicParameterManagerWithCacheSubstitute();
+
+            var dynamicParameter = CreateAndGetDynamicParameterWithTestPermission();
+            var entityDynamicParameter = new EntityDynamicParameter()
+            {
+                DynamicParameterId = dynamicParameter.Id,
+                EntityFullName = typeof(Post).FullName,
+                TenantId = AbpSession.TenantId
+            };
+
+            try
+            {
+                entityDynamicParameterManager.Add(entityDynamicParameter);
+                throw new Exception("Should check if entity registered");
+            }
+            catch (Exception e)
+            {
+                e.Message.ShouldContain(typeof(Post).FullName);
+            }
+        }
+
+        [Fact]
         public void Should_Update_Parameter()
+        {
+            var (entityDynamicParameterManagerCache, entityDynamicParameterManager) = InitializeEntityDynamicParameterManagerWithCacheSubstitute();
+
+
+            var dynamicParameter = CreateAndGetDynamicParameterWithTestPermission();
+            var dynamicParameter2 = CreateAndGetDynamicParameterWithTestPermission();
+            var entityDynamicParameter = new EntityDynamicParameter()
+            {
+                DynamicParameterId = dynamicParameter.Id,
+                EntityFullName = TestEntityFullName,
+                TenantId = AbpSession.TenantId
+            };
+
+            WithUnitOfWork(() =>
+            {
+                entityDynamicParameterManager.Add(entityDynamicParameter);
+            });
+
+            entityDynamicParameterManagerCache.Received().Set(entityDynamicParameter.Id.ToString(), entityDynamicParameter);
+            entityDynamicParameterManagerCache.ClearReceivedCalls();
+
+            WithUnitOfWork(() =>
+            {
+                entityDynamicParameter = entityDynamicParameterManager.Get(entityDynamicParameter.Id);
+
+                entityDynamicParameter.ShouldNotBeNull();
+                entityDynamicParameter.DynamicParameterId.ShouldBe(entityDynamicParameter.DynamicParameterId);
+                entityDynamicParameter.EntityFullName.ShouldBe(entityDynamicParameter.EntityFullName);
+            });
+
+            entityDynamicParameter.DynamicParameterId = dynamicParameter2.Id;
+
+            entityDynamicParameterManagerCache.ClearReceivedCalls();
+            RunAndCheckIfPermissionControlled(() =>
+            {
+                entityDynamicParameterManager.Update(entityDynamicParameter);
+            });
+            entityDynamicParameterManagerCache.Received().Set(entityDynamicParameter.Id.ToString(), entityDynamicParameter);
+
+            WithUnitOfWork(() =>
+            {
+                var val = entityDynamicParameterManager.Get(entityDynamicParameter.Id);
+
+                val.ShouldNotBeNull();
+                val.DynamicParameterId.ShouldBe(dynamicParameter2.Id);
+            });
+        }
+
+        [Fact]
+        public void Should_Not_Update_Parameter_If_Entity_Not_Registered()
         {
             var (entityDynamicParameterManagerCache, entityDynamicParameterManager) = InitializeEntityDynamicParameterManagerWithCacheSubstitute();
 
@@ -162,24 +238,16 @@ namespace Abp.Zero.SampleApp.Tests.DynamicEntityParameters
                 entityDynamicParameter.EntityFullName.ShouldBe(entityDynamicParameter.EntityFullName);
             });
 
-            entityDynamicParameter.EntityFullName = "Test2";
-
-            entityDynamicParameterManagerCache.ClearReceivedCalls();
-            RunAndCheckIfPermissionControlled(() =>
+            entityDynamicParameter.EntityFullName = typeof(Post).FullName;
+            try
             {
                 entityDynamicParameterManager.Update(entityDynamicParameter);
-            });
-            entityDynamicParameterManagerCache.Received().Set(entityDynamicParameter.Id.ToString(), entityDynamicParameter);
-
-            WithUnitOfWork(() =>
+                throw new Exception("Should check if entity registered");
+            }
+            catch (Exception e)
             {
-                var val = entityDynamicParameterManager.Get(entityDynamicParameter.Id);
-
-                val.ShouldNotBeNull();
-
-                val.DynamicParameterId.ShouldBe(entityDynamicParameter.DynamicParameterId);
-                val.EntityFullName.ShouldBe("Test2");
-            });
+                e.Message.ShouldContain(typeof(Post).FullName);
+            }
         }
 
         [Fact]
@@ -264,10 +332,35 @@ namespace Abp.Zero.SampleApp.Tests.DynamicEntityParameters
         }
 
         [Fact]
+        public async Task Should_Not_Add_Parameter_If_Entity_Not_Registered_Async()
+        {
+            var (entityDynamicParameterManagerCache, entityDynamicParameterManager) = InitializeEntityDynamicParameterManagerWithCacheSubstitute();
+
+            var dynamicParameter = CreateAndGetDynamicParameterWithTestPermission();
+            var entityDynamicParameter = new EntityDynamicParameter()
+            {
+                DynamicParameterId = dynamicParameter.Id,
+                EntityFullName = typeof(Post).FullName,
+                TenantId = AbpSession.TenantId
+            };
+
+            try
+            {
+                await entityDynamicParameterManager.AddAsync(entityDynamicParameter);
+                throw new Exception("Should check if entity registered");
+            }
+            catch (Exception e)
+            {
+                e.Message.ShouldContain(typeof(Post).FullName);
+            }
+        }
+
+        [Fact]
         public async Task Should_Update_Parameter_Async()
         {
             var (entityDynamicParameterManagerCache, entityDynamicParameterManager) = InitializeEntityDynamicParameterManagerWithCacheSubstitute();
             var dynamicParameter = CreateAndGetDynamicParameterWithTestPermission();
+            var dynamicParameter2 = CreateAndGetDynamicParameterWithTestPermission();
 
             var entityDynamicParameter = new EntityDynamicParameter()
             {
@@ -292,7 +385,7 @@ namespace Abp.Zero.SampleApp.Tests.DynamicEntityParameters
                 entityDynamicParameter.EntityFullName.ShouldBe(entityDynamicParameter.EntityFullName);
             });
 
-            entityDynamicParameter.EntityFullName = "Test2";
+            entityDynamicParameter.DynamicParameterId = dynamicParameter2.Id;
 
             entityDynamicParameterManagerCache.ClearReceivedCalls();
             await RunAndCheckIfPermissionControlledAsync(async () =>
@@ -306,10 +399,51 @@ namespace Abp.Zero.SampleApp.Tests.DynamicEntityParameters
                 var val = await entityDynamicParameterManager.GetAsync(entityDynamicParameter.Id);
 
                 val.ShouldNotBeNull();
-
-                val.DynamicParameterId.ShouldBe(entityDynamicParameter.DynamicParameterId);
-                val.EntityFullName.ShouldBe("Test2");
+                val.DynamicParameterId.ShouldBe(dynamicParameter2.Id);
             });
+        }
+
+        [Fact]
+        public void Should_Not_Update_Parameter_If_Entity_Not_Registered_Async()
+        {
+            var (entityDynamicParameterManagerCache, entityDynamicParameterManager) = InitializeEntityDynamicParameterManagerWithCacheSubstitute();
+
+
+            var dynamicParameter = CreateAndGetDynamicParameterWithTestPermission();
+            var entityDynamicParameter = new EntityDynamicParameter()
+            {
+                DynamicParameterId = dynamicParameter.Id,
+                EntityFullName = TestEntityFullName,
+                TenantId = AbpSession.TenantId
+            };
+
+            WithUnitOfWork(() =>
+            {
+                entityDynamicParameterManager.Add(entityDynamicParameter);
+            });
+
+            entityDynamicParameterManagerCache.Received().Set(entityDynamicParameter.Id.ToString(), entityDynamicParameter);
+            entityDynamicParameterManagerCache.ClearReceivedCalls();
+
+            WithUnitOfWork(() =>
+            {
+                entityDynamicParameter = entityDynamicParameterManager.Get(entityDynamicParameter.Id);
+
+                entityDynamicParameter.ShouldNotBeNull();
+                entityDynamicParameter.DynamicParameterId.ShouldBe(entityDynamicParameter.DynamicParameterId);
+                entityDynamicParameter.EntityFullName.ShouldBe(entityDynamicParameter.EntityFullName);
+            });
+
+            entityDynamicParameter.EntityFullName = typeof(Post).FullName;
+            try
+            {
+                entityDynamicParameterManager.Update(entityDynamicParameter);
+                throw new Exception("Should check if entity registered");
+            }
+            catch (Exception e)
+            {
+                e.Message.ShouldContain(typeof(Post).FullName);
+            }
         }
 
         [Fact]

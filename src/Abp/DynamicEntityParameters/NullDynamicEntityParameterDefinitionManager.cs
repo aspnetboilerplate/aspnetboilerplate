@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using Abp.Domain.Entities;
 using Abp.UI.Inputs;
 
 namespace Abp.DynamicEntityParameters
@@ -27,6 +28,25 @@ namespace Abp.DynamicEntityParameters
         }
 
         public bool ContainsInputType(string name)
+        {
+            return false;
+        }
+
+        public void AddEntity<TEntity, TPrimaryKey>() where TEntity : IEntity<TPrimaryKey>
+        {
+        }
+
+        public List<string> GetAllEntities()
+        {
+            return new List<string>();
+        }
+
+        public bool ContainsEntity(string entityFullName)
+        {
+            return false;
+        }
+
+        public bool ContainsEntity<TEntity, TPrimaryKey>() where TEntity : IEntity<TPrimaryKey>
         {
             return false;
         }

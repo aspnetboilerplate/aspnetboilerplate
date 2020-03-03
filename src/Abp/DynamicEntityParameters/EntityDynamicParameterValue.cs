@@ -7,9 +7,6 @@ namespace Abp.DynamicEntityParameters
     [Table("AbpEntityDynamicParameterValues")]
     public class EntityDynamicParameterValue : Entity, IMayHaveTenant
     {
-        /// <summary>
-        /// Value.
-        /// </summary>
         [Required(AllowEmptyStrings = false)]
         public virtual string Value { get; set; }
 

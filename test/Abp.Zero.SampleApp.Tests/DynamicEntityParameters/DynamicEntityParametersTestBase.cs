@@ -7,6 +7,7 @@ using Abp.Localization;
 using Abp.Modules;
 using Abp.Threading;
 using Abp.UI.Inputs;
+using Abp.Zero.SampleApp.EntityHistory;
 using Castle.MicroKernel.Registration;
 using NSubstitute;
 
@@ -15,7 +16,7 @@ namespace Abp.Zero.SampleApp.Tests.DynamicEntityParameters
     public class DynamicEntityParametersTestBase : SampleAppTestBase<DynamicEntityParametersTestModule>
     {
         public const string TestPermission = "Abp.Zero.TestPermission";
-        public const string TestEntityFullName = "Abp.Zero.TestEntity";
+        public string TestEntityFullName => typeof(Country).FullName;
 
         protected readonly IDynamicParameterStore DynamicParameterStore;
         protected readonly IEntityDynamicParameterStore EntityDynamicParameterStore;
@@ -153,6 +154,8 @@ namespace Abp.Zero.SampleApp.Tests.DynamicEntityParameters
             context.Manager.AddAllowedInputType<SingleLineStringInputType>();
             context.Manager.AddAllowedInputType<CheckboxInputType>();
             context.Manager.AddAllowedInputType<ComboboxInputType>();
+
+            context.Manager.AddEntity<Country, int>();
         }
     }
 

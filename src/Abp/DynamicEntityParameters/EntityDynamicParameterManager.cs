@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using System.Transactions;
@@ -13,6 +14,7 @@ namespace Abp.DynamicEntityParameters
         private readonly IDynamicParameterPermissionChecker _dynamicParameterPermissionChecker;
         private readonly ICacheManager _cacheManager;
         private readonly IUnitOfWorkManager _unitOfWorkManager;
+        private readonly IDynamicEntityParameterDefinitionManager _dynamicEntityParameterDefinitionManager;
 
         public IEntityDynamicParameterStore EntityDynamicParameterStore { get; set; }
 
@@ -23,13 +25,24 @@ namespace Abp.DynamicEntityParameters
         public EntityDynamicParameterManager(
             IDynamicParameterPermissionChecker dynamicParameterPermissionChecker,
             ICacheManager cacheManager,
-            IUnitOfWorkManager unitOfWorkManager
+            IUnitOfWorkManager unitOfWorkManager,
+            IDynamicEntityParameterDefinitionManager dynamicEntityParameterDefinitionManager
             )
         {
             _dynamicParameterPermissionChecker = dynamicParameterPermissionChecker;
             _cacheManager = cacheManager;
             _unitOfWorkManager = unitOfWorkManager;
+            _dynamicEntityParameterDefinitionManager = dynamicEntityParameterDefinitionManager;
+
             EntityDynamicParameterStore = NullEntityDynamicParameterStore.Instance;
+        }
+
+        private void CheckEntityName(string entityFullName)
+        {
+            if (!_dynamicEntityParameterDefinitionManager.ContainsEntity(entityFullName))
+            {
+                throw new ApplicationException($"Unknown entity {entityFullName}.");
+            }
         }
 
         public virtual EntityDynamicParameter Get(int id)
@@ -76,7 +89,9 @@ namespace Abp.DynamicEntityParameters
 
         public virtual void Add(EntityDynamicParameter entityDynamicParameter)
         {
+            CheckEntityName(entityDynamicParameter.EntityFullName);
             _dynamicParameterPermissionChecker.CheckPermission(entityDynamicParameter.DynamicParameterId);
+
             using (var uow = _unitOfWorkManager.Begin(TransactionScopeOption.RequiresNew))
             {
                 EntityDynamicParameterStore.Add(entityDynamicParameter);
@@ -88,7 +103,9 @@ namespace Abp.DynamicEntityParameters
 
         public virtual async Task AddAsync(EntityDynamicParameter entityDynamicParameter)
         {
+            CheckEntityName(entityDynamicParameter.EntityFullName);
             await _dynamicParameterPermissionChecker.CheckPermissionAsync(entityDynamicParameter.DynamicParameterId);
+
             using (var uow = _unitOfWorkManager.Begin(TransactionScopeOption.RequiresNew))
             {
                 await EntityDynamicParameterStore.AddAsync(entityDynamicParameter);
@@ -99,7 +116,9 @@ namespace Abp.DynamicEntityParameters
 
         public virtual void Update(EntityDynamicParameter entityDynamicParameter)
         {
+            CheckEntityName(entityDynamicParameter.EntityFullName);
             _dynamicParameterPermissionChecker.CheckPermission(entityDynamicParameter.DynamicParameterId);
+
             using (var uow = _unitOfWorkManager.Begin(TransactionScopeOption.RequiresNew))
             {
                 EntityDynamicParameterStore.Update(entityDynamicParameter);
@@ -110,7 +129,9 @@ namespace Abp.DynamicEntityParameters
 
         public virtual async Task UpdateAsync(EntityDynamicParameter entityDynamicParameter)
         {
+            CheckEntityName(entityDynamicParameter.EntityFullName);
             await _dynamicParameterPermissionChecker.CheckPermissionAsync(entityDynamicParameter.DynamicParameterId);
+
             using (var uow = _unitOfWorkManager.Begin(TransactionScopeOption.RequiresNew))
             {
                 await EntityDynamicParameterStore.UpdateAsync(entityDynamicParameter);
