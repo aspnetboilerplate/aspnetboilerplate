@@ -81,7 +81,7 @@ namespace Abp.Zero.SampleApp.Tests.DynamicEntityParameters
             var testDynamicParameter = new DynamicParameter
             {
                 ParameterName = "Test123",
-                InputType = "TestType"
+                InputType = GetRandomAllowedInputType()
             };
 
             dynamicParameterManager.Add(testDynamicParameter);
@@ -89,6 +89,26 @@ namespace Abp.Zero.SampleApp.Tests.DynamicEntityParameters
             cacheSubstitute.Received()
                 .Set(testDynamicParameter.Id.ToString(), testDynamicParameter, Arg.Any<TimeSpan?>(), Arg.Any<TimeSpan?>());
             dynamicParameterStoreSubstitute.Received().Add(testDynamicParameter);
+        }
+
+        [Fact]
+        public void Should_Not_Add_If_Input_Type_Is_Not_Exists()
+        {
+            var testDynamicParameter = new DynamicParameter
+            {
+                ParameterName = "Test123",
+                InputType = "asd123"
+            };
+
+            var dynamicParameterManager = Resolve<IDynamicParameterManager>();
+            try
+            {
+                dynamicParameterManager.Add(testDynamicParameter);
+            }
+            catch (Exception e)
+            {
+                e.Message.ShouldContain("asd123");
+            }
         }
 
         [Fact]
@@ -107,6 +127,23 @@ namespace Abp.Zero.SampleApp.Tests.DynamicEntityParameters
             cacheSubstitute.Received()
                 .Set(testDynamicParameter.Id.ToString(), testDynamicParameter, Arg.Any<TimeSpan?>(), Arg.Any<TimeSpan?>());
             dynamicParameterStoreSubstitute.Received().Update(testDynamicParameter);
+        }
+
+        [Fact]
+        public void Should_Not_Update_If_Input_Type_Is_Not_Exists()
+        {
+            var testDynamicParameter = CreateAndGetDynamicParameterWithTestPermission();
+            testDynamicParameter.InputType = "asd123";
+
+            var dynamicParameterManager = Resolve<IDynamicParameterManager>();
+            try
+            {
+                dynamicParameterManager.Update(testDynamicParameter);
+            }
+            catch (Exception e)
+            {
+                e.Message.ShouldContain("asd123");
+            }
         }
 
         [Fact]
@@ -174,13 +211,33 @@ namespace Abp.Zero.SampleApp.Tests.DynamicEntityParameters
             var testDynamicParameter = new DynamicParameter
             {
                 ParameterName = "Test123",
-                InputType = "TestType"
+                InputType = GetRandomAllowedInputType()
             };
 
             await dynamicParameterManager.AddAsync(testDynamicParameter);
             await cacheSubstitute.Received()
                 .SetAsync(testDynamicParameter.Id.ToString(), testDynamicParameter, Arg.Any<TimeSpan?>(), Arg.Any<TimeSpan?>());
             await dynamicParameterStoreSubstitute.Received().AddAsync(testDynamicParameter);
+        }
+
+        [Fact]
+        public async Task Should_Not_Add_If_Input_Type_Is_Not_Exists_Async()
+        {
+            var testDynamicParameter = new DynamicParameter
+            {
+                ParameterName = "Test123",
+                InputType = "asd123"
+            };
+
+            var dynamicParameterManager = Resolve<IDynamicParameterManager>();
+            try
+            {
+                await dynamicParameterManager.AddAsync(testDynamicParameter);
+            }
+            catch (Exception e)
+            {
+                e.Message.ShouldContain("asd123");
+            }
         }
 
         [Fact]
@@ -200,6 +257,23 @@ namespace Abp.Zero.SampleApp.Tests.DynamicEntityParameters
             await dynamicParameterStoreSubstitute.Received().UpdateAsync(testDynamicParameter);
         }
 
+        [Fact]
+        public async Task Should_Not_Update_If_Input_Type_Is_Not_Exists_Async()
+        {
+            var testDynamicParameter = CreateAndGetDynamicParameterWithTestPermission();
+            testDynamicParameter.InputType = "asd123";
+
+            try
+            {
+                var dynamicParameterManager = Resolve<IDynamicParameterManager>();
+                await dynamicParameterManager.UpdateAsync(testDynamicParameter);
+            }
+            catch (Exception e)
+            {
+                e.Message.ShouldContain("asd123");
+            }
+        }
+        
         [Fact]
         public async Task Should_Delete_And_Change_Cache_Async()
         {

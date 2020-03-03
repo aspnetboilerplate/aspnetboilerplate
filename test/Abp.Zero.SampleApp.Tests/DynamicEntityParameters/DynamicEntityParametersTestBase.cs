@@ -1,21 +1,18 @@
 ﻿using System;
+using System.Linq;
 using System.Threading.Tasks;
 using Abp.Authorization;
 using Abp.DynamicEntityParameters;
 using Abp.Localization;
 using Abp.Modules;
 using Abp.Threading;
+using Abp.UI.Inputs;
 using Castle.MicroKernel.Registration;
 using NSubstitute;
 
 namespace Abp.Zero.SampleApp.Tests.DynamicEntityParameters
 {
-    public class DynamicEntityParametersTestBase : DynamicEntityParametersTestBase<DynamicEntityParametersTestModule>
-    {
-    }
-
-    public class DynamicEntityParametersTestBase<TModule> : SampleAppTestBase<TModule>
-        where TModule : AbpModule
+    public class DynamicEntityParametersTestBase : SampleAppTestBase<DynamicEntityParametersTestModule>
     {
         public const string TestPermission = "Abp.Zero.TestPermission";
         public const string TestEntityFullName = "Abp.Zero.TestEntity";
@@ -100,12 +97,16 @@ namespace Abp.Zero.SampleApp.Tests.DynamicEntityParameters
             await WithUnitOfWorkAsync(function.Invoke);
         }
 
+        protected string GetRandomAllowedInputType()
+        {
+            return Resolve<IDynamicEntityParameterDefinitionManager>().GetAllAllowedInputTypeNames().First();
+        }
 
         protected DynamicParameter CreateAndGetDynamicParameterWithTestPermission()
         {
             var dynamicParameter = new DynamicParameter()
             {
-                InputType = "string",
+                InputType = GetRandomAllowedInputType(),
                 ParameterName = "City",
                 Permission = TestPermission,
                 TenantId = AbpSession.TenantId
@@ -145,6 +146,16 @@ namespace Abp.Zero.SampleApp.Tests.DynamicEntityParameters
         }
     }
 
+    public class MyDynamicEntityParameterDefinitionProvider : DynamicEntityParameterDefinitionProvider
+    {
+        public override void SetWebhooks(IDynamicEntityParameterDefinitionContext context)
+        {
+            context.Manager.AddAllowedInputType<SingleLineStringInputType>();
+            context.Manager.AddAllowedInputType<CheckboxInputType>();
+            context.Manager.AddAllowedInputType<ComboboxInputType>();
+        }
+    }
+
     public class DynamicEntityParametersTestAuthorizationProvider : AuthorizationProvider
     {
         public override void SetPermissions(IPermissionDefinitionContext context)
@@ -159,8 +170,11 @@ namespace Abp.Zero.SampleApp.Tests.DynamicEntityParameters
     {
         public override void PreInitialize()
         {
-            Configuration.Authorization.Providers.Add<DynamicEntityParametersTestAuthorizationProvider>();
             IocManager.RegisterAssemblyByConvention(typeof(DynamicEntityParametersTestModule).Assembly);
+
+            Configuration.Authorization.Providers.Add<DynamicEntityParametersTestAuthorizationProvider>();
+            Configuration.DynamicEntityParameters.Providers.Add<MyDynamicEntityParameterDefinitionProvider>();
+
         }
     }
 }
