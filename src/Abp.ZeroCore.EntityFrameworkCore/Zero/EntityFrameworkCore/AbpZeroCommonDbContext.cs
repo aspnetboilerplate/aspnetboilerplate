@@ -274,7 +274,7 @@ namespace Abp.Zero.EntityFrameworkCore
 
             modelBuilder.Entity<OrganizationUnit>(b =>
             {
-                b.HasIndex(e => new { e.TenantId, e.Code });
+                b.HasIndex(e => new { e.TenantId, e.Code }).IsUnique();
             });
 
             modelBuilder.Entity<PermissionSetting>(b =>
