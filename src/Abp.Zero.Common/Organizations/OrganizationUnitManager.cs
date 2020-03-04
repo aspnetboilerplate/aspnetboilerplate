@@ -4,6 +4,7 @@ using System.Threading.Tasks;
 using Abp.Domain.Repositories;
 using Abp.Domain.Services;
 using Abp.Domain.Uow;
+using Abp.Linq;
 using Abp.UI;
 using Abp.Zero;
 
@@ -14,10 +15,12 @@ namespace Abp.Organizations
     /// </summary>
     public class OrganizationUnitManager : DomainService
     {
+        private readonly IAsyncQueryableExecuter _asyncQueryableExecuter;
         protected IRepository<OrganizationUnit, long> OrganizationUnitRepository { get; private set; }
 
-        public OrganizationUnitManager(IRepository<OrganizationUnit, long> organizationUnitRepository)
+        public OrganizationUnitManager(IRepository<OrganizationUnit, long> organizationUnitRepository, IAsyncQueryableExecuter asyncQueryableExecuter)
         {
+            _asyncQueryableExecuter = asyncQueryableExecuter;
             OrganizationUnitRepository = organizationUnitRepository;
 
             LocalizationSourceName = AbpZeroConsts.LocalizationSourceName;
@@ -77,16 +80,18 @@ namespace Abp.Organizations
 
         public virtual async Task<OrganizationUnit> GetLastChildOrNullAsync(long? parentId)
         {
-            return await OrganizationUnitRepository.GetAll()
-                .OrderByDescending(c => c.Code)
-                .FirstOrDefaultAsync(ou => ou.ParentId == parentId);
+            var query = OrganizationUnitRepository.GetAll()
+                .Where(ou => ou.ParentId == parentId)
+                .OrderByDescending(ou => ou.Code);
+            return await _asyncQueryableExecuter.FirstOrDefaultAsync(query);
         }
 
         public virtual OrganizationUnit GetLastChildOrNull(long? parentId)
         {
-            return OrganizationUnitRepository.GetAll()
-                .OrderByDescending(c => c.Code)
-                .FirstOrDefault(ou => ou.ParentId == parentId);
+            var query = OrganizationUnitRepository.GetAll()
+                .Where(ou => ou.ParentId == parentId)
+                .OrderByDescending(ou => ou.Code);
+            return query.FirstOrDefault();
         }
 
         public virtual async Task<string> GetCodeAsync(long id)
