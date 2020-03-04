@@ -1,6 +1,7 @@
 ﻿using System;
 using Microsoft.Extensions.Options;
 using Microsoft.Extensions.Caching.Memory;
+using Abp.Data;
 
 namespace Abp.Runtime.Caching.Memory
 {
@@ -21,9 +22,10 @@ namespace Abp.Runtime.Caching.Memory
             _memoryCache = new MemoryCache(new OptionsWrapper<MemoryCacheOptions>(new MemoryCacheOptions()));
         }
 
-        protected override bool TryGetValue(string key, out object value)
+        protected override ConditionalValue<object> TryGetValue(string key)
         {
-            return _memoryCache.TryGetValue(key, out value);
+            var found = _memoryCache.TryGetValue(key, out object value);
+            return new ConditionalValue<object>(found, value);
         }
 
         public override void Set(string key, object value, TimeSpan? slidingExpireTime = null, TimeSpan? absoluteExpireTime = null)
