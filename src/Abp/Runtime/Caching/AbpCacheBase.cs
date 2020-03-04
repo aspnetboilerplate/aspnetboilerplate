@@ -117,10 +117,10 @@ namespace Abp.Runtime.Caching
                         if (items[i] == null)
                         {
                             var key = keys[i];
-                            items[i] = factory(key);
-                            if (items[i] != null)
+                            var item = items[i] = factory(key);
+                            if (item != null)
                             {
-                                fetched.Add(new KeyValuePair<TKey, TValue>(key, items[i]));
+                                fetched.Add(new KeyValuePair<TKey, TValue>(key, item));
                             }
                         }
                     }
@@ -229,10 +229,10 @@ namespace Abp.Runtime.Caching
                         if (items[i] == null)
                         {
                             var key = keys[i];
-                            items[i] = await factory(key);
-                            if (items[i] != null)
+                            var item = items[i] = await factory(key);
+                            if (item != null)
                             {
-                                fetched.Add(new KeyValuePair<TKey, TValue>(key, items[i]));
+                                fetched.Add(new KeyValuePair<TKey, TValue>(key, item));
                             }
                         }
                     }
