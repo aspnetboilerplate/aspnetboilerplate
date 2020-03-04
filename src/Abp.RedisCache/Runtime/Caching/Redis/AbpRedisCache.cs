@@ -30,32 +30,65 @@ namespace Abp.Runtime.Caching.Redis
             _serializer = redisCacheSerializer;
         }
 
-        public override object GetOrDefault(string key)
+        protected override bool TryGetValue(string key, out object value)
         {
-            var objbyte = _database.StringGet(GetLocalizedRedisKey(key));
-            return objbyte.HasValue ? Deserialize(objbyte) : null;
+            var redisValue = _database.StringGet(GetLocalizedRedisKey(key));
+            if (redisValue.HasValue)
+            {
+                value = Deserialize(redisValue);
+                return true;
+            }
+            else
+            {
+                value = null;
+                return false;
+            }
         }
 
-        public override object[] GetOrDefault(string[] keys)
+        protected override KeyValuePair<bool, object>[] TryGetValues(string[] keys)
         {
             var redisKeys = keys.Select(GetLocalizedRedisKey);
             var redisValues = _database.StringGet(redisKeys.ToArray());
-            var objbytes = redisValues.Select(obj => obj.HasValue ? Deserialize(obj) : null);
-            return objbytes.ToArray();
+            var pairs = new List<KeyValuePair<bool, object>>();
+            foreach (var redisValue in redisValues)
+            {
+                if (redisValue.HasValue)
+                {
+                    pairs.Add(new KeyValuePair<bool, object>(true, Deserialize(redisValue)));
+                }
+                else
+                { 
+                    pairs.Add(new KeyValuePair<bool, object>(false, null)); 
+                }
+            }
+            return pairs.ToArray();
         }
 
-        public override async Task<object> GetOrDefaultAsync(string key)
+        protected async override Task<KeyValuePair<bool, object>> TryGetValueAsync(string key)
         {
-            var objbyte = await _database.StringGetAsync(GetLocalizedRedisKey(key));
-            return objbyte.HasValue ? Deserialize(objbyte) : null;
+            var redisValue = await _database.StringGetAsync(GetLocalizedRedisKey(key));
+            var found = redisValue.HasValue;
+            var value = redisValue.HasValue ? Deserialize(redisValue) : null;
+            return new KeyValuePair<bool, object>(found, value);
         }
 
-        public override async Task<object[]> GetOrDefaultAsync(string[] keys)
+        protected async override Task<KeyValuePair<bool, object>[]> TryGetValuesAsync(string[] keys)
         {
             var redisKeys = keys.Select(GetLocalizedRedisKey);
             var redisValues = await _database.StringGetAsync(redisKeys.ToArray());
-            var objbytes = redisValues.Select(obj => obj.HasValue ? Deserialize(obj) : null);
-            return objbytes.ToArray();
+            var pairs = new List<KeyValuePair<bool, object>>();
+            foreach (var redisValue in redisValues)
+            {
+                if (redisValue.HasValue)
+                {
+                    pairs.Add(new KeyValuePair<bool, object>(true, Deserialize(redisValue)));
+                }
+                else
+                {
+                    pairs.Add(new KeyValuePair<bool, object>(false, null));
+                }
+            }
+            return pairs.ToArray();
         }
 
         public override void Set(string key, object value, TimeSpan? slidingExpireTime = null, TimeSpan? absoluteExpireTime = null)
