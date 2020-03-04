@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
 using System.Threading.Tasks;
+using Abp.Data;
 using Abp.Domain.Entities;
 using Abp.Reflection.Extensions;
 using StackExchange.Redis;
@@ -30,63 +31,38 @@ namespace Abp.Runtime.Caching.Redis
             _serializer = redisCacheSerializer;
         }
 
-        protected override bool TryGetValue(string key, out object value)
+        protected override ConditionalValue<object> TryGetValue(string key)
         {
             var redisValue = _database.StringGet(GetLocalizedRedisKey(key));
-            if (redisValue.HasValue)
-            {
-                value = Deserialize(redisValue);
-                return true;
-            }
-            else
-            {
-                value = null;
-                return false;
-            }
+            return CreateResult(redisValue);
         }
 
-        protected override KeyValuePair<bool, object>[] TryGetValues(string[] keys)
+        protected override ConditionalValue<object>[] TryGetValues(string[] keys)
         {
             var redisKeys = keys.Select(GetLocalizedRedisKey);
             var redisValues = _database.StringGet(redisKeys.ToArray());
-            var pairs = new List<KeyValuePair<bool, object>>();
+            var pairs = new List<ConditionalValue<object>>();
             foreach (var redisValue in redisValues)
             {
-                if (redisValue.HasValue)
-                {
-                    pairs.Add(new KeyValuePair<bool, object>(true, Deserialize(redisValue)));
-                }
-                else
-                { 
-                    pairs.Add(new KeyValuePair<bool, object>(false, null)); 
-                }
+                pairs.Add(CreateResult(redisValue));
             }
             return pairs.ToArray();
         }
 
-        protected async override Task<KeyValuePair<bool, object>> TryGetValueAsync(string key)
+        protected async override Task<ConditionalValue<object>> TryGetValueAsync(string key)
         {
             var redisValue = await _database.StringGetAsync(GetLocalizedRedisKey(key));
-            var found = redisValue.HasValue;
-            var value = redisValue.HasValue ? Deserialize(redisValue) : null;
-            return new KeyValuePair<bool, object>(found, value);
+            return CreateResult(redisValue);
         }
 
-        protected async override Task<KeyValuePair<bool, object>[]> TryGetValuesAsync(string[] keys)
+        protected async override Task<ConditionalValue<object>[]> TryGetValuesAsync(string[] keys)
         {
             var redisKeys = keys.Select(GetLocalizedRedisKey);
             var redisValues = await _database.StringGetAsync(redisKeys.ToArray());
-            var pairs = new List<KeyValuePair<bool, object>>();
+            var pairs = new List<ConditionalValue<object>>();
             foreach (var redisValue in redisValues)
             {
-                if (redisValue.HasValue)
-                {
-                    pairs.Add(new KeyValuePair<bool, object>(true, Deserialize(redisValue)));
-                }
-                else
-                {
-                    pairs.Add(new KeyValuePair<bool, object>(false, null));
-                }
+                pairs.Add(CreateResult(redisValue));
             }
             return pairs.ToArray();
         }
@@ -191,6 +167,11 @@ namespace Abp.Runtime.Caching.Redis
                 type = type.GetTypeInfo().BaseType;
             }
             return type;
+        }
+
+        protected ConditionalValue<object> CreateResult(RedisValue redisValue)
+        {
+            return new ConditionalValue<object>(redisValue.HasValue, redisValue.HasValue ? Deserialize(redisValue) : null);
         }
 
         protected virtual string Serialize(object value, Type type)
