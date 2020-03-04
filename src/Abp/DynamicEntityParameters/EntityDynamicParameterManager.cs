@@ -47,10 +47,7 @@ namespace Abp.DynamicEntityParameters
 
         public virtual EntityDynamicParameter Get(int id)
         {
-            var entityParameter = EntityDynamicParameterCache.Get(id, () =>
-                {
-                    return EntityDynamicParameterStore.Get(id);
-                });
+            var entityParameter = EntityDynamicParameterCache.Get(id, () => EntityDynamicParameterStore.Get(id));
             _dynamicParameterPermissionChecker.CheckPermission(entityParameter.DynamicParameterId);
             return entityParameter;
         }
@@ -64,7 +61,7 @@ namespace Abp.DynamicEntityParameters
 
         public List<EntityDynamicParameter> GetAll(string entityFullName)
         {
-            var allParameters = EntityDynamicParameterStore.GetAllParameters(entityFullName);
+            var allParameters = EntityDynamicParameterStore.GetAll(entityFullName);
             allParameters = allParameters
                 .Where(entityDynamicParameter =>
                     _dynamicParameterPermissionChecker.IsGranted(entityDynamicParameter.DynamicParameterId))
@@ -74,7 +71,32 @@ namespace Abp.DynamicEntityParameters
 
         public async Task<List<EntityDynamicParameter>> GetAllAsync(string entityFullName)
         {
-            var allParameters = await EntityDynamicParameterStore.GetAllParametersAsync(entityFullName);
+            var allParameters = await EntityDynamicParameterStore.GetAllAsync(entityFullName);
+
+            var controlledParameters = new List<EntityDynamicParameter>();
+            foreach (var entityDynamicParameter in allParameters)
+            {
+                if (await _dynamicParameterPermissionChecker.IsGrantedAsync(entityDynamicParameter.DynamicParameterId))
+                {
+                    controlledParameters.Add(entityDynamicParameter);
+                }
+            }
+            return controlledParameters;
+        }
+
+        public List<EntityDynamicParameter> GetAll()
+        {
+            var allParameters = EntityDynamicParameterStore.GetAll();
+            allParameters = allParameters
+                .Where(entityDynamicParameter =>
+                    _dynamicParameterPermissionChecker.IsGranted(entityDynamicParameter.DynamicParameterId))
+                .ToList();
+            return allParameters;
+        }
+
+        public async Task<List<EntityDynamicParameter>> GetAllAsync()
+        {
+            var allParameters = await EntityDynamicParameterStore.GetAllAsync();
 
             var controlledParameters = new List<EntityDynamicParameter>();
             foreach (var entityDynamicParameter in allParameters)

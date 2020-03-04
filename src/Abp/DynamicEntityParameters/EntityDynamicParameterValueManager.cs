@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 using Abp.Dependency;
 
@@ -105,36 +106,65 @@ namespace Abp.DynamicEntityParameters
             await EntityDynamicParameterValueStore.DeleteAsync(id);
         }
 
-        public List<EntityDynamicParameterValue> GetValues(string entityRowId, int entityDynamicParameterId)
+        public List<EntityDynamicParameterValue> GetValues(int entityDynamicParameterId, string entityRowId)
         {
             var entityDynamicParameter = _entityDynamicParameterManager.Get(entityDynamicParameterId);
             _dynamicParameterPermissionChecker.CheckPermission(entityDynamicParameter.DynamicParameterId);
 
-            return EntityDynamicParameterValueStore.GetValues(entityRowId, entityDynamicParameterId);
+            return EntityDynamicParameterValueStore.GetValues(entityDynamicParameterId, entityRowId);
         }
 
-        public async Task<List<EntityDynamicParameterValue>> GetValuesAsync(string entityRowId, int entityDynamicParameterId)
+        public async Task<List<EntityDynamicParameterValue>> GetValuesAsync(int entityDynamicParameterId, string entityRowId)
         {
             var entityDynamicParameter = await _entityDynamicParameterManager.GetAsync(entityDynamicParameterId);
             await _dynamicParameterPermissionChecker.CheckPermissionAsync(entityDynamicParameter.DynamicParameterId);
 
-            return await EntityDynamicParameterValueStore.GetValuesAsync(entityRowId, entityDynamicParameterId);
+            return await EntityDynamicParameterValueStore.GetValuesAsync(entityDynamicParameterId, entityRowId);
         }
 
-        public void CleanValues(string entityRowId, int entityDynamicParameterId)
+        public List<EntityDynamicParameterValue> GetValues(string entityFullName, string entityRowId)
+        {
+            return EntityDynamicParameterValueStore.GetValues(entityFullName, entityRowId)
+                 .Where(value =>
+                 {
+                     var entityDynamicParameter = _entityDynamicParameterManager.Get(value.EntityDynamicParameterId);
+                     return _dynamicParameterPermissionChecker.IsGranted(entityDynamicParameter.DynamicParameterId);
+                 })
+                 .ToList();
+        }
+
+        public async Task<List<EntityDynamicParameterValue>> GetValuesAsync(string entityFullName, string entityRowId)
+        {
+            var allValues = await EntityDynamicParameterValueStore.GetValuesAsync(entityFullName, entityRowId);
+            var returnList = new List<EntityDynamicParameterValue>();
+
+            foreach (var value in allValues)
+            {
+                var entityDynamicParameter = _entityDynamicParameterManager.Get(value.EntityDynamicParameterId);
+
+                if (await _dynamicParameterPermissionChecker.IsGrantedAsync(entityDynamicParameter.DynamicParameterId))
+                {
+                    returnList.Add(value);
+                }
+            }
+
+            return returnList;
+        }
+
+        public void CleanValues(int entityDynamicParameterId, string entityRowId)
         {
             var entityDynamicParameter = _entityDynamicParameterManager.Get(entityDynamicParameterId);
             _dynamicParameterPermissionChecker.CheckPermission(entityDynamicParameter.DynamicParameterId);
 
-            EntityDynamicParameterValueStore.GetValues(entityRowId, entityDynamicParameterId);
+            EntityDynamicParameterValueStore.GetValues(entityDynamicParameterId, entityRowId);
         }
 
-        public async Task CleanValuesAsync(string entityRowId, int entityDynamicParameterId)
+        public async Task CleanValuesAsync(int entityDynamicParameterId, string entityRowId)
         {
             var entityDynamicParameter = await _entityDynamicParameterManager.GetAsync(entityDynamicParameterId);
             await _dynamicParameterPermissionChecker.CheckPermissionAsync(entityDynamicParameter.DynamicParameterId);
 
-            await EntityDynamicParameterValueStore.CleanValuesAsync(entityRowId, entityDynamicParameterId);
+            await EntityDynamicParameterValueStore.CleanValuesAsync(entityDynamicParameterId, entityRowId);
         }
     }
 }

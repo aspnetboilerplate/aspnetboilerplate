@@ -44,21 +44,31 @@ namespace Abp.DynamicEntityParameters
             return Task.CompletedTask;
         }
 
-        public List<EntityDynamicParameterValue> GetValues(string entityRowId, int entityDynamicParameterId)
+        public List<EntityDynamicParameterValue> GetValues(int entityDynamicParameterId, string entityRowId)
         {
             return new List<EntityDynamicParameterValue>();
         }
 
-        public Task<List<EntityDynamicParameterValue>> GetValuesAsync(string entityRowId, int entityDynamicParameterId)
+        public Task<List<EntityDynamicParameterValue>> GetValuesAsync(int entityDynamicParameterId, string entityRowId)
         {
             return Task.FromResult(new List<EntityDynamicParameterValue>());
         }
 
-        public void CleanValues(string entityRowId, int entityDynamicParameterId)
+        public List<EntityDynamicParameterValue> GetValues(string entityFullName, string entityRowId)
+        {
+            return new List<EntityDynamicParameterValue>();
+        }
+
+        public Task<List<EntityDynamicParameterValue>> GetValuesAsync(string entityFullName, string entityRowId)
+        {
+            return Task.FromResult(new List<EntityDynamicParameterValue>());
+        }
+
+        public void CleanValues(int entityDynamicParameterId, string entityRowId)
         {
         }
 
-        public Task CleanValuesAsync(string entityRowId, int entityDynamicParameterId)
+        public Task CleanValuesAsync(int entityDynamicParameterId, string entityRowId)
         {
             return Task.CompletedTask;
         }

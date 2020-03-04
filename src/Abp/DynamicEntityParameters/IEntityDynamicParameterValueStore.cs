@@ -21,12 +21,16 @@ namespace Abp.DynamicEntityParameters
 
         Task DeleteAsync(int id);
 
-        List<EntityDynamicParameterValue> GetValues(string entityRowId, int entityDynamicParameterId);
+        List<EntityDynamicParameterValue> GetValues(int entityDynamicParameterId, string entityRowId);
 
-        Task<List<EntityDynamicParameterValue>> GetValuesAsync(string entityRowId, int entityDynamicParameterId);
+        Task<List<EntityDynamicParameterValue>> GetValuesAsync(int entityDynamicParameterId, string entityRowId);
 
-        void CleanValues(string entityRowId, int entityDynamicParameterId);
+        List<EntityDynamicParameterValue> GetValues(string entityFullName, string entityRowId);
 
-        Task CleanValuesAsync(string entityRowId, int entityDynamicParameterId);
+        Task<List<EntityDynamicParameterValue>> GetValuesAsync(string entityFullName, string entityRowId);
+
+        void CleanValues(int entityDynamicParameterId, string entityRowId);
+
+        Task CleanValuesAsync(int entityDynamicParameterId, string entityRowId);
     }
 }

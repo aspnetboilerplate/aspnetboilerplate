@@ -28,14 +28,31 @@ namespace Abp.DynamicEntityParameters
             return _entityDynamicParameterRepository.GetAsync(id);
         }
 
-        public virtual List<EntityDynamicParameter> GetAllParameters(string entityFullName)
+        public List<EntityDynamicParameter> GetAll()
         {
-            return _entityDynamicParameterRepository.GetAll().Where(x => x.EntityFullName == entityFullName).ToList();
+            return _entityDynamicParameterRepository.GetAllIncluding(e => e.DynamicParameter)
+                .OrderBy(edp => edp.EntityFullName).ThenBy(edp => edp.DynamicParameterId).ToList();
         }
 
-        public virtual Task<List<EntityDynamicParameter>> GetAllParametersAsync(string entityFullName)
+        public Task<List<EntityDynamicParameter>> GetAllAsync()
         {
-            return _asyncQueryableExecuter.ToListAsync(_entityDynamicParameterRepository.GetAll().Where(x => x.EntityFullName == entityFullName));
+            return _asyncQueryableExecuter.ToListAsync(
+                _entityDynamicParameterRepository.GetAllIncluding(e => e.DynamicParameter)
+                    .OrderBy(edp => edp.EntityFullName).ThenBy(edp => edp.DynamicParameterId));
+        }
+
+        public virtual List<EntityDynamicParameter> GetAll(string entityFullName)
+        {
+            return _entityDynamicParameterRepository.GetAllIncluding(e => e.DynamicParameter)
+                .Where(x => x.EntityFullName == entityFullName).OrderBy(edp => edp.EntityFullName).ThenBy(edp => edp.DynamicParameterId).ToList();
+        }
+
+        public virtual Task<List<EntityDynamicParameter>> GetAllAsync(string entityFullName)
+        {
+            return _asyncQueryableExecuter.ToListAsync(
+                _entityDynamicParameterRepository.GetAllIncluding(e => e.DynamicParameter)
+                    .Where(x => x.EntityFullName == entityFullName)
+                    .OrderBy(edp => edp.EntityFullName).ThenBy(edp => edp.DynamicParameterId));
         }
 
         public virtual void Add(EntityDynamicParameter entityDynamicParameter)

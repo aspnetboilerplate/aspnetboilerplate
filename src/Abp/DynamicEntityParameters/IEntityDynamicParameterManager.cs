@@ -13,6 +13,10 @@ namespace Abp.DynamicEntityParameters
 
         Task<List<EntityDynamicParameter>> GetAllAsync(string entityFullName);
 
+        List<EntityDynamicParameter> GetAll();
+
+        Task<List<EntityDynamicParameter>> GetAllAsync();
+
         void Add(EntityDynamicParameter entityDynamicParameter);
 
         Task AddAsync(EntityDynamicParameter entityDynamicParameter);
