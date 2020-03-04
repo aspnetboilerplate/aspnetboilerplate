@@ -641,6 +641,10 @@ namespace Abp.Zero.EntityFramework
                 .CreateIndex("IX_TenantId_UserId", 2);
 
             #endregion
+
+            modelBuilder.Entity<EntityDynamicParameter>()
+               .HasIndex(e => new { e.EntityFullName, e.DynamicParameterId, e.TenantId })
+               .IsUnique();
         }
     }
 }

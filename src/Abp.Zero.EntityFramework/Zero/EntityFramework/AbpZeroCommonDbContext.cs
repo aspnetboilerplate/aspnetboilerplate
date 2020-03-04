@@ -339,6 +339,10 @@ namespace Abp.Zero.EntityFramework
             modelBuilder.Entity<Setting>()
                 .HasIndex(e => new { e.TenantId, e.Name, e.UserId })
                 .IsUnique();
+
+            modelBuilder.Entity<EntityDynamicParameter>()
+                .HasIndex(e => new { e.EntityFullName, e.DynamicParameterId, e.TenantId })
+                .IsUnique();
         }
     }
 }
