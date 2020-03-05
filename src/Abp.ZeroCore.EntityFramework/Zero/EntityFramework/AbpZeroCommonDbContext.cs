@@ -642,9 +642,17 @@ namespace Abp.Zero.EntityFramework
 
             #endregion
 
+            #region DynamicEntityParameters
+            
+            modelBuilder.Entity<DynamicParameter>()
+                .HasIndex(e => new { e.ParameterName, e.TenantId })
+                .IsUnique();
+
             modelBuilder.Entity<EntityDynamicParameter>()
                .HasIndex(e => new { e.EntityFullName, e.DynamicParameterId, e.TenantId })
                .IsUnique();
+
+            #endregion
         }
     }
 }

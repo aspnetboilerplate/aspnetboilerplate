@@ -375,6 +375,11 @@ namespace Abp.Zero.EntityFrameworkCore
                 b.HasIndex(e => new { e.TenantId, e.UserId });
             });
 
+            modelBuilder.Entity<DynamicParameter>(b =>
+            {
+                b.HasIndex(e => new { e.ParameterName, e.TenantId }).IsUnique();
+            });
+
             modelBuilder.Entity<EntityDynamicParameter>(b =>
             {
                 b.HasIndex(e => new { e.EntityFullName, e.DynamicParameterId, e.TenantId }).IsUnique();
