@@ -81,7 +81,7 @@ namespace Abp.Tests.Runtime.Caching
                 _collection.Remove(key);
             }
 
-            public override void Set(string key, int value, TimeSpan? slidingExpireTime = null, TimeSpan? absoluteExpireTime = null)
+            public override void Set(string key, int value, TimeSpan? slidingExpireTime = null, DateTimeOffset? absoluteExpireTime = null)
             {
                 _collection.Add(key, value);
             }
@@ -111,7 +111,7 @@ namespace Abp.Tests.Runtime.Caching
                 _collection.Remove(key);
             }
 
-            public override void Set(string key, int? value, TimeSpan? slidingExpireTime = null, TimeSpan? absoluteExpireTime = null)
+            public override void Set(string key, int? value, TimeSpan? slidingExpireTime = null, DateTimeOffset? absoluteExpireTime = null)
             {
                 _collection.Add(key, value);
             }
