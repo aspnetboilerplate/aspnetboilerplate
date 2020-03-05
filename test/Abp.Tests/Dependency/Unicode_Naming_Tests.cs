@@ -19,7 +19,7 @@ namespace Abp.Tests.Dependency
             container.Resolve<Iお知らせAppService>().ShouldBeOfType<お知らせAppService>();
         }
 
-        //[Fact] This test is failing because Castle Windsor does not support it
+        [Fact(Skip = "This test is failing because Castle Windsor does not support it")]
         public void Castle_Should_Register_Unicode_Names_In_Conventions()
         {
             var container = new WindsorContainer();
