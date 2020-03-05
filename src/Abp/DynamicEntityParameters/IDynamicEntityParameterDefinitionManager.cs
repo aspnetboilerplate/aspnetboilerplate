@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using Abp.Domain.Entities;
 using Abp.UI.Inputs;
 
@@ -35,6 +34,12 @@ namespace Abp.DynamicEntityParameters
         /// <summary>
         /// Adds the specified entity to entity list. Throws exception if it is already added
         /// </summary>
+        void AddEntity<TEntity>()
+            where TEntity : IEntity<int>;
+
+        /// <summary>
+        /// Adds the specified entity to entity list. Throws exception if it is already added
+        /// </summary>
         void AddEntity<TEntity, TPrimaryKey>()
             where TEntity : IEntity<TPrimaryKey>;
 
@@ -53,5 +58,11 @@ namespace Abp.DynamicEntityParameters
         /// </summary>
         bool ContainsEntity<TEntity, TPrimaryKey>()
             where TEntity : IEntity<TPrimaryKey>;
+
+        /// <summary>
+        /// Returns if contains entity
+        /// </summary>
+        bool ContainsEntity<TEntity>() 
+            where TEntity : IEntity<int>;
     }
 }

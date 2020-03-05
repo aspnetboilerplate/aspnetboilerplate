@@ -32,6 +32,11 @@ namespace Abp.DynamicEntityParameters
             return false;
         }
 
+        public void AddEntity<TEntity>() where TEntity : IEntity<int>
+        {
+
+        }
+
         public void AddEntity<TEntity, TPrimaryKey>() where TEntity : IEntity<TPrimaryKey>
         {
         }
@@ -47,6 +52,11 @@ namespace Abp.DynamicEntityParameters
         }
 
         public bool ContainsEntity<TEntity, TPrimaryKey>() where TEntity : IEntity<TPrimaryKey>
+        {
+            return false;
+        }
+
+        public bool ContainsEntity<TEntity>() where TEntity : IEntity<int>
         {
             return false;
         }

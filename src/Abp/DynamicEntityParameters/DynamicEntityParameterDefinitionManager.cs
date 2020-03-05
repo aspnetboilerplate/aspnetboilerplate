@@ -82,6 +82,11 @@ namespace Abp.DynamicEntityParameters
             return _allowedInputTypes.ContainsKey(name);
         }
 
+        public void AddEntity<TEntity>() where TEntity : IEntity<int>
+        {
+            AddEntity<TEntity, int>();
+        }
+
         public void AddEntity<TEntity, TPrimaryKey>() where TEntity : IEntity<TPrimaryKey>
         {
             string entityName = typeof(TEntity).FullName;
@@ -106,6 +111,11 @@ namespace Abp.DynamicEntityParameters
         public bool ContainsEntity<TEntity, TPrimaryKey>() where TEntity : IEntity<TPrimaryKey>
         {
             return ContainsEntity(typeof(TEntity).FullName);
+        }
+
+        public bool ContainsEntity<TEntity>() where TEntity : IEntity<int>
+        {
+            return ContainsEntity<TEntity, int>();
         }
     }
 }
