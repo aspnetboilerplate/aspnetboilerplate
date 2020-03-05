@@ -103,6 +103,7 @@ PreInitialize method:
 
     Configuration.Get<MyModuleConfig>().SampleConfig1 = false;
 
+#### Configuring using extension method 
 While we can use the IAbpStartupConfiguration.Get method as shown below, we
 can create an extension method to the IModuleConfigurations like this:
 
@@ -123,6 +124,7 @@ This makes it easy to investigate module configurations and collect them in
 a single place (Configuration.Modules...). ABP itself defines extension
 methods for its own module configurations.
 
+#### Configuring using injection
 At some point, MyModule needs this configuration. You can inject
 MyModuleConfig and use the configured values. Example:
 

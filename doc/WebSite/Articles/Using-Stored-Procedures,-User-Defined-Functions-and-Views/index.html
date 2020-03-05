@@ -1,7 +1,7 @@
 ﻿<i id="abp-title" data-title="Using Stored Procedures, User Defined Functions and Views"></i>
  
 <ul class="download">
-	<li>Get the source code from the <a href="https://github.com/aspnetboilerplate/aspnetboilerplate-samples/tree/master/storedProcedureDemo">GitHub repository.</a></li>
+	<li>Get the source code from the <a href="https://github.com/aspnetboilerplate/aspnetboilerplate-samples/tree/master/StoredProcedureDemo">GitHub repository.</a></li>
 </ul>
 
 <h2 id="DocIntroduction">Introduction</h2>
@@ -71,13 +71,13 @@ private DbCommand CreateCommand(string commandText, CommandType commandType, par
     return command;
 }
 
-private void EnsureConnectionOpen()
+private async Task EnsureConnectionOpenAsync()
 {
     var connection = Context.Database.GetDbConnection();
 
     if (connection.State != ConnectionState.Open)
     {
-        connection.Open();
+       await connection.OpenAsync();
     }
 }
 
@@ -101,7 +101,7 @@ to the repository implementation (UserRepository).</p>
 <pre>
 public async Task&lt;List&lt;string&gt;&gt; GetUserNames()
 {
-    EnsureConnectionOpen();
+    await EnsureConnectionOpenAsync();
 
     using (var command = CreateCommand("GetUsernames", CommandType.storedProcedure))
     {
@@ -250,7 +250,7 @@ GO
 <pre>
 public async Task&lt;List&lt;string&gt;&gt; GetAdminUsernames()
 {
-    EnsureConnectionOpen();
+    await EnsureConnectionOpenAsync();
     using (var command = CreateCommand("SELECT * FROM dbo.UserAdminView", CommandType.Text))
     {
         using (var dataReader = await command.ExecuteReaderAsync())
@@ -282,7 +282,7 @@ WHERE        (Name = 'admin')
 <pre>
 public async Task&lt;GetUserByIdOutput&gt; GetUserById(EntityDto input)
 {
-    EnsureConnectionOpen();
+    await EnsureConnectionOpenAsync();
     
     using (var command = CreateCommand("SELECT dbo.GetUsernameById(@id)", CommandType.Text, new SqlParameter("@id", input.Id)))
     {

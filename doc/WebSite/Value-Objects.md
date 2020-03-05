@@ -82,7 +82,7 @@ public class Address : ValueObject<Address>
 
     public int Number { get; }
 
-    public AddressAnother(
+    public Address(
         Guid cityId,
         string street,
         int number)

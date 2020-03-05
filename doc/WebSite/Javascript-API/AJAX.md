@@ -1,6 +1,6 @@
 ### Problems of AJAX Operations
 
-Performing AJAX calls is frequently used by modern applcations.
+Performing AJAX calls is frequently used by modern applications.
 Especially in SPAs (Single Page Applications), it's almost the only way
 of communicating with the server. An AJAX call consists of some
 repeating steps:

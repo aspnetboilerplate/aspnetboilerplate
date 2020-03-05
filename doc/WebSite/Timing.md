@@ -83,3 +83,38 @@ datetime convertions by showing a datetime to the user in his/her timezone.
 If the UTC clock provider is used, then all DateTimes stored in the database are
 assumed as UTC values, and all DateTimes received from clients are assumed
 as UTC values unless explicitly specified.
+
+### Disable DateTime Normalization
+
+In some cases, you might want ABP not to normalize your DateTime values. **DisableDateTimeNormalizationAttribute** is designed for such cases. This attribute can be used on classes, properties of classes or parameters of Controller Actions. when **DisableDateTimeNormalizationAttribute** is used, ABP will not normalize DateTime  values.
+
+````csharp
+[DisableDateTimeNormalization]
+public class Location : IHasCreationTime
+{
+	public string Lat { get; set; }
+
+	public string Lng { get; set; }
+
+	public DateTime CreationTime { get; set; }
+}
+
+public class Location : IHasCreationTime
+{
+	public string Lat { get; set; }
+
+	public string Lng { get; set; }
+
+	[DisableDateTimeNormalization]
+	public DateTime CreationTime { get; set; }
+}
+
+[HttpGet]
+public DateModel GetDateTimeKindProperty([DisableDateTimeNormalization]DateTime date)
+{
+	return new SimpleDateModel
+	{
+		Date = date
+	};
+}
+````

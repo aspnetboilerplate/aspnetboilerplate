@@ -38,14 +38,32 @@ public class AppWebhookDefinitionProvider : WebhookDefinitionProvider
 
 *WebhookDefinition.cs:*
 
-| Parameter                                |                           Summary                            |
-| :--------------------------------------- | :----------------------------------------------------------: |
-| Name* *(string)*                         | Unique name of the webhook. Must be unique. <br />*(You can use `IWebhookDefinitionManager.Contains` method to check whether it is already exists)* |
-| DisplayName *(ILocalizableString)*       |                 Display name of the webhook.                 |
-| Description *(ILocalizableString)*       |                 Description for the webhook.                 |
-| FeatureDependency *(IFeatureDependency)* | A [Feature Dependency](https://aspnetboilerplate.com/Pages/Documents/Feature-Management). A defined webhook will be available to a tenant if this feature is enabled on the tenant.<br />*(All webhooks are available for the host)* |
-
-
+<table class="table table-responsive">
+    <thead>
+    	<tr>
+        	<th class="font-weight-bold">Parameter</th>
+        	<th class="font-weight-bold">Summary</th>
+        </tr>
+    </thead>
+    <tbody>
+    	<tr>
+        	<td>Name* <span style="font-style: italic;">(string)</span></td>
+        	<td>Unique name of the webhook. Must be unique. <br /><span style="font-style: italic;">(You can use <code>IWebhookDefinitionManager.Contains</code> method to check whether it is already exists)</span></td>
+        </tr>
+        <tr>
+        	<td>DisplayName <span style="font-style: italic;">(ILocalizableString)</span></td>
+        	<td>Display name of the webhook.</td>
+        </tr>
+        <tr>
+        	<td>Description <span style="font-style: italic;">(ILocalizableString)</span></td>
+        	<td>Description for the webhook.</td>
+        </tr>
+        <tr>
+        	<td>FeatureDependency <span style="font-style: italic;">(IFeatureDependency)</span></td>
+        	<td>A <a href="https://aspnetboilerplate.com/Pages/Documents/Feature-Management">Feature Dependency</a>. A defined webhook will be available to a tenant if this feature is enabled on the tenant.<br /><span style="font-style: italic;">(All webhooks are available for the host)</span></td>
+        </tr>
+    </tbody>
+<table>
 
 After defining such a webhook provider, you must register it in the [PreInitialize](https://aspnetboilerplate.com/Pages/Documents/Module-System#preinitialize) method of our module, as shown below:
 
@@ -101,15 +119,37 @@ Examples:
 
 *WebhookSubscription.cs:*
 
-| Parameter                              |                           Summary                            |
-| :------------------------------------- | :----------------------------------------------------------: |
-| TenantId* *(int?)*                     |            Subscriber tenant's unique identifier             |
-| WebhookUri* *(string)*                 |                    Your webhook endpoint                     |
-| Webhooks *(list of string)*            | List of subscribed webhook names (*`WebhookDefinition.Name`*). You can receive a webhook event if you subscribe it. |
-| Headers *(Dictionary<string, string>)* | Additional headers. You can add an additional header to the subscription. Your webhook will contain that header(s) additionally. |
-| Secret *(string)*                      | Your private webhook secret. You can verify the received webhook by using that key. Do not share it publicly.<br />*(This value is automatically generated when you create a secret. Modification not recommended)* |
+ <table class="table table-responsive">
+    <thead>
+    	<tr>
+        	<th class="font-weight-bold">Parameter</th>
+        	<th class="font-weight-bold">Summary</th>
+        </tr>
+    </thead>
+    <tbody>
+    	<tr>
+            <td>TenantId* <span style="font-style: italic;">(int?)</span></td>
+        	<td>Subscriber tenant's unique identifier</td>
+        </tr>
+        <tr>
+            <td>WebhookUri* <span style="font-style: italic;">(string)</span></td>
+        	<td>Your webhook endpoint</td>
+        </tr>
+        <tr>
+            <td>Webhooks <span style="font-style: italic;">(list of string)</span></td>
+            <td>List of subscribed webhook names <code>(`WebhookDefinition.Name`)</code>. You can receive a webhook event if you subscribe it.</td>
+        </tr>
+        <tr>
+        	<td>Headers <span style="font-style: italic;">(Dictionary<string, string>)</span></td>
+        	<td>Additional headers. You can add an additional header to the subscription. Your webhook will contain that header(s) additionally.</td>
+        </tr>
+        <tr>
+            <td>Secret <span style="font-style: italic;">(string)</span></td>
+            <td>Your private webhook secret. You can verify the received webhook by using that key. Do not share it publicly.<br /><span style="font-style: italic;">(This value is automatically generated when you create a secret. Modification not recommended)</span></td>
+        </tr>
+    </tbody>
+<table>
 
- 
 
 ##### **Check Signature**
 
@@ -210,15 +250,40 @@ If you want to send webhook(s) to a specific tenant you can set tenant id as see
 
 Webhook configurations:
 
-| Parameter                                                    |                           Summary                            |
-| :----------------------------------------------------------- | :----------------------------------------------------------: |
-| TimeoutDuration *(TimeSpan)*                                 | HttpClient timeout. **WebhookSender** will wait `TimeoutDuration` second before throw timeout exception. Then the webhook will be considered unsuccessful. |
-| MaxSendAttemptCount *(int)*                                  | Max send attempt count that **IWebhookPublisher** will try to resend webhook until gets HttpStatusCode.OK |
-| JsonSerializerSettings *([JsonSerializerSettings](https://www.newtonsoft.com/json/help/html/T_Newtonsoft_Json_JsonSerializerSettings.htm))* | Json serializer settings for converting webhook data to json, If this is null default settings will be used.*(JsonExtensions.ToJsonString(object,bool,bool))* |
-| Providers *(type list of WebhookDefinitionProvider(s))*      |                      Webhook providers.                      |
-| IsAutomaticSubscriptionDeactivationEnabled *(bool)*          | If you enable that, subscriptions will be automatically disabled if they fails `MaxConsecutiveFailCountBeforeDeactivateSubscription` times consecutively.<br/>         Tenants should activate it back manually. |
-| MaxConsecutiveFailCountBeforeDeactivateSubscription *(int)*  | Max consecutive fail count to deactivate subscription if `IsAutomaticSubscriptionDeactivationEnabled` is true |
-
+ <table class="table table-responsive">
+    <thead>
+    	<tr>
+        	<th class="font-weight-bold">Parameter</th>
+        	<th class="font-weight-bold">Summary</th>
+        </tr>
+    </thead>
+    <tbody>
+    	<tr>
+            <td>TimeoutDuration<span style="font-style: italic;">(TimeSpan)</span></td>
+            <td>HttpClient timeout. <span style="font-weight: bold;">WebhookSender</span> will wait <code>TimeoutDuration</code> second before throw timeout exception. Then the webhook will be considered unsuccessful.</td>
+        </tr>
+        <tr>
+            <td>MaxSendAttemptCount<span style="font-style: italic;">(int)</span></td>
+        	<td>Max send attempt count that <span style="font-style: italic;">IWebhookPublisher</span> will try to resend webhook until it gets <code>HttpStatusCode.OK</code></td>
+        </tr>
+        <tr>
+            <td>JsonSerializerSettings <a href="https://www.newtonsoft.com/json/help/html/T_Newtonsoft_Json_JsonSerializerSettings.htm" style="font-style: italic;">(JsonSerializerSettings)</a></td>
+        	<td>Json serializer settings for converting webhook data to json, If this is null default settings will be used.<span style="font-style: italic;">(JsonExtensions.ToJsonString(object,bool,bool))</span>*</td>
+        </tr>
+        <tr>
+            <td>Providers<span style="font-style: italic;">(type list of WebhookDefinitionProvider)</span></td>
+        	<td>Webhook providers.</td>
+        </tr>
+        <tr>
+            <td>IsAutomaticSubscriptionDeactivationEnabled<span style="font-style: italic;">(bool)</span></td>
+        	<td>If you enable that, subscriptions will be automatically disabled if they fails <code>MaxConsecutiveFailCountBeforeDeactivateSubscription</code> times consecutively.<br/>Tenants should activate it back manually.</td>
+        </tr>
+        <tr>
+            <td>MaxConsecutiveFailCountBeforeDeactivateSubscription<span style="font-style: italic;">(int)</span></td>
+        	<td>Max consecutive fail count to deactivate subscription if <code>IsAutomaticSubscriptionDeactivationEnabled</code> is true</td>
+        </tr>
+    </tbody>
+<table>
 
 
 ### Auto Subscription Deactivation
