@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Linq;
 using System.Threading.Tasks;
 using Abp.DynamicEntityParameters;
 using Abp.Runtime.Caching;
@@ -113,6 +114,30 @@ namespace Abp.Zero.SampleApp.Tests.DynamicEntityParameters
         }
 
         [Fact]
+        public void Should_Not_Add_If_Parameter_Name_Is_Null_Or_Empty()
+        {
+            var testDynamicParameter = new DynamicParameter
+            {
+                ParameterName = string.Empty,
+                InputType = Resolve<IDynamicEntityParameterDefinitionManager>().GetAllAllowedInputTypeNames().First()
+            };
+
+            var dynamicParameterManager = Resolve<IDynamicParameterManager>();
+
+            var exception = Should.Throw<ArgumentNullException>(() => dynamicParameterManager.Add(testDynamicParameter));
+            exception.Message.ShouldContain(nameof(testDynamicParameter.ParameterName));
+
+            var testDynamicParameter2 = new DynamicParameter
+            {
+                ParameterName = null,
+                InputType = Resolve<IDynamicEntityParameterDefinitionManager>().GetAllAllowedInputTypeNames().First()
+            };
+
+            var exception2 = Should.Throw<ArgumentNullException>(() => dynamicParameterManager.Add(testDynamicParameter2));
+            exception2.Message.ShouldContain(nameof(testDynamicParameter.ParameterName));
+        }
+
+        [Fact]
         public void Should_Update_And_Change_Cache()
         {
             var testDynamicParameter = CreateAndGetDynamicParameterWithTestPermission();
@@ -146,6 +171,24 @@ namespace Abp.Zero.SampleApp.Tests.DynamicEntityParameters
             {
                 e.Message.ShouldContain("asd123");
             }
+        }
+
+        [Fact]
+        public void Should_Not_Update_If_Parameter_Name_Is_Null_Or_Empty()
+        {
+            var testDynamicParameter = CreateAndGetDynamicParameterWithTestPermission();
+
+            var dynamicParameterManager = Resolve<IDynamicParameterManager>();
+
+            testDynamicParameter.ParameterName = string.Empty;
+
+            var exception = Should.Throw<ArgumentNullException>(() => dynamicParameterManager.Update(testDynamicParameter));
+            exception.Message.ShouldContain(nameof(testDynamicParameter.ParameterName));
+
+            testDynamicParameter.ParameterName = null;
+
+            var exception2 = Should.Throw<ArgumentNullException>(() => dynamicParameterManager.Update(testDynamicParameter));
+            exception2.Message.ShouldContain(nameof(testDynamicParameter.ParameterName));
         }
 
         [Fact]
@@ -244,6 +287,30 @@ namespace Abp.Zero.SampleApp.Tests.DynamicEntityParameters
         }
 
         [Fact]
+        public async Task Should_Not_Add_If_Parameter_Name_Is_Null_Or_Empty_Async()
+        {
+            var testDynamicParameter = new DynamicParameter
+            {
+                ParameterName = string.Empty,
+                InputType = Resolve<IDynamicEntityParameterDefinitionManager>().GetAllAllowedInputTypeNames().First()
+            };
+
+            var dynamicParameterManager = Resolve<IDynamicParameterManager>();
+
+            var exception = await Should.ThrowAsync<ArgumentNullException>(() => dynamicParameterManager.AddAsync(testDynamicParameter));
+            exception.Message.ShouldContain(nameof(testDynamicParameter.ParameterName));
+
+            var testDynamicParameter2 = new DynamicParameter
+            {
+                ParameterName = null,
+                InputType = Resolve<IDynamicEntityParameterDefinitionManager>().GetAllAllowedInputTypeNames().First()
+            };
+
+            var exception2 = await Should.ThrowAsync<ArgumentNullException>(() => dynamicParameterManager.AddAsync(testDynamicParameter2));
+            exception2.Message.ShouldContain(nameof(testDynamicParameter.ParameterName));
+        }
+
+        [Fact]
         public async Task Should_Update_And_Change_Cache_Async()
         {
             var testDynamicParameter = CreateAndGetDynamicParameterWithTestPermission();
@@ -275,6 +342,24 @@ namespace Abp.Zero.SampleApp.Tests.DynamicEntityParameters
             {
                 e.Message.ShouldContain("asd123");
             }
+        }
+
+        [Fact]
+        public async Task Should_Not_Update_If_Parameter_Name_Is_Null_Or_Empty_Async()
+        {
+            var testDynamicParameter = CreateAndGetDynamicParameterWithTestPermission();
+
+            var dynamicParameterManager = Resolve<IDynamicParameterManager>();
+
+            testDynamicParameter.ParameterName = string.Empty;
+
+            var exception = await Should.ThrowAsync<ArgumentNullException>(() => dynamicParameterManager.UpdateAsync(testDynamicParameter));
+            exception.Message.ShouldContain(nameof(testDynamicParameter.ParameterName));
+
+            testDynamicParameter.ParameterName = null;
+
+            var exception2 = await Should.ThrowAsync<ArgumentNullException>(() => dynamicParameterManager.UpdateAsync(testDynamicParameter));
+            exception2.Message.ShouldContain(nameof(testDynamicParameter.ParameterName));
         }
 
         [Fact]

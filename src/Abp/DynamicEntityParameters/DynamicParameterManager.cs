@@ -3,6 +3,7 @@ using System.Threading.Tasks;
 using System.Transactions;
 using Abp.Dependency;
 using Abp.Domain.Uow;
+using Abp.Extensions;
 using Abp.Runtime.Caching;
 
 namespace Abp.DynamicEntityParameters
@@ -50,17 +51,27 @@ namespace Abp.DynamicEntityParameters
             return _dynamicParameterStore.GetAsync(parameterName);
         }
 
-        protected virtual void CheckInputType(string inputType)
+        protected virtual void CheckDynamicParameter(DynamicParameter dynamicParameter)
         {
-            if (!_dynamicEntityParameterDefinitionManager.ContainsInputType(inputType))
+            if (dynamicParameter == null)
             {
-                throw new ApplicationException($"Input type is invalid, if you want to use \"{inputType}\" input type, define it in DynamicEntityParameterDefinitionProvider.");
+                throw new ArgumentNullException(nameof(dynamicParameter));
+            }
+
+            if (dynamicParameter.ParameterName.IsNullOrWhiteSpace())
+            {
+                throw new ArgumentNullException(nameof(dynamicParameter.ParameterName));
+            }
+
+            if (!_dynamicEntityParameterDefinitionManager.ContainsInputType(dynamicParameter.InputType))
+            {
+                throw new ApplicationException($"Input type is invalid, if you want to use \"{dynamicParameter.InputType}\" input type, define it in DynamicEntityParameterDefinitionProvider.");
             }
         }
 
         public virtual void Add(DynamicParameter dynamicParameter)
         {
-            CheckInputType(dynamicParameter.InputType);
+            CheckDynamicParameter(dynamicParameter);
 
             using (var uow = _unitOfWorkManager.Begin(TransactionScopeOption.RequiresNew))
             {
@@ -73,7 +84,7 @@ namespace Abp.DynamicEntityParameters
 
         public virtual async Task AddAsync(DynamicParameter dynamicParameter)
         {
-            CheckInputType(dynamicParameter.InputType);
+            CheckDynamicParameter(dynamicParameter);
 
             using (var uow = _unitOfWorkManager.Begin(TransactionScopeOption.RequiresNew))
             {
@@ -86,7 +97,7 @@ namespace Abp.DynamicEntityParameters
 
         public virtual void Update(DynamicParameter dynamicParameter)
         {
-            CheckInputType(dynamicParameter.InputType);
+            CheckDynamicParameter(dynamicParameter);
 
             using (var uow = _unitOfWorkManager.Begin(TransactionScopeOption.RequiresNew))
             {
@@ -99,7 +110,7 @@ namespace Abp.DynamicEntityParameters
 
         public virtual async Task UpdateAsync(DynamicParameter dynamicParameter)
         {
-            CheckInputType(dynamicParameter.InputType);
+            CheckDynamicParameter(dynamicParameter);
 
             using (var uow = _unitOfWorkManager.Begin(TransactionScopeOption.RequiresNew))
             {
