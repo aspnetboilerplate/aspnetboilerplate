@@ -132,6 +132,5 @@ src/.vs/config/applicationhost.config
 !GitLink.exe
 !nuget.exe
 !SQLite.Interop.dll
-/tools
 nupkg/push-hikalkan.bat
 doc/api/help
