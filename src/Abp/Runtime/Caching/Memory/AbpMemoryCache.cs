@@ -36,7 +36,7 @@ namespace Abp.Runtime.Caching.Memory
 
             if (absoluteExpireTime.HasValue)
             {
-                _memoryCache.Set(key, value, DateTimeOffset.Now.Add(absoluteExpireTime.Value));
+                _memoryCache.Set(key, value, absoluteExpireTime.Value);
             }
             else if (slidingExpireTime.HasValue)
             {
@@ -44,7 +44,7 @@ namespace Abp.Runtime.Caching.Memory
             }
             else if (DefaultAbsoluteExpireTime.HasValue)
             {
-                _memoryCache.Set(key, value, DateTimeOffset.Now.Add(DefaultAbsoluteExpireTime.Value));
+                _memoryCache.Set(key, value, DefaultAbsoluteExpireTime.Value);
             }
             else
             {
