@@ -90,7 +90,7 @@ namespace Abp.Extensions
         {
             if (str == null)
             {
-                throw new ArgumentNullException("str");
+                throw new ArgumentNullException(nameof(str));
             }
 
             if (str.StartsWith(c.ToString(culture), ignoreCase, culture))
@@ -128,7 +128,7 @@ namespace Abp.Extensions
         {
             if (str == null)
             {
-                throw new ArgumentNullException("str");
+                throw new ArgumentNullException(nameof(str));
             }
 
             if (str.Length < len)
@@ -191,7 +191,7 @@ namespace Abp.Extensions
                 return null;
             }
 
-            if (str == string.Empty)
+            if (string.IsNullOrEmpty(str))
             {
                 return string.Empty;
             }
@@ -226,7 +226,7 @@ namespace Abp.Extensions
                 return null;
             }
 
-            if (str == string.Empty)
+            if (string.IsNullOrEmpty(str))
             {
                 return string.Empty;
             }
@@ -256,7 +256,7 @@ namespace Abp.Extensions
         {
             if (str == null)
             {
-                throw new ArgumentNullException("str");
+                throw new ArgumentNullException(nameof(str));
             }
 
             if (str.Length < len)
@@ -514,7 +514,7 @@ namespace Abp.Extensions
                 return null;
             }
 
-            if (str == string.Empty || maxLength == 0)
+            if (string.IsNullOrEmpty(str) || maxLength == 0)
             {
                 return string.Empty;
             }

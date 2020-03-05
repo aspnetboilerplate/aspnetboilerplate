@@ -39,7 +39,7 @@ namespace Abp.Text
 
             if (formatTokens.IsNullOrEmpty())
             {
-                return new ExtractionResult(str == "");
+                return new ExtractionResult(string.IsNullOrEmpty(str));
             }
 
             var result = new ExtractionResult(false);
@@ -115,7 +115,7 @@ namespace Abp.Text
             var result = new FormattedStringValueExtracter().Extract(str, format, ignoreCase);
             if (!result.IsMatch)
             {
-                values = new string[0];
+                values = Array.Empty<string>();
                 return false;
             }
 
