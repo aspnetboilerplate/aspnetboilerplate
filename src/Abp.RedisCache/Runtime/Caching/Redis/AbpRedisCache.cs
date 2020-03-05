@@ -58,7 +58,7 @@ namespace Abp.Runtime.Caching.Redis
             return redisValues.Select(CreateConditionalValue).ToArray();
         }
 
-        public override void Set(string key, object value, TimeSpan? slidingExpireTime = null, TimeSpan? absoluteExpireTime = null)
+        public override void Set(string key, object value, TimeSpan? slidingExpireTime = null, DateTimeOffset? absoluteExpireTime = null)
         {
             if (value == null)
             {
@@ -72,7 +72,7 @@ namespace Abp.Runtime.Caching.Redis
                 );
         }
 
-        public override async Task SetAsync(string key, object value, TimeSpan? slidingExpireTime = null, TimeSpan? absoluteExpireTime = null)
+        public override async Task SetAsync(string key, object value, TimeSpan? slidingExpireTime = null, DateTimeOffset? absoluteExpireTime = null)
         {
             if (value == null)
             {
@@ -86,7 +86,7 @@ namespace Abp.Runtime.Caching.Redis
                 );
         }
 
-        public override void Set(KeyValuePair<string, object>[] pairs, TimeSpan? slidingExpireTime = null, TimeSpan? absoluteExpireTime = null)
+        public override void Set(KeyValuePair<string, object>[] pairs, TimeSpan? slidingExpireTime = null, DateTimeOffset? absoluteExpireTime = null)
         {
             if (pairs.Any(p => p.Value == null))
             {
@@ -104,7 +104,7 @@ namespace Abp.Runtime.Caching.Redis
             _database.StringSet(redisPairs.ToArray());
         }
 
-        public override async Task SetAsync(KeyValuePair<string, object>[] pairs, TimeSpan? slidingExpireTime = null, TimeSpan? absoluteExpireTime = null)
+        public override async Task SetAsync(KeyValuePair<string, object>[] pairs, TimeSpan? slidingExpireTime = null, DateTimeOffset? absoluteExpireTime = null)
         {
             if (pairs.Any(p => p.Value == null))
             {

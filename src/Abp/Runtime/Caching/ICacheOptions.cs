@@ -15,6 +15,6 @@ namespace Abp.Runtime.Caching
         /// Default absolute expire time of cache items.
         /// Default value: null (not used).
         /// </summary>
-        TimeSpan? DefaultAbsoluteExpireTime { get; set; }
+        DateTimeOffset? DefaultAbsoluteExpireTime { get; set; }
     }
 }

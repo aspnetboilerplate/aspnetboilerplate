@@ -27,22 +27,22 @@ namespace Abp.Runtime.Caching.Memory
             return _memoryCache.TryGetValue(key, out value);
         }
 
-        public override void Set(string key, object value, TimeSpan? slidingExpireTime = null, TimeSpan? absoluteExpireTime = null)
+        public override void Set(string key, object value, TimeSpan? slidingExpireTime = null, DateTimeOffset? absoluteExpireTime = null)
         {
             if (value == null)
             {
                 throw new AbpException("Can not insert null values to the cache!");
             }
 
-            if (absoluteExpireTime != null)
+            if (absoluteExpireTime.HasValue)
             {
                 _memoryCache.Set(key, value, DateTimeOffset.Now.Add(absoluteExpireTime.Value));
             }
-            else if (slidingExpireTime != null)
+            else if (slidingExpireTime.HasValue)
             {
                 _memoryCache.Set(key, value, slidingExpireTime.Value);
             }
-            else if (DefaultAbsoluteExpireTime != null)
+            else if (DefaultAbsoluteExpireTime.HasValue)
             {
                 _memoryCache.Set(key, value, DateTimeOffset.Now.Add(DefaultAbsoluteExpireTime.Value));
             }
