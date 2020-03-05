@@ -40,6 +40,16 @@ namespace Abp.DynamicEntityParameters
             return DynamicParameterCache.GetAsync(id, (i) => _dynamicParameterStore.GetAsync(id));
         }
 
+        public DynamicParameter Get(string parameterName)
+        {
+            return _dynamicParameterStore.Get(parameterName);
+        }
+
+        public Task<DynamicParameter> GetAsync(string parameterName)
+        {
+            return _dynamicParameterStore.GetAsync(parameterName);
+        }
+
         protected virtual void CheckInputType(string inputType)
         {
             if (!_dynamicEntityParameterDefinitionManager.ContainsInputType(inputType))

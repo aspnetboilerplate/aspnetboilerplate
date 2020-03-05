@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Abp.Dependency;
+using Abp.Domain.Entities;
 
 namespace Abp.DynamicEntityParameters
 {
@@ -33,8 +34,14 @@ namespace Abp.DynamicEntityParameters
                 throw new ArgumentNullException(nameof(entityDynamicParameterValue.EntityDynamicParameterId));
             }
 
-            return entityDynamicParameterValue.EntityDynamicParameter?.DynamicParameterId ??
-                   _dynamicParameterManager.Get(entityDynamicParameterValue.EntityDynamicParameterId).Id;
+            if (entityDynamicParameterValue.EntityDynamicParameter != null)
+            {
+                return entityDynamicParameterValue.EntityDynamicParameter.DynamicParameterId;
+            }
+
+            var entityDynamicParameter = _entityDynamicParameterManager.Get(entityDynamicParameterValue.EntityDynamicParameterId);
+
+            return _dynamicParameterManager.Get(entityDynamicParameter.DynamicParameterId).Id;
         }
 
         private async Task<int> GetDynamicParameterIdAsync(EntityDynamicParameterValue entityDynamicParameterValue)
@@ -44,8 +51,14 @@ namespace Abp.DynamicEntityParameters
                 throw new ArgumentNullException(nameof(entityDynamicParameterValue.EntityDynamicParameterId));
             }
 
-            return entityDynamicParameterValue.EntityDynamicParameter?.DynamicParameterId ??
-                 (await _dynamicParameterManager.GetAsync(entityDynamicParameterValue.EntityDynamicParameterId)).Id;
+            if (entityDynamicParameterValue.EntityDynamicParameter != null)
+            {
+                return entityDynamicParameterValue.EntityDynamicParameter.DynamicParameterId;
+            }
+
+            var entityDynamicParameter = await _entityDynamicParameterManager.GetAsync(entityDynamicParameterValue.EntityDynamicParameterId);
+
+            return (await _dynamicParameterManager.GetAsync(entityDynamicParameter.DynamicParameterId)).Id;
         }
 
         public virtual EntityDynamicParameterValue Get(int id)
@@ -151,12 +164,63 @@ namespace Abp.DynamicEntityParameters
             return returnList;
         }
 
+        public List<EntityDynamicParameterValue> GetValues(string entityFullName, string entityRowId, int dynamicParameterId)
+        {
+            return EntityDynamicParameterValueStore.GetValues(entityFullName, entityRowId, dynamicParameterId)
+                .Where(value =>
+                {
+                    var entityDynamicParameter = _entityDynamicParameterManager.Get(value.EntityDynamicParameterId);
+                    return _dynamicParameterPermissionChecker.IsGranted(entityDynamicParameter.DynamicParameterId);
+                })
+                .ToList();
+        }
+
+        public async Task<List<EntityDynamicParameterValue>> GetValuesAsync(string entityFullName, string entityRowId, int dynamicParameterId)
+        {
+            var allValues = await EntityDynamicParameterValueStore.GetValuesAsync(entityFullName, entityRowId, dynamicParameterId);
+            var returnList = new List<EntityDynamicParameterValue>();
+
+            foreach (var value in allValues)
+            {
+                var entityDynamicParameter = _entityDynamicParameterManager.Get(value.EntityDynamicParameterId);
+
+                if (await _dynamicParameterPermissionChecker.IsGrantedAsync(entityDynamicParameter.DynamicParameterId))
+                {
+                    returnList.Add(value);
+                }
+            }
+
+            return returnList;
+        }
+
+        public List<EntityDynamicParameterValue> GetValues(string entityFullName, string entityRowId, string parameterName)
+        {
+            var dynamicParameter = _dynamicParameterManager.Get(parameterName);
+            if (dynamicParameter == null)
+            {
+                throw new EntityNotFoundException($"There is no DynamicParameter with parameterName: \"{parameterName}\"");
+            }
+
+            return GetValues(entityFullName, entityRowId, dynamicParameter.Id);
+        }
+
+        public async Task<List<EntityDynamicParameterValue>> GetValuesAsync(string entityFullName, string entityRowId, string parameterName)
+        {
+            var dynamicParameter = await _dynamicParameterManager.GetAsync(parameterName);
+            if (dynamicParameter == null)
+            {
+                throw new EntityNotFoundException($"There is no DynamicParameter with parameterName: \"{parameterName}\"");
+            }
+
+            return await GetValuesAsync(entityFullName, entityRowId, dynamicParameter.Id);
+        }
+
         public void CleanValues(int entityDynamicParameterId, string entityRowId)
         {
             var entityDynamicParameter = _entityDynamicParameterManager.Get(entityDynamicParameterId);
             _dynamicParameterPermissionChecker.CheckPermission(entityDynamicParameter.DynamicParameterId);
 
-            EntityDynamicParameterValueStore.GetValues(entityDynamicParameterId, entityRowId);
+            EntityDynamicParameterValueStore.CleanValues(entityDynamicParameterId, entityRowId);
         }
 
         public async Task CleanValuesAsync(int entityDynamicParameterId, string entityRowId)

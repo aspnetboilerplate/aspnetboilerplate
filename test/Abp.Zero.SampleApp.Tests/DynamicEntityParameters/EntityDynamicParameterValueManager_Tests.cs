@@ -1,6 +1,10 @@
-﻿using System.Threading.Tasks;
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Threading.Tasks;
 using Abp.Domain.Entities;
 using Abp.DynamicEntityParameters;
+using Abp.Threading;
 using Shouldly;
 using Xunit;
 
@@ -62,17 +66,6 @@ namespace Abp.Zero.SampleApp.Tests.DynamicEntityParameters
             parameterValue.Value = "TestValue2";
             RunAndCheckIfPermissionControlled(() =>
             {
-                _entityDynamicParameterValueManager.Update(parameterValue);
-            });
-
-            WithUnitOfWork(() =>
-            {
-                _entityDynamicParameterValueManager.Add(parameterValue);
-            });
-
-            RunAndCheckIfPermissionControlled(() =>
-            {
-                parameterValue.Value = "TestValue2";
                 _entityDynamicParameterValueManager.Update(parameterValue);
             });
 
@@ -211,6 +204,201 @@ namespace Abp.Zero.SampleApp.Tests.DynamicEntityParameters
                     {
                     }
                 });
+        }
+
+
+        private (EntityDynamicParameter entityDynamicParameter, List<EntityDynamicParameterValue> values) AddTestItems(int loop = 3, string rowId = "123")
+        {
+            var entityDynamicParameter = CreateAndGetEntityDynamicParameter();
+
+            var user = AsyncHelper.RunSync(() => UserManager.FindByIdAsync(AbpSession.UserId.Value));
+            AsyncHelper.RunSync(() => GrantPermissionAsync(user, TestPermission));
+
+            var items = new List<EntityDynamicParameterValue>();
+            for (int i = 0; i < loop; i++)
+            {
+                WithUnitOfWork(() =>
+                {
+                    var item = new EntityDynamicParameterValue()
+                    {
+                        EntityDynamicParameterId = entityDynamicParameter.Id,
+                        EntityRowId = rowId,
+                        Value = "TestValue",
+                        TenantId = AbpSession.TenantId
+                    };
+                    _entityDynamicParameterValueManager.Add(item);
+
+                    items.Add(item);
+                });
+            }
+            return (entityDynamicParameter, items);
+        }
+
+        private void CheckEquality(EntityDynamicParameterValue value1, EntityDynamicParameterValue value2)
+        {
+            value1.ShouldNotBeNull();
+            value2.ShouldNotBeNull();
+
+            value1.Id.ShouldBe(value2.Id);
+            value1.EntityDynamicParameterId.ShouldBe(value2.EntityDynamicParameterId);
+            value1.EntityRowId.ShouldBe(value2.EntityRowId);
+            value1.Value.ShouldBe(value2.Value);
+            value1.TenantId.ShouldBe(value2.TenantId);
+        }
+
+        private void CheckIfSequencesEqual(List<EntityDynamicParameterValue> values1, List<EntityDynamicParameterValue> values2)
+        {
+            if (!values1.Select(v => v.Id).SequenceEqual(values2.Select(v2 => v2.Id)))
+            {
+                throw new Exception("Sequences Not Equal");
+            }
+
+            foreach (var value1 in values1)
+            {
+                CheckEquality(value1, values2.Single(value2 => value2.Id == value1.Id));
+            }
+        }
+
+        [Fact]
+        public async Task Should_Get_All_Values_Async_With_entityDynamicParameterId_entityRowId()
+        {
+            var testItems = AddTestItems();
+
+            await RunAndCheckIfPermissionControlledAsync(async () =>
+            {
+                var list = await _entityDynamicParameterValueManager.GetValuesAsync(entityDynamicParameterId: testItems.entityDynamicParameter.Id, entityRowId: "123");
+                CheckIfSequencesEqual(list, testItems.values);
+            });
+        }
+
+        [Fact]
+        public void Should_Get_All_Values_With_entityDynamicParameterId_entityRowId()
+        {
+            var testItems = AddTestItems();
+
+            RunAndCheckIfPermissionControlled(() =>
+            {
+                var list = _entityDynamicParameterValueManager.GetValues(entityDynamicParameterId: testItems.entityDynamicParameter.Id, entityRowId: "123");
+                CheckIfSequencesEqual(list, testItems.values);
+            });
+        }
+
+        [Fact]
+        public async Task Should_Get_All_Values_Async_With_entityFullName_entityRowId()
+        {
+            var testItems = AddTestItems();
+
+            await RunAndCheckIfPermissionControlledAsync(async () =>
+            {
+                var list = await _entityDynamicParameterValueManager.GetValuesAsync(entityFullName: testItems.entityDynamicParameter.EntityFullName, entityRowId: "123");
+                CheckIfSequencesEqual(list, testItems.values);
+            });
+        }
+
+        [Fact]
+        public void Should_Get_All_Values_With_entityFullName_entityRowId()
+        {
+            var testItems = AddTestItems();
+
+            RunAndCheckIfPermissionControlled(() =>
+            {
+                var list = _entityDynamicParameterValueManager.GetValues(entityFullName: testItems.entityDynamicParameter.EntityFullName, entityRowId: "123");
+                CheckIfSequencesEqual(list, testItems.values);
+            });
+        }
+
+        [Fact]
+        public async Task Should_Get_All_Values_Async_With_entityFullName_entityRowId_dynamicParameterId()
+        {
+            var testItems = AddTestItems();
+
+            await RunAndCheckIfPermissionControlledAsync(async () =>
+            {
+                var list = await _entityDynamicParameterValueManager.GetValuesAsync(
+                    entityFullName: testItems.entityDynamicParameter.EntityFullName,
+                    entityRowId: "123",
+                    dynamicParameterId: testItems.entityDynamicParameter.DynamicParameterId);
+                CheckIfSequencesEqual(list, testItems.values);
+            });
+        }
+
+        [Fact]
+        public void Should_Get_All_Values_With_entityFullName_entityRowId_dynamicParameterId()
+        {
+            var testItems = AddTestItems();
+
+            RunAndCheckIfPermissionControlled(() =>
+            {
+                var list = _entityDynamicParameterValueManager.GetValues(
+                    entityFullName: testItems.entityDynamicParameter.EntityFullName,
+                    entityRowId: "123",
+                    dynamicParameterId: testItems.entityDynamicParameter.DynamicParameterId);
+                CheckIfSequencesEqual(list, testItems.values);
+            });
+        }
+
+        [Fact]
+        public async Task Should_Get_All_Values_Async_With_entityFullName_entityRowId_parameterName()
+        {
+            var testItems = AddTestItems();
+
+            await RunAndCheckIfPermissionControlledAsync(async () =>
+            {
+                var list = await _entityDynamicParameterValueManager.GetValuesAsync(
+                    entityFullName: testItems.entityDynamicParameter.EntityFullName,
+                    entityRowId: "123",
+                    parameterName: testItems.values.First().EntityDynamicParameter.DynamicParameter.ParameterName);
+                CheckIfSequencesEqual(list, testItems.values);
+            });
+        }
+
+        [Fact]
+        public void Should_Get_All_Values_With_entityFullName_entityRowId_parameterName()
+        {
+            var testItems = AddTestItems();
+
+            RunAndCheckIfPermissionControlled(() =>
+            {
+                var list = _entityDynamicParameterValueManager.GetValues(
+                    entityFullName: testItems.entityDynamicParameter.EntityFullName,
+                    entityRowId: "123",
+                    parameterName: testItems.values.First().EntityDynamicParameter.DynamicParameter.ParameterName);
+                CheckIfSequencesEqual(list, testItems.values);
+            });
+        }
+
+        [Fact]
+        public void Should_Clean_Values()
+        {
+            var testItems = AddTestItems();
+
+            RunAndCheckIfPermissionControlled(() =>
+            {
+                _entityDynamicParameterValueManager.CleanValues(testItems.entityDynamicParameter.Id, "123");
+            });
+
+            WithUnitOfWork(() =>
+            {
+                var items = _entityDynamicParameterValueManager.GetValues(testItems.entityDynamicParameter.Id, "123");
+                items.ShouldBeEmpty();
+            });
+        }
+
+        [Fact]
+        public async Task Should_Clean_Values_Async()
+        {
+            var testItems = AddTestItems();
+
+            await RunAndCheckIfPermissionControlledAsync(async () =>
+            {
+                await _entityDynamicParameterValueManager.CleanValuesAsync(testItems.entityDynamicParameter.Id, "123");
+            });
+
+            WithUnitOfWork(() =>
+            {
+                var items = _entityDynamicParameterValueManager.GetValues(testItems.entityDynamicParameter.Id, "123");
+                items.ShouldBeEmpty();
+            });
         }
     }
 }

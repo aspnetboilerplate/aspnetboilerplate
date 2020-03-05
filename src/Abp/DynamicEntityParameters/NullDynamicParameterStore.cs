@@ -17,6 +17,16 @@ namespace Abp.DynamicEntityParameters
             return Task.FromResult<DynamicParameter>(default);
         }
 
+        public DynamicParameter Get(string parameterName)
+        {
+            return default;
+        }
+
+        public Task<DynamicParameter> GetAsync(string parameterName)
+        {
+            return Task.FromResult<DynamicParameter>(default);
+        }
+
         public List<DynamicParameter> GetAll()
         {
             return new List<DynamicParameter>();

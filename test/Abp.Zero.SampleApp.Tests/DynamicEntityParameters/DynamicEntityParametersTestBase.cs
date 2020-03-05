@@ -105,10 +105,11 @@ namespace Abp.Zero.SampleApp.Tests.DynamicEntityParameters
 
         protected DynamicParameter CreateAndGetDynamicParameterWithTestPermission()
         {
+            var rnd = new Random();
             var dynamicParameter = new DynamicParameter()
             {
                 InputType = GetRandomAllowedInputType(),
-                ParameterName = "City",
+                ParameterName = "City" + rnd.Next(),
                 Permission = TestPermission,
                 TenantId = AbpSession.TenantId
             };

@@ -8,7 +8,7 @@ namespace Abp.DynamicEntityParameters
     public class EntityDynamicParameterValue : Entity, IMayHaveTenant
     {
         [Required(AllowEmptyStrings = false)]
-        public virtual string Value { get; set; }
+        public string Value { get; set; }
 
         public string EntityRowId { get; set; }
 

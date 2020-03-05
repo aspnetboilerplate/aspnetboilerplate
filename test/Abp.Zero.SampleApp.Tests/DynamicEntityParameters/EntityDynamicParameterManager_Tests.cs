@@ -161,8 +161,7 @@ namespace Abp.Zero.SampleApp.Tests.DynamicEntityParameters
         public void Should_Update_Parameter()
         {
             var (entityDynamicParameterManagerCache, entityDynamicParameterManager) = InitializeEntityDynamicParameterManagerWithCacheSubstitute();
-
-
+            
             var dynamicParameter = CreateAndGetDynamicParameterWithTestPermission();
             var dynamicParameter2 = CreateAndGetDynamicParameterWithTestPermission();
             var entityDynamicParameter = new EntityDynamicParameter()

@@ -87,6 +87,29 @@ namespace Abp.DynamicEntityParameters
                 );
         }
 
+        public List<EntityDynamicParameterValue> GetValues(string entityFullName, string entityRowId, int dynamicParameterId)
+        {
+            return _entityDynamicParameterValueRepository.GetAll()
+                .Where(val =>
+                    val.EntityRowId == entityRowId &&
+                    val.EntityDynamicParameter.EntityFullName == entityFullName &&
+                    val.EntityDynamicParameter.DynamicParameterId == dynamicParameterId
+                )
+                .ToList();
+        }
+
+        public Task<List<EntityDynamicParameterValue>> GetValuesAsync(string entityFullName, string entityRowId, int dynamicParameterId)
+        {
+            return _asyncQueryableExecuter.ToListAsync(
+                _entityDynamicParameterValueRepository.GetAll()
+                    .Where(val =>
+                        val.EntityRowId == entityRowId &&
+                        val.EntityDynamicParameter.EntityFullName == entityFullName &&
+                        val.EntityDynamicParameter.DynamicParameterId == dynamicParameterId
+                    )
+            );
+        }
+
         public virtual void CleanValues(int entityDynamicParameterId, string entityRowId)
         {
             var list = _entityDynamicParameterValueRepository.GetAll().Where(val =>

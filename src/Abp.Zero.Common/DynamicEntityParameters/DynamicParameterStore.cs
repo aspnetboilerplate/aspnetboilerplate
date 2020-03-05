@@ -24,6 +24,16 @@ namespace Abp.DynamicEntityParameters
             return _dynamicParameterRepository.GetAsync(id);
         }
 
+        public virtual DynamicParameter Get(string parameterName)
+        {
+            return _dynamicParameterRepository.FirstOrDefault(x => x.ParameterName == parameterName);
+        }
+
+        public virtual Task<DynamicParameter> GetAsync(string parameterName)
+        {
+            return _dynamicParameterRepository.FirstOrDefaultAsync(x => x.ParameterName == parameterName);
+        }
+
         public virtual List<DynamicParameter> GetAll()
         {
             return _dynamicParameterRepository.GetAllList();

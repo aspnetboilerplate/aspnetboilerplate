@@ -9,6 +9,10 @@ namespace Abp.DynamicEntityParameters
 
         Task<DynamicParameter> GetAsync(int id);
 
+        DynamicParameter Get(string parameterName);
+
+        Task<DynamicParameter> GetAsync(string parameterName);
+
         List<DynamicParameter> GetAll();
 
         Task<List<DynamicParameter>> GetAllAsync();
