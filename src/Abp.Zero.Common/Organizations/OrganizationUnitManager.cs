@@ -15,15 +15,16 @@ namespace Abp.Organizations
     /// </summary>
     public class OrganizationUnitManager : DomainService
     {
-        private readonly IAsyncQueryableExecuter _asyncQueryableExecuter;
         protected IRepository<OrganizationUnit, long> OrganizationUnitRepository { get; private set; }
 
-        public OrganizationUnitManager(IRepository<OrganizationUnit, long> organizationUnitRepository, IAsyncQueryableExecuter asyncQueryableExecuter)
+        public IAsyncQueryableExecuter AsyncQueryableExecuter { get; set; }
+        
+        public OrganizationUnitManager(IRepository<OrganizationUnit, long> organizationUnitRepository)
         {
-            _asyncQueryableExecuter = asyncQueryableExecuter;
             OrganizationUnitRepository = organizationUnitRepository;
 
             LocalizationSourceName = AbpZeroConsts.LocalizationSourceName;
+            AsyncQueryableExecuter = NullAsyncQueryableExecuter.Instance;
         }
 
         [UnitOfWork]
@@ -83,7 +84,7 @@ namespace Abp.Organizations
             var query = OrganizationUnitRepository.GetAll()
                 .Where(ou => ou.ParentId == parentId)
                 .OrderByDescending(ou => ou.Code);
-            return await _asyncQueryableExecuter.FirstOrDefaultAsync(query);
+            return await AsyncQueryableExecuter.FirstOrDefaultAsync(query);
         }
 
         public virtual OrganizationUnit GetLastChildOrNull(long? parentId)
