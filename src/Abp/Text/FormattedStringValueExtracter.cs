@@ -102,7 +102,7 @@ namespace Abp.Text
         }
 
         /// <summary>
-        /// Checks if given <see cref="str"/> fits to given <see cref="format"/>.
+        /// Checks if given <paramref name="str"/> fits to given <paramref name="format"/>.
         /// Also gets extracted values.
         /// </summary>
         /// <param name="str">String including dynamic values</param>

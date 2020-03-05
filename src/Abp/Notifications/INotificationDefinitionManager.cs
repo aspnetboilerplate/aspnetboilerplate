@@ -31,12 +31,12 @@ namespace Abp.Notifications
         IReadOnlyList<NotificationDefinition> GetAll();
 
         /// <summary>
-        /// Checks if given notification (<see cref="name"/>) is available for given user.
+        /// Checks if given notification (<paramref name="name"/>) is available for given user.
         /// </summary>
         Task<bool> IsAvailableAsync(string name, UserIdentifier user);
 
         /// <summary>
-        /// Checks if given notification (<see cref="name"/>) is available for given user.
+        /// Checks if given notification (<paramref name="name"/>) is available for given user.
         /// </summary>
         bool IsAvailable(string name, UserIdentifier user);
 

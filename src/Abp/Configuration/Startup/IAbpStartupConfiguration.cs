@@ -118,7 +118,7 @@ namespace Abp.Configuration.Startup
 
         /// <summary>
         /// Used to replace a service type.
-        /// Given <see cref="replaceAction"/> should register an implementation for the <see cref="type"/>.
+        /// Given <paramref name="replaceAction"/> should register an implementation for the <paramref name="type"/>.
         /// </summary>
         /// <param name="type">The type to be replaced.</param>
         /// <param name="replaceAction">Replace action.</param>

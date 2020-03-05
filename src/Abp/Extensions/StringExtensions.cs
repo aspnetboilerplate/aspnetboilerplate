@@ -151,7 +151,7 @@ namespace Abp.Extensions
         /// Gets index of nth occurence of a char in a string.
         /// </summary>
         /// <param name="str">source string to be searched</param>
-        /// <param name="c">Char to search in <see cref="str"/></param>
+        /// <param name="c">Char to search in <paramref name="str"/></param>
         /// <param name="n">Count of the occurence</param>
         public static int NthIndexOf(this string str, char c, int n)
         {
