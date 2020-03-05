@@ -3,7 +3,6 @@ using System.Threading.Tasks;
 using Abp.Application.Services;
 using Abp.BackgroundJobs;
 using Abp.Json;
-using Abp.Runtime.Session;
 using Abp.Webhooks.BackgroundWorker;
 using Abp.Collections.Extensions;
 
@@ -11,7 +10,6 @@ namespace Abp.Webhooks
 {
     public class DefaultWebhookPublisher : ApplicationService, IWebhookPublisher
     {
-        public IAbpSession AbpSession { get; set; }
         public IWebhookEventStore WebhookEventStore { get; set; }
 
         private readonly IGuidGenerator _guidGenerator;
@@ -31,7 +29,6 @@ namespace Abp.Webhooks
             _webhooksConfiguration = webhooksConfiguration;
 
             WebhookEventStore = NullWebhookEventStore.Instance;
-            AbpSession = NullAbpSession.Instance;
         }
 
         public async Task PublishAsync(string webhookName, object data)
