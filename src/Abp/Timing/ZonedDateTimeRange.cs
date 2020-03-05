@@ -240,7 +240,7 @@ namespace Abp.Timing
         /// <summary>
         /// Gets a zoned date range representing the last 30 days (30x24 hours) including today.
         /// </summary>
-        public ZonedDateTimeRange Last30Days
+        public new ZonedDateTimeRange Last30Days
         {
             get
             {
@@ -252,7 +252,7 @@ namespace Abp.Timing
         /// <summary>
         /// Gets a zoned date range representing the last 30 days excluding today.
         /// </summary>
-        public ZonedDateTimeRange Last30DaysExceptToday
+        public new ZonedDateTimeRange Last30DaysExceptToday
         {
             get
             {
@@ -264,7 +264,7 @@ namespace Abp.Timing
         /// <summary>
         /// Gets a zoned date range representing the last 7 days (7x24 hours) including today.
         /// </summary>
-        public ZonedDateTimeRange Last7Days
+        public new ZonedDateTimeRange Last7Days
         {
             get
             {
@@ -276,7 +276,7 @@ namespace Abp.Timing
         /// <summary>
         /// Gets a zoned date range representing the last 7 days excluding today.
         /// </summary>
-        public ZonedDateTimeRange Last7DaysExceptToday
+        public new ZonedDateTimeRange Last7DaysExceptToday
         {
             get
             {
