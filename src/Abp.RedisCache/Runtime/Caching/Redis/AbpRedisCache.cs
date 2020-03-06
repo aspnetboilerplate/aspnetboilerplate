@@ -41,30 +41,20 @@ namespace Abp.Runtime.Caching.Redis
         {
             var redisKeys = keys.Select(GetLocalizedRedisKey);
             var redisValues = _database.StringGet(redisKeys.ToArray());
-            var pairs = new List<ConditionalValue<object>>();
-            foreach (var redisValue in redisValues)
-            {
-                pairs.Add(CreateResult(redisValue));
-            }
-            return pairs.ToArray();
+            return redisValues.Select(CreateResult).ToArray();
         }
 
-        protected async override Task<ConditionalValue<object>> TryGetValueAsync(string key)
+        protected override async Task<ConditionalValue<object>> TryGetValueAsync(string key)
         {
             var redisValue = await _database.StringGetAsync(GetLocalizedRedisKey(key));
             return CreateResult(redisValue);
         }
 
-        protected async override Task<ConditionalValue<object>[]> TryGetValuesAsync(string[] keys)
+        protected override async Task<ConditionalValue<object>[]> TryGetValuesAsync(string[] keys)
         {
             var redisKeys = keys.Select(GetLocalizedRedisKey);
             var redisValues = await _database.StringGetAsync(redisKeys.ToArray());
-            var pairs = new List<ConditionalValue<object>>();
-            foreach (var redisValue in redisValues)
-            {
-                pairs.Add(CreateResult(redisValue));
-            }
-            return pairs.ToArray();
+            return redisValues.Select(CreateResult).ToArray();
         }
 
         public override void Set(string key, object value, TimeSpan? slidingExpireTime = null, TimeSpan? absoluteExpireTime = null)
