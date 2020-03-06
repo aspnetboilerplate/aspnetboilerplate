@@ -6,7 +6,7 @@ using Abp.MultiTenancy;
 
 namespace Abp.Authorization
 {
-    internal abstract class PermissionDefinitionContextBase : IPermissionDefinitionContext
+    public abstract class PermissionDefinitionContextBase : IPermissionDefinitionContext
     {
         protected readonly PermissionDictionary Permissions;
 
@@ -33,12 +33,12 @@ namespace Abp.Authorization
             return permission;
         }
 
-        public Permission GetPermissionOrNull(string name)
+        public virtual Permission GetPermissionOrNull(string name)
         {
             return Permissions.GetOrDefault(name);
         }
 
-        public void RemovePermission(string name)
+        public virtual void RemovePermission(string name)
         {
             Permissions.Remove(name);
         }

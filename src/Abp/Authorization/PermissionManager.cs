@@ -14,7 +14,7 @@ namespace Abp.Authorization
     /// <summary>
     /// Permission manager.
     /// </summary>
-    internal class PermissionManager : PermissionDefinitionContextBase, IPermissionManager, ISingletonDependency
+    public class PermissionManager : PermissionDefinitionContextBase, IPermissionManager, ISingletonDependency
     {
         public IAbpSession AbpSession { get; set; }
 
@@ -37,7 +37,7 @@ namespace Abp.Authorization
             AbpSession = NullAbpSession.Instance;
         }
 
-        public void Initialize()
+        public virtual void Initialize()
         {
             foreach (var providerType in _authorizationConfiguration.Providers)
             {
@@ -50,7 +50,7 @@ namespace Abp.Authorization
             Permissions.AddAllPermissions();
         }
 
-        public Permission GetPermission(string name)
+        public virtual Permission GetPermission(string name)
         {
             var permission = Permissions.GetOrDefault(name);
             if (permission == null)
@@ -61,7 +61,7 @@ namespace Abp.Authorization
             return permission;
         }
 
-        public IReadOnlyList<Permission> GetAllPermissions(bool tenancyFilter = true)
+        public virtual IReadOnlyList<Permission> GetAllPermissions(bool tenancyFilter = true)
         {
             using (var featureDependencyContext = _iocManager.ResolveAsDisposable<FeatureDependencyContext>())
             {
@@ -78,7 +78,7 @@ namespace Abp.Authorization
             }
         }
 
-        public IReadOnlyList<Permission> GetAllPermissions(MultiTenancySides multiTenancySides)
+        public virtual IReadOnlyList<Permission> GetAllPermissions(MultiTenancySides multiTenancySides)
         {
             using (var featureDependencyContext = _iocManager.ResolveAsDisposable<FeatureDependencyContext>())
             {
