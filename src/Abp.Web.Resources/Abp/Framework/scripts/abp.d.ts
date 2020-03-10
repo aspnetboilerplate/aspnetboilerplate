@@ -57,6 +57,8 @@
             isDefault: boolean;
 
             isDisabled: boolean;
+            
+            isRightToLeft: boolean;
 
         }
 
