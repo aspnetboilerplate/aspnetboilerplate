@@ -173,7 +173,7 @@ public async Task WebHookTest()
 
 private bool IsSignatureCompatible(string secret, string body)
 {
-    if (HttpContext.Request.Headers.ContainsKey("abp-webhook-signature"))
+    if (!HttpContext.Request.Headers.ContainsKey("abp-webhook-signature"))
     {
         return false;
     }
