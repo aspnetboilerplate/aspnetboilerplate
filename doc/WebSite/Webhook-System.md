@@ -63,7 +63,7 @@ public class AppWebhookDefinitionProvider : WebhookDefinitionProvider
         	<td>A <a href="https://aspnetboilerplate.com/Pages/Documents/Feature-Management">Feature Dependency</a>. A defined webhook will be available to a tenant if this feature is enabled on the tenant.<br /><span style="font-style: italic;">(All webhooks are available for the host)</span></td>
         </tr>
     </tbody>
-<table>
+</table>
 
 After defining such a webhook provider, you must register it in the [PreInitialize](https://aspnetboilerplate.com/Pages/Documents/Module-System#preinitialize) method of our module, as shown below:
 
@@ -148,7 +148,7 @@ Examples:
             <td>Your private webhook secret. You can verify the received webhook by using that key. Do not share it publicly.<br /><span style="font-style: italic;">(This value is automatically generated when you create a secret. Modification not recommended)</span></td>
         </tr>
     </tbody>
-<table>
+</table>
 
 
 ##### **Check Signature**
@@ -283,7 +283,7 @@ Webhook configurations:
         	<td>Max consecutive fail count to deactivate subscription if <code>IsAutomaticSubscriptionDeactivationEnabled</code> is true</td>
         </tr>
     </tbody>
-<table>
+</table>
 
 
 ### Auto Subscription Deactivation
