@@ -28,7 +28,7 @@ namespace Abp.Auditing
         protected virtual string GetBrowserInfo()
         {
             var httpRequest = GetCurrentHttpRequest();
-            if (httpRequest.Browser == null)
+            if (httpRequest?.Browser == null)
             {
                 return null;
             }
@@ -104,9 +104,9 @@ namespace Abp.Auditing
 
         public virtual HttpRequestBase GetCurrentHttpRequest()
         {
+            var httpContext = HttpContext.Current == null ? null : new HttpContextWrapper(HttpContext.Current);
             try
             {
-                var httpContext = HttpContext.Current == null ? null : new HttpContextWrapper(HttpContext.Current);
                 return httpContext?.Request;
             }
             catch (HttpException ex)
