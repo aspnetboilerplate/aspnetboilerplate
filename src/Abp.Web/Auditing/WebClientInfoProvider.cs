@@ -27,21 +27,21 @@ namespace Abp.Auditing
 
         protected virtual string GetBrowserInfo()
         {
-            var httpContext = GetCurrentHttpContext();
-            if (httpContext?.Request.Browser == null)
+            var httpRequest = GetCurrentHttpRequest();
+            if (httpRequest.Browser == null)
             {
                 return null;
             }
 
-            return httpContext.Request.Browser.Browser + " / " +
-                   httpContext.Request.Browser.Version + " / " +
-                   httpContext.Request.Browser.Platform;
+            return httpRequest.Browser.Browser + " / " +
+                   httpRequest.Browser.Version + " / " +
+                   httpRequest.Browser.Platform;
         }
 
         protected virtual IPAddress GetClientIpAddress()
         {
-            var httpContext = GetCurrentHttpContext();
-            if (httpContext?.Request.ServerVariables == null)
+            var httpRequest = GetCurrentHttpRequest();
+            if (httpRequest?.ServerVariables == null)
             {
                 return null;
             }
@@ -54,20 +54,20 @@ namespace Abp.Auditing
                 // https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/X-Forwarded-For
                 // X_FORWARDED_FOR header is being prefixed with HTTP
                 // https://docs.microsoft.com/en-us/previous-versions/iis/6.0-sdk/ms524602(v=vs.90)#obtaining-server-variables
-                var forwardIpAddress = httpContext.Request.ServerVariables["HTTP_X_FORWARDED_FOR"]?.Split(',').FirstOrDefault();
+                var forwardIpAddress = httpRequest.ServerVariables["HTTP_X_FORWARDED_FOR"]?.Split(',').FirstOrDefault();
                 if (!string.IsNullOrWhiteSpace(forwardIpAddress))
                 {
                     clientIpAddress = IPEndPointHelper.Parse(forwardIpAddress).Address;
                 }
 
                 // Remote Ip Address is separated into REMOTE_ADDR & REMOTE_PORT
-                var remoteIpAddress = httpContext.Request.ServerVariables["REMOTE_ADDR"];
+                var remoteIpAddress = httpRequest.ServerVariables["REMOTE_ADDR"];
                 if (clientIpAddress == null && !string.IsNullOrWhiteSpace(remoteIpAddress))
                 {
                     clientIpAddress = IPAddress.Parse(remoteIpAddress);
                 }
 
-                if (clientIpAddress == null && httpContext.Request.IsLocal)
+                if (clientIpAddress == null && httpRequest.IsLocal)
                 {
                     clientIpAddress = Dns.GetHostAddresses(Dns.GetHostName()).FirstOrDefault(address =>
                         {
@@ -86,8 +86,8 @@ namespace Abp.Auditing
 
         protected virtual string GetComputerName()
         {
-            var httpContext = GetCurrentHttpContext();
-            if (httpContext == null || !httpContext.Request.IsLocal)
+            var httpRequest = GetCurrentHttpRequest();
+            if (httpRequest == null || !httpRequest.IsLocal)
             {
                 return null;
             }
@@ -102,9 +102,23 @@ namespace Abp.Auditing
             }
         }
 
-        public virtual HttpContextBase GetCurrentHttpContext()
+        public virtual HttpRequestBase GetCurrentHttpRequest()
         {
-            return HttpContext.Current == null ? null : new HttpContextWrapper(HttpContext.Current);
+            try
+            {
+                var httpContext = HttpContext.Current == null ? null : new HttpContextWrapper(HttpContext.Current);
+                return httpContext?.Request;
+            }
+            catch (HttpException ex)
+            {
+                /* Workaround:
+                 * Accessing HttpContext.Request during Application_Start or Application_End will throw exception.
+                 * This behavior is intentional from microsoft
+                 * See https://stackoverflow.com/questions/2518057/request-is-not-available-in-this-context/23908099#comment2514887_2518066
+                 */
+                Logger.Warn("HttpContext.Request access when it is not suppose to", ex);
+                return null;
+            }
         }
     }
 }
