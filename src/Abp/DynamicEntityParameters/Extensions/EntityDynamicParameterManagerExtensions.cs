@@ -67,5 +67,29 @@ namespace Abp.DynamicEntityParameters.Extensions
             await manager.AddAsync(entity);
             return entity;
         }
+
+        public static EntityDynamicParameter Add<TEntity>(this IEntityDynamicParameterManager manager, DynamicParameter dynamicParameter, int? tenantId)
+            where TEntity : IEntity<int>
+        {
+            return manager.Add<TEntity>(dynamicParameter.Id, tenantId);
+        }
+
+        public static EntityDynamicParameter Add<TEntity, TPrimaryKey>(this IEntityDynamicParameterManager manager, DynamicParameter dynamicParameter, int? tenantId)
+            where TEntity : IEntity<TPrimaryKey>
+        {
+            return manager.Add<TEntity, TPrimaryKey>(dynamicParameter.Id, tenantId);
+        }
+
+        public static Task<EntityDynamicParameter> AddAsync<TEntity>(this IEntityDynamicParameterManager manager, DynamicParameter dynamicParameter, int? tenantId)
+            where TEntity : IEntity<int>
+        {
+            return manager.AddAsync<TEntity>(dynamicParameter.Id, tenantId);
+        }
+
+        public static Task<EntityDynamicParameter> AddAsync<TEntity, TPrimaryKey>(this IEntityDynamicParameterManager manager, DynamicParameter dynamicParameter, int? tenantId)
+            where TEntity : IEntity<TPrimaryKey>
+        {
+            return manager.AddAsync<TEntity, TPrimaryKey>(dynamicParameter.Id, tenantId);
+        }
     }
 }

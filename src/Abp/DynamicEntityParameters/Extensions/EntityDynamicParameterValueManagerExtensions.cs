@@ -30,6 +30,7 @@ namespace Abp.DynamicEntityParameters.Extensions
             return manager.GetValuesAsync<TEntity, int>(entityRowId: entityRowId);
         }
 
+
         public static List<EntityDynamicParameterValue> GetValues<TEntity, TPrimaryKey>(this IEntityDynamicParameterValueManager manager, string entityRowId, int dynamicParameterId)
             where TEntity : IEntity<TPrimaryKey>
         {
@@ -52,6 +53,30 @@ namespace Abp.DynamicEntityParameters.Extensions
             where TEntity : IEntity<int>
         {
             return manager.GetValuesAsync<TEntity, int>(entityRowId: entityRowId, dynamicParameterId: dynamicParameterId);
+        }
+
+        public static List<EntityDynamicParameterValue> GetValues<TEntity, TPrimaryKey>(this IEntityDynamicParameterValueManager manager, string entityRowId, DynamicParameter dynamicParameter)
+            where TEntity : IEntity<TPrimaryKey>
+        {
+            return manager.GetValues<TEntity, TPrimaryKey>(entityRowId: entityRowId, dynamicParameterId: dynamicParameter.Id);
+        }
+
+        public static List<EntityDynamicParameterValue> GetValues<TEntity>(this IEntityDynamicParameterValueManager manager, string entityRowId, DynamicParameter dynamicParameter)
+            where TEntity : IEntity<int>
+        {
+            return manager.GetValues<TEntity>(entityRowId: entityRowId, dynamicParameterId: dynamicParameter.Id);
+        }
+
+        public static Task<List<EntityDynamicParameterValue>> GetValuesAsync<TEntity, TPrimaryKey>(this IEntityDynamicParameterValueManager manager, string entityRowId, DynamicParameter dynamicParameter)
+            where TEntity : IEntity<TPrimaryKey>
+        {
+            return manager.GetValuesAsync<TEntity, TPrimaryKey>(entityRowId: entityRowId, dynamicParameterId: dynamicParameter.Id);
+        }
+
+        public static Task<List<EntityDynamicParameterValue>> GetValuesAsync<TEntity>(this IEntityDynamicParameterValueManager manager, string entityRowId, DynamicParameter dynamicParameter)
+            where TEntity : IEntity<int>
+        {
+            return manager.GetValuesAsync<TEntity>(entityRowId: entityRowId, dynamicParameterId: dynamicParameter.Id);
         }
 
         public static List<EntityDynamicParameterValue> GetValues<TEntity, TPrimaryKey>(this IEntityDynamicParameterValueManager manager, string entityRowId, string parameterName)
