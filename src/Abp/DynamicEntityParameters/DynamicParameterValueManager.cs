@@ -84,13 +84,13 @@ namespace Abp.DynamicEntityParameters
             }
         }
 
-        public void CleanValues(int dynamicParameterId)
+        public virtual void CleanValues(int dynamicParameterId)
         {
             _dynamicParameterPermissionChecker.CheckPermission(dynamicParameterId);
             DynamicParameterValueStore.CleanValues(dynamicParameterId);
         }
 
-        public async Task CleanValuesAsync(int dynamicParameterId)
+        public virtual async Task CleanValuesAsync(int dynamicParameterId)
         {
             await _dynamicParameterPermissionChecker.CheckPermissionAsync(dynamicParameterId);
             await DynamicParameterValueStore.CleanValuesAsync(dynamicParameterId);

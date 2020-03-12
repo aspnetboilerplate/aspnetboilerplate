@@ -11,7 +11,7 @@ namespace Abp.DynamicEntityParameters
         /// Value.
         /// </summary>
         [Required(AllowEmptyStrings = false)]
-        public virtual string Value { get; set; }
+        public string Value { get; set; }
 
         public int? TenantId { get; set; }
 

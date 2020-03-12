@@ -41,12 +41,12 @@ namespace Abp.DynamicEntityParameters
             return DynamicParameterCache.GetAsync(id, (i) => _dynamicParameterStore.GetAsync(id));
         }
 
-        public DynamicParameter Get(string parameterName)
+        public virtual DynamicParameter Get(string parameterName)
         {
             return _dynamicParameterStore.Get(parameterName);
         }
 
-        public Task<DynamicParameter> GetAsync(string parameterName)
+        public virtual Task<DynamicParameter> GetAsync(string parameterName)
         {
             return _dynamicParameterStore.GetAsync(parameterName);
         }
