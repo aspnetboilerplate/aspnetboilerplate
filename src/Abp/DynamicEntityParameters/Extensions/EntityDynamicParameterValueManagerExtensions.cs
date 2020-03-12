@@ -30,7 +30,6 @@ namespace Abp.DynamicEntityParameters.Extensions
             return manager.GetValuesAsync<TEntity, int>(entityRowId: entityRowId);
         }
 
-
         public static List<EntityDynamicParameterValue> GetValues<TEntity, TPrimaryKey>(this IEntityDynamicParameterValueManager manager, string entityRowId, int dynamicParameterId)
             where TEntity : IEntity<TPrimaryKey>
         {
