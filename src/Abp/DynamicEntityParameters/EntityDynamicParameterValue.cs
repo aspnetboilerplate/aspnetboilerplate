@@ -17,5 +17,18 @@ namespace Abp.DynamicEntityParameters
         public virtual EntityDynamicParameter EntityDynamicParameter { get; set; }
 
         public int? TenantId { get; set; }
+
+        public EntityDynamicParameterValue()
+        {
+
+        }
+
+        public EntityDynamicParameterValue(EntityDynamicParameter entityDynamicParameter, string entityRowId, string value, int? tenantId)
+        {
+            EntityDynamicParameterId = entityDynamicParameter.Id;
+            EntityRowId = entityRowId;
+            Value = value;
+            TenantId = tenantId;
+        }
     }
 }
