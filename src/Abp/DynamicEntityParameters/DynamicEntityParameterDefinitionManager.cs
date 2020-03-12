@@ -45,19 +45,19 @@ namespace Abp.DynamicEntityParameters
 
         public void AddAllowedInputType<TInputType>() where TInputType : IInputType
         {
-            IInputType inputType = (IInputType)Activator.CreateInstance(typeof(TInputType));
+            var inputTypeName = InputTypeBase.GetName<TInputType>();
 
-            if (inputType.Name.IsNullOrWhiteSpace())
+            if (inputTypeName.IsNullOrWhiteSpace())
             {
-                throw new ArgumentNullException(typeof(TInputType).FullName + "/" + nameof(inputType.Name));
+                throw new ArgumentNullException(typeof(TInputType).FullName + "/" + nameof(inputTypeName));
             }
 
-            if (_allowedInputTypes.ContainsKey(inputType.Name))
+            if (_allowedInputTypes.ContainsKey(inputTypeName))
             {
-                throw new Exception($"Input types must be unique.There is already an input type named \"{inputType.Name}\"");
+                throw new Exception($"Input types must be unique.There is already an input type named \"{inputTypeName}\"");
             }
 
-            _allowedInputTypes.Add(inputType.Name, typeof(TInputType));
+            _allowedInputTypes.Add(inputTypeName, typeof(TInputType));
         }
 
         public IInputType GetOrNullAllowedInputType(string name)
