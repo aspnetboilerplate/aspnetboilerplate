@@ -22,10 +22,9 @@ namespace Abp.Runtime.Caching.Memory
             _memoryCache = new MemoryCache(new OptionsWrapper<MemoryCacheOptions>(new MemoryCacheOptions()));
         }
 
-        protected override ConditionalValue<object> TryGetValue(string key)
+        protected override bool TryGetValue(string key, out object value)
         {
-            var found = _memoryCache.TryGetValue(key, out object value);
-            return new ConditionalValue<object>(found, value);
+            return _memoryCache.TryGetValue(key, out value);
         }
 
         public override void Set(string key, object value, TimeSpan? slidingExpireTime = null, TimeSpan? absoluteExpireTime = null)

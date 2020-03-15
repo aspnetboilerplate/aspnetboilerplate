@@ -31,10 +31,11 @@ namespace Abp.Runtime.Caching.Redis
             _serializer = redisCacheSerializer;
         }
 
-        protected override ConditionalValue<object> TryGetValue(string key)
+        protected override bool TryGetValue(string key, out object value)
         {
             var redisValue = _database.StringGet(GetLocalizedRedisKey(key));
-            return CreateResult(redisValue);
+            value = redisValue.HasValue ? Deserialize(redisValue) : null;
+            return redisValue.HasValue;
         }
 
         protected override ConditionalValue<object>[] TryGetValues(string[] keys)

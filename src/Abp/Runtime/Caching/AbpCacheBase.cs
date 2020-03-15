@@ -255,23 +255,23 @@ namespace Abp.Runtime.Caching
             return items;
         }
 
-        protected abstract ConditionalValue<TValue> TryGetValue(TKey key);
+        protected abstract bool TryGetValue(TKey key, out TValue value);
 
         protected virtual ConditionalValue<TValue>[] TryGetValues(TKey[] keys)
         {
             var pairs = new List<ConditionalValue<TValue>>();
             foreach (var key in keys)
             {
-                var result = TryGetValue(key);
-                pairs.Add(new ConditionalValue<TValue>(result.HasValue, result.Value));
+                var found = TryGetValue(key, out TValue value);
+                pairs.Add(new ConditionalValue<TValue>(found, value));
             }
             return pairs.ToArray();
         }
 
         protected virtual Task<ConditionalValue<TValue>> TryGetValueAsync(TKey key)
         {
-            var result = TryGetValue(key);
-            return Task.FromResult(new ConditionalValue<TValue>(result.HasValue, result.Value));
+            var found = TryGetValue(key, out TValue value);
+            return Task.FromResult(new ConditionalValue<TValue>(found, value));
         }
 
         protected virtual Task<ConditionalValue<TValue>[]> TryGetValuesAsync(TKey[] keys)
@@ -281,8 +281,8 @@ namespace Abp.Runtime.Caching
 
         public virtual TValue GetOrDefault(TKey key)
         {
-            var result = TryGetValue(key);
-            return result.Value;
+            TryGetValue(key, out TValue value);
+            return value;
         }
 
         public virtual TValue[] GetOrDefault(TKey[] keys)
