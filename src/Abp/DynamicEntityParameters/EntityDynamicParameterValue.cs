@@ -10,7 +10,7 @@ namespace Abp.DynamicEntityParameters
         [Required(AllowEmptyStrings = false)]
         public string Value { get; set; }
 
-        public string EntityRowId { get; set; }
+        public string EntityId { get; set; }
 
         public int EntityDynamicParameterId { get; set; }
 
@@ -23,10 +23,10 @@ namespace Abp.DynamicEntityParameters
 
         }
 
-        public EntityDynamicParameterValue(EntityDynamicParameter entityDynamicParameter, string entityRowId, string value, int? tenantId)
+        public EntityDynamicParameterValue(EntityDynamicParameter entityDynamicParameter, string entityId, string value, int? tenantId)
         {
             EntityDynamicParameterId = entityDynamicParameter.Id;
-            EntityRowId = entityRowId;
+            EntityId = entityId;
             Value = value;
             TenantId = tenantId;
         }

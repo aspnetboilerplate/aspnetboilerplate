@@ -21,24 +21,24 @@ namespace Abp.DynamicEntityParameters
 
         Task DeleteAsync(int id);
 
-        List<EntityDynamicParameterValue> GetValues(int entityDynamicParameterId, string entityRowId);
+        List<EntityDynamicParameterValue> GetValues(int entityDynamicParameterId, string entityId);
 
-        Task<List<EntityDynamicParameterValue>> GetValuesAsync(int entityDynamicParameterId, string entityRowId);
+        Task<List<EntityDynamicParameterValue>> GetValuesAsync(int entityDynamicParameterId, string entityId);
 
-        List<EntityDynamicParameterValue> GetValues(string entityFullName, string entityRowId);
+        List<EntityDynamicParameterValue> GetValues(string entityFullName, string entityId);
 
-        Task<List<EntityDynamicParameterValue>> GetValuesAsync(string entityFullName, string entityRowId);
+        Task<List<EntityDynamicParameterValue>> GetValuesAsync(string entityFullName, string entityId);
 
-        List<EntityDynamicParameterValue> GetValues(string entityFullName, string entityRowId, int dynamicParameterId);
+        List<EntityDynamicParameterValue> GetValues(string entityFullName, string entityId, int dynamicParameterId);
 
-        Task<List<EntityDynamicParameterValue>> GetValuesAsync(string entityFullName, string entityRowId, int dynamicParameterId);
+        Task<List<EntityDynamicParameterValue>> GetValuesAsync(string entityFullName, string entityId, int dynamicParameterId);
 
-        List<EntityDynamicParameterValue> GetValues(string entityFullName, string entityRowId, string parameterName);
+        List<EntityDynamicParameterValue> GetValues(string entityFullName, string entityId, string parameterName);
 
-        Task<List<EntityDynamicParameterValue>> GetValuesAsync(string entityFullName, string entityRowId, string parameterName);
+        Task<List<EntityDynamicParameterValue>> GetValuesAsync(string entityFullName, string entityId, string parameterName);
 
-        void CleanValues(int entityDynamicParameterId, string entityRowId);
+        void CleanValues(int entityDynamicParameterId, string entityId);
 
-        Task CleanValuesAsync(int entityDynamicParameterId, string entityRowId);
+        Task CleanValuesAsync(int entityDynamicParameterId, string entityId);
     }
 }

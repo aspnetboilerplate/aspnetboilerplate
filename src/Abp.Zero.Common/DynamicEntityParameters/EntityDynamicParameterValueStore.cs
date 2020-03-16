@@ -58,62 +58,62 @@ namespace Abp.DynamicEntityParameters
             return _entityDynamicParameterValueRepository.DeleteAsync(id);
         }
 
-        public virtual List<EntityDynamicParameterValue> GetValues(int entityDynamicParameterId, string entityRowId)
+        public virtual List<EntityDynamicParameterValue> GetValues(int entityDynamicParameterId, string entityId)
         {
             return _entityDynamicParameterValueRepository.GetAll().Where(val =>
-                val.EntityRowId == entityRowId && val.EntityDynamicParameterId == entityDynamicParameterId).ToList();
+                val.EntityId == entityId && val.EntityDynamicParameterId == entityDynamicParameterId).ToList();
         }
 
-        public virtual Task<List<EntityDynamicParameterValue>> GetValuesAsync(int entityDynamicParameterId, string entityRowId)
+        public virtual Task<List<EntityDynamicParameterValue>> GetValuesAsync(int entityDynamicParameterId, string entityId)
         {
             return _asyncQueryableExecuter.ToListAsync(
                 _entityDynamicParameterValueRepository.GetAll()
-                .Where(val => val.EntityRowId == entityRowId && val.EntityDynamicParameterId == entityDynamicParameterId)
+                .Where(val => val.EntityId == entityId && val.EntityDynamicParameterId == entityDynamicParameterId)
                 );
         }
 
-        public List<EntityDynamicParameterValue> GetValues(string entityFullName, string entityRowId)
+        public List<EntityDynamicParameterValue> GetValues(string entityFullName, string entityId)
         {
             return _entityDynamicParameterValueRepository.GetAll()
-                .Where(val => val.EntityRowId == entityRowId && val.EntityDynamicParameter.EntityFullName == entityFullName)
+                .Where(val => val.EntityId == entityId && val.EntityDynamicParameter.EntityFullName == entityFullName)
                 .ToList();
         }
 
-        public Task<List<EntityDynamicParameterValue>> GetValuesAsync(string entityFullName, string entityRowId)
+        public Task<List<EntityDynamicParameterValue>> GetValuesAsync(string entityFullName, string entityId)
         {
             return _asyncQueryableExecuter.ToListAsync(
                 _entityDynamicParameterValueRepository.GetAll()
-                    .Where(val => val.EntityRowId == entityRowId && val.EntityDynamicParameter.EntityFullName == entityFullName)
+                    .Where(val => val.EntityId == entityId && val.EntityDynamicParameter.EntityFullName == entityFullName)
                 );
         }
 
-        public List<EntityDynamicParameterValue> GetValues(string entityFullName, string entityRowId, int dynamicParameterId)
+        public List<EntityDynamicParameterValue> GetValues(string entityFullName, string entityId, int dynamicParameterId)
         {
             return _entityDynamicParameterValueRepository.GetAll()
                 .Where(val =>
-                    val.EntityRowId == entityRowId &&
+                    val.EntityId == entityId &&
                     val.EntityDynamicParameter.EntityFullName == entityFullName &&
                     val.EntityDynamicParameter.DynamicParameterId == dynamicParameterId
                 )
                 .ToList();
         }
 
-        public Task<List<EntityDynamicParameterValue>> GetValuesAsync(string entityFullName, string entityRowId, int dynamicParameterId)
+        public Task<List<EntityDynamicParameterValue>> GetValuesAsync(string entityFullName, string entityId, int dynamicParameterId)
         {
             return _asyncQueryableExecuter.ToListAsync(
                 _entityDynamicParameterValueRepository.GetAll()
                     .Where(val =>
-                        val.EntityRowId == entityRowId &&
+                        val.EntityId == entityId &&
                         val.EntityDynamicParameter.EntityFullName == entityFullName &&
                         val.EntityDynamicParameter.DynamicParameterId == dynamicParameterId
                     )
             );
         }
 
-        public virtual void CleanValues(int entityDynamicParameterId, string entityRowId)
+        public virtual void CleanValues(int entityDynamicParameterId, string entityId)
         {
             var list = _entityDynamicParameterValueRepository.GetAll().Where(val =>
-                 val.EntityRowId == entityRowId && val.EntityDynamicParameterId == entityDynamicParameterId).ToList();
+                 val.EntityId == entityId && val.EntityDynamicParameterId == entityDynamicParameterId).ToList();
 
             foreach (var entityDynamicParameterValue in list)
             {
@@ -121,10 +121,10 @@ namespace Abp.DynamicEntityParameters
             }
         }
 
-        public virtual async Task CleanValuesAsync(int entityDynamicParameterId, string entityRowId)
+        public virtual async Task CleanValuesAsync(int entityDynamicParameterId, string entityId)
         {
             var list = await _asyncQueryableExecuter.ToListAsync(_entityDynamicParameterValueRepository.GetAll().Where(val =>
-                 val.EntityRowId == entityRowId && val.EntityDynamicParameterId == entityDynamicParameterId));
+                 val.EntityId == entityId && val.EntityDynamicParameterId == entityDynamicParameterId));
 
             foreach (var entityDynamicParameterValue in list)
             {

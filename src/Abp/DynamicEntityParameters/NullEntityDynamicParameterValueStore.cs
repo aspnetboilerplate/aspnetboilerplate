@@ -44,41 +44,41 @@ namespace Abp.DynamicEntityParameters
             return Task.CompletedTask;
         }
 
-        public List<EntityDynamicParameterValue> GetValues(int entityDynamicParameterId, string entityRowId)
+        public List<EntityDynamicParameterValue> GetValues(int entityDynamicParameterId, string entityId)
         {
             return new List<EntityDynamicParameterValue>();
         }
 
-        public Task<List<EntityDynamicParameterValue>> GetValuesAsync(int entityDynamicParameterId, string entityRowId)
+        public Task<List<EntityDynamicParameterValue>> GetValuesAsync(int entityDynamicParameterId, string entityId)
         {
             return Task.FromResult(new List<EntityDynamicParameterValue>());
         }
 
-        public List<EntityDynamicParameterValue> GetValues(string entityFullName, string entityRowId)
+        public List<EntityDynamicParameterValue> GetValues(string entityFullName, string entityId)
         {
             return new List<EntityDynamicParameterValue>();
         }
 
-        public Task<List<EntityDynamicParameterValue>> GetValuesAsync(string entityFullName, string entityRowId)
+        public Task<List<EntityDynamicParameterValue>> GetValuesAsync(string entityFullName, string entityId)
         {
             return Task.FromResult(new List<EntityDynamicParameterValue>());
         }
 
-        public List<EntityDynamicParameterValue> GetValues(string entityFullName, string entityRowId, int dynamicParameterId)
+        public List<EntityDynamicParameterValue> GetValues(string entityFullName, string entityId, int dynamicParameterId)
         {
             return new List<EntityDynamicParameterValue>();
         }
 
-        public Task<List<EntityDynamicParameterValue>> GetValuesAsync(string entityFullName, string entityRowId, int dynamicParameterId)
+        public Task<List<EntityDynamicParameterValue>> GetValuesAsync(string entityFullName, string entityId, int dynamicParameterId)
         {
             return Task.FromResult(new List<EntityDynamicParameterValue>());
         }
 
-        public void CleanValues(int entityDynamicParameterId, string entityRowId)
+        public void CleanValues(int entityDynamicParameterId, string entityId)
         {
         }
 
-        public Task CleanValuesAsync(int entityDynamicParameterId, string entityRowId)
+        public Task CleanValuesAsync(int entityDynamicParameterId, string entityId)
         {
             return Task.CompletedTask;
         }

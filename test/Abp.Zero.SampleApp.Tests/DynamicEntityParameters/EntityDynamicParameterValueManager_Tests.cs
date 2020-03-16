@@ -26,7 +26,7 @@ namespace Abp.Zero.SampleApp.Tests.DynamicEntityParameters
             var val = new EntityDynamicParameterValue()
             {
                 EntityDynamicParameterId = entityDynamicParameter.Id,
-                EntityRowId = "123",
+                EntityId = "123",
                 Value = "TestValue",
                 TenantId = AbpSession.TenantId
             };
@@ -44,7 +44,7 @@ namespace Abp.Zero.SampleApp.Tests.DynamicEntityParameters
                 val2.ShouldNotBeNull();
 
                 val.EntityDynamicParameterId.ShouldBe(val2.EntityDynamicParameterId);
-                val.EntityRowId.ShouldBe(val2.EntityRowId);
+                val.EntityId.ShouldBe(val2.EntityId);
                 val.Value.ShouldBe(val2.Value);
             });
         }
@@ -56,7 +56,7 @@ namespace Abp.Zero.SampleApp.Tests.DynamicEntityParameters
             var parameterValue = new EntityDynamicParameterValue()
             {
                 EntityDynamicParameterId = entityDynamicParameter.Id,
-                EntityRowId = "123",
+                EntityId = "123",
                 Value = "TestValue",
                 TenantId = AbpSession.TenantId
             };
@@ -73,7 +73,7 @@ namespace Abp.Zero.SampleApp.Tests.DynamicEntityParameters
             {
                 var parameterValueLatest = _entityDynamicParameterValueManager.Get(parameterValue.Id);
                 parameterValueLatest.Value.ShouldBe("TestValue2");
-                parameterValueLatest.EntityRowId.ShouldBe(parameterValue.EntityRowId);
+                parameterValueLatest.EntityId.ShouldBe(parameterValue.EntityId);
                 parameterValueLatest.EntityDynamicParameterId.ShouldBe(parameterValue.EntityDynamicParameterId);
             });
         }
@@ -85,7 +85,7 @@ namespace Abp.Zero.SampleApp.Tests.DynamicEntityParameters
             var parameterValue = new EntityDynamicParameterValue()
             {
                 EntityDynamicParameterId = entityDynamicParameter.Id,
-                EntityRowId = "123",
+                EntityId = "123",
                 Value = "TestValue",
                 TenantId = AbpSession.TenantId
             };
@@ -120,7 +120,7 @@ namespace Abp.Zero.SampleApp.Tests.DynamicEntityParameters
             var val = new EntityDynamicParameterValue()
             {
                 EntityDynamicParameterId = entityDynamicParameter.Id,
-                EntityRowId = "123",
+                EntityId = "123",
                 Value = "TestValue",
                 TenantId = AbpSession.TenantId
             };
@@ -134,7 +134,7 @@ namespace Abp.Zero.SampleApp.Tests.DynamicEntityParameters
                  val2.ShouldNotBeNull();
 
                  val.EntityDynamicParameterId.ShouldBe(val2.EntityDynamicParameterId);
-                 val.EntityRowId.ShouldBe(val2.EntityRowId);
+                 val.EntityId.ShouldBe(val2.EntityId);
                  val.Value.ShouldBe(val2.Value);
              });
         }
@@ -146,7 +146,7 @@ namespace Abp.Zero.SampleApp.Tests.DynamicEntityParameters
             var parameterValue = new EntityDynamicParameterValue()
             {
                 EntityDynamicParameterId = entityDynamicParameter.Id,
-                EntityRowId = "123",
+                EntityId = "123",
                 Value = "TestValue",
                 TenantId = AbpSession.TenantId
             };
@@ -166,7 +166,7 @@ namespace Abp.Zero.SampleApp.Tests.DynamicEntityParameters
             {
                 var parameterValueLatest = await _entityDynamicParameterValueManager.GetAsync(parameterValue.Id);
                 parameterValueLatest.Value.ShouldBe("TestValue2");
-                parameterValueLatest.EntityRowId.ShouldBe(parameterValue.EntityRowId);
+                parameterValueLatest.EntityId.ShouldBe(parameterValue.EntityId);
                 parameterValueLatest.EntityDynamicParameterId.ShouldBe(parameterValue.EntityDynamicParameterId);
             });
         }
@@ -178,7 +178,7 @@ namespace Abp.Zero.SampleApp.Tests.DynamicEntityParameters
             var parameterValue = new EntityDynamicParameterValue()
             {
                 EntityDynamicParameterId = entityDynamicParameter.Id,
-                EntityRowId = "123",
+                EntityId = "123",
                 Value = "TestValue",
                 TenantId = AbpSession.TenantId
             };
@@ -222,7 +222,7 @@ namespace Abp.Zero.SampleApp.Tests.DynamicEntityParameters
                     var item = new EntityDynamicParameterValue()
                     {
                         EntityDynamicParameterId = entityDynamicParameter.Id,
-                        EntityRowId = rowId,
+                        EntityId = rowId,
                         Value = "TestValue",
                         TenantId = AbpSession.TenantId
                     };
@@ -241,7 +241,7 @@ namespace Abp.Zero.SampleApp.Tests.DynamicEntityParameters
 
             value1.Id.ShouldBe(value2.Id);
             value1.EntityDynamicParameterId.ShouldBe(value2.EntityDynamicParameterId);
-            value1.EntityRowId.ShouldBe(value2.EntityRowId);
+            value1.EntityId.ShouldBe(value2.EntityId);
             value1.Value.ShouldBe(value2.Value);
             value1.TenantId.ShouldBe(value2.TenantId);
         }
@@ -260,55 +260,55 @@ namespace Abp.Zero.SampleApp.Tests.DynamicEntityParameters
         }
 
         [Fact]
-        public async Task Should_Get_All_Values_Async_With_entityDynamicParameterId_entityRowId()
+        public async Task Should_Get_All_Values_Async_With_entityDynamicParameterId_entityId()
         {
             var testItems = AddTestItems();
 
             await RunAndCheckIfPermissionControlledAsync(async () =>
             {
-                var list = await _entityDynamicParameterValueManager.GetValuesAsync(entityDynamicParameterId: testItems.entityDynamicParameter.Id, entityRowId: "123");
+                var list = await _entityDynamicParameterValueManager.GetValuesAsync(entityDynamicParameterId: testItems.entityDynamicParameter.Id, entityId: "123");
                 CheckIfSequencesEqual(list, testItems.values);
             });
         }
 
         [Fact]
-        public void Should_Get_All_Values_With_entityDynamicParameterId_entityRowId()
+        public void Should_Get_All_Values_With_entityDynamicParameterId_entityId()
         {
             var testItems = AddTestItems();
 
             RunAndCheckIfPermissionControlled(() =>
             {
-                var list = _entityDynamicParameterValueManager.GetValues(entityDynamicParameterId: testItems.entityDynamicParameter.Id, entityRowId: "123");
+                var list = _entityDynamicParameterValueManager.GetValues(entityDynamicParameterId: testItems.entityDynamicParameter.Id, entityId: "123");
                 CheckIfSequencesEqual(list, testItems.values);
             });
         }
 
         [Fact]
-        public async Task Should_Get_All_Values_Async_With_entityFullName_entityRowId()
+        public async Task Should_Get_All_Values_Async_With_entityFullName_entityId()
         {
             var testItems = AddTestItems();
 
             await RunAndCheckIfPermissionControlledAsync(async () =>
             {
-                var list = await _entityDynamicParameterValueManager.GetValuesAsync(entityFullName: testItems.entityDynamicParameter.EntityFullName, entityRowId: "123");
+                var list = await _entityDynamicParameterValueManager.GetValuesAsync(entityFullName: testItems.entityDynamicParameter.EntityFullName, entityId: "123");
                 CheckIfSequencesEqual(list, testItems.values);
             });
         }
 
         [Fact]
-        public void Should_Get_All_Values_With_entityFullName_entityRowId()
+        public void Should_Get_All_Values_With_entityFullName_entityId()
         {
             var testItems = AddTestItems();
 
             RunAndCheckIfPermissionControlled(() =>
             {
-                var list = _entityDynamicParameterValueManager.GetValues(entityFullName: testItems.entityDynamicParameter.EntityFullName, entityRowId: "123");
+                var list = _entityDynamicParameterValueManager.GetValues(entityFullName: testItems.entityDynamicParameter.EntityFullName, entityId: "123");
                 CheckIfSequencesEqual(list, testItems.values);
             });
         }
 
         [Fact]
-        public async Task Should_Get_All_Values_Async_With_entityFullName_entityRowId_dynamicParameterId()
+        public async Task Should_Get_All_Values_Async_With_entityFullName_entityId_dynamicParameterId()
         {
             var testItems = AddTestItems();
 
@@ -316,14 +316,14 @@ namespace Abp.Zero.SampleApp.Tests.DynamicEntityParameters
             {
                 var list = await _entityDynamicParameterValueManager.GetValuesAsync(
                     entityFullName: testItems.entityDynamicParameter.EntityFullName,
-                    entityRowId: "123",
+                    entityId: "123",
                     dynamicParameterId: testItems.entityDynamicParameter.DynamicParameterId);
                 CheckIfSequencesEqual(list, testItems.values);
             });
         }
 
         [Fact]
-        public void Should_Get_All_Values_With_entityFullName_entityRowId_dynamicParameterId()
+        public void Should_Get_All_Values_With_entityFullName_entityId_dynamicParameterId()
         {
             var testItems = AddTestItems();
 
@@ -331,14 +331,14 @@ namespace Abp.Zero.SampleApp.Tests.DynamicEntityParameters
             {
                 var list = _entityDynamicParameterValueManager.GetValues(
                     entityFullName: testItems.entityDynamicParameter.EntityFullName,
-                    entityRowId: "123",
+                    entityId: "123",
                     dynamicParameterId: testItems.entityDynamicParameter.DynamicParameterId);
                 CheckIfSequencesEqual(list, testItems.values);
             });
         }
 
         [Fact]
-        public async Task Should_Get_All_Values_Async_With_entityFullName_entityRowId_parameterName()
+        public async Task Should_Get_All_Values_Async_With_entityFullName_entityId_parameterName()
         {
             var testItems = AddTestItems();
 
@@ -346,14 +346,14 @@ namespace Abp.Zero.SampleApp.Tests.DynamicEntityParameters
             {
                 var list = await _entityDynamicParameterValueManager.GetValuesAsync(
                     entityFullName: testItems.entityDynamicParameter.EntityFullName,
-                    entityRowId: "123",
+                    entityId: "123",
                     parameterName: testItems.values.First().EntityDynamicParameter.DynamicParameter.ParameterName);
                 CheckIfSequencesEqual(list, testItems.values);
             });
         }
 
         [Fact]
-        public void Should_Get_All_Values_With_entityFullName_entityRowId_parameterName()
+        public void Should_Get_All_Values_With_entityFullName_entityId_parameterName()
         {
             var testItems = AddTestItems();
 
@@ -361,7 +361,7 @@ namespace Abp.Zero.SampleApp.Tests.DynamicEntityParameters
             {
                 var list = _entityDynamicParameterValueManager.GetValues(
                     entityFullName: testItems.entityDynamicParameter.EntityFullName,
-                    entityRowId: "123",
+                    entityId: "123",
                     parameterName: testItems.values.First().EntityDynamicParameter.DynamicParameter.ParameterName);
                 CheckIfSequencesEqual(list, testItems.values);
             });
