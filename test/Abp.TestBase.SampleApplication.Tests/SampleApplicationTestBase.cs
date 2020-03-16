@@ -7,6 +7,7 @@ using Abp.TestBase.SampleApplication.Crm;
 using Abp.TestBase.SampleApplication.EntityFramework;
 using Abp.TestBase.SampleApplication.Messages;
 using Abp.TestBase.SampleApplication.People;
+using Abp.Threading;
 using Castle.MicroKernel.Registration;
 using EntityFramework.DynamicFilters;
 
@@ -28,6 +29,9 @@ namespace Abp.TestBase.SampleApplication.Tests
                 Component.For<DbConnection>()
                     .UsingFactoryMethod(Effort.DbConnectionFactory.CreateTransient)
                     .LifestyleSingleton()
+                );
+            LocalIocManager.IocContainer.Register(
+                Component.For<ICancellationTokenProvider>().Instance(NullCancellationTokenProvider.Instance)
                 );
         }
 
