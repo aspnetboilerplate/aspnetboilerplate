@@ -8,6 +8,6 @@ namespace Abp.DynamicEntityParameters
         /// Used to add/manipulate dynamic parameter definitions.
         /// </summary>
         /// <param name="context">Context</param>,
-        public abstract void SetWebhooks(IDynamicEntityParameterDefinitionContext context);
+        public abstract void SetDynamicEntityParameters(IDynamicEntityParameterDefinitionContext context);
     }
 }

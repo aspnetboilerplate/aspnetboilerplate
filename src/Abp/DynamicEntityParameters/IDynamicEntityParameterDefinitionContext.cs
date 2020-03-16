@@ -3,7 +3,7 @@
     public interface IDynamicEntityParameterDefinitionContext
     {
         /// <summary>
-        /// Gets the webhook definition manager.
+        /// Gets the DynamicEntityParameter definition manager.
         /// </summary>
         IDynamicEntityParameterDefinitionManager Manager { get; set; }
     }
