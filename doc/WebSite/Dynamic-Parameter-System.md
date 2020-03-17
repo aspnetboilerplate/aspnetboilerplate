@@ -9,7 +9,7 @@ First of all you need to define which entities can have that feature and allowed
 ```csharp
 public class MyDynamicEntityParameterDefinitionProvider : DynamicEntityParameterDefinitionProvider
 {
-     public override void SetWebhooks(IDynamicEntityParameterDefinitionContext context)
+     public override void SetDynamicEntityParameters(IDynamicEntityParameterDefinitionContext context)
      {
          //input types dynamic parameters can have
          context.Manager.AddAllowedInputType<SingleLineStringInputType>();
@@ -267,9 +267,9 @@ The values your that your entity rows have.
 Adding value to entities dynamic parameter
 
 ```csharp
-var valueOfRow1 = new EntityDynamicParameterValue(cityDynamicParameterOfCountry, entityRowId: "1", value: "Istanbul", tenantId: AbpSession.TenantId);
-var valueOfRow12 = new EntityDynamicParameterValue(cityDynamicParameterOfCountry, entityRowId: "1", value: "London", tenantId: AbpSession.TenantId);//can have multiple values
-var valueOfRow2 = new EntityDynamicParameterValue(cityDynamicParameterOfCountry, entityRowId: "2", value: "London", tenantId: AbpSession.TenantId);
+var valueOfRow1 = new EntityDynamicParameterValue(cityDynamicParameterOfCountry, EntityId: "1", value: "Istanbul", tenantId: AbpSession.TenantId);
+var valueOfRow12 = new EntityDynamicParameterValue(cityDynamicParameterOfCountry, EntityId: "1", value: "London", tenantId: AbpSession.TenantId);//can have multiple values
+var valueOfRow2 = new EntityDynamicParameterValue(cityDynamicParameterOfCountry, EntityId: "2", value: "London", tenantId: AbpSession.TenantId);
 
 var _entityDynamicParameterValueManager = Resolve<IEntityDynamicParameterValueManager>();
 _entityDynamicParameterValueManager.Add(valueOfRow1);
@@ -281,8 +281,8 @@ Get values of entity parameter
 
 ```csharp
 var _entityDynamicParameterValueManager = Resolve<IEntityDynamicParameterValueManager>();
-var allValues = _entityDynamicParameterValueManager.GetValues<Country>(entityRowId: "1");
-var cityValues = _entityDynamicParameterValueManager.GetValues<Country>(entityRowId: "1", cityParameter);
+var allValues = _entityDynamicParameterValueManager.GetValues<Country>(EntityId: "1");
+var cityValues = _entityDynamicParameterValueManager.GetValues<Country>(EntityId: "1", cityParameter);
 ```
 
 
@@ -339,25 +339,25 @@ public interface IEntityDynamicParameterValueManager
 
     Task DeleteAsync(int id);
 
-    List<EntityDynamicParameterValue> GetValues(int entityDynamicParameterId, string entityRowId);
+    List<EntityDynamicParameterValue> GetValues(int entityDynamicParameterId, string EntityId);
 
-    Task<List<EntityDynamicParameterValue>> GetValuesAsync(int entityDynamicParameterId, string entityRowId);
+    Task<List<EntityDynamicParameterValue>> GetValuesAsync(int entityDynamicParameterId, string EntityId);
 
-    List<EntityDynamicParameterValue> GetValues(string entityFullName, string entityRowId);
+    List<EntityDynamicParameterValue> GetValues(string entityFullName, string EntityId);
 
-    Task<List<EntityDynamicParameterValue>> GetValuesAsync(string entityFullName, string entityRowId);
+    Task<List<EntityDynamicParameterValue>> GetValuesAsync(string entityFullName, string EntityId);
 
-    List<EntityDynamicParameterValue> GetValues(string entityFullName, string entityRowId, int dynamicParameterId);
+    List<EntityDynamicParameterValue> GetValues(string entityFullName, string EntityId, int dynamicParameterId);
 
-    Task<List<EntityDynamicParameterValue>> GetValuesAsync(string entityFullName, string entityRowId, int dynamicParameterId);
+    Task<List<EntityDynamicParameterValue>> GetValuesAsync(string entityFullName, string EntityId, int dynamicParameterId);
 
-    List<EntityDynamicParameterValue> GetValues(string entityFullName, string entityRowId, string parameterName);
+    List<EntityDynamicParameterValue> GetValues(string entityFullName, string EntityId, string parameterName);
 
-    Task<List<EntityDynamicParameterValue>> GetValuesAsync(string entityFullName, string entityRowId, string parameterName);
+    Task<List<EntityDynamicParameterValue>> GetValuesAsync(string entityFullName, string EntityId, string parameterName);
 
-    void CleanValues(int entityDynamicParameterId, string entityRowId);
+    void CleanValues(int entityDynamicParameterId, string EntityId);
 
-    Task CleanValuesAsync(int entityDynamicParameterId, string entityRowId);
+    Task CleanValuesAsync(int entityDynamicParameterId, string EntityId);
 }
 ```
 
