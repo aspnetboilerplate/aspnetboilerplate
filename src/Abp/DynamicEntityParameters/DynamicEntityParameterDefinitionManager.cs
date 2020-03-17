@@ -38,7 +38,7 @@ namespace Abp.DynamicEntityParameters
             {
                 using (var provider = _iocManager.ResolveAsDisposable<DynamicEntityParameterDefinitionProvider>(providerType))
                 {
-                    provider.Object.SetWebhooks(context);
+                    provider.Object.SetDynamicEntityParameters(context);
                 }
             }
         }

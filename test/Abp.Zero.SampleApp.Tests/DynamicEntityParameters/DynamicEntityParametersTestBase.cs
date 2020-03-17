@@ -150,7 +150,7 @@ namespace Abp.Zero.SampleApp.Tests.DynamicEntityParameters
 
     public class MyDynamicEntityParameterDefinitionProvider : DynamicEntityParameterDefinitionProvider
     {
-        public override void SetWebhooks(IDynamicEntityParameterDefinitionContext context)
+        public override void SetDynamicEntityParameters(IDynamicEntityParameterDefinitionContext context)
         {
             context.Manager.AddAllowedInputType<SingleLineStringInputType>();
             context.Manager.AddAllowedInputType<CheckboxInputType>();
