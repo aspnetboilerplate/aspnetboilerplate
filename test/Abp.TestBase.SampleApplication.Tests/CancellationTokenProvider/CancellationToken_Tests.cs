@@ -53,12 +53,11 @@ namespace Abp.TestBase.SampleApplication.Tests.CancellationTokenProvider
         public async Task Should_Not_Cancel_Operation()
         {
             bool isCanceled = false;
-            decimal total = 0;
             using (CancellationTokenProvider.Use(CancellationToken.None))
             {
                 try
                 {
-                    total = await LongTask(100);
+                    await LongTask(100);
                 }
                 catch (Exception)
                 {
