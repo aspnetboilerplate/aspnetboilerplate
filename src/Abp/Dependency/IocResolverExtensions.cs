@@ -121,7 +121,7 @@ namespace Abp.Dependency
         
         /// <summary>
         /// This method starts a scope to resolve and release all objects automatically.
-        /// You can use the <c>scope</c> in <see cref="action"/>.
+        /// You can use the <c>scope</c> in <paramref name="action"/>.
         /// </summary> 
         /// <param name="iocResolver">IIocResolver object</param>
         /// <param name="action">An action that can use the resolved object</param>

@@ -4,6 +4,7 @@ using System.Threading.Tasks;
 using Abp.Domain.Repositories;
 using Abp.Domain.Services;
 using Abp.Domain.Uow;
+using Abp.Linq;
 using Abp.UI;
 using Abp.Zero;
 
@@ -16,11 +17,14 @@ namespace Abp.Organizations
     {
         protected IRepository<OrganizationUnit, long> OrganizationUnitRepository { get; private set; }
 
+        public IAsyncQueryableExecuter AsyncQueryableExecuter { get; set; }
+        
         public OrganizationUnitManager(IRepository<OrganizationUnit, long> organizationUnitRepository)
         {
             OrganizationUnitRepository = organizationUnitRepository;
 
             LocalizationSourceName = AbpZeroConsts.LocalizationSourceName;
+            AsyncQueryableExecuter = NullAsyncQueryableExecuter.Instance;
         }
 
         [UnitOfWork]
@@ -77,14 +81,18 @@ namespace Abp.Organizations
 
         public virtual async Task<OrganizationUnit> GetLastChildOrNullAsync(long? parentId)
         {
-            var children = await OrganizationUnitRepository.GetAllListAsync(ou => ou.ParentId == parentId);
-            return children.OrderBy(c => c.Code).LastOrDefault();
+            var query = OrganizationUnitRepository.GetAll()
+                .Where(ou => ou.ParentId == parentId)
+                .OrderByDescending(ou => ou.Code);
+            return await AsyncQueryableExecuter.FirstOrDefaultAsync(query);
         }
 
         public virtual OrganizationUnit GetLastChildOrNull(long? parentId)
         {
-            var children = OrganizationUnitRepository.GetAllList(ou => ou.ParentId == parentId);
-            return children.OrderBy(c => c.Code).LastOrDefault();
+            var query = OrganizationUnitRepository.GetAll()
+                .Where(ou => ou.ParentId == parentId)
+                .OrderByDescending(ou => ou.Code);
+            return query.FirstOrDefault();
         }
 
         public virtual async Task<string> GetCodeAsync(long id)

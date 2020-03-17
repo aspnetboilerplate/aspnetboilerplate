@@ -5,6 +5,7 @@ using Abp.Auditing;
 using Abp.BackgroundJobs;
 using Abp.Dependency;
 using Abp.Domain.Uow;
+using Abp.DynamicEntityParameters;
 using Abp.EntityHistory;
 using Abp.Events.Bus;
 using Abp.Notifications;
@@ -117,8 +118,13 @@ namespace Abp.Configuration.Startup
         IWebhooksConfiguration Webhooks { get; }
 
         /// <summary>
+        /// Used to configure dynamic entity parameters
+        /// </summary>
+        IDynamicEntityParameterConfiguration DynamicEntityParameters { get; }
+
+        /// <summary>
         /// Used to replace a service type.
-        /// Given <see cref="replaceAction"/> should register an implementation for the <see cref="type"/>.
+        /// Given <paramref name="replaceAction"/> should register an implementation for the <paramref name="type"/>.
         /// </summary>
         /// <param name="type">The type to be replaced.</param>
         /// <param name="replaceAction">Replace action.</param>

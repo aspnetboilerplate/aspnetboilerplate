@@ -65,10 +65,8 @@ namespace Abp.Web.Tests.Auditing
             {
                 mockHttpRequest.ServerVariables.Returns(serverVariables);
             }
-            var mockHttpContext = Substitute.For<HttpContextBase>();
-            mockHttpContext.Request.Returns(mockHttpRequest);
 
-            _clientInfoProvider.Configure().GetCurrentHttpContext().Returns(mockHttpContext);
+            _clientInfoProvider.Configure().GetCurrentHttpRequest().Returns(mockHttpRequest);
         }
     }
 }

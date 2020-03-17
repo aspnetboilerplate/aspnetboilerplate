@@ -71,7 +71,7 @@ namespace Abp.Tests.Localization
             _resourceFileLocalizationSource.GetStringOrNull("Apple", CultureInfo.GetCultureInfo("en-US")).ShouldBeNull();
         }
 
-        //[Fact] Waiting for https://github.com/aspnetboilerplate/aspnetboilerplate/issues/1995
+        [Fact(Skip = "Waiting for https://github.com/aspnetboilerplate/aspnetboilerplate/issues/1995")]
         public void Test_GetAllStrings()
         {
             var allStrings = _resourceFileLocalizationSource.GetAllStrings(CultureInfo.GetCultureInfo("en"));
