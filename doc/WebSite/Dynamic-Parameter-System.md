@@ -302,7 +302,7 @@ var cityValues = _entityDynamicParameterValueManager.GetValues<Country>(EntityId
             <td>Unique indentifier of EntityDynamicParameterId</td>
         </tr>
          <tr>
-            <td>EntityRowId*  <span style="font-style: italic;">(string)</span></td>
+            <td>EntityId*  <span style="font-style: italic;">(string)</span></td>
             <td>Unique idenfier of entity row</td>
         </tr>  
          <tr>
