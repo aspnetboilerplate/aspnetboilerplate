@@ -43,7 +43,7 @@ namespace Abp.UI.Inputs
         public IValueValidator Validator { get; set; }
 
         protected InputTypeBase()
-            :this(new AlwaysValidValueValidator())
+            : this(new AlwaysValidValueValidator())
         {
 
         }
@@ -53,5 +53,8 @@ namespace Abp.UI.Inputs
             Attributes = new Dictionary<string, object>();
             Validator = validator;
         }
+
+        public static string GetName<TInputType>() where TInputType : IInputType =>
+            ((IInputType) Activator.CreateInstance(typeof(TInputType))).Name;
     }
 }

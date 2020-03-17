@@ -8,6 +8,7 @@ using Abp.Authorization.Users;
 using Abp.EntityHistory;
 using Abp.BackgroundJobs;
 using Abp.Configuration;
+using Abp.DynamicEntityParameters;
 using Abp.Localization;
 using Abp.MultiTenancy;
 using Abp.Notifications;
@@ -72,6 +73,10 @@ namespace Abp.Zero.EntityFramework
             SetTableName<WebhookEvent>(modelBuilder, prefix + "WebhookEvents", schemaName);
             SetTableName<WebhookSubscriptionInfo>(modelBuilder, prefix + "WebhookSubscriptions", schemaName);
             SetTableName<WebhookSendAttempt>(modelBuilder, prefix + "WebhookSendAttempts", schemaName);
+            SetTableName<DynamicParameter>(modelBuilder, prefix + "DynamicParameters", schemaName);
+            SetTableName<DynamicParameterValue>(modelBuilder, prefix + "DynamicParameterValues", schemaName);
+            SetTableName<EntityDynamicParameter>(modelBuilder, prefix + "EntityDynamicParameters", schemaName);
+            SetTableName<EntityDynamicParameterValue>(modelBuilder, prefix + "EntityDynamicParameterValues", schemaName);
         }
 
         private static void SetTableName<TEntity>(DbModelBuilder modelBuilder, string tableName, string schemaName)
