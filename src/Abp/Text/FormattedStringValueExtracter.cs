@@ -39,7 +39,7 @@ namespace Abp.Text
 
             if (formatTokens.IsNullOrEmpty())
             {
-                return new ExtractionResult(str == "");
+                return new ExtractionResult(string.IsNullOrEmpty(str));
             }
 
             var result = new ExtractionResult(false);
@@ -102,7 +102,7 @@ namespace Abp.Text
         }
 
         /// <summary>
-        /// Checks if given <see cref="str"/> fits to given <see cref="format"/>.
+        /// Checks if given <paramref name="str"/> fits to given <paramref name="format"/>.
         /// Also gets extracted values.
         /// </summary>
         /// <param name="str">String including dynamic values</param>
@@ -115,7 +115,7 @@ namespace Abp.Text
             var result = new FormattedStringValueExtracter().Extract(str, format, ignoreCase);
             if (!result.IsMatch)
             {
-                values = new string[0];
+                values = Array.Empty<string>();
                 return false;
             }
 

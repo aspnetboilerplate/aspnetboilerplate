@@ -15,7 +15,7 @@ namespace Abp.Tests.Experimental
             Method_BaseEvent_BaseArg(new EntityUpdatedEventData<Person>(new Student())); //TODO: <Student>
         }
 
-        public void Method_BaseEvent_BaseArg(EntityEventData<Person> data)
+        internal void Method_BaseEvent_BaseArg(EntityEventData<Person> data)
         {
 
         }
@@ -27,7 +27,7 @@ namespace Abp.Tests.Experimental
             Method_BaseEvent_DerivedArg(new EntityUpdatedEventData<Student>(new Student()));
         }
 
-        public void Method_BaseEvent_DerivedArg(EntityEventData<Student> data)
+        internal void Method_BaseEvent_DerivedArg(EntityEventData<Student> data)
         {
 
         }
@@ -39,7 +39,7 @@ namespace Abp.Tests.Experimental
             Method_DerivedEvent_BaseArg(new EntityUpdatedEventData<Person>(new Student()));
         }
 
-        public void Method_DerivedEvent_BaseArg(EntityUpdatedEventData<Person> data)
+        internal void Method_DerivedEvent_BaseArg(EntityUpdatedEventData<Person> data)
         {
 
         }
@@ -50,7 +50,7 @@ namespace Abp.Tests.Experimental
             Method_DerivedEvent_DerivedArg(new EntityUpdatedEventData<Student>(new Student()));
         }
 
-        public void Method_DerivedEvent_DerivedArg(EntityUpdatedEventData<Student> data)
+        internal void Method_DerivedEvent_DerivedArg(EntityUpdatedEventData<Student> data)
         {
 
         }

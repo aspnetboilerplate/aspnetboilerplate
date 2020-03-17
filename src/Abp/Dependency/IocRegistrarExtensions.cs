@@ -50,7 +50,7 @@ namespace Abp.Dependency
         /// Registers a type with it's implementation if it's not registered before.
         /// </summary>
         /// <typeparam name="TType">Registering type</typeparam>
-        /// <typeparam name="TImpl">The type that implements <see cref="TType"/></typeparam>
+        /// <typeparam name="TImpl">The type that implements <typeparamref name="TType"/></typeparam>
         /// <param name="iocRegistrar">Registrar</param>
         /// <param name="lifeStyle">Lifestyle of the objects of this type</param>
         /// <returns>True, if registered for given implementation.</returns>

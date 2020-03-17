@@ -101,7 +101,7 @@ namespace Abp.Application.Services
         }
 
         /// <summary>
-        /// Maps <see cref="TEntity"/> to <see cref="TEntityDto"/>.
+        /// Maps <typeparamref name="TEntity"/> to <typeparamref name="TEntityDto"/>.
         /// It uses <see cref="IObjectMapper"/> by default.
         /// It can be overrided for custom mapping.
         /// </summary>
@@ -111,7 +111,7 @@ namespace Abp.Application.Services
         }
 
         /// <summary>
-        /// Maps <see cref="TEntityDto"/> to <see cref="TEntity"/> to create a new entity.
+        /// Maps <typeparamref name="TEntityDto"/> to <typeparamref name="TEntity"/> to create a new entity.
         /// It uses <see cref="IObjectMapper"/> by default.
         /// It can be overrided for custom mapping.
         /// </summary>
@@ -121,7 +121,7 @@ namespace Abp.Application.Services
         }
 
         /// <summary>
-        /// Maps <see cref="TUpdateInput"/> to <see cref="TEntity"/> to update the entity.
+        /// Maps <typeparamref name="TUpdateInput"/> to <typeparamref name="TEntity"/> to update the entity.
         /// It uses <see cref="IObjectMapper"/> by default.
         /// It can be overrided for custom mapping.
         /// </summary>
