@@ -22,9 +22,10 @@ namespace Abp.TestBase.SampleApplication.Tests.CancellationTokenProvider
                 Component.For<ICancellationTokenProvider>().Instance(NullCancellationTokenProvider.Instance)
             );
         }
+
         public CancellationToken_Tests()
         {
-            CancellationTokenProvider = NullCancellationTokenProvider.Instance;
+            CancellationTokenProvider = LocalIocManager.Resolve<ICancellationTokenProvider>();
         }
 
         [Fact]
