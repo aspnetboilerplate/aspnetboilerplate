@@ -1,6 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Text;
 using System.Threading;
 using Abp.Runtime;
 
@@ -17,6 +15,7 @@ namespace Abp.Threading
         {
             CancellationTokenOverrideScopeProvider = cancellationTokenOverrideScopeProvider;
         }
+
         public IDisposable Use(CancellationToken cancellationToken)
         {
             return CancellationTokenOverrideScopeProvider.BeginScope(CancellationTokenOverrideContextKey, new CancellationTokenOverride(cancellationToken));

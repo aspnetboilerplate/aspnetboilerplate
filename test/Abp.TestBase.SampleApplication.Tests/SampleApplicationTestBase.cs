@@ -30,9 +30,6 @@ namespace Abp.TestBase.SampleApplication.Tests
                     .UsingFactoryMethod(Effort.DbConnectionFactory.CreateTransient)
                     .LifestyleSingleton()
                 );
-            LocalIocManager.IocContainer.Register(
-                Component.For<ICancellationTokenProvider>().Instance(NullCancellationTokenProvider.Instance)
-                );
         }
 
         protected override void PostInitialize()
