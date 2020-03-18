@@ -47,7 +47,7 @@ namespace Abp.Runtime.Caching
                 }
 
                 var generatedValue = factory(key);
-                if (generatedValue != null)
+                if (!EqualityComparer<TValue>.Default.Equals(generatedValue, default))
                 {
                     try
                     {
@@ -101,7 +101,7 @@ namespace Abp.Runtime.Caching
                         {
                             var key = keys[i];
                             var generatedValue = factory(key);
-                            if (generatedValue != null)
+                            if (!EqualityComparer<TValue>.Default.Equals(generatedValue, default))
                             {
                                 generated.Add(new KeyValuePair<TKey, TValue>(key, generatedValue));
                             }
@@ -155,7 +155,7 @@ namespace Abp.Runtime.Caching
                     if (!result.HasValue)
                     {
                         var generatedValue = await factory(key);
-                        if (generatedValue != null)
+                        if (!EqualityComparer<TValue>.Default.Equals(generatedValue, default))
                         {
                             try
                             {
@@ -214,7 +214,7 @@ namespace Abp.Runtime.Caching
                         {
                             var key = keys[i];
                             var generatedValue = await factory(key);
-                            if (generatedValue != null)
+                            if (!EqualityComparer<TValue>.Default.Equals(generatedValue, default))
                             {
                                 generated.Add(new KeyValuePair<TKey, TValue>(key, generatedValue));
                             }
