@@ -56,42 +56,55 @@ namespace Abp.Runtime.Caching
 
         public TValue Get(TKey key, Func<TKey, TValue> factory)
         {
-            return InternalCache.Get(key, factory);
+            return (TValue)InternalCache.Get(key.ToString(), (k) => factory(key));
         }
 
         public TValue[] Get(TKey[] keys, Func<TKey, TValue> factory)
         {
-            return InternalCache.Get(keys, factory);
+            var keysAsString = keys.Select((key) => key.ToString()).ToArray();
+            var values = InternalCache.Get(keysAsString, (k) => factory((TKey)(k as object)));
+            return values.Select(value => (TValue)value).ToArray();
         }
 
-        public Task<TValue> GetAsync(TKey key, Func<TKey, Task<TValue>> factory)
+        public async Task<TValue> GetAsync(TKey key, Func<TKey, Task<TValue>> factory)
         {
-            return InternalCache.GetAsync(key, factory);
+            return (TValue)await InternalCache.GetAsync(key.ToString(), async (k) => await factory(key));
         }
 
-        public Task<TValue[]> GetAsync(TKey[] keys, Func<TKey, Task<TValue>> factory)
+        public async Task<TValue[]> GetAsync(TKey[] keys, Func<TKey, Task<TValue>> factory)
         {
-            return InternalCache.GetAsync(keys, factory);
+            var keysAsString = keys.Select((key) => key.ToString()).ToArray();
+            var values = await InternalCache.GetAsync(keysAsString, async (k) => await factory((TKey)(k as object)));
+            return values.Select(value => (TValue)value).ToArray();
         }
 
         public TValue GetOrDefault(TKey key)
         {
-            return InternalCache.GetOrDefault<TKey, TValue>(key);
+            return CastOrDefault(InternalCache.GetOrDefault(key.ToString()));
         }
 
         public TValue[] GetOrDefault(TKey[] keys)
         {
-            return InternalCache.GetOrDefault<TKey, TValue>(keys);
+            var keysAsString = keys.Select((key) => key.ToString()).ToArray();
+            var values = InternalCache.GetOrDefault(keysAsString);
+            return values.Select(CastOrDefault).ToArray();
         }
 
-        public Task<TValue> GetOrDefaultAsync(TKey key)
+        public async Task<TValue> GetOrDefaultAsync(TKey key)
         {
-            return InternalCache.GetOrDefaultAsync<TKey, TValue>(key);
+            return CastOrDefault(await InternalCache.GetOrDefaultAsync(key.ToString()));
         }
 
-        public Task<TValue[]> GetOrDefaultAsync(TKey[] keys)
+        public async Task<TValue[]> GetOrDefaultAsync(TKey[] keys)
         {
-            return InternalCache.GetOrDefaultAsync<TKey, TValue>(keys);
+            var keysAsString = keys.Select((key) => key.ToString()).ToArray();
+            var values = await InternalCache.GetOrDefaultAsync(keysAsString);
+            return values.Select(CastOrDefault).ToArray();
+        }
+
+        private TValue CastOrDefault(object value)
+        {
+            return value == null ? default : (TValue)value;
         }
 
         public void Set(TKey key, TValue value, TimeSpan? slidingExpireTime = null, TimeSpan? absoluteExpireTime = null)
