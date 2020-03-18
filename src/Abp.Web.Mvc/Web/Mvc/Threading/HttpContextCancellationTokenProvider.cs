@@ -16,7 +16,21 @@ namespace Abp.Web.Mvc.Threading
                 {
                     return OverridedValue.CancellationToken;
                 }
-                return HttpContext.Current?.Response.ClientDisconnectedToken ?? CancellationToken.None;
+
+                try
+                {
+                    return HttpContext.Current?.Response.ClientDisconnectedToken ?? CancellationToken.None;
+                }
+                catch (HttpException ex)
+                {
+                    /* Workaround:
+                     * Accessing HttpContext.Response during Application_Start or Application_End will throw exception.
+                     * This behavior is intentional from microsoft
+                     * See https://stackoverflow.com/questions/2518057/request-is-not-available-in-this-context/23908099#comment2514887_2518066
+                     */
+                    Logger.Warn("HttpContext.Request access when it is not suppose to", ex);
+                    return CancellationToken.None;
+                }
             }
         }
         public HttpContextCancellationTokenProvider(
