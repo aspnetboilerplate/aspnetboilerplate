@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data.Common;
@@ -18,6 +18,8 @@ using Abp.Domain.Entities;
 using Abp.Domain.Entities.Auditing;
 using Abp.Domain.Repositories;
 using Abp.Domain.Uow;
+using Abp.EntityFramework.Uow;
+using Abp.EntityFramework.Utils;
 using Abp.Events.Bus;
 using Abp.Events.Bus.Entities;
 using Abp.Extensions;
@@ -31,7 +33,7 @@ namespace Abp.EntityFramework
     /// <summary>
     /// Base class for all DbContext classes in the application.
     /// </summary>
-    public abstract class AbpDbContext : DbContext, ITransientDependency, IShouldInitialize
+    public abstract class AbpDbContext : DbContext, ITransientDependency, IShouldInitialize, IShouldInitializeDcontext
     {
         /// <summary>
         /// Used to get current session values.
@@ -252,6 +254,31 @@ namespace Abp.EntityFramework
             }
 
             return changeReport;
+        }
+
+        public virtual void Initialize(AbpEfDbContextInitializationContext initializationContext)
+        {
+            var uowOptions = initializationContext.UnitOfWork.Options;
+            if (uowOptions.Timeout.HasValue && !Database.CommandTimeout.HasValue)
+            {
+                Database.CommandTimeout = uowOptions.Timeout.Value.TotalSeconds.To<int>();
+            }
+
+            if (Clock.SupportsMultipleTimezone)
+            {
+                ((IObjectContextAdapter)this).ObjectContext.ObjectMaterialized += (sender, args) =>
+                {
+                    var entityType = ObjectContext.GetObjectType(args.Entity.GetType());
+
+                    Configuration.AutoDetectChangesEnabled = false;
+                    var previousState = Entry(args.Entity).State;
+
+                    DateTimePropertyInfoHelper.NormalizeDatePropertyKinds(args.Entity, entityType);
+
+                    Entry(args.Entity).State = previousState;
+                    Configuration.AutoDetectChangesEnabled = true;
+                };
+            }
         }
 
         protected virtual void ApplyAbpConcepts(DbEntityEntry entry, long? userId, EntityChangeReport changeReport)

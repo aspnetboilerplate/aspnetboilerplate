@@ -4,7 +4,7 @@ using System.Threading;
 using System.Web;
 using Abp.Runtime;
 
-namespace Abp.Web.Mvc.Threading
+namespace Abp.Web.Threading
 {
     public class HttpContextCancellationTokenProvider : CancellationTokenProviderBase, ITransientDependency
     {
