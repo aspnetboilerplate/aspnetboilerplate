@@ -124,11 +124,9 @@ namespace Abp.EntityFrameworkCore.Uow
                     dbContext = _dbContextResolver.Resolve<TDbContext>(connectionString, null);
                 }
 
-                if (Options.Timeout.HasValue &&
-                    dbContext.Database.IsRelational() && 
-                    !dbContext.Database.GetCommandTimeout().HasValue)
+                if (dbContext is IShouldInitializeDcontext abpDbContext)
                 {
-                    dbContext.Database.SetCommandTimeout(Options.Timeout.Value.TotalSeconds.To<int>());
+                    abpDbContext.Initialize(new AbpEfDbContextInitializationContext(this));
                 }
 
                 //TODO: Object materialize event
