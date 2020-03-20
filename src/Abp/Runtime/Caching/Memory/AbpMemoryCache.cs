@@ -22,7 +22,7 @@ namespace Abp.Runtime.Caching.Memory
             _memoryCache = new MemoryCache(new OptionsWrapper<MemoryCacheOptions>(new MemoryCacheOptions()));
         }
 
-        protected override bool TryGetValue(string key, out object value)
+        public override bool TryGetValue(string key, out object value)
         {
             return _memoryCache.TryGetValue(key, out value);
         }

@@ -31,27 +31,27 @@ namespace Abp.Runtime.Caching.Redis
             _serializer = redisCacheSerializer;
         }
 
-        protected override bool TryGetValue(string key, out object value)
+        public override bool TryGetValue(string key, out object value)
         {
             var redisValue = _database.StringGet(GetLocalizedRedisKey(key));
             value = redisValue.HasValue ? Deserialize(redisValue) : null;
             return redisValue.HasValue;
         }
 
-        protected override ConditionalValue<object>[] TryGetValues(string[] keys)
+        public override ConditionalValue<object>[] TryGetValues(string[] keys)
         {
             var redisKeys = keys.Select(GetLocalizedRedisKey);
             var redisValues = _database.StringGet(redisKeys.ToArray());
             return redisValues.Select(CreateResult).ToArray();
         }
 
-        protected override async Task<ConditionalValue<object>> TryGetValueAsync(string key)
+        public override async Task<ConditionalValue<object>> TryGetValueAsync(string key)
         {
             var redisValue = await _database.StringGetAsync(GetLocalizedRedisKey(key));
             return CreateResult(redisValue);
         }
 
-        protected override async Task<ConditionalValue<object>[]> TryGetValuesAsync(string[] keys)
+        public override async Task<ConditionalValue<object>[]> TryGetValuesAsync(string[] keys)
         {
             var redisKeys = keys.Select(GetLocalizedRedisKey);
             var redisValues = await _database.StringGetAsync(redisKeys.ToArray());
