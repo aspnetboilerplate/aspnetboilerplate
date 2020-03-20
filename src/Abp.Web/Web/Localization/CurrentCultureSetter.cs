@@ -1,4 +1,5 @@
 using System;
+using System.Globalization;
 using System.Linq;
 using System.Threading;
 using System.Web;
@@ -67,7 +68,7 @@ namespace Abp.Web.Localization
             }
 
             // 5 & 6: Default / Browser
-            culture = GetDefaultCulture() ?? GetBrowserCulture(httpContext);
+            culture = GetBrowserCulture(httpContext) ?? GetDefaultCulture();
             if (culture != null)
             {
                 SetCurrentCulture(culture);
@@ -184,8 +185,8 @@ namespace Abp.Web.Localization
 
         protected virtual void SetCurrentCulture(string language)
         {
-            Thread.CurrentThread.CurrentCulture = CultureInfoHelper.Get(language);
-            Thread.CurrentThread.CurrentUICulture = CultureInfoHelper.Get(language);
+            Thread.CurrentThread.CurrentCulture = CultureInfo.GetCultureInfo(language);
+            Thread.CurrentThread.CurrentUICulture = CultureInfo.GetCultureInfo(language);
         }
     }
 }

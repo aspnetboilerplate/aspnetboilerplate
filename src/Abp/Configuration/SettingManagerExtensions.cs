@@ -11,7 +11,7 @@ namespace Abp.Configuration
     public static class SettingManagerExtensions
     {
         /// <summary>
-        /// Gets value of a setting in given type (<see cref="T"/>).
+        /// Gets value of a setting in given type (<typeparamref name="T"/>).
         /// </summary>
         /// <typeparam name="T">Type of the setting to get</typeparam>
         /// <param name="settingManager">Setting manager</param>
@@ -24,7 +24,7 @@ namespace Abp.Configuration
         }
 
         /// <summary>
-        /// Gets value of a setting in given type (<see cref="T"/>).
+        /// Gets value of a setting in given type (<typeparamref name="T"/>).
         /// </summary>
         /// <typeparam name="T">Type of the setting to get</typeparam>
         /// <param name="settingManager">Setting manager</param>

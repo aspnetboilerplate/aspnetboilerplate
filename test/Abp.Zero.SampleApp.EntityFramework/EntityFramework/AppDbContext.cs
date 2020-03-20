@@ -37,6 +37,12 @@ namespace Abp.Zero.SampleApp.EntityFramework
 
         public DbSet<Student> Students { get; set; }
 
+        public DbSet<StudentLectureNote> StudentLectureNotes { get; set; }
+
+        public DbSet<CitizenshipInformation> CitizenshipInformation { get; set; }
+
+        public DbSet<Country> Countries { get; set; }
+
         public AppDbContext(DbConnection existingConnection)
             : base(existingConnection, true)
         {

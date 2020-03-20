@@ -19,7 +19,7 @@ namespace Abp.Authorization
         /// <param name="authorizationProviders">Authorization providers</param>
         /// <returns>List of permissions</returns>
         /// <remarks>
-        /// This method creates instances of <see cref="authorizationProviders"/> by order and
+        /// This method creates instances of <paramref name="authorizationProviders"/> by order and
         /// calls <see cref="AuthorizationProvider.SetPermissions"/> to build permission list.
         /// So, providers should not use dependency injection.
         /// </remarks>

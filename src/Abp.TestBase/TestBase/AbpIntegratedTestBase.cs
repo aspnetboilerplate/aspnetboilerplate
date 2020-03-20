@@ -12,7 +12,7 @@ namespace Abp.TestBase
     /// <summary>
     /// This is the base class for all tests integrated to ABP.
     /// </summary>
-    public abstract class AbpIntegratedTestBase<TStartupModule> : IDisposable 
+    public abstract class AbpIntegratedTestBase<TStartupModule> : IDisposable
         where TStartupModule : AbpModule
     {
         /// <summary>
@@ -157,6 +157,21 @@ namespace Abp.TestBase
             }
         }
 
+        protected virtual void WithUnitOfWork(int? tenantId, Action action, UnitOfWorkOptions options = null)
+        {
+            using (var uowManager = LocalIocManager.ResolveAsDisposable<IUnitOfWorkManager>())
+            {
+                using (var uow = uowManager.Object.Begin(options ?? new UnitOfWorkOptions()))
+                {
+                    using (uowManager.Object.Current.SetTenantId(tenantId))
+                    {
+                        action();
+                        uow.Complete();
+                    }
+                }
+            }
+        }
+
         protected virtual async Task WithUnitOfWorkAsync(Func<Task> action, UnitOfWorkOptions options = null)
         {
             using (var uowManager = LocalIocManager.ResolveAsDisposable<IUnitOfWorkManager>())
@@ -165,6 +180,21 @@ namespace Abp.TestBase
                 {
                     await action();
                     uow.Complete();
+                }
+            }
+        }
+
+        protected async Task WithUnitOfWorkAsync(int? tenantId, Func<Task> action, UnitOfWorkOptions options = null)
+        {
+            using (var uowManager = LocalIocManager.ResolveAsDisposable<IUnitOfWorkManager>())
+            {
+                using (var uow = uowManager.Object.Begin(options ?? new UnitOfWorkOptions()))
+                {
+                    using (uowManager.Object.Current.SetTenantId(tenantId))
+                    {
+                        await action();
+                        uow.Complete();
+                    }
                 }
             }
         }

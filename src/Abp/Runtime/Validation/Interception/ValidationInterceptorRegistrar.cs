@@ -1,6 +1,7 @@
 ﻿using System.Reflection;
 using Abp.Application.Services;
 using Abp.Dependency;
+using Abp.Domain.Uow;
 using Castle.Core;
 using Castle.MicroKernel;
 
@@ -17,7 +18,7 @@ namespace Abp.Runtime.Validation.Interception
         {
             if (typeof(IApplicationService).GetTypeInfo().IsAssignableFrom(handler.ComponentModel.Implementation))
             {
-                handler.ComponentModel.Interceptors.Add(new InterceptorReference(typeof(ValidationInterceptor)));
+                handler.ComponentModel.Interceptors.Add(new InterceptorReference(typeof(AbpAsyncDeterminationInterceptor<ValidationInterceptor>)));
             }
         }
     }

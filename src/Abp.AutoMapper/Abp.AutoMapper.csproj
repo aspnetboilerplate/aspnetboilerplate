@@ -32,7 +32,7 @@
 
   <ItemGroup>
     <PackageReference Include="AutoMapper" Version="9.0.0" />
-    <PackageReference Include="AutoMapper.Collection" Version="5.0.0" />
+    <PackageReference Include="AutoMapper.Collection" Version="6.0.0" />
   </ItemGroup>
 
   <ItemGroup>

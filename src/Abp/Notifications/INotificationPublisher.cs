@@ -24,12 +24,12 @@ namespace Abp.Notifications
         /// <param name="excludedUserIds">
         /// Excluded user id(s).
         /// This can be set to exclude some users while publishing notifications to subscribed users.
-        /// It's normally not set if <see cref="userIds"/> is set.
+        /// It's normally not set if <paramref name="userIds"/> is set.
         /// </param>
         /// <param name="tenantIds">
         /// Target tenant id(s).
         /// Used to send notification to subscribed users of specific tenant(s).
-        /// This should not be set if <see cref="userIds"/> is set.
+        /// This should not be set if <paramref name="userIds"/> is set.
         /// <see cref="NotificationPublisher.AllTenants"/> can be passed to indicate all tenants.
         /// But this can only work in a single database approach (all tenants are stored in host database).
         /// If this is null, then it's automatically set to the current tenant on <see cref="IAbpSession.TenantId"/>. 
@@ -59,12 +59,12 @@ namespace Abp.Notifications
         /// <param name="excludedUserIds">
         /// Excluded user id(s).
         /// This can be set to exclude some users while publishing notifications to subscribed users.
-        /// It's normally not set if <see cref="userIds"/> is set.
+        /// It's normally not set if <paramref name="userIds"/> is set.
         /// </param>
         /// <param name="tenantIds">
         /// Target tenant id(s).
         /// Used to send notification to subscribed users of specific tenant(s).
-        /// This should not be set if <see cref="userIds"/> is set.
+        /// This should not be set if <paramref name="userIds"/> is set.
         /// <see cref="NotificationPublisher.AllTenants"/> can be passed to indicate all tenants.
         /// But this can only work in a single database approach (all tenants are stored in host database).
         /// If this is null, then it's automatically set to the current tenant on <see cref="IAbpSession.TenantId"/>. 

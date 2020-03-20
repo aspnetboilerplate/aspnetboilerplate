@@ -5,6 +5,7 @@ using Abp.Application.Features;
 using Abp.Collections.Extensions;
 using Abp.Configuration.Startup;
 using Abp.Dependency;
+using Abp.Domain.Uow;
 using Abp.MultiTenancy;
 using Abp.Runtime.Session;
 
@@ -13,27 +14,30 @@ namespace Abp.Authorization
     /// <summary>
     /// Permission manager.
     /// </summary>
-    internal class PermissionManager : PermissionDefinitionContextBase, IPermissionManager, ISingletonDependency
+    public class PermissionManager : PermissionDefinitionContextBase, IPermissionManager, ISingletonDependency
     {
         public IAbpSession AbpSession { get; set; }
 
         private readonly IIocManager _iocManager;
         private readonly IAuthorizationConfiguration _authorizationConfiguration;
+        private readonly IUnitOfWorkManager _unitOfWorkManager;
 
         /// <summary>
         /// Constructor.
         /// </summary>
         public PermissionManager(
             IIocManager iocManager,
-            IAuthorizationConfiguration authorizationConfiguration)
+            IAuthorizationConfiguration authorizationConfiguration,
+            IUnitOfWorkManager unitOfWorkManager)
         {
             _iocManager = iocManager;
             _authorizationConfiguration = authorizationConfiguration;
+            _unitOfWorkManager = unitOfWorkManager;
 
             AbpSession = NullAbpSession.Instance;
         }
 
-        public void Initialize()
+        public virtual void Initialize()
         {
             foreach (var providerType in _authorizationConfiguration.Providers)
             {
@@ -46,7 +50,7 @@ namespace Abp.Authorization
             Permissions.AddAllPermissions();
         }
 
-        public Permission GetPermission(string name)
+        public virtual Permission GetPermission(string name)
         {
             var permission = Permissions.GetOrDefault(name);
             if (permission == null)
@@ -57,11 +61,13 @@ namespace Abp.Authorization
             return permission;
         }
 
-        public IReadOnlyList<Permission> GetAllPermissions(bool tenancyFilter = true)
+        public virtual IReadOnlyList<Permission> GetAllPermissions(bool tenancyFilter = true)
         {
             using (var featureDependencyContext = _iocManager.ResolveAsDisposable<FeatureDependencyContext>())
             {
                 var featureDependencyContextObject = featureDependencyContext.Object;
+                featureDependencyContextObject.TenantId = GetCurrentTenantId();
+
                 return Permissions.Values
                     .WhereIf(tenancyFilter, p => p.MultiTenancySides.HasFlag(AbpSession.MultiTenancySide))
                     .Where(p =>
@@ -72,11 +78,13 @@ namespace Abp.Authorization
             }
         }
 
-        public IReadOnlyList<Permission> GetAllPermissions(MultiTenancySides multiTenancySides)
+        public virtual IReadOnlyList<Permission> GetAllPermissions(MultiTenancySides multiTenancySides)
         {
             using (var featureDependencyContext = _iocManager.ResolveAsDisposable<FeatureDependencyContext>())
             {
                 var featureDependencyContextObject = featureDependencyContext.Object;
+                featureDependencyContextObject.TenantId = GetCurrentTenantId();
+
                 return Permissions.Values
                     .Where(p => p.MultiTenancySides.HasFlag(multiTenancySides))
                     .Where(p =>
@@ -87,6 +95,16 @@ namespace Abp.Authorization
                         p.FeatureDependency.IsSatisfied(featureDependencyContextObject)
                     ).ToImmutableList();
             }
+        }
+
+        private int? GetCurrentTenantId()
+        {
+            if (_unitOfWorkManager.Current != null)
+            {
+                return _unitOfWorkManager.Current.GetTenantId();
+            }
+
+            return AbpSession.TenantId;
         }
     }
 }

@@ -6,12 +6,12 @@ namespace Abp.Authorization
     /// <summary>
     /// Used to store and manipulate dictionary of permissions.
     /// </summary>
-    internal class PermissionDictionary : Dictionary<string, Permission>
+    public class PermissionDictionary : Dictionary<string, Permission>
     {
         /// <summary>
         /// Adds all child permissions of current permissions recursively.
         /// </summary>
-        public void AddAllPermissions()
+        public virtual void AddAllPermissions()
         {
             foreach (var permission in Values.ToList())
             {
@@ -31,7 +31,7 @@ namespace Abp.Authorization
             {
                 if (existingPermission != permission)
                 {
-                    throw new AbpInitializationException("Duplicate permission name detected for " + permission.Name);                    
+                    throw new AbpInitializationException("Duplicate permission name detected for " + permission.Name);
                 }
             }
             else

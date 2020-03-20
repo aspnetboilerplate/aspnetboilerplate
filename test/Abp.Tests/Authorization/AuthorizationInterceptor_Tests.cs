@@ -4,6 +4,7 @@ using Abp.Application.Features;
 using Abp.Authorization;
 using Abp.Configuration.Startup;
 using Abp.Dependency;
+using Abp.Domain.Uow;
 using Abp.Runtime.Session;
 using Castle.MicroKernel.Registration;
 using NSubstitute;
@@ -29,12 +30,13 @@ namespace Abp.Tests.Authorization
             LocalIocManager.Register<IAuthorizationConfiguration, AuthorizationConfiguration>();
             LocalIocManager.Register<IMultiTenancyConfig, MultiTenancyConfig>();
             LocalIocManager.Register<AuthorizationInterceptor>(DependencyLifeStyle.Transient);
+            LocalIocManager.Register<AbpAsyncDeterminationInterceptor<AuthorizationInterceptor>>(DependencyLifeStyle.Transient);
             LocalIocManager.Register<IAuthorizationHelper, AuthorizationHelper>(DependencyLifeStyle.Transient);
             LocalIocManager.IocContainer.Register(
-                Component.For<MyTestClassToBeAuthorized_Sync>().Interceptors<AuthorizationInterceptor>().LifestyleTransient(),
-                Component.For<MyTestClassToBeAuthorized_Async>().Interceptors<AuthorizationInterceptor>().LifestyleTransient(),
-                Component.For<MyTestClassToBeAllowProtected_Async>().Interceptors<AuthorizationInterceptor>().LifestyleTransient(),
-                Component.For<MyTestClassToBeAllowProtected_Sync>().Interceptors<AuthorizationInterceptor>().LifestyleTransient()
+                Component.For<MyTestClassToBeAuthorized_Sync>().Interceptors<AbpAsyncDeterminationInterceptor<AuthorizationInterceptor>>().LifestyleTransient(),
+                Component.For<MyTestClassToBeAuthorized_Async>().Interceptors<AbpAsyncDeterminationInterceptor<AuthorizationInterceptor>>().LifestyleTransient(),
+                Component.For<MyTestClassToBeAllowProtected_Async>().Interceptors<AbpAsyncDeterminationInterceptor<AuthorizationInterceptor>>().LifestyleTransient(),
+                Component.For<MyTestClassToBeAllowProtected_Sync>().Interceptors<AbpAsyncDeterminationInterceptor<AuthorizationInterceptor>>().LifestyleTransient()
                 );
 
             //Mock session

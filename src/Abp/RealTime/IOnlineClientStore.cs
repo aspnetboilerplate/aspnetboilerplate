@@ -27,6 +27,7 @@ namespace Abp.RealTime
         /// Removes a client by connection id.
         /// </summary>
         /// <param name="connectionId">The connection id.</param>
+        /// <param name="client">The client.</param>
         /// <returns>true if the client is removed, otherwise, false</returns>
         bool TryRemove(string connectionId, out IOnlineClient client);
 
@@ -34,6 +35,7 @@ namespace Abp.RealTime
         /// Gets a client by connection id.
         /// </summary>
         /// <param name="connectionId">The connection id.</param>
+        /// <param name="client">The client.</param>
         /// <returns>true if the client exists, otherwise, false</returns>
         bool TryGet(string connectionId, out IOnlineClient client);
 

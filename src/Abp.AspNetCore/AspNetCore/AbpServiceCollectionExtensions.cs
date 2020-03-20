@@ -10,6 +10,7 @@ using Microsoft.AspNetCore.Mvc.Infrastructure;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.DependencyInjection.Extensions;
 using Abp.AspNetCore.Mvc.Providers;
+using Abp.AspNetCore.Webhook;
 using Abp.Json;
 using Abp.Modules;
 using JetBrains.Annotations;
@@ -44,12 +45,26 @@ namespace Abp.AspNetCore
             return WindsorRegistrationHelper.CreateServiceProvider(abpBootstrapper.IocManager.IocContainer, services);
         }
 
+        /// <summary>
+        /// Integrates ABP to AspNet Core without creating a IServiceProvider.
+        /// </summary>
+        /// <typeparam name="TStartupModule">Startup module of the application which depends on other used modules. Should be derived from <see cref="AbpModule"/>.</typeparam>
+        /// <param name="services">Services.</param>
+        /// <param name="optionsAction">An action to get/modify options</param>
+        public static void AddAbpWithoutCreatingServiceProvider<TStartupModule>(this IServiceCollection services, [CanBeNull] Action<AbpBootstrapperOptions> optionsAction = null)
+            where TStartupModule : AbpModule
+        {
+            var abpBootstrapper = AddAbpBootstrapper<TStartupModule>(services, optionsAction);
+
+            ConfigureAspNetCore(services, abpBootstrapper.IocManager);
+        }
+
         private static void ConfigureAspNetCore(IServiceCollection services, IIocResolver iocResolver)
         {
             //See https://github.com/aspnet/Mvc/issues/3936 to know why we added these services.
             services.TryAddSingleton<IHttpContextAccessor, HttpContextAccessor>();
             services.TryAddSingleton<IActionContextAccessor, ActionContextAccessor>();
-            
+
             //Use DI to create controllers
             services.Replace(ServiceDescriptor.Transient<IControllerActivator, ServiceBasedControllerActivator>());
 
@@ -89,6 +104,8 @@ namespace Abp.AspNetCore
                     )
                 )
             );
+
+            services.AddHttpClient(AspNetCoreWebhookSender.WebhookSenderHttpClientName);
         }
 
         private static AbpBootstrapper AddAbpBootstrapper<TStartupModule>(IServiceCollection services, Action<AbpBootstrapperOptions> optionsAction)

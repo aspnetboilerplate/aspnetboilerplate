@@ -1,3 +1,6 @@
+# Build output
+output/
+
 # Build Folders (you can keep bin if you'd like, to store dlls and pdbs)
 [Bb]in/
 [Oo]bj/
@@ -14,6 +17,7 @@ project.lock.json
 # Nuget packages
 nupkg/*.nupkg
 nupkg/push.bat
+nupkg/push_packages.ps1
 
 # Profile images
 ProfileImages/
@@ -75,7 +79,7 @@ _ReSharper*
 *.ncrunch*
 .*crunch*.local.xml
 
-# Installshield output folder 
+# Installshield output folder
 [Ee]xpress
 
 # DocProject is a documentation generator add-in
@@ -128,5 +132,5 @@ src/.vs/config/applicationhost.config
 !GitLink.exe
 !nuget.exe
 !SQLite.Interop.dll
-/tools
 nupkg/push-hikalkan.bat
+doc/api/help

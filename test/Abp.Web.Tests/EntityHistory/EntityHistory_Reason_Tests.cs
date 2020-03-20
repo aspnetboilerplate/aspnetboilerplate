@@ -6,7 +6,7 @@ using Abp.Web.EntityHistory;
 using Shouldly;
 using Xunit;
 
-namespace Abp.Web.Tests
+namespace Abp.Web.Tests.EntityHistory
 {
     public class EntityHistory_Reason_Tests : AbpIntegratedTestBase<AbpWebModule>
     {

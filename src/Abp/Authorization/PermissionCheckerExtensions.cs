@@ -174,7 +174,7 @@ namespace Abp.Authorization
         /// <summary>
         /// Authorizes current user for given permission or permissions,
         /// throws <see cref="AbpAuthorizationException"/> if not authorized.
-        /// User it authorized if any of the <see cref="permissionNames"/> are granted.
+        /// User it authorized if any of the <paramref name="permissionNames"/> are granted.
         /// </summary>
         /// <param name="permissionChecker">Permission checker</param>
         /// <param name="permissionNames">Name of the permissions to authorize</param>
@@ -187,7 +187,7 @@ namespace Abp.Authorization
         /// <summary>
         /// Authorizes current user for given permission or permissions,
         /// throws <see cref="AbpAuthorizationException"/> if not authorized.
-        /// User it authorized if any of the <see cref="permissionNames"/> are granted.
+        /// User it authorized if any of the <paramref name="permissionNames"/> are granted.
         /// </summary>
         /// <param name="permissionChecker">Permission checker</param>
         /// <param name="permissionNames">Name of the permissions to authorize</param>
@@ -203,8 +203,8 @@ namespace Abp.Authorization
         /// </summary>
         /// <param name="permissionChecker">Permission checker</param>
         /// <param name="requireAll">
-        /// If this is set to true, all of the <see cref="permissionNames"/> must be granted.
-        /// If it's false, at least one of the <see cref="permissionNames"/> must be granted.
+        /// If this is set to true, all of the <paramref name="permissionNames"/> must be granted.
+        /// If it's false, at least one of the <paramref name="permissionNames"/> must be granted.
         /// </param>
         /// <param name="permissionNames">Name of the permissions to authorize</param>
         /// <exception cref="AbpAuthorizationException">Throws authorization exception if</exception>
@@ -251,8 +251,8 @@ namespace Abp.Authorization
         /// </summary>
         /// <param name="permissionChecker">Permission checker</param>
         /// <param name="requireAll">
-        /// If this is set to true, all of the <see cref="permissionNames"/> must be granted.
-        /// If it's false, at least one of the <see cref="permissionNames"/> must be granted.
+        /// If this is set to true, all of the <paramref name="permissionNames"/> must be granted.
+        /// If it's false, at least one of the <paramref name="permissionNames"/> must be granted.
         /// </param>
         /// <param name="permissionNames">Name of the permissions to authorize</param>
         /// <exception cref="AbpAuthorizationException">Throws authorization exception if</exception>

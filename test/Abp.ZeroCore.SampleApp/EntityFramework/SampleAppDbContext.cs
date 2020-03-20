@@ -1,5 +1,4 @@
-﻿using System.ComponentModel.DataAnnotations.Schema;
-using Abp.IdentityServer4;
+﻿using Abp.IdentityServer4;
 using Abp.Zero.EntityFrameworkCore;
 using Abp.ZeroCore.SampleApp.Core;
 using Abp.ZeroCore.SampleApp.Core.BookStore;
@@ -38,6 +37,8 @@ namespace Abp.ZeroCore.SampleApp.EntityFramework
 
         public DbSet<UserTestEntity> UserTestEntities { get; set; }
 
+        public DbSet<Country> Countries { get; set; }
+
         public SampleAppDbContext(DbContextOptions<SampleAppDbContext> options) 
             : base(options)
         {
@@ -50,6 +51,29 @@ namespace Abp.ZeroCore.SampleApp.EntityFramework
             modelBuilder.ConfigurePersistedGrantEntity();
 
             modelBuilder.Entity<Blog>().OwnsOne(x => x.More);
+
+            modelBuilder.Entity<Blog>().OwnsMany(x => x.Promotions, b => 
+            {
+                b.WithOwner().HasForeignKey(bp => bp.BlogId);
+                b.Property<int>("Id");
+                b.HasKey("Id");
+
+                b.HasOne<Blog>()
+                 .WithOne()
+                 .HasForeignKey<BlogPromotion>(bp => bp.AdvertisementId)
+                 .IsRequired();
+            });
+
+            modelBuilder.Entity<Advertisement>().OwnsMany(a => a.Feedbacks, b =>
+            {
+                b.WithOwner().HasForeignKey(af => af.AdvertisementId);
+                b.Property<int>("Id");
+                b.HasKey("Id");
+
+                b.HasOne<Comment>()
+                 .WithOne()
+                 .HasForeignKey<AdvertisementFeedback>(af => af.CommentId);
+            });
 
             modelBuilder.Entity<Book>().ToTable("Books");
             modelBuilder.Entity<Book>().Property(e => e.Id).ValueGeneratedNever();

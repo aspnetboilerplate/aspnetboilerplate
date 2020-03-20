@@ -69,6 +69,7 @@ namespace Abp.Zero.EntityFrameworkCore
         {
 
         }
+
         /// <summary>
         /// 
         /// </summary>

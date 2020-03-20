@@ -79,7 +79,8 @@ Real Time Services
 
 -   [Notification System](Notification-System.md)
 -   [SignalR Integration](SignalR-Integration.md)
--   [SignalR ASP.NET Core Integration <label class="label label-success">NEW</label>](SignalR-AspNetCore-Integration.md)
+-   [SignalR ASP.NET Core Integration](SignalR-AspNetCore-Integration.md)
+-   [Webhooks](Webhook-System.md)
 
 Object-Relational Mapping
 

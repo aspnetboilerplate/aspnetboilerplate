@@ -104,7 +104,7 @@ namespace Abp.Tests.Domain.Entities
             entity.GetData<DateTime>("BirthDate").ShouldBe(new DateTime());
             entity.GetData<DateTime?>("BirthDate").ShouldBe(null);
             Assert.Equal(0, entity.GetData<byte>("Age"));
-            Assert.Equal(null, entity.GetData<byte?>("Age"));
+            Assert.Null(entity.GetData<byte?>("Age"));
             entity.GetData<MyComplexType>("ComplexData").ShouldBe(null);
         }
 
