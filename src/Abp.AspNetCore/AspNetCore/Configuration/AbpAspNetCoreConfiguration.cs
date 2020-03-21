@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Reflection;
-using Abp.AspNetCore.Mvc.Results.Caching;
 using Abp.Domain.Uow;
 using Abp.Web.Models;
 using Microsoft.AspNetCore.Routing;
@@ -11,9 +10,6 @@ namespace Abp.AspNetCore.Configuration
     public class AbpAspNetCoreConfiguration : IAbpAspNetCoreConfiguration
     {
         public WrapResultAttribute DefaultWrapResultAttribute { get; }
-
-        [Obsolete]
-        public IClientCacheAttribute DefaultClientCacheAttribute { get; set; }
 
         public UnitOfWorkAttribute DefaultUnitOfWorkAttribute { get; }
 
@@ -35,7 +31,6 @@ namespace Abp.AspNetCore.Configuration
         public AbpAspNetCoreConfiguration()
         {
             DefaultWrapResultAttribute = new WrapResultAttribute();
-            DefaultClientCacheAttribute = new NoClientCacheAttribute(false);
             DefaultUnitOfWorkAttribute = new UnitOfWorkAttribute();
             ControllerAssemblySettings = new ControllerAssemblySettingList();
             FormBodyBindingIgnoredTypes = new List<Type>();

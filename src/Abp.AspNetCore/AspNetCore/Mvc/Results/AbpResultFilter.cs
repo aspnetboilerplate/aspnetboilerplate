@@ -27,13 +27,6 @@ namespace Abp.AspNetCore.Mvc.Results
             }
 
             var methodInfo = context.ActionDescriptor.GetMethodInfo();
-
-            //var clientCacheAttribute = ReflectionHelper.GetSingleAttributeOfMemberOrDeclaringTypeOrDefault(
-            //    methodInfo,
-            //    _configuration.DefaultClientCacheAttribute
-            //);
-
-            //clientCacheAttribute?.Apply(context);
             
             var wrapResultAttribute =
                 ReflectionHelper.GetSingleAttributeOfMemberOrDeclaringTypeOrDefault(
