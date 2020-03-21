@@ -4,6 +4,7 @@ using System.Reflection;
 using Abp.AspNetCore.Mvc.Results.Caching;
 using Abp.Domain.Uow;
 using Abp.Web.Models;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Routing;
 
 namespace Abp.AspNetCore.Configuration
@@ -13,6 +14,10 @@ namespace Abp.AspNetCore.Configuration
         public WrapResultAttribute DefaultWrapResultAttribute { get; }
 
         public IClientCacheAttribute DefaultClientCacheAttribute { get; set; }
+
+        public ResponseCacheAttribute DefaultResponseCacheAttributeForControllers { get; set; }
+
+        public ResponseCacheAttribute DefaultResponseCacheAttributeForAppServices { get; set; }
 
         public UnitOfWorkAttribute DefaultUnitOfWorkAttribute { get; }
 
@@ -35,6 +40,12 @@ namespace Abp.AspNetCore.Configuration
         {
             DefaultWrapResultAttribute = new WrapResultAttribute();
             DefaultClientCacheAttribute = new NoClientCacheAttribute(false);
+            DefaultResponseCacheAttributeForControllers = null;
+            DefaultResponseCacheAttributeForAppServices = new ResponseCacheAttribute()
+            {
+                NoStore = true,
+                Location = ResponseCacheLocation.None,
+            };
             DefaultUnitOfWorkAttribute = new UnitOfWorkAttribute();
             ControllerAssemblySettings = new ControllerAssemblySettingList();
             FormBodyBindingIgnoredTypes = new List<Type>();
