@@ -42,12 +42,6 @@ namespace Abp.AspNetCore.Configuration
         /// <summary>
         /// Used to add route config for modules.
         /// </summary>
-        //[Obsolete("Use EndpointConfiguration instead !")]
-        //List<Action<IRouteBuilder>> RouteConfiguration { get; }
-
-        /// <summary>
-        /// Used to add route config for modules.
-        /// </summary>
         List<Action<IEndpointRouteBuilder>> EndpointConfiguration { get; }
 
         AbpControllerAssemblySettingBuilder CreateControllersForAppServices(
