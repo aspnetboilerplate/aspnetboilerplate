@@ -1,8 +1,7 @@
 ﻿using System.Linq;
 using Abp.Collections.Extensions;
-using Abp.Webhooks;
 
-namespace Abp.WebHooks.Extensions
+namespace Abp.Webhooks.Extensions
 {
     public static class WebhookSubscriptionExtensions
     {
