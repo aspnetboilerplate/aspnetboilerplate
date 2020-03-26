@@ -75,7 +75,6 @@ namespace Abp.Tests.ObjectComparators
                     throw new ArgumentOutOfRangeException(nameof(compareType), compareType, null);
             }
         }
-
     }
 
     public class ObjectComparatorManager_Tests : TestBaseWithLocalIocManager
