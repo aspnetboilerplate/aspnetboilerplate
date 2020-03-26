@@ -62,4 +62,8 @@
     <PackageReference Update="Microsoft.NETFramework.ReferenceAssemblies" Version="1.0.0" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="ObjectComparators\" />
+  </ItemGroup>
+
 </Project>
