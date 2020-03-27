@@ -27,6 +27,19 @@ namespace Abp.ObjectComparators
                 .SelectMany(comparator => comparator.CompareTypes).Distinct().ToImmutableList();
         }
 
+        public Dictionary<Type, List<string>> GetAllCompareTypes()
+        {
+            return _objectComparators
+                .GroupBy(compareType => compareType.ObjectType)
+                .Select(comparator =>
+                    new
+                    {
+                        ObjectType = comparator.Key,
+                        ComparatorTypes = comparator.SelectMany(c => c.CompareTypes).Distinct().ToList()
+                    })
+                .ToDictionary(x => x.ObjectType, y => y.ComparatorTypes);
+        }
+
         public bool CanCompare<TBaseType>(string compareType)
         {
             return _objectComparators.Any(objectComparator => objectComparator.CanCompare(typeof(TBaseType), compareType));

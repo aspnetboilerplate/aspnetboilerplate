@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Collections.Immutable;
 
 namespace Abp.ObjectComparators
@@ -8,6 +9,8 @@ namespace Abp.ObjectComparators
         bool HasComparator<TBaseType>();
 
         ImmutableList<string> GetAllCompareTypes<TBaseType>();
+
+        Dictionary<Type, List<string>> GetAllCompareTypes();
 
         bool CanCompare<TBaseType>(string compareType);
 

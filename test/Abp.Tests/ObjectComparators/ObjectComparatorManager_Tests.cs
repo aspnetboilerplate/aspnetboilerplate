@@ -91,7 +91,7 @@ namespace Abp.Tests.ObjectComparators
         }
 
         [Fact]
-        public void Should_Get_All_Compare_Types()
+        public void Should_Get_All_Compare_Types_By_Type()
         {
             var compareTypesForString = _objectComparatorManager.GetAllCompareTypes<string>();
             compareTypesForString.ShouldContain(MyTestStringObjectComparator.EqualsCompareType);
@@ -99,6 +99,21 @@ namespace Abp.Tests.ObjectComparators
 
             var compareTypesForClass = _objectComparatorManager.GetAllCompareTypes<ObjectComparatorTestClass>();
             compareTypesForClass.SequenceEqual(Enum.GetNames(typeof(ObjectComparatorTestClassCompareTypes))).ShouldBeTrue();
+        }
+
+        [Fact]
+        public void Should_Get_All_Compare_Types()
+        {
+            var compareTypes = _objectComparatorManager.GetAllCompareTypes();
+
+            compareTypes.ContainsKey(typeof(ObjectComparatorTestClass)).ShouldBeTrue();
+            var compareTypesForTestClass = compareTypes[typeof(ObjectComparatorTestClass)];
+            compareTypesForTestClass.SequenceEqual(Enum.GetNames(typeof(ObjectComparatorTestClassCompareTypes))).ShouldBeTrue();
+
+            compareTypes.ContainsKey(typeof(string)).ShouldBeTrue();
+            var compareTypesForString = compareTypes[typeof(string)];
+            compareTypesForString.ShouldContain(MyTestStringObjectComparator.EqualsCompareType);
+            compareTypesForString.ShouldContain(MyTestStringObjectComparator.ReverseOfSecondIsEqualtoFirstCompareType);
         }
 
         [Fact]
