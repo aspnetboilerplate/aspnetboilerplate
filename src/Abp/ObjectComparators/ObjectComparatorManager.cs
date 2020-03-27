@@ -35,9 +35,9 @@ namespace Abp.ObjectComparators
                     new
                     {
                         ObjectType = comparator.Key,
-                        ComparatorTypes = comparator.SelectMany(c => c.CompareTypes).Distinct().ToList()
+                        CompareTypes = comparator.SelectMany(c => c.CompareTypes).Distinct().ToList()
                     })
-                .ToDictionary(x => x.ObjectType, y => y.ComparatorTypes);
+                .ToDictionary(x => x.ObjectType, y => y.CompareTypes);
         }
 
         public bool CanCompare<TBaseType>(string compareType)
