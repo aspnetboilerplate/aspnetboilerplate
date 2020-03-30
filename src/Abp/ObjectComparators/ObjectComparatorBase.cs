@@ -47,7 +47,6 @@ namespace Abp.ObjectComparators
                 baseObjTyped = (TBaseType)baseObject;
             }
 
-
             if (compareObject == null)
             {
                 compareObjTyped = default;//which is null
