@@ -30,7 +30,7 @@ namespace Abp.ObjectComparators
 
         public sealed override bool Compare(object baseObject, object compareObject, string compareType)
         {
-            if (!IsNullableType(typeof(TBaseType)) && (baseObject == null || compareObject == null))
+            if (!_isNullable && (baseObject == null || compareObject == null))
             {
                 throw new ArgumentNullException();
             }
