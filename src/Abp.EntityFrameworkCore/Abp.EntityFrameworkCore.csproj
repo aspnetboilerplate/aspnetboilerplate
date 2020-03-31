@@ -36,8 +36,4 @@
     <PackageReference Include="Microsoft.EntityFrameworkCore.Relational" Version="3.1.2" />
   </ItemGroup>
 
-  <ItemGroup>
-    <PackageReference Update="SourceLink.Create.CommandLine" Version="2.8.3" />
-  </ItemGroup>
-
 </Project>

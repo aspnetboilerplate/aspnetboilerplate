@@ -25,10 +25,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Update="SourceLink.Create.CommandLine" Version="2.8.3" />
-  </ItemGroup>
-
-  <ItemGroup>
     <None Include="bin\Release\netstandard2.0\Abp.EntityFrameworkCore.EFPlus.pdb">
       <PackagePath>lib/netstandard2.0/</PackagePath>
       <Pack>true</Pack>

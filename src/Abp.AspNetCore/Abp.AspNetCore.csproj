@@ -45,8 +45,4 @@
     <PackageReference Include="Microsoft.AspNetCore.Mvc.Razor.RuntimeCompilation" Version="3.1.2"></PackageReference>
   </ItemGroup>
 
-  <ItemGroup>
-    <PackageReference Update="SourceLink.Create.CommandLine" Version="2.8.3" />
-  </ItemGroup>
-
 </Project>
