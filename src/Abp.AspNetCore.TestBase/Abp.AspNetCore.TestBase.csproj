@@ -31,11 +31,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Include="Microsoft.AspNetCore.TestHost" Version="3.1.1" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <PackageReference Update="SourceLink.Create.CommandLine" Version="2.8.3" />
+    <PackageReference Include="Microsoft.AspNetCore.TestHost" Version="3.1.2" />
   </ItemGroup>
 
 </Project>

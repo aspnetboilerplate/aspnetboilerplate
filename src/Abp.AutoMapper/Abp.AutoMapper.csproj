@@ -35,8 +35,4 @@
     <PackageReference Include="AutoMapper.Collection" Version="6.0.0" />
   </ItemGroup>
 
-  <ItemGroup>
-    <PackageReference Update="SourceLink.Create.CommandLine" Version="2.8.3" />
-  </ItemGroup>
-
 </Project>

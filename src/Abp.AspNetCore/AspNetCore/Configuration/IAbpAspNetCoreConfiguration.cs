@@ -12,6 +12,7 @@ namespace Abp.AspNetCore.Configuration
     {
         WrapResultAttribute DefaultWrapResultAttribute { get; }
 
+        [Obsolete]
         IClientCacheAttribute DefaultClientCacheAttribute { get; set; }
 
         UnitOfWorkAttribute DefaultUnitOfWorkAttribute { get; }
@@ -38,12 +39,6 @@ namespace Abp.AspNetCore.Configuration
         /// Default: false.
         /// </summary>
         bool UseMvcDateTimeFormatForAppServices { get; set; }
-
-        /// <summary>
-        /// Used to add route config for modules.
-        /// </summary>
-        //[Obsolete("Use EndpointConfiguration instead !")]
-        //List<Action<IRouteBuilder>> RouteConfiguration { get; }
 
         /// <summary>
         /// Used to add route config for modules.

@@ -33,6 +33,7 @@ Domain Layer
 -   [Unit Of Work](Unit-Of-Work.md)
 -   [Domain Events (EventBus)](EventBus-Domain-Events.md)
 -   [Data Filters](Data-Filters.md)
+-   [Dynamic Parameter System](Dynamic-Parameter-System.md)
 
 Application Layer
 

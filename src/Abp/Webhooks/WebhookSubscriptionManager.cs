@@ -7,7 +7,7 @@ using Abp.Collections.Extensions;
 using Abp.Domain.Services;
 using Abp.Domain.Uow;
 using Abp.Json;
-using Abp.WebHooks.Extensions;
+using Abp.Webhooks.Extensions;
 
 namespace Abp.Webhooks
 {

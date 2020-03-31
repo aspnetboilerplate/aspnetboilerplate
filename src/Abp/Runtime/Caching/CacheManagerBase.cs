@@ -11,7 +11,7 @@ namespace Abp.Runtime.Caching
     [Obsolete("Use CacheManagerBase<TCache> instead.")]
     public abstract class CacheManagerBase : CacheManagerBase<ICache>, ICacheManager
     {
-        public CacheManagerBase(ICachingConfiguration configuration) : base(configuration)
+        protected CacheManagerBase(ICachingConfiguration configuration) : base(configuration)
         {
         }
     }
