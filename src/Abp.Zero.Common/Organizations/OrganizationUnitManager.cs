@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Abp.Domain.Repositories;
@@ -57,7 +58,7 @@ namespace Abp.Organizations
 
         public virtual async Task<string> GetNextChildCodeAsync(long? parentId)
         {
-            var lastChild = await GetLastChildOrNullAsync(parentId);
+            var lastChild = await GetLastChildOrNullAsync(parentId, true);
             if (lastChild == null)
             {
                 var parentCode = parentId != null ? await GetCodeAsync(parentId.Value) : null;
@@ -69,7 +70,7 @@ namespace Abp.Organizations
 
         public virtual string GetNextChildCode(long? parentId)
         {
-            var lastChild = GetLastChildOrNull(parentId);
+            var lastChild = GetLastChildOrNull(parentId, true);
             if (lastChild == null)
             {
                 var parentCode = parentId != null ? GetCode(parentId.Value) : null;
@@ -79,20 +80,32 @@ namespace Abp.Organizations
             return OrganizationUnit.CalculateNextCode(lastChild.Code);
         }
 
-        public virtual async Task<OrganizationUnit> GetLastChildOrNullAsync(long? parentId)
+        public virtual async Task<OrganizationUnit> GetLastChildOrNullAsync(long? parentId, bool includeDeleted = false)
         {
+            var filterDisposable = includeDeleted ? CurrentUnitOfWork.DisableFilter(AbpDataFilters.SoftDelete) : null;
+
             var query = OrganizationUnitRepository.GetAll()
                 .Where(ou => ou.ParentId == parentId)
                 .OrderByDescending(ou => ou.Code);
-            return await AsyncQueryableExecuter.FirstOrDefaultAsync(query);
+            var result = await AsyncQueryableExecuter.FirstOrDefaultAsync(query);
+
+            filterDisposable?.Dispose();
+
+            return result;
         }
 
-        public virtual OrganizationUnit GetLastChildOrNull(long? parentId)
+        public virtual OrganizationUnit GetLastChildOrNull(long? parentId, bool includeDeleted = false)
         {
+            var filterDisposable = includeDeleted ? CurrentUnitOfWork.DisableFilter(AbpDataFilters.SoftDelete) : null;
+
             var query = OrganizationUnitRepository.GetAll()
                 .Where(ou => ou.ParentId == parentId)
                 .OrderByDescending(ou => ou.Code);
-            return query.FirstOrDefault();
+            var result = query.FirstOrDefault();
+
+            filterDisposable?.Dispose();
+
+            return result;
         }
 
         public virtual async Task<string> GetCodeAsync(long id)
