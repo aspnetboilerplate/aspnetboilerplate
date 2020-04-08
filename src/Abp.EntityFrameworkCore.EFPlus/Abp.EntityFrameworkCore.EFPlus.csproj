@@ -21,11 +21,7 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="Z.EntityFramework.Plus.EFCore" Version="3.0.43" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <PackageReference Update="SourceLink.Create.CommandLine" Version="2.8.3" />
+    <PackageReference Include="Z.EntityFramework.Plus.EFCore" Version="3.0.45" />
   </ItemGroup>
 
   <ItemGroup>

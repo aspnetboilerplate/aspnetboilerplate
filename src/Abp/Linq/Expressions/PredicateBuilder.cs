@@ -8,7 +8,7 @@ namespace Abp.Linq.Expressions
     // Codes below are taken from https://github.com/scottksmith95/LINQKit project.
 
     /// <summary> The Predicate Operator </summary>
-    internal enum PredicateOperator
+    public enum PredicateOperator
     {
         /// <summary> The "Or" </summary>
         Or,
@@ -20,7 +20,7 @@ namespace Abp.Linq.Expressions
     /// <summary>
     /// See http://www.albahari.com/expressions for information and examples.
     /// </summary>
-    internal static class PredicateBuilder
+    public static class PredicateBuilder
     {
         private class RebindParameterVisitor : ExpressionVisitor
         {
@@ -105,9 +105,9 @@ namespace Abp.Linq.Expressions
     /// <typeparam name="T">The type</typeparam>
     public class ExpressionStarter<T>
     {
-        internal ExpressionStarter() : this(false) { }
+        public ExpressionStarter() : this(false) { }
 
-        internal ExpressionStarter(bool defaultExpression)
+        public ExpressionStarter(bool defaultExpression)
         {
             if (defaultExpression)
                 DefaultExpression = f => true;
@@ -115,7 +115,7 @@ namespace Abp.Linq.Expressions
                 DefaultExpression = f => false;
         }
 
-        internal ExpressionStarter(Expression<Func<T, bool>> exp) : this(false)
+        public ExpressionStarter(Expression<Func<T, bool>> exp) : this(false)
         {
             _predicate = exp;
         }

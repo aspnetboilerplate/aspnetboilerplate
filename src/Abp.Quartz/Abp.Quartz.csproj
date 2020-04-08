@@ -34,8 +34,4 @@
     <PackageReference Include="Quartz" Version="3.0.7" />
   </ItemGroup>
 
-  <ItemGroup>
-    <PackageReference Update="SourceLink.Create.CommandLine" Version="2.8.3" />
-  </ItemGroup>
-
 </Project>

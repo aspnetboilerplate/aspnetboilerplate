@@ -203,11 +203,11 @@ namespace Abp.Webhooks
         }
 
         [UnitOfWork]
-        public Task<List<WebhookSendAttempt>> GetAllSendAttemptsByWebhookEventIdAsync(int? tenantId, Guid webhookEventId)
+        public async Task<List<WebhookSendAttempt>> GetAllSendAttemptsByWebhookEventIdAsync(int? tenantId, Guid webhookEventId)
         {
             using (_unitOfWorkManager.Current.SetTenantId(tenantId))
             {
-                return _asyncQueryableExecuter.ToListAsync(
+                return await _asyncQueryableExecuter.ToListAsync(
                     _webhookSendAttemptRepository.GetAll().Where(attempt => attempt.WebhookEventId == webhookEventId)
                         .OrderByDescending(attempt => attempt.CreationTime)
                 );
