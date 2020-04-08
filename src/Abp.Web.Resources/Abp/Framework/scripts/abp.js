@@ -1,4 +1,4 @@
-﻿(function (define) {
+(function (define) {
   define(['jquery'], function ($) {
     return (function () {
       var abp = window.abp || {};
@@ -722,6 +722,7 @@
        * @param {string} value 
        * @param {Date} expireDate (optional). If not specified the cookie will expire at the end of session.
        * @param {string} path (optional)
+       * @param {string} domain (optional)
        * @param {any} attributes (optional)
        */
       abp.utils.setCookieValue = function (key, value, expireDate, path, domain, attributes) {
