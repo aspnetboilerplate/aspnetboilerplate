@@ -46,7 +46,7 @@ namespace Abp.Domain.Entities.Caching
 
         public override string ToString()
         {
-            return "MayHaveTenantEntityCache {CacheName}";
+            return $"MayHaveTenantEntityCache {CacheName}";
         }
     }
 }
