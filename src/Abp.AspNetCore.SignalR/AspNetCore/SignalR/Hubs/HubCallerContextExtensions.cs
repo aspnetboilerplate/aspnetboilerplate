@@ -55,6 +55,38 @@ namespace Abp.AspNetCore.SignalR.Hubs
             return userId.Value;
         }
 
+        public static long? GetImpersonatorUserId(this HubCallerContext context)
+        {
+            if (context?.User == null)
+            {
+                return null;
+            }
+
+            var impersonatorUserIdClaim = context.User.Claims.FirstOrDefault(c => c.Type == AbpClaimTypes.ImpersonatorUserId);
+            if (string.IsNullOrEmpty(impersonatorUserIdClaim?.Value))
+            {
+                return null;
+            }
+
+            return Convert.ToInt64(impersonatorUserIdClaim.Value);
+        }
+
+        public static long? GetImpersonatorTenantId(this HubCallerContext context)
+        {
+            if (context?.User == null)
+            {
+                return null;
+            }
+
+            var impersonatorTenantIdClaim = context.User.Claims.FirstOrDefault(c => c.Type == AbpClaimTypes.ImpersonatorTenantId);
+            if (string.IsNullOrEmpty(impersonatorTenantIdClaim?.Value))
+            {
+                return null;
+            }
+
+            return Convert.ToInt32(impersonatorTenantIdClaim.Value);
+        }
+
         public static UserIdentifier ToUserIdentifier(this HubCallerContext context)
         {
             var userId = context.GetUserIdOrNull();
