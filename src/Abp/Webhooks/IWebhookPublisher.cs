@@ -10,14 +10,26 @@ namespace Abp.Webhooks
         /// </summary>
         /// <param name="webhookName"><see cref="WebhookDefinition.Name"/></param>
         /// <param name="data">data to send</param>
-        Task PublishAsync(string webhookName, object data);
-        
+        /// <param name="sendExactSameData">
+        /// True: It sends the exact same data as the parameter to clients.
+        /// <para>
+        /// False: It sends data in <see cref="WebhookPayload"/>. It is recommended way.
+        /// </para>
+        /// </param>
+        Task PublishAsync(string webhookName, object data, bool sendExactSameData = false);
+
         /// <summary>
         /// Sends webhooks to current tenant subscriptions (<see cref="IAbpSession.TenantId"/>). with given data, (Checks permissions)
         /// </summary>
         /// <param name="webhookName"><see cref="WebhookDefinition.Name"/></param>
         /// <param name="data">data to send</param>
-        void Publish(string webhookName, object data);
+        /// <param name="sendExactSameData">
+        /// True: It sends the exact same data as the parameter to clients.
+        /// <para>
+        /// False: It sends data in <see cref="WebhookPayload"/>. It is recommended way.
+        /// </para>
+        /// </param>
+        void Publish(string webhookName, object data, bool sendExactSameData = false);
 
         /// <summary>
         /// Sends webhooks to given tenant's subscriptions
@@ -27,8 +39,14 @@ namespace Abp.Webhooks
         /// <param name="tenantId">
         /// Target tenant id
         /// </param>
-        Task PublishAsync(string webhookName, object data, int? tenantId);
-        
+        /// <param name="sendExactSameData">
+        /// True: It sends the exact same data as the parameter to clients.
+        /// <para>
+        /// False: It sends data in <see cref="WebhookPayload"/>. It is recommended way.
+        /// </para>
+        /// </param>
+        Task PublishAsync(string webhookName, object data, int? tenantId, bool sendExactSameData = false);
+
         /// <summary>
         /// Sends webhooks to given tenant's subscriptions
         /// </summary>
@@ -37,6 +55,12 @@ namespace Abp.Webhooks
         /// <param name="tenantId">
         /// Target tenant id
         /// </param>
-        void Publish(string webhookName, object data, int? tenantId);
+        /// <param name="sendExactSameData">
+        /// True: It sends the exact same data as the parameter to clients.
+        /// <para>
+        /// False: It sends data in <see cref="WebhookPayload"/>. It is recommended way.
+        /// </para>
+        /// </param>
+        void Publish(string webhookName, object data, int? tenantId, bool sendExactSameData = false);
     }
 }
