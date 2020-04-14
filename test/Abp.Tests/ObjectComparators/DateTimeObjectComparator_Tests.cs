@@ -9,40 +9,40 @@ namespace Abp.Tests.ObjectComparators
     {
         public static IEnumerable<object[]> Should_Compare_Data_Generator()
         {
-            yield return new object[] { "03-18-1996", "03-19-1996", nameof(DateTimeCompareTypes.Equals), false };
-            yield return new object[] { "03-19-1996", "03-19-1996", nameof(DateTimeCompareTypes.Equals), true };
-            yield return new object[] { "03-20-1996", "03-19-1996", nameof(DateTimeCompareTypes.Equals), false };
-            yield return new object[] { "03-19-1996 18:00:00", "03-19-1996 18:00:00", nameof(DateTimeCompareTypes.Equals), true };
-            yield return new object[] { "03-19-1996 18:00:00", "03-19-1996 18:00:01", nameof(DateTimeCompareTypes.Equals), false };
-            yield return new object[] { "03-19-1996 18:00:01", "03-19-1996 18:00:00", nameof(DateTimeCompareTypes.Equals), false };
+            yield return new object[] { "1996-03-18", "1996-03-19", nameof(DateTimeCompareTypes.Equals), false };
+            yield return new object[] { "1996-03-19", "1996-03-19", nameof(DateTimeCompareTypes.Equals), true };
+            yield return new object[] { "1996-03-20", "1996-03-19", nameof(DateTimeCompareTypes.Equals), false };
+            yield return new object[] { "1996-03-19 18:00:00", "1996-03-19 18:00:00", nameof(DateTimeCompareTypes.Equals), true };
+            yield return new object[] { "1996-03-19 18:00:00", "1996-03-19 18:00:01", nameof(DateTimeCompareTypes.Equals), false };
+            yield return new object[] { "1996-03-19 18:00:01", "1996-03-19 18:00:00", nameof(DateTimeCompareTypes.Equals), false };
 
-            yield return new object[] { "03-18-1996", "03-19-1996", nameof(DateTimeCompareTypes.LessThan), true };
-            yield return new object[] { "03-19-1996", "03-19-1996", nameof(DateTimeCompareTypes.LessThan), false };
-            yield return new object[] { "03-20-1996", "03-19-1996", nameof(DateTimeCompareTypes.LessThan), false };
-            yield return new object[] { "03-19-1996 18:00:00", "03-19-1996 18:00:00", nameof(DateTimeCompareTypes.LessThan), false };
-            yield return new object[] { "03-19-1996 18:00:00", "03-19-1996 18:00:01", nameof(DateTimeCompareTypes.LessThan), true };
-            yield return new object[] { "03-19-1996 18:00:01", "03-19-1996 18:00:00", nameof(DateTimeCompareTypes.LessThan), false };
+            yield return new object[] { "1996-03-18", "1996-03-19", nameof(DateTimeCompareTypes.LessThan), true };
+            yield return new object[] { "1996-03-19", "1996-03-19", nameof(DateTimeCompareTypes.LessThan), false };
+            yield return new object[] { "1996-03-20", "1996-03-19", nameof(DateTimeCompareTypes.LessThan), false };
+            yield return new object[] { "1996-03-19 18:00:00", "1996-03-19 18:00:00", nameof(DateTimeCompareTypes.LessThan), false };
+            yield return new object[] { "1996-03-19 18:00:00", "1996-03-19 18:00:01", nameof(DateTimeCompareTypes.LessThan), true };
+            yield return new object[] { "1996-03-19 18:00:01", "1996-03-19 18:00:00", nameof(DateTimeCompareTypes.LessThan), false };
 
-            yield return new object[] { "03-18-1996", "03-19-1996", nameof(DateTimeCompareTypes.LessOrEqualThan), true };
-            yield return new object[] { "03-19-1996", "03-19-1996", nameof(DateTimeCompareTypes.LessOrEqualThan), true };
-            yield return new object[] { "03-20-1996", "03-19-1996", nameof(DateTimeCompareTypes.LessOrEqualThan), false };
-            yield return new object[] { "03-19-1996 18:00:00", "03-19-1996 18:00:00", nameof(DateTimeCompareTypes.LessOrEqualThan), true };
-            yield return new object[] { "03-19-1996 18:00:00", "03-19-1996 18:00:01", nameof(DateTimeCompareTypes.LessOrEqualThan), true };
-            yield return new object[] { "03-19-1996 18:00:01", "03-19-1996 18:00:00", nameof(DateTimeCompareTypes.LessOrEqualThan), false };
+            yield return new object[] { "1996-03-18", "1996-03-19", nameof(DateTimeCompareTypes.LessOrEqualThan), true };
+            yield return new object[] { "1996-03-19", "1996-03-19", nameof(DateTimeCompareTypes.LessOrEqualThan), true };
+            yield return new object[] { "1996-03-20", "1996-03-19", nameof(DateTimeCompareTypes.LessOrEqualThan), false };
+            yield return new object[] { "1996-03-19 18:00:00", "1996-03-19 18:00:00", nameof(DateTimeCompareTypes.LessOrEqualThan), true };
+            yield return new object[] { "1996-03-19 18:00:00", "1996-03-19 18:00:01", nameof(DateTimeCompareTypes.LessOrEqualThan), true };
+            yield return new object[] { "1996-03-19 18:00:01", "1996-03-19 18:00:00", nameof(DateTimeCompareTypes.LessOrEqualThan), false };
 
-            yield return new object[] { "03-18-1996", "03-19-1996", nameof(DateTimeCompareTypes.BiggerThan), false };
-            yield return new object[] { "03-19-1996", "03-19-1996", nameof(DateTimeCompareTypes.BiggerThan), false };
-            yield return new object[] { "03-20-1996", "03-19-1996", nameof(DateTimeCompareTypes.BiggerThan), true };
-            yield return new object[] { "03-19-1996 18:00:00", "03-19-1996 18:00:00", nameof(DateTimeCompareTypes.BiggerThan), false };
-            yield return new object[] { "03-19-1996 18:00:00", "03-19-1996 18:00:01", nameof(DateTimeCompareTypes.BiggerThan), false };
-            yield return new object[] { "03-19-1996 18:00:01", "03-19-1996 18:00:00", nameof(DateTimeCompareTypes.BiggerThan), true };
+            yield return new object[] { "1996-03-18", "1996-03-19", nameof(DateTimeCompareTypes.BiggerThan), false };
+            yield return new object[] { "1996-03-19", "1996-03-19", nameof(DateTimeCompareTypes.BiggerThan), false };
+            yield return new object[] { "1996-03-20", "1996-03-19", nameof(DateTimeCompareTypes.BiggerThan), true };
+            yield return new object[] { "1996-03-19 18:00:00", "1996-03-19 18:00:00", nameof(DateTimeCompareTypes.BiggerThan), false };
+            yield return new object[] { "1996-03-19 18:00:00", "1996-03-19 18:00:01", nameof(DateTimeCompareTypes.BiggerThan), false };
+            yield return new object[] { "1996-03-19 18:00:01", "1996-03-19 18:00:00", nameof(DateTimeCompareTypes.BiggerThan), true };
 
-            yield return new object[] { "03-18-1996", "03-19-1996", nameof(DateTimeCompareTypes.BiggerOrEqualThan), false };
-            yield return new object[] { "03-19-1996", "03-19-1996", nameof(DateTimeCompareTypes.BiggerOrEqualThan), true };
-            yield return new object[] { "03-20-1996", "03-19-1996", nameof(DateTimeCompareTypes.BiggerOrEqualThan), true };
-            yield return new object[] { "03-19-1996 18:00:00", "03-19-1996 18:00:00", nameof(DateTimeCompareTypes.BiggerOrEqualThan), true };
-            yield return new object[] { "03-19-1996 18:00:00", "03-19-1996 18:00:01", nameof(DateTimeCompareTypes.BiggerOrEqualThan), false };
-            yield return new object[] { "03-19-1996 18:00:01", "03-19-1996 18:00:00", nameof(DateTimeCompareTypes.BiggerOrEqualThan), true };
+            yield return new object[] { "1996-03-18", "1996-03-19", nameof(DateTimeCompareTypes.BiggerOrEqualThan), false };
+            yield return new object[] { "1996-03-19", "1996-03-19", nameof(DateTimeCompareTypes.BiggerOrEqualThan), true };
+            yield return new object[] { "1996-03-20", "1996-03-19", nameof(DateTimeCompareTypes.BiggerOrEqualThan), true };
+            yield return new object[] { "1996-03-19 18:00:00", "1996-03-19 18:00:00", nameof(DateTimeCompareTypes.BiggerOrEqualThan), true };
+            yield return new object[] { "1996-03-19 18:00:00", "1996-03-19 18:00:01", nameof(DateTimeCompareTypes.BiggerOrEqualThan), false };
+            yield return new object[] { "1996-03-19 18:00:01", "1996-03-19 18:00:00", nameof(DateTimeCompareTypes.BiggerOrEqualThan), true };
         }
 
         [Theory]
