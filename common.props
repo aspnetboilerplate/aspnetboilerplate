@@ -1,6 +1,6 @@
 <Project>
   <PropertyGroup>
-    <Version>5.5.0</Version>
+    <Version>5.6.0</Version>
     <NoWarn>$(NoWarn);CS1591</NoWarn>
     <PackageIconUrl>http://www.aspnetboilerplate.com/images/abp_nupkg.png</PackageIconUrl>
     <PackageProjectUrl>http://www.aspnetboilerplate.com/</PackageProjectUrl>
@@ -11,7 +11,21 @@
   <PropertyGroup Condition="'$(Configuration)' == 'Release' ">
     <GeneratePackageOnBuild>True</GeneratePackageOnBuild>
   </PropertyGroup>
+   <PropertyGroup>
+    <!-- Optional: Publish the repository URL in the built .nupkg (in the NuSpec <Repository> element) -->
+    <PublishRepositoryUrl>true</PublishRepositoryUrl>
+ 
+    <!-- Optional: Embed source files that are not tracked by the source control manager in the PDB -->
+    <EmbedUntrackedSources>true</EmbedUntrackedSources>
+  
+    <!-- Optional: Build symbol package (.snupkg) to distribute the PDB containing Source Link -->
+    <IncludeSymbols>true</IncludeSymbols>
+    <SymbolPackageFormat>snupkg</SymbolPackageFormat>
+  </PropertyGroup>
   <ItemGroup>
-    <PackageReference Include="SourceLink.Create.CommandLine" Version="2.8.1" PrivateAssets="All" />
+    <!-- Add PackageReference specific for your source control provider (see below) --> 
+  </ItemGroup>
+  <ItemGroup>
+      <PackageReference Include="Microsoft.SourceLink.GitHub" Version="1.0.0" PrivateAssets="All"/>
   </ItemGroup>
 </Project>
