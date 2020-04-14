@@ -72,13 +72,13 @@ namespace Abp.Webhooks
         public void Publish(string webhookName, object data, bool sendExactSameData = false)
         {
             var subscriptions = _webhookSubscriptionManager.GetAllSubscriptionsIfFeaturesGranted(AbpSession.TenantId, webhookName);
-            Publish(AbpSession.TenantId, webhookName, data, subscriptions);
+            Publish(AbpSession.TenantId, webhookName, data, subscriptions, sendExactSameData);
         }
 
         public void Publish(string webhookName, object data, int? tenantId, bool sendExactSameData = false)
         {
             var subscriptions = _webhookSubscriptionManager.GetAllSubscriptionsIfFeaturesGranted(tenantId, webhookName);
-            Publish(tenantId, webhookName, data, subscriptions);
+            Publish(tenantId, webhookName, data, subscriptions, sendExactSameData);
         }
 
         private void Publish(int? tenantId, string webhookName, object data, List<WebhookSubscription> webhookSubscriptions, bool sendExactSameData = false)
