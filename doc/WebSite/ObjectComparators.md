@@ -1,6 +1,6 @@
 ## Introduction
 
-**Object Comparator System** is a system which you can create comparator for any type of object with any compare type.
+**Object Comparator System** is a system which allows you to create comparator for any type of object with any compare type.
 
 ### Creating a Comparator
 You can create a comparator for any type of object. Just inherit **ObjectComparatorBase**, **ObjectComparatorBase<TBaseType>**  or  **ObjectComparatorBase<TBaseType, TEnumCompareTypes>  where TEnumCompareTypes : Enum**
@@ -83,8 +83,6 @@ public class ObjectComparatorTestClassObjectComparator : ObjectComparatorBase<Ob
 ```
 
 *Or you can directly inherit **ObjectComparatorBase** and manage everything manually.*
-
-
 
 ### Comparing Objects
 
