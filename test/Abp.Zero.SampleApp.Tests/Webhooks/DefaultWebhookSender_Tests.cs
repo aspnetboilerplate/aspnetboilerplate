@@ -79,5 +79,113 @@ namespace Abp.Zero.SampleApp.Tests.Webhooks
             request.Headers.GetValues(SignatureHeaderName).Single()
                 .ShouldStartWith("sha256=");
         }
+
+        //WebhookPayload with parameterless constructor for testing
+        public class WebhookPayloadTest : WebhookPayload
+        {
+            public WebhookPayloadTest(string id, string webHookEvent, int attempt) : base(id, webHookEvent, attempt)
+            {
+            }
+
+            public WebhookPayloadTest() : base("test", "test", int.MaxValue)
+            {
+
+            }
+        }
+
+        [Fact]
+        public void GetSerializedBody_SendExactSameData_False_Test()
+        {
+            string data = new { Test = "test" }.ToJsonString();
+
+            var serializedBody = GetSerializedBody(new WebhookSenderArgs()
+            {
+                TenantId = 1,
+                WebhookName = AppWebhookDefinitionNames.Theme.DefaultThemeChanged,
+                Data = data,
+                SendExactSameData = false
+            });
+
+            serializedBody.ShouldContain(data);
+            serializedBody.ShouldNotBe(data); // serializedBody must be created with WebhookPayload
+
+            WebhookPayloadTest payload;
+            try
+            {
+                payload = serializedBody.FromJsonString<WebhookPayloadTest>();
+            }
+            catch (Exception e)
+            {
+                throw new Exception("Payload must be WebhookPayload json");
+            }
+
+            payload.Id.ShouldNotBe("test");
+            payload.Event.ShouldBe(AppWebhookDefinitionNames.Theme.DefaultThemeChanged);
+            payload.Attempt.ShouldBe(1);
+        }
+
+        [Fact]
+        public void GetSerializedBody_SendExactSameData_True_Test()
+        {
+            string data = new { Test = "test" }.ToJsonString();
+
+            var serializedBody = GetSerializedBody(new WebhookSenderArgs()
+            {
+                TenantId = 1,
+                WebhookName = AppWebhookDefinitionNames.Theme.DefaultThemeChanged,
+                Data = data,
+                SendExactSameData = true
+            });
+
+            serializedBody.ShouldBe(data); // serializedBody must be equal to data
+        }
+
+
+        [Fact]
+        public async Task GetSerializedBodyAsync_SendExactSameData_False_Test()
+        {
+            string data = new { Test = "test" }.ToJsonString();
+
+            var serializedBody = await GetSerializedBodyAsync(new WebhookSenderArgs()
+            {
+                TenantId = 1,
+                WebhookName = AppWebhookDefinitionNames.Theme.DefaultThemeChanged,
+                Data = data,
+                SendExactSameData = false
+            });
+
+            serializedBody.ShouldContain(data);
+            serializedBody.ShouldNotBe(data); // serializedBody must be created with WebhookPayload
+
+            WebhookPayloadTest payload;
+            try
+            {
+                payload = serializedBody.FromJsonString<WebhookPayloadTest>();
+            }
+            catch (Exception e)
+            {
+                throw new Exception("Payload must be WebhookPayload json");
+            }
+
+            payload.Id.ShouldNotBe("test");
+            payload.Event.ShouldBe(AppWebhookDefinitionNames.Theme.DefaultThemeChanged);
+            payload.Attempt.ShouldBe(1);
+        }
+
+        [Fact]
+        public async Task GetSerializedBodyAsync_SendExactSameData_True_Test()
+        {
+            string data = new { Test = "test" }.ToJsonString();
+
+            var serializedBody = await GetSerializedBodyAsync(new WebhookSenderArgs()
+            {
+                TenantId = 1,
+                WebhookName = AppWebhookDefinitionNames.Theme.DefaultThemeChanged,
+                Data = data,
+                SendExactSameData = true
+            });
+
+            serializedBody.ShouldBe(data); // serializedBody must be equal to data
+        }
     }
 }
