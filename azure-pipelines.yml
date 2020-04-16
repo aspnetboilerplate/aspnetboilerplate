@@ -9,7 +9,7 @@
 #
 #     - To trigger manual generation invoke:
 #
-#         nuke --configure-build-server --host AzurePipelines
+#         nuke --generate-configuration AzurePipelines --host AzurePipelines
 #
 # </auto-generated>
 # ------------------------------------------------------------------------------
