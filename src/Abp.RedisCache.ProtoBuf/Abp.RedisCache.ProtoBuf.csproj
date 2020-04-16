@@ -1,7 +1,7 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <Import Project="..\..\common.props" />
-  
+
   <PropertyGroup>
     <TargetFramework>netstandard2.0</TargetFramework>
     <GenerateDocumentationFile>true</GenerateDocumentationFile>
@@ -15,13 +15,6 @@
     <RootNamespace>Abp</RootNamespace>
     <Description>Abp.RedisCache.ProtoBuf</Description>
   </PropertyGroup>
-
-  <ItemGroup>
-    <None Include="bin\Release\netstandard2.0\Abp.RedisCache.ProtoBuf.pdb">
-      <PackagePath>lib/netstandard2.0/</PackagePath>
-      <Pack>true</Pack>
-    </None>
-  </ItemGroup>
 
   <ItemGroup>
     <ProjectReference Include="..\Abp.RedisCache\Abp.RedisCache.csproj" />

@@ -1,5 +1,5 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
-  
+
   <Import Project="..\..\common.props" />
 
   <PropertyGroup>
@@ -22,13 +22,6 @@
 
   <ItemGroup>
     <PackageReference Include="Z.EntityFramework.Plus.EFCore" Version="3.0.45" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <None Include="bin\Release\netstandard2.0\Abp.EntityFrameworkCore.EFPlus.pdb">
-      <PackagePath>lib/netstandard2.0/</PackagePath>
-      <Pack>true</Pack>
-    </None>
   </ItemGroup>
 
   <ItemGroup>

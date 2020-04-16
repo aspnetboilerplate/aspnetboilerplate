@@ -20,13 +20,6 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <None Include="bin\Release\netstandard2.0\Abp.RedisCache.pdb">
-      <PackagePath>lib/netstandard2.0/</PackagePath>
-      <Pack>true</Pack>
-    </None>
-  </ItemGroup>
-
-  <ItemGroup>
     <PackageReference Include="StackExchange.Redis" Version="2.1.28" />
   </ItemGroup>
 

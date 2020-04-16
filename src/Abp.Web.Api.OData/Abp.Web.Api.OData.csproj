@@ -22,13 +22,6 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <None Include="bin\Release\net461\Abp.Web.Api.OData.pdb">
-      <PackagePath>lib/net461/</PackagePath>
-      <Pack>true</Pack>
-    </None>
-  </ItemGroup>
-
-  <ItemGroup>
     <ProjectReference Include="..\Abp\Abp.csproj" />
     <ProjectReference Include="..\Abp.Web.Api\Abp.Web.Api.csproj" />
   </ItemGroup>
@@ -41,7 +34,7 @@
   <ItemGroup>
     <PackageReference Include="Microsoft.AspNet.OData" Version="7.3.0" />
     <PackageReference Include="Microsoft.Extensions.DependencyInjection.Abstractions" Version="3.1.3" />
-    
+
   </ItemGroup>
 
   <ItemGroup>
