@@ -1,7 +1,7 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
-  
+
   <Import Project="..\..\common.props" />
-  
+
   <PropertyGroup>
     <TargetFramework>netcoreapp3.1</TargetFramework>
     <GenerateDocumentationFile>true</GenerateDocumentationFile>
@@ -15,15 +15,8 @@
     <GenerateAssemblyProductAttribute>false</GenerateAssemblyProductAttribute>
     <GenerateAssemblyCopyrightAttribute>false</GenerateAssemblyCopyrightAttribute>
     <GeneratePackageOnBuild>False</GeneratePackageOnBuild>
-	<Description>Abp.AspNetCore.TestBase</Description>
+    <Description>Abp.AspNetCore.TestBase</Description>
   </PropertyGroup>
-
-  <ItemGroup>
-    <None Include="bin\Release\netcoreapp3.1\Abp.AspNetCore.TestBase.pdb">
-      <PackagePath>lib/netcoreapp3.1/</PackagePath>
-      <Pack>true</Pack>
-    </None>
-  </ItemGroup>
 
   <ItemGroup>
     <ProjectReference Include="..\Abp.AspNetCore\Abp.AspNetCore.csproj" />

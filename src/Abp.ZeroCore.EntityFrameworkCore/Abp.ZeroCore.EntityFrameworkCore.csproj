@@ -1,5 +1,5 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
-  
+
   <Import Project="..\..\common.props" />
 
   <PropertyGroup>
@@ -11,13 +11,6 @@
     <PackageTags>asp.net;asp.net mvc;boilerplate;application framework;web framework;framework;domain driven design;multitenancy;user management;role management;identity;entity framework core</PackageTags>
     <Description>Abp.ZeroCore.EntityFrameworkCore</Description>
   </PropertyGroup>
-
-  <ItemGroup>
-    <None Include="bin\Release\netcoreapp3.1\Abp.ZeroCore.EntityFrameworkCore.pdb">
-      <PackagePath>lib/netcoreapp3.1/</PackagePath>
-      <Pack>true</Pack>
-    </None>
-  </ItemGroup>
 
   <ItemGroup>
     <ProjectReference Include="..\Abp.EntityFrameworkCore\Abp.EntityFrameworkCore.csproj" />

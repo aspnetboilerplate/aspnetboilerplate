@@ -23,13 +23,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <None Include="bin\Release\net461\Abp.Zero.pdb">
-      <PackagePath>lib/net461/</PackagePath>
-      <Pack>true</Pack>
-    </None>
-  </ItemGroup>
-
-  <ItemGroup>
     <PackageReference Include="Microsoft.AspNet.Identity.Core" Version="2.2.3" />
   </ItemGroup>
 

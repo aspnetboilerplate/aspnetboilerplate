@@ -23,11 +23,4 @@
     <ProjectReference Include="..\Abp.ZeroCore.IdentityServer4\Abp.ZeroCore.IdentityServer4.csproj" />
   </ItemGroup>
 
-  <ItemGroup>
-    <None Include="bin\Release\netcoreapp3.1\Abp.ZeroCore.IdentityServer4.EntityFrameworkCore.pdb">
-      <PackagePath>lib/netcoreapp3.1/</PackagePath>
-      <Pack>true</Pack>
-    </None>
-  </ItemGroup>
-  
 </Project>

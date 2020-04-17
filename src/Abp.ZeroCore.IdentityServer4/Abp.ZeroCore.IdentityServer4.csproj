@@ -24,15 +24,8 @@
   </ItemGroup>
 
   <ItemGroup>
-    <None Include="bin\Release\netcoreapp3.1\Abp.ZeroCore.IdentityServer4.pdb">
-      <PackagePath>lib/netcoreapp3.1/</PackagePath>
-      <Pack>true</Pack>
-    </None>
-  </ItemGroup>
-  
-  <ItemGroup>
     <ProjectReference Include="..\Abp.AutoMapper\Abp.AutoMapper.csproj" />
     <ProjectReference Include="..\Abp.ZeroCore\Abp.ZeroCore.csproj" />
   </ItemGroup>
-  
+
 </Project>

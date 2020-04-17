@@ -46,11 +46,7 @@ namespace Abp.Webhooks
 
             var request = CreateWebhookRequestMessage(webhookSenderArgs);
 
-            var payload = await GetWebhookPayloadAsync(webhookSenderArgs);
-
-            var serializedBody = _webhooksConfiguration.JsonSerializerSettings != null
-                ? payload.ToJsonString(_webhooksConfiguration.JsonSerializerSettings)
-                : payload.ToJsonString();
+            var serializedBody = await GetSerializedBodyAsync(webhookSenderArgs);
 
             SignWebhookRequest(request, serializedBody, webhookSenderArgs.Secret);
 
@@ -107,11 +103,7 @@ namespace Abp.Webhooks
 
             var request = CreateWebhookRequestMessage(webhookSenderArgs);
 
-            var payload = GetWebhookPayload(webhookSenderArgs);
-
-            var serializedBody = _webhooksConfiguration.JsonSerializerSettings != null
-                ? payload.ToJsonString(_webhooksConfiguration.JsonSerializerSettings)
-                : payload.ToJsonString();
+            var serializedBody = GetSerializedBody(webhookSenderArgs);
 
             SignWebhookRequest(request, serializedBody, webhookSenderArgs.Secret);
 
@@ -305,6 +297,38 @@ namespace Abp.Webhooks
 
                 return (isSucceed, statusCode, content);
             }
+        }
+
+        protected virtual string GetSerializedBody(WebhookSenderArgs webhookSenderArgs)
+        {
+            if (webhookSenderArgs.SendExactSameData)
+            {
+                return webhookSenderArgs.Data;
+            }
+
+            var payload = GetWebhookPayload(webhookSenderArgs);
+
+            var serializedBody = _webhooksConfiguration.JsonSerializerSettings != null
+                ? payload.ToJsonString(_webhooksConfiguration.JsonSerializerSettings)
+                : payload.ToJsonString();
+
+            return serializedBody;
+        }
+
+        protected virtual async Task<string> GetSerializedBodyAsync(WebhookSenderArgs webhookSenderArgs)
+        {
+            if (webhookSenderArgs.SendExactSameData)
+            {
+                return webhookSenderArgs.Data;
+            }
+
+            var payload = await GetWebhookPayloadAsync(webhookSenderArgs);
+
+            var serializedBody = _webhooksConfiguration.JsonSerializerSettings != null
+                ? payload.ToJsonString(_webhooksConfiguration.JsonSerializerSettings)
+                : payload.ToJsonString();
+
+            return serializedBody;
         }
     }
 }

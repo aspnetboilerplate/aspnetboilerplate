@@ -22,13 +22,6 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <None Include="bin\Release\netcoreapp3.1\Abp.AspNetCore.SignalR.pdb">
-      <PackagePath>lib/netcoreapp3.1/</PackagePath>
-      <Pack>true</Pack>
-    </None>
-  </ItemGroup>
-
-  <ItemGroup>
     <ProjectReference Include="..\Abp\Abp.csproj" />
   </ItemGroup>
 

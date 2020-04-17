@@ -20,17 +20,6 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <None Include="bin\Release\net461\Abp.EntityFramework.pdb">
-      <PackagePath>lib/net461/</PackagePath>
-      <Pack>true</Pack>
-    </None>
-    <None Include="bin\Release\netstandard2.1\Abp.EntityFramework.pdb">
-      <PackagePath>lib/netstandard2.1/</PackagePath>
-      <Pack>true</Pack>
-    </None>
-  </ItemGroup>
-
-  <ItemGroup>
     <ProjectReference Include="..\Abp\Abp.csproj" />
     <ProjectReference Include="..\Abp.EntityFramework.Common\Abp.EntityFramework.Common.csproj" />
   </ItemGroup>

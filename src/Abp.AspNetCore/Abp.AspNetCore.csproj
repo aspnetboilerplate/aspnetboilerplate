@@ -28,13 +28,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <None Include="bin\Release\netcoreapp3.1\Abp.AspNetCore.pdb">
-      <PackagePath>lib/netcoreapp3.1/</PackagePath>
-      <Pack>true</Pack>
-    </None>
-  </ItemGroup>
-
-  <ItemGroup>
     <ProjectReference Include="..\Abp.Web.Common\Abp.Web.Common.csproj" />
   </ItemGroup>
 

@@ -1,5 +1,5 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
-  
+
   <Import Project="..\..\common.props" />
 
   <PropertyGroup>
@@ -17,13 +17,6 @@
 
   <ItemGroup>
     <EmbeddedResource Include="Zero\Localization\Source\*.xml" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <None Include="bin\Release\netstandard2.0\Abp.Zero.Common.pdb">
-      <PackagePath>lib/netstandard2.0/</PackagePath>
-      <Pack>true</Pack>
-    </None>
   </ItemGroup>
 
   <ItemGroup>
