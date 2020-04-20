@@ -59,14 +59,14 @@ namespace Abp.ZeroCore.SampleApp
     {
         public static void CreateMappings(IMapperConfigurationExpression configuration, MultiLingualMapContext context)
         {
-            configuration.CreateMultiLingualMap<Product, ProductTranslation, ProductListDto>(context);
+            configuration.CreateMultiLingualMap<Product, ProductTranslation, ProductListDto>(context, true);
 
             configuration.CreateMap<ProductCreateDto, Product>();
             configuration.CreateMap<ProductUpdateDto, Product>();
 
             configuration.CreateMap<ProductTranslationDto, ProductTranslation>();
 
-            configuration.CreateMultiLingualMap<Order, OrderTranslation, OrderListDto>(context)
+            configuration.CreateMultiLingualMap<Order, OrderTranslation, OrderListDto>(context, true)
                 .EntityMap.ForMember(dest => dest.ProductCount, opt => opt.MapFrom(src => src.Products.Count));
         }
     }
