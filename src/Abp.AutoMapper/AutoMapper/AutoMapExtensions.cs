@@ -48,6 +48,13 @@ namespace Abp.AutoMapper
             result.TranslationMap = configuration.CreateMap<TTranslation, TDestination>();
             result.EntityMap = configuration.CreateMap<TMultiLingualEntity, TDestination>().BeforeMap((source, destination, context) =>
             {
+                // when no translation is available, all translation properties will just stay null
+                if (source.Translations == null)
+                {
+                    return;
+                }
+
+                // check for region specific language, e.g. 'en-US'
                 var translation = source.Translations.FirstOrDefault(pt => pt.Language == CultureInfo.CurrentUICulture.Name);
                 if (translation != null)
                 {
@@ -55,8 +62,15 @@ namespace Abp.AutoMapper
                     return;
                 }
 
-                var defaultLanguage = multiLingualMapContext.SettingManager
-                                                            .GetSettingValue(LocalizationSettingNames.DefaultLanguage);
+                // check for language, e.g. 'en'
+                translation = source.Translations.FirstOrDefault(pt => pt.Language == CultureInfo.CurrentUICulture.TwoLetterISOLanguageName);
+                if (translation != null)
+                {
+                    context.Mapper.Map(translation, destination);
+                    return;
+                }
+
+                var defaultLanguage = multiLingualMapContext.SettingManager.GetSettingValue(LocalizationSettingNames.DefaultLanguage);
 
                 translation = source.Translations.FirstOrDefault(pt => pt.Language == defaultLanguage);
                 if (translation != null)
