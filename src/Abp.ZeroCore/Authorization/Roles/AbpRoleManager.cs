@@ -180,8 +180,7 @@ namespace Abp.Authorization.Roles
         {
             var cacheItem = await GetRolePermissionCacheItemAsync(role.Id);
             var allPermissions = _permissionManager.GetAllPermissions();
-            var grantedPermissions = allPermissions.Select(x => x.Name).Intersect(cacheItem.GrantedPermissions);
-            return allPermissions.Where(x => grantedPermissions.Contains(x.Name)).ToList();
+            return allPermissions.Where(x => cacheItem.GrantedPermissions.Contains(x.Name)).ToList();
         }
 
         /// <summary>
