@@ -2,12 +2,14 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
+using System.Threading;
 using System.Threading.Tasks;
 using Abp.Dependency;
 using Abp.Domain.Entities;
 using Abp.Domain.Uow;
 using Abp.MultiTenancy;
 using Abp.Reflection.Extensions;
+using Abp.Threading;
 
 namespace Abp.Domain.Repositories
 {
@@ -28,6 +30,7 @@ namespace Abp.Domain.Repositories
         public IUnitOfWorkManager UnitOfWorkManager { get; set; }
 
         public IIocResolver IocResolver { get; set; }
+        public ICancellationTokenProvider CancellationTokenProvider { get; set; }
 
         static AbpRepositoryBase()
         {
@@ -36,6 +39,11 @@ namespace Abp.Domain.Repositories
             {
                 MultiTenancySide = attr.Side;
             }
+        }
+
+        protected AbpRepositoryBase()
+        {
+            CancellationTokenProvider = NullCancellationTokenProvider.Instance;
         }
 
         public abstract IQueryable<TEntity> GetAll();
