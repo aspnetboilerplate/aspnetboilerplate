@@ -60,7 +60,7 @@ namespace Abp.AspNetCore.SignalR.Hubs
                 Context.ConnectionId,
                 GetIpAddressOfClient(),
                 Context.GetTenantId(),
-                Context.GetUserId()
+                Context.GetUserIdOrNull()
             );
         }
 
