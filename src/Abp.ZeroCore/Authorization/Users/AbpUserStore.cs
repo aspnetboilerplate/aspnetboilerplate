@@ -911,8 +911,8 @@ namespace Abp.Authorization.Users
             var userClaims = user.Claims.Where(uc => uc.ClaimValue == claim.Value && uc.ClaimType == claim.Type);
             foreach (var userClaim in userClaims)
             {
-                userClaim.ClaimType = claim.Type;
-                userClaim.ClaimValue = claim.Value;
+                userClaim.ClaimType = newClaim.Type;
+                userClaim.ClaimValue = newClaim.Value;
             }
         }
 
