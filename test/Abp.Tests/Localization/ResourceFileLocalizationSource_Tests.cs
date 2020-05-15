@@ -128,6 +128,16 @@ namespace Abp.Tests.Localization
             _resourceFileLocalizationSource.GetStringsOrNull(new List<string>{"Apple"}, CultureInfo.GetCultureInfo("en-US")).ShouldContain(x => x == null);
         }
 
+        [Fact]
+        public void Test_GetStringsOrNull_When_Name_Not_Exist()
+        {
+            var enStrings = _resourceFileLocalizationSource.GetStringsOrNull(new List<string>{"Hello", "World", "NotExist"}, CultureInfo.GetCultureInfo("en"));
+            enStrings.ShouldContain(x => x == "Hello!");
+            enStrings.ShouldContain(x => x == "World!");
+            enStrings.ShouldContain(x => x == null);
+            enStrings[2].ShouldBeNull(); //NotExist
+        }
+
         [Fact(Skip = "Waiting for https://github.com/aspnetboilerplate/aspnetboilerplate/issues/1995")]
         public void Test_GetAllStrings()
         {
