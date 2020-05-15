@@ -117,14 +117,10 @@ namespace Abp.Localization.Sources.Resource
             return GetStringsInternal(names, culture, tryDefaults).Select(x => x.Value).ToList();
         }
 
-        private List<NameValue> GetStringsInternal(List<string> names, CultureInfo culture, bool includeDefaults = true)
+        private List<NameValue> GetStringsInternal(List<string> names, CultureInfo culture, bool tryDefaults = true)
         {
-            return ResourceManager
-                .GetResourceSet(culture, true, includeDefaults)
-                .Cast<DictionaryEntry>()
-                .Where(x => names.Contains(x.Key))
-                .Select(entry => new NameValue(entry.Key.ToString(), entry.Value.ToString()))
-                .ToList();
+            //WARN: tryDefaults is not implemented!
+            return names.Select(name => new NameValue(name, ResourceManager.GetString(name, culture))).ToList();
         }
 
         /// <summary>
@@ -136,7 +132,7 @@ namespace Abp.Localization.Sources.Resource
         }
 
         /// <summary>
-        /// Gets all strings in specified culture. 
+        /// Gets all strings in specified culture.
         /// </summary>
         public virtual IReadOnlyList<LocalizedString> GetAllStrings(CultureInfo culture, bool includeDefaults = true)
         {

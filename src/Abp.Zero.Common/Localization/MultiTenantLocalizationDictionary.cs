@@ -58,7 +58,7 @@ namespace Abp.Localization
 
         public IReadOnlyList<LocalizedString> GetStringsOrNull(List<string> names)
         {
-            return GetStringOrNull(_session.TenantId, names);
+            return GetStringsOrNull(_session.TenantId, names);
         }
 
         public LocalizedString GetOrNull(int? tenantId, string name)
@@ -96,7 +96,7 @@ namespace Abp.Localization
             return null;
         }
 
-        public IReadOnlyList<LocalizedString> GetStringOrNull(int? tenantId, List<string> names)
+        public IReadOnlyList<LocalizedString> GetStringsOrNull(int? tenantId, List<string> names)
         {
             //Get cache
             var cache = _cacheManager.GetMultiTenantLocalizationDictionaryCache();

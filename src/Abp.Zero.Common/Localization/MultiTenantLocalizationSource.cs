@@ -125,7 +125,7 @@ namespace Abp.Localization
             {
                 var strOriginal = originalDictionary
                     .As<IMultiTenantLocalizationDictionary>()
-                    .GetStringOrNull(tenantId, names);
+                    .GetStringsOrNull(tenantId, names);
 
                 if (!strOriginal.IsNullOrEmpty())
                 {
@@ -144,7 +144,7 @@ namespace Abp.Localization
                 ILocalizationDictionary langDictionary;
                 if (dictionaries.TryGetValue(GetBaseCultureName(cultureName), out langDictionary))
                 {
-                    var strLang = langDictionary.As<IMultiTenantLocalizationDictionary>().GetStringOrNull(tenantId, names);
+                    var strLang = langDictionary.As<IMultiTenantLocalizationDictionary>().GetStringsOrNull(tenantId, names);
                     if (!strLang.IsNullOrEmpty())
                     {
                         return strLang.Select(x => x.Value).ToList();;
@@ -159,7 +159,7 @@ namespace Abp.Localization
                 return null;
             }
 
-            var strDefault = defaultDictionary.As<IMultiTenantLocalizationDictionary>().GetStringOrNull(tenantId, names);
+            var strDefault = defaultDictionary.As<IMultiTenantLocalizationDictionary>().GetStringsOrNull(tenantId, names);
             if (strDefault.IsNullOrEmpty())
             {
                 return null;

@@ -20,7 +20,7 @@ namespace Abp.Localization
         /// </summary>
         /// <param name="tenantId">TenantId or null for host.</param>
         /// <param name="names">List of localization key names.</param>
-        IReadOnlyList<LocalizedString> GetStringOrNull(int? tenantId, List<string> names);
+        IReadOnlyList<LocalizedString> GetStringsOrNull(int? tenantId, List<string> names);
 
         /// <summary>
         /// Gets all <see cref="LocalizedString"/>s.
