@@ -112,16 +112,16 @@ namespace Abp.Localization
             //Override by host
             if (tenantId != null)
             {
-                var defaultDictionary = cache.Get(CalculateCacheKey(null), () => GetValuesFromDatabase(null, names));
-                foreach (var keyValue in defaultDictionary)
+                var defaultDictionary = cache.Get(CalculateCacheKey(null), () => GetAllValuesFromDatabase(null));
+                foreach (var keyValue in defaultDictionary.Where(x => names.Contains(x.Key)))
                 {
                     dictionary[keyValue.Key] = new LocalizedString(keyValue.Key, keyValue.Value, CultureInfo);
                 }
             }
 
             //Override by tenant
-            var tenantDictionary = cache.Get(CalculateCacheKey(tenantId), () => GetValuesFromDatabase(tenantId, names));
-            foreach (var keyValue in tenantDictionary)
+            var tenantDictionary = cache.Get(CalculateCacheKey(tenantId), () => GetAllValuesFromDatabase(tenantId));
+            foreach (var keyValue in tenantDictionary.Where(x => names.Contains(x.Key)))
             {
                 dictionary[keyValue.Key] = new LocalizedString(keyValue.Key, keyValue.Value, CultureInfo);
             }
@@ -180,19 +180,6 @@ namespace Abp.Localization
             {
                 return _customLocalizationRepository
                     .GetAllList(l => l.Source == _sourceName && l.LanguageName == CultureInfo.Name)
-                    .ToDictionary(l => l.Key, l => l.Value);
-            }
-        }
-
-        [UnitOfWork]
-        protected virtual Dictionary<string, string> GetValuesFromDatabase(int? tenantId, List<string> names)
-        {
-            using (_unitOfWorkManager.Current.SetTenantId(tenantId))
-            {
-                return _customLocalizationRepository
-                    .GetAll()
-                    .Where(x => names.Contains(x.Key))
-                    .Where(l => l.Source == _sourceName && l.LanguageName == CultureInfo.Name)
                     .ToDictionary(l => l.Key, l => l.Value);
             }
         }
