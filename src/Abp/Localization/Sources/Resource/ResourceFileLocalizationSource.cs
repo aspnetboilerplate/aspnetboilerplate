@@ -1,4 +1,4 @@
-﻿using System.Collections.Generic;
+using System.Collections.Generic;
 using System.Globalization;
 using System.Resources;
 using Abp.Configuration.Startup;
@@ -83,6 +83,50 @@ namespace Abp.Localization.Sources.Resource
             return ResourceManager.GetString(name, culture);
         }
 
+        public List<string> GetStrings(List<string> names)
+        {
+            var values = GetStringsInternal(names, CultureInfo.CurrentUICulture);
+            var nullValues = values.Where(x => x.Value == null).ToList();
+            if (nullValues.Any())
+            {
+                return ReturnGivenNamesOrThrowException(nullValues.Select(x => x.Name).ToList(), CultureInfo.CurrentUICulture);
+            }
+
+            return values.Select(x => x.Value).ToList();
+        }
+
+        public List<string> GetStrings(List<string> names, CultureInfo culture)
+        {
+            var values = GetStringsInternal(names, culture);
+            var nullValues = values.Where(x => x.Value == null).ToList();
+            if (nullValues.Any())
+            {
+                return ReturnGivenNamesOrThrowException(nullValues.Select(x => x.Name).ToList(), culture);
+            }
+
+            return values.Select(x => x.Value).ToList();
+        }
+
+        public List<string> GetStringsOrNull(List<string> names, bool tryDefaults = true)
+        {
+            return GetStringsInternal(names, CultureInfo.CurrentUICulture, tryDefaults).Select(x => x.Value).ToList();
+        }
+
+        public List<string> GetStringsOrNull(List<string> names, CultureInfo culture, bool tryDefaults = true)
+        {
+            return GetStringsInternal(names, culture, tryDefaults).Select(x => x.Value).ToList();
+        }
+
+        private List<NameValue> GetStringsInternal(List<string> names, CultureInfo culture, bool includeDefaults = true)
+        {
+            return ResourceManager
+                .GetResourceSet(culture, true, includeDefaults)
+                .Cast<DictionaryEntry>()
+                .Where(x => names.Contains(x.Key))
+                .Select(entry => new NameValue(entry.Key.ToString(), entry.Value.ToString()))
+                .ToList();
+        }
+
         /// <summary>
         /// Gets all strings in current language.
         /// </summary>
@@ -109,6 +153,17 @@ namespace Abp.Localization.Sources.Resource
                 _configuration,
                 Name,
                 name,
+                culture,
+                _logger
+            );
+        }
+
+        protected virtual List<string> ReturnGivenNamesOrThrowException(List<string> names, CultureInfo culture)
+        {
+            return LocalizationSourceHelper.ReturnGivenNamesOrThrowException(
+                _configuration,
+                Name,
+                names,
                 culture,
                 _logger
             );

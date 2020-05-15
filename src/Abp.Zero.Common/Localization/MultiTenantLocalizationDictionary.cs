@@ -56,6 +56,11 @@ namespace Abp.Localization
             return GetOrNull(_session.TenantId, name);
         }
 
+        public IReadOnlyList<LocalizedString> GetStringsOrNull(List<string> names)
+        {
+            return GetStringOrNull(_session.TenantId, names);
+        }
+
         public LocalizedString GetOrNull(int? tenantId, string name)
         {
             //Get cache
@@ -90,6 +95,40 @@ namespace Abp.Localization
             //Not found at all
             return null;
         }
+
+        public IReadOnlyList<LocalizedString> GetStringOrNull(int? tenantId, List<string> names)
+        {
+            //Get cache
+            var cache = _cacheManager.GetMultiTenantLocalizationDictionaryCache();
+
+            //Create a temp dictionary to build (by underlying dictionary)
+            var dictionary = new Dictionary<string, LocalizedString>();
+
+            foreach (var localizedString in _internalDictionary.GetStringsOrNull(names))
+            {
+                dictionary[localizedString.Name] = localizedString;
+            }
+
+            //Override by host
+            if (tenantId != null)
+            {
+                var defaultDictionary = cache.Get(CalculateCacheKey(null), () => GetValuesFromDatabase(null, names));
+                foreach (var keyValue in defaultDictionary)
+                {
+                    dictionary[keyValue.Key] = new LocalizedString(keyValue.Key, keyValue.Value, CultureInfo);
+                }
+            }
+
+            //Override by tenant
+            var tenantDictionary = cache.Get(CalculateCacheKey(tenantId), () => GetValuesFromDatabase(tenantId, names));
+            foreach (var keyValue in tenantDictionary)
+            {
+                dictionary[keyValue.Key] = new LocalizedString(keyValue.Key, keyValue.Value, CultureInfo);
+            }
+
+            return dictionary.Values.ToImmutableList();
+        }
+
 
         public IReadOnlyList<LocalizedString> GetAllStrings()
         {
@@ -141,6 +180,19 @@ namespace Abp.Localization
             {
                 return _customLocalizationRepository
                     .GetAllList(l => l.Source == _sourceName && l.LanguageName == CultureInfo.Name)
+                    .ToDictionary(l => l.Key, l => l.Value);
+            }
+        }
+
+        [UnitOfWork]
+        protected virtual Dictionary<string, string> GetValuesFromDatabase(int? tenantId, List<string> names)
+        {
+            using (_unitOfWorkManager.Current.SetTenantId(tenantId))
+            {
+                return _customLocalizationRepository
+                    .GetAll()
+                    .Where(x => names.Contains(x.Key))
+                    .Where(l => l.Source == _sourceName && l.LanguageName == CultureInfo.Name)
                     .ToDictionary(l => l.Key, l => l.Value);
             }
         }
