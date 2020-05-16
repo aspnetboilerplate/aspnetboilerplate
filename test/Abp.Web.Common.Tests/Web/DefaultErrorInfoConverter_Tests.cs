@@ -16,7 +16,7 @@ namespace Abp.Web.Common.Tests.Web
         }
 
         [Fact]
-        public async Task DefaultErrorInfoConverter_Should_Work_For_EntityNotFoundException_Overload_Methods()
+        public void DefaultErrorInfoConverter_Should_Work_For_EntityNotFoundException_Overload_Methods()
         {
             var message = "Test message";
             var errorInfo = _defaultErrorInfoConverter.Convert(new EntityNotFoundException(message));

@@ -278,7 +278,7 @@ namespace Abp.Zero.SampleApp.Tests.Webhooks
         }
 
         [Fact]
-        public async Task Should_Insert_Sync()
+        public void Should_Insert_Sync()
         {
             _webhookSendAttemptStore.Insert(new WebhookSendAttempt()
             {
