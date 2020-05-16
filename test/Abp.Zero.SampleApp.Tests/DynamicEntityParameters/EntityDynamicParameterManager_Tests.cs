@@ -484,7 +484,7 @@ namespace Abp.Zero.SampleApp.Tests.DynamicEntityParameters
             {
                 try
                 {
-                    var val = entityDynamicParameterManager.Get(entityDynamicParameter.Id);
+                    var val = await entityDynamicParameterManager.GetAsync(entityDynamicParameter.Id);
                     val.ShouldBeNull();
                 }
                 catch (EntityNotFoundException)
