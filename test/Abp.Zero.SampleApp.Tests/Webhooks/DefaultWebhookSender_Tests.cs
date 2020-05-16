@@ -114,7 +114,7 @@ namespace Abp.Zero.SampleApp.Tests.Webhooks
             {
                 payload = serializedBody.FromJsonString<WebhookPayloadTest>();
             }
-            catch (Exception e)
+            catch (Exception)
             {
                 throw new Exception("Payload must be WebhookPayload json");
             }
@@ -162,7 +162,7 @@ namespace Abp.Zero.SampleApp.Tests.Webhooks
             {
                 payload = serializedBody.FromJsonString<WebhookPayloadTest>();
             }
-            catch (Exception e)
+            catch (Exception)
             {
                 throw new Exception("Payload must be WebhookPayload json");
             }
