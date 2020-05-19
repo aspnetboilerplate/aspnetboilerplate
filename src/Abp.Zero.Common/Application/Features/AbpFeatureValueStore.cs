@@ -220,6 +220,7 @@ namespace Abp.Application.Features
 
                 using (var uow = _unitOfWorkManager.Begin())
                 {
+                    using (_unitOfWorkManager.Current.EnableFilter(AbpDataFilters.MayHaveTenant))
                     using (_unitOfWorkManager.Current.SetTenantId(tenantId))
                     {
                         var featureSettings = await _tenantFeatureRepository.GetAllListAsync();
@@ -255,6 +256,7 @@ namespace Abp.Application.Features
 
                 using (var uow = _unitOfWorkManager.Begin())
                 {
+                    using (_unitOfWorkManager.Current.EnableFilter(AbpDataFilters.MayHaveTenant))
                     using (_unitOfWorkManager.Current.SetTenantId(tenantId))
                     {
                         var featureSettings = _tenantFeatureRepository.GetAllList();
