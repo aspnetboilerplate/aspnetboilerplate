@@ -61,7 +61,7 @@ namespace Abp.TestBase.SampleApplication.Tests.Auditing
         }
 
         [Fact]
-        public async Task AuditInfo_ReturnValue_DisableAudit_Test()
+        public void AuditInfo_ReturnValue_DisableAudit_Test()
         {
             Resolve<MyServiceWithClassAudited>().Test4();
 

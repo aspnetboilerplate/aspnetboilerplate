@@ -263,7 +263,7 @@ namespace Abp.Authorization.Roles
         /// <summary>
         /// Resets all permission settings for a role.
         /// It removes all permission settings for the role.
-        /// Role will have permissions those have <see cref="Permission.IsGrantedByDefault"/> set to true.
+        /// Role will have permissions for which <see cref="StaticRoleDefinition.IsGrantedByDefault"/> returns true.
         /// </summary>
         /// <param name="role">Role</param>
         public async Task ResetAllPermissionsAsync(TRole role)
