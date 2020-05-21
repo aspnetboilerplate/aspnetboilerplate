@@ -61,6 +61,46 @@ namespace Abp.Localization.Sources
         string GetStringOrNull(string name, CultureInfo culture, bool tryDefaults = true);
 
         /// <summary>
+        /// Gets list of localized strings for given names in current language.
+        /// Fallbacks to default language if not found in current culture.
+        /// </summary>
+        /// <param name="names">Key names</param>
+        /// <returns>Localized string</returns>
+        List<string> GetStrings(List<string> names);
+
+        /// <summary>
+        /// Gets list of localized strings for given names and specified culture.
+        /// Fallbacks to default language if not found in given culture.
+        /// </summary>
+        /// <param name="names">Key names</param>
+        /// <param name="culture">culture information</param>
+        /// <returns>Localized string</returns>
+        List<string> GetStrings(List<string> names, CultureInfo culture);
+
+        /// <summary>
+        /// Gets list of localized strings for given names  in current language.
+        /// Returns null if not found.
+        /// </summary>
+        /// <param name="names">Key name</param>
+        /// <param name="tryDefaults">
+        /// True: Fallbacks to default language if not found in current culture.
+        /// </param>
+        /// <returns>Localized string</returns>
+        List<string> GetStringsOrNull(List<string> names, bool tryDefaults = true);
+
+        /// <summary>
+        /// Gets list of localized strings for given names and specified culture.
+        /// Returns null if not found.
+        /// </summary>
+        /// <param name="names">Key name</param>
+        /// <param name="culture">culture information</param>
+        /// <param name="tryDefaults">
+        /// True: Fallbacks to default language if not found in current culture.
+        /// </param>
+        /// <returns>Localized string</returns>
+        List<string> GetStringsOrNull(List<string> names, CultureInfo culture, bool tryDefaults = true);
+
+        /// <summary>
         /// Gets all strings in current language.
         /// </summary>
         /// <param name="includeDefaults">

@@ -244,6 +244,7 @@ namespace Abp.MultiTenancy
 
             //Get the current feature setting
             TenantFeatureSetting currentSetting;
+            using (UnitOfWorkManager.Current.EnableFilter(AbpDataFilters.MayHaveTenant))
             using (UnitOfWorkManager.Current.SetTenantId(tenant.Id))
             {
                 currentSetting = await TenantFeatureRepository.FirstOrDefaultAsync(f => f.Name == featureName);
@@ -299,6 +300,7 @@ namespace Abp.MultiTenancy
 
             //Get the current feature setting
             TenantFeatureSetting currentSetting;
+            using (UnitOfWorkManager.Current.EnableFilter(AbpDataFilters.MayHaveTenant))
             using (UnitOfWorkManager.Current.SetTenantId(tenant.Id))
             {
                 currentSetting = TenantFeatureRepository.FirstOrDefault(f => f.Name == featureName);
@@ -351,6 +353,7 @@ namespace Abp.MultiTenancy
         [UnitOfWork]
         public virtual async Task ResetAllFeaturesAsync(int tenantId)
         {
+            using (UnitOfWorkManager.Current.EnableFilter(AbpDataFilters.MayHaveTenant))
             using (UnitOfWorkManager.Current.SetTenantId(tenantId))
             {
                 await TenantFeatureRepository.DeleteAsync(f => f.TenantId == tenantId);
@@ -365,6 +368,7 @@ namespace Abp.MultiTenancy
         [UnitOfWork]
         public virtual void ResetAllFeatures(int tenantId)
         {
+            using (UnitOfWorkManager.Current.EnableFilter(AbpDataFilters.MayHaveTenant))
             using (UnitOfWorkManager.Current.SetTenantId(tenantId))
             {
                 TenantFeatureRepository.Delete(f => f.TenantId == tenantId);

@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Linq;
+using System.Threading.Tasks;
 using System.Transactions;
 using Abp.Domain.Repositories;
 using Abp.Domain.Uow;
@@ -19,14 +20,14 @@ namespace Abp.TestBase.SampleApplication.Tests.People
         }
 
         [Fact]
-        public void Should_Suppress_Outer_Transaction()
+        public async Task Should_Suppress_Outer_Transaction()
         {
             var outerUowPersonName = Guid.NewGuid().ToString("N");
             var innerUowPersonName = Guid.NewGuid().ToString("N");
 
             var unitOfWorkManager = Resolve<IUnitOfWorkManager>();
 
-            Assert.Throws<ApplicationException>(() =>
+            var exception = await Assert.ThrowsAsync<ApplicationException>(() =>
             {
                 using (var uow = unitOfWorkManager.Begin())
                 {
@@ -51,9 +52,9 @@ namespace Abp.TestBase.SampleApplication.Tests.People
 
                     throw new ApplicationException("This exception is thown to rollback outer transaction!");
                 }
-
-                return;
-            }).Message.ShouldBe("This exception is thown to rollback outer transaction!");
+            });
+            
+            exception.Message.ShouldBe("This exception is thown to rollback outer transaction!");
 
             UsingDbContext(context =>
             {

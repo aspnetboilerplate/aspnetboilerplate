@@ -20,12 +20,14 @@ namespace Abp.Zero.SampleApp.Tests.Webhooks
         private IWebhookEventStore _webhookEventStore;
         public WebhookSendAttemptStore_Tests()
         {
+#if DEBUG
             LocalIocManager.IocContainer.Register(
                 Component.For<IAsyncQueryableExecuter>()
                     .ImplementedBy<FakeAsyncQueryableExecuter>()
                     .LifestyleSingleton()
                     .IsDefault()
                 );
+#endif
 
             _webhookSendAttemptStore = Resolve<IWebhookSendAttemptStore>();
             _webhookEventStore = Resolve<IWebhookEventStore>();
@@ -278,7 +280,7 @@ namespace Abp.Zero.SampleApp.Tests.Webhooks
         }
 
         [Fact]
-        public async Task Should_Insert_Sync()
+        public void Should_Insert_Sync()
         {
             _webhookSendAttemptStore.Insert(new WebhookSendAttempt()
             {

@@ -67,11 +67,11 @@ namespace Abp.Zero.SampleApp.Tests.Webhooks
             await webhookSubscriptionManager.AddOrUpdateSubscriptionAsync(newSubscription);
 
             await WithUnitOfWorkAsync(tenantId, async () =>
-             {
-                 var storedSubscription = webhookSubscriptionManager.Get(newSubscription.Id);
-                 storedSubscription.ShouldNotBeNull();
-                 CompareSubscriptions(storedSubscription, newSubscription);
-             });
+            {
+                var storedSubscription = await webhookSubscriptionManager.GetAsync(newSubscription.Id);
+                storedSubscription.ShouldNotBeNull();
+                CompareSubscriptions(storedSubscription, newSubscription);
+            });
         }
 
         [Fact]
