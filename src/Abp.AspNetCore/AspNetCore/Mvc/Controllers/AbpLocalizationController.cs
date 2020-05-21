@@ -57,10 +57,15 @@ namespace Abp.AspNetCore.Mvc.Controllers
 
             if (!string.IsNullOrWhiteSpace(returnUrl))
             {
-                var localPath = UrlHelper.LocalPathAndQuery(Uri.EscapeUriString(returnUrl), Request.Host.Host, Request.Host.Port);
+                var escapedReturnUrl = Uri.EscapeUriString(returnUrl);
+                var localPath = UrlHelper.LocalPathAndQuery(escapedReturnUrl, Request.Host.Host, Request.Host.Port);
                 if (!string.IsNullOrWhiteSpace(localPath))
                 {
-                    return Redirect(Uri.UnescapeDataString(localPath));
+                    var unescapedLocalPath = Uri.UnescapeDataString(localPath);
+                    if (Url.IsLocalUrl(unescapedLocalPath))
+                    {
+                        return Redirect(unescapedLocalPath);
+                    }
                 }
             }
 
