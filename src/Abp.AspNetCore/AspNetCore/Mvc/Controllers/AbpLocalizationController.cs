@@ -64,12 +64,12 @@ namespace Abp.AspNetCore.Mvc.Controllers
                     var unescapedLocalPath = Uri.UnescapeDataString(localPath);
                     if (Url.IsLocalUrl(unescapedLocalPath))
                     {
-                        return Redirect(unescapedLocalPath);
+                        return LocalRedirect(unescapedLocalPath);
                     }
                 }
             }
 
-            return Redirect("/"); //TODO: Go to app root
+            return LocalRedirect("/"); //TODO: Go to app root
         }
     }
 }
