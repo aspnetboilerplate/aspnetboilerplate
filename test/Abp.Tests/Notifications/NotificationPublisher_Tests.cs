@@ -48,6 +48,32 @@ namespace Abp.Tests.Notifications
                 );
         }
 
+        [Fact]
+        public async Task Should_PublishAsync_To_Host()
+        {
+            // Act
+            await _publisher.PublishAsync("TestNotification", tenantIds: new int?[] { null });
+
+            // Assert
+            await _store.Received()
+                .InsertNotificationAsync(
+                    Arg.Is<NotificationInfo>(n => n.TenantIds == "null")
+                );
+        }
+
+        [Fact]
+        public void Should_Publish_To_Host()
+        {
+            // Act
+            _publisher.Publish("TestNotification", tenantIds: new int?[] { null });
+
+            // Assert
+            _store.Received()
+                .InsertNotification(
+                    Arg.Is<NotificationInfo>(n => n.TenantIds == "null")
+                );
+        }
+
         private static NotificationData CreateNotificationData()
         {
             var notificationData = new NotificationData();
