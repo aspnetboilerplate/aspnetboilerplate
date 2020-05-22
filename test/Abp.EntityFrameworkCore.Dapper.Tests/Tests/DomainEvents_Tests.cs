@@ -63,7 +63,7 @@ namespace Abp.EntityFrameworkCore.Dapper.Tests.Tests
                     triggerCount++;
                 });
 
-            _blogDapperRepository.Insert(new Blog("OnSoftware", "www.aspnetboilerplate.com"));
+            await _blogDapperRepository.InsertAsync(new Blog("OnSoftware", "www.aspnetboilerplate.com"));
 
             triggerCount.ShouldBe(1);
         }
