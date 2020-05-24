@@ -1,9 +1,11 @@
 using Abp.Extensions;
 using JetBrains.Annotations;
 using Microsoft.AspNetCore.Http;
+using System;
 
 namespace Abp.AspNetCore
 {
+    [Obsolete("Use Abp.Web.Http.UrlHelper instead")]
     public static class AbpUrlHelper
     {
         public static bool IsLocalUrl([NotNull] HttpRequest request, [NotNull] string url)

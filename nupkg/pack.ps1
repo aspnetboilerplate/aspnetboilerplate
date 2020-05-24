@@ -62,13 +62,16 @@ foreach($project in $projects) {
     # Create nuget pack
     Set-Location $projectFolder
     Get-ChildItem (Join-Path $projectFolder "bin/Release") -ErrorAction SilentlyContinue | Remove-Item -Recurse
-    & dotnet msbuild /p:Configuration=Release /p:SourceLinkCreate=true
-    & dotnet msbuild /t:pack /p:Configuration=Release /p:SourceLinkCreate=true
+    & dotnet msbuild /p:Configuration=Release
+    & dotnet msbuild /p:Configuration=Release /t:pack /p:IncludeSymbols=true /p:SymbolPackageFormat=snupkg
 
     # Copy nuget package
     $projectPackPath = Join-Path $projectFolder ("/bin/Release/" + $project + ".*.nupkg")
     Move-Item $projectPackPath $packFolder
 
+	# Copy symbol package
+    $projectPackPath = Join-Path $projectFolder ("/bin/Release/" + $project + ".*.snupkg")
+    Move-Item $projectPackPath $packFolder
 }
 
 # Go back to the pack folder

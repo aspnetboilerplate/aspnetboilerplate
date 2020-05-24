@@ -1,5 +1,5 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
-  
+
   <Import Project="..\..\common.props" />
 
   <PropertyGroup>
@@ -13,19 +13,8 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <None Include="bin\Release\netcoreapp3.1\Abp.ZeroCore.EntityFrameworkCore.pdb">
-      <PackagePath>lib/netcoreapp3.1/</PackagePath>
-      <Pack>true</Pack>
-    </None>
-  </ItemGroup>
-
-  <ItemGroup>
     <ProjectReference Include="..\Abp.EntityFrameworkCore\Abp.EntityFrameworkCore.csproj" />
     <ProjectReference Include="..\Abp.ZeroCore\Abp.ZeroCore.csproj" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <PackageReference Update="SourceLink.Create.CommandLine" Version="2.8.3" />
   </ItemGroup>
 
 </Project>

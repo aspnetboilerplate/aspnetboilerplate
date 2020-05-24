@@ -56,6 +56,11 @@ namespace Abp.Localization
             return GetOrNull(_session.TenantId, name);
         }
 
+        public IReadOnlyList<LocalizedString> GetStringsOrNull(List<string> names)
+        {
+            return GetStringsOrNull(_session.TenantId, names);
+        }
+
         public LocalizedString GetOrNull(int? tenantId, string name)
         {
             //Get cache
@@ -90,6 +95,40 @@ namespace Abp.Localization
             //Not found at all
             return null;
         }
+
+        public IReadOnlyList<LocalizedString> GetStringsOrNull(int? tenantId, List<string> names)
+        {
+            //Get cache
+            var cache = _cacheManager.GetMultiTenantLocalizationDictionaryCache();
+
+            //Create a temp dictionary to build (by underlying dictionary)
+            var dictionary = new Dictionary<string, LocalizedString>();
+
+            foreach (var localizedString in _internalDictionary.GetStringsOrNull(names))
+            {
+                dictionary[localizedString.Name] = localizedString;
+            }
+
+            //Override by host
+            if (tenantId != null)
+            {
+                var defaultDictionary = cache.Get(CalculateCacheKey(null), () => GetAllValuesFromDatabase(null));
+                foreach (var keyValue in defaultDictionary.Where(x => names.Contains(x.Key)))
+                {
+                    dictionary[keyValue.Key] = new LocalizedString(keyValue.Key, keyValue.Value, CultureInfo);
+                }
+            }
+
+            //Override by tenant
+            var tenantDictionary = cache.Get(CalculateCacheKey(tenantId), () => GetAllValuesFromDatabase(tenantId));
+            foreach (var keyValue in tenantDictionary.Where(x => names.Contains(x.Key)))
+            {
+                dictionary[keyValue.Key] = new LocalizedString(keyValue.Key, keyValue.Value, CultureInfo);
+            }
+
+            return dictionary.Values.ToImmutableList();
+        }
+
 
         public IReadOnlyList<LocalizedString> GetAllStrings()
         {

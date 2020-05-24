@@ -253,7 +253,6 @@ namespace Abp.EntityFrameworkCore
             }
             
             ChangeTracker.CascadeDeleteTiming = CascadeTiming.OnSaveChanges;
-            ChangeTracker.DeleteOrphansTiming = CascadeTiming.OnSaveChanges;
         }
         
         protected virtual EntityChangeReport ApplyAbpConcepts()

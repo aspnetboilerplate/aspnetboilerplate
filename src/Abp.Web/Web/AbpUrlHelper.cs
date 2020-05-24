@@ -4,6 +4,7 @@ using JetBrains.Annotations;
 
 namespace Abp.Web
 {
+    [Obsolete("Use Abp.Web.Http.UrlHelper instead")]
     public static class AbpUrlHelper
     {
         public static bool IsLocalUrl([NotNull] Uri requestUri, [NotNull] string url)

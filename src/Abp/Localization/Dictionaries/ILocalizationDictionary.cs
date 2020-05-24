@@ -27,6 +27,13 @@ namespace Abp.Localization.Dictionaries
         LocalizedString GetOrNull(string name);
 
         /// <summary>
+        /// Gets a <see cref="LocalizedString"/> for given <paramref name="names"/>.
+        /// </summary>
+        /// <param name="names">Names (key) to get list of localized strings</param>
+        /// <returns>The localized string or null if not found in this dictionary</returns>
+        IReadOnlyList<LocalizedString> GetStringsOrNull(List<string> names);
+
+        /// <summary>
         /// Gets a list of all strings in this dictionary.
         /// </summary>
         /// <returns>List of all <see cref="LocalizedString"/> object</returns>

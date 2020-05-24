@@ -59,8 +59,8 @@ namespace Abp.AspNetCore.SignalR.Hubs
             return new OnlineClient(
                 Context.ConnectionId,
                 GetIpAddressOfClient(),
-                AbpSession.TenantId,
-                AbpSession.UserId
+                Context.GetTenantId(),
+                Context.GetUserIdOrNull()
             );
         }
 

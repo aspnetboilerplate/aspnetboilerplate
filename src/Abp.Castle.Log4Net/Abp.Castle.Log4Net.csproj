@@ -1,7 +1,7 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <Import Project="..\..\common.props" />
-  
+
   <PropertyGroup>
     <TargetFramework>netstandard2.0</TargetFramework>
     <GenerateDocumentationFile>true</GenerateDocumentationFile>
@@ -13,15 +13,8 @@
     <GenerateAssemblyProductAttribute>false</GenerateAssemblyProductAttribute>
     <GeneratePackageOnBuild>False</GeneratePackageOnBuild>
     <RootNamespace>Abp</RootNamespace>
-	<Description>Abp.Castle.Log4Net</Description>
+    <Description>Abp.Castle.Log4Net</Description>
   </PropertyGroup>
-
-  <ItemGroup>
-    <None Include="bin\Release\netstandard2.0\Abp.Castle.Log4Net.pdb">
-      <PackagePath>lib/netstandard2.0/</PackagePath>
-      <Pack>true</Pack>
-    </None>
-  </ItemGroup>
 
   <ItemGroup>
     <ProjectReference Include="..\Abp\Abp.csproj" />
@@ -29,10 +22,6 @@
 
   <ItemGroup>
     <PackageReference Include="log4net" Version="2.0.8" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <PackageReference Update="SourceLink.Create.CommandLine" Version="2.8.3" />
   </ItemGroup>
 
 </Project>

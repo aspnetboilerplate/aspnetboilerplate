@@ -1,5 +1,5 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
-  
+
   <Import Project="..\..\common.props" />
 
   <PropertyGroup>
@@ -13,26 +13,15 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <None Include="bin\Release\netcoreapp3.1\Abp.ZeroCore.EntityFramework.pdb">
-      <PackagePath>lib/netcoreapp3.1/</PackagePath>
-      <Pack>true</Pack>
-    </None>
-  </ItemGroup>
-
-  <ItemGroup>
     <ProjectReference Include="..\Abp.EntityFramework\Abp.EntityFramework.csproj" />
     <ProjectReference Include="..\Abp.ZeroCore\Abp.ZeroCore.csproj" />
   </ItemGroup>
-  
+
   <ItemGroup>
     <Reference Include="System" />
     <Reference Include="Microsoft.CSharp" />
     <Reference Include="System.Configuration" />
     <Reference Include="System.Transactions" />
-  </ItemGroup>
-  
-  <ItemGroup>
-    <PackageReference Update="SourceLink.Create.CommandLine" Version="2.8.3" />
   </ItemGroup>
 
 </Project>

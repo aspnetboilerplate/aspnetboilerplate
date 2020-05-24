@@ -13,6 +13,7 @@ namespace Abp.AspNetCore.Configuration
     {
         public WrapResultAttribute DefaultWrapResultAttribute { get; }
 
+        [Obsolete]
         public IClientCacheAttribute DefaultClientCacheAttribute { get; set; }
 
         public ResponseCacheAttribute DefaultResponseCacheAttributeForControllers { get; set; }

@@ -13,7 +13,7 @@ namespace Abp.EntityFrameworkCore.Tests.Tests
         {
             var blogViewRepository = Resolve<IRepository<BlogView>>();
 
-            var blogViews = blogViewRepository.GetAllList();
+            var blogViews = await blogViewRepository.GetAllListAsync();
 
             blogViews.ShouldNotBeNull();
             blogViews.ShouldContain(x => x.Name == "test-blog-1" && x.Url == "http://testblog1.myblogs.com");
