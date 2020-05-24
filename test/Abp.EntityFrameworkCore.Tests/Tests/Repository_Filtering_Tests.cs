@@ -6,6 +6,7 @@ using Shouldly;
 using System;
 using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.EntityFrameworkCore;
 using Xunit;
 
 namespace Abp.EntityFrameworkCore.Tests.Tests
@@ -13,6 +14,7 @@ namespace Abp.EntityFrameworkCore.Tests.Tests
     public class Repository_Filtering_Tests : EntityFrameworkCoreModuleTestBase
     {
         private readonly IRepository<Post, Guid> _postRepository;
+        private readonly IRepository<Blog> _blogRepository;
         private readonly IRepository<Ticket> _ticketRepository;
         private readonly IUnitOfWorkManager _unitOfWorkManager;
         private readonly IRepository<TicketListItem> _ticketListItemRepository;
@@ -22,6 +24,7 @@ namespace Abp.EntityFrameworkCore.Tests.Tests
             _unitOfWorkManager = Resolve<IUnitOfWorkManager>();
 
             _postRepository = Resolve<IRepository<Post, Guid>>();
+            _blogRepository = Resolve<IRepository<Blog>>();
             _ticketRepository = Resolve<IRepository<Ticket>>();
             _ticketListItemRepository = Resolve<IRepository<TicketListItem>>();
         }
@@ -122,6 +125,29 @@ namespace Abp.EntityFrameworkCore.Tests.Tests
             ticketsDefault = await _ticketListItemRepository.GetAllListAsync();
             ticketsDefault.Any(t => t.TenantId == 42).ShouldBeTrue();
             ticketsDefault.Any(t => t.TenantId != 42).ShouldBeFalse();
+        }
+        
+        [Fact]
+        public async Task Navigation_Properties_Cascade_Delete_Test()
+        {
+            await WithUnitOfWorkAsync(async () =>
+            {
+                var blog = await _blogRepository.GetAll().Include(x => x.Posts).FirstOrDefaultAsync(b => b.Name == "test-blog-1");
+                blog.Posts.ShouldNotBeEmpty();
+
+                blog.Posts.Clear();
+                await _blogRepository.UpdateAsync(blog);
+            });
+            
+            await WithUnitOfWorkAsync(async () =>
+            {
+                using (_unitOfWorkManager.Current.DisableFilter(AbpDataFilters.SoftDelete))
+                {
+                    var blog = await _blogRepository.GetAll().Include(x => x.Posts).FirstOrDefaultAsync(b => b.Name == "test-blog-1");
+                    blog.Posts.ShouldNotBeEmpty();
+                    blog.Posts.ShouldAllBe(x => x.IsDeleted);
+                }
+            });
         }
     }
 }

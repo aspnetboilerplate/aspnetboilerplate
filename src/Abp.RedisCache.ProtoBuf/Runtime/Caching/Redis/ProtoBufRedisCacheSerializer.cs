@@ -16,7 +16,7 @@ namespace Abp.Runtime.Caching.Redis
         /// </summary>
         /// <param name="objbyte">String representation of the object from the Redis server.</param>
         /// <returns>Returns a newly constructed object.</returns>
-        /// <seealso cref="IRedisCacheSerializer.Serialize" />
+        /// <seealso cref="IRedisCacheSerializer{TSource,TDestination}.Serialize" />
         public override object Deserialize(RedisValue objbyte)
         {
             string serializedObj = objbyte;
@@ -43,7 +43,7 @@ namespace Abp.Runtime.Caching.Redis
         /// <param name="value">Instance to serialize.</param>
         /// <param name="type">Type of the object.</param>
         /// <returns>Returns a string representing the object instance that can be placed into the Redis cache.</returns>
-        /// <seealso cref="IRedisCacheSerializer.Deserialize" />
+        /// <seealso cref="IRedisCacheSerializer{TSource,TDestination}.Deserialize" />
         public override RedisValue Serialize(object value, Type type)
         {
             if (!type.GetTypeInfo().IsDefined(typeof(ProtoContractAttribute), false))

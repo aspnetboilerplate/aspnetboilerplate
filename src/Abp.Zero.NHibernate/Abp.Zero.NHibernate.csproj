@@ -19,13 +19,6 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <None Include="bin\Release\net461\Abp.Zero.NHibernate.pdb">
-      <PackagePath>lib/net461/</PackagePath>
-      <Pack>true</Pack>
-    </None>
-  </ItemGroup>
-
-  <ItemGroup>
     <ProjectReference Include="..\Abp.FluentMigrator\Abp.FluentMigrator.csproj" />
     <ProjectReference Include="..\Abp.NHibernate\Abp.NHibernate.csproj" />
     <ProjectReference Include="..\Abp.Zero\Abp.Zero.csproj" />
@@ -38,7 +31,6 @@
 
   <ItemGroup>
     <PackageReference Update="Microsoft.NETFramework.ReferenceAssemblies" Version="1.0.0" />
-    <PackageReference Update="SourceLink.Create.CommandLine" Version="2.8.3" />
   </ItemGroup>
 
 </Project>

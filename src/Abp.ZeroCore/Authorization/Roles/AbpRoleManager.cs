@@ -178,17 +178,9 @@ namespace Abp.Authorization.Roles
         /// <returns>List of granted permissions</returns>
         public virtual async Task<IReadOnlyList<Permission>> GetGrantedPermissionsAsync(TRole role)
         {
-            var permissionList = new List<Permission>();
-
-            foreach (var permission in _permissionManager.GetAllPermissions())
-            {
-                if (await IsGrantedAsync(role.Id, permission))
-                {
-                    permissionList.Add(permission);
-                }
-            }
-
-            return permissionList;
+            var cacheItem = await GetRolePermissionCacheItemAsync(role.Id);
+            var allPermissions = _permissionManager.GetAllPermissions();
+            return allPermissions.Where(x => cacheItem.GrantedPermissions.Contains(x.Name)).ToList();
         }
 
         /// <summary>
@@ -271,7 +263,7 @@ namespace Abp.Authorization.Roles
         /// <summary>
         /// Resets all permission settings for a role.
         /// It removes all permission settings for the role.
-        /// Role will have permissions those have <see cref="Permission.IsGrantedByDefault"/> set to true.
+        /// Role will have permissions for which <see cref="StaticRoleDefinition.IsGrantedByDefault"/> returns true.
         /// </summary>
         /// <param name="role">Role</param>
         public async Task ResetAllPermissionsAsync(TRole role)

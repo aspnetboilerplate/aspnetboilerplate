@@ -1,6 +1,6 @@
-﻿using Abp.AspNetCore.Mvc.Extensions;
+﻿using System;
+using Abp.AspNetCore.Mvc.Extensions;
 using Abp.Auditing;
-using Abp.Configuration;
 using Abp.Localization;
 using Abp.Runtime.Session;
 using Abp.Timing;
@@ -8,11 +8,19 @@ using Abp.Web.Models;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Localization;
 using Microsoft.AspNetCore.Mvc;
+using IUrlHelper = Abp.Web.Http.IUrlHelper;
 
 namespace Abp.AspNetCore.Mvc.Controllers
 {
     public class AbpLocalizationController : AbpController
     {
+        protected IUrlHelper UrlHelper;
+
+        public AbpLocalizationController(IUrlHelper urlHelper)
+        {
+            UrlHelper = urlHelper;
+        }
+
         [DisableAuditing]
         public virtual ActionResult ChangeCulture(string cultureName, string returnUrl = "")
         {
@@ -22,7 +30,7 @@ namespace Abp.AspNetCore.Mvc.Controllers
             }
 
             var cookieValue = CookieRequestCultureProvider.MakeCookieValue(new RequestCulture(cultureName, cultureName));
-
+            
             Response.Cookies.Append(
                 CookieRequestCultureProvider.DefaultCookieName,
                 cookieValue,
@@ -47,9 +55,13 @@ namespace Abp.AspNetCore.Mvc.Controllers
                 return Json(new AjaxResponse());
             }
 
-            if (!string.IsNullOrWhiteSpace(returnUrl) && AbpUrlHelper.IsLocalUrl(Request, returnUrl))
+            if (!string.IsNullOrWhiteSpace(returnUrl))
             {
-                return Redirect(returnUrl);
+                var localPath = UrlHelper.LocalPathAndQuery(Uri.EscapeUriString(returnUrl), Request.Host.Host, Request.Host.Port);
+                if (!string.IsNullOrWhiteSpace(localPath))
+                {
+                    return Redirect(Uri.UnescapeDataString(localPath));
+                }
             }
 
             return Redirect("/"); //TODO: Go to app root

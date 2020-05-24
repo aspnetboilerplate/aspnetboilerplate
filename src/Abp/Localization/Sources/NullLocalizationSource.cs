@@ -49,6 +49,26 @@ namespace Abp.Localization.Sources
             return null;
         }
 
+        public List<string> GetStrings(List<string> names)
+        {
+            return names;
+        }
+
+        public List<string> GetStrings(List<string> names, CultureInfo culture)
+        {
+            return names;
+        }
+
+        public List<string> GetStringsOrNull(List<string> names, bool tryDefaults = true)
+        {
+            return null;
+        }
+
+        public List<string> GetStringsOrNull(List<string> names, CultureInfo culture, bool tryDefaults = true)
+        {
+            return null;
+        }
+
         public IReadOnlyList<LocalizedString> GetAllStrings(bool includeDefaults = true)
         {
             return _emptyStringArray;
