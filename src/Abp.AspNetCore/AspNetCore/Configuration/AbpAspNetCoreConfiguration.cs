@@ -42,11 +42,7 @@ namespace Abp.AspNetCore.Configuration
             DefaultWrapResultAttribute = new WrapResultAttribute();
             DefaultClientCacheAttribute = new NoClientCacheAttribute(false);
             DefaultResponseCacheAttributeForControllers = null;
-            DefaultResponseCacheAttributeForAppServices = new ResponseCacheAttribute()
-            {
-                NoStore = true,
-                Location = ResponseCacheLocation.None,
-            };
+            DefaultResponseCacheAttributeForAppServices = null;
             DefaultUnitOfWorkAttribute = new UnitOfWorkAttribute();
             ControllerAssemblySettings = new ControllerAssemblySettingList();
             FormBodyBindingIgnoredTypes = new List<Type>();
