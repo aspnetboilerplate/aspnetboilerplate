@@ -43,7 +43,7 @@ namespace Abp.Runtime.Caching
 
             if (item == null)
             {
-                using(AsyncLock.Lock())
+                using (AsyncLock.Lock())
                 {
                     try
                     {
