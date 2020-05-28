@@ -272,10 +272,65 @@ namespace Abp.Tests.Configuration
 
             session.TenantId = 1;
 
-            //Inherited setting
+            // User setting
+            session.UserId = 2;
+            (await settingManager.GetSettingValueAsync(MyEncryptedSetting)).ShouldBe("user_setting");
 
-            session.UserId = 1;
-            (await settingManager.GetSettingValueAsync(MyEncryptedSetting)).ShouldBe("123qwe");
+            // Tenant setting
+            session.UserId = null;
+            (await settingManager.GetSettingValueAsync(MyEncryptedSetting)).ShouldBe("tenant_setting");
+
+            // App setting
+            session.TenantId = null;
+            (await settingManager.GetSettingValueAsync(MyEncryptedSetting)).ShouldBe("app_setting");
+        }
+
+        [Fact]
+        public async Task Should_Set_Encrypted_Setting_Value()
+        {
+            var session = CreateTestAbpSession();
+
+            var settingManager = CreateSettingManager();
+            settingManager.SettingStore = new MemorySettingStore();
+            settingManager.AbpSession = session;
+
+            session.TenantId = 1;
+
+            // User setting
+            session.UserId = 2;
+            await settingManager.ChangeSettingForUserAsync(session.ToUserIdentifier(), MyEncryptedSetting, "user_123qwe");
+
+            var settingValue = await settingManager.SettingStore.GetSettingOrNullAsync(
+                session.TenantId,
+                session.UserId,
+                MyEncryptedSetting
+            );
+            
+            settingValue.Value.ShouldBe("oKPqQDCAHhz+AEnl/r0fsw==");
+            
+            // Tenant setting
+            session.UserId = null;
+            await settingManager.ChangeSettingForTenantAsync(session.GetTenantId(), MyEncryptedSetting, "tenant_123qwe");
+
+            settingValue = await settingManager.SettingStore.GetSettingOrNullAsync(
+                session.TenantId,
+                session.UserId,
+                MyEncryptedSetting
+            );
+            
+            settingValue.Value.ShouldBe("YX+MTwbuOwXgL7tnKw+oxw==");
+            
+            // App setting
+            session.TenantId = null;
+            await settingManager.ChangeSettingForApplicationAsync(MyEncryptedSetting, "app_123qwe");
+
+            settingValue = await settingManager.SettingStore.GetSettingOrNullAsync(
+                session.TenantId,
+                session.UserId,
+                MyEncryptedSetting
+            );
+            
+            settingValue.Value.ShouldBe("EOi2wcQt1pi1K4qYycBBbg==");
         }
 
         private static TestAbpSession CreateTestAbpSession(bool multiTenancyIsEnabled = true)
@@ -305,7 +360,11 @@ namespace Abp.Tests.Configuration
                         scopes: SettingScopes.Application | SettingScopes.Tenant, isInherited: false)
                 },
                 {MyEnumTypeSetting, new SettingDefinition(MyEnumTypeSetting, MyEnumSettingType.Setting1.ToString())},
-                {MyEncryptedSetting, new SettingDefinition(MyEncryptedSetting, "", isEncrypted: true)}
+                {
+                    MyEncryptedSetting,
+                    new SettingDefinition(MyEncryptedSetting, "", isEncrypted: true,
+                        scopes: SettingScopes.Application | SettingScopes.Tenant | SettingScopes.User)
+                }
             };
 
             var definitionManager = Substitute.For<ISettingDefinitionManager>();
@@ -330,7 +389,12 @@ namespace Abp.Tests.Configuration
                     new SettingInfo(1, null, MyAllLevelsSetting, "tenant 1 stored value"),
                     new SettingInfo(1, 1, MyAllLevelsSetting, "user 1 stored value"),
                     new SettingInfo(1, 2, MyAllLevelsSetting, "user 2 stored value"),
-                    new SettingInfo(1, 2, MyEncryptedSetting, "aaa"),
+                    new SettingInfo(1, 2, MyEncryptedSetting,
+                        "Bs90qo8Argqw3l4ZfWsRqQ=="), // encrypted setting: user_setting
+                    new SettingInfo(1, null, MyEncryptedSetting,
+                        "f1dilIUWtfL7DhGextUFKw=="), // encrypted setting: tenant_setting
+                    new SettingInfo(null, null, MyEncryptedSetting,
+                        "OsxLBbqIX7jiqOXo3M1DdA=="), // encrypted setting: app_setting
                     new SettingInfo(null, null, MyNotInheritedSetting, "application value"),
                 };
             }
