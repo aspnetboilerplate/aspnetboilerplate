@@ -298,28 +298,30 @@ namespace Abp.Tests.Configuration
 
             // User setting
             session.UserId = 2;
-            await settingManager.ChangeSettingForUserAsync(session.ToUserIdentifier(), MyEncryptedSetting, "user_123qwe");
+            await settingManager.ChangeSettingForUserAsync(session.ToUserIdentifier(), MyEncryptedSetting,
+                "user_123qwe");
 
             var settingValue = await settingManager.SettingStore.GetSettingOrNullAsync(
                 session.TenantId,
                 session.UserId,
                 MyEncryptedSetting
             );
-            
+
             settingValue.Value.ShouldBe("oKPqQDCAHhz+AEnl/r0fsw==");
-            
+
             // Tenant setting
             session.UserId = null;
-            await settingManager.ChangeSettingForTenantAsync(session.GetTenantId(), MyEncryptedSetting, "tenant_123qwe");
+            await settingManager.ChangeSettingForTenantAsync(session.GetTenantId(), MyEncryptedSetting,
+                "tenant_123qwe");
 
             settingValue = await settingManager.SettingStore.GetSettingOrNullAsync(
                 session.TenantId,
                 session.UserId,
                 MyEncryptedSetting
             );
-            
+
             settingValue.Value.ShouldBe("YX+MTwbuOwXgL7tnKw+oxw==");
-            
+
             // App setting
             session.TenantId = null;
             await settingManager.ChangeSettingForApplicationAsync(MyEncryptedSetting, "app_123qwe");
@@ -329,8 +331,55 @@ namespace Abp.Tests.Configuration
                 session.UserId,
                 MyEncryptedSetting
             );
-            
+
             settingValue.Value.ShouldBe("EOi2wcQt1pi1K4qYycBBbg==");
+        }
+
+        [Fact]
+        public async Task Should_Get_Changed_Encrypted_Setting_Value()
+        {
+            var session = CreateTestAbpSession();
+
+            var settingManager = CreateSettingManager();
+            settingManager.SettingStore = new MemorySettingStore();
+            settingManager.AbpSession = session;
+
+            session.TenantId = 1;
+
+            // User setting
+            session.UserId = 2;
+
+            await settingManager.ChangeSettingForUserAsync(
+                session.ToUserIdentifier(),
+                MyEncryptedSetting,
+                "new_user_setting"
+            );
+
+            var settingValue = await settingManager.GetSettingValueAsync(MyEncryptedSetting);
+            settingValue.ShouldBe("new_user_setting");
+
+            // Tenant Setting
+            session.UserId = null;
+
+            await settingManager.ChangeSettingForTenantAsync(
+                session.GetTenantId(),
+                MyEncryptedSetting,
+                "new_tenant_setting"
+            );
+
+            settingValue = await settingManager.GetSettingValueAsync(MyEncryptedSetting);
+            settingValue.ShouldBe("new_tenant_setting");
+            
+            // App Setting
+            session.TenantId = null;
+
+            await settingManager.ChangeSettingForApplicationAsync(
+                MyEncryptedSetting,
+                "new_app_setting"
+            );
+
+            settingValue = await settingManager.GetSettingValueAsync(MyEncryptedSetting);
+            settingValue.ShouldBe("new_app_setting");
         }
 
         private static TestAbpSession CreateTestAbpSession(bool multiTenancyIsEnabled = true)
