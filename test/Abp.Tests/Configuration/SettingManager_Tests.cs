@@ -10,7 +10,6 @@ using Abp.Runtime.Remoting;
 using Abp.Runtime.Session;
 using Abp.TestBase.Runtime.Session;
 using Abp.Tests.MultiTenancy;
-using JetBrains.Annotations;
 using NSubstitute;
 using Shouldly;
 using Xunit;
@@ -29,6 +28,7 @@ namespace Abp.Tests.Configuration
         private const string MyAllLevelsSetting = "MyAllLevelsSetting";
         private const string MyNotInheritedSetting = "MyNotInheritedSetting";
         private const string MyEnumTypeSetting = "MyEnumTypeSetting";
+        private const string MyEncryptedSetting = "MyEncryptedSetting";
 
         private SettingManager CreateSettingManager(bool multiTenancyIsEnabled = true)
         {
@@ -36,11 +36,12 @@ namespace Abp.Tests.Configuration
                 CreateMockSettingDefinitionManager(),
                 new AbpMemoryCacheManager(
                     new CachingConfiguration(Substitute.For<IAbpStartupConfiguration>())
-                    ),
+                ),
                 new MultiTenancyConfig
                 {
                     IsEnabled = multiTenancyIsEnabled
-                }, new TestTenantStore());
+                }, new TestTenantStore(),
+                new SettingEncryptionService(new SettingsConfiguration()));
         }
 
         [Fact]
@@ -82,22 +83,27 @@ namespace Abp.Tests.Configuration
             (await settingManager.GetSettingValueAsync(MyAllLevelsSetting)).ShouldBe("user 2 stored value");
 
             session.UserId = 3;
-            (await settingManager.GetSettingValueAsync(MyAllLevelsSetting)).ShouldBe("tenant 1 stored value"); //Because no user value in the store
+            (await settingManager.GetSettingValueAsync(MyAllLevelsSetting))
+                .ShouldBe("tenant 1 stored value"); //Because no user value in the store
 
             session.TenantId = 3;
             session.UserId = 3;
-            (await settingManager.GetSettingValueAsync(MyAllLevelsSetting)).ShouldBe("application level stored value"); //Because no user and tenant value in the store
+            (await settingManager.GetSettingValueAsync(MyAllLevelsSetting))
+                .ShouldBe("application level stored value"); //Because no user and tenant value in the store
 
             //Not inherited setting
 
             session.TenantId = 1;
             session.UserId = 1;
 
-            (await settingManager.GetSettingValueForApplicationAsync(MyNotInheritedSetting)).ShouldBe("application value");
-            (await settingManager.GetSettingValueForTenantAsync(MyNotInheritedSetting, session.TenantId.Value)).ShouldBe("default-value");
+            (await settingManager.GetSettingValueForApplicationAsync(MyNotInheritedSetting)).ShouldBe(
+                "application value");
+            (await settingManager.GetSettingValueForTenantAsync(MyNotInheritedSetting, session.TenantId.Value))
+                .ShouldBe("default-value");
             (await settingManager.GetSettingValueAsync(MyNotInheritedSetting)).ShouldBe("default-value");
 
-            (await settingManager.GetSettingValueAsync<MyEnumSettingType>(MyEnumTypeSetting)).ShouldBe(MyEnumSettingType.Setting1);
+            (await settingManager.GetSettingValueAsync<MyEnumSettingType>(MyEnumTypeSetting)).ShouldBe(MyEnumSettingType
+                .Setting1);
         }
 
         [Fact]
@@ -132,9 +138,11 @@ namespace Abp.Tests.Configuration
 
             await settingManager.ChangeSettingForApplicationAsync(MyAppLevelSetting, "53");
             await settingManager.ChangeSettingForApplicationAsync(MyAppLevelSetting, "54");
-            await settingManager.ChangeSettingForApplicationAsync(MyAllLevelsSetting, "application level changed value");
+            await settingManager.ChangeSettingForApplicationAsync(MyAllLevelsSetting,
+                "application level changed value");
 
-            (await settingManager.SettingStore.GetSettingOrNullAsync(null, null, MyAppLevelSetting)).Value.ShouldBe("54");
+            (await settingManager.SettingStore.GetSettingOrNullAsync(null, null, MyAppLevelSetting)).Value
+                .ShouldBe("54");
 
             (await settingManager.GetSettingValueAsync<int>(MyAppLevelSetting)).ShouldBe(54);
             (await settingManager.GetSettingValueAsync(MyAllLevelsSetting)).ShouldBe("application level changed value");
@@ -186,7 +194,8 @@ namespace Abp.Tests.Configuration
             (await settingManager.GetSettingValueAsync(MyAllLevelsSetting)).ShouldBe("application level stored value");
 
             //This will delete setting for application since it's same as the default value of the setting
-            await settingManager.ChangeSettingForApplicationAsync(MyAllLevelsSetting, "application level default value");
+            await settingManager.ChangeSettingForApplicationAsync(MyAllLevelsSetting,
+                "application level default value");
             (await store.GetSettingOrNullAsync(null, null, MyAllLevelsSetting)).ShouldBe(null);
 
             //Now, there is no setting value, default value should return
@@ -243,19 +252,36 @@ namespace Abp.Tests.Configuration
             await settingManager.ChangeSettingForApplicationAsync(MyAppLevelSetting, "B");
 
             // it's ok
-            ( await settingManager.GetSettingValueForApplicationAsync(MyAppLevelSetting) ).ShouldBe("B");
+            (await settingManager.GetSettingValueForApplicationAsync(MyAppLevelSetting)).ShouldBe("B");
 
             //change setting with same value "B" again,
             await settingManager.ChangeSettingForApplicationAsync(MyAppLevelSetting, "B");
 
             //but was "A" ,that's wrong
-            ( await settingManager.GetSettingValueForApplicationAsync(MyAppLevelSetting) ).ShouldBe("B");
+            (await settingManager.GetSettingValueForApplicationAsync(MyAppLevelSetting)).ShouldBe("B");
+        }
+
+        [Fact]
+        public async Task Should_Get_Encrypted_Setting_Value()
+        {
+            var session = CreateTestAbpSession();
+
+            var settingManager = CreateSettingManager();
+            settingManager.SettingStore = new MemorySettingStore();
+            settingManager.AbpSession = session;
+
+            session.TenantId = 1;
+
+            //Inherited setting
+
+            session.UserId = 1;
+            (await settingManager.GetSettingValueAsync(MyEncryptedSetting)).ShouldBe("123qwe");
         }
 
         private static TestAbpSession CreateTestAbpSession(bool multiTenancyIsEnabled = true)
         {
             return new TestAbpSession(
-                new MultiTenancyConfig { IsEnabled = multiTenancyIsEnabled },
+                new MultiTenancyConfig {IsEnabled = multiTenancyIsEnabled},
                 new DataContextAmbientScopeProvider<SessionOverride>(
                     new AsyncLocalAmbientDataContext()
                 ),
@@ -268,9 +294,18 @@ namespace Abp.Tests.Configuration
             var settings = new Dictionary<string, SettingDefinition>
             {
                 {MyAppLevelSetting, new SettingDefinition(MyAppLevelSetting, "42")},
-                {MyAllLevelsSetting, new SettingDefinition(MyAllLevelsSetting, "application level default value", scopes: SettingScopes.Application | SettingScopes.Tenant | SettingScopes.User)},
-                {MyNotInheritedSetting, new SettingDefinition(MyNotInheritedSetting, "default-value", scopes: SettingScopes.Application | SettingScopes.Tenant, isInherited: false)},
+                {
+                    MyAllLevelsSetting,
+                    new SettingDefinition(MyAllLevelsSetting, "application level default value",
+                        scopes: SettingScopes.Application | SettingScopes.Tenant | SettingScopes.User)
+                },
+                {
+                    MyNotInheritedSetting,
+                    new SettingDefinition(MyNotInheritedSetting, "default-value",
+                        scopes: SettingScopes.Application | SettingScopes.Tenant, isInherited: false)
+                },
                 {MyEnumTypeSetting, new SettingDefinition(MyEnumTypeSetting, MyEnumSettingType.Setting1.ToString())},
+                {MyEncryptedSetting, new SettingDefinition(MyEncryptedSetting, "", isEncrypted: true)}
             };
 
             var definitionManager = Substitute.For<ISettingDefinitionManager>();
@@ -295,6 +330,7 @@ namespace Abp.Tests.Configuration
                     new SettingInfo(1, null, MyAllLevelsSetting, "tenant 1 stored value"),
                     new SettingInfo(1, 1, MyAllLevelsSetting, "user 1 stored value"),
                     new SettingInfo(1, 2, MyAllLevelsSetting, "user 2 stored value"),
+                    new SettingInfo(1, 2, MyEncryptedSetting, "aaa"),
                     new SettingInfo(null, null, MyNotInheritedSetting, "application value"),
                 };
             }
@@ -302,7 +338,8 @@ namespace Abp.Tests.Configuration
 
             public Task<SettingInfo> GetSettingOrNullAsync(int? tenantId, long? userId, string name)
             {
-                return Task.FromResult(_settings.FirstOrDefault(s => s.TenantId == tenantId && s.UserId == userId && s.Name == name));
+                return Task.FromResult(_settings.FirstOrDefault(s =>
+                    s.TenantId == tenantId && s.UserId == userId && s.Name == name));
             }
 
             public SettingInfo GetSettingOrNull(int? tenantId, long? userId, string name)
@@ -313,12 +350,14 @@ namespace Abp.Tests.Configuration
 #pragma warning disable 1998
             public async Task DeleteAsync(SettingInfo setting)
             {
-                _settings.RemoveAll(s => s.TenantId == setting.TenantId && s.UserId == setting.UserId && s.Name == setting.Name);
+                _settings.RemoveAll(s =>
+                    s.TenantId == setting.TenantId && s.UserId == setting.UserId && s.Name == setting.Name);
             }
 
             public void Delete(SettingInfo setting)
             {
-                _settings.RemoveAll(s => s.TenantId == setting.TenantId && s.UserId == setting.UserId && s.Name == setting.Name);
+                _settings.RemoveAll(s =>
+                    s.TenantId == setting.TenantId && s.UserId == setting.UserId && s.Name == setting.Name);
             }
 #pragma warning restore 1998
 

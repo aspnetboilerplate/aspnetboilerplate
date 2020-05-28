@@ -11,5 +11,10 @@ namespace Abp.Configuration.Startup
         /// List of settings providers.
         /// </summary>
         ITypeList<SettingProvider> Providers { get; }
+        
+        /// <summary>
+        /// Setting encryption configuration
+        /// </summary>
+        SettingEncryptionConfiguration SettingEncryptionConfiguration { get; }
     }
 }
