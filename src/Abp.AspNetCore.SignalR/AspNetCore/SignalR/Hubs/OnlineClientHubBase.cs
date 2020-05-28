@@ -61,7 +61,16 @@ namespace Abp.AspNetCore.SignalR.Hubs
                 GetIpAddressOfClient(),
                 Context.GetTenantId(),
                 Context.GetUserIdOrNull()
-            );
+            )
+            {
+                Properties = Context.GetHttpContext().Request.Query
+                    .ToDictionary(
+                        k => k.Key,
+                        v => v.Value.Count == 1
+                            ? (object) v.Value.First()
+                            : v.Value.ToArray()
+                    )
+            };
         }
 
         protected virtual string GetIpAddressOfClient()
