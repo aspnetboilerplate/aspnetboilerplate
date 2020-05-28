@@ -1,10 +1,12 @@
 ﻿using System;
+using System.Linq;
 using System.Threading.Tasks;
 using Abp.Auditing;
 using Abp.Dependency;
 using Abp.RealTime;
 using Abp.Runtime.Session;
 using Castle.Core.Logging;
+using Microsoft.AspNetCore.SignalR;
 
 namespace Abp.AspNetCore.SignalR.Hubs
 {
