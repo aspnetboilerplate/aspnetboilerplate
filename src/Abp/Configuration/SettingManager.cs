@@ -20,6 +20,8 @@ namespace Abp.Configuration
     {
         public const string ApplicationSettingsCacheKey = "ApplicationSettings";
 
+        protected ISettingEncryptionService SettingEncryptionService { get; }
+        
         /// <summary>
         /// Reference to the current Session.
         /// </summary>
@@ -41,11 +43,14 @@ namespace Abp.Configuration
         public SettingManager(
             ISettingDefinitionManager settingDefinitionManager,
             ICacheManager cacheManager,
-            IMultiTenancyConfig multiTenancyConfig, ITenantStore tenantStore)
+            IMultiTenancyConfig multiTenancyConfig, 
+            ITenantStore tenantStore, 
+            ISettingEncryptionService settingEncryptionService)
         {
             _settingDefinitionManager = settingDefinitionManager;
             _multiTenancyConfig = multiTenancyConfig;
             _tenantStore = tenantStore;
+            SettingEncryptionService = settingEncryptionService;
 
             AbpSession = NullAbpSession.Instance;
             SettingStore = DefaultConfigSettingStore.Instance;
@@ -452,6 +457,11 @@ namespace Abp.Configuration
                 var settingValue = await GetSettingValueForUserOrNullAsync(new UserIdentifier(tenantId, userId.Value), name);
                 if (settingValue != null)
                 {
+                    if (settingDefinition.IsEncrypted)
+                    {
+                        return SettingEncryptionService.Decrypt(settingDefinition, settingValue.Value);
+                    }
+                    
                     return settingValue.Value;
                 }
 
@@ -515,6 +525,11 @@ namespace Abp.Configuration
                 var settingValue = GetSettingValueForUserOrNull(new UserIdentifier(tenantId, userId.Value), name);
                 if (settingValue != null)
                 {
+                    if (settingDefinition.IsEncrypted)
+                    {
+                        return SettingEncryptionService.Decrypt(settingDefinition, settingValue.Value);
+                    }
+                    
                     return settingValue.Value;
                 }
 
@@ -621,18 +636,24 @@ namespace Abp.Configuration
                     Value = value
                 };
 
+                if (settingDefinition.IsEncrypted)
+                {
+                    settingValue.Value = SettingEncryptionService.Encrypt(settingDefinition, value);
+                }
+
                 await SettingStore.CreateAsync(settingValue);
                 return settingValue;
             }
 
             //It's same value in database, no need to update
-            if (settingValue.Value == value)
+            var rawSettingValue = settingDefinition.IsEncrypted ? SettingEncryptionService.Encrypt(settingDefinition, settingValue.Value) : settingValue.Value;
+            if (rawSettingValue == value)
             {
                 return settingValue;
             }
 
             //Update the setting on database.
-            settingValue.Value = value;
+            settingValue.Value = settingDefinition.IsEncrypted ? SettingEncryptionService.Encrypt(settingDefinition, value) : value;
             await SettingStore.UpdateAsync(settingValue);
 
             return settingValue;
@@ -691,18 +712,23 @@ namespace Abp.Configuration
                     Value = value
                 };
 
+                if (settingDefinition.IsEncrypted)
+                {
+                    settingValue.Value = SettingEncryptionService.Encrypt(settingDefinition, value);
+                }
+                
                 SettingStore.Create(settingValue);
                 return settingValue;
             }
 
-            //It's same value in database, no need to update
-            if (settingValue.Value == value)
+            var rawSettingValue = settingDefinition.IsEncrypted ? SettingEncryptionService.Encrypt(settingDefinition, settingValue.Value) : settingValue.Value;
+            if (rawSettingValue == value)
             {
                 return settingValue;
             }
 
             //Update the setting on database.
-            settingValue.Value = value;
+            settingValue.Value = settingDefinition.IsEncrypted ? SettingEncryptionService.Encrypt(settingDefinition, value) : value;
             SettingStore.Update(settingValue);
 
             return settingValue;
