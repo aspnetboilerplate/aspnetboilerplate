@@ -21,7 +21,7 @@ namespace Abp.Configuration
         public const string ApplicationSettingsCacheKey = "ApplicationSettings";
 
         protected ISettingEncryptionService SettingEncryptionService { get; }
-        
+
         /// <summary>
         /// Reference to the current Session.
         /// </summary>
@@ -43,8 +43,8 @@ namespace Abp.Configuration
         public SettingManager(
             ISettingDefinitionManager settingDefinitionManager,
             ICacheManager cacheManager,
-            IMultiTenancyConfig multiTenancyConfig, 
-            ITenantStore tenantStore, 
+            IMultiTenancyConfig multiTenancyConfig,
+            ITenantStore tenantStore,
             ISettingEncryptionService settingEncryptionService)
         {
             _settingDefinitionManager = settingDefinitionManager;
@@ -636,7 +636,7 @@ namespace Abp.Configuration
             }
 
             //It's same value in database, no need to update
-            var rawSettingValue = settingDefinition.IsEncrypted ? SettingEncryptionService.Encrypt(settingDefinition, settingValue.Value) : settingValue.Value;
+            var rawSettingValue = settingDefinition.IsEncrypted ? SettingEncryptionService.Decrypt(settingDefinition, settingValue.Value) : settingValue.Value;
             if (rawSettingValue == value)
             {
                 return settingValue;
@@ -706,12 +706,12 @@ namespace Abp.Configuration
                 {
                     settingValue.Value = SettingEncryptionService.Encrypt(settingDefinition, value);
                 }
-                
+
                 SettingStore.Create(settingValue);
                 return settingValue;
             }
 
-            var rawSettingValue = settingDefinition.IsEncrypted ? SettingEncryptionService.Encrypt(settingDefinition, settingValue.Value) : settingValue.Value;
+            var rawSettingValue = settingDefinition.IsEncrypted ? SettingEncryptionService.Decrypt(settingDefinition, settingValue.Value) : settingValue.Value;
             if (rawSettingValue == value)
             {
                 return settingValue;
@@ -864,7 +864,7 @@ namespace Abp.Configuration
         private Dictionary<string, SettingInfo> ConvertSettingInfosToDictionary(List<SettingInfo> settingValues)
         {
             var dictionary = new Dictionary<string, SettingInfo>();
-            
+
             foreach (var settingValue in settingValues)
             {
                 var settingDefinition = _settingDefinitionManager.GetSettingDefinition(settingValue.Name);
@@ -872,7 +872,7 @@ namespace Abp.Configuration
                 {
                     settingValue.Value = SettingEncryptionService.Decrypt(settingDefinition, settingValue.Value);
                 }
-                
+
                 dictionary[settingValue.Name] = settingValue;
             }
 

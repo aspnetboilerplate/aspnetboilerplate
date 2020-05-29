@@ -1,4 +1,4 @@
-﻿using System.Collections.Generic;
+using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Abp.Configuration;
@@ -112,16 +112,17 @@ namespace Abp.Tests.Configuration
             var settingManager = CreateSettingManager();
             settingManager.SettingStore = new MemorySettingStore();
 
-            (await settingManager.GetAllSettingValuesAsync()).Count.ShouldBe(4);
+            (await settingManager.GetAllSettingValuesAsync()).Count.ShouldBe(5);
 
-            (await settingManager.GetAllSettingValuesForApplicationAsync()).Count.ShouldBe(3);
+            (await settingManager.GetAllSettingValuesForApplicationAsync()).Count.ShouldBe(4);
 
-            (await settingManager.GetAllSettingValuesForTenantAsync(1)).Count.ShouldBe(1);
+            (await settingManager.GetAllSettingValuesForTenantAsync(1)).Count.ShouldBe(2);
+            (await settingManager.GetAllSettingValuesForTenantAsync(1)).Count.ShouldBe(2);
             (await settingManager.GetAllSettingValuesForTenantAsync(2)).Count.ShouldBe(0);
             (await settingManager.GetAllSettingValuesForTenantAsync(3)).Count.ShouldBe(0);
 
             (await settingManager.GetAllSettingValuesForUserAsync(new UserIdentifier(1, 1))).Count.ShouldBe(1);
-            (await settingManager.GetAllSettingValuesForUserAsync(new UserIdentifier(1, 2))).Count.ShouldBe(1);
+            (await settingManager.GetAllSettingValuesForUserAsync(new UserIdentifier(1, 2))).Count.ShouldBe(2);
             (await settingManager.GetAllSettingValuesForUserAsync(new UserIdentifier(1, 3))).Count.ShouldBe(0);
         }
 
@@ -369,7 +370,7 @@ namespace Abp.Tests.Configuration
 
             settingValue = await settingManager.GetSettingValueAsync(MyEncryptedSetting);
             settingValue.ShouldBe("new_tenant_setting");
-            
+
             // App Setting
             session.TenantId = null;
 
@@ -448,7 +449,6 @@ namespace Abp.Tests.Configuration
                 };
             }
 
-
             public Task<SettingInfo> GetSettingOrNullAsync(int? tenantId, long? userId, string name)
             {
                 return Task.FromResult(_settings.FirstOrDefault(s =>
@@ -506,12 +506,14 @@ namespace Abp.Tests.Configuration
 
             public Task<List<SettingInfo>> GetAllListAsync(int? tenantId, long? userId)
             {
-                return Task.FromResult(_settings.Where(s => s.TenantId == tenantId && s.UserId == userId).ToList());
+                return Task.FromResult(_settings.Where(s => s.TenantId == tenantId && s.UserId == userId)
+                    .Select(s => new SettingInfo(s.TenantId, s.UserId, s.Name, s.Value)).ToList());
             }
 
             public List<SettingInfo> GetAllList(int? tenantId, long? userId)
             {
-                return _settings.Where(s => s.TenantId == tenantId && s.UserId == userId).ToList();
+                return _settings.Where(s => s.TenantId == tenantId && s.UserId == userId)
+                    .Select(s => new SettingInfo(s.TenantId, s.UserId, s.Name, s.Value)).ToList();
             }
         }
     }
