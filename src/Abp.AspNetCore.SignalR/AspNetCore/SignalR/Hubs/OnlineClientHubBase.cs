@@ -1,29 +1,26 @@
 ﻿using System;
-using System.Linq;
 using System.Threading.Tasks;
-using Abp.Auditing;
 using Abp.Dependency;
 using Abp.RealTime;
 using Abp.Runtime.Session;
 using Castle.Core.Logging;
-using Microsoft.AspNetCore.SignalR;
 
 namespace Abp.AspNetCore.SignalR.Hubs
 {
     public abstract class OnlineClientHubBase : AbpHubBase, ITransientDependency
     {
         protected IOnlineClientManager OnlineClientManager { get; }
-        protected IClientInfoProvider ClientInfoProvider { get; }
+        protected IOnlineClientInfoProvider OnlineClientInfoProvider { get; }
 
         /// <summary>
         /// Initializes a new instance of the <see cref="AbpCommonHub"/> class.
         /// </summary>
         protected OnlineClientHubBase(
             IOnlineClientManager onlineClientManager,
-            IClientInfoProvider clientInfoProvider)
+            IOnlineClientInfoProvider clientInfoProvider)
         {
             OnlineClientManager = onlineClientManager;
-            ClientInfoProvider = clientInfoProvider;
+            OnlineClientInfoProvider = clientInfoProvider;
 
             Logger = NullLogger.Instance;
             AbpSession = NullAbpSession.Instance;
@@ -58,35 +55,7 @@ namespace Abp.AspNetCore.SignalR.Hubs
 
         protected virtual IOnlineClient CreateClientForCurrentConnection()
         {
-            return new OnlineClient(
-                Context.ConnectionId,
-                GetIpAddressOfClient(),
-                Context.GetTenantId(),
-                Context.GetUserIdOrNull()
-            )
-            {
-                Properties = Context.GetHttpContext().Request.Query
-                    .ToDictionary(
-                        k => k.Key,
-                        v => v.Value.Count == 1
-                            ? (object) v.Value.First()
-                            : v.Value.ToArray()
-                    )
-            };
-        }
-
-        protected virtual string GetIpAddressOfClient()
-        {
-            try
-            {
-                return ClientInfoProvider.ClientIpAddress;
-            }
-            catch (Exception ex)
-            {
-                Logger.Error("Can not find IP address of the client! connectionId: " + Context.ConnectionId);
-                Logger.Error(ex.Message, ex);
-                return "";
-            }
+            return OnlineClientInfoProvider.CreateClientForCurrentConnection(Context);
         }
     }
 }
