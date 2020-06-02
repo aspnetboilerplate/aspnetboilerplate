@@ -75,6 +75,7 @@ constructor:
     and users (See setting scope section).
 -   **customData**: Can be used to set custom data for this setting
     definition.
+-   **IsEncrypted**: A Boolean value indicates that whether this setting value should be encrypted on save and decrypted on read. It makes possible to secure the setting value in the database.
 
 After creating a setting provider, we must register it in the PreIntialize
 method of our module:
@@ -85,6 +86,17 @@ The setting providers are registered via [dependency
 injection](/Pages/Documents/Dependency-Injection) automatically. A
 setting provider can inject any dependency (like a repository) to build
 the setting definitions using some other source.
+
+Setting encryption/decryption are done using ```SettingEncryptionConfiguration```. In order to change default encryption/decryption configuration, you can access this configuration as below;
+
+````c#
+Configuration.Settings.SettingEncryptionConfiguration.Keysize = 256;
+Configuration.Settings.SettingEncryptionConfiguration.DefaultPassPhrase = "pass_phrase";
+Configuration.Settings.SettingEncryptionConfiguration.InitVectorBytes = Encoding.ASCII.GetBytes("your_secret_value");
+Configuration.Settings.SettingEncryptionConfiguration.DefaultSalt = Encoding.ASCII.GetBytes("your_secret_value");
+````
+
+
 
 #### Setting scope
 
@@ -190,6 +202,12 @@ The ISettingManager defines the **ChangeSettingForApplicationAsync**,
 **ChangeSettingForTenantAsync** and **ChangeSettingForUserAsync**
 methods (and sync versions) to change settings for the application, for
 a tenant and for a user respectively.
+
+### ISettingEncryptionService
+
+`ISettingEncryptionService` is used to encrypt/decrypt setting values when `IsEncrypted` property of a setting definition was set to `true`.
+
+You can replace this service in the dependency injection system to customize the encryption/decryption process.
 
 ### About caching
 
