@@ -4,6 +4,7 @@ using System.Reflection;
 using Abp.AspNetCore.Mvc.Results.Caching;
 using Abp.Domain.Uow;
 using Abp.Web.Models;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Routing;
 
 namespace Abp.AspNetCore.Configuration
@@ -14,6 +15,10 @@ namespace Abp.AspNetCore.Configuration
 
         [Obsolete]
         IClientCacheAttribute DefaultClientCacheAttribute { get; set; }
+
+        ResponseCacheAttribute DefaultResponseCacheAttributeForControllers { get; set; }
+
+        ResponseCacheAttribute DefaultResponseCacheAttributeForAppServices { get; set; }
 
         UnitOfWorkAttribute DefaultUnitOfWorkAttribute { get; }
 
