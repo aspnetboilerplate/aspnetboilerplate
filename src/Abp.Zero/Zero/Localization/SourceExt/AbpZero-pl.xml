@@ -1,0 +1,31 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<localizationDictionary culture="pl">
+  <texts>
+    <text name="Identity.UserAlreadyInRole" value="Użytkownik już posiada rolę." />
+    <text name="Identity.UserNotInRole" value="Użytkownik nie posiada roli." />
+    <text name="Identity.RoleNotFound" value="Rola {0} nie istnieje." />
+    <text name="Identity.PasswordMismatch" value="Nieprawidłowe hasło." />
+    <text name="Identity.InvalidUserName" value="Nazwa użytkownika {0} jest nieprawidłowa, może zawierać tylko litery i cyfry." />
+    <text name="Identity.PasswordTooShort" value="PHasło musi posiadać minimum {0} znaków." />
+    <text name="Identity.PropertyTooShort" value="{0} nie może być puste." />
+    <text name="Identity.DuplicateUserName" value="Nazwa '{0}' jest już zajęta." />
+    <text name="Identity.UserAlreadyHasPassword" value="Użytkownik posiada już hasło." />
+    <text name="Identity.PasswordRequireNonLetterOrDigit" value="Hasło musi posiadać przynajmniej jeden znak nie alfa-numeryczny." />
+    <text name="Identity.UserIdNotFound" value="Identyfikator UserId nie znaleziono." />
+    <text name="Identity.InvalidToken" value="Nieprawidłowy token." />
+    <text name="Identity.InvalidEmail" value="E-mail '{0}' jest nieprawidłowy." />
+    <text name="Identity.UserNameNotFound" value="Użytkownik {0} nie istnieje." />
+    <text name="Identity.LockoutNotEnabled" value="Blokada nie jest włączona dla tego użytkownika.." />
+    <text name="Identity.PasswordRequireUpper" value="Hasło musi posiadać przynajmniej jedną wielką literę ('A'-'Z')." />
+    <text name="Identity.PasswordRequireDigit" value="Hasło musi posiadać przynajmniej jedną cyfrę ('0'-'9')." />
+    <text name="Identity.PasswordRequireLower" value="Hasło musi posiadać przynajmniej jedną małą literę ('a'-'z')." />
+    <text name="Identity.DuplicateEmail" value="E-mail '{0}' jest już zajęty" />
+    <text name="Identity.ExternalLoginExists" value="Zewnętrzna nazwa użytkownika jest już zajęta." />
+    <text name="Identity.DefaultError" value="Wystąpił nieznany błąd." />
+    <text name="Email">E-mail</text>
+    <text name="EmailSecurityCodeSubject">Kod bezpieczeństwa</text>
+    <text name="EmailSecurityCodeBody">Twój kod bezpieczeństwa: {0}</text>
+    <text name="Sms">Sms</text>
+    <text name="SmsSecurityCodeMessage">Twój kod bezpieczeństwa: {0}</text>
+  </texts>
+</localizationDictionary>
