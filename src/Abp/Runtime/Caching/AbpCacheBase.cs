@@ -45,7 +45,7 @@ namespace Abp.Runtime.Caching
                 }
 
                 var generatedValue = factory(key);
-                if (!EqualityComparer<TValue>.Default.Equals(generatedValue, default))
+                if (!IsDefaultValue(generatedValue))
                 {
                     try
                     {
@@ -99,7 +99,7 @@ namespace Abp.Runtime.Caching
                         {
                             var key = keys[i];
                             var generatedValue = factory(key);
-                            if (!EqualityComparer<TValue>.Default.Equals(generatedValue, default))
+                            if (!IsDefaultValue(generatedValue))
                             {
                                 generated.Add(new KeyValuePair<TKey, TValue>(key, generatedValue));
                             }
@@ -122,6 +122,11 @@ namespace Abp.Runtime.Caching
             }
 
             return results.Select(result => result.Value).ToArray();
+        }
+
+        protected virtual bool IsDefaultValue(TValue value)
+        {
+            return EqualityComparer<TValue>.Default.Equals(value, default);
         }
 
         public virtual async Task<TValue> GetAsync(TKey key, Func<TKey, Task<TValue>> factory)
