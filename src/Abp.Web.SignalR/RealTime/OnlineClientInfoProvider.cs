@@ -1,21 +1,23 @@
 using System;
 using Abp.Auditing;
 using Abp.Runtime.Session;
+using Castle.Core.Logging;
 using Microsoft.AspNet.SignalR.Hubs;
 
 namespace Abp.RealTime
 {
-    public class OnlineClientInfoProvider : AbpServiceBase, IOnlineClientInfoProvider
+    public class OnlineClientInfoProvider : IOnlineClientInfoProvider
     {
-
         private readonly IClientInfoProvider _clientInfoProvider;
 
         public IAbpSession AbpSession { get; set; }
+        public ILogger Logger { get; set; }
 
         public OnlineClientInfoProvider(IClientInfoProvider clientInfoProvider)
         {
             _clientInfoProvider = clientInfoProvider;
             AbpSession = NullAbpSession.Instance;
+            Logger = NullLogger.Instance;
         }
 
         public IOnlineClient CreateClientForCurrentConnection(HubCallerContext context)
