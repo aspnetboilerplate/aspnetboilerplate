@@ -54,10 +54,15 @@ namespace Abp.Web.Mvc.Controllers.Localization
 
             if (!string.IsNullOrWhiteSpace(returnUrl))
             {
-                var localPath = UrlHelper.LocalPathAndQuery(Uri.EscapeUriString(returnUrl), Request.Url.Host, Request.Url.Port);
+                var escapedReturnUrl = Uri.EscapeUriString(returnUrl);
+                var localPath = UrlHelper.LocalPathAndQuery(escapedReturnUrl, Request.Url.Host, Request.Url.Port);
                 if (!string.IsNullOrWhiteSpace(localPath))
                 {
-                    return Redirect(Uri.UnescapeDataString(localPath));
+                    var unescapedLocalPath = Uri.UnescapeDataString(localPath);
+                    if (Url.IsLocalUrl(unescapedLocalPath))
+                    {
+                        return Redirect(unescapedLocalPath);
+                    }
                 }
             }
 

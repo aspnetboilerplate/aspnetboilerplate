@@ -1,3 +1,4 @@
+using Abp.Data;
 using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
@@ -45,6 +46,35 @@ namespace Abp.Runtime.Caching
         /// <param name="factory">Factory method to create cache item if not exists</param>
         /// <returns>Cached items</returns>
         Task<TValue[]> GetAsync(TKey[] keys, Func<TKey, Task<TValue>> factory);
+
+        /// <summary>
+        /// Gets an item from the cache.
+        /// </summary>
+        /// <param name="key">Key</param>
+        /// <param name="value">Cache item</param>
+        /// <returns>Result to indicate cache hit</returns>
+        bool TryGetValue(TKey key, out TValue value);
+
+        /// <summary>
+        /// Gets an item from the cache.
+        /// </summary>
+        /// <param name="key">Key</param>
+        /// <returns>Result to indicate cache hit and cache item</returns>
+        Task<ConditionalValue<TValue>> TryGetValueAsync(TKey key);
+
+        /// <summary>
+        /// Gets items from the cache.
+        /// </summary>
+        /// <param name="keys">Keys</param>
+        /// <returns>Results to indicate cache hit and cache item for each key</returns>
+        ConditionalValue<TValue>[] TryGetValues(TKey[] keys);
+
+        /// <summary>
+        /// Gets items from the cache.
+        /// </summary>
+        /// <param name="keys">Keys</param>
+        /// <returns>Results to indicate cache hit and cache item for each key</returns>
+        Task<ConditionalValue<TValue>[]> TryGetValuesAsync(TKey[] keys);
 
         /// <summary>
         /// Gets an item from the cache or null if not found.

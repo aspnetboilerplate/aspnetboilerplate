@@ -1,0 +1,20 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<localizationDictionary culture="pl">
+  <texts>
+    <text name="InternalServerError" value="Wystąpił nieznany błąd dla Twojego żądania!" />
+    <text name="ValidationError" value="Twoje żądanie jest nieprawidłowe!" />
+    <text name="AreYouSure" value="Czy jesteś pewien?" />
+    <text name="Cancel" value="Anuluj" />
+    <text name="Yes" value="Tak" />
+    <text name="ValidationNarrativeTitle" value="Poniższe błędy wystąpiły w trakcie walidacji danych." />
+    <text name="DefaultError" value="Wystąpił błąd!" />
+    <text name="DefaultErrorDetail" value="Szczegóły błędu nie wysłane przez serwer." />
+    <text name="DefaultError401" value="Nie jesteś uwierzytelniony!" />
+    <text name="DefaultErrorDetail401" value="Powinieneś być uwierzytelniony (zalogowany) w celu wykonania tej operacji." />
+    <text name="DefaultError403" value="Nie jesteś upoważniony!" />
+    <text name="DefaultErrorDetail403" value="Nie jesteś upoważniony do wykonania tej operacji." />
+    <text name="DefaultError404" value="Zasób nieznaleziony!" />
+    <text name="DefaultErrorDetail404" value="Żądany zasób nie został znaleziony na serwerze." />
+    <text name="EntityNotFound" value="Nie ma encji {0} z identyfikatorem = {1}!" />
+  </texts>
+</localizationDictionary>
