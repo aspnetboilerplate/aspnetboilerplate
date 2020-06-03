@@ -89,25 +89,24 @@ namespace Abp.Runtime.Caching
         public async Task<ConditionalValue<TValue>> TryGetValueAsync(TKey key)
         {
             var result = await InternalCache.TryGetValueAsync(key.ToString());
-            return new ConditionalValue<TValue>(result.HasValue, CastOrDefault(result.Value));
+            return CreateConditionalValue(result);
         }
 
         public ConditionalValue<TValue>[] TryGetValues(TKey[] keys)
         {
             var results = InternalCache.TryGetValues(keys.Select(key => key.ToString()).ToArray());
-            return results.Select(result =>
-            {
-                return new ConditionalValue<TValue>(result.HasValue, CastOrDefault(result.Value));
-            }).ToArray();
+            return results.Select(CreateConditionalValue).ToArray();
         }
 
         public async Task<ConditionalValue<TValue>[]> TryGetValuesAsync(TKey[] keys)
         {
             var results = await InternalCache.TryGetValuesAsync(keys.Select(key => key.ToString()).ToArray());
-            return results.Select(result =>
-            {
-                return new ConditionalValue<TValue>(result.HasValue, CastOrDefault(result.Value));
-            }).ToArray();
+            return results.Select(CreateConditionalValue).ToArray();
+        }
+
+        protected ConditionalValue<TValue> CreateConditionalValue(ConditionalValue<object> conditionalValue)
+        {
+            return new ConditionalValue<TValue>(conditionalValue.HasValue, CastOrDefault(conditionalValue.Value));
         }
 
         public TValue GetOrDefault(TKey key)

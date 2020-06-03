@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Linq;
+using System.Threading;
 using System.Threading.Tasks;
 using Abp.Authorization;
 using Abp.DynamicEntityParameters;
@@ -106,10 +107,15 @@ namespace Abp.Zero.SampleApp.Tests.DynamicEntityParameters
         protected DynamicParameter CreateAndGetDynamicParameterWithTestPermission()
         {
             var rnd = new Random();
+
+            string parameterNameRandomAppender = rnd.Next().ToString();
+            Thread.Sleep(100);
+            parameterNameRandomAppender += rnd.Next().ToString();
+
             var dynamicParameter = new DynamicParameter()
             {
                 InputType = GetRandomAllowedInputType(),
-                ParameterName = "City" + rnd.Next(),
+                ParameterName = "City" + parameterNameRandomAppender,
                 Permission = TestPermission,
                 TenantId = AbpSession.TenantId
             };

@@ -18,8 +18,6 @@ namespace Abp.Runtime.Caching
 
         public TimeSpan? DefaultAbsoluteExpireTime { get; set; }
 
-        protected readonly object SyncObj = new object();
-
         protected readonly AsyncLock AsyncLock = new AsyncLock();
 
         /// <summary>
@@ -39,7 +37,7 @@ namespace Abp.Runtime.Caching
                 return value;
             }
 
-            lock (SyncObj)
+            using (AsyncLock.Lock())
             {
                 if (TryGetValue(key, out value))
                 {
@@ -82,7 +80,7 @@ namespace Abp.Runtime.Caching
 
             if (results.Any(result => !result.HasValue))
             {
-                lock (SyncObj)
+                using (AsyncLock.Lock())
                 {
                     try
                     {

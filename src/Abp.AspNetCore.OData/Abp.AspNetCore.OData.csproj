@@ -20,23 +20,12 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <None Include="bin\Release\netcoreapp3.1\Abp.AspNetCore.OData.pdb">
-      <PackagePath>lib/netcoreapp3.1/</PackagePath>
-      <Pack>true</Pack>
-    </None>
-  </ItemGroup>
-
-  <ItemGroup>
     <ProjectReference Include="..\Abp\Abp.csproj" />
     <ProjectReference Include="..\Abp.AspNetCore\Abp.AspNetCore.csproj" />
   </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Include="Microsoft.AspNetCore.OData" Version="7.3.0" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <PackageReference Update="SourceLink.Create.CommandLine" Version="2.8.3" />
+    <PackageReference Include="Microsoft.AspNetCore.OData" Version="7.4.0" />
   </ItemGroup>
 
 </Project>

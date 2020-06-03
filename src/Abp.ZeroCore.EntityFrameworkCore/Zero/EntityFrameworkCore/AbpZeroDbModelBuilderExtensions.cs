@@ -18,7 +18,7 @@ using Microsoft.EntityFrameworkCore;
 namespace Abp.Zero.EntityFrameworkCore
 {
     /// <summary>
-    /// Extension methods for <see cref="DbModelBuilder"/>.
+    /// Extension methods for <see cref="ModelBuilder"/>.
     /// </summary>
     public static class AbpZeroDbModelBuilderExtensions
     {

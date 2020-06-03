@@ -85,7 +85,7 @@ dynamicParameterManager.Add(cityParameter);
 
 
 
-You can use [**IDynamicParameterManager**](https://github.com/aspnetboilerplate/aspnetboilerplate/blob/pr/5307/src/Abp/DynamicEntityParameters/IDynamicParameterManager.cs) to manage dynamic parameter. (It uses cache)
+You can use [**IDynamicParameterManager**](https://github.com/aspnetboilerplate/aspnetboilerplate/blob/dev/src/Abp/DynamicEntityParameters/IDynamicParameterManager.cs) to manage dynamic parameter. (It uses cache)
 
 ```csharp
 public interface IDynamicParameterManager
@@ -156,7 +156,7 @@ _dynamicParameterValueManager.Add(london);
 
 
 
-You can use [**IDynamicParameterValueManager**](https://github.com/aspnetboilerplate/aspnetboilerplate/blob/pr/5307/src/Abp/DynamicEntityParameters/IDynamicParameterValueManager.cs) to manage dynamic parameter values. (It checks permissions)
+You can use [**IDynamicParameterValueManager**](https://github.com/aspnetboilerplate/aspnetboilerplate/blob/dev/src/Abp/DynamicEntityParameters/IDynamicParameterValueManager.cs) to manage dynamic parameter values. (It checks permissions)
 
 ```csharp
 public interface IDynamicParameterValueManager
@@ -227,7 +227,7 @@ var cityDynamicParameterOfCountry = _entityDynamicParameterManager.Add<Country>(
 
 
 
-You can use [**IEntityDynamicParameterManager**](https://github.com/aspnetboilerplate/aspnetboilerplate/blob/pr/5307/src/Abp/DynamicEntityParameters/IEntityDynamicParameterManager.cs) to manage entities dynamic parameters. (It uses cache and checks required permissions.) See also: [EntityDynamicParameterManagerExtensions](https://github.com/aspnetboilerplate/aspnetboilerplate/blob/pr/5307/src/Abp/DynamicEntityParameters/Extensions/EntityDynamicParameterManagerExtensions.cs)
+You can use [**IEntityDynamicParameterManager**](https://github.com/aspnetboilerplate/aspnetboilerplate/blob/dev/src/Abp/DynamicEntityParameters/IEntityDynamicParameterManager.cs) to manage entities dynamic parameters. (It uses cache and checks required permissions.) See also: [EntityDynamicParameterManagerExtensions](https://github.com/aspnetboilerplate/aspnetboilerplate/blob/dev/src/Abp/DynamicEntityParameters/Extensions/EntityDynamicParameterManagerExtensions.cs)
 
 ```csharp
 public interface IEntityDynamicParameterManager
@@ -318,7 +318,7 @@ var cityValues = _entityDynamicParameterValueManager.GetValues<Country>(EntityId
 
 
 
-You can use [**IEntityDynamicParameterValueManager**](https://github.com/aspnetboilerplate/aspnetboilerplate/blob/pr/5307/src/Abp/DynamicEntityParameters/IEntityDynamicParameterValueManager.cs) to manage entities dynamic parameters. (It uses cache and checks required permissions.) See also: [EntityDynamicParameterValueManagerExtensions](https://github.com/aspnetboilerplate/aspnetboilerplate/blob/pr/5307/src/Abp/DynamicEntityParameters/Extensions/EntityDynamicParameterValueManagerExtensions.cs)
+You can use [**IEntityDynamicParameterValueManager**](https://github.com/aspnetboilerplate/aspnetboilerplate/blob/dev/src/Abp/DynamicEntityParameters/IEntityDynamicParameterValueManager.cs) to manage entities dynamic parameters. (It uses cache and checks required permissions.) See also: [EntityDynamicParameterValueManagerExtensions](https://github.com/aspnetboilerplate/aspnetboilerplate/blob/dev/src/Abp/DynamicEntityParameters/Extensions/EntityDynamicParameterValueManagerExtensions.cs)
 
 ```csharp
 public interface IEntityDynamicParameterValueManager
