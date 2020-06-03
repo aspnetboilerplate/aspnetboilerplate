@@ -79,6 +79,7 @@ namespace Abp.AspNetCore.Tests
         [InlineData("www.example.com/local/site", "/")]
         [InlineData("www.example.com%2Flocal%2Fsite%3Fid%3D1", "/")]
         [InlineData("http%3A%2F%2Fwww.example.com%2F%E7%B5%8C%E5%96%B6%3F%E4%BB%95%E4%BA%8B%E5%A0%B4%3Dbusiness%26ID%3D1", "/")]
+        [InlineData("%252fAccount%252fLogin", "/")]
         public async Task Should_Redirect_External_Return_Url(string returnUrl, string expected)
         {
             // Act
