@@ -31,7 +31,6 @@ namespace Abp.Runtime.Caching
 
         public virtual TValue Get(TKey key, Func<TKey, TValue> factory)
         {
-
             if (TryGetValue(key, out TValue value))
             {
                 return value;
@@ -63,7 +62,6 @@ namespace Abp.Runtime.Caching
         public virtual TValue[] Get(TKey[] keys, Func<TKey, TValue> factory)
         {
             ConditionalValue<TValue>[] results = null;
-
             try
             {
                 results = TryGetValues(keys);
@@ -99,11 +97,12 @@ namespace Abp.Runtime.Caching
                         {
                             var key = keys[i];
                             var generatedValue = factory(key);
+                            results[i] = new ConditionalValue<TValue>(true, generatedValue);
+                            
                             if (!IsDefaultValue(generatedValue))
                             {
                                 generated.Add(new KeyValuePair<TKey, TValue>(key, generatedValue));
                             }
-                            results[i] = new ConditionalValue<TValue>(true, generatedValue);
                         }
                     }
 
