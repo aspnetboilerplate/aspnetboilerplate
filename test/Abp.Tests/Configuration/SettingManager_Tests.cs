@@ -421,7 +421,15 @@ namespace Abp.Tests.Configuration
             var definitionManager = Substitute.For<ISettingDefinitionManager>();
 
             //Implement methods
-            definitionManager.GetSettingDefinition(Arg.Any<string>()).Returns(x => settings[x[0].ToString()]);
+            definitionManager.GetSettingDefinition(Arg.Any<string>()).Returns(x =>
+            {
+                if (!settings.TryGetValue(x[0].ToString(), out var settingDefinition))
+                {
+                    throw new AbpException("There is no setting defined with name: " + x[0]);
+                }
+
+                return settingDefinition;
+            });
             definitionManager.GetAllSettingDefinitions().Returns(settings.Values.ToList());
 
             return definitionManager;
