@@ -23,6 +23,7 @@ using Abp.EntityFramework.Utils;
 using Abp.Events.Bus;
 using Abp.Events.Bus.Entities;
 using Abp.Extensions;
+using Abp.MultiTenancy;
 using Abp.Runtime.Session;
 using Abp.Timing;
 using Castle.Core.Logging;
@@ -495,9 +496,10 @@ namespace Abp.EntityFramework
                 return;
             }
 
-            //Only works for single tenant applications
-            if (MultiTenancyConfig?.IsEnabled ?? false)
+            //Should set TenantId if multitenancy is disabled
+            if (!MultiTenancyConfig?.IsEnabled ?? true)
             {
+                entity.TenantId = MultiTenancyConsts.DefaultTenantId;
                 return;
             }
 
