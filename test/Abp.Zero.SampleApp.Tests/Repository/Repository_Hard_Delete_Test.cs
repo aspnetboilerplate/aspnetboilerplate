@@ -93,5 +93,17 @@ namespace Abp.Zero.SampleApp.Tests.Repository
                 uow.Complete();
             }
         }
+
+        [Fact]
+        public async Task Should_Throw_Exception_If_There_No_UnitOfWork()
+        {
+            var admin = await _useRepository.FirstOrDefaultAsync(u => u.UserName == "admin");
+
+            Assert.Throws<AbpException>(() => _useRepository.HardDelete(admin));
+            Assert.Throws<AbpException>(() => _useRepository.HardDelete(u => u.Id > 0));
+
+            await Assert.ThrowsAsync<AbpException>(async () => await _useRepository.HardDeleteAsync(admin));
+            await Assert.ThrowsAsync<AbpException>(async () => await _useRepository.HardDeleteAsync(u => u.Id > 0));
+        }
     }
 }
