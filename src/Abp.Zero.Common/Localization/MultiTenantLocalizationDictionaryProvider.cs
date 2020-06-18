@@ -63,7 +63,7 @@ namespace Abp.Localization
 
         protected virtual ILocalizationDictionary GetDefaultDictionary()
         {
-            var languages = _languageManager.GetActiveLanguages();
+            var languages = _languageManager.GetLanguages();
             if (!languages.Any())
             {
                 throw new AbpException("No language defined!");
