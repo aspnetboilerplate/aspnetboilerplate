@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Threading.Tasks;
 using Abp.AspNetCore.SignalR.Hubs;
 using Abp.Dependency;
@@ -36,7 +36,7 @@ namespace Abp.AspNetCore.SignalR.Notifications
         }
 
         /// <inheritdoc/>
-        public Task SendNotificationsAsync(UserNotification[] userNotifications)
+        public async Task SendNotificationsAsync(UserNotification[] userNotifications)
         {
             foreach (var userNotification in userNotifications)
             {
@@ -52,7 +52,7 @@ namespace Abp.AspNetCore.SignalR.Notifications
                             continue;
                         }
 
-                        signalRClient.SendAsync("getNotification", userNotification);
+                        await signalRClient.SendAsync("getNotification", userNotification);
                     }
                 }
                 catch (Exception ex)
@@ -61,8 +61,6 @@ namespace Abp.AspNetCore.SignalR.Notifications
                     Logger.Warn(ex.ToString(), ex);
                 }
             }
-
-            return Task.FromResult(0);
         }
 
         /// <inheritdoc/>
