@@ -44,7 +44,9 @@ namespace Abp.Domain.Uow
 
             var outerUow = _currentUnitOfWorkProvider.Current;
 
-            if (options.Scope == TransactionScopeOption.Required && outerUow != null)
+            if (options.Scope == TransactionScopeOption.Required &&
+                outerUow != null &&
+                outerUow.Options?.Scope != TransactionScopeOption.Suppress)
             {
                 return new InnerUnitOfWorkCompleteHandle();
             }
