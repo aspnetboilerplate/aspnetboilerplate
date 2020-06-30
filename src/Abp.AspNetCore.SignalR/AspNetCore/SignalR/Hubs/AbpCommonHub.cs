@@ -5,7 +5,7 @@ namespace Abp.AspNetCore.SignalR.Hubs
 {
     public class AbpCommonHub : OnlineClientHubBase
     {
-        public AbpCommonHub(IOnlineClientManager onlineClientManager, IClientInfoProvider clientInfoProvider) 
+        public AbpCommonHub(IOnlineClientManager onlineClientManager, IOnlineClientInfoProvider clientInfoProvider)
             : base(onlineClientManager, clientInfoProvider)
         {
         }
