@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -420,7 +421,15 @@ namespace Abp.Tests.Configuration
             var definitionManager = Substitute.For<ISettingDefinitionManager>();
 
             //Implement methods
-            definitionManager.GetSettingDefinition(Arg.Any<string>()).Returns(x => settings[x[0].ToString()]);
+            definitionManager.GetSettingDefinition(Arg.Any<string>()).Returns(x =>
+            {
+                if (!settings.TryGetValue(x[0].ToString(), out var settingDefinition))
+                {
+                    throw new AbpException("There is no setting defined with name: " + x[0]);
+                }
+
+                return settingDefinition;
+            });
             definitionManager.GetAllSettingDefinitions().Returns(settings.Values.ToList());
 
             return definitionManager;
@@ -451,8 +460,7 @@ namespace Abp.Tests.Configuration
 
             public Task<SettingInfo> GetSettingOrNullAsync(int? tenantId, long? userId, string name)
             {
-                return Task.FromResult(_settings.FirstOrDefault(s =>
-                    s.TenantId == tenantId && s.UserId == userId && s.Name == name));
+                return Task.FromResult(GetSettingOrNull(tenantId, userId, name));
             }
 
             public SettingInfo GetSettingOrNull(int? tenantId, long? userId, string name)
@@ -461,10 +469,10 @@ namespace Abp.Tests.Configuration
             }
 
 #pragma warning disable 1998
-            public async Task DeleteAsync(SettingInfo setting)
+            public Task DeleteAsync(SettingInfo setting)
             {
-                _settings.RemoveAll(s =>
-                    s.TenantId == setting.TenantId && s.UserId == setting.UserId && s.Name == setting.Name);
+                Delete(setting);
+                return Task.CompletedTask;
             }
 
             public void Delete(SettingInfo setting)
@@ -475,9 +483,10 @@ namespace Abp.Tests.Configuration
 #pragma warning restore 1998
 
 #pragma warning disable 1998
-            public async Task CreateAsync(SettingInfo setting)
+            public Task CreateAsync(SettingInfo setting)
             {
-                _settings.Add(setting);
+                Create(setting);
+                return Task.CompletedTask;
             }
 
             public void Create(SettingInfo setting)
@@ -486,13 +495,10 @@ namespace Abp.Tests.Configuration
             }
 #pragma warning restore 1998
 
-            public async Task UpdateAsync(SettingInfo setting)
+            public Task UpdateAsync(SettingInfo setting)
             {
-                var s = await GetSettingOrNullAsync(setting.TenantId, setting.UserId, setting.Name);
-                if (s != null)
-                {
-                    s.Value = setting.Value;
-                }
+                Update(setting);
+                return Task.CompletedTask;
             }
 
             public void Update(SettingInfo setting)
@@ -506,14 +512,20 @@ namespace Abp.Tests.Configuration
 
             public Task<List<SettingInfo>> GetAllListAsync(int? tenantId, long? userId)
             {
-                return Task.FromResult(_settings.Where(s => s.TenantId == tenantId && s.UserId == userId)
-                    .Select(s => new SettingInfo(s.TenantId, s.UserId, s.Name, s.Value)).ToList());
+                return Task.FromResult(GetAllList(tenantId, userId));
             }
 
             public List<SettingInfo> GetAllList(int? tenantId, long? userId)
             {
-                return _settings.Where(s => s.TenantId == tenantId && s.UserId == userId)
+                var allSetting = _settings.Where(s => s.TenantId == tenantId && s.UserId == userId)
                     .Select(s => new SettingInfo(s.TenantId, s.UserId, s.Name, s.Value)).ToList();
+
+                //Add some undefined settings.
+                allSetting.Add(new SettingInfo(null, null, Guid.NewGuid().ToString(), Guid.NewGuid().ToString()));
+                allSetting.Add(new SettingInfo(1, null, Guid.NewGuid().ToString(), Guid.NewGuid().ToString()));
+                allSetting.Add(new SettingInfo(1, 1, Guid.NewGuid().ToString(), Guid.NewGuid().ToString()));
+
+                return allSetting;
             }
         }
     }

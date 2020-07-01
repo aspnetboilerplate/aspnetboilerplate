@@ -864,16 +864,23 @@ namespace Abp.Configuration
         private Dictionary<string, SettingInfo> ConvertSettingInfosToDictionary(List<SettingInfo> settingValues)
         {
             var dictionary = new Dictionary<string, SettingInfo>();
+            var allSettingDefinitions = _settingDefinitionManager.GetAllSettingDefinitions();
 
-            foreach (var settingValue in settingValues)
-            {
-                var settingDefinition = _settingDefinitionManager.GetSettingDefinition(settingValue.Name);
-                if (settingDefinition.IsEncrypted)
+            foreach (var setting in allSettingDefinitions.Join(settingValues,
+                definition => definition.Name,
+                value => value.Name,
+                (definition, value) => new
                 {
-                    settingValue.Value = SettingEncryptionService.Decrypt(settingDefinition, settingValue.Value);
+                    SettingDefinition = definition,
+                    SettingValue = value
+                }))
+            {
+                if (setting.SettingDefinition.IsEncrypted)
+                {
+                    setting.SettingValue.Value = SettingEncryptionService.Decrypt(setting.SettingDefinition, setting.SettingValue.Value);
                 }
 
-                dictionary[settingValue.Name] = settingValue;
+                dictionary[setting.SettingValue.Name] = setting.SettingValue;
             }
 
             return dictionary;
