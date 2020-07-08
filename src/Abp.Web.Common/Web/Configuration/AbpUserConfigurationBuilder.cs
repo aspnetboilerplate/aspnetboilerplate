@@ -225,20 +225,19 @@ namespace Abp.Web.Configuration
                 Values = new Dictionary<string, string>()
             };
 
-            var settingDefinitions = SettingDefinitionManager
-                .GetAllSettingDefinitions();
+            var settings = await SettingManager.GetAllSettingValuesAsync(SettingScopes.All);
 
             using (var scope = _iocResolver.CreateScope())
             {
-                foreach (var settingDefinition in settingDefinitions)
+                foreach (var settingValue in settings)
                 {
-                    if (!await settingDefinition.ClientVisibilityProvider.CheckVisible(scope))
+                    if (!await SettingDefinitionManager.GetSettingDefinition(settingValue.Name).ClientVisibilityProvider
+                        .CheckVisible(scope))
                     {
                         continue;
                     }
 
-                    var settingValue = await SettingManager.GetSettingValueAsync(settingDefinition.Name);
-                    config.Values.Add(settingDefinition.Name, settingValue);
+                    config.Values.Add(settingValue.Name, settingValue.Value);
                 }
             }
 

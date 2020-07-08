@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Linq;
 using System.Net.Http;
+using Abp.AspNetCore.Configuration;
 using Abp.Collections.Extensions;
 using Abp.Dependency;
 using Abp.Extensions;
@@ -12,7 +13,7 @@ using Microsoft.Extensions.DependencyInjection;
 
 namespace Abp.AspNetCore.TestBase
 {
-    public abstract class AbpAspNetCoreIntegratedTestBase<TStartup> 
+    public abstract class AbpAspNetCoreIntegratedTestBase<TStartup>
         where TStartup : class
     {
         protected TestServer Server { get; }
@@ -25,6 +26,8 @@ namespace Abp.AspNetCore.TestBase
 
         protected TestAbpSession AbpSession { get; }
 
+        protected string ServiceModuleName { get; }
+
         protected AbpAspNetCoreIntegratedTestBase()
         {
             var builder = CreateWebHostBuilder();
@@ -34,6 +37,7 @@ namespace Abp.AspNetCore.TestBase
             ServiceProvider = Server.Host.Services;
             IocManager = ServiceProvider.GetRequiredService<IIocManager>();
             AbpSession = ServiceProvider.GetRequiredService<TestAbpSession>();
+            ServiceModuleName = AbpControllerAssemblySetting.DefaultServiceModuleName;
         }
 
         protected virtual IWebHostBuilder CreateWebHostBuilder()
@@ -55,7 +59,13 @@ namespace Abp.AspNetCore.TestBase
         /// <typeparam name="TController">The type of the controller.</typeparam>
         protected virtual string GetUrl<TController>()
         {
-            return "/" + typeof(TController).Name.RemovePostFix("Controller", "AppService", "ApplicationService", "Service");
+            var controllerName = typeof(TController).Name;
+            string area = "/";
+            if (!controllerName.EndsWith("Controller"))
+            {
+                area = $"/api/services/{ServiceModuleName}/";
+            }
+            return area + controllerName.RemovePostFix("Controller", "AppService", "ApplicationService", "Service");
         }
 
         /// <summary>
@@ -85,7 +95,7 @@ namespace Abp.AspNetCore.TestBase
         }
 
         #endregion
-        
+
         #region Resolve
 
         /// <summary>

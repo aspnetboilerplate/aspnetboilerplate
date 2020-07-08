@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using System.Linq;
+using Abp.Data;
 using Castle.Core.Logging;
 using Nito.AsyncEx;
 
@@ -252,21 +253,52 @@ namespace Abp.Runtime.Caching
             return items;
         }
 
-        public abstract TValue GetOrDefault(TKey key);
+        public abstract bool TryGetValue(TKey key, out TValue value);
+
+        public virtual ConditionalValue<TValue>[] TryGetValues(TKey[] keys)
+        {
+            var pairs = new List<ConditionalValue<TValue>>();
+            foreach (var key in keys)
+            {
+                var found = TryGetValue(key, out TValue value);
+                pairs.Add(new ConditionalValue<TValue>(found, value));
+            }
+            return pairs.ToArray();
+        }
+
+        public virtual Task<ConditionalValue<TValue>> TryGetValueAsync(TKey key)
+        {
+            var found = TryGetValue(key, out TValue value);
+            return Task.FromResult(new ConditionalValue<TValue>(found, value));
+        }
+
+        public virtual Task<ConditionalValue<TValue>[]> TryGetValuesAsync(TKey[] keys)
+        {
+            return Task.FromResult(TryGetValues(keys));
+        }
+
+        public virtual TValue GetOrDefault(TKey key)
+        {
+            TryGetValue(key, out TValue value);
+            return value;
+        }
 
         public virtual TValue[] GetOrDefault(TKey[] keys)
         {
-            return keys.Select(GetOrDefault).ToArray();
+            var results = TryGetValues(keys);
+            return results.Select(result => result.Value).ToArray();
         }
 
-        public virtual Task<TValue> GetOrDefaultAsync(TKey key)
+        public virtual async Task<TValue> GetOrDefaultAsync(TKey key)
         {
-            return Task.FromResult(GetOrDefault(key));
+            var result = await TryGetValueAsync(key);
+            return result.Value;
         }
 
-        public virtual Task<TValue[]> GetOrDefaultAsync(TKey[] keys)
+        public virtual async Task<TValue[]> GetOrDefaultAsync(TKey[] keys)
         {
-            return Task.WhenAll(keys.Select(GetOrDefaultAsync));
+            var results = await TryGetValuesAsync(keys);
+            return results.Select(result => result.Value).ToArray();
         }
 
         public abstract void Set(TKey key, TValue value, TimeSpan? slidingExpireTime = null, TimeSpan? absoluteExpireTime = null);

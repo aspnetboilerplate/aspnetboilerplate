@@ -1,3 +1,4 @@
+using Abp.Data;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -76,6 +77,36 @@ namespace Abp.Runtime.Caching
             var keysAsString = keys.Select((key) => key.ToString()).ToArray();
             var values = await InternalCache.GetAsync(keysAsString, async (k) => await factory((TKey)(k as object)));
             return values.Select(value => (TValue)value).ToArray();
+        }
+
+        public bool TryGetValue(TKey key, out TValue value)
+        {
+            var found = InternalCache.TryGetValue(key.ToString(), out object objectValue);
+            value = CastOrDefault(objectValue);
+            return found;
+        }
+
+        public async Task<ConditionalValue<TValue>> TryGetValueAsync(TKey key)
+        {
+            var result = await InternalCache.TryGetValueAsync(key.ToString());
+            return CreateConditionalValue(result);
+        }
+
+        public ConditionalValue<TValue>[] TryGetValues(TKey[] keys)
+        {
+            var results = InternalCache.TryGetValues(keys.Select(key => key.ToString()).ToArray());
+            return results.Select(CreateConditionalValue).ToArray();
+        }
+
+        public async Task<ConditionalValue<TValue>[]> TryGetValuesAsync(TKey[] keys)
+        {
+            var results = await InternalCache.TryGetValuesAsync(keys.Select(key => key.ToString()).ToArray());
+            return results.Select(CreateConditionalValue).ToArray();
+        }
+
+        protected ConditionalValue<TValue> CreateConditionalValue(ConditionalValue<object> conditionalValue)
+        {
+            return new ConditionalValue<TValue>(conditionalValue.HasValue, CastOrDefault(conditionalValue.Value));
         }
 
         public TValue GetOrDefault(TKey key)
