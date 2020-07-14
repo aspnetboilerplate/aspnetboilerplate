@@ -41,7 +41,7 @@ namespace Abp.Runtime.Security
         /// <summary>
         /// This constant is used to determine the keysize of the encryption algorithm.
         /// </summary>
-        public const int Keysize = 256;
+        public const int DefaultKeysize = 256;
 
         static SimpleStringCipher()
         {
@@ -56,7 +56,12 @@ namespace Abp.Runtime.Security
             InitVectorBytes = DefaultInitVectorBytes;
         }
 
-        public string Encrypt(string plainText, string passPhrase = null, byte[] salt = null)
+        public string Encrypt(
+            string plainText, 
+            string passPhrase = null, 
+            byte[] salt = null, 
+            int? keySize = null,
+            byte[] initVectorBytes = null)
         {
             if (plainText == null)
             {
@@ -73,14 +78,24 @@ namespace Abp.Runtime.Security
                 salt = DefaultSalt;
             }
 
+            if (keySize == null)
+            {
+                keySize = DefaultKeysize;
+            }
+
+            if (initVectorBytes == null)
+            {
+                initVectorBytes = InitVectorBytes;
+            }
+            
             var plainTextBytes = Encoding.UTF8.GetBytes(plainText);
             using (var password = new Rfc2898DeriveBytes(passPhrase, salt))
             {
-                var keyBytes = password.GetBytes(Keysize / 8);
+                var keyBytes = password.GetBytes(keySize.Value / 8);
                 using (var symmetricKey = Aes.Create())
                 {
                     symmetricKey.Mode = CipherMode.CBC;
-                    using (var encryptor = symmetricKey.CreateEncryptor(keyBytes, InitVectorBytes))
+                    using (var encryptor = symmetricKey.CreateEncryptor(keyBytes, initVectorBytes))
                     {
                         using (var memoryStream = new MemoryStream())
                         {
@@ -97,7 +112,12 @@ namespace Abp.Runtime.Security
             }
         }
 
-        public string Decrypt(string cipherText, string passPhrase = null, byte[] salt = null)
+        public string Decrypt(
+            string cipherText, 
+            string passPhrase = null, 
+            byte[] salt = null,
+            int? keySize = null,
+            byte[] initVectorBytes = null)
         {
             if (string.IsNullOrEmpty(cipherText))
             {
@@ -114,14 +134,24 @@ namespace Abp.Runtime.Security
                 salt = DefaultSalt;
             }
 
+            if (keySize == null)
+            {
+                keySize = DefaultKeysize;
+            }
+
+            if (initVectorBytes == null)
+            {
+                initVectorBytes = InitVectorBytes;
+            }
+            
             var cipherTextBytes = Convert.FromBase64String(cipherText);
             using (var password = new Rfc2898DeriveBytes(passPhrase, salt))
             {
-                var keyBytes = password.GetBytes(Keysize / 8);
+                var keyBytes = password.GetBytes(keySize.Value / 8);
                 using (var symmetricKey = Aes.Create())
                 {
                     symmetricKey.Mode = CipherMode.CBC;
-                    using (var decryptor = symmetricKey.CreateDecryptor(keyBytes, InitVectorBytes))
+                    using (var decryptor = symmetricKey.CreateDecryptor(keyBytes, initVectorBytes))
                     {
                         using (var memoryStream = new MemoryStream(cipherTextBytes))
                         {

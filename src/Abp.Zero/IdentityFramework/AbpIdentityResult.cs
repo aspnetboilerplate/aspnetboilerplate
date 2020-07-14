@@ -22,7 +22,7 @@ namespace Abp.IdentityFramework
             
         }
 
-        public static AbpIdentityResult Failed(params string[] errors)
+        public new static AbpIdentityResult Failed(params string[] errors)
         {
             return new AbpIdentityResult(errors);
         }

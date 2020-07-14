@@ -1,7 +1,5 @@
 using System;
 using System.Linq;
-using System.Security.Claims;
-using System.Threading;
 using Abp.Configuration.Startup;
 using Abp.Dependency;
 using Abp.MultiTenancy;

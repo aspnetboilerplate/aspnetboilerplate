@@ -1,8 +1,10 @@
 ﻿using Abp.AspNetCore.Mvc.Extensions;
 using Microsoft.AspNetCore.Mvc.Filters;
+using System;
 
 namespace Abp.AspNetCore.Mvc.Results.Caching
 {
+    [Obsolete]
     public class NoClientCacheAttribute : IClientCacheAttribute
     {
         /// <summary>

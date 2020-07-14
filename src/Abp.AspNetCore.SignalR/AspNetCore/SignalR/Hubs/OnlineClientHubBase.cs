@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Threading.Tasks;
-using Abp.Auditing;
 using Abp.Dependency;
 using Abp.RealTime;
 using Abp.Runtime.Session;
@@ -11,17 +10,17 @@ namespace Abp.AspNetCore.SignalR.Hubs
     public abstract class OnlineClientHubBase : AbpHubBase, ITransientDependency
     {
         protected IOnlineClientManager OnlineClientManager { get; }
-        protected IClientInfoProvider ClientInfoProvider { get; }
+        protected IOnlineClientInfoProvider OnlineClientInfoProvider { get; }
 
         /// <summary>
         /// Initializes a new instance of the <see cref="AbpCommonHub"/> class.
         /// </summary>
         protected OnlineClientHubBase(
             IOnlineClientManager onlineClientManager,
-            IClientInfoProvider clientInfoProvider)
+            IOnlineClientInfoProvider clientInfoProvider)
         {
             OnlineClientManager = onlineClientManager;
-            ClientInfoProvider = clientInfoProvider;
+            OnlineClientInfoProvider = clientInfoProvider;
 
             Logger = NullLogger.Instance;
             AbpSession = NullAbpSession.Instance;
@@ -56,26 +55,7 @@ namespace Abp.AspNetCore.SignalR.Hubs
 
         protected virtual IOnlineClient CreateClientForCurrentConnection()
         {
-            return new OnlineClient(
-                Context.ConnectionId,
-                GetIpAddressOfClient(),
-                AbpSession.TenantId,
-                AbpSession.UserId
-            );
-        }
-
-        protected virtual string GetIpAddressOfClient()
-        {
-            try
-            {
-                return ClientInfoProvider.ClientIpAddress;
-            }
-            catch (Exception ex)
-            {
-                Logger.Error("Can not find IP address of the client! connectionId: " + Context.ConnectionId);
-                Logger.Error(ex.Message, ex);
-                return "";
-            }
+            return OnlineClientInfoProvider.CreateClientForCurrentConnection(Context);
         }
     }
 }

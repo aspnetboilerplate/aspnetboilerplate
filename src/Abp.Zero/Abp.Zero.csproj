@@ -23,13 +23,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <None Include="bin\Release\net461\Abp.Zero.pdb">
-      <PackagePath>lib/net461/</PackagePath>
-      <Pack>true</Pack>
-    </None>
-  </ItemGroup>
-
-  <ItemGroup>
     <PackageReference Include="Microsoft.AspNet.Identity.Core" Version="2.2.3" />
   </ItemGroup>
 
@@ -46,7 +39,6 @@
 
   <ItemGroup>
     <PackageReference Update="Microsoft.NETFramework.ReferenceAssemblies" Version="1.0.0" />
-    <PackageReference Update="SourceLink.Create.CommandLine" Version="2.8.3" />
   </ItemGroup>
 
 </Project>

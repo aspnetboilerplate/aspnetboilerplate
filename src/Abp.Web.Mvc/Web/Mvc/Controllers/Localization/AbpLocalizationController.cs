@@ -1,23 +1,25 @@
-﻿using System.Security.Policy;
+﻿using System;
 using System.Web;
 using System.Web.Mvc;
 using Abp.Auditing;
-using Abp.Configuration;
 using Abp.Localization;
 using Abp.Runtime.Session;
 using Abp.Timing;
 using Abp.Web.Configuration;
+using Abp.Web.Http;
 using Abp.Web.Models;
 
 namespace Abp.Web.Mvc.Controllers.Localization
 {
     public class AbpLocalizationController : AbpController
     {
-        private readonly IAbpWebLocalizationConfiguration _webLocalizationConfiguration;
+        protected readonly IAbpWebLocalizationConfiguration WebLocalizationConfiguration;
+        protected IUrlHelper UrlHelper;
 
-        public AbpLocalizationController(IAbpWebLocalizationConfiguration webLocalizationConfiguration)
+        public AbpLocalizationController(IAbpWebLocalizationConfiguration webLocalizationConfiguration, IUrlHelper urlHelper)
         {
-            _webLocalizationConfiguration = webLocalizationConfiguration;
+            WebLocalizationConfiguration = webLocalizationConfiguration;
+            UrlHelper = urlHelper;
         }
 
         [DisableAuditing]
@@ -29,7 +31,7 @@ namespace Abp.Web.Mvc.Controllers.Localization
             }
 
             Response.Cookies.Add(
-                new HttpCookie(_webLocalizationConfiguration.CookieName, cultureName)
+                new HttpCookie(WebLocalizationConfiguration.CookieName, cultureName)
                 {
                     Expires = Clock.Now.AddYears(2),
                     Path = Request.ApplicationPath
@@ -50,9 +52,18 @@ namespace Abp.Web.Mvc.Controllers.Localization
                 return Json(new AjaxResponse(), JsonRequestBehavior.AllowGet);
             }
 
-            if (!string.IsNullOrWhiteSpace(returnUrl) && Request.Url != null && AbpUrlHelper.IsLocalUrl(Request.Url, returnUrl))
+            if (!string.IsNullOrWhiteSpace(returnUrl))
             {
-                return Redirect(returnUrl);
+                var escapedReturnUrl = Uri.EscapeUriString(returnUrl);
+                var localPath = UrlHelper.LocalPathAndQuery(escapedReturnUrl, Request.Url.Host, Request.Url.Port);
+                if (!string.IsNullOrWhiteSpace(localPath))
+                {
+                    var unescapedLocalPath = Uri.UnescapeDataString(localPath);
+                    if (Url.IsLocalUrl(unescapedLocalPath))
+                    {
+                        return Redirect(unescapedLocalPath);
+                    }
+                }
             }
 
             return Redirect(Request.ApplicationPath);

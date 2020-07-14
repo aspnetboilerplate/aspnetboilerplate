@@ -20,23 +20,12 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <None Include="bin\Release\netstandard2.0\Abp.MailKit.pdb">
-      <PackagePath>lib/netstandard2.0/</PackagePath>
-      <Pack>true</Pack>
-    </None>
+    <ProjectReference Include="..\Abp\Abp.csproj" />
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\Abp\Abp.csproj" />
-  </ItemGroup>
-  
-  <ItemGroup>
     <PackageReference Include="System.Runtime" Version="4.3.1" />
-    <PackageReference Include="MailKit" Version="2.5.2" />
-  </ItemGroup>
-  
-  <ItemGroup>
-    <PackageReference Update="SourceLink.Create.CommandLine" Version="2.8.3" />
+    <PackageReference Include="MailKit" Version="2.7.0" />
   </ItemGroup>
 
 </Project>

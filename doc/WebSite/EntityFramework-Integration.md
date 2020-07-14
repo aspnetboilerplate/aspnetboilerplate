@@ -162,7 +162,7 @@ TPrimaryKey&gt;? This sets ASP.NET Boilerplate to use the
 SimpleTaskSystemDbContext in our repositories.
 
 By default, all the repositories for your given DbContext
-(SimpleTaskSystemDbContext in this example) is implemented using
+(SimpleTaskSystemDbContext in this example) are implemented using
 EfRepositoryBase. You can replace it to your own base
 repository class by adding the **AutoRepositoryTypes** attribute to your
 DbContext as shown below:

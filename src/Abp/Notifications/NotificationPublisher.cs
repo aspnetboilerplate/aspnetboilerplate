@@ -88,7 +88,7 @@ namespace Abp.Notifications
                 Severity = severity,
                 UserIds = userIds.IsNullOrEmpty() ? null : userIds.Select(uid => uid.ToUserIdentifierString()).JoinAsString(","),
                 ExcludedUserIds = excludedUserIds.IsNullOrEmpty() ? null : excludedUserIds.Select(uid => uid.ToUserIdentifierString()).JoinAsString(","),
-                TenantIds = tenantIds.IsNullOrEmpty() ? null : tenantIds.JoinAsString(","),
+                TenantIds = GetTenantIdsAsStr(tenantIds),
                 Data = data?.ToJsonString(),
                 DataTypeName = data?.GetType().AssemblyQualifiedName
             };
@@ -154,7 +154,7 @@ namespace Abp.Notifications
                 Severity = severity,
                 UserIds = userIds.IsNullOrEmpty() ? null : userIds.Select(uid => uid.ToUserIdentifierString()).JoinAsString(","),
                 ExcludedUserIds = excludedUserIds.IsNullOrEmpty() ? null : excludedUserIds.Select(uid => uid.ToUserIdentifierString()).JoinAsString(","),
-                TenantIds = tenantIds.IsNullOrEmpty() ? null : tenantIds.JoinAsString(","),
+                TenantIds = GetTenantIdsAsStr(tenantIds),
                 Data = data?.ToJsonString(),
                 DataTypeName = data?.GetType().AssemblyQualifiedName
             };
@@ -183,6 +183,23 @@ namespace Abp.Notifications
                        )
                    );
             }
+        }
+
+        /// <summary>
+        /// Gets the string for <see cref="NotificationInfo.TenantIds"/>.
+        /// </summary>
+        /// <param name="tenantIds"></param>
+        /// <seealso cref="DefaultNotificationDistributer.GetTenantIds"/>
+        private static string GetTenantIdsAsStr(int?[] tenantIds)
+        {
+            if (tenantIds.IsNullOrEmpty())
+            {
+                return null;
+            }
+
+            return tenantIds
+                .Select(tenantId => tenantId == null ? "null" : tenantId.ToString())
+                .JoinAsString(",");
         }
     }
 }
