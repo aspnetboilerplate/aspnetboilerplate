@@ -28,6 +28,7 @@ namespace Abp.Domain.Uow
         /// not belong to current tenant.
         /// </summary>
         public const string MayHaveTenant = "MayHaveTenant";
+        public const string MayHaveBranch = "MayHaveBranch";
 
         /// <summary>
         /// Standard parameters of ABP.
@@ -38,6 +39,7 @@ namespace Abp.Domain.Uow
             /// "tenantId".
             /// </summary>
             public const string TenantId = "tenantId";
+            public const string BranchId = "branchId";
 
             /// <summary>
             /// "isDeleted".

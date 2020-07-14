@@ -97,4 +97,95 @@ namespace Abp.MultiTenancy
             return null;
         }
     }
+
+    public class BranchResolver : IBranchResolver, ITransientDependency
+    {
+        private const string AmbientScopeContextKey = "Abp.MultiTenancy.BranchResolver.Resolving";
+
+        public ILogger Logger { get; set; }
+
+        private readonly IMultiTenancyConfig _multiTenancy;
+        private readonly IIocResolver _iocResolver;
+        private readonly ITenantStore _tenantStore;
+        private readonly IBranchResolverCache _cache;
+        private readonly IAmbientScopeProvider<bool> _ambientScopeProvider;
+
+        public BranchResolver(
+            IMultiTenancyConfig multiTenancy,
+            IIocResolver iocResolver,
+            ITenantStore tenantStore,
+            IBranchResolverCache cache,
+            IAmbientScopeProvider<bool> ambientScopeProvider)
+        {
+            _multiTenancy = multiTenancy;
+            _iocResolver = iocResolver;
+            _tenantStore = tenantStore;
+            _cache = cache;
+            _ambientScopeProvider = ambientScopeProvider;
+
+            Logger = NullLogger.Instance;
+        }
+
+        public long? ResolveBranchId()
+        {
+            if (!_multiTenancy.Resolvers.Any())
+            {
+                return null;
+            }
+
+            if (_ambientScopeProvider.GetValue(AmbientScopeContextKey))
+            {
+                //Preventing recursive call of ResolveTenantId
+                return null;
+            }
+
+            using (_ambientScopeProvider.BeginScope(AmbientScopeContextKey, true))
+            {
+                var cacheItem = _cache.Value;
+                if (cacheItem != null)
+                {
+                    return cacheItem.BranchId;
+                }
+
+                var tenantId = GetBranchIdFromContributors();
+                _cache.Value = new BranchResolverCacheItem(tenantId);
+                return tenantId;
+            }
+        }
+
+        private long? GetBranchIdFromContributors()
+        {
+            foreach (var resolverType in _multiTenancy.BranchResolvers)
+            {
+                using (var resolver = _iocResolver.ResolveAsDisposable<IBranchResolveContributor>(resolverType))
+                {
+                    long? branchId;
+
+                    try
+                    {
+                        branchId = resolver.Object.ResolveBranchId();
+                    }
+                    catch (Exception ex)
+                    {
+                        Logger.Warn(ex.ToString(), ex);
+                        continue;
+                    }
+
+                    if (branchId == null)
+                    {
+                        continue;
+                    }
+
+                    //if (_tenantStore.Find(tenantId.Value) == null)
+                    //{
+                    //    continue;
+                    //}
+
+                    return branchId;
+                }
+            }
+
+            return null;
+        }
+    }
 }

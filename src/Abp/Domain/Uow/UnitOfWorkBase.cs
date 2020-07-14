@@ -84,6 +84,7 @@ namespace Abp.Domain.Uow
         private Exception _exception;
 
         private int? _tenantId;
+        private long? _branchId;
 
         /// <summary>
         /// Constructor.
@@ -115,6 +116,7 @@ namespace Abp.Domain.Uow
             SetFilters(options.FilterOverrides);
 
             SetTenantId(AbpSession.TenantId, false);
+            SetBranchId(AbpSession.BranchId);
 
             BeginUow();
         }
@@ -241,9 +243,28 @@ namespace Abp.Domain.Uow
             });
         }
 
+        public virtual IDisposable SetBranchId(long? branchId)
+        {
+            var oldBranchId = _branchId;
+            _branchId = branchId;
+
+            var mayHaveTenantChange = SetFilterParameter(AbpDataFilters.MayHaveBranch, AbpDataFilters.Parameters.BranchId, branchId);
+
+            return new DisposeAction(() =>
+            {
+                mayHaveTenantChange.Dispose();
+                _branchId = oldBranchId;
+            });
+        }
+
         public int? GetTenantId()
         {
             return _tenantId;
+        }
+
+        public long? GetBranchId()
+        {
+            return _branchId;
         }
 
         /// <inheritdoc/>

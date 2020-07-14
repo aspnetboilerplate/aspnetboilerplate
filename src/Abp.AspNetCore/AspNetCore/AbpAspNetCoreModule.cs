@@ -40,6 +40,8 @@ namespace Abp.AspNetCore
             Configuration.MultiTenancy.Resolvers.Add<DomainTenantResolveContributor>();
             Configuration.MultiTenancy.Resolvers.Add<HttpHeaderTenantResolveContributor>();
             Configuration.MultiTenancy.Resolvers.Add<HttpCookieTenantResolveContributor>();
+
+            Configuration.MultiTenancy.BranchResolvers.Add<HttpHeaderBranchResolveContributor>();
         }
 
         public override void Initialize()

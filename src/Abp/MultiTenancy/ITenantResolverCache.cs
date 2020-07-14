@@ -7,4 +7,10 @@ namespace Abp.MultiTenancy
         [CanBeNull]
         TenantResolverCacheItem Value { get; set; }
     }
+
+    public interface IBranchResolverCache
+    {
+        [CanBeNull]
+        BranchResolverCacheItem Value { get; set; }
+    }
 }

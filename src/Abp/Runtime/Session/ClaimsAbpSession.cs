@@ -67,6 +67,30 @@ namespace Abp.Runtime.Session
             }
         }
 
+        public override long? BranchId
+        {
+            get
+            {
+                if (!MultiTenancy.IsEnabled)
+                {
+                    return null;
+                }
+
+                if (OverridedValue != null)
+                {
+                    return OverridedValue.BranchId;
+                }
+
+                var branchIdClaim = PrincipalAccessor.Principal?.Claims.FirstOrDefault(c => c.Type == AbpClaimTypes.BranchId);
+                if (!string.IsNullOrEmpty(branchIdClaim?.Value))
+                {
+                    return Convert.ToInt64(branchIdClaim.Value);
+                }
+
+                return BranchResolver.ResolveBranchId();
+            }
+        }
+
         public override long? ImpersonatorUserId
         {
             get
@@ -102,17 +126,20 @@ namespace Abp.Runtime.Session
 
         protected IPrincipalAccessor PrincipalAccessor { get; }
         protected ITenantResolver TenantResolver { get; }
+        protected IBranchResolver BranchResolver { get; }
 
         public ClaimsAbpSession(
             IPrincipalAccessor principalAccessor,
             IMultiTenancyConfig multiTenancy,
             ITenantResolver tenantResolver,
+            IBranchResolver branchResolver,
             IAmbientScopeProvider<SessionOverride> sessionOverrideScopeProvider)
             : base(
                   multiTenancy, 
                   sessionOverrideScopeProvider)
         {
             TenantResolver = tenantResolver;
+            BranchResolver = branchResolver;
             PrincipalAccessor = principalAccessor;
         }
     }

@@ -4,4 +4,9 @@ namespace Abp.MultiTenancy
     {
         int? ResolveTenantId();
     }
+
+    public interface IBranchResolver
+    {
+        long? ResolveBranchId();
+    }
 }

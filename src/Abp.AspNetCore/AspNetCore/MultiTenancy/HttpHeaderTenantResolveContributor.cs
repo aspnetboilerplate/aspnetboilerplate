@@ -49,4 +49,47 @@ namespace Abp.AspNetCore.MultiTenancy
             return int.TryParse(tenantIdHeader.First(), out var tenantId) ? tenantId : (int?) null;
         }
     }
+
+
+    public class HttpHeaderBranchResolveContributor : IBranchResolveContributor, ITransientDependency
+    {
+        public ILogger Logger { get; set; }
+
+        private readonly IHttpContextAccessor _httpContextAccessor;
+        private readonly IMultiTenancyConfig _multiTenancyConfig;
+
+        public HttpHeaderBranchResolveContributor(
+            IHttpContextAccessor httpContextAccessor,
+            IMultiTenancyConfig multiTenancyConfig)
+        {
+            _httpContextAccessor = httpContextAccessor;
+            _multiTenancyConfig = multiTenancyConfig;
+
+            Logger = NullLogger.Instance;
+        }
+
+        public long? ResolveBranchId()
+        {
+            var httpContext = _httpContextAccessor.HttpContext;
+            if (httpContext == null)
+            {
+                return null;
+            }
+
+            var branchIdHeader = httpContext.Request.Headers[_multiTenancyConfig.BranchIdResolveKey];
+            if (branchIdHeader == string.Empty || branchIdHeader.Count < 1)
+            {
+                return null;
+            }
+
+            if (branchIdHeader.Count > 1)
+            {
+                Logger.Warn(
+                    $"HTTP request includes more than one {_multiTenancyConfig.BranchIdResolveKey} header value. First one will be used. All of them: {branchIdHeader.JoinAsString(", ")}"
+                    );
+            }
+
+            return long.TryParse(branchIdHeader.First(), out var branchId) ? branchId : (long?)null;
+        }
+    }
 }

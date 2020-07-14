@@ -9,7 +9,7 @@ namespace Abp.Authorization
     /// Used to grant/deny a permission for a role or user.
     /// </summary>
     [Table("AbpPermissions")]
-    public abstract class PermissionSetting : CreationAuditedEntity<long>, IMayHaveTenant
+    public abstract class PermissionSetting : CreationAuditedEntity<long>, IMayHaveTenant, IMayHaveBranch
     {
         /// <summary>
         /// Maximum length of the <see cref="Name"/> field.
@@ -30,6 +30,7 @@ namespace Abp.Authorization
         /// Default value: true.
         /// </summary>
         public virtual bool IsGranted { get; set; }
+        public long? BranchId { get; set; }
 
         /// <summary>
         /// Creates a new <see cref="PermissionSetting"/> entity.

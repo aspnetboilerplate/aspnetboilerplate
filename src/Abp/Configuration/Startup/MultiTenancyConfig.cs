@@ -21,13 +21,17 @@ namespace Abp.Configuration.Startup
         public bool IgnoreFeatureCheckForHostUsers { get; set; }
 
         public ITypeList<ITenantResolveContributor> Resolvers { get; }
+        public ITypeList<IBranchResolveContributor> BranchResolvers { get; }
 
         public string TenantIdResolveKey { get; set; }
+        public string BranchIdResolveKey { get; set; }
 
         public MultiTenancyConfig()
         {
             Resolvers = new TypeList<ITenantResolveContributor>();
+            BranchResolvers = new TypeList<IBranchResolveContributor>();
             TenantIdResolveKey = "Abp.TenantId";
+            BranchIdResolveKey = "Abp.BranchId";
         }
     }
 }

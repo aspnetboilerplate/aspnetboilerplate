@@ -9,4 +9,13 @@ namespace Abp.MultiTenancy
             TenantId = tenantId;
         }
     }
+    public class BranchResolverCacheItem
+    {
+        public long? BranchId { get; }
+
+        public BranchResolverCacheItem(long? branchId)
+        {
+            BranchId = branchId;
+        }
+    }
 }

@@ -122,5 +122,6 @@ namespace Abp.Domain.Uow
         /// </summary>
         /// <returns></returns>
         int? GetTenantId();
+        long? GetBranchId();
     }
 }

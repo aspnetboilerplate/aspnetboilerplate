@@ -192,6 +192,9 @@ namespace Abp.EntityFramework
                 AbpSession.TenantId ?? 0);
             this.SetFilterScopedParameterValue(AbpDataFilters.MayHaveTenant, AbpDataFilters.Parameters.TenantId,
                 AbpSession.TenantId);
+
+            this.SetFilterScopedParameterValue(AbpDataFilters.MayHaveBranch, AbpDataFilters.Parameters.BranchId,
+                AbpSession.BranchId);
         }
 
         protected override void OnModelCreating(DbModelBuilder modelBuilder)
@@ -208,6 +211,9 @@ namespace Abp.EntityFramework
                 0); //While "(int?)t.TenantId == null" seems wrong, it's needed. See https://github.com/jcachat/EntityFramework.DynamicFilters/issues/62#issuecomment-208198058
             modelBuilder.Filter(AbpDataFilters.MayHaveTenant,
                 (IMayHaveTenant t, int? tenantId) => t.TenantId == tenantId, 0);
+
+            modelBuilder.Filter(AbpDataFilters.MayHaveBranch,
+                (IMayHaveBranch t, long? branchId) => t.BranchId == branchId, 0);
         }
 
         public override int SaveChanges()

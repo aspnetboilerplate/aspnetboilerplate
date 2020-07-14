@@ -125,6 +125,7 @@ namespace Abp
             Configuration.UnitOfWork.RegisterFilter(AbpDataFilters.SoftDelete, true);
             Configuration.UnitOfWork.RegisterFilter(AbpDataFilters.MustHaveTenant, true);
             Configuration.UnitOfWork.RegisterFilter(AbpDataFilters.MayHaveTenant, true);
+            Configuration.UnitOfWork.RegisterFilter(AbpDataFilters.MayHaveBranch, true);
         }
 
         private void AddSettingProviders()
@@ -226,6 +227,7 @@ namespace Abp
             IocManager.RegisterIfNot<IClientInfoProvider, NullClientInfoProvider>(DependencyLifeStyle.Singleton);
             IocManager.RegisterIfNot<ITenantStore, NullTenantStore>(DependencyLifeStyle.Singleton);
             IocManager.RegisterIfNot<ITenantResolverCache, NullTenantResolverCache>(DependencyLifeStyle.Singleton);
+            IocManager.RegisterIfNot<IBranchResolverCache, NullBranchResolverCache>(DependencyLifeStyle.Singleton);
             IocManager.RegisterIfNot<IEntityHistoryStore, NullEntityHistoryStore>(DependencyLifeStyle.Singleton);
 
             if (Configuration.BackgroundJobs.IsJobExecutionEnabled)

@@ -4,4 +4,8 @@
     {
         int? ResolveTenantId();
     }
+    public interface IBranchResolveContributor
+    {
+        long? ResolveBranchId();
+    }
 }

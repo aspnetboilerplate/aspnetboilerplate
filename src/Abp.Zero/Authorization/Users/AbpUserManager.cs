@@ -760,7 +760,7 @@ namespace Abp.Authorization.Users
 
         private async Task<UserPermissionCacheItem> GetUserPermissionCacheItemAsync(long userId)
         {
-            var cacheKey = userId + "@" + (GetCurrentTenantId() ?? 0);
+            var cacheKey = userId + "@" + (GetCurrentTenantId() ?? 0) + "@" + (GetCurrentBranchId() ?? 0);
             return await _cacheManager.GetUserPermissionCache().GetAsync(cacheKey, async () =>
             {
                 var user = await FindByIdAsync(userId);
@@ -794,7 +794,7 @@ namespace Abp.Authorization.Users
 
         private UserPermissionCacheItem GetUserPermissionCacheItem(long userId)
         {
-            var cacheKey = userId + "@" + (GetCurrentTenantId() ?? 0);
+            var cacheKey = userId + "@" + (GetCurrentTenantId() ?? 0) + "@" + (GetCurrentBranchId() ?? 0);
             return _cacheManager.GetUserPermissionCache().Get(cacheKey, () =>
             {
                 var user = AbpStore.FindById(userId);
@@ -856,6 +856,16 @@ namespace Abp.Authorization.Users
             }
 
             return AbpSession.TenantId;
+        }
+
+        private long? GetCurrentBranchId()
+        {
+            if (_unitOfWorkManager.Current != null)
+            {
+                return _unitOfWorkManager.Current.GetBranchId();
+            }
+
+            return AbpSession.BranchId;
         }
 
         private MultiTenancySides GetCurrentMultiTenancySide()

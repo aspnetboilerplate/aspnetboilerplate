@@ -30,6 +30,7 @@ namespace Abp.Runtime.Security
         /// Default: http://www.aspnetboilerplate.com/identity/claims/tenantId
         /// </summary>
         public static string TenantId { get; set; } = "http://www.aspnetboilerplate.com/identity/claims/tenantId";
+        public static string BranchId { get; set; } = "http://www.aspnetboilerplate.com/identity/claims/branchId";
 
         /// <summary>
         /// ImpersonatorUserId.

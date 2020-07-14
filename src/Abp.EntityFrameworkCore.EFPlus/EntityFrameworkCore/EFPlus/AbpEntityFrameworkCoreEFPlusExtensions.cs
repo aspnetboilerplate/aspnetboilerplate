@@ -30,8 +30,8 @@ namespace Abp.EntityFrameworkCore.EFPlus
         /// <param name="batchDeleteBuilder">The batch delete builder to change default configuration.</param>
         /// <returns></returns>
         public static async Task<int> BatchDeleteAsync<TEntity, TPrimaryKey>(
-            [NotNull] this IRepository<TEntity, TPrimaryKey> repository, 
-            [NotNull] Expression<Func<TEntity, bool>> predicate, 
+            [NotNull] this IRepository<TEntity, TPrimaryKey> repository,
+            [NotNull] Expression<Func<TEntity, bool>> predicate,
             Action<BatchDelete> batchDeleteBuilder = null)
             where TEntity : Entity<TPrimaryKey>
         {
@@ -57,8 +57,8 @@ namespace Abp.EntityFrameworkCore.EFPlus
         /// <param name="batchDeleteBuilder">The batch delete builder to change default configuration.</param>
         /// <returns></returns>
         public static async Task<int> BatchDeleteAsync<TEntity>(
-            [NotNull] this IRepository<TEntity> repository, 
-            [NotNull]Expression<Func<TEntity, bool>> predicate, 
+            [NotNull] this IRepository<TEntity> repository,
+            [NotNull] Expression<Func<TEntity, bool>> predicate,
             Action<BatchDelete> batchDeleteBuilder = null)
             where TEntity : Entity<int>
         {
@@ -76,9 +76,9 @@ namespace Abp.EntityFrameworkCore.EFPlus
         /// <param name="batchUpdateBuilder">The batch delete builder to change default configuration.</param>
         /// <returns></returns>
         public static async Task<int> BatchUpdateAsync<TEntity, TPrimaryKey>(
-            [NotNull]this IRepository<TEntity, TPrimaryKey> repository, 
-            [NotNull]Expression<Func<TEntity, TEntity>> updateExpression, 
-            [NotNull]Expression<Func<TEntity, bool>> predicate, 
+            [NotNull] this IRepository<TEntity, TPrimaryKey> repository,
+            [NotNull] Expression<Func<TEntity, TEntity>> updateExpression,
+            [NotNull] Expression<Func<TEntity, bool>> predicate,
             Action<BatchUpdate> batchUpdateBuilder = null)
             where TEntity : Entity<TPrimaryKey>
         {
@@ -106,8 +106,8 @@ namespace Abp.EntityFrameworkCore.EFPlus
         /// <param name="batchUpdateBuilder">The batch delete builder to change default configuration.</param>
         /// <returns></returns>
         public static async Task<int> BatchUpdateAsync<TEntity>(
-            [NotNull]this IRepository<TEntity> repository, [NotNull]Expression<Func<TEntity, TEntity>> updateExpression,
-            [NotNull]Expression<Func<TEntity, bool>> predicate,
+            [NotNull] this IRepository<TEntity> repository, [NotNull] Expression<Func<TEntity, TEntity>> updateExpression,
+            [NotNull] Expression<Func<TEntity, bool>> predicate,
             Action<BatchUpdate> batchUpdateBuilder = null)
             where TEntity : Entity<int>
         {
@@ -145,6 +145,18 @@ namespace Abp.EntityFrameworkCore.EFPlus
                     }
                 }
 
+                if (typeof(IMayHaveBranch).IsAssignableFrom(typeof(TEntity)))
+                {
+                    var isMayHaveBranchFilterEnabled = currentUnitOfWorkProvider.Current?.IsFilterEnabled(AbpDataFilters.MayHaveBranch) == true;
+                    var currentBranchId = GetCurrentBranchIdOrNull(iocResolver);
+
+                    if (isMayHaveBranchFilterEnabled)
+                    {
+                        Expression<Func<TEntity, bool>> mayHaveBranchFilter = e => ((IMayHaveBranch)e).BranchId == currentBranchId;
+                        expression = expression == null ? mayHaveBranchFilter : ExpressionCombiner.Combine(expression, mayHaveBranchFilter);
+                    }
+                }
+
                 if (typeof(IMustHaveTenant).IsAssignableFrom(typeof(TEntity)))
                 {
                     var isMustHaveTenantFilterEnabled = currentUnitOfWorkProvider.Current?.IsFilterEnabled(AbpDataFilters.MustHaveTenant) == true;
@@ -173,6 +185,20 @@ namespace Abp.EntityFrameworkCore.EFPlus
                 }
 
                 return iocResolver.Resolve<IAbpSession>().TenantId;
+            }
+        }
+        private static long? GetCurrentBranchIdOrNull(IIocResolver iocResolver)
+        {
+            using (var scope = iocResolver.CreateScope())
+            {
+                var currentUnitOfWorkProvider = scope.Resolve<ICurrentUnitOfWorkProvider>();
+
+                if (currentUnitOfWorkProvider?.Current != null)
+                {
+                    return currentUnitOfWorkProvider.Current.GetBranchId();
+                }
+
+                return iocResolver.Resolve<IAbpSession>().BranchId;
             }
         }
     }

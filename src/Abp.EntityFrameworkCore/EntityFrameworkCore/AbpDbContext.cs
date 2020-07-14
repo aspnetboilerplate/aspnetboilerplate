@@ -76,10 +76,12 @@ namespace Abp.EntityFrameworkCore
         public virtual bool SuppressAutoSetTenantId { get; set; }
 
         protected virtual int? CurrentTenantId => GetCurrentTenantIdOrNull();
+        protected virtual long? CurrentBranchId => GetCurrentBranchIdOrNull();
 
         protected virtual bool IsSoftDeleteFilterEnabled => CurrentUnitOfWorkProvider?.Current?.IsFilterEnabled(AbpDataFilters.SoftDelete) == true;
 
         protected virtual bool IsMayHaveTenantFilterEnabled => CurrentUnitOfWorkProvider?.Current?.IsFilterEnabled(AbpDataFilters.MayHaveTenant) == true;
+        protected virtual bool IsMayHaveBranchFilterEnabled => CurrentUnitOfWorkProvider?.Current?.IsFilterEnabled(AbpDataFilters.MayHaveBranch) == true;
 
         protected virtual bool IsMustHaveTenantFilterEnabled => CurrentTenantId != null && CurrentUnitOfWorkProvider?.Current?.IsFilterEnabled(AbpDataFilters.MustHaveTenant) == true;
 
@@ -163,6 +165,11 @@ namespace Abp.EntityFrameworkCore
                 return true;
             }
 
+            if (typeof(IMayHaveBranch).IsAssignableFrom(typeof(TEntity)))
+            {
+                return true;
+            }
+
             return false;
         }
 
@@ -173,7 +180,7 @@ namespace Abp.EntityFrameworkCore
 
             if (typeof(ISoftDelete).IsAssignableFrom(typeof(TEntity)))
             {
-                Expression<Func<TEntity, bool>> softDeleteFilter = e => !IsSoftDeleteFilterEnabled || !((ISoftDelete) e).IsDeleted;
+                Expression<Func<TEntity, bool>> softDeleteFilter = e => !IsSoftDeleteFilterEnabled || !((ISoftDelete)e).IsDeleted;
                 expression = expression == null ? softDeleteFilter : CombineExpressions(expression, softDeleteFilter);
             }
 
@@ -189,13 +196,19 @@ namespace Abp.EntityFrameworkCore
                 expression = expression == null ? mustHaveTenantFilter : CombineExpressions(expression, mustHaveTenantFilter);
             }
 
+            if (typeof(IMayHaveBranch).IsAssignableFrom(typeof(TEntity)))
+            {
+                Expression<Func<TEntity, bool>> mayHaveBranchFilter = e => !IsMayHaveBranchFilterEnabled || ((IMayHaveBranch)e).BranchId == CurrentBranchId;
+                expression = expression == null ? mayHaveBranchFilter : CombineExpressions(expression, mayHaveBranchFilter);
+            }
+
             return expression;
         }
 
         protected void ConfigureGlobalValueConverter<TEntity>(ModelBuilder modelBuilder, IMutableEntityType entityType)
             where TEntity : class
         {
-            if (entityType.BaseType == null && 
+            if (entityType.BaseType == null &&
                 !typeof(TEntity).IsDefined(typeof(DisableDateTimeNormalizationAttribute), true) &&
                 !typeof(TEntity).IsDefined(typeof(OwnedAttribute), true) &&
                 !entityType.IsOwned())
@@ -246,15 +259,15 @@ namespace Abp.EntityFrameworkCore
         {
             var uowOptions = initializationContext.UnitOfWork.Options;
             if (uowOptions.Timeout.HasValue &&
-                Database.IsRelational() && 
+                Database.IsRelational() &&
                 !Database.GetCommandTimeout().HasValue)
             {
                 Database.SetCommandTimeout(uowOptions.Timeout.Value.TotalSeconds.To<int>());
             }
-            
+
             ChangeTracker.CascadeDeleteTiming = CascadeTiming.OnSaveChanges;
         }
-        
+
         protected virtual EntityChangeReport ApplyAbpConcepts()
         {
             var changeReport = new EntityChangeReport();
@@ -538,6 +551,16 @@ namespace Abp.EntityFrameworkCore
             }
 
             return AbpSession.TenantId;
+        }
+        protected virtual long? GetCurrentBranchIdOrNull()
+        {
+            if (CurrentUnitOfWorkProvider != null &&
+                CurrentUnitOfWorkProvider.Current != null)
+            {
+                return CurrentUnitOfWorkProvider.Current.GetBranchId();
+            }
+
+            return AbpSession.BranchId;
         }
 
         protected virtual Expression<Func<T, bool>> CombineExpressions<T>(Expression<Func<T, bool>> expression1, Expression<Func<T, bool>> expression2)

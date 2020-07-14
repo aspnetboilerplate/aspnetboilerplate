@@ -20,6 +20,7 @@ namespace Abp.Runtime.Session
         /// It can be null if given <see cref="UserId"/> is a host user or no user logged in.
         /// </summary>
         int? TenantId { get; }
+        long? BranchId { get; }
 
         /// <summary>
         /// Gets current multi-tenancy side.
@@ -44,6 +45,6 @@ namespace Abp.Runtime.Session
         /// <param name="tenantId"></param>
         /// <param name="userId"></param>
         /// <returns></returns>
-        IDisposable Use(int? tenantId, long? userId);
+        IDisposable Use(int? tenantId, long? userId, long? branchId);
     }
 }
