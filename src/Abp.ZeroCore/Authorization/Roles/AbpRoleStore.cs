@@ -30,7 +30,7 @@ namespace Abp.Authorization.Roles
         where TUser : AbpUser<TUser>
     {
         public ILogger Logger { get; set; }
-        
+
         /// <summary>
         /// Gets or sets the <see cref="IdentityErrorDescriber"/> for any error that occurred with the current operation.
         /// </summary>
@@ -52,7 +52,7 @@ namespace Abp.Authorization.Roles
 
         public AbpRoleStore(
             IUnitOfWorkManager unitOfWorkManager,
-            IRepository<TRole> roleRepository, 
+            IRepository<TRole> roleRepository,
             IRepository<RolePermissionSetting, long> rolePermissionSettingRepository)
         {
             _unitOfWorkManager = unitOfWorkManager;
@@ -149,7 +149,7 @@ namespace Abp.Authorization.Roles
             }
 
             await SaveChanges(cancellationToken);
-            
+
             return IdentityResult.Success;
         }
 
@@ -369,7 +369,8 @@ namespace Abp.Authorization.Roles
                     TenantId = role.TenantId,
                     RoleId = role.Id,
                     Name = permissionGrant.Name,
-                    IsGranted = permissionGrant.IsGranted
+                    IsGranted = permissionGrant.IsGranted,
+                    BranchId = permissionGrant.BranchId
                 });
         }
 
@@ -379,33 +380,34 @@ namespace Abp.Authorization.Roles
             await _rolePermissionSettingRepository.DeleteAsync(
                 permissionSetting => permissionSetting.RoleId == role.Id &&
                                      permissionSetting.Name == permissionGrant.Name &&
-                                     permissionSetting.IsGranted == permissionGrant.IsGranted
+                                     permissionSetting.IsGranted == permissionGrant.IsGranted &&
+                                     permissionSetting.BranchId == permissionGrant.BranchId
                 );
         }
 
         /// <inheritdoc/>
-        public virtual Task<IList<PermissionGrantInfo>> GetPermissionsAsync(TRole role)
+        public virtual Task<IList<PermissionGrantInfo>> GetPermissionsAsync(TRole role, long? branchId)
         {
-            return GetPermissionsAsync(role.Id);
+            return GetPermissionsAsync(role.Id, branchId);
         }
 
         /// <inheritdoc/>
-        public virtual IList<PermissionGrantInfo> GetPermissions(TRole role)
+        public virtual IList<PermissionGrantInfo> GetPermissions(TRole role, long? branchId)
         {
-            return GetPermissions(role.Id);
+            return GetPermissions(role.Id, branchId);
         }
 
-        public async Task<IList<PermissionGrantInfo>> GetPermissionsAsync(int roleId)
+        public async Task<IList<PermissionGrantInfo>> GetPermissionsAsync(int roleId, long? branchId)
         {
-            return (await _rolePermissionSettingRepository.GetAllListAsync(p => p.RoleId == roleId))
-                .Select(p => new PermissionGrantInfo(p.Name, p.IsGranted))
+            return (await _rolePermissionSettingRepository.GetAllListAsync(p => p.RoleId == roleId && p.BranchId == branchId))
+                .Select(p => new PermissionGrantInfo(p.Name, p.IsGranted, p.BranchId))
                 .ToList();
         }
 
-        public IList<PermissionGrantInfo> GetPermissions(int roleId)
+        public IList<PermissionGrantInfo> GetPermissions(int roleId, long? branchId)
         {
-            return (_rolePermissionSettingRepository.GetAllList(p => p.RoleId == roleId))
-                .Select(p => new PermissionGrantInfo(p.Name, p.IsGranted))
+            return (_rolePermissionSettingRepository.GetAllList(p => p.RoleId == roleId && p.BranchId == branchId))
+                .Select(p => new PermissionGrantInfo(p.Name, p.IsGranted, p.BranchId))
                 .ToList();
         }
 
@@ -415,14 +417,15 @@ namespace Abp.Authorization.Roles
             return await _rolePermissionSettingRepository.FirstOrDefaultAsync(
                 p => p.RoleId == roleId &&
                      p.Name == permissionGrant.Name &&
-                     p.IsGranted == permissionGrant.IsGranted
+                     p.IsGranted == permissionGrant.IsGranted &&
+                     p.BranchId == permissionGrant.BranchId
                 ) != null;
         }
 
         /// <inheritdoc/>
-        public virtual async Task RemoveAllPermissionSettingsAsync(TRole role)
+        public virtual async Task RemoveAllPermissionSettingsAsync(TRole role, long? branchId)
         {
-            await _rolePermissionSettingRepository.DeleteAsync(s => s.RoleId == role.Id);
+            await _rolePermissionSettingRepository.DeleteAsync(s => s.RoleId == role.Id && s.BranchId == branchId);
         }
     }
 }

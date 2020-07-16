@@ -20,6 +20,7 @@ namespace Abp.Authorization
         /// </summary>
         public bool RequiresAll { get; set; }
 
+
         /// <summary>
         /// Initializes a new instance of the <see cref="SimplePermissionDependency"/> class.
         /// </summary>
@@ -47,7 +48,7 @@ namespace Abp.Authorization
         public Task<bool> IsSatisfiedAsync(IPermissionDependencyContext context)
         {
             return context.User != null
-                ? context.PermissionChecker.IsGrantedAsync(context.User, RequiresAll, Permissions)
+                ? context.PermissionChecker.IsGrantedAsync(context.User, context.BranchId, RequiresAll, Permissions)
                 : context.PermissionChecker.IsGrantedAsync(RequiresAll, Permissions);
         }
 
@@ -55,7 +56,7 @@ namespace Abp.Authorization
         public bool IsSatisfied(IPermissionDependencyContext context)
         {
             return context.User != null
-                ? context.PermissionChecker.IsGranted(context.User, RequiresAll, Permissions)
+                ? context.PermissionChecker.IsGranted(context.User, context.BranchId, RequiresAll, Permissions)
                 : context.PermissionChecker.IsGranted(RequiresAll, Permissions);
         }
     }

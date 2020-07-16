@@ -68,6 +68,7 @@ namespace Abp.Authorization
         /// List of child permissions. A child permission can be granted only if parent is granted.
         /// </summary>
         public IReadOnlyList<Permission> Children => _children.ToImmutableList();
+
         private readonly List<Permission> _children;
 
         /// <summary>

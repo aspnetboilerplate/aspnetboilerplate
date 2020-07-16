@@ -28,28 +28,28 @@ namespace Abp.Authorization.Roles
         /// </summary>
         /// <param name="role">Role</param>
         /// <returns>List of permission setting informations</returns>
-        Task<IList<PermissionGrantInfo>> GetPermissionsAsync(TRole role);
+        Task<IList<PermissionGrantInfo>> GetPermissionsAsync(TRole role, long? branchId);
 
         /// <summary>
         /// Gets permission grant setting informations for a role.
         /// </summary>
         /// <param name="role">Role</param>
         /// <returns>List of permission setting informations</returns>
-        IList<PermissionGrantInfo> GetPermissions(TRole role);
+        IList<PermissionGrantInfo> GetPermissions(TRole role, long? branchId);
 
         /// <summary>
         /// Gets permission grant setting informations for a role.
         /// </summary>
         /// <param name="roleId">Role id</param>
         /// <returns>List of permission setting informations</returns>
-        Task<IList<PermissionGrantInfo>> GetPermissionsAsync(int roleId);
+        Task<IList<PermissionGrantInfo>> GetPermissionsAsync(int roleId, long? branchId);
 
         /// <summary>
         /// Gets permission grant setting informations for a role.
         /// </summary>
         /// <param name="roleId">Role id</param>
         /// <returns>List of permission setting informations</returns>
-        IList<PermissionGrantInfo> GetPermissions(int roleId);
+        IList<PermissionGrantInfo> GetPermissions(int roleId, long? branchId);
 
         /// <summary>
         /// Checks whether a role has a permission grant setting info.
@@ -63,6 +63,6 @@ namespace Abp.Authorization.Roles
         /// Deleted all permission settings for a role.
         /// </summary>
         /// <param name="role">Role</param>
-        Task RemoveAllPermissionSettingsAsync(TRole role);
+        Task RemoveAllPermissionSettingsAsync(TRole role, long? branchId);
     }
 }

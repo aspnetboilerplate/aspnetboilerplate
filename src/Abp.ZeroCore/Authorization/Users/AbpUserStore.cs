@@ -83,8 +83,8 @@ namespace Abp.Authorization.Users
             IRepository<UserRole, long> userRoleRepository,
             IRepository<UserLogin, long> userLoginRepository,
             IRepository<UserClaim, long> userClaimRepository,
-            IRepository<UserPermissionSetting, long> userPermissionSettingRepository, 
-            IRepository<UserOrganizationUnit, long> userOrganizationUnitRepository, 
+            IRepository<UserPermissionSetting, long> userPermissionSettingRepository,
+            IRepository<UserOrganizationUnit, long> userOrganizationUnitRepository,
             IRepository<OrganizationUnitRole, long> organizationUnitRoleRepository)
         {
             _unitOfWorkManager = unitOfWorkManager;
@@ -2335,7 +2335,8 @@ namespace Abp.Authorization.Users
                     TenantId = user.TenantId,
                     UserId = user.Id,
                     Name = permissionGrant.Name,
-                    IsGranted = permissionGrant.IsGranted
+                    IsGranted = permissionGrant.IsGranted,
+                    BranchId = permissionGrant.BranchId
                 });
         }
 
@@ -2374,17 +2375,17 @@ namespace Abp.Authorization.Users
             );
         }
 
-        public virtual async Task<IList<PermissionGrantInfo>> GetPermissionsAsync(long userId)
+        public virtual async Task<IList<PermissionGrantInfo>> GetPermissionsAsync(long userId, long? branchId)
         {
-            return (await _userPermissionSettingRepository.GetAllListAsync(p => p.UserId == userId))
-                .Select(p => new PermissionGrantInfo(p.Name, p.IsGranted))
+            return (await _userPermissionSettingRepository.GetAllListAsync(p => p.UserId == userId && p.BranchId == branchId))
+                .Select(p => new PermissionGrantInfo(p.Name, p.IsGranted, p.BranchId))
                 .ToList();
         }
 
-        public virtual IList<PermissionGrantInfo> GetPermissions(long userId)
+        public virtual IList<PermissionGrantInfo> GetPermissions(long userId, long? branchId)
         {
-            return (_userPermissionSettingRepository.GetAllList(p => p.UserId == userId))
-                .Select(p => new PermissionGrantInfo(p.Name, p.IsGranted))
+            return (_userPermissionSettingRepository.GetAllList(p => p.UserId == userId && p.BranchId == branchId))
+                .Select(p => new PermissionGrantInfo(p.Name, p.IsGranted, p.BranchId))
                 .ToList();
         }
 
@@ -2393,7 +2394,8 @@ namespace Abp.Authorization.Users
             return await _userPermissionSettingRepository.FirstOrDefaultAsync(
                        p => p.UserId == userId &&
                             p.Name == permissionGrant.Name &&
-                            p.IsGranted == permissionGrant.IsGranted
+                            p.IsGranted == permissionGrant.IsGranted &&
+                            p.BranchId == permissionGrant.BranchId
                    ) != null;
         }
 
@@ -2402,7 +2404,8 @@ namespace Abp.Authorization.Users
             return _userPermissionSettingRepository.FirstOrDefault(
                        p => p.UserId == userId &&
                             p.Name == permissionGrant.Name &&
-                            p.IsGranted == permissionGrant.IsGranted
+                            p.IsGranted == permissionGrant.IsGranted &&
+                            p.BranchId == permissionGrant.BranchId
                    ) != null;
         }
 

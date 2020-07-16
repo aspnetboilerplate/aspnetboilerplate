@@ -24,13 +24,13 @@ namespace Abp.Authorization
         /// </summary>
         /// <param name="user">User to check</param>
         /// <param name="permissionName">Name of the permission</param>
-        Task<bool> IsGrantedAsync(UserIdentifier user, string permissionName);
+        Task<bool> IsGrantedAsync(UserIdentifier user, string permissionName, long? branchId);
 
         /// <summary>
         /// Checks if a user is granted for a permission.
         /// </summary>
         /// <param name="user">User to check</param>
         /// <param name="permissionName">Name of the permission</param>
-        bool IsGranted(UserIdentifier user, string permissionName);
+        bool IsGranted(UserIdentifier user, string permissionName, long? branchId);
     }
 }

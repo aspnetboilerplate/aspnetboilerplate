@@ -16,14 +16,20 @@
         public bool IsGranted { get; private set; }
 
         /// <summary>
+        /// Is this permission granted for branch?
+        /// </summary>
+        public long? BranchId { get; private set; }
+
+        /// <summary>
         /// Creates a new instance of <see cref="PermissionGrantInfo"/>.
         /// </summary>
         /// <param name="name"></param>
         /// <param name="isGranted"></param>
-        public PermissionGrantInfo(string name, bool isGranted)
+        public PermissionGrantInfo(string name, bool isGranted, long? branchId)
         {
             Name = name;
             IsGranted = isGranted;
+            BranchId = branchId;
         }
     }
 }

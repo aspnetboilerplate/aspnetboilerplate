@@ -28,5 +28,6 @@ namespace Abp.Authorization
         /// The feature checker.
         /// </value>
         IPermissionChecker PermissionChecker { get; }
+        long? BranchId { get; set; }
     }
 }

@@ -135,11 +135,12 @@ namespace Abp.Authorization.Users
         /// </summary>
         /// <param name="userId">User id</param>
         /// <param name="permissionName">Permission name</param>
-        public virtual async Task<bool> IsGrantedAsync(long userId, string permissionName)
+        public virtual async Task<bool> IsGrantedAsync(long userId, string permissionName, long? branchId)
         {
             return await IsGrantedAsync(
                 userId,
-                _permissionManager.GetPermission(permissionName)
+                _permissionManager.GetPermission(permissionName),
+                branchId
                 );
         }
 
@@ -148,11 +149,12 @@ namespace Abp.Authorization.Users
         /// </summary>
         /// <param name="userId">User id</param>
         /// <param name="permissionName">Permission name</param>
-        public virtual bool IsGranted(long userId, string permissionName)
+        public virtual bool IsGranted(long userId, string permissionName, long? branchId)
         {
             return IsGranted(
                 userId,
-                _permissionManager.GetPermission(permissionName)
+                _permissionManager.GetPermission(permissionName),
+                branchId
                 );
         }
 
@@ -161,14 +163,14 @@ namespace Abp.Authorization.Users
         /// </summary>
         /// <param name="user">User</param>
         /// <param name="permission">Permission</param>
-        public virtual Task<bool> IsGrantedAsync(TUser user, Permission permission)
+        public virtual Task<bool> IsGrantedAsync(TUser user, Permission permission, long? branchId)
         {
             if (user == null)
             {
                 throw new ArgumentNullException(nameof(user));
             }
 
-            return IsGrantedAsync(user.Id, permission);
+            return IsGrantedAsync(user.Id, permission, branchId);
         }
 
         /// <summary>
@@ -176,14 +178,14 @@ namespace Abp.Authorization.Users
         /// </summary>
         /// <param name="user">User</param>
         /// <param name="permission">Permission</param>
-        public virtual bool IsGranted(TUser user, Permission permission)
+        public virtual bool IsGranted(TUser user, Permission permission, long? branchId)
         {
             if (user == null)
             {
                 throw new ArgumentNullException(nameof(user));
             }
 
-            return IsGranted(user.Id, permission);
+            return IsGranted(user.Id, permission, branchId);
         }
 
         /// <summary>
@@ -191,7 +193,7 @@ namespace Abp.Authorization.Users
         /// </summary>
         /// <param name="userId">User id</param>
         /// <param name="permission">Permission</param>
-        public virtual async Task<bool> IsGrantedAsync(long userId, Permission permission)
+        public virtual async Task<bool> IsGrantedAsync(long userId, Permission permission, long? branchId)
         {
             //Check for multi-tenancy side
             if (!permission.MultiTenancySides.HasFlag(GetCurrentMultiTenancySide()))
@@ -211,7 +213,7 @@ namespace Abp.Authorization.Users
             }
 
             //Get cached user permissions
-            var cacheItem = await GetUserPermissionCacheItemAsync(userId);
+            var cacheItem = await GetUserPermissionCacheItemAsync(userId, branchId);
             if (cacheItem == null)
             {
                 return false;
@@ -231,7 +233,7 @@ namespace Abp.Authorization.Users
             //Check for roles
             foreach (var roleId in cacheItem.RoleIds)
             {
-                if (await RoleManager.IsGrantedAsync(roleId, permission))
+                if (await RoleManager.IsGrantedAsync(roleId, branchId, permission))
                 {
                     return true;
                 }
@@ -245,7 +247,7 @@ namespace Abp.Authorization.Users
         /// </summary>
         /// <param name="userId">User id</param>
         /// <param name="permission">Permission</param>
-        public virtual bool IsGranted(long userId, Permission permission)
+        public virtual bool IsGranted(long userId, Permission permission, long? branchId)
         {
             //Check for multi-tenancy side
             if (!permission.MultiTenancySides.HasFlag(GetCurrentMultiTenancySide()))
@@ -265,7 +267,7 @@ namespace Abp.Authorization.Users
             }
 
             //Get cached user permissions
-            var cacheItem = GetUserPermissionCacheItem(userId);
+            var cacheItem = GetUserPermissionCacheItem(userId, branchId);
             if (cacheItem == null)
             {
                 return false;
@@ -285,7 +287,7 @@ namespace Abp.Authorization.Users
             //Check for roles
             foreach (var roleId in cacheItem.RoleIds)
             {
-                if (RoleManager.IsGranted(roleId, permission))
+                if (RoleManager.IsGranted(roleId, branchId, permission))
                 {
                     return true;
                 }
@@ -299,13 +301,13 @@ namespace Abp.Authorization.Users
         /// </summary>
         /// <param name="user">Role</param>
         /// <returns>List of granted permissions</returns>
-        public virtual async Task<IReadOnlyList<Permission>> GetGrantedPermissionsAsync(TUser user)
+        public virtual async Task<IReadOnlyList<Permission>> GetGrantedPermissionsAsync(TUser user, long? branchId)
         {
             var permissionList = new List<Permission>();
 
             foreach (var permission in _permissionManager.GetAllPermissions())
             {
-                if (await IsGrantedAsync(user.Id, permission))
+                if (await IsGrantedAsync(user.Id, permission, branchId))
                 {
                     permissionList.Add(permission);
                 }
@@ -313,38 +315,38 @@ namespace Abp.Authorization.Users
 
             return permissionList;
         }
-        
+
         /// <summary>
         /// Sets all granted permissions of a user at once.
         /// Prohibits all other permissions.
         /// </summary>
         /// <param name="user">The user</param>
         /// <param name="permissions">Permissions</param>
-        public virtual async Task SetGrantedPermissionsAsync(TUser user, IEnumerable<Permission> permissions)
+        public virtual async Task SetGrantedPermissionsAsync(TUser user, IEnumerable<Permission> permissions, long? branchId)
         {
-            var oldPermissions = await GetGrantedPermissionsAsync(user);
+            var oldPermissions = await GetGrantedPermissionsAsync(user, branchId);
             var newPermissions = permissions.ToArray();
 
             foreach (var permission in oldPermissions.Where(p => !newPermissions.Contains(p)))
             {
-                await ProhibitPermissionAsync(user, permission);
+                await ProhibitPermissionAsync(user, permission, branchId);
             }
 
             foreach (var permission in newPermissions.Where(p => !oldPermissions.Contains(p)))
             {
-                await GrantPermissionAsync(user, permission);
+                await GrantPermissionAsync(user, permission, branchId);
             }
         }
-        
+
         /// <summary>
         /// Prohibits all permissions for a user.
         /// </summary>
         /// <param name="user">User</param>
-        public async Task ProhibitAllPermissionsAsync(TUser user)
+        public async Task ProhibitAllPermissionsAsync(TUser user, long? branchId)
         {
             foreach (var permission in _permissionManager.GetAllPermissions())
             {
-                await ProhibitPermissionAsync(user, permission);
+                await ProhibitPermissionAsync(user, permission, branchId);
             }
         }
 
@@ -379,35 +381,35 @@ namespace Abp.Authorization.Users
         /// </summary>
         /// <param name="user">User</param>
         /// <param name="permission">Permission</param>
-        public virtual async Task GrantPermissionAsync(TUser user, Permission permission)
+        public virtual async Task GrantPermissionAsync(TUser user, Permission permission, long? branchId)
         {
-            await UserPermissionStore.RemovePermissionAsync(user, new PermissionGrantInfo(permission.Name, false));
+            await UserPermissionStore.RemovePermissionAsync(user, new PermissionGrantInfo(permission.Name, false, branchId));
 
-            if (await IsGrantedAsync(user.Id, permission))
+            if (await IsGrantedAsync(user.Id, permission, branchId))
             {
                 return;
             }
 
-            await UserPermissionStore.AddPermissionAsync(user, new PermissionGrantInfo(permission.Name, true));
+            await UserPermissionStore.AddPermissionAsync(user, new PermissionGrantInfo(permission.Name, true, branchId));
         }
-        
+
         /// <summary>
         /// Prohibits a permission for a user if it's granted.
         /// </summary>
         /// <param name="user">User</param>
         /// <param name="permission">Permission</param>
-        public virtual async Task ProhibitPermissionAsync(TUser user, Permission permission)
+        public virtual async Task ProhibitPermissionAsync(TUser user, Permission permission, long? branchId)
         {
-            await UserPermissionStore.RemovePermissionAsync(user, new PermissionGrantInfo(permission.Name, true));
+            await UserPermissionStore.RemovePermissionAsync(user, new PermissionGrantInfo(permission.Name, true, branchId));
 
-            if (!await IsGrantedAsync(user.Id, permission))
+            if (!await IsGrantedAsync(user.Id, permission, branchId))
             {
                 return;
             }
 
-            await UserPermissionStore.AddPermissionAsync(user, new PermissionGrantInfo(permission.Name, false));
+            await UserPermissionStore.AddPermissionAsync(user, new PermissionGrantInfo(permission.Name, false, branchId));
         }
-        
+
         public virtual Task<TUser> FindByNameOrEmailAsync(string userNameOrEmailAddress)
         {
             return AbpUserStore.FindByNameOrEmailAsync(userNameOrEmailAddress);
@@ -997,9 +999,9 @@ namespace Abp.Authorization.Users
             return AbpUserStore.GetUserNameFromDatabase(userId);
         }
 
-        private async Task<UserPermissionCacheItem> GetUserPermissionCacheItemAsync(long userId)
+        private async Task<UserPermissionCacheItem> GetUserPermissionCacheItemAsync(long userId, long? branchId)
         {
-            var cacheKey = userId + "@" + (GetCurrentTenantId() ?? 0);
+            var cacheKey = userId + "@" + (GetCurrentTenantId() ?? 0) + "@" + (branchId ?? 0);
             return await _cacheManager.GetUserPermissionCache().GetAsync(cacheKey, async () =>
             {
                 var user = await FindByIdAsync(userId.ToString());
@@ -1008,14 +1010,14 @@ namespace Abp.Authorization.Users
                     return null;
                 }
 
-                var newCacheItem = new UserPermissionCacheItem(userId);
+                var newCacheItem = new UserPermissionCacheItem(userId, branchId);
 
                 foreach (var roleName in await GetRolesAsync(user))
                 {
                     newCacheItem.RoleIds.Add((await RoleManager.GetRoleByNameAsync(roleName)).Id);
                 }
 
-                foreach (var permissionInfo in await UserPermissionStore.GetPermissionsAsync(userId))
+                foreach (var permissionInfo in await UserPermissionStore.GetPermissionsAsync(userId, branchId))
                 {
                     if (permissionInfo.IsGranted)
                     {
@@ -1031,9 +1033,9 @@ namespace Abp.Authorization.Users
             });
         }
 
-        private UserPermissionCacheItem GetUserPermissionCacheItem(long userId)
+        private UserPermissionCacheItem GetUserPermissionCacheItem(long userId, long? branchId)
         {
-            var cacheKey = userId + "@" + (GetCurrentTenantId() ?? 0);
+            var cacheKey = userId + "@" + (GetCurrentTenantId() ?? 0) + "@" + (branchId ?? 0);
             return _cacheManager.GetUserPermissionCache().Get(cacheKey, () =>
             {
                 var user = AbpUserStore.FindById(userId.ToString());
@@ -1042,14 +1044,14 @@ namespace Abp.Authorization.Users
                     return null;
                 }
 
-                var newCacheItem = new UserPermissionCacheItem(userId);
+                var newCacheItem = new UserPermissionCacheItem(userId, branchId);
 
                 foreach (var roleName in AbpUserStore.GetRoles(user))
                 {
                     newCacheItem.RoleIds.Add((RoleManager.GetRoleByName(roleName)).Id);
                 }
 
-                foreach (var permissionInfo in UserPermissionStore.GetPermissions(userId))
+                foreach (var permissionInfo in UserPermissionStore.GetPermissions(userId, branchId))
                 {
                     if (permissionInfo.IsGranted)
                     {

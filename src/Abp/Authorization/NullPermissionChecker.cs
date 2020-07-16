@@ -17,7 +17,7 @@ namespace Abp.Authorization
             return Task.FromResult(true);
         }
 
-        public Task<bool> IsGrantedAsync(UserIdentifier user, string permissionName)
+        public Task<bool> IsGrantedAsync(UserIdentifier user, string permissionName, long? branchId)
         {
             return Task.FromResult(true);
         }
@@ -26,7 +26,7 @@ namespace Abp.Authorization
             return true;
         }
 
-        public bool IsGranted(UserIdentifier user, string permissionName)
+        public bool IsGranted(UserIdentifier user, string permissionName, long? branchId)
         {
             return true;
         }

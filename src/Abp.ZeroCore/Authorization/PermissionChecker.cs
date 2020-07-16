@@ -40,49 +40,49 @@ namespace Abp.Authorization
 
         public virtual async Task<bool> IsGrantedAsync(string permissionName)
         {
-            return AbpSession.UserId.HasValue && await IsGrantedAsync(AbpSession.UserId.Value, permissionName);
+            return AbpSession.UserId.HasValue && await IsGrantedAsync(AbpSession.UserId.Value, permissionName, AbpSession.BranchId);
         }
 
         public virtual bool IsGranted(string permissionName)
         {
-            return AbpSession.UserId.HasValue && IsGranted(AbpSession.UserId.Value, permissionName);
+            return AbpSession.UserId.HasValue && IsGranted(AbpSession.UserId.Value, permissionName, AbpSession.BranchId);
         }
 
-        public virtual async Task<bool> IsGrantedAsync(long userId, string permissionName)
+        public virtual async Task<bool> IsGrantedAsync(long userId, string permissionName, long? branchId)
         {
-            return await _userManager.IsGrantedAsync(userId, permissionName);
+            return await _userManager.IsGrantedAsync(userId, permissionName, branchId);
         }
 
-        public virtual bool IsGranted(long userId, string permissionName)
+        public virtual bool IsGranted(long userId, string permissionName, long? branchId)
         {
-            return _userManager.IsGranted(userId, permissionName);
+            return _userManager.IsGranted(userId, permissionName, branchId);
         }
 
         [UnitOfWork]
-        public virtual async Task<bool> IsGrantedAsync(UserIdentifier user, string permissionName)
+        public virtual async Task<bool> IsGrantedAsync(UserIdentifier user, string permissionName, long? branchId)
         {
             if (CurrentUnitOfWorkProvider?.Current == null)
             {
-                return await IsGrantedAsync(user.UserId, permissionName);
+                return await IsGrantedAsync(user.UserId, permissionName, branchId);
             }
 
             using (CurrentUnitOfWorkProvider.Current.SetTenantId(user.TenantId))
             {
-                return await IsGrantedAsync(user.UserId, permissionName);
+                return await IsGrantedAsync(user.UserId, permissionName, branchId);
             }
         }
 
         [UnitOfWork]
-        public virtual bool IsGranted(UserIdentifier user, string permissionName)
+        public virtual bool IsGranted(UserIdentifier user, string permissionName, long? branchId)
         {
             if (CurrentUnitOfWorkProvider?.Current == null)
             {
-                return IsGranted(user.UserId, permissionName);
+                return IsGranted(user.UserId, permissionName, branchId);
             }
 
             using (CurrentUnitOfWorkProvider.Current.SetTenantId(user.TenantId))
             {
-                return IsGranted(user.UserId, permissionName);
+                return IsGranted(user.UserId, permissionName, branchId);
             }
         }
     }
