@@ -20,7 +20,7 @@ namespace Abp.Authorization
         /// <param name="user">User</param>
         /// <param name="requiresAll">True, to require all given permissions are granted. False, to require one or more.</param>
         /// <param name="permissionNames">Name of the permissions</param>
-        public static async Task<bool> IsGrantedAsync(this IPermissionChecker permissionChecker, UserIdentifier user, bool requiresAll, params string[] permissionNames)
+        public static async Task<bool> IsGrantedAsync(this IPermissionChecker permissionChecker, UserIdentifier user, long? branchId, bool requiresAll, params string[] permissionNames)
         {
             if (permissionNames.IsNullOrEmpty())
             {
@@ -31,7 +31,7 @@ namespace Abp.Authorization
             {
                 foreach (var permissionName in permissionNames)
                 {
-                    if (!(await permissionChecker.IsGrantedAsync(user, permissionName)))
+                    if (!(await permissionChecker.IsGrantedAsync(user, permissionName, branchId)))
                     {
                         return false;
                     }
@@ -43,7 +43,7 @@ namespace Abp.Authorization
             {
                 foreach (var permissionName in permissionNames)
                 {
-                    if (await permissionChecker.IsGrantedAsync(user, permissionName))
+                    if (await permissionChecker.IsGrantedAsync(user, permissionName, branchId))
                     {
                         return true;
                     }
@@ -60,7 +60,7 @@ namespace Abp.Authorization
         /// <param name="user">User</param>
         /// <param name="requiresAll">True, to require all given permissions are granted. False, to require one or more.</param>
         /// <param name="permissionNames">Name of the permissions</param>
-        public static bool IsGranted(this IPermissionChecker permissionChecker, UserIdentifier user, bool requiresAll, params string[] permissionNames)
+        public static bool IsGranted(this IPermissionChecker permissionChecker, UserIdentifier user, long? branchId, bool requiresAll, params string[] permissionNames)
         {
             if (permissionNames.IsNullOrEmpty())
             {
@@ -71,7 +71,7 @@ namespace Abp.Authorization
             {
                 foreach (var permissionName in permissionNames)
                 {
-                    if (!(permissionChecker.IsGranted(user, permissionName)))
+                    if (!(permissionChecker.IsGranted(user, permissionName, branchId)))
                     {
                         return false;
                     }
@@ -83,7 +83,7 @@ namespace Abp.Authorization
             {
                 foreach (var permissionName in permissionNames)
                 {
-                    if (permissionChecker.IsGranted(user, permissionName))
+                    if (permissionChecker.IsGranted(user, permissionName, branchId))
                     {
                         return true;
                     }

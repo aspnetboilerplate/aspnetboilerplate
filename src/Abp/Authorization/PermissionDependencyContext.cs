@@ -9,6 +9,7 @@ namespace Abp.Authorization
         public IIocResolver IocResolver { get; }
         
         public IPermissionChecker PermissionChecker { get; set; }
+        public long? BranchId { get; set; }
 
         public PermissionDependencyContext(IIocResolver iocResolver)
         {

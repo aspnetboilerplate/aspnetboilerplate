@@ -12,6 +12,7 @@ namespace Abp.Authorization.Users
         public const string CacheStoreName = "AbpZeroUserPermissions";
 
         public long UserId { get; set; }
+        public long? BranchId { get; set; }
 
         public List<int> RoleIds { get; set; }
 
@@ -26,10 +27,11 @@ namespace Abp.Authorization.Users
             ProhibitedPermissions = new HashSet<string>();
         }
 
-        public UserPermissionCacheItem(long userId)
+        public UserPermissionCacheItem(long userId, long? branchId)
             : this()
         {
             UserId = userId;
+            BranchId = branchId;
         }
     }
 }

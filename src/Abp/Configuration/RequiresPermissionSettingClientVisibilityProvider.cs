@@ -25,6 +25,7 @@ namespace Abp.Configuration
 
             var permissionDependencyContext = scope.Resolve<PermissionDependencyContext>();
             permissionDependencyContext.User = abpSession.ToUserIdentifier();
+            permissionDependencyContext.BranchId = abpSession.BranchId;
 
             return await _permissionDependency.IsSatisfiedAsync(permissionDependencyContext);
         }

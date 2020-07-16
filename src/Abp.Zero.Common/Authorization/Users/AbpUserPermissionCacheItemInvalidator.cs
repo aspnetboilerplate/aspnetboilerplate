@@ -21,8 +21,8 @@ namespace Abp.Authorization.Users
         private readonly IUnitOfWorkManager _unitOfWorkManager;
 
         public AbpUserPermissionCacheItemInvalidator(
-            ICacheManager cacheManager, 
-            IRepository<UserOrganizationUnit, long> userOrganizationUnitRepository, 
+            ICacheManager cacheManager,
+            IRepository<UserOrganizationUnit, long> userOrganizationUnitRepository,
             IUnitOfWorkManager unitOfWorkManager)
         {
             _cacheManager = cacheManager;
@@ -32,7 +32,7 @@ namespace Abp.Authorization.Users
 
         public void HandleEvent(EntityChangedEventData<UserPermissionSetting> eventData)
         {
-            var cacheKey = eventData.Entity.UserId + "@" + (eventData.Entity.TenantId ?? 0);
+            var cacheKey = eventData.Entity.UserId + "@" + (eventData.Entity.TenantId ?? 0) + "@" + (eventData.Entity.BranchId ?? 0);
             _cacheManager.GetUserPermissionCache().Remove(cacheKey);
         }
 
