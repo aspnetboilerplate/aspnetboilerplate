@@ -28,6 +28,10 @@ namespace Abp.Domain.Uow
         /// not belong to current tenant.
         /// </summary>
         public const string MayHaveTenant = "MayHaveTenant";
+
+        public const string MustHaveBranch = "MustHaveBranch";
+
+
         public const string MayHaveBranch = "MayHaveBranch";
 
         /// <summary>

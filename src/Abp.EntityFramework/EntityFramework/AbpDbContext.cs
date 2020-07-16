@@ -195,6 +195,9 @@ namespace Abp.EntityFramework
 
             this.SetFilterScopedParameterValue(AbpDataFilters.MayHaveBranch, AbpDataFilters.Parameters.BranchId,
                 AbpSession.BranchId);
+
+            this.SetFilterScopedParameterValue(AbpDataFilters.MustHaveBranch, AbpDataFilters.Parameters.BranchId,
+               AbpSession.BranchId ?? 0);
         }
 
         protected override void OnModelCreating(DbModelBuilder modelBuilder)
@@ -212,6 +215,9 @@ namespace Abp.EntityFramework
             modelBuilder.Filter(AbpDataFilters.MayHaveTenant,
                 (IMayHaveTenant t, int? tenantId) => t.TenantId == tenantId, 0);
 
+
+            modelBuilder.Filter(AbpDataFilters.MustHaveBranch,
+                (IMustHaveBranch t, long branchId) => t.BranchId == branchId || (long?)t.BranchId == null, 0);
             modelBuilder.Filter(AbpDataFilters.MayHaveBranch,
                 (IMayHaveBranch t, long? branchId) => t.BranchId == branchId, 0);
         }

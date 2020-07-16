@@ -126,6 +126,7 @@ namespace Abp
             Configuration.UnitOfWork.RegisterFilter(AbpDataFilters.MustHaveTenant, true);
             Configuration.UnitOfWork.RegisterFilter(AbpDataFilters.MayHaveTenant, true);
             Configuration.UnitOfWork.RegisterFilter(AbpDataFilters.MayHaveBranch, true);
+            Configuration.UnitOfWork.RegisterFilter(AbpDataFilters.MustHaveTenant, true);
         }
 
         private void AddSettingProviders()

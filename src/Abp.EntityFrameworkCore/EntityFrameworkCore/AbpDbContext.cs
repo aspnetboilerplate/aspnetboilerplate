@@ -74,6 +74,7 @@ namespace Abp.EntityFrameworkCore
         /// Default: false.
         /// </summary>
         public virtual bool SuppressAutoSetTenantId { get; set; }
+        public virtual bool SuppressAutoSetBranchId { get; set; }
 
         protected virtual int? CurrentTenantId => GetCurrentTenantIdOrNull();
         protected virtual long? CurrentBranchId => GetCurrentBranchIdOrNull();
@@ -84,6 +85,7 @@ namespace Abp.EntityFrameworkCore
         protected virtual bool IsMayHaveBranchFilterEnabled => CurrentUnitOfWorkProvider?.Current?.IsFilterEnabled(AbpDataFilters.MayHaveBranch) == true;
 
         protected virtual bool IsMustHaveTenantFilterEnabled => CurrentTenantId != null && CurrentUnitOfWorkProvider?.Current?.IsFilterEnabled(AbpDataFilters.MustHaveTenant) == true;
+        protected virtual bool IsMustHaveBranchFilterEnabled => CurrentBranchId != null && CurrentUnitOfWorkProvider?.Current?.IsFilterEnabled(AbpDataFilters.MustHaveBranch) == true;
 
         private static MethodInfo ConfigureGlobalFiltersMethodInfo = typeof(AbpDbContext).GetMethod(nameof(ConfigureGlobalFilters), BindingFlags.Instance | BindingFlags.NonPublic);
 
@@ -165,6 +167,11 @@ namespace Abp.EntityFrameworkCore
                 return true;
             }
 
+            if (typeof(IMustHaveBranch).IsAssignableFrom(typeof(TEntity)))
+            {
+                return true;
+            }
+
             if (typeof(IMayHaveBranch).IsAssignableFrom(typeof(TEntity)))
             {
                 return true;
@@ -200,6 +207,12 @@ namespace Abp.EntityFrameworkCore
             {
                 Expression<Func<TEntity, bool>> mayHaveBranchFilter = e => !IsMayHaveBranchFilterEnabled || ((IMayHaveBranch)e).BranchId == CurrentBranchId;
                 expression = expression == null ? mayHaveBranchFilter : CombineExpressions(expression, mayHaveBranchFilter);
+            }
+
+            if (typeof(IMustHaveBranch).IsAssignableFrom(typeof(TEntity)))
+            {
+                Expression<Func<TEntity, bool>> mustHaveBranchFilter = e => !IsMustHaveBranchFilterEnabled || ((IMustHaveBranch)e).BranchId == CurrentBranchId;
+                expression = expression == null ? mustHaveBranchFilter : CombineExpressions(expression, mustHaveBranchFilter);
             }
 
             return expression;
@@ -309,6 +322,7 @@ namespace Abp.EntityFrameworkCore
         {
             CheckAndSetId(entry);
             CheckAndSetMustHaveTenantIdProperty(entry.Entity);
+            CheckAndSetMustHaveBranchIdProperty(entry.Entity);
             CheckAndSetMayHaveTenantIdProperty(entry.Entity);
             SetCreationAuditProperties(entry.Entity, userId);
             changeReport.ChangedEntities.Add(new EntityChangeEntry(entry.Entity, EntityChangeType.Created));
@@ -422,6 +436,39 @@ namespace Abp.EntityFrameworkCore
             if (currentTenantId != null)
             {
                 entity.TenantId = currentTenantId.Value;
+            }
+            else
+            {
+                throw new AbpException("Can not set TenantId to 0 for IMustHaveTenant entities!");
+            }
+        }
+
+        protected virtual void CheckAndSetMustHaveBranchIdProperty(object entityAsObj)
+        {
+            if (SuppressAutoSetBranchId)
+            {
+                return;
+            }
+
+            //Only set IMustHaveTenant entities
+            if (!(entityAsObj is IMustHaveBranch))
+            {
+                return;
+            }
+
+            var entity = entityAsObj.As<IMustHaveBranch>();
+
+            //Don't set if it's already set
+            if (entity.BranchId != 0)
+            {
+                return;
+            }
+
+            var currentBranchId = GetCurrentBranchIdOrNull();
+
+            if (currentBranchId != null)
+            {
+                entity.BranchId = currentBranchId.Value;
             }
             else
             {

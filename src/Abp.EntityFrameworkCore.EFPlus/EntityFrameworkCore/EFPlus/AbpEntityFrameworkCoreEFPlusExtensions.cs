@@ -168,6 +168,18 @@ namespace Abp.EntityFrameworkCore.EFPlus
                         expression = expression == null ? mustHaveTenantFilter : ExpressionCombiner.Combine(expression, mustHaveTenantFilter);
                     }
                 }
+
+                if (typeof(IMustHaveBranch).IsAssignableFrom(typeof(TEntity)))
+                {
+                    var isMustHaveBranchFilterEnabled = currentUnitOfWorkProvider.Current?.IsFilterEnabled(AbpDataFilters.MustHaveBranch) == true;
+                    var currentBranchId = GetCurrentBranchIdOrNull(iocResolver);
+
+                    if (isMustHaveBranchFilterEnabled)
+                    {
+                        Expression<Func<TEntity, bool>> mustHaveBranchFilter = e => ((IMustHaveBranch)e).BranchId == currentBranchId;
+                        expression = expression == null ? mustHaveBranchFilter : ExpressionCombiner.Combine(expression, mustHaveBranchFilter);
+                    }
+                }
             }
 
             return expression;
