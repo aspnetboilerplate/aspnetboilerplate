@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
+using System.Transactions;
 using Abp.Dependency;
 using Abp.Domain.Uow;
 
@@ -118,7 +119,7 @@ namespace Abp.Events.Bus.Entities
             var entityType = entity.GetType();
             var eventType = genericEventType.MakeGenericType(entityType);
 
-            if (triggerInCurrentUnitOfWork || _unitOfWorkManager.Current == null)
+            if (triggerInCurrentUnitOfWork || _unitOfWorkManager.Current == null || _unitOfWorkManager.Current?.Options?.Scope == TransactionScopeOption.Suppress)
             {
                 EventBus.Trigger(eventType, (IEventData)Activator.CreateInstance(eventType, new[] { entity }));
                 return;
