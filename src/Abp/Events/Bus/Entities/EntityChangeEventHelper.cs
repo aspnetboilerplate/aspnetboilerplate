@@ -119,7 +119,9 @@ namespace Abp.Events.Bus.Entities
             var entityType = entity.GetType();
             var eventType = genericEventType.MakeGenericType(entityType);
 
-            if (triggerInCurrentUnitOfWork || _unitOfWorkManager.Current == null || _unitOfWorkManager.Current?.Options?.Scope == TransactionScopeOption.Suppress)
+            if (triggerInCurrentUnitOfWork ||
+                _unitOfWorkManager.Current == null ||
+                _unitOfWorkManager.Current?.Options?.Scope == TransactionScopeOption.Suppress)
             {
                 EventBus.Trigger(eventType, (IEventData)Activator.CreateInstance(eventType, new[] { entity }));
                 return;

@@ -17,12 +17,12 @@ namespace Abp.Domain.Uow
         private volatile bool _isCompleteCalled;
         private volatile bool _isDisposed;
 
-        public void Complete()
+        public virtual void Complete()
         {
             _isCompleteCalled = true;
         }
 
-        public Task CompleteAsync()
+        public virtual Task CompleteAsync()
         {
             _isCompleteCalled = true;
             return Task.FromResult(0);

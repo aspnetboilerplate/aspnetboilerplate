@@ -2,7 +2,7 @@
 
 namespace Abp.Domain.Uow
 {
-    internal class InnerSuppressUnitOfWorkCompleteHandle : IUnitOfWorkCompleteHandle
+    internal class InnerSuppressUnitOfWorkCompleteHandle : InnerUnitOfWorkCompleteHandle
     {
         private readonly IUnitOfWork _parentUnitOfWork;
 
@@ -11,19 +11,16 @@ namespace Abp.Domain.Uow
             _parentUnitOfWork = parentUnitOfWork;
         }
 
-        public void Complete()
+        public override void Complete()
         {
             _parentUnitOfWork.SaveChanges();
+            base.Complete();
         }
 
-        public async Task CompleteAsync()
+        public override async Task CompleteAsync()
         {
             await _parentUnitOfWork.SaveChangesAsync();
-        }
-
-        public void Dispose()
-        {
-
+            await base.CompleteAsync();
         }
     }
 }
