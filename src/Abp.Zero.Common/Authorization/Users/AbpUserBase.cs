@@ -95,6 +95,7 @@ namespace Abp.Authorization.Users
         /// <summary>
         /// Tenant Id of this user.
         /// </summary>
+        [Column("tenant_id")]
         public virtual int? TenantId { get; set; }
 
         /// <summary>

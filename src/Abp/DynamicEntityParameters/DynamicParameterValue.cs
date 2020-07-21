@@ -13,6 +13,7 @@ namespace Abp.DynamicEntityParameters
         [Required(AllowEmptyStrings = false)]
         public string Value { get; set; }
 
+        [Column("tenant_id")]
         public int? TenantId { get; set; }
 
         public int DynamicParameterId { get; set; }

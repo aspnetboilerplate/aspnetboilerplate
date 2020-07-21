@@ -16,6 +16,7 @@ namespace Abp.Authorization
         /// </summary>
         public const int MaxNameLength = 128;
 
+        [Column("tenant_id")]
         public virtual int? TenantId { get; set; }
 
         /// <summary>

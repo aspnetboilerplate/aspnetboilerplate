@@ -20,6 +20,7 @@ namespace Abp.Configuration
         /// TenantId for this setting.
         /// TenantId is null if this setting is not Tenant level.
         /// </summary>
+        [Column("tenant_id")]
         public virtual int? TenantId { get; set; }
 
         /// <summary>

@@ -15,6 +15,8 @@ namespace Abp.DynamicEntityParameters
 
         public virtual ICollection<DynamicParameterValue> DynamicParameterValues { get; set; }
 
+
+        [Column("tenant_id")]
         public int? TenantId { get; set; }
     }
 }

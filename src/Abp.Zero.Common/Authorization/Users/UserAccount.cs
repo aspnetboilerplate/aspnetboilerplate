@@ -22,7 +22,7 @@ namespace Abp.Authorization.Users
         /// Maximum length of the <see cref="EmailAddress"/> property.
         /// </summary>
         public const int MaxEmailAddressLength = 256;
-
+        [Column("tenant_id")]
         public virtual int? TenantId { get; set; }
 
         public virtual long UserId { get; set; }

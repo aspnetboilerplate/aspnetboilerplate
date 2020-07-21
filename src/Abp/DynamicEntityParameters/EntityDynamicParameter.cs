@@ -15,6 +15,7 @@ namespace Abp.DynamicEntityParameters
         [ForeignKey("DynamicParameterId")]
         public virtual DynamicParameter DynamicParameter { get; set; }
 
+        [Column("tenant_id")]
         public int? TenantId { get; set; }
     }
 }

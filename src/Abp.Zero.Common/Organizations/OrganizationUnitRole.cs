@@ -13,6 +13,7 @@ namespace Abp.Organizations
         /// <summary>
         /// TenantId of this entity.
         /// </summary>
+        [Column("tenant_id")]
         public virtual int? TenantId { get; set; }
 
         /// <summary>

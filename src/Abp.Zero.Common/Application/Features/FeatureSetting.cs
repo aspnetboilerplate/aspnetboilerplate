@@ -23,6 +23,7 @@ namespace Abp.Application.Features
         /// </summary>
         public const int MaxValueLength = 2000;
 
+        [Column("tenant_id")]
         public virtual int? TenantId { get; set; }
 
         /// <summary>

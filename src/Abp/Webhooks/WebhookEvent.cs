@@ -25,6 +25,7 @@ namespace Abp.Webhooks
 
         public DateTime CreationTime { get; set; }
 
+        [Column("tenant_id")]
         public int? TenantId { get; set; }
 
         public bool IsDeleted { get; set; }

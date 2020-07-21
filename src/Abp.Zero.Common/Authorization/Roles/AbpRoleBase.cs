@@ -27,6 +27,7 @@ namespace Abp.Authorization.Roles
         /// <summary>
         /// Tenant's Id, if this role is a tenant-level role. Null, if not.
         /// </summary>
+        [Column("tenant_id")]
         public virtual int? TenantId { get; set; }
 
         /// <summary>

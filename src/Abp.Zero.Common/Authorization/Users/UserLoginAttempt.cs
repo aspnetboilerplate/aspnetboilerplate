@@ -42,6 +42,7 @@ namespace Abp.Authorization.Users
         /// <summary>
         /// Tenant's Id, if <see cref="TenancyName"/> was a valid tenant name.
         /// </summary>
+        [Column("tenant_id")]
         public virtual int? TenantId { get; set; }
 
         /// <summary>

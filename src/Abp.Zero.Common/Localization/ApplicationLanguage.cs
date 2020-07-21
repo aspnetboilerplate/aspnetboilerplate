@@ -31,6 +31,7 @@ namespace Abp.Localization
         /// <summary>
         /// TenantId of this entity. Can be null for host.
         /// </summary>
+        [Column("tenant_id")]
         public virtual int? TenantId { get; set; }
 
         /// <summary>

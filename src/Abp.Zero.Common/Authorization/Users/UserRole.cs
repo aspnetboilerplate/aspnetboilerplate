@@ -10,6 +10,7 @@ namespace Abp.Authorization.Users
     [Table("AbpUserRoles")]
     public class UserRole : CreationAuditedEntity<long>, IMayHaveTenant
     {
+        [Column("tenant_id")]
         public virtual int? TenantId { get; set; }
 
         /// <summary>

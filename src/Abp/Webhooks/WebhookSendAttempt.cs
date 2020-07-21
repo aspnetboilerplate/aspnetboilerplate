@@ -39,6 +39,7 @@ namespace Abp.Webhooks
 
         public DateTime? LastModificationTime { get; set; }
 
+        [Column("tenant_id")]
         public int? TenantId { get; set; }
 
         /// <summary>

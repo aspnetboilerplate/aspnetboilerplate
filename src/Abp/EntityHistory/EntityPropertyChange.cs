@@ -58,6 +58,7 @@ namespace Abp.EntityHistory
         /// <summary>
         /// TenantId.
         /// </summary>
+        [Column("tenant_id")]
         public virtual int? TenantId { get; set; }
     }
 }

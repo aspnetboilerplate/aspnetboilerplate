@@ -17,6 +17,7 @@ namespace Abp.Notifications
         /// <summary>
         /// Tenant Id.
         /// </summary>
+        [Column("tenant_id")]
         public virtual int? TenantId { get; set; }
 
         /// <summary>

@@ -1,4 +1,6 @@
-﻿namespace Abp.Domain.Entities
+﻿using System.ComponentModel.DataAnnotations.Schema;
+
+namespace Abp.Domain.Entities
 {
     /// <summary>
     /// Implement this interface for an entity which may optionally have TenantId.
@@ -8,6 +10,7 @@
         /// <summary>
         /// TenantId of this entity.
         /// </summary>
+        [Column("tenant_id")]
         int? TenantId { get; set; }
     }
 }

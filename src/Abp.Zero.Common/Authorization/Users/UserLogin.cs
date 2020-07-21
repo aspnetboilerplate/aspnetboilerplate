@@ -20,6 +20,7 @@ namespace Abp.Authorization.Users
         /// </summary>
         public const int MaxProviderKeyLength = 256;
 
+        [Column("tenant_id")]
         public virtual int? TenantId { get; set; }
 
         /// <summary>

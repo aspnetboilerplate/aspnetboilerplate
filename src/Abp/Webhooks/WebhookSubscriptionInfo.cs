@@ -14,6 +14,7 @@ namespace Abp.Webhooks
         /// <summary>
         /// Subscribed Tenant's id .
         /// </summary>
+        [Column("tenant_id")]
         public int? TenantId { get; set; }
 
         /// <summary>
