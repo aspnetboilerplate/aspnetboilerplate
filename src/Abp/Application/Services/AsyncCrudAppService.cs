@@ -96,7 +96,7 @@ namespace Abp.Application.Services
         public IAsyncQueryableExecuter AsyncQueryableExecuter { get; set; }
 
         protected AsyncCrudAppService(IRepository<TEntity, TPrimaryKey> repository)
-            :base(repository)
+            : base(repository)
         {
             AsyncQueryableExecuter = NullAsyncQueryableExecuter.Instance;
         }
@@ -134,10 +134,17 @@ namespace Abp.Application.Services
 
             var entity = MapToEntity(input);
 
+            await ProcessBeforeCreateAsync(entity, input);
+
             await Repository.InsertAsync(entity);
             await CurrentUnitOfWork.SaveChangesAsync();
 
             return MapToEntityDto(entity);
+        }
+
+        protected virtual Task ProcessBeforeCreateAsync(TEntity entity, TCreateInput input)
+        {
+            return Task.FromResult(true);
         }
 
         public virtual async Task<TEntityDto> UpdateAsync(TUpdateInput input)
