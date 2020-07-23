@@ -199,8 +199,11 @@ namespace Abp.EntityFrameworkCore
 
             if (typeof(IMustHaveTenant).IsAssignableFrom(typeof(TEntity)))
             {
-                Expression<Func<TEntity, bool>> mustHaveTenantFilter = e => !IsMustHaveTenantFilterEnabled || ((IMustHaveTenant)e).TenantId == CurrentTenantId;
-                expression = expression == null ? mustHaveTenantFilter : CombineExpressions(expression, mustHaveTenantFilter);
+                if (IsMustHaveTenantFilterEnabled)
+                {
+                    Expression<Func<TEntity, bool>> mustHaveTenantFilter = e => ((IMustHaveTenant)e).TenantId == CurrentTenantId;
+                    expression = expression == null ? mustHaveTenantFilter : CombineExpressions(expression, mustHaveTenantFilter);
+                }
             }
 
             if (typeof(IMayHaveBranch).IsAssignableFrom(typeof(TEntity)))
