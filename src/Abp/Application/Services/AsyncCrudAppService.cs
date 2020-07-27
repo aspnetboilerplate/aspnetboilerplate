@@ -154,9 +154,18 @@ namespace Abp.Application.Services
             var entity = await GetEntityByIdAsync(input.Id);
 
             MapToEntity(input, entity);
+
+            await ProcessBeforeUpdateAsync(entity, input);
+
+            await Repository.UpdateAsync(entity);
+
             await CurrentUnitOfWork.SaveChangesAsync();
 
             return MapToEntityDto(entity);
+        }
+        protected virtual Task ProcessBeforeUpdateAsync(TEntity entity, TUpdateInput input)
+        {
+            return Task.FromResult(true);
         }
 
         public virtual Task DeleteAsync(TDeleteInput input)
