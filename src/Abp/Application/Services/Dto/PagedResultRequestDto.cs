@@ -9,7 +9,7 @@ namespace Abp.Application.Services.Dto
     [Serializable]
     public class PagedResultRequestDto : LimitedResultRequestDto, IPagedResultRequest
     {
-        [Range(0, int.MaxValue)]
-        public virtual int SkipCount { get; set; }
+        [Range(1, int.MaxValue)]
+        public virtual int CurrentPage { get; set; } = 1;
     }
 }

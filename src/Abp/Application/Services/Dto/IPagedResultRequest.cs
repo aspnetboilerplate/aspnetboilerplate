@@ -1,3 +1,5 @@
+using System.ComponentModel.DataAnnotations;
+
 namespace Abp.Application.Services.Dto
 {
     /// <summary>
@@ -8,6 +10,7 @@ namespace Abp.Application.Services.Dto
         /// <summary>
         /// Skip count (beginning of the page).
         /// </summary>
-        int SkipCount { get; set; }
+        [Range(1, int.MaxValue)]
+        int CurrentPage { get; set; }
     }
 }
