@@ -115,7 +115,7 @@ namespace Abp.EntityFrameworkCore.EFPlus
         }
 
         private static Expression<Func<TEntity, bool>> GetFilterExpressionOrNull<TEntity, TPrimaryKey>(IIocResolver iocResolver)
-            where TEntity : Entity<TPrimaryKey>
+            where TEntity : IEntity<TPrimaryKey>
         {
             Expression<Func<TEntity, bool>> expression = null;
 

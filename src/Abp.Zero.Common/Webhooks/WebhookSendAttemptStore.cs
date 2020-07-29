@@ -155,7 +155,7 @@ namespace Abp.Webhooks
         {
             using (_unitOfWorkManager.Current.SetTenantId(tenantId))
             {
-                var query = _webhookSendAttemptRepository.GetAllIncluding(attempt => attempt.WebhookEvent)
+                var query = _webhookSendAttemptRepository.GetAllIncluding(false, attempt => attempt.WebhookEvent)
                     .Where(attempt =>
                         attempt.WebhookSubscriptionId == subscriptionId
                     );
@@ -181,7 +181,7 @@ namespace Abp.Webhooks
         {
             using (_unitOfWorkManager.Current.SetTenantId(tenantId))
             {
-                var query = _webhookSendAttemptRepository.GetAllIncluding(attempt => attempt.WebhookEvent)
+                var query = _webhookSendAttemptRepository.GetAllIncluding(false, attempt => attempt.WebhookEvent)
                     .Where(attempt =>
                         attempt.WebhookSubscriptionId == subscriptionId
                     );

@@ -12,6 +12,7 @@ using Abp.Collections.Extensions;
 using Abp.Data;
 using Abp.Domain.Entities;
 using Abp.Domain.Repositories;
+using Abp.Linq.Expressions;
 using Abp.Reflection;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Internal;
@@ -24,11 +25,11 @@ namespace Abp.EntityFrameworkCore.Repositories
     /// <typeparam name="TDbContext">DbContext which contains <typeparamref name="TEntity"/>.</typeparam>
     /// <typeparam name="TEntity">Type of the Entity for this repository</typeparam>
     /// <typeparam name="TPrimaryKey">Primary key of the entity</typeparam>
-    public class EfCoreRepositoryBase<TDbContext, TEntity, TPrimaryKey> : 
+    public class EfCoreRepositoryBase<TDbContext, TEntity, TPrimaryKey> :
         AbpRepositoryBase<TEntity, TPrimaryKey>,
         ISupportsExplicitLoading<TEntity, TPrimaryKey>,
         IRepositoryWithDbContext
-        
+
         where TEntity : class, IEntity<TPrimaryKey>
         where TDbContext : DbContext
     {
@@ -68,7 +69,7 @@ namespace Abp.EntityFrameworkCore.Repositories
         {
             get
             {
-                return (DbTransaction) TransactionProvider?.GetActiveTransaction(new ActiveTransactionProviderArgs
+                return (DbTransaction)TransactionProvider?.GetActiveTransaction(new ActiveTransactionProviderArgs
                 {
                     {"ContextType", typeof(TDbContext) },
                     {"MultiTenancySide", MultiTenancySide }
@@ -92,7 +93,7 @@ namespace Abp.EntityFrameworkCore.Repositories
         }
 
         public IActiveTransactionProvider TransactionProvider { private get; set; }
-        
+
         private readonly IDbContextProvider<TDbContext> _dbContextProvider;
 
         /// <summary>
@@ -104,14 +105,23 @@ namespace Abp.EntityFrameworkCore.Repositories
             _dbContextProvider = dbContextProvider;
         }
 
-        public override IQueryable<TEntity> GetAll()
+        public override IQueryable<TEntity> GetAll(bool? ignoreQueryFilter = false)
         {
-            return GetAllIncluding();
+            return GetAllIncluding(ignoreQueryFilter);
         }
 
-        public override IQueryable<TEntity> GetAllIncluding(params Expression<Func<TEntity, object>>[] propertySelectors)
+        public override IQueryable<TEntity> GetAllIncluding(bool? ignoreQueryFilter = false, params Expression<Func<TEntity, object>>[] propertySelectors)
         {
-            var query = GetQueryable();
+            var query = GetQueryable().IgnoreQueryFilters();
+
+            if (!ignoreQueryFilter.HasValue || !ignoreQueryFilter.Value)
+            {
+                var abpFilterExpression = AbpEntityFrameworkCoreExtension.GetFilterExpressionOrNull<TEntity, TPrimaryKey>(this.GetIocResolver());
+                if (abpFilterExpression != null)
+                {
+                    query = query.Where(abpFilterExpression);
+                }
+            }
 
             if (!propertySelectors.IsNullOrEmpty())
             {

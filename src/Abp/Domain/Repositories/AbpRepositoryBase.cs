@@ -46,9 +46,9 @@ namespace Abp.Domain.Repositories
             CancellationTokenProvider = NullCancellationTokenProvider.Instance;
         }
 
-        public abstract IQueryable<TEntity> GetAll();
+        public abstract IQueryable<TEntity> GetAll(bool? ignoreQueryFilter = false);
 
-        public virtual IQueryable<TEntity> GetAllIncluding(params Expression<Func<TEntity, object>>[] propertySelectors)
+        public virtual IQueryable<TEntity> GetAllIncluding(bool? ignoreQueryFilter = false, params Expression<Func<TEntity, object>>[] propertySelectors)
         {
             return GetAll();
         }
