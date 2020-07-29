@@ -104,9 +104,14 @@ namespace Abp.Application.Services
         public virtual async Task<TEntityDto> GetAsync(TGetInput input)
         {
             CheckGetPermission();
-
-            var entity = await GetEntityByIdAsync(input.Id);
+            var query = CreateFilteredByIdQuery(input);
+            var entity = await AsyncQueryableExecuter.FirstOrDefaultAsync(query);
             return MapToEntityDto(entity);
+        }
+
+        protected virtual IQueryable<TEntity> CreateFilteredByIdQuery(TGetInput input)
+        {
+            return Repository.GetAll().Where(e => e.Id.Equals(input.Id));
         }
 
         public virtual async Task<PagedResultDto<TEntityDto>> GetAllAsync(TGetAllInput input)
