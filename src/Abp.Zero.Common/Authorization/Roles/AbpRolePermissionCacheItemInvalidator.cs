@@ -21,7 +21,7 @@ namespace Abp.Authorization.Roles
 
         public void HandleEvent(EntityChangedEventData<RolePermissionSetting> eventData)
         {
-            var cacheKey = eventData.Entity.RoleId + "@" + (eventData.Entity.TenantId ?? 0);
+            var cacheKey = eventData.Entity.RoleId + "@" + (eventData.Entity.TenantId ?? 0) + "@" + (eventData.Entity.BranchId ?? 0);
             _cacheManager.GetRolePermissionCache().Remove(cacheKey);
         }
 
