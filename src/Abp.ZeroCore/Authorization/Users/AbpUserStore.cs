@@ -588,7 +588,7 @@ namespace Abp.Authorization.Users
             Check.NotNull(user, nameof(user));
             Check.NotNull(normalizedRoleName, nameof(normalizedRoleName));
 
-            if (await IsInRoleAsync(user, normalizedRoleName, cancellationToken))
+            if (await IsInRoleAsync(user, normalizedRoleName, null, cancellationToken))
             {
                 return;
             }
@@ -601,7 +601,30 @@ namespace Abp.Authorization.Users
             }
 
             await UserRepository.EnsureCollectionLoadedAsync(user, u => u.Roles, cancellationToken);
-            user.Roles.Add(new UserRole(user.TenantId, user.Id, role.Id));
+            user.Roles.Add(new UserRole(user.TenantId, user.Id, role.Id, null));
+        }
+
+        public virtual async Task AddToRoleAsync([NotNull] TUser user, [NotNull] string normalizedRoleName, long? branchId, CancellationToken cancellationToken = default(CancellationToken))
+        {
+            cancellationToken.ThrowIfCancellationRequested();
+
+            Check.NotNull(user, nameof(user));
+            Check.NotNull(normalizedRoleName, nameof(normalizedRoleName));
+
+            if (await IsInRoleAsync(user, normalizedRoleName, branchId, cancellationToken))
+            {
+                return;
+            }
+
+            var role = await _roleRepository.FirstOrDefaultAsync(r => r.NormalizedName == normalizedRoleName);
+
+            if (role == null)
+            {
+                throw new InvalidOperationException(string.Format(CultureInfo.CurrentCulture, "Role {0} does not exist!", normalizedRoleName));
+            }
+
+            await UserRepository.EnsureCollectionLoadedAsync(user, u => u.Roles, cancellationToken);
+            user.Roles.Add(new UserRole(user.TenantId, user.Id, role.Id, branchId));
         }
 
         /// <summary>
@@ -613,12 +636,17 @@ namespace Abp.Authorization.Users
         /// <returns>The <see cref="Task"/> that represents the asynchronous operation.</returns>
         public virtual void AddToRole([NotNull] TUser user, [NotNull] string normalizedRoleName, CancellationToken cancellationToken = default(CancellationToken))
         {
+            AddToRole(user, normalizedRoleName, null, cancellationToken);
+        }
+
+        public virtual void AddToRole([NotNull] TUser user, [NotNull] string normalizedRoleName, long? branchId, CancellationToken cancellationToken = default(CancellationToken))
+        {
             cancellationToken.ThrowIfCancellationRequested();
 
             Check.NotNull(user, nameof(user));
             Check.NotNull(normalizedRoleName, nameof(normalizedRoleName));
 
-            if (IsInRole(user, normalizedRoleName, cancellationToken))
+            if (IsInRole(user, normalizedRoleName, branchId, cancellationToken))
             {
                 return;
             }
@@ -631,7 +659,7 @@ namespace Abp.Authorization.Users
             }
 
             UserRepository.EnsureCollectionLoaded(user, u => u.Roles, cancellationToken);
-            user.Roles.Add(new UserRole(user.TenantId, user.Id, role.Id));
+            user.Roles.Add(new UserRole(user.TenantId, user.Id, role.Id, branchId));
         }
 
         /// <summary>
@@ -706,7 +734,13 @@ namespace Abp.Authorization.Users
         /// <param name="cancellationToken">The <see cref="CancellationToken"/> used to propagate notifications that the operation should be canceled.</param>
         /// <returns>A <see cref="Task{TResult}"/> that contains the roles the user is a member of.</returns>
         [UnitOfWork]
-        public virtual async Task<IList<string>> GetRolesAsync([NotNull] TUser user, CancellationToken cancellationToken = default(CancellationToken))
+        public virtual Task<IList<string>> GetRolesAsync([NotNull] TUser user, CancellationToken cancellationToken = default(CancellationToken))
+        {
+            return GetRolesAsync(user, null, cancellationToken);
+        }
+
+        [UnitOfWork]
+        public virtual async Task<IList<string>> GetRolesAsync([NotNull] TUser user, long? branchId, CancellationToken cancellationToken = default(CancellationToken))
         {
             cancellationToken.ThrowIfCancellationRequested();
 
@@ -714,7 +748,7 @@ namespace Abp.Authorization.Users
 
             var userRoles = await _asyncQueryableExecuter.ToListAsync(from userRole in _userRoleRepository.GetAll()
                                                                       join role in _roleRepository.GetAll() on userRole.RoleId equals role.Id
-                                                                      where userRole.UserId == user.Id
+                                                                      where userRole.UserId == user.Id && userRole.BranchId == branchId
                                                                       select role.Name);
 
             var userOrganizationUnitRoles = await _asyncQueryableExecuter.ToListAsync(
@@ -737,6 +771,12 @@ namespace Abp.Authorization.Users
         [UnitOfWork]
         public virtual IList<string> GetRoles([NotNull] TUser user, CancellationToken cancellationToken = default(CancellationToken))
         {
+            return GetRoles(user, null, cancellationToken);
+        }
+
+        [UnitOfWork]
+        public virtual IList<string> GetRoles([NotNull] TUser user, long? branchId, CancellationToken cancellationToken = default(CancellationToken))
+        {
             cancellationToken.ThrowIfCancellationRequested();
 
             Check.NotNull(user, nameof(user)); ;
@@ -744,7 +784,7 @@ namespace Abp.Authorization.Users
             var userRoles = (
                 from userRole in _userRoleRepository.GetAll()
                 join role in _roleRepository.GetAll() on userRole.RoleId equals role.Id
-                where userRole.UserId == user.Id
+                where userRole.UserId == user.Id && userRole.BranchId == branchId
                 select role.Name
                 ).ToList();
 
@@ -768,7 +808,12 @@ namespace Abp.Authorization.Users
         /// <param name="cancellationToken">The <see cref="CancellationToken"/> used to propagate notifications that the operation should be canceled.</param>
         /// <returns>A <see cref="Task{TResult}"/> containing a flag indicating if the specified user is a member of the given group. If the 
         /// user is a member of the group the returned value with be true, otherwise it will be false.</returns>
-        public virtual async Task<bool> IsInRoleAsync([NotNull] TUser user, [NotNull] string normalizedRoleName, CancellationToken cancellationToken = default(CancellationToken))
+        public virtual Task<bool> IsInRoleAsync([NotNull] TUser user, [NotNull] string normalizedRoleName, CancellationToken cancellationToken = default(CancellationToken))
+        {
+            return IsInRoleAsync(user, normalizedRoleName, null, cancellationToken);
+        }
+
+        public virtual async Task<bool> IsInRoleAsync([NotNull] TUser user, [NotNull] string normalizedRoleName, long? branchId, CancellationToken cancellationToken = default(CancellationToken))
         {
             cancellationToken.ThrowIfCancellationRequested();
 
@@ -779,7 +824,7 @@ namespace Abp.Authorization.Users
                 throw new ArgumentException(nameof(normalizedRoleName) + " can not be null or whitespace");
             }
 
-            return (await GetRolesAsync(user, cancellationToken)).Any(r => r.ToUpperInvariant() == normalizedRoleName);
+            return (await GetRolesAsync(user, branchId, cancellationToken)).Any(r => r.ToUpperInvariant() == normalizedRoleName);
         }
 
         /// <summary>
@@ -792,6 +837,11 @@ namespace Abp.Authorization.Users
         /// user is a member of the group the returned value with be true, otherwise it will be false.</returns>
         public virtual bool IsInRole([NotNull] TUser user, [NotNull] string normalizedRoleName, CancellationToken cancellationToken = default(CancellationToken))
         {
+            return IsInRole(user, normalizedRoleName, null, cancellationToken);
+        }
+
+        public virtual bool IsInRole([NotNull] TUser user, [NotNull] string normalizedRoleName, long? branchId, CancellationToken cancellationToken = default(CancellationToken))
+        {
             cancellationToken.ThrowIfCancellationRequested();
 
             Check.NotNull(user, nameof(user));
@@ -801,7 +851,7 @@ namespace Abp.Authorization.Users
                 throw new ArgumentException(nameof(normalizedRoleName) + " can not be null or whitespace");
             }
 
-            return (GetRoles(user, cancellationToken)).Any(r => r.ToUpperInvariant() == normalizedRoleName);
+            return (GetRoles(user, branchId, cancellationToken)).Any(r => r.ToUpperInvariant() == normalizedRoleName);
         }
 
         /// <summary>

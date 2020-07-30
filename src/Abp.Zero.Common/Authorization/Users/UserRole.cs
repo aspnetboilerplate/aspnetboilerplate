@@ -8,7 +8,7 @@ namespace Abp.Authorization.Users
     /// Represents role record of a user. 
     /// </summary>
     [Table("AbpUserRoles")]
-    public class UserRole : CreationAuditedEntity<long>, IMayHaveTenant
+    public class UserRole : CreationAuditedEntity<long>, IMayHaveTenant, IMayHaveBranch
     {
         [Column("tenant_id")]
         public virtual int? TenantId { get; set; }
@@ -22,6 +22,9 @@ namespace Abp.Authorization.Users
         /// Role id.
         /// </summary>
         public virtual int RoleId { get; set; }
+
+        [Column("branch_id")]
+        public long? BranchId { get; set; }
 
         /// <summary>
         /// Creates a new <see cref="UserRole"/> object.
@@ -37,11 +40,12 @@ namespace Abp.Authorization.Users
         /// <param name="tenantId">Tenant id</param>
         /// <param name="userId">User id</param>
         /// <param name="roleId">Role id</param>
-        public UserRole(int? tenantId, long userId, int roleId)
+        public UserRole(int? tenantId, long userId, int roleId, long? branchId)
         {
             TenantId = tenantId;
             UserId = userId;
             RoleId = roleId;
+            BranchId = branchId;
         }
     }
 }

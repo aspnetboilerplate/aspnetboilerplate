@@ -177,6 +177,8 @@ namespace Abp.Runtime.Caching
         /// </summary>
         /// <param name="keys">Keys</param>
         Task RemoveAsync(TKey[] keys);
+
+        List<string> Keys { get; }
     }
 
     /// <summary>

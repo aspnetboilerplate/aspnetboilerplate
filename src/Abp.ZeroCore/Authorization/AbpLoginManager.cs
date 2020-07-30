@@ -341,7 +341,7 @@ namespace Abp.Authorization
                                     user.Roles = new List<UserRole>();
                                     foreach (var defaultRole in RoleManager.Roles.Where(r => r.TenantId == tenantId && r.IsDefault).ToList())
                                     {
-                                        user.Roles.Add(new UserRole(tenantId, user.Id, defaultRole.Id));
+                                        user.Roles.Add(new UserRole(tenantId, user.Id, defaultRole.Id, null));
                                     }
                                 }
 

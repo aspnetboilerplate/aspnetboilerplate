@@ -31,6 +31,8 @@ namespace Abp.Runtime.Caching
 
         public ICache InternalCache { get; private set; }
 
+        public List<string> Keys => InternalCache.Keys;
+
         /// <summary>
         /// Creates a new <see cref="TypedCacheWrapper{TKey,TValue}"/> object.
         /// </summary>

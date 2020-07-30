@@ -1,3 +1,4 @@
+using System.Linq;
 using Abp.Dependency;
 using Abp.Domain.Repositories;
 using Abp.Domain.Uow;
@@ -38,7 +39,7 @@ namespace Abp.Authorization.Users
 
         public void HandleEvent(EntityChangedEventData<UserRole> eventData)
         {
-            var cacheKey = eventData.Entity.UserId + "@" + (eventData.Entity.TenantId ?? 0);
+            var cacheKey = eventData.Entity.UserId + "@" + (eventData.Entity.TenantId ?? 0) + "@" + (eventData.Entity.BranchId ?? 0);
             _cacheManager.GetUserPermissionCache().Remove(cacheKey);
         }
 
@@ -51,7 +52,12 @@ namespace Abp.Authorization.Users
         public void HandleEvent(EntityDeletedEventData<AbpUserBase> eventData)
         {
             var cacheKey = eventData.Entity.Id + "@" + (eventData.Entity.TenantId ?? 0);
-            _cacheManager.GetUserPermissionCache().Remove(cacheKey);
+            var cache = _cacheManager.GetUserPermissionCache();
+            var effectedKeys = cache.Keys.Where(e => e.StartsWith(cacheKey)).ToList();
+            foreach (var key in effectedKeys)
+            {
+                cache.Remove(key);
+            }
         }
 
         [UnitOfWork]

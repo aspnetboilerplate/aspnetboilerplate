@@ -2,6 +2,7 @@
 using Microsoft.Extensions.Options;
 using Microsoft.Extensions.Caching.Memory;
 using Abp.Data;
+using System.Collections.Generic;
 
 namespace Abp.Runtime.Caching.Memory
 {
@@ -11,6 +12,7 @@ namespace Abp.Runtime.Caching.Memory
     public class AbpMemoryCache : CacheBase
     {
         private MemoryCache _memoryCache;
+        private List<string> _keys = new List<string>();
 
         /// <summary>
         /// Constructor.
@@ -26,6 +28,8 @@ namespace Abp.Runtime.Caching.Memory
         {
             return _memoryCache.TryGetValue(key, out value);
         }
+
+        public override List<string> Keys => _keys;
 
         public override void Set(string key, object value, TimeSpan? slidingExpireTime = null, TimeSpan? absoluteExpireTime = null)
         {
@@ -50,17 +54,20 @@ namespace Abp.Runtime.Caching.Memory
             {
                 _memoryCache.Set(key, value, DefaultSlidingExpireTime);
             }
+            _keys.Add(key);
         }
 
         public override void Remove(string key)
         {
             _memoryCache.Remove(key);
+            _keys.Remove(key);
         }
 
         public override void Clear()
         {
             _memoryCache.Dispose();
             _memoryCache = new MemoryCache(new OptionsWrapper<MemoryCacheOptions>(new MemoryCacheOptions()));
+            _keys.Clear();
         }
 
         public override void Dispose()

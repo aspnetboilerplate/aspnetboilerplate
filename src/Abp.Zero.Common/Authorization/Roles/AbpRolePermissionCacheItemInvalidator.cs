@@ -1,3 +1,4 @@
+using System.Linq;
 using Abp.Dependency;
 using Abp.Events.Bus.Entities;
 using Abp.Events.Bus.Handlers;
@@ -21,20 +22,28 @@ namespace Abp.Authorization.Roles
 
         public void HandleEvent(EntityChangedEventData<RolePermissionSetting> eventData)
         {
-            var cacheKey = eventData.Entity.RoleId + "@" + (eventData.Entity.TenantId ?? 0) + "@" + (eventData.Entity.BranchId ?? 0);
-            _cacheManager.GetRolePermissionCache().Remove(cacheKey);
+            InvalidateRoleCache(eventData.Entity.RoleId, eventData.Entity.TenantId);
         }
 
         public void HandleEvent(EntityChangedEventData<OrganizationUnitRole> eventData)
         {
-            var cacheKey = eventData.Entity.RoleId + "@" + (eventData.Entity.TenantId ?? 0);
-            _cacheManager.GetRolePermissionCache().Remove(cacheKey);
+            InvalidateRoleCache(eventData.Entity.RoleId, eventData.Entity.TenantId);
         }
 
         public void HandleEvent(EntityDeletedEventData<AbpRoleBase> eventData)
         {
-            var cacheKey = eventData.Entity.Id + "@" + (eventData.Entity.TenantId ?? 0);
-            _cacheManager.GetRolePermissionCache().Remove(cacheKey);
+            InvalidateRoleCache(eventData.Entity.Id, eventData.Entity.TenantId);
+        }
+
+        private void InvalidateRoleCache(int roleId, int? tenantId)
+        {
+            var cacheKey = roleId + "@" + (tenantId ?? 0);
+            var cache = _cacheManager.GetRolePermissionCache();
+            var effectedKeys = cache.Keys.Where(e => e.StartsWith(cacheKey)).ToList();
+            foreach (var key in effectedKeys)
+            {
+                cache.Remove(key);
+            }
         }
     }
 }

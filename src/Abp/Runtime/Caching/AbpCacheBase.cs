@@ -18,6 +18,8 @@ namespace Abp.Runtime.Caching
 
         public TimeSpan? DefaultAbsoluteExpireTime { get; set; }
 
+        public abstract List<string> Keys { get; }
+
         protected readonly AsyncLock AsyncLock = new AsyncLock();
 
         /// <summary>

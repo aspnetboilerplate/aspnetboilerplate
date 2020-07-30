@@ -643,12 +643,12 @@ namespace Abp.Authorization.Users
         //    return IdentityResult.Success;
         //}
 
-        public virtual async Task<IdentityResult> SetRolesAsync(TUser user, string[] roleNames)
+        public virtual async Task<IdentityResult> SetRolesAsync(TUser user, string[] roleNames, long? branchId)
         {
             await AbpUserStore.UserRepository.EnsureCollectionLoadedAsync(user, u => u.Roles);
 
             //Remove from removed roles
-            foreach (var userRole in user.Roles.ToList())
+            foreach (var userRole in user.Roles.Where(e => e.BranchId == branchId).ToList())
             {
                 var role = await RoleManager.FindByIdAsync(userRole.RoleId.ToString());
                 if (role != null && roleNames.All(roleName => role.Name != roleName))
@@ -665,13 +665,14 @@ namespace Abp.Authorization.Users
             foreach (var roleName in roleNames)
             {
                 var role = await RoleManager.GetRoleByNameAsync(roleName);
-                if (user.Roles.All(ur => ur.RoleId != role.Id))
+                if (user.Roles.All(ur => ur.RoleId != role.Id && ur.BranchId != branchId))
                 {
-                    var result = await AddToRoleAsync(user, roleName);
-                    if (!result.Succeeded)
-                    {
-                        return result;
-                    }
+                    //var result = await AddToRoleAsync(user, roleName);
+                    //if (!result.Succeeded)
+                    //{
+                    //    return result;
+                    //}
+                    await AbpUserStore.AddToRoleAsync(user, roleName, branchId);
                 }
             }
 
@@ -1012,7 +1013,7 @@ namespace Abp.Authorization.Users
 
                 var newCacheItem = new UserPermissionCacheItem(userId, branchId);
 
-                foreach (var roleName in await GetRolesAsync(user))
+                foreach (var roleName in await AbpUserStore.GetRolesAsync(user, branchId))
                 {
                     newCacheItem.RoleIds.Add((await RoleManager.GetRoleByNameAsync(roleName)).Id);
                 }
