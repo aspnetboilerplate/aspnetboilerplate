@@ -1,4 +1,5 @@
-﻿using System.Linq;
+﻿using System;
+using System.Linq;
 using System.Threading.Tasks;
 using Abp.Application.Services.Dto;
 using Abp.Domain.Entities;
@@ -122,7 +123,7 @@ namespace Abp.Application.Services
 
             var totalCount = await AsyncQueryableExecuter.CountAsync(query);
 
-            query = ApplySorting(query, input);
+            //query = ApplySorting(query, input);
             query = ApplyPaging(query, input);
 
             var entities = await AsyncQueryableExecuter.ToListAsync(query);
