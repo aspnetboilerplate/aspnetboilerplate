@@ -21,7 +21,7 @@ namespace Abp.Domain.Repositories
         /// Used to get a IQueryable that is used to retrieve entities from entire table.
         /// </summary>
         /// <returns>IQueryable to be used to select entities from database</returns>
-        IQueryable<TEntity> GetAll(bool? ignoreQueryFilter = false);
+        IQueryable<TEntity> GetAll(bool ignoreQueryFilter = false);
 
         /// <summary>
         /// Used to get a IQueryable that is used to retrieve entities from entire table.
@@ -29,7 +29,7 @@ namespace Abp.Domain.Repositories
         /// </summary>
         /// <param name="propertySelectors">A list of include expressions.</param>
         /// <returns>IQueryable to be used to select entities from database</returns>
-        IQueryable<TEntity> GetAllIncluding(bool? ignoreQueryFilter = false, params Expression<Func<TEntity, object>>[] propertySelectors);
+        IQueryable<TEntity> GetAllIncluding(bool ignoreQueryFilter = false, params Expression<Func<TEntity, object>>[] propertySelectors);
 
         /// <summary>
         /// Used to get all entities.

@@ -18,7 +18,7 @@ namespace Abp.Application.Services
     }
 
     public abstract class CrudAppService<TEntity, TEntityDto, TPrimaryKey>
-        : CrudAppService<TEntity, TEntityDto, TPrimaryKey, PagedAndSortedResultRequestDto>
+        : CrudAppService<TEntity, TEntityDto, TPrimaryKey, TEntityDto, PagedAndSortedResultRequestDto>
         where TEntity : class, IEntity<TPrimaryKey>
         where TEntityDto : IEntityDto<TPrimaryKey>
     {
@@ -29,10 +29,11 @@ namespace Abp.Application.Services
         }
     }
 
-    public abstract class CrudAppService<TEntity, TEntityDto, TPrimaryKey, TGetAllInput>
-        : CrudAppService<TEntity, TEntityDto, TPrimaryKey, TGetAllInput, TEntityDto, TEntityDto>
+    public abstract class CrudAppService<TEntity, TEntityDto, TPrimaryKey, TEntityItemDto, TGetAllInput>
+        : CrudAppService<TEntity, TEntityDto, TPrimaryKey, TEntityItemDto, TGetAllInput, TEntityDto, TEntityDto>
         where TEntity : class, IEntity<TPrimaryKey>
         where TEntityDto : IEntityDto<TPrimaryKey>
+        where TEntityItemDto : IEntityDto<TPrimaryKey>
     {
         protected CrudAppService(IRepository<TEntity, TPrimaryKey> repository)
             : base(repository)
@@ -41,10 +42,11 @@ namespace Abp.Application.Services
         }
     }
 
-    public abstract class CrudAppService<TEntity, TEntityDto, TPrimaryKey, TGetAllInput, TCreateInput>
-        : CrudAppService<TEntity, TEntityDto, TPrimaryKey, TGetAllInput, TCreateInput, TCreateInput>
+    public abstract class CrudAppService<TEntity, TEntityDto, TPrimaryKey, TEntityItemDto, TGetAllInput, TCreateInput>
+        : CrudAppService<TEntity, TEntityDto, TPrimaryKey, TEntityItemDto, TGetAllInput, TCreateInput, TCreateInput>
         where TEntity : class, IEntity<TPrimaryKey>
         where TEntityDto : IEntityDto<TPrimaryKey>
+        where TEntityItemDto : IEntityDto<TPrimaryKey>
         where TCreateInput : IEntityDto<TPrimaryKey>
     {
         protected CrudAppService(IRepository<TEntity, TPrimaryKey> repository)
@@ -54,10 +56,11 @@ namespace Abp.Application.Services
         }
     }
 
-    public abstract class CrudAppService<TEntity, TEntityDto, TPrimaryKey, TGetAllInput, TCreateInput, TUpdateInput>
-        : CrudAppService<TEntity, TEntityDto, TPrimaryKey, TGetAllInput, TCreateInput, TUpdateInput, EntityDto<TPrimaryKey>>
+    public abstract class CrudAppService<TEntity, TEntityDto, TPrimaryKey, TEntityItemDto, TGetAllInput, TCreateInput, TUpdateInput>
+        : CrudAppService<TEntity, TEntityDto, TPrimaryKey, TEntityItemDto, TGetAllInput, TCreateInput, TUpdateInput, EntityDto<TPrimaryKey>>
         where TEntity : class, IEntity<TPrimaryKey>
         where TEntityDto : IEntityDto<TPrimaryKey>
+        where TEntityItemDto : IEntityDto<TPrimaryKey>
         where TUpdateInput : IEntityDto<TPrimaryKey>
     {
         protected CrudAppService(IRepository<TEntity, TPrimaryKey> repository)
@@ -67,10 +70,11 @@ namespace Abp.Application.Services
         }
     }
 
-    public abstract class CrudAppService<TEntity, TEntityDto, TPrimaryKey, TGetAllInput, TCreateInput, TUpdateInput, TGetInput>
-    : CrudAppService<TEntity, TEntityDto, TPrimaryKey, TGetAllInput, TCreateInput, TUpdateInput, TGetInput, EntityDto<TPrimaryKey>>
+    public abstract class CrudAppService<TEntity, TEntityDto, TPrimaryKey, TEntityItemDto, TGetAllInput, TCreateInput, TUpdateInput, TGetInput>
+    : CrudAppService<TEntity, TEntityDto, TPrimaryKey, TEntityItemDto, TGetAllInput, TCreateInput, TUpdateInput, TGetInput, EntityDto<TPrimaryKey>>
         where TEntity : class, IEntity<TPrimaryKey>
         where TEntityDto : IEntityDto<TPrimaryKey>
+        where TEntityItemDto : IEntityDto<TPrimaryKey>
         where TUpdateInput : IEntityDto<TPrimaryKey>
         where TGetInput : IEntityDto<TPrimaryKey>
     {
@@ -81,11 +85,12 @@ namespace Abp.Application.Services
         }
     }
 
-    public abstract class CrudAppService<TEntity, TEntityDto, TPrimaryKey, TGetAllInput, TCreateInput, TUpdateInput, TGetInput, TDeleteInput>
-       : CrudAppServiceBase<TEntity, TEntityDto, TPrimaryKey, TGetAllInput, TCreateInput, TUpdateInput>,
-        ICrudAppService<TEntityDto, TPrimaryKey, TGetAllInput, TCreateInput, TUpdateInput, TGetInput, TDeleteInput>
+    public abstract class CrudAppService<TEntity, TEntityDto, TPrimaryKey, TEntityItemDto, TGetAllInput, TCreateInput, TUpdateInput, TGetInput, TDeleteInput>
+       : CrudAppServiceBase<TEntity, TEntityDto, TPrimaryKey, TEntityItemDto, TGetAllInput, TCreateInput, TUpdateInput>,
+        ICrudAppService<TEntityDto, TPrimaryKey, TEntityItemDto, TGetAllInput, TCreateInput, TUpdateInput, TGetInput, TDeleteInput>
            where TEntity : class, IEntity<TPrimaryKey>
            where TEntityDto : IEntityDto<TPrimaryKey>
+           where TEntityItemDto : IEntityDto<TPrimaryKey>
            where TUpdateInput : IEntityDto<TPrimaryKey>
            where TGetInput : IEntityDto<TPrimaryKey>
            where TDeleteInput : IEntityDto<TPrimaryKey>
@@ -104,7 +109,7 @@ namespace Abp.Application.Services
             return MapToEntityDto(entity);
         }
 
-        public virtual PagedResultDto<TEntityDto> GetAll(TGetAllInput input)
+        public virtual PagedResultDto<TEntityItemDto> GetAll(TGetAllInput input)
         {
             CheckGetAllPermission();
 
@@ -117,9 +122,9 @@ namespace Abp.Application.Services
 
             var entities = query.ToList();
 
-            return new PagedResultDto<TEntityDto>(
+            return new PagedResultDto<TEntityItemDto>(
                 totalCount,
-                entities.Select(MapToEntityDto).ToList()
+                entities.Select(MapToEntityItemDto).ToList()
             );
         }
 

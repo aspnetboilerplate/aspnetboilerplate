@@ -105,16 +105,16 @@ namespace Abp.EntityFrameworkCore.Repositories
             _dbContextProvider = dbContextProvider;
         }
 
-        public override IQueryable<TEntity> GetAll(bool? ignoreQueryFilter = false)
+        public override IQueryable<TEntity> GetAll(bool ignoreQueryFilter = false)
         {
             return GetAllIncluding(ignoreQueryFilter);
         }
 
-        public override IQueryable<TEntity> GetAllIncluding(bool? ignoreQueryFilter = false, params Expression<Func<TEntity, object>>[] propertySelectors)
+        public override IQueryable<TEntity> GetAllIncluding(bool ignoreQueryFilter = false, params Expression<Func<TEntity, object>>[] propertySelectors)
         {
             var query = GetQueryable().IgnoreQueryFilters();
 
-            if (!ignoreQueryFilter.HasValue || !ignoreQueryFilter.Value)
+            if (!ignoreQueryFilter)
             {
                 var abpFilterExpression = AbpEntityFrameworkCoreExtension.GetFilterExpressionOrNull<TEntity, TPrimaryKey>(this.GetIocResolver());
                 if (abpFilterExpression != null)

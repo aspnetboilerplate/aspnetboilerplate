@@ -14,9 +14,10 @@ namespace Abp.Application.Services
     /// This is a common base class for CrudAppService and AsyncCrudAppService classes.
     /// Inherit either from CrudAppService or AsyncCrudAppService, not from this class.
     /// </summary>
-    public abstract class CrudAppServiceBase<TEntity, TEntityDto, TPrimaryKey, TGetAllInput, TCreateInput, TUpdateInput> : ApplicationService
+    public abstract class CrudAppServiceBase<TEntity, TEntityDto, TPrimaryKey, TEntityItemDto, TGetAllInput, TCreateInput, TUpdateInput> : ApplicationService
         where TEntity : class, IEntity<TPrimaryKey>
         where TEntityDto : IEntityDto<TPrimaryKey>
+        where TEntityItemDto : IEntityDto<TPrimaryKey>
         where TUpdateInput : IEntityDto<TPrimaryKey>
     {
         protected readonly IRepository<TEntity, TPrimaryKey> Repository;
@@ -108,6 +109,16 @@ namespace Abp.Application.Services
         protected virtual TEntityDto MapToEntityDto(TEntity entity)
         {
             return ObjectMapper.Map<TEntityDto>(entity);
+        }
+
+        /// <summary>
+        /// Maps <typeparamref name="TEntity"/> to <typeparamref name="TEntityItemDto"/>.
+        /// It uses <see cref="IObjectMapper"/> by default.
+        /// It can be overrided for custom mapping.
+        /// </summary>
+        protected virtual TEntityItemDto MapToEntityItemDto(TEntity entity)
+        {
+            return ObjectMapper.Map<TEntityItemDto>(entity);
         }
 
         /// <summary>

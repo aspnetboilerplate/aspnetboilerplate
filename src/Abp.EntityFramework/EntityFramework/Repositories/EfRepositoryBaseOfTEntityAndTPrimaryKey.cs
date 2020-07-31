@@ -74,12 +74,12 @@ namespace Abp.EntityFramework.Repositories
             _dbContextProvider = dbContextProvider;
         }
 
-        public override IQueryable<TEntity> GetAll()
+        public override IQueryable<TEntity> GetAll(bool ignoreQueryFilter = false)
         {
             return Table;
         }
 
-        public override IQueryable<TEntity> GetAllIncluding(params Expression<Func<TEntity, object>>[] propertySelectors)
+        public override IQueryable<TEntity> GetAllIncluding(bool ignoreQueryFilter = false, params Expression<Func<TEntity, object>>[] propertySelectors)
         {
             if (propertySelectors.IsNullOrEmpty())
             {
