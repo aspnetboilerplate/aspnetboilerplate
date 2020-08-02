@@ -5,7 +5,7 @@ using System.Threading.Tasks;
 namespace Abp.Domain.Uow
 {
     /// <summary>
-    /// This handle is used for innet unit of work scopes.
+    /// This handle is used for inner unit of work scopes.
     /// A inner unit of work scope actually uses outer unit of work scope
     /// and has no effect on <see cref="IUnitOfWorkCompleteHandle.Complete"/> call.
     /// But if it's not called, an exception is thrown at end of the UOW to rollback the UOW.
@@ -17,12 +17,12 @@ namespace Abp.Domain.Uow
         private volatile bool _isCompleteCalled;
         private volatile bool _isDisposed;
 
-        public void Complete()
+        public virtual void Complete()
         {
             _isCompleteCalled = true;
         }
 
-        public Task CompleteAsync()
+        public virtual Task CompleteAsync()
         {
             _isCompleteCalled = true;
             return Task.FromResult(0);
@@ -47,7 +47,7 @@ namespace Abp.Domain.Uow
                 throw new AbpException(DidNotCallCompleteMethodExceptionMessage);
             }
         }
-        
+
         private static bool HasException()
         {
             try
