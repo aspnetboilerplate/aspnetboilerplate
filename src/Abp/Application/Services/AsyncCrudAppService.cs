@@ -1,10 +1,13 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Abp.Application.Services.Dto;
 using Abp.Domain.Entities;
 using Abp.Domain.Repositories;
 using Abp.Linq;
+using AutoMapper;
+using AutoMapper.QueryableExtensions;
 
 namespace Abp.Application.Services
 {
@@ -107,17 +110,16 @@ namespace Abp.Application.Services
             AsyncQueryableExecuter = NullAsyncQueryableExecuter.Instance;
         }
 
-        public virtual async Task<TEntityDto> GetAsync(TGetInput input)
+        public virtual Task<TEntityDto> GetAsync(TGetInput input)
         {
             CheckGetPermission();
             var query = CreateFilteredByIdQuery(input);
-            var entity = await AsyncQueryableExecuter.FirstOrDefaultAsync(query);
-            return MapToEntityDto(entity);
+            return AsyncQueryableExecuter.FirstOrDefaultAsync(query);
         }
 
-        protected virtual IQueryable<TEntity> CreateFilteredByIdQuery(TGetInput input)
+        protected virtual IQueryable<TEntityDto> CreateFilteredByIdQuery(TGetInput input)
         {
-            return Repository.GetAll().Where(e => e.Id.Equals(input.Id));
+            return Repository.GetAll().Where(e => e.Id.Equals(input.Id)).ProjectTo<TEntityDto>(ConfigurationProvider);
         }
 
         public virtual async Task<PagedResultDto<TEntityItemDto>> GetAllAsync(TGetAllInput input)
@@ -127,15 +129,19 @@ namespace Abp.Application.Services
             var query = CreateFilteredQuery(input);
 
             var totalCount = await AsyncQueryableExecuter.CountAsync(query);
+            if (totalCount == 0)
+            {
+                return new PagedResultDto<TEntityItemDto>(0, new List<TEntityItemDto>());
+            }
 
             //query = ApplySorting(query, input);
             query = ApplyPaging(query, input);
 
-            var entities = await AsyncQueryableExecuter.ToListAsync(query);
+            var dtoItems = await AsyncQueryableExecuter.ToListAsync(query);
 
             return new PagedResultDto<TEntityItemDto>(
                 totalCount,
-                entities.Select(MapToEntityItemDto).ToList()
+                dtoItems
             );
         }
 

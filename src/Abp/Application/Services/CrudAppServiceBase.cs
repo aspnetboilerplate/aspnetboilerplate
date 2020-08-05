@@ -7,6 +7,8 @@ using Abp.Domain.Repositories;
 using Abp.Extensions;
 using Abp.Linq.Extensions;
 using Abp.ObjectMapping;
+using AutoMapper;
+using AutoMapper.QueryableExtensions;
 
 namespace Abp.Application.Services
 {
@@ -21,6 +23,7 @@ namespace Abp.Application.Services
         where TUpdateInput : IEntityDto<TPrimaryKey>
     {
         protected readonly IRepository<TEntity, TPrimaryKey> Repository;
+        public IConfigurationProvider ConfigurationProvider { get; set; }
 
         protected virtual string GetPermissionName { get; set; }
 
@@ -69,7 +72,7 @@ namespace Abp.Application.Services
         /// </summary>
         /// <param name="query">The query.</param>
         /// <param name="input">The input.</param>
-        protected virtual IQueryable<TEntity> ApplyPaging(IQueryable<TEntity> query, TGetAllInput input)
+        protected virtual IQueryable<TEntityItemDto> ApplyPaging(IQueryable<TEntityItemDto> query, TGetAllInput input)
         {
             //Try to use paging if available
             var pagedInput = input as IPagedResultRequest;
@@ -96,9 +99,9 @@ namespace Abp.Application.Services
         /// methods.
         /// </summary>
         /// <param name="input">The input.</param>
-        protected virtual IQueryable<TEntity> CreateFilteredQuery(TGetAllInput input)
+        protected virtual IQueryable<TEntityItemDto> CreateFilteredQuery(TGetAllInput input)
         {
-            return Repository.GetAll();
+            return Repository.GetAll().ProjectTo<TEntityItemDto>(ConfigurationProvider);
         }
 
         /// <summary>

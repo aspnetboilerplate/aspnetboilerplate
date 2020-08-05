@@ -1,7 +1,9 @@
-﻿using System.Linq;
+﻿using System.Collections.Generic;
+using System.Linq;
 using Abp.Application.Services.Dto;
 using Abp.Domain.Entities;
 using Abp.Domain.Repositories;
+using AutoMapper;
 
 namespace Abp.Application.Services
 {
@@ -116,15 +118,17 @@ namespace Abp.Application.Services
             var query = CreateFilteredQuery(input);
 
             var totalCount = query.Count();
+            if (totalCount == 0)
+            {
+                return new PagedResultDto<TEntityItemDto>(0, new List<TEntityItemDto>());
+            }
 
-            query = ApplySorting(query, input);
+            //query = ApplySorting(query, input);
             query = ApplyPaging(query, input);
-
-            var entities = query.ToList();
 
             return new PagedResultDto<TEntityItemDto>(
                 totalCount,
-                entities.Select(MapToEntityItemDto).ToList()
+                query.ToList()
             );
         }
 
