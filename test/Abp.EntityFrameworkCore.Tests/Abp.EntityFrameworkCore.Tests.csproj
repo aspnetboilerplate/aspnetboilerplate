@@ -1,7 +1,7 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <TargetFrameworks>netcoreapp3.1</TargetFrameworks>
+    <TargetFramework>net5.0</TargetFramework>
     <AssemblyName>Abp.EntityFrameworkCore.Tests</AssemblyName>
     <PackageId>Abp.EntityFrameworkCore.Tests</PackageId>
     <GenerateRuntimeConfigurationFiles>true</GenerateRuntimeConfigurationFiles>
@@ -41,7 +41,7 @@
     <Reference Include="System.Transactions" />
   </ItemGroup>
   
-  <ItemGroup Condition=" '$(TargetFramework)' == 'netcoreapp3.1' ">
+  <ItemGroup Condition=" '$(TargetFramework)' == 'net5.0' ">
     <PackageReference Include="System.Runtime" Version="4.3.1" />
   </ItemGroup>
 
