@@ -56,7 +56,6 @@ namespace Abp
             ConfigureCaches();
             AddIgnoredTypes();
             AddMethodParameterValidators();
-            AddDefaultNotificationDistributor();
         }
 
         public override void Initialize()
@@ -201,11 +200,6 @@ namespace Abp
             Configuration.Validation.Validators.Add<CustomValidator>();
         }
 
-        private void AddDefaultNotificationDistributor()
-        {
-            Configuration.Notifications.Distributers.Add<DefaultNotificationDistributer>();
-        }
-
         private void RegisterMissingComponents()
         {
             if (!IocManager.IsRegistered<IGuidGenerator>())
@@ -220,7 +214,6 @@ namespace Abp
             IocManager.RegisterIfNot<IUnitOfWork, NullUnitOfWork>(DependencyLifeStyle.Transient);
             IocManager.RegisterIfNot<IAuditingStore, SimpleLogAuditingStore>(DependencyLifeStyle.Singleton);
             IocManager.RegisterIfNot<IPermissionChecker, NullPermissionChecker>(DependencyLifeStyle.Singleton);
-            IocManager.RegisterIfNot<IRealTimeNotifier, NullRealTimeNotifier>(DependencyLifeStyle.Singleton);
             IocManager.RegisterIfNot<INotificationStore, NullNotificationStore>(DependencyLifeStyle.Singleton);
             IocManager.RegisterIfNot<IUnitOfWorkFilterExecuter, NullUnitOfWorkFilterExecuter>(DependencyLifeStyle.Singleton);
             IocManager.RegisterIfNot<IClientInfoProvider, NullClientInfoProvider>(DependencyLifeStyle.Singleton);

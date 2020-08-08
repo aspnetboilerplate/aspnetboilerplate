@@ -23,7 +23,6 @@ namespace Abp.Zero
             Configuration.BackgroundJobs.IsJobExecutionEnabled = false;
             Configuration.Modules.Zero().LanguageManagement.EnableDbLocalization();
             Configuration.UnitOfWork.IsTransactional = false;
-            Configuration.Notifications.Distributers.Add<FakeNotificationDistributer>();
         }
 
         public override void Initialize()

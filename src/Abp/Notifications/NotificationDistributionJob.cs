@@ -10,6 +10,7 @@ namespace Abp.Notifications
     public class NotificationDistributionJob : BackgroundJob<NotificationDistributionJobArgs>, ITransientDependency
     {
         private readonly INotificationConfiguration _notificationConfiguration;
+        private readonly INotificationDistributer _notificationDistributer;
         private readonly IIocResolver _iocResolver;
 
         /// <summary>
@@ -17,21 +18,17 @@ namespace Abp.Notifications
         /// </summary>
         public NotificationDistributionJob(
             INotificationConfiguration notificationConfiguration,
-            IIocResolver iocResolver)
+            IIocResolver iocResolver, 
+            INotificationDistributer notificationDistributer)
         {
             _notificationConfiguration = notificationConfiguration;
             _iocResolver = iocResolver;
+            _notificationDistributer = notificationDistributer;
         }
 
         public override void Execute(NotificationDistributionJobArgs args)
         {
-            foreach (var notificationDistributorType in _notificationConfiguration.Distributers)
-            {
-                using (var notificationDistributer = _iocResolver.ResolveAsDisposable<INotificationDistributer>(notificationDistributorType))
-                {
-                    notificationDistributer.Object.Distribute(args.NotificationId);
-                }
-            }
+            _notificationDistributer.Distribute(args.NotificationId);
         }
     }
 }
