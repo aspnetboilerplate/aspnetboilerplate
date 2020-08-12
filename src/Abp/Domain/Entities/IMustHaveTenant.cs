@@ -11,6 +11,6 @@ namespace Abp.Domain.Entities
         /// TenantId of this entity.
         /// </summary>
         [Column("tenant_id")]
-        int TenantId { get; set; }
+        long TenantId { get; set; }
     }
 }

@@ -11,7 +11,7 @@ namespace Abp.MultiTenancy
     /// </summary>
     [Table("AbpTenants")]
     [MultiTenancySide(MultiTenancySides.Host)]
-    public abstract class AbpTenantBase : FullAuditedEntity<int>, IPassivable
+    public abstract class AbpTenantBase : FullAuditedEntity<long>, IPassivable
     {
         /// <summary>
         /// Max length of the <see cref="TenancyName"/> property.

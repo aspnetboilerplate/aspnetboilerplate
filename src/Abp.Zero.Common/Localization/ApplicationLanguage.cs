@@ -32,7 +32,7 @@ namespace Abp.Localization
         /// TenantId of this entity. Can be null for host.
         /// </summary>
         [Column("tenant_id")]
-        public virtual int? TenantId { get; set; }
+        public virtual long? TenantId { get; set; }
 
         /// <summary>
         /// Gets or sets the name of the culture, like "en" or "en-US".

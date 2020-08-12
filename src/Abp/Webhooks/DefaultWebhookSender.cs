@@ -177,7 +177,7 @@ namespace Abp.Webhooks
         }
 
         [UnitOfWork]
-        protected virtual async Task StoreResponseOnWebhookSendAttemptAsync(Guid webhookSendAttemptId, int? tenantId, HttpStatusCode? statusCode, string content)
+        protected virtual async Task StoreResponseOnWebhookSendAttemptAsync(Guid webhookSendAttemptId, long? tenantId, HttpStatusCode? statusCode, string content)
         {
             var webhookSendAttempt = await WebhookSendAttemptStore.GetAsync(tenantId, webhookSendAttemptId);
 
@@ -188,7 +188,7 @@ namespace Abp.Webhooks
         }
 
         [UnitOfWork]
-        protected virtual void StoreResponseOnWebhookSendAttempt(Guid webhookSendAttemptId, int? tenantId, HttpStatusCode? statusCode, string content)
+        protected virtual void StoreResponseOnWebhookSendAttempt(Guid webhookSendAttemptId, long? tenantId, HttpStatusCode? statusCode, string content)
         {
             var webhookSendAttempt = WebhookSendAttemptStore.Get(tenantId, webhookSendAttemptId);
 

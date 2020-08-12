@@ -27,54 +27,54 @@ namespace Abp.Webhooks
         {
         }
 
-        public Task<WebhookSendAttempt> GetAsync(int? tenantId, Guid id)
+        public Task<WebhookSendAttempt> GetAsync(long? tenantId, Guid id)
         {
             return Task.FromResult<WebhookSendAttempt>(default);
         }
 
-        public WebhookSendAttempt Get(int? tenantId, Guid id)
+        public WebhookSendAttempt Get(long? tenantId, Guid id)
         {
             return default;
         }
 
-        public Task<int> GetSendAttemptCountAsync(int? tenantId, Guid webhookId, Guid webhookSubscriptionId)
+        public Task<int> GetSendAttemptCountAsync(long? tenantId, Guid webhookId, Guid webhookSubscriptionId)
         {
             return Task.FromResult(int.MaxValue);
         }
 
-        public int GetSendAttemptCount(int? tenantId, Guid webhookId, Guid webhookSubscriptionId)
+        public int GetSendAttemptCount(long? tenantId, Guid webhookId, Guid webhookSubscriptionId)
         {
             return int.MaxValue;
         }
 
-        public Task<bool> HasXConsecutiveFailAsync(int? tenantId, Guid subscriptionId, int searchCount)
+        public Task<bool> HasXConsecutiveFailAsync(long? tenantId, Guid subscriptionId, int searchCount)
         {
             return default;
         }
 
-        public bool HasXConsecutiveFail(int? tenantId, Guid subscriptionId, int searchCount)
+        public bool HasXConsecutiveFail(long? tenantId, Guid subscriptionId, int searchCount)
         {
             return default;
         }
 
-        public Task<IPagedResult<WebhookSendAttempt>> GetAllSendAttemptsBySubscriptionAsPagedListAsync(int? tenantId, Guid subscriptionId, int maxResultCount,
+        public Task<IPagedResult<WebhookSendAttempt>> GetAllSendAttemptsBySubscriptionAsPagedListAsync(long? tenantId, Guid subscriptionId, int maxResultCount,
             int skipCount)
         {
             return Task.FromResult(new PagedResultDto<WebhookSendAttempt>() as IPagedResult<WebhookSendAttempt>);
         }
 
-        public IPagedResult<WebhookSendAttempt> GetAllSendAttemptsBySubscriptionAsPagedList(int? tenantId, Guid subscriptionId, int maxResultCount,
+        public IPagedResult<WebhookSendAttempt> GetAllSendAttemptsBySubscriptionAsPagedList(long? tenantId, Guid subscriptionId, int maxResultCount,
             int skipCount)
         {
             return new PagedResultDto<WebhookSendAttempt>();
         }
 
-        public Task<List<WebhookSendAttempt>> GetAllSendAttemptsByWebhookEventIdAsync(int? tenantId, Guid webhookEventId)
+        public Task<List<WebhookSendAttempt>> GetAllSendAttemptsByWebhookEventIdAsync(long? tenantId, Guid webhookEventId)
         {
             return Task.FromResult(new List<WebhookSendAttempt>());
         }
 
-        public List<WebhookSendAttempt> GetAllSendAttemptsByWebhookEventId(int? tenantId, Guid webhookEventId)
+        public List<WebhookSendAttempt> GetAllSendAttemptsByWebhookEventId(long? tenantId, Guid webhookEventId)
         {
             return new List<WebhookSendAttempt>();
         }

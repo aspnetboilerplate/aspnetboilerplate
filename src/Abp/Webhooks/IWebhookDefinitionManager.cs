@@ -41,11 +41,11 @@ namespace Abp.Webhooks
         /// <summary>
         /// Checks if given webhook name is available for given tenant.
         /// </summary>
-        Task<bool> IsAvailableAsync(int? tenantId, string name);
+        Task<bool> IsAvailableAsync(long? tenantId, string name);
 
         /// <summary>
         /// Checks if given webhook name is available for given tenant.
         /// </summary>
-        bool IsAvailable(int? tenantId, string name);
+        bool IsAvailable(long? tenantId, string name);
     }
 }

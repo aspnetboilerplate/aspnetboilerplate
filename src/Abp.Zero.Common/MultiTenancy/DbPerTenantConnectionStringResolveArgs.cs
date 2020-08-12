@@ -4,15 +4,15 @@ namespace Abp.MultiTenancy
 {
     public class DbPerTenantConnectionStringResolveArgs : ConnectionStringResolveArgs
     {
-        public int? TenantId { get; set; }
+        public long? TenantId { get; set; }
 
-        public DbPerTenantConnectionStringResolveArgs(int? tenantId, MultiTenancySides? multiTenancySide = null)
+        public DbPerTenantConnectionStringResolveArgs(long? tenantId, MultiTenancySides? multiTenancySide = null)
             : base(multiTenancySide)
         {
             TenantId = tenantId;
         }
 
-        public DbPerTenantConnectionStringResolveArgs(int? tenantId, ConnectionStringResolveArgs baseArgs)
+        public DbPerTenantConnectionStringResolveArgs(long? tenantId, ConnectionStringResolveArgs baseArgs)
         {
             TenantId = tenantId;
             MultiTenancySide = baseArgs.MultiTenancySide;

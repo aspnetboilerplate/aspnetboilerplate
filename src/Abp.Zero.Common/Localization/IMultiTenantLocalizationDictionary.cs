@@ -13,19 +13,19 @@ namespace Abp.Localization
         /// </summary>
         /// <param name="tenantId">TenantId or null for host.</param>
         /// <param name="name">Localization key name.</param>
-        LocalizedString GetOrNull(int? tenantId, string name);
+        LocalizedString GetOrNull(long? tenantId, string name);
 
         /// <summary>
         /// Gets a <see cref="LocalizedString"/>.
         /// </summary>
         /// <param name="tenantId">TenantId or null for host.</param>
         /// <param name="names">List of localization key names.</param>
-        IReadOnlyList<LocalizedString> GetStringsOrNull(int? tenantId, List<string> names);
+        IReadOnlyList<LocalizedString> GetStringsOrNull(long? tenantId, List<string> names);
 
         /// <summary>
         /// Gets all <see cref="LocalizedString"/>s.
         /// </summary>
         /// <param name="tenantId">TenantId or null for host.</param>
-        IReadOnlyList<LocalizedString> GetAllStrings(int? tenantId);
+        IReadOnlyList<LocalizedString> GetAllStrings(long? tenantId);
     }
 }

@@ -14,7 +14,7 @@ namespace Abp
         /// Tenant Id of the user.
         /// Can be null for host users in a multi tenant application.
         /// </summary>
-        public int? TenantId { get; protected set; }
+        public long? TenantId { get; protected set; }
 
         /// <summary>
         /// Id of the user.
@@ -34,7 +34,7 @@ namespace Abp
         /// </summary>
         /// <param name="tenantId">Tenant Id of the user.</param>
         /// <param name="userId">Id of the user.</param>
-        public UserIdentifier(int? tenantId, long userId)
+        public UserIdentifier(long? tenantId, long userId)
         {
             TenantId = tenantId;
             UserId = userId;

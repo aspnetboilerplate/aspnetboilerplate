@@ -62,7 +62,7 @@ namespace Abp.Webhooks
             _webhookSubscriptionRepository.Delete(id);
         }
         
-        public virtual async Task<List<WebhookSubscriptionInfo>> GetAllSubscriptionsAsync(int? tenantId, string webhookDefinitionName)
+        public virtual async Task<List<WebhookSubscriptionInfo>> GetAllSubscriptionsAsync(long? tenantId, string webhookDefinitionName)
         {
             return await _webhookSubscriptionRepository.GetAllListAsync(subscriptionInfo =>
                 subscriptionInfo.TenantId == tenantId &&
@@ -70,7 +70,7 @@ namespace Abp.Webhooks
                 subscriptionInfo.Webhooks.Contains("\"" + webhookDefinitionName + "\""));
         }
         
-        public virtual List<WebhookSubscriptionInfo> GetAllSubscriptions(int? tenantId, string webhookDefinitionName)
+        public virtual List<WebhookSubscriptionInfo> GetAllSubscriptions(long? tenantId, string webhookDefinitionName)
         {
             return _webhookSubscriptionRepository.GetAllList(subscriptionInfo =>
                subscriptionInfo.TenantId == tenantId &&
@@ -78,7 +78,7 @@ namespace Abp.Webhooks
                subscriptionInfo.Webhooks.Contains("\"" + webhookDefinitionName + "\""));
         }
         
-        public virtual Task<bool> IsSubscribedAsync(int? tenantId, string webhookName)
+        public virtual Task<bool> IsSubscribedAsync(long? tenantId, string webhookName)
         {
             return _asyncQueryableExecuter.AnyAsync(_webhookSubscriptionRepository.GetAll()
                 .Where(subscriptionInfo =>
@@ -88,7 +88,7 @@ namespace Abp.Webhooks
                 ));
         }
         
-        public virtual bool IsSubscribed(int? tenantId, string webhookName)
+        public virtual bool IsSubscribed(long? tenantId, string webhookName)
         {
             return _webhookSubscriptionRepository.GetAll()
                 .Any(subscriptionInfo =>
@@ -98,12 +98,12 @@ namespace Abp.Webhooks
                 );
         }
         
-        public virtual Task<List<WebhookSubscriptionInfo>> GetAllSubscriptionsAsync(int? tenantId)
+        public virtual Task<List<WebhookSubscriptionInfo>> GetAllSubscriptionsAsync(long? tenantId)
         {
             return _webhookSubscriptionRepository.GetAllListAsync(subscriptionInfo => subscriptionInfo.TenantId == tenantId);
         }
         
-        public virtual List<WebhookSubscriptionInfo> GetAllSubscriptions(int? tenantId)
+        public virtual List<WebhookSubscriptionInfo> GetAllSubscriptions(long? tenantId)
         {
             return _webhookSubscriptionRepository.GetAllList(subscriptionInfo => subscriptionInfo.TenantId == tenantId);
         }

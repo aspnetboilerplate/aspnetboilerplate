@@ -14,7 +14,7 @@ namespace Abp.Notifications
         /// <summary>
         /// Tenant Id.
         /// </summary>
-        public int? TenantId { get; set; }
+        public long? TenantId { get; set; }
 
         /// <summary>
         /// Unique notification name.

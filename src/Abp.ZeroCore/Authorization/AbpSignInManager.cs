@@ -165,7 +165,7 @@ namespace Abp.Authorization
                 new Microsoft.AspNetCore.Authentication.AuthenticationProperties { IsPersistent = true });
         }
 
-        private bool IsTrue(string settingName, int? tenantId)
+        private bool IsTrue(string settingName, long? tenantId)
         {
             return tenantId == null
                 ? _settingManager.GetSettingValueForApplication<bool>(settingName)

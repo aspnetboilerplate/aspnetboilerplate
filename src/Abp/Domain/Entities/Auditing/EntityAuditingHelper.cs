@@ -10,8 +10,8 @@ namespace Abp.Domain.Entities.Auditing
     {
         public static void SetCreationAuditProperties(
             IMultiTenancyConfig multiTenancyConfig, 
-            object entityAsObj, 
-            int? tenantId,
+            object entityAsObj,
+            long? tenantId,
             long? userId)
         {
             var entityWithCreationTime = entityAsObj as IHasCreationTime;
@@ -68,7 +68,7 @@ namespace Abp.Domain.Entities.Auditing
         public static void SetModificationAuditProperties(
             IMultiTenancyConfig multiTenancyConfig,
             object entityAsObj,
-            int? tenantId,
+            long? tenantId,
             long? userId)
         {
             if (entityAsObj is IHasModificationTime)

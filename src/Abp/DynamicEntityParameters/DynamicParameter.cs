@@ -17,6 +17,6 @@ namespace Abp.DynamicEntityParameters
 
 
         [Column("tenant_id")]
-        public int? TenantId { get; set; }
+        public long? TenantId { get; set; }
     }
 }

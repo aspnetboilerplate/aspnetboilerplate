@@ -17,7 +17,7 @@ namespace Abp.Notifications
         /// Tenant id of the subscribed user.
         /// </summary>
         [Column("tenant_id")]
-        public virtual int? TenantId { get; set; }
+        public virtual long? TenantId { get; set; }
 
         /// <summary>
         /// User Id.
@@ -59,7 +59,7 @@ namespace Abp.Notifications
         /// <summary>
         /// Initializes a new instance of the <see cref="NotificationSubscriptionInfo"/> class.
         /// </summary>
-        public NotificationSubscriptionInfo(Guid id, int? tenantId, long userId, string notificationName, EntityIdentifier entityIdentifier = null)
+        public NotificationSubscriptionInfo(Guid id, long? tenantId, long userId, string notificationName, EntityIdentifier entityIdentifier = null)
         {
             Id = id;
             TenantId = tenantId;

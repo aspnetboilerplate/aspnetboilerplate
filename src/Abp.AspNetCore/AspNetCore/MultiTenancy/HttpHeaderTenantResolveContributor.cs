@@ -25,7 +25,7 @@ namespace Abp.AspNetCore.MultiTenancy
             Logger = NullLogger.Instance;
         }
 
-        public int? ResolveTenantId()
+        public long? ResolveTenantId()
         {
             var httpContext = _httpContextAccessor.HttpContext;
             if (httpContext == null)

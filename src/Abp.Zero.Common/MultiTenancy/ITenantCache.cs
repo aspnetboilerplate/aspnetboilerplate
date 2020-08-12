@@ -2,12 +2,12 @@ namespace Abp.MultiTenancy
 {
     public interface ITenantCache
     {
-        TenantCacheItem Get(int tenantId);
+        TenantCacheItem Get(long tenantId);
 
         TenantCacheItem Get(string tenancyName);
 
         TenantCacheItem GetOrNull(string tenancyName);
 
-        TenantCacheItem GetOrNull(int tenantId);
+        TenantCacheItem GetOrNull(long tenantId);
     }
 }

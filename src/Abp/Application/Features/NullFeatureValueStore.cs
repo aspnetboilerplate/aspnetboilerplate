@@ -15,13 +15,13 @@ namespace Abp.Application.Features
         public static NullFeatureValueStore Instance { get; } = new NullFeatureValueStore();
 
         /// <inheritdoc/>
-        public Task<string> GetValueOrNullAsync(int tenantId, Feature feature)
+        public Task<string> GetValueOrNullAsync(long tenantId, Feature feature)
         {
             return Task.FromResult((string)null);
         }
 
         /// <inheritdoc/>
-        public string GetValueOrNull(int tenantId, Feature feature)
+        public string GetValueOrNull(long tenantId, Feature feature)
         {
             return (string)null;
         }

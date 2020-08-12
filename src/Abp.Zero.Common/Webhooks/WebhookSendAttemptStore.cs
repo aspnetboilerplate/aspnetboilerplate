@@ -71,7 +71,7 @@ namespace Abp.Webhooks
         }
 
         [UnitOfWork]
-        public virtual async Task<WebhookSendAttempt> GetAsync(int? tenantId, Guid id)
+        public virtual async Task<WebhookSendAttempt> GetAsync(long? tenantId, Guid id)
         {
             using (_unitOfWorkManager.Current.SetTenantId(tenantId))
             {
@@ -80,7 +80,7 @@ namespace Abp.Webhooks
         }
 
         [UnitOfWork]
-        public virtual WebhookSendAttempt Get(int? tenantId, Guid id)
+        public virtual WebhookSendAttempt Get(long? tenantId, Guid id)
         {
             using (_unitOfWorkManager.Current.SetTenantId(tenantId))
             {
@@ -89,7 +89,7 @@ namespace Abp.Webhooks
         }
 
         [UnitOfWork]
-        public virtual async Task<int> GetSendAttemptCountAsync(int? tenantId, Guid webhookId, Guid webhookSubscriptionId)
+        public virtual async Task<int> GetSendAttemptCountAsync(long? tenantId, Guid webhookId, Guid webhookSubscriptionId)
         {
             using (_unitOfWorkManager.Current.SetTenantId(tenantId))
             {
@@ -102,7 +102,7 @@ namespace Abp.Webhooks
         }
 
         [UnitOfWork]
-        public virtual int GetSendAttemptCount(int? tenantId, Guid webhookId, Guid webhookSubscriptionId)
+        public virtual int GetSendAttemptCount(long? tenantId, Guid webhookId, Guid webhookSubscriptionId)
         {
             using (_unitOfWorkManager.Current.SetTenantId(tenantId))
             {
@@ -114,7 +114,7 @@ namespace Abp.Webhooks
         }
 
         [UnitOfWork]
-        public async Task<bool> HasXConsecutiveFailAsync(int? tenantId, Guid subscriptionId, int failCount)
+        public async Task<bool> HasXConsecutiveFailAsync(long? tenantId, Guid subscriptionId, int failCount)
         {
             using (_unitOfWorkManager.Current.SetTenantId(tenantId))
             {
@@ -133,7 +133,7 @@ namespace Abp.Webhooks
         }
 
         [UnitOfWork]
-        public bool HasXConsecutiveFail(int? tenantId, Guid subscriptionId, int failCount)
+        public bool HasXConsecutiveFail(long? tenantId, Guid subscriptionId, int failCount)
         {
             using (_unitOfWorkManager.Current.SetTenantId(tenantId))
             {
@@ -151,7 +151,7 @@ namespace Abp.Webhooks
         }
 
         [UnitOfWork]
-        public async Task<IPagedResult<WebhookSendAttempt>> GetAllSendAttemptsBySubscriptionAsPagedListAsync(int? tenantId, Guid subscriptionId, int maxResultCount, int skipCount)
+        public async Task<IPagedResult<WebhookSendAttempt>> GetAllSendAttemptsBySubscriptionAsPagedListAsync(long? tenantId, Guid subscriptionId, int maxResultCount, int skipCount)
         {
             using (_unitOfWorkManager.Current.SetTenantId(tenantId))
             {
@@ -177,7 +177,7 @@ namespace Abp.Webhooks
         }
 
         [UnitOfWork]
-        public IPagedResult<WebhookSendAttempt> GetAllSendAttemptsBySubscriptionAsPagedList(int? tenantId, Guid subscriptionId, int maxResultCount, int skipCount)
+        public IPagedResult<WebhookSendAttempt> GetAllSendAttemptsBySubscriptionAsPagedList(long? tenantId, Guid subscriptionId, int maxResultCount, int skipCount)
         {
             using (_unitOfWorkManager.Current.SetTenantId(tenantId))
             {
@@ -203,7 +203,7 @@ namespace Abp.Webhooks
         }
 
         [UnitOfWork]
-        public async Task<List<WebhookSendAttempt>> GetAllSendAttemptsByWebhookEventIdAsync(int? tenantId, Guid webhookEventId)
+        public async Task<List<WebhookSendAttempt>> GetAllSendAttemptsByWebhookEventIdAsync(long? tenantId, Guid webhookEventId)
         {
             using (_unitOfWorkManager.Current.SetTenantId(tenantId))
             {
@@ -215,7 +215,7 @@ namespace Abp.Webhooks
         }
 
         [UnitOfWork]
-        public List<WebhookSendAttempt> GetAllSendAttemptsByWebhookEventId(int? tenantId, Guid webhookEventId)
+        public List<WebhookSendAttempt> GetAllSendAttemptsByWebhookEventId(long? tenantId, Guid webhookEventId)
         {
             using (_unitOfWorkManager.Current.SetTenantId(tenantId))
             {

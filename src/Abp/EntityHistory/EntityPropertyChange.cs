@@ -59,6 +59,6 @@ namespace Abp.EntityHistory
         /// TenantId.
         /// </summary>
         [Column("tenant_id")]
-        public virtual int? TenantId { get; set; }
+        public virtual long? TenantId { get; set; }
     }
 }

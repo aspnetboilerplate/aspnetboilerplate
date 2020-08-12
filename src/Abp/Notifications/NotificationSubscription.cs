@@ -12,7 +12,7 @@ namespace Abp.Notifications
         /// <summary>
         /// Tenant id of the subscribed user.
         /// </summary>
-        public int? TenantId { get; set; }
+        public long? TenantId { get; set; }
 
         /// <summary>
         /// User Id.

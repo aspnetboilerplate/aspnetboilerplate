@@ -210,10 +210,10 @@ namespace Abp.EntityFramework
         {
             modelBuilder.Filter(AbpDataFilters.SoftDelete, (ISoftDelete d) => d.IsDeleted, false);
             modelBuilder.Filter(AbpDataFilters.MustHaveTenant,
-                (IMustHaveTenant t, int tenantId) => t.TenantId == tenantId || (int?)t.TenantId == null,
+                (IMustHaveTenant t, long tenantId) => t.TenantId == tenantId || (long?)t.TenantId == null,
                 0); //While "(int?)t.TenantId == null" seems wrong, it's needed. See https://github.com/jcachat/EntityFramework.DynamicFilters/issues/62#issuecomment-208198058
             modelBuilder.Filter(AbpDataFilters.MayHaveTenant,
-                (IMayHaveTenant t, int? tenantId) => t.TenantId == tenantId, 0);
+                (IMayHaveTenant t, long? tenantId) => t.TenantId == tenantId, 0);
 
 
             modelBuilder.Filter(AbpDataFilters.MustHaveBranch,

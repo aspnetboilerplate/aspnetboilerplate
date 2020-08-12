@@ -43,7 +43,7 @@ namespace Abp.Webhooks
             await PublishAsync(tenantId, webhookName, data, subscriptions, sendExactSameData);
         }
 
-        private async Task PublishAsync(int? tenantId, string webhookName, object data, List<WebhookSubscription> webhookSubscriptions, bool sendExactSameData = false)
+        private async Task PublishAsync(long? tenantId, string webhookName, object data, List<WebhookSubscription> webhookSubscriptions, bool sendExactSameData = false)
         {
             if (webhookSubscriptions.IsNullOrEmpty())
             {
@@ -81,7 +81,7 @@ namespace Abp.Webhooks
             Publish(tenantId, webhookName, data, subscriptions, sendExactSameData);
         }
 
-        private void Publish(int? tenantId, string webhookName, object data, List<WebhookSubscription> webhookSubscriptions, bool sendExactSameData = false)
+        private void Publish(long? tenantId, string webhookName, object data, List<WebhookSubscription> webhookSubscriptions, bool sendExactSameData = false)
         {
             if (webhookSubscriptions.IsNullOrEmpty())
             {
@@ -107,7 +107,7 @@ namespace Abp.Webhooks
             }
         }
 
-        protected virtual async Task<WebhookEvent> SaveAndGetWebhookAsync(int? tenantId, string webhookName, object data)
+        protected virtual async Task<WebhookEvent> SaveAndGetWebhookAsync(long? tenantId, string webhookName, object data)
         {
             var webhookInfo = new WebhookEvent
             {
@@ -123,7 +123,7 @@ namespace Abp.Webhooks
             return webhookInfo;
         }
 
-        protected virtual WebhookEvent SaveAndGetWebhook(int? tenantId, string webhookName, object data)
+        protected virtual WebhookEvent SaveAndGetWebhook(long? tenantId, string webhookName, object data)
         {
             var webhookInfo = new WebhookEvent
             {

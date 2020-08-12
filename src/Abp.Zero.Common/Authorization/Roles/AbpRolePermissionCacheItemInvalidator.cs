@@ -35,7 +35,7 @@ namespace Abp.Authorization.Roles
             InvalidateRoleCache(eventData.Entity.Id, eventData.Entity.TenantId);
         }
 
-        private void InvalidateRoleCache(int roleId, int? tenantId)
+        private void InvalidateRoleCache(int roleId, long? tenantId)
         {
             var cacheKey = roleId + "@" + (tenantId ?? 0);
             var cache = _cacheManager.GetRolePermissionCache();

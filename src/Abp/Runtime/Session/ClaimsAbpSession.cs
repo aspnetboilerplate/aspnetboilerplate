@@ -37,7 +37,7 @@ namespace Abp.Runtime.Session
             }
         }
 
-        public override int? TenantId
+        public override long? TenantId
         {
             get
             {

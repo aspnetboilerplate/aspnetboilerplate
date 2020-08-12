@@ -9,7 +9,7 @@ namespace Abp.MultiTenancy
 
         public const string ByNameCacheName = "AbpZeroTenantByNameCache";
 
-        public int Id { get; set; }
+        public long Id { get; set; }
 
         public string Name { get; set; }
 

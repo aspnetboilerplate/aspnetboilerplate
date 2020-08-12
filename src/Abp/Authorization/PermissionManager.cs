@@ -97,7 +97,7 @@ namespace Abp.Authorization
             }
         }
 
-        private int? GetCurrentTenantId()
+        private long? GetCurrentTenantId()
         {
             if (_unitOfWorkManager.Current != null)
             {

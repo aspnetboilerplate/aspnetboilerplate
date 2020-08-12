@@ -63,7 +63,7 @@ namespace Abp.Auditing
         /// TenantId.
         /// </summary>
         [Column("tenant_id")]
-        public virtual int? TenantId { get; set; }
+        public virtual long? TenantId { get; set; }
 
         /// <summary>
         /// UserId.
@@ -128,7 +128,7 @@ namespace Abp.Auditing
         /// <summary>
         /// <see cref="AuditInfo.ImpersonatorTenantId"/>.
         /// </summary>
-        public virtual int? ImpersonatorTenantId { get; set; }
+        public virtual long? ImpersonatorTenantId { get; set; }
 
         /// <summary>
         /// <see cref="AuditInfo.CustomData"/>.

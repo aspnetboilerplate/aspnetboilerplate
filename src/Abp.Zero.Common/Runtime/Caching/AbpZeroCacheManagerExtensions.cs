@@ -17,9 +17,9 @@ namespace Abp.Runtime.Caching
             return cacheManager.GetCache<string, RolePermissionCacheItem>(RolePermissionCacheItem.CacheStoreName);
         }
 
-        public static ITypedCache<int, TenantFeatureCacheItem> GetTenantFeatureCache(this ICacheManager cacheManager)
+        public static ITypedCache<long, TenantFeatureCacheItem> GetTenantFeatureCache(this ICacheManager cacheManager)
         {
-            return cacheManager.GetCache<int, TenantFeatureCacheItem>(TenantFeatureCacheItem.CacheStoreName);
+            return cacheManager.GetCache<long, TenantFeatureCacheItem>(TenantFeatureCacheItem.CacheStoreName);
         }
 
         public static ITypedCache<int, EditionfeatureCacheItem> GetEditionFeatureCache(this ICacheManager cacheManager)

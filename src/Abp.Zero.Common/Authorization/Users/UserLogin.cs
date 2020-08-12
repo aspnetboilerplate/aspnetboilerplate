@@ -21,7 +21,7 @@ namespace Abp.Authorization.Users
         public const int MaxProviderKeyLength = 256;
 
         [Column("tenant_id")]
-        public virtual int? TenantId { get; set; }
+        public virtual long? TenantId { get; set; }
 
         /// <summary>
         /// Id of the User.
@@ -47,7 +47,7 @@ namespace Abp.Authorization.Users
             
         }
 
-        public UserLogin(int? tenantId, long userId, string loginProvider, string providerKey)
+        public UserLogin(long? tenantId, long userId, string loginProvider, string providerKey)
         {
             TenantId = tenantId;
             UserId = userId;

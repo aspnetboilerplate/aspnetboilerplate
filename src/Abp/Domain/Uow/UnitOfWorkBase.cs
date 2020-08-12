@@ -83,7 +83,7 @@ namespace Abp.Domain.Uow
         /// </summary>
         private Exception _exception;
 
-        private int? _tenantId;
+        private long? _tenantId;
         private long? _branchId;
 
         /// <summary>
@@ -208,12 +208,12 @@ namespace Abp.Domain.Uow
             });
         }
 
-        public virtual IDisposable SetTenantId(int? tenantId)
+        public virtual IDisposable SetTenantId(long? tenantId)
         {
             return SetTenantId(tenantId, true);
         }
 
-        public virtual IDisposable SetTenantId(int? tenantId, bool switchMustHaveTenantEnableDisable)
+        public virtual IDisposable SetTenantId(long? tenantId, bool switchMustHaveTenantEnableDisable)
         {
             var oldTenantId = _tenantId;
             _tenantId = tenantId;
@@ -257,7 +257,7 @@ namespace Abp.Domain.Uow
             });
         }
 
-        public int? GetTenantId()
+        public long? GetTenantId()
         {
             return _tenantId;
         }

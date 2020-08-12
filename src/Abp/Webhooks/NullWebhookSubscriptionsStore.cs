@@ -49,32 +49,32 @@ namespace Abp.Webhooks
         {
         }
 
-        public Task<List<WebhookSubscriptionInfo>> GetAllSubscriptionsAsync(int? tenantId)
+        public Task<List<WebhookSubscriptionInfo>> GetAllSubscriptionsAsync(long? tenantId)
         {
             return Task.FromResult(new List<WebhookSubscriptionInfo>());
         }
 
-        public List<WebhookSubscriptionInfo> GetAllSubscriptions(int? tenantId)
+        public List<WebhookSubscriptionInfo> GetAllSubscriptions(long? tenantId)
         {
             return new List<WebhookSubscriptionInfo>();
         }
 
-        public Task<List<WebhookSubscriptionInfo>> GetAllSubscriptionsAsync(int? tenantId, string webhookName)
+        public Task<List<WebhookSubscriptionInfo>> GetAllSubscriptionsAsync(long? tenantId, string webhookName)
         {
             return Task.FromResult(new List<WebhookSubscriptionInfo>());
         }
 
-        public List<WebhookSubscriptionInfo> GetAllSubscriptions(int? tenantId, string webhookName)
+        public List<WebhookSubscriptionInfo> GetAllSubscriptions(long? tenantId, string webhookName)
         {
             return new List<WebhookSubscriptionInfo>();
         }
 
-        public Task<bool> IsSubscribedAsync(int? tenantId, string webhookName)
+        public Task<bool> IsSubscribedAsync(long? tenantId, string webhookName)
         {
             return Task.FromResult(false);
         }
 
-        public bool IsSubscribed(int? tenantId, string webhookName)
+        public bool IsSubscribed(long? tenantId, string webhookName)
         {
             return false;
         }

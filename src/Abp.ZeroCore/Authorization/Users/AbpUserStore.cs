@@ -2245,7 +2245,7 @@ namespace Abp.Authorization.Users
         /// <param name="userNameOrEmailAddress">User name or email address</param>
         /// <returns>User or null</returns>
         [UnitOfWork]
-        public virtual async Task<TUser> FindByNameOrEmailAsync(int? tenantId, string userNameOrEmailAddress)
+        public virtual async Task<TUser> FindByNameOrEmailAsync(long? tenantId, string userNameOrEmailAddress)
         {
             using (_unitOfWorkManager.Current.SetTenantId(tenantId))
             {
@@ -2260,7 +2260,7 @@ namespace Abp.Authorization.Users
         /// <param name="userNameOrEmailAddress">User name or email address</param>
         /// <returns>User or null</returns>
         [UnitOfWork]
-        public virtual TUser FindByNameOrEmail(int? tenantId, string userNameOrEmailAddress)
+        public virtual TUser FindByNameOrEmail(long? tenantId, string userNameOrEmailAddress)
         {
             using (_unitOfWorkManager.Current.SetTenantId(tenantId))
             {
@@ -2319,7 +2319,7 @@ namespace Abp.Authorization.Users
         }
 
         [UnitOfWork]
-        public virtual Task<TUser> FindAsync(int? tenantId, UserLoginInfo login)
+        public virtual Task<TUser> FindAsync(long? tenantId, UserLoginInfo login)
         {
             using (_unitOfWorkManager.Current.SetTenantId(tenantId))
             {
@@ -2333,7 +2333,7 @@ namespace Abp.Authorization.Users
         }
 
         [UnitOfWork]
-        public virtual TUser Find(int? tenantId, UserLoginInfo login)
+        public virtual TUser Find(long? tenantId, UserLoginInfo login)
         {
             using (_unitOfWorkManager.Current.SetTenantId(tenantId))
             {

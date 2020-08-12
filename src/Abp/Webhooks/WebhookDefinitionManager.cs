@@ -80,7 +80,7 @@ namespace Abp.Webhooks
             return _webhookDefinitions.ContainsKey(name);
         }
 
-        public async Task<bool> IsAvailableAsync(int? tenantId, string name)
+        public async Task<bool> IsAvailableAsync(long? tenantId, string name)
         {
             if (tenantId == null) // host allowed to subscribe all webhooks
             {
@@ -112,7 +112,7 @@ namespace Abp.Webhooks
             return true;
         }
 
-        public bool IsAvailable(int? tenantId, string name)
+        public bool IsAvailable(long? tenantId, string name)
         {
             if (tenantId == null) // host allowed to subscribe all webhooks
             {

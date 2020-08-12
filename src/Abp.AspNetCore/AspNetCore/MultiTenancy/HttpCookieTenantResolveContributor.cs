@@ -19,7 +19,7 @@ namespace Abp.AspNetCore.MultiTenancy
             _multiTenancyConfig = multiTenancyConfig;
         }
 
-        public int? ResolveTenantId()
+        public long? ResolveTenantId()
         {
             var httpContext = _httpContextAccessor.HttpContext;
             if (httpContext == null)

@@ -43,14 +43,14 @@ namespace Abp.MultiTenancy
 
         public IUnitOfWorkManager UnitOfWorkManager { get; set; }
 
-        protected IRepository<TTenant> TenantRepository { get; set; }
+        protected IRepository<TTenant, long> TenantRepository { get; set; }
 
         protected IRepository<TenantFeatureSetting, long> TenantFeatureRepository { get; set; }
 
         private readonly IAbpZeroFeatureValueStore _featureValueStore;
 
         public AbpTenantManager(
-            IRepository<TTenant> tenantRepository, 
+            IRepository<TTenant, long> tenantRepository, 
             IRepository<TenantFeatureSetting, long> tenantFeatureRepository,
             AbpEditionManager editionManager,
             IAbpZeroFeatureValueStore featureValueStore)
@@ -109,17 +109,17 @@ namespace Abp.MultiTenancy
             TenantRepository.Update(tenant);
         }
 
-        public virtual async Task<TTenant> FindByIdAsync(int id)
+        public virtual async Task<TTenant> FindByIdAsync(long id)
         {
             return await TenantRepository.FirstOrDefaultAsync(id);
         }
 
-        public virtual TTenant FindById(int id)
+        public virtual TTenant FindById(long id)
         {
             return TenantRepository.FirstOrDefault(id);
         }
 
-        public virtual async Task<TTenant> GetByIdAsync(int id)
+        public virtual async Task<TTenant> GetByIdAsync(long id)
         {
             var tenant = await FindByIdAsync(id);
             if (tenant == null)
@@ -130,7 +130,7 @@ namespace Abp.MultiTenancy
             return tenant;
         }
 
-        public virtual TTenant GetById(int id)
+        public virtual TTenant GetById(long id)
         {
             var tenant = FindById(id);
             if (tenant == null)
@@ -161,17 +161,17 @@ namespace Abp.MultiTenancy
             TenantRepository.Delete(tenant);
         }
 
-        public Task<string> GetFeatureValueOrNullAsync(int tenantId, string featureName)
+        public Task<string> GetFeatureValueOrNullAsync(long tenantId, string featureName)
         {
             return _featureValueStore.GetValueOrNullAsync(tenantId, featureName);
         }
 
-        public string GetFeatureValueOrNull(int tenantId, string featureName)
+        public string GetFeatureValueOrNull(long tenantId, string featureName)
         {
             return _featureValueStore.GetValueOrNull(tenantId, featureName);
         }
 
-        public virtual async Task<IReadOnlyList<NameValue>> GetFeatureValuesAsync(int tenantId)
+        public virtual async Task<IReadOnlyList<NameValue>> GetFeatureValuesAsync(long tenantId)
         {
             var values = new List<NameValue>();
 
@@ -183,7 +183,7 @@ namespace Abp.MultiTenancy
             return values;
         }
 
-        public virtual IReadOnlyList<NameValue> GetFeatureValues(int tenantId)
+        public virtual IReadOnlyList<NameValue> GetFeatureValues(long tenantId)
         {
             var values = new List<NameValue>();
 
@@ -195,7 +195,7 @@ namespace Abp.MultiTenancy
             return values;
         }
 
-        public virtual async Task SetFeatureValuesAsync(int tenantId, params NameValue[] values)
+        public virtual async Task SetFeatureValuesAsync(long tenantId, params NameValue[] values)
         {
             if (values.IsNullOrEmpty())
             {
@@ -222,13 +222,13 @@ namespace Abp.MultiTenancy
         }
 
         [UnitOfWork]
-        public virtual async Task SetFeatureValueAsync(int tenantId, string featureName, string value)
+        public virtual async Task SetFeatureValueAsync(long tenantId, string featureName, string value)
         {
             await SetFeatureValueAsync(await GetByIdAsync(tenantId), featureName, value);
         }
 
         [UnitOfWork]
-        public virtual void SetFeatureValue(int tenantId, string featureName, string value)
+        public virtual void SetFeatureValue(long tenantId, string featureName, string value)
         {
             SetFeatureValue(GetById(tenantId), featureName, value);
         }
@@ -351,7 +351,7 @@ namespace Abp.MultiTenancy
         /// </summary>
         /// <param name="tenantId">Tenant Id</param>
         [UnitOfWork]
-        public virtual async Task ResetAllFeaturesAsync(int tenantId)
+        public virtual async Task ResetAllFeaturesAsync(long tenantId)
         {
             using (UnitOfWorkManager.Current.EnableFilter(AbpDataFilters.MayHaveTenant))
             using (UnitOfWorkManager.Current.SetTenantId(tenantId))
@@ -366,7 +366,7 @@ namespace Abp.MultiTenancy
         /// </summary>
         /// <param name="tenantId">Tenant Id</param>
         [UnitOfWork]
-        public virtual void ResetAllFeatures(int tenantId)
+        public virtual void ResetAllFeatures(long tenantId)
         {
             using (UnitOfWorkManager.Current.EnableFilter(AbpDataFilters.MayHaveTenant))
             using (UnitOfWorkManager.Current.SetTenantId(tenantId))

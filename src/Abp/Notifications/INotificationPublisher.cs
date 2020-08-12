@@ -41,7 +41,7 @@ namespace Abp.Notifications
             NotificationSeverity severity = NotificationSeverity.Info,
             UserIdentifier[] userIds = null,
             UserIdentifier[] excludedUserIds = null,
-            int?[] tenantIds = null);
+            long?[] tenantIds = null);
 
 
         /// <summary>
@@ -76,6 +76,6 @@ namespace Abp.Notifications
             NotificationSeverity severity = NotificationSeverity.Info,
             UserIdentifier[] userIds = null,
             UserIdentifier[] excludedUserIds = null,
-            int?[] tenantIds = null);
+            long?[] tenantIds = null);
     }
 }

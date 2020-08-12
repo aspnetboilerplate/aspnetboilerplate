@@ -28,7 +28,7 @@
         /// <param name="session">Session object.</param>
         /// <returns>Current Tenant's Id.</returns>
         /// <exception cref="AbpException"></exception>
-        public static int GetTenantId(this IAbpSession session)
+        public static long GetTenantId(this IAbpSession session)
         {
             if (!session.TenantId.HasValue)
             {

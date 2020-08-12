@@ -50,7 +50,7 @@ namespace Abp.Domain.Entities.Caching
             InternalCache.Remove(GetCacheKey(eventData.Entity));
         }
 
-        protected virtual int? GetCurrentTenantId()
+        protected virtual long? GetCurrentTenantId()
         {
             if (_unitOfWorkManager.Current != null)
             {
@@ -65,7 +65,7 @@ namespace Abp.Domain.Entities.Caching
             return GetCacheKey(id, GetCurrentTenantId());
         }
 
-        public virtual string GetCacheKey(TPrimaryKey id, int? tenantId)
+        public virtual string GetCacheKey(TPrimaryKey id, long? tenantId)
         {
             return id + "@" + (tenantId ?? 0);
         }

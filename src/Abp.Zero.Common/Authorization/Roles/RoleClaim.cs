@@ -15,7 +15,7 @@ namespace Abp.Authorization.Roles
         public const int MaxClaimTypeLength = 256;
 
         [Column("tenant_id")]
-        public virtual int? TenantId { get; set; }
+        public virtual long? TenantId { get; set; }
 
         public virtual int RoleId { get; set; }
 

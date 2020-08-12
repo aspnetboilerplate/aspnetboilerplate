@@ -22,7 +22,7 @@ namespace Abp.MultiTenancy
         /// <param name="tenantId">The tenant identifier.</param>
         /// <param name="name">Feature name.</param>
         /// <param name="value">Feature value.</param>
-        public TenantFeatureSetting(int tenantId, string name, string value)
+        public TenantFeatureSetting(long tenantId, string name, string value)
             :base(name, value)
         {
             TenantId = tenantId;

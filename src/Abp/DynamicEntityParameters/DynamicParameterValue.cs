@@ -14,7 +14,7 @@ namespace Abp.DynamicEntityParameters
         public string Value { get; set; }
 
         [Column("tenant_id")]
-        public int? TenantId { get; set; }
+        public long? TenantId { get; set; }
 
         public int DynamicParameterId { get; set; }
 
@@ -25,7 +25,7 @@ namespace Abp.DynamicEntityParameters
         {
         }
 
-        public DynamicParameterValue(DynamicParameter dynamicParameter, string value, int? tenantId)
+        public DynamicParameterValue(DynamicParameter dynamicParameter, string value, long? tenantId)
         {
             Value = value;
             TenantId = tenantId;

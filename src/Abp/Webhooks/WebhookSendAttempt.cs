@@ -40,7 +40,7 @@ namespace Abp.Webhooks
         public DateTime? LastModificationTime { get; set; }
 
         [Column("tenant_id")]
-        public int? TenantId { get; set; }
+        public long? TenantId { get; set; }
 
         /// <summary>
         /// WebhookEvent of this send attempt.

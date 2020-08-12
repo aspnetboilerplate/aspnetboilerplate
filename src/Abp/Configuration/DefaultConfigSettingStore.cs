@@ -21,7 +21,7 @@ namespace Abp.Configuration
         {
         }
 
-        public Task<SettingInfo> GetSettingOrNullAsync(int? tenantId, long? userId, string name)
+        public Task<SettingInfo> GetSettingOrNullAsync(long? tenantId, long? userId, string name)
         {
             var value = ConfigurationManager.AppSettings[name];
 
@@ -34,7 +34,7 @@ namespace Abp.Configuration
 
         }
 
-        public SettingInfo GetSettingOrNull(int? tenantId, long? userId, string name)
+        public SettingInfo GetSettingOrNull(long? tenantId, long? userId, string name)
         {
             var value = ConfigurationManager.AppSettings[name];
 
@@ -85,14 +85,14 @@ namespace Abp.Configuration
         }
 
         /// <inheritdoc/>
-        public Task<List<SettingInfo>> GetAllListAsync(int? tenantId, long? userId)
+        public Task<List<SettingInfo>> GetAllListAsync(long? tenantId, long? userId)
         {
             LogHelper.Logger.Warn("ISettingStore is not implemented, using DefaultConfigSettingStore which does not support GetAllListAsync.");
             return Task.FromResult(new List<SettingInfo>());
         }
 
         /// <inheritdoc/>
-        public List<SettingInfo> GetAllList(int? tenantId, long? userId)
+        public List<SettingInfo> GetAllList(long? tenantId, long? userId)
         {
             LogHelper.Logger.Warn("ISettingStore is not implemented, using DefaultConfigSettingStore which does not support GetAllListAsync.");
             return new List<SettingInfo>();

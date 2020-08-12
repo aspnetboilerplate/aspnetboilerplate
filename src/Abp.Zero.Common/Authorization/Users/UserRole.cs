@@ -11,7 +11,7 @@ namespace Abp.Authorization.Users
     public class UserRole : CreationAuditedEntity<long>, IMayHaveTenant, IMayHaveBranch
     {
         [Column("tenant_id")]
-        public virtual int? TenantId { get; set; }
+        public virtual long? TenantId { get; set; }
 
         /// <summary>
         /// User id.
@@ -40,7 +40,7 @@ namespace Abp.Authorization.Users
         /// <param name="tenantId">Tenant id</param>
         /// <param name="userId">User id</param>
         /// <param name="roleId">Role id</param>
-        public UserRole(int? tenantId, long userId, int roleId, long? branchId)
+        public UserRole(long? tenantId, long userId, int roleId, long? branchId)
         {
             TenantId = tenantId;
             UserId = userId;

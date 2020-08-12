@@ -61,7 +61,7 @@ namespace Abp.Localization
             return GetStringsOrNull(_session.TenantId, names);
         }
 
-        public LocalizedString GetOrNull(int? tenantId, string name)
+        public LocalizedString GetOrNull(long? tenantId, string name)
         {
             //Get cache
             var cache = _cacheManager.GetMultiTenantLocalizationDictionaryCache();
@@ -96,7 +96,7 @@ namespace Abp.Localization
             return null;
         }
 
-        public IReadOnlyList<LocalizedString> GetStringsOrNull(int? tenantId, List<string> names)
+        public IReadOnlyList<LocalizedString> GetStringsOrNull(long? tenantId, List<string> names)
         {
             //Get cache
             var cache = _cacheManager.GetMultiTenantLocalizationDictionaryCache();
@@ -135,7 +135,7 @@ namespace Abp.Localization
             return GetAllStrings(_session.TenantId);
         }
 
-        public IReadOnlyList<LocalizedString> GetAllStrings(int? tenantId)
+        public IReadOnlyList<LocalizedString> GetAllStrings(long? tenantId)
         {
             //Get cache
             var cache = _cacheManager.GetMultiTenantLocalizationDictionaryCache();
@@ -168,13 +168,13 @@ namespace Abp.Localization
             return dictionary.Values.ToImmutableList();
         }
 
-        private string CalculateCacheKey(int? tenantId)
+        private string CalculateCacheKey(long? tenantId)
         {
             return MultiTenantLocalizationDictionaryCacheHelper.CalculateCacheKey(tenantId, _sourceName, CultureInfo.Name);
         }
 
         [UnitOfWork]
-        protected virtual Dictionary<string, string> GetAllValuesFromDatabase(int? tenantId)
+        protected virtual Dictionary<string, string> GetAllValuesFromDatabase(long? tenantId)
         {
             using (_unitOfWorkManager.Current.SetTenantId(tenantId))
             {

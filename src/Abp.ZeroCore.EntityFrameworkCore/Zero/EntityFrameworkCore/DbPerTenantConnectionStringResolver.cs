@@ -63,7 +63,7 @@ namespace Abp.Zero.EntityFrameworkCore
             return tenantCacheItem.ConnectionString;
         }
 
-        protected virtual int? GetCurrentTenantId()
+        protected virtual long? GetCurrentTenantId()
         {
             return _currentUnitOfWorkProvider.Current != null
                 ? _currentUnitOfWorkProvider.Current.GetTenantId()

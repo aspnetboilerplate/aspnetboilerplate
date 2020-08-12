@@ -12,6 +12,6 @@ namespace Abp.Domain.Entities.Caching
 
         string GetCacheKey(TPrimaryKey id);
 
-        string GetCacheKey(TPrimaryKey id, int? tenantId);
+        string GetCacheKey(TPrimaryKey id, long? tenantId);
     }
 }

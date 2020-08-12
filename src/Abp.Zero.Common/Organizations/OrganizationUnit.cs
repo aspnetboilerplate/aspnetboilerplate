@@ -40,7 +40,7 @@ namespace Abp.Organizations
         /// TenantId of this entity.
         /// </summary>
         [Column("tenant_id")]
-        public virtual int? TenantId { get; set; }
+        public virtual long? TenantId { get; set; }
 
         /// <summary>
         /// Parent <see cref="OrganizationUnit"/>.

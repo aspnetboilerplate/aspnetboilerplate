@@ -9,7 +9,7 @@
             _tenantCache = tenantCache;
         }
 
-        public TenantInfo Find(int tenantId)
+        public TenantInfo Find(long tenantId)
         {
             var tenant = _tenantCache.GetOrNull(tenantId);
             if (tenant == null)

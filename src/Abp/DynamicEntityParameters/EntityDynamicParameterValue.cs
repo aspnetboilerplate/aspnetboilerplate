@@ -17,14 +17,14 @@ namespace Abp.DynamicEntityParameters
         public virtual EntityDynamicParameter EntityDynamicParameter { get; set; }
 
         [Column("tenant_id")]
-        public int? TenantId { get; set; }
+        public long? TenantId { get; set; }
 
         public EntityDynamicParameterValue()
         {
 
         }
 
-        public EntityDynamicParameterValue(EntityDynamicParameter entityDynamicParameter, string entityId, string value, int? tenantId)
+        public EntityDynamicParameterValue(EntityDynamicParameter entityDynamicParameter, string entityId, string value, long? tenantId)
         {
             EntityDynamicParameterId = entityDynamicParameter.Id;
             EntityId = entityId;

@@ -2,7 +2,7 @@ namespace Abp.MultiTenancy
 {
     public interface ITenantResolver
     {
-        int? ResolveTenantId();
+        long? ResolveTenantId();
     }
 
     public interface IBranchResolver

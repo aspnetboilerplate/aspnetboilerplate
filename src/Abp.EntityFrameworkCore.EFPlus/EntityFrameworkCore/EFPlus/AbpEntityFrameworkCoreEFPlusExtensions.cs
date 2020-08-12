@@ -185,7 +185,7 @@ namespace Abp.EntityFrameworkCore.EFPlus
             return expression;
         }
 
-        private static int? GetCurrentTenantIdOrNull(IIocResolver iocResolver)
+        private static long? GetCurrentTenantIdOrNull(IIocResolver iocResolver)
         {
             using (var scope = iocResolver.CreateScope())
             {

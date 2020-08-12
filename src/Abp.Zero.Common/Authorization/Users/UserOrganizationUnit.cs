@@ -15,7 +15,7 @@ namespace Abp.Authorization.Users
         /// TenantId of this entity.
         /// </summary>
         [Column("tenant_id")]
-        public virtual int? TenantId { get; set; }
+        public virtual long? TenantId { get; set; }
 
         /// <summary>
         /// Id of the User.
@@ -46,7 +46,7 @@ namespace Abp.Authorization.Users
         /// <param name="tenantId">TenantId</param>
         /// <param name="userId">Id of the User.</param>
         /// <param name="organizationUnitId">Id of the <see cref="OrganizationUnit"/>.</param>
-        public UserOrganizationUnit(int? tenantId, long userId, long organizationUnitId)
+        public UserOrganizationUnit(long? tenantId, long userId, long organizationUnitId)
         {
             TenantId = tenantId;
             UserId = userId;

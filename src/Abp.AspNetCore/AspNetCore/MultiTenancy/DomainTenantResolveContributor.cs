@@ -25,7 +25,7 @@ namespace Abp.AspNetCore.MultiTenancy
             _tenantStore = tenantStore;
         }
 
-        public int? ResolveTenantId()
+        public long? ResolveTenantId()
         {
             if (_multiTenancyConfiguration.DomainFormat.IsNullOrEmpty())
             {

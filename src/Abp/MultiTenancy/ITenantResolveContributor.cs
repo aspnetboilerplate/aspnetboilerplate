@@ -2,7 +2,7 @@
 {
     public interface ITenantResolveContributor
     {
-        int? ResolveTenantId();
+        long? ResolveTenantId();
     }
     public interface IBranchResolveContributor
     {

@@ -18,7 +18,7 @@ namespace Abp.Localization
             return cacheManager.GetCache(CacheName).AsTyped<string, Dictionary<string, string>>();
         }
 
-        public static string CalculateCacheKey(int? tenantId, string sourceName, string languageName)
+        public static string CalculateCacheKey(long? tenantId, string sourceName, string languageName)
         {
             return sourceName + "#" + languageName + "#" + (tenantId ?? 0);
         }

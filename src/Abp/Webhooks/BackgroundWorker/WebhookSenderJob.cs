@@ -79,7 +79,7 @@ namespace Abp.Webhooks.BackgroundWorker
             }
         }
 
-        private bool TryDeactivateSubscriptionIfReachedMaxConsecutiveFailCount(int? tenantId, Guid subscriptionId)
+        private bool TryDeactivateSubscriptionIfReachedMaxConsecutiveFailCount(long? tenantId, Guid subscriptionId)
         {
             if (!_webhooksConfiguration.IsAutomaticSubscriptionDeactivationEnabled)
             {

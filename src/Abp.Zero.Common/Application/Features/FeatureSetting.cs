@@ -24,7 +24,7 @@ namespace Abp.Application.Features
         public const int MaxValueLength = 2000;
 
         [Column("tenant_id")]
-        public virtual int? TenantId { get; set; }
+        public virtual long? TenantId { get; set; }
 
         /// <summary>
         /// Feature name.

@@ -27,7 +27,7 @@ namespace Abp.Configuration
         }
 
         [UnitOfWork]
-        public virtual async Task<List<SettingInfo>> GetAllListAsync(int? tenantId, long? userId)
+        public virtual async Task<List<SettingInfo>> GetAllListAsync(long? tenantId, long? userId)
         {
             /* Combined SetTenantId and DisableFilter for backward compatibility.
              * SetTenantId switches database (for tenant) if needed.
@@ -46,7 +46,7 @@ namespace Abp.Configuration
         }
 
         [UnitOfWork]
-        public virtual List<SettingInfo> GetAllList(int? tenantId, long? userId)
+        public virtual List<SettingInfo> GetAllList(long? tenantId, long? userId)
         {
             /* Combined SetTenantId and DisableFilter for backward compatibility.
              * SetTenantId switches database (for tenant) if needed.
@@ -65,7 +65,7 @@ namespace Abp.Configuration
         }
 
         [UnitOfWork]
-        public virtual async Task<SettingInfo> GetSettingOrNullAsync(int? tenantId, long? userId, string name)
+        public virtual async Task<SettingInfo> GetSettingOrNullAsync(long? tenantId, long? userId, string name)
         {
             using (_unitOfWorkManager.Current.SetTenantId(tenantId))
             {
@@ -78,7 +78,7 @@ namespace Abp.Configuration
         }
 
         [UnitOfWork]
-        public virtual SettingInfo GetSettingOrNull(int? tenantId, long? userId, string name)
+        public virtual SettingInfo GetSettingOrNull(long? tenantId, long? userId, string name)
         {
             using (_unitOfWorkManager.Current.SetTenantId(tenantId))
             {

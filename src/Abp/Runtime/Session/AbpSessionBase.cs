@@ -12,7 +12,7 @@ namespace Abp.Runtime.Session
 
         public abstract long? UserId { get; }
 
-        public abstract int? TenantId { get; }
+        public abstract long? TenantId { get; }
         public abstract long? BranchId { get; }
 
         public abstract long? ImpersonatorUserId { get; }
@@ -38,7 +38,7 @@ namespace Abp.Runtime.Session
             SessionOverrideScopeProvider = sessionOverrideScopeProvider;
         }
 
-        public IDisposable Use(int? tenantId, long? userId, long? branchId)
+        public IDisposable Use(long? tenantId, long? userId, long? branchId)
         {
             return SessionOverrideScopeProvider.BeginScope(SessionOverrideContextKey, new SessionOverride(tenantId, userId, branchId));
         }

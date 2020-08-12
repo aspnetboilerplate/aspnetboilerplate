@@ -31,7 +31,7 @@ namespace Abp.Application.Features
     {
         private readonly ICacheManager _cacheManager;
         private readonly IRepository<TenantFeatureSetting, long> _tenantFeatureRepository;
-        private readonly IRepository<TTenant> _tenantRepository;
+        private readonly IRepository<TTenant, long> _tenantRepository;
         private readonly IRepository<EditionFeatureSetting, long> _editionFeatureRepository;
         private readonly IFeatureManager _featureManager;
         private readonly IUnitOfWorkManager _unitOfWorkManager;
@@ -45,7 +45,7 @@ namespace Abp.Application.Features
         public AbpFeatureValueStore(
             ICacheManager cacheManager,
             IRepository<TenantFeatureSetting, long> tenantFeatureRepository,
-            IRepository<TTenant> tenantRepository,
+            IRepository<TTenant, long> tenantRepository,
             IRepository<EditionFeatureSetting, long> editionFeatureRepository,
             IFeatureManager featureManager,
             IUnitOfWorkManager unitOfWorkManager)
@@ -62,13 +62,13 @@ namespace Abp.Application.Features
         }
 
         /// <inheritdoc/>
-        public virtual Task<string> GetValueOrNullAsync(int tenantId, Feature feature)
+        public virtual Task<string> GetValueOrNullAsync(long tenantId, Feature feature)
         {
             return GetValueOrNullAsync(tenantId, feature.Name);
         }
 
         /// <inheritdoc/>
-        public virtual string GetValueOrNull(int tenantId, Feature feature)
+        public virtual string GetValueOrNull(long tenantId, Feature feature)
         {
             return GetValueOrNull(tenantId, feature.Name);
         }
@@ -85,7 +85,7 @@ namespace Abp.Application.Features
             return cacheItem.FeatureValues.GetOrDefault(featureName);
         }
 
-        public virtual async Task<string> GetValueOrNullAsync(int tenantId, string featureName)
+        public virtual async Task<string> GetValueOrNullAsync(long tenantId, string featureName)
         {
             var cacheItem = await GetTenantFeatureCacheItemAsync(tenantId);
             var value = cacheItem.FeatureValues.GetOrDefault(featureName);
@@ -106,7 +106,7 @@ namespace Abp.Application.Features
             return null;
         }
 
-        public virtual string GetValueOrNull(int tenantId, string featureName)
+        public virtual string GetValueOrNull(long tenantId, string featureName)
         {
             var cacheItem = GetTenantFeatureCacheItem(tenantId);
             var value = cacheItem.FeatureValues.GetOrDefault(featureName);
@@ -203,7 +203,7 @@ namespace Abp.Application.Features
             }
         }
 
-        protected virtual async Task<TenantFeatureCacheItem> GetTenantFeatureCacheItemAsync(int tenantId)
+        protected virtual async Task<TenantFeatureCacheItem> GetTenantFeatureCacheItemAsync(long tenantId)
         {
             return await _cacheManager.GetTenantFeatureCache().GetAsync(tenantId, async () =>
             {
@@ -239,7 +239,7 @@ namespace Abp.Application.Features
             });
         }
 
-        protected virtual TenantFeatureCacheItem GetTenantFeatureCacheItem(int tenantId)
+        protected virtual TenantFeatureCacheItem GetTenantFeatureCacheItem(long tenantId)
         {
             return _cacheManager.GetTenantFeatureCache().Get(tenantId, () =>
             {

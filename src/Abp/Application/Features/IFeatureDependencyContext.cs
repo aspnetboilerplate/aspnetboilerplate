@@ -11,7 +11,7 @@ namespace Abp.Application.Features
         /// Tenant id which requires the feature.
         /// Null for current tenant.
         /// </summary>
-        int? TenantId { get; }
+        long? TenantId { get; }
 
         /// <summary>
         /// Gets the <see cref="IIocResolver"/>.
