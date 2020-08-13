@@ -1,7 +1,11 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
+using System.Linq.Expressions;
 using System.Threading.Tasks;
 using Abp.Domain.Repositories;
 using Abp.Domain.Uow;
+using Abp.Extensions;
+using Abp.Linq.Expressions;
 using IdentityServer4.Models;
 using IdentityServer4.Stores;
 
@@ -27,6 +31,7 @@ namespace Abp.IdentityServer4vNext
             else
             {
                 ObjectMapper.Map(grant, entity);
+                await _persistedGrantRepository.UpdateAsync(entity);
             }
         }
 
@@ -42,15 +47,10 @@ namespace Abp.IdentityServer4vNext
             return ObjectMapper.Map<PersistedGrant>(entity);
         }
 
-        public Task<IEnumerable<PersistedGrant>> GetAllAsync(PersistedGrantFilter filter)
-        {
-            throw new System.NotImplementedException();
-        }
-
         [UnitOfWork]
-        public virtual async Task<IEnumerable<PersistedGrant>> GetAllAsync(string subjectId)
+        public virtual async Task<IEnumerable<PersistedGrant>> GetAllAsync(PersistedGrantFilter filter)
         {
-            var entities = await _persistedGrantRepository.GetAllListAsync(x => x.SubjectId == subjectId);
+            var entities = await _persistedGrantRepository.GetAllListAsync(FilterPersistedGrant(filter));
             return ObjectMapper.Map<List<PersistedGrant>>(entities);
         }
 
@@ -60,21 +60,37 @@ namespace Abp.IdentityServer4vNext
             await _persistedGrantRepository.DeleteAsync(key);
         }
 
-        public Task RemoveAllAsync(PersistedGrantFilter filter)
+        [UnitOfWork]
+        public async Task RemoveAllAsync(PersistedGrantFilter filter)
         {
-            throw new System.NotImplementedException();
+            await _persistedGrantRepository.DeleteAsync(FilterPersistedGrant(filter));
         }
 
-        [UnitOfWork]
-        public virtual async Task RemoveAllAsync(string subjectId, string clientId)
+        protected virtual Expression<Func<PersistedGrantEntity, bool>> FilterPersistedGrant(PersistedGrantFilter filter)
         {
-            await _persistedGrantRepository.DeleteAsync(x => x.SubjectId == subjectId && x.ClientId == clientId);
-        }
+            var predicate = PredicateBuilder.New<PersistedGrantEntity>();
 
-        [UnitOfWork]
-        public virtual async Task RemoveAllAsync(string subjectId, string clientId, string type)
-        {
-            await _persistedGrantRepository.DeleteAsync(x => x.SubjectId == subjectId && x.ClientId == clientId && x.Type == type);
+            if (!filter.SubjectId.IsNullOrWhiteSpace())
+            {
+                predicate = predicate.And(x => x.SubjectId == filter.SubjectId);
+            }
+
+            if (!filter.SessionId.IsNullOrWhiteSpace())
+            {
+                predicate = predicate.And(x => x.SessionId == filter.SessionId);
+            }
+
+            if (!filter.ClientId.IsNullOrWhiteSpace())
+            {
+                predicate = predicate.And(x => x.ClientId == filter.ClientId);
+            }
+
+            if (!filter.Type.IsNullOrWhiteSpace())
+            {
+                predicate = predicate.And(x => x.Type == filter.Type);
+            }
+
+            return predicate;
         }
     }
 }
