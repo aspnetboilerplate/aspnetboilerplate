@@ -9,8 +9,7 @@ project.
 
 #### Startup Project
 
-
-**This document applies to the 3.x version of Identity Server 4.  If you are using the 4.x+ version of Identity Server 4, please refer to [Identity Server 4 vNext](../Identity-Server-vNext.md)***
+**This document applies to the 4.x+ version of Identity Server 4.  If you are using the 3.x version of Identity Server 4, please refer to [Identity Server 4](../Identity-Server.md)***
 
 This document assumes that you have already created an ASP.NET Core based
 project (including Module Zero) from the [startup templates](/Templates) and
@@ -21,23 +20,23 @@ project](/Pages/Documents/Zero/Startup-Template-Core) for this demonstration.
 
 There are two NuGet packages:
 
--   [**Abp.ZeroCore.IdentityServer4**](https://www.nuget.org/packages/Abp.ZeroCore.IdentityServer4)
+-   [**Abp.ZeroCore.IdentityServer4.vNext**](https://www.nuget.org/packages/Abp.ZeroCore.IdentityServer4.vNext)
     is the main integration package.
--   [**Abp.ZeroCore.IdentityServer4.EntityFrameworkCore**](https://www.nuget.org/packages/Abp.ZeroCore.IdentityServer4.EntityFrameworkCore)
+-   [**Abp.ZeroCore.IdentityServer4.vNext.EntityFrameworkCore**](https://www.nuget.org/packages/Abp.ZeroCore.IdentityServer4.vNext.EntityFrameworkCore)
     is the storage provider for EF Core.
 
 Since the EF Core package already depends on the first one, you only have to
 install the
-[**Abp.ZeroCore.IdentityServer4.EntityFrameworkCore**](https://www.nuget.org/packages/Abp.ZeroCore.IdentityServer4.EntityFrameworkCore)
+[**Abp.ZeroCore.IdentityServer4.vNext.EntityFrameworkCore**](https://www.nuget.org/packages/Abp.ZeroCore.IdentityServer4.vNext.EntityFrameworkCore)
 package to your project. Install it to the project that contains your
 DbContext (.EntityFrameworkCore project for default templates):
 
-    Install-Package Abp.ZeroCore.IdentityServer4.EntityFrameworkCore
+    Install-Package Abp.ZeroCore.IdentityServer4.vNext.EntityFrameworkCore
 
 Then you can add a dependency to your [module](../Module-System.md)
 (generally, to your EntityFrameworkCore project):
 
-    [DependsOn(typeof(AbpZeroCoreIdentityServerEntityFrameworkCoreModule))]
+    [DependsOn(typeof(AbpZeroCoreIdentityServervNextEntityFrameworkCoreModule))]
     public class MyModule : AbpModule
     {
         //...
@@ -63,13 +62,14 @@ Highlighted, here are the **differences** from the standard IdentityServer4 usag
         {
             //...
     
-                services.AddIdentityServer()
-                    .AddDeveloperSigningCredential()
-                    .AddInMemoryIdentityResources(IdentityServerConfig.GetIdentityResources())
-                    .AddInMemoryApiResources(IdentityServerConfig.GetApiResources())
-                    .AddInMemoryClients(IdentityServerConfig.GetClients())
-                    .AddAbpPersistedGrants<IAbpPersistedGrantDbContext>()
-                    .AddAbpIdentityServer<User>();
+            services.AddIdentityServer()
+                .AddDeveloperSigningCredential()
+                .AddInMemoryIdentityResources(IdentityServerConfig.GetIdentityResources())
+                .AddInMemoryApiScopes(IdentityServerConfig.GetApiScopes())
+                .AddInMemoryApiResources(IdentityServerConfig.GetApiResources())
+                .AddInMemoryClients(IdentityServerConfig.GetClients())
+                .AddAbpPersistedGrants<IAbpPersistedGrantDbContext>()
+                .AddAbpIdentityServer<User>();
     
             //...
         }
@@ -100,14 +100,6 @@ For the simplest case, it can be a static class like below:
 
     public static class IdentityServerConfig
     {
-        public static IEnumerable<ApiResource> GetApiResources()
-        {
-            return new List<ApiResource>
-            {
-                new ApiResource("default-api", "Default (all) API")
-            };
-        }
-    
         public static IEnumerable<IdentityResource> GetIdentityResources()
         {
             return new List<IdentityResource>
@@ -118,7 +110,26 @@ For the simplest case, it can be a static class like below:
                 new IdentityResources.Phone()
             };
         }
-    
+
+        public static IEnumerable<ApiScope> GetApiScopes()
+        {
+            return new List<ApiScope>
+            {
+                new ApiScope("default-api-scope")
+            };
+        }
+
+        public static IEnumerable<ApiResource> GetApiResources()
+        {
+            return new List<ApiResource>
+            {
+                new ApiResource("default-api-resource", "Default (all) API")
+                {
+                    Scopes = { "default-api-scope" }
+                }
+            };
+        }
+
         public static IEnumerable<Client> GetClients()
         {
             return new List<Client>
@@ -127,7 +138,7 @@ For the simplest case, it can be a static class like below:
                 {
                     ClientId = "client",
                     AllowedGrantTypes = GrantTypes.ClientCredentials.Union(GrantTypes.ResourceOwnerPassword).ToList(),
-                    AllowedScopes = {"default-api"},
+                    AllowedScopes = {"default-api-scope"},
                     ClientSecrets =
                     {
                         new Secret("secret".Sha256())
@@ -190,7 +201,7 @@ We can then add the middleware to the Startup class as shown below:
 
     services.AddAuthentication().AddIdentityServerAuthentication("IdentityBearer", options =>
     {
-        options.Authority = "http://localhost:62114/";
+        options.Authority = "https://localhost:44388/";
         options.RequireHttpsMetadata = false;
     });
 
@@ -220,17 +231,13 @@ will convert incoming data to DTOs which are returned by the application service
 Change Program.cs as shown below:
 
     using System;
-    using System.Net;
     using System.Net.Http;
     using System.Threading.Tasks;
     using Abp.Application.Services.Dto;
-    using Abp.Json;
-    using IdentityModel.Client;
-    using Abp.MultiTenancy;
     using Abp.Web.Models;
-    using IdentityServerIntegrationDemo.Users.Dto;
+    using IdentityModel.Client;
     using Newtonsoft.Json;
-    
+
     namespace IdentityServerIntegrationDemo.ConsoleApiClient
     {
         class Program
@@ -240,63 +247,69 @@ Change Program.cs as shown below:
                 RunDemoAsync().Wait();
                 Console.ReadLine();
             }
-    
+
             public static async Task RunDemoAsync()
             {
                 var accessToken = await GetAccessTokenViaOwnerPasswordAsync();
                 await GetUsersListAsync(accessToken);
             }
-    
+
             private static async Task<string> GetAccessTokenViaOwnerPasswordAsync()
             {
-                var disco = await DiscoveryClient.GetAsync("http://localhost:62114");
-    
-                var httpHandler = new HttpClientHandler();
-                httpHandler.CookieContainer.Add(new Uri("http://localhost:62114/"), new Cookie(MultiTenancyConsts.TenantIdResolveKey, "1")); //Set TenantId
-                var tokenClient = new TokenClient(disco.TokenEndpoint, "client", "secret", httpHandler);
-                var tokenResponse = await tokenClient.RequestResourceOwnerPasswordAsync("admin", "123qwe");
-    
+                var disco =  await new HttpClient().GetDiscoveryDocumentAsync("https://localhost:44388");
+
+                var tokenClient = new HttpClient();
+                tokenClient.DefaultRequestHeaders.Add("Abp.TenantId", "1");
+                var tokenResponse = await tokenClient.RequestPasswordTokenAsync(new PasswordTokenRequest()
+                {
+                    Address = disco.TokenEndpoint,
+                    ClientId = "client",
+                    ClientSecret = "secret",
+                    UserName = "admin",
+                    Password = "123qwe"
+                });
+
                 if (tokenResponse.IsError)
                 {
                     Console.WriteLine("Error: ");
                     Console.WriteLine(tokenResponse.Error);
                 }
-    
+
                 Console.WriteLine(tokenResponse.Json);
-    
+
                 return tokenResponse.AccessToken;
             }
-    
+
             private static async Task GetUsersListAsync(string accessToken)
             {
                 var client = new HttpClient();
                 client.SetBearerToken(accessToken);
-    
-                var response = await client.GetAsync("http://localhost:62114/api/services/app/user/GetAll");
+
+                var response = await client.GetAsync("https://localhost:44388/api/services/app/user/GetAll");
                 if (!response.IsSuccessStatusCode)
                 {
                     Console.WriteLine(response.StatusCode);
                     return;
                 }
-    
+
                 var content = await response.Content.ReadAsStringAsync();
                 var ajaxResponse = JsonConvert.DeserializeObject<AjaxResponse<PagedResultDto<UserListDto>>>(content);
                 if (!ajaxResponse.Success)
                 {
                     throw new Exception(ajaxResponse.Error?.Message ?? "Remote service throws exception!");
                 }
-    
+
                 Console.WriteLine();
                 Console.WriteLine("Total user count: " + ajaxResponse.Result.TotalCount);
                 Console.WriteLine();
                 foreach (var user in ajaxResponse.Result.Items)
                 {
                     Console.WriteLine($"### UserId: {user.Id}, UserName: {user.UserName}");
-                    Console.WriteLine(user.ToJsonString(indented: true));
+                    Console.WriteLine(JsonConvert.SerializeObject(user, Formatting.Indented));
                 }
             }
         }
-    
+
         internal class UserListDto
         {
             public int Id { get; set; }
@@ -306,5 +319,5 @@ Change Program.cs as shown below:
 
 Before running this application, ensure that your web project set up and
 running, because this console application will make a request to the web
-application. Also, ensure that the requesting port (62114) is the same
+application. Also, ensure that the requesting port (44388) is the same
 as your web application.

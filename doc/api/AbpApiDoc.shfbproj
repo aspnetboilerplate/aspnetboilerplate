@@ -30,6 +30,8 @@
       <DocumentationSource sourceFile="..\..\src\Abp.ZeroCore.EntityFrameworkCore\Abp.ZeroCore.EntityFrameworkCore.csproj" />
       <DocumentationSource sourceFile="..\..\src\Abp.ZeroCore.IdentityServer4\Abp.ZeroCore.IdentityServer4.csproj" />
       <DocumentationSource sourceFile="..\..\src\Abp.ZeroCore.IdentityServer4.EntityFrameworkCore\Abp.ZeroCore.IdentityServer4.EntityFrameworkCore.csproj" />
+      <DocumentationSource sourceFile="..\..\src\Abp.ZeroCore.IdentityServer4.vNext\Abp.ZeroCore.IdentityServer4.vNext.csproj" />
+      <DocumentationSource sourceFile="..\..\src\Abp.ZeroCore.IdentityServer4.vNext.EntityFrameworkCore\Abp.ZeroCore.IdentityServer4.vNext.EntityFrameworkCore.csproj" />
       <DocumentationSource sourceFile="..\..\src\Abp.EntityFramework\Abp.EntityFramework.csproj" />
       <DocumentationSource sourceFile="..\..\src\Abp\Abp.csproj" />
       <DocumentationSource sourceFile="..\..\src\Abp.AspNetCore\Abp.AspNetCore.csproj" />
