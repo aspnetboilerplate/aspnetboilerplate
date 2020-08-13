@@ -105,7 +105,7 @@ namespace Abp.Runtime.Session
             }
         }
 
-        public override int? ImpersonatorTenantId
+        public override long? ImpersonatorTenantId
         {
             get
             {

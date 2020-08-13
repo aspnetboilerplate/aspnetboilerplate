@@ -17,7 +17,7 @@ namespace Abp.Runtime.Session
 
         public abstract long? ImpersonatorUserId { get; }
 
-        public abstract int? ImpersonatorTenantId { get; }
+        public abstract long? ImpersonatorTenantId { get; }
 
         public virtual MultiTenancySides MultiTenancySide
         {

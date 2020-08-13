@@ -617,7 +617,7 @@ namespace Abp.EntityFramework
             return null;
         }
 
-        protected virtual int? GetCurrentTenantIdOrNull()
+        protected virtual long? GetCurrentTenantIdOrNull()
         {
             if (CurrentUnitOfWorkProvider?.Current != null)
             {

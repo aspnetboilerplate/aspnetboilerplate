@@ -25,7 +25,7 @@ namespace Abp.Runtime.Session
 
         public override long? ImpersonatorUserId => null;
 
-        public override int? ImpersonatorTenantId => null;
+        public override long? ImpersonatorTenantId => null;
 
         private NullAbpSession() 
             : base(
