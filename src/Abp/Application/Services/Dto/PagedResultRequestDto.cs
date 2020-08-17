@@ -11,5 +11,8 @@ namespace Abp.Application.Services.Dto
     {
         [Range(1, int.MaxValue)]
         public virtual int CurrentPage { get; set; } = 1;
+
+        public string Keyword { get; set; }
+        public string NormalizeKeyword => string.IsNullOrEmpty(Keyword) ? string.Empty : string.Format("%{0}%", Keyword);
     }
 }
