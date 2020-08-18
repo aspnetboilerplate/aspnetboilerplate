@@ -125,10 +125,17 @@ namespace Abp.Application.Services
             await Repository.InsertAsync(entity);
             await CurrentUnitOfWork.SaveChangesAsync();
 
+            await ProcessAfterCreateAsync(entity, input);
+
             return MapToEntityDto(entity);
         }
 
         protected virtual Task ProcessBeforeCreateAsync(TEntity entity, TCreateInput input)
+        {
+            return Task.FromResult(true);
+        }
+
+        protected virtual Task ProcessAfterCreateAsync(TEntity entity, TCreateInput input)
         {
             return Task.FromResult(true);
         }
@@ -147,9 +154,16 @@ namespace Abp.Application.Services
 
             await CurrentUnitOfWork.SaveChangesAsync();
 
+            await ProcessAfterUpdateAsync(entity, input);
+
             return MapToEntityDto(entity);
         }
         protected virtual Task ProcessBeforeUpdateAsync(TEntity entity, TUpdateInput input)
+        {
+            return Task.FromResult(true);
+        }
+
+        protected virtual Task ProcessAfterUpdateAsync(TEntity entity, TUpdateInput input)
         {
             return Task.FromResult(true);
         }
