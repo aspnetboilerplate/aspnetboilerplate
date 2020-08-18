@@ -64,43 +64,12 @@ namespace Abp.Application.Services
     }
 
     public abstract class AsyncCrudAppService<TEntity, TEntityDto, TPrimaryKey, TEntityItemDto, TGetAllInput, TCreateInput, TUpdateInput>
-        : AsyncCrudAppService<TEntity, TEntityDto, TPrimaryKey, TEntityItemDto, TGetAllInput, TCreateInput, TUpdateInput, EntityDto<TPrimaryKey>>
-        where TEntity : class, IEntity<TPrimaryKey>
-        where TEntityDto : IEntityDto<TPrimaryKey>
-        where TEntityItemDto : IEntityDto<TPrimaryKey>
-        where TUpdateInput : IEntityDto<TPrimaryKey>
-    {
-        protected AsyncCrudAppService(IRepository<TEntity, TPrimaryKey> repository)
-            : base(repository)
-        {
-
-        }
-    }
-
-    public abstract class AsyncCrudAppService<TEntity, TEntityDto, TPrimaryKey, TEntityItemDto, TGetAllInput, TCreateInput, TUpdateInput, TGetInput>
-    : AsyncCrudAppService<TEntity, TEntityDto, TPrimaryKey, TEntityItemDto, TGetAllInput, TCreateInput, TUpdateInput, TGetInput, EntityDto<TPrimaryKey>>
-        where TEntity : class, IEntity<TPrimaryKey>
-        where TEntityDto : IEntityDto<TPrimaryKey>
-        where TEntityItemDto : IEntityDto<TPrimaryKey>
-        where TUpdateInput : IEntityDto<TPrimaryKey>
-        where TGetInput : IEntityDto<TPrimaryKey>
-    {
-        protected AsyncCrudAppService(IRepository<TEntity, TPrimaryKey> repository)
-            : base(repository)
-        {
-
-        }
-    }
-
-    public abstract class AsyncCrudAppService<TEntity, TEntityDto, TPrimaryKey, TEntityItemDto, TGetAllInput, TCreateInput, TUpdateInput, TGetInput, TDeleteInput>
        : CrudAppServiceBase<TEntity, TEntityDto, TPrimaryKey, TEntityItemDto, TGetAllInput, TCreateInput, TUpdateInput>,
-        IAsyncCrudAppService<TEntityDto, TPrimaryKey, TEntityItemDto, TGetAllInput, TCreateInput, TUpdateInput, TGetInput, TDeleteInput>
+        IAsyncCrudAppService<TEntityDto, TPrimaryKey, TEntityItemDto, TGetAllInput, TCreateInput, TUpdateInput>
            where TEntity : class, IEntity<TPrimaryKey>
            where TEntityDto : IEntityDto<TPrimaryKey>
            where TEntityItemDto : IEntityDto<TPrimaryKey>
            where TUpdateInput : IEntityDto<TPrimaryKey>
-           where TGetInput : IEntityDto<TPrimaryKey>
-           where TDeleteInput : IEntityDto<TPrimaryKey>
     {
         public IAsyncQueryableExecuter AsyncQueryableExecuter { get; set; }
 
@@ -110,16 +79,16 @@ namespace Abp.Application.Services
             AsyncQueryableExecuter = NullAsyncQueryableExecuter.Instance;
         }
 
-        public virtual Task<TEntityDto> GetAsync(TGetInput input)
+        public virtual Task<TEntityDto> GetAsync(TPrimaryKey id)
         {
             CheckGetPermission();
-            var query = CreateFilteredByIdQuery(input);
+            var query = CreateFilteredByIdQuery(id);
             return AsyncQueryableExecuter.FirstOrDefaultAsync(query);
         }
 
-        protected virtual IQueryable<TEntityDto> CreateFilteredByIdQuery(TGetInput input)
+        protected virtual IQueryable<TEntityDto> CreateFilteredByIdQuery(TPrimaryKey id)
         {
-            return Repository.GetAll().Where(e => e.Id.Equals(input.Id)).ProjectTo<TEntityDto>(ConfigurationProvider);
+            return Repository.GetAll().Where(e => e.Id.Equals(id)).ProjectTo<TEntityDto>(ConfigurationProvider);
         }
 
         public virtual async Task<PagedResultDto<TEntityItemDto>> GetAllAsync(TGetAllInput input)
@@ -185,11 +154,11 @@ namespace Abp.Application.Services
             return Task.FromResult(true);
         }
 
-        public virtual Task DeleteAsync(TDeleteInput input)
+        public virtual Task DeleteAsync(TPrimaryKey id)
         {
             CheckDeletePermission();
 
-            return Repository.DeleteAsync(input.Id);
+            return Repository.DeleteAsync(id);
         }
 
         protected virtual Task<TEntity> GetEntityByIdAsync(TPrimaryKey id)
