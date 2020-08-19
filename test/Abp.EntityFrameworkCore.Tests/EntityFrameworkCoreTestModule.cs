@@ -11,8 +11,6 @@ using Abp.Configuration.Startup;
 using Abp.Dependency;
 using Abp.Reflection.Extensions;
 using Microsoft.Data.Sqlite;
-using Microsoft.EntityFrameworkCore.Metadata.Internal;
-using Microsoft.EntityFrameworkCore.Query;
 
 namespace Abp.EntityFrameworkCore.Tests
 {
@@ -51,7 +49,7 @@ namespace Abp.EntityFrameworkCore.Tests
         {
             using (var context = IocManager.Resolve<BloggingDbContext>())
             {
-                context.Database.ExecuteSqlCommand("CREATE VIEW BlogView AS SELECT Id, Name, Url FROM Blogs");
+                context.Database.ExecuteSqlRaw("CREATE VIEW BlogView AS SELECT Id, Name, Url FROM Blogs");
             }
         }
 

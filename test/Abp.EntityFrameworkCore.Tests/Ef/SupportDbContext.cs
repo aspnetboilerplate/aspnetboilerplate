@@ -21,7 +21,7 @@ namespace Abp.EntityFrameworkCore.Tests.Ef
     {
         public DbSet<Ticket> Tickets { get; set; }
 
-        public DbQuery<TicketListItem> TicketListItems { get; set; }
+        public DbSet<TicketListItem> TicketListItems { get; set; }
 
         public const string TicketViewSql = @"CREATE VIEW TicketListItemView AS SELECT Id, EmailAddress, TenantId, IsActive FROM Tickets";
 
@@ -35,7 +35,7 @@ namespace Abp.EntityFrameworkCore.Tests.Ef
         {
             base.OnModelCreating(modelBuilder);
 
-            modelBuilder.Query<TicketListItem>().ToView("TicketListItemView");
+            modelBuilder.Entity<TicketListItem>().HasNoKey().ToView("TicketListItemView");
         }
     }
 

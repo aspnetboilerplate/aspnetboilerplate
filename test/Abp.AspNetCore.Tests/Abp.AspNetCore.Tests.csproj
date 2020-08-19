@@ -20,14 +20,14 @@
   </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Include="Microsoft.NET.Test.Sdk" Version="16.7.0-preview-20200519-01" />
+    <PackageReference Include="Microsoft.NET.Test.Sdk" Version="16.8.0-preview-20200812-03" />
     <PackageReference Include="System.Runtime" Version="4.3.1" />
     <PackageReference Include="xunit" Version="2.4.1" />
-    <PackageReference Include="xunit.runner.visualstudio" Version="2.4.2">
+    <PackageReference Include="xunit.runner.visualstudio" Version="2.4.3">
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers</IncludeAssets>
     </PackageReference>
-    <PackageReference Include="Microsoft.DotNet.InternalAbstractions" Version="1.0.0" />
+    <PackageReference Include="Microsoft.DotNet.InternalAbstractions" Version="1.0.500-preview2-1-003177" />
   </ItemGroup>
 
   <ItemGroup Condition=" '$(TargetFramework)' == 'net5.0' ">

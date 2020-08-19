@@ -23,7 +23,7 @@ namespace Abp.FluentValidation
 
             if (fvValidator != null)
             {
-                var validationResult = fvValidator.Validate(validatingObject);
+                var validationResult = fvValidator.Validate(validatingObject as IValidationContext);
                 var mappedValidationErrors = validationResult.Errors
                     .Select(e => new ValidationResult(e.ErrorMessage, new[] { e.PropertyName }))
                     .ToList();
