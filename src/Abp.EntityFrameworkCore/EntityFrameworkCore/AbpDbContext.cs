@@ -120,9 +120,9 @@ namespace Abp.EntityFrameworkCore
 
             foreach (var entityType in modelBuilder.Model.GetEntityTypes())
             {
-                ConfigureGlobalFiltersMethodInfo
-                    .MakeGenericMethod(entityType.ClrType)
-                    .Invoke(this, new object[] { modelBuilder, entityType });
+                //ConfigureGlobalFiltersMethodInfo
+                //    .MakeGenericMethod(entityType.ClrType)
+                //    .Invoke(this, new object[] { modelBuilder, entityType });
 
                 ConfigureGlobalValueConverterMethodInfo
                     .MakeGenericMethod(entityType.ClrType)
