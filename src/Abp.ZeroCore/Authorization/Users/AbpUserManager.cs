@@ -233,7 +233,7 @@ namespace Abp.Authorization.Users
             //Check for roles
             foreach (var roleId in cacheItem.RoleIds)
             {
-                if (await RoleManager.IsGrantedAsync(roleId, branchId, permission))
+                if (await RoleManager.IsGrantedAsync(roleId, permission))
                 {
                     return true;
                 }
@@ -287,7 +287,7 @@ namespace Abp.Authorization.Users
             //Check for roles
             foreach (var roleId in cacheItem.RoleIds)
             {
-                if (RoleManager.IsGranted(roleId, branchId, permission))
+                if (RoleManager.IsGranted(roleId, permission))
                 {
                     return true;
                 }
@@ -651,21 +651,23 @@ namespace Abp.Authorization.Users
             foreach (var userRole in user.Roles.Where(e => e.BranchId == branchId).ToList())
             {
                 var role = await RoleManager.FindByIdAsync(userRole.RoleId.ToString());
-                if (role != null && roleNames.All(roleName => role.Name != roleName))
+                if (role != null && roleNames.All(roleName => role.NormalizedName != roleName))
                 {
-                    var result = await RemoveFromRoleAsync(user, role.Name);
-                    if (!result.Succeeded)
-                    {
-                        return result;
-                    }
+                    //var result = await RemoveFromRoleAsync(user, role.Name);
+                    //if (!result.Succeeded)
+                    //{
+                    //    return result;
+                    //}
+
+                    await AbpUserStore.RemoveFromRoleAsync(user, role.NormalizedName, branchId);
                 }
             }
 
             //Add to added roles
             foreach (var roleName in roleNames)
             {
-                var role = await RoleManager.GetRoleByNameAsync(roleName);
-                if (user.Roles.All(ur => ur.RoleId != role.Id && ur.BranchId != branchId))
+                var roleByName = await RoleManager.GetRoleByNameAsync(roleName);
+                if (user.Roles.Where(e => e.BranchId == branchId).All(ur => ur.RoleId != roleByName.Id))
                 {
                     //var result = await AddToRoleAsync(user, roleName);
                     //if (!result.Succeeded)
@@ -1047,7 +1049,7 @@ namespace Abp.Authorization.Users
 
                 var newCacheItem = new UserPermissionCacheItem(userId, branchId);
 
-                foreach (var roleName in AbpUserStore.GetRoles(user))
+                foreach (var roleName in AbpUserStore.GetRoles(user, branchId))
                 {
                     newCacheItem.RoleIds.Add((RoleManager.GetRoleByName(roleName)).Id);
                 }

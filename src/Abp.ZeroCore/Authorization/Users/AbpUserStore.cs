@@ -669,7 +669,12 @@ namespace Abp.Authorization.Users
         /// <param name="normalizedRoleName">The role to remove.</param>
         /// <param name="cancellationToken">The <see cref="CancellationToken"/> used to propagate notifications that the operation should be canceled.</param>
         /// <returns>The <see cref="Task"/> that represents the asynchronous operation.</returns>
-        public virtual async Task RemoveFromRoleAsync([NotNull] TUser user, [NotNull] string normalizedRoleName, CancellationToken cancellationToken = default(CancellationToken))
+        public virtual Task RemoveFromRoleAsync([NotNull] TUser user, [NotNull] string normalizedRoleName, CancellationToken cancellationToken = default(CancellationToken))
+        {
+            return RemoveFromRoleAsync(user, normalizedRoleName, null, cancellationToken);
+        }
+
+        public virtual async Task RemoveFromRoleAsync([NotNull] TUser user, [NotNull] string normalizedRoleName, long? branchId, CancellationToken cancellationToken = default(CancellationToken))
         {
             cancellationToken.ThrowIfCancellationRequested();
 
@@ -680,7 +685,7 @@ namespace Abp.Authorization.Users
                 throw new ArgumentException(nameof(normalizedRoleName) + " can not be null or whitespace");
             }
 
-            if (!await IsInRoleAsync(user, normalizedRoleName, cancellationToken))
+            if (!await IsInRoleAsync(user, normalizedRoleName, branchId, cancellationToken))
             {
                 return;
             }
@@ -692,7 +697,7 @@ namespace Abp.Authorization.Users
             }
 
             await UserRepository.EnsureCollectionLoadedAsync(user, u => u.Roles, cancellationToken);
-            user.Roles.RemoveAll(r => r.RoleId == role.Id);
+            user.Roles.RemoveAll(r => r.RoleId == role.Id && r.BranchId == branchId);
         }
 
         /// <summary>
@@ -746,7 +751,7 @@ namespace Abp.Authorization.Users
 
             Check.NotNull(user, nameof(user)); ;
 
-            var userRoles = await _asyncQueryableExecuter.ToListAsync(from userRole in _userRoleRepository.GetAll()
+            var userRoles = await _asyncQueryableExecuter.ToListAsync(from userRole in _userRoleRepository.GetAll(true).Where(e => e.TenantId == user.TenantId)
                                                                       join role in _roleRepository.GetAll() on userRole.RoleId equals role.Id
                                                                       where userRole.UserId == user.Id && userRole.BranchId == branchId
                                                                       select role.Name);
@@ -782,7 +787,7 @@ namespace Abp.Authorization.Users
             Check.NotNull(user, nameof(user)); ;
 
             var userRoles = (
-                from userRole in _userRoleRepository.GetAll()
+                from userRole in _userRoleRepository.GetAll(true).Where(e => e.TenantId == user.TenantId)
                 join role in _roleRepository.GetAll() on userRole.RoleId equals role.Id
                 where userRole.UserId == user.Id && userRole.BranchId == branchId
                 select role.Name

@@ -386,27 +386,27 @@ namespace Abp.Authorization.Roles
         }
 
         /// <inheritdoc/>
-        public virtual Task<IList<PermissionGrantInfo>> GetPermissionsAsync(TRole role, long? branchId)
+        public virtual Task<IList<PermissionGrantInfo>> GetPermissionsAsync(TRole role)
         {
-            return GetPermissionsAsync(role.Id, branchId);
+            return GetPermissionsAsync(role.Id);
         }
 
         /// <inheritdoc/>
-        public virtual IList<PermissionGrantInfo> GetPermissions(TRole role, long? branchId)
+        public virtual IList<PermissionGrantInfo> GetPermissions(TRole role)
         {
-            return GetPermissions(role.Id, branchId);
+            return GetPermissions(role.Id);
         }
 
-        public async Task<IList<PermissionGrantInfo>> GetPermissionsAsync(int roleId, long? branchId)
+        public async Task<IList<PermissionGrantInfo>> GetPermissionsAsync(int roleId)
         {
-            return (await _rolePermissionSettingRepository.GetAllListAsync(p => p.RoleId == roleId && p.BranchId == branchId))
+            return (await _rolePermissionSettingRepository.GetAllListAsync(p => p.RoleId == roleId && p.BranchId == null))
                 .Select(p => new PermissionGrantInfo(p.Name, p.IsGranted, p.BranchId))
                 .ToList();
         }
 
-        public IList<PermissionGrantInfo> GetPermissions(int roleId, long? branchId)
+        public IList<PermissionGrantInfo> GetPermissions(int roleId)
         {
-            return (_rolePermissionSettingRepository.GetAllList(p => p.RoleId == roleId && p.BranchId == branchId))
+            return (_rolePermissionSettingRepository.GetAllList(p => p.RoleId == roleId && p.BranchId == null))
                 .Select(p => new PermissionGrantInfo(p.Name, p.IsGranted, p.BranchId))
                 .ToList();
         }
@@ -423,9 +423,9 @@ namespace Abp.Authorization.Roles
         }
 
         /// <inheritdoc/>
-        public virtual async Task RemoveAllPermissionSettingsAsync(TRole role, long? branchId)
+        public virtual async Task RemoveAllPermissionSettingsAsync(TRole role)
         {
-            await _rolePermissionSettingRepository.DeleteAsync(s => s.RoleId == role.Id && s.BranchId == branchId);
+            await _rolePermissionSettingRepository.DeleteAsync(s => s.RoleId == role.Id && s.BranchId == null);
         }
     }
 }
