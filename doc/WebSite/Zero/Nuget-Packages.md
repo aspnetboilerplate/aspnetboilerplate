@@ -23,6 +23,15 @@ IdentityServer4 integration package for the Abp.ZeroCore package.
 Entity Framework Core integration package for the
 Abp.ZeroCore.IdentityServer4 package.
 
+#### [Abp.ZeroCore.IdentityServer4.vNext](http://www.nuget.org/packages/Abp.ZeroCore.IdentityServer4.vNext)
+
+IdentityServer4 4.x+ integration package for the Abp.ZeroCore package.
+
+#### [Abp.ZeroCore.IdentityServer4.vNext.EntityFrameworkCore](http://www.nuget.org/packages/Abp.ZeroCore.IdentityServer4.vNext.EntityFrameworkCore)
+
+Entity Framework Core integration package for the
+Abp.ZeroCore.IdentityServer4.vNext package.
+
 ### Abp.Zero
 
 Abp.Zero is built on
