@@ -113,7 +113,7 @@ namespace Abp.MultiTenancy
         {
             using (_unitOfWorkManager.Current.SetTenantId(null))
             {
-                return _tenantRepository.FirstOrDefault(t => t.TenancyName.ToLowerInvariant() == tenancyName.ToLowerInvariant());
+                return _tenantRepository.FirstOrDefault(t => t.TenancyName.ToLower() == tenancyName.ToLower());
             }
         }
 
