@@ -14,7 +14,7 @@ namespace Abp.Zero.Notifications
         public NotificationDistributer_Tests()
         {
             _publisher = LocalIocManager.Resolve<INotificationPublisher>();
-            _fakeNotificationDistributer = LocalIocManager.Resolve<FakeNotificationDistributer>();
+            _fakeNotificationDistributer = (FakeNotificationDistributer)LocalIocManager.Resolve<INotificationDistributer>();
         }
 
         [Fact]

@@ -254,15 +254,12 @@ namespace Abp.EntityHistory
                 entityChange.EntityId = GetEntityId(entityEntry);
 
                 /* Update property changes */
-                var trackedPropertyNames = entityChange.PropertyChanges.Select(pc => pc.PropertyName);
-                var trackedNavigationProperties = entityEntry.Navigations
-                                                    .Where(np => trackedPropertyNames.Contains(np.Metadata.Name))
+                var trackedPropertyNames = entityChange.PropertyChanges.Select(pc => pc.PropertyName).ToList();
+
+                // TODO: NET5.0: This might be wrong
+                var additionalForeignKeys = entityEntry.Metadata.GetDeclaredReferencingForeignKeys()
+                                                    .Where(fk => trackedPropertyNames.Contains(fk.Properties[0].Name))
                                                     .ToList();
-                var additionalForeignKeys = trackedNavigationProperties
-                                                  .Where(np => !trackedPropertyNames.Contains(np.Metadata.Name))
-                                                  .Select(np => np.Metadata.ForeignKey)
-                                                  .Distinct()
-                                                  .ToList();
 
                 /* Add additional foreign keys from navigation properties */
                 foreach (var foreignKey in additionalForeignKeys)
