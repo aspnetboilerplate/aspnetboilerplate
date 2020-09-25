@@ -72,7 +72,7 @@ namespace Abp.EntityFrameworkCore
 
                     if (isMustHaveBranchFilterEnabled)
                     {
-                        Expression<Func<TEntity, bool>> mustHaveBranchFilter = e => ((IMustHaveBranch)e).BranchId == currentBranchId;
+                        Expression<Func<TEntity, bool>> mustHaveBranchFilter = e => currentBranchId == null || ((IMustHaveBranch)e).BranchId == currentBranchId;
                         expression = expression == null ? mustHaveBranchFilter : ExpressionCombiner.Combine(expression, mustHaveBranchFilter);
                     }
                 }
