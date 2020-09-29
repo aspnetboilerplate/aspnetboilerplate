@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Abp.Authorization;
+using Abp.Domain.Entities;
 using Abp.Json;
 using Abp.Threading;
 using Abp.Webhooks;
@@ -486,6 +487,39 @@ namespace Abp.Zero.SampleApp.Tests.Webhooks
             storedSubscription.Id.ShouldBe(testWebhookSubscription.Id);
             storedSubscription.IsActive.ShouldBeTrue();
         }
+        
+        [Fact]
+        public async Task Should_Not_Get_Another_Tenants_Subscriptions()
+        {
+            var tenantId = await CreateAndGetTenantIdWithFeaturesAsync(AppFeatures.WebhookFeature, "true");
+
+            var newSubscription = NewWebhookSubscription(tenantId, AppWebhookDefinitionNames.Users.Created);
+
+            var webhookSubscriptionManager = Resolve<IWebhookSubscriptionManager>();
+            await webhookSubscriptionManager.AddOrUpdateSubscriptionAsync(newSubscription);
+
+            //should get tenant's own data
+            await WithUnitOfWorkAsync(tenantId, async () =>
+            {
+                var storedSubscription = await webhookSubscriptionManager.GetAsync(newSubscription.Id);
+                storedSubscription.ShouldNotBeNull();
+                CompareSubscriptions(storedSubscription, newSubscription);
+
+                var allSubscriptions = await webhookSubscriptionManager.GetAllSubscriptionsAsync(tenantId);
+                allSubscriptions.Count.ShouldBe(1);
+                CompareSubscriptions(storedSubscription, allSubscriptions.Single());
+            });
+            
+            //should not get another tenant's data
+            await WithUnitOfWorkAsync(null, async () =>
+            {
+                var allSubscriptions = await webhookSubscriptionManager.GetAllSubscriptionsAsync(null);
+                allSubscriptions.Count.ShouldBe(0);
+                
+                await Should.ThrowAsync<EntityNotFoundException>(async ()=> await webhookSubscriptionManager.GetAsync(newSubscription.Id));
+            });
+        }
+
 
         #endregion
 
@@ -937,6 +971,39 @@ namespace Abp.Zero.SampleApp.Tests.Webhooks
             storedSubscription.Id.ShouldBe(testWebhookSubscription.Id);
             storedSubscription.IsActive.ShouldBeTrue();
         }
+
+        [Fact]
+        public void Should_Not_Get_Another_Tenants_Subscriptions_Sync()
+        {
+            var tenantId = AsyncHelper.RunSync(() => CreateAndGetTenantIdWithFeaturesAsync(AppFeatures.WebhookFeature, "true"));
+
+            var newSubscription = NewWebhookSubscription(tenantId, AppWebhookDefinitionNames.Users.Created);
+
+            var webhookSubscriptionManager = Resolve<IWebhookSubscriptionManager>();
+            webhookSubscriptionManager.AddOrUpdateSubscription(newSubscription);
+
+            //should get tenant's own data
+            WithUnitOfWork(tenantId, () =>
+            {
+                var storedSubscription = webhookSubscriptionManager.Get(newSubscription.Id);
+                storedSubscription.ShouldNotBeNull();
+                CompareSubscriptions(storedSubscription, newSubscription);
+
+                var allSubscriptions = webhookSubscriptionManager.GetAllSubscriptions(tenantId);
+                allSubscriptions.Count.ShouldBe(1);
+                CompareSubscriptions(storedSubscription, allSubscriptions.Single());
+            });
+
+            //should not get another tenant's data
+            WithUnitOfWork(null, () =>
+            {
+                var allSubscriptions = webhookSubscriptionManager.GetAllSubscriptions(null);
+                allSubscriptions.Count.ShouldBe(0);
+
+                Should.Throw<EntityNotFoundException>(() => webhookSubscriptionManager.Get(newSubscription.Id));
+            });
+        }
+
         #endregion
     }
 }
