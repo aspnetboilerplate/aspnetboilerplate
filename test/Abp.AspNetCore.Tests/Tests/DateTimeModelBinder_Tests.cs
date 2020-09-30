@@ -108,11 +108,11 @@ namespace Abp.AspNetCore.Tests
         }
 
         [Theory]
-        [InlineData("2016-04-13T08:58:10.526Z", "local")]
+        [InlineData("2016-04-13T08:58:10.526Z", "utc")]
         [InlineData("2016-04-13T08:58:10.526", "unspecified")]
-        [InlineData("2016-04-13 08:58:10.526Z", "local")]
+        [InlineData("2016-04-13 08:58:10.526Z", "utc")]
         [InlineData("2016-04-13 08:58:10.526", "unspecified")]
-        [InlineData("2018-01-18T10:41:52.3257108+03:00", "local")]
+        [InlineData("2019-06-13T19:30:04.0576719-07:00", "local")]
         public async Task Controller_Should_Receive_Correct_DateTimeKind_For_Current_ClockProvider_When_Not_Normalized_Class(string date, string expectedKind)
         {
             var response = await GetResponseAsObjectAsync<AjaxResponse<string>>(
