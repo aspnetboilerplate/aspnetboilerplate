@@ -80,6 +80,8 @@ namespace Abp.Zero.SampleApp.Tests.Webhooks
         {
             var tenantId = await CreateAndGetTenantIdWithFeaturesAsync(AppFeatures.WebhookFeature, "true");
 
+            AbpSession.TenantId = tenantId;
+            
             var newSubscription = NewWebhookSubscription(tenantId, AppWebhookDefinitionNames.Users.Created);
 
             var webhookSubscriptionManager = Resolve<IWebhookSubscriptionManager>();
@@ -125,6 +127,8 @@ namespace Abp.Zero.SampleApp.Tests.Webhooks
         {
             var tenantId = await CreateAndGetTenantIdWithFeaturesAsync(AppFeatures.WebhookFeature, "true");
 
+            AbpSession.TenantId = tenantId;
+            
             var newSubscription = NewWebhookSubscription(tenantId, AppWebhookDefinitionNames.Users.Created);
 
             var webhookSubscriptionManager = Resolve<IWebhookSubscriptionManager>();
@@ -278,6 +282,8 @@ namespace Abp.Zero.SampleApp.Tests.Webhooks
         {
             var tenantId = await CreateAndGetTenantIdWithFeaturesAsync(AppFeatures.WebhookFeature, "true");
 
+            AbpSession.TenantId = tenantId;
+            
             var webhookSubscriptionManager = Resolve<IWebhookSubscriptionManager>();
 
             var userCreatedWebhookSubscription = NewWebhookSubscription("1", tenantId, AppWebhookDefinitionNames.Users.Created);
@@ -316,6 +322,8 @@ namespace Abp.Zero.SampleApp.Tests.Webhooks
                 {AppFeatures.ThemeFeature, "true"}
             });
 
+            AbpSession.TenantId = tenantId;
+            
             var webhookSubscriptionManager = Resolve<IWebhookSubscriptionManager>();
 
             var userCreatedWebhookSubscription = NewWebhookSubscription(tenantId, AppWebhookDefinitionNames.Users.Created);
@@ -356,6 +364,8 @@ namespace Abp.Zero.SampleApp.Tests.Webhooks
                 {AppFeatures.WebhookFeature, "true"},
                 {AppFeatures.ThemeFeature, "true"}
             });
+            
+            AbpSession.TenantId = tenantId;
 
             var webhookSubscriptionManager = Resolve<IWebhookSubscriptionManager>();
 
@@ -408,6 +418,8 @@ namespace Abp.Zero.SampleApp.Tests.Webhooks
 
             });
 
+            AbpSession.TenantId = tenantId;
+            
             var webhookSubscriptionManager = Resolve<IWebhookSubscriptionManager>();
             await WithUnitOfWorkAsync(async () =>
                 {
@@ -548,6 +560,8 @@ namespace Abp.Zero.SampleApp.Tests.Webhooks
         {
             var tenantId = AsyncHelper.RunSync(() => CreateAndGetTenantIdWithFeaturesAsync(AppFeatures.WebhookFeature, "true"));
 
+            AbpSession.TenantId = tenantId;
+            
             var newSubscription = NewWebhookSubscription(tenantId, AppWebhookDefinitionNames.Users.Created);
 
             var webhookSubscriptionManager = Resolve<IWebhookSubscriptionManager>();
@@ -595,6 +609,8 @@ namespace Abp.Zero.SampleApp.Tests.Webhooks
         {
             var tenantId = AsyncHelper.RunSync(() => CreateAndGetTenantIdWithFeaturesAsync(AppFeatures.WebhookFeature, "true"));
 
+            AbpSession.TenantId = tenantId;
+            
             var newSubscription = NewWebhookSubscription(tenantId, AppWebhookDefinitionNames.Users.Created);
 
             var webhookSubscriptionManager = Resolve<IWebhookSubscriptionManager>();
@@ -764,6 +780,8 @@ namespace Abp.Zero.SampleApp.Tests.Webhooks
         {
             var tenantId = AsyncHelper.RunSync(() => CreateAndGetTenantIdWithFeaturesAsync(AppFeatures.WebhookFeature, "true"));
 
+            AbpSession.TenantId = tenantId;
+            
             var webhookSubscriptionManager = Resolve<IWebhookSubscriptionManager>();
 
             var userCreatedWebhookSubscription = NewWebhookSubscription("1", tenantId, AppWebhookDefinitionNames.Users.Created);
@@ -802,6 +820,8 @@ namespace Abp.Zero.SampleApp.Tests.Webhooks
                 {AppFeatures.ThemeFeature, "true"}
             }));
 
+            AbpSession.TenantId = tenantId;
+            
             var webhookSubscriptionManager = Resolve<IWebhookSubscriptionManager>();
 
             var userCreatedWebhookSubscription = NewWebhookSubscription(tenantId, AppWebhookDefinitionNames.Users.Created);
@@ -843,6 +863,8 @@ namespace Abp.Zero.SampleApp.Tests.Webhooks
                 {AppFeatures.ThemeFeature, "true"}
             }));
 
+            AbpSession.TenantId = tenantId;
+            
             var webhookSubscriptionManager = Resolve<IWebhookSubscriptionManager>();
 
             var userCreatedWebhookSubscription = NewWebhookSubscription(tenantId, AppWebhookDefinitionNames.Users.Created);
@@ -893,6 +915,8 @@ namespace Abp.Zero.SampleApp.Tests.Webhooks
                 {AppFeatures.ThemeFeature, "true"}
             }));
 
+            AbpSession.TenantId = tenantId;
+            
             var webhookSubscriptionManager = Resolve<IWebhookSubscriptionManager>();
 
             WithUnitOfWork(() =>
