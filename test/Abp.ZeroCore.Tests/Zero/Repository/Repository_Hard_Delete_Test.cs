@@ -30,31 +30,31 @@ namespace Abp.Zero.Repository
                 var admin = await _roleRepository.FirstOrDefaultAsync(u => u.NormalizedName == "ADMIN");
                 await _roleRepository.DeleteAsync(admin);
 
-                uow.Complete();
+                await uow.CompleteAsync();
             }
 
             using (var uow = uowManager.Begin())
             {
-                var roles = _roleRepository.GetAllList();
+                var roles = await _roleRepository.GetAllListAsync();
 
                 foreach (var role in roles)
                 {
                     await _roleRepository.HardDeleteAsync(role);
                 }
 
-                uow.Complete();
+                await uow.CompleteAsync();
             }
 
             using (var uow = uowManager.Begin())
             {
                 using (uowManager.Current.DisableFilter(AbpDataFilters.SoftDelete))
                 {
-                    var roles = _roleRepository.GetAllList();
+                    var roles = await _roleRepository.GetAllListAsync();
                     roles.Count.ShouldBe(1);
                     roles.First().NormalizedName.ShouldBe("ADMIN");
                 }
 
-                uow.Complete();
+                await uow.CompleteAsync();
             }
         }
 
@@ -71,26 +71,26 @@ namespace Abp.Zero.Repository
                 var admin = await _roleRepository.FirstOrDefaultAsync(u => u.NormalizedName == "ADMIN");
                 await _roleRepository.DeleteAsync(admin);
 
-                uow.Complete();
+                await uow.CompleteAsync();
             }
 
             using (var uow = uowManager.Begin())
             {
                 await _roleRepository.HardDeleteAsync(r => r.Id > 0);
 
-                uow.Complete();
+                await uow.CompleteAsync();
             }
 
             using (var uow = uowManager.Begin())
             {
                 using (uowManager.Current.DisableFilter(AbpDataFilters.SoftDelete))
                 {
-                    var roles = _roleRepository.GetAllList();
+                    var roles = await _roleRepository.GetAllListAsync();
                     roles.Count.ShouldBe(1);
                     roles.First().NormalizedName.ShouldBe("ADMIN");
                 }
 
-                uow.Complete();
+                await uow.CompleteAsync();
             }
         }
 

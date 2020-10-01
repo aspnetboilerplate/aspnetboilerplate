@@ -30,31 +30,31 @@ namespace Abp.Zero.SampleApp.Tests.Repository
                 var admin = await _useRepository.FirstOrDefaultAsync(u => u.UserName == "admin");
                 await _useRepository.DeleteAsync(admin);
 
-                uow.Complete();
+                await uow.CompleteAsync();
             }
 
             using (var uow = uowManager.Begin())
             {
-                var users = _useRepository.GetAllList();
+                var users = await _useRepository.GetAllListAsync();
 
                 foreach (var user in users)
                 {
                     await _useRepository.HardDeleteAsync(user);
                 }
-
-                uow.Complete();
+                
+                await uow.CompleteAsync();
             }
 
             using (var uow = uowManager.Begin())
             {
                 using (uowManager.Current.DisableFilter(AbpDataFilters.SoftDelete))
                 {
-                    var users = _useRepository.GetAllList();
+                    var users = await _useRepository.GetAllListAsync();
                     users.Count.ShouldBe(1);
                     users.First().UserName.ShouldBe("admin");
                 }
 
-                uow.Complete();
+                await uow.CompleteAsync();
             }
         }
 
@@ -71,26 +71,26 @@ namespace Abp.Zero.SampleApp.Tests.Repository
                 var admin = await _useRepository.FirstOrDefaultAsync(u => u.UserName == "admin");
                 await _useRepository.DeleteAsync(admin);
 
-                uow.Complete();
+                await uow.CompleteAsync();
             }
 
             using (var uow = uowManager.Begin())
             {
                 await _useRepository.HardDeleteAsync(u => u.Id > 0);
 
-                uow.Complete();
+                await uow.CompleteAsync();
             }
 
             using (var uow = uowManager.Begin())
             {
                 using (uowManager.Current.DisableFilter(AbpDataFilters.SoftDelete))
                 {
-                    var users = _useRepository.GetAllList();
+                    var users = await _useRepository.GetAllListAsync();
                     users.Count.ShouldBe(1);
                     users.First().UserName.ShouldBe("admin");
                 }
 
-                uow.Complete();
+                await uow.CompleteAsync();
             }
         }
 
