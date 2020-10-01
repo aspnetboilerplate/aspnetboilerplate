@@ -3,6 +3,7 @@ using System.Threading.Tasks;
 using Abp.Domain.Repositories;
 using Abp.Domain.Uow;
 using Abp.ZeroCore.SampleApp.Core;
+using Abp.ZeroCore.SampleApp.Core.EntityHistory;
 using Shouldly;
 using Xunit;
 
@@ -77,7 +78,6 @@ namespace Abp.Zero.Repository
             using (var uow = uowManager.Begin())
             {
                 await _roleRepository.HardDeleteAsync(r => r.Id > 0);
-
                 await uow.CompleteAsync();
             }
 
@@ -104,6 +104,36 @@ namespace Abp.Zero.Repository
 
             await Assert.ThrowsAsync<AbpException>(async () => await _roleRepository.HardDeleteAsync(admin));
             await Assert.ThrowsAsync<AbpException>(async () => await _roleRepository.HardDeleteAsync(u => u.Id > 0));
+        }
+
+        [Fact]
+        public async Task Should_Not_Throw_Exception_When_Deleting_ValueObject_And_HardDeleting_Entity()
+        {
+            LoginAsDefaultTenantAdmin();
+
+            var uowManager = Resolve<IUnitOfWorkManager>();
+            
+            UsingDbContext(context =>
+            {
+                context.Categories.Add(new Category
+                {
+                    Id = 42,
+                    DisplayName = "Soft Drinks"
+                });
+            });
+            
+            using (var uow = uowManager.Begin())
+            {
+                await _roleRepository.HardDeleteAsync(r => r.Id > 0);
+                
+                UsingDbContext(context =>
+                {
+                    var category = context.Categories.Single(e=> e.Id == 42);
+                    context.Categories.Remove(category);
+                });
+                
+                await uow.CompleteAsync();
+            }
         }
     }
 }
