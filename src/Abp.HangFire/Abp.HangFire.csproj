@@ -31,7 +31,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Include="Hangfire.Core" Version="1.7.13" />
+    <PackageReference Include="Hangfire.Core" Version="1.7.15" />
   </ItemGroup>
 
   <ItemGroup>
