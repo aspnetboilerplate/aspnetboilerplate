@@ -45,6 +45,8 @@ namespace Abp.Zero.SampleApp.Tests.Webhooks
         {
             var subscription = await CreateTenantAndSubscribeToWebhookAsync(webhookDefinition, tenantFeatures);
 
+            AbpSession.TenantId = subscription.TenantId;
+            
             var webhooksConfiguration = Resolve<IWebhooksConfiguration>();
 
             var data = new { Name = "Musa", Surname = "Demir" };
