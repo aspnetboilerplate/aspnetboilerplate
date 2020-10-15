@@ -40,7 +40,7 @@ namespace Abp.EntityFrameworkCore.Tests.Tests
             foreach (var blog in blogs)
             {
                 blog.CreationTime.Kind.ShouldBe(DateTimeKind.Utc);
-                blog.DeletionTime.ShouldNotBeNull();
+                blog.DeletionTime.ShouldNotBe(null);
                 blog.DeletionTime.Value.Kind.ShouldBe(DateTimeKind.Utc);
                 blog.DeletionTime.Value.ToString("yyy-MM-dd HH:mm:ss").ShouldBe("2019-01-01 00:00:00");
                 blog.BlogTime.LastAccessTime.Kind.ShouldBe(DateTimeKind.Utc);

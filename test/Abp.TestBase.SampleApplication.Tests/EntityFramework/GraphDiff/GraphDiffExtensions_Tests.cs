@@ -35,7 +35,7 @@ namespace Abp.TestBase.SampleApplication.Tests.EntityFramework.GraphDiff
                 davidDoe = _peopleRepository.AttachGraph(davidDoe);
                 unitOfWorkManager.Current.SaveChanges();
 
-                davidDoe.Id.ShouldNotBeNull();
+                ((int?)davidDoe.Id).ShouldNotBe(null);
                 davidDoe.Id.ShouldNotBe(default(int));
                 davidDoe.ContactListId.ShouldBe(list1.Id); //New entity should be attached with it's navigation property
 

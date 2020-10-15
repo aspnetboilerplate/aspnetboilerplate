@@ -29,8 +29,8 @@ namespace Abp.TestBase.SampleApplication.Tests.Session
         [Fact]
         public void Session_Override_Test()
         {
-            _session.UserId.ShouldBeNull();
-            _session.TenantId.ShouldBeNull();
+            _session.UserId.ShouldBe(null);
+            _session.TenantId.ShouldBe(null);
 
             using (_session.Use(42, 571))
             {
@@ -39,7 +39,7 @@ namespace Abp.TestBase.SampleApplication.Tests.Session
 
                 using (_session.Use(null, 3))
                 {
-                    _session.TenantId.ShouldBeNull();
+                    _session.TenantId.ShouldBe(null);
                     _session.UserId.ShouldBe(3);
                 }
 
@@ -47,8 +47,8 @@ namespace Abp.TestBase.SampleApplication.Tests.Session
                 _session.UserId.ShouldBe(571);
             }
 
-            _session.UserId.ShouldBeNull();
-            _session.TenantId.ShouldBeNull();
+            _session.UserId.ShouldBe(null);
+            _session.TenantId.ShouldBe(null);
         }
 
         [Fact]

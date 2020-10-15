@@ -25,7 +25,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Include="FluentValidation" Version="9.1.2" />
+    <PackageReference Include="FluentValidation" Version="9.3.0-preview2" />
   </ItemGroup>
 
   <ItemGroup>

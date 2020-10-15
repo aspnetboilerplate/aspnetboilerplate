@@ -49,7 +49,7 @@ namespace Abp.Dapper.Tests
 
                 insertedProduct.ShouldNotBeNull();
                 insertedProduct.TenantId.ShouldBe(AbpSession.TenantId);
-                insertedProduct.CreationTime.ShouldNotBeNull();
+                ((DateTime?)insertedProduct.CreationTime).ShouldNotBe(null);
                 insertedProduct.CreatorUserId.ShouldBe(AbpSession.UserId);
 
                 //----Update operation should work and Modification Audits should be set---------------------------
@@ -60,7 +60,7 @@ namespace Abp.Dapper.Tests
 
                 productToUpdate.ShouldNotBeNull();
                 productToUpdate.TenantId.ShouldBe(AbpSession.TenantId);
-                productToUpdate.CreationTime.ShouldNotBeNull();
+                ((DateTime?)productToUpdate.CreationTime).ShouldNotBe(null);
                 productToUpdate.LastModifierUserId.ShouldBe(AbpSession.UserId);
 
                 //---Get method should return single-------------------------------------------------------------------

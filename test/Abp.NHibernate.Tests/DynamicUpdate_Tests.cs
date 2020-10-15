@@ -38,7 +38,7 @@ namespace Abp.NHibernate.Tests
             }
 
             var book2 = _bookRepository.Get(1);
-            book2.LastModifierUserId.ShouldNotBeNull();
+            book2.LastModifierUserId.ShouldNotBe(null);
         }
 
         [Fact]
@@ -56,7 +56,7 @@ namespace Abp.NHibernate.Tests
             }
 
             var book2 = await _bookRepository.GetAsync(1);
-            book2.LastModifierUserId.ShouldNotBeNull();
+            book2.LastModifierUserId.ShouldNotBe(null);
         }
     }
 }
