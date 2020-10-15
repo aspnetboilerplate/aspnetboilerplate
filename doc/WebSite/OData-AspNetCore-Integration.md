@@ -98,20 +98,20 @@ We must do this in the Startup class:
         {
             ...
 
-			services.AddOData();
+            services.AddOData();
 
-			// Workaround: https://github.com/OData/WebApi/issues/1177
-			services.AddMvcCore(options =>
-			{
-				foreach (var outputFormatter in options.OutputFormatters.OfType<ODataOutputFormatter>().Where(_ => _.SupportedMediaTypes.Count == 0))
-				{
-					outputFormatter.SupportedMediaTypes.Add(new MediaTypeHeaderValue("application/prs.odatatestxx-odata"));
-				}
-				foreach (var inputFormatter in options.InputFormatters.OfType<ODataInputFormatter>().Where(_ => _.SupportedMediaTypes.Count == 0))
-				{
-					inputFormatter.SupportedMediaTypes.Add(new MediaTypeHeaderValue("application/prs.odatatestxx-odata"));
-				}
-			});
+            // Workaround: https://github.com/OData/WebApi/issues/1177
+            services.AddMvcCore(options =>
+            {
+                foreach (var outputFormatter in options.OutputFormatters.OfType<ODataOutputFormatter>().Where(_ => _.SupportedMediaTypes.Count == 0))
+                {
+                    outputFormatter.SupportedMediaTypes.Add(new MediaTypeHeaderValue("application/prs.odatatestxx-odata"));
+                }
+                foreach (var inputFormatter in options.InputFormatters.OfType<ODataInputFormatter>().Where(_ => _.SupportedMediaTypes.Count == 0))
+                {
+                    inputFormatter.SupportedMediaTypes.Add(new MediaTypeHeaderValue("application/prs.odatatestxx-odata"));
+                }
+            });
 
             return services.AddAbp<MyProjectWebHostModule>(...);
         }
@@ -122,28 +122,27 @@ We must do this in the Startup class:
 
             ...
 
-			
-			// Return IQueryable from controllers
-			app.UseUnitOfWork(options =>
-			{
-				options.Filter = httpContext => httpContext.Request.Path.Value.StartsWith("/odata");
-			});
+            
+            // Return IQueryable from controllers
+            app.UseUnitOfWork(options =>
+            {
+                options.Filter = httpContext => httpContext.Request.Path.Value.StartsWith("/odata");
+            });
 
-			app.UseODataBatching();
-			app.UseEndpoints(endpoints =>
-			{
-				...	
+            app.UseODataBatching();
+            app.UseEndpoints(endpoints =>
+            {
+                ...    
 
-				var builder = new ODataConventionModelBuilder();
-				builder.EntitySet<Person>("Persons").EntityType.Expand().Filter().OrderBy().Page();
-				endpoints.MapODataRoute("odataPrefix", "odata",  builder.GetEdmModel());
-				...
-			});
-			
-			...
+                var builder = new ODataConventionModelBuilder();
+                builder.EntitySet<Person>("Persons").EntityType.Expand().Filter().OrderBy().Page();
+                endpoints.MapODataRoute("odataPrefix", "odata",  builder.GetEdmModel());
+                ...
+            });
+            
+            ...
         }
     }
-
 
 Here, we got the ODataModelBuilder reference and set the Person entity.
 You can use EntitySet to add other entities in a similar way. See the [OData
