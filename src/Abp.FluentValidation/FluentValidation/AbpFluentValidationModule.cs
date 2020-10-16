@@ -27,7 +27,7 @@ namespace Abp.FluentValidation
 
         public override void PostInitialize()
         {
-            ValidatorOptions.LanguageManager = IocManager.Resolve<AbpFluentValidationLanguageManager>();
+            ValidatorOptions.Global.LanguageManager = IocManager.Resolve<AbpFluentValidationLanguageManager>();
         }
     }
 }
