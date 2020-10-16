@@ -417,27 +417,27 @@ namespace Abp.Configuration
             _tenantSettingCache.Remove(tenantId);
         }
 
-        /// <inheritdoc/>
-        [UnitOfWork]
-        public virtual Task ChangeSettingForUserAsync(long userId, string name, string value)
+        public Task ChangeSettingForUserAsync(long userId, string name, string value)
         {
             return ChangeSettingForUserAsync(new UserIdentifier(AbpSession.TenantId, userId), name, value);
         }
 
-        /// <inheritdoc/>
-        [UnitOfWork]
-        public virtual void ChangeSettingForUser(long userId, string name, string value)
+        public void ChangeSettingForUser(long userId, string name, string value)
         {
             ChangeSettingForUser(new UserIdentifier(AbpSession.TenantId, userId), name, value);
         }
 
-        public async Task ChangeSettingForUserAsync(UserIdentifier user, string name, string value)
+        /// <inheritdoc/>
+        [UnitOfWork]
+        public virtual async Task ChangeSettingForUserAsync(UserIdentifier user, string name, string value)
         {
             await InsertOrUpdateOrDeleteSettingValueAsync(name, value, user.TenantId, user.UserId);
             await _userSettingCache.RemoveAsync(user.ToUserIdentifierString());
         }
 
-        public void ChangeSettingForUser(UserIdentifier user, string name, string value)
+        /// <inheritdoc/>
+        [UnitOfWork]
+        public virtual void ChangeSettingForUser(UserIdentifier user, string name, string value)
         {
             InsertOrUpdateOrDeleteSettingValue(name, value, user.TenantId, user.UserId);
             _userSettingCache.Remove(user.ToUserIdentifierString());

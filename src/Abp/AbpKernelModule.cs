@@ -12,7 +12,7 @@ using Abp.Configuration;
 using Abp.Configuration.Startup;
 using Abp.Dependency;
 using Abp.Domain.Uow;
-using Abp.DynamicEntityParameters;
+using Abp.DynamicEntityProperties;
 using Abp.EntityHistory;
 using Abp.Events.Bus;
 using Abp.Localization;
@@ -101,7 +101,7 @@ namespace Abp
             IocManager.Resolve<NotificationDefinitionManager>().Initialize();
             IocManager.Resolve<NavigationManager>().Initialize();
             IocManager.Resolve<WebhookDefinitionManager>().Initialize();
-            IocManager.Resolve<DynamicEntityParameterDefinitionManager>().Initialize();
+            IocManager.Resolve<DynamicEntityPropertyDefinitionManager>().Initialize();
 
             if (Configuration.BackgroundJobs.IsJobExecutionEnabled)
             {

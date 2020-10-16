@@ -1,12 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
 using Abp.Application.Features;
 using Abp.Auditing;
 using Abp.BackgroundJobs;
 using Abp.Dependency;
 using Abp.Domain.Uow;
-using Abp.DynamicEntityParameters;
+using Abp.DynamicEntityProperties;
 using Abp.EntityHistory;
 using Abp.Events.Bus;
 using Abp.Notifications;
@@ -108,7 +107,7 @@ namespace Abp.Configuration.Startup
 
         public IWebhooksConfiguration Webhooks { get; private set; }
 
-        public IDynamicEntityParameterConfiguration DynamicEntityParameters { get; private set; }
+        public IDynamicEntityPropertyConfiguration DynamicEntityProperties { get; private set; }
 
         public IList<ICustomConfigProvider> CustomConfigProviders { get; private set; }
 
@@ -158,7 +157,7 @@ namespace Abp.Configuration.Startup
             EmbeddedResources = IocManager.Resolve<IEmbeddedResourcesConfiguration>();
             EntityHistory = IocManager.Resolve<IEntityHistoryConfiguration>();
             Webhooks = IocManager.Resolve<IWebhooksConfiguration>();
-            DynamicEntityParameters = IocManager.Resolve<IDynamicEntityParameterConfiguration>();
+            DynamicEntityProperties = IocManager.Resolve<IDynamicEntityPropertyConfiguration>();
 
             CustomConfigProviders = new List<ICustomConfigProvider>();
             ServiceReplaceActions = new Dictionary<Type, Action>();
