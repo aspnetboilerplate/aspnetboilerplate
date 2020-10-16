@@ -27,28 +27,13 @@ namespace Abp.Zero
             Configuration.Modules.Zero().LanguageManagement.EnableDbLocalization();
             Configuration.UnitOfWork.IsTransactional = false;
 
-            Configuration.ReplaceService<INotificationDistributer, FakeNotificationDistributer>(DependencyLifeStyle.Singleton);
+            Configuration.ReplaceService<INotificationDistributer, FakeNotificationDistributer>();
         }
 
         public override void Initialize()
         {
             TestServiceCollectionRegistrar.Register(IocManager);
-
-            //IocManager.IocContainer.Register(
-            //    Component
-            //        .For<FakeNotificationDistributer>()
-            //        .LifestyleSingleton()
-            //);
-
             IocManager.RegisterAssemblyByConvention(typeof(AbpZeroTestModule).GetAssembly());
-
-            // IocManager.IocContainer.Register(
-            //    Component
-            //        .For<INotificationDistributer>()
-            //        .ImplementedBy<FakeNotificationDistributer>()
-            //        .LifestyleSingleton()
-            //        .IsDefault()
-            //);
         }
     }
 }

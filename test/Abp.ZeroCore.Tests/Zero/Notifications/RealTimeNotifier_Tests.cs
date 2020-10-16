@@ -18,6 +18,13 @@ namespace Abp.Zero.Notifications
 
         public RealTimeNotifier_Tests()
         {
+            var defaultNotificationDistributor = LocalIocManager.Resolve<DefaultNotificationDistributer>();
+            LocalIocManager.IocContainer.Register(
+                Component.For<INotificationDistributer>().Instance(defaultNotificationDistributor)
+                    .LifestyleSingleton()
+                    .IsDefault()
+            );
+            
             _publisher = LocalIocManager.Resolve<INotificationPublisher>();
             _realTimeNotifier1 = Substitute.For<IRealTimeNotifier>();
             _realTimeNotifier2 = Substitute.For<IRealTimeNotifier2>();

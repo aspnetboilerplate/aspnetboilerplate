@@ -3,6 +3,8 @@ using System.Threading;
 using System.Threading.Tasks;
 using Abp.Notifications;
 using Abp.Runtime.Session;
+using Castle.MicroKernel.Registration;
+using NSubstitute;
 using Shouldly;
 using Xunit;
 
@@ -15,9 +17,17 @@ namespace Abp.Zero.Notifications
 
         public NotificationStore_Tests()
         {
+            var defaultNotificationDistributor = LocalIocManager.Resolve<DefaultNotificationDistributer>();
+            LocalIocManager.IocContainer.Register(
+                Component.For<INotificationDistributer>().Instance(defaultNotificationDistributor)
+                    .LifestyleSingleton()
+                    .IsDefault()
+            );
+            
             _notificationPublisher = LocalIocManager.Resolve<INotificationPublisher>();
             _notificationStore = LocalIocManager.Resolve<INotificationStore>();
         }
+        
         [Fact]
         public async Task Should_Get_All_Notifications()
         {
@@ -48,7 +58,6 @@ namespace Abp.Zero.Notifications
 
             //this notification's creation time will be more than now+10sec
             await _notificationPublisher.PublishAsync("TestNotification3", userIds: new[] { userIdentifier });
-
 
             //this should get second added notification
             var notifications = await _notificationStore.GetUserNotificationsWithNotificationsAsync(
