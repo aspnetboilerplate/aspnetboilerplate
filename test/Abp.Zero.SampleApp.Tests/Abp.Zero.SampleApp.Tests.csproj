@@ -35,7 +35,7 @@
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers</IncludeAssets>
     </PackageReference>
-    <PackageReference Include="Shouldly" Version="4.0.0-beta0003" />
+    <PackageReference Include="Shouldly" Version="4.0.0-beta0002" />
     <PackageReference Include="Effort.EF6" Version="2.2.10" />
     <PackageReference Include="NSubstitute" Version="4.2.2" />
   </ItemGroup>

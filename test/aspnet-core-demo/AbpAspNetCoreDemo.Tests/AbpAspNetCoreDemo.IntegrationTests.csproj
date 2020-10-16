@@ -12,7 +12,7 @@
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
     </PackageReference>
-    <PackageReference Include="Shouldly" Version="4.0.0-beta0003" />
+    <PackageReference Include="Shouldly" Version="4.0.0-beta0002" />
     <PackageReference Include="NSubstitute" Version="4.2.2" />
     <PackageReference Include="NSubstitute.Analyzers.CSharp" Version="1.0.13" />
     <PackageReference Include="AngleSharp" Version="1.0.0-alpha-827" />
