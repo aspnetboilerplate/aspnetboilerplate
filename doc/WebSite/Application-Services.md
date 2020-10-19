@@ -310,7 +310,13 @@ AsyncCrudAppService class:
         }
     }
 
-No need for any additional code changes!
+In addition, you need to add under PreInitialize of your Module:
+
+        public override void PreInitialize()
+        {
+            Configuration.Modules.AbpAspNetCore().CreateControllersForAppServices(typeof(YouModule).GetAssembly());
+        }
+        
 
 ##### Other Method Arguments
 
