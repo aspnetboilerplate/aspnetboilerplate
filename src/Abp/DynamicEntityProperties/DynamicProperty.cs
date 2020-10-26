@@ -8,6 +8,8 @@ namespace Abp.DynamicEntityProperties
     public class DynamicProperty : Entity, IMayHaveTenant
     {
         public string PropertyName { get; set; }
+        
+        public string DisplayName { get; set; }
 
         public string InputType { get; set; }
 
