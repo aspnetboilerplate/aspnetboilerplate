@@ -24,7 +24,8 @@ namespace Abp.EntityHistory
         protected readonly IUnitOfWorkManager UnitOfWorkManager;
 
         protected bool IsEntityHistoryEnabled => EntityHistoryConfiguration.IsEnabled &&
-            (AbpSession.UserId.HasValue || EntityHistoryConfiguration.IsEnabledForAnonymousUsers);
+                                                 (AbpSession.UserId.HasValue || EntityHistoryConfiguration
+                                                     .IsEnabledForAnonymousUsers);
 
         protected EntityHistoryHelperBase(
             IEntityHistoryConfiguration entityHistoryConfiguration,
@@ -92,6 +93,24 @@ namespace Abp.EntityHistory
             return null;
         }
 
+        protected virtual bool? IsAuditedPropertyInfo(Type entityType, PropertyInfo propertyInfo)
+        {
+            if (propertyInfo.IsDefined(typeof(DisableAuditingAttribute), true))
+            {
+                return false;
+            }
+
+            if (propertyInfo.IsDefined(typeof(AuditedAttribute), true))
+            {
+                return true;
+            }
+
+            var isTrackedEntity = IsTypeOfTrackedEntity(entityType);
+            var isAuditedEntity = IsTypeOfAuditedEntity(entityType);
+
+            return (isTrackedEntity ?? false) || (isAuditedEntity ?? false);
+        }
+        
         protected virtual bool? IsAuditedPropertyInfo(PropertyInfo propertyInfo)
         {
             if (propertyInfo.IsDefined(typeof(DisableAuditingAttribute), true))

@@ -39,6 +39,8 @@ namespace Abp.ZeroCore.SampleApp.EntityFramework
 
         public DbSet<Country> Countries { get; set; }
 
+        public DbSet<Foo> Foo { get; set; }
+        
         public SampleAppDbContext(DbContextOptions<SampleAppDbContext> options) 
             : base(options)
         {

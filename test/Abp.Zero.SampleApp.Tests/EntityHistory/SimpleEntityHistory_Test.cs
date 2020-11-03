@@ -32,6 +32,7 @@ namespace Abp.Zero.SampleApp.Tests.EntityHistory
         private readonly IRepository<Post, Guid> _postRepository;
         private readonly IRepository<Comment> _commentRepository;
         private readonly IRepository<Student> _studentRepository;
+        private readonly IRepository<Foo> _fooRepository;
 
         private IEntityHistoryStore _entityHistoryStore;
 
@@ -42,6 +43,7 @@ namespace Abp.Zero.SampleApp.Tests.EntityHistory
             _postRepository = Resolve<IRepository<Post, Guid>>();
             _commentRepository = Resolve<IRepository<Comment>>();
             _studentRepository = Resolve<IRepository<Student>>();
+            _fooRepository = Resolve<IRepository<Foo>>();
 
             var user = GetDefaultTenantAdmin();
             AbpSession.TenantId = user.TenantId;
@@ -56,7 +58,7 @@ namespace Abp.Zero.SampleApp.Tests.EntityHistory
             _entityHistoryStore = Substitute.For<IEntityHistoryStore>();
             LocalIocManager.IocContainer.Register(
                 Component.For<IEntityHistoryStore>().Instance(_entityHistoryStore).LifestyleSingleton()
-                );
+            );
         }
 
         #region CASES WRITE HISTORY
@@ -70,7 +72,7 @@ namespace Abp.Zero.SampleApp.Tests.EntityHistory
             int? advertisementId = null;
             WithUnitOfWork(() =>
             {
-                var advertisement = new Advertisement { Banner = "tracked-advertisement" };
+                var advertisement = new Advertisement {Banner = "tracked-advertisement"};
                 advertisementId = _advertisementRepository.InsertAndGetId(advertisement);
             });
 
@@ -78,13 +80,15 @@ namespace Abp.Zero.SampleApp.Tests.EntityHistory
             {
                 s.EntityChanges.Count.ShouldBe(1);
 
-                var entityChange = s.EntityChanges.Single(ec => ec.EntityTypeFullName == typeof(Advertisement).FullName);
+                var entityChange =
+                    s.EntityChanges.Single(ec => ec.EntityTypeFullName == typeof(Advertisement).FullName);
                 entityChange.ChangeTime.ShouldNotBeNull();
                 entityChange.ChangeType.ShouldBe(EntityChangeType.Created);
                 entityChange.EntityId.ShouldBe(advertisementId.ToJsonString());
                 entityChange.PropertyChanges.Count.ShouldBe(1);
 
-                var propertyChange1 = entityChange.PropertyChanges.Single(pc => pc.PropertyName == nameof(Advertisement.Banner));
+                var propertyChange1 =
+                    entityChange.PropertyChanges.Single(pc => pc.PropertyName == nameof(Advertisement.Banner));
                 propertyChange1.OriginalValue.ShouldBeNull();
                 propertyChange1.NewValue.ShouldNotBeNull();
 
@@ -127,7 +131,7 @@ namespace Abp.Zero.SampleApp.Tests.EntityHistory
 
             WithUnitOfWork(() =>
             {
-                _advertisementRepository.InsertAndGetId(new Advertisement { Banner = "tracked-advertisement" });
+                _advertisementRepository.InsertAndGetId(new Advertisement {Banner = "tracked-advertisement"});
             });
 
             UsingDbContext((context) =>
@@ -144,7 +148,7 @@ namespace Abp.Zero.SampleApp.Tests.EntityHistory
         {
             Resolve<IEntityHistoryConfiguration>().Selectors.Add("Selected", typeof(Student));
 
-            var student = new Student()
+            var student = new Student
             {
                 Name = "TestName",
                 IdCard = "TestIdCard",
@@ -164,19 +168,23 @@ namespace Abp.Zero.SampleApp.Tests.EntityHistory
                 entityChange.EntityId.ShouldBe(student.Id.ToJsonString());
                 entityChange.PropertyChanges.Count.ShouldBe(4); //Name,IdCard,Address,Grade
 
-                var propertyChange1 = entityChange.PropertyChanges.Single(pc => pc.PropertyName == nameof(Student.Name));
+                var propertyChange1 =
+                    entityChange.PropertyChanges.Single(pc => pc.PropertyName == nameof(Student.Name));
                 propertyChange1.OriginalValue.ShouldBeNull();
                 propertyChange1.NewValue.ShouldNotBeNull();
 
-                var propertyChange2 = entityChange.PropertyChanges.Single(pc => pc.PropertyName == nameof(Student.IdCard));
+                var propertyChange2 =
+                    entityChange.PropertyChanges.Single(pc => pc.PropertyName == nameof(Student.IdCard));
                 propertyChange2.OriginalValue.ShouldBeNull();
                 propertyChange2.NewValue.ShouldNotBeNull();
 
-                var propertyChange3 = entityChange.PropertyChanges.Single(pc => pc.PropertyName == nameof(Student.Address));
+                var propertyChange3 =
+                    entityChange.PropertyChanges.Single(pc => pc.PropertyName == nameof(Student.Address));
                 propertyChange3.OriginalValue.ShouldBeNull();
                 propertyChange3.NewValue.ShouldNotBeNull();
 
-                var propertyChange4 = entityChange.PropertyChanges.Single(pc => pc.PropertyName == nameof(Student.Grade));
+                var propertyChange4 =
+                    entityChange.PropertyChanges.Single(pc => pc.PropertyName == nameof(Student.Grade));
                 propertyChange4.OriginalValue.ShouldBeNull();
                 propertyChange4.NewValue.ShouldNotBeNull();
 
@@ -251,15 +259,19 @@ namespace Abp.Zero.SampleApp.Tests.EntityHistory
             {
                 s.EntityChanges.Count.ShouldBe(1);
 
-                var entityChange = s.EntityChanges.Single(ec => ec.EntityTypeFullName == typeof(Advertisement).FullName);
+                var entityChange =
+                    s.EntityChanges.Single(ec => ec.EntityTypeFullName == typeof(Advertisement).FullName);
                 entityChange.ChangeType.ShouldBe(EntityChangeType.Updated);
-                entityChange.EntityId.ShouldBe(entityChange.EntityEntry.As<DbEntityEntry>().Entity.As<IEntity>().Id.ToJsonString());
+                entityChange.EntityId.ShouldBe(entityChange.EntityEntry.As<DbEntityEntry>().Entity.As<IEntity>().Id
+                    .ToJsonString());
                 entityChange.PropertyChanges.Count.ShouldBe(1);
 
-                var propertyChange = entityChange.PropertyChanges.Single(pc => pc.PropertyName == nameof(Advertisement.Banner));
+                var propertyChange =
+                    entityChange.PropertyChanges.Single(pc => pc.PropertyName == nameof(Advertisement.Banner));
                 propertyChange.NewValue.ShouldBe("test-advertisement-1-updated".ToJsonString());
                 propertyChange.OriginalValue.ShouldBe("test-advertisement-1".ToJsonString());
-                propertyChange.PropertyTypeFullName.ShouldBe(typeof(Advertisement).GetProperty(nameof(Advertisement.Banner)).PropertyType.FullName);
+                propertyChange.PropertyTypeFullName.ShouldBe(typeof(Advertisement)
+                    .GetProperty(nameof(Advertisement.Banner)).PropertyType.FullName);
 
                 return true;
             };
@@ -279,7 +291,8 @@ namespace Abp.Zero.SampleApp.Tests.EntityHistory
                 s.EntityChanges.Count.ShouldBe(1);
 
                 var entityChange = s.EntityChanges.Single(ec => ec.EntityTypeFullName == typeof(Blog).FullName);
-                entityChange.ChangeTime.ShouldBe(entityChange.EntityEntry.As<DbEntityEntry>().Entity.As<IHasCreationTime>().CreationTime);
+                entityChange.ChangeTime.ShouldBe(entityChange.EntityEntry.As<DbEntityEntry>().Entity
+                    .As<IHasCreationTime>().CreationTime);
                 entityChange.ChangeType.ShouldBe(EntityChangeType.Created);
                 entityChange.EntityId.ShouldBe(blog2Id.ToJsonString());
                 entityChange.PropertyChanges.Count.ShouldBe(3);
@@ -292,7 +305,8 @@ namespace Abp.Zero.SampleApp.Tests.EntityHistory
                 propertyChange2.OriginalValue.ShouldBeNull();
                 propertyChange2.NewValue.ShouldNotBeNull();
 
-                var propertyChange3 = entityChange.PropertyChanges.Single(pc => pc.PropertyName == nameof(Blog.CreationTime));
+                var propertyChange3 =
+                    entityChange.PropertyChanges.Single(pc => pc.PropertyName == nameof(Blog.CreationTime));
                 propertyChange3.OriginalValue.ShouldBeNull();
                 propertyChange3.NewValue.ShouldNotBeNull();
 
@@ -355,13 +369,15 @@ namespace Abp.Zero.SampleApp.Tests.EntityHistory
 
                 var entityChange = s.EntityChanges.Single(ec => ec.EntityTypeFullName == typeof(Blog).FullName);
                 entityChange.ChangeType.ShouldBe(EntityChangeType.Updated);
-                entityChange.EntityId.ShouldBe(entityChange.EntityEntry.As<DbEntityEntry>().Entity.As<IEntity>().Id.ToJsonString());
+                entityChange.EntityId.ShouldBe(entityChange.EntityEntry.As<DbEntityEntry>().Entity.As<IEntity>().Id
+                    .ToJsonString());
                 entityChange.PropertyChanges.Count.ShouldBe(1);
 
                 var propertyChange = entityChange.PropertyChanges.Single(pc => pc.PropertyName == nameof(Blog.Url));
                 propertyChange.NewValue.ShouldBe(newValue.ToJsonString());
                 propertyChange.OriginalValue.ShouldBe(originalValue.ToJsonString());
-                propertyChange.PropertyTypeFullName.ShouldBe(typeof(Blog).GetProperty(nameof(Blog.Url)).PropertyType.FullName);
+                propertyChange.PropertyTypeFullName.ShouldBe(typeof(Blog).GetProperty(nameof(Blog.Url)).PropertyType
+                    .FullName);
 
                 return true;
             };
@@ -390,13 +406,15 @@ namespace Abp.Zero.SampleApp.Tests.EntityHistory
 
                 var entityChange = s.EntityChanges.Single(ec => ec.EntityTypeFullName == typeof(Blog).FullName);
                 entityChange.ChangeType.ShouldBe(EntityChangeType.Updated);
-                entityChange.EntityId.ShouldBe(entityChange.EntityEntry.As<DbEntityEntry>().Entity.As<IEntity>().Id.ToJsonString());
+                entityChange.EntityId.ShouldBe(entityChange.EntityEntry.As<DbEntityEntry>().Entity.As<IEntity>().Id
+                    .ToJsonString());
                 entityChange.PropertyChanges.Count.ShouldBe(1);
 
                 var propertyChange = entityChange.PropertyChanges.Single(pc => pc.PropertyName == nameof(Blog.Url));
                 propertyChange.NewValue.ShouldBe(newValue.ToJsonString());
                 propertyChange.OriginalValue.ShouldBe(originalValue.ToJsonString());
-                propertyChange.PropertyTypeFullName.ShouldBe(typeof(Blog).GetProperty(nameof(Blog.Url)).PropertyType.FullName);
+                propertyChange.PropertyTypeFullName.ShouldBe(typeof(Blog).GetProperty(nameof(Blog.Url)).PropertyType
+                    .FullName);
 
                 return true;
             };
@@ -410,7 +428,7 @@ namespace Abp.Zero.SampleApp.Tests.EntityHistory
             /* Blog has Audited attribute. */
 
             int blog1Id = 0;
-            var newValue = new BlogEx { BloggerName = "blogger-2" };
+            var newValue = new BlogEx {BloggerName = "blogger-2"};
             BlogEx originalValue = null;
 
             WithUnitOfWork(() =>
@@ -418,7 +436,7 @@ namespace Abp.Zero.SampleApp.Tests.EntityHistory
                 var blog1 = _blogRepository.Single(b => b.More.BloggerName == "blogger-1");
                 blog1Id = blog1.Id;
 
-                originalValue = new BlogEx { BloggerName = blog1.More.BloggerName };
+                originalValue = new BlogEx {BloggerName = blog1.More.BloggerName};
                 blog1.More.BloggerName = newValue.BloggerName;
                 _blogRepository.Update(blog1);
             });
@@ -435,7 +453,8 @@ namespace Abp.Zero.SampleApp.Tests.EntityHistory
                 var propertyChange = entityChange.PropertyChanges.Single(pc => pc.PropertyName == nameof(Blog.More));
                 propertyChange.NewValue.ShouldBe(newValue.ToJsonString());
                 propertyChange.OriginalValue.ShouldBe(originalValue.ToJsonString());
-                propertyChange.PropertyTypeFullName.ShouldBe(typeof(Blog).GetProperty(nameof(Blog.More)).PropertyType.FullName);
+                propertyChange.PropertyTypeFullName.ShouldBe(typeof(Blog).GetProperty(nameof(Blog.More)).PropertyType
+                    .FullName);
 
                 return true;
             };
@@ -474,7 +493,8 @@ namespace Abp.Zero.SampleApp.Tests.EntityHistory
                 var propertyChange = entityChange.PropertyChanges.Single(pc => pc.PropertyName == nameof(Post.BlogId));
                 propertyChange.NewValue.ShouldBe("2");
                 propertyChange.OriginalValue.ShouldBe("1");
-                propertyChange.PropertyTypeFullName.ShouldBe(typeof(Post).GetProperty(nameof(Post.BlogId)).PropertyType.FullName);
+                propertyChange.PropertyTypeFullName.ShouldBe(typeof(Post).GetProperty(nameof(Post.BlogId)).PropertyType
+                    .FullName);
 
                 return true;
             };
@@ -488,7 +508,7 @@ namespace Abp.Zero.SampleApp.Tests.EntityHistory
             WithUnitOfWork(() =>
             {
                 var blog1 = _blogRepository.Single(b => b.Name == "test-blog-1");
-                var post10 = new Post { Blog = blog1, Title = "test-post-10-title", Body = "test-post-10-body" };
+                var post10 = new Post {Blog = blog1, Title = "test-post-10-title", Body = "test-post-10-body"};
 
                 // Change navigation property by adding into collection
                 blog1.Posts.Add(post10);
@@ -505,7 +525,8 @@ namespace Abp.Zero.SampleApp.Tests.EntityHistory
                 entityChangePost.ChangeType.ShouldBe(EntityChangeType.Created);
                 entityChangePost.PropertyChanges.Count.ShouldBe(1);
 
-                var propertyChange1 = entityChangePost.PropertyChanges.Single(pc => pc.PropertyName == nameof(Post.BlogId));
+                var propertyChange1 =
+                    entityChangePost.PropertyChanges.Single(pc => pc.PropertyName == nameof(Post.BlogId));
                 propertyChange1.OriginalValue.ShouldBeNull();
                 propertyChange1.NewValue.ShouldNotBeNull();
 
@@ -551,7 +572,8 @@ namespace Abp.Zero.SampleApp.Tests.EntityHistory
                 var propertyChange = entityChange.PropertyChanges.Single(pc => pc.PropertyName == nameof(Comment.Post));
                 propertyChange.NewValue.ShouldBe(post2KeyValue.ToJsonString());
                 propertyChange.OriginalValue.ShouldBe(post1KeyValue.ToJsonString());
-                propertyChange.PropertyTypeFullName.ShouldBe(typeof(Comment).GetProperty(nameof(Comment.Post)).PropertyType.FullName);
+                propertyChange.PropertyTypeFullName.ShouldBe(typeof(Comment).GetProperty(nameof(Comment.Post))
+                    .PropertyType.FullName);
 
                 return true;
             };
@@ -577,7 +599,8 @@ namespace Abp.Zero.SampleApp.Tests.EntityHistory
 
                 var entityChange = s.EntityChanges.Single(ec => ec.EntityTypeFullName == typeof(Blog).FullName);
                 entityChange.ChangeType.ShouldBe(EntityChangeType.Updated);
-                entityChange.EntityId.ShouldBe(entityChange.EntityEntry.As<DbEntityEntry>().Entity.As<IEntity>().Id.ToJsonString());
+                entityChange.EntityId.ShouldBe(entityChange.EntityEntry.As<DbEntityEntry>().Entity.As<IEntity>().Id
+                    .ToJsonString());
                 entityChange.PropertyChanges.Count.ShouldBe(0);
 
                 return true;
@@ -590,7 +613,8 @@ namespace Abp.Zero.SampleApp.Tests.EntityHistory
         public void Should_Write_History_For_TPH_Tracked_Entities_With_One_To_Many_Relationship_Create()
         {
             var studentId = CreateStudentAndGetId();
-            Resolve<IEntityHistoryConfiguration>().Selectors.Add("Selected", typeof(Student), typeof(StudentLectureNote));
+            Resolve<IEntityHistoryConfiguration>().Selectors
+                .Add("Selected", typeof(Student), typeof(StudentLectureNote));
 
             _entityHistoryStore.ClearReceivedCalls();
 
@@ -612,7 +636,8 @@ namespace Abp.Zero.SampleApp.Tests.EntityHistory
             {
                 s.EntityChanges.Count.ShouldBe(1);
 
-                var entityChange = s.EntityChanges.Single(ec => ec.EntityTypeFullName == typeof(StudentLectureNote).FullName);
+                var entityChange =
+                    s.EntityChanges.Single(ec => ec.EntityTypeFullName == typeof(StudentLectureNote).FullName);
                 entityChange.ChangeTime.ShouldNotBeNull();
                 entityChange.ChangeType.ShouldBe(EntityChangeType.Created);
                 entityChange.PropertyChanges.Count.ShouldBe(3);
@@ -630,7 +655,8 @@ namespace Abp.Zero.SampleApp.Tests.EntityHistory
         public void Should_Write_History_For_TPH_Tracked_Entities_With_One_To_One_Relationship_Changes_Create()
         {
             var studentId = CreateStudentAndGetId();
-            Resolve<IEntityHistoryConfiguration>().Selectors.Add("Selected", typeof(Student), typeof(CitizenshipInformation));
+            Resolve<IEntityHistoryConfiguration>().Selectors
+                .Add("Selected", typeof(Student), typeof(CitizenshipInformation));
 
             _entityHistoryStore.ClearReceivedCalls();
 
@@ -651,7 +677,8 @@ namespace Abp.Zero.SampleApp.Tests.EntityHistory
             {
                 s.EntityChanges.Count.ShouldBe(1);
 
-                var entityChange = s.EntityChanges.Single(ec => ec.EntityTypeFullName == typeof(CitizenshipInformation).FullName);
+                var entityChange =
+                    s.EntityChanges.Single(ec => ec.EntityTypeFullName == typeof(CitizenshipInformation).FullName);
                 entityChange.ChangeTime.ShouldNotBeNull();
                 entityChange.ChangeType.ShouldBe(EntityChangeType.Created);
                 entityChange.PropertyChanges.Count.ShouldBe(1);
@@ -669,13 +696,15 @@ namespace Abp.Zero.SampleApp.Tests.EntityHistory
         public void Should_Write_History_For_TPH_Tracked_Entities_With_One_To_One_Relationship_Changes_Update()
         {
             var studentId = CreateStudentWithCitizenshipAndGetId();
-            Resolve<IEntityHistoryConfiguration>().Selectors.Add("Selected", typeof(Student), typeof(CitizenshipInformation));
+            Resolve<IEntityHistoryConfiguration>().Selectors
+                .Add("Selected", typeof(Student), typeof(CitizenshipInformation));
 
             _entityHistoryStore.ClearReceivedCalls();
 
             WithUnitOfWork(() =>
             {
-                var student = _studentRepository.GetAll().Include(x => x.CitizenshipInformation).Single(x => x.Id == studentId);
+                var student = _studentRepository.GetAll().Include(x => x.CitizenshipInformation)
+                    .Single(x => x.Id == studentId);
                 student.CitizenshipInformation.CitizenShipId = "qwe123";
                 _studentRepository.Update(student);
             });
@@ -684,12 +713,14 @@ namespace Abp.Zero.SampleApp.Tests.EntityHistory
             {
                 s.EntityChanges.Count.ShouldBe(1);
 
-                var entityChange = s.EntityChanges.Single(ec => ec.EntityTypeFullName == typeof(CitizenshipInformation).FullName);
+                var entityChange =
+                    s.EntityChanges.Single(ec => ec.EntityTypeFullName == typeof(CitizenshipInformation).FullName);
                 entityChange.ChangeTime.ShouldNotBeNull();
                 entityChange.ChangeType.ShouldBe(EntityChangeType.Updated);
                 entityChange.PropertyChanges.Count.ShouldBe(1);
 
-                var idChange = entityChange.PropertyChanges.Single(p => p.PropertyName == nameof(CitizenshipInformation.CitizenShipId));
+                var idChange = entityChange.PropertyChanges.Single(p =>
+                    p.PropertyName == nameof(CitizenshipInformation.CitizenShipId));
                 idChange.OriginalValue.ShouldBe("\"123qwe\"");
                 idChange.NewValue.ShouldBe("\"qwe123\"");
 
@@ -728,6 +759,55 @@ namespace Abp.Zero.SampleApp.Tests.EntityHistory
 
             return _studentRepository.InsertAndGetId(student);
         }
+
+        [Fact]
+        public void Should_Not_Save_Empty_PropertyChanges()
+        {
+            // Arrange
+            // Forward calls from substitute to implementation
+            var entityHistoryStore = Resolve<EntityHistoryStore>();
+            _entityHistoryStore.When(x => x.SaveAsync(Arg.Any<EntityChangeSet>()))
+                .Do(callback => AsyncHelper.RunSync(() =>
+                    entityHistoryStore.SaveAsync(callback.Arg<EntityChangeSet>()))
+                );
+
+            _entityHistoryStore.When(x => x.Save(Arg.Any<EntityChangeSet>()))
+                .Do(callback => entityHistoryStore.Save(callback.Arg<EntityChangeSet>()));
+
+            // Act
+            Foo foo = null;
+            WithUnitOfWork(() =>
+            {
+                foo = new Foo
+                {
+                    Audited = "s1"
+                };
+
+                _fooRepository.InsertAndGetId(foo);
+            });
+
+            UsingDbContext((context) =>
+            {
+                context.EntityChanges.Count(e => e.TenantId == 1).ShouldBe(1);
+                context.EntityChangeSets.Count(e => e.TenantId == 1).ShouldBe(1);
+                context.EntityPropertyChanges.Count(e => e.TenantId == 1).ShouldBe(1);
+            });
+
+            WithUnitOfWork(() =>
+            {
+                foo.NonAudited = "s2";
+                _fooRepository.Update(foo);
+            });
+
+            // Assert
+            UsingDbContext((context) =>
+            {
+                context.EntityChanges.Count(e => e.TenantId == 1).ShouldBe(1);
+                context.EntityChangeSets.Count(e => e.TenantId == 1).ShouldBe(1);
+                context.EntityPropertyChanges.Count(e => e.TenantId == 1).ShouldBe(1);
+            });
+        }
+
         #endregion
 
         #region CASES DON'T WRITE HISTORY
@@ -811,7 +891,7 @@ namespace Abp.Zero.SampleApp.Tests.EntityHistory
             //Act
             UsingDbContext((context) =>
             {
-                context.Categories.Add(new Category { DisplayName = "My Category" });
+                context.Categories.Add(new Category {DisplayName = "My Category"});
                 context.SaveChanges();
             });
 
@@ -825,7 +905,7 @@ namespace Abp.Zero.SampleApp.Tests.EntityHistory
             //Arrange
             UsingDbContext((context) =>
             {
-                context.Categories.Add(new Category { DisplayName = "My Category" });
+                context.Categories.Add(new Category {DisplayName = "My Category"});
                 context.SaveChanges();
             });
             _entityHistoryStore.ClearReceivedCalls();
@@ -848,7 +928,7 @@ namespace Abp.Zero.SampleApp.Tests.EntityHistory
             //Arrange
             UsingDbContext((context) =>
             {
-                context.Categories.Add(new Category { DisplayName = "My Category" });
+                context.Categories.Add(new Category {DisplayName = "My Category"});
                 context.SaveChanges();
             });
             _entityHistoryStore.ClearReceivedCalls();
@@ -871,7 +951,7 @@ namespace Abp.Zero.SampleApp.Tests.EntityHistory
             //Arrange
             UsingDbContext((context) =>
             {
-                context.Countries.Add(new Country { CountryCode = "My Country" });
+                context.Countries.Add(new Country {CountryCode = "My Country"});
                 context.SaveChanges();
             });
 
