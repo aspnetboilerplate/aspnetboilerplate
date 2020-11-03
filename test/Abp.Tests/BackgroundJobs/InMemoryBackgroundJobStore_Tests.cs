@@ -1,5 +1,6 @@
 ﻿using System.Threading.Tasks;
 using Abp.BackgroundJobs;
+using Abp.Timing;
 using Shouldly;
 using Xunit;
 
@@ -20,7 +21,8 @@ namespace Abp.Tests.BackgroundJobs
             var jobInfo = new BackgroundJobInfo
             {
                 JobType = "TestType",
-                JobArgs = "{}"
+                JobArgs = "{}",
+                NextTryTime = Clock.Now.AddMinutes(-1) // to be sure NextTryTime will not be same when _store.InsertAsync and _store.GetWaitingJobsAsync are executed.
             };
             
             await _store.InsertAsync(jobInfo);

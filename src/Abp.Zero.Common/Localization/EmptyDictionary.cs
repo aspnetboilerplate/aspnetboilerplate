@@ -18,6 +18,11 @@ namespace Abp.Localization
             return null;
         }
 
+        public IReadOnlyList<LocalizedString> GetStringsOrNull(List<string> names)
+        {
+            return new LocalizedString[0];
+        }
+
         public IReadOnlyList<LocalizedString> GetAllStrings()
         {
             return new LocalizedString[0];

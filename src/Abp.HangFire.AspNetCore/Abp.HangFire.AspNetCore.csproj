@@ -1,5 +1,5 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
-  
+
   <Import Project="..\..\common.props" />
 
   <PropertyGroup>
@@ -9,27 +9,16 @@
     <PackageId>Abp.HangFire.AspNetCore</PackageId>
     <PackageTags>asp.net;asp.net mvc;boilerplate;application framework;web framework;framework;domain driven design;HangFire;background jobs; aspnet core</PackageTags>
     <RootNamespace>Abp</RootNamespace>
-	<Description>Abp.HangFire.AspNetCore</Description>
+    <Description>Abp.HangFire.AspNetCore</Description>
   </PropertyGroup>
-
-  <ItemGroup>
-    <None Include="bin\Release\netstandard2.0\Abp.HangFire.AspNetCore.pdb">
-      <PackagePath>lib/netstandard2.0/</PackagePath>
-      <Pack>true</Pack>
-    </None>
-  </ItemGroup>
 
   <ItemGroup>
     <ProjectReference Include="..\Abp\Abp.csproj" />
   </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Include="Hangfire.AspNetCore" Version="1.7.9" />
+    <PackageReference Include="Hangfire.AspNetCore" Version="1.7.15" />
     <PackageReference Include="System.Runtime" Version="4.3.1" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <PackageReference Update="SourceLink.Create.CommandLine" Version="2.8.3" />
   </ItemGroup>
 
 </Project>

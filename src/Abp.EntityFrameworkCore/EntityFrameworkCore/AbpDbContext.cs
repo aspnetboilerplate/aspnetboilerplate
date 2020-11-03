@@ -253,7 +253,6 @@ namespace Abp.EntityFrameworkCore
             }
             
             ChangeTracker.CascadeDeleteTiming = CascadeTiming.OnSaveChanges;
-            ChangeTracker.DeleteOrphansTiming = CascadeTiming.OnSaveChanges;
         }
         
         protected virtual EntityChangeReport ApplyAbpConcepts()
@@ -331,6 +330,11 @@ namespace Abp.EntityFrameworkCore
 
         protected virtual bool IsHardDeleteEntity(EntityEntry entry)
         {
+            if (!EntityHelper.IsEntity(entry.Entity.GetType()))
+            {
+                return false;
+            }
+            
             if (CurrentUnitOfWorkProvider?.Current?.Items == null)
             {
                 return false;

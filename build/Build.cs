@@ -21,7 +21,6 @@ using static Nuke.Common.Tools.NuGet.NuGetTasks;
 [UnsetVisualStudioEnvironmentVariables]
 [MSBuildVerbosityMapping]
 [AzurePipelines(
-    "",
     AzurePipelinesImage.WindowsLatest,
     InvokedTargets = new[] {nameof(Test)},
     ExcludedTargets = new[] {nameof(Clean)},

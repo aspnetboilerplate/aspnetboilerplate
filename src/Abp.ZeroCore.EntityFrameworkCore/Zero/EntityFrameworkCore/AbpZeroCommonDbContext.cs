@@ -12,7 +12,7 @@ using Microsoft.EntityFrameworkCore;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
-using Abp.DynamicEntityParameters;
+using Abp.DynamicEntityProperties;
 using Abp.Webhooks;
 
 namespace Abp.Zero.EntityFrameworkCore
@@ -158,24 +158,24 @@ namespace Abp.Zero.EntityFrameworkCore
         public virtual DbSet<WebhookSendAttempt> WebhookSendAttempts { get; set; }
 
         /// <summary>
-        /// DynamicParameters
+        /// DynamicProperties
         /// </summary>
-        public virtual DbSet<DynamicParameter> DynamicParameters { get; set; }
+        public virtual DbSet<DynamicProperty> DynamicProperties { get; set; }
 
         /// <summary>
-        /// DynamicParameter selectable values
+        /// DynamicProperty selectable values
         /// </summary>
-        public virtual DbSet<DynamicParameterValue> DynamicParameterValues { get; set; }
+        public virtual DbSet<DynamicPropertyValue> DynamicPropertyValues { get; set; }
 
         /// <summary>
-        /// Entities dynamic parameters. Which parameters that entity has
+        /// Entities dynamic properties. Which property that entity has
         /// </summary>
-        public virtual DbSet<EntityDynamicParameter> EntityDynamicParameters { get; set; }
+        public virtual DbSet<DynamicEntityProperty> DynamicEntityProperties { get; set; }
 
         /// <summary>
-        /// Entities dynamic parameter's values
+        /// Entities dynamic properties values
         /// </summary>
-        public virtual DbSet<EntityDynamicParameterValue> EntityDynamicParameterValues { get; set; }
+        public virtual DbSet<DynamicEntityPropertyValue> DynamicEntityPropertyValues { get; set; }
 
         public IEntityHistoryHelper EntityHistoryHelper { get; set; }
 
@@ -295,7 +295,7 @@ namespace Abp.Zero.EntityFrameworkCore
 
             modelBuilder.Entity<OrganizationUnit>(b =>
             {
-                b.HasIndex(e => new { e.TenantId, e.Code }).IsUnique();
+                b.HasIndex(e => new { e.TenantId, e.Code }).IsUnique(false);
             });
 
             modelBuilder.Entity<PermissionSetting>(b =>
@@ -375,14 +375,14 @@ namespace Abp.Zero.EntityFrameworkCore
                 b.HasIndex(e => new { e.TenantId, e.UserId });
             });
 
-            modelBuilder.Entity<DynamicParameter>(b =>
+            modelBuilder.Entity<DynamicProperty>(b =>
             {
-                b.HasIndex(e => new { e.ParameterName, e.TenantId }).IsUnique();
+                b.HasIndex(e => new { e.PropertyName, e.TenantId }).IsUnique();
             });
 
-            modelBuilder.Entity<EntityDynamicParameter>(b =>
+            modelBuilder.Entity<DynamicEntityProperty>(b =>
             {
-                b.HasIndex(e => new { e.EntityFullName, e.DynamicParameterId, e.TenantId }).IsUnique();
+                b.HasIndex(e => new { e.EntityFullName, e.DynamicPropertyId, e.TenantId }).IsUnique();
             });
         }
     }

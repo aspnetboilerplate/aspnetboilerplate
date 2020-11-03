@@ -26,18 +26,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <None Include="bin\Release\netcoreapp3.1\Abp.ZeroCore.pdb">
-      <PackagePath>lib/netcoreapp3.1/</PackagePath>
-      <Pack>true</Pack>
-    </None>
-  </ItemGroup>
-
-  <ItemGroup>
     <ProjectReference Include="..\Abp.Zero.Common\Abp.Zero.Common.csproj" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <PackageReference Update="SourceLink.Create.CommandLine" Version="2.8.3" />
   </ItemGroup>
 
 </Project>

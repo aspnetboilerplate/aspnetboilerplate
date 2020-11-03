@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Threading.Tasks;
-using Abp.Auditing;
 using Abp.Dependency;
 using Abp.RealTime;
 using Abp.Runtime.Session;
@@ -14,17 +13,17 @@ namespace Abp.Web.SignalR.Hubs
     public class AbpCommonHub : AbpHubBase, ITransientDependency
     {
         private readonly IOnlineClientManager _onlineClientManager;
-        private readonly IClientInfoProvider _clientInfoProvider;
+        private readonly IOnlineClientInfoProvider _onlineClientInfoProvider;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="AbpCommonHub"/> class.
         /// </summary>
         public AbpCommonHub(
-            IOnlineClientManager onlineClientManager, 
-            IClientInfoProvider clientInfoProvider)
+            IOnlineClientManager onlineClientManager,
+            IOnlineClientInfoProvider onlineClientInfoProvider)
         {
             _onlineClientManager = onlineClientManager;
-            _clientInfoProvider = clientInfoProvider;
+            _onlineClientInfoProvider = onlineClientInfoProvider;
 
             Logger = NullLogger.Instance;
             AbpSession = NullAbpSession.Instance;
@@ -39,10 +38,10 @@ namespace Abp.Web.SignalR.Hubs
         {
             await base.OnConnected();
 
-            var client = CreateClientForCurrentConnection();
+            var client = _onlineClientInfoProvider.CreateClientForCurrentConnection(Context);
 
             Logger.Debug("A client is connected: " + client);
-            
+
             _onlineClientManager.Add(client);
         }
 
@@ -53,7 +52,7 @@ namespace Abp.Web.SignalR.Hubs
             var client = _onlineClientManager.GetByConnectionIdOrNull(Context.ConnectionId);
             if (client == null)
             {
-                client = CreateClientForCurrentConnection();
+                client = _onlineClientInfoProvider.CreateClientForCurrentConnection(Context);
                 _onlineClientManager.Add(client);
                 Logger.Debug("A client is connected (on reconnected event): " + client);
             }
@@ -76,30 +75,6 @@ namespace Abp.Web.SignalR.Hubs
             catch (Exception ex)
             {
                 Logger.Warn(ex.ToString(), ex);
-            }
-        }
-
-        private IOnlineClient CreateClientForCurrentConnection()
-        {
-            return new OnlineClient(
-                Context.ConnectionId,
-                GetIpAddressOfClient(),
-                AbpSession.TenantId,
-                AbpSession.UserId
-            );
-        }
-
-        protected virtual string GetIpAddressOfClient()
-        {
-            try
-            {
-                return _clientInfoProvider.ClientIpAddress;
-            }
-            catch (Exception ex)
-            {
-                Logger.Error("Can not find IP address of the client! connectionId: " + Context.ConnectionId);
-                Logger.Error(ex.Message, ex);
-                return "";
             }
         }
     }

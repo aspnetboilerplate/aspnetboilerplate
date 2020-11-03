@@ -213,17 +213,9 @@ namespace Abp.Authorization.Roles
         /// <returns>List of granted permissions</returns>
         public virtual async Task<IReadOnlyList<Permission>> GetGrantedPermissionsAsync(TRole role)
         {
-            var permissionList = new List<Permission>();
-
-            foreach (var permission in PermissionManager.GetAllPermissions())
-            {
-                if (await IsGrantedAsync(role.Id, permission))
-                {
-                    permissionList.Add(permission);
-                }
-            }
-
-            return permissionList;
+            var cacheItem = await GetRolePermissionCacheItemAsync(role.Id);
+            var allPermissions = PermissionManager.GetAllPermissions();
+            return allPermissions.Where(x => cacheItem.GrantedPermissions.Contains(x.Name)).ToList();
         }
 
         /// <summary>

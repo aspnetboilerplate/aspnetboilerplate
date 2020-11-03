@@ -33,6 +33,8 @@ Domain Layer
 -   [Unit Of Work](Unit-Of-Work.md)
 -   [Domain Events (EventBus)](EventBus-Domain-Events.md)
 -   [Data Filters](Data-Filters.md)
+-   [Dynamic Parameter System](Dynamic-Parameter-System.md)
+-   [Object Comparators](ObjectComparators.md)
 
 Application Layer
 
@@ -118,6 +120,7 @@ Features
   -   [Permission Management](/Pages/Documents/Zero/Permission-Management)
   -   [Language Management](/Pages/Documents/Zero/Language-Management)
   -   [Identity Server Integration](Zero/Identity-Server.md)
+  -   [Identity Server vNext Integration](Zero/Identity-Server-vNext.md)
 
 Releases
 

@@ -5,7 +5,7 @@ using Abp.Auditing;
 using Abp.BackgroundJobs;
 using Abp.Dependency;
 using Abp.Domain.Uow;
-using Abp.DynamicEntityParameters;
+using Abp.DynamicEntityProperties;
 using Abp.EntityHistory;
 using Abp.Events.Bus;
 using Abp.Notifications;
@@ -118,9 +118,9 @@ namespace Abp.Configuration.Startup
         IWebhooksConfiguration Webhooks { get; }
 
         /// <summary>
-        /// Used to configure dynamic entity parameters
+        /// Used to configure dynamic entity properties
         /// </summary>
-        IDynamicEntityParameterConfiguration DynamicEntityParameters { get; }
+        IDynamicEntityPropertyConfiguration DynamicEntityProperties { get; }
 
         /// <summary>
         /// Used to replace a service type.

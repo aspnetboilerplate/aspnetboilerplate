@@ -16,8 +16,6 @@ Some configuration and workarounds are needed to use SQLite with ASP.NET Core an
 
 Since SQLite doesn't support multithreading, transactions should be disabled in the `SQLiteDemoEntityFrameworkModule.PreInitialize()` method.
 
-> NOTE:Check [here](https://github.com/XdX-Software/EasyDDD/issues/1) for more info and workarounds.
-
 ```c#
 [DependsOn(
     typeof(SQLiteDemoCoreModule), 
@@ -49,7 +47,7 @@ public static class SqliteDemoDbContextConfigurer
         builder.UseSqlite(connection);
     }
  }
- ```
+```
 
 #### Configure connection string 
 
@@ -58,7 +56,7 @@ Change the connection string to your SQLite connection in ***.Web.Mvc/appsetting
 ```js
 {
   "ConnectionStrings": {
-    "Default": "Data Source=SqliteDemoDb.db"
+    "Default": "Data Source=SqliteDemoDb.db;Cache=Shared"
   },
   ...
 }

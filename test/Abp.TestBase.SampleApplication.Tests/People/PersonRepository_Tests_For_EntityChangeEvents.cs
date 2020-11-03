@@ -23,11 +23,10 @@ namespace Abp.TestBase.SampleApplication.Tests.People
         {
             _personRepository = Resolve<IRepository<Person>>();
         }
-        
+
         [Theory]
         [InlineData(TransactionScopeOption.Required)]
         [InlineData(TransactionScopeOption.RequiresNew)]
-        [InlineData(TransactionScopeOption.Suppress)]
         public void Should_Trigger_All_Events_On_Create_For_All_Transaction_Scopes(TransactionScopeOption scopeOption)
         {
             var changingTriggerCount = 0;
@@ -90,6 +89,65 @@ namespace Abp.TestBase.SampleApplication.Tests.People
 
             changedTriggerCount.ShouldBe(1);
             createdTriggerCount.ShouldBe(1);
+        }
+
+         [Fact]
+         public void Should_Immediate_Trigger_All_Events_For_Suppress_Transaction_Scopes()
+        {
+            var changingTriggerCount = 0;
+            var creatingTriggerCount = 0;
+
+            var changedTriggerCount = 0;
+            var createdTriggerCount = 0;
+
+            Resolve<IEventBus>().Register<EntityChangingEventData<Person>>(
+                eventData =>
+                {
+                    eventData.Entity.Name.ShouldBe("halil");
+                    eventData.Entity.IsTransient().ShouldBe(false);
+                    changingTriggerCount++;
+                    changedTriggerCount.ShouldBe(0);
+                });
+
+            Resolve<IEventBus>().Register<EntityCreatingEventData<Person>>(
+                eventData =>
+                {
+                    eventData.Entity.Name.ShouldBe("halil");
+                    eventData.Entity.IsTransient().ShouldBe(false);
+                    creatingTriggerCount++;
+                    createdTriggerCount.ShouldBe(0);
+                });
+
+            Resolve<IEventBus>().Register<EntityChangedEventData<Person>>(
+                eventData =>
+                {
+                    eventData.Entity.Name.ShouldBe("halil");
+                    eventData.Entity.IsTransient().ShouldBe(false);
+                    changingTriggerCount.ShouldBe(1);
+                    changedTriggerCount++;
+                });
+
+            Resolve<IEventBus>().Register<EntityCreatedEventData<Person>>(
+                eventData =>
+                {
+                    eventData.Entity.Name.ShouldBe("halil");
+                    eventData.Entity.IsTransient().ShouldBe(false);
+                    creatingTriggerCount.ShouldBe(1);
+                    createdTriggerCount++;
+                });
+
+            using (var uow = Resolve<IUnitOfWorkManager>().Begin(TransactionScopeOption.Suppress))
+            {
+                _personRepository.Insert(new Person { ContactListId = 1, Name = "halil" });
+
+                changingTriggerCount.ShouldBe(1);
+                creatingTriggerCount.ShouldBe(1);
+
+                changedTriggerCount.ShouldBe(1);
+                createdTriggerCount.ShouldBe(1);
+
+                uow.Complete();
+            }
         }
 
         [Fact]
@@ -207,7 +265,7 @@ namespace Abp.TestBase.SampleApplication.Tests.People
             {
                 //hiding exception
             }
-            
+
             _personRepository
                 .FirstOrDefault(p => p.Name == "halil")
                 .ShouldNotBeNull();

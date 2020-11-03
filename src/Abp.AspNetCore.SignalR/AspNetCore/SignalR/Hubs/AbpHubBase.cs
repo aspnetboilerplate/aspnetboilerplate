@@ -1,4 +1,5 @@
-﻿using System.Globalization;
+﻿using System;
+using System.Globalization;
 using Abp.Configuration;
 using Abp.Dependency;
 using Abp.Localization;
@@ -14,6 +15,7 @@ namespace Abp.AspNetCore.SignalR.Hubs
     {
         public ILogger Logger { get; set; }
 
+        [Obsolete("Use Context.User instead.")]
         public IAbpSession AbpSession { get; set; }
 
         public IIocResolver IocResolver { get; set; }

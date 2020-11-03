@@ -1,0 +1,24 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<localizationDictionary culture="pl">
+  <texts>
+    <text name="SmtpHost">Adres serwera SMTP</text>
+    <text name="SmtpPort">Port serwera SMTP</text>
+    <text name="Username">Nazwa użytkownika</text>
+    <text name="Password">Hasło</text>
+    <text name="DomainName">Nazwa domeny</text>
+    <text name="UseSSL">Użyj SSL</text>
+    <text name="UseDefaultCredentials">Użyj domyślne poświadczenia</text>
+    <text name="DefaultFromSenderEmailAddress">Domyślny adres e-mail od (nadawca)</text>
+    <text name="DefaultFromSenderDisplayName">Domyślna nazwa (nadawca)</text>
+    <text name="DefaultLanguage">Domyślny język</text>
+    <text name="ReceiveNotifications">Odbieraj powiadomienia</text>
+    <text name="CurrentUserDidNotLoginToTheApplication">Bieżący użytkownik nie zalogował się do aplikacji!</text>
+    <text name="TimeZone">Strefa czasowa</text>
+    <text name="AllOfThesePermissionsMustBeGranted">Wymagane uprawnienia nie są przyznawane. Wszystkie uprawnienia muszą zostać przyznane: {0}</text>
+    <text name="AtLeastOneOfThesePermissionsMustBeGranted">Wymagane uprawnienia nie są przyznawane. Przynajmniej jedno uprawnienie musi zostać przyznane: {0}</text>
+    <text name="FeatureIsNotEnabled">Funkcja nie jest włączona: {0}</text>
+    <text name="AllOfTheseFeaturesMustBeEnabled">Wymagane funkcje nie są włączone. Wszystkie funkcje muszą być włączone: {0}</text>
+    <text name="AtLeastOneOfTheseFeaturesMustBeEnabled">Wymagane funkcje nie są włączone. Przynajmniej jedna funkcja musi być włączone: {0}</text>
+    <text name="MainMenu">Menu główne</text>
+  </texts>
+</localizationDictionary>
