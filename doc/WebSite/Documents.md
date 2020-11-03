@@ -113,6 +113,7 @@ Releases
     -   [Permission Management](/Pages/Documents/Zero/Permission-Management)
     -   [Language Management](/Pages/Documents/Zero/Language-Management)
     -   [Identity Server Integration](Zero/Identity-Server.md)
+    -   [Identity Server vNext Integration](Zero/Identity-Server-vNext.md)
 -   Releases
     -   [Nuget Packages](/Pages/Documents/Zero/Nuget-Packages)
     -   [Change Logs & Releases](https://github.com/aspnetboilerplate/module-zero/releases)

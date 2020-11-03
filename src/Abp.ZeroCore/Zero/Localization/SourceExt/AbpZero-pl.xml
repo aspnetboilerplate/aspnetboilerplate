@@ -1,0 +1,35 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<localizationDictionary culture="pl">
+  <texts>
+    <text name="Identity.ConcurrencyFailure">Błąd optymistycznej współbieżności, obiekt został zmodyfikowany.</text>
+    <text name="Identity.DefaultError">Wystąpił nieznany błąd.</text>
+    <text name="Identity.DuplicateEmail">E-mail '{0}' jest już zajęty.</text>
+    <text name="Identity.DuplicateRoleName">Nazwa roli '{0}' jest już zajęta.</text>
+    <text name="Identity.DuplicateUserName">Nazwa użytkownika '{0}' jest już zajęta.</text>
+    <text name="Identity.InvalidEmail">E-mail '{0}' jest nieprawidłowy.</text>
+    <text name="Identity.InvalidPasswordHasherCompatibilityMode">Wskazany tryb kompatybilności jest nieprawidłowy.</text>
+    <text name="Identity.InvalidPasswordHasherIterationCount">Liczba iteracji musi być dodatnią liczbą całkowitą.</text>
+    <text name="Identity.InvalidRoleName">Nazwa roli '{0}' jest niepoprawna.</text>
+    <text name="Identity.InvalidToken">Nieprawidłowy token.</text>
+    <text name="Identity.InvalidUserName">Nazwa użytkownika '{0}' jest nieprawidłowa, może zawierać tylko litery i cyfry.</text>
+    <text name="Identity.LoginAlreadyAssociated">Użytkownik z tą nazwą użytkownika już istnieje.</text>
+    <text name="Identity.PasswordMismatch">Nieprawidłowe hasło.</text>
+    <text name="Identity.PasswordRequireDigit">Hasło musi posiadać przynajmniej jedną cyfrę ('0'-'9').</text>
+    <text name="Identity.PasswordRequireLower">Hasło musi posiadać przynajmniej jedną małą literę ('a'-'z').</text>
+    <text name="Identity.PasswordRequireNonAlphanumeric">Hasło musi posiadać przynajmniej jeden znak nie alfa-numeryczny.</text>
+    <text name="Identity.PasswordRequireUpper">Hasło musi posiadać przynajmniej jedną wielką literę ('A'-'Z').</text>
+    <text name="Identity.PasswordTooShort">Hasło musi posiadać minimum {0} znaków.</text>
+    <text name="Identity.RoleNotFound">Rola {0} nie istnieje.</text>
+    <text name="Identity.UserAlreadyHasPassword">Użytkownik posiada już hasło.</text>
+    <text name="Identity.UserAlreadyInRole">Użytkownik już posiada rolę '{0}'.</text>
+    <text name="Identity.UserLockedOut">Użytkownik jest zablokowany.</text>
+    <text name="Identity.UserLockoutNotEnabled">Blokada nie jest włączona dla tego użytkownika.</text>
+    <text name="Identity.UserNameNotFound">Użytkownik {0} nie istnieje.</text>
+    <text name="Identity.UserNotInRole">Użytkownik nie posiada roli '{0}'.</text>
+    <text name="Email">E-mail</text>
+    <text name="EmailSecurityCodeSubject">Kod bezpieczeństwa</text>
+    <text name="EmailSecurityCodeBody">Twój kod bezpieczeństwa: {0}</text>
+    <text name="Sms">Sms</text>
+    <text name="SmsSecurityCodeMessage">Twój kod bezpieczeństwa: {0}</text>
+  </texts>
+</localizationDictionary>

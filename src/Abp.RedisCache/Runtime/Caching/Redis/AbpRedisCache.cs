@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
 using System.Threading.Tasks;
+using Abp.Data;
 using Abp.Domain.Entities;
 using Abp.Reflection.Extensions;
 using StackExchange.Redis;
@@ -30,95 +31,255 @@ namespace Abp.Runtime.Caching.Redis
             _serializer = redisCacheSerializer;
         }
 
-        public override object GetOrDefault(string key)
+        public override bool TryGetValue(string key, out object value)
         {
-            var objbyte = _database.StringGet(GetLocalizedRedisKey(key));
-            return objbyte.HasValue ? Deserialize(objbyte) : null;
+            var redisValue = _database.StringGet(GetLocalizedRedisKey(key));
+            value = redisValue.HasValue ? Deserialize(redisValue) : null;
+            return redisValue.HasValue;
         }
 
-        public override object[] GetOrDefault(string[] keys)
+        public override ConditionalValue<object>[] TryGetValues(string[] keys)
         {
             var redisKeys = keys.Select(GetLocalizedRedisKey);
             var redisValues = _database.StringGet(redisKeys.ToArray());
-            var objbytes = redisValues.Select(obj => obj.HasValue ? Deserialize(obj) : null);
-            return objbytes.ToArray();
+            return redisValues.Select(CreateConditionalValue).ToArray();
         }
 
-        public override async Task<object> GetOrDefaultAsync(string key)
+        public override async Task<ConditionalValue<object>> TryGetValueAsync(string key)
         {
-            var objbyte = await _database.StringGetAsync(GetLocalizedRedisKey(key));
-            return objbyte.HasValue ? Deserialize(objbyte) : null;
+            var redisValue = await _database.StringGetAsync(GetLocalizedRedisKey(key));
+            return CreateConditionalValue(redisValue);
         }
 
-        public override async Task<object[]> GetOrDefaultAsync(string[] keys)
+        public override async Task<ConditionalValue<object>[]> TryGetValuesAsync(string[] keys)
         {
             var redisKeys = keys.Select(GetLocalizedRedisKey);
             var redisValues = await _database.StringGetAsync(redisKeys.ToArray());
-            var objbytes = redisValues.Select(obj => obj.HasValue ? Deserialize(obj) : null);
-            return objbytes.ToArray();
+            return redisValues.Select(CreateConditionalValue).ToArray();
         }
 
-        public override void Set(string key, object value, TimeSpan? slidingExpireTime = null, TimeSpan? absoluteExpireTime = null)
+        public override void Set(string key, object value, TimeSpan? slidingExpireTime = null, DateTimeOffset? absoluteExpireTime = null)
         {
             if (value == null)
             {
                 throw new AbpException("Can not insert null values to the cache!");
             }
 
-            _database.StringSet(
-                GetLocalizedRedisKey(key),
-                Serialize(value, GetSerializableType(value)),
-                absoluteExpireTime ?? slidingExpireTime ?? DefaultAbsoluteExpireTime ?? DefaultSlidingExpireTime
-                );
+            var redisKey = GetLocalizedRedisKey(key);
+            var redisValue = Serialize(value, GetSerializableType(value));
+            if (absoluteExpireTime.HasValue)
+            {
+                if (!_database.StringSet(redisKey, redisValue))
+                {
+                    Logger.ErrorFormat("Unable to set key:{0} value:{1} in Redis", redisKey, redisValue);
+                } 
+                else if (!_database.KeyExpire(redisKey, absoluteExpireTime.Value.UtcDateTime))
+                {
+                    Logger.ErrorFormat("Unable to set key:{0} to expire at {1:O} in Redis", redisKey, absoluteExpireTime.Value.UtcDateTime);
+                }
+            }
+            else if (slidingExpireTime.HasValue)
+            {
+                if (!_database.StringSet(redisKey, redisValue, slidingExpireTime.Value))
+                {
+                    Logger.ErrorFormat("Unable to set key:{0} value:{1} to expire after {2:c} in Redis", redisKey, redisValue, slidingExpireTime.Value);
+                }
+            }
+            else if (DefaultAbsoluteExpireTime.HasValue)
+            {
+                if (!_database.StringSet(redisKey, redisValue))
+                {
+                    Logger.ErrorFormat("Unable to set key:{0} value:{1} in Redis", redisKey, redisValue);
+                }
+                else if (!_database.KeyExpire(redisKey, DefaultAbsoluteExpireTime.Value.UtcDateTime))
+                {
+                    Logger.ErrorFormat("Unable to set key:{0} to expire at {1:O} in Redis", redisKey, DefaultAbsoluteExpireTime.Value.UtcDateTime);
+                }
+            }
+            else
+            {
+                if (!_database.StringSet(redisKey, redisValue, DefaultSlidingExpireTime))
+                {
+                    Logger.ErrorFormat("Unable to set key:{0} value:{1} to expire after {2:c} in Redis", redisKey, redisValue, DefaultSlidingExpireTime);
+                }
+            }
         }
 
-        public override async Task SetAsync(string key, object value, TimeSpan? slidingExpireTime = null, TimeSpan? absoluteExpireTime = null)
+        public override async Task SetAsync(string key, object value, TimeSpan? slidingExpireTime = null, DateTimeOffset? absoluteExpireTime = null)
         {
             if (value == null)
             {
                 throw new AbpException("Can not insert null values to the cache!");
             }
 
-            await _database.StringSetAsync(
-                GetLocalizedRedisKey(key),
-                Serialize(value, GetSerializableType(value)),
-                absoluteExpireTime ?? slidingExpireTime ?? DefaultAbsoluteExpireTime ?? DefaultSlidingExpireTime
-                );
+            var redisKey = GetLocalizedRedisKey(key);
+            var redisValue = Serialize(value, GetSerializableType(value));
+            if (absoluteExpireTime.HasValue)
+            {
+                if (!await _database.StringSetAsync(redisKey, redisValue))
+                {
+                    Logger.ErrorFormat("Unable to set key:{0} value:{1} asynchronously in Redis", redisKey, redisValue);
+                }
+                else if (!await _database.KeyExpireAsync(redisKey, absoluteExpireTime.Value.UtcDateTime))
+                {
+                    Logger.ErrorFormat("Unable to set key:{0} to expire at {1:O} asynchronously in Redis", redisKey, absoluteExpireTime.Value.UtcDateTime);
+                }
+            }
+            else if (slidingExpireTime.HasValue)
+            {
+                if (!await _database.StringSetAsync(redisKey, redisValue, slidingExpireTime.Value))
+                {
+                    Logger.ErrorFormat("Unable to set key:{0} value:{1} to expire after {2:c} asynchronously in Redis", redisKey, redisValue, slidingExpireTime.Value);
+                }
+            }
+            else if (DefaultAbsoluteExpireTime.HasValue)
+            {
+                if (!await _database.StringSetAsync(redisKey, redisValue))
+                {
+                    Logger.ErrorFormat("Unable to set key:{0} value:{1} asynchronously in Redis", redisKey, redisValue);
+                }
+                else if (!await _database.KeyExpireAsync(redisKey, DefaultAbsoluteExpireTime.Value.UtcDateTime))
+                {
+                    Logger.ErrorFormat("Unable to set key:{0} to expire at {1:O} asynchronously in Redis", redisKey, DefaultAbsoluteExpireTime.Value.UtcDateTime);
+                }
+            }
+            else
+            {
+                if (!await _database.StringSetAsync(redisKey, redisValue, DefaultSlidingExpireTime))
+                {
+                    Logger.ErrorFormat("Unable to set key:{0} value:{1} to expire after {2:c} asynchronously in Redis", redisKey, redisValue, DefaultSlidingExpireTime);
+                }
+            }
         }
 
-        public override void Set(KeyValuePair<string, object>[] pairs, TimeSpan? slidingExpireTime = null, TimeSpan? absoluteExpireTime = null)
+        public override void Set(KeyValuePair<string, object>[] pairs, TimeSpan? slidingExpireTime = null, DateTimeOffset? absoluteExpireTime = null)
         {
             if (pairs.Any(p => p.Value == null))
             {
                 throw new AbpException("Can not insert null values to the cache!");
             }
 
-            var redisPairs = pairs.Select(p => new KeyValuePair<RedisKey, RedisValue>
-                                          (GetLocalizedRedisKey(p.Key), Serialize(p.Value, GetSerializableType(p.Value)))
-                                         );
+            var redisPairs = pairs.Select(p => {
+                var redisKey = GetLocalizedRedisKey(p.Key);
+                var redisValue = Serialize(p.Value, GetSerializableType(p.Value));
+                return new KeyValuePair<RedisKey, RedisValue>(redisKey, redisValue);
+            }).ToList();
 
-            if (slidingExpireTime.HasValue || absoluteExpireTime.HasValue)
+            if (!_database.StringSet(redisPairs.ToArray()))
             {
-                Logger.WarnFormat("{0}/{1} is not supported for Redis bulk insert of key-value pairs", nameof(slidingExpireTime), nameof(absoluteExpireTime));
+                foreach (var pair in redisPairs)
+                {
+                    Logger.ErrorFormat("Unable to set key:{0} value:{1} in Redis", pair.Key, pair.Value);
+                }
+
+                return;
             }
-            _database.StringSet(redisPairs.ToArray());
+
+            if (absoluteExpireTime.HasValue)
+            {
+                foreach (var pair in redisPairs)
+                {
+                    if (!_database.KeyExpire(pair.Key, absoluteExpireTime.Value.UtcDateTime))
+                    {
+                        Logger.ErrorFormat("Unable to set key:{0} to expire at {1:O} in Redis", pair.Key, absoluteExpireTime.Value.UtcDateTime);
+                    }
+                }
+            }
+            else if (slidingExpireTime.HasValue)
+            {
+                foreach (var pair in redisPairs)
+                {
+                    if (!_database.KeyExpire(pair.Key, slidingExpireTime.Value))
+                    {
+                        Logger.ErrorFormat("Unable to set key:{0} value:{1} to expire after {2:c} in Redis", pair.Key, pair.Value, slidingExpireTime.Value);
+                    }
+                }
+            }
+            else if (DefaultAbsoluteExpireTime.HasValue)
+            {
+                foreach (var pair in redisPairs)
+                {
+                    if (!_database.KeyExpire(pair.Key, DefaultAbsoluteExpireTime.Value.UtcDateTime))
+                    {
+                        Logger.ErrorFormat("Unable to set key:{0} to expire at {1:O} in Redis", pair.Key, DefaultAbsoluteExpireTime.Value.UtcDateTime);
+                    }
+                }
+            }
+            else
+            {
+                foreach (var pair in redisPairs)
+                {
+                    if (!_database.KeyExpire(pair.Key, DefaultSlidingExpireTime))
+                    {
+                        Logger.ErrorFormat("Unable to set key:{0} value:{1} to expire after {2:c} in Redis", pair.Key, pair.Value, DefaultSlidingExpireTime);
+                    }
+                }
+            }
         }
 
-        public override async Task SetAsync(KeyValuePair<string, object>[] pairs, TimeSpan? slidingExpireTime = null, TimeSpan? absoluteExpireTime = null)
+        public override async Task SetAsync(KeyValuePair<string, object>[] pairs, TimeSpan? slidingExpireTime = null, DateTimeOffset? absoluteExpireTime = null)
         {
             if (pairs.Any(p => p.Value == null))
             {
                 throw new AbpException("Can not insert null values to the cache!");
             }
 
-            var redisPairs = pairs.Select(p => new KeyValuePair<RedisKey, RedisValue>
-                                          (GetLocalizedRedisKey(p.Key), Serialize(p.Value, GetSerializableType(p.Value)))
-                                         );
-            if (slidingExpireTime.HasValue || absoluteExpireTime.HasValue)
+            var redisPairs = pairs.Select(p => {
+                var redisKey = GetLocalizedRedisKey(p.Key);
+                var redisValue = Serialize(p.Value, GetSerializableType(p.Value));
+                return new KeyValuePair<RedisKey, RedisValue>(redisKey, redisValue);
+            });
+
+            if (!await _database.StringSetAsync(redisPairs.ToArray()))
             {
-                Logger.WarnFormat("{0}/{1} is not supported for Redis bulk insert of key-value pairs", nameof(slidingExpireTime), nameof(absoluteExpireTime));
+                foreach (var pair in redisPairs)
+                {
+                    Logger.ErrorFormat("Unable to set key:{0} value:{1} asynchronously in Redis", pair.Key, pair.Value);
+                }
             }
-            await _database.StringSetAsync(redisPairs.ToArray());
+            else
+            {
+                if (absoluteExpireTime.HasValue)
+                {
+                    foreach (var pair in redisPairs)
+                    {
+                        if (!await _database.KeyExpireAsync(pair.Key, absoluteExpireTime.Value.UtcDateTime))
+                        {
+                            Logger.ErrorFormat("Unable to set key:{0} to expire at {1:O} asynchronously in Redis", pair.Key, absoluteExpireTime.Value.UtcDateTime);
+                        }
+                    }
+                }
+                else if (slidingExpireTime.HasValue)
+                {
+                    foreach (var pair in redisPairs)
+                    {
+                        if (!await _database.KeyExpireAsync(pair.Key, slidingExpireTime.Value))
+                        {
+                            Logger.ErrorFormat("Unable to set key:{0} value:{1} to expire after {2:c} asynchronously in Redis", pair.Key, pair.Value, slidingExpireTime.Value);
+                        }
+                    }
+                }
+                else if (DefaultAbsoluteExpireTime.HasValue)
+                {
+                    foreach (var pair in redisPairs)
+                    {
+                        if (!await _database.KeyExpireAsync(pair.Key, DefaultAbsoluteExpireTime.Value.UtcDateTime))
+                        {
+                            Logger.ErrorFormat("Unable to set key:{0} to expire at {1:O} asynchronously in Redis", pair.Key, DefaultAbsoluteExpireTime.Value.UtcDateTime);
+                        }
+                    }
+                }
+                else
+                {
+                    foreach (var pair in redisPairs)
+                    {
+                        if (!await _database.KeyExpireAsync(pair.Key, DefaultSlidingExpireTime))
+                        {
+                            Logger.ErrorFormat("Unable to set key:{0} value:{1} to expire after {2:c} asynchronously in Redis", pair.Key, pair.Value, DefaultSlidingExpireTime);
+                        }
+                    }
+                }
+            }
         }
 
         public override void Remove(string key)
@@ -158,6 +319,11 @@ namespace Abp.Runtime.Caching.Redis
                 type = type.GetTypeInfo().BaseType;
             }
             return type;
+        }
+
+        protected ConditionalValue<object> CreateConditionalValue(RedisValue redisValue)
+        {
+            return new ConditionalValue<object>(redisValue.HasValue, redisValue.HasValue ? Deserialize(redisValue) : null);
         }
 
         protected virtual string Serialize(object value, Type type)

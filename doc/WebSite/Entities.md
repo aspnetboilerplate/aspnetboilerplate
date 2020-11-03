@@ -206,6 +206,8 @@ class that implements them all.
 
 In some cases, soft-delete entities may be requested to be permanently deleted. In those cases, **IRepository.HardDelete** extension method can be used. This method is currently implemented for EntityFramework 6.x and Entity Framework Core.
 
+If you wish to undelete a soft-deleted entity, you can query the entity by [disabling SoftDelete filter](Pages/Documents/Data-Filters#disable-filters) then use **Abp.Domain.Entities.EntityExtensions.Undelete(entity)**.
+
 #### Active/Passive Entities
 
 Some entities need to be marked as Active or Passive. You may take an

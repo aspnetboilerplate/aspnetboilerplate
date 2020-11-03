@@ -20,6 +20,8 @@ namespace Abp.Configuration
     {
         public const string ApplicationSettingsCacheKey = "ApplicationSettings";
 
+        protected ISettingEncryptionService SettingEncryptionService { get; }
+
         /// <summary>
         /// Reference to the current Session.
         /// </summary>
@@ -41,11 +43,14 @@ namespace Abp.Configuration
         public SettingManager(
             ISettingDefinitionManager settingDefinitionManager,
             ICacheManager cacheManager,
-            IMultiTenancyConfig multiTenancyConfig, ITenantStore tenantStore)
+            IMultiTenancyConfig multiTenancyConfig,
+            ITenantStore tenantStore,
+            ISettingEncryptionService settingEncryptionService)
         {
             _settingDefinitionManager = settingDefinitionManager;
             _multiTenancyConfig = multiTenancyConfig;
             _tenantStore = tenantStore;
+            SettingEncryptionService = settingEncryptionService;
 
             AbpSession = NullAbpSession.Instance;
             SettingStore = DefaultConfigSettingStore.Instance;
@@ -412,27 +417,27 @@ namespace Abp.Configuration
             _tenantSettingCache.Remove(tenantId);
         }
 
-        /// <inheritdoc/>
-        [UnitOfWork]
-        public virtual Task ChangeSettingForUserAsync(long userId, string name, string value)
+        public Task ChangeSettingForUserAsync(long userId, string name, string value)
         {
             return ChangeSettingForUserAsync(new UserIdentifier(AbpSession.TenantId, userId), name, value);
         }
 
-        /// <inheritdoc/>
-        [UnitOfWork]
-        public virtual void ChangeSettingForUser(long userId, string name, string value)
+        public void ChangeSettingForUser(long userId, string name, string value)
         {
             ChangeSettingForUser(new UserIdentifier(AbpSession.TenantId, userId), name, value);
         }
 
-        public async Task ChangeSettingForUserAsync(UserIdentifier user, string name, string value)
+        /// <inheritdoc/>
+        [UnitOfWork]
+        public virtual async Task ChangeSettingForUserAsync(UserIdentifier user, string name, string value)
         {
             await InsertOrUpdateOrDeleteSettingValueAsync(name, value, user.TenantId, user.UserId);
             await _userSettingCache.RemoveAsync(user.ToUserIdentifierString());
         }
 
-        public void ChangeSettingForUser(UserIdentifier user, string name, string value)
+        /// <inheritdoc/>
+        [UnitOfWork]
+        public virtual void ChangeSettingForUser(UserIdentifier user, string name, string value)
         {
             InsertOrUpdateOrDeleteSettingValue(name, value, user.TenantId, user.UserId);
             _userSettingCache.Remove(user.ToUserIdentifierString());
@@ -621,18 +626,24 @@ namespace Abp.Configuration
                     Value = value
                 };
 
+                if (settingDefinition.IsEncrypted)
+                {
+                    settingValue.Value = SettingEncryptionService.Encrypt(settingDefinition, value);
+                }
+
                 await SettingStore.CreateAsync(settingValue);
                 return settingValue;
             }
 
             //It's same value in database, no need to update
-            if (settingValue.Value == value)
+            var rawSettingValue = settingDefinition.IsEncrypted ? SettingEncryptionService.Decrypt(settingDefinition, settingValue.Value) : settingValue.Value;
+            if (rawSettingValue == value)
             {
                 return settingValue;
             }
 
             //Update the setting on database.
-            settingValue.Value = value;
+            settingValue.Value = settingDefinition.IsEncrypted ? SettingEncryptionService.Encrypt(settingDefinition, value) : value;
             await SettingStore.UpdateAsync(settingValue);
 
             return settingValue;
@@ -691,18 +702,23 @@ namespace Abp.Configuration
                     Value = value
                 };
 
+                if (settingDefinition.IsEncrypted)
+                {
+                    settingValue.Value = SettingEncryptionService.Encrypt(settingDefinition, value);
+                }
+
                 SettingStore.Create(settingValue);
                 return settingValue;
             }
 
-            //It's same value in database, no need to update
-            if (settingValue.Value == value)
+            var rawSettingValue = settingDefinition.IsEncrypted ? SettingEncryptionService.Decrypt(settingDefinition, settingValue.Value) : settingValue.Value;
+            if (rawSettingValue == value)
             {
                 return settingValue;
             }
 
             //Update the setting on database.
-            settingValue.Value = value;
+            settingValue.Value = settingDefinition.IsEncrypted ? SettingEncryptionService.Encrypt(settingDefinition, value) : value;
             SettingStore.Update(settingValue);
 
             return settingValue;
@@ -752,15 +768,8 @@ namespace Abp.Configuration
         {
             return await _applicationSettingCache.GetAsync(ApplicationSettingsCacheKey, async () =>
             {
-                var dictionary = new Dictionary<string, SettingInfo>();
-
                 var settingValues = await SettingStore.GetAllListAsync(null, null);
-                foreach (var settingValue in settingValues)
-                {
-                    dictionary[settingValue.Name] = settingValue;
-                }
-
-                return dictionary;
+                return ConvertSettingInfosToDictionary(settingValues);
             });
         }
 
@@ -768,15 +777,8 @@ namespace Abp.Configuration
         {
             return _applicationSettingCache.Get(ApplicationSettingsCacheKey, () =>
             {
-                var dictionary = new Dictionary<string, SettingInfo>();
-
                 var settingValues = SettingStore.GetAllList(null, null);
-                foreach (var settingValue in settingValues)
-                {
-                    dictionary[settingValue.Name] = settingValue;
-                }
-
-                return dictionary;
+                return ConvertSettingInfosToDictionary(settingValues);
             });
         }
 
@@ -822,20 +824,13 @@ namespace Abp.Configuration
                 tenantId,
                 async () =>
                 {
-                    var dictionary = new Dictionary<string, SettingInfo>();
-
                     if (!_multiTenancyConfig.IsEnabled && _tenantStore.Find(tenantId) == null)
                     {
-                        return dictionary;
+                        return new Dictionary<string, SettingInfo>();
                     }
 
                     var settingValues = await SettingStore.GetAllListAsync(tenantId, null);
-                    foreach (var settingValue in settingValues)
-                    {
-                        dictionary[settingValue.Name] = settingValue;
-                    }
-
-                    return dictionary;
+                    return ConvertSettingInfosToDictionary(settingValues);
                 });
         }
 
@@ -845,20 +840,13 @@ namespace Abp.Configuration
                 tenantId,
                 () =>
                 {
-                    var dictionary = new Dictionary<string, SettingInfo>();
-
                     if (!_multiTenancyConfig.IsEnabled && _tenantStore.Find(tenantId) == null)
                     {
-                        return dictionary;
+                        return new Dictionary<string, SettingInfo>();
                     }
 
                     var settingValues = SettingStore.GetAllList(tenantId, null);
-                    foreach (var settingValue in settingValues)
-                    {
-                        dictionary[settingValue.Name] = settingValue;
-                    }
-
-                    return dictionary;
+                    return ConvertSettingInfosToDictionary(settingValues);
                 });
         }
 
@@ -868,16 +856,34 @@ namespace Abp.Configuration
                 user.ToUserIdentifierString(),
                 async () =>
                 {
-                    var dictionary = new Dictionary<string, SettingInfo>();
-
                     var settingValues = await SettingStore.GetAllListAsync(user.TenantId, user.UserId);
-                    foreach (var settingValue in settingValues)
-                    {
-                        dictionary[settingValue.Name] = settingValue;
-                    }
-
-                    return dictionary;
+                    return ConvertSettingInfosToDictionary(settingValues);
                 });
+        }
+
+        private Dictionary<string, SettingInfo> ConvertSettingInfosToDictionary(List<SettingInfo> settingValues)
+        {
+            var dictionary = new Dictionary<string, SettingInfo>();
+            var allSettingDefinitions = _settingDefinitionManager.GetAllSettingDefinitions();
+
+            foreach (var setting in allSettingDefinitions.Join(settingValues,
+                definition => definition.Name,
+                value => value.Name,
+                (definition, value) => new
+                {
+                    SettingDefinition = definition,
+                    SettingValue = value
+                }))
+            {
+                if (setting.SettingDefinition.IsEncrypted)
+                {
+                    setting.SettingValue.Value = SettingEncryptionService.Decrypt(setting.SettingDefinition, setting.SettingValue.Value);
+                }
+
+                dictionary[setting.SettingValue.Name] = setting.SettingValue;
+            }
+
+            return dictionary;
         }
 
         private Dictionary<string, SettingInfo> GetUserSettingsFromCache(UserIdentifier user)
@@ -886,15 +892,8 @@ namespace Abp.Configuration
                 user.ToUserIdentifierString(),
                 () =>
                 {
-                    var dictionary = new Dictionary<string, SettingInfo>();
-
                     var settingValues = SettingStore.GetAllList(user.TenantId, user.UserId);
-                    foreach (var settingValue in settingValues)
-                    {
-                        dictionary[settingValue.Name] = settingValue;
-                    }
-
-                    return dictionary;
+                    return ConvertSettingInfosToDictionary(settingValues);
                 });
         }
 

@@ -25,19 +25,21 @@ var abp = abp || {};
 
         // Reconnect loop
         function tryReconnect() {
-            if (tries > abp.signalr.maxTries) {
-                return;
-            } else {
+            if (tries <= abp.signalr.maxTries) {
                 connection.start()
-                    .then(() => {
+                    .then(function () {
                         reconnectTime = abp.signalr.reconnectTime;
                         tries = 1;
                         console.log('Reconnected to SignalR server!');
-                    }).catch(() => {
-                        tries += 1;
-                        reconnectTime = abp.signalr.increaseReconnectTime(reconnectTime);
-                        setTimeout(() => tryReconnect(), reconnectTime);
-                    });
+                    }).catch(function () {
+                    tries += 1;
+                    reconnectTime = abp.signalr.increaseReconnectTime(reconnectTime);
+                    setTimeout(function () {
+                            tryReconnect()
+                        },
+                        reconnectTime
+                    );
+                });
             }
         }
 

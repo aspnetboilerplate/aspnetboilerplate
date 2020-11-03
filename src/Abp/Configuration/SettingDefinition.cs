@@ -58,6 +58,12 @@ namespace Abp.Configuration
         public object CustomData { get; set; }
 
         /// <summary>
+        /// Is this setting stored as encrypted in the data source.
+        /// Default: False.
+        /// </summary>
+        public bool IsEncrypted { get; set; }
+
+        /// <summary>
         /// Creates a new <see cref="SettingDefinition"/> object.
         /// </summary>
         /// <param name="name">Unique name of the setting</param>
@@ -70,6 +76,7 @@ namespace Abp.Configuration
         /// <param name="isInherited">Is this setting inherited from parent scopes. Default: True.</param>
         /// <param name="customData">Can be used to store a custom object related to this setting</param>
         /// <param name="clientVisibilityProvider">Client visibility definition for the setting. Default: invisible</param>
+        /// <param name="isEncrypted">Is this setting stored as encrypted in the data source.</param>
         public SettingDefinition(
             string name,
             string defaultValue,
@@ -80,7 +87,8 @@ namespace Abp.Configuration
             bool isVisibleToClients = false,
             bool isInherited = true,
             object customData = null,
-            ISettingClientVisibilityProvider clientVisibilityProvider = null)
+            ISettingClientVisibilityProvider clientVisibilityProvider = null,
+            bool isEncrypted = false)
         {
             if (string.IsNullOrEmpty(name))
             {
@@ -95,6 +103,7 @@ namespace Abp.Configuration
             Scopes = scopes;
             IsInherited = isInherited;
             CustomData = customData;
+            IsEncrypted = isEncrypted;
 
             ClientVisibilityProvider = new HiddenSettingClientVisibilityProvider();
 

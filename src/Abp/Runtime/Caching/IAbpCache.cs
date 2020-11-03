@@ -1,3 +1,4 @@
+using Abp.Data;
 using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
@@ -47,6 +48,35 @@ namespace Abp.Runtime.Caching
         Task<TValue[]> GetAsync(TKey[] keys, Func<TKey, Task<TValue>> factory);
 
         /// <summary>
+        /// Gets an item from the cache.
+        /// </summary>
+        /// <param name="key">Key</param>
+        /// <param name="value">Cache item</param>
+        /// <returns>Result to indicate cache hit</returns>
+        bool TryGetValue(TKey key, out TValue value);
+
+        /// <summary>
+        /// Gets an item from the cache.
+        /// </summary>
+        /// <param name="key">Key</param>
+        /// <returns>Result to indicate cache hit and cache item</returns>
+        Task<ConditionalValue<TValue>> TryGetValueAsync(TKey key);
+
+        /// <summary>
+        /// Gets items from the cache.
+        /// </summary>
+        /// <param name="keys">Keys</param>
+        /// <returns>Results to indicate cache hit and cache item for each key</returns>
+        ConditionalValue<TValue>[] TryGetValues(TKey[] keys);
+
+        /// <summary>
+        /// Gets items from the cache.
+        /// </summary>
+        /// <param name="keys">Keys</param>
+        /// <returns>Results to indicate cache hit and cache item for each key</returns>
+        Task<ConditionalValue<TValue>[]> TryGetValuesAsync(TKey[] keys);
+
+        /// <summary>
         /// Gets an item from the cache or null if not found.
         /// </summary>
         /// <param name="key">Key</param>
@@ -85,7 +115,7 @@ namespace Abp.Runtime.Caching
         /// <param name="value">Value</param>
         /// <param name="slidingExpireTime">Sliding expire time</param>
         /// <param name="absoluteExpireTime">Absolute expire time</param>
-        void Set(TKey key, TValue value, TimeSpan? slidingExpireTime = null, TimeSpan? absoluteExpireTime = null);
+        void Set(TKey key, TValue value, TimeSpan? slidingExpireTime = null, DateTimeOffset? absoluteExpireTime = null);
 
         /// <summary>
         /// Saves/Overrides items in the cache by the pairs.
@@ -97,7 +127,7 @@ namespace Abp.Runtime.Caching
         /// <param name="pairs">Pairs</param>
         /// <param name="slidingExpireTime">Sliding expire time</param>
         /// <param name="absoluteExpireTime">Absolute expire time</param>
-        void Set(KeyValuePair<TKey, TValue>[] pairs, TimeSpan? slidingExpireTime = null, TimeSpan? absoluteExpireTime = null);
+        void Set(KeyValuePair<TKey, TValue>[] pairs, TimeSpan? slidingExpireTime = null, DateTimeOffset? absoluteExpireTime = null);
 
         /// <summary>
         /// Saves/Overrides an item in the cache by a key.
@@ -110,7 +140,7 @@ namespace Abp.Runtime.Caching
         /// <param name="value">Value</param>
         /// <param name="slidingExpireTime">Sliding expire time</param>
         /// <param name="absoluteExpireTime">Absolute expire time</param>
-        Task SetAsync(TKey key, TValue value, TimeSpan? slidingExpireTime = null, TimeSpan? absoluteExpireTime = null);
+        Task SetAsync(TKey key, TValue value, TimeSpan? slidingExpireTime = null, DateTimeOffset? absoluteExpireTime = null);
 
         /// <summary>
         /// Saves/Overrides items in the cache by the pairs.
@@ -122,7 +152,7 @@ namespace Abp.Runtime.Caching
         /// <param name="pairs">Pairs</param>
         /// <param name="slidingExpireTime">Sliding expire time</param>
         /// <param name="absoluteExpireTime">Absolute expire time</param>
-        Task SetAsync(KeyValuePair<TKey, TValue>[] pairs, TimeSpan? slidingExpireTime = null, TimeSpan? absoluteExpireTime = null);
+        Task SetAsync(KeyValuePair<TKey, TValue>[] pairs, TimeSpan? slidingExpireTime = null, DateTimeOffset? absoluteExpireTime = null);
 
         /// <summary>
         /// Removes a cache item by it's key (does nothing if given key does not exists in the cache).

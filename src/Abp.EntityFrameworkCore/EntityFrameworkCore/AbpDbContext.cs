@@ -330,6 +330,11 @@ namespace Abp.EntityFrameworkCore
 
         protected virtual bool IsHardDeleteEntity(EntityEntry entry)
         {
+            if (!EntityHelper.IsEntity(entry.Entity.GetType()))
+            {
+                return false;
+            }
+            
             if (CurrentUnitOfWorkProvider?.Current?.Items == null)
             {
                 return false;

@@ -1,22 +1,22 @@
 ## Introduction
 
-**Dynamic Parameter System** is a system that allows you to add and manage new parameters on entity objects at runtime without any code changes. With this system, you can define dynamic parameters on entity objects and perform operations on these objects easily. For example, it can be used for cities, counties, gender, status codes etc. 
+**Dynamic Property System** is a system that allows you to add and manage new properties on entity objects at runtime without any code changes. With this system, you can define dynamic properties on entity objects and perform operations on these objects easily. For example, it can be used for cities, counties, gender, status codes etc. 
 
-### Dynamic Parameter Definition
+### Dynamic Property Definition
 
-First of all you need to define which entities can have that feature and allowed *input types* * can a dynamic parameter has. 
+First of all you need to define which entities can have that feature and allowed *input types* * can a dynamic property has. 
 
 ```csharp
-public class MyDynamicEntityParameterDefinitionProvider : DynamicEntityParameterDefinitionProvider
+public class MyDynamicEntityPropertyDefinitionProvider : DynamicEntityPropertyDefinitionProvider
 {
-     public override void SetDynamicEntityParameters(IDynamicEntityParameterDefinitionContext context)
+     public override void SetDynamicEntityProperties(IDynamicEntityPropertyDefinitionContext context)
      {
-         //input types dynamic parameters can have
+         //input types dynamic properties can have
          context.Manager.AddAllowedInputType<SingleLineStringInputType>();
          context.Manager.AddAllowedInputType<CheckboxInputType>();
          context.Manager.AddAllowedInputType<ComboboxInputType>();
          
-         //entities that can have dynamic parameter
+         //entities that can have dynamic property
          context.Manager.AddEntity<Country>(); 
          context.Manager.AddEntity<Blog, long>(); 
      }
@@ -26,35 +26,35 @@ public class MyDynamicEntityParameterDefinitionProvider : DynamicEntityParameter
 *InputType: A UI input type for the feature. This can be defined, and then used while creating an automatic feature screen. For example: [SingleLineStringInputType](https://github.com/aspnetboilerplate/aspnetboilerplate/blob/dev/src/Abp/UI/Inputs/SingleLineStringInputType.cs), [ComboboxInputType](https://github.com/aspnetboilerplate/aspnetboilerplate/blob/dev/src/Abp/UI/Inputs/ComboboxInputType.cs), [CheckboxInputType](https://github.com/aspnetboilerplate/aspnetboilerplate/blob/dev/src/Abp/UI/Inputs/CheckboxInputType.cs)*
 
 ```csharp
-public class DynamicEntityParametersTestModule : AbpModule
+public class DynamicEntityPropertyTestModule : AbpModule
 {
     public override void PreInitialize()
-    {        Configuration.DynamicEntityParameters.Providers.Add<MyDynamicEntityParameterDefinitionProvider>();
+    {        Configuration.DynamicEntityProperties.Providers.Add<MyDynamicEntityPropertyDefinitionProvider>();
     }
 }
 ```
 
 
 
-### Dynamic Parameter
+### Dynamic Property
 
-It is a parameter that you can use in other entities. 
+It is a property that you can use in other entities. 
 
-Creating a dynamic parameter.
+Creating a dynamic property.
 
 ```csharp
-var cityParameter = new DynamicParameter
+var cityProperty = new DynamicProperty
 {
-    ParameterName = "City",//Parameter name. 
+    PropertyName = "City",//Property name. 
     InputType = InputTypeBase.GetName<ComboboxInputType>(),
-    Permission = "App.Permission.DynamicParameter.City",
+    Permission = "App.Permission.DynamicProperty.City",
     TenantId = AbpSession.TenantId
 };
-var dynamicParameterManager = Resolve<IDynamicParameterManager>();
-dynamicParameterManager.Add(cityParameter);
+var dynamicPropertyManager = Resolve<IDynamicPropertyManager>();
+dynamicPropertyManager.Add(cityProperty);
 ```
 
-***DynamicParameter.cs***
+***DynamicProperty.cs***
 
 <table>
     <thead>
@@ -65,16 +65,16 @@ dynamicParameterManager.Add(cityParameter);
     </thead>
     <tbody>
     	<tr>
-            <td>ParameterName*  <span style="font-style: italic;">(string)</span></td>
-            <td>Unique name of the dynamic parameter</td>
+            <td>PropertyName*  <span style="font-style: italic;">(string)</span></td>
+            <td>Unique name of the dynamic property</td>
         </tr>
          <tr>
             <td>Input Type*  <span style="font-style: italic;">(string)</span></td>
-            <td>Input type name of the dynamic parameter.(Input type should be provided in definition.)</td>
+            <td>Input type name of the dynamic property.(Input type should be provided in definition.)</td>
         </tr>  
          <tr>
             <td>Permission  <span style="font-style: italic;">(string)</span></td>
-            <td>Required permission to manage anything about that parameter <br><span style="font-style: italic;">(<code>DynamicParameterValue</code>, <code>EntityDynamicParameter</code>, <code>EntityDynamicParameterValue</code>)</span></td>
+            <td>Required permission to manage anything about that property <br><span style="font-style: italic;">(<code>DynamicPropertyValue</code>, <code>DynamicEntityProperty</code>, <code>DynamicEntityPropertyValue</code>)</span></td>
         </tr> 
          <tr>
             <td>TenantId  <span style="font-style: italic;">(int?)</span></td>
@@ -85,26 +85,27 @@ dynamicParameterManager.Add(cityParameter);
 
 
 
-You can use [**IDynamicParameterManager**](https://github.com/aspnetboilerplate/aspnetboilerplate/blob/dev/src/Abp/DynamicEntityParameters/IDynamicParameterManager.cs) to manage dynamic parameter. (It uses cache)
+
+You can use [**IDynamicPropertyManager**](https://github.com/aspnetboilerplate/aspnetboilerplate/blob/dev/src/Abp/DynamicEntityProperties/IDynamicPropertyManager.cs) to manage dynamic property. (It uses cache)
 
 ```csharp
-public interface IDynamicParameterManager
+public interface IDynamicPropertyManager
 {
-    DynamicParameter Get(int id);
+    DynamicProperty Get(int id);
 
-    Task<DynamicParameter> GetAsync(int id);
+    Task<DynamicProperty> GetAsync(int id);
 
-    DynamicParameter Get(string parameterName);
+    DynamicProperty Get(string propertyName);
 
-    Task<DynamicParameter> GetAsync(string parameterName);
+    Task<DynamicProperty> GetAsync(string propertyName);
 
-    void Add(DynamicParameter dynamicParameter);
+    void Add(DynamicProperty dynamicProperty);
 
-    Task AddAsync(DynamicParameter dynamicParameter);
+    Task AddAsync(DynamicProperty dynamicProperty);
 
-    void Update(DynamicParameter dynamicParameter);
+    void Update(DynamicProperty dynamicProperty);
 
-    Task UpdateAsync(DynamicParameter dynamicParameter);
+    Task UpdateAsync(DynamicProperty dynamicProperty);
 
     void Delete(int id);
 
@@ -114,22 +115,22 @@ public interface IDynamicParameterManager
 
 
 
-### Dynamic Parameter Value
+### Dynamic Property Value
 
-If your dynamic parameter's input types need values to select (for example `ComboboxInputType`), you can store the values that your dynamic parameters can have here. 
+If your dynamic property's input types need values to select (for example `ComboboxInputType`), you can store the values that your dynamic properties can have here. 
 
-Adding a value to your dynamic parameter.
+Adding a value to your dynamic property.
 
 ```csharp
-var istanbul = new new DynamicParameterValue(cityParameter, "Istanbul", AbpSession.TenantId);
-var london = new new DynamicParameterValue(cityParameter, "London", AbpSession.TenantId);
+var istanbul = new new DynamicPropertyValue(cityProperty, "Istanbul", AbpSession.TenantId);
+var london = new new DynamicPropertyValue(cityProperty, "London", AbpSession.TenantId);
 
-var _dynamicParameterValueManager = Resolve<IDynamicParameterValueManager>();
-_dynamicParameterValueManager.Add(istanbul); 
-_dynamicParameterValueManager.Add(london);
+var _dynamicPropertyValueManager = Resolve<IDynamicPropertyValueManager>();
+_dynamicPropertyValueManager.Add(istanbul); 
+_dynamicPropertyValueManager.Add(london);
 ```
 
-***DynamicParameterValue.cs***
+***DynamicPropertyValue.cs***
 
 <table>
     <thead>
@@ -140,8 +141,8 @@ _dynamicParameterValueManager.Add(london);
     </thead>
     <tbody>
     	<tr>
-            <td>DynamicParameterId*  <span style="font-style: italic;">(int)</span></td>
-            <td>Unique indentifier of DynamicParameter</td>
+            <td>DynamicPropertyId*  <span style="font-style: italic;">(int)</span></td>
+            <td>Unique indentifier of DynamicProperty</td>
         </tr>
          <tr>
             <td>Value*  <span style="font-style: italic;">(string)</span></td>
@@ -156,51 +157,51 @@ _dynamicParameterValueManager.Add(london);
 
 
 
-You can use [**IDynamicParameterValueManager**](https://github.com/aspnetboilerplate/aspnetboilerplate/blob/dev/src/Abp/DynamicEntityParameters/IDynamicParameterValueManager.cs) to manage dynamic parameter values. (It checks permissions)
+You can use [**IDynamicPropertyValueManager**](https://github.com/aspnetboilerplate/aspnetboilerplate/blob/dev/src/Abp/DynamicEntityProperties/IDynamicPropertyValueManager.cs) to manage dynamic property values. (It checks permissions)
 
 ```csharp
-public interface IDynamicParameterValueManager
+public interface IDynamicPropertyValueManager
 {
-    DynamicParameterValue Get(int id);
+    DynamicPropertyValue Get(int id);
 
-    Task<DynamicParameterValue> GetAsync(int id);
+    Task<DynamicPropertyValue> GetAsync(int id);
 
-    List<DynamicParameterValue> GetAllValuesOfDynamicParameter(int dynamicParameterId);
+    List<DynamicPropertyValue> GetAllValuesOfDynamicProperty(int dynamicPropertyId);
 
-    Task<List<DynamicParameterValue>> GetAllValuesOfDynamicParameterAsync(int dynamicParameterId);
+    Task<List<DynamicPropertyValue>> GetAllValuesOfDynamicPropertyAsync(int dynamicPropertyId);
 
-    void Add(DynamicParameterValue dynamicParameterValue);
+    void Add(DynamicPropertyValue dynamicPropertyValue);
 
-    Task AddAsync(DynamicParameterValue dynamicParameterValue);
+    Task AddAsync(DynamicPropertyValue dynamicPropertyValue);
 
-    void Update(DynamicParameterValue dynamicParameterValue);
+    void Update(DynamicPropertyValue dynamicPropertyValue);
 
-    Task UpdateAsync(DynamicParameterValue dynamicParameterValue);
+    Task UpdateAsync(DynamicPropertyValue dynamicPropertyValue);
 
     void Delete(int id);
 
     Task DeleteAsync(int id);
 
-    void CleanValues(int dynamicParameterId);
+    void CleanValues(int dynamicPropertyId);
 
-    Task CleanValuesAsync(int dynamicParameterId);
+    Task CleanValuesAsync(int dynamicPropertyId);
 }
 ```
 
 
 
-### Entity Dynamic Parameters
+### Dynamic Entity Properties
 
-Dynamic parameter definitions of an entity. It stores which dynamic parameters an entity have. 
+Dynamic property definitions of an entity. It stores which dynamic properties an entity have. 
 
-Adding New Parameter to Entity
+Adding New Property to Entity
 
 ```csharp
-var _entityDynamicParameterManager = Resolve<IEntityDynamicParameterManager>();
-var cityDynamicParameterOfCountry = _entityDynamicParameterManager.Add<Country>(cityParameter, tenantId: 1);//add cityParameter to Country entity
+var _dynamicEntityPropertyManager = Resolve<IDynamicEntityPropertyManager>();
+var cityDynamicPropertyOfCountry = _dynamicEntityPropertyManager.Add<Country>(cityProperty, tenantId: 1);//add cityProperty to Country entity
 ```
 
-***EntityDynamicParameter.cs***
+***DynamicEntityProperty.cs***
 
 <table>
     <thead>
@@ -211,8 +212,8 @@ var cityDynamicParameterOfCountry = _entityDynamicParameterManager.Add<Country>(
     </thead>
     <tbody>
     	<tr>
-            <td>DynamicParameterId*  <span style="font-style: italic;">(int)</span></td>
-            <td>Unique indentifier of DynamicParameter</td>
+            <td>DynamicPropertyId*  <span style="font-style: italic;">(int)</span></td>
+            <td>Unique indentifier of DynamicProperty</td>
         </tr>
          <tr>
             <td>EntityFullName*  <span style="font-style: italic;">(string)</span></td>
@@ -227,30 +228,30 @@ var cityDynamicParameterOfCountry = _entityDynamicParameterManager.Add<Country>(
 
 
 
-You can use [**IEntityDynamicParameterManager**](https://github.com/aspnetboilerplate/aspnetboilerplate/blob/dev/src/Abp/DynamicEntityParameters/IEntityDynamicParameterManager.cs) to manage entities dynamic parameters. (It uses cache and checks required permissions.) See also: [EntityDynamicParameterManagerExtensions](https://github.com/aspnetboilerplate/aspnetboilerplate/blob/dev/src/Abp/DynamicEntityParameters/Extensions/EntityDynamicParameterManagerExtensions.cs)
+You can use [**IDynamicEntityPropertyManager**](https://github.com/aspnetboilerplate/aspnetboilerplate/blob/dev/src/Abp/DynamicEntityProperties/IDynamicEntityPropertyManager.cs) to manage entities dynamic properties. (It uses cache and checks required permissions.) See also: [DynamicEntityPropertyManagerExtensions](https://github.com/aspnetboilerplate/aspnetboilerplate/blob/dev/src/Abp/DynamicEntityProperties/Extensions/DynamicEntityPropertyManagerExtensions.cs)
 
 ```csharp
-public interface IEntityDynamicParameterManager
+public interface IDynamicEntityPropertyManager
 {
-    EntityDynamicParameter Get(int id);
+    DynamicEntityProperty Get(int id);
 
-    Task<EntityDynamicParameter> GetAsync(int id);
+    Task<DynamicEntityProperty> GetAsync(int id);
 
-    List<EntityDynamicParameter> GetAll(string entityFullName);
+    List<DynamicEntityProperty> GetAll(string entityFullName);
 
-    Task<List<EntityDynamicParameter>> GetAllAsync(string entityFullName);
+    Task<List<DynamicEntityProperty>> GetAllAsync(string entityFullName);
 
-    List<EntityDynamicParameter> GetAll();
+    List<DynamicEntityProperty> GetAll();
 
-    Task<List<EntityDynamicParameter>> GetAllAsync();
+    Task<List<DynamicEntityProperty>> GetAllAsync();
 
-    void Add(EntityDynamicParameter entityDynamicParameter);
+    void Add(DynamicEntityProperty dynamicEntityProperty);
 
-    Task AddAsync(EntityDynamicParameter entityDynamicParameter);
+    Task AddAsync(DynamicEntityProperty dynamicEntityProperty);
 
-    void Update(EntityDynamicParameter entityDynamicParameter);
+    void Update(DynamicEntityProperty dynamicEntityProperty);
 
-    Task UpdateAsync(EntityDynamicParameter entityDynamicParameter);
+    Task UpdateAsync(DynamicEntityProperty dynamicEntityProperty);
 
     void Delete(int id);
 
@@ -260,34 +261,34 @@ public interface IEntityDynamicParameterManager
 
 
 
-### Entity Dynamic Parameter Values
+### Entity Dynamic Property Values
 
 The values your that your entity rows have. 
 
-Adding value to entities dynamic parameter
+Adding value to entities dynamic property
 
 ```csharp
-var valueOfRow1 = new EntityDynamicParameterValue(cityDynamicParameterOfCountry, EntityId: "1", value: "Istanbul", tenantId: AbpSession.TenantId);
-var valueOfRow12 = new EntityDynamicParameterValue(cityDynamicParameterOfCountry, EntityId: "1", value: "London", tenantId: AbpSession.TenantId);//can have multiple values
-var valueOfRow2 = new EntityDynamicParameterValue(cityDynamicParameterOfCountry, EntityId: "2", value: "London", tenantId: AbpSession.TenantId);
+var valueOfRow1 = new DynamicEntityPropertyValue(cityDynamicPropertyOfCountry, EntityId: "1", value: "Istanbul", tenantId: AbpSession.TenantId);
+var valueOfRow12 = new DynamicEntityPropertyValue(cityDynamicPropertyOfCountry, EntityId: "1", value: "London", tenantId: AbpSession.TenantId);//can have multiple values
+var valueOfRow2 = new DynamicEntityPropertyValue(cityDynamicPropertyOfCountry, EntityId: "2", value: "London", tenantId: AbpSession.TenantId);
 
-var _entityDynamicParameterValueManager = Resolve<IEntityDynamicParameterValueManager>();
-_entityDynamicParameterValueManager.Add(valueOfRow1);
-_entityDynamicParameterValueManager.Add(valueOfRow12);
-_entityDynamicParameterValueManager.Add(valueOfRow2);
+var _dynamicEntityPropertyValueManager = Resolve<IDynamicEntityPropertyValueManager>();
+_dynamicEntityPropertyValueManager.Add(valueOfRow1);
+_dynamicEntityPropertyValueManager.Add(valueOfRow12);
+_dynamicEntityPropertyValueManager.Add(valueOfRow2);
 ```
 
-Get values of entity parameter
+Get values of entity property
 
 ```csharp
-var _entityDynamicParameterValueManager = Resolve<IEntityDynamicParameterValueManager>();
-var allValues = _entityDynamicParameterValueManager.GetValues<Country>(EntityId: "1");
-var cityValues = _entityDynamicParameterValueManager.GetValues<Country>(EntityId: "1", cityParameter);
+var _dynamicEntityPropertyValueManager = Resolve<IDynamicEntityPropertyValueManager>();
+var allValues = _dynamicEntityPropertyValueManager.GetValues<Country>(EntityId: "1");
+var cityValues = _dynamicEntityPropertyValueManager.GetValues<Country>(EntityId: "1", cityProperty);
 ```
 
 
 
-***EntityDynamicParameterValue.cs***
+***DynamicEntityPropertyValue.cs***
 
 <table>
     <thead>
@@ -298,8 +299,8 @@ var cityValues = _entityDynamicParameterValueManager.GetValues<Country>(EntityId
     </thead>
     <tbody>
     	<tr>
-            <td>EntityDynamicParameterId*  <span style="font-style: italic;">(int)</span></td>
-            <td>Unique indentifier of EntityDynamicParameterId</td>
+            <td>DynamicEntityPropertyId*  <span style="font-style: italic;">(int)</span></td>
+            <td>Unique indentifier of DynamicEntityPropertyId</td>
         </tr>
          <tr>
             <td>EntityId*  <span style="font-style: italic;">(string)</span></td>
@@ -318,46 +319,46 @@ var cityValues = _entityDynamicParameterValueManager.GetValues<Country>(EntityId
 
 
 
-You can use [**IEntityDynamicParameterValueManager**](https://github.com/aspnetboilerplate/aspnetboilerplate/blob/dev/src/Abp/DynamicEntityParameters/IEntityDynamicParameterValueManager.cs) to manage entities dynamic parameters. (It uses cache and checks required permissions.) See also: [EntityDynamicParameterValueManagerExtensions](https://github.com/aspnetboilerplate/aspnetboilerplate/blob/dev/src/Abp/DynamicEntityParameters/Extensions/EntityDynamicParameterValueManagerExtensions.cs)
+You can use [**IDynamicEntityPropertyValueManager**](https://github.com/aspnetboilerplate/aspnetboilerplate/blob/dev/src/Abp/DynamicEntityProperties/IDynamicEntityPropertyValueManager.cs) to manage entities dynamic properties. (It uses cache and checks required permissions.) See also: [DynamicEntityPropertyValueManagerExtensions](https://github.com/aspnetboilerplate/aspnetboilerplate/blob/dev/src/Abp/DynamicEntityProperties/Extensions/DynamicEntityPropertyValueManagerExtensions.cs)
 
 ```csharp
-public interface IEntityDynamicParameterValueManager
+public interface IDynamicEntityPropertyValueManager
 {
-    EntityDynamicParameterValue Get(int id);
+    DynamicEntityPropertyValue Get(int id);
 
-    Task<EntityDynamicParameterValue> GetAsync(int id);
+    Task<DynamicEntityPropertyValue> GetAsync(int id);
 
-    void Add(EntityDynamicParameterValue entityDynamicParameterValue);
+    void Add(DynamicEntityPropertyValue dynamicEntityPropertyValue);
 
-    Task AddAsync(EntityDynamicParameterValue entityDynamicParameterValue);
+    Task AddAsync(DynamicEntityPropertyValue dynamicEntityPropertyValue);
 
-    void Update(EntityDynamicParameterValue entityDynamicParameterValue);
+    void Update(DynamicEntityPropertyValue dynamicEntityPropertyValue);
 
-    Task UpdateAsync(EntityDynamicParameterValue entityDynamicParameterValue);
+    Task UpdateAsync(DynamicEntityPropertyValue dynamicEntityPropertyValue);
 
     void Delete(int id);
 
     Task DeleteAsync(int id);
 
-    List<EntityDynamicParameterValue> GetValues(int entityDynamicParameterId, string EntityId);
+    List<DynamicEntityPropertyValue> GetValues(int dynamicEntityPropertyId, string EntityId);
 
-    Task<List<EntityDynamicParameterValue>> GetValuesAsync(int entityDynamicParameterId, string EntityId);
+    Task<List<DynamicEntityPropertyValue>> GetValuesAsync(int dynamicEntityPropertyId, string EntityId);
 
-    List<EntityDynamicParameterValue> GetValues(string entityFullName, string EntityId);
+    List<DynamicEntityPropertyValue> GetValues(string entityFullName, string EntityId);
 
-    Task<List<EntityDynamicParameterValue>> GetValuesAsync(string entityFullName, string EntityId);
+    Task<List<DynamicEntityPropertyValue>> GetValuesAsync(string entityFullName, string EntityId);
 
-    List<EntityDynamicParameterValue> GetValues(string entityFullName, string EntityId, int dynamicParameterId);
+    List<DynamicEntityPropertyValue> GetValues(string entityFullName, string EntityId, int dynamicPropertyId);
 
-    Task<List<EntityDynamicParameterValue>> GetValuesAsync(string entityFullName, string EntityId, int dynamicParameterId);
+    Task<List<DynamicEntityPropertyValue>> GetValuesAsync(string entityFullName, string EntityId, int dynamicPropertyId);
 
-    List<EntityDynamicParameterValue> GetValues(string entityFullName, string EntityId, string parameterName);
+    List<DynamicEntityPropertyValue> GetValues(string entityFullName, string EntityId, string propertyName);
 
-    Task<List<EntityDynamicParameterValue>> GetValuesAsync(string entityFullName, string EntityId, string parameterName);
+    Task<List<DynamicEntityPropertyValue>> GetValuesAsync(string entityFullName, string EntityId, string propertyName);
 
-    void CleanValues(int entityDynamicParameterId, string EntityId);
+    void CleanValues(int dynamicEntityPropertyId, string EntityId);
 
-    Task CleanValuesAsync(int entityDynamicParameterId, string EntityId);
+    Task CleanValuesAsync(int dynamicEntityPropertyId, string EntityId);
 }
 ```
 

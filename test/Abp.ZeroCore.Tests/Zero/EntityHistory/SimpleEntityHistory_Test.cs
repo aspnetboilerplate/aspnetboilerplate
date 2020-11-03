@@ -27,6 +27,7 @@ namespace Abp.Zero.EntityHistory
         private readonly IRepository<Blog> _blogRepository;
         private readonly IRepository<Post, Guid> _postRepository;
         private readonly IRepository<Comment> _commentRepository;
+        private readonly IRepository<Foo> _fooRepository;
 
         private IEntityHistoryStore _entityHistoryStore;
 
@@ -36,7 +37,8 @@ namespace Abp.Zero.EntityHistory
             _blogRepository = Resolve<IRepository<Blog>>();
             _postRepository = Resolve<IRepository<Post, Guid>>();
             _commentRepository = Resolve<IRepository<Comment>>();
-
+            _fooRepository = Resolve<IRepository<Foo>>();
+            
             Resolve<IEntityHistoryConfiguration>().IsEnabledForAnonymousUsers = true;
         }
 
@@ -365,8 +367,7 @@ namespace Abp.Zero.EntityHistory
 
             _entityHistoryStore.Received().Save(Arg.Is<EntityChangeSet>(s => predicate(s)));
         }
-
-
+        
         [Fact]
         public void Should_Write_History_For_Owned_Entities_Of_Audited_Entities_Create()
         {
@@ -646,6 +647,54 @@ namespace Abp.Zero.EntityHistory
             _entityHistoryStore.Received().Save(Arg.Is<EntityChangeSet>(s => predicate(s)));
         }
 
+        [Fact]
+        public void Should_Not_Save_Empty_PropertyChanges()
+        {
+            // Arrange
+            // Forward calls from substitute to implementation
+            var entityHistoryStore = Resolve<EntityHistoryStore>();
+            _entityHistoryStore.When(x => x.SaveAsync(Arg.Any<EntityChangeSet>()))
+                .Do(callback => AsyncHelper.RunSync(() =>
+                    entityHistoryStore.SaveAsync(callback.Arg<EntityChangeSet>()))
+                );
+
+            _entityHistoryStore.When(x => x.Save(Arg.Any<EntityChangeSet>()))
+                .Do(callback => entityHistoryStore.Save(callback.Arg<EntityChangeSet>()));
+
+            // Act
+            Foo foo = null;
+            WithUnitOfWork(() =>
+            {
+                foo = new Foo
+                {
+                    Audited = "s1"
+                };
+                
+                _fooRepository.InsertAndGetId(foo);
+            });
+
+            UsingDbContext((context) =>
+            {
+                context.EntityChanges.Count(e => e.TenantId == 1).ShouldBe(1);
+                context.EntityChangeSets.Count(e => e.TenantId == 1).ShouldBe(1);
+                context.EntityPropertyChanges.Count(e => e.TenantId == 1).ShouldBe(1);
+            });
+
+            WithUnitOfWork(() =>
+            {
+                foo.NonAudited = "s2";
+                _fooRepository.Update(foo);
+            });
+
+            // Assert
+            UsingDbContext((context) =>
+            {
+                context.EntityChanges.Count(e => e.TenantId == 1).ShouldBe(1);
+                context.EntityChangeSets.Count(e => e.TenantId == 1).ShouldBe(1);
+                context.EntityPropertyChanges.Count(e => e.TenantId == 1).ShouldBe(1);
+            });
+        }
+        
         #endregion
 
         #region CASES DON'T WRITE HISTORY
@@ -845,17 +894,8 @@ namespace Abp.Zero.EntityHistory
 
         private int CreateBlogAndGetId()
         {
-            int blog2Id;
-
-            using (var uow = Resolve<IUnitOfWorkManager>().Begin())
-            {
-                var blog2 = new Blog("test-blog-2", "http://testblog2.myblogs.com", "blogger-2");
-
-                blog2Id = _blogRepository.InsertAndGetId(blog2);
-
-                uow.Complete();
-            }
-
+            var blog2 = new Blog("test-blog-2", "http://testblog2.myblogs.com", "blogger-2");
+            var blog2Id = _blogRepository.InsertAndGetId(blog2);
             return blog2Id;
         }
 

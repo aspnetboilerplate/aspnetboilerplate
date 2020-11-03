@@ -39,7 +39,7 @@ namespace Abp.Web.SignalR.Notifications
         }
 
         /// <inheritdoc/>
-        public Task SendNotificationsAsync(UserNotification[] userNotifications)
+        public async Task SendNotificationsAsync(UserNotification[] userNotifications)
         {
             foreach (var userNotification in userNotifications)
             {
@@ -55,7 +55,7 @@ namespace Abp.Web.SignalR.Notifications
                             continue;
                         }
 
-                        signalRClient.getNotification(userNotification);
+                        await signalRClient.getNotification(userNotification);
                     }
                 }
                 catch (Exception ex)
@@ -64,8 +64,6 @@ namespace Abp.Web.SignalR.Notifications
                     Logger.Warn(ex.ToString(), ex);
                 }
             }
-
-            return Task.FromResult(0);
         }
 
         /// <inheritdoc/>

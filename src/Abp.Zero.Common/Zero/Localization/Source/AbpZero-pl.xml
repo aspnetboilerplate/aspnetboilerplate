@@ -1,0 +1,14 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<localizationDictionary culture="pl">
+  <texts>
+    <text name="InvalidTenancyName" value="Nazwa lokatora jest niepoprawna!" />
+    <text name="TenancyNameIsAlreadyTaken" value="Nazwa lokatora {0} jest już zajęta." />
+    <text name="RoleNameIsAlreadyTaken" value="Nazwa roli {0} jest już zajęta." />
+    <text name="RoleDisplayNameIsAlreadyTaken" value="Nazwa roli do wyświetlenia {0} jest już zajęta." />
+    <text name="CanNotDeleteStaticRole" value="Nie można usunąć statycznej roli : {0}" />
+    <text name="CanNotRenameAdminUser" value="Nie można zmienić nazwy użytkownika {0} z powodu, że jest to domyślny administrator!" />
+    <text name="CanNotDeleteAdminUser" value="Nie można usunąć użytkownika {0} z powodu, że jest to domyślny administrator!" />
+    <text name="OrganizationUnitDuplicateDisplayNameWarning" value="Istnieje już jednostka organizacji {0}. Dwie jednostki z tą samą nazwą nie mogą być utworzone na tym samym poziomie." />
+    <text name="InvalidFeatureValue" value="{0} wartość funkcji jest nieprawidłowa!" />
+  </texts>
+</localizationDictionary>

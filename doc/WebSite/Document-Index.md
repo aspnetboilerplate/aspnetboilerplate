@@ -120,6 +120,7 @@ Features
   -   [Permission Management](/Pages/Documents/Zero/Permission-Management)
   -   [Language Management](/Pages/Documents/Zero/Language-Management)
   -   [Identity Server Integration](Zero/Identity-Server.md)
+  -   [Identity Server vNext Integration](Zero/Identity-Server-vNext.md)
 
 Releases
 

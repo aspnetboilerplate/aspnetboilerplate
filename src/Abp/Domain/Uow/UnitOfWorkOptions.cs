@@ -40,7 +40,7 @@ namespace Abp.Domain.Uow
         public TransactionScopeAsyncFlowOption? AsyncFlowOption { get; set; }
 
         /// <summary>
-        /// Can be used to enable/disable some filters. 
+        /// Can be used to enable/disable some filters.
         /// </summary>
         public List<DataFilterConfiguration> FilterOverrides { get; }
 
