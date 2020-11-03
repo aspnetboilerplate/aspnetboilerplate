@@ -20,7 +20,8 @@ namespace Abp.Zero.SampleApp.Tests.DynamicEntityProperties
             p1.InputType.ShouldBe(p2.InputType);
         }
 
-        private (ICacheManager cacheManager, IDynamicPropertyStore dynamicPropertyStoreSubstitute, ICache cacheSubstitute) InitializeFakes()
+        private (ICacheManager cacheManager, IDynamicPropertyStore dynamicPropertyStoreSubstitute, ICache
+            cacheSubstitute) InitializeFakes()
         {
             var cacheManager = RegisterFake<ICacheManager>();
             var dynamicPropertyStoreSubstitute = RegisterFake<IDynamicPropertyStore>();
@@ -87,8 +88,13 @@ namespace Abp.Zero.SampleApp.Tests.DynamicEntityProperties
 
             dynamicPropertyManager.Add(testDynamicProperty);
 
-            cacheSubstitute.Received()
-                .Set(testDynamicProperty.Id.ToString(), testDynamicProperty, Arg.Any<TimeSpan?>(), Arg.Any<TimeSpan?>());
+            cacheSubstitute.Received().Set(
+                testDynamicProperty.Id.ToString(),
+                testDynamicProperty,
+                Arg.Any<TimeSpan?>(),
+                Arg.Any<DateTimeOffset?>()
+            );
+
             dynamicPropertyStoreSubstitute.Received().Add(testDynamicProperty);
         }
 
@@ -133,7 +139,8 @@ namespace Abp.Zero.SampleApp.Tests.DynamicEntityProperties
                 InputType = Resolve<IDynamicEntityPropertyDefinitionManager>().GetAllAllowedInputTypeNames().First()
             };
 
-            var exception2 = Should.Throw<ArgumentNullException>(() => dynamicPropertyManager.Add(testDynamicProperty2));
+            var exception2 =
+                Should.Throw<ArgumentNullException>(() => dynamicPropertyManager.Add(testDynamicProperty2));
             exception2.Message.ShouldContain(nameof(testDynamicProperty.PropertyName));
         }
 
@@ -150,8 +157,13 @@ namespace Abp.Zero.SampleApp.Tests.DynamicEntityProperties
 
             dynamicPropertyManager.Update(testDynamicProperty);
 
-            cacheSubstitute.Received()
-                .Set(testDynamicProperty.Id.ToString(), testDynamicProperty, Arg.Any<TimeSpan?>(), Arg.Any<TimeSpan?>());
+            cacheSubstitute.Received().Set(
+                testDynamicProperty.Id.ToString(),
+                testDynamicProperty,
+                Arg.Any<TimeSpan?>(),
+                Arg.Any<DateTimeOffset?>()
+            );
+
             dynamicPropertyStoreSubstitute.Received().Update(testDynamicProperty);
         }
 
@@ -182,12 +194,14 @@ namespace Abp.Zero.SampleApp.Tests.DynamicEntityProperties
 
             testDynamicProperty.PropertyName = string.Empty;
 
-            var exception = Should.Throw<ArgumentNullException>(() => dynamicPropertyManager.Update(testDynamicProperty));
+            var exception =
+                Should.Throw<ArgumentNullException>(() => dynamicPropertyManager.Update(testDynamicProperty));
             exception.Message.ShouldContain(nameof(testDynamicProperty.PropertyName));
 
             testDynamicProperty.PropertyName = null;
 
-            var exception2 = Should.Throw<ArgumentNullException>(() => dynamicPropertyManager.Update(testDynamicProperty));
+            var exception2 =
+                Should.Throw<ArgumentNullException>(() => dynamicPropertyManager.Update(testDynamicProperty));
             exception2.Message.ShouldContain(nameof(testDynamicProperty.PropertyName));
         }
 
@@ -227,7 +241,8 @@ namespace Abp.Zero.SampleApp.Tests.DynamicEntityProperties
             CheckEquality(entity, testDynamicProperty);
 
             cacheManager.Received().GetCache(Arg.Any<string>());
-            await cacheSubstitute.Received().GetAsync(testDynamicProperty.Id.ToString(), Arg.Any<Func<string, Task<object>>>());
+            await cacheSubstitute.Received()
+                .GetAsync(testDynamicProperty.Id.ToString(), Arg.Any<Func<string, Task<object>>>());
             await dynamicPropertyStoreSubstitute.DidNotReceive().GetAsync(testDynamicProperty.Id);
         }
 
@@ -260,8 +275,13 @@ namespace Abp.Zero.SampleApp.Tests.DynamicEntityProperties
             };
 
             await dynamicPropertyManager.AddAsync(testDynamicProperty);
-            await cacheSubstitute.Received()
-                .SetAsync(testDynamicProperty.Id.ToString(), testDynamicProperty, Arg.Any<TimeSpan?>(), Arg.Any<TimeSpan?>());
+            await cacheSubstitute.Received().SetAsync(
+                testDynamicProperty.Id.ToString(),
+                testDynamicProperty,
+                Arg.Any<TimeSpan?>(),
+                Arg.Any<DateTimeOffset?>()
+            );
+
             await dynamicPropertyStoreSubstitute.Received().AddAsync(testDynamicProperty);
         }
 
@@ -297,7 +317,9 @@ namespace Abp.Zero.SampleApp.Tests.DynamicEntityProperties
 
             var dynamicPropertyManager = Resolve<IDynamicPropertyManager>();
 
-            var exception = await Should.ThrowAsync<ArgumentNullException>(() => dynamicPropertyManager.AddAsync(testDynamicProperty));
+            var exception =
+                await Should.ThrowAsync<ArgumentNullException>(() =>
+                    dynamicPropertyManager.AddAsync(testDynamicProperty));
             exception.Message.ShouldContain(nameof(testDynamicProperty.PropertyName));
 
             var testDynamicProperty2 = new DynamicProperty
@@ -306,7 +328,9 @@ namespace Abp.Zero.SampleApp.Tests.DynamicEntityProperties
                 InputType = Resolve<IDynamicEntityPropertyDefinitionManager>().GetAllAllowedInputTypeNames().First()
             };
 
-            var exception2 = await Should.ThrowAsync<ArgumentNullException>(() => dynamicPropertyManager.AddAsync(testDynamicProperty2));
+            var exception2 =
+                await Should.ThrowAsync<ArgumentNullException>(() =>
+                    dynamicPropertyManager.AddAsync(testDynamicProperty2));
             exception2.Message.ShouldContain(nameof(testDynamicProperty.PropertyName));
         }
 
@@ -322,8 +346,13 @@ namespace Abp.Zero.SampleApp.Tests.DynamicEntityProperties
             testDynamicProperty.PropertyName = "Test";
 
             await dynamicPropertyManager.UpdateAsync(testDynamicProperty);
-            await cacheSubstitute.Received()
-                  .SetAsync(testDynamicProperty.Id.ToString(), testDynamicProperty, Arg.Any<TimeSpan?>(), Arg.Any<TimeSpan?>());
+            await cacheSubstitute.Received().SetAsync(
+                testDynamicProperty.Id.ToString(),
+                testDynamicProperty,
+                Arg.Any<TimeSpan?>(),
+                Arg.Any<DateTimeOffset?>()
+            );
+            
             await dynamicPropertyStoreSubstitute.Received().UpdateAsync(testDynamicProperty);
         }
 
@@ -353,12 +382,16 @@ namespace Abp.Zero.SampleApp.Tests.DynamicEntityProperties
 
             testDynamicProperty.PropertyName = string.Empty;
 
-            var exception = await Should.ThrowAsync<ArgumentNullException>(() => dynamicPropertyManager.UpdateAsync(testDynamicProperty));
+            var exception =
+                await Should.ThrowAsync<ArgumentNullException>(() =>
+                    dynamicPropertyManager.UpdateAsync(testDynamicProperty));
             exception.Message.ShouldContain(nameof(testDynamicProperty.PropertyName));
 
             testDynamicProperty.PropertyName = null;
 
-            var exception2 = await Should.ThrowAsync<ArgumentNullException>(() => dynamicPropertyManager.UpdateAsync(testDynamicProperty));
+            var exception2 =
+                await Should.ThrowAsync<ArgumentNullException>(() =>
+                    dynamicPropertyManager.UpdateAsync(testDynamicProperty));
             exception2.Message.ShouldContain(nameof(testDynamicProperty.PropertyName));
         }
 

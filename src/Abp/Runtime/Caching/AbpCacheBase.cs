@@ -16,7 +16,7 @@ namespace Abp.Runtime.Caching
     {
         public TimeSpan DefaultSlidingExpireTime { get; set; }
 
-        public TimeSpan? DefaultAbsoluteExpireTime { get; set; }
+        public DateTimeOffset? DefaultAbsoluteExpireTime { get; set; }
 
         protected readonly AsyncLock AsyncLock = new AsyncLock();
 
@@ -293,9 +293,9 @@ namespace Abp.Runtime.Caching
             return results.Select(result => result.Value).ToArray();
         }
 
-        public abstract void Set(TKey key, TValue value, TimeSpan? slidingExpireTime = null, TimeSpan? absoluteExpireTime = null);
+        public abstract void Set(TKey key, TValue value, TimeSpan? slidingExpireTime = null, DateTimeOffset? absoluteExpireTime = null);
 
-        public virtual void Set(KeyValuePair<TKey, TValue>[] pairs, TimeSpan? slidingExpireTime = null, TimeSpan? absoluteExpireTime = null)
+        public virtual void Set(KeyValuePair<TKey, TValue>[] pairs, TimeSpan? slidingExpireTime = null, DateTimeOffset? absoluteExpireTime = null)
         {
             foreach (var pair in pairs)
             {
@@ -303,13 +303,13 @@ namespace Abp.Runtime.Caching
             }
         }
 
-        public virtual Task SetAsync(TKey key, TValue value, TimeSpan? slidingExpireTime = null, TimeSpan? absoluteExpireTime = null)
+        public virtual Task SetAsync(TKey key, TValue value, TimeSpan? slidingExpireTime = null, DateTimeOffset? absoluteExpireTime = null)
         {
             Set(key, value, slidingExpireTime, absoluteExpireTime);
             return Task.CompletedTask;
         }
 
-        public virtual Task SetAsync(KeyValuePair<TKey, TValue>[] pairs, TimeSpan? slidingExpireTime = null, TimeSpan? absoluteExpireTime = null)
+        public virtual Task SetAsync(KeyValuePair<TKey, TValue>[] pairs, TimeSpan? slidingExpireTime = null, DateTimeOffset? absoluteExpireTime = null)
         {
             return Task.WhenAll(pairs.Select(p => SetAsync(p.Key, p.Value, slidingExpireTime, absoluteExpireTime)));
         }
