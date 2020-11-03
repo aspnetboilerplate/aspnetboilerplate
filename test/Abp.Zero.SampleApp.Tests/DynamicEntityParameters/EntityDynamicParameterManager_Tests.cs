@@ -391,6 +391,7 @@ namespace Abp.Zero.SampleApp.Tests.DynamicEntityParameters
             {
                 await entityDynamicParameterManager.UpdateAsync(entityDynamicParameter);
             });
+            
             await entityDynamicParameterManagerCache.Received().SetAsync(entityDynamicParameter.Id.ToString(), entityDynamicParameter);
 
             await WithUnitOfWorkAsync(async () =>

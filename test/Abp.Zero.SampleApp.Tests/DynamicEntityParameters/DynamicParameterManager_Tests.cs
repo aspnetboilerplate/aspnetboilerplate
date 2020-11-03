@@ -20,7 +20,8 @@ namespace Abp.Zero.SampleApp.Tests.DynamicEntityParameters
             p1.InputType.ShouldBe(p2.InputType);
         }
 
-        private (ICacheManager cacheManager, IDynamicParameterStore dynamicParameterStoreSubstitute, ICache cacheSubstitute) InitializeFakes()
+        private (ICacheManager cacheManager, IDynamicParameterStore dynamicParameterStoreSubstitute, ICache
+            cacheSubstitute) InitializeFakes()
         {
             var cacheManager = RegisterFake<ICacheManager>();
             var dynamicParameterStoreSubstitute = RegisterFake<IDynamicParameterStore>();
@@ -87,8 +88,13 @@ namespace Abp.Zero.SampleApp.Tests.DynamicEntityParameters
 
             dynamicParameterManager.Add(testDynamicParameter);
 
-            cacheSubstitute.Received()
-                .Set(testDynamicParameter.Id.ToString(), testDynamicParameter, Arg.Any<TimeSpan?>(), Arg.Any<TimeSpan?>());
+            cacheSubstitute.Received().Set(
+                testDynamicParameter.Id.ToString(),
+                testDynamicParameter,
+                Arg.Any<TimeSpan?>(),
+                Arg.Any<DateTimeOffset?>()
+            );
+
             dynamicParameterStoreSubstitute.Received().Add(testDynamicParameter);
         }
 
@@ -124,7 +130,8 @@ namespace Abp.Zero.SampleApp.Tests.DynamicEntityParameters
 
             var dynamicParameterManager = Resolve<IDynamicParameterManager>();
 
-            var exception = Should.Throw<ArgumentNullException>(() => dynamicParameterManager.Add(testDynamicParameter));
+            var exception =
+                Should.Throw<ArgumentNullException>(() => dynamicParameterManager.Add(testDynamicParameter));
             exception.Message.ShouldContain(nameof(testDynamicParameter.ParameterName));
 
             var testDynamicParameter2 = new DynamicParameter
@@ -133,7 +140,8 @@ namespace Abp.Zero.SampleApp.Tests.DynamicEntityParameters
                 InputType = Resolve<IDynamicEntityParameterDefinitionManager>().GetAllAllowedInputTypeNames().First()
             };
 
-            var exception2 = Should.Throw<ArgumentNullException>(() => dynamicParameterManager.Add(testDynamicParameter2));
+            var exception2 =
+                Should.Throw<ArgumentNullException>(() => dynamicParameterManager.Add(testDynamicParameter2));
             exception2.Message.ShouldContain(nameof(testDynamicParameter.ParameterName));
         }
 
@@ -150,8 +158,13 @@ namespace Abp.Zero.SampleApp.Tests.DynamicEntityParameters
 
             dynamicParameterManager.Update(testDynamicParameter);
 
-            cacheSubstitute.Received()
-                .Set(testDynamicParameter.Id.ToString(), testDynamicParameter, Arg.Any<TimeSpan?>(), Arg.Any<TimeSpan?>());
+            cacheSubstitute.Received().Set(
+                testDynamicParameter.Id.ToString(),
+                testDynamicParameter,
+                Arg.Any<TimeSpan?>(),
+                Arg.Any<DateTimeOffset?>()
+            );
+            
             dynamicParameterStoreSubstitute.Received().Update(testDynamicParameter);
         }
 
@@ -182,12 +195,14 @@ namespace Abp.Zero.SampleApp.Tests.DynamicEntityParameters
 
             testDynamicParameter.ParameterName = string.Empty;
 
-            var exception = Should.Throw<ArgumentNullException>(() => dynamicParameterManager.Update(testDynamicParameter));
+            var exception =
+                Should.Throw<ArgumentNullException>(() => dynamicParameterManager.Update(testDynamicParameter));
             exception.Message.ShouldContain(nameof(testDynamicParameter.ParameterName));
 
             testDynamicParameter.ParameterName = null;
 
-            var exception2 = Should.Throw<ArgumentNullException>(() => dynamicParameterManager.Update(testDynamicParameter));
+            var exception2 =
+                Should.Throw<ArgumentNullException>(() => dynamicParameterManager.Update(testDynamicParameter));
             exception2.Message.ShouldContain(nameof(testDynamicParameter.ParameterName));
         }
 
@@ -227,7 +242,8 @@ namespace Abp.Zero.SampleApp.Tests.DynamicEntityParameters
             CheckEquality(entity, testDynamicParameter);
 
             cacheManager.Received().GetCache(Arg.Any<string>());
-            await cacheSubstitute.Received().GetAsync(testDynamicParameter.Id.ToString(), Arg.Any<Func<string, Task<object>>>());
+            await cacheSubstitute.Received()
+                .GetAsync(testDynamicParameter.Id.ToString(), Arg.Any<Func<string, Task<object>>>());
             await dynamicParameterStoreSubstitute.DidNotReceive().GetAsync(testDynamicParameter.Id);
         }
 
@@ -260,8 +276,13 @@ namespace Abp.Zero.SampleApp.Tests.DynamicEntityParameters
             };
 
             await dynamicParameterManager.AddAsync(testDynamicParameter);
-            await cacheSubstitute.Received()
-                .SetAsync(testDynamicParameter.Id.ToString(), testDynamicParameter, Arg.Any<TimeSpan?>(), Arg.Any<TimeSpan?>());
+            await cacheSubstitute.Received().SetAsync(
+                testDynamicParameter.Id.ToString(),
+                testDynamicParameter,
+                Arg.Any<TimeSpan?>(),
+                Arg.Any<DateTimeOffset?>()
+            );
+            
             await dynamicParameterStoreSubstitute.Received().AddAsync(testDynamicParameter);
         }
 
@@ -297,7 +318,9 @@ namespace Abp.Zero.SampleApp.Tests.DynamicEntityParameters
 
             var dynamicParameterManager = Resolve<IDynamicParameterManager>();
 
-            var exception = await Should.ThrowAsync<ArgumentNullException>(() => dynamicParameterManager.AddAsync(testDynamicParameter));
+            var exception =
+                await Should.ThrowAsync<ArgumentNullException>(() =>
+                    dynamicParameterManager.AddAsync(testDynamicParameter));
             exception.Message.ShouldContain(nameof(testDynamicParameter.ParameterName));
 
             var testDynamicParameter2 = new DynamicParameter
@@ -306,7 +329,9 @@ namespace Abp.Zero.SampleApp.Tests.DynamicEntityParameters
                 InputType = Resolve<IDynamicEntityParameterDefinitionManager>().GetAllAllowedInputTypeNames().First()
             };
 
-            var exception2 = await Should.ThrowAsync<ArgumentNullException>(() => dynamicParameterManager.AddAsync(testDynamicParameter2));
+            var exception2 =
+                await Should.ThrowAsync<ArgumentNullException>(() =>
+                    dynamicParameterManager.AddAsync(testDynamicParameter2));
             exception2.Message.ShouldContain(nameof(testDynamicParameter.ParameterName));
         }
 
@@ -322,8 +347,13 @@ namespace Abp.Zero.SampleApp.Tests.DynamicEntityParameters
             testDynamicParameter.ParameterName = "Test";
 
             await dynamicParameterManager.UpdateAsync(testDynamicParameter);
-            await cacheSubstitute.Received()
-                  .SetAsync(testDynamicParameter.Id.ToString(), testDynamicParameter, Arg.Any<TimeSpan?>(), Arg.Any<TimeSpan?>());
+            await cacheSubstitute.Received().SetAsync(
+                testDynamicParameter.Id.ToString(),
+                testDynamicParameter,
+                Arg.Any<TimeSpan?>(),
+                Arg.Any<DateTimeOffset?>()
+            );
+            
             await dynamicParameterStoreSubstitute.Received().UpdateAsync(testDynamicParameter);
         }
 
@@ -353,12 +383,16 @@ namespace Abp.Zero.SampleApp.Tests.DynamicEntityParameters
 
             testDynamicParameter.ParameterName = string.Empty;
 
-            var exception = await Should.ThrowAsync<ArgumentNullException>(() => dynamicParameterManager.UpdateAsync(testDynamicParameter));
+            var exception =
+                await Should.ThrowAsync<ArgumentNullException>(() =>
+                    dynamicParameterManager.UpdateAsync(testDynamicParameter));
             exception.Message.ShouldContain(nameof(testDynamicParameter.ParameterName));
 
             testDynamicParameter.ParameterName = null;
 
-            var exception2 = await Should.ThrowAsync<ArgumentNullException>(() => dynamicParameterManager.UpdateAsync(testDynamicParameter));
+            var exception2 =
+                await Should.ThrowAsync<ArgumentNullException>(() =>
+                    dynamicParameterManager.UpdateAsync(testDynamicParameter));
             exception2.Message.ShouldContain(nameof(testDynamicParameter.ParameterName));
         }
 

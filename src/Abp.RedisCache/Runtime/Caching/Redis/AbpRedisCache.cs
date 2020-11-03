@@ -163,55 +163,55 @@ namespace Abp.Runtime.Caching.Redis
                 var redisKey = GetLocalizedRedisKey(p.Key);
                 var redisValue = Serialize(p.Value, GetSerializableType(p.Value));
                 return new KeyValuePair<RedisKey, RedisValue>(redisKey, redisValue);
-            });
+            }).ToList();
 
             if (!_database.StringSet(redisPairs.ToArray()))
             {
                 foreach (var pair in redisPairs)
                 {
-                    Logger.ErrorFormat("Unable to multi-set key:{0} value:{1} in Redis", pair.Key, pair.Value);
+                    Logger.ErrorFormat("Unable to set key:{0} value:{1} in Redis", pair.Key, pair.Value);
+                }
+
+                return;
+            }
+
+            if (absoluteExpireTime.HasValue)
+            {
+                foreach (var pair in redisPairs)
+                {
+                    if (!_database.KeyExpire(pair.Key, absoluteExpireTime.Value.UtcDateTime))
+                    {
+                        Logger.ErrorFormat("Unable to set key:{0} to expire at {1:O} in Redis", pair.Key, absoluteExpireTime.Value.UtcDateTime);
+                    }
+                }
+            }
+            else if (slidingExpireTime.HasValue)
+            {
+                foreach (var pair in redisPairs)
+                {
+                    if (!_database.KeyExpire(pair.Key, slidingExpireTime.Value))
+                    {
+                        Logger.ErrorFormat("Unable to set key:{0} value:{1} to expire after {2:c} in Redis", pair.Key, pair.Value, slidingExpireTime.Value);
+                    }
+                }
+            }
+            else if (DefaultAbsoluteExpireTime.HasValue)
+            {
+                foreach (var pair in redisPairs)
+                {
+                    if (!_database.KeyExpire(pair.Key, DefaultAbsoluteExpireTime.Value.UtcDateTime))
+                    {
+                        Logger.ErrorFormat("Unable to set key:{0} to expire at {1:O} in Redis", pair.Key, DefaultAbsoluteExpireTime.Value.UtcDateTime);
+                    }
                 }
             }
             else
             {
-                if (absoluteExpireTime.HasValue)
+                foreach (var pair in redisPairs)
                 {
-                    foreach (var pair in redisPairs)
+                    if (!_database.KeyExpire(pair.Key, DefaultSlidingExpireTime))
                     {
-                        if (!_database.KeyExpire(pair.Key, absoluteExpireTime.Value.UtcDateTime))
-                        {
-                            Logger.ErrorFormat("Unable to multi-set key:{0} to expire at {1:O} in Redis", pair.Key, absoluteExpireTime.Value.UtcDateTime);
-                        }
-                    }
-                }
-                else if (slidingExpireTime.HasValue)
-                {
-                    foreach (var pair in redisPairs)
-                    {
-                        if (!_database.KeyExpire(pair.Key, slidingExpireTime.Value))
-                        {
-                            Logger.ErrorFormat("Unable to multi-set key:{0} value:{1} to expire after {2:c} in Redis", pair.Key, pair.Value, slidingExpireTime.Value);
-                        }
-                    }
-                }
-                else if (DefaultAbsoluteExpireTime.HasValue)
-                {
-                    foreach (var pair in redisPairs)
-                    {
-                        if (!_database.KeyExpire(pair.Key, DefaultAbsoluteExpireTime.Value.UtcDateTime))
-                        {
-                            Logger.ErrorFormat("Unable to multi-set key:{0} to expire at {1:O} in Redis", pair.Key, DefaultAbsoluteExpireTime.Value.UtcDateTime);
-                        }
-                    }
-                }
-                else
-                {
-                    foreach (var pair in redisPairs)
-                    {
-                        if (!_database.KeyExpire(pair.Key, DefaultSlidingExpireTime))
-                        {
-                            Logger.ErrorFormat("Unable to multi-set key:{0} value:{1} to expire after {2:c} in Redis", pair.Key, pair.Value, DefaultSlidingExpireTime);
-                        }
+                        Logger.ErrorFormat("Unable to set key:{0} value:{1} to expire after {2:c} in Redis", pair.Key, pair.Value, DefaultSlidingExpireTime);
                     }
                 }
             }
@@ -234,7 +234,7 @@ namespace Abp.Runtime.Caching.Redis
             {
                 foreach (var pair in redisPairs)
                 {
-                    Logger.ErrorFormat("Unable to multi-set key:{0} value:{1} asynchronously in Redis", pair.Key, pair.Value);
+                    Logger.ErrorFormat("Unable to set key:{0} value:{1} asynchronously in Redis", pair.Key, pair.Value);
                 }
             }
             else
@@ -245,7 +245,7 @@ namespace Abp.Runtime.Caching.Redis
                     {
                         if (!await _database.KeyExpireAsync(pair.Key, absoluteExpireTime.Value.UtcDateTime))
                         {
-                            Logger.ErrorFormat("Unable to multi-set key:{0} to expire at {1:O} asynchronously in Redis", pair.Key, absoluteExpireTime.Value.UtcDateTime);
+                            Logger.ErrorFormat("Unable to set key:{0} to expire at {1:O} asynchronously in Redis", pair.Key, absoluteExpireTime.Value.UtcDateTime);
                         }
                     }
                 }
@@ -255,7 +255,7 @@ namespace Abp.Runtime.Caching.Redis
                     {
                         if (!await _database.KeyExpireAsync(pair.Key, slidingExpireTime.Value))
                         {
-                            Logger.ErrorFormat("Unable to multi-set key:{0} value:{1} to expire after {2:c} asynchronously in Redis", pair.Key, pair.Value, slidingExpireTime.Value);
+                            Logger.ErrorFormat("Unable to set key:{0} value:{1} to expire after {2:c} asynchronously in Redis", pair.Key, pair.Value, slidingExpireTime.Value);
                         }
                     }
                 }
@@ -265,7 +265,7 @@ namespace Abp.Runtime.Caching.Redis
                     {
                         if (!await _database.KeyExpireAsync(pair.Key, DefaultAbsoluteExpireTime.Value.UtcDateTime))
                         {
-                            Logger.ErrorFormat("Unable to multi-set key:{0} to expire at {1:O} asynchronously in Redis", pair.Key, DefaultAbsoluteExpireTime.Value.UtcDateTime);
+                            Logger.ErrorFormat("Unable to set key:{0} to expire at {1:O} asynchronously in Redis", pair.Key, DefaultAbsoluteExpireTime.Value.UtcDateTime);
                         }
                     }
                 }
@@ -275,7 +275,7 @@ namespace Abp.Runtime.Caching.Redis
                     {
                         if (!await _database.KeyExpireAsync(pair.Key, DefaultSlidingExpireTime))
                         {
-                            Logger.ErrorFormat("Unable to multi-set key:{0} value:{1} to expire after {2:c} asynchronously in Redis", pair.Key, pair.Value, DefaultSlidingExpireTime);
+                            Logger.ErrorFormat("Unable to set key:{0} value:{1} to expire after {2:c} asynchronously in Redis", pair.Key, pair.Value, DefaultSlidingExpireTime);
                         }
                     }
                 }

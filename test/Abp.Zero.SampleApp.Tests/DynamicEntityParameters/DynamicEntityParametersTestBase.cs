@@ -45,7 +45,8 @@ namespace Abp.Zero.SampleApp.Tests.DynamicEntityParameters
             }
             catch (Exception e)
             {
-                if (e.Message.Contains(requiredPermission) || e.InnerException != null && e.InnerException.Message.Contains(requiredPermission))
+                if (e.Message.Contains(requiredPermission) ||
+                    e.InnerException != null && e.InnerException.Message.Contains(requiredPermission))
                 {
                     isExceptionThrown = true;
                 }
@@ -65,7 +66,8 @@ namespace Abp.Zero.SampleApp.Tests.DynamicEntityParameters
             WithUnitOfWork(function.Invoke);
         }
 
-        protected async Task RunAndCheckIfPermissionControlledAsync(Func<Task> function, string requiredPermission = TestPermission)
+        protected async Task RunAndCheckIfPermissionControlledAsync(Func<Task> function,
+            string requiredPermission = TestPermission)
         {
             var user = await UserManager.FindByIdAsync(AbpSession.UserId.Value);
 
@@ -78,7 +80,8 @@ namespace Abp.Zero.SampleApp.Tests.DynamicEntityParameters
             }
             catch (Exception e)
             {
-                if (e.Message.Contains(requiredPermission) || e.InnerException != null && e.InnerException.Message.Contains(requiredPermission))
+                if (e.Message.Contains(requiredPermission) ||
+                    e.InnerException != null && e.InnerException.Message.Contains(requiredPermission))
                 {
                     isExceptionThrown = true;
                 }
@@ -105,19 +108,15 @@ namespace Abp.Zero.SampleApp.Tests.DynamicEntityParameters
 
         protected DynamicParameter CreateAndGetDynamicParameterWithTestPermission()
         {
-            var rnd = new Random();
-            var dynamicParameter = new DynamicParameter()
+            var dynamicParameter = new DynamicParameter
             {
                 InputType = GetRandomAllowedInputType(),
-                ParameterName = "City" + rnd.Next(),
+                ParameterName = "City" + Guid.NewGuid().ToString().Substring(0, 5),
                 Permission = TestPermission,
                 TenantId = AbpSession.TenantId
             };
 
-            WithUnitOfWork(() =>
-            {
-                DynamicParameterStore.Add(dynamicParameter);
-            });
+            WithUnitOfWork(() => { DynamicParameterStore.Add(dynamicParameter); });
 
             return dynamicParameter;
         }
@@ -133,10 +132,7 @@ namespace Abp.Zero.SampleApp.Tests.DynamicEntityParameters
                 TenantId = AbpSession.TenantId
             };
 
-            WithUnitOfWork(() =>
-            {
-                EntityDynamicParameterStore.Add(entityDynamicParameter);
-            });
+            WithUnitOfWork(() => { EntityDynamicParameterStore.Add(entityDynamicParameter); });
             return entityDynamicParameter;
         }
 
@@ -178,7 +174,6 @@ namespace Abp.Zero.SampleApp.Tests.DynamicEntityParameters
 
             Configuration.Authorization.Providers.Add<DynamicEntityParametersTestAuthorizationProvider>();
             Configuration.DynamicEntityParameters.Providers.Add<MyDynamicEntityParameterDefinitionProvider>();
-
         }
     }
 }
