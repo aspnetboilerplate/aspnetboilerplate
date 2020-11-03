@@ -141,40 +141,44 @@ namespace Abp.Runtime.Caching
                 Logger.Error(ex.ToString(), ex);
             }
 
-            if (!result.HasValue)
+            if (result.HasValue)
             {
-                using (await AsyncLock.LockAsync())
-                {
-                    try
-                    {
-                        result = await TryGetValueAsync(key);
-                    }
-                    catch (Exception ex)
-                    {
-                        Logger.Error(ex.ToString(), ex);
-                    }
-
-                    if (!result.HasValue)
-                    {
-                        var generatedValue = await factory(key);
-                        if (!EqualityComparer<TValue>.Default.Equals(generatedValue, default))
-                        {
-                            try
-                            {
-                                await SetAsync(key, generatedValue);
-                            }
-                            catch (Exception ex)
-                            {
-                                Logger.Error(ex.ToString(), ex);
-                            }
-                        }
-
-                        return generatedValue;
-                    }
-                }
+                return result.Value;
             }
+            
+            using (await AsyncLock.LockAsync())
+            {
+                try
+                {
+                    result = await TryGetValueAsync(key);
+                }
+                catch (Exception ex)
+                {
+                    Logger.Error(ex.ToString(), ex);
+                }
 
-            return result.Value;
+                if (result.HasValue)
+                {
+                    return result.Value;
+                }
+                
+                var generatedValue = await factory(key);
+                if (IsDefaultValue(generatedValue))
+                {
+                    return generatedValue;
+                }
+                
+                try
+                {
+                    await SetAsync(key, generatedValue);
+                }
+                catch (Exception ex)
+                {
+                    Logger.Error(ex.ToString(), ex);
+                }
+
+                return generatedValue;
+            }
         }
 
         public virtual async Task<TValue[]> GetAsync(TKey[] keys, Func<TKey, Task<TValue>> factory)
@@ -216,7 +220,7 @@ namespace Abp.Runtime.Caching
                         {
                             var key = keys[i];
                             var generatedValue = await factory(key);
-                            if (!EqualityComparer<TValue>.Default.Equals(generatedValue, default))
+                            if (!IsDefaultValue(generatedValue))
                             {
                                 generated.Add(new KeyValuePair<TKey, TValue>(key, generatedValue));
                             }
