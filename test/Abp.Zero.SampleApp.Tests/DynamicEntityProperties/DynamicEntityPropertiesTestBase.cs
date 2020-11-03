@@ -46,7 +46,8 @@ namespace Abp.Zero.SampleApp.Tests.DynamicEntityProperties
             }
             catch (Exception e)
             {
-                if (e.Message.Contains(requiredPermission) || e.InnerException != null && e.InnerException.Message.Contains(requiredPermission))
+                if (e.Message.Contains(requiredPermission) ||
+                    e.InnerException != null && e.InnerException.Message.Contains(requiredPermission))
                 {
                     isExceptionThrown = true;
                 }
@@ -66,7 +67,8 @@ namespace Abp.Zero.SampleApp.Tests.DynamicEntityProperties
             WithUnitOfWork(function.Invoke);
         }
 
-        protected async Task RunAndCheckIfPermissionControlledAsync(Func<Task> function, string requiredPermission = TestPermission)
+        protected async Task RunAndCheckIfPermissionControlledAsync(Func<Task> function,
+            string requiredPermission = TestPermission)
         {
             var user = await UserManager.FindByIdAsync(AbpSession.UserId.Value);
 
@@ -79,7 +81,8 @@ namespace Abp.Zero.SampleApp.Tests.DynamicEntityProperties
             }
             catch (Exception e)
             {
-                if (e.Message.Contains(requiredPermission) || e.InnerException != null && e.InnerException.Message.Contains(requiredPermission))
+                if (e.Message.Contains(requiredPermission) ||
+                    e.InnerException != null && e.InnerException.Message.Contains(requiredPermission))
                 {
                     isExceptionThrown = true;
                 }
@@ -106,16 +109,10 @@ namespace Abp.Zero.SampleApp.Tests.DynamicEntityProperties
 
         protected DynamicProperty CreateAndGetDynamicPropertyWithTestPermission()
         {
-            var rnd = new Random();
-
-            string propertyNameRandomAppender = rnd.Next().ToString();
-            Thread.Sleep(100);
-            propertyNameRandomAppender += rnd.Next().ToString();
-
             var dynamicProperty = new DynamicProperty()
             {
                 InputType = GetRandomAllowedInputType(),
-                PropertyName = "City" + propertyNameRandomAppender,
+                PropertyName = "City" + Guid.NewGuid().ToString().Substring(0, 5),
                 Permission = TestPermission,
                 TenantId = AbpSession.TenantId
             };

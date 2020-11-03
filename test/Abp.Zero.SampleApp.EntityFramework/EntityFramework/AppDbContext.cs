@@ -43,6 +43,8 @@ namespace Abp.Zero.SampleApp.EntityFramework
 
         public DbSet<Country> Countries { get; set; }
 
+        public DbSet<Foo> Foo { get; set; }
+        
         public AppDbContext(DbConnection existingConnection)
             : base(existingConnection, true)
         {

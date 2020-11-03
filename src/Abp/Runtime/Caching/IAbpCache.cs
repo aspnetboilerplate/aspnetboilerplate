@@ -115,7 +115,7 @@ namespace Abp.Runtime.Caching
         /// <param name="value">Value</param>
         /// <param name="slidingExpireTime">Sliding expire time</param>
         /// <param name="absoluteExpireTime">Absolute expire time</param>
-        void Set(TKey key, TValue value, TimeSpan? slidingExpireTime = null, TimeSpan? absoluteExpireTime = null);
+        void Set(TKey key, TValue value, TimeSpan? slidingExpireTime = null, DateTimeOffset? absoluteExpireTime = null);
 
         /// <summary>
         /// Saves/Overrides items in the cache by the pairs.
@@ -127,7 +127,7 @@ namespace Abp.Runtime.Caching
         /// <param name="pairs">Pairs</param>
         /// <param name="slidingExpireTime">Sliding expire time</param>
         /// <param name="absoluteExpireTime">Absolute expire time</param>
-        void Set(KeyValuePair<TKey, TValue>[] pairs, TimeSpan? slidingExpireTime = null, TimeSpan? absoluteExpireTime = null);
+        void Set(KeyValuePair<TKey, TValue>[] pairs, TimeSpan? slidingExpireTime = null, DateTimeOffset? absoluteExpireTime = null);
 
         /// <summary>
         /// Saves/Overrides an item in the cache by a key.
@@ -140,7 +140,7 @@ namespace Abp.Runtime.Caching
         /// <param name="value">Value</param>
         /// <param name="slidingExpireTime">Sliding expire time</param>
         /// <param name="absoluteExpireTime">Absolute expire time</param>
-        Task SetAsync(TKey key, TValue value, TimeSpan? slidingExpireTime = null, TimeSpan? absoluteExpireTime = null);
+        Task SetAsync(TKey key, TValue value, TimeSpan? slidingExpireTime = null, DateTimeOffset? absoluteExpireTime = null);
 
         /// <summary>
         /// Saves/Overrides items in the cache by the pairs.
@@ -152,7 +152,7 @@ namespace Abp.Runtime.Caching
         /// <param name="pairs">Pairs</param>
         /// <param name="slidingExpireTime">Sliding expire time</param>
         /// <param name="absoluteExpireTime">Absolute expire time</param>
-        Task SetAsync(KeyValuePair<TKey, TValue>[] pairs, TimeSpan? slidingExpireTime = null, TimeSpan? absoluteExpireTime = null);
+        Task SetAsync(KeyValuePair<TKey, TValue>[] pairs, TimeSpan? slidingExpireTime = null, DateTimeOffset? absoluteExpireTime = null);
 
         /// <summary>
         /// Removes a cache item by it's key (does nothing if given key does not exists in the cache).
