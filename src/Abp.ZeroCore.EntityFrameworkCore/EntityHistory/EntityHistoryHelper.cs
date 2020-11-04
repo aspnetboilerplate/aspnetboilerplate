@@ -296,7 +296,7 @@ namespace Abp.EntityHistory
                 foreach (var propertyChange in entityChange.PropertyChanges)
                 {
                     var propertyEntry = entityEntry.Property(propertyChange.PropertyName);
-                    
+
                     // Take owner entity type if this is an owned entity
                     var propertyEntityType = entityEntryType;
                     if (entityEntry.Metadata.IsOwned())
@@ -304,9 +304,10 @@ namespace Abp.EntityHistory
                         var ownerForeignKey = entityEntry.Metadata.GetForeignKeys().First(fk => fk.IsOwnership);
                         propertyEntityType = ownerForeignKey.PrincipalEntityType.ClrType;
                     }
-                    
+
                     var isAuditedProperty = propertyEntry.Metadata.IsShadowProperty() ||
-                                            IsAuditedPropertyInfo(propertyEntityType, propertyEntry.Metadata.PropertyInfo) == true;
+                                            IsAuditedPropertyInfo(propertyEntityType,
+                                                propertyEntry.Metadata.PropertyInfo) == true;
 
                     // TODO: fix new value comparison before truncation
                     propertyChange.NewValue = propertyEntry.GetNewValue()?.ToJsonString()
@@ -342,8 +343,9 @@ namespace Abp.EntityHistory
                 OriginalValue = oldValue?.ToJsonString().TruncateWithPostfix(EntityPropertyChange.MaxValueLength),
                 NewValue = newValue?.ToJsonString().TruncateWithPostfix(EntityPropertyChange.MaxValueLength),
                 PropertyName = property.Name.TruncateWithPostfix(EntityPropertyChange.MaxPropertyNameLength),
-                PropertyTypeFullName =
-                    property.ClrType.FullName.TruncateWithPostfix(EntityPropertyChange.MaxPropertyTypeFullNameLength),
+                PropertyTypeFullName = property.ClrType.FullName.TruncateWithPostfix(
+                    EntityPropertyChange.MaxPropertyTypeFullNameLength
+                ),
                 TenantId = AbpSession.TenantId
             };
         }

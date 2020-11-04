@@ -13,13 +13,17 @@ namespace Abp.Webhooks
     /// </summary>
     public class WebhookSubscriptionsStore : IWebhookSubscriptionsStore, ITransientDependency
     {
-        private readonly IRepository<WebhookSubscriptionInfo, Guid> _webhookSubscriptionRepository;
-        private readonly IAsyncQueryableExecuter _asyncQueryableExecuter;
+        public IAsyncQueryableExecuter AsyncQueryableExecuter { get; set; }
 
-        public WebhookSubscriptionsStore(IRepository<WebhookSubscriptionInfo, Guid> webhookSubscriptionRepository, IAsyncQueryableExecuter asyncQueryableExecuter)
+        private readonly IRepository<WebhookSubscriptionInfo, Guid> _webhookSubscriptionRepository;
+
+        public WebhookSubscriptionsStore(
+            IRepository<WebhookSubscriptionInfo, Guid> webhookSubscriptionRepository
+            )
         {
             _webhookSubscriptionRepository = webhookSubscriptionRepository;
-            _asyncQueryableExecuter = asyncQueryableExecuter;
+
+            AsyncQueryableExecuter = NullAsyncQueryableExecuter.Instance;
         }
         
         public virtual Task<WebhookSubscriptionInfo> GetAsync(Guid id)
@@ -80,7 +84,7 @@ namespace Abp.Webhooks
         
         public virtual Task<bool> IsSubscribedAsync(int? tenantId, string webhookName)
         {
-            return _asyncQueryableExecuter.AnyAsync(_webhookSubscriptionRepository.GetAll()
+            return AsyncQueryableExecuter.AnyAsync(_webhookSubscriptionRepository.GetAll()
                 .Where(subscriptionInfo =>
                     subscriptionInfo.TenantId == tenantId &&
                     subscriptionInfo.IsActive &&
