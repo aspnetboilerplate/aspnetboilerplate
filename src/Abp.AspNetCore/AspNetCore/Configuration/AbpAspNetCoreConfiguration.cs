@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Reflection;
-using Abp.AspNetCore.Mvc.Results.Caching;
 using Abp.Domain.Uow;
 using Abp.Web.Models;
 using Microsoft.AspNetCore.Mvc;
@@ -12,9 +11,6 @@ namespace Abp.AspNetCore.Configuration
     public class AbpAspNetCoreConfiguration : IAbpAspNetCoreConfiguration
     {
         public WrapResultAttribute DefaultWrapResultAttribute { get; }
-
-        [Obsolete]
-        public IClientCacheAttribute DefaultClientCacheAttribute { get; set; }
 
         public ResponseCacheAttribute DefaultResponseCacheAttributeForControllers { get; set; }
 
@@ -40,7 +36,6 @@ namespace Abp.AspNetCore.Configuration
         public AbpAspNetCoreConfiguration()
         {
             DefaultWrapResultAttribute = new WrapResultAttribute();
-            DefaultClientCacheAttribute = new NoClientCacheAttribute(false);
             DefaultResponseCacheAttributeForControllers = null;
             DefaultResponseCacheAttributeForAppServices = null;
             DefaultUnitOfWorkAttribute = new UnitOfWorkAttribute();
