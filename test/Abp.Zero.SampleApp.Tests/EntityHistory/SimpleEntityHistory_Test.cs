@@ -775,15 +775,15 @@ namespace Abp.Zero.SampleApp.Tests.EntityHistory
                 .Do(callback => entityHistoryStore.Save(callback.Arg<EntityChangeSet>()));
 
             // Act
-            Foo foo = null;
+            int itemId = 0;
             WithUnitOfWork(() =>
             {
-                foo = new Foo
+                var foo = new Foo
                 {
                     Audited = "s1"
                 };
 
-                _fooRepository.InsertAndGetId(foo);
+                itemId = _fooRepository.InsertAndGetId(foo);
             });
 
             UsingDbContext((context) =>
@@ -795,6 +795,7 @@ namespace Abp.Zero.SampleApp.Tests.EntityHistory
 
             WithUnitOfWork(() =>
             {
+                var foo = _fooRepository.Get(itemId);
                 foo.NonAudited = "s2";
                 _fooRepository.Update(foo);
             });
