@@ -62,10 +62,10 @@ namespace Abp.EntityHistory
         public virtual int? TenantId { get; set; }
 
         [NotMapped] 
-        public string NewValueHash { get; set; }
+        internal string NewValueHash { get; set; }
         
         [NotMapped] 
-        public string OriginalValueHash { get; set; }
+        internal string OriginalValueHash { get; set; }
 
         public void SetNewValue(string newValue)
         {
@@ -79,7 +79,7 @@ namespace Abp.EntityHistory
             OriginalValue = originalValue.TruncateWithPostfix(MaxValueLength);
         }
 
-        public bool IsValuesEquals()
+        internal bool IsValuesEquals()
         {
             if (!NewValueHash.IsNullOrWhiteSpace() || !OriginalValueHash.IsNullOrWhiteSpace())
             {
