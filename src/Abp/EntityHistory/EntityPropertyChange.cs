@@ -1,6 +1,7 @@
 ﻿using Abp.Domain.Entities;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
+using Abp.Extensions;
 
 namespace Abp.EntityHistory
 {
@@ -59,5 +60,33 @@ namespace Abp.EntityHistory
         /// TenantId.
         /// </summary>
         public virtual int? TenantId { get; set; }
+
+        [NotMapped] 
+        public string NewValueHash { get; set; }
+        
+        [NotMapped] 
+        public string OriginalValueHash { get; set; }
+
+        public void SetNewValue(string newValue)
+        {
+            NewValueHash = newValue?.ToMd5();
+            NewValue = newValue.TruncateWithPostfix(MaxValueLength);
+        }
+
+        public void SetOriginalValue(string originalValue)
+        {
+            OriginalValueHash = originalValue?.ToMd5();
+            OriginalValue = originalValue.TruncateWithPostfix(MaxValueLength);
+        }
+
+        public bool IsValuesEquals()
+        {
+            if (!NewValueHash.IsNullOrWhiteSpace() || !OriginalValueHash.IsNullOrWhiteSpace())
+            {
+                return NewValueHash == OriginalValueHash;
+            }
+
+            return NewValue == OriginalValue;
+        }
     }
 }
