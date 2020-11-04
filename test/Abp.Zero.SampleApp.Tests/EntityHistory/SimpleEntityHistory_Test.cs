@@ -871,6 +871,8 @@ namespace Abp.Zero.SampleApp.Tests.EntityHistory
                 //(the actual values have been truncated because they are too large to be stored. truncated values are equal but actual values are not)
                 changes[1].OriginalValue.ShouldBe(bigStringWithTruncateWithPostfix);
                 changes[1].NewValue.ShouldBe(bigStringWithTruncateWithPostfix);
+                //hashes must be different
+                changes[1].NewValueHash.ShouldNotBe(changes[1].OriginalValueHash);
             });
         }
 
