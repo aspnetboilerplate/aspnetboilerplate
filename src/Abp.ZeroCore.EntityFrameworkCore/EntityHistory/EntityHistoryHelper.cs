@@ -308,7 +308,8 @@ namespace Abp.EntityHistory
                     }
 
                     var isAuditedProperty = propertyEntry.Metadata.IsShadowProperty() ||
-                                            IsAuditedPropertyInfo(propertyEntityType, propertyEntry.Metadata.PropertyInfo) == true;
+                                            IsAuditedPropertyInfo(propertyEntityType,
+                                                propertyEntry.Metadata.PropertyInfo) == true;
 
                     propertyChange.SetNewValue(propertyEntry.GetNewValue()?.ToJsonString());
                     if (!isAuditedProperty || propertyChange.IsValuesEquals())
@@ -340,8 +341,9 @@ namespace Abp.EntityHistory
             var entityPropertyChange = new EntityPropertyChange()
             {
                 PropertyName = property.Name.TruncateWithPostfix(EntityPropertyChange.MaxPropertyNameLength),
-                PropertyTypeFullName =
-                    property.ClrType.FullName.TruncateWithPostfix(EntityPropertyChange.MaxPropertyTypeFullNameLength),
+                PropertyTypeFullName = property.ClrType.FullName.TruncateWithPostfix(
+                    EntityPropertyChange.MaxPropertyTypeFullNameLength
+                ),
                 TenantId = AbpSession.TenantId
             };
 

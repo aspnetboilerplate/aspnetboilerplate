@@ -201,17 +201,6 @@ successfully executed.
 -   You can use a startup configuration to change the default behavior for
     result wrapping.
 
-##### Result Caching For Ajax Requests
-
-AbpResultFilter adds a **Cache-Control** header (no-cache, no-store...) to
-the response of AJAX Requests. Thus, it prevents browser caching of
-AJAX responses even for GET requests. This behavior can be disabled by
-configuration or attributes. You can use the  **NoClientCache** attribute
-to prevent caching (default) or **AllowClientCache** attrbiute to allow the
-browser to cache results. Alternatively, you can implement
-IClientCacheAttribute to create a custom attribute for finer
-control.
-
 ### Model Binders
 
 **AbpDateTimeModelBinder** is used to normalize DateTime (and
