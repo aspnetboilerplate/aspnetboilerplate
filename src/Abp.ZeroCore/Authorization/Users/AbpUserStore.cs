@@ -710,7 +710,7 @@ namespace Abp.Authorization.Users
         {
             cancellationToken.ThrowIfCancellationRequested();
 
-            Check.NotNull(user, nameof(user)); ;
+            Check.NotNull(user, nameof(user));
 
             var userRoles = await AsyncQueryableExecuter.ToListAsync(from userRole in _userRoleRepository.GetAll()
                                                                       join role in _roleRepository.GetAll() on userRole.RoleId equals role.Id
@@ -739,7 +739,7 @@ namespace Abp.Authorization.Users
         {
             cancellationToken.ThrowIfCancellationRequested();
 
-            Check.NotNull(user, nameof(user)); ;
+            Check.NotNull(user, nameof(user));
 
             var userRoles = (
                 from userRole in _userRoleRepository.GetAll()

@@ -280,11 +280,9 @@ namespace Abp.EntityHistory
                         }
 
                         var propertyEntry = entityEntry.Property(property.Name);
-                        // TODO: fix new value comparison before truncation
-                        var newValue = propertyEntry.GetNewValue()?.ToJsonString()
-                            .TruncateWithPostfix(EntityPropertyChange.MaxValueLength);
-                        var oldValue = propertyEntry.GetOriginalValue()?.ToJsonString()
-                            .TruncateWithPostfix(EntityPropertyChange.MaxValueLength);
+                        
+                        var newValue = propertyEntry.GetNewValue()?.ToJsonString();
+                        var oldValue = propertyEntry.GetOriginalValue()?.ToJsonString();
 
                         // Add foreign key
                         entityChange.PropertyChanges.Add(CreateEntityPropertyChange(oldValue, newValue, property));
@@ -309,10 +307,8 @@ namespace Abp.EntityHistory
                                             IsAuditedPropertyInfo(propertyEntityType,
                                                 propertyEntry.Metadata.PropertyInfo) == true;
 
-                    // TODO: fix new value comparison before truncation
-                    propertyChange.NewValue = propertyEntry.GetNewValue()?.ToJsonString()
-                        .TruncateWithPostfix(EntityPropertyChange.MaxValueLength);
-                    if (!isAuditedProperty || propertyChange.OriginalValue == propertyChange.NewValue)
+                    propertyChange.SetNewValue(propertyEntry.GetNewValue()?.ToJsonString());
+                    if (!isAuditedProperty || propertyChange.IsValuesEquals())
                     {
                         // No change
                         propertyChangesToRemove.Add(propertyChange);
@@ -338,16 +334,18 @@ namespace Abp.EntityHistory
 
         private EntityPropertyChange CreateEntityPropertyChange(object oldValue, object newValue, IProperty property)
         {
-            return new EntityPropertyChange()
+            var entityPropertyChange = new EntityPropertyChange()
             {
-                OriginalValue = oldValue?.ToJsonString().TruncateWithPostfix(EntityPropertyChange.MaxValueLength),
-                NewValue = newValue?.ToJsonString().TruncateWithPostfix(EntityPropertyChange.MaxValueLength),
                 PropertyName = property.Name.TruncateWithPostfix(EntityPropertyChange.MaxPropertyNameLength),
                 PropertyTypeFullName = property.ClrType.FullName.TruncateWithPostfix(
                     EntityPropertyChange.MaxPropertyTypeFullNameLength
                 ),
                 TenantId = AbpSession.TenantId
             };
+
+            entityPropertyChange.SetNewValue(newValue?.ToJsonString());
+            entityPropertyChange.SetOriginalValue(oldValue?.ToJsonString());
+            return entityPropertyChange;
         }
     }
 }

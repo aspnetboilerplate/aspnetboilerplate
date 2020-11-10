@@ -16,6 +16,7 @@ using System.Collections.Generic;
 using System.Data.Entity;
 using System.Data.Entity.Infrastructure;
 using System.Linq;
+using System.Text;
 using System.Threading;
 using Abp.Application.Editions;
 using Abp.Application.Features;
@@ -771,15 +772,15 @@ namespace Abp.Zero.SampleApp.Tests.EntityHistory
                 .Do(callback => entityHistoryStore.Save(callback.Arg<EntityChangeSet>()));
 
             // Act
-            Foo foo = null;
+            int itemId = 0;
             WithUnitOfWork(() =>
             {
-                foo = new Foo
+                var foo = new Foo
                 {
                     Audited = "s1"
                 };
 
-                _fooRepository.InsertAndGetId(foo);
+                itemId = _fooRepository.InsertAndGetId(foo);
             });
 
             UsingDbContext((context) =>
@@ -791,6 +792,7 @@ namespace Abp.Zero.SampleApp.Tests.EntityHistory
 
             WithUnitOfWork(() =>
             {
+                var foo = _fooRepository.Get(itemId);
                 foo.NonAudited = "s2";
                 _fooRepository.Update(foo);
             });
@@ -801,6 +803,73 @@ namespace Abp.Zero.SampleApp.Tests.EntityHistory
                 context.EntityChanges.Count(e => e.TenantId == 1).ShouldBe(1);
                 context.EntityChangeSets.Count(e => e.TenantId == 1).ShouldBe(1);
                 context.EntityPropertyChanges.Count(e => e.TenantId == 1).ShouldBe(1);
+            });
+        }
+
+        [Fact]
+        public void Should_Work_Properly_With_Large_Data()
+        {
+            var entityHistoryStore = Resolve<EntityHistoryStore>();
+            _entityHistoryStore.When(x => x.SaveAsync(Arg.Any<EntityChangeSet>()))
+                .Do(callback => AsyncHelper.RunSync(() =>
+                    entityHistoryStore.SaveAsync(callback.Arg<EntityChangeSet>()))
+                );
+
+            _entityHistoryStore.When(x => x.Save(Arg.Any<EntityChangeSet>()))
+                .Do(callback => entityHistoryStore.Save(callback.Arg<EntityChangeSet>()));
+
+            StringBuilder stringBuilder = new StringBuilder();
+            for (int i = 0; i <= EntityPropertyChange.MaxValueLength+1; i++)
+            {
+                stringBuilder.Append("a");
+            }
+
+            var bigStringWithTruncateWithPostfix = stringBuilder.ToString().ToJsonString().TruncateWithPostfix(EntityPropertyChange.MaxValueLength);
+            // Act
+            int itemId = 0;
+            WithUnitOfWork(() =>
+            {
+                var foo = new Foo
+                {
+                    Audited = stringBuilder.ToString()
+                };
+
+                itemId = _fooRepository.InsertAndGetId(foo);
+            });
+            
+            UsingDbContext((context) =>
+            {
+                context.EntityChanges.Count(e => e.TenantId == 1).ShouldBe(1);
+                context.EntityChangeSets.Count(e => e.TenantId == 1).ShouldBe(1);
+                context.EntityPropertyChanges.Count(e => e.TenantId == 1).ShouldBe(1);
+                var change = context.EntityPropertyChanges.Single();
+                change.OriginalValue.ShouldBeNull();
+                change.NewValue.ShouldBe(bigStringWithTruncateWithPostfix);
+            });
+
+            WithUnitOfWork(() =>
+            {
+                var foo = _fooRepository.Get(itemId);
+                foo.Audited = stringBuilder.ToString() + "bbbbbbbbbbbbbb";
+                _fooRepository.Update(foo);
+            });
+            
+            UsingDbContext((context) =>
+            {
+                context.EntityChanges.Count(e => e.TenantId == 1).ShouldBe(2);
+                context.EntityChangeSets.Count(e => e.TenantId == 1).ShouldBe(2);
+                context.EntityPropertyChanges.Count(e => e.TenantId == 1).ShouldBe(2);
+                var changes = context.EntityPropertyChanges.ToList();
+                
+                changes[0].OriginalValue.ShouldBeNull();
+                changes[0].NewValue.ShouldBe(bigStringWithTruncateWithPostfix);
+                
+                //even though the original value and new value are equal, changes will be detected on entity
+                //(the actual values have been truncated because they are too large to be stored. truncated values are equal but actual values are not)
+                changes[1].OriginalValue.ShouldBe(bigStringWithTruncateWithPostfix);
+                changes[1].NewValue.ShouldBe(bigStringWithTruncateWithPostfix);
+                //hashes must be different
+                changes[1].NewValueHash.ShouldNotBe(changes[1].OriginalValueHash);
             });
         }
 

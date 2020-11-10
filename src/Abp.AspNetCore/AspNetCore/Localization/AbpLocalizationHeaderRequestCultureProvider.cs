@@ -21,6 +21,12 @@ namespace Abp.AspNetCore.Localization
         private static readonly string _culturePrefix = "c=";
         private static readonly string _uiCulturePrefix = "uic=";
 
+        /// <summary>
+        /// The name of the header that contains the user's preferred culture information.
+        /// Defaults to <see cref="CookieRequestCultureProvider.DefaultCookieName"/>.
+        /// </summary>
+        public string HeaderName { get; set; } = CookieRequestCultureProvider.DefaultCookieName;
+
         public AbpLocalizationHeaderRequestCultureProvider()
         {
             Logger = NullLogger.Instance;
@@ -34,7 +40,7 @@ namespace Abp.AspNetCore.Localization
                 throw new ArgumentNullException(nameof(httpContext));
             }
 
-            var localizationHeader = httpContext.Request.Headers[CookieRequestCultureProvider.DefaultCookieName];
+            var localizationHeader = httpContext.Request.Headers[HeaderName];
 
             if (localizationHeader.Count == 0)
             {
