@@ -50,7 +50,7 @@ namespace Abp.MultiTenancy
         private readonly IAbpZeroFeatureValueStore _featureValueStore;
 
         public AbpTenantManager(
-            IRepository<TTenant, long> tenantRepository, 
+            IRepository<TTenant, long> tenantRepository,
             IRepository<TenantFeatureSetting, long> tenantFeatureRepository,
             AbpEditionManager editionManager,
             IAbpZeroFeatureValueStore featureValueStore)
@@ -71,7 +71,7 @@ namespace Abp.MultiTenancy
 
             if (await TenantRepository.FirstOrDefaultAsync(t => t.TenancyName == tenant.TenancyName) != null)
             {
-                throw new UserFriendlyException(string.Format(L("TenancyNameIsAlreadyTaken"), tenant.TenancyName));
+                throw new UserFriendlyException("TenancyNameIsAlreadyTaken", tenant.TenancyName);
             }
 
             await TenantRepository.InsertAsync(tenant);
