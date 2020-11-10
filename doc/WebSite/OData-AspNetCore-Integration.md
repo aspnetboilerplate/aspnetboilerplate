@@ -35,6 +35,8 @@ dependencies.
 OData requires us to declare entities which can be used as OData resources.
 We must do this in the Startup class:
 
+##### For asp net core 2.x
+
     public class Startup
     {
         public IServiceProvider ConfigureServices(IServiceCollection services)
@@ -85,6 +87,60 @@ We must do this in the Startup class:
 
                 ...
             });
+        }
+    }
+
+##### For asp net core 3.x
+
+    public class Startup
+    {
+        public IServiceProvider ConfigureServices(IServiceCollection services)
+        {
+            ...
+
+            services.AddOData();
+
+            // Workaround: https://github.com/OData/WebApi/issues/1177
+            services.AddMvcCore(options =>
+            {
+                foreach (var outputFormatter in options.OutputFormatters.OfType<ODataOutputFormatter>().Where(_ => _.SupportedMediaTypes.Count == 0))
+                {
+                    outputFormatter.SupportedMediaTypes.Add(new MediaTypeHeaderValue("application/prs.odatatestxx-odata"));
+                }
+                foreach (var inputFormatter in options.InputFormatters.OfType<ODataInputFormatter>().Where(_ => _.SupportedMediaTypes.Count == 0))
+                {
+                    inputFormatter.SupportedMediaTypes.Add(new MediaTypeHeaderValue("application/prs.odatatestxx-odata"));
+                }
+            });
+
+            return services.AddAbp<MyProjectWebHostModule>(...);
+        }
+
+        public void Configure(IApplicationBuilder app, IHostingEnvironment env, ILoggerFactory loggerFactory)
+        {
+            app.UseAbp();
+
+            ...
+
+            
+            // Return IQueryable from controllers
+            app.UseUnitOfWork(options =>
+            {
+                options.Filter = httpContext => httpContext.Request.Path.Value.StartsWith("/odata");
+            });
+
+            app.UseODataBatching();
+            app.UseEndpoints(endpoints =>
+            {
+                ...    
+
+                var builder = new ODataConventionModelBuilder();
+                builder.EntitySet<Person>("Persons").EntityType.Expand().Filter().OrderBy().Page();
+                endpoints.MapODataRoute("odataPrefix", "odata",  builder.GetEdmModel());
+                ...
+            });
+            
+            ...
         }
     }
 

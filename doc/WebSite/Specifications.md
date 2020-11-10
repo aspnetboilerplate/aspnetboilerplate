@@ -5,7 +5,7 @@ whereby business rules can be recombined by chaining the business rules
 together using boolean logic*
 ([Wikipedia](https://en.wikipedia.org/wiki/Specification_pattern)).
 
-In pratical terms, it's used mostly **to define reusable filters** for
+In practical terms, it's used mostly **to define reusable filters** for
 entities or other business objects.
 
 #### Example
