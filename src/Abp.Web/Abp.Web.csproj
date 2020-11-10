@@ -28,7 +28,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Include="Castle.Facilities.AspNet.SystemWeb" Version="5.0.1" />
+    <PackageReference Include="Castle.Facilities.AspNet.SystemWeb" Version="5.1.0-beta001" />
   </ItemGroup>
 
   <ItemGroup Condition=" '$(TargetFramework)' == 'net461' ">
@@ -43,6 +43,7 @@
 
   <ItemGroup>
     <PackageReference Update="Microsoft.NETFramework.ReferenceAssemblies" Version="1.0.0" />
+    <PackageReference Update="Microsoft.SourceLink.GitHub" Version="1.1.0-beta-20204-02" />
   </ItemGroup>
 
 </Project>

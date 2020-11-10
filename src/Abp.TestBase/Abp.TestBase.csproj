@@ -23,4 +23,8 @@
     <ProjectReference Include="..\Abp\Abp.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <PackageReference Update="Microsoft.SourceLink.GitHub" Version="1.1.0-beta-20204-02" />
+  </ItemGroup>
+
 </Project>

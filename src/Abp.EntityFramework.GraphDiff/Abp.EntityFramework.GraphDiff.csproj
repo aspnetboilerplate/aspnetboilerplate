@@ -14,6 +14,7 @@
     <GeneratePackageOnBuild>False</GeneratePackageOnBuild>
     <RootNamespace>Abp.EntityFramework</RootNamespace>
     <Description>Abp.EntityFramework.GraphDiff</Description>
+    <UserSecretsId>9c1c3adb-b823-4583-9c4f-bd57476d8015</UserSecretsId>
   </PropertyGroup>
 
   <ItemGroup>
@@ -23,7 +24,7 @@
 
   <ItemGroup>
     <PackageReference Include="EntityFramework" Version="6.4.4" />
-    <PackageReference Include="RefactorThis.GraphDiff" Version="3.1.2" />
+    <PackageReference Include="RefactorThis.GraphDiff" Version="3.1.3" />
   </ItemGroup>
 
   <ItemGroup Condition=" '$(TargetFramework)' == 'net461' ">
@@ -33,6 +34,7 @@
 
   <ItemGroup>
     <PackageReference Update="Microsoft.NETFramework.ReferenceAssemblies" Version="1.0.0" />
+    <PackageReference Update="Microsoft.SourceLink.GitHub" Version="1.1.0-beta-20204-02" />
   </ItemGroup>
 
 </Project>

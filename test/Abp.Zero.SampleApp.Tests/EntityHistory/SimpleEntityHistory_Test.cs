@@ -81,9 +81,8 @@ namespace Abp.Zero.SampleApp.Tests.EntityHistory
             {
                 s.EntityChanges.Count.ShouldBe(1);
 
-                var entityChange =
-                    s.EntityChanges.Single(ec => ec.EntityTypeFullName == typeof(Advertisement).FullName);
-                entityChange.ChangeTime.ShouldNotBeNull();
+                var entityChange = s.EntityChanges.Single(ec => ec.EntityTypeFullName == typeof(Advertisement).FullName);
+                ((DateTime?)entityChange.ChangeTime).ShouldNotBe(null);
                 entityChange.ChangeType.ShouldBe(EntityChangeType.Created);
                 entityChange.EntityId.ShouldBe(advertisementId.ToJsonString());
                 entityChange.PropertyChanges.Count.ShouldBe(1);
@@ -164,7 +163,7 @@ namespace Abp.Zero.SampleApp.Tests.EntityHistory
                 s.EntityChanges.Count.ShouldBe(1);
 
                 var entityChange = s.EntityChanges.Single(ec => ec.EntityTypeFullName == typeof(Student).FullName);
-                entityChange.ChangeTime.ShouldNotBeNull();
+                ((DateTime?)entityChange.ChangeTime).ShouldNotBe(null);
                 entityChange.ChangeType.ShouldBe(EntityChangeType.Created);
                 entityChange.EntityId.ShouldBe(student.Id.ToJsonString());
                 entityChange.PropertyChanges.Count.ShouldBe(4); //Name,IdCard,Address,Grade
@@ -637,9 +636,8 @@ namespace Abp.Zero.SampleApp.Tests.EntityHistory
             {
                 s.EntityChanges.Count.ShouldBe(1);
 
-                var entityChange =
-                    s.EntityChanges.Single(ec => ec.EntityTypeFullName == typeof(StudentLectureNote).FullName);
-                entityChange.ChangeTime.ShouldNotBeNull();
+                var entityChange = s.EntityChanges.Single(ec => ec.EntityTypeFullName == typeof(StudentLectureNote).FullName);
+                ((DateTime?)entityChange.ChangeTime).ShouldNotBe(null);
                 entityChange.ChangeType.ShouldBe(EntityChangeType.Created);
                 entityChange.PropertyChanges.Count.ShouldBe(3);
 
@@ -678,9 +676,8 @@ namespace Abp.Zero.SampleApp.Tests.EntityHistory
             {
                 s.EntityChanges.Count.ShouldBe(1);
 
-                var entityChange =
-                    s.EntityChanges.Single(ec => ec.EntityTypeFullName == typeof(CitizenshipInformation).FullName);
-                entityChange.ChangeTime.ShouldNotBeNull();
+                var entityChange = s.EntityChanges.Single(ec => ec.EntityTypeFullName == typeof(CitizenshipInformation).FullName);
+                ((DateTime?)entityChange.ChangeTime).ShouldNotBe(null);
                 entityChange.ChangeType.ShouldBe(EntityChangeType.Created);
                 entityChange.PropertyChanges.Count.ShouldBe(1);
 
@@ -714,9 +711,8 @@ namespace Abp.Zero.SampleApp.Tests.EntityHistory
             {
                 s.EntityChanges.Count.ShouldBe(1);
 
-                var entityChange =
-                    s.EntityChanges.Single(ec => ec.EntityTypeFullName == typeof(CitizenshipInformation).FullName);
-                entityChange.ChangeTime.ShouldNotBeNull();
+                var entityChange = s.EntityChanges.Single(ec => ec.EntityTypeFullName == typeof(CitizenshipInformation).FullName);
+                ((DateTime?)entityChange.ChangeTime).ShouldNotBe(null);
                 entityChange.ChangeType.ShouldBe(EntityChangeType.Updated);
                 entityChange.PropertyChanges.Count.ShouldBe(1);
 

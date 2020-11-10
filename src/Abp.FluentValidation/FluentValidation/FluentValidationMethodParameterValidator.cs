@@ -19,11 +19,13 @@ namespace Abp.FluentValidation
         {
             var validationErrors = new List<ValidationResult>();
 
-            var fvValidator = _validatorFactory.GetValidator(validatingObject.GetType());
+            IValidator fvValidator = _validatorFactory.GetValidator(validatingObject.GetType());
 
             if (fvValidator != null)
             {
-                var validationResult = fvValidator.Validate(validatingObject);
+                var validationContext = new ValidationContext<object>(validatingObject);
+                var validationResult = fvValidator.Validate(validationContext);
+
                 var mappedValidationErrors = validationResult.Errors
                     .Select(e => new ValidationResult(e.ErrorMessage, new[] { e.PropertyName }))
                     .ToList();

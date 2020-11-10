@@ -33,7 +33,7 @@ namespace Abp.AspNetCore.App.Controllers
             });
         }
 
-        public JsonResult GetNullableJsonValue2([FromBody]ValidationTestArgument3 arg1)
+        public JsonResult GetNullableJsonValue2([FromBody] ValidationTestArgument3 arg1)
         {
             return Json(new ValidationTestArgument3
             {

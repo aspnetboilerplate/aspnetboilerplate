@@ -71,7 +71,7 @@ namespace Abp.Zero.EntityHistory
                 s.EntityChanges.Count.ShouldBe(1);
 
                 var entityChange = s.EntityChanges.Single(ec => ec.EntityTypeFullName == typeof(Advertisement).FullName);
-                entityChange.ChangeTime.ShouldNotBeNull();
+                ((DateTime?)entityChange.ChangeTime).ShouldNotBe(null);
                 entityChange.ChangeType.ShouldBe(EntityChangeType.Created);
                 entityChange.EntityId.ShouldBe(advertisementId.ToJsonString());
                 entityChange.PropertyChanges.Count.ShouldBe(1);

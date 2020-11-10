@@ -53,7 +53,7 @@ namespace Abp.EntityFrameworkCore.Repositories
         protected virtual IQueryable<TEntity> GetQueryable()
         {
             if (EntityIsDbQuery.GetOrAdd(typeof(TEntity), key => Context.GetType().GetProperties().Any(property =>
-                    ReflectionHelper.IsAssignableToGenericType(property.PropertyType, typeof(DbQuery<>)) &&
+                    ReflectionHelper.IsAssignableToGenericType(property.PropertyType, typeof(DbSet<>)) &&
                     ReflectionHelper.IsAssignableToGenericType(property.PropertyType.GenericTypeArguments[0],
                         typeof(IEntity<>)) &&
                     property.PropertyType.GetGenericArguments().Any(x => x == typeof(TEntity)))))

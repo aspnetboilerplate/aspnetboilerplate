@@ -45,12 +45,12 @@ namespace Abp.TestBase.SampleApplication.Tests.Auditing
             selectedMessage.CreationTime.ShouldBe(createdMessage.CreationTime);
             selectedMessage.CreatorUserId.ShouldBe(createdMessage.CreatorUserId);
 
-            selectedMessage.LastModifierUserId.ShouldBeNull();
-            selectedMessage.LastModificationTime.ShouldBeNull();
+            selectedMessage.LastModifierUserId.ShouldBe(null);
+            selectedMessage.LastModificationTime.ShouldBe(null);
 
             selectedMessage.IsDeleted.ShouldBeFalse();
-            selectedMessage.DeleterUserId.ShouldBeNull();
-            selectedMessage.DeletionTime.ShouldBeNull();
+            selectedMessage.DeleterUserId.ShouldBe(null);
+            selectedMessage.DeletionTime.ShouldBe(null);
 
             //Act: Update the entity
             selectedMessage.Text = "test message 1 - updated";
@@ -58,7 +58,7 @@ namespace Abp.TestBase.SampleApplication.Tests.Auditing
 
             //Assert: Modification properties should be changed
             selectedMessage.LastModifierUserId.ShouldBe(AbpSession.UserId);
-            selectedMessage.LastModificationTime.ShouldNotBeNull();
+            selectedMessage.LastModificationTime.ShouldNotBe(null);
             selectedMessage.LastModificationTime.Value.ShouldBeGreaterThan(Clock.Now.Subtract(TimeSpan.FromSeconds(10)));
             selectedMessage.LastModificationTime.Value.ShouldBeLessThan(Clock.Now.Add(TimeSpan.FromSeconds(10)));
 
@@ -68,7 +68,7 @@ namespace Abp.TestBase.SampleApplication.Tests.Auditing
             //Assert: Deletion audit properties should be set
             selectedMessage.IsDeleted.ShouldBe(true);
             selectedMessage.DeleterUserId.ShouldBe(AbpSession.UserId);
-            selectedMessage.DeletionTime.ShouldNotBeNull();
+            selectedMessage.DeletionTime.ShouldNotBe(null);
             selectedMessage.DeletionTime.Value.ShouldBeGreaterThan(Clock.Now.Subtract(TimeSpan.FromSeconds(10)));
             selectedMessage.DeletionTime.Value.ShouldBeLessThan(Clock.Now.Add(TimeSpan.FromSeconds(10)));
         }
@@ -84,7 +84,7 @@ namespace Abp.TestBase.SampleApplication.Tests.Auditing
 
             //Get a company to modify
             var company = _companyRepository.GetAllList().First();
-            company.LastModifierUserId.ShouldBeNull(); //initial value
+            company.LastModifierUserId.ShouldBe(null); //initial value
 
             //Modify the company
             company.Name = company.Name + "1";

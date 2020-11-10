@@ -2,7 +2,7 @@
 
   <PropertyGroup>
     <OutputType>Exe</OutputType>
-    <TargetFramework>netcoreapp3.0</TargetFramework>
+    <TargetFramework>net5.0</TargetFramework>
     <AppendTargetFrameworkToOutputPath>false</AppendTargetFrameworkToOutputPath>
     <RootNamespace></RootNamespace>
     <IsPackable>False</IsPackable>
@@ -10,16 +10,16 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="NuGet.CommandLine" Version="5.6.0">
+    <PackageReference Include="NuGet.CommandLine" Version="5.7.0">
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
     </PackageReference>
-    <PackageReference Include="Nuke.Common" Version="0.24.11" />
+    <PackageReference Include="Nuke.Common" Version="0.25.0" />
 
-    <PackageReference Include="Microsoft.Build" Version="16.6.0" />
-    <PackageReference Include="Microsoft.Build.Framework" Version="16.6.0" />
-    <PackageReference Include="Microsoft.Build.Tasks.Core" Version="16.6.0" />
-    <PackageReference Include="Microsoft.Build.Utilities.Core" Version="16.6.0" />
+    <PackageReference Include="Microsoft.Build" Version="16.7.0" />
+    <PackageReference Include="Microsoft.Build.Framework" Version="16.7.0" />
+    <PackageReference Include="Microsoft.Build.Tasks.Core" Version="16.7.0" />
+    <PackageReference Include="Microsoft.Build.Utilities.Core" Version="16.7.0" />
   </ItemGroup>
 
   <ItemGroup>

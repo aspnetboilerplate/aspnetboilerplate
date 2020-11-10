@@ -42,7 +42,7 @@ namespace Abp.TestBase.SampleApplication.Tests.ContactLists
             using (var unitOfWork = unitOfWorkManager.Begin())
             {
                 //Should start UOW with TenantId in the session
-                unitOfWorkManager.Current.GetTenantId().ShouldBeNull();
+                unitOfWorkManager.Current.GetTenantId().ShouldBe(null);
 
                 using (unitOfWorkManager.Current.SetTenantId(1))
                 {
@@ -50,8 +50,8 @@ namespace Abp.TestBase.SampleApplication.Tests.ContactLists
 
                     tenant1Message1 = _messageRepository.FirstOrDefault(m => m.Text == "tenant-1-message-1");
                     tenant1Message1.ShouldNotBeNull(); //Can get tenant's data from host since we used SetTenantId()
-                    tenant1Message1.LastModifierUserId.ShouldBeNull();
-                    tenant1Message1.LastModificationTime.ShouldBeNull();
+                    tenant1Message1.LastModifierUserId.ShouldBe(null);
+                    tenant1Message1.LastModificationTime.ShouldBe(null);
 
                     tenant1Message1.Text = "tenant-1-message-1-modified";
 
@@ -67,11 +67,11 @@ namespace Abp.TestBase.SampleApplication.Tests.ContactLists
             //Creation audit check
             tenant1MessageNew.IsTransient().ShouldBeFalse(); //It should be saved to database
             tenant1MessageNew.CreationTime.ShouldBeGreaterThan(Clock.Now.Subtract(TimeSpan.FromMinutes(1)));
-            tenant1MessageNew.CreatorUserId.ShouldBeNull(); //It's not set since user in the AbpSession is not that tenant's user!
+            tenant1MessageNew.CreatorUserId.ShouldBe(null); //It's not set since user in the AbpSession is not that tenant's user!
 
             //Modification audit check
-            tenant1Message1.LastModificationTime.ShouldNotBeNull(); //It's set since we modified Text
-            tenant1Message1.LastModifierUserId.ShouldBeNull(); //It's not set since user in the AbpSession is not that tenant's user!
+            tenant1Message1.LastModificationTime.ShouldNotBe(null); //It's set since we modified Text
+            tenant1Message1.LastModifierUserId.ShouldBe(null); //It's not set since user in the AbpSession is not that tenant's user!
 
             //Deletion audit check
             UsingDbContext(context =>
@@ -79,8 +79,8 @@ namespace Abp.TestBase.SampleApplication.Tests.ContactLists
                 var tenant1Message2 = context.Messages.FirstOrDefault(m => m.Text == "tenant-1-message-2");
                 tenant1Message2.ShouldNotBeNull();
                 tenant1Message2.IsDeleted.ShouldBeTrue();
-                tenant1Message2.DeletionTime.ShouldNotBeNull();
-                tenant1Message2.DeleterUserId.ShouldBeNull(); //It's not set since user in the AbpSession is not that tenant's user!
+                tenant1Message2.DeletionTime.ShouldNotBe(null);
+                tenant1Message2.DeleterUserId.ShouldBe(null); //It's not set since user in the AbpSession is not that tenant's user!
             });
         }
 
@@ -104,8 +104,8 @@ namespace Abp.TestBase.SampleApplication.Tests.ContactLists
 
                 tenant1Message1 = _messageRepository.FirstOrDefault(m => m.Text == "tenant-1-message-1");
                 tenant1Message1.ShouldNotBeNull();
-                tenant1Message1.LastModifierUserId.ShouldBeNull();
-                tenant1Message1.LastModificationTime.ShouldBeNull();
+                tenant1Message1.LastModifierUserId.ShouldBe(null);
+                tenant1Message1.LastModificationTime.ShouldBe(null);
 
                 tenant1Message1.Text = "tenant-1-message-1-modified";
 
@@ -123,7 +123,7 @@ namespace Abp.TestBase.SampleApplication.Tests.ContactLists
             tenant1MessageNew.CreatorUserId.ShouldBe(999); //It set since user in the AbpSession is tenant's user!
 
             //Modification audit check
-            tenant1Message1.LastModificationTime.ShouldNotBeNull(); //It's set since we modified Text
+            tenant1Message1.LastModificationTime.ShouldNotBe(null); //It's set since we modified Text
             tenant1Message1.LastModifierUserId.ShouldBe(999); //It set since user in the AbpSession is tenant's user!
 
             //Deletion audit check
@@ -132,7 +132,7 @@ namespace Abp.TestBase.SampleApplication.Tests.ContactLists
                 var tenant1Message2 = context.Messages.FirstOrDefault(m => m.Text == "tenant-1-message-2");
                 tenant1Message2.ShouldNotBeNull();
                 tenant1Message2.IsDeleted.ShouldBeTrue();
-                tenant1Message2.DeletionTime.ShouldNotBeNull();
+                tenant1Message2.DeletionTime.ShouldNotBe(null);
                 tenant1Message2.DeleterUserId.ShouldBe(999); //It set since user in the AbpSession is tenant's user!
             });
         }

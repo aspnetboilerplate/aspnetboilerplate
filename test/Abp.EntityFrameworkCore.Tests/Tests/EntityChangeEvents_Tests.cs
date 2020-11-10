@@ -40,7 +40,7 @@ namespace Abp.EntityFrameworkCore.Tests.Tests
 
                 creatingEventTriggered = true;
 
-                data.Entity.IsTransient().ShouldNotBeNull();
+                ((bool?)data.Entity.IsTransient()).ShouldNotBe(null);
                 data.Entity.Name.ShouldBe(blogName);
 
                 /* Want to change url from http:// to https:// (ensure to save https url always)
@@ -59,7 +59,7 @@ namespace Abp.EntityFrameworkCore.Tests.Tests
 
                 createdEventTriggered = true;
 
-                data.Entity.IsTransient().ShouldNotBeNull();
+                ((bool?)data.Entity.IsTransient()).ShouldNotBe(null);
                 data.Entity.Name.ShouldBe(blogName);
             });
 
@@ -73,7 +73,7 @@ namespace Abp.EntityFrameworkCore.Tests.Tests
 
                 updatingEventTriggered = true;
 
-                data.Entity.IsTransient().ShouldNotBeNull();
+                ((bool?)data.Entity.IsTransient()).ShouldNotBe(null);
                 data.Entity.Name.ShouldBe(blogName);
                 data.Entity.Url.ShouldStartWith("https://");
             });
@@ -88,7 +88,7 @@ namespace Abp.EntityFrameworkCore.Tests.Tests
 
                 updatedEventTriggered = true;
 
-                data.Entity.IsTransient().ShouldNotBeNull();
+                ((bool?)data.Entity.IsTransient()).ShouldNotBe(null);
                 data.Entity.Name.ShouldBe(blogName);
                 data.Entity.Url.ShouldStartWith("https://");
             });
@@ -103,7 +103,7 @@ namespace Abp.EntityFrameworkCore.Tests.Tests
 
                 blogUrlChangedEventTriggered = true;
 
-                data.Blog.IsTransient().ShouldNotBeNull();
+                ((bool?)data.Blog.IsTransient()).ShouldNotBe(null);
                 data.Blog.Name.ShouldBe(blogName);
                 data.Blog.Url.ShouldStartWith("https://");
             });

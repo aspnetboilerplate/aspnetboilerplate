@@ -188,7 +188,7 @@ namespace Abp.Zero.MultiLingual
             product = await GetProduct("en", "Bicycle");
             product.ShouldNotBeNull();
             product.Translations.Count.ShouldBe(2);
-            product.Translations.Count(pt => pt.Language == "en" && pt.Name == "Bicycle").ShouldNotBeNull();
+            product.Translations.Count(pt => pt.Language == "en" && pt.Name == "Bicycle").ShouldBeGreaterThan(0);
         }
 
         [Fact]

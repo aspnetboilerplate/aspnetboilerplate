@@ -24,8 +24,8 @@
   </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Include="FluentMigrator" Version="3.2.7" />
-    <PackageReference Include="FluentMigrator.Runner" Version="3.2.7" />
+    <PackageReference Include="FluentMigrator" Version="3.2.9" />
+    <PackageReference Include="FluentMigrator.Runner" Version="3.2.9" />
   </ItemGroup>
 
   <ItemGroup Condition=" '$(TargetFramework)' == 'net461' ">
@@ -35,6 +35,7 @@
 
   <ItemGroup>
     <PackageReference Update="Microsoft.NETFramework.ReferenceAssemblies" Version="1.0.0" />
+    <PackageReference Update="Microsoft.SourceLink.GitHub" Version="1.1.0-beta-20204-02" />
   </ItemGroup>
 
 </Project>

@@ -169,7 +169,7 @@ namespace Abp.AutoMapper.Tests
         {
             var obj1 = new MyClass1();
             var obj2 = _mapper.Map<MyClass2>(obj1);
-            obj2.NullableValue.ShouldBeNull();
+            obj2.NullableValue.ShouldBe(null);
         }
 
         [Fact]
