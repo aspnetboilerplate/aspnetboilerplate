@@ -53,7 +53,7 @@ namespace Abp.AspNetCore.Mvc.ExceptionHandling
 
             if (pageHandlerExecutedContext.Exception == null)
             {
-                return;;
+                return;
             }
 
             var wrapResultAttribute =

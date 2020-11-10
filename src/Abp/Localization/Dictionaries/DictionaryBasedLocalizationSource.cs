@@ -186,7 +186,7 @@ namespace Abp.Localization.Dictionaries
                     var strLang = langDictionary.GetStringsOrNull(names);
                     if (!strLang.IsNullOrEmpty())
                     {
-                        return strLang.Select(x => new NameValue(x.Name, x.Value)).ToList();;
+                        return strLang.Select(x => new NameValue(x.Name, x.Value)).ToList();
                     }
                 }
             }
