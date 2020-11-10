@@ -147,7 +147,7 @@ namespace Abp.Localization
                     var strLang = langDictionary.As<IMultiTenantLocalizationDictionary>().GetStringsOrNull(tenantId, names);
                     if (!strLang.IsNullOrEmpty())
                     {
-                        return strLang.Select(x => x.Value).ToList();;
+                        return strLang.Select(x => x.Value).ToList();
                     }
                 }
             }
@@ -165,7 +165,7 @@ namespace Abp.Localization
                 return null;
             }
 
-            return strDefault.Select(x => x.Value).ToList();;
+            return strDefault.Select(x => x.Value).ToList();
         }
 
         public override void Extend(ILocalizationDictionary dictionary)
