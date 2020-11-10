@@ -259,8 +259,7 @@ namespace Abp.EntityHistory
 
                 /* Update property changes */
                 var trackedPropertyNames = entityChange.PropertyChanges.Select(pc => pc.PropertyName).ToList();
-
-                // TODO: NET5.0: This might be wrong
+                
                 var additionalForeignKeys = entityEntry.Metadata.GetDeclaredReferencingForeignKeys()
                                                     .Where(fk => trackedPropertyNames.Contains(fk.Properties[0].Name))
                                                     .ToList();
