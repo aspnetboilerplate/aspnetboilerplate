@@ -23,8 +23,8 @@
   </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Include="System.DirectoryServices.AccountManagement" Version="5.0.0-rc.2.20475.5" />
-    <PackageReference Include="System.DirectoryServices.Protocols" Version="5.0.0-rc.2.20475.5" />
+    <PackageReference Include="System.DirectoryServices.AccountManagement" Version="5.0.0" />
+    <PackageReference Include="System.DirectoryServices.Protocols" Version="5.0.0" />
     <ProjectReference Include="..\Abp.Zero.Common\Abp.Zero.Common.csproj" />
   </ItemGroup>
 

@@ -24,7 +24,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Include="mongocsharpdriver" Version="2.11.2" />
+    <PackageReference Include="mongocsharpdriver" Version="2.11.4" />
   </ItemGroup>
 
   <ItemGroup>
