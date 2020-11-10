@@ -78,9 +78,9 @@ namespace Abp.AspNetCore.Localization
                 }
             }
 
-            if (!cultureName.IsNullOrEmpty())
+            if (!cultureName.IsNullOrEmpty() && cultureName != await GetDefaultCulture(abpSession, settingManager))
             {
-                //Try to set user's language setting from cookie/header if available.
+                // Try to set user's language setting from cookie/header if available and not default.
                 await settingManager.ChangeSettingForUserAsync(
                     abpSession.ToUserIdentifier(),
                     LocalizationSettingNames.DefaultLanguage,
@@ -99,6 +99,13 @@ namespace Abp.AspNetCore.Localization
             }
 
             return await provider.DetermineProviderCultureResult(httpContext);
+        }
+
+        private Task<string> GetDefaultCulture(IAbpSession abpSession, ISettingManager settingManager)
+        {
+            return abpSession.TenantId.HasValue
+                ? settingManager.GetSettingValueForTenantAsync(LocalizationSettingNames.DefaultLanguage, abpSession.TenantId.Value)
+                : settingManager.GetSettingValueForApplicationAsync(LocalizationSettingNames.DefaultLanguage);
         }
     }
 }
