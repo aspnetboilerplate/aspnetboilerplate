@@ -46,12 +46,16 @@ namespace Abp.Zero.EntityFrameworkCore
             SetTableName<EntityChangeSet>(modelBuilder, prefix + "EntityChangeSets", schemaName);
             SetTableName<EntityPropertyChange>(modelBuilder, prefix + "EntityPropertyChanges", schemaName);
             SetTableName<FeatureSetting>(modelBuilder, prefix + "Features", schemaName);
+            SetTableName<EditionFeatureSetting>(modelBuilder, prefix + "Features", schemaName);
+            SetTableName<TenantFeatureSetting>(modelBuilder, prefix + "Features", schemaName);
             SetTableName<ApplicationLanguage>(modelBuilder, prefix + "Languages", schemaName);
             SetTableName<ApplicationLanguageText>(modelBuilder, prefix + "LanguageTexts", schemaName);
             SetTableName<NotificationInfo>(modelBuilder, prefix + "Notifications", schemaName);
             SetTableName<NotificationSubscriptionInfo>(modelBuilder, prefix + "NotificationSubscriptions", schemaName);
             SetTableName<OrganizationUnit>(modelBuilder, prefix + "OrganizationUnits", schemaName);
             SetTableName<PermissionSetting>(modelBuilder, prefix + "Permissions", schemaName);
+            SetTableName<RolePermissionSetting>(modelBuilder, prefix + "Permissions", schemaName);
+            SetTableName<UserPermissionSetting>(modelBuilder, prefix + "Permissions", schemaName);
             SetTableName<TRole>(modelBuilder, prefix + "Roles", schemaName);
             SetTableName<Setting>(modelBuilder, prefix + "Settings", schemaName);
             SetTableName<TTenant>(modelBuilder, prefix + "Tenants", schemaName);
