@@ -71,7 +71,7 @@ namespace Abp.Runtime.Validation.Interception
 
             if (IsValidationDisabled())
             {
-                return;                
+                return;
             }
 
             if (Parameters.Length != ParameterValues.Length)
@@ -130,8 +130,8 @@ namespace Abp.Runtime.Validation.Interception
         {
             if (parameterValue == null)
             {
-                if (!parameterInfo.IsOptional && 
-                    !parameterInfo.IsOut && 
+                if (!parameterInfo.IsOptional &&
+                    !parameterInfo.IsOut &&
                     !TypeHelper.IsPrimitiveExtendedIncludingNullable(parameterInfo.ParameterType, includeEnums: true))
                 {
                     ValidationErrors.Add(new ValidationResult(parameterInfo.Name + " is null!", new[] { parameterInfo.Name }));
@@ -172,6 +172,12 @@ namespace Abp.Runtime.Validation.Interception
             {
                 foreach (var item in (IEnumerable) validatingObject)
                 {
+                    // Do not recursively validate for primitive objects
+                    if (item == null || TypeHelper.IsPrimitiveExtendedIncludingNullable(item.GetType()))
+                    {
+                        break;
+                    }
+
                     ValidateObjectRecursively(item, currentDepth + 1);
                 }
             }
