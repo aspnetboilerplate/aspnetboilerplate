@@ -60,9 +60,6 @@ class Build : NukeBuild
     Target Restore => _ => _
         .Executes(() =>
         {
-            NuGetRestore(_ => _
-                .SetTargetPath(Solution));
-
             DotNetRestore(_ => _
                 .SetProjectFile(Solution));
         });
