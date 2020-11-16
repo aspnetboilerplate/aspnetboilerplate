@@ -10,12 +10,9 @@ using Nuke.Common.ProjectModel;
 using Nuke.Common.Tooling;
 using Nuke.Common.Tools.DotNet;
 using Nuke.Common.Tools.MSBuild;
-using Nuke.Common.Tools.NuGet;
 using Nuke.Common.Utilities.Collections;
 using static Nuke.Common.IO.FileSystemTasks;
 using static Nuke.Common.Tools.DotNet.DotNetTasks;
-using static Nuke.Common.Tools.MSBuild.MSBuildTasks;
-using static Nuke.Common.Tools.NuGet.NuGetTasks;
 
 [CheckBuildProjectConfigurations]
 [UnsetVisualStudioEnvironmentVariables]
@@ -60,9 +57,6 @@ class Build : NukeBuild
     Target Restore => _ => _
         .Executes(() =>
         {
-            NuGetRestore(_ => _
-                .SetTargetPath(Solution));
-
             DotNetRestore(_ => _
                 .SetProjectFile(Solution));
         });
@@ -71,8 +65,9 @@ class Build : NukeBuild
         .DependsOn(Restore)
         .Executes(() =>
         {
-            MSBuild(_ => _
+            DotNetBuild(_ => _
                 .SetProjectFile(Solution)
+                .SetNoRestore(InvokedTargets.Contains(Restore))
                 .SetConfiguration(Configuration)
                 .SetProperty("SourceLinkCreate", true));
         });

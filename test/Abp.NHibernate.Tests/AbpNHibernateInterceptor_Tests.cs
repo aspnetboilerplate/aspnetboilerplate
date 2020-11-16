@@ -18,6 +18,8 @@ namespace Abp.NHibernate.Tests
 
         public AbpNHibernateInterceptor_Tests()
         {
+            Clock.Provider = ClockProviders.Unspecified;
+
             _hotelRepository = Resolve<IRepository<Hotel>>();
             _orderRepository = Resolve<IRepository<Order>>();
             _unitOfWorkManager = Resolve<IUnitOfWorkManager>();

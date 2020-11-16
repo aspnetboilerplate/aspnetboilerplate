@@ -14,12 +14,7 @@
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
     </PackageReference>
-    <PackageReference Include="Nuke.Common" Version="0.25.0" />
-
-    <PackageReference Include="Microsoft.Build" Version="16.7.0" />
-    <PackageReference Include="Microsoft.Build.Framework" Version="16.7.0" />
-    <PackageReference Include="Microsoft.Build.Tasks.Core" Version="16.7.0" />
-    <PackageReference Include="Microsoft.Build.Utilities.Core" Version="16.7.0" />
+    <PackageReference Include="Nuke.Common" Version="5.0.0" />
   </ItemGroup>
 
   <ItemGroup>
