@@ -23,6 +23,20 @@ namespace Abp.Resources.Embedded
                 {
                     var currentChar = subPath[i];
 
+                    if (char.IsDigit(currentChar))
+                    {
+                        if (i >= 0)
+                        {
+                            var previousChar = subPath[i - 1];
+                            if (previousChar == '/' || previousChar == '-' || previousChar == '.')
+                            {
+                                builder.Append('_');
+                                builder.Append(currentChar);
+                                continue;
+                            }
+                        }
+                    }
+
                     if (currentChar == '/')
                     {
                         if (i != 0) // omit a starting slash (/), encode any others as a dot
