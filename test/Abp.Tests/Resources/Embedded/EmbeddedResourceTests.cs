@@ -113,6 +113,21 @@ namespace Abp.Tests.Resources.Embedded
         }
 
         [Fact]
+        public void Should_Get_Embedded_Resource_With_Begin_Digit_In_Folder()
+        {
+            var filepath = "/MyApp/MyResources/0.9/MyScriptFile.0.9.js";
+            var resource = _embeddedResourceManager.GetResource(filepath);
+            var filename = System.IO.Path.GetFileName(filepath);
+            var extension = System.IO.Path.GetExtension(filepath);
+
+            resource.ShouldNotBeNull();
+            Assert.True(resource.Assembly == GetType().GetAssembly());
+            Assert.True(resource.Content.Length > 0);
+            Assert.EndsWith(filename, resource.FileName);
+            Assert.True(resource.FileExtension == extension.Substring(1)); // without dot
+        }
+
+        [Fact]
         public void Should_Get_Embedded_Resources()
         {
             var filepath = "/MyApp/MyResources/js/";
