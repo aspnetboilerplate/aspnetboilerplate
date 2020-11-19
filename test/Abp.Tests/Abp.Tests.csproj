@@ -25,6 +25,7 @@
 
   <ItemGroup>
     <EmbeddedResource Include="Resources\Embedded\MyResources\js-dash\MyScriptFile.js" />
+    <EmbeddedResource Include="Resources\Embedded\MyResources\0.9\MyScriptFile.0.9.js" />
     <EmbeddedResource Include="Resources\Embedded\MyResources\js_underscore\MyScriptFile.js" />
   </ItemGroup>
 
