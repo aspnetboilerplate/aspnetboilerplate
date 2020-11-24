@@ -92,6 +92,7 @@ namespace Abp.EntityFrameworkCore.Utils
                     (property.PropertyType == typeof(DateTime) ||
                      property.PropertyType == typeof(DateTime?)) &&
                     property.CanWrite &&
+                    !property.IsDefined(typeof(NotMappedAttribute)) &&
                     !property.IsDefined(typeof(DisableDateTimeNormalizationAttribute), true)
                 ).ToList();
 
