@@ -50,7 +50,7 @@ namespace Abp.Webhooks
         public List<WebhookSubscription> GetAllSubscriptions(int? tenantId)
         {
             return WebhookSubscriptionsStore.GetAllSubscriptions(tenantId)
-            .Select(subscriptionInfo => subscriptionInfo.ToWebhookSubscription()).ToList();
+                .Select(subscriptionInfo => subscriptionInfo.ToWebhookSubscription()).ToList();
         }
 
         public async Task<List<WebhookSubscription>> GetAllSubscriptionsIfFeaturesGrantedAsync(int? tenantId, string webhookName)
@@ -152,6 +152,18 @@ namespace Abp.Webhooks
         }
 
         [UnitOfWork]
+        public Task DeleteSubscriptionAsync(Guid id)
+        {
+            return WebhookSubscriptionsStore.DeleteAsync(id);
+        }
+
+        [UnitOfWork]
+        public void DeleteSubscription(Guid id)
+        {
+            WebhookSubscriptionsStore.Delete(id);
+        }
+
+        [UnitOfWork]
         public async Task AddWebhookAsync(WebhookSubscriptionInfo subscription, string webhookName)
         {
             await CheckPermissionsAsync(subscription.TenantId, webhookName);
@@ -210,7 +222,6 @@ namespace Abp.Webhooks
                 throw new AbpAuthorizationException($"Tenant \"{tenantId}\" must have necessary feature(s) to use webhook \"{webhookName}\"");
             }
         }
-
 
         #endregion
     }
