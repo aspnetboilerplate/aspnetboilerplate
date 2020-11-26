@@ -6,13 +6,12 @@ using Abp.TestBase;
 using Abp.Zero.Configuration;
 using Abp.Zero.Notifications;
 using Abp.ZeroCore.SampleApp;
-using Castle.MicroKernel.Registration;
 using Abp.Configuration.Startup;
-using Abp.Dependency;
+using Abp.Runtime.Caching.Redis;
 
 namespace Abp.Zero
 {
-    [DependsOn(typeof(AbpZeroCoreSampleAppModule), typeof(AbpTestBaseModule))]
+    [DependsOn(typeof(AbpZeroCoreSampleAppModule), typeof(AbpTestBaseModule), typeof(AbpAspNetCorePerRequestRedisCacheModule))]
     public class AbpZeroTestModule : AbpModule
     {
         public AbpZeroTestModule(AbpZeroCoreSampleAppModule sampleAppModule)
