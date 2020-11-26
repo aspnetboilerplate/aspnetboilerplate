@@ -15,7 +15,7 @@ using Xunit;
 
 namespace Abp.Zero.Redis
 {
-    public class AbpPerRequestRedisCache_Test : AbpZeroTestBase
+    public class AbpPerRequestRedisCache_Test :  AbpIntegratedTestBase<AbpPerRequestRedisCacheTestModule>
     {
         private ITypedCache<string, MyCacheItem> _perRequestRedisCache;
         private ITypedCache<string, MyCacheItem> _normalRedisCache;
@@ -23,26 +23,31 @@ namespace Abp.Zero.Redis
         private IDatabase _redisDatabase;
         private IRedisCacheSerializer _redisSerializer;
 
-        public static HttpContext CurrentHttpContext;
+        private HttpContext _currentHttpContext;
 
         public AbpPerRequestRedisCache_Test()
         {
+            _currentHttpContext = GetNewContextSubstitute();
+            
             var httpContextAccessor = Substitute.For<IHttpContextAccessor>();
-            httpContextAccessor.HttpContext.Returns(info => CurrentHttpContext);
+            httpContextAccessor.HttpContext.Returns(info => _currentHttpContext);
 
-            LocalIocManager.IocContainer.Register(Component.For<IHttpContextAccessor>().Instance(httpContextAccessor).LifestyleSingleton());
+            LocalIocManager.IocContainer.Register(Component.For<IHttpContextAccessor>().Instance(httpContextAccessor).LifestyleSingleton().IsDefault());
 
             _redisDatabase = Substitute.For<IDatabase>();
             var redisDatabaseProvider = Substitute.For<IAbpRedisCacheDatabaseProvider>();
 
             redisDatabaseProvider.GetDatabase().Returns(_redisDatabase);
 
-            LocalIocManager.IocContainer.Register(Component.For<IAbpRedisCacheDatabaseProvider>().Instance(redisDatabaseProvider).LifestyleSingleton());
-            LocalIocManager.IocContainer.Register(Component.For<IAbpStartupConfiguration>().Instance(Substitute.For<IAbpStartupConfiguration>()));
+            LocalIocManager.IocContainer.Register(Component.For<IAbpRedisCacheDatabaseProvider>().Instance(redisDatabaseProvider).LifestyleSingleton().IsDefault());
+            LocalIocManager.IocContainer.Register(Component.For<IAbpStartupConfiguration>().Instance(Substitute.For<IAbpStartupConfiguration>()).IsDefault());
 
             LocalIocManager.Resolve<ICachingConfiguration>().Configure("MyTestCacheItems", cache => { cache.DefaultSlidingExpireTime = TimeSpan.FromHours(12); });
             LocalIocManager.Resolve<ICachingConfiguration>().Configure("MyPerRequestRedisTestCacheItems", cache => { cache.DefaultSlidingExpireTime = TimeSpan.FromHours(24); });
             
+            //LocalIocManager.Register<AbpRedisCacheManager>();
+            var cacheManager = Resolve<ICacheManager>();
+
             _redisSerializer = LocalIocManager.Resolve<IRedisCacheSerializer>();
 
             _perRequestRedisCache = LocalIocManager.Resolve<IAbpPerRequestRedisCacheManager>().GetCache<string, MyCacheItem>("MyPerRequestRedisTestCacheItems");
@@ -182,7 +187,7 @@ namespace Abp.Zero.Redis
 
             var cachedObject = _redisSerializer.Serialize(new MyCacheItem {Value = cacheValue}, typeof(MyCacheItem));
 
-            CurrentHttpContext = GetNewContextSubstitute();
+            _currentHttpContext = GetNewContextSubstitute();
 
             var item = _perRequestRedisCache.Get(cacheKey, GetCacheValue);
             _redisDatabase.Received(1).StringGet(Arg.Any<RedisKey>());
@@ -190,11 +195,11 @@ namespace Abp.Zero.Redis
 
             _redisDatabase.StringGet(Arg.Any<RedisKey>()).Returns(cachedObject);
 
-            CurrentHttpContext = GetNewContextSubstitute();
+            _currentHttpContext = GetNewContextSubstitute();
             var item1 = _perRequestRedisCache.Get(cacheKey, GetCacheValue);
             _redisDatabase.Received(2).StringGet(Arg.Any<RedisKey>());
 
-            CurrentHttpContext = GetNewContextSubstitute();
+            _currentHttpContext = GetNewContextSubstitute();
             var item2 = _perRequestRedisCache.Get(cacheKey, GetCacheValue);
             _redisDatabase.Received(3).StringGet(Arg.Any<RedisKey>());
 
@@ -213,7 +218,7 @@ namespace Abp.Zero.Redis
         [Fact]
         public void Should_Work_With_Null_Contexts()
         {
-            CurrentHttpContext = null;
+            _currentHttpContext = null;
             _redisDatabase.ClearReceivedCalls();
 
             string cacheKey = "Test";
@@ -238,9 +243,9 @@ namespace Abp.Zero.Redis
             _redisDatabase.StringGet(Arg.Any<RedisKey>()).Returns(cachedObject);
 
             var item1 = _perRequestRedisCache.Get(cacheKey, GetCacheValue);
-            _redisDatabase.Received(3).StringGet(Arg.Any<RedisKey>()); //since CurrentHttpContext is null it should go to the redisdb again
+            _redisDatabase.Received(3).StringGet(Arg.Any<RedisKey>()); //since _currentHttpContext is null it should go to the redisdb again
 
-            var item2 = _perRequestRedisCache.Get(cacheKey, GetCacheValue); //since CurrentHttpContext is null it should go to the redisdb again
+            var item2 = _perRequestRedisCache.Get(cacheKey, GetCacheValue); //since _currentHttpContext is null it should go to the redisdb again
             _redisDatabase.Received(4).StringGet(Arg.Any<RedisKey>());
 
             //should still be one received calls
@@ -330,7 +335,7 @@ namespace Abp.Zero.Redis
 
             var cachedObject = _redisSerializer.Serialize(new MyCacheItem {Value = cacheValue}, typeof(MyCacheItem));
 
-            CurrentHttpContext = GetNewContextSubstitute();
+            _currentHttpContext = GetNewContextSubstitute();
 
             var item = await _perRequestRedisCache.GetAsync(cacheKey, GetCacheValue);
             await _redisDatabase.Received(1).StringGetAsync(Arg.Any<RedisKey>());
@@ -338,11 +343,11 @@ namespace Abp.Zero.Redis
 
             _redisDatabase.StringGetAsync(Arg.Any<RedisKey>()).Returns(Task.FromResult(cachedObject));
 
-            CurrentHttpContext = GetNewContextSubstitute();
+            _currentHttpContext = GetNewContextSubstitute();
             var item1 = await _perRequestRedisCache.GetAsync(cacheKey, GetCacheValue);
             await _redisDatabase.Received(2).StringGetAsync(Arg.Any<RedisKey>());
 
-            CurrentHttpContext = GetNewContextSubstitute();
+            _currentHttpContext = GetNewContextSubstitute();
             var item2 = await _perRequestRedisCache.GetAsync(cacheKey, GetCacheValue);
             await _redisDatabase.Received(3).StringGetAsync(Arg.Any<RedisKey>());
 
@@ -361,7 +366,7 @@ namespace Abp.Zero.Redis
         [Fact]
         public async Task Should_Work_With_Null_Contexts_Async()
         {
-            CurrentHttpContext = null;
+            _currentHttpContext = null;
             _redisDatabase.ClearReceivedCalls();
 
             string cacheKey = "Test";
@@ -386,9 +391,9 @@ namespace Abp.Zero.Redis
             _redisDatabase.StringGetAsync(Arg.Any<RedisKey>()).Returns(Task.FromResult(cachedObject));
 
             var item1 = await _perRequestRedisCache.GetAsync(cacheKey, GetCacheValue);
-            await _redisDatabase.Received(3).StringGetAsync(Arg.Any<RedisKey>()); //since CurrentHttpContext is null it should go to the redisdb again
+            await _redisDatabase.Received(3).StringGetAsync(Arg.Any<RedisKey>()); //since _currentHttpContext is null it should go to the redisdb again
 
-            var item2 = await _perRequestRedisCache.GetAsync(cacheKey, GetCacheValue); //since CurrentHttpContext is null it should go to the redisdb again
+            var item2 = await _perRequestRedisCache.GetAsync(cacheKey, GetCacheValue); //since _currentHttpContext is null it should go to the redisdb again
             await _redisDatabase.Received(4).StringGetAsync(Arg.Any<RedisKey>());
 
             //should still be one received calls

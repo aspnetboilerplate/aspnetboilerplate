@@ -7,11 +7,10 @@ using Abp.Zero.Configuration;
 using Abp.Zero.Notifications;
 using Abp.ZeroCore.SampleApp;
 using Abp.Configuration.Startup;
-using Abp.Runtime.Caching.Redis;
 
 namespace Abp.Zero
 {
-    [DependsOn(typeof(AbpZeroCoreSampleAppModule), typeof(AbpTestBaseModule), typeof(AbpAspNetCorePerRequestRedisCacheModule))]
+    [DependsOn(typeof(AbpZeroCoreSampleAppModule), typeof(AbpTestBaseModule))]
     public class AbpZeroTestModule : AbpModule
     {
         public AbpZeroTestModule(AbpZeroCoreSampleAppModule sampleAppModule)
