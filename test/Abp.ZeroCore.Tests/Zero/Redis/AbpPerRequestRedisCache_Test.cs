@@ -45,9 +45,6 @@ namespace Abp.Zero.Redis
             LocalIocManager.Resolve<ICachingConfiguration>().Configure("MyTestCacheItems", cache => { cache.DefaultSlidingExpireTime = TimeSpan.FromHours(12); });
             LocalIocManager.Resolve<ICachingConfiguration>().Configure("MyPerRequestRedisTestCacheItems", cache => { cache.DefaultSlidingExpireTime = TimeSpan.FromHours(24); });
             
-            //LocalIocManager.Register<AbpRedisCacheManager>();
-            var cacheManager = Resolve<ICacheManager>();
-
             _redisSerializer = LocalIocManager.Resolve<IRedisCacheSerializer>();
 
             _perRequestRedisCache = LocalIocManager.Resolve<IAbpPerRequestRedisCacheManager>().GetCache<string, MyCacheItem>("MyPerRequestRedisTestCacheItems");
