@@ -9,21 +9,21 @@ namespace Abp.DynamicEntityProperties
 {
     public class DynamicEntityPropertyValueStore : IDynamicEntityPropertyValueStore, ITransientDependency
     {
-        private readonly IRepository<DynamicEntityPropertyValue> _dynamicEntityPropertyValueRepository;
+        private readonly IRepository<DynamicEntityPropertyValue, long> _dynamicEntityPropertyValueRepository;
         private readonly IAsyncQueryableExecuter _asyncQueryableExecuter;
 
-        public DynamicEntityPropertyValueStore(IRepository<DynamicEntityPropertyValue> dynamicEntityPropertyValueRepository, IAsyncQueryableExecuter asyncQueryableExecuter)
+        public DynamicEntityPropertyValueStore(IRepository<DynamicEntityPropertyValue, long> dynamicEntityPropertyValueRepository, IAsyncQueryableExecuter asyncQueryableExecuter)
         {
             _dynamicEntityPropertyValueRepository = dynamicEntityPropertyValueRepository;
             _asyncQueryableExecuter = asyncQueryableExecuter;
         }
 
-        public virtual DynamicEntityPropertyValue Get(int id)
+        public virtual DynamicEntityPropertyValue Get(long id)
         {
             return _dynamicEntityPropertyValueRepository.Get(id);
         }
 
-        public virtual Task<DynamicEntityPropertyValue> GetAsync(int id)
+        public virtual Task<DynamicEntityPropertyValue> GetAsync(long id)
         {
             return _dynamicEntityPropertyValueRepository.GetAsync(id);
         }
@@ -48,12 +48,12 @@ namespace Abp.DynamicEntityProperties
             return _dynamicEntityPropertyValueRepository.UpdateAsync(dynamicEntityPropertyValue);
         }
 
-        public virtual void Delete(int id)
+        public virtual void Delete(long id)
         {
             _dynamicEntityPropertyValueRepository.Delete(id);
         }
 
-        public virtual Task DeleteAsync(int id)
+        public virtual Task DeleteAsync(long id)
         {
             return _dynamicEntityPropertyValueRepository.DeleteAsync(id);
         }

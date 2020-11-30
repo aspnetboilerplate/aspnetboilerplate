@@ -61,14 +61,14 @@ namespace Abp.DynamicEntityProperties
             return (await _dynamicPropertyManager.GetAsync(dynamicEntityProperty.DynamicPropertyId)).Id;
         }
 
-        public virtual DynamicEntityPropertyValue Get(int id)
+        public virtual DynamicEntityPropertyValue Get(long id)
         {
             var value = DynamicEntityPropertyValueStore.Get(id);
             _dynamicPropertyPermissionChecker.CheckPermission(GetDynamicPropertyId(value));
             return value;
         }
 
-        public virtual async Task<DynamicEntityPropertyValue> GetAsync(int id)
+        public virtual async Task<DynamicEntityPropertyValue> GetAsync(long id)
         {
             var value = await DynamicEntityPropertyValueStore.GetAsync(id);
             await _dynamicPropertyPermissionChecker.CheckPermissionAsync(await GetDynamicPropertyIdAsync(value));
@@ -99,7 +99,7 @@ namespace Abp.DynamicEntityProperties
             await DynamicEntityPropertyValueStore.UpdateAsync(dynamicEntityPropertyValue);
         }
 
-        public virtual void Delete(int id)
+        public virtual void Delete(long id)
         {
             var dynamicEntityPropertyValue = Get(id); //Get checks permission, no need to check it again
             if (dynamicEntityPropertyValue == null)
@@ -110,7 +110,7 @@ namespace Abp.DynamicEntityProperties
             DynamicEntityPropertyValueStore.Delete(id);
         }
 
-        public virtual async Task DeleteAsync(int id)
+        public virtual async Task DeleteAsync(long id)
         {
             var dynamicEntityPropertyValue = await GetAsync(id); //Get checks permission, no need to check it again
             if (dynamicEntityPropertyValue == null)
