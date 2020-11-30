@@ -91,5 +91,17 @@ namespace Abp.Webhooks
         /// <param name="id">unique identifier of <see cref="WebhookSubscriptionInfo"/></param>
         /// <param name="active">IsActive</param>
         void ActivateWebhookSubscription(Guid id, bool active);
+
+        /// <summary>
+        /// Delete given webhook subscription.
+        /// </summary>
+        /// <param name="id">unique identifier of <see cref="WebhookSubscriptionInfo"/></param>
+        Task DeleteSubscriptionAsync(Guid id);
+
+        /// <summary>
+        /// Delete given webhook subscription.
+        /// </summary>
+        /// <param name="id">unique identifier of <see cref="WebhookSubscriptionInfo"/></param>
+        void DeleteSubscription(Guid id);
     }
 }

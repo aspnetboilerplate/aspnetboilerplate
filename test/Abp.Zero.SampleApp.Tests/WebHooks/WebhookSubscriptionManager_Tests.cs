@@ -532,6 +532,45 @@ namespace Abp.Zero.SampleApp.Tests.Webhooks
             });
         }
 
+        [Fact]
+        public void Should_Delete_Subscription_Sync()
+        {
+            var tenantId = AsyncHelper.RunSync(()=> CreateAndGetTenantIdWithFeaturesAsync(AppFeatures.WebhookFeature, "true"));
+
+            AbpSession.TenantId = tenantId;
+            
+            var webhookSubscriptionManager = Resolve<IWebhookSubscriptionManager>();
+
+            var userCreatedWebhookSubscription = NewWebhookSubscription("1", tenantId, AppWebhookDefinitionNames.Users.Created);
+             webhookSubscriptionManager.AddOrUpdateSubscription(userCreatedWebhookSubscription);
+            
+            var allSubscriptions = webhookSubscriptionManager.GetAllSubscriptions(tenantId);
+
+            allSubscriptions.Count.ShouldBe(1);
+
+            webhookSubscriptionManager.DeleteSubscription(userCreatedWebhookSubscription.Id);
+            webhookSubscriptionManager.GetAllSubscriptions(tenantId).Count.ShouldBe(0);
+        }
+
+        [Fact]
+        public async Task Should_Delete_Subscription_Async()
+        {
+            var tenantId = await CreateAndGetTenantIdWithFeaturesAsync(AppFeatures.WebhookFeature, "true");
+
+            AbpSession.TenantId = tenantId;
+            
+            var webhookSubscriptionManager = Resolve<IWebhookSubscriptionManager>();
+
+            var userCreatedWebhookSubscription = NewWebhookSubscription("1", tenantId, AppWebhookDefinitionNames.Users.Created);
+            await webhookSubscriptionManager.AddOrUpdateSubscriptionAsync(userCreatedWebhookSubscription);
+            
+            var allSubscriptions = await webhookSubscriptionManager.GetAllSubscriptionsAsync(tenantId);
+
+            allSubscriptions.Count.ShouldBe(1);
+
+            await webhookSubscriptionManager.DeleteSubscriptionAsync(userCreatedWebhookSubscription.Id);
+            (await webhookSubscriptionManager.GetAllSubscriptionsAsync(tenantId)).Count.ShouldBe(0);
+        }
 
         #endregion
 
