@@ -533,7 +533,7 @@ namespace Abp.Zero.SampleApp.Tests.Webhooks
         }
 
         [Fact]
-        public void Should_Delete_Subscription_Async()
+        public void Should_Delete_Subscription_Sync()
         {
             var tenantId = AsyncHelper.RunSync(()=> CreateAndGetTenantIdWithFeaturesAsync(AppFeatures.WebhookFeature, "true"));
 
@@ -553,7 +553,7 @@ namespace Abp.Zero.SampleApp.Tests.Webhooks
         }
 
         [Fact]
-        public async Task Should_Delete_Subscription_Sync()
+        public async Task Should_Delete_Subscription_Async()
         {
             var tenantId = await CreateAndGetTenantIdWithFeaturesAsync(AppFeatures.WebhookFeature, "true");
 
