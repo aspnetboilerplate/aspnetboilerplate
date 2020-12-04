@@ -109,7 +109,7 @@ namespace Abp.Notifications
                         notificationInfo.NotificationName,
                         notificationInfo.EntityTypeName,
                         notificationInfo.EntityId
-                        );
+                        ).ConfigureAwait(false);
                 }
                 else
                 {
@@ -119,7 +119,7 @@ namespace Abp.Notifications
                         notificationInfo.NotificationName,
                         notificationInfo.EntityTypeName,
                         notificationInfo.EntityId
-                        );
+                        ).ConfigureAwait(false);
                 }
 
                 //Remove invalid subscriptions
@@ -130,7 +130,7 @@ namespace Abp.Notifications
                 {
                     using (CurrentUnitOfWork.SetTenantId(subscription.TenantId))
                     {
-                        if (!await _notificationDefinitionManager.IsAvailableAsync(notificationInfo.NotificationName, new UserIdentifier(subscription.TenantId, subscription.UserId)) ||
+                        if (!await _notificationDefinitionManager.IsAvailableAsync(notificationInfo.NotificationName, new UserIdentifier(subscription.TenantId, subscription.UserId)).ConfigureAwait(false) ||
                             !SettingManager.GetSettingValueForUser<bool>(NotificationSettingNames.ReceiveNotifications, subscription.TenantId, subscription.UserId))
                         {
                             invalidSubscriptions[subscription.Id] = subscription;

@@ -1,3 +1,4 @@
+using System.Threading.Tasks;
 using Abp.Domain.Uow;
 using Abp.MultiTenancy;
 using Microsoft.EntityFrameworkCore;
@@ -21,6 +22,16 @@ namespace Abp.EntityFrameworkCore.Uow
         public UnitOfWorkDbContextProvider(ICurrentUnitOfWorkProvider currentUnitOfWorkProvider)
         {
             _currentUnitOfWorkProvider = currentUnitOfWorkProvider;
+        }
+
+        public Task<TDbContext> GetDbContextAsync()
+        {
+            return GetDbContextAsync(null);
+        }
+
+        public Task<TDbContext> GetDbContextAsync(MultiTenancySides? multiTenancySide)
+        {
+            return _currentUnitOfWorkProvider.Current.GetDbContextAsync<TDbContext>(multiTenancySide);
         }
 
         public TDbContext GetDbContext()

@@ -1,6 +1,6 @@
 ﻿using System.Data;
 using System.Data.Common;
-
+using System.Threading.Tasks;
 using Abp.Data;
 using Abp.Domain.Entities;
 using Abp.Domain.Uow;
@@ -35,9 +35,33 @@ namespace Abp.Dapper.Repositories
             }
         }
 
-        public override DbConnection Connection => (DbConnection)_activeTransactionProvider.GetActiveConnection(ActiveTransactionProviderArgs);
+        public override DbConnection GetConnection()
+        {
+            return (DbConnection) _activeTransactionProvider.GetActiveConnection(ActiveTransactionProviderArgs);
+        }
 
-        public override DbTransaction ActiveTransaction => (DbTransaction)_activeTransactionProvider.GetActiveTransaction(ActiveTransactionProviderArgs);
+        public override async Task<DbConnection> GetConnectionAsync()
+        {
+            var connection = await _activeTransactionProvider
+                .GetActiveConnectionAsync(ActiveTransactionProviderArgs)
+                .ConfigureAwait(false);
+
+            return (DbConnection) connection;
+        }
+
+        public override DbTransaction GetActiveTransaction()
+        {
+            return (DbTransaction) _activeTransactionProvider.GetActiveTransaction(ActiveTransactionProviderArgs);
+        }
+
+        public override async Task<DbTransaction> GetActiveTransactionAsync()
+        {
+            var transaction = await _activeTransactionProvider
+                .GetActiveTransactionAsync(ActiveTransactionProviderArgs)
+                .ConfigureAwait(false);
+
+            return (DbTransaction) transaction;
+        }
 
         public override int? Timeout => _currentUnitOfWorkProvider.Current?.Options.Timeout?.TotalSeconds.To<int>();
     }
