@@ -37,8 +37,7 @@ namespace Abp.EntityFrameworkCore.Uow
                 dbContext = dbContextResolver.Resolve<TDbContext>(connectionString, null);
 
                 var dbTransaction = await dbContext.Database.BeginTransactionAsync(
-                        (Options.IsolationLevel ?? IsolationLevel.ReadUncommitted).ToSystemDataIsolationLevel())
-                    .ConfigureAwait(false);
+                        (Options.IsolationLevel ?? IsolationLevel.ReadUncommitted).ToSystemDataIsolationLevel());
                 
                 activeTransaction = new ActiveTransactionInfo(dbTransaction, dbContext);
                 ActiveTransactions[connectionString] = activeTransaction;
@@ -52,12 +51,11 @@ namespace Abp.EntityFrameworkCore.Uow
 
                 if (dbContext.HasRelationalTransactionManager())
                 {
-                    await dbContext.Database.UseTransactionAsync(activeTransaction.DbContextTransaction.GetDbTransaction())
-                        .ConfigureAwait(false);
+                    await dbContext.Database.UseTransactionAsync(activeTransaction.DbContextTransaction.GetDbTransaction());
                 }
                 else
                 {
-                    await dbContext.Database.BeginTransactionAsync().ConfigureAwait(false);
+                    await dbContext.Database.BeginTransactionAsync();
                 }
 
                 activeTransaction.AttendedDbContexts.Add(dbContext);
@@ -125,8 +123,7 @@ namespace Abp.EntityFrameworkCore.Uow
 
                 if (dbContext.HasRelationalTransactionManager())
                 {
-                    dbContext.Database.UseTransaction(activeTransaction.DbContextTransaction.GetDbTransaction())
-                        .ConfigureAwait(false);
+                    dbContext.Database.UseTransaction(activeTransaction.DbContextTransaction.GetDbTransaction());
                 }
                 else
                 {

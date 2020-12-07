@@ -1,6 +1,7 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <Import Project="..\..\common.props" />
+  <Import Project="..\..\configureawait.props" />
   
   <PropertyGroup>
     <TargetFramework>net461</TargetFramework>

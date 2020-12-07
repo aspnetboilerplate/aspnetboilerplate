@@ -44,7 +44,7 @@ namespace Abp.EntityHistory
             {
                 proceedInfo.Invoke();
                 var task = (Task)invocation.ReturnValue;
-                await task.ConfigureAwait(false);
+                await task;
                 return;
             }
 
@@ -52,7 +52,7 @@ namespace Abp.EntityHistory
             {
                 proceedInfo.Invoke();
                 var task = (Task)invocation.ReturnValue;
-                await task.ConfigureAwait(false);
+                await task;
             }
         }
 
@@ -68,14 +68,14 @@ namespace Abp.EntityHistory
             {
                 proceedInfo.Invoke();
                 var taskResult = (Task<TResult>)invocation.ReturnValue;
-                return await taskResult.ConfigureAwait(false);
+                return await taskResult;
             }
 
             using (ReasonProvider.Use(useCaseAttribute.Description))
             {
                 proceedInfo.Invoke();
                 var taskResult = (Task<TResult>)invocation.ReturnValue;
-                return await taskResult.ConfigureAwait(false);
+                return await taskResult;
             }
         }
     }

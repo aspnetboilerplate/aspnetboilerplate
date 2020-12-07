@@ -71,7 +71,7 @@ namespace Abp.EntityFramework.Uow
         {
             foreach (var dbContext in GetAllActiveDbContexts())
             {
-                await SaveChangesInDbContextAsync(dbContext).ConfigureAwait(false);
+                await SaveChangesInDbContextAsync(dbContext);
             }
         }
 
@@ -92,7 +92,7 @@ namespace Abp.EntityFramework.Uow
 
         protected override async Task CompleteUowAsync()
         {
-            await SaveChangesAsync().ConfigureAwait(false);
+            await SaveChangesAsync();
 
             if (Options.IsTransactional == true)
             {
@@ -106,9 +106,12 @@ namespace Abp.EntityFramework.Uow
         {
             var concreteDbContextType = _dbContextTypeMatcher.GetConcreteType(typeof(TDbContext));
 
-            var connectionStringResolveArgs = new ConnectionStringResolveArgs(multiTenancySide);
-            connectionStringResolveArgs["DbContextType"] = typeof(TDbContext);
-            connectionStringResolveArgs["DbContextConcreteType"] = concreteDbContextType;
+            var connectionStringResolveArgs = new ConnectionStringResolveArgs(multiTenancySide)
+            {
+                ["DbContextType"] = typeof(TDbContext),
+                ["DbContextConcreteType"] = concreteDbContextType
+            };
+            
             var connectionString = ResolveConnectionString(connectionStringResolveArgs);
 
             var dbContextKey = concreteDbContextType.FullName + "#" + connectionString;
@@ -117,27 +120,28 @@ namespace Abp.EntityFramework.Uow
                 dbContextKey += "#" + name;
             }
 
-            DbContext dbContext;
-            if (!ActiveDbContexts.TryGetValue(dbContextKey, out dbContext))
+            if (ActiveDbContexts.TryGetValue(dbContextKey, out var dbContext))
             {
-                if (Options.IsTransactional == true)
-                {
-                    dbContext = _transactionStrategy.CreateDbContext<TDbContext>(connectionString, _dbContextResolver);
-                }
-                else
-                {
-                    dbContext = _dbContextResolver.Resolve<TDbContext>(connectionString);
-                }
-
-                if (dbContext is IShouldInitializeDcontext abpDbContext)
-                {
-                    abpDbContext.Initialize(new AbpEfDbContextInitializationContext(this));
-                }
-
-                FilterExecuter.As<IEfUnitOfWorkFilterExecuter>().ApplyCurrentFilters(this, dbContext);
-
-                ActiveDbContexts[dbContextKey] = dbContext;
+                return (TDbContext) dbContext;
             }
+            
+            if (Options.IsTransactional == true)
+            {
+                dbContext = _transactionStrategy.CreateDbContext<TDbContext>(connectionString, _dbContextResolver);
+            }
+            else
+            {
+                dbContext = _dbContextResolver.Resolve<TDbContext>(connectionString);
+            }
+
+            if (dbContext is IShouldInitializeDcontext abpDbContext)
+            {
+                abpDbContext.Initialize(new AbpEfDbContextInitializationContext(this));
+            }
+
+            FilterExecuter.As<IEfUnitOfWorkFilterExecuter>().ApplyCurrentFilters(this, dbContext);
+
+            ActiveDbContexts[dbContextKey] = dbContext;
 
             return (TDbContext) dbContext;
         }
@@ -170,8 +174,7 @@ namespace Abp.EntityFramework.Uow
             if (Options.IsTransactional == true)
             {
                 dbContext = await _transactionStrategy
-                    .CreateDbContextAsync<TDbContext>(connectionString, _dbContextResolver)
-                    .ConfigureAwait(false);
+                    .CreateDbContextAsync<TDbContext>(connectionString, _dbContextResolver);
             }
             else
             {

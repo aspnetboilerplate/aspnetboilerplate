@@ -1,10 +1,10 @@
 ﻿using System;
 using System.Data;
-using System.Reflection;
 using System.Threading.Tasks;
 using Abp.Data;
 using Abp.Dependency;
 using Abp.MultiTenancy;
+using Abp.Reflection;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Storage;
 
@@ -21,7 +21,7 @@ namespace Abp.EntityFrameworkCore
 
         public async Task<IDbTransaction> GetActiveTransactionAsync(ActiveTransactionProviderArgs args)
         {
-            var context = await GetDbContextAsync(args).ConfigureAwait(false);
+            var context = await GetDbContextAsync(args);
             return context.Database.CurrentTransaction?.GetDbTransaction();
         }
 
@@ -33,7 +33,7 @@ namespace Abp.EntityFrameworkCore
 
         public async Task<IDbConnection> GetActiveConnectionAsync(ActiveTransactionProviderArgs args)
         {
-            var context = await GetDbContextAsync(args).ConfigureAwait(false);
+            var context = await GetDbContextAsync(args);
             return context.Database.GetDbConnection();
         }
 
@@ -43,7 +43,7 @@ namespace Abp.EntityFrameworkCore
             return context.Database.GetDbConnection();
         }
 
-        private Task<DbContext> GetDbContextAsync(ActiveTransactionProviderArgs args)
+        private async Task<DbContext> GetDbContextAsync(ActiveTransactionProviderArgs args)
         {
             var dbContextProviderType = typeof(IDbContextProvider<>).MakeGenericType((Type) args["ContextType"]);
 
@@ -55,11 +55,11 @@ namespace Abp.EntityFrameworkCore
                         nameof(IDbContextProvider<AbpDbContext>.GetDbContextAsync),
                         new[] {typeof(MultiTenancySides)}
                     );
-                // TODO@ASYNC: Is this dangerous !
-                return (Task<DbContext>) method.Invoke(
-                    dbContextProviderWrapper.Object,
-                    new object[] {(MultiTenancySides?) args["MultiTenancySide"]}
-                );
+                
+                var result = await ReflectionHelper.InvokeAsync(method, dbContextProviderWrapper.Object,
+                    new object[] {(MultiTenancySides?) args["MultiTenancySide"]});
+                
+                return result as DbContext;
             }
         }
 

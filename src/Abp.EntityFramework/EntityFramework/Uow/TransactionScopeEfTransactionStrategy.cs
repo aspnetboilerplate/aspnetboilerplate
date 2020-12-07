@@ -92,7 +92,7 @@ namespace Abp.EntityFramework.Uow
         {
             var dbContext = dbContextResolver.Resolve<TDbContext>(connectionString);
             DbContexts.Add(dbContext);
-            return await Task.FromResult(dbContext).ConfigureAwait(false);
+            return await Task.FromResult(dbContext);
         }
     }
 }

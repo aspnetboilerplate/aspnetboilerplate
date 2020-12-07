@@ -43,8 +43,7 @@ namespace Abp.Dapper.Repositories
         public override async Task<DbConnection> GetConnectionAsync()
         {
             var connection = await _activeTransactionProvider
-                .GetActiveConnectionAsync(ActiveTransactionProviderArgs)
-                .ConfigureAwait(false);
+                .GetActiveConnectionAsync(ActiveTransactionProviderArgs);
 
             return (DbConnection) connection;
         }
@@ -57,8 +56,7 @@ namespace Abp.Dapper.Repositories
         public override async Task<DbTransaction> GetActiveTransactionAsync()
         {
             var transaction = await _activeTransactionProvider
-                .GetActiveTransactionAsync(ActiveTransactionProviderArgs)
-                .ConfigureAwait(false);
+                .GetActiveTransactionAsync(ActiveTransactionProviderArgs);
 
             return (DbTransaction) transaction;
         }

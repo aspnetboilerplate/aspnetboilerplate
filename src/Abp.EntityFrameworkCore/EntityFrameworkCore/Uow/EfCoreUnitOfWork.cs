@@ -67,7 +67,7 @@ namespace Abp.EntityFrameworkCore.Uow
         {
             foreach (var dbContext in GetAllActiveDbContexts())
             {
-                await SaveChangesInDbContextAsync(dbContext).ConfigureAwait(false);
+                await SaveChangesInDbContextAsync(dbContext);
             }
         }
 
@@ -79,7 +79,7 @@ namespace Abp.EntityFrameworkCore.Uow
 
         protected override async Task CompleteUowAsync()
         {
-            await SaveChangesAsync().ConfigureAwait(false);
+            await SaveChangesAsync();
             CommitTransaction();
         }
 
@@ -124,8 +124,7 @@ namespace Abp.EntityFrameworkCore.Uow
             if (Options.IsTransactional == true)
             {
                 dbContext = await _transactionStrategy
-                    .CreateDbContextAsync<TDbContext>(connectionString, _dbContextResolver)
-                    .ConfigureAwait(false);
+                    .CreateDbContextAsync<TDbContext>(connectionString, _dbContextResolver);
             }
             else
             {

@@ -19,7 +19,7 @@ namespace Abp.EntityFramework
 
         public async Task<IDbTransaction> GetActiveTransactionAsync(ActiveTransactionProviderArgs args)
         {
-            var context = await GetDbContextAsync(args).ConfigureAwait(false);
+            var context = await GetDbContextAsync(args);
             return context.Database.CurrentTransaction.UnderlyingTransaction;
         }
 
@@ -30,7 +30,7 @@ namespace Abp.EntityFramework
 
         public async Task<IDbConnection> GetActiveConnectionAsync(ActiveTransactionProviderArgs args)
         {
-            var context = await GetDbContextAsync(args).ConfigureAwait(false);
+            var context = await GetDbContextAsync(args);
             return context.Database.Connection;
         }
 
@@ -69,8 +69,6 @@ namespace Abp.EntityFramework
                         nameof(IDbContextProvider<AbpDbContext>.GetDbContextAsync),
                         new[] {typeof(MultiTenancySides)}
                     );
-
-                // TODO@ASYNC: Is this OK ?
                 
                 return (Task<DbContext>) method.Invoke(
                     dbContextProviderWrapper.Object,

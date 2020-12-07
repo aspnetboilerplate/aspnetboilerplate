@@ -33,7 +33,7 @@ namespace Abp.NHibernate
 
         public async Task<IDbConnection> GetActiveConnectionAsync(ActiveTransactionProviderArgs args)
         {
-            return await Task.FromResult(_sessionProvider.Session.Connection).ConfigureAwait(false);
+            return await Task.FromResult(_sessionProvider.Session.Connection);
         }
 
         public IDbConnection GetActiveConnection(ActiveTransactionProviderArgs args)

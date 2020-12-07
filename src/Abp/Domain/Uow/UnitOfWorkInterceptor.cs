@@ -47,7 +47,7 @@ namespace Abp.Domain.Uow
             {
                 proceedInfo.Invoke();
                 var task = (Task)invocation.ReturnValue;
-                await task.ConfigureAwait(false);
+                await task;
                 return;
             }
 
@@ -55,8 +55,8 @@ namespace Abp.Domain.Uow
             {
                 proceedInfo.Invoke();
                 var task = (Task)invocation.ReturnValue;
-                await task.ConfigureAwait(false);
-                await uow.CompleteAsync().ConfigureAwait(false);
+                await task;
+                await uow.CompleteAsync();
             }
         }
 
@@ -71,7 +71,7 @@ namespace Abp.Domain.Uow
             {
                 proceedInfo.Invoke();
                 var taskResult = (Task<TResult>)invocation.ReturnValue;
-                return await taskResult.ConfigureAwait(false);
+                return await taskResult;
             }
 
             using (var uow = _unitOfWorkManager.Begin(unitOfWorkAttr.CreateOptions()))
@@ -79,9 +79,9 @@ namespace Abp.Domain.Uow
                 proceedInfo.Invoke();
                 
                 var taskResult = (Task<TResult>)invocation.ReturnValue;
-                var result = await taskResult.ConfigureAwait(false);
+                var result = await taskResult;
 
-                await uow.CompleteAsync().ConfigureAwait(false);
+                await uow.CompleteAsync();
 
                 return result;
             }
