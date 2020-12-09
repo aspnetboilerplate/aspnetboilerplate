@@ -9,8 +9,7 @@ project.
 
 #### Startup Project
 
-
-**This document applies to the 3.x version of Identity Server 4.  If you are using the 4.x+ version of Identity Server 4, please refer to [Identity Server 4 vNext](../Identity-Server-vNext.md)***
+**This document applies to the 3.x version of Identity Server 4.  If you are using the 4.x+ version of Identity Server 4, please refer to [Identity Server 4 vNext](../Zero/Identity-Server-vNext.md)***
 
 This document assumes that you have already created an ASP.NET Core based
 project (including Module Zero) from the [startup templates](/Templates) and
