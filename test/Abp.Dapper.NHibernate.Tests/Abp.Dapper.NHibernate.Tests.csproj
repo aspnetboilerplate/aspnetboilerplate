@@ -18,8 +18,4 @@
     <ProjectReference Include="..\..\src\Abp\Abp.csproj" />
   </ItemGroup>
 
-  <ItemGroup>
-    <PackageReference Update="Microsoft.NETFramework.ReferenceAssemblies" Version="1.0.0" />
-  </ItemGroup>
-
 </Project>
