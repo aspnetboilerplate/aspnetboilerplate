@@ -1,4 +1,5 @@
-﻿using Abp.Domain.Uow;
+﻿using System.Threading.Tasks;
+using Abp.Domain.Uow;
 
 namespace Abp.MultiTenancy
 {
@@ -12,5 +13,10 @@ namespace Abp.MultiTenancy
         /// Gets the connection string for given args.
         /// </summary>
         string GetNameOrConnectionString(DbPerTenantConnectionStringResolveArgs args);
+
+        /// <summary>
+        /// Gets the connection string for given args.
+        /// </summary>
+        Task<string> GetNameOrConnectionStringAsync(DbPerTenantConnectionStringResolveArgs args);
     }
 }

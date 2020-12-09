@@ -111,7 +111,7 @@ namespace Abp.EntityFramework.Uow
                 ["DbContextType"] = typeof(TDbContext),
                 ["DbContextConcreteType"] = concreteDbContextType
             };
-            
+
             var connectionString = ResolveConnectionString(connectionStringResolveArgs);
 
             var dbContextKey = concreteDbContextType.FullName + "#" + connectionString;
@@ -124,7 +124,7 @@ namespace Abp.EntityFramework.Uow
             {
                 return (TDbContext) dbContext;
             }
-            
+
             if (Options.IsTransactional == true)
             {
                 dbContext = _transactionStrategy.CreateDbContext<TDbContext>(connectionString, _dbContextResolver);
@@ -158,7 +158,7 @@ namespace Abp.EntityFramework.Uow
                 ["DbContextConcreteType"] = concreteDbContextType
             };
 
-            var connectionString = ResolveConnectionString(connectionStringResolveArgs);
+            var connectionString = await ResolveConnectionStringAsync(connectionStringResolveArgs);
 
             var dbContextKey = concreteDbContextType.FullName + "#" + connectionString;
             if (name != null)

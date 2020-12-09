@@ -16,7 +16,7 @@ namespace Abp.EntityFrameworkCore.Uow
     public class EfCoreUnitOfWork : UnitOfWorkBase, ITransientDependency
     {
         protected IDictionary<string, DbContext> ActiveDbContexts { get; }
-        
+
         protected IIocResolver IocResolver { get; }
 
         private readonly IDbContextResolver _dbContextResolver;
@@ -108,7 +108,7 @@ namespace Abp.EntityFrameworkCore.Uow
                 ["DbContextConcreteType"] = concreteDbContextType
             };
 
-            var connectionString = ResolveConnectionString(connectionStringResolveArgs);
+            var connectionString = await ResolveConnectionStringAsync(connectionStringResolveArgs);
 
             var dbContextKey = concreteDbContextType.FullName + "#" + connectionString;
             if (name != null)
@@ -120,7 +120,7 @@ namespace Abp.EntityFrameworkCore.Uow
             {
                 return (TDbContext) dbContext;
             }
-            
+
             if (Options.IsTransactional == true)
             {
                 dbContext = await _transactionStrategy
@@ -135,12 +135,12 @@ namespace Abp.EntityFrameworkCore.Uow
             {
                 abpDbContext.Initialize(new AbpEfDbContextInitializationContext(this));
             }
-                
+
             ActiveDbContexts[dbContextKey] = dbContext;
 
             return (TDbContext) dbContext;
         }
-        
+
         public virtual TDbContext GetOrCreateDbContext<TDbContext>(
             MultiTenancySides? multiTenancySide = null, string name = null)
             where TDbContext : DbContext
@@ -165,7 +165,7 @@ namespace Abp.EntityFrameworkCore.Uow
             {
                 return (TDbContext) dbContext;
             }
-            
+
             if (Options.IsTransactional == true)
             {
                 dbContext = _transactionStrategy
@@ -180,7 +180,7 @@ namespace Abp.EntityFrameworkCore.Uow
             {
                 abpDbContext.Initialize(new AbpEfDbContextInitializationContext(this));
             }
-                
+
             ActiveDbContexts[dbContextKey] = dbContext;
 
             return (TDbContext) dbContext;
