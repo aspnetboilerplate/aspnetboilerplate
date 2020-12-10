@@ -9,10 +9,10 @@ namespace Abp.EntityFrameworkCore
     {
         Task<TDbContext> GetDbContextAsync();
 
-        Task<TDbContext> GetDbContextAsync(MultiTenancySides? multiTenancySide );
-        
+        Task<TDbContext> GetDbContextAsync(MultiTenancySides? multiTenancySide);
+
         TDbContext GetDbContext();
-        
-        TDbContext GetDbContext(MultiTenancySides? multiTenancySide );
+
+        TDbContext GetDbContext(MultiTenancySides? multiTenancySide);
     }
 }
