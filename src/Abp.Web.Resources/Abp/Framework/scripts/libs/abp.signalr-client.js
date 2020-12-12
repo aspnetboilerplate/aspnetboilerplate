@@ -31,6 +31,7 @@ var abp = abp || {};
                         reconnectTime = abp.signalr.reconnectTime;
                         tries = 1;
                         console.log('Reconnected to SignalR server!');
+                        abp.event.trigger('abp.signalr.reconnected');
                     }).catch(function () {
                     tries += 1;
                     reconnectTime = abp.signalr.increaseReconnectTime(reconnectTime);
@@ -54,7 +55,8 @@ var abp = abp || {};
             if (!abp.signalr.autoReconnect) {
                 return;
             }
-
+            
+            abp.event.trigger('abp.signalr.disconnected');
             tryReconnect();
         });
 
