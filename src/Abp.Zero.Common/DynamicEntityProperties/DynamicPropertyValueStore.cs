@@ -12,7 +12,9 @@ namespace Abp.DynamicEntityProperties
         private readonly IRepository<DynamicPropertyValue, long> _dynamicPropertyValuesRepository;
         private readonly IAsyncQueryableExecuter _asyncQueryableExecuter;
 
-        public DynamicPropertyValueStore(IRepository<DynamicPropertyValue, long> dynamicPropertyValuesRepository, IAsyncQueryableExecuter asyncQueryableExecuter)
+        public DynamicPropertyValueStore(
+            IRepository<DynamicPropertyValue, long> dynamicPropertyValuesRepository,
+            IAsyncQueryableExecuter asyncQueryableExecuter)
         {
             _dynamicPropertyValuesRepository = dynamicPropertyValuesRepository;
             _asyncQueryableExecuter = asyncQueryableExecuter;
