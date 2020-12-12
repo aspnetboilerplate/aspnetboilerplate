@@ -5,7 +5,7 @@ using Abp.Domain.Entities;
 namespace Abp.DynamicEntityProperties
 {
     [Table("AbpDynamicEntityPropertyValues")]
-    public class DynamicEntityPropertyValue : Entity, IMayHaveTenant
+    public class DynamicEntityPropertyValue : Entity<long>, IMayHaveTenant
     {
         [Required(AllowEmptyStrings = false)]
         public string Value { get; set; }

@@ -5,9 +5,9 @@ namespace Abp.DynamicEntityProperties
 {
     public interface IDynamicEntityPropertyValueManager
     {
-        DynamicEntityPropertyValue Get(int id);
+        DynamicEntityPropertyValue Get(long id);
 
-        Task<DynamicEntityPropertyValue> GetAsync(int id);
+        Task<DynamicEntityPropertyValue> GetAsync(long id);
 
         void Add(DynamicEntityPropertyValue dynamicEntityPropertyValue);
 
@@ -17,9 +17,9 @@ namespace Abp.DynamicEntityProperties
 
         Task UpdateAsync(DynamicEntityPropertyValue dynamicEntityPropertyValue);
 
-        void Delete(int id);
+        void Delete(long id);
 
-        Task DeleteAsync(int id);
+        Task DeleteAsync(long id);
 
         List<DynamicEntityPropertyValue> GetValues(int dynamicEntityPropertyId, string entityId);
 

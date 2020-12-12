@@ -7,12 +7,12 @@ namespace Abp.DynamicEntityProperties
     {
         public static NullDynamicEntityPropertyValueStore Instance = new NullDynamicEntityPropertyValueStore();
 
-        public DynamicEntityPropertyValue Get(int id)
+        public DynamicEntityPropertyValue Get(long id)
         {
             return default;
         }
 
-        public Task<DynamicEntityPropertyValue> GetAsync(int id)
+        public Task<DynamicEntityPropertyValue> GetAsync(long id)
         {
             return Task.FromResult<DynamicEntityPropertyValue>(default);
         }
@@ -35,11 +35,11 @@ namespace Abp.DynamicEntityProperties
             return Task.CompletedTask;
         }
 
-        public void Delete(int id)
+        public void Delete(long id)
         {
         }
 
-        public Task DeleteAsync(int id)
+        public Task DeleteAsync(long id)
         {
             return Task.CompletedTask;
         }
