@@ -23,7 +23,7 @@ your **Startup.cs**
         
           services.AddSwaggerGen(options =>
                 {
-                    options.SwaggerDoc("v1", new Info { Title = "AbpZeroTemplate API", Version = "v1" });
+                    options.SwaggerDoc("v1", new OpenApiInfo { Title = "AbpZeroTemplate API", Version = "v1" });
                     options.DocInclusionPredicate((docName, description) => true);
                 });
         
