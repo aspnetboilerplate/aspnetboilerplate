@@ -1,5 +1,6 @@
 using System;
 using System.Data.Entity;
+using System.Threading.Tasks;
 using Abp.Domain.Uow;
 using Abp.MultiTenancy;
 
@@ -35,6 +36,22 @@ namespace Abp.EntityFramework.Uow
             }
 
             return (unitOfWork as EfUnitOfWork).GetOrCreateDbContext<TDbContext>(multiTenancySide, name);
+        }
+        
+        public static Task<TDbContext> GetDbContextAsync<TDbContext>(this IActiveUnitOfWork unitOfWork, MultiTenancySides? multiTenancySide = null, string name = null)
+            where TDbContext : DbContext
+        {
+            if (unitOfWork == null)
+            {
+                throw new ArgumentNullException(nameof(unitOfWork));
+            }
+
+            if (!(unitOfWork is EfUnitOfWork))
+            {
+                throw new ArgumentException("unitOfWork is not type of " + typeof(EfUnitOfWork).FullName, nameof(unitOfWork));
+            }
+
+            return (unitOfWork as EfUnitOfWork).GetOrCreateDbContextAsync<TDbContext>(multiTenancySide, name);
         }
     }
 }

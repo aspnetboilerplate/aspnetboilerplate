@@ -1,3 +1,5 @@
+using System.Threading.Tasks;
+
 namespace Abp.MultiTenancy
 {
     public interface ITenantCache
@@ -9,5 +11,13 @@ namespace Abp.MultiTenancy
         TenantCacheItem GetOrNull(string tenancyName);
 
         TenantCacheItem GetOrNull(int tenantId);
+
+        Task<TenantCacheItem> GetAsync(int tenantId);
+
+        Task<TenantCacheItem> GetAsync(string tenancyName);
+
+        Task<TenantCacheItem> GetOrNullAsync(string tenancyName);
+
+        Task<TenantCacheItem> GetOrNullAsync(int tenantId);
     }
 }

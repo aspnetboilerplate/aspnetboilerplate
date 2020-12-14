@@ -215,12 +215,12 @@ namespace Abp.EntityFrameworkCore.Dapper.Tests.Tests
         [Fact]
         public async Task execute_method_for_void_sqls_should_work()
         {
-            int blogId = _blogDapperRepository.InsertAndGetId(new Blog("Oguzhan_Blog", "wwww.aspnetboilerplate.com"));
+            int blogId = await _blogDapperRepository.InsertAndGetIdAsync(new Blog("Oguzhan_Blog", "wwww.aspnetboilerplate.com"));
 
             await _blogDapperRepository.ExecuteAsync("Update Blogs Set Name = @name where Id =@id", new { id = blogId, name = "Oguzhan_New_Blog" });
 
-            _blogDapperRepository.Get(blogId).Name.ShouldBe("Oguzhan_New_Blog");
-            _blogRepository.Get(blogId).Name.ShouldBe("Oguzhan_New_Blog");
+            (await _blogDapperRepository.GetAsync(blogId)).Name.ShouldBe("Oguzhan_New_Blog");
+            (await _blogRepository.GetAsync(blogId)).Name.ShouldBe("Oguzhan_New_Blog");
         }
 
         [Fact]

@@ -89,7 +89,7 @@ namespace Abp.Domain.Uow
         /// Constructor.
         /// </summary>
         protected UnitOfWorkBase(
-            IConnectionStringResolver connectionStringResolver, 
+            IConnectionStringResolver connectionStringResolver,
             IUnitOfWorkDefaultOptions defaultOptions,
             IUnitOfWorkFilterExecuter filterExecuter)
         {
@@ -304,7 +304,7 @@ namespace Abp.Domain.Uow
         /// </summary>
         protected virtual void BeginUow()
         {
-            
+
         }
 
         /// <summary>
@@ -340,6 +340,11 @@ namespace Abp.Domain.Uow
         protected virtual string ResolveConnectionString(ConnectionStringResolveArgs args)
         {
             return ConnectionStringResolver.GetNameOrConnectionString(args);
+        }
+
+        protected virtual async Task<string> ResolveConnectionStringAsync(ConnectionStringResolveArgs args)
+        {
+            return await ConnectionStringResolver.GetNameOrConnectionStringAsync(args);
         }
 
         /// <summary>

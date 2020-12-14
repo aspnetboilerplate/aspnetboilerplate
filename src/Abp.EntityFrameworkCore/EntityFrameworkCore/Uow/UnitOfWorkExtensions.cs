@@ -1,4 +1,5 @@
 using System;
+using System.Threading.Tasks;
 using Abp.Domain.Uow;
 using Abp.MultiTenancy;
 using Microsoft.EntityFrameworkCore;
@@ -21,6 +22,22 @@ namespace Abp.EntityFrameworkCore.Uow
         /// A custom name for the dbcontext to get a named dbcontext.
         /// If there is no dbcontext in this unit of work with given name, then a new one is created.
         /// </param>
+        public static Task<TDbContext> GetDbContextAsync<TDbContext>(this IActiveUnitOfWork unitOfWork, MultiTenancySides? multiTenancySide = null, string name = null)
+            where TDbContext : DbContext
+        {
+            if (unitOfWork == null)
+            {
+                throw new ArgumentNullException("unitOfWork");
+            }
+
+            if (!(unitOfWork is EfCoreUnitOfWork))
+            {
+                throw new ArgumentException("unitOfWork is not type of " + typeof(EfCoreUnitOfWork).FullName, "unitOfWork");
+            }
+
+            return (unitOfWork as EfCoreUnitOfWork).GetOrCreateDbContextAsync<TDbContext>(multiTenancySide, name);
+        }
+        
         public static TDbContext GetDbContext<TDbContext>(this IActiveUnitOfWork unitOfWork, MultiTenancySides? multiTenancySide = null, string name = null)
             where TDbContext : DbContext
         {

@@ -7,7 +7,7 @@ namespace Abp.EntityFrameworkCore.Tests.Ef
 {
     public class TicketListItemRepository : SupportRepositoryBase<TicketListItem>
     {
-        private IQueryable<TicketListItem> View => Context.TicketListItems;
+        private IQueryable<TicketListItem> View => GetContext().TicketListItems;
 
         public TicketListItemRepository(IDbContextProvider<SupportDbContext> dbContextProvider)
             : base(dbContextProvider)

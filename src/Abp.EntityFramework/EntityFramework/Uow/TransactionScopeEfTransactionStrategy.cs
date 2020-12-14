@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using System.Data.Entity;
+using System.Threading.Tasks;
 using System.Transactions;
 using Abp.Dependency;
 using Abp.Domain.Uow;
@@ -85,6 +86,13 @@ namespace Abp.EntityFramework.Uow
                 CurrentTransaction.Dispose();
                 CurrentTransaction = null;
             }
+        }
+
+        public async Task<DbContext> CreateDbContextAsync<TDbContext>(string connectionString, IDbContextResolver dbContextResolver) where TDbContext : DbContext
+        {
+            var dbContext = dbContextResolver.Resolve<TDbContext>(connectionString);
+            DbContexts.Add(dbContext);
+            return await Task.FromResult(dbContext);
         }
     }
 }

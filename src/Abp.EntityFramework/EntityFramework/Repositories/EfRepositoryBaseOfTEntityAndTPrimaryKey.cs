@@ -79,6 +79,11 @@ namespace Abp.EntityFramework.Repositories
             return Table;
         }
 
+        public override Task<IQueryable<TEntity>> GetAllAsync()
+        {
+            return Task.FromResult(Table.AsQueryable());
+        }
+
         public override IQueryable<TEntity> GetAllIncluding(params Expression<Func<TEntity, object>>[] propertySelectors)
         {
             if (propertySelectors.IsNullOrEmpty())

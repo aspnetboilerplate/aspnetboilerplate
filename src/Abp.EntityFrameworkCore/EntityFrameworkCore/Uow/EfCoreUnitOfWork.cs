@@ -2,7 +2,6 @@ using System;
 using Abp.Dependency;
 using Abp.Domain.Uow;
 using Abp.EntityFramework;
-using Abp.Extensions;
 using Abp.MultiTenancy;
 using Microsoft.EntityFrameworkCore;
 using System.Collections.Generic;
@@ -17,6 +16,7 @@ namespace Abp.EntityFrameworkCore.Uow
     public class EfCoreUnitOfWork : UnitOfWorkBase, ITransientDependency
     {
         protected IDictionary<string, DbContext> ActiveDbContexts { get; }
+
         protected IIocResolver IocResolver { get; }
 
         private readonly IDbContextResolver _dbContextResolver;
@@ -35,16 +35,16 @@ namespace Abp.EntityFrameworkCore.Uow
             IDbContextTypeMatcher dbContextTypeMatcher,
             IEfCoreTransactionStrategy transactionStrategy)
             : base(
-                  connectionStringResolver,
-                  defaultOptions,
-                  filterExecuter)
+                connectionStringResolver,
+                defaultOptions,
+                filterExecuter)
         {
             IocResolver = iocResolver;
             _dbContextResolver = dbContextResolver;
             _dbContextTypeMatcher = dbContextTypeMatcher;
             _transactionStrategy = transactionStrategy;
 
-            ActiveDbContexts = new Dictionary<string, DbContext>();
+            ActiveDbContexts = new Dictionary<string, DbContext>(StringComparer.OrdinalIgnoreCase);
         }
 
         protected override void BeginUow()
@@ -96,14 +96,63 @@ namespace Abp.EntityFrameworkCore.Uow
             return ActiveDbContexts.Values.ToImmutableList();
         }
 
-        public virtual TDbContext GetOrCreateDbContext<TDbContext>(MultiTenancySides? multiTenancySide = null, string name = null)
+        public virtual async Task<TDbContext> GetOrCreateDbContextAsync<TDbContext>(
+            MultiTenancySides? multiTenancySide = null, string name = null)
             where TDbContext : DbContext
         {
             var concreteDbContextType = _dbContextTypeMatcher.GetConcreteType(typeof(TDbContext));
 
-            var connectionStringResolveArgs = new ConnectionStringResolveArgs(multiTenancySide);
-            connectionStringResolveArgs["DbContextType"] = typeof(TDbContext);
-            connectionStringResolveArgs["DbContextConcreteType"] = concreteDbContextType;
+            var connectionStringResolveArgs = new ConnectionStringResolveArgs(multiTenancySide)
+            {
+                ["DbContextType"] = typeof(TDbContext),
+                ["DbContextConcreteType"] = concreteDbContextType
+            };
+
+            var connectionString = await ResolveConnectionStringAsync(connectionStringResolveArgs);
+
+            var dbContextKey = concreteDbContextType.FullName + "#" + connectionString;
+            if (name != null)
+            {
+                dbContextKey += "#" + name;
+            }
+
+            if (ActiveDbContexts.TryGetValue(dbContextKey, out var dbContext))
+            {
+                return (TDbContext) dbContext;
+            }
+
+            if (Options.IsTransactional == true)
+            {
+                dbContext = await _transactionStrategy
+                    .CreateDbContextAsync<TDbContext>(connectionString, _dbContextResolver);
+            }
+            else
+            {
+                dbContext = _dbContextResolver.Resolve<TDbContext>(connectionString, null);
+            }
+
+            if (dbContext is IShouldInitializeDcontext abpDbContext)
+            {
+                abpDbContext.Initialize(new AbpEfDbContextInitializationContext(this));
+            }
+
+            ActiveDbContexts[dbContextKey] = dbContext;
+
+            return (TDbContext) dbContext;
+        }
+
+        public virtual TDbContext GetOrCreateDbContext<TDbContext>(
+            MultiTenancySides? multiTenancySide = null, string name = null)
+            where TDbContext : DbContext
+        {
+            var concreteDbContextType = _dbContextTypeMatcher.GetConcreteType(typeof(TDbContext));
+
+            var connectionStringResolveArgs = new ConnectionStringResolveArgs(multiTenancySide)
+            {
+                ["DbContextType"] = typeof(TDbContext),
+                ["DbContextConcreteType"] = concreteDbContextType
+            };
+
             var connectionString = ResolveConnectionString(connectionStringResolveArgs);
 
             var dbContextKey = concreteDbContextType.FullName + "#" + connectionString;
@@ -112,30 +161,29 @@ namespace Abp.EntityFrameworkCore.Uow
                 dbContextKey += "#" + name;
             }
 
-            DbContext dbContext;
-            if (!ActiveDbContexts.TryGetValue(dbContextKey, out dbContext))
+            if (ActiveDbContexts.TryGetValue(dbContextKey, out var dbContext))
             {
-                if (Options.IsTransactional == true)
-                {
-                    dbContext = _transactionStrategy.CreateDbContext<TDbContext>(connectionString, _dbContextResolver);
-                }
-                else
-                {
-                    dbContext = _dbContextResolver.Resolve<TDbContext>(connectionString, null);
-                }
-
-                if (dbContext is IShouldInitializeDcontext abpDbContext)
-                {
-                    abpDbContext.Initialize(new AbpEfDbContextInitializationContext(this));
-                }
-
-                //TODO: Object materialize event
-                //TODO: Apply current filters to this dbcontext
-
-                ActiveDbContexts[dbContextKey] = dbContext;
+                return (TDbContext) dbContext;
             }
 
-            return (TDbContext)dbContext;
+            if (Options.IsTransactional == true)
+            {
+                dbContext = _transactionStrategy
+                    .CreateDbContext<TDbContext>(connectionString, _dbContextResolver);
+            }
+            else
+            {
+                dbContext = _dbContextResolver.Resolve<TDbContext>(connectionString, null);
+            }
+
+            if (dbContext is IShouldInitializeDcontext abpDbContext)
+            {
+                abpDbContext.Initialize(new AbpEfDbContextInitializationContext(this));
+            }
+
+            ActiveDbContexts[dbContextKey] = dbContext;
+
+            return (TDbContext) dbContext;
         }
 
         protected override void DisposeUow()
@@ -160,9 +208,9 @@ namespace Abp.EntityFrameworkCore.Uow
             dbContext.SaveChanges();
         }
 
-        protected virtual async Task SaveChangesInDbContextAsync(DbContext dbContext)
+        protected virtual Task SaveChangesInDbContextAsync(DbContext dbContext)
         {
-            await dbContext.SaveChangesAsync();
+            return dbContext.SaveChangesAsync();
         }
 
         protected virtual void Release(DbContext dbContext)

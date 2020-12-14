@@ -23,7 +23,7 @@ namespace Abp.Dapper.Repositories
         where TEntity : class, IEntity<TPrimaryKey>
     {
         private readonly IActiveTransactionProvider _activeTransactionProvider;
-
+        
         public DapperRepositoryBase(IActiveTransactionProvider activeTransactionProvider)
         {
             _activeTransactionProvider = activeTransactionProvider;
@@ -39,9 +39,16 @@ namespace Abp.Dapper.Repositories
 
         public IDapperActionFilterExecuter DapperActionFilterExecuter { get; set; }
 
-        public virtual DbConnection Connection
+        public virtual DbConnection GetConnection()
         {
-            get { return (DbConnection)_activeTransactionProvider.GetActiveConnection(ActiveTransactionProviderArgs.Empty); }
+            var connection = _activeTransactionProvider.GetActiveConnection(ActiveTransactionProviderArgs.Empty); 
+            return (DbConnection)connection;
+        }
+        
+        public virtual async Task<DbConnection> GetConnectionAsync()
+        {
+            var connection = await _activeTransactionProvider.GetActiveConnectionAsync(ActiveTransactionProviderArgs.Empty); 
+            return (DbConnection)connection;
         }
 
         /// <summary>
@@ -51,9 +58,16 @@ namespace Abp.Dapper.Repositories
         /// <value>
         ///     The active transaction.
         /// </value>
-        public virtual DbTransaction ActiveTransaction
+        public virtual async Task<DbTransaction> GetActiveTransactionAsync()
         {
-            get { return (DbTransaction)_activeTransactionProvider.GetActiveTransaction(ActiveTransactionProviderArgs.Empty); }
+            var connection = await _activeTransactionProvider.GetActiveTransactionAsync(ActiveTransactionProviderArgs.Empty);
+            return (DbTransaction)connection;
+        }
+        
+        public virtual DbTransaction GetActiveTransaction()
+        {
+            var connection = _activeTransactionProvider.GetActiveTransaction(ActiveTransactionProviderArgs.Empty);
+            return (DbTransaction)connection;
         }
 
         public virtual int? Timeout => null;
@@ -66,7 +80,7 @@ namespace Abp.Dapper.Repositories
         public override TEntity Single(Expression<Func<TEntity, bool>> predicate)
         {
             IPredicate pg = DapperQueryFilterExecuter.ExecuteFilter<TEntity, TPrimaryKey>(predicate);
-            return Connection.GetList<TEntity>(pg, transaction: ActiveTransaction, commandTimeout: Timeout).Single();
+            return GetConnection().GetList<TEntity>(pg, transaction: GetActiveTransaction(), commandTimeout: Timeout).Single();
         }
 
         public override TEntity FirstOrDefault(TPrimaryKey id)
@@ -77,7 +91,7 @@ namespace Abp.Dapper.Repositories
         public override TEntity FirstOrDefault(Expression<Func<TEntity, bool>> predicate)
         {
             IPredicate pg = DapperQueryFilterExecuter.ExecuteFilter<TEntity, TPrimaryKey>(predicate);
-            return Connection.GetList<TEntity>(pg, transaction: ActiveTransaction, commandTimeout: Timeout).FirstOrDefault();
+            return GetConnection().GetList<TEntity>(pg, transaction: GetActiveTransaction(), commandTimeout: Timeout).FirstOrDefault();
         }
 
         public override TEntity Get(TPrimaryKey id)
@@ -91,67 +105,73 @@ namespace Abp.Dapper.Repositories
         public override IEnumerable<TEntity> GetAll()
         {
             PredicateGroup predicateGroup = DapperQueryFilterExecuter.ExecuteFilter<TEntity, TPrimaryKey>();
-            return Connection.GetList<TEntity>(predicateGroup, transaction: ActiveTransaction, commandTimeout: Timeout);
+            return GetConnection().GetList<TEntity>(predicateGroup, transaction: GetActiveTransaction(), commandTimeout: Timeout);
         }
 
         public override IEnumerable<TEntity> Query(string query, object parameters = null)
         {
-            return Connection.Query<TEntity>(query, parameters, ActiveTransaction, commandTimeout: Timeout);
+            return GetConnection().Query<TEntity>(query, parameters, GetActiveTransaction(), commandTimeout: Timeout);
         }
 
-        public override Task<IEnumerable<TEntity>> QueryAsync(string query, object parameters = null)
+        public override async Task<IEnumerable<TEntity>> QueryAsync(string query, object parameters = null)
         {
-            return Connection.QueryAsync<TEntity>(query, parameters, ActiveTransaction, Timeout);
+            var connection = await GetConnectionAsync();
+            var activeTransaction = await GetActiveTransactionAsync();
+            return await connection.QueryAsync<TEntity>(query, parameters, activeTransaction, Timeout);
         }
 
         public override IEnumerable<TAny> Query<TAny>(string query, object parameters = null)
         {
-            return Connection.Query<TAny>(query, parameters, ActiveTransaction, commandTimeout: Timeout);
+            return GetConnection().Query<TAny>(query, parameters, GetActiveTransaction(), commandTimeout: Timeout);
         }
 
-        public override Task<IEnumerable<TAny>> QueryAsync<TAny>(string query, object parameters = null)
+        public override async Task<IEnumerable<TAny>> QueryAsync<TAny>(string query, object parameters = null)
         {
-            return Connection.QueryAsync<TAny>(query, parameters, ActiveTransaction, Timeout);
+            var connection = await GetConnectionAsync();
+            var activeTransaction = await GetActiveTransactionAsync();
+            return await connection.QueryAsync<TAny>(query, parameters, activeTransaction, Timeout);
         }
 
         public override int Execute(string query, object parameters = null)
         {
-            return Connection.Execute(query, parameters, ActiveTransaction, Timeout);
+            return GetConnection().Execute(query, parameters, GetActiveTransaction(), Timeout);
         }
 
-        public override Task<int> ExecuteAsync(string query, object parameters = null)
+        public override async Task<int> ExecuteAsync(string query, object parameters = null)
         {
-            return Connection.ExecuteAsync(query, parameters, ActiveTransaction, Timeout);
+            var connection = await GetConnectionAsync();
+            var activeTransaction = await GetActiveTransactionAsync();
+            return await connection.ExecuteAsync(query, parameters, activeTransaction, Timeout);
         }
 
         public override IEnumerable<TEntity> GetAllPaged(Expression<Func<TEntity, bool>> predicate, int pageNumber, int itemsPerPage, string sortingProperty, bool ascending = true)
         {
             IPredicate filteredPredicate = DapperQueryFilterExecuter.ExecuteFilter<TEntity, TPrimaryKey>(predicate);
 
-            return Connection.GetPage<TEntity>(
+            return GetConnection().GetPage<TEntity>(
                 filteredPredicate,
                 new List<ISort> { new Sort { Ascending = ascending, PropertyName = sortingProperty } },
                 pageNumber,
                 itemsPerPage,
-                ActiveTransaction, 
+                GetActiveTransaction(), 
                 Timeout);
         }
 
         public override int Count(Expression<Func<TEntity, bool>> predicate)
         {
             IPredicate filteredPredicate = DapperQueryFilterExecuter.ExecuteFilter<TEntity, TPrimaryKey>(predicate);
-            return Connection.Count<TEntity>(filteredPredicate, ActiveTransaction, Timeout);
+            return GetConnection().Count<TEntity>(filteredPredicate, GetActiveTransaction(), Timeout);
         }
 
         public override IEnumerable<TEntity> GetSet(Expression<Func<TEntity, bool>> predicate, int firstResult, int maxResults, string sortingProperty, bool ascending = true)
         {
             IPredicate filteredPredicate = DapperQueryFilterExecuter.ExecuteFilter<TEntity, TPrimaryKey>(predicate);
-            return Connection.GetSet<TEntity>(
+            return GetConnection().GetSet<TEntity>(
                 filteredPredicate,
                 new List<ISort> { new Sort { Ascending = ascending, PropertyName = sortingProperty } },
                 firstResult,
                 maxResults,
-                ActiveTransaction,  
+                GetActiveTransaction(),  
                 Timeout
             );
         }
@@ -159,19 +179,19 @@ namespace Abp.Dapper.Repositories
         public override IEnumerable<TEntity> GetAll(Expression<Func<TEntity, bool>> predicate)
         {
             IPredicate filteredPredicate = DapperQueryFilterExecuter.ExecuteFilter<TEntity, TPrimaryKey>(predicate);
-            return Connection.GetList<TEntity>(filteredPredicate, transaction: ActiveTransaction, commandTimeout: Timeout);
+            return GetConnection().GetList<TEntity>(filteredPredicate, transaction: GetActiveTransaction(), commandTimeout: Timeout);
         }
 
         public override IEnumerable<TEntity> GetAllPaged(Expression<Func<TEntity, bool>> predicate, int pageNumber, int itemsPerPage, bool ascending = true, params Expression<Func<TEntity, object>>[] sortingExpression)
         {
             IPredicate filteredPredicate = DapperQueryFilterExecuter.ExecuteFilter<TEntity, TPrimaryKey>(predicate);
-            return Connection.GetPage<TEntity>(filteredPredicate, sortingExpression.ToSortable(ascending), pageNumber, itemsPerPage, ActiveTransaction, Timeout);
+            return GetConnection().GetPage<TEntity>(filteredPredicate, sortingExpression.ToSortable(ascending), pageNumber, itemsPerPage, GetActiveTransaction(), Timeout);
         }
 
         public override IEnumerable<TEntity> GetSet(Expression<Func<TEntity, bool>> predicate, int firstResult, int maxResults, bool ascending = true, params Expression<Func<TEntity, object>>[] sortingExpression)
         {
             IPredicate filteredPredicate = DapperQueryFilterExecuter.ExecuteFilter<TEntity, TPrimaryKey>(predicate);
-            return Connection.GetSet<TEntity>(filteredPredicate, sortingExpression.ToSortable(ascending), firstResult, maxResults, ActiveTransaction, Timeout);
+            return GetConnection().GetSet<TEntity>(filteredPredicate, sortingExpression.ToSortable(ascending), firstResult, maxResults, GetActiveTransaction(), Timeout);
         }
 
         public override void Insert(TEntity entity)
@@ -183,7 +203,7 @@ namespace Abp.Dapper.Repositories
         {
             EntityChangeEventHelper.TriggerEntityUpdatingEvent(entity);
             DapperActionFilterExecuter.ExecuteModificationAuditFilter<TEntity, TPrimaryKey>(entity);
-            Connection.Update(entity, ActiveTransaction, Timeout);
+            GetConnection().Update(entity, GetActiveTransaction(), Timeout);
             EntityChangeEventHelper.TriggerEntityUpdatedEventOnUowCompleted(entity);
         }
 
@@ -193,11 +213,11 @@ namespace Abp.Dapper.Repositories
             if (entity is ISoftDelete)
             {
                 DapperActionFilterExecuter.ExecuteDeletionAuditFilter<TEntity, TPrimaryKey>(entity);
-                Connection.Update(entity, ActiveTransaction, Timeout);
+                GetConnection().Update(entity, GetActiveTransaction(), Timeout);
             }
             else
             {
-                Connection.Delete(entity, ActiveTransaction, Timeout);
+                GetConnection().Delete(entity, GetActiveTransaction(), Timeout);
             }
             EntityChangeEventHelper.TriggerEntityDeletedEventOnUowCompleted(entity);
         }
@@ -215,7 +235,7 @@ namespace Abp.Dapper.Repositories
         {
             EntityChangeEventHelper.TriggerEntityCreatingEvent(entity);
             DapperActionFilterExecuter.ExecuteCreationAuditFilter<TEntity, TPrimaryKey>(entity);
-            TPrimaryKey primaryKey = Connection.Insert(entity, ActiveTransaction, Timeout);
+            TPrimaryKey primaryKey = GetConnection().Insert(entity, GetActiveTransaction(), Timeout);
             EntityChangeEventHelper.TriggerEntityCreatedEventOnUowCompleted(entity);
             return primaryKey;
         }

@@ -1,4 +1,5 @@
 using System.Data.Entity;
+using System.Threading.Tasks;
 using Abp.Domain.Uow;
 using Abp.MultiTenancy;
 
@@ -31,6 +32,16 @@ namespace Abp.EntityFramework.Uow
         public TDbContext GetDbContext(MultiTenancySides? multiTenancySide)
         {
             return _currentUnitOfWorkProvider.Current.GetDbContext<TDbContext>(multiTenancySide);
+        }
+
+        public Task<TDbContext> GetDbContextAsync()
+        {
+            return GetDbContextAsync(null);
+        }
+
+        public Task<TDbContext> GetDbContextAsync(MultiTenancySides? multiTenancySide)
+        {
+            return _currentUnitOfWorkProvider.Current.GetDbContextAsync<TDbContext>(multiTenancySide);
         }
     }
 }

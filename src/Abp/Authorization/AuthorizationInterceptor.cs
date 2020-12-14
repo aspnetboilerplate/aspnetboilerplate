@@ -36,7 +36,7 @@ namespace Abp.Authorization
 
             proceedInfo.Invoke();
             var task = (Task)invocation.ReturnValue;
-            await task.ConfigureAwait(false);
+            await task;
         }
         
         protected override async Task<TResult> InternalInterceptAsynchronous<TResult>(IInvocation invocation)
@@ -47,7 +47,7 @@ namespace Abp.Authorization
 
             proceedInfo.Invoke();
             var taskResult = (Task<TResult>)invocation.ReturnValue;
-            return await taskResult.ConfigureAwait(false);
+            return await taskResult;
         }
     }
 }
