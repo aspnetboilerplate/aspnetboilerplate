@@ -24,6 +24,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\..\src\Abp.AspNetCore.PerRequestRedisCache\Abp.AspNetCore.PerRequestRedisCache.csproj" />
     <ProjectReference Include="..\..\src\Abp.EntityFrameworkCore.EFPlus\Abp.EntityFrameworkCore.EFPlus.csproj" />
     <ProjectReference Include="..\..\src\Abp.TestBase\Abp.TestBase.csproj" />
     <ProjectReference Include="..\Abp.ZeroCore.SampleApp\Abp.ZeroCore.SampleApp.csproj" />

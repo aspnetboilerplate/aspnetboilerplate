@@ -6,9 +6,7 @@ using Abp.TestBase;
 using Abp.Zero.Configuration;
 using Abp.Zero.Notifications;
 using Abp.ZeroCore.SampleApp;
-using Castle.MicroKernel.Registration;
 using Abp.Configuration.Startup;
-using Abp.Dependency;
 
 namespace Abp.Zero
 {
