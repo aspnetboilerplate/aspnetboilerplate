@@ -1,4 +1,5 @@
 using System.Linq;
+using System.Threading.Tasks;
 using Abp.Domain.Entities;
 using Abp.Domain.Repositories;
 using MongoDB.Driver;
@@ -50,6 +51,11 @@ namespace Abp.MongoDb.Repositories
         public override IQueryable<TEntity> GetAll()
         {
             return Collection.AsQueryable();
+        }
+
+        public override Task<IQueryable<TEntity>> GetAllAsync()
+        {
+            return Task.FromResult(Collection.AsQueryable());
         }
 
         public override TEntity Get(TPrimaryKey id)

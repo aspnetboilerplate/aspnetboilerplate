@@ -40,6 +40,11 @@ namespace Abp.NHibernate.Repositories
             return Session.Query<TEntity>();
         }
 
+        public override Task<IQueryable<TEntity>> GetAllAsync()
+        {
+            return Task.FromResult(Session.Query<TEntity>());
+        }
+
         public override IQueryable<TEntity> GetAllIncluding(params Expression<Func<TEntity, object>>[] propertySelectors)
         {
             if (propertySelectors.IsNullOrEmpty())

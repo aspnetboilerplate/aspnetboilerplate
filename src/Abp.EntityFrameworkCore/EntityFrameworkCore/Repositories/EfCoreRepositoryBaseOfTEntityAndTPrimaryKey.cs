@@ -1,11 +1,10 @@
-﻿using System;
+using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Data;
 using System.Data.Common;
 using System.Linq;
 using System.Linq.Expressions;
-using System.Reflection;
 using System.Threading;
 using System.Threading.Tasks;
 using Abp.Collections.Extensions;
@@ -14,7 +13,6 @@ using Abp.Domain.Entities;
 using Abp.Domain.Repositories;
 using Abp.Reflection;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.EntityFrameworkCore.Internal;
 
 namespace Abp.EntityFrameworkCore.Repositories
 {
@@ -68,11 +66,18 @@ namespace Abp.EntityFrameworkCore.Repositories
         /// <summary>
         /// Gets DbQuery for given entity.
         /// </summary>
+        public virtual async Task<DbSet<TEntity>> GetDbQueryTableAsync()
+        {
+            return (await GetContextAsync()).Set<TEntity>();
+        }
+
+        /// <summary>
+        /// Gets DbQuery for given entity.
+        /// </summary>
         public virtual DbSet<TEntity> GetDbQueryTable()
         {
             return GetContext().Set<TEntity>();
         }
-
 
         private static readonly ConcurrentDictionary<Type, bool> EntityIsDbQuery =
             new ConcurrentDictionary<Type, bool>();
@@ -89,6 +94,20 @@ namespace Abp.EntityFrameworkCore.Repositories
             }
 
             return GetTable().AsQueryable();
+        }
+
+        protected virtual async Task<IQueryable<TEntity>> GetQueryableAsync()
+        {
+            if (EntityIsDbQuery.GetOrAdd(typeof(TEntity), key => GetContext().GetType().GetProperties().Any(property =>
+                ReflectionHelper.IsAssignableToGenericType(property.PropertyType, typeof(DbSet<>)) &&
+                ReflectionHelper.IsAssignableToGenericType(property.PropertyType.GenericTypeArguments[0],
+                    typeof(IEntity<>)) &&
+                property.PropertyType.GetGenericArguments().Any(x => x == typeof(TEntity)))))
+            {
+                return (await GetDbQueryTableAsync()).AsQueryable();
+            }
+
+            return (await GetTableAsync()).AsQueryable();
         }
 
         public virtual DbTransaction GetTransaction()
@@ -159,6 +178,11 @@ namespace Abp.EntityFrameworkCore.Repositories
             return GetAllIncluding();
         }
 
+        public override async Task<IQueryable<TEntity>> GetAllAsync()
+        {
+            return await GetAllIncludingAsync();
+        }
+
         public override IQueryable<TEntity> GetAllIncluding(
             params Expression<Func<TEntity, object>>[] propertySelectors)
         {
@@ -177,31 +201,50 @@ namespace Abp.EntityFrameworkCore.Repositories
             return query;
         }
 
+        public override async Task<IQueryable<TEntity>> GetAllIncludingAsync(
+            params Expression<Func<TEntity, object>>[] propertySelectors)
+        {
+            var query = await GetQueryableAsync();
+
+            if (propertySelectors.IsNullOrEmpty())
+            {
+                return query;
+            }
+
+            foreach (var propertySelector in propertySelectors)
+            {
+                query = query.Include(propertySelector);
+            }
+
+            return query;
+        }
+
+
         public override async Task<List<TEntity>> GetAllListAsync()
         {
-            return await GetAll().ToListAsync(CancellationTokenProvider.Token);
+            return await (await GetAllAsync()).ToListAsync(CancellationTokenProvider.Token);
         }
 
         public override async Task<List<TEntity>> GetAllListAsync(Expression<Func<TEntity, bool>> predicate)
         {
-            return await GetAll().Where(predicate).ToListAsync(CancellationTokenProvider.Token);
+            return await (await GetAllAsync()).Where(predicate).ToListAsync(CancellationTokenProvider.Token);
         }
 
         public override async Task<TEntity> SingleAsync(Expression<Func<TEntity, bool>> predicate)
         {
-            return await GetAll().SingleAsync(predicate, CancellationTokenProvider.Token);
+            return await (await GetAllAsync()).SingleAsync(predicate, CancellationTokenProvider.Token);
         }
 
         public override async Task<TEntity> FirstOrDefaultAsync(TPrimaryKey id)
         {
-            return await GetAll().FirstOrDefaultAsync(
+            return await (await GetAllAsync()).FirstOrDefaultAsync(
                 CreateEqualityExpressionForId(id), CancellationTokenProvider.Token
             );
         }
 
         public override async Task<TEntity> FirstOrDefaultAsync(Expression<Func<TEntity, bool>> predicate)
         {
-            return await GetAll().FirstOrDefaultAsync(predicate, CancellationTokenProvider.Token);
+            return await (await GetAllAsync()).FirstOrDefaultAsync(predicate, CancellationTokenProvider.Token);
         }
 
         public override TEntity Insert(TEntity entity)
@@ -304,22 +347,22 @@ namespace Abp.EntityFrameworkCore.Repositories
 
         public override async Task<int> CountAsync()
         {
-            return await GetAll().CountAsync(CancellationTokenProvider.Token);
+            return await (await GetAllAsync()).CountAsync(CancellationTokenProvider.Token);
         }
 
         public override async Task<int> CountAsync(Expression<Func<TEntity, bool>> predicate)
         {
-            return await GetAll().Where(predicate).CountAsync(CancellationTokenProvider.Token);
+            return await (await GetAllAsync()).Where(predicate).CountAsync(CancellationTokenProvider.Token);
         }
 
         public override async Task<long> LongCountAsync()
         {
-            return await GetAll().LongCountAsync(CancellationTokenProvider.Token);
+            return await (await GetAllAsync()).LongCountAsync(CancellationTokenProvider.Token);
         }
 
         public override async Task<long> LongCountAsync(Expression<Func<TEntity, bool>> predicate)
         {
-            return await GetAll().Where(predicate).LongCountAsync(CancellationTokenProvider.Token);
+            return await (await GetAllAsync()).Where(predicate).LongCountAsync(CancellationTokenProvider.Token);
         }
 
         protected virtual void AttachIfNot(TEntity entity)
