@@ -1,5 +1,5 @@
 $prefix = 'dotnet nuget push '
-$suffix = ' API_KEY -Source https://api.nuget.org/v3/index.json'
+$suffix = ' --source https://api.nuget.org/v3/index.json --api-key API_KEY'
 
 Get-ChildItem .\*.nupkg | Select-Object { $prefix + $_.Name + $suffix }  | Out-File -width 1000 .\push.bat -Force
 
