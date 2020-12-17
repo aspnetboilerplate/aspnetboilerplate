@@ -4,8 +4,8 @@ using System.Threading.Tasks;
 using System.Linq;
 using System.Threading;
 using Abp.Data;
+using Abp.Threading.Extensions;
 using Castle.Core.Logging;
-using Nito.AsyncEx;
 
 namespace Abp.Runtime.Caching
 {
