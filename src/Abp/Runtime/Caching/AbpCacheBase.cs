@@ -2,9 +2,10 @@ using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using System.Linq;
+using System.Threading;
 using Abp.Data;
+using Abp.Threading.Extensions;
 using Castle.Core.Logging;
-using Nito.AsyncEx;
 
 namespace Abp.Runtime.Caching
 {
@@ -18,7 +19,7 @@ namespace Abp.Runtime.Caching
 
         public DateTimeOffset? DefaultAbsoluteExpireTime { get; set; }
 
-        protected readonly AsyncLock AsyncLock = new AsyncLock();
+        protected readonly SemaphoreSlim SemaphoreSlim = new SemaphoreSlim(1, 1);
 
         /// <summary>
         /// Constructor.
@@ -36,7 +37,7 @@ namespace Abp.Runtime.Caching
                 return value;
             }
 
-            using (AsyncLock.Lock())
+            using (SemaphoreSlim.Lock())
             {
                 if (TryGetValue(key, out value))
                 {
@@ -78,7 +79,7 @@ namespace Abp.Runtime.Caching
 
             if (results.Any(result => !result.HasValue))
             {
-                using (AsyncLock.Lock())
+                using (SemaphoreSlim.Lock())
                 {
                     try
                     {
@@ -98,7 +99,7 @@ namespace Abp.Runtime.Caching
                             var key = keys[i];
                             var generatedValue = factory(key);
                             results[i] = new ConditionalValue<TValue>(true, generatedValue);
-                            
+
                             if (!IsDefaultValue(generatedValue))
                             {
                                 generated.Add(new KeyValuePair<TKey, TValue>(key, generatedValue));
@@ -145,8 +146,8 @@ namespace Abp.Runtime.Caching
             {
                 return result.Value;
             }
-            
-            using (await AsyncLock.LockAsync())
+
+            using (await SemaphoreSlim.LockAsync())
             {
                 try
                 {
@@ -161,13 +162,13 @@ namespace Abp.Runtime.Caching
                 {
                     return result.Value;
                 }
-                
+
                 var generatedValue = await factory(key);
                 if (IsDefaultValue(generatedValue))
                 {
                     return generatedValue;
                 }
-                
+
                 try
                 {
                     await SetAsync(key, generatedValue);
@@ -201,7 +202,7 @@ namespace Abp.Runtime.Caching
 
             if (results.Any(result => !result.HasValue))
             {
-                using (await AsyncLock.LockAsync())
+                using (await SemaphoreSlim.LockAsync())
                 {
                     try
                     {
