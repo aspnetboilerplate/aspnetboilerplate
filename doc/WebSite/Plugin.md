@@ -89,7 +89,7 @@ Project solution looks like the following:
 #### Build the Plugin
 
 Build project in release mode. `DatabaseMaintainer.dll` will be created in the folder
-`DatabaseMaintainer\DatabaseMaintainer\bin\Release\netcoreapp2.1`.
+`DatabaseMaintainer\DatabaseMaintainer\bin\Release\net5.0`.
 
 ### Add Plugin to the Application
 
