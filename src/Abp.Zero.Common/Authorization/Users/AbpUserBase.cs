@@ -102,7 +102,7 @@ namespace Abp.Authorization.Users
         /// Email address of the user.
         /// Email address must be unique for it's tenant.
         /// </summary>
-        [Required]
+        // [Required]
         [StringLength(MaxEmailAddressLength)]
         public virtual string EmailAddress { get; set; }
 
@@ -224,7 +224,7 @@ namespace Abp.Authorization.Users
         /// If as user is not active, he/she can not use the application.
         /// </summary>
         public virtual bool IsActive { get; set; }
-        
+
         protected AbpUserBase()
         {
             IsActive = true;

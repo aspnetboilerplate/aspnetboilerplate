@@ -28,7 +28,7 @@ namespace Abp.Authorization.Users
         /// Email address of the user.
         /// Email address must be unique for it's tenant.
         /// </summary>
-        [Required]
+        // [Required]
         [StringLength(MaxEmailAddressLength)]
         public virtual string NormalizedEmailAddress { get; set; }
 
@@ -45,7 +45,7 @@ namespace Abp.Authorization.Users
         public virtual TUser CreatorUser { get; set; }
 
         public virtual TUser LastModifierUser { get; set; }
-        
+
         protected AbpUser()
         {
         }
