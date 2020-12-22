@@ -110,7 +110,7 @@ subscriptions.
         //Send a general notification to a specific user
         public async Task Publish_SentFrendshipRequest(string senderUserName, string friendshipMessage, UserIdentifier targetUserId)
         {
-            await _notificationPublisher.PublishAsync("SentFrendshipRequest", new SentFrendshipRequestNotificationData(senderUserName, friendshipMessage), userIds: new[] { targetUserId });
+            await _notificationPublisher.PublishAsync("SentFriendshipRequest", new SentFrendshipRequestNotificationData(senderUserName, friendshipMessage), userIds: new[] { targetUserId });
         }
 
         //Send an entity notification to a specific user
