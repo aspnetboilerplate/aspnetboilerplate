@@ -135,13 +135,13 @@ In the first example, we published a notification to a single user.
 **NotificationData** like this:
 
     [Serializable]
-    public class SentFrendshipRequestNotificationData : NotificationData
+    public class SentFriendshipRequestNotificationData : NotificationData
     {
         public string SenderUserName { get; set; }
 
         public string FriendshipMessage { get; set; }
 
-        public SentFrendshipRequestNotificationData(string senderUserName, string friendshipMessage)
+        public SentFriendshipRequestNotificationData(string senderUserName, string friendshipMessage)
         {
             SenderUserName = senderUserName;
             FriendshipMessage = friendshipMessage;
