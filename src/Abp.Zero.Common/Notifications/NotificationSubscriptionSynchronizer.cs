@@ -29,7 +29,7 @@ namespace Abp.Notifications
                 using (_unitOfWorkManager.Current.DisableFilter(AbpDataFilters.MayHaveTenant))
                 {
                     _notificationSubscriptionRepository.Delete(x => x.UserId == eventData.Entity.Id && x.TenantId == eventData.Entity.TenantId);
-                    uow.CompleteAsync();
+                    uow.Complete();
                 }
             }
         }
