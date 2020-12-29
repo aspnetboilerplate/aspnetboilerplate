@@ -51,7 +51,7 @@
 
         # Download install script
         $DotNetInstallFile = "$TempDirectory\dotnet-install.ps1"
-        New-Item -ItemType Directory -Path $TempDirectory | Out-Null
+        New-Item -ItemType Directory -Path $TempDirectory -Force | Out-Null
         (New-Object System.Net.WebClient).DownloadFile($DotNetInstallUrl, $DotNetInstallFile)
 
         # Install by channel or version
