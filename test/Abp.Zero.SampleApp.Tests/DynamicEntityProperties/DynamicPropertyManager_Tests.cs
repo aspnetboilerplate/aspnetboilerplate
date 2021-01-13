@@ -86,7 +86,7 @@ namespace Abp.Zero.SampleApp.Tests.DynamicEntityProperties
                 InputType = GetRandomAllowedInputType()
             };
 
-            dynamicPropertyManager.Add(testDynamicProperty);
+            var result = dynamicPropertyManager.Add(testDynamicProperty);
 
             cacheSubstitute.Received().Set(
                 testDynamicProperty.Id.ToString(),
@@ -96,6 +96,7 @@ namespace Abp.Zero.SampleApp.Tests.DynamicEntityProperties
             );
 
             dynamicPropertyStoreSubstitute.Received().Add(testDynamicProperty);
+            result.ShouldBe(testDynamicProperty);
         }
 
         [Fact]
@@ -155,7 +156,7 @@ namespace Abp.Zero.SampleApp.Tests.DynamicEntityProperties
 
             testDynamicProperty.PropertyName = "Test";
 
-            dynamicPropertyManager.Update(testDynamicProperty);
+            var result = dynamicPropertyManager.Update(testDynamicProperty);
 
             cacheSubstitute.Received().Set(
                 testDynamicProperty.Id.ToString(),
@@ -165,6 +166,7 @@ namespace Abp.Zero.SampleApp.Tests.DynamicEntityProperties
             );
 
             dynamicPropertyStoreSubstitute.Received().Update(testDynamicProperty);
+            result.ShouldBe(testDynamicProperty);
         }
 
         [Fact]
@@ -274,7 +276,7 @@ namespace Abp.Zero.SampleApp.Tests.DynamicEntityProperties
                 InputType = GetRandomAllowedInputType()
             };
 
-            await dynamicPropertyManager.AddAsync(testDynamicProperty);
+            var result = await dynamicPropertyManager.AddAsync(testDynamicProperty);
             await cacheSubstitute.Received().SetAsync(
                 testDynamicProperty.Id.ToString(),
                 testDynamicProperty,
@@ -283,6 +285,8 @@ namespace Abp.Zero.SampleApp.Tests.DynamicEntityProperties
             );
 
             await dynamicPropertyStoreSubstitute.Received().AddAsync(testDynamicProperty);
+
+            result.ShouldBe(testDynamicProperty);
         }
 
         [Fact]
@@ -345,15 +349,17 @@ namespace Abp.Zero.SampleApp.Tests.DynamicEntityProperties
 
             testDynamicProperty.PropertyName = "Test";
 
-            await dynamicPropertyManager.UpdateAsync(testDynamicProperty);
+            var result = await dynamicPropertyManager.UpdateAsync(testDynamicProperty);
             await cacheSubstitute.Received().SetAsync(
                 testDynamicProperty.Id.ToString(),
                 testDynamicProperty,
                 Arg.Any<TimeSpan?>(),
                 Arg.Any<DateTimeOffset?>()
             );
-            
+
             await dynamicPropertyStoreSubstitute.Received().UpdateAsync(testDynamicProperty);
+
+            result.ShouldBe(testDynamicProperty);
         }
 
         [Fact]
