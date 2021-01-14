@@ -88,7 +88,7 @@ a **specific entity** (Photo), if the user wants to get notified if anyone
 writes a comment to a specified photo.
 
 Every notification type should have a **unique name** (like
-*SentFrendshipRequest* and *CommentPhoto* in the examples)
+*SentFriendshipRequest* and *CommentPhoto* in the examples)
 
 The **INotificationSubscriptionManager** also has the **UnsubscribeAsync,
 IsSubscribedAsync, GetSubscriptionsAsync**... methods to manage
@@ -108,9 +108,9 @@ subscriptions.
         }
 
         //Send a general notification to a specific user
-        public async Task Publish_SentFrendshipRequest(string senderUserName, string friendshipMessage, UserIdentifier targetUserId)
+        public async Task Publish_SentFriendshipRequest(string senderUserName, string friendshipMessage, UserIdentifier targetUserId)
         {
-            await _notificationPublisher.PublishAsync("SentFrendshipRequest", new SentFrendshipRequestNotificationData(senderUserName, friendshipMessage), userIds: new[] { targetUserId });
+            await _notificationPublisher.PublishAsync("SentFriendshipRequest", new SentFriendshipRequestNotificationData(senderUserName, friendshipMessage), userIds: new[] { targetUserId });
         }
 
         //Send an entity notification to a specific user
@@ -131,17 +131,17 @@ subscriptions.
     }
 
 In the first example, we published a notification to a single user.
-*SentFrendshipRequestNotificationData* should be derived from
+*SentFriendshipRequestNotificationData* should be derived from
 **NotificationData** like this:
 
     [Serializable]
-    public class SentFrendshipRequestNotificationData : NotificationData
+    public class SentFriendshipRequestNotificationData : NotificationData
     {
         public string SenderUserName { get; set; }
 
         public string FriendshipMessage { get; set; }
 
-        public SentFrendshipRequestNotificationData(string senderUserName, string friendshipMessage)
+        public SentFriendshipRequestNotificationData(string senderUserName, string friendshipMessage)
         {
             SenderUserName = senderUserName;
             FriendshipMessage = friendshipMessage;
