@@ -165,8 +165,8 @@ namespace Abp.Auditing
                 ClientIpAddress = auditInfo.ClientIpAddress.TruncateWithPostfix(MaxClientIpAddressLength),
                 ClientName = auditInfo.ClientName.TruncateWithPostfix(MaxClientNameLength),
                 BrowserInfo = auditInfo.BrowserInfo.TruncateWithPostfix(MaxBrowserInfoLength),
-                Exception = exceptionMessage.exception.TruncateWithPostfix(MaxExceptionLength),
-                ExceptionMessage = exceptionMessage.message,
+                Exception = exceptionMessage.TruncateWithPostfix(MaxExceptionLength),
+                ExceptionMessage = auditInfo.Exception.Message,
                 ImpersonatorUserId = auditInfo.ImpersonatorUserId,
                 ImpersonatorTenantId = auditInfo.ImpersonatorTenantId,
                 CustomData = auditInfo.CustomData.TruncateWithPostfix(MaxCustomDataLength)
@@ -186,13 +186,13 @@ namespace Abp.Auditing
         /// </summary>
         /// <param name="exception"></param>
         /// <returns></returns>
-        public static (string exception, string message) GetAbpClearException(Exception exception)
+        public static string GetAbpClearException(Exception exception)
         {
             var clearMessage = "";
             switch (exception)
             {
                 case null:
-                    return (null, null);
+                    return null;
 
                 case AbpValidationException abpValidationException:
                     clearMessage = "There are " + abpValidationException.ValidationErrors.Count + " validation errors:";
@@ -215,7 +215,7 @@ namespace Abp.Auditing
                     break;
             }
 
-            return (exception + (clearMessage.IsNullOrWhiteSpace() ? "" : "\r\n\r\n" + clearMessage), exception.Message);
+            return exception + (clearMessage.IsNullOrWhiteSpace() ? "" : "\r\n\r\n" + clearMessage);
         }
     }
 }
