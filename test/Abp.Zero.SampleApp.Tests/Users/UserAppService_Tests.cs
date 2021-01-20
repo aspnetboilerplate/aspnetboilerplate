@@ -44,6 +44,7 @@ namespace Abp.Zero.SampleApp.Tests.Users
                     auditLog.ServiceName.ShouldBe(typeof(UserAppService).FullName);
                     auditLog.MethodName.ShouldBe("CreateUser");
                     auditLog.Exception.ShouldBe(null);
+                    auditLog.ExceptionMessage.ShouldBe(null);
                 });
         }
 

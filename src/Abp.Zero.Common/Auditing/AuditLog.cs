@@ -50,6 +50,11 @@ namespace Abp.Auditing
         public static int MaxBrowserInfoLength = 512;
 
         /// <summary>
+        /// Maximum length of <see cref="ExceptionMessage"/> property.
+        /// </summary>
+        public static int MaxExceptionMessageLength = 1024;
+
+        /// <summary>
         /// Maximum length of <see cref="Exception"/> property.
         /// </summary>
         public static int MaxExceptionLength = 2000;
@@ -115,6 +120,11 @@ namespace Abp.Auditing
         public virtual string BrowserInfo { get; set; }
 
         /// <summary>
+        /// Store the message content of  <see cref="Exception"/>.
+        /// </summary>
+        public virtual string ExceptionMessage { get; set; }
+
+        /// <summary>
         /// Exception object, if an exception occured during execution of the method.
         /// </summary>
         public virtual string Exception { get; set; }
@@ -143,23 +153,24 @@ namespace Abp.Auditing
         {
             var exceptionMessage = GetAbpClearException(auditInfo.Exception);
             return new AuditLog
-                   {
-                       TenantId = auditInfo.TenantId,
-                       UserId = auditInfo.UserId,
-                       ServiceName = auditInfo.ServiceName.TruncateWithPostfix(MaxServiceNameLength),
-                       MethodName = auditInfo.MethodName.TruncateWithPostfix(MaxMethodNameLength),
-                       Parameters = auditInfo.Parameters.TruncateWithPostfix(MaxParametersLength),
-                       ReturnValue = auditInfo.ReturnValue.TruncateWithPostfix(MaxReturnValueLength),
-                       ExecutionTime = auditInfo.ExecutionTime,
-                       ExecutionDuration = auditInfo.ExecutionDuration,
-                       ClientIpAddress = auditInfo.ClientIpAddress.TruncateWithPostfix(MaxClientIpAddressLength),
-                       ClientName = auditInfo.ClientName.TruncateWithPostfix(MaxClientNameLength),
-                       BrowserInfo = auditInfo.BrowserInfo.TruncateWithPostfix(MaxBrowserInfoLength),
-                       Exception = exceptionMessage.TruncateWithPostfix(MaxExceptionLength),
-                       ImpersonatorUserId = auditInfo.ImpersonatorUserId,
-                       ImpersonatorTenantId = auditInfo.ImpersonatorTenantId,
-                       CustomData = auditInfo.CustomData.TruncateWithPostfix(MaxCustomDataLength)
-                   };
+            {
+                TenantId = auditInfo.TenantId,
+                UserId = auditInfo.UserId,
+                ServiceName = auditInfo.ServiceName.TruncateWithPostfix(MaxServiceNameLength),
+                MethodName = auditInfo.MethodName.TruncateWithPostfix(MaxMethodNameLength),
+                Parameters = auditInfo.Parameters.TruncateWithPostfix(MaxParametersLength),
+                ReturnValue = auditInfo.ReturnValue.TruncateWithPostfix(MaxReturnValueLength),
+                ExecutionTime = auditInfo.ExecutionTime,
+                ExecutionDuration = auditInfo.ExecutionDuration,
+                ClientIpAddress = auditInfo.ClientIpAddress.TruncateWithPostfix(MaxClientIpAddressLength),
+                ClientName = auditInfo.ClientName.TruncateWithPostfix(MaxClientNameLength),
+                BrowserInfo = auditInfo.BrowserInfo.TruncateWithPostfix(MaxBrowserInfoLength),
+                Exception = exceptionMessage.TruncateWithPostfix(MaxExceptionLength),
+                ExceptionMessage = auditInfo.Exception?.Message,
+                ImpersonatorUserId = auditInfo.ImpersonatorUserId,
+                ImpersonatorTenantId = auditInfo.ImpersonatorTenantId,
+                CustomData = auditInfo.CustomData.TruncateWithPostfix(MaxCustomDataLength)
+            };
         }
 
         public override string ToString()
@@ -167,7 +178,7 @@ namespace Abp.Auditing
             return string.Format(
                 "AUDIT LOG: {0}.{1} is executed by user {2} in {3} ms from {4} IP address.",
                 ServiceName, MethodName, UserId, ExecutionDuration, ClientIpAddress
-                );
+            );
         }
 
         /// <summary>
@@ -185,7 +196,7 @@ namespace Abp.Auditing
 
                 case AbpValidationException abpValidationException:
                     clearMessage = "There are " + abpValidationException.ValidationErrors.Count + " validation errors:";
-                    foreach (var validationResult in abpValidationException.ValidationErrors) 
+                    foreach (var validationResult in abpValidationException.ValidationErrors)
                     {
                         var memberNames = "";
                         if (validationResult.MemberNames != null && validationResult.MemberNames.Any())
@@ -195,6 +206,7 @@ namespace Abp.Auditing
 
                         clearMessage += "\r\n" + validationResult.ErrorMessage + memberNames;
                     }
+
                     break;
 
                 case UserFriendlyException userFriendlyException:
