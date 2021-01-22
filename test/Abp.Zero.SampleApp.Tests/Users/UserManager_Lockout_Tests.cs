@@ -28,7 +28,7 @@ namespace Abp.Zero.SampleApp.Tests.Users
             Resolve<ISettingManager>()
                 .ChangeSettingForApplicationAsync(
                     AbpZeroSettingNames.UserManagement.UserLockOut.DefaultAccountLockoutSeconds,
-                    "1"
+                    "5"
                 );
         }
 
@@ -51,7 +51,7 @@ namespace Abp.Zero.SampleApp.Tests.Users
 
             (await _userManager.IsLockedOutAsync(_testUser.Id)).ShouldBeTrue();
 
-            await Task.Delay(TimeSpan.FromSeconds(1.5)); //Wait for unlock
+            await Task.Delay(TimeSpan.FromSeconds(6)); //Wait for unlock
 
             (await _userManager.IsLockedOutAsync(_testUser.Id)).ShouldBeFalse();
         }
@@ -63,17 +63,19 @@ namespace Abp.Zero.SampleApp.Tests.Users
 
             for (int i = 0; i < _userManager.MaxFailedAccessAttemptsBeforeLockout - 1; i++)
             {
-                (await _logInManager.LoginAsync("TestUser", "invalid-pass")).Result.ShouldBe(AbpLoginResultType.InvalidPassword);
+                (await _logInManager.LoginAsync("TestUser", "invalid-pass")).Result.ShouldBe(AbpLoginResultType
+                    .InvalidPassword);
             }
 
             (await _logInManager.LoginAsync("TestUser", "invalid-pass")).Result.ShouldBe(AbpLoginResultType.LockedOut);
             (await _userManager.IsLockedOutAsync(_testUser.Id)).ShouldBeTrue();
 
-            await Task.Delay(TimeSpan.FromSeconds(1.5)); //Wait for unlock
+            await Task.Delay(TimeSpan.FromSeconds(6)); //Wait for unlock
 
             (await _userManager.GetAccessFailedCountAsync(_testUser.Id)).ShouldBe(0);
             (await _userManager.IsLockedOutAsync(_testUser.Id)).ShouldBeFalse();
-            (await _logInManager.LoginAsync("TestUser", "invalid-pass")).Result.ShouldBe(AbpLoginResultType.InvalidPassword);
+            (await _logInManager.LoginAsync("TestUser", "invalid-pass")).Result.ShouldBe(AbpLoginResultType
+                .InvalidPassword);
 
             (await _logInManager.LoginAsync("TestUser", "123qwe")).Result.ShouldBe(AbpLoginResultType.Success);
             (await _userManager.GetAccessFailedCountAsync(_testUser.Id)).ShouldBe(0);
@@ -82,7 +84,8 @@ namespace Abp.Zero.SampleApp.Tests.Users
         [Theory]
         [InlineData(true)]
         [InlineData(false)]
-        public async Task Test_IsLockoutEnabled_On_User_Creation_Should_Use_Setting_By_Default(bool isLockoutEnabledByDefault)
+        public async Task Test_IsLockoutEnabled_On_User_Creation_Should_Use_Setting_By_Default(
+            bool isLockoutEnabledByDefault)
         {
             // Arrange
 
@@ -99,7 +102,6 @@ namespace Abp.Zero.SampleApp.Tests.Users
                 EmailAddress = "user1@aspnetboilerplate.com",
                 IsEmailConfirmed = true,
                 Password = "AM4OLBpptxBYmM79lGOX9egzZk3vIQU3d/gFCJzaBjAPXzYIK3tQ2N7X4fcrHtElTw==", //123qwe
-                // IsLockoutEnabled = isLockoutEnabled
             };
 
             await WithUnitOfWorkAsync(async () => await _userManager.CreateAsync(user));
@@ -114,7 +116,8 @@ namespace Abp.Zero.SampleApp.Tests.Users
         [InlineData(true, false, true)]
         [InlineData(false, true, true)]
         [InlineData(false, false, false)]
-        public async Task Test_IsLockoutEnabled_On_User_Creation_Should_Use_Stricter_Value_If_Set(bool isLockoutEnabledByDefault, bool isLockoutEnabled, bool isLockoutEnabledExpected)
+        public async Task Test_IsLockoutEnabled_On_User_Creation_Should_Use_Stricter_Value_If_Set(
+            bool isLockoutEnabledByDefault, bool isLockoutEnabled, bool isLockoutEnabledExpected)
         {
             // Arrange
 
@@ -145,16 +148,17 @@ namespace Abp.Zero.SampleApp.Tests.Users
 
         private void ChangeLockoutEnabledSetting(bool isLockoutEnabledByDefault)
         {
-
             LocalIocManager.Using<ISettingManager>(settingManager =>
             {
                 if (AbpSession.TenantId is int tenantId)
                 {
-                    settingManager.ChangeSettingForTenant(tenantId, AbpZeroSettingNames.UserManagement.UserLockOut.IsEnabled, isLockoutEnabledByDefault.ToString());
+                    settingManager.ChangeSettingForTenant(tenantId,
+                        AbpZeroSettingNames.UserManagement.UserLockOut.IsEnabled, isLockoutEnabledByDefault.ToString());
                 }
                 else
                 {
-                    settingManager.ChangeSettingForApplication(AbpZeroSettingNames.UserManagement.UserLockOut.IsEnabled, isLockoutEnabledByDefault.ToString());
+                    settingManager.ChangeSettingForApplication(AbpZeroSettingNames.UserManagement.UserLockOut.IsEnabled,
+                        isLockoutEnabledByDefault.ToString());
                 }
             });
         }

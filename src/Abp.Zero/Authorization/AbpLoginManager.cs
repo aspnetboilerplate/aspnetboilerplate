@@ -268,7 +268,6 @@ namespace Abp.Authorization
                     var isLockOut = await UserManager.IsLockedOutAsync(userId);
 
                     await UnitOfWorkManager.Current.SaveChangesAsync();
-
                     await uow.CompleteAsync();
 
                     return isLockOut;
