@@ -9,7 +9,7 @@ using Xunit;
 
 namespace Abp.EntityFrameworkCore.Tests.Tests
 {
-    public class DateTimeKind_Notmalization_Tests : EntityFrameworkCoreModuleTestBase
+    public class DateTimeKind_Normalization_Tests : EntityFrameworkCoreModuleTestBase
     {
         private readonly IRepository<Blog> _blogRepository;
         private readonly IRepository<BlogCategory> _blogCategoryRepository;
