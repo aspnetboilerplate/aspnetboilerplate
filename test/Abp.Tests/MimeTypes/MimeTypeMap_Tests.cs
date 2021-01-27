@@ -797,7 +797,7 @@ namespace Abp.Tests.MimeTypes
 
             Should.Throw<ArgumentNullException>(() => { _mimeTypeMap.TryGetMimeType(null, out _); });
 
-            _mimeTypeMap.TryGetMimeType("test", out _).ShouldBeFalse();//not found
+            _mimeTypeMap.TryGetMimeType("test", out _).ShouldBeFalse(); //not found
         }
 
         [Fact]
@@ -807,8 +807,29 @@ namespace Abp.Tests.MimeTypes
 
             Should.Throw<ArgumentNullException>(() => { _mimeTypeMap.GetMimeType(null); });
 
-            Should.Throw<ArgumentException>(() => { _mimeTypeMap.GetMimeType("test"); });//not found exception
+            Should.Throw<ArgumentException>(() => { _mimeTypeMap.GetMimeType("test"); }); //not found exception
             _mimeTypeMap.GetMimeType("test", throwErrorIfNotFound: false).ShouldBe(string.Empty);
+        }
+
+        [Fact]
+        public void Try_Get_Extension_Common_Tests()
+        {
+            Should.Throw<ArgumentNullException>(() => { _mimeTypeMap.TryGetExtension("", out _); });
+
+            Should.Throw<ArgumentNullException>(() => { _mimeTypeMap.TryGetExtension(null, out _); });
+
+            _mimeTypeMap.TryGetExtension("test", out _).ShouldBeFalse(); //not found
+        }
+
+        [Fact]
+        public void Get_Extension_Common_Tests()
+        {
+            Should.Throw<ArgumentNullException>(() => { _mimeTypeMap.GetExtension(""); });
+
+            Should.Throw<ArgumentNullException>(() => { _mimeTypeMap.GetExtension(null); });
+
+            Should.Throw<ArgumentException>(() => { _mimeTypeMap.GetExtension("test"); }); //not found exception
+            _mimeTypeMap.GetExtension("test", throwErrorIfNotFound: false).ShouldBe(string.Empty);
         }
     }
 }
