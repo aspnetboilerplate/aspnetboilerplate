@@ -6,6 +6,7 @@ namespace Abp.AspNetCore.Mvc.Caching
 {
     public class GetScriptsResponsePerUserCacheMiddleware
     {
+        internal static TimeSpan? MaxAge = TimeSpan.FromMinutes(30);
         private readonly RequestDelegate _next;
 
         public GetScriptsResponsePerUserCacheMiddleware(RequestDelegate next)
@@ -21,7 +22,7 @@ namespace Abp.AspNetCore.Mvc.Caching
                     new Microsoft.Net.Http.Headers.CacheControlHeaderValue()
                     {
                         Public = true,
-                        MaxAge = TimeSpan.FromMinutes(30),
+                        MaxAge = MaxAge,
                     };
             }
 
