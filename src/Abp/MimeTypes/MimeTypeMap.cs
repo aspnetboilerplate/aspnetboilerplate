@@ -855,5 +855,127 @@ namespace Abp.MimeTypes
 
             return string.Empty;
         }
+
+        /// <summary>
+        /// Adds MIME type to map
+        /// </summary>
+        /// <param name="mimeType">Type of the MIME.</param>
+        /// <param name="extension">Type of the extension</param>
+        /// <exception cref="ArgumentNullException" />
+        /// <exception cref="ArgumentException" />
+        public void AddMimeType(string mimeType, string extension)
+        {
+            if (string.IsNullOrWhiteSpace(mimeType))
+            {
+                throw new ArgumentNullException(nameof(mimeType));
+            }
+
+            if (string.IsNullOrWhiteSpace(extension))
+            {
+                throw new ArgumentNullException(nameof(extension));
+            }
+
+            if (mimeType.StartsWith(Dot))
+            {
+                throw new ArgumentException("MIME type should not start with dot");
+            }
+            
+            if (!extension.StartsWith(Dot))
+            {
+                throw new ArgumentException("Extensions should start with dot");
+            }
+
+            if (MappingDictionary.Value.ContainsKey(mimeType))
+            {
+                throw new ArgumentException("An item with the same mimeType has already been added");
+            }
+
+            MappingDictionary.Value.Add(mimeType, extension);
+        }
+
+        /// <summary>
+        /// Removes MIME type from map
+        /// </summary>
+        /// <param name="mimeType">Type of the MIME.</param>
+        /// <exception cref="ArgumentNullException" />
+        /// <exception cref="ArgumentException" />
+        public void RemoveMimeType(string mimeType)
+        {
+            if (string.IsNullOrWhiteSpace(mimeType))
+            {
+                throw new ArgumentNullException(nameof(mimeType));
+            }
+
+            if (mimeType.StartsWith(Dot))
+            {
+                throw new ArgumentException("MIME type should not start with dot");
+            }
+
+            if (MappingDictionary.Value.ContainsKey(mimeType))
+            {
+                MappingDictionary.Value.Remove(mimeType);
+            }
+        }
+
+        /// <summary>
+        /// Adds extension to map
+        /// </summary>
+        /// <param name="extension">Type of the extension</param>
+        /// <param name="mimeType">Type of the MIME.</param>
+        /// <exception cref="ArgumentNullException" />
+        /// <exception cref="ArgumentException" />
+        public void AddExtension(string extension, string mimeType)
+        {
+            if (string.IsNullOrWhiteSpace(extension))
+            {
+                throw new ArgumentNullException(nameof(extension));
+            }
+
+            if (string.IsNullOrWhiteSpace(mimeType))
+            {
+                throw new ArgumentNullException(nameof(mimeType));
+            }
+
+            if (MappingDictionary.Value.ContainsKey(extension))
+            {
+                throw new ArgumentException("An item with the same extension has already been added");
+            }
+
+            if (mimeType.StartsWith(Dot))
+            {
+                throw new ArgumentException("MIME type should not start with dot");
+            }
+            
+            if (!extension.StartsWith(Dot))
+            {
+                throw new ArgumentException("Extensions should start with dot");
+            }
+
+            MappingDictionary.Value.Add(extension, mimeType);
+        }
+
+        /// <summary>
+        /// Removes extension from map
+        /// </summary>
+        /// <param name="extension">Type of the extension</param>
+        /// <exception cref="ArgumentNullException" />
+        /// <exception cref="ArgumentException" />
+        public void RemoveExtension(string extension)
+        {
+            if (string.IsNullOrWhiteSpace(extension))
+            {
+                throw new ArgumentNullException(nameof(extension));
+            }
+
+            if (!extension.StartsWith(Dot))
+            {
+                throw new ArgumentException("Extensions should start with dot");
+            }
+
+            if (MappingDictionary.Value.ContainsKey(extension))
+            {
+                MappingDictionary.Value.Remove(extension);
+            }
+        }
     }
 }

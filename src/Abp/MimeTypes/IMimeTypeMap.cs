@@ -42,5 +42,39 @@ namespace Abp.MimeTypes
         /// <exception cref="ArgumentNullException" />
         /// <exception cref="ArgumentException" />
         string GetExtension(string mimeType, bool throwErrorIfNotFound = true);
+        
+        /// <summary>
+        /// Adds MIME type to map
+        /// </summary>
+        /// <param name="mimeType">Type of the MIME.</param>
+        /// <param name="extension">Type of the extension</param>
+        /// <exception cref="ArgumentNullException" />
+        /// <exception cref="ArgumentException" />
+        void AddMimeType(string mimeType, string extension);
+        
+        /// <summary>
+        /// Removes MIME type from map
+        /// </summary>
+        /// <param name="mimeType">Type of the MIME.</param>
+        /// <exception cref="ArgumentNullException" />
+        /// <exception cref="ArgumentException" />
+        void RemoveMimeType(string mimeType);
+        
+        /// <summary>
+        /// Adds extension to map
+        /// </summary>
+        /// <param name="extension">Type of the extension</param>
+        /// <param name="mimeType">Type of the MIME.</param>
+        /// <exception cref="ArgumentNullException" />
+        /// <exception cref="ArgumentException" />
+        void AddExtension(string extension, string mimeType);
+        
+        /// <summary>
+        /// Removes extension from map
+        /// </summary>
+        /// <param name="extension">Type of the extension</param>
+        /// <exception cref="ArgumentNullException" />
+        /// <exception cref="ArgumentException" />
+        void RemoveExtension(string extension);
     }
 }
