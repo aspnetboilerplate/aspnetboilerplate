@@ -3,7 +3,7 @@ using Abp.Dependency;
 
 namespace Abp.MimeTypes
 {
-    public interface IMimeTypeMap : ITransientDependency
+    public interface IMimeTypeMap
     {
         /// <summary>
         /// Tries to get the type of the MIME from the provided string.

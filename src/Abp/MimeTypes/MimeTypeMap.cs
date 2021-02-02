@@ -3,10 +3,11 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using Abp.Dependency;
 
 namespace Abp.MimeTypes
 {
-    public class MimeTypeMap : IMimeTypeMap
+    public class MimeTypeMap : IMimeTypeMap, ITransientDependency
     {
         protected const string Dot = ".";
         protected const string QuestionMark = "?";
@@ -803,7 +804,7 @@ namespace Abp.MimeTypes
 
             return string.Empty;
         }
-        
+
         /// <summary>
         /// Gets the extension from the provided MIME type.
         /// </summary>
