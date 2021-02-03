@@ -12,13 +12,13 @@ namespace Abp.DynamicEntityProperties
 
         Task<DynamicProperty> GetAsync(string propertyName);
 
-        void Add(DynamicProperty dynamicProperty);
+        DynamicProperty Add(DynamicProperty dynamicProperty);
 
-        Task AddAsync(DynamicProperty dynamicProperty);
+        Task<DynamicProperty> AddAsync(DynamicProperty dynamicProperty);
 
-        void Update(DynamicProperty dynamicProperty);
+        DynamicProperty Update(DynamicProperty dynamicProperty);
 
-        Task UpdateAsync(DynamicProperty dynamicProperty);
+        Task<DynamicProperty> UpdateAsync(DynamicProperty dynamicProperty);
 
         void Delete(int id);
 
