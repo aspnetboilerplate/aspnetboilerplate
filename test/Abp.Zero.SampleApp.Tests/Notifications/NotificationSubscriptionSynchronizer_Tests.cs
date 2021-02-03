@@ -42,7 +42,7 @@ namespace Abp.Zero.SampleApp.Tests.Notifications
         private void TestNotificationSubscriptionDeletion(int? tenantId)
         {
             var notificationName = "Test";
-            var user = CreateAndGetUser(tenantId);
+            var user = CreateTestUser(tenantId);
 
             UsingDbContext(
                 context =>
@@ -70,7 +70,7 @@ namespace Abp.Zero.SampleApp.Tests.Notifications
             subscriptions.Count.ShouldBe(0);
         }
 
-        private User CreateAndGetUser(int? tenantId)
+        private User CreateTestUser(int? tenantId)
         {
             _userAppService.CreateUser(
                 new CreateUserInput
