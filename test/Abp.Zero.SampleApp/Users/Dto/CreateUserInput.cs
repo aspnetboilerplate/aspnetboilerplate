@@ -15,5 +15,7 @@ namespace Abp.Zero.SampleApp.Users.Dto
 
         [Required]
         public virtual string EmailAddress { get; set; }
+        
+        public int? TenantId { get; set; }
     }
 }

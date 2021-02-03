@@ -28,7 +28,7 @@ namespace Abp.Zero.SampleApp.Users
         {
             _userManager.Create(new User
             {
-                TenantId = null,
+                TenantId = input.TenantId,
                 UserName = input.UserName,
                 Name = input.Name,
                 Surname = input.Surname,
