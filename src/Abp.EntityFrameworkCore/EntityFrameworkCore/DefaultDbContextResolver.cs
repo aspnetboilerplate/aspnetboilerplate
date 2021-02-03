@@ -83,6 +83,7 @@ namespace Abp.EntityFrameworkCore
             if (_iocResolver.IsRegistered<IAbpDbContextConfigurer<TDbContext>>())
             {
                 var configuration = new AbpDbContextConfiguration<TDbContext>(connectionString, existingConnection);
+                configuration.DbContextOptions.UseApplicationServiceProvider(_iocResolver.Resolve<IServiceProvider>());
 
                 using (var configurer = _iocResolver.ResolveAsDisposable<IAbpDbContextConfigurer<TDbContext>>())
                 {
