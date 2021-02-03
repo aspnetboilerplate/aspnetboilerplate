@@ -1,9 +1,6 @@
-﻿using System;
-using System.Linq;
-using System.Threading.Tasks;
+﻿using System.Linq;
 using Abp.Domain.Uow;
 using Abp.Notifications;
-using Abp.Timing;
 using Abp.Zero.SampleApp.MultiTenancy;
 using Abp.Zero.SampleApp.Users;
 using Abp.Zero.SampleApp.Users.Dto;
@@ -30,10 +27,22 @@ namespace Abp.Zero.SampleApp.Tests.Notifications
         }
 
         [Fact]
-        public void Should_Delete_Subscription_When_User_Deleted()
+        public void Should_Delete_Subscription_When_HostUser_Deleted()
+        {
+            TestNotificationSubscriptionDeletion(null);
+        }
+        
+        [Fact]
+        public void Should_Delete_Subscription_When_TenantUser_Deleted()
+        {
+            AbpSession.TenantId = 1;
+            TestNotificationSubscriptionDeletion(AbpSession.TenantId);
+        }
+
+        private void TestNotificationSubscriptionDeletion(int? tenantId)
         {
             var notificationName = "Test";
-            var user = CreateAndGetUser();
+            var user = CreateAndGetUser(tenantId);
 
             UsingDbContext(
                 context =>
@@ -61,7 +70,7 @@ namespace Abp.Zero.SampleApp.Tests.Notifications
             subscriptions.Count.ShouldBe(0);
         }
 
-        private User CreateAndGetUser()
+        private User CreateAndGetUser(int? tenantId)
         {
             _userAppService.CreateUser(
                 new CreateUserInput
@@ -69,7 +78,8 @@ namespace Abp.Zero.SampleApp.Tests.Notifications
                     EmailAddress = "test@aspnetboilerplate.com",
                     Name = "Test Name",
                     Surname = "Test Surname",
-                    UserName = "test.username"
+                    UserName = "test.username",
+                    TenantId = tenantId
                 });
 
             return UsingDbContext(

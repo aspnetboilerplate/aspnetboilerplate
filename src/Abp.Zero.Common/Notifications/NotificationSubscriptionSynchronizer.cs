@@ -22,15 +22,12 @@ namespace Abp.Notifications
             _unitOfWorkManager = unitOfWorkManager;
         }
 
+        [UnitOfWork]
         public virtual void HandleEvent(EntityDeletedEventData<AbpUserBase> eventData)
         {
-            using (var uow = _unitOfWorkManager.Begin())
+            using (_unitOfWorkManager.Current.SetTenantId(eventData.Entity.TenantId))
             {
-                using (_unitOfWorkManager.Current.DisableFilter(AbpDataFilters.MayHaveTenant))
-                {
-                    _notificationSubscriptionRepository.Delete(x => x.UserId == eventData.Entity.Id && x.TenantId == eventData.Entity.TenantId);
-                    uow.Complete();
-                }
+                _notificationSubscriptionRepository.Delete(x => x.UserId == eventData.Entity.Id);
             }
         }
     }
