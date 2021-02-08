@@ -115,7 +115,7 @@ namespace Abp.Webhooks
         }
 
         [UnitOfWork]
-        public async Task<bool> HasXConsecutiveFailAsync(int? tenantId, Guid subscriptionId, int failCount)
+        public virtual async Task<bool> HasXConsecutiveFailAsync(int? tenantId, Guid subscriptionId, int failCount)
         {
             using (_unitOfWorkManager.Current.SetTenantId(tenantId))
             {
@@ -134,7 +134,7 @@ namespace Abp.Webhooks
         }
 
         [UnitOfWork]
-        public bool HasXConsecutiveFail(int? tenantId, Guid subscriptionId, int failCount)
+        public virtual bool HasXConsecutiveFail(int? tenantId, Guid subscriptionId, int failCount)
         {
             using (_unitOfWorkManager.Current.SetTenantId(tenantId))
             {
@@ -152,7 +152,7 @@ namespace Abp.Webhooks
         }
 
         [UnitOfWork]
-        public async Task<IPagedResult<WebhookSendAttempt>> GetAllSendAttemptsBySubscriptionAsPagedListAsync(int? tenantId, Guid subscriptionId, int maxResultCount, int skipCount)
+        public virtual async Task<IPagedResult<WebhookSendAttempt>> GetAllSendAttemptsBySubscriptionAsPagedListAsync(int? tenantId, Guid subscriptionId, int maxResultCount, int skipCount)
         {
             using (_unitOfWorkManager.Current.SetTenantId(tenantId))
             {
@@ -178,7 +178,7 @@ namespace Abp.Webhooks
         }
 
         [UnitOfWork]
-        public IPagedResult<WebhookSendAttempt> GetAllSendAttemptsBySubscriptionAsPagedList(int? tenantId, Guid subscriptionId, int maxResultCount, int skipCount)
+        public virtual IPagedResult<WebhookSendAttempt> GetAllSendAttemptsBySubscriptionAsPagedList(int? tenantId, Guid subscriptionId, int maxResultCount, int skipCount)
         {
             using (_unitOfWorkManager.Current.SetTenantId(tenantId))
             {
@@ -204,7 +204,7 @@ namespace Abp.Webhooks
         }
 
         [UnitOfWork]
-        public async Task<List<WebhookSendAttempt>> GetAllSendAttemptsByWebhookEventIdAsync(int? tenantId, Guid webhookEventId)
+        public virtual async Task<List<WebhookSendAttempt>> GetAllSendAttemptsByWebhookEventIdAsync(int? tenantId, Guid webhookEventId)
         {
             using (_unitOfWorkManager.Current.SetTenantId(tenantId))
             {
@@ -216,7 +216,7 @@ namespace Abp.Webhooks
         }
 
         [UnitOfWork]
-        public List<WebhookSendAttempt> GetAllSendAttemptsByWebhookEventId(int? tenantId, Guid webhookEventId)
+        public virtual List<WebhookSendAttempt> GetAllSendAttemptsByWebhookEventId(int? tenantId, Guid webhookEventId)
         {
             using (_unitOfWorkManager.Current.SetTenantId(tenantId))
             {

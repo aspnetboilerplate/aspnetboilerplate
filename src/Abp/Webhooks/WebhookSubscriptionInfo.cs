@@ -9,7 +9,7 @@ namespace Abp.Webhooks
 {
     [Table("AbpWebhookSubscriptions")]
     [MultiTenancySide(MultiTenancySides.Host)]
-    public class WebhookSubscriptionInfo : CreationAuditedEntity<Guid>, IPassivable, IMayHaveTenant
+    public class WebhookSubscriptionInfo : CreationAuditedEntity<Guid>, IPassivable
     {
         /// <summary>
         /// Subscribed Tenant's id .

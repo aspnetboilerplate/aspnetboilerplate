@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 using Abp.Application.Services;
 using Abp.BackgroundJobs;
@@ -31,79 +32,101 @@ namespace Abp.Webhooks
             WebhookEventStore = NullWebhookEventStore.Instance;
         }
 
-        public async Task PublishAsync(string webhookName, object data, bool sendExactSameData = false)
+        public virtual async Task PublishAsync(string webhookName, object data, bool sendExactSameData = false)
         {
             var subscriptions = await _webhookSubscriptionManager.GetAllSubscriptionsIfFeaturesGrantedAsync(AbpSession.TenantId, webhookName);
-            await PublishAsync(AbpSession.TenantId, webhookName, data, subscriptions, sendExactSameData);
+            await PublishAsync(webhookName, data, subscriptions, sendExactSameData);
         }
 
-        public async Task PublishAsync(string webhookName, object data, int? tenantId, bool sendExactSameData = false)
+        public virtual async Task PublishAsync(string webhookName, object data, int? tenantId, bool sendExactSameData = false)
         {
             var subscriptions = await _webhookSubscriptionManager.GetAllSubscriptionsIfFeaturesGrantedAsync(tenantId, webhookName);
-            await PublishAsync(tenantId, webhookName, data, subscriptions, sendExactSameData);
+            await PublishAsync(webhookName, data, subscriptions, sendExactSameData);
         }
 
-        private async Task PublishAsync(int? tenantId, string webhookName, object data, List<WebhookSubscription> webhookSubscriptions, bool sendExactSameData = false)
+        public virtual async Task PublishAsync(int?[] tenantIds, string webhookName, object data, bool sendExactSameData = false)
+        {
+            var subscriptions = await _webhookSubscriptionManager.GetAllSubscriptionsOfTenantsIfFeaturesGrantedAsync(tenantIds, webhookName);
+            await PublishAsync(webhookName, data, subscriptions, sendExactSameData);
+        }
+
+        private async Task PublishAsync(string webhookName, object data, List<WebhookSubscription> webhookSubscriptions, bool sendExactSameData = false)
         {
             if (webhookSubscriptions.IsNullOrEmpty())
             {
                 return;
             }
 
-            var webhookInfo = await SaveAndGetWebhookAsync(tenantId, webhookName, data);
+            var subscriptionsGroupedByTenant = webhookSubscriptions.GroupBy(x => x.TenantId);
 
-            foreach (var webhookSubscription in webhookSubscriptions)
+            foreach (var subscriptionGroupedByTenant in subscriptionsGroupedByTenant)
             {
-                await _backgroundJobManager.EnqueueAsync<WebhookSenderJob, WebhookSenderArgs>(new WebhookSenderArgs
+                var webhookInfo = await SaveAndGetWebhookAsync(subscriptionGroupedByTenant.Key, webhookName, data);
+
+                foreach (var webhookSubscription in subscriptionGroupedByTenant)
                 {
-                    TenantId = webhookSubscription.TenantId,
-                    WebhookEventId = webhookInfo.Id,
-                    Data = webhookInfo.Data,
-                    WebhookName = webhookInfo.WebhookName,
-                    WebhookSubscriptionId = webhookSubscription.Id,
-                    Headers = webhookSubscription.Headers,
-                    Secret = webhookSubscription.Secret,
-                    WebhookUri = webhookSubscription.WebhookUri,
-                    SendExactSameData = sendExactSameData
-                });
+                    await _backgroundJobManager.EnqueueAsync<WebhookSenderJob, WebhookSenderArgs>(new WebhookSenderArgs
+                    {
+                        TenantId = webhookSubscription.TenantId,
+                        WebhookEventId = webhookInfo.Id,
+                        Data = webhookInfo.Data,
+                        WebhookName = webhookInfo.WebhookName,
+                        WebhookSubscriptionId = webhookSubscription.Id,
+                        Headers = webhookSubscription.Headers,
+                        Secret = webhookSubscription.Secret,
+                        WebhookUri = webhookSubscription.WebhookUri,
+                        SendExactSameData = sendExactSameData
+                    });
+                }
             }
         }
 
-        public void Publish(string webhookName, object data, bool sendExactSameData = false)
+        public virtual void Publish(string webhookName, object data, bool sendExactSameData = false)
         {
             var subscriptions = _webhookSubscriptionManager.GetAllSubscriptionsIfFeaturesGranted(AbpSession.TenantId, webhookName);
-            Publish(AbpSession.TenantId, webhookName, data, subscriptions, sendExactSameData);
+            Publish(webhookName, data, subscriptions, sendExactSameData);
         }
 
-        public void Publish(string webhookName, object data, int? tenantId, bool sendExactSameData = false)
+        public virtual void Publish(string webhookName, object data, int? tenantId, bool sendExactSameData = false)
         {
             var subscriptions = _webhookSubscriptionManager.GetAllSubscriptionsIfFeaturesGranted(tenantId, webhookName);
-            Publish(tenantId, webhookName, data, subscriptions, sendExactSameData);
+            Publish(webhookName, data, subscriptions, sendExactSameData);
         }
 
-        private void Publish(int? tenantId, string webhookName, object data, List<WebhookSubscription> webhookSubscriptions, bool sendExactSameData = false)
+        public virtual void Publish(int?[] tenantIds, string webhookName, object data, bool sendExactSameData = false)
+        {
+            var subscriptions = _webhookSubscriptionManager.GetAllSubscriptionsOfTenantsIfFeaturesGranted(tenantIds, webhookName);
+            Publish(webhookName, data, subscriptions, sendExactSameData);
+        }
+
+        private void Publish(string webhookName, object data, List<WebhookSubscription> webhookSubscriptions, bool sendExactSameData = false)
         {
             if (webhookSubscriptions.IsNullOrEmpty())
             {
                 return;
             }
 
-            var webhookInfo = SaveAndGetWebhook(tenantId, webhookName, data);
+            var subscriptionsGroupedByTenant = webhookSubscriptions.GroupBy(x => x.TenantId);
 
-            foreach (var webhookSubscription in webhookSubscriptions)
+            foreach (var subscriptionGroupedByTenant in subscriptionsGroupedByTenant)
             {
-                _backgroundJobManager.Enqueue<WebhookSenderJob, WebhookSenderArgs>(new WebhookSenderArgs
+                var webhookInfo = SaveAndGetWebhook(subscriptionGroupedByTenant.Key, webhookName, data);
+
+                foreach (var webhookSubscription in subscriptionGroupedByTenant)
                 {
-                    TenantId = webhookSubscription.TenantId,
-                    WebhookEventId = webhookInfo.Id,
-                    Data = webhookInfo.Data,
-                    WebhookName = webhookInfo.WebhookName,
-                    WebhookSubscriptionId = webhookSubscription.Id,
-                    Headers = webhookSubscription.Headers,
-                    Secret = webhookSubscription.Secret,
-                    WebhookUri = webhookSubscription.WebhookUri,
-                    SendExactSameData = sendExactSameData
-                });
+                    _backgroundJobManager.Enqueue<WebhookSenderJob, WebhookSenderArgs>(new WebhookSenderArgs
+                    {
+                        TenantId = webhookSubscription.TenantId,
+                        WebhookEventId = webhookInfo.Id,
+                        Data = webhookInfo.Data,
+                        WebhookName = webhookInfo.WebhookName,
+                        WebhookSubscriptionId = webhookSubscription.Id,
+                        Headers = webhookSubscription.Headers,
+                        Secret = webhookSubscription.Secret,
+                        WebhookUri = webhookSubscription.WebhookUri,
+                        SendExactSameData = sendExactSameData
+                    });
+                }
             }
         }
 
