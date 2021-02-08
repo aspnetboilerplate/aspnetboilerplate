@@ -1,7 +1,9 @@
-﻿using System.Linq;
+﻿using System;
+using System.Linq;
 using Abp.AspNetCore.Configuration;
 using Abp.AspNetCore.MultiTenancy;
 using Abp.AspNetCore.Mvc.Auditing;
+using Abp.AspNetCore.Mvc.Caching;
 using Abp.AspNetCore.Runtime.Session;
 using Abp.AspNetCore.Security.AntiForgery;
 using Abp.AspNetCore.Webhook;
@@ -40,6 +42,8 @@ namespace Abp.AspNetCore
             Configuration.MultiTenancy.Resolvers.Add<DomainTenantResolveContributor>();
             Configuration.MultiTenancy.Resolvers.Add<HttpHeaderTenantResolveContributor>();
             Configuration.MultiTenancy.Resolvers.Add<HttpCookieTenantResolveContributor>();
+
+            Configuration.Caching.Configure(GetScriptsResponsePerUserCache.CacheName, cache => { cache.DefaultSlidingExpireTime = TimeSpan.FromMinutes(30); });
         }
 
         public override void Initialize()
