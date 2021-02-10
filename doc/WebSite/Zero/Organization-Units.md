@@ -189,10 +189,17 @@ public class ProductManager : IDomainService
 
     public async Task<List<Product>> GetProductsForUserAsync(long userId)
     {
-        var user = await _userManager.GetUserByIdAsync(userId);
-        var organizationUnits = await _userManager.GetOrganizationUnitsAsync(user);
-        var organizationUnitIds = organizationUnits.Select(ou => ou.Id);
+		var user = await _userManager.GetUserByIdAsync(AbpSession.UserId.Value);
+		var organizationUnits = await _userManager.GetOrganizationUnitsAsync(user);
+		var organizationUnitCodes = organizationUnits.Select(ou => ou.Code).ToList();
 
+		var predicate = PredicateBuilder.New<OrganizationUnit>();
+		foreach (var code in organizationUnitCodes)
+		{
+			predicate = predicate.Or(ou => ou.Code.StartsWith(code));
+		}
+
+		var organizationUnitIds = await _organizationUnitRepository.GetAll().Where(predicate).Select(ou => ou.Id).ToListAsync();
         return await _productRepository.GetAllListAsync(p => organizationUnitIds.Contains(p.OrganizationUnitId));
     }
 }
