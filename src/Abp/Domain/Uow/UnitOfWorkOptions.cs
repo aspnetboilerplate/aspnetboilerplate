@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Transactions;
+using Abp.Auditing;
 
 namespace Abp.Domain.Uow
 {
@@ -44,12 +45,15 @@ namespace Abp.Domain.Uow
         /// </summary>
         public List<DataFilterConfiguration> FilterOverrides { get; }
 
+        public UnitOfWorkAuditingConfiguration AuiditingOverrides { get; }
+        
         /// <summary>
         /// Creates a new <see cref="UnitOfWorkOptions"/> object.
         /// </summary>
         public UnitOfWorkOptions()
         {
             FilterOverrides = new List<DataFilterConfiguration>();
+            AuiditingOverrides = new UnitOfWorkAuditingConfiguration();
         }
 
         internal void FillDefaultsForNonProvidedOptions(IUnitOfWorkDefaultOptions defaultOptions)
