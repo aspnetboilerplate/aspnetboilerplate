@@ -4,9 +4,9 @@
     {
         public bool DisableCreatorUserId { get; set; }
         
-        public bool DisableModifierUserId { get; set; }
+        public bool DisableLastModifierUserId { get; set; }
         
-        public bool DisableModifierUserId { get; set; }
+        public bool DisableDeleterUserId { get; set; }
     }
     
 }

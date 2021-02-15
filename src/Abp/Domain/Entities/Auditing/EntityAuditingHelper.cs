@@ -117,6 +117,11 @@ namespace Abp.Domain.Entities.Auditing
                 }
             }
 
+            if (auditingConfiguration.DisableLastModifierUserId)
+            {
+                return;
+            }
+            
             //Finally, set LastModifierUserId!
             entity.LastModifierUserId = userId;
         }
@@ -153,6 +158,11 @@ namespace Abp.Domain.Entities.Auditing
                     return;
                 }
 
+                if (auditingConfiguration.DisableDeleterUserId)
+                {
+                    return;
+                }
+                
                 //Special check for multi-tenant entities
                 if (entity is IMayHaveTenant || entity is IMustHaveTenant)
                 {

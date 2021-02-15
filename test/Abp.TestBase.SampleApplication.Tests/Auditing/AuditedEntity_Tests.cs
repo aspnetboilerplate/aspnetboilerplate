@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Linq;
 using Abp.Configuration.Startup;
+using Abp.Dependency;
 using Abp.Domain.Repositories;
 using Abp.Domain.Uow;
 using Abp.TestBase.SampleApplication.Crm;
@@ -75,85 +76,6 @@ namespace Abp.TestBase.SampleApplication.Tests.Auditing
         }
 
         [Fact]
-        public void Should_Not_Write_Audit_Properties()
-        {
-            //Arrange
-            AbpSession.TenantId = 1;
-            AbpSession.UserId = 2;
-
-            //Act: CreatorUserId
-            WithUnitOfWork(() =>
-            {
-                var createdMessage = _messageRepository.Insert(new Message(AbpSession.TenantId, "test message 1"));
-                createdMessage.CreatorUserId.ShouldBeNull();
-                ((DateTime?)createdMessage.CreationTime).ShouldNotBe(null);
-            }, new UnitOfWorkOptions
-            {
-                AuiditingOverrides =
-                {
-                    DisableCreatorUserId = true
-                }
-            });
-            
-            //Act: CreationTime
-            WithUnitOfWork(() =>
-            {
-                var createdMessage = _messageRepository.Insert(new Message(AbpSession.TenantId, "test message 1"));
-                createdMessage.CreatorUserId.ShouldNotBe(null);
-                ((DateTime?)createdMessage.CreationTime).ShouldBe(null);
-            }, new UnitOfWorkOptions
-            {
-                AuiditingOverrides =
-                {
-                    DisableCreationTime = true
-                }
-            });
-
-            // var createdMessage = _messageRepository.Insert(new Message(AbpSession.TenantId, "test message 1"));
-            //
-            // //Assert: Check creation properties
-            // createdMessage.CreatorUserId.ShouldBe(AbpSession.UserId);
-            // createdMessage.CreationTime.ShouldBeGreaterThan(Clock.Now.Subtract(TimeSpan.FromSeconds(10)));
-            // createdMessage.CreationTime.ShouldBeLessThan(Clock.Now.Add(TimeSpan.FromSeconds(10)));
-            //
-            // //Act: Select the same entity
-            // var selectedMessage = _messageRepository.Get(createdMessage.Id);
-            //
-            // //Assert: Select should not change audit properties
-            // selectedMessage.EntityEquals(createdMessage);
-            //
-            // selectedMessage.CreationTime.ShouldBe(createdMessage.CreationTime);
-            // selectedMessage.CreatorUserId.ShouldBe(createdMessage.CreatorUserId);
-            //
-            // selectedMessage.LastModifierUserId.ShouldBe(null);
-            // selectedMessage.LastModificationTime.ShouldBe(null);
-            //
-            // selectedMessage.IsDeleted.ShouldBeFalse();
-            // selectedMessage.DeleterUserId.ShouldBe(null);
-            // selectedMessage.DeletionTime.ShouldBe(null);
-            //
-            // //Act: Update the entity
-            // selectedMessage.Text = "test message 1 - updated";
-            // _messageRepository.Update(selectedMessage);
-            //
-            // //Assert: Modification properties should be changed
-            // selectedMessage.LastModifierUserId.ShouldBe(AbpSession.UserId);
-            // selectedMessage.LastModificationTime.ShouldNotBe(null);
-            // selectedMessage.LastModificationTime.Value.ShouldBeGreaterThan(Clock.Now.Subtract(TimeSpan.FromSeconds(10)));
-            // selectedMessage.LastModificationTime.Value.ShouldBeLessThan(Clock.Now.Add(TimeSpan.FromSeconds(10)));
-            //
-            // //Act: Delete the entity
-            // _messageRepository.Delete(selectedMessage);
-            //
-            // //Assert: Deletion audit properties should be set
-            // selectedMessage.IsDeleted.ShouldBe(true);
-            // selectedMessage.DeleterUserId.ShouldBe(AbpSession.UserId);
-            // selectedMessage.DeletionTime.ShouldNotBe(null);
-            // selectedMessage.DeletionTime.Value.ShouldBeGreaterThan(Clock.Now.Subtract(TimeSpan.FromSeconds(10)));
-            // selectedMessage.DeletionTime.Value.ShouldBeLessThan(Clock.Now.Add(TimeSpan.FromSeconds(10)));
-        }
-        
-        [Fact]
         public void Should_Not_Set_Audit_User_Properties_Of_Host_Entities_By_Tenant_User()
         {
             Resolve<IMultiTenancyConfig>().IsEnabled = true;
@@ -188,6 +110,90 @@ namespace Abp.TestBase.SampleApplication.Tests.Auditing
 
             //LastModifierUserId should set to null since a tenant changing a host entity
             company.LastModifierUserId.ShouldBe(null);
+        }
+        
+         [Fact]
+        public void Should_Not_Set_CreatorUserId_When_DisableCreatorUserId_Is_True()
+        {
+            //Arrange
+            AbpSession.TenantId = 1;
+            AbpSession.UserId = 2;
+
+            //Act: CreatorUserId
+            using (var uowManager = LocalIocManager.ResolveAsDisposable<IUnitOfWorkManager>())
+            {
+                using (var uow = uowManager.Object.Begin(new UnitOfWorkOptions
+                {
+                    AuiditingOverrides =
+                    {
+                        DisableCreatorUserId = true
+                    }
+                }))
+                {
+                    var message = _messageRepository.Insert(new Message(AbpSession.TenantId, "test message 1"));
+                    message.CreatorUserId.ShouldBeNull();
+                    uow.Complete();
+                }
+            }
+        }
+
+        [Fact]
+        public void Should_Not_Set_LastModifierUserId_When_DisableLastModifierUserId_Is_True()
+        {
+            //Arrange
+            AbpSession.TenantId = 1;
+            AbpSession.UserId = 2;
+
+            //Act: Create a new entity
+            var message = _messageRepository.Insert(new Message(AbpSession.TenantId, "test message 1"));
+
+            //Act: CreatorUserId
+            using (var uowManager = LocalIocManager.ResolveAsDisposable<IUnitOfWorkManager>())
+            {
+                using (var uow = uowManager.Object.Begin(new UnitOfWorkOptions
+                {
+                    AuiditingOverrides =
+                    {
+                        DisableLastModifierUserId = true
+                    }
+                }))
+                {
+                    message.Text = "edited test message 1";
+                    _messageRepository.Update(message);
+                    uow.Complete();
+                }
+            }
+
+            message.LastModifierUserId.ShouldBeNull();
+        }
+
+        [Fact]
+        public void Should_Not_Set_DeleterUserId_When_DisableDeleterUserId_Is_True()
+        {
+            //Arrange
+            AbpSession.TenantId = 1;
+            AbpSession.UserId = 2;
+
+            //Act: Create a new entity
+            var message = _messageRepository.Insert(new Message(AbpSession.TenantId, "test message 1"));
+
+            //Act: CreatorUserId
+            using (var uowManager = LocalIocManager.ResolveAsDisposable<IUnitOfWorkManager>())
+            {
+                using (var uow = uowManager.Object.Begin(new UnitOfWorkOptions
+                {
+                    AuiditingOverrides =
+                    {
+                        DisableDeleterUserId = true
+                    }
+                }))
+                {
+                    _messageRepository.Delete(message);
+                    uow.Complete();
+                }
+            }
+
+            message.DeleterUserId.ShouldBeNull();
         }
     }
 }
