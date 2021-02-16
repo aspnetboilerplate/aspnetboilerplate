@@ -209,7 +209,7 @@ namespace Abp.Domain.Uow
                 }
             }
 
-            return new DisposeAction(() => DisableFilter(enabledAuditFields.ToArray()));
+            return new DisposeAction(() => DisableAuditing(enabledAuditFields.ToArray()));
         }
 
         /// <inheritdoc/>
