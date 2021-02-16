@@ -7,6 +7,12 @@ namespace Abp.DynamicEntityProperties
     [Table("AbpDynamicEntityProperties")]
     public class DynamicEntityProperty : Entity, IMayHaveTenant
     {
+        /// <summary>
+        /// Maximum length of the <see cref="EntityFullName"/> property.
+        /// </summary>
+        public const int MaxEntityFullName = 256;
+        
+        [StringLength(MaxEntityFullName)]
         public string EntityFullName { get; set; }
 
         [Required]
