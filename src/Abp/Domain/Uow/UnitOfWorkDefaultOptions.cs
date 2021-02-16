@@ -25,13 +25,19 @@ namespace Abp.Domain.Uow
         public IsolationLevel? IsolationLevel { get; set; }
 
         public IReadOnlyList<DataFilterConfiguration> Filters => _filters;
+        
         private readonly List<DataFilterConfiguration> _filters;
+        
+        public IReadOnlyList<AuditFieldConfiguration> AuditFields => _auditFields;
+        
+        private readonly List<AuditFieldConfiguration> _auditFields;
 
         public List<Func<Type, bool>> ConventionalUowSelectors { get; }
 
         public UnitOfWorkDefaultOptions()
         {
             _filters = new List<DataFilterConfiguration>();
+            _auditFields = new List<AuditFieldConfiguration>();
             IsTransactional = true;
             Scope = TransactionScopeOption.Required;
 
@@ -52,6 +58,16 @@ namespace Abp.Domain.Uow
             }
 
             _filters.Add(new DataFilterConfiguration(filterName, isEnabledByDefault));
+        }
+        
+        public void RegisterAuditField(string fieldName, bool isEnabledByDefault)
+        {
+            if (_auditFields.Any(f => f.FieldName == fieldName))
+            {
+                throw new AbpException("There is already a audit field configuration with name: " + fieldName);
+            }
+
+            _auditFields.Add(new AuditFieldConfiguration(fieldName, isEnabledByDefault));
         }
 
         public void OverrideFilter(string filterName, bool isEnabledByDefault)

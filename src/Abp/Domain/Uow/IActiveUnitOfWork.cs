@@ -38,6 +38,11 @@ namespace Abp.Domain.Uow
         IReadOnlyList<DataFilterConfiguration> Filters { get; }
 
         /// <summary>
+        /// Gets audit field configurations for this unit of work.
+        /// </summary>
+        IReadOnlyList<AuditFieldConfiguration> AuditFields { get; }
+        
+        /// <summary>
         /// A dictionary to use for custom operations on unitOfWork
         /// </summary>
         Dictionary<string, object> Items { get; set; }
@@ -97,6 +102,10 @@ namespace Abp.Domain.Uow
         /// <param name="value">Value of the parameter to be set</param>
         IDisposable SetFilterParameter(string filterName, string parameterName, object value);
 
+        IDisposable DisableAuditing(params string[] fieldNames);
+        
+        IDisposable EnableAuditing(params string[] fieldNames);
+        
         /// <summary>
         /// Sets/Changes Tenant's Id for this UOW.
         /// </summary>

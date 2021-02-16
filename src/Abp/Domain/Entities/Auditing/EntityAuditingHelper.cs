@@ -1,5 +1,7 @@
 ﻿using Abp.Timing;
 using System;
+using System.Collections.Generic;
+using System.Linq;
 using Abp.Configuration.Startup;
 using Abp.Domain.Uow;
 using Abp.MultiTenancy;
@@ -14,7 +16,7 @@ namespace Abp.Domain.Entities.Auditing
             object entityAsObj, 
             int? tenantId,
             long? userId,
-            UnitOfWorkAuditingConfiguration auditingConfiguration)
+            IReadOnlyList<AuditFieldConfiguration> auditFields)
         {
             var entityWithCreationTime = entityAsObj as IHasCreationTime;
             if (entityWithCreationTime == null)
@@ -63,7 +65,8 @@ namespace Abp.Domain.Entities.Auditing
                 }
             }
 
-            if (auditingConfiguration.DisableCreatorUserId)
+            var creationUserIdFilter = auditFields.FirstOrDefault(e => e.FieldName == AbpAuditFields.CreationUserId);
+            if (creationUserIdFilter != null && !creationUserIdFilter.IsEnabled)
             {
                 return;
             }
@@ -77,7 +80,7 @@ namespace Abp.Domain.Entities.Auditing
             object entityAsObj,
             int? tenantId,
             long? userId,
-            UnitOfWorkAuditingConfiguration auditingConfiguration)
+            IReadOnlyList<AuditFieldConfiguration> auditFields)
         {
             if (entityAsObj is IHasModificationTime)
             {
@@ -117,7 +120,8 @@ namespace Abp.Domain.Entities.Auditing
                 }
             }
 
-            if (auditingConfiguration.DisableLastModifierUserId)
+            var lastModifierUserIdFilter = auditFields.FirstOrDefault(e => e.FieldName == AbpAuditFields.LastModifierUserId);
+            if (lastModifierUserIdFilter != null && !lastModifierUserIdFilter.IsEnabled)
             {
                 return;
             }
@@ -130,8 +134,8 @@ namespace Abp.Domain.Entities.Auditing
             IMultiTenancyConfig multiTenancyConfig, 
             object entityAsObj, 
             int? tenantId, 
-            long? userId, 
-            UnitOfWorkAuditingConfiguration auditingConfiguration)
+            long? userId,
+            IReadOnlyList<AuditFieldConfiguration> auditFields)
         {
             if (entityAsObj is IHasDeletionTime)
             {
@@ -158,7 +162,8 @@ namespace Abp.Domain.Entities.Auditing
                     return;
                 }
 
-                if (auditingConfiguration.DisableDeleterUserId)
+                var deleterUserIdFilter = auditFields.FirstOrDefault(e => e.FieldName == AbpAuditFields.DeleterUserId);
+                if (deleterUserIdFilter != null && !deleterUserIdFilter.IsEnabled)
                 {
                     return;
                 }

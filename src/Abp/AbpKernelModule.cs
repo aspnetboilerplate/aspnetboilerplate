@@ -53,6 +53,7 @@ namespace Abp
             AddLocalizationSources();
             AddSettingProviders();
             AddUnitOfWorkFilters();
+            AddUnitOfWorkAuditFieldConfiguration();
             ConfigureCaches();
             AddIgnoredTypes();
             AddMethodParameterValidators();
@@ -124,6 +125,13 @@ namespace Abp
             Configuration.UnitOfWork.RegisterFilter(AbpDataFilters.SoftDelete, true);
             Configuration.UnitOfWork.RegisterFilter(AbpDataFilters.MustHaveTenant, true);
             Configuration.UnitOfWork.RegisterFilter(AbpDataFilters.MayHaveTenant, true);
+        }
+
+        private void AddUnitOfWorkAuditFieldConfiguration()
+        {
+            Configuration.UnitOfWork.RegisterAuditField(AbpAuditFields.CreationUserId, true);
+            Configuration.UnitOfWork.RegisterAuditField(AbpAuditFields.LastModifierUserId, true);
+            Configuration.UnitOfWork.RegisterAuditField(AbpAuditFields.DeleterUserId, true);
         }
 
         private void AddSettingProviders()

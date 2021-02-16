@@ -122,17 +122,14 @@ namespace Abp.TestBase.SampleApplication.Tests.Auditing
             //Act: CreatorUserId
             using (var uowManager = LocalIocManager.ResolveAsDisposable<IUnitOfWorkManager>())
             {
-                using (var uow = uowManager.Object.Begin(new UnitOfWorkOptions
+                using (var uow = uowManager.Object.Begin())
                 {
-                    AuiditingOverrides =
+                    using (uowManager.Object.Current.DisableAuditing(AbpAuditFields.CreationUserId))
                     {
-                        DisableCreatorUserId = true
+                        var message = _messageRepository.Insert(new Message(AbpSession.TenantId, "test message 1"));
+                        message.CreatorUserId.ShouldBeNull();
+                        uow.Complete();   
                     }
-                }))
-                {
-                    var message = _messageRepository.Insert(new Message(AbpSession.TenantId, "test message 1"));
-                    message.CreatorUserId.ShouldBeNull();
-                    uow.Complete();
                 }
             }
         }
@@ -150,17 +147,14 @@ namespace Abp.TestBase.SampleApplication.Tests.Auditing
             //Act: CreatorUserId
             using (var uowManager = LocalIocManager.ResolveAsDisposable<IUnitOfWorkManager>())
             {
-                using (var uow = uowManager.Object.Begin(new UnitOfWorkOptions
+                using (var uow = uowManager.Object.Begin())
                 {
-                    AuiditingOverrides =
+                    using (uowManager.Object.Current.DisableAuditing(AbpAuditFields.LastModifierUserId))
                     {
-                        DisableLastModifierUserId = true
+                        message.Text = "edited test message 1";
+                        _messageRepository.Update(message);
+                        uow.Complete();
                     }
-                }))
-                {
-                    message.Text = "edited test message 1";
-                    _messageRepository.Update(message);
-                    uow.Complete();
                 }
             }
 
@@ -180,16 +174,13 @@ namespace Abp.TestBase.SampleApplication.Tests.Auditing
             //Act: CreatorUserId
             using (var uowManager = LocalIocManager.ResolveAsDisposable<IUnitOfWorkManager>())
             {
-                using (var uow = uowManager.Object.Begin(new UnitOfWorkOptions
+                using (var uow = uowManager.Object.Begin())
                 {
-                    AuiditingOverrides =
+                    using (uowManager.Object.Current.DisableAuditing(AbpAuditFields.DeleterUserId))
                     {
-                        DisableDeleterUserId = true
+                        _messageRepository.Delete(message);
+                        uow.Complete();   
                     }
-                }))
-                {
-                    _messageRepository.Delete(message);
-                    uow.Complete();
                 }
             }
 
