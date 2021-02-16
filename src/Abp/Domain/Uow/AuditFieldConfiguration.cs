@@ -4,12 +4,12 @@
     {
         public string FieldName { get; set; }
         
-        public bool IsEnabled { get; }
+        public bool IsSavingEnabled { get; }
         
-        public AuditFieldConfiguration(string fieldName, bool isEnabled)
+        public AuditFieldConfiguration(string fieldName, bool isSavingEnabled)
         {
             FieldName = fieldName;
-            IsEnabled = isEnabled;
+            IsSavingEnabled = isSavingEnabled;
         }
     }
 }

@@ -40,7 +40,7 @@ namespace Abp.Domain.Uow
         /// <summary>
         /// Gets audit field configurations for this unit of work.
         /// </summary>
-        IReadOnlyList<AuditFieldConfiguration> AuditFields { get; }
+        IReadOnlyList<AuditFieldConfiguration> AuditFieldConfiguration { get; }
         
         /// <summary>
         /// A dictionary to use for custom operations on unitOfWork
@@ -102,8 +102,18 @@ namespace Abp.Domain.Uow
         /// <param name="value">Value of the parameter to be set</param>
         IDisposable SetFilterParameter(string filterName, string parameterName, object value);
 
+        /// <summary>
+        /// Disables automatic saving for one or more audit fields.
+        /// </summary>
+        /// <param name="fieldNames">One or more audit field names. <see cref="AbpAuditFields"/> for standard fields.</param>
+        /// <returns>A <see cref="IDisposable"/> handle to take back the disable effect.</returns>
         IDisposable DisableAuditing(params string[] fieldNames);
         
+        /// <summary>
+        /// Enables automatic saving for one or more audit fields.
+        /// </summary>
+        /// <param name="fieldNames">One or more audit field names. <see cref="AbpAuditFields"/> for standard fields.</param>
+        /// <returns>A <see cref="IDisposable"/> handle to take back the enable effect.</returns>
         IDisposable EnableAuditing(params string[] fieldNames);
         
         /// <summary>

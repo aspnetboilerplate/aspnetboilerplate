@@ -524,7 +524,7 @@ namespace Abp.EntityFramework
                 entityAsObj,
                 AbpSession.TenantId,
                 userId,
-                CurrentUnitOfWorkProvider?.Current?.AuditFields
+                CurrentUnitOfWorkProvider?.Current?.AuditFieldConfiguration
             );
         }
 
@@ -535,7 +535,7 @@ namespace Abp.EntityFramework
                 entityAsObj,
                 AbpSession.TenantId,
                 userId,
-                CurrentUnitOfWorkProvider?.Current?.AuditFields
+                CurrentUnitOfWorkProvider?.Current?.AuditFieldConfiguration
             );
         }
 
@@ -559,7 +559,7 @@ namespace Abp.EntityFramework
                 entityAsObj,
                 AbpSession.TenantId,
                 userId,
-                CurrentUnitOfWorkProvider?.Current?.AuditFields
+                CurrentUnitOfWorkProvider?.Current?.AuditFieldConfiguration
             );
         }
 

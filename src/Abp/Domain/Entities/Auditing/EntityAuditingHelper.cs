@@ -66,7 +66,7 @@ namespace Abp.Domain.Entities.Auditing
             }
 
             var creationUserIdFilter = auditFields.FirstOrDefault(e => e.FieldName == AbpAuditFields.CreationUserId);
-            if (creationUserIdFilter != null && !creationUserIdFilter.IsEnabled)
+            if (creationUserIdFilter != null && !creationUserIdFilter.IsSavingEnabled)
             {
                 return;
             }
@@ -121,7 +121,7 @@ namespace Abp.Domain.Entities.Auditing
             }
 
             var lastModifierUserIdFilter = auditFields.FirstOrDefault(e => e.FieldName == AbpAuditFields.LastModifierUserId);
-            if (lastModifierUserIdFilter != null && !lastModifierUserIdFilter.IsEnabled)
+            if (lastModifierUserIdFilter != null && !lastModifierUserIdFilter.IsSavingEnabled)
             {
                 return;
             }
@@ -163,7 +163,7 @@ namespace Abp.Domain.Entities.Auditing
                 }
 
                 var deleterUserIdFilter = auditFields.FirstOrDefault(e => e.FieldName == AbpAuditFields.DeleterUserId);
-                if (deleterUserIdFilter != null && !deleterUserIdFilter.IsEnabled)
+                if (deleterUserIdFilter != null && !deleterUserIdFilter.IsSavingEnabled)
                 {
                     return;
                 }

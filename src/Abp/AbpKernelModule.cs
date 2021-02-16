@@ -129,9 +129,9 @@ namespace Abp
 
         private void AddUnitOfWorkAuditFieldConfiguration()
         {
-            Configuration.UnitOfWork.RegisterAuditField(AbpAuditFields.CreationUserId, true);
-            Configuration.UnitOfWork.RegisterAuditField(AbpAuditFields.LastModifierUserId, true);
-            Configuration.UnitOfWork.RegisterAuditField(AbpAuditFields.DeleterUserId, true);
+            Configuration.UnitOfWork.RegisterAuditFieldConfiguration(AbpAuditFields.CreationUserId, true);
+            Configuration.UnitOfWork.RegisterAuditFieldConfiguration(AbpAuditFields.LastModifierUserId, true);
+            Configuration.UnitOfWork.RegisterAuditFieldConfiguration(AbpAuditFields.DeleterUserId, true);
         }
 
         private void AddSettingProviders()
