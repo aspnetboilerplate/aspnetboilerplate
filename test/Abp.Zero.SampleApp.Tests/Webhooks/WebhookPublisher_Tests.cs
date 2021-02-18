@@ -46,10 +46,10 @@ namespace Abp.Zero.SampleApp.Tests.Webhooks
             var subscription = await CreateTenantAndSubscribeToWebhookAsync(webhookDefinition, tenantFeatures);
 
             AbpSession.TenantId = subscription.TenantId;
-            
+
             var webhooksConfiguration = Resolve<IWebhooksConfiguration>();
 
-            var data = new { Name = "Musa", Surname = "Demir" };
+            var data = new {Name = "Musa", Surname = "Demir"};
 
             Predicate<WebhookSenderArgs> predicate = w =>
             {
@@ -77,7 +77,7 @@ namespace Abp.Zero.SampleApp.Tests.Webhooks
         public async Task Should_Not_Send_Webhook_If_There_Is_No_Subscription_Async()
         {
             await CreateTenantAndSubscribeToWebhookAsync(AppWebhookDefinitionNames.Users.Created,
-               AppFeatures.WebhookFeature, "true");
+                AppFeatures.WebhookFeature, "true");
 
             AbpSession.TenantId = GetDefaultTenant().Id;
 
@@ -131,7 +131,7 @@ namespace Abp.Zero.SampleApp.Tests.Webhooks
 
             await AddOrReplaceFeatureToTenantAsync(subscription.TenantId.Value, AppFeatures.WebhookFeature, "false");
 
-            await _webhookPublisher.PublishAsync(AppWebhookDefinitionNames.Users.Created, new { Name = "Musa", Surname = "Demir" }, subscription.TenantId);
+            await _webhookPublisher.PublishAsync(AppWebhookDefinitionNames.Users.Created, new {Name = "Musa", Surname = "Demir"}, subscription.TenantId);
 
             //should not try to send
             await _backgroundJobManagerSubstitute.DidNotReceive().EnqueueAsync<WebhookSenderJob, WebhookSenderArgs>(Arg.Any<WebhookSenderArgs>());
@@ -147,7 +147,7 @@ namespace Abp.Zero.SampleApp.Tests.Webhooks
 
             await AddOrReplaceFeatureToTenantAsync(AbpSession.TenantId.Value, AppFeatures.WebhookFeature, "false");
 
-            await _webhookPublisher.PublishAsync(AppWebhookDefinitionNames.Users.Created, new { Name = "Musa", Surname = "Demir" });
+            await _webhookPublisher.PublishAsync(AppWebhookDefinitionNames.Users.Created, new {Name = "Musa", Surname = "Demir"});
 
             //should not try to send
             await _backgroundJobManagerSubstitute.DidNotReceive().EnqueueAsync<WebhookSenderJob, WebhookSenderArgs>(Arg.Any<WebhookSenderArgs>());
@@ -231,7 +231,7 @@ namespace Abp.Zero.SampleApp.Tests.Webhooks
             //remove one feature
             await AddOrReplaceFeatureToTenantAsync(subscription.TenantId.Value, AppFeatures.WebhookFeature, "false");
 
-            await _webhookPublisher.PublishAsync(AppWebhookDefinitionNames.Theme.DefaultThemeChanged, new { Name = "Musa", Surname = "Demir" }, subscription.TenantId);
+            await _webhookPublisher.PublishAsync(AppWebhookDefinitionNames.Theme.DefaultThemeChanged, new {Name = "Musa", Surname = "Demir"}, subscription.TenantId);
 
             //should not try to send
             await _backgroundJobManagerSubstitute.DidNotReceive().EnqueueAsync<WebhookSenderJob, WebhookSenderArgs>(Arg.Any<WebhookSenderArgs>());
@@ -252,7 +252,7 @@ namespace Abp.Zero.SampleApp.Tests.Webhooks
             await AddOrReplaceFeatureToTenantAsync(subscription.TenantId.Value, AppFeatures.WebhookFeature, "false");
 
             AbpSession.TenantId = subscription.TenantId;
-            await _webhookPublisher.PublishAsync(AppWebhookDefinitionNames.Theme.DefaultThemeChanged, new { Name = "Musa", Surname = "Demir" });
+            await _webhookPublisher.PublishAsync(AppWebhookDefinitionNames.Theme.DefaultThemeChanged, new {Name = "Musa", Surname = "Demir"});
 
             //should not try to send
             await _backgroundJobManagerSubstitute.DidNotReceive().EnqueueAsync<WebhookSenderJob, WebhookSenderArgs>(Arg.Any<WebhookSenderArgs>());
@@ -266,10 +266,10 @@ namespace Abp.Zero.SampleApp.Tests.Webhooks
                 TenantId = null,
                 Secret = "secret",
                 WebhookUri = "www.mywebhook.com",
-                Webhooks = new List<string>() { AppWebhookDefinitionNames.Users.Created },
+                Webhooks = new List<string>() {AppWebhookDefinitionNames.Users.Created},
                 Headers = new Dictionary<string, string>
                 {
-                    { "Key","Value"}
+                    {"Key", "Value"}
                 }
             };
 
@@ -278,7 +278,7 @@ namespace Abp.Zero.SampleApp.Tests.Webhooks
 
             await webhookSubscriptionManager.AddOrUpdateSubscriptionAsync(subscription);
 
-            var data = new { Name = "Musa", Surname = "Demir" };
+            var data = new {Name = "Musa", Surname = "Demir"};
 
             Predicate<WebhookSenderArgs> predicate = w =>
             {
@@ -337,13 +337,13 @@ namespace Abp.Zero.SampleApp.Tests.Webhooks
                     webhookSenderJob.Execute(args[0] as WebhookSenderArgs);
 
                     var sub = webhookSubscriptionManager.Get(subscription.Id);
-                    sub.IsActive.ShouldBeFalse();//after it get error MaxConsecutiveFailCountBeforeDeactivateSubscription times(in our case it is 1) subscription becomes deactivate
+                    sub.IsActive.ShouldBeFalse(); //after it get error MaxConsecutiveFailCountBeforeDeactivateSubscription times(in our case it is 1) subscription becomes deactivate
                 });
 
             await webhookSubscriptionManager.AddOrUpdateSubscriptionAsync(subscription);
 
             var storedSubscription = webhookSubscriptionManager.Get(subscription.Id);
-            storedSubscription.IsActive.ShouldBeTrue();//subscription is active 
+            storedSubscription.IsActive.ShouldBeTrue(); //subscription is active 
 
             await _webhookPublisher.PublishAsync(AppWebhookDefinitionNames.Test, data, subscription.TenantId);
 
@@ -351,6 +351,130 @@ namespace Abp.Zero.SampleApp.Tests.Webhooks
                 .EnqueueAsync<WebhookSenderJob, WebhookSenderArgs>(Arg.Is<WebhookSenderArgs>(w => predicate(w)));
 
             webhookSenderSubstitute.Received().SendWebhook(Arg.Any<WebhookSenderArgs>());
+        }
+
+        [Fact]
+        public async Task Should_Send_Webhook_To_Subscribed_Tenants_Async()
+        {
+            var tenant1Subscription = await CreateTenantAndSubscribeToWebhookAsync(
+                AppWebhookDefinitionNames.Users.Created,
+                new Dictionary<string, string>
+                {
+                    {AppFeatures.WebhookFeature, "true"}
+                }
+            );
+
+            var tenant2Subscription = await CreateTenantAndSubscribeToWebhookAsync(
+                AppWebhookDefinitionNames.Users.Created,
+                new Dictionary<string, string>
+                {
+                    {AppFeatures.WebhookFeature, "true"}
+                }
+            );
+
+            var tenant3Subscription = await CreateTenantAndSubscribeToWebhookAsync(
+                AppWebhookDefinitionNames.Test,
+                null
+            );
+
+            var webhooksConfiguration = Resolve<IWebhooksConfiguration>();
+
+            var data = new {Name = "Musa", Surname = "Demir"};
+
+            Predicate<WebhookSenderArgs> predicate = w =>
+            {
+                w.Secret.ShouldNotBeNullOrEmpty();
+                w.Secret.ShouldStartWith(WebhookSubscriptionSecretPrefix);
+                w.WebhookName.ShouldContain(AppWebhookDefinitionNames.Users.Created);
+
+                w.Headers.Count.ShouldBe(1);
+                w.Headers.Single().Key.ShouldBe("Key");
+                w.Headers.Single().Value.ShouldBe("Value");
+
+                var acceptedIds = new[] {tenant1Subscription.Id, tenant2Subscription.Id}; //since tenant 3 is not subscribed to that event, tenant3's subscription should not receive that event
+                acceptedIds.ShouldContain(w.WebhookSubscriptionId);
+
+                w.Data.ShouldBe(
+                    webhooksConfiguration.JsonSerializerSettings != null
+                        ? data.ToJsonString(webhooksConfiguration.JsonSerializerSettings)
+                        : data.ToJsonString()
+                );
+                return true;
+            };
+
+            //Even if we try to publish this webhook to tenant 3, it shouldn't get it since it has no subscription to that AppWebhookDefinitionNames.Users.Created
+            await _webhookPublisher.PublishAsync(new[]
+            {
+                tenant1Subscription.TenantId,
+                tenant2Subscription.TenantId,
+                tenant3Subscription.TenantId
+            }, AppWebhookDefinitionNames.Users.Created, data);
+
+            await _backgroundJobManagerSubstitute.Received(2)
+                .EnqueueAsync<WebhookSenderJob, WebhookSenderArgs>(Arg.Is<WebhookSenderArgs>(p => predicate(p)));
+        }
+
+        [Fact]
+        public async Task Should_Send_Webhook_To_Only_Listed_Subscribed_Tenants_Async()
+        {
+            var tenant1Subscription = await CreateTenantAndSubscribeToWebhookAsync(
+                AppWebhookDefinitionNames.Users.Created,
+                new Dictionary<string, string>
+                {
+                    {AppFeatures.WebhookFeature, "true"}
+                }
+            );
+
+            var tenant2Subscription = await CreateTenantAndSubscribeToWebhookAsync(
+                AppWebhookDefinitionNames.Users.Created,
+                new Dictionary<string, string>
+                {
+                    {AppFeatures.WebhookFeature, "true"}
+                }
+            );
+
+            var tenant3Subscription = await CreateTenantAndSubscribeToWebhookAsync(
+                AppWebhookDefinitionNames.Test,
+                new Dictionary<string, string>
+                {
+                    {AppFeatures.WebhookFeature, "true"}
+                }
+            );
+
+            var webhooksConfiguration = Resolve<IWebhooksConfiguration>();
+
+            var data = new {Name = "Musa", Surname = "Demir"};
+
+            Predicate<WebhookSenderArgs> predicate = w =>
+            {
+                w.Secret.ShouldNotBeNullOrEmpty();
+                w.Secret.ShouldStartWith(WebhookSubscriptionSecretPrefix);
+                w.WebhookName.ShouldContain(AppWebhookDefinitionNames.Users.Created);
+
+                w.Headers.Count.ShouldBe(1);
+                w.Headers.Single().Key.ShouldBe("Key");
+                w.Headers.Single().Value.ShouldBe("Value");
+
+                var acceptedIds = new[] {tenant1Subscription.Id, tenant2Subscription.Id}; //since tenant 3 is not listed in publish function, tenant3's subscription should not receive that event
+                acceptedIds.ShouldContain(w.WebhookSubscriptionId);
+
+                w.Data.ShouldBe(
+                    webhooksConfiguration.JsonSerializerSettings != null
+                        ? data.ToJsonString(webhooksConfiguration.JsonSerializerSettings)
+                        : data.ToJsonString()
+                );
+                return true;
+            };
+
+            //only send to tenant1 and tenant2, not tenant3
+            await _webhookPublisher.PublishAsync(new[]
+            {
+                tenant1Subscription.TenantId,
+                tenant2Subscription.TenantId
+            }, AppWebhookDefinitionNames.Users.Created, data);
+
+            await _backgroundJobManagerSubstitute.Received(2)
+                .EnqueueAsync<WebhookSenderJob, WebhookSenderArgs>(Arg.Is<WebhookSenderArgs>(p => predicate(p)));
         }
 
         #endregion
@@ -361,15 +485,15 @@ namespace Abp.Zero.SampleApp.Tests.Webhooks
         public void Should_Not_Send_Webhook_If_There_Is_Subscription_Sync()
         {
             AsyncHelper.RunSync(() => CreateTenantAndSubscribeToWebhookAsync(AppWebhookDefinitionNames.Users.Created,
-               AppFeatures.WebhookFeature, "true"));
+                AppFeatures.WebhookFeature, "true"));
 
             AbpSession.TenantId = GetDefaultTenant().Id;
             _webhookPublisher.Publish(AppWebhookDefinitionNames.Test,
-               new
-               {
-                   Name = "Musa",
-                   Surname = "Demir"
-               });
+                new
+                {
+                    Name = "Musa",
+                    Surname = "Demir"
+                });
 
             _backgroundJobManagerSubstitute.DidNotReceive().Enqueue<WebhookSenderJob, WebhookSenderArgs>(Arg.Any<WebhookSenderArgs>());
         }
@@ -386,7 +510,7 @@ namespace Abp.Zero.SampleApp.Tests.Webhooks
             _webhookPublisher.Publish(AppWebhookDefinitionNames.Users.Created, data, subscription.TenantId);
 
             _backgroundJobManagerSubstitute.Received()
-               .Enqueue<WebhookSenderJob, WebhookSenderArgs>(Arg.Is<WebhookSenderArgs>(w => predicate(w)));
+                .Enqueue<WebhookSenderJob, WebhookSenderArgs>(Arg.Is<WebhookSenderArgs>(w => predicate(w)));
         }
 
         [Fact]
@@ -414,7 +538,7 @@ namespace Abp.Zero.SampleApp.Tests.Webhooks
 
             AsyncHelper.RunSync(() => AddOrReplaceFeatureToTenantAsync(subscription.TenantId.Value, AppFeatures.WebhookFeature, "false"));
 
-            _webhookPublisher.Publish(AppWebhookDefinitionNames.Users.Created, new { Name = "Musa", Surname = "Demir" }, subscription.TenantId);
+            _webhookPublisher.Publish(AppWebhookDefinitionNames.Users.Created, new {Name = "Musa", Surname = "Demir"}, subscription.TenantId);
 
             //should not try to send
             _backgroundJobManagerSubstitute.DidNotReceive().Enqueue<WebhookSenderJob, WebhookSenderArgs>(Arg.Any<WebhookSenderArgs>());
@@ -430,7 +554,7 @@ namespace Abp.Zero.SampleApp.Tests.Webhooks
 
             AbpSession.TenantId = subscription.TenantId;
 
-            _webhookPublisher.Publish(AppWebhookDefinitionNames.Users.Created, new { Name = "Musa", Surname = "Demir" });
+            _webhookPublisher.Publish(AppWebhookDefinitionNames.Users.Created, new {Name = "Musa", Surname = "Demir"});
 
             //should not try to send
             _backgroundJobManagerSubstitute.DidNotReceive().Enqueue<WebhookSenderJob, WebhookSenderArgs>(Arg.Any<WebhookSenderArgs>());
@@ -465,7 +589,7 @@ namespace Abp.Zero.SampleApp.Tests.Webhooks
             _webhookPublisher.Publish(AppWebhookDefinitionNames.Theme.DefaultThemeChanged, data2, subscription2.TenantId);
 
             _backgroundJobManagerSubstitute.Received()
-               .Enqueue<WebhookSenderJob, WebhookSenderArgs>(Arg.Is<WebhookSenderArgs>(w => predicate2(w)));
+                .Enqueue<WebhookSenderJob, WebhookSenderArgs>(Arg.Is<WebhookSenderArgs>(w => predicate2(w)));
         }
 
         [Fact]
@@ -507,16 +631,16 @@ namespace Abp.Zero.SampleApp.Tests.Webhooks
         {
             //DefaultThemeChanged webhook requires AppFeatures.WebhookFeature, AppFeatures.ThemeFeature and requires all
             var subscription = AsyncHelper.RunSync(() => CreateTenantAndSubscribeToWebhookAsync(AppWebhookDefinitionNames.Theme.DefaultThemeChanged,
-               new Dictionary<string, string>
-               {
+                new Dictionary<string, string>
+                {
                     {AppFeatures.WebhookFeature, "true"},
                     {AppFeatures.ThemeFeature, "true"}
-               }));
+                }));
 
             //remove one feature
             AsyncHelper.RunSync(() => AddOrReplaceFeatureToTenantAsync(subscription.TenantId.Value, AppFeatures.WebhookFeature, "false"));
 
-            _webhookPublisher.Publish(AppWebhookDefinitionNames.Theme.DefaultThemeChanged, new { Name = "Musa", Surname = "Demir" }, subscription.TenantId);
+            _webhookPublisher.Publish(AppWebhookDefinitionNames.Theme.DefaultThemeChanged, new {Name = "Musa", Surname = "Demir"}, subscription.TenantId);
 
             //should not try to send
             _backgroundJobManagerSubstitute.DidNotReceive().Enqueue<WebhookSenderJob, WebhookSenderArgs>(Arg.Any<WebhookSenderArgs>());
@@ -537,7 +661,7 @@ namespace Abp.Zero.SampleApp.Tests.Webhooks
             //remove one feature
             AsyncHelper.RunSync(() => AddOrReplaceFeatureToTenantAsync(AbpSession.TenantId.Value, AppFeatures.WebhookFeature, "false"));
 
-            _webhookPublisher.Publish(AppWebhookDefinitionNames.Theme.DefaultThemeChanged, new { Name = "Musa", Surname = "Demir" }, AbpSession.TenantId);
+            _webhookPublisher.Publish(AppWebhookDefinitionNames.Theme.DefaultThemeChanged, new {Name = "Musa", Surname = "Demir"}, AbpSession.TenantId);
 
             //should not try to send
             _backgroundJobManagerSubstitute.DidNotReceive().Enqueue<WebhookSenderJob, WebhookSenderArgs>(Arg.Any<WebhookSenderArgs>());
@@ -551,10 +675,10 @@ namespace Abp.Zero.SampleApp.Tests.Webhooks
                 TenantId = null,
                 Secret = "secret",
                 WebhookUri = "www.mywebhook.com",
-                Webhooks = new List<string>() { AppWebhookDefinitionNames.Users.Created },
+                Webhooks = new List<string>() {AppWebhookDefinitionNames.Users.Created},
                 Headers = new Dictionary<string, string>
                 {
-                    { "Key","Value"}
+                    {"Key", "Value"}
                 }
             };
 
@@ -563,7 +687,7 @@ namespace Abp.Zero.SampleApp.Tests.Webhooks
 
             webhookSubscriptionManager.AddOrUpdateSubscription(subscription);
 
-            var data = new { Name = "Musa", Surname = "Demir" };
+            var data = new {Name = "Musa", Surname = "Demir"};
 
             Predicate<WebhookSenderArgs> predicate = w =>
             {
@@ -587,7 +711,7 @@ namespace Abp.Zero.SampleApp.Tests.Webhooks
             _webhookPublisher.Publish(AppWebhookDefinitionNames.Users.Created, data, null);
 
             _backgroundJobManagerSubstitute.Received()
-               .Enqueue<WebhookSenderJob, WebhookSenderArgs>(Arg.Is<WebhookSenderArgs>(w => predicate(w)));
+                .Enqueue<WebhookSenderJob, WebhookSenderArgs>(Arg.Is<WebhookSenderArgs>(w => predicate(w)));
         }
 
         [Fact]
@@ -622,20 +746,144 @@ namespace Abp.Zero.SampleApp.Tests.Webhooks
                     webhookSenderJob.Execute(args[0] as WebhookSenderArgs);
 
                     var sub = webhookSubscriptionManager.Get(subscription.Id);
-                    sub.IsActive.ShouldBeFalse();//after it get error MaxConsecutiveFailCountBeforeDeactivateSubscription times(in our case it is 1) subscription becomes deactivate
+                    sub.IsActive.ShouldBeFalse(); //after it get error MaxConsecutiveFailCountBeforeDeactivateSubscription times(in our case it is 1) subscription becomes deactivate
                 });
 
             webhookSubscriptionManager.AddOrUpdateSubscription(subscription);
 
             var storedSubscription = webhookSubscriptionManager.Get(subscription.Id);
-            storedSubscription.IsActive.ShouldBeTrue();//subscription is active 
+            storedSubscription.IsActive.ShouldBeTrue(); //subscription is active 
 
             _webhookPublisher.Publish(AppWebhookDefinitionNames.Test, data, subscription.TenantId);
 
             _backgroundJobManagerSubstitute.Received()
-               .Enqueue<WebhookSenderJob, WebhookSenderArgs>(Arg.Is<WebhookSenderArgs>(w => predicate(w)));
+                .Enqueue<WebhookSenderJob, WebhookSenderArgs>(Arg.Is<WebhookSenderArgs>(w => predicate(w)));
 
             webhookSenderSubstitute.Received().SendWebhook(Arg.Any<WebhookSenderArgs>());
+        }
+
+        [Fact]
+        public void Should_Send_Webhook_To_Subscribed_Tenants()
+        {
+            var tenant1Subscription = AsyncHelper.RunSync(() => CreateTenantAndSubscribeToWebhookAsync(
+                AppWebhookDefinitionNames.Users.Created,
+                new Dictionary<string, string>
+                {
+                    {AppFeatures.WebhookFeature, "true"}
+                }
+            ));
+
+            var tenant2Subscription = AsyncHelper.RunSync(() => CreateTenantAndSubscribeToWebhookAsync(
+                AppWebhookDefinitionNames.Users.Created,
+                new Dictionary<string, string>
+                {
+                    {AppFeatures.WebhookFeature, "true"}
+                }
+            ));
+
+            var tenant3Subscription = AsyncHelper.RunSync(() => CreateTenantAndSubscribeToWebhookAsync(
+                AppWebhookDefinitionNames.Test,
+                null
+            ));
+
+            var webhooksConfiguration = Resolve<IWebhooksConfiguration>();
+
+            var data = new {Name = "Musa", Surname = "Demir"};
+
+            Predicate<WebhookSenderArgs> predicate = w =>
+            {
+                w.Secret.ShouldNotBeNullOrEmpty();
+                w.Secret.ShouldStartWith(WebhookSubscriptionSecretPrefix);
+                w.WebhookName.ShouldContain(AppWebhookDefinitionNames.Users.Created);
+
+                w.Headers.Count.ShouldBe(1);
+                w.Headers.Single().Key.ShouldBe("Key");
+                w.Headers.Single().Value.ShouldBe("Value");
+
+                var acceptedIds = new[] {tenant1Subscription.Id, tenant2Subscription.Id}; //since tenant 3 is not subscribed to that event, tenant3's subscription should not receive that event
+                acceptedIds.ShouldContain(w.WebhookSubscriptionId);
+
+                w.Data.ShouldBe(
+                    webhooksConfiguration.JsonSerializerSettings != null
+                        ? data.ToJsonString(webhooksConfiguration.JsonSerializerSettings)
+                        : data.ToJsonString()
+                );
+                return true;
+            };
+
+            //Even if we try to publish this webhook to tenant 3, it shouldn't get it since it has no subscription to that AppWebhookDefinitionNames.Users.Created
+            _webhookPublisher.Publish(new[]
+            {
+                tenant1Subscription.TenantId,
+                tenant2Subscription.TenantId,
+                tenant3Subscription.TenantId
+            }, AppWebhookDefinitionNames.Users.Created, data);
+
+            _backgroundJobManagerSubstitute.Received(2)
+                .Enqueue<WebhookSenderJob, WebhookSenderArgs>(Arg.Is<WebhookSenderArgs>(p => predicate(p)));
+        }
+
+        [Fact]
+        public void Should_Send_Webhook_To_Only_Listed_Subscribed_Tenants()
+        {
+            var tenant1Subscription = AsyncHelper.RunSync(() => CreateTenantAndSubscribeToWebhookAsync(
+                AppWebhookDefinitionNames.Users.Created,
+                new Dictionary<string, string>
+                {
+                    {AppFeatures.WebhookFeature, "true"}
+                }
+            ));
+
+            var tenant2Subscription = AsyncHelper.RunSync(() => CreateTenantAndSubscribeToWebhookAsync(
+                AppWebhookDefinitionNames.Users.Created,
+                new Dictionary<string, string>
+                {
+                    {AppFeatures.WebhookFeature, "true"}
+                }
+            ));
+
+            var tenant3Subscription = AsyncHelper.RunSync(() => CreateTenantAndSubscribeToWebhookAsync(
+                AppWebhookDefinitionNames.Test,
+                new Dictionary<string, string>
+                {
+                    {AppFeatures.WebhookFeature, "true"}
+                }
+            ));
+
+            var webhooksConfiguration = Resolve<IWebhooksConfiguration>();
+
+            var data = new {Name = "Musa", Surname = "Demir"};
+
+            Predicate<WebhookSenderArgs> predicate = w =>
+            {
+                w.Secret.ShouldNotBeNullOrEmpty();
+                w.Secret.ShouldStartWith(WebhookSubscriptionSecretPrefix);
+                w.WebhookName.ShouldContain(AppWebhookDefinitionNames.Users.Created);
+
+                w.Headers.Count.ShouldBe(1);
+                w.Headers.Single().Key.ShouldBe("Key");
+                w.Headers.Single().Value.ShouldBe("Value");
+
+                var acceptedIds = new[] {tenant1Subscription.Id, tenant2Subscription.Id}; //since tenant 3 is not listed in publish function, tenant3's subscription should not receive that event
+                acceptedIds.ShouldContain(w.WebhookSubscriptionId);
+
+                w.Data.ShouldBe(
+                    webhooksConfiguration.JsonSerializerSettings != null
+                        ? data.ToJsonString(webhooksConfiguration.JsonSerializerSettings)
+                        : data.ToJsonString()
+                );
+                return true;
+            };
+
+            //only send to tenant1 and tenant2, not tenant3
+            _webhookPublisher.Publish(new[]
+            {
+                tenant1Subscription.TenantId,
+                tenant2Subscription.TenantId
+            }, AppWebhookDefinitionNames.Users.Created, data);
+
+            _backgroundJobManagerSubstitute.Received(2)
+                .Enqueue<WebhookSenderJob, WebhookSenderArgs>(Arg.Is<WebhookSenderArgs>(p => predicate(p)));
         }
 
         #endregion

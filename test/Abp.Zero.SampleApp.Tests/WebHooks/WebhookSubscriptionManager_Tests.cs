@@ -527,8 +527,6 @@ namespace Abp.Zero.SampleApp.Tests.Webhooks
             {
                 var allSubscriptions = await webhookSubscriptionManager.GetAllSubscriptionsAsync(null);
                 allSubscriptions.Count.ShouldBe(0);
-                
-                await Should.ThrowAsync<EntityNotFoundException>(async ()=> await webhookSubscriptionManager.GetAsync(newSubscription.Id));
             });
         }
 
@@ -1062,8 +1060,6 @@ namespace Abp.Zero.SampleApp.Tests.Webhooks
             {
                 var allSubscriptions = webhookSubscriptionManager.GetAllSubscriptions(null);
                 allSubscriptions.Count.ShouldBe(0);
-
-                Should.Throw<EntityNotFoundException>(() => webhookSubscriptionManager.Get(newSubscription.Id));
             });
         }
 
