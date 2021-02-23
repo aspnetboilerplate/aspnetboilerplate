@@ -5,6 +5,7 @@ using Abp.Events.Bus.Entities;
 using Abp.Events.Bus.Handlers;
 using Abp.Localization;
 using Abp.Organizations;
+using Abp.CachedUniqueKeys;
 
 namespace Abp.Caching
 {
@@ -18,11 +19,13 @@ namespace Abp.Caching
         IEventHandler<EntityChangedEventData<SettingInfo>>,
         ITransientDependency
     {
-        private readonly IGetScriptsResponsePerUserCache _getScriptsResponsePerUserCache;
+        private const string CacheName = "GetScriptsResponsePerUser";
+        
+        private readonly ICachedUniqueKeyPerUser _cachedUniqueKeyPerUser;
 
-        public GetScriptsResponsePerUserCacheInvalidator(IGetScriptsResponsePerUserCache getScriptsResponsePerUserCache)
+        public GetScriptsResponsePerUserCacheInvalidator(ICachedUniqueKeyPerUser cachedUniqueKeyPerUser)
         {
-            _getScriptsResponsePerUserCache = getScriptsResponsePerUserCache;
+            _cachedUniqueKeyPerUser = cachedUniqueKeyPerUser;
         }
 
         public void HandleEvent(EntityChangedEventData<UserPermissionSetting> eventData)
@@ -57,12 +60,12 @@ namespace Abp.Caching
 
         public void HandleEvent(EntityChangedEventData<SettingInfo> eventData)
         {
-            _getScriptsResponsePerUserCache.ClearAll();
+            _cachedUniqueKeyPerUser.ClearCache(CacheName);
         }
 
         private void RemoveCache()
         {
-            _getScriptsResponsePerUserCache.RemoveKey();
+            _cachedUniqueKeyPerUser.RemoveKey(CacheName);
         }
     }
 }
