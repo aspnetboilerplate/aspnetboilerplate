@@ -208,6 +208,22 @@ In some cases, soft-delete entities may be requested to be permanently deleted. 
 
 If you wish to undelete a soft-deleted entity, you can query the entity by [disabling SoftDelete filter](Pages/Documents/Data-Filters#disable-filters) then use **Abp.Domain.Entities.EntityExtensions.Undelete(entity)**.
 
+##### Disable Auditing Fields
+
+In some cases, you might want to programmatically create, update or delete some entities and don't want ASP.NET Boilerplate to automatically set CreatorUserId, LastModifierUserId or DeleterUserId. You can easily disable or enable automatic setting of those fields using the DisableAuditing or EnableAuditing methods on the active unit of work.
+
+````c#
+using (_unitOfWorkManager.Current.DisableAuditing(AbpAuiditing.CreatorUserId))
+{
+    // CreatorUserId will not be set by ASP.NET Boilerplate automatically
+}
+
+using (_unitOfWorkManager.Current.EnableAuditing(AbpAuiditing.DeleterUserId))
+{
+    // DeleterUserId will be set by ASP.NET Boilerplate automatically
+}
+````
+
 #### Active/Passive Entities
 
 Some entities need to be marked as Active or Passive. You may take an
@@ -280,7 +296,7 @@ We can then use **GetData** to get the values:
 
     var randomValue = person.GetData<int>("RandomValue");
     var customData = person.GetData<MyCustomObject>("CustomData");
-    
+
 Of course, we can also use the **RemoveData** method to remove data:
     
     person.RemoveData("RandomValue");
