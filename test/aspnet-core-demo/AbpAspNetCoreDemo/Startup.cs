@@ -63,7 +63,7 @@ namespace AbpAspNetCoreDemo
                 {
                     NamingStrategy = new CamelCaseNamingStrategy()
                 };
-            });
+            }).AddRazorRuntimeCompilation();
 
             // Waiting for OData .NET Core 3.0 support, see https://github.com/OData/WebApi/issues/1748
             // services.AddOData();
