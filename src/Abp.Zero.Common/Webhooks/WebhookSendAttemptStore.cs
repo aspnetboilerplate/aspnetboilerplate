@@ -134,24 +134,6 @@ namespace Abp.Webhooks
         }
 
         [UnitOfWork]
-        public virtual bool HasXConsecutiveFail(int? tenantId, Guid subscriptionId, int failCount)
-        {
-            using (_unitOfWorkManager.Current.SetTenantId(tenantId))
-            {
-                if (_webhookSendAttemptRepository.Count(x => x.WebhookSubscriptionId == subscriptionId) < failCount)
-                {
-                    return false;
-                }
-
-                return !_webhookSendAttemptRepository.GetAll()
-                    .Where(attempt => attempt.WebhookSubscriptionId == subscriptionId)
-                    .OrderByDescending(attempt => attempt.CreationTime)
-                    .Take(failCount)
-                    .Any(attempt => attempt.ResponseStatusCode == HttpStatusCode.OK);
-            }
-        }
-
-        [UnitOfWork]
         public virtual async Task<IPagedResult<WebhookSendAttempt>> GetAllSendAttemptsBySubscriptionAsPagedListAsync(int? tenantId, Guid subscriptionId, int maxResultCount, int skipCount)
         {
             using (_unitOfWorkManager.Current.SetTenantId(tenantId))

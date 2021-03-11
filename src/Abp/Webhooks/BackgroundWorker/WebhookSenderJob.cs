@@ -1,11 +1,12 @@
 ﻿using System;
+using System.Threading.Tasks;
 using System.Transactions;
 using Abp.BackgroundJobs;
 using Abp.Dependency;
 
 namespace Abp.Webhooks.BackgroundWorker
 {
-    public class WebhookSenderJob : BackgroundJob<WebhookSenderArgs>, ITransientDependency
+    public class WebhookSenderJob : AsyncBackgroundJob<WebhookSenderArgs>, ITransientDependency
     {
         private readonly IWebhooksConfiguration _webhooksConfiguration;
         private readonly IWebhookSubscriptionManager _webhookSubscriptionManager;
@@ -24,13 +25,13 @@ namespace Abp.Webhooks.BackgroundWorker
             _webhookSender = webhookSender;
         }
 
-        public override void Execute(WebhookSenderArgs args)
+        public override async Task ExecuteAsync(WebhookSenderArgs args)
         {
             if (args.TryOnce)
             {
                 try
                 {
-                    SendWebhook(args);
+                    await SendWebhook(args);
                 }
                 catch (Exception e)
                 {
@@ -40,11 +41,11 @@ namespace Abp.Webhooks.BackgroundWorker
             }
             else
             {
-                SendWebhook(args);
+                await SendWebhook(args);
             }
         }
 
-        private void SendWebhook(WebhookSenderArgs args)
+        private async Task SendWebhook(WebhookSenderArgs args)
         {
             if (args.WebhookEventId == default)
             {
@@ -58,7 +59,12 @@ namespace Abp.Webhooks.BackgroundWorker
 
             if (!args.TryOnce)
             {
-                var sendAttemptCount = _webhookSendAttemptStore.GetSendAttemptCount(args.TenantId, args.WebhookEventId, args.WebhookSubscriptionId);
+                var sendAttemptCount = await _webhookSendAttemptStore.GetSendAttemptCountAsync(
+                    args.TenantId,
+                    args.WebhookEventId,
+                    args.WebhookSubscriptionId
+                );
+
                 if (sendAttemptCount > _webhooksConfiguration.MaxSendAttemptCount)
                 {
                     return;
@@ -67,27 +73,30 @@ namespace Abp.Webhooks.BackgroundWorker
 
             try
             {
-                _webhookSender.SendWebhook(args);
+                await _webhookSender.SendWebhookAsync(args);
             }
             catch (Exception)
             {
-                if (!TryDeactivateSubscriptionIfReachedMaxConsecutiveFailCount(args.TenantId, args.WebhookSubscriptionId))
-                //no need to retry to send webhook since subscription disabled
+                // no need to retry to send webhook since subscription disabled
+                if (!await TryDeactivateSubscriptionIfReachedMaxConsecutiveFailCount(
+                        args.TenantId,
+                        args.WebhookSubscriptionId))
                 {
-                    throw;//Throw exception to re-try sending webhook
+                    throw; //Throw exception to re-try sending webhook
                 }
             }
         }
 
-        private bool TryDeactivateSubscriptionIfReachedMaxConsecutiveFailCount(int? tenantId, Guid subscriptionId)
+        private async Task<bool> TryDeactivateSubscriptionIfReachedMaxConsecutiveFailCount(int? tenantId,
+            Guid subscriptionId)
         {
             if (!_webhooksConfiguration.IsAutomaticSubscriptionDeactivationEnabled)
             {
                 return false;
             }
 
-            var hasXConsecutiveFail = _webhookSendAttemptStore
-                .HasXConsecutiveFail(
+            var hasXConsecutiveFail = await _webhookSendAttemptStore
+                .HasXConsecutiveFailAsync(
                     tenantId,
                     subscriptionId,
                     _webhooksConfiguration.MaxConsecutiveFailCountBeforeDeactivateSubscription
@@ -100,11 +109,10 @@ namespace Abp.Webhooks.BackgroundWorker
 
             using (var uow = UnitOfWorkManager.Begin(TransactionScopeOption.Required))
             {
-                _webhookSubscriptionManager.ActivateWebhookSubscription(subscriptionId, false);
-                uow.Complete();
+                await _webhookSubscriptionManager.ActivateWebhookSubscriptionAsync(subscriptionId, false);
+                await uow.CompleteAsync();
                 return true;
             }
-
         }
     }
 }
