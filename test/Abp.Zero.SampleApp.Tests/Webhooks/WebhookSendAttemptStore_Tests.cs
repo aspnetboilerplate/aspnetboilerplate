@@ -1,10 +1,14 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Data.Entity.Infrastructure;
+using System.IO.Ports;
 using System.Net;
 using System.Threading;
 using System.Threading.Tasks;
+using Abp.Linq;
 using Abp.Webhooks;
+using Abp.Zero.SampleApp.Linq;
+using Castle.MicroKernel.Registration;
 using Shouldly;
 using Xunit;
 
