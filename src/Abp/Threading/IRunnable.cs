@@ -1,4 +1,6 @@
-﻿namespace Abp.Threading
+﻿using System.Threading.Tasks;
+
+namespace Abp.Threading
 {
     /// <summary>
     /// Interface to start/stop self threaded services.

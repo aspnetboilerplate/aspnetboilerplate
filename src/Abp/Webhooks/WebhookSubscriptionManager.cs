@@ -187,13 +187,6 @@ namespace Abp.Webhooks
         }
 
         [UnitOfWork]
-        public virtual void ActivateWebhookSubscription(Guid id, bool active)
-        {
-            var webhookSubscription = WebhookSubscriptionsStore.Get(id);
-            webhookSubscription.IsActive = active;
-        }
-
-        [UnitOfWork]
         public virtual Task DeleteSubscriptionAsync(Guid id)
         {
             return WebhookSubscriptionsStore.DeleteAsync(id);

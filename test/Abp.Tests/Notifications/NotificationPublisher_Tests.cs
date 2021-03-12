@@ -69,23 +69,13 @@ namespace Abp.Tests.Notifications
                 );
         }
 
-        [Fact]
-        public void Should_Publish_To_Host()
-        {
-            // Act
-            _publisher.Publish("TestNotification", tenantIds: new int?[] { null });
-
-            // Assert
-            _store.Received()
-                .InsertNotification(
-                    Arg.Is<NotificationInfo>(n => n.TenantIds == "null")
-                );
-        }
-
         private static NotificationData CreateNotificationData()
         {
-            var notificationData = new NotificationData();
-            notificationData["TestValue"] = 42;
+            var notificationData = new NotificationData
+            {
+                ["TestValue"] = 42
+            };
+            
             return notificationData;
         }
     }

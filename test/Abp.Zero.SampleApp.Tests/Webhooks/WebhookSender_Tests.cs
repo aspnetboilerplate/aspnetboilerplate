@@ -37,38 +37,5 @@ namespace Abp.Zero.SampleApp.Tests.Webhooks
 
             exception2.Message.ShouldContain(nameof(WebhookSenderArgs.WebhookEventId));
         }
-
-        [Fact]
-        public void Should_Throw_Exception()
-        {
-            var webhookSender = Resolve<IWebhookSender>();
-
-            Should.Throw<ArgumentNullException>(() =>
-            {
-                webhookSender.SendWebhook(new WebhookSenderArgs());
-            });
-
-            var exception = Should.Throw<ArgumentNullException>(() =>
-            {
-                webhookSender.SendWebhook(new WebhookSenderArgs()
-                {
-                    WebhookEventId = Guid.NewGuid(),
-                    WebhookSubscriptionId = Guid.Empty
-                });
-            });
-
-            exception.Message.ShouldContain(nameof(WebhookSenderArgs.WebhookSubscriptionId));
-
-            var exception2 = Should.Throw<ArgumentNullException>(() =>
-            {
-                webhookSender.SendWebhook(new WebhookSenderArgs()
-                {
-                    WebhookEventId = Guid.Empty,
-                    WebhookSubscriptionId = Guid.NewGuid()
-                });
-            });
-
-            exception2.Message.ShouldContain(nameof(WebhookSenderArgs.WebhookEventId));
-        }
     }
 }

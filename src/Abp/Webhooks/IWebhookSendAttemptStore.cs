@@ -34,11 +34,6 @@ namespace Abp.Webhooks
         /// </summary>
         Task<bool> HasXConsecutiveFailAsync(int? tenantId, Guid subscriptionId, int searchCount);
 
-        /// <summary>
-        /// Checks is there any successful webhook attempt in last <paramref name="searchCount"/> items. Should return true if there are not X number items
-        /// </summary>
-        bool HasXConsecutiveFail(int? tenantId, Guid subscriptionId, int searchCount);
-
         Task<IPagedResult<WebhookSendAttempt>> GetAllSendAttemptsBySubscriptionAsPagedListAsync(int? tenantId, Guid subscriptionId, int maxResultCount, int skipCount);
 
         IPagedResult<WebhookSendAttempt> GetAllSendAttemptsBySubscriptionAsPagedList(int? tenantId, Guid subscriptionId, int maxResultCount, int skipCount);
