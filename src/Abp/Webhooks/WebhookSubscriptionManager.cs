@@ -145,7 +145,7 @@ namespace Abp.Webhooks
             if (webhookSubscription.Id == default)
             {
                 webhookSubscription.Id = _guidGenerator.Create();
-                webhookSubscription.Secret = WebhookSubscriptionSecretPrefix + Guid.NewGuid().ToString().Replace("-", "");
+                webhookSubscription.Secret = WebhookSubscriptionSecretPrefix + Guid.NewGuid().ToString("N");
                 await WebhookSubscriptionsStore.InsertAsync(webhookSubscription.ToWebhookSubscriptionInfo());
             }
             else
@@ -166,7 +166,7 @@ namespace Abp.Webhooks
             if (webhookSubscription.Id == default)
             {
                 webhookSubscription.Id = _guidGenerator.Create();
-                webhookSubscription.Secret = WebhookSubscriptionSecretPrefix + Guid.NewGuid().ToString().Replace("-", "");
+                webhookSubscription.Secret = WebhookSubscriptionSecretPrefix + Guid.NewGuid().ToString("N");
                 WebhookSubscriptionsStore.Insert(webhookSubscription.ToWebhookSubscriptionInfo());
             }
             else
