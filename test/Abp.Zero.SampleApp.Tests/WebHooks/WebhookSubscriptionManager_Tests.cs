@@ -1009,31 +1009,6 @@ namespace Abp.Zero.SampleApp.Tests.Webhooks
         }
 
         [Fact]
-        public void Should_Activate_Subscription_Sync()
-        {
-            var webhookSubscriptionManager = Resolve<IWebhookSubscriptionManager>();
-
-            var testWebhookSubscription = NewWebhookSubscription(null, AppWebhookDefinitionNames.Test);
-            webhookSubscriptionManager.AddOrUpdateSubscription(testWebhookSubscription);
-
-            var storedSubscription = webhookSubscriptionManager.Get(testWebhookSubscription.Id);
-            storedSubscription.Id.ShouldBe(testWebhookSubscription.Id);
-            storedSubscription.IsActive.ShouldBeTrue();
-
-            webhookSubscriptionManager.ActivateWebhookSubscription(testWebhookSubscription.Id, false);
-
-            storedSubscription = webhookSubscriptionManager.Get(testWebhookSubscription.Id);
-            storedSubscription.Id.ShouldBe(testWebhookSubscription.Id);
-            storedSubscription.IsActive.ShouldBeFalse();
-
-            webhookSubscriptionManager.ActivateWebhookSubscription(testWebhookSubscription.Id, true);
-
-            storedSubscription = webhookSubscriptionManager.Get(testWebhookSubscription.Id);
-            storedSubscription.Id.ShouldBe(testWebhookSubscription.Id);
-            storedSubscription.IsActive.ShouldBeTrue();
-        }
-
-        [Fact]
         public void Should_Not_Get_Another_Tenants_Subscriptions_Sync()
         {
             var tenantId = AsyncHelper.RunSync(() => CreateAndGetTenantIdWithFeaturesAsync(AppFeatures.WebhookFeature, "true"));

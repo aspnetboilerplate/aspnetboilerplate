@@ -60,24 +60,6 @@ namespace Abp.Notifications
             await NotifyAsync(userNotifications.ToArray());
         }
 
-        public void Distribute(Guid notificationId)
-        {
-            var notificationInfo = _notificationStore.GetNotificationOrNull(notificationId);
-            if (notificationInfo == null)
-            {
-                Logger.Warn("NotificationDistributionJob can not continue since could not found notification by id: " + notificationId);
-                return;
-            }
-
-            var users = GetUsers(notificationInfo);
-
-            var userNotifications = SaveUserNotifications(users, notificationInfo);
-
-            _notificationStore.DeleteNotification(notificationInfo);
-
-            Notify(userNotifications.ToArray());
-        }
-
         [UnitOfWork]
         protected virtual async Task<UserIdentifier[]> GetUsersAsync(NotificationInfo notificationInfo)
         {
@@ -341,24 +323,6 @@ namespace Abp.Notifications
                     using (var notifier = _iocResolver.ResolveAsDisposable<IRealTimeNotifier>(notifierType))
                     {
                         await notifier.Object.SendNotificationsAsync(userNotifications);
-                    }
-                }
-                catch (Exception ex)
-                {
-                    Logger.Warn(ex.ToString(), ex);
-                }
-            }
-        }
-
-        protected virtual void Notify(UserNotification[] userNotifications)
-        {
-            foreach (var notifierType in _notificationConfiguration.Notifiers)
-            {
-                try
-                {
-                    using (var notifier = _iocResolver.ResolveAsDisposable<IRealTimeNotifier>(notifierType))
-                    {
-                        notifier.Object.SendNotifications(userNotifications);
                     }
                 }
                 catch (Exception ex)

@@ -1,3 +1,5 @@
+using System.Threading.Tasks;
+
 namespace Abp.Threading
 {
     /// <summary>
@@ -21,6 +23,7 @@ namespace Abp.Threading
         {
             _isRunning = false;
         }
+        
 
         public virtual void WaitToStop()
         {

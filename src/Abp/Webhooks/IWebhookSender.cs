@@ -9,11 +9,5 @@ namespace Abp.Webhooks
         /// Should throw exception if fails or response status not succeed
         /// </summary>
         Task SendWebhookAsync(WebhookSenderArgs webhookSenderArgs);
-
-        /// <summary>
-        /// Tries to send webhook with given transactionId and stores process in <see cref="WebhookSendAttempt"/>
-        /// Should throw exception if fails or response status not succeed
-        /// </summary>
-        void SendWebhook(WebhookSenderArgs webhookSenderArgs);
     }
 }

@@ -1,18 +1,13 @@
-using System.Globalization;
-using System.Threading;
-using System.Threading.Tasks;
+﻿using System.Globalization;
 using Abp.Configuration;
 using Abp.Domain.Uow;
 using Abp.Localization;
 using Abp.Localization.Sources;
 using Castle.Core.Logging;
 
-namespace Abp.Threading.BackgroundWorkers
+namespace Abp.BackgroundJobs
 {
-    /// <summary>
-    /// Base class that can be used to implement <see cref="IBackgroundWorker"/>.
-    /// </summary>
-    public abstract class BackgroundWorkerBase : RunnableBase, IBackgroundWorker
+    public abstract class BackgroundJobBase<TArgs> : IBackgroundJobBase<TArgs>
     {
         /// <summary>
         /// Reference to the setting manager.
@@ -35,12 +30,16 @@ namespace Abp.Threading.BackgroundWorkers
             }
             set { _unitOfWorkManager = value; }
         }
+
         private IUnitOfWorkManager _unitOfWorkManager;
 
         /// <summary>
         /// Gets current unit of work.
         /// </summary>
-        protected IActiveUnitOfWork CurrentUnitOfWork { get { return UnitOfWorkManager.Current; } }
+        protected IActiveUnitOfWork CurrentUnitOfWork
+        {
+            get { return UnitOfWorkManager.Current; }
+        }
 
         /// <summary>
         /// Reference to the localization manager.
@@ -63,7 +62,8 @@ namespace Abp.Threading.BackgroundWorkers
             {
                 if (LocalizationSourceName == null)
                 {
-                    throw new AbpException("Must set LocalizationSourceName before, in order to get LocalizationSource");
+                    throw new AbpException(
+                        "Must set LocalizationSourceName before, in order to get LocalizationSource");
                 }
 
                 if (_localizationSource == null || _localizationSource.Name != LocalizationSourceName)
@@ -74,6 +74,7 @@ namespace Abp.Threading.BackgroundWorkers
                 return _localizationSource;
             }
         }
+
         private ILocalizationSource _localizationSource;
 
         /// <summary>
@@ -84,28 +85,10 @@ namespace Abp.Threading.BackgroundWorkers
         /// <summary>
         /// Constructor.
         /// </summary>
-        protected BackgroundWorkerBase()
+        protected BackgroundJobBase()
         {
             Logger = NullLogger.Instance;
             LocalizationManager = NullLocalizationManager.Instance;
-        }
-
-        public override void Start()
-        {
-            base.Start();
-            Logger.Debug("Start background worker: " + ToString());
-        }
-
-        public override void Stop()
-        {
-            base.Stop();
-            Logger.Debug("Stop background worker: " + ToString());
-        }
-
-        public override void WaitToStop()
-        {
-            base.WaitToStop();
-            Logger.Debug("WaitToStop background worker: " + ToString());
         }
 
         /// <summary>
@@ -150,11 +133,6 @@ namespace Abp.Threading.BackgroundWorkers
         protected string L(string name, CultureInfo culture, params object[] args)
         {
             return LocalizationSource.GetString(name, culture, args);
-        }
-
-        public override string ToString()
-        {
-            return GetType().FullName;
         }
     }
 }

@@ -52,11 +52,6 @@ namespace Abp.Webhooks
             return default;
         }
 
-        public bool HasXConsecutiveFail(int? tenantId, Guid subscriptionId, int searchCount)
-        {
-            return default;
-        }
-
         public Task<IPagedResult<WebhookSendAttempt>> GetAllSendAttemptsBySubscriptionAsPagedListAsync(int? tenantId, Guid subscriptionId, int maxResultCount,
             int skipCount)
         {

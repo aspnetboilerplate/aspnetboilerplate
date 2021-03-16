@@ -145,7 +145,7 @@ namespace Abp.Webhooks
             if (webhookSubscription.Id == default)
             {
                 webhookSubscription.Id = _guidGenerator.Create();
-                webhookSubscription.Secret = WebhookSubscriptionSecretPrefix + Guid.NewGuid().ToString().Replace("-", "");
+                webhookSubscription.Secret = WebhookSubscriptionSecretPrefix + Guid.NewGuid().ToString("N");
                 await WebhookSubscriptionsStore.InsertAsync(webhookSubscription.ToWebhookSubscriptionInfo());
             }
             else
@@ -166,7 +166,7 @@ namespace Abp.Webhooks
             if (webhookSubscription.Id == default)
             {
                 webhookSubscription.Id = _guidGenerator.Create();
-                webhookSubscription.Secret = WebhookSubscriptionSecretPrefix + Guid.NewGuid().ToString().Replace("-", "");
+                webhookSubscription.Secret = WebhookSubscriptionSecretPrefix + Guid.NewGuid().ToString("N");
                 WebhookSubscriptionsStore.Insert(webhookSubscription.ToWebhookSubscriptionInfo());
             }
             else
@@ -183,13 +183,6 @@ namespace Abp.Webhooks
         public virtual async Task ActivateWebhookSubscriptionAsync(Guid id, bool active)
         {
             var webhookSubscription = await WebhookSubscriptionsStore.GetAsync(id);
-            webhookSubscription.IsActive = active;
-        }
-
-        [UnitOfWork]
-        public virtual void ActivateWebhookSubscription(Guid id, bool active)
-        {
-            var webhookSubscription = WebhookSubscriptionsStore.Get(id);
             webhookSubscription.IsActive = active;
         }
 

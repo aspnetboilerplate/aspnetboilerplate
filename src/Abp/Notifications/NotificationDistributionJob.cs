@@ -1,13 +1,13 @@
-﻿using Abp.BackgroundJobs;
+﻿using System.Threading.Tasks;
+using Abp.BackgroundJobs;
 using Abp.Dependency;
-using Abp.Threading;
 
 namespace Abp.Notifications
 {
     /// <summary>
     /// This background job distributes notifications to users.
     /// </summary>
-    public class NotificationDistributionJob : BackgroundJob<NotificationDistributionJobArgs>, ITransientDependency
+    public class NotificationDistributionJob : IAsyncBackgroundJob<NotificationDistributionJobArgs>, ITransientDependency
     {
         private readonly INotificationConfiguration _notificationConfiguration;
         private readonly INotificationDistributer _notificationDistributer;
@@ -26,9 +26,9 @@ namespace Abp.Notifications
             _notificationDistributer = notificationDistributer;
         }
 
-        public override void Execute(NotificationDistributionJobArgs args)
+        public async Task ExecuteAsync(NotificationDistributionJobArgs args)
         {
-            _notificationDistributer.Distribute(args.NotificationId);
+            await _notificationDistributer.DistributeAsync(args.NotificationId);
         }
     }
 }
