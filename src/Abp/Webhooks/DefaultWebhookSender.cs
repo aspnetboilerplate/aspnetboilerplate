@@ -22,7 +22,7 @@ namespace Abp.Webhooks
             _webhookManager = webhookManager;
         }
 
-        public async Task SendWebhookAsync(WebhookSenderArgs webhookSenderArgs)
+        public async Task<Guid> SendWebhookAsync(WebhookSenderArgs webhookSenderArgs)
         {
             if (webhookSenderArgs.WebhookEventId == default)
             {
@@ -77,6 +77,8 @@ namespace Abp.Webhooks
             {
                 throw new Exception($"Webhook sending attempt failed. WebhookSendAttempt id: {webhookSendAttemptId}");
             }
+
+            return webhookSendAttemptId;
         }
 
         /// <summary>

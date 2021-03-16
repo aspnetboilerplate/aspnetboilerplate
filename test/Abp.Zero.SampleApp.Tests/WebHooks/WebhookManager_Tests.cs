@@ -6,22 +6,17 @@ using Abp.Json;
 using Abp.Webhooks;
 using Abp.Zero.SampleApp.Application;
 using Newtonsoft.Json;
-using NSubstitute;
 using Shouldly;
 using Xunit;
 
 namespace Abp.Zero.SampleApp.Tests.Webhooks
 {
-    public class DefaultWebhookSender_Tests : WebhookTestBase
+    public class WebhookManager_Tests : WebhookTestBase
     {
-        private IWebhookManager _webhookManager;
+        private readonly IWebhookManager _webhookManager;
         
-        public DefaultWebhookSender_Tests()
+        public WebhookManager_Tests()
         {
-            // WebhookSendAttemptStore = Substitute.For<IWebhookSendAttemptStore>();
-            // WebhookSendAttemptStore.GetSendAttemptCountAsync(Arg.Any<int?>(), Arg.Any<Guid>(), Arg.Any<Guid>()).Returns(Task.FromResult(0));
-            // WebhookSendAttemptStore.GetSendAttemptCount(Arg.Any<int?>(), Arg.Any<Guid>(), Arg.Any<Guid>()).Returns(0);
-
             _webhookManager = Resolve<IWebhookManager>();
         }
 
@@ -37,9 +32,9 @@ namespace Abp.Zero.SampleApp.Tests.Webhooks
                 Data = data
             });
 
-            payload.Event.ShouldBe(AppWebhookDefinitionNames.Theme.DefaultThemeChanged);
+            payload.WebhookEvent.ShouldBe(AppWebhookDefinitionNames.Theme.DefaultThemeChanged);
             ((string)JsonConvert.SerializeObject(payload.Data)).ShouldBe(data);
-            payload.Attempt.ShouldBe(1);
+            payload.Attempt.ShouldBe(0); // Because webHook is not sent yet
         }
 
         [Fact]
@@ -54,7 +49,7 @@ namespace Abp.Zero.SampleApp.Tests.Webhooks
                 Data = data
             });
 
-            payload.Event.ShouldBe(AppWebhookDefinitionNames.Theme.DefaultThemeChanged);
+            payload.WebhookEvent.ShouldBe(AppWebhookDefinitionNames.Theme.DefaultThemeChanged);
             ((string)JsonConvert.SerializeObject(payload.Data)).ShouldBe(data);
             payload.Attempt.ShouldBe(1);
         }
@@ -85,7 +80,7 @@ namespace Abp.Zero.SampleApp.Tests.Webhooks
         //WebhookPayload with parameterless constructor for testing
         public class WebhookPayloadTest : WebhookPayload
         {
-            public WebhookPayloadTest(string id, string webHookEvent, int attempt) : base(id, webHookEvent, attempt)
+            public WebhookPayloadTest(string id, string webHookWebhookEvent, int attempt) : base(id, webHookWebhookEvent, attempt)
             {
             }
 
@@ -122,7 +117,7 @@ namespace Abp.Zero.SampleApp.Tests.Webhooks
             }
 
             payload.Id.ShouldNotBe("test");
-            payload.Event.ShouldBe(AppWebhookDefinitionNames.Theme.DefaultThemeChanged);
+            payload.WebhookEvent.ShouldBe(AppWebhookDefinitionNames.Theme.DefaultThemeChanged);
             payload.Attempt.ShouldBe(1);
         }
 
@@ -169,8 +164,8 @@ namespace Abp.Zero.SampleApp.Tests.Webhooks
             }
 
             payload.Id.ShouldNotBe("test");
-            payload.Event.ShouldBe(AppWebhookDefinitionNames.Theme.DefaultThemeChanged);
-            payload.Attempt.ShouldBe(1);
+            payload.WebhookEvent.ShouldBe(AppWebhookDefinitionNames.Theme.DefaultThemeChanged);
+            payload.Attempt.ShouldBe(0); // Because webHook is not sent yet
         }
 
         [Fact]
@@ -188,27 +183,5 @@ namespace Abp.Zero.SampleApp.Tests.Webhooks
 
             serializedBody.ShouldBe(data); // serializedBody must be equal to data
         }
-
-        // public async Task Attempt_Count_Test()
-        // {
-        //     // Arrange
-        //     var subscriptionId = Guid.NewGuid();
-        //     var eventId = Guid.NewGuid();
-        //     var secret = "secret";
-        //     
-        //     // Act
-        //     await SendWebhookAsync(new WebhookSenderArgs
-        //     {
-        //         WebhookName = "test",
-        //         WebhookUri = "www.test.com",
-        //         WebhookSubscriptionId = subscriptionId,
-        //         Data = "{}",
-        //         Secret = secret,
-        //         WebhookEventId = eventId
-        //     });
-        //     
-        //     // Assert
-        //     
-        // }
     }
 }

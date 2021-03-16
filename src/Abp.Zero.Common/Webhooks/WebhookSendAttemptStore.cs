@@ -90,13 +90,13 @@ namespace Abp.Webhooks
         }
 
         [UnitOfWork]
-        public virtual async Task<int> GetSendAttemptCountAsync(int? tenantId, Guid webhookId, Guid webhookSubscriptionId)
+        public virtual async Task<int> GetSendAttemptCountAsync(int? tenantId, Guid webhookEventId, Guid webhookSubscriptionId)
         {
             using (_unitOfWorkManager.Current.SetTenantId(tenantId))
             {
                 return await _webhookSendAttemptRepository
                     .CountAsync(attempt =>
-                        attempt.WebhookEventId == webhookId &&
+                        attempt.WebhookEventId == webhookEventId &&
                         attempt.WebhookSubscriptionId == webhookSubscriptionId
                     );
             }

@@ -37,7 +37,7 @@ namespace Abp.Webhooks
             var attemptNumber = await _webhookSendAttemptStore.GetSendAttemptCountAsync(
                 webhookSenderArgs.TenantId,
                 webhookSenderArgs.WebhookEventId,
-                webhookSenderArgs.WebhookSubscriptionId) + 1;
+                webhookSenderArgs.WebhookSubscriptionId);
 
             return new WebhookPayload(
                 webhookSenderArgs.WebhookEventId.ToString(),
