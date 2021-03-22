@@ -6,20 +6,18 @@ using Abp.Json;
 using Abp.Webhooks;
 using Abp.Zero.SampleApp.Application;
 using Newtonsoft.Json;
-using NSubstitute;
 using Shouldly;
 using Xunit;
 
 namespace Abp.Zero.SampleApp.Tests.Webhooks
 {
-    public class DefaultWebhookSender_Tests : DefaultWebhookSender
+    public class WebhookManager_Tests : WebhookTestBase
     {
-        public DefaultWebhookSender_Tests()
-            : base(Substitute.For<IWebhooksConfiguration>())
+        private readonly IWebhookManager _webhookManager;
+        
+        public WebhookManager_Tests()
         {
-            WebhookSendAttemptStore = Substitute.For<IWebhookSendAttemptStore>();
-            WebhookSendAttemptStore.GetSendAttemptCountAsync(Arg.Any<int?>(), Arg.Any<Guid>(), Arg.Any<Guid>()).Returns(Task.FromResult(0));
-            WebhookSendAttemptStore.GetSendAttemptCount(Arg.Any<int?>(), Arg.Any<Guid>(), Arg.Any<Guid>()).Returns(0);
+            _webhookManager = Resolve<IWebhookManager>();
         }
 
         [Fact]
@@ -27,16 +25,16 @@ namespace Abp.Zero.SampleApp.Tests.Webhooks
         {
             string data = new { Test = "test" }.ToJsonString();
 
-            var payload = await GetWebhookPayloadAsync(new WebhookSenderArgs()
+            var payload = await _webhookManager.GetWebhookPayloadAsync(new WebhookSenderArgs()
             {
                 TenantId = 1,
                 WebhookName = AppWebhookDefinitionNames.Theme.DefaultThemeChanged,
                 Data = data
             });
 
-            payload.Event.ShouldBe(AppWebhookDefinitionNames.Theme.DefaultThemeChanged);
+            payload.WebhookEvent.ShouldBe(AppWebhookDefinitionNames.Theme.DefaultThemeChanged);
             ((string)JsonConvert.SerializeObject(payload.Data)).ShouldBe(data);
-            payload.Attempt.ShouldBe(1);
+            payload.Attempt.ShouldBe(0); // Because webHook is not sent yet
         }
 
         [Fact]
@@ -44,23 +42,22 @@ namespace Abp.Zero.SampleApp.Tests.Webhooks
         {
             string data = new { Test = "test" }.ToJsonString();
 
-            var payload = GetWebhookPayload(new WebhookSenderArgs()
+            var payload = _webhookManager.GetWebhookPayload(new WebhookSenderArgs()
             {
                 TenantId = 1,
                 WebhookName = AppWebhookDefinitionNames.Theme.DefaultThemeChanged,
                 Data = data
             });
 
-            payload.Event.ShouldBe(AppWebhookDefinitionNames.Theme.DefaultThemeChanged);
+            payload.WebhookEvent.ShouldBe(AppWebhookDefinitionNames.Theme.DefaultThemeChanged);
             ((string)JsonConvert.SerializeObject(payload.Data)).ShouldBe(data);
             payload.Attempt.ShouldBe(1);
         }
-
-
+        
         [Fact]
         public async Task SignWebhookRequest_Tests()
         {
-            var payload = await GetWebhookPayloadAsync(new WebhookSenderArgs()
+            var payload = await _webhookManager.GetWebhookPayloadAsync(new WebhookSenderArgs()
             {
                 TenantId = 1,
                 WebhookName = AppWebhookDefinitionNames.Theme.DefaultThemeChanged,
@@ -69,21 +66,21 @@ namespace Abp.Zero.SampleApp.Tests.Webhooks
 
             var request = new HttpRequestMessage(HttpMethod.Post, "www.test.com");
 
-            SignWebhookRequest(request, payload.ToJsonString(), "mysecret");
+            _webhookManager.SignWebhookRequest(request, payload.ToJsonString(), "mysecret");
 
             request.Content.ShouldBeAssignableTo(typeof(StringContent));
 
             var content = await request.Content.ReadAsStringAsync();
             content.ShouldBe(payload.ToJsonString());
 
-            request.Headers.GetValues(SignatureHeaderName).Single()
+            request.Headers.GetValues("abp-webhook-signature").Single()
                 .ShouldStartWith("sha256=");
         }
 
         //WebhookPayload with parameterless constructor for testing
         public class WebhookPayloadTest : WebhookPayload
         {
-            public WebhookPayloadTest(string id, string webHookEvent, int attempt) : base(id, webHookEvent, attempt)
+            public WebhookPayloadTest(string id, string webHookWebhookEvent, int attempt) : base(id, webHookWebhookEvent, attempt)
             {
             }
 
@@ -98,7 +95,7 @@ namespace Abp.Zero.SampleApp.Tests.Webhooks
         {
             string data = new { Test = "test" }.ToJsonString();
 
-            var serializedBody = GetSerializedBody(new WebhookSenderArgs()
+            var serializedBody =_webhookManager.GetSerializedBody(new WebhookSenderArgs()
             {
                 TenantId = 1,
                 WebhookName = AppWebhookDefinitionNames.Theme.DefaultThemeChanged,
@@ -120,7 +117,7 @@ namespace Abp.Zero.SampleApp.Tests.Webhooks
             }
 
             payload.Id.ShouldNotBe("test");
-            payload.Event.ShouldBe(AppWebhookDefinitionNames.Theme.DefaultThemeChanged);
+            payload.WebhookEvent.ShouldBe(AppWebhookDefinitionNames.Theme.DefaultThemeChanged);
             payload.Attempt.ShouldBe(1);
         }
 
@@ -129,7 +126,7 @@ namespace Abp.Zero.SampleApp.Tests.Webhooks
         {
             string data = new { Test = "test" }.ToJsonString();
 
-            var serializedBody = GetSerializedBody(new WebhookSenderArgs()
+            var serializedBody = _webhookManager.GetSerializedBody(new WebhookSenderArgs()
             {
                 TenantId = 1,
                 WebhookName = AppWebhookDefinitionNames.Theme.DefaultThemeChanged,
@@ -139,14 +136,13 @@ namespace Abp.Zero.SampleApp.Tests.Webhooks
 
             serializedBody.ShouldBe(data); // serializedBody must be equal to data
         }
-
-
+        
         [Fact]
         public async Task GetSerializedBodyAsync_SendExactSameData_False_Test()
         {
             string data = new { Test = "test" }.ToJsonString();
 
-            var serializedBody = await GetSerializedBodyAsync(new WebhookSenderArgs()
+            var serializedBody = await _webhookManager.GetSerializedBodyAsync(new WebhookSenderArgs()
             {
                 TenantId = 1,
                 WebhookName = AppWebhookDefinitionNames.Theme.DefaultThemeChanged,
@@ -168,8 +164,8 @@ namespace Abp.Zero.SampleApp.Tests.Webhooks
             }
 
             payload.Id.ShouldNotBe("test");
-            payload.Event.ShouldBe(AppWebhookDefinitionNames.Theme.DefaultThemeChanged);
-            payload.Attempt.ShouldBe(1);
+            payload.WebhookEvent.ShouldBe(AppWebhookDefinitionNames.Theme.DefaultThemeChanged);
+            payload.Attempt.ShouldBe(0); // Because webHook is not sent yet
         }
 
         [Fact]
@@ -177,7 +173,7 @@ namespace Abp.Zero.SampleApp.Tests.Webhooks
         {
             string data = new { Test = "test" }.ToJsonString();
 
-            var serializedBody = await GetSerializedBodyAsync(new WebhookSenderArgs()
+            var serializedBody = await _webhookManager.GetSerializedBodyAsync(new WebhookSenderArgs()
             {
                 TenantId = 1,
                 WebhookName = AppWebhookDefinitionNames.Theme.DefaultThemeChanged,

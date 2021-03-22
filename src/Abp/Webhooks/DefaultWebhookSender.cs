@@ -1,35 +1,28 @@
 ﻿using System;
-using System.Globalization;
 using System.Net;
 using System.Net.Http;
-using System.Security.Cryptography;
-using System.Text;
 using System.Threading.Tasks;
 using Abp.Domain.Services;
 using Abp.Domain.Uow;
-using Abp.Json;
 
 namespace Abp.Webhooks
 {
     public class DefaultWebhookSender : DomainService, IWebhookSender
     {
-        public IWebhookSendAttemptStore WebhookSendAttemptStore { get; set; }
-
-        protected const string SignatureHeaderKey = "sha256";
-        protected const string SignatureHeaderValueTemplate = SignatureHeaderKey + "={0}";
-        protected const string SignatureHeaderName = "abp-webhook-signature";
-
         private readonly IWebhooksConfiguration _webhooksConfiguration;
+        private readonly IWebhookManager _webhookManager;
+        
         private const string FailedRequestDefaultContent = "Webhook Send Request Failed";
 
-        public DefaultWebhookSender(IWebhooksConfiguration webhooksConfiguration)
+        public DefaultWebhookSender(
+            IWebhooksConfiguration webhooksConfiguration, 
+            IWebhookManager webhookManager)
         {
             _webhooksConfiguration = webhooksConfiguration;
-
-            WebhookSendAttemptStore = NullWebhookSendAttemptStore.Instance;
+            _webhookManager = webhookManager;
         }
 
-        public async Task SendWebhookAsync(WebhookSenderArgs webhookSenderArgs)
+        public async Task<Guid> SendWebhookAsync(WebhookSenderArgs webhookSenderArgs)
         {
             if (webhookSenderArgs.WebhookEventId == default)
             {
@@ -41,19 +34,19 @@ namespace Abp.Webhooks
                 throw new ArgumentNullException(nameof(webhookSenderArgs.WebhookSubscriptionId));
             }
 
-            var webhookSendAttemptId = await InsertAndGetIdWebhookSendAttemptAsync(webhookSenderArgs);
+            var webhookSendAttemptId = await _webhookManager.InsertAndGetIdWebhookSendAttemptAsync(webhookSenderArgs);
 
             var request = CreateWebhookRequestMessage(webhookSenderArgs);
 
-            var serializedBody = await GetSerializedBodyAsync(webhookSenderArgs);
+            var serializedBody = await _webhookManager.GetSerializedBodyAsync(webhookSenderArgs);
 
-            SignWebhookRequest(request, serializedBody, webhookSenderArgs.Secret);
+            _webhookManager.SignWebhookRequest(request, serializedBody, webhookSenderArgs.Secret);
 
             AddAdditionalHeaders(request, webhookSenderArgs);
 
-            bool isSucceed = false;
+            var isSucceed = false;
             HttpStatusCode? statusCode = null;
-            string content = FailedRequestDefaultContent;
+            var content = FailedRequestDefaultContent;
 
             try
             {
@@ -77,40 +70,15 @@ namespace Abp.Webhooks
             }
             finally
             {
-                await StoreResponseOnWebhookSendAttemptAsync(webhookSendAttemptId, webhookSenderArgs.TenantId, statusCode, content);
+                await _webhookManager.StoreResponseOnWebhookSendAttemptAsync(webhookSendAttemptId, webhookSenderArgs.TenantId, statusCode, content);
             }
 
             if (!isSucceed)
             {
                 throw new Exception($"Webhook sending attempt failed. WebhookSendAttempt id: {webhookSendAttemptId}");
             }
-        }
 
-        [UnitOfWork]
-        protected virtual async Task<Guid> InsertAndGetIdWebhookSendAttemptAsync(WebhookSenderArgs webhookSenderArgs)
-        {
-            var workItem = new WebhookSendAttempt
-            {
-                WebhookEventId = webhookSenderArgs.WebhookEventId,
-                WebhookSubscriptionId = webhookSenderArgs.WebhookSubscriptionId,
-                TenantId = webhookSenderArgs.TenantId
-            };
-
-            await WebhookSendAttemptStore.InsertAsync(workItem);
-            await CurrentUnitOfWork.SaveChangesAsync();
-
-            return workItem.Id;
-        }
-
-        [UnitOfWork]
-        protected virtual async Task StoreResponseOnWebhookSendAttemptAsync(Guid webhookSendAttemptId, int? tenantId, HttpStatusCode? statusCode, string content)
-        {
-            var webhookSendAttempt = await WebhookSendAttemptStore.GetAsync(tenantId, webhookSendAttemptId);
-
-            webhookSendAttempt.ResponseStatusCode = statusCode;
-            webhookSendAttempt.Response = content;
-
-            await WebhookSendAttemptStore.UpdateAsync(webhookSendAttempt);
+            return webhookSendAttemptId;
         }
 
         /// <summary>
@@ -120,63 +88,6 @@ namespace Abp.Webhooks
         protected virtual HttpRequestMessage CreateWebhookRequestMessage(WebhookSenderArgs webhookSenderArgs)
         {
             return new HttpRequestMessage(HttpMethod.Post, webhookSenderArgs.WebhookUri);
-        }
-
-        protected virtual async Task<WebhookPayload> GetWebhookPayloadAsync(WebhookSenderArgs webhookSenderArgs)
-        {
-            dynamic data = _webhooksConfiguration.JsonSerializerSettings != null
-                ? webhookSenderArgs.Data.FromJsonString<dynamic>(_webhooksConfiguration.JsonSerializerSettings)
-                : webhookSenderArgs.Data.FromJsonString<dynamic>();
-
-            var attemptNumber = await WebhookSendAttemptStore.GetSendAttemptCountAsync(webhookSenderArgs.TenantId,
-                                    webhookSenderArgs.WebhookEventId, webhookSenderArgs.WebhookSubscriptionId) + 1;
-
-            return new WebhookPayload(webhookSenderArgs.WebhookEventId.ToString(), webhookSenderArgs.WebhookName, attemptNumber)
-            {
-                Data = data
-            };
-        }
-
-        protected virtual WebhookPayload GetWebhookPayload(WebhookSenderArgs webhookSenderArgs)
-        {
-            dynamic data = _webhooksConfiguration.JsonSerializerSettings != null
-                ? webhookSenderArgs.Data.FromJsonString<dynamic>(_webhooksConfiguration.JsonSerializerSettings)
-                : webhookSenderArgs.Data.FromJsonString<dynamic>();
-
-            var attemptNumber = WebhookSendAttemptStore.GetSendAttemptCount(webhookSenderArgs.TenantId,
-                                    webhookSenderArgs.WebhookEventId, webhookSenderArgs.WebhookSubscriptionId) + 1;
-
-            return new WebhookPayload(webhookSenderArgs.WebhookEventId.ToString(), webhookSenderArgs.WebhookName, attemptNumber)
-            {
-                Data = data
-            };
-        }
-
-        protected virtual void SignWebhookRequest(HttpRequestMessage request, string serializedBody, string secret)
-        {
-            if (request == null)
-            {
-                throw new ArgumentNullException(nameof(request));
-            }
-
-            if (string.IsNullOrWhiteSpace(serializedBody))
-            {
-                throw new ArgumentNullException(nameof(serializedBody));
-            }
-
-            var secretBytes = Encoding.UTF8.GetBytes(secret);
-
-            using (var hasher = new HMACSHA256(secretBytes))
-            {
-                request.Content = new StringContent(serializedBody, Encoding.UTF8, "application/json");
-
-                var data = Encoding.UTF8.GetBytes(serializedBody);
-                var sha256 = hasher.ComputeHash(data);
-
-                var headerValue = string.Format(CultureInfo.InvariantCulture, SignatureHeaderValueTemplate, BitConverter.ToString(sha256));
-
-                request.Headers.Add(SignatureHeaderName, headerValue);
-            }
         }
 
         protected virtual void AddAdditionalHeaders(HttpRequestMessage request, WebhookSenderArgs webhookSenderArgs)
@@ -212,38 +123,6 @@ namespace Abp.Webhooks
 
                 return (isSucceed, statusCode, content);
             }
-        }
-
-        protected virtual string GetSerializedBody(WebhookSenderArgs webhookSenderArgs)
-        {
-            if (webhookSenderArgs.SendExactSameData)
-            {
-                return webhookSenderArgs.Data;
-            }
-
-            var payload = GetWebhookPayload(webhookSenderArgs);
-
-            var serializedBody = _webhooksConfiguration.JsonSerializerSettings != null
-                ? payload.ToJsonString(_webhooksConfiguration.JsonSerializerSettings)
-                : payload.ToJsonString();
-
-            return serializedBody;
-        }
-
-        protected virtual async Task<string> GetSerializedBodyAsync(WebhookSenderArgs webhookSenderArgs)
-        {
-            if (webhookSenderArgs.SendExactSameData)
-            {
-                return webhookSenderArgs.Data;
-            }
-
-            var payload = await GetWebhookPayloadAsync(webhookSenderArgs);
-
-            var serializedBody = _webhooksConfiguration.JsonSerializerSettings != null
-                ? payload.ToJsonString(_webhooksConfiguration.JsonSerializerSettings)
-                : payload.ToJsonString();
-
-            return serializedBody;
         }
     }
 }

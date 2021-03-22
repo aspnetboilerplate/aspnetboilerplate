@@ -5,19 +5,22 @@ using Abp.Webhooks;
 
 namespace Abp.AspNetCore.Webhook
 {
-    public class AspNetCoreWebhookSender : DefaultWebhookSender, IWebhookSender
+    public class AspNetCoreWebhookSender : DefaultWebhookSender
     {
         public const string WebhookSenderHttpClientName = "WebhookSenderHttpClient";
         private readonly IWebhooksConfiguration _webhooksConfiguration;
+        private readonly IWebhookManager _webhookManager;
         private readonly IHttpClientFactory _clientFactory;
 
         public AspNetCoreWebhookSender(
             IWebhooksConfiguration webhooksConfiguration,
+            IWebhookManager webhookManager,
             IHttpClientFactory clientFactory)
-            : base(webhooksConfiguration)
+            : base(webhooksConfiguration, webhookManager)
         {
             _webhooksConfiguration = webhooksConfiguration;
             _clientFactory = clientFactory;
+            _webhookManager = webhookManager;
         }
 
         protected override async Task<(bool isSucceed, HttpStatusCode statusCode, string content)> SendHttpRequest(HttpRequestMessage request)
