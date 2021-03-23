@@ -9,6 +9,7 @@ using Abp.EntityHistory.Extensions;
 using Abp.Events.Bus.Entities;
 using Abp.Extensions;
 using Abp.Json;
+using Abp.Reflection;
 using JetBrains.Annotations;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.ChangeTracking;
@@ -49,7 +50,7 @@ namespace Abp.EntityHistory
 
             foreach (var entityEntry in entityEntries)
             {
-                var typeOfEntity = entityEntry.Entity.GetType();
+                var typeOfEntity = ProxyHelper.GetUnproxiedType(entityEntry.Entity);
                 var shouldTrackEntity = IsTypeOfTrackedEntity(typeOfEntity);
                 if (shouldTrackEntity.HasValue && !shouldTrackEntity.Value)
                 {
@@ -165,7 +166,7 @@ namespace Abp.EntityHistory
         private EntityChange CreateEntityChange(EntityEntry entityEntry)
         {
             var entityId = GetEntityId(entityEntry);
-            var entityTypeFullName = entityEntry.Entity.GetType().FullName;
+            var entityTypeFullName = ProxyHelper.GetUnproxiedType(entityEntry.Entity).FullName;
             EntityChangeType changeType;
             switch (entityEntry.State)
             {
@@ -210,7 +211,6 @@ namespace Abp.EntityHistory
         {
             var propertyChanges = new List<EntityPropertyChange>();
             var properties = entityEntry.Metadata.GetProperties();
-            var entityEntryType = entityEntry.Entity.GetType();
 
             foreach (var property in properties)
             {
@@ -248,7 +248,7 @@ namespace Abp.EntityHistory
             foreach (var entityChange in changeSet.EntityChanges)
             {
                 var entityEntry = entityChange.EntityEntry.As<EntityEntry>();
-                var entityEntryType = entityEntry.Entity.GetType();
+                var entityEntryType = ProxyHelper.GetUnproxiedType(entityEntry.Entity);
                 var isAuditedEntity = IsTypeOfAuditedEntity(entityEntryType) == true;
 
                 /* Update change time */

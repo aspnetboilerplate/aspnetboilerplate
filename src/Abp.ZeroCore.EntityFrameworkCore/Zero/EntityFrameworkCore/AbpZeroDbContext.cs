@@ -146,6 +146,10 @@ namespace Abp.Zero.EntityFrameworkCore
                 .HasMaxLength(AuditLog.MaxBrowserInfoLength);
 
             modelBuilder.Entity<AuditLog>()
+                .Property(e => e.ExceptionMessage)
+                .HasMaxLength(AuditLog.MaxExceptionMessageLength);
+
+            modelBuilder.Entity<AuditLog>()
                 .Property(e => e.Exception)
                 .HasMaxLength(AuditLog.MaxExceptionLength);
 

@@ -7,6 +7,7 @@ using Abp.Application.Services;
 using Abp.Auditing;
 using Abp.Authorization;
 using Abp.BackgroundJobs;
+using Abp.CachedUniqueKeys;
 using Abp.Collections.Extensions;
 using Abp.Configuration;
 using Abp.Configuration.Startup;
@@ -53,6 +54,7 @@ namespace Abp
             AddLocalizationSources();
             AddSettingProviders();
             AddUnitOfWorkFilters();
+            AddUnitOfWorkAuditFieldConfiguration();
             ConfigureCaches();
             AddIgnoredTypes();
             AddMethodParameterValidators();
@@ -124,6 +126,13 @@ namespace Abp
             Configuration.UnitOfWork.RegisterFilter(AbpDataFilters.SoftDelete, true);
             Configuration.UnitOfWork.RegisterFilter(AbpDataFilters.MustHaveTenant, true);
             Configuration.UnitOfWork.RegisterFilter(AbpDataFilters.MayHaveTenant, true);
+        }
+
+        private void AddUnitOfWorkAuditFieldConfiguration()
+        {
+            Configuration.UnitOfWork.RegisterAuditFieldConfiguration(AbpAuditFields.CreationUserId, true);
+            Configuration.UnitOfWork.RegisterAuditFieldConfiguration(AbpAuditFields.LastModifierUserId, true);
+            Configuration.UnitOfWork.RegisterAuditFieldConfiguration(AbpAuditFields.DeleterUserId, true);
         }
 
         private void AddSettingProviders()
@@ -220,6 +229,7 @@ namespace Abp
             IocManager.RegisterIfNot<ITenantStore, NullTenantStore>(DependencyLifeStyle.Singleton);
             IocManager.RegisterIfNot<ITenantResolverCache, NullTenantResolverCache>(DependencyLifeStyle.Singleton);
             IocManager.RegisterIfNot<IEntityHistoryStore, NullEntityHistoryStore>(DependencyLifeStyle.Singleton);
+            IocManager.RegisterIfNot<ICachedUniqueKeyPerUser, CachedUniqueKeyPerUser>(DependencyLifeStyle.Transient);
 
             if (Configuration.BackgroundJobs.IsJobExecutionEnabled)
             {

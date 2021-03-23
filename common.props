@@ -1,6 +1,6 @@
 <Project>
     <PropertyGroup>
-        <Version>6.2.0</Version>
+        <Version>6.3.0</Version>
         <NoWarn>$(NoWarn);CS1591</NoWarn>
         <PackageIconUrl>http://www.aspnetboilerplate.com/images/abp_nupkg.png</PackageIconUrl>
         <PackageProjectUrl>http://www.aspnetboilerplate.com/</PackageProjectUrl>
@@ -19,6 +19,6 @@
         <!-- Add PackageReference specific for your source control provider (see below) -->
     </ItemGroup>
     <ItemGroup>
-        <PackageReference Include="Microsoft.SourceLink.GitHub" Version="1.0.0" PrivateAssets="All"/>
+        <PackageReference Include="Microsoft.SourceLink.GitHub" Version="1.1.0-beta-20204-02" PrivateAssets="All"/>
     </ItemGroup>
 </Project>

@@ -69,7 +69,7 @@ namespace Abp.DynamicEntityProperties
             }
         }
 
-        public virtual void Add(DynamicProperty dynamicProperty)
+        public virtual DynamicProperty Add(DynamicProperty dynamicProperty)
         {
             CheckDynamicProperty(dynamicProperty);
 
@@ -80,9 +80,11 @@ namespace Abp.DynamicEntityProperties
             }
 
             DynamicPropertyCache.Set(dynamicProperty.Id, dynamicProperty);
+
+            return dynamicProperty;
         }
 
-        public virtual async Task AddAsync(DynamicProperty dynamicProperty)
+        public virtual async Task<DynamicProperty> AddAsync(DynamicProperty dynamicProperty)
         {
             CheckDynamicProperty(dynamicProperty);
 
@@ -93,9 +95,11 @@ namespace Abp.DynamicEntityProperties
             }
 
             await DynamicPropertyCache.SetAsync(dynamicProperty.Id, dynamicProperty);
+            
+            return dynamicProperty;
         }
 
-        public virtual void Update(DynamicProperty dynamicProperty)
+        public virtual DynamicProperty Update(DynamicProperty dynamicProperty)
         {
             CheckDynamicProperty(dynamicProperty);
 
@@ -106,9 +110,11 @@ namespace Abp.DynamicEntityProperties
             }
 
             DynamicPropertyCache.Set(dynamicProperty.Id, dynamicProperty);
+            
+            return dynamicProperty;
         }
 
-        public virtual async Task UpdateAsync(DynamicProperty dynamicProperty)
+        public virtual async Task<DynamicProperty> UpdateAsync(DynamicProperty dynamicProperty)
         {
             CheckDynamicProperty(dynamicProperty);
 
@@ -119,6 +125,8 @@ namespace Abp.DynamicEntityProperties
             }
 
             await DynamicPropertyCache.SetAsync(dynamicProperty.Id, dynamicProperty);
+            
+            return dynamicProperty;
         }
 
         public virtual void Delete(int id)

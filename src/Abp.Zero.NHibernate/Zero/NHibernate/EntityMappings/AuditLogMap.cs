@@ -19,6 +19,7 @@ namespace Abp.Zero.NHibernate.EntityMappings
             Map(x => x.ClientName);
             Map(x => x.BrowserInfo);
             Map(x => x.Exception);
+            Map(x => x.ExceptionMessage);
             Map(x => x.ImpersonatorUserId);
             Map(x => x.ImpersonatorTenantId);
             Map(x => x.CustomData);

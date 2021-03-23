@@ -453,12 +453,24 @@ namespace Abp.EntityFrameworkCore
 
         protected virtual void SetCreationAuditProperties(object entityAsObj, long? userId)
         {
-            EntityAuditingHelper.SetCreationAuditProperties(MultiTenancyConfig, entityAsObj, AbpSession.TenantId, userId);
+            EntityAuditingHelper.SetCreationAuditProperties(
+                MultiTenancyConfig,
+                entityAsObj,
+                AbpSession.TenantId,
+                userId,
+                CurrentUnitOfWorkProvider?.Current?.AuditFieldConfiguration
+            );
         }
 
         protected virtual void SetModificationAuditProperties(object entityAsObj, long? userId)
         {
-            EntityAuditingHelper.SetModificationAuditProperties(MultiTenancyConfig, entityAsObj, AbpSession.TenantId, userId);
+            EntityAuditingHelper.SetModificationAuditProperties(
+                MultiTenancyConfig,
+                entityAsObj,
+                AbpSession.TenantId,
+                userId,
+                CurrentUnitOfWorkProvider?.Current?.AuditFieldConfiguration
+            );
         }
 
         protected virtual void CancelDeletionForSoftDelete(EntityEntry entry)
@@ -475,50 +487,13 @@ namespace Abp.EntityFrameworkCore
 
         protected virtual void SetDeletionAuditProperties(object entityAsObj, long? userId)
         {
-            if (entityAsObj is IHasDeletionTime)
-            {
-                var entity = entityAsObj.As<IHasDeletionTime>();
-
-                if (entity.DeletionTime == null)
-                {
-                    entity.DeletionTime = Clock.Now;
-                }
-            }
-
-            if (entityAsObj is IDeletionAudited)
-            {
-                var entity = entityAsObj.As<IDeletionAudited>();
-
-                if (entity.DeleterUserId != null)
-                {
-                    return;
-                }
-
-                if (userId == null)
-                {
-                    entity.DeleterUserId = null;
-                    return;
-                }
-
-                //Special check for multi-tenant entities
-                if (entity is IMayHaveTenant || entity is IMustHaveTenant)
-                {
-                    //Sets LastModifierUserId only if current user is in same tenant/host with the given entity
-                    if ((entity is IMayHaveTenant && entity.As<IMayHaveTenant>().TenantId == AbpSession.TenantId) ||
-                        (entity is IMustHaveTenant && entity.As<IMustHaveTenant>().TenantId == AbpSession.TenantId))
-                    {
-                        entity.DeleterUserId = userId;
-                    }
-                    else
-                    {
-                        entity.DeleterUserId = null;
-                    }
-                }
-                else
-                {
-                    entity.DeleterUserId = userId;
-                }
-            }
+            EntityAuditingHelper.SetDeletionAuditProperties(
+                MultiTenancyConfig,
+                entityAsObj,
+                AbpSession.TenantId,
+                userId,
+                CurrentUnitOfWorkProvider?.Current?.AuditFieldConfiguration
+            );
         }
 
         protected virtual long? GetAuditUserId()

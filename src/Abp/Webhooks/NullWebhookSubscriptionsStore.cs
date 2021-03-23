@@ -69,6 +69,26 @@ namespace Abp.Webhooks
             return new List<WebhookSubscriptionInfo>();
         }
 
+        public Task<List<WebhookSubscriptionInfo>> GetAllSubscriptionsOfTenantsAsync(int?[] tenantIds)
+        {
+            return Task.FromResult(new List<WebhookSubscriptionInfo>());
+        }
+
+        public List<WebhookSubscriptionInfo> GetAllSubscriptionsOfTenants(int?[] tenantIds)
+        {
+            return new List<WebhookSubscriptionInfo>();
+        }
+
+        public Task<List<WebhookSubscriptionInfo>> GetAllSubscriptionsOfTenantsAsync(int?[] tenantIds, string webhookName)
+        {
+            return Task.FromResult(new List<WebhookSubscriptionInfo>());
+        }
+
+        public List<WebhookSubscriptionInfo> GetAllSubscriptionsOfTenants(int?[] tenantIds, string webhookName)
+        {
+            return new List<WebhookSubscriptionInfo>();
+        }
+
         public Task<bool> IsSubscribedAsync(int? tenantId, string webhookName)
         {
             return Task.FromResult(false);

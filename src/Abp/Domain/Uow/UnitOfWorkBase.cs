@@ -38,6 +38,13 @@ namespace Abp.Domain.Uow
             get { return _filters.ToImmutableList(); }
         }
         private readonly List<DataFilterConfiguration> _filters;
+        
+        /// <inheritdoc/>
+        public IReadOnlyList<AuditFieldConfiguration> AuditFieldConfiguration
+        {
+            get { return _auditFieldConfiguration.ToImmutableList(); }
+        }
+        private readonly List<AuditFieldConfiguration> _auditFieldConfiguration;
 
         public Dictionary<string, object> Items { get; set; }
 
@@ -99,7 +106,7 @@ namespace Abp.Domain.Uow
 
             Id = Guid.NewGuid().ToString("N");
             _filters = defaultOptions.Filters.ToList();
-
+            _auditFieldConfiguration = defaultOptions.AuditFieldConfiguration.ToList();
             AbpSession = NullAbpSession.Instance;
             Items = new Dictionary<string, object>();
         }
@@ -167,6 +174,42 @@ namespace Abp.Domain.Uow
             enabledFilters.ForEach(ApplyEnableFilter);
 
             return new DisposeAction(() => DisableFilter(enabledFilters.ToArray()));
+        }
+        
+        /// <inheritdoc/>
+        public IDisposable DisableAuditing(params string[] fieldNames)
+        {
+            var disabledAuditFields = new List<string>();
+
+            foreach (var fieldName in fieldNames)
+            {
+                var fieldIndex = GetAuditFieldIndex(fieldName);
+                if (_auditFieldConfiguration[fieldIndex].IsSavingEnabled)
+                {
+                    disabledAuditFields.Add(fieldName);
+                    _auditFieldConfiguration[fieldIndex] = new AuditFieldConfiguration(_auditFieldConfiguration[fieldIndex].FieldName, false);
+                }
+            }
+            
+            return new DisposeAction(() => EnableAuditing(disabledAuditFields.ToArray()));
+        }
+
+        /// <inheritdoc/>
+        public IDisposable EnableAuditing(params string[] fieldNames)
+        {
+            var enabledAuditFields = new List<string>();
+
+            foreach (var fieldName in fieldNames)
+            {
+                var fieldIndex = GetAuditFieldIndex(fieldName);
+                if (!_auditFieldConfiguration[fieldIndex].IsSavingEnabled)
+                {
+                    enabledAuditFields.Add(fieldName);
+                    _auditFieldConfiguration[fieldIndex] = new AuditFieldConfiguration(_auditFieldConfiguration[fieldIndex].FieldName, true);
+                }
+            }
+
+            return new DisposeAction(() => DisableAuditing(enabledAuditFields.ToArray()));
         }
 
         /// <inheritdoc/>
@@ -444,6 +487,17 @@ namespace Abp.Domain.Uow
         private int GetFilterIndex(string filterName)
         {
             var filterIndex = _filters.FindIndex(f => f.FilterName == filterName);
+            if (filterIndex < 0)
+            {
+                throw new AbpException("Unknown filter name: " + filterName + ". Be sure this filter is registered before.");
+            }
+
+            return filterIndex;
+        }
+        
+        private int GetAuditFieldIndex(string filterName)
+        {
+            var filterIndex = _auditFieldConfiguration.FindIndex(f => f.FieldName == filterName);
             if (filterIndex < 0)
             {
                 throw new AbpException("Unknown filter name: " + filterName + ". Be sure this filter is registered before.");

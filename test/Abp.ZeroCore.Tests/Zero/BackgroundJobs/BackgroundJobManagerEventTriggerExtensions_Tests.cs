@@ -48,11 +48,11 @@ namespace Abp.Zero.BackgroundJobs
             }
         }
 
-        public class TestJob : BackgroundJob<TestJobArgs>, ITransientDependency
+        public class TestJob : AsyncBackgroundJob<TestJobArgs>, ITransientDependency
         {
-            public override void Execute(TestJobArgs args)
+            public override Task ExecuteAsync(TestJobArgs args)
             {
-
+                return Task.CompletedTask;
             }
         }
 

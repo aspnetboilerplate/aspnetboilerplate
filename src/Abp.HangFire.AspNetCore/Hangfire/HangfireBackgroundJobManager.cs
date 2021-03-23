@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Reflection;
 using System.Threading.Tasks;
 using Abp.BackgroundJobs;
 using Abp.Threading.BackgroundWorkers;
@@ -9,34 +10,62 @@ namespace Abp.Hangfire
     public class HangfireBackgroundJobManager : BackgroundWorkerBase, IBackgroundJobManager
     {
         public virtual Task<string> EnqueueAsync<TJob, TArgs>(TArgs args, BackgroundJobPriority priority = BackgroundJobPriority.Normal,
-            TimeSpan? delay = null) where TJob : IBackgroundJob<TArgs>
+            TimeSpan? delay = null) where TJob : IBackgroundJobBase<TArgs>
         {
             string jobUniqueIdentifier = string.Empty;
 
             if (!delay.HasValue)
             {
-                jobUniqueIdentifier = HangfireBackgroundJob.Enqueue<TJob>(job => job.Execute(args));
+                if (typeof(IBackgroundJob<TArgs>).IsAssignableFrom(typeof(TArgs)))
+                {
+                    jobUniqueIdentifier = HangfireBackgroundJob.Enqueue<TJob>(job => ((IBackgroundJob<TArgs>)job).Execute(args));   
+                }
+                else
+                {
+                    jobUniqueIdentifier = HangfireBackgroundJob.Enqueue<TJob>(job => ((IAsyncBackgroundJob<TArgs>)job).ExecuteAsync(args));
+                }
             }
             else
             {
-                jobUniqueIdentifier = HangfireBackgroundJob.Schedule<TJob>(job => job.Execute(args), delay.Value);
+                if (typeof(IBackgroundJob<TArgs>).IsAssignableFrom(typeof(TArgs)))
+                {
+                    jobUniqueIdentifier = HangfireBackgroundJob.Schedule<TJob>(job => ((IBackgroundJob<TArgs>)job).Execute(args), delay.Value);   
+                }
+                else
+                {
+                    jobUniqueIdentifier = HangfireBackgroundJob.Schedule<TJob>(job => ((IAsyncBackgroundJob<TArgs>)job).ExecuteAsync(args), delay.Value);
+                }
             }
 
             return Task.FromResult(jobUniqueIdentifier);
         }
 
         public virtual string Enqueue<TJob, TArgs>(TArgs args, BackgroundJobPriority priority = BackgroundJobPriority.Normal,
-            TimeSpan? delay = null) where TJob : IBackgroundJob<TArgs>
+            TimeSpan? delay = null) where TJob : IBackgroundJobBase<TArgs>
         {
             string jobUniqueIdentifier = string.Empty;
 
             if (!delay.HasValue)
             {
-                jobUniqueIdentifier = HangfireBackgroundJob.Enqueue<TJob>(job => job.Execute(args));
+                if (typeof(IBackgroundJob<TArgs>).IsAssignableFrom(typeof(TArgs)))
+                {
+                    jobUniqueIdentifier = HangfireBackgroundJob.Enqueue<TJob>(job => ((IBackgroundJob<TArgs>)job).Execute(args));   
+                }
+                else
+                {
+                    jobUniqueIdentifier = HangfireBackgroundJob.Enqueue<TJob>(job => ((IAsyncBackgroundJob<TArgs>)job).ExecuteAsync(args));
+                }
             }
             else
             {
-                jobUniqueIdentifier = HangfireBackgroundJob.Schedule<TJob>(job => job.Execute(args), delay.Value);
+                if (typeof(IBackgroundJob<TArgs>).IsAssignableFrom(typeof(TArgs)))
+                {
+                    jobUniqueIdentifier = HangfireBackgroundJob.Schedule<TJob>(job => ((IBackgroundJob<TArgs>)job).Execute(args), delay.Value);   
+                }
+                else
+                {
+                    jobUniqueIdentifier = HangfireBackgroundJob.Schedule<TJob>(job => ((IAsyncBackgroundJob<TArgs>)job).ExecuteAsync(args), delay.Value);
+                }
             }
 
             return jobUniqueIdentifier;

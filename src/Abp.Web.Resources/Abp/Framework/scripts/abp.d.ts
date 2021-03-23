@@ -78,7 +78,7 @@
 
         let defaultSourceName: string;
 
-        let values: { [key: string]: string };
+        let values: { [key: string]: { [key: string]: string } };
 
         let abpWeb: (key: string) => string;
 

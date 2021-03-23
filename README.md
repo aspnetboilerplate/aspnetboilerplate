@@ -145,17 +145,7 @@ You can create your project from startup templates to easily start with Module Z
  
 A screenshot of the ASP.NET Core based startup template:
 
-![](doc/img/module-zero-core-template.png)
-
-### Docker Image
-
-You can directly run the startup template on your computer as a docker container:
-
-````
-docker run -p 9902:80 volosoft/abp-template
-````
-
-See https://hub.docker.com/r/volosoft/abp-template/ for more info.
+![](doc/img/module-zero-core-template-1.png)
 
 ## Links
 

@@ -73,16 +73,18 @@ the samples
 The most obvious usage of OUs is to assign an entity to an OU. Let's see a
 sample entity:
 
-    public class Product : Entity, IMustHaveTenant, IMustHaveOrganizationUnit
-    {
-        public virtual int TenantId { get; set; }
+```csharp
+public class Product : Entity, IMustHaveTenant, IMustHaveOrganizationUnit
+{
+    public virtual int TenantId { get; set; }
 
-        public virtual long OrganizationUnitId { get; set; }
-        
-        public virtual string Name { get; set; }
+    public virtual long OrganizationUnitId { get; set; }
+    
+    public virtual string Name { get; set; }
 
-        public virtual float Price { get; set; }
-    }
+    public virtual float Price { get; set; }
+}
+```
 
 We simply created the **OrganizationUnitId** property to assign this entity
 to an OU. The **IMustHaveOrganizationUnit** defines the OrganizationUnitId
@@ -105,21 +107,23 @@ property.
 Getting the Products of an OU is simple. Let's see this sample [domain
 service](/Pages/Documents/Domain-Services):
 
-    public class ProductManager : IDomainService
+```csharp
+public class ProductManager : IDomainService
+{
+    private readonly IRepository<Product> _productRepository;
+
+    public ProductManager(IRepository<Product> productRepository)
     {
-        private readonly IRepository<Product> _productRepository;
-
-        public ProductManager(IRepository<Product> productRepository)
-        {
-            _productRepository = productRepository;
-        }
-
-        public List<Product> GetProductsInOu(long organizationUnitId)
-        {
-            return _productRepository.GetAllList(p => p.OrganizationUnitId == organizationUnitId);
-        }
-                    
+        _productRepository = productRepository;
     }
+
+    public List<Product> GetProductsInOu(long organizationUnitId)
+    {
+        return _productRepository.GetAllList(p => p.OrganizationUnitId == organizationUnitId);
+    }
+                
+}
+```
 
 As shown above, we can simply write a predicate against Product.OrganizationUnitId.
 
@@ -128,33 +132,35 @@ As shown above, we can simply write a predicate against Product.OrganizationUnit
 We may want to get the Products of an organization unit including child
 organization units. In this case, the OU **Code** can help us:
 
-    public class ProductManager : IDomainService
+```csharp
+public class ProductManager : IDomainService
+{
+    private readonly IRepository<Product> _productRepository;
+    private readonly IRepository<OrganizationUnit, long> _organizationUnitRepository;
+
+    public ProductManager(
+        IRepository<Product> productRepository, 
+        IRepository<OrganizationUnit, long> organizationUnitRepository)
     {
-        private readonly IRepository<Product> _productRepository;
-        private readonly IRepository<OrganizationUnit, long> _organizationUnitRepository;
-
-        public ProductManager(
-            IRepository<Product> productRepository, 
-            IRepository<OrganizationUnit, long> organizationUnitRepository)
-        {
-            _productRepository = productRepository;
-            _organizationUnitRepository = organizationUnitRepository;
-        }
-
-        [UnitOfWork]
-        public virtual List<Product> GetProductsInOuIncludingChildren(long organizationUnitId)
-        {
-            var code = _organizationUnitRepository.Get(organizationUnitId).Code;
-
-            var query =
-                from product in _productRepository.GetAll()
-                join organizationUnit in _organizationUnitRepository.GetAll() on product.OrganizationUnitId equals organizationUnit.Id
-                where organizationUnit.Code.StartsWith(code)
-                select product;
-
-            return query.ToList();
-        }
+        _productRepository = productRepository;
+        _organizationUnitRepository = organizationUnitRepository;
     }
+
+    [UnitOfWork]
+    public virtual List<Product> GetProductsInOuIncludingChildren(long organizationUnitId)
+    {
+        var code = _organizationUnitRepository.Get(organizationUnitId).Code;
+
+        var query =
+            from product in _productRepository.GetAll()
+            join organizationUnit in _organizationUnitRepository.GetAll() on product.OrganizationUnitId equals organizationUnit.Id
+            where organizationUnit.Code.StartsWith(code)
+            select product;
+
+        return query.ToList();
+    }
+}
+```
 
 First, we got the **code** of the the given OU. Then we created a LINQ expression with a
 **join** and a **StartsWith(code)** condition (StartsWith creates a
@@ -166,29 +172,38 @@ OU.
 We may want to get all products that are in the OUs of a specific user.
 Example code:
 
-    public class ProductManager : IDomainService
+```csharp
+public class ProductManager : IDomainService
+{
+    private readonly IRepository<Product> _productRepository;
+    private readonly UserManager _userManager;
+
+    public ProductManager(
+        IRepository<Product> productRepository, 
+        UserManager userManager)
     {
-        private readonly IRepository<Product> _productRepository;
-        private readonly UserManager _userManager;
-
-        public ProductManager(
-            IRepository<Product> productRepository, 
-            UserManager userManager)
-        {
-            _productRepository = productRepository;
-            _organizationUnitRepository = organizationUnitRepository;
-            _userManager = userManager;
-        }
-
-        public async Task<List<Product>> GetProductsForUserAsync(long userId)
-        {
-            var user = await _userManager.GetUserByIdAsync(userId);
-            var organizationUnits = await _userManager.GetOrganizationUnitsAsync(user);
-            var organizationUnitIds = organizationUnits.Select(ou => ou.Id);
-
-            return await _productRepository.GetAllListAsync(p => organizationUnitIds.Contains(p.OrganizationUnitId));
-        }
+        _productRepository = productRepository;
+        _organizationUnitRepository = organizationUnitRepository;
+        _userManager = userManager;
     }
+
+    public async Task<List<Product>> GetProductsForUserAsync(long userId)
+    {
+		var user = await _userManager.GetUserByIdAsync(AbpSession.UserId.Value);
+		var organizationUnits = await _userManager.GetOrganizationUnitsAsync(user);
+		var organizationUnitCodes = organizationUnits.Select(ou => ou.Code).ToList();
+
+		var predicate = PredicateBuilder.New<OrganizationUnit>();
+		foreach (var code in organizationUnitCodes)
+		{
+			predicate = predicate.Or(ou => ou.Code.StartsWith(code));
+		}
+
+		var organizationUnitIds = await _organizationUnitRepository.GetAll().Where(predicate).Select(ou => ou.Id).ToListAsync();
+        return await _productRepository.GetAllListAsync(p => organizationUnitIds.Contains(p.OrganizationUnitId));
+    }
+}
+```
 
 We simply found the Ids of the OUs of the user. We then used a **Contains** condition
 while getting the products. We could also create a LINQ query with join
@@ -196,38 +211,37 @@ to get the same list, instead.
 
 We may want to get products in the user's OUs including their child OUs:
 
-    public class ProductManager : IDomainService
+```csharp
+public class ProductManager : IDomainService
+{
+    private readonly IRepository<Product> _productRepository;
+    private readonly IRepository<OrganizationUnit, long> _organizationUnitRepository;
+    private readonly UserManager _userManager;
+
+    public ProductManager(
+        IRepository<Product> productRepository, 
+        IRepository<OrganizationUnit, long> organizationUnitRepository, 
+        UserManager userManager)
     {
-        private readonly IRepository<Product> _productRepository;
-        private readonly IRepository<OrganizationUnit, long> _organizationUnitRepository;
-        private readonly UserManager _userManager;
-
-        public ProductManager(
-            IRepository<Product> productRepository, 
-            IRepository<OrganizationUnit, long> organizationUnitRepository, 
-            UserManager userManager)
-        {
-            _productRepository = productRepository;
-            _organizationUnitRepository = organizationUnitRepository;
-            _userManager = userManager;
-        }
-
-        [UnitOfWork]
-        public virtual async Task<List<Product>> GetProductsForUserIncludingChildOusAsync(long userId)
-        {
-            var user = await _userManager.GetUserByIdAsync(userId);
-            var organizationUnits = await _userManager.GetOrganizationUnitsAsync(user);
-            var organizationUnitCodes = organizationUnits.Select(ou => ou.Code);
-
-            var query =
-                from product in _productRepository.GetAll()
-                join organizationUnit in _organizationUnitRepository.GetAll() on product.OrganizationUnitId equals organizationUnit.Id
-                where organizationUnitCodes.Any(code => organizationUnit.Code.StartsWith(code))
-                select product;
-
-            return query.ToList();
-        }
+        _productRepository = productRepository;
+        _organizationUnitRepository = organizationUnitRepository;
+        _userManager = userManager;
     }
+    
+    [UnitOfWork]
+    public virtual async Task<List<Product>> GetProductsForUserIncludingChildOusAsync(long userId)
+    {
+        var user = await _userManager.GetUserByIdAsync(userId);
+        var organizationUnits = await _userManager.GetOrganizationUnitsAsync(user);
+        var organizationUnitIds = organizationUnits.Select(ou => ou.Id).ToList();
+
+        var newQuery = _productRepository.GetAll()
+        .Where(product => organizationUnitIds.Contains(product.OrganizationUnitId));
+
+        return newQuery.ToList();
+    }
+}
+```
 
 We combined **Any** with the **StartsWith** condition into a LINQ join
 statement.

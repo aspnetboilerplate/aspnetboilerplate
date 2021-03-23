@@ -8,7 +8,6 @@ using System.Threading.Tasks;
 using Abp.Domain.Services;
 using Abp.Domain.Uow;
 using Abp.Json;
-using Abp.Threading;
 
 namespace Abp.Webhooks
 {
@@ -87,63 +86,6 @@ namespace Abp.Webhooks
             }
         }
 
-        public void SendWebhook(WebhookSenderArgs webhookSenderArgs)
-        {
-            if (webhookSenderArgs.WebhookEventId == default)
-            {
-                throw new ArgumentNullException(nameof(webhookSenderArgs.WebhookEventId));
-            }
-
-            if (webhookSenderArgs.WebhookSubscriptionId == default)
-            {
-                throw new ArgumentNullException(nameof(webhookSenderArgs.WebhookSubscriptionId));
-            }
-
-            var webhookSendAttemptId = InsertAndGetIdWebhookSendAttempt(webhookSenderArgs);
-
-            var request = CreateWebhookRequestMessage(webhookSenderArgs);
-
-            var serializedBody = GetSerializedBody(webhookSenderArgs);
-
-            SignWebhookRequest(request, serializedBody, webhookSenderArgs.Secret);
-
-            AddAdditionalHeaders(request, webhookSenderArgs);
-
-            bool isSucceed = false;
-            HttpStatusCode? statusCode = null;
-            string content = FailedRequestDefaultContent;
-
-            try
-            {
-                var response = AsyncHelper.RunSync(() => SendHttpRequest(request));
-                isSucceed = response.isSucceed;
-                statusCode = response.statusCode;
-                content = response.content;
-            }
-            catch (TaskCanceledException)
-            {
-                statusCode = HttpStatusCode.RequestTimeout;
-                content = "Request Timeout";
-            }
-            catch (HttpRequestException e)
-            {
-                content = e.Message;
-            }
-            catch (Exception e)
-            {
-                Logger.Error("An error occured while sending a webhook request", e);
-            }
-            finally
-            {
-                StoreResponseOnWebhookSendAttempt(webhookSendAttemptId, webhookSenderArgs.TenantId, statusCode, content);
-            }
-
-            if (!isSucceed)
-            {
-                throw new Exception($"Webhook send attempt failed. WebhookSendAttempt id: {webhookSendAttemptId}");
-            }
-        }
-
         [UnitOfWork]
         protected virtual async Task<Guid> InsertAndGetIdWebhookSendAttemptAsync(WebhookSenderArgs webhookSenderArgs)
         {
@@ -161,22 +103,6 @@ namespace Abp.Webhooks
         }
 
         [UnitOfWork]
-        protected virtual Guid InsertAndGetIdWebhookSendAttempt(WebhookSenderArgs webhookSenderArgs)
-        {
-            var workItem = new WebhookSendAttempt
-            {
-                WebhookEventId = webhookSenderArgs.WebhookEventId,
-                WebhookSubscriptionId = webhookSenderArgs.WebhookSubscriptionId,
-                TenantId = webhookSenderArgs.TenantId
-            };
-
-            WebhookSendAttemptStore.Insert(workItem);
-            CurrentUnitOfWork.SaveChanges();
-
-            return workItem.Id;
-        }
-
-        [UnitOfWork]
         protected virtual async Task StoreResponseOnWebhookSendAttemptAsync(Guid webhookSendAttemptId, int? tenantId, HttpStatusCode? statusCode, string content)
         {
             var webhookSendAttempt = await WebhookSendAttemptStore.GetAsync(tenantId, webhookSendAttemptId);
@@ -185,17 +111,6 @@ namespace Abp.Webhooks
             webhookSendAttempt.Response = content;
 
             await WebhookSendAttemptStore.UpdateAsync(webhookSendAttempt);
-        }
-
-        [UnitOfWork]
-        protected virtual void StoreResponseOnWebhookSendAttempt(Guid webhookSendAttemptId, int? tenantId, HttpStatusCode? statusCode, string content)
-        {
-            var webhookSendAttempt = WebhookSendAttemptStore.Get(tenantId, webhookSendAttemptId);
-
-            webhookSendAttempt.ResponseStatusCode = statusCode;
-            webhookSendAttempt.Response = content;
-
-            WebhookSendAttemptStore.Update(webhookSendAttempt);
         }
 
         /// <summary>
