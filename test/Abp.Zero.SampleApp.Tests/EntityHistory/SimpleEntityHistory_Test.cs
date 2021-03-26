@@ -110,9 +110,8 @@ namespace Abp.Zero.SampleApp.Tests.EntityHistory
             // Forward calls from substitute to implementation
             var entityHistoryStore = Resolve<EntityHistoryStore>();
             _entityHistoryStore.When(x => x.SaveAsync(Arg.Any<EntityChangeSet>()))
-                .Do(callback => AsyncHelper.RunSync(() =>
-                    entityHistoryStore.SaveAsync(callback.Arg<EntityChangeSet>()))
-                );
+                .Do(callback => entityHistoryStore.SaveAsync(callback.Arg<EntityChangeSet>()));
+            
             _entityHistoryStore.When(x => x.Save(Arg.Any<EntityChangeSet>()))
                 .Do(callback => entityHistoryStore.Save(callback.Arg<EntityChangeSet>()));
 
@@ -206,9 +205,8 @@ namespace Abp.Zero.SampleApp.Tests.EntityHistory
             // Forward calls from substitute to implementation
             var entityHistoryStore = Resolve<EntityHistoryStore>();
             _entityHistoryStore.When(x => x.SaveAsync(Arg.Any<EntityChangeSet>()))
-                .Do(callback => AsyncHelper.RunSync(() =>
-                    entityHistoryStore.SaveAsync(callback.Arg<EntityChangeSet>()))
-                );
+                .Do(callback => entityHistoryStore.SaveAsync(callback.Arg<EntityChangeSet>()));
+            
             _entityHistoryStore.When(x => x.Save(Arg.Any<EntityChangeSet>()))
                 .Do(callback => entityHistoryStore.Save(callback.Arg<EntityChangeSet>()));
 
@@ -328,9 +326,8 @@ namespace Abp.Zero.SampleApp.Tests.EntityHistory
             // Forward calls from substitute to implementation
             var entityHistoryStore = Resolve<EntityHistoryStore>();
             _entityHistoryStore.When(x => x.SaveAsync(Arg.Any<EntityChangeSet>()))
-                .Do(callback => AsyncHelper.RunSync(() =>
-                    entityHistoryStore.SaveAsync(callback.Arg<EntityChangeSet>()))
-                );
+                .Do(callback => entityHistoryStore.SaveAsync(callback.Arg<EntityChangeSet>()));
+            
             _entityHistoryStore.When(x => x.Save(Arg.Any<EntityChangeSet>()))
                 .Do(callback => entityHistoryStore.Save(callback.Arg<EntityChangeSet>()));
 
@@ -764,9 +761,7 @@ namespace Abp.Zero.SampleApp.Tests.EntityHistory
             // Forward calls from substitute to implementation
             var entityHistoryStore = Resolve<EntityHistoryStore>();
             _entityHistoryStore.When(x => x.SaveAsync(Arg.Any<EntityChangeSet>()))
-                .Do(callback => AsyncHelper.RunSync(() =>
-                    entityHistoryStore.SaveAsync(callback.Arg<EntityChangeSet>()))
-                );
+                .Do(callback => entityHistoryStore.SaveAsync(callback.Arg<EntityChangeSet>()));
 
             _entityHistoryStore.When(x => x.Save(Arg.Any<EntityChangeSet>()))
                 .Do(callback => entityHistoryStore.Save(callback.Arg<EntityChangeSet>()));
@@ -811,9 +806,7 @@ namespace Abp.Zero.SampleApp.Tests.EntityHistory
         {
             var entityHistoryStore = Resolve<EntityHistoryStore>();
             _entityHistoryStore.When(x => x.SaveAsync(Arg.Any<EntityChangeSet>()))
-                .Do(callback => AsyncHelper.RunSync(() =>
-                    entityHistoryStore.SaveAsync(callback.Arg<EntityChangeSet>()))
-                );
+                .Do(callback => entityHistoryStore.SaveAsync(callback.Arg<EntityChangeSet>()));
 
             _entityHistoryStore.When(x => x.Save(Arg.Any<EntityChangeSet>()))
                 .Do(callback => entityHistoryStore.Save(callback.Arg<EntityChangeSet>()));
