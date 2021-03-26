@@ -78,7 +78,7 @@ namespace Abp.Web.SignalR.Hubs
         /// <param name="name">Key name</param>
         /// <param name="args">Format arguments</param>
         /// <returns>Localized string</returns>
-        protected string L(string name, params object[] args)
+        protected virtual string L(string name, params object[] args)
         {
             return LocalizationSource.GetString(name, args);
         }
@@ -101,7 +101,7 @@ namespace Abp.Web.SignalR.Hubs
         /// <param name="culture">culture information</param>
         /// <param name="args">Format arguments</param>
         /// <returns>Localized string</returns>
-        protected string L(string name, CultureInfo culture, params object[] args)
+        protected virtual string L(string name, CultureInfo culture, params object[] args)
         {
             return LocalizationSource.GetString(name, culture, args);
         }
