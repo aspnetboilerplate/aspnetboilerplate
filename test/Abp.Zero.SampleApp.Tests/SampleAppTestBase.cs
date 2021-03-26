@@ -201,5 +201,19 @@ namespace Abp.Zero.SampleApp.Tests
             await UserManager.ProhibitPermissionAsync(user, PermissionManager.GetPermission(permissionName));
             (await UserManager.IsGrantedAsync(user.Id, permissionName)).ShouldBe(false);
         }
+        
+        protected void ProhibitPermission(User user, Permission permission)
+        {
+            UserStore.RemovePermission(user, new PermissionGrantInfo(permission.Name, true));
+
+            if (!UserManager.IsGranted(user.Id, permission))
+            {
+                return;
+            }
+
+            UserStore.AddPermission(user, new PermissionGrantInfo(permission.Name, false));
+            
+            UserManager.IsGranted(user.Id, permission.Name).ShouldBe(false);
+        }
     }
 }
