@@ -21,8 +21,8 @@ namespace Abp.Zero.SampleApp.Tests.CachedUniqueKeys
 
         public CachedUniqueKeyPerUser_Tests()
         {
-            user1 = AsyncHelper.RunSync(() => CreateUser("User1"));
-            user2 = AsyncHelper.RunSync(() => CreateUser("User2"));
+            user1 = CreateUser("User1");
+            user2 = CreateUser("User2");
 
             AbpSession.UserId = user1.Id;
             AbpSession.TenantId = user1.TenantId;

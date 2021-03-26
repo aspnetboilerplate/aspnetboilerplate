@@ -12,9 +12,9 @@ namespace Abp.Zero.SampleApp.Tests.Roles
         public async Task User_Should_Be_Unassigned_From_Role_When_The_Role_Is_Deleted()
         {
             //Create user and roles
-            var user1 = await CreateUser("User1");
-            var role1 = await CreateRole("Role1");
-            var role2= await CreateRole("Role2");
+            var user1 = CreateUser("User1");
+            var role1 = CreateRole("Role1");
+            var role2= CreateRole("Role2");
 
             //Add role1, role2 to the user
             (await UserManager.AddToRoleAsync(user1.Id, role1.Name)).CheckErrors();

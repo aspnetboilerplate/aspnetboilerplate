@@ -28,7 +28,7 @@ namespace Abp.Zero.SampleApp.Tests.Roles
         [Fact]
         public async Task Should_Create_And_Retrieve_Role()
         {
-            await CreateRole("Role1");
+            CreateRole("Role1");
 
             var role1Retrieved = await RoleManager.FindByNameAsync("Role1");
             role1Retrieved.ShouldNotBe(null);
@@ -39,7 +39,7 @@ namespace Abp.Zero.SampleApp.Tests.Roles
         public async Task Should_Not_Create_For_Duplicate_Name_Or_DisplayName()
         {
             //Create a role and check
-            await CreateRole("Role1", "Role One");
+            CreateRole("Role1", "Role One");
             (await RoleManager.FindByNameAsync("Role1")).ShouldNotBe(null);
 
             //Create with same name
@@ -50,7 +50,7 @@ namespace Abp.Zero.SampleApp.Tests.Roles
         [Fact]
         public async Task PermissionTests()
         {
-            var role1 = await CreateRole("Role1");
+            var role1 = CreateRole("Role1");
 
             (await RoleManager.IsGrantedAsync(role1.Id, PermissionManager.GetPermission("Permission1"))).ShouldBe(false);
             (await RoleManager.IsGrantedAsync(role1.Id, PermissionManager.GetPermission("Permission3"))).ShouldBe(false);

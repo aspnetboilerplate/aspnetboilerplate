@@ -16,9 +16,9 @@ namespace Abp.Zero.SampleApp.Tests.Users
 
         public UserManager_Permission_Tests()
         {
-            _role1 = CreateRole("Role1").Result;
-            _role2 = CreateRole("Role2").Result;
-            _testUser = CreateUser("TestUser").Result;
+            _role1 = CreateRole("Role1");
+            _role2 = CreateRole("Role2");
+            _testUser = CreateUser("TestUser");
             AsyncHelper.RunSync(() => UserManager.AddToRolesAsync(_testUser.Id, _role1.Name, _role2.Name)).CheckErrors();
         }
 
