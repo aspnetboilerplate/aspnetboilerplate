@@ -51,10 +51,10 @@ namespace Abp.Zero.SampleApp.Tests.EntityHistory
             Thread.Sleep(3 * 1000);
             using (var uow = Resolve<IUnitOfWorkManager>().Begin())
             {
-                var user = _userRepository.Get(id);
+                var user = await _userRepository.GetAsync(id);
                 user.Name = "test-user-name-updated-2";
 
-                uow.Complete();
+                await uow.CompleteAsync();
             }
 
             using (var uow = Resolve<IUnitOfWorkManager>().Begin())

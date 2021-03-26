@@ -21,7 +21,7 @@
         <link rel="stylesheet" href="~/css/site.min.css" asp-append-version="true" />
     </environment>
     
-    @RenderSection("styles", false)
+    @await RenderSectionAsync("styles", false)
 </head>
 <body>
     <div class="navbar navbar-inverse navbar-fixed-top">
@@ -74,6 +74,6 @@
     <script src="~/AbpScripts/GetScripts" type="text/javascript"></script>
     <script src="~/AbpServiceProxies/GetAll?type=jquery" type="text/javascript"></script>
 
-    @RenderSection("scripts", required: false)
+    @await RenderSectionAsync("scripts", required: false)
 </body>
 </html>

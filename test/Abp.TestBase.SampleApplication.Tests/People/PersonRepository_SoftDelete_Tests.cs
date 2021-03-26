@@ -108,7 +108,7 @@ namespace Abp.TestBase.SampleApplication.Tests.People
                     personToBeDeleted.DeleterUserId.ShouldBe(userId);
                 }
 
-                ouw.Complete();
+                await ouw.CompleteAsync();
             }
         }
 
@@ -119,26 +119,26 @@ namespace Abp.TestBase.SampleApplication.Tests.People
 
             using (var uow = uowManager.Begin())
             {
-                var people = _personRepository.GetAllList();
+                var people = await _personRepository.GetAllListAsync();
 
                 foreach (var person in people)
                 {
                     await _personRepository.HardDeleteAsync(person);
                 }
 
-                uow.Complete();
+                await uow.CompleteAsync();
             }
 
             using (var uow = uowManager.Begin())
             {
                 using (uowManager.Current.DisableFilter(AbpDataFilters.SoftDelete))
                 {
-                    var poeple = _personRepository.GetAllList();
-                    poeple.Count.ShouldBe(1);
-                    poeple.First().Name.ShouldBe("emre");
+                    var people = await _personRepository.GetAllListAsync();
+                    people.Count.ShouldBe(1);
+                    people.First().Name.ShouldBe("emre");
                 }
 
-                uow.Complete();
+                await uow.CompleteAsync();
             }
         }
     }

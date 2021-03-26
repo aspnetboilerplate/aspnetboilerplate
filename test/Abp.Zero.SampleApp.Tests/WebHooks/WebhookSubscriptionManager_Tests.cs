@@ -132,7 +132,7 @@ namespace Abp.Zero.SampleApp.Tests.Webhooks
             var newSubscription = NewWebhookSubscription(tenantId, AppWebhookDefinitionNames.Users.Created);
 
             var webhookSubscriptionManager = Resolve<IWebhookSubscriptionManager>();
-            webhookSubscriptionManager.AddOrUpdateSubscription(newSubscription);
+            await webhookSubscriptionManager.AddOrUpdateSubscriptionAsync(newSubscription);
 
             WebhookSubscription storedSubscription = null;
             await WithUnitOfWorkAsync(tenantId, async () =>
@@ -146,7 +146,7 @@ namespace Abp.Zero.SampleApp.Tests.Webhooks
             string currentSecret = storedSubscription.Secret;
             storedSubscription.Secret = "TestSecret";
 
-            webhookSubscriptionManager.AddOrUpdateSubscription(storedSubscription);
+            await webhookSubscriptionManager.AddOrUpdateSubscriptionAsync(storedSubscription);
 
             await WithUnitOfWorkAsync(tenantId, async () =>
             {

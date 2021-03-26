@@ -1,15 +1,12 @@
 using System;
 using System.Threading.Tasks;
-
 using Abp.Dapper.Repositories;
 using Abp.Domain.Repositories;
 using Abp.Domain.Uow;
 using Abp.EntityFrameworkCore.Dapper.Tests.Domain;
 using Abp.Events.Bus;
 using Abp.Events.Bus.Entities;
-
 using Shouldly;
-
 using Xunit;
 
 namespace Abp.EntityFrameworkCore.Dapper.Tests.Tests
@@ -49,11 +46,13 @@ namespace Abp.EntityFrameworkCore.Dapper.Tests.Tests
             {
             }
 
-            _blogRepository.FirstOrDefault(x => x.Name == blogName).ShouldBeNull();
+            var blog = await _blogRepository.FirstOrDefaultAsync(x => x.Name == blogName);
+            blog.ShouldBeNull();
         }
 
         [Fact]
-        public void Dapper_and_EfCore_should_work_under_same_unitofwork_and_when_any_exception_appears_then_rollback_should_be_consistent_for_two_orm()
+        public void
+            Dapper_and_EfCore_should_work_under_same_unitofwork_and_when_any_exception_appears_then_rollback_should_be_consistent_for_two_orm()
         {
             Resolve<IEventBus>().Register<EntityCreatingEventData<Blog>>(
                 eventData =>
@@ -67,7 +66,9 @@ namespace Abp.EntityFrameworkCore.Dapper.Tests.Tests
             {
                 using (IUnitOfWorkCompleteHandle uow = Resolve<IUnitOfWorkManager>().Begin())
                 {
-                    int blogId = _blogDapperRepository.InsertAndGetId(new Blog("Oguzhan_Same_Uow", "www.oguzhansoykan.com"));
+                    var blogId = _blogDapperRepository.InsertAndGetId(
+                        new Blog("Oguzhan_Same_Uow", "www.oguzhansoykan.com")
+                    );
 
                     Blog person = _blogRepository.Get(blogId);
 
@@ -88,47 +89,53 @@ namespace Abp.EntityFrameworkCore.Dapper.Tests.Tests
         [Fact]
         public async Task inline_sql_with_dapper_should_rollback_when_uow_fails()
         {
-
-            Resolve<IEventBus>().Register<EntityCreatingEventData<Blog>>(
-                eventData =>
-                {
-                    eventData.Entity.Name.ShouldBe("Oguzhan_Same_Uow");
-                });
-
-            int blogId = 0;
-            using (IUnitOfWorkCompleteHandle uow = Resolve<IUnitOfWorkManager>().Begin())
+            Resolve<IEventBus>().Register<EntityCreatingEventData<Blog>>(eventData =>
             {
-                blogId = _blogDapperRepository.InsertAndGetId(new Blog("Oguzhan_Same_Uow", "www.aspnetboilerplate.com"));
+                eventData.Entity.Name.ShouldBe("Oguzhan_Same_Uow");
+            });
 
-                Blog person = _blogRepository.Get(blogId);
+            var blogId = 0;
+            using (var uow = Resolve<IUnitOfWorkManager>().Begin())
+            {
+                blogId = await _blogDapperRepository.InsertAndGetIdAsync(
+                    new Blog("Oguzhan_Same_Uow", "www.aspnetboilerplate.com")
+                );
+
+                var person = await _blogRepository.GetAsync(blogId);
 
                 person.ShouldNotBeNull();
 
-                uow.Complete();
+                await uow.CompleteAsync();
             }
 
             try
             {
-                using (IUnitOfWorkCompleteHandle uow = Resolve<IUnitOfWorkManager>().Begin(new UnitOfWorkOptions {IsTransactional = true}))
+                using (IUnitOfWorkCompleteHandle uow = Resolve<IUnitOfWorkManager>()
+                    .Begin(new UnitOfWorkOptions {IsTransactional = true}))
                 {
-                    await _blogDapperRepository.ExecuteAsync("Update Blogs Set Name = @name where Id =@id", new { id = blogId, name = "Oguzhan_New_Blog" });
+                    await _blogDapperRepository.ExecuteAsync(
+                        "Update Blogs Set Name = @name where Id =@id",
+                        new
+                        {
+                            id = blogId, name = "Oguzhan_New_Blog"
+                        }
+                    );
 
                     throw new Exception("uow rollback");
 
-                    uow.Complete();
+                    await uow.CompleteAsync();
                 }
-
             }
             catch (Exception exception)
             {
                 //no handling.
             }
 
-            _blogDapperRepository.FirstOrDefault(x => x.Name == "Oguzhan_New_Blog").ShouldBeNull();
-            _blogRepository.FirstOrDefault(x => x.Name == "Oguzhan_New_Blog").ShouldBeNull();
+            (await _blogDapperRepository.FirstOrDefaultAsync(x => x.Name == "Oguzhan_New_Blog")).ShouldBeNull();
+            (await _blogRepository.FirstOrDefaultAsync(x => x.Name == "Oguzhan_New_Blog")).ShouldBeNull();
 
-            _blogDapperRepository.FirstOrDefault(x=>x.Name == "Oguzhan_Same_Uow").ShouldNotBeNull();
-            _blogRepository.FirstOrDefault(x=>x.Name == "Oguzhan_Same_Uow").ShouldNotBeNull();
+            (await _blogDapperRepository.FirstOrDefaultAsync(x => x.Name == "Oguzhan_Same_Uow")).ShouldNotBeNull();
+            (await _blogRepository.FirstOrDefaultAsync(x => x.Name == "Oguzhan_Same_Uow")).ShouldNotBeNull();
         }
     }
 }
