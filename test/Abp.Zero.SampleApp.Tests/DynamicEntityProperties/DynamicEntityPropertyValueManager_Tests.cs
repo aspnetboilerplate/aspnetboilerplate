@@ -5,6 +5,7 @@ using System.Threading.Tasks;
 using Abp.Domain.Entities;
 using Abp.DynamicEntityProperties;
 using Abp.Threading;
+using Microsoft.AspNet.Identity;
 using Shouldly;
 using Xunit;
 
@@ -189,8 +190,8 @@ namespace Abp.Zero.SampleApp.Tests.DynamicEntityProperties
         {
             var dynamicEntityProperty = CreateAndGetDynamicEntityProperty();
 
-            var user = AsyncHelper.RunSync(() => UserManager.FindByIdAsync(AbpSession.UserId.Value));
-            AsyncHelper.RunSync(() => GrantPermissionAsync(user, TestPermission));
+            var user = UserManager.FindById(AbpSession.UserId.Value);
+            GrantPermission(user, TestPermission);
 
             var items = new List<DynamicEntityPropertyValue>();
             for (int i = 0; i < loop; i++)

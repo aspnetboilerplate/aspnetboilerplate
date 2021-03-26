@@ -64,7 +64,7 @@ namespace Abp.Zero.SampleApp.Tests.DynamicEntityProperties
                 throw new Exception("Should throw exception for unauthorized users");
             }
 
-            AsyncHelper.RunSync(() => GrantPermissionAsync(user, requiredPermission));
+            GrantPermission(user, requiredPermission);
 
             WithUnitOfWork(function.Invoke);
         }
