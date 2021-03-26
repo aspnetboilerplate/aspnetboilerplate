@@ -4,7 +4,6 @@ using System.Threading.Tasks;
 using Abp.Notifications;
 using Abp.Runtime.Session;
 using Castle.MicroKernel.Registration;
-using NSubstitute;
 using Shouldly;
 using Xunit;
 

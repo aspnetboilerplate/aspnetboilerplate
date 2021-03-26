@@ -107,7 +107,7 @@ namespace Abp.EntityFrameworkCore.Tests
 
         public async Task UsingDbContextAsync(Func<BloggingDbContext, Task> action)
         {
-            using (var context = LocalIocManager.Resolve<BloggingDbContext>())
+            await using (var context = LocalIocManager.Resolve<BloggingDbContext>())
             {
                 await action(context);
                 await context.SaveChangesAsync(true);
@@ -118,10 +118,10 @@ namespace Abp.EntityFrameworkCore.Tests
         {
             T result;
 
-            using (var context = LocalIocManager.Resolve<BloggingDbContext>())
+            await using (var context = LocalIocManager.Resolve<BloggingDbContext>())
             {
                 result = await func(context);
-                context.SaveChanges();
+                await context.SaveChangesAsync();
             }
 
             return result;

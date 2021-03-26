@@ -50,7 +50,7 @@ namespace Abp.Zero
                 context =>
                 {
                     var blog1 = new Blog("test-blog-1", "http://testblog1.myblogs.com", "blogger-1");
-                    var blog2 = new Blog() { Name = "test-blog-2" };
+                    var blog2 = new Blog { Name = "test-blog-2" };
 
                     context.Blogs.AddRange(blog1, blog2);
                     context.SaveChanges();
@@ -187,7 +187,7 @@ namespace Abp.Zero
         {
             using (UsingTenantId(tenantId))
             {
-                using (var context = LocalIocManager.Resolve<SampleAppDbContext>())
+                await using (var context = LocalIocManager.Resolve<SampleAppDbContext>())
                 {
                     await action(context);
                     await context.SaveChangesAsync();
@@ -217,7 +217,7 @@ namespace Abp.Zero
 
             using (UsingTenantId(tenantId))
             {
-                using (var context = LocalIocManager.Resolve<SampleAppDbContext>())
+                await using (var context = LocalIocManager.Resolve<SampleAppDbContext>())
                 {
                     result = await func(context);
                     await context.SaveChangesAsync();

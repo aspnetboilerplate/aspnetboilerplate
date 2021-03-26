@@ -69,33 +69,37 @@ namespace Abp.ZeroCore.SampleApp.EntityFramework.Seed.Tenants
             //admin user
 
             var adminUser = _context.Users.FirstOrDefault(u => u.TenantId == _tenantId && u.UserName == AbpUserBase.AdminUserName);
-            if (adminUser == null)
+            if (adminUser != null)
             {
-                adminUser = User.CreateTenantAdminUser(_tenantId, "admin@defaulttenant.com");
-                adminUser.Password = new PasswordHasher<User>(new OptionsWrapper<PasswordHasherOptions>(new PasswordHasherOptions())).HashPassword(adminUser, "123qwe");
-                adminUser.IsEmailConfirmed = true;
-                adminUser.IsActive = true;
-
-                _context.Users.Add(adminUser);
-                _context.SaveChanges();
-
-                //Assign Admin role to admin user
-                _context.UserRoles.Add(new UserRole(_tenantId, adminUser.Id, adminRole.Id));
-                _context.SaveChanges();
-
-                //User account of admin user
-                if (_tenantId == 1)
-                {
-                    _context.UserAccounts.Add(new UserAccount
-                    {
-                        TenantId = _tenantId,
-                        UserId = adminUser.Id,
-                        UserName = AbpUserBase.AdminUserName,
-                        EmailAddress = adminUser.EmailAddress
-                    });
-                    _context.SaveChanges();
-                }
+                return;
             }
+            
+            adminUser = User.CreateTenantAdminUser(_tenantId, "admin@defaulttenant.com");
+            adminUser.Password = new PasswordHasher<User>(new OptionsWrapper<PasswordHasherOptions>(new PasswordHasherOptions())).HashPassword(adminUser, "123qwe");
+            adminUser.IsEmailConfirmed = true;
+            adminUser.IsActive = true;
+
+            _context.Users.Add(adminUser);
+            _context.SaveChanges();
+
+            //Assign Admin role to admin user
+            _context.UserRoles.Add(new UserRole(_tenantId, adminUser.Id, adminRole.Id));
+            _context.SaveChanges();
+
+            //User account of admin user
+            if (_tenantId != 1)
+            {
+                return;
+            }
+                
+            _context.UserAccounts.Add(new UserAccount
+            {
+                TenantId = _tenantId,
+                UserId = adminUser.Id,
+                UserName = AbpUserBase.AdminUserName,
+                EmailAddress = adminUser.EmailAddress
+            });
+            _context.SaveChanges();
         }
     }
 }

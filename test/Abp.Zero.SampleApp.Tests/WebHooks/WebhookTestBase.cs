@@ -95,17 +95,19 @@ namespace Abp.Zero.SampleApp.Tests.Webhooks
         /// <param name="tenantFeatures"></param>
         protected async Task<int> CreateAndGetTenantIdWithFeaturesAsync(Dictionary<string, string> tenantFeatures = null)
         {
-            string name = Guid.NewGuid().ToString().Replace("-", "");
+            var name = Guid.NewGuid().ToString().Replace("-", "");
 
             var tenant = new Tenant(name, name);
             var tenantId = await Resolve<IRepository<Tenant>>().InsertAndGetIdAsync(tenant);
 
-            if (tenantFeatures != null)
+            if (tenantFeatures == null)
             {
-                foreach (var tenantFeature in tenantFeatures.Where(f => !string.IsNullOrWhiteSpace(f.Key)))
-                {
-                    await AddOrReplaceFeatureToTenantAsync(tenantId, tenantFeature.Key, tenantFeature.Value);
-                }
+                return tenantId;
+            }
+            
+            foreach (var tenantFeature in tenantFeatures.Where(f => !string.IsNullOrWhiteSpace(f.Key)))
+            {
+                await AddOrReplaceFeatureToTenantAsync(tenantId, tenantFeature.Key, tenantFeature.Value);
             }
 
             return tenantId;

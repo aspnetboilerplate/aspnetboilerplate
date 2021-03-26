@@ -151,10 +151,7 @@ namespace Abp.Tests.Runtime.Caching.Memory
                 return CacheManager
                     .GetCache("MyClientPropertyInjectsCache")
                     .AsTyped<string, int>()
-                    .Get("A", (k) =>
-                    {
-                        return value;
-                    });
+                    .Get("A", (k) => value);
             }
         }
     }
