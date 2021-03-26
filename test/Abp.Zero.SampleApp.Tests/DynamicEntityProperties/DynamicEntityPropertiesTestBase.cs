@@ -10,6 +10,7 @@ using Abp.Threading;
 using Abp.UI.Inputs;
 using Abp.Zero.SampleApp.EntityHistory;
 using Castle.MicroKernel.Registration;
+using Microsoft.AspNet.Identity;
 using NSubstitute;
 
 namespace Abp.Zero.SampleApp.Tests.DynamicEntityProperties
@@ -27,11 +28,16 @@ namespace Abp.Zero.SampleApp.Tests.DynamicEntityProperties
             DynamicPropertyStore = Resolve<IDynamicPropertyStore>();
             DynamicEntityPropertyStore = Resolve<IDynamicEntityPropertyStore>();
 
+            GrantTestPermission();
+        }
+
+        private void GrantTestPermission()
+        {
             AbpSession.UserId = 1;
             AbpSession.TenantId = 1;
 
-            var user = AsyncHelper.RunSync(() => UserManager.FindByIdAsync(AbpSession.UserId.Value));
-            AsyncHelper.RunSync(() => GrantPermissionAsync(user, TestPermission));
+            var user = UserManager.FindById(AbpSession.UserId.Value);
+            GrantPermission(user, TestPermission);
         }
 
         protected void RunAndCheckIfPermissionControlled(Action function, string requiredPermission = TestPermission)

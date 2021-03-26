@@ -3,6 +3,7 @@ using System.Data.Common;
 using System.Linq;
 using System.Threading.Tasks;
 using Abp.Authorization;
+using Abp.Authorization.Users;
 using Abp.IdentityFramework;
 using Abp.Modules;
 using Abp.MultiTenancy;
@@ -31,6 +32,7 @@ namespace Abp.Zero.SampleApp.Tests
         protected readonly UserManager UserManager;
         protected readonly IPermissionManager PermissionManager;
         protected readonly IPermissionChecker PermissionChecker;
+        protected readonly UserStore UserStore;
 
         protected SampleAppTestBase()
         {
@@ -40,6 +42,7 @@ namespace Abp.Zero.SampleApp.Tests
             UserManager = Resolve<UserManager>();
             PermissionManager = Resolve<IPermissionManager>();
             PermissionChecker = Resolve<IPermissionChecker>();
+            UserStore = Resolve<UserStore>();
         }
 
         protected override void PreInitialize()
@@ -168,6 +171,29 @@ namespace Abp.Zero.SampleApp.Tests
         {
             await UserManager.GrantPermissionAsync(user, PermissionManager.GetPermission(permissionName));
             (await UserManager.IsGrantedAsync(user.Id, permissionName)).ShouldBe(true);
+        }
+        
+        protected void GrantPermission(User user, string permissionName)
+        {
+            GrantPermission(user, PermissionManager.GetPermission(permissionName));
+            UserManager.IsGranted(user.Id, permissionName).ShouldBe(true);
+        }
+        
+        /// <summary>
+        /// Grants a permission for a user if not already granted.
+        /// </summary>
+        /// <param name="user">User</param>
+        /// <param name="permission">Permission</param>
+        protected void GrantPermission(User user, Permission permission)
+        {
+            UserStore.RemovePermission(user, new PermissionGrantInfo(permission.Name, false));
+
+            if (UserManager.IsGranted(user.Id, permission))
+            {
+                return;
+            }
+
+            UserStore.AddPermission(user, new PermissionGrantInfo(permission.Name, true));
         }
 
         protected async Task ProhibitPermissionAsync(User user, string permissionName)
