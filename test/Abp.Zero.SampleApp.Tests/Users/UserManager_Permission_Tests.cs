@@ -3,6 +3,7 @@ using Abp.IdentityFramework;
 using Abp.Threading;
 using Abp.Zero.SampleApp.Roles;
 using Abp.Zero.SampleApp.Users;
+using Microsoft.AspNet.Identity;
 using Shouldly;
 using Xunit;
 
@@ -19,7 +20,7 @@ namespace Abp.Zero.SampleApp.Tests.Users
             _role1 = CreateRole("Role1");
             _role2 = CreateRole("Role2");
             _testUser = CreateUser("TestUser");
-            AsyncHelper.RunSync(() => UserManager.AddToRolesAsync(_testUser.Id, _role1.Name, _role2.Name)).CheckErrors();
+            UserManager.AddToRoles(_testUser.Id, _role1.Name, _role2.Name).CheckErrors();
         }
 
         [Fact]
