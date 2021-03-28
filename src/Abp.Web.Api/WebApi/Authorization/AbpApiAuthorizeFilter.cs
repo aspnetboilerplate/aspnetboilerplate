@@ -72,7 +72,7 @@ namespace Abp.WebApi.Authorization
             catch (AbpAuthorizationException ex)
             {
                 LogHelper.Logger.Warn(ex.ToString(), ex);
-                _eventBus.Trigger(this, new AbpHandledExceptionData(ex));
+                await _eventBus.TriggerAsync(this, new AbpHandledExceptionData(ex));
                 return CreateUnAuthorizedResponse(actionContext);
             }
         }

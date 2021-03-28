@@ -90,7 +90,8 @@ namespace Abp.NHibernate.Repositories
 
         public override async Task<TEntity> FirstOrDefaultAsync(Expression<Func<TEntity, bool>> predicate)
         {
-            return await GetAll().FirstOrDefaultAsync(predicate, CancellationTokenProvider.Token);
+            var query = await GetAllAsync();
+            return await query.FirstOrDefaultAsync(predicate, CancellationTokenProvider.Token);
         }
 
         public override TEntity Load(TPrimaryKey id)
