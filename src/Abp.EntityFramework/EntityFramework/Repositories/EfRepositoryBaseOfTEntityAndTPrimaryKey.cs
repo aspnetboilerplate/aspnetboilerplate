@@ -103,27 +103,32 @@ namespace Abp.EntityFramework.Repositories
 
         public override async Task<List<TEntity>> GetAllListAsync()
         {
-            return await GetAll().ToListAsync(CancellationTokenProvider.Token);
+            var query = await GetAllAsync();
+            return await query.ToListAsync(CancellationTokenProvider.Token);
         }
 
         public override async Task<List<TEntity>> GetAllListAsync(Expression<Func<TEntity, bool>> predicate)
         {
-            return await GetAll().Where(predicate).ToListAsync(CancellationTokenProvider.Token);
+            var query = await GetAllAsync();
+            return await query.Where(predicate).ToListAsync(CancellationTokenProvider.Token);
         }
 
         public override async Task<TEntity> SingleAsync(Expression<Func<TEntity, bool>> predicate)
         {
-            return await GetAll().SingleAsync(predicate, CancellationTokenProvider.Token);
+            var query = await GetAllAsync();
+            return await query.SingleAsync(predicate, CancellationTokenProvider.Token);
         }
 
         public override async Task<TEntity> FirstOrDefaultAsync(TPrimaryKey id)
         {
-            return await GetAll().FirstOrDefaultAsync(CreateEqualityExpressionForId(id), CancellationTokenProvider.Token);
+            var query = await GetAllAsync();
+            return await query.FirstOrDefaultAsync(CreateEqualityExpressionForId(id), CancellationTokenProvider.Token);
         }
 
         public override async Task<TEntity> FirstOrDefaultAsync(Expression<Func<TEntity, bool>> predicate)
         {
-            return await GetAll().FirstOrDefaultAsync(predicate, CancellationTokenProvider.Token);
+            var query = await GetAllAsync();
+            return await query.FirstOrDefaultAsync(predicate, CancellationTokenProvider.Token);
         }
 
         public override TEntity Insert(TEntity entity)
@@ -221,22 +226,26 @@ namespace Abp.EntityFramework.Repositories
 
         public override async Task<int> CountAsync()
         {
-            return await GetAll().CountAsync(CancellationTokenProvider.Token);
+            var query = await GetAllAsync();
+            return await query.CountAsync(CancellationTokenProvider.Token);
         }
 
         public override async Task<int> CountAsync(Expression<Func<TEntity, bool>> predicate)
         {
-            return await GetAll().Where(predicate).CountAsync(CancellationTokenProvider.Token);
+            var query = await GetAllAsync();
+            return await query.Where(predicate).CountAsync(CancellationTokenProvider.Token);
         }
 
         public override async Task<long> LongCountAsync()
         {
-            return await GetAll().LongCountAsync(CancellationTokenProvider.Token);
+            var query = await GetAllAsync();
+            return await query.LongCountAsync(CancellationTokenProvider.Token);
         }
 
         public override async Task<long> LongCountAsync(Expression<Func<TEntity, bool>> predicate)
         {
-            return await GetAll().Where(predicate).LongCountAsync(CancellationTokenProvider.Token);
+            var query = await GetAllAsync();
+            return await query.Where(predicate).LongCountAsync(CancellationTokenProvider.Token);
         }
 
         protected virtual void AttachIfNot(TEntity entity)
