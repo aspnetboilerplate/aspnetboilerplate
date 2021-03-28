@@ -56,8 +56,8 @@ namespace AbpAspNetCoreDemo.IntegrationTests.Tests
             // Assert
             response.StatusCode.ShouldBe(Enum.Parse<HttpStatusCode>("500"));
 
-            _permissionChecker.Received().IsGranted(Arg.Is<string>(
-                permisionNames => permisionNames == "GetAllProductsPermission")
+            await _permissionChecker.Received().IsGrantedAsync(
+                Arg.Is<string>(permissionNames => permissionNames == "GetAllProductsPermission")
             );
         }
 
@@ -73,8 +73,8 @@ namespace AbpAspNetCoreDemo.IntegrationTests.Tests
             // Assert
             response.StatusCode.ShouldBe(Enum.Parse<HttpStatusCode>("500"));
 
-            _permissionChecker.Received().IsGranted(Arg.Is<string>(
-                permisionNames => permisionNames == "GetProductPermission")
+            await _permissionChecker.Received().IsGrantedAsync(
+                Arg.Is<string>(permissionNames => permissionNames == "GetProductPermission")
             );
         }
 

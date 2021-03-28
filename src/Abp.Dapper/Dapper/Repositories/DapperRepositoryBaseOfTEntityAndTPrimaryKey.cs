@@ -113,11 +113,11 @@ namespace Abp.Dapper.Repositories
             return GetConnection().Query<TEntity>(query, parameters, GetActiveTransaction(), commandTimeout: Timeout);
         }
 
-        public override async Task<IEnumerable<TEntity>> QueryAsync(string query, object parameters = null)
+        public override Task<IEnumerable<TEntity>> QueryAsync(string query, object parameters = null)
         {
-            var connection = await GetConnectionAsync();
-            var activeTransaction = await GetActiveTransactionAsync();
-            return await connection.QueryAsync<TEntity>(query, parameters, activeTransaction, Timeout);
+            var connection = GetConnection();
+            var activeTransaction = GetActiveTransaction();
+            return connection.QueryAsync<TEntity>(query, parameters, activeTransaction, Timeout);
         }
 
         public override IEnumerable<TAny> Query<TAny>(string query, object parameters = null)
@@ -125,11 +125,11 @@ namespace Abp.Dapper.Repositories
             return GetConnection().Query<TAny>(query, parameters, GetActiveTransaction(), commandTimeout: Timeout);
         }
 
-        public override async Task<IEnumerable<TAny>> QueryAsync<TAny>(string query, object parameters = null)
+        public override Task<IEnumerable<TAny>> QueryAsync<TAny>(string query, object parameters = null)
         {
-            var connection = await GetConnectionAsync();
-            var activeTransaction = await GetActiveTransactionAsync();
-            return await connection.QueryAsync<TAny>(query, parameters, activeTransaction, Timeout);
+            var connection = GetConnection();
+            var activeTransaction = GetActiveTransaction();
+            return connection.QueryAsync<TAny>(query, parameters, activeTransaction, Timeout);
         }
 
         public override int Execute(string query, object parameters = null)
@@ -137,11 +137,11 @@ namespace Abp.Dapper.Repositories
             return GetConnection().Execute(query, parameters, GetActiveTransaction(), Timeout);
         }
 
-        public override async Task<int> ExecuteAsync(string query, object parameters = null)
+        public override Task<int> ExecuteAsync(string query, object parameters = null)
         {
-            var connection = await GetConnectionAsync();
-            var activeTransaction = await GetActiveTransactionAsync();
-            return await connection.ExecuteAsync(query, parameters, activeTransaction, Timeout);
+            var connection = GetConnection();
+            var activeTransaction = GetActiveTransaction();
+            return connection.ExecuteAsync(query, parameters, activeTransaction, Timeout);
         }
 
         public override IEnumerable<TEntity> GetAllPaged(Expression<Func<TEntity, bool>> predicate, int pageNumber, int itemsPerPage, string sortingProperty, bool ascending = true)
