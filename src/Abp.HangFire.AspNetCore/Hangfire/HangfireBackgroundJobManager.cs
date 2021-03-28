@@ -16,9 +16,9 @@ namespace Abp.Hangfire
 
             if (!delay.HasValue)
             {
-                if (typeof(IBackgroundJob<TArgs>).IsAssignableFrom(typeof(TArgs)))
+                if (typeof(IBackgroundJob<TArgs>).IsAssignableFrom(typeof(TJob)))
                 {
-                    jobUniqueIdentifier = HangfireBackgroundJob.Enqueue<TJob>(job => ((IBackgroundJob<TArgs>)job).Execute(args));   
+                    jobUniqueIdentifier = HangfireBackgroundJob.Enqueue<TJob>(job => ((IBackgroundJob<TArgs>)job).Execute(args));
                 }
                 else
                 {
@@ -27,9 +27,9 @@ namespace Abp.Hangfire
             }
             else
             {
-                if (typeof(IBackgroundJob<TArgs>).IsAssignableFrom(typeof(TArgs)))
+                if (typeof(IBackgroundJob<TArgs>).IsAssignableFrom(typeof(TJob)))
                 {
-                    jobUniqueIdentifier = HangfireBackgroundJob.Schedule<TJob>(job => ((IBackgroundJob<TArgs>)job).Execute(args), delay.Value);   
+                    jobUniqueIdentifier = HangfireBackgroundJob.Schedule<TJob>(job => ((IBackgroundJob<TArgs>)job).Execute(args), delay.Value);
                 }
                 else
                 {
@@ -47,9 +47,9 @@ namespace Abp.Hangfire
 
             if (!delay.HasValue)
             {
-                if (typeof(IBackgroundJob<TArgs>).IsAssignableFrom(typeof(TArgs)))
+                if (typeof(IBackgroundJob<TArgs>).IsAssignableFrom(typeof(TJob)))
                 {
-                    jobUniqueIdentifier = HangfireBackgroundJob.Enqueue<TJob>(job => ((IBackgroundJob<TArgs>)job).Execute(args));   
+                    jobUniqueIdentifier = HangfireBackgroundJob.Enqueue<TJob>(job => ((IBackgroundJob<TArgs>)job).Execute(args));
                 }
                 else
                 {
@@ -58,9 +58,9 @@ namespace Abp.Hangfire
             }
             else
             {
-                if (typeof(IBackgroundJob<TArgs>).IsAssignableFrom(typeof(TArgs)))
+                if (typeof(IBackgroundJob<TArgs>).IsAssignableFrom(typeof(TJob)))
                 {
-                    jobUniqueIdentifier = HangfireBackgroundJob.Schedule<TJob>(job => ((IBackgroundJob<TArgs>)job).Execute(args), delay.Value);   
+                    jobUniqueIdentifier = HangfireBackgroundJob.Schedule<TJob>(job => ((IBackgroundJob<TArgs>)job).Execute(args), delay.Value);
                 }
                 else
                 {
