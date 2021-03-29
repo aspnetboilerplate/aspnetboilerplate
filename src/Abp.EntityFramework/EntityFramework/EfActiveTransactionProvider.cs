@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Data;
 using System.Data.Entity;
+using System.Reflection;
 using System.Threading.Tasks;
 using Abp.Data;
 using Abp.Dependency;
@@ -57,23 +58,24 @@ namespace Abp.EntityFramework
                 );
             }
         }
-        
-        private Task<DbContext> GetDbContextAsync(ActiveTransactionProviderArgs args)
-        {
-            var dbContextProviderType = typeof(IDbContextProvider<>).MakeGenericType((Type)args["ContextType"]);
 
-            using (var dbContextProviderWrapper = _iocResolver.ResolveAsDisposable(dbContextProviderType))
+        private async Task<DbContext> GetDbContextAsync(ActiveTransactionProviderArgs args)
+        {
+            var dbContextProviderType = (Type)args["ContextType"];
+
+            var method = typeof(EfActiveTransactionProvider)
+                .GetMethod(nameof(EfActiveTransactionProvider.GetDbContextFromDbContextProviderAsync),
+                    BindingFlags.NonPublic | BindingFlags.Instance).MakeGenericMethod(dbContextProviderType);
+
+            return await (Task<DbContext>) method.Invoke(this, new object[] {(MultiTenancySides?) args["MultiTenancySide"]});
+        }
+
+        private async Task<DbContext> GetDbContextFromDbContextProviderAsync<TDbContext>(MultiTenancySides multiTenancySides)
+            where TDbContext : DbContext
+        {
+            using (var dbContextProviderWrapper = _iocResolver.ResolveAsDisposable(typeof(IDbContextProvider<TDbContext>)))
             {
-                var method = dbContextProviderWrapper.Object.GetType()
-                    .GetMethod(
-                        nameof(IDbContextProvider<AbpDbContext>.GetDbContextAsync),
-                        new[] {typeof(MultiTenancySides)}
-                    );
-                
-                return (Task<DbContext>) method.Invoke(
-                    dbContextProviderWrapper.Object,
-                    new object[] { (MultiTenancySides?)args["MultiTenancySide"] }
-                );
+                return await ((IDbContextProvider<TDbContext>) dbContextProviderWrapper.Object).GetDbContextAsync(multiTenancySides);
             }
         }
     }
