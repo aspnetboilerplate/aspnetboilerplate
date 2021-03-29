@@ -27,28 +27,28 @@ namespace Abp.Zero.Tenants
         {
             const int tenantId = 1;
 
-            UsingDbContext(tenantId, (context) =>
+            UsingDbContext(tenantId, context =>
             {
                 context.FeatureSettings.Count(f => f.TenantId == tenantId).ShouldBe(0);
             });
 
             await ChangeTenantFeatureValueAsync(tenantId, AppFeatures.SimpleIntFeature, "1");
 
-            UsingDbContext(tenantId, (context) =>
+            UsingDbContext(tenantId, context =>
             {
                 context.FeatureSettings.Count(f => f.TenantId == tenantId).ShouldBe(1);
             });
 
             await ChangeTenantFeatureValueAsync(tenantId, AppFeatures.SimpleIntFeature, "2");
 
-            UsingDbContext(tenantId, (context) =>
+            UsingDbContext(tenantId, context =>
             {
                 context.FeatureSettings.Count(f => f.TenantId == tenantId).ShouldBe(1);
             });
 
             await ChangeTenantFeatureValueAsync(tenantId, AppFeatures.SimpleIntFeature, "0");
 
-            UsingDbContext(tenantId, (context) =>
+            UsingDbContext(tenantId, context =>
             {
                 context.FeatureSettings.Count(f => f.TenantId == tenantId).ShouldBe(0);
             });
@@ -59,14 +59,14 @@ namespace Abp.Zero.Tenants
         {
             const int tenantId = 1;
 
-            UsingDbContext(tenantId, (context) =>
+            UsingDbContext(tenantId, context =>
             {
                 context.FeatureSettings.Count(f => f.TenantId == tenantId).ShouldBe(0);
             });
 
             await ChangeTenantFeatureValueAsync(tenantId, AppFeatures.SimpleIntFeature, "1");
 
-            UsingDbContext(tenantId, (context) =>
+            UsingDbContext(tenantId, context =>
             {
                 context.FeatureSettings.Count(f => f.TenantId == tenantId).ShouldBe(1);
             });
@@ -81,7 +81,7 @@ namespace Abp.Zero.Tenants
                 await uow.CompleteAsync();
             }
 
-            UsingDbContext(tenantId, (context) =>
+            UsingDbContext(tenantId, context =>
             {
                 context.FeatureSettings.Count(f => f.TenantId == tenantId).ShouldBe(0);
             });

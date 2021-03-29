@@ -23,13 +23,15 @@ namespace Abp.Tests.ObjectComparators
 
         protected override bool Compare(string baseObject, string compareObject, string compareType)
         {
-            if (compareType == ReverseOfSecondIsEqualtoFirstCompareType)
+            if (compareType != ReverseOfSecondIsEqualtoFirstCompareType)
             {
-                char[] array = compareObject.ToCharArray();
-                Array.Reverse(array);
-                return baseObject == new string(array);
+                return baseObject == compareObject;
             }
-            return baseObject == compareObject;
+            
+            var array = compareObject.ToCharArray();
+            Array.Reverse(array);
+            return baseObject == new string(array);
+
         }
     }
 

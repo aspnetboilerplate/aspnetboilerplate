@@ -40,14 +40,13 @@ namespace Abp.Dapper.Repositories
         public virtual DbConnection GetConnection()
         {
             var connection = _activeTransactionProvider.GetActiveConnection(ActiveTransactionProviderArgs.Empty);
-            return (DbConnection) connection;
+            return (DbConnection)connection;
         }
 
         public virtual async Task<DbConnection> GetConnectionAsync()
         {
-            var connection =
-                await _activeTransactionProvider.GetActiveConnectionAsync(ActiveTransactionProviderArgs.Empty);
-            return (DbConnection) connection;
+            var connection = await _activeTransactionProvider.GetActiveConnectionAsync(ActiveTransactionProviderArgs.Empty);
+            return (DbConnection)connection;
         }
 
         /// <summary>

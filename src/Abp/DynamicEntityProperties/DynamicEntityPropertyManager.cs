@@ -131,7 +131,7 @@ namespace Abp.DynamicEntityProperties
             using (var uow = _unitOfWorkManager.Begin(TransactionScopeOption.RequiresNew))
             {
                 await DynamicEntityPropertyStore.AddAsync(dynamicEntityProperty);
-                uow.Complete();
+                await uow.CompleteAsync();
             }
             await DynamicEntityPropertyCache.SetAsync(dynamicEntityProperty.Id, dynamicEntityProperty);
         }
@@ -157,7 +157,7 @@ namespace Abp.DynamicEntityProperties
             using (var uow = _unitOfWorkManager.Begin(TransactionScopeOption.RequiresNew))
             {
                 await DynamicEntityPropertyStore.UpdateAsync(dynamicEntityProperty);
-                uow.Complete();
+                await uow.CompleteAsync();
             }
             await DynamicEntityPropertyCache.SetAsync(dynamicEntityProperty.Id, dynamicEntityProperty);
         }

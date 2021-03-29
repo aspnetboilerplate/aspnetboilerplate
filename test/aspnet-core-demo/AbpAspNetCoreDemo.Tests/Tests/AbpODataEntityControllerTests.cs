@@ -56,8 +56,8 @@ namespace AbpAspNetCoreDemo.IntegrationTests.Tests
             // Assert
             response.StatusCode.ShouldBe(Enum.Parse<HttpStatusCode>("500"));
 
-            _permissionChecker.Received().IsGranted(Arg.Is<string>(
-                permisionNames => permisionNames == "GetAllProductsPermission")
+            await _permissionChecker.Received().IsGrantedAsync(
+                Arg.Is<string>(permissionNames => permissionNames == "GetAllProductsPermission")
             );
         }
 
@@ -73,8 +73,8 @@ namespace AbpAspNetCoreDemo.IntegrationTests.Tests
             // Assert
             response.StatusCode.ShouldBe(Enum.Parse<HttpStatusCode>("500"));
 
-            _permissionChecker.Received().IsGranted(Arg.Is<string>(
-                permisionNames => permisionNames == "GetProductPermission")
+            await _permissionChecker.Received().IsGrantedAsync(
+                Arg.Is<string>(permissionNames => permissionNames == "GetProductPermission")
             );
         }
 
@@ -86,13 +86,14 @@ namespace AbpAspNetCoreDemo.IntegrationTests.Tests
 
             // Act
             var content = JsonConvert.SerializeObject(new Product("Test product2"));
-            var response = await client.PostAsync("/odata/Products", new StringContent(content, Encoding.UTF8, "application/json"));
+            var response = await client.PostAsync("/odata/Products",
+                new StringContent(content, Encoding.UTF8, "application/json"));
 
             // Assert
             response.StatusCode.ShouldBe(Enum.Parse<HttpStatusCode>("500"));
 
-            _permissionChecker.Received().IsGranted(Arg.Is<string>(
-                permisionNames => permisionNames == "CreateProductPermission")
+            await _permissionChecker.Received().IsGrantedAsync(Arg.Is<string>(
+                permissionNames => permissionNames == "CreateProductPermission")
             );
         }
 
@@ -112,8 +113,8 @@ namespace AbpAspNetCoreDemo.IntegrationTests.Tests
             // Assert
             response.StatusCode.ShouldBe(Enum.Parse<HttpStatusCode>("500"));
 
-            _permissionChecker.Received().IsGranted(Arg.Is<string>(
-                permisionNames => permisionNames == "UpdateProductPermission")
+            await _permissionChecker.Received().IsGrantedAsync(Arg.Is<string>(
+                permissionNames => permissionNames == "UpdateProductPermission")
             );
         }
 
@@ -129,8 +130,8 @@ namespace AbpAspNetCoreDemo.IntegrationTests.Tests
             // Assert
             response.StatusCode.ShouldBe(Enum.Parse<HttpStatusCode>("500"));
 
-            _permissionChecker.Received().IsGranted(Arg.Is<string>(
-                permisionNames => permisionNames == "DeleteProductPermission")
+            await _permissionChecker.Received().IsGrantedAsync(Arg.Is<string>(
+                permissionNames => permissionNames == "DeleteProductPermission")
             );
         }
     }

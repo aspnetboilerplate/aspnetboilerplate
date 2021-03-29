@@ -54,19 +54,19 @@ namespace Abp.Dapper.Tests
 
         private string ReadScriptFile(string name)
         {
-            string fileName = GetType().Namespace + ".Scripts" + "." + name + ".sql";
-            using (Stream resource = Assembly.GetExecutingAssembly().GetManifestResourceStream(fileName))
+            var fileName = GetType().Namespace + ".Scripts" + "." + name + ".sql";
+            using (var resource = Assembly.GetExecutingAssembly().GetManifestResourceStream(fileName))
             {
-                if (resource != null)
+                if (resource == null)
                 {
-                    using (var sr = new StreamReader(resource))
-                    {
-                        return sr.ReadToEnd();
-                    }
+                    return string.Empty;
+                }
+                
+                using (var sr = new StreamReader(resource))
+                {
+                    return sr.ReadToEnd();
                 }
             }
-
-            return string.Empty;
         }
     }
 }

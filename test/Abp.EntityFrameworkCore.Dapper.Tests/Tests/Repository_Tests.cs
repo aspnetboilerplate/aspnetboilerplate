@@ -66,12 +66,12 @@ namespace Abp.EntityFrameworkCore.Dapper.Tests.Tests
 
                 await _blogDapperRepository.InsertAsync(new Blog("test-blog-2", "www"));
 
-                Blog blog2 = _blogRepository.Single(x => x.Name == "test-blog-2");
+                Blog blog2 = await _blogRepository.SingleAsync(x => x.Name == "test-blog-2");
                 blog2Id = blog2.Id;
 
                 blog2.Name = "test-blog-2-updated";
 
-                _blogDapperRepository.Update(blog2);
+                await _blogDapperRepository.UpdateAsync(blog2);
 
                 await uow.CompleteAsync();
             }
@@ -100,7 +100,7 @@ namespace Abp.EntityFrameworkCore.Dapper.Tests.Tests
                 blog1Id = blog1.Id;
 
                 blog1.Name = "test-blog-1-updated";
-                _blogDapperRepository.Update(blog1);
+                await _blogDapperRepository.UpdateAsync(blog1);
 
                 await uow.CompleteAsync();
             }

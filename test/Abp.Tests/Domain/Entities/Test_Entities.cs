@@ -48,8 +48,11 @@ namespace Abp.Tests.Domain.Entities
         public void GetHashCode_ReferenceIdNull()
         {
             var e1 = new StringEntity();
-            var dic = new Dictionary<StringEntity, string>();
-            dic.Add(e1, string.Empty);
+            var dic = new Dictionary<StringEntity, string>
+            {
+                {e1, string.Empty}
+            };
+            
             var a = dic[e1];
             Assert.Equal(a, string.Empty);
         }

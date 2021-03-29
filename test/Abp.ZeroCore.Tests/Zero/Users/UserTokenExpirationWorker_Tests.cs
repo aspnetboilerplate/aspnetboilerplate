@@ -35,12 +35,27 @@ namespace Abp.Zero.Users
             {
                 var user = await _abpUserManager.GetUserByIdAsync(AbpSession.GetUserId());
 
-                await _abpUserManager.AddTokenValidityKeyAsync(user, Guid.NewGuid().ToString(), DateTime.UtcNow);
-                await _abpUserManager.AddTokenValidityKeyAsync(user, Guid.NewGuid().ToString(), DateTime.UtcNow.AddDays(1));
-                await _abpUserManager.AddTokenValidityKeyAsync(user, Guid.NewGuid().ToString(), DateTime.UtcNow.AddDays(1));
-                _unitOfWorkManager.Current.SaveChanges();
+                await _abpUserManager.AddTokenValidityKeyAsync(
+                    user,
+                    Guid.NewGuid().ToString(),
+                    DateTime.UtcNow
+                );
 
-                var allTokens = _userTokenRepository.GetAllList(t => t.UserId == user.Id);
+                await _abpUserManager.AddTokenValidityKeyAsync(
+                    user,
+                    Guid.NewGuid().ToString(),
+                    DateTime.UtcNow.AddDays(1)
+                );
+
+                await _abpUserManager.AddTokenValidityKeyAsync(
+                    user,
+                    Guid.NewGuid().ToString(),
+                    DateTime.UtcNow.AddDays(1)
+                );
+
+                await _unitOfWorkManager.Current.SaveChangesAsync();
+
+                var allTokens = await _userTokenRepository.GetAllListAsync(t => t.UserId == user.Id);
                 allTokens.Count.ShouldBe(3);
             }
 
@@ -50,12 +65,27 @@ namespace Abp.Zero.Users
                 {
                     var user = await _abpUserManager.FindByNameOrEmailAsync(AbpUserBase.AdminUserName);
 
-                    await _abpUserManager.AddTokenValidityKeyAsync(user, Guid.NewGuid().ToString(), DateTime.UtcNow);
-                    await _abpUserManager.AddTokenValidityKeyAsync(user, Guid.NewGuid().ToString(), DateTime.UtcNow.AddDays(1));
-                    await _abpUserManager.AddTokenValidityKeyAsync(user, Guid.NewGuid().ToString(), DateTime.UtcNow.AddDays(1));
-                    _unitOfWorkManager.Current.SaveChanges();
+                    await _abpUserManager.AddTokenValidityKeyAsync(
+                        user,
+                        Guid.NewGuid().ToString(),
+                        DateTime.UtcNow
+                    );
 
-                    var allTokens = _userTokenRepository.GetAllList(t => t.UserId == user.Id);
+                    await _abpUserManager.AddTokenValidityKeyAsync(
+                        user,
+                        Guid.NewGuid().ToString(),
+                        DateTime.UtcNow.AddDays(1)
+                    );
+
+                    await _abpUserManager.AddTokenValidityKeyAsync(
+                        user,
+                        Guid.NewGuid().ToString(),
+                        DateTime.UtcNow.AddDays(1)
+                    );
+
+                    await _unitOfWorkManager.Current.SaveChangesAsync();
+
+                    var allTokens = await _userTokenRepository.GetAllListAsync(t => t.UserId == user.Id);
                     allTokens.Count.ShouldBe(3);
                 }
             }
@@ -67,7 +97,7 @@ namespace Abp.Zero.Users
             using (_unitOfWorkManager.Begin())
             {
                 var user = await _abpUserManager.GetUserByIdAsync(AbpSession.GetUserId());
-                var allTokens = _userTokenRepository.GetAllList(t => t.UserId == user.Id);
+                var allTokens = await _userTokenRepository.GetAllListAsync(t => t.UserId == user.Id);
                 allTokens.Count.ShouldBe(2);
             }
 
@@ -76,7 +106,7 @@ namespace Abp.Zero.Users
                 using (_unitOfWorkManager.Current.SetTenantId(null))
                 {
                     var user = await _abpUserManager.FindByNameOrEmailAsync(AbpUserBase.AdminUserName);
-                    var allTokens = _userTokenRepository.GetAllList(t => t.UserId == user.Id);
+                    var allTokens = await _userTokenRepository.GetAllListAsync(t => t.UserId == user.Id);
                     allTokens.Count.ShouldBe(2);
                 }
             }
@@ -96,6 +126,5 @@ namespace Abp.Zero.Users
         {
             DoWork();
         }
-
     }
 }

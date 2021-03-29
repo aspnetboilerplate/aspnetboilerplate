@@ -109,7 +109,7 @@ namespace Abp.Zero.SampleApp.Tests.Webhooks
         /// <param name="tenantFeatures"></param>
         protected int CreateAndGetTenantIdWithFeatures(Dictionary<string, string> tenantFeatures = null)
         {
-            string name = Guid.NewGuid().ToString().Replace("-", "");
+            var name = Guid.NewGuid().ToString().Replace("-", "");
 
             var tenant = new Tenant(name, name);
             var tenantId = Resolve<IRepository<Tenant>>().InsertAndGetId(tenant);
