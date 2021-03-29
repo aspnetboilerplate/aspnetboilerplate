@@ -33,7 +33,7 @@ namespace Abp.IdentityServer4
             using (var uow = Resolve<IUnitOfWorkManager>().Begin())
             {
                 //Arrange
-                var user = repository.FirstOrDefault(userId);
+                var user = await repository.FirstOrDefaultAsync(userId);
                 user.ShouldNotBeNull();
 
                 var principalFactory = Resolve<IUserClaimsPrincipalFactory<User>>();

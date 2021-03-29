@@ -28,13 +28,13 @@ namespace Abp.Zero.EFPlus
                 await _roleRepository.BatchDeleteAsync(r => r.Id > 0);
 
                 // Assert
-                var roleCount = _roleRepository.Count();
+                var roleCount = await _roleRepository.CountAsync();
                 roleCount.ShouldBe(0);
 
                 using (_unitOfWorkManager.Current.SetTenantId(null))
                 {
                     // Assert
-                    roleCount = _roleRepository.Count();
+                    roleCount = await _roleRepository.CountAsync();
                     roleCount.ShouldBe(1);
                 }
 
@@ -49,7 +49,7 @@ namespace Abp.Zero.EFPlus
             {
                 await _roleRepository.BatchDeleteAsync(e => e.Name != "ADMIN");
 
-                var roleCount = _roleRepository.Count();
+                var roleCount = await _roleRepository.CountAsync();
                 roleCount.ShouldBe(1);
 
                 await uow.CompleteAsync();
@@ -82,7 +82,7 @@ namespace Abp.Zero.EFPlus
                 {
                     await _roleRepository.BatchDeleteAsync(r => r.Id > 0);
 
-                    var roleCount = _roleRepository.Count();
+                    var roleCount = await _roleRepository.CountAsync();
                     roleCount.ShouldBe(0);
                 }
 
@@ -96,16 +96,16 @@ namespace Abp.Zero.EFPlus
             using (var uow = _unitOfWorkManager.Begin())
             {
                 // Act
-                await _roleRepository.BatchUpdateAsync(r => new Role { DisplayName = "Test" }, r => r.Id > 0);
+                await _roleRepository.BatchUpdateAsync(r => new Role {DisplayName = "Test"}, r => r.Id > 0);
 
                 // Assert
-                var roleCount = _roleRepository.Count(r => r.DisplayName == "Test");
+                var roleCount = await _roleRepository.CountAsync(r => r.DisplayName == "Test");
                 roleCount.ShouldBe(4);
 
                 using (_unitOfWorkManager.Current.SetTenantId(null))
                 {
                     // Assert
-                    roleCount = _roleRepository.Count(r => r.DisplayName == "Test");
+                    roleCount = await _roleRepository.CountAsync(r => r.DisplayName == "Test");
                     roleCount.ShouldBe(0);
                 }
 
@@ -119,10 +119,10 @@ namespace Abp.Zero.EFPlus
             using (var uow = _unitOfWorkManager.Begin())
             {
                 // Act
-                await _roleRepository.BatchUpdateAsync(r => new Role { DisplayName = "Test" }, e => e.Name != "ADMIN");
+                await _roleRepository.BatchUpdateAsync(r => new Role {DisplayName = "Test"}, e => e.Name != "ADMIN");
 
                 // Assert
-                var roleCount = _roleRepository.Count(r => r.DisplayName == "Test");
+                var roleCount = await _roleRepository.CountAsync(r => r.DisplayName == "Test");
                 roleCount.ShouldBe(3);
 
                 await uow.CompleteAsync();
@@ -134,7 +134,7 @@ namespace Abp.Zero.EFPlus
         {
             using (var uow = _unitOfWorkManager.Begin())
             {
-                await _roleRepository.BatchUpdateAsync(r => new Role { DisplayName = "Test" }, r => r.Id > 0);
+                await _roleRepository.BatchUpdateAsync(r => new Role {DisplayName = "Test"}, r => r.Id > 0);
 
                 using (_unitOfWorkManager.Current.SetTenantId(null))
                 {
@@ -153,9 +153,9 @@ namespace Abp.Zero.EFPlus
             {
                 using (_unitOfWorkManager.Current.DisableFilter(AbpDataFilters.MayHaveTenant))
                 {
-                    await _roleRepository.BatchUpdateAsync(r => new Role { DisplayName = "Test" }, r => r.Id > 0);
+                    await _roleRepository.BatchUpdateAsync(r => new Role {DisplayName = "Test"}, r => r.Id > 0);
 
-                    var roleCount = _roleRepository.Count(r => r.DisplayName == "Test");
+                    var roleCount = await _roleRepository.CountAsync(r => r.DisplayName == "Test");
                     roleCount.ShouldBe(5);
                 }
 

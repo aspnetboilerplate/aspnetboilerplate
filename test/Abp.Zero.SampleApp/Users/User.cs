@@ -6,7 +6,7 @@ namespace Abp.Zero.SampleApp.Users
     {
         public override string ToString()
         {
-            return string.Format("[User {0}] {1}", Id, UserName);
+            return $"[User {Id}] {UserName}";
         }
     }
 }

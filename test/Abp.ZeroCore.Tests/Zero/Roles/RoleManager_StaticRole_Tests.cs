@@ -64,7 +64,7 @@ namespace Abp.Zero.Roles
 
             await CreateTestStaticRoles();
 
-            var tenant = GetTenant("Tenant1");
+            var tenant = await GetTenantAsync("Tenant1");
             AbpSession.TenantId = tenant.Id;
 
             var adminRole = await _roleManager.GetRoleByNameAsync("admin");

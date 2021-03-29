@@ -1,6 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Text;
 using Abp.ZeroCore.SampleApp.Core.BookStore;
 using Shouldly;
 using Xunit;

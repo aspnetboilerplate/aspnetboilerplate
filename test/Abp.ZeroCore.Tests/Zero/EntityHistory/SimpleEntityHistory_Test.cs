@@ -106,7 +106,7 @@ namespace Abp.Zero.EntityHistory
             _entityHistoryStore.When(x => x.Save(Arg.Any<EntityChangeSet>()))
                 .Do(callback => entityHistoryStore.Save(callback.Arg<EntityChangeSet>()));
 
-            UsingDbContext((context) =>
+            UsingDbContext(context =>
             {
                 context.EntityChanges.Count(e => e.TenantId == 1).ShouldBe(0);
                 context.EntityChangeSets.Count(e => e.TenantId == 1).ShouldBe(0);
@@ -123,7 +123,7 @@ namespace Abp.Zero.EntityHistory
                     {Banner = "tracked-advertisement"});
             });
 
-            UsingDbContext((context) =>
+            UsingDbContext(context =>
             {
                 context.EntityChanges.Count(e => e.TenantId == 1).ShouldBe(1);
                 context.EntityChangeSets.Count(e => e.TenantId == 1).ShouldBe(1);
@@ -184,13 +184,13 @@ namespace Abp.Zero.EntityHistory
                 entityChangeBlog.ChangeTime.ShouldBe(entityChangeBlog.EntityEntry.As<EntityEntry>().Entity
                     .As<IHasCreationTime>().CreationTime);
                 entityChangeBlog.ChangeType.ShouldBe(EntityChangeType.Created);
-                entityChangeBlog.EntityId.ShouldBe(blog2Id.ToJsonString(false, false));
+                entityChangeBlog.EntityId.ShouldBe(blog2Id.ToJsonString());
                 entityChangeBlog.EntityTypeFullName.ShouldBe(typeof(Blog).FullName);
                 entityChangeBlog.PropertyChanges.Count.ShouldBe(2); // Blog.Name, Blog.Url
 
                 var entityChangeBlogEx = s.EntityChanges[1];
                 entityChangeBlogEx.ChangeType.ShouldBe(EntityChangeType.Created);
-                entityChangeBlogEx.EntityId.ShouldBe(blog2Id.ToJsonString(false, false));
+                entityChangeBlogEx.EntityId.ShouldBe(blog2Id.ToJsonString());
                 entityChangeBlogEx.EntityTypeFullName.ShouldBe(typeof(BlogEx).FullName);
                 entityChangeBlogEx.PropertyChanges.Count.ShouldBe(1); // BlogEx.BloggerName
 
@@ -331,7 +331,7 @@ namespace Abp.Zero.EntityHistory
                 // The primary key of BlogEx is a shadow property,
                 // EF Core is keeping the values of PK of Blog and PK of BlogEx the same
                 // See https://docs.microsoft.com/en-us/ef/core/modeling/owned-entities#implicit-keys
-                entityChange.EntityId.ShouldBe(blog2Id.ToJsonString(false, false));
+                entityChange.EntityId.ShouldBe(blog2Id.ToJsonString());
                 entityChange.PropertyChanges.Count.ShouldBe(1);
 
                 var propertyChange =
@@ -378,7 +378,7 @@ namespace Abp.Zero.EntityHistory
                 // The primary key of BlogEx is a shadow property,
                 // EF Core is keeping the values of PK of Blog and PK of BlogEx the same
                 // See https://docs.microsoft.com/en-us/ef/core/modeling/owned-entities#implicit-keys
-                entityChange.EntityId.ShouldBe(blog1Id.ToJsonString(false, false));
+                entityChange.EntityId.ShouldBe(blog1Id.ToJsonString());
                 entityChange.PropertyChanges.Count.ShouldBe(1);
 
                 var propertyChange =
@@ -447,7 +447,7 @@ namespace Abp.Zero.EntityHistory
 
                 var entityChange1 = s.EntityChanges.Single(ec =>
                     ec.EntityTypeFullName == typeof(BlogPromotion).FullName
-                    && ec.EntityId == blog1Promotion1Id.ToJsonString(false, false)
+                    && ec.EntityId == blog1Promotion1Id.ToJsonString()
                 );
                 entityChange1.ChangeType.ShouldBe(EntityChangeType.Created);
                 entityChange1.PropertyChanges.Count.ShouldBe(2);
@@ -469,7 +469,7 @@ namespace Abp.Zero.EntityHistory
 
                 var entityChange2 = s.EntityChanges.Single(ec =>
                     ec.EntityTypeFullName == typeof(BlogPromotion).FullName
-                    && ec.EntityId == blog1Promotion2Id.ToJsonString(false, false)
+                    && ec.EntityId == blog1Promotion2Id.ToJsonString()
                 );
                 entityChange2.ChangeType.ShouldBe(EntityChangeType.Created);
                 entityChange2.PropertyChanges.Count.ShouldBe(2);
@@ -572,7 +572,7 @@ namespace Abp.Zero.EntityHistory
 
                 var entityChange1 = s.EntityChanges.Single(ec =>
                     ec.EntityTypeFullName == typeof(BlogPromotion).FullName
-                    && ec.EntityId == blog1Promotion2Id.ToJsonString(false, false)
+                    && ec.EntityId == blog1Promotion2Id.ToJsonString()
                 );
                 entityChange1.ChangeType.ShouldBe(EntityChangeType.Updated);
                 entityChange1.PropertyChanges.Count.ShouldBe(1);
@@ -620,7 +620,7 @@ namespace Abp.Zero.EntityHistory
 
                 var entityChange = s.EntityChanges.Single(ec => ec.EntityTypeFullName == typeof(Post).FullName);
                 entityChange.ChangeType.ShouldBe(EntityChangeType.Updated);
-                entityChange.EntityId.ShouldBe(post1Id.ToJsonString(false, false));
+                entityChange.EntityId.ShouldBe(post1Id.ToJsonString());
                 entityChange.PropertyChanges.Count.ShouldBe(1);
 
                 var propertyChange = entityChange.PropertyChanges.Single();
@@ -719,7 +719,7 @@ namespace Abp.Zero.EntityHistory
                 await _fooRepository.InsertAndGetIdAsync(foo);
             });
 
-            UsingDbContext((context) =>
+            UsingDbContext(context =>
             {
                 context.EntityChanges.Count(e => e.TenantId == 1).ShouldBe(1);
                 context.EntityChangeSets.Count(e => e.TenantId == 1).ShouldBe(1);
@@ -733,7 +733,7 @@ namespace Abp.Zero.EntityHistory
             });
 
             // Assert
-            UsingDbContext((context) =>
+            UsingDbContext(context =>
             {
                 context.EntityChanges.Count(e => e.TenantId == 1).ShouldBe(1);
                 context.EntityChangeSets.Count(e => e.TenantId == 1).ShouldBe(1);
@@ -822,7 +822,7 @@ namespace Abp.Zero.EntityHistory
         public void Should_Not_Write_History_If_Invalid_Entity_Has_Property_With_Audited_Attribute_Created()
         {
             //Act
-            UsingDbContext((context) =>
+            UsingDbContext(context =>
             {
                 /* Category does not inherit from Entity<> and is not an owned entity*/
                 context.Categories.Add(new Category {DisplayName = "My Category"});
@@ -837,7 +837,7 @@ namespace Abp.Zero.EntityHistory
         public void Should_Not_Write_History_If_Invalid_Entity_Has_Property_With_Audited_Attribute_Updated()
         {
             //Arrange
-            UsingDbContext((context) =>
+            UsingDbContext(context =>
             {
                 /* Category does not inherit from Entity<> and is not an owned entity*/
                 context.Categories.Add(new Category {DisplayName = "My Category"});
@@ -846,7 +846,7 @@ namespace Abp.Zero.EntityHistory
             _entityHistoryStore.ClearReceivedCalls();
 
             //Act
-            UsingDbContext((context) =>
+            UsingDbContext(context =>
             {
                 var category = context.Categories.Single(c => c.DisplayName == "My Category");
                 category.DisplayName = "Invalid Category";
@@ -861,7 +861,7 @@ namespace Abp.Zero.EntityHistory
         public void Should_Not_Write_History_If_Invalid_Entity_Has_Property_With_Audited_Attribute_Deleted()
         {
             //Arrange
-            UsingDbContext((context) =>
+            UsingDbContext(context =>
             {
                 context.Categories.Add(new Category {DisplayName = "My Category"});
                 context.SaveChanges();
@@ -869,7 +869,7 @@ namespace Abp.Zero.EntityHistory
             _entityHistoryStore.ClearReceivedCalls();
 
             //Act
-            UsingDbContext((context) =>
+            UsingDbContext(context =>
             {
                 var category = context.Categories.Single(c => c.DisplayName == "My Category");
                 context.Categories.Remove(category);
@@ -884,7 +884,7 @@ namespace Abp.Zero.EntityHistory
         public void Should_Not_Write_History_For_Audited_Entity_By_Default()
         {
             //Arrange
-            UsingDbContext((context) =>
+            UsingDbContext(context =>
             {
                 context.Countries.Add(new Country {CountryCode = "My Country"});
                 context.SaveChanges();
@@ -900,12 +900,12 @@ namespace Abp.Zero.EntityHistory
             // PermissionSetting has Discriminator column (shadow property) for RolePermissionSetting
 
             //Arrange
-            UsingDbContext((context) =>
+            UsingDbContext(context =>
             {
                 var role = context.Roles.FirstOrDefault();
                 role.ShouldNotBeNull();
 
-                context.RolePermissions.Add(new RolePermissionSetting()
+                context.RolePermissions.Add(new RolePermissionSetting
                 {
                     Name = "Test",
                     RoleId = role.Id

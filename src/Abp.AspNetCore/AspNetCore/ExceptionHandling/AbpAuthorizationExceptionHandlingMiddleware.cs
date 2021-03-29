@@ -52,7 +52,7 @@ namespace Abp.AspNetCore.ExceptionHandling
                     )
                 );
 
-                EventBus.Trigger(this, new AbpHandledExceptionData(exception));
+                await EventBus.TriggerAsync(this, new AbpHandledExceptionData(exception));
             }
         }
 

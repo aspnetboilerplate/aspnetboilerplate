@@ -244,10 +244,8 @@ namespace Abp.TestBase.SampleApplication.Tests.People
         public void Should_Rollback_UOW_In_Deleting_Event()
         {
             Resolve<IEventBus>().Register<EntityDeletingEventData<Person>>(
-                eventData =>
-                {
-                    throw new ApplicationException("A sample exception to rollback the UOW.");
-                });
+                eventData => throw new ApplicationException("A sample exception to rollback the UOW.")
+            );
 
             //Act
             try
@@ -277,7 +275,7 @@ namespace Abp.TestBase.SampleApplication.Tests.People
             var person = await _personRepository.InsertAsync(new Person { Name = "Tuana", ContactListId = 1 });
             person.IsTransient().ShouldBeFalse();
 
-            var text = string.Format("{0} is being created with Id = {1}!", person.Name, person.Id);
+            var text = $"{person.Name} is being created with Id = {person.Id}!";
             UsingDbContext(context =>
             {
                 var message = context.Messages.FirstOrDefault(m => m.Text == text && m.TenantId == PersonHandler.FakeTenantId);
@@ -312,12 +310,16 @@ namespace Abp.TestBase.SampleApplication.Tests.People
 
             public void HandleEvent(EntityCreatingEventData<Person> eventData)
             {
-                _messageRepository.Insert(new Message(FakeTenantId, string.Format("{0} is being created with Id = {1}!", eventData.Entity.Name, eventData.Entity.Id)));
+                _messageRepository.Insert(new Message(FakeTenantId,
+                    $"{eventData.Entity.Name} is being created with Id = {eventData.Entity.Id}!")
+                );
             }
 
             public void HandleEvent(EntityCreatedEventData<Person> eventData)
             {
-                _messageRepository.Insert(new Message(FakeTenantId, string.Format("{0} is created with Id = {1}!", eventData.Entity.Name, eventData.Entity.Id)));
+                _messageRepository.Insert(new Message(FakeTenantId,
+                    $"{eventData.Entity.Name} is created with Id = {eventData.Entity.Id}!")
+                );
             }
         }
     }

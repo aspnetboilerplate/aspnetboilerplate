@@ -36,60 +36,62 @@ namespace Abp.ZeroCore.SampleApp.EntityFramework.Seed.Host
             //admin user for host
 
             var adminUserForHost = _context.Users.FirstOrDefault(u => u.TenantId == null && u.UserName == AbpUserBase.AdminUserName);
-            if (adminUserForHost == null)
+            if (adminUserForHost != null)
             {
-                var user = new User
-                {
-                    TenantId = null,
-                    UserName = AbpUserBase.AdminUserName,
-                    Name = "admin",
-                    Surname = "admin",
-                    EmailAddress = "admin@aspnetzero.com",
-                    IsEmailConfirmed = true,
-                    IsActive = true,
-                    Password = "AM4OLBpptxBYmM79lGOX9egzZk3vIQU3d/gFCJzaBjAPXzYIK3tQ2N7X4fcrHtElTw==" //123qwe
-                };
-
-                user.SetNormalizedNames();
-
-                adminUserForHost = _context.Users.Add(user).Entity;
-                _context.SaveChanges();
-
-                //Assign Admin role to admin user
-                _context.UserRoles.Add(new UserRole(null, adminUserForHost.Id, adminRoleForHost.Id));
-                _context.SaveChanges();
-
-                //Grant all permissions
-                var permissions = PermissionFinder
-                    .GetAllPermissions(new AppAuthorizationProvider())
-                    .Where(p => p.MultiTenancySides.HasFlag(MultiTenancySides.Host))
-                    .ToList();
-
-                foreach (var permission in permissions)
-                {
-                    _context.Permissions.Add(
-                        new RolePermissionSetting
-                        {
-                            TenantId = null,
-                            Name = permission.Name,
-                            IsGranted = true,
-                            RoleId = adminRoleForHost.Id
-                        });
-                }
-
-                _context.SaveChanges();
-
-                //User account of admin user
-                _context.UserAccounts.Add(new UserAccount
-                {
-                    TenantId = null,
-                    UserId = adminUserForHost.Id,
-                    UserName = AbpUserBase.AdminUserName,
-                    EmailAddress = adminUserForHost.EmailAddress
-                });
-
-                _context.SaveChanges();
+                return;
             }
+            
+            var user = new User
+            {
+                TenantId = null,
+                UserName = AbpUserBase.AdminUserName,
+                Name = "admin",
+                Surname = "admin",
+                EmailAddress = "admin@aspnetzero.com",
+                IsEmailConfirmed = true,
+                IsActive = true,
+                Password = "AM4OLBpptxBYmM79lGOX9egzZk3vIQU3d/gFCJzaBjAPXzYIK3tQ2N7X4fcrHtElTw==" //123qwe
+            };
+
+            user.SetNormalizedNames();
+
+            adminUserForHost = _context.Users.Add(user).Entity;
+            _context.SaveChanges();
+
+            //Assign Admin role to admin user
+            _context.UserRoles.Add(new UserRole(null, adminUserForHost.Id, adminRoleForHost.Id));
+            _context.SaveChanges();
+
+            //Grant all permissions
+            var permissions = PermissionFinder
+                .GetAllPermissions(new AppAuthorizationProvider())
+                .Where(p => p.MultiTenancySides.HasFlag(MultiTenancySides.Host))
+                .ToList();
+
+            foreach (var permission in permissions)
+            {
+                _context.Permissions.Add(
+                    new RolePermissionSetting
+                    {
+                        TenantId = null,
+                        Name = permission.Name,
+                        IsGranted = true,
+                        RoleId = adminRoleForHost.Id
+                    });
+            }
+
+            _context.SaveChanges();
+
+            //User account of admin user
+            _context.UserAccounts.Add(new UserAccount
+            {
+                TenantId = null,
+                UserId = adminUserForHost.Id,
+                UserName = AbpUserBase.AdminUserName,
+                EmailAddress = adminUserForHost.EmailAddress
+            });
+
+            _context.SaveChanges();
         }
     }
 }

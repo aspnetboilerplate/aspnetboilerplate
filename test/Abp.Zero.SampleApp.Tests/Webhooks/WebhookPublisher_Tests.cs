@@ -29,12 +29,6 @@ namespace Abp.Zero.SampleApp.Tests.Webhooks
 
         #region Async
 
-        private (WebhookSubscription subscription, object data, Predicate<WebhookSenderArgs> predicate)
-            InitializeTestCase(string webhookDefinition)
-        {
-            return InitializeTestCase(webhookDefinition, null);
-        }
-
         /// <summary>
         /// Creates tenant with adding feature(s), then creates predicate for WebhookSenderArgs which publisher should send to WebhookSenderJob
         /// </summary>
@@ -42,7 +36,7 @@ namespace Abp.Zero.SampleApp.Tests.Webhooks
         /// <param name="tenantFeatures"></param>
         /// <returns></returns>
         private (WebhookSubscription subscription, object data, Predicate<WebhookSenderArgs> predicate)
-            InitializeTestCase(string webhookDefinition, Dictionary<string, string> tenantFeatures)
+            InitializeTestCase(string webhookDefinition, Dictionary<string, string> tenantFeatures = null)
         {
             var subscription = CreateTenantAndSubscribeToWebhook(webhookDefinition, tenantFeatures);
 
@@ -52,7 +46,7 @@ namespace Abp.Zero.SampleApp.Tests.Webhooks
 
             var data = new {Name = "Musa", Surname = "Demir"};
 
-            Predicate<WebhookSenderArgs> predicate = w =>
+            bool Predicate(WebhookSenderArgs w)
             {
                 w.Secret.ShouldNotBeNullOrEmpty();
                 w.Secret.ShouldStartWith(WebhookSubscriptionSecretPrefix);
@@ -63,15 +57,14 @@ namespace Abp.Zero.SampleApp.Tests.Webhooks
                 w.Headers.Single().Value.ShouldBe("Value");
 
                 w.WebhookSubscriptionId.ShouldBe(subscription.Id);
-                w.Data.ShouldBe(
-                    webhooksConfiguration.JsonSerializerSettings != null
-                        ? data.ToJsonString(webhooksConfiguration.JsonSerializerSettings)
-                        : data.ToJsonString()
-                );
-                return true;
-            };
+                w.Data.ShouldBe(webhooksConfiguration.JsonSerializerSettings != null
+                    ? data.ToJsonString(webhooksConfiguration.JsonSerializerSettings)
+                    : data.ToJsonString());
 
-            return (subscription, data, predicate);
+                return true;
+            }
+
+            return (subscription, data, Predicate);
         }
 
         [Fact]
@@ -400,7 +393,7 @@ namespace Abp.Zero.SampleApp.Tests.Webhooks
             await webhookSubscriptionManager.AddOrUpdateSubscriptionAsync(subscription);
 
             var storedSubscription = await webhookSubscriptionManager.GetAsync(subscription.Id);
-            storedSubscription.IsActive.ShouldBeTrue(); //subscription is active 
+            storedSubscription.IsActive.ShouldBeTrue(); //subscription is active
 
             await _webhookPublisher.PublishAsync(AppWebhookDefinitionNames.Test, data, subscription.TenantId);
 
@@ -778,7 +771,7 @@ namespace Abp.Zero.SampleApp.Tests.Webhooks
                 });
 
             AbpSession.TenantId = subscription.TenantId;
-            
+
             //remove one feature
             AddOrReplaceFeatureToTenant(
                 AbpSession.TenantId.Value,
