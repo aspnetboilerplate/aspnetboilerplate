@@ -33,26 +33,22 @@ namespace Abp.Tests.Castle
         }
 
         [Fact]
-        public void Test_Regular()
+        public async Task Test_Regular()
         {
             _handler.HandleEvent(new MyEventData());
-            AsyncHelper.RunSync(() => _asyncHandler.HandleEventAsync(new MyEventData()));
+            await _asyncHandler.HandleEventAsync(new MyEventData());
         }
 
         [Fact]
-        public void Test_Reflection()
+        public async Task Test_Reflection()
         {
             typeof(IEventHandler<MyEventData>)
                 .GetMethod("HandleEvent", BindingFlags.Instance | BindingFlags.Public)
                 .Invoke(_handler, new object[] {new MyEventData()});
 
-            AsyncHelper.RunSync(
-                () => 
-                {
-                    return (Task) typeof(IAsyncEventHandler<MyEventData>)
-                        .GetMethod("HandleEventAsync", BindingFlags.Instance | BindingFlags.Public)
-                        .Invoke(_asyncHandler, new object[] { new MyEventData() });
-                });
+            await (Task) typeof(IAsyncEventHandler<MyEventData>)
+                .GetMethod("HandleEventAsync", BindingFlags.Instance | BindingFlags.Public)
+                .Invoke(_asyncHandler, new object[] {new MyEventData()});
         }
 
         public class MyHandler : IEventHandler<MyEventData>
@@ -78,7 +74,6 @@ namespace Abp.Tests.Castle
 
         public class MyEventData
         {
-            
         }
 
         public class MyInterceptor : IInterceptor

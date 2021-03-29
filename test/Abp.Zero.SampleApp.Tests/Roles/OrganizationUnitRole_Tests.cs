@@ -20,7 +20,7 @@ namespace Abp.Zero.SampleApp.Tests.Roles
         {
             //Arrange
             var ou2 = GetOu("OU2");
-            var role = await CreateRole("role_1");
+            var role = CreateRole("role_1");
 
             //Act
             await RoleManager.AddToOrganizationUnitAsync(role, ou2);
@@ -35,7 +35,7 @@ namespace Abp.Zero.SampleApp.Tests.Roles
         {
             //Arrange
             var ou11 = GetOu("OU11");
-            var role = await CreateRole("role_1");
+            var role = CreateRole("role_1");
 
             //Act
             await RoleManager.RemoveFromOrganizationUnitAsync(role, ou11);
@@ -49,7 +49,7 @@ namespace Abp.Zero.SampleApp.Tests.Roles
         public async Task Should_Remove_Role_From_Organization_When_Role_Is_Deleted()
         {
             //Arrange
-            var role = await CreateRole("role_1");
+            var role = CreateRole("role_1");
             var ou11 = GetOu("OU11");
 
             await RoleManager.AddToOrganizationUnitAsync(role, ou11);
@@ -69,7 +69,7 @@ namespace Abp.Zero.SampleApp.Tests.Roles
         public async Task Test_SetOrganizationUnitsAsync(string[] organizationUnitNames)
         {
             //Arrange
-            var role = await CreateRole("role_1");
+            var role = CreateRole("role_1");
             var organizationUnitIds = organizationUnitNames.Select(oun => GetOu(oun).Id).ToArray();
 
             //Act

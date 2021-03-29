@@ -117,7 +117,7 @@ namespace Abp.AspNetCore.Mvc.Views
         /// <param name="culture">culture information</param>
         /// <param name="args">Format arguments</param>
         /// <returns>Localized string</returns>
-        protected string L(string name, CultureInfo culture, params object[] args)
+        protected virtual string L(string name, CultureInfo culture, params object[] args)
         {
             return _localizationSource.GetString(name, culture, args);
         }

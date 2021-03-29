@@ -22,7 +22,7 @@ namespace Abp.Zero.SampleApp.Tests.Users
 
             _userManager.DefaultAccountLockoutTimeSpan = TimeSpan.FromSeconds(0.5);
 
-            _testUser = AsyncHelper.RunSync(() => CreateUser("TestUser"));
+            _testUser = CreateUser("TestUser");
         }
 
         [Fact]
