@@ -162,7 +162,7 @@ namespace Abp.BackgroundJobs
 
                         if (jobExecuteMethod.Name == nameof(IAsyncBackgroundJob<object>.ExecuteAsync))
                         {
-                            await ((Task) jobExecuteMethod.Invoke(job, new[] {argsObj}));
+                            await ((Task) jobExecuteMethod.Invoke(job.Object, new[] {argsObj}));
                         }
                         else
                         {
