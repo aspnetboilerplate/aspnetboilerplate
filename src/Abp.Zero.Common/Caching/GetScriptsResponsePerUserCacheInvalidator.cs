@@ -20,7 +20,7 @@ namespace Abp.Caching
         ITransientDependency
     {
         private const string CacheName = "GetScriptsResponsePerUser";
-        
+
         private readonly ICachedUniqueKeyPerUser _cachedUniqueKeyPerUser;
 
         public GetScriptsResponsePerUserCacheInvalidator(ICachedUniqueKeyPerUser cachedUniqueKeyPerUser)
@@ -30,42 +30,37 @@ namespace Abp.Caching
 
         public void HandleEvent(EntityChangedEventData<UserPermissionSetting> eventData)
         {
-            RemoveCache();
+            _cachedUniqueKeyPerUser.RemoveKey(CacheName, eventData.Entity.TenantId, eventData.Entity.UserId);
         }
 
         public void HandleEvent(EntityChangedEventData<UserRole> eventData)
         {
-            RemoveCache();
+            _cachedUniqueKeyPerUser.RemoveKey(CacheName, eventData.Entity.TenantId, eventData.Entity.UserId);
         }
 
         public void HandleEvent(EntityChangedEventData<UserOrganizationUnit> eventData)
         {
-            RemoveCache();
+            _cachedUniqueKeyPerUser.RemoveKey(CacheName, eventData.Entity.TenantId, eventData.Entity.UserId);
         }
 
         public void HandleEvent(EntityDeletedEventData<AbpUserBase> eventData)
         {
-            RemoveCache();
+            _cachedUniqueKeyPerUser.RemoveKey(CacheName, eventData.Entity.TenantId, eventData.Entity.Id);
         }
 
         public void HandleEvent(EntityChangedEventData<OrganizationUnitRole> eventData)
         {
-            RemoveCache();
+            _cachedUniqueKeyPerUser.ClearCache(CacheName);
         }
 
         public void HandleEvent(EntityChangedEventData<LanguageInfo> eventData)
         {
-            RemoveCache();
+            _cachedUniqueKeyPerUser.ClearCache(CacheName);
         }
 
         public void HandleEvent(EntityChangedEventData<SettingInfo> eventData)
         {
             _cachedUniqueKeyPerUser.ClearCache(CacheName);
-        }
-
-        private void RemoveCache()
-        {
-            _cachedUniqueKeyPerUser.RemoveKey(CacheName);
         }
     }
 }

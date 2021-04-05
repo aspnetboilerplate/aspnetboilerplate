@@ -34,30 +34,30 @@ namespace Abp.Zero.SampleApp.Tests.CachedUniqueKeys
         [Fact]
         public void Should_Get_Same_Key_Until_Cache_Expire()
         {
-            var cachedKey = _cachedUniqueKeyPerUser.GetKey(MyTestCacheName);
-            var cachedKey2 = _cachedUniqueKeyPerUser.GetKey(MyTestCacheName);
+            var cachedKey = GetKeyForCurrentUser(MyTestCacheName);
+            var cachedKey2 = GetKeyForCurrentUser(MyTestCacheName);
             cachedKey2.ShouldBe(cachedKey);
 
             Thread.Sleep(TimeSpan.FromSeconds(6));
 
-            var cachedKey3 = _cachedUniqueKeyPerUser.GetKey(MyTestCacheName);
+            var cachedKey3 = GetKeyForCurrentUser(MyTestCacheName);
             cachedKey3.ShouldNotBe(cachedKey);
-            var cachedKey4 = _cachedUniqueKeyPerUser.GetKey(MyTestCacheName);
+            var cachedKey4 = GetKeyForCurrentUser(MyTestCacheName);
             cachedKey4.ShouldBe(cachedKey3);
         }
 
         [Fact]
         public void Should_Get_New_Key_If_Cache_Cleared()
         {
-            var cachedKey = _cachedUniqueKeyPerUser.GetKey(MyTestCacheName);
-            var cachedKey2 = _cachedUniqueKeyPerUser.GetKey(MyTestCacheName);
+            var cachedKey = GetKeyForCurrentUser(MyTestCacheName);
+            var cachedKey2 = GetKeyForCurrentUser(MyTestCacheName);
             cachedKey2.ShouldBe(cachedKey);
 
             _cacheManager.GetCache(MyTestCacheName).Clear();
 
-            var cachedKey3 = _cachedUniqueKeyPerUser.GetKey(MyTestCacheName);
+            var cachedKey3 = GetKeyForCurrentUser(MyTestCacheName);
             cachedKey3.ShouldNotBe(cachedKey);
-            var cachedKey4 = _cachedUniqueKeyPerUser.GetKey(MyTestCacheName);
+            var cachedKey4 = GetKeyForCurrentUser(MyTestCacheName);
             cachedKey4.ShouldBe(cachedKey3);
         }
 
@@ -66,66 +66,71 @@ namespace Abp.Zero.SampleApp.Tests.CachedUniqueKeys
         {
             AbpSession.UserId = user1.Id;
             AbpSession.UserId = user1.Id;
-            var cachedKey = _cachedUniqueKeyPerUser.GetKey(MyTestCacheName);
-            
+            var cachedKey = GetKeyForCurrentUser(MyTestCacheName);
+
             AbpSession.UserId = user2.Id;
             AbpSession.UserId = user2.Id;
-            var cachedKey2 = _cachedUniqueKeyPerUser.GetKey(MyTestCacheName);
+            var cachedKey2 = GetKeyForCurrentUser(MyTestCacheName);
             cachedKey2.ShouldNotBe(cachedKey);
-            
+
             AbpSession.UserId = user1.Id;
             AbpSession.UserId = user1.Id;
-            var cachedKey3 = _cachedUniqueKeyPerUser.GetKey(MyTestCacheName);
+            var cachedKey3 = GetKeyForCurrentUser(MyTestCacheName);
             cachedKey3.ShouldBe(cachedKey);
-            
+
             AbpSession.UserId = user2.Id;
             AbpSession.UserId = user2.Id;
-            var cachedKey4 = _cachedUniqueKeyPerUser.GetKey(MyTestCacheName);
+            var cachedKey4 = GetKeyForCurrentUser(MyTestCacheName);
             cachedKey4.ShouldBe(cachedKey2);
         }
-        
+
         [Fact]
         public void Should_Get_Different_Keys_For_Different_CacheNames()
         {
-            var cachedKey = _cachedUniqueKeyPerUser.GetKey(MyTestCacheName);
-            var cachedKey2 = _cachedUniqueKeyPerUser.GetKey(MyTestCacheName2);
+            var cachedKey = GetKeyForCurrentUser(MyTestCacheName);
+            var cachedKey2 = GetKeyForCurrentUser(MyTestCacheName2);
             cachedKey2.ShouldNotBe(cachedKey);
-            
+
             AbpSession.UserId = user2.Id;
             AbpSession.UserId = user2.Id;
-            var cachedKey3 = _cachedUniqueKeyPerUser.GetKey(MyTestCacheName);
-            var cachedKey4 = _cachedUniqueKeyPerUser.GetKey(MyTestCacheName2);
+            var cachedKey3 = GetKeyForCurrentUser(MyTestCacheName);
+            var cachedKey4 = GetKeyForCurrentUser(MyTestCacheName2);
             cachedKey3.ShouldNotBe(cachedKey4);
         }
 
         [Fact]
         public void Should_Remove_Key_And_Give_New_Key()
         {
-            var cachedKey = _cachedUniqueKeyPerUser.GetKey(MyTestCacheName);
-            var cachedKey2 = _cachedUniqueKeyPerUser.GetKey(MyTestCacheName);
+            var cachedKey = GetKeyForCurrentUser(MyTestCacheName);
+            var cachedKey2 = GetKeyForCurrentUser(MyTestCacheName);
             cachedKey2.ShouldBe(cachedKey);
 
-            _cachedUniqueKeyPerUser.RemoveKey(MyTestCacheName);
+            _cachedUniqueKeyPerUser.RemoveKey(MyTestCacheName, AbpSession.TenantId, AbpSession.UserId);
 
-            var cachedKey3 = _cachedUniqueKeyPerUser.GetKey(MyTestCacheName);
+            var cachedKey3 = GetKeyForCurrentUser(MyTestCacheName);
             cachedKey3.ShouldNotBe(cachedKey);
-            var cachedKey4 = _cachedUniqueKeyPerUser.GetKey(MyTestCacheName);
+            var cachedKey4 = GetKeyForCurrentUser(MyTestCacheName);
             cachedKey4.ShouldBe(cachedKey3);
         }
 
         [Fact]
         public void Should_Clear_Cache_And_Give_New_Key()
         {
-            var cachedKey = _cachedUniqueKeyPerUser.GetKey(MyTestCacheName);
-            var cachedKey2 = _cachedUniqueKeyPerUser.GetKey(MyTestCacheName);
+            var cachedKey = GetKeyForCurrentUser(MyTestCacheName);
+            var cachedKey2 = GetKeyForCurrentUser(MyTestCacheName);
             cachedKey2.ShouldBe(cachedKey);
 
             _cachedUniqueKeyPerUser.ClearCache(MyTestCacheName);
 
-            var cachedKey3 = _cachedUniqueKeyPerUser.GetKey(MyTestCacheName);
+            var cachedKey3 = GetKeyForCurrentUser(MyTestCacheName);
             cachedKey3.ShouldNotBe(cachedKey);
-            var cachedKey4 = _cachedUniqueKeyPerUser.GetKey(MyTestCacheName);
+            var cachedKey4 = GetKeyForCurrentUser(MyTestCacheName);
             cachedKey4.ShouldBe(cachedKey3);
+        }
+
+        private string GetKeyForCurrentUser(string cacheName)
+        {
+            return _cachedUniqueKeyPerUser.GetKey(cacheName, AbpSession.TenantId, AbpSession.UserId);
         }
     }
 
@@ -136,7 +141,8 @@ namespace Abp.Zero.SampleApp.Tests.CachedUniqueKeys
         {
             IocManager.RegisterAssemblyByConvention(typeof(CachedUniqueKeyPerUserTestModule).Assembly);
 
-            Configuration.Caching.Configure(CachedUniqueKeyPerUser_Tests.MyTestCacheName, cache => { cache.DefaultSlidingExpireTime = TimeSpan.FromSeconds(5); });
+            Configuration.Caching.Configure(CachedUniqueKeyPerUser_Tests.MyTestCacheName,
+                cache => { cache.DefaultSlidingExpireTime = TimeSpan.FromSeconds(5); });
         }
     }
 }

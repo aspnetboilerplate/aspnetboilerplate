@@ -18,7 +18,17 @@ namespace Abp.CachedUniqueKeys
             AbpSession = NullAbpSession.Instance;
         }
 
-        public virtual async Task<string> GetKeyAsync(string cacheName)
+        public Task<string> GetKeyAsync(string cacheName, UserIdentifier user)
+        {
+            return GetKeyAsync(cacheName, user.TenantId, user.UserId);
+        }
+
+        public Task RemoveKeyAsync(string cacheName, UserIdentifier user)
+        {
+            return RemoveKeyAsync(cacheName, user.TenantId, user.UserId);
+        }
+
+        public virtual async Task<string> GetKeyAsync(string cacheName, int? tenantId, long? userId)
         {
             if (!AbpSession.UserId.HasValue)
             {
@@ -26,11 +36,11 @@ namespace Abp.CachedUniqueKeys
             }
 
             var cache = GetCache(cacheName);
-            return await cache.GetAsync(GetKeyString(),
+            return await cache.GetAsync(GetKeyString(tenantId, userId),
                 () => Task.FromResult(Guid.NewGuid().ToString("N")));
         }
 
-        public virtual async Task RemoveKeyAsync(string cacheName)
+        public virtual async Task RemoveKeyAsync(string cacheName, int? tenantId, long? userId)
         {
             if (!AbpSession.UserId.HasValue)
             {
@@ -38,7 +48,7 @@ namespace Abp.CachedUniqueKeys
             }
 
             var cache = GetCache(cacheName);
-            await cache.RemoveAsync(GetKeyString());
+            await cache.RemoveAsync(GetKeyString(tenantId, userId));
         }
 
         public virtual async Task ClearCacheAsync(string cacheName)
@@ -47,7 +57,17 @@ namespace Abp.CachedUniqueKeys
             await cache.ClearAsync();
         }
 
-        public string GetKey(string cacheName)
+        public string GetKey(string cacheName, UserIdentifier user)
+        {
+            return GetKey(cacheName, user.TenantId, user.UserId);
+        }
+
+        public void RemoveKey(string cacheName, UserIdentifier user)
+        {
+            RemoveKey(cacheName, user.TenantId, user.UserId);
+        }
+
+        public string GetKey(string cacheName, int? tenantId, long? userId)
         {
             if (!AbpSession.UserId.HasValue)
             {
@@ -55,11 +75,11 @@ namespace Abp.CachedUniqueKeys
             }
 
             var cache = GetCache(cacheName);
-            return cache.Get(GetKeyString(),
+            return cache.Get(GetKeyString(tenantId, userId),
                 () => Guid.NewGuid().ToString("N"));
         }
 
-        public void RemoveKey(string cacheName)
+        public void RemoveKey(string cacheName, int? tenantId, long? userId)
         {
             if (!AbpSession.UserId.HasValue)
             {
@@ -67,7 +87,7 @@ namespace Abp.CachedUniqueKeys
             }
 
             var cache = GetCache(cacheName);
-            cache.Remove(GetKeyString());
+            cache.Remove(GetKeyString(tenantId, userId));
         }
 
         public void ClearCache(string cacheName)
@@ -81,6 +101,14 @@ namespace Abp.CachedUniqueKeys
             return _cacheManager.GetCache<string, string>(cacheName);
         }
 
-        private string GetKeyString() => AbpSession.ToUserIdentifier().ToString();
+        private string GetKeyString(int? tenantId, long? userId)
+        {
+            if (tenantId == null)
+            {
+                return userId.ToString();
+            }
+
+            return userId + "@" + tenantId;
+        }
     }
 }

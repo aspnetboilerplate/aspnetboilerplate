@@ -23,17 +23,12 @@ namespace Abp.AspNetCore.Mvc.Caching
 
         public void HandleEvent(EntityChangedEventData<LanguageInfo> eventData)
         {
-            RemoveCache();
+            _cachedUniqueKeyPerUser.ClearCache(CacheName);
         }
 
         public void HandleEvent(EntityChangedEventData<SettingInfo> eventData)
         {
             _cachedUniqueKeyPerUser.ClearCache(CacheName);
-        }
-
-        private void RemoveCache()
-        {
-            _cachedUniqueKeyPerUser.RemoveKey(CacheName);
         }
     }
 }
