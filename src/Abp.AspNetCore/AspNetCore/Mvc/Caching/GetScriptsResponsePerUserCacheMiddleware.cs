@@ -1,28 +1,31 @@
 ﻿using System;
 using System.Threading.Tasks;
+using Abp.Configuration;
 using Microsoft.AspNetCore.Http;
 
 namespace Abp.AspNetCore.Mvc.Caching
 {
     public class GetScriptsResponsePerUserCacheMiddleware
     {
-        internal static TimeSpan? MaxAge = TimeSpan.FromMinutes(30);
         private readonly RequestDelegate _next;
+        private readonly IGetScriptsResponsePerUserConfiguration _configuration;
 
-        public GetScriptsResponsePerUserCacheMiddleware(RequestDelegate next)
+        public GetScriptsResponsePerUserCacheMiddleware(RequestDelegate next,
+            IGetScriptsResponsePerUserConfiguration configuration)
         {
             _next = next;
+            _configuration = configuration;
         }
 
         public async Task Invoke(HttpContext context)
         {
-            if (context.Request.Path == "/AbpScripts/GetScripts")
+            if (_configuration.IsEnabled && context.Request.Path == "/AbpScripts/GetScripts")
             {
                 context.Response.GetTypedHeaders().CacheControl =
                     new Microsoft.Net.Http.Headers.CacheControlHeaderValue()
                     {
                         Public = true,
-                        MaxAge = MaxAge,
+                        MaxAge = _configuration.MaxAge,
                     };
             }
 

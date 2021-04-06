@@ -18,12 +18,22 @@ namespace Abp.CachedUniqueKeys
             AbpSession = NullAbpSession.Instance;
         }
 
-        public Task<string> GetKeyAsync(string cacheName, UserIdentifier user)
+        public virtual Task<string> GetKeyAsync(string cacheName)
+        {
+            return GetKeyAsync(cacheName, AbpSession.TenantId, AbpSession.UserId);
+        }
+
+        public virtual Task RemoveKeyAsync(string cacheName)
+        {
+            return RemoveKeyAsync(cacheName, AbpSession.TenantId, AbpSession.UserId);
+        }
+
+        public virtual Task<string> GetKeyAsync(string cacheName, UserIdentifier user)
         {
             return GetKeyAsync(cacheName, user.TenantId, user.UserId);
         }
 
-        public Task RemoveKeyAsync(string cacheName, UserIdentifier user)
+        public virtual Task RemoveKeyAsync(string cacheName, UserIdentifier user)
         {
             return RemoveKeyAsync(cacheName, user.TenantId, user.UserId);
         }
@@ -36,7 +46,7 @@ namespace Abp.CachedUniqueKeys
             }
 
             var cache = GetCache(cacheName);
-            return await cache.GetAsync(GetKeyString(tenantId, userId),
+            return await cache.GetAsync(GetCacheKeyForUser(tenantId, userId),
                 () => Task.FromResult(Guid.NewGuid().ToString("N")));
         }
 
@@ -48,7 +58,7 @@ namespace Abp.CachedUniqueKeys
             }
 
             var cache = GetCache(cacheName);
-            await cache.RemoveAsync(GetKeyString(tenantId, userId));
+            await cache.RemoveAsync(GetCacheKeyForUser(tenantId, userId));
         }
 
         public virtual async Task ClearCacheAsync(string cacheName)
@@ -57,17 +67,27 @@ namespace Abp.CachedUniqueKeys
             await cache.ClearAsync();
         }
 
-        public string GetKey(string cacheName, UserIdentifier user)
+        public virtual string GetKey(string cacheName)
+        {
+            return GetKey(cacheName, AbpSession.TenantId, AbpSession.UserId);
+        }
+
+        public virtual void RemoveKey(string cacheName)
+        {
+            RemoveKey(cacheName, AbpSession.TenantId, AbpSession.UserId);
+        }
+
+        public virtual string GetKey(string cacheName, UserIdentifier user)
         {
             return GetKey(cacheName, user.TenantId, user.UserId);
         }
 
-        public void RemoveKey(string cacheName, UserIdentifier user)
+        public virtual void RemoveKey(string cacheName, UserIdentifier user)
         {
             RemoveKey(cacheName, user.TenantId, user.UserId);
         }
 
-        public string GetKey(string cacheName, int? tenantId, long? userId)
+        public virtual string GetKey(string cacheName, int? tenantId, long? userId)
         {
             if (!AbpSession.UserId.HasValue)
             {
@@ -75,11 +95,11 @@ namespace Abp.CachedUniqueKeys
             }
 
             var cache = GetCache(cacheName);
-            return cache.Get(GetKeyString(tenantId, userId),
+            return cache.Get(GetCacheKeyForUser(tenantId, userId),
                 () => Guid.NewGuid().ToString("N"));
         }
 
-        public void RemoveKey(string cacheName, int? tenantId, long? userId)
+        public virtual void RemoveKey(string cacheName, int? tenantId, long? userId)
         {
             if (!AbpSession.UserId.HasValue)
             {
@@ -87,10 +107,10 @@ namespace Abp.CachedUniqueKeys
             }
 
             var cache = GetCache(cacheName);
-            cache.Remove(GetKeyString(tenantId, userId));
+            cache.Remove(GetCacheKeyForUser(tenantId, userId));
         }
 
-        public void ClearCache(string cacheName)
+        public virtual void ClearCache(string cacheName)
         {
             var cache = GetCache(cacheName);
             cache.Clear();
@@ -101,7 +121,7 @@ namespace Abp.CachedUniqueKeys
             return _cacheManager.GetCache<string, string>(cacheName);
         }
 
-        private string GetKeyString(int? tenantId, long? userId)
+        protected virtual string GetCacheKeyForUser(int? tenantId, long? userId)
         {
             if (tenantId == null)
             {
