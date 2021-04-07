@@ -1,17 +1,14 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Data;
 using System.Linq;
 using System.Threading.Tasks;
-
 using Abp.Dapper.Repositories;
 using Abp.Domain.Repositories;
 using Abp.Domain.Uow;
 using Abp.EntityFrameworkCore.Dapper.Tests.Domain;
-
 using Microsoft.EntityFrameworkCore;
-
 using Shouldly;
-
 using Xunit;
 
 namespace Abp.EntityFrameworkCore.Dapper.Tests.Tests
@@ -212,12 +209,24 @@ namespace Abp.EntityFrameworkCore.Dapper.Tests.Tests
             }
         }
 
-        [Fact]
-        public async Task execute_method_for_void_sqls_should_work()
+        [Theory]
+        [InlineData(null)]
+        [InlineData(CommandType.Text)]
+        public async Task execute_method_for_void_sqls_should_work(CommandType? commandType)
         {
-            int blogId = await _blogDapperRepository.InsertAndGetIdAsync(new Blog("Oguzhan_Blog", "wwww.aspnetboilerplate.com"));
+            int blogId = await _blogDapperRepository.InsertAndGetIdAsync(
+                new Blog("Oguzhan_Blog", "wwww.aspnetboilerplate.com")
+            );
 
-            await _blogDapperRepository.ExecuteAsync("Update Blogs Set Name = @name where Id =@id", new { id = blogId, name = "Oguzhan_New_Blog" });
+            await _blogDapperRepository.ExecuteAsync(
+                "Update Blogs Set Name = @name where Id =@id",
+                new
+                {
+                    id = blogId,
+                    name = "Oguzhan_New_Blog"
+                },
+                commandType
+            );
 
             (await _blogDapperRepository.GetAsync(blogId)).Name.ShouldBe("Oguzhan_New_Blog");
             (await _blogRepository.GetAsync(blogId)).Name.ShouldBe("Oguzhan_New_Blog");
