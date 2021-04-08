@@ -2,6 +2,7 @@
 using Abp.Dependency;
 using Abp.Modules;
 using Abp.Quartz.Configuration;
+using Abp.Threading;
 using Abp.Threading.BackgroundWorkers;
 using Quartz;
 
@@ -10,11 +11,16 @@ namespace Abp.Quartz
     [DependsOn(typeof (AbpKernelModule))]
     public class AbpQuartzModule : AbpModule
     {
+        private static readonly OneTimeRunner OneTimeRunner = new OneTimeRunner();
+        
         public override void PreInitialize()
         {
             IocManager.Register<IAbpQuartzConfiguration, AbpQuartzConfiguration>();
 
-            Configuration.Modules.AbpQuartz().Scheduler.JobFactory = new AbpQuartzJobFactory(IocManager);
+            OneTimeRunner.Run(() =>
+            {
+                Configuration.Modules.AbpQuartz().Scheduler.JobFactory = new AbpQuartzJobFactory(IocManager); 
+            });
         }
 
         public override void Initialize()
