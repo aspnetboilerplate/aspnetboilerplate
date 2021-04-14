@@ -29,19 +29,19 @@ the following example:
     public class PersonAppService
     {
         private IPersonRepository _personRepository;
-
+    
         public PersonAppService()
         {
             _personRepository = new PersonRepository();            
         }
-
+    
         public void CreatePerson(string name, int age)
         {
             var person = new Person { Name = name, Age = age };
             _personRepository.Insert(person);
         }
     }
-                
+
 
 **PersonAppService** uses **PersonRepository** to insert a **Person** into
 the database. Although this looks harmless, there are some problems with this code:
@@ -72,19 +72,19 @@ the creation of the repository class is abstracted. See the code below:
     public class PersonAppService
     {
         private IPersonRepository _personRepository;
-
+    
         public PersonAppService()
         {
             _personRepository = PersonRepositoryFactory.Create();            
         }
-
+    
         public void CreatePerson(string name, int age)
         {
             var person = new Person { Name = name, Age = age };
             _personRepository.Insert(person);
         }
     }
-                
+
 
 PersonRepositoryFactory is a static class that creates and returns an
 IPersonRepository. This is known as the **Service Locator** pattern.
@@ -111,19 +111,19 @@ The example above can be re-written as shown below:
     public class PersonAppService
     {
         private IPersonRepository _personRepository;
-
+    
         public PersonAppService(IPersonRepository personRepository)
         {
             _personRepository = personRepository;
         }
-
+    
         public void CreatePerson(string name, int age)
         {
             var person = new Person { Name = name, Age = age };
             _personRepository.Insert(person);
         }
     }
-                
+
 
 This is known as **constructor injection**. PersonAppService does
 not know which classes implement IPersonRepository or how it is created.
@@ -167,15 +167,15 @@ to logs in PersonAppService. We can re-write the class like this:
     public class PersonAppService
     {
         public ILogger Logger { get; set; }
-
+    
         private IPersonRepository _personRepository;
-
+    
         public PersonAppService(IPersonRepository personRepository)
         {
             _personRepository = personRepository;
             Logger = NullLogger.Instance;
         }
-
+    
         public void CreatePerson(string name, int age)
         {
             Logger.Debug("Inserting a new person to database with name = " + name);
@@ -223,12 +223,12 @@ interfaces/classes to the dependency injection framework, and then
 resolve (create) an object. In Castle Windsor, it's something like that:
 
     var container = new WindsorContainer();
-
+    
     container.Register(
             Component.For<IPersonRepository>().ImplementedBy<PersonRepository>().LifestyleTransient(),
             Component.For<IPersonAppService>().ImplementedBy<PersonAppService>().LifestyleTransient()
         );
-
+    
     var personService = container.Resolve<IPersonAppService>();
     personService.CreatePerson("John Doe", 32);
 
@@ -272,7 +272,7 @@ it:
     {
         //...
     }
-
+    
     public class PersonAppService : IPersonAppService
     {
         //...
@@ -320,7 +320,7 @@ shortcut. For example:
     {
         //...
     }
-
+    
     public class MyPersonManager : IPersonManager, ISingletonDependency
     {
         //...
@@ -374,15 +374,15 @@ Example:
     public class PersonAppService
     {
         public ILogger Logger { get; set; }
-
+    
         private IPersonRepository _personRepository;
-
+    
         public PersonAppService(IPersonRepository personRepository)
         {
             _personRepository = personRepository;
             Logger = NullLogger.Instance;
         }
-
+    
         public void CreatePerson(string name, int age)
         {
             Logger.Debug("Inserting a new person to database with name = " + name);
@@ -407,19 +407,19 @@ injected and used easily. Example:
     public class MySampleClass : ITransientDependency
     {
         private readonly IIocResolver _iocResolver;
-
+    
         public MySampleClass(IIocResolver iocResolver)
         {
             _iocResolver = iocResolver;
         }
-
+    
         public void DoIt()
         {
             //Resolving, using and releasing manually
             var personService1 = _iocResolver.Resolve<PersonAppService>();
             personService1.CreatePerson(new CreatePersonInput { Name = "John", Surname = "Doe" });
             _iocResolver.Release(personService1);
-
+    
             //Resolving and using in a safe way
             using (var personService2 = _iocResolver.ResolveAsDisposable<PersonAppService>())
             {
@@ -473,6 +473,22 @@ IShouldInitialize has an Initialize() method. If you implement it, then
 your Initialize() method is automatically called just after creating
 your object (before it's used). You need to inject/resolve the object
 in order to work with this feature.
+
+##### `Lazy<T>` components
+
+In order to resolve components lazily, register ```LazyOfTComponentLoader``` in the Initialize of a method as shown below;
+
+```c#
+public override void Initialize()
+{
+    IocManager.RegisterAssemblyByConvention(typeof(AbpZeroTestModule).GetAssembly());
+    IocManager.IocContainer.Register(
+        Component.For<ILazyComponentLoader>().ImplementedBy<LazyOfTComponentLoader>()
+    );
+}
+```
+
+Then, you can resolve any service using ```Lazy<ISomeService>``` in your app. This service will be lazily resolved when the first time you access `lazy.Value` property.
 
 #### ASP.NET MVC & ASP.NET Web API integration
 

@@ -1,4 +1,5 @@
-﻿using Abp.Application.Editions;
+﻿using System;
+using Abp.Application.Editions;
 using Abp.Application.Features;
 using Abp.Authorization;
 using Abp.Authorization.Roles;
@@ -106,6 +107,12 @@ namespace Abp.Zero
             LocalIocManager.Resolve<IRoleStore<Role>>();
             LocalIocManager.Resolve<AbpRoleStore<Role, User>>();
             LocalIocManager.Resolve<RoleStore>();
+        }
+
+        [Fact]
+        public void Should_Resolve_LazyRoleStore()
+        {
+            LocalIocManager.Resolve<Lazy<RoleStore>>();
         }
     }
 }
