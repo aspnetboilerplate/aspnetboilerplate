@@ -208,12 +208,18 @@ namespace Abp.AspNetCore.Mvc.Conventions
 
             foreach (var action in controller.Actions)
             {
-                ConfigureSelector(moduleName, controller.ControllerName, action, configuration);
+                ConfigureSelector(moduleName, controller.ControllerName, controller.Selectors, action, configuration);
             }
         }
 
-        private void ConfigureSelector(string moduleName, string controllerName, ActionModel action, [CanBeNull] AbpControllerAssemblySetting configuration)
+        private void ConfigureSelector(string moduleName, string controllerName, IList<SelectorModel> controllerSelectors, ActionModel action, [CanBeNull] AbpControllerAssemblySetting configuration)
         {
+            //Add controller's endpointMetadata to action.
+            foreach (var controllerEndpointMetadata in controllerSelectors.SelectMany(x => x.EndpointMetadata))
+            {
+                action.Selectors.FirstOrDefault()?.EndpointMetadata.Add(controllerEndpointMetadata);
+            }
+
             RemoveEmptySelectors(action.Selectors);
 
             var remoteServiceAtt = ReflectionHelper.GetSingleAttributeOrDefault<RemoteServiceAttribute>(action.ActionMethod);
@@ -295,7 +301,9 @@ namespace Abp.AspNetCore.Mvc.Conventions
 
         private static bool IsEmptySelector(SelectorModel selector)
         {
-            return selector.AttributeRouteModel == null && selector.ActionConstraints.IsNullOrEmpty();
+            return selector.AttributeRouteModel == null
+                   && selector.ActionConstraints.IsNullOrEmpty()
+                   && selector.EndpointMetadata.IsNullOrEmpty();
         }
     }
 }
