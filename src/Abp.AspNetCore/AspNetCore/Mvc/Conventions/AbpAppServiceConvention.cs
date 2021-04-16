@@ -13,7 +13,6 @@ using System.Reflection;
 using Abp.Collections.Extensions;
 using Abp.Web.Api.ProxyScripting.Generators;
 using JetBrains.Annotations;
-using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc.ModelBinding;
 using Microsoft.AspNetCore.Mvc.ActionConstraints;
 
