@@ -13,6 +13,7 @@ using System.Reflection;
 using Abp.Collections.Extensions;
 using Abp.Web.Api.ProxyScripting.Generators;
 using JetBrains.Annotations;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc.ModelBinding;
 using Microsoft.AspNetCore.Mvc.ActionConstraints;
 
@@ -214,8 +215,8 @@ namespace Abp.AspNetCore.Mvc.Conventions
 
         private void ConfigureSelector(string moduleName, string controllerName, IList<SelectorModel> controllerSelectors, ActionModel action, [CanBeNull] AbpControllerAssemblySetting configuration)
         {
-            //Add controller's endpointMetadata to action.
-            foreach (var controllerEndpointMetadata in controllerSelectors.SelectMany(x => x.EndpointMetadata))
+            //Add controller's Authorize EndpointMetadata to action.
+            foreach (var controllerEndpointMetadata in controllerSelectors.SelectMany(x => x.EndpointMetadata).Where(x => x is IAuthorizeData))
             {
                 action.Selectors.FirstOrDefault()?.EndpointMetadata.Add(controllerEndpointMetadata);
             }
