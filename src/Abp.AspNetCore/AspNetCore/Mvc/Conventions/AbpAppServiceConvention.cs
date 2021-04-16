@@ -209,18 +209,12 @@ namespace Abp.AspNetCore.Mvc.Conventions
 
             foreach (var action in controller.Actions)
             {
-                ConfigureSelector(moduleName, controller.ControllerName, controller.Selectors, action, configuration);
+                ConfigureSelector(moduleName, controller.ControllerName, action, configuration);
             }
         }
 
-        private void ConfigureSelector(string moduleName, string controllerName, IList<SelectorModel> controllerSelectors, ActionModel action, [CanBeNull] AbpControllerAssemblySetting configuration)
+        private void ConfigureSelector(string moduleName, string controllerName, ActionModel action, [CanBeNull] AbpControllerAssemblySetting configuration)
         {
-            //Add controller's Authorize EndpointMetadata to action.
-            foreach (var controllerEndpointMetadata in controllerSelectors.SelectMany(x => x.EndpointMetadata).Where(x => x is IAuthorizeData))
-            {
-                action.Selectors.FirstOrDefault()?.EndpointMetadata.Add(controllerEndpointMetadata);
-            }
-
             RemoveEmptySelectors(action.Selectors);
 
             var remoteServiceAtt = ReflectionHelper.GetSingleAttributeOrDefault<RemoteServiceAttribute>(action.ActionMethod);
