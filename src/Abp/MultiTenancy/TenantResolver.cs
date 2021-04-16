@@ -1,5 +1,6 @@
 using System;
 using System.Linq;
+using System.Threading.Tasks;
 using Abp.Configuration.Startup;
 using Abp.Dependency;
 using Abp.Runtime;
@@ -60,6 +61,11 @@ namespace Abp.MultiTenancy
                 _cache.Value = new TenantResolverCacheItem(tenantId);
                 return tenantId;
             }
+        }
+
+        public Task<int?> ResolveTenantIdAsync()
+        {
+            return Task.FromResult(ResolveTenantId());
         }
 
         private int? GetTenantIdFromContributors()
