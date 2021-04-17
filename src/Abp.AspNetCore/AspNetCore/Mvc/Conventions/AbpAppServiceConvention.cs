@@ -295,7 +295,9 @@ namespace Abp.AspNetCore.Mvc.Conventions
 
         private static bool IsEmptySelector(SelectorModel selector)
         {
-            return selector.AttributeRouteModel == null && selector.ActionConstraints.IsNullOrEmpty();
+            return selector.AttributeRouteModel == null
+                   && selector.ActionConstraints.IsNullOrEmpty()
+                   && selector.EndpointMetadata.IsNullOrEmpty();
         }
     }
 }
