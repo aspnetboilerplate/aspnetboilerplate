@@ -21,6 +21,7 @@ namespace Abp.Authorization
         private readonly IIocManager _iocManager;
         private readonly IAuthorizationConfiguration _authorizationConfiguration;
         private readonly IUnitOfWorkManager _unitOfWorkManager;
+        private readonly IMultiTenancyConfig _multiTenancy;
 
         /// <summary>
         /// Constructor.
@@ -28,11 +29,13 @@ namespace Abp.Authorization
         public PermissionManager(
             IIocManager iocManager,
             IAuthorizationConfiguration authorizationConfiguration,
-            IUnitOfWorkManager unitOfWorkManager)
+            IUnitOfWorkManager unitOfWorkManager, 
+            IMultiTenancyConfig multiTenancy)
         {
             _iocManager = iocManager;
             _authorizationConfiguration = authorizationConfiguration;
             _unitOfWorkManager = unitOfWorkManager;
+            _multiTenancy = multiTenancy;            
 
             AbpSession = NullAbpSession.Instance;
         }
@@ -69,10 +72,10 @@ namespace Abp.Authorization
                 featureDependencyContextObject.TenantId = GetCurrentTenantId();
 
                 return Permissions.Values
-                    .WhereIf(tenancyFilter, p => p.MultiTenancySides.HasFlag(AbpSession.MultiTenancySide))
+                    .WhereIf(tenancyFilter, p => p.MultiTenancySides.HasFlag(GetCurrentMultiTenancySide()))
                     .Where(p =>
                         p.FeatureDependency == null ||
-                        AbpSession.MultiTenancySide == MultiTenancySides.Host ||
+                        GetCurrentMultiTenancySide() == MultiTenancySides.Host ||
                         p.FeatureDependency.IsSatisfied(featureDependencyContextObject)
                     ).ToImmutableList();
             }
@@ -89,12 +92,24 @@ namespace Abp.Authorization
                     .Where(p => p.MultiTenancySides.HasFlag(multiTenancySides))
                     .Where(p =>
                         p.FeatureDependency == null ||
-                        AbpSession.MultiTenancySide == MultiTenancySides.Host ||
+                        GetCurrentMultiTenancySide() == MultiTenancySides.Host ||
                         (p.MultiTenancySides.HasFlag(MultiTenancySides.Host) &&
                          multiTenancySides.HasFlag(MultiTenancySides.Host)) ||
                         p.FeatureDependency.IsSatisfied(featureDependencyContextObject)
                     ).ToImmutableList();
             }
+        }
+        
+        private MultiTenancySides GetCurrentMultiTenancySide()
+        {
+            if (_unitOfWorkManager.Current != null)
+            {
+                return _multiTenancy.IsEnabled && !_unitOfWorkManager.Current.GetTenantId().HasValue
+                    ? MultiTenancySides.Host
+                    : MultiTenancySides.Tenant;
+            }
+
+            return AbpSession.MultiTenancySide;
         }
 
         private int? GetCurrentTenantId()
