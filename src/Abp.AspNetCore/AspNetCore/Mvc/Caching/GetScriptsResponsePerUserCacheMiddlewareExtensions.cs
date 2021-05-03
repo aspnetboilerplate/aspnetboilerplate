@@ -1,5 +1,4 @@
-﻿using System;
-using Microsoft.AspNetCore.Builder;
+﻿using Microsoft.AspNetCore.Builder;
 
 namespace Abp.AspNetCore.Mvc.Caching
 {
@@ -9,15 +8,8 @@ namespace Abp.AspNetCore.Mvc.Caching
         /// Implements GetScriptsResponsePerUserCacheMiddleware middleware with given maxAge
         /// </summary>
         /// <param name="builder"></param>
-        /// <param name="maxAge">Default is 30min</param>
-        public static IApplicationBuilder UseGetScriptsResponsePerUserCache(
-            this IApplicationBuilder builder, TimeSpan? maxAge = null)
+        public static IApplicationBuilder UseGetScriptsResponsePerUserCache(this IApplicationBuilder builder)
         {
-            if (maxAge != null)
-            {
-                GetScriptsResponsePerUserCacheMiddleware.MaxAge = maxAge;
-            }
-
             return builder.UseMiddleware<GetScriptsResponsePerUserCacheMiddleware>();
         }
     }
