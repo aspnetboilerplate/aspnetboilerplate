@@ -1,6 +1,6 @@
 ### Cached Unique Key Per User
 
-​	Cached Unique Key Per User is an implementation that you can create a unique key per user. It can be used in cases where you need a temporary unique key for the user. It creates a unique key for a given user for a given key name, and stores it until the cache expires. You can use it when you need a temporary unique key for the user.
+Cached Unique Key Per User is an implementation that you can create a unique key per user. It can be used in cases where you need a temporary unique key for the user. It creates a unique key for a given user for a given key name, and stores it until the cache expires. You can use it when you need a temporary unique key for the user.
 
 Keys created with `ICachedUniqueKeyPerUser` can be expired at any time, or automatically expired at the end of the cache time. 
 

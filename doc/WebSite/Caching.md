@@ -349,3 +349,7 @@ information on Redis and it's configuration.
 
 **Note**: The Redis server should be installed and running to use the Redis
 cache in ABP.
+
+### Cached Unique Key Per User
+
+ASP.NET Boilerplate provides cached unique key per user implementation that you can create a unique key per user. For more information, see its [documentation](Cached-Unique-Key-Per-User.md).
