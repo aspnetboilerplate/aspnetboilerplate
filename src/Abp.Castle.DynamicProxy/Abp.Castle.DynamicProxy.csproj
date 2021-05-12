@@ -1,0 +1,28 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+	<Import Project="..\..\common.props" />
+	<Import Project="..\..\configureawait.props" />
+
+	<PropertyGroup>
+		<TargetFramework>netstandard2.0</TargetFramework>
+		<GenerateDocumentationFile>true</GenerateDocumentationFile>
+		<AssemblyName>Abp.Castle.DynamicProxy</AssemblyName>
+		<PackageId>Abp.Castle.DynamicProxy</PackageId>
+		<PackageTags>asp.net;asp.net mvc;boilerplate;application framework;web framework;framework;domain driven design;dynamicproxy;castle</PackageTags>
+		<GenerateAssemblyConfigurationAttribute>false</GenerateAssemblyConfigurationAttribute>
+		<GenerateAssemblyCompanyAttribute>false</GenerateAssemblyCompanyAttribute>
+		<GenerateAssemblyProductAttribute>false</GenerateAssemblyProductAttribute>
+		<GeneratePackageOnBuild>False</GeneratePackageOnBuild>
+		<RootNamespace>Abp</RootNamespace>
+		<Description>Abp.Castle.DynamicProxy</Description>
+	</PropertyGroup>
+
+	<ItemGroup>
+		<ProjectReference Include="..\Abp\Abp.csproj" />
+	</ItemGroup>
+
+	<ItemGroup>
+		<PackageReference Update="Microsoft.SourceLink.GitHub" Version="1.1.0-beta-20204-02" />
+	</ItemGroup>
+
+</Project>
