@@ -5,7 +5,7 @@ using JetBrains.Annotations;
 
 namespace Abp.Aspects
 {
-    internal static class AbpCrossCuttingConcerns
+    public static class AbpCrossCuttingConcerns
     {
         public const string Auditing = "AbpAuditing";
         public const string Validation = "AbpValidation";

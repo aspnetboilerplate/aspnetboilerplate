@@ -18,6 +18,10 @@
 	</PropertyGroup>
 
 	<ItemGroup>
+	  <PackageReference Include="PostSharp" Version="6.9.5" />
+	</ItemGroup>
+
+	<ItemGroup>
 		<ProjectReference Include="..\Abp\Abp.csproj" />
 	</ItemGroup>
 

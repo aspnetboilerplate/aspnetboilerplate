@@ -99,11 +99,17 @@ namespace Abp
 
         private void AddInterceptorRegistrars()
         {
-            ValidationInterceptorRegistrar.Initialize(IocManager);
-            AuditingInterceptorRegistrar.Initialize(IocManager);
-            EntityHistoryInterceptorRegistrar.Initialize(IocManager);
-            UnitOfWorkRegistrar.Initialize(IocManager);
-            AuthorizationInterceptorRegistrar.Initialize(IocManager);
+            var modules = AbpModule.FindDependedModuleTypesRecursivelyIncludingGivenModule(StartupModule);
+
+            if (StartupModule.Name != "AbpPostSharpModule"
+                && modules.FindIndex(m => m.Name == "AbpPostSharpModule") == -1)
+            {
+                ValidationInterceptorRegistrar.Initialize(IocManager);
+                AuditingInterceptorRegistrar.Initialize(IocManager);
+                EntityHistoryInterceptorRegistrar.Initialize(IocManager);
+                UnitOfWorkRegistrar.Initialize(IocManager);
+                AuthorizationInterceptorRegistrar.Initialize(IocManager);
+            }
         }
 
         /// <summary>
