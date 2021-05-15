@@ -20,9 +20,9 @@
     <Description>Abp.Web.Resources</Description>
   </PropertyGroup>
 
-	<ItemGroup>
-		<PackageReference Remove="PostSharp"></PackageReference>
-	</ItemGroup>
+  <ItemGroup>
+    <PackageReference Remove="PostSharp"></PackageReference>
+  </ItemGroup>
 	
   <ItemGroup>
     <None Remove="Abp\**\*" />

@@ -126,7 +126,7 @@ namespace Abp.Auditing
 
 				if (AbpCrossCuttingConcerns.IsApplied(args.Instance, AbpCrossCuttingConcerns.Auditing))
 				{
-					await args .ProceedAsync();
+					await args.ProceedAsync();
 					return;
 				}
 
