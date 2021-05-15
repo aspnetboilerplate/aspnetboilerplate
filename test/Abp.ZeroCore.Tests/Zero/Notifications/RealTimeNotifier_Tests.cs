@@ -22,6 +22,7 @@ namespace Abp.Zero.Notifications
             LocalIocManager.IocContainer.Register(
                 Component.For<INotificationDistributer>().Instance(defaultNotificationDistributor)
                     .LifestyleSingleton()
+                    .Named("RealTimeNotifier_Tests_DefaultNotificationDistributer")
                     .IsDefault()
             );
             

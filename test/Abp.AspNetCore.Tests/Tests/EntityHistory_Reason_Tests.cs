@@ -106,7 +106,7 @@ namespace Abp.AspNetCore.Tests
     [UseCase(Description = Consts.UseCaseDescription)]
     public class MyUseCaseMarkedClass : ITransientDependency
     {
-        public readonly IEntityChangeSetReasonProvider ReasonProvider;
+        public IEntityChangeSetReasonProvider ReasonProvider { get; set; }
 
         public MyUseCaseMarkedClass(IEntityChangeSetReasonProvider reasonProvider)
         {

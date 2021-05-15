@@ -29,15 +29,11 @@ namespace Abp.Tests.Authorization
 
             LocalIocManager.Register<IAuthorizationConfiguration, AuthorizationConfiguration>();
             LocalIocManager.Register<IMultiTenancyConfig, MultiTenancyConfig>();
-            LocalIocManager.Register<AuthorizationInterceptor>(DependencyLifeStyle.Transient);
-            LocalIocManager.Register<AbpAsyncDeterminationInterceptor<AuthorizationInterceptor>>(DependencyLifeStyle.Transient);
             LocalIocManager.Register<IAuthorizationHelper, AuthorizationHelper>(DependencyLifeStyle.Transient);
-            LocalIocManager.IocContainer.Register(
-                Component.For<MyTestClassToBeAuthorized_Sync>().Interceptors<AbpAsyncDeterminationInterceptor<AuthorizationInterceptor>>().LifestyleTransient(),
-                Component.For<MyTestClassToBeAuthorized_Async>().Interceptors<AbpAsyncDeterminationInterceptor<AuthorizationInterceptor>>().LifestyleTransient(),
-                Component.For<MyTestClassToBeAllowProtected_Async>().Interceptors<AbpAsyncDeterminationInterceptor<AuthorizationInterceptor>>().LifestyleTransient(),
-                Component.For<MyTestClassToBeAllowProtected_Sync>().Interceptors<AbpAsyncDeterminationInterceptor<AuthorizationInterceptor>>().LifestyleTransient()
-                );
+            LocalIocManager.Register<MyTestClassToBeAuthorized_Sync>(DependencyLifeStyle.Transient);
+            LocalIocManager.Register<MyTestClassToBeAuthorized_Async>(DependencyLifeStyle.Transient);
+            LocalIocManager.Register<MyTestClassToBeAllowProtected_Async>(DependencyLifeStyle.Transient);
+            LocalIocManager.Register<MyTestClassToBeAllowProtected_Sync>(DependencyLifeStyle.Transient);
 
             //Mock session
             var session = Substitute.For<IAbpSession>();

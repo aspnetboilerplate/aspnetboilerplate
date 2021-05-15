@@ -13,6 +13,10 @@
     <GenerateAssemblyCopyrightAttribute>false</GenerateAssemblyCopyrightAttribute>
   </PropertyGroup>
 
+	<ItemGroup>
+		<PackageReference Include="PostSharp" Version="6.9.5" />
+	</ItemGroup>
+
   <ItemGroup>
     <ProjectReference Include="..\Abp.TestBase.SampleApplication\Abp.TestBase.SampleApplication.csproj" />
     <ProjectReference Include="..\Abp.Tests\Abp.Tests.csproj" />

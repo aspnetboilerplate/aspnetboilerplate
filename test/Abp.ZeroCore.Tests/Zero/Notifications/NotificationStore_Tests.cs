@@ -20,9 +20,10 @@ namespace Abp.Zero.Notifications
             LocalIocManager.IocContainer.Register(
                 Component.For<INotificationDistributer>().Instance(defaultNotificationDistributor)
                     .LifestyleSingleton()
+                    .Named("NotificationStore_Tests_DefaultNotificationDistributer")
                     .IsDefault()
             );
-            
+
             _notificationPublisher = LocalIocManager.Resolve<INotificationPublisher>();
             _notificationStore = LocalIocManager.Resolve<INotificationStore>();
         }

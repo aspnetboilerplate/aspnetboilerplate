@@ -18,15 +18,17 @@
 	</PropertyGroup>
 
 	<ItemGroup>
-	  <PackageReference Include="PostSharp" Version="6.9.5" />
-	</ItemGroup>
-
-	<ItemGroup>
 		<ProjectReference Include="..\Abp\Abp.csproj" />
 	</ItemGroup>
 
 	<ItemGroup>
 		<PackageReference Update="Microsoft.SourceLink.GitHub" Version="1.1.0-beta-20204-02" />
+	</ItemGroup>
+
+	<ItemGroup>
+	  <Folder Include="Authorization\" />
+	  <Folder Include="Domain\Uow\" />
+	  <Folder Include="Runtime\Validation\Interception\" />
 	</ItemGroup>
 
 </Project>

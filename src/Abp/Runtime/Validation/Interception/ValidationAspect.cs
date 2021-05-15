@@ -5,15 +5,20 @@ using PostSharp.Aspects.Advices;
 using PostSharp.Extensibility;
 using PostSharp.Reflection;
 using PostSharp.Serialization;
+using System;
+using System.ComponentModel.DataAnnotations.Schema;
 using System.Threading.Tasks;
 
 namespace Abp.Runtime.Validation.Interception
 {
-	[MulticastAttributeUsage(Inheritance = MulticastInheritance.Multicast, AllowExternalAssemblies = true)]
+	[AttributeUsage(AttributeTargets.Assembly | AttributeTargets.Class | AttributeTargets.Struct | AttributeTargets.Method | AttributeTargets.Interface, AllowMultiple = true)]
+	[MulticastAttributeUsage(MulticastTargets.Method, Inheritance = MulticastInheritance.Multicast, AllowExternalAssemblies = true)]
 	[PSerializable]
 	public class ValidationAspect : MethodInterceptionAspect, IInstanceScopedAspect
 	{
 		[IntroduceMember(Visibility = Visibility.Public, OverrideAction = MemberOverrideAction.Ignore)]
+		[NotMapped]
+		[CopyCustomAttributes(typeof(NotMappedAttribute))]
 		public IIocManager IocManager { get; set; }
 
 		[ImportMember("IocManager", IsRequired = true)]
@@ -33,6 +38,18 @@ namespace Abp.Runtime.Validation.Interception
 
 			var iocManager = IocManagerProperty.Get();
 
+			if (iocManager == null)
+			{
+				args.Proceed();
+				return;
+			}
+
+			if (!iocManager.IsRegistered<MethodInvocationValidator>())
+			{
+				args.Proceed();
+				return;
+			}
+
 			using (var validator = iocManager.ResolveAsDisposable<MethodInvocationValidator>())
 			{
 				validator.Object.Initialize((System.Reflection.MethodInfo)args.Method, args.Arguments.ToArray());
@@ -51,6 +68,18 @@ namespace Abp.Runtime.Validation.Interception
 			}
 
 			var iocManager = IocManagerProperty.Get();
+
+			if (iocManager == null)
+			{
+				await args.ProceedAsync();
+				return;
+			}
+
+			if (!iocManager.IsRegistered<MethodInvocationValidator>())
+			{
+				await args.ProceedAsync();
+				return;
+			}
 
 			using (var validator = iocManager.ResolveAsDisposable<MethodInvocationValidator>())
 			{
