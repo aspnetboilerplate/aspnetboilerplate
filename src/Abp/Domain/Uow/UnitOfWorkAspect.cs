@@ -1,6 +1,7 @@
 ﻿using Abp.Dependency;
 using PostSharp.Aspects;
 using PostSharp.Aspects.Advices;
+using PostSharp.Aspects.Dependencies;
 using PostSharp.Extensibility;
 using PostSharp.Reflection;
 using PostSharp.Serialization;
@@ -11,6 +12,7 @@ using System.Threading.Tasks;
 
 namespace Abp.Domain.Uow
 {
+	[AspectTypeDependency(AspectDependencyAction.Order, AspectDependencyPosition.Before, typeof(Abp.Authorization.AuthorizationAspect))]
 	[AttributeUsage(AttributeTargets.Assembly | AttributeTargets.Class | AttributeTargets.Method | AttributeTargets.Interface, AllowMultiple = true)]
 	[MulticastAttributeUsage(MulticastTargets.Method, Inheritance = MulticastInheritance.Multicast, AllowExternalAssemblies = true)]
 	[PSerializable]
@@ -19,91 +21,92 @@ namespace Abp.Domain.Uow
 		[IntroduceMember(Visibility = Visibility.Public, OverrideAction = MemberOverrideAction.Ignore)]
 		[NotMapped]
 		[CopyCustomAttributes(typeof(NotMappedAttribute))]
-		public IIocManager IocManager { get; set; }
+		public IUnitOfWorkDefaultOptions UnitOfWorkDefaultOptions { get; set; }
 
-		[ImportMember("IocManager", IsRequired = true)]
-		public Property<IIocManager> IocManagerProperty;
+		[ImportMember("UnitOfWorkDefaultOptions", IsRequired = true)]
+		public Property<IUnitOfWorkDefaultOptions> UnitOfWorkDefaultOptionsProperty;
+
+		[IntroduceMember(Visibility = Visibility.Public, OverrideAction = MemberOverrideAction.Ignore)]
+		[NotMapped]
+		[CopyCustomAttributes(typeof(NotMappedAttribute))]
+		public IUnitOfWorkManager UnitOfWorkManager { get; set; }
+
+		[ImportMember("UnitOfWorkManager", IsRequired = true)]
+		public Property<IUnitOfWorkManager> UnitOfWorkManagerProperty;
+
+		[IntroduceMember(Visibility = Visibility.Public, OverrideAction = MemberOverrideAction.Ignore)]
+		[NotMapped]
+		[CopyCustomAttributes(typeof(NotMappedAttribute))]
+		public IPostSharpOptions PostSharpOptions { get; set; }
+
+		[ImportMember("PostSharpOptions", IsRequired = false)]
+		public Property<IPostSharpOptions> PostSharpOptionsProperty;
 
 		public override void OnInvoke(MethodInterceptionArgs args)
 		{
-			var iocManager = IocManagerProperty.Get();
+			IPostSharpOptions postSharpOptions = PostSharpOptionsProperty?.Get();
 
-			if (iocManager == null)
+			if (postSharpOptions == null || !postSharpOptions.EnablePostSharp)
 			{
 				args.Proceed();
 				return;
 			}
 
-			if (!iocManager.IsRegistered<IUnitOfWorkDefaultOptions>() || !iocManager.IsRegistered<IUnitOfWorkManager>())
+			IUnitOfWorkDefaultOptions unitOfWorkOptions = UnitOfWorkDefaultOptionsProperty.Get();
+			IUnitOfWorkManager unitOfWorkManager = UnitOfWorkManagerProperty.Get();
+
+			if (unitOfWorkOptions == null || unitOfWorkManager == null)
 			{
 				args.Proceed();
 				return;
 			}
 
-			using (var unitOfWorkOptions = iocManager.ResolveAsDisposable<IUnitOfWorkDefaultOptions>())
-			using (var unitOfWorkManager = iocManager.ResolveAsDisposable<IUnitOfWorkManager>())
+			var unitOfWorkAttr = unitOfWorkOptions.GetUnitOfWorkAttributeOrNull((MethodInfo)args.Method);
+
+			if (unitOfWorkAttr == null || unitOfWorkAttr.IsDisabled)
 			{
-				if (unitOfWorkOptions?.Object == null || unitOfWorkManager?.Object == null)
-				{
-					args.Proceed();
-					return;
-				}
-
-				var unitOfWorkAttr = unitOfWorkOptions.Object.GetUnitOfWorkAttributeOrNull((MethodInfo)args.Method);
-
-				if (unitOfWorkAttr == null || unitOfWorkAttr.IsDisabled)
-				{
-					args.Proceed();
-					return;
-				}
-
-				using (var uow = unitOfWorkManager.Object.Begin(unitOfWorkAttr.CreateOptions()))
-				{
-					args.Proceed();
-					uow.Complete();
-				}
+				args.Proceed();
+				return;
 			}
 
+			using (var uow = unitOfWorkManager.Begin(unitOfWorkAttr.CreateOptions()))
+			{
+				args.Proceed();
+				uow.Complete();
+			}
 		}
 
 		public override async Task OnInvokeAsync(MethodInterceptionArgs args)
 		{
-			var iocManager = IocManagerProperty.Get();
+			IPostSharpOptions postSharpOptions = PostSharpOptionsProperty?.Get();
 
-			if (iocManager == null)
+			if (postSharpOptions == null || !postSharpOptions.EnablePostSharp)
 			{
 				await args.ProceedAsync();
 				return;
 			}
 
-			if (!iocManager.IsRegistered<IUnitOfWorkDefaultOptions>() || !iocManager.IsRegistered<IUnitOfWorkManager>())
+			IUnitOfWorkDefaultOptions unitOfWorkOptions = UnitOfWorkDefaultOptionsProperty.Get();
+			IUnitOfWorkManager unitOfWorkManager = UnitOfWorkManagerProperty.Get();
+
+			if (unitOfWorkOptions == null || unitOfWorkManager == null)
 			{
 				await args.ProceedAsync();
 				return;
 			}
 
-			using (var unitOfWorkOptions = iocManager.ResolveAsDisposable<IUnitOfWorkDefaultOptions>())
-			using (var unitOfWorkManager = iocManager.ResolveAsDisposable<IUnitOfWorkManager>())
+			var unitOfWorkAttr = unitOfWorkOptions.GetUnitOfWorkAttributeOrNull((MethodInfo)args.Method);
+
+			if (unitOfWorkAttr == null || unitOfWorkAttr.IsDisabled)
 			{
-				if (unitOfWorkOptions?.Object == null || unitOfWorkManager?.Object == null)
-				{
-					await args.ProceedAsync();
-					return;
-				}
+				await args.ProceedAsync();
+				return;
+			}
 
-				var unitOfWorkAttr = unitOfWorkOptions.Object.GetUnitOfWorkAttributeOrNull((MethodInfo)args.Method);
-
-				if (unitOfWorkAttr == null || unitOfWorkAttr.IsDisabled)
-				{
-					await args.ProceedAsync();
-					return;
-				}
-
-				using (var uow = unitOfWorkManager.Object.Begin(unitOfWorkAttr.CreateOptions()))
-				{
-					await args.ProceedAsync();
-					await uow.CompleteAsync();
-				}
+			using (var uow = unitOfWorkManager.Begin(unitOfWorkAttr.CreateOptions()))
+			{
+				await args.ProceedAsync();
+				await uow.CompleteAsync();
 			}
 		}
 

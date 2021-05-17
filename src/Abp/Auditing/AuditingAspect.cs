@@ -2,19 +2,20 @@
 using Abp.Dependency;
 using PostSharp.Aspects;
 using PostSharp.Aspects.Advices;
+using PostSharp.Aspects.Dependencies;
 using PostSharp.Extensibility;
 using PostSharp.Reflection;
 using PostSharp.Serialization;
 using System;
-using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations.Schema;
 using System.Diagnostics;
 using System.Reflection;
-using System.Text;
 using System.Threading.Tasks;
 
 namespace Abp.Auditing
 {
+	[AspectTypeDependency(AspectDependencyAction.Order, AspectDependencyPosition.After, typeof(Abp.Runtime.Validation.Interception.ValidationAspect))]
+	[AspectTypeDependency(AspectDependencyAction.Order, AspectDependencyPosition.Before, typeof(Abp.EntityHistory.EntityHistoryAspect))]
 	[AttributeUsage(AttributeTargets.Assembly | AttributeTargets.Class | AttributeTargets.Struct | AttributeTargets.Method | AttributeTargets.Interface, AllowMultiple = true)]
 	[MulticastAttributeUsage(MulticastTargets.Method, Inheritance = MulticastInheritance.Multicast, AllowExternalAssemblies = true)]
 	[PSerializable]
@@ -23,144 +24,144 @@ namespace Abp.Auditing
 		[IntroduceMember(Visibility = Visibility.Public, OverrideAction = MemberOverrideAction.Ignore)]
 		[NotMapped]
 		[CopyCustomAttributes(typeof(NotMappedAttribute))]
-		public IIocManager IocManager { get; set; }
+		public IAuditingHelper AuditingHelper { get; set; }
 
-		[ImportMember("IocManager", IsRequired = true)]
-		public Property<IIocManager> IocManagerProperty;
+		[ImportMember("AuditingHelper", IsRequired = true)]
+		public Property<IAuditingHelper> AuditingHelperProperty;
+
+		[IntroduceMember(Visibility = Visibility.Public, OverrideAction = MemberOverrideAction.Ignore)]
+		[NotMapped]
+		[CopyCustomAttributes(typeof(NotMappedAttribute))]
+		public IAuditingConfiguration AuditingConfiguration { get; set; }
+
+		[ImportMember("AuditingConfiguration", IsRequired = true)]
+		public Property<IAuditingConfiguration> AuditingConfigurationProperty;
+
+		[IntroduceMember(Visibility = Visibility.Public, OverrideAction = MemberOverrideAction.Ignore)]
+		[NotMapped]
+		[CopyCustomAttributes(typeof(NotMappedAttribute))]
+		public IAuditSerializer AuditSerializer { get; set; }
+
+		[ImportMember("AuditSerializer", IsRequired = true)]
+		public Property<IAuditSerializer> AuditSerializerProperty;
+
+		[IntroduceMember(Visibility = Visibility.Public, OverrideAction = MemberOverrideAction.Ignore)]
+		[NotMapped]
+		[CopyCustomAttributes(typeof(NotMappedAttribute))]
+		public IPostSharpOptions PostSharpOptions { get; set; }
+
+		[ImportMember("PostSharpOptions", IsRequired = false)]
+		public Property<IPostSharpOptions> PostSharpOptionsProperty;
 
 		public override void OnInvoke(MethodInterceptionArgs args)
 		{
-			var iocManager = IocManagerProperty.Get();
+			IPostSharpOptions postSharpOptions = PostSharpOptionsProperty?.Get();
 
-			if (iocManager == null)
+			if (postSharpOptions == null || !postSharpOptions.EnablePostSharp)
 			{
 				args.Proceed();
 				return;
 			}
 
-			if (!iocManager.IsRegistered<IAuditingHelper>() 
-				|| !iocManager.IsRegistered<IAuditingConfiguration>()
-				|| !iocManager.IsRegistered<IAuditSerializer>())
+			IAuditingHelper auditingHelper = AuditingHelperProperty.Get();
+			IAuditingConfiguration auditingConfiguration = AuditingConfigurationProperty.Get();
+			IAuditSerializer auditSerializer = AuditSerializerProperty.Get();
+
+			if (AbpCrossCuttingConcerns.IsApplied(args.Instance, AbpCrossCuttingConcerns.Auditing))
 			{
 				args.Proceed();
 				return;
 			}
 
-			using (var auditingHelper = iocManager.ResolveAsDisposable<IAuditingHelper>())
-			using (var auditingConfiguration = iocManager.ResolveAsDisposable<IAuditingConfiguration>())
-			using (var auditSerializer = iocManager.ResolveAsDisposable<IAuditSerializer>())
+			if (!auditingHelper.ShouldSaveAudit((MethodInfo)args.Method))
 			{
-				if (auditingHelper?.Object == null || auditingConfiguration?.Object == null || auditSerializer?.Object == null)
+				args.Proceed();
+				return;
+			}
+
+			var auditInfo = auditingHelper.CreateAuditInfo(args.Instance.GetType(), (MethodInfo)args.Method, args.Arguments.ToArray());
+
+			var stopwatch = Stopwatch.StartNew();
+
+			try
+			{
+				args.Proceed();
+			}
+			catch (Exception ex)
+			{
+				auditInfo.Exception = ex;
+				throw;
+			}
+			finally
+			{
+				stopwatch.Stop();
+				auditInfo.ExecutionDuration = Convert.ToInt32(stopwatch.Elapsed.TotalMilliseconds);
+
+				if (auditingConfiguration.SaveReturnValues && args.ReturnValue != null)
 				{
-					args.Proceed();
-					return;
+					auditInfo.ReturnValue = auditSerializer.Serialize(args.ReturnValue);
 				}
 
-				if (AbpCrossCuttingConcerns.IsApplied(args.Instance, AbpCrossCuttingConcerns.Auditing))
-				{
-					args.Proceed();
-					return;
-				}
-
-				if (!auditingHelper.Object.ShouldSaveAudit((MethodInfo)args.Method))
-				{
-					args.Proceed();
-					return;
-				}
-
-				var auditInfo = auditingHelper.Object.CreateAuditInfo(args.Instance.GetType(), (MethodInfo)args.Method, args.Arguments.ToArray());
-
-				var stopwatch = Stopwatch.StartNew();
-
-				try
-				{
-					args.Proceed();
-				}
-				catch (Exception ex)
-				{
-					auditInfo.Exception = ex;
-					throw;
-				}
-				finally
-				{
-					stopwatch.Stop();
-					auditInfo.ExecutionDuration = Convert.ToInt32(stopwatch.Elapsed.TotalMilliseconds);
-
-					if (auditingConfiguration.Object.SaveReturnValues && args.ReturnValue != null)
-					{
-						auditInfo.ReturnValue = auditSerializer.Object.Serialize(args.ReturnValue);
-					}
-
-					auditingHelper.Object.Save(auditInfo);
-				}
+				auditingHelper.Save(auditInfo);
 			}
 		}
 
 		public override async Task OnInvokeAsync(MethodInterceptionArgs args)
 		{
-			var iocManager = IocManagerProperty.Get();
+			IPostSharpOptions postSharpOptions = PostSharpOptionsProperty?.Get();
 
-			if (iocManager == null)
+			if (postSharpOptions == null || !postSharpOptions.EnablePostSharp)
 			{
 				await args.ProceedAsync();
 				return;
 			}
 
-			if (!iocManager.IsRegistered<IAuditingHelper>()
-				|| !iocManager.IsRegistered<IAuditingConfiguration>()
-				|| !iocManager.IsRegistered<IAuditSerializer>())
+			IAuditingHelper auditingHelper = AuditingHelperProperty?.Get();
+			IAuditingConfiguration auditingConfiguration = AuditingConfigurationProperty?.Get();
+			IAuditSerializer auditSerializer = AuditSerializerProperty?.Get();
+
+			if (auditingHelper == null || auditingConfiguration == null || auditSerializer == null)
 			{
 				await args.ProceedAsync();
 				return;
 			}
 
-			using (var auditingHelper = iocManager.ResolveAsDisposable<IAuditingHelper>())
-			using (var auditingConfiguration = iocManager.ResolveAsDisposable<IAuditingConfiguration>())
-			using (var auditSerializer = iocManager.ResolveAsDisposable<IAuditSerializer>())
+			if (AbpCrossCuttingConcerns.IsApplied(args.Instance, AbpCrossCuttingConcerns.Auditing))
 			{
-				if (auditingHelper?.Object == null || auditingConfiguration?.Object == null || auditSerializer?.Object == null)
+				await args.ProceedAsync();
+				return;
+			}
+
+			if (!auditingHelper.ShouldSaveAudit((MethodInfo)args.Method))
+			{
+				await args.ProceedAsync();
+				return;
+			}
+
+			var auditInfo = auditingHelper.CreateAuditInfo(args.Instance.GetType(), (MethodInfo)args.Method, args.Arguments.ToArray());
+
+			var stopwatch = Stopwatch.StartNew();
+
+			try
+			{
+				await args.ProceedAsync();
+			}
+			catch (Exception ex)
+			{
+				auditInfo.Exception = ex;
+				throw;
+			}
+			finally
+			{
+				stopwatch.Stop();
+				auditInfo.ExecutionDuration = Convert.ToInt32(stopwatch.Elapsed.TotalMilliseconds);
+
+				if (auditingConfiguration.SaveReturnValues && args.ReturnValue != null)
 				{
-					await args.ProceedAsync();
-					return;
+					auditInfo.ReturnValue = auditSerializer.Serialize(args.ReturnValue);
 				}
 
-				if (AbpCrossCuttingConcerns.IsApplied(args.Instance, AbpCrossCuttingConcerns.Auditing))
-				{
-					await args.ProceedAsync();
-					return;
-				}
-
-				if (!auditingHelper.Object.ShouldSaveAudit((MethodInfo)args.Method))
-				{
-					await args.ProceedAsync();
-					return;
-				}
-
-				var auditInfo = auditingHelper.Object.CreateAuditInfo(args.Instance.GetType(), (MethodInfo)args.Method, args.Arguments.ToArray());
-
-				var stopwatch = Stopwatch.StartNew();
-
-				try
-				{
-					await args.ProceedAsync();
-				}
-				catch (Exception ex)
-				{
-					auditInfo.Exception = ex;
-					throw;
-				}
-				finally
-				{
-					stopwatch.Stop();
-					auditInfo.ExecutionDuration = Convert.ToInt32(stopwatch.Elapsed.TotalMilliseconds);
-
-					if (auditingConfiguration.Object.SaveReturnValues && args.ReturnValue != null)
-					{
-						auditInfo.ReturnValue = auditSerializer.Object.Serialize(args.ReturnValue);
-					}
-
-					await auditingHelper.Object.SaveAsync(auditInfo);
-				}
+				await auditingHelper.SaveAsync(auditInfo);
 			}
 		}
 

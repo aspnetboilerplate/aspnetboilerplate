@@ -1,5 +1,7 @@
-﻿using PostSharp.Aspects;
+﻿using Abp.Dependency;
+using PostSharp.Aspects;
 using PostSharp.Aspects.Advices;
+using PostSharp.Aspects.Dependencies;
 using PostSharp.Extensibility;
 using PostSharp.Reflection;
 using PostSharp.Serialization;
@@ -11,6 +13,7 @@ using System.Threading.Tasks;
 
 namespace Abp.EntityHistory
 {
+	[AspectTypeDependency(AspectDependencyAction.Order, AspectDependencyPosition.After, typeof(Abp.Auditing.AuditingAspect))]
 	[AttributeUsage(AttributeTargets.Assembly | AttributeTargets.Class | AttributeTargets.Struct | AttributeTargets.Method | AttributeTargets.Interface, AllowMultiple = true)]
 	[MulticastAttributeUsage(MulticastTargets.Method, Inheritance = MulticastInheritance.Multicast, AllowExternalAssemblies = true)]
 	[PSerializable]
@@ -24,15 +27,25 @@ namespace Abp.EntityHistory
 		[ImportMember("ReasonProvider", IsRequired = true)]
 		public Property<IEntityChangeSetReasonProvider> ReasonProviderProperty;
 
+		[IntroduceMember(Visibility = Visibility.Public, OverrideAction = MemberOverrideAction.Ignore)]
+		[NotMapped]
+		[CopyCustomAttributes(typeof(NotMappedAttribute))]
+		public IPostSharpOptions PostSharpOptions { get; set; }
+
+		[ImportMember("PostSharpOptions", IsRequired = false)]
+		public Property<IPostSharpOptions> PostSharpOptionsProperty;
+
 		public override void OnInvoke(MethodInterceptionArgs args)
 		{
-			var reasonProvider = ReasonProviderProperty.Get();
+			IPostSharpOptions postSharpOptions = PostSharpOptionsProperty?.Get();
 
-			if (reasonProvider == null)
+			if (postSharpOptions == null || !postSharpOptions.EnablePostSharp)
 			{
 				args.Proceed();
 				return;
 			}
+
+			var reasonProvider = ReasonProviderProperty.Get();
 
 			var methodInfo = (MethodInfo)args.Method;
 			var useCaseAttribute = methodInfo.GetCustomAttributes(true).OfType<UseCaseAttribute>().FirstOrDefault()
@@ -52,13 +65,15 @@ namespace Abp.EntityHistory
 
 		public override async Task OnInvokeAsync(MethodInterceptionArgs args)
 		{
-			var reasonProvider = ReasonProviderProperty.Get();
+			IPostSharpOptions postSharpOptions = PostSharpOptionsProperty?.Get();
 
-			if (reasonProvider == null)
+			if (postSharpOptions == null || !postSharpOptions.EnablePostSharp)
 			{
 				await args.ProceedAsync();
 				return;
 			}
+
+			var reasonProvider = ReasonProviderProperty.Get();
 
 			var methodInfo = (MethodInfo)args.Method;
 			var useCaseAttribute = methodInfo.GetCustomAttributes(true).OfType<UseCaseAttribute>().FirstOrDefault()

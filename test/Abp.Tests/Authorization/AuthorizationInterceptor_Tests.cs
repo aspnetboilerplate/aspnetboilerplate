@@ -27,6 +27,7 @@ namespace Abp.Tests.Authorization
                 Component.For<IFeatureChecker>().Instance(Substitute.For<IFeatureChecker>())
                 );
 
+            LocalIocManager.Register<IPostSharpOptions, PostSharpOptions>();
             LocalIocManager.Register<IAuthorizationConfiguration, AuthorizationConfiguration>();
             LocalIocManager.Register<IMultiTenancyConfig, MultiTenancyConfig>();
             LocalIocManager.Register<IAuthorizationHelper, AuthorizationHelper>(DependencyLifeStyle.Transient);
@@ -58,6 +59,9 @@ namespace Abp.Tests.Authorization
 
             _syncObjForProtectedMethod = LocalIocManager.Resolve<MyTestClassToBeAllowProtected_Sync>();
             _asyncObjForProtectedMethod = LocalIocManager.Resolve<MyTestClassToBeAllowProtected_Async>();
+
+            var postSharpOptions = LocalIocManager.Resolve<IPostSharpOptions>();
+            postSharpOptions.EnablePostSharp = true;
         }
 
         [Fact]

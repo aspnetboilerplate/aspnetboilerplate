@@ -40,6 +40,7 @@ namespace Abp
 
         private AbpModuleManager _moduleManager;
         private ILogger _logger;
+        private bool _enablePostSharp;
 
         /// <summary>
         /// Creates a new <see cref="AbpBootstrapper"/> instance.
@@ -64,6 +65,8 @@ namespace Abp
             PlugInSources = options.PlugInSources;
 
             _logger = NullLogger.Instance;
+
+            _enablePostSharp = !options.DisableAllInterceptors;
         }
 
         /// <summary>
@@ -98,6 +101,12 @@ namespace Abp
             {
                 RegisterBootstrapper();
                 IocManager.IocContainer.Install(new AbpCoreInstaller());
+
+                if (_enablePostSharp)
+                {
+                    IPostSharpOptions postSharpOptions = IocManager.Resolve<IPostSharpOptions>();
+                    postSharpOptions.EnablePostSharp = true;
+                }
 
                 IocManager.Resolve<AbpPlugInManager>().PlugInSources.AddRange(PlugInSources);
                 IocManager.Resolve<AbpStartupConfiguration>().Initialize();

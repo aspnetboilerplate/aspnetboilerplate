@@ -2,6 +2,7 @@
 using Abp.Dependency;
 using PostSharp.Aspects;
 using PostSharp.Aspects.Advices;
+using PostSharp.Aspects.Dependencies;
 using PostSharp.Extensibility;
 using PostSharp.Reflection;
 using PostSharp.Serialization;
@@ -11,6 +12,8 @@ using System.Threading.Tasks;
 
 namespace Abp.Runtime.Validation.Interception
 {
+	[AspectTypeDependency(AspectDependencyAction.Order, AspectDependencyPosition.After, typeof(Abp.Authorization.AuthorizationAspect))]
+	[AspectTypeDependency(AspectDependencyAction.Order, AspectDependencyPosition.Before, typeof(Abp.Auditing.AuditingAspect))]
 	[AttributeUsage(AttributeTargets.Assembly | AttributeTargets.Class | AttributeTargets.Struct | AttributeTargets.Method | AttributeTargets.Interface, AllowMultiple = true)]
 	[MulticastAttributeUsage(MulticastTargets.Method, Inheritance = MulticastInheritance.Multicast, AllowExternalAssemblies = true)]
 	[PSerializable]
@@ -19,10 +22,18 @@ namespace Abp.Runtime.Validation.Interception
 		[IntroduceMember(Visibility = Visibility.Public, OverrideAction = MemberOverrideAction.Ignore)]
 		[NotMapped]
 		[CopyCustomAttributes(typeof(NotMappedAttribute))]
-		public IIocManager IocManager { get; set; }
+		public IIocResolver IocResolver { get; set; }
 
-		[ImportMember("IocManager", IsRequired = true)]
-		public Property<IIocManager> IocManagerProperty;
+		[ImportMember("IocResolver", IsRequired = true)]
+		public Property<IIocResolver> IocResolverProperty;
+
+		[IntroduceMember(Visibility = Visibility.Public, OverrideAction = MemberOverrideAction.Ignore)]
+		[NotMapped]
+		[CopyCustomAttributes(typeof(NotMappedAttribute))]
+		public IPostSharpOptions PostSharpOptions { get; set; }
+
+		[ImportMember("PostSharpOptions", IsRequired = false)]
+		public Property<IPostSharpOptions> PostSharpOptionsProperty;
 
 		public ValidationAspect()
 		{
@@ -30,27 +41,23 @@ namespace Abp.Runtime.Validation.Interception
 
 		public override void OnInvoke(MethodInterceptionArgs args)
 		{
+			IPostSharpOptions postSharpOptions = PostSharpOptionsProperty?.Get();
+
+			if (postSharpOptions == null || !postSharpOptions.EnablePostSharp)
+			{
+				args.Proceed();
+				return;
+			}
+
 			if (AbpCrossCuttingConcerns.IsApplied(args.Instance, AbpCrossCuttingConcerns.Validation))
 			{
 				args.Proceed();
 				return;
 			}
 
-			var iocManager = IocManagerProperty.Get();
+			IIocResolver iocResolver = IocResolverProperty.Get();
 
-			if (iocManager == null)
-			{
-				args.Proceed();
-				return;
-			}
-
-			if (!iocManager.IsRegistered<MethodInvocationValidator>())
-			{
-				args.Proceed();
-				return;
-			}
-
-			using (var validator = iocManager.ResolveAsDisposable<MethodInvocationValidator>())
+			using (var validator = iocResolver.ResolveAsDisposable<MethodInvocationValidator>())
 			{
 				validator.Object.Initialize((System.Reflection.MethodInfo)args.Method, args.Arguments.ToArray());
 				validator.Object.Validate();
@@ -61,27 +68,23 @@ namespace Abp.Runtime.Validation.Interception
 
 		public override async Task OnInvokeAsync(MethodInterceptionArgs args)
 		{
+			IPostSharpOptions postSharpOptions = PostSharpOptionsProperty?.Get();
+
+			if (postSharpOptions == null || !postSharpOptions.EnablePostSharp)
+			{
+				await args.ProceedAsync();
+				return;
+			}
+
 			if (AbpCrossCuttingConcerns.IsApplied(args.Instance, AbpCrossCuttingConcerns.Validation))
 			{
 				await args.ProceedAsync();
 				return;
 			}
 
-			var iocManager = IocManagerProperty.Get();
+			IIocResolver iocResolver = IocResolverProperty.Get();
 
-			if (iocManager == null)
-			{
-				await args.ProceedAsync();
-				return;
-			}
-
-			if (!iocManager.IsRegistered<MethodInvocationValidator>())
-			{
-				await args.ProceedAsync();
-				return;
-			}
-
-			using (var validator = iocManager.ResolveAsDisposable<MethodInvocationValidator>())
+			using (var validator = iocResolver.ResolveAsDisposable<MethodInvocationValidator>())
 			{
 				validator.Object.Initialize((System.Reflection.MethodInfo)args.Method, args.Arguments.ToArray());
 				validator.Object.Validate();
