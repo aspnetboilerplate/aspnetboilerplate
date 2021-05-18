@@ -259,17 +259,7 @@ namespace Abp.AspNetCore.Mvc.Conventions
             {
                 if (!selector.ActionConstraints.OfType<HttpMethodActionConstraint>().Any())
                 {
-                    var httpMethod = selector.ActionConstraints
-                        .OfType<HttpMethodActionConstraint>()
-                        .FirstOrDefault()?
-                        .HttpMethods?
-                        .FirstOrDefault();
-
-                    if (httpMethod == null)
-                    {
-                        httpMethod = SelectHttpMethod(action, configuration);
-                    }
-
+                    var httpMethod = SelectHttpMethod(action, configuration);
                     selector.ActionConstraints.Add(new HttpMethodActionConstraint(new[] { httpMethod }));
                 }
 
