@@ -21,6 +21,7 @@ namespace Abp.Domain.Uow
             {
                 var implementationType = handler.ComponentModel.Implementation.GetTypeInfo();
 
+                // TODO: This might cause double interception ???
                 HandleTypesWithUnitOfWorkAttribute(implementationType, handler);
                 HandleConventionalUnitOfWorkTypes(iocManager, implementationType, handler);
             };
