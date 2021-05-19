@@ -6,10 +6,12 @@ using Abp.AspNetCore.Mvc.Auditing;
 using Abp.AspNetCore.Mvc.Caching;
 using Abp.AspNetCore.Runtime.Session;
 using Abp.AspNetCore.Security.AntiForgery;
+using Abp.AspNetCore.Uow;
 using Abp.AspNetCore.Webhook;
 using Abp.Auditing;
 using Abp.Configuration.Startup;
 using Abp.Dependency;
+using Abp.Domain.Uow;
 using Abp.Modules;
 using Abp.Reflection.Extensions;
 using Abp.Runtime.Session;
@@ -36,6 +38,7 @@ namespace Abp.AspNetCore
             Configuration.ReplaceService<IAbpAntiForgeryManager, AbpAspNetCoreAntiForgeryManager>(DependencyLifeStyle.Transient);
             Configuration.ReplaceService<IClientInfoProvider, HttpContextClientInfoProvider>(DependencyLifeStyle.Transient);
             Configuration.ReplaceService<IWebhookSender, AspNetCoreWebhookSender>(DependencyLifeStyle.Transient);
+            Configuration.ReplaceService<IUnitOfWorkDefaultOptions, AbpAspNetCoreUnitOfWorkDefaultOptions>();
             IocManager.Register<IGetScriptsResponsePerUserConfiguration, GetScriptsResponsePerUserConfiguration>();
             
             Configuration.Modules.AbpAspNetCore().FormBodyBindingIgnoredTypes.Add(typeof(IFormFile));

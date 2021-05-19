@@ -70,10 +70,7 @@ namespace Abp
 
             _logger = NullLogger.Instance;
 
-            if (!options.DisableAllInterceptors)
-            {
-                AddInterceptorRegistrars();
-            }
+            AddInterceptorRegistrars(options.InterceptorOptions);
         }
 
         /// <summary>
@@ -97,13 +94,32 @@ namespace Abp
             return new AbpBootstrapper(startupModule, optionsAction);
         }
 
-        private void AddInterceptorRegistrars()
+        private void AddInterceptorRegistrars(AbpBootstrapperInterceptorOptions options)
         {
-            ValidationInterceptorRegistrar.Initialize(IocManager);
-            AuditingInterceptorRegistrar.Initialize(IocManager);
-            EntityHistoryInterceptorRegistrar.Initialize(IocManager);
-            UnitOfWorkRegistrar.Initialize(IocManager);
-            AuthorizationInterceptorRegistrar.Initialize(IocManager);
+            if (!options.DisableValidationInterceptor)
+            {
+                ValidationInterceptorRegistrar.Initialize(IocManager);    
+            }
+
+            if (!options.DisableAuditingInterceptor)
+            {
+                AuditingInterceptorRegistrar.Initialize(IocManager);
+            }
+
+            if (!options.DisableEntityHistoryInterceptor)
+            {
+                EntityHistoryInterceptorRegistrar.Initialize(IocManager);    
+            }
+
+            if (!options.DisableUnitOfWorkInterceptor)
+            {
+                UnitOfWorkRegistrar.Initialize(IocManager);    
+            }
+
+            if (!options.DisableAuthorizationInterceptor)
+            {
+                AuthorizationInterceptorRegistrar.Initialize(IocManager);   
+            }
         }
 
         /// <summary>

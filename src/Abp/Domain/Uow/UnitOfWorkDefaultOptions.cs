@@ -32,7 +32,7 @@ namespace Abp.Domain.Uow
         
         private readonly List<AuditFieldConfiguration> _auditFieldConfiguration;
 
-        public List<Func<Type, bool>> ConventionalUowSelectors { get; }
+        public List<Func<Type, bool>> ConventionalUowSelectors { get; protected set; }
 
         public UnitOfWorkDefaultOptions()
         {
