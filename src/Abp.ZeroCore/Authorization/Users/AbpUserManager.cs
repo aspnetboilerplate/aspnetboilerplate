@@ -623,24 +623,6 @@ namespace Abp.Authorization.Users
             return IdentityResult.Success;
         }
 
-        // Microsoft.AspNetCore.Identity doesn't have a sync version of FindByName(...), FindByEmail(...)
-        //public virtual IdentityResult CheckDuplicateUsernameOrEmailAddress(long? expectedUserId, string userName, string emailAddress)
-        //{
-        //    var user = (FindByName(userName));
-        //    if (user != null && user.Id != expectedUserId)
-        //    {
-        //        throw new UserFriendlyException(string.Format(L("Identity.DuplicateUserName"), userName));
-        //    }
-
-        //    user = (FindByEmail(emailAddress));
-        //    if (user != null && user.Id != expectedUserId)
-        //    {
-        //        throw new UserFriendlyException(string.Format(L("Identity.DuplicateEmail"), emailAddress));
-        //    }
-
-        //    return IdentityResult.Success;
-        //}
-
         public virtual async Task<IdentityResult> SetRolesAsync(TUser user, string[] roleNames)
         {
             await AbpUserStore.UserRepository.EnsureCollectionLoadedAsync(user, u => u.Roles);
@@ -814,40 +796,44 @@ namespace Abp.Authorization.Users
             }
         }
 
-        [UnitOfWork]
         public virtual async Task SetOrganizationUnitsAsync(TUser user, params long[] organizationUnitIds)
         {
-            if (organizationUnitIds == null)
+            using (var uow = _unitOfWorkManager.Begin())
             {
-                organizationUnitIds = new long[0];
-            }
-
-            await CheckMaxUserOrganizationUnitMembershipCountAsync(user.TenantId, organizationUnitIds.Length);
-
-            var currentOus = await GetOrganizationUnitsAsync(user);
-
-            //Remove from removed OUs
-            foreach (var currentOu in currentOus)
-            {
-                if (!organizationUnitIds.Contains(currentOu.Id))
+                if (organizationUnitIds == null)
                 {
-                    await RemoveFromOrganizationUnitAsync(user, currentOu);
+                    organizationUnitIds = new long[0];
                 }
-            }
 
-            await _unitOfWorkManager.Current.SaveChangesAsync();
+                await CheckMaxUserOrganizationUnitMembershipCountAsync(user.TenantId, organizationUnitIds.Length);
 
-            //Add to added OUs
-            foreach (var organizationUnitId in organizationUnitIds)
-            {
-                if (currentOus.All(ou => ou.Id != organizationUnitId))
+                var currentOus = await GetOrganizationUnitsAsync(user);
+
+                //Remove from removed OUs
+                foreach (var currentOu in currentOus)
                 {
-                    await AddToOrganizationUnitAsync(
-                        user,
-                        await _organizationUnitRepository.GetAsync(organizationUnitId)
+                    if (!organizationUnitIds.Contains(currentOu.Id))
+                    {
+                        await RemoveFromOrganizationUnitAsync(user, currentOu);
+                    }
+                }
+
+                await _unitOfWorkManager.Current.SaveChangesAsync();
+
+                //Add to added OUs
+                foreach (var organizationUnitId in organizationUnitIds)
+                {
+                    if (currentOus.All(ou => ou.Id != organizationUnitId))
+                    {
+                        await AddToOrganizationUnitAsync(
+                            user,
+                            await _organizationUnitRepository.GetAsync(organizationUnitId)
                         );
+                    }
                 }
-            }
+
+                await uow.CompleteAsync();
+            }    
         }
 
         public virtual void SetOrganizationUnits(TUser user, params long[] organizationUnitIds)
@@ -883,73 +869,94 @@ namespace Abp.Authorization.Users
             }
         }
 
-        [UnitOfWork]
-        public virtual Task<List<OrganizationUnit>> GetOrganizationUnitsAsync(TUser user)
+        
+        public virtual async Task<List<OrganizationUnit>> GetOrganizationUnitsAsync(TUser user)
         {
-            var query = from uou in _userOrganizationUnitRepository.GetAll()
-                        join ou in _organizationUnitRepository.GetAll() on uou.OrganizationUnitId equals ou.Id
-                        where uou.UserId == user.Id
-                        select ou;
+            using (var uow = _unitOfWorkManager.Begin())
+            {
+                var query = from uou in _userOrganizationUnitRepository.GetAll()
+                    join ou in _organizationUnitRepository.GetAll() on uou.OrganizationUnitId equals ou.Id
+                    where uou.UserId == user.Id
+                    select ou;
 
-            return Task.FromResult(query.ToList());
+                await uow.CompleteAsync();
+                
+                return query.ToList();
+            }
         }
 
-        [UnitOfWork]
         public virtual List<OrganizationUnit> GetOrganizationUnits(TUser user)
         {
-            var query = from uou in _userOrganizationUnitRepository.GetAll()
-                        join ou in _organizationUnitRepository.GetAll() on uou.OrganizationUnitId equals ou.Id
-                        where uou.UserId == user.Id
-                        select ou;
+            using (var uow = _unitOfWorkManager.Begin())
+            {
+                var query = from uou in _userOrganizationUnitRepository.GetAll()
+                    join ou in _organizationUnitRepository.GetAll() on uou.OrganizationUnitId equals ou.Id
+                    where uou.UserId == user.Id
+                    select ou;
 
-            return query.ToList();
+                uow.Complete();
+
+                return query.ToList();
+            }
         }
 
-        [UnitOfWork]
-        public virtual Task<List<TUser>> GetUsersInOrganizationUnitAsync(OrganizationUnit organizationUnit, bool includeChildren = false)
+        public virtual async Task<List<TUser>> GetUsersInOrganizationUnitAsync(OrganizationUnit organizationUnit, bool includeChildren = false)
         {
-            if (!includeChildren)
+            using (var uow = _unitOfWorkManager.Begin())
             {
-                var query = from uou in _userOrganizationUnitRepository.GetAll()
-                            join user in Users on uou.UserId equals user.Id
-                            where uou.OrganizationUnitId == organizationUnit.Id
-                            select user;
+                if (!includeChildren)
+                {
+                    var query = from uou in _userOrganizationUnitRepository.GetAll()
+                        join user in Users on uou.UserId equals user.Id
+                        where uou.OrganizationUnitId == organizationUnit.Id
+                        select user;
 
-                return Task.FromResult(query.ToList());
-            }
-            else
-            {
-                var query = from uou in _userOrganizationUnitRepository.GetAll()
-                            join user in Users on uou.UserId equals user.Id
-                            join ou in _organizationUnitRepository.GetAll() on uou.OrganizationUnitId equals ou.Id
-                            where ou.Code.StartsWith(organizationUnit.Code)
-                            select user;
+                    await uow.CompleteAsync();
+                    
+                    return query.ToList();
+                }
+                else
+                {
+                    var query = from uou in _userOrganizationUnitRepository.GetAll()
+                        join user in Users on uou.UserId equals user.Id
+                        join ou in _organizationUnitRepository.GetAll() on uou.OrganizationUnitId equals ou.Id
+                        where ou.Code.StartsWith(organizationUnit.Code)
+                        select user;
 
-                return Task.FromResult(query.ToList());
+                    await uow.CompleteAsync();
+                    
+                    return query.ToList();
+                }
             }
         }
 
-        [UnitOfWork]
         public virtual List<TUser> GetUsersInOrganizationUnit(OrganizationUnit organizationUnit, bool includeChildren = false)
         {
-            if (!includeChildren)
+            using (var uow = _unitOfWorkManager.Begin())
             {
-                var query = from uou in _userOrganizationUnitRepository.GetAll()
-                            join user in Users on uou.UserId equals user.Id
-                            where uou.OrganizationUnitId == organizationUnit.Id
-                            select user;
+                if (!includeChildren)
+                {
+                    var query = from uou in _userOrganizationUnitRepository.GetAll()
+                        join user in Users on uou.UserId equals user.Id
+                        where uou.OrganizationUnitId == organizationUnit.Id
+                        select user;
 
-                return query.ToList();
-            }
-            else
-            {
-                var query = from uou in _userOrganizationUnitRepository.GetAll()
-                            join user in Users on uou.UserId equals user.Id
-                            join ou in _organizationUnitRepository.GetAll() on uou.OrganizationUnitId equals ou.Id
-                            where ou.Code.StartsWith(organizationUnit.Code)
-                            select user;
+                    uow.Complete();
+                    
+                    return query.ToList();
+                }
+                else
+                {
+                    var query = from uou in _userOrganizationUnitRepository.GetAll()
+                        join user in Users on uou.UserId equals user.Id
+                        join ou in _organizationUnitRepository.GetAll() on uou.OrganizationUnitId equals ou.Id
+                        where ou.Code.StartsWith(organizationUnit.Code)
+                        select user;
 
-                return query.ToList();
+                    uow.Complete();
+                    
+                    return query.ToList();
+                }
             }
         }
 

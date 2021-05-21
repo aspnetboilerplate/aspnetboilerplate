@@ -5,14 +5,13 @@ using Abp.AspNetCore.Configuration;
 using Abp.AspNetCore.MultiTenancy;
 using Abp.AspNetCore.Mvc.Auditing;
 using Abp.AspNetCore.Mvc.Caching;
-using Abp.AspNetCore.Mvc.Validation;
 using Abp.AspNetCore.Runtime.Session;
 using Abp.AspNetCore.Security.AntiForgery;
-using Abp.AspNetCore.Uow;
 using Abp.AspNetCore.Webhook;
 using Abp.Auditing;
 using Abp.Configuration.Startup;
 using Abp.Dependency;
+using Abp.Domain.Repositories;
 using Abp.Domain.Uow;
 using Abp.Modules;
 using Abp.Reflection.Extensions;
@@ -41,9 +40,6 @@ namespace Abp.AspNetCore
             Configuration.ReplaceService<IAbpAntiForgeryManager, AbpAspNetCoreAntiForgeryManager>(DependencyLifeStyle.Transient);
             Configuration.ReplaceService<IClientInfoProvider, HttpContextClientInfoProvider>(DependencyLifeStyle.Transient);
             Configuration.ReplaceService<IWebhookSender, AspNetCoreWebhookSender>(DependencyLifeStyle.Transient);
-            Configuration.ReplaceService<IUnitOfWorkDefaultOptions, AbpAspNetCoreUnitOfWorkDefaultOptions>();
-            Configuration.ReplaceService<IAbpValidationDefaultOptions, AbpAspNetCoreValidationDefaultOptions>();
-            Configuration.ReplaceService<IAbpAuditingDefaultOptions, AbpAspNetCoreAuditingDefaultOptions>();
             
             IocManager.Register<IGetScriptsResponsePerUserConfiguration, GetScriptsResponsePerUserConfiguration>();
             

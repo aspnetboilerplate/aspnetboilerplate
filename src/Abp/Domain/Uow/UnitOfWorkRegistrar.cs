@@ -22,6 +22,7 @@ namespace Abp.Domain.Uow
                 var implementationType = handler.ComponentModel.Implementation.GetTypeInfo();
 
                 // TODO: This might cause double interception ???
+
                 HandleTypesWithUnitOfWorkAttribute(implementationType, handler);
                 HandleConventionalUnitOfWorkTypes(iocManager, implementationType, handler);
             };
@@ -31,11 +32,14 @@ namespace Abp.Domain.Uow
         {
             if (IsUnitOfWorkType(implementationType) || AnyMethodHasUnitOfWork(implementationType))
             {
-                handler.ComponentModel.Interceptors.Add(new InterceptorReference(typeof(AbpAsyncDeterminationInterceptor<UnitOfWorkInterceptor>)));
+                handler.ComponentModel.Interceptors.Add(
+                    new InterceptorReference(typeof(AbpAsyncDeterminationInterceptor<UnitOfWorkInterceptor>))
+                );
             }
         }
 
-        private static void HandleConventionalUnitOfWorkTypes(IIocManager iocManager, TypeInfo implementationType, IHandler handler)
+        private static void HandleConventionalUnitOfWorkTypes(IIocManager iocManager, TypeInfo implementationType,
+            IHandler handler)
         {
             if (!iocManager.IsRegistered<IUnitOfWorkDefaultOptions>())
             {
@@ -46,7 +50,9 @@ namespace Abp.Domain.Uow
 
             if (uowOptions.IsConventionalUowClass(implementationType.AsType()))
             {
-                handler.ComponentModel.Interceptors.Add(new InterceptorReference(typeof(AbpAsyncDeterminationInterceptor<UnitOfWorkInterceptor>)));
+                handler.ComponentModel.Interceptors.Add(
+                    new InterceptorReference(typeof(AbpAsyncDeterminationInterceptor<UnitOfWorkInterceptor>))
+                );
             }
         }
 

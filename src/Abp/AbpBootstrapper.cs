@@ -51,7 +51,9 @@ namespace Abp
         /// </summary>
         /// <param name="startupModule">Startup module of the application which depends on other used modules. Should be derived from <see cref="AbpModule"/>.</param>
         /// <param name="optionsAction">An action to set options</param>
-        private AbpBootstrapper([NotNull] Type startupModule, [CanBeNull] Action<AbpBootstrapperOptions> optionsAction = null)
+        private AbpBootstrapper(
+            [NotNull] Type startupModule, 
+            [CanBeNull] Action<AbpBootstrapperOptions> optionsAction = null)
         {
             Check.NotNull(startupModule, nameof(startupModule));
 
@@ -69,7 +71,7 @@ namespace Abp
             PlugInSources = options.PlugInSources;
 
             _logger = NullLogger.Instance;
-
+            
             AddInterceptorRegistrars(options.InterceptorOptions);
         }
 
@@ -78,7 +80,8 @@ namespace Abp
         /// </summary>
         /// <typeparam name="TStartupModule">Startup module of the application which depends on other used modules. Should be derived from <see cref="AbpModule"/>.</typeparam>
         /// <param name="optionsAction">An action to set options</param>
-        public static AbpBootstrapper Create<TStartupModule>([CanBeNull] Action<AbpBootstrapperOptions> optionsAction = null)
+        public static AbpBootstrapper Create<TStartupModule>(
+            [CanBeNull] Action<AbpBootstrapperOptions> optionsAction = null)
             where TStartupModule : AbpModule
         {
             return new AbpBootstrapper(typeof(TStartupModule), optionsAction);
@@ -89,12 +92,15 @@ namespace Abp
         /// </summary>
         /// <param name="startupModule">Startup module of the application which depends on other used modules. Should be derived from <see cref="AbpModule"/>.</param>
         /// <param name="optionsAction">An action to set options</param>
-        public static AbpBootstrapper Create([NotNull] Type startupModule, [CanBeNull] Action<AbpBootstrapperOptions> optionsAction = null)
+        public static AbpBootstrapper Create(
+            [NotNull] Type startupModule, 
+            [CanBeNull] Action<AbpBootstrapperOptions> optionsAction = null)
         {
             return new AbpBootstrapper(startupModule, optionsAction);
         }
 
-        private void AddInterceptorRegistrars(AbpBootstrapperInterceptorOptions options)
+        private void AddInterceptorRegistrars(
+            AbpBootstrapperInterceptorOptions options)
         {
             if (!options.DisableValidationInterceptor)
             {
@@ -113,7 +119,7 @@ namespace Abp
 
             if (!options.DisableUnitOfWorkInterceptor)
             {
-                UnitOfWorkRegistrar.Initialize(IocManager);    
+                UnitOfWorkRegistrar.Initialize(IocManager);
             }
 
             if (!options.DisableAuthorizationInterceptor)
@@ -162,7 +168,7 @@ namespace Abp
             {
                 IocManager.IocContainer.Register(
                     Component.For<AbpBootstrapper>().Instance(this)
-                    );
+                );
             }
         }
 
