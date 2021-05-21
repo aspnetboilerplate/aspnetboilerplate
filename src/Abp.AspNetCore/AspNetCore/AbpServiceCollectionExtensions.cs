@@ -12,6 +12,7 @@ using Microsoft.Extensions.DependencyInjection.Extensions;
 using Abp.AspNetCore.Mvc.Providers;
 using Abp.AspNetCore.Webhook;
 using Abp.Auditing;
+using Abp.Domain.Repositories;
 using Abp.Domain.Uow;
 using Abp.Json;
 using Abp.Modules;
@@ -67,7 +68,11 @@ namespace Abp.AspNetCore
 
         private static void RemoveConventionalInterceptionSelectors()
         {
-            UnitOfWorkDefaultOptions.ConventionalUowSelectorList = new List<Func<Type, bool>>();
+            UnitOfWorkDefaultOptions.ConventionalUowSelectorList  = new List<Func<Type, bool>>
+            {
+                type => typeof(IRepository).IsAssignableFrom(type)
+            };
+            
             AbpAuditingDefaultOptions.ConventionalAuditingSelectorList = new List<Func<Type, bool>>();
             AbpValidationDefaultOptions.ConventionalValidationSelectorList = new List<Func<Type, bool>>();
         }
