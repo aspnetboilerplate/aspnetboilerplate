@@ -657,43 +657,7 @@ namespace Abp.Authorization.Users
 
             return IdentityResult.Success;
         }
-
-        // Microsoft.AspNetCore.Identity doesn't have a sync version of FindById(...), RemoveFromRole(...), GetRoleByName(...), AddToRole(...)
-        //public virtual IdentityResult SetRoles(TUser user, string[] roleNames)
-        //{
-        //    AbpUserStore.UserRepository.EnsureCollectionLoaded(user, u => u.Roles);
-
-        //    //Remove from removed roles
-        //    foreach (var userRole in user.Roles.ToList())
-        //    {
-        //        var role = RoleManager.FindById(userRole.RoleId.ToString());
-        //        if (roleNames.All(roleName => role.Name != roleName))
-        //        {
-        //            var result = RemoveFromRole(user, role.Name);
-        //            if (!result.Succeeded)
-        //            {
-        //                return result;
-        //            }
-        //        }
-        //    }
-
-        //    //Add to added roles
-        //    foreach (var roleName in roleNames)
-        //    {
-        //        var role = RoleManager.GetRoleByName(roleName);
-        //        if (user.Roles.All(ur => ur.RoleId != role.Id))
-        //        {
-        //            var result = AddToRole(user, roleName);
-        //            if (!result.Succeeded)
-        //            {
-        //                return result;
-        //            }
-        //        }
-        //    }
-
-        //    return IdentityResult.Success;
-        //}
-
+        
         public virtual async Task<bool> IsInOrganizationUnitAsync(long userId, long ouId)
         {
             return await IsInOrganizationUnitAsync(
