@@ -1,10 +1,15 @@
 ﻿using System;
 using System.Reflection;
+using Abp.Auditing;
+using Abp.Authorization;
 using Abp.Configuration.Startup;
 using Abp.Dependency;
 using Abp.Dependency.Installers;
+using Abp.Domain.Uow;
+using Abp.EntityHistory;
 using Abp.Modules;
 using Abp.PlugIns;
+using Abp.Runtime.Validation.Interception;
 using Castle.Core.Logging;
 using Castle.MicroKernel.Registration;
 using JetBrains.Annotations;
@@ -88,6 +93,21 @@ namespace Abp
         public static AbpBootstrapper Create([NotNull] Type startupModule, [CanBeNull] Action<AbpBootstrapperOptions> optionsAction = null)
         {
             return new AbpBootstrapper(startupModule, optionsAction);
+        }
+
+        private void AddInterceptorRegistrars()
+        {
+            var modules = AbpModule.FindDependedModuleTypesRecursivelyIncludingGivenModule(StartupModule);
+
+            if (StartupModule.Name != "AbpPostSharpModule"
+                && modules.FindIndex(m => m.Name == "AbpPostSharpModule") == -1)
+            {
+                ValidationInterceptorRegistrar.Initialize(IocManager);
+                AuditingInterceptorRegistrar.Initialize(IocManager);
+                EntityHistoryInterceptorRegistrar.Initialize(IocManager);
+                UnitOfWorkRegistrar.Initialize(IocManager);
+                AuthorizationInterceptorRegistrar.Initialize(IocManager);
+            }
         }
 
         /// <summary>
