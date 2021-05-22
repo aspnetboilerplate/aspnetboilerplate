@@ -77,7 +77,7 @@ namespace Abp.EntityFrameworkCore.Dapper.Tests.Tests
                     uow.Complete();
                 }
             }
-            catch (Exception exception)
+            catch (Exception)
             {
                 //no handling.
             }
@@ -126,7 +126,7 @@ namespace Abp.EntityFrameworkCore.Dapper.Tests.Tests
                     await uow.CompleteAsync();
                 }
             }
-            catch (Exception exception)
+            catch (Exception)
             {
                 //no handling.
             }
