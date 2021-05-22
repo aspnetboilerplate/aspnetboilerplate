@@ -21,6 +21,9 @@ namespace Abp.Tests.Localization.Json
 
             _bootstrapper = AbpBootstrapper.Create<MyLangModule>(options =>
             {
+                // TODO: Add some way of making this configurable
+                options.EnablePostSharp = true;
+
                 options.IocManager = LocalIocManager;
             });
 

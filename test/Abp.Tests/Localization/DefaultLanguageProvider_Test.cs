@@ -14,6 +14,9 @@ namespace Abp.Tests.Localization
             LocalIocManager.Register<ILanguageProvider, DefaultLanguageProvider>();
             var bootstrapper = AbpBootstrapper.Create<DefaultLanguageProviderLangModule>(options =>
             {
+                // TODO: Add some way of making this configurable
+                options.EnablePostSharp = true;
+
                 options.IocManager = LocalIocManager;
             });
 

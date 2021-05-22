@@ -12,6 +12,9 @@ namespace Abp.Tests.Startup
         {
             _bootstrapper = AbpBootstrapper.Create<MyTestModule>(options =>
             {
+                // TODO: Add some way of making this configurable
+                options.EnablePostSharp = true;
+
                 options.IocManager = LocalIocManager;
             });
         }

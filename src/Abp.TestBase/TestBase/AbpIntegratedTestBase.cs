@@ -33,6 +33,9 @@ namespace Abp.TestBase
 
             AbpBootstrapper = AbpBootstrapper.Create<TStartupModule>(options =>
             {
+                // TODO: Add some way of making this configurable
+                options.EnablePostSharp = true;
+
                 options.IocManager = LocalIocManager;
             });
 

@@ -71,7 +71,12 @@ namespace Abp
 
             _logger = NullLogger.Instance;
 
-            _enablePostSharp = !options.DisableAllInterceptors;
+            _enablePostSharp = options.EnablePostSharp && !options.DisableAllInterceptors;
+
+            if (!options.DisableAllInterceptors && !options.EnablePostSharp)
+            {
+                AddInterceptorRegistrars();
+            }
         }
 
         /// <summary>

@@ -11,6 +11,11 @@ namespace Abp
         public bool DisableAllInterceptors { get; set; }
 
         /// <summary>
+        /// Used to replace DynamicProxy interceptors with PostSharp aspects. Requires a PostSharp license.
+        /// </summary>
+        public bool EnablePostSharp { get; set; }
+
+        /// <summary>
         /// IIocManager that is used to bootstrap the ABP system. If set to null, uses global <see cref="Abp.Dependency.IocManager.Instance"/>
         /// </summary>
         public IIocManager IocManager { get; set; }
