@@ -30,9 +30,7 @@ namespace Abp.Authorization.Users
         IUserClaimStore<TUser, long>,
         IUserSecurityStampStore<TUser, long>,
         IUserTwoFactorStore<TUser, long>,
-
         ITransientDependency
-
         where TRole : AbpRole<TUser>
         where TUser : AbpUser<TUser>
     {
@@ -145,7 +143,8 @@ namespace Abp.Authorization.Users
             var normalizedUserNameOrEmailAddress = NormalizeKey(userNameOrEmailAddress);
 
             return await _userRepository.FirstOrDefaultAsync(
-                user => (user.NormalizedUserName == normalizedUserNameOrEmailAddress || user.NormalizedEmailAddress == normalizedUserNameOrEmailAddress)
+                user => (user.NormalizedUserName == normalizedUserNameOrEmailAddress ||
+                         user.NormalizedEmailAddress == normalizedUserNameOrEmailAddress)
             );
         }
 
@@ -155,13 +154,21 @@ namespace Abp.Authorization.Users
         /// <param name="tenantId">Tenant Id</param>
         /// <param name="userNameOrEmailAddress">User name or email address</param>
         /// <returns>User or null</returns>
-        [UnitOfWork]
         public virtual async Task<TUser> FindByNameOrEmailAsync(int? tenantId, string userNameOrEmailAddress)
         {
-            using (_unitOfWorkManager.Current.SetTenantId(tenantId))
+            TUser user;
+
+            using (var uow = _unitOfWorkManager.Begin())
             {
-                return await FindByNameOrEmailAsync(userNameOrEmailAddress);
+                using (_unitOfWorkManager.Current.SetTenantId(tenantId))
+                {
+                    user = await FindByNameOrEmailAsync(userNameOrEmailAddress);
+                }
+
+                await uow.CompleteAsync();
             }
+
+            return user;
         }
 
         #endregion
@@ -256,15 +263,22 @@ namespace Abp.Authorization.Users
             return await _userRepository.FirstOrDefaultAsync(u => u.Id == userLogin.UserId);
         }
 
-        [UnitOfWork]
-        public virtual Task<List<TUser>> FindAllAsync(UserLoginInfo login)
+        public virtual async Task<List<TUser>> FindAllAsync(UserLoginInfo login)
         {
-            var query = from userLogin in _userLoginRepository.GetAll()
-                        join user in _userRepository.GetAll() on userLogin.UserId equals user.Id
-                        where userLogin.LoginProvider == login.LoginProvider && userLogin.ProviderKey == login.ProviderKey
-                        select user;
+            List<TUser> users;
+            
+            using (var uow = _unitOfWorkManager.Begin())
+            {
+                var query = from userLogin in _userLoginRepository.GetAll()
+                    join user in _userRepository.GetAll() on userLogin.UserId equals user.Id
+                    where userLogin.LoginProvider == login.LoginProvider && userLogin.ProviderKey == login.ProviderKey
+                    select user;
 
-            return Task.FromResult(query.ToList());
+                users = query.ToList();
+                await uow.CompleteAsync();
+            }
+
+            return users;
         }
 
         public virtual Task<TUser> FindAsync(int? tenantId, UserLoginInfo login)
@@ -272,9 +286,9 @@ namespace Abp.Authorization.Users
             using (_unitOfWorkManager.Current.SetTenantId(tenantId))
             {
                 var query = from userLogin in _userLoginRepository.GetAll()
-                            join user in _userRepository.GetAll() on userLogin.UserId equals user.Id
-                            where userLogin.LoginProvider == login.LoginProvider && userLogin.ProviderKey == login.ProviderKey
-                            select user;
+                    join user in _userRepository.GetAll() on userLogin.UserId equals user.Id
+                    where userLogin.LoginProvider == login.LoginProvider && userLogin.ProviderKey == login.ProviderKey
+                    select user;
 
                 return Task.FromResult(query.FirstOrDefault());
             }
@@ -293,7 +307,8 @@ namespace Abp.Authorization.Users
         public virtual async Task RemoveFromRoleAsync(TUser user, string roleName)
         {
             var role = await GetRoleByNameAsync(roleName);
-            var userRole = await _userRoleRepository.FirstOrDefaultAsync(ur => ur.UserId == user.Id && ur.RoleId == role.Id);
+            var userRole =
+                await _userRoleRepository.FirstOrDefaultAsync(ur => ur.UserId == user.Id && ur.RoleId == role.Id);
             if (userRole == null)
             {
                 return;
@@ -306,9 +321,9 @@ namespace Abp.Authorization.Users
         public virtual async Task<IList<string>> GetRolesAsync(TUser user)
         {
             var userRoles = await AsyncQueryableExecuter.ToListAsync(from userRole in _userRoleRepository.GetAll()
-                                                                     join role in _roleRepository.GetAll() on userRole.RoleId equals role.Id
-                                                                     where userRole.UserId == user.Id
-                                                                     select role.Name);
+                join role in _roleRepository.GetAll() on userRole.RoleId equals role.Id
+                where userRole.UserId == user.Id
+                select role.Name);
 
             var userOrganizationUnitRoles = await AsyncQueryableExecuter.ToListAsync(
                 from userOu in _userOrganizationUnitRepository.GetAll()
@@ -332,7 +347,7 @@ namespace Abp.Authorization.Users
                 join role in _roleRepository.GetAll() on userRole.RoleId equals role.Id
                 where userRole.UserId == userId
                 select role.Name
-                ).ToList();
+            ).ToList();
 
             var userOrganizationUnitRoles = (
                 from userOu in _userOrganizationUnitRepository.GetAll()
@@ -341,7 +356,7 @@ namespace Abp.Authorization.Users
                 join userOuRoles in _roleRepository.GetAll() on roleOu.RoleId equals userOuRoles.Id
                 where userOu.UserId == userId
                 select userOuRoles.Name
-                ).ToList();
+            ).ToList();
 
             return userRoles.Union(userOrganizationUnitRoles).ToList();
         }
@@ -424,19 +439,19 @@ namespace Abp.Authorization.Users
         public virtual async Task<bool> HasPermissionAsync(long userId, PermissionGrantInfo permissionGrant)
         {
             return await _userPermissionSettingRepository.FirstOrDefaultAsync(
-                       p => p.UserId == userId &&
-                            p.Name == permissionGrant.Name &&
-                            p.IsGranted == permissionGrant.IsGranted
-                   ) != null;
+                p => p.UserId == userId &&
+                     p.Name == permissionGrant.Name &&
+                     p.IsGranted == permissionGrant.IsGranted
+            ) != null;
         }
 
         public virtual bool HasPermission(long userId, PermissionGrantInfo permissionGrant)
         {
             return _userPermissionSettingRepository.FirstOrDefault(
-                       p => p.UserId == userId &&
-                            p.Name == permissionGrant.Name &&
-                            p.IsGranted == permissionGrant.IsGranted
-                   ) != null;
+                p => p.UserId == userId &&
+                     p.Name == permissionGrant.Name &&
+                     p.IsGranted == permissionGrant.IsGranted
+            ) != null;
         }
 
         public virtual async Task RemoveAllPermissionSettingsAsync(TUser user)
@@ -464,7 +479,7 @@ namespace Abp.Authorization.Users
 
         public DateTimeOffset GetLockoutEndDate(TUser user)
         {
-            return 
+            return
                 user.LockoutEndDateUtc.HasValue
                     ? new DateTimeOffset(DateTime.SpecifyKind(user.LockoutEndDateUtc.Value, DateTimeKind.Utc))
                     : new DateTimeOffset();
