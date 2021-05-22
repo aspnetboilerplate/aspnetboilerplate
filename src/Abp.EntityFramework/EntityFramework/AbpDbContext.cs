@@ -203,8 +203,10 @@ namespace Abp.EntityFramework
         {
             modelBuilder.Filter(AbpDataFilters.SoftDelete, (ISoftDelete d) => d.IsDeleted, false);
             modelBuilder.Filter(AbpDataFilters.MustHaveTenant,
-                (IMustHaveTenant t, int tenantId) => t.TenantId == tenantId || (int?) t.TenantId == null,
-                0); //While "(int?)t.TenantId == null" seems wrong, it's needed. See https://github.com/jcachat/EntityFramework.DynamicFilters/issues/62#issuecomment-208198058
+#pragma warning disable CS0472 // The result of the expression is always the same since a value of this type is never equal to 'null'
+				(IMustHaveTenant t, int tenantId) => t.TenantId == tenantId || (int?) t.TenantId == null,
+#pragma warning restore CS0472 // While "(int?)t.TenantId == null" seems wrong, it's needed. See https://github.com/jcachat/EntityFramework.DynamicFilters/issues/62#issuecomment-208198058
+                0); 
             modelBuilder.Filter(AbpDataFilters.MayHaveTenant,
                 (IMayHaveTenant t, int? tenantId) => t.TenantId == tenantId, 0);
         }

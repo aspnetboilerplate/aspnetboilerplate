@@ -123,7 +123,8 @@ namespace Abp.EntityFrameworkCore.Dapper.Tests.Tests
 
                     throw new Exception("uow rollback");
 
-                    await uow.CompleteAsync();
+                    // Unreachable code.
+                    // await uow.CompleteAsync();
                 }
             }
             catch (Exception)
