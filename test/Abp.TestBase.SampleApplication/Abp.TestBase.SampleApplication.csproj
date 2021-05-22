@@ -21,7 +21,9 @@
   </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Include="PostSharp" Version="6.9.5" />
+    <PackageReference Include="PostSharp" Version="6.9.5">
+      <PrivateAssets>All</PrivateAssets>
+    </PackageReference>
   </ItemGroup>
 
   <ItemGroup>

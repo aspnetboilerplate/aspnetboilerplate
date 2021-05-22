@@ -30,9 +30,11 @@
     <ProjectReference Include="..\Abp.ZeroCore.SampleApp\Abp.ZeroCore.SampleApp.csproj" />
   </ItemGroup>
 
-  <ItemGroup>
-    <PackageReference Include="PostSharp" Version="6.9.5" />
-  </ItemGroup>
+	<ItemGroup>
+		<PackageReference Include="PostSharp" Version="6.9.5">
+			<PrivateAssets>All</PrivateAssets>
+		</PackageReference>
+	</ItemGroup>
 
   <ItemGroup>
     <PackageReference Include="Microsoft.Data.Sqlite" Version="5.0.3" />
