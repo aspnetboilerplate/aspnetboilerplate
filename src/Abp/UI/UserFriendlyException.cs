@@ -11,6 +11,11 @@ namespace Abp.UI
     public class UserFriendlyException : AbpException, IHasLogSeverity, IHasErrorCode
     {
         /// <summary>
+        /// Default log severity
+        /// </summary>
+        public static LogSeverity DefaultLogSeverity = LogSeverity.Warn;
+        
+        /// <summary>
         /// Additional information about the exception.
         /// </summary>
         public string Details { get; private set; }
@@ -31,7 +36,7 @@ namespace Abp.UI
         /// </summary>
         public UserFriendlyException()
         {
-            Severity = LogSeverity.Warn;
+            Severity = DefaultLogSeverity;
         }
 
         /// <summary>
@@ -50,7 +55,7 @@ namespace Abp.UI
         public UserFriendlyException(string message)
             : base(message)
         {
-            Severity = LogSeverity.Warn;
+            Severity = DefaultLogSeverity;
         }
 
         /// <summary>
@@ -106,7 +111,7 @@ namespace Abp.UI
         public UserFriendlyException(string message, Exception innerException)
             : base(message, innerException)
         {
-            Severity = LogSeverity.Warn;
+            Severity = DefaultLogSeverity;
         }
 
         /// <summary>
