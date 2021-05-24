@@ -4,6 +4,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using Abp.Configuration;
 using Abp.Configuration.Startup;
+using Abp.Domain.Uow;
 using Abp.MultiTenancy;
 using Abp.Runtime.Caching.Configuration;
 using Abp.Runtime.Caching.Memory;
@@ -11,6 +12,7 @@ using Abp.Runtime.Remoting;
 using Abp.Runtime.Session;
 using Abp.TestBase.Runtime.Session;
 using Abp.Tests.MultiTenancy;
+using Castle.MicroKernel.Registration;
 using NSubstitute;
 using Shouldly;
 using Xunit;
@@ -42,7 +44,8 @@ namespace Abp.Tests.Configuration
                 {
                     IsEnabled = multiTenancyIsEnabled
                 }, new TestTenantStore(),
-                new SettingEncryptionService(new SettingsConfiguration()));
+                new SettingEncryptionService(new SettingsConfiguration()),
+                Substitute.For<IUnitOfWorkManager>());
         }
 
         [Fact]
