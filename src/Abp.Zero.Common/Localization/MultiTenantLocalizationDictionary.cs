@@ -172,16 +172,24 @@ namespace Abp.Localization
         {
             return MultiTenantLocalizationDictionaryCacheHelper.CalculateCacheKey(tenantId, _sourceName, CultureInfo.Name);
         }
-
-        [UnitOfWork]
+        
         protected virtual Dictionary<string, string> GetAllValuesFromDatabase(int? tenantId)
         {
-            using (_unitOfWorkManager.Current.SetTenantId(tenantId))
+            Dictionary<string, string> result;
+            
+            using (var uow = _unitOfWorkManager.Begin())
             {
-                return _customLocalizationRepository
-                    .GetAllList(l => l.Source == _sourceName && l.LanguageName == CultureInfo.Name)
-                    .ToDictionary(l => l.Key, l => l.Value);
+                using (_unitOfWorkManager.Current.SetTenantId(tenantId))
+                {
+                    result = _customLocalizationRepository
+                        .GetAllList(l => l.Source == _sourceName && l.LanguageName == CultureInfo.Name)
+                        .ToDictionary(l => l.Key, l => l.Value);
+                }
+                
+                uow.Complete();
             }
+
+            return result;
         }
     }
 }

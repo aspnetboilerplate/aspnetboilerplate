@@ -14,10 +14,14 @@ namespace Abp.BackgroundJobs
     public class BackgroundJobStore : IBackgroundJobStore, ITransientDependency
     {
         private readonly IRepository<BackgroundJobInfo, long> _backgroundJobRepository;
+        private readonly IUnitOfWorkManager _unitOfWorkManager;
 
-        public BackgroundJobStore(IRepository<BackgroundJobInfo, long> backgroundJobRepository)
+        public BackgroundJobStore(
+            IRepository<BackgroundJobInfo, long> backgroundJobRepository,
+            IUnitOfWorkManager unitOfWorkManager)
         {
             _backgroundJobRepository = backgroundJobRepository;
+            _unitOfWorkManager = unitOfWorkManager;
         }
 
         public Task<BackgroundJobInfo> GetAsync(long jobId)
@@ -40,32 +44,46 @@ namespace Abp.BackgroundJobs
             _backgroundJobRepository.Insert(jobInfo);
         }
 
-        [UnitOfWork]
-        public virtual Task<List<BackgroundJobInfo>> GetWaitingJobsAsync(int maxResultCount)
+        public virtual async Task<List<BackgroundJobInfo>> GetWaitingJobsAsync(int maxResultCount)
         {
-            var waitingJobs = _backgroundJobRepository.GetAll()
-                .Where(t => !t.IsAbandoned && t.NextTryTime <= Clock.Now)
-                .OrderByDescending(t => t.Priority)
-                .ThenBy(t => t.TryCount)
-                .ThenBy(t => t.NextTryTime)
-                .Take(maxResultCount)
-                .ToList();
+            List<BackgroundJobInfo> result;
 
-            return Task.FromResult(waitingJobs);
+            using (var uow = _unitOfWorkManager.Begin())
+            {
+                var waitingJobs = _backgroundJobRepository.GetAll()
+                    .Where(t => !t.IsAbandoned && t.NextTryTime <= Clock.Now)
+                    .OrderByDescending(t => t.Priority)
+                    .ThenBy(t => t.TryCount)
+                    .ThenBy(t => t.NextTryTime)
+                    .Take(maxResultCount)
+                    .ToList();
+
+                result = waitingJobs;
+                await uow.CompleteAsync();
+            }
+
+            return result;
         }
 
-        [UnitOfWork]
         public virtual List<BackgroundJobInfo> GetWaitingJobs(int maxResultCount)
         {
-            var waitingJobs = _backgroundJobRepository.GetAll()
-                .Where(t => !t.IsAbandoned && t.NextTryTime <= Clock.Now)
-                .OrderByDescending(t => t.Priority)
-                .ThenBy(t => t.TryCount)
-                .ThenBy(t => t.NextTryTime)
-                .Take(maxResultCount)
-                .ToList();
+            List<BackgroundJobInfo> result;
 
-            return waitingJobs;
+            using (var uow = _unitOfWorkManager.Begin())
+            {
+                var waitingJobs = _backgroundJobRepository.GetAll()
+                    .Where(t => !t.IsAbandoned && t.NextTryTime <= Clock.Now)
+                    .OrderByDescending(t => t.Priority)
+                    .ThenBy(t => t.TryCount)
+                    .ThenBy(t => t.NextTryTime)
+                    .Take(maxResultCount)
+                    .ToList();
+
+                result = waitingJobs;
+                uow.Complete();
+            }
+
+            return result;
         }
 
         public Task DeleteAsync(BackgroundJobInfo jobInfo)

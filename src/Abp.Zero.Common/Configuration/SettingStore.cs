@@ -26,169 +26,239 @@ namespace Abp.Configuration
             _unitOfWorkManager = unitOfWorkManager;
         }
 
-        [UnitOfWork]
         public virtual async Task<List<SettingInfo>> GetAllListAsync(int? tenantId, long? userId)
         {
             /* Combined SetTenantId and DisableFilter for backward compatibility.
              * SetTenantId switches database (for tenant) if needed.
              * DisableFilter and Where condition ensures to work even if tenantId is null for single db approach.
              */
-            using (_unitOfWorkManager.Current.SetTenantId(tenantId))
+
+            List<SettingInfo> result;
+
+            using (var uow = _unitOfWorkManager.Begin())
             {
-                using (_unitOfWorkManager.Current.DisableFilter(AbpDataFilters.MayHaveTenant))
+                using (_unitOfWorkManager.Current.SetTenantId(tenantId))
                 {
-                    return
-                        (await _settingRepository.GetAllListAsync(s => s.UserId == userId && s.TenantId == tenantId))
-                        .Select(s => s.ToSettingInfo())
-                        .ToList();
+                    using (_unitOfWorkManager.Current.DisableFilter(AbpDataFilters.MayHaveTenant))
+                    {
+                        var settingList = await _settingRepository.GetAllListAsync(s =>
+                            s.UserId == userId && s.TenantId == tenantId
+                        );
+
+                        result = settingList
+                            .Select(s => s.ToSettingInfo())
+                            .ToList();
+                    }
                 }
+
+                await uow.CompleteAsync();
             }
+
+            return result;
         }
 
-        [UnitOfWork]
         public virtual List<SettingInfo> GetAllList(int? tenantId, long? userId)
         {
             /* Combined SetTenantId and DisableFilter for backward compatibility.
              * SetTenantId switches database (for tenant) if needed.
              * DisableFilter and Where condition ensures to work even if tenantId is null for single db approach.
              */
-            using (_unitOfWorkManager.Current.SetTenantId(tenantId))
+
+            List<SettingInfo> result;
+
+            using (var uow = _unitOfWorkManager.Begin())
             {
-                using (_unitOfWorkManager.Current.DisableFilter(AbpDataFilters.MayHaveTenant))
+                using (_unitOfWorkManager.Current.SetTenantId(tenantId))
                 {
-                    return
-                        (_settingRepository.GetAllList(s => s.UserId == userId && s.TenantId == tenantId))
-                        .Select(s => s.ToSettingInfo())
-                        .ToList();
+                    using (_unitOfWorkManager.Current.DisableFilter(AbpDataFilters.MayHaveTenant))
+                    {
+                        result = _settingRepository.GetAllList(s =>
+                                s.UserId == userId && s.TenantId == tenantId
+                            )
+                            .Select(s => s.ToSettingInfo())
+                            .ToList();
+                    }
                 }
+
+                uow.Complete();
             }
+
+            return result;
         }
 
-        [UnitOfWork]
         public virtual async Task<SettingInfo> GetSettingOrNullAsync(int? tenantId, long? userId, string name)
         {
-            using (_unitOfWorkManager.Current.SetTenantId(tenantId))
+            SettingInfo result;
+
+            using (var uow = _unitOfWorkManager.Begin())
             {
-                using (_unitOfWorkManager.Current.DisableFilter(AbpDataFilters.MayHaveTenant))
+                using (_unitOfWorkManager.Current.SetTenantId(tenantId))
                 {
-                    return (await _settingRepository.FirstOrDefaultAsync(s => s.UserId == userId && s.Name == name && s.TenantId == tenantId))
-                    .ToSettingInfo();
+                    using (_unitOfWorkManager.Current.DisableFilter(AbpDataFilters.MayHaveTenant))
+                    {
+                        var settingInfo = await _settingRepository.FirstOrDefaultAsync(s =>
+                            s.UserId == userId && s.Name == name && s.TenantId == tenantId
+                        );
+
+                        result = settingInfo.ToSettingInfo();
+                    }
                 }
+
+                await uow.CompleteAsync();
             }
+
+            return result;
         }
 
-        [UnitOfWork]
         public virtual SettingInfo GetSettingOrNull(int? tenantId, long? userId, string name)
         {
-            using (_unitOfWorkManager.Current.SetTenantId(tenantId))
+            SettingInfo result;
+
+            using (var uow = _unitOfWorkManager.Begin())
             {
-                using (_unitOfWorkManager.Current.DisableFilter(AbpDataFilters.MayHaveTenant))
+                using (_unitOfWorkManager.Current.SetTenantId(tenantId))
                 {
-                    return (_settingRepository.FirstOrDefault(s => s.UserId == userId && s.Name == name && s.TenantId == tenantId))
-                    .ToSettingInfo();
+                    using (_unitOfWorkManager.Current.DisableFilter(AbpDataFilters.MayHaveTenant))
+                    {
+                        result = _settingRepository.FirstOrDefault(s =>
+                            s.UserId == userId && s.Name == name && s.TenantId == tenantId
+                        ).ToSettingInfo();
+                    }
                 }
+                
+                uow.Complete();
             }
+
+            return result;
         }
 
-        [UnitOfWork]
         public virtual async Task DeleteAsync(SettingInfo settingInfo)
         {
-            using (_unitOfWorkManager.Current.SetTenantId(settingInfo.TenantId))
+            using (var uow = _unitOfWorkManager.Begin())
             {
-                using (_unitOfWorkManager.Current.DisableFilter(AbpDataFilters.MayHaveTenant))
+                using (_unitOfWorkManager.Current.SetTenantId(settingInfo.TenantId))
                 {
-                    await _settingRepository.DeleteAsync(
-                    s => s.UserId == settingInfo.UserId && s.Name == settingInfo.Name && s.TenantId == settingInfo.TenantId
-                    );
-                    await _unitOfWorkManager.Current.SaveChangesAsync();
+                    using (_unitOfWorkManager.Current.DisableFilter(AbpDataFilters.MayHaveTenant))
+                    {
+                        await _settingRepository.DeleteAsync(
+                            s => s.UserId == settingInfo.UserId && s.Name == settingInfo.Name &&
+                                 s.TenantId == settingInfo.TenantId
+                        );
+                        
+                        await _unitOfWorkManager.Current.SaveChangesAsync();
+                    }
                 }
+
+                await uow.CompleteAsync();
             }
         }
 
-        [UnitOfWork]
         public virtual void Delete(SettingInfo settingInfo)
         {
-            using (_unitOfWorkManager.Current.SetTenantId(settingInfo.TenantId))
+            using (var uow = _unitOfWorkManager.Begin())
             {
-                using (_unitOfWorkManager.Current.DisableFilter(AbpDataFilters.MayHaveTenant))
+                using (_unitOfWorkManager.Current.SetTenantId(settingInfo.TenantId))
                 {
-                    _settingRepository.Delete(
-                    s => s.UserId == settingInfo.UserId && s.Name == settingInfo.Name && s.TenantId == settingInfo.TenantId
-                    );
-                    _unitOfWorkManager.Current.SaveChanges();
+                    using (_unitOfWorkManager.Current.DisableFilter(AbpDataFilters.MayHaveTenant))
+                    {
+                        _settingRepository.Delete(
+                            s => s.UserId == settingInfo.UserId && s.Name == settingInfo.Name &&
+                                 s.TenantId == settingInfo.TenantId
+                        );
+                    
+                        _unitOfWorkManager.Current.SaveChanges();
+                    }
                 }
+                
+                uow.Complete();
             }
         }
 
-        [UnitOfWork]
         public virtual async Task CreateAsync(SettingInfo settingInfo)
         {
-            using (_unitOfWorkManager.Current.SetTenantId(settingInfo.TenantId))
+            using (var uow = _unitOfWorkManager.Begin())
             {
-                using (_unitOfWorkManager.Current.DisableFilter(AbpDataFilters.MayHaveTenant))
+                using (_unitOfWorkManager.Current.SetTenantId(settingInfo.TenantId))
                 {
-                    await _settingRepository.InsertAsync(settingInfo.ToSetting());
-                    await _unitOfWorkManager.Current.SaveChangesAsync();
+                    using (_unitOfWorkManager.Current.DisableFilter(AbpDataFilters.MayHaveTenant))
+                    {
+                        await _settingRepository.InsertAsync(settingInfo.ToSetting());
+                        await _unitOfWorkManager.Current.SaveChangesAsync();
+                    }
                 }
+
+                await uow.CompleteAsync();
             }
         }
 
-        [UnitOfWork]
         public virtual void Create(SettingInfo settingInfo)
         {
-            using (_unitOfWorkManager.Current.SetTenantId(settingInfo.TenantId))
+            using (var uow = _unitOfWorkManager.Begin())
             {
-                using (_unitOfWorkManager.Current.DisableFilter(AbpDataFilters.MayHaveTenant))
+                using (_unitOfWorkManager.Current.SetTenantId(settingInfo.TenantId))
                 {
-                    _settingRepository.Insert(settingInfo.ToSetting());
-                    _unitOfWorkManager.Current.SaveChanges();
+                    using (_unitOfWorkManager.Current.DisableFilter(AbpDataFilters.MayHaveTenant))
+                    {
+                        _settingRepository.Insert(settingInfo.ToSetting());
+                        _unitOfWorkManager.Current.SaveChanges();
+                    }
                 }
+
+                uow.Complete();
             }
         }
 
-        [UnitOfWork]
         public virtual async Task UpdateAsync(SettingInfo settingInfo)
         {
-            using (_unitOfWorkManager.Current.SetTenantId(settingInfo.TenantId))
+            using (var uow = _unitOfWorkManager.Begin())
             {
-                using (_unitOfWorkManager.Current.DisableFilter(AbpDataFilters.MayHaveTenant))
+                using (_unitOfWorkManager.Current.SetTenantId(settingInfo.TenantId))
                 {
-                    var setting = await _settingRepository.FirstOrDefaultAsync(
-                        s => s.TenantId == settingInfo.TenantId &&
-                             s.UserId == settingInfo.UserId &&
-                             s.Name == settingInfo.Name
+                    using (_unitOfWorkManager.Current.DisableFilter(AbpDataFilters.MayHaveTenant))
+                    {
+                        var setting = await _settingRepository.FirstOrDefaultAsync(
+                            s => s.TenantId == settingInfo.TenantId &&
+                                 s.UserId == settingInfo.UserId &&
+                                 s.Name == settingInfo.Name
                         );
 
-                    if (setting != null)
-                    {
-                        setting.Value = settingInfo.Value;
-                    }
+                        if (setting != null)
+                        {
+                            setting.Value = settingInfo.Value;
+                        }
 
-                    await _unitOfWorkManager.Current.SaveChangesAsync();
+                        await _unitOfWorkManager.Current.SaveChangesAsync();
+                    }
                 }
+                
+                await uow.CompleteAsync();
             }
         }
 
-        [UnitOfWork]
         public virtual void Update(SettingInfo settingInfo)
         {
-            using (_unitOfWorkManager.Current.SetTenantId(settingInfo.TenantId))
+            using (var uow = _unitOfWorkManager.Begin())
             {
-                using (_unitOfWorkManager.Current.DisableFilter(AbpDataFilters.MayHaveTenant))
+                using (_unitOfWorkManager.Current.SetTenantId(settingInfo.TenantId))
                 {
-                    var setting = _settingRepository.FirstOrDefault(
-                        s => s.TenantId == settingInfo.TenantId &&
-                             s.UserId == settingInfo.UserId &&
-                             s.Name == settingInfo.Name
+                    using (_unitOfWorkManager.Current.DisableFilter(AbpDataFilters.MayHaveTenant))
+                    {
+                        var setting = _settingRepository.FirstOrDefault(
+                            s => s.TenantId == settingInfo.TenantId &&
+                                 s.UserId == settingInfo.UserId &&
+                                 s.Name == settingInfo.Name
                         );
 
-                    if (setting != null)
-                    {
-                        setting.Value = settingInfo.Value;
-                    }
+                        if (setting != null)
+                        {
+                            setting.Value = settingInfo.Value;
+                        }
 
-                    _unitOfWorkManager.Current.SaveChanges();
+                        _unitOfWorkManager.Current.SaveChanges();
+                    }
                 }
+                
+                uow.Complete();
             }
         }
     }
