@@ -11,6 +11,11 @@ namespace Abp.Authorization
     public class AbpAuthorizationException : AbpException, IHasLogSeverity
     {
         /// <summary>
+        /// Default log severity
+        /// </summary>
+        public static LogSeverity DefaultLogSeverity = LogSeverity.Warn;
+        
+        /// <summary>
         /// Severity of the exception.
         /// Default: Warn.
         /// </summary>
@@ -21,7 +26,7 @@ namespace Abp.Authorization
         /// </summary>
         public AbpAuthorizationException()
         {
-            Severity = LogSeverity.Warn;
+            Severity = DefaultLogSeverity;
         }
 
         /// <summary>
@@ -40,7 +45,7 @@ namespace Abp.Authorization
         public AbpAuthorizationException(string message)
             : base(message)
         {
-            Severity = LogSeverity.Warn;
+            Severity = DefaultLogSeverity;
         }
 
         /// <summary>
@@ -51,7 +56,7 @@ namespace Abp.Authorization
         public AbpAuthorizationException(string message, Exception innerException)
             : base(message, innerException)
         {
-            Severity = LogSeverity.Warn;
+            Severity = DefaultLogSeverity;
         }
     }
 }

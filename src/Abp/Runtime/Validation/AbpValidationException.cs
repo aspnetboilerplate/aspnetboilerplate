@@ -13,6 +13,11 @@ namespace Abp.Runtime.Validation
     public class AbpValidationException : AbpException, IHasLogSeverity
     {
         /// <summary>
+        /// Default log severity
+        /// </summary>
+        public static LogSeverity DefaultLogSeverity = LogSeverity.Warn;
+        
+        /// <summary>
         /// Detailed list of validation errors for this exception.
         /// </summary>
         public IList<ValidationResult> ValidationErrors { get; set; }
@@ -29,7 +34,7 @@ namespace Abp.Runtime.Validation
         public AbpValidationException()
         {
             ValidationErrors = new List<ValidationResult>();
-            Severity = LogSeverity.Warn;
+            Severity = DefaultLogSeverity;
         }
 
         /// <summary>
@@ -39,7 +44,7 @@ namespace Abp.Runtime.Validation
             : base(serializationInfo, context)
         {
             ValidationErrors = new List<ValidationResult>();
-            Severity = LogSeverity.Warn;
+            Severity = DefaultLogSeverity;
         }
 
         /// <summary>
@@ -50,7 +55,7 @@ namespace Abp.Runtime.Validation
             : base(message)
         {
             ValidationErrors = new List<ValidationResult>();
-            Severity = LogSeverity.Warn;
+            Severity = DefaultLogSeverity;
         }
 
         /// <summary>
@@ -62,7 +67,7 @@ namespace Abp.Runtime.Validation
             : base(message)
         {
             ValidationErrors = validationErrors;
-            Severity = LogSeverity.Warn;
+            Severity = DefaultLogSeverity;
         }
 
         /// <summary>
@@ -74,7 +79,7 @@ namespace Abp.Runtime.Validation
             : base(message, innerException)
         {
             ValidationErrors = new List<ValidationResult>();
-            Severity = LogSeverity.Warn;
+            Severity = DefaultLogSeverity;
         }
     }
 }
