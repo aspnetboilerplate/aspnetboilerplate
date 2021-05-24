@@ -1,9 +1,98 @@
-﻿# ASP.NET Boilerplate
+﻿# ASP.NET Boilerplate (PostSharp Edition)
 
-[![Build Status](http://ci.volosoft.com:5480/job/aspnet-boilerplate-nightly/badge/icon)](http://ci.volosoft.com:5480/blue/organizations/jenkins/aspnet-boilerplate-nightly/activity)
-[![NuGet](https://img.shields.io/nuget/v/Abp.svg?style=flat-square)](https://www.nuget.org/packages/Abp)
-[![MyGet (with prereleases)](https://img.shields.io/myget/abp-nightly/vpre/Abp.svg?style=flat-square)](https://aspnetboilerplate.com/Pages/Documents/Nightly-Builds)
-[![NuGet Download](https://img.shields.io/nuget/dt/Abp.svg?style=flat-square)](https://www.nuget.org/packages/Abp)
+[![NuGet](https://img.shields.io/nuget/v/Emisand.Abp.PostSharp.svg?style=flat-square)](https://www.nuget.org/packages/Emisand.Abp.PostSharp)
+[![NuGet Download](https://img.shields.io/nuget/dt/Emisand.Abp.PostSharp.svg?style=flat-square)](https://www.nuget.org/packages/Emisand.Abp.PostSharp)
+
+## About this fork
+
+This fork adds [PostSharp](https://www.postsharp.net/) aspects to ASP.NET Boilerplate, replacing the Castle DynamicProxy interceptors for added performance.
+
+In order to use this fork with PostSharp, please refer to the next section.
+
+For anything else, refer to the original [ASP.NET Boilerplate repository](https://github.com/aspnetboilerplate/aspnetboilerplate), and the original [ASP.NET Boilerplate Documentation](https://aspnetboilerplate.com/Pages/Documents)
+
+## How to use this fork?
+
+#### 1. Get a PostSharp license
+First of all, you will need a PostSharp community or a PostSharp framework license, [read this](https://www.postsharp.net/pricing) to learn more about their licensing program.
+Please note that the community license is limited to 1000 enhanced lines of code, but you can try their ultimate license for free for 45 days to verify if this solution is good for you.
+
+#### 2. Replace Abp packages with Emisand.Abp.PostSharp
+Assuming that you already have a solution that uses ASP.NET Boilerplate, you will have to replace all your *Abp.\** package references to *Emisand.Abp.PostSharp.\**, this replaces all the original Abp packages with PostSharp enhanced packages.
+
+#### 3. Install the PostSharp NuGet package
+You will also have to add a reference to the PostSharp package too all of your projects that implement `IApplicationService`, `IRepository` or any of their derived classes, or use any of the following attributes: `AbpAuthorize`, `Audited`, `RequiresFeature`, `UnitOfWork` or `UseCase`.
+
+If you have a *.props* files included at all of your solution projects, like the *common.props* file included in the ASP.NET Zero solution, then just add the following package reference to the props file so it looks like this:
+```XML
+<Project>
+    <ItemGroup>
+        <PackageReference Include="PostSharp" Version="6.9.5">
+            <PrivateAssets>All</PrivateAssets>
+        </PackageReference>
+    </ItemGroup>
+</Project>
+
+```
+
+#### 4. Add a PostSharp config file to your solution
+Then, you will have to add a PostSharp configuration file named *postsharp.config* to the root folder of your solution (same folder as your .sln files) with the following contents, replacing *YOUR_LICENSE_CODE* with your own PostSharp license:
+
+```XML
+<?xml version="1.0" encoding="utf-8"?>
+<Project xmlns="http://schemas.postsharp.org/1.0/configuration">
+	<License Value="YOUR_LICENSE_CODE" />
+	<Multicast>
+		<AuthorizationAspectProvider xmlns="clr-namespace:Abp.Authorization;assembly:Abp" />
+		<AuditingAspectProvider xmlns="clr-namespace:Abp.Auditing;assembly:Abp" />
+		<EntityHistoryAspectProvider xmlns="clr-namespace:Abp.EntityHistory;assembly:Abp" />
+		<UnitOfWorkAspectProvider xmlns="clr-namespace:Abp.Domain.Uow;assembly:Abp" />
+		<ValidationAspectProvider xmlns="clr-namespace:Abp.Runtime.Validation.Interception;assembly:Abp" />
+	</Multicast>
+</Project>
+```
+
+#### 5. Enable PostSharp when Initializing Abp in your web projects
+Finally, you have to find the `AddAbp()` call in your Startup class and add a line to the *options* lambda like this: `options.EnablePostSharp = true;`
+
+Example:
+
+```C#
+public class Startup
+{
+    public IServiceProvider ConfigureServices(IServiceCollection services)
+    {
+        //...
+
+        //Configure Abp and Dependency Injection. Should be called last.
+        return services.AddAbp<MyProjectWebModule>(options =>
+        {
+            // Enable PostSharp
+            options.EnablePostSharp = true;
+            
+            //Configure Log4Net logging (optional)
+            options.IocManager.IocContainer.AddFacility<LoggingFacility>(
+                f => f.UseLog4Net().WithConfig("log4net.config")
+            );
+        });
+    }
+
+    public void Configure(IApplicationBuilder app, IHostingEnvironment env, ILoggerFactory loggerFactory)
+    {
+        //Initializes ABP framework and all modules. Should be called first.
+        app.UseAbp();
+
+        //...
+    }
+}
+```
+#### 6. Build your solution
+Once all of this has been done and you **rebuild** your solution, PostSharp aspects will be applied to your code at compilation.
+
+#### Notes:
+If you do not add the `options.EnablePostSharp = true;` to your Startup class, then Abp will use the default Castle DynamicProxy interceptors and not use any of the implemented PostSharp aspects.
+
+# Original ABP Readme
 
 ## What is ABP?
 
@@ -39,42 +128,6 @@ ABP provides a layered architectural model based on **Domain Driven Design** and
 
 See the <a href="https://aspnetboilerplate.com/Pages/Documents/NLayer-Architecture" target="_blank">NLayer Architecture</a> document for more details.
 
-## Nuget Packages
-
-ASP.NET Boilerplate is distributed as NuGet packages.
-
-|Package|Status|
-|:------|:-----:|
-|Abp|[![NuGet version](https://badge.fury.io/nu/Abp.svg)](https://badge.fury.io/nu/Abp)|
-|Abp.AspNetCore|[![NuGet version](https://badge.fury.io/nu/Abp.AspNetCore.svg)](https://badge.fury.io/nu/Abp.AspNetCore)|
-|Abp.Web.Common|[![NuGet version](https://badge.fury.io/nu/Abp.Web.Common.svg)](https://badge.fury.io/nu/Abp.Web.Common)|
-|Abp.Web|[![NuGet version](https://badge.fury.io/nu/Abp.Web.svg)](https://badge.fury.io/nu/Abp.Web)|
-|Abp.Web.Mvc|[![NuGet version](https://badge.fury.io/nu/Abp.Web.Mvc.svg)](https://badge.fury.io/nu/Abp.Web.Mvc)|
-|Abp.Web.Api|[![NuGet version](https://badge.fury.io/nu/Abp.Web.Api.svg)](https://badge.fury.io/nu/Abp.Web.Api)|
-|Abp.Web.Api.OData|[![NuGet version](https://badge.fury.io/nu/Abp.eb.Api.OData.svg)](https://badge.fury.io/nu/Abp.Web.Api.OData)|
-|Abp.Web.Resources|[![NuGet version](https://badge.fury.io/nu/Abp.Web.Resources.svg)](https://badge.fury.io/nu/Abp.Web.Resources)|
-|Abp.Web.SignalR|[![NuGet version](https://badge.fury.io/nu/Abp.Web.SignalR.svg)](https://badge.fury.io/nu/Abp.Web.SignalR)|
-|Abp.Owin|[![NuGet version](https://badge.fury.io/nu/Abp.Owin.svg)](https://badge.fury.io/nu/Abp.Owin)|
-|Abp.EntityFramework.Common|[![NuGet version](https://badge.fury.io/nu/Abp.EntityFramework.Common.svg)](https://badge.fury.io/nu/Abp.EntityFramework.Common)|
-|Abp.EntityFramework|[![NuGet version](https://badge.fury.io/nu/Abp.EntityFramework.svg)](https://badge.fury.io/nu/Abp.EntityFramework)|
-|Abp.EntityFramework.GraphDiff|[![NuGet version](https://badge.fury.io/nu/Abp.EntityFramework.GraphDiff.svg)](https://badge.fury.io/nu/Abp.EntityFramework.GraphDiff)|
-|Abp.EntityFrameworkCore|[![NuGet version](https://badge.fury.io/nu/Abp.EntityFrameworkCore.svg)](https://badge.fury.io/nu/Abp.EntityFrameworkCore)|
-|Abp.NHibernate|[![NuGet version](https://badge.fury.io/nu/Abp.NHibernate.svg)](https://badge.fury.io/nu/Abp.NHibernate)|
-|Abp.Dapper|[![NuGet version](https://badge.fury.io/nu/Abp.Dapper.svg)](https://badge.fury.io/nu/Abp.Dapper)|
-|Abp.FluentMigrator|[![NuGet version](https://badge.fury.io/nu/Abp.FluentMigrator.svg)](https://badge.fury.io/nu/Abp.FluentMigrator)|
-|Abp.AspNetCore|[![NuGet version](https://badge.fury.io/nu/Abp.AspNetCore.svg)](https://badge.fury.io/nu/Abp.AspNetCore)|
-|Abp.AspNetCore.SignalR|[![NuGet version](https://badge.fury.io/nu/Abp.AspNetCore.SignalR.svg)](https://badge.fury.io/nu/Abp.AspNetCore.SignalR)|
-|Abp.AutoMapper|[![NuGet version](https://badge.fury.io/nu/Abp.AutoMapper.svg)](https://badge.fury.io/nu/Abp.AutoMapper)|
-|Abp.HangFire|[![NuGet version](https://badge.fury.io/nu/Abp.HangFire.svg)](https://badge.fury.io/nu/Abp.HangFire)|
-|Abp.HangFire.AspNetCore|[![NuGet version](https://badge.fury.io/nu/Abp.HangFire.AspNetCore.svg)](https://badge.fury.io/nu/Abp.HangFire.AspNetCore)|
-|Abp.Castle.Log4Net|[![NuGet version](https://badge.fury.io/nu/Abp.Castle.Log4Net.svg)](https://badge.fury.io/nu/Abp.Castle.Log4Net)|
-|Abp.RedisCache|[![NuGet version](https://badge.fury.io/nu/Abp.RedisCache.svg)](https://badge.fury.io/nu/Abp.RedisCache)|
-|Abp.RedisCache.ProtoBuf|[![NuGet version](https://badge.fury.io/nu/Abp.RedisCache.ProtoBuf.svg)](https://badge.fury.io/nu/Abp.RedisCache.ProtoBuf)|
-|Abp.MailKit|[![NuGet version](https://badge.fury.io/nu/Abp.MailKit.svg)](https://badge.fury.io/nu/Abp.MailKit)|
-|Abp.Quartz|[![NuGet version](https://badge.fury.io/nu/Abp.Quartz.svg)](https://badge.fury.io/nu/Abp.Quartz)|
-|Abp.TestBase|[![NuGet version](https://badge.fury.io/nu/Abp.TestBase.svg)](https://badge.fury.io/nu/Abp.TestBase)|
-|Abp.AspNetCore.TestBase|[![NuGet version](https://badge.fury.io/nu/Abp.AspNetCore.TestBase.svg)](https://badge.fury.io/nu/Abp.AspNetCore.TestBase)|
-
 # Module Zero
 
 ## What is 'Module Zero'?
@@ -99,41 +152,6 @@ Also adds common enterprise application features:
 * **<a href="https://aspnetboilerplate.com/Pages/Documents/Zero/Identity-Server" target="_blank">Identity Server 4</a>** integration.
 
 Module Zero packages define entities and implement base domain logic for these concepts.
-
-## NuGet Packages
-
-### ASP.NET Core Identity Packages
-
-Packages integrated into <a href="https://docs.microsoft.com/en-us/aspnet/identity/overview/getting-started/introduction-to-aspnet-identity" target="_blank">ASP.NET Core Identity</a> and <a href="http://identityserver.io/" target="_blank">Identity Server 4</a> (supports .NET Standard).
-
-|Package|Status|
-|:------|:-----:|
-|Abp.ZeroCore|[![NuGet version](https://badge.fury.io/nu/Abp.ZeroCore.svg)](https://badge.fury.io/nu/Abp.ZeroCore)|
-|Abp.ZeroCore.EntityFrameworkCore|[![NuGet version](https://badge.fury.io/nu/Abp.ZeroCore.EntityFrameworkCore.svg)](https://badge.fury.io/nu/Abp.ZeroCore.EntityFrameworkCore)|
-|Abp.ZeroCore.IdentityServer4|[![NuGet version](https://badge.fury.io/nu/Abp.ZeroCore.IdentityServer4.svg)](https://badge.fury.io/nu/Abp.ZeroCore.IdentityServer4)|
-|Abp.ZeroCore.IdentityServer4.EntityFrameworkCore|[![NuGet version](https://badge.fury.io/nu/Abp.ZeroCore.IdentityServer4.vNext.EntityFrameworkCore.svg)](https://badge.fury.io/nu/Abp.ZeroCore.IdentityServer4.EntityFrameworkCore)|
-|Abp.ZeroCore.IdentityServer4.vNext|[![NuGet version](https://badge.fury.io/nu/Abp.ZeroCore.IdentityServer4.svg)](https://badge.fury.io/nu/Abp.ZeroCore.IdentityServer4.vNext)|
-|Abp.ZeroCore.IdentityServer4.vNext.EntityFrameworkCore|[![NuGet version](https://badge.fury.io/nu/Abp.ZeroCore.IdentityServer4.vNext.EntityFrameworkCore.svg)](https://badge.fury.io/nu/Abp.ZeroCore.IdentityServer4.vNext.EntityFrameworkCore)|
-
-### ASP.NET Identity Packages
-
-Packages integrated into <a href="https://www.asp.net/identity" target="_blank">ASP.NET Identity</a> 2.x.
-
-|Package|Status|
-|:------|:-----:|
-|Abp.Zero|[![NuGet version](https://badge.fury.io/nu/Abp.Zero.svg)](https://badge.fury.io/nu/Abp.Zero)|
-|Abp.Zero.Owin|[![NuGet version](https://badge.fury.io/nu/Abp.Zero.Owin.svg)](https://badge.fury.io/nu/Abp.Zero.Owin)|
-|Abp.Zero.AspNetCore|[![NuGet version](https://badge.fury.io/nu/Abp.Zero.AspNetCore.svg)](https://badge.fury.io/nu/Abp.Zero.AspNetCore)|
-|Abp.Zero.EntityFramework|[![NuGet version](https://badge.fury.io/nu/Abp.Zero.EntityFramework.svg)](https://badge.fury.io/nu/Abp.Zero.EntityFramework)|
-
-### Shared Packages
-
-Shared packages between the Abp.ZeroCore.\* and Abp.Zero.\* packages.
-
-|Package|Status|
-|:------|:-----:|
-|Abp.Zero.Common|[![NuGet version](https://badge.fury.io/nu/Abp.Zero.Common.svg)](https://badge.fury.io/nu/Abp.Zero.Common)|
-|Abp.Zero.Ldap|[![NuGet version](https://badge.fury.io/nu/Abp.Zero.Ldap.svg)](https://badge.fury.io/nu/Abp.Zero.Ldap)|
 
 ## Startup Templates
 
