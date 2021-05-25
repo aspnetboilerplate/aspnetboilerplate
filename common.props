@@ -24,7 +24,4 @@
             <PrivateAssets>All</PrivateAssets>
         </PackageReference>
     </ItemGroup>
-    <PropertyGroup Condition="'$(Configuration)' == 'Release' ">
-        <PostSharpDisabledMessages>PS0134,PS0262</PostSharpDisabledMessages>
-    </PropertyGroup>
 </Project>
