@@ -424,30 +424,33 @@ namespace Abp.Authorization.Roles
 
             await SetGrantedPermissionsAsync(role, permissions);
         }
-
-        [UnitOfWork]
+        
         public virtual async Task<IdentityResult> CreateStaticRoles(int tenantId)
         {
-            var staticRoleDefinitions =
-                RoleManagementConfig.StaticRoles.Where(sr => sr.Side == MultiTenancySides.Tenant);
-
-            using (UnitOfWorkManager.Current.SetTenantId(tenantId))
+            return await UnitOfWorkManager.WithUnitOfWorkAsync(async () =>
             {
-                foreach (var staticRoleDefinition in staticRoleDefinitions)
+                var staticRoleDefinitions = RoleManagementConfig.StaticRoles.Where(
+                    sr => sr.Side == MultiTenancySides.Tenant
+                );
+
+                using (UnitOfWorkManager.Current.SetTenantId(tenantId))
                 {
-                    var role = MapStaticRoleDefinitionToRole(tenantId, staticRoleDefinition);
-
-                    role.SetNormalizedName();
-
-                    var identityResult = await CreateAsync(role);
-                    if (!identityResult.Succeeded)
+                    foreach (var staticRoleDefinition in staticRoleDefinitions)
                     {
-                        return identityResult;
+                        var role = MapStaticRoleDefinitionToRole(tenantId, staticRoleDefinition);
+
+                        role.SetNormalizedName();
+
+                        var identityResult = await CreateAsync(role);
+                        if (!identityResult.Succeeded)
+                        {
+                            return identityResult;
+                        }
                     }
                 }
-            }
 
-            return IdentityResult.Success;
+                return IdentityResult.Success;
+            });
         }
 
         public virtual async Task<IdentityResult> CheckDuplicateRoleNameAsync(int? expectedRoleId, string name,
@@ -467,30 +470,35 @@ namespace Abp.Authorization.Roles
 
             return IdentityResult.Success;
         }
-
-        [UnitOfWork]
-        public virtual Task<List<TRole>> GetRolesInOrganizationUnit(OrganizationUnit organizationUnit,
+        
+        public virtual async Task<List<TRole>> GetRolesInOrganizationUnit(
+            OrganizationUnit organizationUnit,
             bool includeChildren = false)
         {
-            if (!includeChildren)
+            var result= UnitOfWorkManager.WithUnitOfWork(() =>
             {
-                var query = from uor in _organizationUnitRoleRepository.GetAll()
-                    join role in Roles on uor.RoleId equals role.Id
-                    where uor.OrganizationUnitId == organizationUnit.Id
-                    select role;
+                if (!includeChildren)
+                {
+                    var query = from uor in _organizationUnitRoleRepository.GetAll()
+                        join role in Roles on uor.RoleId equals role.Id
+                        where uor.OrganizationUnitId == organizationUnit.Id
+                        select role;
 
-                return Task.FromResult(query.ToList());
-            }
-            else
-            {
-                var query = from uor in _organizationUnitRoleRepository.GetAll()
-                    join role in Roles on uor.RoleId equals role.Id
-                    join ou in _organizationUnitRepository.GetAll() on uor.OrganizationUnitId equals ou.Id
-                    where ou.Code.StartsWith(organizationUnit.Code)
-                    select role;
+                    return query.ToList();
+                }
+                else
+                {
+                    var query = from uor in _organizationUnitRoleRepository.GetAll()
+                        join role in Roles on uor.RoleId equals role.Id
+                        join ou in _organizationUnitRepository.GetAll() on uor.OrganizationUnitId equals ou.Id
+                        where ou.Code.StartsWith(organizationUnit.Code)
+                        select role;
 
-                return Task.FromResult(query.ToList());
-            }
+                    return query.ToList();
+                }
+            });
+
+            return await Task.FromResult(result);
         }
 
         public virtual async Task SetOrganizationUnitsAsync(int roleId, params long[] organizationUnitIds)
@@ -578,16 +586,20 @@ namespace Abp.Authorization.Roles
             await _organizationUnitRoleRepository.DeleteAsync(uor =>
                 uor.RoleId == role.Id && uor.OrganizationUnitId == ou.Id);
         }
-
-        [UnitOfWork]
-        public virtual Task<List<OrganizationUnit>> GetOrganizationUnitsAsync(TRole role)
+        
+        public virtual async Task<List<OrganizationUnit>> GetOrganizationUnitsAsync(TRole role)
         {
-            var query = from uor in _organizationUnitRoleRepository.GetAll()
-                join ou in _organizationUnitRepository.GetAll() on uor.OrganizationUnitId equals ou.Id
-                where uor.RoleId == role.Id
-                select ou;
+            var result = UnitOfWorkManager.WithUnitOfWork(() =>
+            {
+                var query = from uor in _organizationUnitRoleRepository.GetAll()
+                    join ou in _organizationUnitRepository.GetAll() on uor.OrganizationUnitId equals ou.Id
+                    where uor.RoleId == role.Id
+                    select ou;
 
-            return Task.FromResult(query.ToList());
+                return query.ToList();
+            });
+
+            return await Task.FromResult(result);
         }
 
         private Task<TRole> FindByDisplayNameAsync(string displayName)
