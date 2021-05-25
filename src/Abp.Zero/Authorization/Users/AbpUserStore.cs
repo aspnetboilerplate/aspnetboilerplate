@@ -266,7 +266,7 @@ namespace Abp.Authorization.Users
         public virtual async Task<List<TUser>> FindAllAsync(UserLoginInfo login)
         {
             List<TUser> users;
-            
+
             using (var uow = _unitOfWorkManager.Begin())
             {
                 var query = from userLogin in _userLoginRepository.GetAll()
@@ -317,48 +317,51 @@ namespace Abp.Authorization.Users
             await _userRoleRepository.DeleteAsync(userRole);
         }
 
-        [UnitOfWork]
         public virtual async Task<IList<string>> GetRolesAsync(TUser user)
         {
-            var userRoles = await AsyncQueryableExecuter.ToListAsync(from userRole in _userRoleRepository.GetAll()
-                join role in _roleRepository.GetAll() on userRole.RoleId equals role.Id
-                where userRole.UserId == user.Id
-                select role.Name);
+            return await _unitOfWorkManager.WithUnitOfWorkAsync(async () =>
+            {
+                var userRoles = await AsyncQueryableExecuter.ToListAsync(from userRole in _userRoleRepository.GetAll()
+                    join role in _roleRepository.GetAll() on userRole.RoleId equals role.Id
+                    where userRole.UserId == user.Id
+                    select role.Name);
 
-            var userOrganizationUnitRoles = await AsyncQueryableExecuter.ToListAsync(
-                from userOu in _userOrganizationUnitRepository.GetAll()
-                join roleOu in _organizationUnitRoleRepository.GetAll() on userOu.OrganizationUnitId equals roleOu
-                    .OrganizationUnitId
-                join userOuRoles in _roleRepository.GetAll() on roleOu.RoleId equals userOuRoles.Id
-                where userOu.UserId == user.Id
-                select userOuRoles.Name);
+                var userOrganizationUnitRoles = await AsyncQueryableExecuter.ToListAsync(
+                    from userOu in _userOrganizationUnitRepository.GetAll()
+                    join roleOu in _organizationUnitRoleRepository.GetAll() on userOu.OrganizationUnitId equals roleOu
+                        .OrganizationUnitId
+                    join userOuRoles in _roleRepository.GetAll() on roleOu.RoleId equals userOuRoles.Id
+                    where userOu.UserId == user.Id
+                    select userOuRoles.Name);
 
-            return userRoles.Union(userOrganizationUnitRoles).ToList();
+                return userRoles.Union(userOrganizationUnitRoles).ToList();
+            });
         }
 
-        [UnitOfWork]
         public virtual IList<string> GetRoles(TUser user) => GetRoles(user.Id);
 
-        [UnitOfWork]
         public virtual IList<string> GetRoles(long userId)
         {
-            var userRoles = (
-                from userRole in _userRoleRepository.GetAll()
-                join role in _roleRepository.GetAll() on userRole.RoleId equals role.Id
-                where userRole.UserId == userId
-                select role.Name
-            ).ToList();
+            return _unitOfWorkManager.WithUnitOfWork(() =>
+            {
+                var userRoles = (
+                    from userRole in _userRoleRepository.GetAll()
+                    join role in _roleRepository.GetAll() on userRole.RoleId equals role.Id
+                    where userRole.UserId == userId
+                    select role.Name
+                ).ToList();
 
-            var userOrganizationUnitRoles = (
-                from userOu in _userOrganizationUnitRepository.GetAll()
-                join roleOu in _organizationUnitRoleRepository.GetAll() on userOu.OrganizationUnitId equals roleOu
-                    .OrganizationUnitId
-                join userOuRoles in _roleRepository.GetAll() on roleOu.RoleId equals userOuRoles.Id
-                where userOu.UserId == userId
-                select userOuRoles.Name
-            ).ToList();
+                var userOrganizationUnitRoles = (
+                    from userOu in _userOrganizationUnitRepository.GetAll()
+                    join roleOu in _organizationUnitRoleRepository.GetAll() on userOu.OrganizationUnitId equals roleOu
+                        .OrganizationUnitId
+                    join userOuRoles in _roleRepository.GetAll() on roleOu.RoleId equals userOuRoles.Id
+                    where userOu.UserId == userId
+                    select userOuRoles.Name
+                ).ToList();
 
-            return userRoles.Union(userOrganizationUnitRoles).ToList();
+                return userRoles.Union(userOrganizationUnitRoles).ToList();
+            });
         }
 
         public virtual async Task<bool> IsInRoleAsync(TUser user, string roleName)

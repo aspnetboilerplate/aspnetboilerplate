@@ -35,35 +35,43 @@ namespace Abp.IdentityServer4
             }
         }
 
-        [UnitOfWork]
         public virtual async Task<PersistedGrant> GetAsync(string key)
         {
-            var entity = await _persistedGrantRepository.FirstOrDefaultAsync(key);
-            if (entity == null)
+            return await UnitOfWorkManager.WithUnitOfWorkAsync(async () =>
             {
-                return null;
-            }
+                var entity = await _persistedGrantRepository.FirstOrDefaultAsync(key);
+                if (entity == null)
+                {
+                    return null;
+                }
 
-            return ObjectMapper.Map<PersistedGrant>(entity);
+                return ObjectMapper.Map<PersistedGrant>(entity);
+            });
         }
 
-        [UnitOfWork]
         public virtual async Task<IEnumerable<PersistedGrant>> GetAllAsync(PersistedGrantFilter filter)
         {
-            var entities = await _persistedGrantRepository.GetAllListAsync(FilterPersistedGrant(filter));
-            return ObjectMapper.Map<List<PersistedGrant>>(entities);
+            return await UnitOfWorkManager.WithUnitOfWorkAsync(async () =>
+            {
+                var entities = await _persistedGrantRepository.GetAllListAsync(FilterPersistedGrant(filter));
+                return ObjectMapper.Map<List<PersistedGrant>>(entities);
+            });
         }
-
-        [UnitOfWork]
+        
         public virtual async Task RemoveAsync(string key)
         {
-            await _persistedGrantRepository.DeleteAsync(key);
+            await UnitOfWorkManager.WithUnitOfWorkAsync(async () =>
+            {
+                await _persistedGrantRepository.DeleteAsync(key);
+            });
         }
-
-        [UnitOfWork]
+        
         public async Task RemoveAllAsync(PersistedGrantFilter filter)
         {
-            await _persistedGrantRepository.DeleteAsync(FilterPersistedGrant(filter));
+            await UnitOfWorkManager.WithUnitOfWorkAsync(async () =>
+            {
+                await _persistedGrantRepository.DeleteAsync(FilterPersistedGrant(filter));
+            });
         }
 
         protected virtual Expression<Func<PersistedGrantEntity, bool>> FilterPersistedGrant(PersistedGrantFilter filter)
@@ -94,4 +102,3 @@ namespace Abp.IdentityServer4
         }
     }
 }
-

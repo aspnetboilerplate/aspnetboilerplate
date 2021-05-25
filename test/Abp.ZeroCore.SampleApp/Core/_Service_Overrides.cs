@@ -267,12 +267,15 @@ namespace Abp.ZeroCore.SampleApp.Core
         public UserClaimsPrincipalFactory(
             UserManager userManager,
             RoleManager roleManager,
-            IOptions<IdentityOptions> optionsAccessor)
+            IOptions<IdentityOptions> optionsAccessor, 
+            IUnitOfWorkManager unitOfWorkManager)
             : base(
                 userManager,
                 roleManager,
-                optionsAccessor)
+                optionsAccessor,
+                unitOfWorkManager)
         {
+            
         }
 
         [UnitOfWork]
