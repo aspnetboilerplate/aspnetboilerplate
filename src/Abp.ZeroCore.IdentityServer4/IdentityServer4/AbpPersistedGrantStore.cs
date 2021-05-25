@@ -19,20 +19,22 @@ namespace Abp.IdentityServer4
         {
             _persistedGrantRepository = persistedGrantRepository;
         }
-
-        [UnitOfWork]
+        
         public virtual async Task StoreAsync(PersistedGrant grant)
         {
-            var entity = await _persistedGrantRepository.FirstOrDefaultAsync(grant.Key);
-            if (entity == null)
+            await UnitOfWorkManager.WithUnitOfWorkAsync(async () =>
             {
-                await _persistedGrantRepository.InsertAsync(ObjectMapper.Map<PersistedGrantEntity>(grant));
-            }
-            else
-            {
-                ObjectMapper.Map(grant, entity);
-                await _persistedGrantRepository.UpdateAsync(entity);
-            }
+                var entity = await _persistedGrantRepository.FirstOrDefaultAsync(grant.Key);
+                if (entity == null)
+                {
+                    await _persistedGrantRepository.InsertAsync(ObjectMapper.Map<PersistedGrantEntity>(grant));
+                }
+                else
+                {
+                    ObjectMapper.Map(grant, entity);
+                    await _persistedGrantRepository.UpdateAsync(entity);
+                }
+            });
         }
 
         public virtual async Task<PersistedGrant> GetAsync(string key)

@@ -24,16 +24,18 @@ namespace Abp.Organizations
             _organizationUnitRoleRepository = organizationUnitRoleRepository;
             _unitOfWorkManager = unitOfWorkManager;
         }
-
-        [UnitOfWork]
+        
         public virtual void HandleEvent(EntityDeletedEventData<AbpRoleBase> eventData)
         {
-            using (_unitOfWorkManager.Current.SetTenantId(eventData.Entity.TenantId))
+            _unitOfWorkManager.WithUnitOfWork(() =>
             {
-                _organizationUnitRoleRepository.Delete(
-                    uou => uou.RoleId == eventData.Entity.Id
-                );
-            }
+                using (_unitOfWorkManager.Current.SetTenantId(eventData.Entity.TenantId))
+                {
+                    _organizationUnitRoleRepository.Delete(
+                        uou => uou.RoleId == eventData.Entity.Id
+                    );
+                }
+            });
         }
     }
 }
