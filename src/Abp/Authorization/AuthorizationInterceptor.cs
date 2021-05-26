@@ -32,22 +32,22 @@ namespace Abp.Authorization
         {
             var proceedInfo = invocation.CaptureProceedInfo();
             
-            await _authorizationHelper.AuthorizeAsync(invocation.MethodInvocationTarget, invocation.TargetType);
+            await _authorizationHelper.AuthorizeAsync(invocation.MethodInvocationTarget, invocation.TargetType).ConfigureAwait(false);
 
             proceedInfo.Invoke();
             var task = (Task)invocation.ReturnValue;
-            await task;
+            await task.ConfigureAwait(false);
         }
         
         protected override async Task<TResult> InternalInterceptAsynchronous<TResult>(IInvocation invocation)
         {
             var proceedInfo = invocation.CaptureProceedInfo();
 
-            await _authorizationHelper.AuthorizeAsync(invocation.MethodInvocationTarget, invocation.TargetType);
+            await _authorizationHelper.AuthorizeAsync(invocation.MethodInvocationTarget, invocation.TargetType).ConfigureAwait(false);
 
             proceedInfo.Invoke();
             var taskResult = (Task<TResult>)invocation.ReturnValue;
-            return await taskResult;
+            return await taskResult.ConfigureAwait(false);
         }
     }
 }

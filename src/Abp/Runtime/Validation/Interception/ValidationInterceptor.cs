@@ -42,7 +42,7 @@ namespace Abp.Runtime.Validation.Interception
             if (AbpCrossCuttingConcerns.IsApplied(invocation.InvocationTarget, AbpCrossCuttingConcerns.Validation))
             {
                 proceedInfo.Invoke();
-                await ((Task)invocation.ReturnValue);
+                await ((Task)invocation.ReturnValue).ConfigureAwait(false);
                 return;
             }
 
@@ -53,7 +53,7 @@ namespace Abp.Runtime.Validation.Interception
             }
 
             proceedInfo.Invoke();
-            await ((Task)invocation.ReturnValue);
+            await ((Task)invocation.ReturnValue).ConfigureAwait(false);
         }
 
         protected override async Task<TResult> InternalInterceptAsynchronous<TResult>(IInvocation invocation)
@@ -63,7 +63,7 @@ namespace Abp.Runtime.Validation.Interception
             if (AbpCrossCuttingConcerns.IsApplied(invocation.InvocationTarget, AbpCrossCuttingConcerns.Validation))
             {
                 proceedInfo.Invoke();
-                return await ((Task<TResult>)invocation.ReturnValue);
+                return await ((Task<TResult>)invocation.ReturnValue).ConfigureAwait(false);
             }
 
             using (var validator = _iocResolver.ResolveAsDisposable<MethodInvocationValidator>())
@@ -73,7 +73,7 @@ namespace Abp.Runtime.Validation.Interception
             }
 
             proceedInfo.Invoke();
-            return await ((Task<TResult>)invocation.ReturnValue);
+            return await ((Task<TResult>)invocation.ReturnValue).ConfigureAwait(false);
         }
     }
 }

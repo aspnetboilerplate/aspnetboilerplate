@@ -72,7 +72,7 @@ namespace Abp.Auditing
             {
                 proceedInfo.Invoke();
                 var task = (Task)invocation.ReturnValue;
-                await task;
+                await task.ConfigureAwait(false);
                 return;
             }
 
@@ -80,7 +80,7 @@ namespace Abp.Auditing
             {
                 proceedInfo.Invoke();
                 var task = (Task)invocation.ReturnValue;
-                await task;
+                await task.ConfigureAwait(false);
                 return;
             }
 
@@ -92,7 +92,7 @@ namespace Abp.Auditing
             {
                 proceedInfo.Invoke();
                 var task = (Task)invocation.ReturnValue;
-                await task;
+                await task.ConfigureAwait(false);
             }
             catch (Exception ex)
             {
@@ -104,7 +104,7 @@ namespace Abp.Auditing
                 stopwatch.Stop();
                 auditInfo.ExecutionDuration = Convert.ToInt32(stopwatch.Elapsed.TotalMilliseconds);
 
-                await _auditingHelper.SaveAsync(auditInfo);
+                await _auditingHelper.SaveAsync(auditInfo).ConfigureAwait(false);
             }
         }
 
@@ -116,14 +116,14 @@ namespace Abp.Auditing
             {
                 proceedInfo.Invoke();
                 var taskResult = (Task<TResult>)invocation.ReturnValue;
-                return await taskResult;
+                return await taskResult.ConfigureAwait(false);
             }
 
             if (!_auditingHelper.ShouldSaveAudit(invocation.MethodInvocationTarget))
             {
                 proceedInfo.Invoke();
                 var taskResult = (Task<TResult>)invocation.ReturnValue;
-                return await taskResult;
+                return await taskResult.ConfigureAwait(false);
             }
 
             var auditInfo = _auditingHelper.CreateAuditInfo(invocation.TargetType, invocation.MethodInvocationTarget, invocation.Arguments);
@@ -135,7 +135,7 @@ namespace Abp.Auditing
             {
                 proceedInfo.Invoke();
                 var taskResult = (Task<TResult>)invocation.ReturnValue;
-                result = await taskResult;
+                result = await taskResult.ConfigureAwait(false);
 
                 if (_auditingConfiguration.SaveReturnValues && result != null)
                 {
@@ -152,7 +152,7 @@ namespace Abp.Auditing
                 stopwatch.Stop();
                 auditInfo.ExecutionDuration = Convert.ToInt32(stopwatch.Elapsed.TotalMilliseconds);
 
-                await _auditingHelper.SaveAsync(auditInfo);
+                await _auditingHelper.SaveAsync(auditInfo).ConfigureAwait(false);
             }
 
             return result;
