@@ -23,6 +23,7 @@ namespace Abp.Zero.Notifications
                 Component.For<INotificationDistributer>().Instance(defaultNotificationDistributor)
                     .LifestyleSingleton()
                     .IsDefault()
+                    .Named("DefaultNotificationDistributer")
             );
             
             _publisher = LocalIocManager.Resolve<INotificationPublisher>();
