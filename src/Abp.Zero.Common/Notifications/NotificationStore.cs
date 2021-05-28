@@ -41,36 +41,35 @@ namespace Abp.Notifications
 
         public virtual async Task InsertSubscriptionAsync(NotificationSubscriptionInfo subscription)
         {
-            using (var uow = _unitOfWorkManager.Begin())
+            await _unitOfWorkManager.WithUnitOfWorkAsync(async () =>
             {
                 using (_unitOfWorkManager.Current.SetTenantId(subscription.TenantId))
                 {
                     await _notificationSubscriptionRepository.InsertAsync(subscription);
                     await _unitOfWorkManager.Current.SaveChangesAsync();
                 }
-
-                await uow.CompleteAsync();
-            }
+            });
         }
 
         public virtual void InsertSubscription(NotificationSubscriptionInfo subscription)
         {
-            using (var uow = _unitOfWorkManager.Begin())
+            _unitOfWorkManager.WithUnitOfWork(() =>
             {
                 using (_unitOfWorkManager.Current.SetTenantId(subscription.TenantId))
                 {
                     _notificationSubscriptionRepository.Insert(subscription);
                     _unitOfWorkManager.Current.SaveChanges();
                 }
-
-                uow.Complete();
-            }
+            });
         }
 
-        public virtual async Task DeleteSubscriptionAsync(UserIdentifier user, string notificationName,
-            string entityTypeName, string entityId)
+        public virtual async Task DeleteSubscriptionAsync(
+            UserIdentifier user,
+            string notificationName,
+            string entityTypeName,
+            string entityId)
         {
-            using (var uow = _unitOfWorkManager.Begin())
+            await _unitOfWorkManager.WithUnitOfWorkAsync(async () =>
             {
                 using (_unitOfWorkManager.Current.SetTenantId(user.TenantId))
                 {
@@ -83,15 +82,16 @@ namespace Abp.Notifications
 
                     await _unitOfWorkManager.Current.SaveChangesAsync();
                 }
-
-                await uow.CompleteAsync();
-            }
+            });
         }
 
-        public virtual void DeleteSubscription(UserIdentifier user, string notificationName, string entityTypeName,
+        public virtual void DeleteSubscription(
+            UserIdentifier user,
+            string notificationName,
+            string entityTypeName,
             string entityId)
         {
-            using (var uow = _unitOfWorkManager.Begin())
+            _unitOfWorkManager.WithUnitOfWork(() =>
             {
                 using (_unitOfWorkManager.Current.SetTenantId(user.TenantId))
                 {
@@ -104,99 +104,77 @@ namespace Abp.Notifications
 
                     _unitOfWorkManager.Current.SaveChanges();
                 }
-
-                uow.Complete();
-            }
+            });
         }
 
         public virtual async Task InsertNotificationAsync(NotificationInfo notification)
         {
-            using (var uow = _unitOfWorkManager.Begin())
+            await _unitOfWorkManager.WithUnitOfWorkAsync(async () =>
             {
                 using (_unitOfWorkManager.Current.SetTenantId(null))
                 {
                     await _notificationRepository.InsertAsync(notification);
                     await _unitOfWorkManager.Current.SaveChangesAsync();
                 }
-
-                await uow.CompleteAsync();
-            }
+            });
         }
 
         public virtual void InsertNotification(NotificationInfo notification)
         {
-            using (var uow = _unitOfWorkManager.Begin())
+            _unitOfWorkManager.WithUnitOfWork(() =>
             {
                 using (_unitOfWorkManager.Current.SetTenantId(null))
                 {
                     _notificationRepository.Insert(notification);
                     _unitOfWorkManager.Current.SaveChanges();
                 }
-
-                uow.Complete();
-            }
+            });
         }
 
         public virtual async Task<NotificationInfo> GetNotificationOrNullAsync(Guid notificationId)
         {
-            NotificationInfo notification;
-
-            using (var uow = _unitOfWorkManager.Begin())
+            return await _unitOfWorkManager.WithUnitOfWorkAsync(async () =>
             {
                 using (_unitOfWorkManager.Current.SetTenantId(null))
                 {
-                    notification = await _notificationRepository.FirstOrDefaultAsync(notificationId);
+                    return await _notificationRepository.FirstOrDefaultAsync(notificationId);
                 }
-
-                await uow.CompleteAsync();
-            }
-
-            return notification;
+            });
         }
 
         public virtual NotificationInfo GetNotificationOrNull(Guid notificationId)
         {
-            NotificationInfo notification;
-
-            using (var uow = _unitOfWorkManager.Begin())
+            return _unitOfWorkManager.WithUnitOfWork(() =>
             {
                 using (_unitOfWorkManager.Current.SetTenantId(null))
                 {
-                    notification = _notificationRepository.FirstOrDefault(notificationId);
+                    return _notificationRepository.FirstOrDefault(notificationId);
                 }
-
-                uow.Complete();
-            }
-
-            return notification;
+            });
         }
 
         public virtual async Task InsertUserNotificationAsync(UserNotificationInfo userNotification)
         {
-            using (var uow = _unitOfWorkManager.Begin())
+            await _unitOfWorkManager.WithUnitOfWorkAsync(async () =>
             {
                 using (_unitOfWorkManager.Current.SetTenantId(userNotification.TenantId))
                 {
                     await _userNotificationRepository.InsertAsync(userNotification);
                     await _unitOfWorkManager.Current.SaveChangesAsync();
                 }
-
-                await uow.CompleteAsync();
-            }
+            });
         }
 
         public virtual void InsertUserNotification(UserNotificationInfo userNotification)
         {
-            using (var uow = _unitOfWorkManager.Begin())
+            _unitOfWorkManager.WithUnitOfWork(() =>
             {
                 using (_unitOfWorkManager.Current.SetTenantId(userNotification.TenantId))
                 {
                     _userNotificationRepository.Insert(userNotification);
                     _unitOfWorkManager.Current.SaveChanges();
                 }
-
-                uow.Complete();
-            }
+            });
         }
 
         public virtual async Task<List<NotificationSubscriptionInfo>> GetSubscriptionsAsync(
@@ -204,23 +182,17 @@ namespace Abp.Notifications
             string entityTypeName,
             string entityId)
         {
-            List<NotificationSubscriptionInfo> notificationSubscriptions;
-
-            using (var uow = _unitOfWorkManager.Begin())
+            return await _unitOfWorkManager.WithUnitOfWorkAsync(async () =>
             {
                 using (_unitOfWorkManager.Current.DisableFilter(AbpDataFilters.MayHaveTenant))
                 {
-                    notificationSubscriptions = await _notificationSubscriptionRepository.GetAllListAsync(s =>
+                    return await _notificationSubscriptionRepository.GetAllListAsync(s =>
                         s.NotificationName == notificationName &&
                         s.EntityTypeName == entityTypeName &&
                         s.EntityId == entityId
                     );
                 }
-
-                await uow.CompleteAsync();
-            }
-
-            return notificationSubscriptions;
+            });
         }
 
         public virtual List<NotificationSubscriptionInfo> GetSubscriptions(
@@ -228,23 +200,17 @@ namespace Abp.Notifications
             string entityTypeName,
             string entityId)
         {
-            List<NotificationSubscriptionInfo> notificationSubscriptions;
-
-            using (var uow = _unitOfWorkManager.Begin())
+            return _unitOfWorkManager.WithUnitOfWork(() =>
             {
                 using (_unitOfWorkManager.Current.DisableFilter(AbpDataFilters.MayHaveTenant))
                 {
-                    notificationSubscriptions = _notificationSubscriptionRepository.GetAllList(s =>
+                    return _notificationSubscriptionRepository.GetAllList(s =>
                         s.NotificationName == notificationName &&
                         s.EntityTypeName == entityTypeName &&
                         s.EntityId == entityId
                     );
                 }
-
-                uow.Complete();
-            }
-
-            return notificationSubscriptions;
+            });
         }
 
         public virtual async Task<List<NotificationSubscriptionInfo>> GetSubscriptionsAsync(
@@ -253,20 +219,18 @@ namespace Abp.Notifications
             string entityTypeName,
             string entityId)
         {
-            var subscriptions = new List<NotificationSubscriptionInfo>();
-
-            using (var uow = _unitOfWorkManager.Begin())
+            return await _unitOfWorkManager.WithUnitOfWorkAsync(async () =>
             {
+                var subscriptions = new List<NotificationSubscriptionInfo>();
+
                 foreach (var tenantId in tenantIds)
                 {
-                    subscriptions.AddRange(
-                        await GetSubscriptionsAsync(tenantId, notificationName, entityTypeName, entityId));
+                    subscriptions.AddRange(await GetSubscriptionsAsync(tenantId, notificationName, entityTypeName,
+                        entityId));
                 }
 
-                await uow.CompleteAsync();
-            }
-
-            return subscriptions;
+                return subscriptions;
+            });
         }
 
         public virtual List<NotificationSubscriptionInfo> GetSubscriptions(
@@ -275,55 +239,39 @@ namespace Abp.Notifications
             string entityTypeName,
             string entityId)
         {
-            var subscriptions = new List<NotificationSubscriptionInfo>();
-
-            using (var uow = _unitOfWorkManager.Begin())
+            return _unitOfWorkManager.WithUnitOfWork(() =>
             {
+                var subscriptions = new List<NotificationSubscriptionInfo>();
+
                 foreach (var tenantId in tenantIds)
                 {
                     subscriptions.AddRange(GetSubscriptions(tenantId, notificationName, entityTypeName, entityId));
                 }
 
-                uow.Complete();
-            }
-
-            return subscriptions;
+                return subscriptions;
+            });
         }
 
         public virtual async Task<List<NotificationSubscriptionInfo>> GetSubscriptionsAsync(UserIdentifier user)
         {
-            List<NotificationSubscriptionInfo> notificationSubscriptions;
-
-            using (var uow = _unitOfWorkManager.Begin())
+            return await _unitOfWorkManager.WithUnitOfWorkAsync(async () =>
             {
                 using (_unitOfWorkManager.Current.SetTenantId(user.TenantId))
                 {
-                    notificationSubscriptions =
-                        await _notificationSubscriptionRepository.GetAllListAsync(s => s.UserId == user.UserId);
+                    return await _notificationSubscriptionRepository.GetAllListAsync(s => s.UserId == user.UserId);
                 }
-
-                await uow.CompleteAsync();
-            }
-
-            return notificationSubscriptions;
+            });
         }
 
         public virtual List<NotificationSubscriptionInfo> GetSubscriptions(UserIdentifier user)
         {
-            List<NotificationSubscriptionInfo> notificationSubscriptions;
-
-            using (var uow = _unitOfWorkManager.Begin())
+            return _unitOfWorkManager.WithUnitOfWork(() =>
             {
                 using (_unitOfWorkManager.Current.SetTenantId(user.TenantId))
                 {
-                    notificationSubscriptions =
-                        _notificationSubscriptionRepository.GetAllList(s => s.UserId == user.UserId);
+                    return _notificationSubscriptionRepository.GetAllList(s => s.UserId == user.UserId);
                 }
-
-                uow.Complete();
-            }
-
-            return notificationSubscriptions;
+            });
         }
 
         protected virtual async Task<List<NotificationSubscriptionInfo>> GetSubscriptionsAsync(
@@ -332,23 +280,17 @@ namespace Abp.Notifications
             string entityTypeName,
             string entityId)
         {
-            List<NotificationSubscriptionInfo> notificationSubscriptions;
-
-            using (var uow = _unitOfWorkManager.Begin())
+            return await _unitOfWorkManager.WithUnitOfWorkAsync(async () =>
             {
                 using (_unitOfWorkManager.Current.SetTenantId(tenantId))
                 {
-                    notificationSubscriptions = await _notificationSubscriptionRepository.GetAllListAsync(s =>
+                    return await _notificationSubscriptionRepository.GetAllListAsync(s =>
                         s.NotificationName == notificationName &&
                         s.EntityTypeName == entityTypeName &&
                         s.EntityId == entityId
                     );
                 }
-
-                await uow.CompleteAsync();
-            }
-
-            return notificationSubscriptions;
+            });
         }
 
         protected virtual List<NotificationSubscriptionInfo> GetSubscriptions(
@@ -357,23 +299,17 @@ namespace Abp.Notifications
             string entityTypeName,
             string entityId)
         {
-            List<NotificationSubscriptionInfo> notificationSubscriptions;
-
-            using (var uow = _unitOfWorkManager.Begin())
+            return _unitOfWorkManager.WithUnitOfWork(() =>
             {
                 using (_unitOfWorkManager.Current.SetTenantId(tenantId))
                 {
-                    notificationSubscriptions = _notificationSubscriptionRepository.GetAllList(s =>
+                    return _notificationSubscriptionRepository.GetAllList(s =>
                         s.NotificationName == notificationName &&
                         s.EntityTypeName == entityTypeName &&
                         s.EntityId == entityId
                     );
                 }
-
-                uow.Complete();
-            }
-
-            return notificationSubscriptions;
+            });
         }
 
         public virtual async Task<bool> IsSubscribedAsync(
@@ -382,24 +318,18 @@ namespace Abp.Notifications
             string entityTypeName,
             string entityId)
         {
-            bool subscribed;
-
-            using (var uow = _unitOfWorkManager.Begin())
+            return await _unitOfWorkManager.WithUnitOfWorkAsync(async () =>
             {
                 using (_unitOfWorkManager.Current.SetTenantId(user.TenantId))
                 {
-                    subscribed = await _notificationSubscriptionRepository.CountAsync(s =>
+                    return await _notificationSubscriptionRepository.CountAsync(s =>
                         s.UserId == user.UserId &&
                         s.NotificationName == notificationName &&
                         s.EntityTypeName == entityTypeName &&
                         s.EntityId == entityId
                     ) > 0;
                 }
-
-                await uow.CompleteAsync();
-            }
-
-            return subscribed;
+            });
         }
 
         public virtual bool IsSubscribed(
@@ -408,24 +338,18 @@ namespace Abp.Notifications
             string entityTypeName,
             string entityId)
         {
-            bool subscribed;
-
-            using (var uow = _unitOfWorkManager.Begin())
+            return _unitOfWorkManager.WithUnitOfWork(() =>
             {
                 using (_unitOfWorkManager.Current.SetTenantId(user.TenantId))
                 {
-                    subscribed = _notificationSubscriptionRepository.Count(s =>
+                    return _notificationSubscriptionRepository.Count(s =>
                         s.UserId == user.UserId &&
                         s.NotificationName == notificationName &&
                         s.EntityTypeName == entityTypeName &&
                         s.EntityId == entityId
                     ) > 0;
                 }
-
-                uow.Complete();
-            }
-
-            return subscribed;
+            });
         }
 
         public virtual async Task UpdateUserNotificationStateAsync(
@@ -433,23 +357,20 @@ namespace Abp.Notifications
             Guid userNotificationId,
             UserNotificationState state)
         {
-            using (var uow = _unitOfWorkManager.Begin())
+            await _unitOfWorkManager.WithUnitOfWorkAsync(async () =>
             {
                 using (_unitOfWorkManager.Current.SetTenantId(tenantId))
                 {
                     var userNotification = await _userNotificationRepository.FirstOrDefaultAsync(userNotificationId);
                     if (userNotification == null)
                     {
-                        await uow.CompleteAsync();
                         return;
                     }
 
                     userNotification.State = state;
                     await _unitOfWorkManager.Current.SaveChangesAsync();
                 }
-
-                await uow.CompleteAsync();
-            }
+            });
         }
 
         public virtual void UpdateUserNotificationState(
@@ -457,28 +378,25 @@ namespace Abp.Notifications
             Guid userNotificationId,
             UserNotificationState state)
         {
-            using (var uow = _unitOfWorkManager.Begin())
+            _unitOfWorkManager.WithUnitOfWork(() =>
             {
                 using (_unitOfWorkManager.Current.SetTenantId(tenantId))
                 {
                     var userNotification = _userNotificationRepository.FirstOrDefault(userNotificationId);
                     if (userNotification == null)
                     {
-                        uow.Complete();
                         return;
                     }
 
                     userNotification.State = state;
                     _unitOfWorkManager.Current.SaveChanges();
                 }
-
-                uow.Complete();
-            }
+            });
         }
 
         public virtual async Task UpdateAllUserNotificationStatesAsync(UserIdentifier user, UserNotificationState state)
         {
-            using (var uow = _unitOfWorkManager.Begin())
+            await _unitOfWorkManager.WithUnitOfWorkAsync(async () =>
             {
                 using (_unitOfWorkManager.Current.SetTenantId(user.TenantId))
                 {
@@ -493,14 +411,12 @@ namespace Abp.Notifications
 
                     await _unitOfWorkManager.Current.SaveChangesAsync();
                 }
-
-                await uow.CompleteAsync();
-            }
+            });
         }
 
         public virtual void UpdateAllUserNotificationStates(UserIdentifier user, UserNotificationState state)
         {
-            using (var uow = _unitOfWorkManager.Begin())
+            _unitOfWorkManager.WithUnitOfWork(() =>
             {
                 using (_unitOfWorkManager.Current.SetTenantId(user.TenantId))
                 {
@@ -515,37 +431,31 @@ namespace Abp.Notifications
 
                     _unitOfWorkManager.Current.SaveChanges();
                 }
-
-                uow.Complete();
-            }
+            });
         }
 
         public virtual async Task DeleteUserNotificationAsync(int? tenantId, Guid userNotificationId)
         {
-            using (var uow = _unitOfWorkManager.Begin())
+            await _unitOfWorkManager.WithUnitOfWorkAsync(async () =>
             {
                 using (_unitOfWorkManager.Current.SetTenantId(tenantId))
                 {
                     await _userNotificationRepository.DeleteAsync(userNotificationId);
                     await _unitOfWorkManager.Current.SaveChangesAsync();
                 }
-
-                await uow.CompleteAsync();
-            }
+            });
         }
 
         public virtual void DeleteUserNotification(int? tenantId, Guid userNotificationId)
         {
-            using (var uow = _unitOfWorkManager.Begin())
+            _unitOfWorkManager.WithUnitOfWork(() =>
             {
                 using (_unitOfWorkManager.Current.SetTenantId(tenantId))
                 {
                     _userNotificationRepository.Delete(userNotificationId);
                     _unitOfWorkManager.Current.SaveChanges();
                 }
-
-                uow.Complete();
-            }
+            });
         }
 
         public virtual async Task DeleteAllUserNotificationsAsync(
@@ -554,7 +464,7 @@ namespace Abp.Notifications
             DateTime? startDate = null,
             DateTime? endDate = null)
         {
-            using (var uow = _unitOfWorkManager.Begin())
+            await _unitOfWorkManager.WithUnitOfWorkAsync(async () =>
             {
                 using (_unitOfWorkManager.Current.SetTenantId(user.TenantId))
                 {
@@ -563,9 +473,7 @@ namespace Abp.Notifications
                     await _userNotificationRepository.DeleteAsync(predicate);
                     await _unitOfWorkManager.Current.SaveChangesAsync();
                 }
-
-                await uow.CompleteAsync();
-            }
+            });
         }
 
         public virtual void DeleteAllUserNotifications(
@@ -574,7 +482,7 @@ namespace Abp.Notifications
             DateTime? startDate = null,
             DateTime? endDate = null)
         {
-            using (var uow = _unitOfWorkManager.Begin())
+            _unitOfWorkManager.WithUnitOfWork(() =>
             {
                 using (_unitOfWorkManager.Current.SetTenantId(user.TenantId))
                 {
@@ -583,9 +491,7 @@ namespace Abp.Notifications
                     _userNotificationRepository.Delete(predicate);
                     _unitOfWorkManager.Current.SaveChanges();
                 }
-
-                uow.Complete();
-            }
+            });
         }
 
         private Expression<Func<UserNotificationInfo, bool>> CreateNotificationFilterPredicate(
@@ -624,9 +530,7 @@ namespace Abp.Notifications
                 DateTime? startDate = null,
                 DateTime? endDate = null)
         {
-            List<UserNotificationInfoWithNotificationInfo> result;
-
-            using (var uow = _unitOfWorkManager.Begin())
+            var result = _unitOfWorkManager.WithUnitOfWork(() =>
             {
                 using (_unitOfWorkManager.Current.SetTenantId(user.TenantId))
                 {
@@ -660,18 +564,16 @@ namespace Abp.Notifications
 
                     var list = query.ToList();
 
-                    result = list.Select(
+                    return list.Select(
                         a => new UserNotificationInfoWithNotificationInfo(
                             a.userNotificationInfo,
                             a.tenantNotificationInfo
                         )
                     ).ToList();
                 }
+            });
 
-                await uow.CompleteAsync();
-            }
-
-            return result;
+            return await Task.FromResult(result);
         }
 
         public virtual List<UserNotificationInfoWithNotificationInfo> GetUserNotificationsWithNotifications(
@@ -682,9 +584,7 @@ namespace Abp.Notifications
             DateTime? startDate = null,
             DateTime? endDate = null)
         {
-            List<UserNotificationInfoWithNotificationInfo> result;
-
-            using (var uow = _unitOfWorkManager.Begin())
+            return _unitOfWorkManager.WithUnitOfWork(() =>
             {
                 using (_unitOfWorkManager.Current.SetTenantId(user.TenantId))
                 {
@@ -718,18 +618,14 @@ namespace Abp.Notifications
 
                     var list = query.ToList();
 
-                    result = list.Select(
+                    return list.Select(
                         a => new UserNotificationInfoWithNotificationInfo(
                             a.userNotificationInfo,
                             a.tenantNotificationInfo
                         )
                     ).ToList();
                 }
-
-                uow.Complete();
-            }
-
-            return result;
+            });
         }
 
         public virtual async Task<int> GetUserNotificationCountAsync(
@@ -738,20 +634,14 @@ namespace Abp.Notifications
             DateTime? startDate = null,
             DateTime? endDate = null)
         {
-            int count;
-
-            using (var uow = _unitOfWorkManager.Begin())
+            return await _unitOfWorkManager.WithUnitOfWorkAsync(async () =>
             {
                 using (_unitOfWorkManager.Current.SetTenantId(user.TenantId))
                 {
                     var predicate = CreateNotificationFilterPredicate(user, state, startDate, endDate);
-                    count = await _userNotificationRepository.CountAsync(predicate);
+                    return await _userNotificationRepository.CountAsync(predicate);
                 }
-
-                await uow.CompleteAsync();
-            }
-
-            return count;
+            });
         }
 
         public virtual int GetUserNotificationCount(
@@ -760,20 +650,14 @@ namespace Abp.Notifications
             DateTime? startDate = null,
             DateTime? endDate = null)
         {
-            int count;
-
-            using (var uow = _unitOfWorkManager.Begin())
+            return _unitOfWorkManager.WithUnitOfWork(() =>
             {
                 using (_unitOfWorkManager.Current.SetTenantId(user.TenantId))
                 {
                     var predicate = CreateNotificationFilterPredicate(user, state, startDate, endDate);
-                    count = _userNotificationRepository.Count(predicate);
+                    return _userNotificationRepository.Count(predicate);
                 }
-
-                uow.CompleteAsync();
-            }
-
-            return count;
+            });
         }
 
         public virtual async Task<UserNotificationInfoWithNotificationInfo>
@@ -781,7 +665,7 @@ namespace Abp.Notifications
                 int? tenantId,
                 Guid userNotificationId)
         {
-            using (var uow = _unitOfWorkManager.Begin())
+            var result = _unitOfWorkManager.WithUnitOfWork(() =>
             {
                 using (_unitOfWorkManager.Current.SetTenantId(tenantId))
                 {
@@ -798,24 +682,24 @@ namespace Abp.Notifications
                     var item = query.FirstOrDefault();
                     if (item == null)
                     {
-                        await uow.CompleteAsync();
                         return null;
                     }
 
-                    await uow.CompleteAsync();
                     return new UserNotificationInfoWithNotificationInfo(
                         item.userNotificationInfo,
                         item.tenantNotificationInfo
                     );
                 }
-            }
+            });
+
+            return await Task.FromResult(result);
         }
 
         public virtual UserNotificationInfoWithNotificationInfo GetUserNotificationWithNotificationOrNull(
             int? tenantId,
             Guid userNotificationId)
         {
-            using (var uow = _unitOfWorkManager.Begin())
+            return _unitOfWorkManager.WithUnitOfWork(() =>
             {
                 using (_unitOfWorkManager.Current.SetTenantId(tenantId))
                 {
@@ -832,53 +716,50 @@ namespace Abp.Notifications
                     var item = query.FirstOrDefault();
                     if (item == null)
                     {
-                        uow.Complete();
                         return null;
                     }
 
-                    uow.Complete();
                     return new UserNotificationInfoWithNotificationInfo(
                         item.userNotificationInfo,
                         item.tenantNotificationInfo
                     );
                 }
-            }
+            });
         }
 
         public virtual async Task InsertTenantNotificationAsync(TenantNotificationInfo tenantNotificationInfo)
         {
-            using (var uow = _unitOfWorkManager.Begin())
+            await _unitOfWorkManager.WithUnitOfWorkAsync(async () =>
             {
                 using (_unitOfWorkManager.Current.SetTenantId(tenantNotificationInfo.TenantId))
                 {
                     await _tenantNotificationRepository.InsertAsync(tenantNotificationInfo);
                 }
-
-                await uow.CompleteAsync();
-            }
+            });
         }
 
         public virtual void InsertTenantNotification(TenantNotificationInfo tenantNotificationInfo)
         {
-            using (var uow = _unitOfWorkManager.Begin())
+            _unitOfWorkManager.WithUnitOfWork(() =>
             {
                 using (_unitOfWorkManager.Current.SetTenantId(tenantNotificationInfo.TenantId))
                 {
                     _tenantNotificationRepository.Insert(tenantNotificationInfo);
                 }
-
-                uow.Complete();
-            }
+            });
         }
 
-        public virtual Task DeleteNotificationAsync(NotificationInfo notification)
+        public virtual async Task DeleteNotificationAsync(NotificationInfo notification)
         {
-            return _notificationRepository.DeleteAsync(notification);
+            await _unitOfWorkManager.WithUnitOfWorkAsync(async () => await _notificationRepository.DeleteAsync(notification));
         }
 
         public virtual void DeleteNotification(NotificationInfo notification)
         {
-            _notificationRepository.Delete(notification);
+            _unitOfWorkManager.WithUnitOfWork(() =>
+            {
+                _notificationRepository.Delete(notification);
+            });
         }
     }
 }
