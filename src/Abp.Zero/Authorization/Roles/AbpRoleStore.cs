@@ -4,6 +4,7 @@ using System.Threading.Tasks;
 using Abp.Authorization.Users;
 using Abp.Dependency;
 using Abp.Domain.Repositories;
+using Abp.Domain.Uow;
 using Microsoft.AspNet.Identity;
 
 namespace Abp.Authorization.Roles
@@ -15,7 +16,6 @@ namespace Abp.Authorization.Roles
         IQueryableRoleStore<TRole, int>,
         IRolePermissionStore<TRole>,
         ITransientDependency
-
         where TRole : AbpRole<TUser>
         where TUser : AbpUser<TUser>
     {
@@ -23,17 +23,21 @@ namespace Abp.Authorization.Roles
         private readonly IRepository<UserRole, long> _userRoleRepository;
         private readonly IRepository<RolePermissionSetting, long> _rolePermissionSettingRepository;
 
+        private readonly IUnitOfWorkManager _unitOfWorkManager;
+
         /// <summary>
         /// Constructor.
         /// </summary>
         protected AbpRoleStore(
             IRepository<TRole> roleRepository,
             IRepository<UserRole, long> userRoleRepository,
-            IRepository<RolePermissionSetting, long> rolePermissionSettingRepository)
+            IRepository<RolePermissionSetting, long> rolePermissionSettingRepository,
+            IUnitOfWorkManager unitOfWorkManager)
         {
             _roleRepository = roleRepository;
             _userRoleRepository = userRoleRepository;
             _rolePermissionSettingRepository = rolePermissionSettingRepository;
+            _unitOfWorkManager = unitOfWorkManager;
         }
 
         public virtual IQueryable<TRole> Roles
@@ -43,81 +47,103 @@ namespace Abp.Authorization.Roles
 
         public virtual async Task CreateAsync(TRole role)
         {
-            await _roleRepository.InsertAsync(role);
+            await _unitOfWorkManager.WithUnitOfWorkAsync(async () => { await _roleRepository.InsertAsync(role); });
         }
 
         public virtual async Task UpdateAsync(TRole role)
         {
-            await _roleRepository.UpdateAsync(role);
+            await _unitOfWorkManager.WithUnitOfWorkAsync(async () => { await _roleRepository.UpdateAsync(role); });
         }
 
         public virtual async Task DeleteAsync(TRole role)
         {
-            await _userRoleRepository.DeleteAsync(ur => ur.RoleId == role.Id);
-            await _roleRepository.DeleteAsync(role);
+            await _unitOfWorkManager.WithUnitOfWorkAsync(async () =>
+            {
+                await _userRoleRepository.DeleteAsync(ur => ur.RoleId == role.Id);
+                await _roleRepository.DeleteAsync(role);
+            });
         }
 
         public virtual async Task<TRole> FindByIdAsync(int roleId)
         {
-            return await _roleRepository.FirstOrDefaultAsync(roleId);
+            return await _unitOfWorkManager.WithUnitOfWorkAsync(async () =>
+                await _roleRepository.FirstOrDefaultAsync(roleId)
+            );
         }
 
         public virtual TRole FindById(int roleId)
         {
-            return _roleRepository.FirstOrDefault(roleId);
+            return _unitOfWorkManager.WithUnitOfWork(() =>
+                _roleRepository.FirstOrDefault(roleId)
+            );
         }
 
         public virtual async Task<TRole> FindByNameAsync(string roleName)
         {
             var normalizedName = NormalizeKey(roleName);
 
-            return await _roleRepository.FirstOrDefaultAsync(
-                role => role.NormalizedName == normalizedName
+            return await _unitOfWorkManager.WithUnitOfWorkAsync(async () =>
+            {
+                return await _roleRepository.FirstOrDefaultAsync(
+                    role => role.NormalizedName == normalizedName
                 );
+            });
         }
 
         public virtual TRole FindByName(string roleName)
         {
             var normalizedName = NormalizeKey(roleName);
 
-            return _roleRepository.FirstOrDefault(
-                role => role.NormalizedName == normalizedName
+            return _unitOfWorkManager.WithUnitOfWork(() =>
+            {
+                return _roleRepository.FirstOrDefault(
+                    role => role.NormalizedName == normalizedName
                 );
+            });
         }
 
         public virtual async Task<TRole> FindByDisplayNameAsync(string displayName)
         {
-            return await _roleRepository.FirstOrDefaultAsync(
-                role => role.DisplayName == displayName
+            return await _unitOfWorkManager.WithUnitOfWorkAsync(async () =>
+            {
+                return await _roleRepository.FirstOrDefaultAsync(
+                    role => role.DisplayName == displayName
                 );
+            });
         }
 
         /// <inheritdoc/>
         public virtual async Task AddPermissionAsync(TRole role, PermissionGrantInfo permissionGrant)
         {
-            if (await HasPermissionAsync(role.Id, permissionGrant))
+            await _unitOfWorkManager.WithUnitOfWorkAsync(async () =>
             {
-                return;
-            }
-
-            await _rolePermissionSettingRepository.InsertAsync(
-                new RolePermissionSetting
+                if (await HasPermissionAsync(role.Id, permissionGrant))
                 {
-                    TenantId = role.TenantId,
-                    RoleId = role.Id,
-                    Name = permissionGrant.Name,
-                    IsGranted = permissionGrant.IsGranted
-                });
+                    return;
+                }
+
+                await _rolePermissionSettingRepository.InsertAsync(
+                    new RolePermissionSetting
+                    {
+                        TenantId = role.TenantId,
+                        RoleId = role.Id,
+                        Name = permissionGrant.Name,
+                        IsGranted = permissionGrant.IsGranted
+                    });
+            });
         }
 
         /// <inheritdoc/>
         public virtual async Task RemovePermissionAsync(TRole role, PermissionGrantInfo permissionGrant)
         {
-            await _rolePermissionSettingRepository.DeleteAsync(
-                permissionSetting => permissionSetting.RoleId == role.Id &&
-                                     permissionSetting.Name == permissionGrant.Name &&
-                                     permissionSetting.IsGranted == permissionGrant.IsGranted
+            await _unitOfWorkManager.WithUnitOfWorkAsync(async () =>
+            {
+                await _rolePermissionSettingRepository.DeleteAsync(
+                    permissionSetting => permissionSetting.RoleId == role.Id &&
+                                         permissionSetting.Name == permissionGrant.Name &&
+                                         permissionSetting.IsGranted == permissionGrant.IsGranted
                 );
+            });
         }
 
         /// <inheritdoc/>
@@ -134,32 +160,44 @@ namespace Abp.Authorization.Roles
 
         public async Task<IList<PermissionGrantInfo>> GetPermissionsAsync(int roleId)
         {
-            return (await _rolePermissionSettingRepository.GetAllListAsync(p => p.RoleId == roleId))
-                .Select(p => new PermissionGrantInfo(p.Name, p.IsGranted))
-                .ToList();
+            return await _unitOfWorkManager.WithUnitOfWorkAsync(async () =>
+            {
+                return (await _rolePermissionSettingRepository.GetAllListAsync(p => p.RoleId == roleId))
+                    .Select(p => new PermissionGrantInfo(p.Name, p.IsGranted))
+                    .ToList();
+            });
         }
 
         public IList<PermissionGrantInfo> GetPermissions(int roleId)
         {
-            return (_rolePermissionSettingRepository.GetAllList(p => p.RoleId == roleId))
-                .Select(p => new PermissionGrantInfo(p.Name, p.IsGranted))
-                .ToList();
+            return _unitOfWorkManager.WithUnitOfWork(() =>
+            {
+                return (_rolePermissionSettingRepository.GetAllList(p => p.RoleId == roleId))
+                    .Select(p => new PermissionGrantInfo(p.Name, p.IsGranted))
+                    .ToList();
+            });
         }
 
         /// <inheritdoc/>
         public virtual async Task<bool> HasPermissionAsync(int roleId, PermissionGrantInfo permissionGrant)
         {
-            return await _rolePermissionSettingRepository.FirstOrDefaultAsync(
-                p => p.RoleId == roleId &&
-                     p.Name == permissionGrant.Name &&
-                     p.IsGranted == permissionGrant.IsGranted
+            return await _unitOfWorkManager.WithUnitOfWorkAsync(async () =>
+            {
+                return await _rolePermissionSettingRepository.FirstOrDefaultAsync(
+                    p => p.RoleId == roleId &&
+                         p.Name == permissionGrant.Name &&
+                         p.IsGranted == permissionGrant.IsGranted
                 ) != null;
+            });
         }
 
         /// <inheritdoc/>
         public virtual async Task RemoveAllPermissionSettingsAsync(TRole role)
         {
-            await _rolePermissionSettingRepository.DeleteAsync(s => s.RoleId == role.Id);
+            await _unitOfWorkManager.WithUnitOfWorkAsync(async () =>
+            {
+                await _rolePermissionSettingRepository.DeleteAsync(s => s.RoleId == role.Id);
+            });
         }
 
         protected virtual string NormalizeKey(string key)
@@ -169,7 +207,7 @@ namespace Abp.Authorization.Roles
 
         public virtual void Dispose()
         {
-            //No need to dispose since using IOC.
+            // No need to dispose since using IOC.
         }
     }
 }
