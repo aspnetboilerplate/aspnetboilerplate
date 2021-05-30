@@ -88,10 +88,12 @@ namespace Abp.ZeroCore.SampleApp.Core
 
         public EditionManager(
             IRepository<Edition> editionRepository,
-            IAbpZeroFeatureValueStore featureValueStore)
+            IAbpZeroFeatureValueStore featureValueStore,
+            IUnitOfWorkManager unitOfWorkManager)
             : base(
                editionRepository,
-               featureValueStore)
+               featureValueStore,
+               unitOfWorkManager)
         {
         }
     }
