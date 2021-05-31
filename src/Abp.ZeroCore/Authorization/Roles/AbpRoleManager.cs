@@ -483,80 +483,101 @@ namespace Abp.Authorization.Roles
 
         public virtual async Task SetOrganizationUnitsAsync(TRole role, params long[] organizationUnitIds)
         {
-            if (organizationUnitIds == null)
+            await _unitOfWorkManager.WithUnitOfWorkAsync(async () =>
             {
-                organizationUnitIds = new long[0];
-            }
-
-            var currentOus = await GetOrganizationUnitsAsync(role);
-
-            //Remove from removed OUs
-            foreach (var currentOu in currentOus)
-            {
-                if (!organizationUnitIds.Contains(currentOu.Id))
+                if (organizationUnitIds == null)
                 {
-                    await RemoveFromOrganizationUnitAsync(role, currentOu);
+                    organizationUnitIds = new long[0];
                 }
-            }
 
-            //Add to added OUs
-            foreach (var organizationUnitId in organizationUnitIds)
-            {
-                if (currentOus.All(ou => ou.Id != organizationUnitId))
+                var currentOus = await GetOrganizationUnitsAsync(role);
+
+                //Remove from removed OUs
+                foreach (var currentOu in currentOus)
                 {
-                    await AddToOrganizationUnitAsync(
-                        role,
-                        await _organizationUnitRepository.GetAsync(organizationUnitId)
-                    );
+                    if (!organizationUnitIds.Contains(currentOu.Id))
+                    {
+                        await RemoveFromOrganizationUnitAsync(role, currentOu);
+                    }
                 }
-            }
+
+                //Add to added OUs
+                foreach (var organizationUnitId in organizationUnitIds)
+                {
+                    if (currentOus.All(ou => ou.Id != organizationUnitId))
+                    {
+                        await AddToOrganizationUnitAsync(
+                            role,
+                            await _organizationUnitRepository.GetAsync(organizationUnitId)
+                        );
+                    }
+                }
+            });
         }
 
         public virtual async Task<bool> IsInOrganizationUnitAsync(int roleId, long ouId)
         {
-            return await IsInOrganizationUnitAsync(
-                await GetRoleByIdAsync(roleId),
-                await _organizationUnitRepository.GetAsync(ouId)
+            return await _unitOfWorkManager.WithUnitOfWorkAsync(async () =>
+                await IsInOrganizationUnitAsync(
+                    await GetRoleByIdAsync(roleId),
+                    await _organizationUnitRepository.GetAsync(ouId)
+                )
             );
         }
 
         public virtual async Task<bool> IsInOrganizationUnitAsync(TRole role, OrganizationUnit ou)
         {
-            return await _organizationUnitRoleRepository.CountAsync(uou =>
-                uou.RoleId == role.Id && uou.OrganizationUnitId == ou.Id
-            ) > 0;
+            return await _unitOfWorkManager.WithUnitOfWorkAsync(async () =>
+            {
+                return await _organizationUnitRoleRepository.CountAsync(uou =>
+                    uou.RoleId == role.Id && uou.OrganizationUnitId == ou.Id
+                ) > 0;
+            });
         }
 
         public virtual async Task AddToOrganizationUnitAsync(int roleId, long ouId, int? tenantId)
         {
-            await AddToOrganizationUnitAsync(
-                await GetRoleByIdAsync(roleId),
-                await _organizationUnitRepository.GetAsync(ouId)
-            );
+            await _unitOfWorkManager.WithUnitOfWorkAsync(async () =>
+            {
+                await AddToOrganizationUnitAsync(
+                    await GetRoleByIdAsync(roleId),
+                    await _organizationUnitRepository.GetAsync(ouId)
+                );
+            });
         }
 
         public virtual async Task AddToOrganizationUnitAsync(TRole role, OrganizationUnit ou)
         {
-            if (await IsInOrganizationUnitAsync(role, ou))
+            await _unitOfWorkManager.WithUnitOfWorkAsync(async () =>
             {
-                return;
-            }
+                if (await IsInOrganizationUnitAsync(role, ou))
+                {
+                    return;
+                }
 
-            await _organizationUnitRoleRepository.InsertAsync(new OrganizationUnitRole(role.TenantId, role.Id, ou.Id));
+                await _organizationUnitRoleRepository.InsertAsync(new OrganizationUnitRole(role.TenantId, role.Id, ou.Id));
+            });
         }
 
         public async Task RemoveFromOrganizationUnitAsync(int roleId, long organizationUnitId)
         {
-            await RemoveFromOrganizationUnitAsync(
-                await GetRoleByIdAsync(roleId),
-                await _organizationUnitRepository.GetAsync(organizationUnitId)
-            );
+            await _unitOfWorkManager.WithUnitOfWorkAsync(async () =>
+            {
+                await RemoveFromOrganizationUnitAsync(
+                    await GetRoleByIdAsync(roleId),
+                    await _organizationUnitRepository.GetAsync(organizationUnitId)
+                );
+            });
         }
 
         public virtual async Task RemoveFromOrganizationUnitAsync(TRole role, OrganizationUnit ou)
         {
-            await _organizationUnitRoleRepository.DeleteAsync(uor =>
-                uor.RoleId == role.Id && uor.OrganizationUnitId == ou.Id);
+            await _unitOfWorkManager.WithUnitOfWorkAsync(async () =>
+            {
+                await _organizationUnitRoleRepository.DeleteAsync(uor =>
+                    uor.RoleId == role.Id && uor.OrganizationUnitId == ou.Id
+                );
+            });
         }
 
         public virtual async Task<List<OrganizationUnit>> GetOrganizationUnitsAsync(TRole role)
@@ -593,7 +614,8 @@ namespace Abp.Authorization.Roles
                 }
 
                 var staticRoleDefinition = RoleManagementConfig.StaticRoles.FirstOrDefault(r =>
-                    r.RoleName == role.Name && r.Side == role.GetMultiTenancySide());
+                    r.RoleName == role.Name && r.Side == role.GetMultiTenancySide()
+                );
 
                 if (staticRoleDefinition != null)
                 {
@@ -636,7 +658,8 @@ namespace Abp.Authorization.Roles
                 }
 
                 var staticRoleDefinition = RoleManagementConfig.StaticRoles.FirstOrDefault(r =>
-                    r.RoleName == role.Name && r.Side == role.GetMultiTenancySide());
+                    r.RoleName == role.Name && r.Side == role.GetMultiTenancySide()
+                );
 
                 if (staticRoleDefinition != null)
                 {
