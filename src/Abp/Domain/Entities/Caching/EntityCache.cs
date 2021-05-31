@@ -1,5 +1,6 @@
 ﻿using System.Threading.Tasks;
 using Abp.Domain.Repositories;
+using Abp.Domain.Uow;
 using Abp.Events.Bus.Entities;
 using Abp.Events.Bus.Handlers;
 using Abp.Runtime.Caching;
@@ -14,10 +15,12 @@ namespace Abp.Domain.Entities.Caching
         public EntityCache(
             ICacheManager cacheManager,
             IRepository<TEntity, int> repository,
+            IUnitOfWorkManager unitOfWorkManager,
             string cacheName = null)
             : base(
                 cacheManager,
                 repository,
+                unitOfWorkManager,
                 cacheName)
         {
         }
@@ -39,11 +42,13 @@ namespace Abp.Domain.Entities.Caching
 
         public EntityCache(
             ICacheManager cacheManager, 
-            IRepository<TEntity, TPrimaryKey> repository, 
+            IRepository<TEntity, TPrimaryKey> repository,
+            IUnitOfWorkManager unitOfWorkManager,
             string cacheName = null)
             : base(
                 cacheManager,
                 repository,
+                unitOfWorkManager,
                 cacheName)
         {
         }

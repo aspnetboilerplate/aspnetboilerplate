@@ -2,6 +2,7 @@
 using Abp.Dependency;
 using Abp.Domain.Entities.Caching;
 using Abp.Domain.Repositories;
+using Abp.Domain.Uow;
 using Abp.Runtime.Caching;
 using Abp.TestBase.SampleApplication.Messages;
 using Shouldly;
@@ -40,15 +41,20 @@ namespace Abp.TestBase.SampleApplication.Tests.Domain.Entities.Caching
 
         public interface IMessageCache : IEntityCache<MessageCacheItem>
         {
-
         }
 
         public class MessageCache : EntityCache<Message, MessageCacheItem>, IMessageCache, ITransientDependency
         {
-            public MessageCache(ICacheManager cacheManager, IRepository<Message, int> repository)
-                : base(cacheManager, repository)
+            public MessageCache(
+                ICacheManager cacheManager,
+                IRepository<Message, int> repository,
+                IUnitOfWorkManager unitOfWorkManager)
+                : base(
+                    cacheManager,
+                    repository,
+                    unitOfWorkManager
+                )
             {
-
             }
         }
 
