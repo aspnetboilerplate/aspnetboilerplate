@@ -124,8 +124,8 @@ namespace Abp.Authorization
 
         public virtual async Task<AbpLoginResult<TTenant, TUser>> LoginAsync(
             string userNameOrEmailAddress,
-            string plainPassword, 
-            string tenancyName = null, 
+            string plainPassword,
+            string tenancyName = null,
             bool shouldLockout = true)
         {
             return await UnitOfWorkManager.WithUnitOfWorkAsync(async () =>
@@ -136,7 +136,7 @@ namespace Abp.Authorization
                     tenancyName,
                     shouldLockout
                 );
-                
+
                 await SaveLoginAttemptAsync(result, tenancyName, userNameOrEmailAddress);
                 return result;
             });
@@ -144,8 +144,8 @@ namespace Abp.Authorization
 
         protected virtual async Task<AbpLoginResult<TTenant, TUser>> LoginAsyncInternal(
             string userNameOrEmailAddress,
-            string plainPassword, 
-            string tenancyName, 
+            string plainPassword,
+            string tenancyName,
             bool shouldLockout)
         {
             if (userNameOrEmailAddress.IsNullOrEmpty())
@@ -400,8 +400,9 @@ namespace Abp.Authorization
 
         protected virtual async Task<TTenant> GetDefaultTenantAsync()
         {
-            var tenant =
-                await TenantRepository.FirstOrDefaultAsync(t => t.TenancyName == AbpTenant<TUser>.DefaultTenantName);
+            var tenant = await TenantRepository.FirstOrDefaultAsync(
+                t => t.TenancyName == AbpTenant<TUser>.DefaultTenantName
+            );
             if (tenant == null)
             {
                 throw new AbpException("There should be a 'Default' tenant if multi-tenancy is disabled!");
@@ -426,11 +427,14 @@ namespace Abp.Authorization
             if (tenantId.HasValue)
             {
                 return await SettingManager.GetSettingValueForTenantAsync<bool>(
-                    AbpZeroSettingNames.UserManagement.IsEmailConfirmationRequiredForLogin, tenantId.Value);
+                    AbpZeroSettingNames.UserManagement.IsEmailConfirmationRequiredForLogin,
+                    tenantId.Value
+                );
             }
 
-            return await SettingManager.GetSettingValueForApplicationAsync<bool>(AbpZeroSettingNames.UserManagement
-                .IsEmailConfirmationRequiredForLogin);
+            return await SettingManager.GetSettingValueForApplicationAsync<bool>(
+                AbpZeroSettingNames.UserManagement.IsEmailConfirmationRequiredForLogin
+            );
         }
 
         protected virtual bool IsEmailConfirmationRequiredForLogin(int? tenantId)
@@ -438,11 +442,14 @@ namespace Abp.Authorization
             if (tenantId.HasValue)
             {
                 return SettingManager.GetSettingValueForTenant<bool>(
-                    AbpZeroSettingNames.UserManagement.IsEmailConfirmationRequiredForLogin, tenantId.Value);
+                    AbpZeroSettingNames.UserManagement.IsEmailConfirmationRequiredForLogin, 
+                    tenantId.Value
+                );
             }
 
-            return SettingManager.GetSettingValueForApplication<bool>(AbpZeroSettingNames.UserManagement
-                .IsEmailConfirmationRequiredForLogin);
+            return SettingManager.GetSettingValueForApplication<bool>(
+                AbpZeroSettingNames.UserManagement.IsEmailConfirmationRequiredForLogin
+            );
         }
 
         protected virtual Task<bool> IsPhoneConfirmationRequiredForLoginAsync(int? tenantId)
