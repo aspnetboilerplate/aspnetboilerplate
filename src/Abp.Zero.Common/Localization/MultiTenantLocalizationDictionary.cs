@@ -43,7 +43,10 @@ namespace Abp.Localization
             _unitOfWorkManager = unitOfWorkManager;
         }
 
-        public CultureInfo CultureInfo { get { return _internalDictionary.CultureInfo; } }
+        public CultureInfo CultureInfo
+        {
+            get { return _internalDictionary.CultureInfo; }
+        }
 
         public string this[string name]
         {
@@ -170,26 +173,24 @@ namespace Abp.Localization
 
         private string CalculateCacheKey(int? tenantId)
         {
-            return MultiTenantLocalizationDictionaryCacheHelper.CalculateCacheKey(tenantId, _sourceName, CultureInfo.Name);
+            return MultiTenantLocalizationDictionaryCacheHelper.CalculateCacheKey(
+                tenantId,
+                _sourceName,
+                CultureInfo.Name
+            );
         }
-        
+
         protected virtual Dictionary<string, string> GetAllValuesFromDatabase(int? tenantId)
         {
-            Dictionary<string, string> result;
-            
-            using (var uow = _unitOfWorkManager.Begin())
+            return _unitOfWorkManager.WithUnitOfWork(() =>
             {
                 using (_unitOfWorkManager.Current.SetTenantId(tenantId))
                 {
-                    result = _customLocalizationRepository
+                    return _customLocalizationRepository
                         .GetAllList(l => l.Source == _sourceName && l.LanguageName == CultureInfo.Name)
                         .ToDictionary(l => l.Key, l => l.Value);
                 }
-                
-                uow.Complete();
-            }
-
-            return result;
+            });
         }
     }
 }
