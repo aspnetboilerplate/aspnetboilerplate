@@ -543,53 +543,71 @@ namespace Abp.Authorization.Users
 
         public virtual async Task<bool> IsInOrganizationUnitAsync(long userId, long ouId)
         {
-            return await IsInOrganizationUnitAsync(
-                await GetUserByIdAsync(userId),
-                await _organizationUnitRepository.GetAsync(ouId)
+            return await _unitOfWorkManager.WithUnitOfWorkAsync(async () =>
+                await IsInOrganizationUnitAsync(
+                    await GetUserByIdAsync(userId),
+                    await _organizationUnitRepository.GetAsync(ouId)
+                )
             );
         }
 
         public virtual async Task<bool> IsInOrganizationUnitAsync(TUser user, OrganizationUnit ou)
         {
-            return await _userOrganizationUnitRepository.CountAsync(uou =>
-                uou.UserId == user.Id && uou.OrganizationUnitId == ou.Id
-            ) > 0;
+            return await _unitOfWorkManager.WithUnitOfWorkAsync(async () =>
+            {
+                return await _userOrganizationUnitRepository.CountAsync(uou =>
+                    uou.UserId == user.Id && uou.OrganizationUnitId == ou.Id
+                ) > 0;
+            });
         }
 
         public virtual async Task AddToOrganizationUnitAsync(long userId, long ouId)
         {
-            await AddToOrganizationUnitAsync(
-                await GetUserByIdAsync(userId),
-                await _organizationUnitRepository.GetAsync(ouId)
-            );
+            await _unitOfWorkManager.WithUnitOfWorkAsync(async () =>
+            {
+                await AddToOrganizationUnitAsync(
+                    await GetUserByIdAsync(userId),
+                    await _organizationUnitRepository.GetAsync(ouId)
+                );
+            });
         }
 
         public virtual async Task AddToOrganizationUnitAsync(TUser user, OrganizationUnit ou)
         {
-            var currentOus = await GetOrganizationUnitsAsync(user);
-
-            if (currentOus.Any(cou => cou.Id == ou.Id))
+            await _unitOfWorkManager.WithUnitOfWorkAsync(async () =>
             {
-                return;
-            }
+                var currentOus = await GetOrganizationUnitsAsync(user);
 
-            await CheckMaxUserOrganizationUnitMembershipCountAsync(user.TenantId, currentOus.Count + 1);
+                if (currentOus.Any(cou => cou.Id == ou.Id))
+                {
+                    return;
+                }
 
-            await _userOrganizationUnitRepository.InsertAsync(new UserOrganizationUnit(user.TenantId, user.Id, ou.Id));
+                await CheckMaxUserOrganizationUnitMembershipCountAsync(user.TenantId, currentOus.Count + 1);
+                await _userOrganizationUnitRepository.InsertAsync(new UserOrganizationUnit(user.TenantId, user.Id,
+                    ou.Id));
+            });
         }
 
         public virtual async Task RemoveFromOrganizationUnitAsync(long userId, long ouId)
         {
-            await RemoveFromOrganizationUnitAsync(
-                await GetUserByIdAsync(userId),
-                await _organizationUnitRepository.GetAsync(ouId)
-            );
+            await _unitOfWorkManager.WithUnitOfWorkAsync(async () =>
+            {
+                await RemoveFromOrganizationUnitAsync(
+                    await GetUserByIdAsync(userId),
+                    await _organizationUnitRepository.GetAsync(ouId)
+                );
+            });
         }
 
         public virtual async Task RemoveFromOrganizationUnitAsync(TUser user, OrganizationUnit ou)
         {
-            await _userOrganizationUnitRepository.DeleteAsync(uou =>
-                uou.UserId == user.Id && uou.OrganizationUnitId == ou.Id);
+            await _unitOfWorkManager.WithUnitOfWorkAsync(async () =>
+            {
+                await _userOrganizationUnitRepository.DeleteAsync(uou =>
+                    uou.UserId == user.Id && uou.OrganizationUnitId == ou.Id
+                );
+            });
         }
 
         public virtual async Task SetOrganizationUnitsAsync(long userId, params long[] organizationUnitIds)
@@ -732,10 +750,16 @@ namespace Abp.Authorization.Users
         {
             UserLockoutEnabledByDefault = IsTrue(AbpZeroSettingNames.UserManagement.UserLockOut.IsEnabled, tenantId);
             DefaultAccountLockoutTimeSpan = TimeSpan.FromSeconds(
-                GetSettingValue<int>(AbpZeroSettingNames.UserManagement.UserLockOut.DefaultAccountLockoutSeconds,
-                    tenantId));
+                GetSettingValue<int>(
+                    AbpZeroSettingNames.UserManagement.UserLockOut.DefaultAccountLockoutSeconds,
+                    tenantId
+                )
+            );
+
             MaxFailedAccessAttemptsBeforeLockout = GetSettingValue<int>(
-                AbpZeroSettingNames.UserManagement.UserLockOut.MaxFailedAccessAttemptsBeforeLockout, tenantId);
+                AbpZeroSettingNames.UserManagement.UserLockOut.MaxFailedAccessAttemptsBeforeLockout,
+                tenantId
+            );
         }
 
         public override async Task<IList<string>> GetValidTwoFactorProvidersAsync(long userId)

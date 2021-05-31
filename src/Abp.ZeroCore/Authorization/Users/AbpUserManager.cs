@@ -140,7 +140,7 @@ namespace Abp.Authorization.Users
             return await IsGrantedAsync(
                 userId,
                 _permissionManager.GetPermission(permissionName)
-                );
+            );
         }
 
         /// <summary>
@@ -153,7 +153,7 @@ namespace Abp.Authorization.Users
             return IsGranted(
                 userId,
                 _permissionManager.GetPermission(permissionName)
-                );
+            );
         }
 
         /// <summary>
@@ -313,7 +313,7 @@ namespace Abp.Authorization.Users
 
             return permissionList;
         }
-        
+
         /// <summary>
         /// Sets all granted permissions of a user at once.
         /// Prohibits all other permissions.
@@ -335,7 +335,7 @@ namespace Abp.Authorization.Users
                 await GrantPermissionAsync(user, permission);
             }
         }
-        
+
         /// <summary>
         /// Prohibits all permissions for a user.
         /// </summary>
@@ -390,7 +390,7 @@ namespace Abp.Authorization.Users
 
             await UserPermissionStore.AddPermissionAsync(user, new PermissionGrantInfo(permission.Name, true));
         }
-        
+
         /// <summary>
         /// Prohibits a permission for a user if it's granted.
         /// </summary>
@@ -407,7 +407,7 @@ namespace Abp.Authorization.Users
 
             await UserPermissionStore.AddPermissionAsync(user, new PermissionGrantInfo(permission.Name, false));
         }
-        
+
         public virtual Task<TUser> FindByNameOrEmailAsync(string userNameOrEmailAddress)
         {
             return AbpUserStore.FindByNameOrEmailAsync(userNameOrEmailAddress);
@@ -509,7 +509,8 @@ namespace Abp.Authorization.Users
             {
                 if ((await GetOldUserNameAsync(user.Id)) == AbpUserBase.AdminUserName)
                 {
-                    throw new UserFriendlyException(string.Format(L("CanNotRenameAdminUser"), AbpUserBase.AdminUserName));
+                    throw new UserFriendlyException(
+                        string.Format(L("CanNotRenameAdminUser"), AbpUserBase.AdminUserName));
                 }
             }
 
@@ -606,7 +607,8 @@ namespace Abp.Authorization.Users
         //    return IdentityResult.Success;
         //}
 
-        public virtual async Task<IdentityResult> CheckDuplicateUsernameOrEmailAddressAsync(long? expectedUserId, string userName, string emailAddress)
+        public virtual async Task<IdentityResult> CheckDuplicateUsernameOrEmailAddressAsync(long? expectedUserId,
+            string userName, string emailAddress)
         {
             var user = (await FindByNameAsync(userName));
             if (user != null && user.Id != expectedUserId)
@@ -657,81 +659,110 @@ namespace Abp.Authorization.Users
 
             return IdentityResult.Success;
         }
-        
+
         public virtual async Task<bool> IsInOrganizationUnitAsync(long userId, long ouId)
         {
-            return await IsInOrganizationUnitAsync(
-                await GetUserByIdAsync(userId),
-                await _organizationUnitRepository.GetAsync(ouId)
-                );
+            return await _unitOfWorkManager.WithUnitOfWorkAsync(async () =>
+                await IsInOrganizationUnitAsync(
+                    await GetUserByIdAsync(userId),
+                    await _organizationUnitRepository.GetAsync(ouId)
+                )
+            );
         }
 
         public virtual async Task<bool> IsInOrganizationUnitAsync(TUser user, OrganizationUnit ou)
         {
-            return await _userOrganizationUnitRepository.CountAsync(uou =>
-                uou.UserId == user.Id && uou.OrganizationUnitId == ou.Id
+            return await _unitOfWorkManager.WithUnitOfWorkAsync(async () =>
+            {
+                return await _userOrganizationUnitRepository.CountAsync(uou =>
+                    uou.UserId == user.Id && uou.OrganizationUnitId == ou.Id
                 ) > 0;
+            });
         }
 
         public virtual bool IsInOrganizationUnit(TUser user, OrganizationUnit ou)
         {
-            return _userOrganizationUnitRepository.Count(uou =>
-                uou.UserId == user.Id && uou.OrganizationUnitId == ou.Id
+            return _unitOfWorkManager.WithUnitOfWork(() =>
+            {
+                return _userOrganizationUnitRepository.Count(uou =>
+                    uou.UserId == user.Id && uou.OrganizationUnitId == ou.Id
                 ) > 0;
+            });
         }
 
         public virtual async Task AddToOrganizationUnitAsync(long userId, long ouId)
         {
-            await AddToOrganizationUnitAsync(
-                await GetUserByIdAsync(userId),
-                await _organizationUnitRepository.GetAsync(ouId)
+            await _unitOfWorkManager.WithUnitOfWorkAsync(async () =>
+            {
+                await AddToOrganizationUnitAsync(
+                    await GetUserByIdAsync(userId),
+                    await _organizationUnitRepository.GetAsync(ouId)
                 );
+            });
         }
 
         public virtual async Task AddToOrganizationUnitAsync(TUser user, OrganizationUnit ou)
         {
-            var currentOus = await GetOrganizationUnitsAsync(user);
-
-            if (currentOus.Any(cou => cou.Id == ou.Id))
+            await _unitOfWorkManager.WithUnitOfWorkAsync(async () =>
             {
-                return;
-            }
+                var currentOus = await GetOrganizationUnitsAsync(user);
 
-            await CheckMaxUserOrganizationUnitMembershipCountAsync(user.TenantId, currentOus.Count + 1);
+                if (currentOus.Any(cou => cou.Id == ou.Id))
+                {
+                    return;
+                }
 
-            await _userOrganizationUnitRepository.InsertAsync(new UserOrganizationUnit(user.TenantId, user.Id, ou.Id));
+                await CheckMaxUserOrganizationUnitMembershipCountAsync(user.TenantId, currentOus.Count + 1);
+                await _userOrganizationUnitRepository.InsertAsync(new UserOrganizationUnit(user.TenantId, user.Id,
+                    ou.Id));
+            });
         }
 
         public virtual void AddToOrganizationUnit(TUser user, OrganizationUnit ou)
         {
-            var currentOus = GetOrganizationUnits(user);
-
-            if (currentOus.Any(cou => cou.Id == ou.Id))
+            _unitOfWorkManager.WithUnitOfWork(() =>
             {
-                return;
-            }
+                var currentOus = GetOrganizationUnits(user);
 
-            CheckMaxUserOrganizationUnitMembershipCount(user.TenantId, currentOus.Count + 1);
+                if (currentOus.Any(cou => cou.Id == ou.Id))
+                {
+                    return;
+                }
 
-            _userOrganizationUnitRepository.Insert(new UserOrganizationUnit(user.TenantId, user.Id, ou.Id));
+                CheckMaxUserOrganizationUnitMembershipCount(user.TenantId, currentOus.Count + 1);
+                _userOrganizationUnitRepository.Insert(new UserOrganizationUnit(user.TenantId, user.Id, ou.Id));
+            });
         }
 
         public virtual async Task RemoveFromOrganizationUnitAsync(long userId, long ouId)
         {
-            await RemoveFromOrganizationUnitAsync(
-                await GetUserByIdAsync(userId),
-                await _organizationUnitRepository.GetAsync(ouId)
+            await _unitOfWorkManager.WithUnitOfWorkAsync(async () =>
+            {
+                await RemoveFromOrganizationUnitAsync(
+                    await GetUserByIdAsync(userId),
+                    await _organizationUnitRepository.GetAsync(ouId)
                 );
+            });
         }
 
         public virtual async Task RemoveFromOrganizationUnitAsync(TUser user, OrganizationUnit ou)
         {
-            await _userOrganizationUnitRepository.DeleteAsync(uou => uou.UserId == user.Id && uou.OrganizationUnitId == ou.Id);
+            await _unitOfWorkManager.WithUnitOfWorkAsync(async () =>
+            {
+                await _userOrganizationUnitRepository.DeleteAsync(uou =>
+                    uou.UserId == user.Id && uou.OrganizationUnitId == ou.Id
+                );
+            });
         }
 
         public virtual void RemoveFromOrganizationUnit(TUser user, OrganizationUnit ou)
         {
-            _userOrganizationUnitRepository.Delete(uou => uou.UserId == user.Id && uou.OrganizationUnitId == ou.Id);
+            _unitOfWorkManager.WithUnitOfWork(() =>
+            {
+                _userOrganizationUnitRepository.Delete(
+                    uou => uou.UserId == user.Id && uou.OrganizationUnitId == ou.Id
+                );
+            });
         }
 
         public virtual async Task SetOrganizationUnitsAsync(long userId, params long[] organizationUnitIds)
@@ -739,7 +770,7 @@ namespace Abp.Authorization.Users
             await SetOrganizationUnitsAsync(
                 await GetUserByIdAsync(userId),
                 organizationUnitIds
-                );
+            );
         }
 
         private async Task CheckMaxUserOrganizationUnitMembershipCountAsync(int? tenantId, int requestedCount)
@@ -762,7 +793,7 @@ namespace Abp.Authorization.Users
 
         public virtual async Task SetOrganizationUnitsAsync(TUser user, params long[] organizationUnitIds)
         {
-            using (var uow = _unitOfWorkManager.Begin())
+            await _unitOfWorkManager.WithUnitOfWorkAsync(async () =>
             {
                 if (organizationUnitIds == null)
                 {
@@ -795,78 +826,79 @@ namespace Abp.Authorization.Users
                         );
                     }
                 }
-
-                await uow.CompleteAsync();
-            }    
+            });
         }
 
         public virtual void SetOrganizationUnits(TUser user, params long[] organizationUnitIds)
         {
-            if (organizationUnitIds == null)
+            _unitOfWorkManager.WithUnitOfWork(() =>
             {
-                organizationUnitIds = new long[0];
-            }
-
-            CheckMaxUserOrganizationUnitMembershipCount(user.TenantId, organizationUnitIds.Length);
-
-            var currentOus = GetOrganizationUnits(user);
-
-            //Remove from removed OUs
-            foreach (var currentOu in currentOus)
-            {
-                if (!organizationUnitIds.Contains(currentOu.Id))
+                if (organizationUnitIds == null)
                 {
-                    RemoveFromOrganizationUnit(user, currentOu);
+                    organizationUnitIds = new long[0];
                 }
-            }
 
-            //Add to added OUs
-            foreach (var organizationUnitId in organizationUnitIds)
-            {
-                if (currentOus.All(ou => ou.Id != organizationUnitId))
+                CheckMaxUserOrganizationUnitMembershipCount(user.TenantId, organizationUnitIds.Length);
+
+                var currentOus = GetOrganizationUnits(user);
+
+                //Remove from removed OUs
+                foreach (var currentOu in currentOus)
                 {
-                    AddToOrganizationUnit(
-                        user,
-                        _organizationUnitRepository.Get(organizationUnitId)
+                    if (!organizationUnitIds.Contains(currentOu.Id))
+                    {
+                        RemoveFromOrganizationUnit(user, currentOu);
+                    }
+                }
+
+                //Add to added OUs
+                foreach (var organizationUnitId in organizationUnitIds)
+                {
+                    if (currentOus.All(ou => ou.Id != organizationUnitId))
+                    {
+                        AddToOrganizationUnit(
+                            user,
+                            _organizationUnitRepository.Get(organizationUnitId)
                         );
+                    }
                 }
-            }
+            });
         }
 
-        
+
         public virtual async Task<List<OrganizationUnit>> GetOrganizationUnitsAsync(TUser user)
         {
-            using (var uow = _unitOfWorkManager.Begin())
+            var result = _unitOfWorkManager.WithUnitOfWork(() =>
             {
                 var query = from uou in _userOrganizationUnitRepository.GetAll()
                     join ou in _organizationUnitRepository.GetAll() on uou.OrganizationUnitId equals ou.Id
                     where uou.UserId == user.Id
                     select ou;
 
-                await uow.CompleteAsync();
-                
                 return query.ToList();
-            }
+            });
+
+            return await Task.FromResult(result);
         }
 
         public virtual List<OrganizationUnit> GetOrganizationUnits(TUser user)
         {
-            using (var uow = _unitOfWorkManager.Begin())
+            return _unitOfWorkManager.WithUnitOfWork(() =>
             {
                 var query = from uou in _userOrganizationUnitRepository.GetAll()
                     join ou in _organizationUnitRepository.GetAll() on uou.OrganizationUnitId equals ou.Id
                     where uou.UserId == user.Id
                     select ou;
 
-                uow.Complete();
-
                 return query.ToList();
-            }
+            });
         }
 
-        public virtual async Task<List<TUser>> GetUsersInOrganizationUnitAsync(OrganizationUnit organizationUnit, bool includeChildren = false)
+        public virtual async Task<List<TUser>> GetUsersInOrganizationUnitAsync(
+            OrganizationUnit organizationUnit,
+            bool includeChildren = false)
         {
-            using (var uow = _unitOfWorkManager.Begin())
+            var result = _unitOfWorkManager.WithUnitOfWork(() =>
             {
                 if (!includeChildren)
                 {
@@ -875,8 +907,6 @@ namespace Abp.Authorization.Users
                         where uou.OrganizationUnitId == organizationUnit.Id
                         select user;
 
-                    await uow.CompleteAsync();
-                    
                     return query.ToList();
                 }
                 else
@@ -887,16 +917,18 @@ namespace Abp.Authorization.Users
                         where ou.Code.StartsWith(organizationUnit.Code)
                         select user;
 
-                    await uow.CompleteAsync();
-                    
                     return query.ToList();
                 }
-            }
+            });
+
+            return await Task.FromResult(result);
         }
 
-        public virtual List<TUser> GetUsersInOrganizationUnit(OrganizationUnit organizationUnit, bool includeChildren = false)
+        public virtual List<TUser> GetUsersInOrganizationUnit(
+            OrganizationUnit organizationUnit,
+            bool includeChildren = false)
         {
-            using (var uow = _unitOfWorkManager.Begin())
+            return _unitOfWorkManager.WithUnitOfWork(() =>
             {
                 if (!includeChildren)
                 {
@@ -905,8 +937,6 @@ namespace Abp.Authorization.Users
                         where uou.OrganizationUnitId == organizationUnit.Id
                         select user;
 
-                    uow.Complete();
-                    
                     return query.ToList();
                 }
                 else
@@ -917,11 +947,9 @@ namespace Abp.Authorization.Users
                         where ou.Code.StartsWith(organizationUnit.Code)
                         select user;
 
-                    uow.Complete();
-                    
                     return query.ToList();
                 }
-            }
+            });
         }
 
         public virtual async Task InitializeOptionsAsync(int? tenantId)
@@ -929,16 +957,48 @@ namespace Abp.Authorization.Users
             Options = JsonConvert.DeserializeObject<IdentityOptions>(_optionsAccessor.Value.ToJsonString());
 
             //Lockout
-            Options.Lockout.AllowedForNewUsers = await IsTrueAsync(AbpZeroSettingNames.UserManagement.UserLockOut.IsEnabled, tenantId);
-            Options.Lockout.DefaultLockoutTimeSpan = TimeSpan.FromSeconds(await GetSettingValueAsync<int>(AbpZeroSettingNames.UserManagement.UserLockOut.DefaultAccountLockoutSeconds, tenantId));
-            Options.Lockout.MaxFailedAccessAttempts = await GetSettingValueAsync<int>(AbpZeroSettingNames.UserManagement.UserLockOut.MaxFailedAccessAttemptsBeforeLockout, tenantId);
+            Options.Lockout.AllowedForNewUsers = await IsTrueAsync(
+                AbpZeroSettingNames.UserManagement.UserLockOut.IsEnabled,
+                tenantId
+            );
+
+            Options.Lockout.DefaultLockoutTimeSpan = TimeSpan.FromSeconds(
+                await GetSettingValueAsync<int>(
+                    AbpZeroSettingNames.UserManagement.UserLockOut.DefaultAccountLockoutSeconds,
+                    tenantId
+                )
+            );
+
+            Options.Lockout.MaxFailedAccessAttempts = await GetSettingValueAsync<int>(
+                AbpZeroSettingNames.UserManagement.UserLockOut.MaxFailedAccessAttemptsBeforeLockout,
+                tenantId
+            );
 
             //Password complexity
-            Options.Password.RequireDigit = await GetSettingValueAsync<bool>(AbpZeroSettingNames.UserManagement.PasswordComplexity.RequireDigit, tenantId);
-            Options.Password.RequireLowercase = await GetSettingValueAsync<bool>(AbpZeroSettingNames.UserManagement.PasswordComplexity.RequireLowercase, tenantId);
-            Options.Password.RequireNonAlphanumeric = await GetSettingValueAsync<bool>(AbpZeroSettingNames.UserManagement.PasswordComplexity.RequireNonAlphanumeric, tenantId);
-            Options.Password.RequireUppercase = await GetSettingValueAsync<bool>(AbpZeroSettingNames.UserManagement.PasswordComplexity.RequireUppercase, tenantId);
-            Options.Password.RequiredLength = await GetSettingValueAsync<int>(AbpZeroSettingNames.UserManagement.PasswordComplexity.RequiredLength, tenantId);
+            Options.Password.RequireDigit = await GetSettingValueAsync<bool>(
+                AbpZeroSettingNames.UserManagement.PasswordComplexity.RequireDigit,
+                tenantId
+            );
+
+            Options.Password.RequireLowercase = await GetSettingValueAsync<bool>(
+                AbpZeroSettingNames.UserManagement.PasswordComplexity.RequireLowercase,
+                tenantId
+            );
+
+            Options.Password.RequireNonAlphanumeric = await GetSettingValueAsync<bool>(
+                AbpZeroSettingNames.UserManagement.PasswordComplexity.RequireNonAlphanumeric,
+                tenantId
+            );
+
+            Options.Password.RequireUppercase = await GetSettingValueAsync<bool>(
+                AbpZeroSettingNames.UserManagement.PasswordComplexity.RequireUppercase,
+                tenantId
+            );
+
+            Options.Password.RequiredLength = await GetSettingValueAsync<int>(
+                AbpZeroSettingNames.UserManagement.PasswordComplexity.RequiredLength,
+                tenantId
+            );
         }
 
         public virtual void InitializeOptions(int? tenantId)
@@ -946,16 +1006,45 @@ namespace Abp.Authorization.Users
             Options = JsonConvert.DeserializeObject<IdentityOptions>(_optionsAccessor.Value.ToJsonString());
 
             //Lockout
-            Options.Lockout.AllowedForNewUsers = IsTrue(AbpZeroSettingNames.UserManagement.UserLockOut.IsEnabled, tenantId);
-            Options.Lockout.DefaultLockoutTimeSpan = TimeSpan.FromSeconds(GetSettingValue<int>(AbpZeroSettingNames.UserManagement.UserLockOut.DefaultAccountLockoutSeconds, tenantId));
-            Options.Lockout.MaxFailedAccessAttempts = GetSettingValue<int>(AbpZeroSettingNames.UserManagement.UserLockOut.MaxFailedAccessAttemptsBeforeLockout, tenantId);
+            Options.Lockout.AllowedForNewUsers = IsTrue(
+                AbpZeroSettingNames.UserManagement.UserLockOut.IsEnabled,
+                tenantId
+            );
+
+            Options.Lockout.DefaultLockoutTimeSpan = TimeSpan.FromSeconds(
+                GetSettingValue<int>(
+                    AbpZeroSettingNames.UserManagement.UserLockOut.DefaultAccountLockoutSeconds,
+                    tenantId)
+            );
+
+            Options.Lockout.MaxFailedAccessAttempts = GetSettingValue<int>(
+                AbpZeroSettingNames.UserManagement.UserLockOut.MaxFailedAccessAttemptsBeforeLockout, tenantId);
 
             //Password complexity
-            Options.Password.RequireDigit = GetSettingValue<bool>(AbpZeroSettingNames.UserManagement.PasswordComplexity.RequireDigit, tenantId);
-            Options.Password.RequireLowercase = GetSettingValue<bool>(AbpZeroSettingNames.UserManagement.PasswordComplexity.RequireLowercase, tenantId);
-            Options.Password.RequireNonAlphanumeric = GetSettingValue<bool>(AbpZeroSettingNames.UserManagement.PasswordComplexity.RequireNonAlphanumeric, tenantId);
-            Options.Password.RequireUppercase = GetSettingValue<bool>(AbpZeroSettingNames.UserManagement.PasswordComplexity.RequireUppercase, tenantId);
-            Options.Password.RequiredLength = GetSettingValue<int>(AbpZeroSettingNames.UserManagement.PasswordComplexity.RequiredLength, tenantId);
+            Options.Password.RequireDigit = GetSettingValue<bool>(
+                AbpZeroSettingNames.UserManagement.PasswordComplexity.RequireDigit,
+                tenantId
+            );
+
+            Options.Password.RequireLowercase = GetSettingValue<bool>(
+                AbpZeroSettingNames.UserManagement.PasswordComplexity.RequireLowercase,
+                tenantId
+            );
+
+            Options.Password.RequireNonAlphanumeric = GetSettingValue<bool>(
+                AbpZeroSettingNames.UserManagement.PasswordComplexity.RequireNonAlphanumeric,
+                tenantId
+            );
+
+            Options.Password.RequireUppercase = GetSettingValue<bool>(
+                AbpZeroSettingNames.UserManagement.PasswordComplexity.RequireUppercase,
+                tenantId
+            );
+
+            Options.Password.RequiredLength = GetSettingValue<int>(
+                AbpZeroSettingNames.UserManagement.PasswordComplexity.RequiredLength,
+                tenantId
+            );
         }
 
         protected virtual Task<string> GetOldUserNameAsync(long userId)
@@ -1042,14 +1131,22 @@ namespace Abp.Authorization.Users
 
             foreach (var provider in await base.GetValidTwoFactorProvidersAsync(user))
             {
-                if (provider == "Email" &&
-                    !await IsTrueAsync(AbpZeroSettingNames.UserManagement.TwoFactorLogin.IsEmailProviderEnabled, user.TenantId))
+                var isEmailProviderEnabled = await IsTrueAsync(
+                    AbpZeroSettingNames.UserManagement.TwoFactorLogin.IsEmailProviderEnabled,
+                    user.TenantId
+                );
+
+                if (provider == "Email" && !isEmailProviderEnabled)
                 {
                     continue;
                 }
 
-                if (provider == "Phone" &&
-                    !await IsTrueAsync(AbpZeroSettingNames.UserManagement.TwoFactorLogin.IsSmsProviderEnabled, user.TenantId))
+                var isSmsProviderEnabled = await IsTrueAsync(
+                    AbpZeroSettingNames.UserManagement.TwoFactorLogin.IsSmsProviderEnabled,
+                    user.TenantId
+                );
+                
+                if (provider == "Phone" && !isSmsProviderEnabled)
                 {
                     continue;
                 }
@@ -1059,31 +1156,6 @@ namespace Abp.Authorization.Users
 
             return providers;
         }
-
-        // no sync version available for GetValidTwoFactorProviders()
-        //public override IList<string> GetValidTwoFactorProviders(TUser user)
-        //{
-        //    var providers = new List<string>();
-
-        //    foreach (var provider in base.GetValidTwoFactorProviders(user)) 
-        //    {
-        //        if (provider == "Email" &&
-        //            !IsTrue(AbpZeroSettingNames.UserManagement.TwoFactorLogin.IsEmailProviderEnabled, user.TenantId))
-        //        {
-        //            continue;
-        //        }
-
-        //        if (provider == "Phone" &&
-        //            !IsTrue(AbpZeroSettingNames.UserManagement.TwoFactorLogin.IsSmsProviderEnabled, user.TenantId))
-        //        {
-        //            continue;
-        //        }
-
-        //        providers.Add(provider);
-        //    }
-
-        //    return providers;
-        //}
 
         private bool IsTrue(string settingName, int? tenantId)
         {
