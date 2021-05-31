@@ -476,8 +476,11 @@ namespace Abp.Configuration
             //Get for user if defined
             if (settingDefinition.Scopes.HasFlag(SettingScopes.User) && userId.HasValue)
             {
-                var settingValue =
-                    await GetSettingValueForUserOrNullAsync(new UserIdentifier(tenantId, userId.Value), name);
+                var settingValue = await GetSettingValueForUserOrNullAsync(
+                    new UserIdentifier(tenantId, userId.Value),
+                    name
+                );
+                
                 if (settingValue != null)
                 {
                     return settingValue.Value;

@@ -26,7 +26,8 @@ namespace Abp.Localization
         /// </summary>
         public const string CacheName = "AbpZeroLanguages";
 
-        private ITypedCache<int, Dictionary<string, ApplicationLanguage>> LanguageListCache => _cacheManager.GetCache<int, Dictionary<string, ApplicationLanguage>>(CacheName);
+        private ITypedCache<int, Dictionary<string, ApplicationLanguage>> LanguageListCache =>
+            _cacheManager.GetCache<int, Dictionary<string, ApplicationLanguage>>(CacheName);
 
         private readonly IRepository<ApplicationLanguage> _languageRepository;
         private readonly ICacheManager _cacheManager;
@@ -82,11 +83,10 @@ namespace Abp.Localization
         /// <param name="language">The language.</param>
         public virtual async Task AddAsync(ApplicationLanguage language)
         {
-            using (var uow = _unitOfWorkManager.Begin())
+            await _unitOfWorkManager.WithUnitOfWorkAsync(async () =>
             {
                 if ((await GetLanguagesAsync(language.TenantId)).Any(l => l.Name == language.Name))
                 {
-                    await uow.CompleteAsync();
                     throw new AbpException("There is already a language with name = " + language.Name);
                 }
 
@@ -95,9 +95,7 @@ namespace Abp.Localization
                     await _languageRepository.InsertAsync(language);
                     await _unitOfWorkManager.Current.SaveChangesAsync();
                 }
-                
-                await uow.CompleteAsync();
-            }
+            });
         }
 
         /// <summary>
@@ -106,11 +104,10 @@ namespace Abp.Localization
         /// <param name="language">The language.</param>
         public virtual void Add(ApplicationLanguage language)
         {
-            using (var uow = _unitOfWorkManager.Begin())
+            _unitOfWorkManager.WithUnitOfWork(() =>
             {
                 if ((GetLanguages(language.TenantId)).Any(l => l.Name == language.Name))
                 {
-                    uow.Complete();
                     throw new AbpException("There is already a language with name = " + language.Name);
                 }
 
@@ -119,9 +116,7 @@ namespace Abp.Localization
                     _languageRepository.Insert(language);
                     _unitOfWorkManager.Current.SaveChanges();
                 }
-                
-                uow.Complete();
-            }
+            });
         }
 
         /// <summary>
@@ -131,18 +126,16 @@ namespace Abp.Localization
         /// <param name="languageName">Name of the language.</param>
         public virtual async Task RemoveAsync(int? tenantId, string languageName)
         {
-            using (var uow = _unitOfWorkManager.Begin())
+            await _unitOfWorkManager.WithUnitOfWorkAsync(async () =>
             {
                 var currentLanguage = (await GetLanguagesAsync(tenantId)).FirstOrDefault(l => l.Name == languageName);
                 if (currentLanguage == null)
                 {
-                    await uow.CompleteAsync();
                     return;
                 }
 
                 if (currentLanguage.TenantId == null && tenantId != null)
                 {
-                    await uow.CompleteAsync();
                     throw new AbpException("Can not delete a host language from tenant!");
                 }
 
@@ -151,9 +144,7 @@ namespace Abp.Localization
                     await _languageRepository.DeleteAsync(currentLanguage.Id);
                     await _unitOfWorkManager.Current.SaveChangesAsync();
                 }
-                
-                await uow.CompleteAsync();
-            }
+            });
         }
 
         /// <summary>
@@ -163,18 +154,16 @@ namespace Abp.Localization
         /// <param name="languageName">Name of the language.</param>
         public virtual void Remove(int? tenantId, string languageName)
         {
-            using (var uow = _unitOfWorkManager.Begin())
+            _unitOfWorkManager.WithUnitOfWork(() =>
             {
                 var currentLanguage = (GetLanguages(tenantId)).FirstOrDefault(l => l.Name == languageName);
                 if (currentLanguage == null)
                 {
-                    uow.Complete();
                     return;
                 }
 
                 if (currentLanguage.TenantId == null && tenantId != null)
                 {
-                    uow.Complete();
                     throw new AbpException("Can not delete a host language from tenant!");
                 }
 
@@ -183,9 +172,7 @@ namespace Abp.Localization
                     _languageRepository.Delete(currentLanguage.Id);
                     _unitOfWorkManager.Current.SaveChanges();
                 }
-                
-                uow.Complete();
-            }
+            });
         }
 
         /// <summary>
@@ -193,21 +180,20 @@ namespace Abp.Localization
         /// </summary>
         public virtual async Task UpdateAsync(int? tenantId, ApplicationLanguage language)
         {
-            using (var uow = _unitOfWorkManager.Begin())
+            await _unitOfWorkManager.WithUnitOfWorkAsync(async () =>
             {
-                var existingLanguageWithSameName = (await GetLanguagesAsync(language.TenantId)).FirstOrDefault(l => l.Name == language.Name);
+                var existingLanguageWithSameName =
+                    (await GetLanguagesAsync(language.TenantId)).FirstOrDefault(l => l.Name == language.Name);
                 if (existingLanguageWithSameName != null)
                 {
                     if (existingLanguageWithSameName.Id != language.Id)
                     {
-                        await uow.CompleteAsync();
                         throw new AbpException("There is already a language with name = " + language.Name);
                     }
                 }
 
                 if (language.TenantId == null && tenantId != null)
                 {
-                    await uow.CompleteAsync();
                     throw new AbpException("Can not update a host language from tenant");
                 }
 
@@ -216,9 +202,7 @@ namespace Abp.Localization
                     await _languageRepository.UpdateAsync(language);
                     await _unitOfWorkManager.Current.SaveChangesAsync();
                 }
-                
-                await uow.CompleteAsync();
-            }
+            });
         }
 
         /// <summary>
@@ -226,21 +210,20 @@ namespace Abp.Localization
         /// </summary>
         public virtual void Update(int? tenantId, ApplicationLanguage language)
         {
-            using (var uow = _unitOfWorkManager.Begin())
+            _unitOfWorkManager.WithUnitOfWork(() =>
             {
-                var existingLanguageWithSameName = (GetLanguages(language.TenantId)).FirstOrDefault(l => l.Name == language.Name);
+                var existingLanguageWithSameName =
+                    (GetLanguages(language.TenantId)).FirstOrDefault(l => l.Name == language.Name);
                 if (existingLanguageWithSameName != null)
                 {
                     if (existingLanguageWithSameName.Id != language.Id)
                     {
-                        uow.Complete();
                         throw new AbpException("There is already a language with name = " + language.Name);
                     }
                 }
 
                 if (language.TenantId == null && tenantId != null)
                 {
-                    uow.Complete();
                     throw new AbpException("Can not update a host language from tenant");
                 }
 
@@ -249,9 +232,7 @@ namespace Abp.Localization
                     _languageRepository.Update(language);
                     _unitOfWorkManager.Current.SaveChanges();
                 }
-                
-                uow.Complete();
-            }
+            });
         }
 
         /// <summary>
@@ -261,7 +242,8 @@ namespace Abp.Localization
         public virtual async Task<ApplicationLanguage> GetDefaultLanguageOrNullAsync(int? tenantId)
         {
             var defaultLanguageName = tenantId.HasValue
-                ? await _settingManager.GetSettingValueForTenantAsync(LocalizationSettingNames.DefaultLanguage, tenantId.Value)
+                ? await _settingManager.GetSettingValueForTenantAsync(LocalizationSettingNames.DefaultLanguage,
+                    tenantId.Value)
                 : await _settingManager.GetSettingValueForApplicationAsync(LocalizationSettingNames.DefaultLanguage);
 
             return (await GetLanguagesAsync(tenantId)).FirstOrDefault(l => l.Name == defaultLanguageName);
@@ -290,11 +272,13 @@ namespace Abp.Localization
             var cultureInfo = CultureInfo.GetCultureInfo(languageName);
             if (tenantId.HasValue)
             {
-                await _settingManager.ChangeSettingForTenantAsync(tenantId.Value, LocalizationSettingNames.DefaultLanguage, cultureInfo.Name);
+                await _settingManager.ChangeSettingForTenantAsync(tenantId.Value,
+                    LocalizationSettingNames.DefaultLanguage, cultureInfo.Name);
             }
             else
             {
-                await _settingManager.ChangeSettingForApplicationAsync(LocalizationSettingNames.DefaultLanguage, cultureInfo.Name);
+                await _settingManager.ChangeSettingForApplicationAsync(LocalizationSettingNames.DefaultLanguage,
+                    cultureInfo.Name);
             }
         }
 
@@ -308,7 +292,8 @@ namespace Abp.Localization
             var cultureInfo = CultureInfo.GetCultureInfo(languageName);
             if (tenantId.HasValue)
             {
-                _settingManager.ChangeSettingForTenant(tenantId.Value, LocalizationSettingNames.DefaultLanguage, cultureInfo.Name);
+                _settingManager.ChangeSettingForTenant(tenantId.Value, LocalizationSettingNames.DefaultLanguage,
+                    cultureInfo.Name);
             }
             else
             {
@@ -327,7 +312,8 @@ namespace Abp.Localization
         protected virtual async Task<Dictionary<string, ApplicationLanguage>> GetLanguageDictionaryAsync(int? tenantId)
         {
             //Creates a copy of the cached dictionary (to not modify it)
-            var languageDictionary = new Dictionary<string, ApplicationLanguage>(await GetLanguageDictionaryFromCacheAsync(null));
+            var languageDictionary =
+                new Dictionary<string, ApplicationLanguage>(await GetLanguageDictionaryFromCacheAsync(null));
 
             if (tenantId == null)
             {
@@ -371,39 +357,28 @@ namespace Abp.Localization
         {
             return LanguageListCache.Get(tenantId ?? 0, () => GetLanguagesFromDatabase(tenantId));
         }
-        
-        protected virtual async Task<Dictionary<string, ApplicationLanguage>> GetLanguagesFromDatabaseAsync(int? tenantId)
+
+        protected virtual async Task<Dictionary<string, ApplicationLanguage>> GetLanguagesFromDatabaseAsync(
+            int? tenantId)
         {
-            Dictionary<string, ApplicationLanguage> languages;
-            
-            using (var uow = _unitOfWorkManager.Begin())
+            return await _unitOfWorkManager.WithUnitOfWorkAsync(async () =>
             {
                 using (_unitOfWorkManager.Current.SetTenantId(tenantId))
                 {
-                    languages = (await _languageRepository.GetAllListAsync()).ToDictionary(l => l.Name);
+                    return (await _languageRepository.GetAllListAsync()).ToDictionary(l => l.Name);
                 }
-
-                await uow.CompleteAsync();
-            }
-
-            return languages;
+            });
         }
-        
+
         protected virtual Dictionary<string, ApplicationLanguage> GetLanguagesFromDatabase(int? tenantId)
         {
-            Dictionary<string, ApplicationLanguage> languages;
-            
-            using (var uow = _unitOfWorkManager.Begin())
+            return _unitOfWorkManager.WithUnitOfWork(() =>
             {
                 using (_unitOfWorkManager.Current.SetTenantId(tenantId))
                 {
-                    languages= (_languageRepository.GetAllList()).ToDictionary(l => l.Name);
+                    return (_languageRepository.GetAllList()).ToDictionary(l => l.Name);
                 }
-                
-                uow.Complete();
-            }
-
-            return languages;
+            });
         }
     }
 }
