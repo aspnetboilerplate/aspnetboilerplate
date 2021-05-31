@@ -25,15 +25,13 @@ namespace Abp.Notifications
 
         public virtual void HandleEvent(EntityDeletedEventData<AbpUserBase> eventData)
         {
-            using (var uow = _unitOfWorkManager.Begin())
+            _unitOfWorkManager.WithUnitOfWork(() =>
             {
                 using (_unitOfWorkManager.Current.SetTenantId(eventData.Entity.TenantId))
                 {
                     _notificationSubscriptionRepository.Delete(x => x.UserId == eventData.Entity.Id);
                 }
-
-                uow.Complete();
-            }
+            });
         }
     }
 }
