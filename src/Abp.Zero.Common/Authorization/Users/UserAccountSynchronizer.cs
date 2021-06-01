@@ -36,7 +36,7 @@ namespace Abp.Authorization.Users
         /// </summary>
         public virtual void HandleEvent(EntityCreatedEventData<AbpUserBase> eventData)
         {
-            using (var uow = _unitOfWorkManager.Begin())
+            _unitOfWorkManager.WithUnitOfWork(() =>
             {
                 using (_unitOfWorkManager.Current.SetTenantId(null))
                 {
@@ -61,9 +61,7 @@ namespace Abp.Authorization.Users
                         _userAccountRepository.Update(userAccount);
                     }
                 }
-
-                uow.Complete();
-            }
+            });
         }
 
         /// <summary>
@@ -72,7 +70,7 @@ namespace Abp.Authorization.Users
         /// <param name="eventData"></param>
         public virtual void HandleEvent(EntityDeletedEventData<AbpUserBase> eventData)
         {
-            using (var uow = _unitOfWorkManager.Begin())
+            _unitOfWorkManager.WithUnitOfWork(() =>
             {
                 using (_unitOfWorkManager.Current.SetTenantId(null))
                 {
@@ -85,9 +83,7 @@ namespace Abp.Authorization.Users
                         _userAccountRepository.Delete(userAccount);
                     }
                 }
-
-                uow.Complete();
-            }
+            });
         }
 
         /// <summary>
@@ -96,7 +92,7 @@ namespace Abp.Authorization.Users
         /// <param name="eventData"></param>
         public virtual void HandleEvent(EntityUpdatedEventData<AbpUserBase> eventData)
         {
-            using (var uow = _unitOfWorkManager.Begin())
+            _unitOfWorkManager.WithUnitOfWork(() =>
             {
                 using (_unitOfWorkManager.Current.SetTenantId(null))
                 {
@@ -111,9 +107,7 @@ namespace Abp.Authorization.Users
                         _userAccountRepository.Update(userAccount);
                     }
                 }
-                
-                uow.Complete();
-            }
+            });
         }
 
         /// <summary>
@@ -122,15 +116,13 @@ namespace Abp.Authorization.Users
         /// <param name="eventData"></param>
         public virtual void HandleEvent(EntityDeletedEventData<AbpTenantBase> eventData)
         {
-            using (var uow = _unitOfWorkManager.Begin())
+            _unitOfWorkManager.WithUnitOfWork(() =>
             {
                 using (_unitOfWorkManager.Current.SetTenantId(null))
                 {
                     _userAccountRepository.Delete(ua => ua.TenantId == eventData.Entity.Id);
                 }
-                
-                uow.Complete();
-            }
+            });
         }
     }
 }

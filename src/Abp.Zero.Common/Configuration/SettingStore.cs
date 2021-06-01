@@ -33,9 +33,7 @@ namespace Abp.Configuration
              * DisableFilter and Where condition ensures to work even if tenantId is null for single db approach.
              */
 
-            List<SettingInfo> result;
-
-            using (var uow = _unitOfWorkManager.Begin())
+            return await _unitOfWorkManager.WithUnitOfWorkAsync(async () =>
             {
                 using (_unitOfWorkManager.Current.SetTenantId(tenantId))
                 {
@@ -45,16 +43,12 @@ namespace Abp.Configuration
                             s.UserId == userId && s.TenantId == tenantId
                         );
 
-                        result = settingList
+                        return settingList
                             .Select(s => s.ToSettingInfo())
                             .ToList();
                     }
                 }
-
-                await uow.CompleteAsync();
-            }
-
-            return result;
+            });
         }
 
         public virtual List<SettingInfo> GetAllList(int? tenantId, long? userId)
@@ -64,15 +58,13 @@ namespace Abp.Configuration
              * DisableFilter and Where condition ensures to work even if tenantId is null for single db approach.
              */
 
-            List<SettingInfo> result;
-
-            using (var uow = _unitOfWorkManager.Begin())
+            return _unitOfWorkManager.WithUnitOfWork(() =>
             {
                 using (_unitOfWorkManager.Current.SetTenantId(tenantId))
                 {
                     using (_unitOfWorkManager.Current.DisableFilter(AbpDataFilters.MayHaveTenant))
                     {
-                        result = _settingRepository.GetAllList(s =>
+                        return _settingRepository.GetAllList(s =>
                                 s.UserId == userId && s.TenantId == tenantId
                             )
                             .Select(s => s.ToSettingInfo())
@@ -80,17 +72,12 @@ namespace Abp.Configuration
                     }
                 }
 
-                uow.Complete();
-            }
-
-            return result;
+            });
         }
 
         public virtual async Task<SettingInfo> GetSettingOrNullAsync(int? tenantId, long? userId, string name)
         {
-            SettingInfo result;
-
-            using (var uow = _unitOfWorkManager.Begin())
+            return await _unitOfWorkManager.WithUnitOfWorkAsync(async () =>
             {
                 using (_unitOfWorkManager.Current.SetTenantId(tenantId))
                 {
@@ -100,41 +87,31 @@ namespace Abp.Configuration
                             s.UserId == userId && s.Name == name && s.TenantId == tenantId
                         );
 
-                        result = settingInfo.ToSettingInfo();
+                        return settingInfo.ToSettingInfo();
                     }
                 }
-
-                await uow.CompleteAsync();
-            }
-
-            return result;
+            });
         }
 
         public virtual SettingInfo GetSettingOrNull(int? tenantId, long? userId, string name)
         {
-            SettingInfo result;
-
-            using (var uow = _unitOfWorkManager.Begin())
+            return _unitOfWorkManager.WithUnitOfWork(() =>
             {
                 using (_unitOfWorkManager.Current.SetTenantId(tenantId))
                 {
                     using (_unitOfWorkManager.Current.DisableFilter(AbpDataFilters.MayHaveTenant))
                     {
-                        result = _settingRepository.FirstOrDefault(s =>
+                        return _settingRepository.FirstOrDefault(s =>
                             s.UserId == userId && s.Name == name && s.TenantId == tenantId
                         ).ToSettingInfo();
                     }
                 }
-                
-                uow.Complete();
-            }
-
-            return result;
+            });
         }
 
         public virtual async Task DeleteAsync(SettingInfo settingInfo)
         {
-            using (var uow = _unitOfWorkManager.Begin())
+            await _unitOfWorkManager.WithUnitOfWorkAsync(async () =>
             {
                 using (_unitOfWorkManager.Current.SetTenantId(settingInfo.TenantId))
                 {
@@ -148,14 +125,12 @@ namespace Abp.Configuration
                         await _unitOfWorkManager.Current.SaveChangesAsync();
                     }
                 }
-
-                await uow.CompleteAsync();
-            }
+            });
         }
 
         public virtual void Delete(SettingInfo settingInfo)
         {
-            using (var uow = _unitOfWorkManager.Begin())
+            _unitOfWorkManager.WithUnitOfWork(() =>
             {
                 using (_unitOfWorkManager.Current.SetTenantId(settingInfo.TenantId))
                 {
@@ -169,14 +144,12 @@ namespace Abp.Configuration
                         _unitOfWorkManager.Current.SaveChanges();
                     }
                 }
-                
-                uow.Complete();
-            }
+            });
         }
 
         public virtual async Task CreateAsync(SettingInfo settingInfo)
         {
-            using (var uow = _unitOfWorkManager.Begin())
+            await _unitOfWorkManager.WithUnitOfWorkAsync(async () =>
             {
                 using (_unitOfWorkManager.Current.SetTenantId(settingInfo.TenantId))
                 {
@@ -186,14 +159,12 @@ namespace Abp.Configuration
                         await _unitOfWorkManager.Current.SaveChangesAsync();
                     }
                 }
-
-                await uow.CompleteAsync();
-            }
+            });
         }
 
         public virtual void Create(SettingInfo settingInfo)
         {
-            using (var uow = _unitOfWorkManager.Begin())
+            _unitOfWorkManager.WithUnitOfWork(() =>
             {
                 using (_unitOfWorkManager.Current.SetTenantId(settingInfo.TenantId))
                 {
@@ -203,14 +174,12 @@ namespace Abp.Configuration
                         _unitOfWorkManager.Current.SaveChanges();
                     }
                 }
-
-                uow.Complete();
-            }
+            });
         }
 
         public virtual async Task UpdateAsync(SettingInfo settingInfo)
         {
-            using (var uow = _unitOfWorkManager.Begin())
+            await _unitOfWorkManager.WithUnitOfWorkAsync(async () =>
             {
                 using (_unitOfWorkManager.Current.SetTenantId(settingInfo.TenantId))
                 {
@@ -230,14 +199,12 @@ namespace Abp.Configuration
                         await _unitOfWorkManager.Current.SaveChangesAsync();
                     }
                 }
-                
-                await uow.CompleteAsync();
-            }
+            });
         }
 
         public virtual void Update(SettingInfo settingInfo)
         {
-            using (var uow = _unitOfWorkManager.Begin())
+            _unitOfWorkManager.WithUnitOfWork(() =>
             {
                 using (_unitOfWorkManager.Current.SetTenantId(settingInfo.TenantId))
                 {
@@ -257,9 +224,7 @@ namespace Abp.Configuration
                         _unitOfWorkManager.Current.SaveChanges();
                     }
                 }
-                
-                uow.Complete();
-            }
+            });
         }
     }
 }
