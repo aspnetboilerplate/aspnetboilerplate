@@ -21,10 +21,7 @@ namespace Abp.Tests.Notifications
                 _store,
                 _backgroundJobManager,
                 Substitute.For<INotificationDistributer>(),
-                Substitute.For<INotificationConfiguration>(),
-                SequentialGuidGenerator.Instance,
-                LocalIocManager
-            )
+                SequentialGuidGenerator.Instance)
             {
                 UnitOfWorkManager = Substitute.For<IUnitOfWorkManager>()
             };

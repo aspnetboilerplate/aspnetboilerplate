@@ -23,16 +23,18 @@ namespace Abp.Authorization.Users
             _unitOfWorkManager = unitOfWorkManager;
             _userRoleRepository = userRoleRepository;
         }
-
-        [UnitOfWork]
+        
         public virtual void HandleEvent(EntityDeletedEventData<AbpUserBase> eventData)
         {
-            using (_unitOfWorkManager.Current.SetTenantId(eventData.Entity.TenantId))
+            _unitOfWorkManager.WithUnitOfWork(() =>
             {
-                _userRoleRepository.Delete(
-                    ur => ur.UserId == eventData.Entity.Id
-                );
-            }
+                using (_unitOfWorkManager.Current.SetTenantId(eventData.Entity.TenantId))
+                {
+                    _userRoleRepository.Delete(
+                        ur => ur.UserId == eventData.Entity.Id
+                    );
+                }
+            });
         }
     }
 }

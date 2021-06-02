@@ -75,39 +75,41 @@ namespace Abp.Localization
         /// <param name="culture">Culture</param>
         /// <param name="key">Localization key</param>
         /// <param name="value">New localized value.</param>
-        [UnitOfWork]
         public virtual async Task UpdateStringAsync(int? tenantId, string sourceName, CultureInfo culture, string key, string value)
         {
-            using (_unitOfWorkManager.Current.SetTenantId(tenantId))
+            await _unitOfWorkManager.WithUnitOfWorkAsync(async () =>
             {
-                var existingEntity = (await _applicationTextRepository.GetAllListAsync(t =>
-                    t.Source == sourceName &&
-                    t.LanguageName == culture.Name &&
-                    t.Key == key))
-                    .FirstOrDefault(t => t.Key == key);
-
-                if (existingEntity != null)
+                using (_unitOfWorkManager.Current.SetTenantId(tenantId))
                 {
-                    if (existingEntity.Value != value)
+                    var existingEntity = (await _applicationTextRepository.GetAllListAsync(t =>
+                            t.Source == sourceName &&
+                            t.LanguageName == culture.Name &&
+                            t.Key == key))
+                        .FirstOrDefault(t => t.Key == key);
+
+                    if (existingEntity != null)
                     {
-                        existingEntity.Value = value;
+                        if (existingEntity.Value != value)
+                        {
+                            existingEntity.Value = value;
+                            await _unitOfWorkManager.Current.SaveChangesAsync();
+                        }
+                    }
+                    else
+                    {
+                        await _applicationTextRepository.InsertAsync(
+                            new ApplicationLanguageText
+                            {
+                                TenantId = tenantId,
+                                Source = sourceName,
+                                LanguageName = culture.Name,
+                                Key = key,
+                                Value = value
+                            });
                         await _unitOfWorkManager.Current.SaveChangesAsync();
                     }
                 }
-                else
-                {
-                    await _applicationTextRepository.InsertAsync(
-                        new ApplicationLanguageText
-                        {
-                           TenantId = tenantId,
-                           Source = sourceName,
-                           LanguageName = culture.Name,
-                           Key = key,
-                           Value = value
-                        });
-                    await _unitOfWorkManager.Current.SaveChangesAsync();
-                }
-            }
+            });
         }
     }
 }

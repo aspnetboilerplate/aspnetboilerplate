@@ -1,5 +1,6 @@
 ﻿using System.Threading.Tasks;
 using Abp.Domain.Repositories;
+using Abp.Domain.Uow;
 using Abp.ObjectMapping;
 using Abp.Runtime.Caching;
 
@@ -18,13 +19,17 @@ namespace Abp.Domain.Entities.Caching
 
         protected IRepository<TEntity, TPrimaryKey> Repository { get; private set; }
 
+        protected IUnitOfWorkManager UnitOfWorkManager { get; private set; }
+        
         public EntityCacheBase(
             ICacheManager cacheManager, 
-            IRepository<TEntity, TPrimaryKey> repository, 
+            IRepository<TEntity, TPrimaryKey> repository,
+            IUnitOfWorkManager unitOfWorkManager,
             string cacheName = null)
         {
-            Repository = repository;
             CacheManager = cacheManager;
+            Repository = repository;
+            UnitOfWorkManager = unitOfWorkManager;
             CacheName = cacheName ?? GenerateDefaultCacheName();
             ObjectMapper = NullObjectMapper.Instance;
         }
@@ -45,12 +50,16 @@ namespace Abp.Domain.Entities.Caching
 
         protected virtual TEntity GetEntityFromDataSource(TPrimaryKey id)
         {
-            return Repository.FirstOrDefault(id);
+            return UnitOfWorkManager.WithUnitOfWork(() =>
+                Repository.FirstOrDefault(id)
+            );
         }
 
-        protected virtual Task<TEntity> GetEntityFromDataSourceAsync(TPrimaryKey id)
+        protected virtual async Task<TEntity> GetEntityFromDataSourceAsync(TPrimaryKey id)
         {
-            return Repository.FirstOrDefaultAsync(id);
+            return await UnitOfWorkManager.WithUnitOfWorkAsync(async () =>
+                await Repository.FirstOrDefaultAsync(id)
+            );
         }
 
         protected virtual TCacheItem MapToCacheItem(TEntity entity)

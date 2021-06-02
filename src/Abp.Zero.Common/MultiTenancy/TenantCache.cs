@@ -158,40 +158,48 @@ namespace Abp.MultiTenancy
             };
         }
 
-        [UnitOfWork]
         protected virtual TTenant GetTenantOrNull(int tenantId)
         {
-            using (_unitOfWorkManager.Current.SetTenantId(null))
+            return _unitOfWorkManager.WithUnitOfWork(() =>
             {
-                return _tenantRepository.FirstOrDefault(tenantId);
-            }
+                using (_unitOfWorkManager.Current.SetTenantId(null))
+                {
+                    return _tenantRepository.FirstOrDefault(tenantId);
+                }
+            });
         }
 
-        [UnitOfWork]
         protected virtual TTenant GetTenantOrNull(string tenancyName)
         {
-            using (_unitOfWorkManager.Current.SetTenantId(null))
+            return _unitOfWorkManager.WithUnitOfWork(() =>
             {
-                return _tenantRepository.FirstOrDefault(t => t.TenancyName == tenancyName);
-            }
+                using (_unitOfWorkManager.Current.SetTenantId(null))
+                {
+                    return _tenantRepository.FirstOrDefault(t => t.TenancyName == tenancyName);
+                }
+            });
         }
 
-        [UnitOfWork]
         protected virtual async Task<TTenant> GetTenantOrNullAsync(int tenantId)
         {
-            using (_unitOfWorkManager.Current.SetTenantId(null))
+            return await _unitOfWorkManager.WithUnitOfWorkAsync(async () =>
             {
-                return await _tenantRepository.FirstOrDefaultAsync(tenantId);
-            }
+                using (_unitOfWorkManager.Current.SetTenantId(null))
+                {
+                    return await _tenantRepository.FirstOrDefaultAsync(tenantId);
+                }
+            });
         }
 
-        [UnitOfWork]
         protected virtual async Task<TTenant> GetTenantOrNullAsync(string tenancyName)
         {
-            using (_unitOfWorkManager.Current.SetTenantId(null))
+            return await _unitOfWorkManager.WithUnitOfWorkAsync(async () =>
             {
-                return await _tenantRepository.FirstOrDefaultAsync(t => t.TenancyName == tenancyName);
-            }
+                using (_unitOfWorkManager.Current.SetTenantId(null))
+                {
+                    return await _tenantRepository.FirstOrDefaultAsync(t => t.TenancyName == tenancyName);
+                }
+            });
         }
 
         public virtual void HandleEvent(EntityChangedEventData<TTenant> eventData)
