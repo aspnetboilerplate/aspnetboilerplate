@@ -235,6 +235,13 @@ namespace Abp.Zero.EntityFramework
             modelBuilder.Conventions.AddAfter<IndexAttributeConvention>(new IndexingPropertyConvention<ISoftDelete, bool>(m => m.IsDeleted));
             modelBuilder.Conventions.AddAfter<IndexAttributeConvention>(new IndexingPropertyConvention<IMayHaveTenant, int?>(m => m.TenantId));
             modelBuilder.Conventions.AddAfter<IndexAttributeConvention>(new IndexingPropertyConvention<IMustHaveTenant, int>(m => m.TenantId));
+            #endregion
+
+            #region UserLogin.ProviderKey_TenantId
+            
+            modelBuilder.Entity<UserLogin>()
+                .HasIndex(e => new {e.ProviderKey, e.TenantId})
+                .IsUnique();
 
             #endregion
         }
