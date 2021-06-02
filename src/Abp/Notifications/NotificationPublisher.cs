@@ -63,13 +63,11 @@ namespace Abp.Notifications
             {
                 if (notificationName.IsNullOrEmpty())
                 {
-                    await uow.CompleteAsync();
                     throw new ArgumentException("NotificationName can not be null or whitespace!", nameof(notificationName));
                 }
 
                 if (!tenantIds.IsNullOrEmpty() && !userIds.IsNullOrEmpty())
                 {
-                    await uow.CompleteAsync();
                     throw new ArgumentException("tenantIds can be set only if userIds is not set!", nameof(tenantIds));
                 }
 
