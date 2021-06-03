@@ -648,6 +648,14 @@ namespace Abp.Zero.EntityFramework
                 .IsUnique();
 
             #endregion
+            
+            #region UserLogin.ProviderKey_TenantId
+            
+            modelBuilder.Entity<UserLogin>()
+                .HasIndex(e => new {e.ProviderKey, e.TenantId})
+                .IsUnique();
+
+            #endregion
         }
     }
 }
