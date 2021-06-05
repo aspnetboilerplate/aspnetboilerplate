@@ -26,7 +26,7 @@ persistence.
 #### Create a Background Job
 
 We can create a background job class by either inheriting from the
-**BackgroundJob&lt;TArgs&gt;** class or by directly implementing the
+**BackgroundJob&lt;TArgs&gt;** class or **AsyncBackgroundJob&lt;TArgs&gt;** class or by directly implementing the
 **IBackgroundJob&lt;TArgs&gt; interface**.
 
 Here is the most simple background job:
@@ -39,7 +39,17 @@ Here is the most simple background job:
         }
     }
 
-A background job defines an **Execute** method that gets an input
+Here is the most simple async background job:
+
+    public class TestJob : AsyncBackgroundJob<int>, ITransientDependency
+    {
+        public override async Task ExecuteAsync(int number)
+        {
+            Logger.Debug(number.ToString());
+        }
+    }
+
+A background job defines an **Execute** or **ExecuteAsync** method that gets an input
 **argument**. The argument **type** is defined as a **generic** class
 parameter as shown in the example.
 
@@ -71,12 +81,7 @@ queue:
         }
     }
 
-We
-[injected](/Pages/Documents/Dependency-Injection#constructor-injection-pattern) the
-user [repository](/Pages/Documents/Repositories) to get user emails,  
-and injected the email sender (a service to send emails) and simply sent the email.
-**SimpleSendEmailJobArgs** is the job argument here and defined as shown
-below:
+We [injected](/Pages/Documents/Dependency-Injection#constructor-injection-pattern) the user [repository](/Pages/Documents/Repositories) to get user emails, and injected the email sender (a service to send emails) and simply sent the email. **SimpleSendEmailJobArgs** is the job argument here and defined as shown below:
 
     [Serializable]
     public class SimpleSendEmailJobArgs
