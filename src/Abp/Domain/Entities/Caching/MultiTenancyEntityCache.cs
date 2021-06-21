@@ -28,6 +28,7 @@ namespace Abp.Domain.Entities.Caching
             : base(
                 cacheManager,
                 repository,
+                unitOfWorkManager,
                 cacheName)
         {
             _unitOfWorkManager = unitOfWorkManager;

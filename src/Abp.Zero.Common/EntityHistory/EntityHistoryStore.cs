@@ -1,6 +1,7 @@
 ﻿using System.Threading.Tasks;
 using Abp.Dependency;
 using Abp.Domain.Repositories;
+using Abp.Domain.Uow;
 
 namespace Abp.EntityHistory
 {
@@ -10,23 +11,33 @@ namespace Abp.EntityHistory
     public class EntityHistoryStore : IEntityHistoryStore, ITransientDependency
     {
         private readonly IRepository<EntityChangeSet, long> _changeSetRepository;
+        private readonly IUnitOfWorkManager _unitOfWorkManager;
 
         /// <summary>
         /// Creates a new <see cref="EntityHistoryStore"/>.
         /// </summary>
-        public EntityHistoryStore(IRepository<EntityChangeSet, long> changeSetRepository)
+        public EntityHistoryStore(
+            IRepository<EntityChangeSet, long> changeSetRepository,
+            IUnitOfWorkManager unitOfWorkManager)
         {
             _changeSetRepository = changeSetRepository;
+            _unitOfWorkManager = unitOfWorkManager;
         }
 
-        public virtual Task SaveAsync(EntityChangeSet changeSet)
+        public virtual async Task SaveAsync(EntityChangeSet changeSet)
         {
-            return _changeSetRepository.InsertAsync(changeSet);
+            await _unitOfWorkManager.WithUnitOfWorkAsync(async () =>
+            {
+                await _changeSetRepository.InsertAsync(changeSet);
+            });
         }
 
         public virtual void Save(EntityChangeSet changeSet)
         {
-            _changeSetRepository.Insert(changeSet);
+            _unitOfWorkManager.WithUnitOfWork(() =>
+            {
+                _changeSetRepository.Insert(changeSet);
+            });
         }
     }
 }

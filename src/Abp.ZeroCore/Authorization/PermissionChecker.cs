@@ -27,6 +27,8 @@ namespace Abp.Authorization
 
         public ICurrentUnitOfWorkProvider CurrentUnitOfWorkProvider { get; set; }
 
+        public IUnitOfWorkManager UnitOfWorkManager { get; set; }
+
         /// <summary>
         /// Constructor.
         /// </summary>
@@ -58,32 +60,36 @@ namespace Abp.Authorization
             return _userManager.IsGranted(userId, permissionName);
         }
 
-        [UnitOfWork]
         public virtual async Task<bool> IsGrantedAsync(UserIdentifier user, string permissionName)
         {
-            if (CurrentUnitOfWorkProvider?.Current == null)
+            return await UnitOfWorkManager.WithUnitOfWorkAsync(async () =>
             {
-                return await IsGrantedAsync(user.UserId, permissionName);
-            }
+                if (CurrentUnitOfWorkProvider?.Current == null)
+                {
+                    return await IsGrantedAsync(user.UserId, permissionName);
+                }
 
-            using (CurrentUnitOfWorkProvider.Current.SetTenantId(user.TenantId))
-            {
-                return await IsGrantedAsync(user.UserId, permissionName);
-            }
+                using (CurrentUnitOfWorkProvider.Current.SetTenantId(user.TenantId))
+                {
+                    return await IsGrantedAsync(user.UserId, permissionName);
+                }
+            });
         }
 
-        [UnitOfWork]
         public virtual bool IsGranted(UserIdentifier user, string permissionName)
         {
-            if (CurrentUnitOfWorkProvider?.Current == null)
+            return UnitOfWorkManager.WithUnitOfWork(() =>
             {
-                return IsGranted(user.UserId, permissionName);
-            }
+                if (CurrentUnitOfWorkProvider?.Current == null)
+                {
+                    return IsGranted(user.UserId, permissionName);
+                }
 
-            using (CurrentUnitOfWorkProvider.Current.SetTenantId(user.TenantId))
-            {
-                return IsGranted(user.UserId, permissionName);
-            }
+                using (CurrentUnitOfWorkProvider.Current.SetTenantId(user.TenantId))
+                {
+                    return IsGranted(user.UserId, permissionName);
+                }
+            });
         }
     }
 }

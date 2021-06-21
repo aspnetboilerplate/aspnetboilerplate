@@ -88,10 +88,12 @@ namespace Abp.ZeroCore.SampleApp.Core
 
         public EditionManager(
             IRepository<Edition> editionRepository,
-            IAbpZeroFeatureValueStore featureValueStore)
+            IAbpZeroFeatureValueStore featureValueStore,
+            IUnitOfWorkManager unitOfWorkManager)
             : base(
                editionRepository,
-               featureValueStore)
+               featureValueStore,
+               unitOfWorkManager)
         {
         }
     }
@@ -204,8 +206,9 @@ namespace Abp.ZeroCore.SampleApp.Core
             IOptions<SecurityStampValidatorOptions> options,
             SignInManager signInManager,
             ISystemClock systemClock,
-            ILoggerFactory loggerFactory)
-            : base(options, signInManager, systemClock, loggerFactory)
+            ILoggerFactory loggerFactory,
+            IUnitOfWorkManager unitOfWorkManager)
+            : base(options, signInManager, systemClock, loggerFactory, unitOfWorkManager)
         {
         }
     }
@@ -267,12 +270,15 @@ namespace Abp.ZeroCore.SampleApp.Core
         public UserClaimsPrincipalFactory(
             UserManager userManager,
             RoleManager roleManager,
-            IOptions<IdentityOptions> optionsAccessor)
+            IOptions<IdentityOptions> optionsAccessor, 
+            IUnitOfWorkManager unitOfWorkManager)
             : base(
                 userManager,
                 roleManager,
-                optionsAccessor)
+                optionsAccessor,
+                unitOfWorkManager)
         {
+            
         }
 
         [UnitOfWork]

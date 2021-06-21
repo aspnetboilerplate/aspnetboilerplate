@@ -54,21 +54,23 @@ namespace Abp.Authorization.Users
             _cacheManager.GetUserPermissionCache().Remove(cacheKey);
         }
 
-        [UnitOfWork]
         public virtual void HandleEvent(EntityChangedEventData<OrganizationUnitRole> eventData)
         {
-            using (_unitOfWorkManager.Current.SetTenantId(eventData.Entity.TenantId))
+            _unitOfWorkManager.WithUnitOfWork(() =>
             {
-                var users = _userOrganizationUnitRepository.GetAllList(userOu =>
-                    userOu.OrganizationUnitId == eventData.Entity.OrganizationUnitId
-                );
-
-                foreach (var userOrganizationUnit in users)
+                using (_unitOfWorkManager.Current.SetTenantId(eventData.Entity.TenantId))
                 {
-                    var cacheKey = userOrganizationUnit.UserId + "@" + (eventData.Entity.TenantId ?? 0);
-                    _cacheManager.GetUserPermissionCache().Remove(cacheKey);
+                    var users = _userOrganizationUnitRepository.GetAllList(userOu =>
+                        userOu.OrganizationUnitId == eventData.Entity.OrganizationUnitId
+                    );
+
+                    foreach (var userOrganizationUnit in users)
+                    {
+                        var cacheKey = userOrganizationUnit.UserId + "@" + (eventData.Entity.TenantId ?? 0);
+                        _cacheManager.GetUserPermissionCache().Remove(cacheKey);
+                    }
                 }
-            }
+            });
         }
     }
 }

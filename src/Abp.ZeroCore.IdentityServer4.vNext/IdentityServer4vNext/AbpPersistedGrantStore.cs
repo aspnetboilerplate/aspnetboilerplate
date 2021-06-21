@@ -14,56 +14,70 @@ namespace Abp.IdentityServer4vNext
     public class AbpPersistedGrantStore : AbpServiceBase, IPersistedGrantStore
     {
         private readonly IRepository<PersistedGrantEntity, string> _persistedGrantRepository;
+        private readonly IUnitOfWorkManager _unitOfWorkManager;
 
-        public AbpPersistedGrantStore(IRepository<PersistedGrantEntity, string> persistedGrantRepository)
+        public AbpPersistedGrantStore(
+            IRepository<PersistedGrantEntity, string> persistedGrantRepository,
+            IUnitOfWorkManager unitOfWorkManager)
         {
             _persistedGrantRepository = persistedGrantRepository;
+            _unitOfWorkManager = unitOfWorkManager;
         }
 
-        [UnitOfWork]
         public virtual async Task StoreAsync(PersistedGrant grant)
         {
-            var entity = await _persistedGrantRepository.FirstOrDefaultAsync(grant.Key);
-            if (entity == null)
+            await _unitOfWorkManager.WithUnitOfWorkAsync(async () =>
             {
-                await _persistedGrantRepository.InsertAsync(ObjectMapper.Map<PersistedGrantEntity>(grant));
-            }
-            else
-            {
-                ObjectMapper.Map(grant, entity);
-                await _persistedGrantRepository.UpdateAsync(entity);
-            }
+                var entity = await _persistedGrantRepository.FirstOrDefaultAsync(grant.Key);
+                if (entity == null)
+                {
+                    await _persistedGrantRepository.InsertAsync(ObjectMapper.Map<PersistedGrantEntity>(grant));
+                }
+                else
+                {
+                    ObjectMapper.Map(grant, entity);
+                    await _persistedGrantRepository.UpdateAsync(entity);
+                }
+            });
         }
 
-        [UnitOfWork]
         public virtual async Task<PersistedGrant> GetAsync(string key)
         {
-            var entity = await _persistedGrantRepository.FirstOrDefaultAsync(key);
-            if (entity == null)
+            return await _unitOfWorkManager.WithUnitOfWorkAsync(async () =>
             {
-                return null;
-            }
+                var entity = await _persistedGrantRepository.FirstOrDefaultAsync(key);
+                if (entity == null)
+                {
+                    return null;
+                }
 
-            return ObjectMapper.Map<PersistedGrant>(entity);
+                return ObjectMapper.Map<PersistedGrant>(entity);
+            });
         }
 
-        [UnitOfWork]
         public virtual async Task<IEnumerable<PersistedGrant>> GetAllAsync(PersistedGrantFilter filter)
         {
-            var entities = await _persistedGrantRepository.GetAllListAsync(FilterPersistedGrant(filter));
-            return ObjectMapper.Map<List<PersistedGrant>>(entities);
+            return await _unitOfWorkManager.WithUnitOfWorkAsync(async () =>
+            {
+                var entities = await _persistedGrantRepository.GetAllListAsync(FilterPersistedGrant(filter));
+                return ObjectMapper.Map<List<PersistedGrant>>(entities);
+            });
         }
-
-        [UnitOfWork]
+        
         public virtual async Task RemoveAsync(string key)
         {
-            await _persistedGrantRepository.DeleteAsync(key);
+            await _unitOfWorkManager.WithUnitOfWorkAsync(async () =>
+            {
+                await _persistedGrantRepository.DeleteAsync(key);
+            });
         }
-
-        [UnitOfWork]
+        
         public async Task RemoveAllAsync(PersistedGrantFilter filter)
         {
-            await _persistedGrantRepository.DeleteAsync(FilterPersistedGrant(filter));
+            await _unitOfWorkManager.WithUnitOfWorkAsync(async () =>
+            {
+                await _persistedGrantRepository.DeleteAsync(FilterPersistedGrant(filter));
+            });
         }
 
         protected virtual Expression<Func<PersistedGrantEntity, bool>> FilterPersistedGrant(PersistedGrantFilter filter)

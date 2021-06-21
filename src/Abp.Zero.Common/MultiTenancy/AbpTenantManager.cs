@@ -67,56 +67,68 @@ namespace Abp.MultiTenancy
 
         public virtual async Task CreateAsync(TTenant tenant)
         {
-            await ValidateTenantAsync(tenant);
-
-            if (await TenantRepository.FirstOrDefaultAsync(t => t.TenancyName == tenant.TenancyName) != null)
+            await UnitOfWorkManager.WithUnitOfWorkAsync(async () =>
             {
-                throw new UserFriendlyException(string.Format(L("TenancyNameIsAlreadyTaken"), tenant.TenancyName));
-            }
+                await ValidateTenantAsync(tenant);
 
-            await TenantRepository.InsertAsync(tenant);
+                if (await TenantRepository.FirstOrDefaultAsync(t => t.TenancyName == tenant.TenancyName) != null)
+                {
+                    throw new UserFriendlyException(string.Format(L("TenancyNameIsAlreadyTaken"), tenant.TenancyName));
+                }
+
+                await TenantRepository.InsertAsync(tenant);
+            });
         }
 
         public virtual void Create(TTenant tenant)
         {
-            ValidateTenant(tenant);
-
-            if (TenantRepository.FirstOrDefault(t => t.TenancyName == tenant.TenancyName) != null)
+            UnitOfWorkManager.WithUnitOfWork(() =>
             {
-                throw new UserFriendlyException(string.Format(L("TenancyNameIsAlreadyTaken"), tenant.TenancyName));
-            }
+                ValidateTenant(tenant);
 
-            TenantRepository.Insert(tenant);
+                if (TenantRepository.FirstOrDefault(t => t.TenancyName == tenant.TenancyName) != null)
+                {
+                    throw new UserFriendlyException(string.Format(L("TenancyNameIsAlreadyTaken"), tenant.TenancyName));
+                }
+
+                TenantRepository.Insert(tenant);
+            });
         }
 
         public virtual async Task UpdateAsync(TTenant tenant)
         {
-            if (await TenantRepository.FirstOrDefaultAsync(t => t.TenancyName == tenant.TenancyName && t.Id != tenant.Id) != null)
+            await UnitOfWorkManager.WithUnitOfWorkAsync(async () =>
             {
-                throw new UserFriendlyException(string.Format(L("TenancyNameIsAlreadyTaken"), tenant.TenancyName));
-            }
+                if (await TenantRepository.FirstOrDefaultAsync(t => t.TenancyName == tenant.TenancyName && t.Id != tenant.Id) != null)
+                {
+                    throw new UserFriendlyException(string.Format(L("TenancyNameIsAlreadyTaken"), tenant.TenancyName));
+                }
 
-            await TenantRepository.UpdateAsync(tenant);
+                await TenantRepository.UpdateAsync(tenant);
+            });
         }
 
         public virtual void Update(TTenant tenant)
         {
-            if (TenantRepository.FirstOrDefault(t => t.TenancyName == tenant.TenancyName && t.Id != tenant.Id) != null)
+            UnitOfWorkManager.WithUnitOfWork(() =>
             {
-                throw new UserFriendlyException(string.Format(L("TenancyNameIsAlreadyTaken"), tenant.TenancyName));
-            }
+                if (TenantRepository.FirstOrDefault(t => t.TenancyName == tenant.TenancyName && t.Id != tenant.Id) != null)
+                {
+                    throw new UserFriendlyException(string.Format(L("TenancyNameIsAlreadyTaken"), tenant.TenancyName));
+                }
 
-            TenantRepository.Update(tenant);
+                TenantRepository.Update(tenant);
+            });
         }
 
         public virtual async Task<TTenant> FindByIdAsync(int id)
         {
-            return await TenantRepository.FirstOrDefaultAsync(id);
+            return await UnitOfWorkManager.WithUnitOfWorkAsync(async () => await TenantRepository.FirstOrDefaultAsync(id));
         }
 
         public virtual TTenant FindById(int id)
         {
-            return TenantRepository.FirstOrDefault(id);
+            return UnitOfWorkManager.WithUnitOfWork(() => TenantRepository.FirstOrDefault(id));
         }
 
         public virtual async Task<TTenant> GetByIdAsync(int id)
@@ -141,24 +153,36 @@ namespace Abp.MultiTenancy
             return tenant;
         }
 
-        public virtual Task<TTenant> FindByTenancyNameAsync(string tenancyName)
+        public virtual async Task<TTenant> FindByTenancyNameAsync(string tenancyName)
         {
-            return TenantRepository.FirstOrDefaultAsync(t => t.TenancyName == tenancyName);
+            return await UnitOfWorkManager.WithUnitOfWorkAsync(async () =>
+            {
+                return await TenantRepository.FirstOrDefaultAsync(t => t.TenancyName == tenancyName);
+            });
         }
 
         public virtual TTenant FindByTenancyName(string tenancyName)
         {
-            return TenantRepository.FirstOrDefault(t => t.TenancyName == tenancyName);
+            return UnitOfWorkManager.WithUnitOfWork(() =>
+            {
+                return TenantRepository.FirstOrDefault(t => t.TenancyName == tenancyName);
+            });
         }
 
         public virtual async Task DeleteAsync(TTenant tenant)
         {
-            await TenantRepository.DeleteAsync(tenant);
+            await UnitOfWorkManager.WithUnitOfWorkAsync(async () =>
+            {
+                await TenantRepository.DeleteAsync(tenant);
+            });
         }
 
         public virtual void Delete(TTenant tenant)
         {
-            TenantRepository.Delete(tenant);
+            UnitOfWorkManager.WithUnitOfWork(() =>
+            {
+                TenantRepository.Delete(tenant);
+            });
         }
 
         public Task<string> GetFeatureValueOrNullAsync(int tenantId, string featureName)
@@ -221,128 +245,136 @@ namespace Abp.MultiTenancy
             }
         }
 
-        [UnitOfWork]
         public virtual async Task SetFeatureValueAsync(int tenantId, string featureName, string value)
         {
-            await SetFeatureValueAsync(await GetByIdAsync(tenantId), featureName, value);
+            await UnitOfWorkManager.WithUnitOfWorkAsync(async () =>
+            {
+                await SetFeatureValueAsync(await GetByIdAsync(tenantId), featureName, value);
+            });
         }
 
-        [UnitOfWork]
         public virtual void SetFeatureValue(int tenantId, string featureName, string value)
         {
-            SetFeatureValue(GetById(tenantId), featureName, value);
+            UnitOfWorkManager.WithUnitOfWork(() =>
+            {
+                SetFeatureValue(GetById(tenantId), featureName, value);
+            });
         }
 
-        [UnitOfWork]
         public virtual async Task SetFeatureValueAsync(TTenant tenant, string featureName, string value)
         {
-            //No need to change if it's already equals to the current value
-            if (await GetFeatureValueOrNullAsync(tenant.Id, featureName) == value)
+            await UnitOfWorkManager.WithUnitOfWorkAsync(async () =>
             {
-                return;
-            }
-
-            //Get the current feature setting
-            TenantFeatureSetting currentSetting;
-            using (UnitOfWorkManager.Current.EnableFilter(AbpDataFilters.MayHaveTenant))
-            using (UnitOfWorkManager.Current.SetTenantId(tenant.Id))
-            {
-                currentSetting = await TenantFeatureRepository.FirstOrDefaultAsync(f => f.Name == featureName);
-            }
-
-            //Get the feature
-            var feature = FeatureManager.GetOrNull(featureName);
-            if (feature == null)
-            {
-                if (currentSetting != null)
+                //No need to change if it's already equals to the current value
+                if (await GetFeatureValueOrNullAsync(tenant.Id, featureName) == value)
                 {
-                    await TenantFeatureRepository.DeleteAsync(currentSetting);
+                    return;
                 }
 
-                return;
-            }
-
-            //Determine default value
-            var defaultValue = tenant.EditionId.HasValue
-                ? (await EditionManager.GetFeatureValueOrNullAsync(tenant.EditionId.Value, featureName) ?? feature.DefaultValue)
-                : feature.DefaultValue;
-
-            //No need to store value if it's default
-            if (value == defaultValue)
-            {
-                if (currentSetting != null)
+                //Get the current feature setting
+                TenantFeatureSetting currentSetting;
+                using (UnitOfWorkManager.Current.EnableFilter(AbpDataFilters.MayHaveTenant))
+                using (UnitOfWorkManager.Current.SetTenantId(tenant.Id))
                 {
-                    await TenantFeatureRepository.DeleteAsync(currentSetting);
+                    currentSetting = await TenantFeatureRepository.FirstOrDefaultAsync(f => f.Name == featureName);
                 }
 
-                return;
-            }
+                //Get the feature
+                var feature = FeatureManager.GetOrNull(featureName);
+                if (feature == null)
+                {
+                    if (currentSetting != null)
+                    {
+                        await TenantFeatureRepository.DeleteAsync(currentSetting);
+                    }
+                    
+                    return;
+                }
 
-            //Insert/update the feature value
-            if (currentSetting == null)
-            {
-                await TenantFeatureRepository.InsertAsync(new TenantFeatureSetting(tenant.Id, featureName, value));
-            }
-            else
-            {
-                currentSetting.Value = value;
-            }
+                //Determine default value
+                var defaultValue = tenant.EditionId.HasValue
+                    ? (await EditionManager.GetFeatureValueOrNullAsync(tenant.EditionId.Value, featureName) ?? feature.DefaultValue)
+                    : feature.DefaultValue;
+
+                //No need to store value if it's default
+                if (value == defaultValue)
+                {
+                    if (currentSetting != null)
+                    {
+                        await TenantFeatureRepository.DeleteAsync(currentSetting);
+                    }
+                    
+                    return;
+                }
+
+                //Insert/update the feature value
+                if (currentSetting == null)
+                {
+                    await TenantFeatureRepository.InsertAsync(new TenantFeatureSetting(tenant.Id, featureName, value));
+                }
+                else
+                {
+                    currentSetting.Value = value;
+                }
+            });
         }
 
-        [UnitOfWork]
         public virtual void SetFeatureValue(TTenant tenant, string featureName, string value)
         {
-            //No need to change if it's already equals to the current value
-            if (GetFeatureValueOrNull(tenant.Id, featureName) == value)
+            UnitOfWorkManager.WithUnitOfWork(() =>
             {
-                return;
-            }
-
-            //Get the current feature setting
-            TenantFeatureSetting currentSetting;
-            using (UnitOfWorkManager.Current.EnableFilter(AbpDataFilters.MayHaveTenant))
-            using (UnitOfWorkManager.Current.SetTenantId(tenant.Id))
-            {
-                currentSetting = TenantFeatureRepository.FirstOrDefault(f => f.Name == featureName);
-            }
-
-            //Get the feature
-            var feature = FeatureManager.GetOrNull(featureName);
-            if (feature == null)
-            {
-                if (currentSetting != null)
+                 //No need to change if it's already equals to the current value
+                if (GetFeatureValueOrNull(tenant.Id, featureName) == value)
                 {
-                    TenantFeatureRepository.Delete(currentSetting);
+                    return;
                 }
 
-                return;
-            }
-
-            //Determine default value
-            var defaultValue = tenant.EditionId.HasValue
-                ? (EditionManager.GetFeatureValueOrNull(tenant.EditionId.Value, featureName) ?? feature.DefaultValue)
-                : feature.DefaultValue;
-
-            //No need to store value if it's default
-            if (value == defaultValue)
-            {
-                if (currentSetting != null)
+                //Get the current feature setting
+                TenantFeatureSetting currentSetting;
+                using (UnitOfWorkManager.Current.EnableFilter(AbpDataFilters.MayHaveTenant))
+                using (UnitOfWorkManager.Current.SetTenantId(tenant.Id))
                 {
-                    TenantFeatureRepository.Delete(currentSetting);
+                    currentSetting = TenantFeatureRepository.FirstOrDefault(f => f.Name == featureName);
                 }
 
-                return;
-            }
+                //Get the feature
+                var feature = FeatureManager.GetOrNull(featureName);
+                if (feature == null)
+                {
+                    if (currentSetting != null)
+                    {
+                        TenantFeatureRepository.Delete(currentSetting);
+                    }
 
-            //Insert/update the feature value
-            if (currentSetting == null)
-            {
-                TenantFeatureRepository.Insert(new TenantFeatureSetting(tenant.Id, featureName, value));
-            }
-            else
-            {
-                currentSetting.Value = value;
-            }
+                    return;
+                }
+
+                //Determine default value
+                var defaultValue = tenant.EditionId.HasValue
+                    ? (EditionManager.GetFeatureValueOrNull(tenant.EditionId.Value, featureName) ?? feature.DefaultValue)
+                    : feature.DefaultValue;
+
+                //No need to store value if it's default
+                if (value == defaultValue)
+                {
+                    if (currentSetting != null)
+                    {
+                        TenantFeatureRepository.Delete(currentSetting);
+                    }
+
+                    return;
+                }
+
+                //Insert/update the feature value
+                if (currentSetting == null)
+                {
+                    TenantFeatureRepository.Insert(new TenantFeatureSetting(tenant.Id, featureName, value));
+                }
+                else
+                {
+                    currentSetting.Value = value;
+                }
+            });
         }
 
         /// <summary>
@@ -350,14 +382,16 @@ namespace Abp.MultiTenancy
         /// Tenant will have features according to it's edition.
         /// </summary>
         /// <param name="tenantId">Tenant Id</param>
-        [UnitOfWork]
         public virtual async Task ResetAllFeaturesAsync(int tenantId)
         {
-            using (UnitOfWorkManager.Current.EnableFilter(AbpDataFilters.MayHaveTenant))
-            using (UnitOfWorkManager.Current.SetTenantId(tenantId))
+            await UnitOfWorkManager.WithUnitOfWorkAsync(async () =>
             {
-                await TenantFeatureRepository.DeleteAsync(f => f.TenantId == tenantId);
-            }
+                using (UnitOfWorkManager.Current.EnableFilter(AbpDataFilters.MayHaveTenant))
+                using (UnitOfWorkManager.Current.SetTenantId(tenantId))
+                {
+                    await TenantFeatureRepository.DeleteAsync(f => f.TenantId == tenantId);
+                }
+            });
         }
 
         /// <summary>
@@ -365,14 +399,16 @@ namespace Abp.MultiTenancy
         /// Tenant will have features according to it's edition.
         /// </summary>
         /// <param name="tenantId">Tenant Id</param>
-        [UnitOfWork]
         public virtual void ResetAllFeatures(int tenantId)
         {
-            using (UnitOfWorkManager.Current.EnableFilter(AbpDataFilters.MayHaveTenant))
-            using (UnitOfWorkManager.Current.SetTenantId(tenantId))
+            UnitOfWorkManager.WithUnitOfWork(() =>
             {
-                TenantFeatureRepository.Delete(f => f.TenantId == tenantId);
-            }
+                using (UnitOfWorkManager.Current.EnableFilter(AbpDataFilters.MayHaveTenant))
+                using (UnitOfWorkManager.Current.SetTenantId(tenantId))
+                {
+                    TenantFeatureRepository.Delete(f => f.TenantId == tenantId);
+                }
+            });
         }
 
         protected virtual async Task ValidateTenantAsync(TTenant tenant)
@@ -422,15 +458,17 @@ namespace Abp.MultiTenancy
 
             CacheManager.GetTenantFeatureCache().Remove(eventData.Entity.Id);
         }
-
-        [UnitOfWork]
+        
         public virtual void HandleEvent(EntityDeletedEventData<Edition> eventData)
         {
-            var relatedTenants = TenantRepository.GetAllList(t => t.EditionId == eventData.Entity.Id);
-            foreach (var relatedTenant in relatedTenants)
+            UnitOfWorkManager.WithUnitOfWork(() =>
             {
-                relatedTenant.EditionId = null;
-            }
+                var relatedTenants = TenantRepository.GetAllList(t => t.EditionId == eventData.Entity.Id);
+                foreach (var relatedTenant in relatedTenants)
+                {
+                    relatedTenant.EditionId = null;
+                }
+            });
         }
     }
 }

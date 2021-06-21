@@ -8,8 +8,14 @@ using Abp.Domain.Repositories;
 
 namespace Abp.Domain.Uow
 {
-    internal class UnitOfWorkDefaultOptions : IUnitOfWorkDefaultOptions
+    public class UnitOfWorkDefaultOptions : IUnitOfWorkDefaultOptions
     {
+        public static List<Func<Type, bool>> ConventionalUowSelectorList = new List<Func<Type, bool>>
+        {
+            type => typeof(IRepository).IsAssignableFrom(type) ||
+                    typeof(IApplicationService).IsAssignableFrom(type)
+        };
+        
         public TransactionScopeOption Scope { get; set; }
 
         /// <inheritdoc/>
@@ -43,11 +49,7 @@ namespace Abp.Domain.Uow
 
             IsTransactionScopeAvailable = true;
 
-            ConventionalUowSelectors = new List<Func<Type, bool>>
-            {
-                type => typeof(IRepository).IsAssignableFrom(type) ||
-                        typeof(IApplicationService).IsAssignableFrom(type)
-            };
+            ConventionalUowSelectors = ConventionalUowSelectorList.ToList();
         }
 
         public void RegisterFilter(string filterName, bool isEnabledByDefault)

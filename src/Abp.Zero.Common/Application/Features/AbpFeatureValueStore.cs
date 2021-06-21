@@ -126,81 +126,85 @@ namespace Abp.Application.Features
 
             return null;
         }
-
-        [UnitOfWork]
+        
         public virtual async Task SetEditionFeatureValueAsync(int editionId, string featureName, string value)
         {
-            using (_unitOfWorkManager.Current.EnableFilter(AbpDataFilters.MayHaveTenant))
-            using (_unitOfWorkManager.Current.SetTenantId(null))
+            await _unitOfWorkManager.WithUnitOfWorkAsync(async () =>
             {
-                if (await GetEditionValueOrNullAsync(editionId, featureName) == value)
+                using (_unitOfWorkManager.Current.EnableFilter(AbpDataFilters.MayHaveTenant))
+                using (_unitOfWorkManager.Current.SetTenantId(null))
                 {
-                    return;
-                }
-
-                var currentFeature = await _editionFeatureRepository.FirstOrDefaultAsync(f => f.EditionId == editionId && f.Name == featureName);
-
-                var feature = _featureManager.GetOrNull(featureName);
-                if (feature == null || feature.DefaultValue == value)
-                {
-                    if (currentFeature != null)
+                    if (await GetEditionValueOrNullAsync(editionId, featureName) == value)
                     {
-                        await _editionFeatureRepository.DeleteAsync(currentFeature);
+                        return;
                     }
 
-                    return;
-                }
+                    var currentFeature = await _editionFeatureRepository.FirstOrDefaultAsync(f => f.EditionId == editionId && f.Name == featureName);
 
-                if (!feature.InputType.Validator.IsValid(value))
-                {
-                    throw new UserFriendlyException(string.Format(
-                        L("InvalidFeatureValue"), feature.Name));
-                }
+                    var feature = _featureManager.GetOrNull(featureName);
+                    if (feature == null || feature.DefaultValue == value)
+                    {
+                        if (currentFeature != null)
+                        {
+                            await _editionFeatureRepository.DeleteAsync(currentFeature);
+                        }
 
-                if (currentFeature == null)
-                {
-                    await _editionFeatureRepository.InsertAsync(new EditionFeatureSetting(editionId, featureName, value));
+                        return;
+                    }
+
+                    if (!feature.InputType.Validator.IsValid(value))
+                    {
+                        throw new UserFriendlyException(string.Format(
+                            L("InvalidFeatureValue"), feature.Name));
+                    }
+
+                    if (currentFeature == null)
+                    {
+                        await _editionFeatureRepository.InsertAsync(new EditionFeatureSetting(editionId, featureName, value));
+                    }
+                    else
+                    {
+                        currentFeature.Value = value;
+                    }
                 }
-                else
-                {
-                    currentFeature.Value = value;
-                }
-            }
+            });
         }
-
-        [UnitOfWork]
+        
         public virtual void SetEditionFeatureValue(int editionId, string featureName, string value)
         {
-            using (_unitOfWorkManager.Current.EnableFilter(AbpDataFilters.MayHaveTenant))
-            using (_unitOfWorkManager.Current.SetTenantId(null))
+            _unitOfWorkManager.WithUnitOfWork(() =>
             {
-                if (GetEditionValueOrNull(editionId, featureName) == value)
+                using (_unitOfWorkManager.Current.EnableFilter(AbpDataFilters.MayHaveTenant))
+                using (_unitOfWorkManager.Current.SetTenantId(null))
                 {
-                    return;
-                }
-
-                var currentFeature = _editionFeatureRepository.FirstOrDefault(f => f.EditionId == editionId && f.Name == featureName);
-
-                var feature = _featureManager.GetOrNull(featureName);
-                if (feature == null || feature.DefaultValue == value)
-                {
-                    if (currentFeature != null)
+                    if (GetEditionValueOrNull(editionId, featureName) == value)
                     {
-                        _editionFeatureRepository.Delete(currentFeature);
+                        return;
                     }
 
-                    return;
-                }
+                    var currentFeature = _editionFeatureRepository.FirstOrDefault(f => f.EditionId == editionId && f.Name == featureName);
 
-                if (currentFeature == null)
-                {
-                    _editionFeatureRepository.Insert(new EditionFeatureSetting(editionId, featureName, value));
+                    var feature = _featureManager.GetOrNull(featureName);
+                    if (feature == null || feature.DefaultValue == value)
+                    {
+                        if (currentFeature != null)
+                        {
+                            _editionFeatureRepository.Delete(currentFeature);
+                        }
+
+                        return;
+                    }
+
+                    if (currentFeature == null)
+                    {
+                        _editionFeatureRepository.Insert(new EditionFeatureSetting(editionId, featureName, value));
+                    }
+                    else
+                    {
+                        currentFeature.Value = value;
+                    }
                 }
-                else
-                {
-                    currentFeature.Value = value;
-                }
-            }
+            });
         }
 
         protected virtual async Task<TenantFeatureCacheItem> GetTenantFeatureCacheItemAsync(int tenantId)

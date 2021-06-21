@@ -38,6 +38,7 @@ namespace Abp.Configuration
         private readonly ITypedCache<int, Dictionary<string, SettingInfo>> _tenantSettingCache;
         private readonly ITypedCache<string, Dictionary<string, SettingInfo>> _userSettingCache;
         private readonly ITenantStore _tenantStore;
+        private readonly IUnitOfWorkManager _unitOfWorkManager;
 
         /// <inheritdoc/>
         public SettingManager(
@@ -45,12 +46,14 @@ namespace Abp.Configuration
             ICacheManager cacheManager,
             IMultiTenancyConfig multiTenancyConfig,
             ITenantStore tenantStore,
-            ISettingEncryptionService settingEncryptionService)
+            ISettingEncryptionService settingEncryptionService,
+            IUnitOfWorkManager unitOfWorkManager)
         {
             _settingDefinitionManager = settingDefinitionManager;
             _multiTenancyConfig = multiTenancyConfig;
             _tenantStore = tenantStore;
             SettingEncryptionService = settingEncryptionService;
+            _unitOfWorkManager = unitOfWorkManager;
 
             AbpSession = NullAbpSession.Instance;
             SettingStore = DefaultConfigSettingStore.Instance;
@@ -67,6 +70,7 @@ namespace Abp.Configuration
         {
             return GetSettingValueInternalAsync(name, AbpSession.TenantId, AbpSession.UserId);
         }
+
         /// <inheritdoc/>
         public string GetSettingValue(string name)
         {
@@ -135,7 +139,8 @@ namespace Abp.Configuration
 
         public async Task<IReadOnlyList<ISettingValue>> GetAllSettingValuesAsync()
         {
-            return await GetAllSettingValuesAsync(SettingScopes.Application | SettingScopes.Tenant | SettingScopes.User);
+            return await GetAllSettingValuesAsync(SettingScopes.Application | SettingScopes.Tenant |
+                                                  SettingScopes.User);
         }
 
         public IReadOnlyList<ISettingValue> GetAllSettingValues()
@@ -170,7 +175,8 @@ namespace Abp.Configuration
                     }
 
                     if (!setting.IsInherited &&
-                        ((setting.Scopes.HasFlag(SettingScopes.Tenant) && AbpSession.TenantId.HasValue) || (setting.Scopes.HasFlag(SettingScopes.User) && AbpSession.UserId.HasValue)))
+                        ((setting.Scopes.HasFlag(SettingScopes.Tenant) && AbpSession.TenantId.HasValue) ||
+                         (setting.Scopes.HasFlag(SettingScopes.User) && AbpSession.UserId.HasValue)))
                     {
                         continue;
                     }
@@ -210,7 +216,8 @@ namespace Abp.Configuration
                     var setting = settingDefinitions.GetOrDefault(settingValue.Name);
                     if (setting != null && setting.Scopes.HasFlag(SettingScopes.User))
                     {
-                        settingValues[settingValue.Name] = new SettingValueObject(settingValue.Name, settingValue.Value);
+                        settingValues[settingValue.Name] =
+                            new SettingValueObject(settingValue.Name, settingValue.Value);
                     }
                 }
             }
@@ -245,7 +252,8 @@ namespace Abp.Configuration
                     }
 
                     if (!setting.IsInherited &&
-                        ((setting.Scopes.HasFlag(SettingScopes.Tenant) && AbpSession.TenantId.HasValue) || (setting.Scopes.HasFlag(SettingScopes.User) && AbpSession.UserId.HasValue)))
+                        ((setting.Scopes.HasFlag(SettingScopes.Tenant) && AbpSession.TenantId.HasValue) ||
+                         (setting.Scopes.HasFlag(SettingScopes.User) && AbpSession.UserId.HasValue)))
                     {
                         continue;
                     }
@@ -285,7 +293,8 @@ namespace Abp.Configuration
                     var setting = settingDefinitions.GetOrDefault(settingValue.Name);
                     if (setting != null && setting.Scopes.HasFlag(SettingScopes.User))
                     {
-                        settingValues[settingValue.Name] = new SettingValueObject(settingValue.Name, settingValue.Value);
+                        settingValues[settingValue.Name] =
+                            new SettingValueObject(settingValue.Name, settingValue.Value);
                     }
                 }
             }
@@ -366,55 +375,63 @@ namespace Abp.Configuration
         }
 
         /// <inheritdoc/>
-        [UnitOfWork]
         public virtual async Task ChangeSettingForApplicationAsync(string name, string value)
         {
-            if (_multiTenancyConfig.IsEnabled)
+            await _unitOfWorkManager.WithUnitOfWorkAsync(async () =>
             {
-                await InsertOrUpdateOrDeleteSettingValueAsync(name, value, null, null);
-            }
-            else
-            {
-                // If MultiTenancy is disabled, then we should change default tenant's setting
-                await InsertOrUpdateOrDeleteSettingValueAsync(name, value, AbpSession.GetTenantId(), null);
-                await _tenantSettingCache.RemoveAsync(AbpSession.GetTenantId());
-            }
+                if (_multiTenancyConfig.IsEnabled)
+                {
+                    await InsertOrUpdateOrDeleteSettingValueAsync(name, value, null, null);
+                }
+                else
+                {
+                    // If MultiTenancy is disabled, then we should change default tenant's setting
+                    await InsertOrUpdateOrDeleteSettingValueAsync(name, value, AbpSession.GetTenantId(), null);
+                    await _tenantSettingCache.RemoveAsync(AbpSession.GetTenantId());
+                }
 
-            await _applicationSettingCache.RemoveAsync(ApplicationSettingsCacheKey);
+                await _applicationSettingCache.RemoveAsync(ApplicationSettingsCacheKey);
+            });
         }
 
         /// <inheritdoc/>
-        [UnitOfWork]
         public virtual void ChangeSettingForApplication(string name, string value)
         {
-            if (_multiTenancyConfig.IsEnabled)
+            _unitOfWorkManager.WithUnitOfWork(() =>
             {
-                InsertOrUpdateOrDeleteSettingValue(name, value, null, null);
-            }
-            else
-            {
-                // If MultiTenancy is disabled, then we should change default tenant's setting
-                InsertOrUpdateOrDeleteSettingValue(name, value, AbpSession.GetTenantId(), null);
-                _tenantSettingCache.Remove(AbpSession.GetTenantId());
-            }
+                if (_multiTenancyConfig.IsEnabled)
+                {
+                    InsertOrUpdateOrDeleteSettingValue(name, value, null, null);
+                }
+                else
+                {
+                    // If MultiTenancy is disabled, then we should change default tenant's setting
+                    InsertOrUpdateOrDeleteSettingValue(name, value, AbpSession.GetTenantId(), null);
+                    _tenantSettingCache.Remove(AbpSession.GetTenantId());
+                }
 
-            _applicationSettingCache.Remove(ApplicationSettingsCacheKey);
+                _applicationSettingCache.Remove(ApplicationSettingsCacheKey);
+            });
         }
 
         /// <inheritdoc/>
-        [UnitOfWork]
         public virtual async Task ChangeSettingForTenantAsync(int tenantId, string name, string value)
         {
-            await InsertOrUpdateOrDeleteSettingValueAsync(name, value, tenantId, null);
-            await _tenantSettingCache.RemoveAsync(tenantId);
+            await _unitOfWorkManager.WithUnitOfWorkAsync(async () =>
+            {
+                await InsertOrUpdateOrDeleteSettingValueAsync(name, value, tenantId, null);
+                await _tenantSettingCache.RemoveAsync(tenantId);
+            });
         }
 
         /// <inheritdoc/>
-        [UnitOfWork]
         public virtual void ChangeSettingForTenant(int tenantId, string name, string value)
         {
-            InsertOrUpdateOrDeleteSettingValue(name, value, tenantId, null);
-            _tenantSettingCache.Remove(tenantId);
+            _unitOfWorkManager.WithUnitOfWork(() =>
+            {
+                InsertOrUpdateOrDeleteSettingValue(name, value, tenantId, null);
+                _tenantSettingCache.Remove(tenantId);
+            });
         }
 
         public Task ChangeSettingForUserAsync(long userId, string name, string value)
@@ -428,33 +445,42 @@ namespace Abp.Configuration
         }
 
         /// <inheritdoc/>
-        [UnitOfWork]
         public virtual async Task ChangeSettingForUserAsync(UserIdentifier user, string name, string value)
         {
-            await InsertOrUpdateOrDeleteSettingValueAsync(name, value, user.TenantId, user.UserId);
-            await _userSettingCache.RemoveAsync(user.ToUserIdentifierString());
+            await _unitOfWorkManager.WithUnitOfWorkAsync(async () =>
+            {
+                await InsertOrUpdateOrDeleteSettingValueAsync(name, value, user.TenantId, user.UserId);
+                await _userSettingCache.RemoveAsync(user.ToUserIdentifierString());
+            });
         }
 
         /// <inheritdoc/>
-        [UnitOfWork]
         public virtual void ChangeSettingForUser(UserIdentifier user, string name, string value)
         {
-            InsertOrUpdateOrDeleteSettingValue(name, value, user.TenantId, user.UserId);
-            _userSettingCache.Remove(user.ToUserIdentifierString());
+            _unitOfWorkManager.WithUnitOfWork(() =>
+            {
+                InsertOrUpdateOrDeleteSettingValue(name, value, user.TenantId, user.UserId);
+                _userSettingCache.Remove(user.ToUserIdentifierString());
+            });
         }
 
         #endregion
 
         #region Private methods
 
-        private async Task<string> GetSettingValueInternalAsync(string name, int? tenantId = null, long? userId = null, bool fallbackToDefault = true)
+        private async Task<string> GetSettingValueInternalAsync(string name, int? tenantId = null, long? userId = null,
+            bool fallbackToDefault = true)
         {
             var settingDefinition = _settingDefinitionManager.GetSettingDefinition(name);
 
             //Get for user if defined
             if (settingDefinition.Scopes.HasFlag(SettingScopes.User) && userId.HasValue)
             {
-                var settingValue = await GetSettingValueForUserOrNullAsync(new UserIdentifier(tenantId, userId.Value), name);
+                var settingValue = await GetSettingValueForUserOrNullAsync(
+                    new UserIdentifier(tenantId, userId.Value),
+                    name
+                );
+                
                 if (settingValue != null)
                 {
                     return settingValue.Value;
@@ -510,7 +536,8 @@ namespace Abp.Configuration
             return settingDefinition.DefaultValue;
         }
 
-        private string GetSettingValueInternal(string name, int? tenantId = null, long? userId = null, bool fallbackToDefault = true)
+        private string GetSettingValueInternal(string name, int? tenantId = null, long? userId = null,
+            bool fallbackToDefault = true)
         {
             var settingDefinition = _settingDefinitionManager.GetSettingDefinition(name);
 
@@ -573,7 +600,8 @@ namespace Abp.Configuration
             return settingDefinition.DefaultValue;
         }
 
-        private async Task<SettingInfo> InsertOrUpdateOrDeleteSettingValueAsync(string name, string value, int? tenantId, long? userId)
+        private async Task<SettingInfo> InsertOrUpdateOrDeleteSettingValueAsync(string name, string value,
+            int? tenantId, long? userId)
         {
             var settingDefinition = _settingDefinitionManager.GetSettingDefinition(name);
             var settingValue = await SettingStore.GetSettingOrNullAsync(tenantId, userId, name);
@@ -636,14 +664,18 @@ namespace Abp.Configuration
             }
 
             //It's same value in database, no need to update
-            var rawSettingValue = settingDefinition.IsEncrypted ? SettingEncryptionService.Decrypt(settingDefinition, settingValue.Value) : settingValue.Value;
+            var rawSettingValue = settingDefinition.IsEncrypted
+                ? SettingEncryptionService.Decrypt(settingDefinition, settingValue.Value)
+                : settingValue.Value;
             if (rawSettingValue == value)
             {
                 return settingValue;
             }
 
             //Update the setting on database.
-            settingValue.Value = settingDefinition.IsEncrypted ? SettingEncryptionService.Encrypt(settingDefinition, value) : value;
+            settingValue.Value = settingDefinition.IsEncrypted
+                ? SettingEncryptionService.Encrypt(settingDefinition, value)
+                : value;
             await SettingStore.UpdateAsync(settingValue);
 
             return settingValue;
@@ -711,14 +743,18 @@ namespace Abp.Configuration
                 return settingValue;
             }
 
-            var rawSettingValue = settingDefinition.IsEncrypted ? SettingEncryptionService.Decrypt(settingDefinition, settingValue.Value) : settingValue.Value;
+            var rawSettingValue = settingDefinition.IsEncrypted
+                ? SettingEncryptionService.Decrypt(settingDefinition, settingValue.Value)
+                : settingValue.Value;
             if (rawSettingValue == value)
             {
                 return settingValue;
             }
 
             //Update the setting on database.
-            settingValue.Value = settingDefinition.IsEncrypted ? SettingEncryptionService.Encrypt(settingDefinition, value) : value;
+            settingValue.Value = settingDefinition.IsEncrypted
+                ? SettingEncryptionService.Encrypt(settingDefinition, value)
+                : value;
             SettingStore.Update(settingValue);
 
             return settingValue;
@@ -877,7 +913,8 @@ namespace Abp.Configuration
             {
                 if (setting.SettingDefinition.IsEncrypted)
                 {
-                    setting.SettingValue.Value = SettingEncryptionService.Decrypt(setting.SettingDefinition, setting.SettingValue.Value);
+                    setting.SettingValue.Value =
+                        SettingEncryptionService.Decrypt(setting.SettingDefinition, setting.SettingValue.Value);
                 }
 
                 dictionary[setting.SettingValue.Name] = setting.SettingValue;

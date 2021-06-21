@@ -24,34 +24,42 @@ namespace Abp.IdentityServer4
             _unitOfWorkManager = unitOfWorkManager;
             _userManager = userManager;
         }
-
-        [UnitOfWork]
+        
         public override async Task GetProfileDataAsync(ProfileDataRequestContext context)
         {
-            var tenantId = context.Subject.Identity.GetTenantId();
-            using (_unitOfWorkManager.Current.SetTenantId(tenantId))
+            using (var uow = _unitOfWorkManager.Begin())
             {
-                await base.GetProfileDataAsync(context);
-            }
-        }
-
-        [UnitOfWork]
-        public override async Task IsActiveAsync(IsActiveContext context)
-        {
-            var tenantId = context.Subject.Identity.GetTenantId();
-            using (_unitOfWorkManager.Current.SetTenantId(tenantId))
-            {
-                await base.IsActiveAsync(context);
-
-                if (!context.IsActive)
+                var tenantId = context.Subject.Identity.GetTenantId();
+                using (_unitOfWorkManager.Current.SetTenantId(tenantId))
                 {
-                    return;
+                    await base.GetProfileDataAsync(context);
                 }
 
-                var sub = context.Subject.GetSubjectId();
-                var user = await _userManager.FindByIdAsync(sub);
+                await uow.CompleteAsync();
+            }    
+        }
 
-                context.IsActive = user != null && user.IsActive;
+        public override async Task IsActiveAsync(IsActiveContext context)
+        {
+            using (var uow = _unitOfWorkManager.Begin())
+            {
+                var tenantId = context.Subject.Identity.GetTenantId();
+                using (_unitOfWorkManager.Current.SetTenantId(tenantId))
+                {
+                    await base.IsActiveAsync(context);
+
+                    if (!context.IsActive)
+                    {
+                        await uow.CompleteAsync();
+                        return;
+                    }
+
+                    var sub = context.Subject.GetSubjectId();
+                    var user = await _userManager.FindByIdAsync(sub);
+
+                    context.IsActive = user != null && user.IsActive;
+                    await uow.CompleteAsync();
+                }
             }
         }
     }

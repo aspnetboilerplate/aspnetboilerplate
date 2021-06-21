@@ -6,7 +6,6 @@ using System.Security.Cryptography;
 using System.Text;
 using System.Threading.Tasks;
 using Abp.Domain.Services;
-using Abp.Domain.Uow;
 using Abp.Json;
 
 namespace Abp.Webhooks
@@ -126,32 +125,40 @@ namespace Abp.Webhooks
 
             return serializedBody;
         }
-
-        [UnitOfWork]
+        
         public virtual async Task<Guid> InsertAndGetIdWebhookSendAttemptAsync(WebhookSenderArgs webhookSenderArgs)
         {
-            var workItem = new WebhookSendAttempt
+            using (var uow = UnitOfWorkManager.Begin())
             {
-                WebhookEventId = webhookSenderArgs.WebhookEventId,
-                WebhookSubscriptionId = webhookSenderArgs.WebhookSubscriptionId,
-                TenantId = webhookSenderArgs.TenantId
-            };
+                var workItem = new WebhookSendAttempt
+                {
+                    WebhookEventId = webhookSenderArgs.WebhookEventId,
+                    WebhookSubscriptionId = webhookSenderArgs.WebhookSubscriptionId,
+                    TenantId = webhookSenderArgs.TenantId
+                };
 
-            await _webhookSendAttemptStore.InsertAsync(workItem);
-            await CurrentUnitOfWork.SaveChangesAsync();
+                await _webhookSendAttemptStore.InsertAsync(workItem);
+                await CurrentUnitOfWork.SaveChangesAsync();
 
-            return workItem.Id;
+                await uow.CompleteAsync();
+                
+                return workItem.Id;
+            }
         }
 
-        [UnitOfWork]
         public virtual async Task StoreResponseOnWebhookSendAttemptAsync(Guid webhookSendAttemptId, int? tenantId, HttpStatusCode? statusCode, string content)
         {
-            var webhookSendAttempt = await _webhookSendAttemptStore.GetAsync(tenantId, webhookSendAttemptId);
+            using (var uow = UnitOfWorkManager.Begin())
+            {
+                var webhookSendAttempt = await _webhookSendAttemptStore.GetAsync(tenantId, webhookSendAttemptId);
 
-            webhookSendAttempt.ResponseStatusCode = statusCode;
-            webhookSendAttempt.Response = content;
+                webhookSendAttempt.ResponseStatusCode = statusCode;
+                webhookSendAttempt.Response = content;
 
-            await _webhookSendAttemptStore.UpdateAsync(webhookSendAttempt);
+                await _webhookSendAttemptStore.UpdateAsync(webhookSendAttempt);
+
+                await uow.CompleteAsync();
+            }
         }
     }
 }

@@ -12,6 +12,7 @@ using Abp.PlugIns;
 using Abp.Reflection;
 using Abp.Resources.Embedded;
 using Abp.Runtime.Caching.Configuration;
+using Abp.Runtime.Validation;
 using Abp.Webhooks;
 using Castle.MicroKernel.Registration;
 using Castle.MicroKernel.SubSystems.Configuration;
@@ -25,6 +26,8 @@ namespace Abp.Dependency.Installers
         {
             container.Register(
                 Component.For<IUnitOfWorkDefaultOptions, UnitOfWorkDefaultOptions>().ImplementedBy<UnitOfWorkDefaultOptions>().LifestyleSingleton(),
+                Component.For<IAbpValidationDefaultOptions, AbpValidationDefaultOptions>().ImplementedBy<AbpValidationDefaultOptions>().LifestyleSingleton(),
+                Component.For<IAbpAuditingDefaultOptions, AbpAuditingDefaultOptions>().ImplementedBy<AbpAuditingDefaultOptions>().LifestyleSingleton(),
                 Component.For<INavigationConfiguration, NavigationConfiguration>().ImplementedBy<NavigationConfiguration>().LifestyleSingleton(),
                 Component.For<ILocalizationConfiguration, LocalizationConfiguration>().ImplementedBy<LocalizationConfiguration>().LifestyleSingleton(),
                 Component.For<IAuthorizationConfiguration, AuthorizationConfiguration>().ImplementedBy<AuthorizationConfiguration>().LifestyleSingleton(),

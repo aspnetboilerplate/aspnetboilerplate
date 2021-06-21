@@ -1,4 +1,5 @@
-﻿using System.Linq;
+﻿using System;
+using System.Linq;
 using System.Reflection;
 using Abp.Application.Services;
 using Abp.AspNetCore.Configuration;
@@ -11,6 +12,7 @@ using Abp.Threading;
 using Abp.Web.Api.Modeling;
 using Abp.Web.Api.ProxyScripting.Configuration;
 using Castle.Core.Logging;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.ApiExplorer;
 using Microsoft.AspNetCore.Mvc.ModelBinding;
 
@@ -109,38 +111,54 @@ namespace Abp.AspNetCore.Mvc.Proxying
                    ?? apiDescription.ActionDescriptor.AsControllerActionDescriptor().ControllerName;
         }
 
-        private void AddParameterDescriptionsToModel(ActionApiDescriptionModel actionModel, MethodInfo method, ApiDescription apiDescription)
+           private void AddParameterDescriptionsToModel(ActionApiDescriptionModel actionModel, MethodInfo method,
+            ApiDescription apiDescription)
         {
             if (!apiDescription.ParameterDescriptions.Any())
             {
                 return;
             }
 
+            var parameterDescriptionNames = apiDescription
+                .ParameterDescriptions
+                .Select(p => p.Name)
+                .ToArray();
+
+            var methodParameterNames = method
+                .GetParameters()
+                .Where(IsNotFromServicesParameter)
+                .Select(GetMethodParamName)
+                .ToArray();
+
             var matchedMethodParamNames = ArrayMatcher.Match(
-                apiDescription.ParameterDescriptions.Select(p => p.Name).ToArray(),
-                method.GetParameters().Select(GetMethodParamName).ToArray()
+                parameterDescriptionNames,
+                methodParameterNames
             );
 
             for (var i = 0; i < apiDescription.ParameterDescriptions.Count; i++)
             {
                 var parameterDescription = apiDescription.ParameterDescriptions[i];
                 var matchedMethodParamName = matchedMethodParamNames.Length > i
-                                                 ? matchedMethodParamNames[i]
-                                                 : parameterDescription.Name;
+                    ? matchedMethodParamNames[i]
+                    : parameterDescription.Name;
 
                 actionModel.AddParameter(new ParameterApiDescriptionModel(
-                        parameterDescription.Name,
-                        matchedMethodParamName,
-                        parameterDescription.Type,
-                        parameterDescription.RouteInfo?.IsOptional ?? false,
-                        parameterDescription.RouteInfo?.DefaultValue,
-                        parameterDescription.RouteInfo?.Constraints?.Select(c => c.GetType().Name).ToArray(),
-                        parameterDescription.Source.Id
-                    )
-                );
+                    parameterDescription.Name,
+                    matchedMethodParamName,
+                    parameterDescription.Type,
+                    parameterDescription.RouteInfo?.IsOptional ?? false,
+                    parameterDescription.RouteInfo?.DefaultValue,
+                    parameterDescription.RouteInfo?.Constraints?.Select(c => c.GetType().Name).ToArray(),
+                    parameterDescription.Source.Id
+                ));
             }
         }
 
+         private static bool IsNotFromServicesParameter(ParameterInfo parameterInfo)
+         {
+             return !parameterInfo.IsDefined(typeof(FromServicesAttribute), true);
+         }
+         
         public string GetMethodParamName(ParameterInfo parameterInfo)
         {
             var modelNameProvider = parameterInfo.GetCustomAttributes()

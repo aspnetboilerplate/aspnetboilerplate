@@ -136,82 +136,94 @@ namespace Abp.Webhooks
 
             return WebhookSubscriptionsStore.IsSubscribed(tenantId, webhookName);
         }
-
-        [UnitOfWork]
+        
         public virtual async Task AddOrUpdateSubscriptionAsync(WebhookSubscription webhookSubscription)
         {
-            await CheckIfPermissionsGrantedAsync(webhookSubscription);
+            await UnitOfWorkManager.WithUnitOfWorkAsync(async () =>
+            {
+                await CheckIfPermissionsGrantedAsync(webhookSubscription);
 
-            if (webhookSubscription.Id == default)
-            {
-                webhookSubscription.Id = _guidGenerator.Create();
-                webhookSubscription.Secret = WebhookSubscriptionSecretPrefix + Guid.NewGuid().ToString("N");
-                await WebhookSubscriptionsStore.InsertAsync(webhookSubscription.ToWebhookSubscriptionInfo());
-            }
-            else
-            {
-                var subscription = await WebhookSubscriptionsStore.GetAsync(webhookSubscription.Id);
-                subscription.WebhookUri = webhookSubscription.WebhookUri;
-                subscription.Webhooks = webhookSubscription.Webhooks.ToJsonString();
-                subscription.Headers = webhookSubscription.Headers.ToJsonString();
-                await WebhookSubscriptionsStore.UpdateAsync(subscription);
-            }
+                if (webhookSubscription.Id == default)
+                {
+                    webhookSubscription.Id = _guidGenerator.Create();
+                    webhookSubscription.Secret = WebhookSubscriptionSecretPrefix + Guid.NewGuid().ToString("N");
+                    await WebhookSubscriptionsStore.InsertAsync(webhookSubscription.ToWebhookSubscriptionInfo());
+                }
+                else
+                {
+                    var subscription = await WebhookSubscriptionsStore.GetAsync(webhookSubscription.Id);
+                    subscription.WebhookUri = webhookSubscription.WebhookUri;
+                    subscription.Webhooks = webhookSubscription.Webhooks.ToJsonString();
+                    subscription.Headers = webhookSubscription.Headers.ToJsonString();
+                    await WebhookSubscriptionsStore.UpdateAsync(subscription);
+                }
+            });
         }
-
-        [UnitOfWork]
+        
         public virtual void AddOrUpdateSubscription(WebhookSubscription webhookSubscription)
         {
-            CheckIfPermissionsGranted(webhookSubscription);
+            UnitOfWorkManager.WithUnitOfWork(() =>
+            {
+                CheckIfPermissionsGranted(webhookSubscription);
 
-            if (webhookSubscription.Id == default)
-            {
-                webhookSubscription.Id = _guidGenerator.Create();
-                webhookSubscription.Secret = WebhookSubscriptionSecretPrefix + Guid.NewGuid().ToString("N");
-                WebhookSubscriptionsStore.Insert(webhookSubscription.ToWebhookSubscriptionInfo());
-            }
-            else
-            {
-                var subscription = WebhookSubscriptionsStore.Get(webhookSubscription.Id);
-                subscription.WebhookUri = webhookSubscription.WebhookUri;
-                subscription.Webhooks = webhookSubscription.Webhooks.ToJsonString();
-                subscription.Headers = webhookSubscription.Headers.ToJsonString();
-                WebhookSubscriptionsStore.Update(subscription);
-            }
+                if (webhookSubscription.Id == default)
+                {
+                    webhookSubscription.Id = _guidGenerator.Create();
+                    webhookSubscription.Secret = WebhookSubscriptionSecretPrefix + Guid.NewGuid().ToString("N");
+                    WebhookSubscriptionsStore.Insert(webhookSubscription.ToWebhookSubscriptionInfo());
+                }
+                else
+                {
+                    var subscription = WebhookSubscriptionsStore.Get(webhookSubscription.Id);
+                    subscription.WebhookUri = webhookSubscription.WebhookUri;
+                    subscription.Webhooks = webhookSubscription.Webhooks.ToJsonString();
+                    subscription.Headers = webhookSubscription.Headers.ToJsonString();
+                    WebhookSubscriptionsStore.Update(subscription);
+                }
+            });
         }
 
-        [UnitOfWork]
         public virtual async Task ActivateWebhookSubscriptionAsync(Guid id, bool active)
         {
-            var webhookSubscription = await WebhookSubscriptionsStore.GetAsync(id);
-            webhookSubscription.IsActive = active;
+            await UnitOfWorkManager.WithUnitOfWorkAsync(async () =>
+            {
+                var webhookSubscription = await WebhookSubscriptionsStore.GetAsync(id);
+                webhookSubscription.IsActive = active;
+            });
         }
-
-        [UnitOfWork]
-        public virtual Task DeleteSubscriptionAsync(Guid id)
+        
+        public virtual async Task DeleteSubscriptionAsync(Guid id)
         {
-            return WebhookSubscriptionsStore.DeleteAsync(id);
+            await UnitOfWorkManager.WithUnitOfWorkAsync(async () =>
+            {
+                await WebhookSubscriptionsStore.DeleteAsync(id);
+            });
         }
-
-        [UnitOfWork]
+        
         public virtual void DeleteSubscription(Guid id)
         {
-            WebhookSubscriptionsStore.Delete(id);
+            UnitOfWorkManager.WithUnitOfWork(() =>
+            {
+                WebhookSubscriptionsStore.Delete(id);
+            });
         }
-
-        [UnitOfWork]
+        
         public virtual async Task AddWebhookAsync(WebhookSubscriptionInfo subscription, string webhookName)
         {
-            await CheckPermissionsAsync(subscription.TenantId, webhookName);
-
-            subscription.SubscribeWebhook(webhookName);
+            await UnitOfWorkManager.WithUnitOfWorkAsync(async () =>
+            {
+                await CheckPermissionsAsync(subscription.TenantId, webhookName);
+                subscription.SubscribeWebhook(webhookName);
+            });
         }
-
-        [UnitOfWork]
+        
         public virtual void AddWebhook(WebhookSubscriptionInfo subscription, string webhookName)
         {
-            CheckPermissions(subscription.TenantId, webhookName);
-
-            subscription.SubscribeWebhook(webhookName);
+            UnitOfWorkManager.WithUnitOfWork(() =>
+            {
+                CheckPermissions(subscription.TenantId, webhookName);
+                subscription.SubscribeWebhook(webhookName);
+            });
         }
 
         #region PermissionCheck
