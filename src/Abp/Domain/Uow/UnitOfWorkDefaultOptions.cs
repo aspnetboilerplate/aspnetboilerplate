@@ -8,7 +8,7 @@ using Abp.Domain.Repositories;
 
 namespace Abp.Domain.Uow
 {
-    internal class UnitOfWorkDefaultOptions : IUnitOfWorkDefaultOptions
+    public class UnitOfWorkDefaultOptions : IUnitOfWorkDefaultOptions
     {
         public static List<Func<Type, bool>> ConventionalUowSelectorList = new List<Func<Type, bool>>
         {

@@ -5,7 +5,7 @@ using Abp.Application.Services;
 
 namespace Abp.Auditing
 {
-    internal class AbpAuditingDefaultOptions : IAbpAuditingDefaultOptions
+    public class AbpAuditingDefaultOptions : IAbpAuditingDefaultOptions
     {
         public static List<Func<Type, bool>> ConventionalAuditingSelectorList = new List<Func<Type, bool>>
         {

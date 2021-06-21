@@ -38,12 +38,17 @@ namespace Abp.AspNetCore
         /// <typeparam name="TStartupModule">Startup module of the application which depends on other used modules. Should be derived from <see cref="AbpModule"/>.</typeparam>
         /// <param name="services">Services.</param>
         /// <param name="optionsAction">An action to get/modify options</param>
+        /// <param name="removeConventionalInterceptors">Removes the conventional interceptors</param>
         public static IServiceProvider AddAbp<TStartupModule>(this IServiceCollection services,
-            [CanBeNull] Action<AbpBootstrapperOptions> optionsAction = null)
+            [CanBeNull] Action<AbpBootstrapperOptions> optionsAction = null,
+            bool removeConventionalInterceptors = true)
             where TStartupModule : AbpModule
         {
-            RemoveConventionalInterceptionSelectors();
-
+            if (removeConventionalInterceptors)
+            {
+                RemoveConventionalInterceptionSelectors();
+            }
+            
             var abpBootstrapper = AddAbpBootstrapper<TStartupModule>(services, optionsAction);
             ConfigureAspNetCore(services, abpBootstrapper.IocManager);
 
@@ -56,11 +61,16 @@ namespace Abp.AspNetCore
         /// <typeparam name="TStartupModule">Startup module of the application which depends on other used modules. Should be derived from <see cref="AbpModule"/>.</typeparam>
         /// <param name="services">Services.</param>
         /// <param name="optionsAction">An action to get/modify options</param>
+        /// <param name="removeConventionalInterceptors">Removes the conventional interceptors</param>
         public static void AddAbpWithoutCreatingServiceProvider<TStartupModule>(this IServiceCollection services,
-            [CanBeNull] Action<AbpBootstrapperOptions> optionsAction = null)
+            [CanBeNull] Action<AbpBootstrapperOptions> optionsAction = null,
+            bool removeConventionalInterceptors = true)
             where TStartupModule : AbpModule
         {
-            RemoveConventionalInterceptionSelectors();
+            if (removeConventionalInterceptors)
+            {
+                RemoveConventionalInterceptionSelectors();
+            }
 
             var abpBootstrapper = AddAbpBootstrapper<TStartupModule>(services, optionsAction);
             ConfigureAspNetCore(services, abpBootstrapper.IocManager);
