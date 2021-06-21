@@ -1,4 +1,5 @@
 ﻿using System;
+using Abp.Reflection;
 
 namespace Abp.Web.Api.Modeling
 {
@@ -31,7 +32,7 @@ namespace Abp.Web.Api.Modeling
             Name = name;
             NameOnMethod = nameOnMethod;
             Type = type;
-            TypeAsString = type.FullName;
+            TypeAsString = type?.FullName;
             IsOptional = isOptional;
             DefaultValue = defaultValue;
             ConstraintTypes = constraintTypes;
