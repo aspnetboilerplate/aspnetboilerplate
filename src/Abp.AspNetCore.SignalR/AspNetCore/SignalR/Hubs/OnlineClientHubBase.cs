@@ -23,7 +23,9 @@ namespace Abp.AspNetCore.SignalR.Hubs
             OnlineClientInfoProvider = clientInfoProvider;
 
             Logger = NullLogger.Instance;
-            AbpSession = NullAbpSession.Instance;
+#pragma warning disable CS0618 // Type or member is obsolete, this line will be removed once the AbpSession property is removed
+			AbpSession = NullAbpSession.Instance;
+#pragma warning restore CS0618 // Type or member is obsolete, this line will be removed once the AbpSession property is removed
         }
 
         public override async Task OnConnectedAsync()

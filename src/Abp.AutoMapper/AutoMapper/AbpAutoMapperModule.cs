@@ -53,7 +53,9 @@ namespace Abp.AutoMapper
             IocManager.IocContainer.Register(
                 Component.For<IMapper>().Instance(mapper).LifestyleSingleton()
             );
-            AbpEmulateAutoMapper.Mapper = mapper;
+#pragma warning disable CS0618 // Type or member is obsolete, this line will be removed once AutoMapper is updated
+			AbpEmulateAutoMapper.Mapper = mapper;
+#pragma warning restore CS0618 // Type or member is obsolete, this line will be removed once AutoMapper is updated
         }
 
         private void FindAndAutoMapTypes(IMapperConfigurationExpression configuration)

@@ -44,31 +44,31 @@ namespace Abp.TestBase.SampleApplication.Tests.EntityFramework
         // Note: The test below is cancelled since Effort does not work well with ObjectMaterialized event.
         // Even if we restore the state of an entity in ObjectMaterialized of EfUnitOfWork, Effort still thinks that this entity is changed.
         // [Fact]
-        public void DateTime_Kind_Property_Should_Be_Normalized_On_Ef_ObjectMaterialition()
-        {
-            using (var uow = _unitOfWorkManager.Begin())
-            {
-                var companies = _companyRepository.GetAll().Include(c => c.Branches).ToList();
+        //public void DateTime_Kind_Property_Should_Be_Normalized_On_Ef_ObjectMaterialition()
+        //{
+        //    using (var uow = _unitOfWorkManager.Begin())
+        //    {
+        //        var companies = _companyRepository.GetAll().Include(c => c.Branches).ToList();
 
-                foreach (var company in companies)
-                {
-                    company.CreationTime.Kind.ShouldBe(Clock.Kind);
+        //        foreach (var company in companies)
+        //        {
+        //            company.CreationTime.Kind.ShouldBe(Clock.Kind);
 
-                    company.BillingAddress.CreationTime.Kind.ShouldBe(Clock.Kind);
-                    company.BillingAddress.LastModifier.ModificationTime.Value.Kind.ShouldBe(Clock.Kind);
+        //            company.BillingAddress.CreationTime.Kind.ShouldBe(Clock.Kind);
+        //            company.BillingAddress.LastModifier.ModificationTime.Value.Kind.ShouldBe(Clock.Kind);
 
-                    company.ShippingAddress.CreationTime.Kind.ShouldBe(Clock.Kind);
-                    company.ShippingAddress.LastModifier.ModificationTime.Value.Kind.ShouldBe(Clock.Kind);
+        //            company.ShippingAddress.CreationTime.Kind.ShouldBe(Clock.Kind);
+        //            company.ShippingAddress.LastModifier.ModificationTime.Value.Kind.ShouldBe(Clock.Kind);
 
-                    foreach (var branch in company.Branches)
-                    {
-                        branch.CreationTime.Kind.ShouldBe(Clock.Kind);
-                    }
-                }
+        //            foreach (var branch in company.Branches)
+        //            {
+        //                branch.CreationTime.Kind.ShouldBe(Clock.Kind);
+        //            }
+        //        }
 
-                uow.Complete();
-            }
-        }
+        //        uow.Complete();
+        //    }
+        //}
 
         [Fact]
         public void DisableDateTimeNormalizationAttribute_Ef_ObjectMaterialition_Test()

@@ -110,9 +110,9 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "solution-items", "solution-
 		.gitattributes = .gitattributes
 		.gitignore = .gitignore
 		common.props = common.props
-		LICENSE = LICENSE
-		README.md = README.md
 		configureawait.props = configureawait.props
+		LICENSE.md = LICENSE.md
+		README.md = README.md
 	EndProjectSection
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Abp.HangFire.AspNetCore", "src\Abp.HangFire.AspNetCore\Abp.HangFire.AspNetCore.csproj", "{1CC8525B-3F36-4ED0-BD5A-18DCEA19167E}"

@@ -8,21 +8,7 @@ using Abp.Zero.Notifications;
 using Abp.ZeroCore.SampleApp;
 using Abp.Configuration.Startup;
 using Castle.MicroKernel.Resolvers;
-using System;
-using System.Collections.Generic;
-using System.Threading.Tasks;
-using Abp.Configuration.Startup;
-using Abp.Runtime.Caching;
-using Abp.Runtime.Caching.Configuration;
-using Abp.Runtime.Caching.Redis;
-using Abp.TestBase;
 using Castle.MicroKernel.Registration;
-using Microsoft.AspNetCore.Http;
-using NSubstitute;
-using Shouldly;
-using StackExchange.Redis;
-using Xunit;
-
 
 namespace Abp.Zero
 {
@@ -36,7 +22,9 @@ namespace Abp.Zero
 
         public override void PreInitialize()
         {
+#pragma warning disable CS0618 // Type or member is obsolete, this line will be removed once the UseStaticMapper is removed
             Configuration.Modules.AbpAutoMapper().UseStaticMapper = false;
+#pragma warning restore CS0618 // Type or member is obsolete, this line will be removed once the UseStaticMapper is removed
             Configuration.BackgroundJobs.IsJobExecutionEnabled = false;
             Configuration.Modules.Zero().LanguageManagement.EnableDbLocalization();
             Configuration.UnitOfWork.IsTransactional = false;

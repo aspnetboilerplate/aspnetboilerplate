@@ -77,7 +77,7 @@ namespace Abp.EntityFrameworkCore.Dapper.Tests.Tests
                     uow.Complete();
                 }
             }
-            catch (Exception exception)
+            catch (Exception)
             {
                 //no handling.
             }
@@ -123,10 +123,11 @@ namespace Abp.EntityFrameworkCore.Dapper.Tests.Tests
 
                     throw new Exception("uow rollback");
 
-                    await uow.CompleteAsync();
+                    // Unreachable code.
+                    // await uow.CompleteAsync();
                 }
             }
-            catch (Exception exception)
+            catch (Exception)
             {
                 //no handling.
             }

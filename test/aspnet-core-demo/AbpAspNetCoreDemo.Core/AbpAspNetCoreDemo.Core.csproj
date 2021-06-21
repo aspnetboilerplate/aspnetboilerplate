@@ -18,8 +18,4 @@
     <ProjectReference Include="..\..\..\src\Abp.AutoMapper\Abp.AutoMapper.csproj" />
   </ItemGroup>
 
-  <ItemGroup>
-    <Reference Include="System.ComponentModel.DataAnnotations" />
-  </ItemGroup>
-
 </Project>

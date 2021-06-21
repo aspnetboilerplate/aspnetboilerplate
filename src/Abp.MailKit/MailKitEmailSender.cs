@@ -76,8 +76,8 @@ namespace Abp.MailKit
                 }
             };
 
-            message.From.Add(new MailboxAddress(from));
-            message.To.Add(new MailboxAddress(to));
+            message.From.Add(MailboxAddress.Parse(from));
+            message.To.Add(MailboxAddress.Parse(to));
             
             return message;
         }
