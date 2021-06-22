@@ -1,5 +1,6 @@
 ﻿using Abp.TestBase;
 using Shouldly;
+using System;
 using Xunit;
 
 namespace Abp.AutoMapper.Tests
@@ -7,6 +8,7 @@ namespace Abp.AutoMapper.Tests
     public class StaticAutoMapper_Tests : AbpIntegratedTestBase<AbpAutoMapperTestModule>
     {
         [Fact]
+        [Obsolete("This test should be removed once the static Mapper is removed from Abp")]
         public void StaticAutoMapper_Test()
         {
             AbpEmulateAutoMapper.Mapper.ShouldNotBeNull();

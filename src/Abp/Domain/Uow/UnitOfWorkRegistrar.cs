@@ -2,7 +2,6 @@ using System.Linq;
 using System.Reflection;
 using Abp.Dependency;
 using Castle.Core;
-using Castle.MicroKernel;
 
 namespace Abp.Domain.Uow
 {
@@ -21,32 +20,30 @@ namespace Abp.Domain.Uow
             {
                 var implementationType = handler.ComponentModel.Implementation.GetTypeInfo();
 
-                HandleTypesWithUnitOfWorkAttribute(implementationType, handler);
-                HandleConventionalUnitOfWorkTypes(iocManager, implementationType, handler);
+                if (ShouldIntercept(iocManager, implementationType))
+                {
+                    handler.ComponentModel.Interceptors.Add(
+                        new InterceptorReference(typeof(AbpAsyncDeterminationInterceptor<UnitOfWorkInterceptor>))
+                    );
+                }
             };
         }
 
-        private static void HandleTypesWithUnitOfWorkAttribute(TypeInfo implementationType, IHandler handler)
+        private static bool ShouldIntercept(IIocManager iocManager, TypeInfo implementationType)
         {
             if (IsUnitOfWorkType(implementationType) || AnyMethodHasUnitOfWork(implementationType))
             {
-                handler.ComponentModel.Interceptors.Add(new InterceptorReference(typeof(AbpAsyncDeterminationInterceptor<UnitOfWorkInterceptor>)));
+                return true;
             }
-        }
-
-        private static void HandleConventionalUnitOfWorkTypes(IIocManager iocManager, TypeInfo implementationType, IHandler handler)
-        {
+            
             if (!iocManager.IsRegistered<IUnitOfWorkDefaultOptions>())
             {
-                return;
+                return false;
             }
 
             var uowOptions = iocManager.Resolve<IUnitOfWorkDefaultOptions>();
 
-            if (uowOptions.IsConventionalUowClass(implementationType.AsType()))
-            {
-                handler.ComponentModel.Interceptors.Add(new InterceptorReference(typeof(AbpAsyncDeterminationInterceptor<UnitOfWorkInterceptor>)));
-            }
+            return uowOptions.IsConventionalUowClass(implementationType.AsType());
         }
 
         private static bool IsUnitOfWorkType(TypeInfo implementationType)

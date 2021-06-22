@@ -1,10 +1,12 @@
 ﻿using System;
 using System.Data;
 using System.Data.Entity;
+using System.Reflection;
 using System.Threading.Tasks;
 using Abp.Data;
 using Abp.Dependency;
 using Abp.MultiTenancy;
+using Abp.Reflection;
 
 namespace Abp.EntityFramework
 {
@@ -57,10 +59,10 @@ namespace Abp.EntityFramework
                 );
             }
         }
-        
-        private Task<DbContext> GetDbContextAsync(ActiveTransactionProviderArgs args)
+
+        private async Task<DbContext> GetDbContextAsync(ActiveTransactionProviderArgs args)
         {
-            var dbContextProviderType = typeof(IDbContextProvider<>).MakeGenericType((Type)args["ContextType"]);
+            var dbContextProviderType = typeof(IDbContextProvider<>).MakeGenericType((Type) args["ContextType"]);
 
             using (var dbContextProviderWrapper = _iocResolver.ResolveAsDisposable(dbContextProviderType))
             {
@@ -69,11 +71,11 @@ namespace Abp.EntityFramework
                         nameof(IDbContextProvider<AbpDbContext>.GetDbContextAsync),
                         new[] {typeof(MultiTenancySides)}
                     );
-                
-                return (Task<DbContext>) method.Invoke(
-                    dbContextProviderWrapper.Object,
-                    new object[] { (MultiTenancySides?)args["MultiTenancySide"] }
-                );
+
+                var result = await ReflectionHelper.InvokeAsync(method, dbContextProviderWrapper.Object,
+                    new object[] {(MultiTenancySides?) args["MultiTenancySide"]});
+
+                return result as DbContext;
             }
         }
     }

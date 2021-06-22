@@ -6,7 +6,7 @@ namespace Abp.ZeroCore.SampleApp.Core
     {
         public override string ToString()
         {
-            return string.Format("[User {0}] {1}", Id, UserName);
+            return $"[User {Id}] {UserName}";
         }
 
         public static User CreateTenantAdminUser(int tenantId, string emailAddress)

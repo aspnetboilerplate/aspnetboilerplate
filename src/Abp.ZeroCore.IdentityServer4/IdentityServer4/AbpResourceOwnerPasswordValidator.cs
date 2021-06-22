@@ -21,6 +21,8 @@ namespace Abp.IdentityServer4
         protected SignInManager<TUser> SignInManager { get; }
 
         protected ILogger<ResourceOwnerPasswordValidator<TUser>> Logger { get; }
+        
+        protected IUnitOfWorkManager UnitOfWorkManager { get; }
 
         public AbpResourceOwnerPasswordValidator(
             UserManager<TUser> userManager,
@@ -32,41 +34,43 @@ namespace Abp.IdentityServer4
             SignInManager = signInManager;
             Logger = logger;
         }
-
-        [UnitOfWork]
+        
         public override async Task ValidateAsync(ResourceOwnerPasswordValidationContext context)
         {
-            var user = await UserManager.FindByNameAsync(context.UserName);
-            if (user != null)
+            await UnitOfWorkManager.WithUnitOfWorkAsync(async () =>
             {
-                var result = await SignInManager.CheckPasswordSignInAsync(user, context.Password, true);
-                if (result.Succeeded)
+                var user = await UserManager.FindByNameAsync(context.UserName);
+                if (user != null)
                 {
-                    Logger.LogInformation("Credentials validated for username: {username}", context.UserName);
+                    var result = await SignInManager.CheckPasswordSignInAsync(user, context.Password, true);
+                    if (result.Succeeded)
+                    {
+                        Logger.LogInformation("Credentials validated for username: {username}", context.UserName);
 
-                    var sub = await UserManager.GetUserIdAsync(user);
-                    context.Result = new GrantValidationResult(sub, OidcConstants.AuthenticationMethods.Password, GetAdditionalClaimsOrNull(user));
-                    return;
-                }
-                else if (result.IsLockedOut)
-                {
-                    Logger.LogInformation("Authentication failed for username: {username}, reason: locked out", context.UserName);
-                }
-                else if (result.IsNotAllowed)
-                {
-                    Logger.LogInformation("Authentication failed for username: {username}, reason: not allowed", context.UserName);
+                        var sub = await UserManager.GetUserIdAsync(user);
+                        context.Result = new GrantValidationResult(sub, OidcConstants.AuthenticationMethods.Password, GetAdditionalClaimsOrNull(user));
+                        return;
+                    }
+                    else if (result.IsLockedOut)
+                    {
+                        Logger.LogInformation("Authentication failed for username: {username}, reason: locked out", context.UserName);
+                    }
+                    else if (result.IsNotAllowed)
+                    {
+                        Logger.LogInformation("Authentication failed for username: {username}, reason: not allowed", context.UserName);
+                    }
+                    else
+                    {
+                        Logger.LogInformation("Authentication failed for username: {username}, reason: invalid credentials", context.UserName);
+                    }
                 }
                 else
                 {
-                    Logger.LogInformation("Authentication failed for username: {username}, reason: invalid credentials", context.UserName);
+                    Logger.LogInformation("No user found matching username: {username}", context.UserName);
                 }
-            }
-            else
-            {
-                Logger.LogInformation("No user found matching username: {username}", context.UserName);
-            }
 
-            context.Result = new GrantValidationResult(TokenRequestErrors.InvalidGrant);
+                context.Result = new GrantValidationResult(TokenRequestErrors.InvalidGrant);
+            });
         }
 
         protected virtual IEnumerable<Claim> GetAdditionalClaimsOrNull(TUser user)

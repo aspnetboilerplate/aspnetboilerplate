@@ -8,7 +8,8 @@ using Abp.Events.Bus.Handlers;
 
 namespace Abp.Notifications
 {
-    public class NotificationSubscriptionSynchronizer : IEventHandler<EntityDeletedEventData<AbpUserBase>>, ITransientDependency
+    public class NotificationSubscriptionSynchronizer : IEventHandler<EntityDeletedEventData<AbpUserBase>>,
+        ITransientDependency
     {
         private readonly IRepository<NotificationSubscriptionInfo, Guid> _notificationSubscriptionRepository;
         private readonly IUnitOfWorkManager _unitOfWorkManager;
@@ -22,13 +23,15 @@ namespace Abp.Notifications
             _unitOfWorkManager = unitOfWorkManager;
         }
 
-        [UnitOfWork]
         public virtual void HandleEvent(EntityDeletedEventData<AbpUserBase> eventData)
         {
-            using (_unitOfWorkManager.Current.SetTenantId(eventData.Entity.TenantId))
+            _unitOfWorkManager.WithUnitOfWork(() =>
             {
-                _notificationSubscriptionRepository.Delete(x => x.UserId == eventData.Entity.Id);
-            }
+                using (_unitOfWorkManager.Current.SetTenantId(eventData.Entity.TenantId))
+                {
+                    _notificationSubscriptionRepository.Delete(x => x.UserId == eventData.Entity.Id);
+                }
+            });
         }
     }
 }

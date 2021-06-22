@@ -4,7 +4,6 @@ using System.Threading.Tasks;
 using Abp.Notifications;
 using Abp.Runtime.Session;
 using Castle.MicroKernel.Registration;
-using NSubstitute;
 using Shouldly;
 using Xunit;
 
@@ -22,6 +21,7 @@ namespace Abp.Zero.Notifications
                 Component.For<INotificationDistributer>().Instance(defaultNotificationDistributor)
                     .LifestyleSingleton()
                     .IsDefault()
+                    .Named("DefaultNotificationDistributer")
             );
             
             _notificationPublisher = LocalIocManager.Resolve<INotificationPublisher>();

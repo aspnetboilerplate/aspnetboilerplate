@@ -68,7 +68,7 @@ namespace Abp.Configuration
         /// </summary>
         /// <param name="name">Unique name of the setting</param>
         /// <param name="defaultValue">Default value of the setting</param>
-        /// <param name="displayName">Display name of the permission</param>
+        /// <param name="displayName">Display name of the setting</param>
         /// <param name="group">Group of this setting</param>
         /// <param name="description">A brief description for this setting</param>
         /// <param name="scopes">Scopes of this setting. Default value: <see cref="SettingScopes.Application"/>.</param>

@@ -7,7 +7,7 @@ namespace Abp.Webhooks
     {
         public string Id { get; set; }
 
-        public string Event { get; set; }
+        public string WebhookEvent { get; set; }
 
         public int Attempt { get; set; }
 
@@ -15,25 +15,20 @@ namespace Abp.Webhooks
 
         public DateTime CreationTimeUtc { get; set; }
 
-        public WebhookPayload(string id, string webHookEvent, int attempt)
+        public WebhookPayload(string id, string webhookEvent, int attempt)
         {
             if (id.IsNullOrWhiteSpace())
             {
                 throw new ArgumentNullException(nameof(id));
             }
 
-            if (webHookEvent.IsNullOrWhiteSpace())
+            if (webhookEvent.IsNullOrWhiteSpace())
             {
-                throw new ArgumentNullException(nameof(webHookEvent));
-            }
-
-            if (attempt <= 0)
-            {
-                throw new ArgumentOutOfRangeException(nameof(attempt));
+                throw new ArgumentNullException(nameof(webhookEvent));
             }
 
             Id = id;
-            Event = webHookEvent;
+            WebhookEvent = webhookEvent;
             Attempt = attempt;
             CreationTimeUtc = DateTime.UtcNow;
         }

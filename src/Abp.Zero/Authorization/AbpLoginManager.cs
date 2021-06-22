@@ -60,13 +60,15 @@ namespace Abp.Authorization
 
             ClientInfoProvider = NullClientInfoProvider.Instance;
         }
-
-        [UnitOfWork]
+        
         public virtual async Task<AbpLoginResult<TTenant, TUser>> LoginAsync(UserLoginInfo login, string tenancyName = null)
         {
-            var result = await LoginAsyncInternal(login, tenancyName);
-            await SaveLoginAttempt(result, tenancyName, login.ProviderKey + "@" + login.LoginProvider);
-            return result;
+            return await UnitOfWorkManager.WithUnitOfWorkAsync(async () =>
+            {
+                var result = await LoginAsyncInternal(login, tenancyName);
+                await SaveLoginAttempt(result, tenancyName, login.ProviderKey + "@" + login.LoginProvider);
+                return result;
+            });
         }
 
         protected virtual async Task<AbpLoginResult<TTenant, TUser>> LoginAsyncInternal(UserLoginInfo login, string tenancyName)
@@ -108,13 +110,15 @@ namespace Abp.Authorization
                 return await CreateLoginResultAsync(user, tenant);
             }
         }
-
-        [UnitOfWork]
+        
         public virtual async Task<AbpLoginResult<TTenant, TUser>> LoginAsync(string userNameOrEmailAddress, string plainPassword, string tenancyName = null, bool shouldLockout = true)
         {
-            var result = await LoginAsyncInternal(userNameOrEmailAddress, plainPassword, tenancyName, shouldLockout);
-            await SaveLoginAttempt(result, tenancyName, userNameOrEmailAddress);
-            return result;
+            return await UnitOfWorkManager.WithUnitOfWorkAsync(async () =>
+            {
+                var result = await LoginAsyncInternal(userNameOrEmailAddress, plainPassword, tenancyName, shouldLockout);
+                await SaveLoginAttempt(result, tenancyName, userNameOrEmailAddress);
+                return result;
+            });
         }
 
         protected virtual async Task<AbpLoginResult<TTenant, TUser>> LoginAsyncInternal(string userNameOrEmailAddress, string plainPassword, string tenancyName, bool shouldLockout)

@@ -52,7 +52,9 @@ namespace Abp.AspNetCore.SignalR.Notifications
                             continue;
                         }
 
-                        userNotification.Notification.EntityType = null; // Serialization of System.Type causes SignalR to disconnect. See https://github.com/aspnetboilerplate/aspnetboilerplate/issues/5230
+#pragma warning disable CS0618 // Type or member is obsolete, this line will be removed once the EntityType property is removed
+						userNotification.Notification.EntityType = null; // Serialization of System.Type causes SignalR to disconnect. See https://github.com/aspnetboilerplate/aspnetboilerplate/issues/5230
+#pragma warning restore CS0618 // Type or member is obsolete, this line will be removed once the EntityType property is removed
                         await signalRClient.SendAsync("getNotification", userNotification);
                     }
                 }

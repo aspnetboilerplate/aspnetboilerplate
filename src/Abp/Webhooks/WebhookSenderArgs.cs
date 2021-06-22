@@ -58,5 +58,10 @@ namespace Abp.Webhooks
         /// </para>
         /// </summary>
         public bool SendExactSameData { get; set; }
+
+        public WebhookSenderArgs()
+        {
+            Headers = new Dictionary<string, string>();
+        }
     }
 }

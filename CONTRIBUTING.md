@@ -1,6 +1,4 @@
-﻿**DRAFT**: This doc is draft. See https://help.github.com/en/articles/setting-guidelines-for-repository-contributors
-
-# Contributing to ASP.NET Boilerplate
+﻿# Contributing to ASP.NET Boilerplate
 
 ASP.NET Boilerplate is an [open source](https://github.com/aspnetboilerplate/aspnetboilerplate) and community driven project. This guide is aims to help anyone wants to contribute to the project.
 
@@ -40,8 +38,6 @@ To add missing translation, see [this example pull request](https://github.com/a
 ## Writing a New Module
 
 The framework has pre-build modules, you can also add a new module. [Abp.Dapper](https://github.com/aspnetboilerplate/aspnetboilerplate/tree/dev/src/Abp.Dapper) is a contributed module. You can check Abp.Dapper module to make your own.
-
-TODO: May be added step by step module development guide.
 
 ## Blog Posts & Tutorials
 

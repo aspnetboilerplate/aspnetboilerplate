@@ -228,7 +228,7 @@ namespace Abp.AspNetCore.Mvc.Conventions
             }
             else
             {
-                NormalizeSelectorRoutes(moduleName, controllerName, action);
+                NormalizeSelectorRoutes(moduleName, controllerName, action, configuration);
             }
         }
 
@@ -239,19 +239,30 @@ namespace Abp.AspNetCore.Mvc.Conventions
                 AttributeRouteModel = CreateAbpServiceAttributeRouteModel(moduleName, controllerName, action)
             };
 
-            var verb = configuration?.UseConventionalHttpVerbs == true
-                           ? ProxyScriptingHelper.GetConventionalVerbForMethodName(action.ActionName)
-                           : ProxyScriptingHelper.DefaultHttpVerb;
+            var httpMethod = SelectHttpMethod(action, configuration);
 
-            abpServiceSelectorModel.ActionConstraints.Add(new HttpMethodActionConstraint(new[] { verb }));
+            abpServiceSelectorModel.ActionConstraints.Add(new HttpMethodActionConstraint(new[] { httpMethod }));
 
             action.Selectors.Add(abpServiceSelectorModel);
         }
 
-        private static void NormalizeSelectorRoutes(string moduleName, string controllerName, ActionModel action)
+        private string SelectHttpMethod(ActionModel action, AbpControllerAssemblySetting configuration)
+        {
+            return configuration?.UseConventionalHttpVerbs == true
+                ? ProxyScriptingHelper.GetConventionalVerbForMethodName(action.ActionName)
+                : ProxyScriptingHelper.DefaultHttpVerb;
+        }
+
+        private void NormalizeSelectorRoutes(string moduleName, string controllerName, ActionModel action, [CanBeNull] AbpControllerAssemblySetting configuration)
         {
             foreach (var selector in action.Selectors)
             {
+                if (!selector.ActionConstraints.OfType<HttpMethodActionConstraint>().Any())
+                {
+                    var httpMethod = SelectHttpMethod(action, configuration);
+                    selector.ActionConstraints.Add(new HttpMethodActionConstraint(new[] { httpMethod }));
+                }
+
                 if (selector.AttributeRouteModel == null)
                 {
                     selector.AttributeRouteModel = CreateAbpServiceAttributeRouteModel(
@@ -295,7 +306,9 @@ namespace Abp.AspNetCore.Mvc.Conventions
 
         private static bool IsEmptySelector(SelectorModel selector)
         {
-            return selector.AttributeRouteModel == null && selector.ActionConstraints.IsNullOrEmpty();
+            return selector.AttributeRouteModel == null
+                   && selector.ActionConstraints.IsNullOrEmpty()
+                   && selector.EndpointMetadata.IsNullOrEmpty();
         }
     }
 }

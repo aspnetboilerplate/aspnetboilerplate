@@ -13,7 +13,8 @@ namespace Abp.Authorization
     /// </summary>
     /// <typeparam name="TRole"></typeparam>
     /// <typeparam name="TUser"></typeparam>
-    public abstract class PermissionChecker<TRole, TUser> : IPermissionChecker, ITransientDependency, IIocManagerAccessor
+    public abstract class PermissionChecker<TRole, TUser> : IPermissionChecker, ITransientDependency,
+        IIocManagerAccessor
         where TRole : AbpRole<TUser>, new()
         where TUser : AbpUser<TUser>
     {
@@ -26,6 +27,8 @@ namespace Abp.Authorization
         public IAbpSession AbpSession { get; set; }
 
         public ICurrentUnitOfWorkProvider CurrentUnitOfWorkProvider { get; set; }
+
+        public IUnitOfWorkManager UnitOfWorkManager { get; set; }
 
         /// <summary>
         /// Constructor.
@@ -40,7 +43,8 @@ namespace Abp.Authorization
 
         public virtual async Task<bool> IsGrantedAsync(string permissionName)
         {
-            return AbpSession.UserId.HasValue && await _userManager.IsGrantedAsync(AbpSession.UserId.Value, permissionName);
+            return AbpSession.UserId.HasValue &&
+                   await _userManager.IsGrantedAsync(AbpSession.UserId.Value, permissionName);
         }
 
         public virtual bool IsGranted(string permissionName)
@@ -58,32 +62,36 @@ namespace Abp.Authorization
             return _userManager.IsGranted(userId, permissionName);
         }
 
-        [UnitOfWork]
         public virtual async Task<bool> IsGrantedAsync(UserIdentifier user, string permissionName)
         {
-            if (CurrentUnitOfWorkProvider == null || CurrentUnitOfWorkProvider.Current == null)
+            return await UnitOfWorkManager.WithUnitOfWorkAsync(async () =>
             {
-                return await IsGrantedAsync(user.UserId, permissionName);
-            }
+                if (CurrentUnitOfWorkProvider == null || CurrentUnitOfWorkProvider.Current == null)
+                {
+                    return await IsGrantedAsync(user.UserId, permissionName);
+                }
 
-            using (CurrentUnitOfWorkProvider.Current.SetTenantId(user.TenantId))
-            {
-                return await _userManager.IsGrantedAsync(user.UserId, permissionName);
-            }
+                using (CurrentUnitOfWorkProvider.Current.SetTenantId(user.TenantId))
+                {
+                    return await _userManager.IsGrantedAsync(user.UserId, permissionName);
+                }
+            });
         }
 
-        [UnitOfWork]
         public virtual bool IsGranted(UserIdentifier user, string permissionName)
         {
-            if (CurrentUnitOfWorkProvider == null || CurrentUnitOfWorkProvider.Current == null)
+            return UnitOfWorkManager.WithUnitOfWork(() =>
             {
-                return IsGranted(user.UserId, permissionName);
-            }
+                if (CurrentUnitOfWorkProvider == null || CurrentUnitOfWorkProvider.Current == null)
+                {
+                    return IsGranted(user.UserId, permissionName);
+                }
 
-            using (CurrentUnitOfWorkProvider.Current.SetTenantId(user.TenantId))
-            {
-                return _userManager.IsGranted(user.UserId, permissionName);
-            }
+                using (CurrentUnitOfWorkProvider.Current.SetTenantId(user.TenantId))
+                {
+                    return _userManager.IsGranted(user.UserId, permissionName);
+                }
+            });
         }
     }
 }

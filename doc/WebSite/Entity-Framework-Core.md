@@ -267,6 +267,10 @@ ASP.NET Boilerplate is integrated with [Entity Framework Plus](https://github.co
     **classes** in the **.EntityFrameworkCore** project if you want to
     abstract EF Core from your domain/application.
 
+### Notes
+
+* When using Lazy Loading, it is suggested to use a protected constructor for Entities instead of a private constructor.
+
 ### Other Database Integrations
 
 This document and the examples are based on using MS SQL Server.

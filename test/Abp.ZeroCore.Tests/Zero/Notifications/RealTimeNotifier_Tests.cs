@@ -23,6 +23,7 @@ namespace Abp.Zero.Notifications
                 Component.For<INotificationDistributer>().Instance(defaultNotificationDistributor)
                     .LifestyleSingleton()
                     .IsDefault()
+                    .Named("DefaultNotificationDistributer")
             );
             
             _publisher = LocalIocManager.Resolve<INotificationPublisher>();
@@ -73,7 +74,6 @@ namespace Abp.Zero.Notifications
                 notification.CreationTime.ShouldBeInRange(before, after);
                 notification.Data.ToString().ShouldBe(notificationData.ToString());
                 notification.EntityId.ShouldBe(null);
-                notification.EntityType.ShouldBe(null);
                 notification.EntityTypeName.ShouldBe(null);
                 notification.NotificationName.ShouldBe("TestNotification");
                 notification.Severity.ShouldBe(NotificationSeverity.Success);

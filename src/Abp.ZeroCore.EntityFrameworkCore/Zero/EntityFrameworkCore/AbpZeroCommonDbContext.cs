@@ -384,6 +384,15 @@ namespace Abp.Zero.EntityFrameworkCore
             {
                 b.HasIndex(e => new { e.EntityFullName, e.DynamicPropertyId, e.TenantId }).IsUnique();
             });
+            
+            #region UserLogin.ProviderKey_TenantId
+            
+            modelBuilder.Entity<UserLogin>(b =>
+            {
+                b.HasIndex(e => new { e.ProviderKey, e.TenantId }).IsUnique();
+            });
+
+            #endregion
         }
     }
 }

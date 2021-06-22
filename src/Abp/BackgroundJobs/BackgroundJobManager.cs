@@ -50,51 +50,66 @@ namespace Abp.BackgroundJobs
 
             Timer.Period = JobPollPeriod;
         }
-
-        [UnitOfWork]
+        
         public virtual async Task<string> EnqueueAsync<TJob, TArgs>(TArgs args,
             BackgroundJobPriority priority = BackgroundJobPriority.Normal, TimeSpan? delay = null)
             where TJob : IBackgroundJobBase<TArgs>
         {
-            var jobInfo = new BackgroundJobInfo
-            {
-                JobType = typeof(TJob).AssemblyQualifiedName,
-                JobArgs = args.ToJsonString(),
-                Priority = priority
-            };
+            string jobInfoId;
 
-            if (delay.HasValue)
+            using (var uow = UnitOfWorkManager.Begin())
             {
-                jobInfo.NextTryTime = Clock.Now.Add(delay.Value);
+                var jobInfo = new BackgroundJobInfo
+                {
+                    JobType = typeof(TJob).AssemblyQualifiedName,
+                    JobArgs = args.ToJsonString(),
+                    Priority = priority
+                };
+
+                if (delay.HasValue)
+                {
+                    jobInfo.NextTryTime = Clock.Now.Add(delay.Value);
+                }
+
+                await _store.InsertAsync(jobInfo);
+                await CurrentUnitOfWork.SaveChangesAsync();
+
+                jobInfoId = jobInfo.Id.ToString();
+                await uow.CompleteAsync();
             }
 
-            await _store.InsertAsync(jobInfo);
-            await CurrentUnitOfWork.SaveChangesAsync();
-
-            return jobInfo.Id.ToString();
+            return jobInfoId;
         }
-
-        [UnitOfWork]
+        
         public virtual string Enqueue<TJob, TArgs>(TArgs args,
             BackgroundJobPriority priority = BackgroundJobPriority.Normal, TimeSpan? delay = null)
             where TJob : IBackgroundJobBase<TArgs>
         {
-            var jobInfo = new BackgroundJobInfo
-            {
-                JobType = typeof(TJob).AssemblyQualifiedName,
-                JobArgs = args.ToJsonString(),
-                Priority = priority
-            };
+            string jobInfoId;
 
-            if (delay.HasValue)
+            using (var uow = UnitOfWorkManager.Begin())
             {
-                jobInfo.NextTryTime = Clock.Now.Add(delay.Value);
+                var jobInfo = new BackgroundJobInfo
+                {
+                    JobType = typeof(TJob).AssemblyQualifiedName,
+                    JobArgs = args.ToJsonString(),
+                    Priority = priority
+                };
+
+                if (delay.HasValue)
+                {
+                    jobInfo.NextTryTime = Clock.Now.Add(delay.Value);
+                }
+
+                _store.Insert(jobInfo);
+                CurrentUnitOfWork.SaveChanges();
+
+                jobInfoId = jobInfo.Id.ToString();
+                
+                uow.Complete();
             }
 
-            _store.Insert(jobInfo);
-            CurrentUnitOfWork.SaveChanges();
-
-            return jobInfo.Id.ToString();
+            return jobInfoId;
         }
 
         public async Task<bool> DeleteAsync(string jobId)

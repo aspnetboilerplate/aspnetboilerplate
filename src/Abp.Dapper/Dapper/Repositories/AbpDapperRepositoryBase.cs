@@ -1,11 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Data;
 using System.Linq.Expressions;
 using System.Threading.Tasks;
-
-using Abp.Dependency;
 using Abp.Domain.Entities;
-using Abp.Domain.Uow;
 using Abp.MultiTenancy;
 using Abp.Reflection.Extensions;
 
@@ -59,11 +57,11 @@ namespace Abp.Dapper.Repositories
             return Task.FromResult(Query<TAny>(query, parameters));
         }
 
-        public abstract int Execute(string query, object parameters = null);
+        public abstract int Execute(string query, object parameters = null, CommandType? commandType = null);
 
-        public virtual Task<int> ExecuteAsync(string query, object parameters = null)
+        public virtual Task<int> ExecuteAsync(string query, object parameters = null, CommandType? commandType = null)
         {
-            return Task.FromResult(Execute(query, parameters));
+            return Task.FromResult(Execute(query, parameters, commandType));
         }
 
         public abstract IEnumerable<TEntity> GetAll(Expression<Func<TEntity, bool>> predicate);

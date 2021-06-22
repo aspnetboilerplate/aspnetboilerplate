@@ -34,10 +34,10 @@ namespace Abp.Zero.SampleApp.Tests.Webhooks
         /// <param name="webhookNames">Webhook to subscribe</param>
         /// <param name="tenantFeatures">Feature what will be added to created tenant</param>
         /// <returns>User and subscription</returns>
-
-        protected async Task<WebhookSubscription> CreateTenantAndSubscribeToWebhookAsync(List<string> webhookNames, Dictionary<string, string> tenantFeatures = null)
+        protected WebhookSubscription CreateTenantAndSubscribeToWebhook(List<string> webhookNames,
+            Dictionary<string, string> tenantFeatures = null)
         {
-            var tenantId = await CreateAndGetTenantIdWithFeaturesAsync(tenantFeatures);
+            var tenantId = CreateAndGetTenantIdWithFeatures(tenantFeatures);
 
             var webhookSubscriptionManager = Resolve<IWebhookSubscriptionManager>();
 
@@ -48,11 +48,11 @@ namespace Abp.Zero.SampleApp.Tests.Webhooks
                 Webhooks = webhookNames,
                 Headers = new Dictionary<string, string>
                 {
-                    { "Key","Value"}
+                    {"Key", "Value"}
                 }
             };
 
-            await webhookSubscriptionManager.AddOrUpdateSubscriptionAsync(subscription);
+            webhookSubscriptionManager.AddOrUpdateSubscription(subscription);
 
             return subscription;
         }
@@ -64,10 +64,18 @@ namespace Abp.Zero.SampleApp.Tests.Webhooks
         /// <param name="tenantFeatureKey"></param>
         /// <param name="tenantFeatureValue"></param>
         /// <returns></returns>
-        protected Task<WebhookSubscription> CreateTenantAndSubscribeToWebhookAsync(string webhookDefinitionName, string tenantFeatureKey = null, string tenantFeatureValue = null)
+        protected WebhookSubscription CreateTenantAndSubscribeToWebhook(string webhookDefinitionName,
+            string tenantFeatureKey = null, string tenantFeatureValue = null)
         {
-            return CreateTenantAndSubscribeToWebhookAsync(new List<string> { webhookDefinitionName },
-                new Dictionary<string, string> { { tenantFeatureKey, tenantFeatureValue } });
+            return CreateTenantAndSubscribeToWebhook(
+                new List<string> {webhookDefinitionName},
+                new Dictionary<string, string>
+                {
+                    {
+                        tenantFeatureKey, tenantFeatureValue
+                    }
+                }
+            );
         }
 
         /// <summary>
@@ -76,95 +84,59 @@ namespace Abp.Zero.SampleApp.Tests.Webhooks
         /// <param name="webhookDefinitionName">webhook name to subscribe</param>
         /// <param name="tenantFeatures"></param>
         /// <returns></returns>
-        protected Task<WebhookSubscription> CreateTenantAndSubscribeToWebhookAsync(string webhookDefinitionName, Dictionary<string, string> tenantFeatures = null)
+        protected WebhookSubscription CreateTenantAndSubscribeToWebhook(string webhookDefinitionName,
+            Dictionary<string, string> tenantFeatures = null)
         {
-            return CreateTenantAndSubscribeToWebhookAsync(new List<string> { webhookDefinitionName }, tenantFeatures);
+            return CreateTenantAndSubscribeToWebhook(new List<string>
+                {
+                    webhookDefinitionName
+                }, tenantFeatures
+            );
         }
 
-        protected async Task<int> CreateAndGetTenantIdWithFeaturesAsync(string featureKey, string featureValue)
+        protected int CreateAndGetTenantIdWithFeatures(string featureKey, string featureValue)
         {
-            return await CreateAndGetTenantIdWithFeaturesAsync(
+            return CreateAndGetTenantIdWithFeatures(
                 new Dictionary<string, string>()
                 {
                     {featureKey, featureValue}
                 });
         }
+
         /// <summary>
         /// Creates tenant with given features. Returns created tenant's id
         /// </summary>
         /// <param name="tenantFeatures"></param>
-        protected async Task<int> CreateAndGetTenantIdWithFeaturesAsync(Dictionary<string, string> tenantFeatures = null)
+        protected int CreateAndGetTenantIdWithFeatures(Dictionary<string, string> tenantFeatures = null)
         {
-            string name = Guid.NewGuid().ToString().Replace("-", "");
+            var name = Guid.NewGuid().ToString().Replace("-", "");
 
             var tenant = new Tenant(name, name);
-            var tenantId = await Resolve<IRepository<Tenant>>().InsertAndGetIdAsync(tenant);
+            var tenantId = Resolve<IRepository<Tenant>>().InsertAndGetId(tenant);
 
             if (tenantFeatures != null)
             {
                 foreach (var tenantFeature in tenantFeatures.Where(f => !string.IsNullOrWhiteSpace(f.Key)))
                 {
-                    await AddOrReplaceFeatureToTenantAsync(tenantId, tenantFeature.Key, tenantFeature.Value);
+                    AddOrReplaceFeatureToTenant(tenantId, tenantFeature.Key, tenantFeature.Value);
                 }
             }
 
             return tenantId;
         }
 
-        protected async Task AddOrReplaceFeatureToTenantAsync(int tenantId, string featureName, string featureValue)
+        protected void AddOrReplaceFeatureToTenant(int tenantId, string featureName, string featureValue)
         {
-            await WithUnitOfWorkAsync(async () =>
+            WithUnitOfWork(() =>
             {
                 var tenantFeatureRepository = Resolve<IRepository<TenantFeatureSetting, long>>();
-                if (await tenantFeatureRepository.GetAll().AnyAsync(x => x.TenantId == tenantId && x.Name == featureName))
+                if (tenantFeatureRepository.GetAll().Any(x => x.TenantId == tenantId && x.Name == featureName))
                 {
-                    await tenantFeatureRepository.DeleteAsync(x => x.TenantId == tenantId && x.Name == featureName);
+                    tenantFeatureRepository.Delete(x => x.TenantId == tenantId && x.Name == featureName);
                 }
 
-                await tenantFeatureRepository.InsertAsync(new TenantFeatureSetting(tenantId, featureName, featureValue));
+                tenantFeatureRepository.Insert(new TenantFeatureSetting(tenantId, featureName, featureValue));
             });
-        }
-    }
-
-    public class TestWebhookDefinitionProvider : WebhookDefinitionProvider
-    {
-        public override void SetWebhooks(IWebhookDefinitionContext context)
-        {
-            context.Manager.Add(
-                new WebhookDefinition(
-                    AppWebhookDefinitionNames.Test,
-                    L("TestWebhook"),
-                    L("DefaultDescription")
-                ));
-
-            context.Manager.Add(
-                new WebhookDefinition(
-                    AppWebhookDefinitionNames.Users.Created,
-                    L("UserCreatedWebhook"),
-                    L("DescriptionCreated"),
-                    new SimpleFeatureDependency(AppFeatures.WebhookFeature)
-                ));
-
-            context.Manager.Add(
-                new WebhookDefinition(
-                    AppWebhookDefinitionNames.Users.Deleted,
-                    L("DeletedDeletedWebhook"),
-                    L("DescriptionDeletedDeleted"),
-                    new SimpleFeatureDependency(false, AppFeatures.WebhookFeature, AppFeatures.TestFeature)
-                ));
-
-            context.Manager.Add(
-                new WebhookDefinition(
-                    AppWebhookDefinitionNames.Theme.DefaultThemeChanged,
-                    L("DefaultThemeChanged"),
-                    L("TriggersWhenDefaultThemeChanged"),
-                    new SimpleFeatureDependency(true, AppFeatures.WebhookFeature, AppFeatures.ThemeFeature)
-                ));
-        }
-
-        private ILocalizableString L(string name)
-        {
-            return new LocalizableString(name, AbpZeroConsts.LocalizationSourceName);
         }
     }
 
@@ -173,11 +145,11 @@ namespace Abp.Zero.SampleApp.Tests.Webhooks
         public override void SetFeatures(IFeatureDefinitionContext context)
         {
             context.Create(
-                 AppFeatures.TestFeature,
-                 defaultValue: "false",
-                 displayName: L("TestFeature"),
-                 inputType: new CheckboxInputType()
-             );
+                AppFeatures.TestFeature,
+                defaultValue: "false",
+                displayName: L("TestFeature"),
+                inputType: new CheckboxInputType()
+            );
 
             context.Create(
                 AppFeatures.ThemeFeature,
@@ -187,11 +159,11 @@ namespace Abp.Zero.SampleApp.Tests.Webhooks
             );
 
             context.Create(
-               AppFeatures.WebhookFeature,
-               defaultValue: "false",
-               displayName: L("WebhookFeature"),
-               inputType: new CheckboxInputType()
-           );
+                AppFeatures.WebhookFeature,
+                defaultValue: "false",
+                displayName: L("WebhookFeature"),
+                inputType: new CheckboxInputType()
+            );
         }
 
         private ILocalizableString L(string name)

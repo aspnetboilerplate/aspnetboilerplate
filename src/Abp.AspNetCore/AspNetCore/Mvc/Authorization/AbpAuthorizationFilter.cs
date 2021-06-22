@@ -60,7 +60,7 @@ namespace Abp.AspNetCore.Mvc.Authorization
             {
                 Logger.Warn(ex.ToString(), ex);
 
-                _eventBus.Trigger(this, new AbpHandledExceptionData(ex));
+                await _eventBus.TriggerAsync(this, new AbpHandledExceptionData(ex));
 
                 if (ActionResultHelper.IsObjectResult(context.ActionDescriptor.GetMethodInfo().ReturnType))
                 {
@@ -80,7 +80,7 @@ namespace Abp.AspNetCore.Mvc.Authorization
             {
                 Logger.Error(ex.ToString(), ex);
 
-                _eventBus.Trigger(this, new AbpHandledExceptionData(ex));
+                await _eventBus.TriggerAsync(this, new AbpHandledExceptionData(ex));
 
                 if (ActionResultHelper.IsObjectResult(context.ActionDescriptor.GetMethodInfo().ReturnType))
                 {

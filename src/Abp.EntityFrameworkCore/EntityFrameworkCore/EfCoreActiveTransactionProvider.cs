@@ -47,18 +47,17 @@ namespace Abp.EntityFrameworkCore
         {
             var dbContextProviderType = typeof(IDbContextProvider<>).MakeGenericType((Type) args["ContextType"]);
 
-            using (IDisposableDependencyObjectWrapper dbContextProviderWrapper =
-                _iocResolver.ResolveAsDisposable(dbContextProviderType))
+            using (var dbContextProviderWrapper = _iocResolver.ResolveAsDisposable(dbContextProviderType))
             {
                 var method = dbContextProviderWrapper.Object.GetType()
                     .GetMethod(
                         nameof(IDbContextProvider<AbpDbContext>.GetDbContextAsync),
                         new[] {typeof(MultiTenancySides)}
                     );
-                
+
                 var result = await ReflectionHelper.InvokeAsync(method, dbContextProviderWrapper.Object,
                     new object[] {(MultiTenancySides?) args["MultiTenancySide"]});
-                
+
                 return result as DbContext;
             }
         }
@@ -67,8 +66,7 @@ namespace Abp.EntityFrameworkCore
         {
             var dbContextProviderType = typeof(IDbContextProvider<>).MakeGenericType((Type) args["ContextType"]);
 
-            using (IDisposableDependencyObjectWrapper dbContextProviderWrapper =
-                _iocResolver.ResolveAsDisposable(dbContextProviderType))
+            using (var dbContextProviderWrapper = _iocResolver.ResolveAsDisposable(dbContextProviderType))
             {
                 var method = dbContextProviderWrapper.Object.GetType()
                     .GetMethod(

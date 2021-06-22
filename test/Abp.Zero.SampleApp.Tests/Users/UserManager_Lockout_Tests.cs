@@ -23,7 +23,7 @@ namespace Abp.Zero.SampleApp.Tests.Users
             _userManager = Resolve<UserManager>();
             _logInManager = Resolve<AppLogInManager>();
 
-            _testUser = AsyncHelper.RunSync(() => CreateUser("TestUser"));
+            _testUser = CreateUser("TestUser");
 
             Resolve<ISettingManager>()
                 .ChangeSettingForApplicationAsync(

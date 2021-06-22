@@ -26,21 +26,29 @@ namespace Abp.Organizations
             LocalizationSourceName = AbpZeroConsts.LocalizationSourceName;
             AsyncQueryableExecuter = NullAsyncQueryableExecuter.Instance;
         }
-
-        [UnitOfWork]
+        
         public virtual async Task CreateAsync(OrganizationUnit organizationUnit)
         {
-            organizationUnit.Code = await GetNextChildCodeAsync(organizationUnit.ParentId);
-            await ValidateOrganizationUnitAsync(organizationUnit);
-            await OrganizationUnitRepository.InsertAsync(organizationUnit);
-        }
+            using (var uow = UnitOfWorkManager.Begin())
+            {
+                organizationUnit.Code = await GetNextChildCodeAsync(organizationUnit.ParentId);
+                await ValidateOrganizationUnitAsync(organizationUnit);
+                await OrganizationUnitRepository.InsertAsync(organizationUnit);
 
-        [UnitOfWork]
+                await uow.CompleteAsync();
+            }    
+        }
+        
         public virtual void Create(OrganizationUnit organizationUnit)
         {
-            organizationUnit.Code = GetNextChildCode(organizationUnit.ParentId);
-            ValidateOrganizationUnit(organizationUnit);
-            OrganizationUnitRepository.Insert(organizationUnit);
+            using (var uow = UnitOfWorkManager.Begin())
+            {
+                organizationUnit.Code = GetNextChildCode(organizationUnit.ParentId);
+                ValidateOrganizationUnit(organizationUnit);
+                OrganizationUnitRepository.Insert(organizationUnit);
+                
+                uow.Complete();
+            }
         }
 
         public virtual async Task UpdateAsync(OrganizationUnit organizationUnit)
@@ -104,87 +112,102 @@ namespace Abp.Organizations
         {
             return (OrganizationUnitRepository.Get(id)).Code;
         }
-
-        [UnitOfWork]
+        
         public virtual async Task DeleteAsync(long id)
         {
-            var children = await FindChildrenAsync(id, true);
-
-            foreach (var child in children)
+            using (var uow = UnitOfWorkManager.Begin())
             {
-                await OrganizationUnitRepository.DeleteAsync(child);
-            }
+                var children = await FindChildrenAsync(id, true);
 
-            await OrganizationUnitRepository.DeleteAsync(id);
+                foreach (var child in children)
+                {
+                    await OrganizationUnitRepository.DeleteAsync(child);
+                }
+
+                await OrganizationUnitRepository.DeleteAsync(id);
+
+                await uow.CompleteAsync();
+            }
         }
 
-        [UnitOfWork]
         public virtual void Delete(long id)
         {
-            var children = FindChildren(id, true);
-
-            foreach (var child in children)
+            using (var uow = UnitOfWorkManager.Begin())
             {
-                OrganizationUnitRepository.Delete(child);
-            }
+                var children = FindChildren(id, true);
 
-            OrganizationUnitRepository.Delete(id);
+                foreach (var child in children)
+                {
+                    OrganizationUnitRepository.Delete(child);
+                }
+
+                OrganizationUnitRepository.Delete(id);
+                
+                uow.Complete();
+            }
         }
 
-        [UnitOfWork]
         public virtual async Task MoveAsync(long id, long? parentId)
         {
-            var organizationUnit = await OrganizationUnitRepository.GetAsync(id);
-            if (organizationUnit.ParentId == parentId)
+            using (var uow = UnitOfWorkManager.Begin())
             {
-                return;
-            }
+                var organizationUnit = await OrganizationUnitRepository.GetAsync(id);
+                if (organizationUnit.ParentId == parentId)
+                {
+                    await uow.CompleteAsync();
+                    return;
+                }
 
-            //Should find children before Code change
-            var children = await FindChildrenAsync(id, true);
+                //Should find children before Code change
+                var children = await FindChildrenAsync(id, true);
 
-            //Store old code of OU
-            var oldCode = organizationUnit.Code;
+                //Store old code of OU
+                var oldCode = organizationUnit.Code;
 
-            //Move OU
-            organizationUnit.Code = await GetNextChildCodeAsync(parentId);
-            organizationUnit.ParentId = parentId;
+                //Move OU
+                organizationUnit.Code = await GetNextChildCodeAsync(parentId);
+                organizationUnit.ParentId = parentId;
 
-            await ValidateOrganizationUnitAsync(organizationUnit);
+                await ValidateOrganizationUnitAsync(organizationUnit);
 
-            //Update Children Codes
-            foreach (var child in children)
-            {
-                child.Code = OrganizationUnit.AppendCode(organizationUnit.Code, OrganizationUnit.GetRelativeCode(child.Code, oldCode));
+                //Update Children Codes
+                foreach (var child in children)
+                {
+                    child.Code = OrganizationUnit.AppendCode(organizationUnit.Code, OrganizationUnit.GetRelativeCode(child.Code, oldCode));
+                }
+                
+                await uow.CompleteAsync();
             }
         }
 
-        [UnitOfWork]
         public virtual void Move(long id, long? parentId)
         {
-            var organizationUnit = OrganizationUnitRepository.Get(id);
-            if (organizationUnit.ParentId == parentId)
+            UnitOfWorkManager.WithUnitOfWork(() =>
             {
-                return;
-            }
+                var organizationUnit = OrganizationUnitRepository.Get(id);
+                if (organizationUnit.ParentId == parentId)
+                {
+                    return;
+                }
 
-            //Should find children before Code change
-            var children = FindChildren(id, true);
+                //Should find children before Code change
+                var children = FindChildren(id, true);
 
-            //Store old code of OU
-            var oldCode = organizationUnit.Code;
+                //Store old code of OU
+                var oldCode = organizationUnit.Code;
 
-            //Move OU
-            organizationUnit.Code = GetNextChildCode(parentId);
-            organizationUnit.ParentId = parentId;
+                //Move OU
+                organizationUnit.Code = GetNextChildCode(parentId);
+                organizationUnit.ParentId = parentId;
 
-            ValidateOrganizationUnit(organizationUnit);
+                ValidateOrganizationUnit(organizationUnit);
 
-            //Update Children Codes
-            foreach (var child in children)
-            {
-                child.Code = OrganizationUnit.AppendCode(organizationUnit.Code, OrganizationUnit.GetRelativeCode(child.Code, oldCode));
-            }
+                //Update Children Codes
+                foreach (var child in children)
+                {
+                    child.Code = OrganizationUnit.AppendCode(organizationUnit.Code, OrganizationUnit.GetRelativeCode(child.Code, oldCode));
+                }
+            });
         }
 
         public async Task<List<OrganizationUnit>> FindChildrenAsync(long? parentId, bool recursive = false)

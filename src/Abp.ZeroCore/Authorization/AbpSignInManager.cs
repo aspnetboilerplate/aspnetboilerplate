@@ -49,7 +49,8 @@ namespace Abp.Authorization
             _settingManager = settingManager;
         }
 
-        public virtual async Task<SignInResult> SignInOrTwoFactorAsync(AbpLoginResult<TTenant, TUser> loginResult, bool isPersistent, bool? rememberBrowser = null, string loginProvider = null, bool bypassTwoFactor = false)
+        public virtual async Task<SignInResult> SignInOrTwoFactorAsync(AbpLoginResult<TTenant, TUser> loginResult,
+            bool isPersistent, bool? rememberBrowser = null, string loginProvider = null, bool bypassTwoFactor = false)
         {
             if (loginResult.Result != AbpLoginResultType.Success)
             {
@@ -60,7 +61,8 @@ namespace Abp.Authorization
             {
                 await UserManager.As<AbpUserManager<TRole, TUser>>().InitializeOptionsAsync(loginResult.Tenant?.Id);
 
-                if (!bypassTwoFactor && IsTrue(AbpZeroSettingNames.UserManagement.TwoFactorLogin.IsEnabled, loginResult.Tenant?.Id))
+                if (!bypassTwoFactor && IsTrue(AbpZeroSettingNames.UserManagement.TwoFactorLogin.IsEnabled,
+                    loginResult.Tenant?.Id))
                 {
                     if (await UserManager.GetTwoFactorEnabledAsync(loginResult.User))
                     {
@@ -99,14 +101,16 @@ namespace Abp.Authorization
         {
             await Context.SignInAsync(IdentityConstants.ApplicationScheme,
                 new ClaimsPrincipal(identity),
-                new Microsoft.AspNetCore.Authentication.AuthenticationProperties { IsPersistent = isPersistent }
+                new Microsoft.AspNetCore.Authentication.AuthenticationProperties {IsPersistent = isPersistent}
             );
         }
 
-        [UnitOfWork]
-        public override Task SignInAsync(TUser user, bool isPersistent, string authenticationMethod = null)
+        public override async Task SignInAsync(TUser user, bool isPersistent, string authenticationMethod = null)
         {
-            return base.SignInAsync(user, isPersistent, authenticationMethod);
+            await _unitOfWorkManager.WithUnitOfWorkAsync(async () =>
+            {
+                await base.SignInAsync(user, isPersistent, authenticationMethod);
+            });
         }
 
         protected virtual ClaimsPrincipal StoreTwoFactorInfo(TUser user, string loginProvider)
@@ -162,7 +166,7 @@ namespace Abp.Authorization
 
             await Context.SignInAsync(IdentityConstants.TwoFactorRememberMeScheme,
                 new ClaimsPrincipal(rememberBrowserIdentity),
-                new Microsoft.AspNetCore.Authentication.AuthenticationProperties { IsPersistent = true });
+                new Microsoft.AspNetCore.Authentication.AuthenticationProperties {IsPersistent = true});
         }
 
         private bool IsTrue(string settingName, int? tenantId)

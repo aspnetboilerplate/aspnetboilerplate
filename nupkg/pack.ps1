@@ -10,6 +10,7 @@ $projects = (
     "Abp.AspNetCore.OData",
     "Abp.AspNetCore.SignalR",
     "Abp.AspNetCore.TestBase",
+    "Abp.AspNetCore.PerRequestRedisCache",
     "Abp.AutoMapper",
     "Abp.Castle.Log4Net",
     "Abp.Dapper",
@@ -50,8 +51,7 @@ $projects = (
     "Abp.ZeroCore.IdentityServer4",
     "Abp.ZeroCore.IdentityServer4.EntityFrameworkCore",
     "Abp.ZeroCore.IdentityServer4.vNext",
-    "Abp.ZeroCore.IdentityServer4.vNext.EntityFrameworkCore",
-    "Abp.AspNetCore.PerRequestRedisCache"
+    "Abp.ZeroCore.IdentityServer4.vNext.EntityFrameworkCore"
 )
 
 # Rebuild solution

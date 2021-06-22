@@ -10,10 +10,8 @@ namespace Abp.Tests.Events.Bus
         public void Should_Throw_Single_Exception_If_Only_One_Of_Handlers_Fails()
         {
             EventBus.Register<MySimpleEventData>(
-                eventData =>
-                {
-                    throw new Exception("This exception is intentionally thrown!");
-                });
+                eventData => throw new Exception("This exception is intentionally thrown!")
+            );
 
             var appException = Assert.Throws<Exception>(() =>
             {
@@ -27,16 +25,12 @@ namespace Abp.Tests.Events.Bus
         public void Should_Throw_Aggregate_Exception_If_More_Than_One_Of_Handlers_Fail()
         {
             EventBus.Register<MySimpleEventData>(
-                eventData =>
-                {
-                    throw new Exception("This exception is intentionally thrown #1!");
-                });
+                eventData => throw new Exception("This exception is intentionally thrown #1!")
+            );
 
             EventBus.Register<MySimpleEventData>(
-                eventData =>
-                {
-                    throw new Exception("This exception is intentionally thrown #2!");
-                });
+                eventData => throw new Exception("This exception is intentionally thrown #2!")
+            );
 
             var aggrException = Assert.Throws<AggregateException>(() =>
             {

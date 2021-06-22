@@ -1,4 +1,4 @@
-﻿using System.Collections.Generic;
+using System.Collections.Generic;
 using System.Linq;
 using Abp.Application.Features;
 using Abp.Authorization;
@@ -27,10 +27,11 @@ namespace Abp.Tests.Authorization
                 Component.For<MyAuthorizationProvider2>().LifestyleTransient(),
                 Component.For<IUnitOfWorkManager, UnitOfWorkManager>().LifestyleTransient(),
                 Component.For<ICurrentUnitOfWorkProvider, AsyncLocalCurrentUnitOfWorkProvider>().LifestyleTransient(),
-                Component.For<IUnitOfWorkDefaultOptions, UnitOfWorkDefaultOptions>().LifestyleTransient()
+                Component.For<IUnitOfWorkDefaultOptions, UnitOfWorkDefaultOptions>().LifestyleTransient(),
+                Component.For<IMultiTenancyConfig, MultiTenancyConfig>().LifestyleTransient()
                 );
 
-            var permissionManager = new PermissionManager(LocalIocManager, authorizationConfiguration, LocalIocManager.Resolve<IUnitOfWorkManager>());
+            var permissionManager = new PermissionManager(LocalIocManager, authorizationConfiguration, LocalIocManager.Resolve<IUnitOfWorkManager>(), LocalIocManager.Resolve<IMultiTenancyConfig>());
             permissionManager.Initialize();
 
             permissionManager.GetAllPermissions().Count.ShouldBe(5);
@@ -63,10 +64,11 @@ namespace Abp.Tests.Authorization
                 Component.For<MyAuthorizationProviderWithCustomProperties>().LifestyleTransient(),
                 Component.For<IUnitOfWorkManager, UnitOfWorkManager>().LifestyleTransient(),
                 Component.For<ICurrentUnitOfWorkProvider, AsyncLocalCurrentUnitOfWorkProvider>().LifestyleTransient(),
-                Component.For<IUnitOfWorkDefaultOptions, UnitOfWorkDefaultOptions>().LifestyleTransient()
+                Component.For<IUnitOfWorkDefaultOptions, UnitOfWorkDefaultOptions>().LifestyleTransient(),
+                Component.For<IMultiTenancyConfig, MultiTenancyConfig>().LifestyleTransient()
             );
 
-            var permissionManager = new PermissionManager(LocalIocManager, authorizationConfiguration, LocalIocManager.Resolve<IUnitOfWorkManager>());
+            var permissionManager = new PermissionManager(LocalIocManager, authorizationConfiguration, LocalIocManager.Resolve<IUnitOfWorkManager>(), LocalIocManager.Resolve<IMultiTenancyConfig>());
             permissionManager.Initialize();
 
             permissionManager.GetAllPermissions().Count.ShouldBe(4);

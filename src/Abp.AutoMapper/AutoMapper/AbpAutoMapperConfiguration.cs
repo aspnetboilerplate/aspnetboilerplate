@@ -13,7 +13,9 @@ namespace Abp.AutoMapper
 
         public AbpAutoMapperConfiguration()
         {
-            UseStaticMapper = true;
+#pragma warning disable CS0618 // Type or member is obsolete, this line will be removed once the UseStaticMapper property is removed
+			UseStaticMapper = true;
+#pragma warning restore CS0618 // Type or member is obsolete, this line will be removed once the UseStaticMapper property is removed
             Configurators = new List<Action<IMapperConfigurationExpression>>();
         }
     }

@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Data;
 using System.Linq.Expressions;
 using System.Threading.Tasks;
 
@@ -231,15 +232,17 @@ namespace Abp.Dapper.Repositories
         /// </summary>
         /// <param name="query">The query.</param>
         /// <param name="parameters">The parameters.</param>
+        /// <param name="commandType">Command type.</param>
         /// <returns></returns>
-        int Execute([NotNull] string query, [CanBeNull] object parameters = null);
+        int Execute([NotNull] string query, [CanBeNull] object parameters = null, CommandType? commandType = null);
 
         /// <summary>
         ///     Executes as async the given query text
         /// </summary>
         /// <param name="query"></param>
         /// <param name="parameters"></param>
-        Task<int> ExecuteAsync([NotNull] string query, [CanBeNull] object parameters = null);
+        /// <param name="commandType">Command type.</param>
+        Task<int> ExecuteAsync([NotNull] string query, [CanBeNull] object parameters = null, CommandType? commandType = null);
 
         /// <summary>
         ///     Gets the set.
