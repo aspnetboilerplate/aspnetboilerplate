@@ -220,13 +220,13 @@ namespace Abp.Authorization.Roles
         /// <param name="id">The role ID to look for.</param>
         /// <param name="cancellationToken">The <see cref="CancellationToken"/> used to propagate notifications that the operation should be canceled.</param>
         /// <returns>A <see cref="Task{TResult}"/> that result of the look up.</returns>
-        public virtual Task<TRole> FindByIdAsync(string id,
+        public virtual async Task<TRole> FindByIdAsync(string id,
             CancellationToken cancellationToken = default(CancellationToken))
         {
-            return _unitOfWorkManager.WithUnitOfWork(() =>
+            return await _unitOfWorkManager.WithUnitOfWorkAsync(async() =>
             {
                 cancellationToken.ThrowIfCancellationRequested();
-                return _roleRepository.FirstOrDefaultAsync(id.To<int>());
+                return await _roleRepository.FirstOrDefaultAsync(id.To<int>());
             });
         }
 
