@@ -7,6 +7,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using Abp.Dependency;
 using Abp.Extensions;
+using Abp.Web.Configuration;
 using Abp.Web.Models;
 using Abp.WebApi.Configuration;
 
@@ -18,10 +19,13 @@ namespace Abp.WebApi.Controllers
     public class ResultWrapperHandler : DelegatingHandler, ITransientDependency
     {
         private readonly IAbpWebApiConfiguration _configuration;
+        private readonly IAbpWebCommonModuleConfiguration _abpWebCommonModuleConfiguration;
 
-        public ResultWrapperHandler(IAbpWebApiConfiguration configuration)
+        public ResultWrapperHandler(IAbpWebApiConfiguration configuration,
+            IAbpWebCommonModuleConfiguration abpWebCommonModuleConfiguration)
         {
             _configuration = configuration;
+            _abpWebCommonModuleConfiguration = abpWebCommonModuleConfiguration;
         }
 
         protected override async Task<HttpResponseMessage> SendAsync(HttpRequestMessage request, CancellationToken cancellationToken)
@@ -49,6 +53,25 @@ namespace Abp.WebApi.Controllers
                     MustRevalidate = true
                 };
             }
+            
+            /*
+            * Here is the check order
+            * 1) Configuration
+            * 2) Attribute
+            */
+            
+            var absolutePath = request.RequestUri.AbsolutePath;
+
+            if (_abpWebCommonModuleConfiguration.WrapResultFilters.HasFilterForWrapOnSuccess(absolutePath, out var wrapOnSuccess))
+            {
+                if (!wrapOnSuccess)
+                {
+                    return;
+                }
+                
+                Wrap(response);
+                return;
+            }
 
             var wrapAttr = HttpActionDescriptorHelper.GetWrapResultAttributeOrNull(request.GetActionDescriptor())
                            ?? _configuration.DefaultWrapResultAttribute;
@@ -63,6 +86,11 @@ namespace Abp.WebApi.Controllers
                 return;
             }
 
+            Wrap(response);
+        }
+
+        private void Wrap(HttpResponseMessage response)
+        {
             object resultObject;
             if (!response.TryGetContentValue(out resultObject) || resultObject == null)
             {
@@ -70,7 +98,7 @@ namespace Abp.WebApi.Controllers
                 response.Content = new ObjectContent<AjaxResponse>(
                     new AjaxResponse(),
                     _configuration.HttpConfiguration.Formatters.JsonFormatter
-                    );
+                );
                 return;
             }
 
@@ -82,7 +110,7 @@ namespace Abp.WebApi.Controllers
             response.Content = new ObjectContent<AjaxResponse>(
                 new AjaxResponse(resultObject),
                 _configuration.HttpConfiguration.Formatters.JsonFormatter
-                );
+            );
         }
 
         private bool IsIgnoredUrl(Uri uri)

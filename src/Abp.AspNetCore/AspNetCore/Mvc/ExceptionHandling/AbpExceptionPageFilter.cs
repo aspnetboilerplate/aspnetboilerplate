@@ -11,8 +11,10 @@ using Abp.Logging;
 using Abp.Reflection;
 using Abp.Runtime;
 using Abp.Runtime.Validation;
+using Abp.Web.Configuration;
 using Abp.Web.Models;
 using Castle.Core.Logging;
+using Microsoft.AspNetCore.Http.Extensions;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Filters;
 
@@ -26,11 +28,16 @@ namespace Abp.AspNetCore.Mvc.ExceptionHandling
 
         private readonly IErrorInfoBuilder _errorInfoBuilder;
         private readonly IAbpAspNetCoreConfiguration _configuration;
+        private readonly IAbpWebCommonModuleConfiguration _abpWebCommonModuleConfiguration;
 
-        public AbpExceptionPageFilter(IErrorInfoBuilder errorInfoBuilder, IAbpAspNetCoreConfiguration configuration)
+        public AbpExceptionPageFilter(
+            IErrorInfoBuilder errorInfoBuilder,
+            IAbpAspNetCoreConfiguration configuration,
+            IAbpWebCommonModuleConfiguration abpWebCommonModuleConfiguration)
         {
             _errorInfoBuilder = errorInfoBuilder;
             _configuration = configuration;
+            _abpWebCommonModuleConfiguration = abpWebCommonModuleConfiguration;
 
             Logger = NullLogger.Instance;
             EventBus = NullEventBus.Instance;
@@ -76,6 +83,21 @@ namespace Abp.AspNetCore.Mvc.ExceptionHandling
             {
                 return;
             }
+            
+            var displayUrl = context.HttpContext.Request.GetDisplayUrl();
+            if (_abpWebCommonModuleConfiguration.WrapResultFilters.HasFilterForWrapOnError(displayUrl, out var wrapOnError))
+            {
+                //there is a configuration for that method use configuration
+                context.HttpContext.Response.StatusCode = GetStatusCode(context, wrapOnError);
+
+                if (!wrapOnError)
+                {
+                    return;
+                }
+
+                HandleError(context);
+                return;
+            }
 
             context.HttpContext.Response.StatusCode = GetStatusCode(context, wrapResultAttribute.WrapOnError);
 
@@ -84,6 +106,11 @@ namespace Abp.AspNetCore.Mvc.ExceptionHandling
                 return;
             }
 
+            HandleError(context);
+        }
+
+        private void HandleError(PageHandlerExecutedContext context)
+        {
             context.Result = new ObjectResult(
                 new AjaxResponse(
                     _errorInfoBuilder.BuildForException(context.Exception),

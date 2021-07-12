@@ -14,6 +14,7 @@ using Abp.Events.Bus.Exceptions;
 using Abp.Localization;
 using Abp.Logging;
 using Abp.Web;
+using Abp.Web.Configuration;
 using Abp.Web.Models;
 using Abp.WebApi.Configuration;
 using Abp.WebApi.Controllers;
@@ -29,17 +30,20 @@ namespace Abp.WebApi.Authorization
         private readonly IAbpWebApiConfiguration _configuration;
         private readonly ILocalizationManager _localizationManager;
         private readonly IEventBus _eventBus;
+        private readonly IAbpWebCommonModuleConfiguration _abpWebCommonModuleConfiguration;
 
         public AbpApiAuthorizeFilter(
             IAuthorizationHelper authorizationHelper, 
             IAbpWebApiConfiguration configuration,
             ILocalizationManager localizationManager,
-            IEventBus eventBus)
+            IEventBus eventBus,
+            IAbpWebCommonModuleConfiguration abpWebCommonModuleConfiguration)
         {
             _authorizationHelper = authorizationHelper;
             _configuration = configuration;
             _localizationManager = localizationManager;
             _eventBus = eventBus;
+            _abpWebCommonModuleConfiguration = abpWebCommonModuleConfiguration;
         }
 
         public virtual async Task<HttpResponseMessage> ExecuteAuthorizationFilterAsync(
@@ -81,25 +85,37 @@ namespace Abp.WebApi.Authorization
         {
             var statusCode = GetUnAuthorizedStatusCode(actionContext);
 
+            HttpResponseMessage HandleError(bool wrap)
+            {
+                if (!wrap)
+                {
+                    return new HttpResponseMessage(statusCode);
+                }
+
+                return new HttpResponseMessage(statusCode)
+                {
+                    Content = new ObjectContent<AjaxResponse>(
+                        new AjaxResponse(
+                            GetUnAuthorizedErrorMessage(statusCode),
+                            true
+                        ),
+                        _configuration.HttpConfiguration.Formatters.JsonFormatter
+                    )
+                };
+            }
+
+            var displayUrl = actionContext.Request.RequestUri.AbsolutePath;
+            if (_abpWebCommonModuleConfiguration.WrapResultFilters.HasFilterForWrapOnError(displayUrl, out var wrapOnError))
+            {
+                //there is a configuration for that method use configuration
+                return HandleError(wrapOnError);
+            }
+            
             var wrapResultAttribute =
                 HttpActionDescriptorHelper.GetWrapResultAttributeOrNull(actionContext.ActionDescriptor) ??
                 _configuration.DefaultWrapResultAttribute;
 
-            if (!wrapResultAttribute.WrapOnError)
-            {
-                return new HttpResponseMessage(statusCode);
-            }
-
-            return new HttpResponseMessage(statusCode)
-            {
-                Content = new ObjectContent<AjaxResponse>(
-                    new AjaxResponse(
-                        GetUnAuthorizedErrorMessage(statusCode),
-                        true
-                    ),
-                    _configuration.HttpConfiguration.Formatters.JsonFormatter
-                )
-            };
+            return HandleError(wrapResultAttribute.WrapOnError);
         }
 
         private ErrorInfo GetUnAuthorizedErrorMessage(HttpStatusCode statusCode)

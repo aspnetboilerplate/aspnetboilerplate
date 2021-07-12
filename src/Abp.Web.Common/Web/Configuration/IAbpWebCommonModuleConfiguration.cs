@@ -1,6 +1,6 @@
-﻿using System.Collections.Generic;
-using Abp.Web.Api.ProxyScripting.Configuration;
+﻿using Abp.Web.Api.ProxyScripting.Configuration;
 using Abp.Web.MultiTenancy;
+using Abp.Web.Results.Filters;
 using Abp.Web.Security.AntiForgery;
 
 namespace Abp.Web.Configuration
@@ -32,5 +32,10 @@ namespace Abp.Web.Configuration
         IWebEmbeddedResourcesConfiguration EmbeddedResources { get; }
 
         IWebMultiTenancyConfiguration MultiTenancy { get; }
+        
+        /// <summary>
+        /// Used to configure wrap results
+        /// </summary>
+        WrapResultFilterCollection WrapResultFilters { get; }
     }
 }
