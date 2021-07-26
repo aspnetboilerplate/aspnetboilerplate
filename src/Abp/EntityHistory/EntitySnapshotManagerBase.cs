@@ -112,7 +112,7 @@ namespace Abp.EntityHistory
 
                 propertyChangesStackTreeDictionary.Add(
                     entityPropertyChange.PropertyName,
-                    propertyCurrentValue + " -> " + entityPropertyChange.OriginalValue
+                    entityPropertyChange.OriginalValue + " -> " + propertyCurrentValue
                 );
             }
         }
