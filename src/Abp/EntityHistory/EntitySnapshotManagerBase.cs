@@ -97,7 +97,10 @@ namespace Abp.EntityHistory
         {
             if (propertyChangesStackTreeDictionary.ContainsKey(entityPropertyChange.PropertyName))
             {
-                propertyChangesStackTreeDictionary[entityPropertyChange.PropertyName] += " -> " + entityPropertyChange.OriginalValue;
+                propertyChangesStackTreeDictionary[entityPropertyChange.PropertyName] =
+                    entityPropertyChange.OriginalValue + 
+                    " -> " +
+                    propertyChangesStackTreeDictionary[entityPropertyChange.PropertyName];
             }
             else
             {
