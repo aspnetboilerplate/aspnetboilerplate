@@ -54,8 +54,8 @@ namespace Abp.AspNetCore.Tests
         [Theory]
         [InlineData("/local/site", "/local/site")]
         [InlineData("/local/site?id=1", "/local/site?id=1")] //aspnetcore can only bind the first query param in an unescaped return url
-        [InlineData("http://localhost/page", "/page")]
-        [InlineData("http%3A%2F%2Flocalhost%2Fpage", "/page")]
+        [InlineData("http://localhost/page", "http://localhost/page")]
+        [InlineData("http%3A%2F%2Flocalhost%2Fpage", "http://localhost/page")]
         [InlineData("%2Flocal%2Fsite%3Fid%3D1%26value%3D2", "/local/site?id=1&value=2")]
         [InlineData("%2F%E7%B5%8C%E5%96%B6%3F%E4%BB%95%E4%BA%8B%E5%A0%B4%3Dbusiness%26ID%3D1", "/経営?仕事場=business&ID=1")]
         public async Task Should_Redirect_Local_Return_Url(string returnUrl, string expected)
