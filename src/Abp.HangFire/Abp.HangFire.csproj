@@ -25,7 +25,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Include="Hangfire.Core" Version="1.7.24" />
+    <PackageReference Include="Hangfire.Core" Version="1.8.0-beta3" />
   </ItemGroup>
 
   <ItemGroup>

@@ -39,13 +39,15 @@ namespace Abp.AspNetCore.Tests.Uow
 
                 app.UseUnitOfWork();
 
-                app.Use(async (context, func) =>
+                app.Use(async (context, next) =>
                 {
                     await context.Response.WriteAsync(
                         context.RequestServices.GetRequiredService<IUnitOfWorkManager>().Current == null
                             ? "null"
                             : "not-null"
                     );
+                    
+                    await next(context);
                 });
             }
         }
