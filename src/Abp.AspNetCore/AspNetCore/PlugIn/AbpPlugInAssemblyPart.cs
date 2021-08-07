@@ -1,5 +1,6 @@
-﻿using System.Collections.Generic;
+using System.Collections.Generic;
 using System.Reflection;
+using System.Linq;
 using Microsoft.AspNetCore.Mvc.ApplicationParts;
 
 namespace Abp.AspNetCore.PlugIn
@@ -11,9 +12,6 @@ namespace Abp.AspNetCore.PlugIn
         {
         }
 
-        IEnumerable<string> ICompilationReferencesProvider.GetReferencePaths()
-        {
-            return new[] { Assembly.Location };
-        }
+        IEnumerable<string> ICompilationReferencesProvider.GetReferencePaths() => Enumerable.Empty<string>();
     }
 }
