@@ -22,7 +22,7 @@ namespace Abp.IdentityServer4
 
         protected ILogger<ResourceOwnerPasswordValidator<TUser>> Logger { get; }
         
-        protected IUnitOfWorkManager UnitOfWorkManager { get; }
+        public IUnitOfWorkManager UnitOfWorkManager { get; set; }
 
         public AbpResourceOwnerPasswordValidator(
             UserManager<TUser> userManager,
