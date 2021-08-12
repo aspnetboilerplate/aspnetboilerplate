@@ -42,9 +42,9 @@ We must do this in the Startup class:
         public IServiceProvider ConfigureServices(IServiceCollection services)
         {
             ...
-
+    
             services.AddOData();
-
+    
             // Workaround: https://github.com/OData/WebApi/issues/1177
             services.AddMvcCore(options =>
             {
@@ -57,21 +57,21 @@ We must do this in the Startup class:
                     inputFormatter.SupportedMediaTypes.Add(new MediaTypeHeaderValue("application/prs.odatatestxx-odata"));
                 }
             });
-
+    
             return services.AddAbp<MyProjectWebHostModule>(...);
         }
-
+    
         public void Configure(IApplicationBuilder app, IHostingEnvironment env, ILoggerFactory loggerFactory)
         {
             app.UseAbp();
-
+    
             ...
-
+    
             app.UseOData(builder =>
             {
                 builder.EntitySet<Person>("Persons").EntityType.Expand().Filter().OrderBy().Page();
             });
-
+    
             // Return IQueryable from controllers
             app.UseUnitOfWork(options =>
             {
@@ -80,11 +80,11 @@ We must do this in the Startup class:
                     return httpContext.Request.Path.Value.StartsWith("/odata");
                 };
             });
-
+    
             app.UseMvc(routes =>
             {
                 routes.MapODataServiceRoute(app);
-
+    
                 ...
             });
         }
@@ -97,9 +97,9 @@ We must do this in the Startup class:
         public IServiceProvider ConfigureServices(IServiceCollection services)
         {
             ...
-
+    
             services.AddOData();
-
+    
             // Workaround: https://github.com/OData/WebApi/issues/1177
             services.AddMvcCore(options =>
             {
@@ -112,28 +112,29 @@ We must do this in the Startup class:
                     inputFormatter.SupportedMediaTypes.Add(new MediaTypeHeaderValue("application/prs.odatatestxx-odata"));
                 }
             });
-
+    
             return services.AddAbp<MyProjectWebHostModule>(...);
         }
-
+    
         public void Configure(IApplicationBuilder app, IHostingEnvironment env, ILoggerFactory loggerFactory)
         {
             app.UseAbp();
-
+    
             ...
 
-            
+
+​            
             // Return IQueryable from controllers
             app.UseUnitOfWork(options =>
             {
                 options.Filter = httpContext => httpContext.Request.Path.Value.StartsWith("/odata");
             });
-
+    
             app.UseODataBatching();
             app.UseEndpoints(endpoints =>
             {
                 ...    
-
+    
                 var builder = new ODataConventionModelBuilder();
                 builder.EntitySet<Person>("Persons").EntityType.Expand().Filter().OrderBy().Page();
                 endpoints.MapODataRoute("odataPrefix", "odata",  builder.GetEdmModel());
@@ -267,7 +268,7 @@ In this example, we're creating a new person.
 ##### Request
 
     POST http://localhost:21021/odata/Persons
-
+    
     {
         Name: "Galileo Galilei"
     }
@@ -306,7 +307,7 @@ We can get the metadata of entities, as shown in this example.
     <edmx:Edmx Version="4.0" xmlns:edmx="http://docs.oasis-open.org/odata/ns/edmx">
         <edmx:DataServices>
             <Schema Namespace="AbpODataDemo.People" xmlns="http://docs.oasis-open.org/odata/ns/edm">
-
+    
                 <EntityType Name="Person">
                     <Key>
                         <PropertyRef Name="Id" />
@@ -322,7 +323,7 @@ We can get the metadata of entities, as shown in this example.
                     <Property Name="Id" Type="Edm.Int32" Nullable="false" />
                     <NavigationProperty Name="Phones" Type="Collection(AbpODataDemo.People.Phone)" />
                 </EntityType>
-
+    
                 <EntityType Name="Phone">
                     <Key>
                         <PropertyRef Name="Id" />
@@ -337,26 +338,35 @@ We can get the metadata of entities, as shown in this example.
                         <ReferentialConstraint Property="PersonId" ReferencedProperty="Id" />
                     </NavigationProperty>
                 </EntityType>
-
+    
                 <EnumType Name="PhoneType">
                     <Member Name="Unknown" Value="0" />
                     <Member Name="Mobile" Value="1" />
                     <Member Name="Home" Value="2" />
                     <Member Name="Office" Value="3" />
                 </EnumType>
-
+    
             </Schema>
             <Schema Namespace="Default" xmlns="http://docs.oasis-open.org/odata/ns/edm">
-
+    
                 <EntityContainer Name="Container">
                     <EntitySet Name="Persons" EntityType="AbpODataDemo.People.Person" />
                 </EntityContainer>
-
+    
             </Schema>
         </edmx:DataServices>
     </edmx:Edmx>
 
 Metadata is used to investigate the service.
+
+Note: If you want to use ODataQueryOptions in the controller methods, you need to ignore validation for ODataQueryOptions and ODataQueryOptions<> as shown below;
+
+````c#
+Configuration.Validation.IgnoredTypes.AddIfNotContains(typeof(ODataQueryOptions)); 
+Configuration.Validation.IgnoredTypes.AddIfNotContains(typeof(ODataQueryOptions<>));
+````
+
+
 
 ### Sample Project
 
