@@ -48,7 +48,8 @@ namespace Abp.AspNetCore.Mvc.ExceptionHandling
             return Task.CompletedTask;
         }
 
-        public async Task OnPageHandlerExecutionAsync(PageHandlerExecutingContext context, PageHandlerExecutionDelegate next)
+        public async Task OnPageHandlerExecutionAsync(PageHandlerExecutingContext context,
+            PageHandlerExecutionDelegate next)
         {
             if (context.HandlerMethod == null)
             {
@@ -63,11 +64,10 @@ namespace Abp.AspNetCore.Mvc.ExceptionHandling
                 return;
             }
 
-            var wrapResultAttribute =
-                ReflectionHelper.GetSingleAttributeOfMemberOrDeclaringTypeOrDefault(
-                    context.HandlerMethod.MethodInfo,
-                    _configuration.DefaultWrapResultAttribute
-                );
+            var wrapResultAttribute = ReflectionHelper.GetSingleAttributeOfMemberOrDeclaringTypeOrDefault(
+                context.HandlerMethod.MethodInfo,
+                _configuration.DefaultWrapResultAttribute
+            );
 
             if (wrapResultAttribute.LogError)
             {
@@ -77,17 +77,18 @@ namespace Abp.AspNetCore.Mvc.ExceptionHandling
             HandleAndWrapException(pageHandlerExecutedContext, wrapResultAttribute);
         }
 
-        protected virtual void HandleAndWrapException(PageHandlerExecutedContext context, WrapResultAttribute wrapResultAttribute)
+        protected virtual void HandleAndWrapException(PageHandlerExecutedContext context,
+            WrapResultAttribute wrapResultAttribute)
         {
             if (!ActionResultHelper.IsObjectResult(context.HandlerMethod.MethodInfo.ReturnType))
             {
                 return;
             }
-            
+
             var displayUrl = context.HttpContext.Request.GetDisplayUrl();
-            if (_abpWebCommonModuleConfiguration.WrapResultFilters.HasFilterForWrapOnError(displayUrl, out var wrapOnError))
+            if (_abpWebCommonModuleConfiguration.WrapResultFilters.HasFilterForWrapOnError(displayUrl,
+                out var wrapOnError))
             {
-                //there is a configuration for that method use configuration
                 context.HttpContext.Response.StatusCode = GetStatusCode(context, wrapOnError);
 
                 if (!wrapOnError)
@@ -120,7 +121,7 @@ namespace Abp.AspNetCore.Mvc.ExceptionHandling
 
             EventBus.Trigger(this, new AbpHandledExceptionData(context.Exception));
 
-            context.Exception = null; //Handled!
+            context.Exception = null; // Handled!
         }
 
         protected virtual int GetStatusCode(PageHandlerExecutedContext context, bool wrapOnError)
@@ -128,23 +129,23 @@ namespace Abp.AspNetCore.Mvc.ExceptionHandling
             if (context.Exception is AbpAuthorizationException)
             {
                 return context.HttpContext.User.Identity.IsAuthenticated
-                    ? (int)HttpStatusCode.Forbidden
-                    : (int)HttpStatusCode.Unauthorized;
+                    ? (int) HttpStatusCode.Forbidden
+                    : (int) HttpStatusCode.Unauthorized;
             }
 
             if (context.Exception is AbpValidationException)
             {
-                return (int)HttpStatusCode.BadRequest;
+                return (int) HttpStatusCode.BadRequest;
             }
 
             if (context.Exception is EntityNotFoundException)
             {
-                return (int)HttpStatusCode.NotFound;
+                return (int) HttpStatusCode.NotFound;
             }
 
             if (wrapOnError)
             {
-                return (int)HttpStatusCode.InternalServerError;
+                return (int) HttpStatusCode.InternalServerError;
             }
 
             return context.HttpContext.Response.StatusCode;

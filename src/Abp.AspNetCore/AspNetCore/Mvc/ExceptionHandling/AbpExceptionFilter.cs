@@ -49,11 +49,10 @@ namespace Abp.AspNetCore.Mvc.ExceptionHandling
                 return;
             }
 
-            var wrapResultAttribute =
-                ReflectionHelper.GetSingleAttributeOfMemberOrDeclaringTypeOrDefault(
-                    context.ActionDescriptor.GetMethodInfo(),
-                    _configuration.DefaultWrapResultAttribute
-                );
+            var wrapResultAttribute = ReflectionHelper.GetSingleAttributeOfMemberOrDeclaringTypeOrDefault(
+                context.ActionDescriptor.GetMethodInfo(),
+                _configuration.DefaultWrapResultAttribute
+            );
 
             if (wrapResultAttribute.LogError)
             {
@@ -71,9 +70,9 @@ namespace Abp.AspNetCore.Mvc.ExceptionHandling
             }
 
             var displayUrl = context.HttpContext.Request.GetDisplayUrl();
-            if (_abpWebCommonModuleConfiguration.WrapResultFilters.HasFilterForWrapOnError(displayUrl, out var wrapOnError))
+            if (_abpWebCommonModuleConfiguration.WrapResultFilters.HasFilterForWrapOnError(displayUrl,
+                out var wrapOnError))
             {
-                //there is a configuration for that method use configuration
                 context.HttpContext.Response.StatusCode = GetStatusCode(context, wrapOnError);
 
                 if (!wrapOnError)
@@ -84,7 +83,7 @@ namespace Abp.AspNetCore.Mvc.ExceptionHandling
                 HandleError(context);
                 return;
             }
-            
+
             context.HttpContext.Response.StatusCode = GetStatusCode(context, wrapResultAttribute.WrapOnError);
 
             if (!wrapResultAttribute.WrapOnError)
@@ -106,7 +105,7 @@ namespace Abp.AspNetCore.Mvc.ExceptionHandling
 
             EventBus.Trigger(this, new AbpHandledExceptionData(context.Exception));
 
-            context.Exception = null; //Handled!
+            context.Exception = null; // Handled!
         }
 
         protected virtual int GetStatusCode(ExceptionContext context, bool wrapOnError)
@@ -114,23 +113,23 @@ namespace Abp.AspNetCore.Mvc.ExceptionHandling
             if (context.Exception is AbpAuthorizationException)
             {
                 return context.HttpContext.User.Identity.IsAuthenticated
-                    ? (int)HttpStatusCode.Forbidden
-                    : (int)HttpStatusCode.Unauthorized;
+                    ? (int) HttpStatusCode.Forbidden
+                    : (int) HttpStatusCode.Unauthorized;
             }
 
             if (context.Exception is AbpValidationException)
             {
-                return (int)HttpStatusCode.BadRequest;
+                return (int) HttpStatusCode.BadRequest;
             }
 
             if (context.Exception is EntityNotFoundException)
             {
-                return (int)HttpStatusCode.NotFound;
+                return (int) HttpStatusCode.NotFound;
             }
 
             if (wrapOnError)
             {
-                return (int)HttpStatusCode.InternalServerError;
+                return (int) HttpStatusCode.InternalServerError;
             }
 
             return context.HttpContext.Response.StatusCode;

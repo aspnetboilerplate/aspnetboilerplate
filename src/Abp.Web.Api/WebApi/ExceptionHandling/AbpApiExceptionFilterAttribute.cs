@@ -25,7 +25,6 @@ namespace Abp.WebApi.ExceptionHandling
     /// </summary>
     public class AbpApiExceptionFilterAttribute : ExceptionFilterAttribute, ITransientDependency
     {
-
         /// <summary>
         /// Reference to the <see cref="ILogger"/>.
         /// </summary>
@@ -41,6 +40,7 @@ namespace Abp.WebApi.ExceptionHandling
         protected IAbpWebApiConfiguration Configuration { get; }
 
         protected IAbpWebCommonModuleConfiguration AbpWebCommonModuleConfiguration { get; }
+
         /// <summary>
         /// Initializes a new instance of the <see cref="AbpApiExceptionFilterAttribute"/> class.
         /// </summary>
@@ -88,24 +88,23 @@ namespace Abp.WebApi.ExceptionHandling
 
                 EventBus.Trigger(this, new AbpHandledExceptionData(context.Exception));
             }
-            
+
             var displayUrl = context.Request.RequestUri.AbsolutePath;
-            if (AbpWebCommonModuleConfiguration.WrapResultFilters.HasFilterForWrapOnError(displayUrl, out var wrapOnError))
+            if (AbpWebCommonModuleConfiguration.WrapResultFilters.HasFilterForWrapOnError(displayUrl,
+                out var wrapOnError))
             {
-                //there is a configuration for that method use configuration
                 if (!wrapOnError)
                 {
                     context.Response.StatusCode = GetStatusCode(context, false);
                     return;
                 }
-                
+
                 HandleError();
                 return;
             }
 
-            var wrapResultAttribute = HttpActionDescriptorHelper
-                                          .GetWrapResultAttributeOrNull(context.ActionContext.ActionDescriptor) ??
-                                      Configuration.DefaultWrapResultAttribute;
+            var wrapResultAttribute = HttpActionDescriptorHelper.GetWrapResultAttributeOrNull(context.ActionContext.ActionDescriptor) ??
+                Configuration.DefaultWrapResultAttribute;
 
             if (wrapResultAttribute.LogError)
             {

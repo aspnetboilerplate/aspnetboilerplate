@@ -107,7 +107,6 @@ namespace Abp.WebApi.Authorization
             var displayUrl = actionContext.Request.RequestUri.AbsolutePath;
             if (_abpWebCommonModuleConfiguration.WrapResultFilters.HasFilterForWrapOnError(displayUrl, out var wrapOnError))
             {
-                //there is a configuration for that method use configuration
                 return HandleError(wrapOnError);
             }
             

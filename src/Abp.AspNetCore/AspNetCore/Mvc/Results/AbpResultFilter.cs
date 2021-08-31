@@ -33,16 +33,10 @@ namespace Abp.AspNetCore.Mvc.Results
             }
 
             var methodInfo = context.ActionDescriptor.GetMethodInfo();
-
-            /*
-             * Here is the check order,
-             * 1) Configuration
-             * 2) Attribute
-             */
+            
             var displayUrl = context.HttpContext.Request.GetDisplayUrl();
             if (_abpWebCommonModuleConfiguration.WrapResultFilters.HasFilterForWrapOnSuccess(displayUrl, out var wrapOnSuccess))
             {
-                //there is a configuration for that method use configuration
                 if (!wrapOnSuccess)
                 {
                     return;

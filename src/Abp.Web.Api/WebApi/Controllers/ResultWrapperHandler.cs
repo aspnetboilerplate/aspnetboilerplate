@@ -54,12 +54,6 @@ namespace Abp.WebApi.Controllers
                 };
             }
             
-            /*
-            * Here is the check order
-            * 1) Configuration
-            * 2) Attribute
-            */
-            
             var absolutePath = request.RequestUri.AbsolutePath;
 
             if (_abpWebCommonModuleConfiguration.WrapResultFilters.HasFilterForWrapOnSuccess(absolutePath, out var wrapOnSuccess))
