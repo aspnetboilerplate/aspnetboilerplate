@@ -2416,7 +2416,7 @@ namespace Abp.Authorization.Users
         /// <param name="name">The name of the token.</param>
         /// <param name="cancellationToken">The <see cref="CancellationToken"/> used to propagate notifications that the operation should be canceled.</param>
         /// <returns>The <see cref="Task"/> that represents the asynchronous operation.</returns>
-        public async Task RemoveTokenAsync(
+        public virtual async Task RemoveTokenAsync(
             TUser user,
             string loginProvider,
             string name,
@@ -2462,7 +2462,7 @@ namespace Abp.Authorization.Users
         /// <param name="name">The name of the token.</param>
         /// <param name="cancellationToken">The <see cref="CancellationToken"/> used to propagate notifications that the operation should be canceled.</param>
         /// <returns>The <see cref="Task"/> that represents the asynchronous operation.</returns>
-        public async Task<string> GetTokenAsync(TUser user, string loginProvider, string name,
+        public virtual async Task<string> GetTokenAsync(TUser user, string loginProvider, string name,
             CancellationToken cancellationToken)
         {
             return await _unitOfWorkManager.WithUnitOfWorkAsync(async () =>
@@ -2661,7 +2661,7 @@ namespace Abp.Authorization.Users
             });
         }
 
-        public async Task<string> GetUserNameFromDatabaseAsync(long userId)
+        public virtual async Task<string> GetUserNameFromDatabaseAsync(long userId)
         {
             using (var uow = _unitOfWorkManager.Begin(new UnitOfWorkOptions
             {
@@ -2827,7 +2827,7 @@ namespace Abp.Authorization.Users
             SetToken(user, InternalLoginProvider, AuthenticatorKeyTokenName, key, cancellationToken);
         }
 
-        public async Task<string> GetAuthenticatorKeyAsync(TUser user, CancellationToken cancellationToken)
+        public virtual async Task<string> GetAuthenticatorKeyAsync(TUser user, CancellationToken cancellationToken)
         {
             return await GetTokenAsync(user, InternalLoginProvider, AuthenticatorKeyTokenName, cancellationToken);
         }
