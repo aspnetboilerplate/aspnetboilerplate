@@ -19,7 +19,7 @@ This is a simple controller derived from AbpController:
             return View();
         }
     }
-                
+
 
 #### Localization
 
@@ -32,11 +32,11 @@ AbpController defines **L** method to make
         {
             LocalizationSourceName = "MySourceName";
         }
-
+    
         public ActionResult Index()
         {
             var helloWorldText = L("HelloWorld");
-
+    
             return View();
         }
     }
@@ -74,6 +74,16 @@ and **DontWrapResult** attributes for controllers or actions or from the
 [startup configuration](Startup-Configuration.md) (using
 Configuration.Modules.AbpMvc()...) globally. See the [ajax
 documentation](/Pages/Documents/Javascript-API/AJAX) for more info.
+
+##### WrapResultFilters
+
+You can also implement a custom ```IWrapResultFilter``` and decide result wrapping conditionally by the current request URL. A custom result wrapping filter must be added to ```WrapResultFilters``` as shown below;
+
+````c#
+Configuration.Modules.AbpWebCommon().WrapResultFilters.Add(new MyWrapResultFilter());
+````
+
+This approach can be useful if you don't have access the source code of the Controllers and can't used result wrapping attributes on the Controllers.
 
 #### Audit Logging
 
