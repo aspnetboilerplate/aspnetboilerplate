@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Reflection;
 using Abp.Domain.Uow;
 using Abp.Web.Models;
+using Abp.Web.Results.Filters;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Routing;
 
@@ -32,7 +33,8 @@ namespace Abp.AspNetCore.Configuration
 
         public List<Action<IEndpointRouteBuilder>> EndpointConfiguration { get; }
 
-
+        public WrapResultFilterCollection WrapResultFilters { get; }
+        
         public AbpAspNetCoreConfiguration()
         {
             DefaultWrapResultAttribute = new WrapResultAttribute();
@@ -42,6 +44,7 @@ namespace Abp.AspNetCore.Configuration
             ControllerAssemblySettings = new ControllerAssemblySettingList();
             FormBodyBindingIgnoredTypes = new List<Type>();
             EndpointConfiguration = new List<Action<IEndpointRouteBuilder>>();
+            WrapResultFilters = new WrapResultFilterCollection();
             IsValidationEnabledForControllers = true;
             SetNoCacheForAjaxResponses = true;
             IsAuditingEnabled = true;

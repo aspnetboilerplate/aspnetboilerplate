@@ -1,8 +1,10 @@
 using System;
 using System.Linq;
+using System.Net;
 using System.Threading.Tasks;
 using System.Xml.Linq;
 using Abp.AspNetCore.App.Controllers;
+using Abp.UI;
 using Shouldly;
 using Xunit;
 
@@ -36,6 +38,31 @@ namespace Abp.AspNetCore.Tests
 
             // Assert
             response.ShouldBe("42");
+        }
+        
+        [Fact]
+        public async Task WrapResultTestControllerTests_GetDontWrapByUrl_Test()
+        {
+            // Act
+            var response = await GetResponseAsStringAsync(
+                GetUrl<WrapResultTestController>(
+                    nameof(WrapResultTestController.GetDontWrapByUrl)
+                )
+            );
+
+            // Assert
+            response.ShouldBe("42");
+        }
+        
+        [Fact]
+        public async Task WrapResultTestControllerTests_GetDontWrapByUrlException_Test()
+        {
+            // Act
+            var response = await GetResponseAsStringAsync(
+                GetUrl<WrapResultTestController>(
+                    nameof(WrapResultTestController.GetDontWrapByUrlWithException)
+                )
+            ).ShouldThrowAsync<UserFriendlyException>();
         }
 
         [Fact]

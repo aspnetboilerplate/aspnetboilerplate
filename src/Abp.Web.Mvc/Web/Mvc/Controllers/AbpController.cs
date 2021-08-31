@@ -20,6 +20,7 @@ using Abp.ObjectMapping;
 using Abp.Reflection;
 using Abp.Runtime.Session;
 using Abp.Runtime.Validation;
+using Abp.Web.Configuration;
 using Abp.Web.Models;
 using Abp.Web.Mvc.Alerts;
 using Abp.Web.Mvc.Configuration;
@@ -149,6 +150,8 @@ namespace Abp.Web.Mvc.Controllers
         protected IActiveUnitOfWork CurrentUnitOfWork { get { return UnitOfWorkManager.Current; } }
 
         public IAbpMvcConfiguration AbpMvcConfiguration { get; set; }
+        
+        public IAbpWebCommonModuleConfiguration AbpWebCommonModuleConfiguration { get; set; }
 
         /// <summary>
         /// MethodInfo for currently executing action.
@@ -265,6 +268,19 @@ namespace Abp.Web.Mvc.Controllers
         /// <param name="behavior">Behavior.</param>
         protected override JsonResult Json(object data, string contentType, Encoding contentEncoding, JsonRequestBehavior behavior)
         {
+            if (
+                Request.Url != null &&
+                AbpWebCommonModuleConfiguration.WrapResultFilters.HasFilterForWrapOnSuccess(Request?.Url?.AbsolutePath, out var wrapOnSuccess)
+                )
+            {
+                if (!wrapOnSuccess)
+                {
+                    return base.Json(data, contentType, contentEncoding, behavior);
+                }
+
+                return AbpJson(data, contentType, contentEncoding, behavior);
+            }
+
             if (_wrapResultAttribute != null && !_wrapResultAttribute.WrapOnSuccess)
             {
                 return base.Json(data, contentType, contentEncoding, behavior);
@@ -335,6 +351,28 @@ namespace Abp.Web.Mvc.Controllers
 
         protected override void OnException(ExceptionContext context)
         {
+            void HandleError()
+            {
+                //We handled the exception!
+                context.ExceptionHandled = true;
+
+                //Return an error response to the client.
+                context.HttpContext.Response.Clear();
+                context.HttpContext.Response.StatusCode = GetStatusCodeForException(context, _wrapResultAttribute.WrapOnError);
+
+                context.Result = MethodInfoHelper.IsJsonResult(_currentMethodInfo)
+                    ? GenerateJsonExceptionResult(context)
+                    : GenerateNonJsonExceptionResult(context);
+
+                // Certain versions of IIS will sometimes use their own error page when
+                // they detect a server error. Setting this property indicates that we
+                // want it to try to render ASP.NET MVC's error page instead.
+                context.HttpContext.Response.TrySkipIisCustomErrors = true;
+
+                //Trigger an event, so we can register it.
+                EventBus.Trigger(this, new AbpHandledExceptionData(context.Exception));
+            }
+
             if (context == null)
             {
                 throw new ArgumentNullException(nameof(context));
@@ -370,6 +408,23 @@ namespace Abp.Web.Mvc.Controllers
                 return;
             }
 
+            if (context.HttpContext.Request.Url != null)
+            {
+                var url = context.HttpContext.Request.Url?.AbsolutePath;
+                if (AbpWebCommonModuleConfiguration.WrapResultFilters.HasFilterForWrapOnError(url, out var wrapOnError))
+                {
+                    if (!wrapOnError)
+                    {
+                        base.OnException(context);
+                        context.HttpContext.Response.StatusCode = GetStatusCodeForException(context, false);
+                        return;
+                    }
+
+                    HandleError();
+                    return;
+                }
+            }
+
             //Check WrapResultAttribute
             if (_wrapResultAttribute == null || !_wrapResultAttribute.WrapOnError)
             {
@@ -378,24 +433,7 @@ namespace Abp.Web.Mvc.Controllers
                 return;
             }
 
-            //We handled the exception!
-            context.ExceptionHandled = true;
-
-            //Return an error response to the client.
-            context.HttpContext.Response.Clear();
-            context.HttpContext.Response.StatusCode = GetStatusCodeForException(context, _wrapResultAttribute.WrapOnError);
-
-            context.Result = MethodInfoHelper.IsJsonResult(_currentMethodInfo)
-                ? GenerateJsonExceptionResult(context)
-                : GenerateNonJsonExceptionResult(context);
-
-            // Certain versions of IIS will sometimes use their own error page when
-            // they detect a server error. Setting this property indicates that we
-            // want it to try to render ASP.NET MVC's error page instead.
-            context.HttpContext.Response.TrySkipIisCustomErrors = true;
-
-            //Trigger an event, so we can register it.
-            EventBus.Trigger(this, new AbpHandledExceptionData(context.Exception));
+            HandleError();
         }
 
         protected virtual int GetStatusCodeForException(ExceptionContext context, bool wrapOnError)
