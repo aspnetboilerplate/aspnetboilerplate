@@ -6,9 +6,11 @@ namespace Abp.Zero.Ldap.Configuration
     public class AbpZeroLdapModuleConfig : IAbpZeroLdapModuleConfig
     {
         public bool IsEnabled { get; private set; }
+        
+        public bool UseUserPrincipalNameAsUserName { get; set; }
 
         public Type AuthenticationSourceType { get; private set; }
-
+    
         private readonly IAbpZeroConfig _zeroConfig;
 
         public AbpZeroLdapModuleConfig(IAbpZeroConfig zeroConfig)
