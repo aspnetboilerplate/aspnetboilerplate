@@ -136,6 +136,9 @@ public override void PreInitialize()
 It will automatically expire `GetScript` cache when it is necessary. You can also expire it manually. Example:
 
 ```csharp
+ICachedUniqueKeyPerUser _cachedUniqueKeyPerUser;
+IGetScriptsResponsePerUserConfiguration _getScriptsResponsePerUserConfiguration;
+
 public virtual async Task<ActionResult> ImpersonateSignIn()
 {
 	await ClearGetScriptsResponsePerUserCache();
