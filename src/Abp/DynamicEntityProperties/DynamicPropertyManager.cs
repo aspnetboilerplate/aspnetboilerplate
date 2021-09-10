@@ -40,6 +40,7 @@ namespace Abp.DynamicEntityProperties
         {
             var tenantId = GetCurrentTenantId();
             var cacheKey = GetCacheKey(id, tenantId);
+            
             return DynamicPropertyCache.Get(cacheKey, () => _dynamicPropertyStore.Get(id));
         }
 
@@ -47,6 +48,7 @@ namespace Abp.DynamicEntityProperties
         {
             var tenantId = GetCurrentTenantId();
             var cacheKey = GetCacheKey(id, tenantId);
+            
             return DynamicPropertyCache.GetAsync(cacheKey, (i) => _dynamicPropertyStore.GetAsync(id));
         }
 
