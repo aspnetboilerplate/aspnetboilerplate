@@ -42,7 +42,7 @@ namespace Abp.Notifications
             _iocResolver = iocResolver;
         }
 
-        public async Task DistributeAsync(Guid notificationId)
+        public virtual async Task DistributeAsync(Guid notificationId)
         {
             await _unitOfWorkManager.WithUnitOfWorkAsync(async () =>
             {
@@ -51,7 +51,9 @@ namespace Abp.Notifications
                 {
                     Logger.Warn(
                         "NotificationDistributionJob can not continue since could not found notification by id: " +
-                        notificationId);
+                        notificationId
+                    );
+                    
                     return;
                 }
 
@@ -294,7 +296,7 @@ namespace Abp.Notifications
                 return userNotifications;
             });
         }
-        
+
         protected virtual List<UserNotification> SaveUserNotifications(
             UserIdentifier[] users,
             NotificationInfo notificationInfo)

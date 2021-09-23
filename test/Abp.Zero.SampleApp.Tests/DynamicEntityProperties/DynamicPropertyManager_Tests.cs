@@ -36,16 +36,19 @@ namespace Abp.Zero.SampleApp.Tests.DynamicEntityProperties
         public void Should_Get_From_Cache()
         {
             var (cacheManager, dynamicPropertyStoreSubstitute, cacheSubstitute) = InitializeFakes();
-
+            
             var testDynamicProperty = new DynamicProperty
             {
                 Id = -1,
                 PropertyName = "Test123",
-                InputType = "TestType"
+                InputType = "TestType",
+                TenantId = AbpSession.TenantId
             };
 
+            var cacheKey = testDynamicProperty.Id + "@" + (testDynamicProperty.TenantId ?? 0);
+            
             cacheSubstitute
-                .Get(testDynamicProperty.Id.ToString(), Arg.Any<Func<string, object>>())
+                .Get(cacheKey, Arg.Any<Func<string, object>>())
                 .Returns(testDynamicProperty);
 
             var dynamicPropertyManager = Resolve<IDynamicPropertyManager>();
@@ -54,8 +57,33 @@ namespace Abp.Zero.SampleApp.Tests.DynamicEntityProperties
             CheckEquality(entity, testDynamicProperty);
 
             cacheManager.Received().GetCache(Arg.Any<string>());
-            cacheSubstitute.Received().Get(testDynamicProperty.Id.ToString(), Arg.Any<Func<string, object>>());
+            cacheSubstitute.Received().Get(cacheKey, Arg.Any<Func<string, object>>());
             dynamicPropertyStoreSubstitute.DidNotReceive().Get(testDynamicProperty.Id);
+        }
+        
+        [Fact]
+        public void Should_Not_Get_From_Cache_For_Different_Tenant()
+        {
+            var (cacheManager, dynamicPropertyStoreSubstitute, cacheSubstitute) = InitializeFakes();
+            
+            var testDynamicProperty = new DynamicProperty
+            {
+                Id = -1,
+                PropertyName = "Test123",
+                InputType = "TestType",
+                TenantId = 2
+            };
+
+            var cacheKey = testDynamicProperty.Id + "@" + (testDynamicProperty.TenantId ?? 0);
+            
+            cacheSubstitute
+                .Get(cacheKey, Arg.Any<Func<string, object>>())
+                .Returns(testDynamicProperty);
+
+            var dynamicPropertyManager = Resolve<IDynamicPropertyManager>();
+
+            var entity = dynamicPropertyManager.Get(testDynamicProperty.Id);
+           entity.ShouldBeNull();
         }
 
         [Fact]
@@ -89,7 +117,7 @@ namespace Abp.Zero.SampleApp.Tests.DynamicEntityProperties
             var result = dynamicPropertyManager.Add(testDynamicProperty);
 
             cacheSubstitute.Received().Set(
-                testDynamicProperty.Id.ToString(),
+                testDynamicProperty.Id.ToString() + "@0",
                 testDynamicProperty,
                 Arg.Any<TimeSpan?>(),
                 Arg.Any<DateTimeOffset?>()
@@ -159,7 +187,7 @@ namespace Abp.Zero.SampleApp.Tests.DynamicEntityProperties
             var result = dynamicPropertyManager.Update(testDynamicProperty);
 
             cacheSubstitute.Received().Set(
-                testDynamicProperty.Id.ToString(),
+                testDynamicProperty.Id + "@" + (testDynamicProperty.TenantId ?? 0), 
                 testDynamicProperty,
                 Arg.Any<TimeSpan?>(),
                 Arg.Any<DateTimeOffset?>()
@@ -217,7 +245,7 @@ namespace Abp.Zero.SampleApp.Tests.DynamicEntityProperties
             var dynamicPropertyManager = Resolve<IDynamicPropertyManager>();
 
             dynamicPropertyManager.Delete(testDynamicProperty.Id);
-            cacheSubstitute.Received().Remove(testDynamicProperty.Id.ToString());
+            cacheSubstitute.Received().Remove(testDynamicProperty.Id.ToString() + "@1");
             dynamicPropertyStoreSubstitute.Received().Delete(testDynamicProperty.Id);
         }
 
@@ -230,11 +258,14 @@ namespace Abp.Zero.SampleApp.Tests.DynamicEntityProperties
             {
                 Id = -1,
                 PropertyName = "Test123",
-                InputType = "TestType"
+                InputType = "TestType",
+                TenantId = AbpSession.TenantId
             };
 
+            var cacheKey = testDynamicProperty.Id + "@" + (testDynamicProperty.TenantId ?? 0); 
+            
             cacheSubstitute
-                .GetAsync(testDynamicProperty.Id.ToString(), Arg.Any<Func<string, Task<object>>>())
+                .GetAsync(cacheKey, Arg.Any<Func<string, Task<object>>>())
                 .Returns(testDynamicProperty);
 
             var dynamicPropertyManager = Resolve<IDynamicPropertyManager>();
@@ -244,7 +275,7 @@ namespace Abp.Zero.SampleApp.Tests.DynamicEntityProperties
 
             cacheManager.Received().GetCache(Arg.Any<string>());
             await cacheSubstitute.Received()
-                .GetAsync(testDynamicProperty.Id.ToString(), Arg.Any<Func<string, Task<object>>>());
+                .GetAsync(cacheKey, Arg.Any<Func<string, Task<object>>>());
             await dynamicPropertyStoreSubstitute.DidNotReceive().GetAsync(testDynamicProperty.Id);
         }
 
@@ -278,7 +309,7 @@ namespace Abp.Zero.SampleApp.Tests.DynamicEntityProperties
 
             var result = await dynamicPropertyManager.AddAsync(testDynamicProperty);
             await cacheSubstitute.Received().SetAsync(
-                testDynamicProperty.Id.ToString(),
+                testDynamicProperty.Id + "@0", // @0 is added because this is a host entity
                 testDynamicProperty,
                 Arg.Any<TimeSpan?>(),
                 Arg.Any<DateTimeOffset?>()
@@ -351,7 +382,7 @@ namespace Abp.Zero.SampleApp.Tests.DynamicEntityProperties
 
             var result = await dynamicPropertyManager.UpdateAsync(testDynamicProperty);
             await cacheSubstitute.Received().SetAsync(
-                testDynamicProperty.Id.ToString(),
+                testDynamicProperty.Id + "@" + (testDynamicProperty.TenantId ?? 0),
                 testDynamicProperty,
                 Arg.Any<TimeSpan?>(),
                 Arg.Any<DateTimeOffset?>()
@@ -411,7 +442,7 @@ namespace Abp.Zero.SampleApp.Tests.DynamicEntityProperties
             var dynamicPropertyManager = Resolve<IDynamicPropertyManager>();
 
             await dynamicPropertyManager.DeleteAsync(testDynamicProperty.Id);
-            await cacheSubstitute.Received().RemoveAsync(testDynamicProperty.Id.ToString());
+            await cacheSubstitute.Received().RemoveAsync(testDynamicProperty.Id.ToString() + "@1");
             await dynamicPropertyStoreSubstitute.Received().DeleteAsync(testDynamicProperty.Id);
         }
     }

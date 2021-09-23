@@ -77,7 +77,7 @@ shown below:
 
     using Abp.AspNetCore.Mvc.Controllers;
     using Microsoft.AspNetCore.Mvc;
-
+    
     namespace EmbeddedPlugIn.Controllers
     {
         public class BlogController : AbpController
@@ -99,12 +99,12 @@ our views like we normally do:
     @section Styles {
         <link href="~/Views/Blog/Index.css" rel="stylesheet" />
     }
-
+    
     @section Scripts
     {
         <script src="~/Views/Blog/Index.js"></script>
     }
-
+    
     <h2 id="BlogTitle">Blog plugin!</h2>
 
 It assumes that the main application has the Styles and Scripts sections. We
@@ -146,3 +146,14 @@ override the embedded resource file of module B.
 
 Note: For ASP.NET Core projects, you should put the overriding files
 in the wwwroot folder as the root path.
+
+### Notes
+
+Since the path is encoded using dots in embedded resources, the following paths and files will be the same:
+
+````bash
+/First/Second/Third/File.js
+/First/Second/Third.File.js
+/First/Second.Third.File.js
+/First.Second.Third.File.js
+````

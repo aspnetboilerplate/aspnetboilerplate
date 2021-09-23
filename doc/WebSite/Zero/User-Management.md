@@ -215,6 +215,8 @@ Lastly, we must set a module dependency to **AbpZeroLdapModule** and
 After these steps, the LDAP module will be enabled for your application, but
 LDAP auth is not enabled by default. We can enable it using the settings.
 
+By default, LDAP authentication uses ```SamAccountName``` for the username. If you want to use ```UserPrincipalName```, you can configure ```Configuration.Modules.ZeroLdap().UseUserPrincipalNameAsUserName``` to ```true```.
+
 ##### Settings
 
 The **LdapSettingNames** class defines constants for setting names. You can

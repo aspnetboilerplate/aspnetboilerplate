@@ -100,11 +100,21 @@ namespace Abp.Zero.Ldap.Authentication
 
         protected virtual void UpdateUserFromPrincipal(TUser user, UserPrincipal userPrincipal)
         {
-            if (!userPrincipal.SamAccountName.IsNullOrEmpty())
+            if (_ldapModuleConfig.UseUserPrincipalNameAsUserName)
             {
-                user.UserName = userPrincipal.SamAccountName;
+                if (!userPrincipal.UserPrincipalName.IsNullOrEmpty())
+                {
+                    user.UserName = userPrincipal.UserPrincipalName;
+                }
             }
-            
+            else
+            {
+                if (!userPrincipal.SamAccountName.IsNullOrEmpty())
+                {
+                    user.UserName = userPrincipal.SamAccountName;
+                }  
+            }
+
             user.Name = userPrincipal.GivenName;
             user.Surname = userPrincipal.Surname;
             user.EmailAddress = userPrincipal.EmailAddress;

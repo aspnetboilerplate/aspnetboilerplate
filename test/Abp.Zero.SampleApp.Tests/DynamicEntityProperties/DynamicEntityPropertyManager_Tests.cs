@@ -13,7 +13,8 @@ namespace Abp.Zero.SampleApp.Tests.DynamicEntityProperties
 {
     public class DynamicEntityPropertyManager_Tests : DynamicEntityPropertiesTestBase
     {
-        private (ICache dynamicEntityPropertyManagerCache, DynamicEntityPropertyManager dynamicEntityPropertyManager) InitializeDynamicEntityPropertyManagerWithCacheSubstitute()
+        private (ICache dynamicEntityPropertyManagerCache, DynamicEntityPropertyManager dynamicEntityPropertyManager)
+            InitializeDynamicEntityPropertyManagerWithCacheSubstitute()
         {
             var cacheManager = Substitute.For<ICacheManager>();
             var cacheSubstitute = Substitute.For<ICache>();
@@ -57,25 +58,53 @@ namespace Abp.Zero.SampleApp.Tests.DynamicEntityProperties
         public void Should_Get_From_Cache()
         {
             var dynamicEntityPropertyStoreSubstitute = RegisterFake<IDynamicEntityPropertyStore>();
-            var (dynamicEntityPropertyManagerCache, dynamicEntityPropertyManager) = InitializeDynamicEntityPropertyManagerWithCacheSubstitute();
+            var (dynamicEntityPropertyManagerCache, dynamicEntityPropertyManager) =
+                InitializeDynamicEntityPropertyManagerWithCacheSubstitute();
+
+            var dynamicProperty = CreateAndGetDynamicPropertyWithTestPermission();
+            var dynamicEntityProperty = new DynamicEntityProperty()
+            {
+                DynamicPropertyId = dynamicProperty.Id,
+                EntityFullName = TestEntityFullName
+            };
+
+            var cacheKey = dynamicEntityProperty.Id + "@" + (dynamicEntityProperty.TenantId ?? 0);
+
+            dynamicEntityPropertyManagerCache
+                .Get(cacheKey, Arg.Any<Func<string, object>>())
+                .Returns(dynamicEntityProperty);
+
+            var entity = dynamicEntityPropertyManager.Get(dynamicEntityProperty.Id);
+            CheckEquality(entity, dynamicEntityProperty);
+
+            dynamicEntityPropertyManagerCache.Received().Get(cacheKey, Arg.Any<Func<string, object>>());
+            dynamicEntityPropertyStoreSubstitute.DidNotReceive().Get(dynamicEntityProperty.Id);
+        }
+
+        [Fact]
+        public void Should_Not_Get_From_Cache_For_Different_Tenant()
+        {
+            var dynamicEntityPropertyStoreSubstitute = RegisterFake<IDynamicEntityPropertyStore>();
+            var (dynamicEntityPropertyManagerCache, dynamicEntityPropertyManager) =
+                InitializeDynamicEntityPropertyManagerWithCacheSubstitute();
 
             var dynamicProperty = CreateAndGetDynamicPropertyWithTestPermission();
             var dynamicEntityProperty = new DynamicEntityProperty()
             {
                 DynamicPropertyId = dynamicProperty.Id,
                 EntityFullName = TestEntityFullName,
-                TenantId = AbpSession.TenantId
+                TenantId = 2
             };
 
+            var cacheKey = dynamicEntityProperty.Id + "@" + (dynamicEntityProperty.TenantId ?? 0);
+
             dynamicEntityPropertyManagerCache
-                .Get(dynamicEntityProperty.Id.ToString(), Arg.Any<Func<string, object>>())
+                .Get(cacheKey, Arg.Any<Func<string, object>>())
                 .Returns(dynamicEntityProperty);
 
-            var entity = dynamicEntityPropertyManager.Get(dynamicEntityProperty.Id);
-            CheckEquality(entity, dynamicEntityProperty);
-
-            dynamicEntityPropertyManagerCache.Received().Get(dynamicEntityProperty.Id.ToString(), Arg.Any<Func<string, object>>());
-            dynamicEntityPropertyStoreSubstitute.DidNotReceive().Get(dynamicEntityProperty.Id);
+            Assert.Throws<NullReferenceException>(
+                () => dynamicEntityPropertyManager.Get(dynamicEntityProperty.Id)
+            );
         }
 
         [Fact]
@@ -105,7 +134,8 @@ namespace Abp.Zero.SampleApp.Tests.DynamicEntityProperties
         [Fact]
         public void Should_Add_Property()
         {
-            var (dynamicEntityPropertyManagerCache, dynamicEntityPropertyManager) = InitializeDynamicEntityPropertyManagerWithCacheSubstitute();
+            var (dynamicEntityPropertyManagerCache, dynamicEntityPropertyManager) =
+                InitializeDynamicEntityPropertyManagerWithCacheSubstitute();
 
             var dynamicProperty = CreateAndGetDynamicPropertyWithTestPermission();
             var dynamicEntityProperty = new DynamicEntityProperty()
@@ -117,7 +147,8 @@ namespace Abp.Zero.SampleApp.Tests.DynamicEntityProperties
 
             RunAndCheckIfPermissionControlled(() => { dynamicEntityPropertyManager.Add(dynamicEntityProperty); });
 
-            dynamicEntityPropertyManagerCache.Received().Set(dynamicEntityProperty.Id.ToString(), dynamicEntityProperty);
+            var cacheKey = dynamicEntityProperty.Id + "@" + (dynamicEntityProperty.TenantId ?? 0);
+            dynamicEntityPropertyManagerCache.Received().Set(cacheKey, dynamicEntityProperty);
 
             WithUnitOfWork(() =>
             {
@@ -133,7 +164,8 @@ namespace Abp.Zero.SampleApp.Tests.DynamicEntityProperties
         [Fact]
         public void Should_Not_Add_Property_If_Entity_Not_Registered()
         {
-            var (dynamicEntityPropertyManagerCache, dynamicEntityPropertyManager) = InitializeDynamicEntityPropertyManagerWithCacheSubstitute();
+            var (dynamicEntityPropertyManagerCache, dynamicEntityPropertyManager) =
+                InitializeDynamicEntityPropertyManagerWithCacheSubstitute();
 
             var dynamicProperty = CreateAndGetDynamicPropertyWithTestPermission();
             var dynamicEntityProperty = new DynamicEntityProperty()
@@ -157,7 +189,8 @@ namespace Abp.Zero.SampleApp.Tests.DynamicEntityProperties
         [Fact]
         public void Should_Update_Property()
         {
-            var (dynamicEntityPropertyManagerCache, dynamicEntityPropertyManager) = InitializeDynamicEntityPropertyManagerWithCacheSubstitute();
+            var (dynamicEntityPropertyManagerCache, dynamicEntityPropertyManager) =
+                InitializeDynamicEntityPropertyManagerWithCacheSubstitute();
 
             var dynamicProperty = CreateAndGetDynamicPropertyWithTestPermission();
             var dynamicProperty2 = CreateAndGetDynamicPropertyWithTestPermission();
@@ -170,7 +203,9 @@ namespace Abp.Zero.SampleApp.Tests.DynamicEntityProperties
 
             WithUnitOfWork(() => { dynamicEntityPropertyManager.Add(dynamicEntityProperty); });
 
-            dynamicEntityPropertyManagerCache.Received().Set(dynamicEntityProperty.Id.ToString(), dynamicEntityProperty);
+            var cacheKey = dynamicEntityProperty.Id + "@" + (dynamicEntityProperty.TenantId ?? 0);
+
+            dynamicEntityPropertyManagerCache.Received().Set(cacheKey, dynamicEntityProperty);
             dynamicEntityPropertyManagerCache.ClearReceivedCalls();
 
             WithUnitOfWork(() =>
@@ -186,7 +221,7 @@ namespace Abp.Zero.SampleApp.Tests.DynamicEntityProperties
 
             dynamicEntityPropertyManagerCache.ClearReceivedCalls();
             RunAndCheckIfPermissionControlled(() => { dynamicEntityPropertyManager.Update(dynamicEntityProperty); });
-            dynamicEntityPropertyManagerCache.Received().Set(dynamicEntityProperty.Id.ToString(), dynamicEntityProperty);
+            dynamicEntityPropertyManagerCache.Received().Set(cacheKey, dynamicEntityProperty);
 
             WithUnitOfWork(() =>
             {
@@ -200,7 +235,8 @@ namespace Abp.Zero.SampleApp.Tests.DynamicEntityProperties
         [Fact]
         public void Should_Not_Update_Property_If_Entity_Not_Registered()
         {
-            var (dynamicEntityPropertyManagerCache, dynamicEntityPropertyManager) = InitializeDynamicEntityPropertyManagerWithCacheSubstitute();
+            var (dynamicEntityPropertyManagerCache, dynamicEntityPropertyManager) =
+                InitializeDynamicEntityPropertyManagerWithCacheSubstitute();
 
 
             var dynamicProperty = CreateAndGetDynamicPropertyWithTestPermission();
@@ -213,7 +249,9 @@ namespace Abp.Zero.SampleApp.Tests.DynamicEntityProperties
 
             WithUnitOfWork(() => { dynamicEntityPropertyManager.Add(dynamicEntityProperty); });
 
-            dynamicEntityPropertyManagerCache.Received().Set(dynamicEntityProperty.Id.ToString(), dynamicEntityProperty);
+            var cacheKey = dynamicEntityProperty.Id + "@" + (dynamicEntityProperty.TenantId ?? 0);
+
+            dynamicEntityPropertyManagerCache.Received().Set(cacheKey, dynamicEntityProperty);
             dynamicEntityPropertyManagerCache.ClearReceivedCalls();
 
             WithUnitOfWork(() =>
@@ -240,7 +278,8 @@ namespace Abp.Zero.SampleApp.Tests.DynamicEntityProperties
         [Fact]
         public void Should_Delete_Property()
         {
-            var (dynamicEntityPropertyManagerCache, dynamicEntityPropertyManager) = InitializeDynamicEntityPropertyManagerWithCacheSubstitute();
+            var (dynamicEntityPropertyManagerCache, dynamicEntityPropertyManager) =
+                InitializeDynamicEntityPropertyManagerWithCacheSubstitute();
             var dynamicProperty = CreateAndGetDynamicPropertyWithTestPermission();
 
             var dynamicEntityProperty = new DynamicEntityProperty()
@@ -252,7 +291,8 @@ namespace Abp.Zero.SampleApp.Tests.DynamicEntityProperties
 
             WithUnitOfWork(() => { dynamicEntityPropertyManager.Add(dynamicEntityProperty); });
 
-            dynamicEntityPropertyManagerCache.Received().Set(dynamicEntityProperty.Id.ToString(), dynamicEntityProperty);
+            var cacheKey = dynamicEntityProperty.Id + "@" + (dynamicEntityProperty.TenantId ?? 0);
+            dynamicEntityPropertyManagerCache.Received().Set(cacheKey, dynamicEntityProperty);
 
             WithUnitOfWork(() =>
             {
@@ -265,7 +305,7 @@ namespace Abp.Zero.SampleApp.Tests.DynamicEntityProperties
 
             dynamicEntityPropertyManagerCache.ClearReceivedCalls();
             RunAndCheckIfPermissionControlled(() => { dynamicEntityPropertyManager.Delete(dynamicEntityProperty.Id); });
-            dynamicEntityPropertyManagerCache.Received().Remove(dynamicEntityProperty.Id.ToString());
+            dynamicEntityPropertyManagerCache.Received().Remove(cacheKey);
 
             WithUnitOfWork(() =>
             {
@@ -284,7 +324,8 @@ namespace Abp.Zero.SampleApp.Tests.DynamicEntityProperties
         [Fact]
         public async Task Should_Add_Property_Async()
         {
-            var (dynamicEntityPropertyManagerCache, dynamicEntityPropertyManager) = InitializeDynamicEntityPropertyManagerWithCacheSubstitute();
+            var (dynamicEntityPropertyManagerCache, dynamicEntityPropertyManager) =
+                InitializeDynamicEntityPropertyManagerWithCacheSubstitute();
             var dynamicProperty = CreateAndGetDynamicPropertyWithTestPermission();
 
             var dynamicEntityProperty = new DynamicEntityProperty()
@@ -294,9 +335,13 @@ namespace Abp.Zero.SampleApp.Tests.DynamicEntityProperties
                 TenantId = AbpSession.TenantId
             };
 
-            await RunAndCheckIfPermissionControlledAsync(async () => { await dynamicEntityPropertyManager.AddAsync(dynamicEntityProperty); });
+            await RunAndCheckIfPermissionControlledAsync(async () =>
+            {
+                await dynamicEntityPropertyManager.AddAsync(dynamicEntityProperty);
+            });
 
-            await dynamicEntityPropertyManagerCache.Received().SetAsync(dynamicEntityProperty.Id.ToString(), dynamicEntityProperty);
+            var cacheKey = dynamicEntityProperty.Id + "@" + (dynamicEntityProperty.TenantId ?? 0);
+            await dynamicEntityPropertyManagerCache.Received().SetAsync(cacheKey, dynamicEntityProperty);
 
             WithUnitOfWork(() =>
             {
@@ -312,7 +357,8 @@ namespace Abp.Zero.SampleApp.Tests.DynamicEntityProperties
         [Fact]
         public async Task Should_Not_Add_Property_If_Entity_Not_Registered_Async()
         {
-            var (dynamicEntityPropertyManagerCache, dynamicEntityPropertyManager) = InitializeDynamicEntityPropertyManagerWithCacheSubstitute();
+            var (dynamicEntityPropertyManagerCache, dynamicEntityPropertyManager) =
+                InitializeDynamicEntityPropertyManagerWithCacheSubstitute();
 
             var dynamicProperty = CreateAndGetDynamicPropertyWithTestPermission();
             var dynamicEntityProperty = new DynamicEntityProperty()
@@ -336,7 +382,8 @@ namespace Abp.Zero.SampleApp.Tests.DynamicEntityProperties
         [Fact]
         public async Task Should_Update_Property_Async()
         {
-            var (dynamicEntityPropertyManagerCache, dynamicEntityPropertyManager) = InitializeDynamicEntityPropertyManagerWithCacheSubstitute();
+            var (dynamicEntityPropertyManagerCache, dynamicEntityPropertyManager) =
+                InitializeDynamicEntityPropertyManagerWithCacheSubstitute();
             var dynamicProperty = CreateAndGetDynamicPropertyWithTestPermission();
             var dynamicProperty2 = CreateAndGetDynamicPropertyWithTestPermission();
 
@@ -347,9 +394,14 @@ namespace Abp.Zero.SampleApp.Tests.DynamicEntityProperties
                 TenantId = AbpSession.TenantId
             };
 
-            await WithUnitOfWorkAsync(async () => { await dynamicEntityPropertyManager.AddAsync(dynamicEntityProperty); });
+            await WithUnitOfWorkAsync(async () =>
+            {
+                await dynamicEntityPropertyManager.AddAsync(dynamicEntityProperty);
+            });
 
-            await dynamicEntityPropertyManagerCache.Received().SetAsync(dynamicEntityProperty.Id.ToString(), dynamicEntityProperty);
+            var cacheKey = dynamicEntityProperty.Id + "@" + (dynamicEntityProperty.TenantId ?? 0);
+
+            await dynamicEntityPropertyManagerCache.Received().SetAsync(cacheKey, dynamicEntityProperty);
 
             await WithUnitOfWorkAsync(async () =>
             {
@@ -363,8 +415,11 @@ namespace Abp.Zero.SampleApp.Tests.DynamicEntityProperties
             dynamicEntityProperty.DynamicPropertyId = dynamicProperty2.Id;
 
             dynamicEntityPropertyManagerCache.ClearReceivedCalls();
-            await RunAndCheckIfPermissionControlledAsync(async () => { await dynamicEntityPropertyManager.UpdateAsync(dynamicEntityProperty); });
-            await dynamicEntityPropertyManagerCache.Received().SetAsync(dynamicEntityProperty.Id.ToString(), dynamicEntityProperty);
+            await RunAndCheckIfPermissionControlledAsync(async () =>
+            {
+                await dynamicEntityPropertyManager.UpdateAsync(dynamicEntityProperty);
+            });
+            await dynamicEntityPropertyManagerCache.Received().SetAsync(cacheKey, dynamicEntityProperty);
 
             await WithUnitOfWorkAsync(async () =>
             {
@@ -378,7 +433,8 @@ namespace Abp.Zero.SampleApp.Tests.DynamicEntityProperties
         [Fact]
         public void Should_Not_Update_Property_If_Entity_Not_Registered_Async()
         {
-            var (dynamicEntityPropertyManagerCache, dynamicEntityPropertyManager) = InitializeDynamicEntityPropertyManagerWithCacheSubstitute();
+            var (dynamicEntityPropertyManagerCache, dynamicEntityPropertyManager) =
+                InitializeDynamicEntityPropertyManagerWithCacheSubstitute();
 
 
             var dynamicProperty = CreateAndGetDynamicPropertyWithTestPermission();
@@ -391,7 +447,9 @@ namespace Abp.Zero.SampleApp.Tests.DynamicEntityProperties
 
             WithUnitOfWork(() => { dynamicEntityPropertyManager.Add(dynamicEntityProperty); });
 
-            dynamicEntityPropertyManagerCache.Received().Set(dynamicEntityProperty.Id.ToString(), dynamicEntityProperty);
+            var cacheKey = dynamicEntityProperty.Id + "@" + (dynamicEntityProperty.TenantId ?? 0);
+
+            dynamicEntityPropertyManagerCache.Received().Set(cacheKey, dynamicEntityProperty);
             dynamicEntityPropertyManagerCache.ClearReceivedCalls();
 
             WithUnitOfWork(() =>
@@ -418,7 +476,8 @@ namespace Abp.Zero.SampleApp.Tests.DynamicEntityProperties
         [Fact]
         public async Task Should_Delete_Property_Async()
         {
-            var (dynamicEntityPropertyManagerCache, dynamicEntityPropertyManager) = InitializeDynamicEntityPropertyManagerWithCacheSubstitute();
+            var (dynamicEntityPropertyManagerCache, dynamicEntityPropertyManager) =
+                InitializeDynamicEntityPropertyManagerWithCacheSubstitute();
             var dynamicProperty = CreateAndGetDynamicPropertyWithTestPermission();
 
             var dynamicEntityProperty = new DynamicEntityProperty()
@@ -428,8 +487,14 @@ namespace Abp.Zero.SampleApp.Tests.DynamicEntityProperties
                 TenantId = AbpSession.TenantId
             };
 
-            await WithUnitOfWorkAsync(async () => { await dynamicEntityPropertyManager.AddAsync(dynamicEntityProperty); });
-            await dynamicEntityPropertyManagerCache.Received().SetAsync(dynamicEntityProperty.Id.ToString(), dynamicEntityProperty);
+            await WithUnitOfWorkAsync(async () =>
+            {
+                await dynamicEntityPropertyManager.AddAsync(dynamicEntityProperty);
+            });
+
+            var cacheKey = dynamicEntityProperty.Id + "@" + (dynamicEntityProperty.TenantId ?? 0);
+
+            await dynamicEntityPropertyManagerCache.Received().SetAsync(cacheKey, dynamicEntityProperty);
 
             await WithUnitOfWorkAsync(async () =>
             {
@@ -441,8 +506,11 @@ namespace Abp.Zero.SampleApp.Tests.DynamicEntityProperties
             });
 
             dynamicEntityPropertyManagerCache.ClearReceivedCalls();
-            await RunAndCheckIfPermissionControlledAsync(async () => { await dynamicEntityPropertyManager.DeleteAsync(dynamicEntityProperty.Id); });
-            await dynamicEntityPropertyManagerCache.Received().RemoveAsync(dynamicEntityProperty.Id.ToString());
+            await RunAndCheckIfPermissionControlledAsync(async () =>
+            {
+                await dynamicEntityPropertyManager.DeleteAsync(dynamicEntityProperty.Id);
+            });
+            await dynamicEntityPropertyManagerCache.Received().RemoveAsync(cacheKey);
 
             await WithUnitOfWorkAsync(async () =>
             {

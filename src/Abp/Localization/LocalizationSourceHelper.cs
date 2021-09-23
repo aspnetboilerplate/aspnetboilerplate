@@ -45,7 +45,7 @@ namespace Abp.Localization
             CultureInfo culture,
             ILogger logger = null)
         {
-            var exceptionMessage = $"Can not find '{string.Join(",", names)}' in localization source '{sourceName}'!";
+            var exceptionMessage = $"Can not find '{string.Join(",", names)}' in localization source '{sourceName}' with culture '{culture.Name}'!";
 
             if (!configuration.ReturnGivenTextIfNotFound)
             {

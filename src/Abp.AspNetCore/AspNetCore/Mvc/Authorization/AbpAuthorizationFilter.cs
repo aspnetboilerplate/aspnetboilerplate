@@ -34,7 +34,7 @@ namespace Abp.AspNetCore.Mvc.Authorization
             Logger = NullLogger.Instance;
         }
 
-        public async Task OnAuthorizationAsync(AuthorizationFilterContext context)
+        public virtual async Task OnAuthorizationAsync(AuthorizationFilterContext context)
         {
             var endpoint = context?.HttpContext?.GetEndpoint();
             // Allow Anonymous skips all authorization

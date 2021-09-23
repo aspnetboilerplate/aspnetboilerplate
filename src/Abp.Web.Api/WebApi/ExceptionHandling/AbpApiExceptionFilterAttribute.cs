@@ -12,6 +12,7 @@ using Abp.Extensions;
 using Abp.Logging;
 using Abp.Runtime.Session;
 using Abp.Runtime.Validation;
+using Abp.Web.Configuration;
 using Abp.Web.Models;
 using Abp.WebApi.Configuration;
 using Abp.WebApi.Controllers;
@@ -38,11 +39,16 @@ namespace Abp.WebApi.ExceptionHandling
 
         protected IAbpWebApiConfiguration Configuration { get; }
 
+        protected IAbpWebCommonModuleConfiguration AbpWebCommonModuleConfiguration { get; }
+
         /// <summary>
         /// Initializes a new instance of the <see cref="AbpApiExceptionFilterAttribute"/> class.
         /// </summary>
-        public AbpApiExceptionFilterAttribute(IAbpWebApiConfiguration configuration)
+        public AbpApiExceptionFilterAttribute(
+            IAbpWebApiConfiguration configuration,
+            IAbpWebCommonModuleConfiguration abpWebCommonModuleConfiguration)
         {
+            this.AbpWebCommonModuleConfiguration = abpWebCommonModuleConfiguration;
             Configuration = configuration;
             Logger = NullLogger.Instance;
             EventBus = NullEventBus.Instance;
@@ -55,8 +61,49 @@ namespace Abp.WebApi.ExceptionHandling
         /// <param name="context">The context for the action.</param>
         public override void OnException(HttpActionExecutedContext context)
         {
-            var wrapResultAttribute = HttpActionDescriptorHelper
-                .GetWrapResultAttributeOrNull(context.ActionContext.ActionDescriptor) ??
+            void HandleError()
+            {
+                if (context.Exception is HttpException)
+                {
+                    var httpException = context.Exception as HttpException;
+                    var httpStatusCode = (HttpStatusCode) httpException.GetHttpCode();
+
+                    context.Response = context.Request.CreateResponse(
+                        httpStatusCode,
+                        new AjaxResponse(
+                            new ErrorInfo(httpException.Message),
+                            httpStatusCode == HttpStatusCode.Unauthorized || httpStatusCode == HttpStatusCode.Forbidden
+                        )
+                    );
+                }
+                else
+                {
+                    context.Response = context.Request.CreateResponse(
+                        GetStatusCode(context, true),
+                        new AjaxResponse(
+                            SingletonDependency<IErrorInfoBuilder>.Instance.BuildForException(context.Exception),
+                            context.Exception is Abp.Authorization.AbpAuthorizationException)
+                    );
+                }
+
+                EventBus.Trigger(this, new AbpHandledExceptionData(context.Exception));
+            }
+
+            var displayUrl = context.Request.RequestUri.AbsolutePath;
+            if (AbpWebCommonModuleConfiguration.WrapResultFilters.HasFilterForWrapOnError(displayUrl,
+                out var wrapOnError))
+            {
+                if (!wrapOnError)
+                {
+                    context.Response.StatusCode = GetStatusCode(context, false);
+                    return;
+                }
+
+                HandleError();
+                return;
+            }
+
+            var wrapResultAttribute = HttpActionDescriptorHelper.GetWrapResultAttributeOrNull(context.ActionContext.ActionDescriptor) ??
                 Configuration.DefaultWrapResultAttribute;
 
             if (wrapResultAttribute.LogError)
@@ -75,30 +122,7 @@ namespace Abp.WebApi.ExceptionHandling
                 return;
             }
 
-            if (context.Exception is HttpException)
-            {
-                var httpException = context.Exception as HttpException;
-                var httpStatusCode = (HttpStatusCode) httpException.GetHttpCode();
-
-                context.Response = context.Request.CreateResponse(
-                    httpStatusCode,
-                    new AjaxResponse(
-                        new ErrorInfo(httpException.Message),
-                        httpStatusCode == HttpStatusCode.Unauthorized || httpStatusCode == HttpStatusCode.Forbidden
-                    )
-                );
-            }
-            else
-            {
-                context.Response = context.Request.CreateResponse(
-                    GetStatusCode(context, wrapResultAttribute.WrapOnError),
-                    new AjaxResponse(
-                        SingletonDependency<IErrorInfoBuilder>.Instance.BuildForException(context.Exception),
-                        context.Exception is Abp.Authorization.AbpAuthorizationException)
-                );
-            }
-
-            EventBus.Trigger(this, new AbpHandledExceptionData(context.Exception));
+            HandleError();
         }
 
         protected virtual HttpStatusCode GetStatusCode(HttpActionExecutedContext context, bool wrapOnError)

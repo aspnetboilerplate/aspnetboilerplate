@@ -66,7 +66,7 @@ namespace Abp.Zero.EntityHistory
                 snapshot.PropertyChangesStackTree.Count.ShouldBe(1);
 
                 snapshot["Name"].ShouldBe("\"test-user-name-updated\"");
-                snapshot.PropertyChangesStackTree["Name"].ShouldBe("\"test-user-name-updated-2\" -> \"test-user-name-updated\"");
+                snapshot.PropertyChangesStackTree["Name"].ShouldBe("\"test-user-name-updated\" -> \"test-user-name-updated-2\"");
 
                 //undo all changes
                 var snapshot2 = await _entitySnapshotManager.GetSnapshotAsync<UserTestEntity>(id, DateTime.Now.AddDays(-1));
@@ -76,8 +76,8 @@ namespace Abp.Zero.EntityHistory
 
                 snapshot2["Name"].ShouldBe("\"test-user-name-start\"");
                 snapshot2["Surname"].ShouldBe("\"test-user-surname-start\"");
-                snapshot2.PropertyChangesStackTree["Name"].ShouldBe("\"test-user-name-updated-2\" -> \"test-user-name-updated\" -> \"test-user-name-start\"");
-                snapshot2.PropertyChangesStackTree["Surname"].ShouldBe("\"test-user-surname-updated\" -> \"test-user-surname-start\"");
+                snapshot2.PropertyChangesStackTree["Name"].ShouldBe("\"test-user-name-start\" -> \"test-user-name-updated\" -> \"test-user-name-updated-2\"");
+                snapshot2.PropertyChangesStackTree["Surname"].ShouldBe("\"test-user-surname-start\" -> \"test-user-surname-updated\"");
                 
                 await uow.CompleteAsync();
             }

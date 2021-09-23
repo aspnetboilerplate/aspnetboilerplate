@@ -142,7 +142,7 @@ You can create your project from startup templates to easily start with Module Z
 * <a href="https://aspnetboilerplate.com/Pages/Documents/Zero/Startup-Template-Angular" target="_blank">ASP.NET Core & Angular</a> based startup project.
 * <a href="https://aspnetboilerplate.com/Pages/Documents/Zero/Startup-Template-Core" target="_blank">ASP.NET Core MVC & jQuery</a> based startup project.
 * <a href="https://aspnetboilerplate.com/Pages/Documents/Zero/Startup-Template" target="_blank">ASP.NET Core MVC 5.x / AngularJS</a> based startup project.
- 
+
 A screenshot of the ASP.NET Core based startup template:
 
 ![](doc/img/module-zero-core-template-1.png)
@@ -151,6 +151,15 @@ A screenshot of the ASP.NET Core based startup template:
 
 * Web site & Documentation: https://aspnetboilerplate.com
 * Questions & Answers: https://stackoverflow.com/questions/tagged/aspnetboilerplate?sort=newest
+
+## Code of Conduct
+
+This project has adopted the code of conduct defined by the Contributor Covenant to clarify expected behavior in our community.
+For more information see the [.NET Foundation Code of Conduct](https://dotnetfoundation.org/code-of-conduct). 
+
+### .NET Foundation
+
+This project is supported by the [.NET Foundation](https://dotnetfoundation.org).
 
 ## License
 
