@@ -30,7 +30,7 @@ Startup class:
         public IServiceProvider ConfigureServices(IServiceCollection services)
         {
             //...
-
+    
             //Configure Abp and Dependency Injection. Should be called last.
             return services.AddAbp<MyProjectWebModule>(options =>
             {
@@ -40,12 +40,12 @@ Startup class:
                 );
             });
         }
-
+    
         public void Configure(IApplicationBuilder app, IHostingEnvironment env, ILoggerFactory loggerFactory)
         {
             //Initializes ABP framework and all modules. Should be called first.
             app.UseAbp();
-
+    
             //...
         }
     }
@@ -185,7 +185,7 @@ controller actions. It **handles** and **logs** exceptions and returns a
     method defined in the Microsoft.AspNetCore.Diagnostics package to handle view exceptions.
 -   Exception handling and logging behaviour can be changed using the
     **WrapResult** and **DontWrapResult** attributes for methods and
-    classes.
+    classes. You can also create a custom result wrapping filter, see the WrapResultFilters section below.
 
 #### Result Filter
 
@@ -197,9 +197,19 @@ successfully executed.
     versions). If your action is returning a view or any other type of
     result, it will not be wrapped.
 -   The **WrapResult** and **DontWrapResult** attributes can be used for
-    methods and classes to enable/disable wrapping.
+    methods and classes to enable/disable wrapping. You can also create a custom result wrapping filter, see the WrapResultFilters section below.
 -   You can use a startup configuration to change the default behavior for
     result wrapping.
+
+#### WrapResultFilters
+
+You can also implement a custom ```IWrapResultFilter``` and decide result wrapping conditionally by the current request URL. A custom result wrapping filter must be added to ```WrapResultFilters``` as shown below;
+
+````c#
+Configuration.Modules.AbpWebCommon().WrapResultFilters.Add(new MyWrapResultFilter());
+````
+
+This approach can be useful if you don't have access the source code of the Controllers and can't used result wrapping attributes on the Controllers.
 
 ### Model Binders
 

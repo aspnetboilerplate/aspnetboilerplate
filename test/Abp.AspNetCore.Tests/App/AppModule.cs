@@ -1,4 +1,5 @@
 ﻿using Abp.AspNetCore.App.MultiTenancy;
+using Abp.AspNetCore.App.ResultWrapping;
 using Abp.AspNetCore.TestBase;
 using Abp.Configuration.Startup;
 using Abp.Modules;
@@ -38,6 +39,8 @@ namespace Abp.AspNetCore.App
                 endpoints.MapControllerRoute("default", "{controller=Home}/{action=Index}/{id?}");
                 endpoints.MapRazorPages();
             });
+            
+            Configuration.Modules.AbpWebCommon().WrapResultFilters.Add(new CustomWrapResultFilter());
         }
 
         public override void Initialize()

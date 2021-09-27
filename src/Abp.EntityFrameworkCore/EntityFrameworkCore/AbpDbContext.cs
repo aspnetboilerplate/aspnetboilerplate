@@ -134,14 +134,7 @@ namespace Abp.EntityFrameworkCore
                 var filterExpression = CreateFilterExpression<TEntity>();
                 if (filterExpression != null)
                 {
-                    if (entityType.IsKeyless)
-                    {
-                        modelBuilder.Entity<TEntity>().HasQueryFilter(filterExpression);
-                    }
-                    else
-                    {
-                        modelBuilder.Entity<TEntity>().HasQueryFilter(filterExpression);
-                    }
+                    modelBuilder.Entity<TEntity>().HasQueryFilter(filterExpression);
                 }
             }
         }
