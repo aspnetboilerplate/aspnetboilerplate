@@ -4,7 +4,7 @@
   <Import Project="..\..\configureawait.props" />
   
   <PropertyGroup>
-    <TargetFramework>net5.0</TargetFramework>
+    <TargetFramework>net6.0</TargetFramework>
     <GenerateDocumentationFile>true</GenerateDocumentationFile>
     <AssemblyName>Abp.AspNetCore.TestBase</AssemblyName>
     <PackageId>Abp.AspNetCore.TestBase</PackageId>
@@ -25,7 +25,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Include="Microsoft.AspNetCore.TestHost" Version="5.0.10" />
+    <PackageReference Include="Microsoft.AspNetCore.TestHost" Version="6.0.0-rc.1.21452.15" />
   </ItemGroup>
 
   <ItemGroup>

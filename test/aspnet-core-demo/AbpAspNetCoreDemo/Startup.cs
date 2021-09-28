@@ -91,7 +91,7 @@ namespace AbpAspNetCoreDemo
                 string plugDllInPath = "";
 #if DEBUG
                 plugDllInPath = Path.Combine(_env.ContentRootPath,
-                    @"..\AbpAspNetCoreDemo.PlugIn\bin\Debug\net5.0\AbpAspNetCoreDemo.PlugIn.dll");
+                    @"..\AbpAspNetCoreDemo.PlugIn\bin\Debug\net6.0\AbpAspNetCoreDemo.PlugIn.dll");
 #else
                 plugDllInPath = Path.Combine(_env.ContentRootPath,
                     @"..\AbpAspNetCoreDemo.PlugIn\bin\Release\net5.0\AbpAspNetCoreDemo.PlugIn.dll");
