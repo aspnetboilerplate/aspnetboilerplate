@@ -26,7 +26,7 @@
 
   <ItemGroup>
     <PackageReference Include="System.Runtime" Version="4.3.1" />
-    <PackageReference Include="MailKit" Version="2.14.0" />
+    <PackageReference Include="MailKit" Version="2.15.0" />
   </ItemGroup>
 
   <ItemGroup>

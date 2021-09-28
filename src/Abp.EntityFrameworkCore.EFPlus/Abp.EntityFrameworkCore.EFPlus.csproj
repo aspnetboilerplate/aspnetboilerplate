@@ -22,7 +22,7 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="Z.EntityFramework.Plus.EFCore" Version="6.0.0-preview.5.21301.9-3" />
+    <PackageReference Include="Z.EntityFramework.Plus.EFCore" Version="6.0.0-rc.1.21452.10-1" />
   </ItemGroup>
 
   <ItemGroup>
