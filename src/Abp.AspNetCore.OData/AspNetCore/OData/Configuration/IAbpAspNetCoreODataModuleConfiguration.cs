@@ -1,6 +1,7 @@
 ﻿using System;
-using Microsoft.AspNet.OData.Builder;
 using Microsoft.AspNetCore.Routing;
+using Microsoft.Extensions.DependencyInjection;
+using Microsoft.OData.ModelBuilder;
 
 namespace Abp.AspNetCore.OData.Configuration
 {
@@ -17,6 +18,6 @@ namespace Abp.AspNetCore.OData.Configuration
         /// <summary>
         /// Allows overriding OData mapping.
         /// </summary>
-        Action<IRouteBuilder> MapAction { get; set; }
+        Action<IMvcCoreBuilder> MapAction { get; set; }
     }
 }

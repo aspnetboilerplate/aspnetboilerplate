@@ -3,7 +3,8 @@ using Abp.Collections.Extensions;
 using Abp.Dependency;
 using Abp.Modules;
 using Abp.AspNetCore.OData.Configuration;
-using Microsoft.AspNet.OData;
+using Microsoft.AspNetCore.OData.Deltas;
+using Microsoft.AspNetCore.OData.Routing.Controllers;
 
 namespace Abp.AspNetCore.OData
 {
