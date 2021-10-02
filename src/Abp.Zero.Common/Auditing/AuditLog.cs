@@ -166,7 +166,7 @@ namespace Abp.Auditing
                 ClientName = auditInfo.ClientName.TruncateWithPostfix(MaxClientNameLength),
                 BrowserInfo = auditInfo.BrowserInfo.TruncateWithPostfix(MaxBrowserInfoLength),
                 Exception = exceptionMessage.TruncateWithPostfix(MaxExceptionLength),
-                ExceptionMessage = auditInfo.Exception?.Message,
+                ExceptionMessage = auditInfo.Exception?.Message.TruncateWithPostfix(MaxExceptionMessageLength),
                 ImpersonatorUserId = auditInfo.ImpersonatorUserId,
                 ImpersonatorTenantId = auditInfo.ImpersonatorTenantId,
                 CustomData = auditInfo.CustomData.TruncateWithPostfix(MaxCustomDataLength)
