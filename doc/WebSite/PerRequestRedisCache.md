@@ -28,3 +28,6 @@ Using `IPerRequestRedisCacheManager` is exactly the same as using `ICacheManager
   It is all you have to do in order to use per request redis cache implementation. Now you can use all caching features. See caching [documentation](Caching.md) for more information.
 
 Not: You must enable redis to use `IPerRequestRedisCacheManager`. See caching [documentation](Caching.md#redis-cache-integration)
+
+See https://github.com/aspnetboilerplate/aspnetboilerplate/tree/dev/src/Abp.AspNetCore.PerRequestRedisCache
+
