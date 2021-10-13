@@ -132,3 +132,6 @@ src/.vs/config/applicationhost.config
 !SQLite.Interop.dll
 /tools
 nupkg/push-hikalkan.bat
+
+# Nuke Test Results
+output/test-results/*
