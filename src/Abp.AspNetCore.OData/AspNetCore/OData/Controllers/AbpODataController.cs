@@ -1,6 +1,6 @@
 using Abp.Authorization;
 using Abp.Domain.Uow;
-using Microsoft.AspNet.OData;
+using Microsoft.AspNetCore.OData.Routing.Controllers;
 
 namespace Abp.AspNetCore.OData.Controllers
 {
