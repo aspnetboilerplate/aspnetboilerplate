@@ -25,11 +25,11 @@
 
   <ItemGroup>
     <PackageReference Include="Castle.Core.AsyncInterceptor" Version="2.0.0" />
-    <PackageReference Include="JetBrains.Annotations" Version="2021.3.0-eap3" />
+    <PackageReference Include="JetBrains.Annotations" Version="2021.3.0" />
     <PackageReference Include="Newtonsoft.Json" Version="13.0.1" />
-    <PackageReference Include="System.Collections.Immutable" Version="6.0.0-rc.1.21451.13" />
-    <PackageReference Include="System.Configuration.ConfigurationManager" Version="6.0.0-rc.1.21451.13" />
-    <PackageReference Include="System.Linq.Dynamic.Core" Version="1.2.12" />
+    <PackageReference Include="System.Collections.Immutable" Version="6.0.0" />
+    <PackageReference Include="System.Configuration.ConfigurationManager" Version="6.0.0" />
+    <PackageReference Include="System.Linq.Dynamic.Core" Version="1.2.14" />
     <PackageReference Include="Castle.LoggingFacility" Version="5.1.1" />
     <PackageReference Include="System.Linq.Queryable" Version="4.3.0" />
     <PackageReference Include="System.Data.Common" Version="4.3.0" />
@@ -38,8 +38,8 @@
     <PackageReference Include="System.ComponentModel.Annotations" Version="6.0.0-preview.4.21253.7" />
     <PackageReference Include="System.Runtime.Serialization.Formatters" Version="4.3.0" />
     <PackageReference Include="System.Security.Claims" Version="4.3.0" />
-    <PackageReference Include="Microsoft.Extensions.Caching.Memory" Version="6.0.0-rc.1.21451.13" />
-    <PackageReference Include="Microsoft.Extensions.Options" Version="6.0.0-rc.1.21451.13" />
+    <PackageReference Include="Microsoft.Extensions.Caching.Memory" Version="6.0.0" />
+    <PackageReference Include="Microsoft.Extensions.Options" Version="6.0.0" />
     <PackageReference Include="Nito.AsyncEx.Context" Version="5.1.2" />
     <PackageReference Include="Nito.AsyncEx.Coordination" Version="5.1.2" />
     <PackageReference Include="Castle.Core" Version="4.4.1" />
@@ -47,11 +47,11 @@
   </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Update="Fody" Version="6.5.3">
+    <PackageReference Update="Fody" Version="6.6.0">
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers</IncludeAssets>
     </PackageReference>
-    <PackageReference Update="Microsoft.SourceLink.GitHub" Version="1.1.0-beta-20204-02" />
+    <PackageReference Update="Microsoft.SourceLink.GitHub" Version="1.1.1" />
   </ItemGroup>
 
 </Project>

@@ -18,4 +18,11 @@
     <ProjectReference Include="..\..\..\src\Abp.AutoMapper\Abp.AutoMapper.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <PackageReference Update="Microsoft.SourceLink.GitHub" Version="1.1.1">
+      <PrivateAssets>all</PrivateAssets>
+      <IncludeAssets>runtime; build; native; contentfiles; analyzers</IncludeAssets>
+    </PackageReference>
+  </ItemGroup>
+
 </Project>
