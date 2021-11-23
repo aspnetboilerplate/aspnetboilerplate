@@ -1,61 +1,27 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Threading.Tasks;
-using Abp.Configuration.Startup;
 using Abp.Runtime.Caching;
 using Abp.Runtime.Caching.Configuration;
 using Abp.Runtime.Caching.Redis;
-using Abp.TestBase;
-using Castle.MicroKernel.Registration;
-using Microsoft.AspNetCore.Http;
 using NSubstitute;
 using Shouldly;
 using StackExchange.Redis;
 using Xunit;
 
-namespace Abp.Zero.Redis
+namespace Abp.Zero.Redis.PerRequestRedisCache
 {
-    public class AbpPerRequestRedisCache_Test :  AbpIntegratedTestBase<AbpPerRequestRedisCacheTestModule>
+    public class AbpPerRequestRedisCache_Test :  PerRequestRedisCacheTestsBase<AbpPerRequestRedisCacheTestModule>
     {
         private ITypedCache<string, MyCacheItem> _perRequestRedisCache;
         private ITypedCache<string, MyCacheItem> _normalRedisCache;
-
-        private IDatabase _redisDatabase;
-        private IRedisCacheSerializer _redisSerializer;
-
-        private HttpContext _currentHttpContext;
-
-        public AbpPerRequestRedisCache_Test()
+    
+        public AbpPerRequestRedisCache_Test() 
         {
-            _currentHttpContext = GetNewContextSubstitute();
-            
-            var httpContextAccessor = Substitute.For<IHttpContextAccessor>();
-            httpContextAccessor.HttpContext.Returns(info => _currentHttpContext);
-
-            LocalIocManager.IocContainer.Register(Component.For<IHttpContextAccessor>().Instance(httpContextAccessor).LifestyleSingleton().IsDefault());
-
-            _redisDatabase = Substitute.For<IDatabase>();
-            var redisDatabaseProvider = Substitute.For<IAbpRedisCacheDatabaseProvider>();
-
-            redisDatabaseProvider.GetDatabase().Returns(_redisDatabase);
-
-            LocalIocManager.IocContainer.Register(Component.For<IAbpRedisCacheDatabaseProvider>().Instance(redisDatabaseProvider).LifestyleSingleton().IsDefault());
-            LocalIocManager.IocContainer.Register(Component.For<IAbpStartupConfiguration>().Instance(Substitute.For<IAbpStartupConfiguration>()).IsDefault());
-
             LocalIocManager.Resolve<ICachingConfiguration>().Configure("MyTestCacheItems", cache => { cache.DefaultSlidingExpireTime = TimeSpan.FromHours(12); });
             LocalIocManager.Resolve<ICachingConfiguration>().Configure("MyPerRequestRedisTestCacheItems", cache => { cache.DefaultSlidingExpireTime = TimeSpan.FromHours(24); });
             
-            _redisSerializer = LocalIocManager.Resolve<IRedisCacheSerializer>();
-
             _perRequestRedisCache = LocalIocManager.Resolve<IAbpPerRequestRedisCacheManager>().GetCache<string, MyCacheItem>("MyPerRequestRedisTestCacheItems");
             _normalRedisCache = LocalIocManager.Resolve<ICacheManager>().GetCache<string, MyCacheItem>("MyTestCacheItems");
-        }
-
-        private HttpContext GetNewContextSubstitute()
-        {
-            var httpContext = Substitute.For<HttpContext>();
-            httpContext.Items = new Dictionary<object, object>();
-            return httpContext;
         }
 
         [Fact]
@@ -68,7 +34,7 @@ namespace Abp.Zero.Redis
         [Fact]
         public void Should_Not_Change_Normal_Redis_Cache()
         {
-            _redisDatabase.ClearReceivedCalls();
+            RedisDatabase.ClearReceivedCalls();
 
             string cacheKey = "Test";
             int cacheValue = 1;
@@ -81,24 +47,24 @@ namespace Abp.Zero.Redis
                 return new MyCacheItem {Value = cacheValue};
             }
 
-            _redisDatabase.StringSet(Arg.Any<RedisKey>(), Arg.Any<RedisValue>(), Arg.Any<TimeSpan>()).Returns(true);
+            RedisDatabase.StringSet(Arg.Any<RedisKey>(), Arg.Any<RedisValue>(), Arg.Any<TimeSpan>()).Returns(true);
 
-            var cachedObject = _redisSerializer.Serialize(new MyCacheItem {Value = cacheValue}, typeof(MyCacheItem));
+            var cachedObject = RedisSerializer.Serialize(new MyCacheItem {Value = cacheValue}, typeof(MyCacheItem));
 
             var item = _normalRedisCache.Get(cacheKey, GetCacheValue);
-            _redisDatabase.Received(2).StringGet(Arg.Any<RedisKey>()); //redis cache tries to get value two times if value not exists see AbpCacheBase<TKey, TValue>.Get(TKey key, Func<TKey, TValue> factory)
-            _redisDatabase.Received(1).StringSet(Arg.Any<RedisKey>(), cachedObject, Arg.Any<TimeSpan>(), Arg.Any<When>(), Arg.Any<CommandFlags>());
+            RedisDatabase.Received(2).StringGet(Arg.Any<RedisKey>()); //redis cache tries to get value two times if value not exists see AbpCacheBase<TKey, TValue>.Get(TKey key, Func<TKey, TValue> factory)
+            RedisDatabase.Received(1).StringSet(Arg.Any<RedisKey>(), cachedObject, Arg.Any<TimeSpan>(), Arg.Any<When>(), Arg.Any<CommandFlags>());
 
-            _redisDatabase.StringGet(Arg.Any<RedisKey>()).Returns(cachedObject);
+            RedisDatabase.StringGet(Arg.Any<RedisKey>()).Returns(cachedObject);
 
             var item1 = _normalRedisCache.Get(cacheKey, GetCacheValue);
-            _redisDatabase.Received(3).StringGet(Arg.Any<RedisKey>());
+            RedisDatabase.Received(3).StringGet(Arg.Any<RedisKey>());
 
             var item2 = _normalRedisCache.Get(cacheKey, GetCacheValue);
-            _redisDatabase.Received(4).StringGet(Arg.Any<RedisKey>());
+            RedisDatabase.Received(4).StringGet(Arg.Any<RedisKey>());
 
             //should still be one received calls
-            _redisDatabase.Received(1).StringSet(Arg.Any<RedisKey>(), cachedObject, Arg.Any<TimeSpan>(), Arg.Any<When>(), Arg.Any<CommandFlags>());
+            RedisDatabase.Received(1).StringSet(Arg.Any<RedisKey>(), cachedObject, Arg.Any<TimeSpan>(), Arg.Any<When>(), Arg.Any<CommandFlags>());
 
             counter.ShouldBe(1);
             item.ShouldNotBe(null);
@@ -121,9 +87,9 @@ namespace Abp.Zero.Redis
             item.ShouldNotBe(null);
             item.Value.ShouldBe(cacheValue);
 
-            var cachedObject = _redisSerializer.Serialize(new MyCacheItem {Value = cacheValue}, typeof(MyCacheItem));
-            _redisDatabase.StringGet(Arg.Any<RedisKey>()).Returns(cachedObject);
-            _redisDatabase.Received().StringGet(Arg.Any<RedisKey>());
+            var cachedObject = RedisSerializer.Serialize(new MyCacheItem {Value = cacheValue}, typeof(MyCacheItem));
+            RedisDatabase.StringGet(Arg.Any<RedisKey>()).Returns(cachedObject);
+            RedisDatabase.Received().StringGet(Arg.Any<RedisKey>());
 
             _perRequestRedisCache.GetOrDefault(cacheKey).Value.ShouldBe(cacheValue);
         }
@@ -131,7 +97,7 @@ namespace Abp.Zero.Redis
         [Fact]
         public void Should_Request_Once_For_Same_Context()
         {
-            _redisDatabase.ClearReceivedCalls();
+            RedisDatabase.ClearReceivedCalls();
 
             string cacheKey = "Test";
             int cacheValue = 1;
@@ -156,10 +122,10 @@ namespace Abp.Zero.Redis
             item2.ShouldNotBe(null);
             item2.Value.ShouldBe(cacheValue);
 
-            _redisDatabase.Received(1).StringGet(Arg.Any<RedisKey>());
+            RedisDatabase.Received(1).StringGet(Arg.Any<RedisKey>());
 
-            var cachedObject = _redisSerializer.Serialize(new MyCacheItem {Value = cacheValue}, typeof(MyCacheItem));
-            _redisDatabase.Received(1).StringSet(Arg.Any<RedisKey>(), cachedObject, Arg.Any<TimeSpan>(), Arg.Any<When>(), Arg.Any<CommandFlags>());
+            var cachedObject = RedisSerializer.Serialize(new MyCacheItem {Value = cacheValue}, typeof(MyCacheItem));
+            RedisDatabase.Received(1).StringSet(Arg.Any<RedisKey>(), cachedObject, Arg.Any<TimeSpan>(), Arg.Any<When>(), Arg.Any<CommandFlags>());
 
             _perRequestRedisCache.GetOrDefault(cacheKey).Value.ShouldBe(cacheValue);
         }
@@ -167,7 +133,7 @@ namespace Abp.Zero.Redis
         [Fact]
         public void Should_Request_Again_For_Different_Contexts()
         {
-            _redisDatabase.ClearReceivedCalls();
+            RedisDatabase.ClearReceivedCalls();
 
             string cacheKey = "Test";
             int cacheValue = 1;
@@ -180,28 +146,28 @@ namespace Abp.Zero.Redis
                 return new MyCacheItem {Value = cacheValue};
             }
 
-            _redisDatabase.StringSet(Arg.Any<RedisKey>(), Arg.Any<RedisValue>(), Arg.Any<TimeSpan>()).Returns(true);
+            RedisDatabase.StringSet(Arg.Any<RedisKey>(), Arg.Any<RedisValue>(), Arg.Any<TimeSpan>()).Returns(true);
 
-            var cachedObject = _redisSerializer.Serialize(new MyCacheItem {Value = cacheValue}, typeof(MyCacheItem));
+            var cachedObject = RedisSerializer.Serialize(new MyCacheItem {Value = cacheValue}, typeof(MyCacheItem));
 
-            _currentHttpContext = GetNewContextSubstitute();
+            ChangeHttpContext();
 
             var item = _perRequestRedisCache.Get(cacheKey, GetCacheValue);
-            _redisDatabase.Received(1).StringGet(Arg.Any<RedisKey>());
-            _redisDatabase.Received(1).StringSet(Arg.Any<RedisKey>(), cachedObject, Arg.Any<TimeSpan>(), Arg.Any<When>(), Arg.Any<CommandFlags>());
+            RedisDatabase.Received(1).StringGet(Arg.Any<RedisKey>());
+            RedisDatabase.Received(1).StringSet(Arg.Any<RedisKey>(), cachedObject, Arg.Any<TimeSpan>(), Arg.Any<When>(), Arg.Any<CommandFlags>());
 
-            _redisDatabase.StringGet(Arg.Any<RedisKey>()).Returns(cachedObject);
+            RedisDatabase.StringGet(Arg.Any<RedisKey>()).Returns(cachedObject);
 
-            _currentHttpContext = GetNewContextSubstitute();
+            ChangeHttpContext();
             var item1 = _perRequestRedisCache.Get(cacheKey, GetCacheValue);
-            _redisDatabase.Received(2).StringGet(Arg.Any<RedisKey>());
+            RedisDatabase.Received(2).StringGet(Arg.Any<RedisKey>());
 
-            _currentHttpContext = GetNewContextSubstitute();
+            ChangeHttpContext();
             var item2 = _perRequestRedisCache.Get(cacheKey, GetCacheValue);
-            _redisDatabase.Received(3).StringGet(Arg.Any<RedisKey>());
+            RedisDatabase.Received(3).StringGet(Arg.Any<RedisKey>());
 
             //should still be one received calls
-            _redisDatabase.Received(1).StringSet(Arg.Any<RedisKey>(), cachedObject, Arg.Any<TimeSpan>(), Arg.Any<When>(), Arg.Any<CommandFlags>());
+            RedisDatabase.Received(1).StringSet(Arg.Any<RedisKey>(), cachedObject, Arg.Any<TimeSpan>(), Arg.Any<When>(), Arg.Any<CommandFlags>());
 
             counter.ShouldBe(1);
             item.ShouldNotBe(null);
@@ -215,8 +181,8 @@ namespace Abp.Zero.Redis
         [Fact]
         public void Should_Work_With_Null_Contexts()
         {
-            _currentHttpContext = null;
-            _redisDatabase.ClearReceivedCalls();
+            CurrentHttpContext = null;
+            RedisDatabase.ClearReceivedCalls();
 
             string cacheKey = "Test";
             int cacheValue = 1;
@@ -229,24 +195,24 @@ namespace Abp.Zero.Redis
                 return new MyCacheItem {Value = cacheValue};
             }
 
-            _redisDatabase.StringSet(Arg.Any<RedisKey>(), Arg.Any<RedisValue>(), Arg.Any<TimeSpan>()).Returns(true);
+            RedisDatabase.StringSet(Arg.Any<RedisKey>(), Arg.Any<RedisValue>(), Arg.Any<TimeSpan>()).Returns(true);
 
-            var cachedObject = _redisSerializer.Serialize(new MyCacheItem {Value = cacheValue}, typeof(MyCacheItem));
+            var cachedObject = RedisSerializer.Serialize(new MyCacheItem {Value = cacheValue}, typeof(MyCacheItem));
 
             var item = _perRequestRedisCache.Get(cacheKey, GetCacheValue);
-            _redisDatabase.Received(2).StringGet(Arg.Any<RedisKey>());
-            _redisDatabase.Received(1).StringSet(Arg.Any<RedisKey>(), cachedObject, Arg.Any<TimeSpan>(), Arg.Any<When>(), Arg.Any<CommandFlags>());
+            RedisDatabase.Received(2).StringGet(Arg.Any<RedisKey>());
+            RedisDatabase.Received(1).StringSet(Arg.Any<RedisKey>(), cachedObject, Arg.Any<TimeSpan>(), Arg.Any<When>(), Arg.Any<CommandFlags>());
 
-            _redisDatabase.StringGet(Arg.Any<RedisKey>()).Returns(cachedObject);
+            RedisDatabase.StringGet(Arg.Any<RedisKey>()).Returns(cachedObject);
 
             var item1 = _perRequestRedisCache.Get(cacheKey, GetCacheValue);
-            _redisDatabase.Received(3).StringGet(Arg.Any<RedisKey>()); //since _currentHttpContext is null it should go to the redisdb again
+            RedisDatabase.Received(3).StringGet(Arg.Any<RedisKey>()); //since _currentHttpContext is null it should go to the redisdb again
 
             var item2 = _perRequestRedisCache.Get(cacheKey, GetCacheValue); //since _currentHttpContext is null it should go to the redisdb again
-            _redisDatabase.Received(4).StringGet(Arg.Any<RedisKey>());
+            RedisDatabase.Received(4).StringGet(Arg.Any<RedisKey>());
 
             //should still be one received calls
-            _redisDatabase.Received(1).StringSet(Arg.Any<RedisKey>(), cachedObject, Arg.Any<TimeSpan>(), Arg.Any<When>(), Arg.Any<CommandFlags>());
+            RedisDatabase.Received(1).StringSet(Arg.Any<RedisKey>(), cachedObject, Arg.Any<TimeSpan>(), Arg.Any<When>(), Arg.Any<CommandFlags>());
 
             counter.ShouldBe(1);
             item.ShouldNotBe(null);
@@ -269,9 +235,9 @@ namespace Abp.Zero.Redis
             item.ShouldNotBe(null);
             item.Value.ShouldBe(cacheValue);
 
-            var cachedObject = _redisSerializer.Serialize(new MyCacheItem {Value = cacheValue}, typeof(MyCacheItem));
-            _redisDatabase.StringGetAsync(Arg.Any<RedisKey>()).Returns(Task.FromResult(cachedObject));
-            await _redisDatabase.Received().StringGetAsync(Arg.Any<RedisKey>());
+            var cachedObject = RedisSerializer.Serialize(new MyCacheItem {Value = cacheValue}, typeof(MyCacheItem));
+            RedisDatabase.StringGetAsync(Arg.Any<RedisKey>()).Returns(Task.FromResult(cachedObject));
+            await RedisDatabase.Received().StringGetAsync(Arg.Any<RedisKey>());
 
             (await _perRequestRedisCache.GetOrDefaultAsync(cacheKey)).Value.ShouldBe(cacheValue);
         }
@@ -279,7 +245,7 @@ namespace Abp.Zero.Redis
         [Fact]
         public async Task Should_Request_Once_For_Same_Context_Async()
         {
-            _redisDatabase.ClearReceivedCalls();
+            RedisDatabase.ClearReceivedCalls();
 
             string cacheKey = "Test";
             int cacheValue = 1;
@@ -304,10 +270,10 @@ namespace Abp.Zero.Redis
             item2.ShouldNotBe(null);
             item2.Value.ShouldBe(cacheValue);
 
-            await _redisDatabase.Received(1).StringGetAsync(Arg.Any<RedisKey>());
+            await RedisDatabase.Received(1).StringGetAsync(Arg.Any<RedisKey>());
 
-            var cachedObject = _redisSerializer.Serialize(new MyCacheItem {Value = cacheValue}, typeof(MyCacheItem));
-            await _redisDatabase.Received(1).StringSetAsync(Arg.Any<RedisKey>(), cachedObject, Arg.Any<TimeSpan>(), Arg.Any<When>(), Arg.Any<CommandFlags>());
+            var cachedObject = RedisSerializer.Serialize(new MyCacheItem {Value = cacheValue}, typeof(MyCacheItem));
+            await RedisDatabase.Received(1).StringSetAsync(Arg.Any<RedisKey>(), cachedObject, Arg.Any<TimeSpan>(), Arg.Any<When>(), Arg.Any<CommandFlags>());
 
             (await _perRequestRedisCache.GetOrDefaultAsync(cacheKey)).Value.ShouldBe(cacheValue);
         }
@@ -315,7 +281,7 @@ namespace Abp.Zero.Redis
         [Fact]
         public async Task Should_Request_Again_For_Different_Contexts_Async()
         {
-            _redisDatabase.ClearReceivedCalls();
+            RedisDatabase.ClearReceivedCalls();
 
             string cacheKey = "Test";
             int cacheValue = 1;
@@ -328,28 +294,28 @@ namespace Abp.Zero.Redis
                 return Task.FromResult(new MyCacheItem {Value = cacheValue});
             }
 
-            _redisDatabase.StringSetAsync(Arg.Any<RedisKey>(), Arg.Any<RedisValue>(), Arg.Any<TimeSpan>()).Returns(true);
+            RedisDatabase.StringSetAsync(Arg.Any<RedisKey>(), Arg.Any<RedisValue>(), Arg.Any<TimeSpan>()).Returns(true);
 
-            var cachedObject = _redisSerializer.Serialize(new MyCacheItem {Value = cacheValue}, typeof(MyCacheItem));
+            var cachedObject = RedisSerializer.Serialize(new MyCacheItem {Value = cacheValue}, typeof(MyCacheItem));
 
-            _currentHttpContext = GetNewContextSubstitute();
+            ChangeHttpContext();
 
             var item = await _perRequestRedisCache.GetAsync(cacheKey, GetCacheValue);
-            await _redisDatabase.Received(1).StringGetAsync(Arg.Any<RedisKey>());
-            await _redisDatabase.Received(1).StringSetAsync(Arg.Any<RedisKey>(), cachedObject, Arg.Any<TimeSpan>(), Arg.Any<When>(), Arg.Any<CommandFlags>());
+            await RedisDatabase.Received(1).StringGetAsync(Arg.Any<RedisKey>());
+            await RedisDatabase.Received(1).StringSetAsync(Arg.Any<RedisKey>(), cachedObject, Arg.Any<TimeSpan>(), Arg.Any<When>(), Arg.Any<CommandFlags>());
 
-            _redisDatabase.StringGetAsync(Arg.Any<RedisKey>()).Returns(Task.FromResult(cachedObject));
+            RedisDatabase.StringGetAsync(Arg.Any<RedisKey>()).Returns(Task.FromResult(cachedObject));
 
-            _currentHttpContext = GetNewContextSubstitute();
+            ChangeHttpContext();
             var item1 = await _perRequestRedisCache.GetAsync(cacheKey, GetCacheValue);
-            await _redisDatabase.Received(2).StringGetAsync(Arg.Any<RedisKey>());
+            await RedisDatabase.Received(2).StringGetAsync(Arg.Any<RedisKey>());
 
-            _currentHttpContext = GetNewContextSubstitute();
+            ChangeHttpContext();
             var item2 = await _perRequestRedisCache.GetAsync(cacheKey, GetCacheValue);
-            await _redisDatabase.Received(3).StringGetAsync(Arg.Any<RedisKey>());
+            await RedisDatabase.Received(3).StringGetAsync(Arg.Any<RedisKey>());
 
             //should still be one received calls
-            await _redisDatabase.Received(1).StringSetAsync(Arg.Any<RedisKey>(), cachedObject, Arg.Any<TimeSpan>(), Arg.Any<When>(), Arg.Any<CommandFlags>());
+            await RedisDatabase.Received(1).StringSetAsync(Arg.Any<RedisKey>(), cachedObject, Arg.Any<TimeSpan>(), Arg.Any<When>(), Arg.Any<CommandFlags>());
 
             counter.ShouldBe(1);
             item.ShouldNotBe(null);
@@ -363,8 +329,8 @@ namespace Abp.Zero.Redis
         [Fact]
         public async Task Should_Work_With_Null_Contexts_Async()
         {
-            _currentHttpContext = null;
-            _redisDatabase.ClearReceivedCalls();
+            CurrentHttpContext = null;
+            RedisDatabase.ClearReceivedCalls();
 
             string cacheKey = "Test";
             int cacheValue = 1;
@@ -377,24 +343,24 @@ namespace Abp.Zero.Redis
                 return Task.FromResult(new MyCacheItem {Value = cacheValue});
             }
 
-            _redisDatabase.StringSetAsync(Arg.Any<RedisKey>(), Arg.Any<RedisValue>(), Arg.Any<TimeSpan>()).Returns(true);
+            RedisDatabase.StringSetAsync(Arg.Any<RedisKey>(), Arg.Any<RedisValue>(), Arg.Any<TimeSpan>()).Returns(true);
 
-            var cachedObject = _redisSerializer.Serialize(new MyCacheItem {Value = cacheValue}, typeof(MyCacheItem));
+            var cachedObject = RedisSerializer.Serialize(new MyCacheItem {Value = cacheValue}, typeof(MyCacheItem));
 
             var item = await _perRequestRedisCache.GetAsync(cacheKey, GetCacheValue);
-            await _redisDatabase.Received(2).StringGetAsync(Arg.Any<RedisKey>());
-            await _redisDatabase.Received(1).StringSetAsync(Arg.Any<RedisKey>(), cachedObject, Arg.Any<TimeSpan>(), Arg.Any<When>(), Arg.Any<CommandFlags>());
+            await RedisDatabase.Received(2).StringGetAsync(Arg.Any<RedisKey>());
+            await RedisDatabase.Received(1).StringSetAsync(Arg.Any<RedisKey>(), cachedObject, Arg.Any<TimeSpan>(), Arg.Any<When>(), Arg.Any<CommandFlags>());
 
-            _redisDatabase.StringGetAsync(Arg.Any<RedisKey>()).Returns(Task.FromResult(cachedObject));
+            RedisDatabase.StringGetAsync(Arg.Any<RedisKey>()).Returns(Task.FromResult(cachedObject));
 
             var item1 = await _perRequestRedisCache.GetAsync(cacheKey, GetCacheValue);
-            await _redisDatabase.Received(3).StringGetAsync(Arg.Any<RedisKey>()); //since _currentHttpContext is null it should go to the redisdb again
+            await RedisDatabase.Received(3).StringGetAsync(Arg.Any<RedisKey>()); //since _currentHttpContext is null it should go to the redisdb again
 
             var item2 = await _perRequestRedisCache.GetAsync(cacheKey, GetCacheValue); //since _currentHttpContext is null it should go to the redisdb again
-            await _redisDatabase.Received(4).StringGetAsync(Arg.Any<RedisKey>());
+            await RedisDatabase.Received(4).StringGetAsync(Arg.Any<RedisKey>());
 
             //should still be one received calls
-            await _redisDatabase.Received(1).StringSetAsync(Arg.Any<RedisKey>(), cachedObject, Arg.Any<TimeSpan>(), Arg.Any<When>(), Arg.Any<CommandFlags>());
+            await RedisDatabase.Received(1).StringSetAsync(Arg.Any<RedisKey>(), cachedObject, Arg.Any<TimeSpan>(), Arg.Any<When>(), Arg.Any<CommandFlags>());
 
             counter.ShouldBe(1);
             item.ShouldNotBe(null);
