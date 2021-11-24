@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<localizationDictionary culture="da">
+  <texts>
+    <text name="SmtpHost">SMTP Host</text>
+    <text name="SmtpPort">SMTP Port</text>
+    <text name="Username">Brugernavn</text>
+    <text name="Password">Adgangskode</text>
+    <text name="DomainName">Domænenavn</text>
+    <text name="UseSSL">Brug SSL</text>
+    <text name="UseDefaultCredentials">Standard brugeroplysninger</text>
+    <text name="DefaultFromSenderEmailAddress">Standard e-mail for afsender</text>
+    <text name="DefaultFromSenderDisplayName">Standard visningsnavn for afsender</text>
+    <text name="DefaultLanguage">Standardsprog</text>
+    <text name="ReceiveNotifications">Modtag notifikationer</text>
+    <text name="CurrentUserDidNotLoginToTheApplication">Nuværende bruger loggede ikke ind i applikationen!</text>
+    <text name="TimeZone">Tidszone</text>
+    <text name="AllOfThesePermissionsMustBeGranted">Påkrævede adgange er ikke givet. Alle af disse adgange skal være givet: {0}</text>
+    <text name="AtLeastOneOfThesePermissionsMustBeGranted">Påkrævede adgange er ikke givet. Mindst en af disse adgange til være givet: {0}(ENG: Required permissions are not granted. At least one of these permissions must be granted: {0}</text>
+    <text name="FeatureIsNotEnabled">Funktionen er ikke aktiveret: {0}</text>
+    <text name="AllOfTheseFeaturesMustBeEnabled">Påkrævede funktioner er ikke aktive. Alle disse funktioner skal være aktiveret: {0}</text>
+    <text name="AtLeastOneOfTheseFeaturesMustBeEnabled">Påkrævede funktioner er ikke aktive. Mindst en af disse funktioner skal være aktiveret: {0}</text>
+    <text name="MainMenu">Hovedmenu</text>
+  </texts>
+</localizationDictionary>
