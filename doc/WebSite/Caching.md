@@ -352,7 +352,7 @@ cache in ABP.
 
 ### Per Request Redis Cache
 
-ASP.NET Boilerplate provides per request redis cache implementation that you can use to improve redis performance for non-critical data. For more information, see it's [documentation](PerRequestRedisCache.md)
+ASP.NET Boilerplate provides per request redis cache implementation that you can use to improve redis performance. For more information, see it's [documentation](PerRequestRedisCache.md)
 
 ### Cached Unique Key Per User
 
