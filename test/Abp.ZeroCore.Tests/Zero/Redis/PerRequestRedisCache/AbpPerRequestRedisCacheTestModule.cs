@@ -2,7 +2,7 @@
 using Abp.Reflection.Extensions;
 using Abp.Runtime.Caching.Redis;
 
-namespace Abp.Zero.Redis
+namespace Abp.Zero.Redis.PerRequestRedisCache
 {
     [DependsOn(typeof(AbpAspNetCorePerRequestRedisCacheModule))]
     public class AbpPerRequestRedisCacheTestModule : AbpModule

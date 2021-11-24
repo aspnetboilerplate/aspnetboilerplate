@@ -33,4 +33,11 @@ namespace Abp.Runtime.Caching.Redis
             }
         }
     }
+
+    internal class AbpPerRequestRedisCacheManagerForReplacement : AbpPerRequestRedisCacheManager
+    {
+        public AbpPerRequestRedisCacheManagerForReplacement(IIocManager iocManager, ICachingConfiguration configuration) : base(iocManager, configuration)
+        {
+        }
+    }
 }
