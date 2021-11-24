@@ -1,14 +1,14 @@
 ### Per Request Redis Cache
 
-When you use a cache object derived from the default redis cache implementation (`ICacheManager` with redis), every action you make is executed on redis. Although redis works much faster than many operations such as reading from the database, making an api query, redis queries have a performance cost (this cost may vary depending on the location of your redis server to your server). If your project use too many redis queries, this can sometimes cause performance issues and also cause a bottleneck. One method that can solve this is to cache these redis queries locally for some non-critical data that you query from redis many times in your project.
+When you use a cache object derived from the default Redis cache implementation (`ICacheManager` with Redis), every action you make is executed on Redis. Although Redis works much faster than many operations such as reading from the database, making an API query, Redis queries have a performance cost (this cost may vary depending on the location of your Redis server to your server). If your project uses too many Redis queries, this can sometimes cause performance issues and also cause a bottleneck. One method that can solve this is to cache these Redis queries locally for some non-critical data you query from Redis many times in your project.
 
-For example, let's say you are caching about localization and you keep the dictionary of these localization keys in redis. You may need to go to redis dozens of times and read the value of the relevant localization key from redis for the localization process on each page load. Instead, that data can be pulled from the redis once and queries can be made on it. You can use `IPerRequestRedisCacheManager` implementation instead of `ICacheManager`(with redis) for data whose instant change is not critical.
+For example, let's say you are caching about localization, and you keep the dictionary of these localization keys in Redis. You may need to go to Redis dozens of times and read the value of the relevant localization key from Redis for the localization process on each page load. Instead, you can pull that data from the Redis once and make queries on it. You can use `IPerRequestRedisCacheManager` implementation instead of `ICacheManager` (with Redis) for data whose instant change is not critical.
 
-Using `IPerRequestRedisCacheManager` is exactly the same as using `ICacheManager` and returns objects of the same data type. The only difference is that when a cache object created using `IPerRequestRedisCacheManager`, redis queries are cached locally on the httpcontext. Thus, a query is sent to redis only once within a single http request. Repeated queries that follow do not go to redis, and data from previous redis response is used. In this way, performance can be improved.
+Using `IPerRequestRedisCacheManager` is the same as using `ICacheManager` and returns objects of the same data type. The only difference is that when a cache object is created using `IPerRequestRedisCacheManager`, Redis queries are cached locally on the `HttpContext`. Thus, a query is sent to Redis only once within a single HTTP request. Repeated queries that follow do not go to Redis, and data from previous Redis response is used. In this way, you can improve performance.
 
 ### Usage of IPerRequestRedisCacheManager
 
-* Import `Abp.AspNetCore.PerRequestRedisCache` nuget package. 
+* Import `Abp.AspNetCore.PerRequestRedisCache` NuGet package. 
 
 * Add depends on `AbpAspNetCorePerRequestRedisCacheModule` 
 
@@ -34,22 +34,18 @@ Using `IPerRequestRedisCacheManager` is exactly the same as using `ICacheManager
       private ICache GetMyCache() => _cacheManager.GetCache("MyCache"); // get cache using `IPerRequestRedisCacheManager`
   ```
 
-  It is all you have to do in order to use per request redis cache implementation. Now you can use all caching features. See caching [documentation](Caching.md) for more information.
+  It is all you have to do in order to use per request Redis cache implementation. Now you can use all caching features. See caching [documentation](Caching.md) for more information.
 
-Not: You must enable redis to use `IPerRequestRedisCacheManager`. ([Caching documentation](Caching.md#redis-cache-integration))
-
-
+Note: You must enable Redis to use `IPerRequestRedisCacheManager`. ([Caching documentation](Caching.md#redis-cache-integration))
 
 ### Replace ICacheManager with IPerRequestRedisCacheManager
 
-In order to replace current implementation of the cache with `PerRequestRedisCache`, after you import nuget package and add depends on, enable redis with `usePerRequestRedisCache: true` parameter
+In order to replace current implementation of the cache with `PerRequestRedisCache`, after you import NuGet package and add depends on, enable Redis with `usePerRequestRedisCache: true` parameter
 
 ```csharp
 Configuration.Caching.UseRedis(usePerRequestRedisCache: true);
 ```
 
 This will replace `ICacheManager` with `IPerRequestRedisCacheManager`. Your entire project will start working with `IPerRequestRedisCacheManager`.
-
-
 
 [GitHub link](https://github.com/aspnetboilerplate/aspnetboilerplate/tree/dev/src/Abp.AspNetCore.PerRequestRedisCache)
