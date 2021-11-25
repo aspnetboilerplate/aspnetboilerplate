@@ -4,6 +4,7 @@ using Abp.AspNetCore.Configuration;
 using Abp.AspNetCore.MultiTenancy;
 using Abp.AspNetCore.Mvc.Auditing;
 using Abp.AspNetCore.Mvc.Caching;
+using Abp.AspNetCore.PlugIn;
 using Abp.AspNetCore.Runtime.Session;
 using Abp.AspNetCore.Security.AntiForgery;
 using Abp.AspNetCore.Webhook;
@@ -36,9 +37,9 @@ namespace Abp.AspNetCore
             Configuration.ReplaceService<IAbpAntiForgeryManager, AbpAspNetCoreAntiForgeryManager>(DependencyLifeStyle.Transient);
             Configuration.ReplaceService<IClientInfoProvider, HttpContextClientInfoProvider>(DependencyLifeStyle.Transient);
             Configuration.ReplaceService<IWebhookSender, AspNetCoreWebhookSender>(DependencyLifeStyle.Transient);
-            
+
             IocManager.Register<IGetScriptsResponsePerUserConfiguration, GetScriptsResponsePerUserConfiguration>();
-            
+
             Configuration.Modules.AbpAspNetCore().FormBodyBindingIgnoredTypes.Add(typeof(IFormFile));
 
             Configuration.MultiTenancy.Resolvers.Add<DomainTenantResolveContributor>();
@@ -76,7 +77,7 @@ namespace Abp.AspNetCore
             var plugInAssemblies = moduleManager.Modules.Where(m => m.IsLoadedAsPlugIn).Select(m => m.Assembly).Distinct();
             foreach (var plugInAssembly in plugInAssemblies)
             {
-                partManager.AddApplicationPartsIfNotAddedBefore(plugInAssembly);
+                partManager.AddAbpPlugInAssemblyPartIfNotAddedBefore(new AbpPlugInAssemblyPart(plugInAssembly));
             }
         }
 

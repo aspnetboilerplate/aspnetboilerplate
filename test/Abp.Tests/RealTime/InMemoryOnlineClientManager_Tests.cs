@@ -11,10 +11,11 @@ namespace Abp.Tests.RealTime
     public class InMemoryOnlineClientManager_Tests
     {
         private readonly IOnlineClientManager _clientManager;
-        private static readonly RNGCryptoServiceProvider KeyGenerator = new RNGCryptoServiceProvider();
+        private static readonly RandomNumberGenerator KeyGenerator = RandomNumberGenerator.Create();
 
         public InMemoryOnlineClientManager_Tests()
         {
+            
             _clientManager = new OnlineClientManager(new InMemoryOnlineClientStore());
         }
 

@@ -238,9 +238,7 @@ namespace Abp.MailKit
             item.ContentStream.CopyTo(stream);
             stream.Position = 0;
 
-#pragma warning disable CS0618 // Type or member is obsolete, this line will be removed once the ContentObject property is fully removed
-			part.ContentObject = new ContentObject(stream);
-#pragma warning restore CS0618 // Type or member is obsolete, this line will be removed once the ContentObject property is fully removed
+            part.Content = new MimeContent(stream);
 
             return part;
         }

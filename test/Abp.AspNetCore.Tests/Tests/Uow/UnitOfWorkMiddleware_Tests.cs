@@ -15,6 +15,7 @@ namespace Abp.AspNetCore.Tests.Uow
 {
     public class UnitOfWorkMiddleware_Tests : AbpAspNetCoreIntegratedTestBase<UnitOfWorkMiddleware_Tests.Startup>
     {
+        // NET6: Wait for .NET 6 Preview 7 for fix.
         [Fact]
         public async Task Current_UnitOfWork_Should_Be_Available_After_UnitOfWork_Middleware()
         {
@@ -39,7 +40,7 @@ namespace Abp.AspNetCore.Tests.Uow
 
                 app.UseUnitOfWork();
 
-                app.Use(async (context, func) =>
+                app.Run(async (context) =>
                 {
                     await context.Response.WriteAsync(
                         context.RequestServices.GetRequiredService<IUnitOfWorkManager>().Current == null

@@ -1,4 +1,5 @@
 ﻿using System.Globalization;
+using System.Linq;
 using Abp.Extensions;
 
 namespace Abp.Localization
@@ -14,8 +15,7 @@ namespace Abp.Localization
 
             try
             {
-                CultureInfo.GetCultureInfo(cultureCode);
-                return true;
+                return CultureInfo.GetCultures(CultureTypes.AllCultures).Any(e => e.Name.ToLowerInvariant() == cultureCode.ToLowerInvariant());
             }
             catch (CultureNotFoundException)
             {

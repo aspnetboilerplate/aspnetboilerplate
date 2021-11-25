@@ -11,15 +11,18 @@ using Abp.Dependency;
 using Abp.Json;
 using Abp.PlugIns;
 using AbpAspNetCoreDemo.Controllers;
+using AbpAspNetCoreDemo.Core.Domain;
 using Castle.Core.Logging;
 using Castle.Facilities.Logging;
 using Castle.MicroKernel.ModelBuilder.Inspectors;
 using Castle.MicroKernel.SubSystems.Conversion;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.OData;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using Microsoft.OData.ModelBuilder;
 using Newtonsoft.Json.Serialization;
 
 namespace AbpAspNetCoreDemo
@@ -63,25 +66,12 @@ namespace AbpAspNetCoreDemo
                 {
                     NamingStrategy = new CamelCaseNamingStrategy()
                 };
-            }).AddRazorRuntimeCompilation();
-
-            // Waiting for OData .NET Core 3.0 support, see https://github.com/OData/WebApi/issues/1748
-            // services.AddOData();
-
-            // Workaround: https://github.com/OData/WebApi/issues/1177
-            // Waiting for OData .NET Core 3.0 support, see https://github.com/OData/WebApi/issues/1748
-            //services.AddMvcCore(options =>
-            //{
-            //    foreach (var outputFormatter in options.OutputFormatters.OfType<ODataOutputFormatter>().Where(_ => _.SupportedMediaTypes.Count == 0))
-            //    {
-            //        outputFormatter.SupportedMediaTypes.Add(new MediaTypeHeaderValue("application/prs.odatatestxx-odata"));
-            //    }
-
-            //    foreach (var inputFormatter in options.InputFormatters.OfType<ODataInputFormatter>().Where(_ => _.SupportedMediaTypes.Count == 0))
-            //    {
-            //        inputFormatter.SupportedMediaTypes.Add(new MediaTypeHeaderValue("application/prs.odatatestxx-odata"));
-            //    }
-            //});
+            }).AddRazorRuntimeCompilation().AddOData(opts =>
+            {
+                var builder = new ODataConventionModelBuilder();
+                builder.EntitySet<Product>("Products").EntityType.Expand().Filter().OrderBy().Page().Select();
+                opts.AddRouteComponents("odata", builder.GetEdmModel());
+            });
 
             //Configure Abp and Dependency Injection. Should be called last.
             return services.AddAbp<AbpAspNetCoreDemoModule>(options =>
@@ -91,7 +81,7 @@ namespace AbpAspNetCoreDemo
                 string plugDllInPath = "";
 #if DEBUG
                 plugDllInPath = Path.Combine(_env.ContentRootPath,
-                    @"..\AbpAspNetCoreDemo.PlugIn\bin\Debug\net5.0\AbpAspNetCoreDemo.PlugIn.dll");
+                    @"..\AbpAspNetCoreDemo.PlugIn\bin\Debug\net6.0\AbpAspNetCoreDemo.PlugIn.dll");
 #else
                 plugDllInPath = Path.Combine(_env.ContentRootPath,
                     @"..\AbpAspNetCoreDemo.PlugIn\bin\Release\net5.0\AbpAspNetCoreDemo.PlugIn.dll");
@@ -123,17 +113,11 @@ namespace AbpAspNetCoreDemo
         {
             app.UseAbp(); //Initializes ABP framework. Should be called first.
 
-            // Waiting for OData .NET Core 3.0 support, see https://github.com/OData/WebApi/issues/1748
-            // app.UseOData(builder =>
-            // {
-            //     builder.EntitySet<Product>("Products").EntityType.Expand().Filter().OrderBy().Page().Select();
-            // });
-
             // Return IQueryable from controllers
-            //app.UseUnitOfWork(options =>
-            //{
-            //    options.Filter = httpContext => httpContext.Request.Path.Value.StartsWith("/odata");
-            //});
+            app.UseUnitOfWork(options =>
+            {
+                options.Filter = httpContext => httpContext.Request.Path.Value.StartsWith("/odata");
+            });
 
             if (env.IsDevelopment())
             {
@@ -157,9 +141,6 @@ namespace AbpAspNetCoreDemo
                 endpoints.MapRazorPages();
 
                 app.ApplicationServices.GetRequiredService<IAbpAspNetCoreConfiguration>().EndpointConfiguration.ConfigureAllEndpoints(endpoints);
-
-                //TODO@3.0 related: https://github.com/OData/WebApi/issues/1707
-                //routes.MapODataServiceRoute(app); ???
             });
         }
     }

@@ -57,9 +57,9 @@ namespace Abp.Runtime.Security
         }
 
         public string Encrypt(
-            string plainText, 
-            string passPhrase = null, 
-            byte[] salt = null, 
+            string plainText,
+            string passPhrase = null,
+            byte[] salt = null,
             int? keySize = null,
             byte[] initVectorBytes = null)
         {
@@ -87,7 +87,7 @@ namespace Abp.Runtime.Security
             {
                 initVectorBytes = InitVectorBytes;
             }
-            
+
             var plainTextBytes = Encoding.UTF8.GetBytes(plainText);
             using (var password = new Rfc2898DeriveBytes(passPhrase, salt))
             {
@@ -113,8 +113,8 @@ namespace Abp.Runtime.Security
         }
 
         public string Decrypt(
-            string cipherText, 
-            string passPhrase = null, 
+            string cipherText,
+            string passPhrase = null,
             byte[] salt = null,
             int? keySize = null,
             byte[] initVectorBytes = null)
@@ -143,7 +143,7 @@ namespace Abp.Runtime.Security
             {
                 initVectorBytes = InitVectorBytes;
             }
-            
+
             var cipherTextBytes = Convert.FromBase64String(cipherText);
             using (var password = new Rfc2898DeriveBytes(passPhrase, salt))
             {
@@ -158,8 +158,24 @@ namespace Abp.Runtime.Security
                             using (var cryptoStream = new CryptoStream(memoryStream, decryptor, CryptoStreamMode.Read))
                             {
                                 var plainTextBytes = new byte[cipherTextBytes.Length];
-                                var decryptedByteCount = cryptoStream.Read(plainTextBytes, 0, plainTextBytes.Length);
-                                return Encoding.UTF8.GetString(plainTextBytes, 0, decryptedByteCount);
+                                int totalDecryptedByteCount = 0;
+                                while (totalDecryptedByteCount < plainTextBytes.Length)
+                                {
+                                    var decryptedByteCount = cryptoStream.Read(
+                                        plainTextBytes,
+                                        totalDecryptedByteCount,
+                                        plainTextBytes.Length - totalDecryptedByteCount
+                                    );
+                                    
+                                    if (decryptedByteCount == 0)
+                                    {
+                                        break;
+                                    }
+
+                                    totalDecryptedByteCount += decryptedByteCount;
+                                }
+
+                                return Encoding.UTF8.GetString(plainTextBytes, 0, totalDecryptedByteCount);
                             }
                         }
                     }

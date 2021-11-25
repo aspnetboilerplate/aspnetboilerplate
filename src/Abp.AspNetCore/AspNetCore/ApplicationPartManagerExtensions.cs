@@ -1,5 +1,6 @@
 ﻿using System.Linq;
 using System.Reflection;
+using Abp.AspNetCore.PlugIn;
 using Microsoft.AspNetCore.Mvc.ApplicationParts;
 
 namespace Abp.AspNetCore
@@ -14,6 +15,16 @@ namespace Abp.AspNetCore
             }
 
             partManager.ApplicationParts.Add(new AssemblyPart(assembly));
+        }
+
+        public static void AddAbpPlugInAssemblyPartIfNotAddedBefore(this ApplicationPartManager partManager, AbpPlugInAssemblyPart assemblyPart)
+        {
+            if (partManager.ApplicationParts.OfType<AssemblyPart>().Any(ap => ap == assemblyPart))
+            {
+                return;
+            }
+
+            partManager.ApplicationParts.Add(assemblyPart);
         }
     }
 }

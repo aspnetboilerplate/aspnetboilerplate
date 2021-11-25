@@ -1,7 +1,7 @@
 ﻿using System;
-using Microsoft.AspNet.OData.Builder;
-using Microsoft.AspNet.OData.Extensions;
-using Microsoft.AspNetCore.Routing;
+using Microsoft.AspNetCore.OData;
+using Microsoft.Extensions.DependencyInjection;
+using Microsoft.OData.ModelBuilder;
 
 namespace Abp.AspNetCore.OData.Configuration
 {
@@ -9,17 +9,13 @@ namespace Abp.AspNetCore.OData.Configuration
     {
         public ODataConventionModelBuilder ODataModelBuilder { get; set; }
 
-        public Action<IRouteBuilder> MapAction { get; set; }
+        public Action<IMvcCoreBuilder> MapAction { get; set; }
 
         public AbpAspNetCoreODataModuleConfiguration()
         {
             MapAction = routes =>
             {
-                routes.MapODataServiceRoute(
-                    routeName: "ODataRoute",
-                    routePrefix: "odata",
-                    model: ODataModelBuilder.GetEdmModel()
-                );
+                routes.AddOData(opt => opt.AddRouteComponents("odata", ODataModelBuilder.GetEdmModel()));
             };
         }
     }
