@@ -194,7 +194,7 @@ namespace Abp.Runtime.Caching.Redis
             
             var localizedKey = GetPerRequestRedisCacheKey(key);
 
-            if (!httpContext.Items.ContainsKey(localizedKey))
+            if (httpContext.Items.ContainsKey(localizedKey))
             {
                 httpContext.Items.Remove(localizedKey);
             }
@@ -210,7 +210,7 @@ namespace Abp.Runtime.Caching.Redis
             {
                 var localizedKey = GetPerRequestRedisCacheKey(key);
 
-                if (!httpContext.Items.ContainsKey(localizedKey))
+                if (httpContext.Items.ContainsKey(localizedKey))
                 {
                     httpContext.Items.Remove(localizedKey);
                 }
@@ -232,7 +232,7 @@ namespace Abp.Runtime.Caching.Redis
             {
                 var localizedKey = GetPerRequestRedisCacheKey(key);
 
-                if (!httpContext.Items.ContainsKey(localizedKey))
+                if (httpContext.Items.ContainsKey(localizedKey))
                 {
                     httpContext.Items.Remove(localizedKey);
                 }
@@ -251,7 +251,7 @@ namespace Abp.Runtime.Caching.Redis
                 {
                     var localizedKey = GetPerRequestRedisCacheKey(key);
 
-                    if (!httpContext.Items.ContainsKey(localizedKey))
+                    if (httpContext.Items.ContainsKey(localizedKey))
                     {
                         httpContext.Items.Remove(localizedKey);
                     }
@@ -272,7 +272,7 @@ namespace Abp.Runtime.Caching.Redis
             
             var localizedKeyPrefix = GetPerRequestRedisCacheKey("");
 
-            foreach (string key in httpContext.Items.Keys.ToList())
+            foreach (string key in httpContext.Items.Keys.OfType<string>.ToList())
             {
                 if (key.StartsWith(localizedKeyPrefix))
                 {
