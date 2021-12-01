@@ -272,7 +272,7 @@ namespace Abp.Runtime.Caching.Redis
             
             var localizedKeyPrefix = GetPerRequestRedisCacheKey("");
 
-            foreach (string key in httpContext.Items.Keys.OfType<string>.ToList())
+            foreach (var key in httpContext.Items.Keys.OfType<string>().ToList())
             {
                 if (key.StartsWith(localizedKeyPrefix))
                 {
