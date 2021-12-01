@@ -12,10 +12,6 @@
     <PropertyGroup Condition="'$(Configuration)' == 'Release' ">
         <GeneratePackageOnBuild>True</GeneratePackageOnBuild>
     </PropertyGroup>
-    <PropertyGroup>
-        <!-- Include symbol files (*.pdb) in the built .nupkg -->
-        <AllowedOutputExtensionsInPackageBuildOutputFolder>$(AllowedOutputExtensionsInPackageBuildOutputFolder);.pdb</AllowedOutputExtensionsInPackageBuildOutputFolder>
-    </PropertyGroup>
     <ItemGroup>
         <None Include="../../LICENSE.md" Pack="true" PackagePath="/"/>
         <None Include="../../nupkg/abp_nupkg.png" Pack="true" PackagePath="/"/>
