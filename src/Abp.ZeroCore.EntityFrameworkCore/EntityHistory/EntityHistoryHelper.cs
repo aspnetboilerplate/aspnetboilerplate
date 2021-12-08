@@ -290,6 +290,7 @@ namespace Abp.EntityHistory
 
                 /* Update/Remove property changes */
                 var propertyChangesToRemove = new List<EntityPropertyChange>();
+                var foreignKeys = entityEntry.Metadata.GetForeignKeys();
                 foreach (var propertyChange in entityChange.PropertyChanges)
                 {
                     var propertyEntry = entityEntry.Property(propertyChange.PropertyName);
@@ -298,16 +299,16 @@ namespace Abp.EntityHistory
                     var propertyEntityType = entityEntryType;
                     if (entityEntry.Metadata.IsOwned())
                     {
-                        var ownerForeignKey = entityEntry.Metadata.GetForeignKeys().First(fk => fk.IsOwnership);
+                        var ownerForeignKey = foreignKeys.First(fk => fk.IsOwnership);
                         propertyEntityType = ownerForeignKey.PrincipalEntityType.ClrType;
                     }
-
-                    var isAuditedProperty = propertyEntry.Metadata.IsShadowProperty() ||
+                    var isAuditedProperty = !propertyEntry.Metadata.IsShadowProperty() &&
                                             IsAuditedPropertyInfo(propertyEntityType,
                                                 propertyEntry.Metadata.PropertyInfo) == true;
+                    var isForeignKeyShadowProperty = propertyEntry.Metadata.IsShadowProperty() && foreignKeys.Any(fk => fk.Properties.Any(p => p.Name == propertyChange.PropertyName));
 
                     propertyChange.SetNewValue(propertyEntry.GetNewValue()?.ToJsonString());
-                    if (!isAuditedProperty || propertyChange.IsValuesEquals())
+                    if ((!isAuditedProperty && !isForeignKeyShadowProperty) || propertyChange.IsValuesEquals())
                     {
                         // No change
                         propertyChangesToRemove.Add(propertyChange);
