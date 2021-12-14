@@ -8,7 +8,6 @@ namespace Abp.Runtime.Caching.Redis
     {
         public override void PreInitialize()
         {
-            IocManager.Register<IAbpPerRequestRedisCache, AbpPerRequestRedisCache>();
             IocManager.Register<IAbpPerRequestRedisCacheManager, AbpPerRequestRedisCacheManager>();
         }
 
