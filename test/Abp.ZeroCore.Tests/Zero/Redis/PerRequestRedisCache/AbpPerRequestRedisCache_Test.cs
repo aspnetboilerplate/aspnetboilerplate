@@ -1,5 +1,9 @@
 ﻿using System;
 using System.Threading.Tasks;
+using Abp.Application.Editions;
+using Abp.Authorization.Roles;
+using Abp.Authorization.Users;
+using Abp.MultiTenancy;
 using Abp.Runtime.Caching;
 using Abp.Runtime.Caching.Configuration;
 using Abp.Runtime.Caching.Redis;
@@ -14,7 +18,7 @@ namespace Abp.Zero.Redis.PerRequestRedisCache
     {
         private ITypedCache<string, MyCacheItem> _perRequestRedisCache;
         private ITypedCache<string, MyCacheItem> _normalRedisCache;
-    
+
         public AbpPerRequestRedisCache_Test() 
         {
             LocalIocManager.Resolve<ICachingConfiguration>().Configure("MyTestCacheItems", cache => { cache.DefaultSlidingExpireTime = TimeSpan.FromHours(12); });
@@ -31,6 +35,38 @@ namespace Abp.Zero.Redis.PerRequestRedisCache
             _perRequestRedisCache.DefaultSlidingExpireTime.ShouldBe(TimeSpan.FromHours(24));
         }
 
+        [Fact]
+        public void Test_PerRequestRedisCacheManager_GetUserPermissionCache()
+        {
+            var cacheManager = LocalIocManager.Resolve<IAbpPerRequestRedisCacheManager>();
+            var rolePermissionCache = cacheManager.GetUserPermissionCache();
+            rolePermissionCache.Name.ShouldBe(UserPermissionCacheItem.CacheStoreName);
+        }
+        
+        [Fact]
+        public void Test_PerRequestRedisCacheManager_GetRolePermissionCache()
+        {
+            var cacheManager = LocalIocManager.Resolve<IAbpPerRequestRedisCacheManager>();
+            var rolePermissionCache = cacheManager.GetRolePermissionCache();
+            rolePermissionCache.Name.ShouldBe(RolePermissionCacheItem.CacheStoreName);
+        }
+        
+        [Fact]
+        public void Test_PerRequestRedisCacheManager_GetTenantFeatureCache()
+        {
+            var cacheManager = LocalIocManager.Resolve<IAbpPerRequestRedisCacheManager>();
+            var rolePermissionCache = cacheManager.GetTenantFeatureCache();
+            rolePermissionCache.Name.ShouldBe(TenantFeatureCacheItem.CacheStoreName);
+        }
+        
+        [Fact]
+        public void Test_PerRequestRedisCacheManager_GetEditionFeatureCache()
+        {
+            var cacheManager = LocalIocManager.Resolve<IAbpPerRequestRedisCacheManager>();
+            var rolePermissionCache = cacheManager.GetEditionFeatureCache();
+            rolePermissionCache.Name.ShouldBe(EditionfeatureCacheItem.CacheStoreName);
+        }
+        
         [Fact]
         public void Should_Not_Change_Normal_Redis_Cache()
         {

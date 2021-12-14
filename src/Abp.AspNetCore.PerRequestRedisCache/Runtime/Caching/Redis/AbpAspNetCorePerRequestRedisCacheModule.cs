@@ -1,4 +1,5 @@
-﻿using Abp.Modules;
+﻿using Abp.Dependency;
+using Abp.Modules;
 using Abp.Reflection.Extensions;
 
 namespace Abp.Runtime.Caching.Redis
@@ -8,7 +9,6 @@ namespace Abp.Runtime.Caching.Redis
     {
         public override void PreInitialize()
         {
-            IocManager.Register<IAbpPerRequestRedisCache, AbpPerRequestRedisCache>();
             IocManager.Register<IAbpPerRequestRedisCacheManager, AbpPerRequestRedisCacheManager>();
         }
 
