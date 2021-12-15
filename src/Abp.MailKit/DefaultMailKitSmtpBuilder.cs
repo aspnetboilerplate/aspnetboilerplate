@@ -7,12 +7,10 @@ namespace Abp.MailKit
 {
     public class DefaultMailKitSmtpBuilder : IMailKitSmtpBuilder, ITransientDependency
     {
-        private readonly ISmtpEmailSenderConfiguration _smtpEmailSenderConfiguration;
         private readonly IAbpMailKitConfiguration _abpMailKitConfiguration;
 
-        public DefaultMailKitSmtpBuilder(ISmtpEmailSenderConfiguration smtpEmailSenderConfiguration, IAbpMailKitConfiguration abpMailKitConfiguration)
+        public DefaultMailKitSmtpBuilder(IAbpMailKitConfiguration abpMailKitConfiguration)
         {
-            _smtpEmailSenderConfiguration = smtpEmailSenderConfiguration;
             _abpMailKitConfiguration = abpMailKitConfiguration;
         }
 
@@ -34,20 +32,31 @@ namespace Abp.MailKit
 
         protected virtual void ConfigureClient(SmtpClient client)
         {
+            if (_abpMailKitConfiguration.DisableCertificateValidation.GetValueOrDefault(false))
+            {
+                client.ServerCertificateValidationCallback = (mysender, certificate, chain, sslPolicyErrors) => { return true; };
+            }
+
+
+            if (_abpMailKitConfiguration.CheckCertificateRevocation.HasValue)
+            {
+                client.CheckCertificateRevocation = _abpMailKitConfiguration.CheckCertificateRevocation.Value;
+            }
+
             client.Connect(
-                _smtpEmailSenderConfiguration.Host,
-                _smtpEmailSenderConfiguration.Port,
+                _abpMailKitConfiguration.Host,
+                _abpMailKitConfiguration.Port,
                 GetSecureSocketOption()
             );
 
-            if (_smtpEmailSenderConfiguration.UseDefaultCredentials)
+            if (_abpMailKitConfiguration.UseDefaultCredentials)
             {
                 return;
             }
 
             client.Authenticate(
-                _smtpEmailSenderConfiguration.UserName,
-                _smtpEmailSenderConfiguration.Password
+                _abpMailKitConfiguration.UserName,
+                _abpMailKitConfiguration.Password
             );
         }
 
@@ -58,7 +67,7 @@ namespace Abp.MailKit
                 return _abpMailKitConfiguration.SecureSocketOption.Value;
             }
 
-            return _smtpEmailSenderConfiguration.EnableSsl
+            return _abpMailKitConfiguration.EnableSsl
                 ? SecureSocketOptions.SslOnConnect
                 : SecureSocketOptions.StartTlsWhenAvailable;
         }
