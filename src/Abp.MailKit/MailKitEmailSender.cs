@@ -11,7 +11,7 @@ namespace Abp.MailKit
         private readonly IMailKitSmtpBuilder _smtpBuilder;
 
         public MailKitEmailSender(
-            IEmailSenderConfiguration smtpEmailSenderConfiguration,
+            IAbpMailKitConfiguration smtpEmailSenderConfiguration,
             IMailKitSmtpBuilder smtpBuilder)
             : base(
                   smtpEmailSenderConfiguration)
