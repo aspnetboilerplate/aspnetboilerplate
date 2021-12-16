@@ -52,6 +52,10 @@ namespace Abp.ZeroCore.SampleApp.EntityFramework
 
             modelBuilder.ConfigurePersistedGrantEntity();
 
+            // EF property mapped directly to a field
+            modelBuilder.Entity<Blog>()
+                 .Property<string>("_name").HasColumnName("Name");
+
             modelBuilder.Entity<Blog>().OwnsOne(x => x.More);
 
             modelBuilder.Entity<Blog>().OwnsMany(x => x.Promotions, b => 
