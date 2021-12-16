@@ -2832,7 +2832,7 @@ namespace Abp.Authorization.Users
             return await GetTokenAsync(user, InternalLoginProvider, AuthenticatorKeyTokenName, cancellationToken);
         }
 
-        public string GetAuthenticatorKey(TUser user, CancellationToken cancellationToken)
+        public virtual string GetAuthenticatorKey(TUser user, CancellationToken cancellationToken)
         {
             return GetToken(user, InternalLoginProvider, AuthenticatorKeyTokenName, cancellationToken);
         }
