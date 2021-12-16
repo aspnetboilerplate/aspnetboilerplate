@@ -219,7 +219,7 @@ namespace Abp.EntityHistory
                     continue;
                 }
 
-                var shouldSaveProperty = property.IsShadowProperty() // i.e. property.PropertyInfo == null
+                var shouldSaveProperty = property.PropertyInfo == null // Shadow properties or if mapped directly to a field
                     ? !auditedPropertiesOnly
                     : IsAuditedPropertyInfo(property.PropertyInfo) ?? !auditedPropertiesOnly;
 
@@ -269,7 +269,7 @@ namespace Abp.EntityHistory
                 {
                     foreach (var property in foreignKey.Properties)
                     {
-                        var shouldSaveProperty = property.IsShadowProperty()
+                        var shouldSaveProperty = property.PropertyInfo == null // Shadow properties or if mapped directly to a field
                             ? null
                             : IsAuditedPropertyInfo(entityEntryType, property.PropertyInfo);
 
@@ -302,10 +302,10 @@ namespace Abp.EntityHistory
                         var ownerForeignKey = foreignKeys.First(fk => fk.IsOwnership);
                         propertyEntityType = ownerForeignKey.PrincipalEntityType.ClrType;
                     }
-                    var isAuditedProperty = !propertyEntry.Metadata.IsShadowProperty() &&
-                                            IsAuditedPropertyInfo(propertyEntityType,
-                                                propertyEntry.Metadata.PropertyInfo) == true;
-                    var isForeignKeyShadowProperty = propertyEntry.Metadata.IsShadowProperty() && foreignKeys.Any(fk => fk.Properties.Any(p => p.Name == propertyChange.PropertyName));
+                    var property = propertyEntry.Metadata;
+                    var isAuditedProperty = property.PropertyInfo != null &&
+                                            (IsAuditedPropertyInfo(propertyEntityType, property.PropertyInfo) ?? false);
+                    var isForeignKeyShadowProperty = property.IsShadowProperty() && foreignKeys.Any(fk => fk.Properties.Any(p => p.Name == propertyChange.PropertyName));
 
                     propertyChange.SetNewValue(propertyEntry.GetNewValue()?.ToJsonString());
                     if ((!isAuditedProperty && !isForeignKeyShadowProperty) || propertyChange.IsValuesEquals())
