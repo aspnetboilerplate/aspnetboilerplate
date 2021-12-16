@@ -116,10 +116,10 @@ All properties of `MyEntity` are tracked except `MyProperty2` since it's
 explicitly disabled. The `Audited` attribute can be used to
 save change logs for a desired property.
 
-When using **Audited** attribute on an **entity** class, **EntityChange** will be created for an entity in *Added/Modified/Deleted* state, regardless of whether any **PropertyChange** is being created.
-For example, if only **MyProperty2** is modified, **EntityChange** will be created even though **PropertyChange** will not be created.
+When using `Audited` attribute on an **entity** class, `EntityChange` will be created for an entity in `Added`/`Modified`/`Deleted` state, regardless of whether any `PropertyChange` is being created.
+For example, if only `MyProperty2` is modified, `EntityChange` will be created even though `PropertyChange` will not be created.
 
-When using **Audited** attribute on a **property**, **PropertyChange** will be created for the property if there is any difference between the **new and old values** of the property.
+When using `Audited` attribute on a **property**, `PropertyChange` will be created for the property if there is any difference between the **new and old values** of the property.
 
 `DisableAuditing` can be used for an entity or a single **property of an
 entity**. Thus, you can **hide sensitive data** in change logs, such as
