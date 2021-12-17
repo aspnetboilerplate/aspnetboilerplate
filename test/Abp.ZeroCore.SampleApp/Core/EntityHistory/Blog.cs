@@ -9,7 +9,11 @@ namespace Abp.ZeroCore.SampleApp.Core.EntityHistory
     [Audited]
     public class Blog : AggregateRoot, IHasCreationTime
     {
-        [DisableAuditing] public string Name { get; set; }
+        // EF property mapped directly to a field
+        private string _name;
+
+        [DisableAuditing]
+        public string Name { get => _name; set => _name = value; }
 
         public string Url { get; protected set; }
 
