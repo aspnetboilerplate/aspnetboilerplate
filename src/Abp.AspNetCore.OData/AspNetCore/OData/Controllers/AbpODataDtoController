@@ -19,7 +19,7 @@ namespace Framing_App.OData
 {
     public abstract class AbpODataDtoController<TEntity, TDto> : AbpODataDtoController<TEntity, int, TDto, TDto> 
         where TEntity : class, IEntity<int>
-        where TDto : class
+        where TDto : class, IEntityDto<int>
     {
         protected AbpODataDtoController(IRepository<TEntity> repository, IObjectMapper objectMapper)
             : base(repository, objectMapper)
@@ -31,8 +31,8 @@ namespace Framing_App.OData
 
     public abstract class AbpODataDtoController<TEntity, TOutputDto, TInputDto> : AbpODataDtoController<TEntity, int, TOutputDto, TInputDto> //Code copied and modifed for DTO's, from: https://github.com/aspnetboilerplate/aspnetboilerplate/blob/dev/src/Abp.AspNetCore.OData/AspNetCore/OData/Controllers/AbpODataEntityController.cs
         where TEntity : class, IEntity<int>
-        where TOutputDto : class
-        where TInputDto : class
+        where TOutputDto : class, IEntityDto<int>
+        where TInputDto : class, IEntityDto<int>
     {
         protected ODataDTOControllerBase(IRepository<TEntity> repository, IObjectMapper objectMapper)
             : base(repository, objectMapper)
@@ -56,8 +56,8 @@ namespace Framing_App.OData
     public abstract class AbpODataDtoController<TEntity, TPrimaryKey, TOutputDto, TInputDto> : AbpODataController, ITransientDependency
         where TPrimaryKey : IEquatable<TPrimaryKey>
         where TEntity : class, IEntity<TPrimaryKey>
-        where TOutputDto : class
-        where TInputDto : class
+        where TOutputDto : class, IEntityDto<TPrimaryKey>
+        where TInputDto : class, IEntityDto<TPrimaryKey>
     {
         protected IRepository<TEntity, TPrimaryKey> Repository { get; private set; }
         protected IObjectMapper ObjectMapper { get; private set; }
