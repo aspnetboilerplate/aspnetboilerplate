@@ -1,0 +1,201 @@
+using System;
+using System.Linq;
+using System.Net;
+using System.Threading.Tasks;
+using Abp.AspNetCore.Mvc.Controllers;
+using Abp.AspNetCore.OData.Controllers;
+using Abp.Authorization;
+using Abp.AutoMapper;
+using Abp.Dependency;
+using Abp.Domain.Entities;
+using Abp.Domain.Repositories;
+using Abp.Modules;
+using Abp.ObjectMapping;
+using Microsoft.AspNet.OData;
+using Microsoft.AspNet.OData.Builder;
+using Microsoft.AspNetCore.Mvc;
+
+namespace Framing_App.OData
+{
+    public abstract class AbpODataDtoController<TEntity, TDto> : AbpODataDtoController<TEntity, int, TDto, TDto> 
+        where TEntity : class, IEntity<int>
+        where TDto : class
+    {
+        protected AbpODataDtoController(IRepository<TEntity> repository, IObjectMapper objectMapper)
+            : base(repository, objectMapper)
+        {
+
+        }
+    }
+
+
+    public abstract class AbpODataDtoController<TEntity, TOutputDto, TInputDto> : AbpODataDtoController<TEntity, int, TOutputDto, TInputDto> //Code copied and modifed for DTO's, from: https://github.com/aspnetboilerplate/aspnetboilerplate/blob/dev/src/Abp.AspNetCore.OData/AspNetCore/OData/Controllers/AbpODataEntityController.cs
+        where TEntity : class, IEntity<int>
+        where TOutputDto : class
+        where TInputDto : class
+    {
+        protected ODataDTOControllerBase(IRepository<TEntity> repository, IObjectMapper objectMapper)
+            : base(repository, objectMapper)
+        {
+
+        }
+    }
+
+
+
+    /// <summary>
+    /// A modifed verison of AbpODataEntityController, but manipulated DTO's, rather than raw Entities.
+    /// This allows for better control and security of data, rather than using OData's EDM convention annotations on the entity models.
+    /// Thus, keeping the EF and OData code sperated and clean.
+    /// This code was coppied directly from (v6.4): https://github.com/aspnetboilerplate/aspnetboilerplate/blob/dev/src/Abp.AspNetCore.OData/AspNetCore/OData/Controllers/AbpODataEntityController.cs
+    /// </summary>
+    /// <typeparam name="TEntity"></typeparam>
+    /// <typeparam name="TPrimaryKey"></typeparam>
+    /// <typeparam name="TOutputDto"></typeparam>
+    /// <typeparam name="TInputDto"></typeparam>
+    public abstract class AbpODataDtoController<TEntity, TPrimaryKey, TOutputDto, TInputDto> : AbpODataController, ITransientDependency
+        where TPrimaryKey : IEquatable<TPrimaryKey>
+        where TEntity : class, IEntity<TPrimaryKey>
+        where TOutputDto : class
+        where TInputDto : class
+    {
+        protected IRepository<TEntity, TPrimaryKey> Repository { get; private set; }
+        protected IObjectMapper ObjectMapper { get; private set; }
+        protected ODataDTOControllerBase(IRepository<TEntity, TPrimaryKey> repository, 
+                                                                IObjectMapper objectMapper)
+        {
+            Repository = repository;
+            ObjectMapper = objectMapper;
+        }
+
+        //Might be helpfull for automapper https://docs.automapper.org/en/stable/Queryable-Extensions.html#explicit-expansion
+
+
+        protected virtual string GetPermissionName { get; set; }
+
+        protected virtual string GetAllPermissionName { get; set; }
+
+        protected virtual string CreatePermissionName { get; set; }
+
+        protected virtual string UpdatePermissionName { get; set; }
+
+        protected virtual string DeletePermissionName { get; set; }
+
+        [EnableQuery]
+        public virtual IQueryable<TOutputDto> Get( )
+        {
+            CheckGetAllPermission();
+
+            return ObjectMapper.ProjectTo<TOutputDto>(Repository.GetAll());
+        }
+
+        [EnableQuery]
+        public virtual SingleResult<TOutputDto> Get([FromODataUri] TPrimaryKey key)
+        {
+            CheckGetPermission();
+
+            var entity = Repository.GetAll().Where(e => e.Id.Equals(key));
+
+            return SingleResult.Create(ObjectMapper.ProjectTo<TOutputDto>(entity));
+        }
+
+        public virtual async Task<IActionResult> Post([FromBody] TInputDto InputDto)
+        {
+            CheckCreatePermission();
+
+            if (!ModelState.IsValid) {
+                return BadRequest(ModelState);
+            }
+
+            var createdEntity = await Repository.InsertAsync(ObjectMapper.Map<TEntity>(InputDto));
+            await UnitOfWorkManager.Current.SaveChangesAsync();
+
+            return Created(createdEntity);
+        }
+
+        public virtual async Task<IActionResult> Patch([FromODataUri] TPrimaryKey key, [FromBody] Delta<TInputDto> deltaInputDto)
+        {
+            CheckUpdatePermission();
+
+            if (!ModelState.IsValid) {
+                return BadRequest(ModelState);
+            }
+
+            var Entity = await Repository.GetAsync(key);
+            if (Entity == null) {
+                return NotFound();
+            }
+            var EntityDto = ObjectMapper.Map<TInputDto>(Entity);
+
+            deltaInputDto.Patch(EntityDto);
+            Entity = ObjectMapper.Map<TEntity>(deltaInputDto);//Test if updates database
+
+            return Updated(EntityDto);
+        }
+
+        public virtual async Task<IActionResult> Put([FromODataUri] TPrimaryKey key, [FromBody] TInputDto InputDto)
+        {
+            CheckUpdatePermission();
+
+            if (!ModelState.IsValid) {
+                return BadRequest(ModelState);
+            }
+
+            TEntity NewEntity = ObjectMapper.Map<TEntity>(InputDto);
+
+            if (!key.Equals(NewEntity.Id)) {
+                return BadRequest();
+            }
+
+            var updated = await Repository.UpdateAsync(NewEntity);
+
+            return Updated(updated);
+        }
+
+        public virtual async Task<IActionResult> Delete([FromODataUri] TPrimaryKey key)
+        {
+            CheckDeletePermission();
+
+            var product = await Repository.GetAsync(key);
+            if (product == null) {
+                return NotFound();
+            }
+
+            await Repository.DeleteAsync(key);
+
+            return StatusCode((int)HttpStatusCode.NoContent);
+        }
+
+        protected virtual void CheckPermission(string permissionName)
+        {
+            if (!string.IsNullOrEmpty(permissionName)) {
+                PermissionChecker.Authorize(permissionName);
+            }
+        }
+
+        protected virtual void CheckGetPermission( )
+        {
+            CheckPermission(GetPermissionName);
+        }
+
+        protected virtual void CheckGetAllPermission( )
+        {
+            CheckPermission(GetAllPermissionName);
+        }
+
+        protected virtual void CheckCreatePermission( )
+        {
+            CheckPermission(CreatePermissionName);
+        }
+
+        protected virtual void CheckUpdatePermission( )
+        {
+            CheckPermission(UpdatePermissionName);
+        }
+
+        protected virtual void CheckDeletePermission( )
+        {
+            CheckPermission(DeletePermissionName);
+        }
+    }
+}
