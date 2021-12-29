@@ -11,7 +11,6 @@ using Abp.EntityFramework.Uow;
 using Abp.Modules;
 using Abp.Orm;
 using Abp.Reflection;
-
 using Castle.MicroKernel.Registration;
 
 namespace Abp.EntityFramework
@@ -38,9 +37,9 @@ namespace Abp.EntityFramework
             {
                 IocManager.IocContainer.Register(
                     Component
-                    .For<IUnitOfWorkFilterExecuter, IEfUnitOfWorkFilterExecuter>()
-                    .ImplementedBy<EfDynamicFiltersUnitOfWorkFilterExecuter>()
-                    .LifestyleTransient()
+                        .For<IUnitOfWorkFilterExecuter, IEfUnitOfWorkFilterExecuter>()
+                        .ImplementedBy<EfDynamicFiltersUnitOfWorkFilterExecuter>()
+                        .LifestyleTransient()
                 );
             });
         }
@@ -48,9 +47,8 @@ namespace Abp.EntityFramework
         public override void Initialize()
         {
             if (!Configuration.UnitOfWork.IsTransactionScopeAvailable)
-            {
-                IocManager.RegisterIfNot<IEfTransactionStrategy, DbContextEfTransactionStrategy>(DependencyLifeStyle.Transient);
-            }
+                IocManager.RegisterIfNot<IEfTransactionStrategy, DbContextEfTransactionStrategy>(DependencyLifeStyle
+                    .Transient);
 
             IocManager.RegisterAssemblyByConvention(Assembly.GetExecutingAssembly());
 
@@ -58,7 +56,7 @@ namespace Abp.EntityFramework
                 Component.For(typeof(IDbContextProvider<>))
                     .ImplementedBy(typeof(UnitOfWorkDbContextProvider<>))
                     .LifestyleTransient()
-                );
+            );
 
             RegisterGenericRepositoriesAndMatchDbContexes();
             RegisterWithNoLockInterceptor();
@@ -68,10 +66,7 @@ namespace Abp.EntityFramework
         {
             lock (WithNoLockInterceptorSyncObj)
             {
-                if (_withNoLockInterceptor != null)
-                {
-                    return;
-                }
+                if (_withNoLockInterceptor != null) return;
 
                 _withNoLockInterceptor = IocManager.Resolve<WithNoLockInterceptor>();
                 DbInterception.Add(_withNoLockInterceptor);
@@ -86,7 +81,7 @@ namespace Abp.EntityFramework
                     !type.IsAbstract &&
                     type.IsClass &&
                     typeof(AbpDbContext).IsAssignableFrom(type)
-                    );
+                );
 
             if (dbContextTypes.IsNullOrEmpty())
             {
@@ -106,11 +101,12 @@ namespace Abp.EntityFramework
                     IocManager.IocContainer.Register(
                         Component.For<ISecondaryOrmRegistrar>()
                             .Named(Guid.NewGuid().ToString("N"))
-                            .Instance(new EfBasedSecondaryOrmRegistrar(dbContextType, scope.Resolve<IDbContextEntityFinder>()))
+                            .Instance(new EfBasedSecondaryOrmRegistrar(dbContextType,
+                                scope.Resolve<IDbContextEntityFinder>()))
                             .LifestyleTransient()
                     );
                 }
-                
+
                 scope.Resolve<IDbContextTypeMatcher>().Populate(dbContextTypes);
             }
         }

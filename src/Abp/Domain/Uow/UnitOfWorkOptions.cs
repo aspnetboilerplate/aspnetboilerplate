@@ -44,8 +44,8 @@ namespace Abp.Domain.Uow
         /// Can be used to enable/disable some filters.
         /// </summary>
         public List<DataFilterConfiguration> FilterOverrides { get; }
-        
-        
+
+
         /// <summary>
         /// Creates a new <see cref="UnitOfWorkOptions"/> object.
         /// </summary>
@@ -58,35 +58,21 @@ namespace Abp.Domain.Uow
         {
             //TODO: Do not change options object..?
 
-            if (!IsTransactional.HasValue)
-            {
-                IsTransactional = defaultOptions.IsTransactional;
-            }
+            if (!IsTransactional.HasValue) IsTransactional = defaultOptions.IsTransactional;
 
-            if (!Scope.HasValue)
-            {
-                Scope = defaultOptions.Scope;
-            }
+            if (!Scope.HasValue) Scope = defaultOptions.Scope;
 
-            if (!Timeout.HasValue && defaultOptions.Timeout.HasValue)
-            {
-                Timeout = defaultOptions.Timeout.Value;
-            }
+            if (!Timeout.HasValue && defaultOptions.Timeout.HasValue) Timeout = defaultOptions.Timeout.Value;
 
             if (!IsolationLevel.HasValue && defaultOptions.IsolationLevel.HasValue)
-            {
                 IsolationLevel = defaultOptions.IsolationLevel.Value;
-            }
         }
 
         internal void FillOuterUowFiltersForNonProvidedOptions(List<DataFilterConfiguration> filterOverrides)
         {
             foreach (var filterOverride in filterOverrides)
             {
-                if (FilterOverrides.Any(fo => fo.FilterName == filterOverride.FilterName))
-                {
-                    continue;
-                }
+                if (FilterOverrides.Any(fo => fo.FilterName == filterOverride.FilterName)) continue;
 
                 FilterOverrides.Add(filterOverride);
             }

@@ -22,13 +22,14 @@ namespace Abp.WebApi.Controllers.Dynamic.Selectors
             int idx = 0;
             for (int i = 0; i < max; i++)
             {
-                T attr = objects[i] as T;
+                var attr = objects[i] as T;
                 if (attr != null)
                 {
                     list.Add(attr);
                     idx++;
                 }
             }
+
             list.Capacity = idx;
 
             return new ReadOnlyCollection<T>(list);
@@ -45,14 +46,14 @@ namespace Abp.WebApi.Controllers.Dynamic.Selectors
 
         private readonly object[] _attributes;
         private readonly object[] _declaredOnlyAttributes;
-        
+
         public DynamicHttpActionDescriptor(
             IAbpWebApiConfiguration configuration,
             HttpControllerDescriptor controllerDescriptor,
             DynamicApiActionInfo actionInfo)
             : base(
-                  controllerDescriptor,
-                  actionInfo.Method)
+                controllerDescriptor,
+                actionInfo.Method)
         {
             _actionInfo = actionInfo;
             SupportedHttpMethods = new Collection<HttpMethod> { actionInfo.Verb.ToHttpMethod() };
@@ -93,22 +94,13 @@ namespace Abp.WebApi.Controllers.Dynamic.Selectors
 
         private Collection<IFilter> GetFiltersInternal()
         {
-            if (_actionInfo.Filters.IsNullOrEmpty())
-            {
-                return base.GetFilters();
-            }
+            if (_actionInfo.Filters.IsNullOrEmpty()) return base.GetFilters();
 
             var actionFilters = new Collection<IFilter>();
 
-            foreach (var filter in _actionInfo.Filters)
-            {
-                actionFilters.Add(filter);
-            }
+            foreach (var filter in _actionInfo.Filters) actionFilters.Add(filter);
 
-            foreach (var baseFilter in base.GetFilters())
-            {
-                actionFilters.Add(baseFilter);
-            }
+            foreach (var baseFilter in base.GetFilters()) actionFilters.Add(baseFilter);
 
             return actionFilters;
         }
@@ -118,15 +110,9 @@ namespace Abp.WebApi.Controllers.Dynamic.Selectors
             var parameters = base.GetParameters();
 
             if (_actionInfo.Verb.IsIn(HttpVerb.Get, HttpVerb.Head))
-            {
                 foreach (var parameter in parameters)
-                {
                     if (parameter.ParameterBinderAttribute == null)
-                    {
                         parameter.ParameterBinderAttribute = new FromUriAttribute();
-                    }
-                }
-            }
 
             return parameters;
         }

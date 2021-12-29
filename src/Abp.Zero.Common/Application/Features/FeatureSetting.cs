@@ -44,7 +44,6 @@ namespace Abp.Application.Features
         /// </summary>
         protected FeatureSetting()
         {
-            
         }
 
         /// <summary>

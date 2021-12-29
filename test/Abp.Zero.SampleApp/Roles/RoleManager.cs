@@ -20,11 +20,11 @@ namespace Abp.Zero.SampleApp.Roles
             IRepository<OrganizationUnit, long> organizationUnitRepository,
             IRepository<OrganizationUnitRole, long> organizationUnitRoleRepository)
             : base(
-            store,
-            permissionManager,
-            roleManagementConfig,
-            cacheManager,
-            unitOfWorkManager,
+                store,
+                permissionManager,
+                roleManagementConfig,
+                cacheManager,
+                unitOfWorkManager,
                 organizationUnitRepository,
                 organizationUnitRoleRepository)
         {

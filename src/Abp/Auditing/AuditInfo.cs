@@ -11,7 +11,7 @@ namespace Abp.Auditing
         /// TenantId.
         /// </summary>
         public int? TenantId { get; set; }
-        
+
         /// <summary>
         /// UserId.
         /// </summary>
@@ -31,7 +31,7 @@ namespace Abp.Auditing
         /// Service (class/interface) name.
         /// </summary>
         public string ServiceName { get; set; }
-        
+
         /// <summary>
         /// Executed method name.
         /// </summary>
@@ -61,7 +61,7 @@ namespace Abp.Auditing
         /// IP address of the client.
         /// </summary>
         public string ClientIpAddress { get; set; }
-        
+
         /// <summary>
         /// Name (generally computer name) of the client.
         /// </summary>
@@ -76,7 +76,7 @@ namespace Abp.Auditing
         /// Optional custom data that can be filled and used.
         /// </summary>
         public string CustomData { get; set; }
-        
+
         /// <summary>
         /// Exception object, if an exception occurred during execution of the method.
         /// </summary>
@@ -85,14 +85,15 @@ namespace Abp.Auditing
         public override string ToString()
         {
             var loggedUserId = UserId.HasValue
-                                   ? "user " + UserId.Value
-                                   : "an anonymous user";
+                ? "user " + UserId.Value
+                : "an anonymous user";
 
             var exceptionOrSuccessMessage = Exception != null
                 ? "exception: " + Exception.Message
                 : "succeed";
 
-            return $"AUDIT LOG: {ServiceName}.{MethodName} is executed by {loggedUserId} in {ExecutionDuration} ms from {ClientIpAddress} IP address with {exceptionOrSuccessMessage}.";
+            return
+                $"AUDIT LOG: {ServiceName}.{MethodName} is executed by {loggedUserId} in {ExecutionDuration} ms from {ClientIpAddress} IP address with {exceptionOrSuccessMessage}.";
         }
     }
 }

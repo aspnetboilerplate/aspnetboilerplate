@@ -64,9 +64,7 @@ namespace Abp.Zero.SampleApp.Users
 
             var user = await _userManager.GetUserByIdAsync(input.UserId);
             if (user == null || user.PasswordResetCode.IsNullOrEmpty() || user.PasswordResetCode != input.ResetCode)
-            {
                 throw new UserFriendlyException("InvalidPasswordResetCode", "InvalidPasswordResetCode_Detail");
-            }
 
             user.Password = new PasswordHasher().HashPassword(input.Password);
             user.PasswordResetCode = null;

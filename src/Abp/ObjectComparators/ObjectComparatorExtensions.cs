@@ -5,7 +5,8 @@ namespace Abp.ObjectComparators
 {
     public static class ObjectComparatorExtensions
     {
-        public static bool IsNullOrEmpty<T1, T2>(this ObjectComparatorCondition<T1, T2> objectComparator) where T2 : Enum
+        public static bool IsNullOrEmpty<T1, T2>(this ObjectComparatorCondition<T1, T2> objectComparator)
+            where T2 : Enum
         {
             return objectComparator == null;
         }

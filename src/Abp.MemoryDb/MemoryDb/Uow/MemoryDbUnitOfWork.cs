@@ -22,15 +22,15 @@ namespace Abp.MemoryDb.Uow
         /// Constructor.
         /// </summary>
         public MemoryDbUnitOfWork(
-            IAbpMemoryDbModuleConfiguration configuration, 
-            MemoryDatabase memoryDatabase, 
+            IAbpMemoryDbModuleConfiguration configuration,
+            MemoryDatabase memoryDatabase,
             IConnectionStringResolver connectionStringResolver,
             IUnitOfWorkFilterExecuter filterExecuter,
             IUnitOfWorkDefaultOptions defaultOptions)
             : base(
-                  connectionStringResolver, 
-                  defaultOptions,
-                  filterExecuter)
+                connectionStringResolver,
+                defaultOptions,
+                filterExecuter)
         {
             _configuration = configuration;
             _memoryDatabase = memoryDatabase;
@@ -43,31 +43,26 @@ namespace Abp.MemoryDb.Uow
 
         public override void SaveChanges()
         {
-
         }
 
-        #pragma warning disable 1998
+#pragma warning disable 1998
         public override async Task SaveChangesAsync()
         {
-
         }
-        #pragma warning restore 1998
+#pragma warning restore 1998
 
         protected override void CompleteUow()
         {
-
         }
 
-        #pragma warning disable 1998
+#pragma warning disable 1998
         protected override async Task CompleteUowAsync()
         {
-
         }
-        #pragma warning restore 1998
+#pragma warning restore 1998
 
         protected override void DisposeUow()
         {
-
         }
     }
 }

@@ -14,10 +14,7 @@ namespace Abp.Notifications
         /// </summary>
         public LocalizableString Message
         {
-            get
-            {
-                return _message ?? (this[nameof(Message)] as LocalizableString);
-            }
+            get => _message ?? this[nameof(Message)] as LocalizableString;
             set
             {
                 this[nameof(Message)] = value;
@@ -32,7 +29,6 @@ namespace Abp.Notifications
         /// </summary>
         private LocalizableMessageNotificationData()
         {
-
         }
 
         /// <summary>

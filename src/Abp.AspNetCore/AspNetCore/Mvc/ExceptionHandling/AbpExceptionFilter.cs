@@ -17,122 +17,95 @@ using Microsoft.AspNetCore.Http.Extensions;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Filters;
 
-namespace Abp.AspNetCore.Mvc.ExceptionHandling
+namespace Abp.AspNetCore.Mvc.ExceptionHandling;
+
+public class AbpExceptionFilter : IExceptionFilter, ITransientDependency
 {
-    public class AbpExceptionFilter : IExceptionFilter, ITransientDependency
+    public ILogger Logger { get; set; }
+
+    public IEventBus EventBus { get; set; }
+
+    private readonly IErrorInfoBuilder _errorInfoBuilder;
+    private readonly IAbpAspNetCoreConfiguration _configuration;
+    private readonly IAbpWebCommonModuleConfiguration _abpWebCommonModuleConfiguration;
+
+    public AbpExceptionFilter(
+        IErrorInfoBuilder errorInfoBuilder,
+        IAbpAspNetCoreConfiguration configuration,
+        IAbpWebCommonModuleConfiguration abpWebCommonModuleConfiguration)
     {
-        public ILogger Logger { get; set; }
+        _errorInfoBuilder = errorInfoBuilder;
+        _configuration = configuration;
+        _abpWebCommonModuleConfiguration = abpWebCommonModuleConfiguration;
 
-        public IEventBus EventBus { get; set; }
+        Logger = NullLogger.Instance;
+        EventBus = NullEventBus.Instance;
+    }
 
-        private readonly IErrorInfoBuilder _errorInfoBuilder;
-        private readonly IAbpAspNetCoreConfiguration _configuration;
-        private readonly IAbpWebCommonModuleConfiguration _abpWebCommonModuleConfiguration;
+    public void OnException(ExceptionContext context)
+    {
+        if (!context.ActionDescriptor.IsControllerAction()) return;
 
-        public AbpExceptionFilter(
-            IErrorInfoBuilder errorInfoBuilder,
-            IAbpAspNetCoreConfiguration configuration,
-            IAbpWebCommonModuleConfiguration abpWebCommonModuleConfiguration)
-        {
-            _errorInfoBuilder = errorInfoBuilder;
-            _configuration = configuration;
-            _abpWebCommonModuleConfiguration = abpWebCommonModuleConfiguration;
+        var wrapResultAttribute = ReflectionHelper.GetSingleAttributeOfMemberOrDeclaringTypeOrDefault(
+            context.ActionDescriptor.GetMethodInfo(),
+            _configuration.DefaultWrapResultAttribute
+        );
 
-            Logger = NullLogger.Instance;
-            EventBus = NullEventBus.Instance;
-        }
+        if (wrapResultAttribute.LogError) LogHelper.LogException(Logger, context.Exception);
 
-        public void OnException(ExceptionContext context)
-        {
-            if (!context.ActionDescriptor.IsControllerAction())
-            {
-                return;
-            }
+        HandleAndWrapException(context, wrapResultAttribute);
+    }
 
-            var wrapResultAttribute = ReflectionHelper.GetSingleAttributeOfMemberOrDeclaringTypeOrDefault(
-                context.ActionDescriptor.GetMethodInfo(),
-                _configuration.DefaultWrapResultAttribute
-            );
+    protected virtual void HandleAndWrapException(ExceptionContext context, WrapResultAttribute wrapResultAttribute)
+    {
+        if (!ActionResultHelper.IsObjectResult(context.ActionDescriptor.GetMethodInfo().ReturnType)) return;
 
-            if (wrapResultAttribute.LogError)
-            {
-                LogHelper.LogException(Logger, context.Exception);
-            }
-
-            HandleAndWrapException(context, wrapResultAttribute);
-        }
-
-        protected virtual void HandleAndWrapException(ExceptionContext context, WrapResultAttribute wrapResultAttribute)
-        {
-            if (!ActionResultHelper.IsObjectResult(context.ActionDescriptor.GetMethodInfo().ReturnType))
-            {
-                return;
-            }
-
-            var displayUrl = context.HttpContext.Request.GetDisplayUrl();
-            if (_abpWebCommonModuleConfiguration.WrapResultFilters.HasFilterForWrapOnError(displayUrl,
+        var displayUrl = context.HttpContext.Request.GetDisplayUrl();
+        if (_abpWebCommonModuleConfiguration.WrapResultFilters.HasFilterForWrapOnError(displayUrl,
                 out var wrapOnError))
-            {
-                context.HttpContext.Response.StatusCode = GetStatusCode(context, wrapOnError);
+        {
+            context.HttpContext.Response.StatusCode = GetStatusCode(context, wrapOnError);
 
-                if (!wrapOnError)
-                {
-                    return;
-                }
-
-                HandleError(context);
-                return;
-            }
-
-            context.HttpContext.Response.StatusCode = GetStatusCode(context, wrapResultAttribute.WrapOnError);
-
-            if (!wrapResultAttribute.WrapOnError)
-            {
-                return;
-            }
+            if (!wrapOnError) return;
 
             HandleError(context);
+            return;
         }
 
-        private void HandleError(ExceptionContext context)
-        {
-            context.Result = new ObjectResult(
-                new AjaxResponse(
-                    _errorInfoBuilder.BuildForException(context.Exception),
-                    context.Exception is AbpAuthorizationException
-                )
-            );
+        context.HttpContext.Response.StatusCode = GetStatusCode(context, wrapResultAttribute.WrapOnError);
 
-            EventBus.Trigger(this, new AbpHandledExceptionData(context.Exception));
+        if (!wrapResultAttribute.WrapOnError) return;
 
-            context.Exception = null; // Handled!
-        }
+        HandleError(context);
+    }
 
-        protected virtual int GetStatusCode(ExceptionContext context, bool wrapOnError)
-        {
-            if (context.Exception is AbpAuthorizationException)
-            {
-                return context.HttpContext.User.Identity.IsAuthenticated
-                    ? (int) HttpStatusCode.Forbidden
-                    : (int) HttpStatusCode.Unauthorized;
-            }
+    private void HandleError(ExceptionContext context)
+    {
+        context.Result = new ObjectResult(
+            new AjaxResponse(
+                _errorInfoBuilder.BuildForException(context.Exception),
+                context.Exception is AbpAuthorizationException
+            )
+        );
 
-            if (context.Exception is AbpValidationException)
-            {
-                return (int) HttpStatusCode.BadRequest;
-            }
+        EventBus.Trigger(this, new AbpHandledExceptionData(context.Exception));
 
-            if (context.Exception is EntityNotFoundException)
-            {
-                return (int) HttpStatusCode.NotFound;
-            }
+        context.Exception = null; // Handled!
+    }
 
-            if (wrapOnError)
-            {
-                return (int) HttpStatusCode.InternalServerError;
-            }
+    protected virtual int GetStatusCode(ExceptionContext context, bool wrapOnError)
+    {
+        if (context.Exception is AbpAuthorizationException)
+            return context.HttpContext.User.Identity.IsAuthenticated
+                ? (int)HttpStatusCode.Forbidden
+                : (int)HttpStatusCode.Unauthorized;
 
-            return context.HttpContext.Response.StatusCode;
-        }
+        if (context.Exception is AbpValidationException) return (int)HttpStatusCode.BadRequest;
+
+        if (context.Exception is EntityNotFoundException) return (int)HttpStatusCode.NotFound;
+
+        if (wrapOnError) return (int)HttpStatusCode.InternalServerError;
+
+        return context.HttpContext.Response.StatusCode;
     }
 }

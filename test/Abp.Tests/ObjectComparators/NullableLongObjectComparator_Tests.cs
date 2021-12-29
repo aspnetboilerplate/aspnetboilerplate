@@ -116,7 +116,8 @@ namespace Abp.Tests.ObjectComparators
 
         [Theory]
         [MemberData(nameof(Should_Compare_Data_Generator))]
-        public override void Should_Compare_With_ObjectComparatorCondition(long? baseObject, long? compareObject, string compareType, bool result)
+        public override void Should_Compare_With_ObjectComparatorCondition(long? baseObject, long? compareObject,
+            string compareType, bool result)
         {
             base.Should_Compare_With_ObjectComparatorCondition(baseObject, compareObject, compareType, result);
         }

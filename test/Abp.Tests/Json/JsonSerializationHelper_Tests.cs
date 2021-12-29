@@ -22,7 +22,8 @@ namespace Abp.Tests.Json
         [Fact]
         public void Should_Deserialize_With_Different_Assembly_Version()
         {
-            var str = "Abp.Localization.LocalizableString, Abp, Version=1.5.1.0, Culture=neutral, PublicKeyToken=null|{\"SourceName\":\"Bar\",\"Name\":\"Foo\"}";
+            var str =
+                "Abp.Localization.LocalizableString, Abp, Version=1.5.1.0, Culture=neutral, PublicKeyToken=null|{\"SourceName\":\"Bar\",\"Name\":\"Foo\"}";
             var result = (LocalizableString)JsonSerializationHelper.DeserializeWithType(str);
             result.ShouldNotBeNull();
             result.Name.ShouldBe("Foo");
@@ -34,7 +35,8 @@ namespace Abp.Tests.Json
         {
             Clock.Provider = ClockProviders.Utc;
 
-            var str = "Abp.Tests.Json.JsonSerializationHelper_Tests+MyClass2, Abp.Tests, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null|{\"Date\":\"2016-04-13T16:58:10.526+08:00\"}";
+            var str =
+                "Abp.Tests.Json.JsonSerializationHelper_Tests+MyClass2, Abp.Tests, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null|{\"Date\":\"2016-04-13T16:58:10.526+08:00\"}";
             var result = (MyClass2)JsonSerializationHelper.DeserializeWithType(str);
             result.ShouldNotBeNull();
             result.Date.ShouldBe(new DateTime(2016, 04, 13, 08, 58, 10, 526, Clock.Kind));
@@ -46,12 +48,14 @@ namespace Abp.Tests.Json
         {
             Clock.Provider = ClockProviders.Utc;
 
-            var str1 = "Abp.Tests.Json.JsonSerializationHelper_Tests+MyClass3, Abp.Tests, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null|{\"Date\":\"2016-04-13T16:58:10.526+08:00\"}";
+            var str1 =
+                "Abp.Tests.Json.JsonSerializationHelper_Tests+MyClass3, Abp.Tests, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null|{\"Date\":\"2016-04-13T16:58:10.526+08:00\"}";
             var result1 = (MyClass3)JsonSerializationHelper.DeserializeWithType(str1);
             result1.ShouldNotBeNull();
             result1.Date.Kind.ShouldBe(DateTimeKind.Local);
 
-            var str2 = "Abp.Tests.Json.JsonSerializationHelper_Tests+MyClass4, Abp.Tests, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null|{\"Date\":\"2016-04-13T16:58:10.526+08:00\"}";
+            var str2 =
+                "Abp.Tests.Json.JsonSerializationHelper_Tests+MyClass4, Abp.Tests, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null|{\"Date\":\"2016-04-13T16:58:10.526+08:00\"}";
             var result2 = (MyClass4)JsonSerializationHelper.DeserializeWithType(str2);
             result2.ShouldNotBeNull();
             result2.Date.Kind.ShouldBe(DateTimeKind.Local);
@@ -63,7 +67,6 @@ namespace Abp.Tests.Json
 
             public MyClass1()
             {
-
             }
 
             public MyClass1(string name)
@@ -95,8 +98,7 @@ namespace Abp.Tests.Json
 
         public class MyClass4
         {
-            [DisableDateTimeNormalization]
-            public DateTime Date { get; set; }
+            [DisableDateTimeNormalization] public DateTime Date { get; set; }
 
             public MyClass4(DateTime date)
             {

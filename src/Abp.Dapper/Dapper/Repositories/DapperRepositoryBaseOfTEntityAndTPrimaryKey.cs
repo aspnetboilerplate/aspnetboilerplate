@@ -45,7 +45,8 @@ namespace Abp.Dapper.Repositories
 
         public virtual async Task<DbConnection> GetConnectionAsync()
         {
-            var connection = await _activeTransactionProvider.GetActiveConnectionAsync(ActiveTransactionProviderArgs.Empty);
+            var connection =
+                await _activeTransactionProvider.GetActiveConnectionAsync(ActiveTransactionProviderArgs.Empty);
             return (DbConnection)connection;
         }
 
@@ -60,13 +61,13 @@ namespace Abp.Dapper.Repositories
         {
             var connection =
                 await _activeTransactionProvider.GetActiveTransactionAsync(ActiveTransactionProviderArgs.Empty);
-            return (DbTransaction) connection;
+            return (DbTransaction)connection;
         }
 
         public virtual DbTransaction GetActiveTransaction()
         {
             var connection = _activeTransactionProvider.GetActiveTransaction(ActiveTransactionProviderArgs.Empty);
-            return (DbTransaction) connection;
+            return (DbTransaction)connection;
         }
 
         public virtual int? Timeout => null;
@@ -97,11 +98,8 @@ namespace Abp.Dapper.Repositories
 
         public override TEntity Get(TPrimaryKey id)
         {
-            TEntity item = FirstOrDefault(id);
-            if (item == null)
-            {
-                throw new EntityNotFoundException(typeof(TEntity), id);
-            }
+            var item = FirstOrDefault(id);
+            if (item == null) throw new EntityNotFoundException(typeof(TEntity), id);
 
             return item;
         }
@@ -142,7 +140,8 @@ namespace Abp.Dapper.Repositories
             return GetConnection().Execute(query, parameters, GetActiveTransaction(), Timeout, commandType);
         }
 
-        public override async Task<int> ExecuteAsync(string query, object parameters = null, CommandType? commandType = null)
+        public override async Task<int> ExecuteAsync(string query, object parameters = null,
+            CommandType? commandType = null)
         {
             var connection = await GetConnectionAsync();
             var activeTransaction = await GetActiveTransactionAsync();
@@ -156,7 +155,7 @@ namespace Abp.Dapper.Repositories
 
             return GetConnection().GetPage<TEntity>(
                 filteredPredicate,
-                new List<ISort> {new Sort {Ascending = ascending, PropertyName = sortingProperty}},
+                new List<ISort> { new Sort { Ascending = ascending, PropertyName = sortingProperty } },
                 pageNumber,
                 itemsPerPage,
                 GetActiveTransaction(),
@@ -175,7 +174,7 @@ namespace Abp.Dapper.Repositories
             IPredicate filteredPredicate = DapperQueryFilterExecuter.ExecuteFilter<TEntity, TPrimaryKey>(predicate);
             return GetConnection().GetSet<TEntity>(
                 filteredPredicate,
-                new List<ISort> {new Sort {Ascending = ascending, PropertyName = sortingProperty}},
+                new List<ISort> { new Sort { Ascending = ascending, PropertyName = sortingProperty } },
                 firstResult,
                 maxResults,
                 GetActiveTransaction(),
@@ -238,10 +237,7 @@ namespace Abp.Dapper.Repositories
         public override void Delete(Expression<Func<TEntity, bool>> predicate)
         {
             IEnumerable<TEntity> items = GetAll(predicate);
-            foreach (TEntity entity in items)
-            {
-                Delete(entity);
-            }
+            foreach (TEntity entity in items) Delete(entity);
         }
 
         public override TPrimaryKey InsertAndGetId(TEntity entity)

@@ -37,8 +37,8 @@ namespace Abp.Web.Mvc.Authorization
             }
 
             httpContext.Response.StatusCode = httpContext.User.Identity.IsAuthenticated == false
-                                      ? (int)System.Net.HttpStatusCode.Unauthorized
-                                      : (int)System.Net.HttpStatusCode.Forbidden;
+                ? (int)System.Net.HttpStatusCode.Unauthorized
+                : (int)System.Net.HttpStatusCode.Forbidden;
 
             httpContext.Response.SuppressFormsAuthenticationRedirect = true;
             httpContext.Response.End();

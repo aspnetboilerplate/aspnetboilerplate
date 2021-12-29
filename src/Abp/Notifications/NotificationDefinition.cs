@@ -16,7 +16,7 @@ namespace Abp.Notifications
         /// Unique name of the notification.
         /// </summary>
         public string Name { get; private set; }
-        
+
         /// <summary>
         /// Related entity type with this notification (optional).
         /// </summary>
@@ -39,7 +39,7 @@ namespace Abp.Notifications
         /// Optional.
         /// </summary>
         public IPermissionDependency PermissionDependency { get; set; }
-        
+
         /// <summary>
         /// A feature dependency. This notification will be available to a tenant if this feature is enabled.
         /// Optional.
@@ -54,8 +54,8 @@ namespace Abp.Notifications
         /// <param name="key">Key</param>
         public object this[string key]
         {
-            get { return Attributes.GetOrDefault(key); }
-            set { Attributes[key] = value; }
+            get => Attributes.GetOrDefault(key);
+            set => Attributes[key] = value;
         }
 
         /// <summary>
@@ -73,13 +73,13 @@ namespace Abp.Notifications
         /// <param name="description">Description for the notification</param>
         /// <param name="permissionDependency">A permission dependency. This notification will be available to a user if this dependency is satisfied.</param>
         /// <param name="featureDependency">A feature dependency. This notification will be available to a tenant if this feature is enabled.</param>
-        public NotificationDefinition(string name, Type entityType = null, ILocalizableString displayName = null, ILocalizableString description = null, IPermissionDependency permissionDependency = null, IFeatureDependency featureDependency = null)
+        public NotificationDefinition(string name, Type entityType = null, ILocalizableString displayName = null,
+            ILocalizableString description = null, IPermissionDependency permissionDependency = null,
+            IFeatureDependency featureDependency = null)
         {
             if (string.IsNullOrWhiteSpace(name))
-            {
                 throw new ArgumentNullException("name", "name can not be null, empty or whitespace!");
-            }
-            
+
             Name = name;
             EntityType = entityType;
             DisplayName = displayName;

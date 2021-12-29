@@ -17,9 +17,7 @@ namespace Abp.Xml.Extensions
         public static string GetAttributeValueOrNull(this XmlNode node, string attributeName)
         {
             if (node.Attributes == null || node.Attributes.Count <= 0)
-            {
                 throw new AbpException(node.Name + " node has not " + attributeName + " attribute");
-            }
 
             return node.Attributes
                 .Cast<XmlAttribute>()

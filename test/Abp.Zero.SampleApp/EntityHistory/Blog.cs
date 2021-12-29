@@ -10,8 +10,7 @@ namespace Abp.Zero.SampleApp.EntityHistory
     [Audited]
     public class Blog : AggregateRoot, IHasCreationTime
     {
-        [DisableAuditing]
-        public string Name { get; set; }
+        [DisableAuditing] public string Name { get; set; }
 
         public string Url { get; protected set; }
 
@@ -23,20 +22,13 @@ namespace Abp.Zero.SampleApp.EntityHistory
 
         public Blog()
         {
-
         }
 
         public Blog(string name, string url, string bloggerName)
         {
-            if (string.IsNullOrWhiteSpace(name))
-            {
-                throw new ArgumentNullException(nameof(name));
-            }
+            if (string.IsNullOrWhiteSpace(name)) throw new ArgumentNullException(nameof(name));
 
-            if (string.IsNullOrWhiteSpace(url))
-            {
-                throw new ArgumentNullException(nameof(url));
-            }
+            if (string.IsNullOrWhiteSpace(url)) throw new ArgumentNullException(nameof(url));
 
             Name = name;
             Url = url;
@@ -45,10 +37,7 @@ namespace Abp.Zero.SampleApp.EntityHistory
 
         public void ChangeUrl(string url)
         {
-            if (string.IsNullOrWhiteSpace(url))
-            {
-                throw new ArgumentNullException(nameof(url));
-            }
+            if (string.IsNullOrWhiteSpace(url)) throw new ArgumentNullException(nameof(url));
 
             var oldUrl = Url;
             Url = url;

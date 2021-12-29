@@ -5,6 +5,5 @@
     /// </summary>
     public interface IBackgroundWorker : IRunnable
     {
-
     }
 }

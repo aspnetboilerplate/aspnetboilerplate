@@ -28,115 +28,108 @@ using Microsoft.Extensions.Options;
 using Newtonsoft.Json.Serialization;
 using Microsoft.AspNetCore.Mvc.Razor.RuntimeCompilation;
 
-namespace Abp.AspNetCore
+namespace Abp.AspNetCore;
+
+public static class AbpServiceCollectionExtensions
 {
-    public static class AbpServiceCollectionExtensions
+    /// <summary>
+    /// Integrates ABP to AspNet Core.
+    /// </summary>
+    /// <typeparam name="TStartupModule">Startup module of the application which depends on other used modules. Should be derived from <see cref="AbpModule"/>.</typeparam>
+    /// <param name="services">Services.</param>
+    /// <param name="optionsAction">An action to get/modify options</param>
+    /// <param name="removeConventionalInterceptors">Removes the conventional interceptors</param>
+    public static IServiceProvider AddAbp<TStartupModule>(this IServiceCollection services,
+        [CanBeNull] Action<AbpBootstrapperOptions> optionsAction = null,
+        bool removeConventionalInterceptors = true)
+        where TStartupModule : AbpModule
     {
-        /// <summary>
-        /// Integrates ABP to AspNet Core.
-        /// </summary>
-        /// <typeparam name="TStartupModule">Startup module of the application which depends on other used modules. Should be derived from <see cref="AbpModule"/>.</typeparam>
-        /// <param name="services">Services.</param>
-        /// <param name="optionsAction">An action to get/modify options</param>
-        /// <param name="removeConventionalInterceptors">Removes the conventional interceptors</param>
-        public static IServiceProvider AddAbp<TStartupModule>(this IServiceCollection services,
-            [CanBeNull] Action<AbpBootstrapperOptions> optionsAction = null,
-            bool removeConventionalInterceptors = true)
-            where TStartupModule : AbpModule
+        if (removeConventionalInterceptors) RemoveConventionalInterceptionSelectors();
+
+        var abpBootstrapper = AddAbpBootstrapper<TStartupModule>(services, optionsAction);
+        ConfigureAspNetCore(services, abpBootstrapper.IocManager);
+
+        return WindsorRegistrationHelper.CreateServiceProvider(abpBootstrapper.IocManager.IocContainer, services);
+    }
+
+    /// <summary>
+    /// Integrates ABP to AspNet Core without creating a IServiceProvider.
+    /// </summary>
+    /// <typeparam name="TStartupModule">Startup module of the application which depends on other used modules. Should be derived from <see cref="AbpModule"/>.</typeparam>
+    /// <param name="services">Services.</param>
+    /// <param name="optionsAction">An action to get/modify options</param>
+    /// <param name="removeConventionalInterceptors">Removes the conventional interceptors</param>
+    public static void AddAbpWithoutCreatingServiceProvider<TStartupModule>(this IServiceCollection services,
+        [CanBeNull] Action<AbpBootstrapperOptions> optionsAction = null,
+        bool removeConventionalInterceptors = true)
+        where TStartupModule : AbpModule
+    {
+        if (removeConventionalInterceptors) RemoveConventionalInterceptionSelectors();
+
+        var abpBootstrapper = AddAbpBootstrapper<TStartupModule>(services, optionsAction);
+        ConfigureAspNetCore(services, abpBootstrapper.IocManager);
+    }
+
+    private static void RemoveConventionalInterceptionSelectors()
+    {
+        UnitOfWorkDefaultOptions.ConventionalUowSelectorList = new List<Func<Type, bool>>();
+        AbpAuditingDefaultOptions.ConventionalAuditingSelectorList = new List<Func<Type, bool>>();
+        AbpValidationDefaultOptions.ConventionalValidationSelectorList = new List<Func<Type, bool>>();
+    }
+
+    private static void ConfigureAspNetCore(IServiceCollection services, IIocResolver iocResolver)
+    {
+        //See https://github.com/aspnet/Mvc/issues/3936 to know why we added these services.
+        services.TryAddSingleton<IHttpContextAccessor, HttpContextAccessor>();
+        services.TryAddSingleton<IActionContextAccessor, ActionContextAccessor>();
+
+        //Use DI to create controllers
+        services.Replace(ServiceDescriptor.Transient<IControllerActivator, ServiceBasedControllerActivator>());
+
+        //Use DI to create page models
+        services.Replace(ServiceDescriptor
+            .Singleton<IPageModelActivatorProvider, ServiceBasedPageModelActivatorProvider>());
+
+        //Use DI to create view components
+        services.Replace(ServiceDescriptor
+            .Singleton<IViewComponentActivator, ServiceBasedViewComponentActivator>());
+
+        //Add feature providers
+        var partManager = services.GetSingletonServiceOrNull<ApplicationPartManager>();
+        partManager?.FeatureProviders.Add(new AbpAppServiceControllerFeatureProvider(iocResolver));
+
+        //Configure JSON serializer
+        services.Configure<MvcNewtonsoftJsonOptions>(jsonOptions =>
         {
-            if (removeConventionalInterceptors)
+            jsonOptions.SerializerSettings.ContractResolver = new AbpMvcContractResolver(iocResolver)
             {
-                RemoveConventionalInterceptionSelectors();
-            }
-            
-            var abpBootstrapper = AddAbpBootstrapper<TStartupModule>(services, optionsAction);
-            ConfigureAspNetCore(services, abpBootstrapper.IocManager);
+                NamingStrategy = new CamelCaseNamingStrategy()
+            };
+        });
 
-            return WindsorRegistrationHelper.CreateServiceProvider(abpBootstrapper.IocManager.IocContainer, services);
-        }
+        //Configure MVC
+        services.Configure<MvcOptions>(mvcOptions => { mvcOptions.AddAbp(services); });
 
-        /// <summary>
-        /// Integrates ABP to AspNet Core without creating a IServiceProvider.
-        /// </summary>
-        /// <typeparam name="TStartupModule">Startup module of the application which depends on other used modules. Should be derived from <see cref="AbpModule"/>.</typeparam>
-        /// <param name="services">Services.</param>
-        /// <param name="optionsAction">An action to get/modify options</param>
-        /// <param name="removeConventionalInterceptors">Removes the conventional interceptors</param>
-        public static void AddAbpWithoutCreatingServiceProvider<TStartupModule>(this IServiceCollection services,
-            [CanBeNull] Action<AbpBootstrapperOptions> optionsAction = null,
-            bool removeConventionalInterceptors = true)
-            where TStartupModule : AbpModule
-        {
-            if (removeConventionalInterceptors)
-            {
-                RemoveConventionalInterceptionSelectors();
-            }
-
-            var abpBootstrapper = AddAbpBootstrapper<TStartupModule>(services, optionsAction);
-            ConfigureAspNetCore(services, abpBootstrapper.IocManager);
-        }
-
-        private static void RemoveConventionalInterceptionSelectors()
-        {
-            UnitOfWorkDefaultOptions.ConventionalUowSelectorList  = new List<Func<Type, bool>>();
-            AbpAuditingDefaultOptions.ConventionalAuditingSelectorList = new List<Func<Type, bool>>();
-            AbpValidationDefaultOptions.ConventionalValidationSelectorList = new List<Func<Type, bool>>();
-        }
-
-        private static void ConfigureAspNetCore(IServiceCollection services, IIocResolver iocResolver)
-        {
-            //See https://github.com/aspnet/Mvc/issues/3936 to know why we added these services.
-            services.TryAddSingleton<IHttpContextAccessor, HttpContextAccessor>();
-            services.TryAddSingleton<IActionContextAccessor, ActionContextAccessor>();
-
-            //Use DI to create controllers
-            services.Replace(ServiceDescriptor.Transient<IControllerActivator, ServiceBasedControllerActivator>());
-
-            //Use DI to create page models
-            services.Replace(ServiceDescriptor
-                .Singleton<IPageModelActivatorProvider, ServiceBasedPageModelActivatorProvider>());
-
-            //Use DI to create view components
-            services.Replace(ServiceDescriptor
-                .Singleton<IViewComponentActivator, ServiceBasedViewComponentActivator>());
-
-            //Add feature providers
-            var partManager = services.GetSingletonServiceOrNull<ApplicationPartManager>();
-            partManager?.FeatureProviders.Add(new AbpAppServiceControllerFeatureProvider(iocResolver));
-
-            //Configure JSON serializer
-            services.Configure<MvcNewtonsoftJsonOptions>(jsonOptions =>
-            {
-                jsonOptions.SerializerSettings.ContractResolver = new AbpMvcContractResolver(iocResolver)
-                {
-                    NamingStrategy = new CamelCaseNamingStrategy()
-                };
-            });
-
-            //Configure MVC
-            services.Configure<MvcOptions>(mvcOptions => { mvcOptions.AddAbp(services); });
-
-            //Configure Razor
-            services.Insert(0,
-                ServiceDescriptor.Singleton<IConfigureOptions<MvcRazorRuntimeCompilationOptions>>(
-                    new ConfigureOptions<MvcRazorRuntimeCompilationOptions>(
-                        (options) => { options.FileProviders.Add(new EmbeddedResourceViewFileProvider(iocResolver)); }
-                    )
+        //Configure Razor
+        services.Insert(0,
+            ServiceDescriptor.Singleton<IConfigureOptions<MvcRazorRuntimeCompilationOptions>>(
+                new ConfigureOptions<MvcRazorRuntimeCompilationOptions>(
+                    (options) => { options.FileProviders.Add(new EmbeddedResourceViewFileProvider(iocResolver)); }
                 )
-            );
+            )
+        );
 
-            services.AddHttpClient(AspNetCoreWebhookSender.WebhookSenderHttpClientName);
-        }
+        services.AddHttpClient(AspNetCoreWebhookSender.WebhookSenderHttpClientName);
+    }
 
-        private static AbpBootstrapper AddAbpBootstrapper<TStartupModule>(IServiceCollection services,
-            Action<AbpBootstrapperOptions> optionsAction)
-            where TStartupModule : AbpModule
-        {
-            var abpBootstrapper = AbpBootstrapper.Create<TStartupModule>(optionsAction);
+    private static AbpBootstrapper AddAbpBootstrapper<TStartupModule>(IServiceCollection services,
+        Action<AbpBootstrapperOptions> optionsAction)
+        where TStartupModule : AbpModule
+    {
+        var abpBootstrapper = AbpBootstrapper.Create<TStartupModule>(optionsAction);
 
-            services.AddSingleton(abpBootstrapper);
+        services.AddSingleton(abpBootstrapper);
 
-            return abpBootstrapper;
-        }
+        return abpBootstrapper;
     }
 }

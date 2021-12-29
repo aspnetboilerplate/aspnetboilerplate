@@ -12,7 +12,7 @@ namespace Abp.Zero.NHibernate.EntityMappings
             Map(x => x.Name);
             Map(x => x.DisplayName);
             Map(x => x.Icon);
-            
+
             this.MapFullAudited();
         }
     }

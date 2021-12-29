@@ -58,14 +58,16 @@ namespace Abp.Notifications
         /// <summary>
         /// Initializes a new instance of the <see cref="NotificationSubscriptionInfo"/> class.
         /// </summary>
-        public NotificationSubscriptionInfo(Guid id, int? tenantId, long userId, string notificationName, EntityIdentifier entityIdentifier = null)
+        public NotificationSubscriptionInfo(Guid id, int? tenantId, long userId, string notificationName,
+            EntityIdentifier entityIdentifier = null)
         {
             Id = id;
             TenantId = tenantId;
             NotificationName = notificationName;
             UserId = userId;
             EntityTypeName = entityIdentifier == null ? null : entityIdentifier.Type.FullName;
-            EntityTypeAssemblyQualifiedName = entityIdentifier == null ? null : entityIdentifier.Type.AssemblyQualifiedName;
+            EntityTypeAssemblyQualifiedName =
+                entityIdentifier == null ? null : entityIdentifier.Type.AssemblyQualifiedName;
             EntityId = entityIdentifier == null ? null : entityIdentifier.Id.ToJsonString();
         }
     }

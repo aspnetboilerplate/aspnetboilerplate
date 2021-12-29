@@ -28,7 +28,7 @@ namespace Abp.RealTime
 
         public bool Remove(string connectionId)
         {
-            return TryRemove(connectionId, out IOnlineClient removed);
+            return TryRemove(connectionId, out var removed);
         }
 
         public bool TryRemove(string connectionId, out IOnlineClient client)

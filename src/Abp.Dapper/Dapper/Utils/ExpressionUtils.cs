@@ -20,7 +20,8 @@ namespace Abp.Dapper.Utils
         {
             ParameterExpression param = Expression.Parameter(typeof(T), typeof(T).Name);
             MemberExpression memberExp = Expression.Property(param, name);
-            BinaryExpression body = Expression.Equal(memberExp, typeOfValue == null ? Expression.Constant(value) : Expression.Constant(value, typeOfValue));
+            BinaryExpression body = Expression.Equal(memberExp,
+                typeOfValue == null ? Expression.Constant(value) : Expression.Constant(value, typeOfValue));
             return Expression.Lambda<Func<T, bool>>(body, param);
         }
     }

@@ -26,28 +26,30 @@ namespace Abp.Quartz.Tests
                 job =>
                 {
                     job.WithDescription("HelloJobDescription")
-                       .WithIdentity("HelloJobKey");
+                        .WithIdentity("HelloJobKey");
                 },
                 trigger =>
                 {
                     trigger.WithIdentity("HelloJobTrigger")
-                           .WithDescription("HelloJobTriggerDescription")
-                           .WithSimpleSchedule(schedule => schedule.WithRepeatCount(50).WithInterval(TimeSpan.FromSeconds(1)))
-                           .StartNow();
+                        .WithDescription("HelloJobTriggerDescription")
+                        .WithSimpleSchedule(schedule =>
+                            schedule.WithRepeatCount(50).WithInterval(TimeSpan.FromSeconds(1)))
+                        .StartNow();
                 });
 
             await _quartzScheduleJobManager.ScheduleAsync<GoodByeJob>(
                 job =>
                 {
                     job.WithDescription("GoodByeJobDescription")
-                       .WithIdentity("GoodByeJobKey");
+                        .WithIdentity("GoodByeJobKey");
                 },
                 trigger =>
                 {
                     trigger.WithIdentity("GoodByeJobTrigger")
-                           .WithDescription("GoodByeJobTriggerDescription")
-                           .WithSimpleSchedule(schedule => schedule.WithRepeatCount(50).WithInterval(TimeSpan.FromSeconds(1)))
-                           .StartNow();
+                        .WithDescription("GoodByeJobTriggerDescription")
+                        .WithSimpleSchedule(schedule =>
+                            schedule.WithRepeatCount(50).WithInterval(TimeSpan.FromSeconds(1)))
+                        .StartNow();
                 });
         }
 
@@ -57,8 +59,9 @@ namespace Abp.Quartz.Tests
                 trigger =>
                 {
                     trigger.WithIdentity("HelloJobRescheduleTrigger")
-                           .WithSimpleSchedule(schedule => schedule.WithRepeatCount(50).WithInterval(TimeSpan.FromSeconds(1)))
-                           .StartNow();
+                        .WithSimpleSchedule(schedule =>
+                            schedule.WithRepeatCount(50).WithInterval(TimeSpan.FromSeconds(1)))
+                        .StartNow();
                 });
         }
 
@@ -89,7 +92,8 @@ namespace Abp.Quartz.Tests
 
             await RescheduleJob();
             (await _abpQuartzConfiguration.Scheduler.CheckExists(new TriggerKey("HelloJobTrigger"))).ShouldBe(false);
-            (await _abpQuartzConfiguration.Scheduler.CheckExists(new TriggerKey("HelloJobRescheduleTrigger"))).ShouldBe(true);
+            (await _abpQuartzConfiguration.Scheduler.CheckExists(new TriggerKey("HelloJobRescheduleTrigger")))
+                .ShouldBe(true);
 
             await UnscheduleJob();
             (await _abpQuartzConfiguration.Scheduler.CheckExists(new TriggerKey("GoodByeJobTrigger"))).ShouldBe(false);

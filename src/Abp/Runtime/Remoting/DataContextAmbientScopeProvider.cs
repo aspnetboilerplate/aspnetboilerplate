@@ -10,7 +10,8 @@ namespace Abp.Runtime.Remoting
     {
         public ILogger Logger { get; set; }
 
-        private static readonly ConcurrentDictionary<string, ScopeItem> ScopeDictionary = new ConcurrentDictionary<string, ScopeItem>();
+        private static readonly ConcurrentDictionary<string, ScopeItem> ScopeDictionary =
+            new ConcurrentDictionary<string, ScopeItem>();
 
         private readonly IAmbientDataContext _dataContext;
 
@@ -26,10 +27,7 @@ namespace Abp.Runtime.Remoting
         public T GetValue(string contextKey)
         {
             var item = GetCurrentItem(contextKey);
-            if (item == null)
-            {
-                return default(T);
-            }
+            if (item == null) return default;
 
             return item.Value;
         }
@@ -39,9 +37,7 @@ namespace Abp.Runtime.Remoting
             var item = new ScopeItem(value, GetCurrentItem(contextKey));
 
             if (!ScopeDictionary.TryAdd(item.Id, item))
-            {
                 throw new AbpException("Can not add item! ScopeDictionary.TryAdd returns false!");
-            }
 
             _dataContext.SetData(contextKey, item.Id);
 

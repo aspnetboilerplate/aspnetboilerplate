@@ -18,7 +18,7 @@ namespace Abp.Web.Api.ProxyScripting
         private readonly ConcurrentDictionary<string, string> _cache;
 
         public ApiProxyScriptManager(
-            IApiDescriptionModelProvider modelProvider, 
+            IApiDescriptionModelProvider modelProvider,
             IApiProxyScriptingConfiguration configuration,
             IIocResolver iocResolver)
         {
@@ -31,10 +31,7 @@ namespace Abp.Web.Api.ProxyScripting
 
         public string GetScript(ApiProxyGenerationOptions options)
         {
-            if (options.UseCache)
-            {
-                return _cache.GetOrAdd(CreateCacheKey(options), (key) => CreateScript(options));
-            }
+            if (options.UseCache) return _cache.GetOrAdd(CreateCacheKey(options), (key) => CreateScript(options));
 
             return _cache[CreateCacheKey(options)] = CreateScript(options);
         }
@@ -44,15 +41,12 @@ namespace Abp.Web.Api.ProxyScripting
             var model = _modelProvider.CreateModel();
 
             if (options.IsPartialRequest())
-            {
                 model = model.CreateSubModel(options.Modules, options.Controllers, options.Actions);
-            }
 
             var generatorType = _configuration.Generators.GetOrDefault(options.GeneratorType);
             if (generatorType == null)
-            {
-                throw new AbpException($"Could not find a proxy script generator with given name: {options.GeneratorType}");
-            }
+                throw new AbpException(
+                    $"Could not find a proxy script generator with given name: {options.GeneratorType}");
 
             using (var generator = _iocResolver.ResolveAsDisposable<IProxyScriptGenerator>(generatorType))
             {

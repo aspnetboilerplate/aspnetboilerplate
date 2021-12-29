@@ -14,9 +14,9 @@ namespace Abp.Web.Api.Modeling
 
         public string TypeAsString { get; }
 
-        public bool IsOptional { get;  }
+        public bool IsOptional { get; }
 
-        public object DefaultValue { get;  }
+        public object DefaultValue { get; }
 
         public string[] ConstraintTypes { get; }
 
@@ -24,10 +24,10 @@ namespace Abp.Web.Api.Modeling
 
         private ParameterApiDescriptionModel()
         {
-            
         }
 
-        public ParameterApiDescriptionModel(string name, string nameOnMethod, Type type, bool isOptional = false, object defaultValue = null, string[] constraintTypes = null, string bindingSourceId = null)
+        public ParameterApiDescriptionModel(string name, string nameOnMethod, Type type, bool isOptional = false,
+            object defaultValue = null, string[] constraintTypes = null, string bindingSourceId = null)
         {
             Name = name;
             NameOnMethod = nameOnMethod;

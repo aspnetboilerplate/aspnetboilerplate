@@ -42,53 +42,26 @@ namespace Abp.Auditing
 
         public bool ShouldSaveAudit(MethodInfo methodInfo, bool defaultValue = false)
         {
-            if (!_configuration.IsEnabled)
-            {
-                return false;
-            }
+            if (!_configuration.IsEnabled) return false;
 
-            if (!_configuration.IsEnabledForAnonymousUsers && (AbpSession?.UserId == null))
-            {
-                return false;
-            }
+            if (!_configuration.IsEnabledForAnonymousUsers && AbpSession?.UserId == null) return false;
 
-            if (methodInfo == null)
-            {
-                return false;
-            }
+            if (methodInfo == null) return false;
 
-            if (!methodInfo.IsPublic)
-            {
-                return false;
-            }
+            if (!methodInfo.IsPublic) return false;
 
-            if (methodInfo.IsDefined(typeof(AuditedAttribute), true))
-            {
-                return true;
-            }
+            if (methodInfo.IsDefined(typeof(AuditedAttribute), true)) return true;
 
-            if (methodInfo.IsDefined(typeof(DisableAuditingAttribute), true))
-            {
-                return false;
-            }
+            if (methodInfo.IsDefined(typeof(DisableAuditingAttribute), true)) return false;
 
             var classType = methodInfo.DeclaringType;
             if (classType != null)
             {
-                if (classType.GetTypeInfo().IsDefined(typeof(AuditedAttribute), true))
-                {
-                    return true;
-                }
+                if (classType.GetTypeInfo().IsDefined(typeof(AuditedAttribute), true)) return true;
 
-                if (classType.GetTypeInfo().IsDefined(typeof(DisableAuditingAttribute), true))
-                {
-                    return false;
-                }
+                if (classType.GetTypeInfo().IsDefined(typeof(DisableAuditingAttribute), true)) return false;
 
-                if (_configuration.Selectors.Any(selector => selector.Predicate(classType)))
-                {
-                    return true;
-                }
+                if (_configuration.Selectors.Any(selector => selector.Predicate(classType))) return true;
             }
 
             return defaultValue;
@@ -149,24 +122,16 @@ namespace Abp.Auditing
         {
             try
             {
-                if (arguments.IsNullOrEmpty())
-                {
-                    return "{}";
-                }
+                if (arguments.IsNullOrEmpty()) return "{}";
 
                 var dictionary = new Dictionary<string, object>();
 
                 foreach (var argument in arguments)
-                {
-                    if (argument.Value != null && _configuration.IgnoredTypes.Any(t => t.IsInstanceOfType(argument.Value)))
-                    {
+                    if (argument.Value != null &&
+                        _configuration.IgnoredTypes.Any(t => t.IsInstanceOfType(argument.Value)))
                         dictionary[argument.Key] = null;
-                    }
                     else
-                    {
                         dictionary[argument.Key] = argument.Value;
-                    }
-                }
 
                 return _auditSerializer.Serialize(dictionary);
             }
@@ -182,10 +147,7 @@ namespace Abp.Auditing
             var parameters = method.GetParameters();
             var dictionary = new Dictionary<string, object>();
 
-            for (var i = 0; i < parameters.Length; i++)
-            {
-                dictionary[parameters[i].Name] = arguments[i];
-            }
+            for (var i = 0; i < parameters.Length; i++) dictionary[parameters[i].Name] = arguments[i];
 
             return dictionary;
         }

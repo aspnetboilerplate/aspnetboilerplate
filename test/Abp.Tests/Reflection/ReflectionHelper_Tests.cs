@@ -14,7 +14,7 @@ namespace Abp.Tests.Reflection
         {
             ReflectionHelper.IsAssignableToGenericType(typeof(List<string>), typeof(List<>)).ShouldBe(true);
             ReflectionHelper.IsAssignableToGenericType(new List<string>().GetType(), typeof(List<>)).ShouldBe(true);
-            
+
             ReflectionHelper.IsAssignableToGenericType(typeof(MyList), typeof(List<>)).ShouldBe(true);
             ReflectionHelper.IsAssignableToGenericType(new MyList().GetType(), typeof(List<>)).ShouldBe(true);
         }
@@ -22,7 +22,9 @@ namespace Abp.Tests.Reflection
         [Fact]
         public static void Should_Find_Attributes()
         {
-            var attributes = ReflectionHelper.GetAttributesOfMemberAndDeclaringType<MyAttribute>(typeof(MyDerivedList).GetTypeInfo().GetMethod("DoIt"));
+            var attributes =
+                ReflectionHelper.GetAttributesOfMemberAndDeclaringType<MyAttribute>(typeof(MyDerivedList).GetTypeInfo()
+                    .GetMethod("DoIt"));
             attributes.Count.ShouldBe(2); //TODO: Why not find MyList's attribute?
             attributes[0].Number.ShouldBe(1);
             attributes[1].Number.ShouldBe(2);
@@ -52,13 +54,13 @@ namespace Abp.Tests.Reflection
         {
             var model = new MyParentObject
             {
-              Child  = new MyChildObject
-              {
-                  InnerChild = new MyInnerChildObject
-                  {
-                      Age = 42
-                  }
-              }
+                Child = new MyChildObject
+                {
+                    InnerChild = new MyInnerChildObject
+                    {
+                        Age = 42
+                    }
+                }
             };
 
             var property = ReflectionHelper.GetPropertyByPath(model, typeof(MyParentObject), "Child.InnerChild.Age");
@@ -90,7 +92,6 @@ namespace Abp.Tests.Reflection
         [MyAttribute(3)]
         public class MyList : List<int>
         {
-
         }
 
         [MyAttribute(2)]
@@ -99,7 +100,6 @@ namespace Abp.Tests.Reflection
             [MyAttribute(1)]
             public void DoIt()
             {
-
             }
         }
 
@@ -108,7 +108,6 @@ namespace Abp.Tests.Reflection
         {
             public void DoIt()
             {
-
             }
         }
 

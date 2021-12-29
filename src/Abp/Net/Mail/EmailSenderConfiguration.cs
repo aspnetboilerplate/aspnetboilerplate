@@ -9,15 +9,10 @@ namespace Abp.Net.Mail
     /// </summary>
     public abstract class EmailSenderConfiguration : IEmailSenderConfiguration
     {
-        public virtual string DefaultFromAddress
-        {
-            get { return GetNotEmptySettingValue(EmailSettingNames.DefaultFromAddress); }
-        }
+        public virtual string DefaultFromAddress => GetNotEmptySettingValue(EmailSettingNames.DefaultFromAddress);
 
-        public virtual string DefaultFromDisplayName
-        {
-            get { return SettingManager.GetSettingValue(EmailSettingNames.DefaultFromDisplayName); }
-        }
+        public virtual string DefaultFromDisplayName =>
+            SettingManager.GetSettingValue(EmailSettingNames.DefaultFromDisplayName);
 
         protected readonly ISettingManager SettingManager;
 
@@ -38,10 +33,7 @@ namespace Abp.Net.Mail
         {
             var value = SettingManager.GetSettingValue(name);
 
-            if (value.IsNullOrEmpty())
-            {
-                throw new AbpException($"Setting value for '{name}' is null or empty!");
-            }
+            if (value.IsNullOrEmpty()) throw new AbpException($"Setting value for '{name}' is null or empty!");
 
             return value;
         }

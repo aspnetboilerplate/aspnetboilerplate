@@ -16,7 +16,7 @@ namespace Abp.Tests.Localization.Json
             _dictionaryProvider = new JsonEmbeddedFileLocalizationDictionaryProvider(
                 typeof(JsonEmbeddedFileLocalizationDictionaryProvider_Tests).GetAssembly(),
                 "Abp.Tests.Localization.Json.JsonSources"
-                );
+            );
 
             _dictionaryProvider.Initialize("Lang");
         }

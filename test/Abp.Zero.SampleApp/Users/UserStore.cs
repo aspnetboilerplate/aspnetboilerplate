@@ -30,7 +30,6 @@ namespace Abp.Zero.SampleApp.Users
                 userOrganizationUnitRepository,
                 organizationUnitRoleRepository)
         {
-
         }
     }
 }

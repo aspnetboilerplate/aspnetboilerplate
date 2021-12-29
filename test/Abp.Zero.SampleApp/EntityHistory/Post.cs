@@ -9,13 +9,11 @@ namespace Abp.Zero.SampleApp.EntityHistory
 {
     public class Post : AuditedEntity<Guid>, ISoftDelete, IMayHaveTenant
     {
-        [Required]
-        public virtual Blog Blog { get; set; }
+        [Required] public virtual Blog Blog { get; set; }
 
         public virtual ICollection<Comment> Comments { get; set; }
 
-        [Audited]
-        public int BlogId { get; set; }
+        [Audited] public int BlogId { get; set; }
 
         public string Title { get; set; }
 

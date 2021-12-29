@@ -25,7 +25,8 @@ namespace Abp.Web.Api.Tests.Controllers.Dynamic
             Clock.Provider = ClockProviders.Utc;
             var resultDate = new DateTime(2016, 04, 13, 08, 58, 10, 526, DateTimeKind.Utc);
 
-            var dto = JsonConvert.DeserializeObject<DateTimeConverterTestDto>("{date: \"" + sourceDate + "\"}", new AbpDateTimeConverter());
+            var dto = JsonConvert.DeserializeObject<DateTimeConverterTestDto>("{date: \"" + sourceDate + "\"}",
+                new AbpDateTimeConverter());
 
             dto.Date.ShouldBe(resultDate);
             dto.Date.Kind.ShouldBe(DateTimeKind.Utc);
@@ -59,13 +60,14 @@ namespace Abp.Web.Api.Tests.Controllers.Dynamic
             Clock.Provider = ClockProviders.Local;
             var resultDate = new DateTime(2016, 04, 13, 08, 58, 10, 526, DateTimeKind.Utc).ToLocalTime();
 
-            var dto = JsonConvert.DeserializeObject<DateTimeConverterTestDto>("{date: \"" + sourceDate + "\"}", new AbpDateTimeConverter());
+            var dto = JsonConvert.DeserializeObject<DateTimeConverterTestDto>("{date: \"" + sourceDate + "\"}",
+                new AbpDateTimeConverter());
 
             dto.Date.ShouldBe(resultDate);
             dto.Date.Kind.ShouldBe(DateTimeKind.Local);
         }
 
-        class DateTimeConverterTestDto
+        private class DateTimeConverterTestDto
         {
             public DateTime Date { get; set; }
         }

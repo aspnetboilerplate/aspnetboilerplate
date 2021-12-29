@@ -26,15 +26,9 @@ namespace Abp.Extensions
         /// </summary>
         public static string EnsureEndsWith(this string str, char c, StringComparison comparisonType)
         {
-            if (str == null)
-            {
-                throw new ArgumentNullException(nameof(str));
-            }
+            if (str == null) throw new ArgumentNullException(nameof(str));
 
-            if (str.EndsWith(c.ToString(), comparisonType))
-            {
-                return str;
-            }
+            if (str.EndsWith(c.ToString(), comparisonType)) return str;
 
             return str + c;
         }
@@ -44,15 +38,9 @@ namespace Abp.Extensions
         /// </summary>
         public static string EnsureEndsWith(this string str, char c, bool ignoreCase, CultureInfo culture)
         {
-            if (str == null)
-            {
-                throw new ArgumentNullException(nameof(str));
-            }
+            if (str == null) throw new ArgumentNullException(nameof(str));
 
-            if (str.EndsWith(c.ToString(culture), ignoreCase, culture))
-            {
-                return str;
-            }
+            if (str.EndsWith(c.ToString(culture), ignoreCase, culture)) return str;
 
             return str + c;
         }
@@ -70,15 +58,9 @@ namespace Abp.Extensions
         /// </summary>
         public static string EnsureStartsWith(this string str, char c, StringComparison comparisonType)
         {
-            if (str == null)
-            {
-                throw new ArgumentNullException(nameof(str));
-            }
+            if (str == null) throw new ArgumentNullException(nameof(str));
 
-            if (str.StartsWith(c.ToString(), comparisonType))
-            {
-                return str;
-            }
+            if (str.StartsWith(c.ToString(), comparisonType)) return str;
 
             return c + str;
         }
@@ -88,15 +70,9 @@ namespace Abp.Extensions
         /// </summary>
         public static string EnsureStartsWith(this string str, char c, bool ignoreCase, CultureInfo culture)
         {
-            if (str == null)
-            {
-                throw new ArgumentNullException(nameof(str));
-            }
+            if (str == null) throw new ArgumentNullException(nameof(str));
 
-            if (str.StartsWith(c.ToString(culture), ignoreCase, culture))
-            {
-                return str;
-            }
+            if (str.StartsWith(c.ToString(culture), ignoreCase, culture)) return str;
 
             return c + str;
         }
@@ -126,15 +102,10 @@ namespace Abp.Extensions
         /// <exception cref="ArgumentException">Thrown if <paramref name="len"/> is bigger that string's length</exception>
         public static string Left(this string str, int len)
         {
-            if (str == null)
-            {
-                throw new ArgumentNullException(nameof(str));
-            }
+            if (str == null) throw new ArgumentNullException(nameof(str));
 
             if (str.Length < len)
-            {
                 throw new ArgumentException("len argument can not be bigger than given string's length!");
-            }
 
             return str.Substring(0, len);
         }
@@ -155,23 +126,14 @@ namespace Abp.Extensions
         /// <param name="n">Count of the occurence</param>
         public static int NthIndexOf(this string str, char c, int n)
         {
-            if (str == null)
-            {
-                throw new ArgumentNullException(nameof(str));
-            }
+            if (str == null) throw new ArgumentNullException(nameof(str));
 
             var count = 0;
             for (var i = 0; i < str.Length; i++)
             {
-                if (str[i] != c)
-                {
-                    continue;
-                }
+                if (str[i] != c) continue;
 
-                if ((++count) == n)
-                {
-                    return i;
-                }
+                if (++count == n) return i;
             }
 
             return -1;
@@ -186,28 +148,15 @@ namespace Abp.Extensions
         /// <returns>Modified string or the same string if it has not any of given postfixes</returns>
         public static string RemovePostFix(this string str, params string[] postFixes)
         {
-            if (str == null)
-            {
-                return null;
-            }
+            if (str == null) return null;
 
-            if (string.IsNullOrEmpty(str))
-            {
-                return string.Empty;
-            }
+            if (string.IsNullOrEmpty(str)) return string.Empty;
 
-            if (postFixes.IsNullOrEmpty())
-            {
-                return str;
-            }
+            if (postFixes.IsNullOrEmpty()) return str;
 
             foreach (var postFix in postFixes)
-            {
                 if (str.EndsWith(postFix))
-                {
                     return str.Left(str.Length - postFix.Length);
-                }
-            }
 
             return str;
         }
@@ -221,28 +170,15 @@ namespace Abp.Extensions
         /// <returns>Modified string or the same string if it has not any of given prefixes</returns>
         public static string RemovePreFix(this string str, params string[] preFixes)
         {
-            if (str == null)
-            {
-                return null;
-            }
+            if (str == null) return null;
 
-            if (string.IsNullOrEmpty(str))
-            {
-                return string.Empty;
-            }
+            if (string.IsNullOrEmpty(str)) return string.Empty;
 
-            if (preFixes.IsNullOrEmpty())
-            {
-                return str;
-            }
+            if (preFixes.IsNullOrEmpty()) return str;
 
             foreach (var preFix in preFixes)
-            {
                 if (str.StartsWith(preFix))
-                {
                     return str.Right(str.Length - preFix.Length);
-                }
-            }
 
             return str;
         }
@@ -254,15 +190,10 @@ namespace Abp.Extensions
         /// <exception cref="ArgumentException">Thrown if <paramref name="len"/> is bigger that string's length</exception>
         public static string Right(this string str, int len)
         {
-            if (str == null)
-            {
-                throw new ArgumentNullException(nameof(str));
-            }
+            if (str == null) throw new ArgumentNullException(nameof(str));
 
             if (str.Length < len)
-            {
                 throw new ArgumentException("len argument can not be bigger than given string's length!");
-            }
 
             return str.Substring(str.Length - len, len);
         }
@@ -307,15 +238,9 @@ namespace Abp.Extensions
         /// <returns>camelCase of the string</returns>
         public static string ToCamelCase(this string str, bool invariantCulture = true)
         {
-            if (string.IsNullOrWhiteSpace(str))
-            {
-                return str;
-            }
+            if (string.IsNullOrWhiteSpace(str)) return str;
 
-            if (str.Length == 1)
-            {
-                return invariantCulture ? str.ToLowerInvariant() : str.ToLower();
-            }
+            if (str.Length == 1) return invariantCulture ? str.ToLowerInvariant() : str.ToLower();
 
             return (invariantCulture ? char.ToLowerInvariant(str[0]) : char.ToLower(str[0])) + str.Substring(1);
         }
@@ -328,15 +253,9 @@ namespace Abp.Extensions
         /// <returns>camelCase of the string</returns>
         public static string ToCamelCase(this string str, CultureInfo culture)
         {
-            if (string.IsNullOrWhiteSpace(str))
-            {
-                return str;
-            }
+            if (string.IsNullOrWhiteSpace(str)) return str;
 
-            if (str.Length == 1)
-            {
-                return str.ToLower(culture);
-            }
+            if (str.Length == 1) return str.ToLower(culture);
 
             return char.ToLower(str[0], culture) + str.Substring(1);
         }
@@ -349,15 +268,13 @@ namespace Abp.Extensions
         /// <param name="invariantCulture">Invariant culture</param>
         public static string ToSentenceCase(this string str, bool invariantCulture = false)
         {
-            if (string.IsNullOrWhiteSpace(str))
-            {
-                return str;
-            }
+            if (string.IsNullOrWhiteSpace(str)) return str;
 
             return Regex.Replace(
                 str,
                 "[a-z][A-Z]",
-                m => m.Value[0] + " " + (invariantCulture ? char.ToLowerInvariant(m.Value[1]) : char.ToLower(m.Value[1]))
+                m => m.Value[0] + " " +
+                     (invariantCulture ? char.ToLowerInvariant(m.Value[1]) : char.ToLower(m.Value[1]))
             );
         }
 
@@ -369,10 +286,7 @@ namespace Abp.Extensions
         /// <param name="culture">An object that supplies culture-specific casing rules.</param>
         public static string ToSentenceCase(this string str, CultureInfo culture)
         {
-            if (string.IsNullOrWhiteSpace(str))
-            {
-                return str;
-            }
+            if (string.IsNullOrWhiteSpace(str)) return str;
 
             return Regex.Replace(str, "[a-z][A-Z]", m => m.Value[0] + " " + char.ToLower(m.Value[1], culture));
         }
@@ -386,10 +300,7 @@ namespace Abp.Extensions
         public static T ToEnum<T>(this string value)
             where T : struct
         {
-            if (value == null)
-            {
-                throw new ArgumentNullException(nameof(value));
-            }
+            if (value == null) throw new ArgumentNullException(nameof(value));
 
             return (T)Enum.Parse(typeof(T), value);
         }
@@ -404,10 +315,7 @@ namespace Abp.Extensions
         public static T ToEnum<T>(this string value, bool ignoreCase)
             where T : struct
         {
-            if (value == null)
-            {
-                throw new ArgumentNullException(nameof(value));
-            }
+            if (value == null) throw new ArgumentNullException(nameof(value));
 
             return (T)Enum.Parse(typeof(T), value, ignoreCase);
         }
@@ -420,10 +328,7 @@ namespace Abp.Extensions
                 var hashBytes = md5.ComputeHash(inputBytes);
 
                 var sb = new StringBuilder();
-                foreach (var hashByte in hashBytes)
-                {
-                    sb.Append(hashByte.ToString("X2"));
-                }
+                foreach (var hashByte in hashBytes) sb.Append(hashByte.ToString("X2"));
 
                 return sb.ToString();
             }
@@ -437,15 +342,9 @@ namespace Abp.Extensions
         /// <returns>PascalCase of the string</returns>
         public static string ToPascalCase(this string str, bool invariantCulture = true)
         {
-            if (string.IsNullOrWhiteSpace(str))
-            {
-                return str;
-            }
+            if (string.IsNullOrWhiteSpace(str)) return str;
 
-            if (str.Length == 1)
-            {
-                return invariantCulture ? str.ToUpperInvariant(): str.ToUpper();
-            }
+            if (str.Length == 1) return invariantCulture ? str.ToUpperInvariant() : str.ToUpper();
 
             return (invariantCulture ? char.ToUpperInvariant(str[0]) : char.ToUpper(str[0])) + str.Substring(1);
         }
@@ -458,15 +357,9 @@ namespace Abp.Extensions
         /// <returns>PascalCase of the string</returns>
         public static string ToPascalCase(this string str, CultureInfo culture)
         {
-            if (string.IsNullOrWhiteSpace(str))
-            {
-                return str;
-            }
+            if (string.IsNullOrWhiteSpace(str)) return str;
 
-            if (str.Length == 1)
-            {
-                return str.ToUpper(culture);
-            }
+            if (str.Length == 1) return str.ToUpper(culture);
 
             return char.ToUpper(str[0], culture) + str.Substring(1);
         }
@@ -477,15 +370,9 @@ namespace Abp.Extensions
         /// <exception cref="ArgumentNullException">Thrown if <paramref name="str"/> is null</exception>
         public static string Truncate(this string str, int maxLength)
         {
-            if (str == null)
-            {
-                return null;
-            }
+            if (str == null) return null;
 
-            if (str.Length <= maxLength)
-            {
-                return str;
-            }
+            if (str.Length <= maxLength) return str;
 
             return str.Left(maxLength);
         }
@@ -509,25 +396,13 @@ namespace Abp.Extensions
         /// <exception cref="ArgumentNullException">Thrown if <paramref name="str"/> is null</exception>
         public static string TruncateWithPostfix(this string str, int maxLength, string postfix)
         {
-            if (str == null)
-            {
-                return null;
-            }
+            if (str == null) return null;
 
-            if (string.IsNullOrEmpty(str) || maxLength == 0)
-            {
-                return string.Empty;
-            }
+            if (string.IsNullOrEmpty(str) || maxLength == 0) return string.Empty;
 
-            if (str.Length <= maxLength)
-            {
-                return str;
-            }
+            if (str.Length <= maxLength) return str;
 
-            if (maxLength <= postfix.Length)
-            {
-                return postfix.Left(maxLength);
-            }
+            if (maxLength <= postfix.Length) return postfix.Left(maxLength);
 
             return str.Left(maxLength - postfix.Length) + postfix;
         }

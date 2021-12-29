@@ -21,8 +21,10 @@ namespace Abp.EntityFramework.GraphDIff.Tests
 
             Configuration.Modules.AbpEfGraphDiff().EntityMappings = new List<EntityMapping>
             {
-                MappingExpressionBuilder.For<MyMainEntity>(config => config.AssociatedCollection(entity => entity.MyDependentEntities)),
-                MappingExpressionBuilder.For<MyDependentEntity>(config => config.AssociatedEntity(entity => entity.MyMainEntity))
+                MappingExpressionBuilder.For<MyMainEntity>(config =>
+                    config.AssociatedCollection(entity => entity.MyDependentEntities)),
+                MappingExpressionBuilder.For<MyDependentEntity>(config =>
+                    config.AssociatedEntity(entity => entity.MyMainEntity))
             };
         }
     }

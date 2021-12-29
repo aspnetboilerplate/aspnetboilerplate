@@ -26,7 +26,6 @@ namespace Abp
         /// </summary>
         protected UserIdentifier()
         {
-
         }
 
         /// <summary>
@@ -52,21 +51,12 @@ namespace Abp
         public static UserIdentifier Parse(string userIdentifierString)
         {
             if (userIdentifierString.IsNullOrEmpty())
-            {
                 throw new ArgumentNullException(nameof(userIdentifierString), "userAtTenant can not be null or empty!");
-            }
 
             var splitted = userIdentifierString.Split('@');
-            if (splitted.Length == 1)
-            {
-                return new UserIdentifier(null, splitted[0].To<long>());
+            if (splitted.Length == 1) return new UserIdentifier(null, splitted[0].To<long>());
 
-            }
-
-            if (splitted.Length == 2)
-            {
-                return new UserIdentifier(splitted[1].To<int>(), splitted[0].To<long>());
-            }
+            if (splitted.Length == 2) return new UserIdentifier(splitted[1].To<int>(), splitted[0].To<long>());
 
             throw new ArgumentException("userAtTenant is not properly formatted", nameof(userIdentifierString));
         }
@@ -82,26 +72,17 @@ namespace Abp
         /// </summary>
         public string ToUserIdentifierString()
         {
-            if (TenantId == null)
-            {
-                return UserId.ToString();
-            }
+            if (TenantId == null) return UserId.ToString();
 
             return UserId + "@" + TenantId;
         }
 
         public override bool Equals(object obj)
         {
-            if (obj == null || !(obj is UserIdentifier))
-            {
-                return false;
-            }
+            if (obj == null || !(obj is UserIdentifier)) return false;
 
             //Same instances must be considered as equal
-            if (ReferenceEquals(this, obj))
-            {
-                return true;
-            }
+            if (ReferenceEquals(this, obj)) return true;
 
             //Transient objects are not considered as equal
             var other = (UserIdentifier)obj;
@@ -109,10 +90,8 @@ namespace Abp
             //Must have a IS-A relation of types or must be same type
             var typeOfThis = GetType();
             var typeOfOther = other.GetType();
-            if (!typeOfThis.GetTypeInfo().IsAssignableFrom(typeOfOther) && !typeOfOther.GetTypeInfo().IsAssignableFrom(typeOfThis))
-            {
-                return false;
-            }
+            if (!typeOfThis.GetTypeInfo().IsAssignableFrom(typeOfOther) &&
+                !typeOfOther.GetTypeInfo().IsAssignableFrom(typeOfThis)) return false;
 
             return TenantId == other.TenantId && UserId == other.UserId;
         }
@@ -129,10 +108,7 @@ namespace Abp
         /// <inheritdoc/>
         public static bool operator ==(UserIdentifier left, UserIdentifier right)
         {
-            if (Equals(left, null))
-            {
-                return Equals(right, null);
-            }
+            if (Equals(left, null)) return Equals(right, null);
 
             return left.Equals(right);
         }

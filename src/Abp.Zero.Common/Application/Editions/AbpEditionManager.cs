@@ -14,7 +14,7 @@ namespace Abp.Application.Editions
     {
         private readonly IAbpZeroFeatureValueStore _featureValueStore;
         private readonly IUnitOfWorkManager _unitOfWorkManager;
-        
+
         public IQueryable<Edition> Editions => EditionRepository.GetAll();
 
         public ICacheManager CacheManager { get; set; }
@@ -25,7 +25,7 @@ namespace Abp.Application.Editions
 
         public AbpEditionManager(
             IRepository<Edition> editionRepository,
-            IAbpZeroFeatureValueStore featureValueStore, 
+            IAbpZeroFeatureValueStore featureValueStore,
             IUnitOfWorkManager unitOfWorkManager)
         {
             _featureValueStore = featureValueStore;
@@ -58,9 +58,8 @@ namespace Abp.Application.Editions
             var values = new List<NameValue>();
 
             foreach (var feature in FeatureManager.GetAll())
-            {
-                values.Add(new NameValue(feature.Name, await GetFeatureValueOrNullAsync(editionId, feature.Name) ?? feature.DefaultValue));
-            }
+                values.Add(new NameValue(feature.Name,
+                    await GetFeatureValueOrNullAsync(editionId, feature.Name) ?? feature.DefaultValue));
 
             return values;
         }
@@ -70,37 +69,24 @@ namespace Abp.Application.Editions
             var values = new List<NameValue>();
 
             foreach (var feature in FeatureManager.GetAll())
-            {
-                values.Add(new NameValue(feature.Name, GetFeatureValueOrNull(editionId, feature.Name) ?? feature.DefaultValue));
-            }
+                values.Add(new NameValue(feature.Name,
+                    GetFeatureValueOrNull(editionId, feature.Name) ?? feature.DefaultValue));
 
             return values;
         }
 
         public virtual async Task SetFeatureValuesAsync(int editionId, params NameValue[] values)
         {
-            if (values.IsNullOrEmpty())
-            {
-                return;
-            }
+            if (values.IsNullOrEmpty()) return;
 
-            foreach (var value in values)
-            {
-                await SetFeatureValueAsync(editionId, value.Name, value.Value);
-            }
+            foreach (var value in values) await SetFeatureValueAsync(editionId, value.Name, value.Value);
         }
 
         public virtual void SetFeatureValues(int editionId, params NameValue[] values)
         {
-            if (values.IsNullOrEmpty())
-            {
-                return;
-            }
+            if (values.IsNullOrEmpty()) return;
 
-            foreach (var value in values)
-            {
-                SetFeatureValue(editionId, value.Name, value.Value);
-            }
+            foreach (var value in values) SetFeatureValue(editionId, value.Name, value.Value);
         }
 
         public virtual async Task CreateAsync(Edition edition)
@@ -112,10 +98,7 @@ namespace Abp.Application.Editions
 
         public virtual void Create(Edition edition)
         {
-            _unitOfWorkManager.WithUnitOfWork(() =>
-            {
-                EditionRepository.Insert(edition);
-            });
+            _unitOfWorkManager.WithUnitOfWork(() => { EditionRepository.Insert(edition); });
         }
 
         public virtual async Task<Edition> FindByNameAsync(string name)
@@ -167,10 +150,7 @@ namespace Abp.Application.Editions
 
         public virtual void Delete(Edition edition)
         {
-            _unitOfWorkManager.WithUnitOfWork(() =>
-            {
-                EditionRepository.Delete(edition);
-            });
+            _unitOfWorkManager.WithUnitOfWork(() => { EditionRepository.Delete(edition); });
         }
     }
 }

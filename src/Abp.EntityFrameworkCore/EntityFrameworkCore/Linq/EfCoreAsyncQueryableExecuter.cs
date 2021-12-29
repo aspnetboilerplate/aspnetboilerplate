@@ -6,28 +6,27 @@ using Abp.Dependency;
 using Abp.Linq;
 using Microsoft.EntityFrameworkCore;
 
-namespace Abp.EntityFrameworkCore.Linq
+namespace Abp.EntityFrameworkCore.Linq;
+
+public class EfCoreAsyncQueryableExecuter : IAsyncQueryableExecuter, ISingletonDependency
 {
-    public class EfCoreAsyncQueryableExecuter : IAsyncQueryableExecuter, ISingletonDependency
+    public Task<int> CountAsync<T>(IQueryable<T> queryable)
     {
-        public Task<int> CountAsync<T>(IQueryable<T> queryable)
-        {
-            return queryable.CountAsync();
-        }
+        return queryable.CountAsync();
+    }
 
-        public Task<List<T>> ToListAsync<T>(IQueryable<T> queryable)
-        {
-            return queryable.ToListAsync();
-        }
+    public Task<List<T>> ToListAsync<T>(IQueryable<T> queryable)
+    {
+        return queryable.ToListAsync();
+    }
 
-        public Task<T> FirstOrDefaultAsync<T>(IQueryable<T> queryable)
-        {
-            return queryable.FirstOrDefaultAsync();
-        }
+    public Task<T> FirstOrDefaultAsync<T>(IQueryable<T> queryable)
+    {
+        return queryable.FirstOrDefaultAsync();
+    }
 
-        public Task<bool> AnyAsync<T>(IQueryable<T> queryable)
-        {
-            return queryable.AnyAsync();
-        }
+    public Task<bool> AnyAsync<T>(IQueryable<T> queryable)
+    {
+        return queryable.AnyAsync();
     }
 }

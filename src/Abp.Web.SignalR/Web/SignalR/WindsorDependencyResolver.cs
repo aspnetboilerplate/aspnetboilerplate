@@ -21,7 +21,7 @@ namespace Abp.Web.SignalR
         {
             _windsorContainer = windsorContainer;
         }
-        
+
         public override object GetService(Type serviceType)
         {
             return _windsorContainer.Kernel.HasComponent(serviceType)

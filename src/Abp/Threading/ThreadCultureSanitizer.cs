@@ -19,14 +19,9 @@ namespace Abp.Threading
             // find it and not loop endlessly
             var invariantCulture = currentCulture;
             while (invariantCulture.Equals(CultureInfo.InvariantCulture) == false)
-            {
                 invariantCulture = invariantCulture.Parent;
-            }
 
-            if (ReferenceEquals(invariantCulture, CultureInfo.InvariantCulture))
-            {
-                return;
-            }
+            if (ReferenceEquals(invariantCulture, CultureInfo.InvariantCulture)) return;
 
             var thread = Thread.CurrentThread;
             CultureInfo.CurrentCulture = CultureInfo.GetCultureInfo(thread.CurrentCulture.Name);

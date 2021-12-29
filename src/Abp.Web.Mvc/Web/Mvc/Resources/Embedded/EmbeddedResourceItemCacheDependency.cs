@@ -10,7 +10,7 @@ namespace Abp.Web.Mvc.Resources.Embedded
         {
             SetUtcLastModified(resource.LastModifiedUtc);
         }
-        
+
         public EmbeddedResourceItemCacheDependency()
         {
             SetUtcLastModified(DateTime.UtcNow);

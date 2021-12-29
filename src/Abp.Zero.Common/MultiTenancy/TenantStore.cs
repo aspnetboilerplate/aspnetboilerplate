@@ -12,10 +12,7 @@
         public TenantInfo Find(int tenantId)
         {
             var tenant = _tenantCache.GetOrNull(tenantId);
-            if (tenant == null)
-            {
-                return null;
-            }
+            if (tenant == null) return null;
 
             return new TenantInfo(tenant.Id, tenant.TenancyName);
         }
@@ -23,10 +20,7 @@
         public TenantInfo Find(string tenancyName)
         {
             var tenant = _tenantCache.GetOrNull(tenancyName);
-            if (tenant == null)
-            {
-                return null;
-            }
+            if (tenant == null) return null;
 
             return new TenantInfo(tenant.Id, tenant.TenancyName);
         }

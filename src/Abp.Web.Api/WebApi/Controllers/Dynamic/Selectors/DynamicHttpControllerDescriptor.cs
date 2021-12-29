@@ -39,22 +39,13 @@ namespace Abp.WebApi.Controllers.Dynamic.Selectors
         /// <returns> The Collection of filters.</returns>
         public override Collection<IFilter> GetFilters()
         {
-            if (_controllerInfo.Filters.IsNullOrEmpty())
-            {
-                return base.GetFilters();
-            }
+            if (_controllerInfo.Filters.IsNullOrEmpty()) return base.GetFilters();
 
             var actionFilters = new Collection<IFilter>();
 
-            foreach (var filter in _controllerInfo.Filters)
-            {
-                actionFilters.Add(filter);
-            }
+            foreach (var filter in _controllerInfo.Filters) actionFilters.Add(filter);
 
-            foreach (var baseFilter in base.GetFilters())
-            {
-                actionFilters.Add(baseFilter);
-            }
+            foreach (var baseFilter in base.GetFilters()) actionFilters.Add(baseFilter);
 
             return actionFilters;
         }

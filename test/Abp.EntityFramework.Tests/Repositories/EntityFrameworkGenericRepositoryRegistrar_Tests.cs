@@ -25,12 +25,14 @@ namespace Abp.EntityFramework.Tests.Repositories
                 Component.For<IDbContextProvider<MyModuleDbContext>>().Instance(fakeModuleDbContextProvider),
                 Component.For<IDbContextEntityFinder>().ImplementedBy<EfDbContextEntityFinder>().LifestyleTransient(),
                 Component.For<EfGenericRepositoryRegistrar>().LifestyleTransient()
-                );
+            );
 
             using (var repositoryRegistrar = LocalIocManager.ResolveAsDisposable<EfGenericRepositoryRegistrar>())
             {
-                repositoryRegistrar.Object.RegisterForDbContext(typeof(MyModuleDbContext), LocalIocManager, EfAutoRepositoryTypes.Default);
-                repositoryRegistrar.Object.RegisterForDbContext(typeof(MyMainDbContext), LocalIocManager, EfAutoRepositoryTypes.Default);
+                repositoryRegistrar.Object.RegisterForDbContext(typeof(MyModuleDbContext), LocalIocManager,
+                    EfAutoRepositoryTypes.Default);
+                repositoryRegistrar.Object.RegisterForDbContext(typeof(MyMainDbContext), LocalIocManager,
+                    EfAutoRepositoryTypes.Default);
             }
         }
 
@@ -51,13 +53,16 @@ namespace Abp.EntityFramework.Tests.Repositories
             var entity1RepositoryWithModuleInterface = LocalIocManager.Resolve<IMyModuleRepository<MyEntity1>>();
             entity1RepositoryWithModuleInterface.ShouldNotBe(null);
             (entity1RepositoryWithModuleInterface is MyModuleRepositoryBase<MyEntity1>).ShouldBe(true);
-            (entity1RepositoryWithModuleInterface is EfRepositoryBase<MyModuleDbContext, MyEntity1, int>).ShouldBe(true);
+            (entity1RepositoryWithModuleInterface is EfRepositoryBase<MyModuleDbContext, MyEntity1, int>)
+                .ShouldBe(true);
 
             //Entity 1 (with specified Repository forIMyModuleRepository )
-            var entity1RepositoryWithModuleInterfaceWithPk = LocalIocManager.Resolve<IMyModuleRepository<MyEntity1, int>>();
+            var entity1RepositoryWithModuleInterfaceWithPk =
+                LocalIocManager.Resolve<IMyModuleRepository<MyEntity1, int>>();
             entity1RepositoryWithModuleInterfaceWithPk.ShouldNotBe(null);
             (entity1RepositoryWithModuleInterfaceWithPk is MyModuleRepositoryBase<MyEntity1, int>).ShouldBe(true);
-            (entity1RepositoryWithModuleInterfaceWithPk is EfRepositoryBase<MyModuleDbContext, MyEntity1, int>).ShouldBe(true);
+            (entity1RepositoryWithModuleInterfaceWithPk is EfRepositoryBase<MyModuleDbContext, MyEntity1, int>)
+                .ShouldBe(true);
 
             //Entity 2
             var entity2Repository = LocalIocManager.Resolve<IRepository<MyEntity2, long>>();
@@ -82,7 +87,7 @@ namespace Abp.EntityFramework.Tests.Repositories
             typeof(IMyModuleRepository<,>),
             typeof(MyModuleRepositoryBase<>),
             typeof(MyModuleRepositoryBase<,>)
-            )]
+        )]
         public class MyModuleDbContext : MyBaseDbContext
         {
             public virtual DbSet<MyEntity3> MyEntities3 { get; set; }
@@ -95,37 +100,32 @@ namespace Abp.EntityFramework.Tests.Repositories
 
         public class MyEntity1 : Entity
         {
-
         }
 
         public class MyEntity2 : Entity<long>
         {
-
         }
 
         public class MyEntity3 : Entity<Guid>
         {
-
         }
 
         public class MyNonEntity
         {
-
         }
 
         public interface IMyModuleRepository<TEntity> : IRepository<TEntity>
             where TEntity : class, IEntity<int>
         {
-
         }
 
         public interface IMyModuleRepository<TEntity, TPrimaryKey> : IRepository<TEntity, TPrimaryKey>
             where TEntity : class, IEntity<TPrimaryKey>
         {
-
         }
 
-        public class MyModuleRepositoryBase<TEntity, TPrimaryKey> : EfRepositoryBase<MyModuleDbContext, TEntity, TPrimaryKey>, IMyModuleRepository<TEntity, TPrimaryKey>
+        public class MyModuleRepositoryBase<TEntity, TPrimaryKey> :
+            EfRepositoryBase<MyModuleDbContext, TEntity, TPrimaryKey>, IMyModuleRepository<TEntity, TPrimaryKey>
             where TEntity : class, IEntity<TPrimaryKey>
         {
             public MyModuleRepositoryBase(IDbContextProvider<MyModuleDbContext> dbContextProvider)
@@ -134,7 +134,8 @@ namespace Abp.EntityFramework.Tests.Repositories
             }
         }
 
-        public class MyModuleRepositoryBase<TEntity> : MyModuleRepositoryBase<TEntity, int>, IMyModuleRepository<TEntity>
+        public class MyModuleRepositoryBase<TEntity> : MyModuleRepositoryBase<TEntity, int>,
+            IMyModuleRepository<TEntity>
             where TEntity : class, IEntity<int>
         {
             public MyModuleRepositoryBase(IDbContextProvider<MyModuleDbContext> dbContextProvider)

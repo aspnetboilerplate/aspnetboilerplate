@@ -12,16 +12,10 @@ namespace Abp.Reflection.Extensions
         public static string GetDirectoryPathOrNull(this Assembly assembly)
         {
             var location = assembly.Location;
-            if (location == null)
-            {
-                return null;
-            }
+            if (location == null) return null;
 
             var directory = new FileInfo(location).Directory;
-            if (directory == null)
-            {
-                return null;
-            }
+            if (directory == null) return null;
 
             return directory.FullName;
         }

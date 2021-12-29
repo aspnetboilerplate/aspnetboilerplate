@@ -1,1 +1,1 @@
-﻿console.log('Blog module script worked!');
+﻿console.log("Blog module script worked!");

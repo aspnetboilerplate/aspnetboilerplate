@@ -15,8 +15,8 @@ namespace Abp.Domain.Uow
         [DoNotWire]
         public IUnitOfWork Current
         {
-            get { return GetCurrentUow(); }
-            set { SetCurrentUow(value); }
+            get => GetCurrentUow();
+            set => SetCurrentUow(value);
         }
 
         public ILogger Logger { get; set; }
@@ -31,10 +31,7 @@ namespace Abp.Domain.Uow
         private static IUnitOfWork GetCurrentUow()
         {
             var uow = AsyncLocalUow.Value?.UnitOfWork;
-            if (uow == null)
-            {
-                return null;
-            }
+            if (uow == null) return null;
 
             if (uow.IsDisposed)
             {
@@ -51,10 +48,7 @@ namespace Abp.Domain.Uow
             {
                 if (value == null)
                 {
-                    if (AsyncLocalUow.Value == null)
-                    {
-                        return;
-                    }
+                    if (AsyncLocalUow.Value == null) return;
 
                     if (AsyncLocalUow.Value.UnitOfWork?.Outer == null)
                     {
@@ -69,10 +63,7 @@ namespace Abp.Domain.Uow
                 {
                     if (AsyncLocalUow.Value?.UnitOfWork == null)
                     {
-                        if (AsyncLocalUow.Value != null)
-                        {
-                            AsyncLocalUow.Value.UnitOfWork = value;
-                        }
+                        if (AsyncLocalUow.Value != null) AsyncLocalUow.Value.UnitOfWork = value;
 
                         AsyncLocalUow.Value = new LocalUowWrapper(value);
                         return;

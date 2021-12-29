@@ -13,20 +13,18 @@ namespace Abp.Runtime.Caching
     /// <typeparam name="TValue"></typeparam>
     public class TypedCacheWrapper<TKey, TValue> : ITypedCache<TKey, TValue>
     {
-        public string Name
-        {
-            get { return InternalCache.Name; }
-        }
+        public string Name => InternalCache.Name;
 
         public TimeSpan DefaultSlidingExpireTime
         {
-            get { return InternalCache.DefaultSlidingExpireTime; }
-            set { InternalCache.DefaultSlidingExpireTime = value; }
+            get => InternalCache.DefaultSlidingExpireTime;
+            set => InternalCache.DefaultSlidingExpireTime = value;
         }
+
         public DateTimeOffset? DefaultAbsoluteExpireTime
         {
-            get { return InternalCache.DefaultAbsoluteExpireTime; }
-            set { InternalCache.DefaultAbsoluteExpireTime = value; }
+            get => InternalCache.DefaultAbsoluteExpireTime;
+            set => InternalCache.DefaultAbsoluteExpireTime = value;
         }
 
         public ICache InternalCache { get; private set; }
@@ -138,23 +136,27 @@ namespace Abp.Runtime.Caching
             return value == null ? default : (TValue)value;
         }
 
-        public void Set(TKey key, TValue value, TimeSpan? slidingExpireTime = null, DateTimeOffset? absoluteExpireTime = null)
+        public void Set(TKey key, TValue value, TimeSpan? slidingExpireTime = null,
+            DateTimeOffset? absoluteExpireTime = null)
         {
             InternalCache.Set(key.ToString(), value, slidingExpireTime, absoluteExpireTime);
         }
 
-        public void Set(KeyValuePair<TKey, TValue>[] pairs, TimeSpan? slidingExpireTime = null, DateTimeOffset? absoluteExpireTime = null)
+        public void Set(KeyValuePair<TKey, TValue>[] pairs, TimeSpan? slidingExpireTime = null,
+            DateTimeOffset? absoluteExpireTime = null)
         {
             var stringPairs = pairs.Select(p => new KeyValuePair<string, object>(p.Key.ToString(), p.Value));
             InternalCache.Set(stringPairs.ToArray(), slidingExpireTime, absoluteExpireTime);
         }
 
-        public Task SetAsync(TKey key, TValue value, TimeSpan? slidingExpireTime = null, DateTimeOffset? absoluteExpireTime = null)
+        public Task SetAsync(TKey key, TValue value, TimeSpan? slidingExpireTime = null,
+            DateTimeOffset? absoluteExpireTime = null)
         {
             return InternalCache.SetAsync(key.ToString(), value, slidingExpireTime, absoluteExpireTime);
         }
 
-        public Task SetAsync(KeyValuePair<TKey, TValue>[] pairs, TimeSpan? slidingExpireTime = null, DateTimeOffset? absoluteExpireTime = null)
+        public Task SetAsync(KeyValuePair<TKey, TValue>[] pairs, TimeSpan? slidingExpireTime = null,
+            DateTimeOffset? absoluteExpireTime = null)
         {
             var stringPairs = pairs.Select(p => new KeyValuePair<string, object>(p.Key.ToString(), p.Value));
             return InternalCache.SetAsync(stringPairs.ToArray(), slidingExpireTime, absoluteExpireTime);

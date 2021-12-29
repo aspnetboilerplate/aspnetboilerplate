@@ -23,23 +23,14 @@ namespace Abp.WebApi.Runtime.Caching
         [HttpPost]
         public async Task<AjaxResponse> Clear(ClearCacheModel model)
         {
-            if (model.Password.IsNullOrEmpty())
-            {
-                throw new UserFriendlyException("Password can not be null or empty!");
-            }
+            if (model.Password.IsNullOrEmpty()) throw new UserFriendlyException("Password can not be null or empty!");
 
-            if (model.Caches.IsNullOrEmpty())
-            {
-                throw new UserFriendlyException("Caches can not be null or empty!");
-            }
+            if (model.Caches.IsNullOrEmpty()) throw new UserFriendlyException("Caches can not be null or empty!");
 
             await CheckPasswordAsync(model.Password);
 
             var caches = _cacheManager.GetAllCaches().Where(c => model.Caches.Contains(c.Name));
-            foreach (var cache in caches)
-            {
-                await cache.ClearAsync();
-            }
+            foreach (var cache in caches) await cache.ClearAsync();
 
             return new AjaxResponse();
         }
@@ -48,18 +39,12 @@ namespace Abp.WebApi.Runtime.Caching
         [Route("api/AbpCache/ClearAll")]
         public async Task<AjaxResponse> ClearAll(ClearAllCacheModel model)
         {
-            if (model.Password.IsNullOrEmpty())
-            {
-                throw new UserFriendlyException("Password can not be null or empty!");
-            }
+            if (model.Password.IsNullOrEmpty()) throw new UserFriendlyException("Password can not be null or empty!");
 
             await CheckPasswordAsync(model.Password);
 
             var caches = _cacheManager.GetAllCaches();
-            foreach (var cache in caches)
-            {
-                await cache.ClearAsync();
-            }
+            foreach (var cache in caches) await cache.ClearAsync();
 
             return new AjaxResponse();
         }
@@ -67,19 +52,13 @@ namespace Abp.WebApi.Runtime.Caching
         private async Task CheckPasswordAsync(string password)
         {
             var actualPassword = await SettingManager.GetSettingValueAsync(ClearCacheSettingNames.Password);
-            if (actualPassword != password)
-            {
-                throw new UserFriendlyException("Password is not correct!");
-            }
+            if (actualPassword != password) throw new UserFriendlyException("Password is not correct!");
         }
 
         private void CheckPassword(string password)
         {
             var actualPassword = SettingManager.GetSettingValue(ClearCacheSettingNames.Password);
-            if (actualPassword != password)
-            {
-                throw new UserFriendlyException("Password is not correct!");
-            }
+            if (actualPassword != password) throw new UserFriendlyException("Password is not correct!");
         }
     }
 }

@@ -140,7 +140,10 @@ namespace Abp.Zero.SampleApp.Tests.DynamicEntityProperties
                 TenantId = AbpSession.TenantId
             };
 
-            await WithUnitOfWorkAsync(async () => { await _dynamicEntityPropertyValueManager.AddAsync(propertyValue); });
+            await WithUnitOfWorkAsync(async () =>
+            {
+                await _dynamicEntityPropertyValueManager.AddAsync(propertyValue);
+            });
 
             await RunAndCheckIfPermissionControlledAsync(async () =>
             {
@@ -169,15 +172,22 @@ namespace Abp.Zero.SampleApp.Tests.DynamicEntityProperties
                 TenantId = AbpSession.TenantId
             };
 
-            await WithUnitOfWorkAsync(async () => { await _dynamicEntityPropertyValueManager.AddAsync(propertyValue); });
+            await WithUnitOfWorkAsync(async () =>
+            {
+                await _dynamicEntityPropertyValueManager.AddAsync(propertyValue);
+            });
 
-            await RunAndCheckIfPermissionControlledAsync(async () => { await _dynamicEntityPropertyValueManager.DeleteAsync(propertyValue.Id); });
+            await RunAndCheckIfPermissionControlledAsync(async () =>
+            {
+                await _dynamicEntityPropertyValueManager.DeleteAsync(propertyValue.Id);
+            });
 
             await WithUnitOfWorkAsync(async () =>
             {
                 try
                 {
-                    var dynamicEntityPropertyValue = await _dynamicEntityPropertyValueManager.GetAsync(propertyValue.Id);
+                    var dynamicEntityPropertyValue =
+                        await _dynamicEntityPropertyValueManager.GetAsync(propertyValue.Id);
                     dynamicEntityPropertyValue.ShouldBeNull();
                 }
                 catch (EntityNotFoundException)
@@ -186,7 +196,8 @@ namespace Abp.Zero.SampleApp.Tests.DynamicEntityProperties
             });
         }
 
-        private (DynamicEntityProperty dynamicEntityProperty, List<DynamicEntityPropertyValue> values) AddTestItems(int loop = 3, string rowId = "123")
+        private (DynamicEntityProperty dynamicEntityProperty, List<DynamicEntityPropertyValue> values) AddTestItems(
+            int loop = 3, string rowId = "123")
         {
             var dynamicEntityProperty = CreateAndGetDynamicEntityProperty();
 
@@ -195,7 +206,6 @@ namespace Abp.Zero.SampleApp.Tests.DynamicEntityProperties
 
             var items = new List<DynamicEntityPropertyValue>();
             for (int i = 0; i < loop; i++)
-            {
                 WithUnitOfWork(() =>
                 {
                     var item = new DynamicEntityPropertyValue()
@@ -209,7 +219,6 @@ namespace Abp.Zero.SampleApp.Tests.DynamicEntityProperties
 
                     items.Add(item);
                 });
-            }
 
             return (dynamicEntityProperty, items);
         }
@@ -226,17 +235,13 @@ namespace Abp.Zero.SampleApp.Tests.DynamicEntityProperties
             value1.TenantId.ShouldBe(value2.TenantId);
         }
 
-        private void CheckIfSequencesEqual(List<DynamicEntityPropertyValue> values1, List<DynamicEntityPropertyValue> values2)
+        private void CheckIfSequencesEqual(List<DynamicEntityPropertyValue> values1,
+            List<DynamicEntityPropertyValue> values2)
         {
             if (!values1.Select(v => v.Id).SequenceEqual(values2.Select(v2 => v2.Id)))
-            {
                 throw new Exception("Sequences Not Equal");
-            }
 
-            foreach (var value1 in values1)
-            {
-                CheckEquality(value1, values2.Single(value2 => value2.Id == value1.Id));
-            }
+            foreach (var value1 in values1) CheckEquality(value1, values2.Single(value2 => value2.Id == value1.Id));
         }
 
         [Fact]
@@ -246,7 +251,8 @@ namespace Abp.Zero.SampleApp.Tests.DynamicEntityProperties
 
             await RunAndCheckIfPermissionControlledAsync(async () =>
             {
-                var list = await _dynamicEntityPropertyValueManager.GetValuesAsync(dynamicEntityPropertyId: dynamicEntityProperty.Id, entityId: "123");
+                var list = await _dynamicEntityPropertyValueManager.GetValuesAsync(
+                    dynamicEntityPropertyId: dynamicEntityProperty.Id, entityId: "123");
                 CheckIfSequencesEqual(list, values);
             });
         }
@@ -258,7 +264,8 @@ namespace Abp.Zero.SampleApp.Tests.DynamicEntityProperties
 
             RunAndCheckIfPermissionControlled(() =>
             {
-                var list = _dynamicEntityPropertyValueManager.GetValues(dynamicEntityPropertyId: dynamicEntityProperty.Id, entityId: "123");
+                var list = _dynamicEntityPropertyValueManager.GetValues(
+                    dynamicEntityPropertyId: dynamicEntityProperty.Id, entityId: "123");
                 CheckIfSequencesEqual(list, values);
             });
         }
@@ -270,7 +277,8 @@ namespace Abp.Zero.SampleApp.Tests.DynamicEntityProperties
 
             await RunAndCheckIfPermissionControlledAsync(async () =>
             {
-                var list = await _dynamicEntityPropertyValueManager.GetValuesAsync(entityFullName: dynamicEntityProperty.EntityFullName, entityId: "123");
+                var list = await _dynamicEntityPropertyValueManager.GetValuesAsync(
+                    entityFullName: dynamicEntityProperty.EntityFullName, entityId: "123");
                 CheckIfSequencesEqual(list, values);
             });
         }
@@ -282,7 +290,8 @@ namespace Abp.Zero.SampleApp.Tests.DynamicEntityProperties
 
             RunAndCheckIfPermissionControlled(() =>
             {
-                var list = _dynamicEntityPropertyValueManager.GetValues(entityFullName: testItems.dynamicEntityProperty.EntityFullName, entityId: "123");
+                var list = _dynamicEntityPropertyValueManager.GetValues(
+                    entityFullName: testItems.dynamicEntityProperty.EntityFullName, entityId: "123");
                 CheckIfSequencesEqual(list, testItems.values);
             });
         }
@@ -352,7 +361,10 @@ namespace Abp.Zero.SampleApp.Tests.DynamicEntityProperties
         {
             var (dynamicEntityProperty, _) = AddTestItems();
 
-            RunAndCheckIfPermissionControlled(() => { _dynamicEntityPropertyValueManager.CleanValues(dynamicEntityProperty.Id, "123"); });
+            RunAndCheckIfPermissionControlled(() =>
+            {
+                _dynamicEntityPropertyValueManager.CleanValues(dynamicEntityProperty.Id, "123");
+            });
 
             WithUnitOfWork(() =>
             {
@@ -366,7 +378,10 @@ namespace Abp.Zero.SampleApp.Tests.DynamicEntityProperties
         {
             var (dynamicEntityProperty, _) = AddTestItems();
 
-            await RunAndCheckIfPermissionControlledAsync(async () => { await _dynamicEntityPropertyValueManager.CleanValuesAsync(dynamicEntityProperty.Id, "123"); });
+            await RunAndCheckIfPermissionControlledAsync(async () =>
+            {
+                await _dynamicEntityPropertyValueManager.CleanValuesAsync(dynamicEntityProperty.Id, "123");
+            });
 
             WithUnitOfWork(() =>
             {

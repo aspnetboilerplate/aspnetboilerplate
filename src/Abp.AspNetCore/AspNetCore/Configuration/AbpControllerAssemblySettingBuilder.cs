@@ -1,27 +1,26 @@
 ﻿using System;
 using Microsoft.AspNetCore.Mvc.ApplicationModels;
 
-namespace Abp.AspNetCore.Configuration
+namespace Abp.AspNetCore.Configuration;
+
+public class AbpControllerAssemblySettingBuilder : IAbpControllerAssemblySettingBuilder
 {
-    public class AbpControllerAssemblySettingBuilder : IAbpControllerAssemblySettingBuilder
+    private readonly AbpControllerAssemblySetting _setting;
+
+    public AbpControllerAssemblySettingBuilder(AbpControllerAssemblySetting setting)
     {
-        private readonly AbpControllerAssemblySetting _setting;
+        _setting = setting;
+    }
 
-        public AbpControllerAssemblySettingBuilder(AbpControllerAssemblySetting setting)
-        {
-            _setting = setting;
-        }
+    public AbpControllerAssemblySettingBuilder Where(Func<Type, bool> predicate)
+    {
+        _setting.TypePredicate = predicate;
+        return this;
+    }
 
-        public AbpControllerAssemblySettingBuilder Where(Func<Type, bool> predicate)
-        {
-            _setting.TypePredicate = predicate;
-            return this;
-        }
-
-        public AbpControllerAssemblySettingBuilder ConfigureControllerModel(Action<ControllerModel> configurer)
-        {
-            _setting.ControllerModelConfigurer = configurer;
-            return this;
-        }
+    public AbpControllerAssemblySettingBuilder ConfigureControllerModel(Action<ControllerModel> configurer)
+    {
+        _setting.ControllerModelConfigurer = configurer;
+        return this;
     }
 }

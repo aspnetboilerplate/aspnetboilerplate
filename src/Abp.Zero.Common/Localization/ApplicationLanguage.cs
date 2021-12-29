@@ -65,7 +65,8 @@ namespace Abp.Localization
         {
         }
 
-        public ApplicationLanguage(int? tenantId, string name, string displayName, string icon = null, bool isDisabled = false)
+        public ApplicationLanguage(int? tenantId, string name, string displayName, string icon = null,
+            bool isDisabled = false)
         {
             TenantId = tenantId;
             Name = name;

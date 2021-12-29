@@ -9,7 +9,6 @@ namespace Abp.UI.Inputs
     {
         public SingleLineStringInputType()
         {
-
         }
 
         public SingleLineStringInputType(IValueValidator validator)

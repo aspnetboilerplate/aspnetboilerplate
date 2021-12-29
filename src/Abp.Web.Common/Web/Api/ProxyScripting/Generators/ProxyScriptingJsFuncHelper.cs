@@ -10,9 +10,11 @@ namespace Abp.Web.Api.ProxyScripting.Generators
 {
     public static class ProxyScriptingJsFuncHelper
     {
-        private const string ValidJsVariableNameChars = "abcdefghijklmnopqrstuxwvyzABCDEFGHIJKLMNOPQRSTUXWVYZ0123456789_";
+        private const string ValidJsVariableNameChars =
+            "abcdefghijklmnopqrstuxwvyzABCDEFGHIJKLMNOPQRSTUXWVYZ0123456789_";
 
-        private static readonly HashSet<string> ReservedWords = new HashSet<string> {
+        private static readonly HashSet<string> ReservedWords = new HashSet<string>
+        {
             "abstract",
             "else",
             "instanceof",
@@ -85,27 +87,17 @@ namespace Abp.Web.Api.ProxyScripting.Generators
 
             //Delete invalid chars
             foreach (var c in name)
-            {
                 if (!validChars.Contains(c))
-                {
                     sb.Replace(c.ToString(), "");
-                }
-            }
 
-            if (sb.Length == 0)
-            {
-                return "_" + Guid.NewGuid().ToString("N").Left(8);
-            }
+            if (sb.Length == 0) return "_" + Guid.NewGuid().ToString("N").Left(8);
 
             return sb.ToString();
         }
 
         public static string WrapWithBracketsOrWithDotPrefix(string name)
         {
-            if (!ReservedWords.Contains(name))
-            {
-                return "." + name;
-            }
+            if (!ReservedWords.Contains(name)) return "." + name;
 
             return "['" + name + "']";
         }
@@ -113,8 +105,9 @@ namespace Abp.Web.Api.ProxyScripting.Generators
         public static string GetParamNameInJsFunc(ParameterApiDescriptionModel parameterInfo)
         {
             return parameterInfo.Name == parameterInfo.NameOnMethod
-                       ? NormalizeJsVariableName(parameterInfo.Name.ToCamelCase(), ".")
-                       : NormalizeJsVariableName(parameterInfo.NameOnMethod.ToCamelCase()) + "." + NormalizeJsVariableName(parameterInfo.Name.ToCamelCase(), ".");
+                ? NormalizeJsVariableName(parameterInfo.Name.ToCamelCase(), ".")
+                : NormalizeJsVariableName(parameterInfo.NameOnMethod.ToCamelCase()) + "." +
+                  NormalizeJsVariableName(parameterInfo.Name.ToCamelCase(), ".");
         }
 
         public static string CreateJsObjectLiteral(ParameterApiDescriptionModel[] parameters, int indent = 0)
@@ -124,9 +117,7 @@ namespace Abp.Web.Api.ProxyScripting.Generators
             sb.AppendLine("{");
 
             foreach (var prm in parameters)
-            {
                 sb.AppendLine($"{new string(' ', indent)}  '{prm.Name}': {GetParamNameInJsFunc(prm)},");
-            }
 
             sb.Append(new string(' ', indent) + "}");
 
@@ -137,7 +128,8 @@ namespace Abp.Web.Api.ProxyScripting.Generators
         {
             var methodParamNames = action.Parameters.Select(p => p.NameOnMethod).Distinct().ToList();
             methodParamNames.Add(ajaxParametersName);
-            return methodParamNames.Select(prmName => NormalizeJsVariableName(prmName.ToCamelCase())).JoinAsString(", ");
+            return methodParamNames.Select(prmName => NormalizeJsVariableName(prmName.ToCamelCase()))
+                .JoinAsString(", ");
         }
     }
 }

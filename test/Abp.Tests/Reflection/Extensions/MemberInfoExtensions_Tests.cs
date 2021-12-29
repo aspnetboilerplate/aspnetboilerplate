@@ -20,13 +20,11 @@ namespace Abp.Tests.Reflection.Extensions
 
         private class MyClass : MyBaseClass
         {
-            
         }
 
         [MultiTenancySide(MultiTenancySides.Host)]
         private abstract class MyBaseClass
         {
-
         }
     }
 }

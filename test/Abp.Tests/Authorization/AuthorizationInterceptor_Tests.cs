@@ -25,19 +25,24 @@ namespace Abp.Tests.Authorization
             //SUT: AuthorizationInterceptor and AuthorizeAttributeHelper
             LocalIocManager.IocContainer.Register(
                 Component.For<IFeatureChecker>().Instance(Substitute.For<IFeatureChecker>())
-                );
+            );
 
             LocalIocManager.Register<IAuthorizationConfiguration, AuthorizationConfiguration>();
             LocalIocManager.Register<IMultiTenancyConfig, MultiTenancyConfig>();
             LocalIocManager.Register<AuthorizationInterceptor>(DependencyLifeStyle.Transient);
-            LocalIocManager.Register<AbpAsyncDeterminationInterceptor<AuthorizationInterceptor>>(DependencyLifeStyle.Transient);
+            LocalIocManager.Register<AbpAsyncDeterminationInterceptor<AuthorizationInterceptor>>(DependencyLifeStyle
+                .Transient);
             LocalIocManager.Register<IAuthorizationHelper, AuthorizationHelper>(DependencyLifeStyle.Transient);
             LocalIocManager.IocContainer.Register(
-                Component.For<MyTestClassToBeAuthorized_Sync>().Interceptors<AbpAsyncDeterminationInterceptor<AuthorizationInterceptor>>().LifestyleTransient(),
-                Component.For<MyTestClassToBeAuthorized_Async>().Interceptors<AbpAsyncDeterminationInterceptor<AuthorizationInterceptor>>().LifestyleTransient(),
-                Component.For<MyTestClassToBeAllowProtected_Async>().Interceptors<AbpAsyncDeterminationInterceptor<AuthorizationInterceptor>>().LifestyleTransient(),
-                Component.For<MyTestClassToBeAllowProtected_Sync>().Interceptors<AbpAsyncDeterminationInterceptor<AuthorizationInterceptor>>().LifestyleTransient()
-                );
+                Component.For<MyTestClassToBeAuthorized_Sync>()
+                    .Interceptors<AbpAsyncDeterminationInterceptor<AuthorizationInterceptor>>().LifestyleTransient(),
+                Component.For<MyTestClassToBeAuthorized_Async>()
+                    .Interceptors<AbpAsyncDeterminationInterceptor<AuthorizationInterceptor>>().LifestyleTransient(),
+                Component.For<MyTestClassToBeAllowProtected_Async>()
+                    .Interceptors<AbpAsyncDeterminationInterceptor<AuthorizationInterceptor>>().LifestyleTransient(),
+                Component.For<MyTestClassToBeAllowProtected_Sync>()
+                    .Interceptors<AbpAsyncDeterminationInterceptor<AuthorizationInterceptor>>().LifestyleTransient()
+            );
 
             //Mock session
             var session = Substitute.For<IAbpSession>();
@@ -86,7 +91,8 @@ namespace Abp.Tests.Authorization
             Assert.Throws<AbpAuthorizationException>(() => _syncObj.MethodWithPermission3());
             _syncObj.Called_MethodWithPermission3.ShouldBe(false);
 
-            Assert.Throws<AbpAuthorizationException>(() => _syncObj.MethodWithPermission1AndPermission3WithRequireAll());
+            Assert.Throws<AbpAuthorizationException>(() =>
+                _syncObj.MethodWithPermission1AndPermission3WithRequireAll());
             _syncObj.Called_MethodWithPermission1AndPermission3WithRequireAll.ShouldBe(false);
         }
 
@@ -112,10 +118,12 @@ namespace Abp.Tests.Authorization
 
             //Non authorized methods
 
-            await Assert.ThrowsAsync<AbpAuthorizationException>(async () => await _asyncObj.MethodWithPermission3Async());
+            await Assert.ThrowsAsync<AbpAuthorizationException>(
+                async () => await _asyncObj.MethodWithPermission3Async());
             _asyncObj.Called_MethodWithPermission3.ShouldBe(false);
 
-            await Assert.ThrowsAsync<AbpAuthorizationException>(async () => await _asyncObj.MethodWithPermission1AndPermission3WithRequireAllAsync());
+            await Assert.ThrowsAsync<AbpAuthorizationException>(async () =>
+                await _asyncObj.MethodWithPermission1AndPermission3WithRequireAllAsync());
             _asyncObj.Called_MethodWithPermission1AndPermission3WithRequireAll.ShouldBe(false);
         }
 
@@ -129,7 +137,8 @@ namespace Abp.Tests.Authorization
 
             //Non authorized methods
 
-            Assert.Throws<AbpAuthorizationException>(() => _syncObjForProtectedMethod.MethodWithPermissionForProtected());
+            Assert.Throws<AbpAuthorizationException>(
+                () => _syncObjForProtectedMethod.MethodWithPermissionForProtected());
             _syncObjForProtectedMethod.Called_AuthorizedProtectedMethod.ShouldBe(false);
         }
 
@@ -143,14 +152,15 @@ namespace Abp.Tests.Authorization
 
             //Non authorized methods
 
-            await Assert.ThrowsAsync<AbpAuthorizationException>(async () => await _asyncObjForProtectedMethod.MethodWithPermissionForProtectedAsync());
+            await Assert.ThrowsAsync<AbpAuthorizationException>(async () =>
+                await _asyncObjForProtectedMethod.MethodWithPermissionForProtectedAsync());
             _asyncObjForProtectedMethod.Called_AuthorizedProtectedMethod.ShouldBe(false);
         }
 
         private void EmptySession()
         {
-            LocalIocManager.Resolve<IAbpSession>().TenantId.Returns((int?) null);
-            LocalIocManager.Resolve<IAbpSession>().UserId.Returns((int?) null);
+            LocalIocManager.Resolve<IAbpSession>().TenantId.Returns((int?)null);
+            LocalIocManager.Resolve<IAbpSession>().UserId.Returns((int?)null);
         }
 
         public class MyTestClassToBeAuthorized_Sync

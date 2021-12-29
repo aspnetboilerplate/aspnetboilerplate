@@ -86,7 +86,8 @@ namespace Abp.TestBase.SampleApplication.Tests.Messages
         {
             //Act
 
-            var messages = _messageAppService.GetAll(new GetMessagesWithFilterInput { MaxResultCount = 1, Sorting = "Text" });
+            var messages = _messageAppService.GetAll(new GetMessagesWithFilterInput
+                { MaxResultCount = 1, Sorting = "Text" });
 
             //Assert
 
@@ -149,10 +150,7 @@ namespace Abp.TestBase.SampleApplication.Tests.Messages
         {
             //Arrange
 
-            UsingDbContext(context =>
-            {
-                context.Messages.Single(m => m.Id == 2).Text.ShouldBe("tenant-1-message-2");
-            });
+            UsingDbContext(context => { context.Messages.Single(m => m.Id == 2).Text.ShouldBe("tenant-1-message-2"); });
 
             //Act
 

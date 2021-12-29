@@ -8,7 +8,7 @@ namespace Abp.MemoryDb.Uow
     /// </summary>
     public class UnitOfWorkMemoryDatabaseProvider : IMemoryDatabaseProvider, ITransientDependency
     {
-        public MemoryDatabase Database { get { return ((MemoryDbUnitOfWork)_currentUnitOfWork.Current).Database; } }
+        public MemoryDatabase Database => ((MemoryDbUnitOfWork)_currentUnitOfWork.Current).Database;
 
         private readonly ICurrentUnitOfWorkProvider _currentUnitOfWork;
 

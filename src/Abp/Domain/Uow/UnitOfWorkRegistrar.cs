@@ -21,25 +21,17 @@ namespace Abp.Domain.Uow
                 var implementationType = handler.ComponentModel.Implementation.GetTypeInfo();
 
                 if (ShouldIntercept(iocManager, implementationType))
-                {
                     handler.ComponentModel.Interceptors.Add(
                         new InterceptorReference(typeof(AbpAsyncDeterminationInterceptor<UnitOfWorkInterceptor>))
                     );
-                }
             };
         }
 
         private static bool ShouldIntercept(IIocManager iocManager, TypeInfo implementationType)
         {
-            if (IsUnitOfWorkType(implementationType) || AnyMethodHasUnitOfWork(implementationType))
-            {
-                return true;
-            }
-            
-            if (!iocManager.IsRegistered<IUnitOfWorkDefaultOptions>())
-            {
-                return false;
-            }
+            if (IsUnitOfWorkType(implementationType) || AnyMethodHasUnitOfWork(implementationType)) return true;
+
+            if (!iocManager.IsRegistered<IUnitOfWorkDefaultOptions>()) return false;
 
             var uowOptions = iocManager.Resolve<IUnitOfWorkDefaultOptions>();
 

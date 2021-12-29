@@ -36,6 +36,7 @@ namespace Abp.TestBase.SampleApplication.Tests.Uow
                 {
                     await _messageRepository.InsertAsync(messageEntity);
                 }
+
                 await uow.CompleteAsync();
             }
 
@@ -100,8 +101,8 @@ namespace Abp.TestBase.SampleApplication.Tests.Uow
                 entity.TenantId.ShouldBe(null);
             });
         }
-
     }
+
     public interface IMessageTestDomainService : IDomainService
     {
         Task InsetNewMessageWithUsingUOWSetTenantIdNull(string text);

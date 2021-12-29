@@ -64,7 +64,8 @@ namespace Abp.TestBase.SampleApplication.Tests.People
             //CreatePersonAsync will use same UOW.
             using (var uow = LocalIocManager.Resolve<IUnitOfWorkManager>().Begin())
             {
-                await personAppService.CreatePersonAsync(new CreatePersonInput { ContactListId = contactList.Id, Name = "john" });
+                await personAppService.CreatePersonAsync(new CreatePersonInput
+                    { ContactListId = contactList.Id, Name = "john" });
                 //await uow.CompleteAsync(); //It's intentionally removed from code to see roll-back
             }
 
@@ -81,7 +82,8 @@ namespace Abp.TestBase.SampleApplication.Tests.People
         {
             var personAppService = Resolve<IPersonAppService>();
 
-            await Assert.ThrowsAsync<AbpValidationException>(async () => await personAppService.CreatePersonAsync(new CreatePersonInput { Name = null }));
+            await Assert.ThrowsAsync<AbpValidationException>(async () =>
+                await personAppService.CreatePersonAsync(new CreatePersonInput { Name = null }));
         }
 
         [Fact]
@@ -128,7 +130,8 @@ namespace Abp.TestBase.SampleApplication.Tests.People
 
             AbpSession.UserId = 1;
 
-            var halil = await UsingDbContextAsync(async context => await context.People.SingleAsync(p => p.Name == "halil"));
+            var halil = await UsingDbContextAsync(async context =>
+                await context.People.SingleAsync(p => p.Name == "halil"));
 
             //Act
 
@@ -136,7 +139,9 @@ namespace Abp.TestBase.SampleApplication.Tests.People
 
             //Assert
 
-            (await UsingDbContextAsync(async context => await context.People.FirstOrDefaultAsync(p => p.Name == "halil"))).IsDeleted.ShouldBe(true);
+            (await UsingDbContextAsync(
+                    async context => await context.People.FirstOrDefaultAsync(p => p.Name == "halil"))).IsDeleted
+                .ShouldBe(true);
         }
 
         [Fact]
@@ -159,8 +164,9 @@ namespace Abp.TestBase.SampleApplication.Tests.People
             var personAppService = Resolve<IPersonAppService>();
 
             AbpSession.UserId = 1;
-            
-            var halil = await UsingDbContextAsync(async context => await context.People.SingleAsync(p => p.Name == "halil"));
+
+            var halil = await UsingDbContextAsync(async context =>
+                await context.People.SingleAsync(p => p.Name == "halil"));
 
             //Act & Assert
 

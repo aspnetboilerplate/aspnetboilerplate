@@ -1,7 +1,5 @@
 ﻿using System;
-
 using Abp.Domain.Repositories;
-
 using JetBrains.Annotations;
 
 namespace Abp.Dapper
@@ -13,7 +11,8 @@ namespace Abp.Dapper
             [NotNull] Type repositoryInterfaceWithPrimaryKey,
             [NotNull] Type repositoryImplementation,
             [NotNull] Type repositoryImplementationWithPrimaryKey)
-            : base(repositoryInterface, repositoryInterfaceWithPrimaryKey, repositoryImplementation, repositoryImplementationWithPrimaryKey)
+            : base(repositoryInterface, repositoryInterfaceWithPrimaryKey, repositoryImplementation,
+                repositoryImplementationWithPrimaryKey)
         {
         }
     }

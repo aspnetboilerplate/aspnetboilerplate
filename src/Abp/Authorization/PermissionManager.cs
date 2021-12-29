@@ -29,13 +29,13 @@ namespace Abp.Authorization
         public PermissionManager(
             IIocManager iocManager,
             IAuthorizationConfiguration authorizationConfiguration,
-            IUnitOfWorkManager unitOfWorkManager, 
+            IUnitOfWorkManager unitOfWorkManager,
             IMultiTenancyConfig multiTenancy)
         {
             _iocManager = iocManager;
             _authorizationConfiguration = authorizationConfiguration;
             _unitOfWorkManager = unitOfWorkManager;
-            _multiTenancy = multiTenancy;            
+            _multiTenancy = multiTenancy;
 
             AbpSession = NullAbpSession.Instance;
         }
@@ -43,12 +43,10 @@ namespace Abp.Authorization
         public virtual void Initialize()
         {
             foreach (var providerType in _authorizationConfiguration.Providers)
-            {
                 using (var provider = _iocManager.ResolveAsDisposable<AuthorizationProvider>(providerType))
                 {
                     provider.Object.SetPermissions(this);
                 }
-            }
 
             Permissions.AddAllPermissions();
         }
@@ -56,10 +54,7 @@ namespace Abp.Authorization
         public virtual Permission GetPermission(string name)
         {
             var permission = Permissions.GetOrDefault(name);
-            if (permission == null)
-            {
-                throw new AbpException("There is no permission with name: " + name);
-            }
+            if (permission == null) throw new AbpException("There is no permission with name: " + name);
 
             return permission;
         }
@@ -93,31 +88,26 @@ namespace Abp.Authorization
                     .Where(p =>
                         p.FeatureDependency == null ||
                         GetCurrentMultiTenancySide() == MultiTenancySides.Host ||
-                        (p.MultiTenancySides.HasFlag(MultiTenancySides.Host) &&
-                         multiTenancySides.HasFlag(MultiTenancySides.Host)) ||
+                        p.MultiTenancySides.HasFlag(MultiTenancySides.Host) &&
+                        multiTenancySides.HasFlag(MultiTenancySides.Host) ||
                         p.FeatureDependency.IsSatisfied(featureDependencyContextObject)
                     ).ToImmutableList();
             }
         }
-        
+
         private MultiTenancySides GetCurrentMultiTenancySide()
         {
             if (_unitOfWorkManager.Current != null)
-            {
                 return _multiTenancy.IsEnabled && !_unitOfWorkManager.Current.GetTenantId().HasValue
                     ? MultiTenancySides.Host
                     : MultiTenancySides.Tenant;
-            }
 
             return AbpSession.MultiTenancySide;
         }
 
         private int? GetCurrentTenantId()
         {
-            if (_unitOfWorkManager.Current != null)
-            {
-                return _unitOfWorkManager.Current.GetTenantId();
-            }
+            if (_unitOfWorkManager.Current != null) return _unitOfWorkManager.Current.GetTenantId();
 
             return AbpSession.TenantId;
         }

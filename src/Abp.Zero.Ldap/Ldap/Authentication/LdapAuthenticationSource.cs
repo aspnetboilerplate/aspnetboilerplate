@@ -15,7 +15,9 @@ namespace Abp.Zero.Ldap.Authentication
     /// </summary>
     /// <typeparam name="TTenant">Tenant type</typeparam>
     /// <typeparam name="TUser">User type</typeparam>
-    public abstract class LdapAuthenticationSource<TTenant, TUser> : DefaultExternalAuthenticationSource<TTenant, TUser>, ITransientDependency
+    public abstract class
+        LdapAuthenticationSource<TTenant, TUser> : DefaultExternalAuthenticationSource<TTenant, TUser>,
+            ITransientDependency
         where TTenant : AbpTenant<TUser>
         where TUser : AbpUserBase, new()
     {
@@ -36,12 +38,10 @@ namespace Abp.Zero.Ldap.Authentication
         }
 
         /// <inheritdoc/>
-        public override async Task<bool> TryAuthenticateAsync(string userNameOrEmailAddress, string plainPassword, TTenant tenant)
+        public override async Task<bool> TryAuthenticateAsync(string userNameOrEmailAddress, string plainPassword,
+            TTenant tenant)
         {
-            if (!_ldapModuleConfig.IsEnabled || !(await _settings.GetIsEnabled(tenant?.Id)))
-            {
-                return false;
-            }
+            if (!_ldapModuleConfig.IsEnabled || !await _settings.GetIsEnabled(tenant?.Id)) return false;
 
             using (var principalContext = await CreatePrincipalContext(tenant, userNameOrEmailAddress))
             {
@@ -60,10 +60,7 @@ namespace Abp.Zero.Ldap.Authentication
             {
                 var userPrincipal = UserPrincipal.FindByIdentity(principalContext, userNameOrEmailAddress);
 
-                if (userPrincipal == null)
-                {
-                    throw new AbpException("Unknown LDAP user: " + userNameOrEmailAddress);
-                }
+                if (userPrincipal == null) throw new AbpException("Unknown LDAP user: " + userNameOrEmailAddress);
 
                 UpdateUserFromPrincipal(user, userPrincipal);
 
@@ -84,45 +81,35 @@ namespace Abp.Zero.Ldap.Authentication
             {
                 var userPrincipal = UserPrincipal.FindByIdentity(principalContext, user.UserName);
 
-                if (userPrincipal == null)
-                {
-                    throw new AbpException("Unknown LDAP user: " + user.UserName);
-                }
+                if (userPrincipal == null) throw new AbpException("Unknown LDAP user: " + user.UserName);
 
                 UpdateUserFromPrincipal(user, userPrincipal);
             }
         }
 
-        protected virtual bool ValidateCredentials(PrincipalContext principalContext, string userNameOrEmailAddress, string plainPassword)
+        protected virtual bool ValidateCredentials(PrincipalContext principalContext, string userNameOrEmailAddress,
+            string plainPassword)
         {
-            return principalContext.ValidateCredentials(userNameOrEmailAddress, plainPassword, ContextOptions.Negotiate);
+            return principalContext.ValidateCredentials(userNameOrEmailAddress, plainPassword,
+                ContextOptions.Negotiate);
         }
 
         protected virtual void UpdateUserFromPrincipal(TUser user, UserPrincipal userPrincipal)
         {
             if (_ldapModuleConfig.UseUserPrincipalNameAsUserName)
             {
-                if (!userPrincipal.UserPrincipalName.IsNullOrEmpty())
-                {
-                    user.UserName = userPrincipal.UserPrincipalName;
-                }
+                if (!userPrincipal.UserPrincipalName.IsNullOrEmpty()) user.UserName = userPrincipal.UserPrincipalName;
             }
             else
             {
-                if (!userPrincipal.SamAccountName.IsNullOrEmpty())
-                {
-                    user.UserName = userPrincipal.SamAccountName;
-                }  
+                if (!userPrincipal.SamAccountName.IsNullOrEmpty()) user.UserName = userPrincipal.SamAccountName;
             }
 
             user.Name = userPrincipal.GivenName;
             user.Surname = userPrincipal.Surname;
             user.EmailAddress = userPrincipal.EmailAddress;
 
-            if (userPrincipal.Enabled.HasValue)
-            {
-                user.IsActive = userPrincipal.Enabled.Value;
-            }
+            if (userPrincipal.Enabled.HasValue) user.IsActive = userPrincipal.Enabled.Value;
         }
 
         protected virtual Task<PrincipalContext> CreatePrincipalContext(TTenant tenant, string userNameOrEmailAddress)
@@ -149,15 +136,12 @@ namespace Abp.Zero.Ldap.Authentication
         protected virtual async Task CheckIsEnabled(TTenant tenant)
         {
             if (!_ldapModuleConfig.IsEnabled)
-            {
-                throw new AbpException("Ldap Authentication module is disabled globally!");                
-            }
+                throw new AbpException("Ldap Authentication module is disabled globally!");
 
             var tenantId = tenant?.Id;
             if (!await _settings.GetIsEnabled(tenantId))
-            {
-                throw new AbpException("Ldap Authentication is disabled for given tenant (id:" + tenantId + ")! You can enable it by setting '" + LdapSettingNames.IsEnabled + "' to true");
-            }
+                throw new AbpException("Ldap Authentication is disabled for given tenant (id:" + tenantId +
+                                       ")! You can enable it by setting '" + LdapSettingNames.IsEnabled + "' to true");
         }
 
         protected static string ConvertToNullIfEmpty(string str)

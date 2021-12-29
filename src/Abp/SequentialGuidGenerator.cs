@@ -82,10 +82,7 @@ namespace Abp
 
             // Since we're converting from an Int64, we have to reverse on
             // little-endian systems.
-            if (BitConverter.IsLittleEndian)
-            {
-                Array.Reverse(timestampBytes);
-            }
+            if (BitConverter.IsLittleEndian) Array.Reverse(timestampBytes);
 
             byte[] guidBytes = new byte[16];
 
@@ -134,7 +131,7 @@ namespace Abp
 
             MySql,
 
-            PostgreSql,
+            PostgreSql
         }
 
         /// <summary>

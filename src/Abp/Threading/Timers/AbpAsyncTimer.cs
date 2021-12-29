@@ -64,10 +64,7 @@ namespace Abp.Threading.Timers
         /// </summary>
         public override void Start()
         {
-            if (Period <= 0)
-            {
-                throw new AbpException("Period should be set before starting the timer!");
-            }
+            if (Period <= 0) throw new AbpException("Period should be set before starting the timer!");
 
             base.Start();
 
@@ -96,10 +93,7 @@ namespace Abp.Threading.Timers
         {
             lock (_taskTimer)
             {
-                while (_performingTasks)
-                {
-                    Monitor.Wait(_taskTimer);
-                }
+                while (_performingTasks) Monitor.Wait(_taskTimer);
             }
 
             base.WaitToStop();
@@ -113,10 +107,7 @@ namespace Abp.Threading.Timers
         {
             lock (_taskTimer)
             {
-                if (!_running || _performingTasks)
-                {
-                    return;
-                }
+                if (!_running || _performingTasks) return;
 
                 _taskTimer.Change(Timeout.Infinite, Timeout.Infinite);
                 _performingTasks = true;
@@ -124,26 +115,22 @@ namespace Abp.Threading.Timers
 
             _ = Timer_Elapsed();
         }
-        
+
         private async Task Timer_Elapsed()
         {
             try
             {
                 await Elapsed(this);
             }
-            catch(Exception)
+            catch (Exception)
             {
-                
             }
             finally
             {
                 lock (_taskTimer)
                 {
                     _performingTasks = false;
-                    if (IsRunning)
-                    {
-                        _taskTimer.Change(Period, Timeout.Infinite);
-                    }
+                    if (IsRunning) _taskTimer.Change(Period, Timeout.Infinite);
 
                     Monitor.Pulse(_taskTimer);
                 }

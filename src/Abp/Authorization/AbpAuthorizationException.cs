@@ -14,7 +14,7 @@ namespace Abp.Authorization
         /// Default log severity
         /// </summary>
         public static LogSeverity DefaultLogSeverity = LogSeverity.Warn;
-        
+
         /// <summary>
         /// Severity of the exception.
         /// Default: Warn.
@@ -35,7 +35,6 @@ namespace Abp.Authorization
         public AbpAuthorizationException(SerializationInfo serializationInfo, StreamingContext context)
             : base(serializationInfo, context)
         {
-
         }
 
         /// <summary>

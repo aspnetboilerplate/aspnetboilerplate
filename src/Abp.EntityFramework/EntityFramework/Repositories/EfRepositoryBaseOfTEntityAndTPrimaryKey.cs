@@ -20,7 +20,8 @@ namespace Abp.EntityFramework.Repositories
     /// <typeparam name="TDbContext">DbContext which contains <typeparamref name="TEntity"/>.</typeparam>
     /// <typeparam name="TEntity">Type of the Entity for this repository</typeparam>
     /// <typeparam name="TPrimaryKey">Primary key of the entity</typeparam>
-    public class EfRepositoryBase<TDbContext, TEntity, TPrimaryKey> : AbpRepositoryBase<TEntity, TPrimaryKey>, IRepositoryWithDbContext, ISupportsExplicitLoading<TEntity, TPrimaryKey>
+    public class EfRepositoryBase<TDbContext, TEntity, TPrimaryKey> : AbpRepositoryBase<TEntity, TPrimaryKey>,
+        IRepositoryWithDbContext, ISupportsExplicitLoading<TEntity, TPrimaryKey>
         where TEntity : class, IEntity<TPrimaryKey>
         where TDbContext : DbContext
     {
@@ -34,17 +35,12 @@ namespace Abp.EntityFramework.Repositories
         /// </summary>
         public virtual DbSet<TEntity> Table => Context.Set<TEntity>();
 
-        public virtual DbTransaction Transaction
-        {
-            get
+        public virtual DbTransaction Transaction =>
+            (DbTransaction)TransactionProvider?.GetActiveTransaction(new ActiveTransactionProviderArgs
             {
-                return (DbTransaction)TransactionProvider?.GetActiveTransaction(new ActiveTransactionProviderArgs
-                {
-                    {"ContextType", typeof(TDbContext) },
-                    {"MultiTenancySide", MultiTenancySide }
-                });
-            }
-        }
+                { "ContextType", typeof(TDbContext) },
+                { "MultiTenancySide", MultiTenancySide }
+            });
 
         public virtual DbConnection Connection
         {
@@ -52,10 +48,7 @@ namespace Abp.EntityFramework.Repositories
             {
                 var connection = Context.Database.Connection;
 
-                if (connection.State != ConnectionState.Open)
-                {
-                    connection.Open();
-                }
+                if (connection.State != ConnectionState.Open) connection.Open();
 
                 return connection;
             }
@@ -84,19 +77,14 @@ namespace Abp.EntityFramework.Repositories
             return Task.FromResult(Table.AsQueryable());
         }
 
-        public override IQueryable<TEntity> GetAllIncluding(params Expression<Func<TEntity, object>>[] propertySelectors)
+        public override IQueryable<TEntity> GetAllIncluding(
+            params Expression<Func<TEntity, object>>[] propertySelectors)
         {
-            if (propertySelectors.IsNullOrEmpty())
-            {
-                return GetAll();
-            }
+            if (propertySelectors.IsNullOrEmpty()) return GetAll();
 
             var query = GetAll();
 
-            foreach (var propertySelector in propertySelectors)
-            {
-                query = query.Include(propertySelector);
-            }
+            foreach (var propertySelector in propertySelectors) query = query.Include(propertySelector);
 
             return query;
         }
@@ -145,10 +133,7 @@ namespace Abp.EntityFramework.Repositories
         {
             entity = Insert(entity);
 
-            if (entity.IsTransient())
-            {
-                Context.SaveChanges();
-            }
+            if (entity.IsTransient()) Context.SaveChanges();
 
             return entity.Id;
         }
@@ -157,10 +142,7 @@ namespace Abp.EntityFramework.Repositories
         {
             entity = await InsertAsync(entity);
 
-            if (entity.IsTransient())
-            {
-                await Context.SaveChangesAsync(CancellationTokenProvider.Token);
-            }
+            if (entity.IsTransient()) await Context.SaveChangesAsync(CancellationTokenProvider.Token);
 
             return entity.Id;
         }
@@ -169,10 +151,7 @@ namespace Abp.EntityFramework.Repositories
         {
             entity = InsertOrUpdate(entity);
 
-            if (entity.IsTransient())
-            {
-                Context.SaveChanges();
-            }
+            if (entity.IsTransient()) Context.SaveChanges();
 
             return entity.Id;
         }
@@ -181,10 +160,7 @@ namespace Abp.EntityFramework.Repositories
         {
             entity = await InsertOrUpdateAsync(entity);
 
-            if (entity.IsTransient())
-            {
-                await Context.SaveChangesAsync(CancellationTokenProvider.Token);
-            }
+            if (entity.IsTransient()) await Context.SaveChangesAsync(CancellationTokenProvider.Token);
 
             return entity.Id;
         }
@@ -215,10 +191,7 @@ namespace Abp.EntityFramework.Repositories
             if (entity == null)
             {
                 entity = FirstOrDefault(id);
-                if (entity == null)
-                {
-                    return;
-                }
+                if (entity == null) return;
             }
 
             Delete(entity);
@@ -250,10 +223,7 @@ namespace Abp.EntityFramework.Repositories
 
         protected virtual void AttachIfNot(TEntity entity)
         {
-            if (!Table.Local.Contains(entity))
-            {
-                Table.Attach(entity);
-            }
+            if (!Table.Local.Contains(entity)) Table.Attach(entity);
         }
 
         public DbContext GetDbContext()
@@ -261,41 +231,43 @@ namespace Abp.EntityFramework.Repositories
             return Context;
         }
 
-        public Task EnsureCollectionLoadedAsync<TProperty>(TEntity entity, Expression<Func<TEntity, IEnumerable<TProperty>>> collectionExpression,
+        public Task EnsureCollectionLoadedAsync<TProperty>(TEntity entity,
+            Expression<Func<TEntity, IEnumerable<TProperty>>> collectionExpression,
             CancellationToken cancellationToken) where TProperty : class
         {
             var expression = collectionExpression.Body as MemberExpression;
             if (expression == null)
-            {
-                throw new AbpException($"Given {nameof(collectionExpression)} is not a {typeof(MemberExpression).FullName}");
-            }
+                throw new AbpException(
+                    $"Given {nameof(collectionExpression)} is not a {typeof(MemberExpression).FullName}");
 
             return Context.Entry(entity)
                 .Collection(expression.Member.Name)
                 .LoadAsync(cancellationToken);
         }
 
-        public void EnsureCollectionLoaded<TProperty>(TEntity entity, Expression<Func<TEntity, IEnumerable<TProperty>>> collectionExpression,
+        public void EnsureCollectionLoaded<TProperty>(TEntity entity,
+            Expression<Func<TEntity, IEnumerable<TProperty>>> collectionExpression,
             CancellationToken cancellationToken) where TProperty : class
         {
             var expression = collectionExpression.Body as MemberExpression;
             if (expression == null)
-            {
-                throw new AbpException($"Given {nameof(collectionExpression)} is not a {typeof(MemberExpression).FullName}");
-            }
+                throw new AbpException(
+                    $"Given {nameof(collectionExpression)} is not a {typeof(MemberExpression).FullName}");
 
             Context.Entry(entity)
                 .Collection(expression.Member.Name)
                 .Load();
         }
 
-        public Task EnsurePropertyLoadedAsync<TProperty>(TEntity entity, Expression<Func<TEntity, TProperty>> propertyExpression,
+        public Task EnsurePropertyLoadedAsync<TProperty>(TEntity entity,
+            Expression<Func<TEntity, TProperty>> propertyExpression,
             CancellationToken cancellationToken) where TProperty : class
         {
             return Context.Entry(entity).Reference(propertyExpression).LoadAsync(cancellationToken);
         }
 
-        public void EnsurePropertyLoaded<TProperty>(TEntity entity, Expression<Func<TEntity, TProperty>> propertyExpression,
+        public void EnsurePropertyLoaded<TProperty>(TEntity entity,
+            Expression<Func<TEntity, TProperty>> propertyExpression,
             CancellationToken cancellationToken) where TProperty : class
         {
             Context.Entry(entity).Reference(propertyExpression).Load();

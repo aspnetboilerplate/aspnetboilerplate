@@ -46,6 +46,6 @@ namespace Abp.Web
         /// <summary>
         /// PATCH
         /// </summary>
-        Patch,
+        Patch
     }
 }

@@ -27,7 +27,7 @@ namespace Abp.Authorization
             MultiTenancySides multiTenancySides = MultiTenancySides.Host | MultiTenancySides.Tenant,
             IFeatureDependency featureDependency = null,
             Dictionary<string, object> properties = null
-            );
+        );
 
         /// <summary>
         /// Gets a permission with given name or null if can not find.

@@ -18,18 +18,19 @@ namespace Abp.Localization
                 return;
             }
 
-            var localizableString = (ILocalizableString) value;
+            var localizableString = (ILocalizableString)value;
             writer.WriteValue(localizableString.Localize(new LocalizationContext(LocalizationHelper.Manager)));
         }
 
-        public override object ReadJson(JsonReader reader, Type objectType, object existingValue, JsonSerializer serializer)
+        public override object ReadJson(JsonReader reader, Type objectType, object existingValue,
+            JsonSerializer serializer)
         {
             throw new NotImplementedException();
         }
 
         public override bool CanConvert(Type objectType)
         {
-            return typeof (ILocalizableString).GetTypeInfo().IsAssignableFrom(objectType);
+            return typeof(ILocalizableString).GetTypeInfo().IsAssignableFrom(objectType);
         }
     }
 }

@@ -35,14 +35,16 @@ namespace Abp.Tests.Runtime.Caching
             };
 
             var result = AbpCacheData.Serialize(source);
-            result.Type.ShouldBe("Abp.Tests.Runtime.Caching.AbpCacheData_Tests+MyTestClass, Abp.Tests, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null");
+            result.Type.ShouldBe(
+                "Abp.Tests.Runtime.Caching.AbpCacheData_Tests+MyTestClass, Abp.Tests, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null");
             result.Payload.ShouldBe("{\"Field1\":42,\"Field2\":\"Stranger Things\"}");
         }
 
         [Fact]
         public void Deserialize_List_Test()
         {
-            var json = "{\"Payload\":\"[\\\"Stranger Things\\\",\\\"The OA\\\",\\\"Lost in Space\\\"]\",\"Type\":\"System.Collections.Generic.List`1[[System.String]]\"}";
+            var json =
+                "{\"Payload\":\"[\\\"Stranger Things\\\",\\\"The OA\\\",\\\"Lost in Space\\\"]\",\"Type\":\"System.Collections.Generic.List`1[[System.String]]\"}";
             var cacheData = AbpCacheData.Deserialize(json);
 
             cacheData.ShouldNotBeNull();
@@ -51,14 +53,15 @@ namespace Abp.Tests.Runtime.Caching
         [Fact]
         public void Deserialize_Class_Test()
         {
-            var json = "{\"Payload\": \"{\\\"Field1\\\": 42,\\\"Field2\\\":\\\"Stranger Things\\\"}\",\"Type\":\"Abp.Tests.Runtime.Caching.AbpCacheData_Tests+MyTestClass, Abp.Tests\"}";
+            var json =
+                "{\"Payload\": \"{\\\"Field1\\\": 42,\\\"Field2\\\":\\\"Stranger Things\\\"}\",\"Type\":\"Abp.Tests.Runtime.Caching.AbpCacheData_Tests+MyTestClass, Abp.Tests\"}";
 
             var cacheData = AbpCacheData.Deserialize(json);
 
             cacheData.ShouldNotBeNull();
         }
 
-        class MyTestClass
+        private class MyTestClass
         {
             public int Field1 { get; set; }
 

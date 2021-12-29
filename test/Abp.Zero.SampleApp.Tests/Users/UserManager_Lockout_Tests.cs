@@ -62,10 +62,8 @@ namespace Abp.Zero.SampleApp.Tests.Users
             (await _logInManager.LoginAsync("TestUser", "123qwe")).Result.ShouldBe(AbpLoginResultType.Success);
 
             for (int i = 0; i < _userManager.MaxFailedAccessAttemptsBeforeLockout - 1; i++)
-            {
                 (await _logInManager.LoginAsync("TestUser", "invalid-pass")).Result.ShouldBe(AbpLoginResultType
                     .InvalidPassword);
-            }
 
             (await _logInManager.LoginAsync("TestUser", "invalid-pass")).Result.ShouldBe(AbpLoginResultType.LockedOut);
             (await _userManager.IsLockedOutAsync(_testUser.Id)).ShouldBeTrue();
@@ -101,7 +99,7 @@ namespace Abp.Zero.SampleApp.Tests.Users
                 Surname = "Doe",
                 EmailAddress = "user1@aspnetboilerplate.com",
                 IsEmailConfirmed = true,
-                Password = "AM4OLBpptxBYmM79lGOX9egzZk3vIQU3d/gFCJzaBjAPXzYIK3tQ2N7X4fcrHtElTw==", //123qwe
+                Password = "AM4OLBpptxBYmM79lGOX9egzZk3vIQU3d/gFCJzaBjAPXzYIK3tQ2N7X4fcrHtElTw==" //123qwe
             };
 
             await WithUnitOfWorkAsync(async () => await _userManager.CreateAsync(user));
@@ -151,15 +149,11 @@ namespace Abp.Zero.SampleApp.Tests.Users
             LocalIocManager.Using<ISettingManager>(settingManager =>
             {
                 if (AbpSession.TenantId is int tenantId)
-                {
                     settingManager.ChangeSettingForTenant(tenantId,
                         AbpZeroSettingNames.UserManagement.UserLockOut.IsEnabled, isLockoutEnabledByDefault.ToString());
-                }
                 else
-                {
                     settingManager.ChangeSettingForApplication(AbpZeroSettingNames.UserManagement.UserLockOut.IsEnabled,
                         isLockoutEnabledByDefault.ToString());
-                }
             });
         }
 

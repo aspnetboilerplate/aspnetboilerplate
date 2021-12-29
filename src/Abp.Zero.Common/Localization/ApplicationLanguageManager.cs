@@ -69,7 +69,7 @@ namespace Abp.Localization
         /// <param name="tenantId">TenantId or null for host</param>
         public virtual IReadOnlyList<ApplicationLanguage> GetLanguages(int? tenantId)
         {
-            return (GetLanguageDictionary(tenantId)).Values.ToImmutableList();
+            return GetLanguageDictionary(tenantId).Values.ToImmutableList();
         }
 
         public virtual IReadOnlyList<ApplicationLanguage> GetActiveLanguages(int? tenantId)
@@ -86,9 +86,7 @@ namespace Abp.Localization
             await _unitOfWorkManager.WithUnitOfWorkAsync(async () =>
             {
                 if ((await GetLanguagesAsync(language.TenantId)).Any(l => l.Name == language.Name))
-                {
                     throw new AbpException("There is already a language with name = " + language.Name);
-                }
 
                 using (_unitOfWorkManager.Current.SetTenantId(language.TenantId))
                 {
@@ -106,10 +104,8 @@ namespace Abp.Localization
         {
             _unitOfWorkManager.WithUnitOfWork(() =>
             {
-                if ((GetLanguages(language.TenantId)).Any(l => l.Name == language.Name))
-                {
+                if (GetLanguages(language.TenantId).Any(l => l.Name == language.Name))
                     throw new AbpException("There is already a language with name = " + language.Name);
-                }
 
                 using (_unitOfWorkManager.Current.SetTenantId(language.TenantId))
                 {
@@ -129,15 +125,10 @@ namespace Abp.Localization
             await _unitOfWorkManager.WithUnitOfWorkAsync(async () =>
             {
                 var currentLanguage = (await GetLanguagesAsync(tenantId)).FirstOrDefault(l => l.Name == languageName);
-                if (currentLanguage == null)
-                {
-                    return;
-                }
+                if (currentLanguage == null) return;
 
                 if (currentLanguage.TenantId == null && tenantId != null)
-                {
                     throw new AbpException("Can not delete a host language from tenant!");
-                }
 
                 using (_unitOfWorkManager.Current.SetTenantId(currentLanguage.TenantId))
                 {
@@ -156,16 +147,11 @@ namespace Abp.Localization
         {
             _unitOfWorkManager.WithUnitOfWork(() =>
             {
-                var currentLanguage = (GetLanguages(tenantId)).FirstOrDefault(l => l.Name == languageName);
-                if (currentLanguage == null)
-                {
-                    return;
-                }
+                var currentLanguage = GetLanguages(tenantId).FirstOrDefault(l => l.Name == languageName);
+                if (currentLanguage == null) return;
 
                 if (currentLanguage.TenantId == null && tenantId != null)
-                {
                     throw new AbpException("Can not delete a host language from tenant!");
-                }
 
                 using (_unitOfWorkManager.Current.SetTenantId(currentLanguage.TenantId))
                 {
@@ -185,17 +171,11 @@ namespace Abp.Localization
                 var existingLanguageWithSameName =
                     (await GetLanguagesAsync(language.TenantId)).FirstOrDefault(l => l.Name == language.Name);
                 if (existingLanguageWithSameName != null)
-                {
                     if (existingLanguageWithSameName.Id != language.Id)
-                    {
                         throw new AbpException("There is already a language with name = " + language.Name);
-                    }
-                }
 
                 if (language.TenantId == null && tenantId != null)
-                {
                     throw new AbpException("Can not update a host language from tenant");
-                }
 
                 using (_unitOfWorkManager.Current.SetTenantId(language.TenantId))
                 {
@@ -213,19 +193,13 @@ namespace Abp.Localization
             _unitOfWorkManager.WithUnitOfWork(() =>
             {
                 var existingLanguageWithSameName =
-                    (GetLanguages(language.TenantId)).FirstOrDefault(l => l.Name == language.Name);
+                    GetLanguages(language.TenantId).FirstOrDefault(l => l.Name == language.Name);
                 if (existingLanguageWithSameName != null)
-                {
                     if (existingLanguageWithSameName.Id != language.Id)
-                    {
                         throw new AbpException("There is already a language with name = " + language.Name);
-                    }
-                }
 
                 if (language.TenantId == null && tenantId != null)
-                {
                     throw new AbpException("Can not update a host language from tenant");
-                }
 
                 using (_unitOfWorkManager.Current.SetTenantId(language.TenantId))
                 {
@@ -259,7 +233,7 @@ namespace Abp.Localization
                 ? _settingManager.GetSettingValueForTenant(LocalizationSettingNames.DefaultLanguage, tenantId.Value)
                 : _settingManager.GetSettingValueForApplication(LocalizationSettingNames.DefaultLanguage);
 
-            return (GetLanguages(tenantId)).FirstOrDefault(l => l.Name == defaultLanguageName);
+            return GetLanguages(tenantId).FirstOrDefault(l => l.Name == defaultLanguageName);
         }
 
         /// <summary>
@@ -271,15 +245,11 @@ namespace Abp.Localization
         {
             var cultureInfo = CultureInfo.GetCultureInfo(languageName);
             if (tenantId.HasValue)
-            {
                 await _settingManager.ChangeSettingForTenantAsync(tenantId.Value,
                     LocalizationSettingNames.DefaultLanguage, cultureInfo.Name);
-            }
             else
-            {
                 await _settingManager.ChangeSettingForApplicationAsync(LocalizationSettingNames.DefaultLanguage,
                     cultureInfo.Name);
-            }
         }
 
         /// <summary>
@@ -291,14 +261,10 @@ namespace Abp.Localization
         {
             var cultureInfo = CultureInfo.GetCultureInfo(languageName);
             if (tenantId.HasValue)
-            {
                 _settingManager.ChangeSettingForTenant(tenantId.Value, LocalizationSettingNames.DefaultLanguage,
                     cultureInfo.Name);
-            }
             else
-            {
                 _settingManager.ChangeSettingForApplication(LocalizationSettingNames.DefaultLanguage, cultureInfo.Name);
-            }
         }
 
         public void HandleEvent(EntityChangedEventData<ApplicationLanguage> eventData)
@@ -315,16 +281,11 @@ namespace Abp.Localization
             var languageDictionary =
                 new Dictionary<string, ApplicationLanguage>(await GetLanguageDictionaryFromCacheAsync(null));
 
-            if (tenantId == null)
-            {
-                return languageDictionary;
-            }
+            if (tenantId == null) return languageDictionary;
 
             //Override tenant languages
             foreach (var tenantLanguage in await GetLanguageDictionaryFromCacheAsync(tenantId.Value))
-            {
                 languageDictionary[tenantLanguage.Key] = tenantLanguage.Value;
-            }
 
             return languageDictionary;
         }
@@ -334,16 +295,11 @@ namespace Abp.Localization
             //Creates a copy of the cached dictionary (to not modify it)
             var languageDictionary = new Dictionary<string, ApplicationLanguage>(GetLanguageDictionaryFromCache(null));
 
-            if (tenantId == null)
-            {
-                return languageDictionary;
-            }
+            if (tenantId == null) return languageDictionary;
 
             //Override tenant languages
             foreach (var tenantLanguage in GetLanguageDictionaryFromCache(tenantId.Value))
-            {
                 languageDictionary[tenantLanguage.Key] = tenantLanguage.Value;
-            }
 
             return languageDictionary;
         }
@@ -376,7 +332,7 @@ namespace Abp.Localization
             {
                 using (_unitOfWorkManager.Current.SetTenantId(tenantId))
                 {
-                    return (_languageRepository.GetAllList()).ToDictionary(l => l.Name);
+                    return _languageRepository.GetAllList().ToDictionary(l => l.Name);
                 }
             });
         }

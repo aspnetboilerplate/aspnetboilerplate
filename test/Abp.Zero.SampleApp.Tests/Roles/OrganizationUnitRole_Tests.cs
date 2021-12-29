@@ -27,7 +27,9 @@ namespace Abp.Zero.SampleApp.Tests.Roles
 
             //Assert
             (await RoleManager.IsInOrganizationUnitAsync(role, ou2)).ShouldBe(true);
-            UsingDbContext(context => context.OrganizationUnitRoles.FirstOrDefault(ou => ou.RoleId == role.Id && ou.OrganizationUnitId == ou2.Id).ShouldNotBeNull());
+            UsingDbContext(context =>
+                context.OrganizationUnitRoles
+                    .FirstOrDefault(ou => ou.RoleId == role.Id && ou.OrganizationUnitId == ou2.Id).ShouldNotBeNull());
         }
 
         [Fact]
@@ -42,7 +44,9 @@ namespace Abp.Zero.SampleApp.Tests.Roles
 
             //Assert
             (await RoleManager.IsInOrganizationUnitAsync(role, ou11)).ShouldBe(false);
-            UsingDbContext(context => context.OrganizationUnitRoles.FirstOrDefault(ou => ou.RoleId == role.Id && ou.OrganizationUnitId == ou11.Id).ShouldBeNull());
+            UsingDbContext(context =>
+                context.OrganizationUnitRoles
+                    .FirstOrDefault(ou => ou.RoleId == role.Id && ou.OrganizationUnitId == ou11.Id).ShouldBeNull());
         }
 
         [Fact]
@@ -95,7 +99,8 @@ namespace Abp.Zero.SampleApp.Tests.Roles
 
         private OrganizationUnit GetOu(string displayName)
         {
-            var organizationUnit = UsingDbContext(context => context.OrganizationUnits.FirstOrDefault(ou => ou.DisplayName == displayName));
+            var organizationUnit = UsingDbContext(context =>
+                context.OrganizationUnits.FirstOrDefault(ou => ou.DisplayName == displayName));
             organizationUnit.ShouldNotBeNull();
 
             return organizationUnit;

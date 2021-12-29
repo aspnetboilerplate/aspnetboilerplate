@@ -5,6 +5,5 @@ namespace Abp.Zero.SampleApp.NHibernate.Mappings
 {
     public class UserMap : AbpUserMap<User>
     {
-
     }
 }

@@ -93,7 +93,7 @@ namespace Abp.Zero.SampleApp.Tests.Users
                     PermissionManager.GetPermission("Permission1"),
                     PermissionManager.GetPermission("Permission4")
                 });
-            
+
             (await IsGrantedAsync("Permission1")).ShouldBe(true);
             (await IsGrantedAsync("Permission2")).ShouldBe(false);
             (await IsGrantedAsync("Permission3")).ShouldBe(false);
@@ -115,14 +115,12 @@ namespace Abp.Zero.SampleApp.Tests.Users
             await GrantPermissionAsync(_role1, "Permission1");
             await UserManager.ProhibitAllPermissionsAsync(_testUser);
             foreach (var permission in PermissionManager.GetAllPermissions())
-            {
                 (await IsGrantedAsync(permission.Name)).ShouldBe(false);
-            }
         }
 
         private async Task<bool> IsGrantedAsync(string permissionName)
         {
-            return (await PermissionChecker.IsGrantedAsync(_testUser.ToUserIdentifier(), permissionName));
+            return await PermissionChecker.IsGrantedAsync(_testUser.ToUserIdentifier(), permissionName);
         }
     }
 }

@@ -31,16 +31,13 @@ namespace Abp.Localization.Dictionaries.Xml
                                                resouceName.EndsWith($"{SourceName}-{culture.Name}.xml", true,
                                                    null))).ToList();
             foreach (var resourceName in resourceNames)
-            {
                 if (resourceName.StartsWith(_rootNamespace))
-                {
                     using (var stream = _assembly.GetManifestResourceStream(resourceName))
                     {
                         var xmlString = Utf8Helper.ReadStringFromStream(stream);
-                        InitializeDictionary(CreateXmlLocalizationDictionary(xmlString), isDefault: resourceName.EndsWith(SourceName + ".xml"));
+                        InitializeDictionary(CreateXmlLocalizationDictionary(xmlString),
+                            resourceName.EndsWith(SourceName + ".xml"));
                     }
-                }
-            }
         }
 
         protected virtual XmlLocalizationDictionary CreateXmlLocalizationDictionary(string xmlString)

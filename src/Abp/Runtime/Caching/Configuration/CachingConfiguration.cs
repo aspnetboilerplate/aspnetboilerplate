@@ -9,10 +9,7 @@ namespace Abp.Runtime.Caching.Configuration
     {
         public IAbpStartupConfiguration AbpConfiguration { get; private set; }
 
-        public IReadOnlyList<ICacheConfigurator> Configurators
-        {
-            get { return _configurators.ToImmutableList(); }
-        }
+        public IReadOnlyList<ICacheConfigurator> Configurators => _configurators.ToImmutableList();
         private readonly List<ICacheConfigurator> _configurators;
 
         public CachingConfiguration(IAbpStartupConfiguration abpConfiguration)

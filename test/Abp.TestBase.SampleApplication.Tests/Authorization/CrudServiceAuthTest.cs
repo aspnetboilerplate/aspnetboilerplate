@@ -8,7 +8,6 @@ namespace Abp.TestBase.SampleApplication.Tests.Authorization
     {
         public CrudServiceAuthTest()
         {
-
         }
 
         [Fact]

@@ -10,10 +10,7 @@ namespace Abp.Tests.Startup
 
         public AbpBootstraper_Tester()
         {
-            _bootstrapper = AbpBootstrapper.Create<MyTestModule>(options =>
-            {
-                options.IocManager = LocalIocManager;
-            });
+            _bootstrapper = AbpBootstrapper.Create<MyTestModule>(options => { options.IocManager = LocalIocManager; });
         }
 
         [Fact]
@@ -105,7 +102,6 @@ namespace Abp.Tests.Startup
 
     public class MyAnotherModule : MyEventCounterModuleBase
     {
-
     }
 
     public abstract class MyEventCounterModuleBase : AbpModule

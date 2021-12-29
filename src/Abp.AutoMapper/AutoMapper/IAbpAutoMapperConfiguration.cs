@@ -12,7 +12,8 @@ namespace Abp.AutoMapper
         /// Use static Instance.
         /// Default: true.
         /// </summary>
-        [Obsolete("Automapper will remove static API. See https://github.com/aspnetboilerplate/aspnetboilerplate/issues/4667")]
+        [Obsolete(
+            "Automapper will remove static API. See https://github.com/aspnetboilerplate/aspnetboilerplate/issues/4667")]
         bool UseStaticMapper { get; set; }
     }
 }

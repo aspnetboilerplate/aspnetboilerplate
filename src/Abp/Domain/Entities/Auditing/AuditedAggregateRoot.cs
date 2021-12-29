@@ -9,7 +9,6 @@ namespace Abp.Domain.Entities.Auditing
     [Serializable]
     public abstract class AuditedAggregateRoot : AuditedAggregateRoot<int>
     {
-
     }
 
     /// <summary>

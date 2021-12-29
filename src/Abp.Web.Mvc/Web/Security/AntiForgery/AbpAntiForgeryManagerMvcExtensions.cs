@@ -9,14 +9,13 @@ namespace Abp.Web.Security.AntiForgery
 {
     public static class AbpAntiForgeryManagerMvcExtensions
     {
-        public static void SetCookie(this IAbpAntiForgeryManager manager, HttpContextBase context, IIdentity identity = null)
+        public static void SetCookie(this IAbpAntiForgeryManager manager, HttpContextBase context,
+            IIdentity identity = null)
         {
-            if (identity != null)
-            {
-                context.User = new ClaimsPrincipal(identity);
-            }
+            if (identity != null) context.User = new ClaimsPrincipal(identity);
 
-            context.Response.Cookies.Add(new HttpCookie(manager.Configuration.TokenCookieName, manager.GenerateToken()));
+            context.Response.Cookies.Add(new HttpCookie(manager.Configuration.TokenCookieName,
+                manager.GenerateToken()));
         }
 
         public static bool IsValid(this IAbpAntiForgeryManager manager, HttpContextBase context)
@@ -24,16 +23,10 @@ namespace Abp.Web.Security.AntiForgery
             var authCookieValue = GetCookieValue(context, manager.Configuration.AuthorizationCookieName);
             var antiForgeryCookieValue = GetCookieValue(context, AntiForgeryConfig.CookieName);
 
-            if (antiForgeryCookieValue.IsNullOrEmpty())
-            {
-                return authCookieValue.IsNullOrEmpty();
-            }
+            if (antiForgeryCookieValue.IsNullOrEmpty()) return authCookieValue.IsNullOrEmpty();
 
             var formOrHeaderValue = manager.Configuration.GetFormOrHeaderValue(context);
-            if (formOrHeaderValue.IsNullOrEmpty())
-            {
-                return false;
-            }
+            if (formOrHeaderValue.IsNullOrEmpty()) return false;
 
             return manager.As<IAbpAntiForgeryValidator>().IsValid(antiForgeryCookieValue, formOrHeaderValue);
         }
@@ -44,25 +37,17 @@ namespace Abp.Web.Security.AntiForgery
             return cookie?.Value;
         }
 
-        private static string GetFormOrHeaderValue(this IAbpAntiForgeryConfiguration configuration, HttpContextBase context)
+        private static string GetFormOrHeaderValue(this IAbpAntiForgeryConfiguration configuration,
+            HttpContextBase context)
         {
             var formValue = context.Request.Form["__RequestVerificationToken"];
-            if (!formValue.IsNullOrEmpty())
-            {
-                return formValue;
-            }
+            if (!formValue.IsNullOrEmpty()) return formValue;
 
             var headerValues = context.Request.Headers.GetValues(configuration.TokenHeaderName);
-            if (headerValues == null)
-            {
-                return null;
-            }
+            if (headerValues == null) return null;
 
             var headersArray = headerValues.ToArray();
-            if (!headersArray.Any())
-            {
-                return null;
-            }
+            if (!headersArray.Any()) return null;
 
             return headersArray.Last().Split(", ").Last();
         }

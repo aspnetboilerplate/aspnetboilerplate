@@ -18,19 +18,11 @@ namespace Abp.Auditing
         public virtual void Fill(AuditInfo auditInfo)
         {
             if (auditInfo.ClientIpAddress.IsNullOrEmpty())
-            {
                 auditInfo.ClientIpAddress = ClientInfoProvider.ClientIpAddress;
-            }
 
-            if (auditInfo.BrowserInfo.IsNullOrEmpty())
-            {
-                auditInfo.BrowserInfo = ClientInfoProvider.BrowserInfo;
-            }
+            if (auditInfo.BrowserInfo.IsNullOrEmpty()) auditInfo.BrowserInfo = ClientInfoProvider.BrowserInfo;
 
-            if (auditInfo.ClientName.IsNullOrEmpty())
-            {
-                auditInfo.ClientName = ClientInfoProvider.ComputerName;
-            }
+            if (auditInfo.ClientName.IsNullOrEmpty()) auditInfo.ClientName = ClientInfoProvider.ComputerName;
         }
     }
 }

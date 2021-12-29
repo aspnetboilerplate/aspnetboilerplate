@@ -26,10 +26,7 @@ namespace Abp.Web.Mvc.Views
             get
             {
                 var appPath = HttpContext.Current.Request.ApplicationPath;
-                if (appPath == null)
-                {
-                    return "/";
-                }
+                if (appPath == null) return "/";
 
                 appPath = appPath.EnsureEndsWith('/');
 
@@ -41,16 +38,17 @@ namespace Abp.Web.Mvc.Views
         /// Reference to the setting manager.
         /// </summary>
         public ISettingManager SettingManager { get; set; }
-        
+
         /// <summary>
         /// Gets/sets name of the localization source that is used in this controller.
         /// It must be set in order to use <see cref="L(string)"/> and <see cref="L(string,CultureInfo)"/> methods.
         /// </summary>
         protected string LocalizationSourceName
         {
-            get { return _localizationSource.Name; }
-            set { _localizationSource = LocalizationHelper.GetSource(value); }
+            get => _localizationSource.Name;
+            set => _localizationSource = LocalizationHelper.GetSource(value);
         }
+
         private ILocalizationSource _localizationSource;
 
         /// <summary>

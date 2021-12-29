@@ -20,17 +20,11 @@ namespace Abp.PlugIns
 
         private static void RegisterToAssemblyResolve(PlugInSourceList plugInSources)
         {
-            if (_isRegisteredToAssemblyResolve)
-            {
-                return;
-            }
+            if (_isRegisteredToAssemblyResolve) return;
 
             lock (SyncObj)
             {
-                if (_isRegisteredToAssemblyResolve)
-                {
-                    return;
-                }
+                if (_isRegisteredToAssemblyResolve) return;
 
                 _isRegisteredToAssemblyResolve = true;
 

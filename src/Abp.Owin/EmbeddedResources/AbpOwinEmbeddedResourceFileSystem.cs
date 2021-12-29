@@ -25,10 +25,7 @@ namespace Abp.Owin.EmbeddedResources
 
         public bool TryGetFileInfo(string subpath, out IFileInfo fileInfo)
         {
-            if (_physicalFileSystem.TryGetFileInfo(subpath, out fileInfo))
-            {
-                return true;
-            }
+            if (_physicalFileSystem.TryGetFileInfo(subpath, out fileInfo)) return true;
 
             var resource = _embeddedResourceManager.GetResource(subpath);
 
@@ -44,10 +41,7 @@ namespace Abp.Owin.EmbeddedResources
 
         public bool TryGetDirectoryContents(string subpath, out IEnumerable<IFileInfo> contents)
         {
-            if (_physicalFileSystem.TryGetDirectoryContents(subpath, out contents))
-            {
-                return true;
-            }
+            if (_physicalFileSystem.TryGetDirectoryContents(subpath, out contents)) return true;
 
             //TODO: Implement..?
 
@@ -57,7 +51,8 @@ namespace Abp.Owin.EmbeddedResources
 
         private bool IsIgnoredFile(EmbeddedResourceItem resource)
         {
-            return resource.FileExtension != null && _configuration.IgnoredFileExtensions.Contains(resource.FileExtension);
+            return resource.FileExtension != null &&
+                   _configuration.IgnoredFileExtensions.Contains(resource.FileExtension);
         }
     }
 }

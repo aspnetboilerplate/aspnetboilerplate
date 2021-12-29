@@ -1,1 +1,1 @@
-﻿console.log('blog module script overrided by application.');
+﻿console.log("blog module script overrided by application.");

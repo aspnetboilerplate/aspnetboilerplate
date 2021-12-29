@@ -20,23 +20,14 @@ namespace Abp.Reflection
         {
             var givenTypeInfo = givenType.GetTypeInfo();
 
-            if (givenTypeInfo.IsGenericType && givenType.GetGenericTypeDefinition() == genericType)
-            {
-                return true;
-            }
+            if (givenTypeInfo.IsGenericType && givenType.GetGenericTypeDefinition() == genericType) return true;
 
             foreach (var interfaceType in givenType.GetInterfaces())
-            {
-                if (interfaceType.GetTypeInfo().IsGenericType && interfaceType.GetGenericTypeDefinition() == genericType)
-                {
+                if (interfaceType.GetTypeInfo().IsGenericType &&
+                    interfaceType.GetGenericTypeDefinition() == genericType)
                     return true;
-                }
-            }
 
-            if (givenTypeInfo.BaseType == null)
-            {
-                return false;
-            }
+            if (givenTypeInfo.BaseType == null) return false;
 
             return IsAssignableToGenericType(givenTypeInfo.BaseType, genericType);
         }
@@ -53,9 +44,7 @@ namespace Abp.Reflection
             attributeList.AddRange(memberInfo.GetCustomAttributes(inherit));
 
             if (memberInfo.DeclaringType != null)
-            {
                 attributeList.AddRange(memberInfo.DeclaringType.GetTypeInfo().GetCustomAttributes(inherit));
-            }
 
             return attributeList;
         }
@@ -80,20 +69,19 @@ namespace Abp.Reflection
         /// <typeparam name="TAttribute">Type of the attribute</typeparam>
         /// <param name="memberInfo">MemberInfo</param>
         /// <param name="inherit">Inherit attribute from base classes</param>
-        public static List<TAttribute> GetAttributesOfMemberAndDeclaringType<TAttribute>(MemberInfo memberInfo, bool inherit = true)
+        public static List<TAttribute> GetAttributesOfMemberAndDeclaringType<TAttribute>(MemberInfo memberInfo,
+            bool inherit = true)
             where TAttribute : Attribute
         {
             var attributeList = new List<TAttribute>();
 
             if (memberInfo.IsDefined(typeof(TAttribute), inherit))
-            {
                 attributeList.AddRange(memberInfo.GetCustomAttributes(typeof(TAttribute), inherit).Cast<TAttribute>());
-            }
 
-            if (memberInfo.DeclaringType != null && memberInfo.DeclaringType.GetTypeInfo().IsDefined(typeof(TAttribute), inherit))
-            {
-                attributeList.AddRange(memberInfo.DeclaringType.GetTypeInfo().GetCustomAttributes(typeof(TAttribute), inherit).Cast<TAttribute>());
-            }
+            if (memberInfo.DeclaringType != null &&
+                memberInfo.DeclaringType.GetTypeInfo().IsDefined(typeof(TAttribute), inherit))
+                attributeList.AddRange(memberInfo.DeclaringType.GetTypeInfo()
+                    .GetCustomAttributes(typeof(TAttribute), inherit).Cast<TAttribute>());
 
             return attributeList;
         }
@@ -105,20 +93,18 @@ namespace Abp.Reflection
         /// <param name="memberInfo">MemberInfo</param>
         /// <param name="type">Type</param>
         /// <param name="inherit">Inherit attribute from base classes</param>
-        public static List<TAttribute> GetAttributesOfMemberAndType<TAttribute>(MemberInfo memberInfo, Type type, bool inherit = true)
+        public static List<TAttribute> GetAttributesOfMemberAndType<TAttribute>(MemberInfo memberInfo, Type type,
+            bool inherit = true)
             where TAttribute : Attribute
         {
             var attributeList = new List<TAttribute>();
 
             if (memberInfo.IsDefined(typeof(TAttribute), inherit))
-            {
                 attributeList.AddRange(memberInfo.GetCustomAttributes(typeof(TAttribute), inherit).Cast<TAttribute>());
-            }
 
             if (type.GetTypeInfo().IsDefined(typeof(TAttribute), inherit))
-            {
-                attributeList.AddRange(type.GetTypeInfo().GetCustomAttributes(typeof(TAttribute), inherit).Cast<TAttribute>());
-            }
+                attributeList.AddRange(type.GetTypeInfo().GetCustomAttributes(typeof(TAttribute), inherit)
+                    .Cast<TAttribute>());
 
             return attributeList;
         }
@@ -131,11 +117,13 @@ namespace Abp.Reflection
         /// <param name="memberInfo">MemberInfo</param>
         /// <param name="defaultValue">Default value (null as default)</param>
         /// <param name="inherit">Inherit attribute from base classes</param>
-        public static TAttribute GetSingleAttributeOfMemberOrDeclaringTypeOrDefault<TAttribute>(MemberInfo memberInfo, TAttribute defaultValue = default(TAttribute), bool inherit = true)
+        public static TAttribute GetSingleAttributeOfMemberOrDeclaringTypeOrDefault<TAttribute>(MemberInfo memberInfo,
+            TAttribute defaultValue = default, bool inherit = true)
             where TAttribute : class
         {
             return memberInfo.GetCustomAttributes(true).OfType<TAttribute>().FirstOrDefault()
-                   ?? memberInfo.ReflectedType?.GetTypeInfo().GetCustomAttributes(true).OfType<TAttribute>().FirstOrDefault()
+                   ?? memberInfo.ReflectedType?.GetTypeInfo().GetCustomAttributes(true).OfType<TAttribute>()
+                       .FirstOrDefault()
                    ?? defaultValue;
         }
 
@@ -147,14 +135,13 @@ namespace Abp.Reflection
         /// <param name="memberInfo">MemberInfo</param>
         /// <param name="defaultValue">Default value (null as default)</param>
         /// <param name="inherit">Inherit attribute from base classes</param>
-        public static TAttribute GetSingleAttributeOrDefault<TAttribute>(MemberInfo memberInfo, TAttribute defaultValue = default(TAttribute), bool inherit = true)
+        public static TAttribute GetSingleAttributeOrDefault<TAttribute>(MemberInfo memberInfo,
+            TAttribute defaultValue = default, bool inherit = true)
             where TAttribute : Attribute
         {
             //Get attribute on the member
             if (memberInfo.IsDefined(typeof(TAttribute), inherit))
-            {
                 return memberInfo.GetCustomAttributes(typeof(TAttribute), inherit).Cast<TAttribute>().First();
-            }
 
             return defaultValue;
         }
@@ -173,14 +160,12 @@ namespace Abp.Reflection
             var objectPath = currentType.FullName;
             var absolutePropertyPath = propertyPath;
             if (absolutePropertyPath.StartsWith(objectPath))
-            {
                 absolutePropertyPath = absolutePropertyPath.Replace(objectPath + ".", "");
-            }
 
             foreach (var propertyName in absolutePropertyPath.Split('.'))
             {
                 property = currentType.GetProperty(propertyName);
-                currentType = ((PropertyInfo) property).PropertyType;
+                currentType = ((PropertyInfo)property).PropertyType;
             }
 
             return property;
@@ -200,9 +185,7 @@ namespace Abp.Reflection
             var objectPath = currentType.FullName;
             var absolutePropertyPath = propertyPath;
             if (absolutePropertyPath.StartsWith(objectPath))
-            {
                 absolutePropertyPath = absolutePropertyPath.Replace(objectPath + ".", "");
-            }
 
             foreach (var propertyName in absolutePropertyPath.Split('.'))
             {
@@ -213,7 +196,7 @@ namespace Abp.Reflection
 
             return value;
         }
-        
+
         /// <summary>
         /// Sets value of a property by it's full path on given object
         /// </summary>
@@ -228,9 +211,7 @@ namespace Abp.Reflection
             var objectPath = currentType.FullName;
             var absolutePropertyPath = propertyPath;
             if (absolutePropertyPath.StartsWith(objectPath))
-            {
                 absolutePropertyPath = absolutePropertyPath.Replace(objectPath + ".", "");
-            }
 
             var properties = absolutePropertyPath.Split('.');
 
@@ -254,19 +235,14 @@ namespace Abp.Reflection
 
         internal static bool IsPropertyGetterSetterMethod(MethodInfo method, Type type)
         {
-            if (!method.IsSpecialName)
-            {
-                return false;
-            }
+            if (!method.IsSpecialName) return false;
 
-            if (method.Name.Length < 5)
-            {
-                return false;
-            }
+            if (method.Name.Length < 5) return false;
 
-            return type.GetProperty(method.Name.Substring(4), BindingFlags.Instance | BindingFlags.Static | BindingFlags.NonPublic) != null;
+            return type.GetProperty(method.Name.Substring(4),
+                BindingFlags.Instance | BindingFlags.Static | BindingFlags.NonPublic) != null;
         }
-        
+
         internal static async Task<object> InvokeAsync(MethodInfo method, object obj, params object[] parameters)
         {
             var task = (Task)method.Invoke(obj, parameters);

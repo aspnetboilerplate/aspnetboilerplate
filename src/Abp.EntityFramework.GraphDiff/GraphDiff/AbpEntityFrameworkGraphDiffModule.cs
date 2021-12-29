@@ -11,7 +11,9 @@ namespace Abp.EntityFramework.GraphDiff
     {
         public override void PreInitialize()
         {
-            IocManager.Register<IAbpEntityFrameworkGraphDiffModuleConfiguration, AbpEntityFrameworkGraphDiffModuleConfiguration>();
+            IocManager
+                .Register<IAbpEntityFrameworkGraphDiffModuleConfiguration,
+                    AbpEntityFrameworkGraphDiffModuleConfiguration>();
 
             Configuration.Modules
                 .AbpEfGraphDiff()

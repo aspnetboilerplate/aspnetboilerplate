@@ -13,7 +13,6 @@ namespace Abp.Application.Services.Dto
         /// </summary>
         public NameValueDto()
         {
-
         }
 
         /// <summary>
@@ -22,7 +21,6 @@ namespace Abp.Application.Services.Dto
         public NameValueDto(string name, string value)
             : base(name, value)
         {
-
         }
 
         /// <summary>
@@ -32,7 +30,6 @@ namespace Abp.Application.Services.Dto
         public NameValueDto(NameValue nameValue)
             : this(nameValue.Name, nameValue.Value)
         {
-
         }
     }
 
@@ -47,7 +44,6 @@ namespace Abp.Application.Services.Dto
         /// </summary>
         public NameValueDto()
         {
-
         }
 
         /// <summary>
@@ -56,7 +52,6 @@ namespace Abp.Application.Services.Dto
         public NameValueDto(string name, T value)
             : base(name, value)
         {
-
         }
 
         /// <summary>
@@ -66,7 +61,6 @@ namespace Abp.Application.Services.Dto
         public NameValueDto(NameValue<T> nameValue)
             : this(nameValue.Name, nameValue.Value)
         {
-
         }
     }
 }

@@ -22,34 +22,28 @@ namespace Abp.EntityFramework.Uow
         /// A custom name for the dbcontext to get a named dbcontext.
         /// If there is no dbcontext in this unit of work with given name, then a new one is created.
         /// </param>
-        public static TDbContext GetDbContext<TDbContext>(this IActiveUnitOfWork unitOfWork, MultiTenancySides? multiTenancySide = null, string name = null)
+        public static TDbContext GetDbContext<TDbContext>(this IActiveUnitOfWork unitOfWork,
+            MultiTenancySides? multiTenancySide = null, string name = null)
             where TDbContext : DbContext
         {
-            if (unitOfWork == null)
-            {
-                throw new ArgumentNullException(nameof(unitOfWork));
-            }
+            if (unitOfWork == null) throw new ArgumentNullException(nameof(unitOfWork));
 
             if (!(unitOfWork is EfUnitOfWork))
-            {
-                throw new ArgumentException("unitOfWork is not type of " + typeof(EfUnitOfWork).FullName, nameof(unitOfWork));
-            }
+                throw new ArgumentException("unitOfWork is not type of " + typeof(EfUnitOfWork).FullName,
+                    nameof(unitOfWork));
 
             return (unitOfWork as EfUnitOfWork).GetOrCreateDbContext<TDbContext>(multiTenancySide, name);
         }
-        
-        public static Task<TDbContext> GetDbContextAsync<TDbContext>(this IActiveUnitOfWork unitOfWork, MultiTenancySides? multiTenancySide = null, string name = null)
+
+        public static Task<TDbContext> GetDbContextAsync<TDbContext>(this IActiveUnitOfWork unitOfWork,
+            MultiTenancySides? multiTenancySide = null, string name = null)
             where TDbContext : DbContext
         {
-            if (unitOfWork == null)
-            {
-                throw new ArgumentNullException(nameof(unitOfWork));
-            }
+            if (unitOfWork == null) throw new ArgumentNullException(nameof(unitOfWork));
 
             if (!(unitOfWork is EfUnitOfWork))
-            {
-                throw new ArgumentException("unitOfWork is not type of " + typeof(EfUnitOfWork).FullName, nameof(unitOfWork));
-            }
+                throw new ArgumentException("unitOfWork is not type of " + typeof(EfUnitOfWork).FullName,
+                    nameof(unitOfWork));
 
             return (unitOfWork as EfUnitOfWork).GetOrCreateDbContextAsync<TDbContext>(multiTenancySide, name);
         }

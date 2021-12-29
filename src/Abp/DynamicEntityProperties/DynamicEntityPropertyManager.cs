@@ -44,9 +44,7 @@ namespace Abp.DynamicEntityProperties
         private void CheckEntityName(string entityFullName)
         {
             if (!_dynamicEntityPropertyDefinitionManager.ContainsEntity(entityFullName))
-            {
                 throw new ApplicationException($"Unknown entity {entityFullName}.");
-            }
         }
 
         public virtual DynamicEntityProperty Get(int id)
@@ -85,12 +83,8 @@ namespace Abp.DynamicEntityProperties
 
             var controlledProperties = new List<DynamicEntityProperty>();
             foreach (var dynamicEntityProperty in allProperties)
-            {
                 if (await _dynamicPropertyPermissionChecker.IsGrantedAsync(dynamicEntityProperty.DynamicPropertyId))
-                {
                     controlledProperties.Add(dynamicEntityProperty);
-                }
-            }
 
             return controlledProperties;
         }
@@ -110,12 +104,8 @@ namespace Abp.DynamicEntityProperties
 
             var controlledProperties = new List<DynamicEntityProperty>();
             foreach (var dynamicEntityProperty in allProperties)
-            {
                 if (await _dynamicPropertyPermissionChecker.IsGrantedAsync(dynamicEntityProperty.DynamicPropertyId))
-                {
                     controlledProperties.Add(dynamicEntityProperty);
-                }
-            }
 
             return controlledProperties;
         }
@@ -183,41 +173,32 @@ namespace Abp.DynamicEntityProperties
         public virtual void Delete(int id)
         {
             var dynamicEntityProperty = Get(id); //Get checks permission, no need to check it again
-            if (dynamicEntityProperty == null)
-            {
-                return;
-            }
+            if (dynamicEntityProperty == null) return;
 
             DynamicEntityPropertyStore.Delete(dynamicEntityProperty.Id);
-            
+
             var tenantId = GetCurrentTenantId();
             var cacheKey = GetCacheKey(id, tenantId);
-            
+
             DynamicEntityPropertyCache.Remove(cacheKey);
         }
 
         public virtual async Task DeleteAsync(int id)
         {
             var dynamicEntityProperty = await GetAsync(id); //Get checks permission, no need to check it again
-            if (dynamicEntityProperty == null)
-            {
-                return;
-            }
+            if (dynamicEntityProperty == null) return;
 
             await DynamicEntityPropertyStore.DeleteAsync(dynamicEntityProperty.Id);
-            
+
             var tenantId = GetCurrentTenantId();
             var cacheKey = GetCacheKey(id, tenantId);
-            
+
             await DynamicEntityPropertyCache.RemoveAsync(cacheKey);
         }
 
         protected virtual int? GetCurrentTenantId()
         {
-            if (_unitOfWorkManager.Current != null)
-            {
-                return _unitOfWorkManager.Current.GetTenantId();
-            }
+            if (_unitOfWorkManager.Current != null) return _unitOfWorkManager.Current.GetTenantId();
 
             return AbpSession.TenantId;
         }

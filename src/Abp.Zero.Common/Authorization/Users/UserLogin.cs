@@ -43,7 +43,6 @@ namespace Abp.Authorization.Users
 
         public UserLogin()
         {
-            
         }
 
         public UserLogin(int? tenantId, long userId, string loginProvider, string providerKey)

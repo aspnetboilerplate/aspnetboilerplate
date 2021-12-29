@@ -6,7 +6,9 @@ namespace Abp.Json
 {
     public static class JsonExtensions
     {
-        private static readonly AbpCamelCasePropertyNamesContractResolver SharedAbpCamelCasePropertyNamesContractResolver;
+        private static readonly AbpCamelCasePropertyNamesContractResolver
+            SharedAbpCamelCasePropertyNamesContractResolver;
+
         private static readonly AbpContractResolver SharedAbpContractResolver;
 
         static JsonExtensions()
@@ -24,19 +26,12 @@ namespace Abp.Json
             var settings = new JsonSerializerSettings();
 
             if (camelCase)
-            {
                 settings.ContractResolver = SharedAbpCamelCasePropertyNamesContractResolver;
-            }
             else
-            {
                 settings.ContractResolver = SharedAbpContractResolver;
-            }
 
-            if (indented)
-            {
-                settings.Formatting = Formatting.Indented;
-            }
-            
+            if (indented) settings.Formatting = Formatting.Indented;
+
             return ToJsonString(obj, settings);
         }
 
@@ -85,10 +80,7 @@ namespace Abp.Json
         /// <returns></returns>
         public static object FromJsonString(this string value, [NotNull] Type type, JsonSerializerSettings settings)
         {
-            if (type == null)
-            {
-                throw new ArgumentNullException(nameof(type));
-            }
+            if (type == null) throw new ArgumentNullException(nameof(type));
 
             return value != null
                 ? JsonConvert.DeserializeObject(value, type, settings)

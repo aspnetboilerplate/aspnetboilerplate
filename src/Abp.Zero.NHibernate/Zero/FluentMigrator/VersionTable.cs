@@ -16,12 +16,6 @@ namespace Abp.Zero.FluentMigrator
         {
         }
 
-        public override string TableName
-        {
-            get
-            {
-                return "AbpVersionInfo";
-            }
-        }
+        public override string TableName => "AbpVersionInfo";
     }
 }

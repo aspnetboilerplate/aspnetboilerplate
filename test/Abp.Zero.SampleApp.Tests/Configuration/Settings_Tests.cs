@@ -44,7 +44,8 @@ namespace Abp.Zero.SampleApp.Tests.Configuration
             _settingManager.GetSettingValue("Setting2").ShouldBe("B");
 
             //Check value from repository
-            var setting2 = _settingRepository.FirstOrDefault(s => s.TenantId == null && s.UserId == null && s.Name == "Setting2");
+            var setting2 =
+                _settingRepository.FirstOrDefault(s => s.TenantId == null && s.UserId == null && s.Name == "Setting2");
             setting2.ShouldNotBe(null);
             setting2.Value.ShouldBe("B");
 
@@ -52,7 +53,8 @@ namespace Abp.Zero.SampleApp.Tests.Configuration
             _settingManager.ChangeSettingForApplication("Setting2", "A");
 
             //Setting to default value cause the setting will be deleted from database
-            _settingRepository.FirstOrDefault(s => s.TenantId == null && s.UserId == null && s.Name == "Setting2").ShouldBe(null);
+            _settingRepository.FirstOrDefault(s => s.TenantId == null && s.UserId == null && s.Name == "Setting2")
+                .ShouldBe(null);
 
             //Check value again from manager
             _settingManager.GetSettingValue("Setting2").ShouldBe("A");

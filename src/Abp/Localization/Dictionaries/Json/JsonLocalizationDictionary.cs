@@ -64,34 +64,23 @@ namespace Abp.Localization.Dictionaries.Json
             }
 
             var cultureCode = jsonFile.Culture;
-            if (string.IsNullOrEmpty(cultureCode))
-            {
-                throw new AbpException("Culture is empty in language json file.");
-            }
+            if (string.IsNullOrEmpty(cultureCode)) throw new AbpException("Culture is empty in language json file.");
 
             var dictionary = new JsonLocalizationDictionary(CultureInfo.GetCultureInfo(cultureCode));
             var dublicateNames = new List<string>();
             foreach (var item in jsonFile.Texts)
             {
-                if (string.IsNullOrEmpty(item.Key))
-                {
-                    throw new AbpException("The key is empty in given json string.");
-                }
+                if (string.IsNullOrEmpty(item.Key)) throw new AbpException("The key is empty in given json string.");
 
-                if (dictionary.Contains(item.Key))
-                {
-                    dublicateNames.Add(item.Key);
-                }
+                if (dictionary.Contains(item.Key)) dublicateNames.Add(item.Key);
 
                 dictionary[item.Key] = item.Value.NormalizeLineEndings();
             }
 
             if (dublicateNames.Count > 0)
-            {
                 throw new AbpException(
                     "A dictionary can not contain same key twice. There are some duplicated names: " +
                     dublicateNames.JoinAsString(", "));
-            }
 
             return dictionary;
         }

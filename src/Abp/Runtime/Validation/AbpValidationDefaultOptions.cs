@@ -11,7 +11,7 @@ namespace Abp.Runtime.Validation
         {
             type => typeof(IApplicationService).IsAssignableFrom(type)
         };
-        
+
         public List<Func<Type, bool>> ConventionalValidationSelectors { get; }
 
         public AbpValidationDefaultOptions()

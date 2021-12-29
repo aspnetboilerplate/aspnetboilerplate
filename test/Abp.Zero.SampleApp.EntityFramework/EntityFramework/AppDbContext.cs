@@ -44,11 +44,10 @@ namespace Abp.Zero.SampleApp.EntityFramework
         public DbSet<Country> Countries { get; set; }
 
         public DbSet<Foo> Foo { get; set; }
-        
+
         public AppDbContext(DbConnection existingConnection)
             : base(existingConnection, true)
         {
-
         }
 
         protected override void OnModelCreating(DbModelBuilder modelBuilder)
@@ -58,7 +57,8 @@ namespace Abp.Zero.SampleApp.EntityFramework
             modelBuilder.Entity<Comment>().HasRequired(e => e.Post).WithMany(e => e.Comments);
 
             modelBuilder.Entity<Book>().ToTable("Books");
-            modelBuilder.Entity<Book>().Property(e => e.Id).HasDatabaseGeneratedOption(DatabaseGeneratedOption.Identity);
+            modelBuilder.Entity<Book>().Property(e => e.Id)
+                .HasDatabaseGeneratedOption(DatabaseGeneratedOption.Identity);
 
             modelBuilder.Entity<Store>().Property(e => e.Id).HasColumnName("StoreId");
         }

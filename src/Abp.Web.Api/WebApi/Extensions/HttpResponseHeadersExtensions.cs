@@ -12,16 +12,11 @@ namespace Abp.WebApi.Extensions
             Check.NotNull(headers, nameof(headers));
             Check.NotNull(cookie, nameof(cookie));
 
-            var cookieBuilder = new StringBuilder(HttpUtility.UrlEncode(cookie.Name) + "=" + HttpUtility.UrlEncode(cookie.Value));
-            if (cookie.HttpOnly)
-            {
-                cookieBuilder.Append("; HttpOnly");
-            }
+            var cookieBuilder =
+                new StringBuilder(HttpUtility.UrlEncode(cookie.Name) + "=" + HttpUtility.UrlEncode(cookie.Value));
+            if (cookie.HttpOnly) cookieBuilder.Append("; HttpOnly");
 
-            if (cookie.Secure)
-            {
-                cookieBuilder.Append("; Secure");
-            }
+            if (cookie.Secure) cookieBuilder.Append("; Secure");
 
             headers.Add("Set-Cookie", cookieBuilder.ToString());
         }

@@ -12,7 +12,8 @@ namespace Abp.Domain.Uow
     /// </summary>
     internal class InnerUnitOfWorkCompleteHandle : IUnitOfWorkCompleteHandle
     {
-        public const string DidNotCallCompleteMethodExceptionMessage = "Did not call Complete method of a unit of work.";
+        public const string DidNotCallCompleteMethodExceptionMessage =
+            "Did not call Complete method of a unit of work.";
 
         private volatile bool _isCompleteCalled;
         private volatile bool _isDisposed;
@@ -30,19 +31,13 @@ namespace Abp.Domain.Uow
 
         public void Dispose()
         {
-            if (_isDisposed)
-            {
-                return;
-            }
+            if (_isDisposed) return;
 
             _isDisposed = true;
 
             if (!_isCompleteCalled)
             {
-                if (HasException())
-                {
-                    return;
-                }
+                if (HasException()) return;
 
                 throw new AbpException(DidNotCallCompleteMethodExceptionMessage);
             }

@@ -49,7 +49,7 @@ namespace Abp.Notifications
             _guidGenerator = guidGenerator;
             AbpSession = NullAbpSession.Instance;
         }
-        
+
         public virtual async Task PublishAsync(
             string notificationName,
             NotificationData data = null,
@@ -62,19 +62,13 @@ namespace Abp.Notifications
             using (var uow = UnitOfWorkManager.Begin())
             {
                 if (notificationName.IsNullOrEmpty())
-                {
-                    throw new ArgumentException("NotificationName can not be null or whitespace!", nameof(notificationName));
-                }
+                    throw new ArgumentException("NotificationName can not be null or whitespace!",
+                        nameof(notificationName));
 
                 if (!tenantIds.IsNullOrEmpty() && !userIds.IsNullOrEmpty())
-                {
                     throw new ArgumentException("tenantIds can be set only if userIds is not set!", nameof(tenantIds));
-                }
 
-                if (tenantIds.IsNullOrEmpty() && userIds.IsNullOrEmpty())
-                {
-                    tenantIds = new[] { AbpSession.TenantId };
-                }
+                if (tenantIds.IsNullOrEmpty() && userIds.IsNullOrEmpty()) tenantIds = new[] { AbpSession.TenantId };
 
                 var notificationInfo = new NotificationInfo(_guidGenerator.Create())
                 {
@@ -83,8 +77,12 @@ namespace Abp.Notifications
                     EntityTypeAssemblyQualifiedName = entityIdentifier?.Type.AssemblyQualifiedName,
                     EntityId = entityIdentifier?.Id.ToJsonString(),
                     Severity = severity,
-                    UserIds = userIds.IsNullOrEmpty() ? null : userIds.Select(uid => uid.ToUserIdentifierString()).JoinAsString(","),
-                    ExcludedUserIds = excludedUserIds.IsNullOrEmpty() ? null : excludedUserIds.Select(uid => uid.ToUserIdentifierString()).JoinAsString(","),
+                    UserIds = userIds.IsNullOrEmpty()
+                        ? null
+                        : userIds.Select(uid => uid.ToUserIdentifierString()).JoinAsString(","),
+                    ExcludedUserIds = excludedUserIds.IsNullOrEmpty()
+                        ? null
+                        : excludedUserIds.Select(uid => uid.ToUserIdentifierString()).JoinAsString(","),
                     TenantIds = GetTenantIdsAsStr(tenantIds),
                     Data = data?.ToJsonString(),
                     DataTypeName = data?.GetType().AssemblyQualifiedName
@@ -95,20 +93,17 @@ namespace Abp.Notifications
                 await CurrentUnitOfWork.SaveChangesAsync(); //To get Id of the notification
 
                 if (userIds != null && userIds.Length <= MaxUserCountToDirectlyDistributeANotification)
-                {
                     //We can directly distribute the notification since there are not much receivers
                     await _notificationDistributer.DistributeAsync(notificationInfo.Id);
-                }
                 else
-                {
                     //We enqueue a background job since distributing may get a long time
-                    await _backgroundJobManager.EnqueueAsync<NotificationDistributionJob, NotificationDistributionJobArgs>(
-                        new NotificationDistributionJobArgs(
-                            notificationInfo.Id
-                        )
-                    );
-                }
-                
+                    await _backgroundJobManager
+                        .EnqueueAsync<NotificationDistributionJob, NotificationDistributionJobArgs>(
+                            new NotificationDistributionJobArgs(
+                                notificationInfo.Id
+                            )
+                        );
+
                 await uow.CompleteAsync();
             }
         }
@@ -120,10 +115,7 @@ namespace Abp.Notifications
         /// <seealso cref="DefaultNotificationDistributer.GetTenantIds"/>
         private static string GetTenantIdsAsStr(int?[] tenantIds)
         {
-            if (tenantIds.IsNullOrEmpty())
-            {
-                return null;
-            }
+            if (tenantIds.IsNullOrEmpty()) return null;
 
             return tenantIds
                 .Select(tenantId => tenantId == null ? "null" : tenantId.ToString())

@@ -28,7 +28,6 @@ namespace Abp.Application.Services.Dto
         /// </summary>
         public ComboboxItemDto()
         {
-
         }
 
         /// <summary>

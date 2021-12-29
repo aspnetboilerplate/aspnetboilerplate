@@ -8,7 +8,8 @@
         /// <summary>
         /// Converts <see cref="UserNotificationInfo"/> to <see cref="UserNotification"/>.
         /// </summary>
-        public static UserNotification ToUserNotification(this UserNotificationInfo userNotificationInfo, TenantNotification tenantNotification)
+        public static UserNotification ToUserNotification(this UserNotificationInfo userNotificationInfo,
+            TenantNotification tenantNotification)
         {
             return new UserNotification
             {

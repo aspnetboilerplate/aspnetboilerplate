@@ -1,5 +1,4 @@
-﻿
-/* see https://github.com/dotnet/corefx/issues/8681#issuecomment-290396746 */
+﻿/* see https://github.com/dotnet/corefx/issues/8681#issuecomment-290396746 */
 
 //using System.IO;
 //using System.Threading;
@@ -37,3 +36,4 @@
 //        }
 //    }
 //}
+

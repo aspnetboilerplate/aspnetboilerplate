@@ -25,7 +25,7 @@ namespace Abp.Zero.SampleApp.Tests.MultiTenancy
             Assert.NotNull(tenant);
             tenant.TenancyName.ShouldBe(Tenant.DefaultTenantName);
         }
-        
+
         [Fact]
         public void Should_Get_Tenant_By_Name()
         {

@@ -13,7 +13,6 @@ namespace Abp.MultiTenancy
         /// </summary>
         public TenantFeatureSetting()
         {
-            
         }
 
         /// <summary>
@@ -23,7 +22,7 @@ namespace Abp.MultiTenancy
         /// <param name="name">Feature name.</param>
         /// <param name="value">Feature value.</param>
         public TenantFeatureSetting(int tenantId, string name, string value)
-            :base(name, value)
+            : base(name, value)
         {
             TenantId = tenantId;
         }

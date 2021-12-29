@@ -8,6 +8,5 @@ namespace Abp.Authorization
     /// </summary>
     public class AbpAllowAnonymousAttribute : Attribute, IAbpAllowAnonymousAttribute
     {
-
     }
 }

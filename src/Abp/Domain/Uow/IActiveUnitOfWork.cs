@@ -41,7 +41,7 @@ namespace Abp.Domain.Uow
         /// Gets audit field configurations for this unit of work.
         /// </summary>
         IReadOnlyList<AuditFieldConfiguration> AuditFieldConfiguration { get; }
-        
+
         /// <summary>
         /// A dictionary to use for custom operations on unitOfWork
         /// </summary>
@@ -108,14 +108,14 @@ namespace Abp.Domain.Uow
         /// <param name="fieldNames">One or more audit field names. <see cref="AbpAuditFields"/> for standard fields.</param>
         /// <returns>A <see cref="IDisposable"/> handle to take back the disable effect.</returns>
         IDisposable DisableAuditing(params string[] fieldNames);
-        
+
         /// <summary>
         /// Enables automatic saving for one or more audit fields.
         /// </summary>
         /// <param name="fieldNames">One or more audit field names. <see cref="AbpAuditFields"/> for standard fields.</param>
         /// <returns>A <see cref="IDisposable"/> handle to take back the enable effect.</returns>
         IDisposable EnableAuditing(params string[] fieldNames);
-        
+
         /// <summary>
         /// Sets/Changes Tenant's Id for this UOW.
         /// </summary>

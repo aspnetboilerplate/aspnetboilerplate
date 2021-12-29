@@ -21,7 +21,8 @@ namespace Abp.Extensions
         /// </summary>
         public static bool IsWeekday(this DayOfWeek dayOfWeek)
         {
-            return dayOfWeek.IsIn(DayOfWeek.Monday, DayOfWeek.Tuesday, DayOfWeek.Wednesday, DayOfWeek.Thursday, DayOfWeek.Friday);
+            return dayOfWeek.IsIn(DayOfWeek.Monday, DayOfWeek.Tuesday, DayOfWeek.Wednesday, DayOfWeek.Thursday,
+                DayOfWeek.Friday);
         }
 
         /// <summary>
@@ -34,10 +35,7 @@ namespace Abp.Extensions
         /// <remarks>Compensates for 4th and 5th DayOfWeek of Month</remarks>
         public static DateTime FindNthWeekDayOfMonth(this DayOfWeek dayOfWeek, int year, int month, int n)
         {
-            if (n < 1 || n > 5)
-            {
-                throw new ArgumentOutOfRangeException(nameof(n));
-            }
+            if (n < 1 || n > 5) throw new ArgumentOutOfRangeException(nameof(n));
 
             var y = 0;
 

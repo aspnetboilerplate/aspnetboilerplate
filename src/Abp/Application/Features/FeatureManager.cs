@@ -30,12 +30,10 @@ namespace Abp.Application.Features
         public void Initialize()
         {
             foreach (var providerType in _featureConfiguration.Providers)
-            {
                 using (var provider = CreateProvider(providerType))
                 {
                     provider.Object.SetFeatures(this);
                 }
-            }
 
             Features.AddAllFeatures();
         }
@@ -47,10 +45,7 @@ namespace Abp.Application.Features
         public Feature Get(string name)
         {
             var feature = GetOrNull(name);
-            if (feature == null)
-            {
-                throw new AbpException("There is no feature with name: " + name);
-            }
+            if (feature == null) throw new AbpException("There is no feature with name: " + name);
 
             return feature;
         }

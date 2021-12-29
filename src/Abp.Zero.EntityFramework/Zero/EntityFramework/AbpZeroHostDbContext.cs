@@ -54,25 +54,21 @@ namespace Abp.Zero.EntityFramework
 
         protected AbpZeroHostDbContext()
         {
-
         }
 
         protected AbpZeroHostDbContext(string nameOrConnectionString)
             : base(nameOrConnectionString)
         {
-
         }
 
         protected AbpZeroHostDbContext(DbCompiledModel model)
             : base(model)
         {
-
         }
 
         protected AbpZeroHostDbContext(DbConnection existingConnection, bool contextOwnsConnection)
             : base(existingConnection, contextOwnsConnection)
         {
-
         }
 
         protected AbpZeroHostDbContext(string nameOrConnectionString, DbCompiledModel model)
@@ -85,7 +81,8 @@ namespace Abp.Zero.EntityFramework
         {
         }
 
-        protected AbpZeroHostDbContext(DbConnection existingConnection, DbCompiledModel model, bool contextOwnsConnection)
+        protected AbpZeroHostDbContext(DbConnection existingConnection, DbCompiledModel model,
+            bool contextOwnsConnection)
             : base(existingConnection, model, contextOwnsConnection)
         {
         }

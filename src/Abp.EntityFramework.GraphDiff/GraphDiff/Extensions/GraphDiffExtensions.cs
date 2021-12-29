@@ -22,7 +22,8 @@ namespace Abp.EntityFramework.GraphDiff.Extensions
         /// <param name="repository"></param>
         /// <param name="entity"></param>
         /// <returns>Attached entity</returns>
-        public static TEntity AttachGraph<TEntity, TPrimaryKey>(this IRepository<TEntity, TPrimaryKey> repository, TEntity entity)
+        public static TEntity AttachGraph<TEntity, TPrimaryKey>(this IRepository<TEntity, TPrimaryKey> repository,
+            TEntity entity)
             where TEntity : class, IEntity<TPrimaryKey>, new()
         {
             using (var mappingManager = repository.GetIocResolver().ResolveAsDisposable<IEntityMappingManager>())
@@ -42,7 +43,8 @@ namespace Abp.EntityFramework.GraphDiff.Extensions
         /// <param name="repository"></param>
         /// <param name="entity"></param>
         /// <returns>Attached entity</returns>
-        public static Task<TEntity> AttachGraphAsync<TEntity, TPrimaryKey>(this IRepository<TEntity, TPrimaryKey> repository, TEntity entity)
+        public static Task<TEntity> AttachGraphAsync<TEntity, TPrimaryKey>(
+            this IRepository<TEntity, TPrimaryKey> repository, TEntity entity)
             where TEntity : class, IEntity<TPrimaryKey>, new()
         {
             return Task.FromResult(AttachGraph(repository, entity));
@@ -58,7 +60,8 @@ namespace Abp.EntityFramework.GraphDiff.Extensions
         /// <param name="repository"></param>
         /// <param name="entity"></param>
         /// <returns>Id of the entity</returns>
-        public static TPrimaryKey AttachGraphAndGetId<TEntity, TPrimaryKey>(this IRepository<TEntity, TPrimaryKey> repository, TEntity entity)
+        public static TPrimaryKey AttachGraphAndGetId<TEntity, TPrimaryKey>(
+            this IRepository<TEntity, TPrimaryKey> repository, TEntity entity)
             where TEntity : class, IEntity<TPrimaryKey>, new()
         {
             return AttachGraph(repository, entity).Id;
@@ -74,7 +77,8 @@ namespace Abp.EntityFramework.GraphDiff.Extensions
         /// <param name="repository"></param>
         /// <param name="entity"></param>
         /// <returns>Id of the entity</returns>
-        public static Task<TPrimaryKey> AttachGraphAndGetIdAsync<TEntity, TPrimaryKey>(this IRepository<TEntity, TPrimaryKey> repository, TEntity entity)
+        public static Task<TPrimaryKey> AttachGraphAndGetIdAsync<TEntity, TPrimaryKey>(
+            this IRepository<TEntity, TPrimaryKey> repository, TEntity entity)
             where TEntity : class, IEntity<TPrimaryKey>, new()
         {
             return Task.FromResult(AttachGraphAndGetId(repository, entity));

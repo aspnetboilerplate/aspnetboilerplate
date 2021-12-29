@@ -17,7 +17,6 @@ namespace Abp.Tests.Domain.Entities
 
         private class TestEntityWithGuidPk : Entity<Guid>
         {
-            
         }
     }
 }

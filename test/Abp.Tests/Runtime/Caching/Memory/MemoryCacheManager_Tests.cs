@@ -23,7 +23,8 @@ namespace Abp.Tests.Runtime.Caching.Memory
             LocalIocManager.Register<ICachingConfiguration, CachingConfiguration>();
             LocalIocManager.Register<ICacheManager, AbpMemoryCacheManager>();
             LocalIocManager.Register<MyClientPropertyInjects>(DependencyLifeStyle.Transient);
-            LocalIocManager.IocContainer.Register(Component.For<IAbpStartupConfiguration>().Instance(Substitute.For<IAbpStartupConfiguration>()));
+            LocalIocManager.IocContainer.Register(Component.For<IAbpStartupConfiguration>()
+                .Instance(Substitute.For<IAbpStartupConfiguration>()));
 
             _cacheManager = LocalIocManager.Resolve<ICacheManager>();
 
@@ -48,7 +49,8 @@ namespace Abp.Tests.Runtime.Caching.Memory
             _cache.GetOrDefault("A").Value.ShouldBe(42);
 
             _cache.Get("B", () => new MyCacheItem { Value = 43 }).Value.ShouldBe(43);
-            _cache.Get("B", () => new MyCacheItem { Value = 44 }).Value.ShouldBe(43); //Does not call factory, so value is not changed
+            _cache.Get("B", () => new MyCacheItem { Value = 44 }).Value
+                .ShouldBe(43); //Does not call factory, so value is not changed
 
             var items1 = _cache.GetOrDefault(new string[] { "B", "C" });
             items1[0].Value.ShouldBe(43);
@@ -58,16 +60,18 @@ namespace Abp.Tests.Runtime.Caching.Memory
             items2[0].ShouldBeNull();
             items2[1].ShouldBeNull();
 
-            _cache.Set(new KeyValuePair<string, MyCacheItem>[] {
-                new KeyValuePair<string, MyCacheItem>("C", new MyCacheItem{ Value = 44}),
-                new KeyValuePair<string, MyCacheItem>("D", new MyCacheItem{ Value = 45})
+            _cache.Set(new KeyValuePair<string, MyCacheItem>[]
+            {
+                new KeyValuePair<string, MyCacheItem>("C", new MyCacheItem { Value = 44 }),
+                new KeyValuePair<string, MyCacheItem>("D", new MyCacheItem { Value = 45 })
             });
 
             var items3 = _cache.GetOrDefault(new string[] { "C", "D" });
             items3[0].Value.ShouldBe(44);
             items3[1].Value.ShouldBe(45);
 
-            var items4 = _cache.Get(new string[] { "D", "E" }, (key) => new MyCacheItem { Value = key == "D" ? 46 : 47 });
+            var items4 = _cache.Get(new string[] { "D", "E" },
+                (key) => new MyCacheItem { Value = key == "D" ? 46 : 47 });
             items4[0].Value.ShouldBe(45); //Does not call factory, so value is not changed
             items4[1].Value.ShouldBe(47);
         }
@@ -102,8 +106,10 @@ namespace Abp.Tests.Runtime.Caching.Memory
                             _cache.GetOrDefault(randomKeys);
                             var pairs = new KeyValuePair<string, MyCacheItem>[]
                             {
-                                new KeyValuePair<string, MyCacheItem>(randomKeys[0], new MyCacheItem{ Value= RandomHelper.GetRandom(0, 16) }),
-                                new KeyValuePair<string, MyCacheItem>(randomKeys[1], new MyCacheItem{ Value= RandomHelper.GetRandom(0, 16) })
+                                new KeyValuePair<string, MyCacheItem>(randomKeys[0],
+                                    new MyCacheItem { Value = RandomHelper.GetRandom(0, 16) }),
+                                new KeyValuePair<string, MyCacheItem>(randomKeys[1],
+                                    new MyCacheItem { Value = RandomHelper.GetRandom(0, 16) })
                             };
                             _cache.Set(pairs);
                             _cache.GetOrDefault(randomKeys);
@@ -133,7 +139,6 @@ namespace Abp.Tests.Runtime.Caching.Memory
 
             public MyCacheItem()
             {
-                
             }
 
             public MyCacheItem(int value)

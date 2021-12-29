@@ -24,7 +24,6 @@ namespace Abp.Localization.Dictionaries.Xml
         private XmlLocalizationDictionary(CultureInfo cultureInfo)
             : base(cultureInfo)
         {
-
         }
 
         /// <summary>
@@ -54,15 +53,11 @@ namespace Abp.Localization.Dictionaries.Xml
 
             var localizationDictionaryNode = xmlDocument.SelectNodes("/localizationDictionary");
             if (localizationDictionaryNode == null || localizationDictionaryNode.Count <= 0)
-            {
                 throw new AbpException("A Localization Xml must include localizationDictionary as root node.");
-            }
 
             var cultureName = localizationDictionaryNode[0].GetAttributeValueOrNull("culture");
             if (string.IsNullOrEmpty(cultureName))
-            {
                 throw new AbpException("culture is not defined in language XML file!");
-            }
 
             var dictionary = new XmlLocalizationDictionary(CultureInfo.GetCultureInfo(cultureName));
 
@@ -70,28 +65,21 @@ namespace Abp.Localization.Dictionaries.Xml
 
             var textNodes = xmlDocument.SelectNodes("/localizationDictionary/texts/text");
             if (textNodes != null)
-            {
                 foreach (XmlNode node in textNodes)
                 {
                     var name = node.GetAttributeValueOrNull("name");
                     if (string.IsNullOrEmpty(name))
-                    {
                         throw new AbpException("name attribute of a text is empty in given xml string.");
-                    }
 
-                    if (dictionary.Contains(name))
-                    {
-                        dublicateNames.Add(name);
-                    }
+                    if (dictionary.Contains(name)) dublicateNames.Add(name);
 
                     dictionary[name] = (node.GetAttributeValueOrNull("value") ?? node.InnerText).NormalizeLineEndings();
                 }
-            }
 
             if (dublicateNames.Count > 0)
-            {
-                throw new AbpException("A dictionary can not contain same key twice. There are some duplicated names: " + dublicateNames.JoinAsString(", "));
-            }
+                throw new AbpException(
+                    "A dictionary can not contain same key twice. There are some duplicated names: " +
+                    dublicateNames.JoinAsString(", "));
 
             return dictionary;
         }

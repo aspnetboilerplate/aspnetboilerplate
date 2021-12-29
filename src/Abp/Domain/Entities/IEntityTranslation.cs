@@ -12,8 +12,7 @@ namespace Abp.Domain.Entities
         TPrimaryKeyOfMultiLingualEntity CoreId { get; set; }
     }
 
-    public interface IEntityTranslation<TEntity>: IEntityTranslation<TEntity, int>
+    public interface IEntityTranslation<TEntity> : IEntityTranslation<TEntity, int>
     {
-        
     }
 }

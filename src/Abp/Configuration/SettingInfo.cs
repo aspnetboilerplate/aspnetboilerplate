@@ -35,7 +35,6 @@ namespace Abp.Configuration
         /// </summary>
         public SettingInfo()
         {
-            
         }
 
         /// <summary>

@@ -23,9 +23,7 @@ namespace Abp.Localization.Dictionaries.Xml
             var fileNames = Directory.GetFiles(_directoryPath, "*.xml", SearchOption.TopDirectoryOnly);
 
             foreach (var fileName in fileNames)
-            {
-                InitializeDictionary(CreateXmlLocalizationDictionary(fileName), isDefault: fileName.EndsWith(SourceName + ".xml"));
-            }
+                InitializeDictionary(CreateXmlLocalizationDictionary(fileName), fileName.EndsWith(SourceName + ".xml"));
         }
 
         protected virtual XmlLocalizationDictionary CreateXmlLocalizationDictionary(string fileName)

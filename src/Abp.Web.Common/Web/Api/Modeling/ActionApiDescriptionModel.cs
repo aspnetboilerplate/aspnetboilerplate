@@ -18,10 +18,10 @@ namespace Abp.Web.Api.Modeling
 
         private ActionApiDescriptionModel()
         {
-
         }
 
-        public ActionApiDescriptionModel(string name, ReturnValueApiDescriptionModel returnValue, string url, string httpMethod = null)
+        public ActionApiDescriptionModel(string name, ReturnValueApiDescriptionModel returnValue, string url,
+            string httpMethod = null)
         {
             Name = name;
             ReturnValue = returnValue;

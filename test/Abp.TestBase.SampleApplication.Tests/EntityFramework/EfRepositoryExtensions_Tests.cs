@@ -28,7 +28,7 @@ namespace Abp.TestBase.SampleApplication.Tests.EntityFramework
                 uow.Complete();
             }
         }
-        
+
         [Fact]
         public void Should_Get_IocResolver()
         {

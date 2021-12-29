@@ -140,7 +140,6 @@ namespace Abp.Notifications
 
         public NotificationInfo()
         {
-            
         }
 
         /// <summary>

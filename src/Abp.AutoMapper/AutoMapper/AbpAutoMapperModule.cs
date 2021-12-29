@@ -39,9 +39,7 @@ namespace Abp.AutoMapper
             {
                 FindAndAutoMapTypes(configuration);
                 foreach (var configurator in Configuration.Modules.AbpAutoMapper().Configurators)
-                {
                     configurator(configuration);
-                }
             };
 
             var config = new MapperConfiguration(configurer);
@@ -54,7 +52,7 @@ namespace Abp.AutoMapper
                 Component.For<IMapper>().Instance(mapper).LifestyleSingleton()
             );
 #pragma warning disable CS0618 // Type or member is obsolete, this line will be removed once AutoMapper is updated
-			AbpEmulateAutoMapper.Mapper = mapper;
+            AbpEmulateAutoMapper.Mapper = mapper;
 #pragma warning restore CS0618 // Type or member is obsolete, this line will be removed once AutoMapper is updated
         }
 
@@ -82,8 +80,10 @@ namespace Abp.AutoMapper
         {
             var localizationContext = IocManager.Resolve<ILocalizationContext>();
 
-            configuration.CreateMap<ILocalizableString, string>().ConvertUsing(ls => ls == null ? null : ls.Localize(localizationContext));
-            configuration.CreateMap<LocalizableString, string>().ConvertUsing(ls => ls == null ? null : localizationContext.LocalizationManager.GetString(ls));
+            configuration.CreateMap<ILocalizableString, string>()
+                .ConvertUsing(ls => ls == null ? null : ls.Localize(localizationContext));
+            configuration.CreateMap<LocalizableString, string>().ConvertUsing(ls =>
+                ls == null ? null : localizationContext.LocalizationManager.GetString(ls));
         }
     }
 }

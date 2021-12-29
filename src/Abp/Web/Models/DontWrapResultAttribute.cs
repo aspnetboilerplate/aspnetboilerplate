@@ -15,7 +15,6 @@ namespace Abp.Web.Models
         public DontWrapResultAttribute()
             : base(false, false)
         {
-
         }
     }
 }

@@ -10,7 +10,7 @@ namespace Abp.Events.Bus.Factories.Internals
     /// <remarks>
     /// This class always creates a new transient instance of handler.
     /// </remarks>
-    internal class TransientEventHandlerFactory<THandler> : IEventHandlerFactory 
+    internal class TransientEventHandlerFactory<THandler> : IEventHandlerFactory
         where THandler : IEventHandler, new()
     {
         /// <summary>
@@ -33,10 +33,7 @@ namespace Abp.Events.Bus.Factories.Internals
         /// <param name="handler">Handler to be released</param>
         public void ReleaseHandler(IEventHandler handler)
         {
-            if (handler is IDisposable)
-            {
-                (handler as IDisposable).Dispose();
-            }
+            if (handler is IDisposable) (handler as IDisposable).Dispose();
         }
     }
 }

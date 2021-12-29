@@ -37,7 +37,6 @@ namespace Abp.TestBase.SampleApplication.Tests.Auditing
         #region CASES WRITE AUDIT LOGS
 
         [Fact]
-
         public async Task Should_Write_Audits_For_Conventional_Methods()
         {
             /* All application service methods are audited as conventional. */
@@ -81,7 +80,8 @@ namespace Abp.TestBase.SampleApplication.Tests.Auditing
         public async Task Should_Write_Audits_For_AsyncCrudAppService_With_Correct_Service_Name()
         {
             await _asyncCompanyAppService.DeleteAsync(new EntityDto(1));
-            await _auditingStore.Received().SaveAsync(Arg.Is<AuditInfo>(a => a.ServiceName.Contains("AsyncCompanyAppService")));
+            await _auditingStore.Received()
+                .SaveAsync(Arg.Is<AuditInfo>(a => a.ServiceName.Contains("AsyncCompanyAppService")));
         }
 
         #endregion
@@ -139,7 +139,6 @@ namespace Abp.TestBase.SampleApplication.Tests.Auditing
 
             public void Test2()
             {
-
             }
 
             public virtual async Task<int> Test3()
@@ -164,8 +163,7 @@ namespace Abp.TestBase.SampleApplication.Tests.Auditing
         {
             public string Username { get; set; }
 
-            [DisableAuditing]
-            public string Password { get; set; }
+            [DisableAuditing] public string Password { get; set; }
         }
 
         public class MyServiceWithMethodAudited
@@ -173,12 +171,10 @@ namespace Abp.TestBase.SampleApplication.Tests.Auditing
             [Audited]
             public virtual void Test1()
             {
-
             }
 
             public virtual void Test2()
             {
-
             }
         }
 
@@ -186,7 +182,6 @@ namespace Abp.TestBase.SampleApplication.Tests.Auditing
         {
             public virtual void Test1()
             {
-
             }
         }
     }

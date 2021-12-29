@@ -48,7 +48,7 @@ namespace Abp.WebApi.ExceptionHandling
             IAbpWebApiConfiguration configuration,
             IAbpWebCommonModuleConfiguration abpWebCommonModuleConfiguration)
         {
-            this.AbpWebCommonModuleConfiguration = abpWebCommonModuleConfiguration;
+            AbpWebCommonModuleConfiguration = abpWebCommonModuleConfiguration;
             Configuration = configuration;
             Logger = NullLogger.Instance;
             EventBus = NullEventBus.Instance;
@@ -66,7 +66,7 @@ namespace Abp.WebApi.ExceptionHandling
                 if (context.Exception is HttpException)
                 {
                     var httpException = context.Exception as HttpException;
-                    var httpStatusCode = (HttpStatusCode) httpException.GetHttpCode();
+                    var httpStatusCode = (HttpStatusCode)httpException.GetHttpCode();
 
                     context.Response = context.Request.CreateResponse(
                         httpStatusCode,
@@ -91,7 +91,7 @@ namespace Abp.WebApi.ExceptionHandling
 
             var displayUrl = context.Request.RequestUri.AbsolutePath;
             if (AbpWebCommonModuleConfiguration.WrapResultFilters.HasFilterForWrapOnError(displayUrl,
-                out var wrapOnError))
+                    out var wrapOnError))
             {
                 if (!wrapOnError)
                 {
@@ -103,13 +103,11 @@ namespace Abp.WebApi.ExceptionHandling
                 return;
             }
 
-            var wrapResultAttribute = HttpActionDescriptorHelper.GetWrapResultAttributeOrNull(context.ActionContext.ActionDescriptor) ??
+            var wrapResultAttribute =
+                HttpActionDescriptorHelper.GetWrapResultAttributeOrNull(context.ActionContext.ActionDescriptor) ??
                 Configuration.DefaultWrapResultAttribute;
 
-            if (wrapResultAttribute.LogError)
-            {
-                LogHelper.LogException(Logger, context.Exception);
-            }
+            if (wrapResultAttribute.LogError) LogHelper.LogException(Logger, context.Exception);
 
             if (!wrapResultAttribute.WrapOnError)
             {
@@ -117,10 +115,7 @@ namespace Abp.WebApi.ExceptionHandling
                 return;
             }
 
-            if (IsIgnoredUrl(context.Request.RequestUri))
-            {
-                return;
-            }
+            if (IsIgnoredUrl(context.Request.RequestUri)) return;
 
             HandleError();
         }
@@ -128,36 +123,22 @@ namespace Abp.WebApi.ExceptionHandling
         protected virtual HttpStatusCode GetStatusCode(HttpActionExecutedContext context, bool wrapOnError)
         {
             if (context.Exception is Abp.Authorization.AbpAuthorizationException)
-            {
                 return AbpSession.UserId.HasValue
                     ? HttpStatusCode.Forbidden
                     : HttpStatusCode.Unauthorized;
-            }
 
-            if (context.Exception is AbpValidationException)
-            {
-                return HttpStatusCode.BadRequest;
-            }
+            if (context.Exception is AbpValidationException) return HttpStatusCode.BadRequest;
 
-            if (context.Exception is EntityNotFoundException)
-            {
-                return HttpStatusCode.NotFound;
-            }
+            if (context.Exception is EntityNotFoundException) return HttpStatusCode.NotFound;
 
-            if (wrapOnError)
-            {
-                return HttpStatusCode.InternalServerError;
-            }
+            if (wrapOnError) return HttpStatusCode.InternalServerError;
 
             return context.Response.StatusCode;
         }
 
         protected virtual bool IsIgnoredUrl(Uri uri)
         {
-            if (uri == null || uri.AbsolutePath.IsNullOrEmpty())
-            {
-                return false;
-            }
+            if (uri == null || uri.AbsolutePath.IsNullOrEmpty()) return false;
 
             return Configuration.ResultWrappingIgnoreUrls.Any(url => uri.AbsolutePath.StartsWith(url));
         }

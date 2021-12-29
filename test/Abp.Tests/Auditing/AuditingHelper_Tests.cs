@@ -10,7 +10,7 @@ namespace Abp.Tests.Auditing
         [Fact]
         public void Ignored_Properties_Should_Not_Be_Serialized()
         {
-            var json = new JsonNetAuditSerializer(new AuditingConfiguration {IgnoredTypes = { typeof(Exception) }})
+            var json = new JsonNetAuditSerializer(new AuditingConfiguration { IgnoredTypes = { typeof(Exception) } })
                 .Serialize(new AuditingHelperTestPersonDto
                 {
                     FullName = "John Doe",
@@ -30,8 +30,7 @@ namespace Abp.Tests.Auditing
         {
             public string FullName { get; set; }
 
-            [DisableAuditing]
-            public int Age { get; set; }
+            [DisableAuditing] public int Age { get; set; }
 
             public Exception Exception { get; set; }
 
@@ -42,8 +41,7 @@ namespace Abp.Tests.Auditing
         {
             public string Name { get; set; }
 
-            [DisableAuditing]
-            public string Address { get; set; }
+            [DisableAuditing] public string Address { get; set; }
         }
     }
 }

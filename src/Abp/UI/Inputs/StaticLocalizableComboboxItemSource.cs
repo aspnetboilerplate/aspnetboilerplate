@@ -10,15 +10,9 @@ namespace Abp.UI.Inputs
 
         public StaticLocalizableComboboxItemSource(params ILocalizableComboboxItem[] items)
         {
-            if (items == null)
-            {
-                throw new ArgumentNullException("items");
-            }
+            if (items == null) throw new ArgumentNullException("items");
 
-            if (items.Length <= 0)
-            {
-                throw new ArgumentException("Items can not be empty!");
-            }
+            if (items.Length <= 0) throw new ArgumentException("Items can not be empty!");
 
             Items = items;
         }

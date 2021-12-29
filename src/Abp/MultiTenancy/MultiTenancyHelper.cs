@@ -16,8 +16,8 @@ namespace Abp.MultiTenancy
         /// <param name="expectedTenantId">TenantId or null for host</param>
         public static bool IsTenantEntity(object entity, int? expectedTenantId)
         {
-            return (entity is IMayHaveTenant && entity.As<IMayHaveTenant>().TenantId == expectedTenantId) ||
-                   (entity is IMustHaveTenant && entity.As<IMustHaveTenant>().TenantId == expectedTenantId);
+            return entity is IMayHaveTenant && entity.As<IMayHaveTenant>().TenantId == expectedTenantId ||
+                   entity is IMustHaveTenant && entity.As<IMustHaveTenant>().TenantId == expectedTenantId;
         }
 
         public static bool IsHostEntity(object entity)
@@ -27,10 +27,7 @@ namespace Abp.MultiTenancy
                 .Cast<MultiTenancySideAttribute>()
                 .FirstOrDefault();
 
-            if (attribute == null)
-            {
-                return false;
-            }
+            if (attribute == null) return false;
 
             return attribute.Side.HasFlag(MultiTenancySides.Host);
         }

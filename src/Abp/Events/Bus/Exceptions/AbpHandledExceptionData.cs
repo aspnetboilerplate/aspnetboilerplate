@@ -14,7 +14,6 @@ namespace Abp.Events.Bus.Exceptions
         public AbpHandledExceptionData(Exception exception)
             : base(exception)
         {
-
         }
     }
 }

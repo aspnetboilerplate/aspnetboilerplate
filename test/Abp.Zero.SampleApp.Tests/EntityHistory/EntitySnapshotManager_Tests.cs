@@ -10,7 +10,7 @@ using Xunit;
 
 namespace Abp.Zero.SampleApp.Tests.EntityHistory
 {
- public class EntitySnapshotManager_Tests : SampleAppTestBase
+    public class EntitySnapshotManager_Tests : SampleAppTestBase
     {
         private readonly IRepository<UserTestEntity> _userRepository;
         private readonly IEntitySnapshotManager _entitySnapshotManager;
@@ -60,24 +60,29 @@ namespace Abp.Zero.SampleApp.Tests.EntityHistory
             using (var uow = Resolve<IUnitOfWorkManager>().Begin())
             {
                 //undo last update
-                var snapshot = await _entitySnapshotManager.GetSnapshotAsync<UserTestEntity, int>(id, DateTime.Now.AddSeconds(-2));
+                var snapshot =
+                    await _entitySnapshotManager.GetSnapshotAsync<UserTestEntity, int>(id, DateTime.Now.AddSeconds(-2));
 
                 snapshot.ChangedPropertiesSnapshots.Count.ShouldBe(1);
                 snapshot.PropertyChangesStackTree.Count.ShouldBe(1);
 
                 snapshot["Name"].ShouldBe("\"test-user-name-updated\"");
-                snapshot.PropertyChangesStackTree["Name"].ShouldBe("\"test-user-name-updated\" -> \"test-user-name-updated-2\"");
+                snapshot.PropertyChangesStackTree["Name"]
+                    .ShouldBe("\"test-user-name-updated\" -> \"test-user-name-updated-2\"");
 
                 //undo all changes
-                var snapshot2 = await _entitySnapshotManager.GetSnapshotAsync<UserTestEntity>(id, DateTime.Now.AddDays(-1));
+                var snapshot2 =
+                    await _entitySnapshotManager.GetSnapshotAsync<UserTestEntity>(id, DateTime.Now.AddDays(-1));
 
                 snapshot2.ChangedPropertiesSnapshots.Count.ShouldBe(2);
                 snapshot2.PropertyChangesStackTree.Count.ShouldBe(2);
 
                 snapshot2["Name"].ShouldBe("\"test-user-name-start\"");
                 snapshot2["Surname"].ShouldBe("\"test-user-surname-start\"");
-                snapshot2.PropertyChangesStackTree["Name"].ShouldBe("\"test-user-name-start\" -> \"test-user-name-updated\" -> \"test-user-name-updated-2\"");
-                snapshot2.PropertyChangesStackTree["Surname"].ShouldBe("\"test-user-surname-start\" -> \"test-user-surname-updated\"");
+                snapshot2.PropertyChangesStackTree["Name"]
+                    .ShouldBe("\"test-user-name-start\" -> \"test-user-name-updated\" -> \"test-user-name-updated-2\"");
+                snapshot2.PropertyChangesStackTree["Surname"]
+                    .ShouldBe("\"test-user-surname-start\" -> \"test-user-surname-updated\"");
             }
         }
 
@@ -89,8 +94,8 @@ namespace Abp.Zero.SampleApp.Tests.EntityHistory
             {
                 var user = new UserTestEntity
                 {
-                    Name = "test-user-name-start", 
-                    Surname = "test-user-surname-start", 
+                    Name = "test-user-name-start",
+                    Surname = "test-user-surname-start",
                     Age = 18
                 };
 
@@ -103,5 +108,3 @@ namespace Abp.Zero.SampleApp.Tests.EntityHistory
         }
     }
 }
-
-

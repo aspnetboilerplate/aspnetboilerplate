@@ -7,12 +7,11 @@
 <h2>Index</h2>
 
 <form asp-action="CreateUser" method="post">
-    <input asp-for="Name" />
+    <input asp-for="Name"/>
     <span asp-validation-for="Name" class="text-danger"></span>
-    <input asp-for="Email" />
+    <input asp-for="Email"/>
     <span asp-validation-for="Email" class="text-danger"></span>
-    <input asp-for="Phone" />
+    <input asp-for="Phone"/>
     <span asp-validation-for="Phone" class="text-danger"></span>
     <button type="submit">Submit</button>
 </form>
-

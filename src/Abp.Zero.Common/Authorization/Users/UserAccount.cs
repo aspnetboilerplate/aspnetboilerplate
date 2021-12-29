@@ -29,10 +29,8 @@ namespace Abp.Authorization.Users
 
         public virtual long? UserLinkId { get; set; }
 
-        [StringLength(MaxUserNameLength)]
-        public virtual string UserName { get; set; }
+        [StringLength(MaxUserNameLength)] public virtual string UserName { get; set; }
 
-        [StringLength(MaxEmailAddressLength)]
-        public virtual string EmailAddress { get; set; }
+        [StringLength(MaxEmailAddressLength)] public virtual string EmailAddress { get; set; }
     }
 }

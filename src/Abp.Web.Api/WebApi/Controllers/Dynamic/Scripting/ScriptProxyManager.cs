@@ -25,10 +25,7 @@ namespace Abp.WebApi.Controllers.Dynamic.Scripting
 
         public string GetScript(string name, ProxyScriptType type)
         {
-            if (string.IsNullOrWhiteSpace(name))
-            {
-                throw new ArgumentException("name is null or empty!", nameof(name));
-            }
+            if (string.IsNullOrWhiteSpace(name)) throw new ArgumentException("name is null or empty!", nameof(name));
 
             var cacheKey = type + "_" + name;
 
@@ -42,9 +39,8 @@ namespace Abp.WebApi.Controllers.Dynamic.Scripting
                         .FirstOrDefault(ci => ci.ServiceName == name && ci.IsProxyScriptingEnabled);
 
                     if (dynamicController == null)
-                    {
-                        throw new HttpException((int)HttpStatusCode.NotFound, "There is no such a service: " + cacheKey);
-                    }
+                        throw new HttpException((int)HttpStatusCode.NotFound,
+                            "There is no such a service: " + cacheKey);
 
                     var script = CreateProxyGenerator(type, dynamicController, true).Generate();
                     CachedScripts[cacheKey] = cachedScript = new ScriptInfo(script);
@@ -63,7 +59,8 @@ namespace Abp.WebApi.Controllers.Dynamic.Scripting
                 {
                     var script = new StringBuilder();
 
-                    var dynamicControllers = _dynamicApiControllerManager.GetAll().Where(ci => ci.IsProxyScriptingEnabled);
+                    var dynamicControllers =
+                        _dynamicApiControllerManager.GetAll().Where(ci => ci.IsProxyScriptingEnabled);
                     foreach (var dynamicController in dynamicControllers)
                     {
                         var proxyGenerator = CreateProxyGenerator(type, dynamicController, false);
@@ -78,7 +75,8 @@ namespace Abp.WebApi.Controllers.Dynamic.Scripting
             }
         }
 
-        private static IScriptProxyGenerator CreateProxyGenerator(ProxyScriptType type, DynamicApiControllerInfo controllerInfo, bool amdModule)
+        private static IScriptProxyGenerator CreateProxyGenerator(ProxyScriptType type,
+            DynamicApiControllerInfo controllerInfo, bool amdModule)
         {
             switch (type)
             {

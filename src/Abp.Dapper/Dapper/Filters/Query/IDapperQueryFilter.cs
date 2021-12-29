@@ -1,9 +1,7 @@
 ﻿using System;
 using System.Linq.Expressions;
-
 using Abp.Dependency;
 using Abp.Domain.Entities;
-
 using DapperExtensions;
 
 namespace Abp.Dapper.Filters.Query
@@ -16,6 +14,7 @@ namespace Abp.Dapper.Filters.Query
 
         IFieldPredicate ExecuteFilter<TEntity, TPrimaryKey>() where TEntity : class, IEntity<TPrimaryKey>;
 
-        Expression<Func<TEntity, bool>> ExecuteFilter<TEntity, TPrimaryKey>(Expression<Func<TEntity, bool>> predicate) where TEntity : class, IEntity<TPrimaryKey>;
+        Expression<Func<TEntity, bool>> ExecuteFilter<TEntity, TPrimaryKey>(Expression<Func<TEntity, bool>> predicate)
+            where TEntity : class, IEntity<TPrimaryKey>;
     }
 }

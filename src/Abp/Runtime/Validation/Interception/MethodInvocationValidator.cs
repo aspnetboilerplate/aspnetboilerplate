@@ -59,58 +59,34 @@ namespace Abp.Runtime.Validation.Interception
         {
             CheckInitialized();
 
-            if (Parameters.IsNullOrEmpty())
-            {
-                return;
-            }
+            if (Parameters.IsNullOrEmpty()) return;
 
-            if (!Method.IsPublic)
-            {
-                return;
-            }
+            if (!Method.IsPublic) return;
 
-            if (IsValidationDisabled())
-            {
-                return;
-            }
+            if (IsValidationDisabled()) return;
 
             if (Parameters.Length != ParameterValues.Length)
-            {
                 throw new Exception("Method parameter count does not match with argument count!");
-            }
 
-            for (var i = 0; i < Parameters.Length; i++)
-            {
-                ValidateMethodParameter(Parameters[i], ParameterValues[i]);
-            }
+            for (var i = 0; i < Parameters.Length; i++) ValidateMethodParameter(Parameters[i], ParameterValues[i]);
 
-            if (ValidationErrors.Any())
-            {
-                ThrowValidationError();
-            }
+            if (ValidationErrors.Any()) ThrowValidationError();
 
-            foreach (var objectToBeNormalized in ObjectsToBeNormalized)
-            {
-                objectToBeNormalized.Normalize();
-            }
+            foreach (var objectToBeNormalized in ObjectsToBeNormalized) objectToBeNormalized.Normalize();
         }
 
         protected virtual void CheckInitialized()
         {
             if (Method == null)
-            {
                 throw new AbpException("This object has not been initialized. Call Initialize method first.");
-            }
         }
 
         protected virtual bool IsValidationDisabled()
         {
-            if (Method.IsDefined(typeof(EnableValidationAttribute), true))
-            {
-                return false;
-            }
+            if (Method.IsDefined(typeof(EnableValidationAttribute), true)) return false;
 
-            return ReflectionHelper.GetSingleAttributeOfMemberOrDeclaringTypeOrDefault<DisableValidationAttribute>(Method) != null;
+            return ReflectionHelper
+                .GetSingleAttributeOfMemberOrDeclaringTypeOrDefault<DisableValidationAttribute>(Method) != null;
         }
 
         protected virtual void ThrowValidationError()
@@ -132,10 +108,9 @@ namespace Abp.Runtime.Validation.Interception
             {
                 if (!parameterInfo.IsOptional &&
                     !parameterInfo.IsOut &&
-                    !TypeHelper.IsPrimitiveExtendedIncludingNullable(parameterInfo.ParameterType, includeEnums: true))
-                {
-                    ValidationErrors.Add(new ValidationResult(parameterInfo.Name + " is null!", new[] { parameterInfo.Name }));
-                }
+                    !TypeHelper.IsPrimitiveExtendedIncludingNullable(parameterInfo.ParameterType, true))
+                    ValidationErrors.Add(new ValidationResult(parameterInfo.Name + " is null!",
+                        new[] { parameterInfo.Name }));
 
                 return;
             }
@@ -145,58 +120,35 @@ namespace Abp.Runtime.Validation.Interception
 
         protected virtual void ValidateObjectRecursively(object validatingObject, int currentDepth)
         {
-            if (currentDepth > MaxRecursiveParameterValidationDepth)
-            {
-                return;
-            }
+            if (currentDepth > MaxRecursiveParameterValidationDepth) return;
 
-            if (validatingObject == null)
-            {
-                return;
-            }
+            if (validatingObject == null) return;
 
-            if (_configuration.IgnoredTypes.Any(t => t.IsInstanceOfType(validatingObject)))
-            {
-                return;
-            }
+            if (_configuration.IgnoredTypes.Any(t => t.IsInstanceOfType(validatingObject))) return;
 
-            if (TypeHelper.IsPrimitiveExtendedIncludingNullable(validatingObject.GetType()))
-            {
-                return;
-            }
+            if (TypeHelper.IsPrimitiveExtendedIncludingNullable(validatingObject.GetType())) return;
 
             SetValidationErrors(validatingObject);
 
             // Validate items of enumerable
             if (IsEnumerable(validatingObject))
-            {
-                foreach (var item in (IEnumerable) validatingObject)
+                foreach (var item in (IEnumerable)validatingObject)
                 {
                     // Do not recursively validate for primitive objects
-                    if (item == null || TypeHelper.IsPrimitiveExtendedIncludingNullable(item.GetType()))
-                    {
-                        break;
-                    }
+                    if (item == null || TypeHelper.IsPrimitiveExtendedIncludingNullable(item.GetType())) break;
 
                     ValidateObjectRecursively(item, currentDepth + 1);
                 }
-            }
 
             // Add list to be normalized later
-            if (validatingObject is IShouldNormalize)
-            {
-                ObjectsToBeNormalized.Add(validatingObject as IShouldNormalize);
-            }
+            if (validatingObject is IShouldNormalize) ObjectsToBeNormalized.Add(validatingObject as IShouldNormalize);
 
             if (ShouldMakeDeepValidation(validatingObject))
             {
                 var properties = TypeDescriptor.GetProperties(validatingObject).Cast<PropertyDescriptor>();
                 foreach (var property in properties)
                 {
-                    if (property.Attributes.OfType<DisableValidationAttribute>().Any())
-                    {
-                        continue;
-                    }
+                    if (property.Attributes.OfType<DisableValidationAttribute>().Any()) continue;
 
                     ValidateObjectRecursively(property.GetValue(validatingObject), currentDepth + 1);
                 }
@@ -206,16 +158,12 @@ namespace Abp.Runtime.Validation.Interception
         protected virtual void SetValidationErrors(object validatingObject)
         {
             foreach (var validatorType in _configuration.Validators)
-            {
                 if (ShouldValidateUsingValidator(validatingObject, validatorType))
-                {
                     using (var validator = _iocResolver.ResolveAsDisposable<IMethodParameterValidator>(validatorType))
                     {
                         var validationResults = validator.Object.Validate(validatingObject);
                         ValidationErrors.AddRange(validationResults);
                     }
-                }
-            }
         }
 
         protected virtual bool ShouldValidateUsingValidator(object validatingObject, Type validatorType)
@@ -226,18 +174,12 @@ namespace Abp.Runtime.Validation.Interception
         protected virtual bool ShouldMakeDeepValidation(object validatingObject)
         {
             // Do not recursively validate for enumerable objects
-            if (validatingObject is IEnumerable)
-            {
-                return false;
-            }
+            if (validatingObject is IEnumerable) return false;
 
             var validatingObjectType = validatingObject.GetType();
 
             // Do not recursively validate for primitive objects
-            if (TypeHelper.IsPrimitiveExtendedIncludingNullable(validatingObjectType))
-            {
-                return false;
-            }
+            if (TypeHelper.IsPrimitiveExtendedIncludingNullable(validatingObjectType)) return false;
 
             return true;
         }

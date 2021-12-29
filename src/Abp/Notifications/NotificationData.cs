@@ -23,8 +23,8 @@ namespace Abp.Notifications
         /// </summary>
         public object this[string key]
         {
-            get { return Properties.GetOrDefault(key); }
-            set { Properties[key] = value; }
+            get => Properties.GetOrDefault(key);
+            set => Properties[key] = value;
         }
 
         /// <summary>
@@ -32,24 +32,18 @@ namespace Abp.Notifications
         /// </summary>
         public Dictionary<string, object> Properties
         {
-            get { return _properties; }
+            get => _properties;
             set
             {
-                if (value == null)
-                {
-                    throw new ArgumentNullException(nameof(value));
-                }
+                if (value == null) throw new ArgumentNullException(nameof(value));
 
                 /* Not assign value, but add dictionary items. This is required for backward compability. */
                 foreach (var keyValue in value)
-                {
                     if (!_properties.ContainsKey(keyValue.Key))
-                    {
                         _properties[keyValue.Key] = keyValue.Value;
-                    }
-                }
             }
         }
+
         private readonly Dictionary<string, object> _properties;
 
         /// <summary>

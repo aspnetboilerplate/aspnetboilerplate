@@ -52,7 +52,7 @@ namespace Abp
         /// <param name="startupModule">Startup module of the application which depends on other used modules. Should be derived from <see cref="AbpModule"/>.</param>
         /// <param name="optionsAction">An action to set options</param>
         private AbpBootstrapper(
-            [NotNull] Type startupModule, 
+            [NotNull] Type startupModule,
             [CanBeNull] Action<AbpBootstrapperOptions> optionsAction = null)
         {
             Check.NotNull(startupModule, nameof(startupModule));
@@ -61,9 +61,7 @@ namespace Abp
             optionsAction?.Invoke(options);
 
             if (!typeof(AbpModule).GetTypeInfo().IsAssignableFrom(startupModule))
-            {
                 throw new ArgumentException($"{nameof(startupModule)} should be derived from {nameof(AbpModule)}.");
-            }
 
             StartupModule = startupModule;
 
@@ -71,7 +69,7 @@ namespace Abp
             PlugInSources = options.PlugInSources;
 
             _logger = NullLogger.Instance;
-            
+
             AddInterceptorRegistrars(options.InterceptorOptions);
         }
 
@@ -93,7 +91,7 @@ namespace Abp
         /// <param name="startupModule">Startup module of the application which depends on other used modules. Should be derived from <see cref="AbpModule"/>.</param>
         /// <param name="optionsAction">An action to set options</param>
         public static AbpBootstrapper Create(
-            [NotNull] Type startupModule, 
+            [NotNull] Type startupModule,
             [CanBeNull] Action<AbpBootstrapperOptions> optionsAction = null)
         {
             return new AbpBootstrapper(startupModule, optionsAction);
@@ -102,30 +100,15 @@ namespace Abp
         private void AddInterceptorRegistrars(
             AbpBootstrapperInterceptorOptions options)
         {
-            if (!options.DisableValidationInterceptor)
-            {
-                ValidationInterceptorRegistrar.Initialize(IocManager);    
-            }
+            if (!options.DisableValidationInterceptor) ValidationInterceptorRegistrar.Initialize(IocManager);
 
-            if (!options.DisableAuditingInterceptor)
-            {
-                AuditingInterceptorRegistrar.Initialize(IocManager);
-            }
+            if (!options.DisableAuditingInterceptor) AuditingInterceptorRegistrar.Initialize(IocManager);
 
-            if (!options.DisableEntityHistoryInterceptor)
-            {
-                EntityHistoryInterceptorRegistrar.Initialize(IocManager);    
-            }
+            if (!options.DisableEntityHistoryInterceptor) EntityHistoryInterceptorRegistrar.Initialize(IocManager);
 
-            if (!options.DisableUnitOfWorkInterceptor)
-            {
-                UnitOfWorkRegistrar.Initialize(IocManager);
-            }
+            if (!options.DisableUnitOfWorkInterceptor) UnitOfWorkRegistrar.Initialize(IocManager);
 
-            if (!options.DisableAuthorizationInterceptor)
-            {
-                AuthorizationInterceptorRegistrar.Initialize(IocManager);   
-            }
+            if (!options.DisableAuthorizationInterceptor) AuthorizationInterceptorRegistrar.Initialize(IocManager);
         }
 
         /// <summary>
@@ -157,19 +140,15 @@ namespace Abp
         private void ResolveLogger()
         {
             if (IocManager.IsRegistered<ILoggerFactory>())
-            {
                 _logger = IocManager.Resolve<ILoggerFactory>().Create(typeof(AbpBootstrapper));
-            }
         }
 
         private void RegisterBootstrapper()
         {
             if (!IocManager.IsRegistered<AbpBootstrapper>())
-            {
                 IocManager.IocContainer.Register(
                     Component.For<AbpBootstrapper>().Instance(this)
                 );
-            }
         }
 
         /// <summary>
@@ -177,10 +156,7 @@ namespace Abp
         /// </summary>
         public virtual void Dispose()
         {
-            if (IsDisposed)
-            {
-                return;
-            }
+            if (IsDisposed) return;
 
             IsDisposed = true;
 

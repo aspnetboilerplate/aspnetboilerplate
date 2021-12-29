@@ -95,15 +95,9 @@ namespace Abp.Dependency
         {
             var context = new ConventionalRegistrationContext(assembly, this, config);
 
-            foreach (var registerer in _conventionalRegistrars)
-            {
-                registerer.RegisterAssembly(context);
-            }
+            foreach (var registerer in _conventionalRegistrars) registerer.RegisterAssembly(context);
 
-            if (config.InstallInstallers)
-            {
-                IocContainer.Install(FromAssembly.Instance(assembly));
-            }
+            if (config.InstallInstallers) IocContainer.Install(FromAssembly.Instance(assembly));
         }
 
         /// <summary>
@@ -247,7 +241,8 @@ namespace Abp.Dependency
         ///<inheritdoc/>
         public object[] ResolveAll(Type type, object argumentsAsAnonymousType)
         {
-            return IocContainer.ResolveAll(type, Arguments.FromProperties(argumentsAsAnonymousType)).Cast<object>().ToArray();
+            return IocContainer.ResolveAll(type, Arguments.FromProperties(argumentsAsAnonymousType)).Cast<object>()
+                .ToArray();
         }
 
         /// <summary>
@@ -265,7 +260,8 @@ namespace Abp.Dependency
             IocContainer.Dispose();
         }
 
-        private static ComponentRegistration<T> ApplyLifestyle<T>(ComponentRegistration<T> registration, DependencyLifeStyle lifeStyle)
+        private static ComponentRegistration<T> ApplyLifestyle<T>(ComponentRegistration<T> registration,
+            DependencyLifeStyle lifeStyle)
             where T : class
         {
             switch (lifeStyle)

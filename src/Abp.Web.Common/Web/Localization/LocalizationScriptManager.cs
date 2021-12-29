@@ -45,7 +45,8 @@ namespace Abp.Web.Localization
             script.AppendLine();
             script.AppendLine("    abp.localization.currentCulture = {");
             script.AppendLine("        name: '" + HttpEncode.JavaScriptStringEncode(cultureInfo.Name) + "',");
-            script.AppendLine("        displayName: '" + HttpEncode.JavaScriptStringEncode(cultureInfo.DisplayName) + "'");
+            script.AppendLine("        displayName: '" + HttpEncode.JavaScriptStringEncode(cultureInfo.DisplayName) +
+                              "'");
             script.AppendLine("    };");
             script.AppendLine();
             script.Append("    abp.localization.languages = [");
@@ -57,16 +58,14 @@ namespace Abp.Web.Localization
 
                 script.AppendLine("{");
                 script.AppendLine("        name: '" + HttpEncode.JavaScriptStringEncode(language.Name) + "',");
-                script.AppendLine("        displayName: '" + HttpEncode.JavaScriptStringEncode(language.DisplayName) + "',");
+                script.AppendLine("        displayName: '" + HttpEncode.JavaScriptStringEncode(language.DisplayName) +
+                                  "',");
                 script.AppendLine("        icon: '" + HttpEncode.JavaScriptStringEncode(language.Icon) + "',");
                 script.AppendLine("        isDisabled: " + language.IsDisabled.ToString().ToLowerInvariant() + ",");
                 script.AppendLine("        isDefault: " + language.IsDefault.ToString().ToLowerInvariant());
                 script.Append("    }");
 
-                if (i < languages.Count - 1)
-                {
-                    script.Append(" , ");
-                }
+                if (i < languages.Count - 1) script.Append(" , ");
             }
 
             script.AppendLine("];");
@@ -77,9 +76,11 @@ namespace Abp.Web.Localization
                 var currentLanguage = _languageManager.CurrentLanguage;
                 script.AppendLine("    abp.localization.currentLanguage = {");
                 script.AppendLine("        name: '" + HttpEncode.JavaScriptStringEncode(currentLanguage.Name) + "',");
-                script.AppendLine("        displayName: '" + HttpEncode.JavaScriptStringEncode(currentLanguage.DisplayName) + "',");
+                script.AppendLine("        displayName: '" +
+                                  HttpEncode.JavaScriptStringEncode(currentLanguage.DisplayName) + "',");
                 script.AppendLine("        icon: '" + HttpEncode.JavaScriptStringEncode(currentLanguage.Icon) + "',");
-                script.AppendLine("        isDisabled: " + currentLanguage.IsDisabled.ToString().ToLowerInvariant() + ",");
+                script.AppendLine("        isDisabled: " + currentLanguage.IsDisabled.ToString().ToLowerInvariant() +
+                                  ",");
                 script.AppendLine("        isDefault: " + currentLanguage.IsDefault.ToString().ToLowerInvariant());
                 script.AppendLine("    };");
             }
@@ -95,7 +96,7 @@ namespace Abp.Web.Localization
                 script.AppendLine("        {");
                 script.AppendLine("            name: '" + HttpEncode.JavaScriptStringEncode(source.Name) + "',");
                 script.AppendLine("            type: '" + source.GetType().Name + "'");
-                script.AppendLine("        }" + (i < (sources.Length - 1) ? "," : ""));
+                script.AppendLine("        }" + (i < sources.Length - 1 ? "," : ""));
             }
 
             script.AppendLine("    ];");
@@ -106,7 +107,8 @@ namespace Abp.Web.Localization
 
             foreach (var source in sources)
             {
-                script.Append("    abp.localization.values['" + HttpEncode.JavaScriptStringEncode(source.Name) + "'] = ");
+                script.Append(
+                    "    abp.localization.values['" + HttpEncode.JavaScriptStringEncode(source.Name) + "'] = ");
 
                 var stringValues = source.GetAllStrings(cultureInfo).OrderBy(s => s.Name).ToList();
                 var stringJson = stringValues

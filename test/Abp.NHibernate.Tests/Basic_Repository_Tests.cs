@@ -42,7 +42,8 @@ namespace Abp.NHibernate.Tests
         {
             _personRepository.Insert(new Person() { Name = "halil" });
 
-            var insertedPerson = UsingSession(session => session.Query<Person>().FirstOrDefault(p => p.Name == "halil"));
+            var insertedPerson =
+                UsingSession(session => session.Query<Person>().FirstOrDefault(p => p.Name == "halil"));
             insertedPerson.ShouldNotBe(null);
             insertedPerson.IsTransient().ShouldBe(false);
             insertedPerson.Name.ShouldBe("halil");
@@ -53,7 +54,8 @@ namespace Abp.NHibernate.Tests
         {
             await _personRepository.InsertAsync(new Person() { Name = "halil" });
 
-            var insertedPerson = UsingSession(session => session.Query<Person>().FirstOrDefault(p => p.Name == "halil"));
+            var insertedPerson =
+                UsingSession(session => session.Query<Person>().FirstOrDefault(p => p.Name == "halil"));
             insertedPerson.ShouldNotBeNull();
             insertedPerson.IsTransient().ShouldBeFalse();
             insertedPerson.Name.ShouldBe("halil");
@@ -96,12 +98,13 @@ namespace Abp.NHibernate.Tests
             var userAfter = UsingSession(session => session.Get<Person>(userBefore.Id));
             userAfter.Name.ShouldBe("yunus");
         }
+
         [Fact]
         public async Task Update_With_Action_Test_Async()
         {
             var userBefore = UsingSession(session => session.Query<Person>().Single(p => p.Name == "emre"));
 
-            var updatedUser =await _personRepository.UpdateAsync(userBefore.Id, user =>
+            var updatedUser = await _personRepository.UpdateAsync(userBefore.Id, user =>
             {
                 user.Name = "yunus";
                 return Task.FromResult(user);
@@ -112,6 +115,7 @@ namespace Abp.NHibernate.Tests
             var userAfter = UsingSession(session => session.Get<Person>(userBefore.Id));
             userAfter.Name.ShouldBe("yunus");
         }
+
         [Fact]
         public void Should_Trigger_Event_On_Insert()
         {

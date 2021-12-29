@@ -17,9 +17,11 @@ namespace Abp.Hangfire.Configuration
         /// <summary>
         /// Configures to use Hangfire for background job management.
         /// </summary>
-        public static void UseHangfire(this IBackgroundJobConfiguration backgroundJobConfiguration, Action<IAbpHangfireConfiguration> configureAction)
+        public static void UseHangfire(this IBackgroundJobConfiguration backgroundJobConfiguration,
+            Action<IAbpHangfireConfiguration> configureAction)
         {
-            backgroundJobConfiguration.AbpConfiguration.ReplaceService<IBackgroundJobManager, HangfireBackgroundJobManager>();
+            backgroundJobConfiguration.AbpConfiguration
+                .ReplaceService<IBackgroundJobManager, HangfireBackgroundJobManager>();
             configureAction(backgroundJobConfiguration.AbpConfiguration.Modules.AbpHangfire());
         }
     }

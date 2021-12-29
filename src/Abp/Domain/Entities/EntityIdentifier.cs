@@ -24,7 +24,6 @@ namespace Abp.Domain.Entities
         /// </summary>
         private EntityIdentifier()
         {
-            
         }
 
         /// <summary>
@@ -34,15 +33,9 @@ namespace Abp.Domain.Entities
         /// <param name="id">Id of the entity.</param>
         public EntityIdentifier(Type type, object id)
         {
-            if (type == null)
-            {
-                throw new ArgumentNullException("type");
-            }
+            if (type == null) throw new ArgumentNullException("type");
 
-            if (id == null)
-            {
-                throw new ArgumentNullException("id");
-            }
+            if (id == null) throw new ArgumentNullException("id");
 
             Type = type;
             Id = id;

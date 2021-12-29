@@ -42,9 +42,8 @@ namespace Abp.Application.Features
         public Task<string> GetValueAsync(string name)
         {
             if (AbpSession.TenantId == null)
-            {
-                throw new AbpException("FeatureChecker can not get a feature value by name. TenantId is not set in the IAbpSession!");
-            }
+                throw new AbpException(
+                    "FeatureChecker can not get a feature value by name. TenantId is not set in the IAbpSession!");
 
             return GetValueAsync(AbpSession.TenantId.Value, name);
         }
@@ -53,9 +52,8 @@ namespace Abp.Application.Features
         public string GetValue(string name)
         {
             if (AbpSession.TenantId == null)
-            {
-                throw new AbpException("FeatureChecker can not get a feature value by name. TenantId is not set in the IAbpSession!");
-            }
+                throw new AbpException(
+                    "FeatureChecker can not get a feature value by name. TenantId is not set in the IAbpSession!");
 
             return GetValue(AbpSession.TenantId.Value, name);
         }
@@ -81,10 +79,7 @@ namespace Abp.Application.Features
         /// <inheritdoc/>
         public async Task<bool> IsEnabledAsync(string featureName)
         {
-            if (AbpSession.TenantId == null && _multiTenancyConfig.IgnoreFeatureCheckForHostUsers)
-            {
-                return true;
-            }
+            if (AbpSession.TenantId == null && _multiTenancyConfig.IgnoreFeatureCheckForHostUsers) return true;
 
             return string.Equals(await GetValueAsync(featureName), "true", StringComparison.OrdinalIgnoreCase);
         }
@@ -92,10 +87,7 @@ namespace Abp.Application.Features
         /// <inheritdoc/>
         public bool IsEnabled(string featureName)
         {
-            if (AbpSession.TenantId == null && _multiTenancyConfig.IgnoreFeatureCheckForHostUsers)
-            {
-                return true;
-            }
+            if (AbpSession.TenantId == null && _multiTenancyConfig.IgnoreFeatureCheckForHostUsers) return true;
 
             return string.Equals(GetValue(featureName), "true", StringComparison.OrdinalIgnoreCase);
         }
@@ -103,7 +95,8 @@ namespace Abp.Application.Features
         /// <inheritdoc/>
         public async Task<bool> IsEnabledAsync(int tenantId, string featureName)
         {
-            return string.Equals(await GetValueAsync(tenantId, featureName), "true", StringComparison.OrdinalIgnoreCase);
+            return string.Equals(await GetValueAsync(tenantId, featureName), "true",
+                StringComparison.OrdinalIgnoreCase);
         }
 
         /// <inheritdoc/>

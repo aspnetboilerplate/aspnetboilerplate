@@ -23,7 +23,9 @@ namespace Abp.Domain.Entities.Caching
         }
     }
 
-    public class MayHaveTenantEntityCache<TEntity, TCacheItem, TPrimaryKey> : MultiTenancyEntityCache<TEntity, TCacheItem, TPrimaryKey>
+    public class
+        MayHaveTenantEntityCache<TEntity, TCacheItem, TPrimaryKey> : MultiTenancyEntityCache<TEntity, TCacheItem,
+            TPrimaryKey>
         where TEntity : class, IEntity<TPrimaryKey>, IMayHaveTenant
     {
         public MayHaveTenantEntityCache(

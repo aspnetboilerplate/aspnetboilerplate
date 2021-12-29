@@ -22,7 +22,6 @@ namespace Abp.Zero.SampleApp.Tests
 {
     public abstract class SampleAppTestBase : SampleAppTestBase<SampleAppTestModule>
     {
-
     }
 
     public abstract class SampleAppTestBase<TModule> : AbpIntegratedTestBase<TModule>
@@ -54,7 +53,7 @@ namespace Abp.Zero.SampleApp.Tests
                 Component.For<DbConnection>()
                     .UsingFactoryMethod(Effort.DbConnectionFactory.CreateTransient)
                     .LifestyleSingleton()
-                );
+            );
         }
 
         private void CreateInitialData()
@@ -94,10 +93,7 @@ namespace Abp.Zero.SampleApp.Tests
         protected Tenant GetTenant(string tenancyName)
         {
             return UsingDbContext(
-                context =>
-                {
-                    return context.Tenants.Single(t => t.TenancyName == tenancyName);
-                });
+                context => { return context.Tenants.Single(t => t.TenancyName == tenancyName); });
         }
 
         protected User GetDefaultTenantAdmin()
@@ -106,7 +102,8 @@ namespace Abp.Zero.SampleApp.Tests
             return UsingDbContext(
                 context =>
                 {
-                    return context.Users.Single(u => u.UserName == User.AdminUserName && u.TenantId == defaultTenant.Id);
+                    return context.Users.Single(u =>
+                        u.UserName == User.AdminUserName && u.TenantId == defaultTenant.Id);
                 });
         }
 
@@ -121,7 +118,7 @@ namespace Abp.Zero.SampleApp.Tests
 
             RoleManager.Create(role).Succeeded.ShouldBe(true);
 
-            UsingDbContext( context =>
+            UsingDbContext(context =>
             {
                 var createdRole = context.Roles.FirstOrDefault(r => r.Name == name);
                 createdRole.ShouldNotBe(null);
@@ -144,7 +141,7 @@ namespace Abp.Zero.SampleApp.Tests
             };
 
 
-            WithUnitOfWork(()=> UserManager.Create(user).CheckErrors());
+            WithUnitOfWork(() => UserManager.Create(user).CheckErrors());
 
             UsingDbContext(context =>
             {
@@ -158,7 +155,8 @@ namespace Abp.Zero.SampleApp.Tests
         protected async Task ProhibitPermissionAsync(Role role, string permissionName)
         {
             await RoleManager.ProhibitPermissionAsync(role, PermissionManager.GetPermission(permissionName));
-            (await RoleManager.IsGrantedAsync(role.Id, PermissionManager.GetPermission(permissionName))).ShouldBe(false);
+            (await RoleManager.IsGrantedAsync(role.Id, PermissionManager.GetPermission(permissionName)))
+                .ShouldBe(false);
         }
 
         protected async Task GrantPermissionAsync(Role role, string permissionName)
@@ -172,13 +170,13 @@ namespace Abp.Zero.SampleApp.Tests
             await UserManager.GrantPermissionAsync(user, PermissionManager.GetPermission(permissionName));
             (await UserManager.IsGrantedAsync(user.Id, permissionName)).ShouldBe(true);
         }
-        
+
         protected void GrantPermission(User user, string permissionName)
         {
             GrantPermission(user, PermissionManager.GetPermission(permissionName));
             UserManager.IsGranted(user.Id, permissionName).ShouldBe(true);
         }
-        
+
         /// <summary>
         /// Grants a permission for a user if not already granted.
         /// </summary>
@@ -188,10 +186,7 @@ namespace Abp.Zero.SampleApp.Tests
         {
             UserStore.RemovePermission(user, new PermissionGrantInfo(permission.Name, false));
 
-            if (UserManager.IsGranted(user.Id, permission))
-            {
-                return;
-            }
+            if (UserManager.IsGranted(user.Id, permission)) return;
 
             UserStore.AddPermission(user, new PermissionGrantInfo(permission.Name, true));
         }
@@ -201,18 +196,15 @@ namespace Abp.Zero.SampleApp.Tests
             await UserManager.ProhibitPermissionAsync(user, PermissionManager.GetPermission(permissionName));
             (await UserManager.IsGrantedAsync(user.Id, permissionName)).ShouldBe(false);
         }
-        
+
         protected void ProhibitPermission(User user, Permission permission)
         {
             UserStore.RemovePermission(user, new PermissionGrantInfo(permission.Name, true));
 
-            if (!UserManager.IsGranted(user.Id, permission))
-            {
-                return;
-            }
+            if (!UserManager.IsGranted(user.Id, permission)) return;
 
             UserStore.AddPermission(user, new PermissionGrantInfo(permission.Name, false));
-            
+
             UserManager.IsGranted(user.Id, permission.Name).ShouldBe(false);
         }
     }

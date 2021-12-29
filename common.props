@@ -1,22 +1,22 @@
 <Project>
-    <PropertyGroup>
-        <Version>7.1.0</Version>
-        <NoWarn>$(NoWarn);CS1591</NoWarn>
-        <PackageIcon>abp_nupkg.png</PackageIcon>
-        <PackageIconUrl>http://www.aspnetboilerplate.com/images/abp_nupkg.png</PackageIconUrl>
-        <PackageLicenseFile>LICENSE.md</PackageLicenseFile>
-        <PackageProjectUrl>http://www.aspnetboilerplate.com/</PackageProjectUrl>
-        <RepositoryType>git</RepositoryType>
-        <RepositoryUrl>https://github.com/aspnetboilerplate/aspnetboilerplate</RepositoryUrl>
-    </PropertyGroup>
-    <PropertyGroup Condition="'$(Configuration)' == 'Release' ">
-        <GeneratePackageOnBuild>True</GeneratePackageOnBuild>
-    </PropertyGroup>
-    <ItemGroup>
-        <None Include="../../LICENSE.md" Pack="true" PackagePath="/"/>
-        <None Include="../../nupkg/abp_nupkg.png" Pack="true" PackagePath="/"/>
-    </ItemGroup>
+	<PropertyGroup>
+		<Version>7.1.0</Version>
+		<NoWarn>$(NoWarn);CS1591</NoWarn>
+		<PackageIcon>abp_nupkg.png</PackageIcon>
+		<PackageIconUrl>http://www.aspnetboilerplate.com/images/abp_nupkg.png</PackageIconUrl>
+		<PackageLicenseFile>LICENSE.md</PackageLicenseFile>
+		<PackageProjectUrl>http://www.aspnetboilerplate.com/</PackageProjectUrl>
+		<RepositoryType>git</RepositoryType>
+		<RepositoryUrl>https://github.com/aspnetboilerplate/aspnetboilerplate</RepositoryUrl>
+	</PropertyGroup>
+	<PropertyGroup Condition="'$(Configuration)' == 'Release' ">
+		<GeneratePackageOnBuild>True</GeneratePackageOnBuild>
+	</PropertyGroup>
 	<ItemGroup>
-        <PackageReference Include="Microsoft.SourceLink.GitHub" Version="1.1.0-beta-20204-02" PrivateAssets="All"/>
-    </ItemGroup>
+		<None Include="../../LICENSE.md" Pack="true" PackagePath="/" />
+		<None Include="../../nupkg/abp_nupkg.png" Pack="true" PackagePath="/" />
+	</ItemGroup>
+	<ItemGroup>
+		<PackageReference Include="Microsoft.SourceLink.GitHub" Version="1.1.0-beta-20204-02" PrivateAssets="All" />
+	</ItemGroup>
 </Project>

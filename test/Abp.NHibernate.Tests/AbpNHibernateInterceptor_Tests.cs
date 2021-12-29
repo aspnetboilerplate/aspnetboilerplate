@@ -38,7 +38,6 @@ namespace Abp.NHibernate.Tests
                         ModificationDate = new DateTime(2017, 05, 27, 14, 0, 0, DateTimeKind.Local)
                     }
                 });
-
             });
 
             UsingSession(session =>
@@ -99,9 +98,7 @@ namespace Abp.NHibernate.Tests
                 order.CreationTime.Kind.ShouldBe(DateTimeKind.Unspecified);
 
                 foreach (var orderDetail in order.Items)
-                {
                     orderDetail.CreationTime.Kind.ShouldBe(DateTimeKind.Unspecified);
-                }
 
                 uow.Complete();
             }

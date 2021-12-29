@@ -60,7 +60,7 @@ namespace Abp.Tests.MimeTypes
             Should.Throw<ArgumentNullException>(() => { _mimeTypeMap.GetMimeType(null); });
 
             Should.Throw<ArgumentException>(() => { _mimeTypeMap.GetMimeType("test"); }); //not found exception
-            _mimeTypeMap.GetMimeType("test", throwErrorIfNotFound: false).ShouldBe(string.Empty);
+            _mimeTypeMap.GetMimeType("test", false).ShouldBe(string.Empty);
         }
 
         [Fact]
@@ -81,7 +81,7 @@ namespace Abp.Tests.MimeTypes
             Should.Throw<ArgumentNullException>(() => { _mimeTypeMap.GetExtension(null); });
 
             Should.Throw<ArgumentException>(() => { _mimeTypeMap.GetExtension("test"); }); //not found exception
-            _mimeTypeMap.GetExtension("test", throwErrorIfNotFound: false).ShouldBe(string.Empty);
+            _mimeTypeMap.GetExtension("test", false).ShouldBe(string.Empty);
         }
 
         [Fact]
@@ -94,11 +94,20 @@ namespace Abp.Tests.MimeTypes
             Should.Throw<ArgumentNullException>(() => { _mimeTypeMap.AddMimeType("test", ""); });
             Should.Throw<ArgumentNullException>(() => { _mimeTypeMap.AddMimeType("test", null); });
 
-            Should.Throw<ArgumentException>(() => { _mimeTypeMap.AddMimeType(".test", ".test"); }); //MIME type should not start with dot exception
-            Should.Throw<ArgumentException>(() => { _mimeTypeMap.AddMimeType("test", "test"); }); //Extension should start with dot exception
+            Should.Throw<ArgumentException>(() =>
+            {
+                _mimeTypeMap.AddMimeType(".test", ".test");
+            }); //MIME type should not start with dot exception
+            Should.Throw<ArgumentException>(() =>
+            {
+                _mimeTypeMap.AddMimeType("test", "test");
+            }); //Extension should start with dot exception
 
 
-            Should.Throw<ArgumentException>(() => { _mimeTypeMap.AddMimeType("application/zip", ".zip"); }); //An item with the same mimeType has already been added exception
+            Should.Throw<ArgumentException>(() =>
+            {
+                _mimeTypeMap.AddMimeType("application/zip", ".zip");
+            }); //An item with the same mimeType has already been added exception
 
             var testMimeType = "test/test";
             var testExtension = ".test";
@@ -113,7 +122,10 @@ namespace Abp.Tests.MimeTypes
             Should.Throw<ArgumentNullException>(() => { _mimeTypeMap.RemoveMimeType(""); });
             Should.Throw<ArgumentNullException>(() => { _mimeTypeMap.RemoveMimeType(null); });
 
-            Should.Throw<ArgumentException>(() => { _mimeTypeMap.RemoveMimeType(".test"); }); //MIME type should not start with dot exception
+            Should.Throw<ArgumentException>(() =>
+            {
+                _mimeTypeMap.RemoveMimeType(".test");
+            }); //MIME type should not start with dot exception
 
             var testMimeType = "application/zip";
             _mimeTypeMap.GetExtension(testMimeType, false).ShouldNotBeNullOrEmpty();
@@ -131,11 +143,20 @@ namespace Abp.Tests.MimeTypes
             Should.Throw<ArgumentNullException>(() => { _mimeTypeMap.AddExtension("test", ""); });
             Should.Throw<ArgumentNullException>(() => { _mimeTypeMap.AddExtension("test", null); });
 
-            Should.Throw<ArgumentException>(() => { _mimeTypeMap.AddExtension(".test", ".test"); }); //MIME type should not start with dot exception
-            Should.Throw<ArgumentException>(() => { _mimeTypeMap.AddExtension("test", "test"); }); //Extension should start with dot exception
+            Should.Throw<ArgumentException>(() =>
+            {
+                _mimeTypeMap.AddExtension(".test", ".test");
+            }); //MIME type should not start with dot exception
+            Should.Throw<ArgumentException>(() =>
+            {
+                _mimeTypeMap.AddExtension("test", "test");
+            }); //Extension should start with dot exception
 
 
-            Should.Throw<ArgumentException>(() => { _mimeTypeMap.AddExtension(".zip", "application/zip"); }); //An item with the same extension has already been added exception
+            Should.Throw<ArgumentException>(() =>
+            {
+                _mimeTypeMap.AddExtension(".zip", "application/zip");
+            }); //An item with the same extension has already been added exception
 
             var testMimeType = "test/test";
             var testExtension = ".test";
@@ -150,7 +171,10 @@ namespace Abp.Tests.MimeTypes
             Should.Throw<ArgumentNullException>(() => { _mimeTypeMap.RemoveExtension(""); });
             Should.Throw<ArgumentNullException>(() => { _mimeTypeMap.RemoveExtension(null); });
 
-            Should.Throw<ArgumentException>(() => { _mimeTypeMap.RemoveExtension("test"); }); //Extension should start with dot exception
+            Should.Throw<ArgumentException>(() =>
+            {
+                _mimeTypeMap.RemoveExtension("test");
+            }); //Extension should start with dot exception
 
             var testExtension = ".zip";
             _mimeTypeMap.GetMimeType(testExtension, false).ShouldNotBeNullOrEmpty();

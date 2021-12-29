@@ -16,7 +16,6 @@ namespace Abp.WebApi.OData.Controllers
         protected AbpODataEntityController(IRepository<TEntity> repository)
             : base(repository)
         {
-
         }
     }
 
@@ -63,10 +62,7 @@ namespace Abp.WebApi.OData.Controllers
         {
             CheckCreatePermission();
 
-            if (!ModelState.IsValid)
-            {
-                return BadRequest(ModelState);
-            }
+            if (!ModelState.IsValid) return BadRequest(ModelState);
 
             var createdEntity = await Repository.InsertAsync(entity);
             await UnitOfWorkManager.Current.SaveChangesAsync();
@@ -78,16 +74,10 @@ namespace Abp.WebApi.OData.Controllers
         {
             CheckUpdatePermission();
 
-            if (!ModelState.IsValid)
-            {
-                return BadRequest(ModelState);
-            }
+            if (!ModelState.IsValid) return BadRequest(ModelState);
 
             var dbLookup = await Repository.GetAsync(key);
-            if (dbLookup == null)
-            {
-                return NotFound();
-            }
+            if (dbLookup == null) return NotFound();
 
             entity.Patch(dbLookup);
 
@@ -98,15 +88,9 @@ namespace Abp.WebApi.OData.Controllers
         {
             CheckUpdatePermission();
 
-            if (!ModelState.IsValid)
-            {
-                return BadRequest(ModelState);
-            }
+            if (!ModelState.IsValid) return BadRequest(ModelState);
 
-            if (!key.Equals(update.Id))
-            {
-                return BadRequest();
-            }
+            if (!key.Equals(update.Id)) return BadRequest();
 
             var updated = await Repository.UpdateAsync(update);
 
@@ -118,10 +102,7 @@ namespace Abp.WebApi.OData.Controllers
             CheckDeletePermission();
 
             var product = await Repository.GetAsync(key);
-            if (product == null)
-            {
-                return NotFound();
-            }
+            if (product == null) return NotFound();
 
             await Repository.DeleteAsync(key);
 
@@ -130,10 +111,7 @@ namespace Abp.WebApi.OData.Controllers
 
         protected virtual void CheckPermission(string permissionName)
         {
-            if (!string.IsNullOrEmpty(permissionName))
-            {
-                PermissionChecker.Authorize(permissionName);
-            }
+            if (!string.IsNullOrEmpty(permissionName)) PermissionChecker.Authorize(permissionName);
         }
 
         protected virtual void CheckGetPermission()

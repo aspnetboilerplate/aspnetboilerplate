@@ -32,7 +32,7 @@ namespace Abp.Zero.Configuration
                 .Where(s => s is IDictionaryBasedLocalizationSource)
                 .Cast<IDictionaryBasedLocalizationSource>()
                 .ToList();
-            
+
             foreach (var source in sources)
             {
                 _configuration.Localization.Sources.Remove(source);
@@ -42,11 +42,12 @@ namespace Abp.Zero.Configuration
                         new MultiTenantLocalizationDictionaryProvider(
                             source.DictionaryProvider,
                             _iocManager
-                            )
                         )
-                    );
+                    )
+                );
 
-                Logger.DebugFormat("Converted {0} ({1}) to MultiTenantLocalizationSource", source.Name, source.GetType());
+                Logger.DebugFormat("Converted {0} ({1}) to MultiTenantLocalizationSource", source.Name,
+                    source.GetType());
             }
         }
     }

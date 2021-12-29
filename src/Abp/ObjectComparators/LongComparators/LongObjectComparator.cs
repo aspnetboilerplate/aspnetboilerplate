@@ -2,7 +2,6 @@
 
 namespace Abp.ObjectComparators.LongComparators
 {
-
     public class LongObjectComparator : ObjectComparatorBase<long, LongCompareTypes>
     {
         protected override bool Compare(long baseObject, long compareObject, LongCompareTypes compareType)

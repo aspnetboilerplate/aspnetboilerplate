@@ -1,24 +1,25 @@
-﻿<?xml version="1.0" encoding="utf-8" ?>
+﻿<?xml version="1.0" encoding="utf-8"?>
+
 <localizationDictionary culture="uk">
-  <texts>
-    <text name="SmtpHost">SMTP сервер</text>
-    <text name="SmtpPort">SMTP порт</text>
-    <text name="Username">Ім'я користувача</text>
-    <text name="Password">Пароль</text>
-    <text name="DomainName">Домен</text>
-    <text name="UseSSL">Використовувати SSL</text>
-    <text name="UseDefaultCredentials">Використовувати облікові дані за замовчуванням</text>
-    <text name="DefaultFromSenderEmailAddress">Електронна адреса відправника за замовчуванням</text>
-    <text name="DefaultFromSenderDisplayName">Ім'я відправника за замовчуванням</text>
-    <text name="DefaultLanguage">Мова за замовчуванням</text>
-    <text name="ReceiveNotifications">Отримувати сповіщення</text>
-    <text name="CurrentUserDidNotLoginToTheApplication">Поточний користувач не увійшов в додаток!</text>
-    <text name="TimeZone">Часовий пояс</text>
-    <text name="AllOfThesePermissionsMustBeGranted">Необхідні дозволи не надаються. Усі ці дозволи повинні бути надані: {0}</text>
-    <text name="AtLeastOneOfThesePermissionsMustBeGranted">Необхідні дозволи не надаються. Щонайменше одне з цих дозволів має бути надано: {0}</text>
-    <text name="FeatureIsNotEnabled">Функція не активована: {0}</text>
-    <text name="AllOfTheseFeaturesMustBeEnabled">Обов'язкові функції не ввімкнено. Усі ці функції повинні бути активовані: {0}</text>
-    <text name="AtLeastOneOfTheseFeaturesMustBeEnabled">Обов'язкові функції не ввімкнено. Потрібно ввімкнути принаймні одну з цих функцій: {0}</text>
-    <text name="MainMenu">Головне меню</text>
-  </texts>
+	<texts>
+		<text name="SmtpHost">SMTP сервер</text>
+		<text name="SmtpPort">SMTP порт</text>
+		<text name="Username">Ім'я користувача</text>
+		<text name="Password">Пароль</text>
+		<text name="DomainName">Домен</text>
+		<text name="UseSSL">Використовувати SSL</text>
+		<text name="UseDefaultCredentials">Використовувати облікові дані за замовчуванням</text>
+		<text name="DefaultFromSenderEmailAddress">Електронна адреса відправника за замовчуванням</text>
+		<text name="DefaultFromSenderDisplayName">Ім'я відправника за замовчуванням</text>
+		<text name="DefaultLanguage">Мова за замовчуванням</text>
+		<text name="ReceiveNotifications">Отримувати сповіщення</text>
+		<text name="CurrentUserDidNotLoginToTheApplication">Поточний користувач не увійшов в додаток!</text>
+		<text name="TimeZone">Часовий пояс</text>
+		<text name="AllOfThesePermissionsMustBeGranted">Необхідні дозволи не надаються. Усі ці дозволи повинні бути надані: {0}</text>
+		<text name="AtLeastOneOfThesePermissionsMustBeGranted">Необхідні дозволи не надаються. Щонайменше одне з цих дозволів має бути надано: {0}</text>
+		<text name="FeatureIsNotEnabled">Функція не активована: {0}</text>
+		<text name="AllOfTheseFeaturesMustBeEnabled">Обов'язкові функції не ввімкнено. Усі ці функції повинні бути активовані: {0}</text>
+		<text name="AtLeastOneOfTheseFeaturesMustBeEnabled">Обов'язкові функції не ввімкнено. Потрібно ввімкнути принаймні одну з цих функцій: {0}</text>
+		<text name="MainMenu">Головне меню</text>
+	</texts>
 </localizationDictionary>

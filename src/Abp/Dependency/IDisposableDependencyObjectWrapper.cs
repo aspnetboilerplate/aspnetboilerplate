@@ -10,6 +10,5 @@ namespace Abp.Dependency
     /// </summary>
     public interface IDisposableDependencyObjectWrapper : IDisposableDependencyObjectWrapper<object>
     {
-
     }
 }

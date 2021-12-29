@@ -28,10 +28,7 @@ namespace Abp.Web.Api.Tests
                 .ForAll<IApplicationService>(Assembly.GetExecutingAssembly(), "myapp")
                 .ForMethods(builder =>
                 {
-                    if (builder.Method.IsDefined(typeof(MyIgnoreApiAttribute)))
-                    {
-                        builder.DontCreate = true;
-                    }
+                    if (builder.Method.IsDefined(typeof(MyIgnoreApiAttribute))) builder.DontCreate = true;
                 })
                 .WithProxyScripts(false)
                 .Build();

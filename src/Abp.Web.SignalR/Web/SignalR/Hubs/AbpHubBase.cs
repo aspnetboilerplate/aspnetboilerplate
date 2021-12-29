@@ -39,18 +39,16 @@ namespace Abp.Web.SignalR.Hubs
             get
             {
                 if (LocalizationSourceName == null)
-                {
-                    throw new AbpException("Must set LocalizationSourceName before, in order to get LocalizationSource");
-                }
+                    throw new AbpException(
+                        "Must set LocalizationSourceName before, in order to get LocalizationSource");
 
                 if (_localizationSource == null || _localizationSource.Name != LocalizationSourceName)
-                {
                     _localizationSource = LocalizationManager.GetSource(LocalizationSourceName);
-                }
 
                 return _localizationSource;
             }
         }
+
         private ILocalizationSource _localizationSource;
 
         protected bool Disposed { get; private set; }
@@ -110,10 +108,7 @@ namespace Abp.Web.SignalR.Hubs
         {
             base.Dispose(disposing);
 
-            if (Disposed)
-            {
-                return;
-            }
+            if (Disposed) return;
 
             if (disposing)
             {

@@ -24,22 +24,15 @@ namespace Abp.Localization
         /// </summary>
         private LocalizableString()
         {
-            
         }
 
         /// <param name="name">Unique Name of the string to be localized</param>
         /// <param name="sourceName">Unique name of the localization source</param>
         public LocalizableString(string name, string sourceName)
         {
-            if (name == null)
-            {
-                throw new ArgumentNullException("name");
-            }
+            if (name == null) throw new ArgumentNullException("name");
 
-            if (sourceName == null)
-            {
-                throw new ArgumentNullException("sourceName");
-            }
+            if (sourceName == null) throw new ArgumentNullException("sourceName");
 
             Name = name;
             SourceName = sourceName;

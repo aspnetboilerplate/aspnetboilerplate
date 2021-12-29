@@ -36,7 +36,6 @@ namespace Abp.Authorization.Users
         /// </summary>
         public UserOrganizationUnit()
         {
-            
         }
 
         /// <summary>

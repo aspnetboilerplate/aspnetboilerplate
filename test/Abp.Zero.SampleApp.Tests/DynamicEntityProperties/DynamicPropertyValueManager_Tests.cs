@@ -177,7 +177,8 @@ namespace Abp.Zero.SampleApp.Tests.DynamicEntityProperties
                 TenantId = AbpSession.TenantId
             };
 
-            await WithUnitOfWorkAsync(async () => { await _dynamicPropertyValueManager.AddAsync(dynamicPropertyValue); });
+            await WithUnitOfWorkAsync(
+                async () => { await _dynamicPropertyValueManager.AddAsync(dynamicPropertyValue); });
 
             await RunAndCheckIfPermissionControlledAsync(async () =>
             {
@@ -198,7 +199,10 @@ namespace Abp.Zero.SampleApp.Tests.DynamicEntityProperties
                 TenantId = AbpSession.TenantId
             };
 
-            await RunAndCheckIfPermissionControlledAsync(async () => { await _dynamicPropertyValueManager.AddAsync(dynamicPropertyValue); });
+            await RunAndCheckIfPermissionControlledAsync(async () =>
+            {
+                await _dynamicPropertyValueManager.AddAsync(dynamicPropertyValue);
+            });
 
             await WithUnitOfWorkAsync(async () =>
             {
@@ -219,7 +223,8 @@ namespace Abp.Zero.SampleApp.Tests.DynamicEntityProperties
                 TenantId = AbpSession.TenantId
             };
 
-            await WithUnitOfWorkAsync(async () => { await _dynamicPropertyValueManager.AddAsync(dynamicPropertyValue); });
+            await WithUnitOfWorkAsync(
+                async () => { await _dynamicPropertyValueManager.AddAsync(dynamicPropertyValue); });
 
             await WithUnitOfWorkAsync(async () =>
             {
@@ -229,7 +234,10 @@ namespace Abp.Zero.SampleApp.Tests.DynamicEntityProperties
 
             dynamicPropertyValue.Value = "Test2";
 
-            await RunAndCheckIfPermissionControlledAsync(async () => { await _dynamicPropertyValueManager.UpdateAsync(dynamicPropertyValue); });
+            await RunAndCheckIfPermissionControlledAsync(async () =>
+            {
+                await _dynamicPropertyValueManager.UpdateAsync(dynamicPropertyValue);
+            });
 
             await WithUnitOfWorkAsync(async () =>
             {
@@ -251,9 +259,13 @@ namespace Abp.Zero.SampleApp.Tests.DynamicEntityProperties
                 TenantId = AbpSession.TenantId
             };
 
-            await WithUnitOfWorkAsync(async () => { await _dynamicPropertyValueManager.AddAsync(dynamicPropertyValue); });
+            await WithUnitOfWorkAsync(
+                async () => { await _dynamicPropertyValueManager.AddAsync(dynamicPropertyValue); });
 
-            await RunAndCheckIfPermissionControlledAsync(async () => { await _dynamicPropertyValueManager.DeleteAsync(dynamicPropertyValue.Id); });
+            await RunAndCheckIfPermissionControlledAsync(async () =>
+            {
+                await _dynamicPropertyValueManager.DeleteAsync(dynamicPropertyValue.Id);
+            });
 
             await WithUnitOfWorkAsync(async () =>
             {
@@ -293,7 +305,10 @@ namespace Abp.Zero.SampleApp.Tests.DynamicEntityProperties
                 await _dynamicPropertyValueManager.AddAsync(dynamicPropertyValue2);
             });
 
-            await RunAndCheckIfPermissionControlledAsync(async () => { await _dynamicPropertyValueManager.CleanValuesAsync(dynamicProperty.Id); });
+            await RunAndCheckIfPermissionControlledAsync(async () =>
+            {
+                await _dynamicPropertyValueManager.CleanValuesAsync(dynamicProperty.Id);
+            });
 
             await WithUnitOfWorkAsync(async () =>
             {

@@ -63,30 +63,15 @@ namespace Abp.Runtime.Security
             int? keySize = null,
             byte[] initVectorBytes = null)
         {
-            if (plainText == null)
-            {
-                return null;
-            }
+            if (plainText == null) return null;
 
-            if (passPhrase == null)
-            {
-                passPhrase = DefaultPassPhrase;
-            }
+            if (passPhrase == null) passPhrase = DefaultPassPhrase;
 
-            if (salt == null)
-            {
-                salt = DefaultSalt;
-            }
+            if (salt == null) salt = DefaultSalt;
 
-            if (keySize == null)
-            {
-                keySize = DefaultKeysize;
-            }
+            if (keySize == null) keySize = DefaultKeysize;
 
-            if (initVectorBytes == null)
-            {
-                initVectorBytes = InitVectorBytes;
-            }
+            if (initVectorBytes == null) initVectorBytes = InitVectorBytes;
 
             var plainTextBytes = Encoding.UTF8.GetBytes(plainText);
             using (var password = new Rfc2898DeriveBytes(passPhrase, salt))
@@ -119,30 +104,15 @@ namespace Abp.Runtime.Security
             int? keySize = null,
             byte[] initVectorBytes = null)
         {
-            if (string.IsNullOrEmpty(cipherText))
-            {
-                return null;
-            }
+            if (string.IsNullOrEmpty(cipherText)) return null;
 
-            if (passPhrase == null)
-            {
-                passPhrase = DefaultPassPhrase;
-            }
+            if (passPhrase == null) passPhrase = DefaultPassPhrase;
 
-            if (salt == null)
-            {
-                salt = DefaultSalt;
-            }
+            if (salt == null) salt = DefaultSalt;
 
-            if (keySize == null)
-            {
-                keySize = DefaultKeysize;
-            }
+            if (keySize == null) keySize = DefaultKeysize;
 
-            if (initVectorBytes == null)
-            {
-                initVectorBytes = InitVectorBytes;
-            }
+            if (initVectorBytes == null) initVectorBytes = InitVectorBytes;
 
             var cipherTextBytes = Convert.FromBase64String(cipherText);
             using (var password = new Rfc2898DeriveBytes(passPhrase, salt))
@@ -166,11 +136,8 @@ namespace Abp.Runtime.Security
                                         totalDecryptedByteCount,
                                         plainTextBytes.Length - totalDecryptedByteCount
                                     );
-                                    
-                                    if (decryptedByteCount == 0)
-                                    {
-                                        break;
-                                    }
+
+                                    if (decryptedByteCount == 0) break;
 
                                     totalDecryptedByteCount += decryptedByteCount;
                                 }

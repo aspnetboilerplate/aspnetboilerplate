@@ -14,11 +14,16 @@ namespace Abp.Zero.SampleApp.Authorization
             context.CreatePermission("Permission2", new FixedLocalizableString("Permission2"));
             context.CreatePermission("Permission3", new FixedLocalizableString("Permission3"));
             context.CreatePermission("Permission4", new FixedLocalizableString("Permission4"));
-            context.CreatePermission("Permission5", new FixedLocalizableString("Permission5"), multiTenancySides: MultiTenancySides.Host);
-            context.CreatePermission("PermissionWithFeatureDependency", new FixedLocalizableString("PermissionWithFeatureDependency"), featureDependency: new SimpleFeatureDependency(AppFeatureProvider.MyBoolFeature));
+            context.CreatePermission("Permission5", new FixedLocalizableString("Permission5"),
+                multiTenancySides: MultiTenancySides.Host);
+            context.CreatePermission("PermissionWithFeatureDependency",
+                new FixedLocalizableString("PermissionWithFeatureDependency"),
+                featureDependency: new SimpleFeatureDependency(AppFeatureProvider.MyBoolFeature));
 
-            var firstLevelChilPermission1 = permission1.CreateChildPermission("FirstLevelChilPermission1", new FixedLocalizableString("FirstLevelChilPermission1"));
-            firstLevelChilPermission1.CreateChildPermission("SecondLevelChildPermission1", new FixedLocalizableString("SecondLevelChildPermission1"));
+            var firstLevelChilPermission1 = permission1.CreateChildPermission("FirstLevelChilPermission1",
+                new FixedLocalizableString("FirstLevelChilPermission1"));
+            firstLevelChilPermission1.CreateChildPermission("SecondLevelChildPermission1",
+                new FixedLocalizableString("SecondLevelChildPermission1"));
         }
     }
 }

@@ -20,10 +20,7 @@ namespace Abp.Runtime.Caching.Redis
         public override object Deserialize(RedisValue objbyte)
         {
             string serializedObj = objbyte;
-            if (!serializedObj.StartsWith(ProtoBufPrefix))
-            {
-                return base.Deserialize(objbyte);
-            }
+            if (!serializedObj.StartsWith(ProtoBufPrefix)) return base.Deserialize(objbyte);
 
             serializedObj = serializedObj.Substring(ProtoBufPrefix.Length);
             var typeSeperatorIndex = serializedObj.IndexOf(TypeSeperator, StringComparison.OrdinalIgnoreCase);
@@ -47,9 +44,7 @@ namespace Abp.Runtime.Caching.Redis
         public override RedisValue Serialize(object value, Type type)
         {
             if (!type.GetTypeInfo().IsDefined(typeof(ProtoContractAttribute), false))
-            {
                 return base.Serialize(value, type);
-            }
 
             using (var memoryStream = new MemoryStream())
             {

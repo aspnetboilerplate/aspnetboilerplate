@@ -25,7 +25,7 @@ namespace Abp.WebApi.Security.AntiForgery
         private readonly IAbpAntiForgeryWebConfiguration _antiForgeryWebConfiguration;
 
         public AbpAntiForgeryApiFilter(
-            IAbpAntiForgeryManager abpAntiForgeryManager, 
+            IAbpAntiForgeryManager abpAntiForgeryManager,
             IAbpWebApiConfiguration webApiConfiguration,
             IAbpAntiForgeryWebConfiguration antiForgeryWebConfiguration)
         {
@@ -41,20 +41,14 @@ namespace Abp.WebApi.Security.AntiForgery
             Func<Task<HttpResponseMessage>> continuation)
         {
             var methodInfo = actionContext.ActionDescriptor.GetMethodInfoOrNull();
-            if (methodInfo == null)
-            {
-                return await continuation();
-            }
+            if (methodInfo == null) return await continuation();
 
-            if (!_abpAntiForgeryManager.ShouldValidate(_antiForgeryWebConfiguration, methodInfo, actionContext.Request.Method.ToHttpVerb(), _webApiConfiguration.IsAutomaticAntiForgeryValidationEnabled))
-            {
-                return await continuation();
-            }
+            if (!_abpAntiForgeryManager.ShouldValidate(_antiForgeryWebConfiguration, methodInfo,
+                    actionContext.Request.Method.ToHttpVerb(),
+                    _webApiConfiguration.IsAutomaticAntiForgeryValidationEnabled)) return await continuation();
 
             if (!_abpAntiForgeryManager.IsValid(actionContext.Request.Headers))
-            {
                 return CreateErrorResponse(actionContext, "Empty or invalid anti forgery header token.");
-            }
 
             return await continuation();
         }

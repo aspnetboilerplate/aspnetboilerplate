@@ -55,7 +55,6 @@ namespace Abp.Tests.Timing
                 var exceptions = new List<string>();
 
                 foreach (var timezone in allTimezones)
-                {
                     try
                     {
                         TimezoneHelper.WindowsToIana(timezone);
@@ -64,31 +63,21 @@ namespace Abp.Tests.Timing
                     {
                         exceptions.Add(ex.Message);
                     }
-                }
 
-                if (exceptions.Any())
-                {
-                    throw new Exception(exceptions.JoinAsString(Environment.NewLine));
-                }
+                if (exceptions.Any()) throw new Exception(exceptions.JoinAsString(Environment.NewLine));
             });
         }
 
         [Fact]
         public void Should_Throw_Exception_For_Unknown_Windows_Timezone_Id()
         {
-            Should.Throw<Exception>(() =>
-            {
-                TimezoneHelper.WindowsToIana("abc");
-            });
+            Should.Throw<Exception>(() => { TimezoneHelper.WindowsToIana("abc"); });
         }
 
         [Fact]
         public void Should_Throw_Exception_For_Unknown_Iana_Timezone_Id()
         {
-            Should.Throw<Exception>(() =>
-            {
-                TimezoneHelper.IanaToWindows("cba");
-            });
+            Should.Throw<Exception>(() => { TimezoneHelper.IanaToWindows("cba"); });
         }
 
         [Fact]
@@ -102,8 +91,8 @@ namespace Abp.Tests.Timing
         [Fact]
         public void ConvertToDateTimeOffset_Date_With_America_NewYork_TimeZone_Should_Return_Correct_DateTimeOffset()
         {
-            var testDate = new DateTime(1980,11,20);
-            var timeSpan = new TimeSpan(-5,0,0);
+            var testDate = new DateTime(1980, 11, 20);
+            var timeSpan = new TimeSpan(-5, 0, 0);
 
             DateTimeOffset? dateTimeOffset = TimezoneHelper.ConvertToDateTimeOffset(testDate, "America/New_York");
 
@@ -113,7 +102,8 @@ namespace Abp.Tests.Timing
         }
 
         [Fact]
-        public void ConvertToDateTimeOffset_Date_With_America_NewYork_TimeZone_Should_Return_Correct_DateTimeOffset_With_DaylightSavings()
+        public void
+            ConvertToDateTimeOffset_Date_With_America_NewYork_TimeZone_Should_Return_Correct_DateTimeOffset_With_DaylightSavings()
         {
             var testDate = new DateTime(1980, 5, 20);
             var timeSpan = new TimeSpan(-4, 0, 0);
@@ -126,7 +116,8 @@ namespace Abp.Tests.Timing
         }
 
         [Fact]
-        public void ConvertToDateTimeOffset_Dates_With_America_Phoenix_TimeZone_Should_Return_Correct_DateTimeOffsests_With_No_DaylightSavings()
+        public void
+            ConvertToDateTimeOffset_Dates_With_America_Phoenix_TimeZone_Should_Return_Correct_DateTimeOffsests_With_No_DaylightSavings()
         {
             var testDate = new DateTime(1980, 5, 20);
             var timeSpan = new TimeSpan(-7, 0, 0);

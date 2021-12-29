@@ -40,10 +40,7 @@ namespace Abp.Authorization.Roles
             _unitOfWorkManager = unitOfWorkManager;
         }
 
-        public virtual IQueryable<TRole> Roles
-        {
-            get { return _roleRepository.GetAll(); }
-        }
+        public virtual IQueryable<TRole> Roles => _roleRepository.GetAll();
 
         public virtual async Task CreateAsync(TRole role)
         {
@@ -117,10 +114,7 @@ namespace Abp.Authorization.Roles
         {
             await _unitOfWorkManager.WithUnitOfWorkAsync(async () =>
             {
-                if (await HasPermissionAsync(role.Id, permissionGrant))
-                {
-                    return;
-                }
+                if (await HasPermissionAsync(role.Id, permissionGrant)) return;
 
                 await _rolePermissionSettingRepository.InsertAsync(
                     new RolePermissionSetting
@@ -172,7 +166,7 @@ namespace Abp.Authorization.Roles
         {
             return _unitOfWorkManager.WithUnitOfWork(() =>
             {
-                return (_rolePermissionSettingRepository.GetAllList(p => p.RoleId == roleId))
+                return _rolePermissionSettingRepository.GetAllList(p => p.RoleId == roleId)
                     .Select(p => new PermissionGrantInfo(p.Name, p.IsGranted))
                     .ToList();
             });

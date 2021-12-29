@@ -11,7 +11,6 @@ namespace Abp.Timing
     {
         public ZonedDateTimeRange()
         {
-            
         }
 
         public ZonedDateTimeRange(string timezone)
@@ -71,10 +70,7 @@ namespace Abp.Timing
             set
             {
                 var localized = TimezoneHelper.ConvertFromUtc(value, Timezone);
-                if (localized.HasValue)
-                {
-                    StartTime = localized.Value;
-                }
+                if (localized.HasValue) StartTime = localized.Value;
             }
         }
 
@@ -87,10 +83,7 @@ namespace Abp.Timing
             set
             {
                 var localized = TimezoneHelper.ConvertFromUtc(value, Timezone);
-                if (localized.HasValue)
-                {
-                    EndTime = localized.Value;
-                }
+                if (localized.HasValue) EndTime = localized.Value;
             }
         }
 
@@ -208,7 +201,8 @@ namespace Abp.Timing
             get
             {
                 var now = Now;
-                return new ZonedDateTimeRange(new DateTime(now.Year - 1, 1, 1), new DateTime(now.Year, 1, 1).AddMilliseconds(-1), Timezone);
+                return new ZonedDateTimeRange(new DateTime(now.Year - 1, 1, 1),
+                    new DateTime(now.Year, 1, 1).AddMilliseconds(-1), Timezone);
             }
         }
 
@@ -220,7 +214,8 @@ namespace Abp.Timing
             get
             {
                 var now = Now;
-                return new ZonedDateTimeRange(new DateTime(now.Year, 1, 1), new DateTime(now.Year + 1, 1, 1).AddMilliseconds(-1), Timezone);
+                return new ZonedDateTimeRange(new DateTime(now.Year, 1, 1),
+                    new DateTime(now.Year + 1, 1, 1).AddMilliseconds(-1), Timezone);
             }
         }
 
@@ -232,7 +227,8 @@ namespace Abp.Timing
             get
             {
                 var now = Now;
-                return new ZonedDateTimeRange(new DateTime(now.Year + 1, 1, 1), new DateTime(now.Year + 2, 1, 1).AddMilliseconds(-1), Timezone);
+                return new ZonedDateTimeRange(new DateTime(now.Year + 1, 1, 1),
+                    new DateTime(now.Year + 2, 1, 1).AddMilliseconds(-1), Timezone);
             }
         }
 

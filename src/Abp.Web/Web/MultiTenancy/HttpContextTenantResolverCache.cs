@@ -10,18 +10,12 @@ namespace Abp.Web.MultiTenancy
 
         public TenantResolverCacheItem Value
         {
-            get
-            {
-                return HttpContext.Current?.Items[CacheItemKey] as TenantResolverCacheItem;
-            }
+            get => HttpContext.Current?.Items[CacheItemKey] as TenantResolverCacheItem;
 
             set
             {
                 var httpContext = HttpContext.Current;
-                if (httpContext == null)
-                {
-                    return;
-                }
+                if (httpContext == null) return;
 
                 httpContext.Items[CacheItemKey] = value;
             }

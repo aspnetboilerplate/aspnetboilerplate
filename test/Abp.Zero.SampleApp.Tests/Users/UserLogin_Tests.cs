@@ -37,12 +37,12 @@ namespace Abp.Zero.SampleApp.Tests.Users
             UsingDbContext(context =>
             {
                 context.UserLoginAttempts.Count().ShouldBe(1);
-                context.UserLoginAttempts.FirstOrDefault(a => 
+                context.UserLoginAttempts.FirstOrDefault(a =>
                     a.TenantId == AbpSession.TenantId &&
                     a.UserId == loginResult.User.Id &&
                     a.UserNameOrEmailAddress == "user1" &&
                     a.Result == AbpLoginResultType.Success
-                    ).ShouldNotBeNull();
+                ).ShouldNotBeNull();
             });
         }
 
@@ -55,14 +55,14 @@ namespace Abp.Zero.SampleApp.Tests.Users
             loginResult.Result.ShouldBe(AbpLoginResultType.InvalidUserNameOrEmailAddress);
             loginResult.User.ShouldBe(null);
             loginResult.Identity.ShouldBe(null);
-            
+
             UsingDbContext(context =>
             {
                 context.UserLoginAttempts.Count().ShouldBe(1);
                 context.UserLoginAttempts.FirstOrDefault(a =>
                     a.UserNameOrEmailAddress == "wrongUserName" &&
                     a.Result == AbpLoginResultType.InvalidUserNameOrEmailAddress
-                    ).ShouldNotBeNull();
+                ).ShouldNotBeNull();
             });
         }
 
@@ -88,13 +88,16 @@ namespace Abp.Zero.SampleApp.Tests.Users
             AbpSession.UserId = 1;
 
             //Email confirmation is disabled as default
-            (await _logInManager.LoginAsync("user1", "123qwe", Tenant.DefaultTenantName)).Result.ShouldBe(AbpLoginResultType.Success);
+            (await _logInManager.LoginAsync("user1", "123qwe", Tenant.DefaultTenantName)).Result.ShouldBe(
+                AbpLoginResultType.Success);
 
             //Change configuration
-            await Resolve<ISettingManager>().ChangeSettingForTenantAsync(AbpSession.GetTenantId(), AbpZeroSettingNames.UserManagement.IsEmailConfirmationRequiredForLogin, "true");
+            await Resolve<ISettingManager>().ChangeSettingForTenantAsync(AbpSession.GetTenantId(),
+                AbpZeroSettingNames.UserManagement.IsEmailConfirmationRequiredForLogin, "true");
 
             //Email confirmation is enabled now
-            (await _logInManager.LoginAsync("user1", "123qwe", Tenant.DefaultTenantName)).Result.ShouldBe(AbpLoginResultType.UserEmailIsNotConfirmed);
+            (await _logInManager.LoginAsync("user1", "123qwe", Tenant.DefaultTenantName)).Result.ShouldBe(
+                AbpLoginResultType.UserEmailIsNotConfirmed);
         }
 
         [Fact]

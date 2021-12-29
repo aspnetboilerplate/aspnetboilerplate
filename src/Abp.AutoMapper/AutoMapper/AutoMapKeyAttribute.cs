@@ -6,6 +6,5 @@ namespace Abp.AutoMapper
 {
     public class AutoMapKeyAttribute : Attribute
     {
-
     }
 }

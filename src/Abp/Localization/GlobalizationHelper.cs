@@ -8,14 +8,12 @@ namespace Abp.Localization
     {
         public static bool IsValidCultureCode(string cultureCode)
         {
-            if (cultureCode.IsNullOrWhiteSpace())
-            {
-                return false;
-            }
+            if (cultureCode.IsNullOrWhiteSpace()) return false;
 
             try
             {
-                return CultureInfo.GetCultures(CultureTypes.AllCultures).Any(e => e.Name.ToLowerInvariant() == cultureCode.ToLowerInvariant());
+                return CultureInfo.GetCultures(CultureTypes.AllCultures)
+                    .Any(e => e.Name.ToLowerInvariant() == cultureCode.ToLowerInvariant());
             }
             catch (CultureNotFoundException)
             {

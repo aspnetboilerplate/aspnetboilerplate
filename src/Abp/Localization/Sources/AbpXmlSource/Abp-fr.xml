@@ -1,24 +1,25 @@
-﻿<?xml version="1.0" encoding="utf-8" ?>
+﻿<?xml version="1.0" encoding="utf-8"?>
+
 <localizationDictionary culture="fr">
-  <texts>
-    <text name="SmtpHost">Serveur SMTP</text>
-    <text name="SmtpPort">Port SMTP</text>
-    <text name="Username">Utilisateur</text>
-    <text name="Password">Mot de passe</text>
-    <text name="DomainName">Domaine</text>
-    <text name="UseSSL">Activer le chiffrement SSL</text>
-    <text name="UseDefaultCredentials">Utiliser l'authentification par défaut</text>
-    <text name="DefaultFromSenderEmailAddress">Adresse email d'envoi par défaut</text>
-    <text name="DefaultFromSenderDisplayName">Nom affiché de l'émetteur par défaut</text>
-    <text name="DefaultLanguage">Language par défaut</text>
-    <text name="ReceiveNotifications">Recevoir les notifications</text>
-    <text name="CurrentUserDidNotLoginToTheApplication">L'utilisateur courant ne peut pas s'authentifier à l'application!</text>
-    <text name="TimeZone">Fuseau horaire</text>
-    <text name="AllOfThesePermissionsMustBeGranted">Les autorisations requises ne sont pas accordées. Les autorisations suivantes doivent toutes être accordées : {0}</text>
-    <text name="AtLeastOneOfThesePermissionsMustBeGranted">Les autorisations requises ne sont pas accordées. Au moins une des autorisations suivantes doit être accordée : {0}</text>
-    <text name="FeatureIsNotEnabled">La fonctionnalité n'est pas activée:{0}</text>
-    <text name="AllOfTheseFeaturesMustBeEnabled">Les fonctionnalités requises ne sont pas activées. Toutes ces fonctionnalités doivent être activées: {0}</text>
-    <text name="AtLeastOneOfTheseFeaturesMustBeEnabled">Les fonctionnalités requises ne sont pas activées. Au moins une de ces fonctionnalités doit être activée: {0}</text>
-    <text name="MainMenu">Menu principal</text>    
-  </texts>
+	<texts>
+		<text name="SmtpHost">Serveur SMTP</text>
+		<text name="SmtpPort">Port SMTP</text>
+		<text name="Username">Utilisateur</text>
+		<text name="Password">Mot de passe</text>
+		<text name="DomainName">Domaine</text>
+		<text name="UseSSL">Activer le chiffrement SSL</text>
+		<text name="UseDefaultCredentials">Utiliser l'authentification par défaut</text>
+		<text name="DefaultFromSenderEmailAddress">Adresse email d'envoi par défaut</text>
+		<text name="DefaultFromSenderDisplayName">Nom affiché de l'émetteur par défaut</text>
+		<text name="DefaultLanguage">Language par défaut</text>
+		<text name="ReceiveNotifications">Recevoir les notifications</text>
+		<text name="CurrentUserDidNotLoginToTheApplication">L'utilisateur courant ne peut pas s'authentifier à l'application!</text>
+		<text name="TimeZone">Fuseau horaire</text>
+		<text name="AllOfThesePermissionsMustBeGranted">Les autorisations requises ne sont pas accordées. Les autorisations suivantes doivent toutes être accordées : {0}</text>
+		<text name="AtLeastOneOfThesePermissionsMustBeGranted">Les autorisations requises ne sont pas accordées. Au moins une des autorisations suivantes doit être accordée : {0}</text>
+		<text name="FeatureIsNotEnabled">La fonctionnalité n'est pas activée:{0}</text>
+		<text name="AllOfTheseFeaturesMustBeEnabled">Les fonctionnalités requises ne sont pas activées. Toutes ces fonctionnalités doivent être activées: {0}</text>
+		<text name="AtLeastOneOfTheseFeaturesMustBeEnabled">Les fonctionnalités requises ne sont pas activées. Au moins une de ces fonctionnalités doit être activée: {0}</text>
+		<text name="MainMenu">Menu principal</text>
+	</texts>
 </localizationDictionary>

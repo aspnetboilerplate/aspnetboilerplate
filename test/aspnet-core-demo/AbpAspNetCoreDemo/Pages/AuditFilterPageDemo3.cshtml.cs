@@ -2,21 +2,18 @@
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 
-namespace AbpAspNetCoreDemo.Pages
+namespace AbpAspNetCoreDemo.Pages;
+
+[IgnoreAntiforgeryToken]
+public class AuditFilterPageDemo3Model : PageModel
 {
-    [IgnoreAntiforgeryToken]
-    public class AuditFilterPageDemo3Model : PageModel
+    [DisableAuditing]
+    public void OnGet()
     {
-        [DisableAuditing]
-        public void OnGet()
-        {
+    }
 
-        }
-
-        [DisableAuditing]
-        public void OnPost()
-        {
-
-        }
+    [DisableAuditing]
+    public void OnPost()
+    {
     }
 }

@@ -47,7 +47,7 @@ namespace Abp.Zero.SampleApp.Organizations
     //        newChild.ParentId.ShouldBe(ou11.Id);
     //        newChild.Code.ShouldBe(OrganizationUnit.CreateCode(1, 1, 3));
     //    }
-        
+
     //    [Fact]
     //    public async Task Should_Not_Create_OU_With_Same_Name_In_Same_Level()
     //    {

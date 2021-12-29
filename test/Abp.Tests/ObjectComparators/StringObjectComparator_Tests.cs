@@ -45,7 +45,8 @@ namespace Abp.Tests.ObjectComparators
 
         [Theory]
         [MemberData(nameof(Should_Compare_Data_Generator))]
-        public override void Should_Compare_With_ObjectComparatorCondition(string baseObject, string compareObject, string compareType, bool result)
+        public override void Should_Compare_With_ObjectComparatorCondition(string baseObject, string compareObject,
+            string compareType, bool result)
         {
             base.Should_Compare_With_ObjectComparatorCondition(baseObject, compareObject, compareType, result);
         }

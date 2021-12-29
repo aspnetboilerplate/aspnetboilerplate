@@ -32,8 +32,10 @@ namespace Abp.Tests.Dependency
         public void Should_Override_When_Using_IsDefault()
         {
             //Arrange
-            LocalIocManager.IocContainer.Register(Component.For<IMyService>().ImplementedBy<MyImpl1>().LifestyleTransient());
-            LocalIocManager.IocContainer.Register(Component.For<IMyService>().ImplementedBy<MyImpl2>().LifestyleTransient().IsDefault());
+            LocalIocManager.IocContainer.Register(Component.For<IMyService>().ImplementedBy<MyImpl1>()
+                .LifestyleTransient());
+            LocalIocManager.IocContainer.Register(Component.For<IMyService>().ImplementedBy<MyImpl2>()
+                .LifestyleTransient().IsDefault());
 
             //Act
             var service = LocalIocManager.Resolve<IMyService>();
@@ -50,9 +52,12 @@ namespace Abp.Tests.Dependency
         public void Should_Override_When_Using_IsDefault_Twice()
         {
             //Arrange
-            LocalIocManager.IocContainer.Register(Component.For<IMyService>().ImplementedBy<MyImpl1>().LifestyleTransient());
-            LocalIocManager.IocContainer.Register(Component.For<IMyService>().ImplementedBy<MyImpl2>().LifestyleTransient().IsDefault());
-            LocalIocManager.IocContainer.Register(Component.For<IMyService>().ImplementedBy<MyImpl3>().LifestyleTransient().IsDefault());
+            LocalIocManager.IocContainer.Register(Component.For<IMyService>().ImplementedBy<MyImpl1>()
+                .LifestyleTransient());
+            LocalIocManager.IocContainer.Register(Component.For<IMyService>().ImplementedBy<MyImpl2>()
+                .LifestyleTransient().IsDefault());
+            LocalIocManager.IocContainer.Register(Component.For<IMyService>().ImplementedBy<MyImpl3>()
+                .LifestyleTransient().IsDefault());
 
             //Act
             var service = LocalIocManager.Resolve<IMyService>();
@@ -70,9 +75,12 @@ namespace Abp.Tests.Dependency
         public void Should_Get_Default_Service()
         {
             //Arrange
-            LocalIocManager.IocContainer.Register(Component.For<IMyService>().ImplementedBy<MyImpl1>().LifestyleTransient());
-            LocalIocManager.IocContainer.Register(Component.For<IMyService>().ImplementedBy<MyImpl2>().LifestyleTransient().IsDefault());
-            LocalIocManager.IocContainer.Register(Component.For<IMyService>().ImplementedBy<MyImpl3>().LifestyleTransient());
+            LocalIocManager.IocContainer.Register(Component.For<IMyService>().ImplementedBy<MyImpl1>()
+                .LifestyleTransient());
+            LocalIocManager.IocContainer.Register(Component.For<IMyService>().ImplementedBy<MyImpl2>()
+                .LifestyleTransient().IsDefault());
+            LocalIocManager.IocContainer.Register(Component.For<IMyService>().ImplementedBy<MyImpl3>()
+                .LifestyleTransient());
 
             //Act
             var service = LocalIocManager.Resolve<IMyService>();
@@ -88,17 +96,14 @@ namespace Abp.Tests.Dependency
 
         public class MyImpl1 : IMyService
         {
-            
         }
 
         public class MyImpl2 : IMyService
         {
-
         }
 
         public class MyImpl3 : IMyService
         {
-
         }
 
         public interface IMyService

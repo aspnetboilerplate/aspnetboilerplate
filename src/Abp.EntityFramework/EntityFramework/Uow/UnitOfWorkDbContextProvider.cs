@@ -10,10 +10,10 @@ namespace Abp.EntityFramework.Uow
     /// active unit of work.
     /// </summary>
     /// <typeparam name="TDbContext">Type of the DbContext</typeparam>
-    public class UnitOfWorkDbContextProvider<TDbContext> : IDbContextProvider<TDbContext> 
+    public class UnitOfWorkDbContextProvider<TDbContext> : IDbContextProvider<TDbContext>
         where TDbContext : DbContext
     {
-       private readonly ICurrentUnitOfWorkProvider _currentUnitOfWorkProvider;
+        private readonly ICurrentUnitOfWorkProvider _currentUnitOfWorkProvider;
 
         /// <summary>
         /// Creates a new <see cref="UnitOfWorkDbContextProvider{TDbContext}"/>.

@@ -2,14 +2,14 @@
 using Abp.Reflection.Extensions;
 using Abp.Zero.EntityFrameworkCore;
 
-namespace Abp.IdentityServer4
+namespace Abp.IdentityServer4;
+
+[DependsOn(typeof(AbpZeroCoreIdentityServerModule), typeof(AbpZeroCoreEntityFrameworkCoreModule))]
+public class AbpZeroCoreIdentityServerEntityFrameworkCoreModule : AbpModule
 {
-    [DependsOn(typeof(AbpZeroCoreIdentityServerModule), typeof(AbpZeroCoreEntityFrameworkCoreModule))]
-    public class AbpZeroCoreIdentityServerEntityFrameworkCoreModule : AbpModule
+    public override void Initialize()
     {
-        public override void Initialize()
-        {
-            IocManager.RegisterAssemblyByConvention(typeof(AbpZeroCoreIdentityServerEntityFrameworkCoreModule).GetAssembly());
-        }
+        IocManager.RegisterAssemblyByConvention(
+            typeof(AbpZeroCoreIdentityServerEntityFrameworkCoreModule).GetAssembly());
     }
 }

@@ -11,10 +11,11 @@ namespace Abp.BackgroundJobs
             TEventData eventData,
             BackgroundJobPriority priority = BackgroundJobPriority.Normal,
             TimeSpan? delay = null
-          )
-          where TEventData : EventData
+        )
+            where TEventData : EventData
         {
-            return backgroundJobManager.EnqueueAsync<EventTriggerAsyncBackgroundJob<TEventData>,TEventData>(eventData, priority, delay);
+            return backgroundJobManager.EnqueueAsync<EventTriggerAsyncBackgroundJob<TEventData>, TEventData>(eventData,
+                priority, delay);
         }
     }
 }

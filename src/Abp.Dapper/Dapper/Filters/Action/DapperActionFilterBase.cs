@@ -1,7 +1,6 @@
 ﻿using System;
 using System.ComponentModel.DataAnnotations.Schema;
 using System.Reflection;
-
 using Abp.Domain.Entities;
 using Abp.Domain.Uow;
 using Abp.Reflection;
@@ -25,10 +24,7 @@ namespace Abp.Dapper.Filters.Action
 
         protected virtual long? GetAuditUserId()
         {
-            if (AbpSession.UserId.HasValue && CurrentUnitOfWorkProvider?.Current != null)
-            {
-                return AbpSession.UserId;
-            }
+            if (AbpSession.UserId.HasValue && CurrentUnitOfWorkProvider?.Current != null) return AbpSession.UserId;
 
             return null;
         }
@@ -40,20 +36,16 @@ namespace Abp.Dapper.Filters.Action
             {
                 Type entityType = entityAsObj.GetType();
                 PropertyInfo idProperty = entityType.GetProperty("Id");
-                var dbGeneratedAttr = ReflectionHelper.GetSingleAttributeOrDefault<DatabaseGeneratedAttribute>(idProperty);
+                var dbGeneratedAttr =
+                    ReflectionHelper.GetSingleAttributeOrDefault<DatabaseGeneratedAttribute>(idProperty);
                 if (dbGeneratedAttr == null || dbGeneratedAttr.DatabaseGeneratedOption == DatabaseGeneratedOption.None)
-                {
                     entity.Id = GuidGenerator.Create();
-                }
             }
         }
 
         protected virtual int? GetCurrentTenantIdOrNull()
         {
-            if (CurrentUnitOfWorkProvider?.Current != null)
-            {
-                return CurrentUnitOfWorkProvider.Current.GetTenantId();
-            }
+            if (CurrentUnitOfWorkProvider?.Current != null) return CurrentUnitOfWorkProvider.Current.GetTenantId();
 
             return AbpSession.TenantId;
         }

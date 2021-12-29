@@ -15,8 +15,7 @@ namespace Abp.TestBase.SampleApplication.People
         [StringLength(MaxNameLength)]
         public virtual string Name { get; set; }
 
-        [ForeignKey("ContactListId")]
-        public virtual ContactList ContactList { get; set; }
+        [ForeignKey("ContactListId")] public virtual ContactList ContactList { get; set; }
 
         public virtual int ContactListId { get; set; }
 

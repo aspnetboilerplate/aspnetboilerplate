@@ -41,16 +41,13 @@ namespace Abp.Localization.Dictionaries.Json
                                                resouceName.EndsWith($"{SourceName}-{culture.Name}.json", true,
                                                    null))).ToList();
             foreach (var resourceName in resourceNames)
-            {
                 if (resourceName.StartsWith(_rootNamespace))
-                {
                     using (var stream = _assembly.GetManifestResourceStream(resourceName))
                     {
                         var jsonString = Utf8Helper.ReadStringFromStream(stream);
-                        InitializeDictionary(CreateJsonLocalizationDictionary(jsonString), isDefault: resourceName.EndsWith(SourceName + ".json"));
+                        InitializeDictionary(CreateJsonLocalizationDictionary(jsonString),
+                            resourceName.EndsWith(SourceName + ".json"));
                     }
-                }
-            }
         }
 
         protected virtual JsonLocalizationDictionary CreateJsonLocalizationDictionary(string jsonString)

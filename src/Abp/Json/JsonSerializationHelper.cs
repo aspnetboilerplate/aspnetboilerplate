@@ -32,7 +32,7 @@ namespace Abp.Json
                 type.AssemblyQualifiedName,
                 TypeSeperator,
                 serialized
-                );
+            );
         }
 
         /// <summary>

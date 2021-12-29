@@ -44,7 +44,8 @@ namespace Abp.NHibernate
 
         private static object GetFieldValue(Type type, object instance, string fieldName)
         {
-            return type.GetField(fieldName, BindingFlags.Instance | BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Static)
+            return type.GetField(fieldName,
+                    BindingFlags.Instance | BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Static)
                 .GetValue(instance);
         }
     }

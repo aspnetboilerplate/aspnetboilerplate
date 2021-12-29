@@ -23,7 +23,6 @@ namespace Abp.Web.Models
         /// </summary>
         public ValidationErrorInfo()
         {
-
         }
 
         /// <summary>
@@ -34,7 +33,7 @@ namespace Abp.Web.Models
         {
             Message = message;
         }
-        
+
         /// <summary>
         /// Creates a new instance of <see cref="ValidationErrorInfo"/>.
         /// </summary>
@@ -54,7 +53,6 @@ namespace Abp.Web.Models
         public ValidationErrorInfo(string message, string member)
             : this(message, new[] { member })
         {
-
         }
     }
 }

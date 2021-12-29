@@ -6,7 +6,8 @@ namespace Abp.DynamicEntityProperties
 {
     public class NullDynamicEntityPropertyDefinitionManager : IDynamicEntityPropertyDefinitionManager
     {
-        public static NullDynamicEntityPropertyDefinitionManager Instance = new NullDynamicEntityPropertyDefinitionManager();
+        public static NullDynamicEntityPropertyDefinitionManager Instance =
+            new NullDynamicEntityPropertyDefinitionManager();
 
         public void AddAllowedInputType<TInputType>() where TInputType : IInputType
         {
@@ -34,7 +35,6 @@ namespace Abp.DynamicEntityProperties
 
         public void AddEntity<TEntity>() where TEntity : IEntity<int>
         {
-
         }
 
         public void AddEntity<TEntity, TPrimaryKey>() where TEntity : IEntity<TPrimaryKey>

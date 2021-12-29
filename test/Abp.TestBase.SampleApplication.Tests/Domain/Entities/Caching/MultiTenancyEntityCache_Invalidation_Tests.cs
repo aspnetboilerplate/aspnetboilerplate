@@ -57,11 +57,12 @@ namespace Abp.TestBase.SampleApplication.Tests.Domain.Entities.Caching
             {
                 using (_unitOfWorkManager.Current.SetTenantId(null))
                 {
-                     cachedMessage1 = _messageCache.Get(message1.Id);
+                    cachedMessage1 = _messageCache.Get(message1.Id);
                 }
 
                 uow.Complete();
             }
+
             //Assert: Cached object should be updated
             cachedMessage1.Text.ShouldBe(message1.Text);
         }
@@ -100,6 +101,7 @@ namespace Abp.TestBase.SampleApplication.Tests.Domain.Entities.Caching
 
                 uow.Complete();
             }
+
             //Assert: Cached object should be updated
             cachedMessage1.Text.ShouldBe(message1.Text);
         }
@@ -134,6 +136,7 @@ namespace Abp.TestBase.SampleApplication.Tests.Domain.Entities.Caching
 
                 uow.Complete();
             }
+
             //Assert: Cached object should be not retrieved for other tenant
             cachedMessage1.ShouldBeNull();
         }
@@ -172,35 +175,36 @@ namespace Abp.TestBase.SampleApplication.Tests.Domain.Entities.Caching
 
                 uow.Complete();
             }
+
             //Assert: Cached object should be updated
             cachedContact1.Name.ShouldBe(contact1.Name);
         }
 
         public interface IMessageCache : IMultiTenancyEntityCache<MessageCacheItem>
         {
-
         }
 
         public interface IContactListCache : IMultiTenancyEntityCache<ContactListCacheItem>
         {
-
         }
 
-        public class MessageCache : MayHaveTenantEntityCache<Message, MessageCacheItem>, IMessageCache, ITransientDependency
+        public class MessageCache : MayHaveTenantEntityCache<Message, MessageCacheItem>, IMessageCache,
+            ITransientDependency
         {
-            public MessageCache(ICacheManager cacheManager, IUnitOfWorkManager unitOfWorkManager, IRepository<Message, int> repository)
+            public MessageCache(ICacheManager cacheManager, IUnitOfWorkManager unitOfWorkManager,
+                IRepository<Message, int> repository)
                 : base(cacheManager, unitOfWorkManager, repository)
             {
-
             }
         }
 
-        public class ContactListCache : MustHaveTenantEntityCache<ContactList, ContactListCacheItem>, IContactListCache, ITransientDependency
+        public class ContactListCache : MustHaveTenantEntityCache<ContactList, ContactListCacheItem>, IContactListCache,
+            ITransientDependency
         {
-            public ContactListCache(ICacheManager cacheManager, IUnitOfWorkManager unitOfWorkManager, IRepository<ContactList, int> repository)
+            public ContactListCache(ICacheManager cacheManager, IUnitOfWorkManager unitOfWorkManager,
+                IRepository<ContactList, int> repository)
                 : base(cacheManager, unitOfWorkManager, repository)
             {
-
             }
         }
 

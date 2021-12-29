@@ -17,10 +17,9 @@ namespace Abp.EntityHistory
 
         private NullEntityChangeSetReasonProvider()
             : base(
-                  new DataContextAmbientScopeProvider<ReasonOverride>(new AsyncLocalAmbientDataContext())
+                new DataContextAmbientScopeProvider<ReasonOverride>(new AsyncLocalAmbientDataContext())
             )
         {
-
         }
     }
 }

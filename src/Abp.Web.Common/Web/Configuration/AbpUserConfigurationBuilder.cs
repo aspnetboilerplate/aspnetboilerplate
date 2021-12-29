@@ -126,10 +126,7 @@ namespace Abp.Web.Configuration
                 Languages = languages.ToList()
             };
 
-            if (languages.Count > 0)
-            {
-                config.CurrentLanguage = LanguageManager.CurrentLanguage;
-            }
+            if (languages.Count > 0) config.CurrentLanguage = LanguageManager.CurrentLanguage;
 
             var sources = LocalizationManager.GetAllSources().OrderBy(s => s.Name).ToArray();
             config.Sources = sources.Select(s => new AbpLocalizationSourceDto
@@ -174,12 +171,10 @@ namespace Abp.Web.Configuration
             else
             {
                 foreach (var feature in allFeatures)
-                {
                     config.AllFeatures.Add(feature.Name, new AbpStringValueDto
                     {
                         Value = feature.DefaultValue
                     });
-                }
             }
 
             return config;
@@ -193,18 +188,14 @@ namespace Abp.Web.Configuration
             var grantedPermissionNames = new List<string>();
 
             if (AbpSession.UserId.HasValue)
-            {
                 foreach (var permissionName in allPermissionNames)
-                {
                     if (await PermissionChecker.IsGrantedAsync(permissionName))
-                    {
                         grantedPermissionNames.Add(permissionName);
-                    }
-                }
-            }
 
-            config.AllPermissions = allPermissionNames.ToDictionary(permissionName => permissionName, permissionName => "true");
-            config.GrantedPermissions = grantedPermissionNames.ToDictionary(permissionName => permissionName, permissionName => "true");
+            config.AllPermissions =
+                allPermissionNames.ToDictionary(permissionName => permissionName, permissionName => "true");
+            config.GrantedPermissions =
+                grantedPermissionNames.ToDictionary(permissionName => permissionName, permissionName => "true");
 
             return config;
         }
@@ -232,10 +223,8 @@ namespace Abp.Web.Configuration
                 foreach (var settingValue in settings)
                 {
                     if (!await SettingDefinitionManager.GetSettingDefinition(settingValue.Name).ClientVisibilityProvider
-                        .CheckVisible(scope))
-                    {
+                            .CheckVisible(scope))
                         continue;
-                    }
 
                     config.Values.Add(settingValue.Name, settingValue.Value);
                 }

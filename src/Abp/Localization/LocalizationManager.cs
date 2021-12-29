@@ -24,7 +24,7 @@ namespace Abp.Localization
         /// </summary>
         public LocalizationManager(
             ILanguageManager languageManager,
-            ILocalizationConfiguration configuration, 
+            ILocalizationConfiguration configuration,
             IIocResolver iocResolver)
         {
             Logger = NullLogger.Instance;
@@ -51,9 +51,8 @@ namespace Abp.Localization
             foreach (var source in _configuration.Sources)
             {
                 if (_sources.ContainsKey(source.Name))
-                {
-                    throw new AbpException("There are more than one source with name: " + source.Name + "! Source name must be unique!");
-                }
+                    throw new AbpException("There are more than one source with name: " + source.Name +
+                                           "! Source name must be unique!");
 
                 _sources[source.Name] = source;
                 source.Initialize(_configuration, _iocResolver);
@@ -67,9 +66,7 @@ namespace Abp.Localization
                     {
                         extension.DictionaryProvider.Initialize(source.Name);
                         foreach (var extensionDictionary in extension.DictionaryProvider.Dictionaries.Values)
-                        {
                             dictionaryBasedSource.Extend(extensionDictionary);
-                        }
                     }
                 }
 
@@ -84,21 +81,13 @@ namespace Abp.Localization
         /// <returns>The localization source</returns>
         public ILocalizationSource GetSource(string name)
         {
-            if (!_configuration.IsEnabled)
-            {
-                return NullLocalizationSource.Instance;
-            }
+            if (!_configuration.IsEnabled) return NullLocalizationSource.Instance;
 
-            if (name == null)
-            {
-                throw new ArgumentNullException("name");
-            }
+            if (name == null) throw new ArgumentNullException("name");
 
             ILocalizationSource source;
             if (!_sources.TryGetValue(name, out source))
-            {
                 throw new AbpException("Can not find a source with name: " + name);
-            }
 
             return source;
         }

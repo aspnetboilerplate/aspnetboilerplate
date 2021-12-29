@@ -15,22 +15,15 @@ namespace Abp.Timing
 
         public DateTime Normalize(DateTime dateTime)
         {
-            if (dateTime.Kind == DateTimeKind.Unspecified)
-            {
-                return DateTime.SpecifyKind(dateTime, DateTimeKind.Local);
-            }
+            if (dateTime.Kind == DateTimeKind.Unspecified) return DateTime.SpecifyKind(dateTime, DateTimeKind.Local);
 
-            if (dateTime.Kind == DateTimeKind.Utc)
-            {
-                return dateTime.ToLocalTime();
-            }
+            if (dateTime.Kind == DateTimeKind.Utc) return dateTime.ToLocalTime();
 
             return dateTime;
         }
 
         internal LocalClockProvider()
         {
-
         }
     }
 }

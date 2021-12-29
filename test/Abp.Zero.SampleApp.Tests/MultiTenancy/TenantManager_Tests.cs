@@ -24,7 +24,7 @@ namespace Abp.Zero.SampleApp.Tests.MultiTenancy
         public async Task Should_Not_Create_Duplicate_Tenant()
         {
             await _tenantManager.CreateAsync(new Tenant("Tenant-X", "Tenant X"));
-            
+
             //Trying to re-create with same tenancy name
 
             await Assert.ThrowsAnyAsync<AbpException>(async () =>
@@ -50,6 +50,5 @@ namespace Abp.Zero.SampleApp.Tests.MultiTenancy
                 await uow.CompleteAsync();
             }
         }
-
     }
 }

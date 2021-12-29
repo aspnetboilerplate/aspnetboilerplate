@@ -8,18 +8,18 @@ using Quartz;
 
 namespace Abp.Quartz
 {
-    [DependsOn(typeof (AbpKernelModule))]
+    [DependsOn(typeof(AbpKernelModule))]
     public class AbpQuartzModule : AbpModule
     {
         private static readonly OneTimeRunner OneTimeRunner = new OneTimeRunner();
-        
+
         public override void PreInitialize()
         {
             IocManager.Register<IAbpQuartzConfiguration, AbpQuartzConfiguration>();
 
             OneTimeRunner.Run(() =>
             {
-                Configuration.Modules.AbpQuartz().Scheduler.JobFactory = new AbpQuartzJobFactory(IocManager); 
+                Configuration.Modules.AbpQuartz().Scheduler.JobFactory = new AbpQuartzJobFactory(IocManager);
             });
         }
 
@@ -32,12 +32,11 @@ namespace Abp.Quartz
         {
             IocManager.RegisterIfNot<IJobListener, AbpQuartzJobListener>();
 
-            Configuration.Modules.AbpQuartz().Scheduler.ListenerManager.AddJobListener(IocManager.Resolve<IJobListener>());
+            Configuration.Modules.AbpQuartz().Scheduler.ListenerManager
+                .AddJobListener(IocManager.Resolve<IJobListener>());
 
             if (Configuration.BackgroundJobs.IsJobExecutionEnabled)
-            {
                 IocManager.Resolve<IBackgroundWorkerManager>().Add(IocManager.Resolve<IQuartzScheduleJobManager>());
-            }
         }
     }
 }

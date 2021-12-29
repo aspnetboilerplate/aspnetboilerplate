@@ -38,7 +38,8 @@ namespace Abp.Application.Navigation
         /// <param name="menuItems">List of menu items</param>
         /// <param name="menuItemName">Name of the menu item to move</param>
         /// <param name="targetMenuItemName">Target menu item (to move before it)</param>
-        public static void MoveMenuItemBefore(this IList<MenuItemDefinition> menuItems, string menuItemName, string targetMenuItemName)
+        public static void MoveMenuItemBefore(this IList<MenuItemDefinition> menuItems, string menuItemName,
+            string targetMenuItemName)
         {
             var menuItem = GetMenuItem(menuItems, menuItemName);
             var targetMenuItem = GetMenuItem(menuItems, targetMenuItemName);
@@ -52,7 +53,8 @@ namespace Abp.Application.Navigation
         /// <param name="menuItems">List of menu items</param>
         /// <param name="menuItemName">Name of the menu item to move</param>
         /// <param name="targetMenuItemName">Target menu item (to move after it)</param>
-        public static void MoveMenuItemAfter(this IList<MenuItemDefinition> menuItems, string menuItemName, string targetMenuItemName)
+        public static void MoveMenuItemAfter(this IList<MenuItemDefinition> menuItems, string menuItemName,
+            string targetMenuItemName)
         {
             var menuItem = GetMenuItem(menuItems, menuItemName);
             var targetMenuItem = GetMenuItem(menuItems, targetMenuItemName);
@@ -63,10 +65,7 @@ namespace Abp.Application.Navigation
         private static MenuItemDefinition GetMenuItem(IEnumerable<MenuItemDefinition> menuItems, string menuItemName)
         {
             var menuItem = menuItems.FirstOrDefault(i => i.Name == menuItemName);
-            if (menuItem == null)
-            {
-                throw new AbpException("Can not find menu item: " + menuItemName);
-            }
+            if (menuItem == null) throw new AbpException("Can not find menu item: " + menuItemName);
 
             return menuItem;
         }

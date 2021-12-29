@@ -6,6 +6,5 @@ namespace Abp.Events.Bus.Handlers
     /// </summary>
     public interface IEventHandler
     {
-        
     }
 }

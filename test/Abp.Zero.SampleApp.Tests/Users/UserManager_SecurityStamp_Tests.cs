@@ -40,7 +40,8 @@ namespace Abp.Zero.SampleApp.Tests.Users
 
             (await _userManager.GetSecurityStampAsync(_testUser.Id)).ShouldNotBe(oldStamp);
         }
-         [Fact]
+
+        [Fact]
         public async Task Should_Change_Security_Stamp()
         {
             _userAppService.CreateUser(

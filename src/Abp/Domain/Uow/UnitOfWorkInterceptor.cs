@@ -77,7 +77,7 @@ namespace Abp.Domain.Uow
             using (var uow = _unitOfWorkManager.Begin(unitOfWorkAttr.CreateOptions()))
             {
                 proceedInfo.Invoke();
-                
+
                 var taskResult = (Task<TResult>)invocation.ReturnValue;
                 var result = await taskResult;
 

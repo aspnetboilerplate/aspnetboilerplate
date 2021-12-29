@@ -27,7 +27,6 @@ namespace Abp.Authorization.Users
         /// </summary>
         public UserRole()
         {
-
         }
 
         /// <summary>

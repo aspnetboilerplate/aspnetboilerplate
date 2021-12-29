@@ -84,14 +84,10 @@ namespace Abp.Modules
             plugInModuleTypes = new List<Type>();
 
             var modules = AbpModule.FindDependedModuleTypesRecursivelyIncludingGivenModule(_modules.StartupModuleType);
-            
+
             foreach (var plugInModuleType in _abpPlugInManager.PlugInSources.GetAllModules())
-            {
                 if (modules.AddIfNotContains(plugInModuleType))
-                {
                     plugInModuleTypes.Add(plugInModuleType);
-                }
-            }
 
             return modules;
         }
@@ -102,9 +98,8 @@ namespace Abp.Modules
             {
                 var moduleObject = _iocManager.Resolve(moduleType) as AbpModule;
                 if (moduleObject == null)
-                {
-                    throw new AbpInitializationException("This type is not an ABP module: " + moduleType.AssemblyQualifiedName);
-                }
+                    throw new AbpInitializationException("This type is not an ABP module: " +
+                                                         moduleType.AssemblyQualifiedName);
 
                 moduleObject.IocManager = _iocManager;
                 moduleObject.Configuration = _iocManager.Resolve<IAbpStartupConfiguration>();
@@ -113,10 +108,7 @@ namespace Abp.Modules
 
                 _modules.Add(moduleInfo);
 
-                if (moduleType == _modules.StartupModuleType)
-                {
-                    StartupModule = moduleInfo;
-                }
+                if (moduleType == _modules.StartupModuleType) StartupModule = moduleInfo;
 
                 Logger.DebugFormat("Loaded module: " + moduleType.AssemblyQualifiedName);
             }
@@ -124,10 +116,7 @@ namespace Abp.Modules
 
         private void RegisterModules(ICollection<Type> moduleTypes)
         {
-            foreach (var moduleType in moduleTypes)
-            {
-                _iocManager.RegisterIfNot(moduleType);
-            }
+            foreach (var moduleType in moduleTypes) _iocManager.RegisterIfNot(moduleType);
         }
 
         private void SetDependencies()
@@ -141,14 +130,12 @@ namespace Abp.Modules
                 {
                     var dependedModuleInfo = _modules.FirstOrDefault(m => m.Type == dependedModuleType);
                     if (dependedModuleInfo == null)
-                    {
-                        throw new AbpInitializationException("Could not find a depended module " + dependedModuleType.AssemblyQualifiedName + " for " + moduleInfo.Type.AssemblyQualifiedName);
-                    }
+                        throw new AbpInitializationException("Could not find a depended module " +
+                                                             dependedModuleType.AssemblyQualifiedName + " for " +
+                                                             moduleInfo.Type.AssemblyQualifiedName);
 
-                    if ((moduleInfo.Dependencies.FirstOrDefault(dm => dm.Type == dependedModuleType) == null))
-                    {
+                    if (moduleInfo.Dependencies.FirstOrDefault(dm => dm.Type == dependedModuleType) == null)
                         moduleInfo.Dependencies.Add(dependedModuleInfo);
-                    }
                 }
             }
         }

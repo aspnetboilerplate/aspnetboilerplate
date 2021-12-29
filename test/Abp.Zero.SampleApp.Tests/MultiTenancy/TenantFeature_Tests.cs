@@ -37,7 +37,7 @@ namespace Abp.Zero.SampleApp.Tests.MultiTenancy
                 context.SaveChanges();
                 return secondTenant.Id;
             });
-            
+
             _tenantManager.SetFeatureValue(firstTenantId, AppFeatureProvider.MyBoolFeature, "true");
             _featureChecker.IsEnabled(secondTenantId, AppFeatureProvider.MyBoolFeature).ShouldBe(false);
         }

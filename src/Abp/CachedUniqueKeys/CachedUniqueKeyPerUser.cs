@@ -40,10 +40,7 @@ namespace Abp.CachedUniqueKeys
 
         public virtual async Task<string> GetKeyAsync(string cacheName, int? tenantId, long? userId)
         {
-            if (!AbpSession.UserId.HasValue)
-            {
-                return Guid.NewGuid().ToString("N");
-            }
+            if (!AbpSession.UserId.HasValue) return Guid.NewGuid().ToString("N");
 
             var cache = GetCache(cacheName);
             return await cache.GetAsync(GetCacheKeyForUser(tenantId, userId),
@@ -52,10 +49,7 @@ namespace Abp.CachedUniqueKeys
 
         public virtual async Task RemoveKeyAsync(string cacheName, int? tenantId, long? userId)
         {
-            if (!AbpSession.UserId.HasValue)
-            {
-                return;
-            }
+            if (!AbpSession.UserId.HasValue) return;
 
             var cache = GetCache(cacheName);
             await cache.RemoveAsync(GetCacheKeyForUser(tenantId, userId));
@@ -89,10 +83,7 @@ namespace Abp.CachedUniqueKeys
 
         public virtual string GetKey(string cacheName, int? tenantId, long? userId)
         {
-            if (!AbpSession.UserId.HasValue)
-            {
-                return Guid.NewGuid().ToString("N");
-            }
+            if (!AbpSession.UserId.HasValue) return Guid.NewGuid().ToString("N");
 
             var cache = GetCache(cacheName);
             return cache.Get(GetCacheKeyForUser(tenantId, userId),
@@ -101,10 +92,7 @@ namespace Abp.CachedUniqueKeys
 
         public virtual void RemoveKey(string cacheName, int? tenantId, long? userId)
         {
-            if (!AbpSession.UserId.HasValue)
-            {
-                return;
-            }
+            if (!AbpSession.UserId.HasValue) return;
 
             var cache = GetCache(cacheName);
             cache.Remove(GetCacheKeyForUser(tenantId, userId));
@@ -123,10 +111,7 @@ namespace Abp.CachedUniqueKeys
 
         protected virtual string GetCacheKeyForUser(int? tenantId, long? userId)
         {
-            if (tenantId == null)
-            {
-                return userId.ToString();
-            }
+            if (tenantId == null) return userId.ToString();
 
             return userId + "@" + tenantId;
         }

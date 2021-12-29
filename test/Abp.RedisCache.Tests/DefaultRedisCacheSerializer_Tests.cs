@@ -28,7 +28,9 @@ namespace Abp.RedisCache.Tests
             };
 
             var result = _redisCacheSerializer.Serialize(source, typeof(List<string>));
-            result.ToString().ShouldStartWith("{\"Payload\":\"[\\\"Stranger Things\\\",\\\"The OA\\\",\\\"Lost in Space\\\"]\",\"Type\":\"System.Collections.Generic.List`1[[System.String,");
+            result.ToString()
+                .ShouldStartWith(
+                    "{\"Payload\":\"[\\\"Stranger Things\\\",\\\"The OA\\\",\\\"Lost in Space\\\"]\",\"Type\":\"System.Collections.Generic.List`1[[System.String,");
         }
 
         [Fact]
@@ -41,13 +43,15 @@ namespace Abp.RedisCache.Tests
             };
 
             var result = _redisCacheSerializer.Serialize(source, typeof(MyTestClass));
-            result.ToString().ShouldBe("{\"Payload\":\"{\\\"Field1\\\":42,\\\"Field2\\\":\\\"Stranger Things\\\"}\",\"Type\":\"Abp.RedisCache.Tests.DefaultRedisCacheSerializer_Tests+MyTestClass, Abp.RedisCache.Tests, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null\"}");
+            result.ToString().ShouldBe(
+                "{\"Payload\":\"{\\\"Field1\\\":42,\\\"Field2\\\":\\\"Stranger Things\\\"}\",\"Type\":\"Abp.RedisCache.Tests.DefaultRedisCacheSerializer_Tests+MyTestClass, Abp.RedisCache.Tests, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null\"}");
         }
 
         [Fact]
         public void Deserialize_List_Test()
         {
-            var json = "{\"Payload\":\"[\\\"Stranger Things\\\",\\\"The OA\\\",\\\"Lost in Space\\\"]\",\"Type\":\"System.Collections.Generic.List`1[[System.String]]\"}";
+            var json =
+                "{\"Payload\":\"[\\\"Stranger Things\\\",\\\"The OA\\\",\\\"Lost in Space\\\"]\",\"Type\":\"System.Collections.Generic.List`1[[System.String]]\"}";
             var cacheData = _redisCacheSerializer.Deserialize(json);
 
             var typedCacheData = cacheData as List<string>;
@@ -59,7 +63,8 @@ namespace Abp.RedisCache.Tests
         [Fact]
         public void Deserialize_Class_Test()
         {
-            var json = "{\"Payload\": \"{\\\"Field1\\\": 42,\\\"Field2\\\":\\\"Stranger Things\\\"}\",\"Type\":\"Abp.RedisCache.Tests.DefaultRedisCacheSerializer_Tests+MyTestClass, Abp.RedisCache.Tests\"}";
+            var json =
+                "{\"Payload\": \"{\\\"Field1\\\": 42,\\\"Field2\\\":\\\"Stranger Things\\\"}\",\"Type\":\"Abp.RedisCache.Tests.DefaultRedisCacheSerializer_Tests+MyTestClass, Abp.RedisCache.Tests\"}";
 
             var cacheData = _redisCacheSerializer.Deserialize(json);
 
@@ -69,7 +74,7 @@ namespace Abp.RedisCache.Tests
             typedCacheData.Field2.ShouldBe("Stranger Things");
         }
 
-        class MyTestClass
+        private class MyTestClass
         {
             public int Field1 { get; set; }
 

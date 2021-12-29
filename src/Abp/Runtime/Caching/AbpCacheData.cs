@@ -12,7 +12,8 @@ namespace Abp.Runtime.Caching
     /// </summary>
     public class AbpCacheData
     {
-        private static readonly IReadOnlyList<string> SystemAssemblyNames = new List<string> { "mscorlib", "System.Private.CoreLib" };
+        private static readonly IReadOnlyList<string> SystemAssemblyNames = new List<string>
+            { "mscorlib", "System.Private.CoreLib" };
 
         public AbpCacheData(
             string type, string payload)
@@ -25,7 +26,10 @@ namespace Abp.Runtime.Caching
 
         public string Type { get; set; }
 
-        public static AbpCacheData Deserialize(string serializedCacheData) => serializedCacheData.FromJsonString<AbpCacheData>();
+        public static AbpCacheData Deserialize(string serializedCacheData)
+        {
+            return serializedCacheData.FromJsonString<AbpCacheData>();
+        }
 
         public static AbpCacheData Serialize(object obj)
         {
@@ -34,52 +38,35 @@ namespace Abp.Runtime.Caching
                 obj.ToJsonString());
         }
 
-        private static StringBuilder SerializeType(Type type, bool withAssemblyName = true, StringBuilder typeNameBuilder = null)
+        private static StringBuilder SerializeType(Type type, bool withAssemblyName = true,
+            StringBuilder typeNameBuilder = null)
         {
             typeNameBuilder = typeNameBuilder ?? new StringBuilder();
 
             if (type.DeclaringType != null)
-            {
                 SerializeType(type.DeclaringType, false, typeNameBuilder).Append('+');
-            }
-            else if (type.Namespace != null)
-            {
-                typeNameBuilder.Append(type.Namespace).Append('.');
-            }
+            else if (type.Namespace != null) typeNameBuilder.Append(type.Namespace).Append('.');
 
             typeNameBuilder.Append(type.Name);
 
             if (type.GenericTypeArguments.Length > 0)
-            {
                 SerializeTypes(type.GenericTypeArguments, '[', ']', typeNameBuilder);
-            }
 
-            if (!withAssemblyName)
-            {
-                return typeNameBuilder;
-            }
+            if (!withAssemblyName) return typeNameBuilder;
 
             var assemblyName = type.GetTypeInfo().Assembly.GetName().FullName;
 
-            if (!SystemAssemblyNames.Contains(assemblyName))
-            {
-                typeNameBuilder.Append(", ").Append(assemblyName);
-            }
+            if (!SystemAssemblyNames.Contains(assemblyName)) typeNameBuilder.Append(", ").Append(assemblyName);
 
             return typeNameBuilder;
         }
 
-        private static StringBuilder SerializeTypes(Type[] types, char beginTypeDelimiter = '"', char endTypeDelimiter = '"', StringBuilder typeNamesBuilder = null)
+        private static StringBuilder SerializeTypes(Type[] types, char beginTypeDelimiter = '"',
+            char endTypeDelimiter = '"', StringBuilder typeNamesBuilder = null)
         {
-            if (types == null)
-            {
-                return null;
-            }
+            if (types == null) return null;
 
-            if (typeNamesBuilder == null)
-            {
-                typeNamesBuilder = new StringBuilder();
-            }
+            if (typeNamesBuilder == null) typeNamesBuilder = new StringBuilder();
 
             typeNamesBuilder.Append('[');
 
@@ -89,10 +76,7 @@ namespace Abp.Runtime.Caching
                 SerializeType(types[i], true, typeNamesBuilder);
                 typeNamesBuilder.Append(endTypeDelimiter);
 
-                if (i != types.Length - 1)
-                {
-                    typeNamesBuilder.Append(',');
-                }
+                if (i != types.Length - 1) typeNamesBuilder.Append(',');
             }
 
             return typeNamesBuilder.Append(']');

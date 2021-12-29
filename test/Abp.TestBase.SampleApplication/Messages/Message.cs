@@ -13,7 +13,6 @@ namespace Abp.TestBase.SampleApplication.Messages
 
         public Message()
         {
-
         }
 
         public Message(int? tenantId, string text)

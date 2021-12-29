@@ -16,17 +16,15 @@ namespace Abp.Dapper.Repositories
     /// <typeparam name="TEntity">The type of the entity.</typeparam>
     /// <typeparam name="TPrimaryKey">The type of the primary key.</typeparam>
     /// <seealso cref="IDapperRepository{TEntity,TPrimaryKey}" />
-    public abstract class AbpDapperRepositoryBase<TEntity, TPrimaryKey> : IDapperRepository<TEntity, TPrimaryKey> where TEntity : class, IEntity<TPrimaryKey>
+    public abstract class AbpDapperRepositoryBase<TEntity, TPrimaryKey> : IDapperRepository<TEntity, TPrimaryKey>
+        where TEntity : class, IEntity<TPrimaryKey>
     {
         public static MultiTenancySides? MultiTenancySide { get; private set; }
 
         static AbpDapperRepositoryBase()
         {
             var attr = typeof(TEntity).GetSingleAttributeOfTypeOrBaseTypesOrNull<MultiTenancySideAttribute>();
-            if (attr != null)
-            {
-                MultiTenancySide = attr.Side;
-            }
+            if (attr != null) MultiTenancySide = attr.Side;
         }
 
         public abstract TEntity Single(TPrimaryKey id);
@@ -52,7 +50,8 @@ namespace Abp.Dapper.Repositories
 
         public abstract IEnumerable<TAny> Query<TAny>(string query, object parameters = null) where TAny : class;
 
-        public virtual Task<IEnumerable<TAny>> QueryAsync<TAny>(string query, object parameters = null) where TAny : class
+        public virtual Task<IEnumerable<TAny>> QueryAsync<TAny>(string query, object parameters = null)
+            where TAny : class
         {
             return Task.FromResult(Query<TAny>(query, parameters));
         }
@@ -71,12 +70,14 @@ namespace Abp.Dapper.Repositories
             return Task.FromResult(GetAll(predicate));
         }
 
-        public virtual Task<IEnumerable<TEntity>> GetAllPagedAsync(Expression<Func<TEntity, bool>> predicate, int pageNumber, int itemsPerPage, string sortingProperty, bool ascending = true)
+        public virtual Task<IEnumerable<TEntity>> GetAllPagedAsync(Expression<Func<TEntity, bool>> predicate,
+            int pageNumber, int itemsPerPage, string sortingProperty, bool ascending = true)
         {
             return Task.FromResult(GetAllPaged(predicate, pageNumber, itemsPerPage, sortingProperty, ascending));
         }
 
-        public abstract IEnumerable<TEntity> GetAllPaged(Expression<Func<TEntity, bool>> predicate, int pageNumber, int itemsPerPage, string sortingProperty, bool ascending = true);
+        public abstract IEnumerable<TEntity> GetAllPaged(Expression<Func<TEntity, bool>> predicate, int pageNumber,
+            int itemsPerPage, string sortingProperty, bool ascending = true);
 
         public abstract int Count(Expression<Func<TEntity, bool>> predicate);
 
@@ -85,23 +86,31 @@ namespace Abp.Dapper.Repositories
             return Task.FromResult(Count(predicate));
         }
 
-        public abstract IEnumerable<TEntity> GetSet(Expression<Func<TEntity, bool>> predicate, int firstResult, int maxResults, string sortingProperty, bool ascending = true);
+        public abstract IEnumerable<TEntity> GetSet(Expression<Func<TEntity, bool>> predicate, int firstResult,
+            int maxResults, string sortingProperty, bool ascending = true);
 
-        public virtual Task<IEnumerable<TEntity>> GetSetAsync(Expression<Func<TEntity, bool>> predicate, int firstResult, int maxResults, string sortingProperty, bool ascending = true)
+        public virtual Task<IEnumerable<TEntity>> GetSetAsync(Expression<Func<TEntity, bool>> predicate,
+            int firstResult, int maxResults, string sortingProperty, bool ascending = true)
         {
             return Task.FromResult(GetSet(predicate, firstResult, maxResults, sortingProperty, ascending));
         }
 
-        public virtual Task<IEnumerable<TEntity>> GetAllPagedAsync(Expression<Func<TEntity, bool>> predicate, int pageNumber, int itemsPerPage, bool ascending = true, params Expression<Func<TEntity, object>>[] sortingExpression)
+        public virtual Task<IEnumerable<TEntity>> GetAllPagedAsync(Expression<Func<TEntity, bool>> predicate,
+            int pageNumber, int itemsPerPage, bool ascending = true,
+            params Expression<Func<TEntity, object>>[] sortingExpression)
         {
             return Task.FromResult(GetAllPaged(predicate, pageNumber, itemsPerPage, ascending, sortingExpression));
         }
 
-        public abstract IEnumerable<TEntity> GetAllPaged(Expression<Func<TEntity, bool>> predicate, int pageNumber, int itemsPerPage, bool ascending = true, params Expression<Func<TEntity, object>>[] sortingExpression);
+        public abstract IEnumerable<TEntity> GetAllPaged(Expression<Func<TEntity, bool>> predicate, int pageNumber,
+            int itemsPerPage, bool ascending = true, params Expression<Func<TEntity, object>>[] sortingExpression);
 
-        public abstract IEnumerable<TEntity> GetSet(Expression<Func<TEntity, bool>> predicate, int firstResult, int maxResults, bool ascending = true, params Expression<Func<TEntity, object>>[] sortingExpression);
+        public abstract IEnumerable<TEntity> GetSet(Expression<Func<TEntity, bool>> predicate, int firstResult,
+            int maxResults, bool ascending = true, params Expression<Func<TEntity, object>>[] sortingExpression);
 
-        public virtual Task<IEnumerable<TEntity>> GetSetAsync(Expression<Func<TEntity, bool>> predicate, int firstResult, int maxResults, bool ascending = true, params Expression<Func<TEntity, object>>[] sortingExpression)
+        public virtual Task<IEnumerable<TEntity>> GetSetAsync(Expression<Func<TEntity, bool>> predicate,
+            int firstResult, int maxResults, bool ascending = true,
+            params Expression<Func<TEntity, object>>[] sortingExpression)
         {
             return Task.FromResult(GetSet(predicate, firstResult, maxResults, ascending, sortingExpression));
         }

@@ -7,6 +7,5 @@ namespace Abp.EntityFramework
     /// </summary>
     public class DefaultDbContextAttribute : Attribute
     {
-        
     }
 }

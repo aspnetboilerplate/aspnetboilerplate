@@ -18,10 +18,7 @@ namespace Abp.Configuration
         {
             var abpSession = scope.Resolve<IAbpSession>();
 
-            if (!abpSession.UserId.HasValue)
-            {
-                return false;
-            }
+            if (!abpSession.UserId.HasValue) return false;
 
             var permissionDependencyContext = scope.Resolve<PermissionDependencyContext>();
             permissionDependencyContext.User = abpSession.ToUserIdentifier();

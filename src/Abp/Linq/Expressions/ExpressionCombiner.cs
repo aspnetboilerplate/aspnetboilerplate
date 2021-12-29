@@ -5,22 +5,14 @@ namespace Abp.Linq.Expressions
 {
     internal static class ExpressionCombiner
     {
-        public static Expression<Func<T, bool>> Combine<T>(Expression<Func<T, bool>> expression1, Expression<Func<T, bool>> expression2)
+        public static Expression<Func<T, bool>> Combine<T>(Expression<Func<T, bool>> expression1,
+            Expression<Func<T, bool>> expression2)
         {
-            if (expression1 == null && expression2 == null)
-            {
-                return null;
-            }
+            if (expression1 == null && expression2 == null) return null;
 
-            if (expression1 == null)
-            {
-                return expression2;
-            }
+            if (expression1 == null) return expression2;
 
-            if (expression2 == null)
-            {
-                return expression1;
-            }
+            if (expression2 == null) return expression1;
 
             var parameter = Expression.Parameter(typeof(T));
 
@@ -33,7 +25,7 @@ namespace Abp.Linq.Expressions
             return Expression.Lambda<Func<T, bool>>(Expression.AndAlso(left, right), parameter);
         }
 
-        class ReplaceExpressionVisitor : ExpressionVisitor
+        private class ReplaceExpressionVisitor : ExpressionVisitor
         {
             private readonly Expression _oldValue;
             private readonly Expression _newValue;
@@ -46,10 +38,7 @@ namespace Abp.Linq.Expressions
 
             public override Expression Visit(Expression node)
             {
-                if (node == _oldValue)
-                {
-                    return _newValue;
-                }
+                if (node == _oldValue) return _newValue;
 
                 return base.Visit(node);
             }

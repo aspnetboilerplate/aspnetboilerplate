@@ -9,219 +9,221 @@ using Microsoft.EntityFrameworkCore;
 using Shouldly;
 using Xunit;
 
-namespace Abp.Zero.MultiLingual
+namespace Abp.Zero.MultiLingual;
+
+public class MultiLingual_Entity_Tests : AbpZeroTestBase
 {
-    public class MultiLingual_Entity_Tests : AbpZeroTestBase
+    private readonly IProductAppService _productAppService;
+    private readonly IRepository<Product> _productRepository;
+
+    private readonly IUnitOfWorkManager _unitOfWorkManager;
+
+    public MultiLingual_Entity_Tests()
     {
-        private readonly IProductAppService _productAppService;
-        private readonly IRepository<Product> _productRepository;
+        _productAppService = Resolve<IProductAppService>();
+        _productRepository = Resolve<IRepository<Product>>();
+        _unitOfWorkManager = Resolve<IUnitOfWorkManager>();
+    }
 
-        private readonly IUnitOfWorkManager _unitOfWorkManager;
-
-        public MultiLingual_Entity_Tests()
+    [Fact]
+    public async Task Create_MultiLingualEntity_With_Single_Translation_Test()
+    {
+        await _productAppService.CreateProduct(new ProductCreateDto
         {
-            _productAppService = Resolve<IProductAppService>();
-            _productRepository = Resolve<IRepository<Product>>();
-            _unitOfWorkManager = Resolve<IUnitOfWorkManager>();
-        }
-
-        [Fact]
-        public async Task Create_MultiLingualEntity_With_Single_Translation_Test()
-        {
-            await _productAppService.CreateProduct(new ProductCreateDto
+            Price = 99,
+            Stock = 1000,
+            Translations = new List<ProductTranslationDto>
             {
-                Price = 99,
-                Stock = 1000,
-                Translations = new List<ProductTranslationDto>
+                new()
                 {
-                    new ProductTranslationDto
-                    {
-                        Language = "en",
-                        Name = "Mobile Phone"
-                    }
+                    Language = "en",
+                    Name = "Mobile Phone"
                 }
-            });
-
-            using (var uow = _unitOfWorkManager.Begin())
-            {
-                var products = await _productRepository.GetAllIncluding(p => p.Translations).ToListAsync();
-                products.SelectMany(p => p.Translations).Count(pt => pt.Name == "Mobile Phone" && pt.Language == "en").ShouldBe(1);
-
-                await uow.CompleteAsync();
             }
-        }
+        });
 
-        [Fact]
-        public async Task Create_MultiLingualEntity_With_Multiple_Translation_Test()
+        using (var uow = _unitOfWorkManager.Begin())
         {
-            await _productAppService.CreateProduct(new ProductCreateDto
+            var products = await _productRepository.GetAllIncluding(p => p.Translations).ToListAsync();
+            products.SelectMany(p => p.Translations).Count(pt => pt.Name == "Mobile Phone" && pt.Language == "en")
+                .ShouldBe(1);
+
+            await uow.CompleteAsync();
+        }
+    }
+
+    [Fact]
+    public async Task Create_MultiLingualEntity_With_Multiple_Translation_Test()
+    {
+        await _productAppService.CreateProduct(new ProductCreateDto
+        {
+            Price = 99,
+            Stock = 1000,
+            Translations = new List<ProductTranslationDto>
             {
-                Price = 99,
-                Stock = 1000,
-                Translations = new List<ProductTranslationDto>
+                new()
                 {
-                    new ProductTranslationDto
-                    {
-                        Language = "en",
-                        Name = "Mobile Phone"
-                    },
-                    new ProductTranslationDto
-                    {
-                        Language = "tr",
-                        Name = "Cep telefonu"
-                    }
+                    Language = "en",
+                    Name = "Mobile Phone"
+                },
+                new()
+                {
+                    Language = "tr",
+                    Name = "Cep telefonu"
                 }
-            });
-
-            using (var uow = _unitOfWorkManager.Begin())
-            {
-                var products = await _productRepository.GetAllIncluding(p => p.Translations).ToListAsync();
-
-                products.SelectMany(p => p.Translations).Count(pt => pt.Name == "Mobile Phone" && pt.Language == "en").ShouldBe(1);
-                products.SelectMany(p => p.Translations).Count(pt => pt.Name == "Cep telefonu" && pt.Language == "tr").ShouldBe(1);
-
-                await uow.CompleteAsync();
             }
-        }
+        });
 
-        [Fact]
-        public async Task Update_MultiLingualEntity_With_Single_Translation_Test()
+        using (var uow = _unitOfWorkManager.Begin())
         {
-            var product = await GetProduct("it", "Giornale");
+            var products = await _productRepository.GetAllIncluding(p => p.Translations).ToListAsync();
 
-            product.ShouldNotBeNull();
+            products.SelectMany(p => p.Translations).Count(pt => pt.Name == "Mobile Phone" && pt.Language == "en")
+                .ShouldBe(1);
+            products.SelectMany(p => p.Translations).Count(pt => pt.Name == "Cep telefonu" && pt.Language == "tr")
+                .ShouldBe(1);
+
+            await uow.CompleteAsync();
+        }
+    }
+
+    [Fact]
+    public async Task Update_MultiLingualEntity_With_Single_Translation_Test()
+    {
+        var product = await GetProduct("it", "Giornale");
+
+        product.ShouldNotBeNull();
+        product.Translations.Count.ShouldBe(1);
+
+        await _productAppService.UpdateProduct(new ProductUpdateDto
+        {
+            Id = product.Id,
+            Price = product.Price,
+            Stock = product.Stock,
+            Translations = new List<ProductTranslationDto>
+            {
+                new()
+                {
+                    Name = "Newspaper",
+                    Language = "en"
+                }
+            }
+        });
+
+        using (var uow = _unitOfWorkManager.Begin())
+        {
+            // Old Translation
+            product = await GetProduct("it", "Giornale");
+
+            product.ShouldBe(null);
+
+            product = await GetProduct("en", "Newspaper");
+
+            product.ShouldNotBe(null);
             product.Translations.Count.ShouldBe(1);
 
-            await _productAppService.UpdateProduct(new ProductUpdateDto
-            {
-                Id = product.Id,
-                Price = product.Price,
-                Stock = product.Stock,
-                Translations = new List<ProductTranslationDto>
-                {
-                    new ProductTranslationDto
-                    {
-                        Name = "Newspaper",
-                        Language = "en"
-                    }
-                }
-            });
+            var translation = product.Translations.First();
+            translation.Language.ShouldBe("en");
+            translation.Name.ShouldBe("Newspaper");
 
-            using (var uow = _unitOfWorkManager.Begin())
-            {
-                // Old Translation
-                product = await GetProduct("it", "Giornale");
-
-                product.ShouldBe(null);
-
-                product = await GetProduct("en", "Newspaper");
-
-                product.ShouldNotBe(null);
-                product.Translations.Count.ShouldBe(1);
-
-                var translation = product.Translations.First();
-                translation.Language.ShouldBe("en");
-                translation.Name.ShouldBe("Newspaper");
-
-                await uow.CompleteAsync();
-            }
+            await uow.CompleteAsync();
         }
+    }
 
-        [Fact]
-        public async Task Update_MultiLingualEntity_With_Multiple_Translation_Test()
+    [Fact]
+    public async Task Update_MultiLingualEntity_With_Multiple_Translation_Test()
+    {
+        var product = await GetProduct("en", "Bike");
+
+        product.ShouldNotBeNull();
+        product.Translations.Count.ShouldBe(2);
+
+        await _productAppService.UpdateProduct(new ProductUpdateDto
         {
-            var product = await GetProduct("en", "Bike");
-
-            product.ShouldNotBeNull();
-            product.Translations.Count.ShouldBe(2);
-
-            await _productAppService.UpdateProduct(new ProductUpdateDto
+            Id = product.Id,
+            Price = product.Price,
+            Stock = product.Stock,
+            Translations = new List<ProductTranslationDto>
             {
-                Id = product.Id,
-                Price = product.Price,
-                Stock = product.Stock,
-                Translations = new List<ProductTranslationDto>
+                new()
                 {
-                    new ProductTranslationDto
-                    {
-                        Name = "Bicycle",
-                        Language = "en"
-                    },
-                    new ProductTranslationDto
-                    {
-                        Name = "Bicicleta",
-                        Language = "es"
-                    }
+                    Name = "Bicycle",
+                    Language = "en"
+                },
+                new()
+                {
+                    Name = "Bicicleta",
+                    Language = "es"
                 }
-            });
-
-            using (var uow = _unitOfWorkManager.Begin())
-            {
-                // Old Translation
-                product = await GetProduct("en", "Bike");
-
-                product.ShouldBe(null);
-
-                product = await GetProduct("en", "Bicycle");
-
-                product.ShouldNotBe(null);
-                product.Translations.Count.ShouldBe(2);
-
-                product.Translations.Count(pt => pt.Language == "fr").ShouldBe(0);
-                product.Translations.Count(pt => pt.Language == "es" && pt.Name == "Bicicleta").ShouldBe(1);
-
-                await uow.CompleteAsync();
             }
-        }
+        });
 
-        [Fact]
-        public async Task Translate_MultiLingualEntity_Insert_Test()
+        using (var uow = _unitOfWorkManager.Begin())
         {
-            var product = await GetProduct("it", "Giornale");
+            // Old Translation
+            product = await GetProduct("en", "Bike");
 
-            await _productAppService.Translate(product.Id, new ProductTranslationDto
-            {
-                Name = "Bicycle",
-                Language = "en"
-            });
+            product.ShouldBe(null);
 
             product = await GetProduct("en", "Bicycle");
-            product.ShouldNotBeNull();
+
+            product.ShouldNotBe(null);
             product.Translations.Count.ShouldBe(2);
-            product.Translations.Count(pt => pt.Language == "en" && pt.Name == "Bicycle").ShouldBeGreaterThan(0);
-        }
 
-        [Fact]
-        public async Task Translate_MultiLingualEntity_Update_Test()
+            product.Translations.Count(pt => pt.Language == "fr").ShouldBe(0);
+            product.Translations.Count(pt => pt.Language == "es" && pt.Name == "Bicicleta").ShouldBe(1);
+
+            await uow.CompleteAsync();
+        }
+    }
+
+    [Fact]
+    public async Task Translate_MultiLingualEntity_Insert_Test()
+    {
+        var product = await GetProduct("it", "Giornale");
+
+        await _productAppService.Translate(product.Id, new ProductTranslationDto
         {
-            var product = await GetProduct("it", "Giornale");
+            Name = "Bicycle",
+            Language = "en"
+        });
 
-            await _productAppService.Translate(product.Id, new ProductTranslationDto
-            {
-                Name = "il Giornale",
-                Language = "it"
-            });
+        product = await GetProduct("en", "Bicycle");
+        product.ShouldNotBeNull();
+        product.Translations.Count.ShouldBe(2);
+        product.Translations.Count(pt => pt.Language == "en" && pt.Name == "Bicycle").ShouldBeGreaterThan(0);
+    }
 
-            product = await GetProduct("it", "il Giornale");
-            product.ShouldNotBeNull();
-            product.Translations.Count.ShouldBe(1);
-        }
+    [Fact]
+    public async Task Translate_MultiLingualEntity_Update_Test()
+    {
+        var product = await GetProduct("it", "Giornale");
 
-        private async Task<Product> GetProduct(string culture, string productName)
+        await _productAppService.Translate(product.Id, new ProductTranslationDto
         {
-            Product product;
+            Name = "il Giornale",
+            Language = "it"
+        });
 
-            using (var uow = _unitOfWorkManager.Begin())
-            {
-                product = await _productRepository.GetAll()
-                    .Include(p => p.Translations)
-                    .Where(p => p.Translations.Any(pt => pt.Language == culture && pt.Name == productName))
-                    .FirstOrDefaultAsync();
+        product = await GetProduct("it", "il Giornale");
+        product.ShouldNotBeNull();
+        product.Translations.Count.ShouldBe(1);
+    }
 
-                await uow.CompleteAsync();
-            }
+    private async Task<Product> GetProduct(string culture, string productName)
+    {
+        Product product;
 
-            return product;
+        using (var uow = _unitOfWorkManager.Begin())
+        {
+            product = await _productRepository.GetAll()
+                .Include(p => p.Translations)
+                .Where(p => p.Translations.Any(pt => pt.Language == culture && pt.Name == productName))
+                .FirstOrDefaultAsync();
+
+            await uow.CompleteAsync();
         }
+
+        return product;
     }
 }

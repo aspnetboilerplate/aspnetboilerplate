@@ -173,18 +173,14 @@ namespace Abp.Webhooks
                 {
                     if (await _webhookSendAttemptRepository.CountAsync(x => x.WebhookSubscriptionId == subscriptionId) <
                         failCount)
-                    {
                         result = false;
-                    }
                     else
-                    {
                         result = !await AsyncQueryableExecuter.AnyAsync(
                             _webhookSendAttemptRepository.GetAll()
                                 .OrderByDescending(attempt => attempt.CreationTime)
                                 .Take(failCount)
                                 .Where(attempt => attempt.ResponseStatusCode == HttpStatusCode.OK)
                         );
-                    }
                 }
 
                 await uow.CompleteAsync();

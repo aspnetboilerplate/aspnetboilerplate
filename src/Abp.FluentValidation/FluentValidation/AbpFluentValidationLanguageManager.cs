@@ -36,10 +36,7 @@ namespace Abp.FluentValidation
 
         private void AddTranslations(string language, IReadOnlyList<LocalizedString> translations)
         {
-            foreach (var translation in translations)
-            {
-                AddTranslation(language, translation.Name, translation.Value);
-            }
+            foreach (var translation in translations) AddTranslation(language, translation.Name, translation.Value);
         }
     }
 }

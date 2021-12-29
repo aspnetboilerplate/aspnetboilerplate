@@ -10,16 +10,15 @@ namespace Abp.WebApi.Controllers.Dynamic.Scripting.TypeScript
 {
     internal class TypeScriptHelper
     {
-        
         private static readonly string[] _basicTypes =
         {
             "guid", "string", "bool",
-            "datetime", "int16", "int32", "int64", "single", "double", "decimal", "boolean", "void","byte"
+            "datetime", "int16", "int32", "int64", "single", "double", "decimal", "boolean", "void", "byte"
         };
 
         private static readonly string[] _typesToIgnore =
         {
-            "exception", "aggregateexception","module","object"
+            "exception", "aggregateexception", "module", "object"
         };
 
         public static bool IsBasicType(Type type)
@@ -43,40 +42,24 @@ namespace Abp.WebApi.Controllers.Dynamic.Scripting.TypeScript
             if (IsIgnorantType(type))
                 return "any";
 
-            if (type == typeof (Task))
-            {
-                return "void";
-            }
+            if (type == typeof(Task)) return "void";
 
-            if (type.IsArray)
-            {
+            if (type.IsArray) return GetTypeContractName(type.GetElementType(), newTypesToAdd) + "[]";
 
-                return GetTypeContractName(type.GetElementType(), newTypesToAdd) + "[]";
-            }
-
-            if (type.IsGenericType && (typeof (Task<>).IsAssignableFrom(type.GetGenericTypeDefinition()) ||
-                                       typeof (TaskFactory<>).IsAssignableFrom(type.GetGenericTypeDefinition())))
-            {
+            if (type.IsGenericType && (typeof(Task<>).IsAssignableFrom(type.GetGenericTypeDefinition()) ||
+                                       typeof(TaskFactory<>).IsAssignableFrom(type.GetGenericTypeDefinition())))
                 return GetTypeContractName(type.GetGenericArguments()[0], newTypesToAdd);
-            }
 
-            if (type.IsGenericType && typeof (Nullable<>).IsAssignableFrom(type.GetGenericTypeDefinition()))
-            {
+            if (type.IsGenericType && typeof(Nullable<>).IsAssignableFrom(type.GetGenericTypeDefinition()))
                 return GetTypeContractName(type.GetGenericArguments()[0], newTypesToAdd);
-            }
 
             if (type.IsGenericType && (
-                typeof (List<>).IsAssignableFrom(type.GetGenericTypeDefinition()) ||
-                typeof (ICollection<>).IsAssignableFrom(type.GetGenericTypeDefinition()) ||
-                typeof (IEnumerable<>).IsAssignableFrom(type.GetGenericTypeDefinition())
+                    typeof(List<>).IsAssignableFrom(type.GetGenericTypeDefinition()) ||
+                    typeof(ICollection<>).IsAssignableFrom(type.GetGenericTypeDefinition()) ||
+                    typeof(IEnumerable<>).IsAssignableFrom(type.GetGenericTypeDefinition())
                 ))
-            {
                 return GetTypeContractName(type.GetGenericArguments()[0], newTypesToAdd) + "[]";
-            }
-            if (type.IsEnum)
-            {
-                return "number";
-            }
+            if (type.IsEnum) return "number";
             switch (type.Name.ToLowerInvariant())
             {
                 case "guid":
@@ -111,9 +94,7 @@ namespace Abp.WebApi.Controllers.Dynamic.Scripting.TypeScript
             int index = name.IndexOf('`');
             name = index == -1 ? name : name.Substring(0, index);
             if (type.IsGenericType)
-            {
                 name += "Of" + string.Join("And", type.GenericTypeArguments.Select(GenericSpecificName));
-            }
             return name;
         }
 

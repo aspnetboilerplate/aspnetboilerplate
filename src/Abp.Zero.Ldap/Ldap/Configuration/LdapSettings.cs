@@ -9,7 +9,6 @@ namespace Abp.Zero.Ldap.Configuration
     /// <summary>
     /// Implements <see cref="ILdapSettings"/> to get settings from <see cref="ISettingManager"/>.
     /// </summary>
-    
     public class LdapSettings : ILdapSettings, ITransientDependency
     {
         protected ISettingManager SettingManager { get; }
@@ -29,8 +28,10 @@ namespace Abp.Zero.Ldap.Configuration
         public virtual async Task<ContextType> GetContextType(int? tenantId)
         {
             return tenantId.HasValue
-                ? (await SettingManager.GetSettingValueForTenantAsync(LdapSettingNames.ContextType, tenantId.Value)).ToEnum<ContextType>()
-                : (await SettingManager.GetSettingValueForApplicationAsync(LdapSettingNames.ContextType)).ToEnum<ContextType>();
+                ? (await SettingManager.GetSettingValueForTenantAsync(LdapSettingNames.ContextType, tenantId.Value))
+                .ToEnum<ContextType>()
+                : (await SettingManager.GetSettingValueForApplicationAsync(LdapSettingNames.ContextType))
+                .ToEnum<ContextType>();
         }
 
         public virtual Task<string> GetContainer(int? tenantId)

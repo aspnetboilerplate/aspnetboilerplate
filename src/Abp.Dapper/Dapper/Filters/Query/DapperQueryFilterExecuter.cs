@@ -18,14 +18,13 @@ namespace Abp.Dapper.Filters.Query
             _queryFilters = iocResolver.ResolveAll<IDapperQueryFilter>();
         }
 
-        public IPredicate ExecuteFilter<TEntity, TPrimaryKey>(Expression<Func<TEntity, bool>> predicate) where TEntity : class, IEntity<TPrimaryKey>
+        public IPredicate ExecuteFilter<TEntity, TPrimaryKey>(Expression<Func<TEntity, bool>> predicate)
+            where TEntity : class, IEntity<TPrimaryKey>
         {
             ICollection<IDapperQueryFilter> filters = _queryFilters.ToList();
 
             foreach (IDapperQueryFilter filter in filters)
-            {
                 predicate = filter.ExecuteFilter<TEntity, TPrimaryKey>(predicate);
-            }
 
             IPredicate pg = predicate.ToPredicateGroup<TEntity, TPrimaryKey>();
             return pg;
@@ -43,10 +42,7 @@ namespace Abp.Dapper.Filters.Query
             foreach (IDapperQueryFilter filter in filters)
             {
                 IFieldPredicate predicate = filter.ExecuteFilter<TEntity, TPrimaryKey>();
-                if (predicate != null)
-                {
-                    groups.Predicates.Add(predicate);
-                }
+                if (predicate != null) groups.Predicates.Add(predicate);
             }
 
             return groups;

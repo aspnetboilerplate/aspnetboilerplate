@@ -39,7 +39,6 @@ namespace Abp.Events.Bus.Factories.Internals
 
         public void ReleaseHandler(IEventHandler handler)
         {
-            
         }
     }
 }

@@ -150,10 +150,7 @@ namespace Abp.Zero.SampleApp.Tests.Users
                 });
 
             return UsingDbContext(
-                context =>
-                {
-                    return context.Users.First(u => u.UserName == "yunus.emre");
-                });
+                context => { return context.Users.First(u => u.UserName == "yunus.emre"); });
         }
     }
 }

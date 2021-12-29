@@ -8,7 +8,7 @@ namespace Abp.Localization
 {
     public class LanguageManager : ILanguageManager, ITransientDependency
     {
-        public LanguageInfo CurrentLanguage { get { return GetCurrentLanguage(); } }
+        public LanguageInfo CurrentLanguage => GetCurrentLanguage();
 
         private readonly ILanguageProvider _languageProvider;
 
@@ -30,33 +30,21 @@ namespace Abp.Localization
         private LanguageInfo GetCurrentLanguage()
         {
             var languages = _languageProvider.GetLanguages();
-            if (languages.Count <= 0)
-            {
-                throw new AbpException("No language defined in this application.");
-            }
+            if (languages.Count <= 0) throw new AbpException("No language defined in this application.");
 
             var currentCultureName = CultureInfo.CurrentUICulture.Name;
 
             //Try to find exact match
             var currentLanguage = languages.FirstOrDefault(l => l.Name == currentCultureName);
-            if (currentLanguage != null)
-            {
-                return currentLanguage;
-            }
+            if (currentLanguage != null) return currentLanguage;
 
             //Try to find best match
             currentLanguage = languages.FirstOrDefault(l => currentCultureName.StartsWith(l.Name));
-            if (currentLanguage != null)
-            {
-                return currentLanguage;
-            }
+            if (currentLanguage != null) return currentLanguage;
 
             //Try to find default language
             currentLanguage = languages.FirstOrDefault(l => l.IsDefault);
-            if (currentLanguage != null)
-            {
-                return currentLanguage;
-            }
+            if (currentLanguage != null) return currentLanguage;
 
             //Get first one
             return languages[0];

@@ -14,13 +14,16 @@ namespace Abp.TestBase.SampleApplication.Tests.GuidEntities
     {
         private readonly IUnitOfWorkManager _unitOfWorkManager;
         private readonly IRepository<TestEntityWithGuidPk, Guid> _testEntityWithGuidPkRepository;
-        private readonly IRepository<TestEntityWithGuidPkAndDbGeneratedValue, Guid> _testEntityWithGuidPkAndDbGeneratedValueRepository;
+
+        private readonly IRepository<TestEntityWithGuidPkAndDbGeneratedValue, Guid>
+            _testEntityWithGuidPkAndDbGeneratedValueRepository;
 
         public GuidEntity_Tests()
         {
             _unitOfWorkManager = Resolve<IUnitOfWorkManager>();
             _testEntityWithGuidPkRepository = Resolve<IRepository<TestEntityWithGuidPk, Guid>>();
-            _testEntityWithGuidPkAndDbGeneratedValueRepository = Resolve<IRepository<TestEntityWithGuidPkAndDbGeneratedValue, Guid>>();
+            _testEntityWithGuidPkAndDbGeneratedValueRepository =
+                Resolve<IRepository<TestEntityWithGuidPkAndDbGeneratedValue, Guid>>();
         }
 
         [Fact]

@@ -67,10 +67,7 @@ namespace Abp
         /// <param name="objs">List of object to select a random one</param>
         public static T GetRandomOf<T>(params T[] objs)
         {
-            if (objs.IsNullOrEmpty())
-            {
-                throw new ArgumentException("objs can not be null or empty!", "objs");
-            }
+            if (objs.IsNullOrEmpty()) throw new ArgumentException("objs can not be null or empty!", "objs");
 
             return objs[GetRandom(0, objs.Length)];
         }
@@ -87,7 +84,7 @@ namespace Abp
 
             while (currentList.Any())
             {
-                var randomIndex = RandomHelper.GetRandom(0, currentList.Count);
+                var randomIndex = GetRandom(0, currentList.Count);
                 randomList.Add(currentList[randomIndex]);
                 currentList.RemoveAt(randomIndex);
             }

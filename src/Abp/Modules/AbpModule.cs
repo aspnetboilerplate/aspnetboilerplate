@@ -45,7 +45,6 @@ namespace Abp.Modules
         /// </summary>
         public virtual void PreInitialize()
         {
-
         }
 
         /// <summary>
@@ -53,7 +52,6 @@ namespace Abp.Modules
         /// </summary>
         public virtual void Initialize()
         {
-
         }
 
         /// <summary>
@@ -61,7 +59,6 @@ namespace Abp.Modules
         /// </summary>
         public virtual void PostInitialize()
         {
-
         }
 
         /// <summary>
@@ -69,7 +66,6 @@ namespace Abp.Modules
         /// </summary>
         public virtual void Shutdown()
         {
-
         }
 
         public virtual Assembly[] GetAdditionalAssemblies()
@@ -97,22 +93,18 @@ namespace Abp.Modules
         public static List<Type> FindDependedModuleTypes(Type moduleType)
         {
             if (!IsAbpModule(moduleType))
-            {
-                throw new AbpInitializationException("This type is not an ABP module: " + moduleType.AssemblyQualifiedName);
-            }
+                throw new AbpInitializationException("This type is not an ABP module: " +
+                                                     moduleType.AssemblyQualifiedName);
 
             var list = new List<Type>();
 
             if (moduleType.GetTypeInfo().IsDefined(typeof(DependsOnAttribute), true))
             {
-                var dependsOnAttributes = moduleType.GetTypeInfo().GetCustomAttributes(typeof(DependsOnAttribute), true).Cast<DependsOnAttribute>();
+                var dependsOnAttributes = moduleType.GetTypeInfo().GetCustomAttributes(typeof(DependsOnAttribute), true)
+                    .Cast<DependsOnAttribute>();
                 foreach (var dependsOnAttribute in dependsOnAttributes)
-                {
-                    foreach (var dependedModuleType in dependsOnAttribute.DependedModuleTypes)
-                    {
-                        list.Add(dependedModuleType);
-                    }
-                }
+                foreach (var dependedModuleType in dependsOnAttribute.DependedModuleTypes)
+                    list.Add(dependedModuleType);
             }
 
             return list;
@@ -129,22 +121,15 @@ namespace Abp.Modules
         private static void AddModuleAndDependenciesRecursively(List<Type> modules, Type module)
         {
             if (!IsAbpModule(module))
-            {
                 throw new AbpInitializationException("This type is not an ABP module: " + module.AssemblyQualifiedName);
-            }
 
-            if (modules.Contains(module))
-            {
-                return;
-            }
+            if (modules.Contains(module)) return;
 
             modules.Add(module);
 
             var dependedModules = FindDependedModuleTypes(module);
             foreach (var dependedModule in dependedModules)
-            {
                 AddModuleAndDependenciesRecursively(modules, dependedModule);
-            }
         }
     }
 }

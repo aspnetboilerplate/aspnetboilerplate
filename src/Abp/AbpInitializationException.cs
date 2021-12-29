@@ -14,7 +14,6 @@ namespace Abp
         /// </summary>
         public AbpInitializationException()
         {
-
         }
 
         /// <summary>
@@ -23,7 +22,6 @@ namespace Abp
         public AbpInitializationException(SerializationInfo serializationInfo, StreamingContext context)
             : base(serializationInfo, context)
         {
-
         }
 
         /// <summary>
@@ -33,7 +31,6 @@ namespace Abp
         public AbpInitializationException(string message)
             : base(message)
         {
-
         }
 
         /// <summary>
@@ -44,7 +41,6 @@ namespace Abp
         public AbpInitializationException(string message, Exception innerException)
             : base(message, innerException)
         {
-
         }
     }
 }

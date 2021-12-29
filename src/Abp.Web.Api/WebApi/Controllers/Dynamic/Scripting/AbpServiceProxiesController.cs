@@ -19,7 +19,7 @@ namespace Abp.WebApi.Controllers.Dynamic.Scripting
         private readonly ScriptProxyManager _scriptProxyManager;
         private readonly IJavaScriptMinifier _javaScriptMinifier;
 
-        public AbpServiceProxiesController(ScriptProxyManager scriptProxyManager, 
+        public AbpServiceProxiesController(ScriptProxyManager scriptProxyManager,
             IJavaScriptMinifier javaScriptMinifier)
         {
             _scriptProxyManager = scriptProxyManager;

@@ -22,7 +22,8 @@ namespace Abp.Dependency
         /// </summary>
         public ConventionalRegistrationConfig Config { get; private set; }
 
-        internal ConventionalRegistrationContext(Assembly assembly, IIocManager iocManager, ConventionalRegistrationConfig config)
+        internal ConventionalRegistrationContext(Assembly assembly, IIocManager iocManager,
+            ConventionalRegistrationConfig config)
         {
             Assembly = assembly;
             IocManager = iocManager;

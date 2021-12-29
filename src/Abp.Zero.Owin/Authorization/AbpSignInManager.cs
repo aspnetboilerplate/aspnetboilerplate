@@ -53,9 +53,7 @@ namespace Abp.Authorization
             return await _unitOfWorkManager.WithUnitOfWorkAsync(async () =>
             {
                 if (loginResult.Result != AbpLoginResultType.Success)
-                {
                     throw new ArgumentException("loginResult.Result should be success in order to sign in!");
-                }
 
                 using (_unitOfWorkManager.Current.SetTenantId(loginResult.Tenant?.Id))
                 {
@@ -65,9 +63,7 @@ namespace Abp.Authorization
                             .RegisterTwoFactorProviders(loginResult.Tenant?.Id);
 
                         if (await UserManager.GetTwoFactorEnabledAsync(loginResult.User.Id))
-                        {
                             if ((await UserManager.GetValidTwoFactorProvidersAsync(loginResult.User.Id)).Count > 0)
-                            {
                                 if (!await AuthenticationManager.TwoFactorBrowserRememberedAsync(loginResult.User.Id
                                         .ToString()) ||
                                     rememberBrowser == false)
@@ -78,17 +74,13 @@ namespace Abp.Authorization
                                         loginResult.User.Id.ToString()));
 
                                     if (loginResult.Tenant != null)
-                                    {
                                         claimsIdentity.AddClaim(new Claim(AbpClaimTypes.TenantId,
                                             loginResult.Tenant.Id.ToString()));
-                                    }
 
-                                    AuthenticationManager.SignIn(new AuthenticationProperties {IsPersistent = true},
+                                    AuthenticationManager.SignIn(new AuthenticationProperties { IsPersistent = true },
                                         claimsIdentity);
                                     return SignInStatus.RequiresVerification;
                                 }
-                            }
-                        }
                     }
 
                     SignIn(loginResult, isPersistent, rememberBrowser);
@@ -106,9 +98,7 @@ namespace Abp.Authorization
             _unitOfWorkManager.WithUnitOfWork(() =>
             {
                 if (loginResult.Result != AbpLoginResultType.Success)
-                {
                     throw new ArgumentException("loginResult.Result should be success in order to sign in!");
-                }
 
                 using (_unitOfWorkManager.Current.SetTenantId(loginResult.Tenant?.Id))
                 {
@@ -118,15 +108,15 @@ namespace Abp.Authorization
                     );
 
                     if (rememberBrowser == null)
-                    {
-                        rememberBrowser = IsTrue(AbpZeroSettingNames.UserManagement.TwoFactorLogin.IsRememberBrowserEnabled,
+                        rememberBrowser = IsTrue(
+                            AbpZeroSettingNames.UserManagement.TwoFactorLogin.IsRememberBrowserEnabled,
                             loginResult.Tenant?.Id);
-                    }
 
                     if (rememberBrowser == true)
                     {
                         var rememberBrowserIdentity =
-                            AuthenticationManager.CreateTwoFactorRememberBrowserIdentity(loginResult.User.Id.ToString());
+                            AuthenticationManager.CreateTwoFactorRememberBrowserIdentity(loginResult.User.Id
+                                .ToString());
                         AuthenticationManager.SignIn(
                             new AuthenticationProperties
                             {

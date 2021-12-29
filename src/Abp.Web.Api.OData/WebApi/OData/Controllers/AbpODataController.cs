@@ -23,7 +23,8 @@ namespace Abp.WebApi.OData.Controllers
             PermissionChecker = NullPermissionChecker.Instance;
         }
 
-        public override Task<HttpResponseMessage> ExecuteAsync(HttpControllerContext controllerContext, CancellationToken cancellationToken)
+        public override Task<HttpResponseMessage> ExecuteAsync(HttpControllerContext controllerContext,
+            CancellationToken cancellationToken)
         {
             UnitOfWorkCompleteHandler = UnitOfWorkManager.Begin();
             return base.ExecuteAsync(controllerContext, cancellationToken);

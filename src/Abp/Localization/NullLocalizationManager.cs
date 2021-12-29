@@ -12,7 +12,8 @@ namespace Abp.Localization
         /// </summary>
         public static NullLocalizationManager Instance { get; } = new NullLocalizationManager();
 
-        public LanguageInfo CurrentLanguage { get { return new LanguageInfo(CultureInfo.CurrentUICulture.Name, CultureInfo.CurrentUICulture.DisplayName); } }
+        public LanguageInfo CurrentLanguage =>
+            new LanguageInfo(CultureInfo.CurrentUICulture.Name, CultureInfo.CurrentUICulture.DisplayName);
 
         private readonly IReadOnlyList<LanguageInfo> _emptyLanguageArray = new LanguageInfo[0];
 
@@ -20,7 +21,6 @@ namespace Abp.Localization
 
         private NullLocalizationManager()
         {
-
         }
 
         public IReadOnlyList<LanguageInfo> GetAllLanguages()

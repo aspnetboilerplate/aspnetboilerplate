@@ -50,19 +50,12 @@ namespace Abp.Zero.SampleApp.Tests.DynamicEntityProperties
             {
                 if (e.Message.Contains(requiredPermission) ||
                     e.InnerException != null && e.InnerException.Message.Contains(requiredPermission))
-                {
                     isExceptionThrown = true;
-                }
                 else
-                {
                     throw;
-                }
             }
 
-            if (!isExceptionThrown)
-            {
-                throw new Exception("Should throw exception for unauthorized users");
-            }
+            if (!isExceptionThrown) throw new Exception("Should throw exception for unauthorized users");
 
             GrantPermission(user, requiredPermission);
 
@@ -85,19 +78,12 @@ namespace Abp.Zero.SampleApp.Tests.DynamicEntityProperties
             {
                 if (e.Message.Contains(requiredPermission) ||
                     e.InnerException != null && e.InnerException.Message.Contains(requiredPermission))
-                {
                     isExceptionThrown = true;
-                }
                 else
-                {
                     throw;
-                }
             }
 
-            if (!isExceptionThrown)
-            {
-                throw new Exception("Should throw exception for unauthorized users");
-            }
+            if (!isExceptionThrown) throw new Exception("Should throw exception for unauthorized users");
 
             await GrantPermissionAsync(user, requiredPermission);
 

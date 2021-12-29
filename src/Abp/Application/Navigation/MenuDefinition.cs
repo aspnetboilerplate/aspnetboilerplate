@@ -38,14 +38,10 @@ namespace Abp.Application.Navigation
         public MenuDefinition(string name, ILocalizableString displayName, object customData = null)
         {
             if (string.IsNullOrEmpty(name))
-            {
                 throw new ArgumentNullException("name", "Menu name can not be empty or null.");
-            }
 
             if (displayName == null)
-            {
                 throw new ArgumentNullException("displayName", "Display name of the menu can not be null.");
-            }
 
             Name = name;
             DisplayName = displayName;

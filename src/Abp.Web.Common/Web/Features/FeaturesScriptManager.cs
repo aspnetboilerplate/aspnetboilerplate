@@ -33,16 +33,11 @@ namespace Abp.Web.Features
             {
                 var currentTenantId = AbpSession.GetTenantId();
                 foreach (var feature in allFeatures)
-                {
                     currentValues[feature.Name] = await _featureChecker.GetValueAsync(currentTenantId, feature.Name);
-                }
             }
             else
             {
-                foreach (var feature in allFeatures)
-                {
-                    currentValues[feature.Name] = feature.DefaultValue;
-                }
+                foreach (var feature in allFeatures) currentValues[feature.Name] = feature.DefaultValue;
             }
 
             var script = new StringBuilder();
@@ -61,17 +56,14 @@ namespace Abp.Web.Features
             {
                 var feature = allFeatures[i];
                 script.AppendLine("        '" + HttpEncode.JavaScriptStringEncode(feature.Name) + "': {");
-                script.AppendLine("             value: '" + HttpEncode.JavaScriptStringEncode(currentValues[feature.Name]) + "'");
+                script.AppendLine("             value: '" +
+                                  HttpEncode.JavaScriptStringEncode(currentValues[feature.Name]) + "'");
                 script.Append("        }");
 
                 if (i < allFeatures.Count - 1)
-                {
                     script.AppendLine(",");
-                }
                 else
-                {
                     script.AppendLine();
-                }
             }
 
             script.AppendLine("    };");

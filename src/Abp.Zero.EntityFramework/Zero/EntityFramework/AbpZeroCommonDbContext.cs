@@ -219,7 +219,8 @@ namespace Abp.Zero.EntityFramework
         /// <summary>
         /// Constructor.
         /// </summary>
-        protected AbpZeroCommonDbContext(DbConnection existingConnection, DbCompiledModel model, bool contextOwnsConnection)
+        protected AbpZeroCommonDbContext(DbConnection existingConnection, DbCompiledModel model,
+            bool contextOwnsConnection)
             : base(existingConnection, model, contextOwnsConnection)
         {
         }
@@ -235,16 +236,14 @@ namespace Abp.Zero.EntityFramework
             return result;
         }
 
-        public override async Task<int> SaveChangesAsync(CancellationToken cancellationToken = default(CancellationToken))
+        public override async Task<int> SaveChangesAsync(
+            CancellationToken cancellationToken = default(CancellationToken))
         {
             var changeSet = EntityHistoryHelper?.CreateEntityChangeSet(this);
 
             var result = await base.SaveChangesAsync(cancellationToken);
 
-            if (EntityHistoryHelper != null)
-            {
-                await EntityHistoryHelper.SaveAsync(this, changeSet);
-            }
+            if (EntityHistoryHelper != null) await EntityHistoryHelper.SaveAsync(this, changeSet);
 
             return result;
         }
@@ -332,21 +331,21 @@ namespace Abp.Zero.EntityFramework
             #endregion
 
             modelBuilder.Entity<Setting>()
-                .HasIndex(e => new {e.TenantId, e.Name, e.UserId})
+                .HasIndex(e => new { e.TenantId, e.Name, e.UserId })
                 .IsUnique();
 
             modelBuilder.Entity<DynamicProperty>()
-                .HasIndex(e => new {e.PropertyName, e.TenantId})
+                .HasIndex(e => new { e.PropertyName, e.TenantId })
                 .IsUnique();
 
             modelBuilder.Entity<DynamicEntityProperty>()
-                .HasIndex(e => new {e.EntityFullName, e.DynamicPropertyId, e.TenantId})
+                .HasIndex(e => new { e.EntityFullName, e.DynamicPropertyId, e.TenantId })
                 .IsUnique();
 
             #region UserLogin.ProviderKey_TenantId
-            
+
             modelBuilder.Entity<UserLogin>()
-                .HasIndex(e => new {e.ProviderKey, e.TenantId})
+                .HasIndex(e => new { e.ProviderKey, e.TenantId })
                 .IsUnique();
 
             #endregion

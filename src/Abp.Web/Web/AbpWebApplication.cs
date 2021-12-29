@@ -33,22 +33,18 @@ namespace Abp.Web
 
         protected virtual void Session_Start(object sender, EventArgs e)
         {
-
         }
 
         protected virtual void Session_End(object sender, EventArgs e)
         {
-
         }
 
         protected virtual void Application_BeginRequest(object sender, EventArgs e)
         {
-            
         }
 
         protected virtual void Application_AuthenticateRequest(object sender, EventArgs e)
         {
-
         }
 
         protected virtual void Application_PostAuthenticateRequest(object sender, EventArgs e)
@@ -58,17 +54,16 @@ namespace Abp.Web
 
         protected virtual void Application_EndRequest(object sender, EventArgs e)
         {
-
         }
 
         protected virtual void Application_Error(object sender, EventArgs e)
         {
-
         }
 
         protected virtual void SetCurrentCulture()
         {
-            AbpBootstrapper.IocManager.Using<ICurrentCultureSetter>(cultureSetter => cultureSetter.SetCurrentCulture(Context));
+            AbpBootstrapper.IocManager.Using<ICurrentCultureSetter>(cultureSetter =>
+                cultureSetter.SetCurrentCulture(Context));
         }
     }
 }

@@ -34,15 +34,10 @@ namespace Abp.Reflection
         private Type[] GetAllTypes()
         {
             if (_types == null)
-            {
                 lock (_syncObj)
                 {
-                    if (_types == null)
-                    {
-                        _types = CreateTypeList().ToArray();
-                    }
+                    if (_types == null) _types = CreateTypeList().ToArray();
                 }
-            }
 
             return _types;
         }
@@ -54,7 +49,6 @@ namespace Abp.Reflection
             var assemblies = _assemblyFinder.GetAllAssemblies().Distinct();
 
             foreach (var assembly in assemblies)
-            {
                 try
                 {
                     Type[] typesInThisAssembly;
@@ -68,10 +62,7 @@ namespace Abp.Reflection
                         typesInThisAssembly = ex.Types;
                     }
 
-                    if (typesInThisAssembly.IsNullOrEmpty())
-                    {
-                        continue;
-                    }
+                    if (typesInThisAssembly.IsNullOrEmpty()) continue;
 
                     allTypes.AddRange(typesInThisAssembly.Where(type => type != null));
                 }
@@ -79,7 +70,6 @@ namespace Abp.Reflection
                 {
                     Logger.Warn(ex.ToString(), ex);
                 }
-            }
 
             return allTypes;
         }

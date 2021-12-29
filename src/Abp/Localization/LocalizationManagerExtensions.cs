@@ -8,7 +8,8 @@ namespace Abp.Localization
         /// Gets a localized string in current language.
         /// </summary>
         /// <returns>Localized string</returns>
-        public static string GetString(this ILocalizationManager localizationManager, LocalizableString localizableString)
+        public static string GetString(this ILocalizationManager localizationManager,
+            LocalizableString localizableString)
         {
             return localizationManager.GetString(localizableString.SourceName, localizableString.Name);
         }
@@ -17,7 +18,8 @@ namespace Abp.Localization
         /// Gets a localized string in specified language.
         /// </summary>
         /// <returns>Localized string</returns>
-        public static string GetString(this ILocalizationManager localizationManager, LocalizableString localizableString, CultureInfo culture)
+        public static string GetString(this ILocalizationManager localizationManager,
+            LocalizableString localizableString, CultureInfo culture)
         {
             return localizationManager.GetString(localizableString.SourceName, localizableString.Name, culture);
         }
@@ -42,7 +44,8 @@ namespace Abp.Localization
         /// <param name="name">Key name to get localized string</param>
         /// <param name="culture">culture</param>
         /// <returns>Localized string</returns>
-        public static string GetString(this ILocalizationManager localizationManager, string sourceName, string name, CultureInfo culture)
+        public static string GetString(this ILocalizationManager localizationManager, string sourceName, string name,
+            CultureInfo culture)
         {
             return localizationManager.GetSource(sourceName).GetString(name, culture);
         }

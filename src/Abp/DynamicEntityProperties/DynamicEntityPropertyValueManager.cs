@@ -30,14 +30,10 @@ namespace Abp.DynamicEntityProperties
         private int GetDynamicPropertyId(DynamicEntityPropertyValue dynamicEntityPropertyValue)
         {
             if (dynamicEntityPropertyValue.DynamicEntityPropertyId == default)
-            {
                 throw new ArgumentNullException(nameof(dynamicEntityPropertyValue.DynamicEntityPropertyId));
-            }
 
             if (dynamicEntityPropertyValue.DynamicEntityProperty != null)
-            {
                 return dynamicEntityPropertyValue.DynamicEntityProperty.DynamicPropertyId;
-            }
 
             var dynamicEntityProperty =
                 _dynamicEntityPropertyManager.Get(dynamicEntityPropertyValue.DynamicEntityPropertyId);
@@ -48,14 +44,10 @@ namespace Abp.DynamicEntityProperties
         private async Task<int> GetDynamicPropertyIdAsync(DynamicEntityPropertyValue dynamicEntityPropertyValue)
         {
             if (dynamicEntityPropertyValue.DynamicEntityPropertyId == default)
-            {
                 throw new ArgumentNullException(nameof(dynamicEntityPropertyValue.DynamicEntityPropertyId));
-            }
 
             if (dynamicEntityPropertyValue.DynamicEntityProperty != null)
-            {
                 return dynamicEntityPropertyValue.DynamicEntityProperty.DynamicPropertyId;
-            }
 
             var dynamicEntityProperty =
                 await _dynamicEntityPropertyManager.GetAsync(dynamicEntityPropertyValue.DynamicEntityPropertyId);
@@ -106,10 +98,7 @@ namespace Abp.DynamicEntityProperties
         public virtual void Delete(long id)
         {
             var dynamicEntityPropertyValue = Get(id); //Get checks permission, no need to check it again
-            if (dynamicEntityPropertyValue == null)
-            {
-                return;
-            }
+            if (dynamicEntityPropertyValue == null) return;
 
             DynamicEntityPropertyValueStore.Delete(id);
         }
@@ -117,10 +106,7 @@ namespace Abp.DynamicEntityProperties
         public virtual async Task DeleteAsync(long id)
         {
             var dynamicEntityPropertyValue = await GetAsync(id); //Get checks permission, no need to check it again
-            if (dynamicEntityPropertyValue == null)
-            {
-                return;
-            }
+            if (dynamicEntityPropertyValue == null) return;
 
             await DynamicEntityPropertyValueStore.DeleteAsync(id);
         }
@@ -162,9 +148,7 @@ namespace Abp.DynamicEntityProperties
                 var dynamicEntityProperty = await _dynamicEntityPropertyManager.GetAsync(value.DynamicEntityPropertyId);
 
                 if (await _dynamicPropertyPermissionChecker.IsGrantedAsync(dynamicEntityProperty.DynamicPropertyId))
-                {
                     returnList.Add(value);
-                }
             }
 
             return returnList;
@@ -193,9 +177,7 @@ namespace Abp.DynamicEntityProperties
                 var dynamicEntityProperty = await _dynamicEntityPropertyManager.GetAsync(value.DynamicEntityPropertyId);
 
                 if (await _dynamicPropertyPermissionChecker.IsGrantedAsync(dynamicEntityProperty.DynamicPropertyId))
-                {
                     returnList.Add(value);
-                }
             }
 
             return returnList;
@@ -205,9 +187,7 @@ namespace Abp.DynamicEntityProperties
         {
             var dynamicProperty = _dynamicPropertyManager.Get(propertyName);
             if (dynamicProperty == null)
-            {
                 throw new EntityNotFoundException($"There is no DynamicProperty with propertyName: \"{propertyName}\"");
-            }
 
             return GetValues(entityFullName, entityId, dynamicProperty.Id);
         }
@@ -217,9 +197,7 @@ namespace Abp.DynamicEntityProperties
         {
             var dynamicProperty = await _dynamicPropertyManager.GetAsync(propertyName);
             if (dynamicProperty == null)
-            {
                 throw new EntityNotFoundException($"There is no DynamicProperty with propertyName: \"{propertyName}\"");
-            }
 
             return await GetValuesAsync(entityFullName, entityId, dynamicProperty.Id);
         }

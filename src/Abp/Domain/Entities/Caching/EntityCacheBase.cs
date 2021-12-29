@@ -20,9 +20,9 @@ namespace Abp.Domain.Entities.Caching
         protected IRepository<TEntity, TPrimaryKey> Repository { get; private set; }
 
         protected IUnitOfWorkManager UnitOfWorkManager { get; private set; }
-        
+
         public EntityCacheBase(
-            ICacheManager cacheManager, 
+            ICacheManager cacheManager,
             IRepository<TEntity, TPrimaryKey> repository,
             IUnitOfWorkManager unitOfWorkManager,
             string cacheName = null)
@@ -65,15 +65,13 @@ namespace Abp.Domain.Entities.Caching
         protected virtual TCacheItem MapToCacheItem(TEntity entity)
         {
             if (ObjectMapper is NullObjectMapper)
-            {
                 throw new AbpException(
                     string.Format(
                         "MapToCacheItem method should be overridden or IObjectMapper should be implemented in order to map {0} to {1}",
-                        typeof (TEntity),
-                        typeof (TCacheItem)
-                        )
-                    );
-            }
+                        typeof(TEntity),
+                        typeof(TCacheItem)
+                    )
+                );
 
             return ObjectMapper.Map<TCacheItem>(entity);
         }

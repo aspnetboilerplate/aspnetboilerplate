@@ -200,9 +200,7 @@ namespace Abp.Auditing
                     {
                         var memberNames = "";
                         if (validationResult.MemberNames != null && validationResult.MemberNames.Any())
-                        {
                             memberNames = " (" + string.Join(", ", validationResult.MemberNames) + ")";
-                        }
 
                         clearMessage += "\r\n" + validationResult.ErrorMessage + memberNames;
                     }

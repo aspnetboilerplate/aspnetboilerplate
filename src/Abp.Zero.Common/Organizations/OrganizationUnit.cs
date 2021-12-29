@@ -81,7 +81,6 @@ namespace Abp.Organizations
         /// </summary>
         public OrganizationUnit()
         {
-            
         }
 
         /// <summary>
@@ -104,10 +103,7 @@ namespace Abp.Organizations
         /// <param name="numbers">Numbers</param>
         public static string CreateCode(params int[] numbers)
         {
-            if (numbers.IsNullOrEmpty())
-            {
-                return null;
-            }
+            if (numbers.IsNullOrEmpty()) return null;
 
             return numbers.Select(number => number.ToString(new string('0', CodeUnitLength))).JoinAsString(".");
         }
@@ -121,14 +117,9 @@ namespace Abp.Organizations
         public static string AppendCode(string parentCode, string childCode)
         {
             if (childCode.IsNullOrEmpty())
-            {
                 throw new ArgumentNullException(nameof(childCode), "childCode can not be null or empty.");
-            }
 
-            if (parentCode.IsNullOrEmpty())
-            {
-                return childCode;
-            }
+            if (parentCode.IsNullOrEmpty()) return childCode;
 
             return parentCode + "." + childCode;
         }
@@ -141,20 +132,11 @@ namespace Abp.Organizations
         /// <param name="parentCode">The parent code.</param>
         public static string GetRelativeCode(string code, string parentCode)
         {
-            if (code.IsNullOrEmpty())
-            {
-                throw new ArgumentNullException(nameof(code), "code can not be null or empty.");
-            }
+            if (code.IsNullOrEmpty()) throw new ArgumentNullException(nameof(code), "code can not be null or empty.");
 
-            if (parentCode.IsNullOrEmpty())
-            {
-                return code;
-            }
+            if (parentCode.IsNullOrEmpty()) return code;
 
-            if (code.Length == parentCode.Length)
-            {
-                return null;
-            }
+            if (code.Length == parentCode.Length) return null;
 
             return code.Substring(parentCode.Length + 1);
         }
@@ -166,10 +148,7 @@ namespace Abp.Organizations
         /// <param name="code">The code.</param>
         public static string CalculateNextCode(string code)
         {
-            if (code.IsNullOrEmpty())
-            {
-                throw new ArgumentNullException(nameof(code), "code can not be null or empty.");
-            }
+            if (code.IsNullOrEmpty()) throw new ArgumentNullException(nameof(code), "code can not be null or empty.");
 
             var parentCode = GetParentCode(code);
             var lastUnitCode = GetLastUnitCode(code);
@@ -184,10 +163,7 @@ namespace Abp.Organizations
         /// <param name="code">The code.</param>
         public static string GetLastUnitCode(string code)
         {
-            if (code.IsNullOrEmpty())
-            {
-                throw new ArgumentNullException(nameof(code), "code can not be null or empty.");
-            }
+            if (code.IsNullOrEmpty()) throw new ArgumentNullException(nameof(code), "code can not be null or empty.");
 
             var splittedCode = code.Split('.');
             return splittedCode[splittedCode.Length - 1];
@@ -200,16 +176,10 @@ namespace Abp.Organizations
         /// <param name="code">The code.</param>
         public static string GetParentCode(string code)
         {
-            if (code.IsNullOrEmpty())
-            {
-                throw new ArgumentNullException(nameof(code), "code can not be null or empty.");
-            }
+            if (code.IsNullOrEmpty()) throw new ArgumentNullException(nameof(code), "code can not be null or empty.");
 
             var splittedCode = code.Split('.');
-            if (splittedCode.Length == 1)
-            {
-                return null;
-            }
+            if (splittedCode.Length == 1) return null;
 
             return splittedCode.Take(splittedCode.Length - 1).JoinAsString(".");
         }

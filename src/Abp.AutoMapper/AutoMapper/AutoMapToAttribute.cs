@@ -18,7 +18,6 @@ namespace Abp.AutoMapper
         public AutoMapToAttribute(params Type[] targetTypes)
             : base(targetTypes)
         {
-
         }
 
         public AutoMapToAttribute(MemberList memberList, params Type[] targetTypes)
@@ -29,10 +28,7 @@ namespace Abp.AutoMapper
 
         public override void CreateMap(IMapperConfigurationExpression configuration, Type type)
         {
-            if (TargetTypes.IsNullOrEmpty())
-            {
-                return;
-            }
+            if (TargetTypes.IsNullOrEmpty()) return;
 
             configuration.CreateAutoAttributeMaps(type, TargetTypes, MemberList);
         }

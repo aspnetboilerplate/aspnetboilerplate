@@ -27,7 +27,6 @@ namespace Abp.Hangfire
         public void OnPerformed(PerformedContext filterContext)
         {
             if (filterContext.Exception != null)
-            {
                 EventBus.Trigger(
                     this,
                     new AbpHandledExceptionData(
@@ -40,7 +39,6 @@ namespace Abp.Hangfire
                         }
                     )
                 );
-            }
         }
     }
 }

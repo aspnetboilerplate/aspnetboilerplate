@@ -40,7 +40,7 @@ namespace Abp.MemoryDb.Tests.Repositories
             test1.ShouldNotBe(null);
 
             _repository.Delete(test1);
-            
+
             test1 = _repository.FirstOrDefault(e => e.Name == "test-1");
             test1.ShouldBe(null);
         }
@@ -51,7 +51,6 @@ namespace Abp.MemoryDb.Tests.Repositories
 
             public MyEntity()
             {
-                
             }
 
             public MyEntity(string name)

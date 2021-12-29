@@ -8,6 +8,5 @@ namespace Abp.Castle.Logging.Log4Net
     [DependsOn(typeof(AbpKernelModule))]
     public class AbpCastleLog4NetModule : AbpModule
     {
-
     }
 }

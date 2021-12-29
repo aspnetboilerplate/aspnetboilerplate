@@ -120,10 +120,7 @@ namespace Abp.Configuration.Startup
                 foreach (var provider in CustomConfigProviders)
                 {
                     var config = provider.GetConfig(new CustomConfigProviderContext(scope));
-                    foreach (var keyValue in config)
-                    {
-                        mergedConfig[keyValue.Key] = keyValue.Value;
-                    }
+                    foreach (var keyValue in config) mergedConfig[keyValue.Key] = keyValue.Value;
                 }
             }
 

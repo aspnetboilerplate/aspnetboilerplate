@@ -9,6 +9,5 @@ namespace Abp
     /// </summary>
     public interface IShouldInitialize : IInitializable
     {
-        
     }
 }

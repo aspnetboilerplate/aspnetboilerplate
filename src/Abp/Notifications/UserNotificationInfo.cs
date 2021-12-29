@@ -39,7 +39,6 @@ namespace Abp.Notifications
 
         public UserNotificationInfo()
         {
-            
         }
 
         /// <summary>

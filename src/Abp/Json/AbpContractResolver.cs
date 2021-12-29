@@ -20,15 +20,12 @@ namespace Abp.Json
 
         protected virtual void ModifyProperty(MemberInfo member, JsonProperty property)
         {
-            if (property.PropertyType != typeof(DateTime) && property.PropertyType != typeof(DateTime?))
-            {
-                return;
-            }
+            if (property.PropertyType != typeof(DateTime) && property.PropertyType != typeof(DateTime?)) return;
 
-            if (ReflectionHelper.GetSingleAttributeOfMemberOrDeclaringTypeOrDefault<DisableDateTimeNormalizationAttribute>(member) == null)
-            {
-                property.Converter = new AbpDateTimeConverter();
-            }
+            if (ReflectionHelper
+                    .GetSingleAttributeOfMemberOrDeclaringTypeOrDefault<
+                        DisableDateTimeNormalizationAttribute>(member) ==
+                null) property.Converter = new AbpDateTimeConverter();
         }
     }
 }

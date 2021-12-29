@@ -12,9 +12,9 @@ namespace Abp.Zero.SampleApp.Editions
             IAbpZeroFeatureValueStore featureValueStore,
             IUnitOfWorkManager unitOfWorkManager)
             : base(
-               editionRepository,
-               featureValueStore,
-               unitOfWorkManager)
+                editionRepository,
+                featureValueStore,
+                unitOfWorkManager)
         {
         }
     }

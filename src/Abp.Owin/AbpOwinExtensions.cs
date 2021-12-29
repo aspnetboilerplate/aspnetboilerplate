@@ -40,9 +40,8 @@ namespace Abp.Owin
             if (options.UseEmbeddedFiles)
             {
                 if (HttpContext.Current?.Server == null)
-                {
-                    throw new AbpInitializationException("Can not enable UseEmbeddedFiles for OWIN since HttpContext.Current is null! If you are using ASP.NET Core, serve embedded resources through ASP.NET Core middleware instead of OWIN. See http://www.aspnetboilerplate.com/Pages/Documents/Embedded-Resource-Files#aspnet-core-configuration");
-                }
+                    throw new AbpInitializationException(
+                        "Can not enable UseEmbeddedFiles for OWIN since HttpContext.Current is null! If you are using ASP.NET Core, serve embedded resources through ASP.NET Core middleware instead of OWIN. See http://www.aspnetboilerplate.com/Pages/Documents/Embedded-Resource-Files#aspnet-core-configuration");
 
                 app.UseStaticFiles(new StaticFileOptions
                 {
@@ -72,7 +71,9 @@ namespace Abp.Owin
         /// Otherwise, use <see cref="UseAbp(IAppBuilder)"/>.
         /// </summary>
         /// <typeparam name="TStartupModule">The type of the startup module.</typeparam>
-        public static void UseAbp<TStartupModule>(this IAppBuilder app, [CanBeNull] Action<AbpBootstrapper> configureAction, [CanBeNull] Action<AbpOwinOptions> optionsAction = null)
+        public static void UseAbp<TStartupModule>(this IAppBuilder app,
+            [CanBeNull] Action<AbpBootstrapper> configureAction,
+            [CanBeNull] Action<AbpOwinOptions> optionsAction = null)
             where TStartupModule : AbpModule
         {
             app.UseAbp(optionsAction);

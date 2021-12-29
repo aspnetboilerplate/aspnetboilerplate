@@ -22,9 +22,11 @@ namespace Abp.Tests.BackgroundJobs
             {
                 JobType = "TestType",
                 JobArgs = "{}",
-                NextTryTime = Clock.Now.AddMinutes(-1) // to be sure NextTryTime will not be same when _store.InsertAsync and _store.GetWaitingJobsAsync are executed.
+                NextTryTime =
+                    Clock.Now.AddMinutes(
+                        -1) // to be sure NextTryTime will not be same when _store.InsertAsync and _store.GetWaitingJobsAsync are executed.
             };
-            
+
             await _store.InsertAsync(jobInfo);
             (await _store.GetWaitingJobsAsync(1000)).Count.ShouldBe(1);
 

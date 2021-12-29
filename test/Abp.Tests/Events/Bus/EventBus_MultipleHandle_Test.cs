@@ -33,10 +33,9 @@ namespace Abp.Tests.Events.Bus
 
         public class MyEntity : Entity
         {
-            
         }
 
-        public class MyEventHandler : 
+        public class MyEventHandler :
             IEventHandler<EntityChangedEventData<MyEntity>>,
             IEventHandler<EntityCreatedEventData<MyEntity>>
         {

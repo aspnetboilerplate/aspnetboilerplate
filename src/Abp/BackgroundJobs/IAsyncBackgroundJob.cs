@@ -2,7 +2,7 @@
 
 namespace Abp.BackgroundJobs
 {
-    public interface IAsyncBackgroundJob<in TArgs>: IBackgroundJobBase<TArgs>
+    public interface IAsyncBackgroundJob<in TArgs> : IBackgroundJobBase<TArgs>
     {
         /// <summary>
         /// Executes the job with the <paramref name="args"/>.

@@ -7,7 +7,6 @@ namespace Abp.Zero.SampleApp.MultiTenancy
     {
         protected Tenant()
         {
-
         }
 
         public Tenant(string tenancyName, string name)

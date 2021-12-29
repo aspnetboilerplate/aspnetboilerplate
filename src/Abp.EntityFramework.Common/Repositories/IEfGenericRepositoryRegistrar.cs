@@ -6,6 +6,7 @@ namespace Abp.EntityFramework.Repositories
 {
     public interface IEfGenericRepositoryRegistrar
     {
-        void RegisterForDbContext(Type dbContextType, IIocManager iocManager, AutoRepositoryTypesAttribute defaultAutoRepositoryTypesAttribute);
+        void RegisterForDbContext(Type dbContextType, IIocManager iocManager,
+            AutoRepositoryTypesAttribute defaultAutoRepositoryTypesAttribute);
     }
 }

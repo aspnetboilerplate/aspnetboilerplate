@@ -1,24 +1,25 @@
-﻿<?xml version="1.0" encoding="utf-8" ?>
+﻿<?xml version="1.0" encoding="utf-8"?>
+
 <localizationDictionary culture="en">
-  <texts>
-    <text name="SmtpHost">SMTP host</text>
-    <text name="SmtpPort">SMTP port</text>
-    <text name="Username">User name</text>
-    <text name="Password">Password</text>
-    <text name="DomainName">Domain name</text>
-    <text name="UseSSL">Use SSL</text>
-    <text name="UseDefaultCredentials">Use default credentials</text>
-    <text name="DefaultFromSenderEmailAddress">Default from (sender) email address</text>
-    <text name="DefaultFromSenderDisplayName">Default from (sender) display name</text>
-    <text name="DefaultLanguage">Default language</text>
-    <text name="ReceiveNotifications">Receive notifications</text>
-    <text name="CurrentUserDidNotLoginToTheApplication">Current user did not login to the application!</text>
-    <text name="TimeZone">Timezone</text>
-    <text name="AllOfThesePermissionsMustBeGranted">Required permissions are not granted. All of these permissions must be granted: {0}</text>
-    <text name="AtLeastOneOfThesePermissionsMustBeGranted">Required permissions are not granted. At least one of these permissions must be granted: {0}</text>
-    <text name="FeatureIsNotEnabled">Feature is not enabled: {0}</text>
-    <text name="AllOfTheseFeaturesMustBeEnabled">Required features are not enabled. All of these features must be enabled: {0}</text>
-    <text name="AtLeastOneOfTheseFeaturesMustBeEnabled">Required features are not enabled. At least one of these features must be enabled: {0}</text>
-    <text name="MainMenu">Main menu</text>
-  </texts>
+	<texts>
+		<text name="SmtpHost">SMTP host</text>
+		<text name="SmtpPort">SMTP port</text>
+		<text name="Username">User name</text>
+		<text name="Password">Password</text>
+		<text name="DomainName">Domain name</text>
+		<text name="UseSSL">Use SSL</text>
+		<text name="UseDefaultCredentials">Use default credentials</text>
+		<text name="DefaultFromSenderEmailAddress">Default from (sender) email address</text>
+		<text name="DefaultFromSenderDisplayName">Default from (sender) display name</text>
+		<text name="DefaultLanguage">Default language</text>
+		<text name="ReceiveNotifications">Receive notifications</text>
+		<text name="CurrentUserDidNotLoginToTheApplication">Current user did not login to the application!</text>
+		<text name="TimeZone">Timezone</text>
+		<text name="AllOfThesePermissionsMustBeGranted">Required permissions are not granted. All of these permissions must be granted: {0}</text>
+		<text name="AtLeastOneOfThesePermissionsMustBeGranted">Required permissions are not granted. At least one of these permissions must be granted: {0}</text>
+		<text name="FeatureIsNotEnabled">Feature is not enabled: {0}</text>
+		<text name="AllOfTheseFeaturesMustBeEnabled">Required features are not enabled. All of these features must be enabled: {0}</text>
+		<text name="AtLeastOneOfTheseFeaturesMustBeEnabled">Required features are not enabled. At least one of these features must be enabled: {0}</text>
+		<text name="MainMenu">Main menu</text>
+	</texts>
 </localizationDictionary>

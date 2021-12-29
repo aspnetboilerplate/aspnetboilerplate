@@ -16,7 +16,6 @@ namespace Abp.Events.Bus.Entities
         public EntityDeletingEventData(TEntity entity)
             : base(entity)
         {
-
         }
     }
 }

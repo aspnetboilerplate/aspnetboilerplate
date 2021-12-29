@@ -9,10 +9,7 @@ namespace Abp.Application.Navigation
     {
         public IDictionary<string, MenuDefinition> Menus { get; private set; }
 
-        public MenuDefinition MainMenu
-        {
-            get { return Menus["MainMenu"]; }
-        }
+        public MenuDefinition MainMenu => Menus["MainMenu"];
 
         private readonly IIocResolver _iocResolver;
         private readonly INavigationConfiguration _configuration;
@@ -23,9 +20,12 @@ namespace Abp.Application.Navigation
             _configuration = configuration;
 
             Menus = new Dictionary<string, MenuDefinition>
-                    {
-                        {"MainMenu", new MenuDefinition("MainMenu", new LocalizableString("MainMenu", AbpConsts.LocalizationSourceName))}
-                    };
+            {
+                {
+                    "MainMenu",
+                    new MenuDefinition("MainMenu", new LocalizableString("MainMenu", AbpConsts.LocalizationSourceName))
+                }
+            };
         }
 
         public void Initialize()
@@ -33,12 +33,10 @@ namespace Abp.Application.Navigation
             var context = new NavigationProviderContext(this);
 
             foreach (var providerType in _configuration.Providers)
-            {
                 using (var provider = _iocResolver.ResolveAsDisposable<NavigationProvider>(providerType))
                 {
                     provider.Object.SetNavigation(context);
                 }
-            }
         }
     }
 }

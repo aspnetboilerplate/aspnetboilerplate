@@ -51,23 +51,26 @@ namespace Abp.Tests.Application.Navigation
                         {
                             PermissionChecker = CreateMockPermissionChecker()
                         })
-                );
+            );
 
             _iocManager.IocContainer.Register(
                 Component.For<IFeatureDependencyContext, FeatureDependencyContext>()
                     .UsingFactoryMethod(
                         () => new FeatureDependencyContext(_iocManager, Substitute.For<IFeatureChecker>()))
-                );
+            );
 
             //Create user navigation manager to test
-            UserNavigationManager = new UserNavigationManager(NavigationManager, Substitute.For<ILocalizationContext>(), _iocManager);
+            UserNavigationManager =
+                new UserNavigationManager(NavigationManager, Substitute.For<ILocalizationContext>(), _iocManager);
         }
 
         private static IPermissionChecker CreateMockPermissionChecker()
         {
             var permissionChecker = Substitute.For<IPermissionChecker>();
-            permissionChecker.IsGrantedAsync(new UserIdentifier(1, 1), "Abp.Zero.UserManagement").Returns(Task.FromResult(true));
-            permissionChecker.IsGrantedAsync(new UserIdentifier(1, 1), "Abp.Zero.RoleManagement").Returns(Task.FromResult(false));
+            permissionChecker.IsGrantedAsync(new UserIdentifier(1, 1), "Abp.Zero.UserManagement")
+                .Returns(Task.FromResult(true));
+            permissionChecker.IsGrantedAsync(new UserIdentifier(1, 1), "Abp.Zero.RoleManagement")
+                .Returns(Task.FromResult(false));
             return permissionChecker;
         }
 
@@ -81,25 +84,25 @@ namespace Abp.Tests.Application.Navigation
                         new FixedLocalizableString("Administration"),
                         "fa fa-asterisk",
                         requiresAuthentication: true
-                        ).AddItem(
-                            new MenuItemDefinition(
-                                "Abp.Zero.Administration.User",
-                                new FixedLocalizableString("User management"),
-                                "fa fa-users",
-                                "#/admin/users",
-                                permissionDependency: new SimplePermissionDependency("Abp.Zero.UserManagement"),
-                                customData: "A simple test data"
-                                )
-                        ).AddItem(
-                            new MenuItemDefinition(
-                                "Abp.Zero.Administration.Role",
-                                new FixedLocalizableString("Role management"),
-                                "fa fa-star-o",
-                                "#/admin/roles",
-                                permissionDependency: new SimplePermissionDependency("Abp.Zero.RoleManagement")
-                                )
+                    ).AddItem(
+                        new MenuItemDefinition(
+                            "Abp.Zero.Administration.User",
+                            new FixedLocalizableString("User management"),
+                            "fa fa-users",
+                            "#/admin/users",
+                            permissionDependency: new SimplePermissionDependency("Abp.Zero.UserManagement"),
+                            customData: "A simple test data"
                         )
-                    );
+                    ).AddItem(
+                        new MenuItemDefinition(
+                            "Abp.Zero.Administration.Role",
+                            new FixedLocalizableString("Role management"),
+                            "fa fa-star-o",
+                            "#/admin/roles",
+                            permissionDependency: new SimplePermissionDependency("Abp.Zero.RoleManagement")
+                        )
+                    )
+                );
             }
         }
 
@@ -115,8 +118,8 @@ namespace Abp.Tests.Application.Navigation
                         icon: "fa fa-cog",
                         url: "#/admin/settings",
                         customData: new MyCustomDataClass { Data1 = 42, Data2 = "FortyTwo" }
-                        )
-                    );
+                    )
+                );
             }
         }
 

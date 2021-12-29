@@ -24,12 +24,10 @@ namespace Abp.Runtime.Caching.Redis
         {
             return _iocManager.Resolve<AbpRedisCache>(new { name });
         }
+
         protected override void DisposeCaches()
         {
-            foreach (var cache in Caches)
-            {
-                _iocManager.Release(cache.Value);
-            }
+            foreach (var cache in Caches) _iocManager.Release(cache.Value);
         }
     }
 }

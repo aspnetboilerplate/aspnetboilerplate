@@ -7,7 +7,6 @@ namespace Abp.Dependency
     {
         public AbpAsyncDeterminationInterceptor(TInterceptor asyncInterceptor) : base(asyncInterceptor)
         {
-
         }
     }
 }

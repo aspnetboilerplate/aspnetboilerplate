@@ -25,42 +25,40 @@ using Microsoft.Extensions.Hosting;
 using Microsoft.OData.ModelBuilder;
 using Newtonsoft.Json.Serialization;
 
-namespace AbpAspNetCoreDemo
+namespace AbpAspNetCoreDemo;
+
+public class Startup
 {
-    public class Startup
+    private readonly IWebHostEnvironment _env;
+
+    public static readonly AsyncLocal<IocManager> IocManager = new();
+
+    public Startup(IWebHostEnvironment env)
     {
-        private readonly IWebHostEnvironment _env;
+        _env = env;
+        var builder = new ConfigurationBuilder()
+            .SetBasePath(env.ContentRootPath)
+            .AddJsonFile("appsettings.json", true, true)
+            .AddJsonFile($"appsettings.{env.EnvironmentName}.json", true)
+            .AddEnvironmentVariables();
+        Configuration = builder.Build();
+    }
 
-        public static readonly AsyncLocal<IocManager> IocManager = new AsyncLocal<IocManager>();
+    public IConfigurationRoot Configuration { get; }
 
-        public Startup(IWebHostEnvironment env)
-        {
-            _env = env;
-            var builder = new ConfigurationBuilder()
-                .SetBasePath(env.ContentRootPath)
-                .AddJsonFile("appsettings.json", optional: true, reloadOnChange: true)
-                .AddJsonFile($"appsettings.{env.EnvironmentName}.json", optional: true)
-                .AddEnvironmentVariables();
-            Configuration = builder.Build();
-        }
+    // This method gets called by the runtime. Use this method to add services to the container.
+    public IServiceProvider ConfigureServices(IServiceCollection services)
+    {
+        services.AddSingleton(Configuration);
 
-        public IConfigurationRoot Configuration { get; }
+        //Some test classes
+        services.AddTransient<MyTransientClass1>();
+        services.AddTransient<MyTransientClass2>();
+        services.AddScoped<MyScopedClass>();
 
-        // This method gets called by the runtime. Use this method to add services to the container.
-        public IServiceProvider ConfigureServices(IServiceCollection services)
-        {
-            services.AddSingleton(Configuration);
-
-            //Some test classes
-            services.AddTransient<MyTransientClass1>();
-            services.AddTransient<MyTransientClass2>();
-            services.AddScoped<MyScopedClass>();
-
-            //Add framework services
-            services.AddMvc(options =>
-            {
-                options.Filters.Add(new AbpAutoValidateAntiforgeryTokenAttribute());
-            }).AddNewtonsoftJson(options =>
+        //Add framework services
+        services.AddMvc(options => { options.Filters.Add(new AbpAutoValidateAntiforgeryTokenAttribute()); })
+            .AddNewtonsoftJson(options =>
             {
                 options.SerializerSettings.ContractResolver = new AbpMvcContractResolver(IocManager.Value)
                 {
@@ -73,75 +71,74 @@ namespace AbpAspNetCoreDemo
                 opts.AddRouteComponents("odata", builder.GetEdmModel());
             });
 
-            //Configure Abp and Dependency Injection. Should be called last.
-            return services.AddAbp<AbpAspNetCoreDemoModule>(options =>
-            {
-                options.IocManager = IocManager.Value ?? new IocManager();
+        //Configure Abp and Dependency Injection. Should be called last.
+        return services.AddAbp<AbpAspNetCoreDemoModule>(options =>
+        {
+            options.IocManager = IocManager.Value ?? new IocManager();
 
-                string plugDllInPath = "";
+            var plugDllInPath = "";
 #if DEBUG
-                plugDllInPath = Path.Combine(_env.ContentRootPath,
-                    @"..\AbpAspNetCoreDemo.PlugIn\bin\Debug\net6.0\AbpAspNetCoreDemo.PlugIn.dll");
+            plugDllInPath = Path.Combine(_env.ContentRootPath,
+                @"..\AbpAspNetCoreDemo.PlugIn\bin\Debug\net6.0\AbpAspNetCoreDemo.PlugIn.dll");
 #else
                 plugDllInPath = Path.Combine(_env.ContentRootPath,
                     @"..\AbpAspNetCoreDemo.PlugIn\bin\Release\net6.0\AbpAspNetCoreDemo.PlugIn.dll");
 #endif
-                if (!File.Exists(plugDllInPath))
-                {
-                    throw new FileNotFoundException("There is no plugin dll file in the given path.", plugDllInPath);
-                }
+            if (!File.Exists(plugDllInPath))
+                throw new FileNotFoundException("There is no plugin dll file in the given path.", plugDllInPath);
 
-                options.PlugInSources.Add(new AssemblyFileListPlugInSource(plugDllInPath));
+            options.PlugInSources.Add(new AssemblyFileListPlugInSource(plugDllInPath));
 
-                //Configure Log4Net logging
-                options.IocManager.IocContainer.AddFacility<LoggingFacility>(
-                    f => f.UseAbpLog4Net().WithConfig("log4net.config")
-                );
+            //Configure Log4Net logging
+            options.IocManager.IocContainer.AddFacility<LoggingFacility>(
+                f => f.UseAbpLog4Net().WithConfig("log4net.config")
+            );
 
-                var propInjector = options.IocManager.IocContainer.Kernel.ComponentModelBuilder
-                    .Contributors
-                    .OfType<PropertiesDependenciesModelInspector>()
-                    .Single();
+            var propInjector = options.IocManager.IocContainer.Kernel.ComponentModelBuilder
+                .Contributors
+                .OfType<PropertiesDependenciesModelInspector>()
+                .Single();
 
-                options.IocManager.IocContainer.Kernel.ComponentModelBuilder.RemoveContributor(propInjector);
-                options.IocManager.IocContainer.Kernel.ComponentModelBuilder.AddContributor(new AbpPropertiesDependenciesModelInspector(new DefaultConversionManager()));
-            });
-        }
+            options.IocManager.IocContainer.Kernel.ComponentModelBuilder.RemoveContributor(propInjector);
+            options.IocManager.IocContainer.Kernel.ComponentModelBuilder.AddContributor(
+                new AbpPropertiesDependenciesModelInspector(new DefaultConversionManager()));
+        });
+    }
 
-        // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
-        public void Configure(IApplicationBuilder app, IWebHostEnvironment env, ILoggerFactory loggerFactory)
+    // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
+    public void Configure(IApplicationBuilder app, IWebHostEnvironment env, ILoggerFactory loggerFactory)
+    {
+        app.UseAbp(); //Initializes ABP framework. Should be called first.
+
+        // Return IQueryable from controllers
+        app.UseUnitOfWork(options =>
         {
-            app.UseAbp(); //Initializes ABP framework. Should be called first.
+            options.Filter = httpContext => httpContext.Request.Path.Value.StartsWith("/odata");
+        });
 
-            // Return IQueryable from controllers
-            app.UseUnitOfWork(options =>
-            {
-                options.Filter = httpContext => httpContext.Request.Path.Value.StartsWith("/odata");
-            });
-
-            if (env.IsDevelopment())
-            {
-                app.UseDeveloperExceptionPage();
-                app.UseBrowserLink();
-            }
-            else
-            {
-                app.UseExceptionHandler("/Home/Error");
-            }
-
-            app.UseStaticFiles();
-            app.UseEmbeddedFiles(); //Allows to expose embedded files to the web!
-
-            app.UseRouting();
-
-            app.UseEndpoints(endpoints =>
-            {
-                endpoints.MapControllerRoute("defaultWithArea", "{area}/{controller=Home}/{action=Index}/{id?}");
-                endpoints.MapControllerRoute("default", "{controller=Home}/{action=Index}/{id?}");
-                endpoints.MapRazorPages();
-
-                app.ApplicationServices.GetRequiredService<IAbpAspNetCoreConfiguration>().EndpointConfiguration.ConfigureAllEndpoints(endpoints);
-            });
+        if (env.IsDevelopment())
+        {
+            app.UseDeveloperExceptionPage();
+            app.UseBrowserLink();
         }
+        else
+        {
+            app.UseExceptionHandler("/Home/Error");
+        }
+
+        app.UseStaticFiles();
+        app.UseEmbeddedFiles(); //Allows to expose embedded files to the web!
+
+        app.UseRouting();
+
+        app.UseEndpoints(endpoints =>
+        {
+            endpoints.MapControllerRoute("defaultWithArea", "{area}/{controller=Home}/{action=Index}/{id?}");
+            endpoints.MapControllerRoute("default", "{controller=Home}/{action=Index}/{id?}");
+            endpoints.MapRazorPages();
+
+            app.ApplicationServices.GetRequiredService<IAbpAspNetCoreConfiguration>().EndpointConfiguration
+                .ConfigureAllEndpoints(endpoints);
+        });
     }
 }

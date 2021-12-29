@@ -7,8 +7,7 @@ namespace Abp.DynamicEntityProperties
     [Table("AbpDynamicEntityPropertyValues")]
     public class DynamicEntityPropertyValue : Entity<long>, IMayHaveTenant
     {
-        [Required(AllowEmptyStrings = false)]
-        public string Value { get; set; }
+        [Required(AllowEmptyStrings = false)] public string Value { get; set; }
 
         public string EntityId { get; set; }
 
@@ -20,10 +19,10 @@ namespace Abp.DynamicEntityProperties
 
         public DynamicEntityPropertyValue()
         {
-
         }
 
-        public DynamicEntityPropertyValue(DynamicEntityProperty dynamicEntityProperty, string entityId, string value, int? tenantId)
+        public DynamicEntityPropertyValue(DynamicEntityProperty dynamicEntityProperty, string entityId, string value,
+            int? tenantId)
         {
             DynamicEntityPropertyId = dynamicEntityProperty.Id;
             EntityId = entityId;

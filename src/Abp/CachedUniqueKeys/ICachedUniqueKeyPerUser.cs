@@ -7,7 +7,7 @@ namespace Abp.CachedUniqueKeys
         Task<string> GetKeyAsync(string cacheName);
 
         Task RemoveKeyAsync(string cacheName);
-        
+
         Task<string> GetKeyAsync(string cacheName, UserIdentifier user);
 
         Task RemoveKeyAsync(string cacheName, UserIdentifier user);
@@ -21,7 +21,7 @@ namespace Abp.CachedUniqueKeys
         string GetKey(string cacheName);
 
         void RemoveKey(string cacheName);
-        
+
         string GetKey(string cacheName, UserIdentifier user);
 
         void RemoveKey(string cacheName, UserIdentifier user);

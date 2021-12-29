@@ -1,11 +1,8 @@
 ﻿using System;
 using System.Data.Common;
 using System.Data.SQLite;
-
 using Abp.TestBase;
-
 using Castle.MicroKernel.Registration;
-
 using NHibernate;
 
 namespace Abp.Dapper.NHibernate.Tests
@@ -32,7 +29,8 @@ namespace Abp.Dapper.NHibernate.Tests
 
         public void UsingSession(Action<ISession> action)
         {
-            using (ISession session = LocalIocManager.Resolve<ISessionFactory>().WithOptions().Connection(_connection).OpenSession())
+            using (ISession session = LocalIocManager.Resolve<ISessionFactory>().WithOptions().Connection(_connection)
+                       .OpenSession())
             {
                 using (ITransaction transaction = session.BeginTransaction())
                 {
@@ -47,7 +45,8 @@ namespace Abp.Dapper.NHibernate.Tests
         {
             T result;
 
-            using (ISession session = LocalIocManager.Resolve<ISessionFactory>().WithOptions().Connection(_connection).OpenSession())
+            using (ISession session = LocalIocManager.Resolve<ISessionFactory>().WithOptions().Connection(_connection)
+                       .OpenSession())
             {
                 using (ITransaction transaction = session.BeginTransaction())
                 {

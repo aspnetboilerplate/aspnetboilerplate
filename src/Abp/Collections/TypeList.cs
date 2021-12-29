@@ -22,13 +22,13 @@ namespace Abp.Collections
         /// Gets the count.
         /// </summary>
         /// <value>The count.</value>
-        public int Count { get { return _typeList.Count; } }
+        public int Count => _typeList.Count;
 
         /// <summary>
         /// Gets a value indicating whether this instance is read only.
         /// </summary>
         /// <value><c>true</c> if this instance is read only; otherwise, <c>false</c>.</value>
-        public bool IsReadOnly { get { return false; } }
+        public bool IsReadOnly => false;
 
         /// <summary>
         /// Gets or sets the <see cref="Type"/> at the specified index.
@@ -36,7 +36,7 @@ namespace Abp.Collections
         /// <param name="index">Index.</param>
         public Type this[int index]
         {
-            get { return _typeList[index]; }
+            get => _typeList[index];
             set
             {
                 CheckType(value);
@@ -135,9 +135,8 @@ namespace Abp.Collections
         private static void CheckType(Type item)
         {
             if (!typeof(TBaseType).GetTypeInfo().IsAssignableFrom(item))
-            {
-                throw new ArgumentException("Given item is not type of " + typeof(TBaseType).AssemblyQualifiedName, "item");
-            }
+                throw new ArgumentException("Given item is not type of " + typeof(TBaseType).AssemblyQualifiedName,
+                    "item");
         }
     }
 }

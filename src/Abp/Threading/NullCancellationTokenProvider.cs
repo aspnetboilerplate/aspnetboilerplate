@@ -10,8 +10,8 @@ namespace Abp.Threading
         public override CancellationToken Token => CancellationToken.None;
 
         private NullCancellationTokenProvider()
-        : base(
-            new DataContextAmbientScopeProvider<CancellationTokenOverride>(new AsyncLocalAmbientDataContext()))
+            : base(
+                new DataContextAmbientScopeProvider<CancellationTokenOverride>(new AsyncLocalAmbientDataContext()))
         {
         }
     }

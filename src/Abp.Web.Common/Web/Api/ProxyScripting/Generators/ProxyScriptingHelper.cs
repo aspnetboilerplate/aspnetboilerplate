@@ -26,10 +26,7 @@ namespace Abp.Web.Api.ProxyScripting.Generators
                 .Where(p => p.BindingSourceId == ParameterBindingSources.Header)
                 .ToArray();
 
-            if (!parameters.Any())
-            {
-                return null;
-            }
+            if (!parameters.Any()) return null;
 
             return ProxyScriptingJsFuncHelper.CreateJsObjectLiteral(parameters, indent);
         }
@@ -41,17 +38,12 @@ namespace Abp.Web.Api.ProxyScripting.Generators
                 .Where(p => p.BindingSourceId == ParameterBindingSources.Body)
                 .ToArray();
 
-            if (parameters.Length <= 0)
-            {
-                return null;
-            }
+            if (parameters.Length <= 0) return null;
 
             if (parameters.Length > 1)
-            {
                 throw new AbpException(
                     $"Only one complex type allowed as argument to a controller action that's binding source is 'Body'. But {action.Name} ({action.Url}) contains more than one!"
-                    );
-            }
+                );
 
             return ProxyScriptingJsFuncHelper.GetParamNameInJsFunc(parameters[0]);
         }
@@ -63,10 +55,7 @@ namespace Abp.Web.Api.ProxyScripting.Generators
                 .Where(p => p.BindingSourceId == ParameterBindingSources.Form)
                 .ToArray();
 
-            if (!parameters.Any())
-            {
-                return null;
-            }
+            if (!parameters.Any()) return null;
 
             return ProxyScriptingJsFuncHelper.CreateJsObjectLiteral(parameters, indent);
         }
@@ -77,15 +66,11 @@ namespace Abp.Web.Api.ProxyScripting.Generators
                 .Where(p => p.BindingSourceId == ParameterBindingSources.Path)
                 .ToArray();
 
-            if (!pathParameters.Any())
-            {
-                return url;
-            }
+            if (!pathParameters.Any()) return url;
 
             foreach (var pathParameter in pathParameters)
-            {
-                url = url.Replace($"{{{pathParameter.Name}}}", $"' + {ProxyScriptingJsFuncHelper.GetParamNameInJsFunc(pathParameter)} + '");
-            }
+                url = url.Replace($"{{{pathParameter.Name}}}",
+                    $"' + {ProxyScriptingJsFuncHelper.GetParamNameInJsFunc(pathParameter)} + '");
 
             return url;
         }
@@ -96,13 +81,11 @@ namespace Abp.Web.Api.ProxyScripting.Generators
                 .Where(p => p.BindingSourceId.IsIn(ParameterBindingSources.ModelBinding, ParameterBindingSources.Query))
                 .ToArray();
 
-            if (!queryStringParameters.Any())
-            {
-                return url;
-            }
+            if (!queryStringParameters.Any()) return url;
 
             var qsBuilderParams = queryStringParameters
-                .Select(p => $"{{ name: '{p.Name.ToCamelCase()}', value: {ProxyScriptingJsFuncHelper.GetParamNameInJsFunc(p)} }}")
+                .Select(p =>
+                    $"{{ name: '{p.Name.ToCamelCase()}', value: {ProxyScriptingJsFuncHelper.GetParamNameInJsFunc(p)} }}")
                 .JoinAsString(", ");
 
             return url + $"' + abp.utils.buildQueryString([{qsBuilderParams}]) + '";
@@ -110,34 +93,22 @@ namespace Abp.Web.Api.ProxyScripting.Generators
 
         public static string GetConventionalVerbForMethodName(string methodName)
         {
-            if (methodName.StartsWith("Get", StringComparison.OrdinalIgnoreCase))
-            {
-                return "GET";
-            }
+            if (methodName.StartsWith("Get", StringComparison.OrdinalIgnoreCase)) return "GET";
 
             if (methodName.StartsWith("Put", StringComparison.OrdinalIgnoreCase) ||
                 methodName.StartsWith("Update", StringComparison.OrdinalIgnoreCase))
-            {
                 return "PUT";
-            }
 
             if (methodName.StartsWith("Delete", StringComparison.OrdinalIgnoreCase) ||
                 methodName.StartsWith("Remove", StringComparison.OrdinalIgnoreCase))
-            {
                 return "DELETE";
-            }
 
-            if (methodName.StartsWith("Patch", StringComparison.OrdinalIgnoreCase))
-            {
-                return "PATCH";
-            }
+            if (methodName.StartsWith("Patch", StringComparison.OrdinalIgnoreCase)) return "PATCH";
 
             if (methodName.StartsWith("Post", StringComparison.OrdinalIgnoreCase) ||
                 methodName.StartsWith("Create", StringComparison.OrdinalIgnoreCase) ||
                 methodName.StartsWith("Insert", StringComparison.OrdinalIgnoreCase))
-            {
                 return "POST";
-            }
 
             //Default
             return DefaultHttpVerb;

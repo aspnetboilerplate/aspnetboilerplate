@@ -32,19 +32,13 @@ namespace Abp.Extensions
             where T : struct
         {
             if (typeof(T) == typeof(Guid) || typeof(T) == typeof(TimeSpan))
-            {
                 return (T)TypeDescriptor.GetConverter(typeof(T)).ConvertFromInvariantString(obj.ToString());
-            }
             if (typeof(T).IsEnum)
             {
                 if (Enum.IsDefined(typeof(T), obj))
-                {
                     return (T)Enum.Parse(typeof(T), obj.ToString());
-                }
                 else
-                {
                     throw new ArgumentException($"Enum type undefined '{obj}'.");
-                }
             }
 
             return (T)Convert.ChangeType(obj, typeof(T), CultureInfo.InvariantCulture);

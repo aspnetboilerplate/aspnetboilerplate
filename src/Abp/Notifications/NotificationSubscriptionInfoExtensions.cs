@@ -13,7 +13,8 @@ namespace Abp.Notifications
         /// <summary>
         /// Converts <see cref="UserNotificationInfo"/> to <see cref="UserNotification"/>.
         /// </summary>
-        public static NotificationSubscription ToNotificationSubscription(this NotificationSubscriptionInfo subscriptionInfo)
+        public static NotificationSubscription ToNotificationSubscription(
+            this NotificationSubscriptionInfo subscriptionInfo)
         {
             var entityType = subscriptionInfo.EntityTypeAssemblyQualifiedName.IsNullOrEmpty()
                 ? null
@@ -26,7 +27,10 @@ namespace Abp.Notifications
                 NotificationName = subscriptionInfo.NotificationName,
                 EntityType = entityType,
                 EntityTypeName = subscriptionInfo.EntityTypeName,
-                EntityId = subscriptionInfo.EntityId.IsNullOrEmpty() ? null : JsonConvert.DeserializeObject(subscriptionInfo.EntityId, EntityHelper.GetPrimaryKeyType(entityType)),
+                EntityId = subscriptionInfo.EntityId.IsNullOrEmpty()
+                    ? null
+                    : JsonConvert.DeserializeObject(subscriptionInfo.EntityId,
+                        EntityHelper.GetPrimaryKeyType(entityType)),
                 CreationTime = subscriptionInfo.CreationTime
             };
         }

@@ -82,10 +82,7 @@ namespace Abp.Zero.SampleApp.Tests.Notifications
                     TenantId = tenantId
                 });
 
-            return UsingDbContext(context =>
-            {
-                return context.Users.First(u => u.UserName == "test.username");
-            });
+            return UsingDbContext(context => { return context.Users.First(u => u.UserName == "test.username"); });
         }
     }
 }

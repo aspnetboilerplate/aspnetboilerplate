@@ -5,7 +5,7 @@ using Xunit;
 
 namespace Abp.TestBase.SampleApplication.Tests.Domain.Uow
 {
-    public class UnitOfWork_Attribute_Tests: SampleApplicationTestBase
+    public class UnitOfWork_Attribute_Tests : SampleApplicationTestBase
     {
         [Fact]
         public void UnitOfWork_Attribute_Should_Work_Without_Virtual_When_Resolved_By_Interface()

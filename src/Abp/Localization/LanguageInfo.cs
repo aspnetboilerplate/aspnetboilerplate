@@ -68,7 +68,8 @@ namespace Abp.Localization
         /// <param name="icon">An icon can be set to display on the UI</param>
         /// <param name="isDefault">Is this the default language?</param>
         /// <param name="isDisabled">Is this the language disabled?</param>
-        public LanguageInfo(string name, string displayName, string icon = null, bool isDefault = false, bool isDisabled = false)
+        public LanguageInfo(string name, string displayName, string icon = null, bool isDefault = false,
+            bool isDisabled = false)
         {
             Name = name;
             DisplayName = displayName;

@@ -25,11 +25,12 @@ namespace Abp.Tests.Domain.Entities
             Assert.Equal(42, entity.GetData<byte>("Age"));
 
             entity.SetData("BirthDate", new DateTime(2015, 05, 25, 13, 24, 00, DateTimeKind.Utc));
-            Assert.Equal(new DateTime(2015, 05, 25, 13, 24, 00, DateTimeKind.Utc), entity.GetData<DateTime>("BirthDate"));
+            Assert.Equal(new DateTime(2015, 05, 25, 13, 24, 00, DateTimeKind.Utc),
+                entity.GetData<DateTime>("BirthDate"));
 
             entity.SetData("EnumVal", MyEnum.Value2);
             entity.GetData<MyEnum>("EnumVal").ShouldBe(MyEnum.Value2);
-            
+
             entity.GetData<string>("NonExistingValue").ShouldBe(null);
         }
 
@@ -44,9 +45,9 @@ namespace Abp.Tests.Domain.Entities
                 Age = 42,
                 Inner = new List<MyComplexTypeInner>
                 {
-                    new MyComplexTypeInner {Value1 = "A", Value2 = 2},
-                    new MyComplexTypeInner {Value1 = "B", Value2 = null},
-                    new MyComplexTypeInner {Value1 = null, Value2 = null},
+                    new MyComplexTypeInner { Value1 = "A", Value2 = 2 },
+                    new MyComplexTypeInner { Value1 = "B", Value2 = null },
+                    new MyComplexTypeInner { Value1 = null, Value2 = null },
                     null
                 }
             };
@@ -124,7 +125,7 @@ namespace Abp.Tests.Domain.Entities
 
             var animals = new AnimalBase[]
             {
-                new Cat {Friend = new Lion()},
+                new Cat { Friend = new Lion() },
                 new Lion(),
                 new Tiger()
             };
@@ -173,7 +174,6 @@ namespace Abp.Tests.Domain.Entities
 
             public virtual void CatMethod()
             {
-
             }
         }
 
@@ -181,7 +181,6 @@ namespace Abp.Tests.Domain.Entities
         {
             public void LionMethod()
             {
-
             }
         }
 
@@ -189,7 +188,6 @@ namespace Abp.Tests.Domain.Entities
         {
             public void TigerMethod()
             {
-
             }
         }
 

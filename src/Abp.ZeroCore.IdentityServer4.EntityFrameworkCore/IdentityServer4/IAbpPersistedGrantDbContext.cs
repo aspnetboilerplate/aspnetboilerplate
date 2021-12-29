@@ -1,9 +1,8 @@
 ﻿using Microsoft.EntityFrameworkCore;
 
-namespace Abp.IdentityServer4
+namespace Abp.IdentityServer4;
+
+public interface IAbpPersistedGrantDbContext
 {
-    public interface IAbpPersistedGrantDbContext
-    {
-        DbSet<PersistedGrantEntity> PersistedGrants { get; set; }
-    }
+    DbSet<PersistedGrantEntity> PersistedGrants { get; set; }
 }

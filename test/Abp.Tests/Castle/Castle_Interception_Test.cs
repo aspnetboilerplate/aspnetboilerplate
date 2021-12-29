@@ -44,11 +44,11 @@ namespace Abp.Tests.Castle
         {
             typeof(IEventHandler<MyEventData>)
                 .GetMethod("HandleEvent", BindingFlags.Instance | BindingFlags.Public)
-                .Invoke(_handler, new object[] {new MyEventData()});
+                .Invoke(_handler, new object[] { new MyEventData() });
 
-            await (Task) typeof(IAsyncEventHandler<MyEventData>)
+            await (Task)typeof(IAsyncEventHandler<MyEventData>)
                 .GetMethod("HandleEventAsync", BindingFlags.Instance | BindingFlags.Public)
-                .Invoke(_asyncHandler, new object[] {new MyEventData()});
+                .Invoke(_asyncHandler, new object[] { new MyEventData() });
         }
 
         public class MyHandler : IEventHandler<MyEventData>

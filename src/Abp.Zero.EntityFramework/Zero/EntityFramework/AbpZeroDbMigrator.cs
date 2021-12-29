@@ -18,7 +18,7 @@ namespace Abp.Zero.EntityFramework
         private readonly IIocResolver _iocResolver;
 
         protected AbpZeroDbMigrator(
-            IUnitOfWorkManager unitOfWorkManager, 
+            IUnitOfWorkManager unitOfWorkManager,
             IDbPerTenantConnectionStringResolver connectionStringResolver,
             IIocResolver iocResolver)
         {
@@ -34,10 +34,7 @@ namespace Abp.Zero.EntityFramework
 
         public virtual void CreateOrMigrateForTenant(AbpTenantBase tenant)
         {
-            if (tenant.ConnectionString.IsNullOrEmpty())
-            {
-                return;
-            }
+            if (tenant.ConnectionString.IsNullOrEmpty()) return;
 
             CreateOrMigrate(tenant);
         }
@@ -45,11 +42,11 @@ namespace Abp.Zero.EntityFramework
         protected virtual void CreateOrMigrate(AbpTenantBase tenant)
         {
             var args = new DbPerTenantConnectionStringResolveArgs(
-                tenant == null ? (int?) null : (int?) tenant.Id,
+                tenant == null ? (int?)null : (int?)tenant.Id,
                 tenant == null ? MultiTenancySides.Host : MultiTenancySides.Tenant
-                );
+            );
 
-            args["DbContextType"] = typeof (TDbContext);
+            args["DbContextType"] = typeof(TDbContext);
             args["DbContextConcreteType"] = typeof(TDbContext);
 
             var nameOrConnectionString = ConnectionStringHelper.GetConnectionString(
@@ -58,7 +55,9 @@ namespace Abp.Zero.EntityFramework
 
             using (var uow = _unitOfWorkManager.Begin(TransactionScopeOption.Suppress))
             {
-                using (var dbContext = _iocResolver.ResolveAsDisposable<TDbContext>(new {nameOrConnectionString = nameOrConnectionString}))
+                using (var dbContext =
+                       _iocResolver.ResolveAsDisposable<TDbContext>(new
+                           { nameOrConnectionString = nameOrConnectionString }))
                 {
                     var dbInitializer = new MigrateDatabaseToLatestVersion<TDbContext, TConfiguration>(
                         true,

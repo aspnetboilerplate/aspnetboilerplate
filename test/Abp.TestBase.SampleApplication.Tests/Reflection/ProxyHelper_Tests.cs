@@ -7,7 +7,7 @@ using Xunit;
 
 namespace Abp.TestBase.SampleApplication.Tests.Reflection
 {
-    public class ProxyHelper_Tests: SampleApplicationTestBase
+    public class ProxyHelper_Tests : SampleApplicationTestBase
     {
         private readonly IRepository<ContactList> _contactListRepository;
 
@@ -25,12 +25,12 @@ namespace Abp.TestBase.SampleApplication.Tests.Reflection
         [Fact]
         public void ProxyHelper_Should_Return_Unproxied_Object_For_Proxied_Object()
         {
-            (ProxyHelper.UnProxy(_contactListRepository) is SampleApplicationEfRepositoryBase<ContactList>).ShouldBeTrue();
+            (ProxyHelper.UnProxy(_contactListRepository) is SampleApplicationEfRepositoryBase<ContactList>)
+                .ShouldBeTrue();
         }
 
-        class MyTestClass
+        private class MyTestClass
         {
-
         }
     }
 }

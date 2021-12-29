@@ -17,10 +17,7 @@ namespace Abp.Application.Navigation
         public static MenuItemDefinition GetItemByName(this IHasMenuItemDefinitions source, string name)
         {
             var item = GetItemByNameOrNull(source, name);
-            if (item == null)
-            {
-                throw new ArgumentException("There is no source item with given name: " + name, "name");
-            }
+            if (item == null) throw new ArgumentException("There is no source item with given name: " + name, "name");
 
             return item;
         }
@@ -33,28 +30,16 @@ namespace Abp.Application.Navigation
         /// <param name="name">Unique name of the source</param>
         public static MenuItemDefinition GetItemByNameOrNull(this IHasMenuItemDefinitions source, string name)
         {
-            if (source == null)
-            {
-                throw new ArgumentNullException("source");
-            }
+            if (source == null) throw new ArgumentNullException("source");
 
-            if (source.Items.IsNullOrEmpty())
-            {
-                return null;
-            }
+            if (source.Items.IsNullOrEmpty()) return null;
 
             foreach (var subItem in source.Items)
             {
-                if (subItem.Name == name)
-                {
-                    return subItem;
-                }
+                if (subItem.Name == name) return subItem;
 
                 var subItemSearchResult = GetItemByNameOrNull(subItem, name);
-                if (subItemSearchResult != null)
-                {
-                    return subItemSearchResult;
-                }
+                if (subItemSearchResult != null) return subItemSearchResult;
             }
 
             return null;

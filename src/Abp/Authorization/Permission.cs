@@ -59,15 +59,14 @@ namespace Abp.Authorization
         public object this[string key]
         {
             get => !Properties.ContainsKey(key) ? null : Properties[key];
-            set
-            {
-                Properties[key] = value;
-            }
+            set => Properties[key] = value;
         }
+
         /// <summary>
         /// List of child permissions. A child permission can be granted only if parent is granted.
         /// </summary>
         public IReadOnlyList<Permission> Children => _children.ToImmutableList();
+
         private readonly List<Permission> _children;
 
         /// <summary>
@@ -87,10 +86,7 @@ namespace Abp.Authorization
             IFeatureDependency featureDependency = null,
             Dictionary<string, object> properties = null)
         {
-            if (name == null)
-            {
-                throw new ArgumentNullException("name");
-            }
+            if (name == null) throw new ArgumentNullException("name");
 
             Name = name;
             DisplayName = displayName;
@@ -115,7 +111,9 @@ namespace Abp.Authorization
             IFeatureDependency featureDependency = null,
             Dictionary<string, object> properties = null)
         {
-            var permission = new Permission(name, displayName, description, multiTenancySides, featureDependency, properties) { Parent = this };
+            var permission =
+                new Permission(name, displayName, description, multiTenancySides, featureDependency, properties)
+                    { Parent = this };
             _children.Add(permission);
             return permission;
         }

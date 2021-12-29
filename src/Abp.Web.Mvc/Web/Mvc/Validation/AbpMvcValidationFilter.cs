@@ -18,16 +18,10 @@ namespace Abp.Web.Mvc.Validation
 
         public void OnActionExecuting(ActionExecutingContext filterContext)
         {
-            if (!_configuration.IsValidationEnabledForControllers)
-            {
-                return;
-            }
+            if (!_configuration.IsValidationEnabledForControllers) return;
 
             var methodInfo = filterContext.ActionDescriptor.GetMethodInfoOrNull();
-            if (methodInfo == null)
-            {
-                return;
-            }
+            if (methodInfo == null) return;
 
             using (var validator = _iocResolver.ResolveAsDisposable<MvcActionInvocationValidator>())
             {
@@ -38,7 +32,6 @@ namespace Abp.Web.Mvc.Validation
 
         public void OnActionExecuted(ActionExecutedContext filterContext)
         {
-            
         }
     }
 }

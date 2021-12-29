@@ -13,7 +13,8 @@ namespace Abp.EntityFramework.GraphDiff.Configuration
         /// <summary>
         /// Used to configure Abp.EntityFramework.GraphDiff module.
         /// </summary>
-        public static IAbpEntityFrameworkGraphDiffModuleConfiguration AbpEfGraphDiff(this IModuleConfigurations configurations)
+        public static IAbpEntityFrameworkGraphDiffModuleConfiguration AbpEfGraphDiff(
+            this IModuleConfigurations configurations)
         {
             return configurations.AbpConfiguration.Get<IAbpEntityFrameworkGraphDiffModuleConfiguration>();
         }
@@ -23,7 +24,8 @@ namespace Abp.EntityFramework.GraphDiff.Configuration
         /// </summary>
         /// <param name="configuration"></param>
         /// <param name="entityMappings"></param>
-        public static void UseMappings(this IAbpEntityFrameworkGraphDiffModuleConfiguration configuration, IEnumerable<EntityMapping> entityMappings)
+        public static void UseMappings(this IAbpEntityFrameworkGraphDiffModuleConfiguration configuration,
+            IEnumerable<EntityMapping> entityMappings)
         {
             configuration.EntityMappings = entityMappings.ToList();
         }

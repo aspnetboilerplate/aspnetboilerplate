@@ -32,10 +32,10 @@ namespace Abp.Tests.Net.Mail
         public void Test_Send_Email()
         {
             _smtpEmailSender.Send(
-                "...", 
-                "Test email", 
+                "...",
+                "Test email",
                 "An email body"
-                );
+            );
         }
     }
 }

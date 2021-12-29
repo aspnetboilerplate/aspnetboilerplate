@@ -16,7 +16,8 @@ namespace Abp.Zero.FluentMigrator
         /// <summary>
         /// Adds full auditing fields to a table. See <see cref="IFullAudited"/>.
         /// </summary>
-        public static ICreateTableColumnOptionOrForeignKeyCascadeOrWithColumnSyntax WithFullAuditColumns(this ICreateTableWithColumnSyntax table)
+        public static ICreateTableColumnOptionOrForeignKeyCascadeOrWithColumnSyntax WithFullAuditColumns(
+            this ICreateTableWithColumnSyntax table)
         {
             return table
                 .WithAuditColumns()
@@ -26,7 +27,8 @@ namespace Abp.Zero.FluentMigrator
         /// <summary>
         /// Adds auditing fields to a table. See <see cref="IAudited"/>.
         /// </summary>
-        public static ICreateTableColumnOptionOrForeignKeyCascadeOrWithColumnSyntax WithAuditColumns(this ICreateTableWithColumnSyntax table)
+        public static ICreateTableColumnOptionOrForeignKeyCascadeOrWithColumnSyntax WithAuditColumns(
+            this ICreateTableWithColumnSyntax table)
         {
             return table
                 .WithCreationAuditColumns()
@@ -36,7 +38,8 @@ namespace Abp.Zero.FluentMigrator
         /// <summary>
         /// Adds CreatorUserId field to a table. See <see cref="ICreationAudited"/>.
         /// </summary>
-        public static ICreateTableColumnOptionOrForeignKeyCascadeOrWithColumnSyntax WithCreatorUserIdColumn(this ICreateTableWithColumnSyntax table)
+        public static ICreateTableColumnOptionOrForeignKeyCascadeOrWithColumnSyntax WithCreatorUserIdColumn(
+            this ICreateTableWithColumnSyntax table)
         {
             return table
                 .WithColumn("CreatorUserId").AsInt64().Nullable().ForeignKey("AbpUsers", "Id");
@@ -45,7 +48,8 @@ namespace Abp.Zero.FluentMigrator
         /// <summary>
         /// Adds creation auditing fields to a table. See <see cref="ICreationAudited"/>.
         /// </summary>
-        public static ICreateTableColumnOptionOrForeignKeyCascadeOrWithColumnSyntax WithCreationAuditColumns(this ICreateTableWithColumnSyntax table)
+        public static ICreateTableColumnOptionOrForeignKeyCascadeOrWithColumnSyntax WithCreationAuditColumns(
+            this ICreateTableWithColumnSyntax table)
         {
             return table
                 .WithCreationTimeColumn()
@@ -55,7 +59,8 @@ namespace Abp.Zero.FluentMigrator
         /// <summary>
         /// Adds LastModifierUserId field to a table. See <see cref="IModificationAudited"/>.
         /// </summary>
-        public static ICreateTableColumnOptionOrForeignKeyCascadeOrWithColumnSyntax WithLastModifierUserIdColumn(this ICreateTableWithColumnSyntax table)
+        public static ICreateTableColumnOptionOrForeignKeyCascadeOrWithColumnSyntax WithLastModifierUserIdColumn(
+            this ICreateTableWithColumnSyntax table)
         {
             return table
                 .WithColumn("LastModifierUserId").AsInt64().Nullable().ForeignKey("AbpUsers", "Id");
@@ -64,7 +69,8 @@ namespace Abp.Zero.FluentMigrator
         /// <summary>
         /// Adds modification auditing fields to a table. See <see cref="IModificationAudited"/>.
         /// </summary>
-        public static ICreateTableColumnOptionOrForeignKeyCascadeOrWithColumnSyntax WithModificationAuditColumns(this ICreateTableWithColumnSyntax table)
+        public static ICreateTableColumnOptionOrForeignKeyCascadeOrWithColumnSyntax WithModificationAuditColumns(
+            this ICreateTableWithColumnSyntax table)
         {
             return table
                 .WithLastModificationTimeColumn()
@@ -74,7 +80,8 @@ namespace Abp.Zero.FluentMigrator
         /// <summary>
         /// Adds DeleterUserId field to a table. See <see cref="IDeletionAudited"/>.
         /// </summary>
-        public static ICreateTableColumnOptionOrForeignKeyCascadeOrWithColumnSyntax WithDeleterUserIdColumn(this ICreateTableWithColumnSyntax table)
+        public static ICreateTableColumnOptionOrForeignKeyCascadeOrWithColumnSyntax WithDeleterUserIdColumn(
+            this ICreateTableWithColumnSyntax table)
         {
             return table
                 .WithColumn("DeleterUserId").AsInt64().Nullable().ForeignKey("AbpUsers", "Id");
@@ -83,7 +90,8 @@ namespace Abp.Zero.FluentMigrator
         /// <summary>
         /// Adds deletion auditing columns to a table. See <see cref="IModificationAudited"/>.
         /// </summary>
-        public static ICreateTableColumnOptionOrForeignKeyCascadeOrWithColumnSyntax WithDeletionAuditColumns(this ICreateTableWithColumnSyntax table)
+        public static ICreateTableColumnOptionOrForeignKeyCascadeOrWithColumnSyntax WithDeletionAuditColumns(
+            this ICreateTableWithColumnSyntax table)
         {
             return table
                 .WithIsDeletedColumn()
@@ -94,7 +102,8 @@ namespace Abp.Zero.FluentMigrator
         /// <summary>
         /// Adds TenantId column to a table as not nullable. See <see cref="AbpTenant{TUser}"/>.
         /// </summary>
-        public static ICreateTableColumnOptionOrForeignKeyCascadeOrWithColumnSyntax WithTenantIdAsRequired(this ICreateTableWithColumnSyntax table)
+        public static ICreateTableColumnOptionOrForeignKeyCascadeOrWithColumnSyntax WithTenantIdAsRequired(
+            this ICreateTableWithColumnSyntax table)
         {
             return table
                 .WithColumn("TenantId").AsInt32().NotNullable().ForeignKey("AbpTenants", "Id");
@@ -103,29 +112,34 @@ namespace Abp.Zero.FluentMigrator
         /// <summary>
         /// Adds TenantId column to a table as nullable. See <see cref="AbpTenant{TUser}"/>.
         /// </summary>
-        public static ICreateTableColumnOptionOrForeignKeyCascadeOrWithColumnSyntax WithTenantIdAsNullable(this ICreateTableWithColumnSyntax table)
+        public static ICreateTableColumnOptionOrForeignKeyCascadeOrWithColumnSyntax WithTenantIdAsNullable(
+            this ICreateTableWithColumnSyntax table)
         {
             return table
                 .WithColumn("TenantId").AsInt32().Nullable().ForeignKey("AbpTenants", "Id");
         }
 
-        public static ICreateTableColumnOptionOrForeignKeyCascadeOrWithColumnSyntax WithUserId(this ICreateTableWithColumnSyntax table)
+        public static ICreateTableColumnOptionOrForeignKeyCascadeOrWithColumnSyntax WithUserId(
+            this ICreateTableWithColumnSyntax table)
         {
             return table.WithUserId("UserId");
         }
 
-        public static ICreateTableColumnOptionOrForeignKeyCascadeOrWithColumnSyntax WithNullableUserId(this ICreateTableWithColumnSyntax table)
+        public static ICreateTableColumnOptionOrForeignKeyCascadeOrWithColumnSyntax WithNullableUserId(
+            this ICreateTableWithColumnSyntax table)
         {
             return table.WithNullableUserId("UserId");
         }
 
-        public static ICreateTableColumnOptionOrForeignKeyCascadeOrWithColumnSyntax WithUserId(this ICreateTableWithColumnSyntax table, string columnName)
+        public static ICreateTableColumnOptionOrForeignKeyCascadeOrWithColumnSyntax WithUserId(
+            this ICreateTableWithColumnSyntax table, string columnName)
         {
             return table
                 .WithColumn(columnName).AsInt64().NotNullable().ForeignKey("AbpUsers", "Id");
         }
 
-        public static ICreateTableColumnOptionOrForeignKeyCascadeOrWithColumnSyntax WithNullableUserId(this ICreateTableWithColumnSyntax table, string columnName)
+        public static ICreateTableColumnOptionOrForeignKeyCascadeOrWithColumnSyntax WithNullableUserId(
+            this ICreateTableWithColumnSyntax table, string columnName)
         {
             return table
                 .WithColumn(columnName).AsInt64().Nullable().ForeignKey("AbpUsers", "Id");
@@ -135,47 +149,54 @@ namespace Abp.Zero.FluentMigrator
 
         #region Alter table
 
-        public static IAlterTableColumnOptionOrAddColumnOrAlterColumnSyntax AddFullAuditColumns(this IAlterTableAddColumnOrAlterColumnSyntax table)
+        public static IAlterTableColumnOptionOrAddColumnOrAlterColumnSyntax AddFullAuditColumns(
+            this IAlterTableAddColumnOrAlterColumnSyntax table)
         {
             return table
                 .AddAuditColumns()
                 .AddDeletionAuditColumns();
         }
 
-        public static IAlterTableColumnOptionOrAddColumnOrAlterColumnSyntax AddAuditColumns(this IAlterTableAddColumnOrAlterColumnSyntax table)
+        public static IAlterTableColumnOptionOrAddColumnOrAlterColumnSyntax AddAuditColumns(
+            this IAlterTableAddColumnOrAlterColumnSyntax table)
         {
             return table
                 .AddCreationAuditColumns()
                 .AddModificationAuditColumns();
         }
 
-        public static IAlterTableColumnOptionOrAddColumnOrAlterColumnSyntax AddCreatorUserIdColumn(this IAlterTableAddColumnOrAlterColumnSyntax table)
+        public static IAlterTableColumnOptionOrAddColumnOrAlterColumnSyntax AddCreatorUserIdColumn(
+            this IAlterTableAddColumnOrAlterColumnSyntax table)
         {
             return table
                 .AddColumn("CreatorUserId").AsInt64().Nullable().ForeignKey("AbpUsers", "Id");
         }
 
-        public static IAlterTableColumnOptionOrAddColumnOrAlterColumnSyntax AddCreationAuditColumns(this IAlterTableAddColumnOrAlterColumnSyntax table)
+        public static IAlterTableColumnOptionOrAddColumnOrAlterColumnSyntax AddCreationAuditColumns(
+            this IAlterTableAddColumnOrAlterColumnSyntax table)
         {
             return table
                 .AddCreationTimeColumn()
                 .AddCreatorUserIdColumn();
         }
 
-        public static IAlterTableColumnOptionOrAddColumnOrAlterColumnSyntax AddLastModifierUserIdColumn(this IAlterTableAddColumnOrAlterColumnSyntax table)
+        public static IAlterTableColumnOptionOrAddColumnOrAlterColumnSyntax AddLastModifierUserIdColumn(
+            this IAlterTableAddColumnOrAlterColumnSyntax table)
         {
             return table
                 .AddColumn("LastModifierUserId").AsInt64().Nullable().ForeignKey("AbpUsers", "Id");
         }
 
-        public static IAlterTableColumnOptionOrAddColumnOrAlterColumnSyntax AddModificationAuditColumns(this IAlterTableAddColumnOrAlterColumnSyntax table)
+        public static IAlterTableColumnOptionOrAddColumnOrAlterColumnSyntax AddModificationAuditColumns(
+            this IAlterTableAddColumnOrAlterColumnSyntax table)
         {
             return table
                 .AddLastModificationTimeColumn()
                 .AddLastModifierUserIdColumn();
         }
 
-        public static IAlterTableColumnOptionOrAddColumnOrAlterColumnSyntax AddDeletionAuditColumns(this IAlterTableAddColumnOrAlterColumnSyntax table)
+        public static IAlterTableColumnOptionOrAddColumnOrAlterColumnSyntax AddDeletionAuditColumns(
+            this IAlterTableAddColumnOrAlterColumnSyntax table)
         {
             return table
                 .AddIsDeletedColumn()
@@ -183,13 +204,15 @@ namespace Abp.Zero.FluentMigrator
                 .AddColumn("DeleterUserId").AsInt64().Nullable().ForeignKey("AbpUsers", "Id");
         }
 
-        public static IAlterTableColumnOptionOrAddColumnOrAlterColumnSyntax AddTenantIdColumnAsRequired(this IAlterTableAddColumnOrAlterColumnSyntax table)
+        public static IAlterTableColumnOptionOrAddColumnOrAlterColumnSyntax AddTenantIdColumnAsRequired(
+            this IAlterTableAddColumnOrAlterColumnSyntax table)
         {
             return table
                 .AddColumn("TenantId").AsInt32().NotNullable().ForeignKey("AbpTenants", "Id");
         }
 
-        public static IAlterTableColumnOptionOrAddColumnOrAlterColumnSyntax AddTenantIdColumnAsNullable(this IAlterTableAddColumnOrAlterColumnSyntax table)
+        public static IAlterTableColumnOptionOrAddColumnOrAlterColumnSyntax AddTenantIdColumnAsNullable(
+            this IAlterTableAddColumnOrAlterColumnSyntax table)
         {
             return table
                 .AddColumn("TenantId").AsInt32().Nullable().ForeignKey("AbpTenants", "Id");

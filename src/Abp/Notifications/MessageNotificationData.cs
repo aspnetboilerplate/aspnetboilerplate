@@ -13,13 +13,14 @@ namespace Abp.Notifications
         /// </summary>
         public string Message
         {
-            get { return _message ?? (this[nameof(Message)] as string); }
+            get => _message ?? this[nameof(Message)] as string;
             set
             {
                 this[nameof(Message)] = value;
                 _message = value;
             }
         }
+
         private string _message;
 
         /// <summary>
@@ -27,7 +28,6 @@ namespace Abp.Notifications
         /// </summary>
         private MessageNotificationData()
         {
-            
         }
 
         public MessageNotificationData(string message)

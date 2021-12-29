@@ -62,25 +62,21 @@ namespace Abp.Zero.EntityFramework
 
         protected AbpZeroDbContext()
         {
-
         }
 
         protected AbpZeroDbContext(string nameOrConnectionString)
             : base(nameOrConnectionString)
         {
-
         }
 
         protected AbpZeroDbContext(DbCompiledModel model)
             : base(model)
         {
-
         }
 
         protected AbpZeroDbContext(DbConnection existingConnection, bool contextOwnsConnection)
             : base(existingConnection, contextOwnsConnection)
         {
-
         }
 
         protected AbpZeroDbContext(string nameOrConnectionString, DbCompiledModel model)
@@ -123,7 +119,7 @@ namespace Abp.Zero.EntityFramework
             modelBuilder.Entity<BackgroundJobInfo>()
                 .Property(j => j.NextTryTime)
                 .CreateIndex("IX_Priority_TryCount_NextTryTime", 3);
-            
+
             #endregion
 
             #region NotificationSubscriptionInfo.IX_NotificationName_EntityTypeName_EntityId_UserId
@@ -219,7 +215,7 @@ namespace Abp.Zero.EntityFramework
             modelBuilder.Entity<AuditLog>()
                 .Property(e => e.ExceptionMessage)
                 .HasMaxLength(AuditLog.MaxExceptionMessageLength);
-            
+
             modelBuilder.Entity<AuditLog>()
                 .Property(e => e.Exception)
                 .HasMaxLength(AuditLog.MaxExceptionLength);
@@ -232,15 +228,19 @@ namespace Abp.Zero.EntityFramework
 
             #region Common Indexes
 
-            modelBuilder.Conventions.AddAfter<IndexAttributeConvention>(new IndexingPropertyConvention<ISoftDelete, bool>(m => m.IsDeleted));
-            modelBuilder.Conventions.AddAfter<IndexAttributeConvention>(new IndexingPropertyConvention<IMayHaveTenant, int?>(m => m.TenantId));
-            modelBuilder.Conventions.AddAfter<IndexAttributeConvention>(new IndexingPropertyConvention<IMustHaveTenant, int>(m => m.TenantId));
+            modelBuilder.Conventions.AddAfter<IndexAttributeConvention>(
+                new IndexingPropertyConvention<ISoftDelete, bool>(m => m.IsDeleted));
+            modelBuilder.Conventions.AddAfter<IndexAttributeConvention>(
+                new IndexingPropertyConvention<IMayHaveTenant, int?>(m => m.TenantId));
+            modelBuilder.Conventions.AddAfter<IndexAttributeConvention>(
+                new IndexingPropertyConvention<IMustHaveTenant, int>(m => m.TenantId));
+
             #endregion
 
             #region UserLogin.ProviderKey_TenantId
-            
+
             modelBuilder.Entity<UserLogin>()
-                .HasIndex(e => new {e.ProviderKey, e.TenantId})
+                .HasIndex(e => new { e.ProviderKey, e.TenantId })
                 .IsUnique();
 
             #endregion

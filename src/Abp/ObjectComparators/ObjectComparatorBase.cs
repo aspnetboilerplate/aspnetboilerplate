@@ -30,31 +30,20 @@ namespace Abp.ObjectComparators
 
         public sealed override bool Compare(object baseObject, object compareObject, string compareType)
         {
-            if (!_isNullable && (baseObject == null || compareObject == null))
-            {
-                throw new ArgumentNullException();
-            }
+            if (!_isNullable && (baseObject == null || compareObject == null)) throw new ArgumentNullException();
 
             TBaseType baseObjTyped;
             TBaseType compareObjTyped;
 
             if (baseObject == null)
-            {
-                baseObjTyped = default;//which is null
-            }
+                baseObjTyped = default; //which is null
             else
-            {
                 baseObjTyped = (TBaseType)baseObject;
-            }
 
             if (compareObject == null)
-            {
-                compareObjTyped = default;//which is null
-            }
+                compareObjTyped = default; //which is null
             else
-            {
                 compareObjTyped = (TBaseType)compareObject;
-            }
 
             return Compare(baseObjTyped, compareObjTyped, compareType);
         }
@@ -66,15 +55,13 @@ namespace Abp.ObjectComparators
 
         public sealed override bool CanCompare(Type baseObjectType, string compareType)
         {
-            return _isNullable == IsNullableType(baseObjectType) && baseObjectType.IsAssignableFrom(typeof(TBaseType)) && CanCompare(compareType);
+            return _isNullable == IsNullableType(baseObjectType) &&
+                   baseObjectType.IsAssignableFrom(typeof(TBaseType)) && CanCompare(compareType);
         }
 
         protected static bool IsNullableType(Type type)
         {
-            if (type.IsGenericType)
-            {
-                return type.GetGenericTypeDefinition() == typeof(Nullable<>);
-            }
+            if (type.IsGenericType) return type.GetGenericTypeDefinition() == typeof(Nullable<>);
 
             return type == typeof(string);
         }

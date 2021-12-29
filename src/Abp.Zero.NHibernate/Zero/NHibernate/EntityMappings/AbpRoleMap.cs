@@ -23,7 +23,7 @@ namespace Abp.Zero.NHibernate.EntityMappings
             Map(x => x.DisplayName);
             Map(x => x.IsStatic);
             Map(x => x.IsDefault);
-            
+
             this.MapFullAudited();
 
             Polymorphism.Explicit();

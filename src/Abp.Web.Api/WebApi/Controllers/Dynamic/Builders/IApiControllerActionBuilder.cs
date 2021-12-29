@@ -46,7 +46,7 @@ namespace Abp.WebApi.Controllers.Dynamic.Builders
     /// This interface is used to define a dynamic api controller action.
     /// </summary>
     /// <typeparam name="T">Type of the proxied object</typeparam>
-    public interface IApiControllerActionBuilder<T>: IApiControllerActionBuilder
+    public interface IApiControllerActionBuilder<T> : IApiControllerActionBuilder
     {
         /// <summary>
         /// Used to specify Http verb of the action.

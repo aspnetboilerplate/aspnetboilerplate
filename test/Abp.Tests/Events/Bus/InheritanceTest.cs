@@ -42,6 +42,6 @@ namespace Abp.Tests.Events.Bus
             EventBus.Trigger(this, new MyDerivedEventData(4)); //Should handle
 
             Assert.Equal(7, totalData);
-        }   
+        }
     }
 }

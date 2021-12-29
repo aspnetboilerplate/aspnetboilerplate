@@ -19,11 +19,9 @@ namespace Abp.Web
         {
             var root = requestUri.Scheme + "://" + requestUri.Host;
 
-            if ((string.Equals(requestUri.Scheme, "http", StringComparison.OrdinalIgnoreCase) && requestUri.Port != 80) ||
-                (string.Equals(requestUri.Scheme, "https", StringComparison.OrdinalIgnoreCase) && requestUri.Port != 443))
-            {
+            if (string.Equals(requestUri.Scheme, "http", StringComparison.OrdinalIgnoreCase) && requestUri.Port != 80 ||
+                string.Equals(requestUri.Scheme, "https", StringComparison.OrdinalIgnoreCase) && requestUri.Port != 443)
                 root += ":" + requestUri.Port;
-            }
 
             return root;
         }
@@ -32,7 +30,7 @@ namespace Abp.Web
         {
             //This code is copied from System.Web.WebPages.RequestExtensions class.
 
-            if (url.IsNullOrEmpty())  
+            if (url.IsNullOrEmpty())
                 return false;
             if ((int)url[0] == 47 && (url.Length == 1 || (int)url[1] != 47 && (int)url[1] != 92))
                 return true;

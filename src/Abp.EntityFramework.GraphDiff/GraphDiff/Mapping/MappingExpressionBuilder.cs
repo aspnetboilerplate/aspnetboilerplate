@@ -29,7 +29,8 @@ namespace Abp.EntityFramework.GraphDiff.Mapping
         /// <typeparam name="TPrimaryKey">Primary key type of the entity</typeparam>
         /// <param name="expression"></param>
         /// <returns></returns>
-        public static EntityMapping For<TEntity, TPrimaryKey>(Expression<Func<IUpdateConfiguration<TEntity>, object>> expression)
+        public static EntityMapping For<TEntity, TPrimaryKey>(
+            Expression<Func<IUpdateConfiguration<TEntity>, object>> expression)
             where TPrimaryKey : IEquatable<TPrimaryKey>
             where TEntity : class, IEntity<TPrimaryKey>
         {

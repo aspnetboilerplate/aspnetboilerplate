@@ -18,12 +18,13 @@ namespace Abp.NHibernate.Tests
 
             LocalIocManager.IocContainer.Register(
                 Component.For<DbConnection>().Instance(_connection).LifestyleSingleton()
-                );
+            );
         }
 
         public void UsingSession(Action<ISession> action)
         {
-            using (var session = LocalIocManager.Resolve<ISessionFactory>().WithOptions().Connection(_connection).OpenSession())
+            using (var session = LocalIocManager.Resolve<ISessionFactory>().WithOptions().Connection(_connection)
+                       .OpenSession())
             {
                 using (var transaction = session.BeginTransaction())
                 {
@@ -38,7 +39,8 @@ namespace Abp.NHibernate.Tests
         {
             T result;
 
-            using (var session = LocalIocManager.Resolve<ISessionFactory>().WithOptions().Connection(_connection).OpenSession())
+            using (var session = LocalIocManager.Resolve<ISessionFactory>().WithOptions().Connection(_connection)
+                       .OpenSession())
             {
                 using (var transaction = session.BeginTransaction())
                 {

@@ -24,7 +24,7 @@ namespace Abp.EntityFramework.Tests
             fakeCurrentUowProvider.Current.Returns(fakeUow);
 
             matcher = new DbContextTypeMatcher(fakeCurrentUowProvider);
-            matcher.Populate(new []
+            matcher.Populate(new[]
             {
                 typeof(MyDerivedDbContext1),
                 typeof(MyDerivedDbContext2),
@@ -45,7 +45,8 @@ namespace Abp.EntityFramework.Tests
         [Fact]
         public void Should_Get_Same_Types_For_Undefined_Non_Abstract_Types()
         {
-            matcher.GetConcreteType(typeof(MyDerivedDbContextNotDefined)).ShouldBe(typeof(MyDerivedDbContextNotDefined));
+            matcher.GetConcreteType(typeof(MyDerivedDbContextNotDefined))
+                .ShouldBe(typeof(MyDerivedDbContextNotDefined));
         }
 
         [Fact]
@@ -65,48 +66,41 @@ namespace Abp.EntityFramework.Tests
 
         private abstract class MyCommonDbContext : AbpDbContext
         {
-
         }
 
         [MultiTenancySide(MultiTenancySides.Host)]
         private class MyDerivedDbContext1 : MyCommonDbContext
         {
-
         }
 
         [AutoRepositoryTypes( //Does not matter parameters for these tests
-            typeof(IRepository<>), 
-            typeof(IRepository<,>), 
-            typeof(EfRepositoryBase<,>), 
+            typeof(IRepository<>),
+            typeof(IRepository<,>),
+            typeof(EfRepositoryBase<,>),
             typeof(EfRepositoryBase<,,>)
-            )]
+        )]
         [MultiTenancySide(MultiTenancySides.Host)]
         private class MyDerivedDbContext2 : MyCommonDbContext
         {
-
         }
 
         [DefaultDbContext]
         [MultiTenancySide(MultiTenancySides.Tenant)]
         private class MyDerivedDbContext3 : MyCommonDbContext
         {
-
         }
 
         [MultiTenancySide(MultiTenancySides.Tenant)]
         private class MyDerivedDbContext4 : MyCommonDbContext
         {
-
         }
 
         private class MyDerivedDbContextNotDefined : MyCommonDbContext
         {
-
         }
 
         private class MyCommonEntity : Entity
         {
-
         }
     }
 }

@@ -21,15 +21,9 @@ namespace Abp.Hangfire
 
         public bool Authorize(DashboardContext context)
         {
-            if (!IsLoggedIn())
-            {
-                return false;
-            }
+            if (!IsLoggedIn()) return false;
 
-            if (!_requiredPermissionName.IsNullOrEmpty() && !IsPermissionGranted(_requiredPermissionName))
-            {
-                return false;
-            }
+            if (!_requiredPermissionName.IsNullOrEmpty() && !IsPermissionGranted(_requiredPermissionName)) return false;
 
             return true;
         }

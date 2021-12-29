@@ -77,11 +77,8 @@ namespace Abp.Authorization.Users
                     var userAccount = _userAccountRepository.FirstOrDefault(
                         ua => ua.TenantId == eventData.Entity.TenantId && ua.UserId == eventData.Entity.Id
                     );
-                    
-                    if (userAccount != null)
-                    {
-                        _userAccountRepository.Delete(userAccount);
-                    }
+
+                    if (userAccount != null) _userAccountRepository.Delete(userAccount);
                 }
             });
         }
@@ -99,7 +96,7 @@ namespace Abp.Authorization.Users
                     var userAccount = _userAccountRepository.FirstOrDefault(ua =>
                         ua.TenantId == eventData.Entity.TenantId && ua.UserId == eventData.Entity.Id
                     );
-                    
+
                     if (userAccount != null)
                     {
                         userAccount.UserName = eventData.Entity.UserName;

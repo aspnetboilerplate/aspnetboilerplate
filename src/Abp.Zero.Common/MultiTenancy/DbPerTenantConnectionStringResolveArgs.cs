@@ -17,10 +17,7 @@ namespace Abp.MultiTenancy
             TenantId = tenantId;
             MultiTenancySide = baseArgs.MultiTenancySide;
 
-            foreach (var kvPair in baseArgs)
-            {
-                Add(kvPair.Key, kvPair.Value);
-            }
+            foreach (var kvPair in baseArgs) Add(kvPair.Key, kvPair.Value);
         }
     }
 }

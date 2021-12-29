@@ -71,7 +71,6 @@ namespace Abp.Configuration
                             .ToList();
                     }
                 }
-
             });
         }
 
@@ -121,7 +120,7 @@ namespace Abp.Configuration
                             s => s.UserId == settingInfo.UserId && s.Name == settingInfo.Name &&
                                  s.TenantId == settingInfo.TenantId
                         );
-                        
+
                         await _unitOfWorkManager.Current.SaveChangesAsync();
                     }
                 }
@@ -140,7 +139,7 @@ namespace Abp.Configuration
                             s => s.UserId == settingInfo.UserId && s.Name == settingInfo.Name &&
                                  s.TenantId == settingInfo.TenantId
                         );
-                    
+
                         _unitOfWorkManager.Current.SaveChanges();
                     }
                 }
@@ -191,10 +190,7 @@ namespace Abp.Configuration
                                  s.Name == settingInfo.Name
                         );
 
-                        if (setting != null)
-                        {
-                            setting.Value = settingInfo.Value;
-                        }
+                        if (setting != null) setting.Value = settingInfo.Value;
 
                         await _unitOfWorkManager.Current.SaveChangesAsync();
                     }
@@ -216,10 +212,7 @@ namespace Abp.Configuration
                                  s.Name == settingInfo.Name
                         );
 
-                        if (setting != null)
-                        {
-                            setting.Value = settingInfo.Value;
-                        }
+                        if (setting != null) setting.Value = settingInfo.Value;
 
                         _unitOfWorkManager.Current.SaveChanges();
                     }

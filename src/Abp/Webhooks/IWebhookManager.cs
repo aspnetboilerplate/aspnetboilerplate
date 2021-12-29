@@ -12,7 +12,7 @@ namespace Abp.Webhooks
         WebhookPayload GetWebhookPayload(WebhookSenderArgs webhookSenderArgs);
 
         void SignWebhookRequest(HttpRequestMessage request, string serializedBody, string secret);
-        
+
         string GetSerializedBody(WebhookSenderArgs webhookSenderArgs);
 
         Task<string> GetSerializedBodyAsync(WebhookSenderArgs webhookSenderArgs);

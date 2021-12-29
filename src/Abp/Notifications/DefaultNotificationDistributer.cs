@@ -53,7 +53,7 @@ namespace Abp.Notifications
                         "NotificationDistributionJob can not continue since could not found notification by id: " +
                         notificationId
                     );
-                    
+
                     return;
                 }
 
@@ -92,17 +92,14 @@ namespace Abp.Notifications
                 List<NotificationSubscriptionInfo> subscriptions;
 
                 if (tenantIds.IsNullOrEmpty() ||
-                    (tenantIds.Length == 1 && tenantIds[0] == NotificationInfo.AllTenantIds.To<int>()))
-                {
+                    tenantIds.Length == 1 && tenantIds[0] == NotificationInfo.AllTenantIds.To<int>())
                     //Get all subscribed users of all tenants
                     subscriptions = await _notificationStore.GetSubscriptionsAsync(
                         notificationInfo.NotificationName,
                         notificationInfo.EntityTypeName,
                         notificationInfo.EntityId
                     );
-                }
                 else
-                {
                     //Get all subscribed users of specified tenant(s)
                     subscriptions = await _notificationStore.GetSubscriptionsAsync(
                         tenantIds,
@@ -110,25 +107,20 @@ namespace Abp.Notifications
                         notificationInfo.EntityTypeName,
                         notificationInfo.EntityId
                     );
-                }
 
                 //Remove invalid subscriptions
                 var invalidSubscriptions = new Dictionary<Guid, NotificationSubscriptionInfo>();
 
                 //TODO: Group subscriptions per tenant for potential performance improvement
                 foreach (var subscription in subscriptions)
-                {
                     using (CurrentUnitOfWork.SetTenantId(subscription.TenantId))
                     {
                         if (!await _notificationDefinitionManager.IsAvailableAsync(notificationInfo.NotificationName,
                                 new UserIdentifier(subscription.TenantId, subscription.UserId)) ||
                             !SettingManager.GetSettingValueForUser<bool>(NotificationSettingNames.ReceiveNotifications,
                                 subscription.TenantId, subscription.UserId))
-                        {
                             invalidSubscriptions[subscription.Id] = subscription;
-                        }
                     }
-                }
 
                 subscriptions.RemoveAll(s => invalidSubscriptions.ContainsKey(s.Id));
 
@@ -180,17 +172,14 @@ namespace Abp.Notifications
                     List<NotificationSubscriptionInfo> subscriptions;
 
                     if (tenantIds.IsNullOrEmpty() ||
-                        (tenantIds.Length == 1 && tenantIds[0] == NotificationInfo.AllTenantIds.To<int>()))
-                    {
+                        tenantIds.Length == 1 && tenantIds[0] == NotificationInfo.AllTenantIds.To<int>())
                         //Get all subscribed users of all tenants
                         subscriptions = _notificationStore.GetSubscriptions(
                             notificationInfo.NotificationName,
                             notificationInfo.EntityTypeName,
                             notificationInfo.EntityId
                         );
-                    }
                     else
-                    {
                         //Get all subscribed users of specified tenant(s)
                         subscriptions = _notificationStore.GetSubscriptions(
                             tenantIds,
@@ -198,14 +187,12 @@ namespace Abp.Notifications
                             notificationInfo.EntityTypeName,
                             notificationInfo.EntityId
                         );
-                    }
 
                     //Remove invalid subscriptions
                     var invalidSubscriptions = new Dictionary<Guid, NotificationSubscriptionInfo>();
 
                     //TODO: Group subscriptions per tenant for potential performance improvement
                     foreach (var subscription in subscriptions)
-                    {
                         using (CurrentUnitOfWork.SetTenantId(subscription.TenantId))
                         {
                             if (!_notificationDefinitionManager.IsAvailable(notificationInfo.NotificationName,
@@ -213,11 +200,8 @@ namespace Abp.Notifications
                                 !SettingManager.GetSettingValueForUser<bool>(
                                     NotificationSettingNames.ReceiveNotifications, subscription.TenantId,
                                     subscription.UserId))
-                            {
                                 invalidSubscriptions[subscription.Id] = subscription;
-                            }
                         }
-                    }
 
                     subscriptions.RemoveAll(s => invalidSubscriptions.ContainsKey(s.Id));
 
@@ -245,15 +229,12 @@ namespace Abp.Notifications
 
         private static int?[] GetTenantIds(NotificationInfo notificationInfo)
         {
-            if (notificationInfo.TenantIds.IsNullOrEmpty())
-            {
-                return null;
-            }
+            if (notificationInfo.TenantIds.IsNullOrEmpty()) return null;
 
             return notificationInfo
                 .TenantIds
                 .Split(",")
-                .Select(tenantIdAsStr => tenantIdAsStr == "null" ? (int?) null : (int?) tenantIdAsStr.To<int>())
+                .Select(tenantIdAsStr => tenantIdAsStr == "null" ? (int?)null : (int?)tenantIdAsStr.To<int>())
                 .ToArray();
         }
 
@@ -266,7 +247,6 @@ namespace Abp.Notifications
 
                 var tenantGroups = users.GroupBy(user => user.TenantId);
                 foreach (var tenantGroup in tenantGroups)
-                {
                     using (_unitOfWorkManager.Current.SetTenantId(tenantGroup.Key))
                     {
                         var tenantNotificationInfo = new TenantNotificationInfo(_guidGenerator.Create(),
@@ -291,7 +271,6 @@ namespace Abp.Notifications
 
                         await CurrentUnitOfWork.SaveChangesAsync(); //To get Ids of the notifications
                     }
-                }
 
                 return userNotifications;
             });
@@ -307,7 +286,6 @@ namespace Abp.Notifications
 
                 var tenantGroups = users.GroupBy(user => user.TenantId);
                 foreach (var tenantGroup in tenantGroups)
-                {
                     using (_unitOfWorkManager.Current.SetTenantId(tenantGroup.Key))
                     {
                         var tenantNotificationInfo = new TenantNotificationInfo(_guidGenerator.Create(),
@@ -332,7 +310,6 @@ namespace Abp.Notifications
 
                         CurrentUnitOfWork.SaveChanges(); //To get Ids of the notifications
                     }
-                }
 
                 return userNotifications;
             });
@@ -343,7 +320,6 @@ namespace Abp.Notifications
         protected virtual async Task NotifyAsync(UserNotification[] userNotifications)
         {
             foreach (var notifierType in _notificationConfiguration.Notifiers)
-            {
                 try
                 {
                     using (var notifier = _iocResolver.ResolveAsDisposable<IRealTimeNotifier>(notifierType))
@@ -355,7 +331,6 @@ namespace Abp.Notifications
                 {
                     Logger.Warn(ex.ToString(), ex);
                 }
-            }
         }
 
         #endregion

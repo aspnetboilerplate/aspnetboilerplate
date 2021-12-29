@@ -34,7 +34,6 @@ namespace Abp.TestBase.SampleApplication.Crm
 
         public string Lng { get; set; }
 
-        [DisableDateTimeNormalization]
-        public DateTime CreationTime { get; set; }
+        [DisableDateTimeNormalization] public DateTime CreationTime { get; set; }
     }
 }

@@ -15,9 +15,7 @@ namespace Abp.Runtime.Validation
             {
                 var type = GetType().GetTypeInfo();
                 if (type.IsDefined(typeof(ValidatorAttribute)))
-                {
                     return type.GetCustomAttributes(typeof(ValidatorAttribute)).Cast<ValidatorAttribute>().First().Name;
-                }
 
                 return type.Name;
             }
@@ -30,8 +28,8 @@ namespace Abp.Runtime.Validation
         /// <param name="key">Key</param>
         public object this[string key]
         {
-            get { return Attributes.GetOrDefault(key); }
-            set { Attributes[key] = value; }
+            get => Attributes.GetOrDefault(key);
+            set => Attributes[key] = value;
         }
 
         /// <summary>

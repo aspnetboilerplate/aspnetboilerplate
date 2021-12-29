@@ -15,7 +15,6 @@ namespace Abp.NHibernate.EntityMappings
         protected EntityMap(string tableName)
             : base(tableName)
         {
-
         }
     }
 }

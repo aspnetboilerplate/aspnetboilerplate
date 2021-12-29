@@ -39,12 +39,10 @@ namespace Abp.Tests.Dependency
 
         public interface Iお知らせAppService
         {
-            
         }
 
         public class お知らせAppService : Iお知らせAppService
         {
-
         }
     }
 }

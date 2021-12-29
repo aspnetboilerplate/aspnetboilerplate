@@ -13,13 +13,11 @@ namespace Abp.Timing
         /// </summary>
         public static IClockProvider Provider
         {
-            get { return _provider; }
+            get => _provider;
             set
             {
                 if (value == null)
-                {
                     throw new ArgumentNullException(nameof(value), "Can not set Clock.Provider to null!");
-                }
 
                 _provider = value;
             }

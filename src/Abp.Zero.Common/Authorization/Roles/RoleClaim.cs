@@ -18,14 +18,12 @@ namespace Abp.Authorization.Roles
 
         public virtual int RoleId { get; set; }
 
-        [StringLength(MaxClaimTypeLength)]
-        public virtual string ClaimType { get; set; }
+        [StringLength(MaxClaimTypeLength)] public virtual string ClaimType { get; set; }
 
         public virtual string ClaimValue { get; set; }
 
         public RoleClaim()
         {
-            
         }
 
         public RoleClaim(AbpRoleBase role, Claim claim)

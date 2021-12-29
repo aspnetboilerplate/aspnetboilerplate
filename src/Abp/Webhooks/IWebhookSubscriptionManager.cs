@@ -73,7 +73,8 @@ namespace Abp.Webhooks
         /// <param name="tenantIds">
         /// Target tenant id(s).
         /// </param>
-        Task<List<WebhookSubscription>> GetAllSubscriptionsOfTenantsIfFeaturesGrantedAsync(int?[] tenantIds, string webhookName);
+        Task<List<WebhookSubscription>> GetAllSubscriptionsOfTenantsIfFeaturesGrantedAsync(int?[] tenantIds,
+            string webhookName);
 
         /// <summary>
         /// Returns all subscriptions for given webhook.

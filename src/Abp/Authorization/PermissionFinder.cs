@@ -32,10 +32,7 @@ namespace Abp.Authorization
         {
             public InternalPermissionFinder(params AuthorizationProvider[] authorizationProviders)
             {
-                foreach (var provider in authorizationProviders)
-                {
-                    provider.SetPermissions(this);
-                }
+                foreach (var provider in authorizationProviders) provider.SetPermissions(this);
 
                 Permissions.AddAllPermissions();
             }

@@ -8,12 +8,14 @@ namespace Abp.Authorization
 {
     public static class AuthorizationHelperExtensions
     {
-        public static async Task AuthorizeAsync(this IAuthorizationHelper authorizationHelper, IAbpAuthorizeAttribute authorizeAttribute)
+        public static async Task AuthorizeAsync(this IAuthorizationHelper authorizationHelper,
+            IAbpAuthorizeAttribute authorizeAttribute)
         {
             await authorizationHelper.AuthorizeAsync(new[] { authorizeAttribute });
         }
 
-        public static void Authorize(this IAuthorizationHelper authorizationHelper, IAbpAuthorizeAttribute authorizeAttribute)
+        public static void Authorize(this IAuthorizationHelper authorizationHelper,
+            IAbpAuthorizeAttribute authorizeAttribute)
         {
             authorizationHelper.Authorize(new[] { authorizeAttribute });
         }

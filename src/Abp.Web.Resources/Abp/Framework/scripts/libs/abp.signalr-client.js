@@ -1,5 +1,5 @@
 var abp = abp || {};
-(function () {
+(function() {
 
     // Check if SignalR is defined
     if (!signalR) {
@@ -11,9 +11,10 @@ var abp = abp || {};
     abp.signalr.hubs = abp.signalr.hubs || {};
     abp.signalr.reconnectTime = abp.signalr.reconnectTime || 5000;
     abp.signalr.maxTries = abp.signalr.maxTries || 8;
-    abp.signalr.increaseReconnectTime = abp.signalr.increaseReconnectTime || function (time) {
-        return time * 2;
-    };
+    abp.signalr.increaseReconnectTime = abp.signalr.increaseReconnectTime ||
+        function(time) {
+            return time * 2;
+        };
 
     // Configure the connection for abp.signalr.hubs.common
     function configureConnection(connection) {
@@ -27,60 +28,61 @@ var abp = abp || {};
         function tryReconnect() {
             if (tries <= abp.signalr.maxTries) {
                 connection.start()
-                    .then(function () {
+                    .then(function() {
                         reconnectTime = abp.signalr.reconnectTime;
                         tries = 1;
-                        console.log('Reconnected to SignalR server!');
-                        abp.event.trigger('abp.signalr.reconnected');
-                    }).catch(function () {
-                    tries += 1;
-                    reconnectTime = abp.signalr.increaseReconnectTime(reconnectTime);
-                    setTimeout(function () {
-                            tryReconnect()
-                        },
-                        reconnectTime
-                    );
-                });
+                        console.log("Reconnected to SignalR server!");
+                        abp.event.trigger("abp.signalr.reconnected");
+                    }).catch(function() {
+                        tries += 1;
+                        reconnectTime = abp.signalr.increaseReconnectTime(reconnectTime);
+                        setTimeout(function() {
+                                tryReconnect();
+                            },
+                            reconnectTime
+                        );
+                    });
             }
         }
 
         // Reconnect if hub disconnects
-        connection.onclose(function (e) {
+        connection.onclose(function(e) {
             if (e) {
-                abp.log.debug('Connection closed with error: ' + e);
+                abp.log.debug("Connection closed with error: " + e);
             } else {
-                abp.log.debug('Disconnected');
+                abp.log.debug("Disconnected");
             }
 
             if (!abp.signalr.autoReconnect) {
                 return;
             }
-            
-            abp.event.trigger('abp.signalr.disconnected');
+
+            abp.event.trigger("abp.signalr.disconnected");
             tryReconnect();
         });
 
         // Register to get notifications
-        connection.on('getNotification', function (notification) {
-            abp.event.trigger('abp.notifications.received', notification);
-        });
+        connection.on("getNotification",
+            function(notification) {
+                abp.event.trigger("abp.notifications.received", notification);
+            });
     }
 
     // Connect to the server for abp.signalr.hubs.common
     function connect() {
-        var url = abp.signalr.url || (abp.appPath + 'signalr');
+        var url = abp.signalr.url || (abp.appPath + "signalr");
 
         // Start the connection
         startConnection(url, configureConnection)
-            .then(function (connection) {
-                abp.log.debug('Connected to SignalR server!'); //TODO: Remove log
-                abp.event.trigger('abp.signalr.connected');
+            .then(function(connection) {
+                abp.log.debug("Connected to SignalR server!"); //TODO: Remove log
+                abp.event.trigger("abp.signalr.connected");
                 // Call the Register method on the hub
-                connection.invoke('register').then(function () {
-                    abp.log.debug('Registered to the SignalR server!'); //TODO: Remove log
+                connection.invoke("register").then(function() {
+                    abp.log.debug("Registered to the SignalR server!"); //TODO: Remove log
                 });
             })
-            .catch(function (error) {
+            .catch(function(error) {
                 abp.log.debug(error.message);
             });
     }
@@ -96,25 +98,28 @@ var abp = abp || {};
 
         // Add query string: https://github.com/aspnet/SignalR/issues/680
         if (abp.signalr.qs) {
-            url += (url.indexOf('?') == -1 ? '?' : '&') + abp.signalr.qs;
+            url += (url.indexOf("?") == -1 ? "?" : "&") + abp.signalr.qs;
         }
 
         return function start(transport) {
-            abp.log.debug('Starting connection using ' + signalR.HttpTransportType[transport] + ' transport');
+            abp.log.debug("Starting connection using " + signalR.HttpTransportType[transport] + " transport");
             var connection = new signalR.HubConnectionBuilder()
                 .withUrl(url, transport)
                 .build();
 
-            if (configureConnection && typeof configureConnection === 'function') {
+            if (configureConnection && typeof configureConnection === "function") {
                 configureConnection(connection);
             }
 
             return connection.start()
-                .then(function () {
+                .then(function() {
                     return connection;
                 })
-                .catch(function (error) {
-                    abp.log.debug('Cannot start the connection using ' + signalR.HttpTransportType[transport] + ' transport. ' + error.message);
+                .catch(function(error) {
+                    abp.log.debug("Cannot start the connection using " +
+                        signalR.HttpTransportType[transport] +
+                        " transport. " +
+                        error.message);
                     if (transport !== signalR.HttpTransportType.LongPolling) {
                         return start(transport + 1);
                     }

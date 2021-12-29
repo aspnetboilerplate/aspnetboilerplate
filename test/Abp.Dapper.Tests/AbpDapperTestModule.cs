@@ -1,11 +1,9 @@
 ﻿using System.Collections.Generic;
 using System.Reflection;
 using System.Transactions;
-
 using Abp.EntityFramework;
 using Abp.Modules;
 using Abp.TestBase;
-
 using DapperExtensions.Sql;
 
 namespace Abp.Dapper.Tests
@@ -28,7 +26,8 @@ namespace Abp.Dapper.Tests
 
             DapperExtensions.DapperExtensions.SqlDialect = new SqliteDialect();
 
-            DapperExtensions.DapperExtensions.SetMappingAssemblies(new List<Assembly> { Assembly.GetExecutingAssembly() });
+            DapperExtensions.DapperExtensions.SetMappingAssemblies(new List<Assembly>
+                { Assembly.GetExecutingAssembly() });
         }
     }
 }

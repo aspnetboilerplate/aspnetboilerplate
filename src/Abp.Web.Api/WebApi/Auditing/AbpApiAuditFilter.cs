@@ -20,7 +20,7 @@ namespace Abp.WebApi.Auditing
         private readonly IAuditingConfiguration _auditingConfiguration;
         private readonly IAuditSerializer _auditSerializer;
 
-        public AbpApiAuditFilter(IAuditingHelper auditingHelper, 
+        public AbpApiAuditFilter(IAuditingHelper auditingHelper,
             IAuditingConfiguration auditingConfiguration,
             IAuditSerializer auditSerializer)
         {
@@ -29,13 +29,11 @@ namespace Abp.WebApi.Auditing
             _auditSerializer = auditSerializer;
         }
 
-        public async Task<HttpResponseMessage> ExecuteActionFilterAsync(HttpActionContext actionContext, CancellationToken cancellationToken, Func<Task<HttpResponseMessage>> continuation)
+        public async Task<HttpResponseMessage> ExecuteActionFilterAsync(HttpActionContext actionContext,
+            CancellationToken cancellationToken, Func<Task<HttpResponseMessage>> continuation)
         {
             var method = actionContext.ActionDescriptor.GetMethodInfoOrNull();
-            if (method == null || !ShouldSaveAudit(actionContext))
-            {
-                return await continuation();
-            }
+            if (method == null || !ShouldSaveAudit(actionContext)) return await continuation();
 
             var auditInfo = _auditingHelper.CreateAuditInfo(
                 actionContext.ActionDescriptor.ControllerDescriptor.ControllerType,
@@ -62,12 +60,8 @@ namespace Abp.WebApi.Auditing
                 auditInfo.ExecutionDuration = Convert.ToInt32(stopwatch.Elapsed.TotalMilliseconds);
 
                 if (_auditingConfiguration.SaveReturnValues && response != null)
-                {
-                    if (response.TryGetContentValue(out object resultObject) )
-                    {
+                    if (response.TryGetContentValue(out object resultObject))
                         auditInfo.ReturnValue = _auditSerializer.Serialize(resultObject);
-                    }
-                }
 
                 await _auditingHelper.SaveAsync(auditInfo);
             }
@@ -75,10 +69,7 @@ namespace Abp.WebApi.Auditing
 
         private bool ShouldSaveAudit(HttpActionContext context)
         {
-            if (context.ActionDescriptor.IsDynamicAbpAction())
-            {
-                return false;
-            }
+            if (context.ActionDescriptor.IsDynamicAbpAction()) return false;
 
             return _auditingHelper.ShouldSaveAudit(context.ActionDescriptor.GetMethodInfoOrNull(), true);
         }

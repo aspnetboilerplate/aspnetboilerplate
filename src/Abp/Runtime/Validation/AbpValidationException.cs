@@ -16,7 +16,7 @@ namespace Abp.Runtime.Validation
         /// Default log severity
         /// </summary>
         public static LogSeverity DefaultLogSeverity = LogSeverity.Warn;
-        
+
         /// <summary>
         /// Detailed list of validation errors for this exception.
         /// </summary>

@@ -11,7 +11,7 @@ namespace Abp.Tests.Dependency
         {
             LocalIocManager.IocContainer.Register(
                 Component.For<SimpleDisposableObject>().LifestyleTransient()
-                );
+            );
 
             var obj = LocalIocManager.IocContainer.Resolve<SimpleDisposableObject>();
 
@@ -25,7 +25,7 @@ namespace Abp.Tests.Dependency
         {
             LocalIocManager.IocContainer.Register(
                 Component.For<SimpleDisposableObject>().LifestyleTransient()
-                );
+            );
 
             var obj = LocalIocManager.IocContainer.Resolve<SimpleDisposableObject>();
 
@@ -39,7 +39,7 @@ namespace Abp.Tests.Dependency
         {
             LocalIocManager.IocContainer.Register(
                 Component.For<SimpleDisposableObject>().LifestyleSingleton()
-                );
+            );
 
             var obj = LocalIocManager.IocContainer.Resolve<SimpleDisposableObject>();
 

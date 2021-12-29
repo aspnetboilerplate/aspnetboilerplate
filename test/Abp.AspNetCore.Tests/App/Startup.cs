@@ -7,48 +7,44 @@ using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 
-namespace Abp.AspNetCore.App
+namespace Abp.AspNetCore.App;
+
+public class Startup
 {
-    public class Startup
+    public IServiceProvider ConfigureServices(IServiceCollection services)
     {
-        public IServiceProvider ConfigureServices(IServiceCollection services)
+        services.AddMvc()
+            .AddXmlSerializerFormatters();
+
+        services.AddAuthentication(options => { options.DefaultScheme = "Cookies"; }).AddCookie();
+
+        //Configure Abp and Dependency Injection
+        return services.AddAbp<AppModule>(options =>
         {
-            services.AddMvc()
-                .AddXmlSerializerFormatters();
+            //Test setup
+            options.SetupTest();
+        });
+    }
 
-            services.AddAuthentication(options =>
-            {
-                options.DefaultScheme = "Cookies";
-            }).AddCookie();
+    // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
+    public void Configure(IApplicationBuilder app, IWebHostEnvironment env, ILoggerFactory loggerFactory)
+    {
+        app.UseAbp(); //Initializes ABP framework.
 
-            //Configure Abp and Dependency Injection
-            return services.AddAbp<AppModule>(options =>
-            {
-                //Test setup
-                options.SetupTest();
-            });
-        }
+        app.UseRouting();
 
-        // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
-        public void Configure(IApplicationBuilder app, IWebHostEnvironment env, ILoggerFactory loggerFactory)
+        app.UseAuthentication();
+        app.UseAbpAuthorizationExceptionHandling();
+        app.UseAuthorization();
+
+        app.UseEndpoints(endpoints =>
         {
-            app.UseAbp(); //Initializes ABP framework.
+            endpoints.MapControllerRoute("defaultWithArea", "{area}/{controller=Home}/{action=Index}/{id?}");
+            endpoints.MapControllerRoute("default", "{controller=Home}/{action=Index}/{id?}");
 
-            app.UseRouting();
-
-            app.UseAuthentication();
-            app.UseAbpAuthorizationExceptionHandling();
-            app.UseAuthorization();
-
-            app.UseEndpoints(endpoints =>
-            {
-                endpoints.MapControllerRoute("defaultWithArea", "{area}/{controller=Home}/{action=Index}/{id?}");
-                endpoints.MapControllerRoute("default", "{controller=Home}/{action=Index}/{id?}");
-
-                app.ApplicationServices.GetRequiredService<IAbpAspNetCoreConfiguration>()
-                                        .EndpointConfiguration
-                                        .ConfigureAllEndpoints(endpoints);
-            });
-        }
+            app.ApplicationServices.GetRequiredService<IAbpAspNetCoreConfiguration>()
+                .EndpointConfiguration
+                .ConfigureAllEndpoints(endpoints);
+        });
     }
 }

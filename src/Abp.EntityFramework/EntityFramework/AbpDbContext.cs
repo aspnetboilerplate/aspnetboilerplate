@@ -147,7 +147,7 @@ namespace Abp.EntityFramework
 
         private void RegisterToChanges()
         {
-            ((IObjectContextAdapter) this)
+            ((IObjectContextAdapter)this)
                 .ObjectContext
                 .ObjectStateManager
                 .ObjectStateManagerChanged += ObjectStateManager_ObjectStateManagerChanged;
@@ -155,11 +155,8 @@ namespace Abp.EntityFramework
 
         protected virtual void ObjectStateManager_ObjectStateManagerChanged(object sender, CollectionChangeEventArgs e)
         {
-            var contextAdapter = (IObjectContextAdapter) this;
-            if (e.Action != CollectionChangeAction.Add)
-            {
-                return;
-            }
+            var contextAdapter = (IObjectContextAdapter)this;
+            if (e.Action != CollectionChangeAction.Add) return;
 
             var entry = contextAdapter.ObjectContext.ObjectStateManager.GetObjectStateEntry(e.Element);
             switch (entry.State)
@@ -204,9 +201,9 @@ namespace Abp.EntityFramework
             modelBuilder.Filter(AbpDataFilters.SoftDelete, (ISoftDelete d) => d.IsDeleted, false);
             modelBuilder.Filter(AbpDataFilters.MustHaveTenant,
 #pragma warning disable CS0472 // The result of the expression is always the same since a value of this type is never equal to 'null'
-				(IMustHaveTenant t, int tenantId) => t.TenantId == tenantId || (int?) t.TenantId == null,
+                (IMustHaveTenant t, int tenantId) => t.TenantId == tenantId || (int?)t.TenantId == null,
 #pragma warning restore CS0472 // While "(int?)t.TenantId == null" seems wrong, it's needed. See https://github.com/jcachat/EntityFramework.DynamicFilters/issues/62#issuecomment-208198058
-                0); 
+                0);
             modelBuilder.Filter(AbpDataFilters.MayHaveTenant,
                 (IMayHaveTenant t, int? tenantId) => t.TenantId == tenantId, 0);
         }
@@ -249,10 +246,7 @@ namespace Abp.EntityFramework
 
             var userId = GetAuditUserId();
 
-            foreach (var entry in ChangeTracker.Entries().ToList())
-            {
-                ApplyAbpConcepts(entry, userId, changeReport);
-            }
+            foreach (var entry in ChangeTracker.Entries().ToList()) ApplyAbpConcepts(entry, userId, changeReport);
 
             return changeReport;
         }
@@ -261,13 +255,10 @@ namespace Abp.EntityFramework
         {
             var uowOptions = initializationContext.UnitOfWork.Options;
             if (uowOptions.Timeout.HasValue && !Database.CommandTimeout.HasValue)
-            {
                 Database.CommandTimeout = uowOptions.Timeout.Value.TotalSeconds.To<int>();
-            }
 
             if (Clock.SupportsMultipleTimezone)
-            {
-                ((IObjectContextAdapter) this).ObjectContext.ObjectMaterialized += (sender, args) =>
+                ((IObjectContextAdapter)this).ObjectContext.ObjectMaterialized += (sender, args) =>
                 {
                     var entityType = ObjectContext.GetObjectType(args.Entity.GetType());
 
@@ -279,7 +270,6 @@ namespace Abp.EntityFramework
                     Entry(args.Entity).State = previousState;
                     Configuration.AutoDetectChangesEnabled = true;
                 };
-            }
         }
 
         protected virtual void ApplyAbpConcepts(DbEntityEntry entry, long? userId, EntityChangeReport changeReport)
@@ -342,26 +332,15 @@ namespace Abp.EntityFramework
 
         protected virtual bool IsHardDeleteEntity(DbEntityEntry entry)
         {
-            if (!EntityHelper.IsEntity(entry.Entity.GetType()))
-            {
-                return false;
-            }
+            if (!EntityHelper.IsEntity(entry.Entity.GetType())) return false;
 
-            if (CurrentUnitOfWorkProvider?.Current?.Items == null)
-            {
-                return false;
-            }
+            if (CurrentUnitOfWorkProvider?.Current?.Items == null) return false;
 
             if (!CurrentUnitOfWorkProvider.Current.Items.ContainsKey(UnitOfWorkExtensionDataTypes.HardDelete))
-            {
                 return false;
-            }
 
             var hardDeleteItems = CurrentUnitOfWorkProvider.Current.Items[UnitOfWorkExtensionDataTypes.HardDelete];
-            if (!(hardDeleteItems is HashSet<string> objects))
-            {
-                return false;
-            }
+            if (!(hardDeleteItems is HashSet<string> objects)) return false;
 
             var currentTenantId = GetCurrentTenantIdOrNull();
             var hardDeleteKey = EntityHelper.GetHardDeleteKey(entry.Entity, currentTenantId);
@@ -371,15 +350,9 @@ namespace Abp.EntityFramework
         protected virtual void AddDomainEvents(List<DomainEventEntry> domainEvents, object entityAsObj)
         {
             var generatesDomainEventsEntity = entityAsObj as IGeneratesDomainEvents;
-            if (generatesDomainEventsEntity == null)
-            {
-                return;
-            }
+            if (generatesDomainEventsEntity == null) return;
 
-            if (generatesDomainEventsEntity.DomainEvents.IsNullOrEmpty())
-            {
-                return;
-            }
+            if (generatesDomainEventsEntity.DomainEvents.IsNullOrEmpty()) return;
 
             domainEvents.AddRange(
                 generatesDomainEventsEntity.DomainEvents.Select(
@@ -398,17 +371,15 @@ namespace Abp.EntityFramework
                 var edmProperty = GetEdmProperty(entityType, idIdPropertyName);
 
                 if (edmProperty != null && edmProperty.StoreGeneratedPattern == StoreGeneratedPattern.None)
-                {
                     entity.Id = GuidGenerator.Create();
-                }
             }
         }
 
-        EdmProperty GetEdmProperty(Type type, string propertyName)
+        private EdmProperty GetEdmProperty(Type type, string propertyName)
         {
-            var metadata = ((IObjectContextAdapter) this).ObjectContext.MetadataWorkspace;
+            var metadata = ((IObjectContextAdapter)this).ObjectContext.MetadataWorkspace;
 
-            var objectItemCollection = ((ObjectItemCollection) metadata.GetItemCollection(DataSpace.OSpace));
+            var objectItemCollection = (ObjectItemCollection)metadata.GetItemCollection(DataSpace.OSpace);
 
             var entityType = metadata.GetItems<EntityType>(DataSpace.OSpace)
                 .Single(t => objectItemCollection.GetClrType(t) == type);
@@ -420,11 +391,11 @@ namespace Abp.EntityFramework
                 string.Equals(e.Name, propertyName, StringComparison.OrdinalIgnoreCase));
         }
 
-        string GetIdPropertyName(Type type)
+        private string GetIdPropertyName(Type type)
         {
-            var metadata = ((IObjectContextAdapter) this).ObjectContext.MetadataWorkspace;
+            var metadata = ((IObjectContextAdapter)this).ObjectContext.MetadataWorkspace;
 
-            var objectItemCollection = ((ObjectItemCollection) metadata.GetItemCollection(DataSpace.OSpace));
+            var objectItemCollection = (ObjectItemCollection)metadata.GetItemCollection(DataSpace.OSpace);
 
             var entityType = metadata.GetItems<EntityType>(DataSpace.OSpace)
                 .Single(t => objectItemCollection.GetClrType(t) == type);
@@ -452,69 +423,41 @@ namespace Abp.EntityFramework
 
         protected virtual void CheckAndSetMustHaveTenantIdProperty(object entityAsObj)
         {
-            if (SuppressAutoSetTenantId)
-            {
-                return;
-            }
+            if (SuppressAutoSetTenantId) return;
 
             //Only set IMustHaveTenant entities
-            if (!(entityAsObj is IMustHaveTenant))
-            {
-                return;
-            }
+            if (!(entityAsObj is IMustHaveTenant)) return;
 
             var entity = entityAsObj.As<IMustHaveTenant>();
 
             //Don't set if it's already set
-            if (entity.TenantId != 0)
-            {
-                return;
-            }
+            if (entity.TenantId != 0) return;
 
             var currentTenantId = GetCurrentTenantIdOrNull();
 
             if (currentTenantId != null)
-            {
                 entity.TenantId = currentTenantId.Value;
-            }
             else
-            {
                 throw new AbpException("Can not set TenantId to 0 for IMustHaveTenant entities!");
-            }
         }
 
         protected virtual void CheckAndSetMayHaveTenantIdProperty(object entityAsObj)
         {
-            if (SuppressAutoSetTenantId)
-            {
-                return;
-            }
+            if (SuppressAutoSetTenantId) return;
 
             //Only set IMayHaveTenant entities
-            if (!(entityAsObj is IMayHaveTenant))
-            {
-                return;
-            }
+            if (!(entityAsObj is IMayHaveTenant)) return;
 
             var entity = entityAsObj.As<IMayHaveTenant>();
 
             //Don't set if it's already set
-            if (entity.TenantId != null)
-            {
-                return;
-            }
+            if (entity.TenantId != null) return;
 
             //Only works for single tenant applications
-            if (MultiTenancyConfig?.IsEnabled ?? false)
-            {
-                return;
-            }
+            if (MultiTenancyConfig?.IsEnabled ?? false) return;
 
             //Don't set if MayHaveTenant filter is disabled
-            if (!this.IsFilterEnabled(AbpDataFilters.MayHaveTenant))
-            {
-                return;
-            }
+            if (!this.IsFilterEnabled(AbpDataFilters.MayHaveTenant)) return;
 
             entity.TenantId = GetCurrentTenantIdOrNull();
         }
@@ -543,10 +486,7 @@ namespace Abp.EntityFramework
 
         protected virtual void CancelDeletionForSoftDelete(DbEntityEntry entry)
         {
-            if (!(entry.Entity is ISoftDelete))
-            {
-                return;
-            }
+            if (!(entry.Entity is ISoftDelete)) return;
 
             var softDeleteEntry = entry.Cast<ISoftDelete>();
             softDeleteEntry.Reload();
@@ -569,9 +509,7 @@ namespace Abp.EntityFramework
         {
             Logger.Error("There are some validation errors while saving changes in EntityFramework:");
             foreach (var ve in exception.EntityValidationErrors.SelectMany(eve => eve.ValidationErrors))
-            {
                 Logger.Error(" - " + ve.PropertyName + ": " + ve.ErrorMessage);
-            }
         }
 
         protected virtual long? GetAuditUserId()
@@ -580,19 +518,14 @@ namespace Abp.EntityFramework
                 CurrentUnitOfWorkProvider != null &&
                 CurrentUnitOfWorkProvider.Current != null &&
                 CurrentUnitOfWorkProvider.Current.GetTenantId() == AbpSession.TenantId)
-            {
                 return AbpSession.UserId;
-            }
 
             return null;
         }
 
         protected virtual int? GetCurrentTenantIdOrNull()
         {
-            if (CurrentUnitOfWorkProvider?.Current != null)
-            {
-                return CurrentUnitOfWorkProvider.Current.GetTenantId();
-            }
+            if (CurrentUnitOfWorkProvider?.Current != null) return CurrentUnitOfWorkProvider.Current.GetTenantId();
 
             return AbpSession.TenantId;
         }

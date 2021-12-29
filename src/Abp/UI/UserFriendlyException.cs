@@ -14,7 +14,7 @@ namespace Abp.UI
         /// Default log severity
         /// </summary>
         public static LogSeverity DefaultLogSeverity = LogSeverity.Warn;
-        
+
         /// <summary>
         /// Additional information about the exception.
         /// </summary>
@@ -45,7 +45,6 @@ namespace Abp.UI
         public UserFriendlyException(SerializationInfo serializationInfo, StreamingContext context)
             : base(serializationInfo, context)
         {
-
         }
 
         /// <summary>

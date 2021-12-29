@@ -7,19 +7,16 @@ namespace Abp.IdentityFramework
     {
         public AbpIdentityResult()
         {
-            
         }
 
         public AbpIdentityResult(IEnumerable<string> errors)
             : base(errors)
         {
-            
         }
 
         public AbpIdentityResult(params string[] errors)
-            :base(errors)
+            : base(errors)
         {
-            
         }
 
         public new static AbpIdentityResult Failed(params string[] errors)

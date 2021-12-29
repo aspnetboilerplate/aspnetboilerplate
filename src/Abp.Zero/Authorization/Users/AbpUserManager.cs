@@ -38,9 +38,7 @@ namespace Abp.Authorization.Users
             get
             {
                 if (!(Store is IUserPermissionStore<TUser>))
-                {
                     throw new AbpException("Store is not IUserPermissionStore");
-                }
 
                 return Store as IUserPermissionStore<TUser>;
             }
@@ -112,16 +110,10 @@ namespace Abp.Authorization.Users
             user.SetNormalizedNames();
 
             var result = await CheckDuplicateUsernameOrEmailAddressAsync(user.Id, user.UserName, user.EmailAddress);
-            if (!result.Succeeded)
-            {
-                return result;
-            }
+            if (!result.Succeeded) return result;
 
             var tenantId = GetCurrentTenantId();
-            if (tenantId.HasValue && !user.TenantId.HasValue)
-            {
-                user.TenantId = tenantId.Value;
-            }
+            if (tenantId.HasValue && !user.TenantId.HasValue) user.TenantId = tenantId.Value;
 
             InitializeLockoutSettings(user.TenantId);
 
@@ -182,48 +174,29 @@ namespace Abp.Authorization.Users
         public virtual async Task<bool> IsGrantedAsync(long userId, Permission permission)
         {
             //Check for multi-tenancy side
-            if (!permission.MultiTenancySides.HasFlag(GetCurrentMultiTenancySide()))
-            {
-                return false;
-            }
+            if (!permission.MultiTenancySides.HasFlag(GetCurrentMultiTenancySide())) return false;
 
             //Check for depended features
             if (permission.FeatureDependency != null && GetCurrentMultiTenancySide() == MultiTenancySides.Tenant)
             {
                 FeatureDependencyContext.TenantId = GetCurrentTenantId();
 
-                if (!await permission.FeatureDependency.IsSatisfiedAsync(FeatureDependencyContext))
-                {
-                    return false;
-                }
+                if (!await permission.FeatureDependency.IsSatisfiedAsync(FeatureDependencyContext)) return false;
             }
 
             //Get cached user permissions
             var cacheItem = await GetUserPermissionCacheItemAsync(userId);
-            if (cacheItem == null)
-            {
-                return false;
-            }
+            if (cacheItem == null) return false;
 
             //Check for user-specific value
-            if (cacheItem.GrantedPermissions.Contains(permission.Name))
-            {
-                return true;
-            }
+            if (cacheItem.GrantedPermissions.Contains(permission.Name)) return true;
 
-            if (cacheItem.ProhibitedPermissions.Contains(permission.Name))
-            {
-                return false;
-            }
+            if (cacheItem.ProhibitedPermissions.Contains(permission.Name)) return false;
 
             //Check for roles
             foreach (var roleId in cacheItem.RoleIds)
-            {
                 if (await RoleManager.IsGrantedAsync(roleId, permission))
-                {
                     return true;
-                }
-            }
 
             return false;
         }
@@ -236,48 +209,29 @@ namespace Abp.Authorization.Users
         public virtual bool IsGranted(long userId, Permission permission)
         {
             //Check for multi-tenancy side
-            if (!permission.MultiTenancySides.HasFlag(GetCurrentMultiTenancySide()))
-            {
-                return false;
-            }
+            if (!permission.MultiTenancySides.HasFlag(GetCurrentMultiTenancySide())) return false;
 
             //Check for depended features
             if (permission.FeatureDependency != null && GetCurrentMultiTenancySide() == MultiTenancySides.Tenant)
             {
                 FeatureDependencyContext.TenantId = GetCurrentTenantId();
 
-                if (!permission.FeatureDependency.IsSatisfied(FeatureDependencyContext))
-                {
-                    return false;
-                }
+                if (!permission.FeatureDependency.IsSatisfied(FeatureDependencyContext)) return false;
             }
 
             //Get cached user permissions
             var cacheItem = GetUserPermissionCacheItem(userId);
-            if (cacheItem == null)
-            {
-                return false;
-            }
+            if (cacheItem == null) return false;
 
             //Check for user-specific value
-            if (cacheItem.GrantedPermissions.Contains(permission.Name))
-            {
-                return true;
-            }
+            if (cacheItem.GrantedPermissions.Contains(permission.Name)) return true;
 
-            if (cacheItem.ProhibitedPermissions.Contains(permission.Name))
-            {
-                return false;
-            }
+            if (cacheItem.ProhibitedPermissions.Contains(permission.Name)) return false;
 
             //Check for roles
             foreach (var roleId in cacheItem.RoleIds)
-            {
                 if (RoleManager.IsGranted(roleId, permission))
-                {
                     return true;
-                }
-            }
 
             return false;
         }
@@ -292,12 +246,8 @@ namespace Abp.Authorization.Users
             var permissionList = new List<Permission>();
 
             foreach (var permission in _permissionManager.GetAllPermissions())
-            {
                 if (await IsGrantedAsync(user.Id, permission))
-                {
                     permissionList.Add(permission);
-                }
-            }
 
             return permissionList;
         }
@@ -314,14 +264,10 @@ namespace Abp.Authorization.Users
             var newPermissions = permissions.ToArray();
 
             foreach (var permission in oldPermissions.Where(p => !newPermissions.Contains(p)))
-            {
                 await ProhibitPermissionAsync(user, permission);
-            }
 
             foreach (var permission in newPermissions.Where(p => !oldPermissions.Contains(p)))
-            {
                 await GrantPermissionAsync(user, permission);
-            }
         }
 
         /// <summary>
@@ -331,9 +277,7 @@ namespace Abp.Authorization.Users
         public async Task ProhibitAllPermissionsAsync(TUser user)
         {
             foreach (var permission in _permissionManager.GetAllPermissions())
-            {
                 await ProhibitPermissionAsync(user, permission);
-            }
         }
 
         /// <summary>
@@ -358,10 +302,7 @@ namespace Abp.Authorization.Users
         {
             await UserPermissionStore.RemovePermissionAsync(user, new PermissionGrantInfo(permission.Name, false));
 
-            if (await IsGrantedAsync(user.Id, permission))
-            {
-                return;
-            }
+            if (await IsGrantedAsync(user.Id, permission)) return;
 
             await UserPermissionStore.AddPermissionAsync(user, new PermissionGrantInfo(permission.Name, true));
         }
@@ -375,10 +316,7 @@ namespace Abp.Authorization.Users
         {
             await UserPermissionStore.RemovePermissionAsync(user, new PermissionGrantInfo(permission.Name, true));
 
-            if (!await IsGrantedAsync(user.Id, permission))
-            {
-                return;
-            }
+            if (!await IsGrantedAsync(user.Id, permission)) return;
 
             await UserPermissionStore.AddPermissionAsync(user, new PermissionGrantInfo(permission.Name, false));
         }
@@ -403,10 +341,7 @@ namespace Abp.Authorization.Users
         public virtual async Task<TUser> GetUserByIdAsync(long userId)
         {
             var user = await FindByIdAsync(userId);
-            if (user == null)
-            {
-                throw new AbpException("There is no user with id: " + userId);
-            }
+            if (user == null) throw new AbpException("There is no user with id: " + userId);
 
             return user;
         }
@@ -421,22 +356,17 @@ namespace Abp.Authorization.Users
         public virtual TUser GetUserById(long userId)
         {
             var user = AbpStore.FindById(userId);
-            if (user == null)
-            {
-                throw new AbpException("There is no user with id: " + userId);
-            }
+            if (user == null) throw new AbpException("There is no user with id: " + userId);
 
             return user;
         }
 
-        public async override Task<ClaimsIdentity> CreateIdentityAsync(TUser user, string authenticationType)
+        public override async Task<ClaimsIdentity> CreateIdentityAsync(TUser user, string authenticationType)
         {
             var identity = await base.CreateIdentityAsync(user, authenticationType);
             if (user.TenantId.HasValue)
-            {
                 identity.AddClaim(new Claim(AbpClaimTypes.TenantId,
                     user.TenantId.Value.ToString(CultureInfo.InvariantCulture)));
-            }
 
             return identity;
         }
@@ -446,31 +376,22 @@ namespace Abp.Authorization.Users
             user.SetNormalizedNames();
 
             var result = await CheckDuplicateUsernameOrEmailAddressAsync(user.Id, user.UserName, user.EmailAddress);
-            if (!result.Succeeded)
-            {
-                return result;
-            }
+            if (!result.Succeeded) return result;
 
             //Admin user's username can not be changed!
-            if (user.UserName != AbpUser<TUser>.AdminUserName)
-            {
-                if ((await GetOldUserNameAsync(user.Id)) == AbpUser<TUser>.AdminUserName)
-                {
+            if (user.UserName != AbpUserBase.AdminUserName)
+                if (await GetOldUserNameAsync(user.Id) == AbpUserBase.AdminUserName)
                     return AbpIdentityResult.Failed(string.Format(L("CanNotRenameAdminUser"),
-                        AbpUser<TUser>.AdminUserName));
-                }
-            }
+                        AbpUserBase.AdminUserName));
 
             return await base.UpdateAsync(user);
         }
 
         public override async Task<IdentityResult> DeleteAsync(TUser user)
         {
-            if (user.UserName == AbpUser<TUser>.AdminUserName)
-            {
+            if (user.UserName == AbpUserBase.AdminUserName)
                 return AbpIdentityResult.Failed(string.Format(L("CanNotDeleteAdminUser"),
-                    AbpUser<TUser>.AdminUserName));
-            }
+                    AbpUserBase.AdminUserName));
 
             return await base.DeleteAsync(user);
         }
@@ -478,10 +399,7 @@ namespace Abp.Authorization.Users
         public virtual async Task<IdentityResult> ChangePasswordAsync(TUser user, string newPassword)
         {
             var result = await PasswordValidator.ValidateAsync(newPassword);
-            if (!result.Succeeded)
-            {
-                return result;
-            }
+            if (!result.Succeeded) return result;
 
             await AbpStore.SetPasswordHashAsync(user, PasswordHasher.HashPassword(newPassword));
 
@@ -493,17 +411,13 @@ namespace Abp.Authorization.Users
         public virtual async Task<IdentityResult> CheckDuplicateUsernameOrEmailAddressAsync(long? expectedUserId,
             string userName, string emailAddress)
         {
-            var user = (await FindByNameAsync(userName));
+            var user = await FindByNameAsync(userName);
             if (user != null && user.Id != expectedUserId)
-            {
                 return AbpIdentityResult.Failed(string.Format(L("Identity.DuplicateUserName"), userName));
-            }
 
-            user = (await FindByEmailAsync(emailAddress));
+            user = await FindByEmailAsync(emailAddress);
             if (user != null && user.Id != expectedUserId)
-            {
                 return AbpIdentityResult.Failed(string.Format(L("Identity.DuplicateEmail"), emailAddress));
-            }
 
             return IdentityResult.Success;
         }
@@ -517,10 +431,7 @@ namespace Abp.Authorization.Users
                 if (roleNames.All(roleName => role.Name != roleName))
                 {
                     var result = await RemoveFromRoleAsync(user.Id, role.Name);
-                    if (!result.Succeeded)
-                    {
-                        return result;
-                    }
+                    if (!result.Succeeded) return result;
                 }
             }
 
@@ -531,10 +442,7 @@ namespace Abp.Authorization.Users
                 if (user.Roles.All(ur => ur.RoleId != role.Id))
                 {
                     var result = await AddToRoleAsync(user.Id, roleName);
-                    if (!result.Succeeded)
-                    {
-                        return result;
-                    }
+                    if (!result.Succeeded) return result;
                 }
             }
 
@@ -578,10 +486,7 @@ namespace Abp.Authorization.Users
             {
                 var currentOus = await GetOrganizationUnitsAsync(user);
 
-                if (currentOus.Any(cou => cou.Id == ou.Id))
-                {
-                    return;
-                }
+                if (currentOus.Any(cou => cou.Id == ou.Id)) return;
 
                 await CheckMaxUserOrganizationUnitMembershipCountAsync(user.TenantId, currentOus.Count + 1);
                 await _userOrganizationUnitRepository.InsertAsync(new UserOrganizationUnit(user.TenantId, user.Id,
@@ -622,20 +527,15 @@ namespace Abp.Authorization.Users
         {
             var maxCount = await _organizationUnitSettings.GetMaxUserMembershipCountAsync(tenantId);
             if (requestedCount > maxCount)
-            {
                 throw new AbpException(string.Format("Can not set more than {0} organization unit for a user!",
                     maxCount));
-            }
         }
 
         public virtual async Task SetOrganizationUnitsAsync(TUser user, params long[] organizationUnitIds)
         {
             await _unitOfWorkManager.WithUnitOfWorkAsync(async () =>
             {
-                if (organizationUnitIds == null)
-                {
-                    organizationUnitIds = new long[0];
-                }
+                if (organizationUnitIds == null) organizationUnitIds = new long[0];
 
                 await CheckMaxUserOrganizationUnitMembershipCountAsync(user.TenantId, organizationUnitIds.Length);
 
@@ -643,26 +543,18 @@ namespace Abp.Authorization.Users
 
                 //Remove from removed OUs
                 foreach (var currentOu in currentOus)
-                {
                     if (!organizationUnitIds.Contains(currentOu.Id))
-                    {
                         await RemoveFromOrganizationUnitAsync(user, currentOu);
-                    }
-                }
 
                 await _unitOfWorkManager.Current.SaveChangesAsync();
 
                 //Add to added OUs
                 foreach (var organizationUnitId in organizationUnitIds)
-                {
                     if (currentOus.All(ou => ou.Id != organizationUnitId))
-                    {
                         await AddToOrganizationUnitAsync(
                             user,
                             await _organizationUnitRepository.GetAsync(organizationUnitId)
                         );
-                    }
-                }
             });
         }
 
@@ -715,14 +607,10 @@ namespace Abp.Authorization.Users
         {
             TwoFactorProviders.Clear();
 
-            if (!IsTrue(AbpZeroSettingNames.UserManagement.TwoFactorLogin.IsEnabled, tenantId))
-            {
-                return;
-            }
+            if (!IsTrue(AbpZeroSettingNames.UserManagement.TwoFactorLogin.IsEnabled, tenantId)) return;
 
             if (EmailService != null &&
                 IsTrue(AbpZeroSettingNames.UserManagement.TwoFactorLogin.IsEmailProviderEnabled, tenantId))
-            {
                 RegisterTwoFactorProvider(
                     L("Email"),
                     new EmailTokenProvider<TUser, long>
@@ -731,11 +619,9 @@ namespace Abp.Authorization.Users
                         BodyFormat = L("EmailSecurityCodeBody")
                     }
                 );
-            }
 
             if (SmsService != null &&
                 IsTrue(AbpZeroSettingNames.UserManagement.TwoFactorLogin.IsSmsProviderEnabled, tenantId))
-            {
                 RegisterTwoFactorProvider(
                     L("Sms"),
                     new PhoneNumberTokenProvider<TUser, long>
@@ -743,7 +629,6 @@ namespace Abp.Authorization.Users
                         MessageFormat = L("SmsSecurityCodeMessage")
                     }
                 );
-            }
         }
 
         public virtual void InitializeLockoutSettings(int? tenantId)
@@ -810,29 +695,18 @@ namespace Abp.Authorization.Users
             return await _cacheManager.GetUserPermissionCache().GetAsync(cacheKey, async () =>
             {
                 var user = await FindByIdAsync(userId);
-                if (user == null)
-                {
-                    return null;
-                }
+                if (user == null) return null;
 
                 var newCacheItem = new UserPermissionCacheItem(userId);
 
                 foreach (var roleName in await GetRolesAsync(userId))
-                {
                     newCacheItem.RoleIds.Add((await RoleManager.GetRoleByNameAsync(roleName)).Id);
-                }
 
                 foreach (var permissionInfo in await UserPermissionStore.GetPermissionsAsync(userId))
-                {
                     if (permissionInfo.IsGranted)
-                    {
                         newCacheItem.GrantedPermissions.Add(permissionInfo.Name);
-                    }
                     else
-                    {
                         newCacheItem.ProhibitedPermissions.Add(permissionInfo.Name);
-                    }
-                }
 
                 return newCacheItem;
             });
@@ -844,29 +718,18 @@ namespace Abp.Authorization.Users
             return _cacheManager.GetUserPermissionCache().Get(cacheKey, () =>
             {
                 var user = AbpStore.FindById(userId);
-                if (user == null)
-                {
-                    return null;
-                }
+                if (user == null) return null;
 
                 var newCacheItem = new UserPermissionCacheItem(userId);
 
                 foreach (var roleName in AbpStore.GetRoles(userId))
-                {
-                    newCacheItem.RoleIds.Add((RoleManager.GetRoleByName(roleName)).Id);
-                }
+                    newCacheItem.RoleIds.Add(RoleManager.GetRoleByName(roleName).Id);
 
                 foreach (var permissionInfo in UserPermissionStore.GetPermissions(userId))
-                {
                     if (permissionInfo.IsGranted)
-                    {
                         newCacheItem.GrantedPermissions.Add(permissionInfo.Name);
-                    }
                     else
-                    {
                         newCacheItem.ProhibitedPermissions.Add(permissionInfo.Name);
-                    }
-                }
 
                 return newCacheItem;
             });
@@ -896,10 +759,7 @@ namespace Abp.Authorization.Users
 
         private int? GetCurrentTenantId()
         {
-            if (_unitOfWorkManager.Current != null)
-            {
-                return _unitOfWorkManager.Current.GetTenantId();
-            }
+            if (_unitOfWorkManager.Current != null) return _unitOfWorkManager.Current.GetTenantId();
 
             return AbpSession.TenantId;
         }
@@ -907,11 +767,9 @@ namespace Abp.Authorization.Users
         private MultiTenancySides GetCurrentMultiTenancySide()
         {
             if (_unitOfWorkManager.Current != null)
-            {
                 return MultiTenancy.IsEnabled && !_unitOfWorkManager.Current.GetTenantId().HasValue
                     ? MultiTenancySides.Host
                     : MultiTenancySides.Tenant;
-            }
 
             return AbpSession.MultiTenancySide;
         }
@@ -919,10 +777,7 @@ namespace Abp.Authorization.Users
         public bool IsLockedOut(long userId)
         {
             var user = AbpStore.FindById(userId);
-            if (user == null)
-            {
-                throw new AbpException("There is no user with id: " + userId);
-            }
+            if (user == null) throw new AbpException("There is no user with id: " + userId);
 
             var lockoutEndDateUtc = AbpStore.GetLockoutEndDate(user);
             return lockoutEndDateUtc > DateTimeOffset.UtcNow;

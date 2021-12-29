@@ -17,15 +17,9 @@ namespace Abp.Webhooks
 
         public WebhookPayload(string id, string webhookEvent, int attempt)
         {
-            if (id.IsNullOrWhiteSpace())
-            {
-                throw new ArgumentNullException(nameof(id));
-            }
+            if (id.IsNullOrWhiteSpace()) throw new ArgumentNullException(nameof(id));
 
-            if (webhookEvent.IsNullOrWhiteSpace())
-            {
-                throw new ArgumentNullException(nameof(webhookEvent));
-            }
+            if (webhookEvent.IsNullOrWhiteSpace()) throw new ArgumentNullException(nameof(webhookEvent));
 
             Id = id;
             WebhookEvent = webhookEvent;

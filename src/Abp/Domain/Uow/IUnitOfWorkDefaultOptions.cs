@@ -41,7 +41,7 @@ namespace Abp.Domain.Uow
         /// Gets list of all data filter configurations.
         /// </summary>
         IReadOnlyList<DataFilterConfiguration> Filters { get; }
-        
+
         /// <summary>
         /// Gets list of all data filter configurations.
         /// </summary>
@@ -58,7 +58,7 @@ namespace Abp.Domain.Uow
         /// <param name="filterName">Name of the filter.</param>
         /// <param name="isEnabledByDefault">Is filter enabled by default.</param>
         void RegisterFilter(string filterName, bool isEnabledByDefault);
-        
+
         /// <summary>
         /// Registers an audit field configuration to unit of work system.
         /// </summary>

@@ -23,7 +23,8 @@ namespace Abp.Zero.SampleApp.Tests.TestDatas
         private void AddUsersToOus()
         {
             var defaultTenant = _context.Tenants.Single(t => t.TenancyName == Tenant.DefaultTenantName);
-            var adminUser = _context.Users.Single(u => u.TenantId == defaultTenant.Id && u.UserName == User.AdminUserName);
+            var adminUser =
+                _context.Users.Single(u => u.TenantId == defaultTenant.Id && u.UserName == User.AdminUserName);
 
             var ou11 = _context.OrganizationUnits.Single(ou => ou.DisplayName == "OU11");
             var ou21 = _context.OrganizationUnits.Single(ou => ou.DisplayName == "OU21");

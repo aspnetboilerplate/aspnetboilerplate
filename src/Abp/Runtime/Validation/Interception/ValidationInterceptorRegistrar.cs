@@ -11,18 +11,14 @@ namespace Abp.Runtime.Validation.Interception
             iocManager.IocContainer.Kernel.ComponentRegistered += (key, handler) =>
             {
                 var implementationType = handler.ComponentModel.Implementation.GetTypeInfo();
-            
-                if (!iocManager.IsRegistered<IAbpValidationDefaultOptions>())
-                {
-                    return;
-                }
-                
+
+                if (!iocManager.IsRegistered<IAbpValidationDefaultOptions>()) return;
+
                 var validationOptions = iocManager.Resolve<IAbpValidationDefaultOptions>();
 
                 if (validationOptions.IsConventionalValidationClass(implementationType.AsType()))
-                {
-                    handler.ComponentModel.Interceptors.Add(new InterceptorReference(typeof(AbpAsyncDeterminationInterceptor<ValidationInterceptor>)));
-                }
+                    handler.ComponentModel.Interceptors.Add(
+                        new InterceptorReference(typeof(AbpAsyncDeterminationInterceptor<ValidationInterceptor>)));
             };
         }
     }

@@ -11,10 +11,7 @@ namespace Abp.Hangfire
 
         public HangfireIocJobActivator(IIocResolver iocResolver)
         {
-            if (iocResolver == null)
-            {
-                throw new ArgumentNullException(nameof(iocResolver));
-            }
+            if (iocResolver == null) throw new ArgumentNullException(nameof(iocResolver));
 
             _iocResolver = iocResolver;
         }
@@ -29,7 +26,7 @@ namespace Abp.Hangfire
             return new HangfireIocJobActivatorScope(this, _iocResolver);
         }
 
-        class HangfireIocJobActivatorScope : JobActivatorScope
+        private class HangfireIocJobActivatorScope : JobActivatorScope
         {
             private readonly JobActivator _activator;
             private readonly IIocResolver _iocResolver;

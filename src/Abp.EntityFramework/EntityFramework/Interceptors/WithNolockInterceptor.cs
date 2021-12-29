@@ -10,7 +10,10 @@ namespace Abp.EntityFramework.Interceptors
     public class WithNoLockInterceptor : DbCommandInterceptor, ITransientDependency
     {
         private const string InterceptionContextKey = "Abp.EntityFramework.Interceptors.WithNolockInterceptor";
-        private static readonly Regex TableAliasRegex = new Regex(@"(?<tableAlias>AS \[Extent\d+\](?! WITH \(NOLOCK\)))", RegexOptions.Multiline | RegexOptions.IgnoreCase);
+
+        private static readonly Regex TableAliasRegex =
+            new Regex(@"(?<tableAlias>AS \[Extent\d+\](?! WITH \(NOLOCK\)))",
+                RegexOptions.Multiline | RegexOptions.IgnoreCase);
 
         private readonly IAmbientScopeProvider<InterceptionContext> _interceptionScopeProvider;
 
@@ -21,7 +24,8 @@ namespace Abp.EntityFramework.Interceptors
 
         public InterceptionContext NolockingContext => _interceptionScopeProvider.GetValue(InterceptionContextKey);
 
-        public override void ScalarExecuting(DbCommand command, DbCommandInterceptionContext<object> interceptionContext)
+        public override void ScalarExecuting(DbCommand command,
+            DbCommandInterceptionContext<object> interceptionContext)
         {
             if (NolockingContext?.UseNolocking ?? false)
             {
@@ -30,7 +34,8 @@ namespace Abp.EntityFramework.Interceptors
             }
         }
 
-        public override void ReaderExecuting(DbCommand command, DbCommandInterceptionContext<DbDataReader> interceptionContext)
+        public override void ReaderExecuting(DbCommand command,
+            DbCommandInterceptionContext<DbDataReader> interceptionContext)
         {
             if (NolockingContext?.UseNolocking ?? false)
             {
@@ -41,7 +46,8 @@ namespace Abp.EntityFramework.Interceptors
 
         public IDisposable UseNolocking()
         {
-            return _interceptionScopeProvider.BeginScope(InterceptionContextKey, new InterceptionContext(string.Empty, true));
+            return _interceptionScopeProvider.BeginScope(InterceptionContextKey,
+                new InterceptionContext(string.Empty, true));
         }
 
         public class InterceptionContext

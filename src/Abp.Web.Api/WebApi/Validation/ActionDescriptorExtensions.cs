@@ -9,10 +9,8 @@ namespace Abp.WebApi.Validation
         public static MethodInfo GetMethodInfoOrNull(this HttpActionDescriptor actionDescriptor)
         {
             if (actionDescriptor is ReflectedHttpActionDescriptor)
-            {
                 return actionDescriptor.As<ReflectedHttpActionDescriptor>().MethodInfo;
-            }
-            
+
             return null;
         }
 

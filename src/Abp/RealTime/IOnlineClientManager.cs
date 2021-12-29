@@ -9,7 +9,6 @@ namespace Abp.RealTime
     /// </summary>
     public interface IOnlineClientManager<T> : IOnlineClientManager
     {
-
     }
 
     public interface IOnlineClientManager

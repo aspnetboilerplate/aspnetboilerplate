@@ -1,18 +1,17 @@
 ﻿using Abp.Configuration.Startup;
 
-namespace Abp.AspNetCore.OData.Configuration
+namespace Abp.AspNetCore.OData.Configuration;
+
+/// <summary>
+/// Defines extension methods to <see cref="IModuleConfigurations"/> to allow to configure Abp.AspNetCore.OData module.
+/// </summary>
+public static class AbpAspNetCoreODataConfigurationExtensions
 {
     /// <summary>
-    /// Defines extension methods to <see cref="IModuleConfigurations"/> to allow to configure Abp.AspNetCore.OData module.
+    /// Used to configure Abp.AspNetCore.OData module.
     /// </summary>
-    public static class AbpAspNetCoreODataConfigurationExtensions
+    public static IAbpAspNetCoreODataModuleConfiguration AbpAspNetCoreOData(this IModuleConfigurations configurations)
     {
-        /// <summary>
-        /// Used to configure Abp.AspNetCore.OData module.
-        /// </summary>
-        public static IAbpAspNetCoreODataModuleConfiguration AbpAspNetCoreOData(this IModuleConfigurations configurations)
-        {
-            return configurations.AbpConfiguration.Get<IAbpAspNetCoreODataModuleConfiguration>();
-        }
+        return configurations.AbpConfiguration.Get<IAbpAspNetCoreODataModuleConfiguration>();
     }
 }

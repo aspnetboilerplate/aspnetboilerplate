@@ -58,8 +58,7 @@ namespace Abp.Tests.Domain.Values
 
     public class Address3 : ValueObject
     {
-        [IgnoreOnCompare]
-        public Guid? CityId { get; }
+        [IgnoreOnCompare] public Guid? CityId { get; }
 
         public string Street { get; }
 

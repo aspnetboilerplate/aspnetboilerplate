@@ -35,12 +35,14 @@ namespace Abp.Runtime.Security
         /// ImpersonatorUserId.
         /// Default: http://www.aspnetboilerplate.com/identity/claims/impersonatorUserId
         /// </summary>
-        public static string ImpersonatorUserId { get; set; } = "http://www.aspnetboilerplate.com/identity/claims/impersonatorUserId";
+        public static string ImpersonatorUserId { get; set; } =
+            "http://www.aspnetboilerplate.com/identity/claims/impersonatorUserId";
 
         /// <summary>
         /// ImpersonatorTenantId
         /// Default: http://www.aspnetboilerplate.com/identity/claims/impersonatorTenantId
         /// </summary>
-        public static string ImpersonatorTenantId { get; set; } = "http://www.aspnetboilerplate.com/identity/claims/impersonatorTenantId";
+        public static string ImpersonatorTenantId { get; set; } =
+            "http://www.aspnetboilerplate.com/identity/claims/impersonatorTenantId";
     }
 }

@@ -32,21 +32,14 @@ namespace Abp.Runtime.Caching
 
         public virtual TValue Get(TKey key, Func<TKey, TValue> factory)
         {
-            if (TryGetValue(key, out TValue value))
-            {
-                return value;
-            }
+            if (TryGetValue(key, out var value)) return value;
 
             using (SemaphoreSlim.Lock())
             {
-                if (TryGetValue(key, out value))
-                {
-                    return value;
-                }
+                if (TryGetValue(key, out value)) return value;
 
                 var generatedValue = factory(key);
                 if (!IsDefaultValue(generatedValue))
-                {
                     try
                     {
                         Set(key, generatedValue);
@@ -55,7 +48,7 @@ namespace Abp.Runtime.Caching
                     {
                         Logger.Error(ex.ToString(), ex);
                     }
-                }
+
                 return generatedValue;
             }
         }
@@ -72,13 +65,9 @@ namespace Abp.Runtime.Caching
                 Logger.Error(ex.ToString(), ex);
             }
 
-            if (results == null)
-            {
-                results = new ConditionalValue<TValue>[keys.Length];
-            }
+            if (results == null) results = new ConditionalValue<TValue>[keys.Length];
 
             if (results.Any(result => !result.HasValue))
-            {
                 using (SemaphoreSlim.Lock())
                 {
                     try
@@ -101,14 +90,11 @@ namespace Abp.Runtime.Caching
                             results[i] = new ConditionalValue<TValue>(true, generatedValue);
 
                             if (!IsDefaultValue(generatedValue))
-                            {
                                 generated.Add(new KeyValuePair<TKey, TValue>(key, generatedValue));
-                            }
                         }
                     }
 
                     if (generated.Any())
-                    {
                         try
                         {
                             Set(generated.ToArray());
@@ -117,9 +103,7 @@ namespace Abp.Runtime.Caching
                         {
                             Logger.Error(ex.ToString(), ex);
                         }
-                    }
                 }
-            }
 
             return results.Select(result => result.Value).ToArray();
         }
@@ -142,10 +126,7 @@ namespace Abp.Runtime.Caching
                 Logger.Error(ex.ToString(), ex);
             }
 
-            if (result.HasValue)
-            {
-                return result.Value;
-            }
+            if (result.HasValue) return result.Value;
 
             using (await SemaphoreSlim.LockAsync())
             {
@@ -158,16 +139,10 @@ namespace Abp.Runtime.Caching
                     Logger.Error(ex.ToString(), ex);
                 }
 
-                if (result.HasValue)
-                {
-                    return result.Value;
-                }
+                if (result.HasValue) return result.Value;
 
                 var generatedValue = await factory(key);
-                if (IsDefaultValue(generatedValue))
-                {
-                    return generatedValue;
-                }
+                if (IsDefaultValue(generatedValue)) return generatedValue;
 
                 try
                 {
@@ -195,13 +170,9 @@ namespace Abp.Runtime.Caching
                 Logger.Error(ex.ToString(), ex);
             }
 
-            if (results == null)
-            {
-                results = new ConditionalValue<TValue>[keys.Length];
-            }
+            if (results == null) results = new ConditionalValue<TValue>[keys.Length];
 
             if (results.Any(result => !result.HasValue))
-            {
                 using (await SemaphoreSlim.LockAsync())
                 {
                     try
@@ -222,15 +193,12 @@ namespace Abp.Runtime.Caching
                             var key = keys[i];
                             var generatedValue = await factory(key);
                             if (!IsDefaultValue(generatedValue))
-                            {
                                 generated.Add(new KeyValuePair<TKey, TValue>(key, generatedValue));
-                            }
                             results[i] = new ConditionalValue<TValue>(true, generatedValue);
                         }
                     }
 
                     if (generated.Any())
-                    {
                         try
                         {
                             await SetAsync(generated.ToArray());
@@ -239,9 +207,7 @@ namespace Abp.Runtime.Caching
                         {
                             Logger.Error(ex.ToString(), ex);
                         }
-                    }
                 }
-            }
 
             return results.Select(result => result.Value).ToArray();
         }
@@ -253,15 +219,16 @@ namespace Abp.Runtime.Caching
             var pairs = new List<ConditionalValue<TValue>>();
             foreach (var key in keys)
             {
-                var found = TryGetValue(key, out TValue value);
+                var found = TryGetValue(key, out var value);
                 pairs.Add(new ConditionalValue<TValue>(found, value));
             }
+
             return pairs.ToArray();
         }
 
         public virtual Task<ConditionalValue<TValue>> TryGetValueAsync(TKey key)
         {
-            var found = TryGetValue(key, out TValue value);
+            var found = TryGetValue(key, out var value);
             return Task.FromResult(new ConditionalValue<TValue>(found, value));
         }
 
@@ -272,7 +239,7 @@ namespace Abp.Runtime.Caching
 
         public virtual TValue GetOrDefault(TKey key)
         {
-            TryGetValue(key, out TValue value);
+            TryGetValue(key, out var value);
             return value;
         }
 
@@ -294,23 +261,24 @@ namespace Abp.Runtime.Caching
             return results.Select(result => result.Value).ToArray();
         }
 
-        public abstract void Set(TKey key, TValue value, TimeSpan? slidingExpireTime = null, DateTimeOffset? absoluteExpireTime = null);
+        public abstract void Set(TKey key, TValue value, TimeSpan? slidingExpireTime = null,
+            DateTimeOffset? absoluteExpireTime = null);
 
-        public virtual void Set(KeyValuePair<TKey, TValue>[] pairs, TimeSpan? slidingExpireTime = null, DateTimeOffset? absoluteExpireTime = null)
+        public virtual void Set(KeyValuePair<TKey, TValue>[] pairs, TimeSpan? slidingExpireTime = null,
+            DateTimeOffset? absoluteExpireTime = null)
         {
-            foreach (var pair in pairs)
-            {
-                Set(pair.Key, pair.Value, slidingExpireTime, absoluteExpireTime);
-            }
+            foreach (var pair in pairs) Set(pair.Key, pair.Value, slidingExpireTime, absoluteExpireTime);
         }
 
-        public virtual Task SetAsync(TKey key, TValue value, TimeSpan? slidingExpireTime = null, DateTimeOffset? absoluteExpireTime = null)
+        public virtual Task SetAsync(TKey key, TValue value, TimeSpan? slidingExpireTime = null,
+            DateTimeOffset? absoluteExpireTime = null)
         {
             Set(key, value, slidingExpireTime, absoluteExpireTime);
             return Task.CompletedTask;
         }
 
-        public virtual Task SetAsync(KeyValuePair<TKey, TValue>[] pairs, TimeSpan? slidingExpireTime = null, DateTimeOffset? absoluteExpireTime = null)
+        public virtual Task SetAsync(KeyValuePair<TKey, TValue>[] pairs, TimeSpan? slidingExpireTime = null,
+            DateTimeOffset? absoluteExpireTime = null)
         {
             return Task.WhenAll(pairs.Select(p => SetAsync(p.Key, p.Value, slidingExpireTime, absoluteExpireTime)));
         }
@@ -319,10 +287,7 @@ namespace Abp.Runtime.Caching
 
         public virtual void Remove(TKey[] keys)
         {
-            foreach (var key in keys)
-            {
-                Remove(key);
-            }
+            foreach (var key in keys) Remove(key);
         }
 
         public virtual Task RemoveAsync(TKey key)

@@ -34,11 +34,10 @@ namespace Abp.Web.Common.Tests.Web.Localization
             {
                 var texts = _localizationManager
                     .GetSource(AbpWebConsts.LocalizaionSourceName)
-                    .GetStrings(new List<string> {"ValidationError", "InternalServerError"});
+                    .GetStrings(new List<string> { "ValidationError", "InternalServerError" });
 
                 texts.ShouldContain(x => x == "Your request is not valid!");
                 texts.ShouldContain(x => x == "An internal error occurred during your request!");
-
             }
         }
     }

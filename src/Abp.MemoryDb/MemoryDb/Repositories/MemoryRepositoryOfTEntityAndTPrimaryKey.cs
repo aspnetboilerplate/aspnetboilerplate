@@ -10,9 +10,9 @@ namespace Abp.MemoryDb.Repositories
     public class MemoryRepository<TEntity, TPrimaryKey> : AbpRepositoryBase<TEntity, TPrimaryKey>
         where TEntity : class, IEntity<TPrimaryKey>
     {
-        public virtual MemoryDatabase Database { get { return _databaseProvider.Database; } }
+        public virtual MemoryDatabase Database => _databaseProvider.Database;
 
-        public virtual List<TEntity> Table { get { return Database.Set<TEntity>(); } }
+        public virtual List<TEntity> Table => Database.Set<TEntity>();
 
         private readonly IMemoryDatabaseProvider _databaseProvider;
         private readonly MemoryPrimaryKeyGenerator<TPrimaryKey> _primaryKeyGenerator;
@@ -35,10 +35,7 @@ namespace Abp.MemoryDb.Repositories
 
         public override TEntity Insert(TEntity entity)
         {
-            if (entity.IsTransient())
-            {
-                entity.Id = _primaryKeyGenerator.GetNext();
-            }
+            if (entity.IsTransient()) entity.Id = _primaryKeyGenerator.GetNext();
 
             Table.Add(entity);
             return entity;
@@ -47,10 +44,7 @@ namespace Abp.MemoryDb.Repositories
         public override TEntity Update(TEntity entity)
         {
             var index = Table.FindIndex(e => EqualityComparer<TPrimaryKey>.Default.Equals(e.Id, entity.Id));
-            if (index >= 0)
-            {
-                Table[index] = entity;
-            }
+            if (index >= 0) Table[index] = entity;
 
             return entity;
         }
@@ -63,10 +57,7 @@ namespace Abp.MemoryDb.Repositories
         public override void Delete(TPrimaryKey id)
         {
             var index = Table.FindIndex(e => EqualityComparer<TPrimaryKey>.Default.Equals(e.Id, id));
-            if (index >= 0)
-            {
-                Table.RemoveAt(index);
-            }
+            if (index >= 0) Table.RemoveAt(index);
         }
     }
 }

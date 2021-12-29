@@ -64,6 +64,7 @@ namespace Abp.TestBase.SampleApplication.Tests.Session
                 {
                     await _messageRepository.InsertAsync(messageEntity);
                 }
+
                 await uow.CompleteAsync();
             }
 

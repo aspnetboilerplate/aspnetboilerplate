@@ -21,6 +21,7 @@ namespace Abp.Authorization
         {
             return Task.FromResult(true);
         }
+
         public bool IsGranted(string permissionName)
         {
             return true;

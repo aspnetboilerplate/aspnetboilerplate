@@ -33,10 +33,7 @@ namespace Abp.Web.Validation
         protected override bool ShouldValidateUsingValidator(object validatingObject, Type validatorType)
         {
             // Skip DataAnnotations and IValidatableObject validation because MVC does this automatically
-            if (ValidatorsToSkip.Contains(validatorType))
-            {
-                return false;
-            }
+            if (ValidatorsToSkip.Contains(validatorType)) return false;
 
             return base.ShouldValidateUsingValidator(validatingObject, validatorType);
         }
@@ -44,10 +41,7 @@ namespace Abp.Web.Validation
         protected override void ValidateMethodParameter(ParameterInfo parameterInfo, object parameterValue)
         {
             // If action parameter value is null then set only ModelState errors
-            if (parameterValue != null)
-            {
-                base.ValidateMethodParameter(parameterInfo, parameterValue);
-            }
+            if (parameterValue != null) base.ValidateMethodParameter(parameterInfo, parameterValue);
 
             if (!IsSetDataAnnotationAttributeErrors)
             {
@@ -61,10 +55,7 @@ namespace Abp.Web.Validation
             var parameters = method.GetParameters();
             var parameterValues = new object[parameters.Length];
 
-            for (var i = 0; i < parameters.Length; i++)
-            {
-                parameterValues[i] = GetParameterValue(parameters[i].Name);
-            }
+            for (var i = 0; i < parameters.Length; i++) parameterValues[i] = GetParameterValue(parameters[i].Name);
 
             return parameterValues;
         }

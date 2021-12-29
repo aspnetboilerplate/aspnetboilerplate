@@ -224,10 +224,8 @@ namespace Abp.Notifications
                 var subscriptions = new List<NotificationSubscriptionInfo>();
 
                 foreach (var tenantId in tenantIds)
-                {
                     subscriptions.AddRange(await GetSubscriptionsAsync(tenantId, notificationName, entityTypeName,
                         entityId));
-                }
 
                 return subscriptions;
             });
@@ -244,9 +242,7 @@ namespace Abp.Notifications
                 var subscriptions = new List<NotificationSubscriptionInfo>();
 
                 foreach (var tenantId in tenantIds)
-                {
                     subscriptions.AddRange(GetSubscriptions(tenantId, notificationName, entityTypeName, entityId));
-                }
 
                 return subscriptions;
             });
@@ -362,10 +358,7 @@ namespace Abp.Notifications
                 using (_unitOfWorkManager.Current.SetTenantId(tenantId))
                 {
                     var userNotification = await _userNotificationRepository.FirstOrDefaultAsync(userNotificationId);
-                    if (userNotification == null)
-                    {
-                        return;
-                    }
+                    if (userNotification == null) return;
 
                     userNotification.State = state;
                     await _unitOfWorkManager.Current.SaveChangesAsync();
@@ -383,10 +376,7 @@ namespace Abp.Notifications
                 using (_unitOfWorkManager.Current.SetTenantId(tenantId))
                 {
                     var userNotification = _userNotificationRepository.FirstOrDefault(userNotificationId);
-                    if (userNotification == null)
-                    {
-                        return;
-                    }
+                    if (userNotification == null) return;
 
                     userNotification.State = state;
                     _unitOfWorkManager.Current.SaveChanges();
@@ -404,10 +394,7 @@ namespace Abp.Notifications
                         un => un.UserId == user.UserId
                     );
 
-                    foreach (var userNotification in userNotifications)
-                    {
-                        userNotification.State = state;
-                    }
+                    foreach (var userNotification in userNotifications) userNotification.State = state;
 
                     await _unitOfWorkManager.Current.SaveChangesAsync();
                 }
@@ -424,10 +411,7 @@ namespace Abp.Notifications
                         un => un.UserId == user.UserId
                     );
 
-                    foreach (var userNotification in userNotifications)
-                    {
-                        userNotification.State = state;
-                    }
+                    foreach (var userNotification in userNotifications) userNotification.State = state;
 
                     _unitOfWorkManager.Current.SaveChanges();
                 }
@@ -503,20 +487,11 @@ namespace Abp.Notifications
             var predicate = PredicateBuilder.New<UserNotificationInfo>();
             predicate = predicate.And(p => p.UserId == user.UserId);
 
-            if (startDate.HasValue)
-            {
-                predicate = predicate.And(p => p.CreationTime >= startDate);
-            }
+            if (startDate.HasValue) predicate = predicate.And(p => p.CreationTime >= startDate);
 
-            if (endDate.HasValue)
-            {
-                predicate = predicate.And(p => p.CreationTime <= endDate);
-            }
+            if (endDate.HasValue) predicate = predicate.And(p => p.CreationTime <= endDate);
 
-            if (state.HasValue)
-            {
-                predicate = predicate.And(p => p.State == state);
-            }
+            if (state.HasValue) predicate = predicate.And(p => p.State == state);
 
             return predicate;
         }
@@ -545,20 +520,12 @@ namespace Abp.Notifications
                             tenantNotificationInfo
                         };
 
-                    if (state.HasValue)
-                    {
-                        query = query.Where(x => x.userNotificationInfo.State == state.Value);
-                    }
+                    if (state.HasValue) query = query.Where(x => x.userNotificationInfo.State == state.Value);
 
                     if (startDate.HasValue)
-                    {
                         query = query.Where(x => x.tenantNotificationInfo.CreationTime >= startDate);
-                    }
 
-                    if (endDate.HasValue)
-                    {
-                        query = query.Where(x => x.tenantNotificationInfo.CreationTime <= endDate);
-                    }
+                    if (endDate.HasValue) query = query.Where(x => x.tenantNotificationInfo.CreationTime <= endDate);
 
                     query = query.PageBy(skipCount, maxResultCount);
 
@@ -599,20 +566,12 @@ namespace Abp.Notifications
                             tenantNotificationInfo
                         };
 
-                    if (state.HasValue)
-                    {
-                        query = query.Where(x => x.userNotificationInfo.State == state.Value);
-                    }
+                    if (state.HasValue) query = query.Where(x => x.userNotificationInfo.State == state.Value);
 
                     if (startDate.HasValue)
-                    {
                         query = query.Where(x => x.tenantNotificationInfo.CreationTime >= startDate);
-                    }
 
-                    if (endDate.HasValue)
-                    {
-                        query = query.Where(x => x.tenantNotificationInfo.CreationTime <= endDate);
-                    }
+                    if (endDate.HasValue) query = query.Where(x => x.tenantNotificationInfo.CreationTime <= endDate);
 
                     query = query.PageBy(skipCount, maxResultCount);
 
@@ -680,10 +639,7 @@ namespace Abp.Notifications
                         };
 
                     var item = query.FirstOrDefault();
-                    if (item == null)
-                    {
-                        return null;
-                    }
+                    if (item == null) return null;
 
                     return new UserNotificationInfoWithNotificationInfo(
                         item.userNotificationInfo,
@@ -714,10 +670,7 @@ namespace Abp.Notifications
                         };
 
                     var item = query.FirstOrDefault();
-                    if (item == null)
-                    {
-                        return null;
-                    }
+                    if (item == null) return null;
 
                     return new UserNotificationInfoWithNotificationInfo(
                         item.userNotificationInfo,
@@ -751,15 +704,13 @@ namespace Abp.Notifications
 
         public virtual async Task DeleteNotificationAsync(NotificationInfo notification)
         {
-            await _unitOfWorkManager.WithUnitOfWorkAsync(async () => await _notificationRepository.DeleteAsync(notification));
+            await _unitOfWorkManager.WithUnitOfWorkAsync(async () =>
+                await _notificationRepository.DeleteAsync(notification));
         }
 
         public virtual void DeleteNotification(NotificationInfo notification)
         {
-            _unitOfWorkManager.WithUnitOfWork(() =>
-            {
-                _notificationRepository.Delete(notification);
-            });
+            _unitOfWorkManager.WithUnitOfWork(() => { _notificationRepository.Delete(notification); });
         }
     }
 }

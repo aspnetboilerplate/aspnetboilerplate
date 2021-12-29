@@ -17,9 +17,9 @@ namespace Abp.Web.Mvc.Auditing
         private readonly IAuditingConfiguration _auditingConfiguration;
         private readonly IAuditSerializer _auditSerializer;
 
-        public AbpMvcAuditFilter(IAbpMvcConfiguration configuration, 
-            IAuditingHelper auditingHelper, 
-            IAuditingConfiguration auditingConfiguration, 
+        public AbpMvcAuditFilter(IAbpMvcConfiguration configuration,
+            IAuditingHelper auditingHelper,
+            IAuditingConfiguration auditingConfiguration,
             IAuditSerializer auditSerializer)
         {
             _configuration = configuration;
@@ -56,10 +56,7 @@ namespace Abp.Web.Mvc.Auditing
         public void OnActionExecuted(ActionExecutedContext filterContext)
         {
             var auditData = AbpAuditFilterData.GetOrNull(filterContext.HttpContext);
-            if (auditData == null)
-            {
-                return;
-            }
+            if (auditData == null) return;
 
             auditData.Stopwatch.Stop();
 
@@ -67,18 +64,13 @@ namespace Abp.Web.Mvc.Auditing
             auditData.AuditInfo.Exception = filterContext.Exception;
 
             if (_auditingConfiguration.SaveReturnValues && filterContext.Result != null)
-            {
                 switch (filterContext.Result)
                 {
                     case AbpJsonResult abpJsonResult:
                         if (abpJsonResult.Data is AjaxResponse ajaxResponse)
-                        {
                             auditData.AuditInfo.ReturnValue = _auditSerializer.Serialize(ajaxResponse.Result);
-                        }
                         else
-                        {
                             auditData.AuditInfo.ReturnValue = _auditSerializer.Serialize(abpJsonResult.Data);
-                        }
                         break;
 
                     case JsonResult jsonResult:
@@ -88,9 +80,7 @@ namespace Abp.Web.Mvc.Auditing
                     case ContentResult contentResult:
                         auditData.AuditInfo.ReturnValue = contentResult.Content;
                         break;
-
                 }
-            }
 
             _auditingHelper.Save(auditData.AuditInfo);
         }
@@ -98,25 +88,13 @@ namespace Abp.Web.Mvc.Auditing
         private bool ShouldSaveAudit(ActionExecutingContext filterContext)
         {
             var currentMethodInfo = filterContext.ActionDescriptor.GetMethodInfoOrNull();
-            if (currentMethodInfo == null)
-            {
-                return false;
-            }
+            if (currentMethodInfo == null) return false;
 
-            if (_configuration == null)
-            {
-                return false;
-            }
+            if (_configuration == null) return false;
 
-            if (!_configuration.IsAuditingEnabled)
-            {
-                return false;
-            }
+            if (!_configuration.IsAuditingEnabled) return false;
 
-            if (filterContext.IsChildAction && !_configuration.IsAuditingEnabledForChildActions)
-            {
-                return false;
-            }
+            if (filterContext.IsChildAction && !_configuration.IsAuditingEnabledForChildActions) return false;
 
             return _auditingHelper.ShouldSaveAudit(currentMethodInfo, true);
         }

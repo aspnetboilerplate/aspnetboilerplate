@@ -10,10 +10,7 @@ namespace Abp.Data
         public static string GetConnectionString(string nameOrConnectionString)
         {
             var connStrSection = ConfigurationManager.ConnectionStrings[nameOrConnectionString];
-            if (connStrSection != null)
-            {
-                return connStrSection.ConnectionString;
-            }
+            if (connStrSection != null) return connStrSection.ConnectionString;
 
             return nameOrConnectionString;
         }

@@ -5,285 +5,234 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace Abp.Runtime.Caching.Redis
+namespace Abp.Runtime.Caching.Redis;
+
+public class AbpPerRequestRedisCache : AbpRedisCache, IAbpPerRequestRedisCache
 {
-    public class AbpPerRequestRedisCache : AbpRedisCache, IAbpPerRequestRedisCache
+    private const string AbpPerRequestRedisCachePrefix = "AbpPerRequestRedisCache:";
+
+    private readonly IHttpContextAccessor _httpContextAccessor;
+
+    public AbpPerRequestRedisCache(
+        string name,
+        IAbpRedisCacheDatabaseProvider redisCacheDatabaseProvider,
+        IRedisCacheSerializer redisCacheSerializer,
+        IHttpContextAccessor httpContextAccessor)
+        : base(name, redisCacheDatabaseProvider, redisCacheSerializer)
     {
-        private const string AbpPerRequestRedisCachePrefix = "AbpPerRequestRedisCache:";
+        _httpContextAccessor = httpContextAccessor;
+    }
 
-        private readonly IHttpContextAccessor _httpContextAccessor;
+    public override bool TryGetValue(string key, out object value)
+    {
+        var httpContext = _httpContextAccessor.HttpContext;
 
-        public AbpPerRequestRedisCache(
-            string name,
-            IAbpRedisCacheDatabaseProvider redisCacheDatabaseProvider,
-            IRedisCacheSerializer redisCacheSerializer,
-            IHttpContextAccessor httpContextAccessor)
-            : base(name, redisCacheDatabaseProvider, redisCacheSerializer)
+        if (httpContext == null) return base.TryGetValue(key, out value);
+
+        var localizedKey = GetPerRequestRedisCacheKey(key);
+
+        if (httpContext.Items.ContainsKey(localizedKey))
         {
-            _httpContextAccessor = httpContextAccessor;
+            var conditionalValue = (ConditionalValue<object>)httpContext.Items[localizedKey];
+            value = conditionalValue.HasValue ? conditionalValue.Value : null;
+
+            return conditionalValue.HasValue;
         }
 
-        public override bool TryGetValue(string key, out object value)
+        var hasValue = base.TryGetValue(key, out value);
+        httpContext.Items[localizedKey] = new ConditionalValue<object>(hasValue, hasValue ? value : null);
+        return hasValue;
+    }
+
+    public override ConditionalValue<object>[] TryGetValues(string[] keys)
+    {
+        var httpContext = _httpContextAccessor.HttpContext;
+
+        if (httpContext == null) return base.TryGetValues(keys);
+
+        var localizedKeys = keys.ToDictionary(GetPerRequestRedisCacheKey);
+
+        var missingKeys = localizedKeys
+            .Where(kv => !httpContext.Items.ContainsKey(kv.Key))
+            .Select(kv => kv.Value)
+            .ToArray();
+
+        var missingValues = base.TryGetValues(missingKeys);
+
+        for (var i = 0; i < missingKeys.Length; i++)
+            httpContext.Items[GetPerRequestRedisCacheKey(missingKeys[i])] = missingValues[i];
+
+        return localizedKeys.Keys.Select(localizedKey => (ConditionalValue<object>)httpContext.Items[localizedKey])
+            .ToArray();
+    }
+
+    public override async Task<ConditionalValue<object>> TryGetValueAsync(string key)
+    {
+        var httpContext = _httpContextAccessor.HttpContext;
+
+        if (httpContext == null) return await base.TryGetValueAsync(key);
+
+        var localizedKey = GetPerRequestRedisCacheKey(key);
+
+        if (httpContext.Items.ContainsKey(localizedKey))
         {
-            var httpContext = _httpContextAccessor.HttpContext;
-
-            if (httpContext == null)
-            {
-                return base.TryGetValue(key, out value);
-            }
-            
-            var localizedKey = GetPerRequestRedisCacheKey(key);
-
-            if (httpContext.Items.ContainsKey(localizedKey))
-            {
-                var conditionalValue = (ConditionalValue<object>) httpContext.Items[localizedKey];
-                value = conditionalValue.HasValue ? conditionalValue.Value : null;
-
-                return conditionalValue.HasValue;
-            }
-
-            var hasValue = base.TryGetValue(key, out value);
-            httpContext.Items[localizedKey] = new ConditionalValue<object>(hasValue, hasValue ? value : null);
-            return hasValue;
-
+            var conditionalValue = (ConditionalValue<object>)httpContext.Items[localizedKey];
+            return conditionalValue;
         }
-
-        public override ConditionalValue<object>[] TryGetValues(string[] keys)
+        else
         {
-            var httpContext = _httpContextAccessor.HttpContext;
-
-            if (httpContext == null)
-            {
-                return base.TryGetValues(keys);
-            }
-            
-            var localizedKeys = keys.ToDictionary(GetPerRequestRedisCacheKey);
-
-            var missingKeys = localizedKeys
-                .Where(kv => !httpContext.Items.ContainsKey(kv.Key))
-                .Select(kv => kv.Value)
-                .ToArray();
-
-            var missingValues = base.TryGetValues(missingKeys);
-
-            for (var i = 0; i < missingKeys.Length; i++)
-            {
-                httpContext.Items[GetPerRequestRedisCacheKey(missingKeys[i])] = missingValues[i];
-            }
-
-            return localizedKeys.Keys.Select(localizedKey => (ConditionalValue<object>) httpContext.Items[localizedKey]).ToArray();
+            var conditionalValue = await base.TryGetValueAsync(key);
+            httpContext.Items[localizedKey] = conditionalValue;
+            return conditionalValue;
         }
+    }
 
-        public override async Task<ConditionalValue<object>> TryGetValueAsync(string key)
-        {
-            var httpContext = _httpContextAccessor.HttpContext;
+    public override async Task<ConditionalValue<object>[]> TryGetValuesAsync(string[] keys)
+    {
+        var httpContext = _httpContextAccessor.HttpContext;
 
-            if (httpContext == null)
-            {
-                return await base.TryGetValueAsync(key);
-            }
-            
-            var localizedKey = GetPerRequestRedisCacheKey(key);
+        if (httpContext == null) return await base.TryGetValuesAsync(keys);
 
-            if (httpContext.Items.ContainsKey(localizedKey))
-            {
-                var conditionalValue = (ConditionalValue<object>) httpContext.Items[localizedKey];
-                return conditionalValue;
-            }
-            else
-            {
-                var conditionalValue = await base.TryGetValueAsync(key);
-                httpContext.Items[localizedKey] = conditionalValue;
-                return conditionalValue;
-            }
+        var localizedKeys = keys.ToDictionary(GetPerRequestRedisCacheKey);
 
-        }
+        var missingKeys = localizedKeys
+            .Where(kv => !httpContext.Items.ContainsKey(kv.Key))
+            .Select(kv => kv.Value)
+            .ToArray();
 
-        public override async Task<ConditionalValue<object>[]> TryGetValuesAsync(string[] keys)
-        {
-            var httpContext = _httpContextAccessor.HttpContext;
+        var missingValues = await base.TryGetValuesAsync(missingKeys);
 
-            if (httpContext == null)
-            {
-                return await base.TryGetValuesAsync(keys);
-            }
-            
-            var localizedKeys = keys.ToDictionary(GetPerRequestRedisCacheKey);
+        for (var i = 0; i < missingKeys.Length; i++)
+            httpContext.Items[GetPerRequestRedisCacheKey(missingKeys[i])] = missingValues[i];
 
-            var missingKeys = localizedKeys
-                .Where(kv => !httpContext.Items.ContainsKey(kv.Key))
-                .Select(kv => kv.Value)
-                .ToArray();
+        return localizedKeys.Keys.Select(localizedKey => (ConditionalValue<object>)httpContext.Items[localizedKey])
+            .ToArray();
+    }
 
-            var missingValues = await base.TryGetValuesAsync(missingKeys);
+    public override void Set(string key, object value, TimeSpan? slidingExpireTime = null,
+        DateTimeOffset? absoluteExpireTime = null)
+    {
+        base.Set(key, value, slidingExpireTime, absoluteExpireTime);
 
-            for (var i = 0; i < missingKeys.Length; i++)
-            {
-                httpContext.Items[GetPerRequestRedisCacheKey(missingKeys[i])] = missingValues[i];
-            }
+        var httpContext = _httpContextAccessor.HttpContext;
 
-            return localizedKeys.Keys.Select(localizedKey => (ConditionalValue<object>) httpContext.Items[localizedKey]).ToArray();
-        }
+        if (httpContext != null)
+            httpContext.Items[GetPerRequestRedisCacheKey(key)] = new ConditionalValue<object>(true, value);
+    }
 
-        public override void Set(string key, object value, TimeSpan? slidingExpireTime = null, DateTimeOffset? absoluteExpireTime = null)
-        {
-            base.Set(key, value, slidingExpireTime, absoluteExpireTime);
+    public override async Task SetAsync(string key, object value, TimeSpan? slidingExpireTime = null,
+        DateTimeOffset? absoluteExpireTime = null)
+    {
+        await base.SetAsync(key, value, slidingExpireTime, absoluteExpireTime);
 
-            var httpContext = _httpContextAccessor.HttpContext;
+        var httpContext = _httpContextAccessor.HttpContext;
 
-            if (httpContext != null)
-            {
-                httpContext.Items[GetPerRequestRedisCacheKey(key)] = new ConditionalValue<object>(true, value);
-            }
-        }
+        if (httpContext != null)
+            httpContext.Items[GetPerRequestRedisCacheKey(key)] = new ConditionalValue<object>(true, value);
+    }
 
-        public override async Task SetAsync(string key, object value, TimeSpan? slidingExpireTime = null, DateTimeOffset? absoluteExpireTime = null)
-        {
-            await base.SetAsync(key, value, slidingExpireTime, absoluteExpireTime);
+    public override void Set(KeyValuePair<string, object>[] pairs, TimeSpan? slidingExpireTime = null,
+        DateTimeOffset? absoluteExpireTime = null)
+    {
+        base.Set(pairs, slidingExpireTime, absoluteExpireTime);
 
-            var httpContext = _httpContextAccessor.HttpContext;
+        var httpContext = _httpContextAccessor.HttpContext;
 
-            if (httpContext != null)
-            {
-                httpContext.Items[GetPerRequestRedisCacheKey(key)] = new ConditionalValue<object>(true, value);
-            }
-        }
+        if (httpContext == null) return;
 
-        public override void Set(KeyValuePair<string, object>[] pairs, TimeSpan? slidingExpireTime = null, DateTimeOffset? absoluteExpireTime = null)
-        {
-            base.Set(pairs, slidingExpireTime, absoluteExpireTime);
+        for (var i = 0; i < pairs.Length; i++)
+            httpContext.Items[GetPerRequestRedisCacheKey(pairs[i].Key)] =
+                new ConditionalValue<object>(true, pairs[i].Value);
+    }
 
-            var httpContext = _httpContextAccessor.HttpContext;
+    public override async Task SetAsync(KeyValuePair<string, object>[] pairs, TimeSpan? slidingExpireTime = null,
+        DateTimeOffset? absoluteExpireTime = null)
+    {
+        await base.SetAsync(pairs, slidingExpireTime, absoluteExpireTime);
 
-            if (httpContext == null)
-            {
-                return;
-            }
-            
+        var httpContext = _httpContextAccessor.HttpContext;
+
+        if (httpContext != null)
             for (var i = 0; i < pairs.Length; i++)
-            {
-                httpContext.Items[GetPerRequestRedisCacheKey(pairs[i].Key)] = new ConditionalValue<object>(true, pairs[i].Value);
-            }
-        }
+                httpContext.Items[GetPerRequestRedisCacheKey(pairs[i].Key)] =
+                    new ConditionalValue<object>(true, pairs[i].Value);
+    }
 
-        public override async Task SetAsync(KeyValuePair<string, object>[] pairs, TimeSpan? slidingExpireTime = null, DateTimeOffset? absoluteExpireTime = null)
+    public override void Remove(string key)
+    {
+        base.Remove(key);
+
+        var httpContext = _httpContextAccessor.HttpContext;
+
+        if (httpContext == null) return;
+
+        var localizedKey = GetPerRequestRedisCacheKey(key);
+
+        if (httpContext.Items.ContainsKey(localizedKey)) httpContext.Items.Remove(localizedKey);
+    }
+
+    public override async Task RemoveAsync(string key)
+    {
+        await base.RemoveAsync(key);
+
+        var httpContext = _httpContextAccessor.HttpContext;
+
+        if (httpContext != null)
         {
-            await base.SetAsync(pairs, slidingExpireTime, absoluteExpireTime);
-
-            var httpContext = _httpContextAccessor.HttpContext;
-
-            if (httpContext != null)
-            {
-                for (var i = 0; i < pairs.Length; i++)
-                {
-                    httpContext.Items[GetPerRequestRedisCacheKey(pairs[i].Key)] = new ConditionalValue<object>(true, pairs[i].Value);
-                }
-            }
-        }
-
-        public override void Remove(string key)
-        {
-            base.Remove(key);
-
-            var httpContext = _httpContextAccessor.HttpContext;
-
-            if (httpContext == null)
-            {
-                return;
-            }
-            
             var localizedKey = GetPerRequestRedisCacheKey(key);
 
-            if (httpContext.Items.ContainsKey(localizedKey))
-            {
-                httpContext.Items.Remove(localizedKey);
-            }
+            if (httpContext.Items.ContainsKey(localizedKey)) httpContext.Items.Remove(localizedKey);
         }
+    }
 
-        public override async Task RemoveAsync(string key)
+    public override void Remove(string[] keys)
+    {
+        base.Remove(keys);
+
+        var httpContext = _httpContextAccessor.HttpContext;
+
+        if (httpContext == null) return;
+
+        foreach (var key in keys)
         {
-            await base.RemoveAsync(key);
+            var localizedKey = GetPerRequestRedisCacheKey(key);
 
-            var httpContext = _httpContextAccessor.HttpContext;
-
-            if (httpContext != null)
-            {
-                var localizedKey = GetPerRequestRedisCacheKey(key);
-
-                if (httpContext.Items.ContainsKey(localizedKey))
-                {
-                    httpContext.Items.Remove(localizedKey);
-                }
-            }
+            if (httpContext.Items.ContainsKey(localizedKey)) httpContext.Items.Remove(localizedKey);
         }
+    }
 
-        public override void Remove(string[] keys)
-        {
-            base.Remove(keys);
+    public override async Task RemoveAsync(string[] keys)
+    {
+        await base.RemoveAsync(keys);
 
-            var httpContext = _httpContextAccessor.HttpContext;
+        var httpContext = _httpContextAccessor.HttpContext;
 
-            if (httpContext == null)
-            {
-                return;
-            }
-            
+        if (httpContext != null)
             foreach (var key in keys)
             {
                 var localizedKey = GetPerRequestRedisCacheKey(key);
 
-                if (httpContext.Items.ContainsKey(localizedKey))
-                {
-                    httpContext.Items.Remove(localizedKey);
-                }
+                if (httpContext.Items.ContainsKey(localizedKey)) httpContext.Items.Remove(localizedKey);
             }
-        }
+    }
 
-        public override async Task RemoveAsync(string[] keys)
-        {
-            await base.RemoveAsync(keys);
+    public override void Clear()
+    {
+        base.Clear();
 
-            var httpContext = _httpContextAccessor.HttpContext;
+        var httpContext = _httpContextAccessor.HttpContext;
 
-            if (httpContext != null)
-            {
-                foreach (var key in keys)
-                {
-                    var localizedKey = GetPerRequestRedisCacheKey(key);
+        if (httpContext == null) return;
 
-                    if (httpContext.Items.ContainsKey(localizedKey))
-                    {
-                        httpContext.Items.Remove(localizedKey);
-                    }
-                }
-            }
-        }
+        var localizedKeyPrefix = GetPerRequestRedisCacheKey("");
 
-        public override void Clear()
-        {
-            base.Clear();
+        foreach (var key in httpContext.Items.Keys.OfType<string>().ToList())
+            if (key.StartsWith(localizedKeyPrefix))
+                httpContext.Items.Remove(key);
+    }
 
-            var httpContext = _httpContextAccessor.HttpContext;
-
-            if (httpContext == null)
-            {
-                return;
-            }
-            
-            var localizedKeyPrefix = GetPerRequestRedisCacheKey("");
-
-            foreach (var key in httpContext.Items.Keys.OfType<string>().ToList())
-            {
-                if (key.StartsWith(localizedKeyPrefix))
-                {
-                    httpContext.Items.Remove(key);
-                }
-            }
-        }
-
-        protected virtual string GetPerRequestRedisCacheKey(string key)
-        {
-            return AbpPerRequestRedisCachePrefix + GetLocalizedRedisKey(key).ToString();
-        }
+    protected virtual string GetPerRequestRedisCacheKey(string key)
+    {
+        return AbpPerRequestRedisCachePrefix + GetLocalizedRedisKey(key).ToString();
     }
 }

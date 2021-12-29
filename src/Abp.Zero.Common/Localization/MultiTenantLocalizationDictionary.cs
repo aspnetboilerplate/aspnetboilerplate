@@ -43,15 +43,12 @@ namespace Abp.Localization
             _unitOfWorkManager = unitOfWorkManager;
         }
 
-        public CultureInfo CultureInfo
-        {
-            get { return _internalDictionary.CultureInfo; }
-        }
+        public CultureInfo CultureInfo => _internalDictionary.CultureInfo;
 
         public string this[string name]
         {
-            get { return _internalDictionary[name]; }
-            set { _internalDictionary[name] = value; }
+            get => _internalDictionary[name];
+            set => _internalDictionary[name] = value;
         }
 
         public LocalizedString GetOrNull(string name)
@@ -72,28 +69,19 @@ namespace Abp.Localization
             //Get for current tenant
             var dictionary = cache.Get(CalculateCacheKey(tenantId), () => GetAllValuesFromDatabase(tenantId));
             var value = dictionary.GetOrDefault(name);
-            if (value != null)
-            {
-                return new LocalizedString(name, value, CultureInfo);
-            }
+            if (value != null) return new LocalizedString(name, value, CultureInfo);
 
             //Fall back to host
             if (tenantId != null)
             {
                 dictionary = cache.Get(CalculateCacheKey(null), () => GetAllValuesFromDatabase(null));
                 value = dictionary.GetOrDefault(name);
-                if (value != null)
-                {
-                    return new LocalizedString(name, value, CultureInfo);
-                }
+                if (value != null) return new LocalizedString(name, value, CultureInfo);
             }
 
             //Not found in database, fall back to internal dictionary
             var internalLocalizedString = _internalDictionary.GetOrNull(name);
-            if (internalLocalizedString != null)
-            {
-                return internalLocalizedString;
-            }
+            if (internalLocalizedString != null) return internalLocalizedString;
 
             //Not found at all
             return null;
@@ -108,26 +96,20 @@ namespace Abp.Localization
             var dictionary = new Dictionary<string, LocalizedString>();
 
             foreach (var localizedString in _internalDictionary.GetStringsOrNull(names))
-            {
                 dictionary[localizedString.Name] = localizedString;
-            }
 
             //Override by host
             if (tenantId != null)
             {
                 var defaultDictionary = cache.Get(CalculateCacheKey(null), () => GetAllValuesFromDatabase(null));
                 foreach (var keyValue in defaultDictionary.Where(x => names.Contains(x.Key)))
-                {
                     dictionary[keyValue.Key] = new LocalizedString(keyValue.Key, keyValue.Value, CultureInfo);
-                }
             }
 
             //Override by tenant
             var tenantDictionary = cache.Get(CalculateCacheKey(tenantId), () => GetAllValuesFromDatabase(tenantId));
             foreach (var keyValue in tenantDictionary.Where(x => names.Contains(x.Key)))
-            {
                 dictionary[keyValue.Key] = new LocalizedString(keyValue.Key, keyValue.Value, CultureInfo);
-            }
 
             return dictionary.Values.ToImmutableList();
         }
@@ -147,26 +129,20 @@ namespace Abp.Localization
             var dictionary = new Dictionary<string, LocalizedString>();
 
             foreach (var localizedString in _internalDictionary.GetAllStrings())
-            {
                 dictionary[localizedString.Name] = localizedString;
-            }
 
             //Override by host
             if (tenantId != null)
             {
                 var defaultDictionary = cache.Get(CalculateCacheKey(null), () => GetAllValuesFromDatabase(null));
                 foreach (var keyValue in defaultDictionary)
-                {
                     dictionary[keyValue.Key] = new LocalizedString(keyValue.Key, keyValue.Value, CultureInfo);
-                }
             }
 
             //Override by tenant
             var tenantDictionary = cache.Get(CalculateCacheKey(tenantId), () => GetAllValuesFromDatabase(tenantId));
             foreach (var keyValue in tenantDictionary)
-            {
                 dictionary[keyValue.Key] = new LocalizedString(keyValue.Key, keyValue.Value, CultureInfo);
-            }
 
             return dictionary.Values.ToImmutableList();
         }

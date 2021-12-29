@@ -52,10 +52,7 @@ namespace Abp.Localization.Sources.Resource
         public virtual string GetString(string name)
         {
             var value = GetStringOrNull(name);
-            if (value == null)
-            {
-                return ReturnGivenNameOrThrowException(name, CultureInfo.CurrentUICulture);
-            }
+            if (value == null) return ReturnGivenNameOrThrowException(name, CultureInfo.CurrentUICulture);
 
             return value;
         }
@@ -63,10 +60,7 @@ namespace Abp.Localization.Sources.Resource
         public virtual string GetString(string name, CultureInfo culture)
         {
             var value = GetStringOrNull(name, culture);
-            if (value == null)
-            {
-                return ReturnGivenNameOrThrowException(name, culture);
-            }
+            if (value == null) return ReturnGivenNameOrThrowException(name, culture);
 
             return value;
         }
@@ -88,9 +82,8 @@ namespace Abp.Localization.Sources.Resource
             var values = GetStringsInternal(names, CultureInfo.CurrentUICulture);
             var nullValues = values.Where(x => x.Value == null).ToList();
             if (nullValues.Any())
-            {
-                return ReturnGivenNamesOrThrowException(nullValues.Select(x => x.Name).ToList(), CultureInfo.CurrentUICulture);
-            }
+                return ReturnGivenNamesOrThrowException(nullValues.Select(x => x.Name).ToList(),
+                    CultureInfo.CurrentUICulture);
 
             return values.Select(x => x.Value).ToList();
         }
@@ -100,9 +93,7 @@ namespace Abp.Localization.Sources.Resource
             var values = GetStringsInternal(names, culture);
             var nullValues = values.Where(x => x.Value == null).ToList();
             if (nullValues.Any())
-            {
                 return ReturnGivenNamesOrThrowException(nullValues.Select(x => x.Name).ToList(), culture);
-            }
 
             return values.Select(x => x.Value).ToList();
         }

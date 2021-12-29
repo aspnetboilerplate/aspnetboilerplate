@@ -27,7 +27,10 @@ namespace Abp.Tests.Dependency
 
             SimpleDisposableObject simpleObj = null;
 
-            LocalIocManager.UsingScope(scope => { simpleObj = scope.Resolve<SimpleDisposableObject>(new { myData = 40 }); });
+            LocalIocManager.UsingScope(scope =>
+            {
+                simpleObj = scope.Resolve<SimpleDisposableObject>(new { myData = 40 });
+            });
 
             simpleObj.MyData.ShouldBe(40);
         }

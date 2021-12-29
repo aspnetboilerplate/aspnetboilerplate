@@ -1,20 +1,19 @@
 using System.IdentityModel.Tokens.Jwt;
 using Abp.Runtime.Security;
 
-namespace Abp.IdentityServer4
-{
-    public class AbpIdentityServerOptions
-    {
-        /// <summary>
-        /// Updates <see cref="JwtSecurityTokenHandler.DefaultInboundClaimTypeMap"/> to be compatible with identity server claims.
-        /// Default: true.
-        /// </summary>
-        public bool UpdateJwtSecurityTokenHandlerDefaultInboundClaimTypeMap { get; set; } = true;
+namespace Abp.IdentityServer4;
 
-        /// <summary>
-        /// Updates <see cref="AbpClaimTypes"/> to be compatible with identity server claims.
-        /// Default: true.
-        /// </summary>
-        public bool UpdateAbpClaimTypes { get; set; } = true;
-    }
+public class AbpIdentityServerOptions
+{
+    /// <summary>
+    /// Updates <see cref="JwtSecurityTokenHandler.DefaultInboundClaimTypeMap"/> to be compatible with identity server claims.
+    /// Default: true.
+    /// </summary>
+    public bool UpdateJwtSecurityTokenHandlerDefaultInboundClaimTypeMap { get; set; } = true;
+
+    /// <summary>
+    /// Updates <see cref="AbpClaimTypes"/> to be compatible with identity server claims.
+    /// Default: true.
+    /// </summary>
+    public bool UpdateAbpClaimTypes { get; set; } = true;
 }

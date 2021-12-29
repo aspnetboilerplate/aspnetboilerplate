@@ -11,7 +11,6 @@ namespace Abp.RealTime
     {
         public OnlineClientManager(IOnlineClientStore<T> store) : base(store)
         {
-
         }
     }
 
@@ -48,19 +47,14 @@ namespace Abp.RealTime
                 var userWasAlreadyOnline = false;
                 var user = client.ToUserIdentifierOrNull();
 
-                if (user != null)
-                {
-                    userWasAlreadyOnline = this.IsOnline(user);
-                }
+                if (user != null) userWasAlreadyOnline = this.IsOnline(user);
 
                 Store.Add(client);
 
                 ClientConnected?.Invoke(this, new OnlineClientEventArgs(client));
 
                 if (user != null && !userWasAlreadyOnline)
-                {
                     UserConnected?.Invoke(this, new OnlineUserEventArgs(user, client));
-                }
             }
         }
 
@@ -68,7 +62,7 @@ namespace Abp.RealTime
         {
             lock (SyncObj)
             {
-                var result = Store.TryRemove(connectionId, out IOnlineClient client);
+                var result = Store.TryRemove(connectionId, out var client);
                 if (result)
                 {
                     if (UserDisconnected != null)
@@ -76,9 +70,7 @@ namespace Abp.RealTime
                         var user = client.ToUserIdentifierOrNull();
 
                         if (user != null && !this.IsOnline(user))
-                        {
                             UserDisconnected.Invoke(this, new OnlineUserEventArgs(user, client));
-                        }
                     }
 
                     ClientDisconnected?.Invoke(this, new OnlineClientEventArgs(client));
@@ -92,16 +84,13 @@ namespace Abp.RealTime
         {
             lock (SyncObj)
             {
-                if (Store.TryGet(connectionId, out IOnlineClient client))
-                {
+                if (Store.TryGet(connectionId, out var client))
                     return client;
-                } else
-                {
+                else
                     return null;
-                }
             }
         }
-        
+
         public virtual IReadOnlyList<IOnlineClient> GetAllClients()
         {
             lock (SyncObj)
@@ -116,8 +105,8 @@ namespace Abp.RealTime
             Check.NotNull(user, nameof(user));
 
             return GetAllClients()
-                 .Where(c => c.UserId == user.UserId && c.TenantId == user.TenantId)
-                 .ToImmutableList();
+                .Where(c => c.UserId == user.UserId && c.TenantId == user.TenantId)
+                .ToImmutableList();
         }
     }
 }

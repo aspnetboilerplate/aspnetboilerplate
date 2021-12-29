@@ -35,7 +35,6 @@ namespace Abp.Timing
         /// </summary>
         public DateTimeRange()
         {
-
         }
 
         /// <summary>
@@ -157,7 +156,8 @@ namespace Abp.Timing
             get
             {
                 var now = Now;
-                return new DateTimeRange(new DateTime(now.Year - 1, 1, 1), new DateTime(now.Year, 1, 1).AddMilliseconds(-1));
+                return new DateTimeRange(new DateTime(now.Year - 1, 1, 1),
+                    new DateTime(now.Year, 1, 1).AddMilliseconds(-1));
             }
         }
 
@@ -169,7 +169,8 @@ namespace Abp.Timing
             get
             {
                 var now = Now;
-                return new DateTimeRange(new DateTime(now.Year, 1, 1), new DateTime(now.Year + 1, 1, 1).AddMilliseconds(-1));
+                return new DateTimeRange(new DateTime(now.Year, 1, 1),
+                    new DateTime(now.Year + 1, 1, 1).AddMilliseconds(-1));
             }
         }
 
@@ -181,7 +182,8 @@ namespace Abp.Timing
             get
             {
                 var now = Now;
-                return new DateTimeRange(new DateTime(now.Year + 1, 1, 1), new DateTime(now.Year + 2, 1, 1).AddMilliseconds(-1));
+                return new DateTimeRange(new DateTime(now.Year + 1, 1, 1),
+                    new DateTime(now.Year + 2, 1, 1).AddMilliseconds(-1));
             }
         }
 

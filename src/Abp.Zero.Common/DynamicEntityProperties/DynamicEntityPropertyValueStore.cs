@@ -121,9 +121,7 @@ namespace Abp.DynamicEntityProperties
                 val.EntityId == entityId && val.DynamicEntityPropertyId == dynamicEntityPropertyId).ToList();
 
             foreach (var dynamicEntityPropertyValue in list)
-            {
                 _dynamicEntityPropertyValueRepository.Delete(dynamicEntityPropertyValue);
-            }
         }
 
         public virtual async Task CleanValuesAsync(int dynamicEntityPropertyId, string entityId)
@@ -133,9 +131,7 @@ namespace Abp.DynamicEntityProperties
                     val.EntityId == entityId && val.DynamicEntityPropertyId == dynamicEntityPropertyId));
 
             foreach (var dynamicEntityPropertyValue in list)
-            {
                 await _dynamicEntityPropertyValueRepository.DeleteAsync(dynamicEntityPropertyValue);
-            }
         }
     }
 }

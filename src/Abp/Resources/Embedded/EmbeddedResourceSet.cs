@@ -24,10 +24,7 @@ namespace Abp.Resources.Embedded
         {
             foreach (var resourceName in Assembly.GetManifestResourceNames())
             {
-                if (!resourceName.StartsWith(ResourceNamespace))
-                {
-                    continue;
-                }
+                if (!resourceName.StartsWith(ResourceNamespace)) continue;
 
                 using (var stream = Assembly.GetManifestResourceStream(resourceName))
                 {

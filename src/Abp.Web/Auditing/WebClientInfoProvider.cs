@@ -28,10 +28,7 @@ namespace Abp.Auditing
         protected virtual string GetBrowserInfo()
         {
             var httpRequest = GetCurrentHttpRequest();
-            if (httpRequest?.Browser == null)
-            {
-                return null;
-            }
+            if (httpRequest?.Browser == null) return null;
 
             return httpRequest.Browser.Browser + " / " +
                    httpRequest.Browser.Version + " / " +
@@ -41,10 +38,7 @@ namespace Abp.Auditing
         protected virtual IPAddress GetClientIpAddress()
         {
             var httpRequest = GetCurrentHttpRequest();
-            if (httpRequest?.ServerVariables == null)
-            {
-                return null;
-            }
+            if (httpRequest?.ServerVariables == null) return null;
 
             IPAddress clientIpAddress = null;
 
@@ -56,25 +50,20 @@ namespace Abp.Auditing
                 // https://docs.microsoft.com/en-us/previous-versions/iis/6.0-sdk/ms524602(v=vs.90)#obtaining-server-variables
                 var forwardIpAddress = httpRequest.ServerVariables["HTTP_X_FORWARDED_FOR"]?.Split(',').FirstOrDefault();
                 if (!string.IsNullOrWhiteSpace(forwardIpAddress))
-                {
                     clientIpAddress = IPEndPointHelper.Parse(forwardIpAddress).Address;
-                }
 
                 // Remote Ip Address is separated into REMOTE_ADDR & REMOTE_PORT
                 var remoteIpAddress = httpRequest.ServerVariables["REMOTE_ADDR"];
                 if (clientIpAddress == null && !string.IsNullOrWhiteSpace(remoteIpAddress))
-                {
                     clientIpAddress = IPAddress.Parse(remoteIpAddress);
-                }
 
                 if (clientIpAddress == null && httpRequest.IsLocal)
-                {
                     clientIpAddress = Dns.GetHostAddresses(Dns.GetHostName()).FirstOrDefault(address =>
                         {
-                            return address.AddressFamily.HasFlag(AddressFamily.InterNetwork | AddressFamily.InterNetworkV6);
+                            return address.AddressFamily.HasFlag(AddressFamily.InterNetwork |
+                                                                 AddressFamily.InterNetworkV6);
                         }
                     );
-                }
             }
             catch (Exception ex)
             {
@@ -87,10 +76,7 @@ namespace Abp.Auditing
         protected virtual string GetComputerName()
         {
             var httpRequest = GetCurrentHttpRequest();
-            if (httpRequest == null || !httpRequest.IsLocal)
-            {
-                return null;
-            }
+            if (httpRequest == null || !httpRequest.IsLocal) return null;
 
             try
             {

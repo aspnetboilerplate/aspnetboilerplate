@@ -13,75 +13,76 @@ using Abp.Reflection;
 using Abp.Reflection.Extensions;
 using Castle.MicroKernel.Registration;
 
-namespace Abp.EntityFrameworkCore
+namespace Abp.EntityFrameworkCore;
+
+/// <summary>
+/// This module is used to implement "Data Access Layer" in EntityFramework.
+/// </summary>
+[DependsOn(typeof(AbpEntityFrameworkCommonModule))]
+public class AbpEntityFrameworkCoreModule : AbpModule
 {
-    /// <summary>
-    /// This module is used to implement "Data Access Layer" in EntityFramework.
-    /// </summary>
-    [DependsOn(typeof(AbpEntityFrameworkCommonModule))]
-    public class AbpEntityFrameworkCoreModule : AbpModule
+    private readonly ITypeFinder _typeFinder;
+
+    public AbpEntityFrameworkCoreModule(ITypeFinder typeFinder)
     {
-        private readonly ITypeFinder _typeFinder;
+        _typeFinder = typeFinder;
+    }
 
-        public AbpEntityFrameworkCoreModule(ITypeFinder typeFinder)
+    public override void PreInitialize()
+    {
+        IocManager.Register<IAbpEfCoreConfiguration, AbpEfCoreConfiguration>();
+    }
+
+    public override void Initialize()
+    {
+        IocManager.RegisterAssemblyByConvention(typeof(AbpEntityFrameworkCoreModule).GetAssembly());
+
+        IocManager.IocContainer.Register(
+            Component.For(typeof(IDbContextProvider<>))
+                .ImplementedBy(typeof(UnitOfWorkDbContextProvider<>))
+                .LifestyleTransient()
+        );
+
+        RegisterGenericRepositoriesAndMatchDbContexes();
+    }
+
+    private void RegisterGenericRepositoriesAndMatchDbContexes()
+    {
+        var dbContextTypes =
+            _typeFinder.Find(type =>
+            {
+                var typeInfo = type.GetTypeInfo();
+                return typeInfo.IsPublic &&
+                       !typeInfo.IsAbstract &&
+                       typeInfo.IsClass &&
+                       typeof(AbpDbContext).IsAssignableFrom(type);
+            });
+
+        if (dbContextTypes.IsNullOrEmpty())
         {
-            _typeFinder = typeFinder;
+            Logger.Warn("No class found derived from AbpDbContext.");
+            return;
         }
 
-        public override void PreInitialize()
+        using (IScopedIocResolver scope = IocManager.CreateScope())
         {
-            IocManager.Register<IAbpEfCoreConfiguration, AbpEfCoreConfiguration>();
-        }
+            foreach (var dbContextType in dbContextTypes)
+            {
+                Logger.Debug("Registering DbContext: " + dbContextType.AssemblyQualifiedName);
 
-        public override void Initialize()
-        {
-            IocManager.RegisterAssemblyByConvention(typeof(AbpEntityFrameworkCoreModule).GetAssembly());
+                scope.Resolve<IEfGenericRepositoryRegistrar>()
+                    .RegisterForDbContext(dbContextType, IocManager, EfCoreAutoRepositoryTypes.Default);
 
-            IocManager.IocContainer.Register(
-                Component.For(typeof(IDbContextProvider<>))
-                    .ImplementedBy(typeof(UnitOfWorkDbContextProvider<>))
-                    .LifestyleTransient()
+                IocManager.IocContainer.Register(
+                    Component.For<ISecondaryOrmRegistrar>()
+                        .Named(Guid.NewGuid().ToString("N"))
+                        .Instance(new EfCoreBasedSecondaryOrmRegistrar(dbContextType,
+                            scope.Resolve<IDbContextEntityFinder>()))
+                        .LifestyleTransient()
                 );
-
-            RegisterGenericRepositoriesAndMatchDbContexes();
-        }
-
-        private void RegisterGenericRepositoriesAndMatchDbContexes()
-        {
-            var dbContextTypes =
-                _typeFinder.Find(type =>
-                {
-                    var typeInfo = type.GetTypeInfo();
-                    return typeInfo.IsPublic &&
-                           !typeInfo.IsAbstract &&
-                           typeInfo.IsClass &&
-                           typeof(AbpDbContext).IsAssignableFrom(type);
-                });
-
-            if (dbContextTypes.IsNullOrEmpty())
-            {
-                Logger.Warn("No class found derived from AbpDbContext.");
-                return;
             }
 
-            using (IScopedIocResolver scope = IocManager.CreateScope())
-            {
-                foreach (var dbContextType in dbContextTypes)
-                {
-                    Logger.Debug("Registering DbContext: " + dbContextType.AssemblyQualifiedName);
-
-                    scope.Resolve<IEfGenericRepositoryRegistrar>().RegisterForDbContext(dbContextType, IocManager, EfCoreAutoRepositoryTypes.Default);
-
-                    IocManager.IocContainer.Register(
-                        Component.For<ISecondaryOrmRegistrar>()
-                            .Named(Guid.NewGuid().ToString("N"))
-                            .Instance(new EfCoreBasedSecondaryOrmRegistrar(dbContextType, scope.Resolve<IDbContextEntityFinder>()))
-                            .LifestyleTransient()
-                    );
-                }
-
-                scope.Resolve<IDbContextTypeMatcher>().Populate(dbContextTypes);
-            }
+            scope.Resolve<IDbContextTypeMatcher>().Populate(dbContextTypes);
         }
     }
 }

@@ -33,10 +33,7 @@ namespace Abp.Web.Localization
 
         public virtual void SetCurrentCulture(HttpContext httpContext)
         {
-            if (IsCultureSpecifiedInGlobalizationConfig())
-            {
-                return;
-            }
+            if (IsCultureSpecifiedInGlobalizationConfig()) return;
 
             // 1: Query String
             var culture = GetCultureFromQueryString(httpContext);
@@ -58,10 +55,7 @@ namespace Abp.Web.Localization
             culture = GetCultureFromHeader(httpContext) ?? GetCultureFromCookie(httpContext);
             if (culture != null)
             {
-                if (_abpSession.UserId.HasValue)
-                {
-                    SetCultureToUserSetting(_abpSession.ToUserIdentifier(), culture);
-                }
+                if (_abpSession.UserId.HasValue) SetCultureToUserSetting(_abpSession.ToUserIdentifier(), culture);
 
                 SetCurrentCulture(culture);
                 return;
@@ -87,10 +81,7 @@ namespace Abp.Web.Localization
 
         private string GetCultureFromUserSetting()
         {
-            if (_abpSession.UserId == null)
-            {
-                return null;
-            }
+            if (_abpSession.UserId == null) return null;
 
             var culture = _settingManager.GetSettingValueForUser(
                 LocalizationSettingNames.DefaultLanguage,
@@ -99,21 +90,16 @@ namespace Abp.Web.Localization
                 fallbackToDefault: false
             );
 
-            if (culture.IsNullOrEmpty() || !GlobalizationHelper.IsValidCultureCode(culture))
-            {
-                return null;
-            }
+            if (culture.IsNullOrEmpty() || !GlobalizationHelper.IsValidCultureCode(culture)) return null;
 
             return culture;
         }
 
         protected virtual bool IsCultureSpecifiedInGlobalizationConfig()
         {
-            var globalizationSection = WebConfigurationManager.GetSection("system.web/globalization") as GlobalizationSection;
-            if (globalizationSection == null || globalizationSection.UICulture.IsNullOrEmpty())
-            {
-                return false;
-            }
+            var globalizationSection =
+                WebConfigurationManager.GetSection("system.web/globalization") as GlobalizationSection;
+            if (globalizationSection == null || globalizationSection.UICulture.IsNullOrEmpty()) return false;
 
             return !string.Equals(globalizationSection.UICulture, "auto", StringComparison.InvariantCultureIgnoreCase);
         }
@@ -121,10 +107,7 @@ namespace Abp.Web.Localization
         protected virtual string GetCultureFromCookie(HttpContext httpContext)
         {
             var culture = httpContext.Request.Cookies[_webLocalizationConfiguration.CookieName]?.Value;
-            if (culture.IsNullOrEmpty() || !GlobalizationHelper.IsValidCultureCode(culture))
-            {
-                return null;
-            }
+            if (culture.IsNullOrEmpty() || !GlobalizationHelper.IsValidCultureCode(culture)) return null;
 
             return culture;
         }
@@ -143,10 +126,7 @@ namespace Abp.Web.Localization
         protected virtual string GetDefaultCulture()
         {
             var culture = _settingManager.GetSettingValue(LocalizationSettingNames.DefaultLanguage);
-            if (culture.IsNullOrEmpty() || !GlobalizationHelper.IsValidCultureCode(culture))
-            {
-                return null;
-            }
+            if (culture.IsNullOrEmpty() || !GlobalizationHelper.IsValidCultureCode(culture)) return null;
 
             return culture;
         }
@@ -154,20 +134,14 @@ namespace Abp.Web.Localization
         protected virtual string GetCultureFromHeader(HttpContext httpContext)
         {
             var culture = httpContext.Request.Headers[_webLocalizationConfiguration.CookieName];
-            if (culture.IsNullOrEmpty() || !GlobalizationHelper.IsValidCultureCode(culture))
-            {
-                return null;
-            }
+            if (culture.IsNullOrEmpty() || !GlobalizationHelper.IsValidCultureCode(culture)) return null;
 
             return culture;
         }
 
         protected virtual string GetBrowserCulture(HttpContext httpContext)
         {
-            if (httpContext.Request.UserLanguages.IsNullOrEmpty())
-            {
-                return null;
-            }
+            if (httpContext.Request.UserLanguages.IsNullOrEmpty()) return null;
 
             return httpContext.Request?.UserLanguages?.FirstOrDefault(GlobalizationHelper.IsValidCultureCode);
         }
@@ -175,10 +149,7 @@ namespace Abp.Web.Localization
         protected virtual string GetCultureFromQueryString(HttpContext httpContext)
         {
             var culture = httpContext.Request.QueryString[_webLocalizationConfiguration.CookieName];
-            if (culture.IsNullOrEmpty() || !GlobalizationHelper.IsValidCultureCode(culture))
-            {
-                return null;
-            }
+            if (culture.IsNullOrEmpty() || !GlobalizationHelper.IsValidCultureCode(culture)) return null;
 
             return culture;
         }

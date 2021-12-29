@@ -15,7 +15,6 @@ namespace Abp.Application.Services
         protected AsyncCrudAppService(IRepository<TEntity, int> repository)
             : base(repository)
         {
-
         }
     }
 
@@ -27,7 +26,6 @@ namespace Abp.Application.Services
         protected AsyncCrudAppService(IRepository<TEntity, TPrimaryKey> repository)
             : base(repository)
         {
-
         }
     }
 
@@ -39,7 +37,6 @@ namespace Abp.Application.Services
         protected AsyncCrudAppService(IRepository<TEntity, TPrimaryKey> repository)
             : base(repository)
         {
-
         }
     }
 
@@ -48,17 +45,18 @@ namespace Abp.Application.Services
         where TGetAllInput : IPagedAndSortedResultRequest
         where TEntity : class, IEntity<TPrimaryKey>
         where TEntityDto : IEntityDto<TPrimaryKey>
-       where TCreateInput : IEntityDto<TPrimaryKey>
+        where TCreateInput : IEntityDto<TPrimaryKey>
     {
         protected AsyncCrudAppService(IRepository<TEntity, TPrimaryKey> repository)
             : base(repository)
         {
-
         }
     }
 
-    public abstract class AsyncCrudAppService<TEntity, TEntityDto, TPrimaryKey, TGetAllInput, TCreateInput, TUpdateInput>
-        : AsyncCrudAppService<TEntity, TEntityDto, TPrimaryKey, TGetAllInput, TCreateInput, TUpdateInput, EntityDto<TPrimaryKey>>
+    public abstract class AsyncCrudAppService<TEntity, TEntityDto, TPrimaryKey, TGetAllInput, TCreateInput,
+            TUpdateInput>
+        : AsyncCrudAppService<TEntity, TEntityDto, TPrimaryKey, TGetAllInput, TCreateInput, TUpdateInput,
+            EntityDto<TPrimaryKey>>
         where TEntity : class, IEntity<TPrimaryKey>
         where TEntityDto : IEntityDto<TPrimaryKey>
         where TUpdateInput : IEntityDto<TPrimaryKey>
@@ -66,12 +64,13 @@ namespace Abp.Application.Services
         protected AsyncCrudAppService(IRepository<TEntity, TPrimaryKey> repository)
             : base(repository)
         {
-
         }
     }
 
-    public abstract class AsyncCrudAppService<TEntity, TEntityDto, TPrimaryKey, TGetAllInput, TCreateInput, TUpdateInput, TGetInput>
-    : AsyncCrudAppService<TEntity, TEntityDto, TPrimaryKey, TGetAllInput, TCreateInput, TUpdateInput, TGetInput, EntityDto<TPrimaryKey>>
+    public abstract class AsyncCrudAppService<TEntity, TEntityDto, TPrimaryKey, TGetAllInput, TCreateInput,
+            TUpdateInput, TGetInput>
+        : AsyncCrudAppService<TEntity, TEntityDto, TPrimaryKey, TGetAllInput, TCreateInput, TUpdateInput, TGetInput,
+            EntityDto<TPrimaryKey>>
         where TEntity : class, IEntity<TPrimaryKey>
         where TEntityDto : IEntityDto<TPrimaryKey>
         where TUpdateInput : IEntityDto<TPrimaryKey>
@@ -80,23 +79,24 @@ namespace Abp.Application.Services
         protected AsyncCrudAppService(IRepository<TEntity, TPrimaryKey> repository)
             : base(repository)
         {
-
         }
     }
 
-    public abstract class AsyncCrudAppService<TEntity, TEntityDto, TPrimaryKey, TGetAllInput, TCreateInput, TUpdateInput, TGetInput, TDeleteInput>
-       : CrudAppServiceBase<TEntity, TEntityDto, TPrimaryKey, TGetAllInput, TCreateInput, TUpdateInput>,
-        IAsyncCrudAppService<TEntityDto, TPrimaryKey, TGetAllInput, TCreateInput, TUpdateInput, TGetInput, TDeleteInput>
-           where TEntity : class, IEntity<TPrimaryKey>
-           where TEntityDto : IEntityDto<TPrimaryKey>
-           where TUpdateInput : IEntityDto<TPrimaryKey>
-           where TGetInput : IEntityDto<TPrimaryKey>
-           where TDeleteInput : IEntityDto<TPrimaryKey>
+    public abstract class AsyncCrudAppService<TEntity, TEntityDto, TPrimaryKey, TGetAllInput, TCreateInput,
+            TUpdateInput, TGetInput, TDeleteInput>
+        : CrudAppServiceBase<TEntity, TEntityDto, TPrimaryKey, TGetAllInput, TCreateInput, TUpdateInput>,
+            IAsyncCrudAppService<TEntityDto, TPrimaryKey, TGetAllInput, TCreateInput, TUpdateInput, TGetInput,
+                TDeleteInput>
+        where TEntity : class, IEntity<TPrimaryKey>
+        where TEntityDto : IEntityDto<TPrimaryKey>
+        where TUpdateInput : IEntityDto<TPrimaryKey>
+        where TGetInput : IEntityDto<TPrimaryKey>
+        where TDeleteInput : IEntityDto<TPrimaryKey>
     {
         public IAsyncQueryableExecuter AsyncQueryableExecuter { get; set; }
 
         protected AsyncCrudAppService(IRepository<TEntity, TPrimaryKey> repository)
-            :base(repository)
+            : base(repository)
         {
             AsyncQueryableExecuter = NullAsyncQueryableExecuter.Instance;
         }

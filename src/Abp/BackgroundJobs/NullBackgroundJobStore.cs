@@ -14,6 +14,7 @@ namespace Abp.BackgroundJobs
         {
             return Task.FromResult(new BackgroundJobInfo());
         }
+
         public BackgroundJobInfo Get(long jobId)
         {
             return new BackgroundJobInfo();

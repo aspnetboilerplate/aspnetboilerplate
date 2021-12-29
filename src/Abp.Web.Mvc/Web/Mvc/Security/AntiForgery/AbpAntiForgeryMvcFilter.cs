@@ -12,7 +12,7 @@ using Castle.Core.Logging;
 
 namespace Abp.Web.Mvc.Security.AntiForgery
 {
-    public class AbpAntiForgeryMvcFilter: IAuthorizationFilter, ITransientDependency
+    public class AbpAntiForgeryMvcFilter : IAuthorizationFilter, ITransientDependency
     {
         public ILogger Logger { get; set; }
 
@@ -21,7 +21,7 @@ namespace Abp.Web.Mvc.Security.AntiForgery
         private readonly IAbpAntiForgeryWebConfiguration _antiForgeryWebConfiguration;
 
         public AbpAntiForgeryMvcFilter(
-            IAbpAntiForgeryManager abpAntiForgeryManager, 
+            IAbpAntiForgeryManager abpAntiForgeryManager,
             IAbpMvcConfiguration mvcConfiguration,
             IAbpAntiForgeryWebConfiguration antiForgeryWebConfiguration)
         {
@@ -34,26 +34,19 @@ namespace Abp.Web.Mvc.Security.AntiForgery
         public void OnAuthorization(AuthorizationContext context)
         {
             var methodInfo = context.ActionDescriptor.GetMethodInfoOrNull();
-            if (methodInfo == null)
-            {
-                return;
-            }
+            if (methodInfo == null) return;
 
             var httpVerb = HttpVerbHelper.Create(context.HttpContext.Request.HttpMethod);
-            if (!_abpAntiForgeryManager.ShouldValidate(_antiForgeryWebConfiguration, methodInfo, httpVerb, _mvcConfiguration.IsAutomaticAntiForgeryValidationEnabled))
-            {
-                return;
-            }
+            if (!_abpAntiForgeryManager.ShouldValidate(_antiForgeryWebConfiguration, methodInfo, httpVerb,
+                    _mvcConfiguration.IsAutomaticAntiForgeryValidationEnabled)) return;
 
             if (!_abpAntiForgeryManager.IsValid(context.HttpContext))
-            {
                 CreateErrorResponse(context, methodInfo, "Empty or invalid anti forgery header token.");
-            }
         }
 
         private void CreateErrorResponse(
-            AuthorizationContext context, 
-            MethodInfo methodInfo, 
+            AuthorizationContext context,
+            MethodInfo methodInfo,
             string message)
         {
             Logger.Warn(message);
@@ -65,18 +58,12 @@ namespace Abp.Web.Mvc.Security.AntiForgery
             var isJsonResult = MethodInfoHelper.IsJsonResult(methodInfo);
 
             if (isJsonResult)
-            {
                 context.Result = CreateUnAuthorizedJsonResult(message);
-            }
             else
-            {
                 context.Result = CreateUnAuthorizedNonJsonResult(context, message);
-            }
 
             if (isJsonResult || context.HttpContext.Request.IsAjaxRequest())
-            {
                 context.HttpContext.Response.SuppressFormsAuthenticationRedirect = true;
-            }
         }
 
         protected virtual AbpJsonResult CreateUnAuthorizedJsonResult(string message)
@@ -87,7 +74,8 @@ namespace Abp.Web.Mvc.Security.AntiForgery
             };
         }
 
-        protected virtual HttpStatusCodeResult CreateUnAuthorizedNonJsonResult(AuthorizationContext filterContext, string message)
+        protected virtual HttpStatusCodeResult CreateUnAuthorizedNonJsonResult(AuthorizationContext filterContext,
+            string message)
         {
             return new HttpStatusCodeResult(filterContext.HttpContext.Response.StatusCode, message);
         }

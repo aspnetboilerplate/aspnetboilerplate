@@ -17,22 +17,18 @@ namespace Abp.Tests.Collections
 
         public interface IMyInterface
         {
-             
         }
 
         public class MyClass1 : IMyInterface
         {
-            
         }
 
         public class MyClass2 : IMyInterface
         {
-
         }
 
         public class MyClass3
         {
-
         }
     }
 }

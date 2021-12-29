@@ -16,13 +16,11 @@ namespace Abp.Dependency
         /// <param name="iocRegistrar">Registrar</param>
         /// <param name="lifeStyle">Lifestyle of the objects of this type</param>
         /// <returns>True, if registered for given implementation.</returns>
-        public static bool RegisterIfNot<T>(this IIocRegistrar iocRegistrar, DependencyLifeStyle lifeStyle = DependencyLifeStyle.Singleton)
+        public static bool RegisterIfNot<T>(this IIocRegistrar iocRegistrar,
+            DependencyLifeStyle lifeStyle = DependencyLifeStyle.Singleton)
             where T : class
         {
-            if (iocRegistrar.IsRegistered<T>())
-            {
-                return false;
-            }
+            if (iocRegistrar.IsRegistered<T>()) return false;
 
             iocRegistrar.Register<T>(lifeStyle);
             return true;
@@ -35,12 +33,10 @@ namespace Abp.Dependency
         /// <param name="type">Type of the class</param>
         /// <param name="lifeStyle">Lifestyle of the objects of this type</param>
         /// <returns>True, if registered for given implementation.</returns>
-        public static bool RegisterIfNot(this IIocRegistrar iocRegistrar, Type type, DependencyLifeStyle lifeStyle = DependencyLifeStyle.Singleton)
+        public static bool RegisterIfNot(this IIocRegistrar iocRegistrar, Type type,
+            DependencyLifeStyle lifeStyle = DependencyLifeStyle.Singleton)
         {
-            if (iocRegistrar.IsRegistered(type))
-            {
-                return false;
-            }
+            if (iocRegistrar.IsRegistered(type)) return false;
 
             iocRegistrar.Register(type, lifeStyle);
             return true;
@@ -54,14 +50,12 @@ namespace Abp.Dependency
         /// <param name="iocRegistrar">Registrar</param>
         /// <param name="lifeStyle">Lifestyle of the objects of this type</param>
         /// <returns>True, if registered for given implementation.</returns>
-        public static bool RegisterIfNot<TType, TImpl>(this IIocRegistrar iocRegistrar, DependencyLifeStyle lifeStyle = DependencyLifeStyle.Singleton)
+        public static bool RegisterIfNot<TType, TImpl>(this IIocRegistrar iocRegistrar,
+            DependencyLifeStyle lifeStyle = DependencyLifeStyle.Singleton)
             where TType : class
             where TImpl : class, TType
         {
-            if (iocRegistrar.IsRegistered<TType>())
-            {
-                return false;
-            }
+            if (iocRegistrar.IsRegistered<TType>()) return false;
 
             iocRegistrar.Register<TType, TImpl>(lifeStyle);
             return true;
@@ -76,12 +70,10 @@ namespace Abp.Dependency
         /// <param name="impl">The type that implements <paramref name="type"/></param>
         /// <param name="lifeStyle">Lifestyle of the objects of this type</param>
         /// <returns>True, if registered for given implementation.</returns>
-        public static bool RegisterIfNot(this IIocRegistrar iocRegistrar, Type type, Type impl, DependencyLifeStyle lifeStyle = DependencyLifeStyle.Singleton)
+        public static bool RegisterIfNot(this IIocRegistrar iocRegistrar, Type type, Type impl,
+            DependencyLifeStyle lifeStyle = DependencyLifeStyle.Singleton)
         {
-            if (iocRegistrar.IsRegistered(type))
-            {
-                return false;
-            }
+            if (iocRegistrar.IsRegistered(type)) return false;
 
             iocRegistrar.Register(type, impl, lifeStyle);
             return true;

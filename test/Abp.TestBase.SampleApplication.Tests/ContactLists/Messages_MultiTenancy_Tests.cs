@@ -67,11 +67,13 @@ namespace Abp.TestBase.SampleApplication.Tests.ContactLists
             //Creation audit check
             tenant1MessageNew.IsTransient().ShouldBeFalse(); //It should be saved to database
             tenant1MessageNew.CreationTime.ShouldBeGreaterThan(Clock.Now.Subtract(TimeSpan.FromMinutes(1)));
-            tenant1MessageNew.CreatorUserId.ShouldBe(null); //It's not set since user in the AbpSession is not that tenant's user!
+            tenant1MessageNew.CreatorUserId
+                .ShouldBe(null); //It's not set since user in the AbpSession is not that tenant's user!
 
             //Modification audit check
             tenant1Message1.LastModificationTime.ShouldNotBe(null); //It's set since we modified Text
-            tenant1Message1.LastModifierUserId.ShouldBe(null); //It's not set since user in the AbpSession is not that tenant's user!
+            tenant1Message1.LastModifierUserId
+                .ShouldBe(null); //It's not set since user in the AbpSession is not that tenant's user!
 
             //Deletion audit check
             UsingDbContext(context =>
@@ -80,7 +82,8 @@ namespace Abp.TestBase.SampleApplication.Tests.ContactLists
                 tenant1Message2.ShouldNotBeNull();
                 tenant1Message2.IsDeleted.ShouldBeTrue();
                 tenant1Message2.DeletionTime.ShouldNotBe(null);
-                tenant1Message2.DeleterUserId.ShouldBe(null); //It's not set since user in the AbpSession is not that tenant's user!
+                tenant1Message2.DeleterUserId
+                    .ShouldBe(null); //It's not set since user in the AbpSession is not that tenant's user!
             });
         }
 
@@ -176,7 +179,9 @@ namespace Abp.TestBase.SampleApplication.Tests.ContactLists
                 //We can disable the filter to get all entities of host and tenants
                 using (unitOfWorkManager.Current.DisableFilter(AbpDataFilters.MayHaveTenant))
                 {
-                    _messageRepository.Count(m => m.TenantId != PersonRepository_Tests_For_EntityChangeEvents.PersonHandler.FakeTenantId).ShouldBe(3);
+                    _messageRepository.Count(m =>
+                            m.TenantId != PersonRepository_Tests_For_EntityChangeEvents.PersonHandler.FakeTenantId)
+                        .ShouldBe(3);
                 }
 
                 unitOfWork.Complete();

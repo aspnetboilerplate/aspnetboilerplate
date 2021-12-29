@@ -9,7 +9,8 @@ namespace Abp.Authorization.Users
     /// </summary>
     /// <typeparam name="TTenant">Tenant type</typeparam>
     /// <typeparam name="TUser">User type</typeparam>
-    public abstract class DefaultExternalAuthenticationSource<TTenant, TUser> : IExternalAuthenticationSource<TTenant, TUser>
+    public abstract class
+        DefaultExternalAuthenticationSource<TTenant, TUser> : IExternalAuthenticationSource<TTenant, TUser>
         where TTenant : AbpTenant<TUser>
         where TUser : AbpUserBase, new()
     {
@@ -17,7 +18,8 @@ namespace Abp.Authorization.Users
         public abstract string Name { get; }
 
         /// <inheritdoc/>
-        public abstract Task<bool> TryAuthenticateAsync(string userNameOrEmailAddress, string plainPassword, TTenant tenant);
+        public abstract Task<bool> TryAuthenticateAsync(string userNameOrEmailAddress, string plainPassword,
+            TTenant tenant);
 
         /// <inheritdoc/>
         public virtual Task<TUser> CreateUserAsync(string userNameOrEmailAddress, TTenant tenant)

@@ -13,7 +13,7 @@ namespace Abp.Tests.Dependency.Interceptors
             LocalIocManager.IocContainer.Register(
                 Component.For<BracketInterceptor>().LifestyleTransient(),
                 Component.For<MyGreetingClass>().Interceptors<BracketInterceptor>().LifestyleTransient()
-                );
+            );
 
             var greetingObj = LocalIocManager.Resolve<MyGreetingClass>();
 

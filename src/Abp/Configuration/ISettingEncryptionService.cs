@@ -5,9 +5,9 @@ namespace Abp.Configuration
     public interface ISettingEncryptionService
     {
         [CanBeNull]
-        string Encrypt([NotNull]SettingDefinition settingDefinition, [CanBeNull] string plainValue);
+        string Encrypt([NotNull] SettingDefinition settingDefinition, [CanBeNull] string plainValue);
 
         [CanBeNull]
-        string Decrypt([NotNull]SettingDefinition settingDefinition, [CanBeNull] string encryptedValue);
+        string Decrypt([NotNull] SettingDefinition settingDefinition, [CanBeNull] string encryptedValue);
     }
 }

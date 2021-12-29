@@ -17,8 +17,10 @@ namespace Abp.TestBase.SampleApplication.ContactLists
 
         public override void SetFeatures(IFeatureDefinitionContext context)
         {
-            var contacts = context.Create(Names.Contacts, "false", new LocalizableString(Names.Contacts, SampleApplicationConsts.LocalizationSourceName));
-            contacts.CreateChildFeature(Names.MaxContactCount, "100", inputType: new SingleLineStringInputType(new NumericValueValidator(1, 10000)));
+            var contacts = context.Create(Names.Contacts, "false",
+                new LocalizableString(Names.Contacts, SampleApplicationConsts.LocalizationSourceName));
+            contacts.CreateChildFeature(Names.MaxContactCount, "100",
+                inputType: new SingleLineStringInputType(new NumericValueValidator(1, 10000)));
 
             contacts.CreateChildFeature(Names.ChildFeatureToOverride, "ChildFeature");
             contacts.RemoveChildFeature(Names.ChildFeatureToOverride);

@@ -11,14 +11,8 @@ namespace Abp.Authorization.Roles
 
         public bool Equals(Permission x, Permission y)
         {
-            if (x == null && y == null)
-            {
-                return true;
-            }
-            if (x == null || y == null)
-            {
-                return false;
-            }
+            if (x == null && y == null) return true;
+            if (x == null || y == null) return false;
 
             return Equals(x.Name, y.Name);
         }

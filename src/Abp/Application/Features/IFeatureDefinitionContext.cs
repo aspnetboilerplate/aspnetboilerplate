@@ -17,7 +17,9 @@ namespace Abp.Application.Features
         /// <param name="description">A brief description for this feature</param>
         /// <param name="scope">Feature scope</param>
         /// <param name="inputType">Input type</param>
-        Feature Create(string name, string defaultValue, ILocalizableString displayName = null, ILocalizableString description = null, FeatureScopes scope = FeatureScopes.All, IInputType inputType = null);
+        Feature Create(string name, string defaultValue, ILocalizableString displayName = null,
+            ILocalizableString description = null, FeatureScopes scope = FeatureScopes.All,
+            IInputType inputType = null);
 
         /// <summary>
         /// Gets a feature with a given name or null if it can not be found.

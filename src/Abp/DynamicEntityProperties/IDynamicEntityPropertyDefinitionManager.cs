@@ -62,7 +62,7 @@ namespace Abp.DynamicEntityProperties
         /// <summary>
         /// Returns if contains entity
         /// </summary>
-        bool ContainsEntity<TEntity>() 
+        bool ContainsEntity<TEntity>()
             where TEntity : IEntity<int>;
     }
 }

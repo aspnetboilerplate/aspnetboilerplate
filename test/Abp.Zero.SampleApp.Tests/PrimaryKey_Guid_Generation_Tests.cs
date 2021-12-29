@@ -27,7 +27,6 @@ namespace Abp.Zero.SampleApp.Tests
                 testGuidGenerator.CreateCalled.ShouldBeFalse();
                 guid.ShouldNotBe(book.Id);
             });
-
         }
 
         [Fact]
@@ -50,7 +49,6 @@ namespace Abp.Zero.SampleApp.Tests
                 testGuidGenerator.CreateCalled.ShouldBeFalse();
                 guid.ShouldNotBe(author.Id);
             });
-
         }
 
         [Fact]
@@ -73,7 +71,6 @@ namespace Abp.Zero.SampleApp.Tests
                 testGuidGenerator.CreateCalled.ShouldBeTrue();
                 guid.ShouldBe(store.Id);
             });
-
         }
 
         internal class TestGuidGenerator : IGuidGenerator

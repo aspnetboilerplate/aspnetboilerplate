@@ -21,8 +21,8 @@ namespace Abp.Authorization.Users
         private readonly IUnitOfWorkManager _unitOfWorkManager;
 
         public AbpUserPermissionCacheItemInvalidator(
-            ICacheManager cacheManager, 
-            IRepository<UserOrganizationUnit, long> userOrganizationUnitRepository, 
+            ICacheManager cacheManager,
+            IRepository<UserOrganizationUnit, long> userOrganizationUnitRepository,
             IUnitOfWorkManager unitOfWorkManager)
         {
             _cacheManager = cacheManager;

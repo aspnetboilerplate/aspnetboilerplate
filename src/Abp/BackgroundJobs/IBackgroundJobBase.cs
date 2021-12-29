@@ -6,6 +6,5 @@
     /// <typeparam name="TArgs"></typeparam>
     public interface IBackgroundJobBase<in TArgs>
     {
-        
     }
 }

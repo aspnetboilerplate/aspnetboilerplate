@@ -41,25 +41,16 @@ namespace Abp.Dapper.Expressions
 
             public override Expression Visit(Expression exp)
             {
-                if (exp == null)
-                {
-                    return null;
-                }
+                if (exp == null) return null;
 
-                if (_candidates.Contains(exp))
-                {
-                    return Evaluate(exp);
-                }
+                if (_candidates.Contains(exp)) return Evaluate(exp);
 
                 return base.Visit(exp);
             }
 
             private Expression Evaluate(Expression exp)
             {
-                if (exp.NodeType == ExpressionType.Constant)
-                {
-                    return exp;
-                }
+                if (exp.NodeType == ExpressionType.Constant) return exp;
 
                 LambdaExpression lambda = Expression.Lambda(exp);
                 Delegate del = lambda.Compile();
@@ -88,10 +79,7 @@ namespace Abp.Dapper.Expressions
 
             public override Expression Visit(Expression exp)
             {
-                if (exp == null)
-                {
-                    return null;
-                }
+                if (exp == null) return null;
 
                 bool saveCannotBeEval = _cannotBeEval;
                 _cannotBeEval = false;
@@ -101,13 +89,9 @@ namespace Abp.Dapper.Expressions
                 if (!_cannotBeEval)
                 {
                     if (_canBeEval(exp))
-                    {
                         _candidates.Add(exp);
-                    }
                     else
-                    {
                         _cannotBeEval = true;
-                    }
                 }
 
                 _cannotBeEval |= saveCannotBeEval;

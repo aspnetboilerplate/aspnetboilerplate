@@ -19,7 +19,7 @@ namespace Abp.Zero.SampleApp.NHibernate
 
         protected NHibernateTestBase()
         {
-            UsingSession(session => new InitialTestDataBuilder(session).Build());            
+            UsingSession(session => new InitialTestDataBuilder(session).Build());
         }
 
         protected override void PreInitialize()
@@ -29,12 +29,13 @@ namespace Abp.Zero.SampleApp.NHibernate
 
             LocalIocManager.IocContainer.Register(
                 Component.For<DbConnection>().Instance(_connection).LifestyleSingleton()
-                );
+            );
         }
 
         public void UsingSession(Action<ISession> action)
         {
-            using (var session = LocalIocManager.Resolve<ISessionFactory>().WithOptions().Connection(_connection).OpenSession())
+            using (var session = LocalIocManager.Resolve<ISessionFactory>().WithOptions().Connection(_connection)
+                       .OpenSession())
             {
                 using (var transaction = session.BeginTransaction())
                 {
@@ -49,7 +50,8 @@ namespace Abp.Zero.SampleApp.NHibernate
         {
             T result;
 
-            using (var session = LocalIocManager.Resolve<ISessionFactory>().WithOptions().Connection(_connection).OpenSession())
+            using (var session = LocalIocManager.Resolve<ISessionFactory>().WithOptions().Connection(_connection)
+                       .OpenSession())
             {
                 using (var transaction = session.BeginTransaction())
                 {

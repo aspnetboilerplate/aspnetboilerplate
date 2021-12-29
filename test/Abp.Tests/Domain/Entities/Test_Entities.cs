@@ -26,7 +26,8 @@ namespace Abp.Tests.Domain.Entities
 
             var d1 = new Department { Id = 5, Name = "IVR" };
 
-            Assert.False(m1.EntityEquals(d1), "Different classes must not be considered as equal even if their Ids are equal!");
+            Assert.False(m1.EntityEquals(d1),
+                "Different classes must not be considered as equal even if their Ids are equal!");
 
             var w5 = w1;
             w5.Id = 6;
@@ -50,16 +51,15 @@ namespace Abp.Tests.Domain.Entities
             var e1 = new StringEntity();
             var dic = new Dictionary<StringEntity, string>
             {
-                {e1, string.Empty}
+                { e1, string.Empty }
             };
-            
+
             var a = dic[e1];
             Assert.Equal(a, string.Empty);
         }
 
         private class StringEntity : Entity<string>
         {
-
         }
     }
 }

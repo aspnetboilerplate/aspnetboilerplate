@@ -17,7 +17,7 @@ namespace Abp.WebApi.Controllers
                     .BasedOn<ApiController>()
                     .If(type => !type.GetTypeInfo().IsGenericTypeDefinition)
                     .LifestyleTransient()
-                );
+            );
         }
     }
 }

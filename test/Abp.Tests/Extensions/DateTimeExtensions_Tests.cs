@@ -56,7 +56,6 @@ namespace Abp.Tests.Extensions
             days.ShouldNotBeNull();
 
             days.Count().ShouldBe(31);
-
         }
 
         [Fact]
@@ -82,7 +81,6 @@ namespace Abp.Tests.Extensions
             var unspecified = localTime.ToDateTimeUnspecified();
 
             unspecified.Kind.ShouldBe(DateTimeKind.Unspecified);
-
         }
 
         [Fact]

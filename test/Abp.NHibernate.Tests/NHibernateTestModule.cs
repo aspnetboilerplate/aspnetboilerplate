@@ -20,11 +20,12 @@ namespace Abp.NHibernate.Tests
                 .Mappings(m =>
                     m.FluentMappings
                         .Conventions.Add(
-                           DynamicInsert.AlwaysTrue(),
-                           DynamicUpdate.AlwaysTrue()
+                            DynamicInsert.AlwaysTrue(),
+                            DynamicUpdate.AlwaysTrue()
                         )
                         .AddFromAssembly(Assembly.GetExecutingAssembly())
-                ).ExposeConfiguration(cfg => new SchemaExport(cfg).Execute(true, true, false, IocManager.Resolve<DbConnection>(), Console.Out));
+                ).ExposeConfiguration(cfg =>
+                    new SchemaExport(cfg).Execute(true, true, false, IocManager.Resolve<DbConnection>(), Console.Out));
         }
     }
 }

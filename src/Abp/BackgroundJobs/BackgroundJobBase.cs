@@ -21,14 +21,11 @@ namespace Abp.BackgroundJobs
         {
             get
             {
-                if (_unitOfWorkManager == null)
-                {
-                    throw new AbpException("Must set UnitOfWorkManager before use it.");
-                }
+                if (_unitOfWorkManager == null) throw new AbpException("Must set UnitOfWorkManager before use it.");
 
                 return _unitOfWorkManager;
             }
-            set { _unitOfWorkManager = value; }
+            set => _unitOfWorkManager = value;
         }
 
         private IUnitOfWorkManager _unitOfWorkManager;
@@ -36,10 +33,7 @@ namespace Abp.BackgroundJobs
         /// <summary>
         /// Gets current unit of work.
         /// </summary>
-        protected IActiveUnitOfWork CurrentUnitOfWork
-        {
-            get { return UnitOfWorkManager.Current; }
-        }
+        protected IActiveUnitOfWork CurrentUnitOfWork => UnitOfWorkManager.Current;
 
         /// <summary>
         /// Reference to the localization manager.
@@ -61,15 +55,11 @@ namespace Abp.BackgroundJobs
             get
             {
                 if (LocalizationSourceName == null)
-                {
                     throw new AbpException(
                         "Must set LocalizationSourceName before, in order to get LocalizationSource");
-                }
 
                 if (_localizationSource == null || _localizationSource.Name != LocalizationSourceName)
-                {
                     _localizationSource = LocalizationManager.GetSource(LocalizationSourceName);
-                }
 
                 return _localizationSource;
             }

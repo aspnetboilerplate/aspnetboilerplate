@@ -28,18 +28,10 @@ namespace Abp.MongoDb.Repositories
     public class MongoDbRepositoryBase<TEntity, TPrimaryKey> : AbpRepositoryBase<TEntity, TPrimaryKey>
         where TEntity : class, IEntity<TPrimaryKey>
     {
-        public virtual MongoDatabase Database
-        {
-            get { return _databaseProvider.Database; }
-        }
+        public virtual MongoDatabase Database => _databaseProvider.Database;
 
-        public virtual MongoCollection<TEntity> Collection
-        {
-            get
-            {
-                return _databaseProvider.Database.GetCollection<TEntity>(typeof(TEntity).Name);
-            }
-        }
+        public virtual MongoCollection<TEntity> Collection =>
+            _databaseProvider.Database.GetCollection<TEntity>(typeof(TEntity).Name);
 
         private readonly IMongoDatabaseProvider _databaseProvider;
 
@@ -63,9 +55,8 @@ namespace Abp.MongoDb.Repositories
             var query = MongoDB.Driver.Builders.Query<TEntity>.EQ(e => e.Id, id);
             var entity = Collection.FindOne(query);
             if (entity == null)
-            {
-                throw new EntityNotFoundException("There is no such an entity with given primary key. Entity type: " + typeof(TEntity).FullName + ", primary key: " + id);
-            }
+                throw new EntityNotFoundException("There is no such an entity with given primary key. Entity type: " +
+                                                  typeof(TEntity).FullName + ", primary key: " + id);
 
             return entity;
         }
@@ -81,6 +72,7 @@ namespace Abp.MongoDb.Repositories
             Collection.Insert(entity);
             return entity;
         }
+
         public override TEntity Update(TEntity entity)
         {
             Collection.Save(entity);

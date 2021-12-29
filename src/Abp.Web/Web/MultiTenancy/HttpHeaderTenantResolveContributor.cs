@@ -23,18 +23,12 @@ namespace Abp.Web.MultiTenancy
         public int? ResolveTenantId()
         {
             var httpContext = HttpContext.Current;
-            if (httpContext == null)
-            {
-                return null;
-            }
+            if (httpContext == null) return null;
 
             var tenantIdHeader = httpContext.Request.Headers[_multiTenancyConfig.TenantIdResolveKey];
-            if (tenantIdHeader.IsNullOrEmpty())
-            {
-                return null;
-            }
+            if (tenantIdHeader.IsNullOrEmpty()) return null;
 
-            return int.TryParse(tenantIdHeader, out var tenantId) ? tenantId : (int?) null;
+            return int.TryParse(tenantIdHeader, out var tenantId) ? tenantId : (int?)null;
         }
     }
 }

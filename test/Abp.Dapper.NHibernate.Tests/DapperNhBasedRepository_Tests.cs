@@ -35,12 +35,13 @@ namespace Abp.Dapper.NHibernate.Tests
         {
             _personRepository.Insert(new Person("Oguzhan2"));
 
-            Person insertedPerson = UsingSession(session => session.Query<Person>().FirstOrDefault(p => p.Name == "Oguzhan2"));
+            Person insertedPerson =
+                UsingSession(session => session.Query<Person>().FirstOrDefault(p => p.Name == "Oguzhan2"));
             insertedPerson.ShouldNotBe(null);
             insertedPerson.IsTransient().ShouldBe(false);
             insertedPerson.Name.ShouldBe("Oguzhan2");
 
-            Person insertedPersonFromDapper = _personDapperRepository.FirstOrDefault(x => x.Name == "Oguzhan2");
+            var insertedPersonFromDapper = _personDapperRepository.FirstOrDefault(x => x.Name == "Oguzhan2");
             insertedPersonFromDapper.ShouldNotBe(null);
             insertedPersonFromDapper.IsTransient().ShouldBe(false);
             insertedPersonFromDapper.Name.ShouldBe("Oguzhan2");
@@ -49,20 +50,21 @@ namespace Abp.Dapper.NHibernate.Tests
         [Fact]
         public void Update_With_Action_Test()
         {
-            Person userBefore = UsingSession(session => session.Query<Person>().Single(p => p.Name == "Oguzhan_Initial"));
+            Person userBefore =
+                UsingSession(session => session.Query<Person>().Single(p => p.Name == "Oguzhan_Initial"));
 
-            Person updatedUser = _personRepository.Update(userBefore.Id, user => user.Name = "Oguzhan_Updated_With_NH");
+            var updatedUser = _personRepository.Update(userBefore.Id, user => user.Name = "Oguzhan_Updated_With_NH");
             updatedUser.Id.ShouldBe(userBefore.Id);
             updatedUser.Name.ShouldBe("Oguzhan_Updated_With_NH");
 
             Person userAfter = UsingSession(session => session.Get<Person>(userBefore.Id));
             userAfter.Name.ShouldBe("Oguzhan_Updated_With_NH");
 
-            Person updatedWithNh = _personDapperRepository.FirstOrDefault(x => x.Name == "Oguzhan_Updated_With_NH");
+            var updatedWithNh = _personDapperRepository.FirstOrDefault(x => x.Name == "Oguzhan_Updated_With_NH");
             updatedWithNh.Name = "Oguzhan_Updated_With_Dapper";
             _personDapperRepository.Update(updatedWithNh);
 
-            Person updatedWithDapper = _personDapperRepository.Get(updatedWithNh.Id);
+            var updatedWithDapper = _personDapperRepository.Get(updatedWithNh.Id);
             updatedWithDapper.Name.ShouldBe("Oguzhan_Updated_With_Dapper");
         }
 
@@ -96,7 +98,7 @@ namespace Abp.Dapper.NHibernate.Tests
                     triggerCount++;
                 });
 
-            Person person = _personDapperRepository.Single(p => p.Name == "Oguzhan_Initial");
+            var person = _personDapperRepository.Single(p => p.Name == "Oguzhan_Initial");
             person.Name = "Oguzhan_Updated_Event_Fire";
             _personDapperRepository.Update(person);
 
@@ -115,7 +117,7 @@ namespace Abp.Dapper.NHibernate.Tests
                     triggerCount++;
                 });
 
-            Person person = _personDapperRepository.Single(p => p.Name == "Oguzhan_Initial");
+            var person = _personDapperRepository.Single(p => p.Name == "Oguzhan_Initial");
             _personDapperRepository.Delete(person);
 
             triggerCount.ShouldBe(1);
@@ -125,11 +127,11 @@ namespace Abp.Dapper.NHibernate.Tests
         [Fact]
         public void Dapper_and_NHibernate_should_work_under_same_unitofwork()
         {
-            using (IUnitOfWorkCompleteHandle uow = Resolve<IUnitOfWorkManager>().Begin())
+            using (var uow = Resolve<IUnitOfWorkManager>().Begin())
             {
                 int personId = _personDapperRepository.InsertAndGetId(new Person("Oguzhan_Same_Uow"));
 
-                Person person = _personRepository.Get(personId);
+                var person = _personRepository.Get(personId);
 
                 person.ShouldNotBeNull();
 
@@ -138,7 +140,8 @@ namespace Abp.Dapper.NHibernate.Tests
         }
 
         [Fact]
-        public void Dapper_and_NHibernate_should_work_under_same_unitofwork_and_when_any_exception_appears_then_rollback_should__be_consistent_for_two_orm()
+        public void
+            Dapper_and_NHibernate_should_work_under_same_unitofwork_and_when_any_exception_appears_then_rollback_should__be_consistent_for_two_orm()
         {
             Resolve<IEventBus>().Register<EntityCreatingEventData<Person>>(
                 eventData =>
@@ -150,11 +153,11 @@ namespace Abp.Dapper.NHibernate.Tests
 
             try
             {
-                using (IUnitOfWorkCompleteHandle uow = Resolve<IUnitOfWorkManager>().Begin())
+                using (var uow = Resolve<IUnitOfWorkManager>().Begin())
                 {
                     int personId = _personDapperRepository.InsertAndGetId(new Person("Oguzhan_Same_Uow"));
 
-                    Person person = _personRepository.Get(personId);
+                    var person = _personRepository.Get(personId);
 
                     person.ShouldNotBeNull();
 

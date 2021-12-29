@@ -5,7 +5,7 @@ namespace Abp.Zero.Ldap.Configuration
     public interface IAbpZeroLdapModuleConfig
     {
         bool IsEnabled { get; }
-        
+
         /// <summary>
         /// Otherwise SamAccountName will be used as a username
         /// </summary>

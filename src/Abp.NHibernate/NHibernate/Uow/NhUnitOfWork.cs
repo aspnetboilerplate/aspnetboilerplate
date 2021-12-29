@@ -36,9 +36,9 @@ namespace Abp.NHibernate.Uow
             IUnitOfWorkDefaultOptions defaultOptions,
             IUnitOfWorkFilterExecuter filterExecuter)
             : base(
-                  connectionStringResolver,
-                  defaultOptions,
-                  filterExecuter)
+                connectionStringResolver,
+                defaultOptions,
+                filterExecuter)
         {
             _sessionFactory = sessionFactory;
         }
@@ -50,11 +50,9 @@ namespace Abp.NHibernate.Uow
                 : _sessionFactory.OpenSession();
 
             if (Options.IsTransactional == true)
-            {
                 _transaction = Options.IsolationLevel.HasValue
                     ? Session.BeginTransaction(Options.IsolationLevel.Value.ToSystemDataIsolationLevel())
                     : Session.BeginTransaction();
-            }
 
             CheckAndSetSoftDelete();
             CheckAndSetMayHaveTenant();
@@ -66,7 +64,8 @@ namespace Abp.NHibernate.Uow
             if (IsFilterEnabled(AbpDataFilters.SoftDelete))
             {
                 ApplyEnableFilter(AbpDataFilters.SoftDelete); //Enable Filters
-                ApplyFilterParameterValue(AbpDataFilters.SoftDelete, AbpDataFilters.Parameters.IsDeleted, false); //ApplyFilter
+                ApplyFilterParameterValue(AbpDataFilters.SoftDelete, AbpDataFilters.Parameters.IsDeleted,
+                    false); //ApplyFilter
             }
             else
             {
@@ -79,7 +78,8 @@ namespace Abp.NHibernate.Uow
             if (AbpSession.TenantId != null && IsFilterEnabled(AbpDataFilters.MustHaveTenant))
             {
                 ApplyEnableFilter(AbpDataFilters.MustHaveTenant); //Enable Filters
-                ApplyFilterParameterValue(AbpDataFilters.MustHaveTenant, AbpDataFilters.Parameters.TenantId, AbpSession.GetTenantId()); //ApplyFilter
+                ApplyFilterParameterValue(AbpDataFilters.MustHaveTenant, AbpDataFilters.Parameters.TenantId,
+                    AbpSession.GetTenantId()); //ApplyFilter
             }
             else
             {
@@ -92,7 +92,8 @@ namespace Abp.NHibernate.Uow
             if (AbpSession.TenantId != null && IsFilterEnabled(AbpDataFilters.MayHaveTenant))
             {
                 ApplyEnableFilter(AbpDataFilters.MayHaveTenant); //Enable Filters
-                ApplyFilterParameterValue(AbpDataFilters.MayHaveTenant, AbpDataFilters.Parameters.TenantId, AbpSession.TenantId); //ApplyFilter
+                ApplyFilterParameterValue(AbpDataFilters.MayHaveTenant, AbpDataFilters.Parameters.TenantId,
+                    AbpSession.TenantId); //ApplyFilter
             }
             else
             {
@@ -116,19 +117,13 @@ namespace Abp.NHibernate.Uow
         protected override void CompleteUow()
         {
             SaveChanges();
-            if (_transaction != null)
-            {
-                _transaction.Commit();
-            }
+            if (_transaction != null) _transaction.Commit();
         }
 
         protected override async Task CompleteUowAsync()
         {
             await SaveChangesAsync();
-            if (_transaction != null)
-            {
-                await _transaction.CommitAsync();
-            }
+            if (_transaction != null) await _transaction.CommitAsync();
         }
 
         /// <summary>

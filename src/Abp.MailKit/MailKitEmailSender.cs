@@ -14,12 +14,13 @@ namespace Abp.MailKit
             IEmailSenderConfiguration smtpEmailSenderConfiguration,
             IMailKitSmtpBuilder smtpBuilder)
             : base(
-                  smtpEmailSenderConfiguration)
+                smtpEmailSenderConfiguration)
         {
             _smtpBuilder = smtpBuilder;
         }
 
-        public override async Task SendAsync(string from, string to, string subject, string body, bool isBodyHtml = true)
+        public override async Task SendAsync(string from, string to, string subject, string body,
+            bool isBodyHtml = true)
         {
             using (var client = BuildSmtpClient())
             {
@@ -64,7 +65,8 @@ namespace Abp.MailKit
             return _smtpBuilder.Build();
         }
 
-        private static MimeMessage BuildMimeMessage(string from, string to, string subject, string body, bool isBodyHtml = true)
+        private static MimeMessage BuildMimeMessage(string from, string to, string subject, string body,
+            bool isBodyHtml = true)
         {
             var bodyType = isBodyHtml ? "html" : "plain";
             var message = new MimeMessage
@@ -78,7 +80,7 @@ namespace Abp.MailKit
 
             message.From.Add(MailboxAddress.Parse(from));
             message.To.Add(MailboxAddress.Parse(to));
-            
+
             return message;
         }
     }

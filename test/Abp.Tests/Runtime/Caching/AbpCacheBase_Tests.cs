@@ -57,7 +57,7 @@ namespace Abp.Tests.Runtime.Caching
             cacheValues2[1].ShouldBe(22);
         }
 
-        class MyCache1 : AbpCacheBase<string, int>
+        private class MyCache1 : AbpCacheBase<string, int>
         {
             private readonly Dictionary<string, int> _collection;
 
@@ -81,16 +81,17 @@ namespace Abp.Tests.Runtime.Caching
                 _collection.Remove(key);
             }
 
-            public override void Set(string key, int value, TimeSpan? slidingExpireTime = null, DateTimeOffset? absoluteExpireTime = null)
+            public override void Set(string key, int value, TimeSpan? slidingExpireTime = null,
+                DateTimeOffset? absoluteExpireTime = null)
             {
                 _collection.Add(key, value);
             }
         }
 
-        class MyCache2 : AbpCacheBase<string, int?>
+        private class MyCache2 : AbpCacheBase<string, int?>
         {
             private readonly Dictionary<string, int?> _collection;
-            
+
             public MyCache2(string name) : base(name)
             {
                 _collection = new Dictionary<string, int?>();
@@ -111,7 +112,8 @@ namespace Abp.Tests.Runtime.Caching
                 _collection.Remove(key);
             }
 
-            public override void Set(string key, int? value, TimeSpan? slidingExpireTime = null, DateTimeOffset? absoluteExpireTime = null)
+            public override void Set(string key, int? value, TimeSpan? slidingExpireTime = null,
+                DateTimeOffset? absoluteExpireTime = null)
             {
                 _collection.Add(key, value);
             }

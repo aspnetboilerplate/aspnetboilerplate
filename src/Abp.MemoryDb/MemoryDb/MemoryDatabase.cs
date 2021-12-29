@@ -23,10 +23,7 @@ namespace Abp.MemoryDb
 
             lock (_syncObj)
             {
-                if (!_sets.ContainsKey(entityType))
-                {
-                    _sets[entityType] = new List<TEntity>();
-                }
+                if (!_sets.ContainsKey(entityType)) _sets[entityType] = new List<TEntity>();
 
                 return _sets[entityType] as List<TEntity>;
             }

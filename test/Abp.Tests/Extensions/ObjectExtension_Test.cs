@@ -10,7 +10,7 @@ namespace Abp.Tests.Extensions
         public enum TestEnum
         {
             ABC = 0,
-            BDE = 1,
+            BDE = 1
         }
 
         [Fact]
@@ -34,12 +34,13 @@ namespace Abp.Tests.Extensions
 
             "2.0".To<double>().ShouldBe(2.0);
             "0.2".To<double>().ShouldBe(0.2);
-            (2.0).To<int>().ShouldBe(2);
+            2.0.To<int>().ShouldBe(2);
 
             "false".To<bool>().ShouldBeOfType<bool>().ShouldBe(false);
             "True".To<bool>().ShouldBeOfType<bool>().ShouldBe(true);
 
-            "2260afec-bbfd-42d4-a91a-dcb11e09b17f".To<Guid>().ShouldBeOfType<Guid>().ShouldBe(new Guid("2260afec-bbfd-42d4-a91a-dcb11e09b17f"));
+            "2260afec-bbfd-42d4-a91a-dcb11e09b17f".To<Guid>().ShouldBeOfType<Guid>()
+                .ShouldBe(new Guid("2260afec-bbfd-42d4-a91a-dcb11e09b17f"));
 
             "ABC".To<TestEnum>().ShouldBe(TestEnum.ABC);
             "BDE".To<TestEnum>().ShouldBe(TestEnum.BDE);

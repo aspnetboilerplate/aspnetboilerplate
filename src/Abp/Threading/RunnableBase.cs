@@ -10,7 +10,7 @@ namespace Abp.Threading
         /// <summary>
         /// A boolean value to control the running.
         /// </summary>
-        public bool IsRunning { get { return _isRunning; } }
+        public bool IsRunning => _isRunning;
 
         private volatile bool _isRunning;
 
@@ -23,11 +23,10 @@ namespace Abp.Threading
         {
             _isRunning = false;
         }
-        
+
 
         public virtual void WaitToStop()
         {
-
         }
     }
 }

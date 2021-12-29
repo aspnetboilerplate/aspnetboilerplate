@@ -52,17 +52,15 @@ namespace Abp.Castle.Logging.Log4Net
 
         public override ILogger Create(string name)
         {
-            if (name == null)
-            {
-                throw new ArgumentNullException(nameof(name));
-            }
+            if (name == null) throw new ArgumentNullException(nameof(name));
 
             return new Log4NetLogger(LogManager.GetLogger(_loggerRepository.Name, name), this);
         }
 
         public override ILogger Create(string name, LoggerLevel level)
         {
-            throw new NotSupportedException("Logger levels cannot be set at runtime. Please review your configuration file.");
+            throw new NotSupportedException(
+                "Logger levels cannot be set at runtime. Please review your configuration file.");
         }
     }
 }

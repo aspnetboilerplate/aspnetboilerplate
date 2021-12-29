@@ -37,7 +37,8 @@ namespace Abp.Auditing
                 return;
             }
 
-            var auditInfo = _auditingHelper.CreateAuditInfo(invocation.TargetType, invocation.MethodInvocationTarget, invocation.Arguments);
+            var auditInfo = _auditingHelper.CreateAuditInfo(invocation.TargetType, invocation.MethodInvocationTarget,
+                invocation.Arguments);
 
             var stopwatch = Stopwatch.StartNew();
 
@@ -56,9 +57,7 @@ namespace Abp.Auditing
                 auditInfo.ExecutionDuration = Convert.ToInt32(stopwatch.Elapsed.TotalMilliseconds);
 
                 if (_auditingConfiguration.SaveReturnValues && invocation.ReturnValue != null)
-                {
                     auditInfo.ReturnValue = _auditSerializer.Serialize(invocation.ReturnValue);
-                }
 
                 _auditingHelper.Save(auditInfo);
             }
@@ -84,7 +83,8 @@ namespace Abp.Auditing
                 return;
             }
 
-            var auditInfo = _auditingHelper.CreateAuditInfo(invocation.TargetType, invocation.MethodInvocationTarget, invocation.Arguments);
+            var auditInfo = _auditingHelper.CreateAuditInfo(invocation.TargetType, invocation.MethodInvocationTarget,
+                invocation.Arguments);
 
             var stopwatch = Stopwatch.StartNew();
 
@@ -126,7 +126,8 @@ namespace Abp.Auditing
                 return await taskResult;
             }
 
-            var auditInfo = _auditingHelper.CreateAuditInfo(invocation.TargetType, invocation.MethodInvocationTarget, invocation.Arguments);
+            var auditInfo = _auditingHelper.CreateAuditInfo(invocation.TargetType, invocation.MethodInvocationTarget,
+                invocation.Arguments);
 
             var stopwatch = Stopwatch.StartNew();
             TResult result;
@@ -138,9 +139,7 @@ namespace Abp.Auditing
                 result = await taskResult;
 
                 if (_auditingConfiguration.SaveReturnValues && result != null)
-                {
                     auditInfo.ReturnValue = _auditSerializer.Serialize(result);
-                }
             }
             catch (Exception ex)
             {

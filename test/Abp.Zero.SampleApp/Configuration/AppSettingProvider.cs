@@ -8,10 +8,10 @@ namespace Abp.Zero.SampleApp.Configuration
         public override IEnumerable<SettingDefinition> GetSettingDefinitions(SettingDefinitionProviderContext context)
         {
             return new List<SettingDefinition>
-                   {
-                       new SettingDefinition("Setting1", "1"),
-                       new SettingDefinition("Setting2", "A")
-                   };
+            {
+                new SettingDefinition("Setting1", "1"),
+                new SettingDefinition("Setting2", "A")
+            };
         }
     }
 }

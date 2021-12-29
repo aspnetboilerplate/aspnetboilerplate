@@ -47,7 +47,8 @@ namespace Abp.Web.Common.Tests.Configuration
             {
                 {
                     "EntityHistory",
-                    new {
+                    new
+                    {
                         IsEnabled = true
                     }
                 }

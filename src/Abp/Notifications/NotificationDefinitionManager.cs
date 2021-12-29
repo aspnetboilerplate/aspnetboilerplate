@@ -33,20 +33,18 @@ namespace Abp.Notifications
             var context = new NotificationDefinitionContext(this);
 
             foreach (var providerType in _configuration.Providers)
-            {
                 using (var provider = _iocManager.ResolveAsDisposable<NotificationProvider>(providerType))
                 {
                     provider.Object.SetNotifications(context);
                 }
-            }
         }
 
         public void Add(NotificationDefinition notificationDefinition)
         {
             if (_notificationDefinitions.ContainsKey(notificationDefinition.Name))
-            {
-                throw new AbpInitializationException("There is already a notification definition with given name: " + notificationDefinition.Name + ". Notification names must be unique!");
-            }
+                throw new AbpInitializationException("There is already a notification definition with given name: " +
+                                                     notificationDefinition.Name +
+                                                     ". Notification names must be unique!");
 
             _notificationDefinitions[notificationDefinition.Name] = notificationDefinition;
         }
@@ -55,9 +53,7 @@ namespace Abp.Notifications
         {
             var definition = GetOrNull(name);
             if (definition == null)
-            {
                 throw new AbpException("There is no notification definition with given name: " + name);
-            }
 
             return definition;
         }
@@ -80,36 +76,25 @@ namespace Abp.Notifications
         public async Task<bool> IsAvailableAsync(string name, UserIdentifier user)
         {
             var notificationDefinition = GetOrNull(name);
-            if (notificationDefinition == null)
-            {
-                return true;
-            }
+            if (notificationDefinition == null) return true;
 
             if (notificationDefinition.FeatureDependency != null)
-            {
                 using (var featureDependencyContext = _iocManager.ResolveAsDisposable<FeatureDependencyContext>())
                 {
                     featureDependencyContext.Object.TenantId = user.TenantId;
 
-                    if (!await notificationDefinition.FeatureDependency.IsSatisfiedAsync(featureDependencyContext.Object))
-                    {
-                        return false;
-                    }
+                    if (!await notificationDefinition.FeatureDependency.IsSatisfiedAsync(
+                            featureDependencyContext.Object)) return false;
                 }
-            }
 
             if (notificationDefinition.PermissionDependency != null)
-            {
                 using (var permissionDependencyContext = _iocManager.ResolveAsDisposable<PermissionDependencyContext>())
                 {
                     permissionDependencyContext.Object.User = user;
 
-                    if (!await notificationDefinition.PermissionDependency.IsSatisfiedAsync(permissionDependencyContext.Object))
-                    {
-                        return false;
-                    }
+                    if (!await notificationDefinition.PermissionDependency.IsSatisfiedAsync(permissionDependencyContext
+                            .Object)) return false;
                 }
-            }
 
             return true;
         }
@@ -117,36 +102,25 @@ namespace Abp.Notifications
         public bool IsAvailable(string name, UserIdentifier user)
         {
             var notificationDefinition = GetOrNull(name);
-            if (notificationDefinition == null)
-            {
-                return true;
-            }
+            if (notificationDefinition == null) return true;
 
             if (notificationDefinition.FeatureDependency != null)
-            {
                 using (var featureDependencyContext = _iocManager.ResolveAsDisposable<FeatureDependencyContext>())
                 {
                     featureDependencyContext.Object.TenantId = user.TenantId;
 
-                    if (! notificationDefinition.FeatureDependency.IsSatisfied(featureDependencyContext.Object))
-                    {
+                    if (!notificationDefinition.FeatureDependency.IsSatisfied(featureDependencyContext.Object))
                         return false;
-                    }
                 }
-            }
 
             if (notificationDefinition.PermissionDependency != null)
-            {
                 using (var permissionDependencyContext = _iocManager.ResolveAsDisposable<PermissionDependencyContext>())
                 {
                     permissionDependencyContext.Object.User = user;
 
-                    if (! notificationDefinition.PermissionDependency.IsSatisfied(permissionDependencyContext.Object))
-                    {
+                    if (!notificationDefinition.PermissionDependency.IsSatisfied(permissionDependencyContext.Object))
                         return false;
-                    }
                 }
-            }
 
             return true;
         }
@@ -166,17 +140,15 @@ namespace Abp.Notifications
                     foreach (var notificationDefinition in GetAll())
                     {
                         if (notificationDefinition.PermissionDependency != null &&
-                            !await notificationDefinition.PermissionDependency.IsSatisfiedAsync(permissionDependencyContext.Object))
-                        {
+                            !await notificationDefinition.PermissionDependency.IsSatisfiedAsync(
+                                permissionDependencyContext.Object))
                             continue;
-                        }
 
                         if (user.TenantId.HasValue &&
                             notificationDefinition.FeatureDependency != null &&
-                            !await notificationDefinition.FeatureDependency.IsSatisfiedAsync(featureDependencyContext.Object))
-                        {
+                            !await notificationDefinition.FeatureDependency.IsSatisfiedAsync(featureDependencyContext
+                                .Object))
                             continue;
-                        }
 
                         availableDefinitions.Add(notificationDefinition);
                     }
@@ -201,17 +173,14 @@ namespace Abp.Notifications
                     foreach (var notificationDefinition in GetAll())
                     {
                         if (notificationDefinition.PermissionDependency != null &&
-                            ! notificationDefinition.PermissionDependency.IsSatisfied(permissionDependencyContext.Object))
-                        {
+                            !notificationDefinition.PermissionDependency.IsSatisfied(permissionDependencyContext
+                                .Object))
                             continue;
-                        }
 
                         if (user.TenantId.HasValue &&
                             notificationDefinition.FeatureDependency != null &&
-                            ! notificationDefinition.FeatureDependency.IsSatisfied(featureDependencyContext.Object))
-                        {
+                            !notificationDefinition.FeatureDependency.IsSatisfied(featureDependencyContext.Object))
                             continue;
-                        }
 
                         availableDefinitions.Add(notificationDefinition);
                     }

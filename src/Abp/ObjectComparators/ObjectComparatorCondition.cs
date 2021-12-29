@@ -13,8 +13,8 @@ namespace Abp.ObjectComparators
         public TValueType GetValue()
         {
             return JsonValue.IsNullOrWhiteSpace()
-                    ? default
-                    : JsonValue.FromJsonString<TValueType>();
+                ? default
+                : JsonValue.FromJsonString<TValueType>();
         }
 
         public void SetValue(TValueType value)

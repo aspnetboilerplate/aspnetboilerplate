@@ -17,7 +17,8 @@ namespace Abp.Quartz
         /// <param name="configureJob">Job specific definitions to build.</param>
         /// <param name="configureTrigger">Job specific trigger options which means calendar or time interval.</param>
         /// <returns></returns>
-        Task ScheduleAsync<TJob>(Action<JobBuilder> configureJob, Action<TriggerBuilder> configureTrigger) where TJob : IJob;
+        Task ScheduleAsync<TJob>(Action<JobBuilder> configureJob, Action<TriggerBuilder> configureTrigger)
+            where TJob : IJob;
 
         /// <summary>
         /// Reschedules a job.

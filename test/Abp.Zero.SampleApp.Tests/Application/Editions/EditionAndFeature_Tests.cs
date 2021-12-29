@@ -64,10 +64,14 @@ namespace Abp.Zero.SampleApp.Tests.Application.Editions
             AbpSession.TenantId = defaultTenant.Id;
 
             //No value initially
-            (await _editionManager.GetFeatureValueOrNullAsync(standardEdition.Id, AppFeatureProvider.MyBoolFeature)).ShouldBeNull();
-            (await _editionManager.GetFeatureValueOrNullAsync(standardEdition.Id, AppFeatureProvider.MyNumericFeature)).ShouldBeNull();
-            (await _tenantManager.GetFeatureValueOrNullAsync(defaultTenant.Id, AppFeatureProvider.MyBoolFeature)).ShouldBeNull();
-            (await _tenantManager.GetFeatureValueOrNullAsync(defaultTenant.Id, AppFeatureProvider.MyNumericFeature)).ShouldBeNull();
+            (await _editionManager.GetFeatureValueOrNullAsync(standardEdition.Id, AppFeatureProvider.MyBoolFeature))
+                .ShouldBeNull();
+            (await _editionManager.GetFeatureValueOrNullAsync(standardEdition.Id, AppFeatureProvider.MyNumericFeature))
+                .ShouldBeNull();
+            (await _tenantManager.GetFeatureValueOrNullAsync(defaultTenant.Id, AppFeatureProvider.MyBoolFeature))
+                .ShouldBeNull();
+            (await _tenantManager.GetFeatureValueOrNullAsync(defaultTenant.Id, AppFeatureProvider.MyNumericFeature))
+                .ShouldBeNull();
 
             //Should get default values
             (await _featureChecker.IsEnabledAsync(AppFeatureProvider.MyBoolFeature)).ShouldBeFalse();
@@ -78,8 +82,10 @@ namespace Abp.Zero.SampleApp.Tests.Application.Editions
             await _editionManager.SetFeatureValueAsync(standardEdition.Id, AppFeatureProvider.MyNumericFeature, "43");
 
             //Should get new values for edition
-            (await _editionManager.GetFeatureValueOrNullAsync(standardEdition.Id, AppFeatureProvider.MyNumericFeature)).ShouldBe("43");
-            (await _editionManager.GetFeatureValueOrNullAsync(standardEdition.Id, AppFeatureProvider.MyBoolFeature)).ShouldBe("true");
+            (await _editionManager.GetFeatureValueOrNullAsync(standardEdition.Id, AppFeatureProvider.MyNumericFeature))
+                .ShouldBe("43");
+            (await _editionManager.GetFeatureValueOrNullAsync(standardEdition.Id, AppFeatureProvider.MyBoolFeature))
+                .ShouldBe("true");
 
             //Should get edition values for tenant
             (await _featureChecker.GetValueAsync(AppFeatureProvider.MyNumericFeature)).ShouldBe("43");
@@ -121,7 +127,10 @@ namespace Abp.Zero.SampleApp.Tests.Application.Editions
 
         private async Task<Edition> CreateEditionAsync(string name)
         {
-            UsingDbContext(context => { context.Editions.Add(new Edition { Name = name, DisplayName = name + " Edition" }); });
+            UsingDbContext(context =>
+            {
+                context.Editions.Add(new Edition { Name = name, DisplayName = name + " Edition" });
+            });
 
             var standardEdition = await _editionManager.FindByNameAsync("Standard");
             standardEdition.ShouldNotBeNull();

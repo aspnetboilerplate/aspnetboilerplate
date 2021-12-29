@@ -30,7 +30,6 @@ namespace Abp.Application.Features
         /// </summary>
         public EditionFeatureSetting()
         {
-            
         }
 
         /// <summary>
@@ -40,7 +39,7 @@ namespace Abp.Application.Features
         /// <param name="name">Feature name.</param>
         /// <param name="value">Feature value.</param>
         public EditionFeatureSetting(int editionId, string name, string value)
-            :base(name, value)
+            : base(name, value)
         {
             EditionId = editionId;
         }

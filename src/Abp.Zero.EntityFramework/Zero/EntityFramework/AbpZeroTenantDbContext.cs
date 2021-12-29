@@ -18,7 +18,6 @@ namespace Abp.Zero.EntityFramework
         /// </summary>
         protected AbpZeroTenantDbContext()
         {
-
         }
 
         /// <summary>
@@ -28,13 +27,11 @@ namespace Abp.Zero.EntityFramework
         protected AbpZeroTenantDbContext(string nameOrConnectionString)
             : base(nameOrConnectionString)
         {
-
         }
 
         protected AbpZeroTenantDbContext(DbCompiledModel model)
             : base(model)
         {
-
         }
 
         /// <summary>
@@ -43,7 +40,6 @@ namespace Abp.Zero.EntityFramework
         protected AbpZeroTenantDbContext(DbConnection existingConnection, bool contextOwnsConnection)
             : base(existingConnection, contextOwnsConnection)
         {
-
         }
 
         protected AbpZeroTenantDbContext(string nameOrConnectionString, DbCompiledModel model)
@@ -56,7 +52,8 @@ namespace Abp.Zero.EntityFramework
         {
         }
 
-        protected AbpZeroTenantDbContext(DbConnection existingConnection, DbCompiledModel model, bool contextOwnsConnection)
+        protected AbpZeroTenantDbContext(DbConnection existingConnection, DbCompiledModel model,
+            bool contextOwnsConnection)
             : base(existingConnection, model, contextOwnsConnection)
         {
         }

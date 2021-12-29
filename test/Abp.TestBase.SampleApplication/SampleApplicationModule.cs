@@ -27,7 +27,8 @@ namespace Abp.TestBase.SampleApplication
                 new DictionaryBasedLocalizationSource(
                     SampleApplicationConsts.LocalizationSourceName,
                     new XmlEmbeddedFileLocalizationDictionaryProvider(
-                        typeof(SampleApplicationModule).GetAssembly(), "Abp.TestBase.SampleApplication.Localization.Sources"
+                        typeof(SampleApplicationModule).GetAssembly(),
+                        "Abp.TestBase.SampleApplication.Localization.Sources"
                     )));
         }
 

@@ -29,12 +29,11 @@ namespace Abp.EntityFramework.Uow
         public void Commit()
         {
             foreach (var activeTransaction in ActiveTransactions.Values)
-            {
                 activeTransaction.DbContextTransaction.Commit();
-            }
         }
 
-        public DbContext CreateDbContext<TDbContext>(string connectionString, IDbContextResolver dbContextResolver) where TDbContext : DbContext
+        public DbContext CreateDbContext<TDbContext>(string connectionString, IDbContextResolver dbContextResolver)
+            where TDbContext : DbContext
         {
             DbContext dbContext;
 
@@ -42,13 +41,15 @@ namespace Abp.EntityFramework.Uow
             if (activeTransaction == null)
             {
                 dbContext = dbContextResolver.Resolve<TDbContext>(connectionString);
-                var dbTransaction = dbContext.Database.BeginTransaction((Options.IsolationLevel ?? IsolationLevel.ReadUncommitted).ToSystemDataIsolationLevel());
+                var dbTransaction = dbContext.Database.BeginTransaction(
+                    (Options.IsolationLevel ?? IsolationLevel.ReadUncommitted).ToSystemDataIsolationLevel());
                 activeTransaction = new ActiveTransactionInfo(dbTransaction, dbContext);
                 ActiveTransactions[connectionString] = activeTransaction;
             }
             else
             {
-                dbContext = dbContextResolver.Resolve<TDbContext>(activeTransaction.DbContextTransaction.UnderlyingTransaction.Connection, false);
+                dbContext = dbContextResolver.Resolve<TDbContext>(
+                    activeTransaction.DbContextTransaction.UnderlyingTransaction.Connection, false);
                 dbContext.Database.UseTransaction(activeTransaction.DbContextTransaction.UnderlyingTransaction);
                 activeTransaction.AttendedDbContexts.Add(dbContext);
             }
@@ -61,9 +62,7 @@ namespace Abp.EntityFramework.Uow
             foreach (var activeTransaction in ActiveTransactions.Values)
             {
                 foreach (var attendedDbContext in activeTransaction.AttendedDbContexts)
-                {
                     iocResolver.Release(attendedDbContext);
-                }
 
                 activeTransaction.DbContextTransaction.Dispose();
                 iocResolver.Release(activeTransaction.StarterDbContext);
@@ -72,7 +71,8 @@ namespace Abp.EntityFramework.Uow
             ActiveTransactions.Clear();
         }
 
-        public Task<DbContext> CreateDbContextAsync<TDbContext>(string connectionString, IDbContextResolver dbContextResolver) where TDbContext : DbContext
+        public Task<DbContext> CreateDbContextAsync<TDbContext>(string connectionString,
+            IDbContextResolver dbContextResolver) where TDbContext : DbContext
         {
             DbContext dbContext;
 
@@ -80,13 +80,15 @@ namespace Abp.EntityFramework.Uow
             if (activeTransaction == null)
             {
                 dbContext = dbContextResolver.Resolve<TDbContext>(connectionString);
-                var dbTransaction = dbContext.Database.BeginTransaction((Options.IsolationLevel ?? IsolationLevel.ReadUncommitted).ToSystemDataIsolationLevel());
+                var dbTransaction = dbContext.Database.BeginTransaction(
+                    (Options.IsolationLevel ?? IsolationLevel.ReadUncommitted).ToSystemDataIsolationLevel());
                 activeTransaction = new ActiveTransactionInfo(dbTransaction, dbContext);
                 ActiveTransactions[connectionString] = activeTransaction;
             }
             else
             {
-                dbContext = dbContextResolver.Resolve<TDbContext>(activeTransaction.DbContextTransaction.UnderlyingTransaction.Connection, false);
+                dbContext = dbContextResolver.Resolve<TDbContext>(
+                    activeTransaction.DbContextTransaction.UnderlyingTransaction.Connection, false);
                 dbContext.Database.UseTransaction(activeTransaction.DbContextTransaction.UnderlyingTransaction);
                 activeTransaction.AttendedDbContexts.Add(dbContext);
             }

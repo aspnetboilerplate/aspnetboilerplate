@@ -25,7 +25,8 @@ namespace Abp.Tests.Notifications
         [Fact]
         public void Should_Deserialize_And_Serialize_LocalizableMessageNotificationData()
         {
-            var serialized = new LocalizableMessageNotificationData(new LocalizableString("Hello", "MySource")).ToJsonString();
+            var serialized = new LocalizableMessageNotificationData(new LocalizableString("Hello", "MySource"))
+                .ToJsonString();
 
             var data = JsonConvert
                 .DeserializeObject(
@@ -42,7 +43,8 @@ namespace Abp.Tests.Notifications
         [Fact]
         public void MessageNotificationData_Backward_Compatibility_Test()
         {
-            const string serialized = "{\"Message\":\"a test message\",\"Type\":\"Abp.Notifications.MessageNotificationData\",\"Properties\":{}}";
+            const string serialized =
+                "{\"Message\":\"a test message\",\"Type\":\"Abp.Notifications.MessageNotificationData\",\"Properties\":{}}";
 
             var data = JsonConvert
                 .DeserializeObject(

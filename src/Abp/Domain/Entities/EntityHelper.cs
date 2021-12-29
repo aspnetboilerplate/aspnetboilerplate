@@ -26,22 +26,18 @@ namespace Abp.Domain.Entities
         public static Type GetPrimaryKeyType(Type entityType)
         {
             foreach (var interfaceType in entityType.GetTypeInfo().GetInterfaces())
-            {
-                if (interfaceType.GetTypeInfo().IsGenericType && interfaceType.GetGenericTypeDefinition() == typeof(IEntity<>))
-                {
+                if (interfaceType.GetTypeInfo().IsGenericType &&
+                    interfaceType.GetGenericTypeDefinition() == typeof(IEntity<>))
                     return interfaceType.GenericTypeArguments[0];
-                }
-            }
 
-            throw new AbpException("Can not find primary key type of given entity type: " + entityType + ". Be sure that this entity type implements IEntity<TPrimaryKey> interface");
+            throw new AbpException("Can not find primary key type of given entity type: " + entityType +
+                                   ". Be sure that this entity type implements IEntity<TPrimaryKey> interface");
         }
 
         public static object GetEntityId(object entity)
         {
             if (!ReflectionHelper.IsAssignableToGenericType(entity.GetType(), typeof(IEntity<>)))
-            {
                 throw new AbpException(entity.GetType() + " is not an Entity !");
-            }
 
             return ReflectionHelper.GetValueByPath(entity, entity.GetType(), "Id");
         }

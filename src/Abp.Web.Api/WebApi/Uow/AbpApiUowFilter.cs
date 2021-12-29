@@ -21,7 +21,7 @@ namespace Abp.WebApi.Uow
 
         public AbpApiUowFilter(
             IUnitOfWorkManager unitOfWorkManager,
-            IAbpWebApiConfiguration webApiConfiguration, 
+            IAbpWebApiConfiguration webApiConfiguration,
             IUnitOfWorkDefaultOptions unitOfWorkDefaultOptions)
         {
             _unitOfWorkManager = unitOfWorkManager;
@@ -29,26 +29,18 @@ namespace Abp.WebApi.Uow
             _unitOfWorkDefaultOptions = unitOfWorkDefaultOptions;
         }
 
-        public async Task<HttpResponseMessage> ExecuteActionFilterAsync(HttpActionContext actionContext, CancellationToken cancellationToken, Func<Task<HttpResponseMessage>> continuation)
+        public async Task<HttpResponseMessage> ExecuteActionFilterAsync(HttpActionContext actionContext,
+            CancellationToken cancellationToken, Func<Task<HttpResponseMessage>> continuation)
         {
             var methodInfo = actionContext.ActionDescriptor.GetMethodInfoOrNull();
-            if (methodInfo == null)
-            {
-                return await continuation();
-            }
+            if (methodInfo == null) return await continuation();
 
-            if (actionContext.ActionDescriptor.IsDynamicAbpAction())
-            {
-                return await continuation();
-            }
+            if (actionContext.ActionDescriptor.IsDynamicAbpAction()) return await continuation();
 
             var unitOfWorkAttr = _unitOfWorkDefaultOptions.GetUnitOfWorkAttributeOrNull(methodInfo) ??
                                  _webApiConfiguration.DefaultUnitOfWorkAttribute;
 
-            if (unitOfWorkAttr.IsDisabled)
-            {
-                return await continuation();
-            }
+            if (unitOfWorkAttr.IsDisabled) return await continuation();
 
             using (var uow = _unitOfWorkManager.Begin(unitOfWorkAttr.CreateOptions()))
             {

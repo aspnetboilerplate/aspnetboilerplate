@@ -20,7 +20,7 @@ namespace Abp.DynamicEntityProperties
         public DynamicEntityPropertyDefinitionManager(
             IDynamicEntityPropertyConfiguration dynamicEntityPropertiesConfiguration,
             IocManager iocManager
-            )
+        )
         {
             _dynamicEntityPropertiesConfiguration = dynamicEntityPropertiesConfiguration;
             _iocManager = iocManager;
@@ -35,12 +35,11 @@ namespace Abp.DynamicEntityProperties
             context.Manager = this;
 
             foreach (var providerType in _dynamicEntityPropertiesConfiguration.Providers)
-            {
-                using (var provider = _iocManager.ResolveAsDisposable<DynamicEntityPropertyDefinitionProvider>(providerType))
+                using (var provider =
+                       _iocManager.ResolveAsDisposable<DynamicEntityPropertyDefinitionProvider>(providerType))
                 {
                     provider.Object.SetDynamicEntityProperties(context);
                 }
-            }
         }
 
         public void AddAllowedInputType<TInputType>() where TInputType : IInputType
@@ -48,14 +47,11 @@ namespace Abp.DynamicEntityProperties
             var inputTypeName = InputTypeBase.GetName<TInputType>();
 
             if (inputTypeName.IsNullOrWhiteSpace())
-            {
                 throw new ArgumentNullException(typeof(TInputType).FullName + "/" + nameof(inputTypeName));
-            }
 
             if (_allowedInputTypes.ContainsKey(inputTypeName))
-            {
-                throw new Exception($"Input types must be unique.There is already an input type named \"{inputTypeName}\"");
-            }
+                throw new Exception(
+                    $"Input types must be unique.There is already an input type named \"{inputTypeName}\"");
 
             _allowedInputTypes.Add(inputTypeName, typeof(TInputType));
         }
@@ -74,7 +70,8 @@ namespace Abp.DynamicEntityProperties
 
         public List<IInputType> GetAllAllowedInputTypes()
         {
-            return _allowedInputTypes.Select(inputType => (IInputType)Activator.CreateInstance(inputType.Value)).ToList();
+            return _allowedInputTypes.Select(inputType => (IInputType)Activator.CreateInstance(inputType.Value))
+                .ToList();
         }
 
         public bool ContainsInputType(string name)
@@ -91,9 +88,7 @@ namespace Abp.DynamicEntityProperties
         {
             string entityName = typeof(TEntity).FullName;
             if (_entities.Contains(entityName))
-            {
                 throw new ApplicationException($"Entity already registered {entityName}");
-            }
 
             _entities.Add(entityName);
         }

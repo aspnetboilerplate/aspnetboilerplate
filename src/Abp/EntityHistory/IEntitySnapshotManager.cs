@@ -19,7 +19,7 @@ namespace Abp.EntityHistory
         /// <typeparam name="TPrimaryKey">typeof primary key</typeparam>
         /// <param name="id">entity id</param>
         /// <param name="snapshotTime"></param>
-        Task<EntityHistorySnapshot> GetSnapshotAsync<TEntity, TPrimaryKey>(TPrimaryKey id, DateTime snapshotTime) 
+        Task<EntityHistorySnapshot> GetSnapshotAsync<TEntity, TPrimaryKey>(TPrimaryKey id, DateTime snapshotTime)
             where TEntity : class, IEntity<TPrimaryKey>;
     }
 }

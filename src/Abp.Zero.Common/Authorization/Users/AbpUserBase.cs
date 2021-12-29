@@ -123,7 +123,7 @@ namespace Abp.Authorization.Users
         /// Return full name (Name Surname )
         /// </summary>
         [NotMapped]
-        public virtual string FullName { get { return this.Name + " " + this.Surname; } }
+        public virtual string FullName => Name + " " + Surname;
 
         /// <summary>
         /// Password of the user.
@@ -223,7 +223,7 @@ namespace Abp.Authorization.Users
         /// If as user is not active, he/she can not use the application.
         /// </summary>
         public virtual bool IsActive { get; set; }
-        
+
         protected AbpUserBase()
         {
             IsActive = true;

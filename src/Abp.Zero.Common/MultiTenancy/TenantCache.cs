@@ -31,10 +31,7 @@ namespace Abp.MultiTenancy
         {
             var cacheItem = GetOrNull(tenantId);
 
-            if (cacheItem == null)
-            {
-                throw new AbpException("There is no tenant with given id: " + tenantId);
-            }
+            if (cacheItem == null) throw new AbpException("There is no tenant with given id: " + tenantId);
 
             return cacheItem;
         }
@@ -43,10 +40,7 @@ namespace Abp.MultiTenancy
         {
             var cacheItem = GetOrNull(tenancyName);
 
-            if (cacheItem == null)
-            {
-                throw new AbpException("There is no tenant with given tenancy name: " + tenancyName);
-            }
+            if (cacheItem == null) throw new AbpException("There is no tenant with given tenancy name: " + tenancyName);
 
             return cacheItem;
         }
@@ -60,10 +54,7 @@ namespace Abp.MultiTenancy
                     () => GetTenantOrNull(tenancyName)?.Id
                 );
 
-            if (tenantId == null)
-            {
-                return null;
-            }
+            if (tenantId == null) return null;
 
             return Get(tenantId.Value);
         }
@@ -77,10 +68,7 @@ namespace Abp.MultiTenancy
                     () =>
                     {
                         var tenant = GetTenantOrNull(tenantId);
-                        if (tenant == null)
-                        {
-                            return null;
-                        }
+                        if (tenant == null) return null;
 
                         return CreateTenantCacheItem(tenant);
                     }
@@ -91,10 +79,7 @@ namespace Abp.MultiTenancy
         {
             var cacheItem = await GetOrNullAsync(tenantId);
 
-            if (cacheItem == null)
-            {
-                throw new AbpException("There is no tenant with given id: " + tenantId);
-            }
+            if (cacheItem == null) throw new AbpException("There is no tenant with given id: " + tenantId);
 
             return cacheItem;
         }
@@ -103,10 +88,7 @@ namespace Abp.MultiTenancy
         {
             var cacheItem = await GetOrNullAsync(tenancyName);
 
-            if (cacheItem == null)
-            {
-                throw new AbpException("There is no tenant with given tenancy name: " + tenancyName);
-            }
+            if (cacheItem == null) throw new AbpException("There is no tenant with given tenancy name: " + tenancyName);
 
             return cacheItem;
         }
@@ -119,10 +101,7 @@ namespace Abp.MultiTenancy
                     tenancyName.ToLowerInvariant(), async key => (await GetTenantOrNullAsync(tenancyName))?.Id
                 );
 
-            if (tenantId == null)
-            {
-                return null;
-            }
+            if (tenantId == null) return null;
 
             return await GetAsync(tenantId.Value);
         }
@@ -135,10 +114,7 @@ namespace Abp.MultiTenancy
                     tenantId, async key =>
                     {
                         var tenant = await GetTenantOrNullAsync(tenantId);
-                        if (tenant == null)
-                        {
-                            return null;
-                        }
+                        if (tenant == null) return null;
 
                         return CreateTenantCacheItem(tenant);
                     }

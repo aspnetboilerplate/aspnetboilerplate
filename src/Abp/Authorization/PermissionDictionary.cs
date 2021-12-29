@@ -13,10 +13,7 @@ namespace Abp.Authorization
         /// </summary>
         public virtual void AddAllPermissions()
         {
-            foreach (var permission in Values.ToList())
-            {
-                AddPermissionRecursively(permission);
-            }
+            foreach (var permission in Values.ToList()) AddPermissionRecursively(permission);
         }
 
         /// <summary>
@@ -30,9 +27,7 @@ namespace Abp.Authorization
             if (TryGetValue(permission.Name, out existingPermission))
             {
                 if (existingPermission != permission)
-                {
                     throw new AbpInitializationException("Duplicate permission name detected for " + permission.Name);
-                }
             }
             else
             {
@@ -40,10 +35,7 @@ namespace Abp.Authorization
             }
 
             //Add child permissions (recursive call)
-            foreach (var childPermission in permission.Children)
-            {
-                AddPermissionRecursively(childPermission);
-            }
+            foreach (var childPermission in permission.Children) AddPermissionRecursively(childPermission);
         }
     }
 }

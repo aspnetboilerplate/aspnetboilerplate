@@ -23,13 +23,9 @@ namespace Abp.Auditing
         public Task SaveAsync(AuditInfo auditInfo)
         {
             if (auditInfo.Exception == null)
-            {
                 Logger.Info(auditInfo.ToString());
-            }
             else
-            {
                 Logger.Warn(auditInfo.ToString());
-            }
 
             return Task.FromResult(0);
         }
@@ -37,13 +33,9 @@ namespace Abp.Auditing
         public void Save(AuditInfo auditInfo)
         {
             if (auditInfo.Exception == null)
-            {
                 Logger.Info(auditInfo.ToString());
-            }
             else
-            {
                 Logger.Warn(auditInfo.ToString());
-            }
         }
     }
 }

@@ -18,9 +18,7 @@ namespace Abp.Web.Api.Modeling
         public ModuleApiDescriptionModel AddModule(ModuleApiDescriptionModel module)
         {
             if (Modules.ContainsKey(module.Name))
-            {
                 throw new AbpException("There is already a module with same name: " + module.Name);
-            }
 
             return Modules[module.Name] = module;
         }
@@ -30,17 +28,14 @@ namespace Abp.Web.Api.Modeling
             return Modules.GetOrAdd(name, () => new ModuleApiDescriptionModel(name));
         }
 
-        public ApplicationApiDescriptionModel CreateSubModel(string[] modules = null, string[] controllers = null, string[] actions = null)
+        public ApplicationApiDescriptionModel CreateSubModel(string[] modules = null, string[] controllers = null,
+            string[] actions = null)
         {
             var subModel = new ApplicationApiDescriptionModel();
 
             foreach (var module in Modules.Values)
-            {
                 if (modules == null || modules.Contains(module.Name))
-                {
                     subModel.AddModule(module.CreateSubModel(controllers, actions));
-                }
-            }
 
             return subModel;
         }

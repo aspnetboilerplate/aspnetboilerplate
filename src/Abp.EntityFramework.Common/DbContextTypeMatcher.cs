@@ -29,10 +29,7 @@ namespace Abp.EntityFramework
 
                 AddWithBaseTypes(dbContextType, types);
 
-                foreach (var type in types)
-                {
-                    Add(type, dbContextType);
-                }
+                foreach (var type in types) Add(type, dbContextType);
             }
         }
 
@@ -42,24 +39,18 @@ namespace Abp.EntityFramework
         {
             //TODO: This can also get MultiTenancySide to filter dbcontexes
 
-            if (!sourceDbContextType.GetTypeInfo().IsAbstract)
-            {
-                return sourceDbContextType;
-            }
-            
+            if (!sourceDbContextType.GetTypeInfo().IsAbstract) return sourceDbContextType;
+
             //Get possible concrete types for given DbContext type
             var allTargetTypes = _dbContextTypes.GetOrDefault(sourceDbContextType);
 
             if (allTargetTypes.IsNullOrEmpty())
-            {
-                throw new AbpException("Could not find a concrete implementation of given DbContext type: " + sourceDbContextType.AssemblyQualifiedName);
-            }
+                throw new AbpException("Could not find a concrete implementation of given DbContext type: " +
+                                       sourceDbContextType.AssemblyQualifiedName);
 
             if (allTargetTypes.Count == 1)
-            {
                 //Only one type does exists, return it
                 return allTargetTypes[0];
-            }
 
             CheckCurrentUow();
 
@@ -67,15 +58,10 @@ namespace Abp.EntityFramework
 
             var multiTenancySideContexes = GetMultiTenancySideContextTypes(allTargetTypes, currentTenancySide);
 
-            if (multiTenancySideContexes.Count == 1)
-            {
-                return multiTenancySideContexes[0];
-            }
+            if (multiTenancySideContexes.Count == 1) return multiTenancySideContexes[0];
 
             if (multiTenancySideContexes.Count > 1)
-            {
                 return GetDefaultDbContextType(multiTenancySideContexes, sourceDbContextType, currentTenancySide);
-            }
 
             return GetDefaultDbContextType(allTargetTypes, sourceDbContextType, currentTenancySide);
         }
@@ -83,75 +69,61 @@ namespace Abp.EntityFramework
         private void CheckCurrentUow()
         {
             if (_currentUnitOfWorkProvider.Current == null)
-            {
                 throw new AbpException("GetConcreteType method should be called in a UOW.");
-            }
         }
 
         private MultiTenancySides GetCurrentTenancySide()
         {
             return _currentUnitOfWorkProvider.Current.GetTenantId() == null
-                       ? MultiTenancySides.Host
-                       : MultiTenancySides.Tenant;
+                ? MultiTenancySides.Host
+                : MultiTenancySides.Tenant;
         }
 
-        private static List<Type> GetMultiTenancySideContextTypes(List<Type> dbContextTypes, MultiTenancySides tenancySide)
+        private static List<Type> GetMultiTenancySideContextTypes(List<Type> dbContextTypes,
+            MultiTenancySides tenancySide)
         {
             return dbContextTypes.Where(type =>
             {
                 var attrs = type.GetTypeInfo().GetCustomAttributes(typeof(MultiTenancySideAttribute), true).ToArray();
-                if (attrs.IsNullOrEmpty())
-                {
-                    return false;
-                }
+                if (attrs.IsNullOrEmpty()) return false;
 
                 return ((MultiTenancySideAttribute)attrs[0]).Side.HasFlag(tenancySide);
             }).ToList();
         }
 
-        private static Type GetDefaultDbContextType(List<Type> dbContextTypes, Type sourceDbContextType, MultiTenancySides tenancySide)
+        private static Type GetDefaultDbContextType(List<Type> dbContextTypes, Type sourceDbContextType,
+            MultiTenancySides tenancySide)
         {
             var filteredTypes = dbContextTypes
                 .Where(type => !type.GetTypeInfo().IsDefined(typeof(AutoRepositoryTypesAttribute), true))
                 .ToList();
 
-            if (filteredTypes.Count == 1)
-            {
-                return filteredTypes[0];
-            }
+            if (filteredTypes.Count == 1) return filteredTypes[0];
 
             filteredTypes = filteredTypes
                 .Where(type => type.GetTypeInfo().IsDefined(typeof(DefaultDbContextAttribute), true))
                 .ToList();
 
-            if (filteredTypes.Count == 1)
-            {
-                return filteredTypes[0];
-            }
+            if (filteredTypes.Count == 1) return filteredTypes[0];
 
             throw new AbpException(string.Format(
                 "Found more than one concrete type for given DbContext Type ({0}) define MultiTenancySideAttribute with {1}. Found types: {2}.",
                 sourceDbContextType,
                 tenancySide,
                 dbContextTypes.Select(c => c.AssemblyQualifiedName).JoinAsString(", ")
-                ));
+            ));
         }
 
         private static void AddWithBaseTypes(Type dbContextType, List<Type> types)
         {
             types.Add(dbContextType);
-            if (dbContextType != typeof(TBaseDbContext))
-            {
-                AddWithBaseTypes(dbContextType.GetTypeInfo().BaseType, types);
-            }
+            if (dbContextType != typeof(TBaseDbContext)) AddWithBaseTypes(dbContextType.GetTypeInfo().BaseType, types);
         }
 
         private void Add(Type sourceDbContextType, Type targetDbContextType)
         {
             if (!_dbContextTypes.ContainsKey(sourceDbContextType))
-            {
                 _dbContextTypes[sourceDbContextType] = new List<Type>();
-            }
 
             _dbContextTypes[sourceDbContextType].Add(targetDbContextType);
         }

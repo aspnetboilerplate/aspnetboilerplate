@@ -18,7 +18,7 @@ namespace Abp.Organizations
         protected IRepository<OrganizationUnit, long> OrganizationUnitRepository { get; private set; }
 
         public IAsyncQueryableExecuter AsyncQueryableExecuter { get; set; }
-        
+
         public OrganizationUnitManager(IRepository<OrganizationUnit, long> organizationUnitRepository)
         {
             OrganizationUnitRepository = organizationUnitRepository;
@@ -26,7 +26,7 @@ namespace Abp.Organizations
             LocalizationSourceName = AbpZeroConsts.LocalizationSourceName;
             AsyncQueryableExecuter = NullAsyncQueryableExecuter.Instance;
         }
-        
+
         public virtual async Task CreateAsync(OrganizationUnit organizationUnit)
         {
             using (var uow = UnitOfWorkManager.Begin())
@@ -36,9 +36,9 @@ namespace Abp.Organizations
                 await OrganizationUnitRepository.InsertAsync(organizationUnit);
 
                 await uow.CompleteAsync();
-            }    
+            }
         }
-        
+
         public virtual void Create(OrganizationUnit organizationUnit)
         {
             using (var uow = UnitOfWorkManager.Begin())
@@ -46,7 +46,7 @@ namespace Abp.Organizations
                 organizationUnit.Code = GetNextChildCode(organizationUnit.ParentId);
                 ValidateOrganizationUnit(organizationUnit);
                 OrganizationUnitRepository.Insert(organizationUnit);
-                
+
                 uow.Complete();
             }
         }
@@ -110,19 +110,16 @@ namespace Abp.Organizations
 
         public virtual string GetCode(long id)
         {
-            return (OrganizationUnitRepository.Get(id)).Code;
+            return OrganizationUnitRepository.Get(id).Code;
         }
-        
+
         public virtual async Task DeleteAsync(long id)
         {
             using (var uow = UnitOfWorkManager.Begin())
             {
                 var children = await FindChildrenAsync(id, true);
 
-                foreach (var child in children)
-                {
-                    await OrganizationUnitRepository.DeleteAsync(child);
-                }
+                foreach (var child in children) await OrganizationUnitRepository.DeleteAsync(child);
 
                 await OrganizationUnitRepository.DeleteAsync(id);
 
@@ -136,13 +133,10 @@ namespace Abp.Organizations
             {
                 var children = FindChildren(id, true);
 
-                foreach (var child in children)
-                {
-                    OrganizationUnitRepository.Delete(child);
-                }
+                foreach (var child in children) OrganizationUnitRepository.Delete(child);
 
                 OrganizationUnitRepository.Delete(id);
-                
+
                 uow.Complete();
             }
         }
@@ -172,10 +166,9 @@ namespace Abp.Organizations
 
                 //Update Children Codes
                 foreach (var child in children)
-                {
-                    child.Code = OrganizationUnit.AppendCode(organizationUnit.Code, OrganizationUnit.GetRelativeCode(child.Code, oldCode));
-                }
-                
+                    child.Code = OrganizationUnit.AppendCode(organizationUnit.Code,
+                        OrganizationUnit.GetRelativeCode(child.Code, oldCode));
+
                 await uow.CompleteAsync();
             }
         }
@@ -185,10 +178,7 @@ namespace Abp.Organizations
             UnitOfWorkManager.WithUnitOfWork(() =>
             {
                 var organizationUnit = OrganizationUnitRepository.Get(id);
-                if (organizationUnit.ParentId == parentId)
-                {
-                    return;
-                }
+                if (organizationUnit.ParentId == parentId) return;
 
                 //Should find children before Code change
                 var children = FindChildren(id, true);
@@ -204,23 +194,16 @@ namespace Abp.Organizations
 
                 //Update Children Codes
                 foreach (var child in children)
-                {
-                    child.Code = OrganizationUnit.AppendCode(organizationUnit.Code, OrganizationUnit.GetRelativeCode(child.Code, oldCode));
-                }
+                    child.Code = OrganizationUnit.AppendCode(organizationUnit.Code,
+                        OrganizationUnit.GetRelativeCode(child.Code, oldCode));
             });
         }
 
         public async Task<List<OrganizationUnit>> FindChildrenAsync(long? parentId, bool recursive = false)
         {
-            if (!recursive)
-            {
-                return await OrganizationUnitRepository.GetAllListAsync(ou => ou.ParentId == parentId);
-            }
+            if (!recursive) return await OrganizationUnitRepository.GetAllListAsync(ou => ou.ParentId == parentId);
 
-            if (!parentId.HasValue)
-            {
-                return await OrganizationUnitRepository.GetAllListAsync();
-            }
+            if (!parentId.HasValue) return await OrganizationUnitRepository.GetAllListAsync();
 
             var code = await GetCodeAsync(parentId.Value);
 
@@ -231,15 +214,9 @@ namespace Abp.Organizations
 
         public List<OrganizationUnit> FindChildren(long? parentId, bool recursive = false)
         {
-            if (!recursive)
-            {
-                return OrganizationUnitRepository.GetAllList(ou => ou.ParentId == parentId);
-            }
+            if (!recursive) return OrganizationUnitRepository.GetAllList(ou => ou.ParentId == parentId);
 
-            if (!parentId.HasValue)
-            {
-                return OrganizationUnitRepository.GetAllList();
-            }
+            if (!parentId.HasValue) return OrganizationUnitRepository.GetAllList();
 
             var code = GetCode(parentId.Value);
 
@@ -255,21 +232,19 @@ namespace Abp.Organizations
                 .ToList();
 
             if (siblings.Any(ou => ou.DisplayName == organizationUnit.DisplayName))
-            {
-                throw new UserFriendlyException(L("OrganizationUnitDuplicateDisplayNameWarning", organizationUnit.DisplayName));
-            }
+                throw new UserFriendlyException(L("OrganizationUnitDuplicateDisplayNameWarning",
+                    organizationUnit.DisplayName));
         }
 
         protected virtual void ValidateOrganizationUnit(OrganizationUnit organizationUnit)
         {
-            var siblings = (FindChildren(organizationUnit.ParentId))
+            var siblings = FindChildren(organizationUnit.ParentId)
                 .Where(ou => ou.Id != organizationUnit.Id)
                 .ToList();
 
             if (siblings.Any(ou => ou.DisplayName == organizationUnit.DisplayName))
-            {
-                throw new UserFriendlyException(L("OrganizationUnitDuplicateDisplayNameWarning", organizationUnit.DisplayName));
-            }
+                throw new UserFriendlyException(L("OrganizationUnitDuplicateDisplayNameWarning",
+                    organizationUnit.DisplayName));
         }
     }
 }

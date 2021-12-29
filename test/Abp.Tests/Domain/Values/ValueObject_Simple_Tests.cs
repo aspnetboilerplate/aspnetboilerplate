@@ -25,7 +25,7 @@ namespace Abp.Tests.Domain.Values
 
             Assert.False(
                 new Address(new Guid("21C67A65-ED5A-4512-AA29-66308FAAB5AF"), "Baris Manco Streettt", 42).ValueEquals(
-                new Address(new Guid("21C67A65-ED5A-4512-AA29-66308FAAB5AF"), "Baris Manco Street", 42))
+                    new Address(new Guid("21C67A65-ED5A-4512-AA29-66308FAAB5AF"), "Baris Manco Street", 42))
             );
 
             Assert.False(
@@ -37,7 +37,8 @@ namespace Abp.Tests.Domain.Values
         [Fact]
         public void Value_Objects_Should_Not_Be_Same_If_One_Of_Them_Is_Null()
         {
-            Assert.False(new Address(new Guid("21C67A65-ED5A-4512-AA29-66308FAAB5AF"), "Baris Manco Street", 42).ValueEquals(null));
+            Assert.False(new Address(new Guid("21C67A65-ED5A-4512-AA29-66308FAAB5AF"), "Baris Manco Street", 42)
+                .ValueEquals(null));
         }
 
         [Fact]

@@ -14,7 +14,6 @@ namespace Abp.UI.Inputs
 
         public ComboboxInputType()
         {
-
         }
 
         public ComboboxInputType(ILocalizableComboboxItemSource itemSource)

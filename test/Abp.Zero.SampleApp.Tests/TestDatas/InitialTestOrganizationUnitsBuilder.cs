@@ -45,7 +45,8 @@ namespace Abp.Zero.SampleApp.Tests.TestDatas
 
         private OrganizationUnit CreateOU(string displayName, string code, long? parentId = null)
         {
-            var ou = _context.OrganizationUnits.Add(new OrganizationUnit(_defaultTenant.Id, displayName, parentId) { Code = code });
+            var ou = _context.OrganizationUnits.Add(new OrganizationUnit(_defaultTenant.Id, displayName, parentId)
+                { Code = code });
             _context.SaveChanges();
             return ou;
         }

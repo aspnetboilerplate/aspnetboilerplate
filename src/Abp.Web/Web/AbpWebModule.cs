@@ -17,7 +17,7 @@ namespace Abp.Web
     /// <summary>
     /// This module is used to use ABP in ASP.NET web applications.
     /// </summary>
-    [DependsOn(typeof(AbpWebCommonModule))]    
+    [DependsOn(typeof(AbpWebCommonModule))]
     public class AbpWebModule : AbpModule
     {
         /// <inheritdoc/>
@@ -26,8 +26,9 @@ namespace Abp.Web
             IocManager.Register<IAbpAntiForgeryWebConfiguration, AbpAntiForgeryWebConfiguration>();
             IocManager.Register<IAbpWebLocalizationConfiguration, AbpWebLocalizationConfiguration>();
             IocManager.Register<IAbpWebModuleConfiguration, AbpWebModuleConfiguration>();
-            
-            Configuration.ReplaceService<IPrincipalAccessor, HttpContextPrincipalAccessor>(DependencyLifeStyle.Transient);
+
+            Configuration.ReplaceService<IPrincipalAccessor, HttpContextPrincipalAccessor>(
+                DependencyLifeStyle.Transient);
             Configuration.ReplaceService<IClientInfoProvider, WebClientInfoProvider>(DependencyLifeStyle.Transient);
 
             Configuration.MultiTenancy.Resolvers.Add<DomainTenantResolveContributor>();
@@ -40,7 +41,7 @@ namespace Abp.Web
         /// <inheritdoc/>
         public override void Initialize()
         {
-            IocManager.RegisterAssemblyByConvention(Assembly.GetExecutingAssembly());            
+            IocManager.RegisterAssemblyByConvention(Assembly.GetExecutingAssembly());
         }
 
         private void AddIgnoredTypes()
@@ -52,7 +53,7 @@ namespace Abp.Web
                 typeof(HttpPostedFileWrapper),
                 typeof(IEnumerable<HttpPostedFileWrapper>)
             };
-            
+
             foreach (var ignoredType in ignoredTypes)
             {
                 Configuration.Auditing.IgnoredTypes.AddIfNotContains(ignoredType);

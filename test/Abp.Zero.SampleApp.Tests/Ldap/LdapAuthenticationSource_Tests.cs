@@ -16,7 +16,8 @@ using Xunit;
 
 namespace Abp.Zero.SampleApp.Tests.Ldap
 {
-    public class LdapAuthenticationSource_Tests : SampleAppTestBase<LdapAuthenticationSource_Tests.MyUserLoginTestModule>
+    public class
+        LdapAuthenticationSource_Tests : SampleAppTestBase<LdapAuthenticationSource_Tests.MyUserLoginTestModule>
     {
         private readonly AppLogInManager _logInManager;
 
@@ -28,7 +29,7 @@ namespace Abp.Zero.SampleApp.Tests.Ldap
         //[Fact]
         public async Task Should_Login_From_Ldap_Without_Any_Configuration()
         {
-            var result = await _logInManager.LoginAsync("-","-", Tenant.DefaultTenantName);
+            var result = await _logInManager.LoginAsync("-", "-", Tenant.DefaultTenantName);
             result.Result.ShouldBe(AbpLoginResultType.Success);
         }
 
@@ -64,11 +65,14 @@ namespace Abp.Zero.SampleApp.Tests.Ldap
             var settingManager = Resolve<ISettingManager>();
             var defaultTenant = GetDefaultTenant();
 
-            await settingManager.ChangeSettingForTenantAsync(defaultTenant.Id, LdapSettingNames.Domain, "InvalidDomain");
+            await settingManager.ChangeSettingForTenantAsync(defaultTenant.Id, LdapSettingNames.Domain,
+                "InvalidDomain");
             await settingManager.ChangeSettingForTenantAsync(defaultTenant.Id, LdapSettingNames.UserName, "NoUserName");
-            await settingManager.ChangeSettingForTenantAsync(defaultTenant.Id, LdapSettingNames.Password, "123123123123");
+            await settingManager.ChangeSettingForTenantAsync(defaultTenant.Id, LdapSettingNames.Password,
+                "123123123123");
 
-            await Assert.ThrowsAnyAsync<Exception>(() => _logInManager.LoginAsync("testuser", "testpass", Tenant.DefaultTenantName));
+            await Assert.ThrowsAnyAsync<Exception>(() =>
+                _logInManager.LoginAsync("testuser", "testpass", Tenant.DefaultTenantName));
         }
 
         [DependsOn(typeof(AbpZeroLdapModule), typeof(SampleAppTestModule))]
@@ -76,7 +80,7 @@ namespace Abp.Zero.SampleApp.Tests.Ldap
         {
             public override void PreInitialize()
             {
-                Configuration.Modules.ZeroLdap().Enable(typeof (MyLdapAuthenticationSource));
+                Configuration.Modules.ZeroLdap().Enable(typeof(MyLdapAuthenticationSource));
             }
 
             public override void Initialize()
@@ -91,7 +95,6 @@ namespace Abp.Zero.SampleApp.Tests.Ldap
             public MyLdapAuthenticationSource(ILdapSettings settings, IAbpZeroLdapModuleConfig ldapModuleConfig)
                 : base(settings, ldapModuleConfig)
             {
-
             }
         }
     }

@@ -9,7 +9,7 @@
         public string AuthorizationCookieName { get; set; }
 
         public string AuthorizationCookieApplicationScheme { get; set; }
-        
+
         public AbpAntiForgeryConfiguration()
         {
             TokenCookieName = "XSRF-TOKEN";

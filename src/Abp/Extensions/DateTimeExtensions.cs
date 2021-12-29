@@ -85,7 +85,7 @@ namespace Abp.Extensions
                 .Where(x => x.date.Equals(new DateTime(dateTime.Year, dateTime.Month, dateTime.Day)))
                 .Select(x => x.n).FirstOrDefault();
         }
-        
+
         /// <summary>
         /// Gets the total days in a month
         /// </summary>
@@ -95,7 +95,7 @@ namespace Abp.Extensions
         {
             return DaysOfMonth(dateTime.Year, dateTime.Month).Count();
         }
-        
+
         /// <summary>
         /// Takes any date and returns it's value as an Unspecified DateTime
         /// </summary>
@@ -103,12 +103,10 @@ namespace Abp.Extensions
         /// <returns></returns>
         public static DateTime ToDateTimeUnspecified(this DateTime date)
         {
-            if (date.Kind == DateTimeKind.Unspecified)
-            {
-                return date;
-            }
+            if (date.Kind == DateTimeKind.Unspecified) return date;
 
-            return new DateTime(date.Year, date.Month, date.Day, date.Hour, date.Minute, date.Second, DateTimeKind.Unspecified);
+            return new DateTime(date.Year, date.Month, date.Day, date.Hour, date.Minute, date.Second,
+                DateTimeKind.Unspecified);
         }
 
         /// <summary>

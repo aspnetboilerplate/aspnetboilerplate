@@ -33,10 +33,7 @@ namespace Abp.Web.Navigation
             for (int i = 0; i < userMenus.Count; i++)
             {
                 AppendMenu(script, userMenus[i]);
-                if (userMenus.Count - 1 > i)
-                {
-                    script.Append(" , ");
-                }
+                if (userMenus.Count - 1 > i) script.Append(" , ");
             }
 
             script.AppendLine("    };");
@@ -53,14 +50,11 @@ namespace Abp.Web.Navigation
             script.AppendLine("            name: '" + HttpEncode.JavaScriptStringEncode(menu.Name) + "',");
 
             if (menu.DisplayName != null)
-            {
-                script.AppendLine("            displayName: '" + HttpEncode.JavaScriptStringEncode(menu.DisplayName) + "',");
-            }
+                script.AppendLine("            displayName: '" + HttpEncode.JavaScriptStringEncode(menu.DisplayName) +
+                                  "',");
 
             if (menu.CustomData != null)
-            {
                 script.AppendLine("            customData: " + menu.CustomData.ToJsonString(true) + ",");
-            }
 
             script.Append("            items: ");
 
@@ -74,11 +68,9 @@ namespace Abp.Web.Navigation
                 for (int i = 0; i < menu.Items.Count; i++)
                 {
                     AppendMenuItem(16, script, menu.Items[i]);
-                    if (menu.Items.Count - 1 > i)
-                    {
-                        script.Append(" , ");
-                    }
+                    if (menu.Items.Count - 1 > i) script.Append(" , ");
                 }
+
                 script.AppendLine("]");
             }
 
@@ -89,46 +81,41 @@ namespace Abp.Web.Navigation
         {
             sb.AppendLine("{");
 
-            sb.AppendLine(new string(' ', indentLength + 4) + "name: '" + HttpEncode.JavaScriptStringEncode(menuItem.Name) + "',");
+            sb.AppendLine(new string(' ', indentLength + 4) + "name: '" +
+                          HttpEncode.JavaScriptStringEncode(menuItem.Name) + "',");
             sb.AppendLine(new string(' ', indentLength + 4) + "order: " + menuItem.Order + ",");
 
             if (!string.IsNullOrEmpty(menuItem.Icon))
-            {
-                sb.AppendLine(new string(' ', indentLength + 4) + "icon: '" + HttpEncode.JavaScriptStringEncode(menuItem.Icon) + "',");
-            }
+                sb.AppendLine(new string(' ', indentLength + 4) + "icon: '" +
+                              HttpEncode.JavaScriptStringEncode(menuItem.Icon) + "',");
 
             if (!string.IsNullOrEmpty(menuItem.Url))
-            {
-                sb.AppendLine(new string(' ', indentLength + 4) + "url: '" + HttpEncode.JavaScriptStringEncode(menuItem.Url) + "',");
-            }
+                sb.AppendLine(new string(' ', indentLength + 4) + "url: '" +
+                              HttpEncode.JavaScriptStringEncode(menuItem.Url) + "',");
 
             if (menuItem.DisplayName != null)
-            {
-                sb.AppendLine(new string(' ', indentLength + 4) + "displayName: '" + HttpEncode.JavaScriptStringEncode(menuItem.DisplayName) + "',");
-            }
+                sb.AppendLine(new string(' ', indentLength + 4) + "displayName: '" +
+                              HttpEncode.JavaScriptStringEncode(menuItem.DisplayName) + "',");
 
             if (menuItem.CustomData != null)
-            {
-                sb.AppendLine(new string(' ', indentLength + 4) + "customData: " + menuItem.CustomData.ToJsonString(true) + ",");
-            }
+                sb.AppendLine(new string(' ', indentLength + 4) + "customData: " +
+                              menuItem.CustomData.ToJsonString(true) + ",");
 
             if (menuItem.Target != null)
-            {
-                sb.AppendLine(new string(' ', indentLength + 4) + "target: '" + HttpEncode.JavaScriptStringEncode(menuItem.Target) + "',");
-            }
+                sb.AppendLine(new string(' ', indentLength + 4) + "target: '" +
+                              HttpEncode.JavaScriptStringEncode(menuItem.Target) + "',");
 
-            sb.AppendLine(new string(' ', indentLength + 4) + "isEnabled: " + menuItem.IsEnabled.ToString().ToLowerInvariant() + ",");
-            sb.AppendLine(new string(' ', indentLength + 4) + "isVisible: " + menuItem.IsVisible.ToString().ToLowerInvariant() + ",");
+            sb.AppendLine(new string(' ', indentLength + 4) + "isEnabled: " +
+                          menuItem.IsEnabled.ToString().ToLowerInvariant() + ",");
+            sb.AppendLine(new string(' ', indentLength + 4) + "isVisible: " +
+                          menuItem.IsVisible.ToString().ToLowerInvariant() + ",");
 
             sb.Append(new string(' ', indentLength + 4) + "items: [");
 
             for (int i = 0; i < menuItem.Items.Count; i++)
             {
                 AppendMenuItem(24, sb, menuItem.Items[i]);
-                if (menuItem.Items.Count - 1 > i)
-                {
-                    sb.Append(" , ");
-                }
+                if (menuItem.Items.Count - 1 > i) sb.Append(" , ");
             }
 
             sb.AppendLine("]");

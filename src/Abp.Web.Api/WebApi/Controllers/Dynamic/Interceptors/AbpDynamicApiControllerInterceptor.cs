@@ -35,7 +35,6 @@ namespace Abp.WebApi.Controllers.Dynamic.Interceptors
         {
             //If method call is for generic type (T)...
             if (DynamicApiControllerActionHelper.IsMethodOfType(invocation.Method, typeof(T)))
-            {
                 //Call real object's method
                 try
                 {
@@ -43,19 +42,13 @@ namespace Abp.WebApi.Controllers.Dynamic.Interceptors
                 }
                 catch (TargetInvocationException targetInvocation)
                 {
-                    if (targetInvocation.InnerException != null)
-                    {
-                        targetInvocation.InnerException.ReThrow();
-                    }
+                    if (targetInvocation.InnerException != null) targetInvocation.InnerException.ReThrow();
 
                     throw;
                 }
-            }
             else
-            {
                 //Call api controller's methods as usual.
                 invocation.Proceed();
-            }
         }
     }
 }

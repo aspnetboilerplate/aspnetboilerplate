@@ -13,7 +13,7 @@ namespace Abp.Web.Mvc.Validation
     {
         protected ActionExecutingContext ActionContext { get; private set; }
 
-        public MvcActionInvocationValidator(IValidationConfiguration configuration, IIocResolver iocResolver) 
+        public MvcActionInvocationValidator(IValidationConfiguration configuration, IIocResolver iocResolver)
             : base(configuration, iocResolver)
         {
         }
@@ -30,12 +30,8 @@ namespace Abp.Web.Mvc.Validation
             var modelState = ActionContext.Controller.As<Controller>().ModelState;
 
             foreach (var state in modelState)
-            {
-                foreach (var error in state.Value.Errors)
-                {
-                    ValidationErrors.Add(new ValidationResult(error.ErrorMessage, new[] { state.Key }));
-                }
-            }
+            foreach (var error in state.Value.Errors)
+                ValidationErrors.Add(new ValidationResult(error.ErrorMessage, new[] { state.Key }));
         }
 
         protected override object GetParameterValue(string parameterName)

@@ -5,8 +5,7 @@ namespace Abp.Zero.SampleApp.EntityHistory
 {
     public class Foo : Entity
     {
-        [Audited]
-        public string Audited { get; set; }
+        [Audited] public string Audited { get; set; }
 
         public string NonAudited { get; set; }
     }

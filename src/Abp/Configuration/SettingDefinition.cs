@@ -90,10 +90,7 @@ namespace Abp.Configuration
             ISettingClientVisibilityProvider clientVisibilityProvider = null,
             bool isEncrypted = false)
         {
-            if (string.IsNullOrEmpty(name))
-            {
-                throw new ArgumentNullException(nameof(name));
-            }
+            if (string.IsNullOrEmpty(name)) throw new ArgumentNullException(nameof(name));
 
             Name = name;
             DefaultValue = defaultValue;
@@ -108,13 +105,8 @@ namespace Abp.Configuration
             ClientVisibilityProvider = new HiddenSettingClientVisibilityProvider();
 
             if (isVisibleToClients)
-            {
                 ClientVisibilityProvider = new VisibleSettingClientVisibilityProvider();
-            }
-            else if (clientVisibilityProvider != null)
-            {
-                ClientVisibilityProvider = clientVisibilityProvider;
-            }
+            else if (clientVisibilityProvider != null) ClientVisibilityProvider = clientVisibilityProvider;
         }
     }
 }

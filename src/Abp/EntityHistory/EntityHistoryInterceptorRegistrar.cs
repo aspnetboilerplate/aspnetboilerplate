@@ -13,31 +13,21 @@ namespace Abp.EntityHistory
         {
             iocManager.IocContainer.Kernel.ComponentRegistered += (key, handler) =>
             {
-                if (!iocManager.IsRegistered<IEntityHistoryConfiguration>())
-                {
-                    return;
-                }
+                if (!iocManager.IsRegistered<IEntityHistoryConfiguration>()) return;
 
                 var entityHistoryConfiguration = iocManager.Resolve<IEntityHistoryConfiguration>();
 
                 if (ShouldIntercept(entityHistoryConfiguration, handler.ComponentModel.Implementation))
-                {
-                    handler.ComponentModel.Interceptors.Add(new InterceptorReference(typeof(AbpAsyncDeterminationInterceptor<EntityHistoryInterceptor>)));
-                }
+                    handler.ComponentModel.Interceptors.Add(
+                        new InterceptorReference(typeof(AbpAsyncDeterminationInterceptor<EntityHistoryInterceptor>)));
             };
         }
-        
+
         private static bool ShouldIntercept(IEntityHistoryConfiguration entityHistoryConfiguration, Type type)
         {
-            if (type.GetTypeInfo().IsDefined(typeof(UseCaseAttribute), true))
-            {
-                return true;
-            }
+            if (type.GetTypeInfo().IsDefined(typeof(UseCaseAttribute), true)) return true;
 
-            if (type.GetMethods().Any(m => m.IsDefined(typeof(UseCaseAttribute), true)))
-            {
-                return true;
-            }
+            if (type.GetMethods().Any(m => m.IsDefined(typeof(UseCaseAttribute), true))) return true;
 
             return false;
         }

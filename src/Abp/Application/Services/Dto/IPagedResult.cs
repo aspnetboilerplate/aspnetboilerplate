@@ -6,6 +6,5 @@ namespace Abp.Application.Services.Dto
     /// <typeparam name="T">Type of the items in the <see cref="IListResult{T}.Items"/> list</typeparam>
     public interface IPagedResult<T> : IListResult<T>, IHasTotalCount
     {
-
     }
 }

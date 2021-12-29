@@ -12,7 +12,6 @@ namespace Abp.TestBase.SampleApplication.ContactLists
 
         public virtual string Name { get; set; }
 
-        [ForeignKey("ContactListId")]
-        public virtual ICollection<Person> People { get; set; }
+        [ForeignKey("ContactListId")] public virtual ICollection<Person> People { get; set; }
     }
 }

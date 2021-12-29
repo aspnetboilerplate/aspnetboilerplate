@@ -13,88 +13,73 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Filters;
 
-namespace Abp.AspNetCore.Mvc.Authorization
+namespace Abp.AspNetCore.Mvc.Authorization;
+
+public class AbpAuthorizationFilter : IAsyncAuthorizationFilter, ITransientDependency
 {
-    public class AbpAuthorizationFilter : IAsyncAuthorizationFilter, ITransientDependency
+    public ILogger Logger { get; set; }
+
+    private readonly IAuthorizationHelper _authorizationHelper;
+    private readonly IErrorInfoBuilder _errorInfoBuilder;
+    private readonly IEventBus _eventBus;
+
+    public AbpAuthorizationFilter(
+        IAuthorizationHelper authorizationHelper,
+        IErrorInfoBuilder errorInfoBuilder,
+        IEventBus eventBus)
     {
-        public ILogger Logger { get; set; }
+        _authorizationHelper = authorizationHelper;
+        _errorInfoBuilder = errorInfoBuilder;
+        _eventBus = eventBus;
+        Logger = NullLogger.Instance;
+    }
 
-        private readonly IAuthorizationHelper _authorizationHelper;
-        private readonly IErrorInfoBuilder _errorInfoBuilder;
-        private readonly IEventBus _eventBus;
+    public virtual async Task OnAuthorizationAsync(AuthorizationFilterContext context)
+    {
+        var endpoint = context?.HttpContext?.GetEndpoint();
+        // Allow Anonymous skips all authorization
+        if (endpoint?.Metadata.GetMetadata<IAllowAnonymous>() != null) return;
 
-        public AbpAuthorizationFilter(
-            IAuthorizationHelper authorizationHelper,
-            IErrorInfoBuilder errorInfoBuilder,
-            IEventBus eventBus)
+        if (!context.ActionDescriptor.IsControllerAction()) return;
+
+        //TODO: Avoid using try/catch, use conditional checking
+        try
         {
-            _authorizationHelper = authorizationHelper;
-            _errorInfoBuilder = errorInfoBuilder;
-            _eventBus = eventBus;
-            Logger = NullLogger.Instance;
+            await _authorizationHelper.AuthorizeAsync(
+                context.ActionDescriptor.GetMethodInfo(),
+                context.ActionDescriptor.GetMethodInfo().DeclaringType
+            );
         }
-
-        public virtual async Task OnAuthorizationAsync(AuthorizationFilterContext context)
+        catch (AbpAuthorizationException ex)
         {
-            var endpoint = context?.HttpContext?.GetEndpoint();
-            // Allow Anonymous skips all authorization
-            if (endpoint?.Metadata.GetMetadata<IAllowAnonymous>() != null)
-            {
-                return;
-            }
+            Logger.Warn(ex.ToString(), ex);
 
-            if (!context.ActionDescriptor.IsControllerAction())
-            {
-                return;
-            }
+            await _eventBus.TriggerAsync(this, new AbpHandledExceptionData(ex));
 
-            //TODO: Avoid using try/catch, use conditional checking
-            try
-            {
-                await _authorizationHelper.AuthorizeAsync(
-                    context.ActionDescriptor.GetMethodInfo(),
-                    context.ActionDescriptor.GetMethodInfo().DeclaringType
-                );
-            }
-            catch (AbpAuthorizationException ex)
-            {
-                Logger.Warn(ex.ToString(), ex);
-
-                await _eventBus.TriggerAsync(this, new AbpHandledExceptionData(ex));
-
-                if (ActionResultHelper.IsObjectResult(context.ActionDescriptor.GetMethodInfo().ReturnType))
+            if (ActionResultHelper.IsObjectResult(context.ActionDescriptor.GetMethodInfo().ReturnType))
+                context.Result = new ObjectResult(new AjaxResponse(_errorInfoBuilder.BuildForException(ex), true))
                 {
-                    context.Result = new ObjectResult(new AjaxResponse(_errorInfoBuilder.BuildForException(ex), true))
-                    {
-                        StatusCode = context.HttpContext.User.Identity.IsAuthenticated
-                            ? (int) System.Net.HttpStatusCode.Forbidden
-                            : (int) System.Net.HttpStatusCode.Unauthorized
-                    };
-                }
-                else
-                {
-                    context.Result = new ChallengeResult();
-                }
-            }
-            catch (Exception ex)
-            {
-                Logger.Error(ex.ToString(), ex);
+                    StatusCode = context.HttpContext.User.Identity.IsAuthenticated
+                        ? (int)System.Net.HttpStatusCode.Forbidden
+                        : (int)System.Net.HttpStatusCode.Unauthorized
+                };
+            else
+                context.Result = new ChallengeResult();
+        }
+        catch (Exception ex)
+        {
+            Logger.Error(ex.ToString(), ex);
 
-                await _eventBus.TriggerAsync(this, new AbpHandledExceptionData(ex));
+            await _eventBus.TriggerAsync(this, new AbpHandledExceptionData(ex));
 
-                if (ActionResultHelper.IsObjectResult(context.ActionDescriptor.GetMethodInfo().ReturnType))
+            if (ActionResultHelper.IsObjectResult(context.ActionDescriptor.GetMethodInfo().ReturnType))
+                context.Result = new ObjectResult(new AjaxResponse(_errorInfoBuilder.BuildForException(ex)))
                 {
-                    context.Result = new ObjectResult(new AjaxResponse(_errorInfoBuilder.BuildForException(ex)))
-                    {
-                        StatusCode = (int) System.Net.HttpStatusCode.InternalServerError
-                    };
-                }
-                else
-                {
-                    //TODO: How to return Error page?
-                    context.Result = new StatusCodeResult((int)System.Net.HttpStatusCode.InternalServerError);
-                }
-            }
+                    StatusCode = (int)System.Net.HttpStatusCode.InternalServerError
+                };
+            else
+                //TODO: How to return Error page?
+                context.Result = new StatusCodeResult((int)System.Net.HttpStatusCode.InternalServerError);
         }
     }
 }

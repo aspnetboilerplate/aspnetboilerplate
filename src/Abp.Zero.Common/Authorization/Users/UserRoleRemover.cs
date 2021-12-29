@@ -17,13 +17,13 @@ namespace Abp.Authorization.Users
         private readonly IUnitOfWorkManager _unitOfWorkManager;
 
         public UserRoleRemover(
-            IUnitOfWorkManager unitOfWorkManager, 
+            IUnitOfWorkManager unitOfWorkManager,
             IRepository<UserRole, long> userRoleRepository)
         {
             _unitOfWorkManager = unitOfWorkManager;
             _userRoleRepository = userRoleRepository;
         }
-        
+
         public virtual void HandleEvent(EntityDeletedEventData<AbpUserBase> eventData)
         {
             _unitOfWorkManager.WithUnitOfWork(() =>

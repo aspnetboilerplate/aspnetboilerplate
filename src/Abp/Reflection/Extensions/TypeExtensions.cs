@@ -11,7 +11,8 @@ namespace Abp.Reflection.Extensions
             return type.GetTypeInfo().Assembly;
         }
 
-        public static MethodInfo GetMethod(this Type type, string methodName, int pParametersCount = 0, int pGenericArgumentsCount = 0)
+        public static MethodInfo GetMethod(this Type type, string methodName, int pParametersCount = 0,
+            int pGenericArgumentsCount = 0)
         {
             return type
                 .GetMethods()

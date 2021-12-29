@@ -10,60 +10,53 @@ using Microsoft.EntityFrameworkCore;
 using Shouldly;
 using Xunit;
 
-namespace Abp.EntityFrameworkCore.Tests.Tests
+namespace Abp.EntityFrameworkCore.Tests.Tests;
+
+public class Parallel_Querying_Tests : EntityFrameworkCoreModuleTestBase
 {
-    public class Parallel_Querying_Tests : EntityFrameworkCoreModuleTestBase
+    private readonly ParallelQueryExecuteDemo _parallelQueryExecuteDemo;
+
+    public Parallel_Querying_Tests()
     {
-        private readonly ParallelQueryExecuteDemo _parallelQueryExecuteDemo;
-
-        public Parallel_Querying_Tests()
-        {
-            _parallelQueryExecuteDemo = Resolve<ParallelQueryExecuteDemo>();
-        }
-
-        //[Fact]
-        public async Task Should_Run_Parallel_With_Different_UnitOfWorks()
-        {
-            await _parallelQueryExecuteDemo.RunAsync();
-        }
+        _parallelQueryExecuteDemo = Resolve<ParallelQueryExecuteDemo>();
     }
 
-    public class ParallelQueryExecuteDemo : ITransientDependency
+    //[Fact]
+    public async Task Should_Run_Parallel_With_Different_UnitOfWorks()
     {
-        private readonly IRepository<Blog> _blogRepository;
+        await _parallelQueryExecuteDemo.RunAsync();
+    }
+}
 
-        public ParallelQueryExecuteDemo(IRepository<Blog> blogRepository)
-        {
-            _blogRepository = blogRepository;
-        }
+public class ParallelQueryExecuteDemo : ITransientDependency
+{
+    private readonly IRepository<Blog> _blogRepository;
 
-        [UnitOfWork]
-        public virtual async Task RunAsync()
-        {
-            const int threadCount = 32;
+    public ParallelQueryExecuteDemo(IRepository<Blog> blogRepository)
+    {
+        _blogRepository = blogRepository;
+    }
 
-            var tasks = new List<Task<int>>();
+    [UnitOfWork]
+    public virtual async Task RunAsync()
+    {
+        const int threadCount = 32;
 
-            for (int i = 0; i < threadCount; i++)
-            {
-                tasks.Add(GetBlogCountAsync());
-            }
+        var tasks = new List<Task<int>>();
 
-            await Task.WhenAll(tasks.Cast<Task>().ToArray());
+        for (var i = 0; i < threadCount; i++) tasks.Add(GetBlogCountAsync());
 
-            foreach (var task in tasks)
-            {
-                task.Result.ShouldBeGreaterThan(0);
-            }
-        }
+        await Task.WhenAll(tasks.Cast<Task>().ToArray());
 
-        [UnitOfWork(TransactionScopeOption.RequiresNew, false)]
-        public virtual async Task<int> GetBlogCountAsync()
-        {
-            await Task.Delay(RandomHelper.GetRandom(0, 100));
-            var result = await _blogRepository.GetAll().CountAsync();
-            await Task.Delay(RandomHelper.GetRandom(0, 100));
-            return result;
-        }
+        foreach (var task in tasks) task.Result.ShouldBeGreaterThan(0);
+    }
+
+    [UnitOfWork(TransactionScopeOption.RequiresNew, false)]
+    public virtual async Task<int> GetBlogCountAsync()
+    {
+        await Task.Delay(RandomHelper.GetRandom(0, 100));
+        var result = await _blogRepository.GetAll().CountAsync();
+        await Task.Delay(RandomHelper.GetRandom(0, 100));
+        return result;
     }
 }

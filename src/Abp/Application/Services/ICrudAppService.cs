@@ -6,21 +6,18 @@ namespace Abp.Application.Services
         : ICrudAppService<TEntityDto, int>
         where TEntityDto : IEntityDto<int>
     {
-
     }
 
     public interface ICrudAppService<TEntityDto, TPrimaryKey>
         : ICrudAppService<TEntityDto, TPrimaryKey, PagedAndSortedResultRequestDto>
         where TEntityDto : IEntityDto<TPrimaryKey>
     {
-
     }
 
     public interface ICrudAppService<TEntityDto, TPrimaryKey, in TGetAllInput>
         : ICrudAppService<TEntityDto, TPrimaryKey, TGetAllInput, TEntityDto, TEntityDto>
         where TEntityDto : IEntityDto<TPrimaryKey>
     {
-
     }
 
     public interface ICrudAppService<TEntityDto, TPrimaryKey, in TGetAllInput, in TCreateInput>
@@ -28,7 +25,6 @@ namespace Abp.Application.Services
         where TEntityDto : IEntityDto<TPrimaryKey>
         where TCreateInput : IEntityDto<TPrimaryKey>
     {
-
     }
 
     public interface ICrudAppService<TEntityDto, TPrimaryKey, in TGetAllInput, in TCreateInput, in TUpdateInput>
@@ -36,19 +32,20 @@ namespace Abp.Application.Services
         where TEntityDto : IEntityDto<TPrimaryKey>
         where TUpdateInput : IEntityDto<TPrimaryKey>
     {
-
     }
 
-    public interface ICrudAppService<TEntityDto, TPrimaryKey, in TGetAllInput, in TCreateInput, in TUpdateInput, in TGetInput>
-    : ICrudAppService<TEntityDto, TPrimaryKey, TGetAllInput, TCreateInput, TUpdateInput, TGetInput, EntityDto<TPrimaryKey>>
+    public interface ICrudAppService<TEntityDto, TPrimaryKey, in TGetAllInput, in TCreateInput, in TUpdateInput,
+            in TGetInput>
+        : ICrudAppService<TEntityDto, TPrimaryKey, TGetAllInput, TCreateInput, TUpdateInput, TGetInput,
+            EntityDto<TPrimaryKey>>
         where TEntityDto : IEntityDto<TPrimaryKey>
-        where TUpdateInput : IEntityDto<TPrimaryKey> 
+        where TUpdateInput : IEntityDto<TPrimaryKey>
         where TGetInput : IEntityDto<TPrimaryKey>
     {
-
     }
 
-    public interface ICrudAppService<TEntityDto, TPrimaryKey, in TGetAllInput, in TCreateInput, in TUpdateInput, in TGetInput, in TDeleteInput>
+    public interface ICrudAppService<TEntityDto, TPrimaryKey, in TGetAllInput, in TCreateInput, in TUpdateInput,
+            in TGetInput, in TDeleteInput>
         : IApplicationService
         where TEntityDto : IEntityDto<TPrimaryKey>
         where TUpdateInput : IEntityDto<TPrimaryKey>

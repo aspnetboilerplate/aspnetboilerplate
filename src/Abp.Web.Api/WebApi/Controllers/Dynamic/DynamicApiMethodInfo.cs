@@ -43,9 +43,9 @@ namespace Abp.WebApi.Controllers.Dynamic
         /// <param name="filters">Filters</param>
         /// <param name="isApiExplorerEnabled">Is API explorer enabled</param>
         public DynamicApiActionInfo(
-            string actionName, 
-            HttpVerb verb, 
-            MethodInfo method, 
+            string actionName,
+            HttpVerb verb,
+            MethodInfo method,
             IFilter[] filters = null,
             bool? isApiExplorerEnabled = null)
         {

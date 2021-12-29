@@ -46,6 +46,7 @@ namespace Abp.TestBase.SampleApplication.Tests.CancellationTokenProvider
                     isCanceled = true;
                 }
             }
+
             isCanceled.ShouldBeTrue();
         }
 
@@ -64,6 +65,7 @@ namespace Abp.TestBase.SampleApplication.Tests.CancellationTokenProvider
                     isCanceled = true;
                 }
             }
+
             isCanceled.ShouldBeFalse();
         }
 
@@ -89,6 +91,7 @@ namespace Abp.TestBase.SampleApplication.Tests.CancellationTokenProvider
                     Thread.Sleep(10);
                     result += i;
                 }
+
                 return result;
             });
             return task;

@@ -33,7 +33,7 @@ namespace Abp.WebApi.Controllers.Dynamic.Builders
         /// <param name="servicePrefix">Service prefix</param>
         public IBatchApiControllerBuilder<T> ForAll<T>(Assembly assembly, string servicePrefix)
         {
-            return new BatchApiControllerBuilder<T>(_iocResolver, this,  assembly, servicePrefix);
+            return new BatchApiControllerBuilder<T>(_iocResolver, this, assembly, servicePrefix);
         }
     }
 }

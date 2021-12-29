@@ -55,20 +55,14 @@ namespace Abp.Net.Mail
 
         public virtual async Task SendAsync(MailMessage mail, bool normalize = true)
         {
-            if (normalize)
-            {
-                NormalizeMail(mail);
-            }
+            if (normalize) NormalizeMail(mail);
 
             await SendEmailAsync(mail);
         }
 
         public virtual void Send(MailMessage mail, bool normalize = true)
         {
-            if (normalize)
-            {
-                NormalizeMail(mail);
-            }
+            if (normalize) NormalizeMail(mail);
 
             SendEmail(mail);
         }
@@ -94,28 +88,17 @@ namespace Abp.Net.Mail
         protected virtual void NormalizeMail(MailMessage mail)
         {
             if (mail.From == null || mail.From.Address.IsNullOrEmpty())
-            {
                 mail.From = new MailAddress(
                     Configuration.DefaultFromAddress,
                     Configuration.DefaultFromDisplayName,
                     Encoding.UTF8
-                    );
-            }
+                );
 
-            if (mail.HeadersEncoding == null)
-            {
-                mail.HeadersEncoding = Encoding.UTF8;
-            }
+            if (mail.HeadersEncoding == null) mail.HeadersEncoding = Encoding.UTF8;
 
-            if (mail.SubjectEncoding == null)
-            {
-                mail.SubjectEncoding = Encoding.UTF8;
-            }
+            if (mail.SubjectEncoding == null) mail.SubjectEncoding = Encoding.UTF8;
 
-            if (mail.BodyEncoding == null)
-            {
-                mail.BodyEncoding = Encoding.UTF8;
-            }
+            if (mail.BodyEncoding == null) mail.BodyEncoding = Encoding.UTF8;
         }
     }
 }

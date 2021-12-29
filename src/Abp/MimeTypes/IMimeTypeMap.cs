@@ -13,7 +13,7 @@ namespace Abp.MimeTypes
         /// <returns>Whether the transaction was completed successfully.</returns>
         /// <exception cref="ArgumentNullException" />
         bool TryGetMimeType(string str, out string mimeType);
-        
+
         /// <summary>
         /// Gets the type of the MIME from the provided string.
         /// </summary>
@@ -22,7 +22,7 @@ namespace Abp.MimeTypes
         /// <returns>The MIME type.</returns>
         /// <exception cref="ArgumentNullException" />
         string GetMimeType(string str, bool throwErrorIfNotFound = true);
-        
+
         /// <summary>
         /// Gets the extension from the provided MIME type.
         /// </summary>
@@ -32,7 +32,7 @@ namespace Abp.MimeTypes
         /// <exception cref="ArgumentNullException" />
         /// <exception cref="ArgumentException" />
         bool TryGetExtension(string mimeType, out string extension);
-        
+
         /// <summary>
         /// Gets the extension from the provided MIME type.
         /// </summary>
@@ -42,7 +42,7 @@ namespace Abp.MimeTypes
         /// <exception cref="ArgumentNullException" />
         /// <exception cref="ArgumentException" />
         string GetExtension(string mimeType, bool throwErrorIfNotFound = true);
-        
+
         /// <summary>
         /// Adds MIME type to map
         /// </summary>
@@ -51,7 +51,7 @@ namespace Abp.MimeTypes
         /// <exception cref="ArgumentNullException" />
         /// <exception cref="ArgumentException" />
         void AddMimeType(string mimeType, string extension);
-        
+
         /// <summary>
         /// Removes MIME type from map
         /// </summary>
@@ -59,7 +59,7 @@ namespace Abp.MimeTypes
         /// <exception cref="ArgumentNullException" />
         /// <exception cref="ArgumentException" />
         void RemoveMimeType(string mimeType);
-        
+
         /// <summary>
         /// Adds extension to map
         /// </summary>
@@ -68,7 +68,7 @@ namespace Abp.MimeTypes
         /// <exception cref="ArgumentNullException" />
         /// <exception cref="ArgumentException" />
         void AddExtension(string extension, string mimeType);
-        
+
         /// <summary>
         /// Removes extension from map
         /// </summary>

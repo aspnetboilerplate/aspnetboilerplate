@@ -11,7 +11,7 @@ namespace Abp.TestBase.SampleApplication.Tests
         public override void PreInitialize()
         {
 #pragma warning disable CS0618 // Type or member is obsolete, this line will be removed once the UseStaticMapper property is removed
-			Configuration.Modules.AbpAutoMapper().UseStaticMapper = false;
+            Configuration.Modules.AbpAutoMapper().UseStaticMapper = false;
 #pragma warning restore CS0618 // Type or member is obsolete, this line will be removed once the UseStaticMapper property is removed
 
             Configuration.UnitOfWork.ConventionalUowSelectors.Add(type => type == typeof(MyCustomUowClass));

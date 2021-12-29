@@ -24,11 +24,10 @@ namespace Abp.Authorization
             Dictionary<string, object> properties = null)
         {
             if (Permissions.ContainsKey(name))
-            {
                 throw new AbpException("There is already a permission with name: " + name);
-            }
 
-            var permission = new Permission(name, displayName, description, multiTenancySides, featureDependency, properties);
+            var permission = new Permission(name, displayName, description, multiTenancySides, featureDependency,
+                properties);
             Permissions[permission.Name] = permission;
             return permission;
         }

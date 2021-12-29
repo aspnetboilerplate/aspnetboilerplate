@@ -12,267 +12,261 @@ using Abp.EntityFramework.Extensions;
 using Abp.MultiTenancy;
 using Abp.Notifications;
 
-namespace Abp.Zero.EntityFramework
+namespace Abp.Zero.EntityFramework;
+
+/// <summary>
+/// Base DbContext for ABP zero.
+/// Derive your DbContext from this class to have base entities.
+/// </summary>
+public abstract class AbpZeroDbContext<TTenant, TRole, TUser, TSelf> : AbpZeroCommonDbContext<TRole, TUser, TSelf>
+    where TTenant : AbpTenant<TUser>
+    where TRole : AbpRole<TUser>
+    where TUser : AbpUser<TUser>
+    where TSelf : AbpZeroDbContext<TTenant, TRole, TUser, TSelf>
 {
     /// <summary>
-    /// Base DbContext for ABP zero.
-    /// Derive your DbContext from this class to have base entities.
+    /// Tenants
     /// </summary>
-    public abstract class AbpZeroDbContext<TTenant, TRole, TUser, TSelf> : AbpZeroCommonDbContext<TRole, TUser, TSelf>
-        where TTenant : AbpTenant<TUser>
-        where TRole : AbpRole<TUser>
-        where TUser : AbpUser<TUser>
-        where TSelf : AbpZeroDbContext<TTenant, TRole, TUser, TSelf>
+    public virtual DbSet<TTenant> Tenants { get; set; }
+
+    /// <summary>
+    /// Editions.
+    /// </summary>
+    public virtual DbSet<Edition> Editions { get; set; }
+
+    /// <summary>
+    /// FeatureSettings.
+    /// </summary>
+    public virtual DbSet<FeatureSetting> FeatureSettings { get; set; }
+
+    /// <summary>
+    /// TenantFeatureSetting.
+    /// </summary>
+    public virtual DbSet<TenantFeatureSetting> TenantFeatureSettings { get; set; }
+
+    /// <summary>
+    /// EditionFeatureSettings.
+    /// </summary>
+    public virtual DbSet<EditionFeatureSetting> EditionFeatureSettings { get; set; }
+
+    /// <summary>
+    /// Background jobs.
+    /// </summary>
+    public virtual DbSet<BackgroundJobInfo> BackgroundJobs { get; set; }
+
+    /// <summary>
+    /// User accounts
+    /// </summary>
+    public virtual DbSet<UserAccount> UserAccounts { get; set; }
+
+    /// <summary>
+    /// Notifications.
+    /// </summary>
+    public virtual DbSet<NotificationInfo> Notifications { get; set; }
+
+    protected AbpZeroDbContext()
     {
-        /// <summary>
-        /// Tenants
-        /// </summary>
-        public virtual DbSet<TTenant> Tenants { get; set; }
+    }
 
-        /// <summary>
-        /// Editions.
-        /// </summary>
-        public virtual DbSet<Edition> Editions { get; set; }
+    protected AbpZeroDbContext(string nameOrConnectionString)
+        : base(nameOrConnectionString)
+    {
+    }
 
-        /// <summary>
-        /// FeatureSettings.
-        /// </summary>
-        public virtual DbSet<FeatureSetting> FeatureSettings { get; set; }
+    protected AbpZeroDbContext(DbCompiledModel model)
+        : base(model)
+    {
+    }
 
-        /// <summary>
-        /// TenantFeatureSetting.
-        /// </summary>
-        public virtual DbSet<TenantFeatureSetting> TenantFeatureSettings { get; set; }
+    protected AbpZeroDbContext(DbConnection existingConnection, bool contextOwnsConnection)
+        : base(existingConnection, contextOwnsConnection)
+    {
+    }
 
-        /// <summary>
-        /// EditionFeatureSettings.
-        /// </summary>
-        public virtual DbSet<EditionFeatureSetting> EditionFeatureSettings { get; set; }
+    protected AbpZeroDbContext(string nameOrConnectionString, DbCompiledModel model)
+        : base(nameOrConnectionString, model)
+    {
+    }
 
-        /// <summary>
-        /// Background jobs.
-        /// </summary>
-        public virtual DbSet<BackgroundJobInfo> BackgroundJobs { get; set; }
+    protected AbpZeroDbContext(ObjectContext objectContext, bool dbContextOwnsObjectContext)
+        : base(objectContext, dbContextOwnsObjectContext)
+    {
+    }
 
-        /// <summary>
-        /// User accounts
-        /// </summary>
-        public virtual DbSet<UserAccount> UserAccounts { get; set; }
+    protected AbpZeroDbContext(DbConnection existingConnection, DbCompiledModel model, bool contextOwnsConnection)
+        : base(existingConnection, model, contextOwnsConnection)
+    {
+    }
 
-        /// <summary>
-        /// Notifications.
-        /// </summary>
-        public virtual DbSet<NotificationInfo> Notifications { get; set; }
+    protected override void OnModelCreating(DbModelBuilder modelBuilder)
+    {
+        base.OnModelCreating(modelBuilder);
 
-        protected AbpZeroDbContext()
-        {
+        #region BackgroundJobInfo.IX_IsAbandoned_NextTryTime
 
-        }
+        modelBuilder.Entity<BackgroundJobInfo>()
+            .Property(e => e.IsAbandoned)
+            .CreateIndex("IX_IsAbandoned_NextTryTime", 1);
 
-        protected AbpZeroDbContext(string nameOrConnectionString)
-            : base(nameOrConnectionString)
-        {
+        modelBuilder.Entity<BackgroundJobInfo>()
+            .Property(e => e.NextTryTime)
+            .CreateIndex("IX_IsAbandoned_NextTryTime", 2);
 
-        }
+        modelBuilder.Entity<BackgroundJobInfo>()
+            .Property(j => j.Priority)
+            .CreateIndex("IX_Priority_TryCount_NextTryTime", 1);
 
-        protected AbpZeroDbContext(DbCompiledModel model)
-            : base(model)
-        {
+        modelBuilder.Entity<BackgroundJobInfo>()
+            .Property(j => j.TryCount)
+            .CreateIndex("IX_Priority_TryCount_NextTryTime", 2);
 
-        }
+        modelBuilder.Entity<BackgroundJobInfo>()
+            .Property(j => j.NextTryTime)
+            .CreateIndex("IX_Priority_TryCount_NextTryTime", 3);
 
-        protected AbpZeroDbContext(DbConnection existingConnection, bool contextOwnsConnection)
-            : base(existingConnection, contextOwnsConnection)
-        {
+        #endregion
 
-        }
+        #region TenantFeatureSetting.IX_TenantId_Name
 
-        protected AbpZeroDbContext(string nameOrConnectionString, DbCompiledModel model)
-            : base(nameOrConnectionString, model)
-        {
-        }
+        modelBuilder.Entity<TenantFeatureSetting>()
+            .Property(e => e.TenantId)
+            .CreateIndex("IX_TenantId_Name", 1);
 
-        protected AbpZeroDbContext(ObjectContext objectContext, bool dbContextOwnsObjectContext)
-            : base(objectContext, dbContextOwnsObjectContext)
-        {
-        }
+        modelBuilder.Entity<TenantFeatureSetting>()
+            .Property(e => e.Name)
+            .CreateIndex("IX_TenantId_Name", 2);
 
-        protected AbpZeroDbContext(DbConnection existingConnection, DbCompiledModel model, bool contextOwnsConnection)
-            : base(existingConnection, model, contextOwnsConnection)
-        {
-        }
+        #endregion
 
-        protected override void OnModelCreating(DbModelBuilder modelBuilder)
-        {
-            base.OnModelCreating(modelBuilder);
+        #region EditionFeatureSetting.IX_EditionId_Name
 
-            #region BackgroundJobInfo.IX_IsAbandoned_NextTryTime
+        modelBuilder.Entity<EditionFeatureSetting>()
+            .Property(e => e.EditionId)
+            .CreateIndex("IX_EditionId_Name", 1);
 
-            modelBuilder.Entity<BackgroundJobInfo>()
-                .Property(e => e.IsAbandoned)
-                .CreateIndex("IX_IsAbandoned_NextTryTime", 1);
+        modelBuilder.Entity<EditionFeatureSetting>()
+            .Property(e => e.Name)
+            .CreateIndex("IX_EditionId_Name", 2);
 
-            modelBuilder.Entity<BackgroundJobInfo>()
-                .Property(e => e.NextTryTime)
-                .CreateIndex("IX_IsAbandoned_NextTryTime", 2);
+        #endregion
 
-            modelBuilder.Entity<BackgroundJobInfo>()
-                .Property(j => j.Priority)
-                .CreateIndex("IX_Priority_TryCount_NextTryTime", 1);
+        #region TTenant.IX_TenancyName
 
-            modelBuilder.Entity<BackgroundJobInfo>()
-                .Property(j => j.TryCount)
-                .CreateIndex("IX_Priority_TryCount_NextTryTime", 2);
+        modelBuilder.Entity<TTenant>()
+            .Property(e => e.TenancyName)
+            .CreateIndex("IX_TenancyName", 1);
 
-            modelBuilder.Entity<BackgroundJobInfo>()
-                .Property(j => j.NextTryTime)
-                .CreateIndex("IX_Priority_TryCount_NextTryTime", 3);
+        #endregion
 
-            #endregion
+        #region TTenant.Set_ForeignKeys
 
-            #region TenantFeatureSetting.IX_TenantId_Name
+        modelBuilder.Entity<TTenant>()
+            .HasOptional(p => p.DeleterUser)
+            .WithMany()
+            .HasForeignKey(p => p.DeleterUserId);
 
-            modelBuilder.Entity<TenantFeatureSetting>()
-                .Property(e => e.TenantId)
-                .CreateIndex("IX_TenantId_Name", 1);
+        modelBuilder.Entity<TTenant>()
+            .HasOptional(p => p.CreatorUser)
+            .WithMany()
+            .HasForeignKey(p => p.CreatorUserId);
 
-            modelBuilder.Entity<TenantFeatureSetting>()
-                .Property(e => e.Name)
-                .CreateIndex("IX_TenantId_Name", 2);
+        modelBuilder.Entity<TTenant>()
+            .HasOptional(p => p.LastModifierUser)
+            .WithMany()
+            .HasForeignKey(p => p.LastModifierUserId);
 
-            #endregion
+        #endregion
 
-            #region EditionFeatureSetting.IX_EditionId_Name
+        #region UserAccount.IX_TenantId_UserId
 
-            modelBuilder.Entity<EditionFeatureSetting>()
-                .Property(e => e.EditionId)
-                .CreateIndex("IX_EditionId_Name", 1);
+        modelBuilder.Entity<UserAccount>()
+            .Property(e => e.TenantId)
+            .CreateIndex("IX_TenantId_UserId", 1);
 
-            modelBuilder.Entity<EditionFeatureSetting>()
-                .Property(e => e.Name)
-                .CreateIndex("IX_EditionId_Name", 2);
+        modelBuilder.Entity<UserAccount>()
+            .Property(e => e.UserId)
+            .CreateIndex("IX_TenantId_UserId", 2);
 
-            #endregion
+        #endregion
 
-            #region TTenant.IX_TenancyName
+        #region UserAccount.IX_TenantId_UserName
 
-            modelBuilder.Entity<TTenant>()
-                .Property(e => e.TenancyName)
-                .CreateIndex("IX_TenancyName", 1);
+        modelBuilder.Entity<UserAccount>()
+            .Property(e => e.TenantId)
+            .CreateIndex("IX_TenantId_UserName", 1);
 
-            #endregion
+        modelBuilder.Entity<UserAccount>()
+            .Property(e => e.UserName)
+            .CreateIndex("IX_TenantId_UserName", 2);
 
-            #region TTenant.Set_ForeignKeys
+        #endregion
 
-            modelBuilder.Entity<TTenant>()
-                .HasOptional(p => p.DeleterUser)
-                .WithMany()
-                .HasForeignKey(p => p.DeleterUserId);
+        #region UserAccount.IX_TenantId_EmailAddress
 
-            modelBuilder.Entity<TTenant>()
-                .HasOptional(p => p.CreatorUser)
-                .WithMany()
-                .HasForeignKey(p => p.CreatorUserId);
+        modelBuilder.Entity<UserAccount>()
+            .Property(e => e.TenantId)
+            .CreateIndex("IX_TenantId_EmailAddress", 1);
 
-            modelBuilder.Entity<TTenant>()
-                .HasOptional(p => p.LastModifierUser)
-                .WithMany()
-                .HasForeignKey(p => p.LastModifierUserId);
+        modelBuilder.Entity<UserAccount>()
+            .Property(e => e.EmailAddress)
+            .CreateIndex("IX_TenantId_EmailAddress", 2);
 
-            #endregion
+        #endregion
 
-            #region UserAccount.IX_TenantId_UserId
+        #region UserAccount.IX_UserName
 
-            modelBuilder.Entity<UserAccount>()
-                .Property(e => e.TenantId)
-                .CreateIndex("IX_TenantId_UserId", 1);
+        modelBuilder.Entity<UserAccount>()
+            .Property(e => e.UserName)
+            .CreateIndex("IX_UserName", 1);
 
-            modelBuilder.Entity<UserAccount>()
-                .Property(e => e.UserId)
-                .CreateIndex("IX_TenantId_UserId", 2);
+        #endregion
 
-            #endregion
+        #region UserAccount.IX_EmailAddress
 
-            #region UserAccount.IX_TenantId_UserName
+        modelBuilder.Entity<UserAccount>()
+            .Property(e => e.EmailAddress)
+            .CreateIndex("IX_EmailAddress", 1);
 
-            modelBuilder.Entity<UserAccount>()
-                .Property(e => e.TenantId)
-                .CreateIndex("IX_TenantId_UserName", 1);
+        #endregion
 
-            modelBuilder.Entity<UserAccount>()
-                .Property(e => e.UserName)
-                .CreateIndex("IX_TenantId_UserName", 2);
+        #region AuditLog.Set_MaxLengths
 
-            #endregion
+        modelBuilder.Entity<AuditLog>()
+            .Property(e => e.ServiceName)
+            .HasMaxLength(AuditLog.MaxServiceNameLength);
 
-            #region UserAccount.IX_TenantId_EmailAddress
+        modelBuilder.Entity<AuditLog>()
+            .Property(e => e.MethodName)
+            .HasMaxLength(AuditLog.MaxMethodNameLength);
 
-            modelBuilder.Entity<UserAccount>()
-                .Property(e => e.TenantId)
-                .CreateIndex("IX_TenantId_EmailAddress", 1);
+        modelBuilder.Entity<AuditLog>()
+            .Property(e => e.Parameters)
+            .HasMaxLength(AuditLog.MaxParametersLength);
 
-            modelBuilder.Entity<UserAccount>()
-                .Property(e => e.EmailAddress)
-                .CreateIndex("IX_TenantId_EmailAddress", 2);
+        modelBuilder.Entity<AuditLog>()
+            .Property(e => e.ClientIpAddress)
+            .HasMaxLength(AuditLog.MaxClientIpAddressLength);
 
-            #endregion
+        modelBuilder.Entity<AuditLog>()
+            .Property(e => e.ClientName)
+            .HasMaxLength(AuditLog.MaxClientNameLength);
 
-            #region UserAccount.IX_UserName
+        modelBuilder.Entity<AuditLog>()
+            .Property(e => e.BrowserInfo)
+            .HasMaxLength(AuditLog.MaxBrowserInfoLength);
 
-            modelBuilder.Entity<UserAccount>()
-                .Property(e => e.UserName)
-                .CreateIndex("IX_UserName", 1);
+        modelBuilder.Entity<AuditLog>()
+            .Property(e => e.ExceptionMessage)
+            .HasMaxLength(AuditLog.MaxExceptionMessageLength);
 
-            #endregion
+        modelBuilder.Entity<AuditLog>()
+            .Property(e => e.Exception)
+            .HasMaxLength(AuditLog.MaxExceptionLength);
 
-            #region UserAccount.IX_EmailAddress
+        modelBuilder.Entity<AuditLog>()
+            .Property(e => e.CustomData)
+            .HasMaxLength(AuditLog.MaxCustomDataLength);
 
-            modelBuilder.Entity<UserAccount>()
-                .Property(e => e.EmailAddress)
-                .CreateIndex("IX_EmailAddress", 1);
-
-            #endregion
-
-            #region AuditLog.Set_MaxLengths
-
-            modelBuilder.Entity<AuditLog>()
-                .Property(e => e.ServiceName)
-                .HasMaxLength(AuditLog.MaxServiceNameLength);
-
-            modelBuilder.Entity<AuditLog>()
-                .Property(e => e.MethodName)
-                .HasMaxLength(AuditLog.MaxMethodNameLength);
-
-            modelBuilder.Entity<AuditLog>()
-                .Property(e => e.Parameters)
-                .HasMaxLength(AuditLog.MaxParametersLength);
-
-            modelBuilder.Entity<AuditLog>()
-                .Property(e => e.ClientIpAddress)
-                .HasMaxLength(AuditLog.MaxClientIpAddressLength);
-
-            modelBuilder.Entity<AuditLog>()
-                .Property(e => e.ClientName)
-                .HasMaxLength(AuditLog.MaxClientNameLength);
-
-            modelBuilder.Entity<AuditLog>()
-                .Property(e => e.BrowserInfo)
-                .HasMaxLength(AuditLog.MaxBrowserInfoLength);
-
-            modelBuilder.Entity<AuditLog>()
-                .Property(e => e.ExceptionMessage)
-                .HasMaxLength(AuditLog.MaxExceptionMessageLength);
-            
-            modelBuilder.Entity<AuditLog>()
-                .Property(e => e.Exception)
-                .HasMaxLength(AuditLog.MaxExceptionLength);
-
-            modelBuilder.Entity<AuditLog>()
-                .Property(e => e.CustomData)
-                .HasMaxLength(AuditLog.MaxCustomDataLength);
-
-            #endregion
-
-        }
+        #endregion
     }
 }

@@ -15,9 +15,11 @@ namespace Abp.Threading
 
         protected IAmbientScopeProvider<CancellationTokenOverride> CancellationTokenOverrideScopeProvider { get; }
 
-        protected CancellationTokenOverride OverridedValue => CancellationTokenOverrideScopeProvider.GetValue(CancellationTokenOverrideContextKey);
+        protected CancellationTokenOverride OverridedValue =>
+            CancellationTokenOverrideScopeProvider.GetValue(CancellationTokenOverrideContextKey);
 
-        protected CancellationTokenProviderBase(IAmbientScopeProvider<CancellationTokenOverride> cancellationTokenOverrideScopeProvider)
+        protected CancellationTokenProviderBase(
+            IAmbientScopeProvider<CancellationTokenOverride> cancellationTokenOverrideScopeProvider)
         {
             CancellationTokenOverrideScopeProvider = cancellationTokenOverrideScopeProvider;
             Logger = NullLogger.Instance;
@@ -25,7 +27,8 @@ namespace Abp.Threading
 
         public IDisposable Use(CancellationToken cancellationToken)
         {
-            return CancellationTokenOverrideScopeProvider.BeginScope(CancellationTokenOverrideContextKey, new CancellationTokenOverride(cancellationToken));
+            return CancellationTokenOverrideScopeProvider.BeginScope(CancellationTokenOverrideContextKey,
+                new CancellationTokenOverride(cancellationToken));
         }
     }
 }

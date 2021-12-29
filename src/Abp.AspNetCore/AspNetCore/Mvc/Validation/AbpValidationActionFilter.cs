@@ -6,37 +6,36 @@ using Abp.AspNetCore.Mvc.Extensions;
 using Abp.Dependency;
 using Microsoft.AspNetCore.Mvc.Filters;
 
-namespace Abp.AspNetCore.Mvc.Validation
-{
-    public class AbpValidationActionFilter : IAsyncActionFilter, ITransientDependency
-    {
-        private readonly IIocResolver _iocResolver;
-        private readonly IAbpAspNetCoreConfiguration _configuration;
+namespace Abp.AspNetCore.Mvc.Validation;
 
-        public AbpValidationActionFilter(IIocResolver iocResolver, IAbpAspNetCoreConfiguration configuration)
+public class AbpValidationActionFilter : IAsyncActionFilter, ITransientDependency
+{
+    private readonly IIocResolver _iocResolver;
+    private readonly IAbpAspNetCoreConfiguration _configuration;
+
+    public AbpValidationActionFilter(IIocResolver iocResolver, IAbpAspNetCoreConfiguration configuration)
+    {
+        _iocResolver = iocResolver;
+        _configuration = configuration;
+    }
+
+    public async Task OnActionExecutionAsync(ActionExecutingContext context, ActionExecutionDelegate next)
+    {
+        if (!_configuration.IsValidationEnabledForControllers || !context.ActionDescriptor.IsControllerAction())
         {
-            _iocResolver = iocResolver;
-            _configuration = configuration;
+            await next();
+            return;
         }
 
-        public async Task OnActionExecutionAsync(ActionExecutingContext context, ActionExecutionDelegate next)
+        using (AbpCrossCuttingConcerns.Applying(context.Controller, AbpCrossCuttingConcerns.Validation))
         {
-            if (!_configuration.IsValidationEnabledForControllers || !context.ActionDescriptor.IsControllerAction())
+            using (var validator = _iocResolver.ResolveAsDisposable<MvcActionInvocationValidator>())
             {
-                await next();
-                return;
+                validator.Object.Initialize(context);
+                validator.Object.Validate();
             }
 
-            using (AbpCrossCuttingConcerns.Applying(context.Controller, AbpCrossCuttingConcerns.Validation))
-            {
-                using (var validator = _iocResolver.ResolveAsDisposable<MvcActionInvocationValidator>())
-                {
-                    validator.Object.Initialize(context);
-                    validator.Object.Validate();
-                }
-
-                await next();
-            }
+            await next();
         }
     }
 }

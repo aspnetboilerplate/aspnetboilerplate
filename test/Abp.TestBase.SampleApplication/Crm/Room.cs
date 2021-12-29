@@ -15,15 +15,12 @@ namespace Abp.TestBase.SampleApplication.Crm
 
         public int Capacity { get; set; }
 
-        [DisableDateTimeNormalization]
-        public DateTime CreationTime { get; set; }
+        [DisableDateTimeNormalization] public DateTime CreationTime { get; set; }
 
-        [ForeignKey("HotelId")]
-        public virtual Hotel Hotel { get; set; }
+        [ForeignKey("HotelId")] public virtual Hotel Hotel { get; set; }
 
         public Room()
         {
-            
         }
     }
 }

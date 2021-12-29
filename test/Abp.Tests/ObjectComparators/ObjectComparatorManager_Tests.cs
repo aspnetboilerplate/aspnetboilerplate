@@ -23,15 +23,11 @@ namespace Abp.Tests.ObjectComparators
 
         protected override bool Compare(string baseObject, string compareObject, string compareType)
         {
-            if (compareType != ReverseOfSecondIsEqualtoFirstCompareType)
-            {
-                return baseObject == compareObject;
-            }
-            
+            if (compareType != ReverseOfSecondIsEqualtoFirstCompareType) return baseObject == compareObject;
+
             var array = compareObject.ToCharArray();
             Array.Reverse(array);
             return baseObject == new string(array);
-
         }
     }
 
@@ -49,23 +45,20 @@ namespace Abp.Tests.ObjectComparators
 
     public enum ObjectComparatorTestClassCompareTypes
     {
-        Equals, FirstProp1BiggerThanSecondProp2AsInt//so, whatever you want
+        Equals,
+        FirstProp1BiggerThanSecondProp2AsInt //so, whatever you want
     }
 
-    public class ObjectComparatorTestClassObjectComparator : ObjectComparatorBase<ObjectComparatorTestClass, ObjectComparatorTestClassCompareTypes>// you can create comparator for anything
+    public class
+        ObjectComparatorTestClassObjectComparator : ObjectComparatorBase<ObjectComparatorTestClass,
+            ObjectComparatorTestClassCompareTypes> // you can create comparator for anything
     {
         protected override bool Compare(ObjectComparatorTestClass baseObject, ObjectComparatorTestClass compareObject,
             ObjectComparatorTestClassCompareTypes compareType)
         {
-            if (baseObject == null && compareObject == null)
-            {
-                return true;
-            }
+            if (baseObject == null && compareObject == null) return true;
 
-            if (baseObject == null || compareObject == null)
-            {
-                return false;
-            }
+            if (baseObject == null || compareObject == null) return false;
 
             switch (compareType)
             {
@@ -100,7 +93,8 @@ namespace Abp.Tests.ObjectComparators
             compareTypesForString.ShouldContain(MyTestStringObjectComparator.ReverseOfSecondIsEqualtoFirstCompareType);
 
             var compareTypesForClass = _objectComparatorManager.GetAllCompareTypes<ObjectComparatorTestClass>();
-            compareTypesForClass.SequenceEqual(Enum.GetNames(typeof(ObjectComparatorTestClassCompareTypes))).ShouldBeTrue();
+            compareTypesForClass.SequenceEqual(Enum.GetNames(typeof(ObjectComparatorTestClassCompareTypes)))
+                .ShouldBeTrue();
         }
 
         [Fact]
@@ -110,7 +104,8 @@ namespace Abp.Tests.ObjectComparators
 
             compareTypes.ContainsKey(typeof(ObjectComparatorTestClass)).ShouldBeTrue();
             var compareTypesForTestClass = compareTypes[typeof(ObjectComparatorTestClass)];
-            compareTypesForTestClass.SequenceEqual(Enum.GetNames(typeof(ObjectComparatorTestClassCompareTypes))).ShouldBeTrue();
+            compareTypesForTestClass.SequenceEqual(Enum.GetNames(typeof(ObjectComparatorTestClassCompareTypes)))
+                .ShouldBeTrue();
 
             compareTypes.ContainsKey(typeof(string)).ShouldBeTrue();
             var compareTypesForString = compareTypes[typeof(string)];
@@ -130,22 +125,28 @@ namespace Abp.Tests.ObjectComparators
         public void Can_Comparator_Tests()
         {
             _objectComparatorManager.CanCompare<string>(MyTestStringObjectComparator.EqualsCompareType).ShouldBeTrue();
-            _objectComparatorManager.CanCompare<string>(MyTestStringObjectComparator.ReverseOfSecondIsEqualtoFirstCompareType).ShouldBeTrue();
+            _objectComparatorManager
+                .CanCompare<string>(MyTestStringObjectComparator.ReverseOfSecondIsEqualtoFirstCompareType)
+                .ShouldBeTrue();
             _objectComparatorManager.CanCompare<string>("NonExistCompareType").ShouldBeFalse();
 
             _objectComparatorManager
-                .CanCompare<ObjectComparatorTestClass, ObjectComparatorTestClassCompareTypes>(ObjectComparatorTestClassCompareTypes.Equals)
+                .CanCompare<ObjectComparatorTestClass, ObjectComparatorTestClassCompareTypes>(
+                    ObjectComparatorTestClassCompareTypes.Equals)
                 .ShouldBeTrue();
             _objectComparatorManager
-                .CanCompare<ObjectComparatorTestClass, ObjectComparatorTestClassCompareTypes>(ObjectComparatorTestClassCompareTypes.FirstProp1BiggerThanSecondProp2AsInt)
+                .CanCompare<ObjectComparatorTestClass, ObjectComparatorTestClassCompareTypes>(
+                    ObjectComparatorTestClassCompareTypes.FirstProp1BiggerThanSecondProp2AsInt)
                 .ShouldBeTrue();
             _objectComparatorManager.CanCompare<ObjectComparatorTestClass>("test").ShouldBeFalse();
         }
 
         public static IEnumerable<object[]> Should_Compare_String_Data_Generator()
         {
-            yield return new object[] { "123", "321", MyTestStringObjectComparator.ReverseOfSecondIsEqualtoFirstCompareType, true };
-            yield return new object[] { "123", "123", MyTestStringObjectComparator.ReverseOfSecondIsEqualtoFirstCompareType, false };
+            yield return new object[]
+                { "123", "321", MyTestStringObjectComparator.ReverseOfSecondIsEqualtoFirstCompareType, true };
+            yield return new object[]
+                { "123", "123", MyTestStringObjectComparator.ReverseOfSecondIsEqualtoFirstCompareType, false };
             yield return new object[] { "123", "123", MyTestStringObjectComparator.EqualsCompareType, true };
             yield return new object[] { "123", "321", MyTestStringObjectComparator.EqualsCompareType, false };
         }
@@ -159,7 +160,8 @@ namespace Abp.Tests.ObjectComparators
 
         [Theory]
         [MemberData(nameof(Should_Compare_String_Data_Generator))]
-        public void Should_Compare_String_With_ObjectComparatorCondition(string baseObject, string compareObject, string compareType, bool result)
+        public void Should_Compare_String_With_ObjectComparatorCondition(string baseObject, string compareObject,
+            string compareType, bool result)
         {
             var condition = new ObjectComparatorCondition<string>();
             condition.SetValue(compareObject);
@@ -172,32 +174,32 @@ namespace Abp.Tests.ObjectComparators
         {
             yield return new object[]
             {
-                new ObjectComparatorTestClass("1","2"),
-                new ObjectComparatorTestClass("1","2"),
+                new ObjectComparatorTestClass("1", "2"),
+                new ObjectComparatorTestClass("1", "2"),
                 ObjectComparatorTestClassCompareTypes.Equals,
                 true
             };
 
             yield return new object[]
             {
-                new ObjectComparatorTestClass("1","2"),
-                new ObjectComparatorTestClass("1123","test"),
+                new ObjectComparatorTestClass("1", "2"),
+                new ObjectComparatorTestClass("1123", "test"),
                 ObjectComparatorTestClassCompareTypes.Equals,
                 false
             };
 
             yield return new object[]
             {
-                new ObjectComparatorTestClass("5","2"),
-                new ObjectComparatorTestClass("5","2"),
+                new ObjectComparatorTestClass("5", "2"),
+                new ObjectComparatorTestClass("5", "2"),
                 ObjectComparatorTestClassCompareTypes.FirstProp1BiggerThanSecondProp2AsInt,
                 true
             };
 
             yield return new object[]
             {
-                new ObjectComparatorTestClass("2","5"),
-                new ObjectComparatorTestClass("2","5"),
+                new ObjectComparatorTestClass("2", "5"),
+                new ObjectComparatorTestClass("2", "5"),
                 ObjectComparatorTestClassCompareTypes.FirstProp1BiggerThanSecondProp2AsInt,
                 false
             };
@@ -222,7 +224,8 @@ namespace Abp.Tests.ObjectComparators
             ObjectComparatorTestClassCompareTypes compareType,
             bool result)
         {
-            var condition = new ObjectComparatorCondition<ObjectComparatorTestClass, ObjectComparatorTestClassCompareTypes>();
+            var condition =
+                new ObjectComparatorCondition<ObjectComparatorTestClass, ObjectComparatorTestClassCompareTypes>();
             condition.SetValue(compareObject);
             condition.CompareType = compareType;
 

@@ -4,28 +4,27 @@ using Abp.Reflection.Extensions;
 using Abp.Zero;
 using IdentityServer4.Models;
 
-namespace Abp.IdentityServer4
+namespace Abp.IdentityServer4;
+
+[DependsOn(typeof(AbpZeroCoreModule), typeof(AbpAutoMapperModule))]
+public class AbpZeroCoreIdentityServerModule : AbpModule
 {
-    [DependsOn(typeof(AbpZeroCoreModule), typeof(AbpAutoMapperModule))]
-    public class AbpZeroCoreIdentityServerModule : AbpModule
+    public override void PreInitialize()
     {
-        public override void PreInitialize()
+        Configuration.Modules.AbpAutoMapper().Configurators.Add(config =>
         {
-            Configuration.Modules.AbpAutoMapper().Configurators.Add(config =>
-            {
-                //PersistedGrant -> PersistedGrantEntity
-                config.CreateMap<PersistedGrant, PersistedGrantEntity>()
-                    .ForMember(d => d.Id, c => c.MapFrom(s => s.Key));
+            //PersistedGrant -> PersistedGrantEntity
+            config.CreateMap<PersistedGrant, PersistedGrantEntity>()
+                .ForMember(d => d.Id, c => c.MapFrom(s => s.Key));
 
-                //PersistedGrantEntity -> PersistedGrant
-                config.CreateMap<PersistedGrantEntity, PersistedGrant>()
-                    .ForMember(d => d.Key, c => c.MapFrom(s => s.Id));
-            });
-        }
+            //PersistedGrantEntity -> PersistedGrant
+            config.CreateMap<PersistedGrantEntity, PersistedGrant>()
+                .ForMember(d => d.Key, c => c.MapFrom(s => s.Id));
+        });
+    }
 
-        public override void Initialize()
-        {
-            IocManager.RegisterAssemblyByConvention(typeof(AbpZeroCoreIdentityServerModule).GetAssembly());
-        }
+    public override void Initialize()
+    {
+        IocManager.RegisterAssemblyByConvention(typeof(AbpZeroCoreIdentityServerModule).GetAssembly());
     }
 }

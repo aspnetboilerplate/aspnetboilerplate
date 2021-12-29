@@ -13,7 +13,7 @@ namespace Abp.Zero.NHibernate.EntityMappings
             Map(x => x.Source);
             Map(x => x.Key);
             Map(x => x.Value);
-            
+
             this.MapAudited();
         }
     }

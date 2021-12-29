@@ -49,7 +49,7 @@ namespace Abp.Dapper.Tests
 
                 insertedProduct.ShouldNotBeNull();
                 insertedProduct.TenantId.ShouldBe(AbpSession.TenantId);
-                ((DateTime?) insertedProduct.CreationTime).ShouldNotBe(null);
+                ((DateTime?)insertedProduct.CreationTime).ShouldNotBe(null);
                 insertedProduct.CreatorUserId.ShouldBe(AbpSession.UserId);
 
                 //----Update operation should work and Modification Audits should be set---------------------------
@@ -60,7 +60,7 @@ namespace Abp.Dapper.Tests
 
                 productToUpdate.ShouldNotBeNull();
                 productToUpdate.TenantId.ShouldBe(AbpSession.TenantId);
-                ((DateTime?) productToUpdate.CreationTime).ShouldNotBe(null);
+                ((DateTime?)productToUpdate.CreationTime).ShouldNotBe(null);
                 productToUpdate.LastModifierUserId.ShouldBe(AbpSession.UserId);
 
                 //---Get method should return single-------------------------------------------------------------------
@@ -202,7 +202,7 @@ namespace Abp.Dapper.Tests
             {
                 using (_unitOfWorkManager.Current.SetTenantId(AbpSession.TenantId))
                 {
-                    await _goodDapperRepository.InsertAsync(new Good {Name = "AbpTest"});
+                    await _goodDapperRepository.InsertAsync(new Good { Name = "AbpTest" });
                     await _unitOfWorkManager.Current.SaveChangesAsync();
 
                     int? id = 1;

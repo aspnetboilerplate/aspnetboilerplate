@@ -13,10 +13,7 @@ namespace Abp.Webhooks
         /// <returns></returns>
         public static List<string> GetSubscribedWebhooks(this WebhookSubscriptionInfo webhookSubscription)
         {
-            if (webhookSubscription.Webhooks.IsNullOrWhiteSpace())
-            {
-                return new List<string>();
-            }
+            if (webhookSubscription.Webhooks.IsNullOrWhiteSpace()) return new List<string>();
 
             return webhookSubscription.Webhooks.FromJsonString<List<string>>();
         }
@@ -30,15 +27,10 @@ namespace Abp.Webhooks
         {
             name = name.Trim();
             if (name.IsNullOrWhiteSpace())
-            {
                 throw new ArgumentNullException(nameof(name), $"{nameof(name)} can not be null, empty or whitespace!");
-            }
 
             var webhookDefinitions = webhookSubscription.GetSubscribedWebhooks();
-            if (webhookDefinitions.Contains(name))
-            {
-                return;
-            }
+            if (webhookDefinitions.Contains(name)) return;
 
             webhookDefinitions.Add(name);
             webhookSubscription.Webhooks = webhookDefinitions.ToJsonString();
@@ -53,15 +45,10 @@ namespace Abp.Webhooks
         {
             name = name.Trim();
             if (name.IsNullOrWhiteSpace())
-            {
                 throw new ArgumentNullException(nameof(name), $"{nameof(name)} can not be null, empty or whitespace!");
-            }
 
             var webhookDefinitions = webhookSubscription.GetSubscribedWebhooks();
-            if (!webhookDefinitions.Contains(name))
-            {
-                return;
-            }
+            if (!webhookDefinitions.Contains(name)) return;
 
             webhookDefinitions.Remove(name);
             webhookSubscription.Webhooks = webhookDefinitions.ToJsonString();
@@ -82,10 +69,7 @@ namespace Abp.Webhooks
         /// <returns></returns>
         public static bool IsSubscribed(this WebhookSubscriptionInfo webhookSubscription, string webhookName)
         {
-            if (webhookSubscription.Webhooks.IsNullOrWhiteSpace())
-            {
-                return false;
-            }
+            if (webhookSubscription.Webhooks.IsNullOrWhiteSpace()) return false;
 
             return webhookSubscription.GetSubscribedWebhooks().Contains(webhookName);
         }
@@ -96,10 +80,7 @@ namespace Abp.Webhooks
         /// <returns></returns>
         public static IDictionary<string, string> GetWebhookHeaders(this WebhookSubscriptionInfo webhookSubscription)
         {
-            if (webhookSubscription.Headers.IsNullOrWhiteSpace())
-            {
-                return new Dictionary<string, string>();
-            }
+            if (webhookSubscription.Headers.IsNullOrWhiteSpace()) return new Dictionary<string, string>();
 
             return webhookSubscription.Headers.FromJsonString<Dictionary<string, string>>();
         }
@@ -109,15 +90,12 @@ namespace Abp.Webhooks
         /// </summary>
         public static void AddWebhookHeader(this WebhookSubscriptionInfo webhookSubscription, string key, string value)
         {
-            if (key.IsNullOrWhiteSpace() )
-            {
+            if (key.IsNullOrWhiteSpace())
                 throw new ArgumentNullException(nameof(key), $"{nameof(key)} can not be null, empty or whitespace!");
-            }
 
             if (value.IsNullOrWhiteSpace())
-            {
-                throw new ArgumentNullException(nameof(value), $"{nameof(value)} can not be null, empty or whitespace!");
-            }
+                throw new ArgumentNullException(nameof(value),
+                    $"{nameof(value)} can not be null, empty or whitespace!");
 
             var headers = webhookSubscription.GetWebhookHeaders();
             headers[key] = value;
@@ -133,16 +111,12 @@ namespace Abp.Webhooks
         public static void RemoveWebhookHeader(this WebhookSubscriptionInfo webhookSubscription, string header)
         {
             if (header.IsNullOrWhiteSpace())
-            {
-                throw new ArgumentNullException(nameof(header), $"{nameof(header)} can not be null, empty or whitespace!");
-            }
+                throw new ArgumentNullException(nameof(header),
+                    $"{nameof(header)} can not be null, empty or whitespace!");
 
             var headers = webhookSubscription.GetWebhookHeaders();
 
-            if (!headers.ContainsKey(header))
-            {
-                return;
-            }
+            if (!headers.ContainsKey(header)) return;
 
             headers.Remove(header);
 

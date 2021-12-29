@@ -31,10 +31,7 @@ namespace Abp.Resources.Embedded
         public IEnumerable<EmbeddedResourceItem> GetResources(string fullPath)
         {
             var encodedPath = EmbeddedResourcePathHelper.EncodeAsResourcesPath(fullPath);
-            if (encodedPath.Length > 0 && !encodedPath.EndsWith("."))
-            {
-                encodedPath = encodedPath + ".";
-            }
+            if (encodedPath.Length > 0 && !encodedPath.EndsWith(".")) encodedPath = encodedPath + ".";
 
             // We will assume that any file starting with this path, is in that directory.
             // NOTE: This may include false positives, but helps in the majority of cases until 
@@ -47,10 +44,7 @@ namespace Abp.Resources.Embedded
         {
             var resources = new Dictionary<string, EmbeddedResourceItem>(StringComparer.OrdinalIgnoreCase);
 
-            foreach (var source in _configuration.Sources)
-            {
-                source.AddResources(resources);
-            }
+            foreach (var source in _configuration.Sources) source.AddResources(resources);
 
             return resources;
         }

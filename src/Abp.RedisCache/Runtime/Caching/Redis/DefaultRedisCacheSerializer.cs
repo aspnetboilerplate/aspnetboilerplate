@@ -22,7 +22,7 @@ namespace Abp.Runtime.Caching.Redis
             var serializerSettings = new JsonSerializerSettings();
             serializerSettings.Converters.Insert(0, new AbpDateTimeConverter());
 
-            AbpCacheData cacheData = AbpCacheData.Deserialize(objbyte);
+            var cacheData = AbpCacheData.Deserialize(objbyte);
 
             return cacheData.Payload.FromJsonString(
                 Type.GetType(cacheData.Type, true, true),

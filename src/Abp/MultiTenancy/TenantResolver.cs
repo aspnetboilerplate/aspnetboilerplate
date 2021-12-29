@@ -38,24 +38,16 @@ namespace Abp.MultiTenancy
 
         public int? ResolveTenantId()
         {
-            if (!_multiTenancy.Resolvers.Any())
-            {
-                return null;
-            }
+            if (!_multiTenancy.Resolvers.Any()) return null;
 
             if (_ambientScopeProvider.GetValue(AmbientScopeContextKey))
-            {
                 //Preventing recursive call of ResolveTenantId
                 return null;
-            }
 
             using (_ambientScopeProvider.BeginScope(AmbientScopeContextKey, true))
             {
                 var cacheItem = _cache.Value;
-                if (cacheItem != null)
-                {
-                    return cacheItem.TenantId;
-                }
+                if (cacheItem != null) return cacheItem.TenantId;
 
                 var tenantId = GetTenantIdFromContributors();
                 _cache.Value = new TenantResolverCacheItem(tenantId);
@@ -71,7 +63,6 @@ namespace Abp.MultiTenancy
         private int? GetTenantIdFromContributors()
         {
             foreach (var resolverType in _multiTenancy.Resolvers)
-            {
                 using (var resolver = _iocResolver.ResolveAsDisposable<ITenantResolveContributor>(resolverType))
                 {
                     int? tenantId;
@@ -86,19 +77,12 @@ namespace Abp.MultiTenancy
                         continue;
                     }
 
-                    if (tenantId == null)
-                    {
-                        continue;
-                    }
+                    if (tenantId == null) continue;
 
-                    if (_tenantStore.Find(tenantId.Value) == null)
-                    {
-                        continue;
-                    }
+                    if (_tenantStore.Find(tenantId.Value) == null) continue;
 
                     return tenantId;
                 }
-            }
 
             return null;
         }

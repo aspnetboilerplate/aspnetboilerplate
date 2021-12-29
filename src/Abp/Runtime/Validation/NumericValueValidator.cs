@@ -9,19 +9,18 @@ namespace Abp.Runtime.Validation
     {
         public int MinValue
         {
-            get { return (this["MinValue"] ?? "0").To<int>(); }
-            set { this["MinValue"] = value; }
+            get => (this["MinValue"] ?? "0").To<int>();
+            set => this["MinValue"] = value;
         }
 
         public int MaxValue
         {
-            get { return (this["MaxValue"] ?? "0").To<int>(); }
-            set { this["MaxValue"] = value; }
+            get => (this["MaxValue"] ?? "0").To<int>();
+            set => this["MaxValue"] = value;
         }
 
         public NumericValueValidator()
         {
-
         }
 
         public NumericValueValidator(int minValue = int.MinValue, int maxValue = int.MaxValue)
@@ -32,23 +31,14 @@ namespace Abp.Runtime.Validation
 
         public override bool IsValid(object value)
         {
-            if (value == null)
-            {
-                return false;
-            }
+            if (value == null) return false;
 
-            if (value is int)
-            {
-                return IsValidInternal((int)value);
-            }
+            if (value is int) return IsValidInternal((int)value);
 
             if (value is string)
             {
                 int intValue;
-                if (int.TryParse(value as string, out intValue))
-                {
-                    return IsValidInternal(intValue);
-                }
+                if (int.TryParse(value as string, out intValue)) return IsValidInternal(intValue);
             }
 
             return false;

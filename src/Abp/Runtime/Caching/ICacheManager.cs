@@ -29,6 +29,7 @@ namespace Abp.Runtime.Caching
         /// Unique and case sensitive name of the cache.
         /// </param>
         /// <returns>The cache reference</returns>
-        [NotNull] TCache GetCache([NotNull] string name);
+        [NotNull]
+        TCache GetCache([NotNull] string name);
     }
 }

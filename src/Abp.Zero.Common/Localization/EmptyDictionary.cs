@@ -30,7 +30,7 @@ namespace Abp.Localization
 
         public string this[string name]
         {
-            get { return null; }
+            get => null;
             set { }
         }
     }

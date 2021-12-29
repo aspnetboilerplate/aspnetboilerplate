@@ -25,7 +25,8 @@ namespace Abp.Zero.SampleApp.NHibernate.TestDatas
         private void AddUsersToOus()
         {
             var defaultTenant = _session.Query<Tenant>().Single(t => t.Name == Tenant.DefaultTenantName);
-            var adminUser = _session.Query<User>().Single(u => u.TenantId == defaultTenant.Id && u.UserName == User.AdminUserName);
+            var adminUser = _session.Query<User>()
+                .Single(u => u.TenantId == defaultTenant.Id && u.UserName == User.AdminUserName);
 
             var ou11 = _session.Query<OrganizationUnit>().Single(ou => ou.DisplayName == "OU11");
             var ou21 = _session.Query<OrganizationUnit>().Single(ou => ou.DisplayName == "OU21");

@@ -22,7 +22,7 @@ namespace Abp.NHibernate.Repositories
         /// <summary>
         /// Gets the NHibernate session object to perform database operations.
         /// </summary>
-        public virtual ISession Session { get { return _sessionProvider.Session; } }
+        public virtual ISession Session => _sessionProvider.Session;
 
         private readonly ISessionProvider _sessionProvider;
 
@@ -45,20 +45,16 @@ namespace Abp.NHibernate.Repositories
             return Task.FromResult(Session.Query<TEntity>());
         }
 
-        public override IQueryable<TEntity> GetAllIncluding(params Expression<Func<TEntity, object>>[] propertySelectors)
+        public override IQueryable<TEntity> GetAllIncluding(
+            params Expression<Func<TEntity, object>>[] propertySelectors)
         {
-            if (propertySelectors.IsNullOrEmpty())
-            {
-                return GetAll();
-            }
+            if (propertySelectors.IsNullOrEmpty()) return GetAll();
 
             var query = GetAll();
 
             foreach (var propertySelector in propertySelectors)
-            {
                 //TODO: Test if NHibernate supports multiple fetch.
                 query = query.Fetch(propertySelector);
-            }
 
             return query;
         }
@@ -179,10 +175,7 @@ namespace Abp.NHibernate.Repositories
         {
             var entities = await GetAllListAsync(predicate);
 
-            foreach (var entity in entities)
-            {
-                await DeleteAsync(entity);
-            }
+            foreach (var entity in entities) await DeleteAsync(entity);
         }
 
         public override Task<int> CountAsync()

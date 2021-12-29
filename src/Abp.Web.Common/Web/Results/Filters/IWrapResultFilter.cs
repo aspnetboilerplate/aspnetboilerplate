@@ -9,7 +9,7 @@
         /// <param name="wrapOnSuccess"></param>
         /// <returns></returns>
         bool HasFilterForWrapOnSuccess(string url, out bool wrapOnSuccess);
-        
+
         /// <summary>
         /// Returns whether to apply the filter. Stores filter result on <paramref name="wrapOnError"/>.
         /// </summary>

@@ -69,19 +69,15 @@ namespace Abp.DynamicEntityProperties
         public virtual void Delete(long id)
         {
             var val = Get(id);
-            if (val != null)//Get checks permission, no need to check it again  
-            {
+            if (val != null) //Get checks permission, no need to check it again  
                 DynamicPropertyValueStore.Delete(id);
-            }
         }
 
         public virtual async Task DeleteAsync(long id)
         {
             var val = await GetAsync(id);
-            if (val != null)//Get checks permission, no need to check it again
-            {
+            if (val != null) //Get checks permission, no need to check it again
                 await DynamicPropertyValueStore.DeleteAsync(id);
-            }
         }
 
         public virtual void CleanValues(int dynamicPropertyId)

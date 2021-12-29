@@ -13,10 +13,7 @@ namespace Abp.Application.Features
         /// </summary>
         public void AddAllFeatures()
         {
-            foreach (var feature in Values.ToList())
-            {
-                AddFeatureRecursively(feature);
-            }
+            foreach (var feature in Values.ToList()) AddFeatureRecursively(feature);
         }
 
         private void AddFeatureRecursively(Feature feature)
@@ -25,9 +22,7 @@ namespace Abp.Application.Features
             if (TryGetValue(feature.Name, out var existingFeature))
             {
                 if (existingFeature != feature)
-                {
                     throw new AbpInitializationException("Duplicate feature name detected for " + feature.Name);
-                }
             }
             else
             {
@@ -35,10 +30,7 @@ namespace Abp.Application.Features
             }
 
             //Add child features (recursive call)
-            foreach (var childFeature in feature.Children)
-            {
-                AddFeatureRecursively(childFeature);
-            }
+            foreach (var childFeature in feature.Children) AddFeatureRecursively(childFeature);
         }
     }
 }

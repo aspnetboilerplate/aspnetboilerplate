@@ -15,7 +15,7 @@ namespace Abp.Web
     /// <summary>
     /// This module is used to use ABP in ASP.NET web applications.
     /// </summary>
-    [DependsOn(typeof(AbpKernelModule))]    
+    [DependsOn(typeof(AbpKernelModule))]
     public class AbpWebCommonModule : AbpModule
     {
         /// <inheritdoc/>
@@ -28,20 +28,21 @@ namespace Abp.Web
             IocManager.Register<IAbpWebCommonModuleConfiguration, AbpWebCommonModuleConfiguration>();
             IocManager.Register<IJavaScriptMinifier, NUglifyJavaScriptMinifier>();
 
-            Configuration.Modules.AbpWebCommon().ApiProxyScripting.Generators[JQueryProxyScriptGenerator.Name] = typeof(JQueryProxyScriptGenerator);
+            Configuration.Modules.AbpWebCommon().ApiProxyScripting.Generators[JQueryProxyScriptGenerator.Name] =
+                typeof(JQueryProxyScriptGenerator);
 
             Configuration.Localization.Sources.Add(
                 new DictionaryBasedLocalizationSource(
                     AbpWebConsts.LocalizaionSourceName,
                     new XmlEmbeddedFileLocalizationDictionaryProvider(
                         typeof(AbpWebCommonModule).GetAssembly(), "Abp.Web.Localization.AbpWebXmlSource"
-                        )));
+                    )));
         }
 
         /// <inheritdoc/>
         public override void Initialize()
         {
-            IocManager.RegisterAssemblyByConvention(typeof(AbpWebCommonModule).GetAssembly());            
+            IocManager.RegisterAssemblyByConvention(typeof(AbpWebCommonModule).GetAssembly());
         }
     }
 }

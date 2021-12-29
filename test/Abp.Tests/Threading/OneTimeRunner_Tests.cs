@@ -12,13 +12,8 @@ namespace Abp.Tests.Threading
             var oneTimeRunner = new OneTimeRunner();
             var count = 0;
             for (int i = 0; i < 10; i++)
-            {
-                oneTimeRunner.Run(() =>
-                {
-                    count++;
-                });
-            }
-            
+                oneTimeRunner.Run(() => { count++; });
+
             count.ShouldBe(1);
         }
     }

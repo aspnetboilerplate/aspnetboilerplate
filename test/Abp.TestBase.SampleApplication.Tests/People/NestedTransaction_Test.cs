@@ -53,7 +53,7 @@ namespace Abp.TestBase.SampleApplication.Tests.People
                     throw new ApplicationException("This exception is thown to rollback outer transaction!");
                 }
             });
-            
+
             exception.Message.ShouldBe("This exception is thown to rollback outer transaction!");
 
             UsingDbContext(context =>

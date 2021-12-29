@@ -111,15 +111,12 @@ namespace Abp.BackgroundJobs
         /// <returns></returns>
         public virtual DateTime? CalculateNextTryTime()
         {
-            var nextWaitDuration = DefaultFirstWaitDuration * (Math.Pow(DefaultWaitFactor, TryCount - 1));
+            var nextWaitDuration = DefaultFirstWaitDuration * Math.Pow(DefaultWaitFactor, TryCount - 1);
             var nextTryDate = LastTryTime.HasValue
                 ? LastTryTime.Value.AddSeconds(nextWaitDuration)
                 : Clock.Now.AddSeconds(nextWaitDuration);
 
-            if (nextTryDate.Subtract(CreationTime).TotalSeconds > DefaultTimeout)
-            {
-                return null;
-            }
+            if (nextTryDate.Subtract(CreationTime).TotalSeconds > DefaultTimeout) return null;
 
             return nextTryDate;
         }

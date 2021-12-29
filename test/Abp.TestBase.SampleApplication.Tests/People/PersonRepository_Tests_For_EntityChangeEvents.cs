@@ -91,8 +91,8 @@ namespace Abp.TestBase.SampleApplication.Tests.People
             createdTriggerCount.ShouldBe(1);
         }
 
-         [Fact]
-         public void Should_Immediate_Trigger_All_Events_For_Suppress_Transaction_Scopes()
+        [Fact]
+        public void Should_Immediate_Trigger_All_Events_For_Suppress_Transaction_Scopes()
         {
             var changingTriggerCount = 0;
             var creatingTriggerCount = 0;
@@ -278,7 +278,8 @@ namespace Abp.TestBase.SampleApplication.Tests.People
             var text = $"{person.Name} is being created with Id = {person.Id}!";
             UsingDbContext(context =>
             {
-                var message = context.Messages.FirstOrDefault(m => m.Text == text && m.TenantId == PersonHandler.FakeTenantId);
+                var message =
+                    context.Messages.FirstOrDefault(m => m.Text == text && m.TenantId == PersonHandler.FakeTenantId);
                 message.ShouldNotBeNull();
             });
         }
@@ -292,12 +293,14 @@ namespace Abp.TestBase.SampleApplication.Tests.People
             var text = string.Format("{0} is created with Id = {1}!", person.Name, person.Id);
             UsingDbContext(context =>
             {
-                var message = context.Messages.FirstOrDefault(m => m.Text == text && m.TenantId == PersonHandler.FakeTenantId);
+                var message =
+                    context.Messages.FirstOrDefault(m => m.Text == text && m.TenantId == PersonHandler.FakeTenantId);
                 message.ShouldNotBeNull();
             });
         }
 
-        public class PersonHandler : IEventHandler<EntityCreatingEventData<Person>>, IEventHandler<EntityCreatedEventData<Person>>, ITransientDependency
+        public class PersonHandler : IEventHandler<EntityCreatingEventData<Person>>,
+            IEventHandler<EntityCreatedEventData<Person>>, ITransientDependency
         {
             public const int FakeTenantId = 65910381;
 

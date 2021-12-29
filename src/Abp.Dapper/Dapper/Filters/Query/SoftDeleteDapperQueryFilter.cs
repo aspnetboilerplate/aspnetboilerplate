@@ -1,11 +1,9 @@
 ﻿using System;
 using System.Linq.Expressions;
 using System.Reflection;
-
 using Abp.Dapper.Utils;
 using Abp.Domain.Entities;
 using Abp.Domain.Uow;
-
 using DapperExtensions;
 
 namespace Abp.Dapper.Filters.Query
@@ -29,21 +27,21 @@ namespace Abp.Dapper.Filters.Query
         {
             IFieldPredicate predicate = null;
             if (IsFilterable<TEntity, TPrimaryKey>())
-            {
                 predicate = Predicates.Field<TEntity>(f => (f as ISoftDelete).IsDeleted, Operator.Eq, IsDeleted);
-            }
 
             return predicate;
         }
 
-        public Expression<Func<TEntity, bool>> ExecuteFilter<TEntity, TPrimaryKey>(Expression<Func<TEntity, bool>> predicate) where TEntity : class, IEntity<TPrimaryKey>
+        public Expression<Func<TEntity, bool>> ExecuteFilter<TEntity, TPrimaryKey>(
+            Expression<Func<TEntity, bool>> predicate) where TEntity : class, IEntity<TPrimaryKey>
         {
             if (IsFilterable<TEntity, TPrimaryKey>())
             {
                 PropertyInfo propType = typeof(TEntity).GetProperty(nameof(ISoftDelete.IsDeleted));
                 if (predicate == null)
                 {
-                    predicate = ExpressionUtils.MakePredicate<TEntity>(nameof(ISoftDelete.IsDeleted), IsDeleted, propType.PropertyType);
+                    predicate = ExpressionUtils.MakePredicate<TEntity>(nameof(ISoftDelete.IsDeleted), IsDeleted,
+                        propType.PropertyType);
                 }
                 else
                 {
@@ -55,6 +53,7 @@ namespace Abp.Dapper.Filters.Query
                     predicate = Expression.Lambda<Func<TEntity, bool>>(body, paramExpr);
                 }
             }
+
             return predicate;
         }
 

@@ -10,15 +10,10 @@ namespace Abp.Runtime.Caching.Redis
     {
         public static void KeyDeleteWithPrefix(this IDatabase database, string prefix)
         {
-            if (database == null)
-            {
-                throw new ArgumentException("Database cannot be null", nameof(database));
-            }
+            if (database == null) throw new ArgumentException("Database cannot be null", nameof(database));
 
             if (string.IsNullOrWhiteSpace(prefix))
-            {
                 throw new ArgumentException("Prefix cannot be empty", nameof(prefix));
-            }
 
             database.ScriptEvaluate(@"
                 local keys = redis.call('keys', ARGV[1]) 
@@ -29,22 +24,15 @@ namespace Abp.Runtime.Caching.Redis
 
         public static int KeyCount(this IDatabase database, string prefix)
         {
-            if (database == null)
-            {
-                throw new ArgumentException("Database cannot be null", nameof(database));
-            }
+            if (database == null) throw new ArgumentException("Database cannot be null", nameof(database));
 
             if (string.IsNullOrWhiteSpace(prefix))
-            {
                 throw new ArgumentException("Prefix cannot be empty", nameof(prefix));
-            }
 
-            var retVal = database.ScriptEvaluate("return table.getn(redis.call('keys', ARGV[1]))", values: new RedisValue[] { prefix });
+            var retVal = database.ScriptEvaluate("return table.getn(redis.call('keys', ARGV[1]))",
+                values: new RedisValue[] { prefix });
 
-            if (retVal.IsNull)
-            {
-                return 0;
-            }
+            if (retVal.IsNull) return 0;
 
             return (int)retVal;
         }

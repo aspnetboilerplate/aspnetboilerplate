@@ -22,7 +22,9 @@ namespace Abp.Domain.Entities.Caching
         }
     }
 
-    public class MustHaveTenantEntityCache<TEntity, TCacheItem, TPrimaryKey> : MultiTenancyEntityCache<TEntity, TCacheItem, TPrimaryKey>
+    public class
+        MustHaveTenantEntityCache<TEntity, TCacheItem, TPrimaryKey> : MultiTenancyEntityCache<TEntity, TCacheItem,
+            TPrimaryKey>
         where TEntity : class, IEntity<TPrimaryKey>, IMustHaveTenant
     {
         public MustHaveTenantEntityCache(

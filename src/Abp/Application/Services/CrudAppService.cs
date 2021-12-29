@@ -13,7 +13,6 @@ namespace Abp.Application.Services
         protected CrudAppService(IRepository<TEntity, int> repository)
             : base(repository)
         {
-
         }
     }
 
@@ -25,7 +24,6 @@ namespace Abp.Application.Services
         protected CrudAppService(IRepository<TEntity, TPrimaryKey> repository)
             : base(repository)
         {
-
         }
     }
 
@@ -37,7 +35,6 @@ namespace Abp.Application.Services
         protected CrudAppService(IRepository<TEntity, TPrimaryKey> repository)
             : base(repository)
         {
-
         }
     }
 
@@ -50,12 +47,12 @@ namespace Abp.Application.Services
         protected CrudAppService(IRepository<TEntity, TPrimaryKey> repository)
             : base(repository)
         {
-
         }
     }
 
     public abstract class CrudAppService<TEntity, TEntityDto, TPrimaryKey, TGetAllInput, TCreateInput, TUpdateInput>
-        : CrudAppService<TEntity, TEntityDto, TPrimaryKey, TGetAllInput, TCreateInput, TUpdateInput, EntityDto<TPrimaryKey>>
+        : CrudAppService<TEntity, TEntityDto, TPrimaryKey, TGetAllInput, TCreateInput, TUpdateInput,
+            EntityDto<TPrimaryKey>>
         where TEntity : class, IEntity<TPrimaryKey>
         where TEntityDto : IEntityDto<TPrimaryKey>
         where TUpdateInput : IEntityDto<TPrimaryKey>
@@ -63,12 +60,13 @@ namespace Abp.Application.Services
         protected CrudAppService(IRepository<TEntity, TPrimaryKey> repository)
             : base(repository)
         {
-
         }
     }
 
-    public abstract class CrudAppService<TEntity, TEntityDto, TPrimaryKey, TGetAllInput, TCreateInput, TUpdateInput, TGetInput>
-    : CrudAppService<TEntity, TEntityDto, TPrimaryKey, TGetAllInput, TCreateInput, TUpdateInput, TGetInput, EntityDto<TPrimaryKey>>
+    public abstract class CrudAppService<TEntity, TEntityDto, TPrimaryKey, TGetAllInput, TCreateInput, TUpdateInput,
+            TGetInput>
+        : CrudAppService<TEntity, TEntityDto, TPrimaryKey, TGetAllInput, TCreateInput, TUpdateInput, TGetInput,
+            EntityDto<TPrimaryKey>>
         where TEntity : class, IEntity<TPrimaryKey>
         where TEntityDto : IEntityDto<TPrimaryKey>
         where TUpdateInput : IEntityDto<TPrimaryKey>
@@ -77,23 +75,22 @@ namespace Abp.Application.Services
         protected CrudAppService(IRepository<TEntity, TPrimaryKey> repository)
             : base(repository)
         {
-
         }
     }
 
-    public abstract class CrudAppService<TEntity, TEntityDto, TPrimaryKey, TGetAllInput, TCreateInput, TUpdateInput, TGetInput, TDeleteInput>
-       : CrudAppServiceBase<TEntity, TEntityDto, TPrimaryKey, TGetAllInput, TCreateInput, TUpdateInput>,
-        ICrudAppService<TEntityDto, TPrimaryKey, TGetAllInput, TCreateInput, TUpdateInput, TGetInput, TDeleteInput>
-           where TEntity : class, IEntity<TPrimaryKey>
-           where TEntityDto : IEntityDto<TPrimaryKey>
-           where TUpdateInput : IEntityDto<TPrimaryKey>
-           where TGetInput : IEntityDto<TPrimaryKey>
-           where TDeleteInput : IEntityDto<TPrimaryKey>
+    public abstract class CrudAppService<TEntity, TEntityDto, TPrimaryKey, TGetAllInput, TCreateInput, TUpdateInput,
+            TGetInput, TDeleteInput>
+        : CrudAppServiceBase<TEntity, TEntityDto, TPrimaryKey, TGetAllInput, TCreateInput, TUpdateInput>,
+            ICrudAppService<TEntityDto, TPrimaryKey, TGetAllInput, TCreateInput, TUpdateInput, TGetInput, TDeleteInput>
+        where TEntity : class, IEntity<TPrimaryKey>
+        where TEntityDto : IEntityDto<TPrimaryKey>
+        where TUpdateInput : IEntityDto<TPrimaryKey>
+        where TGetInput : IEntityDto<TPrimaryKey>
+        where TDeleteInput : IEntityDto<TPrimaryKey>
     {
         protected CrudAppService(IRepository<TEntity, TPrimaryKey> repository)
             : base(repository)
         {
-
         }
 
         public virtual TEntityDto Get(TGetInput input)

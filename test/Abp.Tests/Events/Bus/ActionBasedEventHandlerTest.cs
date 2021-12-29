@@ -53,10 +53,7 @@ namespace Abp.Tests.Events.Bus
             var totalData = 0;
 
             var registerDisposer = EventBus.Register<MySimpleEventData>(
-                eventData =>
-                {
-                    totalData += eventData.Value;
-                });
+                eventData => { totalData += eventData.Value; });
 
             EventBus.Trigger(this, new MySimpleEventData(1));
             EventBus.Trigger(this, new MySimpleEventData(2));
@@ -75,10 +72,7 @@ namespace Abp.Tests.Events.Bus
             var totalData = 0;
 
             var action = new Action<MySimpleEventData>(
-                eventData =>
-                {
-                    totalData += eventData.Value;
-                });
+                eventData => { totalData += eventData.Value; });
 
             EventBus.Register(action);
 

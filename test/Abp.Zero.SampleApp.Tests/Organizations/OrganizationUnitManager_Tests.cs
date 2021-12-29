@@ -37,7 +37,8 @@ namespace Abp.Zero.SampleApp.Tests.Organizations
             var ou11 = GetOU("OU11");
 
             //Act
-            await _organizationUnitManager.CreateAsync(new OrganizationUnit(AbpSession.TenantId, "OU11 New Child", ou11.Id));
+            await _organizationUnitManager.CreateAsync(new OrganizationUnit(AbpSession.TenantId, "OU11 New Child",
+                ou11.Id));
 
             //Assert
             var newChild = GetOUOrNull("OU11 New Child");
@@ -45,7 +46,7 @@ namespace Abp.Zero.SampleApp.Tests.Organizations
             newChild.ParentId.ShouldBe(ou11.Id);
             newChild.Code.ShouldBe(OrganizationUnit.CreateCode(1, 1, 3));
         }
-        
+
         [Fact]
         public async Task Should_Not_Create_OU_With_Same_Name_In_Same_Level()
         {
@@ -56,8 +57,8 @@ namespace Abp.Zero.SampleApp.Tests.Organizations
             await Assert.ThrowsAsync<UserFriendlyException>(
                 () => _organizationUnitManager.CreateAsync(
                     new OrganizationUnit(AbpSession.TenantId, "OU112", ou11.Id)
-                    )
-                );
+                )
+            );
         }
 
         [Fact]
@@ -134,14 +135,16 @@ namespace Abp.Zero.SampleApp.Tests.Organizations
 
         private OrganizationUnit GetOU(string diplayName)
         {
-            var organizationUnit = UsingDbContext(context => context.OrganizationUnits.FirstOrDefault(ou => ou.DisplayName == diplayName));
+            var organizationUnit = UsingDbContext(context =>
+                context.OrganizationUnits.FirstOrDefault(ou => ou.DisplayName == diplayName));
             organizationUnit.ShouldNotBeNull();
             return organizationUnit;
         }
 
         private OrganizationUnit GetOUOrNull(string diplayName)
         {
-            return UsingDbContext(context => context.OrganizationUnits.FirstOrDefault(ou => ou.DisplayName == diplayName));
+            return UsingDbContext(context =>
+                context.OrganizationUnits.FirstOrDefault(ou => ou.DisplayName == diplayName));
         }
     }
 }

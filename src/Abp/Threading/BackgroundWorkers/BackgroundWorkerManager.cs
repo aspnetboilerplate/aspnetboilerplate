@@ -46,20 +46,14 @@ namespace Abp.Threading.BackgroundWorkers
         {
             _backgroundJobs.Add(worker);
 
-            if (IsRunning)
-            {
-                worker.Start();
-            }
+            if (IsRunning) worker.Start();
         }
 
         private bool _isDisposed;
 
         public void Dispose()
         {
-            if (_isDisposed)
-            {
-                return;
-            }
+            if (_isDisposed) return;
 
             _isDisposed = true;
 

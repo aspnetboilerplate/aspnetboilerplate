@@ -15,7 +15,9 @@ namespace Abp.Specifications
         /// </summary>
         /// <param name="left">The first specification.</param>
         /// <param name="right">The second specification.</param>
-        public AndSpecification(ISpecification<T> left, ISpecification<T> right) : base(left, right) { }
+        public AndSpecification(ISpecification<T> left, ISpecification<T> right) : base(left, right)
+        {
+        }
 
         /// <summary>
         /// Gets the LINQ expression which represents the current specification.

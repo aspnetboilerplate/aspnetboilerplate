@@ -24,7 +24,7 @@ namespace Abp.Tests.Linq.Expressions
             var r1 = func(new TestObj { Value = false });
             r1.ShouldBeTrue();
 
-            args = new TestArgs {Value = true};
+            args = new TestArgs { Value = true };
             var r3 = func(new TestObj { Value = false });
             r3.ShouldBeFalse();
 

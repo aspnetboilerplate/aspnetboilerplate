@@ -33,7 +33,6 @@ namespace Abp.Web.Models
         /// </summary>
         public ErrorInfo()
         {
-
         }
 
         /// <summary>

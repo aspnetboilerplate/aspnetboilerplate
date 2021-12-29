@@ -32,10 +32,7 @@ namespace Abp.Application.Navigation
         public async Task<UserMenu> GetMenuAsync(string menuName, UserIdentifier user)
         {
             var menuDefinition = _navigationManager.Menus.GetOrDefault(menuName);
-            if (menuDefinition == null)
-            {
-                throw new AbpException("There is no menu with given name: " + menuName);
-            }
+            if (menuDefinition == null) throw new AbpException("There is no menu with given name: " + menuName);
 
             var userMenu = new UserMenu(menuDefinition, _localizationContext);
             await FillUserMenuItems(user, menuDefinition.Items, userMenu.Items);
@@ -46,15 +43,13 @@ namespace Abp.Application.Navigation
         {
             var userMenus = new List<UserMenu>();
 
-            foreach (var menu in _navigationManager.Menus.Values)
-            {
-                userMenus.Add(await GetMenuAsync(menu.Name, user));
-            }
+            foreach (var menu in _navigationManager.Menus.Values) userMenus.Add(await GetMenuAsync(menu.Name, user));
 
             return userMenus;
         }
 
-        private async Task<int> FillUserMenuItems(UserIdentifier user, IList<MenuItemDefinition> menuItemDefinitions, IList<UserMenuItem> userMenuItems)
+        private async Task<int> FillUserMenuItems(UserIdentifier user, IList<MenuItemDefinition> menuItemDefinitions,
+            IList<UserMenuItem> userMenuItems)
         {
             //TODO: Can be optimized by re-using FeatureDependencyContext.
 
@@ -67,29 +62,25 @@ namespace Abp.Application.Navigation
 
                 var featureDependencyContext = scope.Resolve<FeatureDependencyContext>();
                 featureDependencyContext.TenantId = user == null ? null : user.TenantId;
-                
+
                 foreach (var menuItemDefinition in menuItemDefinitions)
                 {
-                    if (menuItemDefinition.RequiresAuthentication && user == null)
-                    {
-                        continue;
-                    }
+                    if (menuItemDefinition.RequiresAuthentication && user == null) continue;
 
                     if (menuItemDefinition.PermissionDependency != null &&
-                        (user == null || !(await menuItemDefinition.PermissionDependency.IsSatisfiedAsync(permissionDependencyContext))))
-                    {
+                        (user == null ||
+                         !await menuItemDefinition.PermissionDependency.IsSatisfiedAsync(permissionDependencyContext)))
                         continue;
-                    }
 
                     if (menuItemDefinition.FeatureDependency != null &&
-                        (AbpSession.MultiTenancySide == MultiTenancySides.Tenant || (user != null && user.TenantId != null)) &&
-                        !(await menuItemDefinition.FeatureDependency.IsSatisfiedAsync(featureDependencyContext)))
-                    {
+                        (AbpSession.MultiTenancySide == MultiTenancySides.Tenant ||
+                         user != null && user.TenantId != null) &&
+                        !await menuItemDefinition.FeatureDependency.IsSatisfiedAsync(featureDependencyContext))
                         continue;
-                    }
 
                     var userMenuItem = new UserMenuItem(menuItemDefinition, _localizationContext);
-                    if (menuItemDefinition.IsLeaf || (await FillUserMenuItems(user, menuItemDefinition.Items, userMenuItem.Items)) > 0)
+                    if (menuItemDefinition.IsLeaf ||
+                        await FillUserMenuItems(user, menuItemDefinition.Items, userMenuItem.Items) > 0)
                     {
                         userMenuItems.Add(userMenuItem);
                         ++addedMenuItemCount;

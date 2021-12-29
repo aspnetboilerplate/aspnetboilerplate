@@ -5,6 +5,5 @@ namespace Abp.TestBase.SampleApplication.GuidEntities
 {
     public class TestEntityWithGuidPk : Entity<Guid>
     {
-
     }
 }

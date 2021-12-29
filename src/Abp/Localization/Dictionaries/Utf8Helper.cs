@@ -15,15 +15,9 @@ namespace Abp.Localization.Dictionaries
 
         private static bool HasBom(byte[] bytes)
         {
-            if (bytes.Length < 3)
-            {
-                return false;
-            }
+            if (bytes.Length < 3) return false;
 
-            if (!(bytes[0] == 0xEF && bytes[1] == 0xBB && bytes[2] == 0xBF))
-            {
-                return false;
-            }
+            if (!(bytes[0] == 0xEF && bytes[1] == 0xBB && bytes[2] == 0xBF)) return false;
 
             return true;
         }

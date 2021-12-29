@@ -11,7 +11,8 @@ namespace Abp.Dapper.Extensions
     internal static class SortingExtensions
     {
         [NotNull]
-        public static List<ISort> ToSortable<T>([NotNull] this Expression<Func<T, object>>[] sortingExpression, bool ascending = true)
+        public static List<ISort> ToSortable<T>([NotNull] this Expression<Func<T, object>>[] sortingExpression,
+            bool ascending = true)
         {
             Check.NotNullOrEmpty(sortingExpression, nameof(sortingExpression));
 

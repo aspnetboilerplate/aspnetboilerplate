@@ -11,157 +11,134 @@ using Microsoft.AspNetCore.OData.Formatter;
 using Microsoft.AspNetCore.OData.Query;
 using Microsoft.AspNetCore.OData.Results;
 
-namespace Abp.AspNetCore.OData.Controllers
-{
-    public abstract class AbpODataEntityController<TEntity> : AbpODataEntityController<TEntity, int>
-        where TEntity : class, IEntity<int>
-    {
-        protected AbpODataEntityController(IRepository<TEntity> repository)
-            : base(repository)
-        {
+namespace Abp.AspNetCore.OData.Controllers;
 
-        }
+public abstract class AbpODataEntityController<TEntity> : AbpODataEntityController<TEntity, int>
+    where TEntity : class, IEntity<int>
+{
+    protected AbpODataEntityController(IRepository<TEntity> repository)
+        : base(repository)
+    {
+    }
+}
+
+public abstract class AbpODataEntityController<TEntity, TPrimaryKey> : AbpODataController
+    where TPrimaryKey : IEquatable<TPrimaryKey>
+    where TEntity : class, IEntity<TPrimaryKey>
+{
+    protected IRepository<TEntity, TPrimaryKey> Repository { get; private set; }
+
+    protected AbpODataEntityController(IRepository<TEntity, TPrimaryKey> repository)
+    {
+        Repository = repository;
     }
 
-    public abstract class AbpODataEntityController<TEntity, TPrimaryKey> : AbpODataController
-        where TPrimaryKey : IEquatable<TPrimaryKey>
-        where TEntity : class, IEntity<TPrimaryKey>
+    protected virtual string GetPermissionName { get; set; }
+
+    protected virtual string GetAllPermissionName { get; set; }
+
+    protected virtual string CreatePermissionName { get; set; }
+
+    protected virtual string UpdatePermissionName { get; set; }
+
+    protected virtual string DeletePermissionName { get; set; }
+
+    [EnableQuery]
+    public virtual IQueryable<TEntity> Get()
     {
-        protected IRepository<TEntity, TPrimaryKey> Repository { get; private set; }
-        
-        protected AbpODataEntityController(IRepository<TEntity, TPrimaryKey> repository)
-        {
-            Repository = repository;
-        }
+        CheckGetAllPermission();
 
-        protected virtual string GetPermissionName { get; set; }
+        return Repository.GetAll();
+    }
 
-        protected virtual string GetAllPermissionName { get; set; }
+    [EnableQuery]
+    public virtual SingleResult<TEntity> Get([FromODataUri] TPrimaryKey key)
+    {
+        CheckGetPermission();
 
-        protected virtual string CreatePermissionName { get; set; }
+        var entity = Repository.GetAll().Where(e => e.Id.Equals(key));
 
-        protected virtual string UpdatePermissionName { get; set; }
+        return SingleResult.Create(entity);
+    }
 
-        protected virtual string DeletePermissionName { get; set; }
+    public virtual async Task<IActionResult> Post([FromBody] TEntity entity)
+    {
+        CheckCreatePermission();
 
-        [EnableQuery]
-        public virtual IQueryable<TEntity> Get()
-        {
-            CheckGetAllPermission();
+        if (!ModelState.IsValid) return BadRequest(ModelState);
 
-            return Repository.GetAll();
-        }
+        var createdEntity = await Repository.InsertAsync(entity);
+        await UnitOfWorkManager.Current.SaveChangesAsync();
 
-        [EnableQuery]
-        public virtual SingleResult<TEntity> Get([FromODataUri] TPrimaryKey key)
-        {
-            CheckGetPermission();
+        return Created(createdEntity);
+    }
 
-            var entity = Repository.GetAll().Where(e => e.Id.Equals(key));
+    public virtual async Task<IActionResult> Patch([FromODataUri] TPrimaryKey key, [FromBody] Delta<TEntity> entity)
+    {
+        CheckUpdatePermission();
 
-            return SingleResult.Create(entity);
-        }
+        if (!ModelState.IsValid) return BadRequest(ModelState);
 
-        public virtual async Task<IActionResult> Post([FromBody] TEntity entity)
-        {
-            CheckCreatePermission();
+        var dbLookup = await Repository.GetAsync(key);
+        if (dbLookup == null) return NotFound();
 
-            if (!ModelState.IsValid)
-            {
-                return BadRequest(ModelState);
-            }
+        entity.Patch(dbLookup);
 
-            var createdEntity = await Repository.InsertAsync(entity);
-            await UnitOfWorkManager.Current.SaveChangesAsync();
-            
-            return Created(createdEntity);
-        }
+        return Updated(entity);
+    }
 
-        public virtual async Task<IActionResult> Patch([FromODataUri] TPrimaryKey key, [FromBody] Delta<TEntity> entity)
-        {
-            CheckUpdatePermission();
+    public virtual async Task<IActionResult> Put([FromODataUri] TPrimaryKey key, [FromBody] TEntity update)
+    {
+        CheckUpdatePermission();
 
-            if (!ModelState.IsValid)
-            {
-                return BadRequest(ModelState);
-            }
-            
-            var dbLookup = await Repository.GetAsync(key);
-            if (dbLookup == null)
-            {
-                return NotFound();
-            }
-            
-            entity.Patch(dbLookup);
+        if (!ModelState.IsValid) return BadRequest(ModelState);
 
-            return Updated(entity);
-        }
+        if (!key.Equals(update.Id)) return BadRequest();
 
-        public virtual async Task<IActionResult> Put([FromODataUri] TPrimaryKey key, [FromBody] TEntity update)
-        {
-            CheckUpdatePermission();
-            
-            if (!ModelState.IsValid)
-            {
-                return BadRequest(ModelState);
-            }
+        var updated = await Repository.UpdateAsync(update);
 
-            if (!key.Equals(update.Id))
-            {
-                return BadRequest();
-            }
-            
-            var updated = await Repository.UpdateAsync(update);
+        return Updated(updated);
+    }
 
-            return Updated(updated);
-        }
+    public virtual async Task<IActionResult> Delete([FromODataUri] TPrimaryKey key)
+    {
+        CheckDeletePermission();
 
-        public virtual async Task<IActionResult> Delete([FromODataUri] TPrimaryKey key)
-        {
-            CheckDeletePermission();
+        var product = await Repository.GetAsync(key);
+        if (product == null) return NotFound();
 
-            var product = await Repository.GetAsync(key);
-            if (product == null)
-            {
-                return NotFound();
-            }
-            
-            await Repository.DeleteAsync(key);
+        await Repository.DeleteAsync(key);
 
-            return StatusCode((int)HttpStatusCode.NoContent);
-        }
+        return StatusCode((int)HttpStatusCode.NoContent);
+    }
 
-        protected virtual void CheckPermission(string permissionName)
-        {
-            if (!string.IsNullOrEmpty(permissionName))
-            {
-                PermissionChecker.Authorize(permissionName);
-            }
-        }
+    protected virtual void CheckPermission(string permissionName)
+    {
+        if (!string.IsNullOrEmpty(permissionName)) PermissionChecker.Authorize(permissionName);
+    }
 
-        protected virtual void CheckGetPermission()
-        {
-            CheckPermission(GetPermissionName);
-        }
+    protected virtual void CheckGetPermission()
+    {
+        CheckPermission(GetPermissionName);
+    }
 
-        protected virtual void CheckGetAllPermission()
-        {
-            CheckPermission(GetAllPermissionName);
-        }
+    protected virtual void CheckGetAllPermission()
+    {
+        CheckPermission(GetAllPermissionName);
+    }
 
-        protected virtual void CheckCreatePermission()
-        {
-            CheckPermission(CreatePermissionName);
-        }
+    protected virtual void CheckCreatePermission()
+    {
+        CheckPermission(CreatePermissionName);
+    }
 
-        protected virtual void CheckUpdatePermission()
-        {
-            CheckPermission(UpdatePermissionName);
-        }
+    protected virtual void CheckUpdatePermission()
+    {
+        CheckPermission(UpdatePermissionName);
+    }
 
-        protected virtual void CheckDeletePermission()
-        {
-            CheckPermission(DeletePermissionName);
-        }
+    protected virtual void CheckDeletePermission()
+    {
+        CheckPermission(DeletePermissionName);
     }
 }

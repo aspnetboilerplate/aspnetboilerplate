@@ -11,6 +11,7 @@ namespace Abp.TestBase.Tests.Application.Services
     public class ApplicationWithoutDb_Tests : AbpIntegratedTestBase<AbpKernelModule>
     {
         private readonly IMyAppService _myAppService;
+
         public ApplicationWithoutDb_Tests()
         {
             LocalIocManager.Register<IMyAppService, MyAppService>(DependencyLifeStyle.Transient);
@@ -20,7 +21,7 @@ namespace Abp.TestBase.Tests.Application.Services
         [Fact]
         public void Test1()
         {
-            var output = _myAppService.MyMethod(new MyMethodInput {MyStringValue = "test"});
+            var output = _myAppService.MyMethod(new MyMethodInput { MyStringValue = "test" });
             output.Result.ShouldBe(42);
         }
 
@@ -39,7 +40,7 @@ namespace Abp.TestBase.Tests.Application.Services
             }
         }
 
-        public class MyMethodInput 
+        public class MyMethodInput
         {
             public string MyStringValue { get; set; }
         }

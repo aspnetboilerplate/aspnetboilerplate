@@ -18,7 +18,7 @@ namespace Abp.Web.Mvc.Controllers
                     .BasedOn<Controller>()
                     .If(type => !type.GetTypeInfo().IsGenericTypeDefinition)
                     .LifestyleTransient()
-                );
+            );
 
             //PerWebRequest
             context.IocManager.IocContainer.Register(

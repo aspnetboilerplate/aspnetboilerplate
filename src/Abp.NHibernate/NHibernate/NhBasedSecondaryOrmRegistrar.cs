@@ -14,14 +14,19 @@ namespace Abp.NHibernate
             if (defaultRepositoryTypes.WithDefaultRepositoryInterfaces)
             {
                 iocManager.IocContainer.Register(
-                    Component.For(typeof(IRepository<>),defaultRepositoryTypes.RepositoryInterface).ImplementedBy(defaultRepositoryTypes.RepositoryImplementation).LifestyleTransient(),
-                    Component.For(typeof(IRepository<,>),defaultRepositoryTypes.RepositoryInterfaceWithPrimaryKey).ImplementedBy(defaultRepositoryTypes.RepositoryImplementationWithPrimaryKey).LifestyleTransient()
+                    Component.For(typeof(IRepository<>), defaultRepositoryTypes.RepositoryInterface)
+                        .ImplementedBy(defaultRepositoryTypes.RepositoryImplementation).LifestyleTransient(),
+                    Component.For(typeof(IRepository<,>), defaultRepositoryTypes.RepositoryInterfaceWithPrimaryKey)
+                        .ImplementedBy(defaultRepositoryTypes.RepositoryImplementationWithPrimaryKey)
+                        .LifestyleTransient()
                 );
             }
             else
             {
-                iocManager.Register(defaultRepositoryTypes.RepositoryInterface, defaultRepositoryTypes.RepositoryImplementation, DependencyLifeStyle.Transient);
-                iocManager.Register(defaultRepositoryTypes.RepositoryInterfaceWithPrimaryKey, defaultRepositoryTypes.RepositoryImplementationWithPrimaryKey, DependencyLifeStyle.Transient);
+                iocManager.Register(defaultRepositoryTypes.RepositoryInterface,
+                    defaultRepositoryTypes.RepositoryImplementation, DependencyLifeStyle.Transient);
+                iocManager.Register(defaultRepositoryTypes.RepositoryInterfaceWithPrimaryKey,
+                    defaultRepositoryTypes.RepositoryImplementationWithPrimaryKey, DependencyLifeStyle.Transient);
             }
         }
     }

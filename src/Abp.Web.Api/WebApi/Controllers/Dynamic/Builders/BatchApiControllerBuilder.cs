@@ -28,8 +28,8 @@ namespace Abp.WebApi.Controllers.Dynamic.Builders
 
         public BatchApiControllerBuilder(
             IIocResolver iocResolver,
-            IDynamicApiControllerBuilder dynamicApiControllerBuilder, 
-            Assembly assembly, 
+            IDynamicApiControllerBuilder dynamicApiControllerBuilder,
+            Assembly assembly,
             string servicePrefix)
         {
             _iocResolver = iocResolver;
@@ -86,18 +86,15 @@ namespace Abp.WebApi.Controllers.Dynamic.Builders
                 from
                     type in _assembly.GetTypes()
                 where
-                    (type.IsPublic || type.IsNestedPublic) && 
-                    type.IsInterface && 
+                    (type.IsPublic || type.IsNestedPublic) &&
+                    type.IsInterface &&
                     typeof(T).IsAssignableFrom(type) &&
                     _iocResolver.IsRegistered(type) &&
                     !RemoteServiceAttribute.IsExplicitlyDisabledFor(type)
                 select
                     type;
 
-            if (_typePredicate != null)
-            {
-                types = types.Where(t => _typePredicate(t));
-            }
+            if (_typePredicate != null) types = types.Where(t => _typePredicate(t));
 
             foreach (var type in types)
             {
@@ -105,10 +102,7 @@ namespace Abp.WebApi.Controllers.Dynamic.Builders
                     ? _serviceNameSelector(type)
                     : GetConventionalServiceName(type);
 
-                if (!string.IsNullOrWhiteSpace(_servicePrefix))
-                {
-                    serviceName = _servicePrefix + "/" + serviceName;
-                }
+                if (!string.IsNullOrWhiteSpace(_servicePrefix)) serviceName = _servicePrefix + "/" + serviceName;
 
                 var builder = typeof(IDynamicApiControllerBuilder)
                     .GetMethod("For", BindingFlags.Public | BindingFlags.Instance)
@@ -116,46 +110,36 @@ namespace Abp.WebApi.Controllers.Dynamic.Builders
                     .Invoke(_dynamicApiControllerBuilder, new object[] { serviceName });
 
                 if (_filters != null)
-                {
                     builder.GetType()
                         .GetMethod("WithFilters", BindingFlags.Public | BindingFlags.Instance)
                         .Invoke(builder, new object[] { _filters });
-                }
 
                 if (_isApiExplorerEnabled != null)
-                {
                     builder.GetType()
                         .GetMethod("WithApiExplorer", BindingFlags.Public | BindingFlags.Instance)
                         .Invoke(builder, new object[] { _isApiExplorerEnabled });
-                }
 
                 if (_isProxyScriptingEnabled != null)
-                {
                     builder.GetType()
                         .GetMethod("WithProxyScripts", BindingFlags.Public | BindingFlags.Instance)
                         .Invoke(builder, new object[] { _isProxyScriptingEnabled.Value });
-                }
 
                 if (_conventionalVerbs)
-                {
                     builder.GetType()
-                       .GetMethod("WithConventionalVerbs", BindingFlags.Public | BindingFlags.Instance)
-                       .Invoke(builder, new object[0]);
-                }
+                        .GetMethod("WithConventionalVerbs", BindingFlags.Public | BindingFlags.Instance)
+                        .Invoke(builder, new object[0]);
 
                 if (_forMethodsAction != null)
-                {
                     builder.GetType()
                         .GetMethod("ForMethods", BindingFlags.Public | BindingFlags.Instance)
                         .Invoke(builder, new object[] { _forMethodsAction });
-                }
 
                 builder.GetType()
-                        .GetMethod("Build", BindingFlags.Public | BindingFlags.Instance)
-                        .Invoke(builder, new object[0]);
+                    .GetMethod("Build", BindingFlags.Public | BindingFlags.Instance)
+                    .Invoke(builder, new object[0]);
             }
         }
-        
+
         public static string GetConventionalServiceName(Type type)
         {
             var typeName = type.Name;
@@ -163,9 +147,7 @@ namespace Abp.WebApi.Controllers.Dynamic.Builders
             typeName = typeName.RemovePostFix(ApplicationService.CommonPostfixes);
 
             if (typeName.Length > 1 && typeName.StartsWith("I") && char.IsUpper(typeName, 1))
-            {
                 typeName = typeName.Substring(1);
-            }
 
             return typeName.ToCamelCase();
         }

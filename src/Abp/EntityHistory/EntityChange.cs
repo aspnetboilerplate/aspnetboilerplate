@@ -61,8 +61,7 @@ namespace Abp.EntityHistory
 
         #region Not mapped
 
-        [NotMapped]
-        public virtual object EntityEntry { get; set; }
+        [NotMapped] public virtual object EntityEntry { get; set; }
 
         #endregion
     }

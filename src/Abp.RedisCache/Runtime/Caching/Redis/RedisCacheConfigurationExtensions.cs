@@ -23,7 +23,8 @@ namespace Abp.Runtime.Caching.Redis
         /// </summary>
         /// <param name="cachingConfiguration">The caching configuration.</param>
         /// <param name="optionsAction">Ac action to get/set options</param>
-        public static void UseRedis(this ICachingConfiguration cachingConfiguration, Action<AbpRedisCacheOptions> optionsAction)
+        public static void UseRedis(this ICachingConfiguration cachingConfiguration,
+            Action<AbpRedisCacheOptions> optionsAction)
         {
             var iocManager = cachingConfiguration.AbpConfiguration.IocManager;
 

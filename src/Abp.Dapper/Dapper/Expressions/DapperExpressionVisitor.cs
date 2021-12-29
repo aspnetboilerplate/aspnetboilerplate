@@ -15,13 +15,15 @@ namespace Abp.Dapper.Expressions
     /// <typeparam name="TEntity">The type of the entity.</typeparam>
     /// <typeparam name="TPrimaryKey">The type of the primary key.</typeparam>
     /// <seealso cref="System.Linq.Expressions.ExpressionVisitor" />
-    internal class DapperExpressionVisitor<TEntity, TPrimaryKey> : ExpressionVisitor where TEntity : class, IEntity<TPrimaryKey>
+    internal class DapperExpressionVisitor<TEntity, TPrimaryKey> : ExpressionVisitor
+        where TEntity : class, IEntity<TPrimaryKey>
     {
         private PredicateGroup _pg;
         private Expression _processedProperty;
         private bool _unarySpecified;
         private Stack<PredicateGroup> _predicateGroupStack;
         public PredicateGroup _currentGroup { get; set; }
+
         public DapperExpressionVisitor()
         {
             Expressions = new HashSet<Expression>();
@@ -41,9 +43,9 @@ namespace Abp.Dapper.Expressions
 
             // the 1st expression determines root group operator
             if (Expressions.Any())
-            {
-                _pg.Operator = Expressions.First().NodeType == ExpressionType.OrElse ? GroupOperator.Or : GroupOperator.And;
-            }
+                _pg.Operator = Expressions.First().NodeType == ExpressionType.OrElse
+                    ? GroupOperator.Or
+                    : GroupOperator.And;
 
             return _pg.Predicates.Count == 1 ? _pg.Predicates[0] : _pg;
         }
@@ -75,10 +77,7 @@ namespace Abp.Dapper.Expressions
         private IFieldPredicate GetCurrentField(IPredicateGroup group)
         {
             IPredicate last = group.Predicates.Last();
-            if (last is IPredicateGroup)
-            {
-                return GetCurrentField(last as IPredicateGroup);
-            }
+            if (last is IPredicateGroup) return GetCurrentField(last as IPredicateGroup);
             return last as IFieldPredicate;
         }
 
@@ -87,7 +86,9 @@ namespace Abp.Dapper.Expressions
             PredicateGroup pg = _currentGroup;
 
             // need convert from Expression<Func<T, bool>> to Expression<Func<T, object>> as this is what Predicates.Field() requires
-            Expression<Func<TEntity, object>> fieldExp = Expression.Lambda<Func<TEntity, object>>(Expression.Convert(exp, typeof(object)), exp.Expression as ParameterExpression);
+            Expression<Func<TEntity, object>> fieldExp =
+                Expression.Lambda<Func<TEntity, object>>(Expression.Convert(exp, typeof(object)),
+                    exp.Expression as ParameterExpression);
 
             IFieldPredicate field = Predicates.Field(fieldExp, op, value, not);
             pg.Predicates.Add(field);
@@ -95,6 +96,7 @@ namespace Abp.Dapper.Expressions
 
 
         #region The visit methods override
+
         protected override Expression VisitBinary(BinaryExpression node)
         {
             Expressions.Add(node);
@@ -111,7 +113,6 @@ namespace Abp.Dapper.Expressions
                 _currentGroup.Predicates.Add(pg);
                 _predicateGroupStack.Push(_currentGroup);
                 _currentGroup = pg;
-
             }
 
             Visit(node.Left);
@@ -121,26 +122,18 @@ namespace Abp.Dapper.Expressions
                 IFieldPredicate field = GetCurrentField();
                 field.Operator = DetermineOperator(node);
 
-                if (nt == ExpressionType.NotEqual)
-                {
-                    field.Not = true;
-                }
+                if (nt == ExpressionType.NotEqual) field.Not = true;
             }
 
             Visit(node.Right);
-            if (nt == ExpressionType.OrElse || nt == ExpressionType.AndAlso)
-            {
-                _currentGroup = _predicateGroupStack.Pop();
-            }
+            if (nt == ExpressionType.OrElse || nt == ExpressionType.AndAlso) _currentGroup = _predicateGroupStack.Pop();
             return node;
         }
 
         protected override Expression VisitMember(MemberExpression node)
         {
             if (node.Member.MemberType != MemberTypes.Property || node.Expression.Type != typeof(TEntity))
-            {
                 throw new NotSupportedException($"The member '{node}' is not supported");
-            }
 
             // skip if prop is part of a VisitMethodCall
             if (_processedProperty != null && _processedProperty == node)
@@ -205,8 +198,11 @@ namespace Abp.Dapper.Expressions
         {
             _unarySpecified = true;
 
-            return base.VisitUnary(node); // returning base because we want to continue further processing - ie subsequent call to VisitMethodCall
+            return
+                base.VisitUnary(
+                    node); // returning base because we want to continue further processing - ie subsequent call to VisitMethodCall
         }
+
         #endregion
     }
 }

@@ -22,71 +22,68 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc.ApplicationParts;
 using Microsoft.Extensions.Options;
 
-namespace Abp.AspNetCore
+namespace Abp.AspNetCore;
+
+[DependsOn(typeof(AbpWebCommonModule))]
+public class AbpAspNetCoreModule : AbpModule
 {
-    [DependsOn(typeof(AbpWebCommonModule))]
-    public class AbpAspNetCoreModule : AbpModule
+    public override void PreInitialize()
     {
-        public override void PreInitialize()
+        IocManager.AddConventionalRegistrar(new AbpAspNetCoreConventionalRegistrar());
+
+        IocManager.Register<IAbpAspNetCoreConfiguration, AbpAspNetCoreConfiguration>();
+
+        Configuration.ReplaceService<IPrincipalAccessor, AspNetCorePrincipalAccessor>(DependencyLifeStyle.Transient);
+        Configuration.ReplaceService<IAbpAntiForgeryManager, AbpAspNetCoreAntiForgeryManager>(DependencyLifeStyle
+            .Transient);
+        Configuration.ReplaceService<IClientInfoProvider, HttpContextClientInfoProvider>(DependencyLifeStyle.Transient);
+        Configuration.ReplaceService<IWebhookSender, AspNetCoreWebhookSender>(DependencyLifeStyle.Transient);
+
+        IocManager.Register<IGetScriptsResponsePerUserConfiguration, GetScriptsResponsePerUserConfiguration>();
+
+        Configuration.Modules.AbpAspNetCore().FormBodyBindingIgnoredTypes.Add(typeof(IFormFile));
+
+        Configuration.MultiTenancy.Resolvers.Add<DomainTenantResolveContributor>();
+        Configuration.MultiTenancy.Resolvers.Add<HttpHeaderTenantResolveContributor>();
+        Configuration.MultiTenancy.Resolvers.Add<HttpCookieTenantResolveContributor>();
+
+        Configuration.Caching.Configure(GetScriptsResponsePerUserCache.CacheName,
+            cache => { cache.DefaultSlidingExpireTime = TimeSpan.FromMinutes(30); });
+    }
+
+    public override void Initialize()
+    {
+        IocManager.RegisterAssemblyByConvention(typeof(AbpAspNetCoreModule).GetAssembly());
+    }
+
+    public override void PostInitialize()
+    {
+        AddApplicationParts();
+        ConfigureAntiforgery();
+    }
+
+    private void AddApplicationParts()
+    {
+        var configuration = IocManager.Resolve<AbpAspNetCoreConfiguration>();
+        var partManager = IocManager.Resolve<ApplicationPartManager>();
+        var moduleManager = IocManager.Resolve<IAbpModuleManager>();
+
+        partManager.AddApplicationPartsIfNotAddedBefore(typeof(AbpAspNetCoreModule).Assembly);
+
+        var controllerAssemblies = configuration.ControllerAssemblySettings.Select(s => s.Assembly).Distinct();
+        foreach (var controllerAssembly in controllerAssemblies)
+            partManager.AddApplicationPartsIfNotAddedBefore(controllerAssembly);
+
+        var plugInAssemblies = moduleManager.Modules.Where(m => m.IsLoadedAsPlugIn).Select(m => m.Assembly).Distinct();
+        foreach (var plugInAssembly in plugInAssemblies)
+            partManager.AddAbpPlugInAssemblyPartIfNotAddedBefore(new AbpPlugInAssemblyPart(plugInAssembly));
+    }
+
+    private void ConfigureAntiforgery()
+    {
+        IocManager.Using<IOptions<AntiforgeryOptions>>(optionsAccessor =>
         {
-            IocManager.AddConventionalRegistrar(new AbpAspNetCoreConventionalRegistrar());
-
-            IocManager.Register<IAbpAspNetCoreConfiguration, AbpAspNetCoreConfiguration>();
-
-            Configuration.ReplaceService<IPrincipalAccessor, AspNetCorePrincipalAccessor>(DependencyLifeStyle.Transient);
-            Configuration.ReplaceService<IAbpAntiForgeryManager, AbpAspNetCoreAntiForgeryManager>(DependencyLifeStyle.Transient);
-            Configuration.ReplaceService<IClientInfoProvider, HttpContextClientInfoProvider>(DependencyLifeStyle.Transient);
-            Configuration.ReplaceService<IWebhookSender, AspNetCoreWebhookSender>(DependencyLifeStyle.Transient);
-
-            IocManager.Register<IGetScriptsResponsePerUserConfiguration, GetScriptsResponsePerUserConfiguration>();
-
-            Configuration.Modules.AbpAspNetCore().FormBodyBindingIgnoredTypes.Add(typeof(IFormFile));
-
-            Configuration.MultiTenancy.Resolvers.Add<DomainTenantResolveContributor>();
-            Configuration.MultiTenancy.Resolvers.Add<HttpHeaderTenantResolveContributor>();
-            Configuration.MultiTenancy.Resolvers.Add<HttpCookieTenantResolveContributor>();
-
-            Configuration.Caching.Configure(GetScriptsResponsePerUserCache.CacheName, cache => { cache.DefaultSlidingExpireTime = TimeSpan.FromMinutes(30); });
-        }
-
-        public override void Initialize()
-        {
-            IocManager.RegisterAssemblyByConvention(typeof(AbpAspNetCoreModule).GetAssembly());
-        }
-
-        public override void PostInitialize()
-        {
-            AddApplicationParts();
-            ConfigureAntiforgery();
-        }
-
-        private void AddApplicationParts()
-        {
-            var configuration = IocManager.Resolve<AbpAspNetCoreConfiguration>();
-            var partManager = IocManager.Resolve<ApplicationPartManager>();
-            var moduleManager = IocManager.Resolve<IAbpModuleManager>();
-
-            partManager.AddApplicationPartsIfNotAddedBefore(typeof(AbpAspNetCoreModule).Assembly);
-
-            var controllerAssemblies = configuration.ControllerAssemblySettings.Select(s => s.Assembly).Distinct();
-            foreach (var controllerAssembly in controllerAssemblies)
-            {
-                partManager.AddApplicationPartsIfNotAddedBefore(controllerAssembly);
-            }
-
-            var plugInAssemblies = moduleManager.Modules.Where(m => m.IsLoadedAsPlugIn).Select(m => m.Assembly).Distinct();
-            foreach (var plugInAssembly in plugInAssemblies)
-            {
-                partManager.AddAbpPlugInAssemblyPartIfNotAddedBefore(new AbpPlugInAssemblyPart(plugInAssembly));
-            }
-        }
-
-        private void ConfigureAntiforgery()
-        {
-            IocManager.Using<IOptions<AntiforgeryOptions>>(optionsAccessor =>
-            {
-                optionsAccessor.Value.HeaderName = Configuration.Modules.AbpWebCommon().AntiForgery.TokenHeaderName;
-            });
-        }
+            optionsAccessor.Value.HeaderName = Configuration.Modules.AbpWebCommon().AntiForgery.TokenHeaderName;
+        });
     }
 }

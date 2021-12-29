@@ -53,10 +53,7 @@ namespace Abp.Quartz
         {
             base.Start();
 
-            if (_backgroundJobConfiguration.IsJobExecutionEnabled)
-            {
-                _quartzConfiguration.Scheduler.Start();
-            }
+            if (_backgroundJobConfiguration.IsJobExecutionEnabled) _quartzConfiguration.Scheduler.Start();
 
             Logger.Info("Started QuartzScheduleJobManager");
         }
@@ -64,7 +61,6 @@ namespace Abp.Quartz
         public override void WaitToStop()
         {
             if (_quartzConfiguration.Scheduler != null)
-            {
                 try
                 {
                     _quartzConfiguration.Scheduler.Shutdown(true);
@@ -73,7 +69,6 @@ namespace Abp.Quartz
                 {
                     Logger.Warn(ex.ToString(), ex);
                 }
-            }
 
             base.WaitToStop();
 

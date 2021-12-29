@@ -65,10 +65,7 @@ namespace Abp.Localization.Dictionaries
         {
             var value = GetStringOrNull(name, culture);
 
-            if (value == null)
-            {
-                return ReturnGivenNameOrThrowException(name, culture);
-            }
+            if (value == null) return ReturnGivenNameOrThrowException(name, culture);
 
             return value;
         }
@@ -88,16 +85,10 @@ namespace Abp.Localization.Dictionaries
             if (dictionaries.TryGetValue(cultureName, out originalDictionary))
             {
                 var strOriginal = originalDictionary.GetOrNull(name);
-                if (strOriginal != null)
-                {
-                    return strOriginal.Value;
-                }
+                if (strOriginal != null) return strOriginal.Value;
             }
 
-            if (!tryDefaults)
-            {
-                return null;
-            }
+            if (!tryDefaults) return null;
 
             //Try to get from same language dictionary (without country code)
             if (cultureName.Contains("-")) //Example: "tr-TR" (length=5)
@@ -106,25 +97,16 @@ namespace Abp.Localization.Dictionaries
                 if (dictionaries.TryGetValue(GetBaseCultureName(cultureName), out langDictionary))
                 {
                     var strLang = langDictionary.GetOrNull(name);
-                    if (strLang != null)
-                    {
-                        return strLang.Value;
-                    }
+                    if (strLang != null) return strLang.Value;
                 }
             }
 
             //Try to get from default language
             var defaultDictionary = DictionaryProvider.DefaultDictionary;
-            if (defaultDictionary == null)
-            {
-                return null;
-            }
+            if (defaultDictionary == null) return null;
 
             var strDefault = defaultDictionary.GetOrNull(name);
-            if (strDefault == null)
-            {
-                return null;
-            }
+            if (strDefault == null) return null;
 
             return strDefault.Value;
         }
@@ -139,9 +121,7 @@ namespace Abp.Localization.Dictionaries
             var values = GetStringsInternal(names, culture);
             var nullValues = values.Where(x => x.Value == null).ToList();
             if (nullValues.Any())
-            {
                 return ReturnGivenNamesOrThrowException(nullValues.Select(x => x.Name).ToList(), culture);
-            }
 
             return values.Select(x => x.Value).ToList();
         }
@@ -167,15 +147,10 @@ namespace Abp.Localization.Dictionaries
             {
                 var strOriginal = originalDictionary.GetStringsOrNull(names);
                 if (!strOriginal.IsNullOrEmpty())
-                {
                     return strOriginal.Select(x => new NameValue(x.Name, x.Value)).ToList();
-                }
             }
 
-            if (!includeDefaults)
-            {
-                return null;
-            }
+            if (!includeDefaults) return null;
 
             //Try to get from same language dictionary (without country code)
             if (cultureName.Contains("-")) //Example: "tr-TR" (length=5)
@@ -184,25 +159,16 @@ namespace Abp.Localization.Dictionaries
                 if (dictionaries.TryGetValue(GetBaseCultureName(cultureName), out langDictionary))
                 {
                     var strLang = langDictionary.GetStringsOrNull(names);
-                    if (!strLang.IsNullOrEmpty())
-                    {
-                        return strLang.Select(x => new NameValue(x.Name, x.Value)).ToList();
-                    }
+                    if (!strLang.IsNullOrEmpty()) return strLang.Select(x => new NameValue(x.Name, x.Value)).ToList();
                 }
             }
 
             //Try to get from default language
             var defaultDictionary = DictionaryProvider.DefaultDictionary;
-            if (defaultDictionary == null)
-            {
-                return null;
-            }
+            if (defaultDictionary == null) return null;
 
             var strDefault = defaultDictionary.GetStringsOrNull(names);
-            if (strDefault.IsNullOrEmpty())
-            {
-                return null;
-            }
+            if (strDefault.IsNullOrEmpty()) return null;
 
             return strDefault.Select(x => new NameValue(x.Name, x.Value)).ToList();
         }
@@ -228,36 +194,24 @@ namespace Abp.Localization.Dictionaries
                 //Fill all strings from default dictionary
                 var defaultDictionary = DictionaryProvider.DefaultDictionary;
                 if (defaultDictionary != null)
-                {
                     foreach (var defaultDictString in defaultDictionary.GetAllStrings())
-                    {
                         allStrings[defaultDictString.Name] = defaultDictString;
-                    }
-                }
 
                 //Overwrite all strings from the language based on country culture
                 if (culture.Name.Contains("-"))
                 {
                     ILocalizationDictionary langDictionary;
                     if (dictionaries.TryGetValue(GetBaseCultureName(culture.Name), out langDictionary))
-                    {
                         foreach (var langString in langDictionary.GetAllStrings())
-                        {
                             allStrings[langString.Name] = langString;
-                        }
-                    }
                 }
             }
 
             //Overwrite all strings from the original dictionary
             ILocalizationDictionary originalDictionary;
             if (dictionaries.TryGetValue(culture.Name, out originalDictionary))
-            {
                 foreach (var originalLangString in originalDictionary.GetAllStrings())
-                {
                     allStrings[originalLangString.Name] = originalLangString;
-                }
-            }
 
             return allStrings.Values.ToImmutableList();
         }

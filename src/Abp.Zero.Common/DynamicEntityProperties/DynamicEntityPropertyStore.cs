@@ -122,10 +122,7 @@ namespace Abp.DynamicEntityProperties
 
         public virtual void Delete(int id)
         {
-            _unitOfWorkManager.WithUnitOfWork(() =>
-            {
-                _dynamicEntityPropertyRepository.Delete(id);
-            });
+            _unitOfWorkManager.WithUnitOfWork(() => { _dynamicEntityPropertyRepository.Delete(id); });
         }
 
         public virtual async Task DeleteAsync(int id)

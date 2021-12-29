@@ -2,19 +2,18 @@
 using Abp.UI;
 using Microsoft.AspNetCore.Mvc;
 
-namespace AbpAspNetCoreDemo.Pages
-{
-    [IgnoreAntiforgeryToken]
-    public class ExceptionFilterPageDemoModel : AbpPageModel
-    {
-        public JsonResult OnGet()
-        {
-            throw new UserFriendlyException("OnGet");
-        }
+namespace AbpAspNetCoreDemo.Pages;
 
-        public IActionResult OnPost()
-        {
-            throw new UserFriendlyException("OnPost");
-        }
+[IgnoreAntiforgeryToken]
+public class ExceptionFilterPageDemoModel : AbpPageModel
+{
+    public JsonResult OnGet()
+    {
+        throw new UserFriendlyException("OnGet");
+    }
+
+    public IActionResult OnPost()
+    {
+        throw new UserFriendlyException("OnPost");
     }
 }

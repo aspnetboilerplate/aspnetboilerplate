@@ -31,14 +31,10 @@ namespace Abp.TestBase.SampleApplication.Tests.EntityFramework
 
         private static void SetRandomClockProvider()
         {
-            if (RandomHelper.GetRandomOf(new[] {1, 2}) == 1)
-            {
+            if (RandomHelper.GetRandomOf(new[] { 1, 2 }) == 1)
                 Clock.Provider = ClockProviders.Local;
-            }
             else
-            {
                 Clock.Provider = ClockProviders.Utc;
-            }
         }
 
         // Note: The test below is cancelled since Effort does not work well with ObjectMaterialized event.
@@ -131,10 +127,7 @@ namespace Abp.TestBase.SampleApplication.Tests.EntityFramework
 
                     hotel.Location.CreationTime.Kind.ShouldBe(DateTimeKind.Unspecified);
 
-                    foreach (var room in hotel.Rooms)
-                    {
-                        room.CreationTime.Kind.ShouldBe(DateTimeKind.Unspecified);
-                    }
+                    foreach (var room in hotel.Rooms) room.CreationTime.Kind.ShouldBe(DateTimeKind.Unspecified);
                 }
 
                 uow.Complete();

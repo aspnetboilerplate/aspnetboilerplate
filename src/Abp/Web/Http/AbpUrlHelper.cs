@@ -15,7 +15,8 @@ namespace Abp.Web.Http
         /// <param name="localHostName"></param>
         /// <param name="localPort"></param>
         /// <returns></returns>
-        public virtual string LocalPathAndQuery([NotNull] string url, [CanBeNull] string localHostName = null, [CanBeNull] int? localPort = null)
+        public virtual string LocalPathAndQuery([NotNull] string url, [CanBeNull] string localHostName = null,
+            [CanBeNull] int? localPort = null)
         {
             Check.NotNull(url, nameof(url));
 
@@ -26,17 +27,15 @@ namespace Abp.Web.Http
                 {
                     var isValidScheme = uri.Scheme == Uri.UriSchemeHttp || uri.Scheme == Uri.UriSchemeHttps;
                     var isSameHost = string.Equals(localHostName, uri.Host, StringComparison.OrdinalIgnoreCase);
-                    var isSamePort = localPort == uri.Port || (localPort == null && uri.IsDefaultPort);
-                    if (isValidScheme && isSameHost && isSamePort)
-                    {
-                        return uri.PathAndQuery;
-                    }
+                    var isSamePort = localPort == uri.Port || localPort == null && uri.IsDefaultPort;
+                    if (isValidScheme && isSameHost && isSamePort) return uri.PathAndQuery;
                 }
                 else if (!uri.IsAbsoluteUri)
                 {
                     return uri.OriginalString;
                 }
             }
+
             return null;
         }
 
@@ -54,10 +53,7 @@ namespace Abp.Web.Http
 
         protected virtual Uri ParseWithUri(string url)
         {
-            if (Uri.TryCreate(url, UriKind.RelativeOrAbsolute, out Uri returnUri))
-            {
-                return returnUri;
-            }
+            if (Uri.TryCreate(url, UriKind.RelativeOrAbsolute, out Uri returnUri)) return returnUri;
             return null;
         }
     }

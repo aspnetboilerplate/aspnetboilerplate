@@ -50,7 +50,7 @@ namespace Abp.BackgroundJobs
 
             Timer.Period = JobPollPeriod;
         }
-        
+
         public virtual async Task<string> EnqueueAsync<TJob, TArgs>(TArgs args,
             BackgroundJobPriority priority = BackgroundJobPriority.Normal, TimeSpan? delay = null)
             where TJob : IBackgroundJobBase<TArgs>
@@ -66,10 +66,7 @@ namespace Abp.BackgroundJobs
                     Priority = priority
                 };
 
-                if (delay.HasValue)
-                {
-                    jobInfo.NextTryTime = Clock.Now.Add(delay.Value);
-                }
+                if (delay.HasValue) jobInfo.NextTryTime = Clock.Now.Add(delay.Value);
 
                 await _store.InsertAsync(jobInfo);
                 await CurrentUnitOfWork.SaveChangesAsync();
@@ -80,7 +77,7 @@ namespace Abp.BackgroundJobs
 
             return jobInfoId;
         }
-        
+
         public virtual string Enqueue<TJob, TArgs>(TArgs args,
             BackgroundJobPriority priority = BackgroundJobPriority.Normal, TimeSpan? delay = null)
             where TJob : IBackgroundJobBase<TArgs>
@@ -96,16 +93,13 @@ namespace Abp.BackgroundJobs
                     Priority = priority
                 };
 
-                if (delay.HasValue)
-                {
-                    jobInfo.NextTryTime = Clock.Now.Add(delay.Value);
-                }
+                if (delay.HasValue) jobInfo.NextTryTime = Clock.Now.Add(delay.Value);
 
                 _store.Insert(jobInfo);
                 CurrentUnitOfWork.SaveChanges();
 
                 jobInfoId = jobInfo.Id.ToString();
-                
+
                 uow.Complete();
             }
 
@@ -115,9 +109,7 @@ namespace Abp.BackgroundJobs
         public async Task<bool> DeleteAsync(string jobId)
         {
             if (long.TryParse(jobId, out long finalJobId) == false)
-            {
                 throw new ArgumentException($"The jobId '{jobId}' should be a number.", nameof(jobId));
-            }
 
             var jobInfo = await _store.GetAsync(finalJobId);
 
@@ -128,9 +120,7 @@ namespace Abp.BackgroundJobs
         public bool Delete(string jobId)
         {
             if (long.TryParse(jobId, out long finalJobId) == false)
-            {
                 throw new ArgumentException($"The jobId '{jobId}' should be a number.", nameof(jobId));
-            }
 
             var jobInfo = _store.Get(finalJobId);
 
@@ -142,10 +132,7 @@ namespace Abp.BackgroundJobs
         {
             var waitingJobs = await _store.GetWaitingJobsAsync(1000);
 
-            foreach (var job in waitingJobs)
-            {
-                await TryProcessJobAsync(job);
-            }
+            foreach (var job in waitingJobs) await TryProcessJobAsync(job);
         }
 
         private async Task TryProcessJobAsync(BackgroundJobInfo jobInfo)
@@ -166,23 +153,17 @@ namespace Abp.BackgroundJobs
                                                    .GetMethod(nameof(IAsyncBackgroundJob<object>.ExecuteAsync));
 
                         if (jobExecuteMethod == null)
-                        {
                             throw new AbpException(
                                 $"Given job type does not implement {typeof(IBackgroundJob<>).Name} or {typeof(IAsyncBackgroundJob<>).Name}. " +
                                 "The job type was: " + job.Object.GetType());
-                        }
 
                         var argsType = jobExecuteMethod.GetParameters()[0].ParameterType;
                         var argsObj = JsonConvert.DeserializeObject(jobInfo.JobArgs, argsType);
 
                         if (jobExecuteMethod.Name == nameof(IAsyncBackgroundJob<object>.ExecuteAsync))
-                        {
-                            await ((Task) jobExecuteMethod.Invoke(job.Object, new[] {argsObj}));
-                        }
+                            await (Task)jobExecuteMethod.Invoke(job.Object, new[] { argsObj });
                         else
-                        {
-                            jobExecuteMethod.Invoke(job.Object, new[] {argsObj});
-                        }
+                            jobExecuteMethod.Invoke(job.Object, new[] { argsObj });
 
                         await _store.DeleteAsync(jobInfo);
                     }
@@ -192,13 +173,9 @@ namespace Abp.BackgroundJobs
 
                         var nextTryTime = jobInfo.CalculateNextTryTime();
                         if (nextTryTime.HasValue)
-                        {
                             jobInfo.NextTryTime = nextTryTime.Value;
-                        }
                         else
-                        {
                             jobInfo.IsAbandoned = true;
-                        }
 
                         await TryUpdateAsync(jobInfo);
 

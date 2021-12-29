@@ -7,7 +7,8 @@ namespace Abp.Notifications
     /// <summary>
     /// This background job distributes notifications to users.
     /// </summary>
-    public class NotificationDistributionJob : IAsyncBackgroundJob<NotificationDistributionJobArgs>, ITransientDependency
+    public class NotificationDistributionJob : IAsyncBackgroundJob<NotificationDistributionJobArgs>,
+        ITransientDependency
     {
         private readonly INotificationConfiguration _notificationConfiguration;
         private readonly INotificationDistributer _notificationDistributer;
@@ -18,7 +19,7 @@ namespace Abp.Notifications
         /// </summary>
         public NotificationDistributionJob(
             INotificationConfiguration notificationConfiguration,
-            IIocResolver iocResolver, 
+            IIocResolver iocResolver,
             INotificationDistributer notificationDistributer)
         {
             _notificationConfiguration = notificationConfiguration;

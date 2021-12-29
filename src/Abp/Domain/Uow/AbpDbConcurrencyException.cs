@@ -11,7 +11,6 @@ namespace Abp.Domain.Uow
         /// </summary>
         public AbpDbConcurrencyException()
         {
-
         }
 
         /// <summary>
@@ -20,7 +19,6 @@ namespace Abp.Domain.Uow
         public AbpDbConcurrencyException(SerializationInfo serializationInfo, StreamingContext context)
             : base(serializationInfo, context)
         {
-
         }
 
         /// <summary>
@@ -30,7 +28,6 @@ namespace Abp.Domain.Uow
         public AbpDbConcurrencyException(string message)
             : base(message)
         {
-
         }
 
         /// <summary>
@@ -41,7 +38,6 @@ namespace Abp.Domain.Uow
         public AbpDbConcurrencyException(string message, Exception innerException)
             : base(message, innerException)
         {
-
         }
     }
 }

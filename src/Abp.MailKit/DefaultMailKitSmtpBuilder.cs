@@ -10,7 +10,8 @@ namespace Abp.MailKit
         private readonly ISmtpEmailSenderConfiguration _smtpEmailSenderConfiguration;
         private readonly IAbpMailKitConfiguration _abpMailKitConfiguration;
 
-        public DefaultMailKitSmtpBuilder(ISmtpEmailSenderConfiguration smtpEmailSenderConfiguration, IAbpMailKitConfiguration abpMailKitConfiguration)
+        public DefaultMailKitSmtpBuilder(ISmtpEmailSenderConfiguration smtpEmailSenderConfiguration,
+            IAbpMailKitConfiguration abpMailKitConfiguration)
         {
             _smtpEmailSenderConfiguration = smtpEmailSenderConfiguration;
             _abpMailKitConfiguration = abpMailKitConfiguration;
@@ -40,10 +41,7 @@ namespace Abp.MailKit
                 GetSecureSocketOption()
             );
 
-            if (_smtpEmailSenderConfiguration.UseDefaultCredentials)
-            {
-                return;
-            }
+            if (_smtpEmailSenderConfiguration.UseDefaultCredentials) return;
 
             client.Authenticate(
                 _smtpEmailSenderConfiguration.UserName,
@@ -54,9 +52,7 @@ namespace Abp.MailKit
         protected virtual SecureSocketOptions GetSecureSocketOption()
         {
             if (_abpMailKitConfiguration.SecureSocketOption.HasValue)
-            {
                 return _abpMailKitConfiguration.SecureSocketOption.Value;
-            }
 
             return _smtpEmailSenderConfiguration.EnableSsl
                 ? SecureSocketOptions.SslOnConnect

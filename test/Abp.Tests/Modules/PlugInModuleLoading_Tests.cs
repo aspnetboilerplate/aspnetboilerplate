@@ -38,35 +38,29 @@ namespace Abp.Tests.Modules
         }
 
         [DependsOn(typeof(MyModule1), typeof(MyModule2))]
-        public class MyStartupModule: AbpModule
+        public class MyStartupModule : AbpModule
         {
-
         }
 
         public class MyModule1 : AbpModule
         {
-            
         }
 
         public class MyModule2 : AbpModule
         {
-
         }
-        
+
         public class MyNotDependedModule : AbpModule
         {
-
         }
 
         [DependsOn(typeof(MyPlugInDependedModule))]
         public class MyPlugInModule : AbpModule
         {
-            
         }
 
         public class MyPlugInDependedModule : AbpModule
         {
-            
         }
     }
 }

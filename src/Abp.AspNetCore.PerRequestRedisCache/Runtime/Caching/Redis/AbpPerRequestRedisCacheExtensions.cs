@@ -22,7 +22,8 @@ public static class AbpPerRequestRedisCacheExtensions
     /// <param name="cachingConfiguration">The caching configuration.</param>
     /// <param name="optionsAction">Action to get/set options</param>
     /// <param name="usePerRequestRedisCache">Replaces ICacheManager with <see cref="Abp.Runtime.Caching.Redis.AbpPerRequestRedisCacheManager"/></param>
-    public static void UseRedis(this ICachingConfiguration cachingConfiguration, Action<AbpRedisCacheOptions> optionsAction, bool usePerRequestRedisCache)
+    public static void UseRedis(this ICachingConfiguration cachingConfiguration,
+        Action<AbpRedisCacheOptions> optionsAction, bool usePerRequestRedisCache)
     {
         if (!usePerRequestRedisCache)
         {

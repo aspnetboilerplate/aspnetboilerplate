@@ -58,7 +58,7 @@ namespace Abp.AutoMapper.Tests
         [Fact]
         public void Should_Map_Two_Way_When_AutoMap_Attribute_Is_Used()
         {
-            MyClass3 obj2 = new MyClass3
+            var obj2 = new MyClass3
             {
                 TestProp = "test",
                 AnotherValue = 1
@@ -110,10 +110,10 @@ namespace Abp.AutoMapper.Tests
         public void MapTo_Collection_Tests()
         {
             var list1 = new List<MyClass1>
-                        {
-                            new MyClass1 {TestProp = "Test value 1"},
-                            new MyClass1 {TestProp = "Test value 2"}
-                        };
+            {
+                new MyClass1 { TestProp = "Test value 1" },
+                new MyClass1 { TestProp = "Test value 2" }
+            };
 
             var list2 = _mapper.Map<List<MyClass2>>(list1);
             list2.Count.ShouldBe(2);
@@ -125,20 +125,20 @@ namespace Abp.AutoMapper.Tests
         public void AutoMapKey_MapTo_Collection_Tests()
         {
             var list1 = new List<MyAutoMapKeyClass1>
-                        {
-                            new MyAutoMapKeyClass1 { Id = 1, TestProp = "New test value 1"},
-                            new MyAutoMapKeyClass1 { Id = 2, TestProp = "New test value 2"}
-                        };
+            {
+                new MyAutoMapKeyClass1 { Id = 1, TestProp = "New test value 1" },
+                new MyAutoMapKeyClass1 { Id = 2, TestProp = "New test value 2" }
+            };
             var list2 = new List<MyAutoMapKeyClass2>
-                        {
-                            new MyAutoMapKeyClass2 { Id = 1, SecondId = 10, ThirdId = 100, TestProp = "Test value 1", Value = 5},
-                            new MyAutoMapKeyClass2 { Id = 2,  SecondId = 20, ThirdId = 200,TestProp = "Test value 2", Value = 10}
-                        };
+            {
+                new MyAutoMapKeyClass2 { Id = 1, SecondId = 10, ThirdId = 100, TestProp = "Test value 1", Value = 5 },
+                new MyAutoMapKeyClass2 { Id = 2, SecondId = 20, ThirdId = 200, TestProp = "Test value 2", Value = 10 }
+            };
             var list3 = new List<MyAutoMapKeyClass3>
-                        {
-                            new MyAutoMapKeyClass3 { SecondId = 10, ThirdId = 100, TestProp = "Test value 1", SecondValue = 50},
-                            new MyAutoMapKeyClass3 { SecondId = 20, ThirdId = 200, TestProp = "Test value 2", SecondValue = 100}
-                        };
+            {
+                new MyAutoMapKeyClass3 { SecondId = 10, ThirdId = 100, TestProp = "Test value 1", SecondValue = 50 },
+                new MyAutoMapKeyClass3 { SecondId = 20, ThirdId = 200, TestProp = "Test value 2", SecondValue = 100 }
+            };
 
             _mapper.Map(list1, list2);
             list2.Count.ShouldBe(2);
@@ -158,7 +158,7 @@ namespace Abp.AutoMapper.Tests
         [Fact]
         public void Map_Should_Set_Null_Existing_Object_Tests()
         {
-            MyClass1 obj1 = new MyClass1 { TestProp = null };
+            var obj1 = new MyClass1 { TestProp = null };
             var obj2 = new MyClass2 { TestProp = "before map" };
             _mapper.Map(obj1, obj2);
             obj2.TestProp.ShouldBe(null);
@@ -202,15 +202,13 @@ namespace Abp.AutoMapper.Tests
         {
             public string TestProp { get; set; }
 
-            [IgnoreMap]
-            public int AnotherValue { get; set; }
+            [IgnoreMap] public int AnotherValue { get; set; }
         }
 
         [AutoMapTo(typeof(MyAutoMapKeyClass2))]
         private class MyAutoMapKeyClass1
         {
-            [AutoMapKey]
-            public int Id { get; set; }
+            [AutoMapKey] public int Id { get; set; }
 
             public string TestProp { get; set; }
         }
@@ -220,11 +218,9 @@ namespace Abp.AutoMapper.Tests
         {
             public int Id { get; set; }
 
-            [AutoMapKey]
-            public int SecondId { get; set; }
+            [AutoMapKey] public int SecondId { get; set; }
 
-            [AutoMapKey]
-            public int ThirdId { get; set; }
+            [AutoMapKey] public int ThirdId { get; set; }
 
             public string TestProp { get; set; }
 

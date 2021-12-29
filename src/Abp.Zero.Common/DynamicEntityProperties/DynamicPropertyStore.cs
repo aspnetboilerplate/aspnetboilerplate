@@ -63,10 +63,7 @@ namespace Abp.DynamicEntityProperties
 
         public virtual void Add(DynamicProperty dynamicProperty)
         {
-            _unitOfWorkManager.WithUnitOfWork(() =>
-            {
-                _dynamicPropertyRepository.Insert(dynamicProperty);
-            });
+            _unitOfWorkManager.WithUnitOfWork(() => { _dynamicPropertyRepository.Insert(dynamicProperty); });
         }
 
         public virtual async Task AddAsync(DynamicProperty dynamicProperty)
@@ -78,10 +75,7 @@ namespace Abp.DynamicEntityProperties
 
         public virtual void Update(DynamicProperty dynamicProperty)
         {
-            _unitOfWorkManager.WithUnitOfWork(() =>
-            {
-                _dynamicPropertyRepository.Update(dynamicProperty);
-            });
+            _unitOfWorkManager.WithUnitOfWork(() => { _dynamicPropertyRepository.Update(dynamicProperty); });
         }
 
         public virtual async Task UpdateAsync(DynamicProperty dynamicProperty)
@@ -93,10 +87,7 @@ namespace Abp.DynamicEntityProperties
 
         public virtual void Delete(int id)
         {
-            _unitOfWorkManager.WithUnitOfWork(() =>
-            {
-                _dynamicPropertyRepository.Delete(id);
-            });
+            _unitOfWorkManager.WithUnitOfWork(() => { _dynamicPropertyRepository.Delete(id); });
         }
 
         public virtual async Task DeleteAsync(int id)

@@ -10,7 +10,6 @@ namespace Abp.Domain.Entities.Auditing
     [Serializable]
     public abstract class CreationAuditedEntity : CreationAuditedEntity<int>, IEntity
     {
-
     }
 
     /// <summary>
@@ -45,7 +44,8 @@ namespace Abp.Domain.Entities.Auditing
     /// <typeparam name="TPrimaryKey">Type of the primary key of the entity</typeparam>
     /// <typeparam name="TUser">Type of the user</typeparam>
     [Serializable]
-    public abstract class CreationAuditedEntity<TPrimaryKey, TUser> : CreationAuditedEntity<TPrimaryKey>, ICreationAudited<TUser>
+    public abstract class CreationAuditedEntity<TPrimaryKey, TUser> : CreationAuditedEntity<TPrimaryKey>,
+        ICreationAudited<TUser>
         where TUser : IEntity<long>
     {
         /// <summary>

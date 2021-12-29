@@ -44,7 +44,8 @@ namespace Abp.TestBase.SampleApplication.Tests.People
             var uowManager = Resolve<IUnitOfWorkManager>();
             using (var ouw = uowManager.Begin())
             {
-                _personRepository.GetAllList().Any(p => p.Name == "emre").ShouldBe(false); //not getting deleted people since soft-delete is enabled by default
+                _personRepository.GetAllList().Any(p => p.Name == "emre")
+                    .ShouldBe(false); //not getting deleted people since soft-delete is enabled by default
 
                 using (uowManager.Current.DisableFilter(AbpDataFilters.SoftDelete))
                 {
@@ -52,14 +53,18 @@ namespace Abp.TestBase.SampleApplication.Tests.People
 
                     using (uowManager.Current.EnableFilter(AbpDataFilters.SoftDelete)) //re-enabling filter
                     {
-                        _personRepository.GetAllList().Any(p => p.Name == "emre").ShouldBe(false); //not getting deleted people
+                        _personRepository.GetAllList().Any(p => p.Name == "emre")
+                            .ShouldBe(false); //not getting deleted people
 
-                        using (uowManager.Current.EnableFilter(AbpDataFilters.SoftDelete)) //enabling filter has no effect since it's already enabed
+                        using (uowManager.Current.EnableFilter(AbpDataFilters
+                                   .SoftDelete)) //enabling filter has no effect since it's already enabed
                         {
-                            _personRepository.GetAllList().Any(p => p.Name == "emre").ShouldBe(false); //not getting deleted people
+                            _personRepository.GetAllList().Any(p => p.Name == "emre")
+                                .ShouldBe(false); //not getting deleted people
                         }
 
-                        _personRepository.GetAllList().Any(p => p.Name == "emre").ShouldBe(false); //not getting deleted people
+                        _personRepository.GetAllList().Any(p => p.Name == "emre")
+                            .ShouldBe(false); //not getting deleted people
                     }
 
                     _personRepository.GetAllList().Any(p => p.Name == "emre").ShouldBe(true); //getting deleted people
@@ -121,10 +126,7 @@ namespace Abp.TestBase.SampleApplication.Tests.People
             {
                 var people = await _personRepository.GetAllListAsync();
 
-                foreach (var person in people)
-                {
-                    await _personRepository.HardDeleteAsync(person);
-                }
+                foreach (var person in people) await _personRepository.HardDeleteAsync(person);
 
                 await uow.CompleteAsync();
             }

@@ -50,7 +50,10 @@ namespace Abp.Zero.SampleApp.Tests.Users
 
             //Assert
             (await _userManager.IsInOrganizationUnitAsync(_defaultTenantAdmin, ou2)).ShouldBe(true);
-            UsingDbContext(context => context.UserOrganizationUnits.FirstOrDefault(ou => ou.UserId == _defaultTenantAdmin.Id && ou.OrganizationUnitId == ou2.Id).ShouldNotBeNull());
+            UsingDbContext(context =>
+                context.UserOrganizationUnits
+                    .FirstOrDefault(ou => ou.UserId == _defaultTenantAdmin.Id && ou.OrganizationUnitId == ou2.Id)
+                    .ShouldNotBeNull());
         }
 
         [Fact]
@@ -64,7 +67,10 @@ namespace Abp.Zero.SampleApp.Tests.Users
 
             //Assert
             (await _userManager.IsInOrganizationUnitAsync(_defaultTenantAdmin, ou11)).ShouldBe(false);
-            UsingDbContext(context => context.UserOrganizationUnits.FirstOrDefault(ou => ou.UserId == _defaultTenantAdmin.Id && ou.OrganizationUnitId == ou11.Id).IsDeleted.ShouldBeTrue());
+            UsingDbContext(context =>
+                context.UserOrganizationUnits
+                    .FirstOrDefault(ou => ou.UserId == _defaultTenantAdmin.Id && ou.OrganizationUnitId == ou11.Id)
+                    .IsDeleted.ShouldBeTrue());
         }
 
         [Fact]
@@ -100,7 +106,8 @@ namespace Abp.Zero.SampleApp.Tests.Users
             UsingDbContext(context =>
             {
                 context.UserOrganizationUnits
-                    .Count(uou => uou.UserId == _defaultTenantAdmin.Id && organizationUnitIds.Contains(uou.OrganizationUnitId))
+                    .Count(uou =>
+                        uou.UserId == _defaultTenantAdmin.Id && organizationUnitIds.Contains(uou.OrganizationUnitId))
                     .ShouldBe(organizationUnitIds.Length);
             });
         }
@@ -116,7 +123,8 @@ namespace Abp.Zero.SampleApp.Tests.Users
 
         private OrganizationUnit GetOU(string diplayName)
         {
-            var organizationUnit = UsingDbContext(context => context.OrganizationUnits.FirstOrDefault(ou => ou.DisplayName == diplayName));
+            var organizationUnit = UsingDbContext(context =>
+                context.OrganizationUnits.FirstOrDefault(ou => ou.DisplayName == diplayName));
             organizationUnit.ShouldNotBeNull();
 
             return organizationUnit;
@@ -136,26 +144,25 @@ namespace Abp.Zero.SampleApp.Tests.Users
                 }));
 
             return UsingDbContext(
-                context =>
-                {
-                    return context.Users.Single(u => u.UserName == "yunus.emre");
-                });
+                context => { return context.Users.Single(u => u.UserName == "yunus.emre"); });
         }
+
         [Fact]
         public async Task Test_SetOrganizationUnitsAsync_With_MaxUserMembershipCount()
         {
             await WithUnitOfWorkAsync(async () =>
-             {
-                 await _settingManager.ChangeSettingForApplicationAsync(
-                     AbpZeroSettingNames.OrganizationUnits.MaxUserMembershipCount,
-                     "1");
+            {
+                await _settingManager.ChangeSettingForApplicationAsync(
+                    AbpZeroSettingNames.OrganizationUnits.MaxUserMembershipCount,
+                    "1");
 
-                 var organizationUnitIds = (new[] { /*"OU11", "OU12",*/ "OU2" }).Select(oun => GetOU(oun).Id).ToArray();
+                var organizationUnitIds = new[]
+                {
+                    /*"OU11", "OU12",*/ "OU2"
+                }.Select(oun => GetOU(oun).Id).ToArray();
 
-                 await _userManager.SetOrganizationUnitsAsync(_defaultTenantAdmin, organizationUnitIds);
-             });
+                await _userManager.SetOrganizationUnitsAsync(_defaultTenantAdmin, organizationUnitIds);
+            });
         }
-
-
     }
 }

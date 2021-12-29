@@ -22,27 +22,20 @@ namespace Abp.WebApi.Validation
             _configuration = configuration;
         }
 
-        public async Task<HttpResponseMessage> ExecuteActionFilterAsync(HttpActionContext actionContext, CancellationToken cancellationToken, Func<Task<HttpResponseMessage>> continuation)
+        public async Task<HttpResponseMessage> ExecuteActionFilterAsync(HttpActionContext actionContext,
+            CancellationToken cancellationToken, Func<Task<HttpResponseMessage>> continuation)
         {
-            if (!_configuration.IsValidationEnabledForControllers)
-            {
-                return await continuation();
-            }
+            if (!_configuration.IsValidationEnabledForControllers) return await continuation();
 
             var methodInfo = actionContext.ActionDescriptor.GetMethodInfoOrNull();
-            if (methodInfo == null)
-            {
-                return await continuation();
-            }
+            if (methodInfo == null) return await continuation();
 
             /* ModelState.IsValid is being checked to handle parameter binding errors (ex: send string for an int value).
              * These type of errors can not be catched from application layer. */
 
             if (actionContext.ModelState.IsValid
                 && actionContext.ActionDescriptor.IsDynamicAbpAction())
-            {
                 return await continuation();
-            }
 
             using (var validator = _iocResolver.ResolveAsDisposable<WebApiActionInvocationValidator>())
             {

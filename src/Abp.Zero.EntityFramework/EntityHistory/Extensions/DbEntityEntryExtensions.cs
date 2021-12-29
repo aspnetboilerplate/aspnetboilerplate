@@ -27,10 +27,7 @@ namespace Abp.EntityHistory.Extensions
 
         internal static bool IsDeleted(this DbEntityEntry entityEntry)
         {
-            if (entityEntry.State == EntityState.Deleted)
-            {
-                return true;
-            }
+            if (entityEntry.State == EntityState.Deleted) return true;
             var entity = entityEntry.Entity;
             return entity is ISoftDelete && entity.As<ISoftDelete>().IsDeleted;
         }

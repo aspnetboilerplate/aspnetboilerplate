@@ -33,7 +33,7 @@ namespace Abp.WebApi.Authorization
         private readonly IAbpWebCommonModuleConfiguration _abpWebCommonModuleConfiguration;
 
         public AbpApiAuthorizeFilter(
-            IAuthorizationHelper authorizationHelper, 
+            IAuthorizationHelper authorizationHelper,
             IAbpWebApiConfiguration configuration,
             ILocalizationManager localizationManager,
             IEventBus eventBus,
@@ -52,21 +52,14 @@ namespace Abp.WebApi.Authorization
             Func<Task<HttpResponseMessage>> continuation)
         {
             if (actionContext.ActionDescriptor.GetCustomAttributes<AllowAnonymousAttribute>().Any() ||
-                actionContext.ActionDescriptor.ControllerDescriptor.GetCustomAttributes<AllowAnonymousAttribute>().Any())
-            {
+                actionContext.ActionDescriptor.ControllerDescriptor.GetCustomAttributes<AllowAnonymousAttribute>()
+                    .Any())
                 return await continuation();
-            }
-            
-            var methodInfo = actionContext.ActionDescriptor.GetMethodInfoOrNull();
-            if (methodInfo == null)
-            {
-                return await continuation();
-            }
 
-            if (actionContext.ActionDescriptor.IsDynamicAbpAction())
-            {
-                return await continuation();
-            }
+            var methodInfo = actionContext.ActionDescriptor.GetMethodInfoOrNull();
+            if (methodInfo == null) return await continuation();
+
+            if (actionContext.ActionDescriptor.IsDynamicAbpAction()) return await continuation();
 
             try
             {
@@ -87,10 +80,7 @@ namespace Abp.WebApi.Authorization
 
             HttpResponseMessage HandleError(bool wrap)
             {
-                if (!wrap)
-                {
-                    return new HttpResponseMessage(statusCode);
-                }
+                if (!wrap) return new HttpResponseMessage(statusCode);
 
                 return new HttpResponseMessage(statusCode)
                 {
@@ -105,11 +95,9 @@ namespace Abp.WebApi.Authorization
             }
 
             var displayUrl = actionContext.Request.RequestUri.AbsolutePath;
-            if (_abpWebCommonModuleConfiguration.WrapResultFilters.HasFilterForWrapOnError(displayUrl, out var wrapOnError))
-            {
-                return HandleError(wrapOnError);
-            }
-            
+            if (_abpWebCommonModuleConfiguration.WrapResultFilters.HasFilterForWrapOnError(displayUrl,
+                    out var wrapOnError)) return HandleError(wrapOnError);
+
             var wrapResultAttribute =
                 HttpActionDescriptorHelper.GetWrapResultAttributeOrNull(actionContext.ActionDescriptor) ??
                 _configuration.DefaultWrapResultAttribute;
@@ -120,12 +108,10 @@ namespace Abp.WebApi.Authorization
         private ErrorInfo GetUnAuthorizedErrorMessage(HttpStatusCode statusCode)
         {
             if (statusCode == HttpStatusCode.Forbidden)
-            {
                 return new ErrorInfo(
                     _localizationManager.GetString(AbpWebConsts.LocalizaionSourceName, "DefaultError403"),
                     _localizationManager.GetString(AbpWebConsts.LocalizaionSourceName, "DefaultErrorDetail403")
                 );
-            }
 
             return new ErrorInfo(
                 _localizationManager.GetString(AbpWebConsts.LocalizaionSourceName, "DefaultError401"),
@@ -135,7 +121,7 @@ namespace Abp.WebApi.Authorization
 
         private static HttpStatusCode GetUnAuthorizedStatusCode(HttpActionContext actionContext)
         {
-            return (actionContext.RequestContext.Principal?.Identity?.IsAuthenticated ?? false)
+            return actionContext.RequestContext.Principal?.Identity?.IsAuthenticated ?? false
                 ? HttpStatusCode.Forbidden
                 : HttpStatusCode.Unauthorized;
         }

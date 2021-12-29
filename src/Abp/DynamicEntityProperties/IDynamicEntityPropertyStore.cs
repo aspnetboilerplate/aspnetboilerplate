@@ -16,7 +16,7 @@ namespace Abp.DynamicEntityProperties
         List<DynamicEntityProperty> GetAll(string entityFullName);
 
         Task<List<DynamicEntityProperty>> GetAllAsync(string entityFullName);
-        
+
         void Add(DynamicEntityProperty dynamicEntityProperty);
 
         Task AddAsync(DynamicEntityProperty dynamicEntityProperty);

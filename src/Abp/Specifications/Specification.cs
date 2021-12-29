@@ -19,7 +19,7 @@ namespace Abp.Specifications
         {
             return ToExpression().Compile()(obj);
         }
-        
+
         /// <summary>
         /// Gets the LINQ expression which represents the current specification.
         /// </summary>

@@ -1,24 +1,25 @@
-﻿<?xml version="1.0" encoding="utf-8" ?>
+﻿<?xml version="1.0" encoding="utf-8"?>
+
 <localizationDictionary culture="lv">
-  <texts>
-    <text name="SmtpHost">SMTP hosts</text>
-    <text name="SmtpPort">SMTP ports</text>
-    <text name="Username">Lietotājs</text>
-    <text name="Password">Parole</text>
-    <text name="DomainName">Domēna vārds</text>
-    <text name="UseSSL">Izmantot SSL</text>
-    <text name="UseDefaultCredentials">Izmantot noklusējuma akreditācijas datus</text>
-    <text name="DefaultFromSenderEmailAddress">Pēc Noklusējuma (sender) email pasts</text>
-    <text name="DefaultFromSenderDisplayName">Pēc Noklusējuma (sender) displejs nosaukums</text>
-    <text name="DefaultLanguage">Noklusējuma valoda</text>
-    <text name="ReceiveNotifications">Saņemt paziņojumus</text>
-    <text name="CurrentUserDidNotLoginToTheApplication">Pašreizējais lietotājs nav pieslēdzies lietotnei!</text>
-    <text name="TimeZone">Laika zona</text>
-    <text name="AllOfThesePermissionsMustBeGranted">Nepieciešamās atļaujas netiek piešķirtas. Visas šīs atļaujas ir jāpiešķir: {0}</text>
-    <text name="AtLeastOneOfThesePermissionsMustBeGranted">Nepieciešamās atļaujas netiek piešķirtas. Vismaz viena no šīm atļaujām ir jāpiešķir: {0}</text>
-    <text name="FeatureIsNotEnabled">Funkcija nav iespējota: {0}</text>
-    <text name="AllOfTheseFeaturesMustBeEnabled">Nepieciešamās funkcijas nav iespējotas. Visām šīm funkcijām jābūt iespējotām: {0}</text>
-    <text name="AtLeastOneOfTheseFeaturesMustBeEnabled">Nepieciešamās funkcijas nav iespējotas. Vismaz vienai no šīm funkcijām jābūt iespējotai: {0}</text>
-    <text name="MainMenu">Galvenā izvēlne</text>
-  </texts>
+	<texts>
+		<text name="SmtpHost">SMTP hosts</text>
+		<text name="SmtpPort">SMTP ports</text>
+		<text name="Username">Lietotājs</text>
+		<text name="Password">Parole</text>
+		<text name="DomainName">Domēna vārds</text>
+		<text name="UseSSL">Izmantot SSL</text>
+		<text name="UseDefaultCredentials">Izmantot noklusējuma akreditācijas datus</text>
+		<text name="DefaultFromSenderEmailAddress">Pēc Noklusējuma (sender) email pasts</text>
+		<text name="DefaultFromSenderDisplayName">Pēc Noklusējuma (sender) displejs nosaukums</text>
+		<text name="DefaultLanguage">Noklusējuma valoda</text>
+		<text name="ReceiveNotifications">Saņemt paziņojumus</text>
+		<text name="CurrentUserDidNotLoginToTheApplication">Pašreizējais lietotājs nav pieslēdzies lietotnei!</text>
+		<text name="TimeZone">Laika zona</text>
+		<text name="AllOfThesePermissionsMustBeGranted">Nepieciešamās atļaujas netiek piešķirtas. Visas šīs atļaujas ir jāpiešķir: {0}</text>
+		<text name="AtLeastOneOfThesePermissionsMustBeGranted">Nepieciešamās atļaujas netiek piešķirtas. Vismaz viena no šīm atļaujām ir jāpiešķir: {0}</text>
+		<text name="FeatureIsNotEnabled">Funkcija nav iespējota: {0}</text>
+		<text name="AllOfTheseFeaturesMustBeEnabled">Nepieciešamās funkcijas nav iespējotas. Visām šīm funkcijām jābūt iespējotām: {0}</text>
+		<text name="AtLeastOneOfTheseFeaturesMustBeEnabled">Nepieciešamās funkcijas nav iespējotas. Vismaz vienai no šīm funkcijām jābūt iespējotai: {0}</text>
+		<text name="MainMenu">Galvenā izvēlne</text>
+	</texts>
 </localizationDictionary>

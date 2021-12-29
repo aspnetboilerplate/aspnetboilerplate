@@ -8,7 +8,7 @@ namespace Abp.Web.Configuration
         public IAbpWebLocalizationConfiguration Localization { get; }
 
         public AbpWebModuleConfiguration(
-            IAbpAntiForgeryWebConfiguration antiForgery, 
+            IAbpAntiForgeryWebConfiguration antiForgery,
             IAbpWebLocalizationConfiguration localization)
         {
             AntiForgery = antiForgery;

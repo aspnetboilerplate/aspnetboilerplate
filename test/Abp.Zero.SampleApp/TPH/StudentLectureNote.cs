@@ -5,8 +5,7 @@ namespace Abp.Zero.SampleApp.TPH
 {
     public class StudentLectureNote : Entity
     {
-        [Required]
-        public Student Student { get; set; }
+        [Required] public Student Student { get; set; }
 
         public int StudentId { get; set; }
 

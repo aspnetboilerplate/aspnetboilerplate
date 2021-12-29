@@ -48,13 +48,9 @@ namespace Abp.Tests.Text.Formatting
                 actualToken.Text.ShouldBe(expectedToken.Trim('{', '}'));
 
                 if (expectedToken.StartsWith("{") && expectedToken.EndsWith("}"))
-                {
                     actualToken.Type.ShouldBe(FormatStringTokenType.DynamicValue);
-                }
                 else
-                {
                     actualToken.Type.ShouldBe(FormatStringTokenType.ConstantText);
-                }
             }
         }
     }

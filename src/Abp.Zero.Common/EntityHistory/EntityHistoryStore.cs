@@ -34,10 +34,7 @@ namespace Abp.EntityHistory
 
         public virtual void Save(EntityChangeSet changeSet)
         {
-            _unitOfWorkManager.WithUnitOfWork(() =>
-            {
-                _changeSetRepository.Insert(changeSet);
-            });
+            _unitOfWorkManager.WithUnitOfWork(() => { _changeSetRepository.Insert(changeSet); });
         }
     }
 }

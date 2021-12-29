@@ -38,11 +38,8 @@ namespace Abp.Zero.SampleApp.Tests.Repository
             {
                 var users = await _useRepository.GetAllListAsync();
 
-                foreach (var user in users)
-                {
-                    await _useRepository.HardDeleteAsync(user);
-                }
-                
+                foreach (var user in users) await _useRepository.HardDeleteAsync(user);
+
                 await uow.CompleteAsync();
             }
 
@@ -106,35 +103,35 @@ namespace Abp.Zero.SampleApp.Tests.Repository
             await Assert.ThrowsAsync<AbpException>(async () => await _useRepository.HardDeleteAsync(admin));
             await Assert.ThrowsAsync<AbpException>(async () => await _useRepository.HardDeleteAsync(u => u.Id > 0));
         }
-        
+
         [Fact]
         public async Task Should_Not_Throw_Exception_When_Deleting_ValueObject_And_HardDeleting_Entity()
         {
             AbpSession.TenantId = 1;
 
             var uowManager = Resolve<IUnitOfWorkManager>();
-            
+
             UsingDbContext(context =>
             {
                 context.Categories.Add(new Category
                 {
                     DisplayName = "Soft Drinks"
                 });
-                
+
                 context.SaveChanges();
             });
-            
+
             using (var uow = uowManager.Begin())
             {
                 var admin = await _useRepository.FirstOrDefaultAsync(u => u.UserName == "admin");
                 await _useRepository.HardDeleteAsync(admin);
- 
+
                 UsingDbContext(context =>
                 {
-                    var category = context.Categories.Single(e=> e.DisplayName == "Soft Drinks");
+                    var category = context.Categories.Single(e => e.DisplayName == "Soft Drinks");
                     context.Categories.Remove(category);
                 });
-                
+
                 await uow.CompleteAsync();
             }
         }

@@ -22,8 +22,8 @@ namespace Abp.Configuration
         /// <returns>Value of the config</returns>
         public object this[string name]
         {
-            get { return CustomSettings.GetOrDefault(name); }
-            set { CustomSettings[name] = value; }
+            get => CustomSettings.GetOrDefault(name);
+            set => CustomSettings[name] = value;
         }
 
         /// <summary>
@@ -44,8 +44,8 @@ namespace Abp.Configuration
         {
             var value = this[name];
             return value == null
-                ? default(T)
-                : (T) Convert.ChangeType(value, typeof (T));
+                ? default
+                : (T)Convert.ChangeType(value, typeof(T));
         }
 
         /// <summary>
@@ -78,10 +78,7 @@ namespace Abp.Configuration
         public object Get(string name, object defaultValue)
         {
             var value = this[name];
-            if (value == null)
-            {
-                return defaultValue;
-            }
+            if (value == null) return defaultValue;
 
             return this[name];
         }
@@ -113,7 +110,8 @@ namespace Abp.Configuration
                 value = creator();
                 Set(name, value);
             }
-            return (T) value;
+
+            return (T)value;
         }
     }
 }

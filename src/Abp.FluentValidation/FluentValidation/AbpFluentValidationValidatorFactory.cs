@@ -15,10 +15,7 @@ namespace Abp.FluentValidation
 
         public override IValidator CreateInstance(Type validatorType)
         {
-            if (_iocResolver.IsRegistered(validatorType))
-            {
-                return _iocResolver.Resolve(validatorType) as IValidator;
-            }
+            if (_iocResolver.IsRegistered(validatorType)) return _iocResolver.Resolve(validatorType) as IValidator;
 
             return null;
         }

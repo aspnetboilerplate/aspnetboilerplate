@@ -33,15 +33,10 @@ namespace Abp.Web.Mvc.Authorization
         {
             if (filterContext.ActionDescriptor.IsDefined(typeof(AllowAnonymousAttribute), true) ||
                 filterContext.ActionDescriptor.ControllerDescriptor.IsDefined(typeof(AllowAnonymousAttribute), true))
-            {
                 return;
-            }
 
             var methodInfo = filterContext.ActionDescriptor.GetMethodInfoOrNull();
-            if (methodInfo == null)
-            {
-                return;
-            }
+            if (methodInfo == null) return;
 
             try
             {
@@ -67,18 +62,12 @@ namespace Abp.Web.Mvc.Authorization
             var isJsonResult = MethodInfoHelper.IsJsonResult(methodInfo);
 
             if (isJsonResult)
-            {
                 filterContext.Result = CreateUnAuthorizedJsonResult(ex);
-            }
             else
-            {
                 filterContext.Result = CreateUnAuthorizedNonJsonResult(filterContext, ex);
-            }
 
             if (isJsonResult || filterContext.HttpContext.Request.IsAjaxRequest())
-            {
                 filterContext.HttpContext.Response.SuppressFormsAuthenticationRedirect = true;
-            }
 
             _eventBus.Trigger(this, new AbpHandledExceptionData(ex));
         }
@@ -92,7 +81,8 @@ namespace Abp.Web.Mvc.Authorization
             };
         }
 
-        protected virtual HttpStatusCodeResult CreateUnAuthorizedNonJsonResult(AuthorizationContext filterContext, AbpAuthorizationException ex)
+        protected virtual HttpStatusCodeResult CreateUnAuthorizedNonJsonResult(AuthorizationContext filterContext,
+            AbpAuthorizationException ex)
         {
             return new HttpStatusCodeResult(filterContext.HttpContext.Response.StatusCode, ex.Message);
         }

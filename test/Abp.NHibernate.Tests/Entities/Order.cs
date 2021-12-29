@@ -10,8 +10,7 @@ namespace Abp.NHibernate.Tests.Entities
     {
         public virtual decimal TotalPrice { get; set; }
 
-        [DisableDateTimeNormalization]
-        public virtual DateTime CreationTime { get; set; }
+        [DisableDateTimeNormalization] public virtual DateTime CreationTime { get; set; }
 
         public virtual ICollection<OrderDetail> Items { get; set; }
     }

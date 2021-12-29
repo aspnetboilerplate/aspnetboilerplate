@@ -15,7 +15,7 @@ namespace Abp.Webhooks
         private const string SignatureHeaderKey = "sha256";
         private const string SignatureHeaderValueTemplate = SignatureHeaderKey + "={0}";
         private const string SignatureHeaderName = "abp-webhook-signature";
-        
+
         private readonly IWebhooksConfiguration _webhooksConfiguration;
         private readonly IWebhookSendAttemptStore _webhookSendAttemptStore;
 
@@ -69,15 +69,9 @@ namespace Abp.Webhooks
 
         public virtual void SignWebhookRequest(HttpRequestMessage request, string serializedBody, string secret)
         {
-            if (request == null)
-            {
-                throw new ArgumentNullException(nameof(request));
-            }
+            if (request == null) throw new ArgumentNullException(nameof(request));
 
-            if (string.IsNullOrWhiteSpace(serializedBody))
-            {
-                throw new ArgumentNullException(nameof(serializedBody));
-            }
+            if (string.IsNullOrWhiteSpace(serializedBody)) throw new ArgumentNullException(nameof(serializedBody));
 
             var secretBytes = Encoding.UTF8.GetBytes(secret);
 
@@ -88,7 +82,8 @@ namespace Abp.Webhooks
                 var data = Encoding.UTF8.GetBytes(serializedBody);
                 var sha256 = hasher.ComputeHash(data);
 
-                var headerValue = string.Format(CultureInfo.InvariantCulture, SignatureHeaderValueTemplate, BitConverter.ToString(sha256));
+                var headerValue = string.Format(CultureInfo.InvariantCulture, SignatureHeaderValueTemplate,
+                    BitConverter.ToString(sha256));
 
                 request.Headers.Add(SignatureHeaderName, headerValue);
             }
@@ -96,10 +91,7 @@ namespace Abp.Webhooks
 
         public virtual string GetSerializedBody(WebhookSenderArgs webhookSenderArgs)
         {
-            if (webhookSenderArgs.SendExactSameData)
-            {
-                return webhookSenderArgs.Data;
-            }
+            if (webhookSenderArgs.SendExactSameData) return webhookSenderArgs.Data;
 
             var payload = GetWebhookPayload(webhookSenderArgs);
 
@@ -112,10 +104,7 @@ namespace Abp.Webhooks
 
         public virtual async Task<string> GetSerializedBodyAsync(WebhookSenderArgs webhookSenderArgs)
         {
-            if (webhookSenderArgs.SendExactSameData)
-            {
-                return webhookSenderArgs.Data;
-            }
+            if (webhookSenderArgs.SendExactSameData) return webhookSenderArgs.Data;
 
             var payload = await GetWebhookPayloadAsync(webhookSenderArgs);
 
@@ -125,7 +114,7 @@ namespace Abp.Webhooks
 
             return serializedBody;
         }
-        
+
         public virtual async Task<Guid> InsertAndGetIdWebhookSendAttemptAsync(WebhookSenderArgs webhookSenderArgs)
         {
             using (var uow = UnitOfWorkManager.Begin())
@@ -141,12 +130,13 @@ namespace Abp.Webhooks
                 await CurrentUnitOfWork.SaveChangesAsync();
 
                 await uow.CompleteAsync();
-                
+
                 return workItem.Id;
             }
         }
 
-        public virtual async Task StoreResponseOnWebhookSendAttemptAsync(Guid webhookSendAttemptId, int? tenantId, HttpStatusCode? statusCode, string content)
+        public virtual async Task StoreResponseOnWebhookSendAttemptAsync(Guid webhookSendAttemptId, int? tenantId,
+            HttpStatusCode? statusCode, string content)
         {
             using (var uow = UnitOfWorkManager.Begin())
             {

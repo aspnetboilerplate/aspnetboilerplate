@@ -24,12 +24,8 @@ namespace Abp.Dapper.Filters.Action
 
             var entityWithCreationTime = entity as IHasCreationTime;
             if (entityWithCreationTime != null)
-            {
                 if (entityWithCreationTime.CreationTime == default(DateTime))
-                {
                     entityWithCreationTime.CreationTime = Clock.Now;
-                }
-            }
 
             CheckAndSetMustHaveTenantIdProperty(entity);
             CheckAndSetMayHaveTenantIdProperty(entity);
@@ -44,9 +40,7 @@ namespace Abp.Dapper.Filters.Action
                         //Sets CreatorUserId only if current user is in same tenant/host with the given entity
                         if (entity is IMayHaveTenant && entity.As<IMayHaveTenant>().TenantId == AbpSession.TenantId ||
                             entity is IMustHaveTenant && entity.As<IMustHaveTenant>().TenantId == AbpSession.TenantId)
-                        {
                             record.CreatorUserId = userId;
-                        }
                     }
                     else
                     {
@@ -55,10 +49,7 @@ namespace Abp.Dapper.Filters.Action
                 }
             }
 
-            if (entity is IHasModificationTime)
-            {
-                entity.As<IHasModificationTime>().LastModificationTime = null;
-            }
+            if (entity is IHasModificationTime) entity.As<IHasModificationTime>().LastModificationTime = null;
 
             if (entity is IModificationAudited)
             {
@@ -70,52 +61,33 @@ namespace Abp.Dapper.Filters.Action
         protected virtual void CheckAndSetMustHaveTenantIdProperty(object entityAsObj)
         {
             //Only set IMustHaveTenant entities
-            if (!(entityAsObj is IMustHaveTenant))
-            {
-                return;
-            }
+            if (!(entityAsObj is IMustHaveTenant)) return;
 
             var entity = entityAsObj.As<IMustHaveTenant>();
 
             //Don't set if it's already set
-            if (entity.TenantId != 0)
-            {
-                return;
-            }
+            if (entity.TenantId != 0) return;
 
             int? currentTenantId = GetCurrentTenantIdOrNull();
 
             if (currentTenantId != null)
-            {
                 entity.TenantId = currentTenantId.Value;
-            }
             else
-            {
                 throw new AbpException("Can not set TenantId to 0 for IMustHaveTenant entities!");
-            }
         }
 
         protected virtual void CheckAndSetMayHaveTenantIdProperty(object entityAsObj)
         {
             //Only set IMayHaveTenant entities
-            if (!(entityAsObj is IMayHaveTenant))
-            {
-                return;
-            }
+            if (!(entityAsObj is IMayHaveTenant)) return;
 
             var entity = entityAsObj.As<IMayHaveTenant>();
 
             //Don't set if it's already set
-            if (entity.TenantId != null)
-            {
-                return;
-            }
+            if (entity.TenantId != null) return;
 
             //Only works for single tenant applications
-            if (!_multiTenancyConfig?.IsEnabled ?? false)
-            {
-                return;
-            }
+            if (!_multiTenancyConfig?.IsEnabled ?? false) return;
 
             entity.TenantId = GetCurrentTenantIdOrNull();
         }

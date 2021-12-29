@@ -28,13 +28,13 @@ namespace Abp.Web.Timing
 
             script.AppendLine("(function(){");
 
-            script.AppendLine("    abp.clock.provider = abp.timing." + Clock.Provider.GetType().Name.ToCamelCase() + " || abp.timing.localClockProvider;");
-            script.AppendLine("    abp.clock.provider.supportsMultipleTimezone = " + Clock.SupportsMultipleTimezone.ToString().ToLowerInvariant() + ";");
+            script.AppendLine("    abp.clock.provider = abp.timing." + Clock.Provider.GetType().Name.ToCamelCase() +
+                              " || abp.timing.localClockProvider;");
+            script.AppendLine("    abp.clock.provider.supportsMultipleTimezone = " +
+                              Clock.SupportsMultipleTimezone.ToString().ToLowerInvariant() + ";");
 
             if (Clock.SupportsMultipleTimezone)
-            {
                 script.AppendLine("    abp.timing.timeZoneInfo = " + await GetUsersTimezoneScriptsAsync());
-            }
 
             script.Append("})();");
 
@@ -50,7 +50,8 @@ namespace Abp.Web.Timing
                    "        windows: {" +
                    "            timeZoneId: '" + timezoneId + "'," +
                    "            baseUtcOffsetInMilliseconds: '" + timezone.BaseUtcOffset.TotalMilliseconds + "'," +
-                   "            currentUtcOffsetInMilliseconds: '" + timezone.GetUtcOffset(Clock.Now).TotalMilliseconds + "'," +
+                   "            currentUtcOffsetInMilliseconds: '" +
+                   timezone.GetUtcOffset(Clock.Now).TotalMilliseconds + "'," +
                    "            isDaylightSavingTimeNow: '" + timezone.IsDaylightSavingTime(Clock.Now) + "'" +
                    "        }," +
                    "        iana: {" +

@@ -40,16 +40,13 @@ namespace Abp.Quartz
 
                 return _unitOfWorkManager;
             }
-            set { _unitOfWorkManager = value; }
+            set => _unitOfWorkManager = value;
         }
 
         /// <summary>
         ///     Gets current unit of work.
         /// </summary>
-        protected IActiveUnitOfWork CurrentUnitOfWork
-        {
-            get { return UnitOfWorkManager.Current; }
-        }
+        protected IActiveUnitOfWork CurrentUnitOfWork => UnitOfWorkManager.Current;
 
         /// <summary>
         ///     Reference to the localization manager.
@@ -71,9 +68,10 @@ namespace Abp.Quartz
             get
             {
                 if (LocalizationSourceName == null)
-                    throw new AbpException("Must set LocalizationSourceName before, in order to get LocalizationSource");
+                    throw new AbpException(
+                        "Must set LocalizationSourceName before, in order to get LocalizationSource");
 
-                if ((_localizationSource == null) || (_localizationSource.Name != LocalizationSourceName))
+                if (_localizationSource == null || _localizationSource.Name != LocalizationSourceName)
                     _localizationSource = LocalizationManager.GetSource(LocalizationSourceName);
 
                 return _localizationSource;
@@ -130,6 +128,5 @@ namespace Abp.Quartz
         {
             return LocalizationSource.GetString(name, culture, args);
         }
-
     }
 }

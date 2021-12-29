@@ -25,7 +25,7 @@ namespace Abp.Collections.Extensions
                 return true;
             }
 
-            value = default(T);
+            value = default;
             return false;
         }
 
@@ -40,7 +40,7 @@ namespace Abp.Collections.Extensions
         public static TValue GetOrDefault<TKey, TValue>(this IDictionary<TKey, TValue> dictionary, TKey key)
         {
             TValue obj;
-            return dictionary.TryGetValue(key, out obj) ? obj : default(TValue);
+            return dictionary.TryGetValue(key, out obj) ? obj : default;
         }
 
         /// <summary>
@@ -52,17 +52,15 @@ namespace Abp.Collections.Extensions
         /// <typeparam name="TKey">Type of the key</typeparam>
         /// <typeparam name="TValue">Type of the value</typeparam>
         /// <returns>Value if found, default if can not found.</returns>
-        public static TValue GetOrAdd<TKey, TValue>(this IDictionary<TKey, TValue> dictionary, TKey key, Func<TKey, TValue> factory)
+        public static TValue GetOrAdd<TKey, TValue>(this IDictionary<TKey, TValue> dictionary, TKey key,
+            Func<TKey, TValue> factory)
         {
             TValue obj;
-            if (dictionary.TryGetValue(key, out obj))
-            {
-                return obj;
-            }
+            if (dictionary.TryGetValue(key, out obj)) return obj;
 
             return dictionary[key] = factory(key);
         }
-        
+
         /// <summary>
         /// Gets a value from the dictionary with given key. Returns default value if can not find.
         /// </summary>
@@ -72,7 +70,8 @@ namespace Abp.Collections.Extensions
         /// <typeparam name="TKey">Type of the key</typeparam>
         /// <typeparam name="TValue">Type of the value</typeparam>
         /// <returns>Value if found, default if can not found.</returns>
-        public static TValue GetOrAdd<TKey, TValue>(this IDictionary<TKey, TValue> dictionary, TKey key, Func<TValue> factory)
+        public static TValue GetOrAdd<TKey, TValue>(this IDictionary<TKey, TValue> dictionary, TKey key,
+            Func<TValue> factory)
         {
             return dictionary.GetOrAdd(key, k => factory());
         }

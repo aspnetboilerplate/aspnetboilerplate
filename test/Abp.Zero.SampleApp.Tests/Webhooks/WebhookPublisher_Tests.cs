@@ -44,7 +44,7 @@ namespace Abp.Zero.SampleApp.Tests.Webhooks
 
             var webhooksConfiguration = Resolve<IWebhooksConfiguration>();
 
-            var data = new {Name = "Musa", Surname = "Demir"};
+            var data = new { Name = "Musa", Surname = "Demir" };
 
             bool Predicate(WebhookSenderArgs w)
             {
@@ -96,7 +96,7 @@ namespace Abp.Zero.SampleApp.Tests.Webhooks
                 AppWebhookDefinitionNames.Users.Created,
                 new Dictionary<string, string>
                 {
-                    {AppFeatures.WebhookFeature, "true"}
+                    { AppFeatures.WebhookFeature, "true" }
                 }
             );
 
@@ -113,7 +113,7 @@ namespace Abp.Zero.SampleApp.Tests.Webhooks
                 AppWebhookDefinitionNames.Users.Created,
                 new Dictionary<string, string>
                 {
-                    {AppFeatures.WebhookFeature, "true"}
+                    { AppFeatures.WebhookFeature, "true" }
                 }
             );
 
@@ -185,7 +185,7 @@ namespace Abp.Zero.SampleApp.Tests.Webhooks
                 AppWebhookDefinitionNames.Users.Deleted,
                 new Dictionary<string, string>
                 {
-                    {AppFeatures.WebhookFeature, "true"}
+                    { AppFeatures.WebhookFeature, "true" }
                 }
             );
 
@@ -201,8 +201,8 @@ namespace Abp.Zero.SampleApp.Tests.Webhooks
                 AppWebhookDefinitionNames.Theme.DefaultThemeChanged,
                 new Dictionary<string, string>
                 {
-                    {AppFeatures.WebhookFeature, "true"},
-                    {AppFeatures.ThemeFeature, "true"}
+                    { AppFeatures.WebhookFeature, "true" },
+                    { AppFeatures.ThemeFeature, "true" }
                 });
 
             await _webhookPublisher.PublishAsync(AppWebhookDefinitionNames.Theme.DefaultThemeChanged, data2,
@@ -220,7 +220,7 @@ namespace Abp.Zero.SampleApp.Tests.Webhooks
                 AppWebhookDefinitionNames.Users.Deleted,
                 new Dictionary<string, string>
                 {
-                    {AppFeatures.WebhookFeature, "true"}
+                    { AppFeatures.WebhookFeature, "true" }
                 }
             );
 
@@ -237,8 +237,8 @@ namespace Abp.Zero.SampleApp.Tests.Webhooks
                 AppWebhookDefinitionNames.Theme.DefaultThemeChanged,
                 new Dictionary<string, string>
                 {
-                    {AppFeatures.WebhookFeature, "true"},
-                    {AppFeatures.ThemeFeature, "true"}
+                    { AppFeatures.WebhookFeature, "true" },
+                    { AppFeatures.ThemeFeature, "true" }
                 });
 
             AbpSession.TenantId = subscription2.TenantId;
@@ -256,8 +256,8 @@ namespace Abp.Zero.SampleApp.Tests.Webhooks
                 AppWebhookDefinitionNames.Theme.DefaultThemeChanged,
                 new Dictionary<string, string>
                 {
-                    {AppFeatures.WebhookFeature, "true"},
-                    {AppFeatures.ThemeFeature, "true"}
+                    { AppFeatures.WebhookFeature, "true" },
+                    { AppFeatures.ThemeFeature, "true" }
                 }
             );
 
@@ -287,8 +287,8 @@ namespace Abp.Zero.SampleApp.Tests.Webhooks
                 AppWebhookDefinitionNames.Theme.DefaultThemeChanged,
                 new Dictionary<string, string>
                 {
-                    {AppFeatures.WebhookFeature, "true"},
-                    {AppFeatures.ThemeFeature, "true"}
+                    { AppFeatures.WebhookFeature, "true" },
+                    { AppFeatures.ThemeFeature, "true" }
                 });
 
             //remove one feature
@@ -315,10 +315,10 @@ namespace Abp.Zero.SampleApp.Tests.Webhooks
                 TenantId = null,
                 Secret = "secret",
                 WebhookUri = "www.mywebhook.com",
-                Webhooks = new List<string>() {AppWebhookDefinitionNames.Users.Created},
+                Webhooks = new List<string>() { AppWebhookDefinitionNames.Users.Created },
                 Headers = new Dictionary<string, string>
                 {
-                    {"Key", "Value"}
+                    { "Key", "Value" }
                 }
             };
 
@@ -327,7 +327,7 @@ namespace Abp.Zero.SampleApp.Tests.Webhooks
 
             await webhookSubscriptionManager.AddOrUpdateSubscriptionAsync(subscription);
 
-            var data = new {Name = "Musa", Surname = "Demir"};
+            var data = new { Name = "Musa", Surname = "Demir" };
 
             Predicate<WebhookSenderArgs> predicate = w =>
             {
@@ -410,7 +410,7 @@ namespace Abp.Zero.SampleApp.Tests.Webhooks
                 AppWebhookDefinitionNames.Users.Created,
                 new Dictionary<string, string>
                 {
-                    {AppFeatures.WebhookFeature, "true"}
+                    { AppFeatures.WebhookFeature, "true" }
                 }
             );
 
@@ -418,7 +418,7 @@ namespace Abp.Zero.SampleApp.Tests.Webhooks
                 AppWebhookDefinitionNames.Users.Created,
                 new Dictionary<string, string>
                 {
-                    {AppFeatures.WebhookFeature, "true"}
+                    { AppFeatures.WebhookFeature, "true" }
                 }
             );
 
@@ -429,7 +429,7 @@ namespace Abp.Zero.SampleApp.Tests.Webhooks
 
             var webhooksConfiguration = Resolve<IWebhooksConfiguration>();
 
-            var data = new {Name = "Musa", Surname = "Demir"};
+            var data = new { Name = "Musa", Surname = "Demir" };
 
             Predicate<WebhookSenderArgs> predicate = w =>
             {
@@ -474,7 +474,7 @@ namespace Abp.Zero.SampleApp.Tests.Webhooks
                 AppWebhookDefinitionNames.Users.Created,
                 new Dictionary<string, string>
                 {
-                    {AppFeatures.WebhookFeature, "true"}
+                    { AppFeatures.WebhookFeature, "true" }
                 }
             );
 
@@ -482,7 +482,7 @@ namespace Abp.Zero.SampleApp.Tests.Webhooks
                 AppWebhookDefinitionNames.Users.Created,
                 new Dictionary<string, string>
                 {
-                    {AppFeatures.WebhookFeature, "true"}
+                    { AppFeatures.WebhookFeature, "true" }
                 }
             );
 
@@ -490,13 +490,13 @@ namespace Abp.Zero.SampleApp.Tests.Webhooks
                 AppWebhookDefinitionNames.Test,
                 new Dictionary<string, string>
                 {
-                    {AppFeatures.WebhookFeature, "true"}
+                    { AppFeatures.WebhookFeature, "true" }
                 }
             );
 
             var webhooksConfiguration = Resolve<IWebhooksConfiguration>();
 
-            var data = new {Name = "Musa", Surname = "Demir"};
+            var data = new { Name = "Musa", Surname = "Demir" };
 
             Predicate<WebhookSenderArgs> predicate = w =>
             {
@@ -565,7 +565,7 @@ namespace Abp.Zero.SampleApp.Tests.Webhooks
                 AppWebhookDefinitionNames.Users.Created,
                 new Dictionary<string, string>
                 {
-                    {AppFeatures.WebhookFeature, "true"}
+                    { AppFeatures.WebhookFeature, "true" }
                 }
             );
 
@@ -582,7 +582,7 @@ namespace Abp.Zero.SampleApp.Tests.Webhooks
                 AppWebhookDefinitionNames.Users.Created,
                 new Dictionary<string, string>
                 {
-                    {AppFeatures.WebhookFeature, "true"}
+                    { AppFeatures.WebhookFeature, "true" }
                 }
             );
 
@@ -639,7 +639,8 @@ namespace Abp.Zero.SampleApp.Tests.Webhooks
 
             AbpSession.TenantId = subscription.TenantId;
 
-            _webhookPublisher.Publish(AppWebhookDefinitionNames.Users.Created, new {Name = "Musa", Surname = "Demir"});
+            _webhookPublisher.Publish(AppWebhookDefinitionNames.Users.Created,
+                new { Name = "Musa", Surname = "Demir" });
 
             //should not try to send
             _backgroundJobManagerSubstitute.DidNotReceive()
@@ -655,7 +656,7 @@ namespace Abp.Zero.SampleApp.Tests.Webhooks
                 AppWebhookDefinitionNames.Users.Deleted,
                 new Dictionary<string, string>
                 {
-                    {AppFeatures.WebhookFeature, "true"}
+                    { AppFeatures.WebhookFeature, "true" }
                 }
             );
 
@@ -671,8 +672,8 @@ namespace Abp.Zero.SampleApp.Tests.Webhooks
                 AppWebhookDefinitionNames.Theme.DefaultThemeChanged,
                 new Dictionary<string, string>
                 {
-                    {AppFeatures.WebhookFeature, "true"},
-                    {AppFeatures.ThemeFeature, "true"}
+                    { AppFeatures.WebhookFeature, "true" },
+                    { AppFeatures.ThemeFeature, "true" }
                 }
             );
 
@@ -695,7 +696,7 @@ namespace Abp.Zero.SampleApp.Tests.Webhooks
                 AppWebhookDefinitionNames.Users.Deleted,
                 new Dictionary<string, string>
                 {
-                    {AppFeatures.WebhookFeature, "true"}
+                    { AppFeatures.WebhookFeature, "true" }
                 });
 
             AbpSession.TenantId = subscription.TenantId;
@@ -711,8 +712,8 @@ namespace Abp.Zero.SampleApp.Tests.Webhooks
                 AppWebhookDefinitionNames.Theme.DefaultThemeChanged,
                 new Dictionary<string, string>
                 {
-                    {AppFeatures.WebhookFeature, "true"},
-                    {AppFeatures.ThemeFeature, "true"}
+                    { AppFeatures.WebhookFeature, "true" },
+                    { AppFeatures.ThemeFeature, "true" }
                 });
 
             AbpSession.TenantId = subscription2.TenantId;
@@ -734,8 +735,8 @@ namespace Abp.Zero.SampleApp.Tests.Webhooks
                 AppWebhookDefinitionNames.Theme.DefaultThemeChanged,
                 new Dictionary<string, string>
                 {
-                    {AppFeatures.WebhookFeature, "true"},
-                    {AppFeatures.ThemeFeature, "true"}
+                    { AppFeatures.WebhookFeature, "true" },
+                    { AppFeatures.ThemeFeature, "true" }
                 });
 
             //remove one feature
@@ -766,8 +767,8 @@ namespace Abp.Zero.SampleApp.Tests.Webhooks
                 AppWebhookDefinitionNames.Theme.DefaultThemeChanged,
                 new Dictionary<string, string>
                 {
-                    {AppFeatures.WebhookFeature, "true"},
-                    {AppFeatures.ThemeFeature, "true"}
+                    { AppFeatures.WebhookFeature, "true" },
+                    { AppFeatures.ThemeFeature, "true" }
                 });
 
             AbpSession.TenantId = subscription.TenantId;
@@ -801,10 +802,10 @@ namespace Abp.Zero.SampleApp.Tests.Webhooks
                 TenantId = null,
                 Secret = "secret",
                 WebhookUri = "www.mywebhook.com",
-                Webhooks = new List<string>() {AppWebhookDefinitionNames.Users.Created},
+                Webhooks = new List<string>() { AppWebhookDefinitionNames.Users.Created },
                 Headers = new Dictionary<string, string>
                 {
-                    {"Key", "Value"}
+                    { "Key", "Value" }
                 }
             };
 
@@ -813,7 +814,7 @@ namespace Abp.Zero.SampleApp.Tests.Webhooks
 
             webhookSubscriptionManager.AddOrUpdateSubscription(subscription);
 
-            var data = new {Name = "Musa", Surname = "Demir"};
+            var data = new { Name = "Musa", Surname = "Demir" };
 
             Predicate<WebhookSenderArgs> predicate = w =>
             {
@@ -847,7 +848,7 @@ namespace Abp.Zero.SampleApp.Tests.Webhooks
                 AppWebhookDefinitionNames.Users.Created,
                 new Dictionary<string, string>
                 {
-                    {AppFeatures.WebhookFeature, "true"}
+                    { AppFeatures.WebhookFeature, "true" }
                 }
             );
 
@@ -855,7 +856,7 @@ namespace Abp.Zero.SampleApp.Tests.Webhooks
                 AppWebhookDefinitionNames.Users.Created,
                 new Dictionary<string, string>
                 {
-                    {AppFeatures.WebhookFeature, "true"}
+                    { AppFeatures.WebhookFeature, "true" }
                 }
             );
 
@@ -866,7 +867,7 @@ namespace Abp.Zero.SampleApp.Tests.Webhooks
 
             var webhooksConfiguration = Resolve<IWebhooksConfiguration>();
 
-            var data = new {Name = "Musa", Surname = "Demir"};
+            var data = new { Name = "Musa", Surname = "Demir" };
 
             Predicate<WebhookSenderArgs> predicate = w =>
             {
@@ -911,7 +912,7 @@ namespace Abp.Zero.SampleApp.Tests.Webhooks
                 AppWebhookDefinitionNames.Users.Created,
                 new Dictionary<string, string>
                 {
-                    {AppFeatures.WebhookFeature, "true"}
+                    { AppFeatures.WebhookFeature, "true" }
                 }
             );
 
@@ -919,7 +920,7 @@ namespace Abp.Zero.SampleApp.Tests.Webhooks
                 AppWebhookDefinitionNames.Users.Created,
                 new Dictionary<string, string>
                 {
-                    {AppFeatures.WebhookFeature, "true"}
+                    { AppFeatures.WebhookFeature, "true" }
                 }
             );
 
@@ -927,13 +928,13 @@ namespace Abp.Zero.SampleApp.Tests.Webhooks
                 AppWebhookDefinitionNames.Test,
                 new Dictionary<string, string>
                 {
-                    {AppFeatures.WebhookFeature, "true"}
+                    { AppFeatures.WebhookFeature, "true" }
                 }
             );
 
             var webhooksConfiguration = Resolve<IWebhooksConfiguration>();
 
-            var data = new {Name = "Musa", Surname = "Demir"};
+            var data = new { Name = "Musa", Surname = "Demir" };
 
             Predicate<WebhookSenderArgs> predicate = w =>
             {

@@ -32,7 +32,7 @@ namespace Abp.Web.Configuration
         IWebEmbeddedResourcesConfiguration EmbeddedResources { get; }
 
         IWebMultiTenancyConfiguration MultiTenancy { get; }
-        
+
         /// <summary>
         /// Used to configure wrap results
         /// </summary>

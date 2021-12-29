@@ -24,12 +24,18 @@ namespace Abp.Notifications
                 Id = tenantNotificationInfo.Id,
                 TenantId = tenantNotificationInfo.TenantId,
                 NotificationName = tenantNotificationInfo.NotificationName,
-                Data = tenantNotificationInfo.Data.IsNullOrEmpty() ? null : JsonConvert.DeserializeObject(tenantNotificationInfo.Data, Type.GetType(tenantNotificationInfo.DataTypeName)) as NotificationData,
+                Data = tenantNotificationInfo.Data.IsNullOrEmpty()
+                    ? null
+                    : JsonConvert.DeserializeObject(tenantNotificationInfo.Data,
+                        Type.GetType(tenantNotificationInfo.DataTypeName)) as NotificationData,
                 EntityTypeName = tenantNotificationInfo.EntityTypeName,
 #pragma warning disable CS0618 // Type or member is obsolete, this line will be removed once the EntityType property is removed
-				EntityType = entityType,
+                EntityType = entityType,
 #pragma warning restore CS0618 // Type or member is obsolete, this line will be removed once the EntityType property is removed
-                EntityId = tenantNotificationInfo.EntityId.IsNullOrEmpty() ? null : JsonConvert.DeserializeObject(tenantNotificationInfo.EntityId, EntityHelper.GetPrimaryKeyType(entityType)),
+                EntityId = tenantNotificationInfo.EntityId.IsNullOrEmpty()
+                    ? null
+                    : JsonConvert.DeserializeObject(tenantNotificationInfo.EntityId,
+                        EntityHelper.GetPrimaryKeyType(entityType)),
                 Severity = tenantNotificationInfo.Severity,
                 CreationTime = tenantNotificationInfo.CreationTime
             };

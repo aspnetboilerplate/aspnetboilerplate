@@ -5,6 +5,5 @@ namespace Abp.Domain.Entities
     /// </summary>
     public interface IEntity : IEntity<int>
     {
-
     }
 }

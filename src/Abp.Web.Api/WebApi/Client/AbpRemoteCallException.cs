@@ -20,7 +20,6 @@ namespace Abp.WebApi.Client
         /// </summary>
         public AbpRemoteCallException()
         {
-
         }
 
         /// <summary>
@@ -29,7 +28,6 @@ namespace Abp.WebApi.Client
         public AbpRemoteCallException(SerializationInfo serializationInfo, StreamingContext context)
             : base(serializationInfo, context)
         {
-
         }
 
         /// <summary>

@@ -31,7 +31,6 @@ namespace Abp.Tests.Json
 
         public class MyClass2 : EntityDto
         {
-
         }
     }
 }

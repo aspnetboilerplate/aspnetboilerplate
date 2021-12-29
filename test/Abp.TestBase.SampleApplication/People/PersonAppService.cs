@@ -26,10 +26,7 @@ namespace Abp.TestBase.SampleApplication.People
         {
             var query = _personRepository.GetAll();
 
-            if (!input.NameFilter.IsNullOrEmpty())
-            {
-                query = query.Where(p => p.Name.Contains(input.NameFilter));
-            }
+            if (!input.NameFilter.IsNullOrEmpty()) query = query.Where(p => p.Name.Contains(input.NameFilter));
 
             var people = query.ToList();
 

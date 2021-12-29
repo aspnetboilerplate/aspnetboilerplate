@@ -30,23 +30,17 @@ namespace Abp.Configuration
             var context = new SettingDefinitionProviderContext(this);
 
             foreach (var providerType in _settingsConfiguration.Providers)
-            {
                 using (var provider = CreateProvider(providerType))
                 {
                     foreach (var settings in provider.Object.GetSettingDefinitions(context))
-                    {
                         _settings[settings.Name] = settings;
-                    }
                 }
-            }
         }
 
         public SettingDefinition GetSettingDefinition(string name)
         {
             if (!_settings.TryGetValue(name, out var settingDefinition))
-            {
                 throw new AbpException("There is no setting defined with name: " + name);
-            }
 
             return settingDefinition;
         }

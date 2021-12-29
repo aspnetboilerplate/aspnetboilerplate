@@ -33,9 +33,9 @@ namespace Abp.Localization
         public async Task<IReadOnlyList<LanguageInfo>> GetLanguagesAsync()
         {
             var languageInfos = (await _applicationLanguageManager.GetLanguagesAsync(AbpSession.TenantId))
-                    .OrderBy(l => l.DisplayName)
-                    .Select(l => l.ToLanguageInfo())
-                    .ToList();
+                .OrderBy(l => l.DisplayName)
+                .Select(l => l.ToLanguageInfo())
+                .ToList();
 
             await SetDefaultLanguageAsync(languageInfos);
 
@@ -48,23 +48,24 @@ namespace Abp.Localization
         public IReadOnlyList<LanguageInfo> GetLanguages()
         {
             var languageInfos = _applicationLanguageManager.GetLanguages(AbpSession.TenantId)
-                    .OrderBy(l => l.DisplayName)
-                    .Select(l => l.ToLanguageInfo())
-                    .ToList();
+                .OrderBy(l => l.DisplayName)
+                .Select(l => l.ToLanguageInfo())
+                .ToList();
 
             SetDefaultLanguage(languageInfos);
 
             return languageInfos;
         }
+
         /// <summary>
         /// Gets the active languages for current tenant.
         /// </summary>
         public IReadOnlyList<LanguageInfo> GetActiveLanguages()
         {
             var languageInfos = _applicationLanguageManager.GetActiveLanguages(AbpSession.TenantId)
-               .OrderBy(l => l.DisplayName)
-               .Select(l => l.ToLanguageInfo())
-               .ToList();
+                .OrderBy(l => l.DisplayName)
+                .Select(l => l.ToLanguageInfo())
+                .ToList();
 
             SetDefaultLanguage(languageInfos);
 
@@ -73,10 +74,7 @@ namespace Abp.Localization
 
         private async Task SetDefaultLanguageAsync(List<LanguageInfo> languageInfos)
         {
-            if (languageInfos.Count <= 0)
-            {
-                return;
-            }
+            if (languageInfos.Count <= 0) return;
 
             var defaultLanguage = await _applicationLanguageManager.GetDefaultLanguageOrNullAsync(AbpSession.TenantId);
             if (defaultLanguage == null)
@@ -97,10 +95,7 @@ namespace Abp.Localization
 
         private void SetDefaultLanguage(List<LanguageInfo> languageInfos)
         {
-            if (languageInfos.Count <= 0)
-            {
-                return;
-            }
+            if (languageInfos.Count <= 0) return;
 
             var defaultLanguage = _applicationLanguageManager.GetDefaultLanguageOrNull(AbpSession.TenantId);
             if (defaultLanguage == null)

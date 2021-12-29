@@ -17,7 +17,7 @@ namespace Abp.Web.Tests.Auditing
         {
             _clientInfoProvider = Substitute.ForPartsOf<WebClientInfoProvider>();
         }
-        
+
         [Theory]
         [InlineData(null, null)]
         [InlineData("", null)]
@@ -61,10 +61,7 @@ namespace Abp.Web.Tests.Auditing
         private void MockHttpContext(NameValueCollection serverVariables = null)
         {
             var mockHttpRequest = Substitute.For<HttpRequestBase>();
-            if (serverVariables != null)
-            {
-                mockHttpRequest.ServerVariables.Returns(serverVariables);
-            }
+            if (serverVariables != null) mockHttpRequest.ServerVariables.Returns(serverVariables);
 
             _clientInfoProvider.Configure().GetCurrentHttpRequest().Returns(mockHttpRequest);
         }

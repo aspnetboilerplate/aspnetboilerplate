@@ -10,15 +10,18 @@ namespace Abp.Web.Http
         private static bool CharRequiresJavaScriptEncoding(char c)
         {
             return c < 0x20 // control chars always have to be encoded
-                || c == '\"' // chars which must be encoded per JSON spec
-                || c == '\\'
-                || c == '\'' // HTML-sensitive chars encoded for safety
-                || c == '<'
-                || c == '>'
-                || (c == '&' && JavaScriptEncodeAmpersand) // Bug Dev11 #133237. Encode '&' to provide additional security for people who incorrectly call the encoding methods (unless turned off by backcompat switch)
-                || c == '\u0085' // newline chars (see Unicode 6.2, Table 5-1 [http://www.unicode.org/versions/Unicode6.2.0/ch05.pdf]) have to be encoded (DevDiv #663531)
-                || c == '\u2028'
-                || c == '\u2029';
+                   || c == '\"' // chars which must be encoded per JSON spec
+                   || c == '\\'
+                   || c == '\'' // HTML-sensitive chars encoded for safety
+                   || c == '<'
+                   || c == '>'
+                   ||
+                   c == '&' &&
+                   JavaScriptEncodeAmpersand // Bug Dev11 #133237. Encode '&' to provide additional security for people who incorrectly call the encoding methods (unless turned off by backcompat switch)
+                   ||
+                   c == '\u0085' // newline chars (see Unicode 6.2, Table 5-1 [http://www.unicode.org/versions/Unicode6.2.0/ch05.pdf]) have to be encoded (DevDiv #663531)
+                   || c == '\u2028'
+                   || c == '\u2029';
         }
 
         private static void AppendCharAsUnicodeJavaScript(StringBuilder builder, char c)
@@ -29,10 +32,7 @@ namespace Abp.Web.Http
 
         public static string JavaScriptStringEncode(string value)
         {
-            if (IsNullOrEmpty(value))
-            {
-                return Empty;
-            }
+            if (IsNullOrEmpty(value)) return Empty;
 
             StringBuilder builder = null;
             var startIndex = 0;
@@ -43,15 +43,9 @@ namespace Abp.Web.Http
 
                 if (CharRequiresJavaScriptEncoding(c))
                 {
-                    if (builder == null)
-                    {
-                        builder = new StringBuilder(value.Length + 5);
-                    }
+                    if (builder == null) builder = new StringBuilder(value.Length + 5);
 
-                    if (count > 0)
-                    {
-                        builder.Append(value, startIndex, count);
-                    }
+                    if (count > 0) builder.Append(value, startIndex, count);
 
                     startIndex = i + 1;
                     count = 0;
@@ -82,26 +76,16 @@ namespace Abp.Web.Http
                         break;
                     default:
                         if (CharRequiresJavaScriptEncoding(c))
-                        {
                             AppendCharAsUnicodeJavaScript(builder, c);
-                        }
                         else
-                        {
                             count++;
-                        }
                         break;
                 }
             }
 
-            if (builder == null)
-            {
-                return value;
-            }
+            if (builder == null) return value;
 
-            if (count > 0)
-            {
-                builder.Append(value, startIndex, count);
-            }
+            if (count > 0) builder.Append(value, startIndex, count);
 
             return builder.ToString();
         }

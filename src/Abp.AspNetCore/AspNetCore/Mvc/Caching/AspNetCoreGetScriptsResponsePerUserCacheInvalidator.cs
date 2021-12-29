@@ -5,30 +5,29 @@ using Abp.Events.Bus.Entities;
 using Abp.Events.Bus.Handlers;
 using Abp.Localization;
 
-namespace Abp.AspNetCore.Mvc.Caching
+namespace Abp.AspNetCore.Mvc.Caching;
+
+public class AspNetCoreGetScriptsResponsePerUserCacheInvalidator :
+    IEventHandler<EntityChangedEventData<LanguageInfo>>,
+    IEventHandler<EntityChangedEventData<SettingInfo>>,
+    ITransientDependency
 {
-    public class AspNetCoreGetScriptsResponsePerUserCacheInvalidator :
-        IEventHandler<EntityChangedEventData<LanguageInfo>>,
-        IEventHandler<EntityChangedEventData<SettingInfo>>,
-        ITransientDependency
+    private const string CacheName = "GetScriptsResponsePerUser";
+
+    private readonly ICachedUniqueKeyPerUser _cachedUniqueKeyPerUser;
+
+    public AspNetCoreGetScriptsResponsePerUserCacheInvalidator(ICachedUniqueKeyPerUser cachedUniqueKeyPerUser)
     {
-        private const string CacheName = "GetScriptsResponsePerUser";
+        _cachedUniqueKeyPerUser = cachedUniqueKeyPerUser;
+    }
 
-        private readonly ICachedUniqueKeyPerUser _cachedUniqueKeyPerUser;
+    public void HandleEvent(EntityChangedEventData<LanguageInfo> eventData)
+    {
+        _cachedUniqueKeyPerUser.ClearCache(CacheName);
+    }
 
-        public AspNetCoreGetScriptsResponsePerUserCacheInvalidator(ICachedUniqueKeyPerUser cachedUniqueKeyPerUser)
-        {
-            _cachedUniqueKeyPerUser = cachedUniqueKeyPerUser;
-        }
-
-        public void HandleEvent(EntityChangedEventData<LanguageInfo> eventData)
-        {
-            _cachedUniqueKeyPerUser.ClearCache(CacheName);
-        }
-
-        public void HandleEvent(EntityChangedEventData<SettingInfo> eventData)
-        {
-            _cachedUniqueKeyPerUser.ClearCache(CacheName);
-        }
+    public void HandleEvent(EntityChangedEventData<SettingInfo> eventData)
+    {
+        _cachedUniqueKeyPerUser.ClearCache(CacheName);
     }
 }

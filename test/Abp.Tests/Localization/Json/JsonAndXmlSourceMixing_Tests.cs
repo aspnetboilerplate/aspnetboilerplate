@@ -19,10 +19,7 @@ namespace Abp.Tests.Localization.Json
             LocalIocManager.Register<ILanguageManager, LanguageManager>();
             LocalIocManager.Register<ILanguageProvider, DefaultLanguageProvider>();
 
-            _bootstrapper = AbpBootstrapper.Create<MyLangModule>(options =>
-            {
-                options.IocManager = LocalIocManager;
-            });
+            _bootstrapper = AbpBootstrapper.Create<MyLangModule>(options => { options.IocManager = LocalIocManager; });
 
             _bootstrapper.Initialize();
         }
@@ -63,20 +60,18 @@ namespace Abp.Tests.Localization.Json
                     "Lang",
                     new XmlEmbeddedFileLocalizationDictionaryProvider(
                         typeof(MyLangModule).GetAssembly(),
-                         "Abp.Tests.Localization.Json.XmlSources"
-                        )
+                        "Abp.Tests.Localization.Json.XmlSources"
                     )
-                );
+                )
+            );
 
             Configuration.Localization.Sources.Extensions.Add(
                 new LocalizationSourceExtensionInfo(
                     "Lang",
                     new JsonEmbeddedFileLocalizationDictionaryProvider(
                         typeof(MyLangModule).GetAssembly(),
-                         "Abp.Tests.Localization.Json.JsonSources"
-                        )));
-
-            
+                        "Abp.Tests.Localization.Json.JsonSources"
+                    )));
         }
 
         public override void Initialize()

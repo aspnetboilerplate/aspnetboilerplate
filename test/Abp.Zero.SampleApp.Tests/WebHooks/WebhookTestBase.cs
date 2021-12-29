@@ -48,7 +48,7 @@ namespace Abp.Zero.SampleApp.Tests.Webhooks
                 Webhooks = webhookNames,
                 Headers = new Dictionary<string, string>
                 {
-                    {"Key", "Value"}
+                    { "Key", "Value" }
                 }
             };
 
@@ -68,7 +68,7 @@ namespace Abp.Zero.SampleApp.Tests.Webhooks
             string tenantFeatureKey = null, string tenantFeatureValue = null)
         {
             return CreateTenantAndSubscribeToWebhook(
-                new List<string> {webhookDefinitionName},
+                new List<string> { webhookDefinitionName },
                 new Dictionary<string, string>
                 {
                     {
@@ -99,7 +99,7 @@ namespace Abp.Zero.SampleApp.Tests.Webhooks
             return CreateAndGetTenantIdWithFeatures(
                 new Dictionary<string, string>()
                 {
-                    {featureKey, featureValue}
+                    { featureKey, featureValue }
                 });
         }
 
@@ -115,12 +115,8 @@ namespace Abp.Zero.SampleApp.Tests.Webhooks
             var tenantId = Resolve<IRepository<Tenant>>().InsertAndGetId(tenant);
 
             if (tenantFeatures != null)
-            {
                 foreach (var tenantFeature in tenantFeatures.Where(f => !string.IsNullOrWhiteSpace(f.Key)))
-                {
                     AddOrReplaceFeatureToTenant(tenantId, tenantFeature.Key, tenantFeature.Value);
-                }
-            }
 
             return tenantId;
         }
@@ -131,9 +127,7 @@ namespace Abp.Zero.SampleApp.Tests.Webhooks
             {
                 var tenantFeatureRepository = Resolve<IRepository<TenantFeatureSetting, long>>();
                 if (tenantFeatureRepository.GetAll().Any(x => x.TenantId == tenantId && x.Name == featureName))
-                {
                     tenantFeatureRepository.Delete(x => x.TenantId == tenantId && x.Name == featureName);
-                }
 
                 tenantFeatureRepository.Insert(new TenantFeatureSetting(tenantId, featureName, featureValue));
             });

@@ -5,6 +5,5 @@ namespace Abp.Domain.Services
     /// </summary>
     public abstract class DomainService : AbpServiceBase, IDomainService
     {
-
     }
 }

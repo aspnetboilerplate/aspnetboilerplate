@@ -22,7 +22,6 @@ namespace Abp.Runtime.Caching
     public abstract class CacheManagerBase<TCache> : ICacheManager<TCache>, ISingletonDependency
         where TCache : class, ICacheOptions
     {
-
         protected readonly ICachingConfiguration Configuration;
 
         protected readonly ConcurrentDictionary<string, TCache> Caches;
@@ -50,17 +49,17 @@ namespace Abp.Runtime.Caching
             {
                 var cache = CreateCacheImplementation(cacheName);
 
-                var configurators = Configuration.Configurators.Where(c => c.CacheName == null || c.CacheName == cacheName);
+                var configurators =
+                    Configuration.Configurators.Where(c => c.CacheName == null || c.CacheName == cacheName);
 
-                foreach (var configurator in configurators)
-                {
-                    configurator.InitAction?.Invoke(cache);
-                }
+                foreach (var configurator in configurators) configurator.InitAction?.Invoke(cache);
 
                 return cache;
             });
         }
+
         protected abstract void DisposeCaches();
+
         public virtual void Dispose()
         {
             DisposeCaches();

@@ -31,10 +31,7 @@ namespace Abp.Net.Mail.Smtp
             var smtpClient = new SmtpClient(host, port);
             try
             {
-                if (_configuration.EnableSsl)
-                {
-                    smtpClient.EnableSsl = true;
-                }
+                if (_configuration.EnableSsl) smtpClient.EnableSsl = true;
 
                 if (_configuration.UseDefaultCredentials)
                 {

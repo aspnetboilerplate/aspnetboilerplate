@@ -14,14 +14,16 @@ namespace Abp.WebApi.Controllers.Dynamic.Scripting
     [DisableAbpAntiForgeryTokenValidation]
     public class TypeScriptController : AbpApiController
     {
-        readonly TypeScriptDefinitionGenerator _typeScriptDefinitionGenerator;
-        readonly TypeScriptServiceGenerator _typeScriptServiceGenerator;
-        public TypeScriptController(TypeScriptDefinitionGenerator typeScriptDefinitionGenerator, TypeScriptServiceGenerator typeScriptServiceGenerator)
+        private readonly TypeScriptDefinitionGenerator _typeScriptDefinitionGenerator;
+        private readonly TypeScriptServiceGenerator _typeScriptServiceGenerator;
+
+        public TypeScriptController(TypeScriptDefinitionGenerator typeScriptDefinitionGenerator,
+            TypeScriptServiceGenerator typeScriptServiceGenerator)
         {
             _typeScriptDefinitionGenerator = typeScriptDefinitionGenerator;
             _typeScriptServiceGenerator = typeScriptServiceGenerator;
         }
-        
+
         public HttpResponseMessage Get(bool isCompleteService = false)
         {
             if (isCompleteService)

@@ -1,21 +1,22 @@
 ﻿var abp = abp || {};
-(function () {
+(function() {
 
     if (!$.blockUI) {
         return;
     }
 
-    $.extend($.blockUI.defaults, {
-        message: ' ',
-        css: { },
-        overlayCSS: {
-            backgroundColor: '#AAA',
-            opacity: 0.3,
-            cursor: 'wait'    
-        }
-    });
-    
-    abp.ui.block = function (elm) {
+    $.extend($.blockUI.defaults,
+        {
+            message: " ",
+            css: {},
+            overlayCSS: {
+                backgroundColor: "#AAA",
+                opacity: 0.3,
+                cursor: "wait"
+            }
+        });
+
+    abp.ui.block = function(elm) {
         if (!elm) {
             $.blockUI();
         } else {
@@ -23,7 +24,7 @@
         }
     };
 
-    abp.ui.unblock = function (elm) {
+    abp.ui.unblock = function(elm) {
         if (!elm) {
             $.unblockUI();
         } else {

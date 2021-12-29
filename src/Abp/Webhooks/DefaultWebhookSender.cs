@@ -11,11 +11,11 @@ namespace Abp.Webhooks
     {
         private readonly IWebhooksConfiguration _webhooksConfiguration;
         private readonly IWebhookManager _webhookManager;
-        
+
         private const string FailedRequestDefaultContent = "Webhook Send Request Failed";
 
         public DefaultWebhookSender(
-            IWebhooksConfiguration webhooksConfiguration, 
+            IWebhooksConfiguration webhooksConfiguration,
             IWebhookManager webhookManager)
         {
             _webhooksConfiguration = webhooksConfiguration;
@@ -25,14 +25,10 @@ namespace Abp.Webhooks
         public async Task<Guid> SendWebhookAsync(WebhookSenderArgs webhookSenderArgs)
         {
             if (webhookSenderArgs.WebhookEventId == default)
-            {
                 throw new ArgumentNullException(nameof(webhookSenderArgs.WebhookEventId));
-            }
 
             if (webhookSenderArgs.WebhookSubscriptionId == default)
-            {
                 throw new ArgumentNullException(nameof(webhookSenderArgs.WebhookSubscriptionId));
-            }
 
             var webhookSendAttemptId = await _webhookManager.InsertAndGetIdWebhookSendAttemptAsync(webhookSenderArgs);
 
@@ -70,13 +66,12 @@ namespace Abp.Webhooks
             }
             finally
             {
-                await _webhookManager.StoreResponseOnWebhookSendAttemptAsync(webhookSendAttemptId, webhookSenderArgs.TenantId, statusCode, content);
+                await _webhookManager.StoreResponseOnWebhookSendAttemptAsync(webhookSendAttemptId,
+                    webhookSenderArgs.TenantId, statusCode, content);
             }
 
             if (!isSucceed)
-            {
                 throw new Exception($"Webhook sending attempt failed. WebhookSendAttempt id: {webhookSendAttemptId}");
-            }
 
             return webhookSendAttemptId;
         }
@@ -94,26 +89,22 @@ namespace Abp.Webhooks
         {
             foreach (var header in webhookSenderArgs.Headers)
             {
-                if (request.Headers.TryAddWithoutValidation(header.Key, header.Value))
-                {
-                    continue;
-                }
+                if (request.Headers.TryAddWithoutValidation(header.Key, header.Value)) continue;
 
-                if (request.Content.Headers.TryAddWithoutValidation(header.Key, header.Value))
-                {
-                    continue;
-                }
+                if (request.Content.Headers.TryAddWithoutValidation(header.Key, header.Value)) continue;
 
-                throw new Exception($"Invalid Header. SubscriptionId:{webhookSenderArgs.WebhookSubscriptionId},Header: {header.Key}:{header.Value}");
+                throw new Exception(
+                    $"Invalid Header. SubscriptionId:{webhookSenderArgs.WebhookSubscriptionId},Header: {header.Key}:{header.Value}");
             }
         }
 
-        protected virtual async Task<(bool isSucceed, HttpStatusCode statusCode, string content)> SendHttpRequest(HttpRequestMessage request)
+        protected virtual async Task<(bool isSucceed, HttpStatusCode statusCode, string content)> SendHttpRequest(
+            HttpRequestMessage request)
         {
             using (var client = new HttpClient
-            {
-                Timeout = _webhooksConfiguration.TimeoutDuration
-            })
+                   {
+                       Timeout = _webhooksConfiguration.TimeoutDuration
+                   })
             {
                 var response = await client.SendAsync(request);
 

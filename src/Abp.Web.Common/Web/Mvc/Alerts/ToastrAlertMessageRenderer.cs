@@ -13,7 +13,6 @@ namespace Abp.Web.Mvc.Alerts
         {
             StringBuilder sb = new StringBuilder("<script type=\"text/javascript\">");
             foreach (var alertMessage in alertList)
-            {
                 sb.Append(
                     string.Format("abp.notify.{0}('{1}','{2}', {{ 'closeButton':  {3} }});",
                         alertMessage.Type.ToString().ToLowerInvariant()
@@ -22,7 +21,6 @@ namespace Abp.Web.Mvc.Alerts
                         alertMessage.Text,
                         alertMessage.Title,
                         alertMessage.Dismissible.ToString().ToLower()));
-            }
             sb.Append("</script>");
             return sb.ToString();
         }

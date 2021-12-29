@@ -11,7 +11,6 @@ namespace Abp.EntityFramework.GraphDIff.Tests.Mapping
 {
     public class EntityMappingManager_Tests : AbpEntityFrameworkGraphDiffTestBase
     {
-
         private readonly IEntityMappingManager _entityMappingManager;
 
         public EntityMappingManager_Tests()

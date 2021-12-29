@@ -1,2 +1,2 @@
 ﻿/* This file is just a sample to use in tests */
-alert('hello world 2!');
+alert("hello world 2!");

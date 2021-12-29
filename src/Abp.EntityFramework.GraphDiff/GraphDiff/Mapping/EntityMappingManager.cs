@@ -29,8 +29,10 @@ namespace Abp.EntityFramework.GraphDiff.Mapping
         /// <returns>Entity mapping or null if mapping doesn't exist</returns>
         public Expression<Func<IUpdateConfiguration<TEntity>, object>> GetEntityMappingOrNull<TEntity>()
         {
-            var entityMapping = _moduleConfiguration.EntityMappings.FirstOrDefault(m => m.EntityType == typeof(TEntity));
-            var mappingExptession = entityMapping?.MappingExpression as Expression<Func<IUpdateConfiguration<TEntity>, object>>;
+            var entityMapping =
+                _moduleConfiguration.EntityMappings.FirstOrDefault(m => m.EntityType == typeof(TEntity));
+            var mappingExptession =
+                entityMapping?.MappingExpression as Expression<Func<IUpdateConfiguration<TEntity>, object>>;
             return mappingExptession;
         }
     }

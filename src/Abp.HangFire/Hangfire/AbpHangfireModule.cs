@@ -11,7 +11,7 @@ namespace Abp.Hangfire
         public override void PreInitialize()
         {
             IocManager.Register<IAbpHangfireConfiguration, AbpHangfireConfiguration>();
-            
+
             Configuration.Modules
                 .AbpHangfire()
                 .GlobalConfiguration

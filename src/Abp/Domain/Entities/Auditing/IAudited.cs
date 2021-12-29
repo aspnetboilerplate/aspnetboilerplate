@@ -6,7 +6,6 @@ namespace Abp.Domain.Entities.Auditing
     /// </summary>
     public interface IAudited : ICreationAudited, IModificationAudited
     {
-
     }
 
     /// <summary>
@@ -16,6 +15,5 @@ namespace Abp.Domain.Entities.Auditing
     public interface IAudited<TUser> : IAudited, ICreationAudited<TUser>, IModificationAudited<TUser>
         where TUser : IEntity<long>
     {
-
     }
 }

@@ -32,7 +32,8 @@ namespace Abp.Zero.EntityFramework
         /// <param name="modelBuilder">Model builder.</param>
         /// <param name="prefix">Table prefix, or null to clear prefix.</param>
         /// <param name="schemaName">Schema name</param>
-        public static void ChangeAbpTablePrefix<TTenant, TRole, TUser>(this DbModelBuilder modelBuilder, string prefix, string schemaName = null)
+        public static void ChangeAbpTablePrefix<TTenant, TRole, TUser>(this DbModelBuilder modelBuilder, string prefix,
+            string schemaName = null)
             where TTenant : AbpTenant<TUser>
             where TRole : AbpRole<TUser>
             where TUser : AbpUser<TUser>
@@ -83,13 +84,9 @@ namespace Abp.Zero.EntityFramework
             where TEntity : class
         {
             if (schemaName == null)
-            {
                 modelBuilder.Entity<TEntity>().ToTable(tableName);
-            }
             else
-            {
-                modelBuilder.Entity<TEntity>().ToTable(tableName, schemaName);                
-            }
+                modelBuilder.Entity<TEntity>().ToTable(tableName, schemaName);
         }
     }
 }

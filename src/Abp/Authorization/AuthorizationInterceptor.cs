@@ -31,14 +31,14 @@ namespace Abp.Authorization
         protected override async Task InternalInterceptAsynchronous(IInvocation invocation)
         {
             var proceedInfo = invocation.CaptureProceedInfo();
-            
+
             await _authorizationHelper.AuthorizeAsync(invocation.MethodInvocationTarget, invocation.TargetType);
 
             proceedInfo.Invoke();
             var task = (Task)invocation.ReturnValue;
             await task;
         }
-        
+
         protected override async Task<TResult> InternalInterceptAsynchronous<TResult>(IInvocation invocation)
         {
             var proceedInfo = invocation.CaptureProceedInfo();

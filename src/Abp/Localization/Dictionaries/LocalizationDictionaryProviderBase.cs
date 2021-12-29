@@ -35,9 +35,7 @@ namespace Abp.Localization.Dictionaries
             //Override
             var localizedStrings = dictionary.GetAllStrings();
             foreach (var localizedString in localizedStrings)
-            {
                 existingDictionary[localizedString.Name] = localizedString.Value;
-            }
         }
 
         protected virtual void InitializeDictionaries()
@@ -48,18 +46,17 @@ namespace Abp.Localization.Dictionaries
             where TDictionary : ILocalizationDictionary
         {
             if (Dictionaries.ContainsKey(dictionary.CultureInfo.Name))
-            {
-                throw new AbpInitializationException(SourceName + " source contains more than one dictionary for the culture: " + dictionary.CultureInfo.Name);
-            }
+                throw new AbpInitializationException(SourceName +
+                                                     " source contains more than one dictionary for the culture: " +
+                                                     dictionary.CultureInfo.Name);
 
             Dictionaries[dictionary.CultureInfo.Name] = dictionary;
 
             if (isDefault)
             {
                 if (DefaultDictionary != null)
-                {
-                    throw new AbpInitializationException("Only one default localization dictionary can be for source: " + SourceName);
-                }
+                    throw new AbpInitializationException(
+                        "Only one default localization dictionary can be for source: " + SourceName);
 
                 DefaultDictionary = dictionary;
             }

@@ -10,7 +10,6 @@ namespace Abp.TestBase.SampleApplication.Messages
         public AsyncMessageAppService(IRepository<Message> repository)
             : base(repository)
         {
-
         }
     }
 }

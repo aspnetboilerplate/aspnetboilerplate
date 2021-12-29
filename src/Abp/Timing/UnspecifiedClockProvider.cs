@@ -17,7 +17,6 @@ namespace Abp.Timing
 
         internal UnspecifiedClockProvider()
         {
-            
         }
     }
 }

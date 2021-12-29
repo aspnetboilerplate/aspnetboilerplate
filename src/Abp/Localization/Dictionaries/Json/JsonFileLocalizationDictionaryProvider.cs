@@ -24,9 +24,8 @@ namespace Abp.Localization.Dictionaries.Json
             var fileNames = Directory.GetFiles(_directoryPath, "*.json", SearchOption.TopDirectoryOnly);
 
             foreach (var fileName in fileNames)
-            {
-                InitializeDictionary(CreateJsonLocalizationDictionary(fileName), isDefault: fileName.EndsWith(SourceName + ".json"));
-            }
+                InitializeDictionary(CreateJsonLocalizationDictionary(fileName),
+                    fileName.EndsWith(SourceName + ".json"));
         }
 
         protected virtual JsonLocalizationDictionary CreateJsonLocalizationDictionary(string fileName)

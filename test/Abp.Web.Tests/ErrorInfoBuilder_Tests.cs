@@ -23,7 +23,8 @@ namespace Abp.Web.Tests
             configuration.Initialize();
             configuration.Localization.IsEnabled = false;
 
-            _errorInfoBuilder = new ErrorInfoBuilder(Substitute.For<IAbpWebCommonModuleConfiguration>(), NullLocalizationManager.Instance);
+            _errorInfoBuilder = new ErrorInfoBuilder(Substitute.For<IAbpWebCommonModuleConfiguration>(),
+                NullLocalizationManager.Instance);
             _errorInfoBuilder.AddExceptionConverter(new MyErrorInfoConverter());
         }
 
@@ -54,7 +55,6 @@ namespace Abp.Web.Tests
 
         public class MySpecificException : Exception
         {
-            
         }
 
         public class MyErrorInfoConverter : IExceptionToErrorInfoConverter
@@ -64,9 +64,7 @@ namespace Abp.Web.Tests
             public ErrorInfo Convert(Exception exception)
             {
                 if (exception is MySpecificException)
-                {
                     return new ErrorInfo(42, "MySpecificMessage", "MySpecificMessageDetails");
-                }
 
                 return Next.Convert(exception);
             }

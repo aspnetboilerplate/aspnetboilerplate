@@ -10,7 +10,7 @@ namespace Abp.Zero.NHibernate.EntityMappings
         {
             Map(x => x.Name);
             Map(x => x.DisplayName);
-            
+
             this.MapFullAudited();
         }
     }

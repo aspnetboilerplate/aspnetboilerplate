@@ -18,7 +18,6 @@ namespace Abp.Events.Bus.Entities
         public EntityChangedEventData(TEntity entity)
             : base(entity)
         {
-
         }
     }
 }

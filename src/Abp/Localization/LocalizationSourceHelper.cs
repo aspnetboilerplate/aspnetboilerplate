@@ -19,15 +19,9 @@ namespace Abp.Localization
         {
             var exceptionMessage = $"Can not find '{name}' in localization source '{sourceName}'!";
 
-            if (!configuration.ReturnGivenTextIfNotFound)
-            {
-                throw new AbpException(exceptionMessage);
-            }
+            if (!configuration.ReturnGivenTextIfNotFound) throw new AbpException(exceptionMessage);
 
-            if (configuration.LogWarnMessageIfNotFound)
-            {
-                (logger ?? LogHelper.Logger).Warn(exceptionMessage);
-            }
+            if (configuration.LogWarnMessageIfNotFound) (logger ?? LogHelper.Logger).Warn(exceptionMessage);
 
             var notFoundText = configuration.HumanizeTextIfNotFound
                 ? name.ToSentenceCase(culture)
@@ -45,17 +39,12 @@ namespace Abp.Localization
             CultureInfo culture,
             ILogger logger = null)
         {
-            var exceptionMessage = $"Can not find '{string.Join(",", names)}' in localization source '{sourceName}' with culture '{culture.Name}'!";
+            var exceptionMessage =
+                $"Can not find '{string.Join(",", names)}' in localization source '{sourceName}' with culture '{culture.Name}'!";
 
-            if (!configuration.ReturnGivenTextIfNotFound)
-            {
-                throw new AbpException(exceptionMessage);
-            }
+            if (!configuration.ReturnGivenTextIfNotFound) throw new AbpException(exceptionMessage);
 
-            if (configuration.LogWarnMessageIfNotFound)
-            {
-                (logger ?? LogHelper.Logger).Warn(exceptionMessage);
-            }
+            if (configuration.LogWarnMessageIfNotFound) (logger ?? LogHelper.Logger).Warn(exceptionMessage);
 
             var notFoundText = configuration.HumanizeTextIfNotFound
                 ? names.Select(name => name.ToSentenceCase(culture)).ToList()

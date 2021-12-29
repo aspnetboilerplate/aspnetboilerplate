@@ -17,19 +17,12 @@ namespace Abp.MailKit
         [Obsolete]
         public static MimeMessage ToMimeMessage(this MailMessage mail)
         {
-            if (mail == null)
-            {
-                throw new ArgumentNullException(nameof(mail));
-            }
+            if (mail == null) throw new ArgumentNullException(nameof(mail));
 
             var headers = new List<Header>();
             foreach (var field in mail.Headers.AllKeys)
-            {
-                foreach (var value in mail.Headers.GetValues(field))
-                {
-                    headers.Add(new Header(field, value));
-                }
-            }
+            foreach (var value in mail.Headers.GetValues(field))
+                headers.Add(new Header(field, value));
 
             var message = new MimeMessage(headers.ToArray());
             MimeEntity body = null;
@@ -37,10 +30,7 @@ namespace Abp.MailKit
             // Note: If the user has already sent their MailMessage via System.Net.Mail.SmtpClient,
             // then the following MailMessage properties will have been merged into the Headers, so
             // check to make sure our MimeMessage properties are empty before adding them.
-            if (mail.Sender != null)
-            {
-                message.Sender = mail.Sender.ToMailboxAddress();
-            }
+            if (mail.Sender != null) message.Sender = mail.Sender.ToMailboxAddress();
 
             if (mail.From != null)
             {
@@ -73,13 +63,9 @@ namespace Abp.MailKit
             }
 
             if (mail.SubjectEncoding != null)
-            {
                 message.Headers.Replace(HeaderId.Subject, mail.SubjectEncoding, mail.Subject ?? string.Empty);
-            }
             else
-            {
                 message.Subject = mail.Subject ?? string.Empty;
-            }
 
             switch (mail.Priority)
             {
@@ -112,19 +98,13 @@ namespace Abp.MailKit
             {
                 var alternative = new MultipartAlternative();
 
-                if (body != null)
-                {
-                    alternative.Add(body);
-                }
+                if (body != null) alternative.Add(body);
 
                 foreach (var view in mail.AlternateViews)
                 {
                     var part = GetMimePart(view);
 
-                    if (view.BaseUri != null)
-                    {
-                        part.ContentLocation = view.BaseUri;
-                    }
+                    if (view.BaseUri != null) part.ContentLocation = view.BaseUri;
 
                     if (view.LinkedResources.Count > 0)
                     {
@@ -133,10 +113,7 @@ namespace Abp.MailKit
 
                         related.ContentType.Parameters.Add("type", type);
 
-                        if (view.BaseUri != null)
-                        {
-                            related.ContentLocation = view.BaseUri;
-                        }
+                        if (view.BaseUri != null) related.ContentLocation = view.BaseUri;
 
                         related.Add(part);
 
@@ -161,24 +138,15 @@ namespace Abp.MailKit
                 body = alternative;
             }
 
-            if (body == null)
-            {
-                body = new TextPart(mail.IsBodyHtml ? "html" : "plain");
-            }
+            if (body == null) body = new TextPart(mail.IsBodyHtml ? "html" : "plain");
 
             if (mail.Attachments.Count > 0)
             {
                 var mixed = new Multipart("mixed");
 
-                if (body != null)
-                {
-                    mixed.Add(body);
-                }
+                if (body != null) mixed.Add(body);
 
-                foreach (var attachment in mail.Attachments)
-                {
-                    mixed.Add(GetMimePart(attachment));
-                }
+                foreach (var attachment in mail.Attachments) mixed.Add(GetMimePart(attachment));
 
                 body = mixed;
             }
@@ -196,16 +164,12 @@ namespace Abp.MailKit
             MimePart part;
 
             if (contentType.MediaType.Equals("text", StringComparison.OrdinalIgnoreCase))
-            {
                 // Original: part = new TextPart(contentType);
                 // Due to constructor of TextPart(ContentType contentType) being internal, 
                 // mimic the instantiation by using MimePart(ContentType contentType)
                 part = new MimePart(contentType);
-            }
             else
-            {
                 part = new MimePart(contentType);
-            }
 
             if (attachment != null)
             {
@@ -229,10 +193,7 @@ namespace Abp.MailKit
                     break;
             }
 
-            if (item.ContentId != null)
-            {
-                part.ContentId = item.ContentId;
-            }
+            if (item.ContentId != null) part.ContentId = item.ContentId;
 
             var stream = new MemoryBlockStream();
             item.ContentStream.CopyTo(stream);
@@ -262,16 +223,10 @@ namespace Abp.MailKit
         /// <param name="addresses">The mail address.</param>
         private static InternetAddressList ToInternetAddressList(this MailAddressCollection addresses)
         {
-            if (addresses == null)
-            {
-                return null;
-            }
+            if (addresses == null) return null;
 
             var list = new InternetAddressList();
-            foreach (var address in addresses)
-            {
-                list.Add(address.ToMailboxAddress());
-            }
+            foreach (var address in addresses) list.Add(address.ToMailboxAddress());
 
             return list;
         }

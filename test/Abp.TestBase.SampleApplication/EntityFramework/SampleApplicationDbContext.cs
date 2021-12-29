@@ -35,29 +35,29 @@ namespace Abp.TestBase.SampleApplication.EntityFramework
 
         public virtual IDbSet<TestEntityWithGuidPk> TestEntityWithGuidPks { get; set; }
 
-        public virtual IDbSet<TestEntityWithGuidPkAndDbGeneratedValue> TestEntityWithGuidPkAndDbGeneratedValues { get; set; }
+        public virtual IDbSet<TestEntityWithGuidPkAndDbGeneratedValue> TestEntityWithGuidPkAndDbGeneratedValues
+        {
+            get;
+            set;
+        }
 
         public SampleApplicationDbContext()
         {
-
         }
 
         public SampleApplicationDbContext(string nameOrConnectionString)
             : base(nameOrConnectionString)
         {
-
         }
 
         public SampleApplicationDbContext(DbConnection connection)
             : base(connection, false)
         {
-
         }
 
         public SampleApplicationDbContext(DbConnection connection, bool contextOwnsConnection)
             : base(connection, contextOwnsConnection)
         {
-
         }
     }
 }

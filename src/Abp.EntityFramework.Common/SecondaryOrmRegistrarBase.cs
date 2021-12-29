@@ -21,22 +21,27 @@ namespace Abp.EntityFramework
 
         public abstract string OrmContextKey { get; }
 
-        public virtual void RegisterRepositories(IIocManager iocManager, AutoRepositoryTypesAttribute defaultRepositoryTypes)
+        public virtual void RegisterRepositories(IIocManager iocManager,
+            AutoRepositoryTypesAttribute defaultRepositoryTypes)
         {
-            AutoRepositoryTypesAttribute autoRepositoryAttr = _dbContextType.GetTypeInfo().GetSingleAttributeOrNull<AutoRepositoryTypesAttribute>()
-                                                              ?? defaultRepositoryTypes;
+            var autoRepositoryAttr =
+                _dbContextType.GetTypeInfo().GetSingleAttributeOrNull<AutoRepositoryTypesAttribute>()
+                ?? defaultRepositoryTypes;
 
             foreach (EntityTypeInfo entityTypeInfo in _dbContextEntityFinder.GetEntityTypeInfos(_dbContextType))
             {
                 Type primaryKeyType = EntityHelper.GetPrimaryKeyType(entityTypeInfo.EntityType);
                 if (primaryKeyType == typeof(int))
                 {
-                    Type genericRepositoryType = autoRepositoryAttr.RepositoryInterface.MakeGenericType(entityTypeInfo.EntityType);
+                    Type genericRepositoryType =
+                        autoRepositoryAttr.RepositoryInterface.MakeGenericType(entityTypeInfo.EntityType);
                     if (!iocManager.IsRegistered(genericRepositoryType))
                     {
-                        Type implType = autoRepositoryAttr.RepositoryImplementation.GetTypeInfo().GetGenericArguments().Length == 1
+                        Type implType = autoRepositoryAttr.RepositoryImplementation.GetTypeInfo().GetGenericArguments()
+                            .Length == 1
                             ? autoRepositoryAttr.RepositoryImplementation.MakeGenericType(entityTypeInfo.EntityType)
-                            : autoRepositoryAttr.RepositoryImplementation.MakeGenericType(entityTypeInfo.DeclaringType, entityTypeInfo.EntityType);
+                            : autoRepositoryAttr.RepositoryImplementation.MakeGenericType(entityTypeInfo.DeclaringType,
+                                entityTypeInfo.EntityType);
 
                         iocManager.Register(
                             genericRepositoryType,
@@ -46,12 +51,17 @@ namespace Abp.EntityFramework
                     }
                 }
 
-                Type genericRepositoryTypeWithPrimaryKey = autoRepositoryAttr.RepositoryInterfaceWithPrimaryKey.MakeGenericType(entityTypeInfo.EntityType, primaryKeyType);
+                Type genericRepositoryTypeWithPrimaryKey =
+                    autoRepositoryAttr.RepositoryInterfaceWithPrimaryKey.MakeGenericType(entityTypeInfo.EntityType,
+                        primaryKeyType);
                 if (!iocManager.IsRegistered(genericRepositoryTypeWithPrimaryKey))
                 {
-                    Type implType = autoRepositoryAttr.RepositoryImplementationWithPrimaryKey.GetTypeInfo().GetGenericArguments().Length == 2
-                        ? autoRepositoryAttr.RepositoryImplementationWithPrimaryKey.MakeGenericType(entityTypeInfo.EntityType, primaryKeyType)
-                        : autoRepositoryAttr.RepositoryImplementationWithPrimaryKey.MakeGenericType(entityTypeInfo.DeclaringType, entityTypeInfo.EntityType, primaryKeyType);
+                    Type implType = autoRepositoryAttr.RepositoryImplementationWithPrimaryKey.GetTypeInfo()
+                        .GetGenericArguments().Length == 2
+                        ? autoRepositoryAttr.RepositoryImplementationWithPrimaryKey.MakeGenericType(
+                            entityTypeInfo.EntityType, primaryKeyType)
+                        : autoRepositoryAttr.RepositoryImplementationWithPrimaryKey.MakeGenericType(
+                            entityTypeInfo.DeclaringType, entityTypeInfo.EntityType, primaryKeyType);
 
                     iocManager.Register(
                         genericRepositoryTypeWithPrimaryKey,

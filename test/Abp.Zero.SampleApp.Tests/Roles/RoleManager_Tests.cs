@@ -52,8 +52,10 @@ namespace Abp.Zero.SampleApp.Tests.Roles
         {
             var role1 = CreateRole("Role1");
 
-            (await RoleManager.IsGrantedAsync(role1.Id, PermissionManager.GetPermission("Permission1"))).ShouldBe(false);
-            (await RoleManager.IsGrantedAsync(role1.Id, PermissionManager.GetPermission("Permission3"))).ShouldBe(false);
+            (await RoleManager.IsGrantedAsync(role1.Id, PermissionManager.GetPermission("Permission1")))
+                .ShouldBe(false);
+            (await RoleManager.IsGrantedAsync(role1.Id, PermissionManager.GetPermission("Permission3")))
+                .ShouldBe(false);
 
             await GrantPermissionAsync(role1, "Permission1");
             await ProhibitPermissionAsync(role1, "Permission1");
@@ -67,11 +69,11 @@ namespace Abp.Zero.SampleApp.Tests.Roles
             grantedPermissions.ShouldContain(p => p.Name == "Permission1");
 
             var newPermissionList = new List<Permission>
-                                    {
-                                        PermissionManager.GetPermission("Permission1"),
-                                        PermissionManager.GetPermission("Permission2"),
-                                        PermissionManager.GetPermission("Permission3")
-                                    };
+            {
+                PermissionManager.GetPermission("Permission1"),
+                PermissionManager.GetPermission("Permission2"),
+                PermissionManager.GetPermission("Permission3")
+            };
 
             await RoleManager.SetGrantedPermissionsAsync(role1, newPermissionList);
 

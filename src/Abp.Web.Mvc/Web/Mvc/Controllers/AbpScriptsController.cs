@@ -46,9 +46,9 @@ namespace Abp.Web.Mvc.Controllers
             ILocalizationScriptManager localizationScriptManager,
             IAuthorizationScriptManager authorizationScriptManager,
             IFeaturesScriptManager featuresScriptManager,
-            ISessionScriptManager sessionScriptManager, 
+            ISessionScriptManager sessionScriptManager,
             ITimingScriptManager timingScriptManager,
-            ISecurityScriptManager securityScriptManager, 
+            ISecurityScriptManager securityScriptManager,
             IJavaScriptMinifier javaScriptMinifier)
         {
             _multiTenancyScriptManager = multiTenancyScriptManager;
@@ -69,10 +69,7 @@ namespace Abp.Web.Mvc.Controllers
         [DisableAuditing]
         public async Task<ActionResult> GetScripts(string culture = "", bool minify = false)
         {
-            if (!culture.IsNullOrEmpty())
-            {
-                Thread.CurrentThread.CurrentUICulture = CultureInfo.GetCultureInfo(culture);
-            }
+            if (!culture.IsNullOrEmpty()) Thread.CurrentThread.CurrentUICulture = CultureInfo.GetCultureInfo(culture);
 
             var sb = new StringBuilder();
 

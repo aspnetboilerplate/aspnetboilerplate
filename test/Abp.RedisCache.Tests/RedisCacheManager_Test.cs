@@ -27,18 +27,18 @@ namespace Abp.RedisCache.Tests
             _redisDatabase = Substitute.For<IDatabase>();
             _redisDatabaseProvider = Substitute.For<IAbpRedisCacheDatabaseProvider>();
             _redisDatabaseProvider.GetDatabase().Returns(_redisDatabase);
-            LocalIocManager.IocContainer.Register(Component.For<IAbpRedisCacheDatabaseProvider>().Instance(_redisDatabaseProvider).LifestyleSingleton());
+            LocalIocManager.IocContainer.Register(Component.For<IAbpRedisCacheDatabaseProvider>()
+                .Instance(_redisDatabaseProvider).LifestyleSingleton());
 
             LocalIocManager.Register<ICacheManager, AbpRedisCacheManager>();
             LocalIocManager.Register<IRedisCacheSerializer, DefaultRedisCacheSerializer>();
             _redisSerializer = LocalIocManager.Resolve<IRedisCacheSerializer>();
 
-            LocalIocManager.IocContainer.Register(Component.For<IAbpStartupConfiguration>().Instance(Substitute.For<IAbpStartupConfiguration>()));
+            LocalIocManager.IocContainer.Register(Component.For<IAbpStartupConfiguration>()
+                .Instance(Substitute.For<IAbpStartupConfiguration>()));
 
-            LocalIocManager.Resolve<ICachingConfiguration>().Configure("MyTestCacheItems", cache =>
-            {
-                cache.DefaultSlidingExpireTime = TimeSpan.FromHours(24);
-            });
+            LocalIocManager.Resolve<ICachingConfiguration>().Configure("MyTestCacheItems",
+                cache => { cache.DefaultSlidingExpireTime = TimeSpan.FromHours(24); });
 
             _cache = LocalIocManager.Resolve<ICacheManager>().GetCache<string, MyCacheItem>("MyTestCacheItems");
         }

@@ -16,6 +16,7 @@ namespace Abp.MultiTenancy
         /// Current <see cref="Edition"/> of the Tenant.
         /// </summary>
         public virtual Edition Edition { get; set; }
+
         public virtual int? EditionId { get; set; }
 
         /// <summary>

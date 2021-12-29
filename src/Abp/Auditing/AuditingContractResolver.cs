@@ -23,18 +23,14 @@ namespace Abp.Auditing
             JsonProperty property = base.CreateProperty(member, memberSerialization);
 
             if (member.IsDefined(typeof(DisableAuditingAttribute)) || member.IsDefined(typeof(JsonIgnoreAttribute)))
-            {
                 property.ShouldSerialize = instance => false;
-            }
 
             foreach (var ignoredType in _ignoredTypes)
-            {
                 if (ignoredType.GetTypeInfo().IsAssignableFrom(property.PropertyType))
                 {
                     property.ShouldSerialize = instance => false;
                     break;
                 }
-            }
 
             return property;
         }

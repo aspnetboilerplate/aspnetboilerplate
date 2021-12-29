@@ -7,9 +7,6 @@ namespace Abp.Hangfire.Configuration
     {
         public BackgroundJobServer Server { get; set; }
 
-        public IGlobalConfiguration GlobalConfiguration
-        {
-            get { return HangfireGlobalConfiguration.Configuration; }
-        }
+        public IGlobalConfiguration GlobalConfiguration => HangfireGlobalConfiguration.Configuration;
     }
 }

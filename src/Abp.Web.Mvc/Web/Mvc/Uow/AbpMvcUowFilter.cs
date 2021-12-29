@@ -7,7 +7,7 @@ using Abp.Web.Mvc.Extensions;
 
 namespace Abp.Web.Mvc.Uow
 {
-    public class AbpMvcUowFilter: IActionFilter, ITransientDependency
+    public class AbpMvcUowFilter : IActionFilter, ITransientDependency
     {
         public const string UowHttpContextKey = "__AbpUnitOfWork";
 
@@ -17,7 +17,7 @@ namespace Abp.Web.Mvc.Uow
 
         public AbpMvcUowFilter(
             IUnitOfWorkManager unitOfWorkManager,
-            IAbpMvcConfiguration mvcConfiguration, 
+            IAbpMvcConfiguration mvcConfiguration,
             IUnitOfWorkDefaultOptions unitOfWorkDefaultOptions)
         {
             _unitOfWorkManager = unitOfWorkManager;
@@ -27,25 +27,16 @@ namespace Abp.Web.Mvc.Uow
 
         public void OnActionExecuting(ActionExecutingContext filterContext)
         {
-            if (filterContext.IsChildAction)
-            {
-                return;
-            }
+            if (filterContext.IsChildAction) return;
 
             var methodInfo = filterContext.ActionDescriptor.GetMethodInfoOrNull();
-            if (methodInfo == null)
-            {
-                return;
-            }
+            if (methodInfo == null) return;
 
             var unitOfWorkAttr =
                 _unitOfWorkDefaultOptions.GetUnitOfWorkAttributeOrNull(methodInfo) ??
                 _mvcConfiguration.DefaultUnitOfWorkAttribute;
 
-            if (unitOfWorkAttr.IsDisabled)
-            {
-                return;
-            }
+            if (unitOfWorkAttr.IsDisabled) return;
 
             SetCurrentUow(
                 filterContext.HttpContext,
@@ -55,23 +46,14 @@ namespace Abp.Web.Mvc.Uow
 
         public void OnActionExecuted(ActionExecutedContext filterContext)
         {
-            if (filterContext.IsChildAction)
-            {
-                return;
-            }
+            if (filterContext.IsChildAction) return;
 
             var uow = GetCurrentUow(filterContext.HttpContext);
-            if (uow == null)
-            {
-                return;
-            }
+            if (uow == null) return;
 
             try
             {
-                if (filterContext.Exception == null)
-                {
-                    uow.Complete();
-                }
+                if (filterContext.Exception == null) uow.Complete();
             }
             finally
             {

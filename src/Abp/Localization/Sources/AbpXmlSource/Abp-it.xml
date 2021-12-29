@@ -1,24 +1,25 @@
-﻿<?xml version="1.0" encoding="utf-8" ?>
+﻿<?xml version="1.0" encoding="utf-8"?>
+
 <localizationDictionary culture="it">
-  <texts>
-    <text name="SmtpHost">Server SMTP</text>
-    <text name="SmtpPort">Porta SMTP</text>
-    <text name="Username">Nome Utente</text>
-    <text name="Password">Password</text>
-    <text name="DomainName">Dominio</text>
-    <text name="UseSSL">Usa SSL</text>
-    <text name="UseDefaultCredentials">Usa credenziali di default</text>
-    <text name="DefaultFromSenderEmailAddress">Indirizzo email mittente(default)</text>
-    <text name="DefaultFromSenderDisplayName">Nome visualizzato come mittente</text>
-    <text name="DefaultLanguage">Lingua Predefinita</text>
-    <text name="ReceiveNotifications" value="Ricevi Notifiche" />
-    <text name="CurrentUserDidNotLoginToTheApplication">L'utente corrente non si è registrato all'applicazione!</text>
-    <text name="TimeZone">Fuso orario</text>
-    <text name="AllOfThesePermissionsMustBeGranted">Le autorizzazioni necessarie non vengono concesse. Tutte queste autorizzazioni devono essere concesse: {0}</text>
-    <text name="AtLeastOneOfThesePermissionsMustBeGranted">Le autorizzazioni necessarie non vengono concesse. Almeno una di queste autorizzazioni deve essere concessa: {0}</text>
-    <text name="FeatureIsNotEnabled">La funzione non è abilitata: {0}</text>
-    <text name="AllOfTheseFeaturesMustBeEnabled">Le funzionalità richieste non sono abilitate. Tutte queste funzionalità devono essere abilitate: {0}</text>
-    <text name="AtLeastOneOfTheseFeaturesMustBeEnabled">Le funzionalità richieste non sono abilitate. Almeno una di queste funzioni deve essere abilitata: {0}</text>
-    <text name="MainMenu">Menu principale</text>
-  </texts>
+	<texts>
+		<text name="SmtpHost">Server SMTP</text>
+		<text name="SmtpPort">Porta SMTP</text>
+		<text name="Username">Nome Utente</text>
+		<text name="Password">Password</text>
+		<text name="DomainName">Dominio</text>
+		<text name="UseSSL">Usa SSL</text>
+		<text name="UseDefaultCredentials">Usa credenziali di default</text>
+		<text name="DefaultFromSenderEmailAddress">Indirizzo email mittente(default)</text>
+		<text name="DefaultFromSenderDisplayName">Nome visualizzato come mittente</text>
+		<text name="DefaultLanguage">Lingua Predefinita</text>
+		<text name="ReceiveNotifications" value="Ricevi Notifiche" />
+		<text name="CurrentUserDidNotLoginToTheApplication">L'utente corrente non si è registrato all'applicazione!</text>
+		<text name="TimeZone">Fuso orario</text>
+		<text name="AllOfThesePermissionsMustBeGranted">Le autorizzazioni necessarie non vengono concesse. Tutte queste autorizzazioni devono essere concesse: {0}</text>
+		<text name="AtLeastOneOfThesePermissionsMustBeGranted">Le autorizzazioni necessarie non vengono concesse. Almeno una di queste autorizzazioni deve essere concessa: {0}</text>
+		<text name="FeatureIsNotEnabled">La funzione non è abilitata: {0}</text>
+		<text name="AllOfTheseFeaturesMustBeEnabled">Le funzionalità richieste non sono abilitate. Tutte queste funzionalità devono essere abilitate: {0}</text>
+		<text name="AtLeastOneOfTheseFeaturesMustBeEnabled">Le funzionalità richieste non sono abilitate. Almeno una di queste funzioni deve essere abilitata: {0}</text>
+		<text name="MainMenu">Menu principale</text>
+	</texts>
 </localizationDictionary>

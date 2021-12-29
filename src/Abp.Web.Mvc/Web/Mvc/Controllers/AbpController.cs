@@ -97,14 +97,11 @@ namespace Abp.Web.Mvc.Controllers
             get
             {
                 if (LocalizationSourceName == null)
-                {
-                    throw new AbpException("Must set LocalizationSourceName before, in order to get LocalizationSource");
-                }
+                    throw new AbpException(
+                        "Must set LocalizationSourceName before, in order to get LocalizationSource");
 
                 if (_localizationSource == null || _localizationSource.Name != LocalizationSourceName)
-                {
                     _localizationSource = LocalizationManager.GetSource(LocalizationSourceName);
-                }
 
                 return _localizationSource;
             }
@@ -133,24 +130,22 @@ namespace Abp.Web.Mvc.Controllers
         {
             get
             {
-                if (_unitOfWorkManager == null)
-                {
-                    throw new AbpException("Must set UnitOfWorkManager before use it.");
-                }
+                if (_unitOfWorkManager == null) throw new AbpException("Must set UnitOfWorkManager before use it.");
 
                 return _unitOfWorkManager;
             }
-            set { _unitOfWorkManager = value; }
+            set => _unitOfWorkManager = value;
         }
+
         private IUnitOfWorkManager _unitOfWorkManager;
 
         /// <summary>
         /// Gets current unit of work.
         /// </summary>
-        protected IActiveUnitOfWork CurrentUnitOfWork { get { return UnitOfWorkManager.Current; } }
+        protected IActiveUnitOfWork CurrentUnitOfWork => UnitOfWorkManager.Current;
 
         public IAbpMvcConfiguration AbpMvcConfiguration { get; set; }
-        
+
         public IAbpWebCommonModuleConfiguration AbpWebCommonModuleConfiguration { get; set; }
 
         /// <summary>
@@ -266,25 +261,22 @@ namespace Abp.Web.Mvc.Controllers
         /// <param name="contentType">Content type.</param>
         /// <param name="contentEncoding">Content encoding.</param>
         /// <param name="behavior">Behavior.</param>
-        protected override JsonResult Json(object data, string contentType, Encoding contentEncoding, JsonRequestBehavior behavior)
+        protected override JsonResult Json(object data, string contentType, Encoding contentEncoding,
+            JsonRequestBehavior behavior)
         {
             if (
                 Request.Url != null &&
-                AbpWebCommonModuleConfiguration.WrapResultFilters.HasFilterForWrapOnSuccess(Request?.Url?.AbsolutePath, out var wrapOnSuccess)
-                )
+                AbpWebCommonModuleConfiguration.WrapResultFilters.HasFilterForWrapOnSuccess(Request?.Url?.AbsolutePath,
+                    out var wrapOnSuccess)
+            )
             {
-                if (!wrapOnSuccess)
-                {
-                    return base.Json(data, contentType, contentEncoding, behavior);
-                }
+                if (!wrapOnSuccess) return base.Json(data, contentType, contentEncoding, behavior);
 
                 return AbpJson(data, contentType, contentEncoding, behavior);
             }
 
             if (_wrapResultAttribute != null && !_wrapResultAttribute.WrapOnSuccess)
-            {
                 return base.Json(data, contentType, contentEncoding, behavior);
-            }
 
             return AbpJson(data, contentType, contentEncoding, behavior);
         }
@@ -301,13 +293,8 @@ namespace Abp.Web.Mvc.Controllers
             if (wrapResult)
             {
                 if (data == null)
-                {
                     data = new AjaxResponse();
-                }
-                else if (!(data is AjaxResponseBase))
-                {
-                    data = new AjaxResponse(data);
-                }
+                else if (!(data is AjaxResponseBase)) data = new AjaxResponse(data);
             }
 
             return new AbpJsonResult
@@ -332,10 +319,7 @@ namespace Abp.Web.Mvc.Controllers
         private void SetCurrentMethodInfoAndWrapResultAttribute(ActionExecutingContext filterContext)
         {
             //Prevent overriding for child actions
-            if (_currentMethodInfo != null)
-            {
-                return;
-            }
+            if (_currentMethodInfo != null) return;
 
             _currentMethodInfo = filterContext.ActionDescriptor.GetMethodInfoOrNull();
             _wrapResultAttribute =
@@ -358,7 +342,8 @@ namespace Abp.Web.Mvc.Controllers
 
                 //Return an error response to the client.
                 context.HttpContext.Response.Clear();
-                context.HttpContext.Response.StatusCode = GetStatusCodeForException(context, _wrapResultAttribute.WrapOnError);
+                context.HttpContext.Response.StatusCode =
+                    GetStatusCodeForException(context, _wrapResultAttribute.WrapOnError);
 
                 context.Result = MethodInfoHelper.IsJsonResult(_currentMethodInfo)
                     ? GenerateJsonExceptionResult(context)
@@ -373,10 +358,7 @@ namespace Abp.Web.Mvc.Controllers
                 EventBus.Trigger(this, new AbpHandledExceptionData(context.Exception));
             }
 
-            if (context == null)
-            {
-                throw new ArgumentNullException(nameof(context));
-            }
+            if (context == null) throw new ArgumentNullException(nameof(context));
 
             //If exception handled before, do nothing.
             //If this is child action, exception should be handled by main action.
@@ -388,9 +370,7 @@ namespace Abp.Web.Mvc.Controllers
 
             //Log exception
             if (_wrapResultAttribute == null || _wrapResultAttribute.LogError)
-            {
                 LogHelper.LogException(Logger, context.Exception);
-            }
 
             // If custom errors are disabled, we need to let the normal ASP.NET exception handler
             // execute so that the user can see useful debugging information.
@@ -429,7 +409,8 @@ namespace Abp.Web.Mvc.Controllers
             if (_wrapResultAttribute == null || !_wrapResultAttribute.WrapOnError)
             {
                 base.OnException(context);
-                context.HttpContext.Response.StatusCode = GetStatusCodeForException(context, _wrapResultAttribute.WrapOnError);
+                context.HttpContext.Response.StatusCode =
+                    GetStatusCodeForException(context, _wrapResultAttribute.WrapOnError);
                 return;
             }
 
@@ -439,26 +420,15 @@ namespace Abp.Web.Mvc.Controllers
         protected virtual int GetStatusCodeForException(ExceptionContext context, bool wrapOnError)
         {
             if (context.Exception is AbpAuthorizationException)
-            {
                 return context.HttpContext.User.Identity.IsAuthenticated
                     ? (int)HttpStatusCode.Forbidden
                     : (int)HttpStatusCode.Unauthorized;
-            }
 
-            if (context.Exception is AbpValidationException)
-            {
-                return (int)HttpStatusCode.BadRequest;
-            }
+            if (context.Exception is AbpValidationException) return (int)HttpStatusCode.BadRequest;
 
-            if (context.Exception is EntityNotFoundException)
-            {
-                return (int)HttpStatusCode.NotFound;
-            }
+            if (context.Exception is EntityNotFoundException) return (int)HttpStatusCode.NotFound;
 
-            if (wrapOnError)
-            {
-                return (int)HttpStatusCode.InternalServerError;
-            }
+            if (wrapOnError) return (int)HttpStatusCode.InternalServerError;
 
             return context.HttpContext.Response.StatusCode;
         }
@@ -470,8 +440,8 @@ namespace Abp.Web.Mvc.Controllers
                 new AjaxResponse(
                     ErrorInfoBuilder.BuildForException(context.Exception),
                     context.Exception is AbpAuthorizationException
-                    )
-                );
+                )
+            );
         }
 
         protected virtual ActionResult GenerateNonJsonExceptionResult(ExceptionContext context)
@@ -480,7 +450,8 @@ namespace Abp.Web.Mvc.Controllers
             {
                 ViewName = "Error",
                 MasterName = string.Empty,
-                ViewData = new ViewDataDictionary<ErrorViewModel>(new ErrorViewModel(ErrorInfoBuilder.BuildForException(context.Exception), context.Exception)),
+                ViewData = new ViewDataDictionary<ErrorViewModel>(
+                    new ErrorViewModel(ErrorInfoBuilder.BuildForException(context.Exception), context.Exception)),
                 TempData = context.Controller.TempData
             };
         }

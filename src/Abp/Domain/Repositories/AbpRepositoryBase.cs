@@ -19,7 +19,8 @@ namespace Abp.Domain.Repositories
     /// </summary>
     /// <typeparam name="TEntity">Type of the Entity for this repository</typeparam>
     /// <typeparam name="TPrimaryKey">Primary key of the entity</typeparam>
-    public abstract class AbpRepositoryBase<TEntity, TPrimaryKey> : IRepository<TEntity, TPrimaryKey>, IUnitOfWorkManagerAccessor
+    public abstract class AbpRepositoryBase<TEntity, TPrimaryKey> : IRepository<TEntity, TPrimaryKey>,
+        IUnitOfWorkManagerAccessor
         where TEntity : class, IEntity<TPrimaryKey>
     {
         /// <summary>
@@ -35,10 +36,7 @@ namespace Abp.Domain.Repositories
         static AbpRepositoryBase()
         {
             var attr = typeof(TEntity).GetSingleAttributeOfTypeOrBaseTypesOrNull<MultiTenancySideAttribute>();
-            if (attr != null)
-            {
-                MultiTenancySide = attr.Side;
-            }
+            if (attr != null) MultiTenancySide = attr.Side;
         }
 
         protected AbpRepositoryBase()
@@ -55,7 +53,8 @@ namespace Abp.Domain.Repositories
             return GetAll();
         }
 
-        public virtual Task<IQueryable<TEntity>> GetAllIncludingAsync(params Expression<Func<TEntity, object>>[] propertySelectors)
+        public virtual Task<IQueryable<TEntity>> GetAllIncludingAsync(
+            params Expression<Func<TEntity, object>>[] propertySelectors)
         {
             return GetAllAsync();
         }
@@ -88,10 +87,7 @@ namespace Abp.Domain.Repositories
         public virtual TEntity Get(TPrimaryKey id)
         {
             var entity = FirstOrDefault(id);
-            if (entity == null)
-            {
-                throw new EntityNotFoundException(typeof(TEntity), id);
-            }
+            if (entity == null) throw new EntityNotFoundException(typeof(TEntity), id);
 
             return entity;
         }
@@ -99,10 +95,7 @@ namespace Abp.Domain.Repositories
         public virtual async Task<TEntity> GetAsync(TPrimaryKey id)
         {
             var entity = await FirstOrDefaultAsync(id);
-            if (entity == null)
-            {
-                throw new EntityNotFoundException(typeof(TEntity), id);
-            }
+            if (entity == null) throw new EntityNotFoundException(typeof(TEntity), id);
 
             return entity;
         }
@@ -224,20 +217,14 @@ namespace Abp.Domain.Repositories
 
         public virtual void Delete(Expression<Func<TEntity, bool>> predicate)
         {
-            foreach (var entity in GetAllList(predicate))
-            {
-                Delete(entity);
-            }
+            foreach (var entity in GetAllList(predicate)) Delete(entity);
         }
 
         public virtual async Task DeleteAsync(Expression<Func<TEntity, bool>> predicate)
         {
             var entities = await GetAllListAsync(predicate);
 
-            foreach (var entity in entities)
-            {
-                await DeleteAsync(entity);
-            }
+            foreach (var entity in entities) await DeleteAsync(entity);
         }
 
         public virtual int Count()

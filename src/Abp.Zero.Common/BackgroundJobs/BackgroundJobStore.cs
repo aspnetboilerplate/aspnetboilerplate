@@ -47,10 +47,7 @@ namespace Abp.BackgroundJobs
 
         public void Insert(BackgroundJobInfo jobInfo)
         {
-            _unitOfWorkManager.WithUnitOfWork(() =>
-            {
-                _backgroundJobRepository.Insert(jobInfo);
-            });
+            _unitOfWorkManager.WithUnitOfWork(() => { _backgroundJobRepository.Insert(jobInfo); });
         }
 
         public virtual async Task<List<BackgroundJobInfo>> GetWaitingJobsAsync(int maxResultCount)
@@ -92,10 +89,7 @@ namespace Abp.BackgroundJobs
 
         public void Delete(BackgroundJobInfo jobInfo)
         {
-            _unitOfWorkManager.WithUnitOfWork(() =>
-            {
-                _backgroundJobRepository.Delete(jobInfo);
-            });
+            _unitOfWorkManager.WithUnitOfWork(() => { _backgroundJobRepository.Delete(jobInfo); });
         }
 
         public async Task UpdateAsync(BackgroundJobInfo jobInfo)
@@ -107,10 +101,7 @@ namespace Abp.BackgroundJobs
 
         public void Update(BackgroundJobInfo jobInfo)
         {
-            _unitOfWorkManager.WithUnitOfWork(() =>
-            {
-                _backgroundJobRepository.Update(jobInfo);
-            });
+            _unitOfWorkManager.WithUnitOfWork(() => { _backgroundJobRepository.Update(jobInfo); });
         }
     }
 }

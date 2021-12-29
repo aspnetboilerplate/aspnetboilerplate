@@ -24,10 +24,7 @@ namespace Abp.Runtime.Validation.Interception
             foreach (var property in properties)
             {
                 var validationAttributes = property.Attributes.OfType<ValidationAttribute>().ToArray();
-                if (validationAttributes.IsNullOrEmpty())
-                {
-                    continue;
-                }
+                if (validationAttributes.IsNullOrEmpty()) continue;
 
                 var validationContext = new ValidationContext(validatingObject)
                 {
@@ -38,10 +35,7 @@ namespace Abp.Runtime.Validation.Interception
                 foreach (var attribute in validationAttributes)
                 {
                     var result = attribute.GetValidationResult(property.GetValue(validatingObject), validationContext);
-                    if (result != null)
-                    {
-                        validationErrors.Add(result);
-                    }
+                    if (result != null) validationErrors.Add(result);
                 }
             }
 

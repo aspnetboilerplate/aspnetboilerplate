@@ -158,8 +158,8 @@ namespace Abp.Authorization.Users
             return await _unitOfWorkManager.WithUnitOfWorkAsync(async () =>
             {
                 return await _userRepository.FirstOrDefaultAsync(
-                    user => (user.NormalizedUserName == normalizedUserNameOrEmailAddress ||
-                             user.NormalizedEmailAddress == normalizedUserNameOrEmailAddress)
+                    user => user.NormalizedUserName == normalizedUserNameOrEmailAddress ||
+                            user.NormalizedEmailAddress == normalizedUserNameOrEmailAddress
                 );
             });
         }
@@ -277,10 +277,7 @@ namespace Abp.Authorization.Users
                     ul => ul.LoginProvider == login.LoginProvider && ul.ProviderKey == login.ProviderKey
                 );
 
-                if (userLogin == null)
-                {
-                    return null;
-                }
+                if (userLogin == null) return null;
 
                 return await _userRepository.FirstOrDefaultAsync(u => u.Id == userLogin.UserId);
             });
@@ -342,10 +339,7 @@ namespace Abp.Authorization.Users
                     ur => ur.UserId == user.Id && ur.RoleId == role.Id
                 );
 
-                if (userRole == null)
-                {
-                    return;
-                }
+                if (userRole == null) return;
 
                 await _userRoleRepository.DeleteAsync(userRole);
             });
@@ -372,7 +366,10 @@ namespace Abp.Authorization.Users
             });
         }
 
-        public virtual IList<string> GetRoles(TUser user) => GetRoles(user.Id);
+        public virtual IList<string> GetRoles(TUser user)
+        {
+            return GetRoles(user.Id);
+        }
 
         public virtual IList<string> GetRoles(long userId)
         {
@@ -411,10 +408,7 @@ namespace Abp.Authorization.Users
         {
             await _unitOfWorkManager.WithUnitOfWorkAsync(async () =>
             {
-                if (await HasPermissionAsync(user.Id, permissionGrant))
-                {
-                    return;
-                }
+                if (await HasPermissionAsync(user.Id, permissionGrant)) return;
 
                 await _userPermissionSettingRepository.InsertAsync(
                     new UserPermissionSetting
@@ -432,10 +426,7 @@ namespace Abp.Authorization.Users
         {
             _unitOfWorkManager.WithUnitOfWork(() =>
             {
-                if (HasPermission(user.Id, permissionGrant))
-                {
-                    return;
-                }
+                if (HasPermission(user.Id, permissionGrant)) return;
 
                 _userPermissionSettingRepository.Insert(
                     new UserPermissionSetting
@@ -487,7 +478,7 @@ namespace Abp.Authorization.Users
         {
             return _unitOfWorkManager.WithUnitOfWork(() =>
             {
-                return (_userPermissionSettingRepository.GetAllList(p => p.UserId == userId))
+                return _userPermissionSettingRepository.GetAllList(p => p.UserId == userId)
                     .Select(p => new PermissionGrantInfo(p.Name, p.IsGranted))
                     .ToList();
             });
@@ -674,10 +665,7 @@ namespace Abp.Authorization.Users
             return await _unitOfWorkManager.WithUnitOfWorkAsync(async () =>
             {
                 var role = await _roleRepository.FirstOrDefaultAsync(r => r.NormalizedName == normalizedName);
-                if (role == null)
-                {
-                    throw new AbpException("Could not find a role with name: " + normalizedName);
-                }
+                if (role == null) throw new AbpException("Could not find a role with name: " + normalizedName);
 
                 return role;
             });
@@ -716,16 +704,13 @@ namespace Abp.Authorization.Users
             //note: This workaround will not be needed after fixing https://github.com/aspnetboilerplate/aspnetboilerplate/issues/1828
             var outerUow = _unitOfWorkManager.Current;
             using (var uow = _unitOfWorkManager.Begin(new UnitOfWorkOptions
+                   {
+                       Scope = TransactionScopeOption.RequiresNew,
+                       IsTransactional = false,
+                       IsolationLevel = IsolationLevel.ReadUncommitted
+                   }))
             {
-                Scope = TransactionScopeOption.RequiresNew,
-                IsTransactional = false,
-                IsolationLevel = IsolationLevel.ReadUncommitted
-            }))
-            {
-                if (outerUow != null)
-                {
-                    _unitOfWorkManager.Current.SetTenantId(outerUow.GetTenantId());
-                }
+                if (outerUow != null) _unitOfWorkManager.Current.SetTenantId(outerUow.GetTenantId());
 
                 var user = await _userRepository.GetAsync(userId);
                 await uow.CompleteAsync();

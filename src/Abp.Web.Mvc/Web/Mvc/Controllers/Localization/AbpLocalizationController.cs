@@ -16,7 +16,8 @@ namespace Abp.Web.Mvc.Controllers.Localization
         protected readonly IAbpWebLocalizationConfiguration WebLocalizationConfiguration;
         protected IUrlHelper UrlHelper;
 
-        public AbpLocalizationController(IAbpWebLocalizationConfiguration webLocalizationConfiguration, IUrlHelper urlHelper)
+        public AbpLocalizationController(IAbpWebLocalizationConfiguration webLocalizationConfiguration,
+            IUrlHelper urlHelper)
         {
             WebLocalizationConfiguration = webLocalizationConfiguration;
             UrlHelper = urlHelper;
@@ -26,9 +27,7 @@ namespace Abp.Web.Mvc.Controllers.Localization
         public virtual ActionResult ChangeCulture(string cultureName, string returnUrl = "")
         {
             if (!GlobalizationHelper.IsValidCultureCode(cultureName))
-            {
                 throw new AbpException("Unknown language: " + cultureName + ". It must be a valid culture!");
-            }
 
             Response.Cookies.Add(
                 new HttpCookie(WebLocalizationConfiguration.CookieName, cultureName)
@@ -39,18 +38,13 @@ namespace Abp.Web.Mvc.Controllers.Localization
             );
 
             if (AbpSession.UserId.HasValue)
-            {
                 SettingManager.ChangeSettingForUser(
                     AbpSession.ToUserIdentifier(),
                     LocalizationSettingNames.DefaultLanguage,
                     cultureName
                 );
-            }
 
-            if (Request.IsAjaxRequest())
-            {
-                return Json(new AjaxResponse(), JsonRequestBehavior.AllowGet);
-            }
+            if (Request.IsAjaxRequest()) return Json(new AjaxResponse(), JsonRequestBehavior.AllowGet);
 
             if (!string.IsNullOrWhiteSpace(returnUrl))
             {
@@ -59,10 +53,7 @@ namespace Abp.Web.Mvc.Controllers.Localization
                 if (!string.IsNullOrWhiteSpace(localPath))
                 {
                     var unescapedLocalPath = Uri.UnescapeDataString(localPath);
-                    if (Url.IsLocalUrl(unescapedLocalPath))
-                    {
-                        return Redirect(unescapedLocalPath);
-                    }
+                    if (Url.IsLocalUrl(unescapedLocalPath)) return Redirect(unescapedLocalPath);
                 }
             }
 

@@ -15,12 +15,10 @@ namespace Abp.TestBase.SampleApplication.Crm
 
         public virtual Address BillingAddress { get; set; }
 
-        [ForeignKey("CompanyId")]
-        public virtual ICollection<Branch> Branches { get; set; }
+        [ForeignKey("CompanyId")] public virtual ICollection<Branch> Branches { get; set; }
 
         public Company()
         {
-               
         }
     }
 }

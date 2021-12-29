@@ -25,7 +25,7 @@ namespace Abp.Web.SignalR
         {
             IgnoredAssemblies = new List<Assembly>
             {
-                typeof (Connection).Assembly
+                typeof(Connection).Assembly
             };
         }
 
@@ -40,10 +40,7 @@ namespace Abp.Web.SignalR
 
         public JsonContract ResolveContract(Type type)
         {
-            if (IgnoredAssemblies.Contains(type.Assembly))
-            {
-                return _defaultContractSerializer.ResolveContract(type);
-            }
+            if (IgnoredAssemblies.Contains(type.Assembly)) return _defaultContractSerializer.ResolveContract(type);
 
             return _camelCaseContractResolver.ResolveContract(type);
         }

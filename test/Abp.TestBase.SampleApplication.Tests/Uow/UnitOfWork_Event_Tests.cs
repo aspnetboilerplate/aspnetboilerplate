@@ -33,17 +33,17 @@ namespace Abp.TestBase.SampleApplication.Tests.Uow
                 _personRepository.Insert(new Person { ContactListId = 1, Name = "john" });
 
                 _unitOfWorkManager.Current.Completed += (sender, args) =>
-                                                        {
-                                                            _unitOfWorkManager.Current.ShouldBe(null);
-                                                            completeCount++;
-                                                        };
+                {
+                    _unitOfWorkManager.Current.ShouldBe(null);
+                    completeCount++;
+                };
 
                 _unitOfWorkManager.Current.Disposed += (sender, args) =>
-                                                       {
-                                                           _unitOfWorkManager.Current.ShouldBe(null);
-                                                           completeCount.ShouldBe(1);
-                                                           disposeCount++;
-                                                       };
+                {
+                    _unitOfWorkManager.Current.ShouldBe(null);
+                    completeCount.ShouldBe(1);
+                    disposeCount++;
+                };
 
                 uow.Complete();
             }
@@ -130,19 +130,13 @@ namespace Abp.TestBase.SampleApplication.Tests.Uow
             {
                 var outerUow = _unitOfWorkManager.Current;
 
-                outerUow.Completed += (sender, args) =>
-                {
-                    _unitOfWorkManager.Current.ShouldBe(null);
-                };
+                outerUow.Completed += (sender, args) => { _unitOfWorkManager.Current.ShouldBe(null); };
 
                 using (var uowInner = _unitOfWorkManager.Begin(TransactionScopeOption.RequiresNew))
                 {
                     var innerUow = _unitOfWorkManager.Current;
 
-                    innerUow.Completed += (sender, args) =>
-                    {
-                        _unitOfWorkManager.Current.ShouldBe(outerUow);
-                    };
+                    innerUow.Completed += (sender, args) => { _unitOfWorkManager.Current.ShouldBe(outerUow); };
 
                     await uowInner.CompleteAsync();
                 }

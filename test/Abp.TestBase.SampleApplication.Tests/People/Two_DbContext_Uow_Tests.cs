@@ -38,7 +38,7 @@ namespace Abp.TestBase.SampleApplication.Tests.People
                     ContactListId = personInitial.ContactListId
                 });
 
-                await _secondDbContextEntityRepository.InsertAsync(new SecondDbContextEntity {Name = "test1"});
+                await _secondDbContextEntityRepository.InsertAsync(new SecondDbContextEntity { Name = "test1" });
 
                 await uow.CompleteAsync();
             }

@@ -13,6 +13,7 @@ namespace Abp.Zero.SampleApp.Tests.Users
     {
         private readonly IUserAppService _userAppService;
         private readonly UserManager _userManager;
+
         public UserAppService_Tests()
         {
             _userAppService = Resolve<IUserAppService>();
@@ -67,10 +68,7 @@ namespace Abp.Zero.SampleApp.Tests.Users
             });
 
             var updatedUser = UsingDbContext(
-                context =>
-                {
-                    return context.Users.FirstOrDefault(u => u.UserName == "manager");
-                });
+                context => { return context.Users.FirstOrDefault(u => u.UserName == "manager"); });
 
             updatedUser.UserName.ShouldBe("manager");
             updatedUser.PasswordResetCode.ShouldBe(null);

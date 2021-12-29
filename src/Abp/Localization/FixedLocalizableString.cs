@@ -20,7 +20,6 @@ namespace Abp.Localization
         /// </summary>
         private FixedLocalizableString()
         {
-
         }
 
         /// <summary>

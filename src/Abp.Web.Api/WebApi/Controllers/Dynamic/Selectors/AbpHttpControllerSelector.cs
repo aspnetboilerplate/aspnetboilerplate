@@ -22,7 +22,8 @@ namespace Abp.WebApi.Controllers.Dynamic.Selectors
         /// </summary>
         /// <param name="configuration">Http configuration</param>
         /// <param name="dynamicApiControllerManager"></param>
-        public AbpHttpControllerSelector(HttpConfiguration configuration, DynamicApiControllerManager dynamicApiControllerManager)
+        public AbpHttpControllerSelector(HttpConfiguration configuration,
+            DynamicApiControllerManager dynamicApiControllerManager)
             : base(configuration)
         {
             _configuration = configuration;
@@ -37,23 +38,15 @@ namespace Abp.WebApi.Controllers.Dynamic.Selectors
         public override HttpControllerDescriptor SelectController(HttpRequestMessage request)
         {
             //Get request and route data
-            if (request == null)
-            {
-                return base.SelectController(null);
-            }
+            if (request == null) return base.SelectController(null);
 
             var routeData = request.GetRouteData();
-            if (routeData == null)
-            {
-                return base.SelectController(request);
-            }
+            if (routeData == null) return base.SelectController(request);
 
             //Get serviceNameWithAction from route
             string serviceNameWithAction;
             if (!routeData.Values.TryGetValue("serviceNameWithAction", out serviceNameWithAction))
-            {
-                return base.SelectController(request);                
-            }
+                return base.SelectController(request);
 
             //Normalize serviceNameWithAction
             if (serviceNameWithAction.EndsWith("/"))
@@ -68,20 +61,16 @@ namespace Abp.WebApi.Controllers.Dynamic.Selectors
             if (controllerInfo == null)
             {
                 if (!DynamicApiServiceNameHelper.IsValidServiceNameWithAction(serviceNameWithAction))
-                {
                     return base.SelectController(request);
-                }
-                
-                var serviceName = DynamicApiServiceNameHelper.GetServiceNameInServiceNameWithAction(serviceNameWithAction);
+
+                var serviceName =
+                    DynamicApiServiceNameHelper.GetServiceNameInServiceNameWithAction(serviceNameWithAction);
                 controllerInfo = _dynamicApiControllerManager.FindOrNull(serviceName);
-                if (controllerInfo == null)
-                {
-                    return base.SelectController(request);                    
-                }
+                if (controllerInfo == null) return base.SelectController(request);
 
                 hasActionName = true;
             }
-            
+
             //Create the controller descriptor
             var controllerDescriptor = new DynamicHttpControllerDescriptor(_configuration, controllerInfo);
             controllerDescriptor.Properties["__AbpDynamicApiControllerInfo"] = controllerInfo;

@@ -45,7 +45,8 @@ namespace Abp.Tests.Localization
         [Fact]
         public void Should_Get_All_Strings()
         {
-            var localizedStrings = _localizationSource.GetAllStrings(new CultureInfo("tr-TR")).OrderBy(ls => ls.Name).ToList();
+            var localizedStrings = _localizationSource.GetAllStrings(new CultureInfo("tr-TR")).OrderBy(ls => ls.Name)
+                .ToList();
             Assert.Equal(3, localizedStrings.Count);
             Assert.Equal("Fourty Two (42)", localizedStrings[0].Value);
             Assert.Equal("Merhaba", localizedStrings[1].Value);
@@ -58,7 +59,7 @@ namespace Abp.Tests.Localization
             _localizationSource.Extend(
                 new LocalizationDictionaryWithAddMethod(new CultureInfo("tr"))
                 {
-                    {"hello", "Selam"},
+                    { "hello", "Selam" }
                 });
 
             _localizationSource.GetString("hello", new CultureInfo("tr-TR")).ShouldBe("Selam");
@@ -70,7 +71,7 @@ namespace Abp.Tests.Localization
             _localizationSource.Extend(
                 new LocalizationDictionaryWithAddMethod(new CultureInfo("fr"))
                 {
-                    {"hello", "Bonjour"},
+                    { "hello", "Bonjour" }
                 });
 
             _localizationSource.GetString("hello", new CultureInfo("fr")).ShouldBe("Bonjour");
@@ -88,22 +89,22 @@ namespace Abp.Tests.Localization
             public FakeLocalizationDictionary()
             {
                 Dictionaries["en"] = new LocalizationDictionaryWithAddMethod(new CultureInfo("en"))
-            {
-                {"hello", "Hello"},
-                {"world", "World"},
-                {"fourtyTwo", "Fourty Two (42)"}
-            };
+                {
+                    { "hello", "Hello" },
+                    { "world", "World" },
+                    { "fourtyTwo", "Fourty Two (42)" }
+                };
 
                 Dictionaries["tr"] = new LocalizationDictionaryWithAddMethod(new CultureInfo("tr"))
-            {
-                {"hello", "Merhaba"},
-                {"world", "Dünya"}
-            };
+                {
+                    { "hello", "Merhaba" },
+                    { "world", "Dünya" }
+                };
 
                 Dictionaries["tr-TR"] = new LocalizationDictionaryWithAddMethod(new CultureInfo("tr-TR"))
-            {
-                {"world", "Yeryüzü"}
-            };
+                {
+                    { "world", "Yeryüzü" }
+                };
 
 
                 DefaultDictionary = Dictionaries["en"];

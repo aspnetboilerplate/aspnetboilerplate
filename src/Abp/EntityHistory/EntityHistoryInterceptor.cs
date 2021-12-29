@@ -18,7 +18,8 @@ namespace Abp.EntityHistory
         {
             var methodInfo = invocation.MethodInvocationTarget;
             var useCaseAttribute = methodInfo.GetCustomAttributes(true).OfType<UseCaseAttribute>().FirstOrDefault()
-                                   ?? methodInfo.DeclaringType.GetCustomAttributes(true).OfType<UseCaseAttribute>().FirstOrDefault();
+                                   ?? methodInfo.DeclaringType.GetCustomAttributes(true).OfType<UseCaseAttribute>()
+                                       .FirstOrDefault();
 
             if (useCaseAttribute?.Description == null)
             {
@@ -38,7 +39,8 @@ namespace Abp.EntityHistory
 
             var methodInfo = invocation.MethodInvocationTarget;
             var useCaseAttribute = methodInfo.GetCustomAttributes(true).OfType<UseCaseAttribute>().FirstOrDefault()
-                                   ?? methodInfo.DeclaringType.GetCustomAttributes(true).OfType<UseCaseAttribute>().FirstOrDefault();
+                                   ?? methodInfo.DeclaringType.GetCustomAttributes(true).OfType<UseCaseAttribute>()
+                                       .FirstOrDefault();
 
             if (useCaseAttribute?.Description == null)
             {
@@ -62,7 +64,8 @@ namespace Abp.EntityHistory
 
             var methodInfo = invocation.MethodInvocationTarget;
             var useCaseAttribute = methodInfo.GetCustomAttributes(true).OfType<UseCaseAttribute>().FirstOrDefault()
-                                   ?? methodInfo.DeclaringType.GetCustomAttributes(true).OfType<UseCaseAttribute>().FirstOrDefault();
+                                   ?? methodInfo.DeclaringType.GetCustomAttributes(true).OfType<UseCaseAttribute>()
+                                       .FirstOrDefault();
 
             if (useCaseAttribute?.Description == null)
             {

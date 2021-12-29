@@ -28,11 +28,13 @@ namespace Abp.WebApi.Controllers.Dynamic.Scripting.TypeScript
                 _typesToBeDone = new HashSet<Type>();
                 _doneTypes = new HashSet<Type>();
             }
+
             _controllerInfo = controllerInfo;
 
             var script = new StringBuilder();
 
-            script.AppendLine("     export class " + _controllerInfo.ServiceName.Substring(_controllerInfo.ServiceName.IndexOf('/') + 1));
+            script.AppendLine("     export class " +
+                              _controllerInfo.ServiceName.Substring(_controllerInfo.ServiceName.IndexOf('/') + 1));
             script.AppendLine("     {");
             script.AppendLine("         static $inject = ['$http'];");
             script.AppendLine("         constructor(private $http: ng.IHttpService){");
@@ -42,7 +44,7 @@ namespace Abp.WebApi.Controllers.Dynamic.Scripting.TypeScript
                 PrepareInputParameterTypes(methodInfo.Method);
                 List<Type> newTypes = new List<Type>();
                 var returnType = TypeScriptHelper.GetTypeContractName(methodInfo.Method.ReturnType, newTypes);
-                this.AddNewTypesIfRequired(newTypes.ToArray());
+                AddNewTypesIfRequired(newTypes.ToArray());
                 if (returnType == "void")
                 {
                     script.AppendLine(string.Format("           public {0} = function ({1}): abp.IPromise ",
@@ -51,57 +53,58 @@ namespace Abp.WebApi.Controllers.Dynamic.Scripting.TypeScript
                     script.AppendLine("                    var self = this;");
                     script.AppendLine("                    return self.$http(angular.extend({");
                     script.AppendLine("                        abp: true,");
-                    script.AppendLine("                        url: abp.appPath + '" + ActionScriptingHelper.GenerateUrlWithParameters(_controllerInfo, methodInfo) + "',");
-                    script.AppendLine("                        method: '" + methodInfo.Verb.ToString().ToUpper(CultureInfo.InvariantCulture) + "',");
+                    script.AppendLine("                        url: abp.appPath + '" +
+                                      ActionScriptingHelper.GenerateUrlWithParameters(_controllerInfo, methodInfo) +
+                                      "',");
+                    script.AppendLine("                        method: '" +
+                                      methodInfo.Verb.ToString().ToUpper(CultureInfo.InvariantCulture) + "',");
 
                     if (methodInfo.Verb == HttpVerb.Get)
-                    {
-                        script.AppendLine("                        params: " + ActionScriptingHelper.GenerateBody(methodInfo));
-                    }
+                        script.AppendLine("                        params: " +
+                                          ActionScriptingHelper.GenerateBody(methodInfo));
                     else
-                    {
-                        script.AppendLine("                        data: JSON.stringify(" + ActionScriptingHelper.GenerateBody(methodInfo) + ")");
-                    }
+                        script.AppendLine("                        data: JSON.stringify(" +
+                                          ActionScriptingHelper.GenerateBody(methodInfo) + ")");
 
                     script.AppendLine("                    }, httpParams));");
 
 
                     script.AppendLine("}");
-
-
                 }
 
                 else
                 {
-                    script.AppendLine(string.Format("           public {0} = function ({1}): abp.IGenericPromise<{2}> ", methodInfo.ActionName.ToCamelCase(), 
+                    script.AppendLine(string.Format("           public {0} = function ({1}): abp.IGenericPromise<{2}> ",
+                        methodInfo.ActionName.ToCamelCase(),
                         GetMethodInputParameter(methodInfo.Method), returnType));
                     script.AppendLine("{");
                     script.AppendLine("                    var self = this;");
                     script.AppendLine("                    return self.$http(angular.extend({");
                     script.AppendLine("                        abp: true,");
-                    script.AppendLine("                        url: abp.appPath + '" + ActionScriptingHelper.GenerateUrlWithParameters(_controllerInfo, methodInfo) + "',");
-                    script.AppendLine("                        method: '" + methodInfo.Verb.ToString().ToUpper(CultureInfo.InvariantCulture) + "',");
+                    script.AppendLine("                        url: abp.appPath + '" +
+                                      ActionScriptingHelper.GenerateUrlWithParameters(_controllerInfo, methodInfo) +
+                                      "',");
+                    script.AppendLine("                        method: '" +
+                                      methodInfo.Verb.ToString().ToUpper(CultureInfo.InvariantCulture) + "',");
 
                     if (methodInfo.Verb == HttpVerb.Get)
-                    {
-                        script.AppendLine("                        params: " + ActionScriptingHelper.GenerateBody(methodInfo));
-                    }
+                        script.AppendLine("                        params: " +
+                                          ActionScriptingHelper.GenerateBody(methodInfo));
                     else
-                    {
-                        script.AppendLine("                        data: JSON.stringify(" + ActionScriptingHelper.GenerateBody(methodInfo) + ")");
-                    }
+                        script.AppendLine("                        data: JSON.stringify(" +
+                                          ActionScriptingHelper.GenerateBody(methodInfo) + ")");
 
                     script.AppendLine("                    }, httpParams));");
 
                     script.AppendLine("}");
                 }
-                    
-
             }
-            
+
             script.AppendLine("     }");
 
-            script.AppendLine("angular.module('abp').service('abp.services." + _controllerInfo.ServiceName.Replace("/", ".") + "', abp.services." + _controllerInfo.ServiceName.Replace("/", ".")+");");
+            script.AppendLine("angular.module('abp').service('abp.services." +
+                              _controllerInfo.ServiceName.Replace("/", ".") + "', abp.services." +
+                              _controllerInfo.ServiceName.Replace("/", ".") + ");");
 
 
             while (_typesToBeDone != null && _typesToBeDone.Count > 0)
@@ -112,43 +115,37 @@ namespace Abp.WebApi.Controllers.Dynamic.Scripting.TypeScript
                 _doneTypes.Add(type);
                 _typesToBeDone.RemoveWhere(x => x == type);
             }
+
             return script.ToString();
         }
+
         protected string GetMethodInputParameter(MethodInfo methodInfo)
         {
             var script = new StringBuilder();
-            
+
             List<Type> newTypes = new List<Type>();
             foreach (var parameter in methodInfo.GetParameters())
-            {
-                script.Append(string.Format("{0} : {1},", parameter.Name.ToCamelCase(), TypeScriptHelper.GetTypeContractName(parameter.ParameterType, newTypes)));
-            }
+                script.Append(string.Format("{0} : {1},", parameter.Name.ToCamelCase(),
+                    TypeScriptHelper.GetTypeContractName(parameter.ParameterType, newTypes)));
             script.Append("httpParams?: any");
-            this.AddNewTypesIfRequired(newTypes.ToArray());
+            AddNewTypesIfRequired(newTypes.ToArray());
             return script.ToString();
-
         }
+
         protected string GenerateTypeScript(Type type)
         {
             if (type.IsArray ||
-                (type.IsGenericType && (typeof(List<>).IsAssignableFrom(type.GetGenericTypeDefinition()) ||
-                typeof(ICollection<>).IsAssignableFrom(type.GetGenericTypeDefinition()) ||
-                typeof(IEnumerable<>).IsAssignableFrom(type.GetGenericTypeDefinition())
-                ))
+                type.IsGenericType && (typeof(List<>).IsAssignableFrom(type.GetGenericTypeDefinition()) ||
+                                       typeof(ICollection<>).IsAssignableFrom(type.GetGenericTypeDefinition()) ||
+                                       typeof(IEnumerable<>).IsAssignableFrom(type.GetGenericTypeDefinition())
                 )
+               )
             {
-                if (type.GetElementType() != null)
-                {
-                    this.AddNewTypesIfRequired(type.GetElementType());
-                }
+                if (type.GetElementType() != null) AddNewTypesIfRequired(type.GetElementType());
                 return "";
             }
 
-            if (type.IsGenericType && typeof(Nullable<>).IsAssignableFrom(type.GetGenericTypeDefinition()))
-            {
-                return "";
-            }
-
+            if (type.IsGenericType && typeof(Nullable<>).IsAssignableFrom(type.GetGenericTypeDefinition())) return "";
 
 
             var myscript = new StringBuilder();
@@ -156,10 +153,9 @@ namespace Abp.WebApi.Controllers.Dynamic.Scripting.TypeScript
             myscript.AppendLine("     export class " + TypeScriptHelper.GetTypeContractName(type, newTypes));
             myscript.AppendLine("         {");
             foreach (var property in type.GetProperties())
-            {
-                myscript.AppendLine(string.Format("{0} : {1} ;", property.Name.ToCamelCase(), TypeScriptHelper.GetTypeContractName(property.PropertyType, newTypes)));
-            }
-            this.AddNewTypesIfRequired(newTypes.ToArray());
+                myscript.AppendLine(string.Format("{0} : {1} ;", property.Name.ToCamelCase(),
+                    TypeScriptHelper.GetTypeContractName(property.PropertyType, newTypes)));
+            AddNewTypesIfRequired(newTypes.ToArray());
             myscript.AppendLine("         }");
             return myscript.ToString();
         }
@@ -167,30 +163,26 @@ namespace Abp.WebApi.Controllers.Dynamic.Scripting.TypeScript
         private void AddNewTypesIfRequired(params Type[] newTypes)
         {
             foreach (var type in newTypes)
-                if (this.CanAddToBeDone(type))
+                if (CanAddToBeDone(type))
                     _typesToBeDone.Add(type);
         }
 
         protected void PrepareInputParameterTypes(MethodInfo methodInfo)
         {
-            foreach (var parameter in methodInfo.GetParameters())
-            {
-                AddNewTypesIfRequired(parameter.ParameterType);
-            }
+            foreach (var parameter in methodInfo.GetParameters()) AddNewTypesIfRequired(parameter.ParameterType);
         }
 
         protected void PrepareOutputParameterTypes(MethodInfo methodInfo)
         {
-            if (this.CanAddToBeDone(methodInfo.ReturnType))
-            {
-                _typesToBeDone.Add(methodInfo.ReturnType);
-            }
+            if (CanAddToBeDone(methodInfo.ReturnType)) _typesToBeDone.Add(methodInfo.ReturnType);
         }
+
         private bool CanAddToBeDone(Type type)
         {
             if (type == typeof(Task))
                 return false;
-            if (_typesToBeDone.Count(z => z.FullName == type.FullName) == 0 && !TypeScriptHelper.IsIgnorantType(type) && !TypeScriptHelper.IsBasicType(type) && _doneTypes.Count(z => z.FullName == type.FullName) == 0)
+            if (_typesToBeDone.Count(z => z.FullName == type.FullName) == 0 && !TypeScriptHelper.IsIgnorantType(type) &&
+                !TypeScriptHelper.IsBasicType(type) && _doneTypes.Count(z => z.FullName == type.FullName) == 0)
                 return true;
             return false;
         }

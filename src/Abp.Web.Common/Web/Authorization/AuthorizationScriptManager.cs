@@ -37,16 +37,10 @@ namespace Abp.Web.Authorization
             var grantedPermissionNames = new List<string>();
 
             if (AbpSession.UserId.HasValue)
-            {
                 foreach (var permissionName in allPermissionNames)
-                {
                     if (await PermissionChecker.IsGrantedAsync(permissionName))
-                    {
                         grantedPermissionNames.Add(permissionName);
-                    }
-                }
-            }
-            
+
             var script = new StringBuilder();
 
             script.AppendLine("(function(){");
@@ -77,13 +71,9 @@ namespace Abp.Web.Authorization
             {
                 var permission = permissions[i];
                 if (i < permissions.Count - 1)
-                {
                     script.AppendLine("        '" + HttpEncode.JavaScriptStringEncode(permission) + "': true,");
-                }
                 else
-                {
                     script.AppendLine("        '" + HttpEncode.JavaScriptStringEncode(permission) + "': true");
-                }
             }
 
             script.AppendLine("    };");

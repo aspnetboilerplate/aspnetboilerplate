@@ -11,7 +11,6 @@ namespace Abp.TestBase.SampleApplication.Messages
         public MessageAppService(IRepository<Message, int> repository)
             : base(repository)
         {
-
         }
 
         protected override IQueryable<Message> CreateFilteredQuery(GetMessagesWithFilterInput input)

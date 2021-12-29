@@ -36,10 +36,7 @@ namespace Abp.TestBase
                 options.IocManager = LocalIocManager;
             });
 
-            if (initializeAbp)
-            {
-                InitializeAbp();
-            }
+            if (initializeAbp) InitializeAbp();
         }
 
         protected void InitializeAbp()
@@ -60,7 +57,6 @@ namespace Abp.TestBase
         /// </summary>
         protected virtual void PreInitialize()
         {
-
         }
 
         /// <summary>
@@ -68,7 +64,6 @@ namespace Abp.TestBase
         /// </summary>
         protected virtual void PostInitialize()
         {
-
         }
 
         public virtual void Dispose()
@@ -137,9 +132,8 @@ namespace Abp.TestBase
             if (!LocalIocManager.IsRegistered(type))
             {
                 if (!type.GetTypeInfo().IsClass || type.GetTypeInfo().IsAbstract)
-                {
-                    throw new AbpException("Can not register " + type.Name + ". It should be a non-abstract class. If not, it should be registered before.");
-                }
+                    throw new AbpException("Can not register " + type.Name +
+                                           ". It should be a non-abstract class. If not, it should be registered before.");
 
                 LocalIocManager.Register(type, lifeStyle);
             }

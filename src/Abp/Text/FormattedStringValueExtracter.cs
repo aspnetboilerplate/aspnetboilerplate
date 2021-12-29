@@ -24,23 +24,18 @@ namespace Abp.Text
         /// <param name="format">Format of the string</param>
         /// <param name="ignoreCase">True, to search case-insensitive.</param>
         /// <param name="splitformatCharacter">format is splitted using this character when provided.</param>
-        public ExtractionResult Extract(string str, string format, bool ignoreCase = false, char? splitformatCharacter = null)
+        public ExtractionResult Extract(string str, string format, bool ignoreCase = false,
+            char? splitformatCharacter = null)
         {
             var stringComparison = ignoreCase
                 ? StringComparison.OrdinalIgnoreCase
                 : StringComparison.Ordinal;
 
-            if (str == format)
-            {
-                return new ExtractionResult(true);
-            }
+            if (str == format) return new ExtractionResult(true);
 
             var formatTokens = TokenizeFormat(format, splitformatCharacter);
 
-            if (formatTokens.IsNullOrEmpty())
-            {
-                return new ExtractionResult(string.IsNullOrEmpty(str));
-            }
+            if (formatTokens.IsNullOrEmpty()) return new ExtractionResult(string.IsNullOrEmpty(str));
 
             var result = new ExtractionResult(false);
 
@@ -54,9 +49,7 @@ namespace Abp.Text
                     if (i == 0)
                     {
                         if (str.StartsWith(currentToken.Text, stringComparison))
-                        {
                             str = str.Substring(currentToken.Text.Length);
-                        }
                     }
                     else
                     {
@@ -85,18 +78,12 @@ namespace Abp.Text
 
         private List<FormatStringToken> TokenizeFormat(string originalFormat, char? splitformatCharacter = null)
         {
-            if (splitformatCharacter == null)
-            {
-                return new FormatStringTokenizer().Tokenize(originalFormat);
-            }
+            if (splitformatCharacter == null) return new FormatStringTokenizer().Tokenize(originalFormat);
 
             var result = new List<FormatStringToken>();
             var formats = originalFormat.Split(splitformatCharacter.Value);
 
-            foreach (var format in formats)
-            {
-                result.AddRange(new FormatStringTokenizer().Tokenize(format));
-            }
+            foreach (var format in formats) result.AddRange(new FormatStringTokenizer().Tokenize(format));
 
             return result;
         }

@@ -20,13 +20,7 @@ namespace Abp.Web.Models
 
         public IExceptionToErrorInfoConverter Next { set; private get; }
 
-        private bool SendAllExceptionsToClients
-        {
-            get
-            {
-                return _configuration.SendAllExceptionsToClients;
-            }
-        }
+        private bool SendAllExceptionsToClients => _configuration.SendAllExceptionsToClients;
 
         public DefaultErrorInfoConverter(
             IAbpWebCommonModuleConfiguration configuration,
@@ -40,29 +34,21 @@ namespace Abp.Web.Models
         {
             var errorInfo = CreateErrorInfoWithoutCode(exception);
 
-            if (exception is IHasErrorCode)
-            {
-                errorInfo.Code = (exception as IHasErrorCode).Code;
-            }
+            if (exception is IHasErrorCode) errorInfo.Code = (exception as IHasErrorCode).Code;
 
             return errorInfo;
         }
 
         private ErrorInfo CreateErrorInfoWithoutCode(Exception exception)
         {
-            if (SendAllExceptionsToClients)
-            {
-                return CreateDetailedErrorInfoFromException(exception);
-            }
+            if (SendAllExceptionsToClients) return CreateDetailedErrorInfoFromException(exception);
 
             if (exception is AggregateException && exception.InnerException != null)
             {
                 var aggException = exception as AggregateException;
                 if (aggException.InnerException is UserFriendlyException ||
                     aggException.InnerException is AbpValidationException)
-                {
                     exception = aggException.InnerException;
-                }
             }
 
             if (exception is UserFriendlyException)
@@ -72,20 +58,17 @@ namespace Abp.Web.Models
             }
 
             if (exception is AbpValidationException)
-            {
                 return new ErrorInfo(L("ValidationError"))
                 {
                     ValidationErrors = GetValidationErrorInfos(exception as AbpValidationException),
                     Details = GetValidationErrorNarrative(exception as AbpValidationException)
                 };
-            }
 
             if (exception is EntityNotFoundException)
             {
                 var entityNotFoundException = exception as EntityNotFoundException;
 
                 if (entityNotFoundException.EntityType != null)
-                {
                     return new ErrorInfo(
                         string.Format(
                             L("EntityNotFound"),
@@ -93,7 +76,6 @@ namespace Abp.Web.Models
                             entityNotFoundException.Id
                         )
                     );
-                }
 
                 return new ErrorInfo(
                     entityNotFoundException.Message
@@ -118,9 +100,7 @@ namespace Abp.Web.Models
             var errorInfo = new ErrorInfo(exception.Message, detailBuilder.ToString());
 
             if (exception is AbpValidationException)
-            {
                 errorInfo.ValidationErrors = GetValidationErrorInfos(exception as AbpValidationException);
-            }
 
             return errorInfo;
         }
@@ -135,9 +115,7 @@ namespace Abp.Web.Models
             {
                 var userFriendlyException = exception as UserFriendlyException;
                 if (!string.IsNullOrEmpty(userFriendlyException.Details))
-                {
                     detailBuilder.AppendLine(userFriendlyException.Details);
-                }
             }
 
             //Additional info for AbpValidationException
@@ -145,36 +123,24 @@ namespace Abp.Web.Models
             {
                 var validationException = exception as AbpValidationException;
                 if (validationException.ValidationErrors.Count > 0)
-                {
                     detailBuilder.AppendLine(GetValidationErrorNarrative(validationException));
-                }
             }
 
             //Exception StackTrace
             if (!string.IsNullOrEmpty(exception.StackTrace))
-            {
                 detailBuilder.AppendLine("STACK TRACE: " + exception.StackTrace);
-            }
 
             //Inner exception
-            if (exception.InnerException != null)
-            {
-                AddExceptionToDetails(exception.InnerException, detailBuilder);
-            }
+            if (exception.InnerException != null) AddExceptionToDetails(exception.InnerException, detailBuilder);
 
             //Inner exceptions for AggregateException
             if (exception is AggregateException)
             {
                 var aggException = exception as AggregateException;
-                if (aggException.InnerExceptions.IsNullOrEmpty())
-                {
-                    return;
-                }
+                if (aggException.InnerExceptions.IsNullOrEmpty()) return;
 
                 foreach (var innerException in aggException.InnerExceptions)
-                {
                     AddExceptionToDetails(innerException, detailBuilder);
-                }
             }
         }
 
@@ -187,9 +153,7 @@ namespace Abp.Web.Models
                 var validationError = new ValidationErrorInfo(validationResult.ErrorMessage);
 
                 if (validationResult.MemberNames != null && validationResult.MemberNames.Any())
-                {
                     validationError.Members = validationResult.MemberNames.Select(m => m.ToCamelCase()).ToArray();
-                }
 
                 validationErrorInfos.Add(validationError);
             }

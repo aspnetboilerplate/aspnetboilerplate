@@ -12,7 +12,6 @@ namespace Abp.Zero.SampleApp.TPH
     {
         public string CitizenShipId { get; set; }
 
-        [Required]
-        public Student Student { get; set; }
+        [Required] public Student Student { get; set; }
     }
 }

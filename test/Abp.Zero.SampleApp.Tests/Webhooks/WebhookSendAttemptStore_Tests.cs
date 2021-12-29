@@ -18,6 +18,7 @@ namespace Abp.Zero.SampleApp.Tests.Webhooks
     {
         private IWebhookSendAttemptStore _webhookSendAttemptStore;
         private IWebhookEventStore _webhookEventStore;
+
         public WebhookSendAttemptStore_Tests()
         {
 #if DEBUG
@@ -26,7 +27,7 @@ namespace Abp.Zero.SampleApp.Tests.Webhooks
                     .ImplementedBy<FakeAsyncQueryableExecuter>()
                     .LifestyleSingleton()
                     .IsDefault()
-                );
+            );
 #endif
 
             _webhookSendAttemptStore = Resolve<IWebhookSendAttemptStore>();
@@ -54,7 +55,8 @@ namespace Abp.Zero.SampleApp.Tests.Webhooks
             return sendAttempt;
         }
 
-        #region  Async
+        #region Async
+
         public static IEnumerable<object[]> InsertTestData =>
             new List<object[]>
             {
@@ -100,16 +102,10 @@ namespace Abp.Zero.SampleApp.Tests.Webhooks
         public async Task Tests_Insert_Async(WebhookSendAttempt webhookSendAttempt, Type typeOfException = null)
         {
             if (typeOfException != null)
-            {
-                await Should.ThrowAsync(async () =>
-                 {
-                     await _webhookSendAttemptStore.InsertAsync(webhookSendAttempt);
-                 }, typeOfException);
-            }
+                await Should.ThrowAsync(async () => { await _webhookSendAttemptStore.InsertAsync(webhookSendAttempt); },
+                    typeOfException);
             else
-            {
                 await _webhookSendAttemptStore.InsertAsync(webhookSendAttempt);
-            }
         }
 
         [Fact]
@@ -125,42 +121,35 @@ namespace Abp.Zero.SampleApp.Tests.Webhooks
         public static IEnumerable<object[]> UpdateTestData =>
             new List<object[]>
             {
-                new object[] {Guid.Empty, Guid.Empty, typeof(DbUpdateException)},
-                new object[] {Guid.Empty, Guid.NewGuid(), typeof(DbUpdateException)},
-                new object[] {Guid.NewGuid(), Guid.Empty, typeof(DbUpdateException)},
-                new object[] {Guid.NewGuid(),Guid.NewGuid(), typeof(DbUpdateException)},//webhookevent not exists
-                new object[] {}
+                new object[] { Guid.Empty, Guid.Empty, typeof(DbUpdateException) },
+                new object[] { Guid.Empty, Guid.NewGuid(), typeof(DbUpdateException) },
+                new object[] { Guid.NewGuid(), Guid.Empty, typeof(DbUpdateException) },
+                new object[] { Guid.NewGuid(), Guid.NewGuid(), typeof(DbUpdateException) }, //webhookevent not exists
+                new object[] { }
             };
 
         [Theory]
         [MemberData(nameof(UpdateTestData))]
-        public async Task Tests_Update_Async(Guid? webhookEventId = null, Guid? webhookSubscriptionId = null, Type typeOfException = null)
+        public async Task Tests_Update_Async(Guid? webhookEventId = null, Guid? webhookSubscriptionId = null,
+            Type typeOfException = null)
         {
             var sendAttempt = CreateAndGetWebhookSendAttempt();
             sendAttempt.Response = "Test";
 
-            if (webhookEventId.HasValue)
-            {
-                sendAttempt.WebhookEventId = webhookEventId.Value;
-            }
+            if (webhookEventId.HasValue) sendAttempt.WebhookEventId = webhookEventId.Value;
 
-            if (webhookSubscriptionId.HasValue)
-            {
-                sendAttempt.WebhookSubscriptionId = webhookSubscriptionId.Value;
-            }
+            if (webhookSubscriptionId.HasValue) sendAttempt.WebhookSubscriptionId = webhookSubscriptionId.Value;
 
             if (typeOfException != null)
             {
-                await Should.ThrowAsync(async () =>
-                {
-                    await _webhookSendAttemptStore.UpdateAsync(sendAttempt);
-
-                }, typeOfException);
+                await Should.ThrowAsync(async () => { await _webhookSendAttemptStore.UpdateAsync(sendAttempt); },
+                    typeOfException);
             }
             else
             {
                 await _webhookSendAttemptStore.UpdateAsync(sendAttempt);
-                (await _webhookSendAttemptStore.GetAsync(sendAttempt.TenantId, sendAttempt.Id)).Response.ShouldBe("Test");
+                (await _webhookSendAttemptStore.GetAsync(sendAttempt.TenantId, sendAttempt.Id)).Response
+                    .ShouldBe("Test");
             }
         }
 
@@ -183,13 +172,13 @@ namespace Abp.Zero.SampleApp.Tests.Webhooks
             await _webhookSendAttemptStore.InsertAsync(sendAttempt);
 
             (await _webhookSendAttemptStore.GetSendAttemptCountAsync(sendAttempt.TenantId, sendAttempt.WebhookEventId,
-                    sendAttempt.WebhookSubscriptionId)).ShouldBe(3);
+                sendAttempt.WebhookSubscriptionId)).ShouldBe(3);
         }
 
         [Fact]
         public async Task Should_Get_Has_Any_Successful_Attempt_In_Last_X_Record_Async()
         {
-            (await _webhookSendAttemptStore.HasXConsecutiveFailAsync(null,//if there is no record should return true
+            (await _webhookSendAttemptStore.HasXConsecutiveFailAsync(null, //if there is no record should return true
                 Guid.NewGuid(), 2)).ShouldBe(false);
 
             var webhookEventId = CreateAndGetIdWebhookEvent();
@@ -224,7 +213,7 @@ namespace Abp.Zero.SampleApp.Tests.Webhooks
         [Fact]
         public async Task Should_Get_All_Send_Attempts_By_Webhook_Event_Id_Async()
         {
-            (await _webhookSendAttemptStore.HasXConsecutiveFailAsync(null,//if there is no record should return true
+            (await _webhookSendAttemptStore.HasXConsecutiveFailAsync(null, //if there is no record should return true
                 Guid.NewGuid(), 2)).ShouldBe(false);
 
             var webhookEventId = CreateAndGetIdWebhookEvent();
@@ -257,6 +246,7 @@ namespace Abp.Zero.SampleApp.Tests.Webhooks
             (await _webhookSendAttemptStore.GetAllSendAttemptsByWebhookEventIdAsync(sendAttempt.TenantId,
                 sendAttempt.WebhookEventId)).Count.ShouldBe(3);
         }
+
         #endregion Async
 
 
@@ -267,16 +257,9 @@ namespace Abp.Zero.SampleApp.Tests.Webhooks
         public void Tests_Insert_Sync(WebhookSendAttempt webhookSendAttempt, Type typeOfException = null)
         {
             if (typeOfException != null)
-            {
-                Should.Throw(() =>
-               {
-                   _webhookSendAttemptStore.Insert(webhookSendAttempt);
-               }, typeOfException);
-            }
+                Should.Throw(() => { _webhookSendAttemptStore.Insert(webhookSendAttempt); }, typeOfException);
             else
-            {
                 _webhookSendAttemptStore.Insert(webhookSendAttempt);
-            }
         }
 
         [Fact]
@@ -291,28 +274,19 @@ namespace Abp.Zero.SampleApp.Tests.Webhooks
 
         [Theory]
         [MemberData(nameof(UpdateTestData))]
-        public void Tests_Update_Sync(Guid? webhookEventId = null, Guid? webhookSubscriptionId = null, Type typeOfException = null)
+        public void Tests_Update_Sync(Guid? webhookEventId = null, Guid? webhookSubscriptionId = null,
+            Type typeOfException = null)
         {
             var sendAttempt = CreateAndGetWebhookSendAttempt();
             sendAttempt.Response = "Test";
 
-            if (webhookEventId.HasValue)
-            {
-                sendAttempt.WebhookEventId = webhookEventId.Value;
-            }
+            if (webhookEventId.HasValue) sendAttempt.WebhookEventId = webhookEventId.Value;
 
-            if (webhookSubscriptionId.HasValue)
-            {
-                sendAttempt.WebhookSubscriptionId = webhookSubscriptionId.Value;
-            }
+            if (webhookSubscriptionId.HasValue) sendAttempt.WebhookSubscriptionId = webhookSubscriptionId.Value;
 
             if (typeOfException != null)
             {
-                Should.Throw(() =>
-              {
-                  _webhookSendAttemptStore.Update(sendAttempt);
-
-              }, typeOfException);
+                Should.Throw(() => { _webhookSendAttemptStore.Update(sendAttempt); }, typeOfException);
             }
             else
             {
@@ -344,6 +318,5 @@ namespace Abp.Zero.SampleApp.Tests.Webhooks
         }
 
         #endregion
-
     }
 }

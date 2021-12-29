@@ -11,7 +11,8 @@ namespace Abp.Web.Models
         private IExceptionToErrorInfoConverter Converter { get; set; }
 
         /// <inheritdoc/>
-        public ErrorInfoBuilder(IAbpWebCommonModuleConfiguration configuration, ILocalizationManager localizationManager)
+        public ErrorInfoBuilder(IAbpWebCommonModuleConfiguration configuration,
+            ILocalizationManager localizationManager)
         {
             Converter = new DefaultErrorInfoConverter(configuration, localizationManager);
         }

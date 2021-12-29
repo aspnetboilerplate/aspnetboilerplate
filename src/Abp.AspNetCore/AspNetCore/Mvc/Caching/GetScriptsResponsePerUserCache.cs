@@ -1,7 +1,6 @@
-﻿namespace Abp.AspNetCore.Mvc.Caching
+﻿namespace Abp.AspNetCore.Mvc.Caching;
+
+public class GetScriptsResponsePerUserCache
 {
-    public class GetScriptsResponsePerUserCache
-    {
-        public const string CacheName = "GetScriptsResponsePerUser";
-    }
+    public const string CacheName = "GetScriptsResponsePerUser";
 }

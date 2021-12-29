@@ -10,13 +10,11 @@ namespace Abp.UI.Inputs
         public CheckboxInputType()
             : this(new BooleanValueValidator())
         {
-
         }
 
         public CheckboxInputType(IValueValidator validator)
             : base(validator)
         {
-            
         }
     }
 }

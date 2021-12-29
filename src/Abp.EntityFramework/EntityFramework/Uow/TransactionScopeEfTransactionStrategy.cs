@@ -29,10 +29,7 @@ namespace Abp.EntityFramework.Uow
 
         public virtual void Commit()
         {
-            if (CurrentTransaction == null)
-            {
-                return;
-            }
+            if (CurrentTransaction == null) return;
 
             CurrentTransaction.Complete();
 
@@ -50,20 +47,14 @@ namespace Abp.EntityFramework.Uow
 
         private void StartTransaction()
         {
-            if (CurrentTransaction != null)
-            {
-                return;
-            }
+            if (CurrentTransaction != null) return;
 
             var transactionOptions = new TransactionOptions
             {
-                IsolationLevel = Options.IsolationLevel.GetValueOrDefault(IsolationLevel.ReadUncommitted),
+                IsolationLevel = Options.IsolationLevel.GetValueOrDefault(IsolationLevel.ReadUncommitted)
             };
 
-            if (Options.Timeout.HasValue)
-            {
-                transactionOptions.Timeout = Options.Timeout.Value;
-            }
+            if (Options.Timeout.HasValue) transactionOptions.Timeout = Options.Timeout.Value;
 
             CurrentTransaction = new TransactionScope(
                 Options.Scope.GetValueOrDefault(TransactionScopeOption.Required),
@@ -74,10 +65,7 @@ namespace Abp.EntityFramework.Uow
 
         public virtual void Dispose(IIocResolver iocResolver)
         {
-            foreach (var dbContext in DbContexts)
-            {
-                iocResolver.Release(dbContext);
-            }
+            foreach (var dbContext in DbContexts) iocResolver.Release(dbContext);
 
             DbContexts.Clear();
 
@@ -88,7 +76,8 @@ namespace Abp.EntityFramework.Uow
             }
         }
 
-        public async Task<DbContext> CreateDbContextAsync<TDbContext>(string connectionString, IDbContextResolver dbContextResolver) where TDbContext : DbContext
+        public async Task<DbContext> CreateDbContextAsync<TDbContext>(string connectionString,
+            IDbContextResolver dbContextResolver) where TDbContext : DbContext
         {
             var dbContext = dbContextResolver.Resolve<TDbContext>(connectionString);
             DbContexts.Add(dbContext);

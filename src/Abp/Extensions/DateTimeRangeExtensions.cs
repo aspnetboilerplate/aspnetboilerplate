@@ -37,7 +37,7 @@ namespace Abp.Extensions
         /// <returns></returns>
         public static IEnumerable<DateTime> DaysInRange(this IDateTimeRange dateRange)
         {
-            return Enumerable.Range(0, (dateRange.TimeSpan).Days)
+            return Enumerable.Range(0, dateRange.TimeSpan.Days)
                 .Select(offset => new DateTime(
                     dateRange.StartTime.AddDays(offset).Year,
                     dateRange.StartTime.AddDays(offset).Month,

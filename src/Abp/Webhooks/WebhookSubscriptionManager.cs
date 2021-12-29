@@ -53,12 +53,11 @@ namespace Abp.Webhooks
                 .Select(subscriptionInfo => subscriptionInfo.ToWebhookSubscription()).ToList();
         }
 
-        public virtual async Task<List<WebhookSubscription>> GetAllSubscriptionsIfFeaturesGrantedAsync(int? tenantId, string webhookName)
+        public virtual async Task<List<WebhookSubscription>> GetAllSubscriptionsIfFeaturesGrantedAsync(int? tenantId,
+            string webhookName)
         {
             if (!await _webhookDefinitionManager.IsAvailableAsync(tenantId, webhookName))
-            {
                 return new List<WebhookSubscription>();
-            }
 
             return (await WebhookSubscriptionsStore.GetAllSubscriptionsAsync(tenantId, webhookName))
                 .Select(subscriptionInfo => subscriptionInfo.ToWebhookSubscription()).ToList();
@@ -66,10 +65,7 @@ namespace Abp.Webhooks
 
         public virtual List<WebhookSubscription> GetAllSubscriptionsIfFeaturesGranted(int? tenantId, string webhookName)
         {
-            if (!_webhookDefinitionManager.IsAvailable(tenantId, webhookName))
-            {
-                return new List<WebhookSubscription>();
-            }
+            if (!_webhookDefinitionManager.IsAvailable(tenantId, webhookName)) return new List<WebhookSubscription>();
 
             return WebhookSubscriptionsStore.GetAllSubscriptions(tenantId, webhookName)
                 .Select(subscriptionInfo => subscriptionInfo.ToWebhookSubscription()).ToList();
@@ -87,31 +83,26 @@ namespace Abp.Webhooks
                 .Select(subscriptionInfo => subscriptionInfo.ToWebhookSubscription()).ToList();
         }
 
-        public virtual async Task<List<WebhookSubscription>> GetAllSubscriptionsOfTenantsIfFeaturesGrantedAsync(int?[] tenantIds, string webhookName)
+        public virtual async Task<List<WebhookSubscription>> GetAllSubscriptionsOfTenantsIfFeaturesGrantedAsync(
+            int?[] tenantIds, string webhookName)
         {
             var featureGrantedTenants = new List<int?>();
             foreach (var tenantId in tenantIds)
-            {
                 if (await _webhookDefinitionManager.IsAvailableAsync(tenantId, webhookName))
-                {
                     featureGrantedTenants.Add(tenantId);
-                }
-            }
 
-            return (await WebhookSubscriptionsStore.GetAllSubscriptionsOfTenantsAsync(featureGrantedTenants.ToArray(), webhookName))
+            return (await WebhookSubscriptionsStore.GetAllSubscriptionsOfTenantsAsync(featureGrantedTenants.ToArray(),
+                    webhookName))
                 .Select(subscriptionInfo => subscriptionInfo.ToWebhookSubscription()).ToList();
         }
 
-        public virtual List<WebhookSubscription> GetAllSubscriptionsOfTenantsIfFeaturesGranted(int?[] tenantIds, string webhookName)
+        public virtual List<WebhookSubscription> GetAllSubscriptionsOfTenantsIfFeaturesGranted(int?[] tenantIds,
+            string webhookName)
         {
             var featureGrantedTenants = new List<int?>();
             foreach (var tenantId in tenantIds)
-            {
                 if (_webhookDefinitionManager.IsAvailable(tenantId, webhookName))
-                {
                     featureGrantedTenants.Add(tenantId);
-                }
-            }
 
             return WebhookSubscriptionsStore.GetAllSubscriptionsOfTenants(featureGrantedTenants.ToArray(), webhookName)
                 .Select(subscriptionInfo => subscriptionInfo.ToWebhookSubscription()).ToList();
@@ -119,24 +110,18 @@ namespace Abp.Webhooks
 
         public virtual async Task<bool> IsSubscribedAsync(int? tenantId, string webhookName)
         {
-            if (!await _webhookDefinitionManager.IsAvailableAsync(tenantId, webhookName))
-            {
-                return false;
-            }
+            if (!await _webhookDefinitionManager.IsAvailableAsync(tenantId, webhookName)) return false;
 
             return await WebhookSubscriptionsStore.IsSubscribedAsync(tenantId, webhookName);
         }
 
         public virtual bool IsSubscribed(int? tenantId, string webhookName)
         {
-            if (!_webhookDefinitionManager.IsAvailable(tenantId, webhookName))
-            {
-                return false;
-            }
+            if (!_webhookDefinitionManager.IsAvailable(tenantId, webhookName)) return false;
 
             return WebhookSubscriptionsStore.IsSubscribed(tenantId, webhookName);
         }
-        
+
         public virtual async Task AddOrUpdateSubscriptionAsync(WebhookSubscription webhookSubscription)
         {
             await UnitOfWorkManager.WithUnitOfWorkAsync(async () =>
@@ -159,7 +144,7 @@ namespace Abp.Webhooks
                 }
             });
         }
-        
+
         public virtual void AddOrUpdateSubscription(WebhookSubscription webhookSubscription)
         {
             UnitOfWorkManager.WithUnitOfWork(() =>
@@ -191,7 +176,7 @@ namespace Abp.Webhooks
                 webhookSubscription.IsActive = active;
             });
         }
-        
+
         public virtual async Task DeleteSubscriptionAsync(Guid id)
         {
             await UnitOfWorkManager.WithUnitOfWorkAsync(async () =>
@@ -199,15 +184,12 @@ namespace Abp.Webhooks
                 await WebhookSubscriptionsStore.DeleteAsync(id);
             });
         }
-        
+
         public virtual void DeleteSubscription(Guid id)
         {
-            UnitOfWorkManager.WithUnitOfWork(() =>
-            {
-                WebhookSubscriptionsStore.Delete(id);
-            });
+            UnitOfWorkManager.WithUnitOfWork(() => { WebhookSubscriptionsStore.Delete(id); });
         }
-        
+
         public virtual async Task AddWebhookAsync(WebhookSubscriptionInfo subscription, string webhookName)
         {
             await UnitOfWorkManager.WithUnitOfWorkAsync(async () =>
@@ -216,7 +198,7 @@ namespace Abp.Webhooks
                 subscription.SubscribeWebhook(webhookName);
             });
         }
-        
+
         public virtual void AddWebhook(WebhookSubscriptionInfo subscription, string webhookName)
         {
             UnitOfWorkManager.WithUnitOfWork(() =>
@@ -230,44 +212,32 @@ namespace Abp.Webhooks
 
         protected virtual async Task CheckIfPermissionsGrantedAsync(WebhookSubscription webhookSubscription)
         {
-            if (webhookSubscription.Webhooks.IsNullOrEmpty())
-            {
-                return;
-            }
+            if (webhookSubscription.Webhooks.IsNullOrEmpty()) return;
 
             foreach (var webhookDefinition in webhookSubscription.Webhooks)
-            {
                 await CheckPermissionsAsync(webhookSubscription.TenantId, webhookDefinition);
-            }
         }
 
         protected virtual async Task CheckPermissionsAsync(int? tenantId, string webhookName)
         {
             if (!await _webhookDefinitionManager.IsAvailableAsync(tenantId, webhookName))
-            {
-                throw new AbpAuthorizationException($"Tenant \"{tenantId}\" must have necessary feature(s) to use webhook \"{webhookName}\"");
-            }
+                throw new AbpAuthorizationException(
+                    $"Tenant \"{tenantId}\" must have necessary feature(s) to use webhook \"{webhookName}\"");
         }
 
         protected virtual void CheckIfPermissionsGranted(WebhookSubscription webhookSubscription)
         {
-            if (webhookSubscription.Webhooks.IsNullOrEmpty())
-            {
-                return;
-            }
+            if (webhookSubscription.Webhooks.IsNullOrEmpty()) return;
 
             foreach (var webhookDefinition in webhookSubscription.Webhooks)
-            {
                 CheckPermissions(webhookSubscription.TenantId, webhookDefinition);
-            }
         }
 
         protected virtual void CheckPermissions(int? tenantId, string webhookName)
         {
             if (!_webhookDefinitionManager.IsAvailable(tenantId, webhookName))
-            {
-                throw new AbpAuthorizationException($"Tenant \"{tenantId}\" must have necessary feature(s) to use webhook \"{webhookName}\"");
-            }
+                throw new AbpAuthorizationException(
+                    $"Tenant \"{tenantId}\" must have necessary feature(s) to use webhook \"{webhookName}\"");
         }
 
         #endregion

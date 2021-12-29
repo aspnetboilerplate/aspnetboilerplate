@@ -10,75 +10,62 @@ using Microsoft.Extensions.Options;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Serialization;
 
-namespace Abp.Json
+namespace Abp.Json;
+
+public class AbpMvcContractResolver : DefaultContractResolver
 {
-    public class AbpMvcContractResolver : DefaultContractResolver
+    private readonly IIocResolver _iocResolver;
+
+    private bool? _useMvcDateTimeFormat { get; set; }
+
+    private string _datetimeFormat { get; set; } = null;
+
+    protected readonly object SyncObj = new();
+
+    public AbpMvcContractResolver(IIocResolver iocResolver)
     {
-        private readonly IIocResolver _iocResolver;
+        _iocResolver = iocResolver;
+    }
 
-        private bool? _useMvcDateTimeFormat { get; set; }
+    protected override JsonProperty CreateProperty(MemberInfo member, MemberSerialization memberSerialization)
+    {
+        JsonProperty property = base.CreateProperty(member, memberSerialization);
 
-        private string _datetimeFormat { get; set; } = null;
+        ModifyProperty(member, property);
 
-        protected readonly object SyncObj = new object();
+        return property;
+    }
 
-        public AbpMvcContractResolver(IIocResolver iocResolver)
-        {
-            _iocResolver = iocResolver;
-        }
+    protected virtual void ModifyProperty(MemberInfo member, JsonProperty property)
+    {
+        if (property.PropertyType != typeof(DateTime) && property.PropertyType != typeof(DateTime?)) return;
 
-        protected override JsonProperty CreateProperty(MemberInfo member, MemberSerialization memberSerialization)
-        {
-            JsonProperty property = base.CreateProperty(member, memberSerialization);
+        if (ReflectionHelper
+                .GetSingleAttributeOfMemberOrDeclaringTypeOrDefault<DisableDateTimeNormalizationAttribute>(member) !=
+            null) return;
 
-            ModifyProperty(member, property);
+        var converter = new AbpDateTimeConverter();
 
-            return property;
-        }
-
-        protected virtual void ModifyProperty(MemberInfo member, JsonProperty property)
-        {
-            if (property.PropertyType != typeof(DateTime) && property.PropertyType != typeof(DateTime?))
+        if (!_useMvcDateTimeFormat.HasValue)
+            lock (SyncObj)
             {
-                return;
-            }
-
-            if (ReflectionHelper.GetSingleAttributeOfMemberOrDeclaringTypeOrDefault<DisableDateTimeNormalizationAttribute>(member) != null)
-            {
-                return;
-            }
-
-            var converter = new AbpDateTimeConverter();
-
-            if (!_useMvcDateTimeFormat.HasValue)
-            {
-                lock (SyncObj)
-                {
-                    if (!_useMvcDateTimeFormat.HasValue)
+                if (!_useMvcDateTimeFormat.HasValue)
+                    using (var configuration = _iocResolver.ResolveAsDisposable<IAbpAspNetCoreConfiguration>())
                     {
-                        using (var configuration = _iocResolver.ResolveAsDisposable<IAbpAspNetCoreConfiguration>())
-                        {
-                            _useMvcDateTimeFormat = configuration.Object.UseMvcDateTimeFormatForAppServices;
+                        _useMvcDateTimeFormat = configuration.Object.UseMvcDateTimeFormatForAppServices;
 
-                            if (_useMvcDateTimeFormat.Value)
+                        if (_useMvcDateTimeFormat.Value)
+                            using (var mvcJsonOptions =
+                                   _iocResolver.ResolveAsDisposable<IOptions<MvcNewtonsoftJsonOptions>>())
                             {
-                                using (var mvcJsonOptions = _iocResolver.ResolveAsDisposable<IOptions<MvcNewtonsoftJsonOptions>>())
-                                {
-                                    _datetimeFormat = mvcJsonOptions.Object.Value.SerializerSettings.DateFormatString;
-                                }
+                                _datetimeFormat = mvcJsonOptions.Object.Value.SerializerSettings.DateFormatString;
                             }
-                        }
                     }
-                }
-            }
-            
-            // apply DateTimeFormat only if not empty
-            if (!_datetimeFormat.IsNullOrWhiteSpace())
-            {
-                converter.DateTimeFormat = _datetimeFormat;
             }
 
-            property.Converter = converter;
-        }
+        // apply DateTimeFormat only if not empty
+        if (!_datetimeFormat.IsNullOrWhiteSpace()) converter.DateTimeFormat = _datetimeFormat;
+
+        property.Converter = converter;
     }
 }

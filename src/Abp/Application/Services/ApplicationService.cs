@@ -17,7 +17,7 @@ namespace Abp.Application.Services
         /// Gets current session information.
         /// </summary>
         public IAbpSession AbpSession { get; set; }
-        
+
         /// <summary>
         /// Reference to the permission manager.
         /// </summary>

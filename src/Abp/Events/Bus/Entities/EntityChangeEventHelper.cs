@@ -26,10 +26,7 @@ namespace Abp.Events.Bus.Entities
         {
             TriggerEventsInternal(changeReport);
 
-            if (changeReport.IsEmpty() || _unitOfWorkManager.Current == null)
-            {
-                return;
-            }
+            if (changeReport.IsEmpty() || _unitOfWorkManager.Current == null) return;
 
             _unitOfWorkManager.Current.SaveChanges();
         }
@@ -38,10 +35,7 @@ namespace Abp.Events.Bus.Entities
         {
             TriggerEventsInternal(changeReport);
 
-            if (changeReport.IsEmpty() || _unitOfWorkManager.Current == null)
-            {
-                return Task.FromResult(0);
-            }
+            if (changeReport.IsEmpty() || _unitOfWorkManager.Current == null) return Task.FromResult(0);
 
             return _unitOfWorkManager.Current.SaveChangesAsync();
         }
@@ -85,7 +79,6 @@ namespace Abp.Events.Bus.Entities
         protected virtual void TriggerEntityChangeEvents(List<EntityChangeEntry> changedEntities)
         {
             foreach (var changedEntity in changedEntities)
-            {
                 switch (changedEntity.ChangeType)
                 {
                     case EntityChangeType.Created:
@@ -103,18 +96,16 @@ namespace Abp.Events.Bus.Entities
                     default:
                         throw new AbpException("Unknown EntityChangeType: " + changedEntity.ChangeType);
                 }
-            }
         }
 
         protected virtual void TriggerDomainEvents(List<DomainEventEntry> domainEvents)
         {
             foreach (var domainEvent in domainEvents)
-            {
                 EventBus.Trigger(domainEvent.EventData.GetType(), domainEvent.SourceEntity, domainEvent.EventData);
-            }
         }
 
-        protected virtual void TriggerEventWithEntity(Type genericEventType, object entity, bool triggerInCurrentUnitOfWork)
+        protected virtual void TriggerEventWithEntity(Type genericEventType, object entity,
+            bool triggerInCurrentUnitOfWork)
         {
             var entityType = entity.GetType();
             var eventType = genericEventType.MakeGenericType(entityType);
@@ -127,7 +118,8 @@ namespace Abp.Events.Bus.Entities
                 return;
             }
 
-            _unitOfWorkManager.Current.Completed += (sender, args) => EventBus.Trigger(eventType, (IEventData)Activator.CreateInstance(eventType, new[] { entity }));
+            _unitOfWorkManager.Current.Completed += (sender, args) =>
+                EventBus.Trigger(eventType, (IEventData)Activator.CreateInstance(eventType, new[] { entity }));
         }
     }
 }

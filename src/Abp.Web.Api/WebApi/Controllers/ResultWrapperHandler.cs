@@ -28,7 +28,8 @@ namespace Abp.WebApi.Controllers
             _abpWebCommonModuleConfiguration = abpWebCommonModuleConfiguration;
         }
 
-        protected override async Task<HttpResponseMessage> SendAsync(HttpRequestMessage request, CancellationToken cancellationToken)
+        protected override async Task<HttpResponseMessage> SendAsync(HttpRequestMessage request,
+            CancellationToken cancellationToken)
         {
             var result = await base.SendAsync(request, cancellationToken);
             WrapResultIfNeeded(request, result);
@@ -37,13 +38,9 @@ namespace Abp.WebApi.Controllers
 
         protected virtual void WrapResultIfNeeded(HttpRequestMessage request, HttpResponseMessage response)
         {
-            if (!response.IsSuccessStatusCode)
-            {
-                return;
-            }
+            if (!response.IsSuccessStatusCode) return;
 
             if (_configuration.SetNoCacheForAllResponses)
-            {
                 //Based on http://stackoverflow.com/questions/49547/making-sure-a-web-page-is-not-cached-across-all-browsers
                 response.Headers.CacheControl = new CacheControlHeaderValue
                 {
@@ -52,17 +49,14 @@ namespace Abp.WebApi.Controllers
                     MaxAge = TimeSpan.Zero,
                     MustRevalidate = true
                 };
-            }
-            
+
             var absolutePath = request.RequestUri.AbsolutePath;
 
-            if (_abpWebCommonModuleConfiguration.WrapResultFilters.HasFilterForWrapOnSuccess(absolutePath, out var wrapOnSuccess))
+            if (_abpWebCommonModuleConfiguration.WrapResultFilters.HasFilterForWrapOnSuccess(absolutePath,
+                    out var wrapOnSuccess))
             {
-                if (!wrapOnSuccess)
-                {
-                    return;
-                }
-                
+                if (!wrapOnSuccess) return;
+
                 Wrap(response);
                 return;
             }
@@ -70,15 +64,9 @@ namespace Abp.WebApi.Controllers
             var wrapAttr = HttpActionDescriptorHelper.GetWrapResultAttributeOrNull(request.GetActionDescriptor())
                            ?? _configuration.DefaultWrapResultAttribute;
 
-            if (!wrapAttr.WrapOnSuccess)
-            {
-                return;
-            }
+            if (!wrapAttr.WrapOnSuccess) return;
 
-            if (IsIgnoredUrl(request.RequestUri))
-            {
-                return;
-            }
+            if (IsIgnoredUrl(request.RequestUri)) return;
 
             Wrap(response);
         }
@@ -96,10 +84,7 @@ namespace Abp.WebApi.Controllers
                 return;
             }
 
-            if (resultObject is AjaxResponseBase)
-            {
-                return;
-            }
+            if (resultObject is AjaxResponseBase) return;
 
             response.Content = new ObjectContent<AjaxResponse>(
                 new AjaxResponse(resultObject),
@@ -109,10 +94,7 @@ namespace Abp.WebApi.Controllers
 
         private bool IsIgnoredUrl(Uri uri)
         {
-            if (uri == null || uri.AbsolutePath.IsNullOrEmpty())
-            {
-                return false;
-            }
+            if (uri == null || uri.AbsolutePath.IsNullOrEmpty()) return false;
 
             return _configuration.ResultWrappingIgnoreUrls.Any(url => uri.AbsolutePath.StartsWith(url));
         }

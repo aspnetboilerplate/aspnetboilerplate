@@ -46,8 +46,7 @@ namespace Abp.Tests.Json
 
         public class MyClass2
         {
-            [DisableDateTimeNormalization]
-            public DateTime Date { get; set; }
+            [DisableDateTimeNormalization] public DateTime Date { get; set; }
         }
     }
 }

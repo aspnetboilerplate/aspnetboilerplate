@@ -13,6 +13,7 @@ namespace Abp.Web.Http
         /// <param name="localHostName"></param>
         /// <param name="localPort"></param>
         /// <returns></returns>
-        string LocalPathAndQuery([NotNull] string url, [CanBeNull] string localHostName = null, [CanBeNull] int? localPort = null);
+        string LocalPathAndQuery([NotNull] string url, [CanBeNull] string localHostName = null,
+            [CanBeNull] int? localPort = null);
     }
 }

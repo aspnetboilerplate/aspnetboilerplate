@@ -12,17 +12,11 @@ namespace Abp.Threading
 
         public void Run(Action action)
         {
-            if (_runBefore)
-            {
-                return;
-            }
+            if (_runBefore) return;
 
             lock (this)
             {
-                if (_runBefore)
-                {
-                    return;
-                }
+                if (_runBefore) return;
 
                 action();
 

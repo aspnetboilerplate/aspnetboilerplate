@@ -11,7 +11,8 @@ namespace Abp.Tests.Runtime.Security
         [InlineData(null)]
         [InlineData("")]
         [InlineData("A")]
-        [InlineData("This is a bit long text to test SimpleStringCipher: Istanbul, historically also known as Constantinople and Byzantium, is the most populous city in Turkey and the country's economic, cultural, and historic center.")]
+        [InlineData(
+            "This is a bit long text to test SimpleStringCipher: Istanbul, historically also known as Constantinople and Byzantium, is the most populous city in Turkey and the country's economic, cultural, and historic center.")]
         public void Should_Decrypt_Encrypted_Text(string plainText)
         {
             var encryptedText = SimpleStringCipher.Instance.Encrypt(plainText);

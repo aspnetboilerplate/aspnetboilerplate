@@ -2,13 +2,12 @@
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.EntityFrameworkCore.Storage;
 
-namespace Abp.EntityFrameworkCore
+namespace Abp.EntityFrameworkCore;
+
+public static class DatabaseFacadeExtensions
 {
-    public static class DatabaseFacadeExtensions
+    public static bool IsRelational(this DatabaseFacade database)
     {
-        public static bool IsRelational(this DatabaseFacade database)
-        {
-            return database.GetInfrastructure().GetService<IRelationalConnection>() != null;
-        }
+        return database.GetInfrastructure().GetService<IRelationalConnection>() != null;
     }
 }

@@ -41,14 +41,18 @@ namespace Abp.TestBase.SampleApplication.Tests.Features
         public virtual void Should_Get_Feature_Values()
         {
             var featureValueStore = Substitute.For<IFeatureValueStore>();
-            featureValueStore.GetValueOrNullAsync(1, _featureManager.Get(SampleFeatureProvider.Names.Contacts)).Returns(Task.FromResult("true"));
-            featureValueStore.GetValueOrNullAsync(1, _featureManager.Get(SampleFeatureProvider.Names.MaxContactCount)).Returns(Task.FromResult("20"));
-            featureValueStore.GetValueOrNull(1, _featureManager.Get(SampleFeatureProvider.Names.Contacts)).Returns("true");
-            featureValueStore.GetValueOrNull(1, _featureManager.Get(SampleFeatureProvider.Names.MaxContactCount)).Returns("20");
+            featureValueStore.GetValueOrNullAsync(1, _featureManager.Get(SampleFeatureProvider.Names.Contacts))
+                .Returns(Task.FromResult("true"));
+            featureValueStore.GetValueOrNullAsync(1, _featureManager.Get(SampleFeatureProvider.Names.MaxContactCount))
+                .Returns(Task.FromResult("20"));
+            featureValueStore.GetValueOrNull(1, _featureManager.Get(SampleFeatureProvider.Names.Contacts))
+                .Returns("true");
+            featureValueStore.GetValueOrNull(1, _featureManager.Get(SampleFeatureProvider.Names.MaxContactCount))
+                .Returns("20");
 
             LocalIocManager.IocContainer.Register(
                 Component.For<IFeatureValueStore>().Instance(featureValueStore).LifestyleSingleton()
-                );
+            );
 
             var featureChecker = Resolve<IFeatureChecker>();
             featureChecker.GetValue(SampleFeatureProvider.Names.Contacts).To<bool>().ShouldBeTrue();
@@ -60,12 +64,14 @@ namespace Abp.TestBase.SampleApplication.Tests.Features
         public void Should_Call_Method_With_Feature_If_Enabled()
         {
             var featureValueStore = Substitute.For<IFeatureValueStore>();
-            featureValueStore.GetValueOrNullAsync(1, _featureManager.Get(SampleFeatureProvider.Names.Contacts)).Returns(Task.FromResult("true"));
-            featureValueStore.GetValueOrNull(1, _featureManager.Get(SampleFeatureProvider.Names.Contacts)).Returns("true");
+            featureValueStore.GetValueOrNullAsync(1, _featureManager.Get(SampleFeatureProvider.Names.Contacts))
+                .Returns(Task.FromResult("true"));
+            featureValueStore.GetValueOrNull(1, _featureManager.Get(SampleFeatureProvider.Names.Contacts))
+                .Returns("true");
 
             LocalIocManager.IocContainer.Register(
                 Component.For<IFeatureValueStore>().Instance(featureValueStore).LifestyleSingleton()
-                );
+            );
 
             var contactListAppService = Resolve<IContactListAppService>();
             contactListAppService.Test(); //Should not throw exception
@@ -75,12 +81,14 @@ namespace Abp.TestBase.SampleApplication.Tests.Features
         public void Should_Not_Call_Method_With_Feature_If_Not_Enabled()
         {
             var featureValueStore = Substitute.For<IFeatureValueStore>();
-            featureValueStore.GetValueOrNullAsync(1, _featureManager.Get(SampleFeatureProvider.Names.Contacts)).Returns(Task.FromResult("false"));
-            featureValueStore.GetValueOrNullAsync(1, _featureManager.Get(SampleFeatureProvider.Names.MaxContactCount)).Returns(Task.FromResult("20"));
+            featureValueStore.GetValueOrNullAsync(1, _featureManager.Get(SampleFeatureProvider.Names.Contacts))
+                .Returns(Task.FromResult("false"));
+            featureValueStore.GetValueOrNullAsync(1, _featureManager.Get(SampleFeatureProvider.Names.MaxContactCount))
+                .Returns(Task.FromResult("20"));
 
             LocalIocManager.IocContainer.Register(
                 Component.For<IFeatureValueStore>().Instance(featureValueStore).LifestyleSingleton()
-                );
+            );
 
             var contactListAppService = Resolve<IContactListAppService>();
             Assert.Throws<AbpAuthorizationException>(() => contactListAppService.Test());
@@ -93,7 +101,8 @@ namespace Abp.TestBase.SampleApplication.Tests.Features
             CultureInfo.CurrentUICulture = new CultureInfo("en");
 
             var featureValueStore = Substitute.For<IFeatureValueStore>();
-            featureValueStore.GetValueOrNullAsync(1, _featureManager.Get(SampleFeatureProvider.Names.Contacts)).Returns(Task.FromResult("false"));
+            featureValueStore.GetValueOrNullAsync(1, _featureManager.Get(SampleFeatureProvider.Names.Contacts))
+                .Returns(Task.FromResult("false"));
 
             var contactListAppService = Resolve<IContactListAppService>();
             var ex = Assert.Throws<AbpAuthorizationException>(() => contactListAppService.Test());
@@ -112,7 +121,8 @@ namespace Abp.TestBase.SampleApplication.Tests.Features
         [Fact]
         public void Should_Remove_Child_Feature()
         {
-            Should.Throw<AbpException>(() => {
+            Should.Throw<AbpException>(() =>
+            {
                 var childFeature = _featureManager.Get(SampleFeatureProvider.Names.ChildFeatureToDelete);
             });
         }

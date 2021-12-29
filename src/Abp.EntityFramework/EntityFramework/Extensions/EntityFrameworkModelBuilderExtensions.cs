@@ -8,34 +8,37 @@ namespace Abp.EntityFramework.Extensions
     //TODO: Check https://github.com/mj1856/EntityFramework.IndexingExtensions for example
     public static class EntityFrameworkModelBuilderExtensions
     {
-        public static PrimitivePropertyConfiguration CreateIndex(this PrimitivePropertyConfiguration propertyConfiguration)
+        public static PrimitivePropertyConfiguration CreateIndex(
+            this PrimitivePropertyConfiguration propertyConfiguration)
         {
             return propertyConfiguration.HasColumnAnnotation(
                 IndexAnnotation.AnnotationName,
                 new IndexAnnotation(
                     new IndexAttribute()
-                    )
-                );
+                )
+            );
         }
 
-        public static PrimitivePropertyConfiguration CreateIndex(this PrimitivePropertyConfiguration propertyConfiguration, string name)
+        public static PrimitivePropertyConfiguration CreateIndex(
+            this PrimitivePropertyConfiguration propertyConfiguration, string name)
         {
             return propertyConfiguration.HasColumnAnnotation(
                 IndexAnnotation.AnnotationName,
                 new IndexAnnotation(
                     new IndexAttribute(name)
-                    )
-                );
+                )
+            );
         }
 
-        public static PrimitivePropertyConfiguration CreateIndex(this PrimitivePropertyConfiguration propertyConfiguration, string name, int order)
+        public static PrimitivePropertyConfiguration CreateIndex(
+            this PrimitivePropertyConfiguration propertyConfiguration, string name, int order)
         {
             return propertyConfiguration.HasColumnAnnotation(
                 IndexAnnotation.AnnotationName,
                 new IndexAnnotation(
                     new IndexAttribute(name, order)
-                    )
-                );
+                )
+            );
         }
     }
 }

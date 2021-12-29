@@ -25,10 +25,7 @@ namespace Abp.Modules
         public TModule GetModule<TModule>() where TModule : AbpModule
         {
             var module = this.FirstOrDefault(m => m.Type == typeof(TModule));
-            if (module == null)
-            {
-                throw new AbpException("Can not find module for " + typeof(TModule).FullName);
-            }
+            if (module == null) throw new AbpException("Can not find module for " + typeof(TModule).FullName);
 
             return (TModule)module.Instance;
         }
@@ -50,10 +47,8 @@ namespace Abp.Modules
         {
             var kernelModuleIndex = modules.FindIndex(m => m.Type == typeof(AbpKernelModule));
             if (kernelModuleIndex <= 0)
-            {
                 //It's already the first!
                 return;
-            }
 
             var kernelModule = modules[kernelModuleIndex];
             modules.RemoveAt(kernelModuleIndex);
@@ -64,10 +59,8 @@ namespace Abp.Modules
         {
             var startupModuleIndex = modules.FindIndex(m => m.Type == startupModuleType);
             if (startupModuleIndex >= modules.Count - 1)
-            {
                 //It's already the last!
                 return;
-            }
 
             var startupModule = modules[startupModuleIndex];
             modules.RemoveAt(startupModuleIndex);

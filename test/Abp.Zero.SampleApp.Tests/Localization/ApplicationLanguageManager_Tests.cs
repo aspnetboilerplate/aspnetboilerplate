@@ -75,6 +75,7 @@ namespace Abp.Zero.SampleApp.Tests.Localization
             languages.Count.ShouldBe(2);
             languages.FirstOrDefault(l => l.Name == "tr").ShouldBeNull();
         }
+
         [Fact]
         public async Task Should_Get_Host_Active_Languages()
         {

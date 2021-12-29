@@ -89,20 +89,14 @@ namespace Abp.BackgroundJobs
 
         public Task UpdateAsync(BackgroundJobInfo jobInfo)
         {
-            if (jobInfo.IsAbandoned)
-            {
-                return DeleteAsync(jobInfo);
-            }
+            if (jobInfo.IsAbandoned) return DeleteAsync(jobInfo);
 
             return Task.FromResult(0);
         }
 
         public void Update(BackgroundJobInfo jobInfo)
         {
-            if (jobInfo.IsAbandoned)
-            {
-                Delete(jobInfo);
-            }
+            if (jobInfo.IsAbandoned) Delete(jobInfo);
         }
     }
 }

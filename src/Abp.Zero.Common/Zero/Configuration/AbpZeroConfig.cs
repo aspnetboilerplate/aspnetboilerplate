@@ -2,28 +2,16 @@
 {
     internal class AbpZeroConfig : IAbpZeroConfig
     {
-        public IRoleManagementConfig RoleManagement
-        {
-            get { return _roleManagementConfig; }
-        }
+        public IRoleManagementConfig RoleManagement => _roleManagementConfig;
         private readonly IRoleManagementConfig _roleManagementConfig;
 
-        public IUserManagementConfig UserManagement
-        {
-            get { return _userManagementConfig; }
-        }
+        public IUserManagementConfig UserManagement => _userManagementConfig;
         private readonly IUserManagementConfig _userManagementConfig;
 
-        public ILanguageManagementConfig LanguageManagement
-        {
-            get { return _languageManagement; }
-        }
+        public ILanguageManagementConfig LanguageManagement => _languageManagement;
         private readonly ILanguageManagementConfig _languageManagement;
 
-        public IAbpZeroEntityTypes EntityTypes
-        {
-            get { return _entityTypes; }
-        }
+        public IAbpZeroEntityTypes EntityTypes => _entityTypes;
         private readonly IAbpZeroEntityTypes _entityTypes;
 
 

@@ -13,15 +13,9 @@ namespace Abp.Localization
     /// </summary>
     public class MultiTenantLocalizationDictionaryProvider : ILocalizationDictionaryProvider
     {
-        public ILocalizationDictionary DefaultDictionary
-        {
-            get { return GetDefaultDictionary(); }
-        }
+        public ILocalizationDictionary DefaultDictionary => GetDefaultDictionary();
 
-        public IDictionary<string, ILocalizationDictionary> Dictionaries
-        {
-            get { return GetDictionaries(); }
-        }
+        public IDictionary<string, ILocalizationDictionary> Dictionaries => GetDictionaries();
 
         private readonly ConcurrentDictionary<string, ILocalizationDictionary> _dictionaries;
 
@@ -35,7 +29,8 @@ namespace Abp.Localization
         /// <summary>
         /// Initializes a new instance of the <see cref="MultiTenantLocalizationDictionaryProvider"/> class.
         /// </summary>
-        public MultiTenantLocalizationDictionaryProvider(ILocalizationDictionaryProvider internalProvider, IIocManager iocManager)
+        public MultiTenantLocalizationDictionaryProvider(ILocalizationDictionaryProvider internalProvider,
+            IIocManager iocManager)
         {
             _internalProvider = internalProvider;
             _iocManager = iocManager;
@@ -54,9 +49,7 @@ namespace Abp.Localization
             var languages = _languageManager.GetActiveLanguages();
 
             foreach (var language in languages)
-            {
                 _dictionaries.GetOrAdd(language.Name, s => CreateLocalizationDictionary(language));
-            }
 
             return _dictionaries;
         }
@@ -64,16 +57,10 @@ namespace Abp.Localization
         protected virtual ILocalizationDictionary GetDefaultDictionary()
         {
             var languages = _languageManager.GetLanguages();
-            if (!languages.Any())
-            {
-                throw new AbpException("No language defined!");
-            }
+            if (!languages.Any()) throw new AbpException("No language defined!");
 
             var defaultLanguage = languages.FirstOrDefault(l => l.IsDefault);
-            if (defaultLanguage == null)
-            {
-                throw new AbpException("Default language is not defined!");
-            }
+            if (defaultLanguage == null) throw new AbpException("Default language is not defined!");
 
             return _dictionaries.GetOrAdd(defaultLanguage.Name, s => CreateLocalizationDictionary(defaultLanguage));
         }
@@ -84,7 +71,7 @@ namespace Abp.Localization
                 _internalProvider.Dictionaries.GetOrDefault(language.Name) ??
                 new EmptyDictionary(CultureInfo.GetCultureInfo(language.Name));
 
-            var dictionary =  _iocManager.Resolve<IMultiTenantLocalizationDictionary>(new
+            var dictionary = _iocManager.Resolve<IMultiTenantLocalizationDictionary>(new
             {
                 sourceName = _sourceName,
                 internalDictionary = internalDictionary
@@ -106,9 +93,7 @@ namespace Abp.Localization
             //Override
             var localizedStrings = dictionary.GetAllStrings();
             foreach (var localizedString in localizedStrings)
-            {
                 existingDictionary[localizedString.Name] = localizedString.Value;
-            }
         }
     }
 }

@@ -25,15 +25,9 @@ namespace Abp.Collections.Extensions
         /// <returns>Returns True if added, returns False if not.</returns>
         public static bool AddIfNotContains<T>(this ICollection<T> source, T item)
         {
-            if (source == null)
-            {
-                throw new ArgumentNullException("source");
-            }
+            if (source == null) throw new ArgumentNullException("source");
 
-            if (source.Contains(item))
-            {
-                return false;
-            }
+            if (source.Contains(item)) return false;
 
             source.Add(item);
             return true;

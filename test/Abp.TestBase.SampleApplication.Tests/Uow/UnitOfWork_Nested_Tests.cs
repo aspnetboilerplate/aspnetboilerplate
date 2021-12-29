@@ -32,7 +32,8 @@ namespace Abp.TestBase.SampleApplication.Tests.Uow
                     using (var nestedUow = _unitOfWorkManager.Begin(TransactionScopeOption.RequiresNew))
                     {
                         AbpSession.TenantId.ShouldBe(null);
-                        _unitOfWorkManager.Current.GetTenantId().ShouldBe(1); //Because nested transaction copies outer uow's filters.
+                        _unitOfWorkManager.Current.GetTenantId()
+                            .ShouldBe(1); //Because nested transaction copies outer uow's filters.
 
                         nestedUow.Complete();
                     }

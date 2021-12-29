@@ -13,7 +13,8 @@ namespace Abp.Localization
         /// </summary>
         public const string CacheName = "AbpZeroMultiTenantLocalizationDictionaryCache";
 
-        public static ITypedCache<string, Dictionary<string, string>> GetMultiTenantLocalizationDictionaryCache(this ICacheManager cacheManager)
+        public static ITypedCache<string, Dictionary<string, string>> GetMultiTenantLocalizationDictionaryCache(
+            this ICacheManager cacheManager)
         {
             return cacheManager.GetCache(CacheName).AsTyped<string, Dictionary<string, string>>();
         }

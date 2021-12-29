@@ -21,7 +21,7 @@ namespace Abp.Zero.EntityFramework
                     Component.For<IConnectionStringResolver, IDbPerTenantConnectionStringResolver>()
                         .ImplementedBy<DbPerTenantConnectionStringResolver>()
                         .LifestyleTransient()
-                    );
+                );
             });
         }
 

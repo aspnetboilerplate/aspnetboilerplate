@@ -16,14 +16,12 @@ namespace Abp.WebApi.Controllers.Dynamic.Binders
         {
             var value = bindingContext.ValueProvider.GetValue(bindingContext.ModelName);
             var date = value?.ConvertTo(typeof(DateTime?), CultureInfo.CurrentCulture) as DateTime?;
-            if (date == null)
-            {
-                return true;
-            }
+            if (date == null) return true;
 
             if (bindingContext.ModelMetadata.ContainerType != null)
             {
-                if (bindingContext.ModelMetadata.ContainerType.IsDefined(typeof(DisableDateTimeNormalizationAttribute), true))
+                if (bindingContext.ModelMetadata.ContainerType.IsDefined(typeof(DisableDateTimeNormalizationAttribute),
+                        true))
                 {
                     bindingContext.Model = date.Value;
                     return true;
@@ -44,7 +42,8 @@ namespace Abp.WebApi.Controllers.Dynamic.Binders
                 return true;
             }
 
-            var parameter = actionContext.ActionDescriptor.GetParameters().FirstOrDefault(p => p.ParameterName == bindingContext.ModelName);
+            var parameter = actionContext.ActionDescriptor.GetParameters()
+                .FirstOrDefault(p => p.ParameterName == bindingContext.ModelName);
             if (parameter != null && parameter.GetCustomAttributes<DisableDateTimeNormalizationAttribute>().Count > 0)
             {
                 bindingContext.Model = date.Value;

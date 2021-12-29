@@ -53,19 +53,19 @@ namespace Abp.Tests.ObjectComparators
         public void Can_Comparator_Tests()
         {
             foreach (var compareType in Enum.GetNames(typeof(TEnumCompareTypes)))
-            {
                 ObjectComparatorManager.CanCompare<TObjectType>(compareType).ShouldBeTrue();
-            }
 
             ObjectComparatorManager.CanCompare<TObjectType>("test").ShouldBeFalse();
         }
 
-        public virtual void Should_Compare(TObjectType baseObject, TObjectType compareObject, string compareType, bool result)
+        public virtual void Should_Compare(TObjectType baseObject, TObjectType compareObject, string compareType,
+            bool result)
         {
             ObjectComparatorManager.Compare<TObjectType>(baseObject, compareObject, compareType).ShouldBe(result);
         }
 
-        public virtual void Should_Compare_With_ObjectComparatorCondition(TObjectType baseObject, TObjectType compareObject, string compareType, bool result)
+        public virtual void Should_Compare_With_ObjectComparatorCondition(TObjectType baseObject,
+            TObjectType compareObject, string compareType, bool result)
         {
             var condition = new ObjectComparatorCondition<TObjectType>();
             condition.SetValue(compareObject);
@@ -75,4 +75,3 @@ namespace Abp.Tests.ObjectComparators
         }
     }
 }
-

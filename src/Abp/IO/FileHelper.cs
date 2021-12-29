@@ -13,10 +13,7 @@ namespace Abp.IO
         /// <param name="filePath">Path of the file</param>
         public static void DeleteIfExists(string filePath)
         {
-            if (File.Exists(filePath))
-            {
-                File.Delete(filePath);
-            }
+            if (File.Exists(filePath)) File.Delete(filePath);
         }
     }
 }

@@ -69,7 +69,8 @@ namespace Abp.DynamicEntityProperties
             return new List<DynamicEntityPropertyValue>();
         }
 
-        public Task<List<DynamicEntityPropertyValue>> GetValuesAsync(string entityFullName, string entityId, int dynamicPropertyId)
+        public Task<List<DynamicEntityPropertyValue>> GetValuesAsync(string entityFullName, string entityId,
+            int dynamicPropertyId)
         {
             return Task.FromResult(new List<DynamicEntityPropertyValue>());
         }

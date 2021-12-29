@@ -1,17 +1,15 @@
 ﻿using Abp.MultiTenancy;
 
-namespace Abp.ZeroCore.SampleApp.Core
+namespace Abp.ZeroCore.SampleApp.Core;
+
+public class Tenant : AbpTenant<User>
 {
-    public class Tenant : AbpTenant<User>
+    protected Tenant()
     {
-        protected Tenant()
-        {
+    }
 
-        }
-
-        public Tenant(string tenancyName, string name)
-            : base(tenancyName, name)
-        {
-        }
+    public Tenant(string tenancyName, string name)
+        : base(tenancyName, name)
+    {
     }
 }

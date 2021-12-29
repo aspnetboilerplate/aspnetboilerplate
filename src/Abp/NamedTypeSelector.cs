@@ -11,7 +11,7 @@ namespace Abp
         /// Name of the selector.
         /// </summary>
         public string Name { get; set; }
-        
+
         /// <summary>
         /// Predicate.
         /// </summary>

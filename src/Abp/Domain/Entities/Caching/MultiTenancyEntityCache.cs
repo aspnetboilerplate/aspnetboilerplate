@@ -53,10 +53,7 @@ namespace Abp.Domain.Entities.Caching
 
         protected virtual int? GetCurrentTenantId()
         {
-            if (_unitOfWorkManager.Current != null)
-            {
-                return _unitOfWorkManager.Current.GetTenantId();
-            }
+            if (_unitOfWorkManager.Current != null) return _unitOfWorkManager.Current.GetTenantId();
 
             return AbpSession.TenantId;
         }

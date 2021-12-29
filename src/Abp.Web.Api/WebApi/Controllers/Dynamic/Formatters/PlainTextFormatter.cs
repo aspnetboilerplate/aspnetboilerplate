@@ -32,7 +32,8 @@ namespace Abp.WebApi.Controllers.Dynamic.Formatters
             return type == typeof(string);
         }
 
-        public override Task<object> ReadFromStreamAsync(Type type, Stream stream, HttpContent content, IFormatterLogger formatterLogger)
+        public override Task<object> ReadFromStreamAsync(Type type, Stream stream, HttpContent content,
+            IFormatterLogger formatterLogger)
         {
             string value;
             using (var reader = new StreamReader(stream))
@@ -45,7 +46,8 @@ namespace Abp.WebApi.Controllers.Dynamic.Formatters
             return tcs.Task;
         }
 
-        public override Task WriteToStreamAsync(Type type, object value, Stream stream, HttpContent content, TransportContext transportContext)
+        public override Task WriteToStreamAsync(Type type, object value, Stream stream, HttpContent content,
+            TransportContext transportContext)
         {
             using (var writer = new StreamWriter(stream))
             {

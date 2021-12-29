@@ -23,7 +23,8 @@ namespace Abp.WebApi.Controllers.Dynamic.Scripting.Angular
             script.AppendLine("    ");
             script.AppendLine("    var abpModule = angular.module('abp');");
             script.AppendLine("    ");
-            script.AppendLine("    abpModule.factory('abp.services." + _controllerInfo.ServiceName.Replace("/", ".") + "', [");
+            script.AppendLine("    abpModule.factory('abp.services." + _controllerInfo.ServiceName.Replace("/", ".") +
+                              "', [");
             script.AppendLine("        '$http', function ($http) {");
             script.AppendLine("            return new function () {");
 

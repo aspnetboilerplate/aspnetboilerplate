@@ -21,9 +21,7 @@ namespace Abp.Domain.Uow
             : this(filterToClone.FilterName, isEnabled ?? filterToClone.IsEnabled)
         {
             foreach (var filterParameter in filterToClone.FilterParameters)
-            {
                 FilterParameters[filterParameter.Key] = filterParameter.Value;
-            }
         }
     }
 }

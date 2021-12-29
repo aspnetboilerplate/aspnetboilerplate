@@ -65,15 +65,9 @@ namespace Abp.EntityHistory
         protected virtual bool? IsTypeOfAuditedEntity(Type entityType)
         {
             var entityTypeInfo = entityType.GetTypeInfo();
-            if (entityTypeInfo.IsDefined(typeof(DisableAuditingAttribute), true))
-            {
-                return false;
-            }
+            if (entityTypeInfo.IsDefined(typeof(DisableAuditingAttribute), true)) return false;
 
-            if (entityTypeInfo.IsDefined(typeof(AuditedAttribute), true))
-            {
-                return true;
-            }
+            if (entityTypeInfo.IsDefined(typeof(AuditedAttribute), true)) return true;
 
             return null;
         }
@@ -81,47 +75,30 @@ namespace Abp.EntityHistory
         protected virtual bool? IsTypeOfTrackedEntity(Type entityType)
         {
             if (EntityHistoryConfiguration.IgnoredTypes.Any(type => type.GetTypeInfo().IsAssignableFrom(entityType)))
-            {
                 return false;
-            }
 
-            if (EntityHistoryConfiguration.Selectors.Any(selector => selector.Predicate(entityType)))
-            {
-                return true;
-            }
+            if (EntityHistoryConfiguration.Selectors.Any(selector => selector.Predicate(entityType))) return true;
 
             return null;
         }
 
         protected virtual bool? IsAuditedPropertyInfo(Type entityType, PropertyInfo propertyInfo)
         {
-            if (propertyInfo.IsDefined(typeof(DisableAuditingAttribute), true))
-            {
-                return false;
-            }
+            if (propertyInfo.IsDefined(typeof(DisableAuditingAttribute), true)) return false;
 
-            if (propertyInfo.IsDefined(typeof(AuditedAttribute), true))
-            {
-                return true;
-            }
+            if (propertyInfo.IsDefined(typeof(AuditedAttribute), true)) return true;
 
             var isTrackedEntity = IsTypeOfTrackedEntity(entityType);
             var isAuditedEntity = IsTypeOfAuditedEntity(entityType);
 
             return (isTrackedEntity ?? false) || (isAuditedEntity ?? false);
         }
-        
+
         protected virtual bool? IsAuditedPropertyInfo(PropertyInfo propertyInfo)
         {
-            if (propertyInfo.IsDefined(typeof(DisableAuditingAttribute), true))
-            {
-                return false;
-            }
+            if (propertyInfo.IsDefined(typeof(DisableAuditingAttribute), true)) return false;
 
-            if (propertyInfo.IsDefined(typeof(AuditedAttribute), true))
-            {
-                return true;
-            }
+            if (propertyInfo.IsDefined(typeof(AuditedAttribute), true)) return true;
 
             return null;
         }

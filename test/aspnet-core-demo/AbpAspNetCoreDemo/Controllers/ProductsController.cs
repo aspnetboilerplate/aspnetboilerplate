@@ -3,17 +3,16 @@ using Abp.AspNetCore.OData.Controllers;
 using Abp.Dependency;
 using Abp.Domain.Repositories;
 
-namespace AbpAspNetCoreDemo.Controllers
+namespace AbpAspNetCoreDemo.Controllers;
+
+public class ProductsController : AbpODataEntityController<Product>, ITransientDependency
 {
-    public class ProductsController : AbpODataEntityController<Product>, ITransientDependency
+    public ProductsController(IRepository<Product> repository) : base(repository)
     {
-        public ProductsController(IRepository<Product> repository) : base(repository)
-        {
-            GetPermissionName = "GetProductPermission";
-            GetAllPermissionName = "GetAllProductsPermission";
-            CreatePermissionName = "CreateProductPermission";
-            UpdatePermissionName = "UpdateProductPermission";
-            DeletePermissionName = "DeleteProductPermission";
-        }
+        GetPermissionName = "GetProductPermission";
+        GetAllPermissionName = "GetAllProductsPermission";
+        CreatePermissionName = "CreateProductPermission";
+        UpdatePermissionName = "UpdateProductPermission";
+        DeletePermissionName = "DeleteProductPermission";
     }
 }

@@ -1,6 +1,5 @@
 ﻿using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
-
 using Abp.Domain.Entities;
 using Abp.Domain.Entities.Auditing;
 
@@ -18,9 +17,8 @@ namespace Abp.Dapper.Tests.Entities
             Name = name;
         }
 
-        [Required]
-        public string Name { get; set; }
-        
+        [Required] public string Name { get; set; }
+
         public Status Status { get; set; }
 
         public int? TenantId { get; set; }

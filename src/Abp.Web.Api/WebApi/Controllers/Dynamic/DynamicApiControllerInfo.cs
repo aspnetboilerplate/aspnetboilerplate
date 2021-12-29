@@ -60,10 +60,10 @@ namespace Abp.WebApi.Controllers.Dynamic
         /// <param name="isApiExplorerEnabled">Is API explorer enabled</param>
         /// <param name="isProxyScriptingEnabled">Is proxy scripting enabled</param>
         public DynamicApiControllerInfo(
-            string serviceName, 
-            Type serviceInterfaceType, 
-            Type apiControllerType, 
-            Type interceptorType, 
+            string serviceName,
+            Type serviceInterfaceType,
+            Type apiControllerType,
+            Type interceptorType,
             IFilter[] filters = null,
             bool? isApiExplorerEnabled = null,
             bool isProxyScriptingEnabled = true)

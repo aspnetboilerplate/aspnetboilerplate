@@ -10,7 +10,6 @@ namespace Abp.Web
         public static void AddToBuildManager(this PlugInSourceList plugInSourceList)
         {
             foreach (var plugInAssembly in plugInSourceList.GetAllAssemblies())
-            {
                 try
                 {
                     LogHelper.Logger.Debug($"Adding {plugInAssembly.FullName} to BuildManager");
@@ -20,7 +19,6 @@ namespace Abp.Web
                 {
                     LogHelper.Logger.Warn(ex.ToString(), ex);
                 }
-            }
         }
     }
 }

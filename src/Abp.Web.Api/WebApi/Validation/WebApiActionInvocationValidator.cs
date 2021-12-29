@@ -27,12 +27,8 @@ namespace Abp.WebApi.Validation
         protected override void SetDataAnnotationAttributeErrors()
         {
             foreach (var state in ActionContext.ModelState)
-            {
-                foreach (var error in state.Value.Errors)
-                {
-                    ValidationErrors.Add(new ValidationResult(error.ErrorMessage, new[] { state.Key }));
-                }
-            }
+            foreach (var error in state.Value.Errors)
+                ValidationErrors.Add(new ValidationResult(error.ErrorMessage, new[] { state.Key }));
         }
 
         protected override object GetParameterValue(string parameterName)

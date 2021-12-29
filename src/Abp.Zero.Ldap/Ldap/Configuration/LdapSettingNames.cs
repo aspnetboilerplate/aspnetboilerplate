@@ -14,22 +14,22 @@ namespace Abp.Zero.Ldap.Configuration
         /// Abp.Zero.Ldap.ContextType
         /// </summary>
         public const string ContextType = "Abp.Zero.Ldap.ContextType";
-        
+
         /// <summary>
         /// Abp.Zero.Ldap.Container
         /// </summary>
         public const string Container = "Abp.Zero.Ldap.Container";
-        
+
         /// <summary>
         /// Abp.Zero.Ldap.Domain
         /// </summary>
         public const string Domain = "Abp.Zero.Ldap.Domain";
-        
+
         /// <summary>
         /// Abp.Zero.Ldap.UserName
         /// </summary>
         public const string UserName = "Abp.Zero.Ldap.UserName";
-        
+
         /// <summary>
         /// Abp.Zero.Ldap.Password
         /// </summary>

@@ -50,7 +50,8 @@ namespace Abp.Events.Bus
         /// </summary>
         /// <typeparam name="TEventData">Event type</typeparam>
         /// <typeparam name="THandler">Type of the event handler</typeparam>
-        IDisposable Register<TEventData, THandler>() where TEventData : IEventData where THandler : IEventHandler, new();
+        IDisposable Register<TEventData, THandler>()
+            where TEventData : IEventData where THandler : IEventHandler, new();
 
         /// <summary>
         /// Registers to an event.
@@ -207,7 +208,6 @@ namespace Abp.Events.Bus
         /// <param name="eventData">Related data for the event</param>
         /// <returns>The task to handle async operation</returns>
         Task TriggerAsync(Type eventType, object eventSource, IEventData eventData);
-
 
         #endregion
     }

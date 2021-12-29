@@ -4,7 +4,8 @@ namespace Abp.Web.Mvc.Alerts
 {
     public class AlertList : List<AlertMessage>
     {
-        public void Add(AlertType type, string text, string title = null, bool dismissible = true, string displayType = null)
+        public void Add(AlertType type, string text, string title = null, bool dismissible = true,
+            string displayType = null)
         {
             Add(new AlertMessage(type, text, title, dismissible, displayType));
         }

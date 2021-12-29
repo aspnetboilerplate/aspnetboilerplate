@@ -15,15 +15,9 @@ namespace Abp.Dapper.Utils
         /// <returns></returns>
         public static bool IsInheritsOrImplements(this Type child, Type parent)
         {
-            if (child == parent)
-            {
-                return false;
-            }
+            if (child == parent) return false;
 
-            if (child.GetTypeInfo().IsSubclassOf(parent))
-            {
-                return true;
-            }
+            if (child.GetTypeInfo().IsSubclassOf(parent)) return true;
 
             Type[] parameters = parent.GetGenericArguments();
 
@@ -37,30 +31,22 @@ namespace Abp.Dapper.Utils
                 if (parent == cur ||
                     isParameterLessGeneric &&
                     cur.GetInterfaces().Select(GetFullTypeDefinition).Contains(GetFullTypeDefinition(parent)))
-                {
                     return true;
-                }
 
                 if (!isParameterLessGeneric)
                 {
                     if (GetFullTypeDefinition(parent) == cur && !cur.GetTypeInfo().IsInterface)
                     {
                         if (VerifyGenericArguments(GetFullTypeDefinition(parent), cur))
-                        {
                             if (VerifyGenericArguments(parent, child))
-                            {
                                 return true;
-                            }
-                        }
                     }
                     else
                     {
                         if (child.GetInterfaces()
                             .Where(i => GetFullTypeDefinition(parent) == GetFullTypeDefinition(i))
                             .Any(item => VerifyGenericArguments(parent, item)))
-                        {
                             return true;
-                        }
                     }
                 }
 
@@ -80,20 +66,12 @@ namespace Abp.Dapper.Utils
             Type[] childArguments = child.GetGenericArguments();
             Type[] parentArguments = parent.GetGenericArguments();
             if (childArguments.Length == parentArguments.Length)
-            {
                 for (var i = 0; i < childArguments.Length; i++)
-                {
                     if (childArguments[i].GetAssembly() != parentArguments[i].GetAssembly() ||
                         childArguments[i].Name != parentArguments[i].Name ||
                         childArguments[i].Namespace != parentArguments[i].Namespace)
-                    {
                         if (!childArguments[i].GetTypeInfo().IsSubclassOf(parentArguments[i]))
-                        {
                             return false;
-                        }
-                    }
-                }
-            }
 
             return true;
         }

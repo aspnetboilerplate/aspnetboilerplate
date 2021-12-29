@@ -14,7 +14,7 @@ namespace Abp.Zero.SampleApp.Tests.Roles
             //Create user and roles
             var user1 = CreateUser("User1");
             var role1 = CreateRole("Role1");
-            var role2= CreateRole("Role2");
+            var role2 = CreateRole("Role2");
 
             //Add role1, role2 to the user
             (await UserManager.AddToRoleAsync(user1.Id, role1.Name)).CheckErrors();
@@ -26,7 +26,8 @@ namespace Abp.Zero.SampleApp.Tests.Roles
             await UsingDbContext(
                 async context =>
                 {
-                    (await context.UserRoles.FirstOrDefaultAsync(ur => ur.UserId == user1.Id && ur.RoleId == role1.Id)).ShouldNotBe(null);
+                    (await context.UserRoles.FirstOrDefaultAsync(ur => ur.UserId == user1.Id && ur.RoleId == role1.Id))
+                        .ShouldNotBe(null);
                 });
 
             //Delete role1
@@ -37,7 +38,8 @@ namespace Abp.Zero.SampleApp.Tests.Roles
             await UsingDbContext(
                 async context =>
                 {
-                    (await context.UserRoles.FirstOrDefaultAsync(ur => ur.UserId == user1.Id && ur.RoleId == role1.Id)).ShouldBe(null);
+                    (await context.UserRoles.FirstOrDefaultAsync(ur => ur.UserId == user1.Id && ur.RoleId == role1.Id))
+                        .ShouldBe(null);
                 });
         }
     }

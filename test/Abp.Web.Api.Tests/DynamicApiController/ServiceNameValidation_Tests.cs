@@ -13,8 +13,12 @@ namespace Abp.Web.Api.Tests.DynamicApiController
             Assert.True(DynamicApiServiceNameHelper.IsValidServiceName("taskever/taskService"));
             Assert.True(DynamicApiServiceNameHelper.IsValidServiceName("taskever/tasks/taskService"));
             Assert.True(DynamicApiServiceNameHelper.IsValidServiceName("taskever/tasks/task_service"));
-            Assert.True(DynamicApiServiceNameHelper.IsValidServiceName("taskever/myNameSpace1/MyNameSpace2/mynamespace3/myserviceName"));
-            Assert.True(DynamicApiServiceNameHelper.IsValidServiceName("taskever/myName_Space1/MyName_Space2/mynamespace_3/myservice"));
+            Assert.True(
+                DynamicApiServiceNameHelper.IsValidServiceName(
+                    "taskever/myNameSpace1/MyNameSpace2/mynamespace3/myserviceName"));
+            Assert.True(
+                DynamicApiServiceNameHelper.IsValidServiceName(
+                    "taskever/myName_Space1/MyName_Space2/mynamespace_3/myservice"));
         }
 
         [Fact]
@@ -23,10 +27,14 @@ namespace Abp.Web.Api.Tests.DynamicApiController
             Assert.True(DynamicApiServiceNameHelper.IsValidServiceNameWithAction("taskever/task/create"));
             Assert.True(DynamicApiServiceNameHelper.IsValidServiceNameWithAction("taskever/tasks/task/update"));
             Assert.True(DynamicApiServiceNameHelper.IsValidServiceNameWithAction("taskever/taskService/delete"));
-            Assert.True(DynamicApiServiceNameHelper.IsValidServiceNameWithAction("taskever/tasks/taskService/getAllTasks"));
-            Assert.True(DynamicApiServiceNameHelper.IsValidServiceNameWithAction("taskever/tasks/task_service/deleteTask"));
-            Assert.True(DynamicApiServiceNameHelper.IsValidServiceNameWithAction("taskever/myNameSpace1/MyNameSpace2/mynamespace3/myserviceName/CreateNew"));
-            Assert.True(DynamicApiServiceNameHelper.IsValidServiceNameWithAction("taskever/myName_Space1/MyName_Space2/mynamespace_3/myservice/test_action_Name"));
+            Assert.True(
+                DynamicApiServiceNameHelper.IsValidServiceNameWithAction("taskever/tasks/taskService/getAllTasks"));
+            Assert.True(
+                DynamicApiServiceNameHelper.IsValidServiceNameWithAction("taskever/tasks/task_service/deleteTask"));
+            Assert.True(DynamicApiServiceNameHelper.IsValidServiceNameWithAction(
+                "taskever/myNameSpace1/MyNameSpace2/mynamespace3/myserviceName/CreateNew"));
+            Assert.True(DynamicApiServiceNameHelper.IsValidServiceNameWithAction(
+                "taskever/myName_Space1/MyName_Space2/mynamespace_3/myservice/test_action_Name"));
         }
 
         [Fact]

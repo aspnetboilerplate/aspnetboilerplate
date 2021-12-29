@@ -22,7 +22,8 @@ namespace Abp.Webhooks
         {
             Providers = new TypeList<WebhookDefinitionProvider>();
 
-            MaxConsecutiveFailCountBeforeDeactivateSubscription = MaxSendAttemptCount * 3; //deactivates subscription if 3 webhook can not be sent.
+            MaxConsecutiveFailCountBeforeDeactivateSubscription =
+                MaxSendAttemptCount * 3; //deactivates subscription if 3 webhook can not be sent.
         }
     }
 }

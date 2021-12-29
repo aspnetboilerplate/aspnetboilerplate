@@ -28,20 +28,15 @@ namespace Abp.Domain.Entities.Caching
 
     public class EntityCache<TEntity, TCacheItem, TPrimaryKey> :
         EntityCacheBase<TEntity, TCacheItem, TPrimaryKey>,
-        IEventHandler<EntityChangedEventData<TEntity>>, 
+        IEventHandler<EntityChangedEventData<TEntity>>,
         IEntityCache<TCacheItem, TPrimaryKey>
         where TEntity : class, IEntity<TPrimaryKey>
     {
-        public ITypedCache<TPrimaryKey, TCacheItem> InternalCache
-        {
-            get
-            {
-                return CacheManager.GetCache<TPrimaryKey, TCacheItem>(CacheName);
-            }
-        }
+        public ITypedCache<TPrimaryKey, TCacheItem> InternalCache =>
+            CacheManager.GetCache<TPrimaryKey, TCacheItem>(CacheName);
 
         public EntityCache(
-            ICacheManager cacheManager, 
+            ICacheManager cacheManager,
             IRepository<TEntity, TPrimaryKey> repository,
             IUnitOfWorkManager unitOfWorkManager,
             string cacheName = null)

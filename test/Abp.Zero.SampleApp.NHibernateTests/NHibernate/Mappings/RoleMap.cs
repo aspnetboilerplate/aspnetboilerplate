@@ -6,6 +6,5 @@ namespace Abp.Zero.SampleApp.NHibernate.Mappings
 {
     public class RoleMap : AbpRoleMap<Role, User>
     {
-        
     }
 }

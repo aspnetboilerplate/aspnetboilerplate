@@ -8,7 +8,7 @@ namespace Abp.Localization
     /// <summary>
     /// Clears related localization cache when a <see cref="ApplicationLanguageText"/> changes.
     /// </summary>
-    public class MultiTenantLocalizationDictionaryCacheCleaner : 
+    public class MultiTenantLocalizationDictionaryCacheCleaner :
         ITransientDependency,
         IEventHandler<EntityChangedEventData<ApplicationLanguageText>>
     {

@@ -36,13 +36,10 @@ namespace Abp.Zero.SampleApp.Tests.Webhooks
                         var subscription = new WebhookSubscriptionInfo()
                         {
                             WebhookUri = "www.test.com",
-                            Secret = "secret",
+                            Secret = "secret"
                         };
 
-                        foreach (var definition in webhookDefinition)
-                        {
-                            subscription.SubscribeWebhook(definition);
-                        }
+                        foreach (var definition in webhookDefinition) subscription.SubscribeWebhook(definition);
 
                         await _webhookSubscriptionsStore.InsertAsync(subscription);
 
@@ -103,9 +100,7 @@ namespace Abp.Zero.SampleApp.Tests.Webhooks
             testSubscriptions.Count.ShouldBe(2);
 
             foreach (var webhookSubscriptionInfo in testSubscriptions)
-            {
                 webhookSubscriptionInfo.GetSubscribedWebhooks().Single().ShouldBe(AppWebhookDefinitionNames.Test);
-            }
 
             var userCreatedSubscriptions = await _webhookSubscriptionsStore.GetAllSubscriptionsAsync(
                 AbpSession.TenantId,
@@ -114,9 +109,7 @@ namespace Abp.Zero.SampleApp.Tests.Webhooks
 
             userCreatedSubscriptions.Count.ShouldBe(2);
             foreach (var webhookSubscriptionInfo in userCreatedSubscriptions)
-            {
                 webhookSubscriptionInfo.Webhooks.ShouldContain(AppWebhookDefinitionNames.Users.Created);
-            }
 
             userCreatedSubscriptions[1].Webhooks.ShouldContain(AppWebhookDefinitionNames.Theme.DefaultThemeChanged);
         }
@@ -287,10 +280,7 @@ namespace Abp.Zero.SampleApp.Tests.Webhooks
                             Secret = "secret"
                         };
 
-                        foreach (var definition in webhookDefinition)
-                        {
-                            subscription.SubscribeWebhook(definition);
-                        }
+                        foreach (var definition in webhookDefinition) subscription.SubscribeWebhook(definition);
 
                         _webhookSubscriptionsStore.Insert(subscription);
 
@@ -359,24 +349,20 @@ namespace Abp.Zero.SampleApp.Tests.Webhooks
                 AbpSession.TenantId,
                 AppWebhookDefinitionNames.Test
             );
-            
+
             testSubscriptions.Count.ShouldBe(2);
 
             foreach (var webhookSubscriptionInfo in testSubscriptions)
-            {
                 webhookSubscriptionInfo.Webhooks.ShouldContain(AppWebhookDefinitionNames.Test);
-            }
 
             var userCreatedSubscriptions = _webhookSubscriptionsStore.GetAllSubscriptions(
                 AbpSession.TenantId,
                 AppWebhookDefinitionNames.Users.Created
             );
-            
+
             userCreatedSubscriptions.Count.ShouldBe(2);
             foreach (var webhookSubscriptionInfo in userCreatedSubscriptions)
-            {
                 webhookSubscriptionInfo.Webhooks.ShouldContain(AppWebhookDefinitionNames.Users.Created);
-            }
 
             userCreatedSubscriptions[1].Webhooks.ShouldContain(AppWebhookDefinitionNames.Theme.DefaultThemeChanged);
         }
@@ -409,7 +395,7 @@ namespace Abp.Zero.SampleApp.Tests.Webhooks
             var testSubscriptions1 = _webhookSubscriptionsStore.GetAllSubscriptions(
                 AbpSession.TenantId, AppWebhookDefinitionNames.Test
             );
-            
+
             testSubscriptions1.Count.ShouldBe(1);
             testSubscriptions1.Single().Id.ShouldBe(sub.Id);
 
@@ -417,7 +403,7 @@ namespace Abp.Zero.SampleApp.Tests.Webhooks
                 AbpSession.TenantId,
                 AppWebhookDefinitionNames.Users.Created
             );
-            
+
             testSubscriptions2.Count.ShouldBe(1);
             testSubscriptions2.Single().Id.ShouldBe(sub.Id);
 
@@ -425,7 +411,7 @@ namespace Abp.Zero.SampleApp.Tests.Webhooks
                 AbpSession.TenantId,
                 AppWebhookDefinitionNames.Theme.DefaultThemeChanged
             );
-            
+
             testSubscriptions3.Count.ShouldBe(1);
             testSubscriptions3.Single().Id.ShouldBe(sub.Id);
         }
@@ -440,7 +426,7 @@ namespace Abp.Zero.SampleApp.Tests.Webhooks
                 AppWebhookDefinitionNames.Users.Created,
                 AppWebhookDefinitionNames.Theme.DefaultThemeChanged
             );
-            
+
             var subscribedWebhooks = _webhookSubscriptionsStore.GetAllSubscriptions(AbpSession.TenantId);
             subscribedWebhooks.Count.ShouldBe(3);
 

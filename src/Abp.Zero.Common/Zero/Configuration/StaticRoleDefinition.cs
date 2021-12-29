@@ -11,7 +11,7 @@ namespace Abp.Zero.Configuration
         public string RoleDisplayName { get; }
 
         public bool GrantAllPermissionsByDefault { get; set; }
-        
+
         public List<string> GrantedPermissions { get; }
 
         public MultiTenancySides Side { get; }
@@ -25,7 +25,8 @@ namespace Abp.Zero.Configuration
             GrantedPermissions = new List<string>();
         }
 
-        public StaticRoleDefinition(string roleName, string roleDisplayName, MultiTenancySides side, bool grantAllPermissionsByDefault = false)
+        public StaticRoleDefinition(string roleName, string roleDisplayName, MultiTenancySides side,
+            bool grantAllPermissionsByDefault = false)
         {
             RoleName = roleName;
             RoleDisplayName = roleDisplayName;

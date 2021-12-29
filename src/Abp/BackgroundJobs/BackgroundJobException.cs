@@ -7,18 +7,15 @@ namespace Abp.BackgroundJobs
     [Serializable]
     public class BackgroundJobException : AbpException
     {
-        [CanBeNull]
-        public BackgroundJobInfo BackgroundJob { get; set; }
+        [CanBeNull] public BackgroundJobInfo BackgroundJob { get; set; }
 
-        [CanBeNull]
-        public object JobObject { get; set; }
+        [CanBeNull] public object JobObject { get; set; }
 
         /// <summary>
         /// Creates a new <see cref="BackgroundJobException"/> object.
         /// </summary>
         public BackgroundJobException()
         {
-
         }
 
         /// <summary>
@@ -27,7 +24,6 @@ namespace Abp.BackgroundJobs
         public BackgroundJobException(SerializationInfo serializationInfo, StreamingContext context)
             : base(serializationInfo, context)
         {
-
         }
 
         /// <summary>
@@ -38,7 +34,6 @@ namespace Abp.BackgroundJobs
         public BackgroundJobException(string message, Exception innerException)
             : base(message, innerException)
         {
-
         }
     }
 }

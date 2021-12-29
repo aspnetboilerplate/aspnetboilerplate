@@ -11,11 +11,12 @@ namespace Abp.Web.Mvc.Security.AntiForgery
     {
         private static readonly Lazy<object> AntiForgeryWorkerObject = new Lazy<object>(() =>
         {
-            var antiForgeryWorkerField = typeof(System.Web.Helpers.AntiForgery).GetField("_worker", BindingFlags.NonPublic | BindingFlags.Static);
+            var antiForgeryWorkerField =
+                typeof(System.Web.Helpers.AntiForgery).GetField("_worker",
+                    BindingFlags.NonPublic | BindingFlags.Static);
             if (antiForgeryWorkerField == null)
-            {
-                throw new AbpException("Can not get _worker field of System.Web.Helpers.AntiForgery class. It's internal implementation might be changed. Please create an issue on GitHub repository to solve this.");
-            }
+                throw new AbpException(
+                    "Can not get _worker field of System.Web.Helpers.AntiForgery class. It's internal implementation might be changed. Please create an issue on GitHub repository to solve this.");
 
             return antiForgeryWorkerField.GetValue(null);
         });
@@ -30,7 +31,6 @@ namespace Abp.Web.Mvc.Security.AntiForgery
         public AbpMvcAntiForgeryManager(IAbpAntiForgeryConfiguration configuration)
             : base(configuration)
         {
-
         }
 
         public override string GenerateToken()
@@ -57,7 +57,7 @@ namespace Abp.Web.Mvc.Security.AntiForgery
                 System.Web.Helpers.AntiForgery.Validate(
                     HttpContext.Current.Request.Cookies[AntiForgeryConfig.CookieName]?.Value ?? cookieValue,
                     tokenValue
-                    );
+                );
 
                 return true;
             }

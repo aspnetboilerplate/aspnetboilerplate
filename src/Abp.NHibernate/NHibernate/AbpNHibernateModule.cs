@@ -26,7 +26,8 @@ namespace Abp.NHibernate
         public override void PreInitialize()
         {
             IocManager.Register<IAbpNHibernateModuleConfiguration, AbpNHibernateModuleConfiguration>();
-            Configuration.ReplaceService<IUnitOfWorkFilterExecuter, NhUnitOfWorkFilterExecuter>(DependencyLifeStyle.Transient);
+            Configuration.ReplaceService<IUnitOfWorkFilterExecuter, NhUnitOfWorkFilterExecuter>(DependencyLifeStyle
+                .Transient);
         }
 
         /// <inheritdoc/>

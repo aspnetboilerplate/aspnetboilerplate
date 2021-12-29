@@ -65,7 +65,8 @@ namespace Abp.Tests.Specifications
                 .ShouldBe(6);
 
             _customers
-                .Where(new EuropeanCustomerSpecification().And(new ExpressionSpecification<Customer>(c => c.Age >= 18)).ToExpression())
+                .Where(new EuropeanCustomerSpecification().And(new ExpressionSpecification<Customer>(c => c.Age >= 18))
+                    .ToExpression())
                 .Count()
                 .ShouldBe(4);
         }
@@ -112,9 +113,10 @@ namespace Abp.Tests.Specifications
                 .ShouldBe(4);
 
             _customers
-               .Where(new EuropeanCustomerSpecification().Not().And(new Age18PlusCustomerSpecification()).ToExpression())
-               .Count()
-               .ShouldBe(2);
+                .Where(new EuropeanCustomerSpecification().Not().And(new Age18PlusCustomerSpecification())
+                    .ToExpression())
+                .Count()
+                .ShouldBe(2);
 
             _customers
                 .Where(new Age18PlusCustomerSpecification().AndNot(new EuropeanCustomerSpecification()).ToExpression())

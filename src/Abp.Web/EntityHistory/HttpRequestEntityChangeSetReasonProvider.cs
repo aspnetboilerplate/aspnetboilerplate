@@ -16,10 +16,7 @@ namespace Abp.Web.EntityHistory
         {
             get
             {
-                if (OverridedValue != null)
-                {
-                    return OverridedValue.Reason;
-                }
+                if (OverridedValue != null) return OverridedValue.Reason;
 
                 try
                 {
@@ -40,7 +37,7 @@ namespace Abp.Web.EntityHistory
 
         public HttpRequestEntityChangeSetReasonProvider(
             IAmbientScopeProvider<ReasonOverride> reasonOverrideScopeProvider
-            ) : base(reasonOverrideScopeProvider)
+        ) : base(reasonOverrideScopeProvider)
         {
         }
     }

@@ -94,6 +94,8 @@ namespace Abp.NHibernate.Tests
             insertedBook.ShouldBeNull();
         }
 
-        private class FakeException : Exception { }
+        private class FakeException : Exception
+        {
+        }
     }
 }

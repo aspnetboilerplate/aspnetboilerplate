@@ -15,8 +15,7 @@ namespace Abp.Resources.Embedded
         /// </summary>
         public string FileName { get; }
 
-        [CanBeNull]
-        public string FileExtension { get; }
+        [CanBeNull] public string FileExtension { get; }
 
         /// <summary>
         /// Content of the resource file.
@@ -43,10 +42,7 @@ namespace Abp.Resources.Embedded
 
         private static string CalculateFileExtension(string fileName)
         {
-            if (!fileName.Contains("."))
-            {
-                return null;
-            }
+            if (!fileName.Contains(".")) return null;
 
             return fileName.Substring(fileName.LastIndexOf(".", StringComparison.Ordinal) + 1);
         }

@@ -31,22 +31,17 @@ namespace Abp.PlugIns
             var modules = new List<Type>();
 
             foreach (var assembly in GetAssemblies())
-            {
                 try
                 {
                     foreach (var type in assembly.GetTypes())
-                    {
                         if (AbpModule.IsAbpModule(type))
-                        {
                             modules.AddIfNotContains(type);
-                        }
-                    }
                 }
                 catch (Exception ex)
                 {
-                    throw new AbpInitializationException("Could not get module types from assembly: " + assembly.FullName, ex);
+                    throw new AbpInitializationException(
+                        "Could not get module types from assembly: " + assembly.FullName, ex);
                 }
-            }
 
             return modules;
         }

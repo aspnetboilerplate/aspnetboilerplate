@@ -62,19 +62,17 @@ namespace Abp.WebApi.Controllers.Dynamic.Builders
             Check.NotNull(iocResolver, nameof(iocResolver));
 
             if (string.IsNullOrWhiteSpace(serviceName))
-            {
                 throw new ArgumentException("serviceName null or empty!", "serviceName");
-            }
 
             if (!DynamicApiServiceNameHelper.IsValidServiceName(serviceName))
-            {
-                throw new ArgumentException("serviceName is not properly formatted! It must contain a single-depth namespace at least! For example: 'myapplication/myservice'.", "serviceName");
-            }
+                throw new ArgumentException(
+                    "serviceName is not properly formatted! It must contain a single-depth namespace at least! For example: 'myapplication/myservice'.",
+                    "serviceName");
 
             _iocResolver = iocResolver;
 
             ServiceName = serviceName;
-            ServiceInterfaceType = typeof (T);
+            ServiceInterfaceType = typeof(T);
 
             _actionBuilders = new Dictionary<string, ApiControllerActionBuilder<T>>();
 
@@ -84,9 +82,7 @@ namespace Abp.WebApi.Controllers.Dynamic.Builders
 
                 var remoteServiceAttr = methodInfo.GetSingleAttributeOrNull<RemoteServiceAttribute>();
                 if (remoteServiceAttr != null && !remoteServiceAttr.IsEnabledFor(methodInfo))
-                {
                     actionBuilder.DontCreateAction();
-                }
 
                 _actionBuilders[methodInfo.Name] = actionBuilder;
             }
@@ -111,19 +107,14 @@ namespace Abp.WebApi.Controllers.Dynamic.Builders
         public IApiControllerActionBuilder<T> ForMethod(string methodName)
         {
             if (!_actionBuilders.ContainsKey(methodName))
-            {
                 throw new AbpException("There is no method with name " + methodName + " in type " + typeof(T).Name);
-            }
 
             return _actionBuilders[methodName];
         }
 
         public IApiControllerBuilder<T> ForMethods(Action<IApiControllerActionBuilder> action)
         {
-            foreach (var actionBuilder in _actionBuilders.Values)
-            {
-                action(actionBuilder);
-            }
+            foreach (var actionBuilder in _actionBuilders.Values) action(actionBuilder);
 
             return this;
         }
@@ -160,14 +151,11 @@ namespace Abp.WebApi.Controllers.Dynamic.Builders
                 Filters,
                 IsApiExplorerEnabled,
                 IsProxyScriptingEnabled
-                );
-            
+            );
+
             foreach (var actionBuilder in _actionBuilders.Values)
             {
-                if (actionBuilder.DontCreate)
-                {
-                    continue;
-                }
+                if (actionBuilder.DontCreate) continue;
 
                 controllerInfo.Actions[actionBuilder.ActionName] = actionBuilder.BuildActionInfo(ConventionalVerbs);
             }

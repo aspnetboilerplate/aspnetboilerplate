@@ -29,10 +29,7 @@ namespace Abp.Runtime.Caching.Memory
 
         protected override void DisposeCaches()
         {
-            foreach (var cache in Caches.Values)
-            {
-                cache.Dispose();
-            }
+            foreach (var cache in Caches.Values) cache.Dispose();
         }
     }
 }

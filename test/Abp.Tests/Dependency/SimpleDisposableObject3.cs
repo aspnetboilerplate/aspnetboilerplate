@@ -10,7 +10,6 @@ namespace Abp.Tests.Dependency
 
         public SimpleDisposableObject3()
         {
-
         }
 
         public SimpleDisposableObject3(int myData)

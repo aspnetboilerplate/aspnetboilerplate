@@ -35,7 +35,8 @@ namespace Abp.TestBase.Tests.Application.Services
 
         public class MyAppService : IMyAppService
         {
-            public Task<T> GetsExpressionReturnsGenericAsync<T>(Expression<Func<T, bool>> predicate) where T : class, new()
+            public Task<T> GetsExpressionReturnsGenericAsync<T>(Expression<Func<T, bool>> predicate)
+                where T : class, new()
             {
                 return Task.FromResult(new T());
             }
@@ -43,7 +44,6 @@ namespace Abp.TestBase.Tests.Application.Services
 
         public class MyEmptyDto
         {
-            
         }
 
         #endregion

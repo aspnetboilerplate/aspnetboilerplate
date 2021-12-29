@@ -67,9 +67,7 @@ namespace Abp.Authorization
             return await UnitOfWorkManager.WithUnitOfWorkAsync(async () =>
             {
                 if (CurrentUnitOfWorkProvider == null || CurrentUnitOfWorkProvider.Current == null)
-                {
                     return await IsGrantedAsync(user.UserId, permissionName);
-                }
 
                 using (CurrentUnitOfWorkProvider.Current.SetTenantId(user.TenantId))
                 {
@@ -83,9 +81,7 @@ namespace Abp.Authorization
             return UnitOfWorkManager.WithUnitOfWork(() =>
             {
                 if (CurrentUnitOfWorkProvider == null || CurrentUnitOfWorkProvider.Current == null)
-                {
                     return IsGranted(user.UserId, permissionName);
-                }
 
                 using (CurrentUnitOfWorkProvider.Current.SetTenantId(user.TenantId))
                 {

@@ -8,7 +8,7 @@ using Xunit;
 
 namespace Abp.Tests.Modules
 {
-    public class AbpAssemblyFinder_Tests: TestBaseWithLocalIocManager
+    public class AbpAssemblyFinder_Tests : TestBaseWithLocalIocManager
     {
         [Fact]
         public void Should_Get_Module_And_Additional_Assemblies()
@@ -36,7 +36,7 @@ namespace Abp.Tests.Modules
         {
             public override Assembly[] GetAdditionalAssemblies()
             {
-                return new[] {typeof(FactAttribute).GetAssembly()};
+                return new[] { typeof(FactAttribute).GetAssembly() };
             }
         }
     }

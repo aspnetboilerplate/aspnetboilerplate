@@ -16,9 +16,7 @@ namespace Abp.UI.Inputs
             {
                 var type = GetType().GetTypeInfo();
                 if (type.IsDefined(typeof(InputTypeAttribute)))
-                {
                     return type.GetCustomAttributes(typeof(InputTypeAttribute)).Cast<InputTypeAttribute>().First().Name;
-                }
 
                 return type.Name;
             }
@@ -31,8 +29,8 @@ namespace Abp.UI.Inputs
         /// <param name="key">Key</param>
         public object this[string key]
         {
-            get { return Attributes.GetOrDefault(key); }
-            set { Attributes[key] = value; }
+            get => Attributes.GetOrDefault(key);
+            set => Attributes[key] = value;
         }
 
         /// <summary>
@@ -45,7 +43,6 @@ namespace Abp.UI.Inputs
         protected InputTypeBase()
             : this(new AlwaysValidValueValidator())
         {
-
         }
 
         protected InputTypeBase(IValueValidator validator)
@@ -54,7 +51,9 @@ namespace Abp.UI.Inputs
             Validator = validator;
         }
 
-        public static string GetName<TInputType>() where TInputType : IInputType =>
-            ((IInputType) Activator.CreateInstance(typeof(TInputType))).Name;
+        public static string GetName<TInputType>() where TInputType : IInputType
+        {
+            return ((IInputType)Activator.CreateInstance(typeof(TInputType))).Name;
+        }
     }
 }

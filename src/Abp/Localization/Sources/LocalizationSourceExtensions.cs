@@ -17,10 +17,7 @@ namespace Abp.Localization.Sources
         /// <returns>Formatted and localized string</returns>
         public static string GetString(this ILocalizationSource source, string name, params object[] args)
         {
-            if (source == null)
-            {
-                throw new ArgumentNullException("source");
-            }
+            if (source == null) throw new ArgumentNullException("source");
 
             return string.Format(source.GetString(name), args);
         }
@@ -33,12 +30,10 @@ namespace Abp.Localization.Sources
         /// <param name="culture">Culture</param>
         /// <param name="args">Format arguments</param>
         /// <returns>Formatted and localized string</returns>
-        public static string GetString(this ILocalizationSource source, string name, CultureInfo culture, params object[] args)
+        public static string GetString(this ILocalizationSource source, string name, CultureInfo culture,
+            params object[] args)
         {
-            if (source == null)
-            {
-                throw new ArgumentNullException("source");
-            }
+            if (source == null) throw new ArgumentNullException("source");
 
             return string.Format(source.GetString(name, culture), args);
         }

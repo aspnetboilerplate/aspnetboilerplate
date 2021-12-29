@@ -24,50 +24,38 @@ namespace Abp.WebApi.Controllers.ApiExplorer
         public AbpApiExplorer(
             IAbpWebApiConfiguration abpWebApiConfiguration,
             DynamicApiControllerManager dynamicApiControllerManager
-            ) : base(abpWebApiConfiguration.HttpConfiguration)
+        ) : base(abpWebApiConfiguration.HttpConfiguration)
         {
             _apiDescriptions = new Lazy<Collection<ApiDescription>>(InitializeApiDescriptions);
             _abpWebApiConfiguration = abpWebApiConfiguration;
             _dynamicApiControllerManager = dynamicApiControllerManager;
         }
 
-        public new Collection<ApiDescription> ApiDescriptions
-        {
-            get
-            {
-                return _apiDescriptions.Value;
-            }
-        }
+        public new Collection<ApiDescription> ApiDescriptions => _apiDescriptions.Value;
 
         private Collection<ApiDescription> InitializeApiDescriptions()
         {
             var apiDescriptions = new Collection<ApiDescription>();
 
-            foreach (var item in base.ApiDescriptions)
-            {
-                apiDescriptions.Add(item);
-            }
+            foreach (var item in base.ApiDescriptions) apiDescriptions.Add(item);
 
             var dynamicApiControllerInfos = _dynamicApiControllerManager.GetAll();
             foreach (var dynamicApiControllerInfo in dynamicApiControllerInfos)
             {
-                if (IsApiExplorerDisabled(dynamicApiControllerInfo))
-                {
-                    continue;
-                }
+                if (IsApiExplorerDisabled(dynamicApiControllerInfo)) continue;
 
                 foreach (var dynamicApiActionInfo in dynamicApiControllerInfo.Actions.Values)
                 {
-                    if (IsApiExplorerDisabled(dynamicApiActionInfo))
-                    {
-                        continue;
-                    }
+                    if (IsApiExplorerDisabled(dynamicApiActionInfo)) continue;
 
                     var apiDescription = new ApiDescription();
 
-                    var controllerDescriptor = new DynamicHttpControllerDescriptor(_abpWebApiConfiguration.HttpConfiguration, dynamicApiControllerInfo);
+                    var controllerDescriptor =
+                        new DynamicHttpControllerDescriptor(_abpWebApiConfiguration.HttpConfiguration,
+                            dynamicApiControllerInfo);
                     controllerDescriptor.ControllerName = controllerDescriptor.ControllerName.Replace("/", "_");
-                    var actionDescriptor = new DynamicHttpActionDescriptor(_abpWebApiConfiguration, controllerDescriptor, dynamicApiActionInfo);
+                    var actionDescriptor = new DynamicHttpActionDescriptor(_abpWebApiConfiguration,
+                        controllerDescriptor, dynamicApiActionInfo);
 
                     apiDescription.ActionDescriptor = actionDescriptor;
                     apiDescription.HttpMethod = actionDescriptor.SupportedHttpMethods[0];
@@ -77,13 +65,12 @@ namespace Abp.WebApi.Controllers.ApiExplorer
 
                     apiDescription.ParameterDescriptions.Clear();
                     foreach (var apiParameterDescription in CreateParameterDescription(actionBinding, actionDescriptor))
-                    {
                         apiDescription.ParameterDescriptions.Add(apiParameterDescription);
-                    }
 
                     SetResponseDescription(apiDescription, actionDescriptor);
 
-                    apiDescription.RelativePath = "api/services/" + dynamicApiControllerInfo.ServiceName + "/" + dynamicApiActionInfo.ActionName;
+                    apiDescription.RelativePath = "api/services/" + dynamicApiControllerInfo.ServiceName + "/" +
+                                                  dynamicApiActionInfo.ActionName;
 
                     apiDescriptions.Add(apiDescription);
                 }
@@ -96,17 +83,13 @@ namespace Abp.WebApi.Controllers.ApiExplorer
         {
             if (dynamicApiControllerInfo.IsApiExplorerEnabled == false)
             {
-                if (!RemoteServiceAttribute.IsMetadataExplicitlyEnabledFor(dynamicApiControllerInfo.ServiceInterfaceType))
-                {
-                    return true;
-                }
+                if (!RemoteServiceAttribute.IsMetadataExplicitlyEnabledFor(
+                        dynamicApiControllerInfo.ServiceInterfaceType)) return true;
             }
             else
             {
-                if (RemoteServiceAttribute.IsMetadataExplicitlyDisabledFor(dynamicApiControllerInfo.ServiceInterfaceType))
-                {
-                    return true;
-                }
+                if (RemoteServiceAttribute.IsMetadataExplicitlyDisabledFor(
+                        dynamicApiControllerInfo.ServiceInterfaceType)) return true;
             }
 
             return false;
@@ -116,17 +99,11 @@ namespace Abp.WebApi.Controllers.ApiExplorer
         {
             if (dynamicApiActionInfo.IsApiExplorerEnabled == false)
             {
-                if (!RemoteServiceAttribute.IsMetadataExplicitlyEnabledFor(dynamicApiActionInfo.Method))
-                {
-                    return true;
-                }
+                if (!RemoteServiceAttribute.IsMetadataExplicitlyEnabledFor(dynamicApiActionInfo.Method)) return true;
             }
             else
             {
-                if (RemoteServiceAttribute.IsMetadataExplicitlyDisabledFor(dynamicApiActionInfo.Method))
-                {
-                    return true;
-                }
+                if (RemoteServiceAttribute.IsMetadataExplicitlyDisabledFor(dynamicApiActionInfo.Method)) return true;
             }
 
             return false;
@@ -139,7 +116,8 @@ namespace Abp.WebApi.Controllers.ApiExplorer
             prop2.SetValue(apiDescription, responseDescription);
         }
 
-        private IList<ApiParameterDescription> CreateParameterDescription(HttpActionBinding actionBinding, HttpActionDescriptor actionDescriptor)
+        private IList<ApiParameterDescription> CreateParameterDescription(HttpActionBinding actionBinding,
+            HttpActionDescriptor actionDescriptor)
         {
             IList<ApiParameterDescription> parameterDescriptions = new List<ApiParameterDescription>();
             // try get parameter binding information if available
@@ -147,59 +125,47 @@ namespace Abp.WebApi.Controllers.ApiExplorer
             {
                 HttpParameterBinding[] parameterBindings = actionBinding.ParameterBindings;
                 if (parameterBindings != null)
-                {
                     foreach (HttpParameterBinding parameter in parameterBindings)
-                    {
                         parameterDescriptions.Add(CreateParameterDescriptionFromBinding(parameter));
-                    }
-                }
             }
             else
             {
                 Collection<HttpParameterDescriptor> parameters = actionDescriptor.GetParameters();
                 if (parameters != null)
-                {
                     foreach (HttpParameterDescriptor parameter in parameters)
-                    {
                         parameterDescriptions.Add(CreateParameterDescriptionFromDescriptor(parameter));
-                    }
-                }
             }
 
 
             return parameterDescriptions;
         }
-        
+
         private ApiParameterDescription CreateParameterDescriptionFromDescriptor(HttpParameterDescriptor parameter)
         {
-
             return new ApiParameterDescription
             {
                 ParameterDescriptor = parameter,
                 Name = parameter.Prefix ?? parameter.ParameterName,
                 Documentation = GetApiParameterDocumentation(parameter),
-                Source = ApiParameterSource.Unknown,
+                Source = ApiParameterSource.Unknown
             };
         }
 
         private ApiParameterDescription CreateParameterDescriptionFromBinding(HttpParameterBinding parameterBinding)
         {
-            ApiParameterDescription parameterDescription = CreateParameterDescriptionFromDescriptor(parameterBinding.Descriptor);
+            ApiParameterDescription parameterDescription =
+                CreateParameterDescriptionFromDescriptor(parameterBinding.Descriptor);
             if (parameterBinding.WillReadBody)
-            {
                 parameterDescription.Source = ApiParameterSource.FromBody;
-            }
-            else if (parameterBinding.WillReadUri())
-            {
-                parameterDescription.Source = ApiParameterSource.FromUri;
-            }
+            else if (parameterBinding.WillReadUri()) parameterDescription.Source = ApiParameterSource.FromUri;
 
             return parameterDescription;
         }
 
         private ResponseDescription CreateResponseDescription(HttpActionDescriptor actionDescriptor)
         {
-            Collection<ResponseTypeAttribute> responseTypeAttribute = actionDescriptor.GetCustomAttributes<ResponseTypeAttribute>();
+            Collection<ResponseTypeAttribute> responseTypeAttribute =
+                actionDescriptor.GetCustomAttributes<ResponseTypeAttribute>();
             Type responseType = responseTypeAttribute.Select(attribute => attribute.ResponseType).FirstOrDefault();
 
             return new ResponseDescription
@@ -212,22 +178,20 @@ namespace Abp.WebApi.Controllers.ApiExplorer
 
         private string GetApiResponseDocumentation(HttpActionDescriptor actionDescriptor)
         {
-            IDocumentationProvider documentationProvider = DocumentationProvider ?? actionDescriptor.Configuration.Services.GetDocumentationProvider();
-            if (documentationProvider != null)
-            {
-                return documentationProvider.GetResponseDocumentation(actionDescriptor);
-            }
+            IDocumentationProvider documentationProvider = DocumentationProvider ??
+                                                           actionDescriptor.Configuration.Services
+                                                               .GetDocumentationProvider();
+            if (documentationProvider != null) return documentationProvider.GetResponseDocumentation(actionDescriptor);
 
             return null;
         }
 
         private string GetApiParameterDocumentation(HttpParameterDescriptor parameterDescriptor)
         {
-            IDocumentationProvider documentationProvider = DocumentationProvider ?? parameterDescriptor.Configuration.Services.GetDocumentationProvider();
-            if (documentationProvider != null)
-            {
-                return documentationProvider.GetDocumentation(parameterDescriptor);
-            }
+            IDocumentationProvider documentationProvider = DocumentationProvider ??
+                                                           parameterDescriptor.Configuration.Services
+                                                               .GetDocumentationProvider();
+            if (documentationProvider != null) return documentationProvider.GetDocumentation(parameterDescriptor);
 
             return null;
         }
@@ -237,19 +201,16 @@ namespace Abp.WebApi.Controllers.ApiExplorer
     {
         public static bool WillReadUri(this HttpParameterBinding parameterBinding)
         {
-            if (parameterBinding == null)
-            {
-                throw new ArgumentNullException(nameof(parameterBinding));
-            }
+            if (parameterBinding == null) throw new ArgumentNullException(nameof(parameterBinding));
 
-            IValueProviderParameterBinding valueProviderParameterBinding = parameterBinding as IValueProviderParameterBinding;
+            IValueProviderParameterBinding valueProviderParameterBinding =
+                parameterBinding as IValueProviderParameterBinding;
             if (valueProviderParameterBinding != null)
             {
-                IEnumerable<ValueProviderFactory> valueProviderFactories = valueProviderParameterBinding.ValueProviderFactories;
-                if (valueProviderFactories.Any() && valueProviderFactories.All(factory => factory is IUriValueProviderFactory))
-                {
-                    return true;
-                }
+                IEnumerable<ValueProviderFactory> valueProviderFactories =
+                    valueProviderParameterBinding.ValueProviderFactories;
+                if (valueProviderFactories.Any() &&
+                    valueProviderFactories.All(factory => factory is IUriValueProviderFactory)) return true;
             }
 
             return false;

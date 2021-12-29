@@ -6,6 +6,6 @@ if (navigator.userAgent.match(/IEMobile\/10\.0/)) {
             "@-ms-viewport{width:auto!important}"
         )
     );
-    
+
     document.getElementsByTagName("head")[0].appendChild(msViewportStyle);
 }

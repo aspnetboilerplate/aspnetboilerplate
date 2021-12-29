@@ -30,12 +30,11 @@ namespace Abp.Webhooks
         /// </summary>
         public IFeatureDependency FeatureDependency { get; set; }
 
-        public WebhookDefinition(string name, ILocalizableString displayName = null, ILocalizableString description = null, IFeatureDependency featureDependency = null)
+        public WebhookDefinition(string name, ILocalizableString displayName = null,
+            ILocalizableString description = null, IFeatureDependency featureDependency = null)
         {
             if (name.IsNullOrWhiteSpace())
-            {
                 throw new ArgumentNullException(nameof(name), $"{nameof(name)} can not be null, empty or whitespace!");
-            }
 
             Name = name.Trim();
             DisplayName = displayName;

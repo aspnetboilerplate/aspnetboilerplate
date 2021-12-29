@@ -11,10 +11,7 @@ namespace Abp.Webhooks.Extensions
         /// <returns></returns>
         public static bool IsSubscribed(this WebhookSubscription webhookSubscription, string webhookName)
         {
-            if (webhookSubscription.Webhooks.IsNullOrEmpty())
-            {
-                return false;
-            }
+            if (webhookSubscription.Webhooks.IsNullOrEmpty()) return false;
 
             return webhookSubscription.Webhooks.Contains(webhookName);
         }

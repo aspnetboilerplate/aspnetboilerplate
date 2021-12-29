@@ -22,16 +22,18 @@ namespace Abp.Tests.Authorization
             authorizationConfiguration.Providers.Add<MyAuthorizationProvider2>();
 
             LocalIocManager.IocContainer.Register(
-                Component.For<IFeatureDependencyContext, FeatureDependencyContext>().UsingFactoryMethod(() => new FeatureDependencyContext(LocalIocManager, Substitute.For<IFeatureChecker>())),
+                Component.For<IFeatureDependencyContext, FeatureDependencyContext>().UsingFactoryMethod(() =>
+                    new FeatureDependencyContext(LocalIocManager, Substitute.For<IFeatureChecker>())),
                 Component.For<MyAuthorizationProvider1>().LifestyleTransient(),
                 Component.For<MyAuthorizationProvider2>().LifestyleTransient(),
                 Component.For<IUnitOfWorkManager, UnitOfWorkManager>().LifestyleTransient(),
                 Component.For<ICurrentUnitOfWorkProvider, AsyncLocalCurrentUnitOfWorkProvider>().LifestyleTransient(),
                 Component.For<IUnitOfWorkDefaultOptions, UnitOfWorkDefaultOptions>().LifestyleTransient(),
                 Component.For<IMultiTenancyConfig, MultiTenancyConfig>().LifestyleTransient()
-                );
+            );
 
-            var permissionManager = new PermissionManager(LocalIocManager, authorizationConfiguration, LocalIocManager.Resolve<IUnitOfWorkManager>(), LocalIocManager.Resolve<IMultiTenancyConfig>());
+            var permissionManager = new PermissionManager(LocalIocManager, authorizationConfiguration,
+                LocalIocManager.Resolve<IUnitOfWorkManager>(), LocalIocManager.Resolve<IMultiTenancyConfig>());
             permissionManager.Initialize();
 
             permissionManager.GetAllPermissions().Count.ShouldBe(5);
@@ -40,7 +42,8 @@ namespace Abp.Tests.Authorization
             userManagement.ShouldNotBe(null);
             userManagement.Children.Count.ShouldBe(1);
 
-            var changePermissions = permissionManager.GetPermissionOrNull("Abp.Zero.Administration.UserManagement.ChangePermissions");
+            var changePermissions =
+                permissionManager.GetPermissionOrNull("Abp.Zero.Administration.UserManagement.ChangePermissions");
             changePermissions.ShouldNotBe(null);
             changePermissions.Parent.ShouldBeSameAs(userManagement);
 
@@ -52,6 +55,7 @@ namespace Abp.Tests.Authorization
             permissionManager.RemovePermission("Abp.Zero.Administration");
             permissionManager.GetPermissionOrNull("Abp.Zero.Administration").ShouldBe(null);
         }
+
         [Fact]
         public void Should_Manage_Permission_With_Custom_Properties()
         {
@@ -60,7 +64,8 @@ namespace Abp.Tests.Authorization
 
             LocalIocManager.IocContainer.Register(
                 Component.For<IFeatureDependencyContext, FeatureDependencyContext>()
-                    .UsingFactoryMethod(() => new FeatureDependencyContext(LocalIocManager, Substitute.For<IFeatureChecker>())),
+                    .UsingFactoryMethod(() =>
+                        new FeatureDependencyContext(LocalIocManager, Substitute.For<IFeatureChecker>())),
                 Component.For<MyAuthorizationProviderWithCustomProperties>().LifestyleTransient(),
                 Component.For<IUnitOfWorkManager, UnitOfWorkManager>().LifestyleTransient(),
                 Component.For<ICurrentUnitOfWorkProvider, AsyncLocalCurrentUnitOfWorkProvider>().LifestyleTransient(),
@@ -68,7 +73,8 @@ namespace Abp.Tests.Authorization
                 Component.For<IMultiTenancyConfig, MultiTenancyConfig>().LifestyleTransient()
             );
 
-            var permissionManager = new PermissionManager(LocalIocManager, authorizationConfiguration, LocalIocManager.Resolve<IUnitOfWorkManager>(), LocalIocManager.Resolve<IMultiTenancyConfig>());
+            var permissionManager = new PermissionManager(LocalIocManager, authorizationConfiguration,
+                LocalIocManager.Resolve<IUnitOfWorkManager>(), LocalIocManager.Resolve<IMultiTenancyConfig>());
             permissionManager.Initialize();
 
             permissionManager.GetAllPermissions().Count.ShouldBe(4);
@@ -79,14 +85,14 @@ namespace Abp.Tests.Authorization
 
             customPermission.Properties.Count.ShouldBe(2);
             customPermission["MyProp1"].ShouldBe("Test");
-            ((MyAuthorizationProviderWithCustomProperties.MyTestPropertyClass)customPermission["MyProp2"]).Prop1.ShouldBe("Test");
+            ((MyAuthorizationProviderWithCustomProperties.MyTestPropertyClass)customPermission["MyProp2"]).Prop1
+                .ShouldBe("Test");
 
             //its not exist
             customPermission["MyProp3"].ShouldBeNull();
 
             customPermission.Children[0]["MyProp1"].ShouldBeNull();
             customPermission.Children[1]["MyProp1"].ShouldBe("TestChild");
-
 
 
             var customPermission2 = permissionManager.GetPermissionOrNull("Abp.Zero.MyCustomPermission2");
@@ -102,7 +108,6 @@ namespace Abp.Tests.Authorization
             customPermission2.ShouldBeSameAs(customPermission21);
 
             customPermission21["MyProp1"].ShouldBe("Test");
-
         }
     }
 
@@ -111,13 +116,16 @@ namespace Abp.Tests.Authorization
         public override void SetPermissions(IPermissionDefinitionContext context)
         {
             //Create a root permission group for 'Administration' permissions
-            var administration = context.CreatePermission("Abp.Zero.Administration", new FixedLocalizableString("Administration"));
+            var administration =
+                context.CreatePermission("Abp.Zero.Administration", new FixedLocalizableString("Administration"));
 
             //Create 'User management' permission under 'Administration' group
-            var userManagement = administration.CreateChildPermission("Abp.Zero.Administration.UserManagement", new FixedLocalizableString("User management"));
+            var userManagement = administration.CreateChildPermission("Abp.Zero.Administration.UserManagement",
+                new FixedLocalizableString("User management"));
 
             //Create 'Change permissions' (to be able to change permissions of a user) permission as child of 'User management' permission.
-            userManagement.CreateChildPermission("Abp.Zero.Administration.UserManagement.ChangePermissions", new FixedLocalizableString("Change permissions"));
+            userManagement.CreateChildPermission("Abp.Zero.Administration.UserManagement.ChangePermissions",
+                new FixedLocalizableString("Change permissions"));
         }
     }
 
@@ -130,10 +138,12 @@ namespace Abp.Tests.Authorization
             administration.ShouldNotBe(null);
 
             //Create 'Role management' permission under 'Administration' group
-            var roleManegement = administration.CreateChildPermission("Abp.Zero.Administration.RoleManagement", new FixedLocalizableString("Role management"));
+            var roleManegement = administration.CreateChildPermission("Abp.Zero.Administration.RoleManagement",
+                new FixedLocalizableString("Role management"));
 
             //Create 'Create role' (to be able to create a new role) permission  as child of 'Role management' permission.
-            roleManegement.CreateChildPermission("Abp.Zero.Administration.RoleManagement.CreateRole", new FixedLocalizableString("Create role"));
+            roleManegement.CreateChildPermission("Abp.Zero.Administration.RoleManagement.CreateRole",
+                new FixedLocalizableString("Create role"));
         }
     }
 
@@ -143,26 +153,27 @@ namespace Abp.Tests.Authorization
         {
             public string Prop1 { get; set; }
         }
+
         public override void SetPermissions(IPermissionDefinitionContext context)
         {
             var myPermission = context.CreatePermission("Abp.Zero.MyCustomPermission",
                 new FixedLocalizableString("Administration"),
                 properties: new Dictionary<string, object>()
                 {
-                    {"MyProp1", "Test"},
-                    {"MyProp2", new MyTestPropertyClass {Prop1 = "Test"}}
+                    { "MyProp1", "Test" },
+                    { "MyProp2", new MyTestPropertyClass { Prop1 = "Test" } }
                 }
             );
             //add children to permission
             myPermission.CreateChildPermission("Abp.Zero.MyCustomChildPermission",
                 new FixedLocalizableString("Role management")
-             );
+            );
             myPermission.CreateChildPermission("Abp.Zero.MyCustomChildPermission2",
                 new FixedLocalizableString("Role management"),
                 properties: new Dictionary<string, object>()
                 {
-                        {"MyProp1", "TestChild"},
-                        {"MyProp2", new MyTestPropertyClass {Prop1 = "TestChild"}}
+                    { "MyProp1", "TestChild" },
+                    { "MyProp2", new MyTestPropertyClass { Prop1 = "TestChild" } }
                 });
 
             var myPermission2 = context.CreatePermission("Abp.Zero.MyCustomPermission2",

@@ -14,9 +14,7 @@
         public static long GetUserId(this IAbpSession session)
         {
             if (!session.UserId.HasValue)
-            {
                 throw new AbpException("Session.UserId is null! Probably, user is not logged in.");
-            }
 
             return session.UserId.Value;
         }
@@ -31,9 +29,8 @@
         public static int GetTenantId(this IAbpSession session)
         {
             if (!session.TenantId.HasValue)
-            {
-                throw new AbpException("Session.TenantId is null! Possible problems: No user logged in or current logged in user in a host user (TenantId is always null for host users).");
-            }
+                throw new AbpException(
+                    "Session.TenantId is null! Possible problems: No user logged in or current logged in user in a host user (TenantId is always null for host users).");
 
             return session.TenantId.Value;
         }

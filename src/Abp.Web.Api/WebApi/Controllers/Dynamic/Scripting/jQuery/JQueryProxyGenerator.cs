@@ -21,7 +21,8 @@ namespace Abp.WebApi.Controllers.Dynamic.Scripting.jQuery
 
             script.AppendLine("(function(){");
             script.AppendLine();
-            script.AppendLine("    var serviceNamespace = abp.utils.createNamespace(abp, 'services." + _controllerInfo.ServiceName.Replace("/", ".") + "');");
+            script.AppendLine("    var serviceNamespace = abp.utils.createNamespace(abp, 'services." +
+                              _controllerInfo.ServiceName.Replace("/", ".") + "');");
             script.AppendLine();
 
             //generate all methods
@@ -40,9 +41,11 @@ namespace Abp.WebApi.Controllers.Dynamic.Scripting.jQuery
 
                 var methodNo = 0;
                 foreach (var methodInfo in _controllerInfo.Actions.Values)
-                {
-                    script.AppendLine("                '" + methodInfo.ActionName.ToCamelCase() + "' : serviceNamespace" + ProxyScriptingJsFuncHelper.WrapWithBracketsOrWithDotPrefix(methodInfo.ActionName.ToCamelCase()) + ((methodNo++) < (_controllerInfo.Actions.Count - 1) ? "," : ""));
-                }
+                    script.AppendLine("                '" + methodInfo.ActionName.ToCamelCase() +
+                                      "' : serviceNamespace" +
+                                      ProxyScriptingJsFuncHelper.WrapWithBracketsOrWithDotPrefix(methodInfo.ActionName
+                                          .ToCamelCase()) +
+                                      (methodNo++ < _controllerInfo.Actions.Count - 1 ? "," : ""));
 
                 script.AppendLine("            };");
                 script.AppendLine("        });");
@@ -55,7 +58,8 @@ namespace Abp.WebApi.Controllers.Dynamic.Scripting.jQuery
             return script.ToString();
         }
 
-        private static void AppendMethod(StringBuilder script, DynamicApiControllerInfo controllerInfo, DynamicApiActionInfo methodInfo)
+        private static void AppendMethod(StringBuilder script, DynamicApiControllerInfo controllerInfo,
+            DynamicApiActionInfo methodInfo)
         {
             var generator = new JQueryActionScriptGenerator(controllerInfo, methodInfo);
             script.AppendLine(generator.GenerateMethod());

@@ -61,51 +61,38 @@ namespace Abp.WebApi.Client
             where TResult : class
         {
             var cookieContainer = new CookieContainer();
-            using (var handler = new HttpClientHandler {CookieContainer = cookieContainer})
+            using (var handler = new HttpClientHandler { CookieContainer = cookieContainer })
             {
                 using (var client = new HttpClient(handler))
                 {
                     client.Timeout = timeout.HasValue ? TimeSpan.FromMilliseconds(timeout.Value) : Timeout;
 
-                    if (!BaseUrl.IsNullOrEmpty())
-                    {
-                        client.BaseAddress = new Uri(BaseUrl);
-                    }
+                    if (!BaseUrl.IsNullOrEmpty()) client.BaseAddress = new Uri(BaseUrl);
 
                     client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
-                    foreach (var header in RequestHeaders)
-                    {
-                        client.DefaultRequestHeaders.Add(header.Name, header.Value);
-                    }
-                    
-                    using (var requestContent = new StringContent(Object2JsonString(input), Encoding.UTF8, "application/json"))
+                    foreach (var header in RequestHeaders) client.DefaultRequestHeaders.Add(header.Name, header.Value);
+
+                    using (var requestContent =
+                           new StringContent(Object2JsonString(input), Encoding.UTF8, "application/json"))
                     {
                         foreach (var cookie in Cookies)
-                        {
                             if (!BaseUrl.IsNullOrEmpty())
-                            {
                                 cookieContainer.Add(new Uri(BaseUrl), cookie);
-                            }
                             else
-                            {
                                 cookieContainer.Add(cookie);
-                            }
-                        }
 
                         using (var response = await client.PostAsync(url, requestContent))
                         {
                             SetResponseHeaders(response);
 
                             if (!response.IsSuccessStatusCode)
-                            {
-                                throw new AbpException("Could not made request to " + url + "! StatusCode: " + response.StatusCode + ", ReasonPhrase: " + response.ReasonPhrase);
-                            }
+                                throw new AbpException("Could not made request to " + url + "! StatusCode: " +
+                                                       response.StatusCode + ", ReasonPhrase: " +
+                                                       response.ReasonPhrase);
 
-                            var ajaxResponse = JsonString2Object<AjaxResponse<TResult>>(await response.Content.ReadAsStringAsync());
-                            if (!ajaxResponse.Success)
-                            {
-                                throw new AbpRemoteCallException(ajaxResponse.Error);
-                            }
+                            var ajaxResponse =
+                                JsonString2Object<AjaxResponse<TResult>>(await response.Content.ReadAsStringAsync());
+                            if (!ajaxResponse.Success) throw new AbpRemoteCallException(ajaxResponse.Error);
 
                             return ajaxResponse.Result;
                         }
@@ -118,20 +105,13 @@ namespace Abp.WebApi.Client
         {
             ResponseHeaders.Clear();
             foreach (var header in response.Headers)
-            {
-                foreach (var headerValue in header.Value)
-                {
-                    ResponseHeaders.Add(new NameValue(header.Key, headerValue));
-                }
-            }
+            foreach (var headerValue in header.Value)
+                ResponseHeaders.Add(new NameValue(header.Key, headerValue));
         }
 
         private static string Object2JsonString(object obj)
         {
-            if (obj == null)
-            {
-                return "";
-            }
+            if (obj == null) return "";
 
             return JsonConvert.SerializeObject(obj,
                 new JsonSerializerSettings

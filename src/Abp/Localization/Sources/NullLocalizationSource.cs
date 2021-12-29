@@ -15,18 +15,16 @@ namespace Abp.Localization.Sources
         /// </summary>
         public static NullLocalizationSource Instance { get; } = new NullLocalizationSource();
 
-        public string Name { get { return null; } }
+        public string Name => null;
 
         private readonly IReadOnlyList<LocalizedString> _emptyStringArray = new LocalizedString[0];
 
         private NullLocalizationSource()
         {
-
         }
 
         public void Initialize(ILocalizationConfiguration configuration, IIocResolver iocResolver)
         {
-
         }
 
         public string GetString(string name)

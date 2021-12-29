@@ -18,14 +18,12 @@ namespace Abp.Authorization.Users
 
         public virtual long UserId { get; set; }
 
-        [StringLength(MaxClaimTypeLength)]
-        public virtual string ClaimType { get; set; }
+        [StringLength(MaxClaimTypeLength)] public virtual string ClaimType { get; set; }
 
         public virtual string ClaimValue { get; set; }
 
         public UserClaim()
         {
-            
         }
 
         public UserClaim(AbpUserBase user, Claim claim)

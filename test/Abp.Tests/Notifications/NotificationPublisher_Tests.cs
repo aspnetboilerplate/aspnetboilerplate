@@ -46,7 +46,7 @@ namespace Abp.Tests.Notifications
                              n.Severity == NotificationSeverity.Success &&
                              n.DataTypeName == notificationData.GetType().AssemblyQualifiedName &&
                              n.Data.Contains("42")
-                        )
+                    )
                 );
 
             await _backgroundJobManager.Received()
@@ -74,7 +74,7 @@ namespace Abp.Tests.Notifications
             {
                 ["TestValue"] = 42
             };
-            
+
             return notificationData;
         }
     }

@@ -28,22 +28,15 @@ namespace Abp.Domain.Uow
             Check.NotNull(args, nameof(args));
 
             var defaultConnectionString = _configuration.DefaultNameOrConnectionString;
-            if (!string.IsNullOrWhiteSpace(defaultConnectionString))
-            {
-                return defaultConnectionString;
-            }
+            if (!string.IsNullOrWhiteSpace(defaultConnectionString)) return defaultConnectionString;
 
-            if (ConfigurationManager.ConnectionStrings["Default"] != null)
-            {
-                return "Default";
-            }
+            if (ConfigurationManager.ConnectionStrings["Default"] != null) return "Default";
 
             if (ConfigurationManager.ConnectionStrings.Count == 1)
-            {
                 return ConfigurationManager.ConnectionStrings[0].ConnectionString;
-            }
 
-            throw new AbpException("Could not find a connection string definition for the application. Set IAbpStartupConfiguration.DefaultNameOrConnectionString or add a 'Default' connection string to application .config file.");
+            throw new AbpException(
+                "Could not find a connection string definition for the application. Set IAbpStartupConfiguration.DefaultNameOrConnectionString or add a 'Default' connection string to application .config file.");
         }
 
         public virtual Task<string> GetNameOrConnectionStringAsync(ConnectionStringResolveArgs args)

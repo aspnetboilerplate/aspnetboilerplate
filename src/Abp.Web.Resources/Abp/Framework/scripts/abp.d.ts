@@ -9,9 +9,7 @@
     namespace multiTenancy {
 
         enum sides {
-
             TENANT = 1,
-
             HOST = 2
 
         }
@@ -57,7 +55,7 @@
             isDefault: boolean;
 
             isDisabled: boolean;
-            
+
             isRightToLeft: boolean;
 
         }
@@ -157,11 +155,8 @@
         function getInt(name: string): number;
 
         enum settingScopes {
-
             Application = 1,
-
             Tenant = 2,
-
             User = 4
         }
     }
@@ -260,7 +255,8 @@
 
         function getUserNotificationStateAsString(userNotificationState: userNotificationState): string;
 
-        function getUiNotifyFuncBySeverity(severity: severity): (message: string, title?: string, options?: any) => void;
+        function getUiNotifyFuncBySeverity(severity: severity): (message: string, title?: string, options?: any) =>
+            void;
 
         function getFormattedMessageFromUserNotification(userNotification: IUserNotification): string;
 
@@ -380,7 +376,12 @@
         * @param {string} domain (optional)
         * @param {any} attributes (optional)
         */
-        function setCookieValue(key: string, value: string, expireDate?: Date, path?: string, domain?: string, attributes?: any): void;
+        function setCookieValue(key: string,
+            value: string,
+            expireDate?: Date,
+            path?: string,
+            domain?: string,
+            attributes?: any): void;
 
         /**
         * Gets a cookie with given key.
@@ -431,7 +432,7 @@
 
                 timeZoneId: string;
 
-            }
+            };
 
         }
 

@@ -26,7 +26,8 @@ namespace Abp.ObjectComparators.DateTimeComparators
 
     public class NullableDateTimeObjectComparator : ObjectComparatorBase<DateTime?, NullableDateTimeCompareTypes>
     {
-        protected override bool Compare(DateTime? baseObject, DateTime? compareObject, NullableDateTimeCompareTypes compareType)
+        protected override bool Compare(DateTime? baseObject, DateTime? compareObject,
+            NullableDateTimeCompareTypes compareType)
         {
             var conditionBothHasValue = baseObject.HasValue && compareObject.HasValue;
             switch (compareType)

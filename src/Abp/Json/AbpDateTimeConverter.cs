@@ -9,22 +9,17 @@ namespace Abp.Json
     {
         public override bool CanConvert(Type objectType)
         {
-            if (objectType == typeof(DateTime) || objectType == typeof(DateTime?))
-            {
-                return true;
-            }
+            if (objectType == typeof(DateTime) || objectType == typeof(DateTime?)) return true;
 
             return false;
         }
 
-        public override object ReadJson(JsonReader reader, Type objectType, object existingValue, JsonSerializer serializer)
+        public override object ReadJson(JsonReader reader, Type objectType, object existingValue,
+            JsonSerializer serializer)
         {
             var date = base.ReadJson(reader, objectType, existingValue, serializer) as DateTime?;
 
-            if (date.HasValue)
-            {
-                return Clock.Normalize(date.Value);
-            }
+            if (date.HasValue) return Clock.Normalize(date.Value);
 
             return null;
         }

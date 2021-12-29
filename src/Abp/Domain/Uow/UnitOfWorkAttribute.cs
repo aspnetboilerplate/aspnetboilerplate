@@ -50,7 +50,6 @@ namespace Abp.Domain.Uow
         /// </summary>
         public UnitOfWorkAttribute()
         {
-
         }
 
         /// <summary>

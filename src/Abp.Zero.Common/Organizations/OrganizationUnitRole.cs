@@ -35,7 +35,6 @@ namespace Abp.Organizations
         /// </summary>
         public OrganizationUnitRole()
         {
-            
         }
 
         /// <summary>

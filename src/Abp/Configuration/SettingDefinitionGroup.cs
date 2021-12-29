@@ -30,10 +30,8 @@ namespace Abp.Configuration
         /// <summary>
         /// Gets a list of all children of this group.
         /// </summary>
-        public IReadOnlyList<SettingDefinitionGroup> Children
-        {
-            get { return _children.ToImmutableList(); }
-        }
+        public IReadOnlyList<SettingDefinitionGroup> Children => _children.ToImmutableList();
+
         private readonly List<SettingDefinitionGroup> _children;
 
         /// <summary>
@@ -43,7 +41,7 @@ namespace Abp.Configuration
         /// <param name="displayName">Display name of the setting</param>
         public SettingDefinitionGroup(string name, ILocalizableString displayName)
         {
-           Check.NotNullOrWhiteSpace(name, nameof(name));
+            Check.NotNullOrWhiteSpace(name, nameof(name));
 
             Name = name;
             DisplayName = displayName;
@@ -58,9 +56,8 @@ namespace Abp.Configuration
         public SettingDefinitionGroup AddChild(SettingDefinitionGroup child)
         {
             if (child.Parent != null)
-            {
-                throw new AbpException("Setting group " + child.Name + " has already a Parent (" + child.Parent.Name + ").");
-            }
+                throw new AbpException("Setting group " + child.Name + " has already a Parent (" + child.Parent.Name +
+                                       ").");
 
             _children.Add(child);
             child.Parent = this;

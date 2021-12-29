@@ -33,19 +33,22 @@ namespace Abp.Tests.Dependency
                 _resolver.Resolve<MyClass>();
                 Assert.False(true, "Should not resolve by class that is registered by interface");
             }
-            catch { }
+            catch
+            {
+            }
         }
 
         [Fact]
         public void Should_Get_Different_Objects_For_Transients()
         {
             _registrar.Register<MyClass>(DependencyLifeStyle.Transient);
-            
+
             var obj1 = _resolver.Resolve<MyClass>();
             var obj2 = _resolver.Resolve<MyClass>();
 
             obj1.ShouldNotBeSameAs(obj2);
         }
+
         [Fact]
         public void Should_Get_Same_Object_For_Singleton()
         {
@@ -60,12 +63,10 @@ namespace Abp.Tests.Dependency
 
         public class MyClass : IMyInterface
         {
-            
         }
 
         public interface IMyInterface
         {
-
         }
     }
 }

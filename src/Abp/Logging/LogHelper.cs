@@ -45,31 +45,21 @@ namespace Abp.Logging
             if (exception is AggregateException && exception.InnerException != null)
             {
                 var aggException = exception as AggregateException;
-                if (aggException.InnerException is AbpValidationException)
-                {
-                    exception = aggException.InnerException;
-                }
+                if (aggException.InnerException is AbpValidationException) exception = aggException.InnerException;
             }
 
-            if (!(exception is AbpValidationException))
-            {
-                return;
-            }
+            if (!(exception is AbpValidationException)) return;
 
             var validationException = exception as AbpValidationException;
-            if (validationException.ValidationErrors.IsNullOrEmpty())
-            {
-                return;
-            }
+            if (validationException.ValidationErrors.IsNullOrEmpty()) return;
 
-            logger.Log(validationException.Severity, "There are " + validationException.ValidationErrors.Count + " validation errors:");
+            logger.Log(validationException.Severity,
+                "There are " + validationException.ValidationErrors.Count + " validation errors:");
             foreach (var validationResult in validationException.ValidationErrors)
             {
                 var memberNames = "";
                 if (validationResult.MemberNames != null && validationResult.MemberNames.Any())
-                {
                     memberNames = " (" + string.Join(", ", validationResult.MemberNames) + ")";
-                }
 
                 logger.Log(validationException.Severity, validationResult.ErrorMessage + memberNames);
             }

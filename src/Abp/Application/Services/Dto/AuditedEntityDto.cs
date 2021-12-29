@@ -9,7 +9,6 @@ namespace Abp.Application.Services.Dto
     [Serializable]
     public abstract class AuditedEntityDto : AuditedEntityDto<int>
     {
-
     }
 
     /// <summary>

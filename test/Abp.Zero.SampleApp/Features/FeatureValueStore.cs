@@ -17,14 +17,13 @@ namespace Abp.Zero.SampleApp.Features
             IFeatureManager featureManager,
             IUnitOfWorkManager unitOfWorkManager)
             : base(
-                  cacheManager, 
-                  tenantFeatureRepository, 
-                  tenantRepository, 
-                  editionFeatureRepository, 
-                  featureManager,
-                  unitOfWorkManager)
+                cacheManager,
+                tenantFeatureRepository,
+                tenantRepository,
+                editionFeatureRepository,
+                featureManager,
+                unitOfWorkManager)
         {
-
         }
     }
 }

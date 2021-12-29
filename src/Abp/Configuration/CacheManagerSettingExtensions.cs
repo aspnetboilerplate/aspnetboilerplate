@@ -11,7 +11,8 @@ namespace Abp.Configuration
         /// <summary>
         /// Gets application settings cache.
         /// </summary>
-        public static ITypedCache<string, Dictionary<string, SettingInfo>> GetApplicationSettingsCache(this ICacheManager cacheManager)
+        public static ITypedCache<string, Dictionary<string, SettingInfo>> GetApplicationSettingsCache(
+            this ICacheManager cacheManager)
         {
             return cacheManager
                 .GetCache<string, Dictionary<string, SettingInfo>>(AbpCacheNames.ApplicationSettings);
@@ -20,7 +21,8 @@ namespace Abp.Configuration
         /// <summary>
         /// Gets tenant settings cache.
         /// </summary>
-        public static ITypedCache<int, Dictionary<string, SettingInfo>> GetTenantSettingsCache(this ICacheManager cacheManager)
+        public static ITypedCache<int, Dictionary<string, SettingInfo>> GetTenantSettingsCache(
+            this ICacheManager cacheManager)
         {
             return cacheManager
                 .GetCache<int, Dictionary<string, SettingInfo>>(AbpCacheNames.TenantSettings);
@@ -29,7 +31,8 @@ namespace Abp.Configuration
         /// <summary>
         /// Gets user settings cache.
         /// </summary>
-        public static ITypedCache<string, Dictionary<string, SettingInfo>> GetUserSettingsCache(this ICacheManager cacheManager)
+        public static ITypedCache<string, Dictionary<string, SettingInfo>> GetUserSettingsCache(
+            this ICacheManager cacheManager)
         {
             return cacheManager
                 .GetCache<string, Dictionary<string, SettingInfo>>(AbpCacheNames.UserSettings);

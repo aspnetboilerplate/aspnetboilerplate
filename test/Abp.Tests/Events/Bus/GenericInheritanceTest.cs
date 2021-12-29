@@ -40,16 +40,14 @@ namespace Abp.Tests.Events.Bus
 
             triggeredEvent.ShouldBe(true);
         }
-        
-        
+
+
         public class Person : Entity
         {
-            
         }
 
         public class Student : Person
         {
-            
         }
     }
 }

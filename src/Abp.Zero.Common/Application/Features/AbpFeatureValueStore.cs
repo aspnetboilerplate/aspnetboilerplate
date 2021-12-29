@@ -25,7 +25,6 @@ namespace Abp.Application.Features
         IEventHandler<EntityChangingEventData<Edition>>,
         IEventHandler<EntityChangingEventData<EditionFeatureSetting>>,
         IEventHandler<EntityChangingEventData<TenantFeatureSetting>>
-
         where TTenant : AbpTenant<TUser>
         where TUser : AbpUserBase
     {
@@ -89,18 +88,12 @@ namespace Abp.Application.Features
         {
             var cacheItem = await GetTenantFeatureCacheItemAsync(tenantId);
             var value = cacheItem.FeatureValues.GetOrDefault(featureName);
-            if (value != null)
-            {
-                return value;
-            }
+            if (value != null) return value;
 
             if (cacheItem.EditionId.HasValue)
             {
                 value = await GetEditionValueOrNullAsync(cacheItem.EditionId.Value, featureName);
-                if (value != null)
-                {
-                    return value;
-                }
+                if (value != null) return value;
             }
 
             return null;
@@ -110,23 +103,17 @@ namespace Abp.Application.Features
         {
             var cacheItem = GetTenantFeatureCacheItem(tenantId);
             var value = cacheItem.FeatureValues.GetOrDefault(featureName);
-            if (value != null)
-            {
-                return value;
-            }
+            if (value != null) return value;
 
             if (cacheItem.EditionId.HasValue)
             {
                 value = GetEditionValueOrNull(cacheItem.EditionId.Value, featureName);
-                if (value != null)
-                {
-                    return value;
-                }
+                if (value != null) return value;
             }
 
             return null;
         }
-        
+
         public virtual async Task SetEditionFeatureValueAsync(int editionId, string featureName, string value)
         {
             await _unitOfWorkManager.WithUnitOfWorkAsync(async () =>
@@ -134,42 +121,33 @@ namespace Abp.Application.Features
                 using (_unitOfWorkManager.Current.EnableFilter(AbpDataFilters.MayHaveTenant))
                 using (_unitOfWorkManager.Current.SetTenantId(null))
                 {
-                    if (await GetEditionValueOrNullAsync(editionId, featureName) == value)
-                    {
-                        return;
-                    }
+                    if (await GetEditionValueOrNullAsync(editionId, featureName) == value) return;
 
-                    var currentFeature = await _editionFeatureRepository.FirstOrDefaultAsync(f => f.EditionId == editionId && f.Name == featureName);
+                    var currentFeature =
+                        await _editionFeatureRepository.FirstOrDefaultAsync(f =>
+                            f.EditionId == editionId && f.Name == featureName);
 
                     var feature = _featureManager.GetOrNull(featureName);
                     if (feature == null || feature.DefaultValue == value)
                     {
-                        if (currentFeature != null)
-                        {
-                            await _editionFeatureRepository.DeleteAsync(currentFeature);
-                        }
+                        if (currentFeature != null) await _editionFeatureRepository.DeleteAsync(currentFeature);
 
                         return;
                     }
 
                     if (!feature.InputType.Validator.IsValid(value))
-                    {
                         throw new UserFriendlyException(string.Format(
                             L("InvalidFeatureValue"), feature.Name));
-                    }
 
                     if (currentFeature == null)
-                    {
-                        await _editionFeatureRepository.InsertAsync(new EditionFeatureSetting(editionId, featureName, value));
-                    }
+                        await _editionFeatureRepository.InsertAsync(
+                            new EditionFeatureSetting(editionId, featureName, value));
                     else
-                    {
                         currentFeature.Value = value;
-                    }
                 }
             });
         }
-        
+
         public virtual void SetEditionFeatureValue(int editionId, string featureName, string value)
         {
             _unitOfWorkManager.WithUnitOfWork(() =>
@@ -177,32 +155,24 @@ namespace Abp.Application.Features
                 using (_unitOfWorkManager.Current.EnableFilter(AbpDataFilters.MayHaveTenant))
                 using (_unitOfWorkManager.Current.SetTenantId(null))
                 {
-                    if (GetEditionValueOrNull(editionId, featureName) == value)
-                    {
-                        return;
-                    }
+                    if (GetEditionValueOrNull(editionId, featureName) == value) return;
 
-                    var currentFeature = _editionFeatureRepository.FirstOrDefault(f => f.EditionId == editionId && f.Name == featureName);
+                    var currentFeature =
+                        _editionFeatureRepository.FirstOrDefault(f =>
+                            f.EditionId == editionId && f.Name == featureName);
 
                     var feature = _featureManager.GetOrNull(featureName);
                     if (feature == null || feature.DefaultValue == value)
                     {
-                        if (currentFeature != null)
-                        {
-                            _editionFeatureRepository.Delete(currentFeature);
-                        }
+                        if (currentFeature != null) _editionFeatureRepository.Delete(currentFeature);
 
                         return;
                     }
 
                     if (currentFeature == null)
-                    {
                         _editionFeatureRepository.Insert(new EditionFeatureSetting(editionId, featureName, value));
-                    }
                     else
-                    {
                         currentFeature.Value = value;
-                    }
                 }
             });
         }
@@ -231,9 +201,7 @@ namespace Abp.Application.Features
                     {
                         var featureSettings = await _tenantFeatureRepository.GetAllListAsync();
                         foreach (var featureSetting in featureSettings)
-                        {
                             newCacheItem.FeatureValues[featureSetting.Name] = featureSetting.Value;
-                        }
 
                         await uow.CompleteAsync();
                     }
@@ -267,9 +235,7 @@ namespace Abp.Application.Features
                     {
                         var featureSettings = _tenantFeatureRepository.GetAllList();
                         foreach (var featureSetting in featureSettings)
-                        {
                             newCacheItem.FeatureValues[featureSetting.Name] = featureSetting.Value;
-                        }
 
                         uow.Complete();
                     }
@@ -308,11 +274,10 @@ namespace Abp.Application.Features
                 using (_unitOfWorkManager.Current.EnableFilter(AbpDataFilters.MayHaveTenant))
                 using (_unitOfWorkManager.Current.SetTenantId(null))
                 {
-                    var featureSettings = await _editionFeatureRepository.GetAllListAsync(f => f.EditionId == editionId);
+                    var featureSettings =
+                        await _editionFeatureRepository.GetAllListAsync(f => f.EditionId == editionId);
                     foreach (var featureSetting in featureSettings)
-                    {
                         newCacheItem.FeatureValues[featureSetting.Name] = featureSetting.Value;
-                    }
 
                     await uow.CompleteAsync();
                 }
@@ -332,9 +297,7 @@ namespace Abp.Application.Features
                 {
                     var featureSettings = _editionFeatureRepository.GetAllList(f => f.EditionId == editionId);
                     foreach (var featureSetting in featureSettings)
-                    {
                         newCacheItem.FeatureValues[featureSetting.Name] = featureSetting.Value;
-                    }
 
                     uow.Complete();
                 }
@@ -350,10 +313,7 @@ namespace Abp.Application.Features
 
         public virtual void HandleEvent(EntityChangingEventData<Edition> eventData)
         {
-            if (eventData.Entity.IsTransient())
-            {
-                return;
-            }
+            if (eventData.Entity.IsTransient()) return;
 
             _cacheManager.GetEditionFeatureCache().Remove(eventData.Entity.Id);
         }
@@ -361,9 +321,7 @@ namespace Abp.Application.Features
         public virtual void HandleEvent(EntityChangingEventData<TenantFeatureSetting> eventData)
         {
             if (eventData.Entity.TenantId.HasValue)
-            {
                 _cacheManager.GetTenantFeatureCache().Remove(eventData.Entity.TenantId.Value);
-            }
         }
 
         protected virtual string L(string name)

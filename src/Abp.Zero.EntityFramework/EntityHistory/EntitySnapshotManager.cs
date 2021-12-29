@@ -20,10 +20,12 @@ namespace Abp.EntityHistory
         protected override Task<TEntity> GetEntityById<TEntity, TPrimaryKey>(TPrimaryKey id)
         {
             return EntityChangeRepository.GetDbContext()
-                .Set<TEntity>().AsQueryable().FirstOrDefaultAsync(CreateEqualityExpressionForId<TEntity, TPrimaryKey>(id));
+                .Set<TEntity>().AsQueryable()
+                .FirstOrDefaultAsync(CreateEqualityExpressionForId<TEntity, TPrimaryKey>(id));
         }
 
-        protected override IQueryable<EntityChange> GetEntityChanges<TEntity, TPrimaryKey>(TPrimaryKey id, DateTime snapshotTime)
+        protected override IQueryable<EntityChange> GetEntityChanges<TEntity, TPrimaryKey>(TPrimaryKey id,
+            DateTime snapshotTime)
         {
             string fullName = typeof(TEntity).FullName;
             var idJson = id.ToJsonString();

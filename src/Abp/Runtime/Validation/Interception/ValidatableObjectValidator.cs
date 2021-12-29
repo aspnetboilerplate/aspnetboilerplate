@@ -10,9 +10,7 @@ namespace Abp.Runtime.Validation.Interception
             var validationErrors = new List<ValidationResult>();
 
             if (validatingObject is IValidatableObject o)
-            {
                 validationErrors.AddRange(o.Validate(new ValidationContext(o)));
-            }
 
             return validationErrors;
         }

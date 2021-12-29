@@ -20,16 +20,10 @@ namespace Abp.Web.Security.AntiForgery
             var authCookieValue = GetCookieValue(manager.Configuration.AuthorizationCookieName, headers);
             var antiForgeryCookieValue = GetCookieValue(manager.Configuration.TokenCookieName, headers);
 
-            if (antiForgeryCookieValue.IsNullOrEmpty())
-            {
-                return authCookieValue.IsNullOrEmpty();
-            }
+            if (antiForgeryCookieValue.IsNullOrEmpty()) return authCookieValue.IsNullOrEmpty();
 
             var headerTokenValue = GetHeaderValue(manager, headers);
-            if (headerTokenValue.IsNullOrEmpty())
-            {
-                return false;
-            }
+            if (headerTokenValue.IsNullOrEmpty()) return false;
 
             return manager.As<IAbpAntiForgeryValidator>().IsValid(antiForgeryCookieValue, headerTokenValue);
         }
@@ -37,10 +31,7 @@ namespace Abp.Web.Security.AntiForgery
         private static string GetCookieValue(string cookieName, HttpRequestHeaders headers)
         {
             var cookie = headers.GetCookies(cookieName).LastOrDefault();
-            if (cookie == null)
-            {
-                return null;
-            }
+            if (cookie == null) return null;
 
             return cookie[cookieName].Value;
         }
@@ -48,16 +39,10 @@ namespace Abp.Web.Security.AntiForgery
         private static string GetHeaderValue(IAbpAntiForgeryManager manager, HttpRequestHeaders headers)
         {
             IEnumerable<string> headerValues;
-            if (!headers.TryGetValues(manager.Configuration.TokenHeaderName, out headerValues))
-            {
-                return null;
-            }
+            if (!headers.TryGetValues(manager.Configuration.TokenHeaderName, out headerValues)) return null;
 
             var headersArray = headerValues.ToArray();
-            if (!headersArray.Any())
-            {
-                return null;
-            }
+            if (!headersArray.Any()) return null;
 
             return headersArray.Last().Split(", ").Last();
         }

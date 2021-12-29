@@ -4,12 +4,10 @@
     {
         public ApiClientBuilder(string url)
         {
-            
         }
 
         public void Build()
         {
-            
         }
     }
 }

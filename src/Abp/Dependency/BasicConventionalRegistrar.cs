@@ -20,7 +20,7 @@ namespace Abp.Dependency
                     .WithService.Self()
                     .WithService.DefaultInterfaces()
                     .LifestyleTransient()
-                );
+            );
 
             //Singleton
             context.IocManager.IocContainer.Register(
@@ -31,7 +31,7 @@ namespace Abp.Dependency
                     .WithService.Self()
                     .WithService.DefaultInterfaces()
                     .LifestyleSingleton()
-                );
+            );
 
             //Windsor Interceptors
             context.IocManager.IocContainer.Register(
@@ -41,7 +41,7 @@ namespace Abp.Dependency
                     .If(type => !type.GetTypeInfo().IsGenericTypeDefinition)
                     .WithService.Self()
                     .LifestyleTransient()
-                );
+            );
         }
     }
 }

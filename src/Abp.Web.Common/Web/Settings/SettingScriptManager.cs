@@ -46,25 +46,20 @@ namespace Abp.Web.Settings
             {
                 foreach (var settingDefinition in settingDefinitions)
                 {
-                    if (!await settingDefinition.ClientVisibilityProvider.CheckVisible(scope))
-                    {
-                        continue;
-                    }
+                    if (!await settingDefinition.ClientVisibilityProvider.CheckVisible(scope)) continue;
 
                     if (added > 0)
-                    {
                         script.AppendLine(",");
-                    }
                     else
-                    {
                         script.AppendLine();
-                    }
 
                     var settingValue = await _settingManager.GetSettingValueAsync(settingDefinition.Name);
 
                     script.Append("        '" +
                                   HttpEncode.JavaScriptStringEncode(settingDefinition.Name) + "': " +
-                                  (settingValue == null ? "null" : "'" + HttpEncode.JavaScriptStringEncode(settingValue) + "'"));
+                                  (settingValue == null
+                                      ? "null"
+                                      : "'" + HttpEncode.JavaScriptStringEncode(settingValue) + "'"));
 
                     ++added;
                 }

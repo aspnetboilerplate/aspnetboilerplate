@@ -31,7 +31,8 @@ namespace Abp.DynamicEntityProperties
 
         List<DynamicEntityPropertyValue> GetValues(string entityFullName, string entityId, int dynamicPropertyId);
 
-        Task<List<DynamicEntityPropertyValue>> GetValuesAsync(string entityFullName, string entityId, int dynamicPropertyId);
+        Task<List<DynamicEntityPropertyValue>> GetValuesAsync(string entityFullName, string entityId,
+            int dynamicPropertyId);
 
         void CleanValues(int dynamicEntityPropertyId, string entityId);
 

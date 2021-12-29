@@ -12,10 +12,7 @@ namespace Abp.Web.Threading
         {
             get
             {
-                if (OverridedValue != null)
-                {
-                    return OverridedValue.CancellationToken;
-                }
+                if (OverridedValue != null) return OverridedValue.CancellationToken;
 
                 try
                 {
@@ -33,6 +30,7 @@ namespace Abp.Web.Threading
                 }
             }
         }
+
         public HttpContextCancellationTokenProvider(
             IAmbientScopeProvider<CancellationTokenOverride> cancellationTokenOverrideScopeProvider)
             : base(cancellationTokenOverrideScopeProvider)

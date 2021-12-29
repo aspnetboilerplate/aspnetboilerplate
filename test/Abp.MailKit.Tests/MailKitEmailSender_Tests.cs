@@ -28,7 +28,7 @@ namespace Abp.MailKit.Tests
         {
             var mailSender = CreateMailKitEmailSender();
             var mailMessage = new MailMessage("from_mail_address", "to_mail_address", "subject", "body")
-            { IsBodyHtml = true };
+                { IsBodyHtml = true };
 
             await mailSender.SendAsync(mailMessage);
         }
@@ -38,7 +38,7 @@ namespace Abp.MailKit.Tests
         {
             var mailSender = CreateMailKitEmailSender();
             var mailMessage = new MailMessage("from_mail_address", "to_mail_address", "subject", "body")
-            { IsBodyHtml = true };
+                { IsBodyHtml = true };
 
             mailSender.Send(mailMessage);
         }
@@ -53,7 +53,8 @@ namespace Abp.MailKit.Tests
             mailConfig.Port.Returns(587);
             mailConfig.EnableSsl.Returns(false);
 
-            var mailSender = new MailKitEmailSender(mailConfig, new DefaultMailKitSmtpBuilder(mailConfig, new AbpMailKitConfiguration()));
+            var mailSender = new MailKitEmailSender(mailConfig,
+                new DefaultMailKitSmtpBuilder(mailConfig, new AbpMailKitConfiguration()));
             return mailSender;
         }
     }

@@ -39,7 +39,8 @@ namespace Abp.Events.Bus
         }
 
         /// <inheritdoc/>
-        public IDisposable AsyncRegister<TEventData>(IAsyncEventHandler<TEventData> handler) where TEventData : IEventData
+        public IDisposable AsyncRegister<TEventData>(IAsyncEventHandler<TEventData> handler)
+            where TEventData : IEventData
         {
             return NullDisposable.Instance;
         }

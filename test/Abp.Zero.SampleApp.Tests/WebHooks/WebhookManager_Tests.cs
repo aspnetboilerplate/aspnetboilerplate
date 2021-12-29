@@ -14,7 +14,7 @@ namespace Abp.Zero.SampleApp.Tests.Webhooks
     public class WebhookManager_Tests : WebhookTestBase
     {
         private readonly IWebhookManager _webhookManager;
-        
+
         public WebhookManager_Tests()
         {
             _webhookManager = Resolve<IWebhookManager>();
@@ -53,7 +53,7 @@ namespace Abp.Zero.SampleApp.Tests.Webhooks
             ((string)JsonConvert.SerializeObject(payload.Data)).ShouldBe(data);
             payload.Attempt.ShouldBe(1);
         }
-        
+
         [Fact]
         public async Task SignWebhookRequest_Tests()
         {
@@ -80,13 +80,13 @@ namespace Abp.Zero.SampleApp.Tests.Webhooks
         //WebhookPayload with parameterless constructor for testing
         public class WebhookPayloadTest : WebhookPayload
         {
-            public WebhookPayloadTest(string id, string webHookWebhookEvent, int attempt) : base(id, webHookWebhookEvent, attempt)
+            public WebhookPayloadTest(string id, string webHookWebhookEvent, int attempt) : base(id,
+                webHookWebhookEvent, attempt)
             {
             }
 
             public WebhookPayloadTest() : base("test", "test", int.MaxValue)
             {
-
             }
         }
 
@@ -95,7 +95,7 @@ namespace Abp.Zero.SampleApp.Tests.Webhooks
         {
             string data = new { Test = "test" }.ToJsonString();
 
-            var serializedBody =_webhookManager.GetSerializedBody(new WebhookSenderArgs()
+            var serializedBody = _webhookManager.GetSerializedBody(new WebhookSenderArgs()
             {
                 TenantId = 1,
                 WebhookName = AppWebhookDefinitionNames.Theme.DefaultThemeChanged,
@@ -136,7 +136,7 @@ namespace Abp.Zero.SampleApp.Tests.Webhooks
 
             serializedBody.ShouldBe(data); // serializedBody must be equal to data
         }
-        
+
         [Fact]
         public async Task GetSerializedBodyAsync_SendExactSameData_False_Test()
         {

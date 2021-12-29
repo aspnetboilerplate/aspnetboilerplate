@@ -24,7 +24,6 @@ namespace Abp.Domain.Entities
         /// </summary>
         public EntityNotFoundException()
         {
-
         }
 
         /// <summary>
@@ -33,16 +32,14 @@ namespace Abp.Domain.Entities
         public EntityNotFoundException(SerializationInfo serializationInfo, StreamingContext context)
             : base(serializationInfo, context)
         {
-
         }
-        
+
         /// <summary>
         /// Creates a new <see cref="EntityNotFoundException"/> object.
         /// </summary>
         public EntityNotFoundException(Type entityType, object id)
             : this(entityType, id, null)
         {
-
         }
 
         /// <summary>
@@ -62,7 +59,6 @@ namespace Abp.Domain.Entities
         public EntityNotFoundException(string message)
             : base(message)
         {
-
         }
 
         /// <summary>
@@ -73,7 +69,6 @@ namespace Abp.Domain.Entities
         public EntityNotFoundException(string message, Exception innerException)
             : base(message, innerException)
         {
-
         }
     }
 }

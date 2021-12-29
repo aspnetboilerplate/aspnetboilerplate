@@ -63,7 +63,6 @@ namespace Abp.Notifications
 
         public TenantNotificationInfo()
         {
-            
         }
 
         public TenantNotificationInfo(Guid id, int? tenantId, NotificationInfo notification)

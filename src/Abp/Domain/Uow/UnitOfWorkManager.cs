@@ -15,10 +15,7 @@ namespace Abp.Domain.Uow
         private readonly ICurrentUnitOfWorkProvider _currentUnitOfWorkProvider;
         private readonly IUnitOfWorkDefaultOptions _defaultOptions;
 
-        public IActiveUnitOfWork Current
-        {
-            get { return _currentUnitOfWorkProvider.Current; }
-        }
+        public IActiveUnitOfWork Current => _currentUnitOfWorkProvider.Current;
 
         public UnitOfWorkManager(
             IIocResolver iocResolver,
@@ -47,42 +44,25 @@ namespace Abp.Domain.Uow
             var outerUow = _currentUnitOfWorkProvider.Current;
 
             if (options.Scope == TransactionScopeOption.Required && outerUow != null)
-            {
                 return outerUow.Options?.Scope == TransactionScopeOption.Suppress
                     ? new InnerSuppressUnitOfWorkCompleteHandle(outerUow)
                     : new InnerUnitOfWorkCompleteHandle();
-            }
 
             var uow = _iocResolver.Resolve<IUnitOfWork>();
 
-            uow.Completed += (sender, args) =>
-            {
-                _currentUnitOfWorkProvider.Current = null;
-            };
+            uow.Completed += (sender, args) => { _currentUnitOfWorkProvider.Current = null; };
 
-            uow.Failed += (sender, args) =>
-            {
-                _currentUnitOfWorkProvider.Current = null;
-            };
+            uow.Failed += (sender, args) => { _currentUnitOfWorkProvider.Current = null; };
 
-            uow.Disposed += (sender, args) =>
-            {
-                _iocResolver.Release(uow);
-            };
+            uow.Disposed += (sender, args) => { _iocResolver.Release(uow); };
 
             //Inherit filters from outer UOW
-            if (outerUow != null)
-            {
-                options.FillOuterUowFiltersForNonProvidedOptions(outerUow.Filters.ToList());
-            }
+            if (outerUow != null) options.FillOuterUowFiltersForNonProvidedOptions(outerUow.Filters.ToList());
 
             uow.Begin(options);
 
             //Inherit tenant from outer UOW
-            if (outerUow != null)
-            {
-                uow.SetTenantId(outerUow.GetTenantId(), false);
-            }
+            if (outerUow != null) uow.SetTenantId(outerUow.GetTenantId(), false);
 
             _currentUnitOfWorkProvider.Current = uow;
 

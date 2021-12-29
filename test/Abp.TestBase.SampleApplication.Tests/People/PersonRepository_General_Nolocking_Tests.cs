@@ -1,12 +1,9 @@
 ﻿using System.Linq;
-
 using Abp.Domain.Repositories;
 using Abp.Domain.Uow;
 using Abp.EntityFramework.Extensions;
 using Abp.TestBase.SampleApplication.People;
-
 using Shouldly;
-
 using Xunit;
 
 namespace Abp.TestBase.SampleApplication.Tests.People

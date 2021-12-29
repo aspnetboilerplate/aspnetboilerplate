@@ -1,12 +1,11 @@
 ﻿using Abp.AspNetCore.Mvc.Controllers;
 
-namespace AbpAspNetCoreDemo.Controllers
+namespace AbpAspNetCoreDemo.Controllers;
+
+public class DemoControllerBase : AbpController
 {
-    public class DemoControllerBase : AbpController
+    public DemoControllerBase()
     {
-        public DemoControllerBase()
-        {
-            LocalizationSourceName = "AbpAspNetCoreDemoModule";
-        }
+        LocalizationSourceName = "AbpAspNetCoreDemoModule";
     }
 }

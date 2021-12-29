@@ -96,7 +96,7 @@ namespace Abp.Webhooks
         /// <param name="webhookName"><see cref="WebhookDefinition.Name"/></param>
         /// <returns></returns>
         List<WebhookSubscriptionInfo> GetAllSubscriptions(int? tenantId, string webhookName);
-        
+
         /// <summary>
         /// Returns all subscriptions of given tenant including deactivated 
         /// </summary>
@@ -132,7 +132,7 @@ namespace Abp.Webhooks
         /// <param name="webhookName"><see cref="WebhookDefinition.Name"/></param>
         /// <returns></returns>
         List<WebhookSubscriptionInfo> GetAllSubscriptionsOfTenants(int?[] tenantIds, string webhookName);
-        
+
 
         /// <summary>
         /// Checks if tenant subscribed for a webhook

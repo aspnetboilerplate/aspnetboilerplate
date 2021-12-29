@@ -11,7 +11,7 @@ namespace Abp.Zero.NHibernate.EntityMappings
             Map(x => x.TenantId);
             Map(x => x.UserId);
             Map(x => x.RoleId);
-            
+
             this.MapCreationAudited();
         }
     }

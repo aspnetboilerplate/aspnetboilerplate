@@ -17,10 +17,7 @@ namespace Abp.Web.Minifier
             Check.NotNull(javaScriptCode, nameof(javaScriptCode));
 
             var result = Uglify.Js(javaScriptCode);
-            if (!result.HasErrors)
-            {
-                return result.Code;
-            }
+            if (!result.HasErrors) return result.Code;
 
             Logger.Warn($"{nameof(NUglifyJavaScriptMinifier)} has encountered an error in handling javascript.");
             result.Errors.ForEach(error => Logger.Warn(error.ToString()));

@@ -41,8 +41,8 @@ namespace Abp.RealTime
         /// </summary>
         public object this[string key]
         {
-            get { return Properties[key]; }
-            set { Properties[key] = value; }
+            get => Properties[key];
+            set => Properties[key] = value;
         }
 
         /// <summary>
@@ -50,17 +50,15 @@ namespace Abp.RealTime
         /// </summary>
         public Dictionary<string, object> Properties
         {
-            get { return _properties; }
+            get => _properties;
             set
             {
-                if (value == null)
-                {
-                    throw new ArgumentNullException(nameof(value));
-                }
+                if (value == null) throw new ArgumentNullException(nameof(value));
 
                 _properties = value;
             }
         }
+
         private Dictionary<string, object> _properties;
 
         /// <summary>
