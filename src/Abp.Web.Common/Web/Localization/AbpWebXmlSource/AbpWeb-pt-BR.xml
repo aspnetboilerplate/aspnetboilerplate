@@ -7,5 +7,14 @@
     <text name="Cancel" value="Cancelar" />
     <text name="Yes" value="Sim" />
     <text name="ValidationNarrativeTitle" value="Os seguintes erros foram detectados durante a validação." />
+    <text name="DefaultError" value="Ocorreu um erro!" />
+    <text name="DefaultErrorDetail" value="Detalhes do erro não foram informados pelo servidor." />
+    <text name="DefaultError401" value="Você não está autenticado!" />
+    <text name="DefaultErrorDetail401" value="Você deve estar autenticado (fazer login) antes de efetuar esta operação." />
+    <text name="DefaultError403" value="Você não está autorizado!" />
+    <text name="DefaultErrorDetail403" value="Você não possui a permissão necessária para esta operação." />
+    <text name="DefaultError404" value="Recurso não encontrado!" />
+    <text name="DefaultErrorDetail404" value="O Recurso requisitado não foi encontrado no servidor." />
+    <text name="EntityNotFound" value="A entidade {0} não foi encontrada para o id = {1}!" />
   </texts>
 </localizationDictionary>
