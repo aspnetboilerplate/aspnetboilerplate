@@ -92,7 +92,7 @@ some optional properties for more fine-tuned control.
 -   **Description**: A localizable string to show the feature's detailed
     description to users.
 -   **InputType**: A UI input type for the feature. This can be defined,
-    and then used while creating an automatic feature screen.
+    and then used while creating an automatic feature screen (Available input types are CheckboxInputType, ComboboxInputType and SingleLineStringInputType).
 -   **Attributes**: An arbitrary custom dictionary of key-value pairs
     that are related to the feature.
 
