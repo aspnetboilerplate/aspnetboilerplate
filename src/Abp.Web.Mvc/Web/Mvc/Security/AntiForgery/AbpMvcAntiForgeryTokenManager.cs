@@ -55,7 +55,7 @@ namespace Abp.Web.Mvc.Security.AntiForgery
             try
             {
                 System.Web.Helpers.AntiForgery.Validate(
-                    HttpContext.Current.Request.Cookies[AntiForgeryConfig.CookieName]?.Value ?? cookieValue,
+                    HttpContext.Current?.Request.Cookies[AntiForgeryConfig.CookieName]?.Value ?? cookieValue,
                     tokenValue
                     );
 
