@@ -244,6 +244,25 @@ If you want to send webhook(s) to a specific tenant you can set tenant id as see
  await _webHookPublisher.PublishAsync(AppWebHookNames.TenantDeleted, tenantDeletedInput,null);//sends webhook(s) to subscriptions of host
 ```
 
+As we mentioned before, users can define headers for their webhook subscription. But sometimes you may want to send webhooks with same headers. Or you may need to replace user's header etc. To do that you can use header parameter in Publish methods.
+
+```csharp
+await _webhookPublisher.PublishAsync(AppWebhookDefinitionNames.Users.Created, data, 
+  headers: new WebhookHeader()
+  {
+      UseOnlyGivenHeaders = false,
+      Headers = new Dictionary<string, string>()
+      {
+          {"Key1", "Value1"},
+          {"Key3", "Value3"}
+      }
+  };
+);
+```
+
+ Note: 
+ * If subscription already has given header, publisher uses the one you give. 
+ * If the **UseOnlyGivenHeaders** parameter is **true**, webhook will only contain given headers. If it is **false** given headers will be added to predefined headers in subscription (default is **false**).
 
 
 ### Configuration
