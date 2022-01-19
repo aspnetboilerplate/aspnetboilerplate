@@ -224,6 +224,26 @@ requests will work automatically. For non-ajax form submits, ASP.NET
 Core automatically adds an anti-forgery token field if you use one of
 asp-\* tags in your form. So there's normally no need to use @Html.AntiForgeryToken().
 
+_________
+
+Note: If you host your application in multiple instances and use redis, you should also use redis for antiforgery token.
+
+* Add `Microsoft.AspNetCore.DataProtection.StackExchangeRedis` nuget package to your `*.Host` project.
+* Add following code to `*.Host/Startup.cs` 
+
+```csharp
+public void ConfigureServices(IServiceCollection services)
+{
+    services.AddDataProtection()
+        .PersistKeysToStackExchangeRedis(
+            ConnectionMultiplexer.Connect(_appConfiguration["Abp:RedisCache:ConnectionString"])
+            , "DataProtection-Keys"
+        );
+    ...
+}
+```
+____________
+
 ### Client Libraries
 
 The anti-forgery token must be provided in the request header for all AJAX
