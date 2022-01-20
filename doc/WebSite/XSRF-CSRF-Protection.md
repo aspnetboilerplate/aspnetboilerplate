@@ -228,8 +228,8 @@ _________
 
 Note: If you host your application in multiple instances and use redis, you should also use redis for antiforgery token.
 
-* Add `Microsoft.AspNetCore.DataProtection.StackExchangeRedis` nuget package to your `*.Host` project.
-* Add following code to `*.Host/Startup.cs` 
+* Add `Microsoft.AspNetCore.DataProtection.StackExchangeRedis` nuget package to your `Web` project.
+* Add following code to `Startup.cs` 
 
 ```csharp
 public void ConfigureServices(IServiceCollection services)
