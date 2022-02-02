@@ -129,11 +129,11 @@ public class Startup
         // Return IQueryable from controllers
         app.UseUnitOfWork(options =>
         {
-        	options.Filter = httpContext => httpContext.Request.Path.Value.StartsWith("/odata");
+            options.Filter = httpContext => httpContext.Request.Path.Value.StartsWith("/odata");
         });
         ...
-            
-		app.UseODataBatching();
+
+        app.UseODataBatching();
         app.UseEndpoints(endpoints =>
         {
             ...
@@ -155,14 +155,14 @@ public class Startup
     public IServiceProvider ConfigureServices(IServiceCollection services)
     {
         ...
-		services.AddMvc(/*...*/)
-			.AddOData(opts =>
-				{
-					var builder = new ODataConventionModelBuilder();
-					builder.EntitySet<Person>("Persons").EntityType.Expand().Filter().OrderBy().Page().Select();
-					opts.AddRouteComponents("odata", builder.GetEdmModel());
-				}
-			);
+        services.AddMvc(/*...*/)
+            .AddOData(opts =>
+                {
+                    var builder = new ODataConventionModelBuilder();
+                    builder.EntitySet<Person>("Persons").EntityType.Expand().Filter().OrderBy().Page().Select();
+                    opts.AddRouteComponents("odata", builder.GetEdmModel());
+                }
+            );
 
         return services.AddAbp<MyProjectWebHostModule>(...);
     }
@@ -170,19 +170,19 @@ public class Startup
     public void Configure(IApplicationBuilder app, IHostingEnvironment env, ILoggerFactory loggerFactory)
     {
         app.UseAbp();
-		
-		// Return IQueryable from controllers
-		app.UseUnitOfWork(options =>
-		{
-			options.Filter = httpContext => httpContext.Request.Path.Value.StartsWith("/odata");
-		});
+
+        // Return IQueryable from controllers
+        app.UseUnitOfWork(options =>
+        {
+            options.Filter = httpContext => httpContext.Request.Path.Value.StartsWith("/odata");
+        });
         ...
-	}
+    }
 }
 ```
 
 
-   
+
 
 Here, we got the ODataModelBuilder reference and set the Person entity.
 You can use EntitySet to add other entities in a similar way. See the [OData
@@ -197,7 +197,7 @@ controllers easier. An example to create an OData endpoint for the Person
 entity:
 
 ```csharp
-public class PersonsController : AbpODataEntityController<Person>, ITransientDependency 
+public class PersonsController : AbpODataEntityController<Person>, ITransientDependency
 {
     public PersonsController(IRepository<Person> repository)
         : base(repository)
@@ -480,7 +480,7 @@ Metadata is used to investigate the service.
 Note: If you want to use `ODataQueryOptions` in the controller methods, you need to ignore validation for `ODataQueryOptions` and `ODataQueryOptions<>` as shown below;
 
 ````csharp
-Configuration.Validation.IgnoredTypes.AddIfNotContains(typeof(ODataQueryOptions)); 
+Configuration.Validation.IgnoredTypes.AddIfNotContains(typeof(ODataQueryOptions));
 Configuration.Validation.IgnoredTypes.AddIfNotContains(typeof(ODataQueryOptions<>));
 ````
 
