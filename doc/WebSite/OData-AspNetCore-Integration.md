@@ -39,7 +39,7 @@ dependencies.
 OData requires us to declare entities which can be used as OData resources.
 We must do this in the Startup class:
 
-##### For asp net core 2.x
+##### For ASP.NET Core 2.x
 
 ```csharp
 public class Startup
@@ -96,7 +96,7 @@ public class Startup
 }
 ```
 
-##### For asp net core 3.x
+##### For ASP.NET Core 3.x
 
 ```csharp
 public class Startup
@@ -147,7 +147,7 @@ public class Startup
 }       
 ```
 
-##### For asp net core 5.x and above
+##### For ASP.NET Core 5.x and above
 
 ```csharp
 public class Startup
