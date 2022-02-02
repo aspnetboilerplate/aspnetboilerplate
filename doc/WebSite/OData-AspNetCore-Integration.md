@@ -218,6 +218,15 @@ configuration. If you need to, you can set
 `Configuration.Modules.AbpAspNetCoreOData().MapAction` to map OData routes
 yourself.
 
+#### Result Wrapping
+
+`Abp.AspNetCore.OData` implements `AbpODataDontWrapResultFilter` to disable result wrapping for paths that start with `"/odata"`.
+Add it to [`WrapResultFilters`](/Pages/Documents/AspNet-Core#wrapresultfilters) in the `PreInitialize` method of your module:
+
+```c#
+Configuration.Modules.AbpWebCommon().WrapResultFilters.Add(new AbpODataDontWrapResultFilter());
+```
+
 ### Examples
 
 Here are some requests made to the controller defined above. Assume that
