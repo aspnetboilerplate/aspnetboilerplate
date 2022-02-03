@@ -1,15 +1,21 @@
-﻿using Abp.AutoMapper;
+﻿using System;
+using Abp.AutoMapper;
 using Abp.Configuration;
+using Abp.Domain.Repositories;
+using Abp.EntityFramework.Repositories;
 using Abp.EntityFrameworkCore.Configuration;
+using Abp.EntityFrameworkCore.Repositories;
 using Abp.Modules;
 using Abp.Reflection.Extensions;
 using Abp.Zero.EntityFrameworkCore;
 using Abp.ZeroCore.SampleApp.Application;
 using Abp.ZeroCore.SampleApp.Application.Shop;
+using Abp.ZeroCore.SampleApp.Core.EntityHistory;
 using Abp.ZeroCore.SampleApp.Core.Shop;
 using Abp.ZeroCore.SampleApp.EntityFramework;
 using Abp.ZeroCore.SampleApp.EntityFramework.Seed;
 using AutoMapper;
+using Castle.MicroKernel.Registration;
 
 namespace Abp.ZeroCore.SampleApp
 {
@@ -25,7 +31,8 @@ namespace Abp.ZeroCore.SampleApp
             {
                 Configuration.Modules.AbpEfCore().AddDbContext<SampleAppDbContext>(configuration =>
                 {
-                    AbpZeroTemplateDbContextConfigurer.Configure(configuration.DbContextOptions, configuration.ConnectionString);
+                    AbpZeroTemplateDbContextConfigurer.Configure(configuration.DbContextOptions,
+                        configuration.ConnectionString);
                 });
             }
 
@@ -41,6 +48,22 @@ namespace Abp.ZeroCore.SampleApp
         {
             IocManager.RegisterAssemblyByConvention(typeof(AbpZeroCoreSampleAppModule).GetAssembly());
 
+            var genericRepositoryRegistarar = IocManager.Resolve<EfGenericRepositoryRegistrar>();
+            
+            genericRepositoryRegistarar.RegisterForEntity(
+                typeof(SampleAppDbContext),
+                typeof(CustomEntity),
+                IocManager,
+                EfCoreAutoRepositoryTypes.Default
+            );
+            
+            genericRepositoryRegistarar.RegisterForEntity(
+                typeof(SampleAppDbContext),
+                typeof(CustomEntityWithGuidId),
+                IocManager,
+                EfCoreAutoRepositoryTypes.Default
+            );
+            
             Configuration.Modules.AbpAutoMapper().Configurators.Add(configuration =>
             {
                 CustomDtoMapper.CreateMappings(configuration, new MultiLingualMapContext(

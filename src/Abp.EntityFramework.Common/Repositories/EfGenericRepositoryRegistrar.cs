@@ -50,6 +50,78 @@ namespace Abp.EntityFramework.Repositories
             }
         }
 
+        public void RegisterForEntity(
+            Type dbContextType, 
+            Type entityType, 
+            IIocManager iocManager,
+            AutoRepositoryTypesAttribute defaultAutoRepositoryTypesAttribute)
+        {
+            var autoRepositoryAttr =
+                dbContextType.GetTypeInfo().GetSingleAttributeOrNull<AutoRepositoryTypesAttribute>() ??
+                defaultAutoRepositoryTypesAttribute;
+            
+            RegisterForEntity(
+                dbContextType,
+                entityType,
+                iocManager,
+                defaultAutoRepositoryTypesAttribute.RepositoryInterface,
+                defaultAutoRepositoryTypesAttribute.RepositoryInterfaceWithPrimaryKey,
+                autoRepositoryAttr.RepositoryImplementation,
+                autoRepositoryAttr.RepositoryImplementationWithPrimaryKey
+            );
+        }
+        
+        private static void RegisterForEntity(
+            Type dbContextType,
+            Type entityType,
+            IIocManager iocManager, 
+            Type repositoryInterface,
+            Type repositoryInterfaceWithPrimaryKey, 
+            Type repositoryImplementation,
+            Type repositoryImplementationWithPrimaryKey)
+        {
+            var primaryKeyType = EntityHelper.GetPrimaryKeyType(entityType);
+            if (primaryKeyType == typeof(int))
+            {
+                var genericRepositoryType = repositoryInterface.MakeGenericType(entityType);
+                if (!iocManager.IsRegistered(genericRepositoryType))
+                {
+                    var implType = repositoryImplementation.GetGenericArguments().Length == 1
+                        ? repositoryImplementation.MakeGenericType(entityType)
+                        : repositoryImplementation.MakeGenericType(dbContextType, entityType);
+
+                    iocManager.IocContainer.Register(
+                        Component
+                            .For(genericRepositoryType)
+                            .ImplementedBy(implType)
+                            .Named(Guid.NewGuid().ToString("N"))
+                            .LifestyleTransient()
+                    );
+                }
+            }
+
+            var genericRepositoryTypeWithPrimaryKey = repositoryInterfaceWithPrimaryKey.MakeGenericType(
+                entityType,
+                primaryKeyType
+            );
+
+            if (!iocManager.IsRegistered(genericRepositoryTypeWithPrimaryKey))
+            {
+                var implType = repositoryImplementationWithPrimaryKey.GetGenericArguments().Length == 2
+                    ? repositoryImplementationWithPrimaryKey.MakeGenericType(entityType, primaryKeyType)
+                    : repositoryImplementationWithPrimaryKey.MakeGenericType(dbContextType,
+                        entityType, primaryKeyType);
+
+                iocManager.IocContainer.Register(
+                    Component
+                        .For(genericRepositoryTypeWithPrimaryKey)
+                        .ImplementedBy(implType)
+                        .Named(Guid.NewGuid().ToString("N"))
+                        .LifestyleTransient()
+                );
+            }
+        }
+
         private void RegisterForDbContext(
             Type dbContextType, 
             IIocManager iocManager,
