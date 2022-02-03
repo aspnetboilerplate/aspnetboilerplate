@@ -3,6 +3,7 @@ using System.Threading;
 using Abp.AspNetCore;
 using Abp.AspNetCore.Configuration;
 using Abp.AspNetCore.OData;
+using Abp.AspNetCore.OData.ResultWrapping;
 using Abp.Castle.Logging.Log4Net;
 using Abp.Configuration.Startup;
 using Abp.Dependency;
@@ -40,6 +41,7 @@ namespace AbpAspNetCoreDemo
                     typeof(AbpAspNetCoreDemoCoreModule).GetAssembly()
                 );
 
+            Configuration.Modules.AbpWebCommon().WrapResultFilters.Add(new AbpODataDontWrapResultFilter());
 
             Configuration.IocManager.Resolve<IAbpAspNetCoreConfiguration>().EndpointConfiguration.Add(endpoints =>
             {

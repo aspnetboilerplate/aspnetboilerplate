@@ -39,7 +39,7 @@ dependencies.
 OData requires us to declare entities which can be used as OData resources.
 We must do this in the Startup class:
 
-##### For asp net core 2.x
+##### For ASP.NET Core 2.x
 
 ```csharp
 public class Startup
@@ -96,7 +96,7 @@ public class Startup
 }
 ```
 
-##### For asp net core 3.x
+##### For ASP.NET Core 3.x
 
 ```csharp
 public class Startup
@@ -129,11 +129,11 @@ public class Startup
         // Return IQueryable from controllers
         app.UseUnitOfWork(options =>
         {
-        	options.Filter = httpContext => httpContext.Request.Path.Value.StartsWith("/odata");
+            options.Filter = httpContext => httpContext.Request.Path.Value.StartsWith("/odata");
         });
         ...
-            
-		app.UseODataBatching();
+
+        app.UseODataBatching();
         app.UseEndpoints(endpoints =>
         {
             ...
@@ -147,7 +147,7 @@ public class Startup
 }       
 ```
 
-##### For asp net core 5.x and above
+##### For ASP.NET Core 5.x and above
 
 ```csharp
 public class Startup
@@ -155,14 +155,14 @@ public class Startup
     public IServiceProvider ConfigureServices(IServiceCollection services)
     {
         ...
-		services.AddMvc(/*...*/)
-			.AddOData(opts =>
-				{
-					var builder = new ODataConventionModelBuilder();
-					builder.EntitySet<Person>("Persons").EntityType.Expand().Filter().OrderBy().Page().Select();
-					opts.AddRouteComponents("odata", builder.GetEdmModel());
-				}
-			);
+        services.AddMvc(/*...*/)
+            .AddOData(opts =>
+                {
+                    var builder = new ODataConventionModelBuilder();
+                    builder.EntitySet<Person>("Persons").EntityType.Expand().Filter().OrderBy().Page().Select();
+                    opts.AddRouteComponents("odata", builder.GetEdmModel());
+                }
+            );
 
         return services.AddAbp<MyProjectWebHostModule>(...);
     }
@@ -170,19 +170,19 @@ public class Startup
     public void Configure(IApplicationBuilder app, IHostingEnvironment env, ILoggerFactory loggerFactory)
     {
         app.UseAbp();
-		
-		// Return IQueryable from controllers
-		app.UseUnitOfWork(options =>
-		{
-			options.Filter = httpContext => httpContext.Request.Path.Value.StartsWith("/odata");
-		});
+
+        // Return IQueryable from controllers
+        app.UseUnitOfWork(options =>
+        {
+            options.Filter = httpContext => httpContext.Request.Path.Value.StartsWith("/odata");
+        });
         ...
-	}
+    }
 }
 ```
 
 
-   
+
 
 Here, we got the ODataModelBuilder reference and set the Person entity.
 You can use EntitySet to add other entities in a similar way. See the [OData
@@ -197,7 +197,7 @@ controllers easier. An example to create an OData endpoint for the Person
 entity:
 
 ```csharp
-public class PersonsController : AbpODataEntityController<Person>, ITransientDependency 
+public class PersonsController : AbpODataEntityController<Person>, ITransientDependency
 {
     public PersonsController(IRepository<Person> repository)
         : base(repository)
@@ -217,6 +217,15 @@ This means that you can override the **Get**, **Post**, **Put**, **Patch**,
 configuration. If you need to, you can set
 `Configuration.Modules.AbpAspNetCoreOData().MapAction` to map OData routes
 yourself.
+
+#### Result Wrapping
+
+`Abp.AspNetCore.OData` implements `AbpODataDontWrapResultFilter` to disable result wrapping for paths that start with `"/odata"`.
+Add it to [`WrapResultFilters`](/Pages/Documents/AspNet-Core#wrapresultfilters) in the `PreInitialize` method of your module:
+
+```c#
+Configuration.Modules.AbpWebCommon().WrapResultFilters.Add(new AbpODataDontWrapResultFilter());
+```
 
 ### Examples
 
@@ -471,7 +480,7 @@ Metadata is used to investigate the service.
 Note: If you want to use `ODataQueryOptions` in the controller methods, you need to ignore validation for `ODataQueryOptions` and `ODataQueryOptions<>` as shown below;
 
 ````csharp
-Configuration.Validation.IgnoredTypes.AddIfNotContains(typeof(ODataQueryOptions)); 
+Configuration.Validation.IgnoredTypes.AddIfNotContains(typeof(ODataQueryOptions));
 Configuration.Validation.IgnoredTypes.AddIfNotContains(typeof(ODataQueryOptions<>));
 ````
 
