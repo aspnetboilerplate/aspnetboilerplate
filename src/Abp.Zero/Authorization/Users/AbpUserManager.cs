@@ -67,6 +67,7 @@ namespace Abp.Authorization.Users
         private readonly IRepository<UserOrganizationUnit, long> _userOrganizationUnitRepository;
         private readonly IOrganizationUnitSettings _organizationUnitSettings;
         private readonly ISettingManager _settingManager;
+        private readonly IRepository<UserLogin, long> _userLoginRepository;
 
         protected AbpUserManager(
             AbpUserStore<TRole, TUser> userStore,
@@ -80,7 +81,8 @@ namespace Abp.Authorization.Users
             ILocalizationManager localizationManager,
             IdentityEmailMessageService emailService,
             ISettingManager settingManager,
-            IUserTokenProviderAccessor userTokenProviderAccessor)
+            IUserTokenProviderAccessor userTokenProviderAccessor,
+            IRepository<UserLogin, long> userLoginRepository)
             : base(userStore)
         {
             AbpStore = userStore;
@@ -88,6 +90,7 @@ namespace Abp.Authorization.Users
             LocalizationManager = localizationManager;
             LocalizationSourceName = AbpZeroConsts.LocalizationSourceName;
             _settingManager = settingManager;
+            _userLoginRepository = userLoginRepository;
 
             _permissionManager = permissionManager;
             _unitOfWorkManager = unitOfWorkManager;
@@ -472,7 +475,16 @@ namespace Abp.Authorization.Users
                     AbpUser<TUser>.AdminUserName));
             }
 
-            return await base.DeleteAsync(user);
+            var result = await base.DeleteAsync(user);
+            if (result.Succeeded)
+            {
+                await _userLoginRepository.DeleteAsync(userLogin =>
+                    userLogin.UserId == user.Id &&
+                    userLogin.TenantId == user.TenantId
+                );
+            }
+
+            return result;
         }
 
         public virtual async Task<IdentityResult> ChangePasswordAsync(TUser user, string newPassword)

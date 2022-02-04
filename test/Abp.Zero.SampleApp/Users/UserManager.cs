@@ -25,7 +25,8 @@ namespace Abp.Zero.SampleApp.Users
             ILocalizationManager localizationManager,
             ISettingManager settingManager,
             IdentityEmailMessageService emailService,
-            IUserTokenProviderAccessor userTokenProviderAccessor)
+            IUserTokenProviderAccessor userTokenProviderAccessor,
+            IRepository<UserLogin, long> userLoginRepository)
             : base(
                   userStore, 
                   roleManager, 
@@ -38,7 +39,8 @@ namespace Abp.Zero.SampleApp.Users
                   localizationManager,
                   emailService,
                   settingManager,
-                  userTokenProviderAccessor)
+                  userTokenProviderAccessor,
+                  userLoginRepository)
         {
         }
     }
