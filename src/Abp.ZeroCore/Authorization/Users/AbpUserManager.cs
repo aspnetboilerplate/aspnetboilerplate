@@ -66,6 +66,7 @@ namespace Abp.Authorization.Users
         private readonly IOrganizationUnitSettings _organizationUnitSettings;
         private readonly ISettingManager _settingManager;
         private readonly IOptions<IdentityOptions> _optionsAccessor;
+        private readonly IRepository<UserLogin, long> _userLoginRepository;
 
         public AbpUserManager(
             AbpRoleManager<TRole, TUser> roleManager,
@@ -84,7 +85,8 @@ namespace Abp.Authorization.Users
             IRepository<OrganizationUnit, long> organizationUnitRepository,
             IRepository<UserOrganizationUnit, long> userOrganizationUnitRepository,
             IOrganizationUnitSettings organizationUnitSettings,
-            ISettingManager settingManager)
+            ISettingManager settingManager,
+            IRepository<UserLogin, long> userLoginRepository)
             : base(
                 userStore,
                 optionsAccessor,
@@ -103,6 +105,7 @@ namespace Abp.Authorization.Users
             _userOrganizationUnitRepository = userOrganizationUnitRepository;
             _organizationUnitSettings = organizationUnitSettings;
             _settingManager = settingManager;
+            _userLoginRepository = userLoginRepository;
             _optionsAccessor = optionsAccessor;
 
             AbpUserStore = userStore;
@@ -545,7 +548,16 @@ namespace Abp.Authorization.Users
                 throw new UserFriendlyException(string.Format(L("CanNotDeleteAdminUser"), AbpUserBase.AdminUserName));
             }
 
-            return await base.DeleteAsync(user);
+            var result = await base.DeleteAsync(user);
+            if (result.Succeeded)
+            {
+                await _userLoginRepository.DeleteAsync(userLogin =>
+                    userLogin.UserId == user.Id &&
+                    userLogin.TenantId == user.TenantId
+                );
+            }
+
+            return result;
         }
 
         // Microsoft.AspNetCore.Identity.UserManager doesn't have required sync version for method calls in this function
