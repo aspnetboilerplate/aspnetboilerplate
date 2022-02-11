@@ -532,6 +532,188 @@ namespace Abp.Zero.SampleApp.Tests.Webhooks
             await _backgroundJobManagerSubstitute.Received(2)
                 .EnqueueAsync<WebhookSenderJob, WebhookSenderArgs>(Arg.Is<WebhookSenderArgs>(p => predicate(p)));
         }
+        
+        
+        [Fact]
+        public async Task Should_Add_Given_Headers_To_Webhook_Async()
+        {
+            var (subscription, data, predicate) = InitializeTestCase(
+                AppWebhookDefinitionNames.Users.Created,
+                new Dictionary<string, string>
+                {
+                    {AppFeatures.WebhookFeature, "true"}
+                }
+            );
+            var newHeaders = new WebhookHeader()
+            {
+                UseOnlyGivenHeaders = false,
+                Headers = new Dictionary<string, string>()
+                {
+                    {"Key2", "Value2"},
+                    {"Key3", "Value3"}
+                }
+            };
+            
+            predicate = w =>
+            {
+                w.Secret.ShouldNotBeNullOrEmpty();
+                w.Secret.ShouldStartWith(WebhookSubscriptionSecretPrefix);
+                w.WebhookName.ShouldContain(AppWebhookDefinitionNames.Users.Created);
+
+                w.Headers.Count.ShouldBe(3);
+                w.Headers.ShouldContainKeyAndValue("Key","Value");
+                w.Headers.ShouldContainKeyAndValue("Key2","Value2");
+                w.Headers.ShouldContainKeyAndValue("Key3","Value3");
+
+                w.WebhookSubscriptionId.ShouldBe(subscription.Id);
+                return true;
+            };
+
+            await _webhookPublisher.PublishAsync(AppWebhookDefinitionNames.Users.Created, data, headers: newHeaders);
+
+            await _backgroundJobManagerSubstitute.Received()
+                .EnqueueAsync<WebhookSenderJob, WebhookSenderArgs>(Arg.Is<WebhookSenderArgs>(w => predicate(w)));
+            
+            _backgroundJobManagerSubstitute.ClearReceivedCalls();
+            await _webhookPublisher.PublishAsync(
+                AppWebhookDefinitionNames.Users.Created,
+                data,
+                tenantId: subscription.TenantId,
+                headers: newHeaders);
+            await _backgroundJobManagerSubstitute.Received()
+                .EnqueueAsync<WebhookSenderJob, WebhookSenderArgs>(Arg.Is<WebhookSenderArgs>(w => predicate(w)));
+            
+            _backgroundJobManagerSubstitute.ClearReceivedCalls();
+            await _webhookPublisher.PublishAsync(
+                tenantIds: new[] {subscription.TenantId},
+                AppWebhookDefinitionNames.Users.Created,
+                data,
+                headers: newHeaders
+            );
+            await _backgroundJobManagerSubstitute.Received()
+                .EnqueueAsync<WebhookSenderJob, WebhookSenderArgs>(Arg.Is<WebhookSenderArgs>(w => predicate(w)));
+
+        }
+        
+        [Fact]
+        public async Task Should_Add_Given_Headers_To_Webhook_And_Replace_Existing_One_Async()
+        {
+            var (subscription, data, predicate) = InitializeTestCase(
+                AppWebhookDefinitionNames.Users.Created,
+                new Dictionary<string, string>
+                {
+                    {AppFeatures.WebhookFeature, "true"}
+                }
+            );
+            var newHeaders = new WebhookHeader()
+            {
+                UseOnlyGivenHeaders = false,
+                Headers = new Dictionary<string, string>()
+                {
+                    {"Key", "ValueNew"},//existing header will be replaced
+                    {"Key2", "Value2"}
+                }
+            };
+            
+            predicate = w =>
+            {
+                w.Secret.ShouldNotBeNullOrEmpty();
+                w.Secret.ShouldStartWith(WebhookSubscriptionSecretPrefix);
+                w.WebhookName.ShouldContain(AppWebhookDefinitionNames.Users.Created);
+
+                w.Headers.Count.ShouldBe(2);
+                w.Headers.ShouldContainKeyAndValue("Key","ValueNew");//existing header should be replaced
+                w.Headers.ShouldContainKeyAndValue("Key2","Value2");
+
+                w.WebhookSubscriptionId.ShouldBe(subscription.Id);
+                return true;
+            };
+
+            await _webhookPublisher.PublishAsync(AppWebhookDefinitionNames.Users.Created, data, headers: newHeaders);
+
+            await _backgroundJobManagerSubstitute.Received()
+                .EnqueueAsync<WebhookSenderJob, WebhookSenderArgs>(Arg.Is<WebhookSenderArgs>(w => predicate(w)));
+            
+            _backgroundJobManagerSubstitute.ClearReceivedCalls();
+            await _webhookPublisher.PublishAsync(
+                AppWebhookDefinitionNames.Users.Created,
+                data,
+                tenantId: subscription.TenantId,
+                headers: newHeaders);
+            await _backgroundJobManagerSubstitute.Received()
+                .EnqueueAsync<WebhookSenderJob, WebhookSenderArgs>(Arg.Is<WebhookSenderArgs>(w => predicate(w)));
+            
+            _backgroundJobManagerSubstitute.ClearReceivedCalls();
+            await _webhookPublisher.PublishAsync(
+                tenantIds: new[] {subscription.TenantId},
+                AppWebhookDefinitionNames.Users.Created,
+                data,
+                headers: newHeaders
+            );
+            await _backgroundJobManagerSubstitute.Received()
+                .EnqueueAsync<WebhookSenderJob, WebhookSenderArgs>(Arg.Is<WebhookSenderArgs>(w => predicate(w)));
+        }
+        
+        [Fact]
+        public async Task Should_Only_Use_Given_Headers_On_Webhook_Async()
+        {
+            var (subscription, data, predicate) = InitializeTestCase(
+                AppWebhookDefinitionNames.Users.Created,
+                new Dictionary<string, string>
+                {
+                    {AppFeatures.WebhookFeature, "true"}
+                }
+            );
+            var newHeaders = new WebhookHeader()
+            {
+                UseOnlyGivenHeaders = true,//only the given headers will be used.
+                Headers = new Dictionary<string, string>()
+                {
+                    {"Key1", "Value1"},
+                    {"Key2", "Value2"}
+                }
+            };
+            
+            predicate = w =>
+            {
+                w.Secret.ShouldNotBeNullOrEmpty();
+                w.Secret.ShouldStartWith(WebhookSubscriptionSecretPrefix);
+                w.WebhookName.ShouldContain(AppWebhookDefinitionNames.Users.Created);
+
+                w.Headers.Count.ShouldBe(2);
+                w.Headers.ShouldNotContainKey("Key");//existing header should be removed
+                //only the new headers should be used.
+                w.Headers.ShouldContainKeyAndValue("Key1","Value1");
+                w.Headers.ShouldContainKeyAndValue("Key2","Value2");
+
+                w.WebhookSubscriptionId.ShouldBe(subscription.Id);
+                return true;
+            };
+
+            await _webhookPublisher.PublishAsync(AppWebhookDefinitionNames.Users.Created, data, headers: newHeaders);
+
+            await _backgroundJobManagerSubstitute.Received()
+                .EnqueueAsync<WebhookSenderJob, WebhookSenderArgs>(Arg.Is<WebhookSenderArgs>(w => predicate(w)));
+            
+            _backgroundJobManagerSubstitute.ClearReceivedCalls();
+            await _webhookPublisher.PublishAsync(
+                AppWebhookDefinitionNames.Users.Created,
+                data,
+                tenantId: subscription.TenantId,
+                headers: newHeaders);
+            await _backgroundJobManagerSubstitute.Received()
+                .EnqueueAsync<WebhookSenderJob, WebhookSenderArgs>(Arg.Is<WebhookSenderArgs>(w => predicate(w)));
+            
+            _backgroundJobManagerSubstitute.ClearReceivedCalls();
+            await _webhookPublisher.PublishAsync(
+                tenantIds: new[] {subscription.TenantId},
+                AppWebhookDefinitionNames.Users.Created,
+                data,
+                headers: newHeaders
+            );
+            await _backgroundJobManagerSubstitute.Received()
+                .EnqueueAsync<WebhookSenderJob, WebhookSenderArgs>(Arg.Is<WebhookSenderArgs>(w => predicate(w)));
+        }
 
         #endregion
 
@@ -971,7 +1153,188 @@ namespace Abp.Zero.SampleApp.Tests.Webhooks
             _backgroundJobManagerSubstitute.Received(2)
                 .Enqueue<WebhookSenderJob, WebhookSenderArgs>(Arg.Is<WebhookSenderArgs>(p => predicate(p)));
         }
+        
+        [Fact]
+        public void Should_Add_Given_Headers_To_Webhook()
+        {
+            var (subscription, data, predicate) = InitializeTestCase(
+                AppWebhookDefinitionNames.Users.Created,
+                new Dictionary<string, string>
+                {
+                    {AppFeatures.WebhookFeature, "true"}
+                }
+            );
+            var newHeaders = new WebhookHeader()
+            {
+                UseOnlyGivenHeaders = false,
+                Headers = new Dictionary<string, string>()
+                {
+                    {"Key2", "Value2"},
+                    {"Key3", "Value3"}
+                }
+            };
+            
+            predicate = w =>
+            {
+                w.Secret.ShouldNotBeNullOrEmpty();
+                w.Secret.ShouldStartWith(WebhookSubscriptionSecretPrefix);
+                w.WebhookName.ShouldContain(AppWebhookDefinitionNames.Users.Created);
 
+                w.Headers.Count.ShouldBe(3);
+                w.Headers.ShouldContainKeyAndValue("Key","Value");
+                w.Headers.ShouldContainKeyAndValue("Key2","Value2");
+                w.Headers.ShouldContainKeyAndValue("Key3","Value3");
+
+                w.WebhookSubscriptionId.ShouldBe(subscription.Id);
+                return true;
+            };
+
+            _webhookPublisher.Publish(AppWebhookDefinitionNames.Users.Created, data, headers: newHeaders);
+
+            _backgroundJobManagerSubstitute.Received()
+                .Enqueue<WebhookSenderJob, WebhookSenderArgs>(Arg.Is<WebhookSenderArgs>(w => predicate(w)));
+            
+            _backgroundJobManagerSubstitute.ClearReceivedCalls();
+            _webhookPublisher.Publish(
+                AppWebhookDefinitionNames.Users.Created,
+                data,
+                tenantId: subscription.TenantId,
+                headers: newHeaders);
+            _backgroundJobManagerSubstitute.Received()
+                .Enqueue<WebhookSenderJob, WebhookSenderArgs>(Arg.Is<WebhookSenderArgs>(w => predicate(w)));
+            
+            _backgroundJobManagerSubstitute.ClearReceivedCalls();
+             _webhookPublisher.Publish(
+                tenantIds: new[] {subscription.TenantId},
+                AppWebhookDefinitionNames.Users.Created,
+                data,
+                headers: newHeaders
+            );
+            _backgroundJobManagerSubstitute.Received()
+                .Enqueue<WebhookSenderJob, WebhookSenderArgs>(Arg.Is<WebhookSenderArgs>(w => predicate(w)));
+
+        }
+        
+        [Fact]
+        public void Should_Add_Given_Headers_To_Webhook_And_Replace_Existing_One()
+        {
+            var (subscription, data, predicate) = InitializeTestCase(
+                AppWebhookDefinitionNames.Users.Created,
+                new Dictionary<string, string>
+                {
+                    {AppFeatures.WebhookFeature, "true"}
+                }
+            );
+            var newHeaders = new WebhookHeader()
+            {
+                UseOnlyGivenHeaders = false,
+                Headers = new Dictionary<string, string>()
+                {
+                    {"Key", "ValueNew"},//existing header will be replaced
+                    {"Key2", "Value2"}
+                }
+            };
+            
+            predicate = w =>
+            {
+                w.Secret.ShouldNotBeNullOrEmpty();
+                w.Secret.ShouldStartWith(WebhookSubscriptionSecretPrefix);
+                w.WebhookName.ShouldContain(AppWebhookDefinitionNames.Users.Created);
+
+                w.Headers.Count.ShouldBe(2);
+                w.Headers.ShouldContainKeyAndValue("Key","ValueNew");//existing header should be replaced
+                w.Headers.ShouldContainKeyAndValue("Key2","Value2");
+
+                w.WebhookSubscriptionId.ShouldBe(subscription.Id);
+                return true;
+            };
+
+            _webhookPublisher.Publish(AppWebhookDefinitionNames.Users.Created, data, headers: newHeaders);
+
+            _backgroundJobManagerSubstitute.Received()
+                .Enqueue<WebhookSenderJob, WebhookSenderArgs>(Arg.Is<WebhookSenderArgs>(w => predicate(w)));
+            
+            _backgroundJobManagerSubstitute.ClearReceivedCalls();
+            _webhookPublisher.Publish(
+                AppWebhookDefinitionNames.Users.Created,
+                data,
+                tenantId: subscription.TenantId,
+                headers: newHeaders);
+            _backgroundJobManagerSubstitute.Received()
+                .Enqueue<WebhookSenderJob, WebhookSenderArgs>(Arg.Is<WebhookSenderArgs>(w => predicate(w)));
+            
+            _backgroundJobManagerSubstitute.ClearReceivedCalls();
+            _webhookPublisher.Publish(
+                tenantIds: new[] {subscription.TenantId},
+                AppWebhookDefinitionNames.Users.Created,
+                data,
+                headers: newHeaders
+            );
+            _backgroundJobManagerSubstitute.Received()
+                .Enqueue<WebhookSenderJob, WebhookSenderArgs>(Arg.Is<WebhookSenderArgs>(w => predicate(w)));
+        }
+        
+        [Fact]
+        public void Should_Only_Use_Given_Headers_On_Webhook()
+        {
+            var (subscription, data, predicate) = InitializeTestCase(
+                AppWebhookDefinitionNames.Users.Created,
+                new Dictionary<string, string>
+                {
+                    {AppFeatures.WebhookFeature, "true"}
+                }
+            );
+            var newHeaders = new WebhookHeader()
+            {
+                UseOnlyGivenHeaders = true,//only the given headers will be used.
+                Headers = new Dictionary<string, string>()
+                {
+                    {"Key1", "Value1"},
+                    {"Key2", "Value2"}
+                }
+            };
+            
+            predicate = w =>
+            {
+                w.Secret.ShouldNotBeNullOrEmpty();
+                w.Secret.ShouldStartWith(WebhookSubscriptionSecretPrefix);
+                w.WebhookName.ShouldContain(AppWebhookDefinitionNames.Users.Created);
+
+                w.Headers.Count.ShouldBe(2);
+                w.Headers.ShouldNotContainKey("Key");//existing header should be removed
+                //only the new headers should be used.
+                w.Headers.ShouldContainKeyAndValue("Key1","Value1");
+                w.Headers.ShouldContainKeyAndValue("Key2","Value2");
+
+                w.WebhookSubscriptionId.ShouldBe(subscription.Id);
+                return true;
+            };
+
+            _webhookPublisher.Publish(AppWebhookDefinitionNames.Users.Created, data, headers: newHeaders);
+
+            _backgroundJobManagerSubstitute.Received()
+                .Enqueue<WebhookSenderJob, WebhookSenderArgs>(Arg.Is<WebhookSenderArgs>(w => predicate(w)));
+            
+            _backgroundJobManagerSubstitute.ClearReceivedCalls();
+            _webhookPublisher.Publish(
+                AppWebhookDefinitionNames.Users.Created,
+                data,
+                tenantId: subscription.TenantId,
+                headers: newHeaders);
+            _backgroundJobManagerSubstitute.Received()
+                .Enqueue<WebhookSenderJob, WebhookSenderArgs>(Arg.Is<WebhookSenderArgs>(w => predicate(w)));
+            
+            _backgroundJobManagerSubstitute.ClearReceivedCalls();
+            _webhookPublisher.Publish(
+                tenantIds: new[] {subscription.TenantId},
+                AppWebhookDefinitionNames.Users.Created,
+                data,
+                headers: newHeaders
+            );
+            _backgroundJobManagerSubstitute.Received()
+                .Enqueue<WebhookSenderJob, WebhookSenderArgs>(Arg.Is<WebhookSenderArgs>(w => predicate(w)));
+        }
+        
         #endregion
     }
 }

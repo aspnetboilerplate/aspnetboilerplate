@@ -8,7 +8,6 @@ using Microsoft.EntityFrameworkCore;
 
 namespace Abp.ZeroCore.SampleApp.EntityFramework
 {
-    //TODO: Re-enable when IdentityServer ready
     public class SampleAppDbContext : AbpZeroDbContext<Tenant, Role, User, SampleAppDbContext>, IAbpPersistedGrantDbContext
     {
         public DbSet<PersistedGrantEntity> PersistedGrants { get; set; }
@@ -52,6 +51,10 @@ namespace Abp.ZeroCore.SampleApp.EntityFramework
 
             modelBuilder.ConfigurePersistedGrantEntity();
 
+            // EF property mapped directly to a field
+            modelBuilder.Entity<Blog>()
+                 .Property<string>("_name").HasColumnName("Name");
+
             modelBuilder.Entity<Blog>().OwnsOne(x => x.More);
 
             modelBuilder.Entity<Blog>().OwnsMany(x => x.Promotions, b => 
@@ -81,6 +84,10 @@ namespace Abp.ZeroCore.SampleApp.EntityFramework
             modelBuilder.Entity<Book>().Property(e => e.Id).ValueGeneratedNever();
 
             modelBuilder.Entity<Store>().Property(e => e.Id).HasColumnName("StoreId");
+            
+            // Register custom entity which is not in DbContext
+            modelBuilder.Entity(typeof(CustomEntity));
+            modelBuilder.Entity(typeof(CustomEntityWithGuidId));
         }
     }
 }

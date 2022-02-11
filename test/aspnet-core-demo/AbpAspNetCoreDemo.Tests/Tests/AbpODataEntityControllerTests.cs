@@ -44,6 +44,24 @@ namespace AbpAspNetCoreDemo.IntegrationTests.Tests
         }
 
         [Fact]
+        public async Task AbpODataEntityController_DontWrapResult_Test()
+        {
+            // Arrange
+            var client = _factory.CreateClient();
+
+            // Act
+            var response = await client.GetAsync("/odata");
+            var response2 = await client.GetAsync("/odata/$metadata");
+
+            // Assert
+            response.StatusCode.ShouldBe(Enum.Parse<HttpStatusCode>("200"));
+            (await response.Content.ReadAsStringAsync()).ShouldNotContain("__abp");
+
+            response2.StatusCode.ShouldBe(Enum.Parse<HttpStatusCode>("200"));
+            (await response2.Content.ReadAsStringAsync()).ShouldNotContain("__abp");
+        }
+
+        [Fact]
         public async Task AbpODataEntityController_GetAll_Permission_Test()
         {
             // Arrange

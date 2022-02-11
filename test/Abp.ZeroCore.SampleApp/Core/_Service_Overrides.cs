@@ -44,7 +44,8 @@ namespace Abp.ZeroCore.SampleApp.Core
             IRepository<OrganizationUnit, long> organizationUnitRepository,
             IRepository<UserOrganizationUnit, long> userOrganizationUnitRepository,
             IOrganizationUnitSettings organizationUnitSettings,
-            ISettingManager settingManager) : base(
+            ISettingManager settingManager,
+            IRepository<UserLogin, long> userLoginRepository) : base(
             roleManager,
             userStore,
             optionsAccessor,
@@ -61,7 +62,9 @@ namespace Abp.ZeroCore.SampleApp.Core
             organizationUnitRepository,
             userOrganizationUnitRepository,
             organizationUnitSettings,
-            settingManager)
+            settingManager,
+            userLoginRepository
+            )
         {
         }
     }
