@@ -180,6 +180,17 @@ namespace Abp.EntityHistory
             return (true, shouldSaveAuditedPropertiesOnly);
         }
 
+        protected virtual bool ShouldSavePropertyHistory(PropertyEntry propertyEntry, bool defaultValue)
+        {
+            var propertyInfo = propertyEntry.Metadata.PropertyInfo;
+            if (propertyInfo == null) // Shadow properties or if mapped directly to a field
+            {
+                return defaultValue;
+            }
+
+            return IsAuditedPropertyInfo(propertyInfo) ?? defaultValue;
+        }
+
         [CanBeNull]
         private EntityChange CreateEntityChange(EntityEntry entityEntry)
         {
@@ -237,13 +248,10 @@ namespace Abp.EntityHistory
                     continue;
                 }
 
-                var shouldSaveProperty = property.PropertyInfo == null // Shadow properties or if mapped directly to a field
-                    ? !auditedPropertiesOnly
-                    : IsAuditedPropertyInfo(property.PropertyInfo) ?? !auditedPropertiesOnly;
+                var propertyEntry = entityEntry.Property(property.Name);
 
-                if (shouldSaveProperty)
+                if (ShouldSavePropertyHistory(propertyEntry, !auditedPropertiesOnly))
                 {
-                    var propertyEntry = entityEntry.Property(property.Name);
                     propertyChanges.Add(
                         CreateEntityPropertyChange(
                             propertyEntry.GetOriginalValue(),
