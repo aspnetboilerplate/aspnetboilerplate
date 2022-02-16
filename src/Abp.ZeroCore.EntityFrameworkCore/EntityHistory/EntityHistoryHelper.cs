@@ -50,44 +50,10 @@ namespace Abp.EntityHistory
 
             foreach (var entityEntry in entityEntries)
             {
-                var typeOfEntity = ProxyHelper.GetUnproxiedType(entityEntry.Entity);
-                var shouldTrackEntity = IsTypeOfTrackedEntity(typeOfEntity);
-                if (shouldTrackEntity.HasValue && !shouldTrackEntity.Value)
+                var (shouldSaveEntityHistory, shouldSaveAuditedPropertiesOnly) = ShouldSaveEntityHistory(entityEntry);
+                if (!shouldSaveEntityHistory)
                 {
                     continue;
-                }
-
-                if (!IsTypeOfEntity(typeOfEntity) && !entityEntry.Metadata.IsOwned())
-                {
-                    continue;
-                }
-
-                var shouldAuditEntity = IsTypeOfAuditedEntity(typeOfEntity);
-                if (shouldAuditEntity.HasValue && !shouldAuditEntity.Value)
-                {
-                    continue;
-                }
-
-                bool? shouldAuditOwnerEntity = null;
-                bool? shouldAuditOwnerProperty = null;
-                if (!shouldAuditEntity.HasValue && entityEntry.Metadata.IsOwned())
-                {
-                    // Check if owner entity has auditing attribute
-                    var ownerForeignKey = entityEntry.Metadata.GetForeignKeys().First(fk => fk.IsOwnership);
-                    var ownerEntityType = ownerForeignKey.PrincipalEntityType.ClrType;
-
-                    shouldAuditOwnerEntity = IsTypeOfAuditedEntity(ownerEntityType);
-                    if (shouldAuditOwnerEntity.HasValue && !shouldAuditOwnerEntity.Value)
-                    {
-                        continue;
-                    }
-
-                    var ownerPropertyInfo = ownerForeignKey.PrincipalToDependent.PropertyInfo;
-                    shouldAuditOwnerProperty = IsAuditedPropertyInfo(ownerEntityType, ownerPropertyInfo);
-                    if (shouldAuditOwnerProperty.HasValue && !shouldAuditOwnerProperty.Value)
-                    {
-                        continue;
-                    }
                 }
 
                 var entityChange = CreateEntityChange(entityEntry);
@@ -96,11 +62,6 @@ namespace Abp.EntityHistory
                     continue;
                 }
 
-                var isAuditableEntity = (shouldAuditEntity.HasValue && shouldAuditEntity.Value) ||
-                                        (shouldAuditOwnerEntity.HasValue && shouldAuditOwnerEntity.Value) ||
-                                        (shouldAuditOwnerProperty.HasValue && shouldAuditOwnerProperty.Value);
-                var isTrackableEntity = shouldTrackEntity.HasValue && shouldTrackEntity.Value;
-                var shouldSaveAuditedPropertiesOnly = !isAuditableEntity && !isTrackableEntity;
                 var propertyChanges = GetPropertyChanges(entityEntry, shouldSaveAuditedPropertiesOnly);
                 if (propertyChanges.Count == 0)
                 {
@@ -160,6 +121,63 @@ namespace Abp.EntityHistory
         {
             var primaryKeys = entry.Properties.Where(p => p.Metadata.IsPrimaryKey());
             return primaryKeys.First().CurrentValue?.ToJsonString();
+        }
+
+        protected virtual (bool shouldSaveEntityEntity, bool shouldSaveAuditedPropertiesOnly) ShouldSaveEntityHistory(EntityEntry entityEntry)
+        {
+            if (entityEntry.State == EntityState.Detached ||
+                entityEntry.State == EntityState.Unchanged)
+            {
+                return (false, false);
+            }
+
+            var typeOfEntity = ProxyHelper.GetUnproxiedType(entityEntry.Entity);
+            var shouldTrackEntity = IsTypeOfTrackedEntity(typeOfEntity);
+            if (shouldTrackEntity.HasValue && !shouldTrackEntity.Value)
+            {
+                return (false, false);
+            }
+
+            if (!IsTypeOfEntity(typeOfEntity) && !entityEntry.Metadata.IsOwned())
+            {
+                return (false, false);
+            }
+
+            var shouldAuditEntity = IsTypeOfAuditedEntity(typeOfEntity);
+            if (shouldAuditEntity.HasValue && !shouldAuditEntity.Value)
+            {
+                return (false, false);
+            }
+
+            bool? shouldAuditOwnerEntity = null;
+            bool? shouldAuditOwnerProperty = null;
+            if (!shouldAuditEntity.HasValue && entityEntry.Metadata.IsOwned())
+            {
+                // Check if owner entity has auditing attribute
+                var ownerForeignKey = entityEntry.Metadata.GetForeignKeys().First(fk => fk.IsOwnership);
+                var ownerEntityType = ownerForeignKey.PrincipalEntityType.ClrType;
+
+                shouldAuditOwnerEntity = IsTypeOfAuditedEntity(ownerEntityType);
+                if (shouldAuditOwnerEntity.HasValue && !shouldAuditOwnerEntity.Value)
+                {
+                    return (false, false);
+                }
+
+                var ownerPropertyInfo = ownerForeignKey.PrincipalToDependent.PropertyInfo;
+                shouldAuditOwnerProperty = IsAuditedPropertyInfo(ownerEntityType, ownerPropertyInfo);
+                if (shouldAuditOwnerProperty.HasValue && !shouldAuditOwnerProperty.Value)
+                {
+                    return (false, false);
+                }
+            }
+
+            var isAuditableEntity = (shouldAuditEntity.HasValue && shouldAuditEntity.Value) ||
+                                    (shouldAuditOwnerEntity.HasValue && shouldAuditOwnerEntity.Value) ||
+                                    (shouldAuditOwnerProperty.HasValue && shouldAuditOwnerProperty.Value);
+            var isTrackableEntity = shouldTrackEntity.HasValue && shouldTrackEntity.Value;
+            var shouldSaveAuditedPropertiesOnly = !isAuditableEntity && !isTrackableEntity;
+
+            return (true, shouldSaveAuditedPropertiesOnly);
         }
 
         [CanBeNull]
