@@ -50,8 +50,8 @@ namespace Abp.EntityHistory
 
             foreach (var entityEntry in entityEntries)
             {
-                var (shouldSaveEntityHistory, shouldSaveAuditedPropertiesOnly) = ShouldSaveEntityHistory(entityEntry);
-                if (!shouldSaveEntityHistory)
+                var shouldSaveEntityHistory = ShouldSaveEntityHistory(entityEntry);
+                if (shouldSaveEntityHistory.HasValue && !shouldSaveEntityHistory.Value)
                 {
                     continue;
                 }
@@ -62,6 +62,7 @@ namespace Abp.EntityHistory
                     continue;
                 }
 
+                var shouldSaveAuditedPropertiesOnly = !shouldSaveEntityHistory.HasValue;
                 var propertyChanges = GetPropertyChanges(entityEntry, shouldSaveAuditedPropertiesOnly);
                 if (propertyChanges.Count == 0)
                 {
@@ -123,30 +124,30 @@ namespace Abp.EntityHistory
             return primaryKeys.First().CurrentValue?.ToJsonString();
         }
 
-        protected virtual (bool shouldSaveEntityEntity, bool shouldSaveAuditedPropertiesOnly) ShouldSaveEntityHistory(EntityEntry entityEntry)
+        protected virtual bool? ShouldSaveEntityHistory(EntityEntry entityEntry)
         {
             if (entityEntry.State == EntityState.Detached ||
                 entityEntry.State == EntityState.Unchanged)
             {
-                return (false, false);
+                return false;
             }
 
             var typeOfEntity = ProxyHelper.GetUnproxiedType(entityEntry.Entity);
             var shouldTrackEntity = IsTypeOfTrackedEntity(typeOfEntity);
             if (shouldTrackEntity.HasValue && !shouldTrackEntity.Value)
             {
-                return (false, false);
+                return false;
             }
 
             if (!IsTypeOfEntity(typeOfEntity) && !entityEntry.Metadata.IsOwned())
             {
-                return (false, false);
+                return false;
             }
 
             var shouldAuditEntity = IsTypeOfAuditedEntity(typeOfEntity);
             if (shouldAuditEntity.HasValue && !shouldAuditEntity.Value)
             {
-                return (false, false);
+                return false;
             }
 
             bool? shouldAuditOwnerEntity = null;
@@ -160,24 +161,18 @@ namespace Abp.EntityHistory
                 shouldAuditOwnerEntity = IsTypeOfAuditedEntity(ownerEntityType);
                 if (shouldAuditOwnerEntity.HasValue && !shouldAuditOwnerEntity.Value)
                 {
-                    return (false, false);
+                    return false;
                 }
 
                 var ownerPropertyInfo = ownerForeignKey.PrincipalToDependent.PropertyInfo;
                 shouldAuditOwnerProperty = IsAuditedPropertyInfo(ownerEntityType, ownerPropertyInfo);
                 if (shouldAuditOwnerProperty.HasValue && !shouldAuditOwnerProperty.Value)
                 {
-                    return (false, false);
+                    return false;
                 }
             }
 
-            var isAuditableEntity = (shouldAuditEntity.HasValue && shouldAuditEntity.Value) ||
-                                    (shouldAuditOwnerEntity.HasValue && shouldAuditOwnerEntity.Value) ||
-                                    (shouldAuditOwnerProperty.HasValue && shouldAuditOwnerProperty.Value);
-            var isTrackableEntity = shouldTrackEntity.HasValue && shouldTrackEntity.Value;
-            var shouldSaveAuditedPropertiesOnly = !isAuditableEntity && !isTrackableEntity;
-
-            return (true, shouldSaveAuditedPropertiesOnly);
+            return shouldAuditEntity ?? shouldAuditOwnerEntity ?? shouldAuditOwnerProperty ?? shouldTrackEntity;
         }
 
         protected virtual bool ShouldSavePropertyHistory(PropertyEntry propertyEntry, bool defaultValue)
