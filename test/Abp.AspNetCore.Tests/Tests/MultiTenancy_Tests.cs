@@ -91,12 +91,26 @@ namespace Abp.AspNetCore.Tests
 
         [Theory]
         [InlineData("http://{TENANCY_NAME}.mysite.com", "http://default.mysite.com", 1)]
+        [InlineData("http://{TENANCY_NAME}.mysite.com;http://{TENANCY_NAME}.mywebsite.com", "http://default.mysite.com", 1)]
+        [InlineData("http://{TENANCY_NAME}.mysite.com;http://{TENANCY_NAME}.mywebsite.com", "http://default.mywebsite.com", 1)]
         [InlineData("http://{TENANCY_NAME}.mysite.com:8080", "http://default.mysite.com:8080", 1)]
+        [InlineData("http://{TENANCY_NAME}.mysite.com:8080;http://{TENANCY_NAME}.mywebsite.com:8080", "http://default.mysite.com:8080", 1)]
+        [InlineData("http://{TENANCY_NAME}.mysite.com:8080;http://{TENANCY_NAME}.mywebsite.com:8080", "http://default.mywebsite.com:8080", 1)]
         [InlineData("http://{TENANCY_NAME}.mysite.com/", "http://default.mysite.com/", 1)]
+        [InlineData("http://{TENANCY_NAME}.mysite.com/;http://{TENANCY_NAME}.mywebsite.com/", "http://default.mysite.com/", 1)]
+        [InlineData("http://{TENANCY_NAME}.mysite.com/;http://{TENANCY_NAME}.mywebsite.com/", "http://default.mywebsite.com/", 1)]
         [InlineData("http://{TENANCY_NAME}.mysite.com/host", "http://default.mysite.com/host", 1)]
+        [InlineData("http://{TENANCY_NAME}.mysite.com/host;http://{TENANCY_NAME}.mywebsite.com/host", "http://default.mysite.com/host", 1)]
+        [InlineData("http://{TENANCY_NAME}.mysite.com/host;http://{TENANCY_NAME}.mywebsite.com/host", "http://default.mywebsite.com/host", 1)]
         [InlineData("http://{TENANCY_NAME}:80", "http://default:80", 1)]
+        [InlineData("http://{TENANCY_NAME}:80;http://{TENANCY_NAME}:81", "http://default:80", 1)]
+        [InlineData("http://{TENANCY_NAME}:80;http://{TENANCY_NAME}:81", "http://default:81", 1)]
         [InlineData("http://{TENANCY_NAME}:80", "http://test:80", null)]
+        [InlineData("http://{TENANCY_NAME}:80;http://{TENANCY_NAME}:81", "http://test:80", null)]
+        [InlineData("http://{TENANCY_NAME}:80;http://{TENANCY_NAME}:81", "http://test:81", null)]
         [InlineData("http://{TENANCY_NAME}.mysite.com/host", "http://mysite.default.com/host", null)]
+        [InlineData("http://{TENANCY_NAME}.mysite.com/host;http://{TENANCY_NAME}.mywebsite.com/host", "http://mysite.default.com/host", null)]
+        [InlineData("http://{TENANCY_NAME}.mysite.com/host;http://{TENANCY_NAME}.mywebsite.com/host", "http://mywebsite.default.com/host", null)]
         public async Task DomainTenantResolveContributor_Test(string domainFormat, string domain, int? tenantId)
         {
             _multiTenancyConfiguration.DomainFormat = domainFormat;
