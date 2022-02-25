@@ -6,6 +6,7 @@ using Abp.MultiTenancy;
 using Abp.Text;
 using Abp.Web.MultiTenancy;
 using Microsoft.AspNetCore.Http;
+using static Abp.Text.FormattedStringValueExtracter;
 
 namespace Abp.AspNetCore.MultiTenancy
 {
@@ -37,12 +38,13 @@ namespace Abp.AspNetCore.MultiTenancy
             {
                 return null;
             }
-             
-            var hostName = httpContext.Request.Host.Host.RemovePreFix("http://", "https://").RemovePostFix("/");
-            var domainFormat = _multiTenancyConfiguration.DomainFormat.RemovePreFix("http://", "https://").Split(':')[0].RemovePostFix("/");
-            var result = new FormattedStringValueExtracter().Extract(hostName, domainFormat, true, '/');
 
-            if (!result.IsMatch || !result.Matches.Any())
+            var hostName = httpContext.Request.Host.Host.RemovePreFix("http://", "https://").RemovePostFix("/");
+            var domainFormats = _multiTenancyConfiguration.DomainFormat.Split(";");
+
+            var result = IsDomainFormatValid(domainFormats, hostName);
+
+            if (result is null)
             {
                 return null;
             }
@@ -66,5 +68,21 @@ namespace Abp.AspNetCore.MultiTenancy
 
             return tenantInfo.Id;
         }
+
+        private ExtractionResult IsDomainFormatValid(string[] domainFormats, string hostName)
+        {
+            foreach (var item in domainFormats)
+            {
+                var domainFormat = item.RemovePreFix("http://", "https://").Split(':')[0].RemovePostFix("/");
+                var result = new FormattedStringValueExtracter().Extract(hostName, domainFormat, true, '/');
+
+                if (result.IsMatch || result.Matches.Any())
+                {
+                    return result;
+                }
+            }
+            return null;
+        }
+
     }
 }
