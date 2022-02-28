@@ -245,7 +245,7 @@ Entity History in **Module Zero** project is implemented for
 
 ### Property Changes
 
--   Primary key properties are excluded from an entitiy's property changes.
+-   Primary key properties are excluded from an entity's property changes.
 -   `DisableAuditing` takes priority over the `Audited` attribute when saving property changes.
 -   Property changes would only be saved if there are changes between original/new values.
     `Audited` attribute will make property changes being saved even if there is no change between original/new values.
