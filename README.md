@@ -1,6 +1,6 @@
 ﻿# ASP.NET Boilerplate
 
-[![Build Status](http://ci.volosoft.com:5480/job/aspnet-boilerplate-nightly/badge/icon)](http://ci.volosoft.com:5480/blue/organizations/jenkins/aspnet-boilerplate-nightly/activity)
+[![Build Status](http://ejenkins.dynu.net:5480/job/aspnet-boilerplate-nightly/badge/icon)](http://ejenkins.dynu.net:5480/blue/organizations/jenkins/aspnet-boilerplate-nightly/activity)
 [![NuGet](https://img.shields.io/nuget/v/Abp.svg?style=flat-square)](https://www.nuget.org/packages/Abp)
 [![MyGet (with prereleases)](https://img.shields.io/myget/abp-nightly/vpre/Abp.svg?style=flat-square)](https://aspnetboilerplate.com/Pages/Documents/Nightly-Builds)
 [![NuGet Download](https://img.shields.io/nuget/dt/Abp.svg?style=flat-square)](https://www.nuget.org/packages/Abp)
