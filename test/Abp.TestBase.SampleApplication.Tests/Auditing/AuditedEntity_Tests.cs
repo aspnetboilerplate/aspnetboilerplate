@@ -189,6 +189,51 @@ namespace Abp.TestBase.SampleApplication.Tests.Auditing
         }
 
         [Fact]
+        public void Should_Not_Set_LastModificationTime_When_DisableLastModificationTime_Configuration_Is_Disabled()
+        {
+            //Act: Create a new entity
+            var message = _messageRepository.Insert(new Message(null, "test message 1"));
+
+            //Act: CreatorUserId
+            using (var uowManager = LocalIocManager.ResolveAsDisposable<IUnitOfWorkManager>())
+            {
+                using (var uow = uowManager.Object.Begin())
+                {
+                    using (uowManager.Object.Current.DisableAuditing(AbpAuditFields.LastModificationTime))
+                    {
+                        message.Text = "edited test message 1";
+                        _messageRepository.Update(message);
+                        uow.Complete();
+                    }
+                }
+            }
+
+            message.LastModificationTime.ShouldBeNull();
+        }
+
+        [Fact]
+        public void Should_Not_Set_DeletionTime_When_DisableDeletionTime_Configuration_Is_Disabled()
+        {
+            //Act: Create a new entity
+            var message = _messageRepository.Insert(new Message(null, "test message 1"));
+
+            //Act: CreatorUserId
+            using (var uowManager = LocalIocManager.ResolveAsDisposable<IUnitOfWorkManager>())
+            {
+                using (var uow = uowManager.Object.Begin())
+                {
+                    using (uowManager.Object.Current.DisableAuditing(AbpAuditFields.DeletionTime))
+                    {
+                        _messageRepository.Delete(message);
+                        uow.Complete();
+                    }
+                }
+            }
+
+            message.DeletionTime.ShouldBeNull();
+        }
+
+        [Fact]
         public void Should_Set_CreatorUserId_When_DisableCreatorUserId_Configuration_Is_Enabled()
         {
             //Arrange
@@ -270,6 +315,57 @@ namespace Abp.TestBase.SampleApplication.Tests.Auditing
             }
 
             message.DeleterUserId.ShouldNotBeNull();
+        }
+
+        [Fact]
+        public void Should_Set_LastModificationTime_When_DisableLastModificationTime_Configuration_Is_Enabled()
+        {
+            //Act: Create a new entity
+            var message = _messageRepository.Insert(new Message(null, "test message 1"));
+
+            //Act: CreatorUserId
+            using (var uowManager = LocalIocManager.ResolveAsDisposable<IUnitOfWorkManager>())
+            {
+                using (var uow = uowManager.Object.Begin())
+                {
+                    using (uowManager.Object.Current.DisableAuditing(AbpAuditFields.LastModificationTime))
+                    {
+                        using (uowManager.Object.Current.EnableAuditing(AbpAuditFields.LastModificationTime))
+                        {
+                            message.Text = "edited test message 1";
+                            _messageRepository.Update(message);
+                            uow.Complete();
+                        }
+                    }
+                }
+            }
+
+            message.LastModificationTime.ShouldNotBeNull();
+        }
+
+        [Fact]
+        public void Should_Set_DeletionTime_When_DisableDeletionTime_Configuration_Is_Enabled()
+        {
+            //Act: Create a new entity
+            var message = _messageRepository.Insert(new Message(null, "test message 1"));
+
+            //Act: CreatorUserId
+            using (var uowManager = LocalIocManager.ResolveAsDisposable<IUnitOfWorkManager>())
+            {
+                using (var uow = uowManager.Object.Begin())
+                {
+                    using (uowManager.Object.Current.DisableAuditing(AbpAuditFields.DeletionTime))
+                    {
+                        using (uowManager.Object.Current.EnableAuditing(AbpAuditFields.DeletionTime))
+                        {
+                            _messageRepository.Delete(message);
+                            uow.Complete();
+                        }
+                    }
+                }
+            }
+
+            message.DeletionTime.ShouldNotBeNull();
         }
     }
 }
