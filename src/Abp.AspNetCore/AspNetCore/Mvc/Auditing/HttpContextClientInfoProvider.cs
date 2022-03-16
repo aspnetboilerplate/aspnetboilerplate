@@ -40,7 +40,6 @@ namespace Abp.AspNetCore.Mvc.Auditing
             try
             {
                 var httpContext = _httpContextAccessor.HttpContext;
-
                 return httpContext?.Connection?.RemoteIpAddress?.ToString();
 
             }
@@ -57,8 +56,7 @@ namespace Abp.AspNetCore.Mvc.Auditing
             try
             {
                 var httpContext = _httpContextAccessor.HttpContext;
-
-                return Dns.GetHostEntry(_httpContextAccessor?.HttpContext?.Connection?.RemoteIpAddress).HostName;
+                return Dns.GetHostEntry(httpContext?.Connection?.RemoteIpAddress).HostName;
 
             }
             catch (Exception ex)
