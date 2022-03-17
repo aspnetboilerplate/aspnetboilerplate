@@ -210,17 +210,17 @@ If you wish to undelete a soft-deleted entity, you can query the entity by [disa
 
 ##### Disable Auditing Fields
 
-In some cases, you might want to programmatically create, update or delete some entities and don't want ASP.NET Boilerplate to automatically set CreatorUserId, LastModifierUserId or DeleterUserId. You can easily disable or enable automatic setting of those fields using the DisableAuditing or EnableAuditing methods on the active unit of work.
+In some cases, you might want to programmatically create, update or delete some entities and don't want ASP.NET Boilerplate to automatically set CreatorUserId, LastModifierUserId, DeleterUserId, LastModificationTime or DeletionTime. You can easily disable or enable automatic setting of those fields using the DisableAuditing or EnableAuditing methods on the active unit of work.
 
 ````c#
-using (_unitOfWorkManager.Current.DisableAuditing(AbpAuiditing.CreatorUserId))
+using (_unitOfWorkManager.Current.DisableAuditing(AbpAuditFields.CreatorUserId))
 {
     // CreatorUserId will not be set by ASP.NET Boilerplate automatically
 }
 
-using (_unitOfWorkManager.Current.EnableAuditing(AbpAuiditing.DeleterUserId))
+using (_unitOfWorkManager.Current.EnableAuditing(AbpAuditFields.DeleterUserId))
 {
-    // DeleterUserId will be set by ASP.NET Boilerplate automatically
+    DeleterUserId will be set by ASP.NET Boilerplate automatically
 }
 ````
 
