@@ -220,7 +220,7 @@ using (_unitOfWorkManager.Current.DisableAuditing(AbpAuditFields.CreatorUserId))
 
 using (_unitOfWorkManager.Current.EnableAuditing(AbpAuditFields.DeleterUserId))
 {
-    DeleterUserId will be set by ASP.NET Boilerplate automatically
+    // DeleterUserId will be set by ASP.NET Boilerplate automatically
 }
 ````
 
