@@ -125,7 +125,7 @@ namespace Abp.TestBase.SampleApplication.Tests.Auditing
             {
                 using (var uow = uowManager.Object.Begin())
                 {
-                    using (uowManager.Object.Current.DisableAuditing(AbpAuditFields.CreationUserId))
+                    using (uowManager.Object.Current.DisableAuditing(AbpAuditFields.CreatorUserId))
                     {
                         var message = _messageRepository.Insert(new Message(AbpSession.TenantId, "test message 1"));
                         message.CreatorUserId.ShouldBeNull();
@@ -245,9 +245,9 @@ namespace Abp.TestBase.SampleApplication.Tests.Auditing
             {
                 using (var uow = uowManager.Object.Begin())
                 {
-                    using (uowManager.Object.Current.DisableAuditing(AbpAuditFields.CreationUserId))
+                    using (uowManager.Object.Current.DisableAuditing(AbpAuditFields.CreatorUserId))
                     {
-                        using (uowManager.Object.Current.EnableAuditing(AbpAuditFields.CreationUserId))
+                        using (uowManager.Object.Current.EnableAuditing(AbpAuditFields.CreatorUserId))
                         {
                             var message = _messageRepository.Insert(new Message(AbpSession.TenantId, "test message 1"));
                             message.CreatorUserId.ShouldNotBeNull();

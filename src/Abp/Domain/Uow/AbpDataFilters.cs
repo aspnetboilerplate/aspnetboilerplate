@@ -51,7 +51,7 @@ namespace Abp.Domain.Uow
     /// </summary>
     public static class AbpAuditFields
     {
-        public const string CreationUserId = "CreationUserId";
+        public const string CreatorUserId = "CreatorUserId";
 
         public const string LastModifierUserId = "LastModifierUserId";
 

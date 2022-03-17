@@ -130,7 +130,7 @@ namespace Abp
 
         private void AddUnitOfWorkAuditFieldConfiguration()
         {
-            Configuration.UnitOfWork.RegisterAuditFieldConfiguration(AbpAuditFields.CreationUserId, true);
+            Configuration.UnitOfWork.RegisterAuditFieldConfiguration(AbpAuditFields.CreatorUserId, true);
             Configuration.UnitOfWork.RegisterAuditFieldConfiguration(AbpAuditFields.LastModifierUserId, true);
             Configuration.UnitOfWork.RegisterAuditFieldConfiguration(AbpAuditFields.LastModificationTime, true);
             Configuration.UnitOfWork.RegisterAuditFieldConfiguration(AbpAuditFields.DeleterUserId, true);

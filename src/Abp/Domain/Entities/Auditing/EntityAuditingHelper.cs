@@ -64,7 +64,7 @@ namespace Abp.Domain.Entities.Auditing
                 }
             }
 
-            var creationUserIdFilter = auditFields?.FirstOrDefault(e => e.FieldName == AbpAuditFields.CreationUserId);
+            var creationUserIdFilter = auditFields?.FirstOrDefault(e => e.FieldName == AbpAuditFields.CreatorUserId);
             if (creationUserIdFilter != null && !creationUserIdFilter.IsSavingEnabled)
             {
                 return;
