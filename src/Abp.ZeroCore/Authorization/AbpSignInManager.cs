@@ -132,6 +132,26 @@ namespace Abp.Authorization
             return new ClaimsPrincipal(identity);
         }
 
+        protected virtual async Task<ClaimsPrincipal> StoreRememberClient(TUser user)
+        {
+            var rememberBrowserIdentity = new ClaimsIdentity(IdentityConstants.TwoFactorRememberMeScheme);
+
+            rememberBrowserIdentity.AddClaim(new Claim(ClaimTypes.Name, user.Id.ToString()));
+
+            if (user.TenantId.HasValue)
+            {
+                rememberBrowserIdentity.AddClaim(new Claim(AbpClaimTypes.TenantId, user.TenantId.Value.ToString()));
+            }
+
+            if (UserManager.SupportsUserSecurityStamp)
+            {
+                var stamp = await UserManager.GetSecurityStampAsync(user);
+                rememberBrowserIdentity.AddClaim(new Claim(Options.ClaimsIdentity.SecurityStampClaimType, stamp));
+            }
+
+            return new ClaimsPrincipal(rememberBrowserIdentity);
+        }
+
         public async Task<int?> GetVerifiedTenantIdAsync()
         {
             var result = await Context.AuthenticateAsync(IdentityConstants.TwoFactorUserIdScheme);
@@ -155,23 +175,9 @@ namespace Abp.Authorization
 
         public override async Task RememberTwoFactorClientAsync(TUser user)
         {
-            var rememberBrowserIdentity = new ClaimsIdentity(IdentityConstants.TwoFactorRememberMeScheme);
-
-            rememberBrowserIdentity.AddClaim(new Claim(ClaimTypes.Name, user.Id.ToString()));
-
-            if (user.TenantId.HasValue)
-            {
-                rememberBrowserIdentity.AddClaim(new Claim(AbpClaimTypes.TenantId, user.TenantId.Value.ToString()));
-            }
-
-            if (UserManager.SupportsUserSecurityStamp)
-            {
-                var stamp = await UserManager.GetSecurityStampAsync(user);
-                rememberBrowserIdentity.AddClaim(new Claim(Options.ClaimsIdentity.SecurityStampClaimType, stamp));
-            }
-
+            var principal = await StoreRememberClient(user);
             await Context.SignInAsync(IdentityConstants.TwoFactorRememberMeScheme,
-                new ClaimsPrincipal(rememberBrowserIdentity),
+                principal,
                 new Microsoft.AspNetCore.Authentication.AuthenticationProperties {IsPersistent = true});
         }
 
