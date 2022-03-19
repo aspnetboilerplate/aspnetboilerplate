@@ -164,6 +164,12 @@ namespace Abp.Authorization
                 rememberBrowserIdentity.AddClaim(new Claim(AbpClaimTypes.TenantId, user.TenantId.Value.ToString()));
             }
 
+            if (UserManager.SupportsUserSecurityStamp)
+            {
+                var stamp = await UserManager.GetSecurityStampAsync(user);
+                rememberBrowserIdentity.AddClaim(new Claim(Options.ClaimsIdentity.SecurityStampClaimType, stamp));
+            }
+
             await Context.SignInAsync(IdentityConstants.TwoFactorRememberMeScheme,
                 new ClaimsPrincipal(rememberBrowserIdentity),
                 new Microsoft.AspNetCore.Authentication.AuthenticationProperties {IsPersistent = true});
