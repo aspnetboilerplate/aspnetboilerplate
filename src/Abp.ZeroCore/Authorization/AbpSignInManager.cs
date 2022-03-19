@@ -101,7 +101,7 @@ namespace Abp.Authorization
         {
             await Context.SignInAsync(IdentityConstants.ApplicationScheme,
                 new ClaimsPrincipal(identity),
-                new Microsoft.AspNetCore.Authentication.AuthenticationProperties {IsPersistent = isPersistent}
+                new AuthenticationProperties { IsPersistent = isPersistent }
             );
         }
 
@@ -178,7 +178,7 @@ namespace Abp.Authorization
             var principal = await StoreRememberClient(user);
             await Context.SignInAsync(IdentityConstants.TwoFactorRememberMeScheme,
                 principal,
-                new Microsoft.AspNetCore.Authentication.AuthenticationProperties {IsPersistent = true});
+                new AuthenticationProperties { IsPersistent = true });
         }
 
         private bool IsTrue(string settingName, int? tenantId)
