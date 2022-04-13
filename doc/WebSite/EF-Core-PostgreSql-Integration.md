@@ -44,6 +44,14 @@ Change the connection string to your PostgreSQL connection in ***.Web.Mvc/appset
 }
 ```
 
+### Configure DateTime Handling
+
+Starting from **Npgsql** 6.0, Npgsql changed the datetime handling, see the related [issue](https://github.com/npgsql/efcore.pg/issues/2000). This causes an exception in AspNet Boilerplate's default template. So, you need to switch back to old behavior by following [https://www.npgsql.org/efcore/release-notes/6.0.html#opting-out-of-the-new-timestamp-mapping-logic](https://www.npgsql.org/efcore/release-notes/6.0.html#opting-out-of-the-new-timestamp-mapping-logic). Basically you need to set;
+
+````c#
+AppContext.SetSwitch("Npgsql.DisableDateTimeInfinityConversions", true);
+````
+
 ### Create Database
 
 Before you create the database, you should change the max length of the "Value" property of ApplicationLanguageText by adding the following lines to DbContext.
