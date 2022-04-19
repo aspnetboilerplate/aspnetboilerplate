@@ -1,7 +1,7 @@
 ### Server Side
 
 ASP.NET Boilerplate uses Castle Windsor's [logging
-facility](http://docs.castleproject.org/Windsor.Logging-Facility.ashx).
+facility](http://docs.castleproject.org/).
 It can work with different logging libraries: **Log4Net**, **NLog**,
 **Serilog**, and more. Castle provides a **common interface** for all
 logger libraries. This way, you're independent from a specific logging library
@@ -11,7 +11,7 @@ and can easily change it later if needed.
 popular logging libraries for .NET. The ASP.NET Boilerplate
 [templates](/Templates) come with Log4Net properly configured and ready to use.
 There is just a single-line of code for the dependency to log4net (as
-seen in the [configuration](#config) section), so you can easily change it to
+seen in the [configuration](#configuration) section), so you can easily change it to
 your favourite library.
 
 #### Getting The Logger

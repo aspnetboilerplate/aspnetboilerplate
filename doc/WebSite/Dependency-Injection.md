@@ -2,7 +2,7 @@
 
 If you already know the Dependency Injection, Constructor and
 Property Injection pattern concepts, you can skip to the [next
-section](#abpInfrastructure).
+section](#asp-net-boilerplate-dependency-injection-infrastructure).
 
 Wikipedia says: "*Dependency injection is a software design pattern in
 which one or more dependencies (or services) are injected, or passed by
@@ -147,8 +147,7 @@ above:
     and so on and so forth.. We might not even be able to create a single object
     because the dependency graph is too complex!
 
-Fortunately, there are [Dependency Injection
-frameworks](#dIFrameworks), which automate the management of dependencies.
+Fortunately, there are [Dependency Injection frameworks](#dependency-injection-frameworks), which automate the management of dependencies.
 
 ##### Property Injection pattern
 
