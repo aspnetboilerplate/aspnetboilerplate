@@ -53,10 +53,10 @@ docfx
 
 ## SERVE DOCFX PROJECT ######################################################################
 "{0}-CREATION HAS BEEN COMPLETED-" -f [environment]::NewLine
+cd ..
 
 if($args[0] -eq "-s"){
     "{0}-SERVING PROJECT-" -f [environment]::NewLine
-    cd ..
     docfx docfx_project\docfx.json --serve
 }else {
     " Note: "
