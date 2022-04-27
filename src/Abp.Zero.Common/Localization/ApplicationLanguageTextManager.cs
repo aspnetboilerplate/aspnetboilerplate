@@ -111,5 +111,32 @@ namespace Abp.Localization
                 }
             });
         }
+
+        /// <summary>
+        /// Delete a localized string value for a tenant.
+        /// </summary>
+        /// <param name="tenantId">TenantId</param>
+        /// <param name="sourceName">Source name</param>
+        /// <param name="culture">Culture</param>
+        /// <param name="key">Localization key</param>
+        public virtual async Task DeleteStringAsync(int tenantId, string sourceName, CultureInfo culture, string key)
+        {
+            await _unitOfWorkManager.WithUnitOfWorkAsync(async () =>
+            {
+                using (_unitOfWorkManager.Current.SetTenantId(tenantId))
+                {
+                    var existingEntity = (await _applicationTextRepository.GetAllListAsync(t =>
+                            t.Source == sourceName &&
+                            t.LanguageName == culture.Name &&
+                            t.Key == key))
+                        .FirstOrDefault(t => t.Key == key);
+
+                    if (existingEntity != null)
+                    {
+                        await _applicationTextRepository.DeleteAsync(existingEntity.Id);
+                    }
+                }
+            });
+        }
     }
 }
