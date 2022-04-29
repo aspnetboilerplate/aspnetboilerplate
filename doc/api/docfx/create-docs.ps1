@@ -5,6 +5,23 @@
 $currentPath = (Get-Item -Path "./" -Verbose).FullName
 $docfxProjectPath = Join-Path $currentPath "docfx_project"
 
+$indexTocYmlPath = Join-Path $docfxProjectPath "toc.yml"
+$indexTocYmlOverridedPath = Join-Path $currentPath "overrides/toc.yml"
+
+$indexMdPath = Join-Path $docfxProjectPath "index.md"
+$apiIndexMdPath = Join-Path $docfxProjectPath "api/index.md"
+$indexMdOverridedPath = Join-Path $currentPath "overrides/index.md"
+
+$faviconPath = Join-Path $docfxProjectPath "images/favicon.ico"
+$faviconOverridedPath = Join-Path $currentPath "overrides/favicon.ico"
+
+$logoPath = Join-Path $docfxProjectPath "images/logo.png"
+$logoOverridedPath = Join-Path $currentPath "overrides/logo.png"
+
+
+$docFxJsonFilePath = Join-Path $docfxProjectPath "docfx.json"
+$docFxJsonFileOverridedPath = Join-Path $currentPath "overrides/docfx.json"
+
 ## CLEAR ######################################################################
 
 "{0}-CLEARING CURRENT API DOC FILES-" -f [environment]::NewLine
@@ -22,6 +39,42 @@ If (Test-path $docfxProjectPath) {
 docfx init -q
 
 "-INITIALIZATION COMPLETED-{0}" -f [environment]::NewLine
+
+## REPLACING OVERRIDE ITEMS ######################################################################
+
+"{0}-REPLACING OVERRIDE ITEMS-" -f [environment]::NewLine
+
+If (Test-path $indexTocYmlPath) {
+    Remove-Item $indexTocYmlPath -Force -ErrorAction Ignore
+}
+Copy-Item -Path $indexTocYmlOverridedPath -Destination $indexTocYmlPath
+
+If (Test-path $indexMdPath) {
+    Remove-Item $indexMdPath -Force -ErrorAction Ignore
+}
+Copy-Item -Path $indexMdOverridedPath -Destination $indexMdPath
+
+If (Test-path $apiIndexMdPath) {
+    Remove-Item $apiIndexMdPath -Force -ErrorAction Ignore
+}
+Copy-Item -Path $indexMdOverridedPath -Destination $apiIndexMdPath
+
+If (Test-path $logoPath) {
+    Remove-Item $logoPath -Force -ErrorAction Ignore
+}
+Copy-Item -Path $logoOverridedPath -Destination $logoPath
+
+If (Test-path $faviconPath) {
+    Remove-Item $faviconPath -Force -ErrorAction Ignore
+}
+Copy-Item -Path $faviconOverridedPath -Destination $faviconPath
+
+If (Test-path $docFxJsonFilePath) {
+    Remove-Item $docFxJsonFilePath -Force -ErrorAction Ignore
+}
+Copy-Item -Path $docFxJsonFileOverridedPath -Destination $docFxJsonFilePath
+
+"-ITEMS REPLACED-{0}" -f [environment]::NewLine
 
 ## CLONE ASPNETBOILERPLATE ######################################################################
 
