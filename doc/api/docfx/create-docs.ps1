@@ -22,6 +22,9 @@ $logoOverridedPath = Join-Path $currentPath "overrides/logo.png"
 $docFxJsonFilePath = Join-Path $docfxProjectPath "docfx.json"
 $docFxJsonFileOverridedPath = Join-Path $currentPath "overrides/docfx.json"
 
+$templateFolderPath = Join-Path $docfxProjectPath "template"
+$templateFolderOverridedPath = Join-Path $currentPath "overrides/template"
+
 ## CLEAR ######################################################################
 
 "{0}-CLEARING CURRENT API DOC FILES-" -f [environment]::NewLine
@@ -73,6 +76,8 @@ If (Test-path $docFxJsonFilePath) {
     Remove-Item $docFxJsonFilePath -Force -ErrorAction Ignore
 }
 Copy-Item -Path $docFxJsonFileOverridedPath -Destination $docFxJsonFilePath
+
+Copy-Item -Path $templateFolderOverridedPath -Destination $templateFolderPath -Recurse -Force
 
 "-ITEMS REPLACED-{0}" -f [environment]::NewLine
 
