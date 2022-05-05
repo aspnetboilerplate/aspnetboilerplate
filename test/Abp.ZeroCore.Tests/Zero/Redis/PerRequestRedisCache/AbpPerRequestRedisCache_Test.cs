@@ -3,6 +3,7 @@ using System.Threading.Tasks;
 using Abp.Application.Editions;
 using Abp.Authorization.Roles;
 using Abp.Authorization.Users;
+using Abp.Json;
 using Abp.MultiTenancy;
 using Abp.Runtime.Caching;
 using Abp.Runtime.Caching.Configuration;
@@ -89,7 +90,7 @@ namespace Abp.Zero.Redis.PerRequestRedisCache
 
             var item = _normalRedisCache.Get(cacheKey, GetCacheValue);
             RedisDatabase.Received(2).StringGet(Arg.Any<RedisKey>()); //redis cache tries to get value two times if value not exists see AbpCacheBase<TKey, TValue>.Get(TKey key, Func<TKey, TValue> factory)
-            RedisDatabase.Received(1).StringSet(Arg.Any<RedisKey>(), cachedObject, Arg.Any<TimeSpan>(), Arg.Any<When>(), Arg.Any<CommandFlags>());
+            RedisDatabase.Received(1).StringSet(Arg.Any<RedisKey>(), cachedObject, Arg.Any<TimeSpan>());
 
             RedisDatabase.StringGet(Arg.Any<RedisKey>()).Returns(cachedObject);
 

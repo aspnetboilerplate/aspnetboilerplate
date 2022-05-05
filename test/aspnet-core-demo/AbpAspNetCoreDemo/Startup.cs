@@ -70,7 +70,10 @@ namespace AbpAspNetCoreDemo
             {
                 var builder = new ODataConventionModelBuilder();
                 builder.EntitySet<Product>("Products").EntityType.Expand().Filter().OrderBy().Page().Select();
-                opts.AddRouteComponents("odata", builder.GetEdmModel());
+                builder.EntitySet<Product>("ProductsDto").EntityType.Expand().Filter().OrderBy().Page().Select();
+                var edmModel = builder.GetEdmModel();
+                
+                opts.AddRouteComponents("odata", edmModel);
             });
 
             //Configure Abp and Dependency Injection. Should be called last.

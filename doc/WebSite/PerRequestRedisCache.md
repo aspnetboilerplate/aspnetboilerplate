@@ -36,7 +36,7 @@ Using `IPerRequestRedisCacheManager` is the same as using `ICacheManager` and re
 
   It is all you have to do in order to use per request Redis cache implementation. Now you can use all caching features. See caching [documentation](Caching.md) for more information.
 
-Note: You must enable Redis to use `IPerRequestRedisCacheManager`. ([Caching documentation](Caching.md#redis-cache-integration))
+Note: You must enable Redis to use `IPerRequestRedisCacheManager`. ([Caching documentation](Caching#redis-cache-integration))
 
 ### Replace ICacheManager with IPerRequestRedisCacheManager
 

@@ -25,7 +25,7 @@
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers</IncludeAssets>
     </PackageReference>
-    <PackageReference Include="Effort.EF6" Version="2.2.15" />
+    <PackageReference Include="Effort.EF6" Version="2.2.16" />
   </ItemGroup>
 
   <ItemGroup>

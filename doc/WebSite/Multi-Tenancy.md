@@ -168,11 +168,17 @@ tenant related to the current request in this given order:
         the current host of the request is ***acme*.mydomain.com**, then the
         tenancy name is resolved as "acme". The next step is to query
         ITenantStore to find the TenantId by the given tenancy name. If a
-        tenant is found, then it's resolved as the current TenantId.
+        tenant is found, then it's resolved as the current TenantId. ```Configuration.Modules.AbpWebCommon().MultiTenancy.DomainFormat``` also allows using multiple domain formats separated by ';'. So, if you are hosting same application on multiple domains, you can set DomainFormat as shown below;
+        
+        ````csharp
+        Configuration.Modules.AbpWebCommon().MultiTenancy.DomainFormat = "{0}.mydomain.com;{0}.mywebsite.com";
+        ````
+        
     2.  **HttpHeaderTenantResolveContributor**: Tries to resolve
         TenantId from an "Abp.TenantId" header value, if present. This is a
         constant defined in
         Abp.MultiTenancy.MultiTenancyConsts.TenantIdResolveKey.
+        
     3.  **HttpCookieTenantResolveContributor**: Tries to resolve
         the TenantId from an "Abp.TenantId" cookie value, if present. This uses the
         same constant explained above.
@@ -225,9 +231,9 @@ IMustHaveTenant:
     public class Product : Entity, IMustHaveTenant
     {
         public int TenantId { get; set; }
-
+    
         public string Name { get; set; }
-
+    
         //...other properties
     }
 
@@ -244,9 +250,9 @@ in this case. An example entity that implements IMayHaveTenant:
     public class Role : Entity, IMayHaveTenant
     {
         public int? TenantId { get; set; }
-
+    
         public string RoleName { get; set; }
-
+    
         //...other properties
     }
 
@@ -283,13 +289,13 @@ this behavior and switch to another tenant's database. Example:
     {
         private readonly IRepository<Product> _productRepository;
         private readonly IUnitOfWorkManager _unitOfWorkManager;
-
+    
         public ProductService(IRepository<Product> productRepository, IUnitOfWorkManager unitOfWorkManager)
         {
             _productRepository = productRepository;
             _unitOfWorkManager = unitOfWorkManager;
         }
-
+    
         [UnitOfWork]
         public virtual List<Product> GetProducts(int tenantId)
         {

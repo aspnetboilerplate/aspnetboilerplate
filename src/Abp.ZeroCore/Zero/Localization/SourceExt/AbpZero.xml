@@ -5,13 +5,13 @@
     <text name="Identity.DefaultError">An unknown failure has occurred.</text>
     <text name="Identity.DuplicateEmail">Email '{0}' is already taken.</text>
     <text name="Identity.DuplicateRoleName">Role name '{0}' is already taken.</text>
-    <text name="Identity.DuplicateUserName">User name '{0}' is already taken.</text>
+    <text name="Identity.DuplicateUserName">Username '{0}' is already taken.</text>
     <text name="Identity.InvalidEmail">Email '{0}' is invalid.</text>
     <text name="Identity.InvalidPasswordHasherCompatibilityMode">The provided PasswordHasherCompatibilityMode is invalid.</text>
     <text name="Identity.InvalidPasswordHasherIterationCount">The iteration count must be a positive integer.</text>
     <text name="Identity.InvalidRoleName">Role name '{0}' is invalid.</text>
     <text name="Identity.InvalidToken">Invalid token.</text>
-    <text name="Identity.InvalidUserName">User name '{0}' is invalid, can only contain letters or digits.</text>
+    <text name="Identity.InvalidUserName">Username '{0}' is invalid, can only contain letters or digits.</text>
     <text name="Identity.LoginAlreadyAssociated">A user with this login already exists.</text>
     <text name="Identity.PasswordMismatch">Incorrect password.</text>
     <text name="Identity.PasswordRequireDigit">Passwords must have at least one digit ('0'-'9').</text>

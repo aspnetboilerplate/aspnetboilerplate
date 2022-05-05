@@ -210,6 +210,19 @@ It's that easy! All the methods of `AbpODataEntityController` are **virtual**.
 This means that you can override the **Get**, **Post**, **Put**, **Patch**,
 **Delete** and other actions and add your own logic.
 
+The `Abp.AspNetCore.OData` NuGet package also inclıudes **AbpODataDtoController**. This controller can be used for using DTOs in your OData controller. An example to create an OData endpoint for the Person
+entity based on AbpODataDtoController can be defined like this:
+
+````
+public class PersonsController : AbpODataDtoController<Person, PersonDto, PersonCreateInput>, ITransientDependency
+{
+    public PersonsController(IRepository<Person> repository, IObjectMapper objectMapper)
+        : base(repository, objectMapper)
+    {
+    }
+}
+````
+
 ### Configuration
 
 `Abp.AspNetCore.OData` calls the

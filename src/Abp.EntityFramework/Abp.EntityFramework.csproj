@@ -27,7 +27,7 @@
 
   <ItemGroup>
     <PackageReference Include="EntityFramework" Version="6.4.4" />
-    <PackageReference Include="EntityFramework.DynamicFilters" Version="3.2.2" />
+    <PackageReference Include="EntityFramework.DynamicFilters" Version="3.2.4" />
   </ItemGroup>
 
   <ItemGroup Condition=" '$(TargetFramework)' == 'net461' ">
