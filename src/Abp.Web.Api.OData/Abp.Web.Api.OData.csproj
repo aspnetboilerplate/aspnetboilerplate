@@ -4,7 +4,7 @@
   <Import Project="..\..\configureawait.props" />
 
   <PropertyGroup>
-    <TargetFramework>net461</TargetFramework>
+    <TargetFramework>net462</TargetFramework>
     <GenerateDocumentationFile>true</GenerateDocumentationFile>
     <AssemblyName>Abp.Web.Api.OData</AssemblyName>
     <PackageId>Abp.Web.Api.OData</PackageId>
@@ -34,8 +34,7 @@
 
   <ItemGroup>
 	<PackageReference Include="Microsoft.AspNet.OData" Version="7.5.14" />
-    <PackageReference Include="Microsoft.Extensions.DependencyInjection.Abstractions" Version="6.0.0" />
-
+    <PackageReference Include="Microsoft.Extensions.DependencyInjection.Abstractions" Version="7.0.0-preview.3.22175.4" />
   </ItemGroup>
 
   <ItemGroup>
