@@ -76,7 +76,7 @@ namespace Abp.AspNetCore.MultiTenancy
                 var domainFormat = item.RemovePreFix("http://", "https://").Split(':')[0].RemovePostFix("/");
                 var result = new FormattedStringValueExtracter().Extract(hostName, domainFormat, true, '/');
 
-                if (result.IsMatch || result.Matches.Any())
+                if (result.IsMatch && result.Matches.Any())
                 {
                     return result;
                 }
