@@ -111,6 +111,8 @@ namespace Abp.AspNetCore.Tests
         [InlineData("http://{TENANCY_NAME}.mysite.com/host", "http://mysite.default.com/host", null)]
         [InlineData("http://{TENANCY_NAME}.mysite.com/host;http://{TENANCY_NAME}.mywebsite.com/host", "http://mysite.default.com/host", null)]
         [InlineData("http://{TENANCY_NAME}.mysite.com/host;http://{TENANCY_NAME}.mywebsite.com/host", "http://mywebsite.default.com/host", null)]
+        [InlineData("http://{TENANCY_NAME}.mysite.com/host;http://{TENANCY_NAME}.mywebsite.com/host", "http://mywebsite.default.com/host", null)]
+        [InlineData("https://localhost:44301/", "https://localhost:44301/", null)]
         public async Task DomainTenantResolveContributor_Test(string domainFormat, string domain, int? tenantId)
         {
             _multiTenancyConfiguration.DomainFormat = domainFormat;
