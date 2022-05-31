@@ -53,7 +53,7 @@ namespace Abp.Notifications
                         "NotificationDistributionJob can not continue since could not found notification by id: " +
                         notificationId
                     );
-                    
+
                     return;
                 }
 
@@ -282,7 +282,8 @@ namespace Abp.Notifications
                             {
                                 TenantId = tenantGroup.Key,
                                 UserId = user.UserId,
-                                TenantNotificationId = tenantNotificationInfo.Id
+                                TenantNotificationId = tenantNotificationInfo.Id,
+                                TargetNotifiers = notificationInfo.TargetNotifiers
                             };
 
                             await _notificationStore.InsertUserNotificationAsync(userNotification);
@@ -346,9 +347,21 @@ namespace Abp.Notifications
             {
                 try
                 {
+                    var notificationsToSendWithThatNotifier = userNotifications
+                        .Where(n =>
+                            n.TargetNotifiersList == null || n.TargetNotifiersList.Count == 0 ||// if there is no target notifiers, send it to all of them
+                            n.TargetNotifiersList.Contains(notifierType.FullName)// if there is target notifiers, check if current notifier is in it
+                        )
+                        .ToArray();
+
+                    if (notificationsToSendWithThatNotifier.Length == 0)
+                    {
+                        continue;
+                    }
+
                     using (var notifier = _iocResolver.ResolveAsDisposable<IRealTimeNotifier>(notifierType))
                     {
-                        await notifier.Object.SendNotificationsAsync(userNotifications);
+                        await notifier.Object.SendNotificationsAsync(notificationsToSendWithThatNotifier);
                     }
                 }
                 catch (Exception ex)

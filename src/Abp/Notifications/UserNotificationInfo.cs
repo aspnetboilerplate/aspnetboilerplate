@@ -1,8 +1,11 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
+using System.Linq;
 using Abp.Domain.Entities;
 using Abp.Domain.Entities.Auditing;
+using Abp.Extensions;
 using Abp.Timing;
 
 namespace Abp.Notifications
@@ -37,9 +40,18 @@ namespace Abp.Notifications
 
         public virtual DateTime CreationTime { get; set; }
 
+        /// <summary>
+        /// which realtime notifiers should handle this notification
+        /// </summary>
+        public string TargetNotifiers { get; set; }
+
+        [NotMapped]
+        public List<string> TargetNotifiersList => TargetNotifiers.IsNullOrWhiteSpace()
+            ? new List<string>()
+            : TargetNotifiers.Split(NotificationInfo.NotificationTargetSeparator).ToList();
+
         public UserNotificationInfo()
         {
-            
         }
 
         /// <summary>
@@ -51,6 +63,11 @@ namespace Abp.Notifications
             Id = id;
             State = UserNotificationState.Unread;
             CreationTime = Clock.Now;
+        }
+
+        public void SetTargetNotifiers(List<string> list)
+        {
+            TargetNotifiers = string.Join(NotificationInfo.NotificationTargetSeparator.ToString(), list);
         }
     }
 }
