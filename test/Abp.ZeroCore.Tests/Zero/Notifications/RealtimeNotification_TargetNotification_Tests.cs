@@ -12,6 +12,8 @@ namespace Abp.Zero.Notifications;
 
 public class Notifier1 : IRealTimeNotifier
 {
+    public bool UseOnlyIfRequestedAsTarget => false;
+    
     public bool IsSendNotificationCalled { get; set; }
 
     public async Task SendNotificationsAsync(UserNotification[] userNotifications)
@@ -23,6 +25,8 @@ public class Notifier1 : IRealTimeNotifier
 
 public class Notifier2 : IRealTimeNotifier
 {
+    public bool UseOnlyIfRequestedAsTarget => false;
+    
     public bool IsSendNotificationCalled { get; set; }
 
     public async Task SendNotificationsAsync(UserNotification[] userNotifications)

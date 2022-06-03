@@ -214,5 +214,7 @@ namespace Abp.Notifications
         /// </summary>
         /// <param name="notification">The notification.</param>
         void DeleteNotification(NotificationInfo notification);
+
+        Task<List<GetNotificationsCreatedByUserOutput>> GetNotificationsPublishedByUserAsync(UserIdentifier user, DateTime? startDate, DateTime? endDate);
     }
 }
