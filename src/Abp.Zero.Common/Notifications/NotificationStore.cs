@@ -798,7 +798,8 @@ namespace Abp.Notifications
                                 Severity = x.Severity,
                                 NotificationName = x.NotificationName,
                                 DataTypeName = x.DataTypeName,
-                                IsPublished = false
+                                IsPublished = false,
+                                CreationTime = x.CreationTime
                             })
                     );
                     
@@ -831,7 +832,8 @@ namespace Abp.Notifications
                                 Severity = x.Severity,
                                 NotificationName = x.NotificationName,
                                 DataTypeName = x.DataTypeName,
-                                IsPublished = true
+                                IsPublished = true,
+                                CreationTime = x.CreationTime
                             })
                     );
 

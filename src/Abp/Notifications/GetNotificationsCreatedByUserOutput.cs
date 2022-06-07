@@ -1,4 +1,6 @@
-﻿namespace Abp.Notifications
+﻿using System;
+
+namespace Abp.Notifications
 {
     public class GetNotificationsCreatedByUserOutput
     {
@@ -11,5 +13,7 @@
         public NotificationSeverity Severity { get; set; }
 
         public bool IsPublished { get; set; }
+        
+        public DateTime CreationTime { get; set; }
     }
 }
