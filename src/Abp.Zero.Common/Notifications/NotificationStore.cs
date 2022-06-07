@@ -803,9 +803,10 @@ namespace Abp.Notifications
                     );
                     
                     result.AddRange(unPublishedNotifications);
-                    
+
                     var queryForRegisteredPublishedNotifications = _tenantNotificationRepository.GetAll()
                         .Where(n => n.CreatorUserId == user.UserId && n.NotificationName == notificationName);
+                        
 
                     if (startDate.HasValue)
                     {
@@ -819,6 +820,9 @@ namespace Abp.Notifications
                             .Where(x => x.CreationTime <= endDate);
                     }
 
+                    queryForRegisteredPublishedNotifications = queryForRegisteredPublishedNotifications
+                        .OrderByDescending(n => n.CreationTime);
+                    
                     var publishedNotifications = await AsyncQueryableExecuter.ToListAsync(queryForRegisteredPublishedNotifications
                         .Select(x =>
                             new GetNotificationsCreatedByUserOutput()
