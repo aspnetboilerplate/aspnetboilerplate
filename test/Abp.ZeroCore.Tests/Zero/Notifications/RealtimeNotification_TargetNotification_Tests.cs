@@ -19,7 +19,9 @@ public class Notifier1 : IRealTimeNotifier
     public async Task SendNotificationsAsync(UserNotification[] userNotifications)
     {
         IsSendNotificationCalled = true;
-        //send email
+        
+        // send email
+        await Task.CompletedTask;
     }
 }
 
@@ -32,7 +34,9 @@ public class Notifier2 : IRealTimeNotifier
     public async Task SendNotificationsAsync(UserNotification[] userNotifications)
     {
         IsSendNotificationCalled = true;
-        //send sms
+        
+        // send sms
+        await Task.CompletedTask;
     }
 }
 

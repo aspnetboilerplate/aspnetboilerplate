@@ -349,7 +349,8 @@ namespace Abp.Notifications
                 {
                     using (var notifier = _iocResolver.ResolveAsDisposable<IRealTimeNotifier>(notifierType))
                     {
-                        UserNotification[] notificationsToSendWithThatNotifier=null;
+                        UserNotification[] notificationsToSendWithThatNotifier;
+                        
                         // if UseOnlyIfRequestedAsTarget is true, then we should send notifications which requests this notifier
                         if (notifier.Object.UseOnlyIfRequestedAsTarget)
                         {
@@ -359,9 +360,9 @@ namespace Abp.Notifications
                         }
                         else
                         {
-                            //notifier allows to send any notifications 
-                            //we can send all notifications which does not have TargetNotifiersList(since there is no target, we can send it with any notifier)
-                            //or current notifier is in TargetNotifiersList
+                            // notifier allows to send any notifications 
+                            // we can send all notifications which does not have TargetNotifiersList(since there is no target, we can send it with any notifier)
+                            // or current notifier is in TargetNotifiersList
                             
                             notificationsToSendWithThatNotifier = userNotifications
                                 .Where(n =>
@@ -370,10 +371,8 @@ namespace Abp.Notifications
                                 )
                                 .ToArray();
                         }
-
-
-                        if (notificationsToSendWithThatNotifier == null ||
-                            notificationsToSendWithThatNotifier.Length == 0)
+                        
+                        if (notificationsToSendWithThatNotifier.Length == 0)
                         {
                             continue;
                         }

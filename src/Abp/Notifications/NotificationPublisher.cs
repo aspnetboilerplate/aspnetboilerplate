@@ -94,21 +94,8 @@ namespace Abp.Notifications
                     Data = data?.ToJsonString(),
                     DataTypeName = data?.GetType().AssemblyQualifiedName
                 };
-                
-                if (targetNotifiers != null)
-                {
-                    var allNotificationNotifiers = _notificationConfiguration.Notifiers.Select(notifier => notifier.FullName).ToList();
-                    
-                    foreach (var targetNotifier in targetNotifiers)
-                    {
-                        if (!allNotificationNotifiers.Contains(targetNotifier.FullName))
-                        {
-                            throw new ApplicationException("Given target notifier is not registered before: " + targetNotifier.FullName+" You must register it to the INotificationConfiguration.Notifiers!");
-                        }
-                    }
 
-                    notificationInfo.SetTargetNotifiers(targetNotifiers.Select(n => n.FullName).ToList());
-                }
+                SetTargetNotifiers(notificationInfo, targetNotifiers);
 
                 await _store.InsertNotificationAsync(notificationInfo);
 
@@ -131,6 +118,26 @@ namespace Abp.Notifications
                 
                 await uow.CompleteAsync();
             }
+        }
+
+        protected virtual void SetTargetNotifiers(NotificationInfo notificationInfo, Type[] targetNotifiers)
+        {
+            if (targetNotifiers == null)
+            {
+                return;
+            }
+            
+            var allNotificationNotifiers = _notificationConfiguration.Notifiers.Select(notifier => notifier.FullName).ToList();
+                    
+            foreach (var targetNotifier in targetNotifiers)
+            {
+                if (!allNotificationNotifiers.Contains(targetNotifier.FullName))
+                {
+                    throw new ApplicationException("Given target notifier is not registered before: " + targetNotifier.FullName+" You must register it to the INotificationConfiguration.Notifiers!");
+                }
+            }
+
+            notificationInfo.SetTargetNotifiers(targetNotifiers.Select(n => n.FullName).ToList());
         }
 
         /// <summary>
