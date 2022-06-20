@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 using Abp.Dependency;
 using Abp.Domain.Repositories;
 using Abp.Domain.Uow;
+using Abp.Linq;
 using Abp.Linq.Expressions;
 using Abp.Linq.Extensions;
 
@@ -16,6 +17,8 @@ namespace Abp.Notifications
     /// </summary>
     public class NotificationStore : INotificationStore, ITransientDependency
     {
+        public IAsyncQueryableExecuter AsyncQueryableExecuter { get; set; }
+        
         private readonly IRepository<NotificationInfo, Guid> _notificationRepository;
         private readonly IRepository<TenantNotificationInfo, Guid> _tenantNotificationRepository;
         private readonly IRepository<UserNotificationInfo, Guid> _userNotificationRepository;
@@ -37,6 +40,8 @@ namespace Abp.Notifications
             _userNotificationRepository = userNotificationRepository;
             _notificationSubscriptionRepository = notificationSubscriptionRepository;
             _unitOfWorkManager = unitOfWorkManager;
+            
+            AsyncQueryableExecuter = NullAsyncQueryableExecuter.Instance;
         }
 
         public virtual async Task InsertSubscriptionAsync(NotificationSubscriptionInfo subscription)
@@ -759,6 +764,81 @@ namespace Abp.Notifications
             _unitOfWorkManager.WithUnitOfWork(() =>
             {
                 _notificationRepository.Delete(notification);
+            });
+        }
+
+        public async Task<List<GetNotificationsCreatedByUserOutput>> GetNotificationsPublishedByUserAsync(UserIdentifier user, string notificationName, DateTime? startDate, DateTime? endDate)
+        {
+            return await _unitOfWorkManager.WithUnitOfWorkAsync(async () =>
+            {
+                using (_unitOfWorkManager.Current.SetTenantId(user.TenantId))
+                {
+                    var queryForNotPublishedNotifications = _notificationRepository.GetAll()
+                        .Where(n => n.CreatorUserId == user.UserId && n.NotificationName == notificationName);
+
+                    if (startDate.HasValue)
+                    {
+                        queryForNotPublishedNotifications = queryForNotPublishedNotifications
+                            .Where(x => x.CreationTime >= startDate);
+                    }
+
+                    if (endDate.HasValue)
+                    {
+                        queryForNotPublishedNotifications = queryForNotPublishedNotifications
+                            .Where(x => x.CreationTime <= endDate);
+                    }
+
+                    var result = new List<GetNotificationsCreatedByUserOutput>();
+                    
+                    var unPublishedNotifications = await AsyncQueryableExecuter.ToListAsync(queryForNotPublishedNotifications
+                        .Select(x =>
+                            new GetNotificationsCreatedByUserOutput()
+                            {
+                                Data = x.Data,
+                                Severity = x.Severity,
+                                NotificationName = x.NotificationName,
+                                DataTypeName = x.DataTypeName,
+                                IsPublished = false,
+                                CreationTime = x.CreationTime
+                            })
+                    );
+                    
+                    result.AddRange(unPublishedNotifications);
+
+                    var queryForPublishedNotifications = _tenantNotificationRepository.GetAll()
+                        .Where(n => n.CreatorUserId == user.UserId && n.NotificationName == notificationName);
+                    
+                    if (startDate.HasValue)
+                    {
+                        queryForPublishedNotifications = queryForPublishedNotifications
+                            .Where(x => x.CreationTime >= startDate);
+                    }
+
+                    if (endDate.HasValue)
+                    {
+                        queryForPublishedNotifications = queryForPublishedNotifications
+                            .Where(x => x.CreationTime <= endDate);
+                    }
+
+                    queryForPublishedNotifications = queryForPublishedNotifications
+                        .OrderByDescending(n => n.CreationTime);
+                    
+                    var publishedNotifications = await AsyncQueryableExecuter.ToListAsync(queryForPublishedNotifications
+                        .Select(x =>
+                            new GetNotificationsCreatedByUserOutput()
+                            {
+                                Data = x.Data,
+                                Severity = x.Severity,
+                                NotificationName = x.NotificationName,
+                                DataTypeName = x.DataTypeName,
+                                IsPublished = true,
+                                CreationTime = x.CreationTime
+                            })
+                    );
+
+                    result.AddRange(publishedNotifications);
+                    return result;
+                }
             });
         }
     }

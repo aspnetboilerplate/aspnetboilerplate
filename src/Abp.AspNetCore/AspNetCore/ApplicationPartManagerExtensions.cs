@@ -2,6 +2,7 @@
 using System.Reflection;
 using Abp.AspNetCore.PlugIn;
 using Microsoft.AspNetCore.Mvc.ApplicationParts;
+using Microsoft.AspNetCore.Razor.Hosting;
 
 namespace Abp.AspNetCore
 {
@@ -25,6 +26,10 @@ namespace Abp.AspNetCore
             }
 
             partManager.ApplicationParts.Add(assemblyPart);
+            if (assemblyPart.Assembly.GetCustomAttributes<RazorCompiledItemAttribute>().Any())
+            {
+                partManager.ApplicationParts.Add(new CompiledRazorAssemblyPart(assemblyPart.Assembly));
+            }
         }
     }
 }
