@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Linq;
+using System.Text;
 using System.Threading.Tasks;
 using Abp.BackgroundJobs;
 using Abp.Collections.Extensions;
@@ -33,7 +34,8 @@ namespace Abp.Notifications
         private readonly IBackgroundJobManager _backgroundJobManager;
         private readonly INotificationDistributer _notificationDistributer;
         private readonly IGuidGenerator _guidGenerator;
-
+        private readonly INotificationConfiguration _notificationConfiguration;
+        
         /// <summary>
         /// Initializes a new instance of the <see cref="NotificationPublisher"/> class.
         /// </summary>
@@ -41,12 +43,14 @@ namespace Abp.Notifications
             INotificationStore store,
             IBackgroundJobManager backgroundJobManager,
             INotificationDistributer notificationDistributer,
-            IGuidGenerator guidGenerator)
+            IGuidGenerator guidGenerator, 
+            INotificationConfiguration notificationConfiguration)
         {
             _store = store;
             _backgroundJobManager = backgroundJobManager;
             _notificationDistributer = notificationDistributer;
             _guidGenerator = guidGenerator;
+            _notificationConfiguration = notificationConfiguration;
             AbpSession = NullAbpSession.Instance;
         }
         
@@ -57,7 +61,8 @@ namespace Abp.Notifications
             NotificationSeverity severity = NotificationSeverity.Info,
             UserIdentifier[] userIds = null,
             UserIdentifier[] excludedUserIds = null,
-            int?[] tenantIds = null)
+            int?[] tenantIds = null,
+            Type[] targetNotifiers = null)
         {
             using (var uow = UnitOfWorkManager.Begin())
             {
@@ -90,6 +95,8 @@ namespace Abp.Notifications
                     DataTypeName = data?.GetType().AssemblyQualifiedName
                 };
 
+                SetTargetNotifiers(notificationInfo, targetNotifiers);
+
                 await _store.InsertNotificationAsync(notificationInfo);
 
                 await CurrentUnitOfWork.SaveChangesAsync(); //To get Id of the notification
@@ -111,6 +118,26 @@ namespace Abp.Notifications
                 
                 await uow.CompleteAsync();
             }
+        }
+
+        protected virtual void SetTargetNotifiers(NotificationInfo notificationInfo, Type[] targetNotifiers)
+        {
+            if (targetNotifiers == null)
+            {
+                return;
+            }
+            
+            var allNotificationNotifiers = _notificationConfiguration.Notifiers.Select(notifier => notifier.FullName).ToList();
+                    
+            foreach (var targetNotifier in targetNotifiers)
+            {
+                if (!allNotificationNotifiers.Contains(targetNotifier.FullName))
+                {
+                    throw new ApplicationException("Given target notifier is not registered before: " + targetNotifier.FullName+" You must register it to the INotificationConfiguration.Notifiers!");
+                }
+            }
+
+            notificationInfo.SetTargetNotifiers(targetNotifiers.Select(n => n.FullName).ToList());
         }
 
         /// <summary>

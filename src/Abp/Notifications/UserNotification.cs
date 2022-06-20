@@ -1,5 +1,8 @@
 ﻿using System;
+using System.Collections.Generic;
+using System.Linq;
 using Abp.Application.Services.Dto;
+using Abp.Extensions;
 
 namespace Abp.Notifications
 {
@@ -28,5 +31,15 @@ namespace Abp.Notifications
         /// The notification.
         /// </summary>
         public TenantNotification Notification { get; set; }
+
+        /// <summary>
+        /// which realtime notifiers should handle this notification
+        /// </summary>
+        public string TargetNotifiers { get; set; }
+
+        public List<string> TargetNotifiersList => TargetNotifiers.IsNullOrWhiteSpace()
+            ? new List<string>()
+            : TargetNotifiers.Split(NotificationInfo.NotificationTargetSeparator).ToList();
+
     }
 }
