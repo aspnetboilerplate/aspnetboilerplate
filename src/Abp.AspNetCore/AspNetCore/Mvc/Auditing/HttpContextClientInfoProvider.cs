@@ -52,20 +52,6 @@ namespace Abp.AspNetCore.Mvc.Auditing
 
         protected virtual string GetComputerName()
         {
-            try
-            {
-                var httpContext = _httpContextAccessor.HttpContext;
-                var remoteIpAddress = httpContext?.Connection?.RemoteIpAddress;
-
-                if (remoteIpAddress is null) return null;
-
-                return Dns.GetHostEntry(remoteIpAddress).HostName;
-            }
-            catch (Exception ex)
-            {
-                Logger.Warn(ex.ToString());
-            }
-
             return null;
         }
     }
