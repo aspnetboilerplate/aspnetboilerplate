@@ -213,6 +213,14 @@ For example, you can implement an **EmailRealTimeNotifier**:
 ```c#
 public class EmailRealTimeNotifier : IRealTimeNotifier, ITransientDependency
 {
+    /// <summary>
+    /// If true, this real time notifier will be used for sending real time notifications when it is requested. Otherwise it will not be used.
+    /// <para>
+    /// If false, this realtime notifier will notify any notifications.
+    /// </para>
+    /// </summary>
+    bool UseOnlyIfRequestedAsTarget => false;
+    
     private readonly IEmailSender _emailSender;
     private readonly UserManager _userManager;
 
@@ -244,11 +252,68 @@ public class EmailRealTimeNotifier : IRealTimeNotifier, ITransientDependency
 }
 ```
 
+```c#
+public class SMSRealTimeNotifier : IRealTimeNotifier, ITransientDependency
+{
+    /// <summary>
+    /// If true, this real time notifier will be used for sending real time notifications when it is requested. Otherwise it will not be used.
+    /// <para>
+    /// If false, this realtime notifier will notify any notifications.
+    /// </para>
+    /// </summary>
+    bool UseOnlyIfRequestedAsTarget => true;
+
+    private readonly IUserSMSSender _userSmsSender;
+
+    public SMSRealTimeNotifier(IUserSMSSender userSmsSender)
+    {
+        _userSmsSender = userSmsSender;
+    }
+
+    public async Task SendNotificationsAsync(UserNotification[] userNotifications)
+    {
+        foreach (var userNotification in userNotifications)
+        {
+            if (userNotification.Notification.Data is MessageNotificationData data)
+            {
+                 var user = await _userManager.GetUserByIdAsync(userNotification.UserId);
+                _userSmsSender.Send(user, data.Message);
+            }
+        }
+    }
+}
+```
+
 Add it in the **PreInitialize** method of your module:
 
 ```c#
 Configuration.Notifications.Notifiers.Add<EmailRealTimeNotifier>();
+Configuration.Notifications.Notifiers.Add<SMSRealTimeNotifier>();
 ```
+
+Now you can publish notification using new realtime notifiers.
+
+```csharp
+public async Task Publish_NewUserCreatedNotification(long userId)
+{
+    var data = new LocalizableMessageNotificationData(new LocalizableString("NewUserCreated", "MyLocalizationSourceName"));
+
+    await _notificationPublisher.PublishAsync("System.NewUserCreated", data);    
+}
+```
+
+That notification will be sent to all subscribed users with usings `EmailRealTimeNotifier` and `SignalRRealTimeNotifier`(default notifier). Since `SMSRealTimeNotifier`'s `UseOnlyIfRequestedAsTarget` is true, you must define it as a target to send it using it.
+
+```csharp
+public async Task Publish_NewUserCreatedNotificationWithSms(long userId)
+{
+    var data = new LocalizableMessageNotificationData(new LocalizableString("NewUserCreated", "MyLocalizationSourceName"));
+
+    await _notificationPublisher.PublishAsync("System.NewUserCreated", data, targetNotifiers: new Type[]{typeof(SMSRealTimeNotifier)});    
+}
+```
+
+Now, it will be sent using only `SMSRealTimeNotifier`i
 
 #### Client-Side
 
