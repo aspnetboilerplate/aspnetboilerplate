@@ -302,7 +302,7 @@ public async Task Publish_NewUserCreatedNotification(long userId)
 }
 ```
 
-That notification will be sent to all subscribed users with usings `EmailRealTimeNotifier` and `SignalRRealTimeNotifier`(default notifier). Since `SMSRealTimeNotifier`'s `UseOnlyIfRequestedAsTarget` is true, you must define it as a target to send notifications using it.
+That notification will be sent to all subscribed users using `EmailRealTimeNotifier` and `SignalRRealTimeNotifier`(default notifier). Since `SMSRealTimeNotifier`'s `UseOnlyIfRequestedAsTarget` is true, you must define it as a target to send notifications using it.
 
 ```csharp
 public async Task Publish_NewUserCreatedNotificationWithSms(long userId)
