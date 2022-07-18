@@ -69,8 +69,11 @@ namespace AbpAspNetCoreDemo
             }).AddRazorRuntimeCompilation().AddOData(opts =>
             {
                 var builder = new ODataConventionModelBuilder();
+                // Products
                 builder.EntitySet<Product>("Products").EntityType.Expand().Filter().OrderBy().Page().Select();
                 builder.EntitySet<Product>("ProductsDto").EntityType.Expand().Filter().OrderBy().Page().Select();
+                // Customers
+                builder.EntitySet<Customer>("Customers").EntityType.Expand().Filter().OrderBy().Page().Select();
                 var edmModel = builder.GetEdmModel();
                 
                 opts.AddRouteComponents("odata", edmModel);
