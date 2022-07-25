@@ -48,6 +48,11 @@ namespace Abp.AspNetCore.Mvc.Uow
                 {
                     await uow.CompleteAsync();
                 }
+                else if (result.Exception != null)
+                {
+                    // surface the exception otherwise InnerUnitOfWorkCompleteHandle doesn't handle the exception correctly
+                    throw result.Exception;
+                }
             }
         }
     }
