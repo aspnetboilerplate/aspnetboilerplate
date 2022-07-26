@@ -108,7 +108,7 @@ namespace Abp.Runtime.Caching
         /// Saves/Overrides an item in the cache by a key.
         /// Use one of the expire times at most (<paramref name="slidingExpireTime"/> or <paramref name="absoluteExpireTime"/>).
         /// If none of them is specified, then
-        /// <see cref="ICacheOptions.DefaultAbsoluteExpireTime"/> will be used if it's not null. Othewise, <see cref="ICacheOptions.DefaultSlidingExpireTime"/>
+        /// <see cref="ICacheOptions.DefaultAbsoluteExpireTimeFactory"/> or <see cref="ICacheOptions.DefaultAbsoluteExpireTime"/> will be used if it's not null. Othewise, <see cref="ICacheOptions.DefaultSlidingExpireTime"/>
         /// will be used.
         /// </summary>
         /// <param name="key">Key</param>
@@ -121,7 +121,7 @@ namespace Abp.Runtime.Caching
         /// Saves/Overrides items in the cache by the pairs.
         /// Use one of the expire times at most (<paramref name="slidingExpireTime"/> or <paramref name="absoluteExpireTime"/>).
         /// If none of them is specified, then
-        /// <see cref="ICacheOptions.DefaultAbsoluteExpireTime"/> will be used if it's not null. Othewise, <see cref="ICacheOptions.DefaultSlidingExpireTime"/>
+        /// <see cref="ICacheOptions.DefaultAbsoluteExpireTimeFactory"/> or <see cref="ICacheOptions.DefaultAbsoluteExpireTime"/> will be used if it's not null. Othewise, <see cref="ICacheOptions.DefaultSlidingExpireTime"/>
         /// will be used.
         /// </summary>
         /// <param name="pairs">Pairs</param>
@@ -133,7 +133,7 @@ namespace Abp.Runtime.Caching
         /// Saves/Overrides an item in the cache by a key.
         /// Use one of the expire times at most (<paramref name="slidingExpireTime"/> or <paramref name="absoluteExpireTime"/>).
         /// If none of them is specified, then
-        /// <see cref="ICacheOptions.DefaultAbsoluteExpireTime"/> will be used if it's not null. Othewise, <see cref="ICacheOptions.DefaultSlidingExpireTime"/>
+        /// <see cref="ICacheOptions.DefaultAbsoluteExpireTimeFactory"/> or <see cref="ICacheOptions.DefaultAbsoluteExpireTime"/> will be used if it's not null. Othewise, <see cref="ICacheOptions.DefaultSlidingExpireTime"/>
         /// will be used.
         /// </summary>
         /// <param name="key">Key</param>
@@ -146,7 +146,7 @@ namespace Abp.Runtime.Caching
         /// Saves/Overrides items in the cache by the pairs.
         /// Use one of the expire times at most (<paramref name="slidingExpireTime"/> or <paramref name="absoluteExpireTime"/>).
         /// If none of them is specified, then
-        /// <see cref="ICacheOptions.DefaultAbsoluteExpireTime"/> will be used if it's not null. Othewise, <see cref="ICacheOptions.DefaultSlidingExpireTime"/>
+        /// <see cref="ICacheOptions.DefaultAbsoluteExpireTimeFactory"/> or <see cref="ICacheOptions.DefaultAbsoluteExpireTime"/> will be used if it's not null. Othewise, <see cref="ICacheOptions.DefaultSlidingExpireTime"/>
         /// will be used.
         /// </summary>
         /// <param name="pairs">Pairs</param>

@@ -17,6 +17,8 @@ namespace Abp.Runtime.Caching
     {
         public TimeSpan DefaultSlidingExpireTime { get; set; }
 
+        public Func<string, DateTimeOffset> DefaultAbsoluteExpireTimeFactory { get; set; }
+
         public DateTimeOffset? DefaultAbsoluteExpireTime { get; set; }
 
         protected readonly SemaphoreSlim SemaphoreSlim = new SemaphoreSlim(1, 1);

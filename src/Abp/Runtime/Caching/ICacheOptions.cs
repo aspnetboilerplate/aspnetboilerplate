@@ -12,6 +12,13 @@ namespace Abp.Runtime.Caching
         TimeSpan DefaultSlidingExpireTime { get; set; }
 
         /// <summary>
+        /// Default absolute expire time factory of cache items.
+        /// Priority is higher than DefaultAbsoluteExpireTime
+        /// Default value: null (not used).
+        /// </summary>
+        Func<string, DateTimeOffset> DefaultAbsoluteExpireTimeFactory { get; set; }
+
+        /// <summary>
         /// Default absolute expire time of cache items.
         /// Default value: null (not used).
         /// </summary>

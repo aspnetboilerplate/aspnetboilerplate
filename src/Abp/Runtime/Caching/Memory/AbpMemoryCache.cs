@@ -42,6 +42,10 @@ namespace Abp.Runtime.Caching.Memory
             {
                 _memoryCache.Set(key, value, slidingExpireTime.Value);
             }
+            else if (DefaultAbsoluteExpireTimeFactory != null)
+            {
+                _memoryCache.Set(key, value, DefaultAbsoluteExpireTimeFactory(key));
+            }
             else if (DefaultAbsoluteExpireTime.HasValue)
             {
                 _memoryCache.Set(key, value, DefaultAbsoluteExpireTime.Value);
