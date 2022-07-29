@@ -1,6 +1,8 @@
 ﻿using System;
 using Abp.Dependency;
+using Abp.RealTime;
 using Abp.Runtime.Caching.Configuration;
+using Abp.Runtime.Caching.Redis.RealTime;
 
 namespace Abp.Runtime.Caching.Redis
 {
@@ -28,6 +30,7 @@ namespace Abp.Runtime.Caching.Redis
             var iocManager = cachingConfiguration.AbpConfiguration.IocManager;
 
             iocManager.RegisterIfNot<ICacheManager, AbpRedisCacheManager>();
+            iocManager.RegisterIfNot<IOnlineClientStore, RedisOnlineClientStore>();
 
             optionsAction(iocManager.Resolve<AbpRedisCacheOptions>());
         }
