@@ -59,6 +59,12 @@
       "Abp/Framework/scripts/libs/abp.sweet-alert.js"
     ]
   },
+    {
+    "outputFileName": "Abp/Framework/scripts/libs/abp.sweet-alert2.min.js",
+    "inputFiles": [
+      "Abp/Framework/scripts/libs/abp.sweet-alert2.js"
+    ]
+  },
   {
     "outputFileName": "Abp/Framework/scripts/libs/abp.toastr.min.js",
     "inputFiles": [
