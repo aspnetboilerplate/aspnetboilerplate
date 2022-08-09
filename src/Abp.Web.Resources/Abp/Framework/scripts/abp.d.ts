@@ -318,7 +318,7 @@
 
         function error(message: string, title?: string, options?: any): any;
 
-        function confirm(message: string, title?: string, callback?: (result: boolean, info?: any) => void, options?: any): any;
+        function confirm(message: string, title?: string, callback?: (isConfirmed: boolean, isCancelled?: boolean) => void, options?: any): any;
     }
 
     namespace ui {
