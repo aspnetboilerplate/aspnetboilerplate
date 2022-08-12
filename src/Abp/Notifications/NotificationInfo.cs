@@ -149,7 +149,7 @@ namespace Abp.Notifications
         /// <summary>
         /// which realtime notifiers should handle this notification
         /// </summary>
-        public string TargetNotifiers { get; set; }
+        public virtual string TargetNotifiers { get; set; }
 
         [NotMapped]
         public List<string> TargetNotifiersList => TargetNotifiers.IsNullOrWhiteSpace()
