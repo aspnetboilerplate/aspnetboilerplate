@@ -88,10 +88,6 @@ var abp = abp || {};
         return showMessage('confirm', message, title, confirmFunc, options);
     };
 
-    abp.message.swal = function (options, callback){
-        return showMessage(null, null, null, callback, options);
-    };
-
     abp.event.on('abp.dynamicScriptsInitialized', function () {
         abp.libs.sweetAlert.config.confirm.title = abp.localization.abpWeb('AreYouSure');
         abp.libs.sweetAlert.config.confirm.buttons = [abp.localization.abpWeb('Cancel'), abp.localization.abpWeb('Yes')];
