@@ -25,6 +25,10 @@ namespace Abp.ZeroCore.SampleApp.EntityFramework
         public DbSet<Product> Products { get; set; }
 
         public DbSet<ProductTranslation> ProductTranslations { get; set; }
+        
+        public DbSet<Office> Offices { get; set; }
+
+        public DbSet<OfficeTranslation> OfficeTranslations { get; set; }
 
         public DbSet<Author> Authors { get; set; }
 

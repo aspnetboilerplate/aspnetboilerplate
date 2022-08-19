@@ -3,7 +3,7 @@ using Abp.Application.Services.Dto;
 
 namespace Abp.ZeroCore.SampleApp.Application.Shop
 {
-    public class ProductUpdateDto: EntityDto
+    public class ProductUpdateDto : EntityDto
     {
         public decimal Price { get; set; }
 

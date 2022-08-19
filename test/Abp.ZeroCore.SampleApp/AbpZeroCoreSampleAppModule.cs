@@ -49,21 +49,21 @@ namespace Abp.ZeroCore.SampleApp
             IocManager.RegisterAssemblyByConvention(typeof(AbpZeroCoreSampleAppModule).GetAssembly());
 
             var genericRepositoryRegistarar = IocManager.Resolve<EfGenericRepositoryRegistrar>();
-            
+
             genericRepositoryRegistarar.RegisterForEntity(
                 typeof(SampleAppDbContext),
                 typeof(CustomEntity),
                 IocManager,
                 EfCoreAutoRepositoryTypes.Default
             );
-            
+
             genericRepositoryRegistarar.RegisterForEntity(
                 typeof(SampleAppDbContext),
                 typeof(CustomEntityWithGuidId),
                 IocManager,
                 EfCoreAutoRepositoryTypes.Default
             );
-            
+
             Configuration.Modules.AbpAutoMapper().Configurators.Add(configuration =>
             {
                 CustomDtoMapper.CreateMappings(configuration, new MultiLingualMapContext(
@@ -82,12 +82,17 @@ namespace Abp.ZeroCore.SampleApp
     {
         public static void CreateMappings(IMapperConfigurationExpression configuration, MultiLingualMapContext context)
         {
+            // Product 
             configuration.CreateMultiLingualMap<Product, ProductTranslation, ProductListDto>(context, true);
-
             configuration.CreateMap<ProductCreateDto, Product>();
             configuration.CreateMap<ProductUpdateDto, Product>();
-
             configuration.CreateMap<ProductTranslationDto, ProductTranslation>();
+
+            // Office
+            configuration.CreateMultiLingualMap<Office, int, OfficeTranslation, long, OfficeListDto>(context, true);
+            configuration.CreateMap<OfficeCreateDto, Office>();
+            configuration.CreateMap<OfficeUpdateDto, Office>();
+            configuration.CreateMap<OfficeTranslationDto, OfficeTranslation>();
 
             configuration.CreateMultiLingualMap<Order, OrderTranslation, OrderListDto>(context, true)
                 .EntityMap.ForMember(dest => dest.ProductCount, opt => opt.MapFrom(src => src.Products.Count));

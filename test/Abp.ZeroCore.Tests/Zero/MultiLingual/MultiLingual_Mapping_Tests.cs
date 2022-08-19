@@ -12,11 +12,13 @@ namespace Abp.Zero.MultiLingual
     {
         private readonly IProductAppService _productAppService;
         private readonly IOrderAppService _orderAppService;
+        private readonly IOfficeAppService _officeAppService;
 
         public MultiLingual_Mapping_Tests()
         {
             _productAppService = Resolve<IProductAppService>();
             _orderAppService = Resolve<IOrderAppService>();
+            _officeAppService= Resolve<IOfficeAppService>();
             Resolve<IMultiTenancyConfig>().IsEnabled = true;
         }
 
@@ -150,6 +152,33 @@ namespace Abp.Zero.MultiLingual
             testOrder.Language.ShouldBe("fr");
             testOrder.Name.ShouldBe("Tester");
             testOrder.ProductCount.ShouldBe(3);
+        }
+        
+        [Fact]
+        public async Task CreateMultiLingualMap_For_LongPK__Tests()
+        {
+            CultureInfo.CurrentUICulture = new CultureInfo("tr");
+
+            var offices = await _officeAppService.GetOffices();
+            offices.ShouldNotBeNull();
+
+            offices.Items.Count.ShouldBe(1);
+            var volosoftOffice = offices.Items[0];
+            
+
+            volosoftOffice.Language.ShouldBe("tr");
+            volosoftOffice.Name.ShouldBe("Volosoft Ofisi");
+            
+            CultureInfo.CurrentUICulture = new CultureInfo("fr");
+
+            offices = await _officeAppService.GetOffices();
+            offices.ShouldNotBeNull();
+
+            offices.Items.Count.ShouldBe(1);
+            volosoftOffice = offices.Items[0];
+
+            volosoftOffice.Language.ShouldBe("en");
+            volosoftOffice.Name.ShouldBe("Volosoft Office");
         }
     }
 }
