@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio Version 16
-VisualStudioVersion = 16.0.29123.89
+# Visual Studio Version 17
+VisualStudioVersion = 17.3.32804.467
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "src", "src", "{DFF0464B-5402-4DD6-86F5-2AEC1163B232}"
 EndProject
@@ -177,11 +177,13 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Abp.EntityFrameworkCore.EFP
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "_build", "build\_build.csproj", "{C7AD768F-DA07-49CA-B78E-12B9C6FF4340}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Abp.ZeroCore.IdentityServer4.vNext", "src\Abp.ZeroCore.IdentityServer4.vNext\Abp.ZeroCore.IdentityServer4.vNext.csproj", "{FA588E3F-FBC1-4B2E-B1FF-0628758422F7}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Abp.ZeroCore.IdentityServer4.vNext", "src\Abp.ZeroCore.IdentityServer4.vNext\Abp.ZeroCore.IdentityServer4.vNext.csproj", "{FA588E3F-FBC1-4B2E-B1FF-0628758422F7}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Abp.ZeroCore.IdentityServer4.vNext.EntityFrameworkCore", "src\Abp.ZeroCore.IdentityServer4.vNext.EntityFrameworkCore\Abp.ZeroCore.IdentityServer4.vNext.EntityFrameworkCore.csproj", "{5779DD70-E43D-4429-8D8D-1DD429392F0D}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Abp.ZeroCore.IdentityServer4.vNext.EntityFrameworkCore", "src\Abp.ZeroCore.IdentityServer4.vNext.EntityFrameworkCore\Abp.ZeroCore.IdentityServer4.vNext.EntityFrameworkCore.csproj", "{5779DD70-E43D-4429-8D8D-1DD429392F0D}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Abp.AspNetCore.PerRequestRedisCache", "src\Abp.AspNetCore.PerRequestRedisCache\Abp.AspNetCore.PerRequestRedisCache.csproj", "{DE3D4F5B-70A2-488B-A478-2C73FFE36D46}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Abp.AspNetCore.PerRequestRedisCache", "src\Abp.AspNetCore.PerRequestRedisCache\Abp.AspNetCore.PerRequestRedisCache.csproj", "{DE3D4F5B-70A2-488B-A478-2C73FFE36D46}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Abp.ZeroCore.NHibernate", "src\Abp.ZeroCore.NHibernate\Abp.ZeroCore.NHibernate.csproj", "{01F71E3D-5010-43AA-870A-ADED860FF73B}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -189,8 +191,6 @@ Global
 		Release|Any CPU = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
-		{C7AD768F-DA07-49CA-B78E-12B9C6FF4340}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{C7AD768F-DA07-49CA-B78E-12B9C6FF4340}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{486C8629-0E65-47E9-9BA4-8180E682C1F8}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{486C8629-0E65-47E9-9BA4-8180E682C1F8}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{486C8629-0E65-47E9-9BA4-8180E682C1F8}.Release|Any CPU.ActiveCfg = Release|Any CPU
@@ -499,6 +499,8 @@ Global
 		{15C9B221-9469-47AC-9D96-117EB00E2CE1}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{15C9B221-9469-47AC-9D96-117EB00E2CE1}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{15C9B221-9469-47AC-9D96-117EB00E2CE1}.Release|Any CPU.Build.0 = Release|Any CPU
+		{C7AD768F-DA07-49CA-B78E-12B9C6FF4340}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{C7AD768F-DA07-49CA-B78E-12B9C6FF4340}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{FA588E3F-FBC1-4B2E-B1FF-0628758422F7}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{FA588E3F-FBC1-4B2E-B1FF-0628758422F7}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{FA588E3F-FBC1-4B2E-B1FF-0628758422F7}.Release|Any CPU.ActiveCfg = Release|Any CPU
@@ -511,6 +513,10 @@ Global
 		{DE3D4F5B-70A2-488B-A478-2C73FFE36D46}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{DE3D4F5B-70A2-488B-A478-2C73FFE36D46}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{DE3D4F5B-70A2-488B-A478-2C73FFE36D46}.Release|Any CPU.Build.0 = Release|Any CPU
+		{01F71E3D-5010-43AA-870A-ADED860FF73B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{01F71E3D-5010-43AA-870A-ADED860FF73B}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{01F71E3D-5010-43AA-870A-ADED860FF73B}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{01F71E3D-5010-43AA-870A-ADED860FF73B}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -598,6 +604,7 @@ Global
 		{FA588E3F-FBC1-4B2E-B1FF-0628758422F7} = {DFF0464B-5402-4DD6-86F5-2AEC1163B232}
 		{5779DD70-E43D-4429-8D8D-1DD429392F0D} = {DFF0464B-5402-4DD6-86F5-2AEC1163B232}
 		{DE3D4F5B-70A2-488B-A478-2C73FFE36D46} = {DFF0464B-5402-4DD6-86F5-2AEC1163B232}
+		{01F71E3D-5010-43AA-870A-ADED860FF73B} = {DFF0464B-5402-4DD6-86F5-2AEC1163B232}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {5A1CB38E-F77D-4A40-B3A9-9A70C3F3BC6D}
