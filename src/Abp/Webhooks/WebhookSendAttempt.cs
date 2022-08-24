@@ -1,9 +1,9 @@
-﻿using System;
+﻿using Abp.Domain.Entities;
+using Abp.Domain.Entities.Auditing;
+using System;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 using System.Net;
-using Abp.Domain.Entities;
-using Abp.Domain.Entities.Auditing;
 
 namespace Abp.Webhooks
 {
@@ -17,29 +17,29 @@ namespace Abp.Webhooks
         /// <see cref="WebhookEvent"/> foreign id 
         /// </summary>
         [Required]
-        public Guid WebhookEventId { get; set; }
+        public virtual Guid WebhookEventId { get; set; }
 
         /// <summary>
         /// <see cref="WebhookSubscription"/> foreign id 
         /// </summary>
         [Required]
-        public Guid WebhookSubscriptionId { get; set; }
+        public virtual Guid WebhookSubscriptionId { get; set; }
 
         /// <summary>
         /// Webhook response content that webhook endpoint send back
         /// </summary>
-        public string Response { get; set; }
+        public virtual string Response { get; set; }
 
         /// <summary>
         /// Webhook response status code that webhook endpoint send back
         /// </summary>
-        public HttpStatusCode? ResponseStatusCode { get; set; }
+        public virtual HttpStatusCode? ResponseStatusCode { get; set; }
 
-        public DateTime CreationTime { get; set; }
+        public virtual DateTime CreationTime { get; set; }
 
-        public DateTime? LastModificationTime { get; set; }
+        public virtual DateTime? LastModificationTime { get; set; }
 
-        public int? TenantId { get; set; }
+        public virtual int? TenantId { get; set; }
 
         /// <summary>
         /// WebhookEvent of this send attempt.
