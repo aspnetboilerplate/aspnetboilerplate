@@ -9,9 +9,12 @@ namespace Abp.Zero.NHibernate.EntityMappings
             : base("AbpUserClaims")
         {
             Map(x => x.TenantId);
-            Map(x => x.UserId);
-            Map(x => x.ClaimType);
-            Map(x => x.ClaimValue);
+            Map(x => x.UserId)
+                .Not.Nullable();
+            Map(x => x.ClaimType)
+                .Length(UserClaim.MaxClaimTypeLength);
+            Map(x => x.ClaimValue)
+                .Length(Extensions.NvarcharMax);
 
             this.MapCreationAudited();
         }

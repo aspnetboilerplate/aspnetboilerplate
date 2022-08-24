@@ -20,10 +20,14 @@ namespace Abp.Zero.NHibernate.EntityMappings
             : base("AbpTenants")
         {
             References(x => x.Edition).Column("EditionId").Nullable();
+            Map(x => x.EditionId).ReadOnly();
 
-            Map(x => x.TenancyName);
-            Map(x => x.Name);
-            Map(x => x.IsActive);
+            Map(x => x.TenancyName).Not.Nullable().Length(AbpTenantBase.MaxTenancyNameLength);
+            Map(x => x.Name).Not.Nullable().Length(AbpTenantBase.MaxNameLength);
+            Map(x => x.IsActive)
+                .Not.Nullable();
+
+            Map(x => x.ConnectionString).Length(AbpTenantBase.MaxConnectionStringLength);
 
             this.MapFullAudited();
 

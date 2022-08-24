@@ -8,8 +8,6 @@ namespace Abp.Zero.NHibernate.EntityMappings
         public TenantFeatureSettingMap()
         {
             DiscriminatorValue("TenantFeatureSetting");
-
-            Map(x => x.TenantId);
         }
     }
 }

@@ -8,9 +8,16 @@ namespace Abp.Zero.NHibernate.EntityMappings
         public UserLoginMap()
             : base("AbpUserLogins")
         {
-            Map(x => x.UserId);
-            Map(x => x.LoginProvider);
-            Map(x => x.ProviderKey);
+            Map(x => x.UserId)
+                .Not.Nullable();
+            Map(x => x.LoginProvider)
+                .Length(UserLogin.MaxLoginProviderLength)
+                .Not.Nullable();
+            Map(x => x.ProviderKey)
+                .Length(UserLogin.MaxProviderKeyLength)
+                .Not.Nullable();
+
+            Map(x => x.TenantId);
         }
     }
 }

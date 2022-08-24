@@ -8,11 +8,18 @@ namespace Abp.Zero.NHibernate.EntityMappings
         public FeatureSettingMap()
             : base("AbpFeatures")
         {
-            DiscriminateSubClassesOnColumn("Discriminator");
+            DiscriminateSubClassesOnColumn("Discriminator")
+                .Length(Extensions.NvarcharMax)
+                .Not.Nullable();
 
-            Map(x => x.Name);
-            Map(x => x.Value);
-            
+            Map(x => x.TenantId);
+            Map(x => x.Name)
+                .Length(FeatureSetting.MaxNameLength)
+                .Not.Nullable();
+            Map(x => x.Value)
+                .Length(FeatureSetting.MaxValueLength)
+                .Not.Nullable();
+
             this.MapCreationAudited();
         }
     }

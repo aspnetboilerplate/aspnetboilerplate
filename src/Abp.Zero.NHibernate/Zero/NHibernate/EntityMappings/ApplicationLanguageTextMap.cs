@@ -8,12 +8,20 @@ namespace Abp.Zero.NHibernate.EntityMappings
         public ApplicationLanguageTextMap()
             : base("AbpLanguageTexts")
         {
+            Map(x => x.Key)
+                .Length(ApplicationLanguageText.MaxKeyLength)
+                .Not.Nullable();
+            Map(x => x.LanguageName)
+                .Length(ApplicationLanguageText.MaxSourceNameLength)
+                .Not.Nullable();
+            Map(x => x.Source)
+                .Length(ApplicationLanguageText.MaxSourceNameLength)
+                .Not.Nullable();
             Map(x => x.TenantId);
-            Map(x => x.LanguageName);
-            Map(x => x.Source);
-            Map(x => x.Key);
-            Map(x => x.Value);
-            
+            Map(x => x.Value)
+                .Length(ApplicationLanguageText.MaxValueLength)
+                .Not.Nullable();
+
             this.MapAudited();
         }
     }

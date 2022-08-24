@@ -10,8 +10,11 @@ namespace Abp.Zero.NHibernate.EntityMappings
         {
             Map(x => x.TenantId);
             Map(x => x.UserId);
-            Map(x => x.Name);
-            Map(x => x.Value);
+            Map(x => x.Name)
+                .Length(Setting.MaxNameLength)
+                .Not.Nullable();
+            Map(x => x.Value)
+                .Length(Extensions.NvarcharMax);
 
             this.MapAudited();
         }

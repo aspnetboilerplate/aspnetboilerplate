@@ -8,15 +8,23 @@ namespace Abp.Zero.NHibernate.EntityMappings
         public BackgroundJobInfoMap()
             : base("AbpBackgroundJobs")
         {
-            Map(x => x.JobType);
-            Map(x => x.JobArgs);
-            Map(x => x.TryCount);
-            Map(x => x.NextTryTime);
-            Map(x => x.LastTryTime);
-            Map(x => x.IsAbandoned);
-            Map(x => x.Priority).CustomType<BackgroundJobPriority>();
-
             this.MapCreationAudited();
+            Map(x => x.IsAbandoned)
+                .Not.Nullable();
+            Map(x => x.JobArgs)
+                .Length(BackgroundJobInfo.MaxJobArgsLength)
+                .Not.Nullable();
+            Map(x => x.JobType)
+                .Length(BackgroundJobInfo.MaxJobTypeLength)
+                .Not.Nullable();
+            Map(x => x.LastTryTime);
+            Map(x => x.NextTryTime)
+                .Not.Nullable();
+            Map(x => x.Priority)
+                .CustomType<BackgroundJobPriority>()
+                .Not.Nullable();
+            Map(x => x.TryCount)
+                .Not.Nullable();
         }
     }
 }

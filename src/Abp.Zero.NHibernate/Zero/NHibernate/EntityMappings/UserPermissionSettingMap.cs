@@ -9,7 +9,8 @@ namespace Abp.Zero.NHibernate.EntityMappings
         {
             DiscriminatorValue("UserPermissionSetting");
 
-            Map(x => x.UserId).Not.Nullable();
+            Map(x => x.UserId)
+                .Not.Nullable();
         }
     }
 }

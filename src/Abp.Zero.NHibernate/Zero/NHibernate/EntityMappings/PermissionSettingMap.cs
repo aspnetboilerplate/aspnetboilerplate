@@ -8,10 +8,16 @@ namespace Abp.Zero.NHibernate.EntityMappings
         public PermissionSettingMap()
             : base("AbpPermissions")
         {
-            DiscriminateSubClassesOnColumn("Discriminator");
+            DiscriminateSubClassesOnColumn("Discriminator")
+                .Length(Extensions.NvarcharMax)
+                .Not.Nullable();
 
-            Map(x => x.Name);
-            Map(x => x.IsGranted);
+            Map(x => x.Name)
+                .Length(PermissionSetting.MaxNameLength)
+                .Not.Nullable();
+            Map(x => x.IsGranted)
+                .Not.Nullable();
+            Map(x => x.TenantId);
 
             this.MapCreationAudited();
         }

@@ -9,10 +9,13 @@ namespace Abp.Zero.NHibernate.EntityMappings
             : base("AbpUserOrganizationUnits")
         {
             Map(x => x.TenantId);
-            Map(x => x.UserId);
-            Map(x => x.OrganizationUnitId);
+            Map(x => x.UserId)
+                .Not.Nullable();
+            Map(x => x.OrganizationUnitId)
+                .Not.Nullable();
 
             this.MapCreationAudited();
+            this.MapIsDeleted();
         }
     }
 }

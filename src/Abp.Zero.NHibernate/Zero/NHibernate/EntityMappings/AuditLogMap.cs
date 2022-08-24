@@ -8,21 +8,37 @@ namespace Abp.Zero.NHibernate.EntityMappings
         public AuditLogMap()
             : base("AbpAuditLogs")
         {
-            Map(x => x.TenantId);
-            Map(x => x.UserId);
-            Map(x => x.ServiceName);
-            Map(x => x.MethodName);
-            Map(x => x.Parameters);
-            Map(x => x.ExecutionTime);
-            Map(x => x.ExecutionDuration);
-            Map(x => x.ClientIpAddress);
-            Map(x => x.ClientName);
-            Map(x => x.BrowserInfo);
-            Map(x => x.Exception);
-            Map(x => x.ExceptionMessage);
+            Map(x => x.BrowserInfo)
+                .Length(AuditLog.MaxBrowserInfoLength);
+            Map(x => x.ClientIpAddress)
+                .Length(AuditLog.MaxClientIpAddressLength);
+            Map(x => x.ClientName)
+                .Length(AuditLog.MaxClientNameLength);
+            Map(x => x.CustomData)
+                .Length(AuditLog.MaxCustomDataLength);
+            Map(x => x.Exception)
+                .Length(AuditLog.MaxExceptionLength);
+            Map(x => x.ExecutionDuration)
+                .Not.Nullable();
+            Map(x => x.ExecutionTime)
+                .Not.Nullable();
             Map(x => x.ImpersonatorUserId);
             Map(x => x.ImpersonatorTenantId);
-            Map(x => x.CustomData);
+            Map(x => x.MethodName)
+                .Length(AuditLog.MaxMethodNameLength);
+            Map(x => x.Parameters)
+                .Length(AuditLog.MaxParametersLength);
+            Map(x => x.ServiceName)
+                .Length(AuditLog.MaxServiceNameLength);
+            Map(x => x.TenantId);
+            Map(x => x.UserId);
+            Map(x => x.ReturnValue)
+                .Length(Extensions.NvarcharMax);
+            Map(x => x.ExceptionMessage)
+                .Length(AuditLog.MaxExceptionMessageLength);
+
+
+
         }
     }
 }

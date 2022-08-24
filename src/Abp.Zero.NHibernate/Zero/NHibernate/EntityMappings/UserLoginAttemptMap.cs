@@ -6,17 +6,24 @@ namespace Abp.Zero.NHibernate.EntityMappings
 {
     public class UserLoginAttemptMap : EntityMap<UserLoginAttempt, long>
     {
-        public UserLoginAttemptMap() 
+        public UserLoginAttemptMap()
             : base("AbpUserLoginAttempts")
         {
             Map(x => x.TenantId);
-            Map(x => x.TenancyName);
+            Map(x => x.TenancyName)
+                .Length(UserLoginAttempt.MaxTenancyNameLength);
             Map(x => x.UserId);
-            Map(x => x.UserNameOrEmailAddress);
-            Map(x => x.ClientIpAddress);
-            Map(x => x.ClientName);
-            Map(x => x.BrowserInfo);
-            Map(x => x.Result).CustomType<AbpLoginResultType>();
+            Map(x => x.UserNameOrEmailAddress)
+                .Length(UserLoginAttempt.MaxUserNameOrEmailAddressLength);
+            Map(x => x.ClientIpAddress)
+                .Length(UserLoginAttempt.MaxClientIpAddressLength);
+            Map(x => x.ClientName)
+                .Length(UserLoginAttempt.MaxClientNameLength);
+            Map(x => x.BrowserInfo)
+                .Length(UserLoginAttempt.MaxBrowserInfoLength);
+            Map(x => x.Result)
+                .CustomType<AbpLoginResultType>()
+                .Not.Nullable();
 
             this.MapCreationTime();
         }
