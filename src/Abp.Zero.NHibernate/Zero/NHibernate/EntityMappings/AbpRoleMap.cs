@@ -1,6 +1,5 @@
 using Abp.Authorization.Roles;
 using Abp.Authorization.Users;
-using Abp.MultiTenancy;
 using Abp.NHibernate.EntityMappings;
 
 namespace Abp.Zero.NHibernate.EntityMappings
@@ -19,11 +18,18 @@ namespace Abp.Zero.NHibernate.EntityMappings
             : base("AbpRoles")
         {
             Map(x => x.TenantId);
-            Map(x => x.Name);
-            Map(x => x.DisplayName);
-            Map(x => x.IsStatic);
-            Map(x => x.IsDefault);
-            
+            Map(x => x.Name)
+                .Not.Nullable()
+                .Length(AbpRoleBase.MaxNameLength);
+            Map(x => x.DisplayName).Not.Nullable().Length(AbpRoleBase.MaxDisplayNameLength);
+            Map(x => x.IsStatic).Not.Nullable();
+            Map(x => x.IsDefault).Not.Nullable();
+
+            Map(x => x.NormalizedName).Not.Nullable().Length(AbpRoleBase.MaxNameLength);
+
+            HasMany(x => x.Permissions)
+                .KeyColumn("RoleId");
+
             this.MapFullAudited();
 
             Polymorphism.Explicit();
