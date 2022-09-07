@@ -2,6 +2,8 @@ using Abp.Domain.Entities;
 using Abp.NHibernate.Filters;
 using FluentNHibernate.Mapping;
 using System;
+using System.Collections.Generic;
+using System.Linq.Expressions;
 
 namespace Abp.NHibernate.EntityMappings
 {
@@ -31,7 +33,7 @@ namespace Abp.NHibernate.EntityMappings
                 ApplyFilter<SoftDeleteFilter>();
             }
 
-            if (typeof(IMustHaveTenant).IsAssignableFrom(typeof (TEntity)))
+            if (typeof(IMustHaveTenant).IsAssignableFrom(typeof(TEntity)))
             {
                 ApplyFilter<MustHaveTenantFilter>();
             }
@@ -40,6 +42,38 @@ namespace Abp.NHibernate.EntityMappings
             {
                 ApplyFilter<MayHaveTenantFilter>();
             }
+        }
+
+        protected new OneToManyPart<TChild> HasMany<TChild>(Expression<Func<TEntity, IEnumerable<TChild>>> memberExpression)
+        {
+            var mapping = base.HasMany<TChild>(memberExpression);
+            if (typeof(ISoftDelete).IsAssignableFrom(typeof(TEntity)))
+            {
+                mapping.ApplyFilter<SoftDeleteFilter>();
+            }
+            return mapping;
+        }
+
+        protected new OneToManyPart<TChild> HasMany<TKey, TChild>(Expression<Func<TEntity, IDictionary<TKey, TChild>>> memberExpression)
+        {
+            var mapping = base.HasMany<TKey, TChild>(memberExpression);
+            if (typeof(ISoftDelete).IsAssignableFrom(typeof(TEntity)))
+            {
+                mapping.ApplyFilter<SoftDeleteFilter>();
+            }
+
+            return mapping;
+        }
+
+        protected new OneToManyPart<TChild> HasMany<TChild>(Expression<Func<TEntity, object>> memberExpression)
+        {
+            var mapping = base.HasMany<TChild>(memberExpression);
+            if (typeof(ISoftDelete).IsAssignableFrom(typeof(TEntity)))
+            {
+                mapping.ApplyFilter<SoftDeleteFilter>();
+            }
+
+            return mapping;
         }
     }
 }
