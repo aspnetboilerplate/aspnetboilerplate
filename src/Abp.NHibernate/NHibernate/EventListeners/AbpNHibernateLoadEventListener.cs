@@ -1,20 +1,34 @@
-﻿using System.Threading;
-using System.Threading.Tasks;
+using Abp.Dependency;
 using Abp.Domain.Entities;
+using Abp.Domain.Uow;
 using NHibernate.Engine;
 using NHibernate.Event;
 using NHibernate.Event.Default;
 using NHibernate.Persister.Entity;
+using System;
+using System.Threading;
+using System.Threading.Tasks;
 
 namespace Abp.NHibernate.EventListeners
 {
     internal class AbpNHibernateLoadEventListener : DefaultLoadEventListener
     {
-        protected override object DoLoad(LoadEvent @event, IEntityPersister persister, EntityKey keyToLoad, LoadType options)//1-4
+        private readonly IIocManager _iocManager;
+        private readonly Lazy<IUnitOfWorkManager> _unitOfWork;
+
+        public AbpNHibernateLoadEventListener(IIocManager iocManager)
+        {
+            _iocManager = iocManager;
+
+            _unitOfWork = new Lazy<IUnitOfWorkManager>(() => _iocManager.Resolve<IUnitOfWorkManager>());
+        }
+        protected override object DoLoad(LoadEvent @event, IEntityPersister persister, EntityKey keyToLoad, LoadType options)
         {
             var result = base.DoLoad(@event, persister, keyToLoad, options);
-
-            if (result is ISoftDelete softDeletable && softDeletable.IsDeleted) return null;
+            if (_unitOfWork.Value.Current.IsFilterEnabled(AbpDataFilters.SoftDelete))
+            {
+                if (result is ISoftDelete softDeletable && softDeletable.IsDeleted) return null;
+            }
 
             return result;
         }
@@ -23,8 +37,10 @@ namespace Abp.NHibernate.EventListeners
             CancellationToken cancellationToken)
         {
             var result = await base.DoLoadAsync(@event, persister, keyToLoad, options, cancellationToken);
-
-            if (result is ISoftDelete softDeletable && softDeletable.IsDeleted) return null;
+            if (_unitOfWork.Value.Current.IsFilterEnabled(AbpDataFilters.SoftDelete))
+            {
+                if (result is ISoftDelete softDeletable && softDeletable.IsDeleted) return null;
+            }
 
             return result;
         }
