@@ -18,7 +18,7 @@ using System.Threading.Tasks;
 
 namespace Abp.NHibernate.EventListeners
 {
-    internal class AbpDeleteEventListener : DefaultDeleteEventListener
+    internal class AbpNHibernateDeleteEventListener : DefaultDeleteEventListener
     {
         public IEntityChangeEventHelper EntityChangeEventHelper { get; set; }
 
@@ -27,7 +27,7 @@ namespace Abp.NHibernate.EventListeners
         private readonly Lazy<IGuidGenerator> _guidGenerator;
         private readonly Lazy<IEventBus> _eventBus;
 
-        public AbpDeleteEventListener(IIocManager iocManager)
+        public AbpNHibernateDeleteEventListener(IIocManager iocManager)
         {
             _iocManager = iocManager;
 

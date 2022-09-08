@@ -35,7 +35,8 @@ namespace Abp.NHibernate
         public override void Initialize()
         {
             IocManager.Register<AbpNHibernateInterceptor>(DependencyLifeStyle.Transient);
-            IocManager.Register<AbpDeleteEventListener>(DependencyLifeStyle.Transient);
+            IocManager.Register<AbpNHibernateDeleteEventListener>(DependencyLifeStyle.Transient);
+            IocManager.Register<AbpNHibernateLoadEventListener>(DependencyLifeStyle.Transient);
 
             _sessionFactory = Configuration.Modules.AbpNHibernate().FluentConfiguration
                 .Mappings(m => m.FluentMappings.Add(typeof(SoftDeleteFilter)))
@@ -43,7 +44,9 @@ namespace Abp.NHibernate
                 .Mappings(m => m.FluentMappings.Add(typeof(MustHaveTenantFilter)))
                 .ExposeConfiguration(config =>
                 {
-                    config.SetListener(ListenerType.Delete, IocManager.Resolve<AbpDeleteEventListener>());
+                    config.SetListener(ListenerType.Delete, IocManager.Resolve<AbpNHibernateDeleteEventListener>());
+                    config.SetListener(ListenerType.Load, IocManager.Resolve<AbpNHibernateLoadEventListener>());
+
                     config.SetInterceptor(IocManager.Resolve<AbpNHibernateInterceptor>());
                 })
                 .BuildSessionFactory();
