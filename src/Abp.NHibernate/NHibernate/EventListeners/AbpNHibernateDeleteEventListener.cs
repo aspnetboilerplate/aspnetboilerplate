@@ -89,8 +89,8 @@ namespace Abp.NHibernate.EventListeners
             }
             else
             {
-                EntityChangeEventHelper.TriggerEntityUpdatingEvent(entity);
-                EntityChangeEventHelper.TriggerEntityUpdatedEventOnUowCompleted(entity);
+                EntityChangeEventHelper.TriggerEntityDeletingEvent(entity);
+                EntityChangeEventHelper.TriggerEntityDeletedEventOnUowCompleted(entity);
 
                 TriggerDomainEvents(entity);
 
@@ -132,8 +132,8 @@ namespace Abp.NHibernate.EventListeners
             }
             else
             {
-                EntityChangeEventHelper.TriggerEntityUpdatingEvent(entity);
-                EntityChangeEventHelper.TriggerEntityUpdatedEventOnUowCompleted(entity);
+                EntityChangeEventHelper.TriggerEntityDeletingEvent(entity);
+                EntityChangeEventHelper.TriggerEntityDeletedEventOnUowCompleted(entity);
 
                 TriggerDomainEvents(entity);
 

@@ -125,6 +125,9 @@ namespace Abp.NHibernate.Interceptors
                 }
             }
 
+            EntityChangeEventHelper.TriggerEntityUpdatingEvent(entity);
+            EntityChangeEventHelper.TriggerEntityUpdatedEventOnUowCompleted(entity);
+
             TriggerDomainEvents(entity);
 
             return base.OnFlushDirty(entity, id, currentState, previousState, propertyNames, types) || updated;

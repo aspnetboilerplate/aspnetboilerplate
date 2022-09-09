@@ -14,20 +14,24 @@ namespace Abp.NHibernate.EventListeners
     internal class AbpNHibernateLoadEventListener : DefaultLoadEventListener
     {
         private readonly IIocManager _iocManager;
-        private readonly Lazy<IUnitOfWorkManager> _unitOfWork;
+        private readonly Lazy<IUnitOfWork> _unitOfWork;
 
         public AbpNHibernateLoadEventListener(IIocManager iocManager)
         {
             _iocManager = iocManager;
 
-            _unitOfWork = new Lazy<IUnitOfWorkManager>(() => _iocManager.Resolve<IUnitOfWorkManager>());
+            _unitOfWork =
+                new Lazy<IUnitOfWork>(() => _iocManager.Resolve<IUnitOfWork>());
         }
         protected override object DoLoad(LoadEvent @event, IEntityPersister persister, EntityKey keyToLoad, LoadType options)
         {
             var result = base.DoLoad(@event, persister, keyToLoad, options);
-            if (_unitOfWork.Value.Current.IsFilterEnabled(AbpDataFilters.SoftDelete))
+            if (_unitOfWork.Value.IsFilterEnabled(AbpDataFilters.SoftDelete))
             {
-                if (result is ISoftDelete softDeletable && softDeletable.IsDeleted) return null;
+                if (result is ISoftDelete softDeletable)
+                {
+                    if (softDeletable.IsDeleted) return null;
+                }
             }
 
             return result;
@@ -37,9 +41,12 @@ namespace Abp.NHibernate.EventListeners
             CancellationToken cancellationToken)
         {
             var result = await base.DoLoadAsync(@event, persister, keyToLoad, options, cancellationToken);
-            if (_unitOfWork.Value.Current.IsFilterEnabled(AbpDataFilters.SoftDelete))
+            if (_unitOfWork.Value.IsFilterEnabled(AbpDataFilters.SoftDelete))
             {
-                if (result is ISoftDelete softDeletable && softDeletable.IsDeleted) return null;
+                if (result is ISoftDelete softDeletable)
+                {
+                    if (softDeletable.IsDeleted) return null;
+                }
             }
 
             return result;
