@@ -1,14 +1,16 @@
-﻿using System.Reflection;
-using Abp.Configuration.Startup;
+﻿using Abp.Configuration.Startup;
 using Abp.Dependency;
 using Abp.Domain.Uow;
 using Abp.Modules;
 using Abp.NHibernate.Configuration;
+using Abp.NHibernate.EventListeners;
 using Abp.NHibernate.Filters;
 using Abp.NHibernate.Interceptors;
 using Abp.NHibernate.Repositories;
 using Abp.NHibernate.Uow;
 using NHibernate;
+using NHibernate.Event;
+using System.Reflection;
 
 namespace Abp.NHibernate
 {
@@ -33,12 +35,20 @@ namespace Abp.NHibernate
         public override void Initialize()
         {
             IocManager.Register<AbpNHibernateInterceptor>(DependencyLifeStyle.Transient);
+            IocManager.Register<AbpNHibernateDeleteEventListener>(DependencyLifeStyle.Transient);
+            IocManager.Register<AbpNHibernateLoadEventListener>(DependencyLifeStyle.Transient);
 
             _sessionFactory = Configuration.Modules.AbpNHibernate().FluentConfiguration
                 .Mappings(m => m.FluentMappings.Add(typeof(SoftDeleteFilter)))
                 .Mappings(m => m.FluentMappings.Add(typeof(MayHaveTenantFilter)))
                 .Mappings(m => m.FluentMappings.Add(typeof(MustHaveTenantFilter)))
-                .ExposeConfiguration(config => config.SetInterceptor(IocManager.Resolve<AbpNHibernateInterceptor>()))
+                .ExposeConfiguration(config =>
+                {
+                    config.SetListener(ListenerType.Delete, IocManager.Resolve<AbpNHibernateDeleteEventListener>());
+                    config.SetListener(ListenerType.Load, IocManager.Resolve<AbpNHibernateLoadEventListener>());
+
+                    config.SetInterceptor(IocManager.Resolve<AbpNHibernateInterceptor>());
+                })
                 .BuildSessionFactory();
 
             IocManager.IocContainer.Install(new NhRepositoryInstaller(_sessionFactory));

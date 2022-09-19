@@ -137,15 +137,7 @@ namespace Abp.NHibernate.Repositories
 
         public override void Delete(TEntity entity)
         {
-            if (entity is ISoftDelete softDeleteEntity)
-            {
-                softDeleteEntity.IsDeleted = true;
-                Update(entity);
-            }
-            else
-            {
-                Session.Delete(entity);
-            }
+            Session.Delete(entity);
         }
 
         public override void Delete(TPrimaryKey id)
@@ -157,15 +149,7 @@ namespace Abp.NHibernate.Repositories
 
         public override async Task DeleteAsync(TEntity entity)
         {
-            if (entity is ISoftDelete softDeleteEntity)
-            {
-                softDeleteEntity.IsDeleted = true;
-                await UpdateAsync(entity);
-            }
-            else
-            {
-                await Session.DeleteAsync(entity, CancellationTokenProvider.Token);
-            }
+            await Session.DeleteAsync(entity, CancellationTokenProvider.Token);
         }
 
         public override async Task DeleteAsync(TPrimaryKey id)
