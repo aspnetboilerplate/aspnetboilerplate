@@ -106,6 +106,17 @@ first request). Configuration is not restricted to
 DefaultSlidingExpireTime only, since the cache object is an **ICacheOptions**, you can
 use it's properties to freely configure and initialize it.
 
+#### MemoryCache Configuration
+
+You can configure memory cache options using ASP.NET Core's options pattern as shown below;
+
+```csharp
+Configuration.Caching.MemoryCacheOptions = new MemoryCacheOptions
+{
+    SizeLimit = 2048
+};
+```
+
 ### Entity Caching
 
 While ASP.NET Boilerplate's cache system is for general purposes, there is an
