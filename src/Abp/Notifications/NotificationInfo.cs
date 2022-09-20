@@ -72,6 +72,8 @@ namespace Abp.Notifications
         /// </summary>
         public const int MaxTenantIdsLength = 128 * 1024;
 
+        public const int MaxTargetNotifiersLength = 1024;
+        
         /// <summary>
         /// Notification target list separation character.
         /// </summary>
@@ -149,6 +151,7 @@ namespace Abp.Notifications
         /// <summary>
         /// which realtime notifiers should handle this notification
         /// </summary>
+        [StringLength(MaxTargetNotifiersLength)]
         public virtual string TargetNotifiers { get; set; }
 
         [NotMapped]
