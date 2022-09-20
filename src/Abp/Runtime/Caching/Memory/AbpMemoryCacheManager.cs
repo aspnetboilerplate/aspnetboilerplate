@@ -1,5 +1,9 @@
-﻿using Abp.Runtime.Caching.Configuration;
+﻿using System.Linq;
+using Abp.Dependency;
+using Abp.Runtime.Caching.Configuration;
 using Castle.Core.Logging;
+using Microsoft.Extensions.Caching.Memory;
+using Microsoft.Extensions.Options;
 
 namespace Abp.Runtime.Caching.Memory
 {
@@ -9,7 +13,7 @@ namespace Abp.Runtime.Caching.Memory
     public class AbpMemoryCacheManager : CacheManagerBase<ICache>, ICacheManager
     {
         public ILogger Logger { get; set; }
-
+        
         /// <summary>
         /// Constructor.
         /// </summary>
@@ -21,7 +25,7 @@ namespace Abp.Runtime.Caching.Memory
 
         protected override ICache CreateCacheImplementation(string name)
         {
-            return new AbpMemoryCache(name)
+            return new AbpMemoryCache(name, Configuration?.AbpConfiguration?.Caching?.MemoryCacheOptions)
             {
                 Logger = Logger
             };

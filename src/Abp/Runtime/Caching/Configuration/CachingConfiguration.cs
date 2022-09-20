@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Collections.Immutable;
 using Abp.Configuration.Startup;
+using Microsoft.Extensions.Caching.Memory;
 
 namespace Abp.Runtime.Caching.Configuration
 {
@@ -13,6 +14,9 @@ namespace Abp.Runtime.Caching.Configuration
         {
             get { return _configurators.ToImmutableList(); }
         }
+
+        public MemoryCacheOptions MemoryCacheOptions { get; set; }
+        
         private readonly List<ICacheConfigurator> _configurators;
 
         public CachingConfiguration(IAbpStartupConfiguration abpConfiguration)
