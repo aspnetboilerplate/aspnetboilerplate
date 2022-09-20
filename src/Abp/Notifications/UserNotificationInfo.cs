@@ -17,6 +17,8 @@ namespace Abp.Notifications
     [Table("AbpUserNotifications")]
     public class UserNotificationInfo : Entity<Guid>, IHasCreationTime, IMayHaveTenant
     {
+        public const int MaxTargetNotifiersLength = 1024;
+        
         /// <summary>
         /// Tenant Id.
         /// </summary>
@@ -43,6 +45,7 @@ namespace Abp.Notifications
         /// <summary>
         /// which realtime notifiers should handle this notification
         /// </summary>
+        [StringLength(MaxTargetNotifiersLength)]
         public virtual string TargetNotifiers { get; set; }
 
         [NotMapped]
