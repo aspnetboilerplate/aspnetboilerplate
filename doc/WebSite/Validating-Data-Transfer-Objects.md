@@ -196,3 +196,5 @@ it's not supplied, we want to set a default sorting:
             }
         }
     }
+
+**Note:** By default, Normalization only works when an AppService or a Controller is called directly. For example, if you call an AppService method from a Controller, Normalization will not work. In such cases, you can either enable conventional interceptors by setting `removeConventionalInterceptors=false` when calling `services.AddAbp` in the Startup.cs file (this is not suggested for performance reasons) or you can call Normalize method of the related class manually.
