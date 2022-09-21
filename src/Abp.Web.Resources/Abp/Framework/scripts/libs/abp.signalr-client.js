@@ -14,6 +14,7 @@ var abp = abp || {};
     abp.signalr.increaseReconnectTime = abp.signalr.increaseReconnectTime || function (time) {
         return time * 2;
     };
+    abp.signalr.withUrlOptions = abp.signalr.withUrlOptions || {}; 
 
     // Configure the connection for abp.signalr.hubs.common
     function configureConnection(connection) {
@@ -101,8 +102,9 @@ var abp = abp || {};
 
         return function start(transport) {
             abp.log.debug('Starting connection using ' + signalR.HttpTransportType[transport] + ' transport');
+            abp.signalr.withUrlOptions.transport = transport;
             var connection = new signalR.HubConnectionBuilder()
-                .withUrl(url, transport)
+                .withUrl(url, abp.signalr.withUrlOptions)
                 .build();
 
             if (configureConnection && typeof configureConnection === 'function') {
