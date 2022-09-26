@@ -1,4 +1,4 @@
-name: .NET
+name: "build and test"
 
 on:
   pull_request:
