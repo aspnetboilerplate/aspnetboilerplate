@@ -8,6 +8,9 @@ on:
       - '**/*.csproj'
       - '**/*.razor'
 
+permissions:
+  contents: read
+
 jobs:
   build:
 
