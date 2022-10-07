@@ -191,15 +191,23 @@ namespace Abp.EntityFramework.Repositories
 
         public override TEntity Update(TEntity entity)
         {
-            AttachIfNot(entity);
-            Context.Entry(entity).State = EntityState.Modified;
+            // only if entity had to be attached, we do set its state to "Modified"
+            // this ensures, that unnecessary calls to "Update" result in the whole entity being set "dirty"
+            // as opposed to just the properties that changed!
+            if(AttachIfNot(entity))
+                Context.Entry(entity).State = EntityState.Modified;
+            
             return entity;
         }
-
+        
         public override Task<TEntity> UpdateAsync(TEntity entity)
         {
-            AttachIfNot(entity);
-            Context.Entry(entity).State = EntityState.Modified;
+            // only if entity had to be attached, we do set its state to "Modified"
+            // this ensures, that unnecessary calls to "UpdateAsync" result in the whole entity being set "dirty"
+            // as opposed to just the properties that changed!
+            if(AttachIfNot(entity))
+                Context.Entry(entity).State = EntityState.Modified;
+
             return Task.FromResult(entity);
         }
 
@@ -248,12 +256,15 @@ namespace Abp.EntityFramework.Repositories
             return await query.Where(predicate).LongCountAsync(CancellationTokenProvider.Token);
         }
 
-        protected virtual void AttachIfNot(TEntity entity)
+        protected virtual bool AttachIfNot(TEntity entity)
         {
             if (!Table.Local.Contains(entity))
             {
                 Table.Attach(entity);
+                return true;
             }
+
+            return false;
         }
 
         public DbContext GetDbContext()

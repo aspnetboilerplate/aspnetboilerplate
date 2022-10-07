@@ -514,7 +514,7 @@ namespace Abp.Zero.SampleApp.Tests.EntityHistory
 
             Predicate<EntityChangeSet> predicate = s =>
             {
-                s.EntityChanges.Count.ShouldBe(2);
+                s.EntityChanges.Count.ShouldBe(1, "only the FK on post10 was set, so blog1 should not be modified");
 
                 /* Post is not in Configuration.Selectors */
                 /* Post.Blog has Audited attribute */
@@ -528,9 +528,8 @@ namespace Abp.Zero.SampleApp.Tests.EntityHistory
                 propertyChange1.NewValue.ShouldNotBeNull();
 
                 /* Blog has Audited attribute. */
-                var entityChangeBlog = s.EntityChanges.Single(ec => ec.EntityTypeFullName == typeof(Blog).FullName);
-                entityChangeBlog.ChangeType.ShouldBe(EntityChangeType.Updated);
-                entityChangeBlog.PropertyChanges.Count.ShouldBe(0);
+                var entityChangeBlog = s.EntityChanges.SingleOrDefault(ec => ec.EntityTypeFullName == typeof(Blog).FullName);
+                entityChangeBlog.ShouldBeNull("only the FK on post10 was set, so blog1 should not be modified");
 
                 return true;
             };

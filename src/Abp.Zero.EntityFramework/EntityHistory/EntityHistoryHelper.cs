@@ -102,6 +102,12 @@ namespace Abp.EntityHistory
                 changeSet.EntityChanges.Add(entityChange);
             }
 
+            // in case no entity was changed, but only a relationship between entities...
+            foreach(var relationshipOnlyChange in relationshipChanges.Where(rc => context.ChangeTracker.Entries().All(ent => ent.Entity != rc.Entity)))
+            {
+               // TODO: implement this
+            }
+
             return changeSet;
         }
 
@@ -154,7 +160,7 @@ namespace Abp.EntityHistory
             var property = entityEntry.Property(primaryKey.Name);
             return (property.GetNewValue() ?? property.GetOriginalValue())?.ToJsonString();
         }
-
+        
         [CanBeNull]
         private EntityChange CreateEntityChange(DbEntityEntry entityEntry, EntityType entityType)
         {
