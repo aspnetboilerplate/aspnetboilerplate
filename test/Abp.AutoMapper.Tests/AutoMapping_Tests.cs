@@ -15,12 +15,9 @@ namespace Abp.AutoMapper.Tests
         {
             var config = new MapperConfiguration(configuration =>
             {
-                // configuration.CreateAutoAttributeMaps(typeof(MyClass1));
-                // configuration.CreateAutoAttributeMaps(typeof(MyClass2));
-
-                configuration.CreateMap<MyClass1, MyClass2>();
-                configuration.CreateMap<MyClass1, MyClass3>().ForMember(m => m.AnotherValue, opt => opt.Ignore());
-                configuration.CreateMap<MyClass2, MyClass3>().ForMember(m => m.AnotherValue, opt => opt.Ignore());
+                configuration.CreateMap<MyClass1, MyClass2>().ReverseMap();
+                configuration.CreateMap<MyClass1, MyClass3>().ForMember(m => m.AnotherValue, opt => opt.Ignore()).ReverseMap();
+                configuration.CreateMap<MyClass2, MyClass3>().ForMember(m => m.AnotherValue, opt => opt.Ignore()).ReverseMap();
 
                 configuration.CreateAutoAttributeMaps(typeof(MyAutoMapKeyClass1));
                 configuration.CreateAutoAttributeMaps(typeof(MyAutoMapKeyClass2));
