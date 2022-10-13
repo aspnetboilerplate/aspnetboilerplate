@@ -34,7 +34,7 @@
 
   <ItemGroup>
 	<PackageReference Include="Microsoft.AspNet.OData" Version="7.5.14" />
-    <PackageReference Include="Microsoft.Extensions.DependencyInjection.Abstractions" Version="7.0.0-preview.3.22175.4" />
+    <PackageReference Include="Microsoft.Extensions.DependencyInjection.Abstractions" Version="7.0.0-rc.2.22472.3" />
   </ItemGroup>
 
   <ItemGroup>

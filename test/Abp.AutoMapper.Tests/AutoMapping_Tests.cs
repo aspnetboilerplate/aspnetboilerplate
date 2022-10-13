@@ -15,8 +15,13 @@ namespace Abp.AutoMapper.Tests
         {
             var config = new MapperConfiguration(configuration =>
             {
-                configuration.CreateAutoAttributeMaps(typeof(MyClass1));
-                configuration.CreateAutoAttributeMaps(typeof(MyClass2));
+                // configuration.CreateAutoAttributeMaps(typeof(MyClass1));
+                // configuration.CreateAutoAttributeMaps(typeof(MyClass2));
+
+                configuration.CreateMap<MyClass1, MyClass2>();
+                configuration.CreateMap<MyClass1, MyClass3>().ForMember(m => m.AnotherValue, opt => opt.Ignore());
+                configuration.CreateMap<MyClass2, MyClass3>().ForMember(m => m.AnotherValue, opt => opt.Ignore());
+
                 configuration.CreateAutoAttributeMaps(typeof(MyAutoMapKeyClass1));
                 configuration.CreateAutoAttributeMaps(typeof(MyAutoMapKeyClass2));
                 configuration.AddCollectionMappers();
@@ -180,7 +185,6 @@ namespace Abp.AutoMapper.Tests
             obj2.NullableValue.ShouldBe(42);
         }
 
-        [AutoMap(typeof(MyClass2), typeof(MyClass3))]
         private class MyClass1
         {
             public string TestProp { get; set; }
@@ -188,7 +192,6 @@ namespace Abp.AutoMapper.Tests
             public long? NullableValue { get; set; }
         }
 
-        [AutoMapTo(typeof(MyClass3))]
         private class MyClass2
         {
             public string TestProp { get; set; }
@@ -202,7 +205,6 @@ namespace Abp.AutoMapper.Tests
         {
             public string TestProp { get; set; }
 
-            [IgnoreMap]
             public int AnotherValue { get; set; }
         }
 

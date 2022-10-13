@@ -24,8 +24,8 @@
   </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Include="System.DirectoryServices.AccountManagement" Version="6.0.0" />
-    <PackageReference Include="System.DirectoryServices.Protocols" Version="6.0.1" />
+    <PackageReference Include="System.DirectoryServices.AccountManagement" Version="7.0.0-rc.2.22472.3" />
+    <PackageReference Include="System.DirectoryServices.Protocols" Version="7.0.0-rc.2.22472.3" />
     <ProjectReference Include="..\Abp.Zero.Common\Abp.Zero.Common.csproj" />
   </ItemGroup>
 

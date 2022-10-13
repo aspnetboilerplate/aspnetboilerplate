@@ -14,7 +14,6 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\Abp.TestBase.SampleApplication\Abp.TestBase.SampleApplication.csproj" />
     <ProjectReference Include="..\Abp.Tests\Abp.Tests.csproj" />
   </ItemGroup>
 
