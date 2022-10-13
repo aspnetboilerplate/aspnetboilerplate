@@ -35,10 +35,10 @@ namespace Abp.Web.MultiTenancy
             }
 
             var hostName = httpContext.Request.Url.Host.RemovePreFix("http://", "https://").RemovePostFix("/");
-            var domainFormat = _multiTenancyConfiguration.DomainFormat.RemovePreFix("http://", "https://").Split(':')[0].RemovePostFix("/");
-            var result = new FormattedStringValueExtracter().Extract(hostName, domainFormat, true, '/');
+            var domainFormats = _multiTenancyConfiguration.DomainFormat.Split(";");
+            var result = IsDomainFormatValid(domainFormats, hostName);
 
-            if (!result.IsMatch || !result.Matches.Any())
+            if (result is null)
             {
                 return null;
             }
@@ -62,5 +62,22 @@ namespace Abp.Web.MultiTenancy
 
             return tenantInfo.Id;
         }
+        
+        private FormattedStringValueExtracter.ExtractionResult IsDomainFormatValid(string[] domainFormats, string hostName)
+        {
+            foreach (var item in domainFormats)
+            {
+                var domainFormat = item.RemovePreFix("http://", "https://").Split(':')[0].RemovePostFix("/");
+                var result = new FormattedStringValueExtracter().Extract(hostName, domainFormat, true, '/');
+
+                if (result.IsMatch && result.Matches.Any())
+                {
+                    return result;
+                }
+            }
+            
+            return null;
+        }
+
     }
 }

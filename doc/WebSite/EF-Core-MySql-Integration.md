@@ -32,12 +32,14 @@ public static class MySqlDemoDbContextConfigurer
 {
     public static void Configure(DbContextOptionsBuilder<MySqlDemoDbContext> builder, string connectionString)
     {
-        builder.UseMySql(connectionString);
+        var serverVersion = ServerVersion.AutoDetect(connectionString);
+        builder.UseMySql(connectionString, serverVersion);
     }
 
     public static void Configure(DbContextOptionsBuilder<MySqlDemoDbContext> builder, DbConnection connection)
     {
-        builder.UseMySql(connection);
+        var serverVersion = ServerVersion.AutoDetect(connection.ConnectionString)
+        builder.UseMySql(connection, serverVersion);
     }
  }
  ```

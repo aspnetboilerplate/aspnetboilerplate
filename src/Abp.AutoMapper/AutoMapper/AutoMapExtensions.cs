@@ -41,9 +41,9 @@ namespace Abp.AutoMapper
             return AbpEmulateAutoMapper.Mapper != null ? AbpEmulateAutoMapper.Mapper.Map(source, destination) : default(TDestination);
         }
 
-        public static CreateMultiLingualMapResult<TMultiLingualEntity, TTranslation, TDestination> CreateMultiLingualMap<TMultiLingualEntity, TMultiLingualEntityPrimaryKey, TTranslation, TDestination>(
+        public static CreateMultiLingualMapResult<TMultiLingualEntity, TTranslation, TDestination> CreateMultiLingualMap<TMultiLingualEntity, TMultiLingualEntityPrimaryKey, TTranslation, TTranslationPrimaryKey, TDestination>(
             this IMapperConfigurationExpression configuration, MultiLingualMapContext multiLingualMapContext, bool fallbackToParentCultures = false)
-            where TTranslation : class, IEntityTranslation<TMultiLingualEntity, TMultiLingualEntityPrimaryKey>
+            where TTranslation : class, IEntityTranslation<TMultiLingualEntity, TMultiLingualEntityPrimaryKey>, IEntity<TTranslationPrimaryKey>
             where TMultiLingualEntity : IMultiLingualEntity<TTranslation>
         {
             var result = new CreateMultiLingualMapResult<TMultiLingualEntity, TTranslation, TDestination>();
@@ -112,7 +112,7 @@ namespace Abp.AutoMapper
             where TTranslation : class, IEntity, IEntityTranslation<TMultiLingualEntity, int>
             where TMultiLingualEntity : IMultiLingualEntity<TTranslation>
         {
-            return configuration.CreateMultiLingualMap<TMultiLingualEntity, int, TTranslation, TDestination>(multiLingualMapContext, fallbackToParentCultures);
+            return configuration.CreateMultiLingualMap<TMultiLingualEntity, int, TTranslation, int, TDestination>(multiLingualMapContext, fallbackToParentCultures);
         }
     }
 }

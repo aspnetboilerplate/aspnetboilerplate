@@ -81,10 +81,13 @@ connecting:
         abp.signalr.autoConnect = false;
         abp.signalr.reconnectTime = 5000;
         abp.signalr.maxTries = 8;
+        abp.signalr.withUrlOptions = {};
         abp.signalr.increaseReconnectTime = function (time) { //anytime reconnection request gets fail abp will increase the time to wait before next request with using that function. 
             return time * 2; //(default is twice of previous time)
         };
     </script>
+
+Note: See [Official SignalR documentation](https://learn.microsoft.com/en-us/aspnet/core/signalr/configuration?view=aspnetcore-6.0&tabs=javascript#configure-additional-options) for withUrlOptions values.
 
 In this case, you can call the **abp.signalr.connect()** function manually
 whenever you need to connect to the server.

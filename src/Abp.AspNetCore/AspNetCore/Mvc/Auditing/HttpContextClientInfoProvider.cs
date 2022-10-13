@@ -1,8 +1,7 @@
-﻿using System;
-using Abp.Auditing;
+﻿using Abp.Auditing;
 using Castle.Core.Logging;
 using Microsoft.AspNetCore.Http;
-using Abp.Extensions;
+using System;
 using System.Net;
 
 namespace Abp.AspNetCore.Mvc.Auditing
@@ -53,17 +52,6 @@ namespace Abp.AspNetCore.Mvc.Auditing
 
         protected virtual string GetComputerName()
         {
-            try
-            {
-                var httpContext = _httpContextAccessor.HttpContext;
-                return Dns.GetHostEntry(httpContext?.Connection?.RemoteIpAddress).HostName;
-
-            }
-            catch (Exception ex)
-            {
-                Logger.Warn(ex.ToString());
-            }
-
             return null;
         }
     }

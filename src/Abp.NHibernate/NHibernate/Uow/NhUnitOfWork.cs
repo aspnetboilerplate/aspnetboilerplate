@@ -1,10 +1,11 @@
-using System.Data.Common;
-using System.Threading.Tasks;
 using Abp.Dependency;
 using Abp.Domain.Uow;
 using Abp.Runtime.Session;
 using Abp.Transactions.Extensions;
 using NHibernate;
+using System.Data.Common;
+using System.Linq;
+using System.Threading.Tasks;
 
 namespace Abp.NHibernate.Uow
 {
@@ -43,6 +44,18 @@ namespace Abp.NHibernate.Uow
             _sessionFactory = sessionFactory;
         }
 
+        protected override void ApplyEnableFilter(string filterName)
+        {
+            base.ApplyEnableFilter(filterName);
+
+            var parameters = base.Filters.Single(p => p.FilterName == filterName).FilterParameters;
+
+            foreach (var param in parameters)
+            {
+                ApplyFilterParameterValue(filterName, param.Key, param.Value);
+            }
+        }
+
         protected override void BeginUow()
         {
             Session = DbConnection != null
@@ -67,6 +80,7 @@ namespace Abp.NHibernate.Uow
             {
                 ApplyEnableFilter(AbpDataFilters.SoftDelete); //Enable Filters
                 ApplyFilterParameterValue(AbpDataFilters.SoftDelete, AbpDataFilters.Parameters.IsDeleted, false); //ApplyFilter
+                SetFilterParameter(AbpDataFilters.SoftDelete, AbpDataFilters.Parameters.IsDeleted, false);
             }
             else
             {

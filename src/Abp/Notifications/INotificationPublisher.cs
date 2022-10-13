@@ -1,3 +1,4 @@
+using System;
 using System.Threading.Tasks;
 using Abp.Domain.Entities;
 using Abp.Runtime.Session;
@@ -34,6 +35,7 @@ namespace Abp.Notifications
         /// But this can only work in a single database approach (all tenants are stored in host database).
         /// If this is null, then it's automatically set to the current tenant on <see cref="IAbpSession.TenantId"/>. 
         /// </param>
+        /// <param name="targetNotifiers">Which realtime notifiers should handle this notification. Given notifier must be added to the INotificationConfiguration.Notifiers</param>
         Task PublishAsync(
             string notificationName,
             NotificationData data = null,
@@ -41,6 +43,7 @@ namespace Abp.Notifications
             NotificationSeverity severity = NotificationSeverity.Info,
             UserIdentifier[] userIds = null,
             UserIdentifier[] excludedUserIds = null,
-            int?[] tenantIds = null);
+            int?[] tenantIds = null,
+            Type[] targetNotifiers = null);
     }
 }

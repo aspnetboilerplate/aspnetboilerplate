@@ -16,6 +16,8 @@ namespace Abp.Runtime.Caching.Redis
 
         public int DatabaseId { get; set; }
 
+        public string OnlineClientsStoreKey = "Abp.RealTime.OnlineClients";
+        
         public AbpRedisCacheOptions(IAbpStartupConfiguration abpStartupConfiguration)
         {
             AbpStartupConfiguration = abpStartupConfiguration;

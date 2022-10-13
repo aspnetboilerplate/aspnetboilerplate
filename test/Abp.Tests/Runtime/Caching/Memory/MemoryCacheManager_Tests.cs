@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Threading;
 using System.Threading.Tasks;
 using Abp.Configuration.Startup;
 using Abp.Dependency;
@@ -126,6 +127,49 @@ namespace Abp.Tests.Runtime.Caching.Memory
             });
         }
 
+        [Fact]
+        public void DefaultAbsoluteExpireTimeFactory_Test()
+        {
+            var cache = _cacheManager.GetCache<string, MyCacheItem>("MyCacheItems");
+
+            cache.DefaultAbsoluteExpireTimeFactory = _ => DateTimeOffset.Now + TimeSpan.FromMilliseconds(800);
+
+            var absoluteExpireTimeChangedCount = 0;
+            for (var i = 0; i < 10; i++)
+            {
+                cache.Get("A", () =>
+                {
+                    absoluteExpireTimeChangedCount++;
+                    return new MyCacheItem();
+                });
+            }
+            absoluteExpireTimeChangedCount.ShouldBe(1);
+
+            Thread.Sleep(1 * 1000);
+
+            for (var i = 0; i < 10; i++)
+            {
+                cache.Get("A", () =>
+                {
+                    absoluteExpireTimeChangedCount++;
+                    return new MyCacheItem();
+                });
+            }
+            absoluteExpireTimeChangedCount.ShouldBe(2);
+
+            Thread.Sleep(1 * 1000);
+
+            for (var i = 0; i < 10; i++)
+            {
+                cache.Get("A", () =>
+                {
+                    absoluteExpireTimeChangedCount++;
+                    return new MyCacheItem();
+                });
+            }
+            absoluteExpireTimeChangedCount.ShouldBe(3);
+        }
+
         [Serializable]
         public class MyCacheItem
         {
@@ -133,7 +177,7 @@ namespace Abp.Tests.Runtime.Caching.Memory
 
             public MyCacheItem()
             {
-                
+
             }
 
             public MyCacheItem(int value)

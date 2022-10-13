@@ -14,6 +14,8 @@ namespace Abp.Web.SignalR.Notifications
     /// </summary>
     public class SignalRRealTimeNotifier : IRealTimeNotifier, ITransientDependency
     {
+        public bool UseOnlyIfRequestedAsTarget => false;
+        
         /// <summary>
         /// Reference to the logger.
         /// </summary>

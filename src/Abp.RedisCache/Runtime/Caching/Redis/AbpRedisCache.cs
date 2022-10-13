@@ -72,7 +72,7 @@ namespace Abp.Runtime.Caching.Redis
                 if (!_database.StringSet(redisKey, redisValue))
                 {
                     Logger.ErrorFormat("Unable to set key:{0} value:{1} in Redis", redisKey, redisValue);
-                } 
+                }
                 else if (!_database.KeyExpire(redisKey, absoluteExpireTime.Value.UtcDateTime))
                 {
                     Logger.ErrorFormat("Unable to set key:{0} to expire at {1:O} in Redis", redisKey, absoluteExpireTime.Value.UtcDateTime);
@@ -83,6 +83,17 @@ namespace Abp.Runtime.Caching.Redis
                 if (!_database.StringSet(redisKey, redisValue, slidingExpireTime.Value))
                 {
                     Logger.ErrorFormat("Unable to set key:{0} value:{1} to expire after {2:c} in Redis", redisKey, redisValue, slidingExpireTime.Value);
+                }
+            }
+            else if (DefaultAbsoluteExpireTimeFactory != null)
+            {
+                if (!_database.StringSet(redisKey, redisValue))
+                {
+                    Logger.ErrorFormat("Unable to set key:{0} value:{1} in Redis", redisKey, redisValue);
+                }
+                else if (!_database.KeyExpire(redisKey, DefaultAbsoluteExpireTimeFactory(key).UtcDateTime))
+                {
+                    Logger.ErrorFormat("Unable to set key:{0} to expire at {1:O} in Redis", redisKey, DefaultAbsoluteExpireTimeFactory(key).UtcDateTime);
                 }
             }
             else if (DefaultAbsoluteExpireTime.HasValue)
@@ -130,6 +141,17 @@ namespace Abp.Runtime.Caching.Redis
                 if (!await _database.StringSetAsync(redisKey, redisValue, slidingExpireTime.Value))
                 {
                     Logger.ErrorFormat("Unable to set key:{0} value:{1} to expire after {2:c} asynchronously in Redis", redisKey, redisValue, slidingExpireTime.Value);
+                }
+            }
+            else if (DefaultAbsoluteExpireTimeFactory != null)
+            {
+                if (!await _database.StringSetAsync(redisKey, redisValue))
+                {
+                    Logger.ErrorFormat("Unable to set key:{0} value:{1} asynchronously in Redis", redisKey, redisValue);
+                }
+                else if (!await _database.KeyExpireAsync(redisKey, DefaultAbsoluteExpireTimeFactory(key).UtcDateTime))
+                {
+                    Logger.ErrorFormat("Unable to set key:{0} to expire at {1:O} asynchronously in Redis", redisKey, DefaultAbsoluteExpireTimeFactory(key).UtcDateTime);
                 }
             }
             else if (DefaultAbsoluteExpireTime.HasValue)
@@ -195,6 +217,16 @@ namespace Abp.Runtime.Caching.Redis
                     }
                 }
             }
+            else if (DefaultAbsoluteExpireTimeFactory != null)
+            {
+                foreach (var pair in redisPairs)
+                {
+                    if (!_database.KeyExpire(pair.Key, DefaultAbsoluteExpireTimeFactory(pair.Key).UtcDateTime))
+                    {
+                        Logger.ErrorFormat("Unable to set key:{0} to expire at {1:O} in Redis", pair.Key, DefaultAbsoluteExpireTimeFactory(pair.Key).UtcDateTime);
+                    }
+                }
+            }
             else if (DefaultAbsoluteExpireTime.HasValue)
             {
                 foreach (var pair in redisPairs)
@@ -256,6 +288,16 @@ namespace Abp.Runtime.Caching.Redis
                         if (!await _database.KeyExpireAsync(pair.Key, slidingExpireTime.Value))
                         {
                             Logger.ErrorFormat("Unable to set key:{0} value:{1} to expire after {2:c} asynchronously in Redis", pair.Key, pair.Value, slidingExpireTime.Value);
+                        }
+                    }
+                }
+                else if (DefaultAbsoluteExpireTimeFactory != null)
+                {
+                    foreach (var pair in redisPairs)
+                    {
+                        if (!await _database.KeyExpireAsync(pair.Key, DefaultAbsoluteExpireTimeFactory(pair.Key).UtcDateTime))
+                        {
+                            Logger.ErrorFormat("Unable to set key:{0} to expire at {1:O} asynchronously in Redis", pair.Key, DefaultAbsoluteExpireTimeFactory(pair.Key).UtcDateTime);
                         }
                     }
                 }

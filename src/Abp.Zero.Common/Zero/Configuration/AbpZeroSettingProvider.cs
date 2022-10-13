@@ -116,7 +116,7 @@ namespace Abp.Zero.Configuration
 
                        new SettingDefinition(
                            AbpZeroSettingNames.UserManagement.PasswordComplexity.RequiredLength,
-                           "3",
+                           "6",
                            new FixedLocalizableString("Required length."),
                            scopes: SettingScopes.Application | SettingScopes.Tenant,
                            clientVisibilityProvider: new VisibleSettingClientVisibilityProvider()

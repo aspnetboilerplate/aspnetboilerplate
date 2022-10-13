@@ -186,5 +186,10 @@ namespace Abp.Notifications
         public void DeleteNotification(NotificationInfo notification)
         {
         }
+
+        public Task<List<GetNotificationsCreatedByUserOutput>> GetNotificationsPublishedByUserAsync(UserIdentifier user, string notificationName, DateTime? startDate, DateTime? endDate)
+        {
+            return Task.FromResult(new List<GetNotificationsCreatedByUserOutput>());
+        }
     }
 }

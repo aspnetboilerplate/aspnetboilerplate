@@ -1,9 +1,12 @@
-﻿using System;
+﻿using Abp.Domain.Entities;
+using Abp.Domain.Entities.Auditing;
+using Abp.Extensions;
+using Abp.Timing;
+using System;
+using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
-using Abp.Domain.Entities;
-using Abp.Domain.Entities.Auditing;
-using Abp.Timing;
+using System.Linq;
 
 namespace Abp.Notifications
 {
@@ -14,6 +17,8 @@ namespace Abp.Notifications
     [Table("AbpUserNotifications")]
     public class UserNotificationInfo : Entity<Guid>, IHasCreationTime, IMayHaveTenant
     {
+        public const int MaxTargetNotifiersLength = 1024;
+        
         /// <summary>
         /// Tenant Id.
         /// </summary>
@@ -37,9 +42,19 @@ namespace Abp.Notifications
 
         public virtual DateTime CreationTime { get; set; }
 
+        /// <summary>
+        /// which realtime notifiers should handle this notification
+        /// </summary>
+        [StringLength(MaxTargetNotifiersLength)]
+        public virtual string TargetNotifiers { get; set; }
+
+        [NotMapped]
+        public virtual List<string> TargetNotifiersList => TargetNotifiers.IsNullOrWhiteSpace()
+            ? new List<string>()
+            : TargetNotifiers.Split(NotificationInfo.NotificationTargetSeparator).ToList();
+
         public UserNotificationInfo()
         {
-            
         }
 
         /// <summary>
@@ -51,6 +66,11 @@ namespace Abp.Notifications
             Id = id;
             State = UserNotificationState.Unread;
             CreationTime = Clock.Now;
+        }
+
+        public virtual void SetTargetNotifiers(List<string> list)
+        {
+            TargetNotifiers = string.Join(NotificationInfo.NotificationTargetSeparator.ToString(), list);
         }
     }
 }

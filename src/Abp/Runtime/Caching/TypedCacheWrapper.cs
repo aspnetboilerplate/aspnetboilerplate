@@ -23,10 +23,17 @@ namespace Abp.Runtime.Caching
             get { return InternalCache.DefaultSlidingExpireTime; }
             set { InternalCache.DefaultSlidingExpireTime = value; }
         }
+
         public DateTimeOffset? DefaultAbsoluteExpireTime
         {
             get { return InternalCache.DefaultAbsoluteExpireTime; }
             set { InternalCache.DefaultAbsoluteExpireTime = value; }
+        }
+
+        public Func<string, DateTimeOffset> DefaultAbsoluteExpireTimeFactory
+        {
+            get { return InternalCache.DefaultAbsoluteExpireTimeFactory; }
+            set { InternalCache.DefaultAbsoluteExpireTimeFactory = value; }
         }
 
         public ICache InternalCache { get; private set; }
