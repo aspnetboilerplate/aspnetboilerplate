@@ -26,12 +26,12 @@
   </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Include="Microsoft.EntityFrameworkCore" Version="6.0.4" />
-    <PackageReference Include="Microsoft.EntityFrameworkCore.Relational" Version="6.0.4" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore" Version="6.0.10" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore.Relational" Version="6.0.10" />
   </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Update="Fody" Version="6.6.0">
+    <PackageReference Update="Fody" Version="6.6.4">
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers</IncludeAssets>
     </PackageReference>

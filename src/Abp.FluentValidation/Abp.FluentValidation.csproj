@@ -26,11 +26,11 @@
   </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Include="FluentValidation" Version="10.4.0" />
+    <PackageReference Include="FluentValidation" Version="11.2.2" />
   </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Update="Fody" Version="6.6.0">
+    <PackageReference Update="Fody" Version="6.6.4">
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers</IncludeAssets>
     </PackageReference>
