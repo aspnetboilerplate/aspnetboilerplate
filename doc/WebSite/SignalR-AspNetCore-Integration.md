@@ -35,7 +35,7 @@ Then use the **AddSignalR** and **UseSignalR** methods in your Startup class:
     
             public void Configure(IApplicationBuilder app)
             {
-                app.UseSignalR(routes =>
+                app.UseEndpoints(routes =>
                 {
                     routes.MapHub<AbpCommonHub>("/signalr");
                 });
