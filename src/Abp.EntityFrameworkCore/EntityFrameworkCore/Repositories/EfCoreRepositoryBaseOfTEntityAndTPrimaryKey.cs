@@ -251,10 +251,11 @@ namespace Abp.EntityFrameworkCore.Repositories
         {
             return GetTable().Add(entity).Entity;
         }
-
-        public override Task<TEntity> InsertAsync(TEntity entity)
+        
+        public override async Task<TEntity> InsertAsync(TEntity entity)
         {
-            return Task.FromResult(Insert(entity));
+            var table = await GetTableAsync();
+            return (await table.AddAsync(entity)).Entity;
         }
 
         public override TPrimaryKey InsertAndGetId(TEntity entity)
