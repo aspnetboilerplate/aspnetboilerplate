@@ -7,6 +7,7 @@ using Abp.Domain.Uow;
 using Abp.TestBase.SampleApplication.Crm;
 using Abp.TestBase.SampleApplication.Messages;
 using Abp.Timing;
+using NSubstitute;
 using Shouldly;
 using Xunit;
 
@@ -16,16 +17,28 @@ namespace Abp.TestBase.SampleApplication.Tests.Auditing
     {
         private readonly IRepository<Message> _messageRepository;
         private readonly IRepository<Company> _companyRepository;
+        private readonly IClockAccessor _clockAccessor;
 
         public AuditedEntity_Tests()
         {
+            LocalIocManager.RegisterIfNot<IClockAccessor, ClockAccessor>();
+            
             _messageRepository = Resolve<IRepository<Message>>();
             _companyRepository = Resolve<IRepository<Company>>();
+            _clockAccessor = Resolve<IClockAccessor>();
         }
 
         [Fact]
         public void Should_Write_Audit_Properties()
         {
+            var date = new DateTime(2022, 3, 3);
+            var now = date.AddDays(1);
+            
+            var clockProvider =  Substitute.For<IClockProvider>();
+            clockProvider.Now.Returns(now);
+            
+            _clockAccessor.Provider = clockProvider;
+            
             //Arrange
             AbpSession.TenantId = 1;
             AbpSession.UserId = 2;
@@ -35,8 +48,8 @@ namespace Abp.TestBase.SampleApplication.Tests.Auditing
 
             //Assert: Check creation properties
             createdMessage.CreatorUserId.ShouldBe(AbpSession.UserId);
-            createdMessage.CreationTime.ShouldBeGreaterThan(Clock.Now.Subtract(TimeSpan.FromSeconds(10)));
-            createdMessage.CreationTime.ShouldBeLessThan(Clock.Now.Add(TimeSpan.FromSeconds(10)));
+            createdMessage.CreationTime.ShouldBeGreaterThan(_clockAccessor.Now.Subtract(TimeSpan.FromSeconds(10)));
+            createdMessage.CreationTime.ShouldBeLessThan(_clockAccessor.Now.Add(TimeSpan.FromSeconds(10)));
 
             //Act: Select the same entity
             var selectedMessage = _messageRepository.Get(createdMessage.Id);
@@ -62,8 +75,8 @@ namespace Abp.TestBase.SampleApplication.Tests.Auditing
             selectedMessage.LastModifierUserId.ShouldBe(AbpSession.UserId);
             selectedMessage.LastModificationTime.ShouldNotBe(null);
             selectedMessage.LastModificationTime.Value.ShouldBeGreaterThan(
-                Clock.Now.Subtract(TimeSpan.FromSeconds(10)));
-            selectedMessage.LastModificationTime.Value.ShouldBeLessThan(Clock.Now.Add(TimeSpan.FromSeconds(10)));
+                _clockAccessor.Now.Subtract(TimeSpan.FromSeconds(10)));
+            selectedMessage.LastModificationTime.Value.ShouldBeLessThan(_clockAccessor.Now.Add(TimeSpan.FromSeconds(10)));
 
             //Act: Delete the entity
             _messageRepository.Delete(selectedMessage);
@@ -72,8 +85,8 @@ namespace Abp.TestBase.SampleApplication.Tests.Auditing
             selectedMessage.IsDeleted.ShouldBe(true);
             selectedMessage.DeleterUserId.ShouldBe(AbpSession.UserId);
             selectedMessage.DeletionTime.ShouldNotBe(null);
-            selectedMessage.DeletionTime.Value.ShouldBeGreaterThan(Clock.Now.Subtract(TimeSpan.FromSeconds(10)));
-            selectedMessage.DeletionTime.Value.ShouldBeLessThan(Clock.Now.Add(TimeSpan.FromSeconds(10)));
+            selectedMessage.DeletionTime.Value.ShouldBeGreaterThan(_clockAccessor.Now.Subtract(TimeSpan.FromSeconds(10)));
+            selectedMessage.DeletionTime.Value.ShouldBeLessThan(_clockAccessor.Now.Add(TimeSpan.FromSeconds(10)));
         }
 
         [Fact]
