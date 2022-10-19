@@ -35,9 +35,9 @@ Then use the **AddSignalR** and **UseSignalR** methods in your Startup class:
     
             public void Configure(IApplicationBuilder app)
             {
-                app.UseEndpoints(routes =>
+                app.UseEndpoints(endpoints =>
                 {
-                    routes.MapHub<AbpCommonHub>("/signalr");
+                    endpoints.MapHub<AbpCommonHub>("/signalr");
                 });
             }
         }
@@ -161,7 +161,7 @@ that we want to add a Hub to our application:
 
 <!-- -->
 
-    routes.MapHub<MyChatHub>("/signalr-myChatHub"); // Prefix with '/signalr'
+    endpoints.MapHub<MyChatHub>("/signalr-myChatHub"); // Prefix with '/signalr'
 
 We implemented the **ITransientDependency** interface to simply register our hub to the
 [dependency injection](/Pages/Documents/Dependency-Injection) system
