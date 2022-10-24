@@ -191,7 +191,7 @@ public class _2022_10_24_02_Fix_Inconsistent_Data_Type : Migration
         Delete.DefaultConstraint().OnTable("AbpBackgroundJobs").OnColumn("Priority");
         Alter.Table("AbpBackgroundJobs").AlterColumn("TryCount").AsInt16().NotNullable().WithDefaultValue(0);
         Alter.Table("AbpBackgroundJobs").AlterColumn("IsAbandoned").AsBoolean().Nullable().WithDefaultValue(false);
-        Alter.Table("AbpBackgroundJobs").AlterColumn("Priority").AsBoolean().NotNullable().WithDefaultValue(15);
+        Alter.Table("AbpBackgroundJobs").AlterColumn("Priority").AsByte().NotNullable().WithDefaultValue(15);
 
         Delete.Index("IX_AbpBackgroundJobs_IsAbandoned_NextTryTime").OnTable("AbpBackgroundJobs");
 
