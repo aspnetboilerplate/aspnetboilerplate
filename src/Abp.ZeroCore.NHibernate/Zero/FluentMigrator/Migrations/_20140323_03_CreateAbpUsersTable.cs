@@ -26,7 +26,7 @@ namespace Abp.Zero.FluentMigrator.Migrations
                 .OnColumn("UserName").Ascending()
                 .WithOptions().Unique()
                 .WithOptions().NonClustered();
-            
+
             Create.Index("AbpUsers_TenantId_EmailAddress")
                 .OnTable("AbpUsers")
                 .OnColumn("TenantId").Ascending()
@@ -35,29 +35,29 @@ namespace Abp.Zero.FluentMigrator.Migrations
                 .WithOptions().NonClustered();
 
             //User for system admin.
-            Insert.IntoTable("AbpUsers").Row(
-                new
-                {
-                    UserName = "admin",
-                    Name = "System",
-                    Surname = "Administrator",
-                    EmailAddress = "admin@aspnetboilerplate.com",
-                    IsEmailConfirmed = true,
-                    Password = "AM4OLBpptxBYmM79lGOX9egzZk3vIQU3d/gFCJzaBjAPXzYIK3tQ2N7X4fcrHtElTw==" //123qwe
-                });
+            //Insert.IntoTable("AbpUsers").Row(
+            //    new
+            //    {
+            //        UserName = "admin",
+            //        Name = "System",
+            //        Surname = "Administrator",
+            //        EmailAddress = "admin@aspnetboilerplate.com",
+            //        IsEmailConfirmed = true,
+            //        Password = "AM4OLBpptxBYmM79lGOX9egzZk3vIQU3d/gFCJzaBjAPXzYIK3tQ2N7X4fcrHtElTw==" //123qwe
+            //    });
 
-            //User for default tenant's admin.
-            Insert.IntoTable("AbpUsers").Row(
-                new
-                {
-                    TenantId = 1,
-                    UserName = "admin",
-                    Name = "System",
-                    Surname = "Administrator",
-                    EmailAddress = "admin@aspnetboilerplate.com",
-                    IsEmailConfirmed = true,
-                    Password = "AM4OLBpptxBYmM79lGOX9egzZk3vIQU3d/gFCJzaBjAPXzYIK3tQ2N7X4fcrHtElTw==" //123qwe
-                });
+            ////User for default tenant's admin.
+            //Insert.IntoTable("AbpUsers").Row(
+            //    new
+            //    {
+            //        TenantId = 1,
+            //        UserName = "admin",
+            //        Name = "System",
+            //        Surname = "Administrator",
+            //        EmailAddress = "admin@aspnetboilerplate.com",
+            //        IsEmailConfirmed = true,
+            //        Password = "AM4OLBpptxBYmM79lGOX9egzZk3vIQU3d/gFCJzaBjAPXzYIK3tQ2N7X4fcrHtElTw==" //123qwe
+            //    });
         }
     }
 }

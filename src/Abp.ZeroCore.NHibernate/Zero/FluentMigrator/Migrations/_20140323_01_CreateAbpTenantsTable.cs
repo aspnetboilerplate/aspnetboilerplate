@@ -21,12 +21,12 @@ namespace Abp.Zero.FluentMigrator.Migrations
                 .WithOptions().NonClustered();
 
             //Default tenant
-            Insert.IntoTable("AbpTenants").Row(
-                new
-                {
-                    TenancyName = "Default", //Reserved TenancyName
-                    Name = "Default"
-                });
+            //Insert.IntoTable("AbpTenants").Row(
+            //    new
+            //    {
+            //        TenancyName = "Default", //Reserved TenancyName
+            //        Name = "Default"
+            //    });
         }
     }
 }
