@@ -1,6 +1,9 @@
 ﻿using Abp.Configuration.Startup;
+using Abp.Domain.Uow;
 using Abp.Modules;
+using Abp.MultiTenancy;
 using Abp.NHibernate;
+using Castle.MicroKernel.Registration;
 using System.Reflection;
 
 namespace Abp.Zero.NHibernate
@@ -17,6 +20,15 @@ namespace Abp.Zero.NHibernate
                 .Mappings(
                     m => m.FluentMappings.AddFromAssemblyOf<AbpZeroCoreNHibernateModule>()
                 );
+
+            Configuration.ReplaceService(typeof(IConnectionStringResolver), () =>
+            {
+                IocManager.IocContainer.Register(
+                    Component.For<IConnectionStringResolver, IDbPerTenantConnectionStringResolver>()
+                        .ImplementedBy<DbPerTenantConnectionStringResolver>()
+                        .LifestyleTransient()
+                );
+            });
         }
 
         public override void Initialize()
