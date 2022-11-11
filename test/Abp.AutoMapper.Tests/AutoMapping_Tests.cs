@@ -17,7 +17,7 @@ namespace Abp.AutoMapper.Tests
             {
                 configuration.CreateMap<MyClass1, MyClass2>().ReverseMap();
                 configuration.CreateMap<MyClass1, MyClass3>().ForMember(m => m.AnotherValue, opt => opt.Ignore()).ReverseMap();
-                configuration.CreateMap<MyClass2, MyClass3>().ForMember(m => m.AnotherValue, opt => opt.Ignore()).ReverseMap();
+                configuration.CreateMap<MyClass2, MyClass3>().ForMember(m => m.AnotherValue, opt => opt.Ignore());
 
                 configuration.CreateAutoAttributeMaps(typeof(MyAutoMapKeyClass1));
                 configuration.CreateAutoAttributeMaps(typeof(MyAutoMapKeyClass2));
@@ -84,7 +84,7 @@ namespace Abp.AutoMapper.Tests
             _mapper.Map(obj2, obj3);
             obj3.TestProp.ShouldBe("Test value");
 
-            Assert.ThrowsAny<Exception>(() => //Did not define reverse mapping!
+            Assert.ThrowsAny<Exception>(() => // Did not define reverse mapping!
             {
                 _mapper.Map(obj3, obj2);
             });
