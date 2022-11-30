@@ -22,7 +22,7 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="Z.EntityFramework.Plus.EFCore" Version="7.0.0-rc.1.22426.7-02" />
+    <PackageReference Include="Z.EntityFramework.Plus.EFCore" Version="7.17.1" />
   </ItemGroup>
 
   <ItemGroup>
@@ -30,7 +30,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Update="Fody" Version="6.6.0">
+    <PackageReference Update="Fody" Version="6.6.4">
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers</IncludeAssets>
     </PackageReference>

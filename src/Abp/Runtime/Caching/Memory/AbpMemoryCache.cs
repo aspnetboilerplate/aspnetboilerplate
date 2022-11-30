@@ -39,13 +39,21 @@ namespace Abp.Runtime.Caching.Memory
                 throw new AbpException("Can not insert null values to the cache!");
             }
 
-            if (absoluteExpireTime.HasValue)
+            if (absoluteExpireTime.HasValue || slidingExpireTime.HasValue)
             {
-                _memoryCache.Set(key, value, absoluteExpireTime.Value);
-            }
-            else if (slidingExpireTime.HasValue)
-            {
-                _memoryCache.Set(key, value, slidingExpireTime.Value);
+                var cacheOptions = new MemoryCacheEntryOptions();
+
+                if (absoluteExpireTime.HasValue)
+                {
+                    cacheOptions.AbsoluteExpiration = absoluteExpireTime;
+                }
+
+                if (slidingExpireTime.HasValue)
+                {
+                    cacheOptions.SlidingExpiration = slidingExpireTime;
+                }
+                
+                _memoryCache.Set(key, value, cacheOptions);
             }
             else if (DefaultAbsoluteExpireTimeFactory != null)
             {

@@ -26,6 +26,7 @@
 
   <ItemGroup>
     <PackageReference Include="Microsoft.AspNet.SignalR.Core" Version="2.4.3" />
+    <PackageReference Update="Microsoft.NETFramework.ReferenceAssemblies" Version="1.0.3" />
   </ItemGroup>
 
   <ItemGroup>
@@ -34,11 +35,10 @@
   </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Update="Fody" Version="6.6.0">
+    <PackageReference Update="Fody" Version="6.6.4">
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers</IncludeAssets>
     </PackageReference>
-    <PackageReference Update="Microsoft.NETFramework.ReferenceAssemblies" Version="1.0.2" />
     <PackageReference Update="Microsoft.SourceLink.GitHub" Version="1.1.1" />
   </ItemGroup>
 

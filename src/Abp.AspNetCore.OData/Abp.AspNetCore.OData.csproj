@@ -26,12 +26,12 @@
   </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Include="Microsoft.AspNetCore.OData" Version="8.0.10" />
-    <PackageReference Include="Microsoft.OData.ModelBuilder" Version="1.0.8" />
+    <PackageReference Include="Microsoft.AspNetCore.OData" Version="8.0.11" />
+    <PackageReference Include="Microsoft.OData.ModelBuilder" Version="1.0.9" />
   </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Update="Fody" Version="6.6.0">
+    <PackageReference Update="Fody" Version="6.6.4">
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers</IncludeAssets>
     </PackageReference>
