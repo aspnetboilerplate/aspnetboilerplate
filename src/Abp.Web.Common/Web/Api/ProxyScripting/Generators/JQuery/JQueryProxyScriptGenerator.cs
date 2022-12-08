@@ -75,7 +75,7 @@ namespace Abp.Web.Api.ProxyScripting.Generators.JQuery
 
             AddAjaxCallParameters(script, controller, action);
 
-            script.AppendLine("      }, ajaxParams));;");
+            script.AppendLine("      }, ajaxParams));");
             script.AppendLine("    };");
         }
 
