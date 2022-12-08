@@ -5,6 +5,10 @@
 
       /* Application paths *****************************************/
 
+      //Version
+      abp.aspnetboilerplate = abp.aspnetboilerplate || {};
+      abp.aspnetboilerplate.version = '8.0.0';
+      
       //Current application root path (including virtual directory if exists).
       abp.appPath = abp.appPath || '/';
       abp.pageLoadTime = new Date();
