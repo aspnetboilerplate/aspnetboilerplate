@@ -2,7 +2,7 @@
 
   <PropertyGroup>
     <VersionPrefix>1.5.0.0</VersionPrefix>
-    <TargetFramework>net461</TargetFramework>
+    <TargetFramework>net462</TargetFramework>
     <AssemblyName>Abp.Zero.SampleApp</AssemblyName>
     <PackageId>Abp.Zero.SampleApp</PackageId>
     <GenerateAssemblyTitleAttribute>false</GenerateAssemblyTitleAttribute>
