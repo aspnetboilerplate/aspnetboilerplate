@@ -13,14 +13,6 @@ namespace Abp.Zero.FluentMigrator.Migrations
                 .WithUserId()
                 .WithColumn("RoleId").AsInt32().NotNullable().ForeignKey("AbpRoles", "Id")
                 .WithCreationAuditColumns();
-
-            //Insert.IntoTable("AbpUserRoles").Row(
-            //    new
-            //        {
-            //            UserId = 1,
-            //            RoleId = 1
-            //        }
-            //    );
         }
     }
 }

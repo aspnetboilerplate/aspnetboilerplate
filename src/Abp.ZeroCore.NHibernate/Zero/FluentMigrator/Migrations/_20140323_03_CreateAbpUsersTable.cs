@@ -33,31 +33,6 @@ namespace Abp.Zero.FluentMigrator.Migrations
                 .OnColumn("EmailAddress").Ascending()
                 .WithOptions().Unique()
                 .WithOptions().NonClustered();
-
-            //User for system admin.
-            //Insert.IntoTable("AbpUsers").Row(
-            //    new
-            //    {
-            //        UserName = "admin",
-            //        Name = "System",
-            //        Surname = "Administrator",
-            //        EmailAddress = "admin@aspnetboilerplate.com",
-            //        IsEmailConfirmed = true,
-            //        Password = "AM4OLBpptxBYmM79lGOX9egzZk3vIQU3d/gFCJzaBjAPXzYIK3tQ2N7X4fcrHtElTw==" //123qwe
-            //    });
-
-            ////User for default tenant's admin.
-            //Insert.IntoTable("AbpUsers").Row(
-            //    new
-            //    {
-            //        TenantId = 1,
-            //        UserName = "admin",
-            //        Name = "System",
-            //        Surname = "Administrator",
-            //        EmailAddress = "admin@aspnetboilerplate.com",
-            //        IsEmailConfirmed = true,
-            //        Password = "AM4OLBpptxBYmM79lGOX9egzZk3vIQU3d/gFCJzaBjAPXzYIK3tQ2N7X4fcrHtElTw==" //123qwe
-            //    });
         }
     }
 }

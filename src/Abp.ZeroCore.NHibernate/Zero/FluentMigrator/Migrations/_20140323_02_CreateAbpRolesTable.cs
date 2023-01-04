@@ -13,14 +13,6 @@ namespace Abp.Zero.FluentMigrator.Migrations
                 .WithColumn("Name").AsString(50).NotNullable()
                 .WithColumn("DisplayName").AsString(100).NotNullable()
                 .WithAuditColumns();
-
-            //Insert.IntoTable("AbpRoles").Row(
-            //    new
-            //        {
-            //            Name = "Admin",
-            //            DisplayName = "Admin"
-            //        }
-            //    );
         }
     }
 }
