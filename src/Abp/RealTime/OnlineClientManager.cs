@@ -30,9 +30,6 @@ namespace Abp.RealTime
         /// </summary>
         protected IOnlineClientStore Store { get; }
 
-        //TODO:do we need SyncObj, default store is thread safe?
-        protected readonly object SyncObj = new object();
-
         /// <summary>
         /// Initializes a new instance of the <see cref="OnlineClientManager"/> class.
         /// </summary>
@@ -43,71 +40,60 @@ namespace Abp.RealTime
 
         public virtual void Add(IOnlineClient client)
         {
-            lock (SyncObj)
+            var userWasAlreadyOnline = false;
+            var user = client.ToUserIdentifierOrNull();
+
+            if (user != null)
             {
-                var userWasAlreadyOnline = false;
-                var user = client.ToUserIdentifierOrNull();
+                userWasAlreadyOnline = this.IsOnline(user);
+            }
 
-                if (user != null)
-                {
-                    userWasAlreadyOnline = this.IsOnline(user);
-                }
+            Store.Add(client);
 
-                Store.Add(client);
+            ClientConnected?.Invoke(this, new OnlineClientEventArgs(client));
 
-                ClientConnected?.Invoke(this, new OnlineClientEventArgs(client));
-
-                if (user != null && !userWasAlreadyOnline)
-                {
-                    UserConnected?.Invoke(this, new OnlineUserEventArgs(user, client));
-                }
+            if (user != null && !userWasAlreadyOnline)
+            {
+                UserConnected?.Invoke(this, new OnlineUserEventArgs(user, client));
             }
         }
 
         public virtual bool Remove(string connectionId)
         {
-            lock (SyncObj)
+            var result = Store.TryRemove(connectionId, out IOnlineClient client);
+            if (!result)
             {
-                var result = Store.TryRemove(connectionId, out IOnlineClient client);
-                if (result)
-                {
-                    if (UserDisconnected != null)
-                    {
-                        var user = client.ToUserIdentifierOrNull();
-
-                        if (user != null && !this.IsOnline(user))
-                        {
-                            UserDisconnected.Invoke(this, new OnlineUserEventArgs(user, client));
-                        }
-                    }
-
-                    ClientDisconnected?.Invoke(this, new OnlineClientEventArgs(client));
-                }
-
-                return result;
+                return false;
             }
+            
+            if (UserDisconnected != null)
+            {
+                var user = client.ToUserIdentifierOrNull();
+
+                if (user != null && !this.IsOnline(user))
+                {
+                    UserDisconnected.Invoke(this, new OnlineUserEventArgs(user, client));
+                }
+            }
+
+            ClientDisconnected?.Invoke(this, new OnlineClientEventArgs(client));
+
+            return true;
         }
 
         public virtual IOnlineClient GetByConnectionIdOrNull(string connectionId)
         {
-            lock (SyncObj)
+            if (Store.TryGet(connectionId, out IOnlineClient client))
             {
-                if (Store.TryGet(connectionId, out IOnlineClient client))
-                {
-                    return client;
-                } else
-                {
-                    return null;
-                }
+                return client;
             }
+
+            return null;
         }
         
         public virtual IReadOnlyList<IOnlineClient> GetAllClients()
         {
-            lock (SyncObj)
-            {
-                return Store.GetAll();
-            }
+            return Store.GetAll();
         }
 
         [NotNull]
