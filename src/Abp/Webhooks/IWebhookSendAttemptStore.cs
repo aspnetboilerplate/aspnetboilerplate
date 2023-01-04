@@ -15,6 +15,10 @@ namespace Abp.Webhooks
 
         void Update(WebhookSendAttempt webhookSendAttempt);
 
+        Task DeleteAsync(WebhookSendAttempt webhookSendAttempt);
+
+        void Delete(WebhookSendAttempt webhookSendAttempt);
+
         Task<WebhookSendAttempt> GetAsync(int? tenantId, Guid id);
 
         WebhookSendAttempt Get(int? tenantId, Guid id);
