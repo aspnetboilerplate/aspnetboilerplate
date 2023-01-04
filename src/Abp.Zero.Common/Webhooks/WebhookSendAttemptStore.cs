@@ -87,6 +87,34 @@ namespace Abp.Webhooks
             }
         }
 
+        public virtual async Task DeleteAsync(WebhookSendAttempt webhookSendAttempt)
+        {
+            using (var uow = _unitOfWorkManager.Begin())
+            {
+                using (_unitOfWorkManager.Current.SetTenantId(webhookSendAttempt.TenantId))
+                {
+                    await _webhookSendAttemptRepository.DeleteAsync(webhookSendAttempt);
+                    await _unitOfWorkManager.Current.SaveChangesAsync();
+                }
+
+                await uow.CompleteAsync();
+            }
+        }
+
+        public void Delete(WebhookSendAttempt webhookSendAttempt)
+        {
+            using (var uow = _unitOfWorkManager.Begin())
+            {
+                using (_unitOfWorkManager.Current.SetTenantId(webhookSendAttempt.TenantId))
+                {
+                    _webhookSendAttemptRepository.Delete(webhookSendAttempt);
+                    _unitOfWorkManager.Current.SaveChanges();
+                }
+
+                uow.Complete();
+            }
+        }
+
         public virtual async Task<WebhookSendAttempt> GetAsync(int? tenantId, Guid id)
         {
             WebhookSendAttempt sendAttempt;

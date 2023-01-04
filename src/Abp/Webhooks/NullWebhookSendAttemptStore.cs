@@ -27,6 +27,16 @@ namespace Abp.Webhooks
         {
         }
 
+        public Task DeleteAsync(WebhookSendAttempt webhookSendAttempt)
+        {
+            return Task.CompletedTask;
+        }
+
+        public void Delete(WebhookSendAttempt webhookSendAttempt)
+        {
+            
+        }
+
         public Task<WebhookSendAttempt> GetAsync(int? tenantId, Guid id)
         {
             return Task.FromResult<WebhookSendAttempt>(default);
