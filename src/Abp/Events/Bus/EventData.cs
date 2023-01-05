@@ -18,13 +18,5 @@ namespace Abp.Events.Bus
         /// The object which triggers the event (optional).
         /// </summary>
         public object EventSource { get; set; }
-
-        /// <summary>
-        /// Constructor.
-        /// </summary>
-        protected EventData()
-        {
-            EventTime = Clock.Now;
-        }
     }
 }

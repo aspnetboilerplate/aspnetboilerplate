@@ -17,11 +17,14 @@ namespace Abp.BackgroundJobs
         private readonly ConcurrentDictionary<long, BackgroundJobInfo> _jobs;
         private long _lastId;
 
+        private readonly IClock _clock;
+        
         /// <summary>
         /// Initializes a new instance of the <see cref="InMemoryBackgroundJobStore"/> class.
         /// </summary>
-        public InMemoryBackgroundJobStore()
+        public InMemoryBackgroundJobStore(IClock clock)
         {
+            _clock = clock;
             _jobs = new ConcurrentDictionary<long, BackgroundJobInfo>();
         }
 
@@ -52,7 +55,7 @@ namespace Abp.BackgroundJobs
         public Task<List<BackgroundJobInfo>> GetWaitingJobsAsync(int maxResultCount)
         {
             var waitingJobs = _jobs.Values
-                .Where(t => !t.IsAbandoned && t.NextTryTime <= Clock.Now)
+                .Where(t => !t.IsAbandoned && t.NextTryTime <= _clock.Now)
                 .OrderByDescending(t => t.Priority)
                 .ThenBy(t => t.TryCount)
                 .ThenBy(t => t.NextTryTime)
@@ -65,7 +68,7 @@ namespace Abp.BackgroundJobs
         public List<BackgroundJobInfo> GetWaitingJobs(int maxResultCount)
         {
             var waitingJobs = _jobs.Values
-                .Where(t => !t.IsAbandoned && t.NextTryTime <= Clock.Now)
+                .Where(t => !t.IsAbandoned && t.NextTryTime <= _clock.Now)
                 .OrderByDescending(t => t.Priority)
                 .ThenBy(t => t.TryCount)
                 .ThenBy(t => t.NextTryTime)

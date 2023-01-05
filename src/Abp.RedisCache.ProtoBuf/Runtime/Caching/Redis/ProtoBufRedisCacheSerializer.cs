@@ -1,6 +1,7 @@
 ﻿using System;
 using System.IO;
 using System.Reflection;
+using Abp.Timing;
 using ProtoBuf;
 using StackExchange.Redis;
 
@@ -58,6 +59,10 @@ namespace Abp.Runtime.Caching.Redis
                 var serialized = Convert.ToBase64String(byteArray, 0, byteArray.Length);
                 return $"{ProtoBufPrefix}{type.AssemblyQualifiedName}{TypeSeperator}{serialized}";
             }
+        }
+
+        public ProtoBufRedisCacheSerializer(IClock clock) : base(clock)
+        {
         }
     }
 }

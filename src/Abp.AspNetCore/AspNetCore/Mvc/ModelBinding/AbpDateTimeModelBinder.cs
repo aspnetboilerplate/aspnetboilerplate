@@ -11,10 +11,12 @@ namespace Abp.AspNetCore.Mvc.ModelBinding
     {
         private readonly Type _type;
         private readonly SimpleTypeModelBinder _simpleTypeModelBinder;
-
-        public AbpDateTimeModelBinder(Type type)
+        private readonly IClock _clock;
+        
+        public AbpDateTimeModelBinder(Type type, IClock clock)
         {
             _type = type;
+            _clock = clock;
             _simpleTypeModelBinder = new SimpleTypeModelBinder(type, NullLoggerFactory.Instance);
         }
         
@@ -30,14 +32,14 @@ namespace Abp.AspNetCore.Mvc.ModelBinding
             if (_type == typeof(DateTime))
             {
                 var dateTime = (DateTime)bindingContext.Result.Model;
-                bindingContext.Result = ModelBindingResult.Success(Clock.Normalize(dateTime));
+                bindingContext.Result = ModelBindingResult.Success(_clock.Normalize(dateTime));
             }
             else
             {
                 var dateTime = (DateTime?)bindingContext.Result.Model;
                 if (dateTime != null)
                 {
-                    bindingContext.Result = ModelBindingResult.Success(Clock.Normalize(dateTime.Value));
+                    bindingContext.Result = ModelBindingResult.Success(_clock.Normalize(dateTime.Value));
                 }
             }
         }

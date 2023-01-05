@@ -16,10 +16,12 @@ namespace Abp.Web.Timing
     public class TimingScriptManager : ITimingScriptManager, ITransientDependency
     {
         private readonly ISettingManager _settingManager;
-
-        public TimingScriptManager(ISettingManager settingManager)
+        private readonly IClock _clock;
+        
+        public TimingScriptManager(ISettingManager settingManager, IClock clock)
         {
             _settingManager = settingManager;
+            _clock = clock;
         }
 
         public async Task<string> GetScriptAsync()
@@ -28,10 +30,10 @@ namespace Abp.Web.Timing
 
             script.AppendLine("(function(){");
 
-            script.AppendLine("    abp.clock.provider = abp.timing." + Clock.Provider.GetType().Name.ToCamelCase() + " || abp.timing.localClockProvider;");
-            script.AppendLine("    abp.clock.provider.supportsMultipleTimezone = " + Clock.SupportsMultipleTimezone.ToString().ToLowerInvariant() + ";");
+            script.AppendLine("    abp.clock.provider = abp.timing." + _clock.Provider.GetType().Name.ToCamelCase() + " || abp.timing.localClockProvider;");
+            script.AppendLine("    abp.clock.provider.supportsMultipleTimezone = " + _clock.SupportsMultipleTimezone.ToString().ToLowerInvariant() + ";");
 
-            if (Clock.SupportsMultipleTimezone)
+            if (_clock.SupportsMultipleTimezone)
             {
                 script.AppendLine("    abp.timing.timeZoneInfo = " + await GetUsersTimezoneScriptsAsync());
             }
@@ -50,8 +52,8 @@ namespace Abp.Web.Timing
                    "        windows: {" +
                    "            timeZoneId: '" + timezoneId + "'," +
                    "            baseUtcOffsetInMilliseconds: '" + timezone.BaseUtcOffset.TotalMilliseconds + "'," +
-                   "            currentUtcOffsetInMilliseconds: '" + timezone.GetUtcOffset(Clock.Now).TotalMilliseconds + "'," +
-                   "            isDaylightSavingTimeNow: '" + timezone.IsDaylightSavingTime(Clock.Now) + "'" +
+                   "            currentUtcOffsetInMilliseconds: '" + timezone.GetUtcOffset(_clock.Now).TotalMilliseconds + "'," +
+                   "            isDaylightSavingTimeNow: '" + timezone.IsDaylightSavingTime(_clock.Now) + "'" +
                    "        }," +
                    "        iana: {" +
                    "            timeZoneId:'" + TimezoneHelper.WindowsToIana(timezoneId) + "'" +

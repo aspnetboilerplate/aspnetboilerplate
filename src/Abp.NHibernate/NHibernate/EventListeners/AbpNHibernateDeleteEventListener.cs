@@ -26,10 +26,12 @@ namespace Abp.NHibernate.EventListeners
         private readonly Lazy<IAbpSession> _abpSession;
         private readonly Lazy<IGuidGenerator> _guidGenerator;
         private readonly Lazy<IEventBus> _eventBus;
-
-        public AbpNHibernateDeleteEventListener(IIocManager iocManager)
+        private readonly IClock _clock;
+        
+        public AbpNHibernateDeleteEventListener(IIocManager iocManager, IClock clock)
         {
             _iocManager = iocManager;
+            _clock = clock;
 
             _abpSession =
                 new Lazy<IAbpSession>(
@@ -66,7 +68,7 @@ namespace Abp.NHibernate.EventListeners
 
                     if (e is IHasDeletionTime)
                     {
-                        (e as IHasDeletionTime).DeletionTime = Clock.Now;
+                        (e as IHasDeletionTime).DeletionTime = _clock.Now;
                     }
 
                     if (e is IDeletionAudited)
@@ -109,7 +111,7 @@ namespace Abp.NHibernate.EventListeners
 
                     if (e is IHasDeletionTime)
                     {
-                        (e as IHasDeletionTime).DeletionTime = Clock.Now;
+                        (e as IHasDeletionTime).DeletionTime = _clock.Now;
                     }
 
                     if (e is IDeletionAudited)

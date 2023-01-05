@@ -1,4 +1,4 @@
-﻿using Abp.Timing;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using Abp.Configuration.Startup;
@@ -15,7 +15,8 @@ namespace Abp.Domain.Entities.Auditing
             object entityAsObj,
             int? tenantId,
             long? userId,
-            IReadOnlyList<AuditFieldConfiguration> auditFields)
+            IReadOnlyList<AuditFieldConfiguration> auditFields,
+            DateTime now)
         {
             var entityWithCreationTime = entityAsObj as IHasCreationTime;
             if (entityWithCreationTime == null)
@@ -26,7 +27,7 @@ namespace Abp.Domain.Entities.Auditing
 
             if (entityWithCreationTime.CreationTime == default)
             {
-                entityWithCreationTime.CreationTime = Clock.Now;
+                entityWithCreationTime.CreationTime = now;
             }
 
             if (!(entityAsObj is ICreationAudited))
@@ -79,14 +80,15 @@ namespace Abp.Domain.Entities.Auditing
             object entityAsObj,
             int? tenantId,
             long? userId,
-            IReadOnlyList<AuditFieldConfiguration> auditFields)
+            IReadOnlyList<AuditFieldConfiguration> auditFields,
+            DateTime now)
         {
             if (entityAsObj is IHasModificationTime)
             {
                 var lastModificationTimeFilter = auditFields?.FirstOrDefault(e => e.FieldName == AbpAuditFields.LastModificationTime);
                 if (lastModificationTimeFilter == null || lastModificationTimeFilter.IsSavingEnabled)
                 {
-                    entityAsObj.As<IHasModificationTime>().LastModificationTime = Clock.Now;
+                    entityAsObj.As<IHasModificationTime>().LastModificationTime = now;
                 }
             }
 
@@ -138,7 +140,8 @@ namespace Abp.Domain.Entities.Auditing
             object entityAsObj,
             int? tenantId,
             long? userId,
-            IReadOnlyList<AuditFieldConfiguration> auditFields)
+            IReadOnlyList<AuditFieldConfiguration> auditFields,
+            DateTime now)
         {
             if (entityAsObj is IHasDeletionTime)
             {
@@ -149,7 +152,7 @@ namespace Abp.Domain.Entities.Auditing
                     var deletionTimeFilter = auditFields?.FirstOrDefault(e => e.FieldName == AbpAuditFields.DeletionTime);
                     if (deletionTimeFilter == null || deletionTimeFilter.IsSavingEnabled)
                     {
-                        entityAsObj.As<IHasDeletionTime>().DeletionTime = Clock.Now;
+                        entityAsObj.As<IHasDeletionTime>().DeletionTime = now;
                     }
                 }
             }

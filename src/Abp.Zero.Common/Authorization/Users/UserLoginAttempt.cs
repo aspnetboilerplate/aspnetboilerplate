@@ -85,13 +85,5 @@ namespace Abp.Authorization.Users
         public virtual AbpLoginResultType Result { get; set; }
 
         public virtual DateTime CreationTime { get; set; }
-
-        /// <summary>
-        /// Initializes a new instance of the <see cref="UserLoginAttempt"/> class.
-        /// </summary>
-        public UserLoginAttempt()
-        {
-            CreationTime = Clock.Now;
-        }
     }
 }

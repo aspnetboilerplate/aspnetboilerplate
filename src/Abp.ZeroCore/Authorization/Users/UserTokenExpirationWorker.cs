@@ -19,18 +19,21 @@ namespace Abp.Authorization.Users
         private readonly IRepository<UserToken, long> _userTokenRepository;
         private readonly IRepository<TTenant> _tenantRepository;
         private readonly IUnitOfWorkManager _unitOfWorkManager;
-
+        private readonly IClock _clock;
+        
         public UserTokenExpirationWorker(
             AbpTimer timer,
             IRepository<UserToken, long> userTokenRepository,
             IBackgroundJobConfiguration backgroundJobConfiguration,
             IUnitOfWorkManager unitOfWorkManager,
-            IRepository<TTenant> tenantRepository)
+            IRepository<TTenant> tenantRepository,
+            IClock clock)
             : base(timer)
         {
             _userTokenRepository = userTokenRepository;
             _unitOfWorkManager = unitOfWorkManager;
             _tenantRepository = tenantRepository;
+            _clock = clock;
 
             Timer.Period = backgroundJobConfiguration.UserTokenExpirationPeriod?.TotalMilliseconds.To<int>()
 #pragma warning disable CS0618 // Type or member is obsolete, this line will be removed once support for CleanUserTokenPeriod property is removed
@@ -42,7 +45,7 @@ namespace Abp.Authorization.Users
         protected override void DoWork()
         {
             List<int> tenantIds;
-            var utcNow = Clock.Now.ToUniversalTime();
+            var utcNow = _clock.Now.ToUniversalTime();
 
             using (var uow = _unitOfWorkManager.Begin())
             {

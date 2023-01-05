@@ -10,10 +10,12 @@ namespace Abp.Dapper.Filters.Action
     public class CreationAuditDapperActionFilter : DapperActionFilterBase, IDapperActionFilter
     {
         private readonly IMultiTenancyConfig _multiTenancyConfig;
-
-        public CreationAuditDapperActionFilter(IMultiTenancyConfig multiTenancyConfig)
+        private readonly IClock _clock;
+        
+        public CreationAuditDapperActionFilter(IMultiTenancyConfig multiTenancyConfig, IClock clock)
         {
             _multiTenancyConfig = multiTenancyConfig;
+            _clock = clock;
         }
 
         public void ExecuteFilter<TEntity, TPrimaryKey>(TEntity entity) where TEntity : class, IEntity<TPrimaryKey>
@@ -27,7 +29,7 @@ namespace Abp.Dapper.Filters.Action
             {
                 if (entityWithCreationTime.CreationTime == default(DateTime))
                 {
-                    entityWithCreationTime.CreationTime = Clock.Now;
+                    entityWithCreationTime.CreationTime = _clock.Now;
                 }
             }
 

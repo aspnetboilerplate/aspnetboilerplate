@@ -7,11 +7,18 @@ namespace Abp.Dapper.Filters.Action
 {
     public class ModificationAuditDapperActionFilter : DapperActionFilterBase, IDapperActionFilter
     {
+        private IClock _clock;
+
+        public ModificationAuditDapperActionFilter(IClock clock)
+        {
+            _clock = clock;
+        }
+
         public void ExecuteFilter<TEntity, TPrimaryKey>(TEntity entity) where TEntity : class, IEntity<TPrimaryKey>
         {
             if (entity is IHasModificationTime)
             {
-                entity.As<IHasModificationTime>().LastModificationTime = Clock.Now;
+                entity.As<IHasModificationTime>().LastModificationTime = _clock.Now;
             }
 
             if (entity is IModificationAudited)

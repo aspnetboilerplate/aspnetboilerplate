@@ -7,6 +7,13 @@ namespace Abp.Json
 {
     public class AbpDateTimeConverter : IsoDateTimeConverter
     {
+        private IClock _clock;
+
+        public AbpDateTimeConverter(IClock clock)
+        {
+            _clock = clock;
+        }
+
         public override bool CanConvert(Type objectType)
         {
             if (objectType == typeof(DateTime) || objectType == typeof(DateTime?))
@@ -23,7 +30,7 @@ namespace Abp.Json
 
             if (date.HasValue)
             {
-                return Clock.Normalize(date.Value);
+                return _clock.Normalize(date.Value);
             }
 
             return null;
@@ -32,7 +39,7 @@ namespace Abp.Json
         public override void WriteJson(JsonWriter writer, object value, JsonSerializer serializer)
         {
             var date = value as DateTime?;
-            base.WriteJson(writer, date.HasValue ? Clock.Normalize(date.Value) : value, serializer);
+            base.WriteJson(writer, date.HasValue ? _clock.Normalize(date.Value) : value, serializer);
         }
     }
 }

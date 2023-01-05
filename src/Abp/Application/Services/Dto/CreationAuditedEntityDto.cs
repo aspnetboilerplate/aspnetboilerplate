@@ -29,13 +29,5 @@ namespace Abp.Application.Services.Dto
         /// Creator user's id for this entity.
         /// </summary>
         public long? CreatorUserId { get; set; }
-
-        /// <summary>
-        /// Constructor.
-        /// </summary>
-        protected CreationAuditedEntityDto()
-        {
-            CreationTime = Clock.Now;
-        }
     }
 }

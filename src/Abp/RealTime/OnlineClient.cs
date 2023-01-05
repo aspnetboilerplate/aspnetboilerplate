@@ -68,7 +68,7 @@ namespace Abp.RealTime
         /// </summary>
         public OnlineClient()
         {
-            ConnectTime = Clock.Now;
+            
         }
 
         /// <summary>

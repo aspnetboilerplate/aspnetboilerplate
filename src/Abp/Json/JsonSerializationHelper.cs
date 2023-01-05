@@ -1,4 +1,6 @@
 using System;
+using Abp.Dependency;
+using Abp.Timing;
 using Newtonsoft.Json;
 
 namespace Abp.Json
@@ -6,9 +8,16 @@ namespace Abp.Json
     /// <summary>
     /// Defines helper methods to work with JSON.
     /// </summary>
-    public static class JsonSerializationHelper
+    public class JsonSerializationHelper: ITransientDependency
     {
         private const char TypeSeperator = '|';
+
+        private readonly IClock _clock;
+
+        public JsonSerializationHelper(IClock clock)
+        {
+            _clock = clock;
+        }
 
         /// <summary>
         /// Serializes an object with a type information included.
@@ -38,7 +47,7 @@ namespace Abp.Json
         /// <summary>
         /// Deserializes an object serialized with <see cref="SerializeWithType(object)"/> methods.
         /// </summary>
-        public static T DeserializeWithType<T>(string serializedObj)
+        public T DeserializeWithType<T>(string serializedObj)
         {
             return (T)DeserializeWithType(serializedObj);
         }
@@ -46,7 +55,7 @@ namespace Abp.Json
         /// <summary>
         /// Deserializes an object serialized with <see cref="SerializeWithType(object)"/> methods.
         /// </summary>
-        public static object DeserializeWithType(string serializedObj)
+        public object DeserializeWithType(string serializedObj)
         {
             var typeSeperatorIndex = serializedObj.IndexOf(TypeSeperator);
             var type = Type.GetType(serializedObj.Substring(0, typeSeperatorIndex));
@@ -54,7 +63,7 @@ namespace Abp.Json
 
             var options = new JsonSerializerSettings
             {
-                ContractResolver = new AbpCamelCasePropertyNamesContractResolver()
+                ContractResolver = new AbpCamelCasePropertyNamesContractResolver(_clock)
             };
 
             return JsonConvert.DeserializeObject(serialized, type, options);

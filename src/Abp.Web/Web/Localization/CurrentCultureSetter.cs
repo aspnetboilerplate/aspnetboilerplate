@@ -20,15 +20,18 @@ namespace Abp.Web.Localization
         private readonly IAbpWebLocalizationConfiguration _webLocalizationConfiguration;
         private readonly ISettingManager _settingManager;
         private readonly IAbpSession _abpSession;
-
+        private readonly IClock _clock;
+        
         public CurrentCultureSetter(
             IAbpWebLocalizationConfiguration webLocalizationConfiguration,
             ISettingManager settingManager,
-            IAbpSession abpSession)
+            IAbpSession abpSession, 
+            IClock clock)
         {
             _webLocalizationConfiguration = webLocalizationConfiguration;
             _settingManager = settingManager;
             _abpSession = abpSession;
+            _clock = clock;
         }
 
         public virtual void SetCurrentCulture(HttpContext httpContext)
@@ -134,7 +137,7 @@ namespace Abp.Web.Localization
             context.Response.SetCookie(
                 new HttpCookie(_webLocalizationConfiguration.CookieName, culture)
                 {
-                    Expires = Clock.Now.AddYears(2),
+                    Expires = _clock.Now.AddYears(2),
                     Path = context.Request.ApplicationPath
                 }
             );

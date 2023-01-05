@@ -2,7 +2,6 @@
 using System.Reflection;
 using System.Threading.Tasks;
 using Abp.Dependency;
-using Abp.Domain.Uow;
 using Abp.Events.Bus;
 using Abp.Events.Bus.Exceptions;
 using Abp.Json;
@@ -28,6 +27,7 @@ namespace Abp.BackgroundJobs
 
         private readonly IIocResolver _iocResolver;
         private readonly IBackgroundJobStore _store;
+        private readonly IClock _clock;
 
         static BackgroundJobManager()
         {
@@ -40,17 +40,19 @@ namespace Abp.BackgroundJobs
         public BackgroundJobManager(
             IIocResolver iocResolver,
             IBackgroundJobStore store,
-            AbpAsyncTimer timer)
+            AbpAsyncTimer timer,
+            IClock clock)
             : base(timer)
         {
             _store = store;
+            _clock = clock;
             _iocResolver = iocResolver;
 
             EventBus = NullEventBus.Instance;
 
             Timer.Period = JobPollPeriod;
         }
-        
+
         public virtual async Task<string> EnqueueAsync<TJob, TArgs>(TArgs args,
             BackgroundJobPriority priority = BackgroundJobPriority.Normal, TimeSpan? delay = null)
             where TJob : IBackgroundJobBase<TArgs>
@@ -68,7 +70,7 @@ namespace Abp.BackgroundJobs
 
                 if (delay.HasValue)
                 {
-                    jobInfo.NextTryTime = Clock.Now.Add(delay.Value);
+                    jobInfo.NextTryTime = _clock.Now.Add(delay.Value);
                 }
 
                 await _store.InsertAsync(jobInfo);
@@ -80,7 +82,7 @@ namespace Abp.BackgroundJobs
 
             return jobInfoId;
         }
-        
+
         public virtual string Enqueue<TJob, TArgs>(TArgs args,
             BackgroundJobPriority priority = BackgroundJobPriority.Normal, TimeSpan? delay = null)
             where TJob : IBackgroundJobBase<TArgs>
@@ -98,14 +100,14 @@ namespace Abp.BackgroundJobs
 
                 if (delay.HasValue)
                 {
-                    jobInfo.NextTryTime = Clock.Now.Add(delay.Value);
+                    jobInfo.NextTryTime = _clock.Now.Add(delay.Value);
                 }
 
                 _store.Insert(jobInfo);
                 CurrentUnitOfWork.SaveChanges();
 
                 jobInfoId = jobInfo.Id.ToString();
-                
+
                 uow.Complete();
             }
 
@@ -153,7 +155,7 @@ namespace Abp.BackgroundJobs
             try
             {
                 jobInfo.TryCount++;
-                jobInfo.LastTryTime = Clock.Now;
+                jobInfo.LastTryTime = _clock.Now;
 
                 var jobType = Type.GetType(jobInfo.JobType);
                 using (var job = _iocResolver.ResolveAsDisposable(jobType))
@@ -190,7 +192,7 @@ namespace Abp.BackgroundJobs
                     {
                         Logger.Warn(ex.Message, ex);
 
-                        var nextTryTime = jobInfo.CalculateNextTryTime();
+                        var nextTryTime = CalculateNextTryTime(jobInfo);
                         if (nextTryTime.HasValue)
                         {
                             jobInfo.NextTryTime = nextTryTime.Value;
@@ -226,6 +228,27 @@ namespace Abp.BackgroundJobs
 
                 await TryUpdateAsync(jobInfo);
             }
+        }
+
+        /// <summary>
+        /// Calculates next try time if a job fails.
+        /// Returns null if it will not wait anymore and job should be abandoned.
+        /// </summary>
+        /// <returns></returns>
+        private DateTime? CalculateNextTryTime(BackgroundJobInfo jobInfo)
+        {
+            var nextWaitDuration = BackgroundJobInfo.DefaultFirstWaitDuration *
+                                   Math.Pow(BackgroundJobInfo.DefaultWaitFactor, jobInfo.TryCount - 1);
+            
+            var nextTryDate = jobInfo.LastTryTime?.AddSeconds(nextWaitDuration) ??
+                              _clock.Now.AddSeconds(nextWaitDuration);
+
+            if (nextTryDate.Subtract(jobInfo.CreationTime).TotalSeconds > BackgroundJobInfo.DefaultTimeout)
+            {
+                return null;
+            }
+
+            return nextTryDate;
         }
 
         private async Task TryUpdateAsync(BackgroundJobInfo jobInfo)

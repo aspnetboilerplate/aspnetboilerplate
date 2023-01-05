@@ -41,19 +41,19 @@ namespace Abp.EntityHistory
             EntityHistoryStore = NullEntityHistoryStore.Instance;
         }
 
-        protected virtual DateTime GetChangeTime(EntityChangeType entityChangeType, object entity)
+        protected virtual DateTime GetChangeTime(EntityChangeType entityChangeType, object entity, DateTime now)
         {
             switch (entityChangeType)
             {
                 case EntityChangeType.Created:
-                    return (entity as IHasCreationTime)?.CreationTime ?? Clock.Now;
+                    return (entity as IHasCreationTime)?.CreationTime ?? now;
                 case EntityChangeType.Deleted:
-                    return (entity as IHasDeletionTime)?.DeletionTime ?? Clock.Now;
+                    return (entity as IHasDeletionTime)?.DeletionTime ?? now;
                 case EntityChangeType.Updated:
-                    return (entity as IHasModificationTime)?.LastModificationTime ?? Clock.Now;
+                    return (entity as IHasModificationTime)?.LastModificationTime ?? now;
                 default:
                     Logger.ErrorFormat("Unexpected {0} - {1}", nameof(entityChangeType), entityChangeType);
-                    return Clock.Now;
+                    return now;
             }
         }
 

@@ -10,14 +10,19 @@ namespace Abp.Timing.Timezone
     public class TimeZoneConverter : ITimeZoneConverter, ITransientDependency
     {
         private readonly ISettingManager _settingManager;
+        private readonly IClock _clock;
 
         /// <summary>
         /// Constructor
         /// </summary>
         /// <param name="settingManager"></param>
-        public TimeZoneConverter(ISettingManager settingManager)
+        /// <param name="clock"></param>
+        public TimeZoneConverter(
+            ISettingManager settingManager, 
+            IClock clock)
         {
             _settingManager = settingManager;
+            _clock = clock;
         }
 
         /// <inheritdoc/>
@@ -28,17 +33,17 @@ namespace Abp.Timing.Timezone
                 return null;
             }
 
-            if (!Clock.SupportsMultipleTimezone)
+            if (!_clock.SupportsMultipleTimezone)
             {
                 return date;
             }
 
             var usersTimezone = _settingManager.GetSettingValueForUser(TimingSettingNames.TimeZone, tenantId, userId);
-            if(string.IsNullOrEmpty(usersTimezone))
+            if (string.IsNullOrEmpty(usersTimezone))
             {
                 return date;
             }
-            
+
             return TimezoneHelper.ConvertFromUtc(date.Value.ToUniversalTime(), usersTimezone);
         }
 
@@ -50,7 +55,7 @@ namespace Abp.Timing.Timezone
                 return null;
             }
 
-            if (!Clock.SupportsMultipleTimezone)
+            if (!_clock.SupportsMultipleTimezone)
             {
                 return date;
             }
@@ -63,7 +68,7 @@ namespace Abp.Timing.Timezone
 
             return TimezoneHelper.ConvertFromUtc(date.Value.ToUniversalTime(), tenantsTimezone);
         }
-        
+
         /// <inheritdoc/>
         public DateTime? Convert(DateTime? date)
         {
@@ -72,7 +77,7 @@ namespace Abp.Timing.Timezone
                 return null;
             }
 
-            if (!Clock.SupportsMultipleTimezone)
+            if (!_clock.SupportsMultipleTimezone)
             {
                 return date;
             }

@@ -48,13 +48,5 @@ namespace Abp.Notifications
         public NotificationSeverity Severity { get; set; }
 
         public DateTime CreationTime { get; set; }
-
-        /// <summary>
-        /// Initializes a new instance of the <see cref="TenantNotification"/> class.
-        /// </summary>
-        public TenantNotification()
-        {
-            CreationTime = Clock.Now;
-        }
     }
 }

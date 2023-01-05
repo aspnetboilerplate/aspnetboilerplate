@@ -1,7 +1,6 @@
 ﻿using Abp.Domain.Entities;
 using Abp.Domain.Entities.Auditing;
 using Abp.Extensions;
-using Abp.Timing;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
@@ -65,7 +64,6 @@ namespace Abp.Notifications
         {
             Id = id;
             State = UserNotificationState.Unread;
-            CreationTime = Clock.Now;
         }
 
         public virtual void SetTargetNotifiers(List<string> list)

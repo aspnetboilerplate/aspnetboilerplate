@@ -47,8 +47,10 @@ namespace Abp.Json
             {
                 return;
             }
-
-            var converter = new AbpDateTimeConverter();
+            
+            //TODO@Clock -> how to dispose clock ?
+            var clock = _iocResolver.Resolve<IClock>();
+            var converter = new AbpDateTimeConverter(clock);
 
             if (!_useMvcDateTimeFormat.HasValue)
             {

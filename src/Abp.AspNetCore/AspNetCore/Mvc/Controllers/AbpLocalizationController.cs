@@ -15,10 +15,12 @@ namespace Abp.AspNetCore.Mvc.Controllers
     public class AbpLocalizationController : AbpController
     {
         protected IUrlHelper UrlHelper;
-
-        public AbpLocalizationController(IUrlHelper urlHelper)
+        private readonly IClock _clock;
+        
+        public AbpLocalizationController(IUrlHelper urlHelper, IClock clock)
         {
             UrlHelper = urlHelper;
+            _clock = clock;
         }
 
         [DisableAuditing]
@@ -36,7 +38,7 @@ namespace Abp.AspNetCore.Mvc.Controllers
                 cookieValue,
                 new CookieOptions
                 {
-                    Expires = Clock.Now.AddYears(2),
+                    Expires = _clock.Now.AddYears(2),
                     HttpOnly = true 
                 }
             );

@@ -15,13 +15,16 @@ namespace Abp.BackgroundJobs
     {
         private readonly IRepository<BackgroundJobInfo, long> _backgroundJobRepository;
         private readonly IUnitOfWorkManager _unitOfWorkManager;
-
+        private readonly IClock _clock;
+        
         public BackgroundJobStore(
             IRepository<BackgroundJobInfo, long> backgroundJobRepository,
-            IUnitOfWorkManager unitOfWorkManager)
+            IUnitOfWorkManager unitOfWorkManager,
+            IClock clock)
         {
             _backgroundJobRepository = backgroundJobRepository;
             _unitOfWorkManager = unitOfWorkManager;
+            _clock = clock;
         }
 
         public async Task<BackgroundJobInfo> GetAsync(long jobId)
@@ -58,7 +61,7 @@ namespace Abp.BackgroundJobs
             var waitingJobs = _unitOfWorkManager.WithUnitOfWork(() =>
             {
                 return _backgroundJobRepository.GetAll()
-                    .Where(t => !t.IsAbandoned && t.NextTryTime <= Clock.Now)
+                    .Where(t => !t.IsAbandoned && t.NextTryTime <= _clock.Now)
                     .OrderByDescending(t => t.Priority)
                     .ThenBy(t => t.TryCount)
                     .ThenBy(t => t.NextTryTime)
@@ -74,7 +77,7 @@ namespace Abp.BackgroundJobs
             return _unitOfWorkManager.WithUnitOfWork(() =>
             {
                 return _backgroundJobRepository.GetAll()
-                    .Where(t => !t.IsAbandoned && t.NextTryTime <= Clock.Now)
+                    .Where(t => !t.IsAbandoned && t.NextTryTime <= _clock.Now)
                     .OrderByDescending(t => t.Priority)
                     .ThenBy(t => t.TryCount)
                     .ThenBy(t => t.NextTryTime)

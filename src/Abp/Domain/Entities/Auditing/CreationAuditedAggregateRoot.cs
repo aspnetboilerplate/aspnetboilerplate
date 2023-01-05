@@ -29,14 +29,6 @@ namespace Abp.Domain.Entities.Auditing
         /// Creator of this entity.
         /// </summary>
         public virtual long? CreatorUserId { get; set; }
-
-        /// <summary>
-        /// Constructor.
-        /// </summary>
-        protected CreationAuditedAggregateRoot()
-        {
-            CreationTime = Clock.Now;
-        }
     }
 
     /// <summary>

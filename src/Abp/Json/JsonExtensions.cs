@@ -1,6 +1,7 @@
 using JetBrains.Annotations;
 using Newtonsoft.Json;
 using System;
+using Abp.Timing;
 
 namespace Abp.Json
 {
@@ -11,8 +12,10 @@ namespace Abp.Json
 
         static JsonExtensions()
         {
-            SharedAbpCamelCasePropertyNamesContractResolver = new AbpCamelCasePropertyNamesContractResolver();
-            SharedAbpContractResolver = new AbpContractResolver();
+            //TODO@Clock -> Is this safe ? 
+            var clock = new Clock();
+            SharedAbpCamelCasePropertyNamesContractResolver = new AbpCamelCasePropertyNamesContractResolver(clock);
+            SharedAbpContractResolver = new AbpContractResolver(clock);
         }
 
         /// <summary>

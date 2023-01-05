@@ -9,6 +9,13 @@ namespace Abp.Json
 {
     public class AbpContractResolver : DefaultContractResolver
     {
+        private IClock _clock;
+
+        public AbpContractResolver(IClock clock)
+        {
+            _clock = clock;
+        }
+
         protected override JsonProperty CreateProperty(MemberInfo member, MemberSerialization memberSerialization)
         {
             JsonProperty property = base.CreateProperty(member, memberSerialization);
@@ -27,7 +34,7 @@ namespace Abp.Json
 
             if (ReflectionHelper.GetSingleAttributeOfMemberOrDeclaringTypeOrDefault<DisableDateTimeNormalizationAttribute>(member) == null)
             {
-                property.Converter = new AbpDateTimeConverter();
+                property.Converter = new AbpDateTimeConverter(_clock);
             }
         }
     }

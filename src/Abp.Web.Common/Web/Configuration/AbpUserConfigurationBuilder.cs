@@ -37,7 +37,8 @@ namespace Abp.Web.Configuration
         protected Dictionary<string, object> CustomDataConfig { get; }
 
         private readonly IIocResolver _iocResolver;
-
+        private readonly IClock _clock;
+        
         public AbpUserConfigurationBuilder(
             IMultiTenancyConfig multiTenancyConfig,
             ILanguageManager languageManager,
@@ -52,7 +53,8 @@ namespace Abp.Web.Configuration
             IAbpSession abpSession,
             IPermissionChecker permissionChecker,
             IIocResolver iocResolver,
-            IAbpStartupConfiguration startupConfiguration)
+            IAbpStartupConfiguration startupConfiguration, 
+            IClock clock)
         {
             MultiTenancyConfig = multiTenancyConfig;
             LanguageManager = languageManager;
@@ -68,6 +70,7 @@ namespace Abp.Web.Configuration
             PermissionChecker = permissionChecker;
             _iocResolver = iocResolver;
             _startupConfiguration = startupConfiguration;
+            _clock = clock;
 
             CustomDataConfig = new Dictionary<string, object>();
         }
@@ -248,7 +251,7 @@ namespace Abp.Web.Configuration
         {
             return new AbpUserClockConfigDto
             {
-                Provider = Clock.Provider.GetType().Name.ToCamelCase()
+                Provider = _clock.Provider.GetType().Name.ToCamelCase()
             };
         }
 
@@ -265,8 +268,8 @@ namespace Abp.Web.Configuration
                     {
                         TimeZoneId = timezoneId,
                         BaseUtcOffsetInMilliseconds = timezone.BaseUtcOffset.TotalMilliseconds,
-                        CurrentUtcOffsetInMilliseconds = timezone.GetUtcOffset(Clock.Now).TotalMilliseconds,
-                        IsDaylightSavingTimeNow = timezone.IsDaylightSavingTime(Clock.Now)
+                        CurrentUtcOffsetInMilliseconds = timezone.GetUtcOffset(_clock.Now).TotalMilliseconds,
+                        IsDaylightSavingTimeNow = timezone.IsDaylightSavingTime(_clock.Now)
                     },
                     Iana = new AbpUserIanaTimeZoneConfigDto
                     {

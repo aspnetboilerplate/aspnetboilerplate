@@ -7,6 +7,13 @@ namespace Abp.Dapper.Filters.Action
 {
     public class DeletionAuditDapperActionFilter : DapperActionFilterBase, IDapperActionFilter
     {
+        private readonly IClock _clock;
+
+        public DeletionAuditDapperActionFilter(IClock clock)
+        {
+            _clock = clock;
+        }
+
         public void ExecuteFilter<TEntity, TPrimaryKey>(TEntity entity) where TEntity : class, IEntity<TPrimaryKey>
         {
             if (entity is ISoftDelete)
@@ -20,7 +27,7 @@ namespace Abp.Dapper.Filters.Action
                 var record = entity.As<IHasDeletionTime>();
                 if (record.DeletionTime == null)
                 {
-                    record.DeletionTime = Clock.Now;
+                    record.DeletionTime = _clock.Now;
                 }
             }
 

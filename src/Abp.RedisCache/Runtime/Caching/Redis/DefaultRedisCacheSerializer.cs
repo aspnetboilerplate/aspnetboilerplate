@@ -3,6 +3,7 @@ using Abp.Json;
 using Newtonsoft.Json;
 using StackExchange.Redis;
 using System;
+using Abp.Timing;
 
 namespace Abp.Runtime.Caching.Redis
 {
@@ -11,6 +12,13 @@ namespace Abp.Runtime.Caching.Redis
     /// </summary>
     public class DefaultRedisCacheSerializer : IRedisCacheSerializer, ITransientDependency
     {
+        private readonly IClock _clock;
+
+        public DefaultRedisCacheSerializer(IClock clock)
+        {
+            _clock = clock;
+        }
+
         /// <summary>
         ///     Creates an instance of the object from its serialized string representation.
         /// </summary>
@@ -20,7 +28,7 @@ namespace Abp.Runtime.Caching.Redis
         public virtual object Deserialize(RedisValue objbyte)
         {
             var serializerSettings = new JsonSerializerSettings();
-            serializerSettings.Converters.Insert(0, new AbpDateTimeConverter());
+            serializerSettings.Converters.Insert(0, new AbpDateTimeConverter(_clock));
 
             AbpCacheData cacheData = AbpCacheData.Deserialize(objbyte);
 

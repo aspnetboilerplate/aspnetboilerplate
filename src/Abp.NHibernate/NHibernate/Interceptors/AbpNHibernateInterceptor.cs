@@ -4,7 +4,6 @@ using Abp.Domain.Entities;
 using Abp.Domain.Entities.Auditing;
 using Abp.Events.Bus;
 using Abp.Events.Bus.Entities;
-using Abp.Extensions;
 using Abp.Runtime.Session;
 using Abp.Timing;
 using NHibernate;
@@ -23,10 +22,12 @@ namespace Abp.NHibernate.Interceptors
         private readonly Lazy<IAbpSession> _abpSession;
         private readonly Lazy<IGuidGenerator> _guidGenerator;
         private readonly Lazy<IEventBus> _eventBus;
-
-        public AbpNHibernateInterceptor(IIocManager iocManager)
+        private readonly IClock _clock;
+        
+        public AbpNHibernateInterceptor(IIocManager iocManager, IClock clock)
         {
             _iocManager = iocManager;
+            _clock = clock;
 
             _abpSession =
                 new Lazy<IAbpSession>(
@@ -71,7 +72,7 @@ namespace Abp.NHibernate.Interceptors
                 {
                     if (propertyNames[i] == "CreationTime")
                     {
-                        state[i] = (entity as IHasCreationTime).CreationTime = Clock.Now;
+                        state[i] = (entity as IHasCreationTime).CreationTime = _clock.Now;
                     }
                 }
             }
@@ -107,7 +108,7 @@ namespace Abp.NHibernate.Interceptors
                 {
                     if (propertyNames[i] == "LastModificationTime")
                     {
-                        currentState[i] = (entity as IHasModificationTime).LastModificationTime = Clock.Now;
+                        currentState[i] = (entity as IHasModificationTime).LastModificationTime = _clock.Now;
                         updated = true;
                     }
                 }
@@ -166,7 +167,7 @@ namespace Abp.NHibernate.Interceptors
             return true;
         }
 
-        private static void NormalizeDateTimePropertiesForEntity(object entity, object[] state, string[] propertyNames, IList<IType> types)
+        private void NormalizeDateTimePropertiesForEntity(object entity, object[] state, string[] propertyNames, IList<IType> types)
         {
             for (var i = 0; i < types.Count; i++)
             {
@@ -193,11 +194,11 @@ namespace Abp.NHibernate.Interceptors
                     continue;
                 }
 
-                state[i] = Clock.Normalize(dateTime.Value);
+                state[i] = _clock.Normalize(dateTime.Value);
             }
         }
 
-        private static void NormalizeDateTimePropertiesForComponentType(object componentObject, IType type)
+        private void NormalizeDateTimePropertiesForComponentType(object componentObject, IType type)
         {
             if (componentObject == null)
             {
@@ -253,7 +254,7 @@ namespace Abp.NHibernate.Interceptors
                     continue;
                 }
 
-                subProp.SetValue(componentObject, Clock.Normalize(dateTime.Value));
+                subProp.SetValue(componentObject, _clock.Normalize(dateTime.Value));
             }
         }
     }

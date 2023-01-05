@@ -70,7 +70,7 @@ namespace Abp.BackgroundJobs
         /// Next try time of this job.
         /// </summary>
         //[Index("IX_IsAbandoned_NextTryTime", 2)]
-        public virtual DateTime NextTryTime { get; set; }
+        public virtual DateTime? NextTryTime { get; set; }
 
         /// <summary>
         /// Last try time of this job.
@@ -100,28 +100,7 @@ namespace Abp.BackgroundJobs
         /// </summary>
         public BackgroundJobInfo()
         {
-            NextTryTime = Clock.Now;
             Priority = BackgroundJobPriority.Normal;
-        }
-
-        /// <summary>
-        /// Calculates next try time if a job fails.
-        /// Returns null if it will not wait anymore and job should be abandoned.
-        /// </summary>
-        /// <returns></returns>
-        public virtual DateTime? CalculateNextTryTime()
-        {
-            var nextWaitDuration = DefaultFirstWaitDuration * (Math.Pow(DefaultWaitFactor, TryCount - 1));
-            var nextTryDate = LastTryTime.HasValue
-                ? LastTryTime.Value.AddSeconds(nextWaitDuration)
-                : Clock.Now.AddSeconds(nextWaitDuration);
-
-            if (nextTryDate.Subtract(CreationTime).TotalSeconds > DefaultTimeout)
-            {
-                return null;
-            }
-
-            return nextTryDate;
         }
     }
 }

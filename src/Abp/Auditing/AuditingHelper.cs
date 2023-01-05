@@ -23,17 +23,20 @@ namespace Abp.Auditing
         private readonly IAuditingConfiguration _configuration;
         private readonly IUnitOfWorkManager _unitOfWorkManager;
         private readonly IAuditSerializer _auditSerializer;
-
+        private readonly IClock _clock;
+        
         public AuditingHelper(
             IAuditInfoProvider auditInfoProvider,
             IAuditingConfiguration configuration,
             IUnitOfWorkManager unitOfWorkManager,
-            IAuditSerializer auditSerializer)
+            IAuditSerializer auditSerializer,
+            IClock clock)
         {
             _auditInfoProvider = auditInfoProvider;
             _configuration = configuration;
             _unitOfWorkManager = unitOfWorkManager;
             _auditSerializer = auditSerializer;
+            _clock = clock;
 
             AbpSession = NullAbpSession.Instance;
             Logger = NullLogger.Instance;
@@ -112,7 +115,7 @@ namespace Abp.Auditing
                     : "",
                 MethodName = method.Name,
                 Parameters = ConvertArgumentsToJson(arguments),
-                ExecutionTime = Clock.Now
+                ExecutionTime = _clock.Now
             };
 
             try
