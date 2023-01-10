@@ -21,8 +21,6 @@ namespace Abp.TestBase.SampleApplication.Tests.Auditing
 
         public AuditedEntity_Tests()
         {
-            LocalIocManager.RegisterIfNot<IClockAccessor, ClockAccessor>();
-            
             _messageRepository = Resolve<IRepository<Message>>();
             _companyRepository = Resolve<IRepository<Company>>();
             _clockAccessor = Resolve<IClockAccessor>();
@@ -31,14 +29,6 @@ namespace Abp.TestBase.SampleApplication.Tests.Auditing
         [Fact]
         public void Should_Write_Audit_Properties()
         {
-            var date = new DateTime(2022, 3, 3);
-            var now = date.AddDays(1);
-            
-            var clockProvider =  Substitute.For<IClockProvider>();
-            clockProvider.Now.Returns(now);
-            
-            _clockAccessor.Provider = clockProvider;
-            
             //Arrange
             AbpSession.TenantId = 1;
             AbpSession.UserId = 2;
