@@ -78,13 +78,13 @@ namespace AbpAspNetCoreDemo
                 opts.AddRouteComponents("odata", edmModel);
             });
             
-            services.Configure<MvcOptions>(x => x.AddAbpHtmlSanitizer());
+            // services.Configure<MvcOptions>(x => x.AddAbpHtmlSanitizer());
             
             //Configure Abp and Dependency Injection. Should be called last.
             return services.AddAbp<AbpAspNetCoreDemoModule>(options =>
             {
                 options.IocManager = IocManager.Value ?? new IocManager();
-
+                
                 string plugDllInPath = "";
 #if DEBUG
                 plugDllInPath = Path.Combine(_env.ContentRootPath,
@@ -104,6 +104,7 @@ namespace AbpAspNetCoreDemo
                 options.IocManager.IocContainer.AddFacility<LoggingFacility>(
                     f => f.UseAbpLog4Net().WithConfig("log4net.config")
                 );
+                
 
                 var propInjector = options.IocManager.IocContainer.Kernel.ComponentModelBuilder
                     .Contributors
@@ -119,13 +120,13 @@ namespace AbpAspNetCoreDemo
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env, ILoggerFactory loggerFactory)
         {
             app.UseAbp(); //Initializes ABP framework. Should be called first.
-
+            
             // Return IQueryable from controllers
             app.UseUnitOfWork(options =>
             {
                 options.Filter = httpContext => httpContext.Request.Path.Value.StartsWith("/odata");
             });
-
+            
             if (env.IsDevelopment())
             {
                 app.UseDeveloperExceptionPage();

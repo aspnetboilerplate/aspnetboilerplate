@@ -1,5 +1,9 @@
-﻿using Abp.HtmlSanitizer.HtmlSanitizer.Interceptor;
+﻿using Abp.Dependency;
+using Abp.HtmlSanitizer.HtmlSanitizer.Interceptor;
+using Castle.Core;
+using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.DependencyInjection;
 
 namespace Abp.HtmlSanitizer.HtmlSanitizer;
 
