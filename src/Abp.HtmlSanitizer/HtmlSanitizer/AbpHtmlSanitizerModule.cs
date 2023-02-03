@@ -6,7 +6,7 @@ using Ganss.Xss;
 namespace Abp.HtmlSanitizer.HtmlSanitizer;
 
 [DependsOn(typeof(AbpKernelModule))]    
-public class HtmlSanitizerModule : AbpModule
+public class AbpHtmlSanitizerModule : AbpModule
 {
     public override void Initialize()
     {

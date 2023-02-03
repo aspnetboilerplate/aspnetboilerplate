@@ -28,7 +28,7 @@ namespace AbpAspNetCoreDemo
         typeof(AbpEntityFrameworkCoreModule),
         typeof(AbpCastleLog4NetModule),
         typeof(AbpAspNetCoreODataModule),
-        typeof(HtmlSanitizerModule)
+        typeof(AbpHtmlSanitizerModule)
         )]
     public class AbpAspNetCoreDemoModule : AbpModule
     {
