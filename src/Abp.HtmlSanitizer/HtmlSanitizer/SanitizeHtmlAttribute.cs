@@ -1,4 +1,6 @@
-﻿namespace Abp.HtmlSanitizer.HtmlSanitizer
+﻿using System;
+
+namespace Abp.HtmlSanitizer.HtmlSanitizer
 {
     /// <summary>
     /// Can be added to a method to enable auto validation if validation is disabled for it's class.
