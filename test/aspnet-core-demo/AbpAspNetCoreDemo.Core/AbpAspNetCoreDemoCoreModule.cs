@@ -16,6 +16,8 @@ namespace AbpAspNetCoreDemo.Core
 
             Configuration.Localization.Languages.Add(new LanguageInfo("en", "English", isDefault: true));
             Configuration.Localization.Languages.Add(new LanguageInfo("tr", "Türkçe"));
+            Configuration.Localization.Languages.Add(new LanguageInfo("pt-br", "Portuguese - Brazil"));
+            Configuration.Localization.Languages.Add(new LanguageInfo("en-gb", "English - United Kingdom"));
 
             Configuration.Localization.Sources.Add(
                 new DictionaryBasedLocalizationSource("AbpAspNetCoreDemoModule",
