@@ -257,7 +257,7 @@ namespace Abp.EntityHistory
                     continue;
                 }
 
-                if (!(property.IsPrimitiveType || property.IsComplexType))
+                if (!(property.IsPrimitiveType || property.IsComplexType) && !property.IsEnumType)
                 {
                     // Skipping other types of properties
                     // - Reference navigation properties (DbReferenceEntry)

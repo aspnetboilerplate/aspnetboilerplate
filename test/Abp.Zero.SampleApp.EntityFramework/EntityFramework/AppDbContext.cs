@@ -45,6 +45,8 @@ namespace Abp.Zero.SampleApp.EntityFramework
 
         public DbSet<Foo> Foo { get; set; }
         
+        public DbSet<Employee> Employees { get; set; }
+
         public AppDbContext(DbConnection existingConnection)
             : base(existingConnection, true)
         {
