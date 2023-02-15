@@ -166,6 +166,20 @@ easily. Actually, they are integration tests rather than unit tests
 since they test your code with all of ASP.NET Boilerplate's infrastructure
 (including validation, authorization, unit of work...).
 
+### Running on Docker
+
+The startup template includes necesary files for building docker images and running those images in docker.
+
+#### Building Docker images
+
+In order to build docker image, open the command prompt, go to `aspnet-core/build` folder and run `build-with-ng.ps1` script. This script will build `abp/host` and `abp/ng` docker images.
+The default `abp/host` image is designed to use your local SQL Server, so don't foget to set `ConnectionStrings__Default` in `aspnet-core/docker/ng/docker-compose.yml` before building the docker image. In order to connect your local SQL Server, you need to use your local IP address in the connection string. 
+A sample connection string is `ConnectionStrings__Default: "Server=192.168.1.42; Database=AbpProjectNameDb; User=sa; Password=123qwe;TrustServerCertificate=True;"`
+
+#### Running the project
+
+After creating the docker image, you can go to `aspnet-core/docker/ng` folder and run `up.ps1` script to run the docker image.
+
 ### Source Code
 
 This template is developed as an open source project and is available for free on GitHub:
