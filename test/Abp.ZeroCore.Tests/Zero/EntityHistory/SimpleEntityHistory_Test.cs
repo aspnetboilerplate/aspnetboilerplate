@@ -746,7 +746,6 @@ namespace Abp.Zero.EntityHistory
         [Fact]
         public void Should_Write_History_For_Enum_Property_When_Entity_Created()
         {
-            /* Advertisement does not have Audited attribute. */
             Resolve<IEntityHistoryConfiguration>().Selectors.Add("Selected", typeof(Employee));
 
             int? employeeId = null;
