@@ -147,13 +147,31 @@ namespace Abp.Zero.Ldap.Authentication
 
         protected virtual async Task<PrincipalContext> CreatePrincipalContext(TTenant tenant)
         {
+            var useSsl = await _settings.GetUseSsl(tenant?.Id);
+            var contextType = await _settings.GetContextType(tenant?.Id);
+            
+            var options = useSsl
+                ? ContextOptions.SecureSocketLayer | ContextOptions.Negotiate
+                : GetDefaultOptionForStore(contextType);
+
             return new PrincipalContext(
-                await _settings.GetContextType(tenant?.Id),
+                contextType,
                 ConvertToNullIfEmpty(await _settings.GetDomain(tenant?.Id)),
                 ConvertToNullIfEmpty(await _settings.GetContainer(tenant?.Id)),
+                options,
                 ConvertToNullIfEmpty(await _settings.GetUserName(tenant?.Id)),
                 ConvertToNullIfEmpty(await _settings.GetPassword(tenant?.Id))
             );
+        }
+
+        private ContextOptions GetDefaultOptionForStore(ContextType contextType)
+        {
+            if (contextType == ContextType.Machine)
+            {
+                return ContextOptions.Negotiate;
+            }
+
+            return ContextOptions.Negotiate | ContextOptions.Signing | ContextOptions.Sealing;
         }
 
         protected virtual async Task CheckIsEnabled(TTenant tenant)
