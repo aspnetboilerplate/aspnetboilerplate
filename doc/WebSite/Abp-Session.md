@@ -99,6 +99,30 @@ The Use method returns an IDisposable and it **must be disposed**. Once the
 return value is disposed, Session values are **automatically restored**
 the to previous values.
 
+If you are using this method in a UniOfWork scope, you may need to call `SaveChanges` method of the current unit of work in the using statement which wraps `_session.Use`, otherwise IDisposable object might be disposed before the current unit of work completes and you may get a different value for the UserId and TenantId you intend to use. 
+
+    public class MyService
+    {
+        private readonly IAbpSession _session;
+
+        public MyService(IAbpSession session)
+        {
+            _session = session;
+        }
+
+        [UnitOfWork()]
+        public void Test()
+        {
+            using (_session.Use(42, null))
+            {
+                var tenantId = _session.TenantId; //42
+                var userId = _session.UserId; //null
+                CurrentUnitOfWork.SaveChanges();
+            }
+        }
+    }
+
+
 #### Warning!
 
 Always use the Use method in a using block as shown above. Otherwise, you may 
