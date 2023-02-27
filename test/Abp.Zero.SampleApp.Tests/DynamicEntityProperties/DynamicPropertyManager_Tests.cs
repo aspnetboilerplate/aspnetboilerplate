@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Linq;
 using System.Threading.Tasks;
+using Abp.Dependency;
+using Abp.Domain.Uow;
 using Abp.DynamicEntityProperties;
 using Abp.Runtime.Caching;
 using NSubstitute;
@@ -171,6 +173,31 @@ namespace Abp.Zero.SampleApp.Tests.DynamicEntityProperties
             var exception2 =
                 Should.Throw<ArgumentNullException>(() => dynamicPropertyManager.Add(testDynamicProperty2));
             exception2.Message.ShouldContain(nameof(testDynamicProperty.PropertyName));
+        }
+        
+        [Fact]
+        public void Should_Not_Add_Duplicate_Property_Name()
+        {
+            var propertyName = "Age";
+            var testDynamicProperty1 = new DynamicProperty
+            {
+                PropertyName = propertyName,
+                InputType = Resolve<IDynamicEntityPropertyDefinitionManager>().GetAllAllowedInputTypeNames().First(),
+                TenantId = AbpSession.TenantId
+            };
+            
+            var testDynamicProperty2 = new DynamicProperty
+            {
+                PropertyName = propertyName,
+                InputType = Resolve<IDynamicEntityPropertyDefinitionManager>().GetAllAllowedInputTypeNames().First(),
+                TenantId = AbpSession.TenantId
+            };
+
+            var dynamicPropertyManager = Resolve<IDynamicPropertyManager>();
+
+            dynamicPropertyManager.Add(testDynamicProperty1);
+            var exception = Should.Throw<ArgumentException>(() => dynamicPropertyManager.Add(testDynamicProperty2));
+            exception.Message.ShouldBe($"There is already a dynamic property with name: '{propertyName}'");
         }
 
         [Fact]

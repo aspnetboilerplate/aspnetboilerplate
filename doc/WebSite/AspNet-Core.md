@@ -216,6 +216,26 @@ This approach can be useful if you don't have access the source code of the Cont
 **AbpDateTimeModelBinder** is used to normalize DateTime (and
 Nullable&lt;DateTime&gt;) inputs using the **Clock.Normalize** method.
 
+#### JSON Converters
+
+ASP.NET Boilerplate provides two JsonConverter for Newtonsoft. 
+
+* **CultureInvariantDecimalConverter**: Used to convert a string value to a decimal value when converting JSON string to a object.
+* **CultureInvariantDoubleConverter**: Used to convert a string value to a double value when converting JSON string to a object.
+
+If you want to use one of these converters in your project, you can use them as shown below:
+
+```csharp
+public IServiceProvider ConfigureServices(IServiceCollection services)
+{
+	services.AddNewtonsoftJson(options =>
+	{
+		options.SerializerSettings.Converters.Add(new CultureInvariantDecimalConverter());
+		options.SerializerSettings.Converters.Add(new CultureInvariantDoubleConverter());
+	});
+}
+```
+
 ### Views
 
 MVC Views can be inherited from **AbpRazorPage** to automatically inject the

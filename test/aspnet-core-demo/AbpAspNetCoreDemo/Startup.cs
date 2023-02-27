@@ -68,6 +68,9 @@ namespace AbpAspNetCoreDemo
                 {
                     NamingStrategy = new CamelCaseNamingStrategy()
                 };
+                
+                options.SerializerSettings.Converters.Add(new CultureInvariantDecimalConverter());
+                options.SerializerSettings.Converters.Add(new CultureInvariantDoubleConverter());
             }).AddRazorRuntimeCompilation().AddOData(opts =>
             {
                 var builder = new ODataConventionModelBuilder();

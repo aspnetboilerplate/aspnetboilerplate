@@ -233,10 +233,35 @@ Used to get the current value of a feature for value-type features. Example:
 The FeatureChecker methods also have overrides to check features not only for the
 current tenantId, but for a **specified** tenantId as well.
 
-#### Client Side
+#### Client Side (Razor Views)
+The base view class defines the **IsFeatureEnabled** method to check if the current feature enabled.
 
-On the client side (JavaScript), we can use the **abp.features** namespace
-to get the current values of features.
+##### isEnabled
+```csharp
+    @if (IsFeatureEnabled("App.ChatFeature"))
+    {
+        <div class="row text-end mb-3">
+            <div class="col">
+                <button class="btn btn-primary" id="AddFriendButton">Add Friend</button>
+            </div>
+        </div>    
+    }
+```
+##### getValue
+```csharp
+    @if (CurrentUser.Friends.Count() < Convert.ToInt32(GetFeatureValue("App.FriendLimit")))
+    {
+        <div class="row text-end mb-3">
+            <div class="col">
+                <button class="btn btn-primary" id="AddFriendButton">("AddFriendButton")</button>
+            </div>
+        </div>    
+    }
+```
+
+#### Client Side (Javascript)
+
+In the client side, we can use the **abp.features** namespace to get the current values of features.
 
 ##### isEnabled
 ```csharp

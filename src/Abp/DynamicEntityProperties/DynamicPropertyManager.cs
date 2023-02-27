@@ -78,6 +78,12 @@ namespace Abp.DynamicEntityProperties
             {
                 throw new ApplicationException($"Input type is invalid, if you want to use \"{dynamicProperty.InputType}\" input type, define it in DynamicEntityPropertyDefinitionProvider.");
             }
+
+            var existingProperty = _dynamicPropertyStore.Get(dynamicProperty.PropertyName);
+            if (existingProperty != null)
+            {
+                throw new ArgumentException($"There is already a dynamic property with name: '{dynamicProperty.PropertyName}'");
+            }
         }
 
         public virtual DynamicProperty Add(DynamicProperty dynamicProperty)

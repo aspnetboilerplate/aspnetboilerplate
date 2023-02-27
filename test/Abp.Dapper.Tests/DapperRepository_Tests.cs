@@ -126,7 +126,7 @@ namespace Abp.Dapper.Tests
                     var productWithTenant2 = await _productRepository.GetAsync(productWithTenant2Id);
 
                     productWithTenant2.TenantId
-                        .ShouldBe(1); //Not sure about that?,Because we changed TenantId to 2 in this scope !!! Abp.TenantId = 2 now NOT 1 !!!
+                        .ShouldBe(1); // Not sure about that?,Because we changed TenantId to 2 in this scope !!! Abp.TenantId = 2 now NOT 1 !!!
                 }
 
                 using (_unitOfWorkManager.Current.SetTenantId(3))
