@@ -102,17 +102,14 @@ public class AbpHtmlSanitizerActionFilter : IAsyncActionFilter, ITransientDepend
     {
         var temp = attr;
 
-        if (property.GetCustomAttribute(typeof(SanitizeHtmlAttribute), true) is SanitizeHtmlAttribute propertyAttr)
+        if (property.GetCustomAttribute(typeof(SanitizeHtmlAttribute), true) is not SanitizeHtmlAttribute propertyAttr)
         {
-            temp = propertyAttr;
-
-            if (temp.IsDisabled)
-            {
-                return null;
-            }
+            return temp;
         }
+        
+        temp = propertyAttr;
 
-        return temp;
+        return temp.IsDisabled ? null : temp;
     }
 
     private string SanitizeHtml(string html, bool keepChildNodes)
