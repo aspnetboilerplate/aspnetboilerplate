@@ -23,6 +23,7 @@ $projects = (
 	"Abp.FluentValidation",
     "Abp.HangFire",
     "Abp.HangFire.AspNetCore",
+	"Abp.HtmlSanitizer",
     "Abp.MailKit",
     "Abp.MemoryDb",
     "Abp.MongoDB",
