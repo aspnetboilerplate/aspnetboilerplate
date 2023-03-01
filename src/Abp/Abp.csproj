@@ -29,7 +29,7 @@
     <PackageReference Include="Newtonsoft.Json" Version="13.0.2" />
     <PackageReference Include="System.Collections.Immutable" Version="7.0.0" />
     <PackageReference Include="System.Configuration.ConfigurationManager" Version="7.0.0" />
-    <PackageReference Include="System.Linq.Dynamic.Core" Version="1.2.23" />
+    <PackageReference Include="System.Linq.Dynamic.Core" Version="1.2.25" />
     <PackageReference Include="Castle.LoggingFacility" Version="5.1.2" />
     <PackageReference Include="System.Linq.Queryable" Version="4.3.0" />
     <PackageReference Include="System.Data.Common" Version="4.3.0" />
@@ -43,7 +43,7 @@
     <PackageReference Include="Nito.AsyncEx.Context" Version="5.1.2" />
     <PackageReference Include="Nito.AsyncEx.Coordination" Version="5.1.2" />
     <PackageReference Include="Castle.Core" Version="4.4.1" />
-    <PackageReference Include="TimeZoneConverter" Version="6.0.1" />
+    <PackageReference Include="TimeZoneConverter" Version="6.1.0" />
     <PackageReference Update="ConfigureAwait.Fody" Version="3.3.2" />
   </ItemGroup>
 
