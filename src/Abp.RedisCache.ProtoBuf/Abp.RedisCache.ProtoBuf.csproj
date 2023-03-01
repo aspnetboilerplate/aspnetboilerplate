@@ -23,6 +23,7 @@
 
   <ItemGroup>
     <PackageReference Include="protobuf-net" Version="3.1.25" />
+    <PackageReference Update="ConfigureAwait.Fody" Version="3.3.2" />
   </ItemGroup>
 
   <ItemGroup>

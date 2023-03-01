@@ -23,6 +23,7 @@
 
   <ItemGroup>
     <PackageReference Include="Z.EntityFramework.Plus.EFCore" Version="7.17.1" />
+    <PackageReference Update="ConfigureAwait.Fody" Version="3.3.2" />
   </ItemGroup>
 
   <ItemGroup>
