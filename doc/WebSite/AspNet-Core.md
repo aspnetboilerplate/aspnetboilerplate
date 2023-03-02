@@ -211,6 +211,48 @@ Configuration.Modules.AbpWebCommon().WrapResultFilters.Add(new MyWrapResultFilte
 
 This approach can be useful if you don't have access the source code of the Controllers and can't used result wrapping attributes on the Controllers.
 
+#### Html Sanitizer Action Filter
+
+**AbpHtmlSanitizerActionFilter** is used to sanitize HTML input of actions. XSS attacks can be prevented by sanitizing HTML input.
+
+Add the following code to your **Startup.cs** file to enable HTML sanitizer.
+
+```csharp
+public void ConfigureServices(IServiceCollection services)
+{
+    .
+    .
+
+    services.AddMvc(options =>
+    {
+        .
+        .
+
+        options.AddAbpHtmlSanitizer();
+    });
+}
+```
+
+You can use the **SanitizeHtmlAttribute** on methods, classes, properties or parameters to sanitize HTML input.
+
+**SanitizeHtmlAttribute** has two parameters;
+
+* **IsDisabled**: If set to true, HTML sanitizer is disabled for the place used. Default value: false.
+
+* **KeepChildNodes**: Allowed HTML tags. Default value: "b,strong,i,em,u,strike,ul,ol,li,br,sub,sup,blockquote,pre,a[href|title],img[src|alt|title|width|height],h1,h2,h3,h4,h5,h6,p,div,span".
+
+Example:
+
+```csharp
+[SanitizeHtml]
+[HttpPost("sanitizerTest/sanitizeHtmlTest")]
+public MyModel SanitizeHtml(MyModel myModel)
+{
+    return myModel;
+}
+```
+
+
 ### Model Binders
 
 **AbpDateTimeModelBinder** is used to normalize DateTime (and
