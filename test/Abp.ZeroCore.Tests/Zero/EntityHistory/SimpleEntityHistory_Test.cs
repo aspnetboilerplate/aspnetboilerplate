@@ -29,7 +29,8 @@ namespace Abp.Zero.EntityHistory
         private readonly IRepository<Post, Guid> _postRepository;
         private readonly IRepository<Comment> _commentRepository;
         private readonly IRepository<Foo> _fooRepository;
-
+        private readonly IRepository<Employee> _employeeRepository;
+        
         private IEntityHistoryStore _entityHistoryStore;
 
         public SimpleEntityHistory_Test()
@@ -39,6 +40,7 @@ namespace Abp.Zero.EntityHistory
             _postRepository = Resolve<IRepository<Post, Guid>>();
             _commentRepository = Resolve<IRepository<Comment>>();
             _fooRepository = Resolve<IRepository<Foo>>();
+            _employeeRepository = Resolve<IRepository<Employee>>();
 
             Resolve<IEntityHistoryConfiguration>().IsEnabledForAnonymousUsers = true;
         }
@@ -739,6 +741,47 @@ namespace Abp.Zero.EntityHistory
                 context.EntityChangeSets.Count(e => e.TenantId == 1).ShouldBe(1);
                 context.EntityPropertyChanges.Count(e => e.TenantId == 1).ShouldBe(1);
             });
+        }
+        
+        [Fact]
+        public void Should_Write_History_For_Enum_Property_When_Entity_Created()
+        {
+            Resolve<IEntityHistoryConfiguration>().Selectors.Add("Selected", typeof(Employee));
+
+            int? employeeId = null;
+            WithUnitOfWork(() =>
+            {
+                var john = new Employee
+                {
+                    FullName = "John Doe",
+                    Department = Department.Sales
+                };
+                
+                employeeId = _employeeRepository.InsertAndGetId(john);
+            });
+
+            Predicate<EntityChangeSet> predicate = s =>
+            {
+                s.EntityChanges.Count.ShouldBe(1);
+
+                var entityChange = s.EntityChanges.Single(
+                    ec => ec.EntityTypeFullName == typeof(Employee).FullName
+                );
+                
+                ((DateTime?) entityChange.ChangeTime).ShouldNotBe(null);
+                entityChange.ChangeType.ShouldBe(EntityChangeType.Created);
+                entityChange.EntityId.ShouldBe(employeeId.ToJsonString());
+                entityChange.PropertyChanges.Count.ShouldBe(5);
+                
+                var enumPropertyChange =
+                    entityChange.PropertyChanges.Single(pc => pc.PropertyName == nameof(Employee.Department));
+                enumPropertyChange.OriginalValue.ShouldBeNull();
+                enumPropertyChange.NewValue.ShouldBe(Convert.ToInt32(Department.Sales).ToString());
+              
+                return true;
+            };
+
+            _entityHistoryStore.Received().Save(Arg.Is<EntityChangeSet>(s => predicate(s)));
         }
 
         #endregion

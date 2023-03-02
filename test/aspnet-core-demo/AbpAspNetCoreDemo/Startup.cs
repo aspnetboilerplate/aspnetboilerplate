@@ -8,6 +8,7 @@ using Abp.AspNetCore.Mvc.Antiforgery;
 using Abp.AspNetCore.Mvc.Extensions;
 using Abp.Castle.Logging.Log4Net;
 using Abp.Dependency;
+using Abp.HtmlSanitizer.HtmlSanitizer;
 using Abp.Json;
 using Abp.PlugIns;
 using AbpAspNetCoreDemo.Controllers;
@@ -18,8 +19,8 @@ using Castle.MicroKernel.ModelBuilder.Inspectors;
 using Castle.MicroKernel.SubSystems.Conversion;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.OData;
-using Microsoft.Extensions.Caching.Memory;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
@@ -67,6 +68,9 @@ namespace AbpAspNetCoreDemo
                 {
                     NamingStrategy = new CamelCaseNamingStrategy()
                 };
+                
+                options.SerializerSettings.Converters.Add(new CultureInvariantDecimalConverter());
+                options.SerializerSettings.Converters.Add(new CultureInvariantDoubleConverter());
             }).AddRazorRuntimeCompilation().AddOData(opts =>
             {
                 var builder = new ODataConventionModelBuilder();
@@ -76,7 +80,9 @@ namespace AbpAspNetCoreDemo
                 
                 opts.AddRouteComponents("odata", edmModel);
             });
-
+            
+            services.Configure<MvcOptions>(x => x.AddAbpHtmlSanitizer());
+            
             //Configure Abp and Dependency Injection. Should be called last.
             return services.AddAbp<AbpAspNetCoreDemoModule>(options =>
             {
@@ -85,10 +91,10 @@ namespace AbpAspNetCoreDemo
                 string plugDllInPath = "";
 #if DEBUG
                 plugDllInPath = Path.Combine(_env.ContentRootPath,
-                    @"..\AbpAspNetCoreDemo.PlugIn\bin\Debug\net6.0\AbpAspNetCoreDemo.PlugIn.dll");
+                    @"..\AbpAspNetCoreDemo.PlugIn\bin\Debug\net7.0\AbpAspNetCoreDemo.PlugIn.dll");
 #else
                 plugDllInPath = Path.Combine(_env.ContentRootPath,
-                    @"..\AbpAspNetCoreDemo.PlugIn\bin\Release\net6.0\AbpAspNetCoreDemo.PlugIn.dll");
+                    @"..\AbpAspNetCoreDemo.PlugIn\bin\Release\net7.0\AbpAspNetCoreDemo.PlugIn.dll");
 #endif
                 if (!File.Exists(plugDllInPath))
                 {

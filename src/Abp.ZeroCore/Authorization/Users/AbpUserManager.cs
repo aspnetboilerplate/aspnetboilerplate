@@ -1243,6 +1243,24 @@ namespace Abp.Authorization.Users
             AbpUserStore.AddTokenValidityKey(user, tokenValidityKey, expireDate, cancellationToken);
         }
 
+        public virtual async Task AddTokenValidityKeyAsync(
+            UserIdentifier user,
+            string tokenValidityKey,
+            DateTime expireDate,
+            CancellationToken cancellationToken = default(CancellationToken))
+        {
+            await AbpUserStore.AddTokenValidityKeyAsync(user, tokenValidityKey, expireDate, cancellationToken);
+        }
+
+        public virtual void AddTokenValidityKey(
+            UserIdentifier user,
+            string tokenValidityKey,
+            DateTime expireDate,
+            CancellationToken cancellationToken = default(CancellationToken))
+        {
+            AbpUserStore.AddTokenValidityKey(user, tokenValidityKey, expireDate, cancellationToken);
+        }
+        
         public virtual async Task<bool> IsTokenValidityKeyValidAsync(
             TUser user,
             string tokenValidityKey,

@@ -8,7 +8,7 @@
     <text name="Identity.InvalidUserName" value="Nome de usuário {0} é inválido, pode conter apenas caracteres alfanuméricos." />
     <text name="Identity.PasswordTooShort" value="As senhas devem ter pelo menos {0} caracteres." />
     <text name="Identity.PropertyTooShort" value="{0} não pode ser nulo ou vazio." />
-    <text name="Identity.DuplicateUserName" value="Nome {0} já foi usado." />
+    <text name="Identity.DuplicateUserName" value="Login {0} já foi usado." />
     <text name="Identity.UserAlreadyHasPassword" value="Usuário já tem um conjunto de senha." />
     <text name="Identity.PasswordRequireNonLetterOrDigit" value="As senhas devem ter pelo menos uma não letra ou caractere." />
     <text name="Identity.UserIdNotFound" value="ID do usuário não encontrado." />

@@ -37,6 +37,24 @@ namespace Abp.Zero.Users
                 isTokenValidityKeyValid.ShouldBeTrue();
             }
         }
+        
+        [Fact]
+        public async Task Should_Validate_Non_Expired_TokenValidityKey_Using_UserIdentifier()
+        {
+            using (var uow = Resolve<IUnitOfWorkManager>().Begin())
+            {
+                var user = await _abpUserManager.GetUserByIdAsync(AbpSession.GetUserId());
+                var tokenValidityKey = Guid.NewGuid().ToString();
+                await _abpUserManager.AddTokenValidityKeyAsync(user.ToUserIdentifier(), tokenValidityKey, DateTime.UtcNow.AddDays(1));
+                var isTokenValidityKeyValid = await _abpUserManager.IsTokenValidityKeyValidAsync(
+                    user, 
+                    tokenValidityKey
+                );
+
+                isTokenValidityKeyValid.ShouldBeTrue();
+                await uow.CompleteAsync();
+            }
+        }
 
         [Fact]
         public async Task Should_Not_Valid_Expired_TokenValidityKey()
