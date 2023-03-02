@@ -25,7 +25,8 @@
   </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Include="mongocsharpdriver" Version="2.17.1" />
+    <PackageReference Include="mongocsharpdriver" Version="2.19.0" />
+    <PackageReference Update="ConfigureAwait.Fody" Version="3.3.2" />
   </ItemGroup>
 
   <ItemGroup>

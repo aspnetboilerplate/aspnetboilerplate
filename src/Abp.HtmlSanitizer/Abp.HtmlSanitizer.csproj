@@ -1,10 +1,20 @@
 <Project Sdk="Microsoft.NET.Sdk">
 
     <PropertyGroup>
-        <ImplicitUsings>enable</ImplicitUsings>
-        <Nullable>enable</Nullable>
-        <LangVersion>latest</LangVersion>
         <TargetFramework>net7.0</TargetFramework>
+        <GenerateDocumentationFile>true</GenerateDocumentationFile>
+        <AssemblyName>Abp.HtmlSanitizer</AssemblyName>
+        <PackageId>Abp.HtmlSanitizer</PackageId>
+        <PackageTags>asp.net;asp.net mvc;boilerplate;application framework;web framework;framework;domain driven design;html sanitizer;xss</PackageTags>
+        <GenerateAssemblyTitleAttribute>false</GenerateAssemblyTitleAttribute>
+        <GenerateAssemblyDescriptionAttribute>false</GenerateAssemblyDescriptionAttribute>
+        <GenerateAssemblyConfigurationAttribute>false</GenerateAssemblyConfigurationAttribute>
+        <GenerateAssemblyCompanyAttribute>false</GenerateAssemblyCompanyAttribute>
+        <GenerateAssemblyProductAttribute>false</GenerateAssemblyProductAttribute>
+        <GenerateAssemblyCopyrightAttribute>false</GenerateAssemblyCopyrightAttribute>
+        <GeneratePackageOnBuild>False</GeneratePackageOnBuild>
+        <RootNamespace>Abp</RootNamespace>
+        <Description>Abp.HtmlSanitizer</Description>
     </PropertyGroup>
 
     <ItemGroup>
