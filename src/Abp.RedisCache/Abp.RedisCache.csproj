@@ -22,6 +22,7 @@
 
   <ItemGroup>
     <PackageReference Include="StackExchange.Redis" Version="2.2.88" />
+    <PackageReference Update="ConfigureAwait.Fody" Version="3.3.2" />
   </ItemGroup>
 
   <ItemGroup>
