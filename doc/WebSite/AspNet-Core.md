@@ -213,9 +213,10 @@ This approach can be useful if you don't have access the source code of the Cont
 
 #### Html Sanitizer Action Filter
 
-**AbpHtmlSanitizerActionFilter** is used to sanitize HTML input of actions. XSS attacks can be prevented by sanitizing HTML input.
+To prevent **XSS** attacks, it's important to **sanitize** HTML input of actions. The **AbpHtmlSanitizerActionFilter** is a useful **tool** for this purpose.
 
-Add the following code to your **Startup.cs** file to enable HTML sanitizer.
+To get started, you'll need to **add** the [Abp.HtmlSanitizer](https://www.nuget.org/packages/Abp.HtmlSanitizer) NuGet package to your project. Then, you can enable **HTML sanitizer** by adding the following code to your **Startup.cs** file:
+
 
 ```csharp
 public void ConfigureServices(IServiceCollection services)
@@ -233,15 +234,13 @@ public void ConfigureServices(IServiceCollection services)
 }
 ```
 
-You can use the **SanitizeHtmlAttribute** on methods, classes, properties or parameters to sanitize HTML input.
+You can use the **SanitizeHtmlAttribute** on methods, classes, properties or parameters to sanitize HTML input. This attribute has two parameters:
 
-**SanitizeHtmlAttribute** has two parameters;
+* **IsDisabled**: If set to true, HTML sanitizer is disabled for the place used. The **default** value is **false**.
 
-* **IsDisabled**: If set to true, HTML sanitizer is disabled for the place used. Default value: false.
+* **KeepChildNodes**: If set to true, HTML sanitizer **keeps child nodes** of the sanitized HTML. The **default** value is **false**.
 
-* **KeepChildNodes**: Allowed HTML tags. Default value: "b,strong,i,em,u,strike,ul,ol,li,br,sub,sup,blockquote,pre,a[href|title],img[src|alt|title|width|height],h1,h2,h3,h4,h5,h6,p,div,span".
-
-Example:
+Example usage: 
 
 ```csharp
 [SanitizeHtml]
@@ -252,6 +251,7 @@ public MyModel SanitizeHtml(MyModel myModel)
 }
 ```
 
+> More examples can be found in the [ASP.NET Core Demo](https://github.com/aspnetboilerplate/aspnetboilerplate/blob/dev/test/aspnet-core-demo/AbpAspNetCoreDemo/Controllers/SanitizerTestController.cs):
 
 ### Model Binders
 
